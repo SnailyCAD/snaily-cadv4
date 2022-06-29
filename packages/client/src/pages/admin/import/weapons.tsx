@@ -6,7 +6,7 @@ import type { GetServerSideProps } from "next";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
-import { Citizen, Rank, Weapon } from "@snailycad/types";
+import { Rank } from "@snailycad/types";
 import { Table } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { FormField } from "components/form/FormField";
@@ -17,9 +17,10 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { Permissions } from "@snailycad/permissions";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
+import type { GetImportWeaponsData, PostImportWeaponsData } from "@snailycad/types/api";
 
 interface Props {
-  data: { weapons: (Weapon & { citizen: Citizen })[]; totalCount: number };
+  data: GetImportWeaponsData;
 }
 
 export default function ImportWeaponsPage({ data }: Props) {
@@ -30,7 +31,10 @@ export default function ImportWeaponsPage({ data }: Props) {
 
   const asyncTable = useAsyncTable({
     fetchOptions: {
-      onResponse: (json) => ({ totalCount: json.totalCount, data: json.weapons }),
+      onResponse: (json: GetImportWeaponsData) => ({
+        totalCount: json.totalCount,
+        data: json.weapons,
+      }),
       path: "/admin/import/weapons",
     },
     initialData: data.weapons,
@@ -91,7 +95,7 @@ export default function ImportWeaponsPage({ data }: Props) {
         ]}
       />
 
-      <ImportModal
+      <ImportModal<PostImportWeaponsData>
         onImport={(weapons) => {
           asyncTable.setData((p) => [...weapons, ...p]);
         }}

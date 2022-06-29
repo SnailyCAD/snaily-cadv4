@@ -6,15 +6,16 @@ import { FullEmployee, useBusinessState } from "state/businessState";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { ManageEmployeeModal } from "./ManageEmployeeModal";
-import { EmployeeAsEnum, WhitelistStatus } from "@snailycad/types";
+import { Employee, EmployeeAsEnum, WhitelistStatus } from "@snailycad/types";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { Table } from "components/shared/Table";
 import { yesOrNoText } from "lib/utils";
 import { Status } from "components/shared/Status";
+import type { DeleteBusinessFireEmployeeData } from "@snailycad/types/api";
 
 export function EmployeesTab() {
-  const [tempEmployee, setTempEmployee] = React.useState<FullEmployee | null>(null);
+  const [tempEmployee, setTempEmployee] = React.useState<Employee | null>(null);
 
   const { state, execute } = useFetch();
   const { openModal, closeModal } = useModal();
@@ -42,13 +43,11 @@ export function EmployeesTab() {
   async function handleFireEmployee() {
     if (!tempEmployee || !currentBusiness || !currentEmployee) return;
 
-    const { json } = await execute(
-      `/businesses/employees/${currentBusiness.id}/${tempEmployee.id}`,
-      {
-        data: { employeeId: currentEmployee.id },
-        method: "DELETE",
-      },
-    );
+    const { json } = await execute<DeleteBusinessFireEmployeeData>({
+      path: `/businesses/employees/${currentBusiness.id}/${tempEmployee.id}`,
+      data: { employeeId: currentEmployee.id },
+      method: "DELETE",
+    });
 
     if (json) {
       setCurrentBusiness({
@@ -60,14 +59,14 @@ export function EmployeesTab() {
     }
   }
 
-  function handleManageClick(employee: FullEmployee) {
-    if (employee.role.as === EmployeeAsEnum.OWNER) return;
+  function handleManageClick(employee: Employee) {
+    if (employee.role?.as === EmployeeAsEnum.OWNER) return;
     setTempEmployee(employee);
     openModal(ModalIds.ManageEmployee);
   }
 
-  function handleFireClick(employee: FullEmployee) {
-    if (employee.role.as === EmployeeAsEnum.OWNER) return;
+  function handleFireClick(employee: Employee) {
+    if (employee.role?.as === EmployeeAsEnum.OWNER) return;
     setTempEmployee(employee);
     openModal(ModalIds.AlertFireEmployee);
   }
@@ -79,7 +78,7 @@ export function EmployeesTab() {
       <Table
         data={employees.map((employee) => ({
           name: `${employee.citizen.name} ${employee.citizen.surname}`,
-          role: employee.role.value.value,
+          role: employee.role?.value.value ?? common("none"),
           canCreatePosts: common(yesOrNoText(employee.canCreatePosts)),
           employeeOfTheMonth: common(yesOrNoText(employee.employeeOfTheMonth)),
           whitelistStatus: (
@@ -92,7 +91,7 @@ export function EmployeesTab() {
               <Button
                 size="xs"
                 disabled={
-                  employee.role.as === EmployeeAsEnum.OWNER ||
+                  employee.role?.as === EmployeeAsEnum.OWNER ||
                   employee.whitelistStatus === WhitelistStatus.PENDING
                 }
                 onClick={() => handleManageClick(employee)}
@@ -103,7 +102,7 @@ export function EmployeesTab() {
               <Button
                 size="xs"
                 disabled={
-                  employee.role.as === EmployeeAsEnum.OWNER ||
+                  employee.role?.as === EmployeeAsEnum.OWNER ||
                   employee.whitelistStatus === WhitelistStatus.PENDING
                 }
                 onClick={() => handleFireClick(employee)}

@@ -7,13 +7,9 @@ import { parseImportFile } from "utils/file";
 import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
 import { citizenInclude } from "controllers/citizen/CitizenController";
-import type {
-  Prisma,
-  RegisteredVehicle,
-  VehicleInspectionStatus,
-  VehicleTaxStatus,
-} from "@prisma/client";
+import type { Prisma, VehicleInspectionStatus, VehicleTaxStatus } from "@prisma/client";
 import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
+import type * as APITypes from "@snailycad/types/api";
 
 const vehiclesInclude = { ...citizenInclude.vehicles.include, citizen: true };
 
@@ -24,7 +20,7 @@ export class ImportVehiclesController {
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query = "",
     @QueryParams("includeAll", Boolean) includeAll = false,
-  ) {
+  ): Promise<APITypes.GetImportVehiclesData> {
     const where: Prisma.RegisteredVehicleWhereInput | undefined = query
       ? {
           OR: [
@@ -53,7 +49,7 @@ export class ImportVehiclesController {
   async importVehicles(
     @BodyParams() body?: unknown,
     @MultipartFile("file") file?: PlatformMulterFile,
-  ) {
+  ): Promise<APITypes.PostImportVehiclesData> {
     const toValidateBody = file ? parseImportFile(file) : body;
     return importVehiclesHandler(toValidateBody);
   }
@@ -81,7 +77,7 @@ export async function importVehiclesHandler(body: unknown[]) {
         include: vehiclesInclude,
       });
 
-      let last: RegisteredVehicle = vehicle;
+      let last = vehicle;
       if (data.flags) {
         const disconnectConnectArr = manyToManyHelper([], data.flags);
 
@@ -95,7 +91,7 @@ export async function importVehiclesHandler(body: unknown[]) {
               }),
             ),
           ),
-        );
+        ) as typeof vehicle;
       }
 
       return last;

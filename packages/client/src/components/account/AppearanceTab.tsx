@@ -15,6 +15,7 @@ import type { Sounds } from "lib/server/getAvailableSounds";
 import { soundCamelCaseToKebabCase } from "lib/utils";
 import { CaretDownFill } from "react-bootstrap-icons";
 import { useRouter } from "next/router";
+import type { PatchUserData } from "@snailycad/types/api";
 
 interface Props {
   availableSounds: Record<Sounds, boolean>;
@@ -60,7 +61,8 @@ export function AppearanceTab({ availableSounds }: Props) {
   const sounds = Object.keys(INITIAL_VALUES.soundSettings);
 
   async function onSubmit(data: typeof INITIAL_VALUES) {
-    const { json } = await execute("/user", {
+    const { json } = await execute<PatchUserData, typeof INITIAL_VALUES>({
+      path: "/user",
       method: "PATCH",
       data: { username: user?.username, ...data },
     });

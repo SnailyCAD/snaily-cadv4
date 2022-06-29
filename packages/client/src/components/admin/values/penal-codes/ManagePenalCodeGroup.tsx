@@ -9,6 +9,7 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import type { PenalCodeGroup } from "@snailycad/types";
+import type { PutPenalCodeGroupsData, PostPenalCodeGroupsData } from "@snailycad/types/api";
 
 interface Props {
   group: PenalCodeGroup | null;
@@ -32,7 +33,8 @@ export function ManagePenalCodeGroup({ onCreate, onUpdate, onClose, group }: Pro
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (group) {
-      const { json } = await execute(`/admin/penal-code-group/${group.id}`, {
+      const { json } = await execute<PutPenalCodeGroupsData>({
+        path: `/admin/penal-code-group/${group.id}`,
         method: "PUT",
         data: values,
       });
@@ -42,7 +44,8 @@ export function ManagePenalCodeGroup({ onCreate, onUpdate, onClose, group }: Pro
         handleClose();
       }
     } else {
-      const { json } = await execute("/admin/penal-code-group", {
+      const { json } = await execute<PostPenalCodeGroupsData>({
+        path: "/admin/penal-code-group",
         method: "POST",
         data: values,
       });

@@ -1,5 +1,4 @@
 import { NAME_CHANGE_REQUEST_SCHEMA } from "@snailycad/schemas";
-import type { NameChangeRequest } from "@snailycad/types";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { FormRow } from "components/form/FormRow";
@@ -13,9 +12,10 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
+import type { GetNameChangeRequestsData, PostNameChangeRequestsData } from "@snailycad/types/api";
 
 interface Props {
-  onCreate?(request: NameChangeRequest): void;
+  onCreate?(request: GetNameChangeRequestsData[number]): void;
 }
 
 export function RequestNameChangeModal({ onCreate }: Props) {
@@ -36,7 +36,8 @@ export function RequestNameChangeModal({ onCreate }: Props) {
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
-    const { json } = await execute("/name-change", {
+    const { json } = await execute<PostNameChangeRequestsData, typeof INITIAL_VALUES>({
+      path: "/name-change",
       method: "POST",
       data: values,
       helpers,

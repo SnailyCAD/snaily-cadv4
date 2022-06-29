@@ -10,6 +10,7 @@ import { Socket } from "services/SocketService";
 import { incidentInclude } from "./IncidentController";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/incidents/events")
 @UseBeforeEach(IsAuth)
@@ -28,7 +29,7 @@ export class IncidentEventsController {
   async createIncidentEvent(
     @PathParams("incidentId") incidentId: string,
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PostIncidentEventsData> {
     const data = validateSchema(CALL_911_EVENT_SCHEMA, body);
 
     const incident = await prisma.leoIncident.findUnique({
@@ -67,7 +68,7 @@ export class IncidentEventsController {
     @PathParams("incidentId") incidentId: string,
     @PathParams("eventId") eventId: string,
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PutIncidentEventByIdData> {
     const data = validateSchema(CALL_911_EVENT_SCHEMA, body);
 
     const incident = await prisma.leoIncident.findUnique({
@@ -124,7 +125,7 @@ export class IncidentEventsController {
   async deleteIncidentEvent(
     @PathParams("incidentId") incidentId: string,
     @PathParams("eventId") eventId: string,
-  ) {
+  ): Promise<APITypes.DeleteIncidentEventByIdData> {
     const incident = await prisma.leoIncident.findUnique({
       where: { id: incidentId },
       include: incidentInclude,

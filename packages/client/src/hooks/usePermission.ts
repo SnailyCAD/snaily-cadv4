@@ -17,7 +17,7 @@ export function usePermission() {
       userToCheck.permissions = allPermissions;
     }
 
-    if (!userToCheck.permissions?.length) {
+    if (!userToCheck.permissions.length) {
       return typeof fallback === "boolean" ? fallback : fallback(userToCheck);
     }
 
@@ -26,7 +26,7 @@ export function usePermission() {
 
   function _getPermissions(userToCheck: User | null = user) {
     if (!userToCheck) return false;
-    return getPermissions(userToCheck.permissions ?? []);
+    return getPermissions(userToCheck.permissions);
   }
 
   return { hasPermissions: _hasPermission, getPermissions: _getPermissions };

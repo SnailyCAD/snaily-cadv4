@@ -7,6 +7,7 @@ import { useEmsFdState } from "state/emsFdState";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 import useFetch from "lib/useFetch";
+import type { PostEmsFdTogglePanicButtonData } from "@snailycad/types/api";
 
 interface MButton {
   nameKey: [string, string];
@@ -43,7 +44,8 @@ export function ModalButtons() {
   async function handlePanic() {
     if (!activeDeputy) return;
 
-    await execute("/ems-fd/panic-button", {
+    await execute<PostEmsFdTogglePanicButtonData>({
+      path: "/ems-fd/panic-button",
       method: "POST",
       data: { deputyId: activeDeputy.id },
     });

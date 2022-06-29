@@ -10,6 +10,7 @@ import { importVehiclesHandler } from "./ImportVehiclesController";
 import { importWeaponsHandler } from "./ImportWeaponsController";
 import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
 import { manyToManyHelper } from "utils/manyToMany";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/admin/import/citizens")
 export class ImportCitizensController {
@@ -17,7 +18,7 @@ export class ImportCitizensController {
   async importCitizens(
     @BodyParams() body: unknown,
     @MultipartFile("file") file?: PlatformMulterFile,
-  ) {
+  ): Promise<APITypes.PostImportCitizensData> {
     const toValidateBody = file ? parseImportFile(file) : body;
     const data = validateSchema(IMPORT_CITIZENS_ARR, toValidateBody);
 

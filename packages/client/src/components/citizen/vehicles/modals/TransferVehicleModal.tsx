@@ -14,6 +14,7 @@ import { ModalIds } from "types/ModalIds";
 import { handleValidate } from "lib/handleValidate";
 import { TRANSFER_VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
+import type { PostCitizenTransferVehicleData } from "@snailycad/types/api";
 
 interface Props {
   vehicle: RegisteredVehicle;
@@ -27,13 +28,14 @@ export function TransferVehicleModal({ onTransfer, vehicle }: Props) {
   const { state, execute } = useFetch();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute(`/vehicles/transfer/${vehicle.id}`, {
+    const { json } = await execute<PostCitizenTransferVehicleData>({
+      path: `/vehicles/transfer/${vehicle.id}`,
       method: "POST",
       data: values,
     });
 
     if (json.id) {
-      onTransfer?.(json);
+      onTransfer?.({ ...vehicle, ...json });
       closeModal(ModalIds.TransferVehicle);
     }
   }

@@ -16,6 +16,7 @@ import { ManageCustomFieldModal } from "components/admin/manage/custom-fields/Ma
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { usePermission } from "hooks/usePermission";
+import type { DeleteManageCustomFieldsData } from "@snailycad/types/api";
 
 interface Props {
   customFields: CustomField[];
@@ -34,7 +35,8 @@ export default function ManageCustomFields({ customFields: data }: Props) {
   async function handleDelete() {
     if (!tempField) return;
 
-    const { json } = await execute(`/admin/manage/custom-fields/${tempField.id}`, {
+    const { json } = await execute<DeleteManageCustomFieldsData>({
+      path: `/admin/manage/custom-fields/${tempField.id}`,
       method: "DELETE",
     });
 

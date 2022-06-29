@@ -14,11 +14,11 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useImageUrl } from "hooks/useImageUrl";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
-import type { EmsFdDeputy } from "@snailycad/types";
 import { Permissions } from "@snailycad/permissions";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { OfficerRank } from "components/leo/OfficerRank";
 import { UnitDepartmentStatus } from "components/leo/UnitDepartmentStatus";
+import type { DeleteMyDeputyByIdData, GetMyDeputiesData } from "@snailycad/types/api";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageDeputyModal = dynamic(
@@ -26,7 +26,7 @@ const ManageDeputyModal = dynamic(
 );
 
 interface Props {
-  deputies: EmsFdDeputy[];
+  deputies: GetMyDeputiesData["deputies"];
 }
 
 export default function MyDeputies({ deputies: data }: Props) {
@@ -39,12 +39,17 @@ export default function MyDeputies({ deputies: data }: Props) {
   const { BADGE_NUMBERS } = useFeatureEnabled();
 
   const [deputies, setDeputies] = React.useState(data);
-  const [tempDeputy, setTempDeputy] = React.useState<EmsFdDeputy | null>(null);
+  const [tempDeputy, setTempDeputy] = React.useState<GetMyDeputiesData["deputies"][number] | null>(
+    null,
+  );
 
-  async function handleDeleteOfficer() {
+  async function handleDeleteDeputy() {
     if (!tempDeputy) return;
 
-    const { json } = await execute(`/ems-fd/${tempDeputy.id}`, { method: "DELETE" });
+    const { json } = await execute<DeleteMyDeputyByIdData>({
+      path: `/ems-fd/${tempDeputy.id}`,
+      method: "DELETE",
+    });
 
     if (json) {
       closeModal(ModalIds.AlertDeleteDeputy);
@@ -52,12 +57,12 @@ export default function MyDeputies({ deputies: data }: Props) {
     }
   }
 
-  function handleEditClick(deputy: EmsFdDeputy) {
+  function handleEditClick(deputy: GetMyDeputiesData["deputies"][number]) {
     setTempDeputy(deputy);
     openModal(ModalIds.ManageDeputy);
   }
 
-  function handleDeleteClick(deputy: EmsFdDeputy) {
+  function handleDeleteClick(deputy: GetMyDeputiesData["deputies"][number]) {
     setTempDeputy(deputy);
     openModal(ModalIds.AlertDeleteDeputy);
   }
@@ -148,7 +153,7 @@ export default function MyDeputies({ deputies: data }: Props) {
           deputy: tempDeputy && makeUnitName(tempDeputy),
         })}
         id={ModalIds.AlertDeleteDeputy}
-        onDeleteClick={handleDeleteOfficer}
+        onDeleteClick={handleDeleteDeputy}
         onClose={() => setTempDeputy(null)}
         state={state}
       />

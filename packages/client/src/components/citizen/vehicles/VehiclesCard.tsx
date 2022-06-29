@@ -17,6 +17,7 @@ import { useCitizen } from "context/CitizenContext";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
+import type { DeleteCitizenVehicleData, GetCitizenVehiclesData } from "@snailycad/types/api";
 
 export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
   const { openModal, closeModal } = useModal();
@@ -29,7 +30,10 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
   const [tempVehicle, setTempVehicle] = React.useState<RegisteredVehicle | null>(null);
   const asyncTable = useAsyncTable({
     fetchOptions: {
-      onResponse: (json) => ({ data: json.vehicles, totalCount: json.totalCount }),
+      onResponse: (json: GetCitizenVehiclesData) => ({
+        data: json.vehicles,
+        totalCount: json.totalCount,
+      }),
       path: `/vehicles/${citizen.id}`,
     },
     totalCount: props.vehicles.length,
@@ -39,7 +43,8 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
   async function handleDelete() {
     if (!tempVehicle) return;
 
-    const { json } = await execute(`/vehicles/${tempVehicle.id}`, {
+    const { json } = await execute<DeleteCitizenVehicleData>({
+      path: `/vehicles/${tempVehicle.id}`,
       method: "DELETE",
     });
 

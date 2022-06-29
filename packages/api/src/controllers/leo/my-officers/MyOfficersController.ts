@@ -21,6 +21,7 @@ import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -30,7 +31,7 @@ export class MyOfficersController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
-  async getUserOfficers(@Context("user") user: User) {
+  async getUserOfficers(@Context("user") user: User): Promise<APITypes.GetMyOfficersData> {
     const officers = await prisma.officer.findMany({
       where: { userId: user.id },
       include: {
@@ -51,7 +52,7 @@ export class MyOfficersController {
     @BodyParams() body: unknown,
     @Context("user") user: User,
     @Context("cad") cad: { features: CadFeature[]; miscCadSettings: MiscCadSettings },
-  ) {
+  ): Promise<APITypes.PostMyOfficersData> {
     const data = validateSchema(CREATE_OFFICER_SCHEMA, body);
 
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
@@ -148,7 +149,7 @@ export class MyOfficersController {
       ),
     );
 
-    return updated;
+    return updated as APITypes.PostMyOfficersData;
   }
 
   @Put("/:id")
@@ -161,7 +162,7 @@ export class MyOfficersController {
     @BodyParams() body: unknown,
     @Context("user") user: User,
     @Context("cad") cad: { features: CadFeature[]; miscCadSettings: MiscCadSettings },
-  ) {
+  ): Promise<APITypes.PutMyOfficerByIdData> {
     const data = validateSchema(CREATE_OFFICER_SCHEMA, body);
 
     const officer = await prisma.officer.findFirst({
@@ -270,7 +271,10 @@ export class MyOfficersController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
-  async deleteOfficer(@PathParams("id") officerId: string, @Context("user") user: User) {
+  async deleteOfficer(
+    @PathParams("id") officerId: string,
+    @Context("user") user: User,
+  ): Promise<APITypes.DeleteMyOfficerByIdData> {
     const officer = await prisma.officer.findFirst({
       where: {
         userId: user.id,
@@ -296,7 +300,7 @@ export class MyOfficersController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
-  async getOfficerLogs(@Context("user") user: User) {
+  async getOfficerLogs(@Context("user") user: User): Promise<APITypes.GetMyOfficersLogsData> {
     const logs = await prisma.officerLog.findMany({
       where: { userId: user.id, emsFdDeputyId: null },
       include: {
@@ -319,7 +323,7 @@ export class MyOfficersController {
     @Context("user") user: User,
     @PathParams("id") officerId: string,
     @MultipartFile("image") file: PlatformMulterFile,
-  ) {
+  ): Promise<APITypes.PostMyOfficerByIdData> {
     const officer = await prisma.officer.findFirst({
       where: {
         userId: user.id,

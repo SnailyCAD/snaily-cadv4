@@ -7,6 +7,7 @@ import { UpdateEventForm } from "components/dispatch/events/UpdateEventForm";
 import { EventItem } from "components/dispatch/events/EventItem";
 import type { FormikHelpers } from "formik";
 import { classNames } from "lib/classNames";
+import type { PostIncidentEventsData, PutIncidentEventByIdData } from "@snailycad/types/api";
 
 interface Props {
   incident: LeoIncident;
@@ -24,12 +25,14 @@ export function IncidentEventsArea({ disabled, incident }: Props) {
     helpers: FormikHelpers<{ description: string }>,
   ) {
     if (tempEvent) {
-      await execute(`/incidents/events/${incident.id}/${tempEvent.id}`, {
+      await execute<PutIncidentEventByIdData>({
+        path: `/incidents/events/${incident.id}/${tempEvent.id}`,
         method: "PUT",
         data: values,
       });
     } else {
-      await execute(`/incidents/events/${incident.id}`, {
+      await execute<PostIncidentEventsData>({
+        path: `/incidents/events/${incident.id}`,
         method: "POST",
         data: values,
       });

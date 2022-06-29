@@ -9,6 +9,7 @@ import { makeUnitName } from "lib/utils";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { isUnitCombined } from "@snailycad/utils";
+import type { Post911CallEventsData, PutDispatchStatusByUnitId } from "@snailycad/types/api";
 
 export function MultiValueContainerContextMenu(props: MultiValueGenericProps<any>) {
   const { codes10 } = useValues();
@@ -28,13 +29,15 @@ export function MultiValueContainerContextMenu(props: MultiValueGenericProps<any
     if (!unit) return;
 
     if (status.type === "STATUS_CODE") {
-      await execute(`/dispatch/status/${unitId}`, {
+      await execute<PutDispatchStatusByUnitId>({
+        path: `/dispatch/status/${unitId}`,
         method: "PUT",
         data: { status: status.id },
       });
     } else {
       if (!call) return;
-      await execute(`/911-calls/events/${call.id}`, {
+      await execute<Post911CallEventsData>({
+        path: `/911-calls/events/${call.id}`,
         method: "POST",
         data: {
           description: isUnitCombined(unit)

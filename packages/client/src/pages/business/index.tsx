@@ -2,8 +2,7 @@ import * as React from "react";
 import type { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { FullEmployee, useBusinessState } from "state/businessState";
-import type { Business } from "@snailycad/types";
+import { useBusinessState } from "state/businessState";
 import { Layout } from "components/Layout";
 import { Button } from "components/Button";
 import { useTranslations } from "use-intl";
@@ -14,11 +13,7 @@ import dynamic from "next/dynamic";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { usePermission, Permissions } from "hooks/usePermission";
-
-interface Props {
-  businesses: (FullEmployee & { business: Business })[];
-  joinableBusinesses: Business[];
-}
+import type { GetBusinessesData } from "@snailycad/types/api";
 
 const CreateBusinessModal = dynamic(
   async () => (await import("components/business/CreateBusinessModal")).CreateBusinessModal,
@@ -28,7 +23,7 @@ const JoinBusinessModal = dynamic(
   async () => (await import("components/business/JoinBusinessModal")).JoinBusinessModal,
 );
 
-export default function BusinessPage(props: Props) {
+export default function BusinessPage(props: GetBusinessesData) {
   const { openModal } = useModal();
   const t = useTranslations("Business");
   const [businesses, setBusinesses] = React.useState(props.businesses);
@@ -37,8 +32,8 @@ export default function BusinessPage(props: Props) {
   const { hasPermissions } = usePermission();
   const hasCreateBusinessesPerms = hasPermissions([Permissions.CreateBusinesses], true);
 
-  const ownedBusinesses = businesses.filter((em) => em.citizenId === em.business?.citizenId);
-  const joinedBusinesses = businesses.filter((em) => em.citizenId !== em.business?.citizenId);
+  const ownedBusinesses = businesses.filter((em) => em.citizenId === em.business.citizenId);
+  const joinedBusinesses = businesses.filter((em) => em.citizenId !== em.business.citizenId);
 
   React.useEffect(() => {
     setJoinableBusinesses(props.joinableBusinesses);

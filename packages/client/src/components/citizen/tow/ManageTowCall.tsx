@@ -14,16 +14,25 @@ import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
 import { toastMessage } from "lib/toastMessage";
 import { ModalIds } from "types/ModalIds";
-import type { TaxiCall, TowCall } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
+import type {
+  PutTowCallsData,
+  PutTaxiCallsData,
+  PostTaxiCallsData,
+  PostTowCallsData,
+  DeleteTowCallsData,
+  DeleteTaxiCallsData,
+} from "@snailycad/types/api";
 
-type CallData = Pick<TowCall, keyof TaxiCall> | TaxiCall;
 interface Props {
-  call: CallData | null;
+  call: PutTaxiCallsData | PutTowCallsData | null;
   isTow?: boolean;
-  onUpdate?(old: CallData, newC: CallData): void;
-  onDelete?(call: CallData): void;
+  onUpdate?(
+    old: PutTaxiCallsData | PutTowCallsData,
+    newC: PutTaxiCallsData | PutTowCallsData,
+  ): void;
+  onDelete?(call: PutTaxiCallsData | PutTowCallsData): void;
   onClose?(): void;
 }
 
@@ -48,7 +57,8 @@ export function ManageCallModal({ onDelete, onUpdate, onClose, isTow: tow, call 
     if (!call) return;
 
     const path = isTow ? `/tow/${call.id}` : `/taxi/${call.id}`;
-    const { json } = await execute(path, {
+    const { json } = await execute<DeleteTowCallsData | DeleteTaxiCallsData>({
+      path,
       method: "DELETE",
     });
 
@@ -61,7 +71,8 @@ export function ManageCallModal({ onDelete, onUpdate, onClose, isTow: tow, call 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (call) {
       const path = isTow ? `/tow/${call.id}` : `/taxi/${call.id}`;
-      const { json } = await execute(path, {
+      const { json } = await execute<PutTowCallsData | PutTaxiCallsData>({
+        path,
         method: "PUT",
         data: { ...call, ...values },
       });
@@ -70,7 +81,8 @@ export function ManageCallModal({ onDelete, onUpdate, onClose, isTow: tow, call 
         onUpdate?.(call, json);
       }
     } else {
-      const { json } = await execute(isTow ? "/tow" : "/taxi", {
+      const { json } = await execute<PostTaxiCallsData | PostTowCallsData>({
+        path: isTow ? "/tow" : "/taxi",
         method: "POST",
         data: values,
       });

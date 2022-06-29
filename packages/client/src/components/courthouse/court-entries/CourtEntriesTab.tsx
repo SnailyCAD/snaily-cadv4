@@ -11,9 +11,10 @@ import { ManageCourtEntry } from "./ManageCourtEntry";
 import { DescriptionModal } from "components/modal/DescriptionModal/DescriptionModal";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
+import type { DeleteCourtEntriesData, GetCourtEntriesData } from "@snailycad/types/api";
 
 interface Props {
-  entries: CourtEntry[];
+  entries: GetCourtEntriesData;
 }
 
 export function CourtEntriesTab(props: Props) {
@@ -28,7 +29,10 @@ export function CourtEntriesTab(props: Props) {
   async function deleteCourtEntry() {
     if (!tempEntry) return;
 
-    const { json } = await execute(`/court-entries/${tempEntry.id}`, { method: "DELETE" });
+    const { json } = await execute<DeleteCourtEntriesData>({
+      path: `/court-entries/${tempEntry.id}`,
+      method: "DELETE",
+    });
 
     if (typeof json === "boolean") {
       setEntries((p) => p.filter((v) => v.id !== tempEntry.id));

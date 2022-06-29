@@ -6,6 +6,7 @@ import { Get, Post } from "@tsed/schema";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
+import type * as APITypes from "@snailycad/types/api";
 
 export const expungementRequestInclude = {
   citizen: true,
@@ -17,7 +18,9 @@ export const expungementRequestInclude = {
 @UseBeforeEach(IsAuth)
 export class ExpungementRequestsController {
   @Get("/")
-  async getRequestPerUser(@Context("user") user: User) {
+  async getRequestPerUser(
+    @Context("user") user: User,
+  ): Promise<APITypes.GetExpungementRequestsData> {
     const requests = await prisma.expungementRequest.findMany({
       where: {
         userId: user.id,
@@ -32,7 +35,7 @@ export class ExpungementRequestsController {
   async getCitizensRecords(
     @Context("user") user: User,
     @PathParams("citizenId") citizenId: string,
-  ) {
+  ): Promise<APITypes.GetExpungementRequestByCitizenIdData> {
     const citizen = await prisma.citizen.findFirst({
       where: { id: citizenId, userId: user.id },
       include: { ...citizenInclude, warrants: true },
@@ -50,7 +53,7 @@ export class ExpungementRequestsController {
     @Context("user") user: User,
     @PathParams("citizenId") citizenId: string,
     @BodyParams() body: any,
-  ) {
+  ): Promise<APITypes.PostExpungementRequestByCitizenIdData> {
     const citizen = await prisma.citizen.findFirst({
       where: { id: citizenId, userId: user.id },
     });
@@ -75,7 +78,7 @@ export class ExpungementRequestsController {
       throw new BadRequest("mustSpecifyMinOneArray");
     }
 
-    const updatedRecords = await Promise.all(
+    await Promise.all(
       [...arrestReports, ...tickets].map(async (id) => {
         const existing = await prisma.expungementRequest.findFirst({
           where: { records: { some: { id } }, status: WhitelistStatus.PENDING },
@@ -94,7 +97,7 @@ export class ExpungementRequestsController {
       }),
     );
 
-    const updatedWarrants = await Promise.all(
+    await Promise.all(
       warrants.map(async (id) => {
         const existing = await prisma.expungementRequest.findFirst({
           where: { warrants: { some: { id } }, status: WhitelistStatus.PENDING },
@@ -113,7 +116,12 @@ export class ExpungementRequestsController {
       }),
     );
 
-    return { ...request, warrants: updatedWarrants, records: updatedRecords };
+    const updatedRequest = await prisma.expungementRequest.findUnique({
+      where: { id: request.id },
+      include: expungementRequestInclude,
+    });
+
+    return updatedRequest!;
   }
 }
 

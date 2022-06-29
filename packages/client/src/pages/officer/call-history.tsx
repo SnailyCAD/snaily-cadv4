@@ -5,7 +5,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { makeUnitName, requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import type { AssignedUnit, EmsFdDeputy, LeoIncident, Officer } from "@snailycad/types";
+import type { AssignedUnit } from "@snailycad/types";
 import { IndeterminateCheckbox, Table } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Full911Call, useDispatchState } from "state/dispatchState";
@@ -26,16 +26,20 @@ import { Manage911CallModal } from "components/dispatch/modals/Manage911CallModa
 import { isUnitCombined } from "@snailycad/utils";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { Checkbox } from "components/form/inputs/Checkbox";
+import type {
+  DeletePurge911CallsData,
+  Get911CallsData,
+  GetDispatchData,
+  GetIncidentsData,
+} from "@snailycad/types/api";
 
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
 );
 
-interface Props {
-  data: Full911Call[];
-  incidents: LeoIncident[];
-  officers: Officer[];
-  deputies: EmsFdDeputy[];
+interface Props extends GetDispatchData {
+  data: Get911CallsData;
+  incidents: GetIncidentsData["incidents"];
 }
 
 export default function CallHistory({ data, incidents, officers, deputies }: Props) {
@@ -66,7 +70,8 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
   }
 
   async function handlePurge() {
-    const { json } = await execute("/911-calls/purge", {
+    const { json } = await execute<DeletePurge911CallsData>({
+      path: "/911-calls/purge",
       method: "DELETE",
       data: { ids: tableSelect.selectedRows },
     });

@@ -5,7 +5,6 @@ import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import type { BleeterPost, User } from "@snailycad/types";
 import { handleRequest } from "lib/fetch";
 import { Button, buttonVariants } from "components/Button";
 import { useModal } from "state/modalState";
@@ -13,13 +12,14 @@ import { ModalIds } from "types/ModalIds";
 import dynamic from "next/dynamic";
 import { Title } from "components/shared/Title";
 import { classNames } from "lib/classNames";
+import type { GetBleeterData } from "@snailycad/types/api";
 
 const ManageBleetModal = dynamic(
   async () => (await import("components/bleeter/ManageBleetModal")).ManageBleetModal,
 );
 
 interface Props {
-  posts: (BleeterPost & { user: Pick<User, "username"> })[];
+  posts: GetBleeterData;
 }
 
 export default function Bleeter({ posts }: Props) {
@@ -68,7 +68,7 @@ export default function Bleeter({ posts }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, req }) => {
   const user = await getSessionUser(req);
   const { data } = await handleRequest("/bleeter", {
     req,

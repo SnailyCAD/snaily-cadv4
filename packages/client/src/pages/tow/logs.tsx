@@ -16,13 +16,14 @@ import dynamic from "next/dynamic";
 import { FullDate } from "components/shared/FullDate";
 import type { TowCall } from "@snailycad/types";
 import { Permissions } from "@snailycad/permissions";
+import type { GetTowCallsData } from "@snailycad/types/api";
 
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
 );
 
 interface Props {
-  calls: TowCall[];
+  calls: GetTowCallsData;
 }
 
 export default function TowLogs(props: Props) {
@@ -102,7 +103,7 @@ export default function TowLogs(props: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, req }) => {
   const user = await getSessionUser(req);
   const [data] = await requestAll(req, [["/tow?ended=true", []]]);
 

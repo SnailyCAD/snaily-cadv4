@@ -34,6 +34,7 @@ import { findUnit } from "lib/leo/findUnit";
 import { isFeatureEnabled } from "lib/cad";
 import { hasPermission } from "@snailycad/permissions";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -55,7 +56,7 @@ export class StatusController {
     @BodyParams() body: unknown,
     @Req() req: Req,
     @Context("cad") cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
-  ) {
+  ): Promise<APITypes.PutDispatchStatusByUnitId> {
     const data = validateSchema(UPDATE_OFFICER_STATUS_SCHEMA, body);
     const bodyStatusId = data.status;
 

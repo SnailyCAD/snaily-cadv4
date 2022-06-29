@@ -12,14 +12,14 @@ import { CREATE_COMPANY_SCHEMA } from "@snailycad/schemas";
 import { handleValidate } from "lib/handleValidate";
 import { Toggle } from "components/form/Toggle";
 import { useRouter } from "next/router";
-import type { FullEmployee } from "state/businessState";
 import { FormRow } from "components/form/FormRow";
 import { toastMessage } from "lib/toastMessage";
-import { Business, WhitelistStatus } from "@snailycad/types";
+import { WhitelistStatus } from "@snailycad/types";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
+import type { GetBusinessesData, PostCreateBusinessData } from "@snailycad/types/api";
 
 interface Props {
-  onCreate?(employee: FullEmployee & { business: Business }): void;
+  onCreate?(employee: GetBusinessesData["businesses"][number]): void;
 }
 
 export function CreateBusinessModal({ onCreate }: Props) {
@@ -35,7 +35,8 @@ export function CreateBusinessModal({ onCreate }: Props) {
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute("/businesses/create", {
+    const { json } = await execute<PostCreateBusinessData>({
+      path: "/businesses/create",
       method: "POST",
       data: values,
     });

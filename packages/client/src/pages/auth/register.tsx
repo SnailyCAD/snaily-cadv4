@@ -21,6 +21,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { LocalhostDetector } from "components/auth/LocalhostDetector";
 import { parseCookies } from "nookies";
 import { VersionDisplay } from "components/shared/VersionDisplay";
+import type { PostRegisterUserData } from "@snailycad/types/api";
 
 const INITIAL_VALUES = {
   username: "",
@@ -54,7 +55,8 @@ export default function Register({ cad }: Props) {
       return helpers.setFieldError("confirmPassword", "Passwords do not match");
     }
 
-    const { json } = await execute("/auth/register", {
+    const { json } = await execute<PostRegisterUserData, typeof INITIAL_VALUES>({
+      path: "/auth/register",
       data: values,
       method: "POST",
       helpers,

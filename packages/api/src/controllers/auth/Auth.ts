@@ -16,6 +16,7 @@ import { Description, Returns } from "@tsed/schema";
 import { User, WhitelistStatus, Rank, AutoSetUserProperties, cad, Feature } from "@prisma/client";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import { setUserPreferencesCookies } from "lib/auth/setUserPreferencesCookies";
+import type * as APITypes from "@snailycad/types/api";
 
 // expire after 5 hours
 export const AUTH_TOKEN_EXPIRES_MS = 60 * 60 * 1000 * 5;
@@ -28,7 +29,10 @@ export class AuthController {
   @Returns(200)
   @Returns(400, ExtendedBadRequest)
   @Returns(404, ExtendedNotFound)
-  async login(@BodyParams() body: unknown, @Res() res: Response) {
+  async login(
+    @BodyParams() body: unknown,
+    @Res() res: Response,
+  ): Promise<APITypes.PostLoginUserData> {
     const data = validateSchema(AUTH_SCHEMA, body);
 
     const user = await prisma.user.findFirst({
@@ -93,21 +97,24 @@ export class AuthController {
     });
 
     if (user.tempPassword) {
-      return res.json({ hasTempPassword: true });
+      return { hasTempPassword: true };
     }
 
     if (process.env.IFRAME_SUPPORT_ENABLED === "true") {
-      return res.json({ userId: user.id, session: jwtToken });
+      return { userId: user.id, session: jwtToken };
     }
 
-    return res.json({ userId: user.id });
+    return { userId: user.id };
   }
 
   @Post("/register")
   @Description("Create a user via username and password")
   @Returns(200)
   @Returns(400, ExtendedBadRequest)
-  async register(@BodyParams() body: unknown, @Res() res: Response) {
+  async register(
+    @BodyParams() body: unknown,
+    @Res() res: Response,
+  ): Promise<APITypes.PostRegisterUserData> {
     const data = validateSchema(AUTH_SCHEMA, body);
 
     const existing = await prisma.user.findFirst({
@@ -198,11 +205,11 @@ export class AuthController {
     });
 
     if (process.env.IFRAME_SUPPORT_ENABLED === "true") {
-      return res.json({
+      return {
         userId: user.id,
         session: jwtToken,
         isOwner: extraUserData.rank === Rank.OWNER,
-      });
+      };
     }
 
     return { userId: user.id, isOwner: extraUserData.rank === Rank.OWNER };

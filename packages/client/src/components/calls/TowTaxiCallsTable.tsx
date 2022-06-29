@@ -9,6 +9,7 @@ import { ModalIds } from "types/ModalIds";
 import dynamic from "next/dynamic";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useAuth } from "context/AuthContext";
+import type { GetTaxiCallsData, GetTowCallsData } from "@snailycad/types/api";
 
 const AssignToCallModal = dynamic(
   async () => (await import("components/citizen/tow/AssignToTowCall")).AssignToCallModal,
@@ -23,7 +24,7 @@ const DescriptionModal = dynamic(
 
 interface Props {
   noCallsText: string;
-  calls: (TowCall | TaxiCall)[];
+  calls: GetTaxiCallsData | GetTowCallsData;
   setCalls: React.Dispatch<React.SetStateAction<(TowCall | TaxiCall)[]>>;
   type: "tow" | "taxi";
 }

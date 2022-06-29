@@ -34,6 +34,7 @@ import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { isFeatureEnabled } from "lib/cad";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
+import type * as APITypes from "@snailycad/types/api";
 
 @UseBeforeEach(IsAuth, ActiveOfficer)
 @Controller("/records")
@@ -47,7 +48,7 @@ export class RecordsController {
   async createWarrant(
     @BodyParams() body: unknown,
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
-  ) {
+  ): Promise<APITypes.PostCreateWarrantData> {
     const data = validateSchema(CREATE_WARRANT_SCHEMA, body);
     const officer = getFirstOfficerFromActiveOfficer({ activeOfficer });
 
@@ -91,7 +92,10 @@ export class RecordsController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
-  async updateWarrant(@BodyParams() body: unknown, @PathParams("id") warrantId: string) {
+  async updateWarrant(
+    @BodyParams() body: unknown,
+    @PathParams("id") warrantId: string,
+  ): Promise<APITypes.PutWarrantsData> {
     const data = validateSchema(UPDATE_WARRANT_SCHEMA, body);
 
     const warrant = await prisma.warrant.findUnique({
@@ -106,6 +110,9 @@ export class RecordsController {
       where: { id: warrantId },
       data: {
         status: data.status as WarrantStatus,
+      },
+      include: {
+        citizen: true,
       },
     });
 
@@ -122,7 +129,7 @@ export class RecordsController {
     @BodyParams() body: unknown,
     @Context("cad") cad: { features?: CadFeature[] },
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
-  ) {
+  ): Promise<APITypes.PostRecordsData> {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
     const officer = getFirstOfficerFromActiveOfficer({ activeOfficer });
 
@@ -165,10 +172,7 @@ export class RecordsController {
       });
     }
 
-    const violations: Violation[] = [];
-    const seizedItems: SeizedItem[] = [];
-
-    await Promise.all(
+    const violations = await Promise.all(
       data.violations.map(async (rawItem) => {
         const item = await validateRecordData({
           ...rawItem,
@@ -176,34 +180,24 @@ export class RecordsController {
           cad,
         });
 
-        const violation = await prisma.violation.create({
+        return prisma.violation.create({
           data: {
             fine: item.fine,
             bail: item.bail,
             jailTime: item.jailTime,
-            penalCode: {
-              connect: {
-                id: item.penalCodeId,
-              },
-            },
-            records: {
-              connect: {
-                id: ticket.id,
-              },
-            },
+            penalCode: { connect: { id: item.penalCodeId } },
+            records: { connect: { id: ticket.id } },
           },
           include: {
             penalCode: { include: { warningApplicable: true, warningNotApplicable: true } },
           },
         });
-
-        violations.push(violation);
       }),
     );
 
-    await Promise.all(
+    const seizedItems = await Promise.all(
       (data.seizedItems ?? []).map(async (item) => {
-        const seizedItem = await prisma.seizedItem.create({
+        return prisma.seizedItem.create({
           data: {
             item: item.item,
             illegal: item.illegal ?? false,
@@ -211,8 +205,6 @@ export class RecordsController {
             recordId: ticket.id,
           },
         });
-
-        seizedItems.push(seizedItem);
       }),
     );
 
@@ -238,7 +230,7 @@ export class RecordsController {
     @Context("cad") cad: { features?: CadFeature[] },
     @BodyParams() body: unknown,
     @PathParams("id") recordId: string,
-  ) {
+  ): Promise<APITypes.PutRecordsByIdData> {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
 
     const record = await prisma.record.findUnique({
@@ -312,7 +304,7 @@ export class RecordsController {
   async deleteRecord(
     @PathParams("id") id: string,
     @BodyParams("type") type: "WARRANT" | (string & {}),
-  ) {
+  ): Promise<APITypes.DeleteRecordsByIdData> {
     if (type === "WARRANT") {
       const warrant = await prisma.warrant.findUnique({
         where: { id },

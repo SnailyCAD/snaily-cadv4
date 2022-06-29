@@ -15,6 +15,7 @@ import { isUnitOfficer } from "@snailycad/utils/typeguards";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 import { useLeoState } from "state/leoState";
+import type { PostDispatchStatusMergeOfficers } from "@snailycad/types/api";
 
 interface Props {
   isDispatch: boolean;
@@ -45,7 +46,8 @@ export function MergeUnitModal({ unit, isDispatch, onClose }: Props) {
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute("/dispatch/status/merge", {
+    const { json } = await execute<PostDispatchStatusMergeOfficers>({
+      path: "/dispatch/status/merge",
       method: "POST",
       data: values.ids.map((v) => ({
         entry: isDispatch ? v.isFixed : v.value === activeOfficer?.id && v.isFixed,

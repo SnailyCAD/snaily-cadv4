@@ -8,11 +8,14 @@ import { getTitles } from "components/courthouse/expungement-requests/RequestExp
 import { Button } from "components/Button";
 import { FullDate } from "components/shared/FullDate";
 import { Status } from "components/shared/Status";
-import type { FullRequest } from "src/pages/courthouse";
 import useFetch from "lib/useFetch";
+import type {
+  GetManageExpungementRequests,
+  PutManageExpungementRequests,
+} from "@snailycad/types/api";
 
 interface Props {
-  requests: FullRequest[];
+  requests: GetManageExpungementRequests;
 }
 
 export function ExpungementRequestsTab({ requests: data }: Props) {
@@ -27,7 +30,8 @@ export function ExpungementRequestsTab({ requests: data }: Props) {
   const hasManagePermissions = hasPermissions([Permissions.ManageExpungementRequests], true);
 
   async function handleUpdate(id: string, type: ExpungementRequestStatus) {
-    const { json } = await execute(`/admin/manage/expungement-requests/${id}`, {
+    const { json } = await execute<PutManageExpungementRequests>({
+      path: `/admin/manage/expungement-requests/${id}`,
       method: "PUT",
       data: { type },
     });

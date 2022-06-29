@@ -8,6 +8,7 @@ import { userProperties } from "lib/auth/getSessionUser";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import type * as APITypes from "@snailycad/types/api";
 
 const businessInclude = {
   citizen: {
@@ -35,7 +36,7 @@ export class AdminManageBusinessesController {
       Permissions.ManageBusinesses,
     ],
   })
-  async getBusinesses() {
+  async getBusinesses(): Promise<APITypes.GetManageBusinessesData> {
     const businesses = await prisma.business.findMany({ include: businessInclude });
 
     return businesses;
@@ -47,7 +48,10 @@ export class AdminManageBusinessesController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageBusinesses],
   })
-  async updateBusiness(@BodyParams() body: any, @PathParams("id") businessId: string) {
+  async updateBusiness(
+    @BodyParams() body: any,
+    @PathParams("id") businessId: string,
+  ): Promise<APITypes.PutManageBusinessesData> {
     const business = await prisma.business.findUnique({
       where: {
         id: businessId,
@@ -77,7 +81,7 @@ export class AdminManageBusinessesController {
     @Context("user") user: User,
     @BodyParams() body: any,
     @PathParams("id") businessId: string,
-  ) {
+  ): Promise<APITypes.DeleteManageBusinessesData> {
     const reason = body.reason;
 
     const business = await prisma.business.findUnique({

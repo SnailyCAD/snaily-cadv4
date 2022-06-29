@@ -20,11 +20,12 @@ import { filterLicenseTypes } from "lib/utils";
 import { toastMessage } from "lib/toastMessage";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
+import type { PostCitizenWeaponData, PutCitizenWeaponData } from "@snailycad/types/api";
 
 interface Props {
-  weapon: Weapon | null;
-  onCreate?(newV: Weapon): void;
-  onUpdate?(old: Weapon, newV: Weapon): void;
+  weapon: Omit<Weapon, "citizen"> | null;
+  onCreate?(newV: Omit<Weapon, "citizen">): void;
+  onUpdate?(old: Omit<Weapon, "citizen">, newV: Omit<Weapon, "citizen">): void;
   onClose?(): void;
 }
 
@@ -52,16 +53,18 @@ export function RegisterWeaponModal({ weapon, onClose, onCreate, onUpdate }: Pro
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (weapon) {
-      const { json } = await execute(`/weapons/${weapon.id}`, {
+      const { json } = await execute<PutCitizenWeaponData>({
+        path: `/weapons/${weapon.id}`,
         method: "PUT",
         data: values,
       });
 
       if (json?.id) {
-        onUpdate?.(weapon, json);
+        onUpdate?.(weapon, { ...weapon, ...json });
       }
     } else {
-      const { json } = await execute("/weapons", {
+      const { json } = await execute<PostCitizenWeaponData>({
+        path: "/weapons",
         method: "POST",
         data: values,
       });

@@ -11,6 +11,7 @@ import { useTranslations } from "use-intl";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { toastMessage } from "lib/toastMessage";
+import type { DeleteCADApiTokenData, PutCADApiTokenData } from "@snailycad/types/api";
 
 export function ApiTokenTab() {
   const common = useTranslations("Common");
@@ -24,26 +25,29 @@ export function ApiTokenTab() {
   ) {
     if (!cad) return;
 
-    const { json } = await execute("/admin/manage/cad-settings/api-token", {
+    const { json } = await execute<PutCADApiTokenData>({
+      path: "/admin/manage/cad-settings/api-token",
       method: "PUT",
       data: values,
     });
 
+    setCad({ ...cad, apiTokenId: json?.id ?? null, apiToken: json });
+    toastMessage({
+      icon: "success",
+      title: common("success"),
+      message: common("savedSettingsSuccess"),
+    });
+
     if (json) {
-      setCad({ ...cad, apiTokenId: json?.id ?? null, apiToken: { ...json } });
       helpers.setFieldValue("token", json.token);
-      toastMessage({
-        icon: "success",
-        title: common("success"),
-        message: common("savedSettingsSuccess"),
-      });
     }
   }
 
   async function handleRegenerate(
     setFieldValue: FormikHelpers<typeof INITIAL_VALUES>["setFieldValue"],
   ) {
-    const { json } = await execute("/admin/manage/cad-settings/api-token", {
+    const { json } = await execute<DeleteCADApiTokenData>({
+      path: "/admin/manage/cad-settings/api-token",
       method: "DELETE",
     });
 

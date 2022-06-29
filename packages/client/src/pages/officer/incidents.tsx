@@ -9,7 +9,7 @@ import { useModal } from "state/modalState";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import type { EmsFdDeputy, IncidentInvolvedUnit, LeoIncident, Officer } from "@snailycad/types";
+import type { IncidentInvolvedUnit, LeoIncident } from "@snailycad/types";
 import { useDispatchState } from "state/dispatchState";
 import { useLeoState } from "state/leoState";
 import dynamic from "next/dynamic";
@@ -22,12 +22,16 @@ import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { isUnitCombined } from "@snailycad/utils";
+import type {
+  DeleteIncidentByIdData,
+  GetActiveOfficerData,
+  GetDispatchData,
+  GetIncidentsData,
+} from "@snailycad/types/api";
 
-interface Props {
-  incidents: LeoIncident[];
-  officers: Officer[];
-  deputies: EmsFdDeputy[];
-  activeOfficer: Officer | null;
+interface Props extends GetDispatchData {
+  incidents: GetIncidentsData["incidents"];
+  activeOfficer: GetActiveOfficerData | null;
 }
 
 const ManageIncidentModal = dynamic(async () => {
@@ -89,7 +93,8 @@ export default function LeoIncidents({
   async function handleDelete() {
     if (!tempIncident) return;
 
-    const { json } = await execute(`/incidents/${tempIncident.id}`, {
+    const { json } = await execute<DeleteIncidentByIdData>({
+      path: `/incidents/${tempIncident.id}`,
       method: "DELETE",
     });
 

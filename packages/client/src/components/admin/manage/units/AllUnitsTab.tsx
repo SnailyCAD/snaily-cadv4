@@ -19,9 +19,14 @@ import { ModalIds } from "types/ModalIds";
 import { AlertModal } from "components/modal/AlertModal";
 import { OfficerRank } from "components/leo/OfficerRank";
 import { Checkbox } from "components/form/inputs/Checkbox";
+import type {
+  DeleteManageUnitByIdData,
+  GetManageUnitsData,
+  PutManageUnitsOffDutyData,
+} from "@snailycad/types/api";
 
 interface Props {
-  units: Unit[];
+  units: GetManageUnitsData;
   search: string;
 }
 
@@ -49,7 +54,8 @@ export function AllUnitsTab({ search, units }: Props) {
   async function handleDeleteUnit() {
     if (!tempUnit) return;
 
-    const { json } = await execute(`/admin/manage/units/${tempUnit.id}`, {
+    const { json } = await execute<DeleteManageUnitByIdData>({
+      path: `/admin/manage/units/${tempUnit.id}`,
       method: "DELETE",
     });
 
@@ -67,7 +73,8 @@ export function AllUnitsTab({ search, units }: Props) {
   async function setSelectedUnitsOffDuty() {
     if (tableSelect.selectedRows.length <= 0) return;
 
-    const { json } = await execute("/admin/manage/units/off-duty", {
+    const { json } = await execute<PutManageUnitsOffDutyData>({
+      path: "/admin/manage/units/off-duty",
       method: "PUT",
       data: { ids: tableSelect.selectedRows },
     });

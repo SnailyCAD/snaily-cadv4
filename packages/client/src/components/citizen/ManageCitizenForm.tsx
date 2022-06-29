@@ -20,7 +20,7 @@ import { filterLicenseTypes } from "lib/utils";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 
 interface Props {
-  citizen: (Citizen & { user?: User }) | null;
+  citizen: (Citizen & { user?: User | null }) | null;
   state: "error" | "loading" | null;
   showLicenseFields?: boolean;
   allowEditingName?: boolean;

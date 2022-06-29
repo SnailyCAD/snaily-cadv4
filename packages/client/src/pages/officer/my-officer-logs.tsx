@@ -12,11 +12,12 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Title } from "components/shared/Title";
 import { OfficerLogsTable } from "components/leo/logs/OfficerLogsTable";
 import { Permissions } from "@snailycad/permissions";
+import type { GetMyOfficersLogsData } from "@snailycad/types/api";
 
 export type OfficerLogWithOfficer = OfficerLog & { officer: Officer };
 
 interface Props {
-  logs: OfficerLogWithOfficer[];
+  logs: GetMyOfficersLogsData;
 }
 
 export default function MyOfficersLogs({ logs: data }: Props) {
@@ -30,7 +31,9 @@ export default function MyOfficersLogs({ logs: data }: Props) {
   const officers = logs.reduce(
     (ac, cv) => ({
       ...ac,
-      [cv.officerId]: `${generateCallsign(cv.officer)} ${makeUnitName(cv.officer)}`,
+      ...(cv.officerId && cv.officer
+        ? { [cv.officerId]: `${generateCallsign(cv.officer)} ${makeUnitName(cv.officer)}` }
+        : {}),
     }),
     {},
   );
@@ -67,7 +70,7 @@ export default function MyOfficersLogs({ logs: data }: Props) {
       {logs.length <= 0 ? (
         <p className="mt-5">{t("noOfficers")}</p>
       ) : (
-        <OfficerLogsTable logs={filtered} />
+        <OfficerLogsTable unit={null} logs={filtered} />
       )}
     </Layout>
   );

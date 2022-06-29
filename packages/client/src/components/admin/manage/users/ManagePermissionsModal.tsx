@@ -1,5 +1,4 @@
 import * as React from "react";
-import type { User } from "@snailycad/types";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
@@ -17,10 +16,11 @@ import { Button } from "components/Button";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { Input } from "components/form/inputs/Input";
+import type { GetManageUserByIdData, PutManageUserPermissionsByIdData } from "@snailycad/types/api";
 
 interface Props {
   isReadOnly?: boolean;
-  user: User;
+  user: Pick<GetManageUserByIdData, "permissions" | "id">;
 }
 
 const groups = [
@@ -59,13 +59,14 @@ export function ManagePermissionsModal({ user, isReadOnly }: Props) {
   const t = useTranslations("Management");
   const common = useTranslations("Common");
   const { closeModal, isOpen } = useModal();
-  const userPermissions = getPermissions(user.permissions ?? []);
+  const userPermissions = getPermissions(user.permissions);
   const { state, execute } = useFetch();
 
   async function onSubmit(data: typeof INITIAL_VALUES) {
     if (isReadOnly) return;
 
-    const { json } = await execute(`/admin/manage/users/permissions/${user.id}`, {
+    const { json } = await execute<PutManageUserPermissionsByIdData>({
+      path: `/admin/manage/users/permissions/${user.id}`,
       method: "PUT",
       data: makePermissionsData(data),
     });

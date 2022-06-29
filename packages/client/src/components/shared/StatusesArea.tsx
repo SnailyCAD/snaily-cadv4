@@ -12,6 +12,7 @@ import { ModalIds } from "types/ModalIds";
 import { Officer, ShouldDoType, WhatPages, type StatusValue } from "@snailycad/types";
 import { useAudio } from "react-use";
 import { useAuth } from "context/AuthContext";
+import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
 
 interface Props<T extends ActiveOfficer | ActiveDeputy> {
   activeUnit: T | null;
@@ -97,7 +98,8 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
       );
     }
 
-    const { json } = await execute(`/dispatch/status/${activeUnit.id}`, {
+    const { json } = await execute<PutDispatchStatusByUnitId>({
+      path: `/dispatch/status/${activeUnit.id}`,
       method: "PUT",
       data: {
         status: status.id,

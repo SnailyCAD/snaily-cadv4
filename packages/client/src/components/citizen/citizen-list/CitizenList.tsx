@@ -1,14 +1,14 @@
 import * as React from "react";
-import type { Citizen, User } from "@snailycad/types";
 import { CitizenListItem } from "components/citizen/citizen-list/CitizenListItem";
 import { TablePagination } from "components/shared/Table/TablePagination";
 import { useTranslations } from "next-intl";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
+import type { GetCitizensData } from "@snailycad/types/api";
 
 interface Props {
-  citizens: { totalCount: number; citizens: (Citizen & { user?: Pick<User, "username"> })[] };
+  citizens: GetCitizensData;
 }
 
 function useInstance({ array, totalCount }: { totalCount: number; array: any[] }) {
@@ -17,7 +17,7 @@ function useInstance({ array, totalCount }: { totalCount: number; array: any[] }
   const asyncTable = useAsyncTable({
     fetchOptions: {
       path: "/citizen",
-      onResponse: (json) => ({ totalCount: json.totalCount, data: json.citizens }),
+      onResponse: (json: GetCitizensData) => ({ totalCount: json.totalCount, data: json.citizens }),
     },
     totalCount,
     initialData: array,

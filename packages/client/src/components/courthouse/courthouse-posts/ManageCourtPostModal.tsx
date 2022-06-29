@@ -12,6 +12,7 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { DEFAULT_EDITOR_DATA, Editor } from "components/modal/DescriptionModal/Editor";
+import type { PostCourthousePostsData, PutCourthousePostsData } from "@snailycad/types/api";
 
 interface Props {
   post: CourthousePost | null;
@@ -42,7 +43,8 @@ export function ManageCourtPostModal({ post, onClose, onCreate, onUpdate }: Prop
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
     if (post) {
-      const { json } = await execute(`/courthouse-posts/${post.id}`, {
+      const { json } = await execute<PutCourthousePostsData, typeof INITIAL_VALUES>({
+        path: `/courthouse-posts/${post.id}`,
         method: "PUT",
         data: values,
         helpers,
@@ -53,7 +55,8 @@ export function ManageCourtPostModal({ post, onClose, onCreate, onUpdate }: Prop
         closeModal(ModalIds.ManageCourthousePost);
       }
     } else {
-      const { json } = await execute("/courthouse-posts", {
+      const { json } = await execute<PostCourthousePostsData, typeof INITIAL_VALUES>({
+        path: "/courthouse-posts",
         method: "POST",
         data: values,
         helpers,

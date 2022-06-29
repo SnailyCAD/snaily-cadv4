@@ -6,7 +6,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { ActiveCalls } from "components/leo/ActiveCalls";
-import { Full911Call, useDispatchState } from "state/dispatchState";
+import { useDispatchState } from "state/dispatchState";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { useTime } from "hooks/shared/useTime";
 import { DispatchModalButtons } from "components/dispatch/ModalButtons";
@@ -18,21 +18,13 @@ import { requestAll } from "lib/utils";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { usePanicButton } from "hooks/shared/usePanicButton";
 import { Title } from "components/shared/Title";
-import {
-  ActiveDispatchers,
-  Bolo,
-  CombinedLeoUnit,
-  EmsFdDeputy,
-  LeoIncident,
-  Officer,
-  ShouldDoType,
-  ValueType,
-} from "@snailycad/types";
+import { CombinedLeoUnit, EmsFdDeputy, Officer, ShouldDoType, ValueType } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { Permissions } from "@snailycad/permissions";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
+import type { Get911CallsData, GetBolosData, GetDispatchData } from "@snailycad/types/api";
 
 const ActiveIncidents = dynamic(async () => {
   return (await import("components/dispatch/ActiveIncidents")).ActiveIncidents;
@@ -60,13 +52,9 @@ const Modals = {
   }),
 };
 
-export interface DispatchPageProps {
-  calls: Full911Call[];
-  bolos: Bolo[];
-  officers: (Officer | CombinedLeoUnit)[];
-  deputies: EmsFdDeputy[];
-  activeDispatchers: ActiveDispatchers[];
-  activeIncidents: LeoIncident[];
+export interface DispatchPageProps extends GetDispatchData {
+  calls: Get911CallsData;
+  bolos: GetBolosData;
 }
 
 export default function DispatchDashboard(props: DispatchPageProps) {

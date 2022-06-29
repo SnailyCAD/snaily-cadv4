@@ -15,6 +15,7 @@ import { TabsContent } from "components/shared/TabList";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { toastMessage } from "lib/toastMessage";
 import { DEFAULT_DISABLED_FEATURES } from "hooks/useFeatureEnabled";
+import type { PutCADFeaturesData } from "@snailycad/types/api";
 
 interface FeatureItem {
   name: string;
@@ -217,6 +218,7 @@ export function CADFeaturesTab() {
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
+    if (!cad) return;
     const featuresArr = [];
 
     for (const feature in values.features) {
@@ -230,7 +232,8 @@ export function CADFeaturesTab() {
       featuresArr.push(featObj);
     }
 
-    const { json } = await execute("/admin/manage/cad-settings/features", {
+    const { json } = await execute<PutCADFeaturesData>({
+      path: "/admin/manage/cad-settings/features",
       method: "PUT",
       data: { features: featuresArr },
     });

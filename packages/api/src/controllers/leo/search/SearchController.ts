@@ -23,6 +23,7 @@ import { CUSTOM_FIELD_SEARCH_SCHEMA } from "@snailycad/schemas";
 import { isFeatureEnabled } from "lib/cad";
 import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
+import type * as APITypes from "@snailycad/types/api";
 
 export const vehicleSearchInclude = {
   model: { include: { value: true } },
@@ -117,7 +118,7 @@ export class SearchController {
     @Context("cad") cad: cad & { features?: CadFeature[] },
     @Context("user") user: User,
     @QueryParams("fromAuthUserOnly", Boolean) fromAuthUserOnly = false,
-  ) {
+  ): Promise<APITypes.PostLeoSearchCitizenData> {
     const [name, surname] = fullName.toString().toLowerCase().split(/ +/g);
 
     if ((!name || name.length <= 3) && !surname) {
@@ -144,7 +145,9 @@ export class SearchController {
       ...citizenSearchIncludeOrSelect(user, cad),
     });
 
-    return appendConfidential(await appendCustomFields(citizens, CustomFieldCategory.CITIZEN));
+    return appendConfidential(
+      await appendCustomFields(citizens, CustomFieldCategory.CITIZEN),
+    ) as APITypes.PostLeoSearchCitizenData;
   }
 
   @Post("/weapon")
@@ -153,7 +156,9 @@ export class SearchController {
     fallback: (u) => u.isLeo || u.isDispatch,
     permissions: [Permissions.Leo, Permissions.Dispatch],
   })
-  async searchWeapon(@BodyParams("serialNumber") serialNumber: string) {
+  async searchWeapon(
+    @BodyParams("serialNumber") serialNumber: string,
+  ): Promise<APITypes.PostLeoSearchWeaponData> {
     if (!serialNumber || serialNumber.length < 3) {
       return null;
     }
@@ -184,7 +189,7 @@ export class SearchController {
   async searchVehicle(
     @BodyParams("plateOrVin") plateOrVin: string,
     @QueryParams("includeMany", Boolean) includeMany: boolean,
-  ) {
+  ): Promise<APITypes.PostLeoSearchVehicleData> {
     if (!plateOrVin || plateOrVin.length < 3) {
       return null;
     }
@@ -224,7 +229,7 @@ export class SearchController {
     @BodyParams() body: unknown,
     @Context("cad") cad: cad & { features?: CadFeature[] },
     @Context("user") user: User,
-  ) {
+  ): Promise<APITypes.PostSearchCustomFieldData<true>> {
     const data = validateSchema(CUSTOM_FIELD_SEARCH_SCHEMA, body);
 
     const customField = await prisma.customField.findUnique({
@@ -255,7 +260,7 @@ export class SearchController {
       })
       .flat(1);
 
-    return { field: customField, results };
+    return { field: customField, results } as APITypes.PostSearchCustomFieldData<true>;
   }
 }
 
@@ -282,7 +287,7 @@ export function appendConfidential(
   return _citizens;
 }
 
-async function appendCustomFields(item: any, category: CustomFieldCategory) {
+export async function appendCustomFields(item: any, category: CustomFieldCategory) {
   const allCustomFields = await prisma.customField.findMany({
     where: { category },
   });

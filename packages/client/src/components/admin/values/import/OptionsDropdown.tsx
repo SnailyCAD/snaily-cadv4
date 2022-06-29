@@ -6,7 +6,8 @@ import { useModal } from "state/modalState";
 import { useDownload } from "@casper124578/useful";
 import { Dropdown } from "components/Dropdown";
 import { PenalCode, ValueType } from "@snailycad/types";
-import { AnyValue, isDivisionValue, isStatusValue } from "@snailycad/utils";
+import { isDivisionValue, isStatusValue } from "@snailycad/utils";
+import type { AnyValue } from "@snailycad/types";
 import format from "date-fns/format";
 
 interface Props {

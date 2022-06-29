@@ -15,6 +15,7 @@ import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { Select } from "components/form/Select";
 import { toastMessage } from "lib/toastMessage";
 import { Textarea } from "components/form/Textarea";
+import type { PutCADMiscSettingsData } from "@snailycad/types/api";
 
 export function MiscFeatures() {
   const [headerId, setHeaderId] = React.useState<(File | string) | null>(null);
@@ -53,7 +54,10 @@ export function MiscFeatures() {
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
-    const { json } = await execute("/admin/manage/cad-settings/misc", {
+    if (!cad) return;
+
+    const { json } = await execute<PutCADMiscSettingsData>({
+      path: "/admin/manage/cad-settings/misc",
       method: "PUT",
       data: cleanValues(values),
     });
@@ -75,7 +79,8 @@ export function MiscFeatures() {
       }
 
       if (imgCount > 0) {
-        await execute("/admin/manage/cad-settings/image/auth", {
+        await execute({
+          path: "/admin/manage/cad-settings/image/auth",
           method: "POST",
           data: fd,
         });

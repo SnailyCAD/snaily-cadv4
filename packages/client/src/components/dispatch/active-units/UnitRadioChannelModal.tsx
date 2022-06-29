@@ -15,6 +15,7 @@ import { handleValidate } from "lib/handleValidate";
 import { UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
 import { isUnitCombined, isUnitOfficer } from "@snailycad/utils";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import type { PutDispatchRadioChannelData } from "@snailycad/types/api";
 
 interface Props {
   unit: Officer | EmsFdDeputy | CombinedLeoUnit;
@@ -62,7 +63,8 @@ export function UnitRadioChannelModal({ unit, onClose }: Props) {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     handleStateChange({ radioChannelId: values.radioChannel });
 
-    const { json } = await execute(`/dispatch/radio-channel/${unit.id}`, {
+    const { json } = await execute<PutDispatchRadioChannelData>({
+      path: `/dispatch/radio-channel/${unit.id}`,
       method: "PUT",
       data: {
         radioChannel: values.radioChannel.trim() || null,

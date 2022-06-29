@@ -12,6 +12,7 @@ import { useTranslations } from "next-intl";
 import type { Full911Call } from "state/dispatchState";
 import { ModalIds } from "types/ModalIds";
 import type { LeoIncident } from "@snailycad/types";
+import type { PostLink911CallToIncident } from "@snailycad/types/api";
 
 interface Props {
   call: Full911Call | null;
@@ -28,7 +29,8 @@ export function LinkCallToIncidentModal({ incidents, onSave, call }: Props) {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!call) return;
 
-    const { json } = await execute(`/911-calls/link-incident/${call.id}`, {
+    const { json } = await execute<PostLink911CallToIncident>({
+      path: `/911-calls/link-incident/${call.id}`,
       method: "POST",
       data: { incidentIds: values.incidentIds.map((v) => v.value) },
     });

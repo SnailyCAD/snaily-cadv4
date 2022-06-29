@@ -1,24 +1,7 @@
-import type {
-  Citizen,
-  RegisteredVehicle,
-  Warrant,
-  Weapon,
-  Officer,
-  Record,
-  CustomFieldValue,
-  CustomField,
-} from "@snailycad/types";
+import type { PostLeoSearchCitizenData } from "@snailycad/types/api";
 import create from "zustand";
 
-export interface NameSearchResult extends Citizen {
-  vehicles: RegisteredVehicle[];
-  weapons: Weapon[];
-  Record: Record[];
-  warrants: (Warrant & { officer: Officer })[];
-  customFields?: CustomFieldValue[];
-  allCustomFields?: CustomField[];
-  isConfidential?: boolean;
-}
+export type NameSearchResult = PostLeoSearchCitizenData[number];
 
 interface NameSearchState {
   results: NameSearchResult[] | null | boolean;

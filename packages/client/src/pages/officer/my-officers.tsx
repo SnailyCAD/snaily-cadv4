@@ -19,6 +19,7 @@ import { Permissions } from "@snailycad/permissions";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { OfficerRank } from "components/leo/OfficerRank";
 import { UnitDepartmentStatus } from "components/leo/UnitDepartmentStatus";
+import type { DeleteMyOfficerByIdData, GetMyOfficersData } from "@snailycad/types/api";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageOfficerModal = dynamic(
@@ -26,7 +27,7 @@ const ManageOfficerModal = dynamic(
 );
 
 interface Props {
-  officers: Officer[];
+  officers: GetMyOfficersData["officers"];
 }
 
 export default function MyOfficers({ officers: data }: Props) {
@@ -38,13 +39,16 @@ export default function MyOfficers({ officers: data }: Props) {
   const { makeImageUrl } = useImageUrl();
   const { BADGE_NUMBERS } = useFeatureEnabled();
 
-  const [officers, setOfficers] = React.useState(data);
+  const [officers, setOfficers] = React.useState<Officer[]>(data);
   const [tempOfficer, setTempOfficer] = React.useState<Officer | null>(null);
 
   async function handleDeleteOfficer() {
     if (!tempOfficer) return;
 
-    const { json } = await execute(`/leo/${tempOfficer.id}`, { method: "DELETE" });
+    const { json } = await execute<DeleteMyOfficerByIdData>({
+      path: `/leo/${tempOfficer.id}`,
+      method: "DELETE",
+    });
 
     if (json) {
       closeModal(ModalIds.AlertDeleteOfficer);

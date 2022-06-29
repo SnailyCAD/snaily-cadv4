@@ -10,6 +10,7 @@ import { classNames } from "lib/classNames";
 import { Button } from "components/Button";
 import { Pencil, X } from "react-bootstrap-icons";
 import { AlertModal } from "components/modal/AlertModal";
+import type { Delete911CallEventByIdData, DeleteIncidentEventByIdData } from "@snailycad/types/api";
 
 interface EventItemProps<T extends IncidentEvent | Call911Event> {
   disabled?: boolean;
@@ -46,7 +47,8 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
     const parentId = "call911Id" in event ? event.call911Id : event.incidentId;
     const routeType = "call911Id" in event ? "911-calls" : "incidents";
 
-    await execute(`/${routeType}/events/${parentId}/${event.id}`, {
+    await execute<DeleteIncidentEventByIdData | Delete911CallEventByIdData>({
+      path: `/${routeType}/events/${parentId}/${event.id}`,
       method: "DELETE",
     });
 

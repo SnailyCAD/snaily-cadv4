@@ -36,7 +36,7 @@ export class IsEnabled implements MiddlewareMethods {
       }),
     );
 
-    const cadFeatures = cad?.features ?? [];
+    const cadFeatures = cad.features ?? [];
     for (const feature of cadFeatures) {
       if (feature.isEnabled) {
         continue;

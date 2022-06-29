@@ -16,6 +16,7 @@ import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { ModalIds } from "types/ModalIds";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Checkbox } from "components/form/inputs/Checkbox";
+import type { PatchValueByIdData, PostValuesData } from "@snailycad/types/api";
 
 interface Props {
   type: ValueType;
@@ -49,7 +50,8 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
     };
 
     if (penalCode) {
-      const { json } = await execute(`/admin/values/${type.toLowerCase()}/${penalCode.id}`, {
+      const { json } = await execute<PatchValueByIdData<PenalCode>>({
+        path: `/admin/values/${type.toLowerCase()}/${penalCode.id}`,
         method: "PATCH",
         data,
       });
@@ -59,7 +61,8 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
         onUpdate(penalCode, json);
       }
     } else {
-      const { json } = await execute(`/admin/values/${type.toLowerCase()}`, {
+      const { json } = await execute<PostValuesData<PenalCode>>({
+        path: `/admin/values/${type.toLowerCase()}`,
         method: "POST",
         data,
       });
