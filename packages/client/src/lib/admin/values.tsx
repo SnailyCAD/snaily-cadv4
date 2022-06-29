@@ -20,7 +20,7 @@ import {
   WHAT_PAGES_LABELS,
 } from "components/admin/values/manage-modal/StatusValueFields";
 import { DEPARTMENT_LABELS } from "components/admin/values/manage-modal/DepartmentFields";
-import { type AnyValue, isBaseValue } from "@snailycad/utils";
+import { type AnyValue, isBaseValue, hasValueObj } from "@snailycad/utils";
 import { useImageUrl } from "hooks/useImageUrl";
 
 const TYPE_LABELS = {
@@ -46,7 +46,12 @@ export function useTableDataOfType(type: ValueType) {
 
   function get(value: AnyValue) {
     // state mismatch prevention
-    const valueType = isBaseValue(value) ? value.type : value.value.type;
+    const valueType = isBaseValue(value)
+      ? value.type
+      : hasValueObj(value)
+      ? value.value.type
+      : ("PENAL_CODE" as const);
+
     if (valueType !== type) return;
 
     switch (type) {

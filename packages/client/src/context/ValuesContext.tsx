@@ -13,7 +13,8 @@ import {
   QualificationValue,
   CallTypeValue,
 } from "@snailycad/types";
-import { AnyValue, isBaseValue } from "@snailycad/utils";
+import type { GetValuesData } from "@snailycad/types/api";
+import { hasValueObj, isBaseValue, isPenalCodeValue } from "@snailycad/utils";
 import { useRouter } from "next/router";
 
 interface ContextValue<Custom = Value> {
@@ -40,7 +41,7 @@ interface Context {
   driverslicenseCategory: ContextValue<DriversLicenseCategoryValue>;
   impoundLot: ContextValue;
   qualification: ContextValue<QualificationValue>;
-  setValues: React.Dispatch<React.SetStateAction<{ type: ValueType; values: Value[] }[]>>;
+  setValues: React.Dispatch<React.SetStateAction<GetValuesData>>;
   callType: ContextValue<CallTypeValue>;
 }
 
@@ -48,7 +49,7 @@ const ValuesContext = React.createContext<Context | undefined>(undefined);
 
 interface ProviderProps {
   children: React.ReactChild | React.ReactChild[];
-  initialData: { values: { type: ValueType; values: Value[] }[] };
+  initialData: { values: GetValuesData };
 }
 
 export function ValuesProvider({ initialData, children }: ProviderProps) {
@@ -58,14 +59,16 @@ export function ValuesProvider({ initialData, children }: ProviderProps) {
     Array.isArray(initialData.values) ? initialData.values : [],
   );
 
-  function removeDisabledValues(values: { values: AnyValue[]; type: ValueType }) {
+  function removeDisabledValues(values: GetValuesData[number]) {
     if (isAdmin) return values;
 
     return {
       ...values,
       values: values.values.filter((value) => {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        return !(isBaseValue(value) ? value?.isDisabled : value?.value?.isDisabled);
+        if (isBaseValue(value)) return !value.isDisabled;
+        if (hasValueObj(value)) return !value.value.isDisabled;
+        if (isPenalCodeValue(value)) return true;
+        return true;
       }),
     };
   }

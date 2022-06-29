@@ -49,6 +49,7 @@ import { QualificationFields } from "./manage-modal/QualificationFields";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { Textarea } from "components/form/Textarea";
 import { Toggle } from "components/form/Toggle";
+import type { PatchValueByIdData, PostValuesData } from "@snailycad/types/api";
 
 interface Props {
   type: ValueType;
@@ -109,7 +110,8 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     };
 
     if (value) {
-      const { json } = await execute(`/admin/values/${type.toLowerCase()}/${value.id}`, {
+      const { json } = await execute<PatchValueByIdData, typeof INITIAL_VALUES>({
+        path: `/admin/values/${type.toLowerCase()}/${value.id}`,
         method: "PATCH",
         data,
         helpers,
@@ -121,7 +123,8 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
         onUpdate(value, json);
       }
     } else {
-      const { json } = await execute(`/admin/values/${type.toLowerCase()}`, {
+      const { json } = await execute<PostValuesData, typeof INITIAL_VALUES>({
+        path: `/admin/values/${type.toLowerCase()}`,
         method: "POST",
         data,
         helpers,
@@ -150,7 +153,8 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     }
 
     if (validatedImage && typeof validatedImage === "object") {
-      await execute(`/admin/values/${type}/image/${id}`, {
+      await execute({
+        path: `/admin/values/${type}/image/${id}`,
         method: "POST",
         data: fd,
         helpers,

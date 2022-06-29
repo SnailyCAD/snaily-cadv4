@@ -1629,6 +1629,7 @@ __metadata:
   resolution: "@snailycad/types@workspace:packages/types"
   dependencies:
     "@snailycad/permissions": 1.14.0
+    discord-api-types: 0.35.0
     tsup: ^6.1.2
     type-fest: ^2.14.0
     typescript: ^4.7.4

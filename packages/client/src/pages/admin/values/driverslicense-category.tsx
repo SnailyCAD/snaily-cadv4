@@ -23,6 +23,7 @@ import { Title } from "components/shared/Title";
 import { ModalIds } from "types/ModalIds";
 import { AlertModal } from "components/modal/AlertModal";
 import { Permissions } from "@snailycad/permissions";
+import type { DeleteValueByIdData, PutValuePositionsData } from "@snailycad/types/api";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -64,7 +65,8 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
       ];
     });
 
-    await execute(`/admin/values/${type.toLowerCase()}/positions`, {
+    await execute<PutValuePositionsData>({
+      path: `/admin/values/${type.toLowerCase()}/positions`,
       method: "PUT",
       data: { ids: list.map((v) => v.valueId) },
     });
@@ -83,7 +85,8 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
   async function handleDelete() {
     if (!tempValue?.value || !tempValue.type) return;
 
-    const { json } = await execute(`/admin/values/${type.toLowerCase()}/${tempValue.value.id}`, {
+    const { json } = await execute<DeleteValueByIdData>({
+      path: `/admin/values/${type.toLowerCase()}/${tempValue.value.id}`,
       method: "DELETE",
     });
 

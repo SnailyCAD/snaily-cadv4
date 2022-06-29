@@ -4,7 +4,7 @@ import { NotFound, InternalServerError, BadRequest } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
-import { leoProperties } from "lib/leo/activeOfficer";
+import { leoProperties, unitProperties, _leoProperties } from "lib/leo/activeOfficer";
 import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Officer, ShouldDoType, MiscCadSettings, CombinedLeoUnit } from "@prisma/client";
@@ -12,11 +12,26 @@ import { validateSchema } from "lib/validateSchema";
 import { Socket } from "services/SocketService";
 import type { z } from "zod";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
-import { assignedUnitsInclude } from "controllers/dispatch/911-calls/Calls911Controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
 import { getFirstOfficerFromActiveOfficer, getPrismaNameActiveCallIncident } from "lib/leo/utils";
 import type * as APITypes from "@snailycad/types/api";
+
+export const assignedUnitsInclude = {
+  include: {
+    officer: { include: _leoProperties },
+    deputy: { include: unitProperties },
+    combinedUnit: {
+      include: {
+        status: { include: { value: true } },
+        department: { include: { value: true } },
+        officers: {
+          include: _leoProperties,
+        },
+      },
+    },
+  },
+};
 
 export const incidentInclude = {
   creator: { include: leoProperties },

@@ -7,7 +7,7 @@ import { prisma } from "lib/prisma";
 import { Socket } from "services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
-import { unitProperties, _leoProperties } from "lib/leo/activeOfficer";
+import { _leoProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/validateSchema";
 import {
   type cad,
@@ -29,23 +29,10 @@ import { assignUnitsToCall } from "lib/calls/assignUnitsToCall";
 import { linkOrUnlinkCallDepartmentsAndDivisions } from "lib/calls/linkOrUnlinkCallDepartmentsAndDivisions";
 import { hasPermission } from "@snailycad/permissions";
 import type * as APITypes from "@snailycad/types/api";
-import { incidentInclude } from "controllers/leo/incidents/IncidentController";
-
-export const assignedUnitsInclude = {
-  include: {
-    officer: { include: _leoProperties },
-    deputy: { include: unitProperties },
-    combinedUnit: {
-      include: {
-        status: { include: { value: true } },
-        department: { include: { value: true } },
-        officers: {
-          include: _leoProperties,
-        },
-      },
-    },
-  },
-};
+import {
+  assignedUnitsInclude,
+  incidentInclude,
+} from "controllers/leo/incidents/IncidentController";
 
 export const callInclude = {
   position: true,

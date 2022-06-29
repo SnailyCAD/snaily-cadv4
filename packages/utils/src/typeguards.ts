@@ -13,6 +13,7 @@ import {
   EmsFdDeputy,
   QualificationValue,
   CallTypeValue,
+  PenalCode,
 } from "@snailycad/types";
 
 export type ValueWithValueObj =
@@ -26,14 +27,22 @@ export type ValueWithValueObj =
   | QualificationValue
   | CallTypeValue;
 
-export type AnyValue = Value | ValueWithValueObj;
+export type AnyValue = Value | PenalCode | ValueWithValueObj;
+
+export function isPenalCodeValue(value: AnyValue): value is PenalCode {
+  return (
+    "warningApplicableId" in value &&
+    "warningNotApplicableId" in value &&
+    "descriptionData" in value
+  );
+}
 
 export function isBaseValue(value: AnyValue): value is Value {
-  return "createdAt" in value && typeof value.type === "string";
+  return !isPenalCodeValue(value) && "createdAt" in value && typeof value.type === "string";
 }
 
 export function hasValueObj(value: AnyValue): value is ValueWithValueObj {
-  return "value" in value && typeof value.value === "object";
+  return !isPenalCodeValue(value) && "value" in value && typeof value.value === "object";
 }
 
 export function isVehicleValue(value: AnyValue): value is VehicleValue {
