@@ -349,6 +349,19 @@ export type CourthousePost = Prisma.CourthousePost & {
   user: User;
 };
 
+export type ValueWithValueObj =
+  | VehicleValue
+  | WeaponValue
+  | StatusValue
+  | DepartmentValue
+  | DivisionValue
+  | EmployeeValue
+  | DriversLicenseCategoryValue
+  | QualificationValue
+  | CallTypeValue;
+
+export type AnyValue = Value | PenalCode | ValueWithValueObj;
+
 /**
  * enums
  */

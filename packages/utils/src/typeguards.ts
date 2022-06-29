@@ -14,20 +14,9 @@ import {
   QualificationValue,
   CallTypeValue,
   PenalCode,
+  AnyValue,
+  ValueWithValueObj,
 } from "@snailycad/types";
-
-export type ValueWithValueObj =
-  | VehicleValue
-  | WeaponValue
-  | StatusValue
-  | DepartmentValue
-  | DivisionValue
-  | EmployeeValue
-  | DriversLicenseCategoryValue
-  | QualificationValue
-  | CallTypeValue;
-
-export type AnyValue = Value | PenalCode | ValueWithValueObj;
 
 export function isPenalCodeValue(value: AnyValue): value is PenalCode {
   return (

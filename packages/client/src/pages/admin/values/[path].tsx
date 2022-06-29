@@ -8,7 +8,13 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { useModal } from "state/modalState";
-import { type PenalCode, type PenalCodeGroup, ValueType, Rank } from "@snailycad/types";
+import {
+  type AnyValue,
+  type PenalCode,
+  type PenalCodeGroup,
+  ValueType,
+  Rank,
+} from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll, yesOrNoText } from "lib/utils";
@@ -23,7 +29,7 @@ import { AlertModal } from "components/modal/AlertModal";
 import { ModalIds } from "types/ModalIds";
 import { FullDate } from "components/shared/FullDate";
 import { useTableSelect } from "hooks/shared/useTableSelect";
-import { hasValueObj, isBaseValue, type AnyValue } from "@snailycad/utils/typeguards";
+import { hasValueObj, isBaseValue } from "@snailycad/utils/typeguards";
 import { valueRoutes } from "components/admin/Sidebar/routes";
 import { Checkbox } from "components/form/inputs/Checkbox";
 import type {

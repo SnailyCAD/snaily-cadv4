@@ -13,6 +13,7 @@ import {
   ShouldDoType,
   QualificationValue,
   CallTypeValue,
+  type AnyValue,
 } from "@snailycad/types";
 import {
   SHOULD_DO_LABELS,
@@ -20,7 +21,7 @@ import {
   WHAT_PAGES_LABELS,
 } from "components/admin/values/manage-modal/StatusValueFields";
 import { DEPARTMENT_LABELS } from "components/admin/values/manage-modal/DepartmentFields";
-import { type AnyValue, isBaseValue, hasValueObj } from "@snailycad/utils";
+import { isBaseValue, hasValueObj } from "@snailycad/utils";
 import { useImageUrl } from "hooks/useImageUrl";
 
 const TYPE_LABELS = {

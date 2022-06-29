@@ -18,7 +18,7 @@ import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { useValues } from "context/ValuesContext";
-import { DriversLicenseCategoryType, EmployeeAsEnum, ValueType } from "@snailycad/types";
+import { AnyValue, DriversLicenseCategoryType, EmployeeAsEnum, ValueType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { Select } from "components/form/Select";
 import hexColor from "hex-color-regex";
@@ -43,7 +43,6 @@ import {
   isUnitQualification,
   isDLCategoryValue,
   isCallTypeValue,
-  AnyValue,
 } from "@snailycad/utils/typeguards";
 import { QualificationFields } from "./manage-modal/QualificationFields";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
