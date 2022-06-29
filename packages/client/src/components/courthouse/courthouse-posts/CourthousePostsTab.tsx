@@ -12,7 +12,7 @@ import { DescriptionModal } from "components/modal/DescriptionModal/DescriptionM
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { usePermission, Permissions } from "hooks/usePermission";
-import type { GetCourthousePostsData } from "@snailycad/types/api";
+import type { DeleteCourthousePostsData, GetCourthousePostsData } from "@snailycad/types/api";
 
 interface Props {
   posts: GetCourthousePostsData;
@@ -32,7 +32,10 @@ export function CourthousePostsTab(props: Props) {
   async function deleteCourthousePost() {
     if (!tempPost) return;
 
-    const { json } = await execute(`/courthouse-posts/${tempPost.id}`, { method: "DELETE" });
+    const { json } = await execute<DeleteCourthousePostsData>({
+      path: `/courthouse-posts/${tempPost.id}`,
+      method: "DELETE",
+    });
 
     if (typeof json === "boolean") {
       setPosts((p) => p.filter((v) => v.id !== tempPost.id));

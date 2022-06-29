@@ -12,7 +12,11 @@ import type { FormikHelpers } from "formik";
 import { useRouter } from "next/router";
 import { Permissions } from "@snailycad/permissions";
 import type { SelectValue } from "components/form/Select";
-import type { GetManageCitizenByIdData, PutManageCitizenByIdData } from "@snailycad/types/api";
+import type {
+  GetManageCitizenByIdData,
+  PostCitizenImageByIdData,
+  PutManageCitizenByIdData,
+} from "@snailycad/types/api";
 
 interface Props {
   citizen: GetManageCitizenByIdData;
@@ -54,7 +58,8 @@ export default function ManageCitizens({ citizen }: Props) {
     });
 
     if (formData) {
-      await execute(`/citizen/${citizen.id}`, {
+      await execute<PostCitizenImageByIdData>({
+        path: `/citizen/${citizen.id}`,
         method: "POST",
         data: formData,
         helpers,

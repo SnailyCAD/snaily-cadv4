@@ -17,7 +17,7 @@ import { useCitizen } from "context/CitizenContext";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
-import type { GetCitizenVehiclesData } from "@snailycad/types/api";
+import type { DeleteCitizenVehicleData, GetCitizenVehiclesData } from "@snailycad/types/api";
 
 export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
   const { openModal, closeModal } = useModal();
@@ -43,7 +43,8 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
   async function handleDelete() {
     if (!tempVehicle) return;
 
-    const { json } = await execute(`/vehicles/${tempVehicle.id}`, {
+    const { json } = await execute<DeleteCitizenVehicleData>({
+      path: `/vehicles/${tempVehicle.id}`,
       method: "DELETE",
     });
 

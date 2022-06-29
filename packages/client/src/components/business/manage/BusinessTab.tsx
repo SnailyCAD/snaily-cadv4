@@ -15,7 +15,7 @@ import { Loader } from "components/Loader";
 import { useRouter } from "next/router";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { FormRow } from "components/form/FormRow";
-import type { PutBusinessByIdData } from "@snailycad/types/api";
+import type { DeleteBusinessByIdData, PutBusinessByIdData } from "@snailycad/types/api";
 
 export function ManageBusinessTab() {
   const { state, execute } = useFetch();
@@ -33,7 +33,8 @@ export function ManageBusinessTab() {
   async function handleDeleteBusiness() {
     if (!currentBusiness) return;
 
-    const { json } = await execute(`/businesses/${currentBusiness.id}`, {
+    const { json } = await execute<DeleteBusinessByIdData>({
+      path: `/businesses/${currentBusiness.id}`,
       method: "DELETE",
       data: { employeeId: currentEmployee?.id },
     });

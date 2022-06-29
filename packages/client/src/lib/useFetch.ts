@@ -15,6 +15,7 @@ type State = "loading" | "error";
 export type ErrorMessage = keyof typeof import("../../locales/en/common.json")["Errors"];
 
 type Options<Helpers extends object = object> = AxiosRequestConfig & {
+  path: string;
   noToast?: boolean | ErrorMessage | (string & {});
   helpers?: FormikHelpers<Helpers>;
 };
@@ -40,19 +41,13 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
   }, [overwriteState]);
 
   async function execute<Data, Helpers extends object = object>(
-    pathOrOptions:
-      | string
-      | (Options<Helpers> & {
-          path: string;
-        }),
-    options?: Options<Helpers>,
+    options: Options<Helpers>,
   ): Promise<Return<Data>> {
     setState("loading");
     abortControllerRef.current = new AbortController();
-    const path = typeof pathOrOptions === "string" ? pathOrOptions : pathOrOptions.path;
-    const _options = typeof pathOrOptions === "string" ? options : pathOrOptions;
+    const { path, ...restOptions } = options;
 
-    const mergedOptions = { ..._options, signal: abortControllerRef.current.signal };
+    const mergedOptions = { ...restOptions, signal: abortControllerRef.current.signal };
 
     const response = await handleRequest(path, { ...mergedOptions }).catch((e) => {
       setState("error");
@@ -81,16 +76,20 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
             ? t(translationKey, translationOptions)
             : translationKey;
 
-          if (message && _options?.helpers) {
-            _options.helpers.setFieldError(key, message);
+          if (message && restOptions.helpers) {
+            restOptions.helpers.setFieldError(key, message);
             hasAddedError = true;
           }
         });
       }
 
-      if (typeof _options?.noToast === "string" && _options.noToast !== error && !hasAddedError) {
+      if (
+        typeof restOptions.noToast === "string" &&
+        restOptions.noToast !== error &&
+        !hasAddedError
+      ) {
         toastMessage({ message: t(key), title: errorTitle });
-      } else if (!_options?.noToast && !hasAddedError) {
+      } else if (!restOptions.noToast && !hasAddedError) {
         toastMessage({ message: t(key), title: errorTitle });
       }
 

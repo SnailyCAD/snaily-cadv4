@@ -17,7 +17,7 @@ import dynamic from "next/dynamic";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { classNames } from "lib/classNames";
-import type { GetBusinessByIdData } from "@snailycad/types/api";
+import type { DeleteBusinessPostsData, GetBusinessByIdData } from "@snailycad/types/api";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageBusinessPostModal = dynamic(
@@ -36,7 +36,8 @@ export default function BusinessId(props: GetBusinessByIdData) {
   async function handlePostDeletion() {
     if (!tempPost) return;
 
-    const { json } = await execute(`/businesses/posts/${currentBusiness?.id}/${tempPost.id}`, {
+    const { json } = await execute<DeleteBusinessPostsData>({
+      path: `/businesses/posts/${currentBusiness?.id}/${tempPost.id}`,
       method: "DELETE",
       data: { employeeId: currentEmployee?.id },
     });

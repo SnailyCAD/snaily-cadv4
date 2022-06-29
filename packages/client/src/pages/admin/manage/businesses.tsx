@@ -21,7 +21,7 @@ import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { Status } from "components/shared/Status";
 import { usePermission, Permissions } from "hooks/usePermission";
-import type { GetManageBusinessesData } from "@snailycad/types/api";
+import type { DeleteBusinessByIdData, GetManageBusinessesData } from "@snailycad/types/api";
 
 interface Props {
   businesses: GetManageBusinessesData;
@@ -69,7 +69,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
       return reasonRef.current.focus();
     }
 
-    const { json } = await execute({
+    const { json } = await execute<DeleteBusinessByIdData>({
       path: `/admin/manage/businesses/${tempValue.id}`,
       method: "DELETE",
       data: { reason },

@@ -22,6 +22,7 @@ import { ResultsTab } from "./VehicleSearch/tabs/ResultsTab";
 import { NotesTab } from "./NameSearchModal/tabs/NotesTab";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { RegisterVehicleModal } from "components/citizen/vehicles/modals/RegisterVehicleModal";
+import type { PostMarkStolenData } from "@snailycad/types/api";
 
 interface Props {
   id?: ModalIds.VehicleSearch | ModalIds.VehicleSearchWithinName;
@@ -85,7 +86,8 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   async function handleMarkStolen() {
     if (!currentResult) return;
 
-    const { json } = await execute(`/bolos/mark-stolen/${currentResult.id}`, {
+    const { json } = await execute<PostMarkStolenData>({
+      path: `/bolos/mark-stolen/${currentResult.id}`,
       method: "POST",
       data: {
         id: currentResult.id,

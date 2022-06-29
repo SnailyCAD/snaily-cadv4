@@ -14,7 +14,7 @@ import { Input } from "components/form/inputs/Input";
 import { CustomFieldResults } from "./CustomFieldResults";
 import { handleValidate } from "lib/handleValidate";
 import { CUSTOM_FIELD_SEARCH_SCHEMA } from "@snailycad/schemas";
-import type { PostSearchCustomFieldData } from "@snailycad/types/api";
+import type { GetManageCustomFieldsData, PostSearchCustomFieldData } from "@snailycad/types/api";
 
 let cache: CustomField[] = [];
 
@@ -29,7 +29,10 @@ export function CustomFieldSearch() {
   const [customFields, setCustomFields] = React.useState(cache);
 
   const fetchOnOpen = React.useCallback(async () => {
-    const { json } = await execute("/admin/manage/custom-fields", {});
+    const { json } = await execute<GetManageCustomFieldsData>({
+      path: "/admin/manage/custom-fields",
+      method: "GET",
+    });
 
     if (Array.isArray(json)) {
       cache = json;

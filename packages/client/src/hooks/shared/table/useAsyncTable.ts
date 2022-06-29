@@ -24,7 +24,8 @@ export function useAsyncTable<T>(options: Options<T>) {
 
   const paginationFetch = React.useCallback(
     async ({ pageSize, pageIndex }: Omit<FetchOptions, "path" | "onResponse">) => {
-      const { json, error } = await execute(options.fetchOptions.path, {
+      const { json, error } = await execute({
+        path: options.fetchOptions.path,
         params: {
           skip: pageSize * pageIndex,
           query: search.trim() || undefined,
@@ -43,7 +44,8 @@ export function useAsyncTable<T>(options: Options<T>) {
   );
 
   const handleSearch = React.useCallback(async () => {
-    const { json, error } = await execute(options.fetchOptions.path, {
+    const { json, error } = await execute({
+      path: options.fetchOptions.path,
       params: { query: search.trim() },
     });
 

@@ -19,7 +19,11 @@ import { CallSignPreview } from "components/leo/CallsignPreview";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { UnitQualificationsTable } from "components/leo/qualifications/UnitQualificationsTable";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
-import type { PostMyDeputiesData, PutMyDeputyByIdData } from "@snailycad/types/api";
+import type {
+  PostMyDeputiesData,
+  PostMyDeputyByIdData,
+  PutMyDeputyByIdData,
+} from "@snailycad/types/api";
 
 interface Props {
   deputy: PostMyDeputiesData | null;
@@ -88,7 +92,8 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
     }
 
     if (validatedImage && typeof validatedImage === "object") {
-      await execute(`/ems-fd/image/${deputyId}`, {
+      await execute<PostMyDeputyByIdData, typeof INITIAL_VALUES>({
+        path: `/ems-fd/image/${deputyId}`,
         method: "POST",
         data: fd,
         helpers,

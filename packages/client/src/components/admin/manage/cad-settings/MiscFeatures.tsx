@@ -79,7 +79,8 @@ export function MiscFeatures() {
       }
 
       if (imgCount > 0) {
-        await execute("/admin/manage/cad-settings/image/auth", {
+        await execute({
+          path: "/admin/manage/cad-settings/image/auth",
           method: "POST",
           data: fd,
         });

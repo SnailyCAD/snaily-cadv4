@@ -21,6 +21,8 @@ import type {
   PutTaxiCallsData,
   PostTaxiCallsData,
   PostTowCallsData,
+  DeleteTowCallsData,
+  DeleteTaxiCallsData,
 } from "@snailycad/types/api";
 
 interface Props {
@@ -55,7 +57,8 @@ export function ManageCallModal({ onDelete, onUpdate, onClose, isTow: tow, call 
     if (!call) return;
 
     const path = isTow ? `/tow/${call.id}` : `/taxi/${call.id}`;
-    const { json } = await execute(path, {
+    const { json } = await execute<DeleteTowCallsData | DeleteTaxiCallsData>({
+      path,
       method: "DELETE",
     });
 
