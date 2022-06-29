@@ -18,6 +18,7 @@ import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { NameSearchResult } from "state/search/nameSearchState";
+import type { PostEmsFdMedicalRecord } from "@snailycad/types/api";
 
 interface Props {
   onCreate?(newV: MedicalRecord): void;
@@ -41,7 +42,8 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute("/ems-fd/medical-record", {
+    const { json } = await execute<PostEmsFdMedicalRecord>({
+      path: "/ems-fd/medical-record",
       method: "POST",
       data: values,
     });

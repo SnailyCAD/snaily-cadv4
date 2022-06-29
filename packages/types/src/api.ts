@@ -6,6 +6,7 @@ export * from "./api/dispatch.js";
 export * from "./api/courthouse.js";
 export * from "./api/search.js";
 export * from "./api/leo.js";
+export * from "./api/ems-fd.js";
 
 /** bleeter */
 /**

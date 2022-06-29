@@ -16,15 +16,15 @@ import { useTranslations } from "use-intl";
 import { FormRow } from "components/form/FormRow";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { CallSignPreview } from "components/leo/CallsignPreview";
-import type { EmsFdDeputy } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { UnitQualificationsTable } from "components/leo/qualifications/UnitQualificationsTable";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
+import type { PostMyDeputiesData, PutMyDeputyByIdData } from "@snailycad/types/api";
 
 interface Props {
-  deputy: EmsFdDeputy | null;
-  onCreate?(officer: EmsFdDeputy): void;
-  onUpdate?(old: EmsFdDeputy, newO: EmsFdDeputy): void;
+  deputy: PostMyDeputiesData | null;
+  onCreate?(officer: PostMyDeputiesData): void;
+  onUpdate?(old: PutMyDeputyByIdData, newO: PutMyDeputyByIdData): void;
   onClose?(): void;
 }
 
@@ -60,7 +60,8 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
     let deputyId;
 
     if (deputy) {
-      const { json } = await execute(`/ems-fd/${deputy.id}`, {
+      const { json } = await execute<PutMyDeputyByIdData, typeof INITIAL_VALUES>({
+        path: `/ems-fd/${deputy.id}`,
         method: "PUT",
         data: values,
         helpers,
@@ -72,7 +73,8 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
         onUpdate?.(deputy, json);
       }
     } else {
-      const { json } = await execute("/ems-fd", {
+      const { json } = await execute<PostMyDeputiesData, typeof INITIAL_VALUES>({
+        path: "/ems-fd",
         method: "POST",
         data: values,
         helpers,

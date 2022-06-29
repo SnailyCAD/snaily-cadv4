@@ -229,7 +229,10 @@ export type LeoWhitelistStatus = Prisma.LeoWhitelistStatus & {
   department: DepartmentValue;
 };
 
-export type StatusValue = Prisma.StatusValue & { value: Prisma.Value };
+export type StatusValue = Prisma.StatusValue & {
+  value: Prisma.Value;
+  departments?: DepartmentValue[];
+};
 
 export type OfficerLog = Prisma.OfficerLog;
 

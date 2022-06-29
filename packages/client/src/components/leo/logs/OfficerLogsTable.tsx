@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import type { OfficerLogWithOfficer } from "src/pages/officer/my-officer-logs";
 import type { EmsFdDeputy, Officer, OfficerLog } from "@snailycad/types";
 import type { OfficerLogWithDeputy } from "src/pages/ems-fd/my-deputy-logs";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 
 type Props =
   | {
@@ -20,6 +21,7 @@ type Props =
 
 export function OfficerLogsTable({ unit, logs }: Props) {
   const { makeImageUrl } = useImageUrl();
+  const { generateCallsign } = useGenerateCallsign();
   const t = useTranslations("Leo");
 
   return (
@@ -38,7 +40,7 @@ export function OfficerLogsTable({ unit, logs }: Props) {
 
         return {
           unit: (
-            <span className="flex items-center">
+            <span className="flex items-center capitalize">
               {logUnit.imageId ? (
                 <img
                   className="rounded-md w-[30px] h-[30px] object-cover mr-2"
@@ -46,7 +48,7 @@ export function OfficerLogsTable({ unit, logs }: Props) {
                   src={makeImageUrl("units", logUnit.imageId)}
                 />
               ) : null}
-              {makeUnitName(logUnit)}
+              {generateCallsign(logUnit)} {makeUnitName(logUnit)}
             </span>
           ),
           startedAt,

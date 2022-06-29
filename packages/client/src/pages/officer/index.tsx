@@ -7,7 +7,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { useLeoState } from "state/leoState";
-import { EmsFdDeputy, Officer, Record, RecordType, ValueType } from "@snailycad/types";
+import { Record, RecordType, ValueType } from "@snailycad/types";
 import { ActiveCalls } from "components/leo/ActiveCalls";
 import { useDispatchState } from "state/dispatchState";
 import { ModalButtons } from "components/leo/ModalButtons";
@@ -31,6 +31,8 @@ import type {
   GetActiveOfficerData,
   GetActiveOfficersData,
   GetBolosData,
+  GetEmsFdActiveDeputies,
+  GetMyOfficersData,
 } from "@snailycad/types/api";
 
 const Modals = {
@@ -68,10 +70,10 @@ const Modals = {
 interface Props {
   activeOfficer: GetActiveOfficerData;
   activeOfficers: GetActiveOfficersData;
-  userOfficers: Officer[];
+  userOfficers: GetMyOfficersData["officers"];
   calls: Get911CallsData;
   bolos: GetBolosData;
-  activeDeputies: EmsFdDeputy[];
+  activeDeputies: GetEmsFdActiveDeputies;
 }
 
 export default function OfficerDashboard({

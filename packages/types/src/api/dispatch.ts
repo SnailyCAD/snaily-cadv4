@@ -120,3 +120,21 @@ export type PutDispatchRadioChannelData = Types.Officer | Types.EmsFdDeputy | Ty
  * @route /dispatch/radio-channel
  */
 export type PostDispatchTonesData = boolean;
+
+/**
+ * @method PUT
+ * @route /dispatch/status/:unitId
+ */
+export type PutDispatchStatusByUnitId = Types.Officer | Types.EmsFdDeputy | Types.CombinedLeoUnit;
+
+/**
+ * @method POST
+ * @route /dispatch/status/merge
+ */
+export type PostDispatchStatusMergeOfficers = Types.CombinedLeoUnit;
+
+/**
+ * @method POST
+ * @route /dispatch/status/unmerge/:id
+ */
+export type PostDispatchStatusUnmergeUnitById = boolean;

@@ -33,7 +33,11 @@ import { CitizenImageModal } from "components/citizen/modals/CitizenImageModal";
 import { ManageCustomFieldsModal } from "./ManageCustomFieldsModal";
 import { CustomFieldsArea } from "../CustomFieldsArea";
 import { useBolos } from "hooks/realtime/useBolos";
-import type { PostLeoSearchCitizenData, PutSearchActionsLicensesData } from "@snailycad/types/api";
+import type {
+  PostEmsFdDeclareCitizenById,
+  PostLeoSearchCitizenData,
+  PutSearchActionsLicensesData,
+} from "@snailycad/types/api";
 
 const VehicleSearchModal = dynamic(
   async () => (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal,
@@ -152,7 +156,7 @@ export function NameSearchModal() {
   async function handleDeclare() {
     if (!currentResult) return;
 
-    const { json } = await execute({
+    const { json } = await execute<PostEmsFdDeclareCitizenById>({
       path: `/ems-fd/declare/${currentResult.id}`,
       method: "POST",
     });

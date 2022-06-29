@@ -18,7 +18,10 @@ import { FullDate } from "components/shared/FullDate";
 import { calculateAge, formatCitizenAddress } from "lib/utils";
 import { useAuth } from "context/AuthContext";
 import { CitizenImageModal } from "components/citizen/modals/CitizenImageModal";
-import type { PostEmsFdMedicalRecordsSearchData } from "@snailycad/types/api";
+import type {
+  PostEmsFdDeclareCitizenById,
+  PostEmsFdMedicalRecordsSearchData,
+} from "@snailycad/types/api";
 
 interface Props {
   onClose?(): void;
@@ -42,7 +45,8 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
   async function handleDeclare() {
     if (!results || typeof results === "boolean") return;
 
-    const { json } = await execute(`/ems-fd/declare/${results.id}`, {
+    const { json } = await execute<PostEmsFdDeclareCitizenById>({
+      path: `/ems-fd/declare/${results.id}`,
       method: "POST",
     });
 

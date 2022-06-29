@@ -20,6 +20,7 @@ import { DndActions } from "types/DndActions";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { classNames } from "lib/classNames";
 import { ActiveUnitsQualificationsCard } from "components/leo/qualifications/ActiveUnitsQualificationsCard";
+import type { PostDispatchStatusUnmergeUnitById } from "@snailycad/types/api";
 
 interface Props {
   officer: Officer | CombinedLeoUnit;
@@ -76,7 +77,8 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
   }
 
   async function handleunMerge(id: string) {
-    const { json } = await execute(`/dispatch/status/unmerge/${id}`, {
+    const { json } = await execute<PostDispatchStatusUnmergeUnitById>({
+      path: `/dispatch/status/unmerge/${id}`,
       data: { id },
       method: "POST",
     });
