@@ -1483,7 +1483,7 @@ __metadata:
     express: 4.18.1
     glob: ^8.0.3
     jsonwebtoken: 8.5.1
-    nanoid: ^4.0.0
+    nanoid: ^3.3.4
     nodemon: ^2.0.18
     otplib: ^12.0.1
     prisma: ^4.0.0
@@ -8152,15 +8152,6 @@ __metadata:
   bin:
     nanoid: bin/nanoid.cjs
   checksum: 2fddd6dee994b7676f008d3ffa4ab16035a754f4bb586c61df5a22cf8c8c94017aadd360368f47d653829e0569a92b129979152ff97af23a558331e47e37cd9c
-  languageName: node
-  linkType: hard
-
-"nanoid@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "nanoid@npm:4.0.0"
-  bin:
-    nanoid: bin/nanoid.js
-  checksum: 7d5946df5c6d383694195b781ae7b5067c149d164ec71e910d6b06676309c3459b68af570b944fb5ecd5065d19df464f05700d141d70bb712ff8ca06642fd8df
   languageName: node
   linkType: hard
 
