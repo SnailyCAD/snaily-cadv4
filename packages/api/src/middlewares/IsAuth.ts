@@ -48,7 +48,7 @@ export class IsAuth implements MiddlewareMethods {
     }
 
     if (cad) {
-      ctx.set("cad", { ...setDiscordAuth(cad), version: await getCADVersion() });
+      ctx.set("cad", { ...setDiscordAuth(cad as cad), version: await getCADVersion() });
     }
   }
 }

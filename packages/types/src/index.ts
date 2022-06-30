@@ -31,7 +31,7 @@ export type cad = Pick<
     miscCadSettings: MiscCadSettings | null;
     apiToken?: ApiToken | null;
     autoSetUserProperties?: AutoSetUserProperties | null;
-    discordRoles?: DiscordRoles | null;
+    discordRoles?: DiscordRoles | null | undefined;
     version?: CADVersion | null;
     registrationCode?: string | boolean | null;
   },
