@@ -36,7 +36,7 @@ export class ManageCitizensController {
     });
 
     return {
-      ...setDiscordAuth(cad),
+      ...setDiscordAuth(cad as unknown as cad),
       registrationCode: !!cad?.registrationCode,
       version,
     } as APITypes.GetCADSettingsData;
