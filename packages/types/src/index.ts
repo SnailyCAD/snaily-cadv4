@@ -1,15 +1,39 @@
 import type { Permissions } from "@snailycad/permissions";
 import type * as Prisma from "@prisma/client";
 
-export type cad = Omit<Prisma.cad, "registrationCode"> & {
-  features: CadFeature[];
-  miscCadSettings: MiscCadSettings | null;
-  apiToken?: ApiToken | null;
-  autoSetUserProperties: AutoSetUserProperties | null;
-  discordRoles?: DiscordRoles | null;
-  version: CADVersion | null;
-  registrationCode?: string | boolean | null;
-};
+type CADPick =
+  | "id"
+  | "name"
+  | "areaOfPlay"
+  | "maxPlateLength"
+  | "towWhitelisted"
+  | "taxiWhitelisted"
+  | "whitelisted"
+  | "businessWhitelisted"
+  | "features"
+  | "autoSetUserProperties"
+  | "registrationCode"
+  | "steamApiKey"
+  | "apiTokenId"
+  | "apiToken"
+  | "miscCadSettings"
+  | "miscCadSettingsId"
+  | "logoId"
+  | "discordRolesId"
+  | "version";
+
+export type cad = Pick<
+  Omit<Prisma.cad, "registrationCode"> & {
+    features: CadFeature[];
+    miscCadSettings: MiscCadSettings | null;
+    apiToken?: ApiToken | null;
+    autoSetUserProperties: AutoSetUserProperties | null;
+    discordRoles?: DiscordRoles | null;
+    version?: CADVersion | null;
+    registrationCode?: string | boolean | null;
+  },
+  CADPick
+>;
 
 interface CADVersion {
   currentCommitHash: string;

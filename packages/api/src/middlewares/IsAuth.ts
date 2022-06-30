@@ -1,5 +1,5 @@
 import process from "node:process";
-import { cad, Rank, User, CadFeature, Feature } from "@prisma/client";
+import { Rank, User, CadFeature, Feature } from "@prisma/client";
 import { API_TOKEN_HEADER } from "@snailycad/config";
 import { Context, Middleware, Req, MiddlewareMethods } from "@tsed/common";
 import { Unauthorized } from "@tsed/exceptions";
@@ -7,6 +7,7 @@ import { prisma } from "lib/prisma";
 import { getCADVersion } from "@snailycad/utils/version";
 import { handleDiscordSync } from "./auth/utils";
 import { getUserFromCADAPIToken, getUserFromSession } from "./auth/getUser";
+import type { cad } from "@snailycad/types";
 
 @Middleware()
 export class IsAuth implements MiddlewareMethods {
@@ -52,8 +53,8 @@ export class IsAuth implements MiddlewareMethods {
   }
 }
 
-export function setDiscordAuth(cad: any = {}): cad & { features?: CadFeature[] } {
-  const features = cad.features as CadFeature[] | undefined;
+export function setDiscordAuth<T extends Partial<cad>>(cad: T | null) {
+  const features = cad?.features as CadFeature[] | undefined;
   const hasDiscordTokens =
     Boolean(process.env["DISCORD_CLIENT_ID"]) && Boolean(process.env["DISCORD_CLIENT_SECRET"]);
 
@@ -66,7 +67,7 @@ export function setDiscordAuth(cad: any = {}): cad & { features?: CadFeature[] }
     return { ...(cad as cad), features: [...filtered, notEnabled] };
   }
 
-  return cad as cad;
+  return cad;
 }
 
 export function CAD_SELECT(user?: Pick<User, "rank"> | null, includeDiscordRoles?: boolean) {
@@ -81,7 +82,6 @@ export function CAD_SELECT(user?: Pick<User, "rank"> | null, includeDiscordRoles
     businessWhitelisted: true,
     features: true,
     autoSetUserProperties: true,
-    liveMapSocketURl: user?.rank === Rank.OWNER,
     registrationCode: user?.rank === Rank.OWNER,
     steamApiKey: user?.rank === Rank.OWNER,
     apiTokenId: user?.rank === Rank.OWNER,

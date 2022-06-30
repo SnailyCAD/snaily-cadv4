@@ -9,7 +9,7 @@ import type { PenalCodeGroup, AnyValue } from "../index.js";
 export type GetValuesData<Value extends AnyValue = AnyValue> = {
   values: Value[];
   type: Prisma.ValueType;
-  groups?: never;
+  groups?: PenalCodeGroup[];
 }[];
 
 /**

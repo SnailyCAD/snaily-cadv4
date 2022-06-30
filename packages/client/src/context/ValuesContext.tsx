@@ -80,8 +80,8 @@ export function ValuesProvider({ initialData, children }: ProviderProps) {
         type: valueType,
       };
 
-      if (valuesForType.type === "PENAL_CODE") {
-        obj["penalCodeGroups"] = (valuesForType as any).groups ?? [];
+      if (valuesForType.type === "PENAL_CODE" && Array.isArray(valuesForType.groups)) {
+        obj["penalCodeGroups"] = valuesForType.groups;
       }
 
       return { ...obj, [normalizeValue(valueType)]: removeDisabledValues(valuesForType) };
