@@ -19,15 +19,18 @@ type CADPick =
   | "miscCadSettings"
   | "miscCadSettingsId"
   | "logoId"
+  | "discordRoles"
   | "discordRolesId"
-  | "version";
+  | "version"
+  | "autoSetUserProperties"
+  | "autoSetUserPropertiesId";
 
 export type cad = Pick<
   Omit<Prisma.cad, "registrationCode"> & {
     features: CadFeature[];
     miscCadSettings: MiscCadSettings | null;
     apiToken?: ApiToken | null;
-    autoSetUserProperties: AutoSetUserProperties | null;
+    autoSetUserProperties?: AutoSetUserProperties | null;
     discordRoles?: DiscordRoles | null;
     version?: CADVersion | null;
     registrationCode?: string | boolean | null;

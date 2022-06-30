@@ -6,7 +6,7 @@ interface FetchOptions {
   pageSize: number;
   pageIndex: number;
   path: string;
-  onResponse<TData>(json: unknown): { data: TData; totalCount: number };
+  onResponse(json: unknown): { data: any; totalCount: number };
 }
 
 interface Options<T> {
@@ -33,7 +33,7 @@ export function useAsyncTable<T>(options: Options<T>) {
       });
 
       if (json && !error) {
-        const jsonData = options.fetchOptions.onResponse<T[]>(json);
+        const jsonData = options.fetchOptions.onResponse(json);
         setData(jsonData.data);
         setTotalCount(jsonData.totalCount);
 
@@ -50,7 +50,7 @@ export function useAsyncTable<T>(options: Options<T>) {
     });
 
     if (json && !error) {
-      const jsonData = options.fetchOptions.onResponse<T[]>(json);
+      const jsonData = options.fetchOptions.onResponse(json);
       setData(jsonData.data);
       setTotalCount(jsonData.totalCount);
     }
