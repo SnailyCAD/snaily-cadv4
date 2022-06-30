@@ -52,7 +52,7 @@ export class IsAuth implements MiddlewareMethods {
   }
 }
 
-export function setDiscordAuth(cad: any): cad & { features?: CadFeature[] } {
+export function setDiscordAuth(cad: any = {}): cad & { features?: CadFeature[] } {
   const features = cad.features as CadFeature[] | undefined;
   const hasDiscordTokens =
     Boolean(process.env["DISCORD_CLIENT_ID"]) && Boolean(process.env["DISCORD_CLIENT_SECRET"]);
