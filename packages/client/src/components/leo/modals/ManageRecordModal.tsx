@@ -263,7 +263,14 @@ export function ManageRecordModal({
             </FormField>
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onClick={() => closeModal(data[type].id)} variant="cancel">
+              <Button
+                type="reset"
+                onClick={() => {
+                  closeModal(data[type].id);
+                  setSessionStorage(null);
+                }}
+                variant="cancel"
+              >
                 {common("cancel")}
               </Button>
               <Button
