@@ -9,12 +9,15 @@ import { Input } from "./Input";
 import { useTranslations } from "next-intl";
 import { useDebounce } from "react-use";
 import { isMobile } from "is-mobile";
+import type { FormikErrors } from "formik";
 
 type ApiPathFunc = (inputValue: string) => string;
 type Suggestion = { id: string } & Record<string, unknown>;
 
 interface Props<Suggestion extends { id: string }> {
-  inputProps?: Omit<JSX.IntrinsicElements["input"], "ref"> & { errorMessage?: string };
+  inputProps?: Omit<JSX.IntrinsicElements["input"], "ref"> & {
+    errorMessage?: string | string[] | FormikErrors<any> | FormikErrors<any>[];
+  };
   onSuggestionClick?(suggestion: Suggestion): void;
   Component({ suggestion }: { suggestion: Suggestion }): JSX.Element;
   options: {
@@ -137,7 +140,7 @@ export function InputSuggestions<Suggestion extends { id: string }>({
               ) : null}
 
               {suggestions.map((suggestion, idx) => (
-                <Suggestion
+                <InputSuggestion
                   onSuggestionClick={handleSuggestionClick}
                   key={suggestion.id}
                   suggestion={suggestion}
@@ -160,7 +163,7 @@ type SuggestionProps<Suggestion extends { id: string }> = Pick<
   suggestion: Suggestion;
 };
 
-const Suggestion = React.forwardRef<HTMLButtonElement, SuggestionProps<Suggestion>>(
+const InputSuggestion = React.forwardRef<HTMLButtonElement, SuggestionProps<Suggestion>>(
   ({ suggestion, onSuggestionClick, Component }, ref) => {
     const focusManager = useFocusManager();
 

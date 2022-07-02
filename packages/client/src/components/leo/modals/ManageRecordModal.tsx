@@ -8,7 +8,7 @@ import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { useValues } from "context/ValuesContext";
-import { Form, Formik, type FormikHelpers } from "formik";
+import { Form, Formik, useFormikContext, type FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
@@ -33,6 +33,21 @@ interface Props {
   isReadOnly?: boolean;
   onUpdate?(data: Record): void;
   onCreate?(data: Record): void;
+}
+
+function useSessionStorage<T>(key: string) {
+  const [value, setValue] = React.useState<T | null>(() => {
+    try {
+      const v = JSON.parse(sessionStorage.getItem(key) || "null");
+
+      return v;
+    } catch (_) {
+      console.log(_);
+      return null;
+    }
+  });
+
+  return [value, setValue];
 }
 
 export function ManageRecordModal({
@@ -134,11 +149,12 @@ export function ManageRecordModal({
 
   const payload = getPayload<{ citizenId: string; citizenName: string }>(data[type].id);
   const validate = handleValidate(CREATE_TICKET_SCHEMA);
+  const [value, setSessionStorage] = useSessionStorage<any>(data[type].id);
 
   const INITIAL_VALUES = {
     type,
-    citizenId: record?.citizenId ?? payload?.citizenId ?? "",
-    citizenName: payload?.citizenName ?? "",
+    citizenId: record?.citizenId ?? value?.citizenId ?? payload?.citizenId ?? "",
+    citizenName: payload?.citizenName ?? value?.citizenName ?? "",
     violations:
       record?.violations.map((v) => ({
         label: v.penalCode.title,
@@ -149,10 +165,12 @@ export function ManageRecordModal({
           jailTime: { enabled: !!v.jailTime, value: v.jailTime },
           bail: { enabled: LEO_BAIL ? !!v.jailTime : false, value: v.bail },
         },
-      })) ?? ([] as SelectValue<PenalCode>[]),
-    postal: record?.postal ?? "",
-    notes: record?.notes ?? "",
-    seizedItems: record?.seizedItems ?? [],
+      })) ??
+      value?.violations ??
+      ([] as SelectValue<PenalCode>[]),
+    postal: record?.postal ?? value?.postal ?? "",
+    notes: record?.notes ?? value?.notes ?? "",
+    seizedItems: record?.seizedItems ?? value?.seizedItems ?? [],
   };
 
   return (
@@ -165,6 +183,7 @@ export function ManageRecordModal({
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, setValues, errors, values, isValid }) => (
           <Form autoComplete="off">
+            <SaveToSessionStorage setSessionStorage={setSessionStorage} id={data[type].id} />
             <FormField errorMessage={errors.citizenId} label={t("citizen")}>
               <InputSuggestions<Citizen>
                 inputProps={{
@@ -230,7 +249,7 @@ export function ManageRecordModal({
 
             <PenalCodesTable
               isReadOnly={isReadOnly}
-              penalCodes={values.violations.map((v) => v.value)}
+              penalCodes={values.violations.map((v: SelectValue<PenalCode[]>) => v.value)}
             />
             <SeizedItemsTable isReadOnly={isReadOnly} />
 
@@ -261,6 +280,33 @@ export function ManageRecordModal({
       </Formik>
     </Modal>
   );
+}
+
+function SaveToSessionStorage({ id, setSessionStorage }: { id: string; setSessionStorage: any }) {
+  const { values, submitCount } = useFormikContext<any>();
+  const isFirstTime = React.useRef(true);
+
+  React.useEffect(() => {
+    if (isFirstTime.current) {
+      isFirstTime.current = false;
+    } else {
+      setSessionStorage(values);
+      console.log({ values });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [values, id]);
+
+  React.useEffect(() => {
+    console.log("here", { submitCount });
+
+    if (submitCount === 1) {
+      setSessionStorage(null);
+      isFirstTime.current = true;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [submitCount, id]);
+
+  return null;
 }
 
 function validateRecords(data: any[], helpers: FormikHelpers<any>) {

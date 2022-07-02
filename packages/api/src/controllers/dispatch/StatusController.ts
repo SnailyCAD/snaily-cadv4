@@ -1,14 +1,9 @@
 import {
-  User,
   ShouldDoType,
   MiscCadSettings,
   cad,
-  Officer,
   StatusValue,
-  EmsFdDeputy,
   Citizen,
-  CombinedLeoUnit,
-  Value,
   WhitelistStatus,
   CadFeature,
   Feature,
@@ -26,7 +21,7 @@ import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/a
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { Socket } from "services/SocketService";
 import { IsAuth } from "middlewares/IsAuth";
-import { generateCallsign } from "@snailycad/utils/callsign";
+import { generateCallsign, Unit } from "@snailycad/utils/callsign";
 import { validateSchema } from "lib/validateSchema";
 import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
@@ -35,6 +30,7 @@ import { isFeatureEnabled } from "lib/cad";
 import { hasPermission } from "@snailycad/permissions";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 import type * as APITypes from "@snailycad/types/api";
+import type { User, Officer, EmsFdDeputy, CombinedLeoUnit } from "@snailycad/types";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -268,18 +264,9 @@ interface HandlePanicButtonPressedOptions {
   cad: cad & { miscCadSettings: MiscCadSettings };
 }
 
-type V<T> = T & { value: Value };
-
-export type Unit = { status: V<StatusValue> | null } & (
-  | ((Officer | EmsFdDeputy) & {
-      citizen: Pick<Citizen, "name" | "surname">;
-    })
-  | CombinedLeoUnit
-);
-
 function createWebhookData(
   cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
-  unit: Unit,
+  unit: Officer | EmsFdDeputy | CombinedLeoUnit,
 ) {
   const isBadgeNumberEnabled = isFeatureEnabled({
     defaultReturn: true,
@@ -291,7 +278,7 @@ function createWebhookData(
 
   const status = unit.status?.value.value ?? "Off-duty";
   const unitName = isNotCombined ? `${unit.citizen.name} ${unit.citizen.surname}` : "";
-  const callsign = generateCallsign(unit as any, cad.miscCadSettings.callsignTemplate);
+  const callsign = generateCallsign(unit, cad.miscCadSettings.callsignTemplate);
   const badgeNumber = isBadgeNumberEnabled && isNotCombined ? `${unit.badgeNumber} - ` : "";
   const officerName = isNotCombined ? `${badgeNumber}${callsign} ${unitName}` : `${callsign}`;
 
@@ -314,9 +301,13 @@ function createWebhookData(
 
 function createPanicButtonEmbed(
   cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
-  unit: HandlePanicButtonPressedOptions["unit"],
+  unit: Unit & {
+    citizenId?: string;
+    citizen?: Pick<Citizen, "id" | "name" | "surname">;
+    badgeNumber?: number | null;
+  },
 ) {
-  const isCombined = !("citizen" in unit);
+  const isCombined = !("citizenId" in unit);
 
   const isBadgeNumberEnabled = isFeatureEnabled({
     defaultReturn: true,
@@ -324,12 +315,13 @@ function createPanicButtonEmbed(
     features: cad.features,
   });
 
-  const unitName = isCombined ? null : `${unit.citizen.name} ${unit.citizen.surname}`;
+  const unitName =
+    isCombined || !unit.citizen ? null : `${unit.citizen.name} ${unit.citizen.surname}`;
   const template = isCombined
     ? cad.miscCadSettings.pairedUnitSymbol
     : cad.miscCadSettings.callsignTemplate;
 
-  const callsign = generateCallsign(unit as any, template);
+  const callsign = generateCallsign(unit, template);
   const badgeNumber = isBadgeNumberEnabled || isCombined ? "" : `${unit.badgeNumber} - `;
   const officerName = isCombined ? `${callsign}` : `${badgeNumber}${callsign} ${unitName}`;
 

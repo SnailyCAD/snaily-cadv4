@@ -3,13 +3,14 @@ import { useField } from "@react-aria/label";
 import { classNames } from "lib/classNames";
 import useOnclickOutside from "react-cool-onclickoutside";
 import { useTranslations } from "next-intl";
+import type { FormikErrors } from "formik";
 
 interface Props {
   label: string;
   children: React.ReactNode;
   className?: string;
   checkbox?: boolean;
-  errorMessage?: string;
+  errorMessage?: string | string[] | FormikErrors<any> | FormikErrors<any>[] | undefined;
 
   hideLabel?: boolean;
   boldLabel?: boolean;
