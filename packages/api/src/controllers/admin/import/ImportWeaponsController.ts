@@ -1,5 +1,5 @@
 import { Controller } from "@tsed/di";
-import { Get, Post } from "@tsed/schema";
+import { Get, Post, Description } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { WEAPON_SCHEMA_ARR } from "@snailycad/schemas/dist/admin/import/weapons";
 import { BodyParams, MultipartFile, PlatformMulterFile, QueryParams } from "@tsed/common";
@@ -15,6 +15,7 @@ const weaponsInclude = { ...citizenInclude.weapons.include, citizen: true };
 @Controller("/admin/import/weapons")
 export class ImportWeaponsController {
   @Get("/")
+  @Description("Import Weapons in the CAD via file upload")
   async getWeapons(
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query = "",

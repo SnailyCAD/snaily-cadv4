@@ -1,5 +1,5 @@
 import { Controller } from "@tsed/di";
-import { Get, Post } from "@tsed/schema";
+import { Get, Post, Description } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { VEHICLE_SCHEMA_ARR } from "@snailycad/schemas/dist/admin/import/vehicles";
 import { BodyParams, MultipartFile, PlatformMulterFile, QueryParams } from "@tsed/common";
@@ -15,7 +15,8 @@ const vehiclesInclude = { ...citizenInclude.vehicles.include, citizen: true };
 
 @Controller("/admin/import/vehicles")
 export class ImportVehiclesController {
-  @Get()
+  @Get("/")
+  @Description("Import Vehciles in the CAD via file upload")
   async getVehicles(
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query = "",

@@ -1,5 +1,5 @@
 import { Controller } from "@tsed/di";
-import { Post } from "@tsed/schema";
+import { Post, Description } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { BodyParams, MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { parseImportFile } from "utils/file";
@@ -15,6 +15,7 @@ import type * as APITypes from "@snailycad/types/api";
 @Controller("/admin/import/citizens")
 export class ImportCitizensController {
   @Post("/")
+  @Description("Import Citizens in the CAD via file upload")
   async importCitizens(
     @BodyParams() body: unknown,
     @MultipartFile("file") file?: PlatformMulterFile,
