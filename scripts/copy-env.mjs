@@ -6,6 +6,9 @@ import { readFile, writeFile } from "node:fs/promises";
 
 const DEFAULT_PORT = "3000";
 
+const UNIX_SLASHES_REGEX = /\/packages\/client/;
+const WIN_SLASHES_REGEX = /\\packages\\client/;
+
 async function addPortToClientPackageJson() {
   if (process.env.NODE_ENV === "development") return;
 
@@ -14,7 +17,10 @@ async function addPortToClientPackageJson() {
     if (!port) return;
 
     let dir = join(process.cwd(), "packages", "client");
-    if (process.cwd().match(/\/packages\/client/)) {
+    const unixMatch = process.cwd().match(UNIX_SLASHES_REGEX);
+    const winMatch = process.cwd().match(WIN_SLASHES_REGEX);
+
+    if (unixMatch || winMatch) {
       dir = process.cwd();
     }
 
