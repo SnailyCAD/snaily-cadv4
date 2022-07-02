@@ -3,7 +3,7 @@ import { CUSTOM_FIELDS_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, PathParams, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
-import { Delete, Get, Post, Put } from "@tsed/schema";
+import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
@@ -13,12 +13,14 @@ import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 @UseBeforeEach(IsAuth)
 export class AdminManageCustomFieldsController {
   @Get("/")
+  @Description("Get all the custom fields within the CAD")
   async getCustomFields() {
     const fields = await prisma.customField.findMany();
     return fields;
   }
 
   @Post("/")
+  @Description("")
   @UsePermissions({
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCustomFields],
@@ -38,6 +40,7 @@ export class AdminManageCustomFieldsController {
   }
 
   @Put("/:id")
+  @Description("Update a custom field")
   @UsePermissions({
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCustomFields],
@@ -66,6 +69,7 @@ export class AdminManageCustomFieldsController {
   }
 
   @Delete("/:id")
+  @Description("Delete a custom field")
   @UsePermissions({
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCustomFields],
