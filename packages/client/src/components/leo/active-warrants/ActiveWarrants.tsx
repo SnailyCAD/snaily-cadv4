@@ -13,13 +13,13 @@ export function ActiveWarrants({
 }: {
   warrants: Warrant[];
 }) {
-  const { state, tempItem: tempWarrant } = useTemporaryItem(warrants);
+  const [tempWarrant, warrantState] = useTemporaryItem(warrants);
 
   const { openModal } = useModal();
   const common = useTranslations("Common");
 
   function handleEditClick(warrant: Warrant) {
-    state.setTempId(warrant.id);
+    warrantState.setTempId(warrant.id);
     openModal(ModalIds.CreateWarrant);
   }
 
@@ -56,7 +56,7 @@ export function ActiveWarrants({
         />
       </div>
 
-      <CreateWarrantModal onClose={() => state.setTempId(null)} warrant={tempWarrant} />
+      <CreateWarrantModal onClose={() => warrantState.setTempId(null)} warrant={tempWarrant} />
     </div>
   );
 }

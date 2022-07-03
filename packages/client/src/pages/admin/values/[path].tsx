@@ -38,6 +38,7 @@ import type {
   GetValuesData,
   PutValuePositionsData,
 } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -59,7 +60,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   const routeData = valueRoutes.find((v) => v.type === type);
 
   const [search, setSearch] = React.useState("");
-  const [tempValue, setTempValue] = React.useState<AnyValue | null>(null);
+  const [tempValue, valueState] = useTemporaryItem(values);
   const { state, execute } = useFetch();
 
   const { isOpen, openModal, closeModal } = useModal();
@@ -121,12 +122,12 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   }
 
   function handleDeleteClick(value: AnyValue) {
-    setTempValue(value);
+    valueState.setTempId(value.id);
     openModal(ModalIds.AlertDeleteValue);
   }
 
   function handleEditClick(value: AnyValue) {
-    setTempValue(value);
+    valueState.setTempId(value.id);
     openModal(ModalIds.ManageValue);
   }
 
@@ -140,7 +141,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
 
     if (json) {
       setValues((p) => p.filter((v) => v.id !== tempValue.id));
-      setTempValue(null);
+      valueState.setTempId(null);
       closeModal(ModalIds.AlertDeleteValue);
     }
   }
@@ -169,8 +170,9 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
     // reset form values
     if (!isOpen(ModalIds.ManageValue) && !isOpen(ModalIds.AlertDeleteValue)) {
       // timeout: wait for modal to close
-      setTimeout(() => setTempValue(null), 100);
+      setTimeout(() => valueState.setTempId(null), 100);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   if (!Object.keys(ValueType).includes(path)) {
@@ -275,7 +277,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         state={state}
         onClose={() => {
           // wait for animation to play out
-          setTimeout(() => setTempValue(null), 100);
+          setTimeout(() => valueState.setTempId(null), 100);
         }}
       />
 

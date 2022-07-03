@@ -198,14 +198,14 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
               }`}
             >
               <div>
+                {CREATE_USER_CITIZEN_LEO && isLeo ? (
+                  <Button type="button" onClick={() => openModal(ModalIds.RegisterVehicle)}>
+                    {t("createVehicle")}
+                  </Button>
+                ) : null}
+
                 {currentResult && isLeo ? (
                   <>
-                    {CREATE_USER_CITIZEN_LEO ? (
-                      <Button type="button" onClick={() => openModal(ModalIds.RegisterVehicle)}>
-                        {t("createVehicle")}
-                      </Button>
-                    ) : null}
-
                     {showMarkStolen ? (
                       <Button
                         type="button"

@@ -13,6 +13,7 @@ import useFetch from "lib/useFetch";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import type { DeleteTruckLogsData, GetTruckLogsData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageTruckLogModal = dynamic(
@@ -22,7 +23,7 @@ const ManageTruckLogModal = dynamic(
 export default function TruckLogs({ registeredVehicles, logs: data }: GetTruckLogsData) {
   const { openModal, closeModal } = useModal();
   const [logs, setLogs] = React.useState(data);
-  const [tempLog, setTempLog] = React.useState<GetTruckLogsData["logs"][number] | null>(null);
+  const [tempLog, logState] = useTemporaryItem(logs);
 
   const t = useTranslations("TruckLogs");
   const common = useTranslations("Common");
@@ -38,18 +39,18 @@ export default function TruckLogs({ registeredVehicles, logs: data }: GetTruckLo
 
     if (json) {
       setLogs((p) => p.filter((v) => v.id !== tempLog.id));
-      setTempLog(null);
+      logState.setTempId(null);
       closeModal(ModalIds.AlertDeleteTruckLog);
     }
   }
 
   function handleEditClick(log: GetTruckLogsData["logs"][number]) {
-    setTempLog(log);
+    logState.setTempId(log.id);
     openModal(ModalIds.ManageTruckLog);
   }
 
   function handleDeleteClick(log: GetTruckLogsData["logs"][number]) {
-    setTempLog(log);
+    logState.setTempId(log.id);
     openModal(ModalIds.AlertDeleteTruckLog);
   }
 
@@ -111,7 +112,7 @@ export default function TruckLogs({ registeredVehicles, logs: data }: GetTruckLo
         }}
         log={tempLog}
         registeredVehicles={registeredVehicles}
-        onClose={() => setTempLog(null)}
+        onClose={() => logState.setTempId(null)}
       />
 
       <AlertModal
@@ -120,7 +121,7 @@ export default function TruckLogs({ registeredVehicles, logs: data }: GetTruckLo
         onDeleteClick={handleDelete}
         id={ModalIds.AlertDeleteTruckLog}
         state={state}
-        onClose={() => setTempLog(null)}
+        onClose={() => logState.setTempId(null)}
       />
     </Layout>
   );

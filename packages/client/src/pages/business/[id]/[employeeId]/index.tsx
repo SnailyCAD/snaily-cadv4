@@ -18,6 +18,7 @@ import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { classNames } from "lib/classNames";
 import type { DeleteBusinessPostsData, GetBusinessByIdData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageBusinessPostModal = dynamic(
@@ -30,8 +31,7 @@ export default function BusinessId(props: GetBusinessByIdData) {
   const { currentBusiness, currentEmployee, posts, ...state } = useBusinessState();
   const common = useTranslations("Common");
   const t = useTranslations("Business");
-
-  const [tempPost, setTempPost] = React.useState<BusinessPost | null>(null);
+  const [tempPost, postState] = useTemporaryItem(posts);
 
   async function handlePostDeletion() {
     if (!tempPost) return;
@@ -44,19 +44,19 @@ export default function BusinessId(props: GetBusinessByIdData) {
 
     if (json) {
       state.setPosts(posts.filter((p) => p.id !== tempPost.id));
-      setTempPost(null);
+      postState.setTempId(null);
       closeModal(ModalIds.AlertDeleteBusinessPost);
     }
   }
 
   function handleEdit(post: BusinessPost) {
     openModal(ModalIds.ManageBusinessPost);
-    setTempPost(post);
+    postState.setTempId(post.id);
   }
 
   function handleDelete(post: BusinessPost) {
     openModal(ModalIds.AlertDeleteBusinessPost);
-    setTempPost(post);
+    postState.setTempId(post.id);
   }
 
   React.useEffect(() => {
@@ -196,7 +196,7 @@ export default function BusinessId(props: GetBusinessByIdData) {
           post={tempPost}
           onUpdate={() => void 0}
           onCreate={(post) => state.setPosts([post, ...posts])}
-          onClose={() => setTimeout(() => setTempPost(null), 100)}
+          onClose={() => setTimeout(() => postState.setTempId(null), 100)}
         />
       ) : null}
 
@@ -206,7 +206,7 @@ export default function BusinessId(props: GetBusinessByIdData) {
         id={ModalIds.AlertDeleteBusinessPost}
         onDeleteClick={handlePostDeletion}
         state={fetchState}
-        onClose={() => setTempPost(null)}
+        onClose={() => postState.setTempId(null)}
       />
     </Layout>
   );

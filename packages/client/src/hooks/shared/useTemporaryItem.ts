@@ -24,5 +24,5 @@ export function useTemporaryItem<Id extends string, Obj extends { id: Id }>(
     setTempId,
   };
 
-  return { state, tempItem };
+  return [tempItem, state] as const;
 }

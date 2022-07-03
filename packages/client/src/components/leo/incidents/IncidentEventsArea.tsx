@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { IncidentEvent, LeoIncident } from "@snailycad/types";
+import type { LeoIncident } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import compareDesc from "date-fns/compareDesc";
@@ -8,6 +8,7 @@ import { EventItem } from "components/dispatch/events/EventItem";
 import type { FormikHelpers } from "formik";
 import { classNames } from "lib/classNames";
 import type { PostIncidentEventsData, PutIncidentEventByIdData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 interface Props {
   incident: LeoIncident;
@@ -18,7 +19,7 @@ export function IncidentEventsArea({ disabled, incident }: Props) {
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
-  const [tempEvent, setTempEvent] = React.useState<IncidentEvent | null>(null);
+  const [tempEvent, eventState] = useTemporaryItem(incident.events ?? []);
 
   async function onEventSubmit(
     values: { description: string },
@@ -55,7 +56,7 @@ export function IncidentEventsArea({ disabled, incident }: Props) {
               <EventItem
                 disabled={disabled}
                 key={event.id}
-                setTempEvent={setTempEvent}
+                setTempEvent={eventState.setTempId}
                 event={event}
                 isEditing={tempEvent?.id === event.id}
               />
@@ -68,7 +69,7 @@ export function IncidentEventsArea({ disabled, incident }: Props) {
           onSubmit={onEventSubmit}
           state={state}
           event={tempEvent}
-          setEvent={setTempEvent}
+          setEvent={eventState.setTempId}
         />
       )}
     </div>

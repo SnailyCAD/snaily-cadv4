@@ -346,7 +346,7 @@ export class SearchActionsController {
 
     const citizen = await prisma.citizen.create({
       data: citizenObjectFromData(data, defaultLicenseValueId),
-      include: citizenSearchIncludeOrSelect(user, cad),
+      ...citizenSearchIncludeOrSelect(user, cad),
     });
 
     return citizen as APITypes.PostSearchActionsCreateCitizen;
