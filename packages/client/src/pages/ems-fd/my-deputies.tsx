@@ -19,6 +19,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { OfficerRank } from "components/leo/OfficerRank";
 import { UnitDepartmentStatus } from "components/leo/UnitDepartmentStatus";
 import type { DeleteMyDeputyByIdData, GetMyDeputiesData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageDeputyModal = dynamic(
@@ -39,9 +40,7 @@ export default function MyDeputies({ deputies: data }: Props) {
   const { BADGE_NUMBERS } = useFeatureEnabled();
 
   const [deputies, setDeputies] = React.useState(data);
-  const [tempDeputy, setTempDeputy] = React.useState<GetMyDeputiesData["deputies"][number] | null>(
-    null,
-  );
+  const [tempDeputy, deputyState] = useTemporaryItem(deputies);
 
   async function handleDeleteDeputy() {
     if (!tempDeputy) return;
@@ -58,12 +57,12 @@ export default function MyDeputies({ deputies: data }: Props) {
   }
 
   function handleEditClick(deputy: GetMyDeputiesData["deputies"][number]) {
-    setTempDeputy(deputy);
+    deputyState.setTempId(deputy.id);
     openModal(ModalIds.ManageDeputy);
   }
 
   function handleDeleteClick(deputy: GetMyDeputiesData["deputies"][number]) {
-    setTempDeputy(deputy);
+    deputyState.setTempId(deputy.id);
     openModal(ModalIds.AlertDeleteDeputy);
   }
 
@@ -143,7 +142,7 @@ export default function MyDeputies({ deputies: data }: Props) {
           });
         }}
         deputy={tempDeputy}
-        onClose={() => setTempDeputy(null)}
+        onClose={() => deputyState.setTempId(null)}
       />
 
       <AlertModal
@@ -154,7 +153,7 @@ export default function MyDeputies({ deputies: data }: Props) {
         })}
         id={ModalIds.AlertDeleteDeputy}
         onDeleteClick={handleDeleteDeputy}
-        onClose={() => setTempDeputy(null)}
+        onClose={() => deputyState.setTempId(null)}
         state={state}
       />
     </Layout>

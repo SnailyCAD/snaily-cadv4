@@ -22,14 +22,13 @@ import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 import type { DeleteDLExamByIdData, GetDLExamsData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 interface Props {
   data: GetDLExamsData;
 }
 
 export default function CitizenLogs({ data }: Props) {
-  const [tempExam, setTempExam] = React.useState<DLExam | null>(null);
-
   const { hasPermissions } = usePermission();
   const { openModal, closeModal } = useModal();
   const t = useTranslations("Leo");
@@ -45,6 +44,7 @@ export default function CitizenLogs({ data }: Props) {
     totalCount: data.totalCount,
     initialData: data.exams,
   });
+  const [tempExam, examState] = useTemporaryItem(asyncTable.data);
 
   const PASS_FAIL_LABELS = {
     PASSED: cT("passed"),
@@ -62,17 +62,17 @@ export default function CitizenLogs({ data }: Props) {
     if (typeof json === "boolean") {
       closeModal(ModalIds.AlertDeleteDLExam);
       asyncTable.setData((p) => p.filter((v) => v.id !== tempExam.id));
-      setTempExam(null);
+      examState.setTempId(null);
     }
   }
 
   function handleDeleteClick(exam: DLExam) {
-    setTempExam(exam);
+    examState.setTempId(exam.id);
     openModal(ModalIds.AlertDeleteDLExam);
   }
 
   function handleEditClick(exam: DLExam) {
-    setTempExam(exam);
+    examState.setTempId(exam.id);
     openModal(ModalIds.ManageDLExam);
   }
 
@@ -179,11 +179,11 @@ export default function CitizenLogs({ data }: Props) {
         description={t("alert_deleteDLExam")}
         onDeleteClick={handleDelete}
         state={state}
-        onClose={() => setTempExam(null)}
+        onClose={() => examState.setTempId(null)}
       />
 
       <ManageDLExamModal
-        onClose={() => setTempExam(null)}
+        onClose={() => examState.setTempId(null)}
         onCreate={(exam) => {
           asyncTable.setData((p) => [exam, ...p]);
         }}
@@ -194,7 +194,7 @@ export default function CitizenLogs({ data }: Props) {
 
             return prev;
           });
-          setTempExam(null);
+          examState.setTempId(null);
         }}
         exam={tempExam}
       />
