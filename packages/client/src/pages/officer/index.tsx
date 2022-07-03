@@ -15,6 +15,7 @@ import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { requestAll } from "lib/utils";
 import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
 import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
+import { ActiveWarrants } from "components/leo/active-warrants/ActiveWarrants";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { usePanicButton } from "hooks/shared/usePanicButton";
 import { Title } from "components/shared/Title";
@@ -157,6 +158,7 @@ export default function OfficerDashboard({
 
       <ActiveCalls />
       <ActiveBolos />
+      <ActiveWarrants />
 
       <div className="mt-3">
         <ActiveOfficers />
@@ -177,7 +179,7 @@ export default function OfficerDashboard({
             </>
           )}
           <Modals.NameSearchModal />
-          <Modals.CreateWarrantModal />
+
           <Modals.CustomFieldSearch />
         </>
       ) : null}

@@ -21,7 +21,6 @@ const buttons: modalButtons.ModalButton[] = [
   modalButtons.createTicketBtn,
   modalButtons.createArrestReportBtn,
   modalButtons.createBoloBtn,
-  modalButtons.createWarrantBtn,
   modalButtons.notepadBtn,
 ];
 

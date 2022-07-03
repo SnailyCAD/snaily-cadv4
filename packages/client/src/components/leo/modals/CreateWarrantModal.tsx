@@ -15,13 +15,24 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { toastMessage } from "lib/toastMessage";
 import type { NameSearchResult } from "state/search/nameSearchState";
 import type { PostCreateWarrantData } from "@snailycad/types/api";
+import type { Warrant } from "@snailycad/types";
 
-export function CreateWarrantModal() {
+interface Props {
+  onClose?(): void;
+  warrant: Warrant | null;
+}
+
+export function CreateWarrantModal({ warrant, onClose }: Props) {
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const { makeImageUrl } = useImageUrl();
   const t = useTranslations("Leo");
+
+  function handleClose() {
+    onClose?.();
+    closeModal(ModalIds.CreateWarrant);
+  }
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
@@ -46,17 +57,17 @@ export function CreateWarrantModal() {
   }
 
   const INITIAL_VALUES = {
-    citizenId: "",
-    citizenName: "",
-    status: "",
-    description: "",
+    citizenId: warrant?.citizenId ?? "",
+    citizenName: warrant?.citizen ? `${warrant.citizen.name} ${warrant.citizen.surname}` : "",
+    status: warrant?.status ?? "",
+    description: warrant?.description ?? "",
   };
 
   return (
     <Modal
       title={t("createWarrant")}
       isOpen={isOpen(ModalIds.CreateWarrant)}
-      onClose={() => closeModal(ModalIds.CreateWarrant)}
+      onClose={handleClose}
       className="w-[600px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
@@ -117,11 +128,7 @@ export function CreateWarrantModal() {
             </FormField>
 
             <footer className="flex justify-end mt-5">
-              <Button
-                type="reset"
-                onClick={() => closeModal(ModalIds.CreateWarrant)}
-                variant="cancel"
-              >
+              <Button type="reset" onClick={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button
@@ -130,7 +137,7 @@ export function CreateWarrantModal() {
                 type="submit"
               >
                 {state === "loading" ? <Loader className="mr-2" /> : null}
-                {common("create")}
+                {warrant ? common("save") : common("create")}
               </Button>
             </footer>
           </Form>
