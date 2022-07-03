@@ -1,5 +1,5 @@
 import { Controller } from "@tsed/di";
-import { Get } from "@tsed/schema";
+import { Get, Description } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import glob from "glob";
 import { join } from "node:path";
@@ -15,6 +15,7 @@ import type { GetAdminDashboardData } from "@snailycad/types/api";
 @UseBeforeEach(IsAuth)
 export class AdminController {
   @Get("/")
+  @Description("Get simple CAD stats")
   @UsePermissions({
     fallback: (u) => u.rank !== Rank.USER,
     permissions: defaultPermissions.allDefaultAdminPermissions,
