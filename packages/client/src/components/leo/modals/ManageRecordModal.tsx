@@ -35,21 +35,6 @@ interface Props {
   onCreate?(data: Record): void;
 }
 
-function useSessionStorage<T>(key: string) {
-  const [value, setValue] = React.useState<T | null>(() => {
-    try {
-      const v = JSON.parse(sessionStorage.getItem(key) || "null");
-
-      return v;
-    } catch (_) {
-      console.log(_);
-      return null;
-    }
-  });
-
-  return [value, setValue];
-}
-
 export function ManageRecordModal({
   onUpdate,
   onCreate,
@@ -267,7 +252,9 @@ export function ManageRecordModal({
                 type="reset"
                 onClick={() => {
                   closeModal(data[type].id);
-                  setSessionStorage(null);
+                  if (!record) {
+                    setSessionStorage(null);
+                  }
                 }}
                 variant="cancel"
               >
@@ -289,7 +276,28 @@ export function ManageRecordModal({
   );
 }
 
-function SaveToSessionStorage({ id, setSessionStorage }: { id: string; setSessionStorage: any }) {
+function useSessionStorage<T>(key: string) {
+  const [value, setValue] = React.useState<T | null>(() => {
+    try {
+      const v = JSON.parse(sessionStorage.getItem(key) || "null");
+
+      return v;
+    } catch (_) {
+      console.log(_);
+      return null;
+    }
+  });
+
+  return [value, setValue] as const;
+}
+
+function SaveToSessionStorage<T>({
+  id,
+  setSessionStorage,
+}: {
+  id: string;
+  setSessionStorage: React.Dispatch<React.SetStateAction<T | null>>;
+}) {
   const { values, submitCount } = useFormikContext<any>();
   const isFirstTime = React.useRef(true);
 
@@ -298,14 +306,11 @@ function SaveToSessionStorage({ id, setSessionStorage }: { id: string; setSessio
       isFirstTime.current = false;
     } else {
       setSessionStorage(values);
-      console.log({ values });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values, id]);
 
   React.useEffect(() => {
-    console.log("here", { submitCount });
-
     if (submitCount === 1) {
       setSessionStorage(null);
       isFirstTime.current = true;
