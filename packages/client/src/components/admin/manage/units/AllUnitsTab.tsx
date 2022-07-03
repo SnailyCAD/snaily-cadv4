@@ -24,6 +24,7 @@ import type {
   GetManageUnitsData,
   PutManageUnitsOffDutyData,
 } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 interface Props {
   units: GetManageUnitsData;
@@ -31,7 +32,7 @@ interface Props {
 }
 
 export function AllUnitsTab({ search, units }: Props) {
-  const [tempUnit, setTempUnit] = React.useState<Unit | null>(null);
+  const [tempUnit, unitState] = useTemporaryItem(units);
 
   const tableSelect = useTableSelect(units, (u) => `${u.id}-${u.type}`);
   const { hasPermissions } = usePermission();
@@ -47,7 +48,7 @@ export function AllUnitsTab({ search, units }: Props) {
   const { openModal, closeModal } = useModal();
 
   function handleDeleteClick(unit: Unit) {
-    setTempUnit(unit);
+    unitState.setTempId(unit.id);
     openModal(ModalIds.AlertDeleteUnit);
   }
 
@@ -60,7 +61,7 @@ export function AllUnitsTab({ search, units }: Props) {
     });
 
     if (json) {
-      setTempUnit(null);
+      unitState.setTempId(null);
       closeModal(ModalIds.AlertDeleteUnit);
 
       router.replace({
@@ -215,7 +216,7 @@ export function AllUnitsTab({ search, units }: Props) {
             span: (c) => <span className="font-bold">{c}</span>,
             unit: `${generateCallsign(tempUnit)} ${makeUnitName(tempUnit)}`,
           })}
-          onClose={() => setTempUnit(null)}
+          onClose={() => unitState.setTempId(null)}
         />
       ) : null}
     </TabsContent>

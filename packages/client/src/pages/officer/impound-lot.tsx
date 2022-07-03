@@ -19,6 +19,7 @@ import type {
   DeleteLeoCheckoutImpoundedVehicleData,
   GetLeoImpoundedVehiclesData,
 } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 interface Props {
   vehicles: GetLeoImpoundedVehiclesData;
@@ -33,7 +34,7 @@ export default function ImpoundLot({ vehicles: data }: Props) {
   const hasManagePermissions = hasPermissions([Permissions.ManageImpoundLot], true);
 
   const [vehicles, setVehicles] = React.useState(data);
-  const [tempVehicle, setTempVehicle] = React.useState<ImpoundedVehicle | null>(null);
+  const [tempVehicle, vehicleState] = useTemporaryItem(vehicles);
 
   async function handleCheckout() {
     if (!tempVehicle) return;
@@ -45,13 +46,13 @@ export default function ImpoundLot({ vehicles: data }: Props) {
 
     if (typeof json === "boolean") {
       setVehicles((p) => p.filter((v) => v.id !== tempVehicle.id));
-      setTempVehicle(null);
+      vehicleState.setTempId(null);
       closeModal(ModalIds.AlertCheckoutImpoundedVehicle);
     }
   }
 
   function handleCheckoutClick(item: ImpoundedVehicle) {
-    setTempVehicle(item);
+    vehicleState.setTempId(item.id);
     openModal(ModalIds.AlertCheckoutImpoundedVehicle);
   }
 
