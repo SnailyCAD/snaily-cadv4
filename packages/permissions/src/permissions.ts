@@ -63,6 +63,8 @@ export enum Permissions {
   ImportCitizens = "ImportCitizens",
   ImportRegisteredVehicles = "ImportRegisteredVehicles",
   ImportRegisteredWeapons = "ImportRegisteredWeapons",
+  DeleteRegisteredVehicles = "DeleteRegisteredVehicles",
+  DeleteRegisteredWeapons = "DeleteRegisteredWeapons",
 
   // values
   ManageValueLicense = "ManageValueLicense",

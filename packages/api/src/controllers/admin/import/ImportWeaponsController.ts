@@ -1,8 +1,14 @@
 import { Controller } from "@tsed/di";
-import { Get, Post, Description } from "@tsed/schema";
+import { Get, Post, Description, Delete } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { WEAPON_SCHEMA_ARR } from "@snailycad/schemas/dist/admin/import/weapons";
-import { BodyParams, MultipartFile, PlatformMulterFile, QueryParams } from "@tsed/common";
+import {
+  BodyParams,
+  MultipartFile,
+  PathParams,
+  PlatformMulterFile,
+  QueryParams,
+} from "@tsed/common";
 import { parseImportFile } from "utils/file";
 import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
@@ -51,6 +57,14 @@ export class ImportWeaponsController {
   ): Promise<APITypes.PostImportWeaponsData> {
     const toValidateBody = file ? parseImportFile(file) : body;
     return importWeaponsHandler(toValidateBody);
+  }
+
+  @Delete("/:id")
+  @Description("Delete a registered weapon by its id")
+  async deleteWeapon(@PathParams("id") id: string): Promise<APITypes.DeleteImportWeaponsData> {
+    await prisma.weapon.delete({ where: { id } });
+
+    return true;
   }
 }
 
