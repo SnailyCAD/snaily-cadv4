@@ -76,6 +76,7 @@ export class AdminManageCitizensController {
   }
 
   @Get("/records-logs")
+  @Description("Get all the record logs within the CAD")
   @UsePermissions({
     fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [

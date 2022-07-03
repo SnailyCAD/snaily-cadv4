@@ -1,5 +1,5 @@
 import { Controller } from "@tsed/di";
-import { Get, Post } from "@tsed/schema";
+import { Get, Post, Description } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { WEAPON_SCHEMA_ARR } from "@snailycad/schemas/dist/admin/import/weapons";
 import { BodyParams, MultipartFile, PlatformMulterFile, QueryParams } from "@tsed/common";
@@ -15,6 +15,7 @@ const weaponsInclude = { ...citizenInclude.weapons.include, citizen: true };
 @Controller("/admin/import/weapons")
 export class ImportWeaponsController {
   @Get("/")
+  @Description("Get all the Weapons in the CAD (paginated)")
   async getWeapons(
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query = "",
@@ -43,6 +44,7 @@ export class ImportWeaponsController {
   }
 
   @Post("/")
+  @Description("Import weapons in the CAD via file upload")
   async importWeapons(
     @BodyParams() body: unknown,
     @MultipartFile("file") file?: PlatformMulterFile,
