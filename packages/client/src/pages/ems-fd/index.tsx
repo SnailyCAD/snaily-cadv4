@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Layout } from "components/Layout";
-import { ActiveCalls } from "components/leo/ActiveCalls";
+import { ActiveCalls } from "components/dispatch/active-calls/ActiveCalls";
 import { ModalButtons } from "components/ems-fd/ModalButtons";
 import dynamic from "next/dynamic";
 import type { GetServerSideProps } from "next";

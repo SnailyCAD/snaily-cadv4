@@ -8,7 +8,7 @@ import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { useLeoState } from "state/leoState";
 import { Record, RecordType, ValueType } from "@snailycad/types";
-import { ActiveCalls } from "components/leo/ActiveCalls";
+import { ActiveCalls } from "components/dispatch/active-calls/ActiveCalls";
 import { useDispatchState } from "state/dispatchState";
 import { ModalButtons } from "components/leo/ModalButtons";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";

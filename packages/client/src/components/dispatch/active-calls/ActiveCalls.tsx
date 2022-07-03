@@ -17,7 +17,7 @@ import { DispatchCallTowModal } from "components/dispatch/modals/CallTowModal";
 import compareDesc from "date-fns/compareDesc";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
-import { CallsFilters, useActiveCallsFilters } from "./calls/CallsFilters";
+import { CallsFilters, useActiveCallsFilters } from "./CallsFilters";
 import { useCallsFilters } from "state/callsFiltersState";
 import { Filter } from "react-bootstrap-icons";
 import { Table } from "components/shared/Table";
@@ -29,7 +29,7 @@ import { useAudio } from "react-use";
 import { useAuth } from "context/AuthContext";
 import { Droppable } from "components/shared/dnd/Droppable";
 import { DndActions } from "types/DndActions";
-import { AssignedUnitsColumn } from "./active-calls/AssignedUnitsColumn";
+import { AssignedUnitsColumn } from "./AssignedUnitsColumn";
 import type { Post911CallAssignUnAssign } from "@snailycad/types/api";
 
 const ADDED_TO_CALL_SRC = "/sounds/added-to-call.mp3" as const;
