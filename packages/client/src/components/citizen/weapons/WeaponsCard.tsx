@@ -16,6 +16,7 @@ import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
 import type { DeleteCitizenWeaponData, GetCitizenWeaponsData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
   const { openModal, closeModal } = useModal();
@@ -25,7 +26,6 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
   const { WEAPON_REGISTRATION } = useFeatureEnabled();
   const { citizen } = useCitizen(false);
 
-  const [tempWeapon, setTempWeapon] = React.useState<Omit<Weapon, "citizen"> | null>(null);
   const asyncTable = useAsyncTable({
     fetchOptions: {
       onResponse: (json: GetCitizenWeaponsData) => ({
@@ -37,6 +37,7 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
     totalCount: props.weapons.length,
     initialData: props.weapons,
   });
+  const [tempWeapon, weaponState] = useTemporaryItem(asyncTable.data);
 
   async function handleDelete() {
     if (!tempWeapon) return;
@@ -48,18 +49,18 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
 
     if (typeof json === "boolean" && json) {
       asyncTable.setData((p) => p.filter((v) => v.id !== tempWeapon.id));
-      setTempWeapon(null);
+      weaponState.setTempId(null);
       closeModal(ModalIds.AlertDeleteWeapon);
     }
   }
 
   function handleEditClick(weapon: Omit<Weapon, "citizen">) {
-    setTempWeapon(weapon);
+    weaponState.setTempId(weapon.id);
     openModal(ModalIds.RegisterWeapon);
   }
 
   function handleDeleteClick(weapon: Omit<Weapon, "citizen">) {
-    setTempWeapon(weapon);
+    weaponState.setTempId(weapon.id);
     openModal(ModalIds.AlertDeleteWeapon);
   }
 
@@ -159,7 +160,7 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
           closeModal(ModalIds.RegisterWeapon);
         }}
         weapon={tempWeapon}
-        onClose={() => setTempWeapon(null)}
+        onClose={() => weaponState.setTempId(null)}
       />
 
       <AlertModal
@@ -169,7 +170,7 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
         description={t("alert_deleteWeapon")}
         onDeleteClick={handleDelete}
         state={state}
-        onClose={() => setTempWeapon(null)}
+        onClose={() => weaponState.setTempId(null)}
       />
     </>
   );

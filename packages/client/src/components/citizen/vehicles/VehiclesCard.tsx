@@ -18,6 +18,7 @@ import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
 import type { DeleteCitizenVehicleData, GetCitizenVehiclesData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
   const { openModal, closeModal } = useModal();
@@ -27,7 +28,6 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
   const { DMV } = useFeatureEnabled();
   const { citizen } = useCitizen(false);
 
-  const [tempVehicle, setTempVehicle] = React.useState<RegisteredVehicle | null>(null);
   const asyncTable = useAsyncTable({
     fetchOptions: {
       onResponse: (json: GetCitizenVehiclesData) => ({
@@ -39,6 +39,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
     totalCount: props.vehicles.length,
     initialData: props.vehicles,
   });
+  const [tempVehicle, vehicleState] = useTemporaryItem(asyncTable.data);
 
   async function handleDelete() {
     if (!tempVehicle) return;
@@ -50,23 +51,23 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
 
     if (json) {
       asyncTable.setData((p) => p.filter((v) => v.id !== tempVehicle.id));
-      setTempVehicle(null);
+      vehicleState.setTempId(null);
       closeModal(ModalIds.AlertDeleteVehicle);
     }
   }
 
   function handleDeleteClick(vehicle: RegisteredVehicle) {
-    setTempVehicle(vehicle);
+    vehicleState.setTempId(vehicle.id);
     openModal(ModalIds.AlertDeleteVehicle);
   }
 
   function handleEditClick(vehicle: RegisteredVehicle) {
-    setTempVehicle(vehicle);
+    vehicleState.setTempId(vehicle.id);
     openModal(ModalIds.RegisterVehicle);
   }
 
   function handleTransferClick(vehicle: RegisteredVehicle) {
-    setTempVehicle(vehicle);
+    vehicleState.setTempId(vehicle.id);
     openModal(ModalIds.TransferVehicle);
   }
 
@@ -189,7 +190,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
           closeModal(ModalIds.RegisterVehicle);
         }}
         vehicle={tempVehicle}
-        onClose={() => setTempVehicle(null)}
+        onClose={() => vehicleState.setTempId(null)}
       />
 
       <AlertModal
@@ -199,13 +200,13 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
         description={t("alert_deleteVehicle")}
         onDeleteClick={handleDelete}
         state={state}
-        onClose={() => setTempVehicle(null)}
+        onClose={() => vehicleState.setTempId(null)}
       />
 
       {tempVehicle ? (
         <TransferVehicleModal
           onTransfer={(vehicle) => {
-            setTempVehicle(null);
+            vehicleState.setTempId(null);
             asyncTable.setData((prev) => prev.filter((v) => v.id !== vehicle.id));
           }}
           vehicle={tempVehicle}

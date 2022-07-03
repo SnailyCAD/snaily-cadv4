@@ -16,6 +16,7 @@ import { usePermission, Permissions } from "hooks/usePermission";
 import { classNames } from "lib/classNames";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 import type { DeleteManageCitizenByIdData, GetManageCitizensData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 type CitizenWithUser = GetManageCitizensData["citizens"][number];
 
@@ -38,7 +39,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
     },
   });
 
-  const [tempValue, setTempValue] = React.useState<CitizenWithUser | null>(null);
+  const [tempValue, valueState] = useTemporaryItem(asyncTable.data);
   const [reason, setReason] = React.useState("");
   const [userFilter, setUserFilter] = React.useState<string | null>(null);
   const users = React.useMemo(() => makeUsersList(asyncTable.data), [asyncTable.data]);
@@ -54,7 +55,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
   const common = useTranslations("Common");
 
   function handleDeleteClick(value: CitizenWithUser) {
-    setTempValue(value);
+    valueState.setTempId(value.id);
     openModal(ModalIds.AlertDeleteCitizen);
   }
 
@@ -73,7 +74,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
 
     if (json) {
       setCitizens((p) => p.filter((v) => v.id !== tempValue.id));
-      setTempValue(null);
+      valueState.setTempId(null);
       closeModal(ModalIds.AlertDeleteCitizen);
     }
   }
