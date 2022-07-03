@@ -24,6 +24,7 @@ import { SeizedItemsTable } from "./ManageRecord/seized-items/SeizedItemsTable";
 import { toastMessage } from "lib/toastMessage";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { PostRecordsData, PutRecordsByIdData } from "@snailycad/types/api";
+import { SaveToSessionStorage, useSessionStorage } from "components/shared/SaveToSessionStorage";
 
 interface Props {
   record?: Record | null;
@@ -274,51 +275,6 @@ export function ManageRecordModal({
       </Formik>
     </Modal>
   );
-}
-
-function useSessionStorage<T>(key: string) {
-  const [value, setValue] = React.useState<T | null>(() => {
-    try {
-      const v = JSON.parse(sessionStorage.getItem(key) || "null");
-
-      return v;
-    } catch (_) {
-      console.log(_);
-      return null;
-    }
-  });
-
-  return [value, setValue] as const;
-}
-
-function SaveToSessionStorage<T>({
-  id,
-  setSessionStorage,
-}: {
-  id: string;
-  setSessionStorage: React.Dispatch<React.SetStateAction<T | null>>;
-}) {
-  const { values, submitCount } = useFormikContext<any>();
-  const isFirstTime = React.useRef(true);
-
-  React.useEffect(() => {
-    if (isFirstTime.current) {
-      isFirstTime.current = false;
-    } else {
-      setSessionStorage(values);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [values, id]);
-
-  React.useEffect(() => {
-    if (submitCount === 1) {
-      setSessionStorage(null);
-      isFirstTime.current = true;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [submitCount, id]);
-
-  return null;
 }
 
 function validateRecords(data: any[], helpers: FormikHelpers<any>) {
