@@ -27,7 +27,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "yarn workspace @snailycad/api generate && yarn tsup",
-    "watch": "rm -rf ./dist && yarn tsup --watch --silent=false",
+    "watch": "yarn tsup --watch --silent=false",
     "typecheck": "yarn workspace @snailycad/api generate && yarn tsc --noEmit"
   },
   "dependencies": {
