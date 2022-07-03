@@ -17,6 +17,7 @@ import {
   Officer,
   WhitelistStatus,
   User,
+  Rank,
 } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { CUSTOM_FIELD_SEARCH_SCHEMA } from "@snailycad/schemas";
@@ -53,7 +54,7 @@ export const citizenSearchIncludeOrSelect = (
     ...defaultPermissions.defaultEmsFdPermissions,
   ]);
 
-  if (hasPerms || user.isLeo || user.isDispatch || user.isEmsFd) {
+  if (hasPerms || user.rank === Rank.OWNER || user.isLeo || user.isDispatch || user.isEmsFd) {
     return {
       include: {
         officers: { select: { department: { select: { isConfidential: true } } } },
