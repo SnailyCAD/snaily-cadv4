@@ -15,7 +15,7 @@ const weaponsInclude = { ...citizenInclude.weapons.include, citizen: true };
 @Controller("/admin/import/weapons")
 export class ImportWeaponsController {
   @Get("/")
-  @Description("Get All the Weapons in the CAD")
+  @Description("Get all the Weapons in the CAD (paginated)")
   async getWeapons(
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query = "",
@@ -44,7 +44,7 @@ export class ImportWeaponsController {
   }
 
   @Post("/")
-  @Description("Import Vehciles in the CAD via file upload")
+  @Description("Import weapons in the CAD via file upload")
   async importWeapons(
     @BodyParams() body: unknown,
     @MultipartFile("file") file?: PlatformMulterFile,

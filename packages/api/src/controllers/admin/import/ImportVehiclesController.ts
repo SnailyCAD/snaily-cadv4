@@ -16,7 +16,7 @@ const vehiclesInclude = { ...citizenInclude.vehicles.include, citizen: true };
 @Controller("/admin/import/vehicles")
 export class ImportVehiclesController {
   @Get("/")
-  @Description("Get All the Vehciles in the CAD")
+  @Description("Get all the vehicles in the CAD (paginated)")
   async getVehicles(
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query = "",
@@ -47,7 +47,7 @@ export class ImportVehiclesController {
   }
 
   @Post("/")
-  @Description("Import Vehciles in the CAD via file upload")
+  @Description("Import vehicles in the CAD via file upload")
   async importVehicles(
     @BodyParams() body?: unknown,
     @MultipartFile("file") file?: PlatformMulterFile,

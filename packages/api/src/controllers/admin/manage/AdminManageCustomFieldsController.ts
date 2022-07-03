@@ -20,7 +20,7 @@ export class AdminManageCustomFieldsController {
   }
 
   @Post("/")
-  @Description("")
+  @Description("Create a new custom field")
   @UsePermissions({
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCustomFields],
@@ -40,7 +40,7 @@ export class AdminManageCustomFieldsController {
   }
 
   @Put("/:id")
-  @Description("Update a custom field")
+  @Description("Update a custom field by its id")
   @UsePermissions({
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCustomFields],
@@ -69,7 +69,7 @@ export class AdminManageCustomFieldsController {
   }
 
   @Delete("/:id")
-  @Description("Delete a custom field")
+  @Description("Delete a custom field by its id")
   @UsePermissions({
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCustomFields],

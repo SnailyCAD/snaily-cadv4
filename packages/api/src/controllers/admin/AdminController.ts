@@ -15,7 +15,7 @@ import type { GetAdminDashboardData } from "@snailycad/types/api";
 @UseBeforeEach(IsAuth)
 export class AdminController {
   @Get("/")
-  @Description("Get all the users within the CAD")
+  @Description("Get simple CAD stats")
   @UsePermissions({
     fallback: (u) => u.rank !== Rank.USER,
     permissions: defaultPermissions.allDefaultAdminPermissions,

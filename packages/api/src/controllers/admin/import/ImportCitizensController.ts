@@ -15,7 +15,7 @@ import type * as APITypes from "@snailycad/types/api";
 @Controller("/admin/import/citizens")
 export class ImportCitizensController {
   @Post("/")
-  @Description("Import Citizens in the CAD via file upload")
+  @Description("Import citizens in the CAD via file upload")
   async importCitizens(
     @BodyParams() body: unknown,
     @MultipartFile("file") file?: PlatformMulterFile,
