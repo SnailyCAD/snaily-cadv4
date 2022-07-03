@@ -1,8 +1,14 @@
 import { Controller } from "@tsed/di";
-import { Get, Post, Description } from "@tsed/schema";
+import { Get, Post, Description, Delete } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { VEHICLE_SCHEMA_ARR } from "@snailycad/schemas/dist/admin/import/vehicles";
-import { BodyParams, MultipartFile, PlatformMulterFile, QueryParams } from "@tsed/common";
+import {
+  BodyParams,
+  MultipartFile,
+  PathParams,
+  PlatformMulterFile,
+  QueryParams,
+} from "@tsed/common";
 import { parseImportFile } from "utils/file";
 import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
@@ -54,6 +60,14 @@ export class ImportVehiclesController {
   ): Promise<APITypes.PostImportVehiclesData> {
     const toValidateBody = file ? parseImportFile(file) : body;
     return importVehiclesHandler(toValidateBody);
+  }
+
+  @Delete("/:id")
+  @Description("Delete a registered vehicle by its id")
+  async deleteVehicle(@PathParams("id") id: string): Promise<APITypes.DeleteImportVehiclesData> {
+    await prisma.registeredVehicle.delete({ where: { id } });
+
+    return true;
   }
 }
 

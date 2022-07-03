@@ -49,6 +49,12 @@ export interface GetImportVehiclesData {
 export type PostImportVehiclesData = GetImportVehiclesData["vehicles"];
 
 /**
+ * @method DELETE
+ * @route /admin/import/vehicles/:id
+ */
+export type DeleteImportVehiclesData = boolean;
+
+/**
  * @method GET
  * @route /admin/import/weapons
  */
@@ -66,6 +72,12 @@ export interface GetImportWeaponsData {
  * @route /admin/import/weapons
  */
 export type PostImportWeaponsData = GetImportWeaponsData["weapons"];
+
+/**
+ * @method DELETE
+ * @route /admin/import/weapons/:id
+ */
+export type DeleteImportWeaponsData = boolean;
 
 /**
  * @method GET

@@ -6,7 +6,7 @@ import type { GetServerSideProps } from "next";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
-import { Rank } from "@snailycad/types";
+import { Rank, Weapon } from "@snailycad/types";
 import { Table } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { FormField } from "components/form/FormField";
@@ -15,9 +15,12 @@ import { Button } from "components/Button";
 import { ImportModal } from "components/admin/import/ImportModal";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
-import { Permissions } from "@snailycad/permissions";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 import type { GetImportWeaponsData, PostImportWeaponsData } from "@snailycad/types/api";
+import { AlertModal } from "components/modal/AlertModal";
+import { Permissions, usePermission } from "hooks/usePermission";
+import useFetch from "lib/useFetch";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 interface Props {
   data: GetImportWeaponsData;
@@ -27,7 +30,10 @@ export default function ImportWeaponsPage({ data }: Props) {
   const t = useTranslations("Management");
   const common = useTranslations("Common");
   const wep = useTranslations("Weapons");
-  const { openModal } = useModal();
+  const { closeModal, openModal } = useModal();
+  const { state, execute } = useFetch();
+  const { hasPermissions } = usePermission();
+  const hasDeletePermissions = hasPermissions([Permissions.DeleteRegisteredWeapons], true);
 
   const asyncTable = useAsyncTable({
     fetchOptions: {
@@ -40,6 +46,27 @@ export default function ImportWeaponsPage({ data }: Props) {
     initialData: data.weapons,
     totalCount: data.totalCount,
   });
+  const [tempWeapon, weaponState] = useTemporaryItem(asyncTable.data);
+
+  function handleDeleteClick(weapon: Weapon) {
+    weaponState.setTempId(weapon.id);
+    openModal(ModalIds.AlertDeleteWeapon);
+  }
+
+  async function handleDeleteWeapon() {
+    if (!tempWeapon) return;
+
+    const { json } = await execute({
+      path: `/admin/import/weapons/${tempWeapon.id}`,
+      method: "DELETE",
+    });
+
+    if (typeof json === "boolean" && json) {
+      asyncTable.setData((prevData) => prevData.filter((v) => v.id !== tempWeapon.id));
+      weaponState.setTempId(null);
+      closeModal(ModalIds.AlertDeleteWeapon);
+    }
+  }
 
   return (
     <AdminLayout
@@ -85,6 +112,11 @@ export default function ImportWeaponsPage({ data }: Props) {
           serialNumber: weapon.serialNumber,
           citizen: `${weapon.citizen.name} ${weapon.citizen.surname}`,
           createdAt: <FullDate>{weapon.createdAt}</FullDate>,
+          actions: (
+            <Button size="xs" variant="danger" onClick={() => handleDeleteClick(weapon)}>
+              {common("delete")}
+            </Button>
+          ),
         }))}
         columns={[
           { Header: wep("model"), accessor: "model" },
@@ -92,6 +124,7 @@ export default function ImportWeaponsPage({ data }: Props) {
           { Header: wep("serialNumber"), accessor: "serialNumber" },
           { Header: common("citizen"), accessor: "citizen" },
           { Header: common("createdAt"), accessor: "createdAt" },
+          hasDeletePermissions ? { Header: common("actions"), accessor: "actions" } : null,
         ]}
       />
 
@@ -102,6 +135,16 @@ export default function ImportWeaponsPage({ data }: Props) {
         id={ModalIds.ImportWeapons}
         url="/admin/import/weapons"
       />
+
+      {hasDeletePermissions ? (
+        <AlertModal
+          id={ModalIds.AlertDeleteWeapon}
+          title="Delete weapon"
+          description={`Are you sure you want to delete this weapon (${tempWeapon?.serialNumber})? This action cannot be undone.`}
+          onDeleteClick={handleDeleteWeapon}
+          state={state}
+        />
+      ) : null}
     </AdminLayout>
   );
 }
