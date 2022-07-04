@@ -23,9 +23,10 @@ interface Props {
   isActive?: boolean;
 
   onUpdate?(previous: ActiveWarrant, newWarrant: PutWarrantsData): void;
+  onCreate?(warrant: PostCreateWarrantData): void;
 }
 
-export function CreateWarrantModal({ warrant, isActive, onClose, onUpdate }: Props) {
+export function CreateWarrantModal({ warrant, isActive, onClose, onCreate, onUpdate }: Props) {
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
@@ -69,6 +70,7 @@ export function CreateWarrantModal({ warrant, isActive, onClose, onUpdate }: Pro
         });
 
         closeModal(ModalIds.CreateWarrant);
+        onCreate?.(json);
       }
     }
   }

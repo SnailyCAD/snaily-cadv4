@@ -95,7 +95,7 @@ export type PostNameChangeRequestsData = GetNameChangeRequestsData[number];
  */
 export type GetActiveWarrantsData = (Prisma.Warrant & {
   citizen: Types.BaseCitizen;
-  assignedOfficers: (Types.Officer | Types.CombinedLeoUnit)[];
+  assignedOfficers: Types.AssignedWarrantOfficer[];
 })[];
 
 /**

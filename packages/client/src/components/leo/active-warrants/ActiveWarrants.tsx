@@ -61,14 +61,9 @@ export function ActiveWarrants() {
                   ? common("none")
                   : assignedOfficers(warrant.assignedOfficers),
               actions: (
-                <>
-                  <Button onClick={() => handleEditClick(warrant)} size="xs">
-                    {common("edit")}
-                  </Button>
-                  <Button size="xs" className="ml-2" variant="danger">
-                    {common("delete")}
-                  </Button>
-                </>
+                <Button variant="success" onClick={() => handleEditClick(warrant)} size="xs">
+                  {common("edit")}
+                </Button>
               ),
             }))}
             columns={[
@@ -85,10 +80,14 @@ export function ActiveWarrants() {
         isActive
         onClose={() => warrantState.setTempId(null)}
         warrant={tempWarrant}
+        onCreate={(warrant) => {
+          setActiveWarrants([...activeWarrants, warrant]);
+        }}
         onUpdate={(previous, warrant) => {
           const copied = [...activeWarrants];
           const idx = copied.indexOf(previous);
 
+          warrantState.setTempId(null);
           copied[idx] = warrant;
           setActiveWarrants(copied);
         }}

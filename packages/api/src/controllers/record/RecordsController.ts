@@ -35,6 +35,7 @@ import { isFeatureEnabled } from "lib/cad";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
 import type * as APITypes from "@snailycad/types/api";
+import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 
 const assignedOfficersInclude = {
   combinedUnit: { include: combinedUnitProperties },
@@ -103,7 +104,7 @@ export class RecordsController {
       },
     });
 
-    return warrant;
+    return officerOrDeputyToUnit(warrant);
   }
 
   @Put("/warrant/:id")
@@ -130,8 +131,8 @@ export class RecordsController {
       where: { id: warrantId },
       data: {
         status: data.status as WarrantStatus,
-        description: data.description,
-        citizenId: data.citizenId,
+        description: data.description ?? warrant.description,
+        citizenId: data.citizenId ?? warrant.citizenId,
       },
       include: {
         citizen: true,
@@ -139,7 +140,7 @@ export class RecordsController {
       },
     });
 
-    return updated;
+    return officerOrDeputyToUnit(updated);
   }
 
   @Post("/")

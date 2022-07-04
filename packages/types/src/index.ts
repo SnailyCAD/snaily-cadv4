@@ -303,7 +303,7 @@ export type AssignedUnit = Prisma.AssignedUnit & {
 };
 
 export type AssignedWarrantOfficer = Prisma.AssignedWarrantOfficer & {
-  unit: Officer | CombinedLeoUnit | EmsFdDeputy;
+  unit: Officer | CombinedLeoUnit;
 };
 
 export type IncidentInvolvedUnit = Prisma.IncidentInvolvedUnit & {
