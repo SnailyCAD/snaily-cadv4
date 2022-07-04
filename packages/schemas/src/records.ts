@@ -36,4 +36,7 @@ export const CREATE_WARRANT_SCHEMA = z.object({
 
 export const UPDATE_WARRANT_SCHEMA = CREATE_WARRANT_SCHEMA.pick({
   status: true,
+}).extend({
+  citizenId: z.string().min(2).max(255).nullable().optional(),
+  description: z.string().nullable().optional(),
 });

@@ -90,18 +90,25 @@ export type GetNameChangeRequestsData = (Prisma.NameChangeRequest & {
 export type PostNameChangeRequestsData = GetNameChangeRequestsData[number];
 
 /**
+ * @method GET
+ * @route /records/active-warrants
+ */
+export type GetActiveWarrantsData = (Prisma.Warrant & {
+  citizen: Types.BaseCitizen;
+  assignedOfficers: (Types.Officer | Types.CombinedLeoUnit)[];
+})[];
+
+/**
  * @method POST
  * @route /records/create-warrant
  */
-export type PostCreateWarrantData = Prisma.Warrant & {
-  citizen: Prisma.Citizen;
-};
+export type PostCreateWarrantData = GetActiveWarrantsData[number];
 
 /**
  * @method PUT
- * @route /records/create-warrant/:id
+ * @route /records/warrant/:id
  */
-export type PutWarrantsData = PostCreateWarrantData;
+export type PutWarrantsData = GetActiveWarrantsData[number];
 
 /**
  * @method POST

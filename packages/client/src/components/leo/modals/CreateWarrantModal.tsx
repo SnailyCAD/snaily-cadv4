@@ -14,15 +14,18 @@ import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
 import { toastMessage } from "lib/toastMessage";
 import type { NameSearchResult } from "state/search/nameSearchState";
-import type { PostCreateWarrantData } from "@snailycad/types/api";
-import type { Warrant } from "@snailycad/types";
+import type { PostCreateWarrantData, PutWarrantsData } from "@snailycad/types/api";
+import type { ActiveWarrant } from "state/leoState";
 
 interface Props {
   onClose?(): void;
-  warrant: Warrant | null;
+  warrant: ActiveWarrant | null;
+  isActive?: boolean;
+
+  onUpdate?(previous: ActiveWarrant, newWarrant: PutWarrantsData): void;
 }
 
-export function CreateWarrantModal({ warrant, onClose }: Props) {
+export function CreateWarrantModal({ warrant, isActive, onClose, onUpdate }: Props) {
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
@@ -38,24 +41,40 @@ export function CreateWarrantModal({ warrant, onClose }: Props) {
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
-    const { json } = await execute<PostCreateWarrantData, typeof INITIAL_VALUES>({
-      path: "/records/create-warrant",
-      method: "POST",
-      data: values,
-      helpers,
-    });
-
-    if (json.id) {
-      toastMessage({
-        title: common("success"),
-        message: t("successCreateWarrant", { citizen: values.citizenName }),
-        icon: "success",
+    if (warrant) {
+      const { json } = await execute<PutWarrantsData, typeof INITIAL_VALUES>({
+        path: `/records/warrant/${warrant.id}`,
+        method: "PUT",
+        data: values,
+        helpers,
       });
 
-      closeModal(ModalIds.CreateWarrant);
+      if (json.id) {
+        closeModal(ModalIds.CreateWarrant);
+        onUpdate?.(warrant, json);
+      }
+    } else {
+      const { json } = await execute<PostCreateWarrantData, typeof INITIAL_VALUES>({
+        path: "/records/create-warrant",
+        method: "POST",
+        data: values,
+        helpers,
+      });
+
+      if (json.id) {
+        toastMessage({
+          title: common("success"),
+          message: t("successCreateWarrant", { citizen: values.citizenName }),
+          icon: "success",
+        });
+
+        closeModal(ModalIds.CreateWarrant);
+      }
     }
   }
 
+  // todo
+  isActive;
   const INITIAL_VALUES = {
     citizenId: warrant?.citizenId ?? "",
     citizenName: warrant?.citizen ? `${warrant.citizen.name} ${warrant.citizen.surname}` : "",

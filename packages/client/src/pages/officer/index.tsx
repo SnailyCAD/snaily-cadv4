@@ -106,7 +106,7 @@ export default function OfficerDashboard({
   const tones = useTones("leo");
   const panic = usePanicButton();
   const { isOpen } = useModal();
-  const { LEO_TICKETS } = useFeatureEnabled();
+  const { LEO_TICKETS, ACTIVE_WARRANTS, CALLS_911 } = useFeatureEnabled();
 
   const { currentResult, setCurrentResult } = useNameSearch();
 
@@ -156,8 +156,9 @@ export default function OfficerDashboard({
         />
       </UtilityPanel>
 
-      <ActiveCalls />
+      {CALLS_911 ? <ActiveCalls /> : null}
       <ActiveBolos />
+      {/* {ACTIVE_WARRANTS ? <ActiveWarrants /> : null} */}
       <ActiveWarrants />
 
       <div className="mt-3">

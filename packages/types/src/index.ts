@@ -302,6 +302,10 @@ export type AssignedUnit = Prisma.AssignedUnit & {
   unit: Officer | CombinedLeoUnit | EmsFdDeputy;
 };
 
+export type AssignedWarrantOfficer = Prisma.AssignedWarrantOfficer & {
+  unit: Officer | CombinedLeoUnit | EmsFdDeputy;
+};
+
 export type IncidentInvolvedUnit = Prisma.IncidentInvolvedUnit & {
   unit: Officer | CombinedLeoUnit | EmsFdDeputy;
 };
@@ -424,7 +428,8 @@ export const Feature = {
   LEO_BAIL: "LEO_BAIL",
   COURTHOUSE_POSTS: "COURTHOUSE_POSTS",
   WEAPON_EXAMS: "WEAPON_EXAMS",
-};
+  ACTIVE_WARRANTS: "ACTIVE_WARRANTS",
+} as const;
 
 export type Feature = typeof Feature[keyof typeof Feature];
 

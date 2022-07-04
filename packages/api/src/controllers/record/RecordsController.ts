@@ -1,4 +1,4 @@
-import { Delete, Description, Post, Put } from "@tsed/schema";
+import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import {
   CREATE_TICKET_SCHEMA,
   CREATE_WARRANT_SCHEMA,
@@ -28,7 +28,7 @@ import {
 } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { validateRecordData } from "lib/records/validateRecordData";
-import { leoProperties } from "lib/leo/activeOfficer";
+import { combinedUnitProperties, leoProperties } from "lib/leo/activeOfficer";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { isFeatureEnabled } from "lib/cad";
@@ -36,9 +36,28 @@ import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
 import type * as APITypes from "@snailycad/types/api";
 
+const assignedOfficersInclude = {
+  combinedUnit: { include: combinedUnitProperties },
+  officer: { include: leoProperties },
+};
+
 @UseBeforeEach(IsAuth, ActiveOfficer)
 @Controller("/records")
 export class RecordsController {
+  @Get("/active-warrants")
+  @Description("Get all active warrants (ACTIVE_WARRANTS must be enabled)")
+  async getActiveWarrants() {
+    const activeWarrants = await prisma.warrant.findMany({
+      where: { status: "ACTIVE" },
+      include: {
+        citizen: true,
+        assignedOfficers: { include: assignedOfficersInclude },
+      },
+    });
+
+    return activeWarrants;
+  }
+
   @Post("/create-warrant")
   @Description("Create a new warrant")
   @UsePermissions({
@@ -71,6 +90,7 @@ export class RecordsController {
       },
       include: {
         citizen: true,
+        assignedOfficers: { include: assignedOfficersInclude },
       },
     });
 
@@ -110,9 +130,12 @@ export class RecordsController {
       where: { id: warrantId },
       data: {
         status: data.status as WarrantStatus,
+        description: data.description,
+        citizenId: data.citizenId,
       },
       include: {
         citizen: true,
+        assignedOfficers: { include: assignedOfficersInclude },
       },
     });
 
