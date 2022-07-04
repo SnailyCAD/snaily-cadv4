@@ -1,9 +1,6 @@
 -- AlterEnum
 ALTER TYPE "Feature" ADD VALUE 'ACTIVE_WARRANTS';
 
--- AlterTable
-ALTER TABLE "AssignedUnit" ADD COLUMN     "warrantId" TEXT;
-
 -- CreateTable
 CREATE TABLE "AssignedWarrantOfficer" (
     "id" TEXT NOT NULL,
@@ -15,9 +12,6 @@ CREATE TABLE "AssignedWarrantOfficer" (
 
     CONSTRAINT "AssignedWarrantOfficer_pkey" PRIMARY KEY ("id")
 );
-
--- AddForeignKey
-ALTER TABLE "AssignedUnit" ADD CONSTRAINT "AssignedUnit_warrantId_fkey" FOREIGN KEY ("warrantId") REFERENCES "Warrant"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "AssignedWarrantOfficer" ADD CONSTRAINT "AssignedWarrantOfficer_officerId_fkey" FOREIGN KEY ("officerId") REFERENCES "Officer"("id") ON DELETE SET NULL ON UPDATE CASCADE;
