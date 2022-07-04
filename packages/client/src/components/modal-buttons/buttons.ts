@@ -72,10 +72,10 @@ export const createBoloBtn: ModalButton = () => ({
   nameKey: ["Leo", "createBolo"],
 });
 
-// export const createWarrantBtn: ModalButton = () => ({
-//   modalId: ModalIds.CreateWarrant,
-//   nameKey: ["Leo", "createWarrant"],
-// });
+export const createWarrantBtn: ModalButton = () => ({
+  modalId: ModalIds.CreateWarrant,
+  nameKey: ["Leo", "createWarrant"],
+});
 
 export const notepadBtn: ModalButton = () => ({
   modalId: ModalIds.Notepad,

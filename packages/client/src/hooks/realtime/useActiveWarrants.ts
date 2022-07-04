@@ -1,8 +1,10 @@
 import * as React from "react";
 import useFetch from "lib/useFetch";
 import { useAuth } from "context/AuthContext";
-import { useLeoState } from "state/leoState";
+import { ActiveWarrant, useLeoState } from "state/leoState";
 import type { GetActiveWarrantsData } from "@snailycad/types/api";
+import { SocketEvents } from "@snailycad/config";
+import { useListener } from "@casper124578/use-socket.io";
 
 let ran = false;
 export function useActiveWarrants() {
@@ -37,7 +39,38 @@ export function useActiveWarrants() {
     }
   }, [getActiveWarrants]);
 
-  // todo: add socket listeners
+  const isWarrantInArr = React.useCallback(
+    (bolo: Pick<ActiveWarrant, "id">) => {
+      return activeWarrants.some((v) => v.id === bolo.id);
+    },
+    [activeWarrants],
+  );
+
+  useListener(
+    { eventName: SocketEvents.CreateActiveWarrant, checkHasListeners: true },
+    (data: ActiveWarrant) => {
+      if (!isWarrantInArr(data)) {
+        setActiveWarrants([...[...activeWarrants], data]);
+      }
+    },
+    [setActiveWarrants, activeWarrants],
+  );
+
+  useListener(
+    { eventName: SocketEvents.UpdateActiveWarrant, checkHasListeners: true },
+    (bolo: ActiveWarrant) => {
+      setActiveWarrants(
+        activeWarrants.map((v) => {
+          if (v.id === bolo.id) {
+            return bolo;
+          }
+
+          return v;
+        }),
+      );
+    },
+    [setActiveWarrants, activeWarrants],
+  );
 
   return { activeWarrants, setActiveWarrants, state };
 }

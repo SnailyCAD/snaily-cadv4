@@ -36,6 +36,7 @@ import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
 import type * as APITypes from "@snailycad/types/api";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
+import { Socket } from "services/SocketService";
 
 const assignedOfficersInclude = {
   combinedUnit: { include: combinedUnitProperties },
@@ -45,6 +46,11 @@ const assignedOfficersInclude = {
 @UseBeforeEach(IsAuth, ActiveOfficer)
 @Controller("/records")
 export class RecordsController {
+  private socket: Socket;
+  constructor(socket: Socket) {
+    this.socket = socket;
+  }
+
   @Get("/active-warrants")
   @Description("Get all active warrants (ACTIVE_WARRANTS must be enabled)")
   async getActiveWarrants() {
@@ -104,6 +110,8 @@ export class RecordsController {
       },
     });
 
+    this.socket.emitCreateActiveWarrant(warrant);
+
     return officerOrDeputyToUnit(warrant);
   }
 
@@ -139,6 +147,10 @@ export class RecordsController {
         assignedOfficers: { include: assignedOfficersInclude },
       },
     });
+
+    if (warrant.status === WarrantStatus.ACTIVE) {
+      this.socket.emitUpdateActiveWarrant(updated);
+    }
 
     return officerOrDeputyToUnit(updated);
   }

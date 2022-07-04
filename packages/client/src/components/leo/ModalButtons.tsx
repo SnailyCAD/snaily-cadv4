@@ -20,6 +20,7 @@ const buttons: modalButtons.ModalButton[] = [
   modalButtons.createWrittenWarningBtn,
   modalButtons.createTicketBtn,
   modalButtons.createArrestReportBtn,
+  modalButtons.createWarrantBtn,
   modalButtons.createBoloBtn,
   modalButtons.notepadBtn,
 ];

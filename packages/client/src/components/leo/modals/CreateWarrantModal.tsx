@@ -16,22 +16,30 @@ import { toastMessage } from "lib/toastMessage";
 import type { NameSearchResult } from "state/search/nameSearchState";
 import type { PostCreateWarrantData, PutWarrantsData } from "@snailycad/types/api";
 import type { ActiveWarrant } from "state/leoState";
+import { isUnitCombined } from "@snailycad/utils";
+import { makeUnitName } from "lib/utils";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
+import { useActiveOfficers } from "hooks/realtime/useActiveOfficers";
 
 interface Props {
   onClose?(): void;
   warrant: ActiveWarrant | null;
-  isActive?: boolean;
 
   onUpdate?(previous: ActiveWarrant, newWarrant: PutWarrantsData): void;
   onCreate?(warrant: PostCreateWarrantData): void;
 }
 
-export function CreateWarrantModal({ warrant, isActive, onClose, onCreate, onUpdate }: Props) {
-  const { isOpen, closeModal } = useModal();
+export function CreateWarrantModal({ warrant, onClose, onCreate, onUpdate }: Props) {
+  const { isOpen, closeModal, getPayload } = useModal();
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const { makeImageUrl } = useImageUrl();
   const t = useTranslations("Leo");
+  const { generateCallsign } = useGenerateCallsign();
+  const { activeOfficers } = useActiveOfficers();
+  const { isActive } = getPayload<{ isActive: boolean }>(ModalIds.CreateWarrant) ?? {
+    isActive: false,
+  };
 
   function handleClose() {
     onClose?.();
@@ -75,13 +83,20 @@ export function CreateWarrantModal({ warrant, isActive, onClose, onCreate, onUpd
     }
   }
 
-  // todo
-  isActive;
   const INITIAL_VALUES = {
     citizenId: warrant?.citizenId ?? "",
     citizenName: warrant?.citizen ? `${warrant.citizen.name} ${warrant.citizen.surname}` : "",
     status: warrant?.status ?? "",
     description: warrant?.description ?? "",
+    assignedOfficers:
+      warrant?.assignedOfficers && isActive
+        ? warrant.assignedOfficers.map((unit) => ({
+            label: isUnitCombined(unit.unit)
+              ? generateCallsign(unit.unit, "pairedUnitTemplate")
+              : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`,
+            value: unit.id,
+          }))
+        : [],
   };
 
   return (
@@ -131,6 +146,22 @@ export function CreateWarrantModal({ warrant, isActive, onClose, onCreate, onUpd
                 )}
               />
             </FormField>
+
+            {isActive ? (
+              <FormField label="Assigned Officers">
+                <Select
+                  name="assignedOfficers"
+                  values={activeOfficers.map((unit) => ({
+                    label: isUnitCombined(unit)
+                      ? generateCallsign(unit, "pairedUnitTemplate")
+                      : `${generateCallsign(unit)} ${makeUnitName(unit)}`,
+                    value: unit.id,
+                  }))}
+                  value={values.assignedOfficers}
+                  onChange={handleChange}
+                />
+              </FormField>
+            ) : null}
 
             <FormField errorMessage={errors.status} label={t("status")}>
               <Select

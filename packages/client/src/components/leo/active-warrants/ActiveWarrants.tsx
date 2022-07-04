@@ -22,7 +22,7 @@ export function ActiveWarrants() {
 
   function handleEditClick(warrant: Warrant) {
     warrantState.setTempId(warrant.id);
-    openModal(ModalIds.CreateWarrant);
+    openModal(ModalIds.CreateWarrant, { isActive: true });
   }
 
   function assignedOfficers(assignedOfficers: AssignedWarrantOfficer[]) {
@@ -77,7 +77,6 @@ export function ActiveWarrants() {
       </div>
 
       <CreateWarrantModal
-        isActive
         onClose={() => warrantState.setTempId(null)}
         warrant={tempWarrant}
         onCreate={(warrant) => {
