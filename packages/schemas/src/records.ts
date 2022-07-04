@@ -32,10 +32,12 @@ export const CREATE_WARRANT_SCHEMA = z.object({
     .max(255)
     .regex(/ACTIVE|INACTIVE/),
   description: z.string(),
+  assignedOfficers: z.array(z.any()).nullable().optional(),
 });
 
 export const UPDATE_WARRANT_SCHEMA = CREATE_WARRANT_SCHEMA.pick({
   status: true,
+  assignedOfficers: true,
 }).extend({
   citizenId: z.string().min(2).max(255).nullable().optional(),
   description: z.string().nullable().optional(),

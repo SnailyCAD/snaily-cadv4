@@ -50,11 +50,16 @@ export function CreateWarrantModal({ warrant, onClose, onCreate, onUpdate }: Pro
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
+    const data = {
+      ...values,
+      assignedOfficers: values.assignedOfficers.map((value) => value.value),
+    };
+
     if (warrant) {
       const { json } = await execute<PutWarrantsData, typeof INITIAL_VALUES>({
         path: `/records/warrant/${warrant.id}`,
         method: "PUT",
-        data: values,
+        data,
         helpers,
       });
 
@@ -66,7 +71,7 @@ export function CreateWarrantModal({ warrant, onClose, onCreate, onUpdate }: Pro
       const { json } = await execute<PostCreateWarrantData, typeof INITIAL_VALUES>({
         path: "/records/create-warrant",
         method: "POST",
-        data: values,
+        data,
         helpers,
       });
 
@@ -150,6 +155,7 @@ export function CreateWarrantModal({ warrant, onClose, onCreate, onUpdate }: Pro
             {isActive ? (
               <FormField label="Assigned Officers">
                 <Select
+                  isMulti
                   name="assignedOfficers"
                   values={activeOfficers.map((unit) => ({
                     label: isUnitCombined(unit)

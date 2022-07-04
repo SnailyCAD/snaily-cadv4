@@ -37,6 +37,7 @@ import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
 import type * as APITypes from "@snailycad/types/api";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { Socket } from "services/SocketService";
+import { assignUnitsToWarrant } from "lib/records/assignToWarrant";
 
 const assignedOfficersInclude = {
   combinedUnit: { include: combinedUnitProperties },
@@ -62,7 +63,7 @@ export class RecordsController {
       },
     });
 
-    return activeWarrants;
+    return activeWarrants.map((warrant) => officerOrDeputyToUnit(warrant));
   }
 
   @Post("/create-warrant")
@@ -101,7 +102,17 @@ export class RecordsController {
       },
     });
 
-    await this.handleDiscordWebhook(warrant);
+    await assignUnitsToWarrant({
+      socket: this.socket,
+      warrantId: warrant.id,
+      unitIds: (data.assignedOfficers ?? []) as string[],
+    });
+
+    const updated = await prisma.warrant.findUniqueOrThrow({
+      where: { id: warrant.id },
+    });
+
+    await this.handleDiscordWebhook(updated);
 
     await prisma.recordLog.create({
       data: {
@@ -110,9 +121,10 @@ export class RecordsController {
       },
     });
 
-    this.socket.emitCreateActiveWarrant(warrant);
+    const normalizedWarrant = officerOrDeputyToUnit(updated);
+    this.socket.emitCreateActiveWarrant(normalizedWarrant);
 
-    return officerOrDeputyToUnit(warrant);
+    return normalizedWarrant;
   }
 
   @Put("/warrant/:id")
@@ -129,11 +141,27 @@ export class RecordsController {
 
     const warrant = await prisma.warrant.findUnique({
       where: { id: warrantId },
+      include: { assignedOfficers: true },
     });
 
     if (!warrant) {
       throw new NotFound("warrantNotFound");
     }
+
+    // reset assignedOfficers. find a better way to do this?
+    await Promise.all(
+      warrant.assignedOfficers.map(async ({ id }) =>
+        prisma.assignedWarrantOfficer.delete({
+          where: { id },
+        }),
+      ),
+    );
+
+    await assignUnitsToWarrant({
+      socket: this.socket,
+      warrantId: warrant.id,
+      unitIds: (data.assignedOfficers ?? []) as string[],
+    });
 
     const updated = await prisma.warrant.update({
       where: { id: warrantId },
@@ -148,11 +176,12 @@ export class RecordsController {
       },
     });
 
+    const normalizedWarrant = officerOrDeputyToUnit(updated);
     if (warrant.status === WarrantStatus.ACTIVE) {
-      this.socket.emitUpdateActiveWarrant(updated);
+      this.socket.emitUpdateActiveWarrant(normalizedWarrant);
     }
 
-    return officerOrDeputyToUnit(updated);
+    return officerOrDeputyToUnit(normalizedWarrant);
   }
 
   @Post("/")

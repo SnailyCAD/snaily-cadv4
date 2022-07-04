@@ -57,7 +57,7 @@ export function ActiveWarrants() {
               citizen: `${warrant.citizen.name} ${warrant.citizen.surname}`,
               description: warrant.description,
               assignedOfficers:
-                warrant.assignedOfficers.length >= 0
+                warrant.assignedOfficers.length <= 0
                   ? common("none")
                   : assignedOfficers(warrant.assignedOfficers),
               actions: (
@@ -69,7 +69,7 @@ export function ActiveWarrants() {
             columns={[
               { Header: "Citizen", accessor: "citizen" },
               { Header: common("description"), accessor: "description" },
-              { Header: "assignedOfficers", accessor: "assignedOfficers" },
+              { Header: "assigned Officers", accessor: "assignedOfficers" },
               { Header: common("actions"), accessor: "actions" },
             ]}
           />
