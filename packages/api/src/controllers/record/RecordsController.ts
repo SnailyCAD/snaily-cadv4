@@ -181,7 +181,7 @@ export class RecordsController {
       this.socket.emitUpdateActiveWarrant(normalizedWarrant);
     }
 
-    return officerOrDeputyToUnit(normalizedWarrant);
+    return normalizedWarrant;
   }
 
   @Post("/")

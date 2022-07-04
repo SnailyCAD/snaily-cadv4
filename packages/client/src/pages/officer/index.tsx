@@ -158,8 +158,7 @@ export default function OfficerDashboard({
 
       {CALLS_911 ? <ActiveCalls /> : null}
       <ActiveBolos />
-      {/* {ACTIVE_WARRANTS ? <ActiveWarrants /> : null} */}
-      <ActiveWarrants />
+      {ACTIVE_WARRANTS ? <ActiveWarrants /> : null}
 
       <div className="mt-3">
         <ActiveOfficers />
