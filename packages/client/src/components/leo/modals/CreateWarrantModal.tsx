@@ -114,12 +114,13 @@ export function CreateWarrantModal({ warrant, onClose, onCreate, onUpdate }: Pro
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, setFieldValue, values, errors, isValid }) => (
           <Form autoComplete="off">
-            <FormField errorMessage={errors.citizenName} label={t("citizen")}>
+            <FormField errorMessage={errors.citizenId} label={t("citizen")}>
               <InputSuggestions<NameSearchResult>
                 inputProps={{
                   value: values.citizenName,
                   name: "citizenName",
                   onChange: handleChange,
+                  errorMessage: errors.citizenId,
                 }}
                 onSuggestionClick={(suggestion) => {
                   setFieldValue("citizenId", suggestion.id);
