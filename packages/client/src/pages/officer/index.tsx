@@ -35,6 +35,7 @@ import type {
   GetEmsFdActiveDeputies,
   GetMyOfficersData,
 } from "@snailycad/types/api";
+import { CreateWarrantModal } from "components/leo/modals/CreateWarrantModal";
 
 const Modals = {
   CreateWarrantModal: dynamic(async () => {
@@ -179,7 +180,7 @@ export default function OfficerDashboard({
             </>
           )}
           <Modals.NameSearchModal />
-
+          {!ACTIVE_WARRANTS ? <CreateWarrantModal warrant={null} /> : null}
           <Modals.CustomFieldSearch />
         </>
       ) : null}
