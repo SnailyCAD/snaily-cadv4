@@ -2,41 +2,43 @@ import * as React from "react";
 import { useRouter } from "next/router";
 import type { cad as CAD, Feature } from "@snailycad/types";
 
+const featuresRoute: Partial<Record<Feature, string>> = {
+  TOW: "/tow",
+  BLEETER: "/bleeter",
+  TAXI: "/taxi",
+  TRUCK_LOGS: "/truck-logs",
+  BUSINESS: "/business",
+  DL_EXAMS: "/officer/supervisor/dl-exams",
+  WEAPON_EXAMS: "/officer/supervisor/weapon-exams",
+  DMV: "/officer/dmv",
+};
+
 export function useIsRouteFeatureEnabled(cad: Partial<Pick<CAD, "features">>) {
   const [isEnabled, setIsEnabled] = React.useState(true);
   const router = useRouter();
 
-  const featuresRoute: Partial<Record<Feature, string>> = {
-    TOW: "/tow",
-    BLEETER: "/bleeter",
-    TAXI: "/taxi",
-    TRUCK_LOGS: "/truck-logs",
-    BUSINESS: "/business",
-    DL_EXAMS: "/officer/supervisor/dl-exams",
-    WEAPON_EXAMS: "/officer/supervisor/weapon-exams",
-    DMV: "/officer/dmv",
-  };
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  function checkEnabled() {
+  const checkEnabled = React.useCallback(() => {
     const features = cad.features ?? [];
+    let isEnabled = true;
 
     for (const feature of features) {
-      const route = featuresRoute[feature.feature];
+      const route =
+        feature.feature in featuresRoute &&
+        featuresRoute[feature.feature as keyof typeof featuresRoute];
 
       if (route && !feature.isEnabled && router.pathname.includes(route)) {
-        setIsEnabled(false);
+        isEnabled = false;
         break;
       } else {
-        setIsEnabled(true);
+        isEnabled = true;
       }
     }
 
     return isEnabled;
-  }
+  }, [cad.features, router.pathname]);
 
   React.useEffect(() => {
-    checkEnabled();
+    setIsEnabled(checkEnabled());
   }, [checkEnabled, router]);
 
   return isEnabled;
