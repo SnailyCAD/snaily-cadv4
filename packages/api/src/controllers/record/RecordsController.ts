@@ -148,7 +148,6 @@ export class RecordsController {
       throw new NotFound("warrantNotFound");
     }
 
-    // reset assignedOfficers. find a better way to do this?
     await Promise.all(
       warrant.assignedOfficers.map(async ({ id }) =>
         prisma.assignedWarrantOfficer.delete({
