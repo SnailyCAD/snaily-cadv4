@@ -14,7 +14,7 @@ const featuresRoute: Partial<Record<Feature, string>> = {
 };
 
 export function useIsRouteFeatureEnabled(cad: Partial<Pick<CAD, "features">>) {
-  const [isEnabled, setIsEnabled] = React.useState(() => checkEnabled());
+  const [isEnabled, setIsEnabled] = React.useState(true);
   const router = useRouter();
 
   const checkEnabled = React.useCallback(() => {
