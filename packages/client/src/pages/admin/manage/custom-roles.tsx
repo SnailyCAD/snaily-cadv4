@@ -17,10 +17,10 @@ import useFetch from "lib/useFetch";
 import { usePermission } from "hooks/usePermission";
 import { ManageCustomRolesModal } from "components/admin/manage/custom-roles/ManageCustomRolesModal";
 import { FullDate } from "components/shared/FullDate";
-import type { DeleteCustomRoleByIdData } from "@snailycad/types/api";
+import type { DeleteCustomRoleByIdData, GetCustomRolesData } from "@snailycad/types/api";
 
 interface Props {
-  customRoles: CustomRole[];
+  customRoles: GetCustomRolesData;
 }
 
 export default function ManageCustomRoles({ customRoles: data }: Props) {
