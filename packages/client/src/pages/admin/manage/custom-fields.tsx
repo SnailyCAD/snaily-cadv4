@@ -5,7 +5,7 @@ import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { type CustomField, Rank } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
-import { requestAll, yesOrNoText } from "lib/utils";
+import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
 import { Button } from "components/Button";
@@ -16,6 +16,8 @@ import { ManageCustomFieldModal } from "components/admin/manage/custom-fields/Ma
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { usePermission } from "hooks/usePermission";
+import type { DeleteManageCustomFieldsData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 interface Props {
   customFields: CustomField[];
@@ -23,7 +25,7 @@ interface Props {
 
 export default function ManageCustomFields({ customFields: data }: Props) {
   const [customFields, setCustomFields] = React.useState(data);
-  const [tempField, setTempField] = React.useState<CustomField | null>(null);
+  const [tempField, fieldState] = useTemporaryItem(customFields);
 
   const { state, execute } = useFetch();
   const { hasPermissions } = usePermission();
@@ -34,24 +36,25 @@ export default function ManageCustomFields({ customFields: data }: Props) {
   async function handleDelete() {
     if (!tempField) return;
 
-    const { json } = await execute(`/admin/manage/custom-fields/${tempField.id}`, {
+    const { json } = await execute<DeleteManageCustomFieldsData>({
+      path: `/admin/manage/custom-fields/${tempField.id}`,
       method: "DELETE",
     });
 
     if (typeof json === "boolean" && json) {
       setCustomFields((p) => p.filter((v) => v.id !== tempField.id));
-      setTempField(null);
+      fieldState.setTempId(null);
       closeModal(ModalIds.AlertDeleteCustomField);
     }
   }
 
   function handleEditClick(field: CustomField) {
-    setTempField(field);
+    fieldState.setTempId(field.id);
     openModal(ModalIds.ManageCustomField);
   }
 
   function handleDeleteClick(field: CustomField) {
-    setTempField(field);
+    fieldState.setTempId(field.id);
     openModal(ModalIds.AlertDeleteCustomField);
   }
 
@@ -90,15 +93,14 @@ export default function ManageCustomFields({ customFields: data }: Props) {
           data={customFields.map((field) => ({
             name: field.name,
             category: field.category,
-            citizenEditable: common(yesOrNoText(field.citizenEditable)),
             actions: (
               <>
-                <Button small variant="success" onClick={() => handleEditClick(field)}>
+                <Button size="xs" variant="success" onClick={() => handleEditClick(field)}>
                   {common("edit")}
                 </Button>
                 <Button
                   className="ml-2"
-                  small
+                  size="xs"
                   variant="danger"
                   onClick={() => handleDeleteClick(field)}
                 >
@@ -110,7 +112,6 @@ export default function ManageCustomFields({ customFields: data }: Props) {
           columns={[
             { Header: common("name"), accessor: "name" },
             { Header: "Category", accessor: "category" },
-            { Header: "Citizen Editable", accessor: "citizenEditable" },
             hasPermissions([Permissions.ViewCustomFields], true)
               ? { Header: common("actions"), accessor: "actions" }
               : null,
@@ -125,10 +126,10 @@ export default function ManageCustomFields({ customFields: data }: Props) {
             prev[idx] = newField;
             return prev;
           });
-          setTempField(null);
+          fieldState.setTempId(null);
         }}
         onCreate={(newField) => setCustomFields((p) => [newField, ...p])}
-        onClose={() => setTempField(null)}
+        onClose={() => fieldState.setTempId(null)}
         field={tempField}
       />
       <AlertModal
@@ -136,7 +137,7 @@ export default function ManageCustomFields({ customFields: data }: Props) {
         title={t("deleteCustomField")}
         description={t("alert_deleteCustomField")}
         onDeleteClick={handleDelete}
-        onClose={() => setTempField(null)}
+        onClose={() => fieldState.setTempId(null)}
         state={state}
       />
     </AdminLayout>
@@ -144,14 +145,15 @@ export default function ManageCustomFields({ customFields: data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+  const user = await getSessionUser(req);
   const [customFields] = await requestAll(req, [["/admin/manage/custom-fields", []]]);
 
   return {
     props: {
       customFields,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["admin", "values", "common"], locale)),
+        ...(await getTranslations(["admin", "values", "common"], user?.locale ?? locale)),
       },
     },
   };

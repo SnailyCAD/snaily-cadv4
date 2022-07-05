@@ -1,7 +1,6 @@
 import { Button } from "components/Button";
 import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
-import type { User } from "@snailycad/types";
 import { useRouter } from "next/router";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
@@ -9,9 +8,14 @@ import { AlertModal } from "components/modal/AlertModal";
 import { GiveTempPasswordModal } from "./GiveTempPasswordModal";
 import { useTranslations } from "use-intl";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import type {
+  DeleteManageUserRevokeApiTokenData,
+  DeleteManageUsersData,
+  GetManageUserByIdData,
+} from "@snailycad/types/api";
 
 interface Props {
-  user: User;
+  user: GetManageUserByIdData;
 }
 
 export function DangerZone({ user }: Props) {
@@ -26,7 +30,8 @@ export function DangerZone({ user }: Props) {
   async function handleDelete() {
     if (formDisabled) return;
 
-    const { json } = await execute(`/admin/manage/users/${user.id}`, {
+    const { json } = await execute<DeleteManageUsersData>({
+      path: `/admin/manage/users/${user.id}`,
       method: "DELETE",
     });
 
@@ -38,7 +43,8 @@ export function DangerZone({ user }: Props) {
   async function handleRevoke() {
     if (formDisabled) return;
 
-    const { json } = await execute(`/admin/manage/users/${user.id}/api-token`, {
+    const { json } = await execute<DeleteManageUserRevokeApiTokenData>({
+      path: `/admin/manage/users/${user.id}/api-token`,
       method: "DELETE",
     });
 

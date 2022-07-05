@@ -3,6 +3,7 @@ import { useFormikContext } from "formik";
 import { useTranslations } from "next-intl";
 import type { PenalCode } from "@snailycad/types";
 import { TableItemForm } from "./TableItemForm";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
   penalCodes: PenalCode[];
@@ -10,29 +11,27 @@ interface Props {
 }
 
 export function PenalCodesTable({ isReadOnly, penalCodes }: Props) {
-  const { values } = useFormikContext<any>();
+  const { values } = useFormikContext<{ violations: any[] }>();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const currency = common("currency");
+  const { LEO_BAIL } = useFeatureEnabled();
+
+  function sumOf(type: "fine" | "jailTime" | "bail"): number {
+    return values.violations.reduce((ac, cv) => ac + (parseInt(cv.value[type]?.value) || 0), 0);
+  }
+
+  function formatSum(sum: number) {
+    return Intl.NumberFormat().format(sum);
+  }
 
   if (penalCodes.length <= 0) {
     return <p className="mb-3">{t("noPenalCodesSelected")}</p>;
   }
 
-  const totalFines = (values.violations as any[]).reduce(
-    (ac, cv) => ac + (parseInt(cv.value.fine?.value) || 0),
-    0,
-  );
-
-  const totalJailTime = (values.violations as any[]).reduce(
-    (ac, cv) => ac + (parseInt(cv.value.jailTime?.value) || 0),
-    0,
-  );
-
-  const totalBail = (values.violations as any[]).reduce(
-    (ac, cv) => ac + (parseInt(cv.value.bail?.value) || 0),
-    0,
-  );
+  const totalFines = formatSum(sumOf("fine"));
+  const totalJailTime = formatSum(sumOf("jailTime"));
+  const totalBail = formatSum(sumOf("bail"));
 
   return (
     <div className="w-full my-3 overflow-x-auto">
@@ -61,10 +60,12 @@ export function PenalCodesTable({ isReadOnly, penalCodes }: Props) {
           {totalJailTime || 0}
         </span>
         <span>{"/"}</span>
-        <span className="ml-2">
-          <span className="font-semibold select-none">{t("bail")}: </span> {currency}
-          {totalBail || 0}
-        </span>
+        {LEO_BAIL ? (
+          <span className="ml-2">
+            <span className="font-semibold select-none">{t("bail")}: </span> {currency}
+            {totalBail || 0}
+          </span>
+        ) : null}
       </p>
     </div>
   );

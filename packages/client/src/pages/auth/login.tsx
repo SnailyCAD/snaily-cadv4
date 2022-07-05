@@ -12,13 +12,17 @@ import { useTranslations } from "use-intl";
 import type { GetServerSideProps } from "next";
 import { getTranslations } from "lib/getTranslation";
 import { Button } from "components/Button";
-import { findUrl, handleRequest } from "lib/fetch";
+import { findAPIUrl, handleRequest } from "lib/fetch";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Title } from "components/shared/Title";
 import { AuthScreenImages } from "components/auth/AuthScreenImages";
 import { TwoFactorAuthScreen } from "components/auth/TwoFactorAuthScreen";
 import { canUseThirdPartyConnections } from "lib/utils";
 import { useAuth } from "context/AuthContext";
+import { LocalhostDetector } from "components/auth/LocalhostDetector";
+import { parseCookies } from "nookies";
+import { VersionDisplay } from "components/shared/VersionDisplay";
+import type { PostLoginUserData } from "@snailycad/types/api";
 
 const INITIAL_VALUES = {
   username: "",
@@ -53,7 +57,8 @@ export default function Login() {
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
-    const { json, error } = await execute("/auth/login", {
+    const { json, error } = await execute<PostLoginUserData, typeof INITIAL_VALUES>({
+      path: "/auth/login",
       data: values,
       method: "POST",
       helpers,
@@ -84,14 +89,14 @@ export default function Login() {
   }
 
   function handleDiscordLogin() {
-    const url = findUrl();
+    const url = findAPIUrl();
 
     const fullUrl = `${url}/auth/discord`;
     window.location.href = fullUrl;
   }
 
   function handleSteamLogin() {
-    const url = findUrl();
+    const url = findAPIUrl();
 
     const fullUrl = `${url}/auth/steam`;
     window.location.href = fullUrl;
@@ -106,7 +111,7 @@ export default function Login() {
   const showSteamOAuth = STEAM_OAUTH && useThirdPartyConnectionsAbility;
   const showDiscordOAuth = DISCORD_AUTH && useThirdPartyConnectionsAbility;
 
-  const showHorizontalLine = !ALLOW_REGULAR_LOGIN || showSteamOAuth || showDiscordOAuth || !!user;
+  const showHorizontalLine = ALLOW_REGULAR_LOGIN && (showSteamOAuth || showDiscordOAuth || !!user);
 
   return (
     <>
@@ -114,6 +119,7 @@ export default function Login() {
 
       <main className="flex flex-col items-center justify-center pt-20">
         <AuthScreenImages />
+        <LocalhostDetector />
 
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleChange, errors, values, isValid }) => (
@@ -125,9 +131,22 @@ export default function Login() {
                 />
               ) : (
                 <>
-                  <h1 className="mb-3 text-2xl font-semibold text-gray-800 dark:text-white">
-                    {t("login")}
-                  </h1>
+                  <header className="mb-3">
+                    <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
+                      {t("login")}
+                    </h1>
+
+                    {ALLOW_REGULAR_LOGIN ? (
+                      <Link href="/auth/register">
+                        <a
+                          href="/auth/register"
+                          className="inline-block mt-2 underline text-neutral-700 dark:text-gray-200"
+                        >
+                          {t("noAccount")}
+                        </a>
+                      </Link>
+                    ) : null}
+                  </header>
 
                   {errorMessage ? (
                     <p className="bg-red-500/80 text-black w-full py-1.5 px-3 my-3 rounded-md">
@@ -145,29 +164,24 @@ export default function Login() {
                         <PasswordInput name="password" onChange={handleChange} />
                       </FormField>
 
-                      <div className="mt-3">
-                        <Link href="/auth/register">
-                          <a
-                            href="/auth/register"
-                            className="inline-block mb-3 underline dark:text-gray-200"
-                          >
-                            {t("noAccount")}
-                          </a>
-                        </Link>
-
-                        <Button
-                          disabled={!isValid || state === "loading"}
-                          type="submit"
-                          className="flex items-center justify-center w-full gap-3"
-                        >
-                          {state === "loading" ? <Loader /> : null} {t("login")}
-                        </Button>
-                      </div>
+                      <Button
+                        disabled={!isValid || state === "loading"}
+                        type="submit"
+                        className="flex items-center justify-center w-full gap-3 mt-5"
+                      >
+                        {state === "loading" ? <Loader /> : null} {t("login")}
+                      </Button>
                     </>
                   ) : null}
 
                   {showHorizontalLine ? (
-                    <hr className="my-5 border-[1.5px] rounded-md border-gray-3" />
+                    <div className="my-7 flex items-center gap-2">
+                      <span className="h-[2px] bg-gray-3 w-full rounded-md" />
+                      <span className="min-w-fit text-sm uppercase dark:text-gray-300">
+                        {t("or")}
+                      </span>
+                      <span className="h-[2px] bg-gray-3 w-full rounded-md" />
+                    </div>
                   ) : null}
 
                   {user ? (
@@ -180,7 +194,7 @@ export default function Login() {
                     <Button
                       type="button"
                       onClick={handleDiscordLogin}
-                      className="flex items-center justify-center gap-2 w-full"
+                      className="flex items-center justify-center gap-3 w-full"
                     >
                       <Discord />
                       {t("loginViaDiscord")}
@@ -191,7 +205,7 @@ export default function Login() {
                     <Button
                       type="button"
                       onClick={handleSteamLogin}
-                      className="flex items-center justify-center gap-2 w-full mt-2"
+                      className="flex items-center justify-center gap-3 w-full mt-2"
                     >
                       <Steam />
                       {t("loginViaSteam")}
@@ -202,17 +216,17 @@ export default function Login() {
             </Form>
           )}
         </Formik>
-        {cad?.version ? (
-          <p className="text-gray-900 dark:text-gray-200 block mt-3 text-base">
-            v{cad.version.currentVersion} - {cad.version.currentCommitHash}
-          </p>
-        ) : null}
+        <VersionDisplay cad={cad} />
       </main>
     </>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+  const cookies = parseCookies({ req });
+  const userSavedLocale = cookies.sn_locale ?? null;
+  const userSavedIsDarkTheme = cookies.sn_isDarkTheme ?? null;
+
   const { data } = await handleRequest("/admin/manage/cad-settings").catch(() => ({
     data: null,
   }));
@@ -220,7 +234,8 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   return {
     props: {
       cad: data ?? {},
-      messages: await getTranslations(["auth"], locale),
+      userSavedIsDarkTheme,
+      messages: await getTranslations(["auth"], userSavedLocale ?? locale),
     },
   };
 };

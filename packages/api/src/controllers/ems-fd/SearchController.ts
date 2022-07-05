@@ -6,8 +6,10 @@ import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { appendConfidential } from "controllers/leo/search/SearchController";
+import { citizenInclude } from "controllers/citizen/CitizenController";
 
 const citizenSearchInclude = {
+  ...citizenInclude,
   medicalRecords: { include: { bloodGroup: true } },
   officers: { include: { department: true } },
 };
@@ -15,17 +17,6 @@ const citizenSearchInclude = {
 @Controller("/search")
 @UseBeforeEach(IsAuth)
 export class SearchController {
-  @Post("/medical-name")
-  @Description("Search citizens by name for medical records")
-  @UsePermissions({
-    fallback: (u) => u.isEmsFd,
-    permissions: [Permissions.EmsFd],
-  })
-  async searchName(@BodyParams("name") fullName: string) {
-    const citizen = await this.findCitizenByName(fullName);
-    return citizen;
-  }
-
   @Post("/medical-records")
   @Description("Search medical records by citizen name")
   @UsePermissions({
@@ -33,7 +24,7 @@ export class SearchController {
     permissions: [Permissions.EmsFd],
   })
   async getMedicalRecords(@BodyParams("name") name: string) {
-    const [citizen] = await this.findCitizenByName(name);
+    const [citizen] = await this.findCitizensByName(name);
 
     if (!citizen) {
       throw new NotFound("citizenNotFound");
@@ -42,49 +33,31 @@ export class SearchController {
     return citizen;
   }
 
-  protected async findCitizenByName(fullName: string) {
+  private async findCitizensByName(fullName: string) {
     const [name, surname] = fullName.toString().toLowerCase().split(/ +/g);
 
     if ((!name || name.length <= 3) && !surname) {
       return [];
     }
 
-    let citizen = await prisma.citizen.findMany({
+    const citizens = await prisma.citizen.findMany({
       where: {
-        name: { contains: name, mode: "insensitive" },
-        surname: { contains: surname, mode: "insensitive" },
+        OR: [
+          {
+            name: { contains: name, mode: "insensitive" },
+            surname: { contains: surname, mode: "insensitive" },
+          },
+          { socialSecurityNumber: name },
+          {
+            name: { contains: surname, mode: "insensitive" },
+            surname: { contains: name, mode: "insensitive" },
+          },
+        ],
       },
       include: citizenSearchInclude,
+      take: 35,
     });
 
-    if (citizen.length <= 0) {
-      citizen = await prisma.citizen.findMany({
-        where: {
-          socialSecurityNumber: name,
-        },
-        include: citizenSearchInclude,
-      });
-    }
-
-    if (citizen.length <= 0) {
-      citizen = await prisma.citizen.findMany({
-        where: {
-          name: { contains: surname, mode: "insensitive" },
-          surname: { contains: name, mode: "insensitive" },
-        },
-        include: citizenSearchInclude,
-      });
-    }
-
-    if (citizen.length <= 0 && (!name || !surname)) {
-      citizen = await prisma.citizen.findMany({
-        where: {
-          surname: { startsWith: name, mode: "insensitive" },
-        },
-        include: citizenSearchInclude,
-      });
-    }
-
-    return appendConfidential(citizen);
+    return appendConfidential(citizens);
   }
 }

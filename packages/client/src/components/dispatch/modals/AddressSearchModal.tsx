@@ -8,10 +8,10 @@ import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import type { Citizen } from "@snailycad/types";
 import { Table } from "components/shared/Table";
 import { formatCitizenAddress } from "lib/utils";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
+import type { PostDispatchAddressSearchData } from "@snailycad/types/api";
 
 export function AddressSearchModal() {
   const { isOpen, closeModal, openModal } = useModal();
@@ -27,13 +27,14 @@ export function AddressSearchModal() {
     }
   }, [isOpen]);
 
-  function handleOpen(citizen: Citizen) {
+  function handleOpen(citizen: AddressSearchResult[number]) {
     closeModal(ModalIds.AddressSearch);
     openModal(ModalIds.NameSearch, { name: `${citizen.name} ${citizen.surname}` });
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute("/search/address", {
+    const { json } = await execute<AddressSearchResult>({
+      path: "/search/address",
       method: "POST",
       data: values,
       noToast: true,
@@ -61,12 +62,12 @@ export function AddressSearchModal() {
         {({ handleChange, setFieldValue, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.address} label={t("enterAddress")}>
-              <InputSuggestions
-                onSuggestionClick={(suggestion: AddressSearchResult[0]) => {
+              <InputSuggestions<AddressSearchResult[number]>
+                onSuggestionClick={(suggestion) => {
                   setFieldValue("address", suggestion.address);
                   setResults([suggestion]);
                 }}
-                Component={({ suggestion }: { suggestion: Citizen }) => (
+                Component={({ suggestion }) => (
                   <div className="flex items-center">
                     {suggestion.address} ({suggestion.name} {suggestion.surname})
                   </div>
@@ -95,7 +96,7 @@ export function AddressSearchModal() {
                     citizen: `${result.name} ${result.surname}`,
                     fullAddress: formatCitizenAddress(result),
                     actions: (
-                      <Button type="button" onClick={() => handleOpen(result)} small>
+                      <Button type="button" onClick={() => handleOpen(result)} size="xs">
                         {t("viewInNameSearch")}
                       </Button>
                     ),
@@ -133,4 +134,4 @@ export function AddressSearchModal() {
   );
 }
 
-type AddressSearchResult = Citizen[];
+type AddressSearchResult = PostDispatchAddressSearchData;

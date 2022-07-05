@@ -88,7 +88,7 @@ function generateMarkerTypes() {
 
   let blipCss = `.blip {
     background: url("/map/blips_texturesheet.png");
-    background-size: ${1024 / 2}px ${1024 / 2}px;
+    background-size="xs": ${1024 / 2}px ${1024 / 2}px;
     display: inline-block;
     width: ${BLIP_SIZES.width}px;
     height: ${BLIP_SIZES.height}px;

@@ -10,10 +10,12 @@ import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Socket } from "services/SocketService";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/validateSchema";
-import { Bolo, BoloType, DiscordWebhookType } from "@prisma/client";
+import { Bolo, BoloType, CombinedLeoUnit, DiscordWebhookType, Officer } from "@prisma/client";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import type { APIEmbed } from "discord-api-types/v10";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
+import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/bolos")
 @UseBeforeEach(IsAuth)
@@ -29,7 +31,7 @@ export class BoloController {
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   @Description("Get all the bolos")
-  async getBolos() {
+  async getBolos(): Promise<APITypes.GetBolosData> {
     const bolos = await prisma.bolo.findMany({
       include: {
         officer: {
@@ -48,8 +50,12 @@ export class BoloController {
     fallback: (u) => u.isDispatch || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.Leo],
   })
-  async createBolo(@BodyParams() body: unknown, @Context() ctx: Context) {
+  async createBolo(
+    @BodyParams() body: unknown,
+    @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
+  ): Promise<APITypes.PostBolosData> {
     const data = validateSchema(CREATE_BOLO_SCHEMA, body);
+    const officer = getFirstOfficerFromActiveOfficer({ allowDispatch: true, activeOfficer });
 
     const bolo = await prisma.bolo.create({
       data: {
@@ -59,7 +65,7 @@ export class BoloController {
         name: data.name ?? null,
         plate: data.plate ?? null,
         model: data.model ?? null,
-        officerId: ctx.get("activeOfficer")?.id ?? null,
+        officerId: officer?.id ?? null,
       },
       include: {
         officer: {
@@ -87,7 +93,10 @@ export class BoloController {
     fallback: (u) => u.isDispatch || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.Leo],
   })
-  async updateBolo(@PathParams("id") id: string, @BodyParams() body: unknown) {
+  async updateBolo(
+    @PathParams("id") id: string,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PutBolosData> {
     const data = validateSchema(CREATE_BOLO_SCHEMA, body);
 
     const bolo = await prisma.bolo.findUnique({
@@ -128,7 +137,7 @@ export class BoloController {
     fallback: (u) => u.isDispatch || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.Leo],
   })
-  async deleteBolo(@PathParams("id") id: string) {
+  async deleteBolo(@PathParams("id") id: string): Promise<APITypes.DeleteBolosData> {
     const bolo = await prisma.bolo.findUnique({
       where: { id },
     });
@@ -155,7 +164,7 @@ export class BoloController {
     fallback: (u) => u.isDispatch || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.Leo],
   })
-  async reportVehicleStolen(@BodyParams() body: any) {
+  async reportVehicleStolen(@BodyParams() body: any): Promise<APITypes.PostMarkStolenData> {
     const { id, color, plate } = body;
 
     const vehicle = await prisma.registeredVehicle.findUnique({

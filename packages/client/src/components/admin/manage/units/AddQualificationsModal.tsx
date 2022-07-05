@@ -1,4 +1,8 @@
-import { EmsFdDeputy, Officer, QualificationValueType, UnitQualification } from "@snailycad/types";
+import { QualificationValueType } from "@snailycad/types";
+import type {
+  GetManageUnitByIdData,
+  PostManageUnitAddQualificationData,
+} from "@snailycad/types/api";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
@@ -12,8 +16,8 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 
 interface Props {
-  unit: (EmsFdDeputy | Officer) & { qualifications: UnitQualification[] };
-  setUnit: React.Dispatch<React.SetStateAction<any>>;
+  unit: GetManageUnitByIdData;
+  setUnit: React.Dispatch<React.SetStateAction<GetManageUnitByIdData>>;
 }
 
 export function AddQualificationsModal({ unit, setUnit }: Props) {
@@ -29,13 +33,14 @@ export function AddQualificationsModal({ unit, setUnit }: Props) {
   }
 
   async function handleSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute(`/admin/manage/units/${unit.id}/qualifications`, {
+    const { json } = await execute<PostManageUnitAddQualificationData>({
+      path: `/admin/manage/units/${unit.id}/qualifications`,
       method: "POST",
       data: values,
     });
 
     if (json.id) {
-      setUnit((p: Props["unit"]) => ({ ...p, qualifications: [json, ...p.qualifications] }));
+      setUnit((p) => ({ ...p, qualifications: [json, ...p.qualifications] }));
       closeModal(ModalIds.ManageUnitQualifications);
     }
   }
@@ -66,7 +71,7 @@ export function AddQualificationsModal({ unit, setUnit }: Props) {
                 onChange={handleChange}
                 values={qualification.values
                   .filter((v) => {
-                    return !v.departments.length
+                    return !v.departments?.length
                       ? v.qualificationType === type
                       : v.departments.some((v) => unit.departmentId === v.id) &&
                           v.qualificationType === type;

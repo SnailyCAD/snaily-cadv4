@@ -5,7 +5,7 @@ import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
-import { FullEmployee, useBusinessState } from "state/businessState";
+import { useBusinessState } from "state/businessState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { UPDATE_EMPLOYEE_SCHEMA } from "@snailycad/schemas";
@@ -14,12 +14,13 @@ import { Toggle } from "components/form/Toggle";
 import { Select } from "components/form/Select";
 import { FormRow } from "components/form/FormRow";
 import { useValues } from "context/ValuesContext";
-import { EmployeeAsEnum } from "@snailycad/types";
+import { Employee, EmployeeAsEnum } from "@snailycad/types";
+import type { PutBusinessEmployeesData } from "@snailycad/types/api";
 
 interface Props {
-  onUpdate(old: FullEmployee, newPost: FullEmployee): void;
+  onUpdate(old: Employee, newPost: Employee): void;
   onClose?(): void;
-  employee: FullEmployee | null;
+  employee: Employee | null;
 }
 
 export function ManageEmployeeModal({ onClose, onUpdate, employee }: Props) {
@@ -47,7 +48,8 @@ export function ManageEmployeeModal({ onClose, onUpdate, employee }: Props) {
     if (!currentEmployee || !currentBusiness) return;
     if (!employee) return;
 
-    const { json } = await execute(`/businesses/employees/${currentBusiness.id}/${employee.id}`, {
+    const { json } = await execute<PutBusinessEmployeesData, typeof INITIAL_VALUES>({
+      path: `/businesses/employees/${currentBusiness.id}/${employee.id}`,
       method: "PUT",
       data: { ...values, employeeId: currentEmployee.id },
       helpers,
@@ -55,12 +57,12 @@ export function ManageEmployeeModal({ onClose, onUpdate, employee }: Props) {
 
     if (json.id) {
       closeModal(ModalIds.ManageEmployee);
-      onUpdate(employee, json);
+      onUpdate(employee, { ...employee, ...json });
     }
   }
 
   const filteredRoles =
-    employee?.role.as === EmployeeAsEnum.OWNER
+    employee?.role?.as === EmployeeAsEnum.OWNER
       ? businessRole.values
       : businessRole.values.filter((v) => v.as !== EmployeeAsEnum.OWNER);
 
@@ -98,16 +100,16 @@ export function ManageEmployeeModal({ onClose, onUpdate, employee }: Props) {
               <FormField errorMessage={errors.canCreatePosts} label={t("canCreatePosts")}>
                 <Toggle
                   name="canCreatePosts"
-                  onClick={handleChange}
-                  toggled={values.canCreatePosts}
+                  onCheckedChange={handleChange}
+                  value={values.canCreatePosts}
                 />
               </FormField>
 
               <FormField errorMessage={errors.employeeOfTheMonth} label={t("employeeOfTheMonth")}>
                 <Toggle
                   name="employeeOfTheMonth"
-                  onClick={handleChange}
-                  toggled={values.employeeOfTheMonth}
+                  onCheckedChange={handleChange}
+                  value={values.employeeOfTheMonth}
                 />
               </FormField>
             </FormRow>

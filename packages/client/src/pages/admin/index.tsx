@@ -8,28 +8,13 @@ import { useTranslations } from "next-intl";
 import { Title } from "components/shared/Title";
 import { defaultPermissions } from "@snailycad/permissions";
 import { Rank } from "@snailycad/types";
+import type { GetAdminDashboardData } from "@snailycad/types/api";
 
-interface Counts {
-  activeUsers: number;
-  pendingUsers: number;
-  bannedUsers: number;
-
-  createdCitizens: number;
-  arrestCitizens: number;
-  deadCitizens: number;
-  citizensInBolo: number;
-
-  vehicles: number;
-  impoundedVehicles: number;
-  vehiclesInBOLO: number;
-
-  imageData: {
-    count: number;
-    totalSize: number;
-  };
+interface Props {
+  counts: GetAdminDashboardData | null;
 }
 
-export default function Admin({ counts }: { counts: Counts | null }) {
+export default function Admin({ counts }: Props) {
   const t = useTranslations("Management");
 
   if (!counts) {
@@ -127,15 +112,16 @@ function Item({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
-  const [data] = await requestAll(req, [["/admin/", null]]);
+export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, req }) => {
+  const user = await getSessionUser(req);
+  const [data] = await requestAll(req, [["/admin", null]]);
 
   return {
     props: {
       counts: data,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["admin", "values", "common"], locale)),
+        ...(await getTranslations(["admin", "values", "common"], user?.locale ?? locale)),
       },
     },
   };

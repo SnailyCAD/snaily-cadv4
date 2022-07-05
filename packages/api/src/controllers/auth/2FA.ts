@@ -12,13 +12,17 @@ import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { IsAuth } from "middlewares/IsAuth";
 import { encryptValue } from "lib/auth/crypto";
 import { validateUser2FA } from "lib/auth/2fa";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/2fa")
 @UseBeforeEach(IsAuth)
-export class User2FA {
+export class UserTwoFactorAuthenticationController {
   @Post("/verify")
   @Description("Verify a totpCode for the authenticated user's account")
-  async verify2FA(@Context("user") user: User, @BodyParams("totpCode") totpCode: string) {
+  async verify2FA(
+    @Context("user") user: User,
+    @BodyParams("totpCode") totpCode: string,
+  ): Promise<APITypes.PostVerify2FAData> {
     await validateUser2FA({ userId: user.id, totpCode });
 
     return true;
@@ -29,7 +33,7 @@ export class User2FA {
   async enable2FA(
     @Context("user") user: User,
     @BodyParams("currentPassword") currentPassword: string,
-  ) {
+  ): Promise<APITypes.PostEnable2FAData> {
     const u = (await prisma.user.findUnique({
       where: { id: user.id },
       select: { password: true },
@@ -74,7 +78,7 @@ export class User2FA {
   async disable2FA(
     @Context("user") user: User,
     @BodyParams("currentPassword") currentPassword: string,
-  ) {
+  ): Promise<APITypes.DeleteDisable2FAData> {
     const u = (await prisma.user.findUnique({
       where: { id: user.id },
       select: { password: true },

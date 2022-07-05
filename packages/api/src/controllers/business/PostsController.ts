@@ -8,6 +8,8 @@ import { Forbidden, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { validateBusinessAcceptance } from "utils/businesses";
 import { validateSchema } from "lib/validateSchema";
+import type { cad, User } from "@prisma/client";
+import type * as APITypes from "@snailycad/types/api";
 
 @UseBeforeEach(IsAuth)
 @Controller("/businesses/posts")
@@ -16,12 +18,13 @@ export class BusinessPostsController {
   @Post("/:id")
   async createPost(
     @BodyParams() body: unknown,
-    @Context() ctx: Context,
+    @Context("user") user: User,
+    @Context("cad") cad: cad,
     @PathParams("id") businessId: string,
-  ) {
+  ): Promise<APITypes.PostBusinessPostsData> {
     const data = validateSchema(CREATE_COMPANY_POST_SCHEMA, body);
 
-    await validateBusinessAcceptance(ctx, businessId);
+    await validateBusinessAcceptance(cad, businessId);
 
     const employee = await prisma.employee.findUnique({
       where: {
@@ -29,7 +32,7 @@ export class BusinessPostsController {
       },
     });
 
-    if (!employee || employee.userId !== ctx.get("user").id || employee.businessId !== businessId) {
+    if (!employee || employee.userId !== user.id || employee.businessId !== businessId) {
       throw new NotFound("notFound");
     }
 
@@ -44,7 +47,7 @@ export class BusinessPostsController {
         title: data.title,
         businessId,
         employeeId: employee.id,
-        userId: ctx.get("user").id,
+        userId: user.id,
       },
     });
 
@@ -54,18 +57,19 @@ export class BusinessPostsController {
   @Put("/:id/:postId")
   async updatePost(
     @BodyParams() body: unknown,
-    @Context() ctx: Context,
+    @Context("user") user: User,
+    @Context("cad") cad: cad,
     @PathParams("id") businessId: string,
     @PathParams("postId") postId: string,
-  ) {
+  ): Promise<APITypes.PutBusinessPostsData> {
     const data = validateSchema(CREATE_COMPANY_POST_SCHEMA, body);
 
-    await validateBusinessAcceptance(ctx, businessId);
+    await validateBusinessAcceptance(cad, businessId);
 
     const employee = await prisma.employee.findFirst({
       where: {
         id: data.employeeId,
-        userId: ctx.get("user").id,
+        userId: user.id,
         businessId,
       },
     });
@@ -107,19 +111,20 @@ export class BusinessPostsController {
   @Delete("/:id/:postId")
   async deletePost(
     @BodyParams() body: unknown,
-    @Context() ctx: Context,
+    @Context("user") user: User,
+    @Context("cad") cad: cad,
     @PathParams("id") id: string,
     @PathParams("postId") postId: string,
-  ) {
+  ): Promise<APITypes.DeleteBusinessPostsData> {
     const data = validateSchema(DELETE_COMPANY_POST_SCHEMA, body);
 
-    await validateBusinessAcceptance(ctx, id);
+    await validateBusinessAcceptance(cad, id);
 
     const post = await prisma.businessPost.findFirst({
       where: {
         id: postId,
         businessId: id,
-        userId: ctx.get("user").id,
+        userId: user.id,
         employeeId: data.employeeId,
       },
     });

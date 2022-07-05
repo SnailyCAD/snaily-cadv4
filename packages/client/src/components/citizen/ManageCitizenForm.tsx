@@ -12,17 +12,19 @@ import { useAuth } from "context/AuthContext";
 import { useValues } from "context/ValuesContext";
 import { handleValidate } from "lib/handleValidate";
 import { Form, Formik, FormikHelpers } from "formik";
-import { Citizen, DriversLicenseCategoryType, ValueLicenseType } from "@snailycad/types";
+import { User, Citizen, DriversLicenseCategoryType, ValueLicenseType } from "@snailycad/types";
 import { useTranslations } from "next-intl";
 import { Textarea } from "components/form/Textarea";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { filterLicenseTypes } from "lib/utils";
+import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 
 interface Props {
-  citizen: Citizen | null;
+  citizen: (Citizen & { user?: User | null }) | null;
   state: "error" | "loading" | null;
   showLicenseFields?: boolean;
   allowEditingName?: boolean;
+  allowEditingUser?: boolean;
   cancelURL?: string;
   onSubmit(arg0: {
     data: any;
@@ -37,18 +39,20 @@ export function ManageCitizenForm({
   citizen,
   allowEditingName,
   showLicenseFields,
+  allowEditingUser,
   cancelURL = `/citizen/${citizen?.id}`,
 }: Props) {
   const [image, setImage] = React.useState<File | string | null>(null);
   const { cad } = useAuth();
   const { gender, ethnicity, license, driverslicenseCategory } = useValues();
-  const { WEAPON_REGISTRATION, ALLOW_CITIZEN_UPDATE_LICENSE } = useFeatureEnabled();
+  const { SOCIAL_SECURITY_NUMBERS, WEAPON_REGISTRATION, ALLOW_CITIZEN_UPDATE_LICENSE } =
+    useFeatureEnabled();
   const validate = handleValidate(CREATE_CITIZEN_SCHEMA);
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
 
-  const isFieldDisabled = typeof allowEditingName !== "undefined" ? !allowEditingName : !!citizen;
-
+  const isNamesFieldDisabled =
+    typeof allowEditingName !== "undefined" ? !allowEditingName : !!citizen;
   const weightPrefix = cad?.miscCadSettings?.weightPrefix
     ? `(${cad.miscCadSettings.weightPrefix})`
     : "";
@@ -58,6 +62,8 @@ export function ManageCitizenForm({
     : "";
 
   const INITIAL_VALUES = {
+    userId: citizen?.userId ?? "",
+    username: citizen?.user?.username ?? "",
     name: citizen?.name ?? "",
     surname: citizen?.surname ?? "",
     dateOfBirth: citizen?.dateOfBirth ?? new Date(),
@@ -72,6 +78,7 @@ export function ManageCitizenForm({
     phoneNumber: citizen?.phoneNumber ?? "",
     postal: citizen?.postal ?? "",
     occupation: citizen?.occupation ?? "",
+    socialSecurityNumber: citizen?.socialSecurityNumber ?? "",
 
     driversLicense: citizen?.driversLicenseId ?? null,
     pilotLicense: citizen?.pilotLicenseId ?? null,
@@ -131,8 +138,29 @@ export function ManageCitizenForm({
 
   return (
     <Formik validate={validate} onSubmit={handleSubmit} initialValues={INITIAL_VALUES}>
-      {({ handleChange, values, errors, isValid }) => (
+      {({ handleChange, setValues, values, errors, isValid }) => (
         <Form>
+          {allowEditingUser ? (
+            <FormField errorMessage={errors.userId} label="User">
+              <InputSuggestions<User>
+                options={{
+                  apiPath: "/admin/manage/users/search",
+                  method: "POST",
+                  dataKey: "username",
+                }}
+                inputProps={{
+                  value: values.username,
+                  name: "username",
+                  onChange: handleChange,
+                }}
+                onSuggestionClick={(suggestion) => {
+                  setValues({ ...values, userId: suggestion.id, username: suggestion.username });
+                }}
+                Component={({ suggestion }) => <p className="flex ">{suggestion.username}</p>}
+              />
+            </FormField>
+          ) : null}
+
           <ImageSelectInput image={image} setImage={setImage} />
 
           <FormRow>
@@ -141,7 +169,7 @@ export function ManageCitizenForm({
                 value={values.name}
                 onChange={handleChange}
                 name="name"
-                disabled={isFieldDisabled}
+                disabled={isNamesFieldDisabled}
               />
             </FormField>
 
@@ -150,28 +178,47 @@ export function ManageCitizenForm({
                 value={values.surname}
                 onChange={handleChange}
                 name="surname"
-                disabled={isFieldDisabled}
+                disabled={isNamesFieldDisabled}
               />
             </FormField>
           </FormRow>
 
-          <FormField errorMessage={errors.dateOfBirth as string} label={t("dateOfBirth")}>
-            <Input
-              type="date"
-              value={
-                isDate(values.dateOfBirth)
-                  ? new Date(values.dateOfBirth.toString()).toISOString().slice(0, 10)
-                  : String(values.dateOfBirth)
-              }
-              onChange={(e) =>
-                handleChange({
-                  ...e,
-                  target: { name: "dateOfBirth", value: e.target.valueAsDate },
-                })
-              }
-              name="dateOfBirth"
-            />
-          </FormField>
+          <FormRow flexLike={!SOCIAL_SECURITY_NUMBERS}>
+            <FormField
+              className="w-full"
+              errorMessage={errors.dateOfBirth as string}
+              label={t("dateOfBirth")}
+            >
+              <Input
+                type="date"
+                value={
+                  isDate(values.dateOfBirth)
+                    ? new Date(values.dateOfBirth.toString()).toISOString().slice(0, 10)
+                    : String(values.dateOfBirth)
+                }
+                onChange={(e) =>
+                  handleChange({
+                    ...e,
+                    target: { name: "dateOfBirth", value: e.target.valueAsDate },
+                  })
+                }
+                name="dateOfBirth"
+              />
+            </FormField>
+
+            {SOCIAL_SECURITY_NUMBERS ? (
+              <FormField
+                errorMessage={errors.socialSecurityNumber}
+                label={t("socialSecurityNumber")}
+              >
+                <Input
+                  value={values.socialSecurityNumber}
+                  onChange={handleChange}
+                  name="socialSecurityNumber"
+                />
+              </FormField>
+            ) : null}
+          </FormRow>
 
           <FormRow>
             <FormField errorMessage={errors.gender} label={t("gender")}>

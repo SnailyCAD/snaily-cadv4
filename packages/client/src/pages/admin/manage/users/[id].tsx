@@ -1,13 +1,12 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { Form, Formik } from "formik";
 import { UPDATE_USER_SCHEMA } from "@snailycad/schemas";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { CustomRole, Rank, User } from "@snailycad/types";
+import type { CustomRole, Rank } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
@@ -32,6 +31,7 @@ import { ApiTokenArea } from "components/admin/manage/users/ApiTokenArea";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { classNames } from "lib/classNames";
 import { ManageRolesModal } from "components/admin/manage/users/ManageRolesModal";
+import type { GetManageUserByIdData, PutManageUserByIdData } from "@snailycad/types/api";
 
 const DangerZone = dynamic(
   async () => (await import("components/admin/manage/users/DangerZone")).DangerZone,
@@ -42,8 +42,8 @@ const BanArea = dynamic(
 );
 
 interface Props {
-  user: User | null;
   roles: CustomRole[];
+  user: GetManageUserByIdData;
 }
 
 export default function ManageCitizens(props: Props) {
@@ -51,26 +51,14 @@ export default function ManageCitizens(props: Props) {
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Management");
-  const router = useRouter();
   const { user: session } = useAuth();
   const { openModal, closeModal } = useModal();
   const { hasPermissions } = usePermission();
   const { USER_API_TOKENS } = useFeatureEnabled();
 
-  React.useEffect(() => {
-    if (!user) {
-      router.push("/404");
-    }
-  }, [user, router]);
-
-  if (!user) {
-    return null;
-  }
-
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    if (!user) return;
-
-    const { json } = await execute(`/admin/manage/users/${user.id}`, {
+    const { json } = await execute<PutManageUserByIdData>({
+      path: `/admin/manage/users/${user.id}`,
       method: "PUT",
       data: values,
     });
@@ -132,30 +120,34 @@ export default function ManageCitizens(props: Props) {
 
                   <FormRow flexLike className="mt-5">
                     <FormField errorMessage={errors.isLeo} label="Leo Access">
-                      <Toggle name="isLeo" onClick={handleChange} toggled={values.isLeo} />
+                      <Toggle name="isLeo" onCheckedChange={handleChange} value={values.isLeo} />
                     </FormField>
                     <FormField errorMessage={errors.isSupervisor} label="LEO Supervisor">
                       <Toggle
                         name="isSupervisor"
-                        onClick={handleChange}
-                        toggled={values.isSupervisor}
+                        onCheckedChange={handleChange}
+                        value={values.isSupervisor}
                       />
                     </FormField>
                     <FormField errorMessage={errors.isDispatch} label="Dispatch Access">
                       <Toggle
                         name="isDispatch"
-                        onClick={handleChange}
-                        toggled={values.isDispatch}
+                        onCheckedChange={handleChange}
+                        value={values.isDispatch}
                       />
                     </FormField>
                     <FormField errorMessage={errors.isEmsFd} label="EMS-FD Access">
-                      <Toggle name="isEmsFd" onClick={handleChange} toggled={values.isEmsFd} />
+                      <Toggle
+                        name="isEmsFd"
+                        onCheckedChange={handleChange}
+                        value={values.isEmsFd}
+                      />
                     </FormField>
                     <FormField errorMessage={errors.isTow} label="Tow Access">
-                      <Toggle name="isTow" onClick={handleChange} toggled={values.isTow} />
+                      <Toggle name="isTow" onCheckedChange={handleChange} value={values.isTow} />
                     </FormField>
                     <FormField errorMessage={errors.isTaxi} label="Taxi Access">
-                      <Toggle name="isTaxi" onClick={handleChange} toggled={values.isTaxi} />
+                      <Toggle name="isTaxi" onCheckedChange={handleChange} value={values.isTaxi} />
                     </FormField>
                   </FormRow>
 
@@ -277,19 +269,29 @@ export default function ManageCitizens(props: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ query, locale, req }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ query, locale, req }) => {
+  const sessionUser = await getSessionUser(req);
   const [user, roles] = await requestAll(req, [
     [`/admin/manage/users/${query.id}`, null],
     ["/admin/manage/custom-roles", []],
   ]);
 
+  if (!user) {
+    return {
+      notFound: true,
+    };
+  }
+
   return {
     props: {
       user,
       roles,
-      session: await getSessionUser(req),
+      session: sessionUser,
       messages: {
-        ...(await getTranslations(["citizen", "admin", "values", "common"], locale)),
+        ...(await getTranslations(
+          ["citizen", "admin", "values", "common"],
+          sessionUser?.locale ?? locale,
+        )),
       },
     },
   };

@@ -12,7 +12,7 @@ import { useTranslations } from "use-intl";
 import { Select } from "components/form/Select";
 import { ModalIds } from "types/ModalIds";
 import { CUSTOM_FIELDS_SCHEMA } from "@snailycad/schemas";
-import { Toggle } from "components/form/Toggle";
+import type { POstManageCustomFieldsData, PutManageCustomFieldsData } from "@snailycad/types/api";
 
 interface Props {
   field: CustomField | null;
@@ -42,7 +42,8 @@ export function ManageCustomFieldModal({ field, onClose, onCreate, onUpdate }: P
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
     if (field) {
-      const { json } = await execute(`/admin/manage/custom-fields/${field.id}`, {
+      const { json } = await execute<PutManageCustomFieldsData, typeof INITIAL_VALUES>({
+        path: `/admin/manage/custom-fields/${field.id}`,
         method: "PUT",
         data: values,
         helpers,
@@ -53,7 +54,8 @@ export function ManageCustomFieldModal({ field, onClose, onCreate, onUpdate }: P
         onUpdate?.(field, json);
       }
     } else {
-      const { json } = await execute("/admin/manage/custom-fields", {
+      const { json } = await execute<POstManageCustomFieldsData, typeof INITIAL_VALUES>({
+        path: "/admin/manage/custom-fields",
         method: "POST",
         data: values,
         helpers,
@@ -69,7 +71,7 @@ export function ManageCustomFieldModal({ field, onClose, onCreate, onUpdate }: P
   const INITIAL_VALUES = {
     name: field?.name ?? "",
     category: field?.category ?? "",
-    citizenEditable: field?.citizenEditable ?? false,
+    citizenEditable: false,
   };
 
   const validate = handleValidate(CUSTOM_FIELDS_SCHEMA);
@@ -93,14 +95,6 @@ export function ManageCustomFieldModal({ field, onClose, onCreate, onUpdate }: P
                 name="category"
                 onChange={handleChange}
                 value={values.category}
-              />
-            </FormField>
-
-            <FormField errorMessage={errors.citizenEditable} label="Citizen Editable">
-              <Toggle
-                name="citizenEditable"
-                onClick={handleChange}
-                toggled={values.citizenEditable}
               />
             </FormField>
 

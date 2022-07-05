@@ -9,18 +9,19 @@ import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { ManageSeizedItemsModal } from "./ManageSeizedItemsModal";
 import type { SeizedItem } from "@snailycad/types";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 export function SeizedItemsTable({ isReadOnly }: { isReadOnly?: boolean }) {
-  const [tempItem, setTempItem] = React.useState(null);
   const { values, setFieldValue } = useFormikContext<{ seizedItems: SeizedItem[] }>();
   const { openModal } = useModal();
+  const [tempItem, itemState] = useTemporaryItem(values.seizedItems);
 
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
 
-  function handleEditClick(item: any) {
+  function handleEditClick(item: SeizedItem) {
     openModal(ModalIds.ManageSeizedItems);
-    setTempItem(item);
+    itemState.setTempId(item.id);
   }
 
   function handleDeleteClick(item: any) {
@@ -55,7 +56,7 @@ export function SeizedItemsTable({ isReadOnly }: { isReadOnly?: boolean }) {
                 <>
                   <Button
                     disabled={isReadOnly}
-                    small
+                    size="xs"
                     type="button"
                     onClick={() => handleEditClick(v)}
                     variant="success"
@@ -64,7 +65,7 @@ export function SeizedItemsTable({ isReadOnly }: { isReadOnly?: boolean }) {
                   </Button>
                   <Button
                     className="ml-2"
-                    small
+                    size="xs"
                     type="button"
                     onClick={() => handleDeleteClick(v)}
                     variant="danger"
@@ -87,7 +88,7 @@ export function SeizedItemsTable({ isReadOnly }: { isReadOnly?: boolean }) {
         )}
       </FormField>
 
-      <ManageSeizedItemsModal onClose={() => setTempItem(null)} item={tempItem} />
+      <ManageSeizedItemsModal onClose={() => itemState.setTempId(null)} item={tempItem} />
     </>
   );
 }

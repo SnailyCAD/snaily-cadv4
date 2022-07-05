@@ -14,9 +14,10 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Table } from "components/shared/Table";
 import { ManageRecordModal } from "../../ManageRecordModal";
 import { FullDate } from "components/shared/FullDate";
-import { HoverCard } from "components/shared/HoverCard";
-import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { TabsContent } from "components/shared/TabList";
+import { Permissions, usePermission } from "hooks/usePermission";
+import { ViolationsColumn } from "components/leo/ViolationsColumn";
+import type { DeleteRecordsByIdData } from "@snailycad/types/api";
 
 export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitizen?: boolean }) {
   const t = useTranslations();
@@ -41,20 +42,31 @@ export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitize
     ["arrestReports", t("Leo.arrestReports"), t("Leo.noArrestReports"), arrestReports],
   ];
 
-  async function handleDelete() {
-    if (!tempItem) return;
+  function handleRecordUpdate(data: Record) {
+    if (!currentResult || currentResult.isConfidential) return;
 
-    const { json } = await execute(`/records/${tempItem.id}`, {
+    setCurrentResult({
+      ...currentResult,
+      Record: currentResult.Record.map((v) => {
+        if (v.id === data.id) return data;
+        return v;
+      }),
+    });
+  }
+
+  async function handleDelete() {
+    if (!tempItem || !currentResult || currentResult.isConfidential) return;
+
+    const { json } = await execute<DeleteRecordsByIdData>({
+      path: `/records/${tempItem.id}`,
       method: "DELETE",
     });
 
     if (json) {
-      if (currentResult) {
-        setCurrentResult({
-          ...currentResult,
-          Record: currentResult.Record.filter((v) => v.id !== tempItem.id),
-        });
-      }
+      setCurrentResult({
+        ...currentResult,
+        Record: currentResult.Record.filter((v) => v.id !== tempItem.id),
+      });
 
       closeModal(ModalIds.AlertDeleteRecord);
     }
@@ -98,16 +110,7 @@ export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitize
 
       {tempEditRecord ? (
         <ManageRecordModal
-          onUpdate={(data) => {
-            currentResult &&
-              setCurrentResult({
-                ...currentResult,
-                Record: currentResult.Record.map((v) => {
-                  if (v.id === data.id) return data;
-                  return v;
-                }),
-              });
-          }}
+          onUpdate={handleRecordUpdate}
           id={ModalIds.ManageRecord}
           type={tempEditRecord.type}
           record={tempEditRecord}
@@ -126,8 +129,18 @@ function RecordsTable({ data }: { data: Record[] }) {
   const isCitizen = router.pathname.startsWith("/citizen");
   const { generateCallsign } = useGenerateCallsign();
   const { currentResult } = useNameSearch();
+  const { hasPermissions } = usePermission();
+  const hasDeletePermissions = hasPermissions(
+    [
+      Permissions.ManageExpungementRequests,
+      Permissions.ManageNameChangeRequests,
+      Permissions.DeleteCitizenRecords,
+    ],
+    (u) => u.isSupervisor,
+  );
 
   function handleDeleteClick(record: Record) {
+    if (!hasDeletePermissions) return;
     openModal(ModalIds.AlertDeleteRecord, record);
   }
 
@@ -144,26 +157,7 @@ function RecordsTable({ data }: { data: Record[] }) {
         data={data
           .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
           .map((record) => ({
-            violations: record.violations.map((v, idx) => {
-              const comma = idx !== record.violations.length - 1 ? ", " : "";
-              return (
-                <HoverCard
-                  trigger={
-                    <span>
-                      {v.penalCode.title}
-                      {comma}
-                    </span>
-                  }
-                  key={v.id}
-                >
-                  <h3 className="text-lg font-semibold px-2">{v.penalCode.title}</h3>
-
-                  <div className="dark:text-gray-200 mt-2 text-base">
-                    <Editor isReadonly value={dataToSlate(v.penalCode)} />
-                  </div>
-                </HoverCard>
-              );
-            }),
+            violations: <ViolationsColumn violations={record.violations} />,
             postal: record.postal,
             officer: `${generateCallsign(record.officer)} ${makeUnitName(record.officer)}`,
             notes: record.notes || common("none"),
@@ -173,21 +167,23 @@ function RecordsTable({ data }: { data: Record[] }) {
                 <Button
                   type="button"
                   onClick={() => handleEditClick(record)}
-                  small
+                  size="xs"
                   variant="success"
                 >
                   {common("edit")}
                 </Button>
 
-                <Button
-                  className="ml-2"
-                  type="button"
-                  onClick={() => handleDeleteClick(record)}
-                  small
-                  variant="danger"
-                >
-                  {common("delete")}
-                </Button>
+                {hasDeletePermissions ? (
+                  <Button
+                    className="ml-2"
+                    type="button"
+                    onClick={() => handleDeleteClick(record)}
+                    size="xs"
+                    variant="danger"
+                  >
+                    {common("delete")}
+                  </Button>
+                ) : null}
               </>
             ),
           }))}

@@ -45,8 +45,8 @@ export function DepartmentFields() {
       <FormField errorMessage={errors.whitelisted as string} checkbox label="Whitelisted">
         <Toggle
           name="whitelisted"
-          toggled={values.whitelisted}
-          onClick={(e) => {
+          value={values.whitelisted}
+          onCheckedChange={(e) => {
             e.target.value && setFieldValue("isDefaultDepartment", false);
             handleChange(e);
           }}
@@ -61,8 +61,8 @@ export function DepartmentFields() {
         >
           <Toggle
             name="isDefaultDepartment"
-            toggled={values.isDefaultDepartment}
-            onClick={(e) => {
+            value={values.isDefaultDepartment}
+            onCheckedChange={(e) => {
               e.target.value && setFieldValue("whitelisted", false);
               handleChange(e);
             }}
@@ -82,7 +82,11 @@ export function DepartmentFields() {
             checkbox
             label="Is Confidential"
           >
-            <Toggle name="isConfidential" toggled={values.isConfidential} onClick={handleChange} />
+            <Toggle
+              name="isConfidential"
+              value={values.isConfidential}
+              onCheckedChange={handleChange}
+            />
           </FormField>
 
           <p className="text-base italic">

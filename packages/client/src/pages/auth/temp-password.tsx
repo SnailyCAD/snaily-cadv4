@@ -15,6 +15,7 @@ import { Button } from "components/Button";
 import { getSessionUser } from "lib/auth";
 import { useAuth } from "context/AuthContext";
 import { Title } from "components/shared/Title";
+import type { PostUserPasswordData } from "@snailycad/types/api";
 
 const INITIAL_VALUES = {
   newPassword: "",
@@ -40,7 +41,8 @@ export default function TempPassword() {
     }
 
     const tempPassword = String(router.query.tp);
-    const { json } = await execute("/user/password", {
+    const { json } = await execute<PostUserPasswordData>({
+      path: "/user/password",
       data: { ...values, currentPassword: tempPassword },
       method: "POST",
     });
@@ -101,10 +103,11 @@ export default function TempPassword() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+  const user = await getSessionUser(req);
   return {
     props: {
-      session: await getSessionUser(req),
-      messages: await getTranslations(["auth"], locale),
+      session: user,
+      messages: await getTranslations(["auth"], user?.locale ?? locale),
     },
   };
 };

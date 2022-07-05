@@ -7,7 +7,7 @@ import { request } from "undici";
 import type { RESTPostOAuth2AccessTokenResult, APIUser } from "discord-api-types/v10";
 import { encode } from "utils/discord";
 import { prisma } from "lib/prisma";
-import { getSessionUser } from "lib/auth/user";
+import { getSessionUser } from "lib/auth/getSessionUser";
 import { cad, CadFeature, Feature, Rank, WhitelistStatus, type User } from "@prisma/client";
 import {
   AUTH_TOKEN_EXPIRES_MS,
@@ -62,7 +62,7 @@ export class DiscordAuth {
       return res.redirect(`${redirectURL}/auth/login?error=invalidCode`);
     }
 
-    const [data, authUser] = await Promise.all([getDiscordData(code), getSessionUser(req, false)]);
+    const [data, authUser] = await Promise.all([getDiscordData(code), getSessionUser(req, true)]);
 
     if (!data || !data.id) {
       return res.redirect(`${redirectURL}/auth/login?error=could not fetch discord data`);

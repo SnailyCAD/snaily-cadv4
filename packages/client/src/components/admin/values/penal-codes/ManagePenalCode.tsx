@@ -14,6 +14,9 @@ import { FormRow } from "components/form/FormRow";
 import { Select } from "components/form/Select";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { ModalIds } from "types/ModalIds";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { Checkbox } from "components/form/inputs/Checkbox";
+import type { PatchValueByIdData, PostValuesData } from "@snailycad/types/api";
 
 interface Props {
   type: ValueType;
@@ -28,6 +31,7 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
   const { isOpen, closeModal } = useModal();
   const t = useTranslations(type);
   const common = useTranslations("Common");
+  const { LEO_BAIL } = useFeatureEnabled();
 
   const title = !penalCode ? t("ADD") : t("EDIT");
   const footerTitle = !penalCode ? t("ADD") : common("save");
@@ -41,12 +45,13 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
       warningFines: values.warningApplicable ? values.fines1.values : null,
       warningNotFines: values.warningNotApplicable ? values.fines2.values : null,
       prisonTerm: values.warningNotApplicable ? values.prisonTerm.values : null,
-      bail: values.warningNotApplicable ? values.bail.values : null,
+      bail: LEO_BAIL && values.warningNotApplicable ? values.bail.values : null,
       groupId: values.group === "ungrouped" || !values.group ? null : values.group,
     };
 
     if (penalCode) {
-      const { json } = await execute(`/admin/values/${type.toLowerCase()}/${penalCode.id}`, {
+      const { json } = await execute<PatchValueByIdData<PenalCode>>({
+        path: `/admin/values/${type.toLowerCase()}/${penalCode.id}`,
         method: "PATCH",
         data,
       });
@@ -56,7 +61,8 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
         onUpdate(penalCode, json);
       }
     } else {
-      const { json } = await execute(`/admin/values/${type.toLowerCase()}`, {
+      const { json } = await execute<PostValuesData<PenalCode>>({
+        path: `/admin/values/${type.toLowerCase()}`,
         method: "POST",
         data,
       });
@@ -88,8 +94,8 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
       values: penalCode?.warningNotApplicable?.prisonTerm ?? [],
     },
     bail: {
-      enabled: (penalCode?.warningNotApplicable?.bail.length ?? 0) > 0,
-      values: penalCode?.warningNotApplicable?.bail ?? [],
+      enabled: ((LEO_BAIL && penalCode?.warningNotApplicable?.bail.length) ?? 0) > 0,
+      values: (LEO_BAIL && penalCode?.warningNotApplicable?.bail) ?? [],
     },
   };
 
@@ -131,10 +137,9 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
             <FormRow>
               <div className="flex flex-col mr-2.5">
                 <FormField checkbox label="Warning applicable">
-                  <Input
+                  <Checkbox
                     checked={values.warningApplicable}
                     onChange={() => setFieldValue("warningApplicable", !values.warningApplicable)}
-                    type="checkbox"
                   />
                 </FormField>
 
@@ -145,19 +150,18 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
 
               <div className="ml-2.5">
                 <FormField checkbox label="Warning not applicable">
-                  <Input
+                  <Checkbox
                     checked={values.warningNotApplicable}
                     onChange={() =>
                       setFieldValue("warningNotApplicable", !values.warningNotApplicable)
                     }
-                    type="checkbox"
                   />
                 </FormField>
 
                 <div>
                   <FieldsRow keyValue="fines2" />
                   <FieldsRow keyValue="prisonTerm" />
-                  <FieldsRow keyValue="bail" />
+                  {LEO_BAIL ? <FieldsRow keyValue="bail" /> : null}
                 </div>
               </div>
             </FormRow>
@@ -201,11 +205,10 @@ function FieldsRow({ keyValue }: { keyValue: `fines${number}` | "prisonTerm" | "
   return (
     <FormRow className="mb-0">
       <FormField className="mb-0" checkbox label={label}>
-        <Input
+        <Checkbox
           disabled={isBailDisabled || disabled}
           onChange={() => setFieldValue(`${keyValue}.enabled`, !values[keyValue].enabled)}
           checked={values[keyValue].enabled}
-          type="checkbox"
         />
       </FormField>
 

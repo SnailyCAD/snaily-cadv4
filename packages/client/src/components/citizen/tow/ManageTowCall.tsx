@@ -3,12 +3,10 @@ import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { FormRow } from "components/form/FormRow";
 import { Input } from "components/form/inputs/Input";
-import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { AlertModal } from "components/modal/AlertModal";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { Modal } from "components/modal/Modal";
-import { useCitizen } from "context/CitizenContext";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
@@ -16,15 +14,25 @@ import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
 import { toastMessage } from "lib/toastMessage";
 import { ModalIds } from "types/ModalIds";
-import type { TaxiCall, TowCall } from "@snailycad/types";
 import { useTranslations } from "use-intl";
+import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
+import type {
+  PutTowCallsData,
+  PutTaxiCallsData,
+  PostTaxiCallsData,
+  PostTowCallsData,
+  DeleteTowCallsData,
+  DeleteTaxiCallsData,
+} from "@snailycad/types/api";
 
-type CallData = Pick<TowCall, keyof TaxiCall> | TaxiCall;
 interface Props {
-  call: CallData | null;
+  call: PutTaxiCallsData | PutTowCallsData | null;
   isTow?: boolean;
-  onUpdate?(old: CallData, newC: CallData): void;
-  onDelete?(call: CallData): void;
+  onUpdate?(
+    old: PutTaxiCallsData | PutTowCallsData,
+    newC: PutTaxiCallsData | PutTowCallsData,
+  ): void;
+  onDelete?(call: PutTaxiCallsData | PutTowCallsData): void;
   onClose?(): void;
 }
 
@@ -33,7 +41,6 @@ export function ManageCallModal({ onDelete, onUpdate, onClose, isTow: tow, call 
   const t = useTranslations("Calls");
   const { isOpen, closeModal, openModal } = useModal();
   const { state, execute } = useFetch();
-  const { citizens } = useCitizen();
   const router = useRouter();
 
   const isTowPath = router.pathname === "/tow";
@@ -50,7 +57,8 @@ export function ManageCallModal({ onDelete, onUpdate, onClose, isTow: tow, call 
     if (!call) return;
 
     const path = isTow ? `/tow/${call.id}` : `/taxi/${call.id}`;
-    const { json } = await execute(path, {
+    const { json } = await execute<DeleteTowCallsData | DeleteTaxiCallsData>({
+      path,
       method: "DELETE",
     });
 
@@ -63,7 +71,8 @@ export function ManageCallModal({ onDelete, onUpdate, onClose, isTow: tow, call 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (call) {
       const path = isTow ? `/tow/${call.id}` : `/taxi/${call.id}`;
-      const { json } = await execute(path, {
+      const { json } = await execute<PutTowCallsData | PutTaxiCallsData>({
+        path,
         method: "PUT",
         data: { ...call, ...values },
       });
@@ -72,7 +81,8 @@ export function ManageCallModal({ onDelete, onUpdate, onClose, isTow: tow, call 
         onUpdate?.(call, json);
       }
     } else {
-      const { json } = await execute(isTow ? "/tow" : "/taxi", {
+      const { json } = await execute<PostTaxiCallsData | PostTowCallsData>({
+        path: isTow ? "/tow" : "/taxi",
         method: "POST",
         data: values,
       });
@@ -98,6 +108,7 @@ export function ManageCallModal({ onDelete, onUpdate, onClose, isTow: tow, call 
     location: call?.location ?? "",
     postal: call?.postal ?? "",
     creatorId: call?.creatorId ?? "",
+    creatorName: call?.creator ? `${call.creator.name} ${call.creator.surname}` : "",
     description: call?.description ?? "",
     descriptionData: dataToSlate(call),
   };
@@ -115,15 +126,10 @@ export function ManageCallModal({ onDelete, onUpdate, onClose, isTow: tow, call 
         {({ handleChange, setFieldValue, values, isValid, errors }) => (
           <Form>
             <FormField errorMessage={errors.creatorId} label={t("citizen")}>
-              <Select
-                disabled={!!call}
-                name="creatorId"
-                onChange={handleChange}
-                values={citizens.map((citizen) => ({
-                  label: `${citizen.name} ${citizen.surname}`,
-                  value: citizen.id,
-                }))}
-                value={values.creatorId}
+              <CitizenSuggestionsField
+                fromAuthUserOnly
+                labelFieldName="creatorName"
+                valueFieldName="creatorId"
               />
             </FormField>
 

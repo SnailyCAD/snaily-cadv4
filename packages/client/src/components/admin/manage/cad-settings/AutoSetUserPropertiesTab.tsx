@@ -11,6 +11,8 @@ import type { AutoSetUserProperties } from "@snailycad/types";
 import { Toggle } from "components/form/Toggle";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { TabsContent } from "components/shared/TabList";
+import { toastMessage } from "lib/toastMessage";
+import type { PutCADAutoSetPropertiesData } from "@snailycad/types/api";
 
 export function AutoSetUserPropertiesTab() {
   const common = useTranslations("Common");
@@ -21,14 +23,22 @@ export function AutoSetUserPropertiesTab() {
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
-    const { json } = await execute("/admin/manage/cad-settings/auto-set-properties", {
+    if (!cad) return;
+
+    const { json } = await execute<PutCADAutoSetPropertiesData, typeof INITIAL_VALUES>({
+      path: "/admin/manage/cad-settings/auto-set-properties",
       method: "PUT",
       data: values,
       helpers,
     });
 
     if (json.id) {
-      setCad({ ...cad, ...json });
+      setCad({ ...cad, autoSetUserProperties: json, autoSetUserPropertiesId: json.id });
+      toastMessage({
+        icon: "success",
+        title: common("success"),
+        message: common("savedSettingsSuccess"),
+      });
     }
   }
 
@@ -63,17 +73,17 @@ export function AutoSetUserPropertiesTab() {
           <Form className="mt-5 space-y-5">
             <FormRow>
               <FormField errorMessage={errors.leo} label="LEO Access">
-                <Toggle name="leo" toggled={values.leo} onClick={handleChange} />
+                <Toggle name="leo" value={values.leo} onCheckedChange={handleChange} />
               </FormField>
 
               <FormField errorMessage={errors.emsFd} label="EMS/FD Access">
-                <Toggle name="emsFd" toggled={values.emsFd} onClick={handleChange} />
+                <Toggle name="emsFd" value={values.emsFd} onCheckedChange={handleChange} />
               </FormField>
             </FormRow>
 
             <FormRow>
               <FormField errorMessage={errors.dispatch} label="Dispatch Access">
-                <Toggle name="dispatch" toggled={values.dispatch} onClick={handleChange} />
+                <Toggle name="dispatch" value={values.dispatch} onCheckedChange={handleChange} />
               </FormField>
             </FormRow>
 

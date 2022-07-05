@@ -15,6 +15,8 @@ import { SettingsFormField } from "components/form/SettingsFormField";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Formik, FormikHelpers } from "formik";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
+import { toastMessage } from "lib/toastMessage";
+import type { PutCADSettingsData } from "@snailycad/types/api";
 
 export function GeneralSettingsTab() {
   const [logo, setLogo] = React.useState<(File | string) | null>(null);
@@ -28,6 +30,8 @@ export function GeneralSettingsTab() {
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
+    if (!cad) return;
+
     const fd = new FormData();
     const validatedImage = validateFile(logo, helpers);
 
@@ -37,7 +41,8 @@ export function GeneralSettingsTab() {
       }
     }
 
-    const { json } = await execute("/admin/manage/cad-settings", {
+    const { json } = await execute<PutCADSettingsData, typeof INITIAL_VALUES>({
+      path: "/admin/manage/cad-settings",
       method: "PUT",
       data: values,
       helpers,
@@ -47,7 +52,8 @@ export function GeneralSettingsTab() {
       if (validatedImage && typeof validatedImage === "object") {
         const {
           json: { logoId },
-        } = await execute("/admin/manage/cad-settings/image", {
+        } = await execute({
+          path: "/admin/manage/cad-settings/image",
           method: "POST",
           data: fd,
           helpers,
@@ -56,6 +62,11 @@ export function GeneralSettingsTab() {
         json.logoId = logoId;
       }
 
+      toastMessage({
+        icon: "success",
+        title: common("success"),
+        message: common("savedSettingsSuccess"),
+      });
       setCad({ ...cad, ...json });
     }
   }
@@ -126,7 +137,7 @@ export function GeneralSettingsTab() {
             >
               <PasswordInput
                 onChange={handleChange}
-                value={values.registrationCode}
+                value={String(values.registrationCode)}
                 name="registrationCode"
                 autoComplete="off"
               />
@@ -138,7 +149,11 @@ export function GeneralSettingsTab() {
               label="CAD Whitelist"
               description="The CAD will be whitelisted. Any user that registers will need to be reviewed, they can be accepted or denied"
             >
-              <Toggle name="whitelisted" onClick={handleChange} toggled={values.whitelisted} />
+              <Toggle
+                name="whitelisted"
+                onCheckedChange={handleChange}
+                value={values.whitelisted}
+              />
             </SettingsFormField>
 
             <SettingsFormField
@@ -149,8 +164,8 @@ export function GeneralSettingsTab() {
             >
               <Toggle
                 name="towWhitelisted"
-                onClick={handleChange}
-                toggled={values.towWhitelisted}
+                onCheckedChange={handleChange}
+                value={values.towWhitelisted}
               />
             </SettingsFormField>
 
@@ -162,8 +177,8 @@ export function GeneralSettingsTab() {
             >
               <Toggle
                 name="taxiWhitelisted"
-                onClick={handleChange}
-                toggled={values.taxiWhitelisted}
+                onCheckedChange={handleChange}
+                value={values.taxiWhitelisted}
               />
             </SettingsFormField>
 
@@ -175,8 +190,8 @@ export function GeneralSettingsTab() {
             >
               <Toggle
                 name="businessWhitelisted"
-                onClick={handleChange}
-                toggled={values.businessWhitelisted}
+                onCheckedChange={handleChange}
+                value={values.businessWhitelisted}
               />
             </SettingsFormField>
 
@@ -188,8 +203,8 @@ export function GeneralSettingsTab() {
             >
               <Toggle
                 name="roleplayEnabled"
-                onClick={handleChange}
-                toggled={values.roleplayEnabled}
+                onCheckedChange={handleChange}
+                value={values.roleplayEnabled}
               />
             </SettingsFormField>
 

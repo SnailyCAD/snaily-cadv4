@@ -5,13 +5,13 @@ import { Loader } from "components/Loader";
 import { Form, Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
-import type { User } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { BAN_SCHEMA } from "@snailycad/schemas";
+import type { GetManageUserByIdData, PostManageUserBanUnbanData } from "@snailycad/types/api";
 
 interface Props {
-  user: User;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  user: GetManageUserByIdData;
+  setUser: React.Dispatch<React.SetStateAction<GetManageUserByIdData>>;
 }
 
 export function BanArea({ user, setUser }: Props) {
@@ -19,23 +19,25 @@ export function BanArea({ user, setUser }: Props) {
   const { state, execute } = useFetch();
 
   async function onSubmit(values: { reason: string }) {
-    const { json } = await execute(`/admin/manage/users/${user.id}/ban`, {
+    const { json } = await execute<PostManageUserBanUnbanData>({
+      path: `/admin/manage/users/${user.id}/ban`,
       method: "POST",
       data: values,
     });
 
     if (json.id) {
-      setUser({ ...user, ...json });
+      setUser({ ...user, banned: json.banned, banReason: json.banReason });
     }
   }
 
   async function handleUnban() {
-    const { json } = await execute(`/admin/manage/users/${user.id}/unban`, {
+    const { json } = await execute<PostManageUserBanUnbanData>({
+      path: `/admin/manage/users/${user.id}/unban`,
       method: "POST",
     });
 
     if (json.id) {
-      setUser({ ...user, ...json });
+      setUser({ ...user, banned: json.banned, banReason: json.banReason });
     }
   }
 

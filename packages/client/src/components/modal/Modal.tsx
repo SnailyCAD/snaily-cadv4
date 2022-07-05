@@ -55,7 +55,7 @@ export function Modal({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 bg-black/10" />
+            <div className="fixed inset-0 bg-black/10" />
           </Transition.Child>
 
           {/* this element is to trick the browser into centering the modal contents. */}
@@ -65,14 +65,14 @@ export function Modal({
 
           <Transition.Child
             as={React.Fragment}
-            enter="ease-out duration-100"
+            enter="ease-out duration-75"
             enterFrom="opacity-0 scale-95"
             enterTo="opacity-100 scale-100"
-            leave="ease-in duration-100"
+            leave="ease-in duration-75"
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <div
+            <Dialog.Panel
               style={modalStyles}
               className={classNames(
                 "max-w-[100%] inline-block p-4 px-6 my-8 text-left align-middle transition-all transform bg-white dark:bg-dark-bg dark:text-white shadow-xl rounded-lg",
@@ -97,7 +97,7 @@ export function Modal({
               </Dialog.Title>
 
               {children}
-            </div>
+            </Dialog.Panel>
           </Transition.Child>
         </div>
       </Dialog>

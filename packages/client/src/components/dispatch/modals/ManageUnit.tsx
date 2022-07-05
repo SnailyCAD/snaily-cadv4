@@ -19,6 +19,7 @@ import { classNames } from "lib/classNames";
 import { useUnitStatusChange } from "hooks/shared/useUnitsStatusChange";
 import { isUnitCombined } from "@snailycad/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
+import type { PostDispatchStatusUnmergeUnitById } from "@snailycad/types/api";
 
 interface Props {
   type?: "ems-fd" | "leo";
@@ -49,7 +50,8 @@ export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {
   async function handleUnmerge() {
     if (!unit) return;
 
-    const { json } = await execute(`/dispatch/status/unmerge/${unit.id}`, {
+    const { json } = await execute<PostDispatchStatusUnmergeUnitById>({
+      path: `/dispatch/status/unmerge/${unit.id}`,
       method: "POST",
     });
 
@@ -64,9 +66,9 @@ export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {
     const status = codes10.values.find((s) => s.id === values.status);
     if (!status) return;
 
-    const { json } = await setStatus(unit.id, status);
+    const json = await setStatus(unit.id, status);
 
-    if (json.id) {
+    if (json?.id) {
       handleClose();
     }
   }

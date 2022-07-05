@@ -9,7 +9,7 @@ import { IsAuth } from "middlewares/IsAuth";
 import { Description } from "@tsed/schema";
 import { request } from "undici";
 import { findRedirectURL, findUrl } from "./Discord";
-import { getSessionUser } from "lib/auth/user";
+import { getSessionUser } from "lib/auth/getSessionUser";
 import { signJWT } from "utils/jwt";
 import {
   AUTH_TOKEN_EXPIRES_MS,
@@ -41,7 +41,6 @@ export class SteamOAuthController {
   @Get("/callback")
   @Description("Handle Steam's OAuth2 response. Authenticate user where possible.")
   async handleCallbackFromSteam(@QueryParams() query: any, @Res() res: Res, @Req() req: Req) {
-    req;
     const redirectURL = findRedirectURL();
     const identity = query["openid.identity"];
 
@@ -57,7 +56,7 @@ export class SteamOAuthController {
 
     const [steamData, authUser, cad] = await Promise.all([
       getSteamData(rawSteamId),
-      getSessionUser(req, false),
+      getSessionUser(req, true),
       prisma.cad.findFirst({ include: { autoSetUserProperties: true } }),
     ]);
 

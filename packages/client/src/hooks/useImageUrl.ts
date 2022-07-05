@@ -1,4 +1,4 @@
-import { findUrl } from "lib/fetch";
+import { findAPIUrl } from "lib/fetch";
 import { IMGUR_REGEX } from "@snailycad/config";
 import { useMounted } from "@casper124578/useful";
 
@@ -14,7 +14,7 @@ export function useImageUrl() {
       return id;
     }
 
-    const url = findUrl().replace("/v1", "");
+    const url = findAPIUrl().replace("/v1", "");
     const IMAGE_URL = `${url}/static/`;
 
     return `${IMAGE_URL}${type}/${id}`;

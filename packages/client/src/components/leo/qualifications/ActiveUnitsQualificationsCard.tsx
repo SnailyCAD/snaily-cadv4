@@ -1,12 +1,13 @@
 import * as React from "react";
 import type { CombinedLeoUnit, EmsFdDeputy, Officer, UnitQualification } from "@snailycad/types";
-import { useHoverDirty } from "react-use";
+import { useDebounce, useHoverDirty } from "react-use";
 import { isUnitCombined } from "@snailycad/utils";
 import { HoverCard } from "components/shared/HoverCard";
 import useFetch from "lib/useFetch";
 import create from "zustand";
 import { Loader } from "components/Loader";
 import { UnitQualificationsTable } from "./UnitQualificationsTable";
+import type { GetUnitQualificationsByUnitIdData } from "@snailycad/types/api";
 
 interface Props {
   unit: ((Officer | EmsFdDeputy) & { qualifications?: UnitQualification[] }) | CombinedLeoUnit;
@@ -36,7 +37,8 @@ export function ActiveUnitsQualificationsCard({ canBeOpened = true, unit, childr
     if (isUnitCombined(unit)) return;
     if (units[unit.id]) return;
 
-    const { json } = await execute(`/leo/qualifications/${unit.id}`, {
+    const { json } = await execute<GetUnitQualificationsByUnitIdData>({
+      path: `/leo/qualifications/${unit.id}`,
       method: "GET",
       noToast: true,
     });
@@ -49,11 +51,15 @@ export function ActiveUnitsQualificationsCard({ canBeOpened = true, unit, childr
     }
   }, [unit, units, setUnits, execute]);
 
-  React.useEffect(() => {
-    if (hovered && state === null) {
-      handleHover();
-    }
-  }, [hovered, state, handleHover]);
+  useDebounce(
+    () => {
+      if (hovered && state === null) {
+        handleHover();
+      }
+    },
+    500,
+    [hovered, state],
+  );
 
   if (isUnitCombined(unit) || !canBeOpened) {
     // eslint-disable-next-line react/jsx-no-useless-fragment
@@ -62,7 +68,7 @@ export function ActiveUnitsQualificationsCard({ canBeOpened = true, unit, childr
 
   return (
     <HoverCard
-      openDelay={250}
+      openDelay={500}
       showArrow={false}
       contentProps={{ sideOffset: 0, side: "bottom", className: "dark:bg-gray-2" }}
       pointerEvents

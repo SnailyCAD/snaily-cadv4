@@ -5,7 +5,6 @@ import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { ModalIds } from "types/ModalIds";
 import { Button, buttonVariants } from "components/Button";
-import type { Citizen, User } from "@snailycad/types";
 import { useTranslations } from "next-intl";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
@@ -15,22 +14,35 @@ import Link from "next/link";
 import { FullDate } from "components/shared/FullDate";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { classNames } from "lib/classNames";
+import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
+import type { DeleteManageCitizenByIdData, GetManageCitizensData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
-type CitizenWithUser = Citizen & {
-  user: User | null;
-};
+type CitizenWithUser = GetManageCitizensData["citizens"][number];
 
 interface Props {
-  citizens: CitizenWithUser[];
-  setCitizens: React.Dispatch<React.SetStateAction<CitizenWithUser[]>>;
+  citizens: GetManageCitizensData["citizens"];
+  totalCount: number;
+  setCitizens: React.Dispatch<React.SetStateAction<GetManageCitizensData["citizens"]>>;
 }
 
-export function AllCitizensTab({ citizens, setCitizens }: Props) {
-  const [search, setSearch] = React.useState("");
-  const [tempValue, setTempValue] = React.useState<CitizenWithUser | null>(null);
+export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens }: Props) {
+  const asyncTable = useAsyncTable({
+    initialData,
+    totalCount,
+    fetchOptions: {
+      path: "/admin/manage/citizens",
+      onResponse: (json: GetManageCitizensData) => ({
+        totalCount: json.totalCount,
+        data: json.citizens,
+      }),
+    },
+  });
+
+  const [tempValue, valueState] = useTemporaryItem(asyncTable.data);
   const [reason, setReason] = React.useState("");
   const [userFilter, setUserFilter] = React.useState<string | null>(null);
-  const users = React.useMemo(() => makeUsersList(citizens), [citizens]);
+  const users = React.useMemo(() => makeUsersList(asyncTable.data), [asyncTable.data]);
   const { hasPermissions } = usePermission();
 
   const reasonRef = React.useRef<HTMLInputElement>(null);
@@ -43,7 +55,7 @@ export function AllCitizensTab({ citizens, setCitizens }: Props) {
   const common = useTranslations("Common");
 
   function handleDeleteClick(value: CitizenWithUser) {
-    setTempValue(value);
+    valueState.setTempId(value.id);
     openModal(ModalIds.AlertDeleteCitizen);
   }
 
@@ -54,32 +66,37 @@ export function AllCitizensTab({ citizens, setCitizens }: Props) {
       return reasonRef.current.focus();
     }
 
-    const { json } = await execute(`/admin/manage/citizens/${tempValue.id}`, {
+    const { json } = await execute<DeleteManageCitizenByIdData>({
+      path: `/admin/manage/citizens/${tempValue.id}`,
       method: "DELETE",
       data: { reason },
     });
 
     if (json) {
       setCitizens((p) => p.filter((v) => v.id !== tempValue.id));
-      setTempValue(null);
+      valueState.setTempId(null);
       closeModal(ModalIds.AlertDeleteCitizen);
     }
   }
 
   return (
     <>
-      {citizens.length <= 0 ? (
+      {initialData.length <= 0 ? (
         <p className="mt-5">{t("noCitizens")}</p>
       ) : (
         <ul className="mt-5">
           <div className="flex items-center gap-2">
-            <FormField label={common("search")} className="w-full">
+            <FormField label={common("search")} className="w-full relative">
               <Input
                 placeholder="john doe"
-                onChange={(e) => setSearch(e.target.value)}
-                value={search}
-                className=""
+                onChange={(e) => asyncTable.search.setSearch(e.target.value)}
+                value={asyncTable.search.search}
               />
+              {asyncTable.state === "loading" ? (
+                <span className="absolute top-[2.4rem] right-2.5">
+                  <Loader />
+                </span>
+              ) : null}
             </FormField>
 
             <FormField className="w-40" label="Filter">
@@ -95,9 +112,19 @@ export function AllCitizensTab({ citizens, setCitizens }: Props) {
             </FormField>
           </div>
 
+          {asyncTable.search.search && asyncTable.pagination.totalCount !== totalCount ? (
+            <p className="italic text-base font-semibold">
+              Showing {asyncTable.pagination.totalCount} result(s)
+            </p>
+          ) : null}
+
           <Table
-            filter={search}
-            data={citizens
+            pagination={{
+              enabled: true,
+              totalCount: asyncTable.pagination.totalCount,
+              fetchData: asyncTable.pagination,
+            }}
+            data={asyncTable.data
               .filter((v) => (userFilter ? String(v.userId) === userFilter : true))
               .map((citizen) => ({
                 name: `${citizen.name} ${citizen.surname}`,
@@ -128,7 +155,7 @@ export function AllCitizensTab({ citizens, setCitizens }: Props) {
                     {hasPermissions([Permissions.DeleteCitizens], true) ? (
                       <Button
                         className="ml-2"
-                        small
+                        size="xs"
                         variant="danger"
                         onClick={() => handleDeleteClick(citizen)}
                       >
@@ -198,7 +225,7 @@ export function AllCitizensTab({ citizens, setCitizens }: Props) {
   );
 }
 
-function makeUsersList(citizens: CitizenWithUser[]) {
+function makeUsersList(citizens: GetManageCitizensData["citizens"]) {
   const list = new Map<string, { id: string; username: string }>();
   const arr = [];
 

@@ -7,6 +7,7 @@ import {
   QueryParams,
   MultipartFile,
   PlatformMulterFile,
+  Context,
 } from "@tsed/common";
 import process from "node:process";
 import fs from "node:fs";
@@ -21,6 +22,7 @@ import { ValuesSelect, getTypeFromPath, getPermissionsForValuesRequest } from "l
 import { ValueType } from "@prisma/client";
 import { UsePermissions } from "middlewares/UsePermissions";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
+import type * as APITypes from "@snailycad/types/api";
 
 const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
   QUALIFICATION: {
@@ -37,6 +39,7 @@ const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
     name: "divisionValue",
     include: { department: { include: { value: true } } },
   },
+  CALL_TYPE: { name: "callTypeValue" },
 };
 
 @Controller("/admin/values/:path")
@@ -44,7 +47,10 @@ const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
 export class ValuesController {
   @Get("/")
   @Description("Get all the values by the specified types")
-  async getValueByPath(@PathParams("path") path: string, @QueryParams("paths") rawPaths: string) {
+  async getValueByPath(
+    @PathParams("path") path: string,
+    @QueryParams("paths") rawPaths: string,
+  ): Promise<APITypes.GetValuesData | APITypes.GetValuesPenalCodesData> {
     // allow more paths in one request
     const paths =
       typeof rawPaths === "string" ? [...new Set([path, ...rawPaths.split(",")])] : [path];
@@ -70,7 +76,7 @@ export class ValuesController {
             type,
             groups: await prisma.penalCodeGroup.findMany({ orderBy: { position: "asc" } }),
             values: await prisma.penalCode.findMany({
-              orderBy: { position: "asc" },
+              orderBy: { title: "asc" },
               include: {
                 warningApplicable: true,
                 warningNotApplicable: true,
@@ -94,7 +100,7 @@ export class ValuesController {
       }),
     );
 
-    return values;
+    return values as APITypes.GetValuesData;
   }
 
   @Get("/search")
@@ -107,14 +113,14 @@ export class ValuesController {
       const values = await prisma[data.name].findMany({
         include: { ...(data.include ?? {}), value: true },
         orderBy: { value: { position: "asc" } },
-        where: { value: { value: { contains: query, mode: "insensitive" } } },
+        where: { value: { isDisabled: false, value: { contains: query, mode: "insensitive" } } },
       });
 
       return values;
     }
 
     const values = await prisma.value.findMany({
-      where: { type, value: { contains: query, mode: "insensitive" } },
+      where: { type, isDisabled: false, value: { contains: query, mode: "insensitive" } },
       orderBy: { position: "asc" },
     });
 
@@ -183,7 +189,11 @@ export class ValuesController {
   @Post("/")
   @Description("Create a new value by the specified type")
   @UsePermissions(getPermissionsForValuesRequest)
-  async createValueByPath(@BodyParams() body: any, @PathParams("path") path: string) {
+  async createValueByPath(
+    @Context() context: Context,
+    @BodyParams() body: any,
+    @PathParams("path") path: string,
+  ): Promise<APITypes.PostValuesData> {
     const type = getTypeFromPath(path);
 
     if (type === ValueType.DEPARTMENT) {
@@ -201,16 +211,18 @@ export class ValuesController {
     }
 
     const handler = typeHandlers[type];
-    const arr = await handler([body]);
-    const [value] = "success" in arr ? arr.success : arr;
+    const [value] = await handler({ body: [body], context });
 
-    return value;
+    return value as APITypes.PostValuesData;
   }
 
   @Delete("/bulk-delete")
   @Description("Bulk-delete values by the specified ids and type")
   @UsePermissions(getPermissionsForValuesRequest)
-  async bulkDeleteByPathAndIds(@PathParams("path") path: string, @BodyParams() body: unknown) {
+  async bulkDeleteByPathAndIds(
+    @PathParams("path") path: string,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.DeleteValuesBulkData> {
     const type = getTypeFromPath(path);
     const ids = body as string[];
 
@@ -222,7 +234,10 @@ export class ValuesController {
   @Delete("/:id")
   @Description("Delete a value by the specified type and id")
   @UsePermissions(getPermissionsForValuesRequest)
-  async deleteValueByPathAndId(@PathParams("id") id: string, @PathParams("path") path: string) {
+  async deleteValueByPathAndId(
+    @PathParams("id") id: string,
+    @PathParams("path") path: string,
+  ): Promise<APITypes.DeleteValueByIdData> {
     const type = getTypeFromPath(path);
     return this.deleteById(type, id);
   }
@@ -234,14 +249,14 @@ export class ValuesController {
     @BodyParams() body: unknown,
     @PathParams("id") valueId: string,
     @PathParams("path") path: string,
-  ) {
+    @Context() context: Context,
+  ): Promise<APITypes.PatchValueByIdData> {
     const type = getTypeFromPath(path);
 
     const handler = typeHandlers[type];
-    const arr = await handler([body], valueId);
-    const [value] = "success" in arr ? arr.success : arr;
+    const [value] = await handler({ body: [body], id: valueId, context });
 
-    return value;
+    return value as APITypes.PatchValueByIdData;
   }
 
   @Put("/positions")
@@ -250,7 +265,7 @@ export class ValuesController {
   async updatePositions(
     @PathParams("path") path: ValueType,
     @BodyParams() body: { ids: string[] },
-  ) {
+  ): Promise<APITypes.PutValuePositionsData> {
     const type = getTypeFromPath(path);
     const ids = body.ids;
 
@@ -278,9 +293,11 @@ export class ValuesController {
         });
       }),
     );
+
+    return true;
   }
 
-  protected async deleteById(type: ValueType, id: string) {
+  private async deleteById(type: ValueType, id: string) {
     const data = GET_VALUES[type];
 
     if (data) {

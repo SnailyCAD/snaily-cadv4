@@ -7,7 +7,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { useModal } from "state/modalState";
-import { type Business, type Citizen, type User, WhitelistStatus, Rank } from "@snailycad/types";
+import { WhitelistStatus, Rank } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { AdminLayout } from "components/admin/AdminLayout";
@@ -21,19 +21,16 @@ import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { Status } from "components/shared/Status";
 import { usePermission, Permissions } from "hooks/usePermission";
-
-export type FullBusiness = Business & {
-  user: User;
-  citizen: Pick<Citizen, "id" | "name" | "surname">;
-};
+import type { DeleteBusinessByIdData, GetManageBusinessesData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 interface Props {
-  businesses: FullBusiness[];
+  businesses: GetManageBusinessesData;
 }
 
 export default function ManageBusinesses({ businesses: data }: Props) {
-  const [businesses, setBusinesses] = React.useState<FullBusiness[]>(data);
-  const [tempValue, setTempValue] = React.useState<FullBusiness | null>(null);
+  const [businesses, setBusinesses] = React.useState<GetManageBusinessesData>(data);
+  const [tempValue, valueState] = useTemporaryItem(businesses);
   const [reason, setReason] = React.useState("");
   const reasonRef = React.useRef<HTMLInputElement>(null);
   const { cad } = useAuth();
@@ -61,8 +58,8 @@ export default function ManageBusinesses({ businesses: data }: Props) {
     };
   }
 
-  function handleDeleteClick(value: FullBusiness) {
-    setTempValue(value);
+  function handleDeleteClick(value: GetManageBusinessesData[number]) {
+    valueState.setTempId(value.id);
     openModal(ModalIds.AlertDeleteBusiness);
   }
 
@@ -73,14 +70,15 @@ export default function ManageBusinesses({ businesses: data }: Props) {
       return reasonRef.current.focus();
     }
 
-    const { json } = await execute(`/admin/manage/businesses/${tempValue.id}`, {
+    const { json } = await execute<DeleteBusinessByIdData>({
+      path: `/admin/manage/businesses/${tempValue.id}`,
       method: "DELETE",
       data: { reason },
     });
 
     if (json) {
       setBusinesses((p) => p.filter((v) => v.id !== tempValue.id));
-      setTempValue(null);
+      valueState.setTempId(null);
       closeModal(ModalIds.AlertDeleteBusiness);
     }
   }
@@ -128,7 +126,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
                   <Button
                     className="ml-2"
                     onClick={() => handleDeleteClick(business)}
-                    small
+                    size="xs"
                     variant="danger"
                   >
                     {common("delete")}
@@ -195,14 +193,18 @@ export default function ManageBusinesses({ businesses: data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+  const user = await getSessionUser(req);
   const [data] = await requestAll(req, [["/admin/manage/businesses", []]]);
 
   return {
     props: {
       businesses: data,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["citizen", "admin", "values", "common"], locale)),
+        ...(await getTranslations(
+          ["citizen", "admin", "values", "common"],
+          user?.locale ?? locale,
+        )),
       },
     },
   };

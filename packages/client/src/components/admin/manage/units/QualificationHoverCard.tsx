@@ -11,7 +11,7 @@ export function QualificationsHoverCard({ qualification }: Props) {
   const imgUrl = makeImageUrl("values", qualification.qualification.imageId);
 
   const trigger = imgUrl ? (
-    <img src={imgUrl} width={50} height={50} className="object-cover" />
+    <img loading="lazy" src={imgUrl} width={50} height={50} className="object-cover" />
   ) : (
     <span className="cursor-default">—</span>
   );
@@ -25,7 +25,13 @@ export function QualificationsHoverCard({ qualification }: Props) {
       <div className="min-w-[250px] w-full max-w-[400px] flex flex-row gap-4">
         {imgUrl ? (
           <div className="min-w-[70px]">
-            <img src={imgUrl} width={70} height={70} className="object-cover rounded-sm" />
+            <img
+              loading="lazy"
+              src={imgUrl}
+              width={70}
+              height={70}
+              className="object-cover rounded-sm"
+            />
           </div>
         ) : null}
         <div className="flex flex-col gap-2">

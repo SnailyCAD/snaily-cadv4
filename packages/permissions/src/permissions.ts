@@ -13,9 +13,12 @@ export enum Permissions {
   ViewCitizenLogs = "ViewCitizenLogs",
   ViewDLExams = "ViewDLExams",
   ManageDLExams = "ManageDLExams",
+  ViewWeaponExams = "ViewWeaponExams",
+  ManageWeaponExams = "ManageWeaponExams",
   ViewCustomFields = "ViewCustomFields",
   ManageCustomFields = "ManageCustomFields",
   ManageDMV = "ManageDMV",
+  DeleteCitizenRecords = "DeleteCitizenRecords",
   ManageCustomRoles = "ManageCustomRoles",
   ViewCustomRoles = "ViewCustomRolesModal",
 
@@ -57,9 +60,13 @@ export enum Permissions {
   ViewNameChangeRequests = "ViewNameChangeRequests",
   ManageNameChangeRequests = "ManageNameChangeRequests",
 
+  ManageCourthousePosts = "ManageCourthousePosts",
+
   ImportCitizens = "ImportCitizens",
   ImportRegisteredVehicles = "ImportRegisteredVehicles",
   ImportRegisteredWeapons = "ImportRegisteredWeapons",
+  DeleteRegisteredVehicles = "DeleteRegisteredVehicles",
+  DeleteRegisteredWeapons = "DeleteRegisteredWeapons",
 
   // values
   ManageValueLicense = "ManageValueLicense",
@@ -79,6 +86,7 @@ export enum Permissions {
   ManageValueVehicleFlag = "ManageValueVehicleFlag",
   ManageValueCitizenFlag = "ManageValueCitizenFlag",
   ManageValueQualification = "ManageValueQualification",
+  ManageValueCallType = "ManageValueCallType",
 
   // other
   UsePersonalApiToken = "UsePersonalApiToken",

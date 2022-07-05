@@ -18,11 +18,10 @@ const recordTypeRegex = /ARREST_REPORT|TICKET|WRITTEN_WARNING/;
 export const CREATE_TICKET_SCHEMA = z.object({
   type: z.string().min(2).max(255).regex(recordTypeRegex),
   citizenId: z.string().min(2).max(255),
-  citizenName: z.string().min(2).max(255),
   violations: z.array(VIOLATION).min(1),
   seizedItems: z.array(SEIZED_ITEM_SCHEMA).optional(),
   postal: z.string().min(1).max(255),
-  notes: z.string(),
+  notes: z.string().nullable().optional(),
 });
 
 export const CREATE_WARRANT_SCHEMA = z.object({
@@ -33,8 +32,13 @@ export const CREATE_WARRANT_SCHEMA = z.object({
     .max(255)
     .regex(/ACTIVE|INACTIVE/),
   description: z.string(),
+  assignedOfficers: z.array(z.any()).nullable().optional(),
 });
 
 export const UPDATE_WARRANT_SCHEMA = CREATE_WARRANT_SCHEMA.pick({
   status: true,
+  assignedOfficers: true,
+}).extend({
+  citizenId: z.string().min(2).max(255).nullable().optional(),
+  description: z.string().nullable().optional(),
 });

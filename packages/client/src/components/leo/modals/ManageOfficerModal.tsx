@@ -6,7 +6,6 @@ import { Input } from "components/form/inputs/Input";
 import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
-import { useCitizen } from "context/CitizenContext";
 import { useModal } from "state/modalState";
 import { useValues } from "context/ValuesContext";
 import { Formik, FormikHelpers } from "formik";
@@ -23,6 +22,12 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { UnitQualificationsTable } from "../qualifications/UnitQualificationsTable";
 import { AdvancedSettings } from "./AdvancedSettings";
 import { classNames } from "lib/classNames";
+import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
+import type {
+  PostMyOfficerByIdData,
+  PostMyOfficersData,
+  PutMyOfficerByIdData,
+} from "@snailycad/types/api";
 
 interface Props {
   officer: Officer | null;
@@ -36,7 +41,6 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
-  const { citizens } = useCitizen();
   const formRef = React.useRef<HTMLFormElement>(null);
   const { BADGE_NUMBERS } = useFeatureEnabled();
 
@@ -68,7 +72,8 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
       divisions: values.divisions.map((v) => v.value),
     };
     if (officer) {
-      const { json } = await execute(`/leo/${officer.id}`, {
+      const { json } = await execute<PutMyOfficerByIdData, typeof INITIAL_VALUES>({
+        path: `/leo/${officer.id}`,
         method: "PUT",
         data,
         helpers,
@@ -80,7 +85,8 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
         onUpdate?.(officer, json);
       }
     } else {
-      const { json } = await execute("/leo", {
+      const { json } = await execute<PostMyOfficersData, typeof INITIAL_VALUES>({
+        path: "/leo",
         method: "POST",
         data,
         helpers,
@@ -94,7 +100,8 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
     }
 
     if (validatedImage && typeof validatedImage === "object") {
-      await execute(`/leo/image/${officerId}`, {
+      await execute<PostMyOfficerByIdData, typeof INITIAL_VALUES>({
+        path: `/leo/image/${officerId}`,
         method: "POST",
         data: fd,
         helpers,
@@ -115,6 +122,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
     divisions: officer?.divisions.map((v) => ({ value: v.id, label: v.value.value })) ?? [],
     badgeNumber: BADGE_NUMBERS ? officer?.badgeNumber ?? "" : 123,
     citizenId: officer?.citizenId ?? "",
+    name: officer ? `${officer.citizen.name} ${officer.citizen.surname}` : "",
     image: undefined,
     callsigns: officer ? makeDivisionsObjectMap(officer) : {},
   };
@@ -137,15 +145,10 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
               <ImageSelectInput setImage={setImage} image={image} />
 
               <FormField errorMessage={errors.citizenId} label={t("citizen")}>
-                <Select
-                  isClearable
-                  value={values.citizenId}
-                  name="citizenId"
-                  onChange={handleChange}
-                  values={citizens.map((value) => ({
-                    label: `${value.name} ${value.surname}`,
-                    value: value.id,
-                  }))}
+                <CitizenSuggestionsField
+                  fromAuthUserOnly
+                  labelFieldName="name"
+                  valueFieldName="citizenId"
                 />
               </FormField>
 

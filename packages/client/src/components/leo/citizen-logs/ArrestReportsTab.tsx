@@ -14,6 +14,9 @@ import { ManageRecordModal } from "../modals/ManageRecordModal";
 import useFetch from "lib/useFetch";
 import { Status } from "components/shared/Status";
 import { useRouter } from "next/router";
+import { HoverCard } from "components/shared/HoverCard";
+import { ViolationsColumn } from "../ViolationsColumn";
+import type { PostCitizenRecordLogsData } from "@snailycad/types/api";
 
 interface Props {
   search: string;
@@ -45,7 +48,8 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
   }
 
   async function handleAcceptDeclineClick(item: Record, type: "ACCEPT" | "DECLINE") {
-    const { json } = await execute(`/admin/manage/citizens/records-logs/${item.id}`, {
+    const { json } = await execute<PostCitizenRecordLogsData>({
+      path: `/admin/manage/citizens/records-logs/${item.id}`,
       method: "POST",
       data: { type },
     });
@@ -83,19 +87,28 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
               citizen: `${item.citizen.name} ${item.citizen.surname}`,
               officer: `${callsign} ${officerName}`,
               postal: record.postal || common("none"),
-              notes: record.notes || common("none"),
-              violations:
-                record.violations.map((v) => v.penalCode.title).join(", ") || common("none"),
+              notes: (
+                <HoverCard
+                  trigger={
+                    <span className="block max-w-[300px] truncate cursor-help">
+                      {record.notes || common("none")}
+                    </span>
+                  }
+                >
+                  {record.notes}
+                </HoverCard>
+              ),
+              violations: <ViolationsColumn violations={record.violations} />,
               createdAt: createdAt ? <FullDate>{createdAt}</FullDate> : "—",
               status: <Status state={record.status}>{record.status?.toLowerCase()}</Status>,
               actions: (
                 <>
-                  <Button small className="mr-2" onClick={() => handleViewClick(item)}>
+                  <Button size="xs" className="mr-2" onClick={() => handleViewClick(item)}>
                     {common("view")}
                   </Button>
                   <Button
                     variant="success"
-                    small
+                    size="xs"
                     className="mr-2"
                     onClick={() => handleAcceptDeclineClick(record, "ACCEPT")}
                     disabled={state === "loading"}
@@ -104,7 +117,7 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
                   </Button>
                   <Button
                     variant="danger"
-                    small
+                    size="xs"
                     onClick={() => handleAcceptDeclineClick(record, "DECLINE")}
                     disabled={state === "loading"}
                   >

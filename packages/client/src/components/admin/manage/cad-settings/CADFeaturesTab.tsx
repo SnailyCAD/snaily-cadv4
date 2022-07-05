@@ -13,6 +13,9 @@ import { Input } from "components/form/inputs/Input";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { TabsContent } from "components/shared/TabList";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
+import { toastMessage } from "lib/toastMessage";
+import { DEFAULT_DISABLED_FEATURES } from "hooks/useFeatureEnabled";
+import type { PutCADFeaturesData } from "@snailycad/types/api";
 
 interface FeatureItem {
   name: string;
@@ -38,6 +41,11 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     description:
       "When enabled, this will require citizens to enter a driving licenses exam to get a driver's license.",
   },
+  WEAPON_EXAMS: {
+    name: "Weapon's License Exams",
+    description:
+      "When enabled, this will require citizens to enter a weapon licenses exam to get a weapon's license.",
+  },
   AOP: {
     name: "Area Of Play",
     // eslint-disable-next-line quotes
@@ -53,7 +61,7 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
       "When enabled, this will allow users to create citizens with the same name (name and surname)",
   },
   DISCORD_AUTH: {
-    name: "Allow users to authenticate with Discord.",
+    name: "Allow users to authenticate with Discord",
     description: (
       <>
         When enabled, this will allow users to login and register with Discord.{" "}
@@ -176,6 +184,23 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     description:
       "When enabled, this will allow officers to create citizens and vehicles that don't exist yet when searching for them. This citizen/vehicle will not be connected to any user.",
   },
+  LEO_TICKETS: {
+    name: "LEO Tickets",
+    description: "When enabled, this will allow officers to write tickets to citizens",
+  },
+  LEO_BAIL: {
+    name: "Bails",
+    description: "When enabled, this will allow officers to add bails to arrest reports",
+  },
+  COURTHOUSE_POSTS: {
+    name: "Courthouse Posts",
+    description:
+      "When enabled, this will allow users with the correct permissions to create posts in the courthouse. These posts will be visible to anyone.",
+  },
+  ACTIVE_WARRANTS: {
+    name: "Active Warrants",
+    description: "When enabled, this will display active warrants on the LEO Dashboard.",
+  },
 };
 
 export function CADFeaturesTab() {
@@ -197,25 +222,33 @@ export function CADFeaturesTab() {
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
+    if (!cad) return;
     const featuresArr = [];
 
     for (const feature in values.features) {
       const feat = values.features[feature as Feature];
       const featObj = {
         feature,
-        isEnabled: feat?.isEnabled ?? true,
+        isEnabled:
+          feat?.isEnabled ?? DEFAULT_DISABLED_FEATURES[feature as Feature]?.isEnabled ?? true,
       };
 
       featuresArr.push(featObj);
     }
 
-    const { json } = await execute("/admin/manage/cad-settings/features", {
+    const { json } = await execute<PutCADFeaturesData>({
+      path: "/admin/manage/cad-settings/features",
       method: "PUT",
       data: { features: featuresArr },
     });
 
     if (json.id) {
       setCad({ ...cad, ...json });
+      toastMessage({
+        icon: "success",
+        title: common("success"),
+        message: common("savedSettingsSuccess"),
+      });
     }
   }
 
@@ -252,8 +285,12 @@ export function CADFeaturesTab() {
                     label={value.name}
                   >
                     <Toggle
-                      toggled={values.features[key]?.isEnabled ?? true}
-                      onClick={(v) => {
+                      value={
+                        values.features[key]?.isEnabled ??
+                        DEFAULT_DISABLED_FEATURES[key]?.isEnabled ??
+                        true
+                      }
+                      onCheckedChange={(v) => {
                         handleChange(v);
                       }}
                       name={`features.${key}.isEnabled`}

@@ -9,7 +9,7 @@ import { Form, Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
-import { Bolo, BoloType, Citizen, RegisteredVehicle } from "@snailycad/types";
+import { Bolo, BoloType, RegisteredVehicle } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { CREATE_BOLO_SCHEMA } from "@snailycad/schemas";
 import { useDispatchState } from "state/dispatchState";
@@ -19,6 +19,8 @@ import { classNames } from "lib/classNames";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useSSRSafeId } from "@react-aria/ssr";
+import type { NameSearchResult } from "state/search/nameSearchState";
+import type { PostBolosData, PutBolosData } from "@snailycad/types/api";
 
 interface Props {
   onClose?(): void;
@@ -40,7 +42,8 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (bolo) {
-      const { json } = await execute(`/bolos/${bolo.id}`, {
+      const { json } = await execute<PutBolosData>({
+        path: `/bolos/${bolo.id}`,
         method: "PUT",
         data: values,
       });
@@ -58,7 +61,8 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
         closeModal(ModalIds.ManageBolo);
       }
     } else {
-      const { json } = await execute("/bolos", {
+      const { json } = await execute<PostBolosData>({
+        path: "/bolos",
         method: "POST",
         data: values,
       });
@@ -148,7 +152,7 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
             {values.type === BoloType.VEHICLE ? (
               <>
                 <FormField optional errorMessage={errors.plate} label={leo("plate")}>
-                  <InputSuggestions
+                  <InputSuggestions<RegisteredVehicle>
                     inputProps={{
                       id: "plate",
                       onChange: handleChange,
@@ -160,12 +164,12 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                       dataKey: "plateOrVin",
                       allowUnknown: true,
                     }}
-                    onSuggestionClick={(suggestion: RegisteredVehicle) => {
+                    onSuggestionClick={(suggestion) => {
                       setFieldValue("plate", suggestion.plate);
                       setFieldValue("model", suggestion.model.value.value);
                       setFieldValue("color", suggestion.color);
                     }}
-                    Component={({ suggestion }: { suggestion: RegisteredVehicle }) => (
+                    Component={({ suggestion }) => (
                       <div className="flex items-center">
                         {suggestion.plate.toUpperCase()} (
                         {suggestion.model.value.value.toUpperCase()})
@@ -186,7 +190,7 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
 
             {values.type === BoloType.PERSON ? (
               <FormField optional errorMessage={errors.name} label={common("name")}>
-                <InputSuggestions
+                <InputSuggestions<NameSearchResult>
                   inputProps={{
                     id: "name",
                     onChange: handleChange,
@@ -202,10 +206,10 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                     minLength: 2,
                     allowUnknown: true,
                   }}
-                  onSuggestionClick={(suggestion: Citizen) => {
+                  onSuggestionClick={(suggestion) => {
                     setFieldValue("name", `${suggestion.name} ${suggestion.surname}`);
                   }}
-                  Component={({ suggestion }: { suggestion: Citizen }) => (
+                  Component={({ suggestion }) => (
                     <div className="flex items-center">
                       <div className="mr-2 min-w-[25px]">
                         {suggestion.imageId ? (

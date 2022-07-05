@@ -1,9 +1,9 @@
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { BodyParams, Context, PathParams } from "@tsed/platform-params";
+import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
-import { userProperties } from "lib/auth/user";
+import { userProperties } from "lib/auth/getSessionUser";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
@@ -12,12 +12,14 @@ import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateImgurURL } from "utils/image";
-import { Rank, User, WhitelistStatus } from "@prisma/client";
+import { Prisma, Rank, User, WhitelistStatus } from "@prisma/client";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import {
   ACCEPT_DECLINE_TYPES,
   type AcceptDeclineType,
 } from "controllers/admin/manage/AdminManageUnitsController";
+import { isCuid } from "cuid";
+import type * as APITypes from "@snailycad/types/api";
 
 const recordsInclude = {
   officer: { include: leoProperties },
@@ -38,15 +40,43 @@ export class AdminManageCitizensController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ViewCitizens, Permissions.ManageCitizens, Permissions.DeleteCitizens],
   })
-  async getCitizens() {
-    const citizens = await prisma.citizen.findMany({
-      include: citizenInclude,
-    });
+  async getCitizens(
+    @QueryParams("includeAll", Boolean) includeAll = false,
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("query", String) query = "",
+  ): Promise<APITypes.GetManageCitizensData> {
+    const [name, surname] = query.toString().toLowerCase().split(/ +/g);
 
-    return citizens;
+    const where = query
+      ? {
+          OR: [
+            {
+              name: { contains: name, mode: Prisma.QueryMode.insensitive },
+              surname: { contains: surname, mode: Prisma.QueryMode.insensitive },
+            },
+            {
+              name: { equals: surname, mode: Prisma.QueryMode.insensitive },
+              surname: { equals: name, mode: Prisma.QueryMode.insensitive },
+            },
+          ],
+        }
+      : undefined;
+
+    const [totalCount, citizens] = await Promise.all([
+      prisma.citizen.count({ where }),
+      prisma.citizen.findMany({
+        where,
+        include: citizenInclude,
+        take: includeAll ? undefined : 35,
+        skip: includeAll ? undefined : Number(skip),
+      }),
+    ]);
+
+    return { totalCount, citizens };
   }
 
   @Get("/records-logs")
+  @Description("Get all the record logs within the CAD")
   @UsePermissions({
     fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [
@@ -56,7 +86,7 @@ export class AdminManageCitizensController {
       Permissions.ViewCitizenLogs,
     ],
   })
-  async getRecordLogsForCitizen() {
+  async getRecordLogsForCitizen(): Promise<APITypes.GetManageRecordLogsData> {
     const citizens = await prisma.recordLog.findMany({
       include: {
         warrant: { include: { officer: { include: leoProperties } } },
@@ -71,15 +101,23 @@ export class AdminManageCitizensController {
   }
 
   @Get("/:id")
-  @Description("Get a citizen by its id")
+  @Description(
+    "Get a citizen by the `id`. Or get all citizens from a user by the `discordId` or `steamId`",
+  )
   @UsePermissions({
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ViewCitizens, Permissions.ManageCitizens, Permissions.DeleteCitizens],
   })
-  async getCitizen(@PathParams("id") id: string) {
-    const citizen = await prisma.citizen.findUnique({
-      where: { id },
+  async getCitizen(@PathParams("id") id: string): Promise<APITypes.GetManageCitizenByIdData> {
+    const isCitizenId = isCuid(id);
+    const functionName = isCitizenId ? "findFirst" : "findMany";
+
+    // @ts-expect-error same properties
+    const citizen = await prisma.citizen[functionName]({
       include: citizenInclude,
+      where: {
+        OR: [{ user: { discordId: id } }, { user: { steamId: id } }, { id }],
+      },
     });
 
     return citizen;
@@ -89,12 +127,12 @@ export class AdminManageCitizensController {
   @Description("Accept or decline a record by it's id")
   @UsePermissions({
     fallback: (u) => u.rank !== Rank.USER,
-    permissions: [Permissions.ManageCitizens],
+    permissions: [Permissions.ManageCitizens, Permissions.ViewCitizenLogs],
   })
   async acceptOrDeclineArrestReport(
     @PathParams("id") id: string,
     @BodyParams("type") type: AcceptDeclineType | null,
-  ) {
+  ): Promise<APITypes.PostCitizenRecordLogsData> {
     if (!type || !ACCEPT_DECLINE_TYPES.includes(type)) {
       throw new BadRequest("invalidType");
     }
@@ -124,7 +162,10 @@ export class AdminManageCitizensController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCitizens],
   })
-  async updateCitizen(@PathParams("id") id: string, @BodyParams() body: unknown) {
+  async updateCitizen(
+    @PathParams("id") id: string,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PutManageCitizenByIdData> {
     const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
 
     const citizen = await prisma.citizen.update({
@@ -148,6 +189,8 @@ export class AdminManageCitizensController {
         socialSecurityNumber: generateString(9, { numbersOnly: true }),
         occupation: data.occupation || null,
         imageId: validateImgurURL(data.image),
+        userId: data.userId || undefined,
+        appearance: data.appearance || undefined,
       },
       include: citizenInclude,
     });
@@ -165,7 +208,7 @@ export class AdminManageCitizensController {
     @Context("user") user: User,
     @BodyParams("reason") reason: string,
     @PathParams("id") citizenId: string,
-  ) {
+  ): Promise<APITypes.DeleteManageCitizenByIdData> {
     const citizen = await prisma.citizen.findUnique({
       where: {
         id: citizenId,

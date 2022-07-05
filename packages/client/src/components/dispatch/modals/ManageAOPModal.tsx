@@ -9,6 +9,7 @@ import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
+import type { PostDispatchAopData } from "@snailycad/types/api";
 
 export function ManageAOPModal() {
   const { state, execute } = useFetch();
@@ -19,7 +20,10 @@ export function ManageAOPModal() {
   const common = useTranslations("Common");
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute("/dispatch/aop", {
+    if (!cad) return;
+
+    const { json } = await execute<PostDispatchAopData>({
+      path: "/dispatch/aop",
       method: "POST",
       data: values,
     });

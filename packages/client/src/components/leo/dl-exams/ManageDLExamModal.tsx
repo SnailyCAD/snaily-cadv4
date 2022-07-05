@@ -1,6 +1,5 @@
 import { DL_EXAM_SCHEMA } from "@snailycad/schemas";
 import {
-  Citizen,
   DLExam,
   DLExamPassType,
   DriversLicenseCategoryType,
@@ -21,15 +20,18 @@ import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
+import type { NameSearchResult } from "state/search/nameSearchState";
+import type { PostDLExamsData, PutDLExamByIdData } from "@snailycad/types/api";
 
 interface Props {
   exam: DLExam | null;
+  type?: "dl" | "weapon";
   onUpdate?(oldExam: DLExam, newExam: DLExam): void;
   onCreate?(exam: DLExam): void;
   onClose?(): void;
 }
 
-export function ManageDLExamModal({ exam, onClose, onCreate, onUpdate }: Props) {
+export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpdate }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const cT = useTranslations("Vehicles");
@@ -38,6 +40,7 @@ export function ManageDLExamModal({ exam, onClose, onCreate, onUpdate }: Props) 
   const { makeImageUrl } = useImageUrl();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
   const { driverslicenseCategory, license } = useValues();
+  const apiPath = type === "dl" ? "dl-exams" : "weapon-exams";
 
   const PASS_FAIL_VALUES = [
     { label: cT("passed"), value: DLExamPassType.PASSED },
@@ -56,7 +59,8 @@ export function ManageDLExamModal({ exam, onClose, onCreate, onUpdate }: Props) 
     };
 
     if (exam) {
-      const { json } = await execute(`/leo/dl-exams/${exam.id}`, {
+      const { json } = await execute<PutDLExamByIdData>({
+        path: `/leo/${apiPath}/${exam.id}`,
         method: "PUT",
         data,
       });
@@ -66,7 +70,8 @@ export function ManageDLExamModal({ exam, onClose, onCreate, onUpdate }: Props) 
         onUpdate?.(exam, json);
       }
     } else {
-      const { json } = await execute("/leo/dl-exams", {
+      const { json } = await execute<PostDLExamsData>({
+        path: `/leo/${apiPath}`,
         method: "POST",
         data,
       });
@@ -103,15 +108,15 @@ export function ManageDLExamModal({ exam, onClose, onCreate, onUpdate }: Props) 
         {({ handleChange, setValues, errors, values }) => (
           <Form>
             <FormField errorMessage={errors.citizenId} label={common("citizen")}>
-              <InputSuggestions
-                onSuggestionClick={(suggestion: Citizen) => {
+              <InputSuggestions<NameSearchResult>
+                onSuggestionClick={(suggestion) => {
                   setValues({
                     ...values,
                     citizenName: `${suggestion.name} ${suggestion.surname}`,
                     citizenId: suggestion.id,
                   });
                 }}
-                Component={({ suggestion }: { suggestion: Citizen }) => (
+                Component={({ suggestion }) => (
                   <div className="flex items-center">
                     {suggestion.imageId ? (
                       <img
@@ -166,7 +171,11 @@ export function ManageDLExamModal({ exam, onClose, onCreate, onUpdate }: Props) 
                 onChange={handleChange}
                 name="categories"
                 values={driverslicenseCategory.values
-                  .filter((v) => v.type !== DriversLicenseCategoryType.FIREARM)
+                  .filter((v) =>
+                    type === "dl"
+                      ? v.type !== DriversLicenseCategoryType.FIREARM
+                      : v.type === DriversLicenseCategoryType.FIREARM,
+                  )
                   .map((v) => ({
                     label: v.value.value,
                     value: v.id,

@@ -1,10 +1,10 @@
-import type { User } from "@snailycad/types";
+import type { GetManageUserByIdData } from "@snailycad/types/api";
 import { FullDate } from "components/shared/FullDate";
 import { Infofield } from "components/shared/Infofield";
 import { Table } from "components/shared/Table";
 
 interface Props {
-  user: User;
+  user: GetManageUserByIdData;
 }
 
 export function ApiTokenArea({ user }: Props) {
@@ -19,7 +19,7 @@ export function ApiTokenArea({ user }: Props) {
             <FullDate>{user.apiToken.createdAt}</FullDate>
           </Infofield>
 
-          {!user.apiToken.logs?.length ? null : (
+          {!user.apiToken.logs.length ? null : (
             <Table
               data={user.apiToken.logs.map((log) => ({
                 route: (

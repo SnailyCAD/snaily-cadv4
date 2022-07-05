@@ -22,13 +22,19 @@ import { hasTableDataChanged } from "./[path]";
 import { OptionsDropdown } from "components/admin/values/import/OptionsDropdown";
 import { ImportValuesModal } from "components/admin/values/import/ImportValuesModal";
 import { Permissions } from "@snailycad/permissions";
+import type {
+  DeleteValueByIdData,
+  GetValuesPenalCodesData,
+  PutValuePositionsData,
+  DeletePenalCodeGroupsData,
+} from "@snailycad/types/api";
 
 const ManagePenalCode = dynamic(async () => {
   return (await import("components/admin/values/penal-codes/ManagePenalCode")).ManagePenalCode;
 });
 
 interface Props {
-  values: { type: ValueType; groups: PenalCodeGroup[]; values: PenalCode[] };
+  values: GetValuesPenalCodesData[number];
 }
 
 export default function ValuePath({ values: { type, groups: groupData, values: data } }: Props) {
@@ -81,7 +87,8 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
   async function handleDeleteGroup() {
     if (!tempGroup) return;
 
-    const { json } = await execute(`/admin/penal-code-group/${tempGroup.id}`, {
+    const { json } = await execute<DeletePenalCodeGroupsData>({
+      path: `/admin/penal-code-group/${tempGroup.id}`,
       method: "DELETE",
     });
 
@@ -136,7 +143,8 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
       );
     }
 
-    await execute(`/admin/values/${type.toLowerCase()}/positions`, {
+    await execute<PutValuePositionsData>({
+      path: `/admin/values/${type.toLowerCase()}/positions`,
       method: "PUT",
       data: {
         ids: list
@@ -151,7 +159,8 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
   async function handleDelete() {
     if (!tempValue) return;
 
-    const { json } = await execute(`/admin/values/${type.toLowerCase()}/${tempValue.id}`, {
+    const { json } = await execute<DeleteValueByIdData>({
+      path: `/admin/values/${type.toLowerCase()}/${tempValue.id}`,
       method: "DELETE",
     });
 
@@ -202,7 +211,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
       ) : currentGroup ? (
         <>
           <header className="flex items-center justify-between">
-            <h1 className="text-xl font-semibold capitalize">{currentGroup.name}</h1>
+            <h1 className="text-xl font-semibold">{currentGroup.name}</h1>
 
             <Button onClick={handleViewAllGroups} className="flex items-center gap-3">
               <ArrowLeft /> View all groups
@@ -231,13 +240,13 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
                 ),
                 actions: (
                   <>
-                    <Button onClick={() => handleEditClick(code)} small variant="success">
+                    <Button onClick={() => handleEditClick(code)} size="xs" variant="success">
                       {common("edit")}
                     </Button>
                     <Button
                       className="ml-2"
                       onClick={() => handleDeleteClick(code)}
-                      small
+                      size="xs"
                       variant="danger"
                     >
                       {common("delete")}
@@ -265,7 +274,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
             value: group.name,
             actions: (
               <>
-                <Button onClick={() => setCurrentGroup(group)} small>
+                <Button onClick={() => setCurrentGroup(group)} size="xs">
                   {common("view")}
                 </Button>
                 {group.id !== "ungrouped" ? (
@@ -273,7 +282,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
                     <Button
                       className="ml-2"
                       onClick={() => handleEditGroup(group)}
-                      small
+                      size="xs"
                       variant="success"
                       disabled={group.id === "ungrouped"}
                     >
@@ -282,7 +291,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
                     <Button
                       className="ml-2"
                       onClick={() => handleDeleteGroupClick(group)}
-                      small
+                      size="xs"
                       variant="danger"
                       disabled={group.id === "ungrouped"}
                     >
@@ -368,14 +377,15 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+  const user = await getSessionUser(req);
   const [values] = await requestAll(req, [["/admin/values/penal_code", []]]);
 
   return {
     props: {
       values: values?.[0] ?? {},
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["admin", "values", "common"], locale)),
+        ...(await getTranslations(["admin", "values", "common"], user?.locale ?? locale)),
       },
     },
   };

@@ -6,10 +6,11 @@ import { IsAuth } from "middlewares/IsAuth";
 import { UPDATE_EMPLOYEE_SCHEMA, FIRE_EMPLOYEE_SCHEMA } from "@snailycad/schemas";
 import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
-import { EmployeeAsEnum, WhitelistStatus } from "@prisma/client";
+import { cad, EmployeeAsEnum, User, WhitelistStatus } from "@prisma/client";
 import { validateBusinessAcceptance } from "utils/businesses";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import type * as APITypes from "@snailycad/types/api";
 
 @UseBeforeEach(IsAuth)
 @Controller("/businesses/employees")
@@ -19,18 +20,19 @@ export class BusinessEmployeeController {
   async updateEmployee(
     @PathParams("id") employeeId: string,
     @PathParams("businessId") businessId: string,
-    @Context() ctx: Context,
+    @Context("user") user: User,
+    @Context("cad") cad: cad,
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PutBusinessEmployeesData> {
     const data = validateSchema(UPDATE_EMPLOYEE_SCHEMA, body);
 
-    await validateBusinessAcceptance(ctx, businessId);
+    await validateBusinessAcceptance(cad, businessId);
 
     const employee = await prisma.employee.findFirst({
       where: {
         id: data.employeeId,
         businessId,
-        userId: ctx.get("user").id,
+        userId: user.id,
       },
       include: {
         role: true,
@@ -95,18 +97,19 @@ export class BusinessEmployeeController {
   async fireEmployee(
     @PathParams("id") employeeId: string,
     @PathParams("businessId") businessId: string,
-    @Context() ctx: Context,
+    @Context("user") user: User,
+    @Context("cad") cad: cad,
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.DeleteBusinessFireEmployeeData> {
     const data = validateSchema(FIRE_EMPLOYEE_SCHEMA, body);
 
-    await validateBusinessAcceptance(ctx, businessId);
+    await validateBusinessAcceptance(cad, businessId);
 
     const employee = await prisma.employee.findFirst({
       where: {
         id: data.employeeId,
         businessId,
-        userId: ctx.get("user").id,
+        userId: user.id,
       },
       include: {
         role: true,
@@ -148,18 +151,19 @@ export class BusinessEmployeeController {
     @PathParams("type") type: "accept" | "decline",
     @PathParams("id") employeeId: string,
     @PathParams("businessId") businessId: string,
-    @Context() ctx: Context,
+    @Context("user") user: User,
+    @Context("cad") cad: cad,
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PostBusinessAcceptDeclineData> {
     const data = validateSchema(FIRE_EMPLOYEE_SCHEMA, body);
 
-    await validateBusinessAcceptance(ctx, businessId);
+    await validateBusinessAcceptance(cad, businessId);
 
     const employee = await prisma.employee.findFirst({
       where: {
         id: data.employeeId,
         businessId,
-        userId: ctx.get("user").id,
+        userId: user.id,
       },
       include: {
         role: true,

@@ -32,7 +32,8 @@ const Tabs = {
   ),
   DiscordWebhooksTab: dynamic(
     async () =>
-      (await import("components/admin/manage/cad-settings/DiscordWebhooksTab")).DiscordWebhooksTab,
+      (await import("components/admin/manage/cad-settings/webhooks/DiscordWebhooksTab"))
+        .DiscordWebhooksTab,
   ),
 };
 
@@ -79,14 +80,15 @@ export default function CadSettings() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+  const user = await getSessionUser(req);
   const [data] = await requestAll(req, [["/admin/manage/cad-settings", []]]);
 
   return {
     props: {
       cad: data,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["admin", "values", "common"], locale)),
+        ...(await getTranslations(["admin", "values", "common"], user?.locale ?? locale)),
       },
     },
   };

@@ -8,7 +8,6 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
-  // output   = "../node_modules/.prisma/client"
 }
 
 model cad {
@@ -52,6 +51,8 @@ model CadFeature {
 model MiscCadSettings {
   id String @id @default(cuid())
 
+  /// OG = open graph.
+  cadOGDescription          String?
   heightPrefix              String         @default("cm") @db.VarChar(255)
   weightPrefix              String         @default("kg") @db.VarChar(255)
   maxCitizensPerUser        Int?
@@ -124,7 +125,7 @@ model ApiToken {
 
 model ApiTokenLog {
   id         String   @id @default(uuid())
-  apiToken   ApiToken @relation(fields: [apiTokenId], references: [id])
+  apiToken   ApiToken @relation(fields: [apiTokenId], references: [id], onDelete: Cascade)
   apiTokenId String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @default(now()) @updatedAt
@@ -226,6 +227,8 @@ model User {
   apiToken                 ApiToken?             @relation(fields: [apiTokenId], references: [id])
   apiTokenId               String?
   roles                    CustomRole[]
+  locale                   String?
+
 
   // relational data
   citizens             Citizen[]
@@ -246,6 +249,7 @@ model User {
   ActiveDispatchers    ActiveDispatchers[]
   User2FA              User2FA[]
   NameChangeRequest    NameChangeRequest[]
+  CourthousePost       CourthousePost[]
 }
 
 model UserSoundSettings {
@@ -262,7 +266,7 @@ model UserSoundSettings {
 model User2FA {
   id     String @id @default(uuid())
   secret String
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 }
 
@@ -320,12 +324,14 @@ model Citizen {
   truckLogs            TruckLog[]
   createdAt            DateTime                      @default(now())
   updatedAt            DateTime                      @default(now()) @updatedAt
+  appearance           String?
   RecordRelease        RecordRelease[]
   RecordLog            RecordLog[]
   ExpungementRequest   ExpungementRequest[]
   NameChangeRequest    NameChangeRequest[]
   DLExam               DLExam[]
   notes                Note[]
+  WeaponExam           WeaponExam[]                  @relation("weaponExams")
 }
 
 model Note {
@@ -407,13 +413,14 @@ model MedicalRecord {
 
 // values
 model Value {
-  id        String    @id @default(cuid())
-  type      ValueType
-  value     String    @db.VarChar(255)
-  isDefault Boolean
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now()) @updatedAt
-  position  Int?
+  id         String    @id @default(cuid())
+  type       ValueType
+  value      String    @db.VarChar(255)
+  isDefault  Boolean
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now()) @updatedAt
+  position   Int?
+  isDisabled Boolean   @default(false)
 
   // LICENSE type specific
   // this was added here since the migration of eg `LicenseValue` would be to large.
@@ -451,6 +458,8 @@ model Value {
   DLExam                          DLExam[]                      @relation("dlExamToLicense")
   DepartmentValue                 DepartmentValue[]             @relation("departmentValueToOfficerRank")
   QualificationValue              QualificationValue[]
+  CallTypeValue                   CallTypeValue[]               @relation("callTypeValueToValue")
+  WeaponExam                      WeaponExam[]                  @relation("weaponExamToLicense")
 }
 
 model PenalCode {
@@ -559,6 +568,7 @@ model DriversLicenseCategoryValue {
   description String?
   citizens    Citizen[]                  @relation("dlCategoryToDLCategory")
   DLExam      DLExam[]
+  WeaponExam  WeaponExam[]
 }
 
 model VehicleValue {
@@ -577,12 +587,20 @@ model WeaponValue {
   weapon  Weapon[] @relation("weaponModelToValue")
 }
 
+model CallTypeValue {
+  id       String    @id @default(cuid())
+  priority Int?
+  valueId  String
+  value    Value     @relation("callTypeValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  Call911  Call911[]
+}
+
 // notifications
 model Notification {
   id          String   @id @default(uuid())
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
-  executor    User     @relation("executor", fields: [executorId], references: [id])
+  executor    User     @relation("executor", fields: [executorId], references: [id], onDelete: Cascade)
   executorId  String
   title       String
   description String
@@ -753,6 +771,7 @@ model Officer {
   IncidentInvolvedUnit        IncidentInvolvedUnit[]
   Note                        Note[]
   callsigns                   IndividualDivisionCallsign[]
+  AssignedWarrantOfficer      AssignedWarrantOfficer[]
 }
 
 model IndividualDivisionCallsign {
@@ -866,6 +885,8 @@ model LeoIncident {
   events               IncidentEvent[]
   calls                Call911[]
   Officer              Officer[]              @relation("activeIncident")
+  CombinedLeoUnit      CombinedLeoUnit[]      @relation("combinedActiveIncident")
+  EmsFdDeputy          EmsFdDeputy[]          @relation("emsfdActiveIncident")
 }
 
 model IncidentEvent {
@@ -878,22 +899,25 @@ model IncidentEvent {
 }
 
 model CombinedLeoUnit {
-  id                        String                 @id @default(uuid())
+  id                        String                   @id @default(uuid())
   officers                  Officer[]
   callsign                  String
   callsign2                 String?
-  department                DepartmentValue?       @relation(fields: [departmentId], references: [id])
+  department                DepartmentValue?         @relation(fields: [departmentId], references: [id])
   departmentId              String?
   incremental               Int?
   radioChannelId            String?
-  status                    StatusValue?           @relation("combinedUnitStatusToValue", fields: [statusId], references: [id])
+  status                    StatusValue?             @relation("combinedUnitStatusToValue", fields: [statusId], references: [id])
   statusId                  String?
   pairedUnitTemplate        String?
-  activeCall                Call911?               @relation("CombinedLeoUnitActiveCall", fields: [activeCallId], references: [id])
+  activeCall                Call911?                 @relation("CombinedLeoUnitActiveCall", fields: [activeCallId], references: [id])
   activeCallId              String?
+  activeIncident            LeoIncident?             @relation("combinedActiveIncident", fields: [activeIncidentId], references: [id])
+  activeIncidentId          String?
   lastStatusChangeTimestamp DateTime?
   AssignedUnit              AssignedUnit[]
   IncidentInvolvedUnit      IncidentInvolvedUnit[]
+  AssignedWarrantOfficer    AssignedWarrantOfficer[]
 }
 
 // dispatching
@@ -928,6 +952,8 @@ model Call911 {
   departments     DepartmentValue[]
   events          Call911Event[]
   incidents       LeoIncident[]
+  type            CallTypeValue?    @relation(fields: [typeId], references: [id])
+  typeId          String?
   Officer         Officer[]         @relation("activeCall")
   EmsFdDeputy     EmsFdDeputy[]     @relation("emsFdActiveCall")
   CombinedLeoUnit CombinedLeoUnit[] @relation("CombinedLeoUnitActiveCall")
@@ -950,6 +976,19 @@ model AssignedUnit {
   combinedLeoId String?
   call911       Call911?         @relation(fields: [call911Id], references: [id], onDelete: Cascade)
   call911Id     String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @default(now()) @updatedAt
+
+}
+
+model AssignedWarrantOfficer {
+  id            String           @id @default(uuid())
+  officer       Officer?         @relation(fields: [officerId], references: [id])
+  officerId     String?
+  combinedUnit  CombinedLeoUnit? @relation(fields: [combinedLeoId], references: [id])
+  combinedLeoId String?
+  warrant       Warrant?         @relation(fields: [warrantId], references: [id], onDelete: Cascade)
+  warrantId     String?
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @default(now()) @updatedAt
 }
@@ -1022,17 +1061,18 @@ model RecordRelease {
 }
 
 model Warrant {
-  id                   String              @id @default(uuid())
-  citizen              Citizen             @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  id                   String                   @id @default(uuid())
+  citizen              Citizen                  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId            String
-  officer              Officer             @relation(fields: [officerId], references: [id], onDelete: Cascade)
+  officer              Officer                  @relation(fields: [officerId], references: [id], onDelete: Cascade)
   officerId            String
-  description          String              @db.Text
-  status               WarrantStatus       @default(ACTIVE)
-  createdAt            DateTime            @default(now())
-  updatedAt            DateTime            @default(now()) @updatedAt
+  assignedOfficers     AssignedWarrantOfficer[]
+  description          String                   @db.Text
+  status               WarrantStatus            @default(ACTIVE)
+  createdAt            DateTime                 @default(now())
+  updatedAt            DateTime                 @default(now()) @updatedAt
   RecordLog            RecordLog[]
-  ExpungementRequest   ExpungementRequest? @relation(fields: [expungementRequestId], references: [id])
+  ExpungementRequest   ExpungementRequest?      @relation(fields: [expungementRequestId], references: [id])
   expungementRequestId String?
 }
 
@@ -1120,6 +1160,8 @@ model EmsFdDeputy {
   radioChannelId            String?
   activeCall                Call911?               @relation("emsFdActiveCall", fields: [activeCallId], references: [id])
   activeCallId              String?
+  activeIncident            LeoIncident?           @relation("emsfdActiveIncident", fields: [activeIncidentId], references: [id])
+  activeIncidentId          String?
   whitelistStatus           LeoWhitelistStatus?    @relation(fields: [whitelistStatusId], references: [id])
   whitelistStatusId         String?
   logs                      OfficerLog[]
@@ -1142,9 +1184,10 @@ model TruckLog {
   endedAt   String             @db.VarChar(255)
   createdAt DateTime           @default(now())
   updatedAt DateTime           @default(now()) @updatedAt
+  notes     String?
 }
 
-// DL Exams
+// Exams
 model DLExam {
   id           String                        @id @default(uuid())
   citizen      Citizen                       @relation(fields: [citizenId], references: [id])
@@ -1152,6 +1195,20 @@ model DLExam {
   theoryExam   DLExamPassType?
   practiceExam DLExamPassType?
   license      Value                         @relation("dlExamToLicense", fields: [licenseId], references: [id])
+  licenseId    String
+  categories   DriversLicenseCategoryValue[]
+  status       DLExamStatus                  @default(IN_PROGRESS)
+  createdAt    DateTime                      @default(now())
+  updatedAt    DateTime                      @default(now()) @updatedAt
+}
+
+model WeaponExam {
+  id           String                        @id @default(uuid())
+  citizen      Citizen                       @relation("weaponExams", fields: [citizenId], references: [id])
+  citizenId    String
+  theoryExam   DLExamPassType?
+  practiceExam DLExamPassType?
+  license      Value                         @relation("weaponExamToLicense", fields: [licenseId], references: [id])
   licenseId    String
   categories   DriversLicenseCategoryValue[]
   status       DLExamStatus                  @default(IN_PROGRESS)
@@ -1186,8 +1243,18 @@ model CustomRole {
   permissions String[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
-  User        User?    @relation(fields: [userId], references: [id])
-  userId      String?
+  User        User[]
+}
+
+// courthouse posts
+model CourthousePost {
+  id              String   @id @default(uuid())
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          String
+  title           String   @db.VarChar(255)
+  descriptionData Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
 }
 
 enum QualificationValueType {
@@ -1264,6 +1331,7 @@ enum ValueType {
   VEHICLE_FLAG
   CITIZEN_FLAG
   QUALIFICATION
+  CALL_TYPE
 }
 
 enum DriversLicenseCategoryType {
@@ -1387,4 +1455,9 @@ enum Feature {
   COMMON_CITIZEN_CARDS
   STEAM_OAUTH
   CREATE_USER_CITIZEN_LEO
+  LEO_TICKETS
+  LEO_BAIL
+  COURTHOUSE_POSTS
+  WEAPON_EXAMS
+  ACTIVE_WARRANTS
 }

@@ -10,6 +10,7 @@ import { TabsContent } from "components/shared/TabList";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { ManageUnitCallsignModal } from "./ManageUnitCallsignModal";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 interface Props {
   units: Unit[];
@@ -17,7 +18,7 @@ interface Props {
 }
 
 export function CallsignsTab({ search, units }: Props) {
-  const [tempUnit, setTempUnit] = React.useState<Unit | null>(null);
+  const [tempUnit, unitState] = useTemporaryItem(units);
 
   const t = useTranslations();
   const common = useTranslations("Common");
@@ -25,7 +26,7 @@ export function CallsignsTab({ search, units }: Props) {
   const { openModal } = useModal();
 
   function handleManageClick(unit: Unit) {
-    setTempUnit(unit);
+    unitState.setTempId(unit.id);
     openModal(ModalIds.ManageUnitCallsign);
   }
 
@@ -59,7 +60,7 @@ export function CallsignsTab({ search, units }: Props) {
               callsign2: unit.callsign2,
               callsign: generateCallsign(unit),
               actions: (
-                <Button small onClick={() => handleManageClick(unit)}>
+                <Button size="xs" onClick={() => handleManageClick(unit)}>
                   {common("manage")}
                 </Button>
               ),

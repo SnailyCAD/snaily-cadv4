@@ -9,6 +9,8 @@ import { ModalIds } from "types/ModalIds";
 import dynamic from "next/dynamic";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useAuth } from "context/AuthContext";
+import type { GetTaxiCallsData, GetTowCallsData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 const AssignToCallModal = dynamic(
   async () => (await import("components/citizen/tow/AssignToTowCall")).AssignToCallModal,
@@ -23,13 +25,14 @@ const DescriptionModal = dynamic(
 
 interface Props {
   noCallsText: string;
-  calls: (TowCall | TaxiCall)[];
+  calls: GetTaxiCallsData | GetTowCallsData;
   setCalls: React.Dispatch<React.SetStateAction<(TowCall | TaxiCall)[]>>;
   type: "tow" | "taxi";
 }
 
 export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props) {
-  const [tempCall, setTempCall] = React.useState<TowCall | TaxiCall | null>(null);
+  const [tempCall, callState] = useTemporaryItem<string, TowCall | TaxiCall>(calls);
+
   const { openModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
@@ -43,22 +46,22 @@ export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props)
   const hasManagePermissions = hasPermissions(toCheckPerms, fallback ?? false);
 
   function handleViewDescription(call: TowCall | TaxiCall) {
-    setTempCall(call);
+    callState.setTempId(call.id);
     openModal(ModalIds.Description, call);
   }
 
   function assignClick(call: TowCall | TaxiCall) {
     openModal(ModalIds.AssignToTowCall);
-    setTempCall(call);
+    callState.setTempId(call.id);
   }
 
   function editClick(call: TowCall | TaxiCall) {
     openModal(ModalIds.ManageTowCall);
-    setTempCall(call);
+    callState.setTempId(call.id);
   }
 
   function updateCalls(old: TowCall | TaxiCall, newC: TowCall | TaxiCall) {
-    setTempCall(null);
+    callState.setTempId(null);
     setCalls((p) => {
       const idx = p.findIndex((v) => v.id === old.id);
       p[idx] = newC;
@@ -86,10 +89,6 @@ export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props)
         <p className="mt-5">{noCallsText}</p>
       ) : (
         <Table
-          defaultSort={{
-            descending: true,
-            columnId: "createdAt",
-          }}
           data={calls.map((call) => ({
             location: call.location,
             postal: call.postal || common("none"),
@@ -97,7 +96,7 @@ export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props)
               call.description && !call.descriptionData ? (
                 call.description
               ) : (
-                <Button small onClick={() => handleViewDescription(call)}>
+                <Button size="xs" onClick={() => handleViewDescription(call)}>
                   {common("viewDescription")}
                 </Button>
               ),
@@ -108,10 +107,10 @@ export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props)
             createdAt: <FullDate>{call.createdAt}</FullDate>,
             actions: (
               <>
-                <Button onClick={() => editClick(call)} small variant="success">
+                <Button onClick={() => editClick(call)} size="xs" variant="success">
                   {common("edit")}
                 </Button>
-                <Button className="ml-2" onClick={() => assignClick(call)} small>
+                <Button className="ml-2" onClick={() => assignClick(call)} size="xs">
                   {t("assignToCall")}
                 </Button>
               </>
@@ -130,18 +129,21 @@ export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props)
       )}
 
       <AssignToCallModal
-        onClose={() => setTempCall(null)}
+        onClose={() => callState.setTempId(null)}
         onSuccess={updateCalls}
         call={tempCall}
       />
       <ManageCallModal
-        onClose={() => setTempCall(null)}
+        onClose={() => callState.setTempId(null)}
         onDelete={handleCallEnd}
         onUpdate={updateCalls}
         call={tempCall}
       />
       {tempCall?.descriptionData ? (
-        <DescriptionModal onClose={() => setTempCall(null)} value={tempCall.descriptionData} />
+        <DescriptionModal
+          onClose={() => callState.setTempId(null)}
+          value={tempCall.descriptionData}
+        />
       ) : null}
     </>
   );

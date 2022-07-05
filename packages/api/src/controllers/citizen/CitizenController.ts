@@ -1,8 +1,8 @@
 import process from "node:process";
 import { UseBeforeEach, Context, MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { Controller } from "@tsed/di";
-import { Delete, Get, Post, Put } from "@tsed/schema";
-import { BodyParams, PathParams } from "@tsed/platform-params";
+import { Delete, Description, Get, Post, Put } from "@tsed/schema";
+import { QueryParams, BodyParams, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { BadRequest, Forbidden, NotFound } from "@tsed/exceptions";
@@ -11,14 +11,15 @@ import fs from "node:fs";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { generateString } from "utils/generateString";
-import { CadFeature, User, ValueType, Feature, cad, MiscCadSettings } from "@prisma/client";
+import { CadFeature, User, ValueType, Feature, cad, MiscCadSettings, Prisma } from "@prisma/client";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import { canManageInvariant, userProperties } from "lib/auth/user";
+import { canManageInvariant, userProperties } from "lib/auth/getSessionUser";
 import { validateSchema } from "lib/validateSchema";
 import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
 import { isFeatureEnabled } from "lib/cad";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { citizenObjectFromData } from "lib/citizen";
+import type * as APITypes from "@snailycad/types/api";
 
 export const citizenInclude = {
   user: { select: userProperties },
@@ -37,9 +38,13 @@ export const citizenInclude = {
       // hide business vehicles
       Business: { every: { id: "null" } },
     },
+    take: 12,
+    skip: 0,
   },
   weapons: {
     orderBy: { createdAt: "desc" },
+    take: 12,
+    skip: 0,
     include: {
       model: { include: { value: true } },
       registrationStatus: true,
@@ -71,18 +76,46 @@ export const citizenInclude = {
 @UseBeforeEach(IsAuth)
 export class CitizenController {
   @Get("/")
-  async getCitizens(@Context("cad") cad: { features?: CadFeature[] }, @Context("user") user: User) {
+  @Description("Get all the citizens of the authenticated user")
+  async getCitizens(
+    @Context("cad") cad: { features?: CadFeature[] },
+    @Context("user") user: User,
+    @QueryParams("query", String) query = "",
+    @QueryParams("skip", Number) skip = 0,
+  ): Promise<APITypes.GetCitizensData> {
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
+    const [name, surname] = query.toString().toLowerCase().split(/ +/g);
 
-    const citizens = await prisma.citizen.findMany({
-      where: {
-        userId: checkCitizenUserId ? user.id : undefined,
-      },
-      orderBy: { createdAt: "desc" },
-      include: { user: { select: userProperties } },
-    });
+    const where: Prisma.CitizenWhereInput = {
+      userId: checkCitizenUserId ? user.id : undefined,
+      OR: [
+        {
+          name: { contains: name, mode: "insensitive" },
+          surname: { contains: surname, mode: "insensitive" },
+        },
+        {
+          name: { contains: surname, mode: "insensitive" },
+          surname: { contains: name, mode: "insensitive" },
+        },
+        { socialSecurityNumber: { contains: name, mode: "insensitive" } },
+        { phoneNumber: { contains: name, mode: "insensitive" } },
+      ],
+    };
 
-    return citizens;
+    const [citizensCount, citizens] = await Promise.all([
+      await prisma.citizen.count({
+        where,
+      }),
+      await prisma.citizen.findMany({
+        where,
+        orderBy: { updatedAt: "desc" },
+        include: { user: { select: userProperties } },
+        skip,
+        take: 35,
+      }),
+    ]);
+
+    return { citizens, totalCount: citizensCount };
   }
 
   @Get("/:id")
@@ -90,7 +123,7 @@ export class CitizenController {
     @Context("cad") cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
     @Context("user") user: User,
     @PathParams("id") citizenId: string,
-  ) {
+  ): Promise<APITypes.GetCitizenByIdData> {
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
 
     const citizen = await prisma.citizen.findFirst({
@@ -109,9 +142,11 @@ export class CitizenController {
   }
 
   @Delete("/:id")
-  async deleteCitizen(@Context() ctx: Context, @PathParams("id") citizenId: string) {
-    const cad = ctx.get("cad") as cad & { features?: CadFeature[] };
-    const user = ctx.get("user") as User;
+  async deleteCitizen(
+    @Context("user") user: User,
+    @Context("cad") cad: cad & { features?: CadFeature[] },
+    @PathParams("id") citizenId: string,
+  ): Promise<APITypes.DeleteCitizenByIdData> {
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
 
     const allowDeletion = isFeatureEnabled({
@@ -149,7 +184,7 @@ export class CitizenController {
     @Context("cad") cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings | null },
     @Context("user") user: User,
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PostCitizensData> {
     const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
 
     const miscSettings = cad.miscCadSettings;
@@ -213,7 +248,7 @@ export class CitizenController {
     @Context("user") user: User,
     @Context("cad") cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PutCitizenByIdData> {
     const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
 
@@ -258,7 +293,7 @@ export class CitizenController {
     @Context("cad") cad: cad & { features?: CadFeature[] },
     @PathParams("id") citizenId: string,
     @MultipartFile("image") file: PlatformMulterFile,
-  ) {
+  ): Promise<APITypes.PostCitizenImageByIdData> {
     const citizen = await prisma.citizen.findUnique({
       where: {
         id: citizenId,
@@ -286,19 +321,14 @@ export class CitizenController {
     const extension = file.mimetype.split("/")[file.mimetype.split("/").length - 1];
     const path = `${process.cwd()}/public/citizens/${citizen.id}.${extension}`;
 
-    await fs.writeFileSync(path, file.buffer);
-
-    const data = await prisma.citizen.update({
-      where: {
-        id: citizenId,
-      },
-      data: {
-        imageId: `${citizen.id}.${extension}`,
-      },
-      select: {
-        imageId: true,
-      },
-    });
+    const [data] = await Promise.all([
+      prisma.citizen.update({
+        where: { id: citizen.id },
+        data: { imageId: `${citizen.id}.${extension}` },
+        select: { imageId: true },
+      }),
+      fs.writeFileSync(path, file.buffer),
+    ]);
 
     return data;
   }

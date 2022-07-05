@@ -108,14 +108,14 @@
   "IMPOUND_LOT": {
     "MANAGE": "管理扣押地段",
     "ADD": "添加扣押地塊",
-    "DELETE":"刪除扣押地塊",
+    "DELETE": "刪除扣押地塊",
     "EDIT": "編輯扣押地段"
   },
   "VEHICLE_FLAG": {
     "MANAGE": "管理車輛標誌",
     "ADD": "添加車輛標誌",
     "DELETE": "刪除車輛標誌",
-    "EDIT":"編輯車輛標誌"
+    "EDIT": "編輯車輛標誌"
   },
   "CITIZEN_FLAG": {
     "MANAGE": "管理公民旗幟",

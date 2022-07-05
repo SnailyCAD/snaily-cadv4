@@ -9,6 +9,7 @@ import { useCitizen } from "context/CitizenContext";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { ManageCitizenForm } from "components/citizen/ManageCitizenForm";
+import type { PostCitizenImageByIdData, PutCitizenByIdData } from "@snailycad/types/api";
 
 export default function EditCitizen() {
   const { state, execute } = useFetch();
@@ -32,14 +33,16 @@ export default function EditCitizen() {
   }) {
     if (!citizen) return;
 
-    const { json } = await execute(`/citizen/${citizen.id}`, {
+    const { json } = await execute<PutCitizenByIdData>({
+      path: `/citizen/${citizen.id}`,
       method: "PUT",
       data,
       helpers,
     });
 
     if (formData) {
-      await execute(`/citizen/${citizen.id}`, {
+      await execute<PostCitizenImageByIdData>({
+        path: `/citizen/${citizen.id}`,
         method: "POST",
         data: formData,
         helpers,
@@ -63,6 +66,7 @@ export default function EditCitizen() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query, locale, req }) => {
+  const user = await getSessionUser(req);
   const [data, values] = await requestAll(req, [
     [`/citizen/${query.id}`, null],
     ["/admin/values/gender?paths=ethnicity", []],
@@ -78,9 +82,9 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale, re
     props: {
       values,
       citizen: data,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["citizen", "common"], locale)),
+        ...(await getTranslations(["citizen", "common"], user?.locale ?? locale)),
       },
     },
   };

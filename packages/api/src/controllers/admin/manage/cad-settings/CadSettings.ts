@@ -8,7 +8,7 @@ import { Controller } from "@tsed/di";
 import { BodyParams, Context } from "@tsed/platform-params";
 import { Delete, Get, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
-import { CAD_SELECT, IsAuth, setDiscordAUth as setDiscordAuth } from "middlewares/IsAuth";
+import { CAD_SELECT, IsAuth, setDiscordAuth } from "middlewares/IsAuth";
 import { BadRequest } from "@tsed/exceptions";
 import { Req, UseBefore } from "@tsed/common";
 import { Socket } from "services/SocketService";
@@ -16,7 +16,8 @@ import { nanoid } from "nanoid";
 import { validateSchema } from "lib/validateSchema";
 import type { cad, Feature, JailTimeScale } from "@prisma/client";
 import { getCADVersion } from "@snailycad/utils/version";
-import { getSessionUser } from "lib/auth/user";
+import { getSessionUser } from "lib/auth/getSessionUser";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/admin/manage/cad-settings")
 export class ManageCitizensController {
@@ -26,26 +27,31 @@ export class ManageCitizensController {
   }
 
   @Get("/")
-  async getCadSettings(@Req() request: Req) {
-    const user = await getSessionUser(request, false);
+  async getCadSettings(@Req() request: Req): Promise<APITypes.GetCADSettingsData> {
+    const user = await getSessionUser(request, true);
     const version = await getCADVersion();
 
     const cad = await prisma.cad.findFirst({
-      select: { ...CAD_SELECT(user), registrationCode: true },
+      select: { ...CAD_SELECT(user, true), registrationCode: true },
     });
 
-    return { ...setDiscordAuth(cad), registrationCode: !!cad?.registrationCode, version };
+    return {
+      ...setDiscordAuth(cad as unknown as cad),
+      registrationCode: !!cad?.registrationCode,
+      version,
+    } as APITypes.GetCADSettingsData;
   }
 
   @Put("/")
   @UseBefore(IsAuth)
-  async updateCadSettings(@Context() ctx: Context, @BodyParams() body: unknown) {
+  async updateCadSettings(
+    @Context("cad") cad: cad,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PutCADSettingsData> {
     const data = validateSchema(CAD_SETTINGS_SCHEMA, body);
 
     const updated = await prisma.cad.update({
-      where: {
-        id: ctx.get("cad").id,
-      },
+      where: { id: cad.id },
       data: {
         name: data.name,
         areaOfPlay: data.areaOfPlay,
@@ -56,12 +62,9 @@ export class ManageCitizensController {
         businessWhitelisted: data.businessWhitelisted,
         registrationCode: data.registrationCode,
         logoId: data.image,
-        miscCadSettings: {
-          update: {
-            roleplayEnabled: data.roleplayEnabled,
-          },
-        },
+        miscCadSettings: { update: { roleplayEnabled: data.roleplayEnabled } },
       },
+      include: { features: true, miscCadSettings: true, apiToken: true },
     });
 
     this.socket.emitUpdateAop(updated.areaOfPlay);
@@ -72,7 +75,10 @@ export class ManageCitizensController {
 
   @Put("/features")
   @UseBefore(IsAuth)
-  async updateCadFeatures(@Context("cad") cad: cad, @BodyParams() body: unknown) {
+  async updateCadFeatures(
+    @Context("cad") cad: cad,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PutCADFeaturesData> {
     const data = validateSchema(DISABLED_FEATURES_SCHEMA, body);
 
     for (const feature of data.features) {
@@ -89,24 +95,28 @@ export class ManageCitizensController {
       });
     }
 
-    const updated = prisma.cad.findUnique({
+    const updated = await prisma.cad.findUnique({
       where: { id: cad.id },
-      include: { features: true },
+      include: { features: true, miscCadSettings: true, apiToken: true },
     });
 
-    return updated;
+    return updated!;
   }
 
   @Put("/misc")
   @UseBefore(IsAuth)
-  async updateMiscSettings(@Context("cad") ctx: cad, @BodyParams() body: unknown) {
+  async updateMiscSettings(
+    @Context("cad") cad: cad,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PutCADMiscSettingsData> {
     const data = validateSchema(CAD_MISC_SETTINGS_SCHEMA, body);
 
     const updated = await prisma.miscCadSettings.update({
       where: {
-        id: ctx.miscCadSettingsId ?? "null",
+        id: cad.miscCadSettingsId ?? "null",
       },
       data: {
+        cadOGDescription: data.cadOGDescription || null,
         heightPrefix: data.heightPrefix,
         weightPrefix: data.weightPrefix,
         maxBusinessesPerCitizen: data.maxBusinessesPerCitizen,
@@ -132,15 +142,18 @@ export class ManageCitizensController {
 
   @Put("/auto-set-properties")
   @UseBefore(IsAuth)
-  async updateAutoSetProperties(@Context("cad") ctx: cad, @BodyParams() body: unknown) {
+  async updateAutoSetProperties(
+    @Context("cad") cad: cad,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PutCADAutoSetPropertiesData> {
     const data = validateSchema(CAD_AUTO_SET_PROPERTIES, body);
 
     const autoSetProperties = await prisma.autoSetUserProperties.upsert({
       where: {
-        id: ctx.autoSetUserPropertiesId ?? "null",
+        id: cad.autoSetUserPropertiesId ?? "null",
       },
       create: {
-        cad: { connect: { id: ctx.id } },
+        cad: { connect: { id: cad.id } },
         dispatch: data.dispatch,
         emsFd: data.emsFd,
         leo: data.leo,
@@ -157,9 +170,10 @@ export class ManageCitizensController {
 
   @Put("/api-token")
   @UseBefore(IsAuth)
-  async updateApiToken(@Context() ctx: Context, @BodyParams() body: any) {
-    const cad = ctx.get("cad") as cad;
-
+  async updateApiToken(
+    @Context("cad") cad: cad,
+    @BodyParams() body: any,
+  ): Promise<APITypes.PutCADApiTokenData> {
     const existing =
       cad.apiTokenId &&
       (await prisma.apiToken.findFirst({
@@ -170,26 +184,23 @@ export class ManageCitizensController {
 
     if (existing && body.enabled === true) {
       const updated = await prisma.apiToken.update({
-        where: {
-          id: existing.id,
-        },
-        data: {
-          enabled: body.enabled,
-        },
+        where: { id: existing.id },
+        data: { enabled: body.enabled },
       });
 
       return updated;
     }
 
     if (body.enabled === false) {
-      cad.apiTokenId &&
-        (await prisma.apiToken.delete({
-          where: {
-            id: cad.apiTokenId,
-          },
-        }));
+      if (!cad.apiTokenId) {
+        return null;
+      }
 
-      return { enabled: false, token: "" };
+      await prisma.apiToken.delete({
+        where: { id: cad.apiTokenId },
+      });
+
+      return null;
     }
 
     const apiToken = await prisma.apiToken.create({
@@ -205,9 +216,7 @@ export class ManageCitizensController {
 
   @Delete("/api-token")
   @UseBefore(IsAuth)
-  async regenerateApiToken(@Context() ctx: Context) {
-    const cad = ctx.get("cad");
-
+  async regenerateApiToken(@Context("cad") cad: cad) {
     if (!cad.apiTokenId) {
       throw new BadRequest("noApiTokenId");
     }

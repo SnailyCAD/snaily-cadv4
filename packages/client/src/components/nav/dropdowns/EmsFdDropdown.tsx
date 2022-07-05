@@ -27,6 +27,7 @@ export function EmsFdDropdown() {
     >
       <Dropdown.LinkItem href="/ems-fd">{t("dashboard")}</Dropdown.LinkItem>
       <Dropdown.LinkItem href="/ems-fd/my-deputies">{t("myDeputies")}</Dropdown.LinkItem>
+      <Dropdown.LinkItem href="/ems-fd/my-deputy-logs">{t("myDeputyLogs")}</Dropdown.LinkItem>
     </Dropdown>
   );
 }

@@ -31,5 +31,9 @@ export enum SocketEvents {
   CreateActiveIncident = "CreateActiveIncident",
   UpdateActiveIncident = "UpdateActiveIncident",
 
+  CreateActiveWarrant = "CreateActiveWarrant",
+  UpdateActiveWarrant = "UpdateActiveWarrant",
+
   RoleplayStopped = "RoleplayStopped",
+  Tones = "Tones",
 }

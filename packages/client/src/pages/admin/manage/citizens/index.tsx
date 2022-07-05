@@ -3,24 +3,21 @@ import * as React from "react";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { Citizen, Rank, User } from "@snailycad/types";
+import { Rank } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { AllCitizensTab } from "components/admin/manage/citizens/AllCitizensTab";
 import { Permissions } from "@snailycad/permissions";
+import type { GetManageCitizensData } from "@snailycad/types/api";
 
 interface Props {
-  citizens: (Citizen & { user: User })[];
+  citizens: GetManageCitizensData;
 }
 
 export default function ManageCitizens({ citizens: data }: Props) {
-  const [citizens, setCitizens] = React.useState<(Citizen & { user: User | null })[]>(data);
+  const [citizens, setCitizens] = React.useState(data.citizens);
   const t = useTranslations("Management");
-
-  React.useEffect(() => {
-    setCitizens(data);
-  }, [data]);
 
   return (
     <AdminLayout
@@ -35,14 +32,15 @@ export default function ManageCitizens({ citizens: data }: Props) {
     >
       <Title>{t("MANAGE_CITIZENS")}</Title>
 
-      <AllCitizensTab setCitizens={setCitizens} citizens={citizens} />
+      <AllCitizensTab totalCount={data.totalCount} setCitizens={setCitizens} citizens={citizens} />
     </AdminLayout>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, req }) => {
+  const user = await getSessionUser(req);
   const [citizens, values] = await requestAll(req, [
-    ["/admin/manage/citizens", []],
+    ["/admin/manage/citizens", { citizens: [], totalCount: 0 }],
     ["/admin/values/gender?paths=ethnicity", []],
   ]);
 
@@ -50,9 +48,12 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
     props: {
       citizens,
       values,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["citizen", "admin", "values", "common"], locale)),
+        ...(await getTranslations(
+          ["citizen", "admin", "values", "common"],
+          user?.locale ?? locale,
+        )),
       },
     },
   };

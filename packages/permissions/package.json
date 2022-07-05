@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/permissions",
-  "version": "1.4.3",
+  "version": "1.14.1",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -19,20 +19,21 @@
     "dist"
   ],
   "scripts": {
-    "build": "rm -rf ./dist && yarn tsup",
+    "build": "yarn tsup",
+    "watch": "yarn tsup --watch --silent=false",
     "typecheck": "yarn tsc --noEmit",
     "test:watch": "yarn vitest --watch",
     "test": "yarn vitest run"
   },
   "devDependencies": {
-    "tsup": "^5.12.8",
-    "typescript": "^4.6.4",
-    "vite": "^2.9.9",
-    "vitest": "^0.12.9"
+    "tsup": "^6.1.2",
+    "typescript": "^4.7.4",
+    "vite": "^2.9.13",
+    "vitest": "^0.16.0"
   },
   "dependencies": {
-    "type-fest": "^2.12.2",
-    "zod": "^3.17.0"
+    "type-fest": "^2.14.0",
+    "zod": "^3.17.3"
   },
   "tsup": {
     "entry": [

@@ -26,6 +26,7 @@ import { ModalIds } from "types/ModalIds";
 import { FullDate } from "components/shared/FullDate";
 import { RecordsTab } from "components/leo/modals/NameSearchModal/tabs/RecordsTab";
 import { classNames } from "lib/classNames";
+import type { DeleteCitizenByIdData } from "@snailycad/types/api";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const CitizenImageModal = dynamic(
@@ -45,11 +46,12 @@ export default function CitizenId() {
 
   async function handleDelete() {
     if (!citizen) return;
-    const data = await execute(`/citizen/${citizen.id}`, {
+    const data = await execute<DeleteCitizenByIdData>({
+      path: `/citizen/${citizen.id}`,
       method: "DELETE",
     });
 
-    if (data.json) {
+    if (typeof data.json === "boolean" && data.json) {
       closeModal(ModalIds.AlertDeleteCitizen);
       router.push("/citizen");
     }
@@ -137,11 +139,13 @@ export default function CitizenId() {
         </div>
 
         <div className="flex gap-2">
-          <Link
-            className={classNames(buttonVariants.default, "p-1 px-4 rounded-md")}
-            href={`/citizen/${citizen.id}/edit`}
-          >
-            <a href={`/citizen/${citizen.id}/edit`}>{t("editCitizen")}</a>
+          <Link href={`/citizen/${citizen.id}/edit`}>
+            <a
+              className={classNames(buttonVariants.default, "p-1 px-4 rounded-md")}
+              href={`/citizen/${citizen.id}/edit`}
+            >
+              {t("editCitizen")}
+            </a>
           </Link>
           {ALLOW_CITIZEN_DELETION_BY_NON_ADMIN ? (
             <Button onClick={() => openModal(ModalIds.AlertDeleteCitizen)} variant="danger">
@@ -184,6 +188,7 @@ export default function CitizenId() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, query, req }) => {
+  const user = await getSessionUser(req);
   const [data, values] = await requestAll(req, [
     [`/citizen/${query.id}`, null],
     ["/admin/values/license?paths=driverslicense_category,blood_group", []],
@@ -191,11 +196,11 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, re
 
   return {
     props: {
-      session: await getSessionUser(req),
+      session: user,
       citizen: data,
       values,
       messages: {
-        ...(await getTranslations(["citizen", "leo", "common"], locale)),
+        ...(await getTranslations(["citizen", "leo", "common"], user?.locale ?? locale)),
       },
     },
   };

@@ -7,6 +7,7 @@ import { ActiveMapCalls } from "./ActiveMapCalls";
 import { convertToMap } from "lib/map/utils";
 import { Button } from "components/Button";
 import { useTranslations } from "next-intl";
+import type { Put911CallByIdData } from "@snailycad/types/api";
 
 export function RenderActiveCalls() {
   const map = useMap();
@@ -35,7 +36,8 @@ export function RenderActiveCalls() {
 
     handleCallStateUpdate(call.id, { ...data });
 
-    const { json } = await execute(`/911-calls/${call.id}`, {
+    const { json } = await execute<Put911CallByIdData>({
+      path: `/911-calls/${call.id}`,
       method: "PUT",
       data: { ...data, situationCode: call.situationCodeId },
     });
@@ -53,7 +55,8 @@ export function RenderActiveCalls() {
 
     handleCallStateUpdate(call.id, callData);
 
-    const { json } = await execute(`/911-calls/${call.id}`, {
+    const { json } = await execute<Put911CallByIdData>({
+      path: `/911-calls/${call.id}`,
       method: "PUT",
       data: { ...callData, situationCode: call.situationCodeId },
     });
@@ -94,11 +97,11 @@ export function RenderActiveCalls() {
               </p>
 
               <div className="flex gap-2 mt-2">
-                <Button small className="!text-base" onClick={() => handleToggle(call.id)}>
+                <Button size="xs" className="!text-base" onClick={() => handleToggle(call.id)}>
                   {t("toggleCall")}
                 </Button>
                 <Button
-                  small
+                  size="xs"
                   variant="danger"
                   className="!text-base"
                   onClick={() => handleMarkerChange(call, "remove")}

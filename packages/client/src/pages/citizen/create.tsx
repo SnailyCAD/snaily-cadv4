@@ -10,6 +10,7 @@ import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { ManageCitizenForm } from "components/citizen/ManageCitizenForm";
 import type { SelectValue } from "components/form/Select";
+import type { PostCitizenImageByIdData, PostCitizensData } from "@snailycad/types/api";
 
 export default function CreateCitizen() {
   const { state, execute } = useFetch();
@@ -25,7 +26,8 @@ export default function CreateCitizen() {
     data: any;
     helpers: any;
   }) {
-    const { json } = await execute("/citizen", {
+    const { json } = await execute<PostCitizensData>({
+      path: "/citizen",
       method: "POST",
       helpers,
       data: {
@@ -47,7 +49,8 @@ export default function CreateCitizen() {
 
     if (json?.id) {
       if (formData) {
-        await execute(`/citizen/${json.id}`, {
+        await execute<PostCitizenImageByIdData>({
+          path: `/citizen/${json.id}`,
           method: "POST",
           data: formData,
           helpers,
@@ -69,6 +72,7 @@ export default function CreateCitizen() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+  const user = await getSessionUser(req);
   const [values] = await requestAll(req, [
     ["/admin/values/gender?paths=ethnicity,license,driverslicense_category", []],
   ]);
@@ -76,9 +80,9 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
   return {
     props: {
       values,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["citizen", "common"], locale)),
+        ...(await getTranslations(["citizen", "common"], user?.locale ?? locale)),
       },
     },
   };

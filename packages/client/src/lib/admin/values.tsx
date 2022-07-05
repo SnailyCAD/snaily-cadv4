@@ -12,6 +12,8 @@ import {
   WhatPages,
   ShouldDoType,
   QualificationValue,
+  CallTypeValue,
+  type AnyValue,
 } from "@snailycad/types";
 import {
   SHOULD_DO_LABELS,
@@ -19,7 +21,7 @@ import {
   WHAT_PAGES_LABELS,
 } from "components/admin/values/manage-modal/StatusValueFields";
 import { DEPARTMENT_LABELS } from "components/admin/values/manage-modal/DepartmentFields";
-import { type AnyValue, isBaseValue } from "@snailycad/utils";
+import { isBaseValue, hasValueObj } from "@snailycad/utils";
 import { useImageUrl } from "hooks/useImageUrl";
 
 const TYPE_LABELS = {
@@ -45,7 +47,12 @@ export function useTableDataOfType(type: ValueType) {
 
   function get(value: AnyValue) {
     // state mismatch prevention
-    const valueType = isBaseValue(value) ? value.type : value.value.type;
+    const valueType = isBaseValue(value)
+      ? value.type
+      : hasValueObj(value)
+      ? value.value.type
+      : ("PENAL_CODE" as const);
+
     if (valueType !== type) return;
 
     switch (type) {
@@ -76,7 +83,7 @@ export function useTableDataOfType(type: ValueType) {
         };
       }
       case ValueType.DEPARTMENT: {
-        const v = value as DepartmentValue;
+        const v = value as DepartmentValue & { defaultOfficerRank: Value | null };
 
         return {
           callsign: v.callsign || common("none"),
@@ -88,7 +95,7 @@ export function useTableDataOfType(type: ValueType) {
         };
       }
       case ValueType.DIVISION: {
-        const v = value as DivisionValue;
+        const v = value as DivisionValue & { department: DepartmentValue };
 
         return {
           callsign: v.callsign || common("none"),
@@ -105,7 +112,7 @@ export function useTableDataOfType(type: ValueType) {
         };
       }
       case ValueType.LICENSE: {
-        const v = value as Value<ValueType.LICENSE>;
+        const v = value as Value;
 
         return {
           licenseType: v.licenseType ? LICENSE_LABELS[v.licenseType] : common("none"),
@@ -118,26 +125,33 @@ export function useTableDataOfType(type: ValueType) {
 
         return {
           image: imgUrl ? (
-            <img src={imgUrl} width={50} height={50} className="object-cover" />
+            <img loading="lazy" src={imgUrl} width={50} height={50} className="object-cover" />
           ) : (
             "—"
           ),
-          departments: v.departments.map((v) => v.value.value).join(", "),
+          departments: v.departments?.map((v) => v.value.value).join(", ") || common("none"),
           type: v.qualificationType.toLowerCase(),
         };
       }
       case ValueType.OFFICER_RANK: {
-        const v = value as Value<ValueType.OFFICER_RANK>;
+        const v = value as Value;
         const imgUrl = makeImageUrl("values", v.officerRankImageId);
         const departments = defaultDepartments(v);
 
         return {
           image: imgUrl ? (
-            <img src={imgUrl} width={50} height={50} className="object-cover" />
+            <img loading="lazy" src={imgUrl} width={50} height={50} className="object-cover" />
           ) : (
             "—"
           ),
           departments: departments.map((v) => v.label).join(", "),
+        };
+      }
+      case ValueType.CALL_TYPE: {
+        const v = value as CallTypeValue;
+
+        return {
+          priority: v.priority ?? common("none"),
         };
       }
       default: {
@@ -202,6 +216,9 @@ export function useTableHeadersOfType(type: ValueType) {
         { Header: common("image"), accessor: "image" },
         { Header: t("departments"), accessor: "departments" },
       ];
+    }
+    case ValueType.CALL_TYPE: {
+      return [{ Header: t("priority"), accessor: "priority" }];
     }
     default: {
       return [];

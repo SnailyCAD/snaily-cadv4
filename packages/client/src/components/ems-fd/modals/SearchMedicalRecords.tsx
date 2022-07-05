@@ -8,11 +8,20 @@ import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import type { Citizen, MedicalRecord } from "@snailycad/types";
 import { Table } from "components/shared/Table";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { PersonFill } from "react-bootstrap-icons";
+import { Infofield } from "components/shared/Infofield";
+import { FullDate } from "components/shared/FullDate";
+import { calculateAge, formatCitizenAddress } from "lib/utils";
+import { useAuth } from "context/AuthContext";
+import { CitizenImageModal } from "components/citizen/modals/CitizenImageModal";
+import type {
+  PostEmsFdDeclareCitizenById,
+  PostEmsFdMedicalRecordsSearchData,
+} from "@snailycad/types/api";
 
 interface Props {
   onClose?(): void;
@@ -20,12 +29,13 @@ interface Props {
 
 export function SearchMedicalRecordModal({ onClose }: Props) {
   const { state, execute } = useFetch();
-  const { isOpen, closeModal } = useModal();
+  const { isOpen, openModal, closeModal } = useModal();
   const t = useTranslations();
   const { makeImageUrl } = useImageUrl();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
+  const { cad } = useAuth();
 
-  const [results, setResults] = React.useState<SearchResult | null | boolean>(null);
+  const [results, setResults] = React.useState<SearchResult | null | undefined>(undefined);
 
   function handleClose() {
     closeModal(ModalIds.SearchMedicalRecord);
@@ -35,7 +45,8 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
   async function handleDeclare() {
     if (!results || typeof results === "boolean") return;
 
-    const { json } = await execute(`/ems-fd/declare/${results.id}`, {
+    const { json } = await execute<PostEmsFdDeclareCitizenById>({
+      path: `/ems-fd/declare/${results.id}`,
       method: "POST",
     });
 
@@ -45,7 +56,8 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute("/search/medical-records", {
+    const { json } = await execute<PostEmsFdMedicalRecordsSearchData>({
+      path: "/search/medical-records",
       method: "POST",
       data: values,
       noToast: true,
@@ -56,7 +68,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
 
   function handleFoundName(data: SearchResult | null) {
     if (!data?.id) {
-      return setResults(false);
+      return setResults(null);
     }
 
     setResults(data);
@@ -68,7 +80,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
 
   React.useEffect(() => {
     if (!isOpen(ModalIds.SearchMedicalRecord)) {
-      setResults(null);
+      setResults(undefined);
     }
   }, [isOpen]);
 
@@ -77,18 +89,18 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
       title={t("Ems.searchMedicalRecord")}
       onClose={handleClose}
       isOpen={isOpen(ModalIds.SearchMedicalRecord)}
-      className="w-[750px]"
+      className="w-[850px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ setFieldValue, handleChange, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.name} label={t("MedicalRecords.citizen")}>
-              <InputSuggestions
-                onSuggestionClick={(suggestion: SearchResult) => {
+              <InputSuggestions<SearchResult>
+                onSuggestionClick={(suggestion) => {
                   setFieldValue("name", `${suggestion.name} ${suggestion.surname}`);
                   handleFoundName(suggestion);
                 }}
-                Component={({ suggestion }: { suggestion: Citizen }) => (
+                Component={({ suggestion }) => (
                   <div className="flex items-center">
                     {suggestion.imageId ? (
                       <img
@@ -106,7 +118,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                   </div>
                 )}
                 options={{
-                  apiPath: "/search/medical-name",
+                  apiPath: "/search/name",
                   method: "POST",
                   dataKey: "name",
                 }}
@@ -118,55 +130,107 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
               />
             </FormField>
 
-            {typeof results !== "boolean" &&
-            results &&
-            !results.isConfidential &&
-            results.medicalRecords.length <= 0 ? (
-              <div className="flex items-center justify-between my-5">
-                <p>{t("Ems.citizenNoMedicalRecords")}</p>
-                <Button
-                  small
-                  variant={results.dead ? "success" : "danger"}
-                  type="button"
-                  onClick={handleDeclare}
-                  disabled={state === "loading"}
-                  className="mt-2"
-                >
-                  {results.dead ? t("Ems.declareAlive") : t("Ems.declareDead")}
-                </Button>
-              </div>
-            ) : null}
-
-            {typeof results === "boolean" && !results ? <p>{t("Errors.citizenNotFound")}</p> : null}
-
-            {typeof results !== "boolean" && results && results.isConfidential ? (
+            {typeof results === "undefined" ? null : results === null ? (
+              <p>{t("Errors.citizenNotFound")}</p>
+            ) : results.isConfidential ? (
               <p className="my-5 px-2">{t("Leo.citizenIsConfidential")}</p>
-            ) : typeof results !== "boolean" && results && results.medicalRecords.length >= 1 ? (
-              <Table
-                data={results.medicalRecords.map((record) => ({
-                  type: record.type,
-                  bloodGroup: record.bloodGroup?.value ?? t("Common.none"),
-                  description: record.description || t("Common.none"),
-                  actions: (
-                    <Button
-                      small
-                      variant={results.dead ? "success" : "danger"}
+            ) : (
+              <div className="flex w-full">
+                <div className="mr-2 min-w-[100px]">
+                  {results.imageId ? (
+                    <button
                       type="button"
-                      onClick={handleDeclare}
-                      disabled={state === "loading"}
+                      onClick={() => openModal(ModalIds.CitizenImage)}
+                      className="cursor-pointer"
                     >
-                      {results.dead ? t("Ems.declareAlive") : t("Ems.declareDead")}
-                    </Button>
-                  ),
-                }))}
-                columns={[
-                  { Header: t("MedicalRecords.diseases"), accessor: "type" },
-                  { Header: t("MedicalRecords.bloodGroup"), accessor: "bloodGroup" },
-                  { Header: t("Common.description"), accessor: "description" },
-                  { Header: t("Common.actions"), accessor: "actions" },
-                ]}
-              />
-            ) : null}
+                      <img
+                        className="rounded-md w-[100px] h-[100px] object-cover"
+                        draggable={false}
+                        src={makeImageUrl("citizens", results.imageId)}
+                      />
+                    </button>
+                  ) : (
+                    <PersonFill className="text-gray-500/60 w-[100px] h-[100px]" />
+                  )}
+                </div>
+                <div className="w-full overflow-y-auto">
+                  <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-y-1 md:gap-y-0 md:gap-5">
+                    <div>
+                      <Infofield label={t("Citizen.fullName")}>
+                        {results.name} {results.surname}
+                      </Infofield>
+                      {SOCIAL_SECURITY_NUMBERS && results.socialSecurityNumber ? (
+                        <Infofield label={t("Citizen.socialSecurityNumber")}>
+                          {results.socialSecurityNumber}
+                        </Infofield>
+                      ) : null}
+                      <Infofield label={t("Citizen.dateOfBirth")}>
+                        <FullDate isDateOfBirth onlyDate>
+                          {results.dateOfBirth}
+                        </FullDate>{" "}
+                        ({t("Citizen.age")}: {calculateAge(results.dateOfBirth)})
+                      </Infofield>
+                      <Infofield label={t("Citizen.gender")}>{results.gender.value}</Infofield>
+                      <Infofield label={t("Citizen.ethnicity")}>
+                        {results.ethnicity.value}
+                      </Infofield>
+                      <Infofield label={t("Citizen.hairColor")}>{results.hairColor}</Infofield>
+                      <Infofield label={t("Citizen.eyeColor")}>{results.eyeColor}</Infofield>
+                    </div>
+                    <div>
+                      <Infofield label={t("Citizen.weight")}>
+                        {results.weight} {cad?.miscCadSettings?.weightPrefix}
+                      </Infofield>
+                      <Infofield label={t("Citizen.height")}>
+                        {results.height} {cad?.miscCadSettings?.heightPrefix}
+                      </Infofield>
+                      <Infofield label={t("Citizen.address")}>
+                        {formatCitizenAddress(results)}
+                      </Infofield>
+                      <Infofield label={t("Citizen.phoneNumber")}>
+                        {results.phoneNumber || t("Common.none")}
+                      </Infofield>
+                      <Infofield className="max-w-[400px]" label={t("Citizen.occupation")}>
+                        {results.occupation || t("Common.none")}
+                      </Infofield>
+                    </div>
+                  </div>
+
+                  <div className="mt-7">
+                    {results.medicalRecords.length <= 0 ? (
+                      <p>No medical records</p>
+                    ) : (
+                      <Table
+                        data={results.medicalRecords.map((record) => ({
+                          type: record.type,
+                          bloodGroup: record.bloodGroup?.value ?? t("Common.none"),
+                          description: record.description || t("Common.none"),
+                          actions: (
+                            <Button
+                              size="xs"
+                              variant={results.dead ? "success" : "danger"}
+                              type="button"
+                              onClick={handleDeclare}
+                              disabled={state === "loading"}
+                            >
+                              {results.dead ? t("Ems.declareAlive") : t("Ems.declareDead")}
+                            </Button>
+                          ),
+                        }))}
+                        columns={[
+                          { Header: t("MedicalRecords.diseases"), accessor: "type" },
+                          { Header: t("MedicalRecords.bloodGroup"), accessor: "bloodGroup" },
+                          { Header: t("Common.description"), accessor: "description" },
+                          { Header: t("Common.actions"), accessor: "actions" },
+                        ]}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                <CitizenImageModal citizen={results} />
+              </div>
+            )}
 
             <footer className="flex justify-end mt-5">
               <Button
@@ -192,7 +256,4 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
   );
 }
 
-interface SearchResult extends Citizen {
-  medicalRecords: MedicalRecord[];
-  isConfidential?: boolean;
-}
+type SearchResult = PostEmsFdMedicalRecordsSearchData;

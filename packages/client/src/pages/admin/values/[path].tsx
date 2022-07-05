@@ -8,10 +8,16 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { useModal } from "state/modalState";
-import { type PenalCode, type PenalCodeGroup, ValueType, Rank } from "@snailycad/types";
+import {
+  type AnyValue,
+  type PenalCode,
+  type PenalCodeGroup,
+  ValueType,
+  Rank,
+} from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
-import { requestAll } from "lib/utils";
+import { requestAll, yesOrNoText } from "lib/utils";
 import { Input } from "components/form/inputs/Input";
 import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
@@ -23,8 +29,16 @@ import { AlertModal } from "components/modal/AlertModal";
 import { ModalIds } from "types/ModalIds";
 import { FullDate } from "components/shared/FullDate";
 import { useTableSelect } from "hooks/shared/useTableSelect";
-import { isBaseValue, type AnyValue } from "@snailycad/utils/typeguards";
+import { hasValueObj, isBaseValue } from "@snailycad/utils/typeguards";
 import { valueRoutes } from "components/admin/Sidebar/routes";
+import { Checkbox } from "components/form/inputs/Checkbox";
+import type {
+  DeleteValueByIdData,
+  DeleteValuesBulkData,
+  GetValuesData,
+  PutValuePositionsData,
+} from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -35,7 +49,7 @@ const ImportValuesModal = dynamic(async () => {
 });
 
 interface Props {
-  pathValues: { type: ValueType; values: AnyValue[] };
+  pathValues: GetValuesData[number];
 }
 
 export default function ValuePath({ pathValues: { type, values: data } }: Props) {
@@ -46,7 +60,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   const routeData = valueRoutes.find((v) => v.type === type);
 
   const [search, setSearch] = React.useState("");
-  const [tempValue, setTempValue] = React.useState<AnyValue | null>(null);
+  const [tempValue, valueState] = useTemporaryItem(values);
   const { state, execute } = useFetch();
 
   const { isOpen, openModal, closeModal } = useModal();
@@ -71,10 +85,11 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
       },
       { Header: "Value", accessor: "value" },
       ...extraTableHeaders,
+      { Header: t("isDisabled"), accessor: "isDisabled" },
       { Header: common("createdAt"), accessor: "createdAt" },
       { Header: common("actions"), accessor: "actions" },
     ];
-  }, [extraTableHeaders, common, tableSelect]);
+  }, [extraTableHeaders, t, common, tableSelect]);
 
   async function setList(list: AnyValue[]) {
     if (!hasTableDataChanged(values, list)) return;
@@ -95,7 +110,8 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
       }),
     );
 
-    await execute(`/admin/values/${type.toLowerCase()}/positions`, {
+    await execute<PutValuePositionsData>({
+      path: `/admin/values/${type.toLowerCase()}/positions`,
       method: "PUT",
       data: {
         ids: list.map((v) => {
@@ -106,25 +122,26 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   }
 
   function handleDeleteClick(value: AnyValue) {
-    setTempValue(value);
+    valueState.setTempId(value.id);
     openModal(ModalIds.AlertDeleteValue);
   }
 
   function handleEditClick(value: AnyValue) {
-    setTempValue(value);
+    valueState.setTempId(value.id);
     openModal(ModalIds.ManageValue);
   }
 
   async function handleDelete() {
     if (!tempValue) return;
 
-    const { json } = await execute(`/admin/values/${type.toLowerCase()}/${tempValue.id}`, {
+    const { json } = await execute<DeleteValueByIdData>({
+      path: `/admin/values/${type.toLowerCase()}/${tempValue.id}`,
       method: "DELETE",
     });
 
     if (json) {
       setValues((p) => p.filter((v) => v.id !== tempValue.id));
-      setTempValue(null);
+      valueState.setTempId(null);
       closeModal(ModalIds.AlertDeleteValue);
     }
   }
@@ -132,7 +149,8 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   async function handleDeleteSelected() {
     if (tableSelect.selectedRows.length <= 0) return;
 
-    const { json } = await execute(`/admin/values/${type.toLowerCase()}/bulk-delete`, {
+    const { json } = await execute<DeleteValuesBulkData>({
+      path: `/admin/values/${type.toLowerCase()}/bulk-delete`,
       method: "DELETE",
       data: tableSelect.selectedRows,
     });
@@ -152,8 +170,9 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
     // reset form values
     if (!isOpen(ModalIds.ManageValue) && !isOpen(ModalIds.AlertDeleteValue)) {
       // timeout: wait for modal to close
-      setTimeout(() => setTempValue(null), 100);
+      setTimeout(() => valueState.setTempId(null), 100);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   if (!Object.keys(ValueType).includes(path)) {
@@ -180,6 +199,11 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         </div>
 
         <div className="flex gap-2">
+          {tableSelect.selectedRows.length <= 0 ? null : (
+            <Button onClick={() => openModal(ModalIds.AlertDeleteSelectedValues)} variant="danger">
+              {t("deleteSelectedValues")}
+            </Button>
+          )}
           <Button onClick={() => openModal(ModalIds.ManageValue)}>{typeT("ADD")}</Button>
           <OptionsDropdown type={type} values={values} />
         </div>
@@ -192,62 +216,58 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
       {values.length <= 0 ? (
         <p className="mt-5">There are no values yet for this type.</p>
       ) : (
-        <>
-          {tableSelect.selectedRows.length <= 0 ? null : (
-            <Button onClick={() => openModal(ModalIds.AlertDeleteSelectedValues)} variant="danger">
-              {t("deleteSelectedValues")}
-            </Button>
-          )}
-
-          <Table
-            disabledColumnId={["checkbox"]}
-            containerProps={{
-              style: { overflowY: "auto", maxHeight: "75vh" },
-            }}
-            dragDrop={{
-              enabled: true,
-              handleMove: setList,
-            }}
-            filter={search}
-            data={values.map((value) => ({
-              rowProps: { value },
-              checkbox: (
-                <input
-                  className="cursor-pointer"
-                  checked={tableSelect.selectedRows.includes(value.id)}
-                  onChange={() => tableSelect.handleCheckboxChange(value)}
-                  type="checkbox"
-                />
-              ),
-              value: getValueStrFromValue(value),
-              ...extraTableData(value),
-              createdAt: <FullDate>{getCreatedAtFromValue(value)}</FullDate>,
-              actions: (
-                <>
-                  <Button small onClick={() => handleEditClick(value)} variant="success">
-                    {common("edit")}
-                  </Button>
-                  <Button
-                    small
-                    onClick={() => handleDeleteClick(value)}
-                    variant="danger"
-                    className="ml-2"
-                  >
-                    {common("delete")}
-                  </Button>
-                </>
-              ),
-            }))}
-            columns={tableHeaders}
-          />
-        </>
+        <Table
+          disabledColumnId={["checkbox"]}
+          containerProps={{
+            style: { overflowY: "auto", maxHeight: "75vh" },
+          }}
+          dragDrop={{
+            enabled: true,
+            handleMove: setList,
+          }}
+          filter={search}
+          data={values.map((value) => ({
+            rowProps: { value },
+            checkbox: (
+              <Checkbox
+                checked={tableSelect.selectedRows.includes(value.id)}
+                onChange={() => tableSelect.handleCheckboxChange(value)}
+              />
+            ),
+            value: getValueStrFromValue(value),
+            ...extraTableData(value),
+            isDisabled: common(yesOrNoText(getDisabledFromValue(value))),
+            createdAt: <FullDate>{getCreatedAtFromValue(value)}</FullDate>,
+            actions: (
+              <>
+                <Button size="xs" onClick={() => handleEditClick(value)} variant="success">
+                  {common("edit")}
+                </Button>
+                <Button
+                  size="xs"
+                  onClick={() => handleDeleteClick(value)}
+                  variant="danger"
+                  className="ml-2"
+                >
+                  {common("delete")}
+                </Button>
+              </>
+            ),
+          }))}
+          columns={tableHeaders}
+        />
       )}
 
       <AlertModal
         id={ModalIds.AlertDeleteValue}
         description={t.rich("alert_deleteValue", {
           value:
-            typeof tempValue?.value === "string" ? tempValue.value : tempValue?.value.value ?? "",
+            tempValue &&
+            (isBaseValue(tempValue)
+              ? tempValue.value
+              : hasValueObj(tempValue)
+              ? tempValue.value.value
+              : tempValue.title),
           span: (children) => {
             return <span className="font-semibold">{children}</span>;
           },
@@ -257,7 +277,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         state={state}
         onClose={() => {
           // wait for animation to play out
-          setTimeout(() => setTempValue(null), 100);
+          setTimeout(() => valueState.setTempId(null), 100);
         }}
       />
 
@@ -305,15 +325,16 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
   const paths = pathsRecord[path];
   const pathsStr = paths ? `?paths=${paths}` : "";
 
+  const user = await getSessionUser(req);
   const [values] = await requestAll(req, [[`/admin/values/${path}${pathsStr}`, []]]);
 
   return {
     props: {
       values,
       pathValues: values?.[0] ?? { type: path, values: [] },
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["admin", "values", "common"], locale)),
+        ...(await getTranslations(["admin", "values", "common"], user?.locale ?? locale)),
       },
     },
   };
@@ -338,15 +359,22 @@ export function findCreatedAtAndPosition(value: AnyValue) {
     };
   }
 
+  if (hasValueObj(value)) {
+    return {
+      createdAt: new Date(value.value.createdAt),
+      position: value.value.position,
+    };
+  }
+
   return {
-    createdAt: new Date(value.value.createdAt),
-    position: value.value.position,
+    createdAt: new Date(value.createdAt),
+    position: value.position,
   };
 }
 
 export function handleFilter(value: AnyValue, search: string) {
   if (!search) return true;
-  const str = isBaseValue(value) ? value.value : value.value.value;
+  const str = isBaseValue(value) ? value.value : hasValueObj(value) ? value.value.value : "";
 
   if (str.toLowerCase().includes(search.toLowerCase())) return true;
   return false;
@@ -354,12 +382,20 @@ export function handleFilter(value: AnyValue, search: string) {
 
 export function getValueStrFromValue(value: AnyValue) {
   const isBase = isBaseValue(value);
-  return isBase ? value.value : value.value.value;
+  const hasObj = hasValueObj(value);
+  return isBase ? value.value : hasObj ? value.value.value : value.title;
 }
 
 export function getCreatedAtFromValue(value: AnyValue) {
   const isBase = isBaseValue(value);
-  return isBase ? value.createdAt : value.value.createdAt;
+  const hasObj = hasValueObj(value);
+  return isBase ? value.createdAt : hasObj ? value.value.createdAt : value.createdAt;
+}
+
+export function getDisabledFromValue(value: AnyValue) {
+  const isBase = isBaseValue(value);
+  const hasObj = hasValueObj(value);
+  return isBase ? value.isDisabled : hasObj ? value.value.isDisabled : false;
 }
 
 /**

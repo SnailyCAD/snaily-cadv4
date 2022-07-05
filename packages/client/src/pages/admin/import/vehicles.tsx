@@ -6,7 +6,7 @@ import type { GetServerSideProps } from "next";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
-import { Rank, type RegisteredVehicle } from "@snailycad/types";
+import { Rank, RegisteredVehicle } from "@snailycad/types";
 import { Table } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { FormField } from "components/form/FormField";
@@ -15,20 +15,58 @@ import { Button } from "components/Button";
 import { ImportModal } from "components/admin/import/ImportModal";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
-import { Permissions } from "@snailycad/permissions";
+import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
+import type { GetImportVehiclesData, PostImportVehiclesData } from "@snailycad/types/api";
+import { AlertModal } from "components/modal/AlertModal";
+import useFetch from "lib/useFetch";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import { Permissions, usePermission } from "hooks/usePermission";
 
 interface Props {
-  vehicles: RegisteredVehicle[];
+  data: GetImportVehiclesData;
 }
 
-export default function ImportVehiclesPage({ vehicles: data }: Props) {
-  const [vehicles, setVehicles] = React.useState(data);
-  const [search, setSearch] = React.useState("");
-
+export default function ImportVehiclesPage({ data }: Props) {
   const t = useTranslations("Management");
   const common = useTranslations("Common");
   const veh = useTranslations("Vehicles");
-  const { openModal } = useModal();
+  const { closeModal, openModal } = useModal();
+  const { state, execute } = useFetch();
+  const { hasPermissions } = usePermission();
+  const hasDeletePermissions = hasPermissions([Permissions.DeleteRegisteredVehicles], true);
+
+  const asyncTable = useAsyncTable({
+    fetchOptions: {
+      onResponse: (json: GetImportVehiclesData) => ({
+        totalCount: json.totalCount,
+        data: json.vehicles,
+      }),
+      path: "/admin/import/vehicles",
+    },
+    initialData: data.vehicles,
+    totalCount: data.totalCount,
+  });
+  const [tempVehicle, vehicleState] = useTemporaryItem(asyncTable.data);
+
+  function handleDeleteClick(vehicle: RegisteredVehicle) {
+    vehicleState.setTempId(vehicle.id);
+    openModal(ModalIds.AlertDeleteVehicle);
+  }
+
+  async function handleDeleteVehicle() {
+    if (!tempVehicle) return;
+
+    const { json } = await execute({
+      path: `/admin/import/vehicles/${tempVehicle.id}`,
+      method: "DELETE",
+    });
+
+    if (typeof json === "boolean" && json) {
+      asyncTable.setData((prevData) => prevData.filter((v) => v.id !== tempVehicle.id));
+      vehicleState.setTempId(null);
+      closeModal(ModalIds.AlertDeleteWeapon);
+    }
+  }
 
   return (
     <AdminLayout
@@ -56,14 +94,24 @@ export default function ImportVehiclesPage({ vehicles: data }: Props) {
         <Input
           className="w-full"
           placeholder="filter by plate, model, color, etc."
-          onChange={(e) => setSearch(e.target.value)}
-          value={search}
+          onChange={(e) => asyncTable.search.setSearch(e.target.value)}
+          value={asyncTable.search.search}
         />
       </FormField>
 
+      {asyncTable.search.search && asyncTable.pagination.totalCount !== data.totalCount ? (
+        <p className="italic text-base font-semibold">
+          Showing {asyncTable.pagination.totalCount} result(s)
+        </p>
+      ) : null}
+
       <Table
-        filter={search}
-        data={vehicles.map((vehicle) => ({
+        pagination={{
+          enabled: true,
+          totalCount: asyncTable.pagination.totalCount,
+          fetchData: asyncTable.pagination,
+        }}
+        data={asyncTable.data.map((vehicle) => ({
           plate: vehicle.plate,
           model: vehicle.model.value.value,
           color: vehicle.color,
@@ -71,6 +119,11 @@ export default function ImportVehiclesPage({ vehicles: data }: Props) {
           vinNumber: vehicle.vinNumber,
           citizen: `${vehicle.citizen.name} ${vehicle.citizen.surname}`,
           createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
+          actions: (
+            <Button size="xs" variant="danger" onClick={() => handleDeleteClick(vehicle)}>
+              {common("delete")}
+            </Button>
+          ),
         }))}
         columns={[
           { Header: veh("plate"), accessor: "plate" },
@@ -80,33 +133,48 @@ export default function ImportVehiclesPage({ vehicles: data }: Props) {
           { Header: veh("vinNumber"), accessor: "vinNumber" },
           { Header: common("citizen"), accessor: "citizen" },
           { Header: common("createdAt"), accessor: "createdAt" },
+          hasDeletePermissions ? { Header: common("actions"), accessor: "actions" } : null,
         ]}
       />
 
-      <ImportModal
+      <ImportModal<PostImportVehiclesData>
         onImport={(vehicles) => {
-          setVehicles((p) => [...vehicles, ...p]);
+          asyncTable.setData((p) => [...vehicles, ...p]);
         }}
         id={ModalIds.ImportVehicles}
         url="/admin/import/vehicles"
       />
+
+      {hasDeletePermissions ? (
+        <AlertModal
+          id={ModalIds.AlertDeleteVehicle}
+          title="Delete vehicle"
+          description={`Are you sure you want to delete this vehicle (${tempVehicle?.plate})? This action cannot be undone.`}
+          onDeleteClick={handleDeleteVehicle}
+          state={state}
+        />
+      ) : null}
     </AdminLayout>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, req }) => {
+  const user = await getSessionUser(req);
   const [vehicles, values] = await requestAll(req, [
-    ["/admin/import/vehicles", []],
+    ["/admin/import/vehicles", { vehicles: [], totalCount: 0 }],
     ["/admin/values/gender?paths=ethnicity", []],
   ]);
 
   return {
     props: {
       values,
-      vehicles,
-      session: await getSessionUser(req),
+      data: vehicles,
+      session: user,
       messages: {
-        ...(await getTranslations(["citizen", "admin", "values", "common"], locale)),
+        ...(await getTranslations(
+          ["citizen", "admin", "values", "common"],
+          user?.locale ?? locale,
+        )),
       },
     },
   };

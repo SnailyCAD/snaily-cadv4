@@ -10,9 +10,10 @@ import {
 } from "@snailycad/schemas";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
-import { type User, EmployeeAsEnum, MiscCadSettings, WhitelistStatus } from "@prisma/client";
+import { type User, EmployeeAsEnum, MiscCadSettings, WhitelistStatus, cad } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import type * as APITypes from "@snailycad/types/api";
 
 const businessInclude = {
   citizen: {
@@ -35,7 +36,7 @@ const businessInclude = {
 @Hidden()
 export class BusinessController {
   @Get("/")
-  async getBusinessesByUser(@Context("user") user: User) {
+  async getBusinessesByUser(@Context("user") user: User): Promise<APITypes.GetBusinessesData> {
     const businesses = await prisma.employee.findMany({
       where: {
         userId: user.id,
@@ -55,11 +56,11 @@ export class BusinessController {
   }
 
   @Get("/business/:id")
-  async getBusinesses(
+  async getBusinessById(
     @Context("user") user: User,
     @PathParams("id") id: string,
     @QueryParams("employeeId") employeeId: string,
-  ) {
+  ): Promise<APITypes.GetBusinessByIdData> {
     const business = await prisma.business.findUnique({
       where: {
         id,
@@ -87,28 +88,16 @@ export class BusinessController {
       ? await prisma.employee.findFirst({
           where: {
             id: employeeId,
-            NOT: {
-              whitelistStatus: WhitelistStatus.DECLINED,
-            },
+            NOT: { whitelistStatus: WhitelistStatus.DECLINED },
           },
           include: {
-            role: {
-              include: {
-                value: true,
-              },
-            },
-            citizen: {
-              select: {
-                name: true,
-                surname: true,
-                id: true,
-              },
-            },
+            role: { include: { value: true } },
+            citizen: { select: { name: true, surname: true, id: true } },
           },
         })
       : null;
 
-    if (!employee || employee.userId !== user.id) {
+    if (!business || !employee || employee.userId !== user.id) {
       throw new NotFound("employeeNotFound");
     }
 
@@ -120,7 +109,7 @@ export class BusinessController {
     @PathParams("id") businessId: string,
     @BodyParams() body: unknown,
     @Context("user") user: User,
-  ) {
+  ): Promise<APITypes.PutBusinessByIdData> {
     const data = validateSchema(CREATE_COMPANY_SCHEMA, body);
 
     const employee = await prisma.employee.findFirst({
@@ -158,7 +147,7 @@ export class BusinessController {
     @PathParams("id") businessId: string,
     @BodyParams() body: unknown,
     @Context("user") user: User,
-  ) {
+  ): Promise<APITypes.DeleteBusinessByIdData> {
     const data = validateSchema(DELETE_COMPANY_POST_SCHEMA, body);
 
     const employee = await prisma.employee.findFirst({
@@ -186,7 +175,11 @@ export class BusinessController {
   }
 
   @Post("/join")
-  async joinBusiness(@BodyParams() body: unknown, @Context() ctx: Context) {
+  async joinBusiness(
+    @BodyParams() body: unknown,
+    @Context("user") user: User,
+    @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings | null },
+  ): Promise<APITypes.PostJoinBusinessData> {
     const data = validateSchema(JOIN_COMPANY_SCHEMA, body);
 
     const citizen = await prisma.citizen.findUnique({
@@ -195,19 +188,18 @@ export class BusinessController {
       },
     });
 
-    if (!citizen || citizen.userId !== ctx.get("user").id) {
+    if (!citizen || citizen.userId !== user.id) {
       throw new NotFound("notFound");
     }
 
-    const { miscCadSettings } = ctx.get("cad") as { miscCadSettings: MiscCadSettings | null };
-    if (miscCadSettings?.maxBusinessesPerCitizen) {
+    if (cad.miscCadSettings?.maxBusinessesPerCitizen) {
       const length = await prisma.business.count({
         where: {
           citizenId: citizen.id,
         },
       });
 
-      if (length > miscCadSettings.maxBusinessesPerCitizen) {
+      if (length > cad.miscCadSettings.maxBusinessesPerCitizen) {
         throw new BadRequest("maxBusinessesLength");
       }
     }
@@ -271,7 +263,7 @@ export class BusinessController {
         businessId: business.id,
         citizenId: citizen.id,
         employeeOfTheMonth: false,
-        userId: ctx.get("user").id,
+        userId: user.id,
         roleId: employeeRole.id,
         whitelistStatus: business.whitelisted ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED,
       },
@@ -299,7 +291,11 @@ export class BusinessController {
     fallback: true,
     permissions: [Permissions.CreateBusinesses],
   })
-  async createBusiness(@BodyParams() body: unknown, @Context() ctx: Context) {
+  async createBusiness(
+    @BodyParams() body: unknown,
+    @Context("user") user: User,
+    @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings | null },
+  ): Promise<APITypes.PostCreateBusinessData> {
     const data = validateSchema(CREATE_COMPANY_SCHEMA, body);
 
     const owner = await prisma.citizen.findUnique({
@@ -308,15 +304,11 @@ export class BusinessController {
       },
     });
 
-    if (!owner || owner.userId !== ctx.get("user").id) {
+    if (!owner || owner.userId !== user.id) {
       throw new NotFound("notFound");
     }
 
-    const { miscCadSettings, businessWhitelisted } = ctx.get("cad") as {
-      businessWhitelisted: boolean;
-      miscCadSettings: MiscCadSettings | null;
-    };
-
+    const { miscCadSettings, businessWhitelisted } = cad;
     if (miscCadSettings?.maxBusinessesPerCitizen) {
       const length = await prisma.business.count({
         where: {
@@ -336,7 +328,7 @@ export class BusinessController {
         name: data.name,
         whitelisted: data.whitelisted,
         postal: data.postal ? String(data.postal) : null,
-        userId: ctx.get("user").id,
+        userId: user.id,
         status: businessWhitelisted ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED,
       },
     });
@@ -375,7 +367,7 @@ export class BusinessController {
         businessId: business.id,
         citizenId: owner.id,
         employeeOfTheMonth: false,
-        userId: ctx.get("user").id,
+        userId: user.id,
         roleId: ownerRole.id,
         canCreatePosts: true,
       },

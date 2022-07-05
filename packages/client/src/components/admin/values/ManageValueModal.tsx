@@ -6,6 +6,7 @@ import {
   CODES_10_SCHEMA,
   BUSINESS_ROLE_SCHEMA,
   BASE_VALUE_SCHEMA,
+  CALL_TYPE_SCHEMA,
 } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
@@ -17,11 +18,11 @@ import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { useValues } from "context/ValuesContext";
-import { DriversLicenseCategoryType, EmployeeAsEnum, ValueType } from "@snailycad/types";
+import { AnyValue, DriversLicenseCategoryType, EmployeeAsEnum, ValueType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { Select } from "components/form/Select";
 import hexColor from "hex-color-regex";
-import { getValueStrFromValue } from "src/pages/admin/values/[path]";
+import { getDisabledFromValue, getValueStrFromValue } from "src/pages/admin/values/[path]";
 import { ModalIds } from "types/ModalIds";
 import { makeDefaultWhatPages } from "lib/admin/values";
 import { DepartmentFields } from "./manage-modal/DepartmentFields";
@@ -41,11 +42,13 @@ import {
   isWeaponValue,
   isUnitQualification,
   isDLCategoryValue,
-  AnyValue,
+  isCallTypeValue,
 } from "@snailycad/utils/typeguards";
 import { QualificationFields } from "./manage-modal/QualificationFields";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { Textarea } from "components/form/Textarea";
+import { Toggle } from "components/form/Toggle";
+import type { PatchValueByIdData, PostValuesData } from "@snailycad/types/api";
 
 interface Props {
   type: ValueType;
@@ -77,6 +80,7 @@ const EXTRA_SCHEMAS: Partial<Record<ValueType, Zod.ZodObject<Zod.ZodRawShape>>> 
   VEHICLE: HASH_SCHEMA,
   WEAPON: HASH_SCHEMA,
   BUSINESS_ROLE: BUSINESS_ROLE_SCHEMA,
+  CALL_TYPE: CALL_TYPE_SCHEMA,
 };
 
 export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, value }: Props) {
@@ -105,7 +109,8 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     };
 
     if (value) {
-      const { json } = await execute(`/admin/values/${type.toLowerCase()}/${value.id}`, {
+      const { json } = await execute<PatchValueByIdData, typeof INITIAL_VALUES>({
+        path: `/admin/values/${type.toLowerCase()}/${value.id}`,
         method: "PATCH",
         data,
         helpers,
@@ -117,7 +122,8 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
         onUpdate(value, json);
       }
     } else {
-      const { json } = await execute(`/admin/values/${type.toLowerCase()}`, {
+      const { json } = await execute<PostValuesData, typeof INITIAL_VALUES>({
+        path: `/admin/values/${type.toLowerCase()}`,
         method: "POST",
         data,
         helpers,
@@ -146,7 +152,8 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     }
 
     if (validatedImage && typeof validatedImage === "object") {
-      await execute(`/admin/values/${type}/image/${id}`, {
+      await execute({
+        path: `/admin/values/${type}/image/${id}`,
         method: "POST",
         data: fd,
         helpers,
@@ -155,6 +162,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
   }
 
   const INITIAL_VALUES = {
+    isDisabled: value ? getDisabledFromValue(value) : false,
     value: value ? getValueStrFromValue(value) : "",
 
     description:
@@ -193,6 +201,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
 
     licenseType: value && isBaseValue(value) ? value.licenseType : null,
     isDefault: value && isBaseValue(value) ? value.isDefault : undefined,
+    priority: value && isCallTypeValue(value) ? value.priority ?? undefined : undefined,
 
     officerRankImageId: "",
     // @ts-expect-error todo: add typeguard for `OFFICER_RANK`
@@ -289,6 +298,17 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
               </FormField>
             ) : null}
 
+            {type === ValueType.CALL_TYPE ? (
+              <FormField errorMessage={errors.priority} optional label="Priority">
+                <Input
+                  type="number"
+                  name="priority"
+                  onChange={handleChange}
+                  value={values.priority}
+                />
+              </FormField>
+            ) : null}
+
             {type === ValueType.OFFICER_RANK ? (
               <>
                 <ImageSelectInput valueKey="officerRankImageId" image={image} setImage={setImage} />
@@ -316,6 +336,10 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             ) : null}
 
             {type === "CODES_10" ? <StatusValueFields /> : null}
+
+            <FormField errorMessage={errors.isDisabled} label="Disabled">
+              <Toggle name="isDisabled" onCheckedChange={handleChange} value={values.isDisabled} />
+            </FormField>
 
             <footer className="flex justify-end mt-5">
               <Button

@@ -8,12 +8,13 @@ import { validateSchema } from "lib/validateSchema";
 import { NAME_CHANGE_REQUEST_SCHEMA } from "@snailycad/schemas";
 import { NotFound } from "@tsed/exceptions";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/name-change")
 @UseBeforeEach(IsAuth)
 export class NameChangeRequestController {
   @Get("/")
-  async getUserRequests(@Context("user") user: User) {
+  async getUserRequests(@Context("user") user: User): Promise<APITypes.GetNameChangeRequestsData> {
     const requests = await prisma.nameChangeRequest.findMany({
       where: { userId: user.id },
       include: { citizen: true },
@@ -23,7 +24,10 @@ export class NameChangeRequestController {
   }
 
   @Post("/")
-  async requestNameChange(@BodyParams() body: unknown, @Context("user") user: User) {
+  async requestNameChange(
+    @BodyParams() body: unknown,
+    @Context("user") user: User,
+  ): Promise<APITypes.PostNameChangeRequestsData> {
     const data = validateSchema(NAME_CHANGE_REQUEST_SCHEMA, body);
 
     const citizen = await prisma.citizen.findFirst({

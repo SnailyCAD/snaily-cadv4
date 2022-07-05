@@ -3,12 +3,12 @@ import { Button } from "components/Button";
 import { Table } from "components/shared/Table";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
-import type { FullBusiness } from "src/pages/admin/manage/businesses";
 import { WhitelistStatus } from "@snailycad/types";
+import type { GetManageBusinessesData, PutManageBusinessesData } from "@snailycad/types/api";
 
 interface Props {
-  businesses: FullBusiness[];
-  setBusinesses: React.Dispatch<React.SetStateAction<FullBusiness[]>>;
+  businesses: GetManageBusinessesData;
+  setBusinesses: React.Dispatch<React.SetStateAction<GetManageBusinessesData>>;
 }
 
 export function PendingBusinessesTab({ setBusinesses, businesses }: Props) {
@@ -17,8 +17,9 @@ export function PendingBusinessesTab({ setBusinesses, businesses }: Props) {
 
   const { state, execute } = useFetch();
 
-  async function acceptOrDecline(business: FullBusiness, type: WhitelistStatus) {
-    const { json } = await execute(`/admin/manage/businesses/${business.id}`, {
+  async function acceptOrDecline(business: GetManageBusinessesData[number], type: WhitelistStatus) {
+    const { json } = await execute<PutManageBusinessesData>({
+      path: `/admin/manage/businesses/${business.id}`,
       method: "PUT",
       data: { status: type },
     });
@@ -46,7 +47,7 @@ export function PendingBusinessesTab({ setBusinesses, businesses }: Props) {
               <Button
                 onClick={() => acceptOrDecline(business, WhitelistStatus.ACCEPTED)}
                 disabled={state === "loading"}
-                small
+                size="xs"
                 variant="success"
               >
                 {common("accept")}
@@ -55,7 +56,7 @@ export function PendingBusinessesTab({ setBusinesses, businesses }: Props) {
                 className="ml-2"
                 onClick={() => acceptOrDecline(business, WhitelistStatus.DECLINED)}
                 disabled={state === "loading"}
-                small
+                size="xs"
                 variant="danger"
               >
                 {common("decline")}

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { TabsContent } from "@radix-ui/react-tabs";
-import { NameChangeRequest, WhitelistStatus } from "@snailycad/types";
+import { WhitelistStatus } from "@snailycad/types";
 import { Table } from "components/shared/Table";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useTranslations } from "next-intl";
@@ -8,9 +8,13 @@ import { Button } from "components/Button";
 import { FullDate } from "components/shared/FullDate";
 import { Status } from "components/shared/Status";
 import useFetch from "lib/useFetch";
+import type {
+  GetManageNameChangeRequests,
+  PutManageNameChangeRequests,
+} from "@snailycad/types/api";
 
 interface Props {
-  requests: NameChangeRequest[];
+  requests: GetManageNameChangeRequests;
 }
 
 export function NameChangeRequestsTab({ requests: data }: Props) {
@@ -25,7 +29,8 @@ export function NameChangeRequestsTab({ requests: data }: Props) {
   const hasManagePermissions = hasPermissions([Permissions.ManageNameChangeRequests], true);
 
   async function handleUpdate(id: string, type: WhitelistStatus) {
-    const { json } = await execute(`/admin/manage/name-change-requests/${id}`, {
+    const { json } = await execute<PutManageNameChangeRequests>({
+      path: `/admin/manage/name-change-requests/${id}`,
       method: "PUT",
       data: { type },
     });
@@ -54,7 +59,7 @@ export function NameChangeRequestsTab({ requests: data }: Props) {
                   disabled={state === "loading"}
                   onClick={() => handleUpdate(request.id, WhitelistStatus.ACCEPTED)}
                   variant="success"
-                  small
+                  size="xs"
                 >
                   {common("accept")}
                 </Button>
@@ -63,7 +68,7 @@ export function NameChangeRequestsTab({ requests: data }: Props) {
                   disabled={state === "loading"}
                   onClick={() => handleUpdate(request.id, WhitelistStatus.DECLINED)}
                   variant="danger"
-                  small
+                  size="xs"
                 >
                   {common("decline")}
                 </Button>

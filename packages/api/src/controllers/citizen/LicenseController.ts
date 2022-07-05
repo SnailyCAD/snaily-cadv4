@@ -1,16 +1,18 @@
-import { CadFeature, Feature, User } from "@prisma/client";
+import { cad, CadFeature, Feature, User } from "@prisma/client";
 import { LICENSE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { Description, Put } from "@tsed/schema";
-import { canManageInvariant } from "lib/auth/user";
+import { canManageInvariant } from "lib/auth/getSessionUser";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
 import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
 import { isFeatureEnabled } from "lib/cad";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
+import type * as APITypes from "@snailycad/types/api";
+import { citizenInclude } from "./CitizenController";
 
 @Controller("/licenses")
 @UseBeforeEach(IsAuth)
@@ -19,12 +21,11 @@ export class LicensesController {
   @Description("Update the licenses of a citizen")
   async updateCitizenLicenses(
     @PathParams("id") citizenId: string,
-    @Context() ctx: Context,
+    @Context("user") user: User,
+    @Context("cad") cad: cad & { features?: CadFeature[] },
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PutCitizenLicensesByIdData> {
     const data = validateSchema(LICENSE_SCHEMA, body);
-    const user = ctx.get("user") as User;
-    const cad = ctx.get("cad") as { features?: CadFeature[] };
 
     const isDLExamEnabled = isFeatureEnabled({
       features: cad.features,
@@ -58,13 +59,7 @@ export class LicensesController {
         weaponLicenseId: data.weaponLicense,
         waterLicenseId: data.waterLicense,
       },
-      include: {
-        weaponLicense: true,
-        driversLicense: true,
-        pilotLicense: true,
-        waterLicense: true,
-        dlCategory: { include: { value: true } },
-      },
+      include: citizenInclude,
     });
 
     return updated;

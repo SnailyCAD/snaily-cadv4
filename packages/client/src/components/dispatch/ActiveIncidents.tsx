@@ -19,6 +19,7 @@ import { DndActions } from "types/DndActions";
 import { classNames } from "lib/classNames";
 import { Droppable } from "components/shared/dnd/Droppable";
 import { useDispatchState } from "state/dispatchState";
+import type { PostIncidentsData, PutIncidentByIdData } from "@snailycad/types/api";
 
 export function ActiveIncidents() {
   /**
@@ -39,7 +40,8 @@ export function ActiveIncidents() {
     unitId: string,
     type: "assign" | "unassign",
   ) {
-    const { json } = await execute(`/incidents/${type}/${incident.id}`, {
+    const { json } = await execute<PostIncidentsData>({
+      path: `/incidents/${type}/${incident.id}`,
       method: "POST",
       data: { unit: unitId },
     });
@@ -58,7 +60,8 @@ export function ActiveIncidents() {
   async function handleDismissIncident() {
     if (!tempIncident) return;
 
-    const { json } = await execute(`/incidents/${tempIncident.id}`, {
+    const { json } = await execute<PutIncidentByIdData>({
+      path: `/incidents/${tempIncident.id}`,
       method: "PUT",
       data: {
         ...tempIncident,
@@ -96,7 +99,7 @@ export function ActiveIncidents() {
 
   return (
     <div className="mt-3 overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
-      <header className="flex items-center justify-between p-2 px-4 bg-gray-300/50 dark:bg-gray-3">
+      <header className="flex items-center justify-between p-2 px-4 bg-gray-200 dark:bg-gray-3">
         <h3 className="text-xl font-semibold">{t("activeIncidents")}</h3>
 
         <div>
@@ -112,7 +115,7 @@ export function ActiveIncidents() {
       </header>
 
       {activeIncidents.length <= 0 ? (
-        <p className="px-4 py-2">{t("noActiveIncidents")}</p>
+        <p className="px-4 py-2 text-neutral-700 dark:text-gray-300">{t("noActiveIncidents")}</p>
       ) : (
         <Table
           isWithinCard
@@ -138,7 +141,7 @@ export function ActiveIncidents() {
                     {incident.description && !incident.descriptionData ? (
                       incident.description
                     ) : (
-                      <Button small onClick={() => handleViewDescription(incident)}>
+                      <Button size="xs" onClick={() => handleViewDescription(incident)}>
                         {common("viewDescription")}
                       </Button>
                     )}
@@ -150,7 +153,7 @@ export function ActiveIncidents() {
                     <Button
                       onClick={() => onEditClick(incident)}
                       disabled={!hasActiveDispatchers}
-                      small
+                      size="xs"
                       variant="success"
                     >
                       {common("manage")}
@@ -159,7 +162,7 @@ export function ActiveIncidents() {
                     <Button
                       onClick={() => onEndClick(incident)}
                       disabled={!hasActiveDispatchers}
-                      small
+                      size="xs"
                       variant="danger"
                       className="ml-2"
                     >

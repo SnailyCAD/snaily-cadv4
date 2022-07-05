@@ -28,6 +28,7 @@ import { ActiveCallColumn } from "./active-units/officers/ActiveCallColumn";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { HoverCard } from "components/shared/HoverCard";
 import { useDispatchState } from "state/dispatchState";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 export function ActiveOfficers() {
   const { activeOfficers } = useActiveOfficers();
@@ -48,16 +49,16 @@ export function ActiveOfficers() {
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
 
-  const [tempUnit, setTempUnit] = React.useState<ActiveOfficer | CombinedLeoUnit | null>(null);
+  const [tempOfficer, officerState] = useTemporaryItem(activeOfficers);
 
   function handleEditClick(officer: ActiveOfficer | CombinedLeoUnit) {
-    setTempUnit(officer);
+    officerState.setTempId(officer.id);
     openModal(ModalIds.ManageUnit);
   }
 
   return (
     <div className="overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
-      <header className="p-2 px-4 bg-gray-300/50 dark:bg-gray-3 flex items-center justify-between">
+      <header className="p-2 px-4 bg-gray-200 dark:bg-gray-3 flex items-center justify-between">
         <h3 className="text-xl font-semibold">{t("activeOfficers")}</h3>
 
         <div>
@@ -80,7 +81,7 @@ export function ActiveOfficers() {
       </header>
 
       {activeOfficers.length <= 0 ? (
-        <p className="px-4 py-2">{t("noActiveOfficers")}</p>
+        <p className="px-4 py-2 text-neutral-700 dark:text-gray-300">{t("noActiveOfficers")}</p>
       ) : (
         <>
           <ActiveUnitsSearch type="leo" />
@@ -92,10 +93,9 @@ export function ActiveOfficers() {
               .filter((officer) => handleFilter(officer, leoSearch))
               .map((officer) => {
                 const color = officer.status?.color;
-                const activeIncidentId = isUnitOfficer(officer) ? officer.activeIncidentId : null;
 
                 const activeIncident =
-                  activeIncidents.find((v) => v.id === activeIncidentId) ?? null;
+                  activeIncidents.find((v) => v.id === officer.activeIncidentId) ?? null;
                 const activeCall = calls.find((v) => v.id === officer.activeCallId) ?? null;
 
                 const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
@@ -107,7 +107,7 @@ export function ActiveOfficers() {
                   officer: (
                     <OfficerColumn
                       nameAndCallsign={nameAndCallsign}
-                      setTempUnit={setTempUnit}
+                      setTempUnit={officerState.setTempId}
                       officer={officer}
                     />
                   ),
@@ -137,14 +137,16 @@ export function ActiveOfficers() {
                       {officer.status?.value?.value}
                     </span>
                   ),
-                  incident: <ActiveIncidentColumn incident={activeIncident} />,
-                  activeCall: <ActiveCallColumn call={activeCall} />,
+                  incident: (
+                    <ActiveIncidentColumn isDispatch={isDispatch} incident={activeIncident} />
+                  ),
+                  activeCall: <ActiveCallColumn isDispatch={isDispatch} call={activeCall} />,
                   radioChannel: <UnitRadioChannelModal unit={officer} />,
                   actions: isDispatch ? (
                     <Button
                       disabled={!hasActiveDispatchers}
                       onClick={() => handleEditClick(officer)}
-                      small
+                      size="xs"
                       variant="success"
                     >
                       {common("manage")}
@@ -170,12 +172,14 @@ export function ActiveOfficers() {
         </>
       )}
 
-      {tempUnit ? <ManageUnitModal onClose={() => setTempUnit(null)} unit={tempUnit} /> : null}
-      {tempUnit ? (
+      {tempOfficer ? (
+        <ManageUnitModal onClose={() => officerState.setTempId(null)} unit={tempOfficer} />
+      ) : null}
+      {tempOfficer ? (
         <MergeUnitModal
           isDispatch={isDispatch}
-          unit={tempUnit as Officer}
-          onClose={() => setTempUnit(null)}
+          unit={tempOfficer as Officer}
+          onClose={() => officerState.setTempId(null)}
         />
       ) : null}
     </div>

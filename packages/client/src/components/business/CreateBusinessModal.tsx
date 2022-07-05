@@ -10,23 +10,21 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { CREATE_COMPANY_SCHEMA } from "@snailycad/schemas";
 import { handleValidate } from "lib/handleValidate";
-import { useCitizen } from "context/CitizenContext";
-import { Select } from "components/form/Select";
 import { Toggle } from "components/form/Toggle";
 import { useRouter } from "next/router";
-import type { FullEmployee } from "state/businessState";
 import { FormRow } from "components/form/FormRow";
 import { toastMessage } from "lib/toastMessage";
-import { Business, WhitelistStatus } from "@snailycad/types";
+import { WhitelistStatus } from "@snailycad/types";
+import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
+import type { GetBusinessesData, PostCreateBusinessData } from "@snailycad/types/api";
 
 interface Props {
-  onCreate?(employee: FullEmployee & { business: Business }): void;
+  onCreate?(employee: GetBusinessesData["businesses"][number]): void;
 }
 
 export function CreateBusinessModal({ onCreate }: Props) {
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
-  const { citizens } = useCitizen();
   const router = useRouter();
   const common = useTranslations("Common");
   const t = useTranslations("Business");
@@ -37,7 +35,8 @@ export function CreateBusinessModal({ onCreate }: Props) {
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute("/businesses/create", {
+    const { json } = await execute<PostCreateBusinessData>({
+      path: "/businesses/create",
       method: "POST",
       data: values,
     });
@@ -60,6 +59,7 @@ export function CreateBusinessModal({ onCreate }: Props) {
     address: "",
     postal: "",
     ownerId: "",
+    ownerName: "",
     whitelisted: false,
   };
 
@@ -73,15 +73,11 @@ export function CreateBusinessModal({ onCreate }: Props) {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField errorMessage={errors.ownerId} label={t("owner")}>
-              <Select
-                values={citizens.map((citizen) => ({
-                  label: `${citizen.name} ${citizen.surname}`,
-                  value: citizen.id,
-                }))}
-                name="ownerId"
-                onChange={handleChange}
-                value={values.ownerId}
+            <FormField errorMessage={errors.ownerId} label={t("citizen")}>
+              <CitizenSuggestionsField
+                fromAuthUserOnly
+                labelFieldName="ownerName"
+                valueFieldName="ownerId"
               />
             </FormField>
 
@@ -110,7 +106,11 @@ export function CreateBusinessModal({ onCreate }: Props) {
             </FormRow>
 
             <FormField errorMessage={errors.whitelisted} label={t("whitelisted")}>
-              <Toggle name="whitelisted" onClick={handleChange} toggled={values.whitelisted} />
+              <Toggle
+                name="whitelisted"
+                onCheckedChange={handleChange}
+                value={values.whitelisted}
+              />
             </FormField>
 
             <footer className="flex justify-end mt-5">

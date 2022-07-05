@@ -6,24 +6,16 @@ import { StatusesArea } from "components/shared/StatusesArea";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { ActiveOfficer, useLeoState } from "state/leoState";
-import {
-  Bolo,
-  CombinedLeoUnit,
-  EmsFdDeputy,
-  LeoIncident,
-  Officer,
-  Record,
-  RecordType,
-  ShouldDoType,
-} from "@snailycad/types";
-import { ActiveCalls } from "components/leo/ActiveCalls";
-import { Full911Call, useDispatchState } from "state/dispatchState";
+import { useLeoState } from "state/leoState";
+import { Record, RecordType, ValueType } from "@snailycad/types";
+import { ActiveCalls } from "components/dispatch/active-calls/ActiveCalls";
+import { useDispatchState } from "state/dispatchState";
 import { ModalButtons } from "components/leo/ModalButtons";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { requestAll } from "lib/utils";
 import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
 import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
+import { ActiveWarrants } from "components/leo/active-warrants/ActiveWarrants";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { usePanicButton } from "hooks/shared/usePanicButton";
 import { Title } from "components/shared/Title";
@@ -32,7 +24,18 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { Permissions } from "@snailycad/permissions";
 import { useNameSearch } from "state/search/nameSearchState";
-import { useAuth } from "context/AuthContext";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { useTones } from "hooks/global/useTones";
+import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
+import type {
+  Get911CallsData,
+  GetActiveOfficerData,
+  GetActiveOfficersData,
+  GetBolosData,
+  GetEmsFdActiveDeputies,
+  GetMyOfficersData,
+} from "@snailycad/types/api";
+import { CreateWarrantModal } from "components/leo/modals/CreateWarrantModal";
 
 const Modals = {
   CreateWarrantModal: dynamic(async () => {
@@ -67,36 +70,49 @@ const Modals = {
 };
 
 interface Props {
-  activeOfficer: ActiveOfficer | null;
-  calls: Full911Call[];
-  bolos: Bolo[];
-  activeIncidents: LeoIncident[];
-
-  allDeputies: EmsFdDeputy[];
-  allOfficers: Officer[];
+  activeOfficer: GetActiveOfficerData;
+  activeOfficers: GetActiveOfficersData;
+  userOfficers: GetMyOfficersData["officers"];
+  calls: Get911CallsData;
+  bolos: GetBolosData;
+  activeDeputies: GetEmsFdActiveDeputies;
 }
 
 export default function OfficerDashboard({
   bolos,
   calls,
   activeOfficer,
-  activeIncidents,
-
-  allOfficers,
-  allDeputies,
+  activeOfficers,
+  activeDeputies,
+  userOfficers,
 }: Props) {
+  useLoadValuesClientSide({
+    valueTypes: [
+      ValueType.CITIZEN_FLAG,
+      ValueType.VEHICLE_FLAG,
+      ValueType.CALL_TYPE,
+      ValueType.LICENSE,
+      ValueType.DRIVERSLICENSE_CATEGORY,
+      ValueType.IMPOUND_LOT,
+      ValueType.PENAL_CODE,
+      ValueType.DEPARTMENT,
+      ValueType.DIVISION,
+    ],
+  });
+
   const leoState = useLeoState();
   const dispatchState = useDispatchState();
   const t = useTranslations("Leo");
-  const { signal100Enabled, Component, audio: signal100Audio } = useSignal100();
-  const { unit, audio, PanicButton } = usePanicButton();
+  const signal100 = useSignal100();
+  const tones = useTones("leo");
+  const panic = usePanicButton();
   const { isOpen } = useModal();
-  const { user } = useAuth();
+  const { LEO_TICKETS, ACTIVE_WARRANTS, CALLS_911 } = useFeatureEnabled();
 
   const { currentResult, setCurrentResult } = useNameSearch();
 
   function handleRecordCreate(data: Record) {
-    if (!currentResult) return;
+    if (!currentResult || currentResult.isConfidential) return;
 
     setCurrentResult({
       ...currentResult,
@@ -110,29 +126,12 @@ export default function OfficerDashboard({
     dispatchState.setCalls(calls);
     dispatchState.setBolos(bolos);
 
-    dispatchState.setActiveIncidents(activeIncidents);
-    dispatchState.setAllOfficers(allOfficers);
-
-    function activeFilter(v: EmsFdDeputy | Officer | CombinedLeoUnit) {
-      return Boolean(v.statusId && v.status?.shouldDo !== ShouldDoType.SET_OFF_DUTY);
-    }
-
-    const activeOfficers = [...allOfficers].filter(activeFilter);
-    const activeDeputies = [...allDeputies].filter(activeFilter);
-
     dispatchState.setActiveDeputies(activeDeputies);
     dispatchState.setActiveOfficers(activeOfficers);
+    leoState.setUserOfficers(userOfficers);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bolos, calls, allOfficers, allDeputies, activeOfficer]);
-
-  React.useEffect(() => {
-    if (!user) return;
-    const userOfficers = allOfficers.filter((v) => v.userId === user.id);
-
-    leoState.setOfficers(userOfficers);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, allOfficers]);
+  }, [bolos, calls, activeOfficers, activeDeputies, activeOfficer]);
 
   return (
     <Layout
@@ -141,8 +140,9 @@ export default function OfficerDashboard({
     >
       <Title renderLayoutTitle={false}>{t("officer")}</Title>
 
-      <Component enabled={signal100Enabled} audio={signal100Audio} />
-      <PanicButton audio={audio} unit={unit} />
+      <signal100.Component enabled={signal100.enabled} audio={signal100.audio} />
+      <panic.Component audio={panic.audio} unit={panic.unit} />
+      <tones.Component audio={tones.audio} description={tones.description} />
 
       <UtilityPanel>
         <div className="px-4">
@@ -157,8 +157,9 @@ export default function OfficerDashboard({
         />
       </UtilityPanel>
 
-      <ActiveCalls />
+      {CALLS_911 ? <ActiveCalls /> : null}
       <ActiveBolos />
+      {ACTIVE_WARRANTS ? <ActiveWarrants /> : null}
 
       <div className="mt-3">
         <ActiveOfficers />
@@ -179,13 +180,15 @@ export default function OfficerDashboard({
             </>
           )}
           <Modals.NameSearchModal />
-          <Modals.CreateWarrantModal />
+          {!ACTIVE_WARRANTS ? <CreateWarrantModal warrant={null} /> : null}
           <Modals.CustomFieldSearch />
         </>
       ) : null}
 
       <div>
-        <Modals.CreateTicketModal onCreate={handleRecordCreate} type={RecordType.TICKET} />
+        {LEO_TICKETS ? (
+          <Modals.CreateTicketModal onCreate={handleRecordCreate} type={RecordType.TICKET} />
+        ) : null}
         <Modals.CreateTicketModal onCreate={handleRecordCreate} type={RecordType.ARREST_REPORT} />
         <Modals.CreateTicketModal onCreate={handleRecordCreate} type={RecordType.WRITTEN_WARNING} />
       </div>
@@ -193,38 +196,40 @@ export default function OfficerDashboard({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const adminValuesURL =
-    "/admin/values/codes_10?paths=penal_code,impound_lot,license,driverslicense_category,vehicle_flag,citizen_flag";
-
+export const getServerSideProps: GetServerSideProps<Props> = async ({ req, locale }) => {
+  const user = await getSessionUser(req);
   const [
     activeOfficer,
+    { officers: userOfficers },
     values,
     calls,
     bolos,
-    { officers: allOfficers, deputies: allDeputies, activeIncidents },
+    activeOfficers,
+    activeDeputies,
   ] = await requestAll(req, [
     ["/leo/active-officer", null],
-    [adminValuesURL, []],
+    ["/leo", { officers: [] }],
+    ["/admin/values/codes_10", []],
     ["/911-calls", []],
     ["/bolos", []],
-    ["/dispatch", { officers: [], deputies: [], activeIncidents: [] }],
+    ["/leo/active-officers", []],
+    ["/ems-fd/active-deputies", []],
   ]);
 
   return {
     props: {
       session: await getSessionUser(req),
-      allOfficers,
-      allDeputies,
+      activeOfficers,
+      activeDeputies,
       activeOfficer,
+      userOfficers,
       calls,
       bolos,
       values,
-      activeIncidents,
       messages: {
         ...(await getTranslations(
           ["citizen", "leo", "truck-logs", "ems-fd", "calls", "common"],
-          locale,
+          user?.locale ?? locale,
         )),
       },
     },

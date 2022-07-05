@@ -5,7 +5,6 @@ import {
   type Value,
   type ValueLicenseType,
   WhitelistStatus,
-  ValueType,
   EmsFdDeputy,
 } from "@snailycad/types";
 import { isUnitCombined, isUnitOfficer } from "@snailycad/utils/typeguards";
@@ -14,6 +13,7 @@ import type { IncomingMessage } from "connect";
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";
 import format from "date-fns/format";
 import differenceInYears from "date-fns/differenceInYears";
+import type { Sounds } from "./server/getAvailableSounds";
 
 export function calculateAge(dateOfBirth: string | Date): string {
   const difference = differenceInYears(new Date(), new Date(dateOfBirth));
@@ -66,7 +66,7 @@ export function formatDate(date: string | Date | number, options?: { onlyDate: b
   return format(dateObj, `yyyy-MM-dd${hmsString}`);
 }
 
-export function filterLicenseTypes(licenses: Value<ValueType.LICENSE>[], type: ValueLicenseType) {
+export function filterLicenseTypes(licenses: Value[], type: ValueLicenseType) {
   return licenses.filter((item) => {
     if (item.licenseType === null) return true;
     return item.licenseType === type;
@@ -94,7 +94,7 @@ export function formatOfficerDepartment(unit: Officer | EmsFdDeputy) {
   const department = unit.department;
 
   if (whitelistStatus && whitelistStatus.status === WhitelistStatus.PENDING) {
-    return `${department?.value.value} (${whitelistStatus.department.value.value})`;
+    return `${department?.value.value} (${whitelistStatus.department?.value.value})`;
   }
 
   return getUnitDepartment(unit)?.value.value ?? null;
@@ -130,4 +130,17 @@ export function omit<Obj extends object, Properties extends keyof Obj>(
   }
 
   return newObj as Omit<Obj, Properties>;
+}
+
+export function soundCamelCaseToKebabCase(sound: string) {
+  const obj: Record<string, Sounds> = {
+    panicButton: "panic-button",
+    signal100: "signal100",
+    addedToCall: "added-to-call",
+    stopRoleplay: "stop-roleplay",
+    statusUpdate: "status-update",
+    incomingCall: "incoming-call",
+  };
+
+  return obj[sound] as Sounds;
 }

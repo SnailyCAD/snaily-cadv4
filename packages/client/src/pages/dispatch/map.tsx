@@ -11,7 +11,8 @@ import { useDispatchState } from "state/dispatchState";
 import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
 import type { DispatchPageProps } from ".";
-import { CombinedLeoUnit, EmsFdDeputy, Officer, ShouldDoType } from "@snailycad/types";
+import { CombinedLeoUnit, EmsFdDeputy, Officer, ShouldDoType, ValueType } from "@snailycad/types";
+import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 
 const Map = dynamic(async () => (await import("components/dispatch/map/Map")).Map, {
   ssr: false,
@@ -21,6 +22,15 @@ const Map = dynamic(async () => (await import("components/dispatch/map/Map")).Ma
 type Props = Pick<DispatchPageProps, "bolos" | "calls" | "deputies" | "officers">;
 
 export default function MapPage(props: Props) {
+  useLoadValuesClientSide({
+    valueTypes: [
+      ValueType.CALL_TYPE,
+      ValueType.PENAL_CODE,
+      ValueType.DEPARTMENT,
+      ValueType.DIVISION,
+    ],
+  });
+
   const { cad, user } = useAuth();
   const state = useDispatchState();
 
@@ -79,8 +89,9 @@ export default function MapPage(props: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+  const user = await getSessionUser(req);
   const [values, calls, bolos, { officers, deputies }] = await requestAll(req, [
-    ["/admin/values/codes_10?paths=penal_code,impound_lot,department,division", []],
+    ["/admin/values/codes_10", []],
     ["/911-calls", []],
     ["/bolos", []],
     ["/dispatch", { deputies: [], officers: [] }],
@@ -88,14 +99,17 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
 
   return {
     props: {
-      session: await getSessionUser(req),
+      session: user,
       calls,
       bolos,
       values,
       officers,
       deputies,
       messages: {
-        ...(await getTranslations(["citizen", "ems-fd", "leo", "calls", "common"], locale)),
+        ...(await getTranslations(
+          ["citizen", "ems-fd", "leo", "calls", "common"],
+          user?.locale ?? locale,
+        )),
       },
     },
   };

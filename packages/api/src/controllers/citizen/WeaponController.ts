@@ -1,26 +1,73 @@
-import { User, CadFeature, Feature, cad } from "@prisma/client";
+import { User, CadFeature, Feature, cad, Prisma } from "@prisma/client";
 import { WEAPON_SCHEMA } from "@snailycad/schemas";
-import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
+import { UseBeforeEach, Context, BodyParams, PathParams, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
-import { Post, Delete, Put, Description } from "@tsed/schema";
-import { canManageInvariant } from "lib/auth/user";
+import { Post, Delete, Put, Description, Get } from "@tsed/schema";
+import { canManageInvariant } from "lib/auth/getSessionUser";
 import { isFeatureEnabled } from "lib/cad";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
 import { generateString } from "utils/generateString";
+import { citizenInclude } from "./CitizenController";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/weapons")
 @UseBeforeEach(IsAuth)
 export class WeaponController {
+  @Get("/:citizenId")
+  async getCitizenWeapons(
+    @PathParams("citizenId") citizenId: string,
+    @Context("user") user: User,
+    @Context("cad") cad: cad,
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("query", String) query?: string,
+  ): Promise<APITypes.GetCitizenWeaponsData> {
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
+    const citizen = await prisma.citizen.findFirst({
+      where: { id: citizenId, userId: checkCitizenUserId ? user.id : undefined },
+    });
+
+    if (!citizen) {
+      throw new NotFound("citizenNotFound");
+    }
+
+    const where: Prisma.WeaponWhereInput = {
+      ...{ citizenId },
+      ...(query
+        ? {
+            OR: [
+              { model: { value: { value: { contains: query, mode: "insensitive" } } } },
+              { registrationStatus: { value: { contains: query, mode: "insensitive" } } },
+              { serialNumber: { contains: query, mode: "insensitive" } },
+            ],
+          }
+        : {}),
+    };
+
+    const [totalCount, weapons] = await Promise.all([
+      prisma.weapon.count({ where }),
+      prisma.weapon.findMany({
+        where,
+        take: 12,
+        skip,
+        include: citizenInclude.weapons.include,
+      }),
+    ]);
+
+    return { totalCount, weapons };
+  }
+
   @Post("/")
   @Description("Register a new weapon")
-  async registerWeapon(@Context() ctx: Context, @BodyParams() body: unknown) {
+  async registerWeapon(
+    @Context("user") user: User,
+    @Context("cad") cad: cad & { features?: CadFeature[] },
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PostCitizenWeaponData> {
     const data = validateSchema(WEAPON_SCHEMA, body);
-    const user = ctx.get("user") as User;
-    const cad = ctx.get("cad") as { features: CadFeature[] };
 
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -67,10 +114,7 @@ export class WeaponController {
         userId: user.id || undefined,
         modelId,
       },
-      include: {
-        model: { include: { value: true } },
-        registrationStatus: true,
-      },
+      include: citizenInclude.weapons.include,
     });
 
     return weapon;
@@ -83,7 +127,7 @@ export class WeaponController {
     @Context("cad") cad: cad,
     @PathParams("id") weaponId: string,
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PutCitizenWeaponData> {
     const data = validateSchema(WEAPON_SCHEMA, body);
 
     const weapon = await prisma.weapon.findUnique({
@@ -108,10 +152,7 @@ export class WeaponController {
         registrationStatusId: data.registrationStatus as string,
         serialNumber: data.serialNumber || weapon.serialNumber,
       },
-      include: {
-        model: { include: { value: true } },
-        registrationStatus: true,
-      },
+      include: citizenInclude.weapons.include,
     });
 
     return updated;
@@ -123,7 +164,7 @@ export class WeaponController {
     @Context("user") user: User,
     @Context("cad") cad: cad,
     @PathParams("id") weaponId: string,
-  ) {
+  ): Promise<APITypes.DeleteCitizenWeaponData> {
     const weapon = await prisma.weapon.findUnique({
       where: {
         id: weaponId,

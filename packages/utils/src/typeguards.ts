@@ -12,26 +12,26 @@ import {
   CombinedLeoUnit,
   EmsFdDeputy,
   QualificationValue,
+  CallTypeValue,
+  PenalCode,
+  AnyValue,
+  ValueWithValueObj,
 } from "@snailycad/types";
 
-export type ValueWithValueObj =
-  | VehicleValue
-  | WeaponValue
-  | StatusValue
-  | DepartmentValue
-  | DivisionValue
-  | EmployeeValue
-  | DriversLicenseCategoryValue
-  | QualificationValue;
+export function isPenalCodeValue(value: AnyValue): value is PenalCode {
+  return (
+    "warningApplicableId" in value &&
+    "warningNotApplicableId" in value &&
+    "descriptionData" in value
+  );
+}
 
-export type AnyValue = Value<ValueType> | ValueWithValueObj;
-
-export function isBaseValue(value: AnyValue): value is Value<ValueType> {
-  return "createdAt" in value && typeof value.type === "string";
+export function isBaseValue(value: AnyValue): value is Value {
+  return !isPenalCodeValue(value) && "createdAt" in value && typeof value.type === "string";
 }
 
 export function hasValueObj(value: AnyValue): value is ValueWithValueObj {
-  return "value" in value && typeof value.value === "object";
+  return !isPenalCodeValue(value) && "value" in value && typeof value.value === "object";
 }
 
 export function isVehicleValue(value: AnyValue): value is VehicleValue {
@@ -64,6 +64,10 @@ export function isUnitQualification(value: AnyValue): value is QualificationValu
 
 export function isDLCategoryValue(value: AnyValue): value is DriversLicenseCategoryValue {
   return hasValueObj(value) && value.value.type === ValueType.DRIVERSLICENSE_CATEGORY;
+}
+
+export function isCallTypeValue(value: AnyValue): value is CallTypeValue {
+  return hasValueObj(value) && value.value.type === ValueType.CALL_TYPE;
 }
 
 export function isUnitCombined(

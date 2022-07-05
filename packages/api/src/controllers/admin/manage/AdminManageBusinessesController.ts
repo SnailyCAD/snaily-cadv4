@@ -1,13 +1,14 @@
-import { Rank } from "@prisma/client";
+import { Rank, User } from "@prisma/client";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { Delete, Description, Get, Put } from "@tsed/schema";
-import { userProperties } from "lib/auth/user";
+import { userProperties } from "lib/auth/getSessionUser";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import type * as APITypes from "@snailycad/types/api";
 
 const businessInclude = {
   citizen: {
@@ -35,7 +36,7 @@ export class AdminManageBusinessesController {
       Permissions.ManageBusinesses,
     ],
   })
-  async getBusinesses() {
+  async getBusinesses(): Promise<APITypes.GetManageBusinessesData> {
     const businesses = await prisma.business.findMany({ include: businessInclude });
 
     return businesses;
@@ -47,7 +48,10 @@ export class AdminManageBusinessesController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageBusinesses],
   })
-  async updateBusiness(@BodyParams() body: any, @PathParams("id") businessId: string) {
+  async updateBusiness(
+    @BodyParams() body: any,
+    @PathParams("id") businessId: string,
+  ): Promise<APITypes.PutManageBusinessesData> {
     const business = await prisma.business.findUnique({
       where: {
         id: businessId,
@@ -74,10 +78,10 @@ export class AdminManageBusinessesController {
     permissions: [Permissions.DeleteBusinesses],
   })
   async deleteBusiness(
-    @Context() ctx: Context,
+    @Context("user") user: User,
     @BodyParams() body: any,
     @PathParams("id") businessId: string,
-  ) {
+  ): Promise<APITypes.DeleteManageBusinessesData> {
     const reason = body.reason;
 
     const business = await prisma.business.findUnique({
@@ -93,7 +97,7 @@ export class AdminManageBusinessesController {
     await prisma.notification.create({
       data: {
         userId: business.userId,
-        executorId: ctx.get("user").id,
+        executorId: user.id,
         description: reason,
         title: "BUSINESS_DELETED",
       },

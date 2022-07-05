@@ -23,6 +23,8 @@
     "defaultOfficerRank": "Default Officer Rank",
     "pairedUnitTemplate": "Paired Unit Template",
     "isConfidential": "Is Confidential",
+    "priority": "Priority",
+    "isDisabled": "Disabled",
     "alert_deletePenalCodeGroup": "Are you sure you want to delete <span>{group}</span>? This action cannot be undone.",
     "alert_deleteValue": "Are you sure you want to delete <span>{value}</span>? This action cannot be undone!",
     "alert_deleteSelectedValues": "Are you sure you want to delete {length} items? This action cannot be undone"
@@ -128,5 +130,11 @@
     "ADD": "Add Unit Qualification",
     "DELETE": "Delete Unit Qualification",
     "EDIT": "Edit Unit Qualification"
+  },
+  "CALL_TYPE": {
+    "MANAGE": "Manage Call Types",
+    "ADD": "Add Call Type",
+    "DELETE": "Delete Call Type",
+    "EDIT": "Edit Call Type"
   }
 }

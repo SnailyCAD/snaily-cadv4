@@ -20,8 +20,9 @@ import { useLeoState } from "state/leoState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
-import type { RegisteredVehicle } from "@snailycad/types";
 import type { VehicleSearchResult } from "state/search/vehicleSearchState";
+import { Checkbox } from "components/form/inputs/Checkbox";
+import type { PostTowCallsData } from "@snailycad/types/api";
 
 interface Props {
   call: Full911Call | null;
@@ -32,20 +33,21 @@ export function DispatchCallTowModal({ call }: Props) {
   const t = useTranslations();
   const { isOpen, closeModal, getPayload } = useModal();
   const { state, execute } = useFetch();
-  const { activeOfficer, officers } = useLeoState();
+  const { activeOfficer, userOfficers } = useLeoState();
   const { activeDeputy, deputies } = useEmsFdState();
   const router = useRouter();
   const { impoundLot } = useValues();
 
   const isLeo = router.pathname === "/officer";
   const isDispatch = router.pathname === "/dispatch";
-  const citizensFrom = isLeo ? officers : router.pathname === "/ems-fd" ? deputies : [];
+  const citizensFrom = isLeo ? userOfficers : router.pathname === "/ems-fd" ? deputies : [];
   const citizens = [...citizensFrom].map((v) => v.citizen);
   const unit = isLeo ? activeOfficer : router.pathname === "/ems-fd" ? activeDeputy : null;
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const payload = getPayload<{ call911Id: string }>(ModalIds.ManageTowCall);
-    const { json } = await execute("/tow", {
+    const { json } = await execute<PostTowCallsData>({
+      path: "/tow",
       method: "POST",
       data: { ...values, ...payload, creatorId: values.creatorId || null },
     });
@@ -130,12 +132,12 @@ export function DispatchCallTowModal({ call }: Props) {
                 </FormField>
 
                 <FormField optional errorMessage={errors.plate} label={t("Vehicles.plate")}>
-                  <InputSuggestions
-                    onSuggestionClick={(suggestion: VehicleSearchResult) => {
+                  <InputSuggestions<VehicleSearchResult>
+                    onSuggestionClick={(suggestion) => {
                       setFieldValue("plate", suggestion.plate);
                       setFieldValue("model", suggestion.model.value.value);
                     }}
-                    Component={({ suggestion }: { suggestion: RegisteredVehicle }) => (
+                    Component={({ suggestion }) => (
                       <div className="flex items-center">
                         <p>
                           {suggestion.plate.toUpperCase()} ({suggestion.vinNumber})
@@ -169,8 +171,7 @@ export function DispatchCallTowModal({ call }: Props) {
               checkbox
               label={t("Calls.callCountyService")}
             >
-              <Input
-                type="checkbox"
+              <Checkbox
                 name="callCountyService"
                 onChange={() => setFieldValue("callCountyService", !values.callCountyService)}
                 checked={values.callCountyService}

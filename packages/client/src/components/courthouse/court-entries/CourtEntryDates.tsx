@@ -8,6 +8,7 @@ import { ManageCourtDateModal } from "./ManageCourtDateModal";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { AlertModal } from "components/modal/AlertModal";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 interface Props {
   dates: CourtDate[];
@@ -17,8 +18,7 @@ interface Props {
 }
 
 export function CourtEntryDates({ onUpdate, onDelete, onCreate, dates }: Props) {
-  const [tempDate, setTempDate] = React.useState<CourtDate | null>(null);
-
+  const [tempDate, dateState] = useTemporaryItem(dates);
   const common = useTranslations("Common");
   const t = useTranslations("Courthouse");
   const { closeModal, openModal } = useModal();
@@ -28,16 +28,16 @@ export function CourtEntryDates({ onUpdate, onDelete, onCreate, dates }: Props) 
 
     closeModal(ModalIds.AlertDeleteCourtDate);
     onDelete(tempDate);
-    setTempDate(null);
+    dateState.setTempId(null);
   }
 
   function handleDeleteClick(entry: CourtDate) {
-    setTempDate(entry);
+    dateState.setTempId(entry.id);
     openModal(ModalIds.AlertDeleteCourtDate, entry);
   }
 
   function handleManageClick(entry: CourtDate) {
-    setTempDate(entry);
+    dateState.setTempId(entry.id);
     openModal(ModalIds.ManageCourtDate);
   }
 
@@ -59,7 +59,12 @@ export function CourtEntryDates({ onUpdate, onDelete, onCreate, dates }: Props) 
           note: date.note || common("none"),
           actions: (
             <>
-              <Button type="button" onClick={() => handleManageClick(date)} variant="success" small>
+              <Button
+                type="button"
+                onClick={() => handleManageClick(date)}
+                variant="success"
+                size="xs"
+              >
                 {common("edit")}
               </Button>
               <Button
@@ -67,7 +72,7 @@ export function CourtEntryDates({ onUpdate, onDelete, onCreate, dates }: Props) 
                 className="ml-2"
                 onClick={() => handleDeleteClick(date)}
                 variant="danger"
-                small
+                size="xs"
               >
                 {common("delete")}
               </Button>
@@ -82,13 +87,13 @@ export function CourtEntryDates({ onUpdate, onDelete, onCreate, dates }: Props) 
       />
 
       <ManageCourtDateModal
-        onClose={() => setTempDate(null)}
+        onClose={() => dateState.setTempId(null)}
         onCreate={(date) => {
-          setTempDate(null);
+          dateState.setTempId(null);
           onCreate(date);
         }}
         onUpdate={(date) => {
-          setTempDate(null);
+          dateState.setTempId(null);
           onUpdate(date);
         }}
         date={tempDate}
@@ -99,7 +104,7 @@ export function CourtEntryDates({ onUpdate, onDelete, onCreate, dates }: Props) 
         id={ModalIds.AlertDeleteCourtDate}
         description={t("alert_deleteCourtDate")}
         onDeleteClick={deleteCourtDate}
-        onClose={() => setTempDate(null)}
+        onClose={() => dateState.setTempId(null)}
       />
     </section>
   );

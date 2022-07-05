@@ -1,10 +1,11 @@
 import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
-import { FullEmployee, useBusinessState } from "state/businessState";
-import { WhitelistStatus } from "@snailycad/types";
+import { useBusinessState } from "state/businessState";
+import { Employee, WhitelistStatus } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { Table } from "components/shared/Table";
+import type { PutBusinessEmployeesData } from "@snailycad/types/api";
 
 export function PendingEmployeesTab() {
   const { state, execute } = useFetch();
@@ -16,16 +17,14 @@ export function PendingEmployeesTab() {
   const employees =
     currentBusiness?.employees.filter((v) => v.whitelistStatus === WhitelistStatus.PENDING) ?? [];
 
-  async function handleUpdate(employee: FullEmployee, type: "accept" | "decline") {
+  async function handleUpdate(employee: Employee, type: "accept" | "decline") {
     if (!currentBusiness || !currentEmployee) return;
 
-    const { json } = await execute(
-      `/businesses/employees/${currentBusiness.id}/${employee.id}/${type}`,
-      {
-        method: "PUT",
-        data: { employeeId: currentEmployee.id },
-      },
-    );
+    const { json } = await execute<PutBusinessEmployeesData>({
+      path: `/businesses/employees/${currentBusiness.id}/${employee.id}/${type}`,
+      method: "PUT",
+      data: { employeeId: currentEmployee.id },
+    });
 
     if (json.id) {
       setCurrentBusiness({
@@ -58,7 +57,7 @@ export function PendingEmployeesTab() {
                     disabled={state === "loading"}
                     onClick={() => handleUpdate(employee, "accept")}
                     variant="success"
-                    small
+                    size="xs"
                   >
                     {common("accept")}
                   </Button>
@@ -66,7 +65,7 @@ export function PendingEmployeesTab() {
                     disabled={state === "loading"}
                     onClick={() => handleUpdate(employee, "decline")}
                     className="ml-2"
-                    small
+                    size="xs"
                     variant="danger"
                   >
                     {common("decline")}

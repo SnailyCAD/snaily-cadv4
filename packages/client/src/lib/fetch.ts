@@ -22,7 +22,7 @@ export async function handleRequest<T = any>(
 ): Promise<AxiosResponse<T>> {
   const { req, method, data } = options ?? {};
 
-  const url = findUrl();
+  const apiUrl = findAPIUrl();
   const location = typeof window !== "undefined" ? window.location : null;
   const isDispatchUrl = (location?.pathname ?? req?.url) === "/dispatch";
   let parsedCookie = req?.headers.cookie ?? serialize("snaily-cad-session", cookie as string);
@@ -33,10 +33,11 @@ export async function handleRequest<T = any>(
   }
 
   const res = await axios({
-    url: `${url}${path}`,
+    url: `${apiUrl}${path}`,
     method,
     data: data ?? undefined,
     withCredentials: true,
+    params: options?.params,
     headers: {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       Session: parsedCookie ?? "",
@@ -52,11 +53,10 @@ export async function handleRequest<T = any>(
   return makeReturn(res) as unknown as AxiosResponse<T>;
 }
 
-export function findUrl() {
+export function findAPIUrl() {
   const envUrl = process.env.NEXT_PUBLIC_PROD_ORIGIN ?? "http://localhost:8080/v1";
-  const includesDockerContainerName = envUrl === "http://api:8080/v1";
 
-  if ((process.browser || typeof window !== "undefined") && includesDockerContainerName) {
+  if (process.env.NODE_ENV !== "production") {
     return "http://localhost:8080/v1";
   }
 

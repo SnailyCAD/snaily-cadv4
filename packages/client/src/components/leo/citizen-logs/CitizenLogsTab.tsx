@@ -9,6 +9,7 @@ import { FullDate } from "components/shared/FullDate";
 import { TabsContent } from "components/shared/TabList";
 import type { CitizenLog } from "src/pages/officer/supervisor/citizen-logs";
 import { makeUnitName } from "lib/utils";
+import { ViolationsColumn } from "../ViolationsColumn";
 
 interface Props {
   search: string;
@@ -66,9 +67,7 @@ export function CitizenLogsTab({ search, logs: data }: Props) {
                       status: "—",
                       postal: item.records.postal || common("none"),
                       notes: item.records.notes || common("none"),
-                      violations:
-                        item.records.violations.map((v) => v.penalCode.title).join(", ") ||
-                        common("none"),
+                      violations: <ViolationsColumn violations={item.records.violations} />,
                     }
                   : {
                       postal: "—",
@@ -104,7 +103,7 @@ export function CitizenLogsTab({ search, logs: data }: Props) {
             return {
               citizen: `${item.citizen.name} ${item.citizen.surname}`,
               actions: (
-                <Button small onClick={() => setCurrentLog(item)}>
+                <Button size="xs" onClick={() => setCurrentLog(item)}>
                   {common("view")}
                 </Button>
               ),

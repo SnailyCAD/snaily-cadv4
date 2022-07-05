@@ -14,17 +14,21 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { FormRow } from "components/form/FormRow";
-import { useCitizen } from "context/CitizenContext";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { CallSignPreview } from "components/leo/CallsignPreview";
-import type { EmsFdDeputy } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { UnitQualificationsTable } from "components/leo/qualifications/UnitQualificationsTable";
+import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
+import type {
+  PostMyDeputiesData,
+  PostMyDeputyByIdData,
+  PutMyDeputyByIdData,
+} from "@snailycad/types/api";
 
 interface Props {
-  deputy: EmsFdDeputy | null;
-  onCreate?(officer: EmsFdDeputy): void;
-  onUpdate?(old: EmsFdDeputy, newO: EmsFdDeputy): void;
+  deputy: PostMyDeputiesData | null;
+  onCreate?(officer: PostMyDeputiesData): void;
+  onUpdate?(old: PutMyDeputyByIdData, newO: PutMyDeputyByIdData): void;
   onClose?(): void;
 }
 
@@ -36,7 +40,6 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
   const formRef = React.useRef<HTMLFormElement>(null);
   const { BADGE_NUMBERS } = useFeatureEnabled();
 
-  const { citizens } = useCitizen();
   const { state, execute } = useFetch();
   const { department, division } = useValues();
 
@@ -61,7 +64,8 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
     let deputyId;
 
     if (deputy) {
-      const { json } = await execute(`/ems-fd/${deputy.id}`, {
+      const { json } = await execute<PutMyDeputyByIdData, typeof INITIAL_VALUES>({
+        path: `/ems-fd/${deputy.id}`,
         method: "PUT",
         data: values,
         helpers,
@@ -73,7 +77,8 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
         onUpdate?.(deputy, json);
       }
     } else {
-      const { json } = await execute("/ems-fd", {
+      const { json } = await execute<PostMyDeputiesData, typeof INITIAL_VALUES>({
+        path: "/ems-fd",
         method: "POST",
         data: values,
         helpers,
@@ -87,7 +92,8 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
     }
 
     if (validatedImage && typeof validatedImage === "object") {
-      await execute(`/ems-fd/image/${deputyId}`, {
+      await execute<PostMyDeputyByIdData, typeof INITIAL_VALUES>({
+        path: `/ems-fd/image/${deputyId}`,
         method: "POST",
         data: fd,
         helpers,
@@ -102,6 +108,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
   const validate = handleValidate(EMS_FD_DEPUTY_SCHEMA);
   const INITIAL_VALUES = {
     citizenId: deputy?.citizenId ?? "",
+    name: deputy ? `${deputy.citizen.name} ${deputy.citizen.surname}` : "",
     department: deputy?.departmentId ?? "",
     rank: deputy?.rankId ?? "",
     callsign: deputy?.callsign ?? "",
@@ -124,17 +131,10 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
             <ImageSelectInput image={image} setImage={setImage} />
 
             <FormField errorMessage={errors.citizenId} label={t("Leo.citizen")}>
-              <Select
-                isClearable
-                value={values.citizenId}
-                name="citizenId"
-                onChange={handleChange}
-                values={citizens
-                  .filter((v) => v)
-                  .map((value) => ({
-                    label: `${value.name} ${value.surname}`,
-                    value: value.id,
-                  }))}
+              <CitizenSuggestionsField
+                fromAuthUserOnly
+                labelFieldName="name"
+                valueFieldName="citizenId"
               />
             </FormField>
 

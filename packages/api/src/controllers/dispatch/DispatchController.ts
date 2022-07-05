@@ -8,7 +8,7 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
 import type { cad, MiscCadSettings, User } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
-import { UPDATE_AOP_SCHEMA, UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
+import { TONES_SCHEMA, UPDATE_AOP_SCHEMA, UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
 import {
   leoProperties,
   unitProperties,
@@ -18,13 +18,14 @@ import {
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import { incidentInclude } from "controllers/leo/incidents/IncidentController";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
-import { userProperties } from "lib/auth/user";
+import { userProperties } from "lib/auth/getSessionUser";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
 import { getInactivityFilter } from "lib/leo/utils";
 import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
 import { Req } from "@tsed/common";
 import { getActiveDeputy } from "lib/ems-fd";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -39,7 +40,9 @@ export class DispatchController {
     fallback: (u) => u.isDispatch || u.isEmsFd || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
-  async getDispatchData(@Context("cad") cad: { miscCadSettings: MiscCadSettings | null }) {
+  async getDispatchData(
+    @Context("cad") cad: { miscCadSettings: MiscCadSettings | null },
+  ): Promise<APITypes.GetDispatchData> {
     const unitsInactivityFilter = getInactivityFilter(cad, "lastStatusChangeTimestamp");
 
     if (unitsInactivityFilter) {
@@ -102,7 +105,10 @@ export class DispatchController {
     fallback: (u) => u.isDispatch,
     permissions: [Permissions.Dispatch],
   })
-  async updateAreaOfPlay(@Context("cad") cad: cad, @BodyParams() body: unknown) {
+  async updateAreaOfPlay(
+    @Context("cad") cad: cad,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PostDispatchAopData> {
     const data = validateSchema(UPDATE_AOP_SCHEMA, body);
 
     const updated = await prisma.cad.update({
@@ -126,7 +132,10 @@ export class DispatchController {
     fallback: (u) => u.isDispatch,
     permissions: [Permissions.Dispatch],
   })
-  async setSignal100(@Context("cad") cad: cad, @BodyParams("value") value: boolean) {
+  async setSignal100(
+    @Context("cad") cad: cad,
+    @BodyParams("value") value: boolean,
+  ): Promise<APITypes.PostDispatchSignal100Data> {
     if (typeof value !== "boolean") {
       throw new BadRequest("body.valueIsRequired");
     }
@@ -154,7 +163,7 @@ export class DispatchController {
   async setActiveDispatchersState(
     @Context("user") user: User,
     @BodyParams("value") value: boolean,
-  ) {
+  ): Promise<APITypes.PostDispatchDispatchersStateData> {
     let dispatcher = await prisma.activeDispatchers.findFirst({
       where: { userId: user.id },
       include: { user: { select: userProperties } },
@@ -168,15 +177,13 @@ export class DispatchController {
           include: { user: { select: userProperties } },
         }));
     } else {
-      if (!dispatcher) {
-        return;
+      if (dispatcher) {
+        await prisma.activeDispatchers.delete({
+          where: { id: dispatcher.id },
+        });
+
+        dispatcher = null;
       }
-
-      await prisma.activeDispatchers.delete({
-        where: { id: dispatcher.id },
-      });
-
-      dispatcher = null;
     }
 
     this.socket.emitActiveDispatchers();
@@ -189,7 +196,10 @@ export class DispatchController {
     fallback: (u) => u.isDispatch,
     permissions: [Permissions.Dispatch],
   })
-  async updateRadioChannel(@PathParams("unitId") unitId: string, @BodyParams() body: unknown) {
+  async updateRadioChannel(
+    @PathParams("unitId") unitId: string,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PutDispatchRadioChannelData> {
     const data = validateSchema(UPDATE_RADIO_CHANNEL_SCHEMA, body);
     const { unit, type } = await findUnit(unitId);
 
@@ -266,7 +276,20 @@ export class DispatchController {
     return { ...user, unit };
   }
 
-  protected async endInactiveIncidents(updatedAt: Date) {
+  @Post("/tones")
+  @UsePermissions({
+    permissions: [Permissions.Dispatch],
+    fallback: (u) => u.isDispatch,
+  })
+  async handleTones(@BodyParams() body: unknown): Promise<APITypes.PostDispatchTonesData> {
+    const data = validateSchema(TONES_SCHEMA, body);
+
+    this.socket.emitTones(data);
+
+    return true;
+  }
+
+  private async endInactiveIncidents(updatedAt: Date) {
     const incidents = await prisma.leoIncident.findMany({
       where: { isActive: true, updatedAt: { not: { gte: updatedAt } } },
       include: { unitsInvolved: true },

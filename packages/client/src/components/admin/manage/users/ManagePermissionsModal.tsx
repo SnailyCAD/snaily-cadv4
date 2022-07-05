@@ -1,5 +1,4 @@
 import * as React from "react";
-import type { User } from "@snailycad/types";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
@@ -17,9 +16,12 @@ import { Button } from "components/Button";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { Input } from "components/form/inputs/Input";
+import type { GetManageUserByIdData, PutManageUserPermissionsByIdData } from "@snailycad/types/api";
+import type { User } from "@snailycad/types";
 
 interface Props {
-  user: User;
+  user: Pick<GetManageUserByIdData, "permissions" | "id" | "roles">;
+  isReadOnly?: boolean;
   onUpdate?(user: User): void;
 }
 
@@ -53,17 +55,20 @@ const groups = [
   },
 ];
 
-export function ManagePermissionsModal({ user, onUpdate }: Props) {
+export function ManagePermissionsModal({ user, onUpdate, isReadOnly }: Props) {
   const [search, setSearch] = React.useState("");
 
   const t = useTranslations("Management");
   const common = useTranslations("Common");
   const { closeModal, isOpen } = useModal();
-  const userPermissions = getPermissions(user.permissions ?? []);
+  const userPermissions = getPermissions(user.permissions);
   const { state, execute } = useFetch();
 
   async function onSubmit(data: typeof INITIAL_VALUES) {
-    const { json } = await execute(`/admin/manage/users/permissions/${user.id}`, {
+    if (isReadOnly) return;
+
+    const { json } = await execute<PutManageUserPermissionsByIdData>({
+      path: `/admin/manage/users/permissions/${user.id}`,
       method: "PUT",
       data: makePermissionsData(data),
     });
@@ -76,22 +81,28 @@ export function ManagePermissionsModal({ user, onUpdate }: Props) {
 
   function handleToggleAll(
     group: typeof groups[number],
-    values: Record<string, any>,
+    values: Record<Permissions, boolean>,
     setValues: any,
   ) {
-    const shouldSetFalse = group.permissions.every((v) => v === values[v]);
+    if (isReadOnly) return;
 
-    if (shouldSetFalse) {
-      const filtered = Object.values(values)
-        .filter((v) => !group.permissions.includes(v))
-        .reduce((ac, cv) => ({ ...ac, [cv]: cv }), {});
+    const groupPermissionValues = Object.entries(values).filter(([permission]) => {
+      return group.permissions.includes(permission as Permissions);
+    });
+    const areAllChecked = groupPermissionValues.every(([, b]) => b);
 
-      setValues({ ...filtered });
+    if (areAllChecked) {
+      const obj = groupPermissionValues.reduce(
+        (ac, [permission]) => ({ ...ac, [permission]: false }),
+        {},
+      );
+
+      setValues({ ...values, ...obj });
     } else {
       const obj = group.permissions.reduce(
         (ac, cv) => ({
           ...ac,
-          [cv]: cv,
+          [cv]: true,
         }),
         {},
       );
@@ -133,13 +144,15 @@ export function ManagePermissionsModal({ user, onUpdate }: Props) {
                     <header className="flex items-center gap-3 mb-2">
                       <h3 className="text-xl font-semibold">{group.name}</h3>
 
-                      <Button
-                        type="button"
-                        small
-                        onClick={() => handleToggleAll(group, values, setValues)}
-                      >
-                        Toggle all
-                      </Button>
+                      {isReadOnly ? null : (
+                        <Button
+                          type="button"
+                          size="xs"
+                          onClick={() => handleToggleAll(group, values, setValues)}
+                        >
+                          Toggle all
+                        </Button>
+                      )}
                     </header>
 
                     <div className="grid grid-cols-1 md:grid-cols-3">
@@ -152,10 +165,10 @@ export function ManagePermissionsModal({ user, onUpdate }: Props) {
                         return (
                           <FormField key={permission} className="my-1" label={formattedName}>
                             <Toggle
-                              onClick={handleChange}
-                              toggled={values[permission as PermissionNames]}
+                              onCheckedChange={handleChange}
+                              value={values[permission as PermissionNames]}
                               name={permission}
-                              disabled={isDisabled}
+                              disabled={isReadOnly || isDisabled}
                             />
                           </FormField>
                         );

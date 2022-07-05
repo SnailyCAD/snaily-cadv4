@@ -16,6 +16,7 @@ export const CAD_SETTINGS_SCHEMA = z.object({
 });
 
 export const CAD_MISC_SETTINGS_SCHEMA = z.object({
+  cadOGDescription: z.string().nullable().optional(),
   heightPrefix: z.string().max(255),
   weightPrefix: z.string().max(255),
   maxCitizensPerUser: z.number().nullable(),

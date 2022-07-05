@@ -11,6 +11,8 @@ import {
   Officer,
   CombinedLeoUnit,
   IncidentEvent,
+  EmsFdDeputy,
+  Warrant,
 } from "@prisma/client";
 import { prisma } from "lib/prisma";
 import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/activeOfficer";
@@ -36,6 +38,14 @@ export class Socket {
 
   emitCreateActiveIncident(incident: FullIncident) {
     this.io.sockets.emit(SocketEvents.CreateActiveIncident, incident);
+  }
+
+  emitCreateActiveWarrant(warrant: Warrant) {
+    this.io.sockets.emit(SocketEvents.CreateActiveWarrant, warrant);
+  }
+
+  emitUpdateActiveWarrant(warrant: Warrant) {
+    this.io.sockets.emit(SocketEvents.UpdateActiveWarrant, warrant);
   }
 
   emitUpdate911Call(call: Call911 & Record<string, any>) {
@@ -127,15 +137,19 @@ export class Socket {
     this.io.sockets.emit(SocketEvents.Signal100, value);
   }
 
-  emitPanicButtonLeo(officer: CombinedLeoUnit | Officer | null, type?: "ON" | "OFF") {
+  emitPanicButtonLeo(unit: CombinedLeoUnit | Officer | EmsFdDeputy | null, type?: "ON" | "OFF") {
     if (type === "OFF") {
-      this.io.sockets.emit(SocketEvents.PANIC_BUTTON_OFF, officer);
+      this.io.sockets.emit(SocketEvents.PANIC_BUTTON_OFF, unit);
     } else {
-      this.io.sockets.emit(SocketEvents.PANIC_BUTTON_ON, officer);
+      this.io.sockets.emit(SocketEvents.PANIC_BUTTON_ON, unit);
     }
   }
 
   emitActiveDispatchers() {
     this.io.sockets.emit(SocketEvents.UpdateDispatchersState);
+  }
+
+  emitTones(data: any) {
+    this.io.sockets.emit(SocketEvents.Tones, data);
   }
 }

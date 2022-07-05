@@ -9,6 +9,22 @@ export interface TableProps<T extends object = {}, RowProps extends object = {}>
   defaultSort?: DefaultSort<T, RowProps>;
   dragDrop?: DragDrop;
   isWithinCard?: boolean;
+  pagination?: Pagination;
+  maxItemsPerPage?: number;
+}
+
+export type PaginationFetchFunc = ({
+  pageSize,
+  pageIndex,
+}: {
+  pageSize: number;
+  pageIndex: number;
+}) => Promise<void>;
+
+interface Pagination {
+  enabled: boolean;
+  totalCount: number;
+  fetchData: { state: "loading" | "error" | null; fetch: PaginationFetchFunc };
 }
 
 interface DefaultSort<T extends object, RowProps extends object> {

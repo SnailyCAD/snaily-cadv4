@@ -8,7 +8,7 @@ import type { WeaponSearchResult } from "state/search/weaponSearchState";
 import { ModalIds } from "types/ModalIds";
 
 interface Props {
-  currentResult: NameSearchResult | VehicleSearchResult | WeaponSearchResult;
+  currentResult: NonNullable<NameSearchResult | VehicleSearchResult | WeaponSearchResult>;
   isLeo: boolean;
 }
 
@@ -43,7 +43,7 @@ export function CustomFieldsArea({ currentResult, isLeo }: Props) {
 
       {isLeo ? (
         <Button
-          small
+          size="xs"
           type="button"
           className="mt-2"
           onClick={() => openModal(ModalIds.ManageCitizenCustomFields)}

@@ -1,12 +1,13 @@
 import process from "node:process";
 import type { Response } from "@tsed/common";
-import { CookieSerializeOptions, serialize } from "cookie";
+import type { CookieSerializeOptions } from "cookie";
 
 interface SetCookieOptions {
   name: string;
   value: string;
   res: Response;
   expires: number;
+  httpOnly?: boolean;
 }
 
 export function setCookie(options: SetCookieOptions) {
@@ -27,13 +28,10 @@ export function setCookie(options: SetCookieOptions) {
     extraOptions.domain = process.env.DOMAIN;
   }
 
-  options.res.setHeader(
-    "Set-Cookie",
-    serialize(options.name, options.value, {
-      httpOnly: true,
-      expires: new Date(Date.now() + options.expires),
-      path: "/",
-      ...extraOptions,
-    }),
-  );
+  options.res.cookie(options.name, options.value, {
+    httpOnly: options.httpOnly ?? true,
+    expires: new Date(Date.now() + options.expires),
+    path: "/",
+    ...extraOptions,
+  });
 }

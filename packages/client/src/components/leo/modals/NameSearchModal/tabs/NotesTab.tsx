@@ -12,6 +12,8 @@ import { ModalIds } from "types/ModalIds";
 import { ManageNoteModal } from "../ManageNoteModal";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
+import type { DeleteNotesData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 interface Props<T extends VehicleSearchResult | NameSearchResult> {
   currentResult: VehicleSearchResult | NameSearchResult;
@@ -25,15 +27,18 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
   type,
 }: Props<T>) {
   const [open, setOpen] = React.useState(false);
-  const [tempNote, setTempNote] = React.useState<Note | null>(null);
   const t = useTranslations();
   const { openModal, closeModal } = useModal();
   const { state, execute } = useFetch();
 
+  const notes = getNotesFromCurrentResult(currentResult);
+  const [tempNote, noteState] = useTemporaryItem(notes);
+
   async function handleDelete() {
     if (!currentResult || !tempNote) return;
 
-    const { json } = await execute(`/notes/${tempNote.id}`, {
+    const { json } = await execute<DeleteNotesData>({
+      path: `/notes/${tempNote.id}`,
       method: "DELETE",
       data: { type, itemId: currentResult.id, text: tempNote.text },
     });
@@ -41,21 +46,21 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
     if (typeof json === "boolean") {
       setCurrentResult({
         ...currentResult,
-        notes: currentResult.notes?.filter((v) => v.id !== tempNote.id),
+        notes: notes?.filter((v) => v.id !== tempNote.id),
       } as T);
-      setTempNote(null);
+      noteState.setTempId(null);
       closeModal(ModalIds.AlertDeleteNote);
     }
   }
 
   function handleEditClick(note: Note) {
-    setTempNote(note);
+    noteState.setTempId(note.id);
     openModal(ModalIds.ManageNote);
     setOpen(true);
   }
 
   function handleDeleteClick(note: Note) {
-    setTempNote(note);
+    noteState.setTempId(note.id);
     openModal(ModalIds.AlertDeleteNote);
     setOpen(true);
   }
@@ -65,7 +70,8 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
     openModal(ModalIds.ManageNote);
   }
 
-  if (!currentResult || !Array.isArray(currentResult.notes)) {
+  const isConfidential = "isConfidential" in currentResult && currentResult.isConfidential;
+  if (!currentResult || isConfidential) {
     return null;
   }
 
@@ -81,16 +87,21 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
         </div>
       </header>
 
-      {currentResult.notes.length <= 0 ? (
+      {notes.length <= 0 ? (
         <p className="text-neutral-700 dark:text-gray-400 my-2">{t("Leo.noNotes")}</p>
       ) : (
         <Table
-          data={currentResult.notes.map((note) => ({
+          data={notes.map((note) => ({
             text: note.text,
             createdAt: <FullDate>{note.createdAt}</FullDate>,
             actions: (
               <>
-                <Button type="button" variant="success" small onClick={() => handleEditClick(note)}>
+                <Button
+                  type="button"
+                  variant="success"
+                  size="xs"
+                  onClick={() => handleEditClick(note)}
+                >
                   {t("Common.edit")}
                 </Button>
 
@@ -98,7 +109,7 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
                   type="button"
                   variant="danger"
                   className="ml-2"
-                  small
+                  size="xs"
                   onClick={() => handleDeleteClick(note)}
                 >
                   {t("Common.delete")}
@@ -120,7 +131,7 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
             currentResult={currentResult}
             type={type}
             onClose={() => {
-              setTempNote(null);
+              noteState.setTempId(null);
               setOpen(false);
             }}
             onCreate={(note) => {
@@ -128,17 +139,15 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
 
               setCurrentResult({
                 ...currentResult,
-                notes: [...(currentResult.notes ?? []), note],
+                notes: [...(notes ?? []), note],
               } as T);
             }}
             onUpdate={(note) => {
-              if (!currentResult.notes) return;
-              const notes = [...currentResult.notes];
-              const idx = notes.findIndex((v) => v.id === note.id);
+              const copiedNotes = [...notes];
+              const idx = copiedNotes.findIndex((v) => v.id === note.id);
+              copiedNotes[idx] = note;
 
-              notes[idx] = note;
-
-              setCurrentResult({ ...currentResult, notes } as T);
+              setCurrentResult({ ...currentResult, notes: copiedNotes } as T);
             }}
             note={tempNote}
           />
@@ -153,5 +162,26 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
         </>
       ) : null}
     </TabsContent>
+  );
+}
+
+function getNotesFromCurrentResult<T extends VehicleSearchResult | NameSearchResult>(
+  currentResult: Props<T>["currentResult"],
+) {
+  if (isNameSearchResult(currentResult)) {
+    if (currentResult.isConfidential) return [];
+    return currentResult.notes ?? [];
+  }
+
+  return currentResult.notes ?? [];
+}
+
+function isNameSearchResult(
+  currentResult: NameSearchResult | VehicleSearchResult,
+): currentResult is NameSearchResult {
+  return (
+    "isConfidential" in currentResult &&
+    "socialSecurityNumber" in currentResult &&
+    "name" in currentResult
   );
 }

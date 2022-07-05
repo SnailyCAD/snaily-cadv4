@@ -18,14 +18,21 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { AlertModal } from "components/modal/AlertModal";
 import { OfficerRank } from "components/leo/OfficerRank";
+import { Checkbox } from "components/form/inputs/Checkbox";
+import type {
+  DeleteManageUnitByIdData,
+  GetManageUnitsData,
+  PutManageUnitsOffDutyData,
+} from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 interface Props {
-  units: Unit[];
+  units: GetManageUnitsData;
   search: string;
 }
 
 export function AllUnitsTab({ search, units }: Props) {
-  const [tempUnit, setTempUnit] = React.useState<Unit | null>(null);
+  const [tempUnit, unitState] = useTemporaryItem(units);
 
   const tableSelect = useTableSelect(units, (u) => `${u.id}-${u.type}`);
   const { hasPermissions } = usePermission();
@@ -41,19 +48,20 @@ export function AllUnitsTab({ search, units }: Props) {
   const { openModal, closeModal } = useModal();
 
   function handleDeleteClick(unit: Unit) {
-    setTempUnit(unit);
+    unitState.setTempId(unit.id);
     openModal(ModalIds.AlertDeleteUnit);
   }
 
   async function handleDeleteUnit() {
     if (!tempUnit) return;
 
-    const { json } = await execute(`/admin/manage/units/${tempUnit.id}`, {
+    const { json } = await execute<DeleteManageUnitByIdData>({
+      path: `/admin/manage/units/${tempUnit.id}`,
       method: "DELETE",
     });
 
     if (json) {
-      setTempUnit(null);
+      unitState.setTempId(null);
       closeModal(ModalIds.AlertDeleteUnit);
 
       router.replace({
@@ -66,7 +74,8 @@ export function AllUnitsTab({ search, units }: Props) {
   async function setSelectedUnitsOffDuty() {
     if (tableSelect.selectedRows.length <= 0) return;
 
-    const { json } = await execute("/admin/manage/units/off-duty", {
+    const { json } = await execute<PutManageUnitsOffDutyData>({
+      path: "/admin/manage/units/off-duty",
       method: "PUT",
       data: { ids: tableSelect.selectedRows },
     });
@@ -111,10 +120,9 @@ export function AllUnitsTab({ search, units }: Props) {
 
             return {
               dropdown: (
-                <input
+                <Checkbox
                   checked={tableSelect.selectedRows.includes(`${unit.id}-${unit.type}`)}
                   onChange={() => tableSelect.handleCheckboxChange(unit)}
-                  type="checkbox"
                 />
               ),
               unit: LABELS[unit.type],
@@ -154,7 +162,7 @@ export function AllUnitsTab({ search, units }: Props) {
                   ) : null}
                   {hasDeletePermissions ? (
                     <Button
-                      small
+                      size="xs"
                       className="ml-2"
                       onClick={() => handleDeleteClick(unit)}
                       variant="danger"
@@ -208,7 +216,7 @@ export function AllUnitsTab({ search, units }: Props) {
             span: (c) => <span className="font-bold">{c}</span>,
             unit: `${generateCallsign(tempUnit)} ${makeUnitName(tempUnit)}`,
           })}
-          onClose={() => setTempUnit(null)}
+          onClose={() => unitState.setTempId(null)}
         />
       ) : null}
     </TabsContent>

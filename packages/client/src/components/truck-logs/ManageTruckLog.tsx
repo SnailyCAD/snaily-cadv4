@@ -6,20 +6,22 @@ import { Input } from "components/form/inputs/Input";
 import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
-import { useCitizen } from "context/CitizenContext";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
-import type { RegisteredVehicle, TruckLog } from "@snailycad/types";
+import type { RegisteredVehicle } from "@snailycad/types";
 import { useTranslations } from "use-intl";
+import { Textarea } from "components/form/Textarea";
+import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
+import type { GetTruckLogsData, PostTruckLogsData, PutTruckLogsData } from "@snailycad/types/api";
 
 interface Props {
-  log: TruckLog | null;
-  registeredVehicles: RegisteredVehicle[];
-  onUpdate?(old: TruckLog, newLog: TruckLog): void;
-  onCreate?(log: TruckLog): void;
+  log: GetTruckLogsData["logs"][number] | null;
+  registeredVehicles: Omit<RegisteredVehicle, "citizen">[];
+  onUpdate?(old: GetTruckLogsData["logs"][number], newLog: GetTruckLogsData["logs"][number]): void;
+  onCreate?(log: GetTruckLogsData["logs"][number]): void;
   onClose?(): void;
 }
 
@@ -34,7 +36,6 @@ export function ManageTruckLogModal({
   const t = useTranslations("TruckLogs");
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
-  const { citizens } = useCitizen();
 
   function handleClose() {
     onClose?.();
@@ -43,7 +44,8 @@ export function ManageTruckLogModal({
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (log) {
-      const { json } = await execute(`/truck-logs/${log.id}`, {
+      const { json } = await execute<PutTruckLogsData>({
+        path: `/truck-logs/${log.id}`,
         method: "PUT",
         data: values,
       });
@@ -53,7 +55,8 @@ export function ManageTruckLogModal({
         closeModal(ModalIds.ManageTruckLog);
       }
     } else {
-      const { json } = await execute("/truck-logs", {
+      const { json } = await execute<PostTruckLogsData>({
+        path: "/truck-logs",
         method: "POST",
         data: values,
       });
@@ -70,6 +73,8 @@ export function ManageTruckLogModal({
     startedAt: log?.startedAt ?? "",
     vehicleId: log?.vehicleId ?? "",
     citizenId: log?.citizenId ?? "",
+    citizenName: log?.citizen ? `$${log.citizen.name} ${log.citizen.surname}` : "",
+    notes: log?.notes ?? "",
   };
 
   const validate = handleValidate(CREATE_TRUCK_LOG_SCHEMA);
@@ -95,14 +100,10 @@ export function ManageTruckLogModal({
             </FormRow>
 
             <FormField errorMessage={errors.citizenId} label={t("driver")}>
-              <Select
-                name="citizenId"
-                onChange={handleChange}
-                values={citizens.map((citizen) => ({
-                  label: `${citizen.name} ${citizen.surname}`,
-                  value: citizen.id,
-                }))}
-                value={values.citizenId}
+              <CitizenSuggestionsField
+                fromAuthUserOnly
+                labelFieldName="citizenName"
+                valueFieldName="citizenId"
               />
             </FormField>
 
@@ -116,6 +117,10 @@ export function ManageTruckLogModal({
                 }))}
                 value={values.vehicleId}
               />
+            </FormField>
+
+            <FormField optional errorMessage={errors.notes} label={t("notes")}>
+              <Textarea name="notes" onChange={handleChange} value={values.notes} />
             </FormField>
 
             <footer className="flex justify-end mt-5">

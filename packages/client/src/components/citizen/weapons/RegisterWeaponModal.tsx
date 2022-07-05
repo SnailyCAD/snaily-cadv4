@@ -11,7 +11,7 @@ import useFetch from "lib/useFetch";
 import { useValues } from "src/context/ValuesContext";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import { Citizen, ValueLicenseType, Weapon, WeaponValue } from "@snailycad/types";
+import { ValueLicenseType, Weapon, WeaponValue } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import { useCitizen } from "context/CitizenContext";
 import { Input } from "components/form/inputs/Input";
@@ -19,16 +19,17 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { filterLicenseTypes } from "lib/utils";
 import { toastMessage } from "lib/toastMessage";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
+import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
+import type { PostCitizenWeaponData, PutCitizenWeaponData } from "@snailycad/types/api";
 
 interface Props {
-  weapon: Weapon | null;
-  citizens: Citizen[];
-  onCreate?(newV: Weapon): void;
-  onUpdate?(old: Weapon, newV: Weapon): void;
+  weapon: Omit<Weapon, "citizen"> | null;
+  onCreate?(newV: Omit<Weapon, "citizen">): void;
+  onUpdate?(old: Omit<Weapon, "citizen">, newV: Omit<Weapon, "citizen">): void;
   onClose?(): void;
 }
 
-export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, onUpdate }: Props) {
+export function RegisterWeaponModal({ weapon, onClose, onCreate, onUpdate }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const { pathname } = useRouter();
@@ -43,6 +44,7 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
   const { weapon: weapons, license } = useValues();
   const validate = handleValidate(WEAPON_SCHEMA);
   const isDisabled = pathname === "/citizen/[id]";
+  const isLeo = pathname.includes("/officer");
 
   function handleClose() {
     closeModal(ModalIds.RegisterWeapon);
@@ -51,16 +53,18 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (weapon) {
-      const { json } = await execute(`/weapons/${weapon.id}`, {
+      const { json } = await execute<PutCitizenWeaponData>({
+        path: `/weapons/${weapon.id}`,
         method: "PUT",
         data: values,
       });
 
       if (json?.id) {
-        onUpdate?.(weapon, json);
+        onUpdate?.(weapon, { ...weapon, ...json });
       }
     } else {
-      const { json } = await execute("/weapons", {
+      const { json } = await execute<PostCitizenWeaponData>({
+        path: "/weapons",
         method: "POST",
         data: values,
       });
@@ -82,6 +86,11 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
     registrationStatus: weapon?.registrationStatusId ?? "",
     citizenId: isDisabled ? citizen.id : weapon?.citizenId ?? "",
     serialNumber: weapon?.serialNumber ?? "",
+    name: isDisabled
+      ? `${citizen.name} ${citizen.surname}`
+      : weapon
+      ? `${(weapon as any).citizen?.name} ${(weapon as any).citizen?.surname}`
+      : "",
   };
 
   return (
@@ -111,15 +120,15 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
               </FormField>
             ) : (
               <FormField errorMessage={errors.model} label={tVehicle("model")}>
-                <InputSuggestions
-                  onSuggestionClick={(suggestion: WeaponValue) => {
+                <InputSuggestions<WeaponValue>
+                  onSuggestionClick={(suggestion) => {
                     setValues({
                       ...values,
                       modelName: suggestion.value.value,
                       model: suggestion.id,
                     });
                   }}
-                  Component={({ suggestion }: { suggestion: WeaponValue }) => (
+                  Component={({ suggestion }) => (
                     <p className="w-full text-left">{suggestion.value.value}</p>
                   )}
                   options={{
@@ -138,19 +147,12 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
             )}
 
             <FormField errorMessage={errors.citizenId} label={tVehicle("owner")}>
-              <Select
-                values={
-                  isDisabled
-                    ? [{ value: citizen.id, label: `${citizen.name} ${citizen.surname}` }]
-                    : citizens.map((citizen) => ({
-                        label: `${citizen.name} ${citizen.surname}`,
-                        value: citizen.id,
-                      }))
-                }
-                value={isDisabled ? citizen.id : values.citizenId}
-                name="citizenId"
-                onChange={handleChange}
-                disabled={isDisabled}
+              <CitizenSuggestionsField
+                fromAuthUserOnly={!isLeo}
+                allowUnknown={isLeo}
+                labelFieldName="name"
+                valueFieldName="citizenId"
+                isDisabled={isDisabled}
               />
             </FormField>
 

@@ -8,6 +8,7 @@ import { makeUnitName } from "lib/utils";
 import { isUnitCombined } from "@snailycad/utils";
 import * as modalButtons from "components/modal-buttons/buttons";
 import { ModalButton } from "components/modal-buttons/ModalButton";
+import type { PostLeoTogglePanicButtonData } from "@snailycad/types/api";
 
 const buttons: modalButtons.ModalButton[] = [
   modalButtons.switchDivision,
@@ -19,8 +20,8 @@ const buttons: modalButtons.ModalButton[] = [
   modalButtons.createWrittenWarningBtn,
   modalButtons.createTicketBtn,
   modalButtons.createArrestReportBtn,
-  modalButtons.createBoloBtn,
   modalButtons.createWarrantBtn,
+  modalButtons.createBoloBtn,
   modalButtons.notepadBtn,
 ];
 
@@ -29,12 +30,13 @@ export function ModalButtons() {
   const t = useTranslations();
   const { generateCallsign } = useGenerateCallsign();
 
-  const { execute } = useFetch();
+  const { state, execute } = useFetch();
 
   async function handlePanic() {
     if (!activeOfficer) return;
 
-    await execute("/leo/panic-button", {
+    await execute<PostLeoTogglePanicButtonData>({
+      path: "/leo/panic-button",
       method: "POST",
       data: { officerId: activeOfficer.id },
     });
@@ -75,7 +77,7 @@ export function ModalButtons() {
 
         <Button
           id="panicButton"
-          disabled={isButtonDisabled}
+          disabled={state === "loading" || isButtonDisabled}
           title={isButtonDisabled ? "Go on-duty before continuing" : t("Leo.panicButton")}
           onClick={handlePanic}
         >

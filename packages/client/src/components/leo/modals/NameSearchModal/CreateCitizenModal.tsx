@@ -5,45 +5,27 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { ManageCitizenForm } from "components/citizen/ManageCitizenForm";
-import { useValues } from "context/ValuesContext";
 import { Loader } from "components/Loader";
 import type { SelectValue } from "components/form/Select";
 import { useNameSearch } from "state/search/nameSearchState";
-
-let fetched = false;
-function useLoadValues() {
-  const { setValues } = useValues();
-
-  const { state, execute } = useFetch();
-
-  const handleFetch = React.useCallback(async () => {
-    const currentPaths =
-      "codes_10,penal_code,impound_lot,license,driverslicense_category,vehicle_flag,citizen_flag";
-    const { json } = await execute(`/admin/values/gender?paths=${currentPaths},ethnicity`, {
-      method: "GET",
-    });
-
-    if (json && Array.isArray(json)) {
-      setValues(json);
-      fetched = true;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  React.useEffect(() => {
-    if (fetched) return;
-    handleFetch();
-  }, [handleFetch]);
-
-  return { isLoading: state === "loading" };
-}
+import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
+import { ValueType } from "@snailycad/types";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import type {
+  PostCitizenImageByIdData,
+  PostSearchActionsCreateCitizen,
+} from "@snailycad/types/api";
 
 export function CreateCitizenModal() {
-  const { isLoading } = useLoadValues();
   const { isOpen, closeModal } = useModal();
   const t = useTranslations("Leo");
   const { state, execute } = useFetch();
   const { setCurrentResult, setResults } = useNameSearch();
+  const { CREATE_USER_CITIZEN_LEO } = useFeatureEnabled();
+  const { isLoading } = useLoadValuesClientSide({
+    enabled: CREATE_USER_CITIZEN_LEO,
+    valueTypes: [ValueType.GENDER, ValueType.ETHNICITY],
+  });
 
   function handleClose() {
     closeModal(ModalIds.CreateCitizen);
@@ -58,7 +40,8 @@ export function CreateCitizenModal() {
     data: any;
     helpers: any;
   }) {
-    const { json } = await execute("/search/actions/citizen", {
+    const { json } = await execute<PostSearchActionsCreateCitizen>({
+      path: "/search/actions/citizen",
       method: "POST",
       helpers,
       data: {
@@ -81,7 +64,8 @@ export function CreateCitizenModal() {
     if (json.id) {
       let imageJson;
       if (formData) {
-        const { json: _imageJson } = await execute(`/citizen/${json.id}`, {
+        const { json: _imageJson } = await execute<PostCitizenImageByIdData>({
+          path: `/citizen/${json.id}`,
           method: "POST",
           data: formData,
           helpers,

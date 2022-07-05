@@ -20,22 +20,31 @@ import { ModalIds } from "types/ModalIds";
 import { usePermission } from "hooks/usePermission";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
+import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
+import type { DeleteDLExamByIdData, GetDLExamsData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 interface Props {
-  exams: DLExam[];
+  data: GetDLExamsData;
 }
 
-export default function CitizenLogs({ exams: data }: Props) {
-  const [exams, setExams] = React.useState(data);
-  const [search, setSearch] = React.useState("");
-  const [tempExam, setTempExam] = React.useState<DLExam | null>(null);
-
+export default function CitizenLogs({ data }: Props) {
   const { hasPermissions } = usePermission();
   const { openModal, closeModal } = useModal();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const cT = useTranslations("Vehicles");
   const { state, execute } = useFetch();
+
+  const asyncTable = useAsyncTable({
+    fetchOptions: {
+      onResponse: (json: GetDLExamsData) => ({ data: json.exams, totalCount: json.totalCount }),
+      path: "/leo/dl-exams",
+    },
+    totalCount: data.totalCount,
+    initialData: data.exams,
+  });
+  const [tempExam, examState] = useTemporaryItem(asyncTable.data);
 
   const PASS_FAIL_LABELS = {
     PASSED: cT("passed"),
@@ -45,24 +54,25 @@ export default function CitizenLogs({ exams: data }: Props) {
 
   async function handleDelete() {
     if (!tempExam) return;
-    const { json } = await execute(`/leo/dl-exams/${tempExam.id}`, {
+    const { json } = await execute<DeleteDLExamByIdData>({
+      path: `/leo/dl-exams/${tempExam.id}`,
       method: "DELETE",
     });
 
     if (typeof json === "boolean") {
       closeModal(ModalIds.AlertDeleteDLExam);
-      setExams((p) => p.filter((v) => v.id !== tempExam.id));
-      setTempExam(null);
+      asyncTable.setData((p) => p.filter((v) => v.id !== tempExam.id));
+      examState.setTempId(null);
     }
   }
 
   function handleDeleteClick(exam: DLExam) {
-    setTempExam(exam);
+    examState.setTempId(exam.id);
     openModal(ModalIds.AlertDeleteDLExam);
   }
 
   function handleEditClick(exam: DLExam) {
-    setTempExam(exam);
+    examState.setTempId(exam.id);
     openModal(ModalIds.ManageDLExam);
   }
 
@@ -84,21 +94,30 @@ export default function CitizenLogs({ exams: data }: Props) {
         ) : null}
       </header>
 
-      {exams.length <= 0 ? (
+      {data.exams.length <= 0 ? (
         <p className="mt-5">{t("noDLExams")}</p>
       ) : (
         <>
           <FormField label={common("search")} className="my-2">
-            <Input onChange={(e) => setSearch(e.target.value)} value={search} />
+            <Input
+              onChange={(e) => asyncTable.search.setSearch(e.target.value)}
+              value={asyncTable.search.search}
+            />
           </FormField>
 
+          {asyncTable.search.search && asyncTable.pagination.totalCount !== data.totalCount ? (
+            <p className="italic text-base font-semibold">
+              Showing {asyncTable.pagination.totalCount} result(s)
+            </p>
+          ) : null}
+
           <Table
-            filter={search}
-            defaultSort={{
-              columnId: "createdAt",
-              descending: true,
+            pagination={{
+              enabled: true,
+              totalCount: asyncTable.pagination.totalCount,
+              fetchData: asyncTable.pagination,
             }}
-            data={exams.map((exam) => {
+            data={asyncTable.data.map((exam) => {
               const hasPassedOrFailed = exam.status !== DLExamStatus.IN_PROGRESS;
               return {
                 rowProps: {
@@ -122,14 +141,14 @@ export default function CitizenLogs({ exams: data }: Props) {
                 actions: (
                   <>
                     {hasPassedOrFailed ? null : (
-                      <Button variant="success" small onClick={() => handleEditClick(exam)}>
+                      <Button variant="success" size="xs" onClick={() => handleEditClick(exam)}>
                         {common("edit")}
                       </Button>
                     )}
                     <Button
                       className="ml-2"
                       variant="danger"
-                      small
+                      size="xs"
                       onClick={() => handleDeleteClick(exam)}
                     >
                       {common("delete")}
@@ -160,22 +179,22 @@ export default function CitizenLogs({ exams: data }: Props) {
         description={t("alert_deleteDLExam")}
         onDeleteClick={handleDelete}
         state={state}
-        onClose={() => setTempExam(null)}
+        onClose={() => examState.setTempId(null)}
       />
 
       <ManageDLExamModal
-        onClose={() => setTempExam(null)}
+        onClose={() => examState.setTempId(null)}
         onCreate={(exam) => {
-          setExams((p) => [exam, ...p]);
+          asyncTable.setData((p) => [exam, ...p]);
         }}
         onUpdate={(oldExam, newExam) => {
-          setExams((prev) => {
+          asyncTable.setData((prev) => {
             const idx = prev.findIndex((v) => v.id === oldExam.id);
             prev[idx] = newExam;
 
             return prev;
           });
-          setTempExam(null);
+          examState.setTempId(null);
         }}
         exam={tempExam}
       />
@@ -183,19 +202,20 @@ export default function CitizenLogs({ exams: data }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ req, locale }) => {
+  const user = await getSessionUser(req);
   const [exams, values] = await requestAll(req, [
-    ["/leo/dl-exams", []],
+    ["/leo/dl-exams", { exams: [], totalCount: 0 }],
     ["/admin/values/driverslicense_category?paths=license", []],
   ]);
 
   return {
     props: {
       values,
-      session: await getSessionUser(req),
-      exams,
+      session: user,
+      data: exams,
       messages: {
-        ...(await getTranslations(["leo", "citizen", "common"], locale)),
+        ...(await getTranslations(["leo", "citizen", "common"], user?.locale ?? locale)),
       },
     },
   };

@@ -45,7 +45,7 @@ export default function PenalCodesPage() {
             <Input onChange={(e) => setSearch(e.target.value)} value={search} />
           </FormField>
 
-          <ul className="flex flex-col mt-3">
+          <ul className="flex flex-col mt-3 gap-y-2">
             {filtered.map((penalCode) => {
               const description = dataToSlate(penalCode);
 
@@ -65,14 +65,15 @@ export default function PenalCodesPage() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+  const user = await getSessionUser(req);
   const [values] = await requestAll(req, [["/admin/values/penal_code", []]]);
 
   return {
     props: {
-      session: await getSessionUser(req),
+      session: user,
       values,
       messages: {
-        ...(await getTranslations(["leo", "common"], locale)),
+        ...(await getTranslations(["leo", "common"], user?.locale ?? locale)),
       },
     },
   };

@@ -11,73 +11,82 @@ import {
   ValueType,
   type VehicleValue,
   QualificationValue,
+  CallTypeValue,
 } from "@snailycad/types";
+import type { GetValuesData } from "@snailycad/types/api";
+import { hasValueObj, isBaseValue, isPenalCodeValue } from "@snailycad/utils";
+import { useRouter } from "next/router";
 
-interface ContextValue<T extends ValueType, Custom = Value<T>> {
+interface ContextValue<Custom = Value> {
   type: ValueType;
-  values: Custom extends undefined ? Value<T>[] : Custom[];
+  values: Custom extends undefined ? Value[] : Custom[];
 }
 
 interface Context {
-  license: ContextValue<ValueType.LICENSE>;
-  gender: ContextValue<ValueType.GENDER>;
-  ethnicity: ContextValue<ValueType.ETHNICITY>;
-  weapon: ContextValue<ValueType.WEAPON, VehicleValue>;
-  bloodGroup: ContextValue<ValueType.BLOOD_GROUP>;
-  officerRank: ContextValue<ValueType.OFFICER_RANK>;
-  division: ContextValue<ValueType.DIVISION, DivisionValue>;
-  businessRole: ContextValue<ValueType.BUSINESS_ROLE, EmployeeValue>;
-  codes10: ContextValue<ValueType.CODES_10, StatusValue>;
-  vehicle: ContextValue<ValueType.VEHICLE, VehicleValue>;
-  vehicleFlag: ContextValue<ValueType.VEHICLE_FLAG>;
-  citizenFlag: ContextValue<ValueType.CITIZEN_FLAG>;
-  penalCode: ContextValue<ValueType.PENAL_CODE, PenalCode>;
+  license: ContextValue;
+  gender: ContextValue;
+  ethnicity: ContextValue;
+  weapon: ContextValue<VehicleValue>;
+  bloodGroup: ContextValue;
+  officerRank: ContextValue;
+  division: ContextValue<DivisionValue>;
+  businessRole: ContextValue<EmployeeValue>;
+  codes10: ContextValue<StatusValue>;
+  vehicle: ContextValue<VehicleValue>;
+  vehicleFlag: ContextValue;
+  citizenFlag: ContextValue;
+  penalCode: ContextValue<PenalCode>;
   penalCodeGroups: PenalCodeGroup[];
-  department: ContextValue<ValueType.DEPARTMENT, DepartmentValue>;
-  driverslicenseCategory: ContextValue<
-    ValueType.DRIVERSLICENSE_CATEGORY,
-    DriversLicenseCategoryValue
-  >;
-  impoundLot: ContextValue<ValueType.IMPOUND_LOT>;
-  qualification: ContextValue<ValueType.QUALIFICATION, QualificationValue>;
-  setValues: React.Dispatch<
-    React.SetStateAction<
-      {
-        type: ValueType;
-        values: Value<ValueType>[];
-      }[]
-    >
-  >;
+  department: ContextValue<DepartmentValue>;
+  driverslicenseCategory: ContextValue<DriversLicenseCategoryValue>;
+  impoundLot: ContextValue;
+  qualification: ContextValue<QualificationValue>;
+  setValues: React.Dispatch<React.SetStateAction<GetValuesData>>;
+  callType: ContextValue<CallTypeValue>;
 }
 
 const ValuesContext = React.createContext<Context | undefined>(undefined);
 
 interface ProviderProps {
   children: React.ReactChild | React.ReactChild[];
-  initialData: {
-    values: {
-      type: ValueType;
-      values: Value<ValueType>[];
-    }[];
-  };
+  initialData: { values: GetValuesData };
 }
 
 export function ValuesProvider({ initialData, children }: ProviderProps) {
+  const router = useRouter();
+  const isAdmin = router.pathname.startsWith("/admin");
   const [values, setValues] = React.useState<ProviderProps["initialData"]["values"]>(
     Array.isArray(initialData.values) ? initialData.values : [],
   );
 
+  function removeDisabledValues(values: GetValuesData[number]) {
+    if (isAdmin) return values;
+
+    return {
+      ...values,
+      values: values.values.filter((value) => {
+        if (isBaseValue(value)) return !value.isDisabled;
+        if (hasValueObj(value)) return !value.value.isDisabled;
+        if (isPenalCodeValue(value)) return true;
+        return true;
+      }),
+    };
+  }
+
   const data = React.useMemo(() => {
     return Object.values(ValueType).reduce((obj, valueType) => {
-      const v = values.find((v) => v.type === valueType) ?? { values: [], type: valueType };
+      const valuesForType = values.find((v) => v.type === valueType) ?? {
+        values: [],
+        type: valueType,
+      };
 
-      if (v.type === "PENAL_CODE") {
-        obj["penalCodeGroups"] = (v as any).groups ?? [];
+      if (valuesForType.type === "PENAL_CODE" && Array.isArray(valuesForType.groups)) {
+        obj["penalCodeGroups"] = valuesForType.groups;
       }
 
-      return { ...obj, [normalizeValue(valueType)]: v };
+      return { ...obj, [normalizeValue(valueType)]: removeDisabledValues(valuesForType) };
     }, {} as Context);
-  }, [values]);
+  }, [values]); // eslint-disable-line
 
   const value = { ...data, setValues };
 

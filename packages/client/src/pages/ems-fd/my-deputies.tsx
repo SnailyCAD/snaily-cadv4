@@ -14,11 +14,12 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useImageUrl } from "hooks/useImageUrl";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
-import type { EmsFdDeputy } from "@snailycad/types";
 import { Permissions } from "@snailycad/permissions";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { OfficerRank } from "components/leo/OfficerRank";
 import { UnitDepartmentStatus } from "components/leo/UnitDepartmentStatus";
+import type { DeleteMyDeputyByIdData, GetMyDeputiesData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageDeputyModal = dynamic(
@@ -26,7 +27,7 @@ const ManageDeputyModal = dynamic(
 );
 
 interface Props {
-  deputies: EmsFdDeputy[];
+  deputies: GetMyDeputiesData["deputies"];
 }
 
 export default function MyDeputies({ deputies: data }: Props) {
@@ -39,12 +40,15 @@ export default function MyDeputies({ deputies: data }: Props) {
   const { BADGE_NUMBERS } = useFeatureEnabled();
 
   const [deputies, setDeputies] = React.useState(data);
-  const [tempDeputy, setTempDeputy] = React.useState<EmsFdDeputy | null>(null);
+  const [tempDeputy, deputyState] = useTemporaryItem(deputies);
 
-  async function handleDeleteOfficer() {
+  async function handleDeleteDeputy() {
     if (!tempDeputy) return;
 
-    const { json } = await execute(`/ems-fd/${tempDeputy.id}`, { method: "DELETE" });
+    const { json } = await execute<DeleteMyDeputyByIdData>({
+      path: `/ems-fd/${tempDeputy.id}`,
+      method: "DELETE",
+    });
 
     if (json) {
       closeModal(ModalIds.AlertDeleteDeputy);
@@ -52,13 +56,13 @@ export default function MyDeputies({ deputies: data }: Props) {
     }
   }
 
-  function handleEditClick(deputy: EmsFdDeputy) {
-    setTempDeputy(deputy);
+  function handleEditClick(deputy: GetMyDeputiesData["deputies"][number]) {
+    deputyState.setTempId(deputy.id);
     openModal(ModalIds.ManageDeputy);
   }
 
-  function handleDeleteClick(deputy: EmsFdDeputy) {
-    setTempDeputy(deputy);
+  function handleDeleteClick(deputy: GetMyDeputiesData["deputies"][number]) {
+    deputyState.setTempId(deputy.id);
     openModal(ModalIds.AlertDeleteDeputy);
   }
 
@@ -99,14 +103,14 @@ export default function MyDeputies({ deputies: data }: Props) {
             position: deputy.position ?? common("none"),
             actions: (
               <>
-                <Button small onClick={() => handleEditClick(deputy)} variant="success">
+                <Button size="xs" onClick={() => handleEditClick(deputy)} variant="success">
                   {common("edit")}
                 </Button>
                 <Button
                   onClick={() => handleDeleteClick(deputy)}
                   className="ml-2"
                   variant="danger"
-                  small
+                  size="xs"
                 >
                   {common("delete")}
                 </Button>
@@ -138,7 +142,7 @@ export default function MyDeputies({ deputies: data }: Props) {
           });
         }}
         deputy={tempDeputy}
-        onClose={() => setTempDeputy(null)}
+        onClose={() => deputyState.setTempId(null)}
       />
 
       <AlertModal
@@ -148,8 +152,8 @@ export default function MyDeputies({ deputies: data }: Props) {
           deputy: tempDeputy && makeUnitName(tempDeputy),
         })}
         id={ModalIds.AlertDeleteDeputy}
-        onDeleteClick={handleDeleteOfficer}
-        onClose={() => setTempDeputy(null)}
+        onDeleteClick={handleDeleteDeputy}
+        onClose={() => deputyState.setTempId(null)}
         state={state}
       />
     </Layout>
@@ -157,20 +161,19 @@ export default function MyDeputies({ deputies: data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const [{ deputies }, citizens, values] = await requestAll(req, [
+  const user = await getSessionUser(req);
+  const [{ deputies }, values] = await requestAll(req, [
     ["/ems-fd", { deputies: [] }],
-    ["/citizen", []],
     ["/admin/values/department?paths=division", []],
   ]);
 
   return {
     props: {
-      session: await getSessionUser(req),
+      session: user,
       deputies,
       values,
-      citizens,
       messages: {
-        ...(await getTranslations(["ems-fd", "leo", "common"], locale)),
+        ...(await getTranslations(["ems-fd", "leo", "common"], user?.locale ?? locale)),
       },
     },
   };

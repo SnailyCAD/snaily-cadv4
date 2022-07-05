@@ -1,10 +1,8 @@
 import * as React from "react";
 import type { GetServerSideProps } from "next";
 import Link from "next/link";
-import { PersonFill } from "react-bootstrap-icons";
 import dynamic from "next/dynamic";
 import { useTranslations } from "use-intl";
-import type { Citizen, User } from "@snailycad/types";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -14,12 +12,13 @@ import { useModal } from "state/modalState";
 import { requestAll } from "lib/utils";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useAreaOfPlay } from "hooks/global/useAreaOfPlay";
-import { useImageUrl } from "hooks/useImageUrl";
 import { Title } from "components/shared/Title";
+import { CitizenList } from "components/citizen/citizen-list/CitizenList";
+import type { GetCitizensData } from "@snailycad/types/api";
 
 const RegisterVehicleModal = dynamic(
   async () =>
-    (await import("components/citizen/vehicles/RegisterVehicleModal")).RegisterVehicleModal,
+    (await import("components/citizen/vehicles/modals/RegisterVehicleModal")).RegisterVehicleModal,
 );
 const RegisterWeaponModal = dynamic(
   async () => (await import("components/citizen/weapons/RegisterWeaponModal")).RegisterWeaponModal,
@@ -32,18 +31,16 @@ const Manage911CallModal = dynamic(
 );
 
 interface Props {
-  citizens: (Citizen & { user?: Pick<User, "username"> })[];
+  citizens: GetCitizensData;
 }
 
 export default function CitizenPage({ citizens }: Props) {
   const t = useTranslations("Citizen");
-  const common = useTranslations("Common");
+  const { TOW, TAXI, WEAPON_REGISTRATION, CALLS_911 } = useFeatureEnabled();
 
   const { openModal, closeModal } = useModal();
   const [modal, setModal] = React.useState<string | null>(null);
-  const { TOW, TAXI, WEAPON_REGISTRATION, CALLS_911, COMMON_CITIZEN_CARDS } = useFeatureEnabled();
   const { showAop, areaOfPlay } = useAreaOfPlay();
-  const { makeImageUrl } = useImageUrl();
 
   return (
     <Layout className="dark:text-white">
@@ -55,109 +52,68 @@ export default function CitizenPage({ citizens }: Props) {
       </h1>
 
       <ul className="grid grid-cols-1 gap-2 mb-3 sm:grid-cols-2 md:grid-cols-3">
-        <Link href="/citizen/create">
-          <a
-            href="/citizen/create"
-            className={`rounded-md transition-all p-1 px-4 ${buttonVariants.default}`}
-          >
-            {t("createCitizen")}
-          </a>
-        </Link>
-        <Button onClick={() => openModal(ModalIds.RegisterVehicle)} className="text-left">
-          {t("registerVehicle")}
-        </Button>
-        {WEAPON_REGISTRATION ? (
-          <Button onClick={() => openModal(ModalIds.RegisterWeapon)} className="text-left">
-            {t("registerWeapon")}
+        <li>
+          <Link href="/citizen/create">
+            <a
+              href="/citizen/create"
+              className={`rounded-md transition-all p-1 px-4 ${buttonVariants.default} block w-full`}
+            >
+              {t("createCitizen")}
+            </a>
+          </Link>
+        </li>
+        <li>
+          <Button onClick={() => openModal(ModalIds.RegisterVehicle)} className="text-left w-full">
+            {t("registerVehicle")}
           </Button>
+        </li>
+        {WEAPON_REGISTRATION ? (
+          <li>
+            <Button onClick={() => openModal(ModalIds.RegisterWeapon)} className="text-left w-full">
+              {t("registerWeapon")}
+            </Button>
+          </li>
         ) : null}
 
         {TOW ? (
-          <Button
-            onClick={() => {
-              setModal("tow");
-              openModal(ModalIds.ManageTowCall);
-            }}
-            className="text-left"
-          >
-            {t("createTowCall")}
-          </Button>
+          <li>
+            <Button
+              onClick={() => {
+                setModal("tow");
+                openModal(ModalIds.ManageTowCall);
+              }}
+              className="text-left w-full"
+            >
+              {t("createTowCall")}
+            </Button>
+          </li>
         ) : null}
         {TAXI ? (
-          <Button
-            onClick={() => {
-              setModal("taxi");
-              openModal(ModalIds.ManageTowCall);
-            }}
-            className="text-left"
-          >
-            {t("createTaxiCall")}
-          </Button>
+          <li>
+            <Button
+              onClick={() => {
+                setModal("taxi");
+                openModal(ModalIds.ManageTowCall);
+              }}
+              className="text-left w-full"
+            >
+              {t("createTaxiCall")}
+            </Button>
+          </li>
         ) : null}
         {CALLS_911 ? (
-          <Button onClick={() => openModal(ModalIds.Manage911Call)} className="text-left">
-            {t("create911Call")}
-          </Button>
+          <li>
+            <Button onClick={() => openModal(ModalIds.Manage911Call)} className="text-left w-full">
+              {t("create911Call")}
+            </Button>
+          </li>
         ) : null}
       </ul>
 
-      <ul
-        className={
-          citizens.length <= 0 ? "flex flex-col space-y-3" : "grid grid-cols-1 sm:grid-cols-2 gap-2"
-        }
-      >
-        {citizens.length <= 0 ? (
-          <p className="font-medium text-gray-600 dark:text-gray-300">{t("userNoCitizens")}</p>
-        ) : (
-          citizens.map((citizen) => (
-            <li
-              key={citizen.id}
-              className="flex items-center justify-between p-3 bg-gray-200 rounded-md dark:bg-gray-2"
-            >
-              <div className="flex items-center space-x-3">
-                {citizen.imageId ? (
-                  <img
-                    draggable={false}
-                    className="object-cover rounded-full w-14 h-14"
-                    src={makeImageUrl("citizens", citizen.imageId)}
-                  />
-                ) : (
-                  <PersonFill className="w-12 h-12 text-gray-500/60" />
-                )}
+      <CitizenList citizens={citizens} />
 
-                <div className="flex flex-col">
-                  <p className="text-xl font-semibold">
-                    {citizen.name} {citizen.surname}
-                  </p>
-
-                  {COMMON_CITIZEN_CARDS ? <p>{citizen.user?.username ?? common("none")}</p> : null}
-                </div>
-              </div>
-
-              <Link href={`/citizen/${citizen.id}`}>
-                <a
-                  href={`/citizen/${citizen.id}`}
-                  className={`rounded-md transition-all p-1 px-3 ${buttonVariants.default}`}
-                >
-                  {t("viewCitizen")}
-                </a>
-              </Link>
-            </li>
-          ))
-        )}
-      </ul>
-
-      <RegisterVehicleModal
-        onCreate={() => closeModal(ModalIds.RegisterVehicle)}
-        citizens={citizens}
-        vehicle={null}
-      />
-
-      <RegisterWeaponModal
-        onCreate={() => closeModal(ModalIds.RegisterWeapon)}
-        citizens={citizens}
-        weapon={null}
-      />
+      <RegisterVehicleModal onCreate={() => closeModal(ModalIds.RegisterVehicle)} vehicle={null} />
+      <RegisterWeaponModal onCreate={() => closeModal(ModalIds.RegisterWeapon)} weapon={null} />
       <Manage911CallModal call={null} />
       <ManageCallModal isTow={modal === "tow"} call={null} />
     </Layout>
@@ -165,8 +121,9 @@ export default function CitizenPage({ citizens }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, req }) => {
+  const user = await getSessionUser(req);
   const [data, values] = await requestAll(req, [
-    ["/citizen", []],
+    ["/citizen", { citizens: [], totalCount: 0 }],
     ["/admin/values/license", []],
   ]);
 
@@ -174,9 +131,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, re
     props: {
       values,
       citizens: data ?? [],
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["citizen", "calls", "common"], locale)),
+        ...(await getTranslations(["citizen", "calls", "common"], user?.locale ?? locale)),
       },
     },
   };

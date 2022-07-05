@@ -13,6 +13,7 @@ import { Select } from "components/form/Select";
 import { FullDate } from "components/shared/FullDate";
 import type { Warrant } from "@snailycad/types";
 import { TabsContent } from "components/shared/TabList";
+import type { DeleteRecordsByIdData, PutWarrantsData } from "@snailycad/types/api";
 
 const values = [
   { label: "Inactive", value: "inactive" },
@@ -30,20 +31,19 @@ export function NameSearchWarrantsTab() {
   async function handleDelete() {
     const warrant = getPayload<Warrant>(ModalIds.AlertRevokeWarrant);
     if (!warrant) return;
+    if (!currentResult || currentResult.isConfidential) return;
 
-    const { json } = await execute(`/records/${warrant.id}`, {
+    const { json } = await execute<DeleteRecordsByIdData>({
+      path: `/records/${warrant.id}`,
       data: { type: "WARRANT" },
       method: "DELETE",
     });
 
     if (json) {
-      if (currentResult) {
-        setCurrentResult({
-          ...currentResult,
-          warrants: currentResult.warrants.filter((v) => v.id !== warrant.id),
-        });
-      }
-
+      setCurrentResult({
+        ...currentResult,
+        warrants: currentResult.warrants.filter((v) => v.id !== warrant.id),
+      });
       closeModal(ModalIds.AlertRevokeWarrant);
     }
   }
@@ -53,12 +53,15 @@ export function NameSearchWarrantsTab() {
   }
 
   async function handleChange(value: string, warrant: Warrant) {
-    const { json } = await execute(`/records/warrant/${warrant.id}`, {
+    if (!currentResult || currentResult.isConfidential) return;
+
+    const { json } = await execute<PutWarrantsData>({
+      path: `/records/warrant/${warrant.id}`,
       data: { status: value.toUpperCase(), type: "WARRANT" },
       method: "PUT",
     });
 
-    if (json && currentResult) {
+    if (json) {
       setCurrentResult({
         ...currentResult,
         warrants: currentResult.warrants.map((v) => {
@@ -72,7 +75,7 @@ export function NameSearchWarrantsTab() {
     }
   }
 
-  if (!currentResult) {
+  if (!currentResult || currentResult.isConfidential) {
     return null;
   }
 
@@ -91,7 +94,9 @@ export function NameSearchWarrantsTab() {
                 const value = values.find((v) => v.value === warrant.status.toLowerCase());
 
                 return {
-                  officer: `${generateCallsign(warrant.officer)} ${makeUnitName(warrant.officer)}`,
+                  officer: warrant.officer
+                    ? `${generateCallsign(warrant.officer)} ${makeUnitName(warrant.officer)}`
+                    : "—",
                   description: warrant.description,
                   createdAt: <FullDate>{warrant.createdAt}</FullDate>,
                   actions: (
@@ -105,7 +110,7 @@ export function NameSearchWarrantsTab() {
                       <Button
                         type="button"
                         onClick={() => handleDeleteClick(warrant)}
-                        small
+                        size="xs"
                         variant="danger"
                       >
                         {t("Leo.revoke")}

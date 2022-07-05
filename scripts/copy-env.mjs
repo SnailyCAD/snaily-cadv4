@@ -2,37 +2,41 @@ import "dotenv/config";
 import process from "node:process";
 import { one } from "copy";
 import { join } from "node:path";
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFile, writeFile } from "node:fs/promises";
 
 const DEFAULT_PORT = "3000";
 
-function addPortToClientPackageJson() {
-  const port = process.env.PORT_CLIENT;
+const UNIX_SLASHES_REGEX = /\/packages\/client/;
+const WIN_SLASHES_REGEX = /\\packages\\client/;
 
+async function addPortToClientPackageJson() {
   if (process.env.NODE_ENV === "development") return;
-  if (DEFAULT_PORT === port) return;
 
-  let dir = join(process.cwd(), "packages", "client");
-  const includesMultipleClients = dir.split("/").filter((v) => v === "client").length >= 2;
+  try {
+    const port = process.env.PORT_CLIENT;
+    if (!port) return;
 
-  if (includesMultipleClients) {
-    dir = dir.replaceAll("packages/client", "");
-    dir = join(dir, "packages/client");
-  }
+    let dir = join(process.cwd(), "packages", "client");
+    const unixMatch = process.cwd().match(UNIX_SLASHES_REGEX);
+    const winMatch = process.cwd().match(WIN_SLASHES_REGEX);
 
-  let json = readFileSync(join(dir, "package.json"), "utf8");
+    if (unixMatch || winMatch) {
+      dir = process.cwd();
+    }
 
-  if (port) {
-    json = JSON.parse(json);
-    json.scripts.start = `yarn next start -p ${port}`;
-    json = JSON.stringify(json, null, 2);
     const jsonFilePath = join(dir, "package.json");
+    const json = JSON.parse(await readFile(jsonFilePath, "utf8"));
 
-    writeFileSync(jsonFilePath, json, (err) => {
-      if (err) {
-        console.log(err);
-      }
-    });
+    if (!json.scripts.start.includes(`-p ${DEFAULT_PORT}`) && port === DEFAULT_PORT) {
+      json.scripts.start = "yarn next start"; // reset the port back to default
+    } else {
+      json.scripts.start = `yarn next start -p ${port}`;
+    }
+
+    await writeFile(jsonFilePath, JSON.stringify(json, null, 2));
+  } catch (e) {
+    console.log(e);
+    console.log("Could not set the PORT_CLIENT. Continuing build...");
   }
 }
 
@@ -66,10 +70,6 @@ async function copyEnv(distDir) {
       const isApi = distDir.endsWith("api");
       const type = isClient ? "client" : isApi ? "api" : null;
 
-      if (isClient) {
-        addPortToClientPackageJson();
-      }
-
       if (type) {
         console.log(`✅ copied .env — ${type}`);
       }
@@ -81,6 +81,7 @@ async function copyEnv(distDir) {
 
 if (copyToClient) {
   const CLIENT_PACKAGE_PATH = join(process.cwd(), "packages", "client");
+  addPortToClientPackageJson();
   copyEnv(CLIENT_PACKAGE_PATH);
 }
 

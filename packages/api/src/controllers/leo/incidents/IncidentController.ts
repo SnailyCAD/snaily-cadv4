@@ -4,17 +4,34 @@ import { NotFound, InternalServerError, BadRequest } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
-import { leoProperties } from "lib/leo/activeOfficer";
+import { leoProperties, unitProperties, _leoProperties } from "lib/leo/activeOfficer";
 import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
-import { Officer, ShouldDoType, MiscCadSettings } from "@prisma/client";
+import { Officer, ShouldDoType, MiscCadSettings, CombinedLeoUnit } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { Socket } from "services/SocketService";
 import type { z } from "zod";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
-import { assignedUnitsInclude } from "controllers/dispatch/911-calls/Calls911Controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
+import { getFirstOfficerFromActiveOfficer, getPrismaNameActiveCallIncident } from "lib/leo/utils";
+import type * as APITypes from "@snailycad/types/api";
+
+export const assignedUnitsInclude = {
+  include: {
+    officer: { include: _leoProperties },
+    deputy: { include: unitProperties },
+    combinedUnit: {
+      include: {
+        status: { include: { value: true } },
+        department: { include: { value: true } },
+        officers: {
+          include: _leoProperties,
+        },
+      },
+    },
+  },
+};
 
 export const incidentInclude = {
   creator: { include: leoProperties },
@@ -37,7 +54,7 @@ export class IncidentController {
     permissions: [Permissions.Dispatch, Permissions.ViewIncidents, Permissions.ManageIncidents],
     fallback: (u) => u.isDispatch || u.isLeo,
   })
-  async getAllIncidents() {
+  async getAllIncidents(): Promise<APITypes.GetIncidentsData> {
     const incidents = await prisma.leoIncident.findMany({
       where: { NOT: { isActive: true } },
       include: incidentInclude,
@@ -52,7 +69,7 @@ export class IncidentController {
     permissions: [Permissions.Dispatch, Permissions.ViewIncidents, Permissions.ManageIncidents],
     fallback: (u) => u.isDispatch || u.isLeo,
   })
-  async getIncidentById(@PathParams("id") id: string) {
+  async getIncidentById(@PathParams("id") id: string): Promise<APITypes.GetIncidentByIdData> {
     const incident = await prisma.leoIncident.findUnique({
       where: { id },
       include: incidentInclude,
@@ -70,15 +87,15 @@ export class IncidentController {
   async createIncident(
     @BodyParams() body: unknown,
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
-    @Context("activeOfficer") officer: Officer | null,
-  ) {
+    @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
+  ): Promise<APITypes.PostIncidentsData> {
     const data = validateSchema(LEO_INCIDENT_SCHEMA, body);
-    const officerId = officer?.id ?? null;
+    const officer = getFirstOfficerFromActiveOfficer({ allowDispatch: true, activeOfficer });
     const maxAssignmentsToIncidents = cad.miscCadSettings.maxAssignmentsToIncidents ?? Infinity;
 
     const incident = await prisma.leoIncident.create({
       data: {
-        creatorId: officerId,
+        creatorId: officer?.id ?? null,
         description: data.description,
         arrestsMade: data.arrestsMade,
         firearmsInvolved: data.firearmsInvolved,
@@ -117,10 +134,10 @@ export class IncidentController {
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   async assignToIncident(
-    @PathParams("type") callType: "assign" | "unassign",
+    @PathParams("type") assignType: "assign" | "unassign",
     @PathParams("incidentId") incidentId: string,
     @BodyParams("unit") rawUnitId: string | null,
-  ) {
+  ): Promise<APITypes.PutAssignUnassignIncidentsData> {
     if (!rawUnitId) {
       throw new BadRequest("unitIsRequired");
     }
@@ -151,7 +168,7 @@ export class IncidentController {
       },
     });
 
-    if (callType === "assign") {
+    if (assignType === "assign") {
       if (existing) {
         throw new BadRequest("alreadyAssignedToCall");
       }
@@ -172,17 +189,23 @@ export class IncidentController {
       });
     }
 
-    if (type === "leo") {
-      await prisma.officer.update({
-        where: { id: unit.id },
-        data: { activeIncidentId: callType === "assign" ? incidentId : null },
-      });
+    const prismaNames = {
+      leo: "officer",
+      "ems-fd": "emsFdDeputy",
+      combined: "combinedLeoUnit",
+    } as const;
+    const prismaName = prismaNames[type];
 
-      await Promise.all([
-        this.socket.emitUpdateOfficerStatus(),
-        this.socket.emitUpdateDeputyStatus(),
-      ]);
-    }
+    // @ts-expect-error method has same properties
+    await prisma[prismaName].update({
+      where: { id: unit.id },
+      data: { activeIncidentId: assignType === "assign" ? incidentId : null },
+    });
+
+    await Promise.all([
+      this.socket.emitUpdateOfficerStatus(),
+      this.socket.emitUpdateDeputyStatus(),
+    ]);
 
     const updated = await prisma.leoIncident.findUnique({
       where: {
@@ -206,7 +229,7 @@ export class IncidentController {
     @BodyParams() body: unknown,
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
     @PathParams("id") incidentId: string,
-  ) {
+  ): Promise<APITypes.PutIncidentByIdData> {
     const data = validateSchema(LEO_INCIDENT_SCHEMA, body);
     const maxAssignmentsToIncidents = cad.miscCadSettings.maxAssignmentsToIncidents ?? Infinity;
 
@@ -229,12 +252,13 @@ export class IncidentController {
 
     await Promise.all(
       incident.unitsInvolved.map(async (unit) => {
-        if (unit.officerId) {
-          await prisma.officer.update({
-            where: { id: unit.officerId },
-            data: { activeIncidentId: null },
-          });
-        }
+        const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
+
+        // @ts-expect-error method has the same properties
+        await prisma[prismaName].update({
+          where: { id: unitId },
+          data: { activeIncidentId: null },
+        });
       }),
     );
 
@@ -269,6 +293,7 @@ export class IncidentController {
 
     this.socket.emitUpdateActiveIncident(corrected);
     await this.socket.emitUpdateOfficerStatus();
+    await this.socket.emitUpdateDeputyStatus();
 
     return corrected;
   }
@@ -279,7 +304,9 @@ export class IncidentController {
     permissions: [Permissions.Dispatch, Permissions.ManageIncidents],
     fallback: (u) => u.isSupervisor,
   })
-  async deleteIncident(@PathParams("id") incidentId: string) {
+  async deleteIncident(
+    @PathParams("id") incidentId: string,
+  ): Promise<APITypes.DeleteIncidentByIdData> {
     const incident = await prisma.leoIncident.findUnique({
       where: { id: incidentId },
     });
@@ -295,7 +322,7 @@ export class IncidentController {
     return true;
   }
 
-  protected async connectUnitsInvolved(
+  private async connectUnitsInvolved(
     incidentId: string,
     data: Pick<z.infer<typeof LEO_INCIDENT_SCHEMA>, "unitsInvolved" | "isActive">,
     maxAssignmentsToIncidents: number,
@@ -314,7 +341,7 @@ export class IncidentController {
           combined: "combinedLeoId",
           leo: "officerId",
           "ems-fd": "emsFdDeputyId",
-        };
+        } as const;
 
         const assignmentCount = await prisma.incidentInvolvedUnit.count({
           where: {
@@ -346,12 +373,16 @@ export class IncidentController {
           },
         });
 
-        if (type === "leo") {
-          await prisma.officer.update({
-            where: { id: unit.id },
-            data: { activeIncidentId: incidentId },
-          });
-        }
+        const prismaName =
+          type === "combined"
+            ? "combinedLeoUnit"
+            : (types[type].replace("Id", "") as "officer" | "emsFdDeputy");
+
+        // @ts-expect-error method has the same properties
+        await prisma[prismaName].update({
+          where: { id: unit.id },
+          data: { activeIncidentId: incidentId },
+        });
 
         await prisma.leoIncident.update({
           where: { id: incidentId },

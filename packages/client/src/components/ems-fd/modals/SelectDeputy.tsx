@@ -12,9 +12,10 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { useEmsFdState } from "state/emsFdState";
 import { useValues } from "context/ValuesContext";
-import { ShouldDoType } from "@snailycad/types";
+import { EmsFdDeputy, ShouldDoType } from "@snailycad/types";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { isUnitDisabled, makeUnitName } from "lib/utils";
+import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
 
 export function SelectDeputyModal() {
   const { deputies, setActiveDeputy } = useEmsFdState();
@@ -31,7 +32,8 @@ export function SelectDeputyModal() {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!onDutyCode) return;
 
-    const { json } = await execute(`/dispatch/status/${values.deputy}`, {
+    const { json } = await execute<PutDispatchStatusByUnitId>({
+      path: `/dispatch/status/${values.deputy}`,
       method: "PUT",
       data: {
         ...values,
@@ -41,7 +43,7 @@ export function SelectDeputyModal() {
 
     if (json.id) {
       closeModal(ModalIds.SelectDeputy);
-      setActiveDeputy(json);
+      setActiveDeputy(json as EmsFdDeputy);
     }
   }
 

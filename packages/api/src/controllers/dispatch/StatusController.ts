@@ -34,6 +34,7 @@ import { findUnit } from "lib/leo/findUnit";
 import { isFeatureEnabled } from "lib/cad";
 import { hasPermission } from "@snailycad/permissions";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -55,7 +56,7 @@ export class StatusController {
     @BodyParams() body: unknown,
     @Req() req: Req,
     @Context("cad") cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
-  ) {
+  ): Promise<APITypes.PutDispatchStatusByUnitId> {
     const data = validateSchema(UPDATE_OFFICER_STATUS_SCHEMA, body);
     const bodyStatusId = data.status;
 
@@ -128,6 +129,17 @@ export class StatusController {
         cad,
         status: code,
         unit,
+      });
+    } else if (type === "ems-fd") {
+      const fullDeputy = await prisma.emsFdDeputy.findUnique({
+        where: { id: unit.id },
+        include: unitProperties,
+      });
+
+      await this.handlePanicButtonPressed({
+        cad,
+        status: code,
+        unit: fullDeputy!,
       });
     }
 
@@ -216,15 +228,15 @@ export class StatusController {
     return updatedUnit;
   }
 
-  protected isUnitCurrentlyInPanicMode(unit: HandlePanicButtonPressedOptions["unit"]) {
+  private isUnitCurrentlyInPanicMode(unit: HandlePanicButtonPressedOptions["unit"]) {
     return unit.status?.shouldDo === ShouldDoType.PANIC_BUTTON;
   }
 
-  protected isStatusPanicButton(status: StatusValue) {
+  private isStatusPanicButton(status: StatusValue) {
     return status.shouldDo === ShouldDoType.PANIC_BUTTON;
   }
 
-  protected async handlePanicButtonPressed(options: HandlePanicButtonPressedOptions) {
+  private async handlePanicButtonPressed(options: HandlePanicButtonPressedOptions) {
     const isCurrentlyPanicMode = this.isUnitCurrentlyInPanicMode(options.unit);
     const isPanicButton = this.isStatusPanicButton(options.status);
 
@@ -247,7 +259,10 @@ export class StatusController {
 
 interface HandlePanicButtonPressedOptions {
   status: StatusValue;
-  unit: ((Officer & { citizen: Pick<Citizen, "name" | "surname"> }) | CombinedLeoUnit) & {
+  unit: (
+    | ((Officer | EmsFdDeputy) & { citizen: Pick<Citizen, "name" | "surname"> })
+    | CombinedLeoUnit
+  ) & {
     status?: StatusValue | null;
   };
   cad: cad & { miscCadSettings: MiscCadSettings };

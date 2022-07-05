@@ -9,22 +9,22 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { JOIN_COMPANY_SCHEMA } from "@snailycad/schemas";
 import { handleValidate } from "lib/handleValidate";
-import { useCitizen } from "context/CitizenContext";
 import { Select } from "components/form/Select";
 import { useRouter } from "next/router";
-import { useBusinessState, type FullEmployee } from "state/businessState";
+import { useBusinessState } from "state/businessState";
 import { toastMessage } from "lib/toastMessage";
-import { Business, WhitelistStatus } from "@snailycad/types";
+import { WhitelistStatus } from "@snailycad/types";
+import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
+import type { GetBusinessesData, PostJoinBusinessData } from "@snailycad/types/api";
 
 interface Props {
-  onCreate(business: FullEmployee & { business: Business }): void;
+  onCreate(business: GetBusinessesData["businesses"][number]): void;
 }
 
 export function JoinBusinessModal({ onCreate }: Props) {
   const joinableBusinesses = useBusinessState((s) => s.joinableBusinesses);
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
-  const { citizens } = useCitizen();
   const router = useRouter();
   const common = useTranslations("Common");
   const t = useTranslations("Business");
@@ -34,7 +34,8 @@ export function JoinBusinessModal({ onCreate }: Props) {
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute("/businesses/join", {
+    const { json } = await execute<PostJoinBusinessData>({
+      path: "/businesses/join",
       method: "POST",
       data: values,
     });
@@ -55,6 +56,7 @@ export function JoinBusinessModal({ onCreate }: Props) {
   const INITIAL_VALUES = {
     businessId: "",
     citizenId: "",
+    citizenName: "",
   };
 
   return (
@@ -68,14 +70,10 @@ export function JoinBusinessModal({ onCreate }: Props) {
         {({ handleChange, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.citizenId} label={t("citizen")}>
-              <Select
-                values={citizens.map((citizen) => ({
-                  label: `${citizen.name} ${citizen.surname}`,
-                  value: citizen.id,
-                }))}
-                name="citizenId"
-                onChange={handleChange}
-                value={values.citizenId}
+              <CitizenSuggestionsField
+                labelFieldName="citizenName"
+                valueFieldName="citizenId"
+                fromAuthUserOnly
               />
             </FormField>
 

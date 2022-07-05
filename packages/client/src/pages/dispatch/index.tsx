@@ -5,8 +5,8 @@ import { useAreaOfPlay } from "hooks/global/useAreaOfPlay";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { ActiveCalls } from "components/leo/ActiveCalls";
-import { Full911Call, useDispatchState } from "state/dispatchState";
+import { ActiveCalls } from "components/dispatch/active-calls/ActiveCalls";
+import { useDispatchState } from "state/dispatchState";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { useTime } from "hooks/shared/useTime";
 import { DispatchModalButtons } from "components/dispatch/ModalButtons";
@@ -18,19 +18,13 @@ import { requestAll } from "lib/utils";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { usePanicButton } from "hooks/shared/usePanicButton";
 import { Title } from "components/shared/Title";
-import {
-  ActiveDispatchers,
-  Bolo,
-  CombinedLeoUnit,
-  EmsFdDeputy,
-  LeoIncident,
-  Officer,
-  ShouldDoType,
-} from "@snailycad/types";
+import { CombinedLeoUnit, EmsFdDeputy, Officer, ShouldDoType, ValueType } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { Permissions } from "@snailycad/permissions";
+import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
+import type { Get911CallsData, GetBolosData, GetDispatchData } from "@snailycad/types/api";
 
 const ActiveIncidents = dynamic(async () => {
   return (await import("components/dispatch/ActiveIncidents")).ActiveIncidents;
@@ -58,22 +52,33 @@ const Modals = {
   }),
 };
 
-export interface DispatchPageProps {
-  calls: Full911Call[];
-  bolos: Bolo[];
-  officers: (Officer | CombinedLeoUnit)[];
-  deputies: EmsFdDeputy[];
-  activeDispatchers: ActiveDispatchers[];
-  activeIncidents: LeoIncident[];
+export interface DispatchPageProps extends GetDispatchData {
+  calls: Get911CallsData;
+  bolos: GetBolosData;
 }
 
-export default function OfficerDashboard(props: DispatchPageProps) {
+export default function DispatchDashboard(props: DispatchPageProps) {
+  useLoadValuesClientSide({
+    valueTypes: [
+      ValueType.CALL_TYPE,
+      ValueType.CITIZEN_FLAG,
+      ValueType.DRIVERSLICENSE_CATEGORY,
+      ValueType.IMPOUND_LOT,
+      ValueType.LICENSE,
+      ValueType.PENAL_CODE,
+      ValueType.VEHICLE_FLAG,
+      ValueType.DEPARTMENT,
+      ValueType.DIVISION,
+    ],
+  });
+
   const { showAop } = useAreaOfPlay();
   const state = useDispatchState();
   const timeRef = useTime();
   const t = useTranslations("Leo");
-  const { signal100Enabled, Component, audio: signal100Audio } = useSignal100();
-  const { unit, audio, PanicButton } = usePanicButton();
+  const signal100 = useSignal100();
+  const panic = usePanicButton();
+
   const { ACTIVE_INCIDENTS } = useFeatureEnabled();
   const { isOpen } = useModal();
 
@@ -106,11 +111,11 @@ export default function OfficerDashboard(props: DispatchPageProps) {
     >
       <Title renderLayoutTitle={false}>{t("dispatch")}</Title>
 
-      <Component enabled={signal100Enabled} audio={signal100Audio} />
-      <PanicButton audio={audio} unit={unit} />
+      <signal100.Component enabled={signal100.enabled} audio={signal100.audio} />
+      <panic.Component audio={panic.audio} unit={panic.unit} />
 
       <div className="w-full overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
-        <header className="flex items-center justify-between px-4 py-2 bg-gray-300 dark:bg-gray-3">
+        <header className="flex items-center justify-between px-4 py-2 bg-gray-200 dark:bg-gray-3">
           <h3 className="text-xl font-semibold">
             {t("utilityPanel")}
             {showAop ? <DispatchAOP /> : null}
@@ -153,12 +158,10 @@ export default function OfficerDashboard(props: DispatchPageProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const adminValuesURL =
-    "/admin/values/codes_10?paths=penal_code,impound_lot,license,department,division,vehicle_flag,driverslicense_category,citizen_flag";
-
+  const user = await getSessionUser(req);
   const [values, calls, bolos, { officers, deputies, activeDispatchers, activeIncidents }] =
     await requestAll(req, [
-      [adminValuesURL, []],
+      ["/admin/values/codes_10", []],
       ["/911-calls", []],
       ["/bolos", []],
       ["/dispatch", { deputies: [], officers: [], activeDispatchers: [], activeIncidents: [] }],
@@ -166,7 +169,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
 
   return {
     props: {
-      session: await getSessionUser(req),
+      session: user,
       calls,
       bolos,
       values,
@@ -177,7 +180,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       messages: {
         ...(await getTranslations(
           ["citizen", "truck-logs", "ems-fd", "leo", "calls", "common"],
-          locale,
+          user?.locale ?? locale,
         )),
       },
     },

@@ -1,5 +1,12 @@
-import type { PenalCode, WarningApplicable, WarningNotApplicable } from "@prisma/client";
+import {
+  CadFeature,
+  Feature,
+  PenalCode,
+  WarningApplicable,
+  WarningNotApplicable,
+} from "@prisma/client";
 import { BadRequest, NotFound } from "@tsed/exceptions";
+import { isFeatureEnabled } from "lib/cad";
 import { prisma } from "lib/prisma";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
@@ -9,6 +16,7 @@ interface Options {
   jailTime?: number | null;
   bail?: number | null;
   ticketId: string;
+  cad: { features?: CadFeature[] };
 }
 
 type Return = Options & {
@@ -18,29 +26,35 @@ type Return = Options & {
   };
 };
 
-export async function validateRecordData(item: Options): Promise<Return> {
-  if (!item.penalCodeId) {
-    return handleBadRequest(new BadRequest("no penalCodeId provided"), item.ticketId);
+export async function validateRecordData(options: Options): Promise<Return> {
+  if (!options.penalCodeId) {
+    return handleBadRequest(new BadRequest("no penalCodeId provided"), options.ticketId);
   }
+
+  const isBailEnabled = isFeatureEnabled({
+    features: options.cad.features,
+    defaultReturn: true,
+    feature: Feature.LEO_BAIL,
+  });
 
   /** validate the penalCode data */
   const penalCode = await prisma.penalCode.findUnique({
-    where: { id: item.penalCodeId },
+    where: { id: options.penalCodeId },
     include: { warningApplicable: true, warningNotApplicable: true },
   });
 
   if (!penalCode) {
-    return handleBadRequest(new NotFound("penalCodeNotFound"), item.ticketId);
+    return handleBadRequest(new NotFound("penalCodeNotFound"), options.ticketId);
   }
 
   const minMaxFines =
     penalCode.warningApplicable?.fines ?? penalCode?.warningNotApplicable?.fines ?? [];
   const minMaxPrisonTerm = penalCode.warningNotApplicable?.prisonTerm ?? [];
-  const minMaxBail = penalCode.warningNotApplicable?.bail ?? [];
+  const minMaxBail = (isBailEnabled && penalCode.warningNotApplicable?.bail) || [];
 
   // these if statements could be cleaned up?..
-  if (item.fine && exists(minMaxFines) && !isCorrect(minMaxFines, item.fine)) {
-    const name = `violations.${item.penalCodeId}.fine`;
+  if (options.fine && exists(minMaxFines) && !isCorrect(minMaxFines, options.fine)) {
+    const name = `violations.${options.penalCodeId}.fine`;
 
     return handleBadRequest(
       new ExtendedBadRequest({
@@ -49,12 +63,16 @@ export async function validateRecordData(item: Options): Promise<Return> {
           data: { min: minMaxFines[0] || 0, max: minMaxFines[1] || 0 },
         },
       }),
-      item.ticketId,
+      options.ticketId,
     );
   }
 
-  if (item.jailTime && exists(minMaxPrisonTerm) && !isCorrect(minMaxPrisonTerm, item.jailTime)) {
-    const name = `violations.${item.penalCodeId}.jailTime`;
+  if (
+    options.jailTime &&
+    exists(minMaxPrisonTerm) &&
+    !isCorrect(minMaxPrisonTerm, options.jailTime)
+  ) {
+    const name = `violations.${options.penalCodeId}.jailTime`;
 
     return handleBadRequest(
       new ExtendedBadRequest({
@@ -63,12 +81,12 @@ export async function validateRecordData(item: Options): Promise<Return> {
           data: { min: minMaxPrisonTerm[0] || 0, max: minMaxPrisonTerm[1] || 0 },
         },
       }),
-      item.ticketId,
+      options.ticketId,
     );
   }
 
-  if (item.bail && exists(minMaxBail) && !isCorrect(minMaxBail, item.bail)) {
-    const name = `violations.${item.penalCodeId}.bail`;
+  if (isBailEnabled && options.bail && exists(minMaxBail) && !isCorrect(minMaxBail, options.bail)) {
+    const name = `violations.${options.penalCodeId}.bail`;
 
     return handleBadRequest(
       new ExtendedBadRequest({
@@ -77,11 +95,11 @@ export async function validateRecordData(item: Options): Promise<Return> {
           data: { min: minMaxBail[0] || 0, max: minMaxBail[1] || 0 },
         },
       }),
-      item.ticketId,
+      options.ticketId,
     );
   }
 
-  return { ...item, penalCode };
+  return { ...options, penalCode };
 }
 
 function isCorrect(minMax: [number, number], value: number) {

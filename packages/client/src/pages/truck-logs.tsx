@@ -8,26 +8,22 @@ import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import { ModalIds } from "types/ModalIds";
-import type { RegisteredVehicle, TruckLog } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import useFetch from "lib/useFetch";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
+import type { DeleteTruckLogsData, GetTruckLogsData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageTruckLogModal = dynamic(
   async () => (await import("components/truck-logs/ManageTruckLog")).ManageTruckLogModal,
 );
 
-interface Props {
-  truckLogs: TruckLog[];
-  registeredVehicles: RegisteredVehicle[];
-}
-
-export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
+export default function TruckLogs({ registeredVehicles, logs: data }: GetTruckLogsData) {
   const { openModal, closeModal } = useModal();
-  const [logs, setLogs] = React.useState(truckLogs);
-  const [tempLog, setTempLog] = React.useState<TruckLog | null>(null);
+  const [logs, setLogs] = React.useState(data);
+  const [tempLog, logState] = useTemporaryItem(logs);
 
   const t = useTranslations("TruckLogs");
   const common = useTranslations("Common");
@@ -36,22 +32,25 @@ export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
   async function handleDelete() {
     if (!tempLog) return;
 
-    const { json } = await execute(`/truck-logs/${tempLog.id}`, { method: "DELETE" });
+    const { json } = await execute<DeleteTruckLogsData>({
+      path: `/truck-logs/${tempLog.id}`,
+      method: "DELETE",
+    });
 
     if (json) {
       setLogs((p) => p.filter((v) => v.id !== tempLog.id));
-      setTempLog(null);
+      logState.setTempId(null);
       closeModal(ModalIds.AlertDeleteTruckLog);
     }
   }
 
-  function handleEditClick(log: TruckLog) {
-    setTempLog(log);
+  function handleEditClick(log: GetTruckLogsData["logs"][number]) {
+    logState.setTempId(log.id);
     openModal(ModalIds.ManageTruckLog);
   }
 
-  function handleDeleteClick(log: TruckLog) {
-    setTempLog(log);
+  function handleDeleteClick(log: GetTruckLogsData["logs"][number]) {
+    logState.setTempId(log.id);
     openModal(ModalIds.AlertDeleteTruckLog);
   }
 
@@ -68,19 +67,20 @@ export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
       ) : (
         <Table
           data={logs.map((log) => ({
-            driver: `${log.citizen.name} ${log.citizen.surname}`,
+            driver: log.citizen ? `${log.citizen.name} ${log.citizen.surname}` : "—",
             vehicle: log.vehicle?.model.value.value,
             startedAt: log.startedAt,
             endedAt: log.endedAt,
+            notes: log.notes ?? common("none"),
             actions: (
               <>
-                <Button onClick={() => handleEditClick(log)} small variant="success">
+                <Button onClick={() => handleEditClick(log)} size="xs" variant="success">
                   {common("edit")}
                 </Button>
                 <Button
                   onClick={() => handleDeleteClick(log)}
                   className="ml-2"
-                  small
+                  size="xs"
                   variant="danger"
                 >
                   {common("delete")}
@@ -93,6 +93,7 @@ export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
             { Header: t("vehicle"), accessor: "vehicle" },
             { Header: t("startedAt"), accessor: "startedAt" },
             { Header: t("endedAt"), accessor: "endedAt" },
+            { Header: t("notes"), accessor: "notes" },
             { Header: common("actions"), accessor: "actions" },
           ]}
         />
@@ -111,7 +112,7 @@ export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
         }}
         log={tempLog}
         registeredVehicles={registeredVehicles}
-        onClose={() => setTempLog(null)}
+        onClose={() => logState.setTempId(null)}
       />
 
       <AlertModal
@@ -120,26 +121,25 @@ export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
         onDeleteClick={handleDelete}
         id={ModalIds.AlertDeleteTruckLog}
         state={state}
-        onClose={() => setTempLog(null)}
+        onClose={() => logState.setTempId(null)}
       />
     </Layout>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
-  const [{ logs, registeredVehicles }, citizens] = await requestAll(req, [
+export const getServerSideProps: GetServerSideProps<GetTruckLogsData> = async ({ locale, req }) => {
+  const user = await getSessionUser(req);
+  const [{ logs, registeredVehicles }] = await requestAll(req, [
     ["/truck-logs", { logs: [], registeredVehicles: [] }],
-    ["/citizen", []],
   ]);
 
   return {
     props: {
-      truckLogs: logs,
+      logs,
       registeredVehicles,
-      citizens,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["truck-logs", "common"], locale)),
+        ...(await getTranslations(["truck-logs", "common"], user?.locale ?? locale)),
       },
     },
   };

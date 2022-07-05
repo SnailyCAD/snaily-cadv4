@@ -1,6 +1,6 @@
 import type { LICENSE_SCHEMA } from "@snailycad/schemas";
 import type { z } from "zod";
-import type { Citizen, DriversLicenseCategoryValue, Prisma } from "@prisma/client";
+import type { DriversLicenseCategoryValue, Citizen, Prisma } from "@prisma/client";
 import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
 import { prisma } from "lib/prisma";
 

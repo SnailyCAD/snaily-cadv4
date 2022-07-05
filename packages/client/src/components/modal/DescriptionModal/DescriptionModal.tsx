@@ -9,7 +9,7 @@ import type { Descendant } from "slate";
 import type { JsonArray } from "type-fest";
 
 interface Props {
-  value?: Descendant[] | JsonArray | null;
+  value?: any;
   onClose?(): void;
 }
 
@@ -31,7 +31,7 @@ export function DescriptionModal(props: Props) {
 
   return (
     <Modal
-      className="min-w-[600px]"
+      className="min-w-[600px] max-w-[750px]"
       title={common("description")}
       onClose={handleClose}
       isOpen={isOpen(ModalIds.Description)}

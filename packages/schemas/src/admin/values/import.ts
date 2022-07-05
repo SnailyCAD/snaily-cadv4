@@ -7,6 +7,7 @@ export const BASE_VALUE_SCHEMA = z.object({
   isDefault: z.boolean().nullable().optional(),
   officerRankImageId: z.any().nullable().optional(),
   officerRankDepartments: z.array(z.any()).nullable().optional(),
+  isDisabled: z.boolean().nullable().optional(),
 });
 export const BASE_ARR = z.array(BASE_VALUE_SCHEMA).min(1);
 
@@ -109,3 +110,12 @@ export const QUALIFICATION_SCHEMA = BASE_VALUE_SCHEMA.extend({
 });
 
 export const QUALIFICATION_ARR = z.array(QUALIFICATION_SCHEMA).min(1);
+
+/**
+ * call types
+ */
+export const CALL_TYPE_SCHEMA = BASE_VALUE_SCHEMA.extend({
+  priority: z.number().optional().nullable(),
+});
+
+export const CALL_TYPE_ARR = z.array(CALL_TYPE_SCHEMA).min(1);

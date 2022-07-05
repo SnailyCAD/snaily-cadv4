@@ -6,49 +6,65 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { makeUnitName, requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import { Record, Citizen, RecordRelease, ReleaseType } from "@snailycad/types";
+import { Record, BaseCitizen, RecordRelease, ReleaseType } from "@snailycad/types";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { Table } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import compareDesc from "date-fns/compareDesc";
 import { ReleaseCitizenModal } from "components/leo/jail/ReleaseCitizenModal";
-import { useRouter } from "next/router";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { NameSearchModal } from "components/leo/modals/NameSearchModal/NameSearchModal";
+import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
+import type { GetJailedCitizensData } from "@snailycad/types/api";
 
 interface Props {
-  data: (Citizen & { Record: Record[] })[];
+  data: GetJailedCitizensData;
 }
 
-export default function Jail({ data: jailedCitizens }: Props) {
+export default function Jail({ data }: Props) {
+  const asyncTable = useAsyncTable({
+    initialData: data.jailedCitizens,
+    totalCount: data.totalCount,
+    fetchOptions: {
+      onResponse: (json: GetJailedCitizensData) => ({
+        data: json.jailedCitizens,
+        totalCount: json.totalCount,
+      }),
+      path: "/leo/jail",
+    },
+  });
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { openModal, closeModal } = useModal();
   const { generateCallsign } = useGenerateCallsign();
   const { hasPermissions } = usePermission();
-  const router = useRouter();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
 
-  const [tempCitizen, setTempCitizen] = React.useState<(Citizen & { recordId: string }) | null>(
+  const [tempCitizen, setTempCitizen] = React.useState<(BaseCitizen & { recordId: string }) | null>(
     null,
   );
 
-  function handleSuccess() {
-    router.replace({ pathname: router.pathname, query: router.query });
+  function handleSuccess(citizen: BaseCitizen & { Record: Record[] }) {
+    const newData = [...asyncTable.data];
+    const idx = newData.findIndex((v) => v.id === citizen.id);
+    newData[idx] = citizen;
+
+    asyncTable.setData(newData);
+
     setTempCitizen(null);
     closeModal(ModalIds.AlertReleaseCitizen);
   }
 
-  function handleCheckoutClick(item: Citizen, recordId: string) {
+  function handleCheckoutClick(item: BaseCitizen & { Record: Record[] }, recordId: string) {
     setTempCitizen({ ...item, recordId });
     openModal(ModalIds.AlertReleaseCitizen);
   }
 
-  function handleNameClick(item: Citizen) {
+  function handleNameClick(item: BaseCitizen & { Record: Record[] }) {
     openModal(ModalIds.NameSearch, { name: `${item.name} ${item.surname}` });
   }
 
@@ -62,12 +78,17 @@ export default function Jail({ data: jailedCitizens }: Props) {
     >
       <Title>{t("jail")}</Title>
 
-      {jailedCitizens.length <= 0 ? (
+      {data.jailedCitizens.length <= 0 ? (
         <p className="mt-5">{t("noImprisonedCitizens")}</p>
       ) : (
         <Table
+          pagination={{
+            enabled: true,
+            totalCount: asyncTable.pagination.totalCount,
+            fetchData: asyncTable.pagination,
+          }}
           defaultSort={{ columnId: "createdAt", descending: true }}
-          data={jailedCitizens.map((item) => {
+          data={asyncTable.data.map((item) => {
             const [record] = item.Record.sort((a, b) =>
               compareDesc(new Date(a.createdAt), new Date(b.createdAt)),
             ).filter((v) => v.type === "ARREST_REPORT");
@@ -104,7 +125,7 @@ export default function Jail({ data: jailedCitizens }: Props) {
                   disabled={released}
                   onClick={() => handleCheckoutClick(item, record.id)}
                   className="ml-2"
-                  small
+                  size="xs"
                 >
                   {t("release")}
                 </Button>
@@ -130,15 +151,16 @@ export default function Jail({ data: jailedCitizens }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const [jailData] = await requestAll(req, [["/leo/jail", []]]);
+export const getServerSideProps: GetServerSideProps<Props> = async ({ req, locale }) => {
+  const user = await getSessionUser(req);
+  const [jailData] = await requestAll(req, [["/leo/jail", { jailedCitizens: [], totalCount: 0 }]]);
 
   return {
     props: {
-      session: await getSessionUser(req),
+      session: user,
       data: jailData,
       messages: {
-        ...(await getTranslations(["leo", "citizen", "common"], locale)),
+        ...(await getTranslations(["leo", "ems-fd", "citizen", "common"], user?.locale ?? locale)),
       },
     },
   };

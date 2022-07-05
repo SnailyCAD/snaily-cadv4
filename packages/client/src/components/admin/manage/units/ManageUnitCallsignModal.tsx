@@ -1,4 +1,5 @@
 import { UPDATE_UNIT_CALLSIGN_SCHEMA } from "@snailycad/schemas";
+import type { PutManageUnitCallsignData } from "@snailycad/types/api";
 import { isUnitOfficer } from "@snailycad/utils";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
@@ -28,7 +29,8 @@ export function ManageUnitCallsignModal({ unit }: Props) {
   const router = useRouter();
 
   async function handleSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute(`/admin/manage/units/callsign/${unit.id}`, {
+    const { json } = await execute<PutManageUnitCallsignData>({
+      path: `/admin/manage/units/callsign/${unit.id}`,
       method: "PUT",
       data: values,
     });

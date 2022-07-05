@@ -10,14 +10,15 @@ import { DISCORD_SETTINGS_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
 import { getRest } from "lib/discord/config";
 import { manyToManyHelper } from "utils/manyToMany";
+import type * as APITypes from "@snailycad/types/api";
 
 const guildId = process.env.DISCORD_SERVER_ID;
 
-@Controller("/admin/manage/cad-settings/discord")
 @UseBeforeEach(IsAuth)
+@Controller("/admin/manage/cad-settings/discord/roles")
 export class DiscordSettingsController {
   @Get("/")
-  async getGuildRoles(@Context("cad") cad: cad) {
+  async getGuildRoles(@Context("cad") cad: cad): Promise<APITypes.GetCADDiscordRolesData> {
     if (!guildId) {
       throw new BadRequest("mustSetBotTokenGuildId");
     }
@@ -64,7 +65,10 @@ export class DiscordSettingsController {
   }
 
   @Post("/")
-  async setRoleTypes(@Context("cad") cad: cad, @BodyParams() body: unknown) {
+  async setRoleTypes(
+    @Context("cad") cad: cad,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PostCADDiscordRolesData> {
     if (!guildId) {
       throw new BadRequest("mustSetBotTokenGuildId");
     }
@@ -173,19 +177,32 @@ export class DiscordSettingsController {
     const updated = await prisma.cad.update({
       where: { id: cad.id },
       data: { discordRolesId: discordRoles.id },
-      include: { discordRoles: { include: { roles: true, leoRoles: true, emsFdRoles: true } } },
+      include: {
+        discordRoles: {
+          include: {
+            roles: true,
+            leoRoles: true,
+            emsFdRoles: true,
+            leoSupervisorRoles: true,
+            towRoles: true,
+            taxiRoles: true,
+            dispatchRoles: true,
+            courthouseRoles: true,
+          },
+        },
+      },
     });
 
-    return updated.discordRoles;
+    return updated.discordRoles!;
   }
 
-  protected doesRoleExist(roles: { id: string }[], roleId: string | string[]) {
+  private doesRoleExist(roles: { id: string }[], roleId: string | string[]) {
     return roles.some((v) =>
       typeof roleId === "string" ? v.id === roleId : roleId.includes(v.id),
     );
   }
 
-  protected async updateRoles(options: UpdateRolesOptions) {
+  private async updateRoles(options: UpdateRolesOptions) {
     const disconnectConnectArr = manyToManyHelper(
       options.discordRoles.map((v) => v.id),
       options.newRoles,

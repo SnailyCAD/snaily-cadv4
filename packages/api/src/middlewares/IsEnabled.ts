@@ -2,7 +2,7 @@ import type { Feature } from "@prisma/client";
 import { Middleware, MiddlewareMethods, Req } from "@tsed/common";
 import { prisma } from "lib/prisma";
 import { BadRequest } from "@tsed/exceptions";
-import { setDiscordAUth } from "./IsAuth";
+import { setDiscordAuth } from "./IsAuth";
 
 const featuresRoute: Partial<Record<Feature, string>> = {
   TOW: "/v1/tow",
@@ -17,16 +17,18 @@ const featuresRoute: Partial<Record<Feature, string>> = {
   ALLOW_CITIZEN_UPDATE_LICENSE: "/v1/licenses",
   RADIO_CHANNEL_MANAGEMENT: "/v1/dispatch/radio-channel",
   DL_EXAMS: "/leo/dl-exams",
+  WEAPON_EXAMS: "/leo/weapon-exams",
   DMV: "/leo/dmv",
   USER_API_TOKENS: "/user/api-token",
   STEAM_OAUTH: "/v1/auth/steam",
-  CREATE_USER_CITIZEN_LEO: "/v1/search/actions/citizen",
+  COURTHOUSE_POSTS: "/v1/courthouse-posts",
+  ACTIVE_WARRANTS: "/v1/records/active-warrants",
 };
 
 @Middleware()
 export class IsEnabled implements MiddlewareMethods {
   async use(@Req() req: Req) {
-    const cad = setDiscordAUth(
+    const cad = setDiscordAuth(
       await prisma.cad.findFirst({
         select: {
           id: true,

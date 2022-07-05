@@ -2,7 +2,7 @@ import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import type { RegisteredVehicle } from "@snailycad/types";
-import { RegisterVehicleModal } from "./RegisterVehicleModal";
+import { RegisterVehicleModal } from "./modals/RegisterVehicleModal";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
@@ -11,6 +11,14 @@ import { Table } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { Status } from "components/shared/Status";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { TransferVehicleModal } from "./modals/TransferVehicleModal";
+import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
+import { useCitizen } from "context/CitizenContext";
+import { FormField } from "components/form/FormField";
+import { Input } from "components/form/inputs/Input";
+import { Loader } from "components/Loader";
+import type { DeleteCitizenVehicleData, GetCitizenVehiclesData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
   const { openModal, closeModal } = useModal();
@@ -18,36 +26,49 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
   const t = useTranslations("Vehicles");
   const { state, execute } = useFetch();
   const { DMV } = useFeatureEnabled();
+  const { citizen } = useCitizen(false);
 
-  const [vehicles, setVehicles] = React.useState<RegisteredVehicle[]>(props.vehicles);
-  const [tempVehicle, setTempVehicle] = React.useState<RegisteredVehicle | null>(null);
-
-  React.useEffect(() => {
-    setVehicles(props.vehicles);
-  }, [props.vehicles]);
+  const asyncTable = useAsyncTable({
+    fetchOptions: {
+      onResponse: (json: GetCitizenVehiclesData) => ({
+        data: json.vehicles,
+        totalCount: json.totalCount,
+      }),
+      path: `/vehicles/${citizen.id}`,
+    },
+    totalCount: props.vehicles.length,
+    initialData: props.vehicles,
+  });
+  const [tempVehicle, vehicleState] = useTemporaryItem(asyncTable.data);
 
   async function handleDelete() {
     if (!tempVehicle) return;
 
-    const { json } = await execute(`/vehicles/${tempVehicle.id}`, {
+    const { json } = await execute<DeleteCitizenVehicleData>({
+      path: `/vehicles/${tempVehicle.id}`,
       method: "DELETE",
     });
 
     if (json) {
-      setVehicles((p) => p.filter((v) => v.id !== tempVehicle.id));
-      setTempVehicle(null);
+      asyncTable.setData((p) => p.filter((v) => v.id !== tempVehicle.id));
+      vehicleState.setTempId(null);
       closeModal(ModalIds.AlertDeleteVehicle);
     }
   }
 
   function handleDeleteClick(vehicle: RegisteredVehicle) {
-    setTempVehicle(vehicle);
+    vehicleState.setTempId(vehicle.id);
     openModal(ModalIds.AlertDeleteVehicle);
   }
 
   function handleEditClick(vehicle: RegisteredVehicle) {
-    setTempVehicle(vehicle);
+    vehicleState.setTempId(vehicle.id);
     openModal(ModalIds.RegisterVehicle);
+  }
+
+  function handleTransferClick(vehicle: RegisteredVehicle) {
+    vehicleState.setTempId(vehicle.id);
+    openModal(ModalIds.TransferVehicle);
   }
 
   return (
@@ -56,75 +77,112 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
         <header className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold">{t("yourVehicles")}</h1>
 
-          <Button onClick={() => openModal(ModalIds.RegisterVehicle)} small>
+          <Button onClick={() => openModal(ModalIds.RegisterVehicle)} size="xs">
             {t("addVehicle")}
           </Button>
         </header>
 
-        {vehicles.length <= 0 ? (
+        {props.vehicles.length <= 0 ? (
           <p className="text-neutral-700 dark:text-gray-400">{t("noVehicles")}</p>
         ) : (
-          <Table
-            isWithinCard
-            data={vehicles.map((vehicle) => ({
-              rowProps: {
-                title: vehicle.impounded ? t("vehicleImpounded") : undefined,
-                className: vehicle.impounded ? "opacity-50" : undefined,
-              },
-              plate: vehicle.plate,
-              model: vehicle.model.value.value,
-              color: vehicle.color,
-              registrationStatus: vehicle.registrationStatus.value,
-              insuranceStatus: vehicle.insuranceStatus?.value ?? common("none"),
-              vinNumber: vehicle.vinNumber,
-              dmvStatus: (
-                <Status state={vehicle.dmvStatus}>{vehicle.dmvStatus?.toLowerCase()}</Status>
-              ),
-              createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
-              actions: (
-                <>
-                  <Button
-                    disabled={vehicle.impounded}
-                    onClick={() => handleEditClick(vehicle)}
-                    small
-                    variant="success"
-                  >
-                    {common("edit")}
-                  </Button>
-                  <Button
-                    disabled={vehicle.impounded}
-                    className="ml-2"
-                    onClick={() => handleDeleteClick(vehicle)}
-                    small
-                    variant="danger"
-                  >
-                    {common("delete")}
-                  </Button>
-                </>
-              ),
-            }))}
-            columns={[
-              { Header: t("plate"), accessor: "plate" },
-              { Header: t("model"), accessor: "model" },
-              { Header: t("color"), accessor: "color" },
-              { Header: t("registrationStatus"), accessor: "registrationStatus" },
-              { Header: t("insuranceStatus"), accessor: "insuranceStatus" },
-              { Header: t("vinNumber"), accessor: "vinNumber" },
-              DMV ? { Header: t("dmvStatus"), accessor: "dmvStatus" } : null,
-              { Header: common("createdAt"), accessor: "createdAt" },
-              { Header: common("actions"), accessor: "actions" },
-            ]}
-          />
+          <>
+            <FormField label={common("search")} className="w-full relative">
+              <Input
+                placeholder="john doe"
+                onChange={(e) => asyncTable.search.setSearch(e.target.value)}
+                value={asyncTable.search.search}
+              />
+              {asyncTable.state === "loading" ? (
+                <span className="absolute top-[2.4rem] right-2.5">
+                  <Loader />
+                </span>
+              ) : null}
+            </FormField>
+
+            {asyncTable.search.search &&
+            asyncTable.pagination.totalCount !== props.vehicles.length ? (
+              <p className="italic text-base font-semibold">
+                Showing {asyncTable.pagination.totalCount} result(s)
+              </p>
+            ) : null}
+
+            <Table
+              pagination={{
+                enabled: true,
+                totalCount: asyncTable.pagination.totalCount,
+                fetchData: asyncTable.pagination,
+              }}
+              maxItemsPerPage={12}
+              isWithinCard
+              data={asyncTable.data.map((vehicle) => ({
+                rowProps: {
+                  title: vehicle.impounded ? t("vehicleImpounded") : undefined,
+                  className: vehicle.impounded ? "opacity-50" : undefined,
+                },
+                plate: vehicle.plate,
+                model: vehicle.model.value.value,
+                color: vehicle.color,
+                registrationStatus: vehicle.registrationStatus.value,
+                insuranceStatus: vehicle.insuranceStatus?.value ?? common("none"),
+                vinNumber: vehicle.vinNumber,
+                dmvStatus: (
+                  <Status state={vehicle.dmvStatus}>{vehicle.dmvStatus?.toLowerCase()}</Status>
+                ),
+                createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
+                actions: (
+                  <>
+                    <Button
+                      disabled={vehicle.impounded}
+                      onClick={() => handleTransferClick(vehicle)}
+                      size="xs"
+                    >
+                      {t("transfer")}
+                    </Button>
+
+                    <Button
+                      disabled={vehicle.impounded}
+                      onClick={() => handleEditClick(vehicle)}
+                      size="xs"
+                      className="ml-2"
+                    >
+                      {common("edit")}
+                    </Button>
+
+                    <Button
+                      disabled={vehicle.impounded}
+                      className="ml-2"
+                      onClick={() => handleDeleteClick(vehicle)}
+                      size="xs"
+                      variant="danger"
+                    >
+                      {common("delete")}
+                    </Button>
+                  </>
+                ),
+              }))}
+              columns={[
+                { Header: t("plate"), accessor: "plate" },
+                { Header: t("model"), accessor: "model" },
+                { Header: t("color"), accessor: "color" },
+                { Header: t("registrationStatus"), accessor: "registrationStatus" },
+                { Header: t("insuranceStatus"), accessor: "insuranceStatus" },
+                { Header: t("vinNumber"), accessor: "vinNumber" },
+                DMV ? { Header: t("dmvStatus"), accessor: "dmvStatus" } : null,
+                { Header: common("createdAt"), accessor: "createdAt" },
+                { Header: common("actions"), accessor: "actions" },
+              ]}
+            />
+          </>
         )}
       </div>
 
       <RegisterVehicleModal
         onCreate={(weapon) => {
           closeModal(ModalIds.RegisterVehicle);
-          setVehicles((p) => [...p, weapon]);
+          asyncTable.setData((p) => [...p, weapon]);
         }}
         onUpdate={(old, newW) => {
-          setVehicles((p) => {
+          asyncTable.setData((p) => {
             const idx = p.indexOf(old);
             p[idx] = newW;
             return p;
@@ -132,8 +190,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
           closeModal(ModalIds.RegisterVehicle);
         }}
         vehicle={tempVehicle}
-        citizens={[]}
-        onClose={() => setTempVehicle(null)}
+        onClose={() => vehicleState.setTempId(null)}
       />
 
       <AlertModal
@@ -143,8 +200,18 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
         description={t("alert_deleteVehicle")}
         onDeleteClick={handleDelete}
         state={state}
-        onClose={() => setTempVehicle(null)}
+        onClose={() => vehicleState.setTempId(null)}
       />
+
+      {tempVehicle ? (
+        <TransferVehicleModal
+          onTransfer={(vehicle) => {
+            vehicleState.setTempId(null);
+            asyncTable.setData((prev) => prev.filter((v) => v.id !== vehicle.id));
+          }}
+          vehicle={tempVehicle}
+        />
+      ) : null}
     </>
   );
 }

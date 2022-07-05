@@ -1,3 +1,4 @@
+import * as React from "react";
 import { CREATE_TICKET_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
@@ -13,7 +14,7 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Textarea } from "components/form/Textarea";
-import { type Citizen, RecordType, type PenalCode, Record } from "@snailycad/types";
+import { type Citizen, RecordType, type PenalCode, type Record } from "@snailycad/types";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
@@ -21,6 +22,8 @@ import { PenalCodesTable } from "./ManageRecord/PenalCodesTable";
 import { SelectPenalCode } from "./ManageRecord/SelectPenalCode";
 import { SeizedItemsTable } from "./ManageRecord/seized-items/SeizedItemsTable";
 import { toastMessage } from "lib/toastMessage";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import type { PostRecordsData, PutRecordsByIdData } from "@snailycad/types/api";
 
 interface Props {
   record?: Record | null;
@@ -44,6 +47,7 @@ export function ManageRecordModal({
   const { isOpen, closeModal, getPayload } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
+  const { LEO_BAIL } = useFeatureEnabled();
 
   const data = {
     [RecordType.TICKET]: {
@@ -87,7 +91,7 @@ export function ManageRecordModal({
       type,
       violations: values.violations.map(({ value }: { value: any }) => ({
         penalCodeId: value.id,
-        bail: value.jailTime?.enabled ? value.bail?.value : null,
+        bail: LEO_BAIL && value.jailTime?.enabled ? value.bail?.value : null,
         jailTime: value.jailTime?.enabled ? value.jailTime?.value : null,
         fine: value.fine?.enabled ? value.fine?.value : null,
       })),
@@ -96,7 +100,8 @@ export function ManageRecordModal({
     validateRecords(values.violations, helpers);
 
     if (record) {
-      const { json } = await execute(`/records/record/${record.id}`, {
+      const { json } = await execute<PutRecordsByIdData, typeof INITIAL_VALUES>({
+        path: `/records/record/${record.id}`,
         method: "PUT",
         data: requestData,
         helpers,
@@ -107,7 +112,8 @@ export function ManageRecordModal({
         closeModal(data[type].id);
       }
     } else {
-      const { json } = await execute("/records", {
+      const { json } = await execute<PostRecordsData, typeof INITIAL_VALUES>({
+        path: "/records",
         method: "POST",
         data: requestData,
         helpers,
@@ -141,7 +147,7 @@ export function ManageRecordModal({
           ...v.penalCode,
           fine: { enabled: !!v.fine, value: v.fine },
           jailTime: { enabled: !!v.jailTime, value: v.jailTime },
-          bail: { enabled: !!v.jailTime, value: v.bail },
+          bail: { enabled: LEO_BAIL ? !!v.jailTime : false, value: v.bail },
         },
       })) ?? ([] as SelectValue<PenalCode>[]),
     postal: record?.postal ?? "",
@@ -159,8 +165,8 @@ export function ManageRecordModal({
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, setValues, errors, values, isValid }) => (
           <Form autoComplete="off">
-            <FormField errorMessage={errors.citizenName} label={t("citizen")}>
-              <InputSuggestions
+            <FormField errorMessage={errors.citizenId} label={t("citizen")}>
+              <InputSuggestions<Citizen>
                 inputProps={{
                   value: values.citizenName,
                   name: "citizenName",
@@ -168,7 +174,7 @@ export function ManageRecordModal({
                   disabled: isReadOnly || !!record,
                   errorMessage: errors.citizenName,
                 }}
-                onSuggestionClick={(suggestion: Citizen) => {
+                onSuggestionClick={(suggestion) => {
                   const newValues = {
                     ...values,
                     citizenId: suggestion.id,
@@ -183,7 +189,7 @@ export function ManageRecordModal({
                   method: "POST",
                   minLength: 2,
                 }}
-                Component={({ suggestion }: { suggestion: Citizen }) => (
+                Component={({ suggestion }) => (
                   <div className="flex items-center">
                     <div className="mr-2 min-w-[25px]">
                       {suggestion.imageId ? (

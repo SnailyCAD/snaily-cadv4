@@ -5,7 +5,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { makeUnitName, requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import type { AssignedUnit, EmsFdDeputy, LeoIncident, Officer } from "@snailycad/types";
+import type { AssignedUnit } from "@snailycad/types";
 import { IndeterminateCheckbox, Table } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Full911Call, useDispatchState } from "state/dispatchState";
@@ -17,7 +17,6 @@ import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
-import { useRouter } from "next/router";
 import { Title } from "components/shared/Title";
 import dynamic from "next/dynamic";
 import { FullDate } from "components/shared/FullDate";
@@ -26,28 +25,33 @@ import { useTableSelect } from "hooks/shared/useTableSelect";
 import { Manage911CallModal } from "components/dispatch/modals/Manage911CallModal";
 import { isUnitCombined } from "@snailycad/utils";
 import { usePermission, Permissions } from "hooks/usePermission";
+import { Checkbox } from "components/form/inputs/Checkbox";
+import type {
+  DeletePurge911CallsData,
+  Get911CallsData,
+  GetDispatchData,
+  GetIncidentsData,
+} from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
 );
 
-interface Props {
-  data: Full911Call[];
-  incidents: LeoIncident[];
-  officers: Officer[];
-  deputies: EmsFdDeputy[];
+interface Props extends GetDispatchData {
+  data: Get911CallsData;
+  incidents: GetIncidentsData["incidents"];
 }
 
 export default function CallHistory({ data, incidents, officers, deputies }: Props) {
   const [calls, setCalls] = React.useState(data);
-  const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
   const [search, setSearch] = React.useState("");
   const dispatchState = useDispatchState();
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageCallHistory], true);
+  const [tempCall, callState] = useTemporaryItem(calls);
 
   const { state, execute } = useFetch();
-  const router = useRouter();
   const tableSelect = useTableSelect(calls);
 
   const { openModal, closeModal } = useModal();
@@ -57,30 +61,33 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
   const { generateCallsign } = useGenerateCallsign();
 
   function handleLinkClick(call: Full911Call) {
-    setTempCall(call);
+    callState.setTempId(call.id);
     openModal(ModalIds.LinkCallToIncident);
   }
 
   function handleViewClick(call: Full911Call) {
-    setTempCall(call);
+    callState.setTempId(call.id);
     openModal(ModalIds.Manage911Call);
   }
 
   async function handlePurge() {
-    const { json } = await execute("/911-calls/purge", {
+    const { json } = await execute<DeletePurge911CallsData>({
+      path: "/911-calls/purge",
       method: "DELETE",
       data: { ids: tableSelect.selectedRows },
     });
 
     if (json) {
-      router.replace({ pathname: router.pathname, query: router.query });
-      tableSelect.resetRows();
+      const selectedRows = tableSelect.selectedRows;
+      const updatedCalls = calls.filter((call) => !selectedRows.includes(call.id));
+      setCalls(updatedCalls);
+
       closeModal(ModalIds.AlertPurgeCalls);
     }
   }
 
   function handleViewDescription(call: Full911Call) {
-    setTempCall(call);
+    callState.setTempId(call.id);
     openModal(ModalIds.Description, call);
   }
 
@@ -137,10 +144,9 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
 
               return {
                 checkbox: (
-                  <input
+                  <Checkbox
                     checked={tableSelect.selectedRows.includes(call.id)}
                     onChange={() => tableSelect.handleCheckboxChange(call)}
-                    type="checkbox"
                   />
                 ),
                 rowProps: { call },
@@ -151,7 +157,7 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
                   call.description && !call.descriptionData ? (
                     call.description
                   ) : (
-                    <Button small onClick={() => handleViewDescription(call)}>
+                    <Button size="xs" onClick={() => handleViewDescription(call)}>
                       {common("viewDescription")}
                     </Button>
                   ),
@@ -161,11 +167,11 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
                 actions: (
                   <>
                     {hasManagePermissions ? (
-                      <Button onClick={() => handleLinkClick(call)} small>
+                      <Button onClick={() => handleLinkClick(call)} size="xs">
                         {leo("linkToIncident")}
                       </Button>
                     ) : null}
-                    <Button className="ml-2" onClick={() => handleViewClick(call)} small>
+                    <Button className="ml-2" onClick={() => handleViewClick(call)} size="xs">
                       {leo("viewCall")}
                     </Button>
                   </>
@@ -224,7 +230,10 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
       />
 
       {tempCall?.descriptionData ? (
-        <DescriptionModal onClose={() => setTempCall(null)} value={tempCall.descriptionData} />
+        <DescriptionModal
+          onClose={() => callState.setTempId(null)}
+          value={tempCall.descriptionData}
+        />
       ) : null}
 
       <Manage911CallModal call={tempCall} />
@@ -233,6 +242,7 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+  const user = await getSessionUser(req);
   const [calls, { incidents }, { deputies, officers }] = await requestAll(req, [
     ["/911-calls?includeEnded=true", []],
     ["/incidents", { incidents: [] }],
@@ -241,13 +251,13 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
 
   return {
     props: {
-      session: await getSessionUser(req),
+      session: user,
       data: calls,
       incidents,
       deputies,
       officers,
       messages: {
-        ...(await getTranslations(["leo", "calls", "common"], locale)),
+        ...(await getTranslations(["leo", "calls", "common"], user?.locale ?? locale)),
       },
     },
   };

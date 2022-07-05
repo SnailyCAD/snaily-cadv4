@@ -1,4 +1,8 @@
-import { CourtEntry, NameChangeRequest, Rank } from "@snailycad/types";
+import { Rank } from "@snailycad/types";
+import type {
+  GetManageExpungementRequests,
+  GetManageNameChangeRequests,
+} from "@snailycad/types/api";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { ExpungementRequestsTab } from "components/admin/manage/courthouse/ExpungementRequestsTab";
 import { NameChangeRequestsTab } from "components/admin/manage/courthouse/NameChangeRequestsTab";
@@ -10,12 +14,10 @@ import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import { useTranslations } from "next-intl";
-import type { FullRequest } from "src/pages/courthouse";
 
 interface Props {
-  expungementRequests: FullRequest[];
-  nameChangeRequests: NameChangeRequest[];
-  courtEntries: CourtEntry[];
+  expungementRequests: GetManageExpungementRequests;
+  nameChangeRequests: GetManageNameChangeRequests;
 }
 
 export default function ManageCourthouse({ expungementRequests, nameChangeRequests }: Props) {
@@ -70,6 +72,7 @@ export default function ManageCourthouse({ expungementRequests, nameChangeReques
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+  const user = await getSessionUser(req);
   const [nameChangeRequests, expungementRequests] = await requestAll(req, [
     ["/admin/manage/name-change-requests", []],
     ["/admin/manage/expungement-requests", []],
@@ -79,9 +82,12 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
     props: {
       nameChangeRequests,
       expungementRequests,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["admin", "courthouse", "values", "common", "leo"], locale)),
+        ...(await getTranslations(
+          ["admin", "courthouse", "values", "common", "leo"],
+          user?.locale ?? locale,
+        )),
       },
     },
   };

@@ -8,7 +8,7 @@ import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { BoloType, CustomFieldCategory, RegisteredVehicle } from "@snailycad/types";
+import { BoloType, CustomFieldCategory } from "@snailycad/types";
 import { useRouter } from "next/router";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicleSearchState";
@@ -21,7 +21,8 @@ import { TabList } from "components/shared/TabList";
 import { ResultsTab } from "./VehicleSearch/tabs/ResultsTab";
 import { NotesTab } from "./NameSearchModal/tabs/NotesTab";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { RegisterVehicleModal } from "components/citizen/vehicles/RegisterVehicleModal";
+import { RegisterVehicleModal } from "components/citizen/vehicles/modals/RegisterVehicleModal";
+import type { PostMarkStolenData } from "@snailycad/types/api";
 
 interface Props {
   id?: ModalIds.VehicleSearch | ModalIds.VehicleSearchWithinName;
@@ -62,7 +63,8 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   }, [id, isOpen, setCurrentResult]);
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute("/search/vehicle", {
+    const { json } = await execute<VehicleSearchResult>({
+      path: "/search/vehicle",
       method: "POST",
       data: values,
       noToast: true,
@@ -84,7 +86,8 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   async function handleMarkStolen() {
     if (!currentResult) return;
 
-    const { json } = await execute(`/bolos/mark-stolen/${currentResult.id}`, {
+    const { json } = await execute<PostMarkStolenData>({
+      path: `/bolos/mark-stolen/${currentResult.id}`,
       method: "POST",
       data: {
         id: currentResult.id,
@@ -99,7 +102,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
 
       setCurrentResult(updatedVehicle);
 
-      if (nameSearchState.currentResult) {
+      if (nameSearchState.currentResult && !nameSearchState.currentResult.isConfidential) {
         nameSearchState.setCurrentResult({
           ...nameSearchState.currentResult,
           vehicles: nameSearchState.currentResult.vehicles.map((v) =>
@@ -125,12 +128,12 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
         {({ handleChange, setFieldValue, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.plateOrVin} label={t("plateOrVin")}>
-              <InputSuggestions
-                onSuggestionClick={(suggestion: VehicleSearchResult) => {
+              <InputSuggestions<VehicleSearchResult>
+                onSuggestionClick={(suggestion) => {
                   setFieldValue("plateOrVin", suggestion.vinNumber);
                   setCurrentResult(suggestion);
                 }}
-                Component={({ suggestion }: { suggestion: RegisteredVehicle }) => (
+                Component={({ suggestion }) => (
                   <div className="flex items-center">
                     <p>
                       {suggestion.plate.toUpperCase()} ({suggestion.vinNumber})
@@ -187,34 +190,44 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
               </div>
             )}
 
-            <footer className="mt-5 flex justify-between">
-              <div className="flex gap-2">
+            <footer
+              className={`mt-4 flex ${
+                (currentResult || CREATE_USER_CITIZEN_LEO) && isLeo
+                  ? "justify-between"
+                  : "justify-end"
+              }`}
+            >
+              <div>
                 {CREATE_USER_CITIZEN_LEO && isLeo ? (
                   <Button type="button" onClick={() => openModal(ModalIds.RegisterVehicle)}>
                     {t("createVehicle")}
                   </Button>
                 ) : null}
 
-                {showMarkStolen ? (
-                  <Button
-                    type="button"
-                    onClick={() => handleMarkStolen()}
-                    variant="cancel"
-                    className="px-1.5"
-                  >
-                    {vT("reportAsStolen")}
-                  </Button>
-                ) : null}
+                {currentResult && isLeo ? (
+                  <>
+                    {showMarkStolen ? (
+                      <Button
+                        type="button"
+                        onClick={() => handleMarkStolen()}
+                        variant="cancel"
+                        className="px-1.5"
+                      >
+                        {vT("reportAsStolen")}
+                      </Button>
+                    ) : null}
 
-                {isLeo && currentResult ? (
-                  <Button
-                    type="button"
-                    onClick={() => handleEditLicenses()}
-                    variant="cancel"
-                    className="px-1.5"
-                  >
-                    {t("editLicenses")}
-                  </Button>
+                    {currentResult ? (
+                      <Button
+                        type="button"
+                        onClick={() => handleEditLicenses()}
+                        variant="cancel"
+                        className="px-1.5"
+                      >
+                        {t("editLicenses")}
+                      </Button>
+                    ) : null}
+                  </>
                 ) : null}
               </div>
 
@@ -255,7 +268,6 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
             setCurrentResult(vehicle as VehicleSearchResult);
           }}
           vehicle={null}
-          citizens={[]}
         />
       ) : null}
     </Modal>

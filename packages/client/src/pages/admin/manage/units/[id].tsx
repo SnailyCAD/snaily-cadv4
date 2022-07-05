@@ -5,7 +5,7 @@ import { getTranslations } from "lib/getTranslation";
 import { getUnitDepartment, makeUnitName, requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import { useTranslations } from "use-intl";
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { FormField } from "components/form/FormField";
 import { useValues } from "context/ValuesContext";
 import { Select } from "components/form/Select";
@@ -15,7 +15,7 @@ import useFetch from "lib/useFetch";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
-import { Rank, EmsFdDeputy, Officer, OfficerLog, UnitQualification } from "@snailycad/types";
+import { Rank, ValueType } from "@snailycad/types";
 import { Toggle } from "components/form/Toggle";
 import { Title } from "components/shared/Title";
 import { OfficerLogsTable } from "components/leo/logs/OfficerLogsTable";
@@ -25,17 +25,16 @@ import { isUnitOfficer } from "@snailycad/utils";
 import { Permissions } from "@snailycad/permissions";
 import { QualificationsTable } from "components/admin/manage/units/QualificationsTable";
 import { classNames } from "lib/classNames";
-
-type Unit = (Officer | EmsFdDeputy) & {
-  qualifications: UnitQualification[];
-  logs: OfficerLog[];
-};
+import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
+import type { GetManageUnitByIdData, PutManageUnitData } from "@snailycad/types/api";
 
 interface Props {
-  unit: Unit | null;
+  unit: GetManageUnitByIdData;
 }
 
 export default function SupervisorPanelPage({ unit: data }: Props) {
+  useLoadValuesClientSide({ valueTypes: [ValueType.QUALIFICATION] });
+
   const [unit, setUnit] = React.useState(data);
 
   const t = useTranslations("Leo");
@@ -44,27 +43,26 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
   const { state, execute } = useFetch();
   const router = useRouter();
 
-  async function onSubmit(values: typeof INITIAL_VALUES) {
-    if (!unit) return;
-
+  async function onSubmit(
+    values: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
     const data = {
       ...values,
       divisions: values.divisions.map((v) => v.value),
     };
 
-    const { json } = await execute(`/admin/manage/units/${unit.id}`, {
+    const { json } = await execute<PutManageUnitData, typeof INITIAL_VALUES>({
+      path: `/admin/manage/units/${unit.id}`,
       method: "PUT",
       data,
+      helpers,
     });
 
     if (json.id) {
       toast.success("Updated.");
       router.push("/admin/manage/units");
     }
-  }
-
-  if (!unit) {
-    return null;
   }
 
   const divisions = isUnitOfficer(unit) ? unit.divisions : [];
@@ -107,6 +105,7 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
                 }))}
               />
             </FormField>
+            {console.log({ errors })}
 
             <FormField label="Department">
               <Select
@@ -120,7 +119,10 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
               />
             </FormField>
 
-            <FormField label={t("division")}>
+            <FormField
+              errorMessage={isUnitOfficer(unit) ? (errors.divisions as string) : errors.division}
+              label={t("division")}
+            >
               {isUnitOfficer(unit) ? (
                 <Select
                   isMulti
@@ -209,7 +211,7 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
             </FormRow>
 
             <FormField label={t("suspended")}>
-              <Toggle onClick={handleChange} name="suspended" toggled={values.suspended} />
+              <Toggle onCheckedChange={handleChange} name="suspended" value={values.suspended} />
             </FormField>
 
             <footer className="flex justify-end">
@@ -242,25 +244,27 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ query, req, locale }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ query, req, locale }) => {
+  const user = await getSessionUser(req);
   const [unit, values] = await requestAll(req, [
     [`/admin/manage/units/${query.id}`, null],
-    ["/admin/values/codes_10?paths=department,division,officer_rank,qualification", []],
+    ["/admin/values/codes_10?paths=department,division,officer_rank", []],
   ]);
 
   if (!unit) {
-    return {
-      notFound: true,
-    };
+    return { notFound: true };
   }
 
   return {
     props: {
       unit,
       values,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["admin", "leo", "ems-fd", "values", "common"], locale)),
+        ...(await getTranslations(
+          ["admin", "leo", "ems-fd", "values", "common"],
+          user?.locale ?? locale,
+        )),
       },
     },
   };

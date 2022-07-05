@@ -56,7 +56,12 @@ export function ResultsTab() {
       <ul className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-y-1">
         <li>
           <Infofield className="capitalize" label={vT("owner")}>
-            <Button title={common("openInSearch")} small type="button" onClick={handleNameClick}>
+            <Button
+              title={common("openInSearch")}
+              size="xs"
+              type="button"
+              onClick={handleNameClick}
+            >
               {currentResult.citizen.name} {currentResult.citizen.surname}
             </Button>
           </Infofield>
@@ -104,7 +109,7 @@ export function ResultsTab() {
         {BUSINESS ? (
           <li>
             <Infofield className="capitalize" label={vT("business")}>
-              {currentResult.Business[0]?.name ?? common("none")}
+              {currentResult.Business?.[0]?.name ?? common("none")}
             </Infofield>
           </li>
         ) : null}

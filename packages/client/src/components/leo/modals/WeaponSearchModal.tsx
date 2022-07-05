@@ -10,7 +10,7 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Input } from "components/form/inputs/Input";
 import { Infofield } from "components/shared/Infofield";
-import { useWeaponSearch } from "state/search/weaponSearchState";
+import { useWeaponSearch, WeaponSearchResult } from "state/search/weaponSearchState";
 import { CustomFieldsArea } from "./CustomFieldsArea";
 import { useRouter } from "next/router";
 import { ManageCustomFieldsModal } from "./NameSearchModal/ManageCustomFieldsModal";
@@ -46,13 +46,14 @@ export function WeaponSearchModal({ id = ModalIds.WeaponSearch }: Props) {
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute("/search/weapon", {
+    const { json } = await execute<WeaponSearchResult>({
+      path: "/search/weapon",
       method: "POST",
       data: values,
       noToast: true,
     });
 
-    if (json.id) {
+    if (json?.id) {
       setCurrentResult(json);
     } else {
       setCurrentResult(null);
@@ -101,7 +102,7 @@ export function WeaponSearchModal({ id = ModalIds.WeaponSearch }: Props) {
                     <Infofield className="capitalize" label={t("owner")}>
                       <Button
                         title={common("openInSearch")}
-                        small
+                        size="xs"
                         type="button"
                         onClick={handleNameClick}
                       >

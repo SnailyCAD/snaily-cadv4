@@ -51,7 +51,8 @@
     "currency": "$",
     "left": "Left",
     "right": "Right",
-    "user": "User"
+    "user": "User",
+    "savedSettingsSuccess": "Settings successfully saved."
   },
   "Nav": {
     "citizen": "Citizen",
@@ -84,7 +85,9 @@
     "courthouse": "Courthouse",
     "dlExams": "Driver License Exams",
     "dmv": "Department of Motor Vehicles",
-    "penalCodes": "Penal Codes"
+    "penalCodes": "Penal Codes",
+    "weaponExams": "Weapon Exams",
+    "myDeputyLogs": "My deputy logs"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",

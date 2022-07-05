@@ -5,6 +5,7 @@ import useFetch from "lib/useFetch";
 import { useDispatchState } from "state/dispatchState";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useRouter } from "next/router";
+import type { GetDispatchData } from "@snailycad/types/api";
 
 let ran = false;
 export function useActiveDispatchers() {
@@ -12,19 +13,21 @@ export function useActiveDispatchers() {
   const isCitizen = router.pathname.includes("/citizen");
 
   const { state, execute } = useFetch();
-  const dispatchState = useDispatchState((s) => ({
-    setActiveDispatchers: s.setActiveDispatchers,
-    activeDispatchers: s.activeDispatchers,
-  }));
+  const dispatchState = useDispatchState();
+
   const { ACTIVE_DISPATCHERS } = useFeatureEnabled();
 
   const getActiveDispatchers = React.useCallback(async () => {
-    const { json } = await execute("/dispatch", {
+    const { json } = await execute<GetDispatchData>({
+      path: "/dispatch",
       noToast: true,
     });
 
-    if (json.activeDispatchers) {
+    if (json) {
       dispatchState.setActiveDispatchers(json.activeDispatchers);
+      dispatchState.setActiveIncidents(json.activeIncidents);
+      dispatchState.setAllOfficers(json.officers);
+      dispatchState.setAllDeputies(json.deputies);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

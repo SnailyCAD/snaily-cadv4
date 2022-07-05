@@ -12,6 +12,7 @@ import useFetch from "lib/useFetch";
 import { toastMessage } from "lib/toastMessage";
 import type { cad } from "@snailycad/types";
 import { omit } from "lib/utils";
+import type { GetDispatchPlayerBySteamIdData } from "@snailycad/types/api";
 
 export function useMapPlayers() {
   const [players, setPlayers] = React.useState<(MapPlayer | PlayerDataEventPayload)[]>([]);
@@ -46,7 +47,8 @@ export function useMapPlayers() {
         return;
       }
 
-      const { json } = await execute(`/dispatch/players/${steamId}`, {
+      const { json } = await execute<GetDispatchPlayerBySteamIdData>({
+        path: `/dispatch/players/${steamId}`,
         method: "GET",
       });
 

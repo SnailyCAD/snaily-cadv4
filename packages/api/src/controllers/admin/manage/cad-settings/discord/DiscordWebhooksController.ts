@@ -15,28 +15,28 @@ import { BadRequest } from "@tsed/exceptions";
 import { DISCORD_WEBHOOKS_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
 import { getRest } from "lib/discord/config";
+import type * as APITypes from "@snailycad/types/api";
 
 const guildId = process.env.DISCORD_SERVER_ID;
 
-@Controller("/admin/manage/cad-settings/discord/webhooks")
 @UseBeforeEach(IsAuth)
+@Controller("/admin/manage/cad-settings/discord/webhooks")
 export class DiscordWebhooksController {
   @Get("/")
-  async getGuildChannels(@Context("cad") cad: cad) {
+  async getGuildChannels(@Context("cad") cad: cad): Promise<APITypes.GetCADDiscordWebhooksData> {
     if (!guildId) {
       throw new BadRequest("mustSetBotTokenGuildId");
     }
 
     const rest = getRest();
-    const channels = (await rest.get(
-      Routes.guildChannels(guildId),
-    )) as RESTGetAPIGuildChannelsResult | null;
-
-    const miscCadSettings = await prisma.miscCadSettings.upsert({
-      where: { id: String(cad.miscCadSettingsId) },
-      update: {},
-      create: {},
-    });
+    const [channels, miscCadSettings] = await Promise.all([
+      (await rest.get(Routes.guildChannels(guildId))) as RESTGetAPIGuildChannelsResult | null,
+      await prisma.miscCadSettings.upsert({
+        where: { id: String(cad.miscCadSettingsId) },
+        update: {},
+        create: {},
+      }),
+    ]);
 
     await prisma.cad.update({
       where: { id: cad.id },
@@ -44,10 +44,11 @@ export class DiscordWebhooksController {
     });
 
     const channelsBody = Array.isArray(channels) ? channels : [];
-    const data: Pick<APITextChannel, "id" | "name">[] = [];
+    const data: Required<Pick<APITextChannel, "id" | "name">>[] = [];
 
     for (const channel of channelsBody) {
       if (channel.type !== ChannelType.GuildText) continue;
+      if (!channel.name) continue;
 
       data.push({
         name: channel.name,
@@ -63,7 +64,7 @@ export class DiscordWebhooksController {
     @Context("cad")
     cad: cad & { miscCadSettings: MiscCadSettings & { webhooks: DiscordWebhook[] } },
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PostCADDiscordWebhooksData> {
     const name = cad.name || "SnailyCAD";
 
     if (!guildId) {
@@ -119,16 +120,17 @@ export class DiscordWebhooksController {
 
     const updatedCadSettings = await prisma.miscCadSettings.findUnique({
       where: { id: cad.miscCadSettingsId! },
+      include: { webhooks: true },
     });
 
-    return updatedCadSettings;
+    return updatedCadSettings!;
   }
 
-  protected doesChannelExist(arr: { id: string }[], id: string) {
+  private doesChannelExist(arr: { id: string }[], id: string) {
     return arr.some((v) => v.id === id);
   }
 
-  protected async makeWebhookForChannel(
+  private async makeWebhookForChannel(
     channelId: string | null | undefined,
     prevId: string | null,
     name: string,
@@ -154,9 +156,7 @@ export class DiscordWebhooksController {
     }
 
     const createdWebhook = (await rest.post(Routes.channelWebhooks(channelId), {
-      body: {
-        name,
-      },
+      body: { name },
     })) as RESTGetAPIWebhookResult;
 
     return { webhookId: createdWebhook.id, channelId };

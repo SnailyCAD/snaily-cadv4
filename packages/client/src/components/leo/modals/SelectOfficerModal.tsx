@@ -12,12 +12,13 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { useLeoState } from "state/leoState";
 import { useValues } from "context/ValuesContext";
-import { ShouldDoType } from "@snailycad/types";
+import { Officer, ShouldDoType } from "@snailycad/types";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { isUnitDisabled, makeUnitName } from "lib/utils";
+import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
 
 export function SelectOfficerModal() {
-  const { officers, setActiveOfficer } = useLeoState();
+  const { userOfficers, setActiveOfficer } = useLeoState();
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -30,7 +31,8 @@ export function SelectOfficerModal() {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!onDutyCode) return;
 
-    const { json } = await execute(`/dispatch/status/${values.officer}`, {
+    const { json } = await execute<PutDispatchStatusByUnitId>({
+      path: `/dispatch/status/${values.officer}`,
       method: "PUT",
       data: {
         status: onDutyCode.id,
@@ -39,7 +41,7 @@ export function SelectOfficerModal() {
 
     if (json.id) {
       closeModal(ModalIds.SelectOfficer);
-      setActiveOfficer(json);
+      setActiveOfficer(json as Officer);
     }
   }
 
@@ -64,7 +66,7 @@ export function SelectOfficerModal() {
                 name="officer"
                 onChange={handleChange}
                 isClearable
-                values={officers.map((officer) => ({
+                values={userOfficers.map((officer) => ({
                   label: `${generateCallsign(officer)} ${makeUnitName(officer)}`,
                   value: officer.id,
                   isDisabled: isUnitDisabled(officer),

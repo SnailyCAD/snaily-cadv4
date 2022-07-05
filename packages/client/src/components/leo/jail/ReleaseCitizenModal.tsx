@@ -1,7 +1,7 @@
 import { Modal } from "components/modal/Modal";
 import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
-import { Citizen, ReleaseType } from "@snailycad/types";
+import { BaseCitizen, Record, ReleaseType } from "@snailycad/types";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "next-intl";
@@ -12,10 +12,12 @@ import { Select } from "components/form/Select";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useImageUrl } from "hooks/useImageUrl";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
+import type { NameSearchResult } from "state/search/nameSearchState";
+import type { DeleteReleaseJailedCitizenData } from "@snailycad/types/api";
 
 interface Props {
-  citizen: (Citizen & { recordId: string }) | null;
-  onSuccess(): void;
+  citizen: (BaseCitizen & { recordId: string }) | null;
+  onSuccess(entry: BaseCitizen & { Record: Record[] }): void;
 }
 
 const LABELS = {
@@ -43,14 +45,15 @@ export function ReleaseCitizenModal({ onSuccess, citizen }: Props) {
   ) {
     if (!citizen) return;
 
-    const { json } = await execute(`/leo/jail/${citizen.id}`, {
+    const { json } = await execute<DeleteReleaseJailedCitizenData, typeof INITIAL_VALUES>({
+      path: `/leo/jail/${citizen.id}`,
       method: "DELETE",
       data: { ...values, recordId: citizen.recordId },
       helpers,
     });
 
-    if (typeof json === "boolean") {
-      onSuccess();
+    if (json) {
+      onSuccess(json);
     }
   }
 
@@ -78,15 +81,15 @@ export function ReleaseCitizenModal({ onSuccess, citizen }: Props) {
 
             {values.type === ReleaseType.BAIL_POSTED ? (
               <FormField errorMessage={errors.releasedById} label={t("bailPostedBy")}>
-                <InputSuggestions
-                  onSuggestionClick={(suggestion: Citizen) => {
+                <InputSuggestions<NameSearchResult>
+                  onSuggestionClick={(suggestion) => {
                     setValues({
                       ...values,
                       releasedById: suggestion.id,
                       releasedByName: `${suggestion.name} ${suggestion.surname}`,
                     });
                   }}
-                  Component={({ suggestion }: { suggestion: Citizen }) => (
+                  Component={({ suggestion }) => (
                     <div className="flex items-center">
                       {suggestion.imageId ? (
                         <img

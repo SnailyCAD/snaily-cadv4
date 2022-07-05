@@ -4,6 +4,7 @@ import {
   UseBeforeEach,
   MultipartFile,
   PlatformMulterFile,
+  Context,
 } from "@tsed/common";
 import { Post } from "@tsed/schema";
 import { prisma } from "lib/prisma";
@@ -21,6 +22,7 @@ import {
   DIVISION_ARR,
   PENAL_CODE_ARR,
   QUALIFICATION_ARR,
+  CALL_TYPE_ARR,
 } from "@snailycad/schemas";
 import {
   type DepartmentType,
@@ -33,6 +35,8 @@ import {
   WhatPages,
   ValueType,
   Value,
+  CadFeature,
+  cad,
 } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { upsertWarningApplicable } from "lib/records/penal-code";
@@ -40,6 +44,7 @@ import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
 import { getPermissionsForValuesRequest } from "lib/values/utils";
 import { UsePermissions } from "middlewares/UsePermissions";
 import { validateImgurURL } from "utils/image";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/admin/values/import/:path")
 @UseBeforeEach(IsAuth, IsValidPath)
@@ -49,7 +54,8 @@ export class ImportValuesViaFileController {
   async importValueByPath(
     @MultipartFile("file") file: PlatformMulterFile,
     @PathParams("path") path: string,
-  ) {
+    @Context() context: Context,
+  ): Promise<APITypes.ImportValuesData> {
     const type = this.getTypeFromPath(path);
 
     if (file.mimetype !== "application/json") {
@@ -74,8 +80,8 @@ export class ImportValuesViaFileController {
     }
 
     const handler = typeHandlers[type as keyof typeof typeHandlers];
-    const data = await handler(body, type);
-    return data;
+    const data = await handler({ body, context, type });
+    return data as APITypes.ImportValuesData;
   }
 
   private getTypeFromPath(path: string): ValueType {
@@ -83,8 +89,14 @@ export class ImportValuesViaFileController {
   }
 }
 
+interface HandlerOptions {
+  body: unknown;
+  id?: string;
+  context: Context;
+}
+
 export const typeHandlers = {
-  VEHICLE: async (body: unknown, id?: string) => {
+  VEHICLE: async ({ body, id }: HandlerOptions) => {
     const data = validateSchema(HASH_SCHEMA_ARR, body);
 
     return prisma.$transaction(
@@ -94,13 +106,14 @@ export const typeHandlers = {
           ...makePrismaData(ValueType.VEHICLE, {
             hash: item.hash,
             value: item.value,
+            isDisabled: item.isDisabled,
           }),
           include: { value: true },
         });
       }),
     );
   },
-  WEAPON: async (body: unknown, id?: string) => {
+  WEAPON: async ({ body, id }: HandlerOptions) => {
     const data = validateSchema(HASH_SCHEMA_ARR, body);
 
     return prisma.$transaction(
@@ -111,12 +124,13 @@ export const typeHandlers = {
           ...makePrismaData(ValueType.WEAPON, {
             hash: item.hash,
             value: item.value,
+            isDisabled: item.isDisabled,
           }),
         });
       }),
     );
   },
-  BUSINESS_ROLE: async (body: unknown, id?: string) => {
+  BUSINESS_ROLE: async ({ body, id }: HandlerOptions) => {
     const data = validateSchema(BUSINESS_ROLE_ARR, body);
 
     return prisma.$transaction(
@@ -126,13 +140,14 @@ export const typeHandlers = {
           ...makePrismaData(ValueType.BUSINESS_ROLE, {
             as: item.as as EmployeeAsEnum,
             value: item.value,
+            isDisabled: item.isDisabled,
           }),
           include: { value: true },
         });
       }),
     );
   },
-  DRIVERSLICENSE_CATEGORY: async (body: unknown, id?: string) => {
+  DRIVERSLICENSE_CATEGORY: async ({ body, id }: HandlerOptions) => {
     const data = validateSchema(DLC_ARR, body);
 
     return prisma.$transaction(
@@ -142,6 +157,7 @@ export const typeHandlers = {
           ...makePrismaData(ValueType.DRIVERSLICENSE_CATEGORY, {
             type: item.type as DriversLicenseCategoryType,
             value: item.value,
+            isDisabled: item.isDisabled,
             description: item.description,
           }),
           include: { value: true },
@@ -149,7 +165,7 @@ export const typeHandlers = {
       }),
     );
   },
-  DEPARTMENT: async (body: unknown, id?: string) => {
+  DEPARTMENT: async ({ body, id }: HandlerOptions) => {
     const data = validateSchema(DEPARTMENT_ARR, body);
 
     return prisma.$transaction(
@@ -160,6 +176,7 @@ export const typeHandlers = {
             type: item.type as DepartmentType,
             callsign: item.callsign,
             value: item.value,
+            isDisabled: item.isDisabled,
             isDefaultDepartment: item.isDefaultDepartment ?? false,
             isConfidential: item.isConfidential ?? false,
             whitelisted: item.whitelisted ?? false,
@@ -172,7 +189,7 @@ export const typeHandlers = {
       }),
     );
   },
-  DIVISION: async (body: unknown, id?: string) => {
+  DIVISION: async ({ body, id }: HandlerOptions) => {
     const data = validateSchema(DIVISION_ARR, body);
 
     return prisma.$transaction(
@@ -183,6 +200,7 @@ export const typeHandlers = {
             callsign: item.callsign,
             department: { connect: { id: item.departmentId } },
             value: item.value,
+            isDisabled: item.isDisabled,
             pairedUnitTemplate: item.pairedUnitTemplate || null,
           }),
           include: { value: true, department: { include: { value: true } } },
@@ -190,7 +208,7 @@ export const typeHandlers = {
       }),
     );
   },
-  CODES_10: async (body: unknown, id?: string) => {
+  CODES_10: async ({ body, id }: HandlerOptions) => {
     const data = validateSchema(CODES_10_ARR, body);
     const DEFAULT_WHAT_PAGES = [WhatPages.LEO, WhatPages.DISPATCH, WhatPages.EMS_FD];
 
@@ -205,6 +223,7 @@ export const typeHandlers = {
           shouldDo: item.shouldDo as ShouldDoType,
           whatPages: whatPages as WhatPages[],
           value: item.value,
+          isDisabled: item.isDisabled,
         }),
         include: { value: true, departments: { include: { value: true } } },
       });
@@ -232,9 +251,10 @@ export const typeHandlers = {
       return updated || updatedValue;
     });
   },
-  PENAL_CODE: async (body: unknown, id?: string) => {
+  PENAL_CODE: async ({ body, id, context }: HandlerOptions) => {
     const data = validateSchema(PENAL_CODE_ARR, body);
     const penalCode = id && (await prisma.penalCode.findUnique({ where: { id: String(id) } }));
+    const cad = context.get("cad") as cad & { features?: CadFeature[] };
 
     return handlePromiseAll(data, async (item) => {
       const data = {
@@ -243,14 +263,21 @@ export const typeHandlers = {
           description: item.description,
           descriptionData: item.descriptionData ?? [],
           groupId: item.groupId,
-          ...(await upsertWarningApplicable(item, penalCode || undefined)),
+          ...(await upsertWarningApplicable({
+            body: item,
+            cad,
+            penalCode: penalCode || undefined,
+          })),
         },
         create: {
           title: item.title,
           description: item.description,
           descriptionData: item.descriptionData ?? [],
           groupId: item.groupId,
-          ...(await upsertWarningApplicable(item)),
+          ...(await upsertWarningApplicable({
+            body: item,
+            cad,
+          })),
         },
       };
 
@@ -261,7 +288,7 @@ export const typeHandlers = {
       });
     });
   },
-  QUALIFICATION: async (body: unknown, id?: string) => {
+  QUALIFICATION: async ({ body, id }: HandlerOptions) => {
     const data = validateSchema(QUALIFICATION_ARR, body);
 
     return handlePromiseAll(data, async (item) => {
@@ -271,6 +298,7 @@ export const typeHandlers = {
           description: item.description,
           imageId: validateImgurURL(item.image),
           value: item.value,
+          isDisabled: item.isDisabled,
           qualificationType: item.qualificationType as QualificationValueType,
         }),
         include: { value: true, departments: { include: { value: true } } },
@@ -300,13 +328,14 @@ export const typeHandlers = {
     });
   },
 
-  OFFICER_RANK: async (body: unknown, id?: string) => {
+  OFFICER_RANK: async ({ body, id }: HandlerOptions) => {
     const data = validateSchema(BASE_ARR, body);
 
     return handlePromiseAll(data, async (item) => {
       const createUpdateData = {
         officerRankImageId: validateImgurURL(item.officerRankImageId),
         value: item.value,
+        isDisabled: item.isDisabled ?? false,
         isDefault: false,
         type: ValueType.OFFICER_RANK,
       };
@@ -341,18 +370,37 @@ export const typeHandlers = {
       return updated || updatedValue;
     });
   },
+  CALL_TYPE: async ({ body, id }: HandlerOptions) => {
+    const data = validateSchema(CALL_TYPE_ARR, body);
 
-  GENDER: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "GENDER", id),
-  ETHNICITY: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "ETHNICITY", id),
-  BLOOD_GROUP: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "BLOOD_GROUP", id),
-  IMPOUND_LOT: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "IMPOUND_LOT", id),
-  LICENSE: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "LICENSE", id),
-  VEHICLE_FLAG: async (body: unknown, id?: string) =>
-    typeHandlers.GENERIC(body, "VEHICLE_FLAG", id),
-  CITIZEN_FLAG: async (body: unknown, id?: string) =>
-    typeHandlers.GENERIC(body, "CITIZEN_FLAG", id),
+    return prisma.$transaction(
+      data.map((item) => {
+        return prisma.callTypeValue.upsert({
+          include: { value: true },
+          where: { id: String(id) },
+          ...makePrismaData(ValueType.CALL_TYPE, {
+            priority: item.priority,
+            value: item.value,
+            isDisabled: item.isDisabled,
+          }),
+        });
+      }),
+    );
+  },
+  GENDER: async (options: HandlerOptions) => typeHandlers.GENERIC({ ...options, type: "GENDER" }),
+  ETHNICITY: async (options: HandlerOptions) =>
+    typeHandlers.GENERIC({ ...options, type: "ETHNICITY" }),
+  BLOOD_GROUP: async (options: HandlerOptions) =>
+    typeHandlers.GENERIC({ ...options, type: "BLOOD_GROUP" }),
+  IMPOUND_LOT: async (options: HandlerOptions) =>
+    typeHandlers.GENERIC({ ...options, type: "IMPOUND_LOT" }),
+  LICENSE: async (options: HandlerOptions) => typeHandlers.GENERIC({ ...options, type: "LICENSE" }),
+  VEHICLE_FLAG: async (options: HandlerOptions) =>
+    typeHandlers.GENERIC({ ...options, type: "VEHICLE_FLAG" }),
+  CITIZEN_FLAG: async (options: HandlerOptions) =>
+    typeHandlers.GENERIC({ ...options, type: "CITIZEN_FLAG" }),
 
-  GENERIC: async (body: unknown, type: ValueType, id?: string): Promise<Value[]> => {
+  GENERIC: async ({ body, type, id }: HandlerOptions & { type: ValueType }): Promise<Value[]> => {
     const data = validateSchema(BASE_ARR, body);
 
     return prisma.$transaction(
@@ -364,21 +412,15 @@ export const typeHandlers = {
             value: { set: item.value },
             licenseType:
               type === ValueType.LICENSE ? (item.licenseType as ValueLicenseType) : undefined,
-            officerRankImageId:
-              type === ValueType.OFFICER_RANK
-                ? validateImgurURL(item.officerRankImageId)
-                : undefined,
+            isDisabled: item.isDisabled ?? false,
           },
           create: {
             isDefault: type === ValueType.LICENSE ? item.isDefault ?? false : false,
             type: type as ValueType,
             value: item.value,
+            isDisabled: item.isDisabled ?? false,
             licenseType:
               type === ValueType.LICENSE ? (item.licenseType as ValueLicenseType) : undefined,
-            officerRankImageId:
-              type === ValueType.OFFICER_RANK
-                ? validateImgurURL(item.officerRankImageId)
-                : undefined,
           },
         };
 
@@ -391,34 +433,46 @@ export const typeHandlers = {
   },
 };
 
-function makePrismaData<T extends { value: string }>(type: ValueType, data: T) {
-  const { value, ...rest } = data;
+function makePrismaData<T extends { value: string; isDisabled: boolean | null | undefined }>(
+  type: ValueType,
+  data: T,
+) {
+  const { value, isDisabled, ...rest } = data;
 
   return {
-    update: { ...rest, value: createValueObj(value, type, "update") },
-    create: { ...rest, value: createValueObj(value, type, "create") },
+    update: {
+      ...rest,
+      value: createValueObj({ value, type, isDisabled, updateType: "update" }),
+    },
+    create: {
+      ...rest,
+      value: createValueObj({ value, type, isDisabled, updateType: "create" }),
+    },
   };
 }
 
-function createValueObj(
-  value: string,
-  type: ValueType,
-  updateType: "update" | "create" = "create",
-) {
+function createValueObj({
+  value,
+  type,
+  updateType = "create",
+  isDisabled,
+}: {
+  value: string;
+  type: ValueType;
+  updateType: "update" | "create";
+  isDisabled: boolean | null | undefined;
+}) {
   return {
     [updateType]: {
       isDefault: false,
       type,
+      isDisabled: isDisabled ?? false,
       value: updateType === "update" ? { set: value } : value,
     },
   };
 }
 
-async function handlePromiseAll<T, R>(
-  data: T[],
-  handler: (item: T) => Promise<R>,
-): Promise<{ success: R[]; failed: number }> {
-  let failed = 0;
+async function handlePromiseAll<T, R>(data: T[], handler: (item: T) => Promise<R>): Promise<R[]> {
   const success: R[] = [];
 
   await Promise.all(
@@ -428,10 +482,9 @@ async function handlePromiseAll<T, R>(
         success.push(data);
       } catch (e) {
         console.error(e);
-        failed += 1;
       }
     }),
   );
 
-  return { success, failed };
+  return success;
 }

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Layout } from "components/Layout";
-import { ActiveCalls } from "components/leo/ActiveCalls";
+import { ActiveCalls } from "components/dispatch/active-calls/ActiveCalls";
 import { ModalButtons } from "components/ems-fd/ModalButtons";
 import dynamic from "next/dynamic";
 import type { GetServerSideProps } from "next";
@@ -8,21 +8,31 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { useTranslations } from "use-intl";
 import { StatusesArea } from "components/shared/StatusesArea";
-import { ActiveDeputy, useEmsFdState } from "state/emsFdState";
-import { Full911Call, useDispatchState } from "state/dispatchState";
+import { useEmsFdState } from "state/emsFdState";
+import { useDispatchState } from "state/dispatchState";
 import { requestAll } from "lib/utils";
 import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
 import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { Title } from "components/shared/Title";
 import { UtilityPanel } from "components/shared/UtilityPanel";
-import type { EmsFdDeputy } from "@snailycad/types";
+import { ValueType } from "@snailycad/types";
 import { Permissions } from "@snailycad/permissions";
+import { usePanicButton } from "hooks/shared/usePanicButton";
+import { useTones } from "hooks/global/useTones";
+import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
+import type {
+  Get911CallsData,
+  GetEmsFdActiveDeputies,
+  GetEmsFdActiveDeputy,
+  GetMyDeputiesData,
+} from "@snailycad/types/api";
 
 interface Props {
-  activeDeputy: ActiveDeputy | null;
-  deputies: EmsFdDeputy[];
-  calls: Full911Call[];
+  activeDeputy: GetEmsFdActiveDeputy | null;
+  activeDeputies: GetEmsFdActiveDeputies;
+  userDeputies: GetMyDeputiesData["deputies"];
+  calls: Get911CallsData;
 }
 
 const NotepadModal = dynamic(async () => {
@@ -41,18 +51,35 @@ const SearchMedicalRecordModal = dynamic(async () => {
   return (await import("components/ems-fd/modals/SearchMedicalRecords")).SearchMedicalRecordModal;
 });
 
-export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props) {
-  const { signal100Enabled, audio, Component } = useSignal100();
+export default function EmsFDDashboard({
+  activeDeputy,
+  calls,
+  userDeputies,
+  activeDeputies,
+}: Props) {
+  useLoadValuesClientSide({
+    valueTypes: [
+      ValueType.BLOOD_GROUP,
+      ValueType.PENAL_CODE,
+      ValueType.IMPOUND_LOT,
+      ValueType.DEPARTMENT,
+      ValueType.DIVISION,
+    ],
+  });
 
+  const signal100 = useSignal100();
+  const tones = useTones("ems-fd");
+  const panic = usePanicButton();
   const state = useEmsFdState();
-  const { setCalls, activeDeputies, setActiveDeputies } = useDispatchState();
+  const dispatchState = useDispatchState();
 
   React.useEffect(() => {
     state.setActiveDeputy(activeDeputy);
-    state.setDeputies(deputies);
-    setCalls(calls);
+    state.setDeputies(userDeputies);
+    dispatchState.setCalls(calls);
+    dispatchState.setActiveDeputies(activeDeputies);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.setActiveDeputy, state.setDeputies, setCalls, calls, deputies, activeDeputy]);
+  }, [activeDeputies, activeDeputy, calls]);
 
   const t = useTranslations();
 
@@ -63,7 +90,9 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
     >
       <Title renderLayoutTitle={false}>{t("Ems.emsFd")}</Title>
 
-      <Component enabled={signal100Enabled} audio={audio} />
+      <signal100.Component enabled={signal100.enabled} audio={signal100.audio} />
+      <panic.Component audio={panic.audio} unit={panic.unit} />
+      <tones.Component audio={tones.audio} description={tones.description} />
 
       <UtilityPanel>
         <div className="px-4">
@@ -71,8 +100,8 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
         </div>
 
         <StatusesArea
-          setUnits={setActiveDeputies}
-          units={activeDeputies}
+          setUnits={dispatchState.setActiveDeputies}
+          units={dispatchState.activeDeputies}
           setActiveUnit={state.setActiveDeputy}
           activeUnit={state.activeDeputy}
         />
@@ -90,30 +119,41 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
       </div>
 
       <SelectDeputyModal />
-      <NotepadModal />
-      <CreateMedicalRecordModal />
-      <SearchMedicalRecordModal />
+
+      {state.activeDeputy ? (
+        <>
+          <NotepadModal />
+          <CreateMedicalRecordModal />
+          <SearchMedicalRecordModal />
+        </>
+      ) : null}
     </Layout>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const [values, calls, { deputies }, activeDeputy] = await requestAll(req, [
-    ["/admin/values/codes_10?paths=penal_code,impound_lot,blood_group", []],
+export const getServerSideProps: GetServerSideProps<Props> = async ({ req, locale }) => {
+  const user = await getSessionUser(req);
+  const [values, calls, { deputies }, activeDeputies, activeDeputy] = await requestAll(req, [
+    ["/admin/values/codes_10", []],
     ["/911-calls", []],
     ["/ems-fd", { deputies: [] }],
+    ["/ems-fd/active-deputies", []],
     ["/ems-fd/active-deputy", null],
   ]);
 
   return {
     props: {
-      session: await getSessionUser(req),
+      session: user,
       activeDeputy,
-      deputies,
+      activeDeputies,
+      userDeputies: deputies,
       calls,
       values,
       messages: {
-        ...(await getTranslations(["leo", "ems-fd", "citizen", "calls", "common"], locale)),
+        ...(await getTranslations(
+          ["leo", "ems-fd", "citizen", "calls", "common"],
+          user?.locale ?? locale,
+        )),
       },
     },
   };

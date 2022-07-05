@@ -2,7 +2,7 @@ import { useTranslations } from "use-intl";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { Citizen, Rank, User } from "@snailycad/types";
+import { Rank } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
@@ -12,9 +12,14 @@ import type { FormikHelpers } from "formik";
 import { useRouter } from "next/router";
 import { Permissions } from "@snailycad/permissions";
 import type { SelectValue } from "components/form/Select";
+import type {
+  GetManageCitizenByIdData,
+  PostCitizenImageByIdData,
+  PutManageCitizenByIdData,
+} from "@snailycad/types/api";
 
 interface Props {
-  citizen: Citizen & { user: User };
+  citizen: GetManageCitizenByIdData;
 }
 
 export default function ManageCitizens({ citizen }: Props) {
@@ -31,7 +36,8 @@ export default function ManageCitizens({ citizen }: Props) {
     formData?: FormData;
     helpers: FormikHelpers<any>;
   }) {
-    const { json } = await execute(`/admin/manage/citizens/${citizen.id}`, {
+    const { json } = await execute<PutManageCitizenByIdData>({
+      path: `/admin/manage/citizens/${citizen.id}`,
       method: "PUT",
       helpers,
       data: {
@@ -52,7 +58,8 @@ export default function ManageCitizens({ citizen }: Props) {
     });
 
     if (formData) {
-      await execute(`/citizen/${citizen.id}`, {
+      await execute<PostCitizenImageByIdData>({
+        path: `/citizen/${citizen.id}`,
         method: "POST",
         data: formData,
         helpers,
@@ -78,6 +85,7 @@ export default function ManageCitizens({ citizen }: Props) {
       <div className="mt-5">
         <ManageCitizenForm
           allowEditingName
+          allowEditingUser
           showLicenseFields
           citizen={citizen}
           onSubmit={handleSubmit}
@@ -89,7 +97,8 @@ export default function ManageCitizens({ citizen }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, query, req }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, query, req }) => {
+  const user = await getSessionUser(req);
   const [citizen, values] = await requestAll(req, [
     [`/admin/manage/citizens/${query.id}`, null],
     ["/admin/values/gender?paths=ethnicity,license", []],
@@ -105,9 +114,12 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, re
     props: {
       citizen,
       values,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["citizen", "admin", "values", "common"], locale)),
+        ...(await getTranslations(
+          ["citizen", "admin", "values", "common"],
+          user?.locale ?? locale,
+        )),
       },
     },
   };

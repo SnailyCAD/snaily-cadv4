@@ -12,6 +12,7 @@ import { ModalIds } from "types/ModalIds";
 import { Officer, ShouldDoType, WhatPages, type StatusValue } from "@snailycad/types";
 import { useAudio } from "react-use";
 import { useAuth } from "context/AuthContext";
+import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
 
 interface Props<T extends ActiveOfficer | ActiveDeputy> {
   activeUnit: T | null;
@@ -97,7 +98,8 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
       );
     }
 
-    const { json } = await execute(`/dispatch/status/${activeUnit.id}`, {
+    const { json } = await execute<PutDispatchStatusByUnitId>({
+      path: `/dispatch/status/${activeUnit.id}`,
       method: "PUT",
       data: {
         status: status.id,
@@ -128,7 +130,7 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
       {audio}
       <li>
         <Button
-          className={classNames("w-full min-w-[5em]", isOnDutyActive && "font-semibold")}
+          className={classNames("w-full min-w-[5em] text-base", isOnDutyActive && "font-semibold")}
           variant={isOnDutyActive ? "blue" : "default"}
           onClick={() => handleOnDuty(onDutyCode)}
         >
@@ -155,7 +157,7 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
                 onClick={() => handleStatusUpdate(code)}
                 disabled={isUnitOffDuty}
                 variant={variant}
-                className={classNames("w-full min-w-[5em]", isActive && "font-semibold")}
+                className={classNames("text-base w-full min-w-[5em]", isActive && "font-semibold")}
               >
                 {code.value.value}
               </Button>

@@ -8,7 +8,7 @@ import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import type { Citizen, MedicalRecord } from "@snailycad/types";
+import type { MedicalRecord } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import { Input } from "components/form/inputs/Input";
 import { Textarea } from "components/form/Textarea";
@@ -17,6 +17,8 @@ import { useValues } from "context/ValuesContext";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import type { NameSearchResult } from "state/search/nameSearchState";
+import type { PostEmsFdMedicalRecord } from "@snailycad/types/api";
 
 interface Props {
   onCreate?(newV: MedicalRecord): void;
@@ -40,7 +42,8 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute("/ems-fd/medical-record", {
+    const { json } = await execute<PostEmsFdMedicalRecord>({
+      path: "/ems-fd/medical-record",
       method: "POST",
       data: values,
     });
@@ -70,8 +73,8 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
         {({ handleChange, setValues, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.citizenId} label={t("citizen")}>
-              <InputSuggestions
-                onSuggestionClick={(suggestion: Citizen) => {
+              <InputSuggestions<NameSearchResult>
+                onSuggestionClick={(suggestion) => {
                   const newValues = {
                     ...values,
                     citizenId: suggestion.id,
@@ -80,7 +83,7 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
 
                   setValues(newValues, true);
                 }}
-                Component={({ suggestion }: { suggestion: Citizen }) => (
+                Component={({ suggestion }) => (
                   <div className="flex items-center">
                     {suggestion.imageId ? (
                       <img
@@ -98,7 +101,7 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
                   </div>
                 )}
                 options={{
-                  apiPath: "/search/medical-name",
+                  apiPath: "/search/name",
                   method: "POST",
                   dataKey: "name",
                 }}

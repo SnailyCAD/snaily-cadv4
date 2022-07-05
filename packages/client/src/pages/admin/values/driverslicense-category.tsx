@@ -7,9 +7,9 @@ import type { GetServerSideProps } from "next";
 import { useModal } from "state/modalState";
 import {
   DriversLicenseCategoryType,
-  DriversLicenseCategoryValue,
   Rank,
-  ValueType,
+  type DriversLicenseCategoryValue,
+  type ValueType,
 } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
@@ -23,6 +23,7 @@ import { Title } from "components/shared/Title";
 import { ModalIds } from "types/ModalIds";
 import { AlertModal } from "components/modal/AlertModal";
 import { Permissions } from "@snailycad/permissions";
+import type { DeleteValueByIdData, PutValuePositionsData } from "@snailycad/types/api";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -64,13 +65,10 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
       ];
     });
 
-    await execute(`/admin/values/${type.toLowerCase()}/positions`, {
+    await execute<PutValuePositionsData>({
+      path: `/admin/values/${type.toLowerCase()}/positions`,
       method: "PUT",
-      data: {
-        ids: list.map((v) => {
-          return "createdAt" in v ? v.id : v.valueId;
-        }),
-      },
+      data: { ids: list.map((v) => v.valueId) },
     });
   }
 
@@ -87,7 +85,8 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
   async function handleDelete() {
     if (!tempValue?.value || !tempValue.type) return;
 
-    const { json } = await execute(`/admin/values/${type.toLowerCase()}/${tempValue.value.id}`, {
+    const { json } = await execute<DeleteValueByIdData>({
+      path: `/admin/values/${type.toLowerCase()}/${tempValue.value.id}`,
       method: "DELETE",
     });
 
@@ -203,15 +202,16 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+  const user = await getSessionUser(req);
   const [values] = await requestAll(req, [["/admin/values/driverslicense_category", []]]);
 
   return {
     props: {
       values,
       pathValues: values?.[0] ?? {},
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["admin", "values", "common"], locale)),
+        ...(await getTranslations(["admin", "values", "common"], user?.locale ?? locale)),
       },
     },
   };

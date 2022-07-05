@@ -17,14 +17,14 @@ export function NameSearchWeaponsTab() {
   const { setCurrentResult: setWeaponResult } = useWeaponSearch();
 
   function handleWeaponClick(weapon: Weapon) {
-    if (!currentResult) return;
+    if (!currentResult || currentResult.isConfidential) return;
 
     // todo: set correct data for `allCustomFields` and `customFields`
     setWeaponResult({ allCustomFields: [], customFields: [], ...weapon, citizen: currentResult });
     openModal(ModalIds.WeaponSearchWithinName);
   }
 
-  if (!currentResult) {
+  if (!currentResult || currentResult.isConfidential) {
     return null;
   }
 
@@ -40,7 +40,7 @@ export function NameSearchWeaponsTab() {
             model: (
               <Button
                 title={common("openInSearch")}
-                small
+                size="xs"
                 type="button"
                 onClick={() => handleWeaponClick(weapon)}
               >
