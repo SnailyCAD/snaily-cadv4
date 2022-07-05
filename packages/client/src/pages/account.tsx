@@ -111,7 +111,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
       session: user,
       availableSounds,
       messages: {
-        ...(await getTranslations(["account", "auth", "common"], user?.locale ?? locale)),
+        ...(await getTranslations(["account", "auth", "common", "admin"], user?.locale ?? locale)),
       },
     },
   };
