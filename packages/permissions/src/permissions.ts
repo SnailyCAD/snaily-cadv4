@@ -20,7 +20,7 @@ export enum Permissions {
   ManageDMV = "ManageDMV",
   DeleteCitizenRecords = "DeleteCitizenRecords",
   ManageCustomRoles = "ManageCustomRoles",
-  ViewCustomRoles = "ViewCustomRolesModal",
+  ViewCustomRoles = "ViewCustomRoles",
 
   Dispatch = "Dispatch",
   EmsFd = "EmsFd",

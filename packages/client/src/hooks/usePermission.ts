@@ -25,17 +25,17 @@ export function usePermission() {
       return typeof fallback === "boolean" ? fallback : fallback(userToCheck);
     }
 
-    return hasPermission(userToCheck.permissions, permissionsToCheck);
+    return hasPermission({
+      permissionsToCheck,
+      userToCheck,
+      fallback,
+    });
   }
 
   function _getPermissions(userToCheck: User | null = user) {
     if (!userToCheck) return false;
 
-    if (userToCheck.roles && userToCheck.roles.length >= 1) {
-      userToCheck.permissions = userToCheck.roles.flatMap((r) => r.permissions);
-    }
-
-    return getPermissions(userToCheck.permissions);
+    return getPermissions(userToCheck);
   }
 
   return { hasPermissions: _hasPermission, getPermissions: _getPermissions };

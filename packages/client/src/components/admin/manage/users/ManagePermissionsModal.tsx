@@ -19,7 +19,7 @@ import { Input } from "components/form/inputs/Input";
 import type { GetManageUserByIdData, PutManageUserPermissionsByIdData } from "@snailycad/types/api";
 
 interface Props {
-  user: Pick<GetManageUserByIdData, "permissions" | "id" | "roles">;
+  user: Pick<GetManageUserByIdData, "permissions" | "id" | "roles" | "rank">;
   isReadOnly?: boolean;
   onUpdate?(user: PutManageUserPermissionsByIdData): void;
 }
@@ -60,7 +60,7 @@ export function ManagePermissionsModal({ user, onUpdate, isReadOnly }: Props) {
   const t = useTranslations("Management");
   const common = useTranslations("Common");
   const { closeModal, isOpen } = useModal();
-  const userPermissions = getPermissions(user.permissions);
+  const userPermissions = getPermissions(user);
   const { state, execute } = useFetch();
 
   async function onSubmit(data: typeof INITIAL_VALUES) {
@@ -160,6 +160,8 @@ export function ManagePermissionsModal({ user, onUpdate, isReadOnly }: Props) {
                         const isDisabled = user.roles?.some((r) =>
                           r.permissions.includes(permission),
                         );
+
+                        console.log({ values });
 
                         return (
                           <FormField key={permission} className="my-1" label={formattedName}>
