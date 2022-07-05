@@ -1,4 +1,13 @@
-import { Rank, type cad, WhitelistStatus, Feature, CadFeature, User, Prisma } from "@prisma/client";
+import {
+  Rank,
+  type cad,
+  WhitelistStatus,
+  Feature,
+  CadFeature,
+  User,
+  Prisma,
+  CustomRole,
+} from "@prisma/client";
 import { PathParams, BodyParams, Context, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -136,7 +145,10 @@ export class ManageUsersController {
     @BodyParams() body: unknown,
   ): Promise<APITypes.PutManageUserPermissionsByIdData> {
     const data = validateSchema(PERMISSIONS_SCHEMA, body);
-    const user = await prisma.user.findUnique({ where: { id: userId } });
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: manageUsersSelect(false),
+    });
 
     if (!user) {
       throw new NotFound("notFound");
@@ -146,7 +158,7 @@ export class ManageUsersController {
       throw new ExtendedBadRequest({ rank: "cannotUpdateOwnerPermissions" });
     }
 
-    const permissions = this.parsePermissions(data);
+    const permissions = this.parsePermissions(data, user);
 
     const updated = await prisma.user.update({
       where: {
@@ -442,16 +454,20 @@ export class ManageUsersController {
     return true;
   }
 
-  private parsePermissions(data: Record<string, string>) {
+  private parsePermissions(data: Record<string, string>, user: { roles: CustomRole[] }) {
     const permissions: string[] = [];
     const values = Object.values(Permissions);
+    const rolePermissions = user.roles.flatMap((r) => r.permissions);
 
-    values.forEach((name) => {
+    for (const name of values) {
       const updatedPermission = data[name];
-      if (!updatedPermission) return;
+
+      if (!updatedPermission || rolePermissions.includes(updatedPermission)) {
+        continue;
+      }
 
       permissions.push(updatedPermission);
-    });
+    }
 
     return permissions;
   }

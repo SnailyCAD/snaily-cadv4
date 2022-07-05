@@ -126,11 +126,11 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
           setCustomRoles((p) => [role, ...p]);
         }}
         onUpdate={(oldRole, newRole) => {
-          setCustomRoles((p) => {
-            const idx = p.indexOf(oldRole);
-            p[idx] = newRole;
-            return p;
-          });
+          const copied = [...customRoles];
+          const idx = copied.indexOf(oldRole);
+          copied[idx] = newRole;
+
+          setCustomRoles(copied);
         }}
         role={tempRole}
         onClose={() => setTempRole(null)}
