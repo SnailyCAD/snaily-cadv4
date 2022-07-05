@@ -1,20 +1,23 @@
-/*
-  Warnings:
+-- CreateTable
+CREATE TABLE "CustomRole" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "iconId" TEXT,
+    "permissions" TEXT[],
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  - You are about to drop the column `userId` on the `CustomRole` table. All the data in the column will be lost.
-
-*/
--- DropForeignKey
-ALTER TABLE "CustomRole" DROP CONSTRAINT "CustomRole_userId_fkey";
-
--- AlterTable
-ALTER TABLE "CustomRole" DROP COLUMN "userId";
+    CONSTRAINT "CustomRole_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "_CustomRoleToUser" (
     "A" TEXT NOT NULL,
     "B" TEXT NOT NULL
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "CustomRole_name_key" ON "CustomRole"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_CustomRoleToUser_AB_unique" ON "_CustomRoleToUser"("A", "B");
