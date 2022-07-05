@@ -1,7 +1,7 @@
 import { Middleware, MiddlewareMethods, Context, Req } from "@tsed/common";
 import { UseBefore } from "@tsed/platform-middlewares";
 import { StoreSet, useDecorators } from "@tsed/core";
-import { Rank, User } from "@prisma/client";
+import type { User } from "@prisma/client";
 import { hasPermission, Permissions } from "@snailycad/permissions";
 import { Forbidden } from "@tsed/exceptions";
 
@@ -24,15 +24,11 @@ export class UsePermissionsMiddleware implements MiddlewareMethods {
     const fallback =
       typeof routeData.fallback === "function" ? routeData.fallback(user) : routeData.fallback;
 
-    let hasPerm = hasPermission(user.permissions, routeData.permissions);
-
-    if (!user.permissions.length && fallback && !hasPerm) {
-      hasPerm = fallback;
-    }
-
-    if (user.rank === Rank.OWNER) {
-      hasPerm = true;
-    }
+    const hasPerm = hasPermission({
+      userToCheck: user,
+      permissionsToCheck: routeData.permissions,
+      fallback,
+    });
 
     if (!hasPerm) {
       throw new Forbidden("Invalid permissions");

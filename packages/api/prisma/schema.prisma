@@ -226,6 +226,7 @@ model User {
   soundSettingsId          String?
   apiToken                 ApiToken?             @relation(fields: [apiTokenId], references: [id])
   apiTokenId               String?
+  roles                    CustomRole[]
   locale                   String?
 
 
@@ -1232,6 +1233,17 @@ model CustomFieldValue {
   Citizens           Citizen[]
   RegisteredVehicles RegisteredVehicle[]
   Weapons            Weapon[]
+}
+
+/// custom roles
+model CustomRole {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  iconId      String?
+  permissions String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+  User        User[]
 }
 
 // courthouse posts

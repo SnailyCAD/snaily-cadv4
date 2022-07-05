@@ -17,92 +17,147 @@ const manageUsers = [
 
 test("Should allow a user to manage/delete/ban a user", () => {
   expect(
-    hasPermission(manageUsers, [
-      Permissions.ViewUsers,
-      Permissions.ManageUsers,
-      Permissions.BanUsers,
-      Permissions.DeleteUsers,
-    ]),
+    hasPermission({
+      userToCheck: { permissions: manageUsers, rank: "USER" },
+      permissionsToCheck: [
+        Permissions.ViewUsers,
+        Permissions.ManageUsers,
+        Permissions.BanUsers,
+        Permissions.DeleteUsers,
+      ],
+    }),
   ).toBe(true);
 });
 
 test("Should NOT be allowed to manage/delete/ban a user", () => {
-  expect(hasPermission(manageUsers, defaultPermissions.defaultTowPermissions)).toBe(false);
+  expect(
+    hasPermission({
+      userToCheck: { permissions: manageUsers, rank: "USER" },
+      permissionsToCheck: defaultPermissions.defaultTowPermissions,
+    }),
+  ).toBe(false);
 });
 
 test("Should not allow a user to manage/delete/ban a user", () => {
   expect(
-    hasPermission(
-      [Permissions.ViewUsers],
-      [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
-    ),
+    hasPermission({
+      userToCheck: { permissions: [Permissions.ViewUsers], rank: "USER" },
+      permissionsToCheck: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
+    }),
   ).toBe(false);
 });
 
 test("Should not allow a user to delete a user", () => {
   expect(
-    hasPermission([Permissions.ViewUsers, Permissions.ManageUsers], [Permissions.DeleteUsers]),
+    hasPermission({
+      userToCheck: {
+        permissions: [Permissions.ViewUsers, Permissions.ManageUsers],
+        rank: "USER",
+      },
+      permissionsToCheck: [Permissions.DeleteUsers],
+    }),
   ).toBe(false);
 });
 
-test("Should allow a user to delete x with 'allPermissions'", () => {
+test("Should allow with rank OWNER is able to delete x with 'allPermissions'", () => {
   expect(
-    hasPermission(allPermissions, [
-      Permissions.DeleteUsers,
-      Permissions.DeleteUnits,
-      Permissions.DeleteBusinesses,
-    ]),
+    hasPermission({
+      userToCheck: { rank: "OWNER", permissions: [] },
+      permissionsToCheck: [
+        Permissions.DeleteUsers,
+        Permissions.DeleteUnits,
+        Permissions.DeleteBusinesses,
+      ],
+    }),
   ).toBe(true);
 });
 
 test("Should allow a user to manage name change requests (Navbar tests)", () => {
-  expect(hasPermission(allDefaultAdminPermissions, [Permissions.ViewNameChangeRequests])).toBe(
-    true,
-  );
+  expect(
+    hasPermission({
+      userToCheck: { permissions: allDefaultAdminPermissions, rank: "USER" },
+      permissionsToCheck: [Permissions.ViewNameChangeRequests],
+    }),
+  ).toBe(true);
 });
 
 test("Should allow a user to manage 10-codes values", () => {
   expect(
-    hasPermission(
-      [
-        Permissions.ViewUsers,
-        Permissions.DeleteUsers,
-        Permissions.ManageValueCodes10,
-        Permissions.ManageValueDepartment,
-        Permissions.ManageValueOfficerRank,
-        Permissions.ManageValueDivision,
-      ],
-      [Permissions.ManageValueCodes10],
-    ),
+    hasPermission({
+      userToCheck: {
+        rank: "USER",
+        permissions: [
+          Permissions.ViewUsers,
+          Permissions.DeleteUsers,
+          Permissions.ManageValueCodes10,
+          Permissions.ManageValueDepartment,
+          Permissions.ManageValueOfficerRank,
+          Permissions.ManageValueDivision,
+        ],
+      },
+      permissionsToCheck: [Permissions.ManageValueCodes10],
+    }),
   ).toBe(true);
 });
 
 test("Should allow an officer to update their status", () => {
   expect(
-    hasPermission(
-      [Permissions.EmsFd, Permissions.Leo],
-      [Permissions.EmsFd, Permissions.Leo, Permissions.Dispatch, Permissions.ManageUnits],
-    ),
+    hasPermission({
+      userToCheck: { permissions: [Permissions.EmsFd, Permissions.Leo], rank: "USER" },
+      permissionsToCheck: [
+        Permissions.EmsFd,
+        Permissions.Leo,
+        Permissions.Dispatch,
+        Permissions.ManageUnits,
+      ],
+    }),
   ).toBe(true);
 });
 
-test("Should allow a user to ban/manage a user with 'allPermissions'", () => {
-  expect(hasPermission(allPermissions, [Permissions.BanUsers, Permissions.ManageUsers])).toBe(true);
+test("Should allow a user to ban/manage a user with rank OWNER", () => {
+  expect(
+    hasPermission({
+      userToCheck: { permissions: [], rank: "OWNER" },
+      permissionsToCheck: [Permissions.BanUsers, Permissions.ManageUsers],
+    }),
+  ).toBe(true);
 });
 
-test("Should return 'false' if user has no permissions", () => {
-  expect(hasPermission([], [Permissions.DeleteBusinesses, Permissions.ManageBusinesses])).toBe(
-    false,
-  );
+test("Should return 'false' if user has no permissions (Rank: USER|ADMIN)", () => {
+  expect(
+    hasPermission({
+      permissionsToCheck: [Permissions.DeleteBusinesses, Permissions.ManageBusinesses],
+      userToCheck: { rank: "USER", permissions: [], roles: [] },
+    }),
+  ).toBe(false);
 });
 
 test("Should correctly return the user permissions", () => {
-  expect(getPermissions(manageUsers)).toBeTypeOf("object");
+  expect(getPermissions({ permissions: manageUsers, rank: "USER" })).toBeTypeOf("object");
 });
 
 test("Should correctly return the user permissions with 'allPermissions'", () => {
-  expect(getPermissions(allPermissions)).toBeTypeOf("object");
+  expect(getPermissions({ permissions: allPermissions, rank: "OWNER" })).toBeTypeOf("object");
 });
+
+test("Should return 'true' if user has roles", () => {
+  expect(
+    hasPermission({
+      permissionsToCheck: [Permissions.EmsFd],
+      userToCheck: {
+        rank: "USER",
+        permissions: [],
+        roles: [
+          {
+            permissions: [Permissions.LiveMap, Permissions.EmsFd],
+          },
+        ],
+      },
+    }),
+  ).toBe(true);
+});
+
+// todo: add tests with roles
 
 test("Should return correct defaultPermissions", () => {
   expect(defaultPermissions.defaultLeoPermissions).toBeTypeOf("object");

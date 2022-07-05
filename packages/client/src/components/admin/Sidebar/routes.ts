@@ -53,6 +53,10 @@ export const managementRoutes: SidebarRoute[] = [
     type: "CUSTOM_FIELDS",
     permissions: [Permissions.ManageCustomFields],
   },
+  {
+    type: "CUSTOM_ROLES",
+    permissions: [Permissions.ViewCustomFields],
+  },
 ];
 
 export const valueRoutes: SidebarRoute[] = [

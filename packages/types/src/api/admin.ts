@@ -369,3 +369,41 @@ export type GetManageNameChangeRequests = (Prisma.NameChangeRequest & {
  * @route /admin/manage/name-change-requests/:id
  */
 export type PutManageNameChangeRequests = Prisma.NameChangeRequest;
+
+/**
+ * @method GET
+ * @route /admin/manage/custom-roles
+ */
+export type GetCustomRolesData = Prisma.CustomRole[];
+
+/**
+ * @method POST
+ * @route /admin/manage/custom-roles
+ */
+export type PostCustomRolesData = Prisma.CustomRole;
+
+/**
+ * @method PUT
+ * @route /admin/manage/custom-roles/:id
+ */
+export type PutCustomRoleByIdData = Prisma.CustomRole;
+
+/**
+ * @method DELETE
+ * @route /admin/manage/custom-roles/:id
+ */
+export type DeleteCustomRoleByIdData = boolean;
+
+/**
+ * @method POST
+ * @route /admin/manage/custom-roles/:id
+ */
+export interface PostCustomRoleByIdData {
+  iconId: string | null;
+}
+
+/**
+ * @method PUT
+ * @route /admin/manage/users/roles/:id
+ */
+export type PutManageUserByIdRolesData = GetManageUserByIdData;

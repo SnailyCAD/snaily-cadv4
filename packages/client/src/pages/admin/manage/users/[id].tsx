@@ -6,7 +6,7 @@ import { UPDATE_USER_SCHEMA } from "@snailycad/schemas";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { Rank } from "@snailycad/types";
+import { CustomRole, Rank } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
@@ -30,6 +30,7 @@ import { AlertModal } from "components/modal/AlertModal";
 import { ApiTokenArea } from "components/admin/manage/users/ApiTokenArea";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { classNames } from "lib/classNames";
+import { ManageRolesModal } from "components/admin/manage/users/ManageRolesModal";
 import type { GetManageUserByIdData, PutManageUserByIdData } from "@snailycad/types/api";
 
 const DangerZone = dynamic(
@@ -41,6 +42,7 @@ const BanArea = dynamic(
 );
 
 interface Props {
+  roles: CustomRole[];
   user: GetManageUserByIdData;
 }
 
@@ -178,6 +180,16 @@ export default function ManageCitizens(props: Props) {
                   </Button>
 
                   <Button
+                    variant="cancel"
+                    className="ml-2 text-base"
+                    disabled={user.rank === Rank.OWNER}
+                    type="button"
+                    onClick={() => openModal(ModalIds.ManageRoles)}
+                  >
+                    {t("manageRoles")}
+                  </Button>
+
+                  <Button
                     disabled={user.rank === Rank.OWNER}
                     variant="cancel"
                     className="ml-2 text-base"
@@ -239,7 +251,8 @@ export default function ManageCitizens(props: Props) {
           )}
         </Formik>
 
-        <ManagePermissionsModal user={user} />
+        <ManagePermissionsModal onUpdate={(user) => setUser(user)} user={user} />
+        <ManageRolesModal onUpdate={(user) => setUser(user)} roles={props.roles} user={user} />
 
         {USER_API_TOKENS ? <ApiTokenArea user={user} /> : null}
 
@@ -258,7 +271,10 @@ export default function ManageCitizens(props: Props) {
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ query, locale, req }) => {
   const sessionUser = await getSessionUser(req);
-  const [user] = await requestAll(req, [[`/admin/manage/users/${query.id}`, null]]);
+  const [user, roles] = await requestAll(req, [
+    [`/admin/manage/users/${query.id}`, null],
+    ["/admin/manage/custom-roles", []],
+  ]);
 
   if (!user) {
     return {
@@ -269,6 +285,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query, loc
   return {
     props: {
       user,
+      roles,
       session: sessionUser,
       messages: {
         ...(await getTranslations(

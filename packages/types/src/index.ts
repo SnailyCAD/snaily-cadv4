@@ -111,7 +111,8 @@ type UserPicks =
   | "apiTokenId"
   | "locale"
   | "twoFactorEnabled"
-  | "hasTempPassword";
+  | "hasTempPassword"
+  | "roles";
 
 export type User = Pick<
   Prisma.User & {
@@ -119,6 +120,7 @@ export type User = Pick<
     soundSettings: Prisma.UserSoundSettings | null;
     twoFactorEnabled?: boolean;
     hasTempPassword?: boolean;
+    roles?: CustomRole[];
   },
   UserPicks
 >;
@@ -375,6 +377,8 @@ export type CustomField = Prisma.CustomField;
 export type CustomFieldValue = Prisma.CustomFieldValue & {
   field: CustomField;
 };
+
+export type CustomRole = Prisma.CustomRole;
 
 export type CourthousePost = Prisma.CourthousePost & {
   user: User;
