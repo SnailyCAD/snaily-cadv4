@@ -152,12 +152,12 @@ export class SearchActionsController {
       ),
     );
 
-    const updated = await prisma.registeredVehicle.findUnique({
+    const updated = await prisma.registeredVehicle.findUniqueOrThrow({
       where: { id: vehicle.id },
       select: { id: true, flags: true },
     });
 
-    return updated!;
+    return updated;
   }
 
   @Put("/citizen-flags/:citizenId")
@@ -190,12 +190,12 @@ export class SearchActionsController {
       ),
     );
 
-    const updated = await prisma.citizen.findUnique({
+    const updated = await prisma.citizen.findUniqueOrThrow({
       where: { id: citizen.id },
       select: { id: true, flags: true },
     });
 
-    return updated!;
+    return updated;
   }
 
   @Put("/custom-fields/citizen/:citizenId")

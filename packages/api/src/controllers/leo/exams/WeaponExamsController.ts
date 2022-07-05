@@ -92,12 +92,12 @@ export class WeaponExamsController {
       await this.grantLicenseToCitizen(exam);
     }
 
-    const updated = await prisma.weaponExam.findUnique({
+    const updated = await prisma.weaponExam.findUniqueOrThrow({
       where: { id: exam.id },
       include: dlExamIncludes,
     });
 
-    return updated!;
+    return updated;
   }
 
   @Put("/:id")
