@@ -3,10 +3,17 @@ import { allPermissions, type Permissions } from "./permissions";
 
 export * from "./permissions";
 
-interface PartialUser {
+export interface PartialUser {
   rank: "OWNER" | "ADMIN" | "USER";
   permissions: (Permissions | string)[];
   roles?: { permissions: (Permissions | string)[] }[];
+
+  isDispatch?: boolean;
+  isLeo?: boolean;
+  isEmsFd?: boolean;
+  isTaxi?: boolean;
+  isTow?: boolean;
+  isSupervisor?: boolean;
 }
 
 export interface HasPermissionOptions {
@@ -14,7 +21,7 @@ export interface HasPermissionOptions {
   userToCheck: PartialUser | null;
   /** the permissions you want to check. */
   permissionsToCheck: (Permissions | string)[];
-  fallback?: boolean | ((user: any) => boolean);
+  fallback?: boolean | ((user: PartialUser) => boolean | undefined);
 }
 /**
  * checks whether a user has certain permissions.
@@ -35,7 +42,7 @@ export function hasPermission(options: HasPermissionOptions) {
   if (userPermissions.length <= 0 && typeof options.fallback !== "undefined") {
     return typeof options.fallback === "boolean"
       ? options.fallback
-      : options.fallback(options.userToCheck);
+      : options.fallback(options.userToCheck) ?? false;
   }
 
   if (userPermissions.length <= 0 || !Array.isArray(options.permissionsToCheck)) {
