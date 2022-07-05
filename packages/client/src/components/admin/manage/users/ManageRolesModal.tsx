@@ -10,11 +10,12 @@ import { Button } from "components/Button";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { Select } from "components/form/Select";
+import type { PutManageUserByIdRolesData } from "@snailycad/types/api";
 
 interface Props {
   user: User;
   roles: CustomRole[];
-  onUpdate?(user: User): void;
+  onUpdate?(user: PutManageUserByIdRolesData): void;
 }
 
 export function ManageRolesModal({ roles, user, onUpdate }: Props) {
@@ -24,7 +25,8 @@ export function ManageRolesModal({ roles, user, onUpdate }: Props) {
   const { state, execute } = useFetch();
 
   async function onSubmit(data: typeof INITIAL_VALUES) {
-    const { json } = await execute(`/admin/manage/users/roles/${user.id}`, {
+    const { json } = await execute<PutManageUserByIdRolesData>({
+      path: `/admin/manage/users/roles/${user.id}`,
       method: "PUT",
       data: {
         roles: data.roles.map((v) => v.value),
@@ -81,7 +83,10 @@ export function ManageRolesModal({ roles, user, onUpdate }: Props) {
                 ) : (
                   <div className="mt-3 flex flex-wrap gap-1">
                     {allRolePermissions.map((permission) => (
-                      <span className="bg-dark-bright px-1 p-0.5 rounded-md" key={permission}>
+                      <span
+                        className="bg-gray-300 dark:bg-dark-bright px-1 p-0.5 rounded-md"
+                        key={permission}
+                      >
                         {permission}
                       </span>
                     ))}

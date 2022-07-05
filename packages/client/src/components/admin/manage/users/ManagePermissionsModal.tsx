@@ -17,12 +17,11 @@ import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { Input } from "components/form/inputs/Input";
 import type { GetManageUserByIdData, PutManageUserPermissionsByIdData } from "@snailycad/types/api";
-import type { User } from "@snailycad/types";
 
 interface Props {
   user: Pick<GetManageUserByIdData, "permissions" | "id" | "roles">;
   isReadOnly?: boolean;
-  onUpdate?(user: User): void;
+  onUpdate?(user: PutManageUserPermissionsByIdData): void;
 }
 
 const groups = [

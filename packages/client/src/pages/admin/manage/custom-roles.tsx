@@ -17,6 +17,7 @@ import useFetch from "lib/useFetch";
 import { usePermission } from "hooks/usePermission";
 import { ManageCustomRolesModal } from "components/admin/manage/custom-roles/ManageCustomRolesModal";
 import { FullDate } from "components/shared/FullDate";
+import type { DeleteCustomRoleByIdData } from "@snailycad/types/api";
 
 interface Props {
   customRoles: CustomRole[];
@@ -35,7 +36,8 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
   async function handleDelete() {
     if (!tempRole) return;
 
-    const { json } = await execute(`/admin/manage/custom-fields/${tempRole.id}`, {
+    const { json } = await execute<DeleteCustomRoleByIdData>({
+      path: `/admin/manage/custom-fields/${tempRole.id}`,
       method: "DELETE",
     });
 
@@ -94,12 +96,12 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
             createdAt: <FullDate>{field.createdAt}</FullDate>,
             actions: (
               <>
-                <Button small variant="success" onClick={() => handleEditClick(field)}>
+                <Button size="xs" variant="success" onClick={() => handleEditClick(field)}>
                   {common("edit")}
                 </Button>
                 <Button
                   className="ml-2"
-                  small
+                  size="xs"
                   variant="danger"
                   onClick={() => handleDeleteClick(field)}
                 >

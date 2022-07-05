@@ -16,6 +16,7 @@ import { CUSTOM_ROLE_SCHEMA } from "@snailycad/schemas";
 import { Permissions } from "@snailycad/permissions";
 import { formatPermissionName } from "../users/ManagePermissionsModal";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
+import type { PostCustomRolesData, PutCustomRoleByIdData } from "@snailycad/types/api";
 
 interface Props {
   role: CustomRole | null;
@@ -49,7 +50,8 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
     };
 
     if (role) {
-      const { json } = await execute(`/admin/manage/custom-roles/${role.id}`, {
+      const { json } = await execute<PutCustomRoleByIdData, typeof INITIAL_VALUES>({
+        path: `/admin/manage/custom-roles/${role.id}`,
         method: "PUT",
         data,
         helpers,
@@ -61,7 +63,8 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
         onUpdate?.(role, json);
       }
     } else {
-      const { json } = await execute("/admin/manage/custom-roles", {
+      const { json } = await execute<PostCustomRolesData, typeof INITIAL_VALUES>({
+        path: "/admin/manage/custom-roles",
         method: "POST",
         data,
         helpers,
@@ -83,7 +86,8 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
         fd.set("image", validatedImage, validatedImage.name);
       }
 
-      await execute(`/admin/manage/custom-roles/${jsonId}/image`, {
+      await execute({
+        path: `/admin/manage/custom-roles/${jsonId}/image`,
         method: "POST",
         data: fd,
       });

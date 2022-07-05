@@ -17,14 +17,15 @@ import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { validateImgurURL } from "utils/image";
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import process from "node:process";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/admin/manage/custom-roles")
 @UseBeforeEach(IsAuth)
 export class AdminManageCustomRolesController {
   @Get("/")
-  async getCustomRoles() {
+  async getCustomRoles(): Promise<APITypes.GetCustomRolesData> {
     const roles = await prisma.customRole.findMany();
     return roles;
   }
@@ -34,7 +35,7 @@ export class AdminManageCustomRolesController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCustomRoles],
   })
-  async createCustomRole(@BodyParams() body: unknown) {
+  async createCustomRole(@BodyParams() body: unknown): Promise<APITypes.PostCustomRolesData> {
     const data = validateSchema(CUSTOM_ROLE_SCHEMA, body);
 
     const existing = await prisma.customRole.findFirst({
@@ -61,7 +62,10 @@ export class AdminManageCustomRolesController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCustomRoles],
   })
-  async updateCustomRole(@BodyParams() body: unknown, @PathParams("id") id: string) {
+  async updateCustomRole(
+    @BodyParams() body: unknown,
+    @PathParams("id") id: string,
+  ): Promise<APITypes.PutCustomRoleByIdData> {
     const data = validateSchema(CUSTOM_ROLE_SCHEMA, body);
 
     const customRole = await prisma.customRole.findUnique({
@@ -89,7 +93,7 @@ export class AdminManageCustomRolesController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCustomRoles],
   })
-  async deleteCustomRole(@PathParams("id") id: string) {
+  async deleteCustomRole(@PathParams("id") id: string): Promise<APITypes.DeleteCustomRoleByIdData> {
     const customRole = await prisma.customRole.findUnique({
       where: { id },
     });
@@ -109,7 +113,7 @@ export class AdminManageCustomRolesController {
   async uploadImageToCustomRole(
     @PathParams("id") customRoleId: string,
     @MultipartFile("image") file: PlatformMulterFile,
-  ) {
+  ): Promise<APITypes.PostCustomRoleByIdData> {
     const customRole = await prisma.customRole.findUnique({
       where: {
         id: customRoleId,
@@ -128,13 +132,14 @@ export class AdminManageCustomRolesController {
     const extension = file.mimetype.split("/")[file.mimetype.split("/").length - 1];
     const path = `${process.cwd()}/public/values/${customRole.id}.${extension}`;
 
-    await fs.writeFileSync(path, file.buffer);
-
-    const data = await prisma.customRole.update({
-      where: { id: customRole.id },
-      data: { iconId: `${customRole.id}.${extension}` },
-      select: { iconId: true },
-    });
+    const [data] = await Promise.all([
+      prisma.customRole.update({
+        where: { id: customRole.id },
+        data: { iconId: `${customRole.id}.${extension}` },
+        select: { iconId: true },
+      }),
+      fs.writeFile(path, file.buffer),
+    ]);
 
     return data;
   }

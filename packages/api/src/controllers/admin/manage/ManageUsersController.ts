@@ -164,7 +164,10 @@ export class ManageUsersController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
-  async updateUserRolesById(@PathParams("id") userId: string, @BodyParams() body: unknown) {
+  async updateUserRolesById(
+    @PathParams("id") userId: string,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PutManageUserByIdRolesData> {
     const data = validateSchema(ROLES_SCHEMA, body);
     const user = await prisma.user.findUnique({ where: { id: userId }, include: { roles: true } });
 
@@ -187,9 +190,9 @@ export class ManageUsersController {
       ),
     );
 
-    const updated = await prisma.user.findFirst({
+    const updated = await prisma.user.findUniqueOrThrow({
       where: { id: user.id },
-      select: userProperties,
+      select: manageUsersSelect(false),
     });
 
     return updated;
