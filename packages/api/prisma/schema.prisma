@@ -195,6 +195,7 @@ model DiscordRole {
   taxiRolesArr          DiscordRoles[] @relation("taxiRoles")
   towRolesArr           DiscordRoles[] @relation("towRoles")
   courthouseRoles       DiscordRoles[] @relation("courthouseRoles")
+  CustomRole            CustomRole[]
 }
 
 model User {
@@ -1237,13 +1238,15 @@ model CustomFieldValue {
 
 /// custom roles
 model CustomRole {
-  id          String   @id @default(uuid())
-  name        String   @unique
-  iconId      String?
-  permissions String[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now()) @updatedAt
-  User        User[]
+  id            String       @id @default(uuid())
+  name          String       @unique
+  iconId        String?
+  permissions   String[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @default(now()) @updatedAt
+  discordRole   DiscordRole? @relation(fields: [discordRoleId], references: [id])
+  discordRoleId String?
+  User          User[]
 }
 
 // courthouse posts

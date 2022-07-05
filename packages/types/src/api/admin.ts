@@ -374,19 +374,19 @@ export type PutManageNameChangeRequests = Prisma.NameChangeRequest;
  * @method GET
  * @route /admin/manage/custom-roles
  */
-export type GetCustomRolesData = Prisma.CustomRole[];
+export type GetCustomRolesData = (Prisma.CustomRole & { discordRole?: Types.DiscordRole | null })[];
 
 /**
  * @method POST
  * @route /admin/manage/custom-roles
  */
-export type PostCustomRolesData = Prisma.CustomRole;
+export type PostCustomRolesData = Prisma.CustomRole & { discordRole?: Types.DiscordRole | null };
 
 /**
  * @method PUT
  * @route /admin/manage/custom-roles/:id
  */
-export type PutCustomRoleByIdData = Prisma.CustomRole;
+export type PutCustomRoleByIdData = Prisma.CustomRole & { discordRole?: Types.DiscordRole | null };
 
 /**
  * @method DELETE
