@@ -32,17 +32,14 @@ export function hasPermission(options: HasPermissionOptions) {
 
   if (!options.userToCheck) return false;
   if (options.userToCheck.roles && options.userToCheck.roles.length >= 1) {
-    userPermissions = options.userToCheck.roles.flatMap((r) => r.permissions);
+    userPermissions = [
+      ...userPermissions,
+      ...options.userToCheck.roles.flatMap((r) => r.permissions),
+    ];
   }
 
   if (options.userToCheck.rank === "OWNER") {
     userPermissions = allPermissions;
-  }
-
-  if (userPermissions.length <= 0 && typeof options.fallback !== "undefined") {
-    return typeof options.fallback === "boolean"
-      ? options.fallback
-      : options.fallback(options.userToCheck) ?? false;
   }
 
   if (userPermissions.length <= 0 || !Array.isArray(options.permissionsToCheck)) {
@@ -51,6 +48,12 @@ export function hasPermission(options: HasPermissionOptions) {
 
   for (const perm of options.permissionsToCheck) {
     if (userPermissions.includes(perm)) return true;
+  }
+
+  if (userPermissions.length <= 0 && typeof options.fallback !== "undefined") {
+    return typeof options.fallback === "boolean"
+      ? options.fallback
+      : options.fallback(options.userToCheck) ?? false;
   }
 
   return false;

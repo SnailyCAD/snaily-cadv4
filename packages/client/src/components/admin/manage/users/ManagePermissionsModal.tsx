@@ -161,8 +161,6 @@ export function ManagePermissionsModal({ user, onUpdate, isReadOnly }: Props) {
                           r.permissions.includes(permission),
                         );
 
-                        console.log({ values });
-
                         return (
                           <FormField key={permission} className="my-1" label={formattedName}>
                             <Toggle

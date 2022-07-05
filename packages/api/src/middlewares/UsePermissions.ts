@@ -26,9 +26,11 @@ export class UsePermissionsMiddleware implements MiddlewareMethods {
 
     const hasPerm = hasPermission({
       userToCheck: user,
-      permissionsToCheck: [Permissions.Dispatch],
+      permissionsToCheck: routeData.permissions,
       fallback,
     });
+
+    console.log({ hasPerm, user: JSON.stringify(user, null, 4) });
 
     if (!hasPerm) {
       throw new Forbidden("Invalid permissions");

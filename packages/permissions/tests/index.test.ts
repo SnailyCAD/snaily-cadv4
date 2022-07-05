@@ -140,6 +140,23 @@ test("Should correctly return the user permissions with 'allPermissions'", () =>
   expect(getPermissions({ permissions: allPermissions, rank: "OWNER" })).toBeTypeOf("object");
 });
 
+test("Should return 'true' if user has roles", () => {
+  expect(
+    hasPermission({
+      permissionsToCheck: [Permissions.EmsFd],
+      userToCheck: {
+        rank: "USER",
+        permissions: [],
+        roles: [
+          {
+            permissions: [Permissions.LiveMap, Permissions.EmsFd],
+          },
+        ],
+      },
+    }),
+  ).toBe(true);
+});
+
 // todo: add tests with roles
 
 test("Should return correct defaultPermissions", () => {

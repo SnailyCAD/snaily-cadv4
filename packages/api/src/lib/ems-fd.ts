@@ -1,5 +1,5 @@
 import { Prisma, ShouldDoType, User } from "@prisma/client";
-import { hasPermission, Permissions } from "@snailycad/permissions";
+import { defaultPermissions, hasPermission, Permissions } from "@snailycad/permissions";
 import type { Req, Context } from "@tsed/common";
 import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
 import { unitProperties } from "lib/leo/activeOfficer";
@@ -28,12 +28,14 @@ export async function getActiveDeputy(
   } else {
     const hasEmsFdPermissions = hasPermission({
       userToCheck: user,
-      permissionsToCheck: [Permissions.EmsFd],
+      permissionsToCheck: defaultPermissions.defaultEmsFdPermissions,
       fallback: (user) => user.isEmsFd,
     });
 
+    console.log({ hasEmsFdPermissions });
+
     if (!hasEmsFdPermissions) {
-      throw new Forbidden("Invalid Permissions");
+      throw new Forbidden("Invalid EMS-FD Permissions");
     }
   }
 
