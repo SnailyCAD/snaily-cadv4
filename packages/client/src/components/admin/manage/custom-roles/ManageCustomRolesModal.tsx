@@ -44,7 +44,6 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
   }
 
   async function refreshRoles() {
-    // todo: make non-owner only
     const { json } = await execute<GetCADDiscordRolesData>({
       path: "/admin/manage/cad-settings/discord/roles",
       method: "GET",
