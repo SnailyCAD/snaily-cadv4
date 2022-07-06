@@ -123,4 +123,5 @@ export const CUSTOM_ROLE_SCHEMA = z.object({
   name: z.string().min(2),
   icon: z.any(),
   permissions: z.array(z.any()).min(1),
+  discordRoleId: z.string().nullable().optional(),
 });

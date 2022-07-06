@@ -51,7 +51,9 @@ export class AdminManageCustomRolesController {
         name: data.name,
         permissions: data.permissions,
         iconId: validateImgurURL(data.icon),
+        discordRoleId: data.discordRoleId,
       },
+      include: { discordRole: true },
     });
 
     return customRole;
@@ -82,7 +84,9 @@ export class AdminManageCustomRolesController {
         name: data.name,
         permissions: data.permissions,
         iconId: validateImgurURL(data.icon),
+        discordRoleId: data.discordRoleId,
       },
+      include: { discordRole: true },
     });
 
     return updated;

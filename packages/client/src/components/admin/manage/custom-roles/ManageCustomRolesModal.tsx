@@ -8,7 +8,7 @@ import { Form, Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
-import type { CustomRole } from "@snailycad/types";
+import type { CustomRole, DiscordRole } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { Select } from "components/form/Select";
 import { ModalIds } from "types/ModalIds";
@@ -16,7 +16,11 @@ import { CUSTOM_ROLE_SCHEMA } from "@snailycad/schemas";
 import { Permissions } from "@snailycad/permissions";
 import { formatPermissionName } from "../users/ManagePermissionsModal";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
-import type { PostCustomRolesData, PutCustomRoleByIdData } from "@snailycad/types/api";
+import type {
+  GetCADDiscordRolesData,
+  PostCustomRolesData,
+  PutCustomRoleByIdData,
+} from "@snailycad/types/api";
 
 interface Props {
   role: CustomRole | null;
@@ -27,6 +31,7 @@ interface Props {
 
 export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Props) {
   const [image, setImage] = React.useState<File | string | null>(null);
+  const [discordRoles, setDiscordRoles] = React.useState<DiscordRole[]>([]);
 
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
@@ -37,6 +42,21 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
     onClose?.();
     closeModal(ModalIds.ManageCustomRole);
   }
+
+  async function refreshRoles() {
+    const { json } = await execute<GetCADDiscordRolesData>({
+      path: "/admin/manage/cad-settings/discord/roles",
+      method: "GET",
+    });
+
+    if (Array.isArray(json)) {
+      setDiscordRoles(json);
+    }
+  }
+
+  React.useEffect(() => {
+    refreshRoles();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
@@ -96,6 +116,7 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
 
   const INITIAL_VALUES = {
     name: role?.name ?? "",
+    discordRoleId: role?.discordRoleId ?? null,
     permissions:
       role?.permissions.map((v) => ({
         value: v,
@@ -129,6 +150,19 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
                 value={values.permissions}
                 name="permissions"
                 onChange={handleChange}
+              />
+            </FormField>
+
+            <FormField errorMessage={errors.discordRoleId as string} label="Discord Role">
+              <Select
+                values={discordRoles.map((role) => ({
+                  value: role.id,
+                  label: role.name,
+                }))}
+                value={values.discordRoleId}
+                name="discordRoleId"
+                onChange={handleChange}
+                isClearable
               />
             </FormField>
 

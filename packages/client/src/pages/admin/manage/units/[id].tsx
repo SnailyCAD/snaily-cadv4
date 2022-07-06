@@ -105,7 +105,6 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
                 }))}
               />
             </FormField>
-            {console.log({ errors })}
 
             <FormField label="Department">
               <Select
