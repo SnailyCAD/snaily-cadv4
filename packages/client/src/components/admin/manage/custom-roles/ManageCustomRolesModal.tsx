@@ -163,6 +163,7 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
                 value={values.discordRoleId}
                 name="discordRoleId"
                 onChange={handleChange}
+                isClearable
               />
             </FormField>
 
