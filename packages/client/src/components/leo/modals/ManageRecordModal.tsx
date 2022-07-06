@@ -24,6 +24,7 @@ import { SeizedItemsTable } from "./ManageRecord/seized-items/SeizedItemsTable";
 import { toastMessage } from "lib/toastMessage";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { PostRecordsData, PutRecordsByIdData } from "@snailycad/types/api";
+import { SaveToSessionStorage, useSessionStorage } from "components/shared/SaveToSessionStorage";
 
 interface Props {
   record?: Record | null;
@@ -134,11 +135,12 @@ export function ManageRecordModal({
 
   const payload = getPayload<{ citizenId: string; citizenName: string }>(data[type].id);
   const validate = handleValidate(CREATE_TICKET_SCHEMA);
+  const [value, setSessionStorage] = useSessionStorage<any>(data[type].id);
 
   const INITIAL_VALUES = {
     type,
-    citizenId: record?.citizenId ?? payload?.citizenId ?? "",
-    citizenName: payload?.citizenName ?? "",
+    citizenId: record?.citizenId ?? value?.citizenId ?? payload?.citizenId ?? "",
+    citizenName: payload?.citizenName ?? value?.citizenName ?? "",
     violations:
       record?.violations.map((v) => ({
         label: v.penalCode.title,
@@ -149,10 +151,12 @@ export function ManageRecordModal({
           jailTime: { enabled: !!v.jailTime, value: v.jailTime },
           bail: { enabled: LEO_BAIL ? !!v.jailTime : false, value: v.bail },
         },
-      })) ?? ([] as SelectValue<PenalCode>[]),
-    postal: record?.postal ?? "",
-    notes: record?.notes ?? "",
-    seizedItems: record?.seizedItems ?? [],
+      })) ??
+      value?.violations ??
+      ([] as SelectValue<PenalCode>[]),
+    postal: record?.postal ?? value?.postal ?? "",
+    notes: record?.notes ?? value?.notes ?? "",
+    seizedItems: record?.seizedItems ?? value?.seizedItems ?? [],
   };
 
   return (
@@ -165,6 +169,7 @@ export function ManageRecordModal({
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, setValues, errors, values, isValid }) => (
           <Form autoComplete="off">
+            <SaveToSessionStorage setSessionStorage={setSessionStorage} id={data[type].id} />
             <FormField errorMessage={errors.citizenId} label={t("citizen")}>
               <InputSuggestions<Citizen>
                 inputProps={{
@@ -230,7 +235,7 @@ export function ManageRecordModal({
 
             <PenalCodesTable
               isReadOnly={isReadOnly}
-              penalCodes={values.violations.map((v) => v.value)}
+              penalCodes={values.violations.map((v: SelectValue<PenalCode[]>) => v.value)}
             />
             <SeizedItemsTable isReadOnly={isReadOnly} />
 
@@ -244,7 +249,16 @@ export function ManageRecordModal({
             </FormField>
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onClick={() => closeModal(data[type].id)} variant="cancel">
+              <Button
+                type="reset"
+                onClick={() => {
+                  closeModal(data[type].id);
+                  if (!record) {
+                    setSessionStorage(null);
+                  }
+                }}
+                variant="cancel"
+              >
                 {common("cancel")}
               </Button>
               <Button

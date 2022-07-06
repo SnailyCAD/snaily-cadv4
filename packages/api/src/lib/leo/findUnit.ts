@@ -1,5 +1,5 @@
 import { combinedUnitProperties } from "lib/leo/activeOfficer";
-import type { CombinedLeoUnit, Officer, EmsFdDeputy, StatusValue } from "@prisma/client";
+import type { CombinedLeoUnit, Officer, EmsFdDeputy, StatusValue } from "@snailycad/types";
 import { prisma } from "lib/prisma";
 
 export async function findUnit(

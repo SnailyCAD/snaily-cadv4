@@ -21,6 +21,9 @@
     "test:watch": "yarn vitest --watch",
     "test": "yarn vitest run"
   },
+  "dependencies": {
+    "@snailycad/types": "1.14.1"
+  },
   "devDependencies": {
     "@snailycad/types": "1.15.0",
     "tsup": "^6.1.2",

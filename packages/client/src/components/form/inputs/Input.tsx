@@ -1,9 +1,10 @@
 import { Button } from "components/Button";
+import type { FormikErrors } from "formik";
 import { useTranslations } from "next-intl";
 import * as React from "react";
 
 type Props = Omit<JSX.IntrinsicElements["input"], "id"> & {
-  errorMessage?: string;
+  errorMessage?: string | string[] | FormikErrors<any> | FormikErrors<any>[];
 };
 
 export const Input = React.forwardRef<HTMLInputElement, Props>(({ errorMessage, ...rest }, ref) => (
