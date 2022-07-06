@@ -25,7 +25,12 @@ const ManageBusinessPostModal = dynamic(
   async () => (await import("components/business/ManagePostModal")).ManageBusinessPostModal,
 );
 
-export default function BusinessId(props: GetBusinessByIdData) {
+interface Props {
+  business: GetBusinessByIdData;
+  employee: GetBusinessByIdData["employee"];
+}
+
+export default function BusinessId(props: Props) {
   const { state: fetchState, execute } = useFetch();
   const { openModal, closeModal } = useModal();
   const { currentBusiness, currentEmployee, posts, ...state } = useBusinessState();
@@ -60,7 +65,7 @@ export default function BusinessId(props: GetBusinessByIdData) {
   }
 
   React.useEffect(() => {
-    const { employee, ...business } = props;
+    const { employee, business } = props;
 
     state.setCurrentBusiness(business);
     state.setCurrentEmployee(employee);
@@ -68,7 +73,7 @@ export default function BusinessId(props: GetBusinessByIdData) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props, state.setCurrentEmployee, state.setCurrentBusiness, state.setPosts]);
 
-  const owner = currentBusiness?.employees.find((v) => v.citizenId === currentBusiness.citizenId);
+  const owner = currentBusiness?.employees?.find((v) => v.citizenId === currentBusiness.citizenId);
 
   if (!currentBusiness || !currentEmployee) {
     return null;
@@ -82,7 +87,7 @@ export default function BusinessId(props: GetBusinessByIdData) {
     );
   }
 
-  if (props.status === WhitelistStatus.PENDING) {
+  if (props.business.status === WhitelistStatus.PENDING) {
     return (
       <Layout className="dark:text-white">
         <p>
