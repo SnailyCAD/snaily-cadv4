@@ -37,7 +37,7 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
     if (!tempRole) return;
 
     const { json } = await execute<DeleteCustomRoleByIdData>({
-      path: `/admin/manage/custom-fields/${tempRole.id}`,
+      path: `/admin/manage/custom-roles/${tempRole.id}`,
       method: "DELETE",
     });
 
