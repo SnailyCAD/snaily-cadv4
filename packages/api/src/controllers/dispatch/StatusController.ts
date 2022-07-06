@@ -7,7 +7,6 @@ import {
   WhitelistStatus,
   CadFeature,
   Feature,
-  Rank,
   DiscordWebhookType,
 } from "@prisma/client";
 import { UPDATE_OFFICER_STATUS_SCHEMA } from "@snailycad/schemas";
@@ -59,9 +58,11 @@ export class StatusController {
     const isFromDispatch = req.headers["is-from-dispatch"]?.toString() === "true";
     const isDispatch =
       isFromDispatch &&
-      (hasPermission(user.permissions, [Permissions.Dispatch]) ||
-        user.isDispatch ||
-        user.rank === Rank.OWNER);
+      hasPermission({
+        userToCheck: user,
+        permissionsToCheck: [Permissions.Dispatch],
+        fallback: (user) => user.isDispatch,
+      });
 
     const { type, unit } = await findUnit(unitId, { userId: isDispatch ? undefined : user.id });
 

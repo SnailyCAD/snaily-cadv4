@@ -7,7 +7,7 @@ import { BoloItem } from "./BoloItem";
 interface Props {
   boloType: BoloType;
   bolos: Bolo[];
-  setTempBolo: React.Dispatch<React.SetStateAction<Bolo | null>>;
+  setTempBolo: React.Dispatch<React.SetStateAction<Bolo["id"] | null>>;
 }
 
 export function BoloColumn({ bolos, boloType, setTempBolo }: Props) {
@@ -15,12 +15,12 @@ export function BoloColumn({ bolos, boloType, setTempBolo }: Props) {
   const t = useTranslations("Bolos");
 
   function handleEditClick(bolo: Bolo) {
-    setTempBolo(bolo);
+    setTempBolo(bolo.id);
     openModal(ModalIds.ManageBolo);
   }
 
   function handleDeleteClick(bolo: Bolo) {
-    setTempBolo(bolo);
+    setTempBolo(bolo.id);
     openModal(ModalIds.AlertDeleteBolo);
   }
 

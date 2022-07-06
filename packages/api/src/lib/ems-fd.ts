@@ -1,5 +1,5 @@
-import { Prisma, Rank, ShouldDoType, User } from "@prisma/client";
-import { hasPermission, Permissions } from "@snailycad/permissions";
+import { Prisma, ShouldDoType, User } from "@prisma/client";
+import { defaultPermissions, hasPermission, Permissions } from "@snailycad/permissions";
 import type { Req, Context } from "@tsed/common";
 import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
 import { unitProperties } from "lib/leo/activeOfficer";
@@ -14,10 +14,11 @@ export async function getActiveDeputy(
   // dispatch is allowed to use ems-fd routes
   let isDispatch = false;
   if (req.headers["is-from-dispatch"]?.toString() === "true") {
-    const hasDispatchPermissions =
-      hasPermission(user.permissions, [Permissions.Dispatch]) ||
-      user.isDispatch ||
-      user.rank === Rank.OWNER;
+    const hasDispatchPermissions = hasPermission({
+      userToCheck: user,
+      permissionsToCheck: [Permissions.Dispatch],
+      fallback: (user) => user.isDispatch,
+    });
 
     if (!hasDispatchPermissions) {
       throw new Unauthorized("Must be dispatch to use this header.");
@@ -25,15 +26,14 @@ export async function getActiveDeputy(
       isDispatch = true;
     }
   } else {
-    const hasEmsFdPermissions =
-      user.rank === Rank.OWNER
-        ? true
-        : !user.permissions.length
-        ? user.isEmsFd
-        : hasPermission(user.permissions, [Permissions.EmsFd]);
+    const hasEmsFdPermissions = hasPermission({
+      userToCheck: user,
+      permissionsToCheck: defaultPermissions.defaultEmsFdPermissions,
+      fallback: (user) => user.isEmsFd,
+    });
 
     if (!hasEmsFdPermissions) {
-      throw new Forbidden("Invalid Permissions");
+      throw new Forbidden("Invalid EMS-FD Permissions");
     }
   }
 

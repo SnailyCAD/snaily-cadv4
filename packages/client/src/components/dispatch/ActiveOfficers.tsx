@@ -28,6 +28,7 @@ import { ActiveCallColumn } from "./active-units/officers/ActiveCallColumn";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { HoverCard } from "components/shared/HoverCard";
 import { useDispatchState } from "state/dispatchState";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 export function ActiveOfficers() {
   const { activeOfficers } = useActiveOfficers();
@@ -48,10 +49,10 @@ export function ActiveOfficers() {
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
 
-  const [tempUnit, setTempUnit] = React.useState<ActiveOfficer | CombinedLeoUnit | null>(null);
+  const [tempOfficer, officerState] = useTemporaryItem(activeOfficers);
 
   function handleEditClick(officer: ActiveOfficer | CombinedLeoUnit) {
-    setTempUnit(officer);
+    officerState.setTempId(officer.id);
     openModal(ModalIds.ManageUnit);
   }
 
@@ -106,7 +107,7 @@ export function ActiveOfficers() {
                   officer: (
                     <OfficerColumn
                       nameAndCallsign={nameAndCallsign}
-                      setTempUnit={setTempUnit}
+                      setTempUnit={officerState.setTempId}
                       officer={officer}
                     />
                   ),
@@ -171,12 +172,14 @@ export function ActiveOfficers() {
         </>
       )}
 
-      {tempUnit ? <ManageUnitModal onClose={() => setTempUnit(null)} unit={tempUnit} /> : null}
-      {tempUnit ? (
+      {tempOfficer ? (
+        <ManageUnitModal onClose={() => officerState.setTempId(null)} unit={tempOfficer} />
+      ) : null}
+      {tempOfficer ? (
         <MergeUnitModal
           isDispatch={isDispatch}
-          unit={tempUnit as Officer}
-          onClose={() => setTempUnit(null)}
+          unit={tempOfficer as Officer}
+          onClose={() => officerState.setTempId(null)}
         />
       ) : null}
     </div>

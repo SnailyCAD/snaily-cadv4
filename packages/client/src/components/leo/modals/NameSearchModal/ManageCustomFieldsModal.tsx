@@ -59,16 +59,13 @@ export function ManageCustomFieldsModal({
     [category, allCustomFields],
   );
   const makeInitialValues = React.useCallback(() => {
-    const fields = allCustomFields;
-    const values = customFields;
-
     const objFields: Record<
       string,
       { fieldId: string; valueId: string | undefined; value: string | null }
     > = {};
-    for (const field of fields) {
+    for (const field of allCustomFields) {
       if (field.category !== category) continue;
-      const value = values.find((v) => v.fieldId === field.id);
+      const value = customFields.find((v) => v.fieldId === field.id);
 
       objFields[field.name] = {
         fieldId: field.id,

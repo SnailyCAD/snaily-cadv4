@@ -5,7 +5,7 @@ import { useAreaOfPlay } from "hooks/global/useAreaOfPlay";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { ActiveCalls } from "components/leo/ActiveCalls";
+import { ActiveCalls } from "components/dispatch/active-calls/ActiveCalls";
 import { useDispatchState } from "state/dispatchState";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { useTime } from "hooks/shared/useTime";

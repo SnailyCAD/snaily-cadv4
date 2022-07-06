@@ -13,10 +13,9 @@ import { Table } from "components/shared/Table";
 import { yesOrNoText } from "lib/utils";
 import { Status } from "components/shared/Status";
 import type { DeleteBusinessFireEmployeeData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 export function EmployeesTab() {
-  const [tempEmployee, setTempEmployee] = React.useState<Employee | null>(null);
-
   const { state, execute } = useFetch();
   const { openModal, closeModal } = useModal();
   const common = useTranslations("Common");
@@ -24,6 +23,7 @@ export function EmployeesTab() {
 
   const { currentBusiness, currentEmployee, setCurrentBusiness } = useBusinessState();
   const employees = currentBusiness?.employees ?? [];
+  const [tempEmployee, employeeState] = useTemporaryItem(employees);
 
   function handleUpdate(old: FullEmployee, newE: FullEmployee) {
     if (!currentBusiness) return;
@@ -54,20 +54,20 @@ export function EmployeesTab() {
         ...currentBusiness,
         employees: currentBusiness.employees.filter((v) => v.id !== tempEmployee.id),
       });
-      setTempEmployee(null);
+      employeeState.setTempId(null);
       closeModal(ModalIds.AlertFireEmployee);
     }
   }
 
   function handleManageClick(employee: Employee) {
     if (employee.role?.as === EmployeeAsEnum.OWNER) return;
-    setTempEmployee(employee);
+    employeeState.setTempId(employee.id);
     openModal(ModalIds.ManageEmployee);
   }
 
   function handleFireClick(employee: Employee) {
     if (employee.role?.as === EmployeeAsEnum.OWNER) return;
-    setTempEmployee(employee);
+    employeeState.setTempId(employee.id);
     openModal(ModalIds.AlertFireEmployee);
   }
 
@@ -134,7 +134,7 @@ export function EmployeesTab() {
         onDeleteClick={handleFireEmployee}
         deleteText={t("fire")}
         state={state}
-        onClose={() => setTempEmployee(null)}
+        onClose={() => employeeState.setTempId(null)}
       />
 
       <ManageEmployeeModal onUpdate={handleUpdate} employee={tempEmployee} />

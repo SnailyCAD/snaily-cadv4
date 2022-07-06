@@ -95,12 +95,12 @@ export class ManageCitizensController {
       });
     }
 
-    const updated = await prisma.cad.findUnique({
+    const updated = await prisma.cad.findUniqueOrThrow({
       where: { id: cad.id },
       include: { features: true, miscCadSettings: true, apiToken: true },
     });
 
-    return updated!;
+    return updated;
   }
 
   @Put("/misc")

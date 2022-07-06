@@ -26,6 +26,7 @@ import { ActiveCallColumn } from "./active-units/officers/ActiveCallColumn";
 import { ActiveIncidentColumn } from "./active-units/officers/ActiveIncidentColumn";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { DeputyColumn } from "./active-units/deputies/DeputyColumn";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 export function ActiveDeputies() {
   const { activeDeputies } = useActiveDeputies();
@@ -45,10 +46,10 @@ export function ActiveDeputies() {
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
 
-  const [tempUnit, setTempUnit] = React.useState<ActiveDeputy | null>(null);
+  const [tempDeputy, deputyState] = useTemporaryItem(activeDeputies);
 
-  function handleEditClick(officer: ActiveDeputy) {
-    setTempUnit(officer);
+  function handleEditClick(deputy: ActiveDeputy) {
+    deputyState.setTempId(deputy.id);
     openModal(ModalIds.ManageUnit);
   }
 
@@ -157,8 +158,12 @@ export function ActiveDeputies() {
         </>
       )}
 
-      {tempUnit ? (
-        <ManageUnitModal type="ems-fd" onClose={() => setTempUnit(null)} unit={tempUnit} />
+      {tempDeputy ? (
+        <ManageUnitModal
+          type="ems-fd"
+          onClose={() => deputyState.setTempId(null)}
+          unit={tempDeputy}
+        />
       ) : null}
     </div>
   );

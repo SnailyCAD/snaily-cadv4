@@ -197,6 +197,10 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     description:
       "When enabled, this will allow users with the correct permissions to create posts in the courthouse. These posts will be visible to anyone.",
   },
+  ACTIVE_WARRANTS: {
+    name: "Active Warrants",
+    description: "When enabled, this will display active warrants on the LEO Dashboard.",
+  },
 };
 
 export function CADFeaturesTab() {

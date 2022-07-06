@@ -47,13 +47,17 @@ export const citizenSearchIncludeOrSelect = (
     defaultReturn: false,
   });
 
-  const hasPerms = hasPermission(user.permissions, [
-    ...defaultPermissions.defaultLeoPermissions,
-    ...defaultPermissions.defaultDispatchPermissions,
-    ...defaultPermissions.defaultEmsFdPermissions,
-  ]);
+  const hasPerms = hasPermission({
+    userToCheck: user,
+    permissionsToCheck: [
+      ...defaultPermissions.defaultLeoPermissions,
+      ...defaultPermissions.defaultDispatchPermissions,
+      ...defaultPermissions.defaultEmsFdPermissions,
+    ],
+    fallback: (user) => user.isLeo || user.isDispatch || user.isEmsFd,
+  });
 
-  if (hasPerms || user.isLeo || user.isDispatch || user.isEmsFd) {
+  if (hasPerms) {
     return {
       include: {
         officers: { select: { department: { select: { isConfidential: true } } } },

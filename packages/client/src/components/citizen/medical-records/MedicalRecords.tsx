@@ -10,6 +10,7 @@ import useFetch from "lib/useFetch";
 import { Table } from "components/shared/Table";
 import { useCitizen } from "context/CitizenContext";
 import type { DeleteCitizenMedicalRecordsData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 export function MedicalRecords() {
   const { state, execute } = useFetch();
@@ -18,7 +19,7 @@ export function MedicalRecords() {
   const common = useTranslations("Common");
   const { citizen, setCurrentCitizen } = useCitizen(false);
 
-  const [tempRecord, setTempRecord] = React.useState<MedicalRecord | null>(null);
+  const [tempRecord, recordState] = useTemporaryItem(citizen.medicalRecords);
 
   async function handleDelete() {
     if (!tempRecord) return;
@@ -34,7 +35,7 @@ export function MedicalRecords() {
         medicalRecords: citizen.medicalRecords.filter((v) => v.id !== tempRecord.id),
       });
       closeModal(ModalIds.AlertDeleteMedicalRecord);
-      setTempRecord(null);
+      recordState.setTempId(null);
     }
   }
 
@@ -43,12 +44,12 @@ export function MedicalRecords() {
   }
 
   function handleDeleteClick(record: MedicalRecord) {
-    setTempRecord(record);
+    recordState.setTempId(record.id);
     openModal(ModalIds.AlertDeleteMedicalRecord);
   }
 
   function handleEditClick(record: MedicalRecord) {
-    setTempRecord(record);
+    recordState.setTempId(record.id);
     openModal(ModalIds.ManageMedicalRecords);
   }
 
@@ -122,7 +123,7 @@ export function MedicalRecords() {
           closeModal(ModalIds.ManageMedicalRecords);
         }}
         medicalRecord={tempRecord}
-        onClose={() => setTempRecord(null)}
+        onClose={() => recordState.setTempId(null)}
       />
 
       <AlertModal
@@ -131,7 +132,7 @@ export function MedicalRecords() {
         id={ModalIds.AlertDeleteMedicalRecord}
         title={t("deleteMedicalRecord")}
         state={state}
-        onClose={() => setTempRecord(null)}
+        onClose={() => recordState.setTempId(null)}
       />
     </>
   );

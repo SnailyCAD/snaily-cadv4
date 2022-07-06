@@ -19,8 +19,9 @@ import { Input } from "components/form/inputs/Input";
 import type { GetManageUserByIdData, PutManageUserPermissionsByIdData } from "@snailycad/types/api";
 
 interface Props {
+  user: Pick<GetManageUserByIdData, "permissions" | "id" | "roles" | "rank">;
   isReadOnly?: boolean;
-  user: Pick<GetManageUserByIdData, "permissions" | "id">;
+  onUpdate?(user: PutManageUserPermissionsByIdData): void;
 }
 
 const groups = [
@@ -53,13 +54,13 @@ const groups = [
   },
 ];
 
-export function ManagePermissionsModal({ user, isReadOnly }: Props) {
+export function ManagePermissionsModal({ user, onUpdate, isReadOnly }: Props) {
   const [search, setSearch] = React.useState("");
 
   const t = useTranslations("Management");
   const common = useTranslations("Common");
   const { closeModal, isOpen } = useModal();
-  const userPermissions = getPermissions(user.permissions);
+  const userPermissions = getPermissions(user);
   const { state, execute } = useFetch();
 
   async function onSubmit(data: typeof INITIAL_VALUES) {
@@ -73,7 +74,7 @@ export function ManagePermissionsModal({ user, isReadOnly }: Props) {
 
     if (json.id) {
       closeModal(ModalIds.ManagePermissions);
-      user.permissions = json.permissions;
+      onUpdate?.(json);
     }
   }
 
@@ -156,6 +157,9 @@ export function ManagePermissionsModal({ user, isReadOnly }: Props) {
                     <div className="grid grid-cols-1 md:grid-cols-3">
                       {filtered.map((permission) => {
                         const formattedName = formatPermissionName(permission);
+                        const isDisabled = user.roles?.some((r) =>
+                          r.permissions.includes(permission),
+                        );
 
                         return (
                           <FormField key={permission} className="my-1" label={formattedName}>
@@ -163,7 +167,7 @@ export function ManagePermissionsModal({ user, isReadOnly }: Props) {
                               onCheckedChange={handleChange}
                               value={values[permission as PermissionNames]}
                               name={permission}
-                              disabled={isReadOnly}
+                              disabled={isReadOnly || isDisabled}
                             />
                           </FormField>
                         );

@@ -22,6 +22,7 @@ import { Title } from "components/shared/Title";
 import { Status } from "components/shared/Status";
 import { usePermission, Permissions } from "hooks/usePermission";
 import type { DeleteBusinessByIdData, GetManageBusinessesData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 interface Props {
   businesses: GetManageBusinessesData;
@@ -29,7 +30,7 @@ interface Props {
 
 export default function ManageBusinesses({ businesses: data }: Props) {
   const [businesses, setBusinesses] = React.useState<GetManageBusinessesData>(data);
-  const [tempValue, setTempValue] = React.useState<GetManageBusinessesData[number] | null>(null);
+  const [tempValue, valueState] = useTemporaryItem(businesses);
   const [reason, setReason] = React.useState("");
   const reasonRef = React.useRef<HTMLInputElement>(null);
   const { cad } = useAuth();
@@ -58,7 +59,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
   }
 
   function handleDeleteClick(value: GetManageBusinessesData[number]) {
-    setTempValue(value);
+    valueState.setTempId(value.id);
     openModal(ModalIds.AlertDeleteBusiness);
   }
 
@@ -77,7 +78,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
 
     if (json) {
       setBusinesses((p) => p.filter((v) => v.id !== tempValue.id));
-      setTempValue(null);
+      valueState.setTempId(null);
       closeModal(ModalIds.AlertDeleteBusiness);
     }
   }

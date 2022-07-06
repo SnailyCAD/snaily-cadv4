@@ -111,7 +111,8 @@ type UserPicks =
   | "apiTokenId"
   | "locale"
   | "twoFactorEnabled"
-  | "hasTempPassword";
+  | "hasTempPassword"
+  | "roles";
 
 export type User = Pick<
   Prisma.User & {
@@ -119,6 +120,7 @@ export type User = Pick<
     soundSettings: Prisma.UserSoundSettings | null;
     twoFactorEnabled?: boolean;
     hasTempPassword?: boolean;
+    roles?: CustomRole[];
   },
   UserPicks
 >;
@@ -302,6 +304,10 @@ export type AssignedUnit = Prisma.AssignedUnit & {
   unit: Officer | CombinedLeoUnit | EmsFdDeputy;
 };
 
+export type AssignedWarrantOfficer = Prisma.AssignedWarrantOfficer & {
+  unit: Officer | CombinedLeoUnit;
+};
+
 export type IncidentInvolvedUnit = Prisma.IncidentInvolvedUnit & {
   unit: Officer | CombinedLeoUnit | EmsFdDeputy;
 };
@@ -372,6 +378,8 @@ export type CustomFieldValue = Prisma.CustomFieldValue & {
   field: CustomField;
 };
 
+export type CustomRole = Prisma.CustomRole;
+
 export type CourthousePost = Prisma.CourthousePost & {
   user: User;
 };
@@ -424,7 +432,8 @@ export const Feature = {
   LEO_BAIL: "LEO_BAIL",
   COURTHOUSE_POSTS: "COURTHOUSE_POSTS",
   WEAPON_EXAMS: "WEAPON_EXAMS",
-};
+  ACTIVE_WARRANTS: "ACTIVE_WARRANTS",
+} as const;
 
 export type Feature = typeof Feature[keyof typeof Feature];
 

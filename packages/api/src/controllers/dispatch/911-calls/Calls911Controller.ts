@@ -15,7 +15,6 @@ import {
   MiscCadSettings,
   Call911,
   DiscordWebhookType,
-  Rank,
   ShouldDoType,
 } from "@prisma/client";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
@@ -98,10 +97,11 @@ export class Calls911Controller {
     @HeaderParams("is-from-dispatch") isFromDispatchHeader: string | undefined,
   ): Promise<APITypes.Post911CallsData> {
     const data = validateSchema(CALL_911_SCHEMA, body);
-    const hasDispatchPermissions =
-      hasPermission(user.permissions, [Permissions.Dispatch]) ||
-      user.isDispatch ||
-      user.rank === Rank.OWNER;
+    const hasDispatchPermissions = hasPermission({
+      userToCheck: user,
+      permissionsToCheck: [Permissions.Dispatch],
+      fallback: (user) => user.isDispatch,
+    });
 
     const isFromDispatch = isFromDispatchHeader === "true" && hasDispatchPermissions;
     const maxAssignmentsToCalls = cad.miscCadSettings.maxAssignmentsToCalls ?? Infinity;

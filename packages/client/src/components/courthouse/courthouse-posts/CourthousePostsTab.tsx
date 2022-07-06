@@ -13,6 +13,7 @@ import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { usePermission, Permissions } from "hooks/usePermission";
 import type { DeleteCourthousePostsData, GetCourthousePostsData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 interface Props {
   posts: GetCourthousePostsData;
@@ -20,7 +21,7 @@ interface Props {
 
 export function CourthousePostsTab(props: Props) {
   const [posts, setPosts] = React.useState(props.posts);
-  const [tempPost, setTempPost] = React.useState<CourthousePost | null>(null);
+  const [tempPost, postState] = useTemporaryItem(posts);
 
   const t = useTranslations("Courthouse");
   const common = useTranslations("Common");
@@ -39,23 +40,23 @@ export function CourthousePostsTab(props: Props) {
 
     if (typeof json === "boolean") {
       setPosts((p) => p.filter((v) => v.id !== tempPost.id));
-      setTempPost(null);
+      postState.setTempId(null);
       closeModal(ModalIds.AlertDeleteCourthousePost);
     }
   }
 
   function handleViewDescription(post: CourthousePost) {
-    setTempPost(post);
+    postState.setTempId(post.id);
     openModal(ModalIds.Description, post);
   }
 
   function handleManageClick(post: CourthousePost) {
-    setTempPost(post);
+    postState.setTempId(post.id);
     openModal(ModalIds.ManageCourthousePost);
   }
 
   function handleDeleteClick(post: CourthousePost) {
-    setTempPost(post);
+    postState.setTempId(post.id);
     openModal(ModalIds.AlertDeleteCourthousePost);
   }
 
@@ -122,7 +123,7 @@ export function CourthousePostsTab(props: Props) {
             title={t("deleteCourthousePost")}
             description={t("alert_deleteCourthousePost")}
             onDeleteClick={deleteCourthousePost}
-            onClose={() => setTempPost(null)}
+            onClose={() => postState.setTempId(null)}
             state={state}
           />
           <ManageCourtPostModal
@@ -136,13 +137,16 @@ export function CourthousePostsTab(props: Props) {
                 return p;
               })
             }
-            onClose={() => setTempPost(null)}
+            onClose={() => postState.setTempId(null)}
           />
         </>
       ) : null}
 
       {tempPost?.descriptionData ? (
-        <DescriptionModal onClose={() => setTempPost(null)} value={tempPost.descriptionData} />
+        <DescriptionModal
+          onClose={() => postState.setTempId(null)}
+          value={tempPost.descriptionData}
+        />
       ) : null}
     </TabsContent>
   );

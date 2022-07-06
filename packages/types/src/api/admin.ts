@@ -49,6 +49,12 @@ export interface GetImportVehiclesData {
 export type PostImportVehiclesData = GetImportVehiclesData["vehicles"];
 
 /**
+ * @method DELETE
+ * @route /admin/import/vehicles/:id
+ */
+export type DeleteImportVehiclesData = boolean;
+
+/**
  * @method GET
  * @route /admin/import/weapons
  */
@@ -66,6 +72,12 @@ export interface GetImportWeaponsData {
  * @route /admin/import/weapons
  */
 export type PostImportWeaponsData = GetImportWeaponsData["weapons"];
+
+/**
+ * @method DELETE
+ * @route /admin/import/weapons/:id
+ */
+export type DeleteImportWeaponsData = boolean;
 
 /**
  * @method GET
@@ -357,3 +369,41 @@ export type GetManageNameChangeRequests = (Prisma.NameChangeRequest & {
  * @route /admin/manage/name-change-requests/:id
  */
 export type PutManageNameChangeRequests = Prisma.NameChangeRequest;
+
+/**
+ * @method GET
+ * @route /admin/manage/custom-roles
+ */
+export type GetCustomRolesData = (Prisma.CustomRole & { discordRole?: Types.DiscordRole | null })[];
+
+/**
+ * @method POST
+ * @route /admin/manage/custom-roles
+ */
+export type PostCustomRolesData = Prisma.CustomRole & { discordRole?: Types.DiscordRole | null };
+
+/**
+ * @method PUT
+ * @route /admin/manage/custom-roles/:id
+ */
+export type PutCustomRoleByIdData = Prisma.CustomRole & { discordRole?: Types.DiscordRole | null };
+
+/**
+ * @method DELETE
+ * @route /admin/manage/custom-roles/:id
+ */
+export type DeleteCustomRoleByIdData = boolean;
+
+/**
+ * @method POST
+ * @route /admin/manage/custom-roles/:id
+ */
+export interface PostCustomRoleByIdData {
+  iconId: string | null;
+}
+
+/**
+ * @method PUT
+ * @route /admin/manage/users/roles/:id
+ */
+export type PutManageUserByIdRolesData = GetManageUserByIdData;

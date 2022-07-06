@@ -15,7 +15,7 @@ import type { Delete911CallEventByIdData, DeleteIncidentEventByIdData } from "@s
 interface EventItemProps<T extends IncidentEvent | Call911Event> {
   disabled?: boolean;
   event: T;
-  setTempEvent: React.Dispatch<React.SetStateAction<T | null>>;
+  setTempEvent: React.Dispatch<React.SetStateAction<T["id"] | null>>;
   isEditing: boolean;
 }
 
@@ -78,7 +78,7 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
             className="p-0 px-1 mr-2"
             size="xs"
             variant="cancel"
-            onClick={() => setTempEvent(event)}
+            onClick={() => setTempEvent(event.id)}
           >
             <Pencil width={15} />
           </Button>

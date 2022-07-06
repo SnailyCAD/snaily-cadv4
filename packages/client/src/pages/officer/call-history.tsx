@@ -32,6 +32,7 @@ import type {
   GetDispatchData,
   GetIncidentsData,
 } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
@@ -44,11 +45,11 @@ interface Props extends GetDispatchData {
 
 export default function CallHistory({ data, incidents, officers, deputies }: Props) {
   const [calls, setCalls] = React.useState(data);
-  const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
   const [search, setSearch] = React.useState("");
   const dispatchState = useDispatchState();
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageCallHistory], true);
+  const [tempCall, callState] = useTemporaryItem(calls);
 
   const { state, execute } = useFetch();
   const tableSelect = useTableSelect(calls);
@@ -60,12 +61,12 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
   const { generateCallsign } = useGenerateCallsign();
 
   function handleLinkClick(call: Full911Call) {
-    setTempCall(call);
+    callState.setTempId(call.id);
     openModal(ModalIds.LinkCallToIncident);
   }
 
   function handleViewClick(call: Full911Call) {
-    setTempCall(call);
+    callState.setTempId(call.id);
     openModal(ModalIds.Manage911Call);
   }
 
@@ -86,7 +87,7 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
   }
 
   function handleViewDescription(call: Full911Call) {
-    setTempCall(call);
+    callState.setTempId(call.id);
     openModal(ModalIds.Description, call);
   }
 
@@ -229,7 +230,10 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
       />
 
       {tempCall?.descriptionData ? (
-        <DescriptionModal onClose={() => setTempCall(null)} value={tempCall.descriptionData} />
+        <DescriptionModal
+          onClose={() => callState.setTempId(null)}
+          value={tempCall.descriptionData}
+        />
       ) : null}
 
       <Manage911CallModal call={tempCall} />

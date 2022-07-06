@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/config",
-  "version": "1.14.1",
+  "version": "1.15.0",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -25,6 +25,7 @@
     "@snailycad/types": "1.14.1"
   },
   "devDependencies": {
+    "@snailycad/types": "1.15.0",
     "tsup": "^6.1.2",
     "typescript": "^4.7.4",
     "vite": "^2.9.13",

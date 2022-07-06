@@ -18,20 +18,25 @@ import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { classNames } from "lib/classNames";
 import type { DeleteBusinessPostsData, GetBusinessByIdData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageBusinessPostModal = dynamic(
   async () => (await import("components/business/ManagePostModal")).ManageBusinessPostModal,
 );
 
-export default function BusinessId(props: GetBusinessByIdData) {
+interface Props {
+  business: GetBusinessByIdData;
+  employee: GetBusinessByIdData["employee"];
+}
+
+export default function BusinessId(props: Props) {
   const { state: fetchState, execute } = useFetch();
   const { openModal, closeModal } = useModal();
   const { currentBusiness, currentEmployee, posts, ...state } = useBusinessState();
   const common = useTranslations("Common");
   const t = useTranslations("Business");
-
-  const [tempPost, setTempPost] = React.useState<BusinessPost | null>(null);
+  const [tempPost, postState] = useTemporaryItem(posts);
 
   async function handlePostDeletion() {
     if (!tempPost) return;
@@ -44,23 +49,23 @@ export default function BusinessId(props: GetBusinessByIdData) {
 
     if (json) {
       state.setPosts(posts.filter((p) => p.id !== tempPost.id));
-      setTempPost(null);
+      postState.setTempId(null);
       closeModal(ModalIds.AlertDeleteBusinessPost);
     }
   }
 
   function handleEdit(post: BusinessPost) {
     openModal(ModalIds.ManageBusinessPost);
-    setTempPost(post);
+    postState.setTempId(post.id);
   }
 
   function handleDelete(post: BusinessPost) {
     openModal(ModalIds.AlertDeleteBusinessPost);
-    setTempPost(post);
+    postState.setTempId(post.id);
   }
 
   React.useEffect(() => {
-    const { employee, ...business } = props;
+    const { employee, business } = props;
 
     state.setCurrentBusiness(business);
     state.setCurrentEmployee(employee);
@@ -68,7 +73,7 @@ export default function BusinessId(props: GetBusinessByIdData) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props, state.setCurrentEmployee, state.setCurrentBusiness, state.setPosts]);
 
-  const owner = currentBusiness?.employees.find((v) => v.citizenId === currentBusiness.citizenId);
+  const owner = currentBusiness?.employees?.find((v) => v.citizenId === currentBusiness.citizenId);
 
   if (!currentBusiness || !currentEmployee) {
     return null;
@@ -82,7 +87,7 @@ export default function BusinessId(props: GetBusinessByIdData) {
     );
   }
 
-  if (props.status === WhitelistStatus.PENDING) {
+  if (props.business.status === WhitelistStatus.PENDING) {
     return (
       <Layout className="dark:text-white">
         <p>
@@ -196,7 +201,7 @@ export default function BusinessId(props: GetBusinessByIdData) {
           post={tempPost}
           onUpdate={() => void 0}
           onCreate={(post) => state.setPosts([post, ...posts])}
-          onClose={() => setTimeout(() => setTempPost(null), 100)}
+          onClose={() => setTimeout(() => postState.setTempId(null), 100)}
         />
       ) : null}
 
@@ -206,7 +211,7 @@ export default function BusinessId(props: GetBusinessByIdData) {
         id={ModalIds.AlertDeleteBusinessPost}
         onDeleteClick={handlePostDeletion}
         state={fetchState}
-        onClose={() => setTempPost(null)}
+        onClose={() => postState.setTempId(null)}
       />
     </Layout>
   );

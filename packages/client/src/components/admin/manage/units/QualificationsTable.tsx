@@ -15,6 +15,7 @@ import type {
   GetManageUnitByIdData,
   PutManageUnitQualificationData,
 } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 interface Props {
   unit: GetManageUnitByIdData;
@@ -84,7 +85,7 @@ export function QualificationsTable({ setUnit, unit }: Props) {
 }
 
 function QualificationAwardsTable({ unit, setUnit }: Props) {
-  const [tempQualification, setTempQualification] = React.useState<UnitQualification | null>(null);
+  const [tempQualification, qualificationState] = useTemporaryItem(unit.qualifications);
 
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
@@ -92,7 +93,7 @@ function QualificationAwardsTable({ unit, setUnit }: Props) {
   const { state, execute } = useFetch();
 
   function handleDeleteClick(qualification: UnitQualification) {
-    setTempQualification(qualification);
+    qualificationState.setTempId(qualification.id);
     openModal(ModalIds.AlertDeleteUnitQualification);
   }
 
@@ -133,7 +134,7 @@ function QualificationAwardsTable({ unit, setUnit }: Props) {
         ...p,
         qualifications: p.qualifications.filter((v) => v.id !== tempQualification.id),
       }));
-      setTempQualification(null);
+      qualificationState.setTempId(null);
       closeModal(ModalIds.AlertDeleteUnitQualification);
     }
   }

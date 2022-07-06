@@ -13,6 +13,7 @@ const DEFAULTS: Partial<Record<Feature, { isEnabled: boolean }>> = {
   STEAM_OAUTH: { isEnabled: false },
   CREATE_USER_CITIZEN_LEO: { isEnabled: false },
   WEAPON_EXAMS: { isEnabled: false },
+  ACTIVE_WARRANTS: { isEnabled: false },
 };
 
 export async function disabledFeatureToCadFeature() {
