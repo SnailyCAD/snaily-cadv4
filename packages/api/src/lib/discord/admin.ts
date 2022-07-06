@@ -1,8 +1,9 @@
 import { hasPermission } from "@snailycad/permissions";
 import { DiscordRole, Rank, User, WhitelistStatus } from "@snailycad/types";
-import { RESTGetAPIGuildMemberResult, Routes } from "discord-api-types/v10";
+import { APIGuildMember, RESTGetAPIGuildMemberResult, Routes } from "discord-api-types/v10";
 import { BOT_TOKEN, getRest, GUILD_ID } from "lib/discord/config";
 import { prisma } from "lib/prisma";
+import { manyToManyHelper } from "utils/manyToMany";
 
 type UserProperties =
   | "permissions"
@@ -102,6 +103,9 @@ export async function updateMemberRoles(
       permissionsToCheck: discordRoles.courthouseRolePermissions,
     }),
   );
+  const customRoles = makeCustomRolesArr(discordMember, user);
+
+  console.log({ customRoles });
 
   const data = [
     ...leoRoles,
@@ -111,6 +115,7 @@ export async function updateMemberRoles(
     ...towRoles,
     ...taxiRoles,
     ...courthouseRoles,
+    ...customRoles,
     { roleId: discordRoles.adminRoleId, method: createMethod(user.rank === Rank.ADMIN) },
     {
       roleId: discordRoles.whitelistedRoleId,
@@ -125,6 +130,36 @@ export async function updateMemberRoles(
   );
 }
 
+function makeCustomRolesArr(discordMember: APIGuildMember, user: Pick<User, UserProperties>) {
+  const disconnectConnectArray = manyToManyHelper(
+    discordMember.roles,
+    user.roles?.map((v) => v.discordRoleId!) ?? [],
+    { showExisting: true },
+  );
+
+  const roles: { roleId: string; method: "put" | "delete" }[] = [];
+  for (const value of disconnectConnectArray) {
+    const isDisconnect = "disconnect" in value;
+    const isConnect = "connect" in value;
+    const isExisting = "existing" in value;
+
+    const id = (
+      isConnect
+        ? value.connect
+        : isDisconnect
+        ? value.disconnect
+        : isExisting
+        ? value.existing
+        : null
+    )?.id;
+    if (!id) continue;
+
+    roles.push({ roleId: id, method: isConnect || isExisting ? "put" : "delete" });
+  }
+
+  return roles;
+}
+
 function makeRolesArr(roles: DiscordRole[], isTrue: boolean) {
   return roles.map((role) => ({
     roleId: role.id,
@@ -136,9 +171,9 @@ async function addOrRemoveRole(discordId: string, roleId: string | null, method:
   if (!roleId) return false;
 
   const rest = getRest();
-  const response = await rest[method](Routes.guildMemberRole(GUILD_ID!, discordId, roleId))
-    .then(() => true)
-    .catch(() => false);
+  const response = await rest[method](Routes.guildMemberRole(GUILD_ID!, discordId, roleId));
+  // .then(() => true)
+  // .catch(() => false);
 
   return response;
 }

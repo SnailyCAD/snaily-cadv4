@@ -179,6 +179,7 @@ export class ManageUsersController {
   async updateUserRolesById(
     @PathParams("id") userId: string,
     @BodyParams() body: unknown,
+    @Context("cad") cad: { discordRolesId: string | null },
   ): Promise<APITypes.PutManageUserByIdRolesData> {
     const data = validateSchema(ROLES_SCHEMA, body);
     const user = await prisma.user.findUnique({ where: { id: userId }, include: { roles: true } });
@@ -206,6 +207,10 @@ export class ManageUsersController {
       where: { id: user.id },
       select: manageUsersSelect(false),
     });
+
+    if (updated.discordId) {
+      await updateMemberRoles(updated, cad.discordRolesId);
+    }
 
     return updated;
   }
