@@ -92,6 +92,7 @@ export function CitizenList({ citizens: data }: Props) {
           <CitizenListItem key={citizen.id} citizen={citizen} />
         ))}
       </ul>
+
       {data.totalCount > 35 ? <TablePagination instance={instance} /> : null}
     </>
   );

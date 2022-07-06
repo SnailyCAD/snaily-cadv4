@@ -22,6 +22,7 @@ import { IsEnabled } from "middlewares/IsEnabled";
 import { sendErrorReport } from "@snailycad/telemetry";
 import { checkForUpdates } from "utils/checkForUpdates";
 import { getCADVersion } from "@snailycad/utils/version";
+import * as Sentry from "@sentry/node";
 
 const rootDir = __dirname;
 
@@ -94,6 +95,8 @@ export class ErrorFilter implements ExceptionFilterMethods {
     const { response, logger } = ctx;
     const error = this.mapError(exception);
     const headers = this.getHeaders(exception);
+
+    Sentry.captureException(exception);
 
     logger.error({
       error,

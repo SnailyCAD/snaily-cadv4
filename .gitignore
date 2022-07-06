@@ -30,3 +30,6 @@ packages/client/public/sounds/*.mp3
 packages/**/coverage
 
 test.mjs
+
+# Sentry
+.sentryclirc
