@@ -19,9 +19,9 @@ import compress from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { IsEnabled } from "middlewares/IsEnabled";
-import { sendErrorReport } from "@snailycad/telemetry";
 import { checkForUpdates } from "utils/checkForUpdates";
 import { getCADVersion } from "@snailycad/utils/version";
+import * as Sentry from "@sentry/node";
 
 const rootDir = __dirname;
 
@@ -95,15 +95,11 @@ export class ErrorFilter implements ExceptionFilterMethods {
     const error = this.mapError(exception);
     const headers = this.getHeaders(exception);
 
+    Sentry.captureException(exception);
+
     logger.error({
       error,
       catch: true,
-    });
-
-    sendErrorReport({
-      name: error.name,
-      message: error.message,
-      stack: `${JSON.stringify(error.errors, null, 4)} \n\n\n ${JSON.stringify(error, null, 4)}`,
     });
 
     response
