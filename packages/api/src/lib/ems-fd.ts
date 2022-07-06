@@ -32,8 +32,6 @@ export async function getActiveDeputy(
       fallback: (user) => user.isEmsFd,
     });
 
-    console.log({ hasEmsFdPermissions });
-
     if (!hasEmsFdPermissions) {
       throw new Forbidden("Invalid EMS-FD Permissions");
     }

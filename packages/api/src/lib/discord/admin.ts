@@ -105,8 +105,6 @@ export async function updateMemberRoles(
   );
   const customRoles = makeCustomRolesArr(discordMember, user);
 
-  console.log({ customRoles });
-
   const data = [
     ...leoRoles,
     ...emsFdRoles,
@@ -171,9 +169,9 @@ async function addOrRemoveRole(discordId: string, roleId: string | null, method:
   if (!roleId) return false;
 
   const rest = getRest();
-  const response = await rest[method](Routes.guildMemberRole(GUILD_ID!, discordId, roleId));
-  .then(() => true)
-  .catch(() => false);
+  const response = await rest[method](Routes.guildMemberRole(GUILD_ID!, discordId, roleId))
+    .then(() => true)
+    .catch(() => false);
 
   return response;
 }
