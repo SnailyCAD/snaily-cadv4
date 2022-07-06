@@ -172,8 +172,8 @@ async function addOrRemoveRole(discordId: string, roleId: string | null, method:
 
   const rest = getRest();
   const response = await rest[method](Routes.guildMemberRole(GUILD_ID!, discordId, roleId));
-  // .then(() => true)
-  // .catch(() => false);
+  .then(() => true)
+  .catch(() => false);
 
   return response;
 }
