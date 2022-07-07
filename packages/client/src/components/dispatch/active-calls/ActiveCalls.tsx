@@ -282,7 +282,9 @@ function _ActiveCalls() {
                   updatedAt: <FullDate>{call.updatedAt}</FullDate>,
                   assignedUnits: (
                     <AssignedUnitsColumn
-                      handleAssignToCall={handleAssignUnassignToCall}
+                      handleAssignToCall={(call, unitId) =>
+                        handleAssignUnassignToCall(call, "assign", unitId)
+                      }
                       call={call}
                       isDispatch={isDispatch}
                     />
@@ -303,7 +305,7 @@ function _ActiveCalls() {
                           className="ml-2"
                           disabled={!isUnitActive}
                           size="xs"
-                          onClick={() => handleAssignUnassignToCall(call, "assign")}
+                          onClick={() => handleAssignUnassignToCall(call, "unassign")}
                         >
                           {t("unassignFromCall")}
                         </Button>
