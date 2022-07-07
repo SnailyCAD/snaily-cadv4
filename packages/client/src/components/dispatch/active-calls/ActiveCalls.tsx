@@ -352,7 +352,7 @@ function _ActiveCalls() {
         <Droppable onDrop={handleUnassign} accepts={[DndActions.UnassignUnitFrom911Call]}>
           <div
             className={classNames(
-              "grid place-items-center z-50 border-2 border-slate-500 bg-gray-4 fixed bottom-3 left-3 right-4 h-60 shadow-sm rounded-md transition-opacity",
+              "grid place-items-center z-50 border-2 border-slate-500 bg-gray-400 dark:bg-gray-4 fixed bottom-3 left-3 right-4 h-60 shadow-sm rounded-md transition-opacity",
               draggingUnit === "call"
                 ? "pointer-events-all opacity-100"
                 : "pointer-events-none opacity-0",
