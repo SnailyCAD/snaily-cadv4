@@ -36,23 +36,25 @@ export function BoloItem({ idx, bolo, handleDelete, handleEdit }: BoloItemProps)
         <div>
           {bolo.type === BoloType.PERSON ? (
             <div id="description">
-              <p className="mb-1">{bolo.description}</p>
               <span className="font-semibold">{common("name")}: </span>
               {bolo.name}
+              <br />
+              <p className="mb-1">{bolo.description}</p>
             </div>
           ) : bolo.type === BoloType.VEHICLE ? (
             <div>
-              <p className="mb-1">
-                {bolo.description === STOLEN_TEXT ? t("Bolos.stolen") : bolo.description}
-              </p>
+              <span className="font-semibold">{t("Leo.model")}: </span>
+              {bolo.model || common("none")}
+              <br />
               <span className="font-semibold">{t("Leo.plate")}: </span>
               {bolo.plate?.toUpperCase() || common("none")}
               <br />
               <span className="font-semibold">{t("Leo.color")}: </span>
               {bolo.color || common("none")}
               <br />
-              <span className="font-semibold">{t("Leo.model")}: </span>
-              {bolo.model || common("none")}
+              <p className="mb-1">
+                {bolo.description === STOLEN_TEXT ? t("Bolos.stolen") : bolo.description}
+              </p>
             </div>
           ) : (
             <p className="text-justify">{bolo.description}</p>
