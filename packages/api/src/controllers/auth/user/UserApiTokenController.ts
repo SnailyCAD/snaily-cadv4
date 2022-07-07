@@ -1,4 +1,4 @@
-import type { ApiToken, User } from "@prisma/client";
+import type { User } from "@snailycad/types";
 import { BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest } from "@tsed/exceptions";
@@ -9,6 +9,7 @@ import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { nanoid } from "nanoid";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/user/api-token")
 @UseBefore(IsAuth)
@@ -20,9 +21,9 @@ export class AccountController {
     permissions: [Permissions.UsePersonalApiToken],
   })
   async enableDisableUserAPIToken(
-    @Context("user") user: User & { apiToken?: ApiToken | null },
+    @Context("user") user: User,
     @BodyParams() body: any,
-  ) {
+  ): Promise<APITypes.PutUserEnableDisableApiTokenData> {
     if (body.enabled === false) {
       if (!user.apiTokenId) {
         return { ...user, apiToken: null, apiTokenId: null };
@@ -61,7 +62,9 @@ export class AccountController {
     fallback: false,
     permissions: [Permissions.UsePersonalApiToken],
   })
-  async generateNewApiToken(@Context("user") user: User & { apiToken?: ApiToken | null }) {
+  async generateNewApiToken(
+    @Context("user") user: User,
+  ): Promise<APITypes.DeleteUserRegenerateApiTokenData> {
     if (!user.apiTokenId) {
       throw new BadRequest("noApiTokenId");
     }
@@ -73,6 +76,7 @@ export class AccountController {
       data: {
         token: nanoid(56),
       },
+      select: userProperties,
     });
 
     return updated;

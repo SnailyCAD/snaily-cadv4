@@ -4,9 +4,10 @@ import type { FormikHelpers } from "formik";
 import compareDesc from "date-fns/compareDesc";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
-import type { Call911Event } from "@snailycad/types";
 import { EventItem } from "../events/EventItem";
 import { UpdateEventForm } from "../events/UpdateEventForm";
+import type { Post911CallEventsData, Put911CallEventByIdData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 interface Props {
   call: Full911Call;
@@ -19,7 +20,7 @@ export function CallEventsArea({ disabled, call, onUpdate, onCreate }: Props) {
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
-  const [tempEvent, setTempEvent] = React.useState<Call911Event | null>(null);
+  const [tempEvent, eventState] = useTemporaryItem(call.events);
 
   async function onEventSubmit(
     values: { description: string },
@@ -28,7 +29,8 @@ export function CallEventsArea({ disabled, call, onUpdate, onCreate }: Props) {
     if (!call) return;
 
     if (tempEvent) {
-      const { json } = await execute(`/911-calls/events/${call.id}/${tempEvent.id}`, {
+      const { json } = await execute<Put911CallEventByIdData>({
+        path: `/911-calls/events/${call.id}/${tempEvent.id}`,
         method: "PUT",
         data: values,
       });
@@ -37,7 +39,8 @@ export function CallEventsArea({ disabled, call, onUpdate, onCreate }: Props) {
         onUpdate?.(json);
       }
     } else {
-      const { json } = await execute(`/911-calls/events/${call.id}`, {
+      const { json } = await execute<Post911CallEventsData>({
+        path: `/911-calls/events/${call.id}`,
         method: "POST",
         data: values,
       });
@@ -47,7 +50,7 @@ export function CallEventsArea({ disabled, call, onUpdate, onCreate }: Props) {
       }
     }
 
-    setTempEvent(null);
+    eventState.setTempId(null);
     helpers.resetForm();
   }
 
@@ -65,7 +68,7 @@ export function CallEventsArea({ disabled, call, onUpdate, onCreate }: Props) {
               <EventItem
                 disabled={disabled}
                 key={event.id}
-                setTempEvent={setTempEvent}
+                setTempEvent={eventState.setTempId}
                 event={event}
                 isEditing={tempEvent?.id === event.id}
               />
@@ -78,7 +81,7 @@ export function CallEventsArea({ disabled, call, onUpdate, onCreate }: Props) {
           onSubmit={onEventSubmit}
           state={state}
           event={tempEvent}
-          setEvent={setTempEvent}
+          setEvent={eventState.setTempId}
         />
       )}
     </div>

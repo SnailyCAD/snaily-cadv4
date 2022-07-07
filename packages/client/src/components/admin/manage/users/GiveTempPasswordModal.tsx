@@ -6,6 +6,7 @@ import { ModalIds } from "types/ModalIds";
 import { Modal } from "components/modal/Modal";
 import { Loader } from "components/Loader";
 import { useTranslations } from "use-intl";
+import type { PostManageUsersGiveTempPasswordData } from "@snailycad/types/api";
 
 interface Props {
   user: User;
@@ -19,11 +20,12 @@ export function GiveTempPasswordModal({ user }: Props) {
   const [result, setResult] = React.useState<string | null>(null);
 
   async function fetchNewPassword() {
-    const { json } = await execute(`/admin/manage/users/temp-password/${user.id}`, {
+    const { json } = await execute<PostManageUsersGiveTempPasswordData>({
+      path: `/admin/manage/users/temp-password/${user.id}`,
       method: "POST",
     });
 
-    if (json && typeof json === "string") {
+    if (json) {
       setResult(json);
     }
   }

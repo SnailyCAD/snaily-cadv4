@@ -7,6 +7,7 @@ import { prisma } from "lib/prisma";
 import { getCADVersion } from "@snailycad/utils/version";
 import { handleDiscordSync } from "./auth/utils";
 import { getUserFromCADAPIToken, getUserFromSession } from "./auth/getUser";
+import type { cad } from "@snailycad/types";
 
 @Middleware()
 export class IsAuth implements MiddlewareMethods {
@@ -46,25 +47,24 @@ export class IsAuth implements MiddlewareMethods {
       await handleDiscordSync({ user, cad });
     }
 
-    ctx.set("cad", { ...setDiscordAuth(cad), version: await getCADVersion() });
+    if (cad) {
+      ctx.set("cad", { ...setDiscordAuth(cad as cad), version: await getCADVersion() });
+    }
   }
 }
 
-export function setDiscordAuth(cad: { features?: CadFeature[] } | null) {
+export function setDiscordAuth<T extends Partial<cad>>(cad: T | null) {
+  const features = cad?.features as CadFeature[] | undefined;
   const hasDiscordTokens =
     Boolean(process.env["DISCORD_CLIENT_ID"]) && Boolean(process.env["DISCORD_CLIENT_SECRET"]);
 
-  const isEnabled = !cad?.features?.some((v) => v.isEnabled && v.feature === Feature.DISCORD_AUTH);
+  const isEnabled = !features?.some((v) => v.isEnabled && v.feature === Feature.DISCORD_AUTH);
 
   const notEnabled = { isEnabled: false, feature: Feature.DISCORD_AUTH } as CadFeature;
-  const filtered = cad?.features?.filter((v) => v.feature !== Feature.DISCORD_AUTH) ?? [];
-
-  if (!cad && !hasDiscordTokens) {
-    return { features: [...filtered, notEnabled] };
-  }
+  const filtered = features?.filter((v) => v.feature !== Feature.DISCORD_AUTH) ?? [];
 
   if (isEnabled && !hasDiscordTokens) {
-    return { ...cad, features: [...filtered, notEnabled] };
+    return { ...(cad as cad), features: [...filtered, notEnabled] };
   }
 
   return cad;
@@ -82,7 +82,6 @@ export function CAD_SELECT(user?: Pick<User, "rank"> | null, includeDiscordRoles
     businessWhitelisted: true,
     features: true,
     autoSetUserProperties: true,
-    liveMapSocketURl: user?.rank === Rank.OWNER,
     registrationCode: user?.rank === Rank.OWNER,
     steamApiKey: user?.rank === Rank.OWNER,
     apiTokenId: user?.rank === Rank.OWNER,

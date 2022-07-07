@@ -86,7 +86,8 @@
     "dlExams": "Driver License Exams",
     "dmv": "Department of Motor Vehicles",
     "penalCodes": "Penal Codes",
-    "weaponExams": "Weapon Exams"
+    "weaponExams": "Weapon Exams",
+    "myDeputyLogs": "My deputy logs"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",

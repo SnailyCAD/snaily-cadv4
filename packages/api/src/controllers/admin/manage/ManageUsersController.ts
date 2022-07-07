@@ -1,4 +1,13 @@
-import { Rank, type cad, WhitelistStatus, Feature, CadFeature, User, Prisma } from "@prisma/client";
+import {
+  Rank,
+  type cad,
+  WhitelistStatus,
+  Feature,
+  CadFeature,
+  User,
+  Prisma,
+  CustomRole,
+} from "@prisma/client";
 import { PathParams, BodyParams, Context, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -7,7 +16,12 @@ import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/getSessionUser";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
-import { BAN_SCHEMA, UPDATE_USER_SCHEMA, PERMISSIONS_SCHEMA } from "@snailycad/schemas";
+import {
+  BAN_SCHEMA,
+  UPDATE_USER_SCHEMA,
+  PERMISSIONS_SCHEMA,
+  ROLES_SCHEMA,
+} from "@snailycad/schemas";
 import { Socket } from "services/SocketService";
 import { nanoid } from "nanoid";
 import { genSaltSync, hashSync } from "bcrypt";
@@ -18,6 +32,16 @@ import { updateMemberRoles } from "lib/discord/admin";
 import { isDiscordIdInUse } from "utils/discord";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { isFeatureEnabled } from "lib/cad";
+import { manyToManyHelper } from "utils/manyToMany";
+import type * as APITypes from "@snailycad/types/api";
+
+const manageUsersSelect = (selectCitizens: boolean) =>
+  ({
+    ...userProperties,
+    ...(selectCitizens ? { citizens: { include: citizenInclude } } : {}),
+    apiToken: { include: { logs: { take: 35, orderBy: { createdAt: "desc" } } } },
+    roles: true,
+  } as const);
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/users")
@@ -43,7 +67,7 @@ export class ManageUsersController {
     @QueryParams("query", String) query = "",
     @QueryParams("pendingOnly", Boolean) pendingOnly = false,
     @QueryParams("includeAll", Boolean) includeAll = false,
-  ) {
+  ): Promise<APITypes.GetManageUsersData> {
     const where =
       query || pendingOnly
         ? {
@@ -81,15 +105,15 @@ export class ManageUsersController {
   async getUserById(
     @PathParams("id") userId: string,
     @QueryParams("select-citizens") selectCitizens: boolean,
-  ) {
+  ): Promise<APITypes.GetManageUserByIdData> {
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: {
-        ...userProperties,
-        ...(selectCitizens ? { citizens: { include: citizenInclude } } : {}),
-        apiToken: { include: { logs: { take: 35, orderBy: { createdAt: "desc" } } } },
-      },
+      select: manageUsersSelect(selectCitizens),
     });
+
+    if (!user) {
+      throw new NotFound("userNotFound");
+    }
 
     return user;
   }
@@ -99,7 +123,9 @@ export class ManageUsersController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
-  async searchUsers(@BodyParams("username") username: string) {
+  async searchUsers(
+    @BodyParams("username") username: string,
+  ): Promise<APITypes.PostManageUsersSearchData> {
     const users = await prisma.user.findMany({
       where: { username: { contains: username, mode: "insensitive" } },
       select: userProperties,
@@ -114,9 +140,15 @@ export class ManageUsersController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
-  async updateUserPermissionsById(@PathParams("id") userId: string, @BodyParams() body: unknown) {
+  async updateUserPermissionsById(
+    @PathParams("id") userId: string,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PutManageUserPermissionsByIdData> {
     const data = validateSchema(PERMISSIONS_SCHEMA, body);
-    const user = await prisma.user.findUnique({ where: { id: userId } });
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: manageUsersSelect(false),
+    });
 
     if (!user) {
       throw new NotFound("notFound");
@@ -126,15 +158,59 @@ export class ManageUsersController {
       throw new ExtendedBadRequest({ rank: "cannotUpdateOwnerPermissions" });
     }
 
-    const permissions = this.parsePermissions(data);
+    const permissions = this.parsePermissions(data, user);
 
     const updated = await prisma.user.update({
       where: {
         id: user.id,
       },
       data: { permissions },
-      select: userProperties,
+      select: manageUsersSelect(false),
     });
+
+    return updated;
+  }
+
+  @Put("/roles/:id")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
+  })
+  async updateUserRolesById(
+    @PathParams("id") userId: string,
+    @BodyParams() body: unknown,
+    @Context("cad") cad: { discordRolesId: string | null },
+  ): Promise<APITypes.PutManageUserByIdRolesData> {
+    const data = validateSchema(ROLES_SCHEMA, body);
+    const user = await prisma.user.findUnique({ where: { id: userId }, include: { roles: true } });
+
+    if (!user) {
+      throw new NotFound("notFound");
+    }
+
+    if (user.rank === Rank.OWNER) {
+      throw new ExtendedBadRequest({ rank: "cannotUpdateOwnerPermissions" });
+    }
+
+    const disconnectConnectArr = manyToManyHelper(
+      user.roles.map((v) => v.id),
+      data.roles as string[],
+    );
+
+    await prisma.$transaction(
+      disconnectConnectArr.map((disconnectConnectData) =>
+        prisma.user.update({ where: { id: user.id }, data: { roles: disconnectConnectData } }),
+      ),
+    );
+
+    const updated = await prisma.user.findUniqueOrThrow({
+      where: { id: user.id },
+      select: manageUsersSelect(false),
+    });
+
+    if (updated.discordId) {
+      await updateMemberRoles(updated, cad.discordRolesId);
+    }
 
     return updated;
   }
@@ -148,7 +224,7 @@ export class ManageUsersController {
     @Context("cad") cad: { discordRolesId: string | null },
     @PathParams("id") userId: string,
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PutManageUserByIdData> {
     const data = validateSchema(UPDATE_USER_SCHEMA, body);
     const user = await prisma.user.findUnique({ where: { id: userId } });
 
@@ -179,7 +255,7 @@ export class ManageUsersController {
         rank: user.rank === Rank.OWNER ? Rank.OWNER : Rank[data.rank as Rank],
         discordId: data.discordId,
       },
-      select: userProperties,
+      select: manageUsersSelect(false),
     });
 
     if (updated.discordId) {
@@ -194,7 +270,9 @@ export class ManageUsersController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
-  async giveUserTempPassword(@PathParams("id") userId: string) {
+  async giveUserTempPassword(
+    @PathParams("id") userId: string,
+  ): Promise<APITypes.PostManageUsersGiveTempPasswordData> {
     const user = await prisma.user.findFirst({
       where: {
         id: userId,
@@ -240,7 +318,7 @@ export class ManageUsersController {
     @PathParams("id") userId: string,
     @PathParams("type") banType: "ban" | "unban",
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PostManageUserBanUnbanData> {
     if (!["ban", "unban"].includes(banType)) {
       throw new NotFound("notFound");
     }
@@ -279,7 +357,9 @@ export class ManageUsersController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.DeleteUsers],
   })
-  async deleteUserAccount(@PathParams("id") userId: string) {
+  async deleteUserAccount(
+    @PathParams("id") userId: string,
+  ): Promise<APITypes.DeleteManageUsersData> {
     const user = await prisma.user.findFirst({
       where: {
         id: userId,
@@ -311,7 +391,7 @@ export class ManageUsersController {
     @PathParams("id") userId: string,
     @PathParams("type") type: "accept" | "decline",
     @Context("cad") cad: cad & { discordRolesId: string | null },
-  ) {
+  ): Promise<APITypes.PostManageUserAcceptDeclineData> {
     if (!["accept", "decline"].includes(type)) {
       throw new BadRequest("invalidType");
     }
@@ -351,7 +431,7 @@ export class ManageUsersController {
   async revokeApiToken(
     @PathParams("userId") userId: string,
     @Context("cad") cad: cad & { features?: CadFeature[] },
-  ) {
+  ): Promise<APITypes.DeleteManageUserRevokeApiTokenData> {
     const isUserAPITokensEnabled = isFeatureEnabled({
       feature: Feature.USER_API_TOKENS,
       features: cad.features,
@@ -379,16 +459,20 @@ export class ManageUsersController {
     return true;
   }
 
-  private parsePermissions(data: Record<string, string>) {
+  private parsePermissions(data: Record<string, string>, user: { roles: CustomRole[] }) {
     const permissions: string[] = [];
     const values = Object.values(Permissions);
+    const rolePermissions = user.roles.flatMap((r) => r.permissions);
 
-    values.forEach((name) => {
+    for (const name of values) {
       const updatedPermission = data[name];
-      if (!updatedPermission) return;
+
+      if (!updatedPermission || rolePermissions.includes(updatedPermission)) {
+        continue;
+      }
 
       permissions.push(updatedPermission);
-    });
+    }
 
     return permissions;
   }

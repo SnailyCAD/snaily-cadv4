@@ -12,7 +12,6 @@ import {
   WhitelistStatus,
   CadFeature,
   Feature,
-  Rank,
   DiscordWebhookType,
 } from "@prisma/client";
 import { UPDATE_OFFICER_STATUS_SCHEMA } from "@snailycad/schemas";
@@ -34,6 +33,7 @@ import { findUnit } from "lib/leo/findUnit";
 import { isFeatureEnabled } from "lib/cad";
 import { hasPermission } from "@snailycad/permissions";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -55,16 +55,18 @@ export class StatusController {
     @BodyParams() body: unknown,
     @Req() req: Req,
     @Context("cad") cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
-  ) {
+  ): Promise<APITypes.PutDispatchStatusByUnitId> {
     const data = validateSchema(UPDATE_OFFICER_STATUS_SCHEMA, body);
     const bodyStatusId = data.status;
 
     const isFromDispatch = req.headers["is-from-dispatch"]?.toString() === "true";
     const isDispatch =
       isFromDispatch &&
-      (hasPermission(user.permissions, [Permissions.Dispatch]) ||
-        user.isDispatch ||
-        user.rank === Rank.OWNER);
+      hasPermission({
+        userToCheck: user,
+        permissionsToCheck: [Permissions.Dispatch],
+        fallback: (user) => user.isDispatch,
+      });
 
     const { type, unit } = await findUnit(unitId, { userId: isDispatch ? undefined : user.id });
 

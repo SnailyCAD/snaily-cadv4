@@ -11,6 +11,7 @@ import { Textarea } from "components/form/Textarea";
 import { Loader } from "components/Loader";
 import type { VehicleSearchResult } from "state/search/vehicleSearchState";
 import type { NameSearchResult } from "state/search/nameSearchState";
+import type { PutNotesData, PostNotesData } from "@snailycad/types/api";
 
 interface Props {
   note: Note | null;
@@ -37,7 +38,8 @@ export function ManageNoteModal({ onCreate, onUpdate, onClose, currentResult, ty
     if (!currentResult) return;
 
     if (note) {
-      const { json } = await execute(`/notes/${note.id}`, {
+      const { json } = await execute<PutNotesData>({
+        path: `/notes/${note.id}`,
         method: "PUT",
         data: { text: values.text, type, itemId: currentResult.id },
       });
@@ -47,7 +49,8 @@ export function ManageNoteModal({ onCreate, onUpdate, onClose, currentResult, ty
         handleClose();
       }
     } else {
-      const { json } = await execute("/notes", {
+      const { json } = await execute<PostNotesData>({
+        path: "/notes",
         method: "POST",
         data: { text: values.text, type, itemId: currentResult.id },
       });

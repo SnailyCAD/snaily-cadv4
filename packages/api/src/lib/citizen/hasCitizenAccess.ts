@@ -1,4 +1,4 @@
-import { Feature, cad, CadFeature, User, Rank } from "@prisma/client";
+import { Feature, cad, CadFeature, User } from "@prisma/client";
 import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { isFeatureEnabled } from "lib/cad";
 
@@ -14,10 +14,14 @@ export function shouldCheckCitizenUserId({ cad, user }: Options) {
     features: cad.features,
   });
 
-  const hasLeoPermissions =
-    hasPermission(user.permissions, defaultPermissions.defaultLeoPermissions) ||
-    user.isLeo ||
-    user.rank === Rank.OWNER;
+  const hasLeoPermissions = hasPermission({
+    userToCheck: user,
+    permissionsToCheck: [
+      ...defaultPermissions.defaultLeoPermissions,
+      ...defaultPermissions.defaultEmsFdPermissions,
+    ],
+    fallback: (user) => user.isLeo || user.isEmsFd,
+  });
 
   if (isCommonCardsEnabled && hasLeoPermissions) return false;
   return true;

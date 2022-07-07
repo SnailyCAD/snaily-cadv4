@@ -5,7 +5,6 @@ import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { ModalIds } from "types/ModalIds";
 import { Button, buttonVariants } from "components/Button";
-import type { Citizen, User } from "@snailycad/types";
 import { useTranslations } from "next-intl";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
@@ -16,15 +15,15 @@ import { FullDate } from "components/shared/FullDate";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { classNames } from "lib/classNames";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
+import type { DeleteManageCitizenByIdData, GetManageCitizensData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
-type CitizenWithUser = Citizen & {
-  user: User | null;
-};
+type CitizenWithUser = GetManageCitizensData["citizens"][number];
 
 interface Props {
-  citizens: CitizenWithUser[];
+  citizens: GetManageCitizensData["citizens"];
   totalCount: number;
-  setCitizens: React.Dispatch<React.SetStateAction<CitizenWithUser[]>>;
+  setCitizens: React.Dispatch<React.SetStateAction<GetManageCitizensData["citizens"]>>;
 }
 
 export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens }: Props) {
@@ -33,11 +32,14 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
     totalCount,
     fetchOptions: {
       path: "/admin/manage/citizens",
-      onResponse: (json) => ({ totalCount: json.totalCount, data: json.citizens }),
+      onResponse: (json: GetManageCitizensData) => ({
+        totalCount: json.totalCount,
+        data: json.citizens,
+      }),
     },
   });
 
-  const [tempValue, setTempValue] = React.useState<CitizenWithUser | null>(null);
+  const [tempValue, valueState] = useTemporaryItem(asyncTable.data);
   const [reason, setReason] = React.useState("");
   const [userFilter, setUserFilter] = React.useState<string | null>(null);
   const users = React.useMemo(() => makeUsersList(asyncTable.data), [asyncTable.data]);
@@ -53,7 +55,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
   const common = useTranslations("Common");
 
   function handleDeleteClick(value: CitizenWithUser) {
-    setTempValue(value);
+    valueState.setTempId(value.id);
     openModal(ModalIds.AlertDeleteCitizen);
   }
 
@@ -64,14 +66,15 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
       return reasonRef.current.focus();
     }
 
-    const { json } = await execute(`/admin/manage/citizens/${tempValue.id}`, {
+    const { json } = await execute<DeleteManageCitizenByIdData>({
+      path: `/admin/manage/citizens/${tempValue.id}`,
       method: "DELETE",
       data: { reason },
     });
 
     if (json) {
       setCitizens((p) => p.filter((v) => v.id !== tempValue.id));
-      setTempValue(null);
+      valueState.setTempId(null);
       closeModal(ModalIds.AlertDeleteCitizen);
     }
   }
@@ -222,7 +225,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
   );
 }
 
-function makeUsersList(citizens: CitizenWithUser[]) {
+function makeUsersList(citizens: GetManageCitizensData["citizens"]) {
   const list = new Map<string, { id: string; username: string }>();
   const arr = [];
 

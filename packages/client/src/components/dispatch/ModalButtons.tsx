@@ -10,6 +10,10 @@ import { ModalButton } from "components/modal-buttons/ModalButton";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { TonesModal } from "./modals/TonesModal";
+import type {
+  PostDispatchDispatchersStateData,
+  PostDispatchSignal100Data,
+} from "@snailycad/types/api";
 
 const buttons: modalButtons.ModalButton[] = [
   modalButtons.nameSearchBtn,
@@ -37,7 +41,8 @@ export function DispatchModalButtons() {
   async function handleStateChangeDispatcher() {
     const newState = !isActive;
 
-    const { json } = await execute("/dispatch/dispatchers-state", {
+    const { json } = await execute<PostDispatchDispatchersStateData>({
+      path: "/dispatch/dispatchers-state",
       method: "POST",
       data: { value: newState },
     });
@@ -50,7 +55,8 @@ export function DispatchModalButtons() {
   }
 
   async function handleSignal100() {
-    await execute("/dispatch/signal-100", {
+    await execute<PostDispatchSignal100Data>({
+      path: "/dispatch/signal-100",
       method: "POST",
       data: { value: !signal100Enabled },
     });

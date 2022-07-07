@@ -1,30 +1,33 @@
 import { Controller } from "@tsed/di";
-import { Get, Post } from "@tsed/schema";
+import { Get, Post, Description, Delete } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { VEHICLE_SCHEMA_ARR } from "@snailycad/schemas/dist/admin/import/vehicles";
-import { BodyParams, MultipartFile, PlatformMulterFile, QueryParams } from "@tsed/common";
+import {
+  BodyParams,
+  MultipartFile,
+  PathParams,
+  PlatformMulterFile,
+  QueryParams,
+} from "@tsed/common";
 import { parseImportFile } from "utils/file";
 import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
 import { citizenInclude } from "controllers/citizen/CitizenController";
-import type {
-  Prisma,
-  RegisteredVehicle,
-  VehicleInspectionStatus,
-  VehicleTaxStatus,
-} from "@prisma/client";
+import type { Prisma, VehicleInspectionStatus, VehicleTaxStatus } from "@prisma/client";
 import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
+import type * as APITypes from "@snailycad/types/api";
 
 const vehiclesInclude = { ...citizenInclude.vehicles.include, citizen: true };
 
 @Controller("/admin/import/vehicles")
 export class ImportVehiclesController {
-  @Get()
+  @Get("/")
+  @Description("Get all the vehicles in the CAD (paginated)")
   async getVehicles(
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query = "",
     @QueryParams("includeAll", Boolean) includeAll = false,
-  ) {
+  ): Promise<APITypes.GetImportVehiclesData> {
     const where: Prisma.RegisteredVehicleWhereInput | undefined = query
       ? {
           OR: [
@@ -50,12 +53,21 @@ export class ImportVehiclesController {
   }
 
   @Post("/")
+  @Description("Import vehicles in the CAD via file upload")
   async importVehicles(
     @BodyParams() body?: unknown,
     @MultipartFile("file") file?: PlatformMulterFile,
-  ) {
+  ): Promise<APITypes.PostImportVehiclesData> {
     const toValidateBody = file ? parseImportFile(file) : body;
     return importVehiclesHandler(toValidateBody);
+  }
+
+  @Delete("/:id")
+  @Description("Delete a registered vehicle by its id")
+  async deleteVehicle(@PathParams("id") id: string): Promise<APITypes.DeleteImportVehiclesData> {
+    await prisma.registeredVehicle.delete({ where: { id } });
+
+    return true;
   }
 }
 
@@ -81,7 +93,7 @@ export async function importVehiclesHandler(body: unknown[]) {
         include: vehiclesInclude,
       });
 
-      let last: RegisteredVehicle = vehicle;
+      let last = vehicle;
       if (data.flags) {
         const disconnectConnectArr = manyToManyHelper([], data.flags);
 
@@ -95,7 +107,7 @@ export async function importVehiclesHandler(body: unknown[]) {
               }),
             ),
           ),
-        );
+        ) as typeof vehicle;
       }
 
       return last;

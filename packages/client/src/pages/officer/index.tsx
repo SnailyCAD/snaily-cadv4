@@ -6,15 +6,16 @@ import { StatusesArea } from "components/shared/StatusesArea";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { ActiveOfficer, useLeoState } from "state/leoState";
-import { Bolo, EmsFdDeputy, Officer, Record, RecordType, ValueType } from "@snailycad/types";
-import { ActiveCalls } from "components/leo/ActiveCalls";
-import { Full911Call, useDispatchState } from "state/dispatchState";
+import { useLeoState } from "state/leoState";
+import { Record, RecordType, ValueType } from "@snailycad/types";
+import { ActiveCalls } from "components/dispatch/active-calls/ActiveCalls";
+import { useDispatchState } from "state/dispatchState";
 import { ModalButtons } from "components/leo/ModalButtons";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { requestAll } from "lib/utils";
 import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
 import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
+import { ActiveWarrants } from "components/leo/active-warrants/ActiveWarrants";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { usePanicButton } from "hooks/shared/usePanicButton";
 import { Title } from "components/shared/Title";
@@ -26,6 +27,15 @@ import { useNameSearch } from "state/search/nameSearchState";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useTones } from "hooks/global/useTones";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
+import type {
+  Get911CallsData,
+  GetActiveOfficerData,
+  GetActiveOfficersData,
+  GetBolosData,
+  GetEmsFdActiveDeputies,
+  GetMyOfficersData,
+} from "@snailycad/types/api";
+import { CreateWarrantModal } from "components/leo/modals/CreateWarrantModal";
 
 const Modals = {
   CreateWarrantModal: dynamic(async () => {
@@ -60,12 +70,12 @@ const Modals = {
 };
 
 interface Props {
-  activeOfficer: ActiveOfficer | null;
-  calls: Full911Call[];
-  bolos: Bolo[];
-  activeDeputies: EmsFdDeputy[];
-  activeOfficers: ActiveOfficer[];
-  userOfficers: Officer[];
+  activeOfficer: GetActiveOfficerData;
+  activeOfficers: GetActiveOfficersData;
+  userOfficers: GetMyOfficersData["officers"];
+  calls: Get911CallsData;
+  bolos: GetBolosData;
+  activeDeputies: GetEmsFdActiveDeputies;
 }
 
 export default function OfficerDashboard({
@@ -97,12 +107,12 @@ export default function OfficerDashboard({
   const tones = useTones("leo");
   const panic = usePanicButton();
   const { isOpen } = useModal();
-  const { LEO_TICKETS } = useFeatureEnabled();
+  const { LEO_TICKETS, ACTIVE_WARRANTS, CALLS_911 } = useFeatureEnabled();
 
   const { currentResult, setCurrentResult } = useNameSearch();
 
   function handleRecordCreate(data: Record) {
-    if (!currentResult) return;
+    if (!currentResult || currentResult.isConfidential) return;
 
     setCurrentResult({
       ...currentResult,
@@ -147,8 +157,9 @@ export default function OfficerDashboard({
         />
       </UtilityPanel>
 
-      <ActiveCalls />
+      {CALLS_911 ? <ActiveCalls /> : null}
       <ActiveBolos />
+      {ACTIVE_WARRANTS ? <ActiveWarrants /> : null}
 
       <div className="mt-3">
         <ActiveOfficers />
@@ -169,7 +180,7 @@ export default function OfficerDashboard({
             </>
           )}
           <Modals.NameSearchModal />
-          <Modals.CreateWarrantModal />
+          {!ACTIVE_WARRANTS ? <CreateWarrantModal warrant={null} /> : null}
           <Modals.CustomFieldSearch />
         </>
       ) : null}

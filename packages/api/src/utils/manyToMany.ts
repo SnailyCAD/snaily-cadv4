@@ -1,19 +1,28 @@
 export type DisconnectOrConnect<
   T extends string | object,
   Accessor extends T extends string ? never : keyof T,
-> = { disconnect?: { id: T[Accessor] | Accessor } } | { connect?: { id: T[Accessor] | Accessor } };
+  ShowExisting extends boolean = false,
+> = ShowExisting extends false
+  ? { disconnect?: { id: T[Accessor] | Accessor } } | { connect?: { id: T[Accessor] | Accessor } }
+  :
+      | { existing?: { id: T[Accessor] | Accessor } }
+      | { disconnect?: { id: T[Accessor] | Accessor } }
+      | { connect?: { id: T[Accessor] | Accessor } };
 
-interface ManyToManyOptions<Accessor> {
+interface ManyToManyOptions<Accessor, ShowExisting extends boolean = false> {
   accessor?: Accessor;
+  showExisting?: ShowExisting;
 }
 
 export function manyToManyHelper<
   T extends string | object,
   Accessor extends T extends string ? never : keyof T,
->(currentArr: T[], incomingArr: T[], options?: ManyToManyOptions<Accessor>) {
-  const connectDisconnectArr: DisconnectOrConnect<T, Accessor>[] = [];
+  ShowExisting extends boolean = false,
+>(currentArr: T[], incomingArr: T[], options?: ManyToManyOptions<Accessor, ShowExisting>) {
+  const connectDisconnectArr: DisconnectOrConnect<T, Accessor, ShowExisting>[] = [];
   const arr = merge(currentArr, incomingArr);
   const accessor = options?.accessor;
+  const showExisting = options?.showExisting ?? false;
 
   for (const item of arr) {
     const existsInCurrent = currentArr.some(
@@ -34,6 +43,14 @@ export function manyToManyHelper<
     if (existsInCurrent && !existsInIncoming) {
       connectDisconnectArr.push({
         disconnect: { id: getAccessor(item, accessor) },
+      });
+      continue;
+    }
+
+    if (existsInCurrent && existsInIncoming && showExisting) {
+      // @ts-expect-error this is a false positive
+      connectDisconnectArr.push({
+        existing: { id: getAccessor(item, accessor) },
       });
       continue;
     }

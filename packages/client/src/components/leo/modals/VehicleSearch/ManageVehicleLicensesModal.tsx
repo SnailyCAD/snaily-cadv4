@@ -14,6 +14,7 @@ import { ValueLicenseType } from "@snailycad/types";
 import { useVehicleSearch } from "state/search/vehicleSearchState";
 import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";
 import { useNameSearch } from "state/search/nameSearchState";
+import type { PutSearchActionsVehicleLicensesData } from "@snailycad/types/api";
 
 export function ManageVehicleLicensesModal() {
   const common = useTranslations("Common");
@@ -29,7 +30,8 @@ export function ManageVehicleLicensesModal() {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!currentResult) return;
 
-    const { json } = await execute(`/search/actions/vehicle-licenses/${currentResult.id}`, {
+    const { json } = await execute<PutSearchActionsVehicleLicensesData>({
+      path: `/search/actions/vehicle-licenses/${currentResult.id}`,
       method: "PUT",
       data: values,
     });
@@ -40,7 +42,7 @@ export function ManageVehicleLicensesModal() {
       setCurrentResult(updatedVehicle);
       closeModal(ModalIds.ManageVehicleLicenses);
 
-      if (nameSearchState.currentResult) {
+      if (nameSearchState.currentResult && !nameSearchState.currentResult.isConfidential) {
         nameSearchState.setCurrentResult({
           ...nameSearchState.currentResult,
           vehicles: nameSearchState.currentResult.vehicles.map((v) =>

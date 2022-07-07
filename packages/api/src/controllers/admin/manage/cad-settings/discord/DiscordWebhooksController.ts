@@ -15,6 +15,7 @@ import { BadRequest } from "@tsed/exceptions";
 import { DISCORD_WEBHOOKS_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
 import { getRest } from "lib/discord/config";
+import type * as APITypes from "@snailycad/types/api";
 
 const guildId = process.env.DISCORD_SERVER_ID;
 
@@ -22,7 +23,7 @@ const guildId = process.env.DISCORD_SERVER_ID;
 @Controller("/admin/manage/cad-settings/discord/webhooks")
 export class DiscordWebhooksController {
   @Get("/")
-  async getGuildChannels(@Context("cad") cad: cad) {
+  async getGuildChannels(@Context("cad") cad: cad): Promise<APITypes.GetCADDiscordWebhooksData> {
     if (!guildId) {
       throw new BadRequest("mustSetBotTokenGuildId");
     }
@@ -43,10 +44,11 @@ export class DiscordWebhooksController {
     });
 
     const channelsBody = Array.isArray(channels) ? channels : [];
-    const data: Pick<APITextChannel, "id" | "name">[] = [];
+    const data: Required<Pick<APITextChannel, "id" | "name">>[] = [];
 
     for (const channel of channelsBody) {
       if (channel.type !== ChannelType.GuildText) continue;
+      if (!channel.name) continue;
 
       data.push({
         name: channel.name,
@@ -62,7 +64,7 @@ export class DiscordWebhooksController {
     @Context("cad")
     cad: cad & { miscCadSettings: MiscCadSettings & { webhooks: DiscordWebhook[] } },
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PostCADDiscordWebhooksData> {
     const name = cad.name || "SnailyCAD";
 
     if (!guildId) {
@@ -121,7 +123,7 @@ export class DiscordWebhooksController {
       include: { webhooks: true },
     });
 
-    return updatedCadSettings;
+    return updatedCadSettings!;
   }
 
   private doesChannelExist(arr: { id: string }[], id: string) {

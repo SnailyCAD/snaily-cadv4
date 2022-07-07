@@ -8,7 +8,6 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
-  // output   = "../node_modules/.prisma/client"
 }
 
 model cad {
@@ -196,6 +195,7 @@ model DiscordRole {
   taxiRolesArr          DiscordRoles[] @relation("taxiRoles")
   towRolesArr           DiscordRoles[] @relation("towRoles")
   courthouseRoles       DiscordRoles[] @relation("courthouseRoles")
+  CustomRole            CustomRole[]
 }
 
 model User {
@@ -227,6 +227,7 @@ model User {
   soundSettingsId          String?
   apiToken                 ApiToken?             @relation(fields: [apiTokenId], references: [id])
   apiTokenId               String?
+  roles                    CustomRole[]
   locale                   String?
 
 
@@ -771,6 +772,7 @@ model Officer {
   IncidentInvolvedUnit        IncidentInvolvedUnit[]
   Note                        Note[]
   callsigns                   IndividualDivisionCallsign[]
+  AssignedWarrantOfficer      AssignedWarrantOfficer[]
 }
 
 model IndividualDivisionCallsign {
@@ -898,24 +900,25 @@ model IncidentEvent {
 }
 
 model CombinedLeoUnit {
-  id                        String                 @id @default(uuid())
+  id                        String                   @id @default(uuid())
   officers                  Officer[]
   callsign                  String
   callsign2                 String?
-  department                DepartmentValue?       @relation(fields: [departmentId], references: [id])
+  department                DepartmentValue?         @relation(fields: [departmentId], references: [id])
   departmentId              String?
   incremental               Int?
   radioChannelId            String?
-  status                    StatusValue?           @relation("combinedUnitStatusToValue", fields: [statusId], references: [id])
+  status                    StatusValue?             @relation("combinedUnitStatusToValue", fields: [statusId], references: [id])
   statusId                  String?
   pairedUnitTemplate        String?
-  activeCall                Call911?               @relation("CombinedLeoUnitActiveCall", fields: [activeCallId], references: [id])
+  activeCall                Call911?                 @relation("CombinedLeoUnitActiveCall", fields: [activeCallId], references: [id])
   activeCallId              String?
-  activeIncident            LeoIncident?           @relation("combinedActiveIncident", fields: [activeIncidentId], references: [id])
+  activeIncident            LeoIncident?             @relation("combinedActiveIncident", fields: [activeIncidentId], references: [id])
   activeIncidentId          String?
   lastStatusChangeTimestamp DateTime?
   AssignedUnit              AssignedUnit[]
   IncidentInvolvedUnit      IncidentInvolvedUnit[]
+  AssignedWarrantOfficer    AssignedWarrantOfficer[]
 }
 
 // dispatching
@@ -974,6 +977,19 @@ model AssignedUnit {
   combinedLeoId String?
   call911       Call911?         @relation(fields: [call911Id], references: [id], onDelete: Cascade)
   call911Id     String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @default(now()) @updatedAt
+
+}
+
+model AssignedWarrantOfficer {
+  id            String           @id @default(uuid())
+  officer       Officer?         @relation(fields: [officerId], references: [id])
+  officerId     String?
+  combinedUnit  CombinedLeoUnit? @relation(fields: [combinedLeoId], references: [id])
+  combinedLeoId String?
+  warrant       Warrant?         @relation(fields: [warrantId], references: [id], onDelete: Cascade)
+  warrantId     String?
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @default(now()) @updatedAt
 }
@@ -1046,17 +1062,18 @@ model RecordRelease {
 }
 
 model Warrant {
-  id                   String              @id @default(uuid())
-  citizen              Citizen             @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  id                   String                   @id @default(uuid())
+  citizen              Citizen                  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId            String
-  officer              Officer             @relation(fields: [officerId], references: [id], onDelete: Cascade)
+  officer              Officer                  @relation(fields: [officerId], references: [id], onDelete: Cascade)
   officerId            String
-  description          String              @db.Text
-  status               WarrantStatus       @default(ACTIVE)
-  createdAt            DateTime            @default(now())
-  updatedAt            DateTime            @default(now()) @updatedAt
+  assignedOfficers     AssignedWarrantOfficer[]
+  description          String                   @db.Text
+  status               WarrantStatus            @default(ACTIVE)
+  createdAt            DateTime                 @default(now())
+  updatedAt            DateTime                 @default(now()) @updatedAt
   RecordLog            RecordLog[]
-  ExpungementRequest   ExpungementRequest? @relation(fields: [expungementRequestId], references: [id])
+  ExpungementRequest   ExpungementRequest?      @relation(fields: [expungementRequestId], references: [id])
   expungementRequestId String?
 }
 
@@ -1217,6 +1234,19 @@ model CustomFieldValue {
   Citizens           Citizen[]
   RegisteredVehicles RegisteredVehicle[]
   Weapons            Weapon[]
+}
+
+/// custom roles
+model CustomRole {
+  id            String       @id @default(uuid())
+  name          String       @unique
+  iconId        String?
+  permissions   String[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @default(now()) @updatedAt
+  discordRole   DiscordRole? @relation(fields: [discordRoleId], references: [id])
+  discordRoleId String?
+  User          User[]
 }
 
 // courthouse posts
@@ -1432,4 +1462,5 @@ enum Feature {
   LEO_BAIL
   COURTHOUSE_POSTS
   WEAPON_EXAMS
+  ACTIVE_WARRANTS
 }

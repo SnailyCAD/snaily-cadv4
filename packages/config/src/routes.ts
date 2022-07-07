@@ -21,5 +21,6 @@ interface Route {
 export type PermissionRoute = [Method[] | "*", Route, (user: User) => boolean];
 
 export const PERMISSION_ROUTES: PermissionRoute[] = [
+  [["GET"], { route: "/v1/admin/manage/cad-settings/discord/roles" }, () => true],
   ["*", { route: "/v1/admin/manage/cad-settings" }, (u) => u.rank === "OWNER"],
 ];

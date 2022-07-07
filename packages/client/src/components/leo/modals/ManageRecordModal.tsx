@@ -23,6 +23,7 @@ import { SelectPenalCode } from "./ManageRecord/SelectPenalCode";
 import { SeizedItemsTable } from "./ManageRecord/seized-items/SeizedItemsTable";
 import { toastMessage } from "lib/toastMessage";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import type { PostRecordsData, PutRecordsByIdData } from "@snailycad/types/api";
 
 interface Props {
   record?: Record | null;
@@ -99,7 +100,8 @@ export function ManageRecordModal({
     validateRecords(values.violations, helpers);
 
     if (record) {
-      const { json } = await execute(`/records/record/${record.id}`, {
+      const { json } = await execute<PutRecordsByIdData, typeof INITIAL_VALUES>({
+        path: `/records/record/${record.id}`,
         method: "PUT",
         data: requestData,
         helpers,
@@ -110,7 +112,8 @@ export function ManageRecordModal({
         closeModal(data[type].id);
       }
     } else {
-      const { json } = await execute("/records", {
+      const { json } = await execute<PostRecordsData, typeof INITIAL_VALUES>({
+        path: "/records",
         method: "POST",
         data: requestData,
         helpers,
@@ -171,7 +174,7 @@ export function ManageRecordModal({
                   disabled: isReadOnly || !!record,
                   errorMessage: errors.citizenName,
                 }}
-                onSuggestionClick={(suggestion: Citizen) => {
+                onSuggestionClick={(suggestion) => {
                   const newValues = {
                     ...values,
                     citizenId: suggestion.id,

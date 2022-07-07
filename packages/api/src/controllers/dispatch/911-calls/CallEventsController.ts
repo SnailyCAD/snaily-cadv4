@@ -11,6 +11,7 @@ import { validateSchema } from "lib/validateSchema";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { callInclude } from "./Calls911Controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/911-calls/events")
 @UseBeforeEach(IsAuth)
@@ -25,7 +26,10 @@ export class Calls911Controller {
     fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
-  async createCallEvent(@PathParams("callId") callId: string, @BodyParams() body: unknown) {
+  async createCallEvent(
+    @PathParams("callId") callId: string,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.Post911CallEventsData> {
     const data = validateSchema(CALL_911_EVENT_SCHEMA, body);
 
     const call = await prisma.call911.findUnique({
@@ -63,7 +67,7 @@ export class Calls911Controller {
     @PathParams("callId") callId: string,
     @PathParams("eventId") eventId: string,
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.Put911CallEventByIdData> {
     const data = validateSchema(CALL_911_EVENT_SCHEMA, body);
 
     const call = await prisma.call911.findUnique({
@@ -120,7 +124,7 @@ export class Calls911Controller {
   async deleteCallEvent(
     @PathParams("callId") callId: string,
     @PathParams("eventId") eventId: string,
-  ) {
+  ): Promise<APITypes.Delete911CallEventByIdData> {
     const call = await prisma.call911.findUnique({
       where: { id: callId },
       include: callInclude,

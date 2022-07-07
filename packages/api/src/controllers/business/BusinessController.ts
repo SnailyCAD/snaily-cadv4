@@ -13,6 +13,7 @@ import { prisma } from "lib/prisma";
 import { type User, EmployeeAsEnum, MiscCadSettings, WhitelistStatus, cad } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import type * as APITypes from "@snailycad/types/api";
 
 const businessInclude = {
   citizen: {
@@ -35,7 +36,7 @@ const businessInclude = {
 @Hidden()
 export class BusinessController {
   @Get("/")
-  async getBusinessesByUser(@Context("user") user: User) {
+  async getBusinessesByUser(@Context("user") user: User): Promise<APITypes.GetBusinessesData> {
     const businesses = await prisma.employee.findMany({
       where: {
         userId: user.id,
@@ -55,11 +56,11 @@ export class BusinessController {
   }
 
   @Get("/business/:id")
-  async getBusinesses(
+  async getBusinessById(
     @Context("user") user: User,
     @PathParams("id") id: string,
     @QueryParams("employeeId") employeeId: string,
-  ) {
+  ): Promise<APITypes.GetBusinessByIdData> {
     const business = await prisma.business.findUnique({
       where: {
         id,
@@ -87,28 +88,16 @@ export class BusinessController {
       ? await prisma.employee.findFirst({
           where: {
             id: employeeId,
-            NOT: {
-              whitelistStatus: WhitelistStatus.DECLINED,
-            },
+            NOT: { whitelistStatus: WhitelistStatus.DECLINED },
           },
           include: {
-            role: {
-              include: {
-                value: true,
-              },
-            },
-            citizen: {
-              select: {
-                name: true,
-                surname: true,
-                id: true,
-              },
-            },
+            role: { include: { value: true } },
+            citizen: { select: { name: true, surname: true, id: true } },
           },
         })
       : null;
 
-    if (!employee || employee.userId !== user.id) {
+    if (!business || !employee || employee.userId !== user.id) {
       throw new NotFound("employeeNotFound");
     }
 
@@ -120,7 +109,7 @@ export class BusinessController {
     @PathParams("id") businessId: string,
     @BodyParams() body: unknown,
     @Context("user") user: User,
-  ) {
+  ): Promise<APITypes.PutBusinessByIdData> {
     const data = validateSchema(CREATE_COMPANY_SCHEMA, body);
 
     const employee = await prisma.employee.findFirst({
@@ -158,7 +147,7 @@ export class BusinessController {
     @PathParams("id") businessId: string,
     @BodyParams() body: unknown,
     @Context("user") user: User,
-  ) {
+  ): Promise<APITypes.DeleteBusinessByIdData> {
     const data = validateSchema(DELETE_COMPANY_POST_SCHEMA, body);
 
     const employee = await prisma.employee.findFirst({
@@ -190,7 +179,7 @@ export class BusinessController {
     @BodyParams() body: unknown,
     @Context("user") user: User,
     @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings | null },
-  ) {
+  ): Promise<APITypes.PostJoinBusinessData> {
     const data = validateSchema(JOIN_COMPANY_SCHEMA, body);
 
     const citizen = await prisma.citizen.findUnique({
@@ -306,7 +295,7 @@ export class BusinessController {
     @BodyParams() body: unknown,
     @Context("user") user: User,
     @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings | null },
-  ) {
+  ): Promise<APITypes.PostCreateBusinessData> {
     const data = validateSchema(CREATE_COMPANY_SCHEMA, body);
 
     const owner = await prisma.citizen.findUnique({

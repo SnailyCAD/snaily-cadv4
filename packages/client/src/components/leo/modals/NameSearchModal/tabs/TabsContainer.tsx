@@ -18,7 +18,7 @@ export function NameSearchTabsContainer() {
   const t = useTranslations();
   const { currentResult, setCurrentResult } = useNameSearch();
 
-  if (!currentResult) {
+  if (!currentResult || currentResult.isConfidential) {
     return null;
   }
 

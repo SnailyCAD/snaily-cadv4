@@ -6,16 +6,16 @@ import { FullEmployee, useBusinessState } from "state/businessState";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { ManageEmployeeModal } from "./ManageEmployeeModal";
-import { EmployeeAsEnum, WhitelistStatus } from "@snailycad/types";
+import { Employee, EmployeeAsEnum, WhitelistStatus } from "@snailycad/types";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { Table } from "components/shared/Table";
 import { yesOrNoText } from "lib/utils";
 import { Status } from "components/shared/Status";
+import type { DeleteBusinessFireEmployeeData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 export function EmployeesTab() {
-  const [tempEmployee, setTempEmployee] = React.useState<FullEmployee | null>(null);
-
   const { state, execute } = useFetch();
   const { openModal, closeModal } = useModal();
   const common = useTranslations("Common");
@@ -23,6 +23,7 @@ export function EmployeesTab() {
 
   const { currentBusiness, currentEmployee, setCurrentBusiness } = useBusinessState();
   const employees = currentBusiness?.employees ?? [];
+  const [tempEmployee, employeeState] = useTemporaryItem(employees);
 
   function handleUpdate(old: FullEmployee, newE: FullEmployee) {
     if (!currentBusiness) return;
@@ -42,33 +43,31 @@ export function EmployeesTab() {
   async function handleFireEmployee() {
     if (!tempEmployee || !currentBusiness || !currentEmployee) return;
 
-    const { json } = await execute(
-      `/businesses/employees/${currentBusiness.id}/${tempEmployee.id}`,
-      {
-        data: { employeeId: currentEmployee.id },
-        method: "DELETE",
-      },
-    );
+    const { json } = await execute<DeleteBusinessFireEmployeeData>({
+      path: `/businesses/employees/${currentBusiness.id}/${tempEmployee.id}`,
+      data: { employeeId: currentEmployee.id },
+      method: "DELETE",
+    });
 
     if (json) {
       setCurrentBusiness({
         ...currentBusiness,
         employees: currentBusiness.employees.filter((v) => v.id !== tempEmployee.id),
       });
-      setTempEmployee(null);
+      employeeState.setTempId(null);
       closeModal(ModalIds.AlertFireEmployee);
     }
   }
 
-  function handleManageClick(employee: FullEmployee) {
-    if (employee.role.as === EmployeeAsEnum.OWNER) return;
-    setTempEmployee(employee);
+  function handleManageClick(employee: Employee) {
+    if (employee.role?.as === EmployeeAsEnum.OWNER) return;
+    employeeState.setTempId(employee.id);
     openModal(ModalIds.ManageEmployee);
   }
 
-  function handleFireClick(employee: FullEmployee) {
-    if (employee.role.as === EmployeeAsEnum.OWNER) return;
-    setTempEmployee(employee);
+  function handleFireClick(employee: Employee) {
+    if (employee.role?.as === EmployeeAsEnum.OWNER) return;
+    employeeState.setTempId(employee.id);
     openModal(ModalIds.AlertFireEmployee);
   }
 
@@ -79,7 +78,7 @@ export function EmployeesTab() {
       <Table
         data={employees.map((employee) => ({
           name: `${employee.citizen.name} ${employee.citizen.surname}`,
-          role: employee.role.value.value,
+          role: employee.role?.value.value ?? common("none"),
           canCreatePosts: common(yesOrNoText(employee.canCreatePosts)),
           employeeOfTheMonth: common(yesOrNoText(employee.employeeOfTheMonth)),
           whitelistStatus: (
@@ -92,7 +91,7 @@ export function EmployeesTab() {
               <Button
                 size="xs"
                 disabled={
-                  employee.role.as === EmployeeAsEnum.OWNER ||
+                  employee.role?.as === EmployeeAsEnum.OWNER ||
                   employee.whitelistStatus === WhitelistStatus.PENDING
                 }
                 onClick={() => handleManageClick(employee)}
@@ -103,7 +102,7 @@ export function EmployeesTab() {
               <Button
                 size="xs"
                 disabled={
-                  employee.role.as === EmployeeAsEnum.OWNER ||
+                  employee.role?.as === EmployeeAsEnum.OWNER ||
                   employee.whitelistStatus === WhitelistStatus.PENDING
                 }
                 onClick={() => handleFireClick(employee)}
@@ -135,7 +134,7 @@ export function EmployeesTab() {
         onDeleteClick={handleFireEmployee}
         deleteText={t("fire")}
         state={state}
-        onClose={() => setTempEmployee(null)}
+        onClose={() => employeeState.setTempId(null)}
       />
 
       <ManageEmployeeModal onUpdate={handleUpdate} employee={tempEmployee} />

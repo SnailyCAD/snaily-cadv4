@@ -25,6 +25,7 @@ import { CombinedLeoUnit, EmsFdDeputy, LeoIncident, StatusValueType } from "@sna
 import { useValues } from "context/ValuesContext";
 import { isUnitCombined } from "@snailycad/utils";
 import { Input } from "components/form/inputs/Input";
+import type { PostIncidentsData, PutIncidentByIdData } from "@snailycad/types/api";
 
 interface Props {
   incident?: LeoIncident | null;
@@ -87,7 +88,8 @@ export function ManageIncidentModal({
     let id = "";
 
     if (incident) {
-      const { json } = await execute(`/incidents/${incident.id}`, {
+      const { json } = await execute<PutIncidentByIdData>({
+        path: `/incidents/${incident.id}`,
         method: "PUT",
         data,
       });
@@ -95,7 +97,8 @@ export function ManageIncidentModal({
       id = json.id;
       onUpdate?.(incident, json);
     } else {
-      const { json } = await execute("/incidents", {
+      const { json } = await execute<PostIncidentsData>({
+        path: "/incidents",
         method: "POST",
         data,
       });

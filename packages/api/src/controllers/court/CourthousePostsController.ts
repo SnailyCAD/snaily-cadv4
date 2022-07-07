@@ -8,12 +8,13 @@ import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 import { COURTHOUSE_POST_SCHEMA } from "@snailycad/schemas";
 import { userProperties } from "lib/auth/getSessionUser";
 import { NotFound } from "@tsed/exceptions";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/courthouse-posts")
 @UseBeforeEach(IsAuth)
 export class CourthousePostsController {
   @Get("/")
-  async getPosts() {
+  async getPosts(): Promise<APITypes.GetCourthousePostsData> {
     const posts = await prisma.courthousePost.findMany({
       orderBy: { createdAt: "desc" },
       include: { user: { select: userProperties } },
@@ -26,7 +27,10 @@ export class CourthousePostsController {
     permissions: [Permissions.ManageCourthousePosts],
   })
   @Post("/")
-  async createCourthousePost(@BodyParams() body: unknown, @Context("user") user: User) {
+  async createCourthousePost(
+    @BodyParams() body: unknown,
+    @Context("user") user: User,
+  ): Promise<APITypes.PostCourthousePostsData> {
     const data = validateSchema(COURTHOUSE_POST_SCHEMA, body);
 
     const post = await prisma.courthousePost.create({
@@ -46,7 +50,10 @@ export class CourthousePostsController {
     permissions: [Permissions.ManageCourthousePosts],
   })
   @Put("/:id")
-  async updateCourthousePost(@PathParams("id") postId: string, @BodyParams() body: unknown) {
+  async updateCourthousePost(
+    @PathParams("id") postId: string,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PutCourthousePostsData> {
     const data = validateSchema(COURTHOUSE_POST_SCHEMA, body);
 
     const post = await prisma.courthousePost.findUnique({
@@ -74,7 +81,9 @@ export class CourthousePostsController {
     permissions: [Permissions.ManageCourthousePosts],
   })
   @Delete("/:id")
-  async deleteCourthousePost(@PathParams("id") postId: string) {
+  async deleteCourthousePost(
+    @PathParams("id") postId: string,
+  ): Promise<APITypes.DeleteCourthousePostsData> {
     const post = await prisma.courthousePost.findUnique({
       where: { id: postId },
     });

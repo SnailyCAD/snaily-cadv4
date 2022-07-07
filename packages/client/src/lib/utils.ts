@@ -5,7 +5,6 @@ import {
   type Value,
   type ValueLicenseType,
   WhitelistStatus,
-  ValueType,
   EmsFdDeputy,
 } from "@snailycad/types";
 import { isUnitCombined, isUnitOfficer } from "@snailycad/utils/typeguards";
@@ -67,7 +66,7 @@ export function formatDate(date: string | Date | number, options?: { onlyDate: b
   return format(dateObj, `yyyy-MM-dd${hmsString}`);
 }
 
-export function filterLicenseTypes(licenses: Value<ValueType.LICENSE>[], type: ValueLicenseType) {
+export function filterLicenseTypes(licenses: Value[], type: ValueLicenseType) {
   return licenses.filter((item) => {
     if (item.licenseType === null) return true;
     return item.licenseType === type;
@@ -95,7 +94,7 @@ export function formatOfficerDepartment(unit: Officer | EmsFdDeputy) {
   const department = unit.department;
 
   if (whitelistStatus && whitelistStatus.status === WhitelistStatus.PENDING) {
-    return `${department?.value.value} (${whitelistStatus.department.value.value})`;
+    return `${department?.value.value} (${whitelistStatus.department?.value.value})`;
   }
 
   return getUnitDepartment(unit)?.value.value ?? null;

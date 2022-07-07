@@ -17,7 +17,7 @@ import { DispatchCallTowModal } from "components/dispatch/modals/CallTowModal";
 import compareDesc from "date-fns/compareDesc";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
-import { CallsFilters, useActiveCallsFilters } from "./calls/CallsFilters";
+import { CallsFilters, useActiveCallsFilters } from "./CallsFilters";
 import { useCallsFilters } from "state/callsFiltersState";
 import { Filter } from "react-bootstrap-icons";
 import { Table } from "components/shared/Table";
@@ -29,7 +29,8 @@ import { useAudio } from "react-use";
 import { useAuth } from "context/AuthContext";
 import { Droppable } from "components/shared/dnd/Droppable";
 import { DndActions } from "types/DndActions";
-import { AssignedUnitsColumn } from "./active-calls/AssignedUnitsColumn";
+import { AssignedUnitsColumn } from "./AssignedUnitsColumn";
+import type { Post911CallAssignUnAssign } from "@snailycad/types/api";
 
 const ADDED_TO_CALL_SRC = "/sounds/added-to-call.mp3" as const;
 const INCOMING_CALL_SRC = "/sounds/incoming-call.mp3" as const;
@@ -184,27 +185,13 @@ function _ActiveCalls() {
     openModal(ModalIds.ManageTowCall, { call911Id: call.id });
   }
 
-  async function handleAssignToCall(call: Full911Call, unitId = unit?.id) {
-    const { json } = await execute(`/911-calls/assign/${call.id}`, {
-      method: "POST",
-      data: { unit: unitId },
-    });
-
-    if (json.id) {
-      const callsMapped = calls.map((call) => {
-        if (call.id === json.id) {
-          return { ...call, ...json };
-        }
-
-        return call;
-      });
-
-      setCalls(callsMapped);
-    }
-  }
-
-  async function handleUnassignFromCall(call: Full911Call, unitId = unit?.id) {
-    const { json } = await execute(`/911-calls/unassign/${call.id}`, {
+  async function handleAssignUnassignToCall(
+    call: Full911Call,
+    type: "assign" | "unassign",
+    unitId = unit?.id,
+  ) {
+    const { json } = await execute<Post911CallAssignUnAssign>({
+      path: `/911-calls/${type}/${call.id}`,
       method: "POST",
       data: { unit: unitId },
     });
@@ -223,7 +210,7 @@ function _ActiveCalls() {
   }
 
   function handleUnassign({ unit, call }: { unit: AssignedUnit; call: Full911Call }) {
-    handleUnassignFromCall(call, unit.unit.id);
+    handleAssignUnassignToCall(call, "unassign", unit.unit.id);
   }
 
   if (!CALLS_911) {
@@ -295,7 +282,7 @@ function _ActiveCalls() {
                   updatedAt: <FullDate>{call.updatedAt}</FullDate>,
                   assignedUnits: (
                     <AssignedUnitsColumn
-                      handleAssignToCall={handleAssignToCall}
+                      handleAssignToCall={handleAssignUnassignToCall}
                       call={call}
                       isDispatch={isDispatch}
                     />
@@ -316,7 +303,7 @@ function _ActiveCalls() {
                           className="ml-2"
                           disabled={!isUnitActive}
                           size="xs"
-                          onClick={() => handleUnassignFromCall(call)}
+                          onClick={() => handleAssignUnassignToCall(call, "assign")}
                         >
                           {t("unassignFromCall")}
                         </Button>
@@ -325,7 +312,7 @@ function _ActiveCalls() {
                           className="ml-2"
                           disabled={!isUnitActive}
                           size="xs"
-                          onClick={() => handleAssignToCall(call)}
+                          onClick={() => handleAssignUnassignToCall(call, "assign")}
                         >
                           {t("assignToCall")}
                         </Button>

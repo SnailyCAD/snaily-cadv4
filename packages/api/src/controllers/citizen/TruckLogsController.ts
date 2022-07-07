@@ -9,21 +9,21 @@ import { IsAuth } from "middlewares/IsAuth";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { validateSchema } from "lib/validateSchema";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
+import type * as APITypes from "@snailycad/types/api";
+import { citizenInclude } from "./CitizenController";
 
 @Controller("/truck-logs")
 @UseBeforeEach(IsAuth)
 export class TruckLogsController {
   @Get("/")
-  async getTruckLogs(@Context("user") user: User) {
+  async getTruckLogs(@Context("user") user: User): Promise<APITypes.GetTruckLogsData> {
     const logs = await prisma.truckLog.findMany({
       where: {
         userId: user.id,
       },
       include: {
         citizen: true,
-        vehicle: {
-          include: { model: { include: { value: true } }, registrationStatus: true },
-        },
+        vehicle: { include: citizenInclude.vehicles.include },
       },
     });
 
@@ -31,9 +31,7 @@ export class TruckLogsController {
       where: {
         userId: user.id,
       },
-      include: {
-        model: { include: { value: true } },
-      },
+      include: citizenInclude.vehicles.include,
     });
 
     return { logs, registeredVehicles };
@@ -44,7 +42,7 @@ export class TruckLogsController {
     @Context("user") user: User,
     @Context("cad") cad: { features: CadFeature[] },
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PostTruckLogsData> {
     const data = validateSchema(CREATE_TRUCK_LOG_SCHEMA, body);
 
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
@@ -82,12 +80,7 @@ export class TruckLogsController {
       },
       include: {
         citizen: true,
-        vehicle: {
-          include: {
-            model: { include: { value: true } },
-            registrationStatus: true,
-          },
-        },
+        vehicle: { include: citizenInclude.vehicles.include },
       },
     });
 
@@ -100,7 +93,7 @@ export class TruckLogsController {
     @Context("cad") cad: { features: CadFeature[] },
     @BodyParams() body: unknown,
     @PathParams("id") id: string,
-  ) {
+  ): Promise<APITypes.PutTruckLogsData> {
     const data = validateSchema(CREATE_TRUCK_LOG_SCHEMA, body);
 
     const log = await prisma.truckLog.findFirst({
@@ -150,9 +143,7 @@ export class TruckLogsController {
       },
       include: {
         citizen: true,
-        vehicle: {
-          include: { model: { include: { value: true } }, registrationStatus: true },
-        },
+        vehicle: { include: citizenInclude.vehicles.include },
       },
     });
 
@@ -164,7 +155,7 @@ export class TruckLogsController {
     @Context("cad") cad: { features: CadFeature[] },
     @Context("user") user: User,
     @PathParams("id") id: string,
-  ) {
+  ): Promise<APITypes.DeleteTruckLogsData> {
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     const log = await prisma.truckLog.findFirst({
       where: {

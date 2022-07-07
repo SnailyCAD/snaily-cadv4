@@ -20,11 +20,12 @@ import { DndActions } from "types/DndActions";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { classNames } from "lib/classNames";
 import { ActiveUnitsQualificationsCard } from "components/leo/qualifications/ActiveUnitsQualificationsCard";
+import type { PostDispatchStatusUnmergeUnitById } from "@snailycad/types/api";
 
 interface Props {
   officer: Officer | CombinedLeoUnit;
   nameAndCallsign: string;
-  setTempUnit: React.Dispatch<React.SetStateAction<ActiveOfficer | null>>;
+  setTempUnit: React.Dispatch<React.SetStateAction<ActiveOfficer["id"] | null>>;
 }
 
 export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) {
@@ -71,12 +72,13 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
   const canDrag = hasActiveDispatchers && isDispatch;
 
   function handleMerge(officer: ActiveOfficer | CombinedLeoUnit) {
-    setTempUnit(officer);
+    setTempUnit(officer.id);
     openModal(ModalIds.MergeUnit);
   }
 
   async function handleunMerge(id: string) {
-    const { json } = await execute(`/dispatch/status/unmerge/${id}`, {
+    const { json } = await execute<PostDispatchStatusUnmergeUnitById>({
+      path: `/dispatch/status/unmerge/${id}`,
       data: { id },
       method: "POST",
     });

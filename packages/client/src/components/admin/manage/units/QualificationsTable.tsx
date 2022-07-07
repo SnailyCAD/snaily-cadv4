@@ -1,5 +1,5 @@
 import * as React from "react";
-import { EmsFdDeputy, Officer, QualificationValueType, UnitQualification } from "@snailycad/types";
+import { QualificationValueType, UnitQualification } from "@snailycad/types";
 import { Button } from "components/Button";
 import { AlertModal } from "components/modal/AlertModal";
 import { Table } from "components/shared/Table";
@@ -10,10 +10,16 @@ import { ModalIds } from "types/ModalIds";
 import { AddQualificationsModal } from "./AddQualificationsModal";
 import { FullDate } from "components/shared/FullDate";
 import { QualificationsHoverCard } from "./QualificationHoverCard";
+import type {
+  DeleteManageUnitQualificationData,
+  GetManageUnitByIdData,
+  PutManageUnitQualificationData,
+} from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 interface Props {
-  unit: (EmsFdDeputy | Officer) & { qualifications: UnitQualification[] };
-  setUnit: React.Dispatch<React.SetStateAction<any>>;
+  unit: GetManageUnitByIdData;
+  setUnit: React.Dispatch<React.SetStateAction<GetManageUnitByIdData>>;
 }
 
 export function QualificationsTable({ setUnit, unit }: Props) {
@@ -79,7 +85,7 @@ export function QualificationsTable({ setUnit, unit }: Props) {
 }
 
 function QualificationAwardsTable({ unit, setUnit }: Props) {
-  const [tempQualification, setTempQualification] = React.useState<UnitQualification | null>(null);
+  const [tempQualification, qualificationState] = useTemporaryItem(unit.qualifications);
 
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
@@ -87,7 +93,7 @@ function QualificationAwardsTable({ unit, setUnit }: Props) {
   const { state, execute } = useFetch();
 
   function handleDeleteClick(qualification: UnitQualification) {
-    setTempQualification(qualification);
+    qualificationState.setTempId(qualification.id);
     openModal(ModalIds.AlertDeleteUnitQualification);
   }
 
@@ -95,10 +101,11 @@ function QualificationAwardsTable({ unit, setUnit }: Props) {
     type: "suspend" | "unsuspend",
     qualification: UnitQualification,
   ) {
-    const { json } = await execute(
-      `/admin/manage/units/${unit.id}/qualifications/${qualification.id}`,
-      { method: "PUT", data: { type } },
-    );
+    const { json } = await execute<PutManageUnitQualificationData>({
+      path: `/admin/manage/units/${unit.id}/qualifications/${qualification.id}`,
+      method: "PUT",
+      data: { type },
+    });
 
     if (json) {
       setUnit((p: Props["unit"]) => ({
@@ -117,17 +124,17 @@ function QualificationAwardsTable({ unit, setUnit }: Props) {
   async function handleDelete() {
     if (!tempQualification) return;
 
-    const { json } = await execute(
-      `/admin/manage/units/${unit.id}/qualifications/${tempQualification.id}`,
-      { method: "DELETE" },
-    );
+    const { json } = await execute<DeleteManageUnitQualificationData>({
+      path: `/admin/manage/units/${unit.id}/qualifications/${tempQualification.id}`,
+      method: "DELETE",
+    });
 
     if (json) {
       setUnit((p: Props["unit"]) => ({
         ...p,
         qualifications: p.qualifications.filter((v) => v.id !== tempQualification.id),
       }));
-      setTempQualification(null);
+      qualificationState.setTempId(null);
       closeModal(ModalIds.AlertDeleteUnitQualification);
     }
   }

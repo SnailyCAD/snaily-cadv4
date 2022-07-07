@@ -7,6 +7,7 @@ import { useAuth } from "context/AuthContext";
 import { useLeoState } from "state/leoState";
 import type { CombinedLeoUnit, Officer } from "@snailycad/types";
 import { isUnitOfficer } from "@snailycad/utils";
+import type { GetActiveOfficersData } from "@snailycad/types/api";
 
 let ran = false;
 export function useActiveOfficers() {
@@ -36,7 +37,8 @@ export function useActiveOfficers() {
   );
 
   const getActiveOfficers = React.useCallback(async () => {
-    const { json } = await execute("/leo/active-officers", {
+    const { json } = await execute<GetActiveOfficersData>({
+      path: "/leo/active-officers",
       noToast: true,
     });
 

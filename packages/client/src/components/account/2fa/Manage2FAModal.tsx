@@ -11,6 +11,11 @@ import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { useAuth } from "context/AuthContext";
 import { toastMessage } from "lib/toastMessage";
+import type {
+  DeleteDisable2FAData,
+  PostEnable2FAData,
+  PostVerify2FAData,
+} from "@snailycad/types/api";
 
 enum Steps {
   EnterPassword = 0,
@@ -33,7 +38,8 @@ export function Manage2FAModal() {
 
   async function onCancel() {
     if (currentStep !== Steps.EnterPassword) {
-      await execute("/2fa", {
+      await execute<DeleteDisable2FAData>({
+        path: "/2fa",
         method: "DELETE",
         data: { currentPassword },
       });
@@ -48,7 +54,8 @@ export function Manage2FAModal() {
   ) {
     if (currentStep === Steps.EnterPassword) {
       if (shouldDisable) {
-        const { json } = await execute("/2fa", {
+        const { json } = await execute<DeleteDisable2FAData, typeof INITIAL_VALUES>({
+          path: "/2fa",
           method: "DELETE",
           data: { currentPassword },
           helpers,
@@ -67,7 +74,8 @@ export function Manage2FAModal() {
         return;
       }
 
-      const { json } = await execute("/2fa/enable", {
+      const { json } = await execute<PostEnable2FAData, typeof INITIAL_VALUES>({
+        path: "/2fa/enable",
         method: "POST",
         data: values,
         helpers,
@@ -84,7 +92,8 @@ export function Manage2FAModal() {
     }
 
     if (currentStep === Steps.VerifyCode) {
-      const { json } = await execute("/2fa/verify", {
+      const { json } = await execute<PostVerify2FAData, typeof INITIAL_VALUES>({
+        path: "/2fa/verify",
         method: "POST",
         data: values,
         helpers,

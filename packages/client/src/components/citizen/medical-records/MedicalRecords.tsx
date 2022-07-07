@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
-import type { MedicalRecord, Value, ValueType } from "@snailycad/types";
+import type { MedicalRecord, Value } from "@snailycad/types";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { ManageMedicalRecordsModal } from "./ManageMedicalRecordsModal";
@@ -9,6 +9,8 @@ import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { Table } from "components/shared/Table";
 import { useCitizen } from "context/CitizenContext";
+import type { DeleteCitizenMedicalRecordsData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 export function MedicalRecords() {
   const { state, execute } = useFetch();
@@ -17,12 +19,13 @@ export function MedicalRecords() {
   const common = useTranslations("Common");
   const { citizen, setCurrentCitizen } = useCitizen(false);
 
-  const [tempRecord, setTempRecord] = React.useState<MedicalRecord | null>(null);
+  const [tempRecord, recordState] = useTemporaryItem(citizen.medicalRecords);
 
   async function handleDelete() {
     if (!tempRecord) return;
 
-    const { json } = await execute(`/medical-records/${tempRecord.id}`, {
+    const { json } = await execute<DeleteCitizenMedicalRecordsData>({
+      path: `/medical-records/${tempRecord.id}`,
       method: "DELETE",
     });
 
@@ -32,24 +35,21 @@ export function MedicalRecords() {
         medicalRecords: citizen.medicalRecords.filter((v) => v.id !== tempRecord.id),
       });
       closeModal(ModalIds.AlertDeleteMedicalRecord);
-      setTempRecord(null);
+      recordState.setTempId(null);
     }
   }
 
-  function handleBloodgroupStateChange(
-    prevState: MedicalRecord[],
-    bloodGroup: Value<ValueType.BLOOD_GROUP> | null,
-  ) {
+  function handleBloodgroupStateChange(prevState: MedicalRecord[], bloodGroup: Value | null) {
     return prevState.map((med) => ({ ...med, bloodGroup, bloodGroupId: bloodGroup?.id ?? null }));
   }
 
   function handleDeleteClick(record: MedicalRecord) {
-    setTempRecord(record);
+    recordState.setTempId(record.id);
     openModal(ModalIds.AlertDeleteMedicalRecord);
   }
 
   function handleEditClick(record: MedicalRecord) {
-    setTempRecord(record);
+    recordState.setTempId(record.id);
     openModal(ModalIds.ManageMedicalRecords);
   }
 
@@ -123,7 +123,7 @@ export function MedicalRecords() {
           closeModal(ModalIds.ManageMedicalRecords);
         }}
         medicalRecord={tempRecord}
-        onClose={() => setTempRecord(null)}
+        onClose={() => recordState.setTempId(null)}
       />
 
       <AlertModal
@@ -132,7 +132,7 @@ export function MedicalRecords() {
         id={ModalIds.AlertDeleteMedicalRecord}
         title={t("deleteMedicalRecord")}
         state={state}
-        onClose={() => setTempRecord(null)}
+        onClose={() => recordState.setTempId(null)}
       />
     </>
   );

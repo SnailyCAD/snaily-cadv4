@@ -15,6 +15,7 @@ import { TabsContent } from "components/shared/TabList";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { toastMessage } from "lib/toastMessage";
 import { DEFAULT_DISABLED_FEATURES } from "hooks/useFeatureEnabled";
+import type { PutCADFeaturesData } from "@snailycad/types/api";
 
 interface FeatureItem {
   name: string;
@@ -196,6 +197,10 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     description:
       "When enabled, this will allow users with the correct permissions to create posts in the courthouse. These posts will be visible to anyone.",
   },
+  ACTIVE_WARRANTS: {
+    name: "Active Warrants",
+    description: "When enabled, this will display active warrants on the LEO Dashboard.",
+  },
 };
 
 export function CADFeaturesTab() {
@@ -217,6 +222,7 @@ export function CADFeaturesTab() {
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
+    if (!cad) return;
     const featuresArr = [];
 
     for (const feature in values.features) {
@@ -230,7 +236,8 @@ export function CADFeaturesTab() {
       featuresArr.push(featObj);
     }
 
-    const { json } = await execute("/admin/manage/cad-settings/features", {
+    const { json } = await execute<PutCADFeaturesData>({
+      path: "/admin/manage/cad-settings/features",
       method: "PUT",
       data: { features: featuresArr },
     });

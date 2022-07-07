@@ -4,10 +4,12 @@ import { useBolos } from "hooks/realtime/useBolos";
 import useFetch from "lib/useFetch";
 import * as React from "react";
 import { ModalIds } from "types/ModalIds";
-import { Bolo, BoloType } from "@snailycad/types";
+import { BoloType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { ManageBoloModal } from "./ManageBoloModal";
 import { BoloColumn } from "./BoloColumn";
+import type { DeleteBolosData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 const BOLO_TYPES = Object.values(BoloType);
 
@@ -15,19 +17,21 @@ export function ActiveBolos() {
   const { state, execute } = useFetch();
   const { closeModal } = useModal();
   const { bolos, setBolos } = useBolos();
-  const [tempBolo, setTempBolo] = React.useState<Bolo | null>(null);
+  const [tempBolo, boloState] = useTemporaryItem(bolos);
+
   const t = useTranslations("Bolos");
 
   async function handleDeleteBolo() {
     if (!tempBolo) return;
 
-    const { json } = await execute(`/bolos/${tempBolo.id}`, {
+    const { json } = await execute<DeleteBolosData>({
+      path: `/bolos/${tempBolo.id}`,
       method: "DELETE",
     });
 
     if (json) {
       setBolos(bolos.filter((v) => v.id !== tempBolo.id));
-      setTempBolo(null);
+      boloState.setTempId(null);
       closeModal(ModalIds.AlertDeleteBolo);
     }
   }
@@ -48,7 +52,7 @@ export function ActiveBolos() {
               return (
                 <BoloColumn
                   boloType={boloType}
-                  setTempBolo={setTempBolo}
+                  setTempBolo={boloState.setTempId}
                   key={boloType}
                   bolos={bolosForType}
                 />
@@ -59,14 +63,17 @@ export function ActiveBolos() {
       </div>
 
       {/* timeout: wait for modal to close */}
-      <ManageBoloModal onClose={() => setTimeout(() => setTempBolo(null), 80)} bolo={tempBolo} />
+      <ManageBoloModal
+        onClose={() => setTimeout(() => boloState.setTempId(null), 80)}
+        bolo={tempBolo}
+      />
 
       <AlertModal
         title={t("deleteBolo")}
         onDeleteClick={handleDeleteBolo}
         description={t("alert_deleteBolo")}
         id={ModalIds.AlertDeleteBolo}
-        onClose={() => setTempBolo(null)}
+        onClose={() => boloState.setTempId(null)}
         state={state}
       />
     </div>

@@ -12,8 +12,9 @@ export type FullEmployee = Employee & {
   citizen: Pick<Citizen, "id" | "name" | "surname">;
   role: EmployeeValue;
 };
+
 export type FullBusiness = Business & {
-  employees: FullEmployee[];
+  employees: Employee[];
   citizen: Pick<Citizen, "id" | "name" | "surname">;
   businessPosts: BusinessPost[];
   vehicles: RegisteredVehicle[];
@@ -23,8 +24,8 @@ interface BusinessState {
   currentBusiness: FullBusiness | null;
   setCurrentBusiness(bus: FullBusiness | null): void;
 
-  currentEmployee: FullEmployee | null;
-  setCurrentEmployee(em: FullEmployee | null): void;
+  currentEmployee: Employee | null;
+  setCurrentEmployee(em: Employee | null): void;
 
   posts: BusinessPost[];
   setPosts(posts: BusinessPost[]): void;

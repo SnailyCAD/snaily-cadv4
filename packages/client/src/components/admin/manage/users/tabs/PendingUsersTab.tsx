@@ -10,13 +10,9 @@ import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
 import { useRouter } from "next/router";
+import type { GetManageUsersData, PostManageUserAcceptDeclineData } from "@snailycad/types/api";
 
-interface Props {
-  pendingCount: number;
-  users: User[];
-}
-
-export function PendingUsersTab({ users, pendingCount }: Props) {
+export function PendingUsersTab({ users, pendingCount }: GetManageUsersData) {
   const t = useTranslations("Management");
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
@@ -27,12 +23,13 @@ export function PendingUsersTab({ users, pendingCount }: Props) {
     totalCount: pendingCount,
     fetchOptions: {
       path: "/admin/manage/users?pendingOnly=true",
-      onResponse: (json) => ({ totalCount: json.totalCount, data: json.users }),
+      onResponse: (json: GetManageUsersData) => ({ totalCount: json.totalCount, data: json.users }),
     },
   });
 
   async function handleAcceptOrDecline(user: Pick<User, "id">, type: "accept" | "decline") {
-    const { json } = await execute(`/admin/manage/users/pending/${user.id}/${type}`, {
+    const { json } = await execute<PostManageUserAcceptDeclineData>({
+      path: `/admin/manage/users/pending/${user.id}/${type}`,
       method: "POST",
     });
 

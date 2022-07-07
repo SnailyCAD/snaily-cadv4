@@ -3,8 +3,12 @@ import process from "node:process";
 import { one } from "copy";
 import { join } from "node:path";
 import { readFile, writeFile } from "node:fs/promises";
+import { EOL } from "node:os";
 
 const DEFAULT_PORT = "3000";
+
+const UNIX_SLASHES_REGEX = /\/packages\/client/;
+const WIN_SLASHES_REGEX = /\\packages\\client/;
 
 async function addPortToClientPackageJson() {
   if (process.env.NODE_ENV === "development") return;
@@ -14,7 +18,10 @@ async function addPortToClientPackageJson() {
     if (!port) return;
 
     let dir = join(process.cwd(), "packages", "client");
-    if (process.cwd().match(/\/packages\/client/)) {
+    const unixMatch = process.cwd().match(UNIX_SLASHES_REGEX);
+    const winMatch = process.cwd().match(WIN_SLASHES_REGEX);
+
+    if (unixMatch || winMatch) {
       dir = process.cwd();
     }
 
@@ -27,7 +34,7 @@ async function addPortToClientPackageJson() {
       json.scripts.start = `yarn next start -p ${port}`;
     }
 
-    await writeFile(jsonFilePath, JSON.stringify(json, null, 2));
+    await writeFile(jsonFilePath, JSON.stringify(json, null, 2) + EOL);
   } catch (e) {
     console.log(e);
     console.log("Could not set the PORT_CLIENT. Continuing build...");

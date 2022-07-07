@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import Link from "next/link";
-import { Rank, User } from "@snailycad/types";
+import { Rank } from "@snailycad/types";
 import { yesOrNoText } from "lib/utils";
 import { TabsContent } from "components/shared/TabList";
 import { buttonVariants } from "components/Button";
@@ -15,13 +15,9 @@ import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
+import type { GetManageUsersData } from "@snailycad/types/api";
 
-interface Props {
-  users: User[];
-  totalCount: number;
-}
-
-export function AllUsersTab({ users, totalCount }: Props) {
+export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
   const { cad } = useAuth();
   const { hasPermissions } = usePermission();
 
@@ -33,7 +29,7 @@ export function AllUsersTab({ users, totalCount }: Props) {
     totalCount,
     fetchOptions: {
       path: "/admin/manage/users",
-      onResponse: (json) => ({ totalCount: json.totalCount, data: json.users }),
+      onResponse: (json: GetManageUsersData) => ({ totalCount: json.totalCount, data: json.users }),
     },
   });
 

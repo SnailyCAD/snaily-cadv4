@@ -9,7 +9,7 @@ import { useModal } from "state/modalState";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import type { EmsFdDeputy, IncidentInvolvedUnit, LeoIncident, Officer } from "@snailycad/types";
+import type { IncidentInvolvedUnit, LeoIncident } from "@snailycad/types";
 import { useDispatchState } from "state/dispatchState";
 import { useLeoState } from "state/leoState";
 import dynamic from "next/dynamic";
@@ -22,12 +22,17 @@ import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { isUnitCombined } from "@snailycad/utils";
+import type {
+  DeleteIncidentByIdData,
+  GetActiveOfficerData,
+  GetDispatchData,
+  GetIncidentsData,
+} from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
-interface Props {
-  incidents: LeoIncident[];
-  officers: Officer[];
-  deputies: EmsFdDeputy[];
-  activeOfficer: Officer | null;
+interface Props extends GetDispatchData {
+  incidents: GetIncidentsData["incidents"];
+  activeOfficer: GetActiveOfficerData | null;
 }
 
 const ManageIncidentModal = dynamic(async () => {
@@ -49,7 +54,7 @@ export default function LeoIncidents({
   incidents: data,
 }: Props) {
   const [incidents, setIncidents] = React.useState(data);
-  const [tempIncident, setTempIncident] = React.useState<LeoIncident | null>(null);
+  const [tempIncident, incidentState] = useTemporaryItem(incidents);
 
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
@@ -66,18 +71,18 @@ export default function LeoIncidents({
   const isOfficerOnDuty = activeOfficer && activeOfficer.status?.shouldDo !== "SET_OFF_DUTY";
 
   function handleViewDescription(incident: LeoIncident) {
-    setTempIncident(incident);
+    incidentState.setTempId(incident.id);
     openModal(ModalIds.Description);
   }
 
   function onDeleteClick(incident: LeoIncident) {
     openModal(ModalIds.AlertDeleteIncident);
-    setTempIncident(incident);
+    incidentState.setTempId(incident.id);
   }
 
   function onEditClick(incident: LeoIncident) {
     openModal(ModalIds.ManageIncident);
-    setTempIncident(incident);
+    incidentState.setTempId(incident.id);
   }
 
   function makeAssignedUnit(unit: IncidentInvolvedUnit) {
@@ -89,13 +94,14 @@ export default function LeoIncidents({
   async function handleDelete() {
     if (!tempIncident) return;
 
-    const { json } = await execute(`/incidents/${tempIncident.id}`, {
+    const { json } = await execute<DeleteIncidentByIdData>({
+      path: `/incidents/${tempIncident.id}`,
       method: "DELETE",
     });
 
     if (json) {
       closeModal(ModalIds.AlertDeleteIncident);
-      setTempIncident(null);
+      incidentState.setTempId(null);
       router.replace({
         pathname: router.pathname,
         query: router.query,
@@ -229,7 +235,7 @@ export default function LeoIncidents({
               return prev;
             });
           }}
-          onClose={() => setTempIncident(null)}
+          onClose={() => incidentState.setTempId(null)}
           incident={tempIncident}
         />
       ) : null}
@@ -240,14 +246,14 @@ export default function LeoIncidents({
           title={t("deleteIncident")}
           description={t("alert_deleteIncident")}
           onDeleteClick={handleDelete}
-          onClose={() => setTempIncident(null)}
+          onClose={() => incidentState.setTempId(null)}
           state={state}
         />
       ) : null}
 
       {tempIncident?.descriptionData ? (
         <DescriptionModal
-          onClose={() => setTempIncident(null)}
+          onClose={() => incidentState.setTempId(null)}
           value={tempIncident.descriptionData}
         />
       ) : null}

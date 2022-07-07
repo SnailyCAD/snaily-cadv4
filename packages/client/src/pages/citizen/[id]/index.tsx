@@ -26,6 +26,7 @@ import { ModalIds } from "types/ModalIds";
 import { FullDate } from "components/shared/FullDate";
 import { RecordsTab } from "components/leo/modals/NameSearchModal/tabs/RecordsTab";
 import { classNames } from "lib/classNames";
+import type { DeleteCitizenByIdData } from "@snailycad/types/api";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const CitizenImageModal = dynamic(
@@ -45,11 +46,12 @@ export default function CitizenId() {
 
   async function handleDelete() {
     if (!citizen) return;
-    const data = await execute(`/citizen/${citizen.id}`, {
+    const data = await execute<DeleteCitizenByIdData>({
+      path: `/citizen/${citizen.id}`,
       method: "DELETE",
     });
 
-    if (data.json) {
+    if (typeof data.json === "boolean" && data.json) {
       closeModal(ModalIds.AlertDeleteCitizen);
       router.push("/citizen");
     }

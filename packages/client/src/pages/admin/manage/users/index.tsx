@@ -3,7 +3,7 @@ import { useTranslations } from "use-intl";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { Rank, User, WhitelistStatus } from "@snailycad/types";
+import { Rank, WhitelistStatus } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { TabList } from "components/shared/TabList";
@@ -11,9 +11,10 @@ import { PendingUsersTab } from "components/admin/manage/users/tabs/PendingUsers
 import { Title } from "components/shared/Title";
 import { Permissions } from "hooks/usePermission";
 import { AllUsersTab } from "components/admin/manage/users/tabs/AllUsersTab";
+import type { GetManageUsersData } from "@snailycad/types/api";
 
 interface Props {
-  data: { users: User[]; pendingCount: number; totalCount: number };
+  data: GetManageUsersData;
 }
 
 export default function ManageUsers({ data }: Props) {

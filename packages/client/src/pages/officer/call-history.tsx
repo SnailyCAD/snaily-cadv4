@@ -5,7 +5,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { makeUnitName, requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import type { AssignedUnit, EmsFdDeputy, LeoIncident, Officer } from "@snailycad/types";
+import type { AssignedUnit } from "@snailycad/types";
 import { IndeterminateCheckbox, Table } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Full911Call, useDispatchState } from "state/dispatchState";
@@ -26,25 +26,30 @@ import { Manage911CallModal } from "components/dispatch/modals/Manage911CallModa
 import { isUnitCombined } from "@snailycad/utils";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { Checkbox } from "components/form/inputs/Checkbox";
+import type {
+  DeletePurge911CallsData,
+  Get911CallsData,
+  GetDispatchData,
+  GetIncidentsData,
+} from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
 );
 
-interface Props {
-  data: Full911Call[];
-  incidents: LeoIncident[];
-  officers: Officer[];
-  deputies: EmsFdDeputy[];
+interface Props extends GetDispatchData {
+  data: Get911CallsData;
+  incidents: GetIncidentsData["incidents"];
 }
 
 export default function CallHistory({ data, incidents, officers, deputies }: Props) {
   const [calls, setCalls] = React.useState(data);
-  const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
   const [search, setSearch] = React.useState("");
   const dispatchState = useDispatchState();
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageCallHistory], true);
+  const [tempCall, callState] = useTemporaryItem(calls);
 
   const { state, execute } = useFetch();
   const tableSelect = useTableSelect(calls);
@@ -56,17 +61,18 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
   const { generateCallsign } = useGenerateCallsign();
 
   function handleLinkClick(call: Full911Call) {
-    setTempCall(call);
+    callState.setTempId(call.id);
     openModal(ModalIds.LinkCallToIncident);
   }
 
   function handleViewClick(call: Full911Call) {
-    setTempCall(call);
+    callState.setTempId(call.id);
     openModal(ModalIds.Manage911Call);
   }
 
   async function handlePurge() {
-    const { json } = await execute("/911-calls/purge", {
+    const { json } = await execute<DeletePurge911CallsData>({
+      path: "/911-calls/purge",
       method: "DELETE",
       data: { ids: tableSelect.selectedRows },
     });
@@ -81,7 +87,7 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
   }
 
   function handleViewDescription(call: Full911Call) {
-    setTempCall(call);
+    callState.setTempId(call.id);
     openModal(ModalIds.Description, call);
   }
 
@@ -224,7 +230,10 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
       />
 
       {tempCall?.descriptionData ? (
-        <DescriptionModal onClose={() => setTempCall(null)} value={tempCall.descriptionData} />
+        <DescriptionModal
+          onClose={() => callState.setTempId(null)}
+          value={tempCall.descriptionData}
+        />
       ) : null}
 
       <Manage911CallModal call={tempCall} />

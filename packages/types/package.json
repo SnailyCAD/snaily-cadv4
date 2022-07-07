@@ -1,35 +1,47 @@
 {
   "name": "@snailycad/types",
-  "version": "1.13.2",
+  "version": "1.15.1",
   "exports": {
     ".": {
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"
+    },
+    "./api": {
+      "require": "./dist/api.js",
+      "import": "./dist/api.mjs"
     },
     "./package.json": "./package.json"
   },
   "files": [
     "dist"
   ],
+  "typesVersions": {
+    "*": {
+      "api": [
+        "dist/api.d.ts"
+      ]
+    }
+  },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "yarn tsup",
+    "build": "yarn workspace @snailycad/api generate && yarn tsup",
     "watch": "yarn tsup --watch --silent=false",
-    "typecheck": "yarn tsc --noEmit"
+    "typecheck": "yarn workspace @snailycad/api generate && yarn tsc --noEmit"
   },
   "dependencies": {
-    "type-fest": "^2.13.0"
+    "type-fest": "^2.14.0"
   },
   "devDependencies": {
-    "@snailycad/permissions": "1.13.2",
+    "@snailycad/permissions": "1.15.1",
+    "discord-api-types": "0.35.0",
     "tsup": "^6.1.2",
-    "typescript": "^4.7.3"
+    "typescript": "^4.7.4"
   },
   "tsup": {
     "entry": [
-      "src/**/*.ts"
+      "./src/**/*.ts"
     ],
     "dts": true,
     "bundle": false,

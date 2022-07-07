@@ -8,7 +8,13 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { useModal } from "state/modalState";
-import { type PenalCode, type PenalCodeGroup, ValueType, Rank } from "@snailycad/types";
+import {
+  type AnyValue,
+  type PenalCode,
+  type PenalCodeGroup,
+  ValueType,
+  Rank,
+} from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll, yesOrNoText } from "lib/utils";
@@ -23,9 +29,16 @@ import { AlertModal } from "components/modal/AlertModal";
 import { ModalIds } from "types/ModalIds";
 import { FullDate } from "components/shared/FullDate";
 import { useTableSelect } from "hooks/shared/useTableSelect";
-import { isBaseValue, type AnyValue } from "@snailycad/utils/typeguards";
+import { hasValueObj, isBaseValue } from "@snailycad/utils/typeguards";
 import { valueRoutes } from "components/admin/Sidebar/routes";
 import { Checkbox } from "components/form/inputs/Checkbox";
+import type {
+  DeleteValueByIdData,
+  DeleteValuesBulkData,
+  GetValuesData,
+  PutValuePositionsData,
+} from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -36,7 +49,7 @@ const ImportValuesModal = dynamic(async () => {
 });
 
 interface Props {
-  pathValues: { type: ValueType; values: AnyValue[] };
+  pathValues: GetValuesData[number];
 }
 
 export default function ValuePath({ pathValues: { type, values: data } }: Props) {
@@ -47,7 +60,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   const routeData = valueRoutes.find((v) => v.type === type);
 
   const [search, setSearch] = React.useState("");
-  const [tempValue, setTempValue] = React.useState<AnyValue | null>(null);
+  const [tempValue, valueState] = useTemporaryItem(values);
   const { state, execute } = useFetch();
 
   const { isOpen, openModal, closeModal } = useModal();
@@ -97,7 +110,8 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
       }),
     );
 
-    await execute(`/admin/values/${type.toLowerCase()}/positions`, {
+    await execute<PutValuePositionsData>({
+      path: `/admin/values/${type.toLowerCase()}/positions`,
       method: "PUT",
       data: {
         ids: list.map((v) => {
@@ -108,25 +122,26 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   }
 
   function handleDeleteClick(value: AnyValue) {
-    setTempValue(value);
+    valueState.setTempId(value.id);
     openModal(ModalIds.AlertDeleteValue);
   }
 
   function handleEditClick(value: AnyValue) {
-    setTempValue(value);
+    valueState.setTempId(value.id);
     openModal(ModalIds.ManageValue);
   }
 
   async function handleDelete() {
     if (!tempValue) return;
 
-    const { json } = await execute(`/admin/values/${type.toLowerCase()}/${tempValue.id}`, {
+    const { json } = await execute<DeleteValueByIdData>({
+      path: `/admin/values/${type.toLowerCase()}/${tempValue.id}`,
       method: "DELETE",
     });
 
     if (json) {
       setValues((p) => p.filter((v) => v.id !== tempValue.id));
-      setTempValue(null);
+      valueState.setTempId(null);
       closeModal(ModalIds.AlertDeleteValue);
     }
   }
@@ -134,7 +149,8 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   async function handleDeleteSelected() {
     if (tableSelect.selectedRows.length <= 0) return;
 
-    const { json } = await execute(`/admin/values/${type.toLowerCase()}/bulk-delete`, {
+    const { json } = await execute<DeleteValuesBulkData>({
+      path: `/admin/values/${type.toLowerCase()}/bulk-delete`,
       method: "DELETE",
       data: tableSelect.selectedRows,
     });
@@ -154,8 +170,9 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
     // reset form values
     if (!isOpen(ModalIds.ManageValue) && !isOpen(ModalIds.AlertDeleteValue)) {
       // timeout: wait for modal to close
-      setTimeout(() => setTempValue(null), 100);
+      setTimeout(() => valueState.setTempId(null), 100);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   if (!Object.keys(ValueType).includes(path)) {
@@ -245,7 +262,12 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         id={ModalIds.AlertDeleteValue}
         description={t.rich("alert_deleteValue", {
           value:
-            typeof tempValue?.value === "string" ? tempValue.value : tempValue?.value.value ?? "",
+            tempValue &&
+            (isBaseValue(tempValue)
+              ? tempValue.value
+              : hasValueObj(tempValue)
+              ? tempValue.value.value
+              : tempValue.title),
           span: (children) => {
             return <span className="font-semibold">{children}</span>;
           },
@@ -255,7 +277,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         state={state}
         onClose={() => {
           // wait for animation to play out
-          setTimeout(() => setTempValue(null), 100);
+          setTimeout(() => valueState.setTempId(null), 100);
         }}
       />
 
@@ -337,15 +359,22 @@ export function findCreatedAtAndPosition(value: AnyValue) {
     };
   }
 
+  if (hasValueObj(value)) {
+    return {
+      createdAt: new Date(value.value.createdAt),
+      position: value.value.position,
+    };
+  }
+
   return {
-    createdAt: new Date(value.value.createdAt),
-    position: value.value.position,
+    createdAt: new Date(value.createdAt),
+    position: value.position,
   };
 }
 
 export function handleFilter(value: AnyValue, search: string) {
   if (!search) return true;
-  const str = isBaseValue(value) ? value.value : value.value.value;
+  const str = isBaseValue(value) ? value.value : hasValueObj(value) ? value.value.value : "";
 
   if (str.toLowerCase().includes(search.toLowerCase())) return true;
   return false;
@@ -353,17 +382,20 @@ export function handleFilter(value: AnyValue, search: string) {
 
 export function getValueStrFromValue(value: AnyValue) {
   const isBase = isBaseValue(value);
-  return isBase ? value.value : value.value.value;
+  const hasObj = hasValueObj(value);
+  return isBase ? value.value : hasObj ? value.value.value : value.title;
 }
 
 export function getCreatedAtFromValue(value: AnyValue) {
   const isBase = isBaseValue(value);
-  return isBase ? value.createdAt : value.value.createdAt;
+  const hasObj = hasValueObj(value);
+  return isBase ? value.createdAt : hasObj ? value.value.createdAt : value.createdAt;
 }
 
 export function getDisabledFromValue(value: AnyValue) {
   const isBase = isBaseValue(value);
-  return isBase ? value.isDisabled : value.value.isDisabled;
+  const hasObj = hasValueObj(value);
+  return isBase ? value.isDisabled : hasObj ? value.value.isDisabled : false;
 }
 
 /**

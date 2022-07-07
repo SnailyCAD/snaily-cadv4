@@ -1,7 +1,13 @@
 import { Button } from "components/Button";
 import type { NextPageContext } from "next";
+import NextErrorComponent, { ErrorProps } from "next/error";
+import * as Sentry from "@sentry/nextjs";
 
-function ErrorPage({ statusCode }: any) {
+interface ErrorPageProps extends ErrorProps {
+  hasGetInitialPropsRun: boolean;
+}
+
+function ErrorPage({ statusCode }: ErrorPageProps) {
   function handleReload() {
     window.location.reload();
   }
@@ -22,10 +28,28 @@ function ErrorPage({ statusCode }: any) {
   );
 }
 
-ErrorPage.getInitialProps = ({ res, err }: NextPageContext) => {
-  const statusCode = res ? res.statusCode : err ? err.statusCode : 404;
+ErrorPage.getInitialProps = async (context: NextPageContext) => {
+  const errorInitialProps = (await NextErrorComponent.getInitialProps(context)) as ErrorPageProps;
+  const { err, res, asPath } = context;
 
-  return { statusCode };
+  errorInitialProps.hasGetInitialPropsRun = true;
+
+  if (res?.statusCode === 404) {
+    return errorInitialProps;
+  }
+
+  if (err) {
+    Sentry.captureException(err);
+
+    await Sentry.flush(2000);
+
+    return errorInitialProps;
+  }
+
+  Sentry.captureException(new Error(`_error.js getInitialProps missing data at path: ${asPath}`));
+  await Sentry.flush(2000);
+
+  return errorInitialProps;
 };
 
 export default ErrorPage;

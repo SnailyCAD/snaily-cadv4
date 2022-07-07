@@ -1,8 +1,8 @@
-import { Permissions, allPermissions, hasPermission, getPermissions } from "@snailycad/permissions";
-import { type User, Rank } from "@snailycad/types";
+import { Permissions, hasPermission, getPermissions, PartialUser } from "@snailycad/permissions";
+import type { User } from "@snailycad/types";
 import { useAuth } from "context/AuthContext";
 
-export type PermissionsFallback = (user: User) => boolean;
+export type PermissionsFallback = (user: PartialUser) => boolean | undefined;
 export { Permissions };
 export function usePermission() {
   const { user } = useAuth();
@@ -13,20 +13,18 @@ export function usePermission() {
     userToCheck: User | null = user,
   ) {
     if (!userToCheck) return false;
-    if (userToCheck.rank === Rank.OWNER) {
-      userToCheck.permissions = allPermissions;
-    }
 
-    if (!userToCheck.permissions?.length) {
-      return typeof fallback === "boolean" ? fallback : fallback(userToCheck);
-    }
-
-    return hasPermission(userToCheck.permissions, permissionsToCheck);
+    return hasPermission({
+      permissionsToCheck,
+      userToCheck,
+      fallback,
+    });
   }
 
   function _getPermissions(userToCheck: User | null = user) {
     if (!userToCheck) return false;
-    return getPermissions(userToCheck.permissions ?? []);
+
+    return getPermissions(userToCheck);
   }
 
   return { hasPermissions: _hasPermission, getPermissions: _getPermissions };

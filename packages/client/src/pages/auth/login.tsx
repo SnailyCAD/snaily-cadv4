@@ -22,6 +22,7 @@ import { useAuth } from "context/AuthContext";
 import { LocalhostDetector } from "components/auth/LocalhostDetector";
 import { parseCookies } from "nookies";
 import { VersionDisplay } from "components/shared/VersionDisplay";
+import type { PostLoginUserData } from "@snailycad/types/api";
 
 const INITIAL_VALUES = {
   username: "",
@@ -56,7 +57,8 @@ export default function Login() {
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
-    const { json, error } = await execute("/auth/login", {
+    const { json, error } = await execute<PostLoginUserData, typeof INITIAL_VALUES>({
+      path: "/auth/login",
       data: values,
       method: "POST",
       helpers,

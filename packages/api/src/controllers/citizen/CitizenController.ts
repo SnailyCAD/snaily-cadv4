@@ -19,6 +19,7 @@ import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
 import { isFeatureEnabled } from "lib/cad";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { citizenObjectFromData } from "lib/citizen";
+import type * as APITypes from "@snailycad/types/api";
 
 export const citizenInclude = {
   user: { select: userProperties },
@@ -81,7 +82,7 @@ export class CitizenController {
     @Context("user") user: User,
     @QueryParams("query", String) query = "",
     @QueryParams("skip", Number) skip = 0,
-  ) {
+  ): Promise<APITypes.GetCitizensData> {
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     const [name, surname] = query.toString().toLowerCase().split(/ +/g);
 
@@ -122,7 +123,7 @@ export class CitizenController {
     @Context("cad") cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
     @Context("user") user: User,
     @PathParams("id") citizenId: string,
-  ) {
+  ): Promise<APITypes.GetCitizenByIdData> {
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
 
     const citizen = await prisma.citizen.findFirst({
@@ -145,7 +146,7 @@ export class CitizenController {
     @Context("user") user: User,
     @Context("cad") cad: cad & { features?: CadFeature[] },
     @PathParams("id") citizenId: string,
-  ) {
+  ): Promise<APITypes.DeleteCitizenByIdData> {
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
 
     const allowDeletion = isFeatureEnabled({
@@ -183,7 +184,7 @@ export class CitizenController {
     @Context("cad") cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings | null },
     @Context("user") user: User,
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PostCitizensData> {
     const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
 
     const miscSettings = cad.miscCadSettings;
@@ -247,7 +248,7 @@ export class CitizenController {
     @Context("user") user: User,
     @Context("cad") cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PutCitizenByIdData> {
     const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
 
@@ -292,7 +293,7 @@ export class CitizenController {
     @Context("cad") cad: cad & { features?: CadFeature[] },
     @PathParams("id") citizenId: string,
     @MultipartFile("image") file: PlatformMulterFile,
-  ) {
+  ): Promise<APITypes.PostCitizenImageByIdData> {
     const citizen = await prisma.citizen.findUnique({
       where: {
         id: citizenId,

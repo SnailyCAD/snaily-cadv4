@@ -65,7 +65,8 @@ export function InputSuggestions<Suggestion extends { id: string }>({
     const apiPath =
       typeof options.apiPath === "function" ? options.apiPath(value) : options.apiPath;
 
-    const { json } = await execute(apiPath, {
+    const { json } = await execute({
+      path: apiPath,
       ...options,
       noToast: true,
       data,

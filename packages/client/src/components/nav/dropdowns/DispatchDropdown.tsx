@@ -27,7 +27,9 @@ export function DispatchDropdown() {
         </Button>
       }
     >
-      <Dropdown.LinkItem href="/dispatch">{t("dashboard")}</Dropdown.LinkItem>
+      {hasPermissions([Permissions.Dispatch], false) ? (
+        <Dropdown.LinkItem href="/dispatch">{t("dashboard")}</Dropdown.LinkItem>
+      ) : null}
 
       {hasPermissions([Permissions.LiveMap], true) ? (
         <Dropdown.LinkItem href="/dispatch/map">{t("liveMap")}</Dropdown.LinkItem>

@@ -22,6 +22,7 @@ const featuresRoute: Partial<Record<Feature, string>> = {
   USER_API_TOKENS: "/user/api-token",
   STEAM_OAUTH: "/v1/auth/steam",
   COURTHOUSE_POSTS: "/v1/courthouse-posts",
+  ACTIVE_WARRANTS: "/v1/records/active-warrants",
 };
 
 @Middleware()

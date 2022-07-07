@@ -11,14 +11,16 @@ import { ManageCourtEntry } from "./ManageCourtEntry";
 import { DescriptionModal } from "components/modal/DescriptionModal/DescriptionModal";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
+import type { DeleteCourtEntriesData, GetCourtEntriesData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 interface Props {
-  entries: CourtEntry[];
+  entries: GetCourtEntriesData;
 }
 
 export function CourtEntriesTab(props: Props) {
   const [entries, setEntries] = React.useState(props.entries);
-  const [tempEntry, setTempEntry] = React.useState<CourtEntry | null>(null);
+  const [tempEntry, entryState] = useTemporaryItem(entries);
 
   const t = useTranslations("Courthouse");
   const common = useTranslations("Common");
@@ -28,27 +30,30 @@ export function CourtEntriesTab(props: Props) {
   async function deleteCourtEntry() {
     if (!tempEntry) return;
 
-    const { json } = await execute(`/court-entries/${tempEntry.id}`, { method: "DELETE" });
+    const { json } = await execute<DeleteCourtEntriesData>({
+      path: `/court-entries/${tempEntry.id}`,
+      method: "DELETE",
+    });
 
     if (typeof json === "boolean") {
       setEntries((p) => p.filter((v) => v.id !== tempEntry.id));
-      setTempEntry(null);
+      entryState.setTempId(null);
       closeModal(ModalIds.AlertDeleteCourtEntry);
     }
   }
 
   function handleViewDescription(entry: CourtEntry) {
-    setTempEntry(entry);
+    entryState.setTempId(entry.id);
     openModal(ModalIds.Description, entry);
   }
 
   function handleManageClick(entry: CourtEntry) {
-    setTempEntry(entry);
+    entryState.setTempId(entry.id);
     openModal(ModalIds.ManageCourtEntry);
   }
 
   function handleDeleteClick(entry: CourtEntry) {
-    setTempEntry(entry);
+    entryState.setTempId(entry.id);
     openModal(ModalIds.AlertDeleteCourtEntry);
   }
 
@@ -105,7 +110,7 @@ export function CourtEntriesTab(props: Props) {
         title={t("deleteCourtEntry")}
         description={t("alert_deleteCourtEntry")}
         onDeleteClick={deleteCourtEntry}
-        onClose={() => setTempEntry(null)}
+        onClose={() => entryState.setTempId(null)}
         state={state}
       />
 
@@ -120,10 +125,13 @@ export function CourtEntriesTab(props: Props) {
             return p;
           })
         }
-        onClose={() => setTempEntry(null)}
+        onClose={() => entryState.setTempId(null)}
       />
       {tempEntry?.descriptionData ? (
-        <DescriptionModal onClose={() => setTempEntry(null)} value={tempEntry.descriptionData} />
+        <DescriptionModal
+          onClose={() => entryState.setTempId(null)}
+          value={tempEntry.descriptionData}
+        />
       ) : null}
     </TabsContent>
   );

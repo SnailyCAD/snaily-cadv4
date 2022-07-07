@@ -9,6 +9,7 @@ import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { combinedUnitProperties } from "lib/leo/activeOfficer";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -26,7 +27,9 @@ export class CombinedUnitsController {
     fallback: (u) => u.isDispatch || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.Leo],
   })
-  async mergeOfficers(@BodyParams() ids: { entry: boolean; id: string }[]) {
+  async mergeOfficers(
+    @BodyParams() ids: { entry: boolean; id: string }[],
+  ): Promise<APITypes.PostDispatchStatusMergeOfficers> {
     const officers = await prisma.$transaction(
       ids.map((officer) => {
         return prisma.officer.findFirst({
@@ -101,7 +104,7 @@ export class CombinedUnitsController {
     const last = data[data.length - 1];
     await this.socket.emitUpdateOfficerStatus();
 
-    return last;
+    return last as APITypes.PostDispatchStatusMergeOfficers;
   }
 
   @Post("/unmerge/:id")
@@ -110,7 +113,9 @@ export class CombinedUnitsController {
     fallback: (u) => u.isDispatch || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.Leo],
   })
-  async unmergeOfficers(@PathParams("id") unitId: string) {
+  async unmergeOfficers(
+    @PathParams("id") unitId: string,
+  ): Promise<APITypes.PostDispatchStatusUnmergeUnitById> {
     const unit = await prisma.combinedLeoUnit.findFirst({
       where: {
         id: unitId,

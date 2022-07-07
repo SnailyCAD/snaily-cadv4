@@ -16,6 +16,7 @@ import { Status } from "components/shared/Status";
 import { useRouter } from "next/router";
 import { HoverCard } from "components/shared/HoverCard";
 import { ViolationsColumn } from "../ViolationsColumn";
+import type { PostCitizenRecordLogsData } from "@snailycad/types/api";
 
 interface Props {
   search: string;
@@ -47,7 +48,8 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
   }
 
   async function handleAcceptDeclineClick(item: Record, type: "ACCEPT" | "DECLINE") {
-    const { json } = await execute(`/admin/manage/citizens/records-logs/${item.id}`, {
+    const { json } = await execute<PostCitizenRecordLogsData>({
+      path: `/admin/manage/citizens/records-logs/${item.id}`,
       method: "POST",
       data: { type },
     });

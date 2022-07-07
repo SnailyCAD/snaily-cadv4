@@ -2,6 +2,7 @@ import * as React from "react";
 import type { ValueType } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { useValues } from "context/ValuesContext";
+import type { GetValuesData } from "@snailycad/types/api";
 
 interface Options {
   valueTypes: ValueType[];
@@ -41,7 +42,8 @@ export function useLoadValuesClientSide(options: Options) {
       params.append("paths", transformValueTypesToString());
     }
 
-    const { json } = await execute(`/admin/values/${firstType}?${params.toString()}`, {
+    const { json } = await execute<GetValuesData>({
+      path: `/admin/values/${firstType}?${params.toString()}`,
       method: "GET",
     });
 

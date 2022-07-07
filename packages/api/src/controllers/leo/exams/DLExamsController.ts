@@ -14,6 +14,7 @@ import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { manyToManyHelper } from "utils/manyToMany";
+import type * as APITypes from "@snailycad/types/api";
 
 const dlExamIncludes = {
   citizen: true,
@@ -32,7 +33,7 @@ export class DLExamsController {
   async getAllDLExams(
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query = "",
-  ) {
+  ): Promise<APITypes.GetDLExamsData> {
     const where: Prisma.DLExamWhereInput | undefined = query
       ? {
           OR: [
@@ -62,7 +63,7 @@ export class DLExamsController {
     fallback: (u) => u.isSupervisor,
     permissions: [Permissions.ManageDLExams],
   })
-  async createDLEXam(@BodyParams() body: unknown) {
+  async createDLEXam(@BodyParams() body: unknown): Promise<APITypes.PostDLExamsData> {
     const data = validateSchema(DL_EXAM_SCHEMA, body);
 
     const status = this.getExamStatus(data);
@@ -91,7 +92,7 @@ export class DLExamsController {
       await this.grantLicenseToCitizen(exam);
     }
 
-    const updated = await prisma.dLExam.findUnique({
+    const updated = await prisma.dLExam.findUniqueOrThrow({
       where: { id: exam.id },
       include: dlExamIncludes,
     });
@@ -104,7 +105,10 @@ export class DLExamsController {
     fallback: (u) => u.isSupervisor,
     permissions: [Permissions.ManageDLExams],
   })
-  async updateDLEXam(@PathParams("id") examId: string, @BodyParams() body: unknown) {
+  async updateDLEXam(
+    @PathParams("id") examId: string,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PutDLExamByIdData> {
     const data = validateSchema(DL_EXAM_SCHEMA, body);
 
     const exam = await prisma.dLExam.findUnique({
@@ -153,7 +157,7 @@ export class DLExamsController {
     fallback: (u) => u.isSupervisor,
     permissions: [Permissions.ManageDLExams],
   })
-  async deleteDLEXam(@PathParams("id") examId: string) {
+  async deleteDLEXam(@PathParams("id") examId: string): Promise<APITypes.DeleteDLExamByIdData> {
     const exam = await prisma.dLExam.findUnique({
       where: { id: examId },
       include: { categories: true },

@@ -22,13 +22,19 @@ import { hasTableDataChanged } from "./[path]";
 import { OptionsDropdown } from "components/admin/values/import/OptionsDropdown";
 import { ImportValuesModal } from "components/admin/values/import/ImportValuesModal";
 import { Permissions } from "@snailycad/permissions";
+import type {
+  DeleteValueByIdData,
+  GetValuesPenalCodesData,
+  PutValuePositionsData,
+  DeletePenalCodeGroupsData,
+} from "@snailycad/types/api";
 
 const ManagePenalCode = dynamic(async () => {
   return (await import("components/admin/values/penal-codes/ManagePenalCode")).ManagePenalCode;
 });
 
 interface Props {
-  values: { type: ValueType; groups: PenalCodeGroup[]; values: PenalCode[] };
+  values: GetValuesPenalCodesData[number];
 }
 
 export default function ValuePath({ values: { type, groups: groupData, values: data } }: Props) {
@@ -81,7 +87,8 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
   async function handleDeleteGroup() {
     if (!tempGroup) return;
 
-    const { json } = await execute(`/admin/penal-code-group/${tempGroup.id}`, {
+    const { json } = await execute<DeletePenalCodeGroupsData>({
+      path: `/admin/penal-code-group/${tempGroup.id}`,
       method: "DELETE",
     });
 
@@ -136,7 +143,8 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
       );
     }
 
-    await execute(`/admin/values/${type.toLowerCase()}/positions`, {
+    await execute<PutValuePositionsData>({
+      path: `/admin/values/${type.toLowerCase()}/positions`,
       method: "PUT",
       data: {
         ids: list
@@ -151,7 +159,8 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
   async function handleDelete() {
     if (!tempValue) return;
 
-    const { json } = await execute(`/admin/values/${type.toLowerCase()}/${tempValue.id}`, {
+    const { json } = await execute<DeleteValueByIdData>({
+      path: `/admin/values/${type.toLowerCase()}/${tempValue.id}`,
       method: "DELETE",
     });
 

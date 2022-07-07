@@ -11,14 +11,10 @@ import { cad, DiscordWebhookType } from "@snailycad/types";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { WebhookSettingsField } from "./WebhookSettingsField";
 import { toastMessage } from "lib/toastMessage";
-
-export interface DiscordChannel {
-  name: string;
-  id: string;
-}
+import type { GetCADDiscordWebhooksData, PostCADDiscordWebhooksData } from "@snailycad/types/api";
 
 export function DiscordWebhooksTab({ canWarn }: { canWarn: boolean }) {
-  const [channels, setChannels] = React.useState<DiscordChannel[]>([]);
+  const [channels, setChannels] = React.useState<GetCADDiscordWebhooksData>([]);
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const { cad, setCad } = useAuth();
@@ -38,7 +34,8 @@ export function DiscordWebhooksTab({ canWarn }: { canWarn: boolean }) {
   }, []);
 
   async function refreshChannels() {
-    const { json } = await execute("/admin/manage/cad-settings/discord/webhooks", {
+    const { json } = await execute<GetCADDiscordWebhooksData>({
+      path: "/admin/manage/cad-settings/discord/webhooks",
       method: "GET",
       noToast: !canWarn,
     });
@@ -49,7 +46,8 @@ export function DiscordWebhooksTab({ canWarn }: { canWarn: boolean }) {
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute("/admin/manage/cad-settings/discord/webhooks", {
+    const { json } = await execute<PostCADDiscordWebhooksData>({
+      path: "/admin/manage/cad-settings/discord/webhooks",
       method: "POST",
       data: values,
     });
