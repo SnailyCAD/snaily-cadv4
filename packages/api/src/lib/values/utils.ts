@@ -25,7 +25,8 @@ export type ValuesSelect =
   | ({ name: "departmentValue" } & Prisma.DepartmentValueFindManyArgs)
   | ({ name: "divisionValue" } & Prisma.DivisionValueFindManyArgs)
   | ({ name: "qualificationValue" } & Prisma.QualificationValueFindManyArgs)
-  | ({ name: "callTypeValue" } & Prisma.CallTypeValueFindManyArgs);
+  | ({ name: "callTypeValue" } & Prisma.CallTypeValueFindManyArgs)
+  | ({ name: "priorityStatusValue" } & Prisma.PriorityStatusValueFindManyArgs);
 
 export const permissionsForRouteType: Record<ValueType, Permissions[]> = {
   BLOOD_GROUP: [Permissions.ManageValueBloodGroup],
@@ -46,6 +47,7 @@ export const permissionsForRouteType: Record<ValueType, Permissions[]> = {
   WEAPON: [Permissions.ManageValueWeapon],
   QUALIFICATION: [Permissions.ManageValueQualification],
   CALL_TYPE: [Permissions.ManageValueCallType],
+  PRIORITY_STATUS: [Permissions.ManageValuePriorityStatus],
 };
 
 export function getTypeFromPath(path: string) {

@@ -26,6 +26,7 @@ import { getDisabledFromValue, getValueStrFromValue } from "src/pages/admin/valu
 import { ModalIds } from "types/ModalIds";
 import { makeDefaultWhatPages } from "lib/admin/values";
 import { DepartmentFields } from "./manage-modal/DepartmentFields";
+import dynamic from "next/dynamic";
 import {
   StatusValueFields,
   useDefaultDepartments,
@@ -43,12 +44,16 @@ import {
   isUnitQualification,
   isDLCategoryValue,
   isCallTypeValue,
+  isPriorityStatusValue,
 } from "@snailycad/utils/typeguards";
 import { QualificationFields } from "./manage-modal/QualificationFields";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { Textarea } from "components/form/Textarea";
 import { Toggle } from "components/form/Toggle";
 import type { PatchValueByIdData, PostValuesData } from "@snailycad/types/api";
+
+import { Eyedropper } from "react-bootstrap-icons";
+const HexColorPicker = dynamic(async () => (await import("react-colorful")).HexColorPicker);
 
 interface Props {
   type: ValueType;
@@ -173,7 +178,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
       value && isUnitQualification(value) ? value.qualificationType : "qualification",
 
     shouldDo: value && isStatusValue(value) ? value.shouldDo : "",
-    color: value && isStatusValue(value) ? value.color ?? "" : "",
+    color: value && (isStatusValue(value) || isPriorityStatusValue(value)) ? value.color ?? "" : "",
     type: value && (isStatusValue(value) || isDepartmentValue(value)) ? value.type : "STATUS_CODE",
     departments:
       value && (isStatusValue(value) || isUnitQualification(value))
@@ -238,7 +243,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
       isOpen={isOpen(ModalIds.ManageValue)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, values, errors }) => (
+        {({ handleChange, setFieldValue, values, errors }) => (
           <Form>
             {type === "DIVISION" ? (
               <FormField label="Department">
@@ -336,6 +341,33 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             ) : null}
 
             {type === "CODES_10" ? <StatusValueFields /> : null}
+
+            {([ValueType.PRIORITY_STATUS, ValueType.CODES_10] as ValueType[]).includes(type) ? (
+              <FormField errorMessage={errors.color as string} label="Color (#HEX)">
+                <div className={`flex ${values.showPicker ? "items-start" : ""}`}>
+                  {values.showPicker ? (
+                    <HexColorPicker
+                      color={values.color}
+                      onChange={(color) => setFieldValue("color", color)}
+                      style={{ width: "100%", height: "150px" }}
+                    />
+                  ) : (
+                    <Input name="color" onChange={handleChange} value={values.color} />
+                  )}
+
+                  <Button
+                    variant="cancel"
+                    className="p-0 px-1 ml-2"
+                    type="button"
+                    onClick={() => setFieldValue("showPicker", !values.showPicker)}
+                    aria-label="Color Picker"
+                    title="Color Picker"
+                  >
+                    <Eyedropper />
+                  </Button>
+                </div>
+              </FormField>
+            ) : null}
 
             <FormField errorMessage={errors.isDisabled} label="Disabled">
               <Toggle name="isDisabled" onCheckedChange={handleChange} value={values.isDisabled} />

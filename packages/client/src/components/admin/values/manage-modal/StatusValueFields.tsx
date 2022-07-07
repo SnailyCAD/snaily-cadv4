@@ -2,14 +2,9 @@ import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Select } from "components/form/Select";
 import { useFormikContext } from "formik";
-import dynamic from "next/dynamic";
 import { QualificationValue, ShouldDoType, StatusValue, Value, WhatPages } from "@snailycad/types";
 
-import { Eyedropper } from "react-bootstrap-icons";
-import { Button } from "components/Button";
 import { useValues } from "context/ValuesContext";
-
-const HexColorPicker = dynamic(async () => (await import("react-colorful")).HexColorPicker);
 
 export const SHOULD_DO_LABELS: Record<ShouldDoType, string> = {
   [ShouldDoType.SET_STATUS]: "Set Status",
@@ -104,31 +99,6 @@ export function StatusValueFields() {
           />
         </FormField>
       )}
-
-      <FormField errorMessage={errors.color as string} label="Color (#HEX)">
-        <div className={`flex ${values.showPicker ? "items-start" : ""}`}>
-          {values.showPicker ? (
-            <HexColorPicker
-              color={values.color}
-              onChange={(color) => setFieldValue("color", color)}
-              style={{ width: "100%", height: "150px" }}
-            />
-          ) : (
-            <Input name="color" onChange={handleChange} value={values.color} />
-          )}
-
-          <Button
-            variant="cancel"
-            className="p-0 px-1 ml-2"
-            type="button"
-            onClick={() => setFieldValue("showPicker", !values.showPicker)}
-            aria-label="Color Picker"
-            title="Color Picker"
-          >
-            <Eyedropper />
-          </Button>
-        </div>
-      </FormField>
 
       <FormField className="mb-0" checkbox label="Status Code">
         <Input

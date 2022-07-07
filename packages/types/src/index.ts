@@ -23,7 +23,9 @@ type CADPick =
   | "discordRolesId"
   | "version"
   | "autoSetUserProperties"
-  | "autoSetUserPropertiesId";
+  | "autoSetUserPropertiesId"
+  | "priorityStatusId"
+  | "priorityStatus";
 
 export type cad = Pick<
   Omit<Prisma.cad, "registrationCode"> & {
@@ -34,6 +36,7 @@ export type cad = Pick<
     discordRoles?: DiscordRoles | null | undefined;
     version?: CADVersion | null;
     registrationCode?: string | boolean | null;
+    priorityStatus?: PriorityStatusValue | null;
   },
   CADPick
 >;
@@ -397,7 +400,8 @@ export type ValueWithValueObj =
   | EmployeeValue
   | DriversLicenseCategoryValue
   | QualificationValue
-  | CallTypeValue;
+  | CallTypeValue
+  | PriorityStatusValue;
 
 export type AnyValue = Value | PenalCode | ValueWithValueObj;
 

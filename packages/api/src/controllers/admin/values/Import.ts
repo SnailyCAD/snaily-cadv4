@@ -23,6 +23,7 @@ import {
   PENAL_CODE_ARR,
   QUALIFICATION_ARR,
   CALL_TYPE_ARR,
+  PRIORITY_STATUS_ARR,
 } from "@snailycad/schemas";
 import {
   type DepartmentType,
@@ -327,7 +328,6 @@ export const typeHandlers = {
       return updated || updatedValue;
     });
   },
-
   OFFICER_RANK: async ({ body, id }: HandlerOptions) => {
     const data = validateSchema(BASE_ARR, body);
 
@@ -382,6 +382,23 @@ export const typeHandlers = {
             priority: item.priority,
             value: item.value,
             isDisabled: item.isDisabled,
+          }),
+        });
+      }),
+    );
+  },
+  PRIORITY_STATUS: async ({ body, id }: HandlerOptions) => {
+    const data = validateSchema(PRIORITY_STATUS_ARR, body);
+
+    return prisma.$transaction(
+      data.map((item) => {
+        return prisma.priorityStatusValue.upsert({
+          include: { value: true },
+          where: { id: String(id) },
+          ...makePrismaData(ValueType.PRIORITY_STATUS, {
+            value: item.value,
+            isDisabled: item.isDisabled,
+            color: item.color,
           }),
         });
       }),

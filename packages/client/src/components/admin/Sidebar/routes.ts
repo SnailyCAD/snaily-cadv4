@@ -117,6 +117,10 @@ export const valueRoutes: SidebarRoute[] = [
     permissions: [Permissions.ManageValuePenalCode],
   },
   {
+    type: ValueType.PRIORITY_STATUS,
+    permissions: [Permissions.ManageValuePriorityStatus],
+  },
+  {
     type: ValueType.QUALIFICATION,
     permissions: [Permissions.ManageValueQualification],
   },

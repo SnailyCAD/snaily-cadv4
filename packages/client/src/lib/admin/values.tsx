@@ -14,6 +14,7 @@ import {
   QualificationValue,
   CallTypeValue,
   type AnyValue,
+  PriorityStatusValue,
 } from "@snailycad/types";
 import {
   SHOULD_DO_LABELS,
@@ -154,6 +155,21 @@ export function useTableDataOfType(type: ValueType) {
           priority: v.priority ?? common("none"),
         };
       }
+      case ValueType.PRIORITY_STATUS: {
+        const v = value as PriorityStatusValue;
+
+        return {
+          color: (
+            <>
+              <span
+                style={{ background: v.color }}
+                className="inline-block w-2.5 h-2.5 mr-2 rounded-full"
+              />
+              {v.color}
+            </>
+          ),
+        };
+      }
       default: {
         return {};
       }
@@ -219,6 +235,9 @@ export function useTableHeadersOfType(type: ValueType) {
     }
     case ValueType.CALL_TYPE: {
       return [{ Header: t("priority"), accessor: "priority" }];
+    }
+    case ValueType.PRIORITY_STATUS: {
+      return [{ Header: t("color"), accessor: "color" }];
     }
     default: {
       return [];

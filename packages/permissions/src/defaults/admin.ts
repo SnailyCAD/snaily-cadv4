@@ -50,6 +50,7 @@ export const defaultValuePermissions = [
   Permissions.ManageValueCitizenFlag,
   Permissions.ManageValueQualification,
   Permissions.ManageValueCallType,
+  Permissions.ManageValuePriorityStatus,
 ];
 
 export const defaultCourthousePermissions = [

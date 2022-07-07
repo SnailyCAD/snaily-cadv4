@@ -136,5 +136,11 @@
     "ADD": "Add Call Type",
     "DELETE": "Delete Call Type",
     "EDIT": "Edit Call Type"
+  },
+  "PRIORITY_STATUS": {
+    "MANAGE": "Manage Priority Statuses",
+    "ADD": "Add Priority Status",
+    "DELETE": "Delete Priority Status",
+    "EDIT": "Edit Priority Status"
   }
 }

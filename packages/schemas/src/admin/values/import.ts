@@ -119,3 +119,12 @@ export const CALL_TYPE_SCHEMA = BASE_VALUE_SCHEMA.extend({
 });
 
 export const CALL_TYPE_ARR = z.array(CALL_TYPE_SCHEMA).min(1);
+
+/**
+ * priority status
+ */
+export const PRIORITY_STATUS_SCHEMA = BASE_VALUE_SCHEMA.extend({
+  color: z.string(),
+});
+
+export const PRIORITY_STATUS_ARR = z.array(PRIORITY_STATUS_SCHEMA).min(1);
