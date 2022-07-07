@@ -16,9 +16,10 @@ import type {
 
 interface Props {
   user: GetManageUserByIdData;
+  setUser: React.Dispatch<React.SetStateAction<GetManageUserByIdData>>;
 }
 
-export function DangerZone({ user }: Props) {
+export function DangerZone({ user, setUser }: Props) {
   const { state, execute } = useFetch();
   const router = useRouter();
   const { openModal, closeModal } = useModal();
@@ -26,6 +27,20 @@ export function DangerZone({ user }: Props) {
   const { USER_API_TOKENS } = useFeatureEnabled();
 
   const formDisabled = user.rank === "OWNER";
+
+  async function handleDisable2FA() {
+    if (formDisabled) return;
+
+    const { json } = await execute<DeleteManageUserRevokeApiTokenData>({
+      path: `/admin/manage/users/${user.id}/2fa`,
+      method: "DELETE",
+    });
+
+    if (json) {
+      closeModal(ModalIds.AlertDisableUser2FA);
+      setUser({ ...user, twoFactorEnabled: false });
+    }
+  }
 
   async function handleDelete() {
     if (formDisabled) return;
@@ -49,8 +64,8 @@ export function DangerZone({ user }: Props) {
     });
 
     if (json) {
-      router.push("/admin/manage/users");
       closeModal(ModalIds.AlertRevokePersonalApiToken);
+      setUser({ ...user, apiToken: null, apiTokenId: null });
     }
   }
 
@@ -78,6 +93,18 @@ export function DangerZone({ user }: Props) {
           {state === "loading" ? <Loader className="mr-3" /> : null}
           Temporary Password
         </Button>
+
+        {user.twoFactorEnabled ? (
+          <Button
+            variant="danger"
+            className="flex items-center ml-2"
+            disabled={state === "loading"}
+            onClick={() => openModal(ModalIds.AlertDisableUser2FA)}
+          >
+            {state === "loading" ? <Loader className="mr-3" /> : null}
+            Disable Two Factor Authentication
+          </Button>
+        ) : null}
 
         {USER_API_TOKENS && user.apiTokenId ? (
           <Button
@@ -116,6 +143,14 @@ export function DangerZone({ user }: Props) {
         description={`Are you sure you want to revoke ${user.username}'s personal API Token? They will not be able to use this API token anymore. They are able to re-generate a new one later. You can remove their 'Use Personal Api Token' permissions via 'Manage Permissions'`}
         id={ModalIds.AlertRevokePersonalApiToken}
         deleteText="Revoke"
+      />
+
+      <AlertModal
+        onDeleteClick={handleDisable2FA}
+        title="Disable Two Factor Authentication"
+        description={`Are you sure you want to disable ${user.username}'s Two Factor Authentication? They can re-enable it again in their settings.`}
+        id={ModalIds.AlertDisableUser2FA}
+        deleteText="Disable"
       />
 
       <GiveTempPasswordModal user={user} />
