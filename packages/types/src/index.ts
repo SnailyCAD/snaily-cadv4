@@ -264,6 +264,10 @@ export type StatusValue = Prisma.StatusValue & {
   departments?: DepartmentValue[];
 };
 
+export type PriorityStatusValue = Prisma.PriorityStatusValue & {
+  value: Prisma.Value;
+};
+
 export type OfficerLog = Prisma.OfficerLog;
 
 export type ImpoundedVehicle = Prisma.ImpoundedVehicle & {

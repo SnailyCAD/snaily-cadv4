@@ -38,6 +38,8 @@ model cad {
   autoSetUserPropertiesId String?
   discordRoles            DiscordRoles?          @relation(fields: [discordRolesId], references: [id])
   discordRolesId          String?
+  priorityStatus          PriorityStatusValue?   @relation(fields: [priorityStatusId], references: [id])
+  priorityStatusId        String?
 }
 
 model CadFeature {
@@ -82,8 +84,7 @@ model MiscCadSettings {
   boloWebhookId        String?
 
   webhooks DiscordWebhook[]
-
-  cad cad[]
+  cad      cad[]
 }
 
 model DiscordWebhook {
@@ -461,6 +462,7 @@ model Value {
   QualificationValue              QualificationValue[]
   CallTypeValue                   CallTypeValue[]               @relation("callTypeValueToValue")
   WeaponExam                      WeaponExam[]                  @relation("weaponExamToLicense")
+  PriorityStatusValue             PriorityStatusValue[]         @relation("priorityStatusValueToValue")
 }
 
 model PenalCode {
@@ -586,6 +588,14 @@ model WeaponValue {
   value   Value    @relation("weaponValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
   hash    String?
   weapon  Weapon[] @relation("weaponModelToValue")
+}
+
+model PriorityStatusValue {
+  id      String @id @default(cuid())
+  valueId String
+  value   Value  @relation("priorityStatusValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  color   String
+  cad     cad[]
 }
 
 model CallTypeValue {
@@ -1335,6 +1345,7 @@ enum ValueType {
   CITIZEN_FLAG
   QUALIFICATION
   CALL_TYPE
+  PRIORITY_STATUS
 }
 
 enum DriversLicenseCategoryType {
