@@ -96,6 +96,7 @@ export function ReleaseCitizenModal({ onSuccess, citizen }: Props) {
                           className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                           draggable={false}
                           src={makeImageUrl("citizens", suggestion.imageId)}
+                          loading="lazy"
                         />
                       ) : null}
                       <p>

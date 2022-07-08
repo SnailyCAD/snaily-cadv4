@@ -76,6 +76,7 @@ export default function BleetPost({ post }: Props) {
             draggable={false}
             className="h-[20rem] mb-5 w-full object-cover"
             src={makeImageUrl("bleeter", post.imageId)}
+            loading="lazy"
           />
         ) : null}
         <Editor isReadonly value={dataToSlate(post)} />

@@ -81,6 +81,7 @@ export function Nav({ maxWidth }: Props) {
                       className="max-h-[30px] min-w-[30px]"
                       src={url}
                       onError={() => setShowImage(false)}
+                      loading="lazy"
                     />
                   </>
                 ) : null}

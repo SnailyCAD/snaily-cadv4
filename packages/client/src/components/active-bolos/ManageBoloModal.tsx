@@ -216,6 +216,7 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                             className="rounded-md w-[35px] h-[35px] object-cover"
                             draggable={false}
                             src={makeImageUrl("citizens", suggestion.imageId)}
+                            loading="lazy"
                           />
                         ) : (
                           <PersonFill className="text-gray-500/60 w-[25px] h-[25px]" />

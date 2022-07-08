@@ -31,6 +31,7 @@ export function CitizenListItem({ citizen }: Props) {
             draggable={false}
             className="object-cover rounded-full w-14 h-14"
             src={makeImageUrl("citizens", citizen.imageId)}
+            loading="lazy"
           />
         ) : (
           <PersonFill className="w-12 h-12 text-gray-500/60" />

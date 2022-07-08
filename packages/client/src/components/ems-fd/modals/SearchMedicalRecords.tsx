@@ -107,6 +107,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                         className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                         draggable={false}
                         src={makeImageUrl("citizens", suggestion.imageId)}
+                        loading="lazy"
                       />
                     ) : null}
                     <p>
@@ -147,6 +148,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                         className="rounded-md w-[100px] h-[100px] object-cover"
                         draggable={false}
                         src={makeImageUrl("citizens", results.imageId)}
+                        loading="lazy"
                       />
                     </button>
                   ) : (
