@@ -64,12 +64,8 @@ export function ManageIncidentModal({
   const activeUnits = [...activeOfficers, ...activeDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
   const unitsForSelect = isDispatch ? activeUnits : allUnits;
 
-  function handleAddUpdateCallEvent(incident: LeoIncident, action?: "delete") {
-    if (action === "delete") {
-      setActiveIncidents(activeIncidents.filter((inc) => inc.id !== incident.id));
-    } else {
-      setActiveIncidents(activeIncidents.map((inc) => (inc.id === incident.id ? incident : inc)));
-    }
+  function handleAddUpdateCallEvent(incident: LeoIncident) {
+    setActiveIncidents(activeIncidents.map((inc) => (inc.id === incident.id ? incident : inc)));
   }
 
   function handleClose() {

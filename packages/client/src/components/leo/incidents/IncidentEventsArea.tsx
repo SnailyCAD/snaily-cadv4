@@ -14,7 +14,7 @@ interface Props {
   incident: LeoIncident;
   disabled?: boolean;
 
-  handleStateUpdate?(incident: LeoIncident, action?: "delete"): void;
+  handleStateUpdate?(incident: LeoIncident): void;
 }
 
 export function IncidentEventsArea({ disabled, incident, handleStateUpdate }: Props) {

@@ -12,11 +12,10 @@ import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 interface Props {
   call: Full911Call;
   disabled?: boolean;
-  onUpdate?(event: Full911Call): void;
-  onCreate?(event: Full911Call): void;
+  handleStateUpdate?(call: Full911Call): void;
 }
 
-export function CallEventsArea({ disabled, call, onUpdate, onCreate }: Props) {
+export function CallEventsArea({ disabled, call, handleStateUpdate }: Props) {
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
@@ -36,7 +35,7 @@ export function CallEventsArea({ disabled, call, onUpdate, onCreate }: Props) {
       });
 
       if (json.id) {
-        onUpdate?.(json);
+        handleStateUpdate?.(json);
       }
     } else {
       const { json } = await execute<Post911CallEventsData>({
@@ -46,7 +45,7 @@ export function CallEventsArea({ disabled, call, onUpdate, onCreate }: Props) {
       });
 
       if (json.id) {
-        onCreate?.(json);
+        handleStateUpdate?.(json);
       }
     }
 
@@ -71,6 +70,7 @@ export function CallEventsArea({ disabled, call, onUpdate, onCreate }: Props) {
                 setTempEvent={eventState.setTempId}
                 event={event}
                 isEditing={tempEvent?.id === event.id}
+                onEventDelete={handleStateUpdate}
               />
             ))
         )}
