@@ -125,7 +125,7 @@ export class SearchController {
   ): Promise<APITypes.PostLeoSearchCitizenData> {
     const [name, surname] = fullName.toString().toLowerCase().split(/ +/g);
 
-    if ((!name || name.length <= 3) && !surname) {
+    if ((!name || name.length < 2) && !surname) {
       return [];
     }
 

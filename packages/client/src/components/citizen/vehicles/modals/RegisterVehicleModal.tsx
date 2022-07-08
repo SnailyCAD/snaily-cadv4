@@ -187,7 +187,6 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
                   options={{
                     apiPath: (value) => `/admin/values/vehicle/search?query=${value}`,
                     method: "GET",
-                    minLength: 2,
                   }}
                   inputProps={{
                     value: values.modelName,

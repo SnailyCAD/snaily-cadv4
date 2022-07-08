@@ -203,7 +203,6 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                     apiPath: "/search/name?includeMany=true",
                     method: "POST",
                     dataKey: "name",
-                    minLength: 2,
                     allowUnknown: true,
                   }}
                   onSuggestionClick={(suggestion) => {

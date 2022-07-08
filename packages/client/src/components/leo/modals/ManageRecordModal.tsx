@@ -187,7 +187,6 @@ export function ManageRecordModal({
                   apiPath: "/search/name",
                   dataKey: "name",
                   method: "POST",
-                  minLength: 2,
                 }}
                 Component={({ suggestion }) => (
                   <div className="flex items-center">
