@@ -23,7 +23,7 @@ export function useActiveDispatchers() {
       noToast: true,
     });
 
-    if (json) {
+    if (json.activeDispatchers) {
       dispatchState.setActiveDispatchers(json.activeDispatchers);
       dispatchState.setActiveIncidents(json.activeIncidents);
       dispatchState.setAllOfficers(json.officers);
