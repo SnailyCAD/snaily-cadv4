@@ -142,7 +142,7 @@ export default function ImportVehiclesPage({ data }: Props) {
           asyncTable.setData((p) => [...vehicles, ...p]);
         }}
         id={ModalIds.ImportVehicles}
-        url="/admin/import/vehicles"
+        url="/admin/import/vehicles/file"
       />
 
       {hasDeletePermissions ? (

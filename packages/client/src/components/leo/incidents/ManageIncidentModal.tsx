@@ -40,7 +40,7 @@ export function ManageIncidentModal({
   onUpdate,
   incident: tempIncident,
 }: Props) {
-  const { activeIncidents } = useActiveIncidents();
+  const { activeIncidents, setActiveIncidents } = useActiveIncidents();
   const foundIncident = activeIncidents.find((v) => v.id === tempIncident?.id);
   const incident = foundIncident ?? tempIncident ?? null;
 
@@ -63,6 +63,10 @@ export function ManageIncidentModal({
   const allUnits = [...allOfficers, ...allDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
   const activeUnits = [...activeOfficers, ...activeDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
   const unitsForSelect = isDispatch ? activeUnits : allUnits;
+
+  function handleAddUpdateCallEvent(incident: LeoIncident) {
+    setActiveIncidents(activeIncidents.map((inc) => (inc.id === incident.id ? incident : inc)));
+  }
 
   function handleClose() {
     closeModal(ModalIds.ManageIncident);
@@ -240,7 +244,13 @@ export function ManageIncidentModal({
           )}
         </Formik>
 
-        {incident ? <IncidentEventsArea disabled={areEventsReadonly} incident={incident} /> : null}
+        {incident ? (
+          <IncidentEventsArea
+            handleStateUpdate={handleAddUpdateCallEvent}
+            disabled={areEventsReadonly}
+            incident={incident}
+          />
+        ) : null}
       </div>
     </Modal>
   );

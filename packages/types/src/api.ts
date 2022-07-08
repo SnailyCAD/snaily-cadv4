@@ -498,19 +498,19 @@ export type DeleteIncidentByIdData = boolean;
  * @method POST
  * @route /incidents/events/:incidentId
  */
-export type PostIncidentEventsData = Prisma.IncidentEvent;
+export type PostIncidentEventsData = Types.LeoIncident;
 
 /**
  * @method PUT
  * @route /incidents/events/:incidentId/:eventId
  */
-export type PutIncidentEventByIdData = Prisma.IncidentEvent;
+export type PutIncidentEventByIdData = Types.LeoIncident;
 
 /**
  * @method DELETE
  * @route /incidents/events/:incidentId/:eventId
  */
-export type DeleteIncidentEventByIdData = boolean;
+export type DeleteIncidentEventByIdData = Types.LeoIncident;
 
 /** notes */
 /**
