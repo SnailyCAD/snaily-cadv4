@@ -12,6 +12,14 @@ import { findAPIUrl } from "lib/fetch";
 
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import * as Sentry from "@sentry/react";
+import { BrowserTracing } from "@sentry/tracing";
+
+Sentry.init({
+  dsn: "https://6e31d0dc886d482091e293edb73eb10e@o518232.ingest.sentry.io/6553264",
+  tracesSampleRate: 1.0,
+  integrations: [new BrowserTracing()],
+});
 
 export default function App({ Component, router, pageProps }: AppProps) {
   const { hostname, protocol, port } = new URL(findAPIUrl());
