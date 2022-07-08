@@ -18,7 +18,7 @@ type ImportData =
 
 interface Props<T extends ImportData> {
   onImport(data: T): void;
-  url: `/admin/import/${"vehicles" | "weapons" | "citizens"}`;
+  url: `/admin/import/${"vehicles" | "weapons" | "citizens"}/file`;
   id: ModalIds.ImportCitizens | ModalIds.ImportVehicles | ModalIds.ImportWeapons;
 }
 

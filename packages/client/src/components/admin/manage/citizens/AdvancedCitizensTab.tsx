@@ -130,7 +130,7 @@ export function AdvancedCitizensTab() {
 
       <ImportModal<PostImportCitizensData>
         id={ModalIds.ImportCitizens}
-        url="/admin/import/citizens"
+        url="/admin/import/citizens/file"
         onImport={() => void undefined}
       />
     </div>

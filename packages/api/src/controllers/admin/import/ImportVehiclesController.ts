@@ -53,12 +53,17 @@ export class ImportVehiclesController {
   }
 
   @Post("/")
+  @Description("Import vehicles in the CAD via body data")
+  async importVehicles(@BodyParams() body: any): Promise<APITypes.PostImportVehiclesData> {
+    return importVehiclesHandler(body);
+  }
+
+  @Post("/file")
   @Description("Import vehicles in the CAD via file upload")
-  async importVehicles(
-    @BodyParams() body?: unknown,
-    @MultipartFile("file") file?: PlatformMulterFile,
+  async importVehiclesViaFile(
+    @MultipartFile("file") file: PlatformMulterFile,
   ): Promise<APITypes.PostImportVehiclesData> {
-    const toValidateBody = file ? parseImportFile(file) : body;
+    const toValidateBody = parseImportFile(file);
     return importVehiclesHandler(toValidateBody);
   }
 

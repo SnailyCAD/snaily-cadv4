@@ -1,5 +1,5 @@
 import { Controller } from "@tsed/di";
-import { Post, Description } from "@tsed/schema";
+import { Post, Description, AcceptMime } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { BodyParams, MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { parseImportFile } from "utils/file";
@@ -14,14 +14,26 @@ import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/admin/import/citizens")
 export class ImportCitizensController {
-  @Post("/")
+  @Post("/file")
   @Description("Import citizens in the CAD via file upload")
+  @AcceptMime("")
   async importCitizens(
-    @BodyParams() body: unknown,
-    @MultipartFile("file") file?: PlatformMulterFile,
+    @MultipartFile("file") file: PlatformMulterFile,
   ): Promise<APITypes.PostImportCitizensData> {
-    const toValidateBody = file ? parseImportFile(file) : body;
-    const data = validateSchema(IMPORT_CITIZENS_ARR, toValidateBody);
+    const toValidateBody = parseImportFile(file);
+    return this.importCitizensHandler(toValidateBody);
+  }
+
+  @Post("/")
+  @Description("Import citizens in the CAD via body data")
+  async importCitizensViaBodyData(
+    @BodyParams() body: any,
+  ): Promise<APITypes.PostImportCitizensData> {
+    return this.importCitizensHandler(body);
+  }
+
+  async importCitizensHandler(body: unknown) {
+    const data = validateSchema(IMPORT_CITIZENS_ARR, body);
 
     return Promise.all(
       data.map(async (data) => {
