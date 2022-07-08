@@ -13,9 +13,11 @@ import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 interface Props {
   incident: LeoIncident;
   disabled?: boolean;
+
+  handleStateUpdate?(incident: LeoIncident, action?: "delete"): void;
 }
 
-export function IncidentEventsArea({ disabled, incident }: Props) {
+export function IncidentEventsArea({ disabled, incident, handleStateUpdate }: Props) {
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -26,17 +28,21 @@ export function IncidentEventsArea({ disabled, incident }: Props) {
     helpers: FormikHelpers<{ description: string }>,
   ) {
     if (tempEvent) {
-      await execute<PutIncidentEventByIdData>({
+      const { json } = await execute<PutIncidentEventByIdData>({
         path: `/incidents/events/${incident.id}/${tempEvent.id}`,
         method: "PUT",
         data: values,
       });
+
+      handleStateUpdate?.(json);
     } else {
-      await execute<PostIncidentEventsData>({
+      const { json } = await execute<PostIncidentEventsData>({
         path: `/incidents/events/${incident.id}`,
         method: "POST",
         data: values,
       });
+
+      handleStateUpdate?.(json);
     }
 
     helpers.resetForm();
@@ -59,6 +65,7 @@ export function IncidentEventsArea({ disabled, incident }: Props) {
                 setTempEvent={eventState.setTempId}
                 event={event}
                 isEditing={tempEvent?.id === event.id}
+                onEventDelete={handleStateUpdate}
               />
             ))
         )}
