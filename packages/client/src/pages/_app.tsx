@@ -7,6 +7,7 @@ import { AuthProvider } from "context/AuthContext";
 import { ValuesProvider } from "context/ValuesContext";
 import { CitizenProvider } from "context/CitizenContext";
 import "styles/globals.scss";
+import "styles/fonts.scss";
 import { SocketProvider } from "@casper124578/use-socket.io";
 import { findAPIUrl } from "lib/fetch";
 
