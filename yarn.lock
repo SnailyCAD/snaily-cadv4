@@ -1541,11 +1541,11 @@ __metadata:
     "@prisma/client": ^4.0.0
     "@sentry/node": ^7.5.1
     "@sentry/tracing": ^7.5.1
-    "@snailycad/config": 1.15.2
-    "@snailycad/permissions": 1.15.2
-    "@snailycad/schemas": 1.15.2
-    "@snailycad/types": 1.15.2
-    "@snailycad/utils": 1.15.2
+    "@snailycad/config": 1.15.3
+    "@snailycad/permissions": 1.15.3
+    "@snailycad/schemas": 1.15.3
+    "@snailycad/types": 1.15.3
+    "@snailycad/utils": 1.15.3
     "@swc/core": ^1.2.207
     "@swc/helpers": ^0.4.3
     "@tsed/common": ^6.115.0
@@ -1616,11 +1616,11 @@ __metadata:
     "@react-aria/ssr": ^3.2.0
     "@sentry/react": ^7.5.1
     "@sentry/tracing": ^7.5.1
-    "@snailycad/config": 1.15.2
-    "@snailycad/permissions": 1.15.2
-    "@snailycad/schemas": 1.15.2
-    "@snailycad/types": 1.15.2
-    "@snailycad/utils": 1.15.2
+    "@snailycad/config": 1.15.3
+    "@snailycad/permissions": 1.15.3
+    "@snailycad/schemas": 1.15.3
+    "@snailycad/types": 1.15.3
+    "@snailycad/utils": 1.15.3
     "@types/leaflet": ^1.7.9
     "@types/react": ^17.0.43
     "@types/react-dom": ^17.0.14
@@ -1674,11 +1674,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/config@1.15.2, @snailycad/config@workspace:packages/config":
+"@snailycad/config@1.15.3, @snailycad/config@workspace:packages/config":
   version: 0.0.0-use.local
   resolution: "@snailycad/config@workspace:packages/config"
   dependencies:
-    "@snailycad/types": 1.15.2
+    "@snailycad/types": 1.15.3
     tsup: ^6.1.2
     typescript: ^4.7.4
     vite: ^2.9.13
@@ -1686,7 +1686,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/permissions@1.15.2, @snailycad/permissions@workspace:packages/permissions":
+"@snailycad/permissions@1.15.3, @snailycad/permissions@workspace:packages/permissions":
   version: 0.0.0-use.local
   resolution: "@snailycad/permissions@workspace:packages/permissions"
   dependencies:
@@ -1699,7 +1699,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/schemas@1.15.2, @snailycad/schemas@workspace:packages/schemas":
+"@snailycad/schemas@1.15.3, @snailycad/schemas@workspace:packages/schemas":
   version: 0.0.0-use.local
   resolution: "@snailycad/schemas@workspace:packages/schemas"
   dependencies:
@@ -1710,11 +1710,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/types@1.15.2, @snailycad/types@workspace:packages/types":
+"@snailycad/types@1.15.3, @snailycad/types@workspace:packages/types":
   version: 0.0.0-use.local
   resolution: "@snailycad/types@workspace:packages/types"
   dependencies:
-    "@snailycad/permissions": 1.15.2
+    "@snailycad/permissions": 1.15.3
     discord-api-types: 0.35.0
     tsup: ^6.1.2
     type-fest: ^2.14.0
@@ -1722,11 +1722,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/utils@1.15.2, @snailycad/utils@workspace:packages/utils":
+"@snailycad/utils@1.15.3, @snailycad/utils@workspace:packages/utils":
   version: 0.0.0-use.local
   resolution: "@snailycad/utils@workspace:packages/utils"
   dependencies:
-    "@snailycad/types": 1.15.2
+    "@snailycad/types": 1.15.3
     c8: ^7.11.3
     tslib: ^2.4.0
     tsup: ^6.1.2
