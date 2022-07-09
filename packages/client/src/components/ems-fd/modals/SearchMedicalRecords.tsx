@@ -22,6 +22,7 @@ import type {
   PostEmsFdDeclareCitizenById,
   PostEmsFdMedicalRecordsSearchData,
 } from "@snailycad/types/api";
+import { classNames } from "lib/classNames";
 
 interface Props {
   onClose?(): void;
@@ -234,22 +235,42 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
               </div>
             )}
 
-            <footer className="flex justify-end mt-5">
-              <Button
-                type="reset"
-                onClick={() => closeModal(ModalIds.SearchMedicalRecord)}
-                variant="cancel"
-              >
-                {t("Common.cancel")}
-              </Button>
-              <Button
-                className="flex items-center"
-                disabled={!isValid || state === "loading"}
-                type="submit"
-              >
-                {state === "loading" ? <Loader className="mr-2" /> : null}
-                {t("Common.search")}
-              </Button>
+            <footer
+              className={classNames(
+                "flex justify-end mt-5",
+                results && !results.isConfidential && "justify-between",
+              )}
+            >
+              {results && !results.isConfidential ? (
+                <Button
+                  size="xs"
+                  type="button"
+                  onClick={handleDeclare}
+                  disabled={state === "loading"}
+                  variant="cancel"
+                  className="px-1.5"
+                >
+                  {results.dead ? t("Ems.declareAlive") : t("Ems.declareDead")}
+                </Button>
+              ) : null}
+
+              <div className="flex gap-2">
+                <Button
+                  type="reset"
+                  onClick={() => closeModal(ModalIds.SearchMedicalRecord)}
+                  variant="cancel"
+                >
+                  {t("Common.cancel")}
+                </Button>
+                <Button
+                  className="flex items-center"
+                  disabled={!isValid || state === "loading"}
+                  type="submit"
+                >
+                  {state === "loading" ? <Loader className="mr-2" /> : null}
+                  {t("Common.search")}
+                </Button>
+              </div>
             </footer>
           </Form>
         )}
