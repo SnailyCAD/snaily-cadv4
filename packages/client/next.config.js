@@ -1,14 +1,3 @@
-const { withSentryConfig } = require("@sentry/nextjs");
-
-/** @type {import("@sentry/nextjs").SentryWebpackPluginOptions} */
-const sentryConfig = {
-  silent: true,
-  org: "SnailyCAD",
-};
-
-const USE_SENTRY =
-  process.env.NODE_ENV === "development" && process.env.TELEMETRY_ENABLED === "true";
-
 /** @type {import("next").NextConfig} */
 const nextConfig = {
   i18n: {
@@ -21,12 +10,4 @@ const nextConfig = {
   },
 };
 
-function withConfig(nextConfig) {
-  if (USE_SENTRY) {
-    return withSentryConfig(nextConfig, sentryConfig);
-  }
-
-  return nextConfig;
-}
-
-module.exports = withConfig(nextConfig);
+module.exports = nextConfig;

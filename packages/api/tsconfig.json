@@ -9,7 +9,6 @@
 
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "sourceMap": true,
     "declaration": false,
     "allowSyntheticDefaultImports": true,
     "allowJs": true,
@@ -26,7 +25,11 @@
       "services/*": ["./src/services/*"],
       "controllers/*": ["./src/controllers/*"],
       "migrations/*": ["./src/migrations/*"]
-    }
+    },
+
+    "sourceMap": true,
+    "inlineSources": true,
+    "sourceRoot": "/"
   },
   "ts-node": {
     "swc": true

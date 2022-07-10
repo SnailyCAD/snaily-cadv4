@@ -23,6 +23,8 @@ import { parseCookies } from "nookies";
 import { VersionDisplay } from "components/shared/VersionDisplay";
 import type { PostRegisterUserData } from "@snailycad/types/api";
 
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+
 const INITIAL_VALUES = {
   username: "",
   password: "",
@@ -34,12 +36,18 @@ interface Props {
   cad: Pick<cad, "registrationCode" | "version">;
 }
 
+const hasGoogleCaptchaSiteKey =
+  typeof process.env.NEXT_PUBLIC_GOOGLE_CAPTCHA_SITE_KEY === "string" &&
+  process.env.NEXT_PUBLIC_GOOGLE_CAPTCHA_SITE_KEY.length > 0;
+
 export default function Register({ cad }: Props) {
   const router = useRouter();
   const { state, execute } = useFetch();
   const t = useTranslations("Auth");
   const { ALLOW_REGULAR_LOGIN } = useFeatureEnabled();
   const validate = handleValidate(AUTH_SCHEMA);
+
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   React.useEffect(() => {
     if (!ALLOW_REGULAR_LOGIN) {
@@ -55,9 +63,10 @@ export default function Register({ cad }: Props) {
       return helpers.setFieldError("confirmPassword", "Passwords do not match");
     }
 
+    const captchaResult = await executeRecaptcha?.("registerUserAccount");
     const { json } = await execute<PostRegisterUserData, typeof INITIAL_VALUES>({
       path: "/auth/register",
-      data: values,
+      data: { ...values, captchaResult },
       method: "POST",
       helpers,
     });
@@ -132,6 +141,20 @@ export default function Register({ cad }: Props) {
                 <FormField errorMessage={errors.registrationCode} label={t("registrationCode")}>
                   <Input name="registrationCode" onChange={handleChange} />
                 </FormField>
+              ) : null}
+
+              {hasGoogleCaptchaSiteKey ? (
+                <p className="mt-5 text-sm text-neutral-700">
+                  This site is protected by reCAPTCHA and the Google{" "}
+                  <a className="underline" href="https://policies.google.com/privacy">
+                    Privacy Policy
+                  </a>{" "}
+                  and{" "}
+                  <a className="underline" href="https://policies.google.com/terms">
+                    Terms of Service
+                  </a>{" "}
+                  apply.
+                </p>
               ) : null}
 
               <Button

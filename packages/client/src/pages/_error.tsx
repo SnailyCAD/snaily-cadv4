@@ -1,7 +1,7 @@
 import { Button } from "components/Button";
 import type { NextPageContext } from "next";
 import NextErrorComponent, { ErrorProps } from "next/error";
-import * as Sentry from "@sentry/nextjs";
+import * as Sentry from "@sentry/react";
 
 interface ErrorPageProps extends ErrorProps {
   hasGetInitialPropsRun: boolean;

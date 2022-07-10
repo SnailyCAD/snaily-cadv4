@@ -123,6 +123,7 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
                         className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                         draggable={false}
                         src={makeImageUrl("citizens", suggestion.imageId)}
+                        loading="lazy"
                       />
                     ) : null}
                     <p>

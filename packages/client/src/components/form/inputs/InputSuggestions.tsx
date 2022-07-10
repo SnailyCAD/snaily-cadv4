@@ -12,6 +12,7 @@ import { isMobile } from "is-mobile";
 
 type ApiPathFunc = (inputValue: string) => string;
 type Suggestion = { id: string } & Record<string, unknown>;
+const MIN_LENGTH = 2 as const;
 
 interface Props<Suggestion extends { id: string }> {
   inputProps?: Omit<JSX.IntrinsicElements["input"], "ref"> & { errorMessage?: string };
@@ -20,7 +21,6 @@ interface Props<Suggestion extends { id: string }> {
   options: {
     apiPath: string | ApiPathFunc;
     method: Method;
-    minLength?: number;
     dataKey?: string;
     allowUnknown?: boolean;
   };
@@ -52,7 +52,7 @@ export function InputSuggestions<Suggestion extends { id: string }>({
   async function onSearch(value: string) {
     setLocalValue(value);
 
-    if (value.length < (options.minLength ?? 3)) {
+    if (value.trim().length < MIN_LENGTH) {
       setOpen(false);
       return;
     }
@@ -84,7 +84,7 @@ export function InputSuggestions<Suggestion extends { id: string }>({
   }
 
   function handleFocus() {
-    if (suggestions.length > 0 && localValue.length > (options.minLength ?? 3)) {
+    if (suggestions.length > 0 && localValue.length > MIN_LENGTH) {
       setOpen(true);
     }
   }
@@ -183,6 +183,7 @@ const Suggestion = React.forwardRef<HTMLButtonElement, SuggestionProps<Suggestio
 
     return (
       <button
+        data-suggestion
         ref={ref}
         onKeyDown={onKeyDown}
         className="p-1.5 px-2 transition-colors rounded-md cursor-pointer hover:bg-gray-200 focus:bg-gray-200 dark:hover:bg-dark-bg dark:focus:bg-dark-bg w-full"

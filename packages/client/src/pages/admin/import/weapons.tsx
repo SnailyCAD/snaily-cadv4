@@ -133,7 +133,7 @@ export default function ImportWeaponsPage({ data }: Props) {
           asyncTable.setData((p) => [...weapons, ...p]);
         }}
         id={ModalIds.ImportWeapons}
-        url="/admin/import/weapons"
+        url="/admin/import/weapons/file"
       />
 
       {hasDeletePermissions ? (

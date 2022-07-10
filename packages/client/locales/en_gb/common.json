@@ -51,7 +51,8 @@
     "currency": "£",
     "left": "Left",
     "right": "Right",
-    "user": "User"
+    "user": "User",
+    "savedSettingsSuccess": "Settings successfully saved."
   },
   "Nav": {
     "citizen": "Civilian",
@@ -84,7 +85,9 @@
     "courthouse": "Magistrates",
     "dlExams": "DVLA Tests",
     "dmv": "Driver and Vehicle Licensing Agency",
-    "penalCodes": "Charges"
+    "penalCodes": "Charges",
+    "weaponExams": "Weapon Exams",
+    "myDeputyLogs": "My member logs"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",

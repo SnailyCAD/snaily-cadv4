@@ -74,10 +74,10 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
   const allUnits = [...allOfficers, ...allDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
   const units = [...activeOfficers, ...activeDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
 
-  const handleAddUpdateCallEvent = React.useCallback(
+  const handleCallStateUpdate = React.useCallback(
     (call: Full911Call) => {
-      setCall?.(call);
       setCalls(calls.map((c) => (c.id === call.id ? call : c)));
+      setCall?.(call);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [call, calls],
@@ -356,8 +356,7 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
 
         {call ? (
           <CallEventsArea
-            onCreate={handleAddUpdateCallEvent}
-            onUpdate={handleAddUpdateCallEvent}
+            handleStateUpdate={handleCallStateUpdate}
             disabled={isDisabled}
             call={call}
           />

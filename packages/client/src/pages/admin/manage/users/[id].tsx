@@ -261,7 +261,9 @@ export default function ManageCitizens(props: Props) {
             {hasPermissions([Permissions.BanUsers], true) ? (
               <BanArea setUser={setUser} user={user} />
             ) : null}
-            {hasPermissions([Permissions.DeleteUsers], true) ? <DangerZone user={user} /> : null}
+            {hasPermissions([Permissions.DeleteUsers], true) ? (
+              <DangerZone setUser={setUser} user={user} />
+            ) : null}
           </>
         ) : null}
       </div>

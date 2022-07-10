@@ -134,7 +134,6 @@ export function RegisterWeaponModal({ weapon, onClose, onCreate, onUpdate }: Pro
                   options={{
                     apiPath: (value) => `/admin/values/weapon/search?query=${value}`,
                     method: "GET",
-                    minLength: 2,
                   }}
                   inputProps={{
                     value: values.modelName,

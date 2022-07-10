@@ -55,7 +55,7 @@ export class IncidentEventsController {
 
     this.socket.emitUpdateActiveIncident(normalizedIncident);
 
-    return event;
+    return normalizedIncident;
   }
 
   @Put("/:incidentId/:eventId")
@@ -113,7 +113,7 @@ export class IncidentEventsController {
     });
     this.socket.emitUpdateActiveIncident(normalizedIncident);
 
-    return updatedEvent;
+    return normalizedIncident;
   }
 
   @Delete("/:incidentId/:eventId")
@@ -157,6 +157,6 @@ export class IncidentEventsController {
     const normalizedIncident = officerOrDeputyToUnit({ ...incident, events: updatedEvents });
     this.socket.emitUpdateActiveIncident(normalizedIncident);
 
-    return true;
+    return normalizedIncident;
   }
 }

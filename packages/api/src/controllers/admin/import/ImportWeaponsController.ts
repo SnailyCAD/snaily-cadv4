@@ -50,12 +50,17 @@ export class ImportWeaponsController {
   }
 
   @Post("/")
+  @Description("Import weapons in the CAD via body data")
+  async importWeaponsViaBodyData(@BodyParams() body: any): Promise<APITypes.PostImportWeaponsData> {
+    return importWeaponsHandler(body);
+  }
+
+  @Post("/file")
   @Description("Import weapons in the CAD via file upload")
-  async importWeapons(
-    @BodyParams() body: unknown,
-    @MultipartFile("file") file?: PlatformMulterFile,
+  async importWeaponsViaFile(
+    @MultipartFile("file") file: PlatformMulterFile,
   ): Promise<APITypes.PostImportWeaponsData> {
-    const toValidateBody = file ? parseImportFile(file) : body;
+    const toValidateBody = parseImportFile(file);
     return importWeaponsHandler(toValidateBody);
   }
 
