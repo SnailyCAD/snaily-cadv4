@@ -2,6 +2,8 @@ import { Controller } from "@tsed/di";
 import { Get, Post, Description, Delete } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { VEHICLE_SCHEMA_ARR } from "@snailycad/schemas/dist/admin/import/vehicles";
+import { UseBeforeEach } from "@tsed/common";
+import { IsAuth } from "middlewares/IsAuth";
 import {
   BodyParams,
   MultipartFile,
@@ -20,6 +22,7 @@ import type * as APITypes from "@snailycad/types/api";
 const vehiclesInclude = { ...citizenInclude.vehicles.include, citizen: true };
 
 @Controller("/admin/import/vehicles")
+@UseBeforeEach(IsAuth)
 export class ImportVehiclesController {
   @Get("/")
   @Description("Get all the vehicles in the CAD (paginated)")

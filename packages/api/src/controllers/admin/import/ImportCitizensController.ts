@@ -2,6 +2,8 @@ import { Controller } from "@tsed/di";
 import { Post, Description, AcceptMime } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { BodyParams, MultipartFile, PlatformMulterFile } from "@tsed/common";
+import { UseBeforeEach } from "@tsed/common";
+import { IsAuth } from "middlewares/IsAuth";
 import { parseImportFile } from "utils/file";
 import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
@@ -13,6 +15,7 @@ import { manyToManyHelper } from "utils/manyToMany";
 import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/admin/import/citizens")
+@UseBeforeEach(IsAuth)
 export class ImportCitizensController {
   @Post("/file")
   @Description("Import citizens in the CAD via file upload")
