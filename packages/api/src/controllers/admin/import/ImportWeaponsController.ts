@@ -2,15 +2,15 @@ import { Controller } from "@tsed/di";
 import { Get, Post, Description, Delete } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { WEAPON_SCHEMA_ARR } from "@snailycad/schemas/dist/admin/import/weapons";
-import { UseBeforeEach } from "@tsed/common";
-import { IsAuth } from "middlewares/IsAuth";
 import {
   BodyParams,
   MultipartFile,
   PathParams,
   PlatformMulterFile,
   QueryParams,
+  UseBeforeEach,
 } from "@tsed/common";
+import { IsAuth } from "middlewares/IsAuth";
 import { parseImportFile } from "utils/file";
 import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";

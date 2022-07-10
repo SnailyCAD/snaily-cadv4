@@ -1,8 +1,7 @@
 import { Controller } from "@tsed/di";
 import { Post, Description, AcceptMime } from "@tsed/schema";
 import { prisma } from "lib/prisma";
-import { BodyParams, MultipartFile, PlatformMulterFile } from "@tsed/common";
-import { UseBeforeEach } from "@tsed/common";
+import { BodyParams, MultipartFile, PlatformMulterFile, UseBeforeEach } from "@tsed/common";
 import { IsAuth } from "middlewares/IsAuth";
 import { parseImportFile } from "utils/file";
 import { validateSchema } from "lib/validateSchema";
