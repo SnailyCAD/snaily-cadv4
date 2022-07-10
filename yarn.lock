@@ -1279,6 +1279,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@reach/observe-rect@npm:^1.1.0":
+  version: 1.2.0
+  resolution: "@reach/observe-rect@npm:1.2.0"
+  checksum: 7dd903eeaad0e22c6d973bd26265d91eadba56ab5134701ceb3e85214db75339fae94aa7e8b88a65e8daa64bc7cf1b915d4ffcdfd324466b561dc6adc3c6e070
+  languageName: node
+  linkType: hard
+
 "@react-aria/focus@npm:^3.6.1":
   version: 3.6.1
   resolution: "@react-aria/focus@npm:3.6.1"
@@ -1621,6 +1628,8 @@ __metadata:
     "@snailycad/schemas": 1.15.3
     "@snailycad/types": 1.15.3
     "@snailycad/utils": 1.15.3
+    "@tanstack/react-virtual": ^3.0.0-alpha.0
+    "@tanstack/virtual-core": ^3.0.0-alpha.1
     "@types/leaflet": ^1.7.9
     "@types/react": ^17.0.43
     "@types/react-dom": ^17.0.14
@@ -1916,6 +1925,24 @@ __metadata:
   dependencies:
     defer-to-connect: ^1.0.1
   checksum: 4d9158061c5f397c57b4988cde33a163244e4f02df16364f103971957a32886beb104d6180902cbe8b38cb940e234d9f98a4e486200deca621923f62f50a06fe
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-virtual@npm:^3.0.0-alpha.0":
+  version: 3.0.0-beta.2
+  resolution: "@tanstack/react-virtual@npm:3.0.0-beta.2"
+  dependencies:
+    "@reach/observe-rect": ^1.1.0
+  checksum: 3fe623dd96603a47d4e7ebbd3f47e9e3aaa95ba36d6c94b6e4f14ff1de006b51d0afb79b80f388908d3caaace589f8c105e0824296e6094dd29fa1b4d5a63c3c
+  languageName: node
+  linkType: hard
+
+"@tanstack/virtual-core@npm:^3.0.0-alpha.1":
+  version: 3.0.0-beta.2
+  resolution: "@tanstack/virtual-core@npm:3.0.0-beta.2"
+  dependencies:
+    "@reach/observe-rect": ^1.1.0
+  checksum: 712124a0ca1e6cde813400eca4f449577c8f0c2c8c43318286166ffcccb4d5fe00f3186033ea8fc14505b826021241109fbe92ea259fe735948c072b7e55f46a
   languageName: node
   linkType: hard
 
