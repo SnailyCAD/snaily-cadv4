@@ -30,7 +30,7 @@ import { HoverCard } from "components/shared/HoverCard";
 import { useDispatchState } from "state/dispatchState";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
-export function ActiveOfficers() {
+function ActiveOfficers() {
   const { activeOfficers } = useActiveOfficers();
   const { activeIncidents } = useActiveIncidents();
   const { calls } = useDispatchState();
@@ -42,7 +42,7 @@ export function ActiveOfficers() {
   const { user } = useAuth();
 
   const { hasActiveDispatchers } = useActiveDispatchers();
-  const { ACTIVE_INCIDENTS, RADIO_CHANNEL_MANAGEMENT } = useFeatureEnabled();
+  const { BADGE_NUMBERS, ACTIVE_INCIDENTS, RADIO_CHANNEL_MANAGEMENT } = useFeatureEnabled();
   const { leoSearch, showLeoFilters, setShowFilters } = useActiveUnitsState();
   const { handleFilter } = useActiveUnitsFilter();
 
@@ -156,7 +156,7 @@ export function ActiveOfficers() {
               })}
             columns={[
               { Header: t("officer"), accessor: "officer" },
-              { Header: t("badgeNumber"), accessor: "badgeNumber" },
+              BADGE_NUMBERS ? { Header: t("badgeNumber"), accessor: "badgeNumber" } : null,
               { Header: t("department"), accessor: "department" },
               { Header: t("division"), accessor: "division" },
               { Header: t("rank"), accessor: "rank" },
@@ -185,3 +185,6 @@ export function ActiveOfficers() {
     </div>
   );
 }
+
+const ActiveOfficersMemoized = React.memo(ActiveOfficers);
+export { ActiveOfficersMemoized as ActiveOfficers };

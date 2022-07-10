@@ -212,6 +212,7 @@ export function NameSearchModal() {
                         className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                         draggable={false}
                         src={makeImageUrl("citizens", suggestion.imageId)}
+                        loading="lazy"
                       />
                     ) : null}
                     <p>
@@ -253,6 +254,7 @@ export function NameSearchModal() {
                             className="rounded-md w-[50px] h-[50px] object-cover"
                             draggable={false}
                             src={makeImageUrl("citizens", result.imageId)}
+                            loading="lazy"
                           />
                         ) : (
                           <PersonFill className="text-gray-500/60 w-[50px] h-[50px]" />
@@ -329,6 +331,7 @@ export function NameSearchModal() {
                             className="rounded-md w-[100px] h-[100px] object-cover"
                             draggable={false}
                             src={makeImageUrl("citizens", currentResult.imageId)}
+                            loading="lazy"
                           />
                         </button>
                       ) : (

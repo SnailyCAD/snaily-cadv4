@@ -28,7 +28,7 @@ import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { DeputyColumn } from "./active-units/deputies/DeputyColumn";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
-export function ActiveDeputies() {
+function ActiveDeputies() {
   const { activeDeputies } = useActiveDeputies();
   const { activeIncidents } = useActiveIncidents();
 
@@ -38,7 +38,7 @@ export function ActiveDeputies() {
   const { generateCallsign } = useGenerateCallsign();
   const { user } = useAuth();
   const { hasActiveDispatchers } = useActiveDispatchers();
-  const { RADIO_CHANNEL_MANAGEMENT, ACTIVE_INCIDENTS } = useFeatureEnabled();
+  const { BADGE_NUMBERS, RADIO_CHANNEL_MANAGEMENT, ACTIVE_INCIDENTS } = useFeatureEnabled();
   const { emsSearch, showEmsFilters, setShowFilters } = useActiveUnitsState();
   const { handleFilter } = useActiveUnitsFilter();
   const { calls } = useDispatchState();
@@ -142,7 +142,7 @@ export function ActiveDeputies() {
               })}
             columns={[
               { Header: t("Ems.deputy"), accessor: "deputy" },
-              { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" },
+              BADGE_NUMBERS ? { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" } : null,
               { Header: t("Leo.department"), accessor: "department" },
               { Header: t("Leo.division"), accessor: "division" },
               { Header: t("Leo.rank"), accessor: "rank" },
@@ -168,3 +168,6 @@ export function ActiveDeputies() {
     </div>
   );
 }
+
+const ActiveDeputiesMemoized = React.memo(ActiveDeputies);
+export { ActiveDeputiesMemoized as ActiveDeputies };

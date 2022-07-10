@@ -91,6 +91,7 @@ export default function CitizenId() {
                 className="rounded-md w-[150px] h-[150px] object-cover"
                 draggable={false}
                 src={makeImageUrl("citizens", citizen.imageId)}
+                loading="lazy"
               />
             </button>
           ) : (

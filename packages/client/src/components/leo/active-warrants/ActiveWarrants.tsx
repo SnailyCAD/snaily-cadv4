@@ -16,6 +16,7 @@ export function ActiveWarrants() {
   const { activeWarrants, setActiveWarrants } = useActiveWarrants();
   const { generateCallsign } = useGenerateCallsign();
   const [tempWarrant, warrantState] = useTemporaryItem(activeWarrants);
+  const t = useTranslations("Leo");
 
   const { openModal } = useModal();
   const common = useTranslations("Common");
@@ -36,20 +37,18 @@ export function ActiveWarrants() {
   return (
     <div className="overflow-hidden rounded-md card mt-3">
       <header className="flex items-center justify-between p-2 px-4 bg-gray-200 dark:bg-gray-3">
-        <h3 className="text-xl font-semibold">{"Active warrants"}</h3>
+        <h3 className="text-xl font-semibold">{t("activeWarrants")}</h3>
 
         <div>
           <Button onClick={() => openModal(ModalIds.CreateWarrant, { isActive: true })}>
-            Create active warrant
+            {t("createWarrant")}
           </Button>
         </div>
       </header>
 
       <div className="px-4">
         {activeWarrants.length <= 0 ? (
-          <p className="py-2 text-neutral-700 dark:text-gray-300">
-            {"there are no active warrants"}
-          </p>
+          <p className="py-2 text-neutral-700 dark:text-gray-300">{t("noActiveWarrants")}</p>
         ) : (
           <Table
             isWithinCard
@@ -86,9 +85,9 @@ export function ActiveWarrants() {
           const copied = [...activeWarrants];
           const idx = copied.indexOf(previous);
 
-          warrantState.setTempId(null);
           copied[idx] = warrant;
           setActiveWarrants(copied);
+          warrantState.setTempId(null);
         }}
       />
     </div>

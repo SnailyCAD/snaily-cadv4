@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const AUTH_SCHEMA = z.object({
+  captchaResult: z.string().nullable().optional(),
   username: z
     .string()
     .min(3)
