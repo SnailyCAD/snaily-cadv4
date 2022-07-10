@@ -13,7 +13,7 @@ export function useActiveWarrants() {
   const { activeWarrants, setActiveWarrants } = useLeoState();
 
   const handleState = React.useCallback(
-    (data: any[]) => {
+    (data: ActiveWarrant[]) => {
       setActiveWarrants(data);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -50,7 +50,7 @@ export function useActiveWarrants() {
     { eventName: SocketEvents.CreateActiveWarrant, checkHasListeners: true },
     (data: ActiveWarrant) => {
       if (!isWarrantInArr(data)) {
-        setActiveWarrants([...[...activeWarrants], data]);
+        setActiveWarrants([...activeWarrants, data]);
       }
     },
     [setActiveWarrants, activeWarrants],
