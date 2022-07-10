@@ -30,7 +30,7 @@ import { HoverCard } from "components/shared/HoverCard";
 import { useDispatchState } from "state/dispatchState";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
-export function ActiveOfficers() {
+function ActiveOfficers() {
   const { activeOfficers } = useActiveOfficers();
   const { activeIncidents } = useActiveIncidents();
   const { calls } = useDispatchState();
@@ -185,3 +185,6 @@ export function ActiveOfficers() {
     </div>
   );
 }
+
+const ActiveOfficersMemoized = React.memo(ActiveOfficers);
+export { ActiveOfficersMemoized as ActiveOfficers };

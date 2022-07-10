@@ -28,7 +28,7 @@ import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { DeputyColumn } from "./active-units/deputies/DeputyColumn";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
-export function ActiveDeputies() {
+function ActiveDeputies() {
   const { activeDeputies } = useActiveDeputies();
   const { activeIncidents } = useActiveIncidents();
 
@@ -168,3 +168,6 @@ export function ActiveDeputies() {
     </div>
   );
 }
+
+const ActiveDeputiesMemoized = React.memo(ActiveDeputies);
+export { ActiveDeputiesMemoized as ActiveDeputies };
