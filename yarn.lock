@@ -1650,6 +1650,7 @@ __metadata:
     react-dnd: 15.1.2
     react-dnd-html5-backend: 15.1.3
     react-dom: ^17.0.2
+    react-google-recaptcha-v3: ^1.9.8
     react-hot-toast: ^2.2.0
     react-leaflet: ^3.2.5
     react-select: ^5.3.2
@@ -9362,6 +9363,18 @@ __metadata:
   version: 2.0.4
   resolution: "react-fast-compare@npm:2.0.4"
   checksum: 06046595f90a4e3e3a56f40a8078c00aa71bdb064ddb98343f577f546aa22e888831fd45f009c93b34707cc842b4c637737e956fd13d6f80607ee92fb9cf9a1c
+  languageName: node
+  linkType: hard
+
+"react-google-recaptcha-v3@npm:^1.9.8":
+  version: 1.9.8
+  resolution: "react-google-recaptcha-v3@npm:1.9.8"
+  dependencies:
+    hoist-non-react-statics: ^3.3.2
+  peerDependencies:
+    react: ^17.0 || ^18.0
+    react-dom: ^17.0 || ^18.0
+  checksum: 3571954dd6351e32bf2ed8e9d048943ce28cefb193603720a817bc88ca7bab1bc38ee2802779a7b7c917cdcbbf65998578688da95f83224d068916d9fceb853f
   languageName: node
   linkType: hard
 

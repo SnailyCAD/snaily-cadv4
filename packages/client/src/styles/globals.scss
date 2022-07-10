@@ -129,3 +129,7 @@ li {
     width: calc(100vw - 330px);
   }
 }
+
+.grecaptcha-badge {
+  display: none !important;
+}
