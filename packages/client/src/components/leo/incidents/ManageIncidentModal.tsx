@@ -73,7 +73,7 @@ export function ManageIncidentModal({
     onClose?.();
   }
 
-  function makeLabel(value: string) {
+  function makeLabel(value: string | undefined) {
     const unit = allUnits.find((v) => v.id === value) ?? activeUnits.find((v) => v.id === value);
 
     if (unit && isUnitCombined(unit)) {
