@@ -135,6 +135,16 @@ export class VehiclesController {
       modelId = newModel.id;
     }
 
+    const vehicleModel = await prisma.vehicleValue.findUnique({
+      where: { id: modelId },
+    });
+
+    if (!vehicleModel) {
+      throw new ExtendedBadRequest({
+        model: "Invalid vehicle model. Please re-enter the vehicle model.",
+      });
+    }
+
     const isDmvEnabled = isFeatureEnabled({
       features: cad.features,
       feature: Feature.DMV,

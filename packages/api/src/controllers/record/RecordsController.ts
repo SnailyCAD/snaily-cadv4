@@ -110,6 +110,10 @@ export class RecordsController {
 
     const updated = await prisma.warrant.findUniqueOrThrow({
       where: { id: warrant.id },
+      include: {
+        citizen: true,
+        officer: true,
+      },
     });
 
     await this.handleDiscordWebhook(updated);
@@ -279,7 +283,7 @@ export class RecordsController {
       },
     });
 
-    await this.handleDiscordWebhook({ ...ticket, violations, seizedItems });
+    await this.handleDiscordWebhook({ ...ticket, violations });
 
     return { ...ticket, violations, seizedItems };
   }
@@ -397,7 +401,9 @@ export class RecordsController {
     return true;
   }
 
-  private async handleDiscordWebhook(ticket: any) {
+  private async handleDiscordWebhook(
+    ticket: ((Record & { violations: Violation[] }) | Warrant) & { citizen: Citizen; officer: any },
+  ) {
     try {
       const data = createWebhookData(ticket);
       await sendDiscordWebhook(DiscordWebhookType.CITIZEN_RECORD, data);
@@ -465,7 +471,12 @@ function createWebhookData(
   };
 
   function getTotal(name: "jailTime" | "fine" | "bail") {
-    const total = !isWarrant ? data.violations.reduce((ac, cv) => ac + (cv[name] || 0), 0) : null;
+    const total = !isWarrant
+      ? data.violations.reduce((ac, cv) => {
+          return ac + (cv[name] || 0);
+        }, 0)
+      : null;
+
     return String(total);
   }
 }
