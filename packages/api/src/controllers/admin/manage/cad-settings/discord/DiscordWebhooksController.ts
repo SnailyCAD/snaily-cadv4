@@ -17,8 +17,7 @@ import { validateSchema } from "lib/validateSchema";
 import { getRest } from "lib/discord/config";
 import type * as APITypes from "@snailycad/types/api";
 import { resolve } from "node:path";
-// @ts-expect-error see https://github.com/DiegoZoracKy/image-data-uri/pull/16
-import { encodeFromFile } from "image-data-uri";
+import { encodeFromFile } from "@snaily-cad/image-data-uri";
 
 const guildId = process.env.DISCORD_SERVER_ID;
 

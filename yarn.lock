@@ -1533,6 +1533,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@snaily-cad/image-data-uri@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "@snaily-cad/image-data-uri@npm:3.0.1"
+  dependencies:
+    fs-extra: ^10.1.0
+    magicli: 0.2.1
+    mime-types: ^2.1.35
+    request: ^2.88.0
+  bin:
+    image-data-uri: bin/magicli.js
+  checksum: bada3f6233fbf487682df97bb4a94a72e8f61738a66a683f9a9a67747d3b4b784f727b7a4102186e603750d08f104fdaaacb87e37c9975c1666c3efdf3ba19de
+  languageName: node
+  linkType: hard
+
 "@snailycad/api@workspace:packages/api":
   version: 0.0.0-use.local
   resolution: "@snailycad/api@workspace:packages/api"
@@ -1541,6 +1555,7 @@ __metadata:
     "@prisma/client": ^4.0.0
     "@sentry/node": ^7.6.0
     "@sentry/tracing": ^7.6.0
+    "@snaily-cad/image-data-uri": ^3.0.1
     "@snailycad/config": 1.16.0
     "@snailycad/permissions": 1.16.0
     "@snailycad/schemas": 1.16.0
@@ -1579,7 +1594,6 @@ __metadata:
     esbuild-register: ^3.3.3
     express: 4.18.1
     glob: ^8.0.3
-    image-data-uri: ^2.0.1
     jsonwebtoken: 8.5.1
     nanoid: ^3.3.4
     nodemon: ^2.0.19
@@ -4005,6 +4019,22 @@ __metadata:
     strip-ansi: ^4.0.0
     yargs-parser: ^7.0.0
   checksum: f1d3d54adc07098bff11515ce5ad1208f8b5a38ddf04347e41a7fc6d2f4b4c7a3124dc0d2d34c13a0a05b6ef33a15aa11005753ee216f9b15f590173b3aa064d
+  languageName: node
+  linkType: hard
+
+"cliss@npm:0.0.8":
+  version: 0.0.8
+  resolution: "cliss@npm:0.0.8"
+  dependencies:
+    command-line-usage: ^4.0.1
+    deepmerge: ^2.0.0
+    get-stdin: ^5.0.1
+    inspect-parameters-declaration: ^0.1.0
+    object-to-arguments: ^0.1.0
+    pipe-functions: ^1.3.0
+    strip-ansi: ^4.0.0
+    yargs-parser: ^7.0.0
+  checksum: 1092ee2fd4bbbe343c0ef458064285de296025ddf21b5e705dd41cbab61fd4d3a01f7c8b2b926f99c89070e1803de5019ea88693eae02868af0516361384d8b6
   languageName: node
   linkType: hard
 
@@ -6511,16 +6541,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fs-extra@npm:^0.26.7":
-  version: 0.26.7
-  resolution: "fs-extra@npm:0.26.7"
+"fs-extra@npm:^10.1.0":
+  version: 10.1.0
+  resolution: "fs-extra@npm:10.1.0"
   dependencies:
-    graceful-fs: ^4.1.2
-    jsonfile: ^2.1.0
-    klaw: ^1.0.0
-    path-is-absolute: ^1.0.0
-    rimraf: ^2.2.8
-  checksum: bb4d02348e9b036794e8c9da7be6f89a851dd37014d691893b54ebdaadffe2eab1c7578c3bc2f0deaa1e204030cda282d006ec020f176e0689fcd0e74499367e
+    graceful-fs: ^4.2.0
+    jsonfile: ^6.0.1
+    universalify: ^2.0.0
+  checksum: dc94ab37096f813cc3ca12f0f1b5ad6744dfed9ed21e953d72530d103cea193c2f81584a39e9dee1bea36de5ee66805678c0dddc048e8af1427ac19c00fffc50
   languageName: node
   linkType: hard
 
@@ -6856,7 +6884,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graceful-fs@npm:^4.1.2, graceful-fs@npm:^4.1.4, graceful-fs@npm:^4.1.6, graceful-fs@npm:^4.1.9, graceful-fs@npm:^4.2.0, graceful-fs@npm:^4.2.6":
+"graceful-fs@npm:^4.1.2, graceful-fs@npm:^4.1.4, graceful-fs@npm:^4.1.6, graceful-fs@npm:^4.2.0, graceful-fs@npm:^4.2.6":
   version: 4.2.10
   resolution: "graceful-fs@npm:4.2.10"
   checksum: 3f109d70ae123951905d85032ebeae3c2a5a7a997430df00ea30df0e3a6c60cf6689b109654d6fdacd28810a053348c4d14642da1d075049e6be1ba5216218da
@@ -7130,20 +7158,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"image-data-uri@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "image-data-uri@npm:2.0.1"
-  dependencies:
-    fs-extra: ^0.26.7
-    magicli: 0.0.8
-    mime-types: ^2.1.18
-    request: ^2.88.0
-  bin:
-    image-data-uri: ./bin/magicli.js
-  checksum: 361c01553c75c214ae57e71ea6aa8f70280417decf7ccd48081234404c1b835b7ef4ab60eeab08e00c2f75ac8068f5b925e30cefdebeedeb6ff875a85e1b9082
-  languageName: node
-  linkType: hard
-
 "immer@npm:^9.0.6":
   version: 9.0.12
   resolution: "immer@npm:9.0.12"
@@ -7247,6 +7261,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"inspect-function@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "inspect-function@npm:0.4.0"
+  dependencies:
+    inspect-parameters-declaration: 0.0.8
+    magicli: 0.0.8
+    split-skip: 0.0.1
+    stringify-parameters: 0.0.7
+    unpack-string: 0.0.2
+  bin:
+    inspect-function: bin/magicli.js
+  checksum: ba8b671a7a5d6244efce77904ca25bc1d341d495698cdb689d2d85bb6cbb10d2e43ea0c2ca306c9cbae2b9607c4ef479284cbe25a34c22e228acb006b539f26b
+  languageName: node
+  linkType: hard
+
 "inspect-parameters-declaration@npm:0.0.10":
   version: 0.0.10
   resolution: "inspect-parameters-declaration@npm:0.0.10"
@@ -7289,6 +7318,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"inspect-parameters-declaration@npm:0.1.0, inspect-parameters-declaration@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "inspect-parameters-declaration@npm:0.1.0"
+  dependencies:
+    magicli: 0.0.8
+    split-skip: 0.0.2
+    stringify-parameters: 0.0.7
+    unpack-string: 0.0.2
+  bin:
+    inspect-parameters-declaration: ./bin/cli.js
+  checksum: 0e552a84f5d1020fa9e6afd726ee73197b2bfc15b7f82009af5bc73066f4d8082f9fc54c4ffd5c11ffb43b8c687e3c3356e384ede88470c1acfe6571e6ab6bab
+  languageName: node
+  linkType: hard
+
 "inspect-property@npm:0.0.6":
   version: 0.0.6
   resolution: "inspect-property@npm:0.0.6"
@@ -7297,6 +7340,17 @@ __metadata:
     for-each-property-deep: 0.0.3
     inspect-function: ^0.3.1
   checksum: 1f7004478ceda8d199e069816ab90b2bea99d6f1aa26b71f582f0e5e413298831a5478d19c0209833c5d70129804cc3d1605f8099509a354a16b8554fb5f831a
+  languageName: node
+  linkType: hard
+
+"inspect-property@npm:0.0.7":
+  version: 0.0.7
+  resolution: "inspect-property@npm:0.0.7"
+  dependencies:
+    for-each-property: 0.0.4
+    for-each-property-deep: 0.0.3
+    inspect-function: ^0.4.0
+  checksum: 47a6f9f33078559de73204749478ca8b5cb9350df54a781680e19bac1ea89584ab3c986222a49094a518f7833e479115ed08b6fe8dedbb7c2106bb57e7b9b08b
   languageName: node
   linkType: hard
 
@@ -7853,18 +7907,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsonfile@npm:^2.1.0":
-  version: 2.4.0
-  resolution: "jsonfile@npm:2.4.0"
-  dependencies:
-    graceful-fs: ^4.1.6
-  dependenciesMeta:
-    graceful-fs:
-      optional: true
-  checksum: f5064aabbc9e35530dc471d8b203ae1f40dbe949ddde4391c6f6a6d310619a15f0efdae5587df594d1d70c555193aaeee9d2ed4aec9ffd5767bd5e4e62d49c3d
-  languageName: node
-  linkType: hard
-
 "jsonfile@npm:^6.0.1":
   version: 6.1.0
   resolution: "jsonfile@npm:6.1.0"
@@ -7952,18 +7994,6 @@ __metadata:
   version: 5.1.0
   resolution: "kind-of@npm:5.1.0"
   checksum: f2a0102ae0cf19c4a953397e552571bad2b588b53282874f25fca7236396e650e2db50d41f9f516bd402536e4df968dbb51b8e69e4d5d4a7173def78448f7bab
-  languageName: node
-  linkType: hard
-
-"klaw@npm:^1.0.0":
-  version: 1.3.1
-  resolution: "klaw@npm:1.3.1"
-  dependencies:
-    graceful-fs: ^4.1.9
-  dependenciesMeta:
-    graceful-fs:
-      optional: true
-  checksum: 8f69e4797c26e7c3f2426bfa85f38a3da3c2cb1b4c6bd850d2377aed440d41ce9d806f2885c2e2e224372c56af4b1d43b8a499adecf9a05e7373dc6b8b7c52e4
   languageName: node
   linkType: hard
 
@@ -8242,6 +8272,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"magicli@npm:0.2.1":
+  version: 0.2.1
+  resolution: "magicli@npm:0.2.1"
+  dependencies:
+    cliss: 0.0.8
+    find-up: ^2.1.0
+    for-each-property: 0.0.4
+    inspect-property: 0.0.7
+  bin:
+    magicli: bin/cli.js
+  checksum: 2ae7fac199c922edfb55c443cc1d7fbbe033c2cd4e53f8147926f32124c83db876c1f654dc5844af17dd0480bd3e4d2e9218817c34828bb5c21e26e2707a1e1e
+  languageName: node
+  linkType: hard
+
 "make-dir@npm:^3.0.0, make-dir@npm:^3.1.0":
   version: 3.1.0
   resolution: "make-dir@npm:3.1.0"
@@ -8365,7 +8409,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mime-types@npm:^2.1.12, mime-types@npm:^2.1.18, mime-types@npm:~2.1.19, mime-types@npm:~2.1.24, mime-types@npm:~2.1.34":
+"mime-types@npm:^2.1.12, mime-types@npm:^2.1.35, mime-types@npm:~2.1.19, mime-types@npm:~2.1.24, mime-types@npm:~2.1.34":
   version: 2.1.35
   resolution: "mime-types@npm:2.1.35"
   dependencies:
@@ -8938,6 +8982,21 @@ __metadata:
   bin:
     object-to-arguments: ./bin/cli.js
   checksum: 4a655e455b943a6f7f4160b9f10b53eb174fcb44a6b8f51aac374eb8b0d34a46d28c038688b395735393bd12dbeca1542d15d3e634659bd1872c285ed97a325f
+  languageName: node
+  linkType: hard
+
+"object-to-arguments@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "object-to-arguments@npm:0.1.0"
+  dependencies:
+    inspect-parameters-declaration: 0.1.0
+    magicli: 0.0.5
+    split-skip: 0.0.2
+    stringify-parameters: 0.0.7
+    unpack-string: 0.0.2
+  bin:
+    object-to-arguments: ./bin/cli.js
+  checksum: 37fc7fccd8ef81ee20edf280fde08c42fc670beb2f8c5dd128b18cc0e3e2d3f99e50a0e599e351ad2fd436192cd14df85aff89df44ae2a60bd880c495c57fbeb
   languageName: node
   linkType: hard
 
@@ -10278,17 +10337,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rimraf@npm:^2.2.8":
-  version: 2.7.1
-  resolution: "rimraf@npm:2.7.1"
-  dependencies:
-    glob: ^7.1.3
-  bin:
-    rimraf: ./bin.js
-  checksum: cdc7f6eacb17927f2a075117a823e1c5951792c6498ebcce81ca8203454a811d4cf8900314154d3259bb8f0b42ab17f67396a8694a54cae3283326e57ad250cd
-  languageName: node
-  linkType: hard
-
 "rimraf@npm:^3.0.2":
   version: 3.0.2
   resolution: "rimraf@npm:3.0.2"
@@ -11082,6 +11130,18 @@ __metadata:
   bin:
     stringify-parameters: ./bin/cli.js
   checksum: e66dd0e41e4e9952d9c8eccd0e5817c738a5a789cdbfd756a0a3eeac0920191aa4559d1e30dad73fc6efac87a1616bc198217f85f886c1b923f442841a6a7b33
+  languageName: node
+  linkType: hard
+
+"stringify-parameters@npm:0.0.7":
+  version: 0.0.7
+  resolution: "stringify-parameters@npm:0.0.7"
+  dependencies:
+    magicli: 0.0.8
+    unpack-string: 0.0.2
+  bin:
+    stringify-parameters: ./bin/cli.js
+  checksum: 2aab8cdc3b47e528d7f303a5ab09ed13ed65876e1f08799c0be75518e8990c5ee58d81dfd6e26c60c67b60639a341576c9a4cfba7beaac9c08ad6f7b896e46d3
   languageName: node
   linkType: hard
 
