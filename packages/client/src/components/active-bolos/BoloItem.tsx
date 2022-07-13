@@ -29,7 +29,7 @@ export function BoloItem({ idx, bolo, handleDelete, handleEdit }: BoloItemProps)
   const { generateCallsign } = useGenerateCallsign();
 
   return (
-    <li key={bolo.id} className="flex justify-between">
+    <li className="flex justify-between">
       <div className="flex">
         <span className="mr-2 text-neutral-700 dark:text-gray-400 select-none">{idx + 1}.</span>
 

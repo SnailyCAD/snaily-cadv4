@@ -308,7 +308,7 @@ export type Call911 = Prisma.Call911 & {
 export type Position = Prisma.Position;
 
 export type AssignedUnit = Prisma.AssignedUnit & {
-  unit: Officer | CombinedLeoUnit | EmsFdDeputy;
+  unit?: Officer | CombinedLeoUnit | EmsFdDeputy;
 };
 
 export type AssignedWarrantOfficer = Prisma.AssignedWarrantOfficer & {
@@ -316,7 +316,7 @@ export type AssignedWarrantOfficer = Prisma.AssignedWarrantOfficer & {
 };
 
 export type IncidentInvolvedUnit = Prisma.IncidentInvolvedUnit & {
-  unit: Officer | CombinedLeoUnit | EmsFdDeputy;
+  unit?: Officer | CombinedLeoUnit | EmsFdDeputy;
 };
 
 export type Call911Event = Prisma.Call911Event;

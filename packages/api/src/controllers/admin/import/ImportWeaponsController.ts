@@ -8,7 +8,9 @@ import {
   PathParams,
   PlatformMulterFile,
   QueryParams,
+  UseBeforeEach,
 } from "@tsed/common";
+import { IsAuth } from "middlewares/IsAuth";
 import { parseImportFile } from "utils/file";
 import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
@@ -19,6 +21,7 @@ import type * as APITypes from "@snailycad/types/api";
 const weaponsInclude = { ...citizenInclude.weapons.include, citizen: true };
 
 @Controller("/admin/import/weapons")
+@UseBeforeEach(IsAuth)
 export class ImportWeaponsController {
   @Get("/")
   @Description("Get all the Weapons in the CAD (paginated)")

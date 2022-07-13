@@ -49,6 +49,9 @@ const rootDir = __dirname;
     json({ limit: "500kb" }),
     cors({ origin: process.env.CORS_ORIGIN_URL ?? "http://localhost:3000", credentials: true }),
     IsEnabled,
+    Sentry.Handlers.requestHandler({
+      request: true,
+    }),
   ],
   swagger: [{ path: "/api-docs", specVersion: "3.0.3" }],
   socketIO: {

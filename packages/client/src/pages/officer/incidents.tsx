@@ -86,6 +86,8 @@ export default function LeoIncidents({
   }
 
   function makeAssignedUnit(unit: IncidentInvolvedUnit) {
+    if (!unit.unit) return "UNKNOWN";
+
     return isUnitCombined(unit.unit)
       ? generateCallsign(unit.unit, "pairedUnitTemplate")
       : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;

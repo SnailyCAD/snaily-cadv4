@@ -210,7 +210,7 @@ function _ActiveCalls() {
   }
 
   function handleUnassign({ unit, call }: { unit: AssignedUnit; call: Full911Call }) {
-    handleAssignUnassignToCall(call, "unassign", unit.unit.id);
+    handleAssignUnassignToCall(call, "unassign", unit.unit?.id);
   }
 
   if (!CALLS_911) {

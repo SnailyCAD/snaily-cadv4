@@ -25,7 +25,7 @@ export function SelectPenalCode({ value, handleChange, penalCodes, isReadOnly }:
   const { penalCodeGroups } = useValues();
   const [currentGroup, setCurrentGroup] = React.useState<string | null>("all");
 
-  const groups = [allPenalCodesGroup, ungroupedGroup, ...penalCodeGroups];
+  const groups = [allPenalCodesGroup, ungroupedGroup, ...(penalCodeGroups ?? [])];
   const [codes, setCodes] = React.useState<PenalCode[]>(penalCodes);
 
   function onGroupChange(e: { target: { value: string } }) {

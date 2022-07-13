@@ -92,6 +92,8 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
   }
 
   function makeUnit(unit: AssignedUnit) {
+    if (!unit.unit) return "UNKNOWN";
+
     return isUnitCombined(unit.unit)
       ? generateCallsign(unit.unit, "pairedUnitTemplate")
       : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
