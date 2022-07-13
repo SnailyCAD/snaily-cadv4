@@ -45,6 +45,7 @@ export class LeoController {
   async getImprisonedCitizens(
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
     @QueryParams("skip", Number) skip = 0,
+    @QueryParams("includeAll", Boolean) includeAll = false,
   ): Promise<APITypes.GetJailedCitizensData> {
     const where = {
       OR: [{ arrested: true }, { Record: { some: { release: { isNot: null } } } }],
@@ -55,8 +56,8 @@ export class LeoController {
       prisma.citizen.findMany({
         where,
         include: citizenInclude,
-        take: 35,
-        skip,
+        take: includeAll ? undefined : 35,
+        skip: includeAll ? undefined : skip,
         orderBy: { createdAt: "desc" },
       }),
     ]);
