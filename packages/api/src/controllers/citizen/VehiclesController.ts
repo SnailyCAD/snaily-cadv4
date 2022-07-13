@@ -164,6 +164,7 @@ export class VehiclesController {
         taxStatus: data.taxStatus as VehicleTaxStatus | null,
         inspectionStatus: data.inspectionStatus as VehicleInspectionStatus | null,
         dmvStatus: isDmvEnabled ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED,
+        appearance: data.appearance ?? null,
       },
       include: {
         model: { include: { value: true } },
@@ -314,6 +315,7 @@ export class VehiclesController {
         taxStatus: data.taxStatus as VehicleTaxStatus | null,
         inspectionStatus: data.inspectionStatus as VehicleInspectionStatus | null,
         dmvStatus,
+        appearance: data.appearance ?? null,
       },
       include: {
         model: { include: { value: true } },
