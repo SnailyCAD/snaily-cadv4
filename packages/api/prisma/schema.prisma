@@ -374,6 +374,7 @@ model RegisteredVehicle {
   customFields         CustomFieldValue[]
   dmvStatus            WhitelistStatus?
   notes                Note[]
+  appearance           String?
 
   TruckLog         TruckLog[]
   ImpoundedVehicle ImpoundedVehicle[]
