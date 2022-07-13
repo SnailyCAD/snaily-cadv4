@@ -25,6 +25,11 @@ async function bootstrap() {
       ? `with version ${versions.currentVersion} - ${versions.currentCommitHash}`
       : "";
 
+    Sentry.setTags({
+      "snailycad.version": versions?.currentVersion,
+      "snailycad.commitHash": versions?.currentCommitHash,
+    });
+
     console.log(`SnailyCADv4 is running ${versionStr}`);
   } catch (er) {
     $log.error(er);
