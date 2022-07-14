@@ -99,25 +99,30 @@ export default function ManageCitizens(props: Props) {
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleChange, setFieldValue, isValid, values, errors }) => (
             <Form>
+              <FormField errorMessage={errors.rank} label="Rank">
+                <Select
+                  name="rank"
+                  onChange={handleChange}
+                  disabled={isRankDisabled}
+                  value={values.rank}
+                  values={
+                    isRankDisabled
+                      ? [{ value: user.rank, label: user.rank }]
+                      : [
+                          { value: "ADMIN", label: "Admin" },
+                          { value: "USER", label: "User" },
+                        ]
+                  }
+                />
+
+                <small className="text-base mt-2 text-neutral-600 dark:text-gray-300 mb-3">
+                  The rank does not have any influence on the permissions of the user. It is only
+                  used to identify the user in the system.
+                </small>
+              </FormField>
+
               {values.useOldPerms ? (
                 <>
-                  <FormField errorMessage={errors.rank} label="Rank">
-                    <Select
-                      name="rank"
-                      onChange={handleChange}
-                      disabled={isRankDisabled}
-                      value={values.rank}
-                      values={
-                        isRankDisabled
-                          ? [{ value: user.rank, label: user.rank }]
-                          : [
-                              { value: "ADMIN", label: "Admin" },
-                              { value: "USER", label: "User" },
-                            ]
-                      }
-                    />
-                  </FormField>
-
                   <FormRow flexLike className="mt-5">
                     <FormField errorMessage={errors.isLeo} label="Leo Access">
                       <Toggle name="isLeo" onCheckedChange={handleChange} value={values.isLeo} />
