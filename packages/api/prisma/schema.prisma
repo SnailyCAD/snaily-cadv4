@@ -1038,8 +1038,8 @@ model Record {
   type                 RecordType
   citizen              Citizen             @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId            String
-  officer              Officer             @relation(fields: [officerId], references: [id], onDelete: Cascade)
-  officerId            String
+  officer              Officer?            @relation(fields: [officerId], references: [id], onDelete: Cascade)
+  officerId            String?
   violations           Violation[]
   createdAt            DateTime            @default(now())
   updatedAt            DateTime            @default(now()) @updatedAt
@@ -1066,8 +1066,8 @@ model Warrant {
   id                   String                   @id @default(uuid())
   citizen              Citizen                  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId            String
-  officer              Officer                  @relation(fields: [officerId], references: [id], onDelete: Cascade)
-  officerId            String
+  officer              Officer?                 @relation(fields: [officerId], references: [id], onDelete: Cascade)
+  officerId            String?
   assignedOfficers     AssignedWarrantOfficer[]
   description          String                   @db.Text
   status               WarrantStatus            @default(ACTIVE)
