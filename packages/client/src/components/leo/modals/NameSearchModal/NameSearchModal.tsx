@@ -183,7 +183,7 @@ export function NameSearchModal() {
 
   const hasWarrants =
     !currentResult?.isConfidential &&
-    (currentResult?.warrants.filter((v) => v.status === "ACTIVE").length ?? 0) > 0;
+    (currentResult?.warrants?.filter((v) => v.status === "ACTIVE").length ?? 0) > 0;
 
   const INITIAL_VALUES = {
     name: payloadName ?? "",
