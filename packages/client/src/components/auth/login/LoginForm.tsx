@@ -121,7 +121,7 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
               <header className="mb-3">
                 <h1 className="text-3xl font-bold text-gray-800 dark:text-white">{t("login")}</h1>
 
-                {ALLOW_REGULAR_LOGIN ? (
+                {ALLOW_REGULAR_LOGIN && !isWithinModal ? (
                   <Link href="/auth/register">
                     <a
                       href="/auth/register"
