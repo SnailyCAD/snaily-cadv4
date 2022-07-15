@@ -79,13 +79,13 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
             const type = TYPE_LABELS[record.type];
             const createdAt = record.createdAt;
             const officer = record.officer;
-            const officerName = makeUnitName(officer);
-            const callsign = generateCallsign(officer);
+            const officerName = officer && makeUnitName(officer);
+            const callsign = officer && generateCallsign(officer);
 
             return {
               type,
               citizen: `${item.citizen.name} ${item.citizen.surname}`,
-              officer: `${callsign} ${officerName}`,
+              officer: officer ? `${callsign} ${officerName}` : common("none"),
               postal: record.postal || common("none"),
               notes: (
                 <HoverCard

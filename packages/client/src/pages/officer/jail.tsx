@@ -116,7 +116,9 @@ export default function Jail({ data }: Props) {
                     : null}
                 </Button>
               ),
-              officer: `${generateCallsign(record.officer)} ${makeUnitName(record.officer)}`,
+              officer: record.officer
+                ? `${generateCallsign(record.officer)} ${makeUnitName(record.officer)}`
+                : common("none"),
               jailTime,
               status,
               createdAt: <FullDate>{record.createdAt}</FullDate>,
