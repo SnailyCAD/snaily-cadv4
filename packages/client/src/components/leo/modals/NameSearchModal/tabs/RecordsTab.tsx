@@ -159,7 +159,9 @@ function RecordsTable({ data }: { data: Record[] }) {
           .map((record) => ({
             violations: <ViolationsColumn violations={record.violations} />,
             postal: record.postal,
-            officer: `${generateCallsign(record.officer)} ${makeUnitName(record.officer)}`,
+            officer: record.officer
+              ? `${generateCallsign(record.officer)} ${makeUnitName(record.officer)}`
+              : common("none"),
             notes: record.notes || common("none"),
             createdAt: <FullDate>{record.createdAt}</FullDate>,
             actions: isCitizen ? null : (

@@ -147,16 +147,7 @@ export type GetManageCitizenByIdData = GetManageCitizensData["citizens"][number]
  * @route /admin/manage/citizens/record-logs/:id
  */
 export type PostCitizenRecordLogsData = Prisma.Record & {
-  officer: Prisma.Officer & {
-    rank: Prisma.Value | null;
-    whitelistStatus:
-      | (Prisma.LeoWhitelistStatus & {
-          department: Prisma.DepartmentValue & { value: Prisma.Value };
-        })
-      | null;
-    /** todo: ... 10 ... */
-    activeDivisionCallsign: Prisma.IndividualDivisionCallsign | null;
-  };
+  officer?: Types.Officer | null;
   violations: (Prisma.Violation & {
     penalCode: Prisma.PenalCode & {
       warningApplicable: Prisma.WarningApplicable | null;

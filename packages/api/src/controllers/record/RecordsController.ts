@@ -77,7 +77,7 @@ export class RecordsController {
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
   ): Promise<APITypes.PostCreateWarrantData> {
     const data = validateSchema(CREATE_WARRANT_SCHEMA, body);
-    const officer = getFirstOfficerFromActiveOfficer({ activeOfficer });
+    const officer = getFirstOfficerFromActiveOfficer({ activeOfficer, allowDispatch: true });
 
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -92,7 +92,7 @@ export class RecordsController {
     const warrant = await prisma.warrant.create({
       data: {
         citizenId: citizen.id,
-        officerId: officer.id,
+        officerId: officer?.id ?? null,
         description: data.description,
         status: data.status as WarrantStatus,
       },
@@ -199,7 +199,7 @@ export class RecordsController {
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
   ): Promise<APITypes.PostRecordsData> {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
-    const officer = getFirstOfficerFromActiveOfficer({ activeOfficer });
+    const officer = getFirstOfficerFromActiveOfficer({ activeOfficer, allowDispatch: true });
 
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -222,7 +222,7 @@ export class RecordsController {
       data: {
         type: data.type as RecordType,
         citizenId: citizen.id,
-        officerId: officer.id,
+        officerId: officer?.id ?? null,
         notes: data.notes,
         postal: String(data.postal),
         status: recordStatus,
