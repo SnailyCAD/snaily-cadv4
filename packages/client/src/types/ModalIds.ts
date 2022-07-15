@@ -1,4 +1,6 @@
 export const enum ModalIds {
+  ReauthorizeSession = "ReauthorizeSessionModal",
+
   RegisterVehicle = "RegisterVehicleModal",
   RegisterWeapon = "RegisterWeaponModal",
   ManageLicenses = "ManageLicensesModal",

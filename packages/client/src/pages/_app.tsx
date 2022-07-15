@@ -16,6 +16,16 @@ import * as Sentry from "@sentry/react";
 import { BrowserTracing } from "@sentry/tracing";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import type { cad } from "@snailycad/types";
+import { useMounted } from "@casper124578/useful";
+import dynamic from "next/dynamic";
+
+const ReauthorizeSessionModal = dynamic(
+  async () =>
+    (await import("components/auth/login/ReauthorizeSessionModal")).ReauthorizeSessionModal,
+  {
+    ssr: false,
+  },
+);
 
 Sentry.init({
   dsn: "https://6e31d0dc886d482091e293edb73eb10e@o518232.ingest.sentry.io/6553264",
@@ -24,6 +34,7 @@ Sentry.init({
 });
 
 export default function App({ Component, router, pageProps }: AppProps) {
+  const isMounted = useMounted();
   const { hostname, protocol, port } = new URL(findAPIUrl());
   const url = `${protocol}//${hostname}:${port}`;
 
@@ -52,6 +63,7 @@ export default function App({ Component, router, pageProps }: AppProps) {
                     scriptProps={{ async: true, defer: true, appendTo: "body" }}
                     useRecaptchaNet
                   >
+                    {isMounted ? <ReauthorizeSessionModal /> : null}
                     <Component {...pageProps} />
                   </GoogleReCaptchaProvider>
                 </DndProvider>
