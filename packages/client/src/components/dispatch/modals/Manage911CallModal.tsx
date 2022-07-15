@@ -68,7 +68,7 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
   const isDisabled = isDispatch
     ? false
     : call
-    ? !call?.assignedUnits.some((u) => u.unit.id === activeUnit?.id)
+    ? !call?.assignedUnits.some((u) => u.unit?.id === activeUnit?.id)
     : false;
 
   const allUnits = [...allOfficers, ...allDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
@@ -165,12 +165,12 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
     callType: call?.typeId ?? null,
     assignedUnits:
       call?.assignedUnits.map((unit) => ({
-        label: makeLabel(unit.unit.id),
-        value: unit.unit.id,
+        label: makeLabel(unit.unit?.id),
+        value: unit.unit?.id,
       })) ?? ([] as SelectValue[]),
   };
 
-  function makeLabel(value: string) {
+  function makeLabel(value: string | undefined) {
     const unit = allUnits.find((v) => v.id === value) ?? units.find((v) => v.id === value);
 
     if (unit && isUnitCombined(unit)) {

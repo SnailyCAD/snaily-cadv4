@@ -135,6 +135,16 @@ export class VehiclesController {
       modelId = newModel.id;
     }
 
+    const vehicleModel = await prisma.vehicleValue.findUnique({
+      where: { id: modelId },
+    });
+
+    if (!vehicleModel) {
+      throw new ExtendedBadRequest({
+        model: "Invalid vehicle model. Please re-enter the vehicle model.",
+      });
+    }
+
     const isDmvEnabled = isFeatureEnabled({
       features: cad.features,
       feature: Feature.DMV,
@@ -154,6 +164,7 @@ export class VehiclesController {
         taxStatus: data.taxStatus as VehicleTaxStatus | null,
         inspectionStatus: data.inspectionStatus as VehicleInspectionStatus | null,
         dmvStatus: isDmvEnabled ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED,
+        appearance: data.appearance ?? null,
       },
       include: {
         model: { include: { value: true } },
@@ -304,6 +315,7 @@ export class VehiclesController {
         taxStatus: data.taxStatus as VehicleTaxStatus | null,
         inspectionStatus: data.inspectionStatus as VehicleInspectionStatus | null,
         dmvStatus,
+        appearance: data.appearance ?? null,
       },
       include: {
         model: { include: { value: true } },

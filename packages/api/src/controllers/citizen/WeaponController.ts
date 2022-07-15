@@ -13,6 +13,7 @@ import { IsAuth } from "middlewares/IsAuth";
 import { generateString } from "utils/generateString";
 import { citizenInclude } from "./CitizenController";
 import type * as APITypes from "@snailycad/types/api";
+import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
 @Controller("/weapons")
 @UseBeforeEach(IsAuth)
@@ -104,6 +105,16 @@ export class WeaponController {
       });
 
       modelId = newModel.id;
+    }
+
+    const weaponModel = await prisma.weaponValue.findUnique({
+      where: { id: modelId },
+    });
+
+    if (!weaponModel) {
+      throw new ExtendedBadRequest({
+        model: "Invalid weapon model. Please re-enter the weapon model.",
+      });
     }
 
     const weapon = await prisma.weapon.create({

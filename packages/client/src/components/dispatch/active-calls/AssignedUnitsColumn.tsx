@@ -23,6 +23,8 @@ export function AssignedUnitsColumn({ handleAssignToCall, isDispatch, call }: Pr
   const canDrag = hasActiveDispatchers && isDispatch;
 
   function makeAssignedUnit(unit: AssignedUnit) {
+    if (!unit.unit) return "UNKNOWN";
+
     return isUnitCombined(unit.unit)
       ? generateCallsign(unit.unit, "pairedUnitTemplate")
       : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;

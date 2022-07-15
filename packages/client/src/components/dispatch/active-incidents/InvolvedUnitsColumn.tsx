@@ -34,6 +34,8 @@ export function InvolvedUnitsColumn({ handleAssignUnassignToIncident, incident }
   const canDrag = hasActiveDispatchers;
 
   function makeAssignedUnit(unit: IncidentInvolvedUnit) {
+    if (!unit.unit) return "UNKNOWN";
+
     return isUnitCombined(unit.unit)
       ? generateCallsign(unit.unit, "pairedUnitTemplate")
       : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
@@ -45,7 +47,7 @@ export function InvolvedUnitsColumn({ handleAssignUnassignToIncident, incident }
       onDrop={(item: Officer | EmsFdDeputy | CombinedLeoUnit) =>
         void handleAssignUnassignToIncident(incident, item.id, "assign")
       }
-      canDrop={(item) => !incident.unitsInvolved.some((v) => v.unit.id === item.id)}
+      canDrop={(item) => !incident.unitsInvolved.some((v) => v.unit?.id === item.id)}
     >
       <div className="flex gap-2">
         {incident.unitsInvolved.length <= 0
