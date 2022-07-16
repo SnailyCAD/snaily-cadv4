@@ -319,7 +319,7 @@ export type Bolo = Prisma.Bolo & {
 };
 
 export type Record = Prisma.Record & {
-  officer: Officer;
+  officer?: Officer | null;
   violations: Violation[];
   seizedItems?: Prisma.SeizedItem[];
 };
@@ -329,7 +329,7 @@ export type RecordRelease = Prisma.RecordRelease & {
 };
 
 export type Warrant = Prisma.Warrant & {
-  officer?: Officer;
+  officer?: Officer | null;
 };
 
 export type RecordLog = Prisma.RecordLog & {

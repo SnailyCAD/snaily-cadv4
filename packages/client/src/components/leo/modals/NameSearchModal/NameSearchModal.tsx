@@ -127,11 +127,12 @@ export function NameSearchModal() {
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute<PostLeoSearchCitizenData>({
+    const { json, error } = await execute<PostLeoSearchCitizenData>({
       path: "/search/name",
       method: "POST",
       data: values,
     });
+    if (error) return;
 
     if (Array.isArray(json) && json.length <= 0) {
       setResults(false);
@@ -183,7 +184,7 @@ export function NameSearchModal() {
 
   const hasWarrants =
     !currentResult?.isConfidential &&
-    (currentResult?.warrants.filter((v) => v.status === "ACTIVE").length ?? 0) > 0;
+    (currentResult?.warrants?.filter((v) => v.status === "ACTIVE").length ?? 0) > 0;
 
   const INITIAL_VALUES = {
     name: payloadName ?? "",
@@ -296,7 +297,7 @@ export function NameSearchModal() {
                     </div>
                   </header>
 
-                  {currentResult?.dead && currentResult?.dateOfDead ? (
+                  {currentResult.dead && currentResult.dateOfDead ? (
                     <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
                       {t("citizenDead", {
                         date: format(
@@ -513,6 +514,7 @@ export function NameSearchModal() {
                   state={state}
                   onSubmit={handleLicensesSubmit}
                   citizen={currentResult}
+                  isLeo
                 />
                 <CitizenImageModal citizen={currentResult} />
               </>

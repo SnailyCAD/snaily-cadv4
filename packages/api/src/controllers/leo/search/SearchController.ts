@@ -24,6 +24,7 @@ import { isFeatureEnabled } from "lib/cad";
 import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import type * as APITypes from "@snailycad/types/api";
+import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
 export const vehicleSearchInclude = {
   model: { include: { value: true } },
@@ -123,6 +124,10 @@ export class SearchController {
     @Context("user") user: User,
     @QueryParams("fromAuthUserOnly", Boolean) fromAuthUserOnly = false,
   ): Promise<APITypes.PostLeoSearchCitizenData> {
+    if (!fullName) {
+      throw new ExtendedBadRequest({ name: "Must provide a name (first, last or fullname)." });
+    }
+
     const [name, surname] = fullName.toString().toLowerCase().split(/ +/g);
 
     if ((!name || name.length < 2) && !surname) {

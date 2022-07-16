@@ -5,6 +5,8 @@ import { useTranslations } from "use-intl";
 import Common from "../../locales/en/common.json";
 import type { FormikHelpers } from "formik";
 import { toastMessage } from "./toastMessage";
+import { useModal } from "state/modalState";
+import { ModalIds } from "types/ModalIds";
 
 interface UseFetchOptions {
   overwriteState: State | null;
@@ -32,6 +34,7 @@ interface Return<Data> {
 
 export default function useFetch({ overwriteState }: UseFetchOptions = { overwriteState: null }) {
   const [state, setState] = React.useState<State | null>(null);
+  const { openModal } = useModal();
 
   const t = useTranslations("Errors");
   const abortControllerRef = React.useRef<NullableAbortController>(null);
@@ -65,6 +68,10 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
       const errorObj = getErrorObj(response);
 
       console.error(JSON.stringify({ DEBUG: errorObj }, null, 2));
+
+      if (response?.response?.status === 401) {
+        openModal(ModalIds.ReauthorizeSession);
+      }
 
       let hasAddedError = false as boolean; // as boolean because eslint gets upset otherwise.
       for (const error of errors) {
