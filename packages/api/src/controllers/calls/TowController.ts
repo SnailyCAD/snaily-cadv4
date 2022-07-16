@@ -175,7 +175,7 @@ export class TowController {
         deliveryAddressId: data.deliveryAddress || null,
         plate: vehicle?.plate.toUpperCase() ?? null,
         model: vehicle?.model.value.value ?? null,
-        ended: data.callCountyService || false,
+        ended: data.callCountyService ?? false,
         name: data.name ?? null,
       },
       include: towIncludes,
