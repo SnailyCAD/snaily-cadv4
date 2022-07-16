@@ -514,6 +514,7 @@ export function NameSearchModal() {
                   state={state}
                   onSubmit={handleLicensesSubmit}
                   citizen={currentResult}
+                  isLeo
                 />
                 <CitizenImageModal citizen={currentResult} />
               </>

@@ -15,7 +15,7 @@ const types = ["driversLicense", "pilotLicense", "waterLicense", "weaponLicense"
 export function LicensesCard() {
   const { openModal, closeModal } = useModal();
   const { citizen, setCurrentCitizen } = useCitizen(false);
-  const { ALLOW_CITIZEN_UPDATE_LICENSE } = useFeatureEnabled();
+  const { ALLOW_CITIZEN_UPDATE_LICENSE, COMMON_CITIZEN_CARDS } = useFeatureEnabled();
   const t = useTranslations("Citizen");
   const { execute, state } = useFetch();
 
@@ -55,7 +55,12 @@ export function LicensesCard() {
       </div>
 
       {ALLOW_CITIZEN_UPDATE_LICENSE ? (
-        <ManageLicensesModal state={state} onSubmit={onSubmit} citizen={citizen} />
+        <ManageLicensesModal
+          isLeo={COMMON_CITIZEN_CARDS}
+          state={state}
+          onSubmit={onSubmit}
+          citizen={citizen}
+        />
       ) : null}
     </div>
   );

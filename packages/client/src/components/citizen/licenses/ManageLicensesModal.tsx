@@ -17,6 +17,7 @@ import { Citizen, DriversLicenseCategoryType, ValueLicenseType } from "@snailyca
 
 interface Props {
   onSubmit(values: LicenseInitialValues): Promise<void>;
+  isLeo?: boolean;
   allowRemoval?: boolean;
   citizen: Citizen;
   state: "loading" | "error" | null;
@@ -34,7 +35,13 @@ export interface LicenseInitialValues {
   firearmLicenseCategory: SelectValue[];
 }
 
-export function ManageLicensesModal({ state, citizen, allowRemoval = true, onSubmit }: Props) {
+export function ManageLicensesModal({
+  state,
+  citizen,
+  isLeo,
+  allowRemoval = true,
+  onSubmit,
+}: Props) {
   const { isOpen, closeModal } = useModal();
   const { license, driverslicenseCategory } = useValues();
   const common = useTranslations("Common");
@@ -87,7 +94,7 @@ export function ManageLicensesModal({ state, citizen, allowRemoval = true, onSub
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ values, errors, isValid, handleChange }) => (
           <Form>
-            {DL_EXAMS ? null : (
+            {DL_EXAMS && !isLeo ? null : (
               <FormRow>
                 <FormField errorMessage={errors.driversLicense} label={t("driversLicense")}>
                   <Select
