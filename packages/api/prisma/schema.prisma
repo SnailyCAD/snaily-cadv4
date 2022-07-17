@@ -933,32 +933,33 @@ model ActiveDispatchers {
 
 // 911 calls & bolos
 model Call911 {
-  id              String            @id @default(cuid())
-  caseNumber      Int               @default(autoincrement())
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @default(now()) @updatedAt
-  position        Position?         @relation(fields: [positionId], references: [id])
-  positionId      String?
-  userId          String?
-  assignedUnits   AssignedUnit[]
-  location        String            @db.Text
-  postal          String?           @db.Text
-  description     String?           @db.Text
-  descriptionData Json?
-  name            String            @db.VarChar(255)
-  ended           Boolean?          @default(false)
-  situationCode   StatusValue?      @relation(fields: [situationCodeId], references: [id])
-  situationCodeId String?
-  viaDispatch     Boolean?          @default(false)
-  divisions       DivisionValue[]
-  departments     DepartmentValue[]
-  events          Call911Event[]
-  incidents       LeoIncident[]
-  type            CallTypeValue?    @relation(fields: [typeId], references: [id])
-  typeId          String?
-  Officer         Officer[]         @relation("activeCall")
-  EmsFdDeputy     EmsFdDeputy[]     @relation("emsFdActiveCall")
-  CombinedLeoUnit CombinedLeoUnit[] @relation("CombinedLeoUnitActiveCall")
+  id               String            @id @default(cuid())
+  caseNumber       Int               @default(autoincrement())
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @default(now()) @updatedAt
+  position         Position?         @relation(fields: [positionId], references: [id])
+  positionId       String?
+  userId           String?
+  assignedUnits    AssignedUnit[]
+  location         String            @db.Text
+  postal           String?           @db.Text
+  shortDescription String?           @db.Text
+  description      String?           @db.Text
+  descriptionData  Json?
+  name             String            @db.VarChar(255)
+  ended            Boolean?          @default(false)
+  situationCode    StatusValue?      @relation(fields: [situationCodeId], references: [id])
+  situationCodeId  String?
+  viaDispatch      Boolean?          @default(false)
+  divisions        DivisionValue[]
+  departments      DepartmentValue[]
+  events           Call911Event[]
+  incidents        LeoIncident[]
+  type             CallTypeValue?    @relation(fields: [typeId], references: [id])
+  typeId           String?
+  Officer          Officer[]         @relation("activeCall")
+  EmsFdDeputy      EmsFdDeputy[]     @relation("emsFdActiveCall")
+  CombinedLeoUnit  CombinedLeoUnit[] @relation("CombinedLeoUnitActiveCall")
 }
 
 model Position {

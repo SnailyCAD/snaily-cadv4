@@ -105,12 +105,14 @@ export class Calls911Controller {
 
     const isFromDispatch = isFromDispatchHeader === "true" && hasDispatchPermissions;
     const maxAssignmentsToCalls = cad.miscCadSettings.maxAssignmentsToCalls ?? Infinity;
+    const descriptionSliced = `${data.description?.split(" ").slice(0, 10).join(" ")}...`;
 
     const call = await prisma.call911.create({
       data: {
         location: data.location,
         postal: data.postal,
         description: data.description,
+        shortDescription: data.shortDescription || descriptionSliced,
         descriptionData: data.descriptionData,
         name: data.name,
         userId: user.id || undefined,
