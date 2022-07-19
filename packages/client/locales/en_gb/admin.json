@@ -36,7 +36,7 @@
     "status": "Status",
     "allBusinesses": "All Businesses",
     "whitelisted": "Whitelisted",
-    "declineUnit": "Decline Unit",
+    "declineOfficer": "Decline Unit",
     "action": "Action",
     "noPendingOfficers": "There are no officers pending access to a force.",
     "allUnits": "All Units",
