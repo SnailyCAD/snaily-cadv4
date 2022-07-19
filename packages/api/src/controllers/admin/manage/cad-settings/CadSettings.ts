@@ -14,10 +14,11 @@ import { Req, UseBefore } from "@tsed/common";
 import { Socket } from "services/SocketService";
 import { nanoid } from "nanoid";
 import { validateSchema } from "lib/validateSchema";
-import type { cad, Feature, JailTimeScale } from "@prisma/client";
+import { cad, Feature, JailTimeScale, Rank } from "@prisma/client";
 import { getCADVersion } from "@snailycad/utils/version";
 import { getSessionUser } from "lib/auth/getSessionUser";
 import type * as APITypes from "@snailycad/types/api";
+import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 
 @Controller("/admin/manage/cad-settings")
 export class ManageCitizensController {
@@ -44,6 +45,10 @@ export class ManageCitizensController {
 
   @Put("/")
   @UseBefore(IsAuth)
+  @UsePermissions({
+    fallback: (u) => u.rank === Rank.OWNER,
+    permissions: [Permissions.ManageCADSettings],
+  })
   async updateCadSettings(
     @Context("cad") cad: cad,
     @BodyParams() body: unknown,
@@ -75,6 +80,10 @@ export class ManageCitizensController {
 
   @Put("/features")
   @UseBefore(IsAuth)
+  @UsePermissions({
+    fallback: (u) => u.rank === Rank.OWNER,
+    permissions: [Permissions.ManageCADSettings],
+  })
   async updateCadFeatures(
     @Context("cad") cad: cad,
     @BodyParams() body: unknown,
@@ -105,6 +114,10 @@ export class ManageCitizensController {
 
   @Put("/misc")
   @UseBefore(IsAuth)
+  @UsePermissions({
+    fallback: (u) => u.rank === Rank.OWNER,
+    permissions: [Permissions.ManageCADSettings],
+  })
   async updateMiscSettings(
     @Context("cad") cad: cad,
     @BodyParams() body: unknown,
@@ -142,6 +155,10 @@ export class ManageCitizensController {
 
   @Put("/auto-set-properties")
   @UseBefore(IsAuth)
+  @UsePermissions({
+    fallback: (u) => u.rank === Rank.OWNER,
+    permissions: [Permissions.ManageCADSettings],
+  })
   async updateAutoSetProperties(
     @Context("cad") cad: cad,
     @BodyParams() body: unknown,
@@ -170,6 +187,10 @@ export class ManageCitizensController {
 
   @Put("/api-token")
   @UseBefore(IsAuth)
+  @UsePermissions({
+    fallback: (u) => u.rank === Rank.OWNER,
+    permissions: [Permissions.ManageCADSettings],
+  })
   async updateApiToken(
     @Context("cad") cad: cad,
     @BodyParams() body: any,
@@ -216,6 +237,10 @@ export class ManageCitizensController {
 
   @Delete("/api-token")
   @UseBefore(IsAuth)
+  @UsePermissions({
+    fallback: (u) => u.rank === Rank.OWNER,
+    permissions: [Permissions.ManageCADSettings],
+  })
   async regenerateApiToken(@Context("cad") cad: cad) {
     if (!cad.apiTokenId) {
       throw new BadRequest("noApiTokenId");
