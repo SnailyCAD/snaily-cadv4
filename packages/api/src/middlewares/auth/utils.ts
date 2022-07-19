@@ -1,5 +1,5 @@
 import type { cad, User } from "@prisma/client";
-import { DISABLED_API_TOKEN_ROUTES, Method, PERMISSION_ROUTES } from "@snailycad/config";
+import { DISABLED_API_TOKEN_ROUTES, Method } from "@snailycad/config";
 import type { GetUserData } from "@snailycad/types/api";
 import type { Req } from "@tsed/common";
 import { userProperties } from "lib/auth/getSessionUser";
@@ -30,28 +30,6 @@ export function isRouteDisabled(options: Pick<Options, "req">) {
   }
 
   return false;
-}
-
-export function hasPermissionForReq(options: Options) {
-  const url = options.req.originalUrl.toLowerCase();
-  const requestMethod = options.req.method.toUpperCase() as Method;
-
-  const [route] = PERMISSION_ROUTES.filter(([m, route]) => {
-    const urlWithBackslash = url.at(-1) === "/" ? url : `${url}/`;
-    const isMethodTrue = m === "*" ? true : m.includes(requestMethod);
-
-    const isTrue = (route.route === urlWithBackslash || route.route === url) && isMethodTrue;
-    return isTrue;
-  });
-
-  if (route) {
-    const [, , callback] = route;
-    const hasPermission = callback(options.user);
-
-    return hasPermission;
-  }
-
-  return true;
 }
 
 const THREE_MIN_TIMEOUT_MS = 60 * 1000 * 3;

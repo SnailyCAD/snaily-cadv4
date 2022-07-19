@@ -52,6 +52,10 @@ const groups = [
     name: "Other",
     permissions: defaultPermissions.otherDefaultPermissions,
   },
+  {
+    name: "Owner",
+    permissions: [Permissions.ManageCADSettings],
+  },
 ];
 
 export function ManagePermissionsModal({ user, onUpdate, isReadOnly }: Props) {

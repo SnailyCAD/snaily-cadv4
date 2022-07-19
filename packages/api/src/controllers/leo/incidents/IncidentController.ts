@@ -254,6 +254,7 @@ export class IncidentController {
     await Promise.all(
       incident.unitsInvolved.map(async (unit) => {
         const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
+        if (!prismaName) return;
 
         // @ts-expect-error method has the same properties
         await prisma[prismaName].update({
