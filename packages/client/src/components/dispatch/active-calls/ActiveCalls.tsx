@@ -31,6 +31,8 @@ import { Droppable } from "components/shared/dnd/Droppable";
 import { DndActions } from "types/DndActions";
 import { AssignedUnitsColumn } from "./AssignedUnitsColumn";
 import type { Post911CallAssignUnAssign } from "@snailycad/types/api";
+import { Editor } from "components/modal/DescriptionModal/Editor";
+import { HoverCard } from "components/shared/HoverCard";
 
 const ADDED_TO_CALL_SRC = "/sounds/added-to-call.mp3" as const;
 const INCOMING_CALL_SRC = "/sounds/incoming-call.mp3" as const;
@@ -264,20 +266,25 @@ function _ActiveCalls() {
                   caseNumber: `#${call.caseNumber}`,
                   name: `${call.name} ${call.viaDispatch ? `(${leo("dispatch")})` : ""}`,
                   location: `${call.location} ${call.postal ? `(${call.postal})` : ""}`,
-                  description:
-                    call.description && !call.descriptionData ? (
-                      <span className="max-w-4xl text-base min-w-[250px] break-words whitespace-pre-wrap">
-                        {call.description}
-                      </span>
-                    ) : (
-                      <Button
-                        disabled={isDispatch ? false : !isUnitActive}
-                        size="xs"
-                        onClick={() => handleViewDescription(call)}
-                      >
-                        {common("viewDescription")}
-                      </Button>
-                    ),
+                  description: call.descriptionData ? (
+                    <HoverCard
+                      trigger={
+                        <div className="">
+                          <Editor value={call.descriptionData} isReadonly />
+                        </div>
+                      }
+                    >
+                      <Editor value={call.descriptionData} isReadonly />
+                    </HoverCard>
+                  ) : (
+                    <Button
+                      disabled={isDispatch ? false : !isUnitActive}
+                      size="xs"
+                      onClick={() => handleViewDescription(call)}
+                    >
+                      {common("viewDescription")}
+                    </Button>
+                  ),
                   situationCode: call.situationCode?.value.value ?? common("none"),
                   updatedAt: <FullDate>{call.updatedAt}</FullDate>,
                   assignedUnits: (

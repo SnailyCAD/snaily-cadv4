@@ -60,29 +60,27 @@ export function Editor({ isReadonly, value, onChange }: EditorProps) {
   }
 
   return (
-    <div className="mt-1">
-      <Slate editor={editor} value={value as Descendant[]} onChange={handleChange}>
-        {isReadonly ? null : <Toolbar />}
-        <Editable
-          spellCheck="false"
-          autoComplete="off"
-          readOnly={isReadonly}
-          renderLeaf={renderLeaf}
-          renderElement={renderElement}
-          className="w-full p-1.5 rounded-md bg-transparent disabled:cursor-not-allowed disabled:opacity-80"
-          placeholder="Start typing..."
-          onKeyDown={(event) => {
-            for (const hotkey in HOTKEYS) {
-              if (isHotkey(hotkey)(event)) {
-                event.preventDefault();
-                const mark = HOTKEYS[hotkey as keyof typeof HOTKEYS];
-                toggleMark(editor, mark);
-              }
+    <Slate editor={editor} value={value as Descendant[]} onChange={handleChange}>
+      {isReadonly ? null : <Toolbar />}
+      <Editable
+        spellCheck="false"
+        autoComplete="off"
+        readOnly={isReadonly}
+        renderLeaf={renderLeaf}
+        renderElement={renderElement}
+        className="w-full max-w-[200px] truncate p-1.5 rounded-md bg-transparent disabled:cursor-not-allowed disabled:opacity-80"
+        placeholder="Start typing..."
+        onKeyDown={(event) => {
+          for (const hotkey in HOTKEYS) {
+            if (isHotkey(hotkey)(event)) {
+              event.preventDefault();
+              const mark = HOTKEYS[hotkey as keyof typeof HOTKEYS];
+              toggleMark(editor, mark);
             }
-          }}
-        />
-      </Slate>
-    </div>
+          }
+        }}
+      />
+    </Slate>
   );
 }
 
