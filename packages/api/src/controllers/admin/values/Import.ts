@@ -344,7 +344,7 @@ export const typeHandlers = {
         where: { id: String(id) },
         create: createUpdateData,
         update: createUpdateData,
-        include: { officerRankDepartments: true },
+        include: { officerRankDepartments: { include: { value: true } } },
       });
 
       const disconnectConnectArr = manyToManyHelper(
