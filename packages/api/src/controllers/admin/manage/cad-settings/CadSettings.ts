@@ -3,6 +3,7 @@ import {
   CAD_SETTINGS_SCHEMA,
   DISABLED_FEATURES_SCHEMA,
   CAD_AUTO_SET_PROPERTIES,
+  API_TOKEN_SCHEMA,
 } from "@snailycad/schemas";
 import { Controller } from "@tsed/di";
 import { BodyParams, Context } from "@tsed/platform-params";
@@ -193,8 +194,10 @@ export class ManageCitizensController {
   })
   async updateApiToken(
     @Context("cad") cad: cad,
-    @BodyParams() body: any,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PutCADApiTokenData> {
+    const data = validateSchema(API_TOKEN_SCHEMA, body);
+
     const existing =
       cad.apiTokenId &&
       (await prisma.apiToken.findFirst({
@@ -203,16 +206,16 @@ export class ManageCitizensController {
         },
       }));
 
-    if (existing && body.enabled === true) {
+    if (existing && data.enabled === true) {
       const updated = await prisma.apiToken.update({
         where: { id: existing.id },
-        data: { enabled: body.enabled },
+        data: { enabled: data.enabled },
       });
 
       return updated;
     }
 
-    if (body.enabled === false) {
+    if (data.enabled === false) {
       if (!cad.apiTokenId) {
         return null;
       }

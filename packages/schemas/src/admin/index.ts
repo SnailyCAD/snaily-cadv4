@@ -15,6 +15,11 @@ export const CAD_SETTINGS_SCHEMA = z.object({
   image: z.any().optional().nullable(),
 });
 
+export const API_TOKEN_SCHEMA = z.object({
+  enabled: z.boolean(),
+  token: z.string().nullable().optional(),
+});
+
 export const CAD_MISC_SETTINGS_SCHEMA = z.object({
   cadOGDescription: z.string().nullable().optional(),
   heightPrefix: z.string().max(255),

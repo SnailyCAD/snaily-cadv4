@@ -26,7 +26,7 @@ export function AppearanceTab({ availableSounds }: Props) {
   const t = useTranslations("Account");
   const { execute, state } = useFetch();
   const common = useTranslations("Common");
-  const availableLanguages = nextConfig.i18n?.locales as string[];
+  const availableLanguages = nextConfig.i18n?.locales;
   const router = useRouter();
 
   const STATUS_VIEW_MODE_LABELS = {
@@ -48,7 +48,7 @@ export function AppearanceTab({ availableSounds }: Props) {
     isDarkTheme: user.isDarkTheme ?? true,
     statusViewMode: user.statusViewMode ?? StatusViewMode.DOT_COLOR,
     tableActionsAlignment: user.tableActionsAlignment,
-    locale: user?.locale ?? (nextConfig.i18n?.defaultLocale as string),
+    locale: user?.locale ?? nextConfig.i18n?.defaultLocale,
     soundSettings: {
       panicButton: user.soundSettings?.panicButton ?? true,
       signal100: user.soundSettings?.signal100 ?? true,

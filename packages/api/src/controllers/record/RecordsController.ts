@@ -402,7 +402,7 @@ export class RecordsController {
   }
 
   private async handleDiscordWebhook(
-    ticket: ((Record & { violations: Violation[] }) | Warrant) & { citizen: Citizen; officer: any },
+    ticket: ((Record & { violations: Violation[] }) | Warrant) & { citizen: Citizen },
   ) {
     try {
       const data = createWebhookData(ticket);
@@ -430,7 +430,7 @@ async function unlinkSeizedItems(items: Pick<SeizedItem, "id">[]) {
 }
 
 function createWebhookData(
-  data: ((Record & { violations: Violation[] }) | Warrant) & { citizen: Citizen; officer: any },
+  data: ((Record & { violations: Violation[] }) | Warrant) & { citizen: Citizen },
 ) {
   const isWarrant = !("notes" in data);
   const citizen = `${data.citizen.name} ${data.citizen.surname}`;
