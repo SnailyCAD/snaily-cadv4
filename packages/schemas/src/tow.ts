@@ -9,7 +9,7 @@ export const TOW_SCHEMA = z.object({
   postal: z.string().max(255).optional().nullable(),
   plate: z.string().max(255).optional(),
   call911Id: z.string().max(255).optional(),
-  deliveryAddress: z.string().max(255).optional(),
+  deliveryAddressId: z.string().max(255).optional(),
   callCountyService: z.boolean().optional(),
 });
 

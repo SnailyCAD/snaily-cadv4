@@ -10,7 +10,7 @@ import {
 } from "discord-api-types/v10";
 import { IsAuth } from "middlewares/IsAuth";
 import { prisma } from "lib/prisma";
-import type { cad, DiscordWebhook, DiscordWebhookType, MiscCadSettings } from "@prisma/client";
+import { cad, DiscordWebhook, DiscordWebhookType, MiscCadSettings, Rank } from "@prisma/client";
 import { BadRequest } from "@tsed/exceptions";
 import { DISCORD_WEBHOOKS_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
@@ -18,6 +18,7 @@ import { getRest } from "lib/discord/config";
 import type * as APITypes from "@snailycad/types/api";
 import { resolve } from "node:path";
 import { encodeFromFile } from "@snaily-cad/image-data-uri";
+import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 
 const guildId = process.env.DISCORD_SERVER_ID;
 
@@ -25,6 +26,10 @@ const guildId = process.env.DISCORD_SERVER_ID;
 @Controller("/admin/manage/cad-settings/discord/webhooks")
 export class DiscordWebhooksController {
   @Get("/")
+  @UsePermissions({
+    fallback: (u) => u.rank === Rank.OWNER,
+    permissions: [Permissions.ManageCADSettings],
+  })
   async getGuildChannels(@Context("cad") cad: cad): Promise<APITypes.GetCADDiscordWebhooksData> {
     if (!guildId) {
       throw new BadRequest("mustSetBotTokenGuildId");
@@ -62,6 +67,10 @@ export class DiscordWebhooksController {
   }
 
   @Post("/")
+  @UsePermissions({
+    fallback: (u) => u.rank === Rank.OWNER,
+    permissions: [Permissions.ManageCADSettings],
+  })
   async setRoleTypes(
     @Context("cad")
     cad: cad & { miscCadSettings: MiscCadSettings & { webhooks: DiscordWebhook[] } },

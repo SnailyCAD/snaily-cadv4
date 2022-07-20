@@ -207,16 +207,17 @@ export class IncidentController {
       this.socket.emitUpdateDeputyStatus(),
     ]);
 
-    const updated = await prisma.leoIncident.findUnique({
+    const updated = await prisma.leoIncident.findUniqueOrThrow({
       where: {
         id: incident.id,
       },
       include: incidentInclude,
     });
 
-    this.socket.emitUpdate911Call(officerOrDeputyToUnit(updated));
+    const normalizedIncident = officerOrDeputyToUnit(updated);
+    this.socket.emitUpdate911Call(normalizedIncident);
 
-    return officerOrDeputyToUnit(updated);
+    return normalizedIncident;
   }
 
   @UseBefore(ActiveOfficer)
@@ -253,6 +254,7 @@ export class IncidentController {
     await Promise.all(
       incident.unitsInvolved.map(async (unit) => {
         const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
+        if (!prismaName) return;
 
         // @ts-expect-error method has the same properties
         await prisma[prismaName].update({
@@ -280,22 +282,18 @@ export class IncidentController {
       await this.connectUnitsInvolved(incident.id, data, maxAssignmentsToIncidents);
     }
 
-    const updated = await prisma.leoIncident.findUnique({
+    const updated = await prisma.leoIncident.findUniqueOrThrow({
       where: { id: incident.id },
       include: incidentInclude,
     });
 
-    if (!updated) {
-      throw new InternalServerError("Unable to find created incident");
-    }
+    const normalizedIncident = officerOrDeputyToUnit(updated);
 
-    const corrected = officerOrDeputyToUnit(updated);
-
-    this.socket.emitUpdateActiveIncident(corrected);
+    this.socket.emitUpdateActiveIncident(normalizedIncident);
     await this.socket.emitUpdateOfficerStatus();
     await this.socket.emitUpdateDeputyStatus();
 
-    return corrected;
+    return normalizedIncident;
   }
 
   @Delete("/:id")

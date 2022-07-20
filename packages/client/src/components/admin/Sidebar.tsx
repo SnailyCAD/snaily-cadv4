@@ -1,15 +1,13 @@
 import * as React from "react";
-import { useAuth } from "context/AuthContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { classNames } from "lib/classNames";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Rank } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { useViewport } from "@casper124578/useful/hooks/useViewport";
 import { importRoutes, managementRoutes, SidebarRoute, valueRoutes } from "./Sidebar/routes";
 import { usePermission } from "hooks/usePermission";
-import { defaultPermissions } from "@snailycad/permissions";
+import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import { SidebarSection } from "./Sidebar/SidebarSection";
 
 export function AdminSidebar() {
@@ -19,7 +17,6 @@ export function AdminSidebar() {
   const t = useTranslations();
   const man = useTranslations("Management");
   const router = useRouter();
-  const { user } = useAuth();
 
   function isMActive(path: string) {
     return router.pathname === path;
@@ -56,7 +53,10 @@ export function AdminSidebar() {
       >
         <div className={menuOpen ? "block" : "hidden nav:block w-full"} id="sidebar-content">
           <SidebarSection
-            permissions={defaultPermissions.defaultManagementPermissions}
+            permissions={[
+              ...defaultPermissions.defaultManagementPermissions,
+              ...defaultPermissions.defaultOwnerPermissions,
+            ]}
             title={man("management")}
           >
             <>
@@ -73,15 +73,13 @@ export function AdminSidebar() {
                 );
               })}
 
-              {user?.rank === Rank.OWNER ? (
-                <SidebarItem
-                  route={null}
-                  isActive={isMActive("/admin/manage/cad-settings")}
-                  href="/admin/manage/cad-settings"
-                  text={man("MANAGE_CAD_SETTINGS")}
-                  onRouteClick={() => setMenuOpen(false)}
-                />
-              ) : null}
+              <SidebarItem
+                route={{ permissions: [Permissions.ManageCADSettings], type: "CAD_SETTINGS" }}
+                isActive={isMActive("/admin/manage/cad-settings")}
+                href="/admin/manage/cad-settings"
+                text={man("MANAGE_CAD_SETTINGS")}
+                onRouteClick={() => setMenuOpen(false)}
+              />
             </>
           </SidebarSection>
 

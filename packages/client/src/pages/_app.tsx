@@ -59,7 +59,7 @@ export default function App({ Component, router, pageProps }: AppProps) {
               <CitizenProvider initialData={pageProps}>
                 <DndProvider backend={HTML5Backend}>
                   <GoogleReCaptchaProvider
-                    reCaptchaKey={process.env.NEXT_PUBLIC_GOOGLE_CAPTCHA_SITE_KEY}
+                    reCaptchaKey={process.env.NEXT_PUBLIC_GOOGLE_CAPTCHA_SITE_KEY as string}
                     scriptProps={{ async: true, defer: true, appendTo: "body" }}
                     useRecaptchaNet
                   >

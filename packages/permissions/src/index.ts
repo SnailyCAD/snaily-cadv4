@@ -39,7 +39,7 @@ export function hasPermission(options: HasPermissionOptions) {
   }
 
   if (options.userToCheck.rank === "OWNER") {
-    userPermissions = allPermissions;
+    return true;
   }
 
   if (userPermissions.length <= 0 || !Array.isArray(options.permissionsToCheck)) {

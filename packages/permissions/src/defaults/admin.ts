@@ -59,8 +59,11 @@ export const defaultCourthousePermissions = [
   Permissions.ManageNameChangeRequests,
 ];
 
+export const defaultOwnerPermissions = [Permissions.ManageCADSettings];
+
 export const allDefaultAdminPermissions = [
   ...defaultManagementPermissions,
   ...defaultImportPermissions,
   ...defaultValuePermissions,
+  ...defaultOwnerPermissions,
 ];

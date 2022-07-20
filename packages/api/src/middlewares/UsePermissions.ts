@@ -30,6 +30,8 @@ export class UsePermissionsMiddleware implements MiddlewareMethods {
       fallback,
     });
 
+    console.log({ hasPerm, user });
+
     if (!hasPerm) {
       throw new Forbidden("Invalid permissions");
     }

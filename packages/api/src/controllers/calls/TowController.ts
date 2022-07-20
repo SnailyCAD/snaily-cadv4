@@ -103,7 +103,7 @@ export class TowController {
     }
 
     let vehicle;
-    if (data.plate && data.deliveryAddress) {
+    if (data.plate && data.deliveryAddressId) {
       vehicle = await prisma.registeredVehicle.findUnique({
         where: { plate: data.plate },
         include: { model: { include: { value: true } } },
@@ -115,7 +115,7 @@ export class TowController {
 
       await prisma.impoundedVehicle.create({
         data: {
-          valueId: data.deliveryAddress,
+          valueId: data.deliveryAddressId,
           registeredVehicleId: vehicle.id,
         },
       });
@@ -172,11 +172,12 @@ export class TowController {
         descriptionData: data.descriptionData,
         location: data.location,
         postal: data.postal,
-        deliveryAddressId: data.deliveryAddress || null,
+        deliveryAddressId: data.deliveryAddressId,
         plate: vehicle?.plate.toUpperCase() ?? null,
         model: vehicle?.model.value.value ?? null,
-        ended: data.callCountyService || false,
+        ended: data.callCountyService ?? false,
         name: data.name ?? null,
+        callCountyService: data.callCountyService,
       },
       include: towIncludes,
     });

@@ -92,23 +92,27 @@ export function ManageIncidentModal({
     let id = "";
 
     if (incident) {
-      const { json } = await execute<PutIncidentByIdData>({
+      const { json, error } = await execute<PutIncidentByIdData>({
         path: `/incidents/${incident.id}`,
         method: "PUT",
         data,
       });
 
-      id = json.id;
-      onUpdate?.(incident, json);
+      if (json && !error) {
+        id = json.id;
+        onUpdate?.(incident, json);
+      }
     } else {
-      const { json } = await execute<PostIncidentsData>({
+      const { json, error } = await execute<PostIncidentsData>({
         path: "/incidents",
         method: "POST",
         data,
       });
 
-      id = json.id;
-      onCreate?.(json);
+      if (json && !error) {
+        id = json.id;
+        onCreate?.(json);
+      }
     }
 
     if (id) {
