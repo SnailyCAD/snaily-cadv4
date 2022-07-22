@@ -23,6 +23,8 @@
     "defaultOfficerRank": "Grade d'officier par défaut",
     "pairedUnitTemplate": "Modèle d'unité en binôme",
     "isConfidential": "Est Confidentiel",
+    "priority": "Priorité",
+    "isDisabled": "Désactivé",
     "alert_deletePenalCodeGroup": "Êtes-vous sûr de vouloir supprimer <span>{group}</span> ? Cette action ne peut être annulée.",
     "alert_deleteValue": "Êtes-vous sûr de vouloir supprimer <span>{value}</span> ? Cette action ne peut être annulée.",
     "alert_deleteSelectedValues": "Êtes-vous sûr de vouloir supprimer {length} élément(s) ? Cette action ne peut être annulée."

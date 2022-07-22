@@ -69,6 +69,9 @@
     "vehicleImpounded": "Ce véhicule est en fourrière",
     "successVehicleRegistered": "Enregistrement réussi du véhicule immatriculé {plate}",
     "dmvStatus": "Statut du DMV",
+    "transfer": "Transférer",
+    "transferVehicle": "Transférer Véhicule",
+    "transferVehicleInfo": "Transférer votre <span>{model}</span> vers un nouveau propriétaire. Cela signifie que vous perdrez la possession de ce véhicule et vous ne pourrez plus le gérer.",
     "alert_deleteVehicle": "Êtes-vous sûr de vouloir supprimer ce véhicule ? Cette action ne peut être annulée."
   },
   "Weapons": {
