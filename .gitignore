@@ -9,6 +9,7 @@ packages/api/public/**/*.png
 packages/api/public/**/*.svg
 packages/api/public/**/*.jpg
 packages/api/public/**/*.jpeg
+packages/api/public/**/*.gif
 
 .eslintcache
 
