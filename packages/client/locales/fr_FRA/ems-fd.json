@@ -6,7 +6,7 @@
     "activeDeputies": "Adjoints Actifs",
     "selectDeputy": "Sélectionner Adjoint",
     "deputy": "Adjoint",
-    "myDeputies": "Mes Adjoints",
+    "myDeputies": "Mes Personnages EMS/FD",
     "createDeputy": "Créer Adjoint",
     "editDeputy": "Modifier Adjoint",
     "deputyName": "Nom de l'adjoint",
@@ -17,7 +17,7 @@
     "activeDeputy": "Adjoint Actif",
     "declareDead": "Déclarer mort",
     "declareAlive": "Déclarer vivant",
-    "myDeputyLogs": "Mes Logs (Adjoints)",
+    "myDeputyLogs": "Mes Logs (EMS/FD)",
     "alert_deleteDeputy": "Êtes-vous sûr de vouloir supprimer <span>{deputy}</span> ? Cette action ne peut être annulée."
   }
 }
