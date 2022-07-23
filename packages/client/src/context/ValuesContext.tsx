@@ -48,7 +48,7 @@ interface Context {
 const ValuesContext = React.createContext<Context | undefined>(undefined);
 
 interface ProviderProps {
-  children: React.ReactChild | React.ReactChild[];
+  children: React.ReactNode;
   initialData: { values: GetValuesData };
 }
 

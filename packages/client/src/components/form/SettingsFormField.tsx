@@ -3,7 +3,7 @@ import { useField } from "@react-aria/label";
 import { classNames } from "lib/classNames";
 import { ExclamationSquareFill } from "react-bootstrap-icons";
 
-type ReactNode = React.ReactChild | React.ReactFragment | React.ReactPortal;
+type ReactNode = React.ReactNode | React.ReactPortal;
 
 const rightAreaStyles = {
   input: "border-t-[1px] w-full px-4",
