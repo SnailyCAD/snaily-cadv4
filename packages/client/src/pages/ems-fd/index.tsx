@@ -109,13 +109,13 @@ export default function EmsFDDashboard({
 
       <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
         <div className="w-full">
-          <ActiveCalls />
+          <ActiveCalls initialCalls={calls} />
         </div>
       </div>
 
       <div className="mt-3">
-        <ActiveOfficers />
-        <ActiveDeputies />
+        <ActiveOfficers initialOfficers={[]} />
+        <ActiveDeputies initialDeputies={activeDeputies} />
       </div>
 
       <SelectDeputyModal />

@@ -57,6 +57,10 @@ export interface DispatchPageProps extends GetDispatchData {
   bolos: GetBolosData;
 }
 
+function activeFilter(v: EmsFdDeputy | Officer | CombinedLeoUnit) {
+  return Boolean(v.statusId && v.status?.shouldDo !== ShouldDoType.SET_OFF_DUTY);
+}
+
 export default function DispatchDashboard(props: DispatchPageProps) {
   useLoadValuesClientSide({
     valueTypes: [
@@ -82,6 +86,16 @@ export default function DispatchDashboard(props: DispatchPageProps) {
   const { ACTIVE_INCIDENTS } = useFeatureEnabled();
   const { isOpen } = useModal();
 
+  const activeOfficers = React.useMemo(
+    () => [...props.officers].filter(activeFilter),
+    [props.officers],
+  );
+
+  const activeDeputies = React.useMemo(
+    () => [...props.deputies].filter(activeFilter),
+    [props.deputies],
+  );
+
   React.useEffect(() => {
     state.setCalls(props.calls);
     state.setBolos(props.bolos);
@@ -91,18 +105,11 @@ export default function DispatchDashboard(props: DispatchPageProps) {
     state.setActiveDispatchers(props.activeDispatchers);
     state.setActiveIncidents(props.activeIncidents);
 
-    function activeFilter(v: EmsFdDeputy | Officer | CombinedLeoUnit) {
-      return Boolean(v.statusId && v.status?.shouldDo !== ShouldDoType.SET_OFF_DUTY);
-    }
-
-    const activeOfficers = [...props.officers].filter(activeFilter);
-    const activeDeputies = [...props.deputies].filter(activeFilter);
-
     state.setActiveDeputies(activeDeputies);
     state.setActiveOfficers(activeOfficers);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props]);
+  }, [props, activeDeputies, activeOfficers]);
 
   return (
     <Layout
@@ -131,14 +138,14 @@ export default function DispatchDashboard(props: DispatchPageProps) {
 
       <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
         <div className="w-full">
-          <ActiveOfficers />
-          <ActiveDeputies />
+          <ActiveOfficers initialOfficers={activeOfficers} />
+          <ActiveDeputies initialDeputies={activeDeputies} />
         </div>
       </div>
 
       <div className="mt-3">
-        <ActiveCalls />
-        <ActiveBolos />
+        <ActiveCalls initialCalls={props.calls} />
+        <ActiveBolos initialBolos={props.bolos} />
         {ACTIVE_INCIDENTS ? <ActiveIncidents /> : null}
       </div>
 

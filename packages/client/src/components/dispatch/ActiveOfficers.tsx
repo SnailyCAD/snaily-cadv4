@@ -29,11 +29,18 @@ import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { HoverCard } from "components/shared/HoverCard";
 import { useDispatchState } from "state/dispatchState";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import { useMounted } from "@casper124578/useful";
 
-function ActiveOfficers() {
-  const { activeOfficers } = useActiveOfficers();
+interface Props {
+  initialOfficers: ActiveOfficer[];
+}
+
+function ActiveOfficers({ initialOfficers }: Props) {
+  const { activeOfficers: _activeOfficers } = useActiveOfficers();
   const { activeIncidents } = useActiveIncidents();
   const { calls } = useDispatchState();
+  const isMounted = useMounted();
+  const activeOfficers = isMounted ? _activeOfficers : initialOfficers;
 
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
