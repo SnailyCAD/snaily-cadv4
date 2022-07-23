@@ -230,7 +230,7 @@ function _ActiveCalls({ initialCalls }: Props) {
       {addedToCallAudio}
       {incomingCallAudio}
       <header className="flex items-center justify-between p-2 px-4 bg-gray-200 dark:bg-gray-3">
-        <h3 className="text-xl font-semibold">{t("active911Calls")}</h3>
+        <h1 className="text-xl font-semibold">{t("active911Calls")}</h1>
 
         <div>
           <Button
