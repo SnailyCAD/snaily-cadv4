@@ -113,13 +113,17 @@ export class BleeterController {
   async uploadImageToPost(
     @Context("user") user: User,
     @PathParams("id") postId: string,
-    @MultipartFile("image") file: PlatformMulterFile,
+    @MultipartFile("image") file?: PlatformMulterFile,
   ): Promise<APITypes.PostBleeterByIdImageData> {
     const post = await prisma.bleeterPost.findUnique({
       where: {
         id: postId,
       },
     });
+
+    if (!file) {
+      throw new ExtendedBadRequest({ file: "No file provided." });
+    }
 
     if (!post || post.userId !== user.id) {
       throw new NotFound("notFound");

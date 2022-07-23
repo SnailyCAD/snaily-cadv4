@@ -132,14 +132,18 @@ export class ValuesController {
   @Post("/image/:id")
   async uploadImageToTypes(
     @PathParams("path") _path: string,
-    @MultipartFile("image") file: PlatformMulterFile,
     @PathParams("id") id: string,
+    @MultipartFile("image") file?: PlatformMulterFile,
   ) {
     const type = getTypeFromPath(_path);
     const supportedValueTypes = [ValueType.QUALIFICATION, ValueType.OFFICER_RANK] as string[];
 
     if (!supportedValueTypes.includes(type)) {
       return new BadRequest("invalidType");
+    }
+
+    if (!file) {
+      throw new ExtendedBadRequest({ file: "No file provided." });
     }
 
     if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
