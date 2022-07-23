@@ -24,12 +24,14 @@ export function Map() {
 
   return (
     <MapContainer
+      ref={(map) => {
+        map && setMap(map);
+      }}
       style={{ zIndex: 1, height: "calc(100vh - 3.5rem)", width: "100%" }}
       crs={L.CRS.Simple}
       center={[0, 0]}
       zoom={-2}
       bounds={bounds}
-      whenCreated={setMap}
       zoomControl={false}
     >
       <TileLayer

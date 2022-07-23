@@ -9,7 +9,7 @@ import type { ModalIds } from "types/ModalIds";
 
 type Props = Pick<ModalProps, "title" | "className"> & {
   id: ModalIds;
-  description: string | React.ReactFragment;
+  description: React.ReactNode;
   state?: "error" | "loading" | null;
   onDeleteClick(): void;
   onClose?(): void;

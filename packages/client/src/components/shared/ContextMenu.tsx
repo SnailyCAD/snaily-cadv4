@@ -8,7 +8,7 @@ interface Props {
   items: (ContextItem | boolean)[];
   asChild?: boolean;
   canBeOpened?: boolean;
-  children: React.ReactChild;
+  children: React.ReactNode;
 }
 
 type ButtonProps = React.DetailedHTMLProps<
@@ -49,7 +49,7 @@ export function ContextMenu({ items, canBeOpened = true, asChild, children }: Pr
       <Menu.Content
         alignOffset={5}
         className={classNames(
-          "flex flex-col",
+          "flex flex-col z-50",
           "shadow-md",
           "bg-white dark:bg-dark-bright shadow-sm",
           "p-1.5 rounded-md min-w-[15rem] max-h-[25rem] overflow-auto",

@@ -31,9 +31,7 @@ export function Title({ children, renderLayoutTitle = true, className }: Props) 
   return (
     <>
       <Head>
-        <title>
-          {children} - {cadName}
-        </title>
+        <title>{`${children} - ${cadName}`}</title>
         {cad?.miscCadSettings?.cadOGDescription ? (
           <>
             <meta name="description" content={cad?.miscCadSettings?.cadOGDescription} />

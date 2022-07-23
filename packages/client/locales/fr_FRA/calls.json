@@ -1,7 +1,7 @@
 {
   "Calls": {
     "tow": "Dépanneur",
-    "towLogs": "Logs dépannages",
+    "towLogs": "Logs Dépanneurs",
     "taxi": "Taxi",
     "active911Calls": "Appels 911 actifs",
     "noTowCalls": "Il n'y aucun appel pour dépanneur pour le moment.",

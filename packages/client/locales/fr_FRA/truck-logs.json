@@ -9,6 +9,7 @@
     "startedAt": "Commencé À",
     "endedAt": "Terminé À",
     "noTruckLogs": "Vous n'avez aucun log pour le moment.",
+    "notes": "Notes",
     "alert_deleteTruckLog": "Êtes-vous sûr de vouloir supprimer ce log ? Cette action ne peut être annulée."
   }
 }

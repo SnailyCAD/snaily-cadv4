@@ -15,7 +15,11 @@ import { TONES_SCHEMA } from "@snailycad/schemas";
 import { toastMessage } from "lib/toastMessage";
 import type { PostDispatchTonesData } from "@snailycad/types/api";
 
-export function TonesModal() {
+interface Props {
+  types: ("leo" | "ems-fd")[];
+}
+
+export function TonesModal({ types }: Props) {
   const { state, execute } = useFetch();
   const { closeModal, isOpen } = useModal();
 
@@ -40,9 +44,10 @@ export function TonesModal() {
 
   const validate = handleValidate(TONES_SCHEMA);
   const INITIAL_VALUES = {
-    emsFdTone: false,
-    leoTone: false,
+    emsFdTone: !!types.every((v) => v === "ems-fd"),
+    leoTone: !!types.every((v) => v === "leo"),
     description: "",
+    types,
   };
 
   return (
@@ -58,13 +63,21 @@ export function TonesModal() {
             <p className="my-3 text-neutral-700 dark:text-gray-400">{t("notesInfo")}</p>
 
             <FormRow>
-              <FormField errorMessage={errors.emsFdTone} label={t("emsFdTone")}>
-                <Toggle name="emsFdTone" onCheckedChange={handleChange} value={values.emsFdTone} />
-              </FormField>
+              {types.includes("ems-fd") ? (
+                <FormField errorMessage={errors.emsFdTone} label={t("emsFdTone")}>
+                  <Toggle
+                    name="emsFdTone"
+                    onCheckedChange={handleChange}
+                    value={values.emsFdTone}
+                  />
+                </FormField>
+              ) : null}
 
-              <FormField errorMessage={errors.leoTone} label={t("leoTone")}>
-                <Toggle name="leoTone" onCheckedChange={handleChange} value={values.leoTone} />
-              </FormField>
+              {types.includes("leo") ? (
+                <FormField errorMessage={errors.leoTone} label={t("leoTone")}>
+                  <Toggle name="leoTone" onCheckedChange={handleChange} value={values.leoTone} />
+                </FormField>
+              ) : null}
             </FormRow>
 
             <FormField errorMessage={errors.description} label={common("description")}>

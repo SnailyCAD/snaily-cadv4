@@ -322,7 +322,7 @@ export class MyOfficersController {
   async uploadImageToOfficer(
     @Context("user") user: User,
     @PathParams("id") officerId: string,
-    @MultipartFile("image") file: PlatformMulterFile,
+    @MultipartFile("image") file?: PlatformMulterFile,
   ): Promise<APITypes.PostMyOfficerByIdData> {
     const officer = await prisma.officer.findFirst({
       where: {
@@ -333,6 +333,10 @@ export class MyOfficersController {
 
     if (!officer) {
       throw new NotFound("Not Found");
+    }
+
+    if (!file) {
+      throw new ExtendedBadRequest({ file: "No file provided." });
     }
 
     if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {

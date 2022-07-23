@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-key */
-
+import * as React from "react";
 import { TableActionsAlignment } from "@snailycad/types";
 import type { TableData } from "./TableProps";
 import type { Row as RowType } from "react-table";
@@ -43,7 +43,7 @@ export function TableRow<T extends object, RP extends object>({
               isMove && "w-10",
             )}
           >
-            {cell.render("Cell")}
+            {cell.render("Cell") as React.ReactNode}
           </td>
         );
       })}

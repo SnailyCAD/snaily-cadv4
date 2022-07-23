@@ -201,6 +201,10 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     name: "Active Warrants",
     description: "When enabled, this will display active warrants on the LEO Dashboard.",
   },
+  CITIZEN_DELETE_ON_DEAD: {
+    name: "Delete citizen on dead",
+    description: "When enabled, this will delete all citizen's data when they are declared dead.",
+  },
 };
 
 export function CADFeaturesTab() {

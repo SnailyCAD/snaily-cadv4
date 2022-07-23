@@ -48,8 +48,11 @@ const HOTKEYS = {
 } as const;
 
 export function Editor({ isReadonly, value, onChange }: EditorProps) {
-  const renderElement = React.useCallback((props) => <Element {...props} />, []);
-  const renderLeaf = React.useCallback((props) => <Leaf {...props} />, []);
+  const renderElement = React.useCallback(
+    (props: RenderElementProps) => <Element {...props} />,
+    [],
+  );
+  const renderLeaf = React.useCallback((props: RenderLeafProps) => <Leaf {...props} />, []);
   const editor = React.useMemo(
     () => withChecklists(withShortcuts(withHistory(withReact(createEditor())))),
     [],

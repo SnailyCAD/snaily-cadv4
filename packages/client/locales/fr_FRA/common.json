@@ -12,7 +12,7 @@
     "off": "Éteint",
     "enabled": "Activé",
     "disabled": "Désactivé",
-    "error": "Une erreur inattendue a eu lieu",
+    "error": "Une erreur inattendue s'est produite",
     "view": "Voir",
     "create": "Créer",
     "reason": "Raison",
@@ -51,22 +51,23 @@
     "currency": "$",
     "left": "Gauche",
     "right": "Droite",
-    "user": "Utilisateur"
+    "user": "Utilisateur",
+    "savedSettingsSuccess": "Paramètres sauvegardés avec succès."
   },
   "Nav": {
     "citizen": "Citoyen",
     "citizens": "Citoyens",
-    "bleeter": "Twitter",
+    "bleeter": "Bleeter",
     "taxi": "Taxi",
     "business": "Entreprise",
     "truckLogs": "Logs des camions",
     "admin": "Admin",
     "dispatch": "Dispatch",
-    "liveMap": "Live Map",
+    "liveMap": "Map en Direct",
     "officer": "LEO",
     "dashboard": "Tableau de bord",
-    "myOfficers": "Mes Officiers",
-    "myOfficerLogs": "Mes Logs",
+    "myOfficers": "Mes Personnages LEO",
+    "myOfficerLogs": "Mes Logs (LEO)",
     "incidents": "Incidents",
     "impoundLot": "Fourrière",
     "manageUnits": "Gérer les unités",
@@ -74,7 +75,7 @@
     "tow": "Dépanneur",
     "towLogs": "Logs dépanneur",
     "emsFd": "EMS/FD",
-    "myDeputies": "Mes Adjoints",
+    "myDeputies": "Mes Personnages EMS/FD",
     "account": "Compte",
     "logout": "Déconnexion",
     "login": "Connexion",
@@ -83,8 +84,10 @@
     "citizenLogs": "Logs des citoyens",
     "courthouse": "Tribunal",
     "dlExams": "Examens du permis de conduire",
-    "dmv": "Department of Motor Vehicles",
-    "penalCodes": "Code Pénal"
+    "dmv": "Service du Permis de Conduire et des Papiers du Véhicule",
+    "penalCodes": "Code Pénal",
+    "weaponExams": "Examens pour le PPA",
+    "myDeputyLogs": "Mes Logs (EMS/FD)"
   },
   "Errors": {
     "unknown": "Une erreur inattendue s'est produite",
@@ -143,6 +146,8 @@
     "steamNameInUse": "Impossible de créer un nouveau compte avec Steam car le nom d'utilisateur est déjà utilisé.",
     "steamAccountAlreadyLinked": "Ce compte Steam est déjà lié à un autre compte.",
     "cannotRegisterFirstWithSteam": "Le premier compte doit être enregistré sans Steam. Vous pouvez lier Steam une fois le compte créé.",
-    "Unauthorized": "Vous avez été déconnecté. Veuillez vous reconnecter pour continuer."
+    "Unauthorized": "Vous avez été déconnecté. Veuillez vous reconnecter pour continuer.",
+    "captchaRequired": "Une erreur s'est produite lors de la tentative de validation de votre CAPTCHA. Veuillez réessayer plus tard.",
+    "invalidCaptcha": "Nous n'avons pas pu vérifier que vous êtes un être humain. Veuillez contacter un administrateur si vous pensez qu'il s'agit d'une erreur."
   }
 }
