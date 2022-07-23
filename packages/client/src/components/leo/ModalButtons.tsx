@@ -9,6 +9,10 @@ import { isUnitCombined } from "@snailycad/utils";
 import * as modalButtons from "components/modal-buttons/buttons";
 import { ModalButton } from "components/modal-buttons/ModalButton";
 import type { PostLeoTogglePanicButtonData } from "@snailycad/types/api";
+import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { ModalIds } from "types/ModalIds";
+import { useModal } from "state/modalState";
+import { TonesModal } from "components/dispatch/modals/TonesModal";
 
 const buttons: modalButtons.ModalButton[] = [
   modalButtons.switchDivision,
@@ -29,8 +33,9 @@ export function ModalButtons() {
   const { activeOfficer } = useLeoState();
   const t = useTranslations();
   const { generateCallsign } = useGenerateCallsign();
-
+  const { hasActiveDispatchers } = useActiveDispatchers();
   const { state, execute } = useFetch();
+  const { openModal } = useModal();
 
   async function handlePanic() {
     if (!activeOfficer) return;
@@ -83,6 +88,15 @@ export function ModalButtons() {
         >
           {t("Leo.panicButton")}
         </Button>
+
+        {!hasActiveDispatchers ? (
+          <>
+            <Button disabled={isButtonDisabled} onClick={() => openModal(ModalIds.Tones)}>
+              {t("Leo.tones")}
+            </Button>
+            <TonesModal types={["leo"]} />
+          </>
+        ) : null}
       </ul>
     </div>
   );
