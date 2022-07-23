@@ -1407,14 +1407,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-leaflet/core@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "@react-leaflet/core@npm:1.1.1"
+"@react-leaflet/core@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@react-leaflet/core@npm:2.0.0"
   peerDependencies:
-    leaflet: ^1.7.1
-    react: ^17.0.1
-    react-dom: ^17.0.1
-  checksum: 2fc4a80e5524f9437ac6cef0f95e63388f2df6ecc5107fef85fd097eb2455436e796d41a4c43cdcbb983a4132403646823ba1dc0d953e866eb80808cbfaf0232
+    leaflet: ^1.8.0
+    react: ^18.0.0
+    react-dom: ^18.0.0
+  checksum: 8528b05bb3f2218dc783d508fad571ed34986bb9a15e8296f3ca6e090934ee4b9858172cab25bc2ae3255c880660d648477bb609c496bee70d1c0e3fb99f0533
   languageName: node
   linkType: hard
 
@@ -1667,7 +1667,7 @@ __metadata:
     "@snailycad/utils": 1.17.1
     "@tanstack/react-virtual": ^3.0.0-alpha.0
     "@tanstack/virtual-core": ^3.0.0-alpha.1
-    "@types/leaflet": ^1.7.9
+    "@types/leaflet": ^1.7.11
     "@types/react": ^18.0.15
     "@types/react-dom": ^18.0.6
     "@types/react-table": ^7.7.12
@@ -1681,7 +1681,7 @@ __metadata:
     hex-color-regex: ^1.1.0
     is-hotkey: ^0.2.0
     is-mobile: ^3.1.1
-    leaflet: ^1.7.1
+    leaflet: ^1.8.0
     next: ^12.2.3
     next-intl: 2.7.4
     nookies: ^2.5.2
@@ -1698,7 +1698,7 @@ __metadata:
     react-dom: ^18.2.0
     react-google-recaptcha-v3: ^1.10.0
     react-hot-toast: ^2.3.0
-    react-leaflet: ^3.2.5
+    react-leaflet: ^4.0.1
     react-select: ^5.4.0
     react-sortablejs: ^6.1.4
     react-table: ^7.8.0
@@ -2622,12 +2622,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/leaflet@npm:^1.7.9":
-  version: 1.7.9
-  resolution: "@types/leaflet@npm:1.7.9"
+"@types/leaflet@npm:^1.7.11":
+  version: 1.7.11
+  resolution: "@types/leaflet@npm:1.7.11"
   dependencies:
     "@types/geojson": "*"
-  checksum: 1a8c18b50d1b7726e99d86f9087733216b830c545a97ea95a83ff45e51e555bbef8f4eab654de603f539b9a297d352f8c443895f75cc5c52a7b488eaed664c04
+  checksum: 6613dbc91f174545ed39183a8564a344152f1884f02ab4dbc002b6bd4816d8525b5247e62217694763daf727ca5e589f40144dc809edb7194064e6bdc2f4369a
   languageName: node
   linkType: hard
 
@@ -7656,10 +7656,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"leaflet@npm:^1.7.1":
-  version: 1.7.1
-  resolution: "leaflet@npm:1.7.1"
-  checksum: f69149ab482eeb6cdabd837939c4782c97a7a18bc0b2a9330d4a828ca0dc6e035981f2ecdb71c6646aa173bc369cd3b4fd6bbe5d81df4c59c45254f9e9361d03
+"leaflet@npm:^1.8.0":
+  version: 1.8.0
+  resolution: "leaflet@npm:1.8.0"
+  checksum: 4a27895d4253844f2f13f94cbc52a2030b10833cdf553085d931b834745236a8d2a38844a01eb968cc109eb43268bfadb97aad85b51deffb17b6ccd106542e00
   languageName: node
   linkType: hard
 
@@ -9317,16 +9317,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-leaflet@npm:^3.2.5":
-  version: 3.2.5
-  resolution: "react-leaflet@npm:3.2.5"
+"react-leaflet@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "react-leaflet@npm:4.0.1"
   dependencies:
-    "@react-leaflet/core": ^1.1.1
+    "@react-leaflet/core": ^2.0.0
   peerDependencies:
-    leaflet: ^1.7.1
-    react: ^17.0.1
-    react-dom: ^17.0.1
-  checksum: 503b7cee8acc12e0e2c5e7675432e7ef5742463e3e5420282ce60a9efd306430caefae3cb282c976e3df7665f19aef5b49cdce44a034979b4ea3ee968c2621d2
+    leaflet: ^1.8.0
+    react: ^18.0.0
+    react-dom: ^18.0.0
+  checksum: f5e94c0e3b49f8d7d3c464185f8624ab0ad6958a950dd153974183ed93be1b61216c1cddd09967a85e65762f6696a39dfac086ab770980689405e80b3c43a6c1
   languageName: node
   linkType: hard
 

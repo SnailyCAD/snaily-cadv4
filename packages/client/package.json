@@ -47,7 +47,7 @@
     "hex-color-regex": "^1.1.0",
     "is-hotkey": "^0.2.0",
     "is-mobile": "^3.1.1",
-    "leaflet": "^1.7.1",
+    "leaflet": "^1.8.0",
     "next": "^12.2.3",
     "next-intl": "2.7.4",
     "nookies": "^2.5.2",
@@ -63,7 +63,7 @@
     "react-dom": "^18.2.0",
     "react-google-recaptcha-v3": "^1.10.0",
     "react-hot-toast": "^2.3.0",
-    "react-leaflet": "^3.2.5",
+    "react-leaflet": "^4.0.1",
     "react-select": "^5.4.0",
     "react-sortablejs": "^6.1.4",
     "react-table": "^7.8.0",
@@ -79,7 +79,7 @@
     "zustand": "^3.7.2"
   },
   "devDependencies": {
-    "@types/leaflet": "^1.7.9",
+    "@types/leaflet": "^1.7.11",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "@types/react-table": "^7.7.12",
