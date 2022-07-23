@@ -433,6 +433,7 @@ export const Feature = {
   COURTHOUSE_POSTS: "COURTHOUSE_POSTS",
   WEAPON_EXAMS: "WEAPON_EXAMS",
   ACTIVE_WARRANTS: "ACTIVE_WARRANTS",
+  CITIZEN_DELETE_ON_DEAD: "CITIZEN_DELETE_ON_DEAD",
 } as const;
 
 export type Feature = typeof Feature[keyof typeof Feature];
