@@ -6,7 +6,7 @@ interface Props {
   onDrop(item: any): void;
   accepts: string[];
   canDrop?(item: any): boolean;
-  children: React.ReactChild;
+  children: React.ReactNode;
 }
 
 export function _Droppable({ accepts, children, canDrop, onDrop }: Props) {

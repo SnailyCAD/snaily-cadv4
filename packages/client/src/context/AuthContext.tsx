@@ -18,7 +18,7 @@ interface Context {
 const AuthContext = React.createContext<Context | undefined>(undefined);
 
 interface ProviderProps {
-  children: React.ReactChild | React.ReactChild[];
+  children: React.ReactNode;
   initialData: {
     userSavedIsDarkTheme?: "false" | "true";
     session?: (User & { cad: CAD | null }) | null;

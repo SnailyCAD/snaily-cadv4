@@ -8,7 +8,7 @@ interface Props {
   items: (ContextItem | boolean)[];
   asChild?: boolean;
   canBeOpened?: boolean;
-  children: React.ReactChild;
+  children: React.ReactNode;
 }
 
 type ButtonProps = React.DetailedHTMLProps<
