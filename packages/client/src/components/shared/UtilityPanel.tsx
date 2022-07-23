@@ -20,10 +20,10 @@ export function UtilityPanel({ children }: Props) {
   return (
     <div className="w-full mb-3 overflow-hidden card">
       <header className="flex items-center justify-between px-4 py-2 mb-2 bg-gray-200 dark:bg-gray-3">
-        <h3 className="text-xl font-semibold">
+        <h1 className="text-xl font-semibold">
           {t("utilityPanel")}
           {showAop ? <span> - AOP: {areaOfPlay}</span> : null}
-        </h3>
+        </h1>
 
         <div className="flex items-center gap-3">
           {ACTIVE_DISPATCHERS ? (

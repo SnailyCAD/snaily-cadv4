@@ -27,6 +27,7 @@ export function BoloColumn({ bolos, boloType, setTempBolo }: Props) {
     count: bolos.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => ESTIMATED_SIZES[boloType],
+    enableSmoothScroll: true,
   });
 
   function handleEditClick(bolo: Bolo) {
@@ -59,10 +60,10 @@ export function BoloColumn({ bolos, boloType, setTempBolo }: Props) {
               if (!bolo) return null;
 
               return (
-                <div
+                <li
                   key={virtualRow.index}
                   ref={virtualRow.measureElement}
-                  className="absolute top-0 left-0 w-full"
+                  className="absolute top-0 left-0 w-full flex justify-between"
                   style={{ transform: `translateY(${virtualRow.start}px)` }}
                 >
                   <BoloItem
@@ -72,7 +73,7 @@ export function BoloColumn({ bolos, boloType, setTempBolo }: Props) {
                     handleEdit={handleEditClick}
                     handleDelete={handleDeleteClick}
                   />
-                </div>
+                </li>
               );
             })}
           </ul>

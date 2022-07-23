@@ -28,8 +28,9 @@ export function CitizenListItem({ citizen }: Props) {
       <div className="flex items-center space-x-3">
         {citizen.imageId ? (
           <img
+            alt={`${citizen.name} ${citizen.surname}`}
             draggable={false}
-            className="object-cover rounded-full w-14 h-14"
+            className="object-cover rounded-md w-14 h-14"
             src={makeImageUrl("citizens", citizen.imageId)}
             loading="lazy"
           />
