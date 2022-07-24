@@ -48,7 +48,13 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
     });
 
     if (typeof json === "boolean" && json) {
-      asyncTable.setData((p) => p.filter((v) => v.id !== tempWeapon.id));
+      const newData = asyncTable.data.filter((v) => v.id !== tempWeapon.id);
+
+      if (newData.length <= 0) {
+        props.weapons.length = 0;
+      }
+
+      asyncTable.setData(newData);
       weaponState.setTempId(null);
       closeModal(ModalIds.AlertDeleteWeapon);
     }
@@ -150,6 +156,7 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
         onCreate={(weapon) => {
           closeModal(ModalIds.RegisterWeapon);
           asyncTable.setData((p) => [...p, weapon]);
+          props.weapons.length += 1;
         }}
         onUpdate={(old, newW) => {
           asyncTable.setData((p) => {
