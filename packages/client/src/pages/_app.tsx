@@ -31,9 +31,10 @@ Sentry.init({
   dsn: "https://6e31d0dc886d482091e293edb73eb10e@o518232.ingest.sentry.io/6553264",
   tracesSampleRate: 1.0,
   integrations: [new Tracing.BrowserTracing()],
+  attachStacktrace: true,
 });
 
-export default function App({ Component, router, pageProps }: AppProps) {
+function App({ Component, router, pageProps }: AppProps) {
   const isMounted = useMounted();
   const { hostname, protocol, port } = new URL(findAPIUrl());
   const url = `${protocol}//${hostname}:${port}`;
@@ -76,3 +77,5 @@ export default function App({ Component, router, pageProps }: AppProps) {
     </SSRProvider>
   );
 }
+
+export default Sentry.withProfiler(App);

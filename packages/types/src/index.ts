@@ -44,6 +44,7 @@ export type cad = Pick<
 interface CADVersion {
   currentCommitHash: string;
   currentVersion: string;
+  latestReleaseVersion: string | null;
 }
 
 export type CadFeature = Prisma.CadFeature;
