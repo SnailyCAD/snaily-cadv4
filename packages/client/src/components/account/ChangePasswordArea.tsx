@@ -44,7 +44,7 @@ export function ChangePasswordArea() {
 
   return (
     <section className="mt-7">
-      <h3 className="text-2xl font-semibold">{t("passwordSettings")}</h3>
+      <h2 className="text-2xl font-semibold">{t("passwordSettings")}</h2>
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (
           <Form className="mt-2">

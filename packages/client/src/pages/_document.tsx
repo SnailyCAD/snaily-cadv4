@@ -3,10 +3,6 @@ import { classNames } from "lib/classNames";
 import Document, { Html, Head, Main, NextScript, DocumentContext } from "next/document";
 
 class CustomDocument extends Document {
-  state: Readonly<{ darkMode: boolean }> = {
-    darkMode: false,
-  };
-
   static async getInitialProps(ctx: DocumentContext) {
     const initialProps = await Document.getInitialProps(ctx);
     return { ...initialProps };

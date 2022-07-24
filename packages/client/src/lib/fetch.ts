@@ -20,8 +20,6 @@ export async function handleRequest<T = any>(
   options?: Options,
   cookie?: string,
 ): Promise<AxiosResponse<T>> {
-  const start = new Date();
-
   const { req, method, data } = options ?? {};
 
   const apiUrl = findAPIUrl();
@@ -51,10 +49,6 @@ export async function handleRequest<T = any>(
   if (res instanceof Error) {
     throw makeReturn(res);
   }
-
-  const end = new Date();
-  const duration = end.getTime() - start.getTime();
-  console.info(`${method ?? "GET"} ${path} - ${duration}ms`);
 
   return makeReturn(res) as unknown as AxiosResponse<T>;
 }
