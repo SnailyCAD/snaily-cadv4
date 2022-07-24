@@ -86,8 +86,10 @@ export default function CitizenId() {
               type="button"
               onClick={() => openModal(ModalIds.CitizenImage)}
               className="cursor-pointer"
+              aria-label="View citizen image"
             >
               <img
+                alt={`${citizen.name} ${citizen.surname}`}
                 className="rounded-md w-[150px] h-[150px] object-cover"
                 draggable={false}
                 src={makeImageUrl("citizens", citizen.imageId)}
