@@ -67,7 +67,7 @@ export function ModalButtons() {
         </p>
       ) : null}
 
-      <ul className="mt-2 modal-buttons-grid">
+      <div className="mt-2 modal-buttons-grid">
         {buttons.map((button, idx) => {
           return (
             <ModalButton
@@ -97,7 +97,7 @@ export function ModalButtons() {
             <TonesModal types={["leo"]} />
           </>
         ) : null}
-      </ul>
+      </div>
     </div>
   );
 }

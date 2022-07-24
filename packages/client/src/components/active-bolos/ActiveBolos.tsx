@@ -47,7 +47,7 @@ export function ActiveBolos({ initialBolos }: Props) {
   return (
     <div className="mt-3 overflow-hidden card">
       <header className="p-2 px-4 bg-gray-200 dark:bg-gray-3">
-        <h3 className="text-xl font-semibold">{t("activeBolos")}</h3>
+        <h1 className="text-xl font-semibold">{t("activeBolos")}</h1>
       </header>
 
       <div className="px-4">
