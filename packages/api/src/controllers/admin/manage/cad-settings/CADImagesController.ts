@@ -58,12 +58,11 @@ export class ManageCitizensController {
   })
   async uploadAuthImagesToCAD(
     @Context("cad") cad: cad,
-    @MultipartFile("authScreenHeaderImageId") header?: PlatformMulterFile,
-    @MultipartFile("authScreenBgImageId") background?: PlatformMulterFile,
+    @MultipartFile("files", 4) files: PlatformMulterFile[],
   ) {
     await Promise.all(
-      [header, background].map(async (file) => {
-        if (!file) return;
+      files.map(async (file) => {
+        console.log({ file });
 
         if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
           throw new BadRequest("invalidImageType");
@@ -77,7 +76,7 @@ export class ManageCitizensController {
         const [data] = await Promise.all([
           prisma.miscCadSettings.update({
             where: { id: cad.miscCadSettingsId! },
-            data: { [file.fieldname]: `${id}.${extension}` },
+            data: { [file.originalname]: `${id}.${extension}` },
           }),
           fs.writeFileSync(path, file.buffer),
         ]);
