@@ -63,7 +63,7 @@ export function DispatchModalButtons() {
   }
 
   return (
-    <ul className="modal-buttons-grid">
+    <ul className="modal-buttons-grid py-2 pb-3 px-4">
       {buttons.map((button, idx) => (
         <ModalButton disabled={!isActive} key={idx} button={button} />
       ))}
