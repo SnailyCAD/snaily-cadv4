@@ -255,6 +255,7 @@
     "vehicle": "véhicule",
     "other": "autre",
     "stolen": "volé",
+    "filters": "Filtres",
     "alert_deleteBolo": "Êtes-vous sûr de vouloir supprimer ce BOLO ? Cette action ne peut être annulée."
   }
 }
