@@ -124,7 +124,6 @@ export class AuthController {
   ): Promise<APITypes.PostRegisterUserData> {
     const data = validateSchema(AUTH_SCHEMA, body);
 
-    console.log({ GOOGLE_CAPTCHA_SECRET });
     const hasGoogleCaptchaSecret =
       typeof GOOGLE_CAPTCHA_SECRET === "string" && GOOGLE_CAPTCHA_SECRET.length > 0;
 

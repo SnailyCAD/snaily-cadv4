@@ -4,19 +4,27 @@ import { useBolos } from "hooks/realtime/useBolos";
 import useFetch from "lib/useFetch";
 import * as React from "react";
 import { ModalIds } from "types/ModalIds";
-import { BoloType } from "@snailycad/types";
+import { Bolo, BoloType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { ManageBoloModal } from "./ManageBoloModal";
 import { BoloColumn } from "./BoloColumn";
 import type { DeleteBolosData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import { useMounted } from "@casper124578/useful";
 
 const BOLO_TYPES = Object.values(BoloType);
 
-export function ActiveBolos() {
+interface Props {
+  initialBolos: Bolo[];
+}
+
+export function ActiveBolos({ initialBolos }: Props) {
   const { state, execute } = useFetch();
   const { closeModal } = useModal();
-  const { bolos, setBolos } = useBolos();
+  const bolosState = useBolos();
+  const isMounted = useMounted();
+  const bolos = isMounted ? bolosState.bolos : initialBolos;
+
   const [tempBolo, boloState] = useTemporaryItem(bolos);
 
   const t = useTranslations("Bolos");
@@ -30,7 +38,7 @@ export function ActiveBolos() {
     });
 
     if (json) {
-      setBolos(bolos.filter((v) => v.id !== tempBolo.id));
+      bolosState.setBolos(bolos.filter((v) => v.id !== tempBolo.id));
       boloState.setTempId(null);
       closeModal(ModalIds.AlertDeleteBolo);
     }
@@ -39,7 +47,7 @@ export function ActiveBolos() {
   return (
     <div className="mt-3 overflow-hidden card">
       <header className="p-2 px-4 bg-gray-200 dark:bg-gray-3">
-        <h3 className="text-xl font-semibold">{t("activeBolos")}</h3>
+        <h1 className="text-xl font-semibold">{t("activeBolos")}</h1>
       </header>
 
       <div className="px-4">

@@ -53,15 +53,11 @@ export class LeoController {
     }
 
     const [officers, units] = await Promise.all([
-      await prisma.officer.findMany({
-        where: {
-          status: {
-            NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY },
-          },
-        },
+      prisma.officer.findMany({
+        where: { status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } } },
         include: leoProperties,
       }),
-      await prisma.combinedLeoUnit.findMany({
+      prisma.combinedLeoUnit.findMany({
         include: combinedUnitProperties,
       }),
     ]);

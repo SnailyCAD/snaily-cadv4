@@ -62,12 +62,8 @@ export function DispatchModalButtons() {
     });
   }
 
-  function handleOpenTonesModal() {
-    openModal(ModalIds.Tones);
-  }
-
   return (
-    <ul className="modal-buttons-grid">
+    <ul className="modal-buttons-grid py-2 pb-3 px-4">
       {buttons.map((button, idx) => (
         <ModalButton disabled={!isActive} key={idx} button={button} />
       ))}
@@ -76,7 +72,7 @@ export function DispatchModalButtons() {
         {signal100Enabled ? t("Leo.disableSignal100") : t("Leo.enableSignal100")}
       </Button>
 
-      <Button disabled={!isActive} onClick={handleOpenTonesModal}>
+      <Button disabled={!isActive} onClick={() => openModal(ModalIds.Tones)}>
         {t("Leo.tones")}
       </Button>
 
@@ -86,7 +82,7 @@ export function DispatchModalButtons() {
         </Button>
       ) : null}
 
-      <TonesModal />
+      <TonesModal types={["leo", "ems-fd"]} />
     </ul>
   );
 }

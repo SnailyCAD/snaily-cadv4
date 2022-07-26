@@ -50,7 +50,13 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
     });
 
     if (json) {
-      asyncTable.setData((p) => p.filter((v) => v.id !== tempVehicle.id));
+      const newData = asyncTable.data.filter((v) => v.id !== tempVehicle.id);
+
+      if (newData.length <= 0) {
+        props.vehicles.length = 0;
+      }
+
+      asyncTable.setData(newData);
       vehicleState.setTempId(null);
       closeModal(ModalIds.AlertDeleteVehicle);
     }
@@ -177,9 +183,10 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
       </div>
 
       <RegisterVehicleModal
-        onCreate={(weapon) => {
+        onCreate={(vehicle) => {
           closeModal(ModalIds.RegisterVehicle);
-          asyncTable.setData((p) => [...p, weapon]);
+          asyncTable.setData((p) => [vehicle, ...p]);
+          props.vehicles.length += 1;
         }}
         onUpdate={(old, newW) => {
           asyncTable.setData((p) => {

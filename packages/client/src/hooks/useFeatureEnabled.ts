@@ -1,4 +1,5 @@
-import { Feature } from "@snailycad/types";
+import * as React from "react";
+import { CadFeature, Feature } from "@snailycad/types";
 import { useAuth } from "context/AuthContext";
 
 export const DEFAULT_DISABLED_FEATURES: Partial<Record<Feature, { isEnabled: boolean }>> = {
@@ -13,20 +14,26 @@ export const DEFAULT_DISABLED_FEATURES: Partial<Record<Feature, { isEnabled: boo
   CREATE_USER_CITIZEN_LEO: { isEnabled: false },
   WEAPON_EXAMS: { isEnabled: false },
   ACTIVE_WARRANTS: { isEnabled: false },
+  CITIZEN_DELETE_ON_DEAD: { isEnabled: false },
 };
 
-export function useFeatureEnabled() {
+export function useFeatureEnabled(features?: CadFeature[]) {
   const { cad } = useAuth();
-  const features = cad?.features;
-  const obj: Record<Feature, boolean> = {} as Record<Feature, boolean>;
+  const _features = features ?? cad?.features;
 
-  Object.keys(Feature).map((feature) => {
-    const cadFeature = features?.find((v) => v.feature === feature);
-    const isEnabled =
-      cadFeature?.isEnabled ?? DEFAULT_DISABLED_FEATURES[feature as Feature]?.isEnabled ?? true;
+  const featuresObj = React.useMemo(() => {
+    const obj: Record<Feature, boolean> = {} as Record<Feature, boolean>;
 
-    obj[feature as Feature] = isEnabled;
-  });
+    Object.keys(Feature).map((feature) => {
+      const cadFeature = _features?.find((v) => v.feature === feature);
+      const isEnabled =
+        cadFeature?.isEnabled ?? DEFAULT_DISABLED_FEATURES[feature as Feature]?.isEnabled ?? true;
 
-  return obj;
+      obj[feature as Feature] = isEnabled;
+    });
+
+    return obj;
+  }, [_features]);
+
+  return featuresObj;
 }

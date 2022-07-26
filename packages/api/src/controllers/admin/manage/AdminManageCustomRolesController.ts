@@ -116,7 +116,7 @@ export class AdminManageCustomRolesController {
   @Post("/:id")
   async uploadImageToCustomRole(
     @PathParams("id") customRoleId: string,
-    @MultipartFile("image") file: PlatformMulterFile,
+    @MultipartFile("image") file?: PlatformMulterFile,
   ): Promise<APITypes.PostCustomRoleByIdData> {
     const customRole = await prisma.customRole.findUnique({
       where: {
@@ -126,6 +126,10 @@ export class AdminManageCustomRolesController {
 
     if (!customRole) {
       throw new NotFound("customRoleNotFound");
+    }
+
+    if (!file) {
+      throw new ExtendedBadRequest({ file: "No file provided." });
     }
 
     if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {

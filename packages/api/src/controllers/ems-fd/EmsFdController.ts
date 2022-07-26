@@ -5,8 +5,8 @@ import { EMS_FD_DEPUTY_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas"
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
-import { type MiscCadSettings, ShouldDoType, type User, CadFeature } from "@prisma/client";
-import type { EmsFdDeputy } from "@snailycad/types";
+import { type MiscCadSettings, ShouldDoType, type User, CadFeature, Feature } from "@prisma/client";
+import type { cad, EmsFdDeputy } from "@snailycad/types";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { IsAuth } from "middlewares/IsAuth";
 import { ActiveDeputy } from "middlewares/ActiveDeputy";
@@ -24,6 +24,7 @@ import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiv
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { Socket } from "services/SocketService";
 import type * as APITypes from "@snailycad/types/api";
+import { isFeatureEnabled } from "lib/cad";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
@@ -359,6 +360,7 @@ export class EmsFdController {
   })
   async declareCitizenDeadOrAlive(
     @PathParams("citizenId") citizenId: string,
+    @Context("cad") cad: cad,
   ): Promise<APITypes.PostEmsFdDeclareCitizenById> {
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -368,6 +370,20 @@ export class EmsFdController {
 
     if (!citizen) {
       throw new NotFound("notFound");
+    }
+
+    const deleteOnDeadFeature = isFeatureEnabled({
+      defaultReturn: false,
+      feature: Feature.CITIZEN_DELETE_ON_DEAD,
+      features: cad.features,
+    });
+
+    if (deleteOnDeadFeature) {
+      const deleted = await prisma.citizen.delete({
+        where: { id: citizen.id },
+      });
+
+      return { ...deleted, dead: true, dateOfDead: new Date() };
     }
 
     const updated = await prisma.citizen.update({
@@ -460,7 +476,7 @@ export class EmsFdController {
   async uploadImageToOfficer(
     @Context("user") user: User,
     @PathParams("id") deputyId: string,
-    @MultipartFile("image") file: PlatformMulterFile,
+    @MultipartFile("image") file?: PlatformMulterFile,
   ): Promise<APITypes.PostMyDeputyByIdData> {
     const deputy = await prisma.emsFdDeputy.findFirst({
       where: {
@@ -471,6 +487,10 @@ export class EmsFdController {
 
     if (!deputy) {
       throw new NotFound("Not Found");
+    }
+
+    if (!file) {
+      throw new ExtendedBadRequest({ file: "No file provided." });
     }
 
     if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {

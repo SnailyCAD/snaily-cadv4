@@ -68,7 +68,7 @@ export function UserApiTokenTab() {
 
   return (
     <TabsContent aria-label={t("userApiToken")} value="userApiToken">
-      <h3 className="text-2xl font-semibold">{t("userApiToken")}</h3>
+      <h1 className="text-2xl font-semibold">{t("userApiToken")}</h1>
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, setFieldValue, values }) => (
           <Form className="mt-3 space-y-5">

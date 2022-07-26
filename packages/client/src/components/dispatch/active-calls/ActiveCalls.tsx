@@ -31,6 +31,7 @@ import { Droppable } from "components/shared/dnd/Droppable";
 import { DndActions } from "types/DndActions";
 import { AssignedUnitsColumn } from "./AssignedUnitsColumn";
 import type { Post911CallAssignUnAssign } from "@snailycad/types/api";
+import { useMounted } from "@casper124578/useful";
 
 const ADDED_TO_CALL_SRC = "/sounds/added-to-call.mp3" as const;
 const INCOMING_CALL_SRC = "/sounds/incoming-call.mp3" as const;
@@ -39,14 +40,21 @@ const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
 );
 
-function _ActiveCalls() {
+interface Props {
+  initialCalls: Full911Call[];
+}
+
+function _ActiveCalls({ initialCalls }: Props) {
   const { user } = useAuth();
   const { hasActiveDispatchers } = useActiveDispatchers();
 
   const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
 
   const { hasPermissions } = usePermission();
-  const { calls, setCalls, draggingUnit } = useDispatchState();
+  const { setCalls, draggingUnit, calls: _calls } = useDispatchState();
+  const isMounted = useMounted();
+  const calls = isMounted ? _calls : initialCalls;
+
   const t = useTranslations("Calls");
   const leo = useTranslations("Leo");
   const common = useTranslations("Common");
@@ -222,7 +230,7 @@ function _ActiveCalls() {
       {addedToCallAudio}
       {incomingCallAudio}
       <header className="flex items-center justify-between p-2 px-4 bg-gray-200 dark:bg-gray-3">
-        <h3 className="text-xl font-semibold">{t("active911Calls")}</h3>
+        <h1 className="text-xl font-semibold">{t("active911Calls")}</h1>
 
         <div>
           <Button

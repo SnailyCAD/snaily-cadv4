@@ -63,17 +63,21 @@ export class AdminController {
   }
 
   private async imageData() {
-    const path = join(__dirname, "../../../", "public");
-    const items = glob.sync(`${path}/**/*.*`);
-    let totalSize = 0;
+    try {
+      const path = join(__dirname, "../../../", "public");
+      const items = glob.sync(`${path}/**/*.*`);
+      let totalSize = 0;
 
-    await Promise.all(
-      items.map((item) => {
-        const stat = statSync(join(item));
-        totalSize += stat.size;
-      }),
-    );
+      await Promise.all(
+        items.map((item) => {
+          const stat = statSync(join(item));
+          totalSize += stat.size;
+        }),
+      );
 
-    return { count: items.length, totalSize };
+      return { count: items.length, totalSize };
+    } catch {
+      return null;
+    }
   }
 }

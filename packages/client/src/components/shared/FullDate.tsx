@@ -3,7 +3,7 @@ import format from "date-fns/format";
 import { formatDate } from "lib/utils";
 import { HoverCard } from "./HoverCard";
 
-interface Props extends HoverCardProps {
+interface Props extends Omit<HoverCardProps, "children"> {
   children: Date | string | number;
   onlyDate?: boolean;
   isDateOfBirth?: boolean;

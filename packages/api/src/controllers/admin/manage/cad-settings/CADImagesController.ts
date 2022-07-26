@@ -12,6 +12,7 @@ import { cad, Rank } from "@prisma/client";
 import { randomUUID } from "node:crypto";
 import { Permissions } from "@snailycad/permissions";
 import { UsePermissions } from "middlewares/UsePermissions";
+import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
 @Controller("/admin/manage/cad-settings/image")
 export class ManageCitizensController {
@@ -23,8 +24,12 @@ export class ManageCitizensController {
   })
   async uploadLogoToCAD(
     @Context("cad") cad: cad,
-    @MultipartFile("image") file: PlatformMulterFile,
+    @MultipartFile("image") file?: PlatformMulterFile,
   ) {
+    if (!file) {
+      throw new ExtendedBadRequest({ file: "No file provided." });
+    }
+
     if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
       throw new BadRequest("invalidImageType");
     }
@@ -53,12 +58,11 @@ export class ManageCitizensController {
   })
   async uploadAuthImagesToCAD(
     @Context("cad") cad: cad,
-    @MultipartFile("authScreenHeaderImageId") header?: PlatformMulterFile,
-    @MultipartFile("authScreenBgImageId") background?: PlatformMulterFile,
+    @MultipartFile("files", 4) files: PlatformMulterFile[],
   ) {
     await Promise.all(
-      [header, background].map(async (file) => {
-        if (!file) return;
+      files.map(async (file) => {
+        console.log({ file });
 
         if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
           throw new BadRequest("invalidImageType");
@@ -72,7 +76,7 @@ export class ManageCitizensController {
         const [data] = await Promise.all([
           prisma.miscCadSettings.update({
             where: { id: cad.miscCadSettingsId! },
-            data: { [file.fieldname]: `${id}.${extension}` },
+            data: { [file.originalname]: `${id}.${extension}` },
           }),
           fs.writeFileSync(path, file.buffer),
         ]);

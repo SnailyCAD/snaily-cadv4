@@ -58,7 +58,7 @@ export function ConnectionsTab() {
 
   return (
     <TabsContent aria-label={t("connections")} value="connections">
-      <h3 className="text-2xl font-semibold">{t("connections")}</h3>
+      <h1 className="text-2xl font-semibold">{t("connections")}</h1>
 
       <ul className="flex flex-col mt-3 gap-y-4">
         {CONNECTIONS.map((connection) => {
@@ -86,11 +86,12 @@ export function ConnectionsTab() {
                     onClick={() => handleUnlink(connection.key)}
                     disabled={!ALLOW_REGULAR_LOGIN || state === "loading"}
                     variant="danger"
+                    className="text-base"
                   >
                     {state === "loading" ? t("disconnecting") : connection.disconnect}
                   </Button>
                 ) : (
-                  <Button onClick={() => handleConnectClick(connection.key)}>
+                  <Button className="text-base" onClick={() => handleConnectClick(connection.key)}>
                     {connection.connect}
                   </Button>
                 )}

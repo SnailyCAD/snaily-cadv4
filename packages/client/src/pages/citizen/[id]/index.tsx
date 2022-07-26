@@ -11,7 +11,6 @@ import { Button, buttonVariants } from "components/Button";
 import useFetch from "lib/useFetch";
 import { getTranslations } from "lib/getTranslation";
 import { VehiclesCard } from "components/citizen/vehicles/VehiclesCard";
-import { WeaponsCard } from "components/citizen/weapons/WeaponsCard";
 import { LicensesCard } from "components/citizen/licenses/LicensesCard";
 import { MedicalRecords } from "components/citizen/medical-records/MedicalRecords";
 import { calculateAge, formatCitizenAddress, requestAll } from "lib/utils";
@@ -32,6 +31,9 @@ const AlertModal = dynamic(async () => (await import("components/modal/AlertModa
 const CitizenImageModal = dynamic(
   async () => (await import("components/citizen/modals/CitizenImageModal")).CitizenImageModal,
 );
+const WeaponsCard = dynamic(
+  async () => (await import("components/citizen/weapons/WeaponsCard")).WeaponsCard,
+);
 
 export default function CitizenId() {
   const { execute, state } = useFetch();
@@ -42,7 +44,8 @@ export default function CitizenId() {
   const { citizen } = useCitizen();
   const { makeImageUrl } = useImageUrl();
   const { cad } = useAuth();
-  const { SOCIAL_SECURITY_NUMBERS, ALLOW_CITIZEN_DELETION_BY_NON_ADMIN } = useFeatureEnabled();
+  const { SOCIAL_SECURITY_NUMBERS, WEAPON_REGISTRATION, ALLOW_CITIZEN_DELETION_BY_NON_ADMIN } =
+    useFeatureEnabled();
 
   async function handleDelete() {
     if (!citizen) return;
@@ -86,8 +89,10 @@ export default function CitizenId() {
               type="button"
               onClick={() => openModal(ModalIds.CitizenImage)}
               className="cursor-pointer"
+              aria-label="View citizen image"
             >
               <img
+                alt={`${citizen.name} ${citizen.surname}`}
                 className="rounded-md w-[150px] h-[150px] object-cover"
                 draggable={false}
                 src={makeImageUrl("citizens", citizen.imageId)}
@@ -163,8 +168,8 @@ export default function CitizenId() {
 
       <div className="mt-3 space-y-3">
         <VehiclesCard vehicles={citizen.vehicles} />
-        <WeaponsCard weapons={citizen.weapons} />
-        {/* <RecordsArea records={citizen.Record} /> */}
+        {WEAPON_REGISTRATION ? <WeaponsCard weapons={citizen.weapons} /> : null}
+
         <RecordsTab records={citizen.Record} isCitizen />
       </div>
 
