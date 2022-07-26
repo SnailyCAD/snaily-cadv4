@@ -15,6 +15,7 @@ import { Button } from "components/Button";
 import { classNames } from "lib/classNames";
 import { Filter } from "react-bootstrap-icons";
 import dynamic from "next/dynamic";
+import { handleFilter } from "./BoloFilters";
 
 const BoloFilters = dynamic(async () => (await import("./BoloFilters")).BoloFilters, {
   ssr: false,
@@ -35,6 +36,7 @@ export function ActiveBolos({ initialBolos }: Props) {
 
   const [tempBolo, boloState] = useTemporaryItem(bolos);
   const [showFilters, setShowFilters] = React.useState(false);
+  const [search, setSearch] = React.useState("");
 
   const t = useTranslations("Bolos");
 
@@ -82,11 +84,14 @@ export function ActiveBolos({ initialBolos }: Props) {
           <p className="py-2 text-neutral-700 dark:text-gray-300">{t("noActiveBolos")}</p>
         ) : (
           <>
-            {showFilters ? <BoloFilters /> : null}
+            {showFilters ? <BoloFilters search={search} setSearch={setSearch} /> : null}
 
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
               {BOLO_TYPES.map((boloType) => {
-                const bolosForType = bolos.filter((v) => v.type === boloType);
+                const bolosForType = bolos.filter(
+                  (v) => v.type === boloType && handleFilter(v, search),
+                );
+
                 return (
                   <BoloColumn
                     boloType={boloType}
