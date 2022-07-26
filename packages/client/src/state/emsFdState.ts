@@ -11,7 +11,7 @@ interface EmsFdState {
   setDeputies(deputies: EmsFdDeputy[]): void;
 }
 
-export const useEmsFdState = create<EmsFdState>((set) => ({
+export const useEmsFdState = create<EmsFdState>()((set) => ({
   activeDeputy: null,
   setActiveDeputy: (deputy) => set({ activeDeputy: deputy }),
 

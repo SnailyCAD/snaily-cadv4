@@ -22,7 +22,7 @@ interface UseModal extends Pick<ModalState, "canBeClosed" | "setCanBeClosed"> {
   getPayload<T = unknown>(id: ModalIds): T | null;
 }
 
-export const useModalState = create<ModalState>((set) => ({
+export const useModalState = create<ModalState>()((set) => ({
   open: [],
   setOpen: (ids) => set({ open: ids }),
 

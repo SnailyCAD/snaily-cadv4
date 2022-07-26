@@ -34,7 +34,7 @@ interface BusinessState {
   setJoinableBusinesses(businesses: Business[]): void;
 }
 
-export const useBusinessState = create<BusinessState>((set) => ({
+export const useBusinessState = create<BusinessState>()((set) => ({
   currentBusiness: null,
   setCurrentBusiness: (business) => set({ currentBusiness: business }),
 
