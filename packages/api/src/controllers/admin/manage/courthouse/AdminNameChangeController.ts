@@ -7,6 +7,7 @@ import { Description, Get, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import type * as APITypes from "@snailycad/types/api";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/name-change-requests")
@@ -17,7 +18,7 @@ export class AdminNameChangeController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ViewNameChangeRequests, Permissions.ManageNameChangeRequests],
   })
-  async getRequests() {
+  async getRequests(): Promise<APITypes.GetManageNameChangeRequests> {
     const requests = await prisma.nameChangeRequest.findMany({
       include: { citizen: true },
     });
@@ -34,7 +35,7 @@ export class AdminNameChangeController {
   async acceptOrDeclineNameChangeRequest(
     @PathParams("id") id: string,
     @BodyParams("type") type: WhitelistStatus,
-  ) {
+  ): Promise<APITypes.PutManageNameChangeRequests> {
     const isCorrect = Object.values(WhitelistStatus).includes(type);
     if (!isCorrect) {
       throw new BadRequest("invalidType");

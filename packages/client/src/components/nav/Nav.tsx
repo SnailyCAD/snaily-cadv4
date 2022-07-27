@@ -81,6 +81,7 @@ export function Nav({ maxWidth }: Props) {
                       className="max-h-[30px] min-w-[30px]"
                       src={url}
                       onError={() => setShowImage(false)}
+                      loading="lazy"
                     />
                   </>
                 ) : null}
@@ -88,7 +89,8 @@ export function Nav({ maxWidth }: Props) {
               </a>
             </h1>
 
-            <ul
+            <div
+              role="list"
               className={classNames(
                 "nav:flex",
                 menuOpen
@@ -123,6 +125,7 @@ export function Nav({ maxWidth }: Props) {
               {user && COURTHOUSE ? (
                 <Link href="/courthouse">
                   <a
+                    role="listitem"
                     href="/courthouse"
                     className={classNames(
                       "p-1 nav:px-2 text-gray-700 dark:text-gray-200 transition duration-300",
@@ -140,6 +143,7 @@ export function Nav({ maxWidth }: Props) {
               ) ? (
                 <Link href="/admin">
                   <a
+                    role="listitem"
                     href="/admin"
                     className={classNames(
                       "p-1 nav:px-2 text-gray-700 dark:text-gray-200 transition duration-300",
@@ -150,7 +154,7 @@ export function Nav({ maxWidth }: Props) {
                   </a>
                 </Link>
               ) : null}
-            </ul>
+            </div>
           </div>
 
           <div>

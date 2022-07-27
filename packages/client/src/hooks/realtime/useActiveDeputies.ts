@@ -6,6 +6,7 @@ import useFetch from "lib/useFetch";
 import { useDispatchState } from "state/dispatchState";
 import { useEmsFdState } from "state/emsFdState";
 import type { EmsFdDeputy } from "@snailycad/types";
+import type { GetEmsFdActiveDeputies } from "@snailycad/types/api";
 
 export function useActiveDeputies() {
   const { user } = useAuth();
@@ -27,7 +28,8 @@ export function useActiveDeputies() {
   );
 
   const getActiveDeputies = React.useCallback(async () => {
-    const { json } = await execute("/ems-fd/active-deputies", {
+    const { json } = await execute<GetEmsFdActiveDeputies>({
+      path: "/ems-fd/active-deputies",
       noToast: true,
     });
 

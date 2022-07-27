@@ -8,12 +8,15 @@ import { IsAuth } from "middlewares/IsAuth";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Socket } from "services/SocketService";
 import { combinedUnitProperties, leoProperties } from "lib/leo/activeOfficer";
-import { CombinedLeoUnit, Officer, ShouldDoType, User, MiscCadSettings } from "@prisma/client";
+import { ShouldDoType, User } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 import { getInactivityFilter } from "lib/leo/utils";
 import { findUnit } from "lib/leo/findUnit";
 import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
+import type { CombinedLeoUnit, Officer, MiscCadSettings } from "@snailycad/types";
+import type * as APITypes from "@snailycad/types/api";
+
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
 export class LeoController {
@@ -29,8 +32,8 @@ export class LeoController {
     permissions: [Permissions.Leo, Permissions.Dispatch, Permissions.EmsFd],
   })
   async getActiveOfficer(
-    @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
-  ) {
+    @Context("activeOfficer") activeOfficer: CombinedLeoUnit | Officer,
+  ): Promise<APITypes.GetActiveOfficerData> {
     return activeOfficer;
   }
 
@@ -40,7 +43,9 @@ export class LeoController {
     fallback: (u) => u.isLeo || u.isDispatch || u.isEmsFd,
     permissions: [Permissions.Leo, Permissions.Dispatch, Permissions.EmsFd],
   })
-  async getActiveOfficers(@Context("cad") cad: { miscCadSettings: MiscCadSettings }) {
+  async getActiveOfficers(
+    @Context("cad") cad: { miscCadSettings: MiscCadSettings },
+  ): Promise<APITypes.GetActiveOfficersData> {
     const unitsInactivityFilter = getInactivityFilter(cad, "lastStatusChangeTimestamp");
 
     if (unitsInactivityFilter) {
@@ -48,15 +53,11 @@ export class LeoController {
     }
 
     const [officers, units] = await Promise.all([
-      await prisma.officer.findMany({
-        where: {
-          status: {
-            NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY },
-          },
-        },
+      prisma.officer.findMany({
+        where: { status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } } },
         include: leoProperties,
       }),
-      await prisma.combinedLeoUnit.findMany({
+      prisma.combinedLeoUnit.findMany({
         include: combinedUnitProperties,
       }),
     ]);
@@ -77,7 +78,10 @@ export class LeoController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
-  async panicButton(@Context("user") user: User, @BodyParams("officerId") officerId: string) {
+  async panicButton(
+    @Context("user") user: User,
+    @BodyParams("officerId") officerId: string,
+  ): Promise<APITypes.PostLeoTogglePanicButtonData> {
     let type: "officer" | "combinedLeoUnit" = "officer";
 
     let officer: CombinedLeoUnit | Officer | null = await prisma.officer.findFirst({
@@ -99,10 +103,6 @@ export class LeoController {
       }
     }
 
-    if (!officer) {
-      throw new NotFound("officerNotFound");
-    }
-
     const code = await prisma.statusValue.findFirst({
       where: {
         shouldDo: ShouldDoType.PANIC_BUTTON,
@@ -110,7 +110,7 @@ export class LeoController {
     });
 
     let panicType: "ON" | "OFF" = "ON";
-    if (code) {
+    if (code && officer) {
       /**
        * officer is already in panic-mode -> set status back to `ON_DUTY`
        */
@@ -153,8 +153,14 @@ export class LeoController {
       }
     }
 
+    if (!officer) {
+      throw new NotFound("officerNotFound");
+    }
+
     await this.socket.emitUpdateOfficerStatus();
     this.socket.emitPanicButtonLeo(officer, panicType);
+
+    return officer;
   }
 
   @Get("/impounded-vehicles")
@@ -163,7 +169,7 @@ export class LeoController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.ViewImpoundLot, Permissions.ManageImpoundLot],
   })
-  async getImpoundedVehicles() {
+  async getImpoundedVehicles(): Promise<APITypes.GetLeoImpoundedVehiclesData> {
     const vehicles = await prisma.impoundedVehicle.findMany({
       include: {
         location: true,
@@ -182,7 +188,9 @@ export class LeoController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.ManageImpoundLot],
   })
-  async checkoutImpoundedVehicle(@PathParams("id") id: string) {
+  async checkoutImpoundedVehicle(
+    @PathParams("id") id: string,
+  ): Promise<APITypes.DeleteLeoCheckoutImpoundedVehicleData> {
     const vehicle = await prisma.impoundedVehicle.findUnique({
       where: { id },
     });
@@ -213,7 +221,9 @@ export class LeoController {
     fallback: (u) => u.isLeo || u.isDispatch || u.isEmsFd,
     permissions: [Permissions.Leo, Permissions.Dispatch, Permissions.EmsFd],
   })
-  async getUnitQualifications(@PathParams("unitId") unitId: string) {
+  async getUnitQualifications(
+    @PathParams("unitId") unitId: string,
+  ): Promise<APITypes.GetUnitQualificationsByUnitIdData> {
     const { type, unit } = await findUnit(unitId);
 
     if (type === "combined") {
@@ -246,7 +256,7 @@ export class LeoController {
   async updateOfficerDivisionCallsign(
     @BodyParams() body: unknown,
     @PathParams("officerId") officerId: string,
-  ) {
+  ): Promise<APITypes.PutLeoCallsignData> {
     const officer = await prisma.officer.findUnique({
       where: { id: officerId },
     });

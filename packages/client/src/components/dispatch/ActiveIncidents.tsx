@@ -19,6 +19,7 @@ import { DndActions } from "types/DndActions";
 import { classNames } from "lib/classNames";
 import { Droppable } from "components/shared/dnd/Droppable";
 import { useDispatchState } from "state/dispatchState";
+import type { PostIncidentsData, PutIncidentByIdData } from "@snailycad/types/api";
 
 export function ActiveIncidents() {
   /**
@@ -39,7 +40,8 @@ export function ActiveIncidents() {
     unitId: string,
     type: "assign" | "unassign",
   ) {
-    const { json } = await execute(`/incidents/${type}/${incident.id}`, {
+    const { json } = await execute<PostIncidentsData>({
+      path: `/incidents/${type}/${incident.id}`,
       method: "POST",
       data: { unit: unitId },
     });
@@ -58,7 +60,8 @@ export function ActiveIncidents() {
   async function handleDismissIncident() {
     if (!tempIncident) return;
 
-    const { json } = await execute(`/incidents/${tempIncident.id}`, {
+    const { json } = await execute<PutIncidentByIdData>({
+      path: `/incidents/${tempIncident.id}`,
       method: "PUT",
       data: {
         ...tempIncident,

@@ -11,10 +11,10 @@ import { RegisterVehicleModal } from "components/citizen/vehicles/modals/Registe
 import { AlertModal } from "components/modal/AlertModal";
 import { FullDate } from "components/shared/FullDate";
 import { Table } from "components/shared/Table";
+import type { DeleteCitizenVehicleData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 export function VehiclesTab() {
-  const [tempVehicle, setTempVehicle] = React.useState<RegisteredVehicle | null>(null);
-
   const { state, execute } = useFetch();
   const { openModal, closeModal } = useModal();
   const common = useTranslations("Common");
@@ -23,21 +23,23 @@ export function VehiclesTab() {
 
   const { currentBusiness, currentEmployee, setCurrentBusiness } = useBusinessState();
   const vehicles = currentBusiness?.vehicles ?? [];
+  const [tempVehicle, vehicleState] = useTemporaryItem(vehicles);
 
-  function handleManageClick(employee: RegisteredVehicle) {
-    setTempVehicle(employee);
+  function handleManageClick(vehicle: RegisteredVehicle) {
+    vehicleState.setTempId(vehicle.id);
     openModal(ModalIds.RegisterVehicle);
   }
 
-  function handleDeleteClick(employee: RegisteredVehicle) {
-    setTempVehicle(employee);
+  function handleDeleteClick(vehicle: RegisteredVehicle) {
+    vehicleState.setTempId(vehicle.id);
     openModal(ModalIds.AlertDeleteVehicle);
   }
 
   async function handleDelete() {
     if (!tempVehicle || !currentBusiness) return;
 
-    const { json } = await execute(`/vehicles/${tempVehicle.id}`, {
+    const { json } = await execute<DeleteCitizenVehicleData>({
+      path: `/vehicles/${tempVehicle.id}`,
       method: "DELETE",
     });
 
@@ -47,7 +49,7 @@ export function VehiclesTab() {
         vehicles: currentBusiness.vehicles.filter((v) => v.id !== tempVehicle.id),
       };
       setCurrentBusiness(updated);
-      setTempVehicle(null);
+      vehicleState.setTempId(null);
       closeModal(ModalIds.AlertDeleteVehicle);
     }
   }
@@ -120,11 +122,11 @@ export function VehiclesTab() {
         description={t("Vehicles.alert_deleteVehicle")}
         onDeleteClick={handleDelete}
         state={state}
-        onClose={() => setTempVehicle(null)}
+        onClose={() => vehicleState.setTempId(null)}
       />
 
       <RegisterVehicleModal
-        onClose={() => setTempVehicle(null)}
+        onClose={() => vehicleState.setTempId(null)}
         onCreate={(vehicle) => {
           closeModal(ModalIds.RegisterVehicle);
           setCurrentBusiness({

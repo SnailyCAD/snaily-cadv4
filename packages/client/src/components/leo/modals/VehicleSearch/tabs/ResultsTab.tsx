@@ -109,7 +109,7 @@ export function ResultsTab() {
         {BUSINESS ? (
           <li>
             <Infofield className="capitalize" label={vT("business")}>
-              {currentResult.Business[0]?.name ?? common("none")}
+              {currentResult.Business?.[0]?.name ?? common("none")}
             </Infofield>
           </li>
         ) : null}

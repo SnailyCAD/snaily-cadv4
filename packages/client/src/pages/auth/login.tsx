@@ -1,115 +1,32 @@
-import { Form, Formik, FormikHelpers } from "formik";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { AUTH_SCHEMA } from "@snailycad/schemas";
-import { Discord, Steam } from "react-bootstrap-icons";
-import useFetch from "lib/useFetch";
-import { FormField } from "components/form/FormField";
-import { Input, PasswordInput } from "components/form/inputs/Input";
-import { Loader } from "components/Loader";
-import { handleValidate } from "lib/handleValidate";
-import { useTranslations } from "use-intl";
 import type { GetServerSideProps } from "next";
 import { getTranslations } from "lib/getTranslation";
-import { Button } from "components/Button";
-import { findAPIUrl, handleRequest } from "lib/fetch";
-import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { handleRequest } from "lib/fetch";
 import { Title } from "components/shared/Title";
 import { AuthScreenImages } from "components/auth/AuthScreenImages";
-import { TwoFactorAuthScreen } from "components/auth/TwoFactorAuthScreen";
-import { canUseThirdPartyConnections } from "lib/utils";
-import { useAuth } from "context/AuthContext";
 import { LocalhostDetector } from "components/auth/LocalhostDetector";
 import { parseCookies } from "nookies";
 import { VersionDisplay } from "components/shared/VersionDisplay";
-
-const INITIAL_VALUES = {
-  username: "",
-  password: "",
-  totpCode: undefined as string | undefined,
-};
+import { useAuth } from "context/AuthContext";
+import { useTranslations } from "next-intl";
+import { LoginForm } from "components/auth/login/LoginForm";
+import { useRouter } from "next/router";
+import type { PostLoginUserData } from "@snailycad/types/api";
 
 export default function Login() {
-  const router = useRouter();
-  const { state, execute } = useFetch();
+  const { cad } = useAuth();
   const t = useTranslations("Auth");
-  const tError = useTranslations("Errors");
-  const { DISCORD_AUTH, ALLOW_REGULAR_LOGIN, STEAM_OAUTH } = useFeatureEnabled();
-  const { user, cad } = useAuth();
+  const router = useRouter();
 
-  const authMessages = {
-    banned: tError("userBanned"),
-    deleted: tError("userDeleted"),
-    discordNameInUse: tError("discordNameInUse"),
-    cannotRegisterFirstWithDiscord: tError("cannotRegisterFirstWithDiscord"),
-    steamNameInUse: tError("steamNameInUse"),
-    cannotRegisterFirstWithSteam: tError("cannotRegisterFirstWithSteam"),
-    userBanned: tError("userBanned"),
-    whitelistPending: tError("whitelistPending"),
-    whitelistDeclined: tError("whitelistDeclined"),
-  } as const;
-
-  const errorMessage = authMessages[router.query.error as keyof typeof authMessages];
-  const validate = handleValidate(AUTH_SCHEMA);
-
-  async function onSubmit(
-    values: typeof INITIAL_VALUES,
-    helpers: FormikHelpers<typeof INITIAL_VALUES>,
-  ) {
-    const { json, error } = await execute("/auth/login", {
-      data: values,
-      method: "POST",
-      helpers,
-      noToast: "totpCodeRequired",
-    });
-
-    if (error === "totpCodeRequired") {
-      helpers.setFieldValue("totpCode", "");
-      return;
-    }
-
-    if (json.hasTempPassword) {
-      router.push({
-        pathname: "/auth/temp-password",
-        query: { tp: values.password },
+  async function handleSubmit({ from, json }: { from: string; json: PostLoginUserData }) {
+    if (process.env.IFRAME_SUPPORT_ENABLED === "true" && json.session) {
+      await fetch("/api/token", {
+        method: "POST",
+        body: json.session,
       });
-    } else if (json?.userId) {
-      if (process.env.IFRAME_SUPPORT_ENABLED === "true" && json.session) {
-        await fetch("/api/token", {
-          method: "POST",
-          body: json.session,
-        });
-      }
-
-      const from = typeof router.query.from === "string" ? router.query.from : "/citizen";
-      router.push(from);
     }
-  }
 
-  function handleDiscordLogin() {
-    const url = findAPIUrl();
-
-    const fullUrl = `${url}/auth/discord`;
-    window.location.href = fullUrl;
-  }
-
-  function handleSteamLogin() {
-    const url = findAPIUrl();
-
-    const fullUrl = `${url}/auth/steam`;
-    window.location.href = fullUrl;
-  }
-
-  function handleContinueAs() {
-    const from = typeof router.query.from === "string" ? router.query.from : "/citizen";
     router.push(from);
   }
-
-  const useThirdPartyConnectionsAbility = canUseThirdPartyConnections();
-  const showSteamOAuth = STEAM_OAUTH && useThirdPartyConnectionsAbility;
-  const showDiscordOAuth = DISCORD_AUTH && useThirdPartyConnectionsAbility;
-
-  const showHorizontalLine = ALLOW_REGULAR_LOGIN && (showSteamOAuth || showDiscordOAuth || !!user);
 
   return (
     <>
@@ -119,101 +36,8 @@ export default function Login() {
         <AuthScreenImages />
         <LocalhostDetector />
 
-        <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-          {({ handleChange, errors, values, isValid }) => (
-            <Form className="relative w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-2 z-10">
-              {typeof values.totpCode !== "undefined" ? (
-                <TwoFactorAuthScreen
-                  errorMessage={errors.totpCode}
-                  isLoading={state === "loading"}
-                />
-              ) : (
-                <>
-                  <header className="mb-3">
-                    <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
-                      {t("login")}
-                    </h1>
+        <LoginForm onFormSubmitted={handleSubmit} />
 
-                    {ALLOW_REGULAR_LOGIN ? (
-                      <Link href="/auth/register">
-                        <a
-                          href="/auth/register"
-                          className="inline-block mt-2 underline text-neutral-700 dark:text-gray-200"
-                        >
-                          {t("noAccount")}
-                        </a>
-                      </Link>
-                    ) : null}
-                  </header>
-
-                  {errorMessage ? (
-                    <p className="bg-red-500/80 text-black w-full py-1.5 px-3 my-3 rounded-md">
-                      {errorMessage}
-                    </p>
-                  ) : null}
-
-                  {ALLOW_REGULAR_LOGIN ? (
-                    <>
-                      <FormField errorMessage={errors.username} label={t("username")}>
-                        <Input type="text" name="username" onChange={handleChange} />
-                      </FormField>
-
-                      <FormField errorMessage={errors.password} label={t("password")}>
-                        <PasswordInput name="password" onChange={handleChange} />
-                      </FormField>
-
-                      <Button
-                        disabled={!isValid || state === "loading"}
-                        type="submit"
-                        className="flex items-center justify-center w-full gap-3 mt-5"
-                      >
-                        {state === "loading" ? <Loader /> : null} {t("login")}
-                      </Button>
-                    </>
-                  ) : null}
-
-                  {showHorizontalLine ? (
-                    <div className="my-7 flex items-center gap-2">
-                      <span className="h-[2px] bg-gray-3 w-full rounded-md" />
-                      <span className="min-w-fit text-sm uppercase dark:text-gray-300">
-                        {t("or")}
-                      </span>
-                      <span className="h-[2px] bg-gray-3 w-full rounded-md" />
-                    </div>
-                  ) : null}
-
-                  {user ? (
-                    <Button type="button" onClick={handleContinueAs} className="w-full mb-2">
-                      {t.rich("continueAs", { username: user.username })}
-                    </Button>
-                  ) : null}
-
-                  {showDiscordOAuth ? (
-                    <Button
-                      type="button"
-                      onClick={handleDiscordLogin}
-                      className="flex items-center justify-center gap-3 w-full"
-                    >
-                      <Discord />
-                      {t("loginViaDiscord")}
-                    </Button>
-                  ) : null}
-
-                  {showSteamOAuth ? (
-                    <Button
-                      type="button"
-                      onClick={handleSteamLogin}
-                      className="flex items-center justify-center gap-3 w-full mt-2"
-                    >
-                      <Steam />
-                      {t("loginViaSteam")}
-                    </Button>
-                  ) : null}
-                </>
-              )}
-            </Form>
-          )}
-        </Formik>
         <VersionDisplay cad={cad} />
       </main>
     </>

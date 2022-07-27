@@ -1,5 +1,4 @@
 import axios, { type Method, type AxiosRequestConfig, type AxiosResponse } from "axios";
-import { serialize } from "cookie";
 import type { IncomingMessage } from "connect";
 import nookies from "nookies";
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";
@@ -18,53 +17,50 @@ interface Options extends Omit<AxiosRequestConfig, "headers"> {
 export async function handleRequest<T = any>(
   path: string,
   options?: Options,
-  cookie?: string,
-): Promise<AxiosResponse<T>> {
+): Promise<AxiosResponse<T, T>> {
   const { req, method, data } = options ?? {};
 
   const apiUrl = findAPIUrl();
   const location = typeof window !== "undefined" ? window.location : null;
   const isDispatchUrl = (location?.pathname ?? req?.url) === "/dispatch";
-  let parsedCookie = req?.headers.cookie ?? serialize("snaily-cad-session", cookie as string);
+  let parsedCookie = req?.headers.cookie;
   const cookies = nookies.get({ req });
 
   if (process.env.IFRAME_SUPPORT_ENABLED === "true" && !parsedCookie) {
     parsedCookie = cookies[IFRAME_COOKIE_NAME]!;
   }
 
-  const res = await axios({
-    url: `${apiUrl}${path}`,
-    method,
-    data: data ?? undefined,
-    withCredentials: true,
-    params: options?.params,
-    headers: {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      Session: parsedCookie ?? "",
-      "Content-Type": "application/json",
-      "is-from-dispatch": String(isDispatchUrl),
-    },
-  }).catch((e) => e);
+  try {
+    const res = await axios({
+      url: `${apiUrl}${path}`,
+      method,
+      data: data ?? undefined,
+      withCredentials: true,
+      params: options?.params,
+      headers: {
+        Session: parsedCookie ?? "",
+        "Content-Type": "application/json",
+        "is-from-dispatch": String(isDispatchUrl),
+      },
+    });
 
-  if (res instanceof Error) {
-    throw makeReturn(res);
+    return makeReturn(res);
+  } catch (e) {
+    return makeReturn(e);
   }
-
-  return makeReturn(res) as unknown as AxiosResponse<T>;
 }
 
 export function findAPIUrl() {
   const envUrl = process.env.NEXT_PUBLIC_PROD_ORIGIN ?? "http://localhost:8080/v1";
-  const includesDockerContainerName = envUrl === "http://api:8080/v1";
 
-  if (typeof window !== "undefined" && includesDockerContainerName) {
+  if (process.env.NODE_ENV !== "production") {
     return "http://localhost:8080/v1";
   }
 
   return envUrl;
 }
 
-function makeReturn(v: any) {
+function makeReturn<T>(v: any): Omit<AxiosResponse<T>, "request"> {
   delete v.request;
 
   return v;

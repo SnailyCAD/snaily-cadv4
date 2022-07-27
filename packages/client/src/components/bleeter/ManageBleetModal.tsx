@@ -10,14 +10,19 @@ import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
-import type { BleeterPost } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import { BLEETER_SCHEMA } from "@snailycad/schemas";
 import { CropImageModal } from "components/modal/CropImageModal";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
+import type {
+  GetBleeterByIdData,
+  PostBleeterByIdData,
+  PostBleeterByIdImageData,
+  PutBleeterByIdData,
+} from "@snailycad/types/api";
 
 interface Props {
-  post: BleeterPost | null;
+  post: GetBleeterByIdData | null;
 }
 
 export function ManageBleetModal({ post }: Props) {
@@ -39,7 +44,8 @@ export function ManageBleetModal({ post }: Props) {
     let json: any = {};
 
     if (post) {
-      const data = await execute(`/bleeter/${post.id}`, {
+      const data = await execute<PutBleeterByIdData, typeof INITIAL_VALUES>({
+        path: `/bleeter/${post.id}`,
         method: "PUT",
         data: values,
         helpers,
@@ -47,7 +53,8 @@ export function ManageBleetModal({ post }: Props) {
 
       json = data.json;
     } else {
-      const data = await execute("/bleeter", {
+      const data = await execute<PostBleeterByIdData, typeof INITIAL_VALUES>({
+        path: "/bleeter",
         method: "POST",
         data: values,
         helpers,
@@ -63,7 +70,8 @@ export function ManageBleetModal({ post }: Props) {
       fd.append("image", values.image, values.image.name);
 
       if (fd.get("image")) {
-        await execute(`/bleeter/${json.id}`, {
+        await execute<PostBleeterByIdImageData, typeof INITIAL_VALUES>({
+          path: `/bleeter/${json.id}`,
           method: "POST",
           data: fd,
           helpers,

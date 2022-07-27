@@ -12,10 +12,40 @@ import { findAPIUrl } from "lib/fetch";
 
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import * as Sentry from "@sentry/react";
+import * as Tracing from "@sentry/tracing";
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
+import type { cad } from "@snailycad/types";
+import { useMounted } from "@casper124578/useful";
+import dynamic from "next/dynamic";
 
-export default function App({ Component, router, pageProps }: AppProps) {
+const ReauthorizeSessionModal = dynamic(
+  async () =>
+    (await import("components/auth/login/ReauthorizeSessionModal")).ReauthorizeSessionModal,
+  {
+    ssr: false,
+  },
+);
+
+Sentry.init({
+  dsn: "https://6e31d0dc886d482091e293edb73eb10e@o518232.ingest.sentry.io/6553264",
+  tracesSampleRate: 1.0,
+  integrations: [new Tracing.BrowserTracing()],
+  attachStacktrace: true,
+});
+
+function App({ Component, router, pageProps }: AppProps) {
+  const isMounted = useMounted();
   const { hostname, protocol, port } = new URL(findAPIUrl());
   const url = `${protocol}//${hostname}:${port}`;
+
+  const cad = pageProps?.cad as cad | null;
+  if (cad?.version) {
+    Sentry.setTags({
+      "snailycad.version": cad.version.currentVersion,
+      "snailycad.commitHash": cad.version.currentCommitHash,
+    });
+  }
 
   return (
     <SSRProvider>
@@ -29,7 +59,14 @@ export default function App({ Component, router, pageProps }: AppProps) {
             <ValuesProvider initialData={pageProps}>
               <CitizenProvider initialData={pageProps}>
                 <DndProvider backend={HTML5Backend}>
-                  <Component {...pageProps} />
+                  <GoogleReCaptchaProvider
+                    reCaptchaKey={process.env.NEXT_PUBLIC_GOOGLE_CAPTCHA_SITE_KEY as string}
+                    scriptProps={{ async: true, defer: true, appendTo: "body" }}
+                    useRecaptchaNet
+                  >
+                    {isMounted ? <ReauthorizeSessionModal /> : null}
+                    <Component {...pageProps} />
+                  </GoogleReCaptchaProvider>
                 </DndProvider>
                 <Toaster position="top-right" />
               </CitizenProvider>
@@ -40,3 +77,5 @@ export default function App({ Component, router, pageProps }: AppProps) {
     </SSRProvider>
   );
 }
+
+export default Sentry.withProfiler(App);

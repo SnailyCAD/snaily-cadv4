@@ -10,13 +10,23 @@ import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { classNames } from "lib/classNames";
 import type { CustomField, CustomFieldCategory, CustomFieldValue } from "@snailycad/types";
+import type {
+  PutSearchActionsUpdateCitizenCustomFields,
+  PutSearchActionsUpdateVehicleCustomFields,
+  PutSearchActionsUpdateWeaponCustomFields,
+} from "@snailycad/types/api";
+
+type CustomFieldResults =
+  | PutSearchActionsUpdateWeaponCustomFields
+  | PutSearchActionsUpdateVehicleCustomFields
+  | PutSearchActionsUpdateCitizenCustomFields;
 
 interface Props {
   category: CustomFieldCategory;
   url: `/search/actions/custom-fields/${Lowercase<CustomFieldCategory>}/${string}`;
   allCustomFields: CustomField[];
   customFields: CustomFieldValue[];
-  onUpdate(newResults: any): void;
+  onUpdate(newResults: CustomFieldResults): void;
 }
 
 export function ManageCustomFieldsModal({
@@ -32,7 +42,8 @@ export function ManageCustomFieldsModal({
   const { state, execute } = useFetch();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute(url, {
+    const { json } = await execute<CustomFieldResults>({
+      path: url,
       method: "PUT",
       data: { fields: values },
     });
@@ -48,16 +59,13 @@ export function ManageCustomFieldsModal({
     [category, allCustomFields],
   );
   const makeInitialValues = React.useCallback(() => {
-    const fields = allCustomFields;
-    const values = customFields;
-
     const objFields: Record<
       string,
       { fieldId: string; valueId: string | undefined; value: string | null }
     > = {};
-    for (const field of fields) {
+    for (const field of allCustomFields) {
       if (field.category !== category) continue;
-      const value = values.find((v) => v.fieldId === field.id);
+      const value = customFields.find((v) => v.fieldId === field.id);
 
       objFields[field.name] = {
         fieldId: field.id,

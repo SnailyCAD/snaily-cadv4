@@ -19,6 +19,7 @@ import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { manyToManyHelper } from "utils/manyToMany";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { isCuid } from "cuid";
+import type * as APITypes from "@snailycad/types/api";
 
 const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_UNIT"] as const;
 type Action = typeof ACTIONS[number];
@@ -48,14 +49,14 @@ export class AdminManageUnitsController {
       Permissions.ManageUnitCallsigns,
     ],
   })
-  async getUnits() {
+  async getUnits(): Promise<APITypes.GetManageUnitsData> {
     const units = await Promise.all([
       (
         await prisma.officer.findMany({ include: leoProperties })
-      ).map((v) => ({ ...v, type: "OFFICER" })),
+      ).map((v) => ({ ...v, type: "OFFICER" as const })),
       (
         await prisma.emsFdDeputy.findMany({ include: unitProperties })
-      ).map((v) => ({ ...v, type: "DEPUTY" })),
+      ).map((v) => ({ ...v, type: "DEPUTY" as const })),
     ]);
 
     return units.flat(1);
@@ -69,9 +70,10 @@ export class AdminManageUnitsController {
     fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [Permissions.ViewUnits, Permissions.DeleteUnits, Permissions.ManageUnits],
   })
-  async getUnit(@PathParams("id") id: string) {
+  async getUnit(@PathParams("id") id: string): Promise<APITypes.GetManageUnitByIdData> {
     const extraInclude = {
       qualifications: { include: { qualification: { include: { value: true } } } },
+      logs: true,
     };
 
     const isUnitId = isCuid(id);
@@ -82,7 +84,7 @@ export class AdminManageUnitsController {
       where: {
         OR: [{ id }, { user: { discordId: id } }, { user: { steamId: id } }],
       },
-      include: { ...leoProperties, ...extraInclude, logs: true },
+      include: { ...leoProperties, ...extraInclude },
     });
 
     if (Array.isArray(unit) ? !unit.length : !unit) {
@@ -91,7 +93,7 @@ export class AdminManageUnitsController {
         where: {
           OR: [{ id }, { user: { discordId: id } }, { user: { steamId: id } }],
         },
-        include: { ...unitProperties, ...extraInclude, logs: true },
+        include: { ...unitProperties, ...extraInclude },
       });
     }
 
@@ -115,7 +117,9 @@ export class AdminManageUnitsController {
     fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [Permissions.ManageUnits],
   })
-  async setSelectedOffDuty(@BodyParams("ids") ids: string[]) {
+  async setSelectedOffDuty(
+    @BodyParams("ids") ids: string[],
+  ): Promise<APITypes.PutManageUnitsOffDutyData> {
     const updated = await Promise.all(
       ids.map(async (fullId) => {
         const [id, rawType] = fullId.split("-");
@@ -140,9 +144,7 @@ export class AdminManageUnitsController {
         // @ts-expect-error ignore
         return prisma[type].update({
           where: { id },
-          data: {
-            statusId: null,
-          },
+          data: { statusId: null },
         });
       }),
     );
@@ -165,7 +167,7 @@ export class AdminManageUnitsController {
     @Context("user") user: User,
     @PathParams("unitId") unitId: string,
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PutManageUnitCallsignData> {
     const data = validateSchema(UPDATE_UNIT_CALLSIGN_SCHEMA, body);
 
     const { type, unit } = await findUnit(unitId);
@@ -225,7 +227,7 @@ export class AdminManageUnitsController {
     @PathParams("id") id: string,
     @BodyParams() body: unknown,
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
-  ) {
+  ): Promise<APITypes.PutManageUnitData> {
     const data = validateSchema(UPDATE_UNIT_SCHEMA, body);
 
     let type: "officer" | "emsFdDeputy" = "officer";
@@ -301,7 +303,7 @@ export class AdminManageUnitsController {
     @PathParams("unitId") unitId: string,
     @BodyParams("action") action: Action | null,
     @BodyParams("type") type: AcceptDeclineType | null,
-  ) {
+  ): Promise<APITypes.PostManageUnitAcceptDeclineDepartmentData> {
     if (action && !ACTIONS.includes(action)) {
       throw new ExtendedBadRequest({ action: "Invalid Action" });
     }
@@ -364,6 +366,7 @@ export class AdminManageUnitsController {
         // @ts-expect-error function has the same properties
         const updated = await prisma[prismaName].delete({
           where: { id: unit.id },
+          include: unitType === "leo" ? leoProperties : unitProperties,
         });
 
         return { ...updated, deleted: true };
@@ -423,7 +426,7 @@ export class AdminManageUnitsController {
   async addUnitQualification(
     @PathParams("unitId") unitId: string,
     @BodyParams("qualificationId") qualificationId: string,
-  ) {
+  ): Promise<APITypes.PostManageUnitAddQualificationData> {
     const unit = await findUnit(unitId);
 
     if (unit.type === "combined") {
@@ -453,7 +456,9 @@ export class AdminManageUnitsController {
         [t]: unitId,
         qualificationId: qualificationValue.id,
       },
-      include: { qualification: { include: { value: true } } },
+      include: {
+        qualification: { include: { value: true, departments: { include: { value: true } } } },
+      },
     });
 
     return qualification;
@@ -467,7 +472,7 @@ export class AdminManageUnitsController {
   async deleteUnitQualification(
     @PathParams("unitId") unitId: string,
     @PathParams("qualificationId") qualificationId: string,
-  ) {
+  ): Promise<APITypes.DeleteManageUnitQualificationData> {
     const unit = await findUnit(unitId);
 
     if (unit.type === "combined") {
@@ -494,7 +499,7 @@ export class AdminManageUnitsController {
     @PathParams("unitId") unitId: string,
     @PathParams("qualificationId") qualificationId: string,
     @BodyParams("type") suspendType: SuspendType,
-  ) {
+  ): Promise<APITypes.PutManageUnitQualificationData> {
     if (!SUSPEND_TYPE.includes(suspendType)) {
       throw new BadRequest("invalidType");
     }
@@ -522,7 +527,9 @@ export class AdminManageUnitsController {
       data: {
         suspendedAt: suspendType === "suspend" ? new Date() : null,
       },
-      include: { qualification: { include: { value: true } } },
+      include: {
+        qualification: { include: { value: true, departments: { include: { value: true } } } },
+      },
     });
 
     return updated;
@@ -533,7 +540,10 @@ export class AdminManageUnitsController {
     fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [Permissions.DeleteUnits],
   })
-  async deleteUnit(@Context("user") user: User, @PathParams("unitId") unitId: string) {
+  async deleteUnit(
+    @Context("user") user: User,
+    @PathParams("unitId") unitId: string,
+  ): Promise<APITypes.DeleteManageUnitByIdData> {
     const unit = await findUnit(unitId);
 
     if (unit.type === "combined") {

@@ -15,8 +15,10 @@ import { useCitizen } from "context/CitizenContext";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
+import type { DeleteCitizenWeaponData, GetCitizenWeaponsData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
-export function WeaponsCard(props: { weapons: Weapon[] }) {
+export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
   const { openModal, closeModal } = useModal();
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
@@ -24,37 +26,47 @@ export function WeaponsCard(props: { weapons: Weapon[] }) {
   const { WEAPON_REGISTRATION } = useFeatureEnabled();
   const { citizen } = useCitizen(false);
 
-  const [tempWeapon, setTempWeapon] = React.useState<Weapon | null>(null);
   const asyncTable = useAsyncTable({
     fetchOptions: {
-      onResponse: (json) => ({ data: json.weapons, totalCount: json.totalCount }),
+      onResponse: (json: GetCitizenWeaponsData) => ({
+        data: json.weapons,
+        totalCount: json.totalCount,
+      }),
       path: `/weapons/${citizen.id}`,
     },
     totalCount: props.weapons.length,
     initialData: props.weapons,
   });
+  const [tempWeapon, weaponState] = useTemporaryItem(asyncTable.data);
 
   async function handleDelete() {
     if (!tempWeapon) return;
 
-    const { json } = await execute(`/weapons/${tempWeapon.id}`, {
+    const { json } = await execute<DeleteCitizenWeaponData>({
+      path: `/weapons/${tempWeapon.id}`,
       method: "DELETE",
     });
 
-    if (json) {
-      asyncTable.setData((p) => p.filter((v) => v.id !== tempWeapon.id));
-      setTempWeapon(null);
+    if (typeof json === "boolean" && json) {
+      const newData = asyncTable.data.filter((v) => v.id !== tempWeapon.id);
+
+      if (newData.length <= 0) {
+        props.weapons.length = 0;
+      }
+
+      asyncTable.setData(newData);
+      weaponState.setTempId(null);
       closeModal(ModalIds.AlertDeleteWeapon);
     }
   }
 
-  function handleEditClick(weapon: Weapon) {
-    setTempWeapon(weapon);
+  function handleEditClick(weapon: Omit<Weapon, "citizen">) {
+    weaponState.setTempId(weapon.id);
     openModal(ModalIds.RegisterWeapon);
   }
 
-  function handleDeleteClick(weapon: Weapon) {
-    setTempWeapon(weapon);
+  function handleDeleteClick(weapon: Omit<Weapon, "citizen">) {
+    weaponState.setTempId(weapon.id);
     openModal(ModalIds.AlertDeleteWeapon);
   }
 
@@ -144,6 +156,7 @@ export function WeaponsCard(props: { weapons: Weapon[] }) {
         onCreate={(weapon) => {
           closeModal(ModalIds.RegisterWeapon);
           asyncTable.setData((p) => [...p, weapon]);
+          props.weapons.length += 1;
         }}
         onUpdate={(old, newW) => {
           asyncTable.setData((p) => {
@@ -154,7 +167,7 @@ export function WeaponsCard(props: { weapons: Weapon[] }) {
           closeModal(ModalIds.RegisterWeapon);
         }}
         weapon={tempWeapon}
-        onClose={() => setTempWeapon(null)}
+        onClose={() => weaponState.setTempId(null)}
       />
 
       <AlertModal
@@ -164,7 +177,7 @@ export function WeaponsCard(props: { weapons: Weapon[] }) {
         description={t("alert_deleteWeapon")}
         onDeleteClick={handleDelete}
         state={state}
-        onClose={() => setTempWeapon(null)}
+        onClose={() => weaponState.setTempId(null)}
       />
     </>
   );

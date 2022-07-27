@@ -20,6 +20,7 @@ import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useSSRSafeId } from "@react-aria/ssr";
 import type { NameSearchResult } from "state/search/nameSearchState";
+import type { PostBolosData, PutBolosData } from "@snailycad/types/api";
 
 interface Props {
   onClose?(): void;
@@ -41,7 +42,8 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (bolo) {
-      const { json } = await execute(`/bolos/${bolo.id}`, {
+      const { json } = await execute<PutBolosData>({
+        path: `/bolos/${bolo.id}`,
         method: "PUT",
         data: values,
       });
@@ -59,7 +61,8 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
         closeModal(ModalIds.ManageBolo);
       }
     } else {
-      const { json } = await execute("/bolos", {
+      const { json } = await execute<PostBolosData>({
+        path: "/bolos",
         method: "POST",
         data: values,
       });
@@ -99,7 +102,6 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
             <FormField errorMessage={errors.type} label={common("type")}>
               <FormRow>
                 <Button
-                  disabled={!!bolo}
                   onClick={() => setFieldValue("type", BoloType.PERSON)}
                   variant={values.type === BoloType.PERSON ? "blue" : "default"}
                   className={classNames("flex justify-center")}
@@ -111,7 +113,6 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                   <Person aria-labelledby={personTypeId} width={30} height={30} />
                 </Button>
                 <Button
-                  disabled={!!bolo}
                   onClick={() => setFieldValue("type", BoloType.VEHICLE)}
                   variant={values.type === BoloType.VEHICLE ? "blue" : "default"}
                   className={classNames("flex justify-center")}
@@ -132,7 +133,6 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                   </svg>
                 </Button>
                 <Button
-                  disabled={!!bolo}
                   onClick={() => setFieldValue("type", BoloType.OTHER)}
                   variant={values.type === BoloType.OTHER ? "blue" : "default"}
                   className={classNames("flex justify-center")}
@@ -200,7 +200,6 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                     apiPath: "/search/name?includeMany=true",
                     method: "POST",
                     dataKey: "name",
-                    minLength: 2,
                     allowUnknown: true,
                   }}
                   onSuggestionClick={(suggestion) => {
@@ -214,6 +213,7 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                             className="rounded-md w-[35px] h-[35px] object-cover"
                             draggable={false}
                             src={makeImageUrl("citizens", suggestion.imageId)}
+                            loading="lazy"
                           />
                         ) : (
                           <PersonFill className="text-gray-500/60 w-[25px] h-[25px]" />

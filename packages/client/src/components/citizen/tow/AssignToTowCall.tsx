@@ -7,13 +7,16 @@ import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
-import type { TaxiCall, TowCall } from "@snailycad/types";
 import { useRouter } from "next/router";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
+import type { PutTaxiCallsData, PutTowCallsData } from "@snailycad/types/api";
 
 interface Props {
-  call: TowCall | TaxiCall | null;
-  onSuccess(old: TowCall | TaxiCall, newC: TowCall | TaxiCall): void;
+  call: PutTaxiCallsData | PutTowCallsData | null;
+  onSuccess(
+    old: PutTaxiCallsData | PutTowCallsData,
+    newC: PutTaxiCallsData | PutTowCallsData,
+  ): void;
   onClose?(): void;
 }
 
@@ -44,7 +47,8 @@ export function AssignToCallModal({ call, onClose, onSuccess }: Props) {
     }
 
     const path = isTow ? `/tow/${call.id}` : `/taxi/${call.id}`;
-    const { json } = await execute(path, {
+    const { json } = await execute<PutTaxiCallsData | PutTowCallsData>({
+      path,
       method: "PUT",
       data: { ...call, ...values },
     });

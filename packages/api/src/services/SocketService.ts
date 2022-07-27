@@ -12,6 +12,7 @@ import {
   CombinedLeoUnit,
   IncidentEvent,
   EmsFdDeputy,
+  Warrant,
 } from "@prisma/client";
 import { prisma } from "lib/prisma";
 import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/activeOfficer";
@@ -37,6 +38,14 @@ export class Socket {
 
   emitCreateActiveIncident(incident: FullIncident) {
     this.io.sockets.emit(SocketEvents.CreateActiveIncident, incident);
+  }
+
+  emitCreateActiveWarrant(warrant: Warrant) {
+    this.io.sockets.emit(SocketEvents.CreateActiveWarrant, warrant);
+  }
+
+  emitUpdateActiveWarrant(warrant: Warrant) {
+    this.io.sockets.emit(SocketEvents.UpdateActiveWarrant, warrant);
   }
 
   emitUpdate911Call(call: Call911 & Record<string, any>) {

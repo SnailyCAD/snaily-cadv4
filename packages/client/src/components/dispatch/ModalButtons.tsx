@@ -10,6 +10,10 @@ import { ModalButton } from "components/modal-buttons/ModalButton";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { TonesModal } from "./modals/TonesModal";
+import type {
+  PostDispatchDispatchersStateData,
+  PostDispatchSignal100Data,
+} from "@snailycad/types/api";
 
 const buttons: modalButtons.ModalButton[] = [
   modalButtons.nameSearchBtn,
@@ -37,7 +41,8 @@ export function DispatchModalButtons() {
   async function handleStateChangeDispatcher() {
     const newState = !isActive;
 
-    const { json } = await execute("/dispatch/dispatchers-state", {
+    const { json } = await execute<PostDispatchDispatchersStateData>({
+      path: "/dispatch/dispatchers-state",
       method: "POST",
       data: { value: newState },
     });
@@ -50,18 +55,15 @@ export function DispatchModalButtons() {
   }
 
   async function handleSignal100() {
-    await execute("/dispatch/signal-100", {
+    await execute<PostDispatchSignal100Data>({
+      path: "/dispatch/signal-100",
       method: "POST",
       data: { value: !signal100Enabled },
     });
   }
 
-  function handleOpenTonesModal() {
-    openModal(ModalIds.Tones);
-  }
-
   return (
-    <ul className="modal-buttons-grid">
+    <ul className="modal-buttons-grid py-2 pb-3 px-4">
       {buttons.map((button, idx) => (
         <ModalButton disabled={!isActive} key={idx} button={button} />
       ))}
@@ -70,7 +72,7 @@ export function DispatchModalButtons() {
         {signal100Enabled ? t("Leo.disableSignal100") : t("Leo.enableSignal100")}
       </Button>
 
-      <Button disabled={!isActive} onClick={handleOpenTonesModal}>
+      <Button disabled={!isActive} onClick={() => openModal(ModalIds.Tones)}>
         {t("Leo.tones")}
       </Button>
 
@@ -80,7 +82,7 @@ export function DispatchModalButtons() {
         </Button>
       ) : null}
 
-      <TonesModal />
+      <TonesModal types={["leo", "ems-fd"]} />
     </ul>
   );
 }

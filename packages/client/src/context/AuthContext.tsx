@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useRouter } from "next/router";
 import { getSessionUser } from "lib/auth";
-import { cad as CAD, Rank, User } from "@snailycad/types";
+import type { cad as CAD, User } from "@snailycad/types";
 import { Loader } from "components/Loader";
 import { useIsRouteFeatureEnabled } from "hooks/auth/useIsRouteFeatureEnabled";
 import { useListener } from "@casper124578/use-socket.io";
@@ -18,7 +18,7 @@ interface Context {
 const AuthContext = React.createContext<Context | undefined>(undefined);
 
 interface ProviderProps {
-  children: React.ReactChild | React.ReactChild[];
+  children: React.ReactNode;
   initialData: {
     userSavedIsDarkTheme?: "false" | "true";
     session?: (User & { cad: CAD | null }) | null;
@@ -26,14 +26,9 @@ interface ProviderProps {
   };
 }
 
-const PERMISSIONS: Record<string, (user: User) => boolean> = {
-  "/admin/manage/cad-settings": (user) => user.rank === Rank.OWNER,
-};
-
 const NO_LOADING_ROUTES = ["/403", "/404", "/auth/login", "/auth/register"];
 
 export function AuthProvider({ initialData, children }: ProviderProps) {
-  const [isForbidden, setForbidden] = React.useState(false);
   const [user, setUser] = React.useState<User | null>(initialData.session ?? null);
   const [cad, setCad] = React.useState<CAD | null>(
     initialData.session?.cad ?? initialData.cad ?? null,
@@ -63,18 +58,6 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
     const isDarkTheme = user?.isDarkTheme ?? savedDarkTheme;
     _setBodyTheme(isDarkTheme);
   }, [user?.isDarkTheme, initialData.userSavedIsDarkTheme]);
-
-  React.useEffect(() => {
-    if (user) {
-      const hasPermission = hasPermissionForCurrentRoute(router.pathname, user);
-
-      if (!hasPermission) {
-        setForbidden(true);
-        router.push("/403");
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, router.pathname]);
 
   React.useEffect(() => {
     handleGetUser();
@@ -110,7 +93,7 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
 
   const value = { user, cad, setCad, setUser };
 
-  if ((!NO_LOADING_ROUTES.includes(router.pathname) && !user) || isForbidden) {
+  if (!NO_LOADING_ROUTES.includes(router.pathname) && !user) {
     return (
       <div id="unauthorized" className="fixed inset-0 grid bg-transparent place-items-center">
         <span aria-label="loading...">
@@ -149,15 +132,4 @@ function _setBodyTheme(isDarkTheme: boolean) {
   }
 
   window.document.body.classList.add("dark");
-}
-
-function hasPermissionForCurrentRoute(path: string, user: User) {
-  const key = Object.keys(PERMISSIONS).find((v) => path.startsWith(v));
-  if (!key) return true;
-
-  const pathPermission = PERMISSIONS[key];
-
-  if (typeof pathPermission !== "function") return true;
-
-  return pathPermission(user);
 }

@@ -1,30 +1,14 @@
-import type {
-  Citizen,
-  RegisteredVehicle,
-  ValueType,
-  Value,
-  TruckLog,
-  Business,
-  CustomField,
-  CustomFieldValue,
-} from "@snailycad/types";
+import type { PostLeoSearchVehicleData } from "@snailycad/types/api";
 import create from "zustand";
 
-export interface VehicleSearchResult extends RegisteredVehicle {
-  citizen: Citizen;
-  registrationStatus: Value<ValueType.LICENSE>;
-  TruckLog: TruckLog[];
-  Business: Business[];
-  allCustomFields?: CustomField[];
-  customFields?: CustomFieldValue[];
-}
+export type VehicleSearchResult = NonNullable<PostLeoSearchVehicleData>;
 
 interface VehicleSearchState {
   currentResult: VehicleSearchResult | null | undefined;
   setCurrentResult(v: VehicleSearchResult | null | undefined): void;
 }
 
-export const useVehicleSearch = create<VehicleSearchState>((set) => ({
+export const useVehicleSearch = create<VehicleSearchState>()((set) => ({
   currentResult: undefined,
   setCurrentResult: (v) => set({ currentResult: v }),
 }));

@@ -25,12 +25,12 @@
     "date": "Date",
     "note": "Note",
     "deleteCourtDate": "Supprimer la date",
-    "courthousePosts": "Posts du tribunal",
-    "manageCourthousePost": "Gérer le post",
-    "deleteCourthousePost": "Supprimer le post",
-    "addCourthousePost": "Ajouter un post",
-    "noCourthousePosts": "Il n'y a pas de posts pour le moment.",
-    "alert_deleteCourthousePost": "Êtes-vous sûr de vouloir supprimer ce post ? Cette action ne peut être annulée.",
+    "courthousePosts": "Publications du tribunal",
+    "manageCourthousePost": "Gérer la publication",
+    "deleteCourthousePost": "Supprimer la publication",
+    "addCourthousePost": "Ajouter une publication",
+    "noCourthousePosts": "Il n'y a pas de publications pour le moment.",
+    "alert_deleteCourthousePost": "Êtes-vous sûr de vouloir supprimer cette publication ? Cette action ne peut être annulée.",
     "alert_deleteCourtEntry": "Êtes-vous sûr de vouloir supprimer cette entrée ? Cette action ne peut être annulée.",
     "alert_deleteCourtDate": "Êtes-vous sûr de vouloir supprimer cette date ? Cette action ne peut être annulée."
   }

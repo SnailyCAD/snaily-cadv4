@@ -25,6 +25,7 @@ import { CombinedLeoUnit, EmsFdDeputy, LeoIncident, StatusValueType } from "@sna
 import { useValues } from "context/ValuesContext";
 import { isUnitCombined } from "@snailycad/utils";
 import { Input } from "components/form/inputs/Input";
+import type { PostIncidentsData, PutIncidentByIdData } from "@snailycad/types/api";
 
 interface Props {
   incident?: LeoIncident | null;
@@ -39,7 +40,7 @@ export function ManageIncidentModal({
   onUpdate,
   incident: tempIncident,
 }: Props) {
-  const { activeIncidents } = useActiveIncidents();
+  const { activeIncidents, setActiveIncidents } = useActiveIncidents();
   const foundIncident = activeIncidents.find((v) => v.id === tempIncident?.id);
   const incident = foundIncident ?? tempIncident ?? null;
 
@@ -63,12 +64,16 @@ export function ManageIncidentModal({
   const activeUnits = [...activeOfficers, ...activeDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
   const unitsForSelect = isDispatch ? activeUnits : allUnits;
 
+  function handleAddUpdateCallEvent(incident: LeoIncident) {
+    setActiveIncidents(activeIncidents.map((inc) => (inc.id === incident.id ? incident : inc)));
+  }
+
   function handleClose() {
     closeModal(ModalIds.ManageIncident);
     onClose?.();
   }
 
-  function makeLabel(value: string) {
+  function makeLabel(value: string | undefined) {
     const unit = allUnits.find((v) => v.id === value) ?? activeUnits.find((v) => v.id === value);
 
     if (unit && isUnitCombined(unit)) {
@@ -87,21 +92,27 @@ export function ManageIncidentModal({
     let id = "";
 
     if (incident) {
-      const { json } = await execute(`/incidents/${incident.id}`, {
+      const { json, error } = await execute<PutIncidentByIdData>({
+        path: `/incidents/${incident.id}`,
         method: "PUT",
         data,
       });
 
-      id = json.id;
-      onUpdate?.(incident, json);
+      if (json && !error) {
+        id = json.id;
+        onUpdate?.(incident, json);
+      }
     } else {
-      const { json } = await execute("/incidents", {
+      const { json, error } = await execute<PostIncidentsData>({
+        path: "/incidents",
         method: "POST",
         data,
       });
 
-      id = json.id;
-      onCreate?.(json);
+      if (json && !error) {
+        id = json.id;
+        onCreate?.(json);
+      }
     }
 
     if (id) {
@@ -237,7 +248,13 @@ export function ManageIncidentModal({
           )}
         </Formik>
 
-        {incident ? <IncidentEventsArea disabled={areEventsReadonly} incident={incident} /> : null}
+        {incident ? (
+          <IncidentEventsArea
+            handleStateUpdate={handleAddUpdateCallEvent}
+            disabled={areEventsReadonly}
+            incident={incident}
+          />
+        ) : null}
       </div>
     </Modal>
   );

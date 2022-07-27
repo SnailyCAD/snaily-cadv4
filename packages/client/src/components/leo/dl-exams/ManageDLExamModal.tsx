@@ -1,6 +1,5 @@
 import { DL_EXAM_SCHEMA } from "@snailycad/schemas";
 import {
-  Citizen,
   DLExam,
   DLExamPassType,
   DriversLicenseCategoryType,
@@ -21,6 +20,8 @@ import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
+import type { NameSearchResult } from "state/search/nameSearchState";
+import type { PostDLExamsData, PutDLExamByIdData } from "@snailycad/types/api";
 
 interface Props {
   exam: DLExam | null;
@@ -58,7 +59,8 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
     };
 
     if (exam) {
-      const { json } = await execute(`/leo/${apiPath}/${exam.id}`, {
+      const { json } = await execute<PutDLExamByIdData>({
+        path: `/leo/${apiPath}/${exam.id}`,
         method: "PUT",
         data,
       });
@@ -68,7 +70,8 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
         onUpdate?.(exam, json);
       }
     } else {
-      const { json } = await execute(`/leo/${apiPath}`, {
+      const { json } = await execute<PostDLExamsData>({
+        path: `/leo/${apiPath}`,
         method: "POST",
         data,
       });
@@ -105,7 +108,7 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
         {({ handleChange, setValues, errors, values }) => (
           <Form>
             <FormField errorMessage={errors.citizenId} label={common("citizen")}>
-              <InputSuggestions<Citizen>
+              <InputSuggestions<NameSearchResult>
                 onSuggestionClick={(suggestion) => {
                   setValues({
                     ...values,
@@ -120,6 +123,7 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
                         className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                         draggable={false}
                         src={makeImageUrl("citizens", suggestion.imageId)}
+                        loading="lazy"
                       />
                     ) : null}
                     <p>

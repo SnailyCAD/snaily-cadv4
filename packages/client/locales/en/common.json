@@ -86,7 +86,8 @@
     "dlExams": "Driver License Exams",
     "dmv": "Department of Motor Vehicles",
     "penalCodes": "Penal Codes",
-    "weaponExams": "Weapon Exams"
+    "weaponExams": "Weapon Exams",
+    "myDeputyLogs": "My deputy logs"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",
@@ -145,6 +146,10 @@
     "steamNameInUse": "Could not create a new account with Steam since the username is already in-use.",
     "steamAccountAlreadyLinked": "This Steam account is already linked to another account.",
     "cannotRegisterFirstWithSteam": "The first account must be registered without Steam. You can link Steam once the account is created.",
-    "Unauthorized": "You have been logged out. Please log back in to continue."
+    "Unauthorized": "You have been logged out. Please log back in to continue.",
+    "captchaRequired": "An error occurred trying to validate your CAPTCHA. Please try again later.",
+    "invalidCaptcha": "We were unable to verify you are a human. Please contact an administrator if you think this is an error.",
+    "updateAvailable": "Update Available",
+    "updateAvailableInfo": "A new update is available. Please update your SnailyCAD to take advantage of the latest features and bug fixes. Click for more information."
   }
 }

@@ -11,6 +11,8 @@ import { IsAuth } from "middlewares/IsAuth";
 import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
 import { isFeatureEnabled } from "lib/cad";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
+import type * as APITypes from "@snailycad/types/api";
+import { citizenInclude } from "./CitizenController";
 
 @Controller("/licenses")
 @UseBeforeEach(IsAuth)
@@ -22,7 +24,7 @@ export class LicensesController {
     @Context("user") user: User,
     @Context("cad") cad: cad & { features?: CadFeature[] },
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PutCitizenLicensesByIdData> {
     const data = validateSchema(LICENSE_SCHEMA, body);
 
     const isDLExamEnabled = isFeatureEnabled({
@@ -57,13 +59,7 @@ export class LicensesController {
         weaponLicenseId: data.weaponLicense,
         waterLicenseId: data.waterLicense,
       },
-      include: {
-        weaponLicense: true,
-        driversLicense: true,
-        pilotLicense: true,
-        waterLicense: true,
-        dlCategory: { include: { value: true } },
-      },
+      include: citizenInclude,
     });
 
     return updated;

@@ -5,13 +5,8 @@ import { EMS_FD_DEPUTY_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas"
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
-import {
-  type MiscCadSettings,
-  ShouldDoType,
-  type User,
-  CadFeature,
-  EmsFdDeputy,
-} from "@prisma/client";
+import { type MiscCadSettings, ShouldDoType, type User, CadFeature, Feature } from "@prisma/client";
+import type { cad, EmsFdDeputy } from "@snailycad/types";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { IsAuth } from "middlewares/IsAuth";
 import { ActiveDeputy } from "middlewares/ActiveDeputy";
@@ -28,6 +23,8 @@ import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
 import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { Socket } from "services/SocketService";
+import type * as APITypes from "@snailycad/types/api";
+import { isFeatureEnabled } from "lib/cad";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
@@ -42,7 +39,7 @@ export class EmsFdController {
     fallback: (u) => u.isEmsFd,
     permissions: [Permissions.EmsFd],
   })
-  async getUserDeputies(@Context("user") user: User) {
+  async getUserDeputies(@Context("user") user: User): Promise<APITypes.GetMyDeputiesData> {
     const deputies = await prisma.emsFdDeputy.findMany({
       where: { userId: user.id },
       include: {
@@ -59,7 +56,7 @@ export class EmsFdController {
     fallback: (u) => u.isEmsFd,
     permissions: [Permissions.EmsFd],
   })
-  async getDeputyLogs(@Context("user") user: User) {
+  async getDeputyLogs(@Context("user") user: User): Promise<APITypes.GetMyDeputiesLogsData> {
     const logs = await prisma.officerLog.findMany({
       where: { userId: user.id, officerId: null },
       include: { emsFdDeputy: { include: unitProperties } },
@@ -78,7 +75,7 @@ export class EmsFdController {
     @BodyParams() body: unknown,
     @Context("user") user: User,
     @Context("cad") cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
-  ) {
+  ): Promise<APITypes.PostMyDeputiesData> {
     const data = validateSchema(EMS_FD_DEPUTY_SCHEMA, body);
 
     const division = await prisma.divisionValue.findFirst({
@@ -158,7 +155,7 @@ export class EmsFdController {
     @BodyParams() body: unknown,
     @Context("user") user: User,
     @Context("cad") cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
-  ) {
+  ): Promise<APITypes.PutMyDeputyByIdData> {
     const data = validateSchema(EMS_FD_DEPUTY_SCHEMA, body);
 
     const deputy = await prisma.emsFdDeputy.findFirst({
@@ -255,7 +252,10 @@ export class EmsFdController {
     fallback: (u) => u.isEmsFd,
     permissions: [Permissions.EmsFd],
   })
-  async deleteDeputy(@PathParams("id") id: string, @Context("user") user: User) {
+  async deleteDeputy(
+    @PathParams("id") id: string,
+    @Context("user") user: User,
+  ): Promise<APITypes.DeleteMyDeputyByIdData> {
     const deputy = await prisma.emsFdDeputy.findFirst({
       where: {
         userId: user.id,
@@ -282,7 +282,9 @@ export class EmsFdController {
     fallback: (u) => u.isEmsFd || u.isLeo || u.isDispatch,
     permissions: [Permissions.EmsFd, Permissions.Leo, Permissions.Dispatch],
   })
-  async getActiveDeputy(@Context("activeDeputy") activeDeputy: EmsFdDeputy) {
+  async getActiveDeputy(
+    @Context("activeDeputy") activeDeputy: EmsFdDeputy,
+  ): Promise<APITypes.GetEmsFdActiveDeputy> {
     return activeDeputy;
   }
 
@@ -292,7 +294,9 @@ export class EmsFdController {
     fallback: (u) => u.isEmsFd || u.isLeo || u.isDispatch,
     permissions: [Permissions.EmsFd, Permissions.Leo, Permissions.Dispatch],
   })
-  async getActiveDeputies(@Context("cad") cad: { miscCadSettings: MiscCadSettings }) {
+  async getActiveDeputies(
+    @Context("cad") cad: { miscCadSettings: MiscCadSettings },
+  ): Promise<APITypes.GetEmsFdActiveDeputies> {
     const unitsInactivityFilter = getInactivityFilter(cad, "lastStatusChangeTimestamp");
 
     if (unitsInactivityFilter) {
@@ -322,7 +326,7 @@ export class EmsFdController {
     fallback: (u) => u.isEmsFd,
     permissions: [Permissions.EmsFd],
   })
-  async createMedicalRecord(@BodyParams() body: unknown) {
+  async createMedicalRecord(@BodyParams() body: unknown): Promise<APITypes.PostEmsFdMedicalRecord> {
     const data = validateSchema(MEDICAL_RECORD_SCHEMA, body);
 
     const citizen = await prisma.citizen.findUnique({
@@ -343,6 +347,7 @@ export class EmsFdController {
         description: data.description,
         bloodGroupId: data.bloodGroup ?? null,
       },
+      include: { bloodGroup: true },
     });
 
     return medicalRecord;
@@ -353,7 +358,10 @@ export class EmsFdController {
     fallback: (u) => u.isEmsFd || u.isLeo || u.isDispatch,
     permissions: [Permissions.EmsFd, Permissions.Leo, Permissions.Dispatch],
   })
-  async declareCitizenDeadOrAlive(@PathParams("citizenId") citizenId: string) {
+  async declareCitizenDeadOrAlive(
+    @PathParams("citizenId") citizenId: string,
+    @Context("cad") cad: cad,
+  ): Promise<APITypes.PostEmsFdDeclareCitizenById> {
     const citizen = await prisma.citizen.findUnique({
       where: {
         id: citizenId,
@@ -362,6 +370,20 @@ export class EmsFdController {
 
     if (!citizen) {
       throw new NotFound("notFound");
+    }
+
+    const deleteOnDeadFeature = isFeatureEnabled({
+      defaultReturn: false,
+      feature: Feature.CITIZEN_DELETE_ON_DEAD,
+      features: cad.features,
+    });
+
+    if (deleteOnDeadFeature) {
+      const deleted = await prisma.citizen.delete({
+        where: { id: citizen.id },
+      });
+
+      return { ...deleted, dead: true, dateOfDead: new Date() };
     }
 
     const updated = await prisma.citizen.update({
@@ -383,7 +405,10 @@ export class EmsFdController {
     fallback: (u) => u.isEmsFd,
     permissions: [Permissions.EmsFd],
   })
-  async panicButton(@Context("user") user: User, @BodyParams("deputyId") deputyId: string) {
+  async panicButton(
+    @Context("user") user: User,
+    @BodyParams("deputyId") deputyId: string,
+  ): Promise<APITypes.PostEmsFdTogglePanicButtonData> {
     let deputy = await prisma.emsFdDeputy.findFirst({
       where: {
         id: deputyId,
@@ -439,6 +464,8 @@ export class EmsFdController {
 
     await this.socket.emitUpdateDeputyStatus();
     this.socket.emitPanicButtonLeo(deputy, panicType);
+
+    return deputy;
   }
 
   @Post("/image/:id")
@@ -449,8 +476,8 @@ export class EmsFdController {
   async uploadImageToOfficer(
     @Context("user") user: User,
     @PathParams("id") deputyId: string,
-    @MultipartFile("image") file: PlatformMulterFile,
-  ) {
+    @MultipartFile("image") file?: PlatformMulterFile,
+  ): Promise<APITypes.PostMyDeputyByIdData> {
     const deputy = await prisma.emsFdDeputy.findFirst({
       where: {
         userId: user.id,
@@ -460,6 +487,10 @@ export class EmsFdController {
 
     if (!deputy) {
       throw new NotFound("Not Found");
+    }
+
+    if (!file) {
+      throw new ExtendedBadRequest({ file: "No file provided." });
     }
 
     if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {

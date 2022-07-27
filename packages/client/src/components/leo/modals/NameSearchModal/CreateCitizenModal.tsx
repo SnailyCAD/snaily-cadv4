@@ -11,6 +11,10 @@ import { useNameSearch } from "state/search/nameSearchState";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import { ValueType } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import type {
+  PostCitizenImageByIdData,
+  PostSearchActionsCreateCitizen,
+} from "@snailycad/types/api";
 
 export function CreateCitizenModal() {
   const { isOpen, closeModal } = useModal();
@@ -36,7 +40,8 @@ export function CreateCitizenModal() {
     data: any;
     helpers: any;
   }) {
-    const { json } = await execute("/search/actions/citizen", {
+    const { json } = await execute<PostSearchActionsCreateCitizen>({
+      path: "/search/actions/citizen",
       method: "POST",
       helpers,
       data: {
@@ -59,7 +64,8 @@ export function CreateCitizenModal() {
     if (json.id) {
       let imageJson;
       if (formData) {
-        const { json: _imageJson } = await execute(`/citizen/${json.id}`, {
+        const { json: _imageJson } = await execute<PostCitizenImageByIdData>({
+          path: `/citizen/${json.id}`,
           method: "POST",
           data: formData,
           helpers,

@@ -13,7 +13,7 @@ import { Full911Call, useDispatchState } from "state/dispatchState";
 import { useRouter } from "next/router";
 import { Select, SelectValue } from "components/form/Select";
 import { AlertModal } from "components/modal/AlertModal";
-import { CallEventsArea } from "../911Call/EventsArea";
+import { CallEventsArea } from "../active-calls/EventsArea";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 import { EmsFdDeputy, StatusValueType, type CombinedLeoUnit } from "@snailycad/types";
@@ -28,6 +28,11 @@ import { usePermission } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
 import { useLeoState } from "state/leoState";
 import { useEmsFdState } from "state/emsFdState";
+import type {
+  Delete911CallByIdData,
+  Post911CallsData,
+  Put911CallByIdData,
+} from "@snailycad/types/api";
 
 interface Props {
   call: Full911Call | null;
@@ -63,16 +68,16 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
   const isDisabled = isDispatch
     ? false
     : call
-    ? !call?.assignedUnits.some((u) => u.unit.id === activeUnit?.id)
+    ? !call?.assignedUnits.some((u) => u.unit?.id === activeUnit?.id)
     : false;
 
   const allUnits = [...allOfficers, ...allDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
   const units = [...activeOfficers, ...activeDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
 
-  const handleAddUpdateCallEvent = React.useCallback(
+  const handleCallStateUpdate = React.useCallback(
     (call: Full911Call) => {
-      setCall?.(call);
       setCalls(calls.map((c) => (c.id === call.id ? call : c)));
+      setCall?.(call);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [call, calls],
@@ -94,7 +99,8 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
   async function handleDelete() {
     if (!call || isDisabled) return;
 
-    const { json } = await execute(`/911-calls/${call.id}`, {
+    const { json } = await execute<Delete911CallByIdData>({
+      path: `/911-calls/${call.id}`,
       method: "DELETE",
     });
 
@@ -114,17 +120,19 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
     };
 
     if (call) {
-      const { json } = await execute(`/911-calls/${call.id}`, {
+      const { json } = await execute<Put911CallByIdData>({
+        path: `/911-calls/${call.id}`,
         method: "PUT",
         data: requestData,
       });
 
       if (json.id) {
-        setCalls(calls.map((c) => (c.id === json.id ? json : c)));
+        setCalls(calls.map((c) => (c.id === json.id ? { ...c, ...json } : c)));
         closeModal(ModalIds.Manage911Call);
       }
     } else {
-      const { json } = await execute("/911-calls", {
+      const { json } = await execute<Post911CallsData>({
+        path: "/911-calls",
         method: "POST",
         data: requestData,
       });
@@ -157,12 +165,12 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
     callType: call?.typeId ?? null,
     assignedUnits:
       call?.assignedUnits.map((unit) => ({
-        label: makeLabel(unit.unit.id),
-        value: unit.unit.id,
+        label: makeLabel(unit.unit?.id),
+        value: unit.unit?.id,
       })) ?? ([] as SelectValue[]),
   };
 
-  function makeLabel(value: string) {
+  function makeLabel(value: string | undefined) {
     const unit = allUnits.find((v) => v.id === value) ?? units.find((v) => v.id === value);
 
     if (unit && isUnitCombined(unit)) {
@@ -348,8 +356,7 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
 
         {call ? (
           <CallEventsArea
-            onCreate={handleAddUpdateCallEvent}
-            onUpdate={handleAddUpdateCallEvent}
+            handleStateUpdate={handleCallStateUpdate}
             disabled={isDisabled}
             call={call}
           />

@@ -17,6 +17,7 @@ import { FullDate } from "components/shared/FullDate";
 import { TabsContent } from "components/shared/TabList";
 import { Permissions, usePermission } from "hooks/usePermission";
 import { ViolationsColumn } from "components/leo/ViolationsColumn";
+import type { DeleteRecordsByIdData } from "@snailycad/types/api";
 
 export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitizen?: boolean }) {
   const t = useTranslations();
@@ -41,20 +42,31 @@ export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitize
     ["arrestReports", t("Leo.arrestReports"), t("Leo.noArrestReports"), arrestReports],
   ];
 
-  async function handleDelete() {
-    if (!tempItem) return;
+  function handleRecordUpdate(data: Record) {
+    if (!currentResult || currentResult.isConfidential) return;
 
-    const { json } = await execute(`/records/${tempItem.id}`, {
+    setCurrentResult({
+      ...currentResult,
+      Record: currentResult.Record.map((v) => {
+        if (v.id === data.id) return data;
+        return v;
+      }),
+    });
+  }
+
+  async function handleDelete() {
+    if (!tempItem || !currentResult || currentResult.isConfidential) return;
+
+    const { json } = await execute<DeleteRecordsByIdData>({
+      path: `/records/${tempItem.id}`,
       method: "DELETE",
     });
 
     if (json) {
-      if (currentResult) {
-        setCurrentResult({
-          ...currentResult,
-          Record: currentResult.Record.filter((v) => v.id !== tempItem.id),
-        });
-      }
+      setCurrentResult({
+        ...currentResult,
+        Record: currentResult.Record.filter((v) => v.id !== tempItem.id),
+      });
 
       closeModal(ModalIds.AlertDeleteRecord);
     }
@@ -98,16 +110,7 @@ export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitize
 
       {tempEditRecord ? (
         <ManageRecordModal
-          onUpdate={(data) => {
-            currentResult &&
-              setCurrentResult({
-                ...currentResult,
-                Record: currentResult.Record.map((v) => {
-                  if (v.id === data.id) return data;
-                  return v;
-                }),
-              });
-          }}
+          onUpdate={handleRecordUpdate}
           id={ModalIds.ManageRecord}
           type={tempEditRecord.type}
           record={tempEditRecord}
@@ -156,7 +159,9 @@ function RecordsTable({ data }: { data: Record[] }) {
           .map((record) => ({
             violations: <ViolationsColumn violations={record.violations} />,
             postal: record.postal,
-            officer: `${generateCallsign(record.officer)} ${makeUnitName(record.officer)}`,
+            officer: record.officer
+              ? `${generateCallsign(record.officer)} ${makeUnitName(record.officer)}`
+              : common("none"),
             notes: record.notes || common("none"),
             createdAt: <FullDate>{record.createdAt}</FullDate>,
             actions: isCitizen ? null : (

@@ -6,7 +6,8 @@ import { useModal } from "state/modalState";
 import { useDownload } from "@casper124578/useful";
 import { Dropdown } from "components/Dropdown";
 import { PenalCode, ValueType } from "@snailycad/types";
-import { AnyValue, isDivisionValue, isStatusValue } from "@snailycad/utils";
+import { isDivisionValue, isStatusValue } from "@snailycad/utils";
+import type { AnyValue } from "@snailycad/types";
 import format from "date-fns/format";
 
 interface Props {
@@ -34,7 +35,12 @@ export function OptionsDropdown({ type, values }: Props) {
       className="dropdown-right"
       trigger={
         <Button className="flex items-center justify-center w-8 h-8">
-          <ThreeDots width={15} height={15} className="text-neutral-800" />
+          <ThreeDots
+            aria-label="Options"
+            width={15}
+            height={15}
+            className="text-neutral-800 dark:text-gray-300"
+          />
         </Button>
       }
     >

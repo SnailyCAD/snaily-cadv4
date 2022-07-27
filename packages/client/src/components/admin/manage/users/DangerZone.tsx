@@ -1,7 +1,6 @@
 import { Button } from "components/Button";
 import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
-import type { User } from "@snailycad/types";
 import { useRouter } from "next/router";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
@@ -9,12 +8,18 @@ import { AlertModal } from "components/modal/AlertModal";
 import { GiveTempPasswordModal } from "./GiveTempPasswordModal";
 import { useTranslations } from "use-intl";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import type {
+  DeleteManageUserRevokeApiTokenData,
+  DeleteManageUsersData,
+  GetManageUserByIdData,
+} from "@snailycad/types/api";
 
 interface Props {
-  user: User;
+  user: GetManageUserByIdData;
+  setUser: React.Dispatch<React.SetStateAction<GetManageUserByIdData>>;
 }
 
-export function DangerZone({ user }: Props) {
+export function DangerZone({ user, setUser }: Props) {
   const { state, execute } = useFetch();
   const router = useRouter();
   const { openModal, closeModal } = useModal();
@@ -23,10 +28,25 @@ export function DangerZone({ user }: Props) {
 
   const formDisabled = user.rank === "OWNER";
 
+  async function handleDisable2FA() {
+    if (formDisabled) return;
+
+    const { json } = await execute<DeleteManageUserRevokeApiTokenData>({
+      path: `/admin/manage/users/${user.id}/2fa`,
+      method: "DELETE",
+    });
+
+    if (json) {
+      closeModal(ModalIds.AlertDisableUser2FA);
+      setUser({ ...user, twoFactorEnabled: false });
+    }
+  }
+
   async function handleDelete() {
     if (formDisabled) return;
 
-    const { json } = await execute(`/admin/manage/users/${user.id}`, {
+    const { json } = await execute<DeleteManageUsersData>({
+      path: `/admin/manage/users/${user.id}`,
       method: "DELETE",
     });
 
@@ -38,13 +58,14 @@ export function DangerZone({ user }: Props) {
   async function handleRevoke() {
     if (formDisabled) return;
 
-    const { json } = await execute(`/admin/manage/users/${user.id}/api-token`, {
+    const { json } = await execute<DeleteManageUserRevokeApiTokenData>({
+      path: `/admin/manage/users/${user.id}/api-token`,
       method: "DELETE",
     });
 
     if (json) {
-      router.push("/admin/manage/users");
       closeModal(ModalIds.AlertRevokePersonalApiToken);
+      setUser({ ...user, apiToken: null, apiTokenId: null });
     }
   }
 
@@ -72,6 +93,18 @@ export function DangerZone({ user }: Props) {
           {state === "loading" ? <Loader className="mr-3" /> : null}
           Temporary Password
         </Button>
+
+        {user.twoFactorEnabled ? (
+          <Button
+            variant="danger"
+            className="flex items-center ml-2"
+            disabled={state === "loading"}
+            onClick={() => openModal(ModalIds.AlertDisableUser2FA)}
+          >
+            {state === "loading" ? <Loader className="mr-3" /> : null}
+            Disable Two Factor Authentication
+          </Button>
+        ) : null}
 
         {USER_API_TOKENS && user.apiTokenId ? (
           <Button
@@ -110,6 +143,14 @@ export function DangerZone({ user }: Props) {
         description={`Are you sure you want to revoke ${user.username}'s personal API Token? They will not be able to use this API token anymore. They are able to re-generate a new one later. You can remove their 'Use Personal Api Token' permissions via 'Manage Permissions'`}
         id={ModalIds.AlertRevokePersonalApiToken}
         deleteText="Revoke"
+      />
+
+      <AlertModal
+        onDeleteClick={handleDisable2FA}
+        title="Disable Two Factor Authentication"
+        description={`Are you sure you want to disable ${user.username}'s Two Factor Authentication? They can re-enable it again in their settings.`}
+        id={ModalIds.AlertDisableUser2FA}
+        deleteText="Disable"
       />
 
       <GiveTempPasswordModal user={user} />

@@ -10,12 +10,13 @@ import {
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import type * as APITypes from "@snailycad/types/api";
 
 const vehicleInclude = {
   model: { include: { value: true } },
   registrationStatus: true,
   insuranceStatus: true,
-  citizen: { select: { name: true, surname: true, id: true } },
+  citizen: true,
 };
 
 @Controller("/leo/dmv")
@@ -27,7 +28,7 @@ export class DmvController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.ManageDMV],
   })
-  async getPendingVehicles() {
+  async getPendingVehicles(): Promise<APITypes.GetDMVPendingVehiclesData> {
     const vehicles = await prisma.registeredVehicle.findMany({
       where: { dmvStatus: WhitelistStatus.PENDING },
       include: vehicleInclude,
@@ -41,7 +42,7 @@ export class DmvController {
   async acceptOrDeclineVehicle(
     @PathParams("vehicleId") vehicleId: string,
     @BodyParams("type") type: AcceptDeclineType,
-  ) {
+  ): Promise<APITypes.PostDMVVehiclesData> {
     const vehicle = await prisma.registeredVehicle.findFirst({
       where: { id: vehicleId, dmvStatus: WhitelistStatus.PENDING },
     });

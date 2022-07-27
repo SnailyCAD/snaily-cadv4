@@ -8,6 +8,7 @@ import { expungementRequestInclude } from "controllers/court/ExpungementRequests
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import type * as APITypes from "@snailycad/types/api";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/expungement-requests")
@@ -17,7 +18,7 @@ export class AdminManageExpungementRequests {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ViewExpungementRequests, Permissions.ManageExpungementRequests],
   })
-  async getRequests() {
+  async getRequests(): Promise<APITypes.GetManageExpungementRequests> {
     const requests = await prisma.expungementRequest.findMany({
       include: expungementRequestInclude,
     });
@@ -33,7 +34,7 @@ export class AdminManageExpungementRequests {
   async updateExpungementRequest(
     @PathParams("id") id: string,
     @BodyParams("type") type: ExpungementRequestStatus,
-  ) {
+  ): Promise<APITypes.PutManageExpungementRequests> {
     const isCorrect = Object.values(ExpungementRequestStatus).includes(type);
     if (!isCorrect) {
       throw new BadRequest("invalidType");

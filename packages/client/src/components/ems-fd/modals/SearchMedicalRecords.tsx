@@ -8,7 +8,6 @@ import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import type { Citizen, MedicalRecord } from "@snailycad/types";
 import { Table } from "components/shared/Table";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { useImageUrl } from "hooks/useImageUrl";
@@ -19,6 +18,11 @@ import { FullDate } from "components/shared/FullDate";
 import { calculateAge, formatCitizenAddress } from "lib/utils";
 import { useAuth } from "context/AuthContext";
 import { CitizenImageModal } from "components/citizen/modals/CitizenImageModal";
+import type {
+  PostEmsFdDeclareCitizenById,
+  PostEmsFdMedicalRecordsSearchData,
+} from "@snailycad/types/api";
+import { classNames } from "lib/classNames";
 
 interface Props {
   onClose?(): void;
@@ -42,7 +46,8 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
   async function handleDeclare() {
     if (!results || typeof results === "boolean") return;
 
-    const { json } = await execute(`/ems-fd/declare/${results.id}`, {
+    const { json } = await execute<PostEmsFdDeclareCitizenById>({
+      path: `/ems-fd/declare/${results.id}`,
       method: "POST",
     });
 
@@ -52,7 +57,8 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute("/search/medical-records", {
+    const { json } = await execute<PostEmsFdMedicalRecordsSearchData>({
+      path: "/search/medical-records",
       method: "POST",
       data: values,
       noToast: true,
@@ -102,6 +108,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                         className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                         draggable={false}
                         src={makeImageUrl("citizens", suggestion.imageId)}
+                        loading="lazy"
                       />
                     ) : null}
                     <p>
@@ -113,7 +120,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                   </div>
                 )}
                 options={{
-                  apiPath: "/search/medical-name",
+                  apiPath: "/search/name",
                   method: "POST",
                   dataKey: "name",
                 }}
@@ -142,6 +149,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                         className="rounded-md w-[100px] h-[100px] object-cover"
                         draggable={false}
                         src={makeImageUrl("citizens", results.imageId)}
+                        loading="lazy"
                       />
                     </button>
                   ) : (
@@ -227,22 +235,42 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
               </div>
             )}
 
-            <footer className="flex justify-end mt-5">
-              <Button
-                type="reset"
-                onClick={() => closeModal(ModalIds.SearchMedicalRecord)}
-                variant="cancel"
-              >
-                {t("Common.cancel")}
-              </Button>
-              <Button
-                className="flex items-center"
-                disabled={!isValid || state === "loading"}
-                type="submit"
-              >
-                {state === "loading" ? <Loader className="mr-2" /> : null}
-                {t("Common.search")}
-              </Button>
+            <footer
+              className={classNames(
+                "flex justify-end mt-5",
+                results && !results.isConfidential && "justify-between",
+              )}
+            >
+              {results && !results.isConfidential ? (
+                <Button
+                  size="xs"
+                  type="button"
+                  onClick={handleDeclare}
+                  disabled={state === "loading"}
+                  variant="cancel"
+                  className="px-1.5"
+                >
+                  {results.dead ? t("Ems.declareAlive") : t("Ems.declareDead")}
+                </Button>
+              ) : null}
+
+              <div className="flex gap-2">
+                <Button
+                  type="reset"
+                  onClick={() => closeModal(ModalIds.SearchMedicalRecord)}
+                  variant="cancel"
+                >
+                  {t("Common.cancel")}
+                </Button>
+                <Button
+                  className="flex items-center"
+                  disabled={!isValid || state === "loading"}
+                  type="submit"
+                >
+                  {state === "loading" ? <Loader className="mr-2" /> : null}
+                  {t("Common.search")}
+                </Button>
+              </div>
             </footer>
           </Form>
         )}
@@ -251,7 +279,4 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
   );
 }
 
-interface SearchResult extends Citizen {
-  medicalRecords: MedicalRecord[];
-  isConfidential?: boolean;
-}
+type SearchResult = PostEmsFdMedicalRecordsSearchData;

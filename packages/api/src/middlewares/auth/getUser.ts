@@ -1,10 +1,10 @@
-import { User, WhitelistStatus } from "@prisma/client";
+import { WhitelistStatus } from "@prisma/client";
 import { allPermissions } from "@snailycad/permissions";
 import type { Req } from "@tsed/common";
-import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
+import { BadRequest, Unauthorized } from "@tsed/exceptions";
 import { getSessionUser } from "lib/auth/getSessionUser";
 import { prisma } from "lib/prisma";
-import { hasPermissionForReq, isRouteDisabled } from "./utils";
+import { isRouteDisabled } from "./utils";
 
 interface GetUserFromCADAPITokenOptions {
   req: Req;
@@ -44,12 +44,7 @@ export async function getUserFromCADAPIToken(options: GetUserFromCADAPITokenOpti
 }
 
 export async function getUserFromSession(options: Pick<GetUserFromCADAPITokenOptions, "req">) {
-  const user = (await getSessionUser(options.req, false)) as User & { twoFactorEnabled: boolean };
-
-  const hasPermission = hasPermissionForReq({ ...options, user });
-  if (!hasPermission) {
-    throw new Forbidden("Invalid Permissions");
-  }
+  const user = await getSessionUser(options.req, false);
 
   const user2FA = await prisma.user2FA.findFirst({
     where: { userId: user.id },

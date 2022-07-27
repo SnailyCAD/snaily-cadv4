@@ -7,6 +7,7 @@ import { ActiveMapCalls } from "./ActiveMapCalls";
 import { convertToMap } from "lib/map/utils";
 import { Button } from "components/Button";
 import { useTranslations } from "next-intl";
+import type { Put911CallByIdData } from "@snailycad/types/api";
 
 export function RenderActiveCalls() {
   const map = useMap();
@@ -35,9 +36,15 @@ export function RenderActiveCalls() {
 
     handleCallStateUpdate(call.id, { ...data });
 
-    const { json } = await execute(`/911-calls/${call.id}`, {
+    const { json } = await execute<Put911CallByIdData>({
+      path: `/911-calls/${call.id}`,
       method: "PUT",
-      data: { ...data, situationCode: call.situationCodeId },
+      data: {
+        ...data,
+        situationCode: call.situationCodeId,
+        divisions: call.divisions?.map((v) => v.id),
+        departments: call.departments?.map((v) => v.id),
+      },
     });
 
     handleCallStateUpdate(call.id, { ...data, ...json });
@@ -53,9 +60,15 @@ export function RenderActiveCalls() {
 
     handleCallStateUpdate(call.id, callData);
 
-    const { json } = await execute(`/911-calls/${call.id}`, {
+    const { json } = await execute<Put911CallByIdData>({
+      path: `/911-calls/${call.id}`,
       method: "PUT",
-      data: { ...callData, situationCode: call.situationCodeId },
+      data: {
+        ...callData,
+        situationCode: call.situationCodeId,
+        divisions: call.divisions?.map((v) => v.id),
+        departments: call.departments?.map((v) => v.id),
+      },
     });
 
     handleCallStateUpdate(call.id, { ...callData, ...json });

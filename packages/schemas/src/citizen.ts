@@ -46,6 +46,7 @@ export const VEHICLE_SCHEMA = z.object({
   businessId: z.string().max(255).optional().nullable(),
   employeeId: z.string().max(255).optional().nullable(),
   reApplyForDmv: z.boolean().nullable().optional(),
+  appearance: z.string().nullable().optional(),
 });
 
 export const TRANSFER_VEHICLE_SCHEMA = z.object({

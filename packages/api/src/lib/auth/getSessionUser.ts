@@ -5,9 +5,10 @@ import { parse } from "cookie";
 import { Cookie, USER_API_TOKEN_HEADER } from "@snailycad/config";
 import { verifyJWT } from "utils/jwt";
 import { prisma } from "lib/prisma";
-import { Feature, Rank, WhitelistStatus, type User } from "@prisma/client";
+import { Feature, WhitelistStatus, type User } from "@prisma/client";
 import { isFeatureEnabled } from "lib/cad";
 import { hasPermission, Permissions } from "@snailycad/permissions";
+import type { GetUserData } from "@snailycad/types/api";
 
 enum GetSessionUserErrors {
   InvalidAPIToken = "invalid user API token",
@@ -45,12 +46,19 @@ export const userProperties = {
   permissions: true,
   apiToken: true,
   apiTokenId: true,
+  roles: true,
   locale: true,
 };
 
-export async function getSessionUser(req: Req, returnNullOnError?: false): Promise<User>;
-export async function getSessionUser(req: Req, returnNullOnError?: true): Promise<User | null>;
-export async function getSessionUser(req: Req, returnNullOnError = false): Promise<User | null> {
+export async function getSessionUser(req: Req, returnNullOnError?: false): Promise<GetUserData>;
+export async function getSessionUser(
+  req: Req,
+  returnNullOnError?: true,
+): Promise<GetUserData | null>;
+export async function getSessionUser(
+  req: Req,
+  returnNullOnError = false,
+): Promise<GetUserData | null> {
   let header = req.cookies[Cookie.Session] || parse(String(req.headers.session))[Cookie.Session];
 
   const cad = await prisma.cad.findFirst({ select: { features: true } });
@@ -89,13 +97,12 @@ export async function getSessionUser(req: Req, returnNullOnError = false): Promi
     });
 
     if (user) {
-      let hasPerms = hasPermission(user.permissions, [Permissions.UsePersonalApiToken]);
+      const hasPersonalApiTokenPerms = hasPermission({
+        userToCheck: user,
+        permissionsToCheck: [Permissions.UsePersonalApiToken],
+      });
 
-      if (user.rank === Rank.OWNER) {
-        hasPerms = true;
-      }
-
-      if (!hasPerms) {
+      if (!hasPersonalApiTokenPerms) {
         throw new Forbidden(GetSessionUserErrors.InvalidPermissionsForUserAPIToken);
       }
     }
@@ -147,7 +154,7 @@ export async function getSessionUser(req: Req, returnNullOnError = false): Promi
   }
 
   const { tempPassword, ...rest } = user ?? {};
-  return { ...rest, tempPassword: null, hasTempPassword: !!tempPassword } as unknown as User;
+  return { ...rest, tempPassword: null, hasTempPassword: !!tempPassword } as GetUserData;
 }
 
 export function canManageInvariant<T extends Error>(

@@ -31,7 +31,7 @@ const LICENSE_VALUE = {
   type: ValueType.LICENSE,
   value: "Valid",
   createdAt: new Date(),
-} as Value<ValueType.LICENSE>;
+} as Value;
 
 const QUALIFICATION_VALUE = {
   value: { value: "Basic life support qualification", type: ValueType.QUALIFICATION },

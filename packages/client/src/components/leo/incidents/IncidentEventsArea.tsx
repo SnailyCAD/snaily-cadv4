@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { IncidentEvent, LeoIncident } from "@snailycad/types";
+import type { LeoIncident } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import compareDesc from "date-fns/compareDesc";
@@ -7,32 +7,42 @@ import { UpdateEventForm } from "components/dispatch/events/UpdateEventForm";
 import { EventItem } from "components/dispatch/events/EventItem";
 import type { FormikHelpers } from "formik";
 import { classNames } from "lib/classNames";
+import type { PostIncidentEventsData, PutIncidentEventByIdData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 interface Props {
   incident: LeoIncident;
   disabled?: boolean;
+
+  handleStateUpdate?(incident: LeoIncident): void;
 }
 
-export function IncidentEventsArea({ disabled, incident }: Props) {
+export function IncidentEventsArea({ disabled, incident, handleStateUpdate }: Props) {
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
-  const [tempEvent, setTempEvent] = React.useState<IncidentEvent | null>(null);
+  const [tempEvent, eventState] = useTemporaryItem(incident.events ?? []);
 
   async function onEventSubmit(
     values: { description: string },
     helpers: FormikHelpers<{ description: string }>,
   ) {
     if (tempEvent) {
-      await execute(`/incidents/events/${incident.id}/${tempEvent.id}`, {
+      const { json } = await execute<PutIncidentEventByIdData>({
+        path: `/incidents/events/${incident.id}/${tempEvent.id}`,
         method: "PUT",
         data: values,
       });
+
+      handleStateUpdate?.(json);
     } else {
-      await execute(`/incidents/events/${incident.id}`, {
+      const { json } = await execute<PostIncidentEventsData>({
+        path: `/incidents/events/${incident.id}`,
         method: "POST",
         data: values,
       });
+
+      handleStateUpdate?.(json);
     }
 
     helpers.resetForm();
@@ -52,9 +62,10 @@ export function IncidentEventsArea({ disabled, incident }: Props) {
               <EventItem
                 disabled={disabled}
                 key={event.id}
-                setTempEvent={setTempEvent}
+                setTempEvent={eventState.setTempId}
                 event={event}
                 isEditing={tempEvent?.id === event.id}
+                onEventDelete={handleStateUpdate}
               />
             ))
         )}
@@ -65,7 +76,7 @@ export function IncidentEventsArea({ disabled, incident }: Props) {
           onSubmit={onEventSubmit}
           state={state}
           event={tempEvent}
-          setEvent={setTempEvent}
+          setEvent={eventState.setTempId}
         />
       )}
     </div>

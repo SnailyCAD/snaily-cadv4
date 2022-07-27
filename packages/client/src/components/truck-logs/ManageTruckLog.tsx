@@ -11,16 +11,17 @@ import { Form, Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
-import type { RegisteredVehicle, TruckLog } from "@snailycad/types";
+import type { RegisteredVehicle } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { Textarea } from "components/form/Textarea";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
+import type { GetTruckLogsData, PostTruckLogsData, PutTruckLogsData } from "@snailycad/types/api";
 
 interface Props {
-  log: TruckLog | null;
-  registeredVehicles: RegisteredVehicle[];
-  onUpdate?(old: TruckLog, newLog: TruckLog): void;
-  onCreate?(log: TruckLog): void;
+  log: GetTruckLogsData["logs"][number] | null;
+  registeredVehicles: Omit<RegisteredVehicle, "citizen">[];
+  onUpdate?(old: GetTruckLogsData["logs"][number], newLog: GetTruckLogsData["logs"][number]): void;
+  onCreate?(log: GetTruckLogsData["logs"][number]): void;
   onClose?(): void;
 }
 
@@ -43,7 +44,8 @@ export function ManageTruckLogModal({
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (log) {
-      const { json } = await execute(`/truck-logs/${log.id}`, {
+      const { json } = await execute<PutTruckLogsData>({
+        path: `/truck-logs/${log.id}`,
         method: "PUT",
         data: values,
       });
@@ -53,7 +55,8 @@ export function ManageTruckLogModal({
         closeModal(ModalIds.ManageTruckLog);
       }
     } else {
-      const { json } = await execute("/truck-logs", {
+      const { json } = await execute<PostTruckLogsData>({
+        path: "/truck-logs",
         method: "POST",
         data: values,
       });

@@ -9,13 +9,14 @@ import { useTranslations } from "use-intl";
 import { Title } from "components/shared/Title";
 import { TabList } from "components/shared/TabList";
 import { AllUnitsTab } from "components/admin/manage/units/AllUnitsTab";
-import { EmsFdDeputy, Officer, WhitelistStatus, Rank } from "@snailycad/types";
+import { WhitelistStatus, Rank } from "@snailycad/types";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { FormRow } from "components/form/FormRow";
 import { Input } from "components/form/inputs/Input";
 import { CallsignsTab } from "components/admin/manage/units/CallsignsTab";
+import type { GetManageUnitsData } from "@snailycad/types/api";
 
 const DepartmentWhitelistingTab = dynamic(
   async () =>
@@ -23,10 +24,10 @@ const DepartmentWhitelistingTab = dynamic(
       .DepartmentWhitelistingTab,
 );
 
-export type Unit = (Officer & { type: "OFFICER" }) | (EmsFdDeputy & { type: "DEPUTY" });
+export type Unit = GetManageUnitsData[number];
 
 interface Props {
-  units: Unit[];
+  units: GetManageUnitsData;
 }
 
 export default function SupervisorPanelPage({ units }: Props) {
@@ -134,7 +135,7 @@ export default function SupervisorPanelPage({ units }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ req, locale }) => {
   const user = await getSessionUser(req);
   const [units] = await requestAll(req, [["/admin/manage/units", []]]);
 

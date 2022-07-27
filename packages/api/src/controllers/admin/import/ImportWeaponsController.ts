@@ -1,24 +1,35 @@
 import { Controller } from "@tsed/di";
-import { Get, Post } from "@tsed/schema";
+import { Get, Post, Description, Delete } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { WEAPON_SCHEMA_ARR } from "@snailycad/schemas/dist/admin/import/weapons";
-import { BodyParams, MultipartFile, PlatformMulterFile, QueryParams } from "@tsed/common";
+import {
+  BodyParams,
+  MultipartFile,
+  PathParams,
+  PlatformMulterFile,
+  QueryParams,
+  UseBeforeEach,
+} from "@tsed/common";
+import { IsAuth } from "middlewares/IsAuth";
 import { parseImportFile } from "utils/file";
 import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import type { Prisma } from "@prisma/client";
+import type * as APITypes from "@snailycad/types/api";
 
 const weaponsInclude = { ...citizenInclude.weapons.include, citizen: true };
 
 @Controller("/admin/import/weapons")
+@UseBeforeEach(IsAuth)
 export class ImportWeaponsController {
   @Get("/")
+  @Description("Get all the Weapons in the CAD (paginated)")
   async getWeapons(
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query = "",
     @QueryParams("includeAll", Boolean) includeAll = false,
-  ) {
+  ): Promise<APITypes.GetImportWeaponsData> {
     const where: Prisma.WeaponWhereInput | undefined = query
       ? {
           OR: [
@@ -42,12 +53,26 @@ export class ImportWeaponsController {
   }
 
   @Post("/")
-  async importWeapons(
-    @BodyParams() body: unknown,
-    @MultipartFile("file") file?: PlatformMulterFile,
-  ) {
-    const toValidateBody = file ? parseImportFile(file) : body;
+  @Description("Import weapons in the CAD via body data")
+  async importWeaponsViaBodyData(@BodyParams() body: any): Promise<APITypes.PostImportWeaponsData> {
+    return importWeaponsHandler(body);
+  }
+
+  @Post("/file")
+  @Description("Import weapons in the CAD via file upload")
+  async importWeaponsViaFile(
+    @MultipartFile("file") file: PlatformMulterFile,
+  ): Promise<APITypes.PostImportWeaponsData> {
+    const toValidateBody = parseImportFile(file);
     return importWeaponsHandler(toValidateBody);
+  }
+
+  @Delete("/:id")
+  @Description("Delete a registered weapon by its id")
+  async deleteWeapon(@PathParams("id") id: string): Promise<APITypes.DeleteImportWeaponsData> {
+    await prisma.weapon.delete({ where: { id } });
+
+    return true;
   }
 }
 

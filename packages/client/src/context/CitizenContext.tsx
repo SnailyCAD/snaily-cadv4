@@ -19,7 +19,7 @@ interface Context<CitizenNull extends boolean = true> {
 const CitizenContext = React.createContext<Context | undefined>(undefined);
 
 interface ProviderProps {
-  children: React.ReactChild | React.ReactChild[];
+  children: React.ReactNode;
   initialData?: Partial<Pick<Context, "citizen" | "citizens">>;
 }
 
@@ -37,6 +37,8 @@ export function CitizenProvider({ initialData, children }: ProviderProps) {
 
       if (initialData.citizen) {
         setCurrentCitizen(initialData.citizen);
+      } else {
+        setCurrentCitizen(null);
       }
     }
   }, [initialData]);

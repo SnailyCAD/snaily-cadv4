@@ -4,12 +4,15 @@ import { Get, Post } from "@tsed/schema";
 import { RESTGetAPIGuildRolesResult, Routes } from "discord-api-types/v10";
 import { IsAuth } from "middlewares/IsAuth";
 import { prisma } from "lib/prisma";
-import type { cad, DiscordRole } from "@prisma/client";
+import { Rank, cad, DiscordRole } from "@prisma/client";
 import { BadRequest } from "@tsed/exceptions";
 import { DISCORD_SETTINGS_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
 import { getRest } from "lib/discord/config";
 import { manyToManyHelper } from "utils/manyToMany";
+import type * as APITypes from "@snailycad/types/api";
+import { Permissions } from "@snailycad/permissions";
+import { UsePermissions } from "middlewares/UsePermissions";
 
 const guildId = process.env.DISCORD_SERVER_ID;
 
@@ -17,7 +20,7 @@ const guildId = process.env.DISCORD_SERVER_ID;
 @Controller("/admin/manage/cad-settings/discord/roles")
 export class DiscordSettingsController {
   @Get("/")
-  async getGuildRoles(@Context("cad") cad: cad) {
+  async getGuildRoles(@Context("cad") cad: cad): Promise<APITypes.GetCADDiscordRolesData> {
     if (!guildId) {
       throw new BadRequest("mustSetBotTokenGuildId");
     }
@@ -64,7 +67,14 @@ export class DiscordSettingsController {
   }
 
   @Post("/")
-  async setRoleTypes(@Context("cad") cad: cad, @BodyParams() body: unknown) {
+  @UsePermissions({
+    fallback: (u) => u.rank === Rank.OWNER,
+    permissions: [Permissions.ManageCADSettings],
+  })
+  async setRoleTypes(
+    @Context("cad") cad: cad,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PostCADDiscordRolesData> {
     if (!guildId) {
       throw new BadRequest("mustSetBotTokenGuildId");
     }
@@ -189,7 +199,7 @@ export class DiscordSettingsController {
       },
     });
 
-    return updated.discordRoles;
+    return updated.discordRoles!;
   }
 
   private doesRoleExist(roles: { id: string }[], roleId: string | string[]) {

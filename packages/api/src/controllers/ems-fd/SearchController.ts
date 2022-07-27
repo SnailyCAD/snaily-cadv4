@@ -17,17 +17,6 @@ const citizenSearchInclude = {
 @Controller("/search")
 @UseBeforeEach(IsAuth)
 export class SearchController {
-  @Post("/medical-name")
-  @Description("Search citizens by name for medical records")
-  @UsePermissions({
-    fallback: (u) => u.isEmsFd,
-    permissions: [Permissions.EmsFd],
-  })
-  async searchName(@BodyParams("name") fullName: string) {
-    const citizen = await this.findCitizensByName(fullName);
-    return citizen;
-  }
-
   @Post("/medical-records")
   @Description("Search medical records by citizen name")
   @UsePermissions({

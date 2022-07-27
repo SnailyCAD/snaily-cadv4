@@ -24,11 +24,11 @@ export function CustomFieldResults({ results }: Props) {
   const t = useTranslations("Leo");
 
   const Component = React.useMemo(
-    () => components[results.field.category],
-    [results.field.category],
+    () => results.field && components[results.field.category],
+    [results.field],
   );
 
-  if (results.results.length <= 0) {
+  if (results.results.length <= 0 || !Component) {
     return (
       <div className="mt-3">
         <p>{t("noCustomFieldResults")}</p>
@@ -80,7 +80,7 @@ function WeaponResults({ results }: any) {
   const { setCurrentResult } = useWeaponSearch();
   const t = useTranslations();
 
-  const citizens = results as WeaponSearchResult[];
+  const citizens = results as NonNullable<WeaponSearchResult>[];
 
   function handleOpen(weapon: any) {
     closeModal(ModalIds.CustomFieldSearch);

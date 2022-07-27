@@ -9,7 +9,7 @@ import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
 import { useRouter } from "next/router";
 import { formatUnitDivisions, makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { StatusViewMode } from "@snailycad/types";
+import { EmsFdDeputy, StatusViewMode } from "@snailycad/types";
 import { useAuth } from "context/AuthContext";
 
 import { Table } from "components/shared/Table";
@@ -26,10 +26,18 @@ import { ActiveCallColumn } from "./active-units/officers/ActiveCallColumn";
 import { ActiveIncidentColumn } from "./active-units/officers/ActiveIncidentColumn";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { DeputyColumn } from "./active-units/deputies/DeputyColumn";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import { useMounted } from "@casper124578/useful";
 
-export function ActiveDeputies() {
-  const { activeDeputies } = useActiveDeputies();
+interface Props {
+  initialDeputies: EmsFdDeputy[];
+}
+
+function ActiveDeputies({ initialDeputies }: Props) {
+  const { activeDeputies: _activeDeputies } = useActiveDeputies();
   const { activeIncidents } = useActiveIncidents();
+  const isMounted = useMounted();
+  const activeDeputies = isMounted ? _activeDeputies : initialDeputies;
 
   const t = useTranslations();
   const common = useTranslations("Common");
@@ -37,7 +45,7 @@ export function ActiveDeputies() {
   const { generateCallsign } = useGenerateCallsign();
   const { user } = useAuth();
   const { hasActiveDispatchers } = useActiveDispatchers();
-  const { RADIO_CHANNEL_MANAGEMENT, ACTIVE_INCIDENTS } = useFeatureEnabled();
+  const { BADGE_NUMBERS, RADIO_CHANNEL_MANAGEMENT, ACTIVE_INCIDENTS } = useFeatureEnabled();
   const { emsSearch, showEmsFilters, setShowFilters } = useActiveUnitsState();
   const { handleFilter } = useActiveUnitsFilter();
   const { calls } = useDispatchState();
@@ -45,17 +53,17 @@ export function ActiveDeputies() {
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
 
-  const [tempUnit, setTempUnit] = React.useState<ActiveDeputy | null>(null);
+  const [tempDeputy, deputyState] = useTemporaryItem(activeDeputies);
 
-  function handleEditClick(officer: ActiveDeputy) {
-    setTempUnit(officer);
+  function handleEditClick(deputy: ActiveDeputy) {
+    deputyState.setTempId(deputy.id);
     openModal(ModalIds.ManageUnit);
   }
 
   return (
     <div className="mt-3 overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
       <header className="p-2 px-4 bg-gray-200 dark:bg-gray-3 flex items-center justify-between">
-        <h3 className="text-xl font-semibold">{t("Ems.activeDeputies")}</h3>
+        <h1 className="text-xl font-semibold">{t("Ems.activeDeputies")}</h1>
 
         <div>
           <Button
@@ -141,7 +149,7 @@ export function ActiveDeputies() {
               })}
             columns={[
               { Header: t("Ems.deputy"), accessor: "deputy" },
-              { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" },
+              BADGE_NUMBERS ? { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" } : null,
               { Header: t("Leo.department"), accessor: "department" },
               { Header: t("Leo.division"), accessor: "division" },
               { Header: t("Leo.rank"), accessor: "rank" },
@@ -157,9 +165,16 @@ export function ActiveDeputies() {
         </>
       )}
 
-      {tempUnit ? (
-        <ManageUnitModal type="ems-fd" onClose={() => setTempUnit(null)} unit={tempUnit} />
+      {tempDeputy ? (
+        <ManageUnitModal
+          type="ems-fd"
+          onClose={() => deputyState.setTempId(null)}
+          unit={tempDeputy}
+        />
       ) : null}
     </div>
   );
 }
+
+const ActiveDeputiesMemoized = React.memo(ActiveDeputies);
+export { ActiveDeputiesMemoized as ActiveDeputies };

@@ -20,6 +20,7 @@ import { IsAuth } from "middlewares/IsAuth";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import type { User } from "@prisma/client";
+import type * as APITypes from "@snailycad/types/api";
 
 @UseBeforeEach(IsAuth)
 @Controller("/bleeter")
@@ -41,11 +42,10 @@ export class BleeterController {
 
   @Get("/:id")
   @Description("Get a bleeter post by its id")
-  async getPostById(@PathParams("id") postId: string) {
+  async getPostById(@PathParams("id") postId: string): Promise<APITypes.GetBleeterByIdData> {
     const post = await prisma.bleeterPost.findUnique({
-      where: {
-        id: postId,
-      },
+      where: { id: postId },
+      include: { user: { select: { username: true } } },
     });
 
     if (!post) {
@@ -57,7 +57,10 @@ export class BleeterController {
 
   @Post("/")
   @Description("Create a bleeter post")
-  async createPost(@BodyParams() body: unknown, @Context("user") user: User) {
+  async createPost(
+    @BodyParams() body: unknown,
+    @Context("user") user: User,
+  ): Promise<APITypes.PostBleeterByIdData> {
     const data = validateSchema(BLEETER_SCHEMA, body);
 
     const post = await prisma.bleeterPost.create({
@@ -78,7 +81,7 @@ export class BleeterController {
     @PathParams("id") postId: string,
     @BodyParams() body: unknown,
     @Context("user") user: User,
-  ) {
+  ): Promise<APITypes.PutBleeterByIdData> {
     const data = validateSchema(BLEETER_SCHEMA, body);
 
     const post = await prisma.bleeterPost.findUnique({
@@ -110,13 +113,17 @@ export class BleeterController {
   async uploadImageToPost(
     @Context("user") user: User,
     @PathParams("id") postId: string,
-    @MultipartFile("image") file: PlatformMulterFile,
-  ) {
+    @MultipartFile("image") file?: PlatformMulterFile,
+  ): Promise<APITypes.PostBleeterByIdImageData> {
     const post = await prisma.bleeterPost.findUnique({
       where: {
         id: postId,
       },
     });
+
+    if (!file) {
+      throw new ExtendedBadRequest({ file: "No file provided." });
+    }
 
     if (!post || post.userId !== user.id) {
       throw new NotFound("notFound");
@@ -144,7 +151,10 @@ export class BleeterController {
 
   @Delete("/:id")
   @Description("Delete a bleeter post its id")
-  async deleteBleetPost(@PathParams("id") postId: string, @Context("user") user: User) {
+  async deleteBleetPost(
+    @PathParams("id") postId: string,
+    @Context("user") user: User,
+  ): Promise<APITypes.DeleteBleeterByIdData> {
     const post = await prisma.bleeterPost.findUnique({
       where: {
         id: postId,

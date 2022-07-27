@@ -1,4 +1,5 @@
 import { CHANGE_PASSWORD_SCHEMA } from "@snailycad/schemas";
+import type { PostUserPasswordData } from "@snailycad/types/api";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { PasswordInput } from "components/form/inputs/Input";
@@ -22,13 +23,14 @@ export function ChangePasswordArea() {
       return;
     }
 
-    const { json } = await execute("/user/password", {
+    const { json } = await execute<PostUserPasswordData, typeof INITIAL_VALUES>({
+      path: "/user/password",
       method: "POST",
       data: { ...values, currentPassword: values.currentPassword || null },
       helpers,
     });
 
-    if (typeof json === "boolean") {
+    if (typeof json === "boolean" && json) {
       toast.success("Successfully saved.");
     }
   }
@@ -42,7 +44,7 @@ export function ChangePasswordArea() {
 
   return (
     <section className="mt-7">
-      <h3 className="text-2xl font-semibold">{t("passwordSettings")}</h3>
+      <h2 className="text-2xl font-semibold">{t("passwordSettings")}</h2>
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (
           <Form className="mt-2">

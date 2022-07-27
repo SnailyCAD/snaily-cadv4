@@ -1,7 +1,8 @@
 import { Controller } from "@tsed/di";
-import { Post } from "@tsed/schema";
+import { Post, Description, AcceptMime } from "@tsed/schema";
 import { prisma } from "lib/prisma";
-import { BodyParams, MultipartFile, PlatformMulterFile } from "@tsed/common";
+import { BodyParams, MultipartFile, PlatformMulterFile, UseBeforeEach } from "@tsed/common";
+import { IsAuth } from "middlewares/IsAuth";
 import { parseImportFile } from "utils/file";
 import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
@@ -10,16 +11,31 @@ import { importVehiclesHandler } from "./ImportVehiclesController";
 import { importWeaponsHandler } from "./ImportWeaponsController";
 import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
 import { manyToManyHelper } from "utils/manyToMany";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/admin/import/citizens")
+@UseBeforeEach(IsAuth)
 export class ImportCitizensController {
-  @Post("/")
+  @Post("/file")
+  @Description("Import citizens in the CAD via file upload")
+  @AcceptMime("")
   async importCitizens(
-    @BodyParams() body: unknown,
-    @MultipartFile("file") file?: PlatformMulterFile,
-  ) {
-    const toValidateBody = file ? parseImportFile(file) : body;
-    const data = validateSchema(IMPORT_CITIZENS_ARR, toValidateBody);
+    @MultipartFile("file") file: PlatformMulterFile,
+  ): Promise<APITypes.PostImportCitizensData> {
+    const toValidateBody = parseImportFile(file);
+    return this.importCitizensHandler(toValidateBody);
+  }
+
+  @Post("/")
+  @Description("Import citizens in the CAD via body data")
+  async importCitizensViaBodyData(
+    @BodyParams() body: any,
+  ): Promise<APITypes.PostImportCitizensData> {
+    return this.importCitizensHandler(body);
+  }
+
+  async importCitizensHandler(body: unknown) {
+    const data = validateSchema(IMPORT_CITIZENS_ARR, body);
 
     return Promise.all(
       data.map(async (data) => {

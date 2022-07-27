@@ -1,4 +1,3 @@
-import { Rank } from "@snailycad/types";
 import { convertToMap } from "lib/map/utils";
 import * as React from "react";
 import { Marker, Popup, Tooltip, useMap } from "react-leaflet";
@@ -34,17 +33,19 @@ export function PlayerMarker({ player, handleToggle }: Props) {
 
   const hasLeoPermissions =
     isCADUser &&
-    (player.rank === Rank.OWNER ||
-      (player.permissions
-        ? hasPermission(player.permissions, defaultPermissions.defaultLeoPermissions)
-        : player.isLeo));
+    hasPermission({
+      userToCheck: player,
+      permissionsToCheck: defaultPermissions.defaultLeoPermissions,
+      fallback: player.isLeo,
+    });
 
   const hasEmsFdPermissions =
     isCADUser &&
-    (player.rank === Rank.OWNER ||
-      (player.permissions
-        ? hasPermission(player.permissions, defaultPermissions.defaultEmsFdPermissions)
-        : player.isEmsFd));
+    hasPermission({
+      userToCheck: player,
+      permissionsToCheck: defaultPermissions.defaultEmsFdPermissions,
+      fallback: player.isEmsFd,
+    });
 
   return (
     <Marker icon={PLAYER_ICON} key={player.identifier} position={pos}>

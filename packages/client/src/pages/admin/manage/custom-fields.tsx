@@ -16,6 +16,8 @@ import { ManageCustomFieldModal } from "components/admin/manage/custom-fields/Ma
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { usePermission } from "hooks/usePermission";
+import type { DeleteManageCustomFieldsData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 interface Props {
   customFields: CustomField[];
@@ -23,7 +25,7 @@ interface Props {
 
 export default function ManageCustomFields({ customFields: data }: Props) {
   const [customFields, setCustomFields] = React.useState(data);
-  const [tempField, setTempField] = React.useState<CustomField | null>(null);
+  const [tempField, fieldState] = useTemporaryItem(customFields);
 
   const { state, execute } = useFetch();
   const { hasPermissions } = usePermission();
@@ -34,24 +36,25 @@ export default function ManageCustomFields({ customFields: data }: Props) {
   async function handleDelete() {
     if (!tempField) return;
 
-    const { json } = await execute(`/admin/manage/custom-fields/${tempField.id}`, {
+    const { json } = await execute<DeleteManageCustomFieldsData>({
+      path: `/admin/manage/custom-fields/${tempField.id}`,
       method: "DELETE",
     });
 
     if (typeof json === "boolean" && json) {
       setCustomFields((p) => p.filter((v) => v.id !== tempField.id));
-      setTempField(null);
+      fieldState.setTempId(null);
       closeModal(ModalIds.AlertDeleteCustomField);
     }
   }
 
   function handleEditClick(field: CustomField) {
-    setTempField(field);
+    fieldState.setTempId(field.id);
     openModal(ModalIds.ManageCustomField);
   }
 
   function handleDeleteClick(field: CustomField) {
-    setTempField(field);
+    fieldState.setTempId(field.id);
     openModal(ModalIds.AlertDeleteCustomField);
   }
 
@@ -123,10 +126,10 @@ export default function ManageCustomFields({ customFields: data }: Props) {
             prev[idx] = newField;
             return prev;
           });
-          setTempField(null);
+          fieldState.setTempId(null);
         }}
         onCreate={(newField) => setCustomFields((p) => [newField, ...p])}
-        onClose={() => setTempField(null)}
+        onClose={() => fieldState.setTempId(null)}
         field={tempField}
       />
       <AlertModal
@@ -134,7 +137,7 @@ export default function ManageCustomFields({ customFields: data }: Props) {
         title={t("deleteCustomField")}
         description={t("alert_deleteCustomField")}
         onDeleteClick={handleDelete}
-        onClose={() => setTempField(null)}
+        onClose={() => fieldState.setTempId(null)}
         state={state}
       />
     </AdminLayout>

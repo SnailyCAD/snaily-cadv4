@@ -12,6 +12,7 @@ import { ModalIds } from "types/ModalIds";
 import { AlertDeclineOfficerModal } from "./AlertDeclineOfficerModal";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import type { PostManageUnitAcceptDeclineDepartmentData } from "@snailycad/types/api";
 
 interface Props {
   pendingOfficers: Unit[];
@@ -35,13 +36,14 @@ export function DepartmentWhitelistingTab({ search, pendingOfficers }: Props) {
   }) {
     const { helpers, unit, ...rest } = data;
 
-    const { json } = await execute(`/admin/manage/units/departments/${unit.id}`, {
+    const { json } = await execute<PostManageUnitAcceptDeclineDepartmentData>({
+      path: `/admin/manage/units/departments/${unit.id}`,
       data: rest,
       helpers,
       method: "POST",
     });
 
-    if (json.id) {
+    if (json?.id) {
       closeModal(ModalIds.AlertDeclineOfficer);
       router.replace({ pathname: router.pathname, query: router.query });
     }

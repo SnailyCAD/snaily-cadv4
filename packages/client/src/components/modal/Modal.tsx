@@ -27,11 +27,10 @@ export function Modal({
 }: ModalProps) {
   const { canBeClosed } = useModal();
 
-  function handleClose() {
+  const handleClose = React.useCallback(() => {
     if (!canBeClosed) return;
-
     onClose();
-  }
+  }, [canBeClosed, onClose]);
 
   return (
     <Transition show={isOpen} appear as={React.Fragment}>

@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { Call911Event, IncidentEvent } from "@snailycad/types";
+import type { Call911Event, IncidentEvent, LeoIncident } from "@snailycad/types";
 import { useModal } from "state/modalState";
 import { useHoverDirty } from "react-use";
 import useFetch from "lib/useFetch";
@@ -10,12 +10,16 @@ import { classNames } from "lib/classNames";
 import { Button } from "components/Button";
 import { Pencil, X } from "react-bootstrap-icons";
 import { AlertModal } from "components/modal/AlertModal";
+import type { Delete911CallEventByIdData, DeleteIncidentEventByIdData } from "@snailycad/types/api";
+import type { Full911Call } from "state/dispatchState";
 
 interface EventItemProps<T extends IncidentEvent | Call911Event> {
   disabled?: boolean;
   event: T;
-  setTempEvent: React.Dispatch<React.SetStateAction<T | null>>;
+  setTempEvent: React.Dispatch<React.SetStateAction<T["id"] | null>>;
   isEditing: boolean;
+
+  onEventDelete?(incident: T extends IncidentEvent ? LeoIncident : Full911Call): void;
 }
 
 export function EventItem<T extends IncidentEvent | Call911Event>({
@@ -23,6 +27,7 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
   event,
   isEditing,
   setTempEvent,
+  onEventDelete,
 }: EventItemProps<T>) {
   const { openModal, closeModal } = useModal();
   const actionsRef = React.useRef<HTMLLIElement>(null);
@@ -46,13 +51,21 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
     const parentId = "call911Id" in event ? event.call911Id : event.incidentId;
     const routeType = "call911Id" in event ? "911-calls" : "incidents";
 
-    await execute(`/${routeType}/events/${parentId}/${event.id}`, {
+    const { json } = await execute<DeleteIncidentEventByIdData | Delete911CallEventByIdData>({
+      path: `/${routeType}/events/${parentId}/${event.id}`,
       method: "DELETE",
     });
 
-    setTempEvent(null);
-    setOpen(false);
-    handleClose();
+    if (json) {
+      setTempEvent(null);
+      setOpen(false);
+      handleClose();
+
+      if (typeof json === "object") {
+        // @ts-expect-error ignore
+        onEventDelete?.(json);
+      }
+    }
   }
 
   return (
@@ -76,7 +89,7 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
             className="p-0 px-1 mr-2"
             size="xs"
             variant="cancel"
-            onClick={() => setTempEvent(event)}
+            onClick={() => setTempEvent(event.id)}
           >
             <Pencil width={15} />
           </Button>

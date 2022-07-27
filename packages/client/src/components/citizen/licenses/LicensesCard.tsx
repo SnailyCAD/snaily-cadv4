@@ -8,18 +8,20 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Infofield } from "components/shared/Infofield";
 import { DriversLicenseCategoryType } from "@snailycad/types";
 import useFetch from "lib/useFetch";
+import type { PutCitizenLicensesByIdData } from "@snailycad/types/api";
 
 const types = ["driversLicense", "pilotLicense", "waterLicense", "weaponLicense"] as const;
 
 export function LicensesCard() {
   const { openModal, closeModal } = useModal();
   const { citizen, setCurrentCitizen } = useCitizen(false);
-  const { ALLOW_CITIZEN_UPDATE_LICENSE } = useFeatureEnabled();
+  const { ALLOW_CITIZEN_UPDATE_LICENSE, COMMON_CITIZEN_CARDS } = useFeatureEnabled();
   const t = useTranslations("Citizen");
   const { execute, state } = useFetch();
 
   async function onSubmit(values: LicenseInitialValues) {
-    const { json } = await execute(`/licenses/${citizen.id}`, {
+    const { json } = await execute<PutCitizenLicensesByIdData>({
+      path: `/licenses/${citizen.id}`,
       method: "PUT",
       data: {
         ...values,
@@ -53,7 +55,12 @@ export function LicensesCard() {
       </div>
 
       {ALLOW_CITIZEN_UPDATE_LICENSE ? (
-        <ManageLicensesModal state={state} onSubmit={onSubmit} citizen={citizen} />
+        <ManageLicensesModal
+          isLeo={COMMON_CITIZEN_CARDS}
+          state={state}
+          onSubmit={onSubmit}
+          citizen={citizen}
+        />
       ) : null}
     </div>
   );

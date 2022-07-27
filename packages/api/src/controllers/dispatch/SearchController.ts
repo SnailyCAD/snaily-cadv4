@@ -23,9 +23,7 @@ export class SearchController {
           mode: "insensitive",
         },
       },
-      include: {
-        warrants: true,
-      },
+      include: { warrants: true },
     });
 
     if (citizens.length <= 0) {

@@ -9,7 +9,7 @@ export async function getNextI18Config() {
 }
 
 export async function getTranslations(types: string[], locale = "en") {
-  const typesWithCommon = [...new Set(["common", ...types])];
+  const typesWithCommon = [...new Set(["common", "auth", ...types])];
   const paths = typesWithCommon.map((type) => path.join(cwd, `locales/${locale}/${type}.json`));
   const i18n = await getNextI18Config();
 

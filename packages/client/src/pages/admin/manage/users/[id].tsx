@@ -1,13 +1,12 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { Form, Formik } from "formik";
 import { UPDATE_USER_SCHEMA } from "@snailycad/schemas";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { Rank, User } from "@snailycad/types";
+import { CustomRole, Rank } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
@@ -31,6 +30,8 @@ import { AlertModal } from "components/modal/AlertModal";
 import { ApiTokenArea } from "components/admin/manage/users/ApiTokenArea";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { classNames } from "lib/classNames";
+import { ManageRolesModal } from "components/admin/manage/users/ManageRolesModal";
+import type { GetManageUserByIdData, PutManageUserByIdData } from "@snailycad/types/api";
 
 const DangerZone = dynamic(
   async () => (await import("components/admin/manage/users/DangerZone")).DangerZone,
@@ -41,7 +42,8 @@ const BanArea = dynamic(
 );
 
 interface Props {
-  user: User | null;
+  roles: CustomRole[];
+  user: GetManageUserByIdData;
 }
 
 export default function ManageCitizens(props: Props) {
@@ -49,26 +51,14 @@ export default function ManageCitizens(props: Props) {
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Management");
-  const router = useRouter();
   const { user: session } = useAuth();
   const { openModal, closeModal } = useModal();
   const { hasPermissions } = usePermission();
   const { USER_API_TOKENS } = useFeatureEnabled();
 
-  React.useEffect(() => {
-    if (!user) {
-      router.push("/404");
-    }
-  }, [user, router]);
-
-  if (!user) {
-    return null;
-  }
-
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    if (!user) return;
-
-    const { json } = await execute(`/admin/manage/users/${user.id}`, {
+    const { json } = await execute<PutManageUserByIdData>({
+      path: `/admin/manage/users/${user.id}`,
       method: "PUT",
       data: values,
     });
@@ -109,25 +99,30 @@ export default function ManageCitizens(props: Props) {
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleChange, setFieldValue, isValid, values, errors }) => (
             <Form>
+              <FormField errorMessage={errors.rank} label="Rank">
+                <Select
+                  name="rank"
+                  onChange={handleChange}
+                  disabled={isRankDisabled}
+                  value={values.rank}
+                  values={
+                    isRankDisabled
+                      ? [{ value: user.rank, label: user.rank }]
+                      : [
+                          { value: "ADMIN", label: "Admin" },
+                          { value: "USER", label: "User" },
+                        ]
+                  }
+                />
+
+                <small className="text-base mt-2 text-neutral-600 dark:text-gray-300 mb-3">
+                  The rank does not have any influence on the permissions of the user. It is only
+                  used to identify the user in the system.
+                </small>
+              </FormField>
+
               {values.useOldPerms ? (
                 <>
-                  <FormField errorMessage={errors.rank} label="Rank">
-                    <Select
-                      name="rank"
-                      onChange={handleChange}
-                      disabled={isRankDisabled}
-                      value={values.rank}
-                      values={
-                        isRankDisabled
-                          ? [{ value: user.rank, label: user.rank }]
-                          : [
-                              { value: "ADMIN", label: "Admin" },
-                              { value: "USER", label: "User" },
-                            ]
-                      }
-                    />
-                  </FormField>
-
                   <FormRow flexLike className="mt-5">
                     <FormField errorMessage={errors.isLeo} label="Leo Access">
                       <Toggle name="isLeo" onCheckedChange={handleChange} value={values.isLeo} />
@@ -187,6 +182,16 @@ export default function ManageCitizens(props: Props) {
                     onClick={() => openModal(ModalIds.ManagePermissions)}
                   >
                     {t("managePermissions")}
+                  </Button>
+
+                  <Button
+                    variant="cancel"
+                    className="ml-2 text-base"
+                    disabled={user.rank === Rank.OWNER}
+                    type="button"
+                    onClick={() => openModal(ModalIds.ManageRoles)}
+                  >
+                    {t("manageRoles")}
                   </Button>
 
                   <Button
@@ -251,7 +256,8 @@ export default function ManageCitizens(props: Props) {
           )}
         </Formik>
 
-        <ManagePermissionsModal user={user} />
+        <ManagePermissionsModal onUpdate={(user) => setUser(user)} user={user} />
+        <ManageRolesModal onUpdate={(user) => setUser(user)} roles={props.roles} user={user} />
 
         {USER_API_TOKENS ? <ApiTokenArea user={user} /> : null}
 
@@ -260,7 +266,9 @@ export default function ManageCitizens(props: Props) {
             {hasPermissions([Permissions.BanUsers], true) ? (
               <BanArea setUser={setUser} user={user} />
             ) : null}
-            {hasPermissions([Permissions.DeleteUsers], true) ? <DangerZone user={user} /> : null}
+            {hasPermissions([Permissions.DeleteUsers], true) ? (
+              <DangerZone setUser={setUser} user={user} />
+            ) : null}
           </>
         ) : null}
       </div>
@@ -268,13 +276,23 @@ export default function ManageCitizens(props: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ query, locale, req }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ query, locale, req }) => {
   const sessionUser = await getSessionUser(req);
-  const [user] = await requestAll(req, [[`/admin/manage/users/${query.id}`, null]]);
+  const [user, roles] = await requestAll(req, [
+    [`/admin/manage/users/${query.id}`, null],
+    ["/admin/manage/custom-roles", []],
+  ]);
+
+  if (!user) {
+    return {
+      notFound: true,
+    };
+  }
 
   return {
     props: {
       user,
+      roles,
       session: sessionUser,
       messages: {
         ...(await getTranslations(

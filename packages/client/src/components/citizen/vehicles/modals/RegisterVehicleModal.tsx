@@ -31,6 +31,7 @@ import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";
 import { toastMessage } from "lib/toastMessage";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
+import type { PostCitizenVehicleData, PutCitizenVehicleData } from "@snailycad/types/api";
 
 interface Props {
   vehicle: RegisteredVehicle | null;
@@ -68,18 +69,20 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
     if (vehicle && !isLeo) {
-      const { json } = await execute(`/vehicles/${vehicle.id}`, {
+      const { json } = await execute<PutCitizenVehicleData, typeof INITIAL_VALUES>({
+        path: `/vehicles/${vehicle.id}`,
         method: "PUT",
         data: values,
         helpers,
       });
 
       if (json?.id) {
-        onUpdate?.(vehicle, json);
+        onUpdate?.(vehicle, { ...vehicle, ...json });
       }
     } else {
       const path = isLeo ? "/search/actions/vehicle" : "/vehicles";
-      const { json } = await execute(path, {
+      const { json } = await execute<PostCitizenVehicleData, typeof INITIAL_VALUES>({
+        path,
         method: "POST",
         data: values,
         helpers,
@@ -184,7 +187,6 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
                   options={{
                     apiPath: (value) => `/admin/values/vehicle/search?query=${value}`,
                     method: "GET",
-                    minLength: 2,
                   }}
                   inputProps={{
                     value: values.modelName,

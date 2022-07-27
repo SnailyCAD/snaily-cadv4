@@ -1,26 +1,14 @@
-import type {
-  Citizen,
-  Weapon,
-  ValueType,
-  Value,
-  CustomField,
-  CustomFieldValue,
-} from "@snailycad/types";
+import type { PostLeoSearchWeaponData } from "@snailycad/types/api";
 import create from "zustand";
 
-export interface WeaponSearchResult extends Weapon {
-  citizen: Citizen;
-  registrationStatus: Value<ValueType.LICENSE>;
-  allCustomFields?: CustomField[];
-  customFields?: CustomFieldValue[];
-}
+export type WeaponSearchResult = PostLeoSearchWeaponData;
 
 interface WeaponSearchState {
   currentResult: WeaponSearchResult | null | undefined;
   setCurrentResult(v: WeaponSearchResult | null | undefined): void;
 }
 
-export const useWeaponSearch = create<WeaponSearchState>((set) => ({
+export const useWeaponSearch = create<WeaponSearchState>()((set) => ({
   currentResult: undefined,
   setCurrentResult: (v) => set({ currentResult: v }),
 }));

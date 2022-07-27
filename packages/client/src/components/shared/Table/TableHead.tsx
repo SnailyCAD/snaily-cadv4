@@ -43,17 +43,20 @@ export function TableHead<T extends object, RowProps extends object>({
                   isActions ? `${dir} z-10` : "sticky",
                 )}
               >
-                <span className="flex items-center gap-3">
-                  {column.render("Header")}
-                  {column.isSorted ? (
-                    <span>
-                      <ArrowDownSquareFill
-                        className="transition-transform duration-75"
-                        style={{ transform: column.isSortedDesc ? "" : "rotate(-180deg)" }}
-                      />
-                    </span>
-                  ) : null}
-                </span>
+                <div className="flex items-center gap-3">
+                  {/* eslint-disable-next-line react/jsx-no-useless-fragment */}
+                  <>
+                    {column.render("Header")}
+                    {column.isSorted ? (
+                      <span>
+                        <ArrowDownSquareFill
+                          className="transition-transform duration-75"
+                          style={{ transform: column.isSortedDesc ? "" : "rotate(-180deg)" }}
+                        />
+                      </span>
+                    ) : null}
+                  </>
+                </div>
               </th>
             );
           })}

@@ -15,6 +15,7 @@ import type { Sounds } from "lib/server/getAvailableSounds";
 import { soundCamelCaseToKebabCase } from "lib/utils";
 import { CaretDownFill } from "react-bootstrap-icons";
 import { useRouter } from "next/router";
+import type { PatchUserData } from "@snailycad/types/api";
 
 interface Props {
   availableSounds: Record<Sounds, boolean>;
@@ -25,7 +26,7 @@ export function AppearanceTab({ availableSounds }: Props) {
   const t = useTranslations("Account");
   const { execute, state } = useFetch();
   const common = useTranslations("Common");
-  const availableLanguages = nextConfig.i18n.locales;
+  const availableLanguages = nextConfig.i18n?.locales;
   const router = useRouter();
 
   const STATUS_VIEW_MODE_LABELS = {
@@ -47,7 +48,7 @@ export function AppearanceTab({ availableSounds }: Props) {
     isDarkTheme: user.isDarkTheme ?? true,
     statusViewMode: user.statusViewMode ?? StatusViewMode.DOT_COLOR,
     tableActionsAlignment: user.tableActionsAlignment,
-    locale: user?.locale ?? nextConfig.i18n.defaultLocale,
+    locale: user?.locale ?? nextConfig.i18n?.defaultLocale,
     soundSettings: {
       panicButton: user.soundSettings?.panicButton ?? true,
       signal100: user.soundSettings?.signal100 ?? true,
@@ -60,7 +61,8 @@ export function AppearanceTab({ availableSounds }: Props) {
   const sounds = Object.keys(INITIAL_VALUES.soundSettings);
 
   async function onSubmit(data: typeof INITIAL_VALUES) {
-    const { json } = await execute("/user", {
+    const { json } = await execute<PatchUserData, typeof INITIAL_VALUES>({
+      path: "/user",
       method: "PATCH",
       data: { username: user?.username, ...data },
     });
@@ -79,7 +81,7 @@ export function AppearanceTab({ availableSounds }: Props) {
 
   return (
     <TabsContent aria-label={t("appearanceSettings")} value="appearanceSettings">
-      <h3 className="text-2xl font-semibold">{t("appearanceSettings")}</h3>
+      <h1 className="text-2xl font-semibold">{t("appearanceSettings")}</h1>
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (
           <Form className="mt-3">
@@ -125,7 +127,7 @@ export function AppearanceTab({ availableSounds }: Props) {
             </FormField>
 
             <div className="mb-5">
-              <h3 className="text-2xl font-semibold mb-3">{t("sounds")}</h3>
+              <h2 className="text-2xl font-semibold mb-3">{t("sounds")}</h2>
 
               {availableSoundsArr.map((_name) => {
                 const fieldName = _name as keyof typeof INITIAL_VALUES.soundSettings;

@@ -15,14 +15,7 @@ import useFetch from "lib/useFetch";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
-import {
-  Rank,
-  EmsFdDeputy,
-  Officer,
-  OfficerLog,
-  UnitQualification,
-  ValueType,
-} from "@snailycad/types";
+import { Rank, ValueType } from "@snailycad/types";
 import { Toggle } from "components/form/Toggle";
 import { Title } from "components/shared/Title";
 import { OfficerLogsTable } from "components/leo/logs/OfficerLogsTable";
@@ -33,14 +26,10 @@ import { Permissions } from "@snailycad/permissions";
 import { QualificationsTable } from "components/admin/manage/units/QualificationsTable";
 import { classNames } from "lib/classNames";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
-
-type Unit = (Officer | EmsFdDeputy) & {
-  qualifications: UnitQualification[];
-  logs: OfficerLog[];
-};
+import type { GetManageUnitByIdData, PutManageUnitData } from "@snailycad/types/api";
 
 interface Props {
-  unit: Unit | null;
+  unit: GetManageUnitByIdData;
 }
 
 export default function SupervisorPanelPage({ unit: data }: Props) {
@@ -58,14 +47,13 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
-    if (!unit) return;
-
     const data = {
       ...values,
       divisions: values.divisions.map((v) => v.value),
     };
 
-    const { json } = await execute(`/admin/manage/units/${unit.id}`, {
+    const { json } = await execute<PutManageUnitData, typeof INITIAL_VALUES>({
+      path: `/admin/manage/units/${unit.id}`,
       method: "PUT",
       data,
       helpers,
@@ -75,10 +63,6 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
       toast.success("Updated.");
       router.push("/admin/manage/units");
     }
-  }
-
-  if (!unit) {
-    return null;
   }
 
   const divisions = isUnitOfficer(unit) ? unit.divisions : [];
@@ -121,7 +105,6 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
                 }))}
               />
             </FormField>
-            {console.log({ errors })}
 
             <FormField label="Department">
               <Select
@@ -260,7 +243,7 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ query, req, locale }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ query, req, locale }) => {
   const user = await getSessionUser(req);
   const [unit, values] = await requestAll(req, [
     [`/admin/manage/units/${query.id}`, null],
@@ -268,9 +251,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req, local
   ]);
 
   if (!unit) {
-    return {
-      notFound: true,
-    };
+    return { notFound: true };
   }
 
   return {

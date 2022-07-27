@@ -13,6 +13,7 @@ import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { DEFAULT_EDITOR_DATA, Editor } from "components/modal/DescriptionModal/Editor";
 import { CourtEntryDates } from "./CourtEntryDates";
+import type { PostCourtEntriesData, PutCourtEntriesData } from "@snailycad/types/api";
 
 interface Props {
   courtEntry: CourtEntry | null;
@@ -45,7 +46,8 @@ export function ManageCourtEntry({ courtEntry, onClose, onCreate, onUpdate }: Pr
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
     if (courtEntry) {
-      const { json } = await execute(`/court-entries/${courtEntry.id}`, {
+      const { json } = await execute<PutCourtEntriesData, typeof INITIAL_VALUES>({
+        path: `/court-entries/${courtEntry.id}`,
         method: "PUT",
         data: values,
         helpers,
@@ -56,7 +58,8 @@ export function ManageCourtEntry({ courtEntry, onClose, onCreate, onUpdate }: Pr
         closeModal(ModalIds.ManageCourtEntry);
       }
     } else {
-      const { json } = await execute("/court-entries", {
+      const { json } = await execute<PostCourtEntriesData, typeof INITIAL_VALUES>({
+        path: "/court-entries",
         method: "POST",
         data: values,
         helpers,

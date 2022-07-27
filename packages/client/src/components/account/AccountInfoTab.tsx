@@ -30,7 +30,7 @@ export function AccountInfoTab() {
 
   return (
     <TabsContent aria-label={t("Account.accountInfo")} value="accountInfo">
-      <h3 className="text-2xl font-semibold">{t("Account.accountInfo")}</h3>
+      <h1 className="text-2xl font-semibold">{t("Account.accountInfo")}</h1>
       <Formik onSubmit={() => void 0} initialValues={INITIAL_VALUES}>
         {({ values, errors }) => (
           <Form className="mt-2">

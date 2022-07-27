@@ -15,6 +15,10 @@ import { useCitizen } from "context/CitizenContext";
 import { Textarea } from "components/form/Textarea";
 import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
+import type {
+  PostCitizenMedicalRecordsData,
+  PutCitizenMedicalRecordsData,
+} from "@snailycad/types/api";
 
 interface Props {
   medicalRecord: MedicalRecord | null;
@@ -38,7 +42,8 @@ export function ManageMedicalRecordsModal({ medicalRecord, onClose, onCreate, on
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (medicalRecord) {
-      const { json } = await execute(`/medical-records/${medicalRecord.id}`, {
+      const { json } = await execute<PutCitizenMedicalRecordsData>({
+        path: `/medical-records/${medicalRecord.id}`,
         method: "PUT",
         data: values,
       });
@@ -47,7 +52,8 @@ export function ManageMedicalRecordsModal({ medicalRecord, onClose, onCreate, on
         onUpdate?.(medicalRecord, json);
       }
     } else {
-      const { json } = await execute("/medical-records", {
+      const { json } = await execute<PostCitizenMedicalRecordsData>({
+        path: "/medical-records",
         method: "POST",
         data: { ...values, citizenId: citizen.id },
       });

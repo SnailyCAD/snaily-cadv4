@@ -1,4 +1,6 @@
 export const enum ModalIds {
+  ReauthorizeSession = "ReauthorizeSessionModal",
+
   RegisterVehicle = "RegisterVehicleModal",
   RegisterWeapon = "RegisterWeaponModal",
   ManageLicenses = "ManageLicensesModal",
@@ -19,6 +21,8 @@ export const enum ModalIds {
   ManageCustomField = "ManageCustomFieldModal",
   ManageUnitQualifications = "ManageUnitQualificationsModal",
   ManageUnitCallsign = "ManageUnitCallsignModal",
+  ManageCustomRole = "ManageCustomRoleModal",
+  ManageRoles = "ManageRolesModal",
 
   ManageTowCall = "ManageTowCallModal",
   AssignToTowCall = "AssignToTowCallModal",
@@ -121,5 +125,7 @@ export const enum ModalIds {
   AlertDeleteNote = "AlertDeleteNoteModal",
   AlertDeleteCourtDate = "AlertDeleteCourtDateModal",
   AlertDeleteCourtEntry = "AlertDeleteCourtEntryModal",
+  AlertDeleteCustomRole = "AlertDeleteCustomRoleModal",
   AlertDeleteCourthousePost = "AlertDeleteCourthousePostModal",
+  AlertDisableUser2FA = "AlertDisableUser2FAModal",
 }

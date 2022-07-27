@@ -13,6 +13,7 @@ import { useTranslations } from "use-intl";
 import { useLeoState } from "state/leoState";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { isUnitCombined } from "@snailycad/utils";
+import type { PutLeoCallsignData } from "@snailycad/types/api";
 
 export function SwitchDivisionCallsignModal() {
   const { activeOfficer, setActiveOfficer } = useLeoState();
@@ -26,7 +27,8 @@ export function SwitchDivisionCallsignModal() {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!activeOfficer) return;
 
-    const { json } = await execute(`/leo/callsign/${activeOfficer?.id}`, {
+    const { json } = await execute<PutLeoCallsignData>({
+      path: `/leo/callsign/${activeOfficer?.id}`,
       method: "PUT",
       data: values,
     });

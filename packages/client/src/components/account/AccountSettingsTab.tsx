@@ -12,9 +12,10 @@ import { Manage2FAModal } from "./2fa/Manage2FAModal";
 import { Loader } from "components/Loader";
 import { TwoFactorAuthArea } from "./2fa/TwoFactorAuthArea";
 import { handleValidate } from "lib/handleValidate";
+import type { PatchUserData } from "@snailycad/types/api";
 
 export function AccountSettingsTab() {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   const t = useTranslations();
   const { execute, state } = useFetch();
   const common = useTranslations("Common");
@@ -29,16 +30,23 @@ export function AccountSettingsTab() {
     data: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
-    await execute("/user", {
+    if (!user) return;
+
+    const { json } = await execute<PatchUserData, typeof INITIAL_VALUES>({
+      path: "/user",
       method: "PATCH",
       data: { ...(user ?? {}), ...data },
       helpers,
     });
+
+    if (json) {
+      setUser({ ...user, ...json });
+    }
   }
 
   return (
     <TabsContent aria-label={t("Account.accountSettings")} value="accountSettings">
-      <h3 className="text-2xl font-semibold">{t("Account.accountSettings")}</h3>
+      <h1 className="text-2xl font-semibold">{t("Account.accountSettings")}</h1>
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (
           <Form className="mt-2">

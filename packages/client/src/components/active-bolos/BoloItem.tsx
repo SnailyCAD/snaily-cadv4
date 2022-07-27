@@ -29,30 +29,33 @@ export function BoloItem({ idx, bolo, handleDelete, handleEdit }: BoloItemProps)
   const { generateCallsign } = useGenerateCallsign();
 
   return (
-    <li key={bolo.id} className="flex justify-between">
+    <>
+      {" "}
       <div className="flex">
         <span className="mr-2 text-neutral-700 dark:text-gray-400 select-none">{idx + 1}.</span>
 
         <div>
           {bolo.type === BoloType.PERSON ? (
             <div id="description">
-              <p className="mb-1">{bolo.description}</p>
               <span className="font-semibold">{common("name")}: </span>
               {bolo.name}
+              <br />
+              <p className="mb-1">{bolo.description}</p>
             </div>
           ) : bolo.type === BoloType.VEHICLE ? (
             <div>
-              <p className="mb-1">
-                {bolo.description === STOLEN_TEXT ? t("Bolos.stolen") : bolo.description}
-              </p>
+              <span className="font-semibold">{t("Leo.model")}: </span>
+              {bolo.model || common("none")}
+              <br />
               <span className="font-semibold">{t("Leo.plate")}: </span>
               {bolo.plate?.toUpperCase() || common("none")}
               <br />
               <span className="font-semibold">{t("Leo.color")}: </span>
               {bolo.color || common("none")}
               <br />
-              <span className="font-semibold">{t("Leo.model")}: </span>
-              {bolo.model || common("none")}
+              <p className="mb-1">
+                {bolo.description === STOLEN_TEXT ? t("Bolos.stolen") : bolo.description}
+              </p>
             </div>
           ) : (
             <p className="text-justify">{bolo.description}</p>
@@ -66,7 +69,6 @@ export function BoloItem({ idx, bolo, handleDelete, handleEdit }: BoloItemProps)
           </p>
         </div>
       </div>
-
       <div className="ml-2 min-w-fit">
         <Button size="xs" disabled={isDisabled} onClick={() => handleEdit(bolo)} variant="success">
           {common("edit")}
@@ -81,6 +83,6 @@ export function BoloItem({ idx, bolo, handleDelete, handleEdit }: BoloItemProps)
           {common("delete")}
         </Button>
       </div>
-    </li>
+    </>
   );
 }

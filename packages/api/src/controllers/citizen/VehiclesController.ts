@@ -24,6 +24,7 @@ import { IsAuth } from "middlewares/IsAuth";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { generateString } from "utils/generateString";
 import { citizenInclude } from "./CitizenController";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/vehicles")
 @UseBeforeEach(IsAuth)
@@ -35,7 +36,7 @@ export class VehiclesController {
     @Context("cad") cad: cad,
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query?: string,
-  ) {
+  ): Promise<APITypes.GetCitizenVehiclesData> {
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     const citizen = await prisma.citizen.findFirst({
       where: { id: citizenId, userId: checkCitizenUserId ? user.id : undefined },
@@ -79,7 +80,7 @@ export class VehiclesController {
     @Context("user") user: User,
     @Context("cad") cad: cad & { miscCadSettings?: MiscCadSettings; features?: CadFeature[] },
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PostCitizenVehicleData> {
     const data = validateSchema(VEHICLE_SCHEMA, body);
 
     const citizen = await prisma.citizen.findUnique({
@@ -134,6 +135,16 @@ export class VehiclesController {
       modelId = newModel.id;
     }
 
+    const vehicleModel = await prisma.vehicleValue.findUnique({
+      where: { id: modelId },
+    });
+
+    if (!vehicleModel) {
+      throw new ExtendedBadRequest({
+        model: "Invalid vehicle model. Please re-enter the vehicle model.",
+      });
+    }
+
     const isDmvEnabled = isFeatureEnabled({
       features: cad.features,
       feature: Feature.DMV,
@@ -153,6 +164,7 @@ export class VehiclesController {
         taxStatus: data.taxStatus as VehicleTaxStatus | null,
         inspectionStatus: data.inspectionStatus as VehicleInspectionStatus | null,
         dmvStatus: isDmvEnabled ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED,
+        appearance: data.appearance ?? null,
       },
       include: {
         model: { include: { value: true } },
@@ -193,7 +205,7 @@ export class VehiclesController {
     @Context("cad") cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
     @PathParams("id") vehicleId: string,
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PutCitizenVehicleData> {
     const data = validateSchema(VEHICLE_SCHEMA, body);
 
     const vehicle = await prisma.registeredVehicle.findUnique({
@@ -303,6 +315,7 @@ export class VehiclesController {
         taxStatus: data.taxStatus as VehicleTaxStatus | null,
         inspectionStatus: data.inspectionStatus as VehicleInspectionStatus | null,
         dmvStatus,
+        appearance: data.appearance ?? null,
       },
       include: {
         model: { include: { value: true } },
@@ -315,7 +328,10 @@ export class VehiclesController {
 
   @Post("/transfer/:vehicleId")
   @Description("Transfer a vehicle to a new owner")
-  async transferVehicle(@BodyParams() body: unknown, @PathParams("vehicleId") vehicleId: string) {
+  async transferVehicle(
+    @BodyParams() body: unknown,
+    @PathParams("vehicleId") vehicleId: string,
+  ): Promise<APITypes.PostCitizenTransferVehicleData> {
     const data = validateSchema(TRANSFER_VEHICLE_SCHEMA, body);
 
     const vehicle = await prisma.registeredVehicle.findUnique({
@@ -354,7 +370,7 @@ export class VehiclesController {
     @Context("cad") cad: { features?: CadFeature[] },
     @PathParams("id") vehicleId: string,
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.DeleteCitizenVehicleData> {
     const data = validateSchema(DELETE_VEHICLE_SCHEMA, body);
 
     const vehicle = await prisma.registeredVehicle.findUnique({

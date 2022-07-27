@@ -9,7 +9,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import { FullBusiness, FullEmployee, useBusinessState } from "state/businessState";
+import { useBusinessState } from "state/businessState";
 import { useTranslations } from "use-intl";
 import { BusinessPost, WhitelistStatus } from "@snailycad/types";
 import useFetch from "lib/useFetch";
@@ -17,16 +17,18 @@ import dynamic from "next/dynamic";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { classNames } from "lib/classNames";
-
-interface Props {
-  employee: FullEmployee | null;
-  business: FullBusiness | null;
-}
+import type { DeleteBusinessPostsData, GetBusinessByIdData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageBusinessPostModal = dynamic(
   async () => (await import("components/business/ManagePostModal")).ManageBusinessPostModal,
 );
+
+interface Props {
+  business: GetBusinessByIdData;
+  employee: GetBusinessByIdData["employee"];
+}
 
 export default function BusinessId(props: Props) {
   const { state: fetchState, execute } = useFetch();
@@ -34,42 +36,44 @@ export default function BusinessId(props: Props) {
   const { currentBusiness, currentEmployee, posts, ...state } = useBusinessState();
   const common = useTranslations("Common");
   const t = useTranslations("Business");
-
-  const [tempPost, setTempPost] = React.useState<BusinessPost | null>(null);
+  const [tempPost, postState] = useTemporaryItem(posts);
 
   async function handlePostDeletion() {
     if (!tempPost) return;
 
-    const { json } = await execute(`/businesses/posts/${currentBusiness?.id}/${tempPost.id}`, {
+    const { json } = await execute<DeleteBusinessPostsData>({
+      path: `/businesses/posts/${currentBusiness?.id}/${tempPost.id}`,
       method: "DELETE",
       data: { employeeId: currentEmployee?.id },
     });
 
     if (json) {
       state.setPosts(posts.filter((p) => p.id !== tempPost.id));
-      setTempPost(null);
+      postState.setTempId(null);
       closeModal(ModalIds.AlertDeleteBusinessPost);
     }
   }
 
   function handleEdit(post: BusinessPost) {
     openModal(ModalIds.ManageBusinessPost);
-    setTempPost(post);
+    postState.setTempId(post.id);
   }
 
   function handleDelete(post: BusinessPost) {
     openModal(ModalIds.AlertDeleteBusinessPost);
-    setTempPost(post);
+    postState.setTempId(post.id);
   }
 
   React.useEffect(() => {
-    state.setCurrentBusiness(props.business);
-    state.setCurrentEmployee(props.employee);
-    state.setPosts(props.business?.businessPosts ?? []);
+    const { employee, business } = props;
+
+    state.setCurrentBusiness(business);
+    state.setCurrentEmployee(employee);
+    state.setPosts(business.businessPosts);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props, state.setCurrentEmployee, state.setCurrentBusiness, state.setPosts]);
 
-  const owner = currentBusiness?.employees.find((v) => v.citizenId === currentBusiness.citizenId);
+  const owner = currentBusiness?.employees?.find((v) => v.citizenId === currentBusiness.citizenId);
 
   if (!currentBusiness || !currentEmployee) {
     return null;
@@ -83,7 +87,7 @@ export default function BusinessId(props: Props) {
     );
   }
 
-  if (props.business?.status === WhitelistStatus.PENDING) {
+  if (props.business.status === WhitelistStatus.PENDING) {
     return (
       <Layout className="dark:text-white">
         <p>
@@ -197,7 +201,7 @@ export default function BusinessId(props: Props) {
           post={tempPost}
           onUpdate={() => void 0}
           onCreate={(post) => state.setPosts([post, ...posts])}
-          onClose={() => setTimeout(() => setTempPost(null), 100)}
+          onClose={() => setTimeout(() => postState.setTempId(null), 100)}
         />
       ) : null}
 
@@ -207,7 +211,7 @@ export default function BusinessId(props: Props) {
         id={ModalIds.AlertDeleteBusinessPost}
         onDeleteClick={handlePostDeletion}
         state={fetchState}
-        onClose={() => setTempPost(null)}
+        onClose={() => postState.setTempId(null)}
       />
     </Layout>
   );

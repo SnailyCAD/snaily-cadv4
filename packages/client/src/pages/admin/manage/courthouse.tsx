@@ -1,4 +1,8 @@
-import { CourtEntry, NameChangeRequest, Rank } from "@snailycad/types";
+import { Rank } from "@snailycad/types";
+import type {
+  GetManageExpungementRequests,
+  GetManageNameChangeRequests,
+} from "@snailycad/types/api";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { ExpungementRequestsTab } from "components/admin/manage/courthouse/ExpungementRequestsTab";
 import { NameChangeRequestsTab } from "components/admin/manage/courthouse/NameChangeRequestsTab";
@@ -10,12 +14,10 @@ import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import { useTranslations } from "next-intl";
-import type { FullRequest } from "src/pages/courthouse";
 
 interface Props {
-  expungementRequests: FullRequest[];
-  nameChangeRequests: NameChangeRequest[];
-  courtEntries: CourtEntry[];
+  expungementRequests: GetManageExpungementRequests;
+  nameChangeRequests: GetManageNameChangeRequests;
 }
 
 export default function ManageCourthouse({ expungementRequests, nameChangeRequests }: Props) {

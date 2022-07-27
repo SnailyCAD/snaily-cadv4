@@ -15,6 +15,7 @@ import { IsAuth } from "middlewares/IsAuth";
 import { Socket } from "services/SocketService";
 import { validateSchema } from "lib/validateSchema";
 import {
+  cad,
   Citizen,
   DiscordWebhookType,
   RegisteredVehicle,
@@ -27,6 +28,8 @@ import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 import { callInclude } from "controllers/dispatch/911-calls/Calls911Controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
+import type * as APITypes from "@snailycad/types/api";
+import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 
 const CITIZEN_SELECTS = {
   name: true,
@@ -53,7 +56,9 @@ export class TowController {
     permissions: [Permissions.ManageTowCalls, Permissions.ViewTowCalls, Permissions.ViewTowLogs],
     fallback: (u) => u.isTow,
   })
-  async getTowCalls(@QueryParams("ended", Boolean) includingEnded = false) {
+  async getTowCalls(
+    @QueryParams("ended", Boolean) includingEnded = false,
+  ): Promise<APITypes.GetTowCallsData> {
     const calls = await prisma.towCall.findMany({
       where: includingEnded ? undefined : { ended: false },
       include: towIncludes,
@@ -66,7 +71,11 @@ export class TowController {
   @UseBefore(IsAuth)
   @Post("/")
   @Description("Create a new tow call")
-  async createTowCall(@BodyParams() body: unknown, @Context("user") user: User) {
+  async createTowCall(
+    @BodyParams() body: unknown,
+    @Context("user") user: User,
+    @Context("cad") cad: cad,
+  ): Promise<APITypes.PostTowCallsData> {
     const data = validateSchema(TOW_SCHEMA, body);
 
     if (data.creatorId) {
@@ -86,11 +95,15 @@ export class TowController {
         },
       });
 
-      canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
+      const checkUserId = shouldCheckCitizenUserId({ cad, user });
+
+      if (checkUserId) {
+        canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
+      }
     }
 
     let vehicle;
-    if (data.plate && data.deliveryAddress) {
+    if (data.plate && data.deliveryAddressId) {
       vehicle = await prisma.registeredVehicle.findUnique({
         where: { plate: data.plate },
         include: { model: { include: { value: true } } },
@@ -102,7 +115,7 @@ export class TowController {
 
       await prisma.impoundedVehicle.create({
         data: {
-          valueId: data.deliveryAddress,
+          valueId: data.deliveryAddressId,
           registeredVehicleId: vehicle.id,
         },
       });
@@ -134,21 +147,21 @@ export class TowController {
           include: callInclude,
         });
 
-        if (!call) return;
+        if (call) {
+          const event = await prisma.call911Event.create({
+            data: {
+              description: "Created a tow call",
+              call911Id: data.call911Id,
+            },
+          });
 
-        const event = await prisma.call911Event.create({
-          data: {
-            description: "Created a tow call",
-            call911Id: data.call911Id,
-          },
-        });
+          const normalizedCall = officerOrDeputyToUnit({
+            ...call,
+            events: [...call.events, event],
+          });
 
-        const normalizedCall = officerOrDeputyToUnit({
-          ...call,
-          events: [...call.events, event],
-        });
-
-        this.socket.emitUpdate911Call(normalizedCall);
+          this.socket.emitUpdate911Call(normalizedCall);
+        }
       }
     }
 
@@ -159,11 +172,12 @@ export class TowController {
         descriptionData: data.descriptionData,
         location: data.location,
         postal: data.postal,
-        deliveryAddressId: data.deliveryAddress || null,
+        deliveryAddressId: data.deliveryAddressId,
         plate: vehicle?.plate.toUpperCase() ?? null,
         model: vehicle?.model.value.value ?? null,
-        ended: data.callCountyService || false,
+        ended: data.callCountyService ?? false,
         name: data.name ?? null,
+        callCountyService: data.callCountyService,
       },
       include: towIncludes,
     });
@@ -184,7 +198,10 @@ export class TowController {
     permissions: [Permissions.ManageTowCalls],
     fallback: (u) => u.isTow,
   })
-  async updateCall(@PathParams("id") callId: string, @BodyParams() body: unknown) {
+  async updateCall(
+    @PathParams("id") callId: string,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PutTowCallsData> {
     const data = validateSchema(UPDATE_TOW_SCHEMA, body);
 
     const call = await prisma.towCall.findUnique({
@@ -228,7 +245,7 @@ export class TowController {
     permissions: [Permissions.ManageTowCalls],
     fallback: (u) => u.isTow,
   })
-  async endTowCall(@PathParams("id") callId: string) {
+  async endTowCall(@PathParams("id") callId: string): Promise<APITypes.DeleteTowCallsData> {
     const call = await prisma.towCall.findUnique({
       where: { id: callId },
     });

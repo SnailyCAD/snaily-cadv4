@@ -22,6 +22,7 @@ import { ResultsTab } from "./VehicleSearch/tabs/ResultsTab";
 import { NotesTab } from "./NameSearchModal/tabs/NotesTab";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { RegisterVehicleModal } from "components/citizen/vehicles/modals/RegisterVehicleModal";
+import type { PostMarkStolenData } from "@snailycad/types/api";
 
 interface Props {
   id?: ModalIds.VehicleSearch | ModalIds.VehicleSearchWithinName;
@@ -62,7 +63,8 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   }, [id, isOpen, setCurrentResult]);
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute("/search/vehicle", {
+    const { json } = await execute<VehicleSearchResult>({
+      path: "/search/vehicle",
       method: "POST",
       data: values,
       noToast: true,
@@ -84,7 +86,8 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   async function handleMarkStolen() {
     if (!currentResult) return;
 
-    const { json } = await execute(`/bolos/mark-stolen/${currentResult.id}`, {
+    const { json } = await execute<PostMarkStolenData>({
+      path: `/bolos/mark-stolen/${currentResult.id}`,
       method: "POST",
       data: {
         id: currentResult.id,
@@ -99,7 +102,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
 
       setCurrentResult(updatedVehicle);
 
-      if (nameSearchState.currentResult) {
+      if (nameSearchState.currentResult && !nameSearchState.currentResult.isConfidential) {
         nameSearchState.setCurrentResult({
           ...nameSearchState.currentResult,
           vehicles: nameSearchState.currentResult.vehicles.map((v) =>
@@ -195,14 +198,14 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
               }`}
             >
               <div>
+                {CREATE_USER_CITIZEN_LEO && isLeo ? (
+                  <Button type="button" onClick={() => openModal(ModalIds.RegisterVehicle)}>
+                    {t("createVehicle")}
+                  </Button>
+                ) : null}
+
                 {currentResult && isLeo ? (
                   <>
-                    {CREATE_USER_CITIZEN_LEO ? (
-                      <Button type="button" onClick={() => openModal(ModalIds.RegisterVehicle)}>
-                        {t("createVehicle")}
-                      </Button>
-                    ) : null}
-
                     {showMarkStolen ? (
                       <Button
                         type="button"

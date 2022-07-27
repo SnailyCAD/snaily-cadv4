@@ -12,7 +12,7 @@ import { DndActions } from "types/DndActions";
 interface Props {
   call: Full911Call;
   isDispatch: boolean;
-  handleAssignToCall: any;
+  handleAssignToCall(call: Full911Call, unitId: string): void;
 }
 
 export function AssignedUnitsColumn({ handleAssignToCall, isDispatch, call }: Props) {
@@ -23,6 +23,8 @@ export function AssignedUnitsColumn({ handleAssignToCall, isDispatch, call }: Pr
   const canDrag = hasActiveDispatchers && isDispatch;
 
   function makeAssignedUnit(unit: AssignedUnit) {
+    if (!unit.unit) return "UNKNOWN";
+
     return isUnitCombined(unit.unit)
       ? generateCallsign(unit.unit, "pairedUnitTemplate")
       : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;

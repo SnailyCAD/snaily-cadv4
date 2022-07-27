@@ -8,6 +8,11 @@ import { makeUnitName } from "lib/utils";
 import { isUnitCombined } from "@snailycad/utils";
 import * as modalButtons from "components/modal-buttons/buttons";
 import { ModalButton } from "components/modal-buttons/ModalButton";
+import type { PostLeoTogglePanicButtonData } from "@snailycad/types/api";
+import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { ModalIds } from "types/ModalIds";
+import { useModal } from "state/modalState";
+import { TonesModal } from "components/dispatch/modals/TonesModal";
 
 const buttons: modalButtons.ModalButton[] = [
   modalButtons.switchDivision,
@@ -19,8 +24,8 @@ const buttons: modalButtons.ModalButton[] = [
   modalButtons.createWrittenWarningBtn,
   modalButtons.createTicketBtn,
   modalButtons.createArrestReportBtn,
-  modalButtons.createBoloBtn,
   modalButtons.createWarrantBtn,
+  modalButtons.createBoloBtn,
   modalButtons.notepadBtn,
 ];
 
@@ -28,13 +33,15 @@ export function ModalButtons() {
   const { activeOfficer } = useLeoState();
   const t = useTranslations();
   const { generateCallsign } = useGenerateCallsign();
-
+  const { hasActiveDispatchers } = useActiveDispatchers();
   const { state, execute } = useFetch();
+  const { openModal } = useModal();
 
   async function handlePanic() {
     if (!activeOfficer) return;
 
-    await execute("/leo/panic-button", {
+    await execute<PostLeoTogglePanicButtonData>({
+      path: "/leo/panic-button",
       method: "POST",
       data: { officerId: activeOfficer.id },
     });
@@ -60,7 +67,7 @@ export function ModalButtons() {
         </p>
       ) : null}
 
-      <ul className="mt-2 modal-buttons-grid">
+      <div className="mt-2 modal-buttons-grid">
         {buttons.map((button, idx) => {
           return (
             <ModalButton
@@ -81,7 +88,16 @@ export function ModalButtons() {
         >
           {t("Leo.panicButton")}
         </Button>
-      </ul>
+
+        {!hasActiveDispatchers ? (
+          <>
+            <Button disabled={isButtonDisabled} onClick={() => openModal(ModalIds.Tones)}>
+              {t("Leo.tones")}
+            </Button>
+            <TonesModal types={["leo"]} />
+          </>
+        ) : null}
+      </div>
     </div>
   );
 }

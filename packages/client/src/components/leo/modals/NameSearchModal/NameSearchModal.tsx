@@ -33,6 +33,11 @@ import { CitizenImageModal } from "components/citizen/modals/CitizenImageModal";
 import { ManageCustomFieldsModal } from "./ManageCustomFieldsModal";
 import { CustomFieldsArea } from "../CustomFieldsArea";
 import { useBolos } from "hooks/realtime/useBolos";
+import type {
+  PostEmsFdDeclareCitizenById,
+  PostLeoSearchCitizenData,
+  PutSearchActionsLicensesData,
+} from "@snailycad/types/api";
 
 const VehicleSearchModal = dynamic(
   async () => (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal,
@@ -103,7 +108,8 @@ export function NameSearchModal() {
   async function handleLicensesSubmit(values: LicenseInitialValues) {
     if (!currentResult) return;
 
-    const { json } = await execute(`/search/actions/licenses/${currentResult.id}`, {
+    const { json } = await execute<PutSearchActionsLicensesData>({
+      path: `/search/actions/licenses/${currentResult.id}`,
       method: "PUT",
       data: {
         ...values,
@@ -121,10 +127,12 @@ export function NameSearchModal() {
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute("/search/name", {
+    const { json, error } = await execute<PostLeoSearchCitizenData>({
+      path: "/search/name",
       method: "POST",
       data: values,
     });
+    if (error) return;
 
     if (Array.isArray(json) && json.length <= 0) {
       setResults(false);
@@ -134,7 +142,7 @@ export function NameSearchModal() {
 
     const first = Array.isArray(json) ? json[0] : json;
 
-    if (first?.id === currentResult?.id) {
+    if (first && first?.id === currentResult?.id) {
       setCurrentResult(first);
     }
 
@@ -149,7 +157,8 @@ export function NameSearchModal() {
   async function handleDeclare() {
     if (!currentResult) return;
 
-    const { json } = await execute(`/ems-fd/declare/${currentResult.id}`, {
+    const { json } = await execute<PostEmsFdDeclareCitizenById>({
+      path: `/ems-fd/declare/${currentResult.id}`,
       method: "POST",
     });
 
@@ -175,7 +184,7 @@ export function NameSearchModal() {
 
   const hasWarrants =
     !currentResult?.isConfidential &&
-    (currentResult?.warrants.filter((v) => v.status === "ACTIVE").length ?? 0) > 0;
+    (currentResult?.warrants?.filter((v) => v.status === "ACTIVE").length ?? 0) > 0;
 
   const INITIAL_VALUES = {
     name: payloadName ?? "",
@@ -204,6 +213,7 @@ export function NameSearchModal() {
                         className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                         draggable={false}
                         src={makeImageUrl("citizens", suggestion.imageId)}
+                        loading="lazy"
                       />
                     ) : null}
                     <p>
@@ -245,6 +255,7 @@ export function NameSearchModal() {
                             className="rounded-md w-[50px] h-[50px] object-cover"
                             draggable={false}
                             src={makeImageUrl("citizens", result.imageId)}
+                            loading="lazy"
                           />
                         ) : (
                           <PersonFill className="text-gray-500/60 w-[50px] h-[50px]" />
@@ -266,7 +277,7 @@ export function NameSearchModal() {
               </ul>
             ) : null}
 
-            {typeof results !== "boolean" && currentResult ? (
+            {currentResult ? (
               currentResult.isConfidential ? (
                 <p className="my-5 px-2">{t("citizenIsConfidential")}</p>
               ) : (
@@ -286,7 +297,7 @@ export function NameSearchModal() {
                     </div>
                   </header>
 
-                  {currentResult?.dead && currentResult?.dateOfDead ? (
+                  {currentResult.dead && currentResult.dateOfDead ? (
                     <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
                       {t("citizenDead", {
                         date: format(
@@ -321,6 +332,7 @@ export function NameSearchModal() {
                             className="rounded-md w-[100px] h-[100px] object-cover"
                             draggable={false}
                             src={makeImageUrl("citizens", currentResult.imageId)}
+                            loading="lazy"
                           />
                         </button>
                       ) : (
@@ -436,7 +448,7 @@ export function NameSearchModal() {
                     {t("createCitizen")}
                   </Button>
                 ) : null}
-                {currentResult && isLeo ? (
+                {currentResult && !currentResult.isConfidential && isLeo ? (
                   <>
                     {Object.values(RecordType).map((type) => (
                       <Button
@@ -502,6 +514,7 @@ export function NameSearchModal() {
                   state={state}
                   onSubmit={handleLicensesSubmit}
                   citizen={currentResult}
+                  isLeo
                 />
                 <CitizenImageModal citizen={currentResult} />
               </>

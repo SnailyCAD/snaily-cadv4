@@ -11,13 +11,14 @@ import { JOIN_COMPANY_SCHEMA } from "@snailycad/schemas";
 import { handleValidate } from "lib/handleValidate";
 import { Select } from "components/form/Select";
 import { useRouter } from "next/router";
-import { useBusinessState, type FullEmployee } from "state/businessState";
+import { useBusinessState } from "state/businessState";
 import { toastMessage } from "lib/toastMessage";
-import { Business, WhitelistStatus } from "@snailycad/types";
+import { WhitelistStatus } from "@snailycad/types";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
+import type { GetBusinessesData, PostJoinBusinessData } from "@snailycad/types/api";
 
 interface Props {
-  onCreate(business: FullEmployee & { business: Business }): void;
+  onCreate(business: GetBusinessesData["businesses"][number]): void;
 }
 
 export function JoinBusinessModal({ onCreate }: Props) {
@@ -33,7 +34,8 @@ export function JoinBusinessModal({ onCreate }: Props) {
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute("/businesses/join", {
+    const { json } = await execute<PostJoinBusinessData>({
+      path: "/businesses/join",
       method: "POST",
       data: values,
     });

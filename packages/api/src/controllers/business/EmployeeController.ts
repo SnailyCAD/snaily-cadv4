@@ -10,6 +10,7 @@ import { cad, EmployeeAsEnum, User, WhitelistStatus } from "@prisma/client";
 import { validateBusinessAcceptance } from "utils/businesses";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import type * as APITypes from "@snailycad/types/api";
 
 @UseBeforeEach(IsAuth)
 @Controller("/businesses/employees")
@@ -22,7 +23,7 @@ export class BusinessEmployeeController {
     @Context("user") user: User,
     @Context("cad") cad: cad,
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PutBusinessEmployeesData> {
     const data = validateSchema(UPDATE_EMPLOYEE_SCHEMA, body);
 
     await validateBusinessAcceptance(cad, businessId);
@@ -99,7 +100,7 @@ export class BusinessEmployeeController {
     @Context("user") user: User,
     @Context("cad") cad: cad,
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.DeleteBusinessFireEmployeeData> {
     const data = validateSchema(FIRE_EMPLOYEE_SCHEMA, body);
 
     await validateBusinessAcceptance(cad, businessId);
@@ -153,7 +154,7 @@ export class BusinessEmployeeController {
     @Context("user") user: User,
     @Context("cad") cad: cad,
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PostBusinessAcceptDeclineData> {
     const data = validateSchema(FIRE_EMPLOYEE_SCHEMA, body);
 
     await validateBusinessAcceptance(cad, businessId);

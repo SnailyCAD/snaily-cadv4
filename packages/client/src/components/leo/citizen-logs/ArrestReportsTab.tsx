@@ -16,6 +16,7 @@ import { Status } from "components/shared/Status";
 import { useRouter } from "next/router";
 import { HoverCard } from "components/shared/HoverCard";
 import { ViolationsColumn } from "../ViolationsColumn";
+import type { PostCitizenRecordLogsData } from "@snailycad/types/api";
 
 interface Props {
   search: string;
@@ -47,7 +48,8 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
   }
 
   async function handleAcceptDeclineClick(item: Record, type: "ACCEPT" | "DECLINE") {
-    const { json } = await execute(`/admin/manage/citizens/records-logs/${item.id}`, {
+    const { json } = await execute<PostCitizenRecordLogsData>({
+      path: `/admin/manage/citizens/records-logs/${item.id}`,
       method: "POST",
       data: { type },
     });
@@ -77,13 +79,13 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
             const type = TYPE_LABELS[record.type];
             const createdAt = record.createdAt;
             const officer = record.officer;
-            const officerName = makeUnitName(officer);
-            const callsign = generateCallsign(officer);
+            const officerName = officer && makeUnitName(officer);
+            const callsign = officer && generateCallsign(officer);
 
             return {
               type,
               citizen: `${item.citizen.name} ${item.citizen.surname}`,
-              officer: `${callsign} ${officerName}`,
+              officer: officer ? `${callsign} ${officerName}` : common("none"),
               postal: record.postal || common("none"),
               notes: (
                 <HoverCard

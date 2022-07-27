@@ -15,9 +15,14 @@ import { ModalIds } from "types/ModalIds";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { usePermission, Permissions } from "hooks/usePermission";
+import type {
+  DeleteLeoCheckoutImpoundedVehicleData,
+  GetLeoImpoundedVehiclesData,
+} from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 interface Props {
-  vehicles: ImpoundedVehicle[];
+  vehicles: GetLeoImpoundedVehiclesData;
 }
 
 export default function ImpoundLot({ vehicles: data }: Props) {
@@ -29,24 +34,25 @@ export default function ImpoundLot({ vehicles: data }: Props) {
   const hasManagePermissions = hasPermissions([Permissions.ManageImpoundLot], true);
 
   const [vehicles, setVehicles] = React.useState(data);
-  const [tempVehicle, setTempVehicle] = React.useState<ImpoundedVehicle | null>(null);
+  const [tempVehicle, vehicleState] = useTemporaryItem(vehicles);
 
   async function handleCheckout() {
     if (!tempVehicle) return;
 
-    const { json } = await execute(`/leo/impounded-vehicles/${tempVehicle.id}`, {
+    const { json } = await execute<DeleteLeoCheckoutImpoundedVehicleData>({
+      path: `/leo/impounded-vehicles/${tempVehicle.id}`,
       method: "DELETE",
     });
 
     if (typeof json === "boolean") {
       setVehicles((p) => p.filter((v) => v.id !== tempVehicle.id));
-      setTempVehicle(null);
+      vehicleState.setTempId(null);
       closeModal(ModalIds.AlertCheckoutImpoundedVehicle);
     }
   }
 
   function handleCheckoutClick(item: ImpoundedVehicle) {
-    setTempVehicle(item);
+    vehicleState.setTempId(item.id);
     openModal(ModalIds.AlertCheckoutImpoundedVehicle);
   }
 

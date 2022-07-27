@@ -7,6 +7,7 @@ import { CREATE_PENAL_CODE_GROUP_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { Rank } from "@prisma/client";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/admin/penal-code-group")
 @UseBeforeEach(IsAuth)
@@ -17,7 +18,9 @@ export class ValuesController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageValuePenalCode],
   })
-  async createPenalCodeGroup(@BodyParams() body: unknown) {
+  async createPenalCodeGroup(
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PostPenalCodeGroupsData> {
     const data = validateSchema(CREATE_PENAL_CODE_GROUP_SCHEMA, body);
 
     const group = await prisma.penalCodeGroup.create({
@@ -35,7 +38,10 @@ export class ValuesController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageValuePenalCode],
   })
-  async editPenalCodeGroup(@PathParams("id") id: string, @BodyParams() body: unknown) {
+  async editPenalCodeGroup(
+    @PathParams("id") id: string,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PutPenalCodeGroupsData> {
     const data = validateSchema(CREATE_PENAL_CODE_GROUP_SCHEMA, body);
 
     const group = await prisma.penalCodeGroup.findUnique({
@@ -60,7 +66,9 @@ export class ValuesController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageValuePenalCode],
   })
-  async deletePenalCodeGroup(@PathParams("id") id: string) {
+  async deletePenalCodeGroup(
+    @PathParams("id") id: string,
+  ): Promise<APITypes.DeletePenalCodeGroupsData> {
     const group = await prisma.penalCodeGroup.findUnique({
       where: { id },
     });

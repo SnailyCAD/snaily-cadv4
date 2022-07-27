@@ -5,8 +5,8 @@
     "noExpungementRequests": "You do not have any seal requests",
     "request": "Request",
     "noPendingRequests": "There are no pending seal requests",
-    "expungementRequests": "Seal requests",
-    "nameChangeRequests": "Deed poll requests",
+    "expungementRequests": "Record Seal Requests",
+    "nameChangeRequests": "Deed Poll Requests",
     "requestNameChange": "Request deed poll",
     "noNameChangeRequests": "There are no deed poll requests.",
     "newName": "New Name",
@@ -25,6 +25,12 @@
     "date": "Date",
     "note": "Note",
     "deleteCourtDate": "Delete court date",
+    "courthousePosts": "Magistrates posts",
+    "manageCourthousePost": "Manage magistrates post",
+    "deleteCourthousePost": "Delete magistrates post",
+    "addCourthousePost": "Add magistrates post",
+    "noCourthousePosts": "There are no magistrates posts yet.",
+    "alert_deleteCourthousePost": "Are you sure you want to delete this post? This action cannot be undone.",
     "alert_deleteCourtEntry": "Are you sure you want to delete this entry? This action cannot be undone.",
     "alert_deleteCourtDate": "Are you sure you want to delete this court date? This action cannot be undone."
   }

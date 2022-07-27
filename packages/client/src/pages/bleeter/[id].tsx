@@ -6,7 +6,6 @@ import { getSessionUser } from "lib/auth";
 import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import type { BleeterPost } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
@@ -16,6 +15,7 @@ import dynamic from "next/dynamic";
 import { useImageUrl } from "hooks/useImageUrl";
 import { Title } from "components/shared/Title";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
+import type { DeleteBleeterByIdData, GetBleeterByIdData } from "@snailycad/types/api";
 
 const ManageBleetModal = dynamic(
   async () => (await import("components/bleeter/ManageBleetModal")).ManageBleetModal,
@@ -24,7 +24,7 @@ const ManageBleetModal = dynamic(
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 
 interface Props {
-  post: BleeterPost | null;
+  post: GetBleeterByIdData;
 }
 
 export default function BleetPost({ post }: Props) {
@@ -37,17 +37,14 @@ export default function BleetPost({ post }: Props) {
   const { makeImageUrl } = useImageUrl();
 
   async function handleDelete() {
-    if (!post) return;
-
-    const { json } = await execute(`/bleeter/${post.id}`, { method: "DELETE" });
+    const { json } = await execute<DeleteBleeterByIdData>({
+      path: `/bleeter/${post.id}`,
+      method: "DELETE",
+    });
 
     if (json) {
       router.push("/bleeter");
     }
-  }
-
-  if (!post) {
-    return null;
   }
 
   return (
@@ -79,6 +76,7 @@ export default function BleetPost({ post }: Props) {
             draggable={false}
             className="h-[20rem] mb-5 w-full object-cover"
             src={makeImageUrl("bleeter", post.imageId)}
+            loading="lazy"
           />
         ) : null}
         <Editor isReadonly value={dataToSlate(post)} />
@@ -104,6 +102,10 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale, re
   const { data } = await handleRequest(`/bleeter/${query.id}`, {
     req,
   }).catch(() => ({ data: null }));
+
+  if (!data) {
+    return { notFound: true };
+  }
 
   return {
     notFound: !data,

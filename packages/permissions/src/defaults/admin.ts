@@ -21,6 +21,8 @@ export const defaultManagementPermissions = [
   Permissions.ManageNameChangeRequests,
   Permissions.ViewCustomFields,
   Permissions.ManageCustomFields,
+  Permissions.ManageCustomRoles,
+  Permissions.ViewCustomRoles,
 ];
 
 export const defaultImportPermissions = [
@@ -57,8 +59,11 @@ export const defaultCourthousePermissions = [
   Permissions.ManageNameChangeRequests,
 ];
 
+export const defaultOwnerPermissions = [Permissions.ManageCADSettings];
+
 export const allDefaultAdminPermissions = [
   ...defaultManagementPermissions,
   ...defaultImportPermissions,
   ...defaultValuePermissions,
+  ...defaultOwnerPermissions,
 ];

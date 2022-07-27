@@ -28,11 +28,19 @@ import { ActiveCallColumn } from "./active-units/officers/ActiveCallColumn";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { HoverCard } from "components/shared/HoverCard";
 import { useDispatchState } from "state/dispatchState";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import { useMounted } from "@casper124578/useful";
 
-export function ActiveOfficers() {
-  const { activeOfficers } = useActiveOfficers();
+interface Props {
+  initialOfficers: ActiveOfficer[];
+}
+
+function ActiveOfficers({ initialOfficers }: Props) {
+  const { activeOfficers: _activeOfficers } = useActiveOfficers();
   const { activeIncidents } = useActiveIncidents();
   const { calls } = useDispatchState();
+  const isMounted = useMounted();
+  const activeOfficers = isMounted ? _activeOfficers : initialOfficers;
 
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
@@ -41,24 +49,24 @@ export function ActiveOfficers() {
   const { user } = useAuth();
 
   const { hasActiveDispatchers } = useActiveDispatchers();
-  const { ACTIVE_INCIDENTS, RADIO_CHANNEL_MANAGEMENT } = useFeatureEnabled();
+  const { BADGE_NUMBERS, ACTIVE_INCIDENTS, RADIO_CHANNEL_MANAGEMENT } = useFeatureEnabled();
   const { leoSearch, showLeoFilters, setShowFilters } = useActiveUnitsState();
   const { handleFilter } = useActiveUnitsFilter();
 
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
 
-  const [tempUnit, setTempUnit] = React.useState<ActiveOfficer | CombinedLeoUnit | null>(null);
+  const [tempOfficer, officerState] = useTemporaryItem(activeOfficers);
 
   function handleEditClick(officer: ActiveOfficer | CombinedLeoUnit) {
-    setTempUnit(officer);
+    officerState.setTempId(officer.id);
     openModal(ModalIds.ManageUnit);
   }
 
   return (
     <div className="overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
       <header className="p-2 px-4 bg-gray-200 dark:bg-gray-3 flex items-center justify-between">
-        <h3 className="text-xl font-semibold">{t("activeOfficers")}</h3>
+        <h1 className="text-xl font-semibold">{t("activeOfficers")}</h1>
 
         <div>
           <Button
@@ -106,7 +114,7 @@ export function ActiveOfficers() {
                   officer: (
                     <OfficerColumn
                       nameAndCallsign={nameAndCallsign}
-                      setTempUnit={setTempUnit}
+                      setTempUnit={officerState.setTempId}
                       officer={officer}
                     />
                   ),
@@ -155,7 +163,7 @@ export function ActiveOfficers() {
               })}
             columns={[
               { Header: t("officer"), accessor: "officer" },
-              { Header: t("badgeNumber"), accessor: "badgeNumber" },
+              BADGE_NUMBERS ? { Header: t("badgeNumber"), accessor: "badgeNumber" } : null,
               { Header: t("department"), accessor: "department" },
               { Header: t("division"), accessor: "division" },
               { Header: t("rank"), accessor: "rank" },
@@ -171,14 +179,19 @@ export function ActiveOfficers() {
         </>
       )}
 
-      {tempUnit ? <ManageUnitModal onClose={() => setTempUnit(null)} unit={tempUnit} /> : null}
-      {tempUnit ? (
+      {tempOfficer ? (
+        <ManageUnitModal onClose={() => officerState.setTempId(null)} unit={tempOfficer} />
+      ) : null}
+      {tempOfficer ? (
         <MergeUnitModal
           isDispatch={isDispatch}
-          unit={tempUnit as Officer}
-          onClose={() => setTempUnit(null)}
+          unit={tempOfficer as Officer}
+          onClose={() => officerState.setTempId(null)}
         />
       ) : null}
     </div>
   );
 }
+
+const ActiveOfficersMemoized = React.memo(ActiveOfficers);
+export { ActiveOfficersMemoized as ActiveOfficers };

@@ -8,17 +8,25 @@ import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
-import type { Citizen, Record, Warrant } from "@snailycad/types";
 import { Select, SelectValue } from "components/form/Select";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
+import type {
+  PostExpungementRequestByCitizenIdData,
+  GetManageExpungementRequests,
+  GetExpungementRequestByCitizenIdData,
+} from "@snailycad/types/api";
 
-type Result = Citizen & { Record: Record[]; warrants: Warrant[] };
-
-export function RequestExpungement({ onSuccess }: { onSuccess(json: any): void }) {
+export function RequestExpungement({
+  onSuccess,
+}: {
+  onSuccess(json: PostExpungementRequestByCitizenIdData): void;
+}) {
   const { state, execute } = useFetch();
   const { closeModal, isOpen } = useModal();
 
-  const [result, setResult] = React.useState<false | null | Result>(null);
+  const [result, setResult] = React.useState<false | null | GetExpungementRequestByCitizenIdData>(
+    null,
+  );
 
   const t = useTranslations("Courthouse");
   const leo = useTranslations("Leo");
@@ -30,7 +38,8 @@ export function RequestExpungement({ onSuccess }: { onSuccess(json: any): void }
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute(`/expungement-requests/${values.citizenId}`, {
+    const { json } = await execute<GetExpungementRequestByCitizenIdData>({
+      path: `/expungement-requests/${values.citizenId}`,
       method: "GET",
       noToast: true,
     });
@@ -90,8 +99,8 @@ export function RequestExpungement({ onSuccess }: { onSuccess(json: any): void }
 
 interface ResultProps {
   handleClose(): void;
-  result: Result;
-  onSuccess(json: any): void;
+  result: GetExpungementRequestByCitizenIdData;
+  onSuccess(json: PostExpungementRequestByCitizenIdData): void;
 }
 
 function ResultsForm({ result, onSuccess, handleClose }: ResultProps) {
@@ -107,7 +116,8 @@ function ResultsForm({ result, onSuccess, handleClose }: ResultProps) {
     arrestReports.length <= 0 && tickets.length <= 0 && result.warrants.length <= 0;
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute(`/expungement-requests/${result.id}`, {
+    const { json } = await execute<PostExpungementRequestByCitizenIdData>({
+      path: `/expungement-requests/${result.id}`,
       data: Object.entries(values).reduce(
         (ac, [key, data]) => ({
           ...ac,
@@ -216,7 +226,7 @@ function ResultsForm({ result, onSuccess, handleClose }: ResultProps) {
   );
 }
 
-export function getTitles(record: Record) {
+export function getTitles(record: GetManageExpungementRequests[number]["records"][number]) {
   const titles = record.violations.map((v) => v.penalCode.title);
   return titles.join(", ");
 }

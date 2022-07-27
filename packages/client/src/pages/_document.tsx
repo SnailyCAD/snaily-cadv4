@@ -1,3 +1,5 @@
+import type { User } from "@snailycad/types";
+import { classNames } from "lib/classNames";
 import Document, { Html, Head, Main, NextScript, DocumentContext } from "next/document";
 
 class CustomDocument extends Document {
@@ -7,21 +9,21 @@ class CustomDocument extends Document {
   }
 
   render() {
+    let darkMode = true;
+    const session = this.props.__NEXT_DATA__.props.pageProps?.session as User | null;
+
+    if (session) {
+      darkMode = session.isDarkTheme;
+    }
+
     return (
       <Html lang="en">
         <Head>
           <meta charSet="utf-8" />
-
           <link rel="shortcut icon" type="image/png" href="/favicon.png" />
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Assistant:wght@200;300;400;600;700;800&display=swap"
-            rel="stylesheet"
-          />
         </Head>
 
-        <body className="antialiased">
+        <body className={classNames("antialiased", darkMode && "dark")}>
           <Main />
           <NextScript />
         </body>
