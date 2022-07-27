@@ -38,7 +38,7 @@ export type UserUpdate = BaseAuditLogAction<
   User | Types.User
 >;
 export type UserDelete = BaseAuditLogAction<
-  AuditLogActionType.UserUpdate,
+  AuditLogActionType.UserDelete,
   undefined,
   User | Types.User
 >;

@@ -177,10 +177,11 @@ export class ManageUsersController {
     });
 
     await createAuditLogEntry({
+      type: "UPDATE",
       action: {
-        type: AuditLogActionType.UnitDelete,
-        new: unit.unit,
-        previous: undefined,
+        type: AuditLogActionType.UserUpdate,
+        new: updated,
+        previous: user,
       },
       prisma,
       executorId: user.id,
@@ -289,6 +290,7 @@ export class ManageUsersController {
       },
       prisma,
       executorId: sessionUser.id,
+      type: "UPDATE",
     });
 
     return updated;
@@ -337,6 +339,7 @@ export class ManageUsersController {
     }
 
     await createAuditLogEntry({
+      type: "UPDATE",
       action: {
         type: AuditLogActionType.UserTempPassword,
         new: user,
@@ -400,6 +403,7 @@ export class ManageUsersController {
   })
   async deleteUserAccount(
     @PathParams("id") userId: string,
+    @Context("user") sessionUser: User,
   ): Promise<APITypes.DeleteManageUsersData> {
     const user = await prisma.user.findFirst({
       where: {
@@ -419,6 +423,17 @@ export class ManageUsersController {
     });
 
     this.socket.emitUserDeleted(user.id);
+
+    await createAuditLogEntry({
+      type: "UPDATE",
+      action: {
+        type: AuditLogActionType.UserDelete,
+        new: user,
+        previous: undefined,
+      },
+      prisma,
+      executorId: sessionUser.id,
+    });
 
     return true;
   }
