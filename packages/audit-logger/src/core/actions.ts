@@ -16,8 +16,8 @@ export type AuditLogActions =
   | UnitQualificationAdd
   | UnitQualificationDelete;
 
-export interface BaseAuditLogAction<Type extends AuditLogActionType, Previous, New> {
-  type: Type;
+export interface BaseAuditLogAction<ActionType extends AuditLogActionType, Previous, New> {
+  type: ActionType;
   previous: Previous;
   new: New;
 }

@@ -1,4 +1,4 @@
-import type { User } from "@snailycad/types";
+import type { User, AuditLogType } from "@snailycad/types";
 import type { AuditLogActions } from "./core/actions";
 
 export interface AuditLog {
@@ -6,6 +6,7 @@ export interface AuditLog {
   action: AuditLogActions;
   executor: User;
   createdAt: Date;
+  type: AuditLogType;
 }
 
 export * from "./core/actionTypes";

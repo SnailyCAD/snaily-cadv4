@@ -206,6 +206,7 @@ export class AdminManageCitizensController {
     });
 
     await createAuditLogEntry({
+      type: "UPDATE",
       action: { type: AuditLogActionType.CitizenUpdate, previous: citizen, new: updated },
       prisma,
       executorId: user.id,
@@ -253,6 +254,7 @@ export class AdminManageCitizensController {
     });
 
     await createAuditLogEntry({
+      type: "DELETE",
       action: { type: AuditLogActionType.CitizenDelete, new: citizen, previous: undefined },
       prisma,
       executorId: user.id,

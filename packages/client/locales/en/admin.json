@@ -54,7 +54,6 @@
     "deleteCustomField": "Delete Custom Field",
     "deleteUnit": "Delete Unit",
     "callsignManagement": "Callsign Management",
-    "changes": "Changes",
     "customRoles": "Custom Roles",
     "createCustomRole": "Create Custom Role",
     "noCustomRoles": "There are no custom roles yet.",
@@ -67,5 +66,13 @@
     "alert_deleteCustomField": "Are you sure you want to delete this custom field? This action cannot be undone. All values created with this field will also be deleted.",
     "info_pendingBusinesses": "These are created businesses that are awaiting approval to be used. Accept or decline them.",
     "alert_deleteBusiness": "Are you sure you want to delete this <span>{name}</span>? All it's data will be lost. This action cannot be undone."
+  },
+  "AuditLogs": {
+    "changes": "Changes",
+    "MANAGE_AUDIT_LOGS": "Audit Logs",
+    "deletedEntry": "Item deleted with <span>id {id}</span>.",
+    "createdEntry": "Item created with <span>id {id}</span>.",
+    "data": "Full Data",
+    "noAuditLogs": "There are no audit logs yet."
   }
 }

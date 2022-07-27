@@ -255,3 +255,11 @@ export const CustomFieldCategory = {
 } as const;
 
 export type CustomFieldCategory = typeof CustomFieldCategory[keyof typeof CustomFieldCategory];
+
+export const AuditLogType = {
+  CREATE: "CREATE",
+  UPDATE: "UPDATE",
+  DELETE: "DELETE",
+} as const;
+
+export type AuditLogType = typeof AuditLogType[keyof typeof AuditLogType];
