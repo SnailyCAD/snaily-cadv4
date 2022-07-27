@@ -2,6 +2,9 @@ import * as React from "react";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import type { Bolo } from "@snailycad/types";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
+import { useTranslations } from "next-intl";
+import { makeUnitName } from "lib/utils";
 
 interface Props {
   search: string;
@@ -18,9 +21,20 @@ export function BoloFilters({ search, setSearch }: Props) {
   );
 }
 
-export function handleFilter(bolo: Bolo, search: string) {
-  if (!search) return true;
+export function useBOLOFilters() {
+  const { generateCallsign } = useGenerateCallsign();
+  const t = useTranslations("Leo");
 
-  const text = `${bolo.color} ${bolo.description} ${bolo.model} ${bolo.name} ${bolo.officer} ${bolo.plate} ${bolo.type}`;
-  return text.toLowerCase().includes(search);
+  function handleFilter(bolo: Bolo, search: string) {
+    if (!search) return true;
+
+    const officer = bolo.officer
+      ? `${generateCallsign(bolo.officer)} ${makeUnitName(bolo.officer)}`
+      : t("dispatch");
+
+    const text = `${bolo.color} ${bolo.description} ${bolo.model} ${bolo.name} ${officer} ${bolo.plate} ${bolo.type}`;
+    return text.toLowerCase().includes(search);
+  }
+
+  return handleFilter;
 }

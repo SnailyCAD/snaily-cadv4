@@ -15,7 +15,7 @@ import { Button } from "components/Button";
 import { classNames } from "lib/classNames";
 import { Filter } from "react-bootstrap-icons";
 import dynamic from "next/dynamic";
-import { handleFilter } from "./BoloFilters";
+import { useBOLOFilters } from "./BoloFilters";
 
 const BoloFilters = dynamic(async () => (await import("./BoloFilters")).BoloFilters, {
   ssr: false,
@@ -32,6 +32,7 @@ export function ActiveBolos({ initialBolos }: Props) {
   const { closeModal } = useModal();
   const bolosState = useBolos();
   const isMounted = useMounted();
+  const handleBOLOFilter = useBOLOFilters();
   const bolos = isMounted ? bolosState.bolos : initialBolos;
 
   const [tempBolo, boloState] = useTemporaryItem(bolos);
@@ -89,7 +90,7 @@ export function ActiveBolos({ initialBolos }: Props) {
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
               {BOLO_TYPES.map((boloType) => {
                 const bolosForType = bolos.filter(
-                  (v) => v.type === boloType && handleFilter(v, search),
+                  (v) => v.type === boloType && handleBOLOFilter(v, search),
                 );
 
                 return (
