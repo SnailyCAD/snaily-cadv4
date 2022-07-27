@@ -9,6 +9,7 @@ import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import type * as APITypes from "@snailycad/types/api";
+import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 
 const businessInclude = {
   citizen: {
@@ -51,11 +52,11 @@ export class AdminManageBusinessesController {
   async updateBusiness(
     @BodyParams() body: any,
     @PathParams("id") businessId: string,
+    @Context("user") sessionUser: User,
   ): Promise<APITypes.PutManageBusinessesData> {
     const business = await prisma.business.findUnique({
-      where: {
-        id: businessId,
-      },
+      where: { id: businessId },
+      include: businessInclude,
     });
 
     if (!business) {
@@ -66,6 +67,17 @@ export class AdminManageBusinessesController {
       where: { id: businessId },
       data: { status: body.status },
       include: businessInclude,
+    });
+
+    await createAuditLogEntry({
+      type: "UPDATE",
+      action: {
+        type: AuditLogActionType.BusinessUpdate,
+        new: updated,
+        previous: business,
+      },
+      prisma,
+      executorId: sessionUser.id,
     });
 
     return updated;
@@ -81,6 +93,7 @@ export class AdminManageBusinessesController {
     @Context("user") user: User,
     @BodyParams() body: any,
     @PathParams("id") businessId: string,
+    @Context("user") sessionUser: User,
   ): Promise<APITypes.DeleteManageBusinessesData> {
     const reason = body.reason;
 
@@ -107,6 +120,17 @@ export class AdminManageBusinessesController {
       where: {
         id: businessId,
       },
+    });
+
+    await createAuditLogEntry({
+      type: "DELETE",
+      action: {
+        type: AuditLogActionType.BusinessDelete,
+        new: business,
+        previous: undefined,
+      },
+      prisma,
+      executorId: sessionUser.id,
     });
 
     return true;

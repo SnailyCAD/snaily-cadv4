@@ -318,14 +318,9 @@ export class ManageUsersController {
 
     const password = nanoid();
     const salt = genSaltSync();
-    const updated = await prisma.user.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        tempPassword: hashSync(password, salt),
-      },
-      select: { ...userProperties, tempPassword: true },
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { tempPassword: hashSync(password, salt) },
     });
 
     const user2FA = await prisma.user2FA.findFirst({
@@ -343,7 +338,7 @@ export class ManageUsersController {
       action: {
         type: AuditLogActionType.UserTempPassword,
         new: user,
-        previous: updated,
+        previous: undefined,
       },
       prisma,
       executorId: sessionUser.id,

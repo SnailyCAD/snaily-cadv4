@@ -13,4 +13,7 @@ export enum AuditLogActionType {
   UnitsSetOffDuty = "UnitsSetOffDuty",
   UnitQualificationAdd = "UnitQualificationAdd",
   UnitQualificationDelete = "UnitQualificationDelete",
+
+  BusinessUpdate = "BusinessUpdate",
+  BusinessDelete = "BusinessDelete",
 }

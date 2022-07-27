@@ -14,7 +14,9 @@ export type AuditLogActions =
   | UnitDelete
   | UnitsSetOffDuty
   | UnitQualificationAdd
-  | UnitQualificationDelete;
+  | UnitQualificationDelete
+  | BusinessUpdate
+  | BusinessDelete;
 
 export interface BaseAuditLogAction<ActionType extends AuditLogActionType, Previous, New> {
   type: ActionType;
@@ -81,4 +83,15 @@ export type UnitQualificationDelete = BaseAuditLogAction<
   AuditLogActionType.UnitQualificationDelete,
   Types.Officer | Types.EmsFdDeputy,
   Types.Officer | Types.EmsFdDeputy
+>;
+
+export type BusinessDelete = BaseAuditLogAction<
+  AuditLogActionType.BusinessDelete,
+  undefined,
+  Types.Business
+>;
+export type BusinessUpdate = BaseAuditLogAction<
+  AuditLogActionType.BusinessUpdate,
+  Types.Business,
+  Types.Business
 >;
