@@ -70,6 +70,7 @@
   "AuditLogs": {
     "changes": "Changes",
     "MANAGE_AUDIT_LOGS": "Audit Logs",
+    "userBanned": "User: <span>{user}</span> has been banned.",
     "deletedEntry": "Item deleted with <span>id {id}</span>.",
     "createdEntry": "Item created with <span>id {id}</span>.",
     "data": "Full Data",

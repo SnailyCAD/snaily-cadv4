@@ -1263,12 +1263,13 @@ model CourthousePost {
 
 // audit logs
 model AuditLog {
-  id         String       @id @default(uuid())
-  executor   User         @relation(fields: [executorId], references: [id])
-  executorId String
-  action     Json
-  createdAt  DateTime     @default(now())
-  type       AuditLogType
+  id             String       @id @default(uuid())
+  executor       User         @relation(fields: [executorId], references: [id])
+  executorId     String
+  action         Json
+  createdAt      DateTime     @default(now())
+  type           AuditLogType?
+  translationKey String?
 }
 
 enum AuditLogType {

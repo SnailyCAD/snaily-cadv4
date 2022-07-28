@@ -1,6 +1,7 @@
 import superjson from "superjson";
-import type { AuditLog, AuditLogType, PrismaClient } from "@prisma/client";
+import type { AuditLog, PrismaClient } from "@prisma/client";
 import type { AuditLogActions } from "./actions";
+import type { AuditLogMessages } from "..";
 
 export * from "./actionTypes";
 export * from "./actions";
@@ -8,7 +9,7 @@ export * from "./actions";
 interface Options<Action extends AuditLogActions> {
   prisma: PrismaClient;
 
-  type: AuditLogType;
+  translationKey?: AuditLogMessages | null;
   executorId: string;
   action: Action;
 }
@@ -18,7 +19,7 @@ export async function createAuditLogEntry<Action extends AuditLogActions>(
 ) {
   const auditLog = await options.prisma.auditLog.create({
     data: {
-      type: options.type,
+      translationKey: options.translationKey,
       action: superjson.stringify(options.action),
       executorId: options.executorId,
     },

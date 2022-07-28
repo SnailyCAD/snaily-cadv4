@@ -177,7 +177,6 @@ export class ManageUsersController {
     });
 
     await createAuditLogEntry({
-      type: "UPDATE",
       action: {
         type: AuditLogActionType.UserUpdate,
         new: updated,
@@ -290,7 +289,6 @@ export class ManageUsersController {
       },
       prisma,
       executorId: sessionUser.id,
-      type: "UPDATE",
     });
 
     return updated;
@@ -334,7 +332,6 @@ export class ManageUsersController {
     }
 
     await createAuditLogEntry({
-      type: "UPDATE",
       action: {
         type: AuditLogActionType.UserTempPassword,
         new: user,
@@ -357,6 +354,7 @@ export class ManageUsersController {
     @PathParams("id") userId: string,
     @PathParams("type") banType: "ban" | "unban",
     @BodyParams() body: unknown,
+    @Context("user") sessionUser: User,
   ): Promise<APITypes.PostManageUserBanUnbanData> {
     if (!["ban", "unban"].includes(banType)) {
       throw new NotFound("notFound");
@@ -387,6 +385,17 @@ export class ManageUsersController {
     if (banType === "ban") {
       this.socket.emitUserBanned(userToManage.id);
     }
+
+    await createAuditLogEntry({
+      translationKey: "userBanned",
+      action: {
+        type: AuditLogActionType.UserBan,
+        new: updated,
+        previous: undefined,
+      },
+      prisma,
+      executorId: sessionUser.id,
+    });
 
     return updated;
   }
@@ -420,7 +429,7 @@ export class ManageUsersController {
     this.socket.emitUserDeleted(user.id);
 
     await createAuditLogEntry({
-      type: "UPDATE",
+      translationKey: "deletedEntry",
       action: {
         type: AuditLogActionType.UserDelete,
         new: user,

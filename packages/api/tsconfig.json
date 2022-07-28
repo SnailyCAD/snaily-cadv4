@@ -13,6 +13,7 @@
     "allowSyntheticDefaultImports": true,
     "allowJs": true,
     "skipLibCheck": true,
+    "resolveJsonModule": true,
 
     "outDir": "dist",
     "strict": true,
@@ -31,6 +32,7 @@
     "inlineSources": true,
     "sourceRoot": "/"
   },
+  "include": ["../../client/locales/en/**/*.json", "./**/*.ts"],
   "ts-node": {
     "swc": true
   }

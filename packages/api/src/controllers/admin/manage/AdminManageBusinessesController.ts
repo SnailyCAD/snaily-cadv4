@@ -70,7 +70,6 @@ export class AdminManageBusinessesController {
     });
 
     await createAuditLogEntry({
-      type: "UPDATE",
       action: {
         type: AuditLogActionType.BusinessUpdate,
         new: updated,
@@ -123,7 +122,7 @@ export class AdminManageBusinessesController {
     });
 
     await createAuditLogEntry({
-      type: "DELETE",
+      translationKey: "deletedEntry",
       action: {
         type: AuditLogActionType.BusinessDelete,
         new: business,

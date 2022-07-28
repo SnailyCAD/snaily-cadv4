@@ -208,7 +208,6 @@ export class AdminManageUnitsController {
     });
 
     await createAuditLogEntry({
-      type: "UPDATE",
       prisma,
       action: { type: AuditLogActionType.UnitUpdate, new: updated, previous: unit },
       executorId: user.id,
@@ -286,7 +285,6 @@ export class AdminManageUnitsController {
     });
 
     await createAuditLogEntry({
-      type: "UPDATE",
       prisma,
       action: { type: AuditLogActionType.UnitUpdate, new: updated, previous: unit },
       executorId: user.id,
@@ -568,6 +566,7 @@ export class AdminManageUnitsController {
     });
 
     await createAuditLogEntry({
+      translationKey: "deletedEntry",
       action: {
         type: AuditLogActionType.UnitDelete,
         new: unit.unit,
@@ -575,7 +574,6 @@ export class AdminManageUnitsController {
       },
       prisma,
       executorId: user.id,
-      type: "DELETE",
     });
 
     return true;
