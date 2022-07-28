@@ -1,12 +1,13 @@
 {
   "private": true,
   "name": "snailycad",
-  "version": "1.18.1",
+  "version": "1.18.2",
   "packageManager": "yarn@3.2.0",
   "workspaces": [
     "packages/**"
   ],
   "scripts": {
+    "start": "yarn run concurrently \"yarn workspace @snailycad/client start\" \"yarn workspace @snailycad/api generate && yarn workspace @snailycad/api start\"",
     "dev": "yarn turbo run watch --parallel",
     "format:quick": "pretty-quick --staged --pattern \"packages/**/*.{js,jsx,ts,tsx,md,css,json}\"",
     "format": "prettier --write \"./packages/**/**/*.{js,jsx,ts,tsx,md,css,json}\" --ignore-path .gitignore",
