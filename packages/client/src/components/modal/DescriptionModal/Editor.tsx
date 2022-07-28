@@ -33,6 +33,7 @@ interface EditorProps {
   value: any;
   onChange?(value: Descendant[]): void;
   truncate?: boolean;
+  date?: Date;
 }
 
 export const DEFAULT_EDITOR_DATA = [
@@ -75,7 +76,7 @@ export function Editor({ isReadonly, value, onChange, truncate }: EditorProps) {
           renderLeaf={renderLeaf}
           renderElement={renderElement}
           className={classNames(
-            truncate && "flex",
+            truncate && "!flex",
             "w-full p-1.5 rounded-md bg-transparent disabled:cursor-not-allowed disabled:opacity-80",
           )}
           placeholder="Start typing..."

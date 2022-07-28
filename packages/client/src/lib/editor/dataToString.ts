@@ -4,9 +4,18 @@ export function dataToString(data: Descendant[]) {
   const string: string[] = [];
 
   for (const item of data) {
-    console.log({ data });
+    if (Editor.isEditor(item)) continue;
 
-    if (!Editor.isEditor(item) && SlateElement.isElement(item)) {
+    if (SlateElement.isElement(item) && item.type === "bulleted-list") {
+      console.log({ list: item });
+
+      const children = item.children.flatMap((c) => c.children).map((v) => v.text);
+
+      string.push(children.join(" "));
+      continue;
+    }
+
+    if (SlateElement.isElement(item)) {
       item.children.forEach((child) => {
         string.push(child.text);
       });

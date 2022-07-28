@@ -36,7 +36,6 @@ import { HoverCard } from "components/shared/HoverCard";
 import { useMounted } from "@casper124578/useful";
 import { isArrayEqual } from "lib/editor/isArrayEqual";
 import { dataToString } from "lib/editor/dataToString";
-import type { Descendant } from "slate";
 
 const ADDED_TO_CALL_SRC = "/sounds/added-to-call.mp3" as const;
 const INCOMING_CALL_SRC = "/sounds/incoming-call.mp3" as const;
@@ -187,11 +186,6 @@ function _ActiveCalls({ initialCalls }: Props) {
     openModal(ModalIds.Manage911Call, call);
   }
 
-  function handleViewDescription(call: Full911Call) {
-    setTempCall(call);
-    openModal(ModalIds.Description, call);
-  }
-
   function handleCallTow(call: Full911Call) {
     if (!TOW) return;
     setTempCall(call);
@@ -269,6 +263,11 @@ function _ActiveCalls({ initialCalls }: Props) {
               .filter(handleCallsFilter)
               .map((call) => {
                 const isUnitAssigned = isUnitAssignedToCall(call);
+                const stringDescription = dataToString(call.descriptionData as any[]);
+                const isDescriptionLengthy = stringDescription.length >= 1;
+                const shouldTruncate = stringDescription.length > 25;
+                const hoverCardDisabled =
+                  !shouldTruncate || isArrayEqual(call.descriptionData as any, DEFAULT_EDITOR_DATA);
 
                 return {
                   rowProps: {
@@ -277,24 +276,28 @@ function _ActiveCalls({ initialCalls }: Props) {
                   caseNumber: `#${call.caseNumber}`,
                   name: `${call.name} ${call.viaDispatch ? `(${leo("dispatch")})` : ""}`,
                   location: `${call.location} ${call.postal ? `(${call.postal})` : ""}`,
+                  // todo: make custom component for this
                   description:
-                    dataToString(call.descriptionData as any[]).length >= 1 ? (
+                    isDescriptionLengthy || call.description ? (
                       <HoverCard
-                        disabled={isArrayEqual(call.descriptionData as any, DEFAULT_EDITOR_DATA)}
+                        disabled={hoverCardDisabled}
                         trigger={
-                          <div className="w-[300px] truncate truncate-custom overflow-hidden">
-                            <Editor
-                              value={call.descriptionData ?? DEFAULT_EDITOR_DATA}
-                              isReadonly
-                              truncate
-                            />
+                          <div
+                            className={classNames(
+                              "w-[300px] truncate overflow-hidden",
+                              shouldTruncate && "truncate-custom",
+                            )}
+                          >
+                            {call.description || stringDescription}
                           </div>
                         }
                       >
-                        <Editor value={call.descriptionData ?? DEFAULT_EDITOR_DATA} isReadonly />
+                        {call.description ? (
+                          call.description
+                        ) : (
+                          <Editor value={call.descriptionData ?? DEFAULT_EDITOR_DATA} isReadonly />
+                        )}
                       </HoverCard>
-                    ) : call.description ? (
-                      <p>{call.description}</p>
                     ) : (
                       common("none")
                     ),

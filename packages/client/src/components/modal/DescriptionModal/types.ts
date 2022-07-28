@@ -33,7 +33,7 @@ export interface ListItemElement {
 
 export interface BulletItemElement {
   type: "bulleted-list";
-  children: Text[];
+  children: ListItemElement[];
 }
 
 export interface CheckListItemElement {

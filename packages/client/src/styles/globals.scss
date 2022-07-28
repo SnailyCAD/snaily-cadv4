@@ -33,10 +33,10 @@ html {
   .truncate-custom::after {
     content: "...";
     position: absolute;
-    bottom: 6px;
+    bottom: 0px;
     right: 0;
     background-color: inherit;
-    @apply pr-1
+    @apply pr-1;
   }
 }
 
