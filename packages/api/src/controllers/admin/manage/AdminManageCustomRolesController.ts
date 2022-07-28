@@ -3,6 +3,7 @@ import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { CUSTOM_ROLE_SCHEMA } from "@snailycad/schemas";
 import {
   BodyParams,
+  Context,
   MultipartFile,
   PathParams,
   PlatformMulterFile,
@@ -20,6 +21,9 @@ import { validateImgurURL } from "utils/image";
 import fs from "node:fs/promises";
 import process from "node:process";
 import type * as APITypes from "@snailycad/types/api";
+import { AuditLogActionType } from "@snailycad/audit-logger";
+import { createAuditLogEntry } from "@snailycad/audit-logger/server";
+import type { User } from "@snailycad/types";
 
 @Controller("/admin/manage/custom-roles")
 @UseBeforeEach(IsAuth)
@@ -35,7 +39,10 @@ export class AdminManageCustomRolesController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCustomRoles],
   })
-  async createCustomRole(@BodyParams() body: unknown): Promise<APITypes.PostCustomRolesData> {
+  async createCustomRole(
+    @BodyParams() body: unknown,
+    @Context("user") sessionUser: User,
+  ): Promise<APITypes.PostCustomRolesData> {
     const data = validateSchema(CUSTOM_ROLE_SCHEMA, body);
 
     const existing = await prisma.customRole.findFirst({
@@ -56,6 +63,13 @@ export class AdminManageCustomRolesController {
       include: { discordRole: true },
     });
 
+    await createAuditLogEntry({
+      prisma,
+      executorId: sessionUser.id,
+      action: { type: AuditLogActionType.CustomRoleCreate, new: customRole, previous: undefined },
+      translationKey: "createdEntry",
+    });
+
     return customRole;
   }
 
@@ -67,6 +81,7 @@ export class AdminManageCustomRolesController {
   async updateCustomRole(
     @BodyParams() body: unknown,
     @PathParams("id") id: string,
+    @Context("user") sessionUser: User,
   ): Promise<APITypes.PutCustomRoleByIdData> {
     const data = validateSchema(CUSTOM_ROLE_SCHEMA, body);
 
@@ -89,6 +104,12 @@ export class AdminManageCustomRolesController {
       include: { discordRole: true },
     });
 
+    await createAuditLogEntry({
+      prisma,
+      executorId: sessionUser.id,
+      action: { type: AuditLogActionType.CustomRoleUpdate, new: updated, previous: customRole },
+    });
+
     return updated;
   }
 
@@ -97,7 +118,10 @@ export class AdminManageCustomRolesController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCustomRoles],
   })
-  async deleteCustomRole(@PathParams("id") id: string): Promise<APITypes.DeleteCustomRoleByIdData> {
+  async deleteCustomRole(
+    @PathParams("id") id: string,
+    @Context("user") sessionUser: User,
+  ): Promise<APITypes.DeleteCustomRoleByIdData> {
     const customRole = await prisma.customRole.findUnique({
       where: { id },
     });
@@ -108,6 +132,13 @@ export class AdminManageCustomRolesController {
 
     await prisma.customRole.delete({
       where: { id: customRole.id },
+    });
+
+    await createAuditLogEntry({
+      prisma,
+      executorId: sessionUser.id,
+      action: { type: AuditLogActionType.CustomRoleDelete, new: customRole, previous: undefined },
+      translationKey: "deletedEntry",
     });
 
     return true;

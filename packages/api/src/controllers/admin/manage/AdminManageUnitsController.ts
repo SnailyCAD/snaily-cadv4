@@ -119,6 +119,7 @@ export class AdminManageUnitsController {
   })
   async setSelectedOffDuty(
     @BodyParams("ids") ids: string[],
+    @Context("user") sessionUser: User,
   ): Promise<APITypes.PutManageUnitsOffDutyData> {
     const updated = await Promise.all(
       ids.map(async (fullId) => {
@@ -153,6 +154,12 @@ export class AdminManageUnitsController {
       this.socket.emitUpdateOfficerStatus(),
       this.socket.emitUpdateDeputyStatus(),
     ]);
+
+    await createAuditLogEntry({
+      prisma,
+      action: { type: AuditLogActionType.UnitsSetOffDuty, new: ids, previous: undefined },
+      executorId: sessionUser.id,
+    });
 
     return updated;
   }

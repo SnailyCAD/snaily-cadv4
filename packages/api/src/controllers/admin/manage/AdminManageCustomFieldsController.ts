@@ -1,6 +1,8 @@
 import { CustomFieldCategory, Rank } from "@prisma/client";
+import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { CUSTOM_FIELDS_SCHEMA } from "@snailycad/schemas";
-import { BodyParams, PathParams, UseBeforeEach } from "@tsed/common";
+import type { User } from "@snailycad/types";
+import { BodyParams, Context, PathParams, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
@@ -25,7 +27,7 @@ export class AdminManageCustomFieldsController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCustomFields],
   })
-  async createCustomField(@BodyParams() body: unknown) {
+  async createCustomField(@BodyParams() body: unknown, @Context("user") sessionUser: User) {
     const data = validateSchema(CUSTOM_FIELDS_SCHEMA, body);
 
     const customField = await prisma.customField.create({
@@ -34,6 +36,13 @@ export class AdminManageCustomFieldsController {
         name: data.name,
         citizenEditable: data.citizenEditable,
       },
+    });
+
+    await createAuditLogEntry({
+      prisma,
+      executorId: sessionUser.id,
+      action: { type: AuditLogActionType.CustomFieldCreate, new: customField, previous: undefined },
+      translationKey: "createdEntry",
     });
 
     return customField;
@@ -45,7 +54,11 @@ export class AdminManageCustomFieldsController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCustomFields],
   })
-  async updateCustomField(@BodyParams() body: unknown, @PathParams("id") id: string) {
+  async updateCustomField(
+    @BodyParams() body: unknown,
+    @PathParams("id") id: string,
+    @Context("user") sessionUser: User,
+  ) {
     const data = validateSchema(CUSTOM_FIELDS_SCHEMA, body);
 
     const customField = await prisma.customField.findUnique({
@@ -65,6 +78,12 @@ export class AdminManageCustomFieldsController {
       },
     });
 
+    await createAuditLogEntry({
+      prisma,
+      executorId: sessionUser.id,
+      action: { type: AuditLogActionType.CustomFieldUpdate, new: updated, previous: customField },
+    });
+
     return updated;
   }
 
@@ -74,7 +93,7 @@ export class AdminManageCustomFieldsController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCustomFields],
   })
-  async deleteCustomField(@PathParams("id") id: string) {
+  async deleteCustomField(@PathParams("id") id: string, @Context("user") sessionUser: User) {
     const customField = await prisma.customField.findUnique({
       where: { id },
     });
@@ -85,6 +104,13 @@ export class AdminManageCustomFieldsController {
 
     await prisma.customField.delete({
       where: { id: customField.id },
+    });
+
+    await createAuditLogEntry({
+      prisma,
+      executorId: sessionUser.id,
+      action: { type: AuditLogActionType.CustomFieldDelete, new: customField, previous: undefined },
+      translationKey: "deletedEntry",
     });
 
     return true;

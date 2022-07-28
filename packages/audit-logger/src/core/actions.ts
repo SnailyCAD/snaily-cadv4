@@ -14,7 +14,13 @@ export type AuditLogActions =
   | UnitDelete
   | UnitsSetOffDuty
   | BusinessUpdate
-  | BusinessDelete;
+  | BusinessDelete
+  | CustomFieldCreate
+  | CustomFieldDelete
+  | CustomFieldUpdate
+  | CustomRoleCreate
+  | CustomRoleDelete
+  | CustomRoleUpdate;
 
 export interface BaseAuditLogAction<ActionType extends AuditLogActionType, Previous, New> {
   type: ActionType;
@@ -70,7 +76,7 @@ export type UnitDelete = BaseAuditLogAction<
 export type UnitsSetOffDuty = BaseAuditLogAction<
   AuditLogActionType.UnitsSetOffDuty,
   undefined,
-  undefined
+  string[]
 >;
 
 export type BusinessDelete = BaseAuditLogAction<
@@ -82,4 +88,36 @@ export type BusinessUpdate = BaseAuditLogAction<
   AuditLogActionType.BusinessUpdate,
   Types.Business,
   Types.Business
+>;
+
+export type CustomFieldCreate = BaseAuditLogAction<
+  AuditLogActionType.CustomFieldCreate,
+  undefined,
+  Types.CustomField
+>;
+export type CustomFieldUpdate = BaseAuditLogAction<
+  AuditLogActionType.CustomFieldUpdate,
+  Types.CustomField,
+  Types.CustomField
+>;
+export type CustomFieldDelete = BaseAuditLogAction<
+  AuditLogActionType.CustomFieldDelete,
+  undefined,
+  Types.CustomField
+>;
+
+export type CustomRoleCreate = BaseAuditLogAction<
+  AuditLogActionType.CustomRoleCreate,
+  undefined,
+  Types.CustomRole
+>;
+export type CustomRoleUpdate = BaseAuditLogAction<
+  AuditLogActionType.CustomRoleUpdate,
+  Types.CustomRole,
+  Types.CustomRole
+>;
+export type CustomRoleDelete = BaseAuditLogAction<
+  AuditLogActionType.CustomRoleDelete,
+  undefined,
+  Types.CustomRole
 >;
