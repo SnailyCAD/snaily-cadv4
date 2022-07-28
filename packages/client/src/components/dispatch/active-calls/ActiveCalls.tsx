@@ -34,13 +34,9 @@ import type { Post911CallAssignUnAssign } from "@snailycad/types/api";
 import { DEFAULT_EDITOR_DATA, Editor } from "components/modal/DescriptionModal/Editor";
 import { HoverCard } from "components/shared/HoverCard";
 import { useMounted } from "@casper124578/useful";
-import isEqual from "lodash/isEqual";
-import isEmpty from "lodash/isEmpty";
-import xorWith from "lodash/xorWith";
-
-function isArrayEqual<T>(x: T[], y: T[]) {
-  return isEmpty(xorWith(x, y, isEqual));
-}
+import { isArrayEqual } from "lib/editor/isArrayEqual";
+import { dataToString } from "lib/editor/dataToString";
+import type { Descendant } from "slate";
 
 const ADDED_TO_CALL_SRC = "/sounds/added-to-call.mp3" as const;
 const INCOMING_CALL_SRC = "/sounds/incoming-call.mp3" as const;
@@ -281,26 +277,27 @@ function _ActiveCalls({ initialCalls }: Props) {
                   caseNumber: `#${call.caseNumber}`,
                   name: `${call.name} ${call.viaDispatch ? `(${leo("dispatch")})` : ""}`,
                   location: `${call.location} ${call.postal ? `(${call.postal})` : ""}`,
-                  description: call.descriptionData ? (
-                    <HoverCard
-                      disabled={isArrayEqual(call.descriptionData as any, DEFAULT_EDITOR_DATA)}
-                      trigger={
-                        <div className="min-w-[300px]">
-                          <Editor value={call.descriptionData ?? DEFAULT_EDITOR_DATA} isReadonly />
-                        </div>
-                      }
-                    >
-                      <Editor value={call.descriptionData ?? DEFAULT_EDITOR_DATA} isReadonly />
-                    </HoverCard>
-                  ) : (
-                    <Button
-                      disabled={isDispatch ? false : !isUnitActive}
-                      size="xs"
-                      onClick={() => handleViewDescription(call)}
-                    >
-                      {common("viewDescription")}
-                    </Button>
-                  ),
+                  description:
+                    dataToString(call.descriptionData as any[]).length >= 1 ? (
+                      <HoverCard
+                        disabled={isArrayEqual(call.descriptionData as any, DEFAULT_EDITOR_DATA)}
+                        trigger={
+                          <div className="w-[300px] truncate truncate-custom overflow-hidden">
+                            <Editor
+                              value={call.descriptionData ?? DEFAULT_EDITOR_DATA}
+                              isReadonly
+                              truncate
+                            />
+                          </div>
+                        }
+                      >
+                        <Editor value={call.descriptionData ?? DEFAULT_EDITOR_DATA} isReadonly />
+                      </HoverCard>
+                    ) : call.description ? (
+                      <p>{call.description}</p>
+                    ) : (
+                      common("none")
+                    ),
                   situationCode: call.situationCode?.value.value ?? common("none"),
                   updatedAt: <FullDate>{call.updatedAt}</FullDate>,
                   assignedUnits: (

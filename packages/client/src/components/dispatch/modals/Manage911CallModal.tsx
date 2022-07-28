@@ -315,7 +315,11 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
                 </>
               )}
 
-              <FormField errorMessage={errors.description} label={common("description")}>
+              <FormField
+                className="max-w-[750px]"
+                errorMessage={errors.description}
+                label={common("description")}
+              >
                 <Editor
                   value={values.descriptionData}
                   onChange={(v) => setFieldValue("descriptionData", v)}

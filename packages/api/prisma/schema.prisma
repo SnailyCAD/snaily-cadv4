@@ -943,7 +943,6 @@ model Call911 {
   assignedUnits    AssignedUnit[]
   location         String            @db.Text
   postal           String?           @db.Text
-  shortDescription String?           @db.Text
   description      String?           @db.Text
   descriptionData  Json?
   name             String            @db.VarChar(255)

@@ -4,7 +4,6 @@ import { SELECT_VALUE } from "../leo";
 export const CALL_911_SCHEMA = z.object({
   location: z.string().min(2),
   description: z.string().optional(),
-  shortDescription: z.string().optional(),
   descriptionData: z.any().nullable().optional(),
   name: z.string().min(2).max(255),
   postal: z.string().nullable().optional(),
