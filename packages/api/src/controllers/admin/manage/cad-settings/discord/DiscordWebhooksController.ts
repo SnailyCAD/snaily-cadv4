@@ -73,7 +73,7 @@ export class DiscordWebhooksController {
   })
   async setRoleTypes(
     @Context("cad")
-    cad: cad & { miscCadSettings: MiscCadSettings & { webhooks: DiscordWebhook[] } },
+    cad: cad & { miscCadSettings: (MiscCadSettings & { webhooks?: DiscordWebhook[] }) | null },
     @BodyParams() body: unknown,
   ): Promise<APITypes.PostCADDiscordWebhooksData> {
     const name = cad.name || "SnailyCAD";
@@ -94,7 +94,7 @@ export class DiscordWebhooksController {
 
     await Promise.all(
       entries.map(async ([, webhookData]) => {
-        const prevWebhook = cad.miscCadSettings.webhooks.find((v) => v.type === webhookData.type);
+        const prevWebhook = cad.miscCadSettings?.webhooks?.find((v) => v.type === webhookData.type);
 
         if (webhookData.id && !this.doesChannelExist(channelsBody, webhookData.id)) {
           throw new BadRequest("invalidChannelId");
