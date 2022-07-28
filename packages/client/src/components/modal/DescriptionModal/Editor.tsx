@@ -33,7 +33,6 @@ interface EditorProps {
   value: any;
   onChange?(value: Descendant[]): void;
   truncate?: boolean;
-  date?: Date;
 }
 
 export const DEFAULT_EDITOR_DATA = [
