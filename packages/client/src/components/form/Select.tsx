@@ -45,9 +45,8 @@ export function Select({ name, onChange, ...rest }: Props) {
     typeof rest.value === "string" ? rest.values.find((v) => v.value === rest.value) : rest.value;
 
   const useDarkTheme =
-    user?.isDarkTheme &&
-    typeof window !== "undefined" &&
-    window.document.body.classList.contains("dark");
+    user?.isDarkTheme ||
+    (typeof window !== "undefined" && window.document.body.classList.contains("dark"));
 
   const theme = useDarkTheme ? { backgroundColor: "rgb(39, 40, 43)", color: "white" } : {};
   const fixedClearable =

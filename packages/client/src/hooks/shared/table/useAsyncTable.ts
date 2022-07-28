@@ -19,7 +19,7 @@ interface Options<T> {
 export function useAsyncTable<T>(options: Options<T>) {
   const [totalCount, setTotalCount] = React.useState(options.totalCount);
   const [data, setData] = React.useState(options.initialData);
-  const [search, setSearch] = React.useState("");
+  const [search, setSearch] = React.useState<string>("");
   const { state, execute } = useFetch();
 
   const paginationFetch = React.useCallback(
@@ -28,7 +28,7 @@ export function useAsyncTable<T>(options: Options<T>) {
         path: options.fetchOptions.path,
         params: {
           skip: pageSize * pageIndex,
-          query: search.trim() || undefined,
+          query: (search as string | null)?.trim() || undefined,
         },
       });
 
@@ -46,7 +46,7 @@ export function useAsyncTable<T>(options: Options<T>) {
   const handleSearch = React.useCallback(async () => {
     const { json, error } = await execute({
       path: options.fetchOptions.path,
-      params: { query: search.trim() },
+      params: { query: (search as string | null)?.trim() },
     });
 
     if (json && !error) {
@@ -54,7 +54,7 @@ export function useAsyncTable<T>(options: Options<T>) {
       setData(jsonData.data);
       setTotalCount(jsonData.totalCount);
     }
-  }, [search]); // eslint-disable-line
+  }, [search, options.fetchOptions.path]); // eslint-disable-line
 
   useDebounce(handleSearch, 250, [search, handleSearch]);
 
