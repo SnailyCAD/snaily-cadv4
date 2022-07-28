@@ -17,7 +17,8 @@ import { ArrowRight } from "react-bootstrap-icons";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
-import { ViewAuditLogDataModal } from "./audit-logs/ViewAuditLogDataModal";
+import { ViewAuditLogDataModal } from "components/admin/manage/audit-logs/ViewAuditLogDataModal";
+import type { GetAuditLogs } from "@snailycad/types/api";
 
 interface Props {
   data: { auditLogs: AuditLog[]; totalCount: number };
@@ -27,7 +28,7 @@ export default function ManageBusinesses({ data }: Props) {
   const asyncTable = useAsyncTable({
     fetchOptions: {
       path: "/admin/audit-logs",
-      onResponse: (json) => ({ data: json.auditLogs, totalCount: json.totalCount }),
+      onResponse: (json: GetAuditLogs) => ({ data: json.auditLogs, totalCount: json.totalCount }),
     },
     initialData: data.auditLogs,
     totalCount: data.totalCount,
@@ -64,17 +65,10 @@ export default function ManageBusinesses({ data }: Props) {
               changes: auditLog.translationKey
                 ? t.rich(auditLog.translationKey, {
                     span: (children) => <span className="font-semibold">{children}</span>,
-                    value: auditLog.action.new?.id,
-                  })
-                : auditLog.type === "DELETE"
-                ? t.rich("deletedEntry", {
-                    span: (children) => <span className="font-semibold">{children}</span>,
-                    id: auditLog.action.new?.id,
-                  })
-                : auditLog.type === "CREATE"
-                ? t.rich("createdEntry", {
-                    span: (children) => <span className="font-semibold">{children}</span>,
-                    id: auditLog.action.new?.id,
+                    value:
+                      auditLog.action.new && "id" in auditLog.action.new && auditLog.action.new.id
+                        ? auditLog.action.new.id
+                        : "UNKNOWN",
                   })
                 : differences?.map((difference) => (
                     <p className="flex items-center gap-2" key={difference.key}>

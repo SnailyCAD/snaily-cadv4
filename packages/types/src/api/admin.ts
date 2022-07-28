@@ -398,3 +398,12 @@ export interface PostCustomRoleByIdData {
  * @route /admin/manage/users/roles/:id
  */
 export type PutManageUserByIdRolesData = GetManageUserByIdData;
+
+/**
+ * @method GET
+ * @route /admin/audit-logs
+ */
+export interface GetAuditLogs {
+  totalCount: number;
+  auditLogs: (Prisma.AuditLog & { executor: Types.User })[];
+}

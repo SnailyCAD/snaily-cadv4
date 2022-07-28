@@ -11,7 +11,7 @@ import { UsePermissions } from "middlewares/UsePermissions";
 import { defaultPermissions } from "@snailycad/permissions";
 import { AuditLogActionType, parseAuditLogs } from "@snailycad/audit-logger/server";
 import { userProperties } from "lib/auth/getSessionUser";
-import type { GetAdminDashboardData } from "@snailycad/types/api";
+import type { GetAdminDashboardData, GetAuditLogs } from "@snailycad/types/api";
 
 @Controller("/admin")
 @UseBeforeEach(IsAuth)
@@ -68,7 +68,7 @@ export class AdminController {
   async getAuditLogs(
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("type", String) type?: AuditLogActionType,
-  ) {
+  ): Promise<GetAuditLogs> {
     const totalCount = await prisma.auditLog.count();
     const auditLogs = await prisma.auditLog.findMany({
       take: 35,
@@ -80,7 +80,7 @@ export class AdminController {
     // todo
     type;
 
-    return { totalCount, auditLogs: parseAuditLogs(auditLogs) };
+    return { totalCount, auditLogs: parseAuditLogs(auditLogs) as any };
   }
 
   private async imageData() {

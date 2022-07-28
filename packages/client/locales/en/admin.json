@@ -71,8 +71,8 @@
     "changes": "Changes",
     "MANAGE_AUDIT_LOGS": "Audit Logs",
     "userBanned": "User: <span>{value}</span> has been banned.",
-    "deletedEntry": "Item deleted with <span>id {id}</span>.",
-    "createdEntry": "Item created with <span>id {id}</span>.",
+    "deletedEntry": "Item deleted with id: <span>{value}</span>.",
+    "createdEntry": "Item created with id: <span>{value}</span>.",
     "tempPasswordGiven": "User: <span>{value}</span> has been given a temporary password.",
     "data": "Full Data",
     "noAuditLogs": "There are no audit logs yet."
