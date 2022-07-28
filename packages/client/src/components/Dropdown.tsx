@@ -2,7 +2,7 @@ import type * as React from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { classNames } from "lib/classNames";
 import { Button, ButtonProps, buttonSizes, buttonVariants } from "components/Button";
-import { useRouter } from "next/router";
+import Link from "next/link";
 
 interface Props extends DropdownMenu.MenuContentProps {
   trigger: any;
@@ -55,37 +55,22 @@ Dropdown.Item = function DropdownItem({ children, ...rest }: Omit<ButtonProps, "
 };
 
 Dropdown.LinkItem = function LinkItem({ children, ...rest }: JSX.IntrinsicElements["a"]) {
-  const router = useRouter();
-
-  // next/link doesn't support a "ref" prop. :(
-  function handleClick(e: React.MouseEvent<HTMLAnchorElement>) {
-    e.preventDefault();
-
-    const target = e.target as HTMLAnchorElement;
-    const href = target.href;
-
-    if (e.shiftKey || e.ctrlKey) {
-      open(href, "_blank");
-    } else {
-      router.push(target.href);
-    }
-  }
-
   return (
-    <DropdownMenu.Item asChild>
-      <a
-        {...rest}
-        onClick={handleClick}
-        className={classNames(
-          "block my-0.5 rounded-md transition-colors w-full text-left bg-transparent",
-          "dark:hover:bg-dark-bg focus:bg-gray-200 dark:focus:bg-dark-bg",
-          buttonSizes.sm,
-          buttonVariants.default,
-          rest.className,
-        )}
-      >
-        {children}
-      </a>
+    <DropdownMenu.Item className="hover:outline-none">
+      <Link href={rest.href!}>
+        <a
+          className={classNames(
+            "outline-none block rounded-md transition-colors w-full text-left bg-transparent",
+            "dark:hover:bg-dark-bg focus:bg-gray-200 dark:focus:bg-dark-bg",
+            buttonSizes.sm,
+            buttonVariants.default,
+            rest.className,
+          )}
+          {...rest}
+        >
+          {children}
+        </a>
+      </Link>
     </DropdownMenu.Item>
   );
 };
