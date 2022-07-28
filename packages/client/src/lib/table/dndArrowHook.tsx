@@ -2,7 +2,7 @@ import type { TableData, TableProps } from "components/shared/Table/TableProps";
 import { classNames } from "lib/classNames";
 import { DRAGGABLE_TABLE_HANDLE } from "components/shared/Table";
 import { ArrowDownUp, ArrowsExpand } from "react-bootstrap-icons";
-import type { Hooks, Cell } from "react-table";
+import type { Hooks, CellProps } from "react-table";
 
 export function dndArrowHook<T extends object, RowProps extends object>(
   hooks: Hooks<TableData<T, RowProps>>,
@@ -14,7 +14,7 @@ export function dndArrowHook<T extends object, RowProps extends object>(
     {
       id: "move",
       Header: () => <ArrowDownUp />,
-      Cell: (props: Cell<TableData<T, RowProps>>) => {
+      Cell: (props: CellProps<TableData<T, RowProps>>) => {
         const isDisabled = dragDropProps.disabledIndices?.includes(props.row.index);
 
         return (
