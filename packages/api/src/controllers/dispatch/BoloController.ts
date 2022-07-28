@@ -112,6 +112,7 @@ export class BoloController {
         id,
       },
       data: {
+        type: (data.type || bolo.type) as BoloType,
         description: data.description,
         color: data.color ?? null,
         name: data.name ?? null,

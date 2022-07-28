@@ -8,17 +8,28 @@ import { BadRequest } from "@tsed/exceptions";
 import { MultipartFile, PlatformMulterFile, UseBefore } from "@tsed/common";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import fs from "node:fs";
-import type { cad } from "@prisma/client";
+import { cad, Rank } from "@prisma/client";
 import { randomUUID } from "node:crypto";
+import { Permissions } from "@snailycad/permissions";
+import { UsePermissions } from "middlewares/UsePermissions";
+import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
 @Controller("/admin/manage/cad-settings/image")
 export class ManageCitizensController {
   @UseBefore(IsAuth)
   @Post("/")
+  @UsePermissions({
+    fallback: (u) => u.rank === Rank.OWNER,
+    permissions: [Permissions.ManageCADSettings],
+  })
   async uploadLogoToCAD(
     @Context("cad") cad: cad,
-    @MultipartFile("image") file: PlatformMulterFile,
+    @MultipartFile("image") file?: PlatformMulterFile,
   ) {
+    if (!file) {
+      throw new ExtendedBadRequest({ file: "No file provided." });
+    }
+
     if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
       throw new BadRequest("invalidImageType");
     }
@@ -41,14 +52,17 @@ export class ManageCitizensController {
 
   @UseBefore(IsAuth)
   @Post("/auth")
+  @UsePermissions({
+    fallback: (u) => u.rank === Rank.OWNER,
+    permissions: [Permissions.ManageCADSettings],
+  })
   async uploadAuthImagesToCAD(
     @Context("cad") cad: cad,
-    @MultipartFile("authScreenHeaderImageId") header?: PlatformMulterFile,
-    @MultipartFile("authScreenBgImageId") background?: PlatformMulterFile,
+    @MultipartFile("files", 4) files: PlatformMulterFile[],
   ) {
     await Promise.all(
-      [header, background].map(async (file) => {
-        if (!file) return;
+      files.map(async (file) => {
+        console.log({ file });
 
         if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
           throw new BadRequest("invalidImageType");
@@ -62,7 +76,7 @@ export class ManageCitizensController {
         const [data] = await Promise.all([
           prisma.miscCadSettings.update({
             where: { id: cad.miscCadSettingsId! },
-            data: { [file.fieldname]: `${id}.${extension}` },
+            data: { [file.originalname]: `${id}.${extension}` },
           }),
           fs.writeFileSync(path, file.buffer),
         ]);

@@ -36,6 +36,8 @@ export enum Permissions {
   CreateBusinesses = "CreateBusinesses",
 
   // admin related
+  ManageCADSettings = "ManageCADSettings",
+
   ViewUsers = "ViewUsers",
   ManageUsers = "ManageUsers",
   BanUsers = "BanUsers",

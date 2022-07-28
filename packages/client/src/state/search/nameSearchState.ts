@@ -11,7 +11,7 @@ interface NameSearchState {
   setCurrentResult(v: NameSearchResult | null): void;
 }
 
-export const useNameSearch = create<NameSearchState>((set) => ({
+export const useNameSearch = create<NameSearchState>()((set) => ({
   results: null,
   setResults: (v) => set({ results: v }),
 

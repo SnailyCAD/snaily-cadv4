@@ -71,7 +71,7 @@ export function DispatchCallTowModal({ call }: Props) {
     creatorId: unit?.citizenId ?? null,
     description: call?.description ?? "",
     callCountyService: false,
-    deliveryAddress: "",
+    deliveryAddressId: "",
     model: "",
     plate: "",
     plateOrVin: "",
@@ -116,18 +116,18 @@ export function DispatchCallTowModal({ call }: Props) {
               <>
                 <FormField
                   optional
-                  errorMessage={errors.deliveryAddress}
+                  errorMessage={errors.deliveryAddressId}
                   label={t("Calls.deliveryAddress")}
                 >
                   <Select
                     isClearable
-                    name="deliveryAddress"
+                    name="deliveryAddressId"
                     onChange={handleChange}
                     values={impoundLot.values.map((lot) => ({
                       label: lot.value,
                       value: lot.id,
                     }))}
-                    value={values.deliveryAddress}
+                    value={values.deliveryAddressId}
                   />
                 </FormField>
 

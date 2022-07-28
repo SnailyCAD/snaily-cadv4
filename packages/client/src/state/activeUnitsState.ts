@@ -10,7 +10,7 @@ interface ActiveUnitsState {
   setSearch(type: keyof Pick<ActiveUnitsState, "emsSearch" | "leoSearch">, value: string): void;
 }
 
-export const useActiveUnitsState = create<ActiveUnitsState>((set) => ({
+export const useActiveUnitsState = create<ActiveUnitsState>()((set) => ({
   showLeoFilters: false,
   showEmsFilters: false,
   setShowFilters: (type, v) => {

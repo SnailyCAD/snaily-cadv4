@@ -48,8 +48,11 @@ const HOTKEYS = {
 } as const;
 
 export function Editor({ isReadonly, value, onChange }: EditorProps) {
-  const renderElement = React.useCallback((props) => <Element {...props} />, []);
-  const renderLeaf = React.useCallback((props) => <Leaf {...props} />, []);
+  const renderElement = React.useCallback(
+    (props: RenderElementProps) => <Element {...props} />,
+    [],
+  );
+  const renderLeaf = React.useCallback((props: RenderLeafProps) => <Leaf {...props} />, []);
   const editor = React.useMemo(
     () => withChecklists(withShortcuts(withHistory(withReact(createEditor())))),
     [],
@@ -69,7 +72,6 @@ export function Editor({ isReadonly, value, onChange }: EditorProps) {
         renderLeaf={renderLeaf}
         renderElement={renderElement}
         className="w-full max-w-[200px] truncate p-1.5 rounded-md bg-transparent disabled:cursor-not-allowed disabled:opacity-80"
-        placeholder="Start typing..."
         onKeyDown={(event) => {
           for (const hotkey in HOTKEYS) {
             if (isHotkey(hotkey)(event)) {

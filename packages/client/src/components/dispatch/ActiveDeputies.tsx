@@ -9,7 +9,7 @@ import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
 import { useRouter } from "next/router";
 import { formatUnitDivisions, makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { StatusViewMode } from "@snailycad/types";
+import { EmsFdDeputy, StatusViewMode } from "@snailycad/types";
 import { useAuth } from "context/AuthContext";
 
 import { Table } from "components/shared/Table";
@@ -27,10 +27,17 @@ import { ActiveIncidentColumn } from "./active-units/officers/ActiveIncidentColu
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { DeputyColumn } from "./active-units/deputies/DeputyColumn";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import { useMounted } from "@casper124578/useful";
 
-function ActiveDeputies() {
-  const { activeDeputies } = useActiveDeputies();
+interface Props {
+  initialDeputies: EmsFdDeputy[];
+}
+
+function ActiveDeputies({ initialDeputies }: Props) {
+  const { activeDeputies: _activeDeputies } = useActiveDeputies();
   const { activeIncidents } = useActiveIncidents();
+  const isMounted = useMounted();
+  const activeDeputies = isMounted ? _activeDeputies : initialDeputies;
 
   const t = useTranslations();
   const common = useTranslations("Common");
@@ -56,7 +63,7 @@ function ActiveDeputies() {
   return (
     <div className="mt-3 overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
       <header className="p-2 px-4 bg-gray-200 dark:bg-gray-3 flex items-center justify-between">
-        <h3 className="text-xl font-semibold">{t("Ems.activeDeputies")}</h3>
+        <h1 className="text-xl font-semibold">{t("Ems.activeDeputies")}</h1>
 
         <div>
           <Button

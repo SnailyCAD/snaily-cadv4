@@ -45,6 +45,7 @@ import { getPermissionsForValuesRequest } from "lib/values/utils";
 import { UsePermissions } from "middlewares/UsePermissions";
 import { validateImgurURL } from "utils/image";
 import type * as APITypes from "@snailycad/types/api";
+import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
 @Controller("/admin/values/import/:path")
 @UseBeforeEach(IsAuth, IsValidPath)
@@ -52,11 +53,15 @@ export class ImportValuesViaFileController {
   @Post("/")
   @UsePermissions(getPermissionsForValuesRequest)
   async importValueByPath(
-    @MultipartFile("file") file: PlatformMulterFile,
     @PathParams("path") path: string,
     @Context() context: Context,
+    @MultipartFile("file") file?: PlatformMulterFile,
   ): Promise<APITypes.ImportValuesData> {
     const type = this.getTypeFromPath(path);
+
+    if (!file) {
+      throw new ExtendedBadRequest({ file: "No file provided." });
+    }
 
     if (file.mimetype !== "application/json") {
       throw new BadRequest("invalidImageType");
@@ -344,7 +349,7 @@ export const typeHandlers = {
         where: { id: String(id) },
         create: createUpdateData,
         update: createUpdateData,
-        include: { officerRankDepartments: true },
+        include: { officerRankDepartments: { include: { value: true } } },
       });
 
       const disconnectConnectArr = manyToManyHelper(

@@ -19,6 +19,7 @@ export function useNotepad() {
 
   React.useEffect(() => {
     if (!routeId) return;
+    if (typeof window === "undefined") return;
 
     const localRaw = window.localStorage.getItem(routeId);
     const local = dataToSlate({

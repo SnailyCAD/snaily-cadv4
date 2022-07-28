@@ -70,12 +70,12 @@ export function MiscFeatures() {
       let imgCount = 0;
       if (header && typeof header === "object") {
         imgCount += 1;
-        fd.set("authScreenHeaderImageId", header, header.name);
+        fd.append("files", header, "authScreenHeaderImageId");
       }
 
       if (background && typeof background === "object") {
         imgCount += 1;
-        fd.set("authScreenBgImageId", background, background.name);
+        fd.append("files", background, "authScreenBgImageId");
       }
 
       if (imgCount > 0) {

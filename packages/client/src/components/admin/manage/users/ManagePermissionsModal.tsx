@@ -52,6 +52,10 @@ const groups = [
     name: "Other",
     permissions: defaultPermissions.otherDefaultPermissions,
   },
+  {
+    name: "Owner",
+    permissions: [Permissions.ManageCADSettings],
+  },
 ];
 
 export function ManagePermissionsModal({ user, onUpdate, isReadOnly }: Props) {
@@ -211,6 +215,7 @@ function makePermissionsData(data: Record<PermissionNames, boolean>) {
 export function formatPermissionName(permission: string) {
   // todo: whoops
   if (permission === Permissions.ManageDMV) return "Manage DMV";
+  if (permission === Permissions.ManageCADSettings) return "Manage CAD-Settings";
 
   return permission.match(/[A-Z][a-z]+/g)?.join(" ") ?? permission;
 }

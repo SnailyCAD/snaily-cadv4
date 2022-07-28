@@ -9,9 +9,21 @@ interface Props extends RHoverCard.HoverCardProps {
   pointerEvents?: boolean;
   contentProps?: RHoverCard.HoverCardContentProps;
   showArrow?: boolean;
+  disabled?: boolean;
 }
 
-export function HoverCard({ trigger, children, pointerEvents, contentProps, ...rest }: Props) {
+export function HoverCard({
+  trigger,
+  children,
+  pointerEvents,
+  contentProps,
+  disabled,
+  ...rest
+}: Props) {
+  if (disabled) {
+    return trigger;
+  }
+
   return (
     <RHoverCard.Root closeDelay={10} openDelay={0} {...rest}>
       <RHoverCard.Trigger asChild>{trigger}</RHoverCard.Trigger>
@@ -20,7 +32,7 @@ export function HoverCard({ trigger, children, pointerEvents, contentProps, ...r
         {...contentProps}
         className={classNames(
           pointerEvents ? "pointer-events-auto" : "pointer-events-none",
-          "bg-gray-200 dark:bg-dark-bright shadow-lg w-full max-w-2xl p-3 rounded-md dark:text-white hover-card dropdown-fade",
+          "bg-gray-200 dark:bg-dark-bright shadow-lg w-full max-w-2xl p-3 rounded-md dark:text-white hover-card dropdown-fade !z-10",
           contentProps?.className,
         )}
       >

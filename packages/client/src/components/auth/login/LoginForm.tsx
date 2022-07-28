@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Form, Formik, FormikHelpers } from "formik";
 import Link from "next/link";
 import { Discord, Steam } from "react-bootstrap-icons";

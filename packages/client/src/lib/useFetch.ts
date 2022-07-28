@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { AxiosRequestConfig, AxiosError } from "axios";
 import { handleRequest } from "./fetch";
-import { useTranslations } from "use-intl";
+import { type TranslationValues, useTranslations } from "use-intl";
 import Common from "../../locales/en/common.json";
 import type { FormikHelpers } from "formik";
 import { toastMessage } from "./toastMessage";
@@ -24,7 +24,15 @@ type Options<Helpers extends object = object> = AxiosRequestConfig & {
 
 interface ErrorObj {
   message: ErrorMessage;
-  data: any;
+  data: TranslationValues;
+}
+
+interface ErrorResponseData {
+  name: string;
+  message: string;
+  status: number;
+  errors: Record<string, ErrorMessage | ErrorObj>[];
+  stack: string;
 }
 
 interface Return<Data> {
@@ -57,7 +65,7 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
       return e;
     });
 
-    const error = isAxiosError(response) ? parseError(response) : null;
+    const error = isAxiosError<ErrorResponseData | null>(response) ? parseError(response) : null;
 
     if (error) {
       const errors = parseErrors(response);
@@ -104,7 +112,7 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
 
       return {
         json: {} as Data,
-        error: isAxiosError(response) ? parseError(response) : null,
+        error: isAxiosError<ErrorResponseData | null>(response) ? parseError(response) : null,
       };
     }
 
@@ -127,7 +135,9 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
   return { execute, state };
 }
 
-function parseError(error: AxiosError<any>): ErrorMessage | "unknown" | (string & {}) {
+function parseError(
+  error: AxiosError<ErrorResponseData | null>,
+): ErrorMessage | "unknown" | (string & {}) {
   const message = error.response?.data?.message ?? error.message;
   const name = error.name;
 
@@ -135,22 +145,23 @@ function parseError(error: AxiosError<any>): ErrorMessage | "unknown" | (string 
     return name;
   }
 
-  return message ?? "unknown";
+  return message || "unknown";
 }
 
-function parseErrors(error: AxiosError<any>): Record<string, ErrorMessage | ErrorObj>[] {
+function parseErrors(error: AxiosError<ErrorResponseData | null>) {
   return error.response?.data?.errors ?? [];
 }
 
-function parseErrorTitle(error: AxiosError<any>) {
+function parseErrorTitle(error: AxiosError<ErrorResponseData | null>) {
   const name = (error.response?.data?.name ?? error.message) as string | undefined;
   if (!name) return;
 
   return name.toLowerCase().replace(/_/g, " ");
 }
 
-function isAxiosError(error: any): error is AxiosError {
-  return error instanceof Error || "response" in error;
+function isAxiosError<T>(error: unknown): error is AxiosError<T, T> {
+  if (!error) return false;
+  return error instanceof Error || (typeof error === "object" && "response" in error);
 }
 
 function isErrorKey(key: string | ErrorObj): key is ErrorMessage {

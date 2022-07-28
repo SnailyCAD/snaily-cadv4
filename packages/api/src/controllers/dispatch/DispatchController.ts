@@ -278,8 +278,8 @@ export class DispatchController {
 
   @Post("/tones")
   @UsePermissions({
-    permissions: [Permissions.Dispatch],
-    fallback: (u) => u.isDispatch,
+    permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
+    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
   })
   async handleTones(@BodyParams() body: unknown): Promise<APITypes.PostDispatchTonesData> {
     const data = validateSchema(TONES_SCHEMA, body);

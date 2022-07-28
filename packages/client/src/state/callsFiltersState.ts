@@ -28,7 +28,7 @@ interface CallFiltersState {
   setAssignedUnit(assignedUnit: _SelectValue | null): void;
 }
 
-export const useCallsFilters = create<CallFiltersState>((set) => ({
+export const useCallsFilters = create<CallFiltersState>()((set) => ({
   showFilters: false,
   setShowFilters: (showFilters) => set({ showFilters }),
 

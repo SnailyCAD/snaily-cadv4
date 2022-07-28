@@ -8,7 +8,7 @@ export const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 
 let cacheREST: REST;
 export function getRest(): REST {
-  if (!BOT_TOKEN) {
+  if (!BOT_TOKEN || BOT_TOKEN === "undefined") {
     throw new Error("mustSetBotTokenGuildId");
   }
 

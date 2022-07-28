@@ -29,7 +29,8 @@ export function BoloItem({ idx, bolo, handleDelete, handleEdit }: BoloItemProps)
   const { generateCallsign } = useGenerateCallsign();
 
   return (
-    <li className="flex justify-between">
+    <>
+      {" "}
       <div className="flex">
         <span className="mr-2 text-neutral-700 dark:text-gray-400 select-none">{idx + 1}.</span>
 
@@ -68,7 +69,6 @@ export function BoloItem({ idx, bolo, handleDelete, handleEdit }: BoloItemProps)
           </p>
         </div>
       </div>
-
       <div className="ml-2 min-w-fit">
         <Button size="xs" disabled={isDisabled} onClick={() => handleEdit(bolo)} variant="success">
           {common("edit")}
@@ -83,6 +83,6 @@ export function BoloItem({ idx, bolo, handleDelete, handleEdit }: BoloItemProps)
           {common("delete")}
         </Button>
       </div>
-    </li>
+    </>
   );
 }

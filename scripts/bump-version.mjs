@@ -51,10 +51,14 @@ async function askNewVersion() {
 }
 
 function getJson(path) {
-  const packageJsonContentRaw = readFileSync(path, "utf-8");
-  const packageJsonContentJSON = JSON.parse(packageJsonContentRaw);
+  try {
+    const packageJsonContentRaw = readFileSync(path, "utf-8");
+    const packageJsonContentJSON = JSON.parse(packageJsonContentRaw);
 
-  return packageJsonContentJSON;
+    return packageJsonContentJSON;
+  } catch {
+    return null;
+  }
 }
 
 function stringifyAndFormat(json) {

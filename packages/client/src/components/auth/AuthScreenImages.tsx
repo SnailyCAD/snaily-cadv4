@@ -14,6 +14,7 @@ export function AuthScreenImages() {
           className="fixed inset-0 z-0 h-screen w-screen object-cover"
           src={makeImageUrl("cad", authScreenBgImageId)}
           loading="lazy"
+          alt="Authentication view background"
         />
       ) : null}
 
@@ -23,6 +24,7 @@ export function AuthScreenImages() {
           style={{ minWidth: 20, maxWidth: 400, maxHeight: 200, zIndex: 999 }}
           src={makeImageUrl("cad", authScreenHeaderImageId)}
           loading="lazy"
+          alt={cad?.name || "Authentication view header"}
         />
       ) : null}
     </>

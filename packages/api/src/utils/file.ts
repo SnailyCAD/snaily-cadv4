@@ -1,7 +1,12 @@
 import type { PlatformMulterFile } from "@tsed/common";
 import { BadRequest } from "@tsed/exceptions";
+import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
-export function parseImportFile(file: PlatformMulterFile) {
+export function parseImportFile(file: PlatformMulterFile | undefined) {
+  if (!file) {
+    throw new ExtendedBadRequest({ file: "No file provided." });
+  }
+
   if (file.mimetype !== "application/json") {
     throw new BadRequest("invalidImageType");
   }

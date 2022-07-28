@@ -26,7 +26,7 @@ export function AppearanceTab({ availableSounds }: Props) {
   const t = useTranslations("Account");
   const { execute, state } = useFetch();
   const common = useTranslations("Common");
-  const availableLanguages = nextConfig.i18n?.locales as string[];
+  const availableLanguages = nextConfig.i18n?.locales;
   const router = useRouter();
 
   const STATUS_VIEW_MODE_LABELS = {
@@ -48,7 +48,7 @@ export function AppearanceTab({ availableSounds }: Props) {
     isDarkTheme: user.isDarkTheme ?? true,
     statusViewMode: user.statusViewMode ?? StatusViewMode.DOT_COLOR,
     tableActionsAlignment: user.tableActionsAlignment,
-    locale: user?.locale ?? (nextConfig.i18n?.defaultLocale as string),
+    locale: user?.locale ?? nextConfig.i18n?.defaultLocale,
     soundSettings: {
       panicButton: user.soundSettings?.panicButton ?? true,
       signal100: user.soundSettings?.signal100 ?? true,
@@ -81,7 +81,7 @@ export function AppearanceTab({ availableSounds }: Props) {
 
   return (
     <TabsContent aria-label={t("appearanceSettings")} value="appearanceSettings">
-      <h3 className="text-2xl font-semibold">{t("appearanceSettings")}</h3>
+      <h1 className="text-2xl font-semibold">{t("appearanceSettings")}</h1>
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (
           <Form className="mt-3">
@@ -127,7 +127,7 @@ export function AppearanceTab({ availableSounds }: Props) {
             </FormField>
 
             <div className="mb-5">
-              <h3 className="text-2xl font-semibold mb-3">{t("sounds")}</h3>
+              <h2 className="text-2xl font-semibold mb-3">{t("sounds")}</h2>
 
               {availableSoundsArr.map((_name) => {
                 const fieldName = _name as keyof typeof INITIAL_VALUES.soundSettings;

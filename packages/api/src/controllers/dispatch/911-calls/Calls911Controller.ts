@@ -318,6 +318,7 @@ export class Calls911Controller {
 
     const unitPromises = call.assignedUnits.map(async (unit) => {
       const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
+      if (!prismaName) return;
 
       // @ts-expect-error method has the same properties
       return prisma[prismaName].update({

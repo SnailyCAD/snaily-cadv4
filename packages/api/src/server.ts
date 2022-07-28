@@ -38,6 +38,10 @@ const rootDir = __dirname;
   statics: {
     "/static": [
       {
+        cacheControl: true,
+        etag: true,
+        immutable: true,
+        maxAge: "365d",
         root: join(rootDir, "../", "public"),
         hook: "$beforeRoutesInit",
       },

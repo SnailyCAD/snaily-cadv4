@@ -251,13 +251,19 @@ test("Should filter license types -> INSURANCE_STATUS", () => {
 });
 
 test("Should handle Discord auth -> window not defined", () => {
-  expect(canUseThirdPartyConnections()).toBe(false);
+  expect(canUseThirdPartyConnections()).toBe(true);
 });
 
 test("Should handle Discord auth -> window defined", () => {
   // @ts-expect-error testing purposes
   global.window = { location: "test", parent: { location: "test" } };
   expect(canUseThirdPartyConnections()).toBe(true);
+});
+
+test("Should handle Discord auth -> window defined -> incorrect location", () => {
+  // @ts-expect-error testing purposes
+  global.window = { location: "test", parent: { location: "different location" } };
+  expect(canUseThirdPartyConnections()).toBe(false);
 });
 
 describe("isUnitDisabled", () => {

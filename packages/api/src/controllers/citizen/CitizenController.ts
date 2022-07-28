@@ -292,7 +292,7 @@ export class CitizenController {
     @Context("user") user: User,
     @Context("cad") cad: cad & { features?: CadFeature[] },
     @PathParams("id") citizenId: string,
-    @MultipartFile("image") file: PlatformMulterFile,
+    @MultipartFile("image") file?: PlatformMulterFile,
   ): Promise<APITypes.PostCitizenImageByIdData> {
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -311,6 +311,10 @@ export class CitizenController {
       canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
     } else if (!citizen) {
       throw new NotFound("citizenNotFound");
+    }
+
+    if (!file) {
+      throw new ExtendedBadRequest({ file: "No file provided." });
     }
 
     if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
