@@ -332,6 +332,7 @@ export class ManageUsersController {
     }
 
     await createAuditLogEntry({
+      translationKey: "tempPasswordGiven",
       action: {
         type: AuditLogActionType.UserTempPassword,
         new: user,
@@ -389,7 +390,7 @@ export class ManageUsersController {
     await createAuditLogEntry({
       translationKey: "userBanned",
       action: {
-        type: AuditLogActionType.UserBan,
+        type: banType === "ban" ? AuditLogActionType.UserBan : AuditLogActionType.UserUnban,
         new: updated,
         previous: undefined,
       },

@@ -13,8 +13,6 @@ export type AuditLogActions =
   | UnitUpdate
   | UnitDelete
   | UnitsSetOffDuty
-  | UnitQualificationAdd
-  | UnitQualificationDelete
   | BusinessUpdate
   | BusinessDelete;
 
@@ -73,16 +71,6 @@ export type UnitsSetOffDuty = BaseAuditLogAction<
   AuditLogActionType.UnitsSetOffDuty,
   undefined,
   undefined
->;
-export type UnitQualificationAdd = BaseAuditLogAction<
-  AuditLogActionType.UnitQualificationAdd,
-  Types.Officer | Types.EmsFdDeputy,
-  Types.Officer | Types.EmsFdDeputy
->;
-export type UnitQualificationDelete = BaseAuditLogAction<
-  AuditLogActionType.UnitQualificationDelete,
-  Types.Officer | Types.EmsFdDeputy,
-  Types.Officer | Types.EmsFdDeputy
 >;
 
 export type BusinessDelete = BaseAuditLogAction<

@@ -61,25 +61,29 @@ export default function ManageBusinesses({ data }: Props) {
             return {
               type: auditLog.action.type,
               executor: auditLog.executor.username,
-              changes:
-                auditLog.type === "DELETE"
-                  ? t.rich("deletedEntry", {
-                      span: (children) => <span className="font-semibold">{children}</span>,
-                      id: auditLog.action.new?.id,
-                    })
-                  : auditLog.type === "CREATE"
-                  ? t.rich("createdEntry", {
-                      span: (children) => <span className="font-semibold">{children}</span>,
-                      id: auditLog.action.new?.id,
-                    })
-                  : differences?.map((difference) => (
-                      <p className="flex items-center gap-2" key={difference.key}>
-                        <span>{difference.key}: </span>
-                        <span>{difference.previous}</span>
-                        <ArrowRight />
-                        <span>{difference.new}</span>
-                      </p>
-                    )),
+              changes: auditLog.translationKey
+                ? t.rich(auditLog.translationKey, {
+                    span: (children) => <span className="font-semibold">{children}</span>,
+                    value: auditLog.action.new?.id,
+                  })
+                : auditLog.type === "DELETE"
+                ? t.rich("deletedEntry", {
+                    span: (children) => <span className="font-semibold">{children}</span>,
+                    id: auditLog.action.new?.id,
+                  })
+                : auditLog.type === "CREATE"
+                ? t.rich("createdEntry", {
+                    span: (children) => <span className="font-semibold">{children}</span>,
+                    id: auditLog.action.new?.id,
+                  })
+                : differences?.map((difference) => (
+                    <p className="flex items-center gap-2" key={difference.key}>
+                      <span>{difference.key}: </span>
+                      <span>{difference.previous}</span>
+                      <ArrowRight />
+                      <span>{difference.new}</span>
+                    </p>
+                  )),
               data: (
                 <Button onClick={() => openModal(ModalIds.ViewAuditLogData, auditLog)} size="sm">
                   View full data
