@@ -1684,6 +1684,7 @@ __metadata:
     is-hotkey: ^0.2.0
     is-mobile: ^3.1.1
     leaflet: ^1.8.0
+    lodash: ^4.17.21
     next: ^12.2.3
     next-intl: 2.7.4
     nookies: ^2.5.2

@@ -31,7 +31,11 @@ import { Droppable } from "components/shared/dnd/Droppable";
 import { DndActions } from "types/DndActions";
 import { AssignedUnitsColumn } from "./AssignedUnitsColumn";
 import type { Post911CallAssignUnAssign } from "@snailycad/types/api";
+import { DEFAULT_EDITOR_DATA, Editor } from "components/modal/DescriptionModal/Editor";
+import { HoverCard } from "components/shared/HoverCard";
 import { useMounted } from "@casper124578/useful";
+import { isArrayEqual } from "lib/editor/isArrayEqual";
+import { dataToString } from "lib/editor/dataToString";
 
 const ADDED_TO_CALL_SRC = "/sounds/added-to-call.mp3" as const;
 const INCOMING_CALL_SRC = "/sounds/incoming-call.mp3" as const;
@@ -182,11 +186,6 @@ function _ActiveCalls({ initialCalls }: Props) {
     openModal(ModalIds.Manage911Call, call);
   }
 
-  function handleViewDescription(call: Full911Call) {
-    setTempCall(call);
-    openModal(ModalIds.Description, call);
-  }
-
   function handleCallTow(call: Full911Call) {
     if (!TOW) return;
     setTempCall(call);
@@ -264,6 +263,11 @@ function _ActiveCalls({ initialCalls }: Props) {
               .filter(handleCallsFilter)
               .map((call) => {
                 const isUnitAssigned = isUnitAssignedToCall(call);
+                const stringDescription = dataToString(call.descriptionData as any[]);
+                const isDescriptionLengthy = stringDescription.length >= 1;
+                const shouldTruncate = stringDescription.length > 25;
+                const hoverCardDisabled =
+                  !shouldTruncate || isArrayEqual(call.descriptionData as any, DEFAULT_EDITOR_DATA);
 
                 return {
                   rowProps: {
@@ -272,19 +276,30 @@ function _ActiveCalls({ initialCalls }: Props) {
                   caseNumber: `#${call.caseNumber}`,
                   name: `${call.name} ${call.viaDispatch ? `(${leo("dispatch")})` : ""}`,
                   location: `${call.location} ${call.postal ? `(${call.postal})` : ""}`,
+                  // todo: make custom component for this
                   description:
-                    call.description && !call.descriptionData ? (
-                      <span className="max-w-4xl text-base min-w-[250px] break-words whitespace-pre-wrap">
-                        {call.description}
-                      </span>
-                    ) : (
-                      <Button
-                        disabled={isDispatch ? false : !isUnitActive}
-                        size="xs"
-                        onClick={() => handleViewDescription(call)}
+                    isDescriptionLengthy || call.description ? (
+                      <HoverCard
+                        disabled={hoverCardDisabled}
+                        trigger={
+                          <div
+                            className={classNames(
+                              "w-[300px] truncate overflow-hidden",
+                              shouldTruncate && "truncate-custom",
+                            )}
+                          >
+                            {call.description || stringDescription}
+                          </div>
+                        }
                       >
-                        {common("viewDescription")}
-                      </Button>
+                        {call.description ? (
+                          call.description
+                        ) : (
+                          <Editor value={call.descriptionData ?? DEFAULT_EDITOR_DATA} isReadonly />
+                        )}
+                      </HoverCard>
+                    ) : (
+                      common("none")
                     ),
                   situationCode: call.situationCode?.value.value ?? common("none"),
                   updatedAt: <FullDate>{call.updatedAt}</FullDate>,

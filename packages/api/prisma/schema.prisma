@@ -104,6 +104,7 @@ model AutoSetUserProperties {
   emsFd    Boolean? @default(false)
 
   cad cad[]
+
   @@map("AutoSetPropertiesUser")
 }
 
@@ -229,7 +230,6 @@ model User {
   apiTokenId               String?
   roles                    CustomRole[]
   locale                   String?
-
 
   // relational data
   citizens             Citizen[]
@@ -980,7 +980,6 @@ model AssignedUnit {
   call911Id     String?
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @default(now()) @updatedAt
-
 }
 
 model AssignedWarrantOfficer {

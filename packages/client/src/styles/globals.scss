@@ -25,6 +25,19 @@ html {
   .card {
     @apply rounded-md bg-gray-200/60 dark:bg-gray-2;
   }
+
+  .truncate-custom {
+    @apply relative bg-gray-200/60 dark:bg-gray-2;
+  }
+
+  .truncate-custom::after {
+    content: "...";
+    position: absolute;
+    bottom: 0px;
+    right: 0;
+    background-color: inherit;
+    @apply pr-1;
+  }
 }
 
 #__next {
