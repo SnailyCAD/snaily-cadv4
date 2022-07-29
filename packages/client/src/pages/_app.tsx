@@ -18,9 +18,6 @@ import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import type { cad } from "@snailycad/types";
 import { useMounted } from "@casper124578/useful";
 import dynamic from "next/dynamic";
-import { patchConsoleError } from "src/patch";
-
-patchConsoleError();
 
 const ReauthorizeSessionModal = dynamic(
   async () =>
