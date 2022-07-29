@@ -53,9 +53,9 @@ export async function handleRequest<T = any>(
 export function findAPIUrl() {
   const envUrl = process.env.NEXT_PUBLIC_PROD_ORIGIN ?? "http://localhost:8080/v1";
 
-  if (process.env.NODE_ENV !== "production" && envUrl === "http://api:8080/v1") {
-    return "http://localhost:8080/v1";
-  }
+  // if (process.env.NODE_ENV !== "production" && envUrl === "http://api:8080/v1") {
+  //   return "http://localhost:8080/v1";
+  // }
 
   return envUrl;
 }
