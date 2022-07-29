@@ -1,14 +1,11 @@
 import { findAPIUrl } from "lib/fetch";
 import { IMGUR_REGEX } from "@snailycad/config";
-import { useMounted } from "@casper124578/useful";
 
 type ImageURLTypes = "citizens" | "users" | "bleeter" | "units" | "cad" | "values";
 
 export function useImageUrl() {
-  const mounted = useMounted();
-
   function makeImageUrl(type: ImageURLTypes, id: string | null) {
-    if (!mounted || !id) return;
+    if (!id) return;
 
     if (id.match(IMGUR_REGEX)) {
       return id;
