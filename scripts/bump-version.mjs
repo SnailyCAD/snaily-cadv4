@@ -16,6 +16,7 @@ for (const pkg of packages) {
   const packageJsonPath = join(PACKAGES_PATH, pkg, "package.json");
 
   const packageJsonContentJSON = getJson(packageJsonPath);
+  if (!packageJsonContentJSON) continue;
   packageJsonContentJSON.version = version;
 
   for (const utilPkg of utilPackages) {
