@@ -1,0 +1,14 @@
+{
+  "Bleeter": {
+    "bleeter": "Bleeter",
+    "noPosts": "There are no bleeter posts yet. Check back later",
+    "createBleet": "Create bleet",
+    "editBleet": "Edit bleet",
+    "deleteBleet": "Delete Bleet",
+    "viewBleet": "View bleet",
+    "headerImage": "Header Image",
+    "bleetTitle": "Bleet title",
+    "bleetBody": "Bleet Body",
+    "alert_deleteBleet": "Are you sure want to delete \"<span>{title}</span>\"? This action cannot be undone."
+  }
+}
