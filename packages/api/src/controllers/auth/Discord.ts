@@ -107,8 +107,8 @@ export class DiscordAuth {
      * -> register the account and set cookie
      */
     if (!user && !authUser) {
-      const existingUserWithUsername = await prisma.user.findUnique({
-        where: { username: data.username },
+      const existingUserWithUsername = await prisma.user.findFirst({
+        where: { username: { equals: data.username, mode: "insensitive" } },
       });
 
       if (existingUserWithUsername) {
