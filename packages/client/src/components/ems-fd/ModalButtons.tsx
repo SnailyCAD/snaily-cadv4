@@ -63,7 +63,7 @@ export function ModalButtons() {
         </p>
       ) : null}
 
-      <ul className="mt-2 modal-buttons-grid">
+      <div className="mt-2 modal-buttons-grid">
         {buttons.map((button, idx) => (
           <Button
             id={button.nameKey[1]}
@@ -94,7 +94,7 @@ export function ModalButtons() {
             <TonesModal types={["ems-fd"]} />
           </>
         ) : null}
-      </ul>
+      </div>
     </div>
   );
 }
