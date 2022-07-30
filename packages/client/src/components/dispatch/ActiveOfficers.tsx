@@ -30,6 +30,8 @@ import { HoverCard } from "components/shared/HoverCard";
 import { useDispatchState } from "state/dispatchState";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useMounted } from "@casper124578/useful";
+import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
+import type { GetActiveOfficersPaginatedData } from "@snailycad/types/api";
 
 interface Props {
   initialOfficers: ActiveOfficer[];
@@ -55,6 +57,18 @@ function ActiveOfficers({ initialOfficers }: Props) {
 
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
+
+  const asyncTable = useAsyncTable({
+    initialData: initialOfficers,
+    totalCount: initialOfficers.length,
+    fetchOptions: {
+      onResponse: (json: GetActiveOfficersPaginatedData) => ({
+        data: json.officers,
+        totalCount: json.totalCount,
+      }),
+      path: "/leo/active-officers-paginated",
+    },
+  });
 
   const [tempOfficer, officerState] = useTemporaryItem(activeOfficers);
 
@@ -91,12 +105,18 @@ function ActiveOfficers({ initialOfficers }: Props) {
         <p className="px-4 py-2 text-neutral-700 dark:text-gray-300">{t("noActiveOfficers")}</p>
       ) : (
         <>
-          <ActiveUnitsSearch type="leo" />
+          <ActiveUnitsSearch search={asyncTable.search} type="leo" />
 
           <Table
+            pagination={{
+              enabled: true,
+              totalCount: asyncTable.pagination.totalCount,
+              fetchData: asyncTable.pagination,
+            }}
+            maxItemsPerPage={15}
             isWithinCard
             containerProps={{ className: "mb-3 px-4" }}
-            data={activeOfficers
+            data={asyncTable.data
               .filter((officer) => handleFilter(officer, leoSearch))
               .map((officer) => {
                 const color = officer.status?.color;

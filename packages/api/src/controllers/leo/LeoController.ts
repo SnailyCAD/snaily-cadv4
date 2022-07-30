@@ -1,7 +1,7 @@
 import { Controller, UseBeforeEach, UseBefore } from "@tsed/common";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { SWITCH_CALLSIGN_SCHEMA } from "@snailycad/schemas";
-import { BodyParams, Context, PathParams } from "@tsed/platform-params";
+import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
@@ -37,6 +37,53 @@ export class LeoController {
     return activeOfficer;
   }
 
+  @Get("/active-officers-paginated")
+  @Description("Get all the active officers (Paginated)")
+  @UsePermissions({
+    fallback: (u) => u.isLeo || u.isDispatch || u.isEmsFd,
+    permissions: [Permissions.Leo, Permissions.Dispatch, Permissions.EmsFd],
+  })
+  async getActiveOfficersPaginated(
+    @Context("cad") cad: { miscCadSettings: MiscCadSettings },
+    @QueryParams("skip", Number) skip = 0,
+    // @QueryParams("query", String) query = "",
+  ): Promise<APITypes.GetActiveOfficersPaginatedData> {
+    const unitsInactivityFilter = getInactivityFilter(cad, "lastStatusChangeTimestamp");
+
+    if (unitsInactivityFilter) {
+      setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp);
+    }
+
+    const [officerCount, combinedUnitCount, officers, units] = await Promise.all([
+      prisma.officer.count({
+        where: { status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } } },
+      }),
+      prisma.combinedLeoUnit.count(),
+      prisma.officer.findMany({
+        where: { status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } } },
+        include: leoProperties,
+        skip,
+        take: 16,
+        orderBy: { updatedAt: "desc" },
+      }),
+      prisma.combinedLeoUnit.findMany({
+        include: combinedUnitProperties,
+      }),
+    ]);
+
+    const officersWithUpdatedStatus = officers.map((u) =>
+      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
+    );
+    const combinedUnitsWithUpdatedStatus = units.map((u) =>
+      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
+    );
+
+    return {
+      officers: [...officersWithUpdatedStatus, ...combinedUnitsWithUpdatedStatus],
+      totalCount: officerCount + combinedUnitCount,
+    };
+  }
+
   @Get("/active-officers")
   @Description("Get all the active officers")
   @UsePermissions({
@@ -56,6 +103,8 @@ export class LeoController {
       prisma.officer.findMany({
         where: { status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } } },
         include: leoProperties,
+        take: 15,
+        orderBy: { updatedAt: "desc" },
       }),
       prisma.combinedLeoUnit.findMany({
         include: combinedUnitProperties,

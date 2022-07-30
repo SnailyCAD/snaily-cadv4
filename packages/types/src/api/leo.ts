@@ -141,6 +141,15 @@ export type GetActiveOfficerData = Types.CombinedLeoUnit | Types.Officer;
 export type GetActiveOfficersData = (Types.CombinedLeoUnit | Types.Officer)[];
 
 /**
+ * @method GET
+ * @route /leo/active-officers/paginated
+ */
+export interface GetActiveOfficersPaginatedData {
+  officers: (Types.CombinedLeoUnit | Types.Officer)[];
+  totalCount: number;
+}
+
+/**
  * @method POST
  * @route /leo/panic-button
  */
