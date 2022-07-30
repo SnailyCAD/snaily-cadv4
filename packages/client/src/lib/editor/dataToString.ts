@@ -7,8 +7,6 @@ export function dataToString(data: Descendant[]) {
     if (Editor.isEditor(item)) continue;
 
     if (SlateElement.isElement(item) && item.type === "bulleted-list") {
-      console.log({ list: item });
-
       const children = item.children.flatMap((c) => c.children).map((v) => v.text);
 
       string.push(children.join(" "));
