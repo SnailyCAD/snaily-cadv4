@@ -1,0 +1,23 @@
+{
+  "Ems": {
+    "emsFd": "EMS/FD",
+    "createMedicalRecord": "Krankenakte anlegen",
+    "searchMedicalRecord": "Krankenakte suchen",
+    "activeDeputies": "Aktive Stellvertreter",
+    "selectDeputy": "Stellvertreter wählen",
+    "deputy": "Stellvertreter",
+    "myDeputies": "Meine Stellvertreter",
+    "createDeputy": "Stellvertreter erstellen",
+    "editDeputy": "Stellvertreter bearbeiten",
+    "deputyName": "Stellvertreter Name",
+    "deleteDeputy": "Stellvertreter löschen",
+    "noDeputies": "Sie haben keine Stellvertreter",
+    "noActiveDeputies": "Es gibt keine aktiven Stellvertreter",
+    "citizenNoMedicalRecords": "Dieser Bürger hat keine Krankenakte.",
+    "activeDeputy": "Aktiver Stellvertreter",
+    "declareDead": "Für tot erklären",
+    "declareAlive": "Für lebendig erklären",
+    "myDeputyLogs": "Mein Stellvertreter protokolliert",
+    "alert_deleteDeputy": "Sind Sie sicher, dass Sie <span>{deputy}</span> löschen wollen? Diese Aktion kann nicht rückgängig gemacht werden."
+  }
+}

@@ -1,0 +1,140 @@
+{
+  "Values": {
+    "totalItems": "Posten insgesamt",
+    "values": "Werte",
+    "shouldDo": "Sollte tun",
+    "color": "Farbe",
+    "callsign": "Rufzeichen",
+    "department": "Abteilung",
+    "gameHash": "Spiel Hash",
+    "file": "Datei",
+    "importValues": "Importieren über Datei",
+    "exportValues": "Werte exportieren",
+    "addPenalCodeGroup": "Gruppe hinzufügen",
+    "deleteGroup": "Gruppe löschen",
+    "ungrouped": "Ungruppiert",
+    "licenseType": "Lizenz-Typ",
+    "whitelisted": "Whitelisted",
+    "whatPages": "Welche Seiten",
+    "departments": "Abteilungen",
+    "isDefaultDepartment": "Standard-Abteilung",
+    "deleteSelectedValues": "Ausgewählte Werte löschen",
+    "isDefault": "Ist Standard",
+    "defaultOfficerRank": "Standard-Offiziersrang",
+    "pairedUnitTemplate": "Vorlage für gepaarte Einheiten",
+    "isConfidential": "Ist vertraulich",
+    "priority": "Priorität",
+    "isDisabled": "Behinderte",
+    "alert_deletePenalCodeGroup": "Sind Sie sicher, dass Sie <span>{group}</span> löschen wollen? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "alert_deleteValue": "Sind Sie sicher, dass Sie <span>{value}</span> löschen wollen? Diese Aktion kann nicht rückgängig gemacht werden!",
+    "alert_deleteSelectedValues": "Sind Sie sicher, dass Sie {length} Elemente löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden"
+  },
+  "GENDER": {
+    "MANAGE": "Geschlechter verwalten",
+    "ADD": "Geschlechter hinzufügen",
+    "DELETE": "Geschlechter löschen",
+    "EDIT": "Geschlechter bearbeiten"
+  },
+  "WEAPON": {
+    "MANAGE": "Waffe verwalten",
+    "ADD": "Waffe hinzufügen",
+    "DELETE": "Waffe löschen",
+    "EDIT": "Waffe bearbeiten"
+  },
+  "VEHICLE": {
+    "MANAGE": "Fahrzeuge verwalten",
+    "ADD": "Fahrzeug hinzufügen",
+    "DELETE": "Fahrzeug löschen",
+    "EDIT": "Fahrzeug bearbeiten"
+  },
+  "ETHNICITY": {
+    "MANAGE": "Ethnizitäten verwalten",
+    "ADD": "Ethnizität hinzufügen",
+    "DELETE": "Ethnizität löschen",
+    "EDIT": "Ethnizität bearbeiten"
+  },
+  "BLOOD_GROUP": {
+    "MANAGE": "Blutgruppen verwalten",
+    "ADD": "Blutgrupp hinzufügen",
+    "DELETE": "Blutgrupp löschen",
+    "EDIT": "Blutgrupp bearbeiten"
+  },
+  "LICENSE": {
+    "MANAGE": "Lizenzen verwalten",
+    "ADD": "Lizenz hinzufügen",
+    "DELETE": "Lizenz löschen",
+    "EDIT": "Lizenz barbeiten"
+  },
+  "BUSINESS_ROLE": {
+    "MANAGE": "Unternehmerische Rollen verwalten",
+    "ADD": "Unternehmerische Rolle hinzufügen",
+    "DELETE": "Unternehmerische Rolle löschen",
+    "EDIT": "Unternehmerische Rolle bearbeiten"
+  },
+  "DEPARTMENT": {
+    "MANAGE": "Abteilungen verwalten",
+    "ADD": "Abteilung hinzufügen",
+    "DELETE": "Abteilung löschen",
+    "EDIT": "Abteilung bearbeiten"
+  },
+  "CODES_10": {
+    "MANAGE": "10-Codes verwalten",
+    "ADD": "10-Code hinzufügen",
+    "DELETE": "10-Code löschen",
+    "EDIT": "10-Code bearbeiten"
+  },
+  "OFFICER_RANK": {
+    "MANAGE": "Offiziersränge verwalten",
+    "ADD": "Offiziersrang hinzufügen",
+    "DELETE": "Offiziersrang löschen",
+    "EDIT": "Offiziersrang bearbeiten"
+  },
+  "PENAL_CODE": {
+    "MANAGE": "Strafgesetzbücher verwalten",
+    "ADD": "Strafgesetzbuch hinzufügen",
+    "DELETE": "Strafgesetzbuch löschen",
+    "EDIT": "Strafgesetzbuch bearbeiten"
+  },
+  "DIVISION": {
+    "MANAGE": "Divisionen verwalten",
+    "ADD": "Division hinzufügen",
+    "DELETE": "Division löschen",
+    "EDIT": "Division bearbeiten"
+  },
+  "DRIVERSLICENSE_CATEGORY": {
+    "MANAGE": "FS-Kategorien verwalten",
+    "ADD": "FS-Kategorie hinzufügen",
+    "DELETE": "FS-Kategorie löschen",
+    "EDIT": "FS-Kategorie bearbeiten"
+  },
+  "IMPOUND_LOT": {
+    "MANAGE": "Beschlagnahmte Grundstücke verwalten",
+    "ADD": "Beschlagnahmte Grundstück hinzufügen",
+    "DELETE": "Beschlagnahmte Grundstück löschen",
+    "EDIT": "Beschlagnahmte Grundstück bearbeiten"
+  },
+  "VEHICLE_FLAG": {
+    "MANAGE": "Fahrzeug-Flaggen verwalten",
+    "ADD": "Fahrzeug-Flagge hinzufügen",
+    "DELETE": "Fahrzeug-Flagge löschen",
+    "EDIT": "Fahrzeug-Flagge bearbeiten"
+  },
+  "CITIZEN_FLAG": {
+    "MANAGE": "Bürger-Flaggen verwalten",
+    "ADD": "Bürger-Flagge hinzufügen",
+    "DELETE": "Bürger-Flagge löschen",
+    "EDIT": "Bürger-Flagge bearbeiten"
+  },
+  "QUALIFICATION": {
+    "MANAGE": "Qualifikationen der Einheit verwalten",
+    "ADD": "Qualifikation der Einheit hinzufügen",
+    "DELETE": "Qualifikation der Einheit löschen",
+    "EDIT": "Qualifikation der Einheit bearbeiten"
+  },
+  "CALL_TYPE": {
+    "MANAGE": "Ruf-Typen verwalten",
+    "ADD": "Ruf-Typ hinzufügen",
+    "DELETE": "Ruf-Typ löschen",
+    "EDIT": "Ruf-Typ bearbeiten"
+  }
+}
