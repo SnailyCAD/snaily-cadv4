@@ -1,140 +1,140 @@
 {
   "Values": {
-    "totalItems": "Total Items",
-    "values": "Values",
-    "shouldDo": "Should Do",
-    "color": "Color",
-    "callsign": "Callsign",
-    "department": "Department",
-    "gameHash": "Game Hash",
-    "file": "file",
-    "importValues": "Import via file",
-    "exportValues": "Export Values",
-    "addPenalCodeGroup": "Add Group",
-    "deleteGroup": "Delete Group",
-    "ungrouped": "Ungrouped",
-    "licenseType": "License Type",
+    "totalItems": "Posten insgesamt",
+    "values": "Werte",
+    "shouldDo": "Sollte tun",
+    "color": "Farbe",
+    "callsign": "Rufzeichen",
+    "department": "Abteilung",
+    "gameHash": "Spiel Hash",
+    "file": "Datei",
+    "importValues": "Importieren über Datei",
+    "exportValues": "Werte exportieren",
+    "addPenalCodeGroup": "Gruppe hinzufügen",
+    "deleteGroup": "Gruppe löschen",
+    "ungrouped": "Ungruppiert",
+    "licenseType": "Lizenz-Typ",
     "whitelisted": "Whitelisted",
-    "whatPages": "What Pages",
-    "departments": "Departments",
-    "isDefaultDepartment": "Default Department",
-    "deleteSelectedValues": "Delete Selected Values",
-    "isDefault": "Is Default",
-    "defaultOfficerRank": "Default Officer Rank",
-    "pairedUnitTemplate": "Paired Unit Template",
-    "isConfidential": "Is Confidential",
-    "priority": "Priority",
-    "isDisabled": "Disabled",
-    "alert_deletePenalCodeGroup": "Are you sure you want to delete <span>{group}</span>? This action cannot be undone.",
-    "alert_deleteValue": "Are you sure you want to delete <span>{value}</span>? This action cannot be undone!",
-    "alert_deleteSelectedValues": "Are you sure you want to delete {length} items? This action cannot be undone"
+    "whatPages": "Welche Seiten",
+    "departments": "Abteilungen",
+    "isDefaultDepartment": "Standard-Abteilung",
+    "deleteSelectedValues": "Ausgewählte Werte löschen",
+    "isDefault": "Ist Standard",
+    "defaultOfficerRank": "Standard-Offiziersrang",
+    "pairedUnitTemplate": "Vorlage für gepaarte Einheiten",
+    "isConfidential": "Ist vertraulich",
+    "priority": "Priorität",
+    "isDisabled": "Behinderte",
+    "alert_deletePenalCodeGroup": "Sind Sie sicher, dass Sie <span>{group}</span> löschen wollen? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "alert_deleteValue": "Sind Sie sicher, dass Sie <span>{value}</span> löschen wollen? Diese Aktion kann nicht rückgängig gemacht werden!",
+    "alert_deleteSelectedValues": "Sind Sie sicher, dass Sie {length} Elemente löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden"
   },
   "GENDER": {
-    "MANAGE": "Manage Genders",
-    "ADD": "Add Gender",
-    "DELETE": "Delete Gender",
-    "EDIT": "Edit Gender"
+    "MANAGE": "Geschlechter verwalten",
+    "ADD": "Geschlechter hinzufügen",
+    "DELETE": "Geschlechter löschen",
+    "EDIT": "Geschlechter bearbeiten"
   },
   "WEAPON": {
-    "MANAGE": "Manage Weapons",
-    "ADD": "Add Weapon",
-    "DELETE": "Delete Weapon",
-    "EDIT": "Edit Weapon"
+    "MANAGE": "Waffe verwalten",
+    "ADD": "Waffe hinzufügen",
+    "DELETE": "Waffe löschen",
+    "EDIT": "Waffe bearbeiten"
   },
   "VEHICLE": {
-    "MANAGE": "Manage Vehicles",
-    "ADD": "Add Vehicle",
-    "DELETE": "Delete Vehicle",
-    "EDIT": "Edit Vehicle"
+    "MANAGE": "Fahrzeuge verwalten",
+    "ADD": "Fahrzeug hinzufügen",
+    "DELETE": "Fahrzeug löschen",
+    "EDIT": "Fahrzeug bearbeiten"
   },
   "ETHNICITY": {
-    "MANAGE": "Manage Ethnicities",
-    "ADD": "Add Ethnicity",
-    "DELETE": "Delete Ethnicity",
-    "EDIT": "Edit Ethnicity"
+    "MANAGE": "Ethnizitäten verwalten",
+    "ADD": "Ethnizität hinzufügen",
+    "DELETE": "Ethnizität löschen",
+    "EDIT": "Ethnizität bearbeiten"
   },
   "BLOOD_GROUP": {
-    "MANAGE": "Manage Blood Groups",
-    "ADD": "Add Blood Group",
-    "DELETE": "Delete Blood Group",
-    "EDIT": "Edit Blood Group"
+    "MANAGE": "Blutgruppen verwalten",
+    "ADD": "Blutgrupp hinzufügen",
+    "DELETE": "Blutgrupp löschen",
+    "EDIT": "Blutgrupp bearbeiten"
   },
   "LICENSE": {
-    "MANAGE": "Manage Licenses",
-    "ADD": "Add License",
-    "DELETE": "Delete License",
-    "EDIT": "Edit License"
+    "MANAGE": "Lizenzen verwalten",
+    "ADD": "Lizenz hinzufügen",
+    "DELETE": "Lizenz löschen",
+    "EDIT": "Lizenz barbeiten"
   },
   "BUSINESS_ROLE": {
-    "MANAGE": "Manage Business Roles",
-    "ADD": "Add Business Role",
-    "DELETE": "Delete Business Role",
-    "EDIT": "Edit Business Role"
+    "MANAGE": "Unternehmerische Rollen verwalten",
+    "ADD": "Unternehmerische Rolle hinzufügen",
+    "DELETE": "Unternehmerische Rolle löschen",
+    "EDIT": "Unternehmerische Rolle bearbeiten"
   },
   "DEPARTMENT": {
-    "MANAGE": "Manage Departments",
-    "ADD": "Add Department",
-    "DELETE": "Delete Department",
-    "EDIT": "Edit Department"
+    "MANAGE": "Abteilungen verwalten",
+    "ADD": "Abteilung hinzufügen",
+    "DELETE": "Abteilung löschen",
+    "EDIT": "Abteilung bearbeiten"
   },
   "CODES_10": {
-    "MANAGE": "Manage 10 Codes",
-    "ADD": "Add 10 Code",
-    "DELETE": "Delete 10 Code",
-    "EDIT": "Edit 10 Code"
+    "MANAGE": "10-Codes verwalten",
+    "ADD": "10-Code hinzufügen",
+    "DELETE": "10-Code löschen",
+    "EDIT": "10-Code bearbeiten"
   },
   "OFFICER_RANK": {
-    "MANAGE": "Manage Officer Ranks",
-    "ADD": "Add Officer Rank",
-    "DELETE": "Delete Officer Rank",
-    "EDIT": "Edit Officer Rank"
+    "MANAGE": "Offiziersränge verwalten",
+    "ADD": "Offiziersrang hinzufügen",
+    "DELETE": "Offiziersrang löschen",
+    "EDIT": "Offiziersrang bearbeiten"
   },
   "PENAL_CODE": {
-    "MANAGE": "Manage Penal Codes",
-    "ADD": "Add Penal Code",
-    "DELETE": "Delete Penal Code",
-    "EDIT": "Edit Penal Code"
+    "MANAGE": "Strafgesetzbücher verwalten",
+    "ADD": "Strafgesetzbuch hinzufügen",
+    "DELETE": "Strafgesetzbuch löschen",
+    "EDIT": "Strafgesetzbuch bearbeiten"
   },
   "DIVISION": {
-    "MANAGE": "Manage Divisions",
-    "ADD": "Add Division",
-    "DELETE": "Delete Division",
-    "EDIT": "Edit Division"
+    "MANAGE": "Divisionen verwalten",
+    "ADD": "Division hinzufügen",
+    "DELETE": "Division löschen",
+    "EDIT": "Division bearbeiten"
   },
   "DRIVERSLICENSE_CATEGORY": {
-    "MANAGE": "Manage DL Categories",
-    "ADD": "Add Category",
-    "DELETE": "Delete Category",
-    "EDIT": "Edit Category"
+    "MANAGE": "FS-Kategorien verwalten",
+    "ADD": "FS-Kategorie hinzufügen",
+    "DELETE": "FS-Kategorie löschen",
+    "EDIT": "FS-Kategorie bearbeiten"
   },
   "IMPOUND_LOT": {
-    "MANAGE": "Manage Impound Lots",
-    "ADD": "Add Impound Lot",
-    "DELETE": "Delete Impound Lot",
-    "EDIT": "Edit Impound Lot"
+    "MANAGE": "Beschlagnahmte Grundstücke verwalten",
+    "ADD": "Beschlagnahmte Grundstück hinzufügen",
+    "DELETE": "Beschlagnahmte Grundstück löschen",
+    "EDIT": "Beschlagnahmte Grundstück bearbeiten"
   },
   "VEHICLE_FLAG": {
-    "MANAGE": "Manage Vehicle flags",
-    "ADD": "Add vehicle flag",
-    "DELETE": "Delete vehicle flag",
-    "EDIT": "Edit vehicle flag"
+    "MANAGE": "Fahrzeug-Flaggen verwalten",
+    "ADD": "Fahrzeug-Flagge hinzufügen",
+    "DELETE": "Fahrzeug-Flagge löschen",
+    "EDIT": "Fahrzeug-Flagge bearbeiten"
   },
   "CITIZEN_FLAG": {
-    "MANAGE": "Manage Citizen flags",
-    "ADD": "Add citizen flag",
-    "DELETE": "Delete citizen flag",
-    "EDIT": "Edit citizen flag"
+    "MANAGE": "Bürger-Flaggen verwalten",
+    "ADD": "Bürger-Flagge hinzufügen",
+    "DELETE": "Bürger-Flagge löschen",
+    "EDIT": "Bürger-Flagge bearbeiten"
   },
   "QUALIFICATION": {
-    "MANAGE": "Manage Unit Qualifications",
-    "ADD": "Add Unit Qualification",
-    "DELETE": "Delete Unit Qualification",
-    "EDIT": "Edit Unit Qualification"
+    "MANAGE": "Qualifikationen der Einheit verwalten",
+    "ADD": "Qualifikation der Einheit hinzufügen",
+    "DELETE": "Qualifikation der Einheit löschen",
+    "EDIT": "Qualifikation der Einheit bearbeiten"
   },
   "CALL_TYPE": {
-    "MANAGE": "Manage Call Types",
-    "ADD": "Add Call Type",
-    "DELETE": "Delete Call Type",
-    "EDIT": "Edit Call Type"
+    "MANAGE": "Ruf-Typen verwalten",
+    "ADD": "Ruf-Typ hinzufügen",
+    "DELETE": "Ruf-Typ löschen",
+    "EDIT": "Ruf-Typ bearbeiten"
   }
 }
