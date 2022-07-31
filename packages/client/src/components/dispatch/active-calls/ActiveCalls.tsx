@@ -36,6 +36,7 @@ import { HoverCard } from "components/shared/HoverCard";
 import { useMounted } from "@casper124578/useful";
 import { isArrayEqual } from "lib/editor/isArrayEqual";
 import { dataToString } from "lib/editor/dataToString";
+import type { Descendant } from "slate";
 
 const ADDED_TO_CALL_SRC = "/sounds/added-to-call.mp3" as const;
 const INCOMING_CALL_SRC = "/sounds/incoming-call.mp3" as const;
@@ -263,7 +264,7 @@ function _ActiveCalls({ initialCalls }: Props) {
               .filter(handleCallsFilter)
               .map((call) => {
                 const isUnitAssigned = isUnitAssignedToCall(call);
-                const stringDescription = dataToString(call.descriptionData as any[]);
+                const stringDescription = dataToString(call.descriptionData as Descendant[] | null);
                 const isDescriptionLengthy = stringDescription.length >= 1;
                 const shouldTruncate = stringDescription.length > 25;
                 const hoverCardDisabled =
