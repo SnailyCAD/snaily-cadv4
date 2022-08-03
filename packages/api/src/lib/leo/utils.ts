@@ -49,7 +49,7 @@ type InactivityReturn<Prop extends string> = {
   >;
 } & Record<Prop, Date>;
 
-export function getInactivityFilter<Prop extends string = "updatedAt">(
+export function createInactivityFilter<Prop extends string = "updatedAt">(
   cad: { miscCadSettings: MiscCadSettings | null },
   property?: Prop,
 ): InactivityReturn<Prop> | null {

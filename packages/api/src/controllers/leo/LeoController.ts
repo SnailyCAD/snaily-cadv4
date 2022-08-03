@@ -11,11 +11,10 @@ import { combinedUnitProperties, leoProperties } from "lib/leo/activeOfficer";
 import { ShouldDoType, User } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
-import { getInactivityFilter } from "lib/leo/utils";
 import { findUnit } from "lib/leo/findUnit";
-import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
-import type { CombinedLeoUnit, Officer, MiscCadSettings } from "@snailycad/types";
+import type { CombinedLeoUnit, Officer, cad } from "@snailycad/types";
 import type * as APITypes from "@snailycad/types/api";
+import { getActiveOfficers } from "lib/leo/getActiveOfficers";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -43,46 +42,13 @@ export class LeoController {
     fallback: (u) => u.isLeo || u.isDispatch || u.isEmsFd,
     permissions: [Permissions.Leo, Permissions.Dispatch, Permissions.EmsFd],
   })
-  async getActiveOfficersPaginated(
-    @Context("cad") cad: { miscCadSettings: MiscCadSettings },
+  async getActiveOfficers(
+    @Context("cad") cad: cad,
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("includeAll", Boolean) includeAll = false,
-    // @QueryParams("query", String) query = "",
+    @QueryParams("query", String) query = "",
   ): Promise<APITypes.GetActiveOfficersData> {
-    const unitsInactivityFilter = getInactivityFilter(cad, "lastStatusChangeTimestamp");
-
-    if (unitsInactivityFilter) {
-      setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp);
-    }
-
-    const [officerCount, combinedUnitCount, officers, units] = await Promise.all([
-      prisma.officer.count({
-        where: { status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } } },
-      }),
-      prisma.combinedLeoUnit.count(),
-      prisma.combinedLeoUnit.findMany({
-        include: combinedUnitProperties,
-      }),
-      prisma.officer.findMany({
-        where: { status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } } },
-        include: leoProperties,
-        skip: includeAll ? undefined : skip,
-        take: includeAll ? undefined : 15,
-        orderBy: { updatedAt: "desc" },
-      }),
-    ]);
-
-    const officersWithUpdatedStatus = officers.map((u) =>
-      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
-    );
-    const combinedUnitsWithUpdatedStatus = units.map((u) =>
-      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
-    );
-
-    return {
-      officers: [...officersWithUpdatedStatus, ...combinedUnitsWithUpdatedStatus],
-      totalCount: officerCount + combinedUnitCount,
-    };
+    return getActiveOfficers({ cad, skip, includeAll, query });
   }
 
   @Post("/panic-button")

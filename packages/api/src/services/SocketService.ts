@@ -90,12 +90,12 @@ export class Socket {
 
   async emitUpdateOfficerStatus() {
     const [officers, units] = await Promise.all([
+      await prisma.combinedLeoUnit.findMany({
+        include: combinedUnitProperties,
+      }),
       await prisma.officer.findMany({
         where: { status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } } },
         include: leoProperties,
-      }),
-      await prisma.combinedLeoUnit.findMany({
-        include: combinedUnitProperties,
       }),
     ]);
 

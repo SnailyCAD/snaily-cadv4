@@ -33,9 +33,9 @@ import type {
   GetActiveOfficersData,
   GetBolosData,
   GetEmsFdActiveDeputies,
-  GetMyOfficersData,
 } from "@snailycad/types/api";
 import { CreateWarrantModal } from "components/leo/modals/CreateWarrantModal";
+import { useFetchUserOfficers } from "hooks/leo/useFetchUserOfficers";
 
 const Modals = {
   CreateWarrantModal: dynamic(async () => {
@@ -72,7 +72,6 @@ const Modals = {
 interface Props {
   activeOfficer: GetActiveOfficerData;
   activeOfficers: GetActiveOfficersData;
-  userOfficers: GetMyOfficersData["officers"];
   calls: Get911CallsData;
   bolos: GetBolosData;
   activeDeputies: GetEmsFdActiveDeputies;
@@ -84,8 +83,8 @@ export default function OfficerDashboard({
   activeOfficer,
   activeOfficers,
   activeDeputies,
-  userOfficers,
 }: Props) {
+  useFetchUserOfficers();
   useLoadValuesClientSide({
     valueTypes: [
       ValueType.CITIZEN_FLAG,
@@ -130,8 +129,6 @@ export default function OfficerDashboard({
     for (const officer of activeOfficers.officers) {
       dispatchState.setActiveOfficerInMap(officer);
     }
-
-    leoState.setUserOfficers(userOfficers);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bolos, calls, activeOfficers, activeDeputies, activeOfficer]);
@@ -202,23 +199,17 @@ export default function OfficerDashboard({
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ req, locale }) => {
   const user = await getSessionUser(req);
-  const [
-    activeOfficer,
-    { officers: userOfficers }, // todo: remove this
-    values,
-    calls,
-    bolos,
-    activeOfficers,
-    activeDeputies,
-  ] = await requestAll(req, [
-    ["/leo/active-officer", null],
-    ["/leo", { officers: [] }],
-    ["/admin/values/codes_10", []],
-    ["/911-calls", []],
-    ["/bolos", []],
-    ["/leo/active-officers", { totalCount: 0, officers: [] }],
-    ["/ems-fd/active-deputies", []],
-  ]);
+  const [activeOfficer, values, calls, bolos, activeOfficers, activeDeputies] = await requestAll(
+    req,
+    [
+      ["/leo/active-officer", null],
+      ["/admin/values/codes_10", []],
+      ["/911-calls", []],
+      ["/bolos", []],
+      ["/leo/active-officers", { totalCount: 0, officers: [] }],
+      ["/ems-fd/active-deputies", []],
+    ],
+  );
 
   return {
     props: {
@@ -226,7 +217,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ req, local
       activeOfficers,
       activeDeputies,
       activeOfficer,
-      userOfficers,
       calls,
       bolos,
       values,

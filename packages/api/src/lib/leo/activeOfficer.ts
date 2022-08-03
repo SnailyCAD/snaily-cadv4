@@ -4,7 +4,7 @@ import type { Req, Context } from "@tsed/common";
 import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
 import { userProperties } from "lib/auth/getSessionUser";
 import { prisma } from "lib/prisma";
-import { getInactivityFilter } from "./utils";
+import { createInactivityFilter } from "./utils";
 
 export const unitProperties = {
   department: { include: { value: true } },
@@ -88,7 +88,7 @@ export async function getActiveOfficer(
   });
 
   const cad = await prisma.cad.findFirst({ include: { miscCadSettings: true } });
-  const unitsInactivityFilter = getInactivityFilter(cad!, "lastStatusChangeTimestamp");
+  const unitsInactivityFilter = createInactivityFilter(cad!, "lastStatusChangeTimestamp");
 
   const filters: Prisma.Enumerable<Prisma.OfficerWhereInput> = [
     { status: { shouldDo: "SET_OFF_DUTY" } },

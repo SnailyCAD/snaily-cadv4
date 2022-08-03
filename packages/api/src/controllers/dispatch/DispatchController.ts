@@ -6,7 +6,7 @@ import { prisma } from "lib/prisma";
 import { Socket } from "services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
-import type { cad, MiscCadSettings, User } from "@prisma/client";
+import type { cad, User } from "@snailycad/types";
 import { validateSchema } from "lib/validateSchema";
 import { TONES_SCHEMA, UPDATE_AOP_SCHEMA, UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
 import {
@@ -21,11 +21,12 @@ import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { userProperties } from "lib/auth/getSessionUser";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
-import { getInactivityFilter } from "lib/leo/utils";
-import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
+import { createInactivityFilter } from "lib/leo/utils";
+import { filterInactiveUnits } from "lib/leo/setInactiveUnitsOffDuty";
 import { Req } from "@tsed/common";
 import { getActiveDeputy } from "lib/ems-fd";
 import type * as APITypes from "@snailycad/types/api";
+import { getActiveOfficers } from "lib/leo/getActiveOfficers";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -40,24 +41,9 @@ export class DispatchController {
     fallback: (u) => u.isDispatch || u.isEmsFd || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
-  async getDispatchData(
-    @Context("cad") cad: { miscCadSettings: MiscCadSettings | null },
-  ): Promise<APITypes.GetDispatchData> {
-    const unitsInactivityFilter = getInactivityFilter(cad, "lastStatusChangeTimestamp");
-
-    if (unitsInactivityFilter) {
-      setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp);
-    }
-
-    const [officers, units] = await Promise.all([
-      await prisma.combinedLeoUnit.findMany({
-        include: combinedUnitProperties,
-      }),
-      await prisma.officer.findMany({
-        include: leoProperties,
-        orderBy: { updatedAt: "desc" },
-      }),
-    ]);
+  async getDispatchData(@Context("cad") cad: cad): Promise<APITypes.GetDispatchData> {
+    const unitsInactivityFilter = createInactivityFilter(cad, "lastStatusChangeTimestamp");
+    const activeOfficers = await getActiveOfficers({ cad, skip: 0, includeAll: false });
 
     const deputies = await prisma.emsFdDeputy.findMany({
       include: unitProperties,
@@ -71,7 +57,7 @@ export class DispatchController {
       },
     });
 
-    const inactivityFilter = getInactivityFilter(cad);
+    const inactivityFilter = createInactivityFilter(cad);
     if (inactivityFilter) {
       this.endInactiveIncidents(inactivityFilter.updatedAt);
     }
@@ -82,19 +68,13 @@ export class DispatchController {
     });
 
     const correctedIncidents = activeIncidents.map(officerOrDeputyToUnit);
-    const officersWithUpdatedStatus = officers.map((u) =>
-      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
-    );
     const deputiesWithUpdatedStatus = deputies.map((u) =>
-      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
-    );
-    const combinedUnitsWithUpdatedStatus = units.map((u) =>
       filterInactiveUnits({ unit: u, unitsInactivityFilter }),
     );
 
     return {
       deputies: deputiesWithUpdatedStatus,
-      officers: [...officersWithUpdatedStatus, ...combinedUnitsWithUpdatedStatus],
+      officers: activeOfficers.officers,
       activeIncidents: correctedIncidents,
       activeDispatchers,
     };

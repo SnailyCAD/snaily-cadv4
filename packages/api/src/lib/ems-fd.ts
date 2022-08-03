@@ -3,7 +3,7 @@ import { defaultPermissions, hasPermission, Permissions } from "@snailycad/permi
 import type { Req, Context } from "@tsed/common";
 import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
 import { unitProperties } from "lib/leo/activeOfficer";
-import { getInactivityFilter } from "./leo/utils";
+import { createInactivityFilter } from "./leo/utils";
 import { prisma } from "./prisma";
 
 export async function getActiveDeputy(
@@ -42,7 +42,7 @@ export async function getActiveDeputy(
   }
 
   const cad = await prisma.cad.findFirst({ include: { miscCadSettings: true } });
-  const unitsInactivityFilter = getInactivityFilter(cad!, "lastStatusChangeTimestamp");
+  const unitsInactivityFilter = createInactivityFilter(cad!, "lastStatusChangeTimestamp");
 
   const filters: Prisma.Enumerable<Prisma.EmsFdDeputyWhereInput> = [
     { status: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
