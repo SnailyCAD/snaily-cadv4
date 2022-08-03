@@ -18,7 +18,7 @@ interface Props<T extends ActiveOfficer | ActiveDeputy> {
   activeUnit: T | null;
   units: T[];
   setActiveUnit(unit: T | null): void;
-  setUnits(units: T[]): void;
+  setUnits(units: T[] | (T | string)): void;
 }
 
 const STATUS_UPDATE_SRC = "/sounds/status-update.mp3" as const;
@@ -84,18 +84,23 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
     if (status.id === activeUnit.statusId) return;
 
     setActiveUnit({ ...activeUnit, statusId: status.id, status });
+    const shouldUseArray = isEmsFd;
 
     if (status.shouldDo === ShouldDoType.SET_OFF_DUTY) {
-      setUnits(units.filter((v) => v.id !== activeUnit.id));
+      const data = shouldUseArray ? units.filter((v) => v.id !== activeUnit.id) : activeUnit.id;
+
+      setUnits(data);
     } else {
-      setUnits(
-        units.map((unit) => {
-          if (unit.id === activeUnit.id) {
-            return { ...unit, statusId: status.id, status };
-          }
-          return unit;
-        }),
-      );
+      const data = shouldUseArray
+        ? units.map((unit) => {
+            if (unit.id === activeUnit.id) {
+              return { ...unit, statusId: status.id, status };
+            }
+            return unit;
+          })
+        : { ...activeUnit, statusId: status.id, status };
+
+      setUnits(data);
     }
 
     const { json } = await execute<PutDispatchStatusByUnitId>({

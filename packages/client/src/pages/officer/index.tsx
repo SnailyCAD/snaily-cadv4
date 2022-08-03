@@ -30,7 +30,7 @@ import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import type {
   Get911CallsData,
   GetActiveOfficerData,
-  GetActiveOfficersData,
+  GetActiveOfficersPaginatedData,
   GetBolosData,
   GetEmsFdActiveDeputies,
   GetMyOfficersData,
@@ -71,7 +71,7 @@ const Modals = {
 
 interface Props {
   activeOfficer: GetActiveOfficerData;
-  activeOfficers: GetActiveOfficersData;
+  activeOfficers: GetActiveOfficersPaginatedData;
   userOfficers: GetMyOfficersData["officers"];
   calls: Get911CallsData;
   bolos: GetBolosData;
@@ -127,7 +127,10 @@ export default function OfficerDashboard({
     dispatchState.setBolos(bolos);
 
     dispatchState.setActiveDeputies(activeDeputies);
-    dispatchState.setActiveOfficers(activeOfficers);
+    for (const officer of activeOfficers.officers) {
+      dispatchState.setActiveOfficerInMap(officer);
+    }
+
     leoState.setUserOfficers(userOfficers);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -150,8 +153,8 @@ export default function OfficerDashboard({
         </div>
 
         <StatusesArea
-          setUnits={dispatchState.setActiveOfficers}
-          units={dispatchState.activeOfficers}
+          setUnits={dispatchState.setActiveOfficerInMap}
+          units={Array.from(dispatchState.activeOfficers.values())}
           activeUnit={leoState.activeOfficer}
           setActiveUnit={leoState.setActiveOfficer}
         />
@@ -213,7 +216,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ req, local
     ["/admin/values/codes_10", []],
     ["/911-calls", []],
     ["/bolos", []],
-    ["/leo/active-officers", []],
+    ["/leo/active-officers", { totalCount: 0, officers: [] }],
     ["/ems-fd/active-deputies", []],
   ]);
 

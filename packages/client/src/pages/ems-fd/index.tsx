@@ -114,7 +114,7 @@ export default function EmsFDDashboard({
       </div>
 
       <div className="mt-3">
-        <ActiveOfficers initialOfficers={[]} />
+        <ActiveOfficers initialOfficers={{ officers: [], totalCount: 0 }} />
         <ActiveDeputies initialDeputies={activeDeputies} />
       </div>
 

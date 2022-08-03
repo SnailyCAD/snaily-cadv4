@@ -7,18 +7,20 @@ import { useAuth } from "context/AuthContext";
 import { useLeoState } from "state/leoState";
 import type { CombinedLeoUnit, Officer } from "@snailycad/types";
 import { isUnitOfficer } from "@snailycad/utils";
-import type { GetActiveOfficersData } from "@snailycad/types/api";
+import type { GetActiveOfficersPaginatedData } from "@snailycad/types/api";
 
 let ran = false;
 export function useActiveOfficers() {
   const { user } = useAuth();
-  const { activeOfficers, setActiveOfficers } = useDispatchState();
+  const { activeOfficers, setActiveOfficerInMap } = useDispatchState();
   const { state, execute } = useFetch();
   const { setActiveOfficer } = useLeoState();
 
   const handleState = React.useCallback(
     (data: (Officer | CombinedLeoUnit)[]) => {
-      setActiveOfficers(data);
+      for (const officer of data) {
+        setActiveOfficerInMap(officer);
+      }
 
       const activeOfficer = data.find((v) => {
         if (isUnitOfficer(v)) {
@@ -37,13 +39,16 @@ export function useActiveOfficers() {
   );
 
   const getActiveOfficers = React.useCallback(async () => {
-    const { json } = await execute<GetActiveOfficersData>({
+    const { json } = await execute<GetActiveOfficersPaginatedData>({
       path: "/leo/active-officers",
       noToast: true,
+      params: {
+        includeAll: true,
+      },
     });
 
-    if (json && Array.isArray(json)) {
-      handleState(json);
+    if (json.officers) {
+      handleState(json.officers);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id, handleState]);
@@ -64,5 +69,5 @@ export function useActiveOfficers() {
     getActiveOfficers();
   });
 
-  return { activeOfficers, setActiveOfficers, state };
+  return { activeOfficers, setActiveOfficerInMap, state };
 }

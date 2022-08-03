@@ -29,20 +29,17 @@ import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { HoverCard } from "components/shared/HoverCard";
 import { useDispatchState } from "state/dispatchState";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
-import { useMounted } from "@casper124578/useful";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 import type { GetActiveOfficersPaginatedData } from "@snailycad/types/api";
 
 interface Props {
-  initialOfficers: ActiveOfficer[];
+  initialOfficers: GetActiveOfficersPaginatedData;
 }
 
 function ActiveOfficers({ initialOfficers }: Props) {
-  const { activeOfficers: _activeOfficers } = useActiveOfficers();
+  const { activeOfficers: _activeOfficers, setActiveOfficerInMap } = useActiveOfficers();
   const { activeIncidents } = useActiveIncidents();
   const { calls } = useDispatchState();
-  const isMounted = useMounted();
-  const activeOfficers = isMounted ? _activeOfficers : initialOfficers;
 
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
@@ -59,18 +56,26 @@ function ActiveOfficers({ initialOfficers }: Props) {
   const isDispatch = router.pathname === "/dispatch";
 
   const asyncTable = useAsyncTable({
-    initialData: initialOfficers,
-    totalCount: initialOfficers.length,
+    initialData: initialOfficers.officers,
+    totalCount: initialOfficers.totalCount,
+    state: {
+      data: Array.from(_activeOfficers.values()),
+      setData: (data) => {
+        for (const officer of data) {
+          setActiveOfficerInMap(officer);
+        }
+      },
+    },
     fetchOptions: {
       onResponse: (json: GetActiveOfficersPaginatedData) => ({
         data: json.officers,
         totalCount: json.totalCount,
       }),
-      path: "/leo/active-officers-paginated",
+      path: "/leo/active-officers",
     },
   });
 
-  const [tempOfficer, officerState] = useTemporaryItem(activeOfficers);
+  const [tempOfficer, officerState] = useTemporaryItem(asyncTable.data);
 
   function handleEditClick(officer: ActiveOfficer | CombinedLeoUnit) {
     officerState.setTempId(officer.id);
@@ -91,7 +96,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
             )}
             onClick={() => setShowFilters("leo", !showLeoFilters)}
             title={common("filters")}
-            disabled={activeOfficers.length <= 0}
+            disabled={asyncTable.data.length <= 0}
           >
             <Filter
               className={classNames("group-hover:fill-white", showLeoFilters && "text-white")}
@@ -101,7 +106,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
         </div>
       </header>
 
-      {activeOfficers.length <= 0 ? (
+      {initialOfficers.totalCount <= 0 ? (
         <p className="px-4 py-2 text-neutral-700 dark:text-gray-300">{t("noActiveOfficers")}</p>
       ) : (
         <>

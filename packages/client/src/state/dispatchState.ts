@@ -20,8 +20,10 @@ interface DispatchState {
   bolos: Bolo[];
   setBolos(bolos: Bolo[]): void;
 
-  activeOfficers: (Officer | CombinedLeoUnit)[];
-  setActiveOfficers(officers: (Officer | CombinedLeoUnit)[]): void;
+  activeOfficers: Map<(Officer | CombinedLeoUnit)["id"], Officer | CombinedLeoUnit>;
+  setActiveOfficerInMap(
+    officer: Officer | CombinedLeoUnit | (Officer | CombinedLeoUnit)["id"],
+  ): void;
 
   activeDeputies: EmsFdDeputy[];
   setActiveDeputies(deputies: EmsFdDeputy[]): void;
@@ -42,15 +44,25 @@ interface DispatchState {
   setDraggingUnit(v: "incident" | "call" | null): void;
 }
 
-export const useDispatchState = create<DispatchState>()((set) => ({
+export const useDispatchState = create<DispatchState>()((set, get) => ({
   calls: [],
   setCalls: (calls) => set({ calls }),
 
   bolos: [],
   setBolos: (bolos) => set({ bolos }),
 
-  activeOfficers: [],
-  setActiveOfficers: (officers) => set({ activeOfficers: officers }),
+  activeOfficers: new Map(),
+  setActiveOfficerInMap: (officer) => {
+    const map = get().activeOfficers;
+
+    if (typeof officer === "string") {
+      map.delete(officer);
+    } else {
+      map.set(officer.id, officer);
+    }
+
+    set({ activeOfficers: map });
+  },
 
   activeDeputies: [],
   setActiveDeputies: (deputies) => set({ activeDeputies: deputies }),

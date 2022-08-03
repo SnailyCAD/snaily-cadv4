@@ -37,7 +37,7 @@ export class LeoController {
     return activeOfficer;
   }
 
-  @Get("/active-officers-paginated")
+  @Get("/active-officers")
   @Description("Get all the active officers (Paginated)")
   @UsePermissions({
     fallback: (u) => u.isLeo || u.isDispatch || u.isEmsFd,
@@ -46,6 +46,7 @@ export class LeoController {
   async getActiveOfficersPaginated(
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
     @QueryParams("skip", Number) skip = 0,
+    @QueryParams("includeAll", Boolean) includeAll = false,
     // @QueryParams("query", String) query = "",
   ): Promise<APITypes.GetActiveOfficersPaginatedData> {
     const unitsInactivityFilter = getInactivityFilter(cad, "lastStatusChangeTimestamp");
@@ -62,8 +63,8 @@ export class LeoController {
       prisma.officer.findMany({
         where: { status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } } },
         include: leoProperties,
-        skip,
-        take: 16,
+        skip: includeAll ? undefined : skip,
+        take: includeAll ? undefined : 15,
         orderBy: { updatedAt: "desc" },
       }),
       prisma.combinedLeoUnit.findMany({
@@ -84,7 +85,7 @@ export class LeoController {
     };
   }
 
-  @Get("/active-officers")
+  @Get("/active-officers-old")
   @Description("Get all the active officers")
   @UsePermissions({
     fallback: (u) => u.isLeo || u.isDispatch || u.isEmsFd,

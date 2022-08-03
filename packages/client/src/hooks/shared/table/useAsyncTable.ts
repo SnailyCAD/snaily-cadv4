@@ -13,17 +13,34 @@ interface Options<T> {
   totalCount: number;
   initialData: T[];
   setDataOnInitialDataChange?: boolean;
+  state?: { data: T[]; setData(data: T[]): void };
   fetchOptions: Pick<FetchOptions, "onResponse" | "path">;
 }
 
 export function useAsyncTable<T>(options: Options<T>) {
+  const [pageIndex, setPageIndex] = React.useState(0);
   const [totalCount, setTotalCount] = React.useState(options.totalCount);
-  const [data, setData] = React.useState(options.initialData);
+  const [_data, _setData] = React.useState(options.initialData);
   const [search, setSearch] = React.useState("");
   const { state, execute } = useFetch();
 
+  const data = React.useMemo(() => {
+    if (options.state?.data) {
+      const innerData = options.state.data;
+      const start = pageIndex * 15;
+      const end = start + 15;
+
+      return [...innerData].slice(start, end);
+    }
+
+    return _data;
+  }, [options.state?.data, pageIndex, _data]);
+  const setData = options.state?.setData ?? _setData;
+
   const paginationFetch = React.useCallback(
     async ({ pageSize, pageIndex }: Omit<FetchOptions, "path" | "onResponse">) => {
+      setPageIndex(pageIndex);
+
       const { json, error } = await execute({
         path: options.fetchOptions.path,
         params: {
@@ -34,6 +51,7 @@ export function useAsyncTable<T>(options: Options<T>) {
 
       if (json && !error) {
         const jsonData = options.fetchOptions.onResponse(json);
+
         setData(jsonData.data);
         setTotalCount(jsonData.totalCount);
 
