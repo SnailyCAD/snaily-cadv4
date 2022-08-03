@@ -51,9 +51,7 @@ export class DispatchController {
 
     const activeDispatchers = await prisma.activeDispatchers.findMany({
       include: {
-        user: {
-          select: { id: true, username: true, rank: true, isLeo: true, isEmsFd: true },
-        },
+        user: { select: { id: true, username: true, rank: true, isLeo: true, isEmsFd: true } },
       },
     });
 
