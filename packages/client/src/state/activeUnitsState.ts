@@ -7,18 +7,18 @@ interface ActiveUnitsState {
 
   leoSearch: string;
   emsSearch: string;
-  setSearch(type: keyof Pick<ActiveUnitsState, "emsSearch" | "leoSearch">, value: string): void;
+  setSearch(value: string, type: keyof Pick<ActiveUnitsState, "emsSearch">): void;
 }
 
 export const useActiveUnitsState = create<ActiveUnitsState>()((set) => ({
   showLeoFilters: false,
   showEmsFilters: false,
-  setShowFilters: (type, v) => {
+  setShowFilters: (type, value) => {
     const propName = type === "leo" ? "showLeoFilters" : "showEmsFilters";
-    set({ [propName]: v } as unknown as ActiveUnitsState);
+    set({ [propName]: value } as unknown as ActiveUnitsState);
   },
 
   leoSearch: "",
   emsSearch: "",
-  setSearch: (type, value) => set({ [type]: value } as unknown as ActiveUnitsState),
+  setSearch: (value, type) => set({ [type]: value } as unknown as ActiveUnitsState),
 }));

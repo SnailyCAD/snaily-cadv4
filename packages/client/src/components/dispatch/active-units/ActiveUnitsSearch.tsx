@@ -4,20 +4,20 @@ import { useTranslations } from "next-intl";
 import { useActiveUnitsState } from "state/activeUnitsState";
 
 interface Props {
-  type: "leo" | "ems-fd";
-  search: { search: string; setSearch: React.Dispatch<React.SetStateAction<string>> };
+  search?: { search: string; setSearch: React.Dispatch<React.SetStateAction<string>> };
 }
 
-export function ActiveUnitsSearch({ type, search }: Props) {
-  const showFiltersType = type === "leo" ? "showLeoFilters" : "showEmsFilters";
-
+export function ActiveUnitsSearch({ search: apiSearch }: Props) {
   const common = useTranslations("Common");
-  const { [showFiltersType]: showFilters } = useActiveUnitsState();
+  const { emsSearch, showEmsFilters, setSearch: _setSearch } = useActiveUnitsState();
 
-  return showFilters ? (
+  const search = apiSearch?.search ?? emsSearch;
+  const setSearch = apiSearch?.setSearch ?? _setSearch;
+
+  return showEmsFilters ? (
     <div className="px-4 mt-2 mb-5">
       <FormField className="w-full" label={common("search")}>
-        <Input onChange={(e) => search.setSearch(e.target.value)} value={search.search} />
+        <Input onChange={(e) => setSearch(e.target.value, "emsSearch")} value={search} />
       </FormField>
     </div>
   ) : null;

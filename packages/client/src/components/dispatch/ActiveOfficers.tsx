@@ -114,7 +114,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
         <p className="px-4 py-2 text-neutral-700 dark:text-gray-300">{t("noActiveOfficers")}</p>
       ) : (
         <>
-          <ActiveUnitsSearch search={asyncTable.search} type="leo" />
+          <ActiveUnitsSearch search={asyncTable.search} />
 
           <Table
             pagination={{
