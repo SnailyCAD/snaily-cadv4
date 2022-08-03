@@ -1419,6 +1419,7 @@ enum DiscordWebhookType {
   BOLO
   CITIZEN_RECORD
   VEHICLE_IMPOUNDED
+  WARRANTS
 }
 
 enum JailTimeScale {

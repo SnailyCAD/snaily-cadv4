@@ -108,7 +108,7 @@ export class RecordsController {
       unitIds: (data.assignedOfficers ?? []) as string[],
     });
 
-    const updated = await prisma.warrant.findUniqueOrThrow({
+    const updatedWarrant = await prisma.warrant.findUniqueOrThrow({
       where: { id: warrant.id },
       include: {
         citizen: true,
@@ -116,7 +116,7 @@ export class RecordsController {
       },
     });
 
-    await this.handleDiscordWebhook(updated);
+    await this.handleDiscordWebhook(updatedWarrant, DiscordWebhookType.WARRANTS);
 
     await prisma.recordLog.create({
       data: {
@@ -125,7 +125,7 @@ export class RecordsController {
       },
     });
 
-    const normalizedWarrant = officerOrDeputyToUnit(updated);
+    const normalizedWarrant = officerOrDeputyToUnit(updatedWarrant);
     this.socket.emitCreateActiveWarrant(normalizedWarrant);
 
     return normalizedWarrant;
@@ -403,10 +403,11 @@ export class RecordsController {
 
   private async handleDiscordWebhook(
     ticket: ((Record & { violations: Violation[] }) | Warrant) & { citizen: Citizen },
+    type: DiscordWebhookType = DiscordWebhookType.CITIZEN_RECORD,
   ) {
     try {
       const data = createWebhookData(ticket);
-      await sendDiscordWebhook(DiscordWebhookType.CITIZEN_RECORD, data);
+      await sendDiscordWebhook(type, data);
     } catch (error) {
       console.error("Could not send Discord webhook.", error);
     }

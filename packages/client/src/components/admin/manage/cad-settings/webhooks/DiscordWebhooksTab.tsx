@@ -26,6 +26,7 @@ export function DiscordWebhooksTab({ canWarn }: { canWarn: boolean }) {
     boloWebhook: makeInitialValue(cad!, DiscordWebhookType.BOLO),
     vehicleImpoundedWebhook: makeInitialValue(cad!, DiscordWebhookType.VEHICLE_IMPOUNDED),
     citizenRecordsWebhook: makeInitialValue(cad!, DiscordWebhookType.CITIZEN_RECORD),
+    warrantsWebhook: makeInitialValue(cad!, DiscordWebhookType.WARRANTS),
   };
 
   React.useEffect(() => {
@@ -122,6 +123,13 @@ export function DiscordWebhooksTab({ canWarn }: { canWarn: boolean }) {
               channels={channels}
               description="The Discord channel where new arrest reports, tickets, warrants and written warnings will be sent to."
               label="Citizen records channel"
+            />
+
+            <WebhookSettingsField
+              fieldName="warrantsWebhook"
+              channels={channels}
+              description="The Discord channel where new warrants will be sent to."
+              label="Warrants Channel"
             />
 
             <Button className="flex items-center" type="submit" disabled={state === "loading"}>

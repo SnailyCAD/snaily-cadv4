@@ -68,7 +68,7 @@ export const DISCORD_SETTINGS_SCHEMA = z.object({
 
 /** discord webhooks */
 const DISCORD_WEBHOOK_TYPE =
-  /CALL_911|BOLO|UNIT_STATUS|PANIC_BUTTON|VEHICLE_IMPOUNDED|CITIZEN_RECORD/;
+  /CALL_911|BOLO|UNIT_STATUS|PANIC_BUTTON|VEHICLE_IMPOUNDED|CITIZEN_RECORD|WARRANTS/;
 
 export const DISCORD_WEBHOOK = z.object({
   id: z.string().max(255).nullable().optional(),
@@ -83,6 +83,7 @@ export const DISCORD_WEBHOOKS_SCHEMA = z.object({
   boloWebhook: DISCORD_WEBHOOK,
   vehicleImpoundedWebhook: DISCORD_WEBHOOK,
   citizenRecordsWebhook: DISCORD_WEBHOOK,
+  warrantsWebhook: DISCORD_WEBHOOK,
 });
 
 export const CAD_AUTO_SET_PROPERTIES = z.object({
