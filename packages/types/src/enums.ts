@@ -35,6 +35,7 @@ export const Feature = {
   WEAPON_EXAMS: "WEAPON_EXAMS",
   ACTIVE_WARRANTS: "ACTIVE_WARRANTS",
   CITIZEN_DELETE_ON_DEAD: "CITIZEN_DELETE_ON_DEAD",
+  PANIC_BUTTON: "PANIC_BUTTON",
 } as const;
 
 export type Feature = typeof Feature[keyof typeof Feature];

@@ -205,6 +205,10 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     name: "Delete citizen on dead",
     description: "When enabled, this will delete all citizen's data when they are declared dead.",
   },
+  PANIC_BUTTON: {
+    name: "Panic Buttons",
+    description: "When enabled, this will allow LEO and EMS-FD to press a panic button.",
+  },
 };
 
 export function CADFeaturesTab() {

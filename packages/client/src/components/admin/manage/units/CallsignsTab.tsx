@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Unit } from "src/pages/admin/manage/units";
 import Link from "next/link";
-import { makeUnitName } from "lib/utils";
+import { formatOfficerDepartment, makeUnitName } from "lib/utils";
 import { useTranslations } from "use-intl";
 import { Button, buttonVariants } from "components/Button";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
@@ -59,6 +59,7 @@ export function CallsignsTab({ search, units }: Props) {
               callsign1: unit.callsign,
               callsign2: unit.callsign2,
               callsign: generateCallsign(unit),
+              department: formatOfficerDepartment(unit) ?? common("none"),
               actions: (
                 <Button size="xs" onClick={() => handleManageClick(unit)}>
                   {common("manage")}
@@ -72,6 +73,8 @@ export function CallsignsTab({ search, units }: Props) {
             { Header: t("Leo.callsign1"), accessor: "callsign1" },
             { Header: t("Leo.callsign2"), accessor: "callsign2" },
             { Header: t("Leo.callsign"), accessor: "callsign" },
+            { Header: t("Leo.department"), accessor: "department" },
+            { Header: common("user"), accessor: "user" },
             { Header: common("actions"), accessor: "actions" },
           ]}
         />

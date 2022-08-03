@@ -49,7 +49,11 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
 
   const [values, setValues] = React.useState<PenalCode[]>(data);
 
-  const [groups, setGroups] = React.useState<PenalCodeGroup[]>([...groupData, ungroupedGroup]);
+  const [groups, setGroups] = React.useState<PenalCodeGroup[]>([
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    ...(groupData ?? []),
+    ungroupedGroup,
+  ]);
   const [currentGroup, setCurrentGroup] = React.useState<PenalCodeGroup | null>(null);
   const [tempGroup, setTempGroup] = React.useState<PenalCodeGroup | null>(null);
 
