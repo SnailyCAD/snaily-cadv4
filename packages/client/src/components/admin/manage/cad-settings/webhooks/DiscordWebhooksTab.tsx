@@ -120,7 +120,7 @@ export function DiscordWebhooksTab({ canWarn }: { canWarn: boolean }) {
             <WebhookSettingsField
               fieldName="citizenRecordsWebhook"
               channels={channels}
-              description="The Discord channel where new arrest reports, tickets and written warnings will be sent to."
+              description="The Discord channel where new arrest reports, tickets, warrants and written warnings will be sent to."
               label="Citizen records channel"
             />
 
