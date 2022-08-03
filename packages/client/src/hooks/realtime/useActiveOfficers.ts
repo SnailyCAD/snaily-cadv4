@@ -12,12 +12,16 @@ import type { GetActiveOfficersData } from "@snailycad/types/api";
 let ran = false;
 export function useActiveOfficers() {
   const { user } = useAuth();
-  const { activeOfficers, setActiveOfficerInMap } = useDispatchState();
+  const { activeOfficers, resetActiveOfficers, setActiveOfficerInMap } = useDispatchState();
   const { state, execute } = useFetch();
   const { setActiveOfficer } = useLeoState();
 
   const handleState = React.useCallback(
     (data: (Officer | CombinedLeoUnit)[]) => {
+      if (data.length !== activeOfficers.size) {
+        resetActiveOfficers();
+      }
+
       for (const officer of data) {
         setActiveOfficerInMap(officer);
       }

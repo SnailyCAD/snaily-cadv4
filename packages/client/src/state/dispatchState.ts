@@ -21,6 +21,7 @@ interface DispatchState {
   setBolos(bolos: Bolo[]): void;
 
   activeOfficers: Map<(Officer | CombinedLeoUnit)["id"], Officer | CombinedLeoUnit>;
+  resetActiveOfficers(): void;
   setActiveOfficerInMap(
     officer: Officer | CombinedLeoUnit | (Officer | CombinedLeoUnit)["id"],
   ): void;
@@ -52,6 +53,7 @@ export const useDispatchState = create<DispatchState>()((set, get) => ({
   setBolos: (bolos) => set({ bolos }),
 
   activeOfficers: new Map(),
+  resetActiveOfficers: () => set({ activeOfficers: new Map() }),
   setActiveOfficerInMap: (officer) => {
     const map = get().activeOfficers;
 

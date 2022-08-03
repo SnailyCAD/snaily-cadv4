@@ -52,6 +52,7 @@ export class DispatchController {
     const [officers, units] = await Promise.all([
       await prisma.officer.findMany({
         include: leoProperties,
+        orderBy: { updatedAt: "desc" },
       }),
       await prisma.combinedLeoUnit.findMany({
         include: combinedUnitProperties,

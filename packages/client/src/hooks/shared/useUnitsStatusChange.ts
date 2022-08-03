@@ -5,7 +5,7 @@ import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
 
 interface UnitStatusChangeArgs {
   shouldUseArray?: boolean;
-  units: any[] | any;
+  units: any[];
   setUnits(units: any[] | (string | any)): void;
 }
 
@@ -25,14 +25,17 @@ export function useUnitStatusChange({
 
         setUnits(data);
       } else {
-        setUnits(
-          units.map((unit: any) => {
-            if (unit.id === unitId) {
-              return { ...unit, statusId: status.id, status };
-            }
-            return unit;
-          }),
-        );
+        const unit = units.find((v: any) => v.id === unitId);
+        const data = shouldUseArray
+          ? units.map((unit: any) => {
+              if (unit.id === unitId) {
+                return { ...unit, statusId: status.id, status };
+              }
+              return unit;
+            })
+          : { ...unit, statusId: status.id, status };
+
+        setUnits(data);
       }
 
       const { json } = await execute<PutDispatchStatusByUnitId>({

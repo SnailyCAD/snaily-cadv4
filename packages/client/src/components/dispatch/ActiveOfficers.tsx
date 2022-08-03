@@ -56,6 +56,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
   const isDispatch = router.pathname === "/dispatch";
 
   const asyncTable = useAsyncTable({
+    scrollToTopOnDataChange: false,
     initialData: initialOfficers.officers,
     totalCount: initialOfficers.totalCount,
     state: {
@@ -106,7 +107,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
         </div>
       </header>
 
-      {initialOfficers.totalCount <= 0 ? (
+      {asyncTable.data.length <= 0 ? (
         <p className="px-4 py-2 text-neutral-700 dark:text-gray-300">{t("noActiveOfficers")}</p>
       ) : (
         <>

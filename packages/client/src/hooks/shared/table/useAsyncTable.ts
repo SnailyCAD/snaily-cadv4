@@ -12,7 +12,7 @@ interface FetchOptions {
 interface Options<T> {
   totalCount: number;
   initialData: T[];
-  setDataOnInitialDataChange?: boolean;
+  scrollToTopOnDataChange?: boolean;
   state?: { data: T[]; setData(data: T[]): void };
   fetchOptions: Pick<FetchOptions, "onResponse" | "path">;
 }
@@ -24,6 +24,7 @@ export function useAsyncTable<T>(options: Options<T>) {
   const [search, setSearch] = React.useState("");
   const { state, execute } = useFetch();
 
+  const scrollToTopOnDataChange = options.scrollToTopOnDataChange ?? true;
   const data = React.useMemo(() => {
     if (options.state?.data) {
       const innerData = options.state.data;
@@ -55,10 +56,12 @@ export function useAsyncTable<T>(options: Options<T>) {
         setData(jsonData.data);
         setTotalCount(jsonData.totalCount);
 
-        window.scrollTo({ behavior: "smooth", top: 0 });
+        if (scrollToTopOnDataChange) {
+          window.scrollTo({ behavior: "smooth", top: 0 });
+        }
       }
     },
-    [search], // eslint-disable-line
+    [search, scrollToTopOnDataChange], // eslint-disable-line
   );
 
   const handleSearch = React.useCallback(async () => {

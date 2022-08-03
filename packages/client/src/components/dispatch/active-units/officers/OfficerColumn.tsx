@@ -34,7 +34,7 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
   const { openModal } = useModal();
   const { setStatus } = useUnitStatusChange({
     shouldUseArray: false,
-    units: activeOfficers,
+    units: [...activeOfficers.values()],
     setUnits: setActiveOfficerInMap,
   });
   const { activeOfficer } = useLeoState();

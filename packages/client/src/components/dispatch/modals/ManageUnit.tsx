@@ -38,7 +38,7 @@ export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {
 
   const t = useTranslations("Leo");
   const setUnits = type === "leo" ? setActiveOfficerInMap : setActiveDeputies;
-  const units = type === "leo" ? activeOfficers : activeDeputies;
+  const units = type === "leo" ? [...activeOfficers.values()] : activeDeputies;
 
   const { state: statusState, setStatus } = useUnitStatusChange({
     shouldUseArray: type === "leo",
