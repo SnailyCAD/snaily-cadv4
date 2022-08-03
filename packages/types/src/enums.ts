@@ -55,6 +55,7 @@ export const DiscordWebhookType = {
   BOLO: "BOLO",
   CITIZEN_RECORD: "CITIZEN_RECORD",
   VEHICLE_IMPOUNDED: "VEHICLE_IMPOUNDED",
+  WARRANTS: "WARRANTS",
 } as const;
 
 export type DiscordWebhookType = typeof DiscordWebhookType[keyof typeof DiscordWebhookType];
