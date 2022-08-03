@@ -31,6 +31,7 @@ import { useDispatchState } from "state/dispatchState";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 import type { GetActiveOfficersData } from "@snailycad/types/api";
+import { useMounted } from "@casper124578/useful";
 
 interface Props {
   initialOfficers: GetActiveOfficersData;
@@ -40,6 +41,8 @@ function ActiveOfficers({ initialOfficers }: Props) {
   const { activeOfficers: _activeOfficers, setActiveOfficerInMap } = useActiveOfficers();
   const { activeIncidents } = useActiveIncidents();
   const { calls } = useDispatchState();
+  const isMounted = useMounted();
+  const activeOfficers = isMounted ? [..._activeOfficers.values()] : initialOfficers.officers;
 
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
@@ -60,7 +63,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
     initialData: initialOfficers.officers,
     totalCount: initialOfficers.totalCount,
     state: {
-      data: Array.from(_activeOfficers.values()),
+      data: activeOfficers,
       setData: (data) => {
         for (const officer of data) {
           setActiveOfficerInMap(officer);

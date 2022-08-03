@@ -204,7 +204,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ req, local
   const user = await getSessionUser(req);
   const [
     activeOfficer,
-    { officers: userOfficers },
+    { officers: userOfficers }, // todo: remove this
     values,
     calls,
     bolos,

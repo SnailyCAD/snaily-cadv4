@@ -205,6 +205,12 @@ export class AdminManageUnitsController {
       include: type === "leo" ? leoProperties : unitProperties,
     });
 
+    if (type === "leo") {
+      this.socket.emitUpdateOfficerStatus();
+    } else {
+      this.socket.emitUpdateDeputyStatus();
+    }
+
     return updated;
   }
 
@@ -274,6 +280,12 @@ export class AdminManageUnitsController {
       },
       include: type === "officer" ? leoProperties : unitProperties,
     });
+
+    if (type === "officer") {
+      this.socket.emitUpdateOfficerStatus();
+    } else {
+      this.socket.emitUpdateDeputyStatus();
+    }
 
     return updated;
   }
