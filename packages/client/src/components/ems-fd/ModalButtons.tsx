@@ -10,6 +10,7 @@ import useFetch from "lib/useFetch";
 import type { PostEmsFdTogglePanicButtonData } from "@snailycad/types/api";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { TonesModal } from "components/dispatch/modals/TonesModal";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface MButton {
   nameKey: [string, string];
@@ -38,6 +39,7 @@ export function ModalButtons() {
   const { generateCallsign } = useGenerateCallsign();
   const { execute } = useFetch();
   const { hasActiveDispatchers } = useActiveDispatchers();
+  const { PANIC_BUTTON } = useFeatureEnabled();
 
   const isButtonDisabled =
     !activeDeputy ||
@@ -76,14 +78,16 @@ export function ModalButtons() {
           </Button>
         ))}
 
-        <Button
-          id="panicButton"
-          disabled={isButtonDisabled}
-          title={isButtonDisabled ? "Go on-duty before continuing" : t("Leo.panicButton")}
-          onClick={handlePanic}
-        >
-          {t("Leo.panicButton")}
-        </Button>
+        {PANIC_BUTTON ? (
+          <Button
+            id="panicButton"
+            disabled={isButtonDisabled}
+            title={isButtonDisabled ? "Go on-duty before continuing" : t("Leo.panicButton")}
+            onClick={handlePanic}
+          >
+            {t("Leo.panicButton")}
+          </Button>
+        ) : null}
 
         {!hasActiveDispatchers ? (
           <>
