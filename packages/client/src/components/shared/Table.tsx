@@ -55,10 +55,13 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
   const initialState =
     data.length >= MAX_ITEMS_PER_PAGE ? { pageIndex: state?.pageIndex ?? 0 } : {};
 
+  const options = props.pagination?.enabled
+    ? { pageCount: controlledPageCount, manualPagination: true }
+    : { manualPagination: false };
+
   const instance = useTable<TableData<T, RowProps>>(
     {
-      pageCount: props.pagination?.enabled ? controlledPageCount : undefined,
-      manualPagination: !!props.pagination?.enabled,
+      ...options,
       autoResetSortBy: false,
       columns,
       data,

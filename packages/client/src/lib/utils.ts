@@ -102,7 +102,8 @@ export function formatOfficerDepartment(unit: Officer | EmsFdDeputy) {
 }
 
 export function canUseThirdPartyConnections() {
-  return typeof window !== "undefined" && window.location === window.parent.location;
+  if (typeof window === "undefined") return true;
+  return window.location === window.parent.location;
 }
 
 export function isUnitDisabled(unit: Officer | EmsFdDeputy) {

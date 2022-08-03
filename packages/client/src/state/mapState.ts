@@ -5,7 +5,7 @@ interface DispatchMapState {
   setBlipsHidden(b: boolean): void;
 }
 
-export const useDispatchMapState = create<DispatchMapState>((set) => ({
+export const useDispatchMapState = create<DispatchMapState>()((set) => ({
   blipsHidden: false,
   setBlipsHidden: (v) => set({ blipsHidden: v }),
 }));

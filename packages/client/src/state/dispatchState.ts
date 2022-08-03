@@ -42,7 +42,7 @@ interface DispatchState {
   setDraggingUnit(v: "incident" | "call" | null): void;
 }
 
-export const useDispatchState = create<DispatchState>((set) => ({
+export const useDispatchState = create<DispatchState>()((set) => ({
   calls: [],
   setCalls: (calls) => set({ calls }),
 

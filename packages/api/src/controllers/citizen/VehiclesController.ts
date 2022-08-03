@@ -68,6 +68,7 @@ export class VehiclesController {
         take: 12,
         skip,
         include: citizenInclude.vehicles.include,
+        orderBy: { createdAt: "desc" },
       }),
     ]);
 

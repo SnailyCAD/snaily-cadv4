@@ -24,7 +24,6 @@ interface Props {
 
 export function Nav({ maxWidth }: Props) {
   const [menuOpen, setMenuOpen] = React.useState(false);
-  const [showImage, setShowImage] = React.useState(true);
 
   const { user, cad } = useAuth();
   const { TOW, COURTHOUSE } = useFeatureEnabled();
@@ -68,7 +67,7 @@ export function Nav({ maxWidth }: Props) {
                 href="/citizen"
                 className="flex items-center gap-2 py-3 font-bold text-gray-800 dark:text-white"
               >
-                {url && showImage ? (
+                {url ? (
                   <>
                     <Head>
                       <link rel="shortcut icon" href={url} />
@@ -80,7 +79,6 @@ export function Nav({ maxWidth }: Props) {
                       height={30}
                       className="max-h-[30px] min-w-[30px]"
                       src={url}
-                      onError={() => setShowImage(false)}
                       loading="lazy"
                     />
                   </>
@@ -89,7 +87,8 @@ export function Nav({ maxWidth }: Props) {
               </a>
             </h1>
 
-            <ul
+            <div
+              role="list"
               className={classNames(
                 "nav:flex",
                 menuOpen
@@ -124,6 +123,7 @@ export function Nav({ maxWidth }: Props) {
               {user && COURTHOUSE ? (
                 <Link href="/courthouse">
                   <a
+                    role="listitem"
                     href="/courthouse"
                     className={classNames(
                       "p-1 nav:px-2 text-gray-700 dark:text-gray-200 transition duration-300",
@@ -141,6 +141,7 @@ export function Nav({ maxWidth }: Props) {
               ) ? (
                 <Link href="/admin">
                   <a
+                    role="listitem"
                     href="/admin"
                     className={classNames(
                       "p-1 nav:px-2 text-gray-700 dark:text-gray-200 transition duration-300",
@@ -151,7 +152,7 @@ export function Nav({ maxWidth }: Props) {
                   </a>
                 </Link>
               ) : null}
-            </ul>
+            </div>
           </div>
 
           <div>

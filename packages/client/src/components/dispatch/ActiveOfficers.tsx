@@ -29,11 +29,18 @@ import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { HoverCard } from "components/shared/HoverCard";
 import { useDispatchState } from "state/dispatchState";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import { useMounted } from "@casper124578/useful";
 
-function ActiveOfficers() {
-  const { activeOfficers } = useActiveOfficers();
+interface Props {
+  initialOfficers: ActiveOfficer[];
+}
+
+function ActiveOfficers({ initialOfficers }: Props) {
+  const { activeOfficers: _activeOfficers } = useActiveOfficers();
   const { activeIncidents } = useActiveIncidents();
   const { calls } = useDispatchState();
+  const isMounted = useMounted();
+  const activeOfficers = isMounted ? _activeOfficers : initialOfficers;
 
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
@@ -59,7 +66,7 @@ function ActiveOfficers() {
   return (
     <div className="overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
       <header className="p-2 px-4 bg-gray-200 dark:bg-gray-3 flex items-center justify-between">
-        <h3 className="text-xl font-semibold">{t("activeOfficers")}</h3>
+        <h1 className="text-xl font-semibold">{t("activeOfficers")}</h1>
 
         <div>
           <Button

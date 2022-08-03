@@ -104,6 +104,7 @@ model AutoSetUserProperties {
   emsFd    Boolean? @default(false)
 
   cad cad[]
+
   @@map("AutoSetPropertiesUser")
 }
 
@@ -229,7 +230,6 @@ model User {
   apiTokenId               String?
   roles                    CustomRole[]
   locale                   String?
-
 
   // relational data
   citizens             Citizen[]
@@ -927,7 +927,7 @@ model ActiveDispatchers {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
 }
 
@@ -980,7 +980,6 @@ model AssignedUnit {
   call911Id     String?
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @default(now()) @updatedAt
-
 }
 
 model AssignedWarrantOfficer {
@@ -1420,6 +1419,7 @@ enum DiscordWebhookType {
   BOLO
   CITIZEN_RECORD
   VEHICLE_IMPOUNDED
+  WARRANTS
 }
 
 enum JailTimeScale {
@@ -1465,4 +1465,5 @@ enum Feature {
   WEAPON_EXAMS
   ACTIVE_WARRANTS
   CITIZEN_DELETE_ON_DEAD
+  PANIC_BUTTON
 }

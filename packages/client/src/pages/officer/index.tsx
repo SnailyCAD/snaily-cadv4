@@ -60,7 +60,7 @@ const Modals = {
   SelectOfficerModal: dynamic(async () => {
     return (await import("components/leo/modals/SelectOfficerModal")).SelectOfficerModal;
   }),
-  CreateTicketModal: dynamic(async () => {
+  ManageRecordModal: dynamic(async () => {
     return (await import("components/leo/modals/ManageRecordModal")).ManageRecordModal;
   }),
   SwitchDivisionCallsignModal: dynamic(async () => {
@@ -157,13 +157,13 @@ export default function OfficerDashboard({
         />
       </UtilityPanel>
 
-      {CALLS_911 ? <ActiveCalls /> : null}
-      <ActiveBolos />
+      {CALLS_911 ? <ActiveCalls initialCalls={calls} /> : null}
+      <ActiveBolos initialBolos={bolos} />
       {ACTIVE_WARRANTS ? <ActiveWarrants /> : null}
 
       <div className="mt-3">
-        <ActiveOfficers />
-        <ActiveDeputies />
+        <ActiveOfficers initialOfficers={activeOfficers} />
+        <ActiveDeputies initialDeputies={activeDeputies} />
       </div>
 
       <Modals.SelectOfficerModal />
@@ -182,16 +182,17 @@ export default function OfficerDashboard({
           <Modals.NameSearchModal />
           {!ACTIVE_WARRANTS ? <CreateWarrantModal warrant={null} /> : null}
           <Modals.CustomFieldSearch />
+
+          {LEO_TICKETS ? (
+            <Modals.ManageRecordModal onCreate={handleRecordCreate} type={RecordType.TICKET} />
+          ) : null}
+          <Modals.ManageRecordModal onCreate={handleRecordCreate} type={RecordType.ARREST_REPORT} />
+          <Modals.ManageRecordModal
+            onCreate={handleRecordCreate}
+            type={RecordType.WRITTEN_WARNING}
+          />
         </>
       ) : null}
-
-      <div>
-        {LEO_TICKETS ? (
-          <Modals.CreateTicketModal onCreate={handleRecordCreate} type={RecordType.TICKET} />
-        ) : null}
-        <Modals.CreateTicketModal onCreate={handleRecordCreate} type={RecordType.ARREST_REPORT} />
-        <Modals.CreateTicketModal onCreate={handleRecordCreate} type={RecordType.WRITTEN_WARNING} />
-      </div>
     </Layout>
   );
 }
@@ -218,7 +219,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ req, local
 
   return {
     props: {
-      session: await getSessionUser(req),
+      session: user,
       activeOfficers,
       activeDeputies,
       activeOfficer,

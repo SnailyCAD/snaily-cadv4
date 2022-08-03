@@ -8,7 +8,7 @@ interface VehicleSearchState {
   setCurrentResult(v: VehicleSearchResult | null | undefined): void;
 }
 
-export const useVehicleSearch = create<VehicleSearchState>((set) => ({
+export const useVehicleSearch = create<VehicleSearchState>()((set) => ({
   currentResult: undefined,
   setCurrentResult: (v) => set({ currentResult: v }),
 }));

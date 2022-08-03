@@ -102,7 +102,6 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
             <FormField errorMessage={errors.type} label={common("type")}>
               <FormRow>
                 <Button
-                  disabled={!!bolo}
                   onClick={() => setFieldValue("type", BoloType.PERSON)}
                   variant={values.type === BoloType.PERSON ? "blue" : "default"}
                   className={classNames("flex justify-center")}
@@ -114,7 +113,6 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                   <Person aria-labelledby={personTypeId} width={30} height={30} />
                 </Button>
                 <Button
-                  disabled={!!bolo}
                   onClick={() => setFieldValue("type", BoloType.VEHICLE)}
                   variant={values.type === BoloType.VEHICLE ? "blue" : "default"}
                   className={classNames("flex justify-center")}
@@ -135,7 +133,6 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                   </svg>
                 </Button>
                 <Button
-                  disabled={!!bolo}
                   onClick={() => setFieldValue("type", BoloType.OTHER)}
                   variant={values.type === BoloType.OTHER ? "blue" : "default"}
                   className={classNames("flex justify-center")}

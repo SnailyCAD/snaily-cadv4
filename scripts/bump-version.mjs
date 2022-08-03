@@ -16,6 +16,7 @@ for (const pkg of packages) {
   const packageJsonPath = join(PACKAGES_PATH, pkg, "package.json");
 
   const packageJsonContentJSON = getJson(packageJsonPath);
+  if (!packageJsonContentJSON) continue;
   packageJsonContentJSON.version = version;
 
   for (const utilPkg of utilPackages) {
@@ -51,10 +52,14 @@ async function askNewVersion() {
 }
 
 function getJson(path) {
-  const packageJsonContentRaw = readFileSync(path, "utf-8");
-  const packageJsonContentJSON = JSON.parse(packageJsonContentRaw);
+  try {
+    const packageJsonContentRaw = readFileSync(path, "utf-8");
+    const packageJsonContentJSON = JSON.parse(packageJsonContentRaw);
 
-  return packageJsonContentJSON;
+    return packageJsonContentJSON;
+  } catch {
+    return null;
+  }
 }
 
 function stringifyAndFormat(json) {

@@ -8,7 +8,7 @@ interface WeaponSearchState {
   setCurrentResult(v: WeaponSearchResult | null | undefined): void;
 }
 
-export const useWeaponSearch = create<WeaponSearchState>((set) => ({
+export const useWeaponSearch = create<WeaponSearchState>()((set) => ({
   currentResult: undefined,
   setCurrentResult: (v) => set({ currentResult: v }),
 }));

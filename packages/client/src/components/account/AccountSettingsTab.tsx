@@ -46,7 +46,7 @@ export function AccountSettingsTab() {
 
   return (
     <TabsContent aria-label={t("Account.accountSettings")} value="accountSettings">
-      <h3 className="text-2xl font-semibold">{t("Account.accountSettings")}</h3>
+      <h1 className="text-2xl font-semibold">{t("Account.accountSettings")}</h1>
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (
           <Form className="mt-2">

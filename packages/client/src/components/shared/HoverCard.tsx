@@ -9,9 +9,21 @@ interface Props extends RHoverCard.HoverCardProps {
   pointerEvents?: boolean;
   contentProps?: RHoverCard.HoverCardContentProps;
   showArrow?: boolean;
+  disabled?: boolean;
 }
 
-export function HoverCard({ trigger, children, pointerEvents, contentProps, ...rest }: Props) {
+export function HoverCard({
+  trigger,
+  children,
+  pointerEvents,
+  contentProps,
+  disabled,
+  ...rest
+}: Props) {
+  if (disabled) {
+    return trigger;
+  }
+
   return (
     <RHoverCard.Root closeDelay={10} openDelay={0} {...rest}>
       <RHoverCard.Trigger asChild>{trigger}</RHoverCard.Trigger>

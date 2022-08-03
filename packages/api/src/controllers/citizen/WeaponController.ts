@@ -55,6 +55,7 @@ export class WeaponController {
         take: 12,
         skip,
         include: citizenInclude.weapons.include,
+        orderBy: { createdAt: "desc" },
       }),
     ]);
 

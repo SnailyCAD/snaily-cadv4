@@ -1,5 +1,8 @@
 import type { Permissions } from "@snailycad/permissions";
 import type * as Prisma from "@prisma/client";
+import type * as Enums from "./enums";
+
+export * from "./enums";
 
 type CADPick =
   | "id"
@@ -41,6 +44,7 @@ export type cad = Pick<
 interface CADVersion {
   currentCommitHash: string;
   currentVersion: string;
+  latestReleaseVersion: string | null;
 }
 
 export type CadFeature = Prisma.CadFeature;
@@ -227,7 +231,7 @@ export type BusinessPost = Prisma.BusinessPost;
 
 export type EmployeeValue = Prisma.EmployeeValue & {
   value: Prisma.Value;
-  as: Prisma.EmployeeAsEnum;
+  as: Enums.EmployeeAsEnum;
 };
 
 export type Officer = Prisma.Officer & {
@@ -255,7 +259,7 @@ export type QualificationValue = Prisma.QualificationValue & {
 };
 
 export type LeoWhitelistStatus = Prisma.LeoWhitelistStatus & {
-  status: Prisma.WhitelistStatus;
+  status: Enums.WhitelistStatus;
   department: DepartmentValue;
 };
 
@@ -396,72 +400,3 @@ export type ValueWithValueObj =
   | CallTypeValue;
 
 export type AnyValue = Value | PenalCode | ValueWithValueObj;
-
-/**
- * enums
- */
-export const Feature = {
-  BLEETER: "BLEETER",
-  TOW: "TOW",
-  TAXI: "TAXI",
-  COURTHOUSE: "COURTHOUSE",
-  TRUCK_LOGS: "TRUCK_LOGS",
-  AOP: "AOP",
-  BUSINESS: "BUSINESS",
-  ALLOW_DUPLICATE_CITIZEN_NAMES: "ALLOW_DUPLICATE_CITIZEN_NAMES",
-  DISCORD_AUTH: "DISCORD_AUTH",
-  CALLS_911: "CALLS_911",
-  WEAPON_REGISTRATION: "WEAPON_REGISTRATION",
-  SOCIAL_SECURITY_NUMBERS: "SOCIAL_SECURITY_NUMBERS",
-  CUSTOM_TEXTFIELD_VALUES: "CUSTOM_TEXTFIELD_VALUES",
-  ACTIVE_DISPATCHERS: "ACTIVE_DISPATCHERS",
-  ACTIVE_INCIDENTS: "ACTIVE_INCIDENTS",
-  ALLOW_CITIZEN_UPDATE_LICENSE: "ALLOW_CITIZEN_UPDATE_LICENSE",
-  ALLOW_REGULAR_LOGIN: "ALLOW_REGULAR_LOGIN",
-  RADIO_CHANNEL_MANAGEMENT: "RADIO_CHANNEL_MANAGEMENT",
-  ALLOW_CITIZEN_DELETION_BY_NON_ADMIN: "ALLOW_CITIZEN_DELETION_BY_NON_ADMIN",
-  DL_EXAMS: "DL_EXAMS",
-  DMV: "DMV",
-  BADGE_NUMBERS: "BADGE_NUMBERS",
-  USER_API_TOKENS: "USER_API_TOKENS",
-  CITIZEN_RECORD_APPROVAL: "CITIZEN_RECORD_APPROVAL",
-  COMMON_CITIZEN_CARDS: "COMMON_CITIZEN_CARDS",
-  STEAM_OAUTH: "STEAM_OAUTH",
-  CREATE_USER_CITIZEN_LEO: "CREATE_USER_CITIZEN_LEO",
-  LEO_TICKETS: "LEO_TICKETS",
-  LEO_BAIL: "LEO_BAIL",
-  COURTHOUSE_POSTS: "COURTHOUSE_POSTS",
-  WEAPON_EXAMS: "WEAPON_EXAMS",
-  ACTIVE_WARRANTS: "ACTIVE_WARRANTS",
-  CITIZEN_DELETE_ON_DEAD: "CITIZEN_DELETE_ON_DEAD",
-} as const;
-
-export type Feature = typeof Feature[keyof typeof Feature];
-
-export {
-  RecordType,
-  WhitelistStatus,
-  Rank,
-  StatusViewMode,
-  TableActionsAlignment,
-  ValueType,
-  ValueLicenseType,
-  DepartmentType,
-  DriversLicenseCategoryType,
-  EmployeeAsEnum,
-  ShouldDoType,
-  StatusValueType,
-  WhatPages,
-  BoloType,
-  ReleaseType,
-  ExpungementRequestStatus,
-  WarrantStatus,
-  VehicleInspectionStatus,
-  VehicleTaxStatus,
-  DLExamPassType,
-  DLExamStatus,
-  CustomFieldCategory,
-  QualificationValueType,
-  DiscordWebhookType,
-  JailTimeScale,
-} from "@prisma/client";

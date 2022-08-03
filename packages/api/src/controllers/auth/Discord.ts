@@ -107,8 +107,8 @@ export class DiscordAuth {
      * -> register the account and set cookie
      */
     if (!user && !authUser) {
-      const existingUserWithUsername = await prisma.user.findUnique({
-        where: { username: data.username },
+      const existingUserWithUsername = await prisma.user.findFirst({
+        where: { username: { equals: data.username, mode: "insensitive" } },
       });
 
       if (existingUserWithUsername) {
@@ -223,7 +223,7 @@ export class DiscordAuth {
 }
 
 async function getDiscordData(code: string): Promise<APIUser | null> {
-  const data = (await request(
+  const response = await request(
     `${DISCORD_API_URL}/oauth2/token?grant_type=authorization_code&code=${code}&redirect_uri=${callbackUrl}`,
     {
       method: "POST",
@@ -237,8 +237,13 @@ async function getDiscordData(code: string): Promise<APIUser | null> {
         scope: "identify guilds",
       }),
     },
-  ).then((v) => v.body.json())) as RESTPostOAuth2AccessTokenResult;
+  );
 
+  if (response.statusCode !== 200) {
+    return null;
+  }
+
+  const data = (await response.body.json()) as RESTPostOAuth2AccessTokenResult;
   const accessToken = data.access_token;
   const meData = await request(`${DISCORD_API_URL}/users/@me`, {
     method: "GET",

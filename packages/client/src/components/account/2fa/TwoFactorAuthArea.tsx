@@ -12,7 +12,7 @@ export function TwoFactorAuthArea() {
 
   return (
     <section className="mt-7">
-      <h3 className="text-2xl font-semibold">{t("2fa")}</h3>
+      <h2 className="text-2xl font-semibold">{t("2fa")}</h2>
 
       <Button
         className="mt-3"

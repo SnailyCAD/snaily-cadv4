@@ -13,6 +13,7 @@ import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { TonesModal } from "components/dispatch/modals/TonesModal";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 const buttons: modalButtons.ModalButton[] = [
   modalButtons.switchDivision,
@@ -36,6 +37,7 @@ export function ModalButtons() {
   const { hasActiveDispatchers } = useActiveDispatchers();
   const { state, execute } = useFetch();
   const { openModal } = useModal();
+  const { PANIC_BUTTON } = useFeatureEnabled();
 
   async function handlePanic() {
     if (!activeOfficer) return;
@@ -67,7 +69,7 @@ export function ModalButtons() {
         </p>
       ) : null}
 
-      <ul className="mt-2 modal-buttons-grid">
+      <div className="mt-2 modal-buttons-grid">
         {buttons.map((button, idx) => {
           return (
             <ModalButton
@@ -80,14 +82,16 @@ export function ModalButtons() {
           );
         })}
 
-        <Button
-          id="panicButton"
-          disabled={state === "loading" || isButtonDisabled}
-          title={isButtonDisabled ? "Go on-duty before continuing" : t("Leo.panicButton")}
-          onClick={handlePanic}
-        >
-          {t("Leo.panicButton")}
-        </Button>
+        {PANIC_BUTTON ? (
+          <Button
+            id="panicButton"
+            disabled={state === "loading" || isButtonDisabled}
+            title={isButtonDisabled ? "Go on-duty before continuing" : t("Leo.panicButton")}
+            onClick={handlePanic}
+          >
+            {t("Leo.panicButton")}
+          </Button>
+        ) : null}
 
         {!hasActiveDispatchers ? (
           <>
@@ -97,7 +101,7 @@ export function ModalButtons() {
             <TonesModal types={["leo"]} />
           </>
         ) : null}
-      </ul>
+      </div>
     </div>
   );
 }

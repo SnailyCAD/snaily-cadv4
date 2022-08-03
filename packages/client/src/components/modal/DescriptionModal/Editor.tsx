@@ -16,6 +16,7 @@ import { withShortcuts } from "lib/editor/withShortcuts";
 import { withChecklists } from "lib/editor/withChecklists";
 import { CheckListItemElement } from "./ChecklistItem";
 import type { SlateElements, Text } from "./types";
+import { classNames } from "lib/classNames";
 
 export type SlateEditor = BaseEditor & ReactEditor & HistoryEditor;
 
@@ -31,6 +32,7 @@ interface EditorProps {
   isReadonly?: boolean;
   value: any;
   onChange?(value: Descendant[]): void;
+  truncate?: boolean;
 }
 
 export const DEFAULT_EDITOR_DATA = [
@@ -47,7 +49,7 @@ const HOTKEYS = {
   "mod+s": "strikethrough",
 } as const;
 
-export function Editor({ isReadonly, value, onChange }: EditorProps) {
+export function Editor({ isReadonly, value, onChange, truncate }: EditorProps) {
   const renderElement = React.useCallback(
     (props: RenderElementProps) => <Element {...props} />,
     [],
@@ -72,7 +74,10 @@ export function Editor({ isReadonly, value, onChange }: EditorProps) {
           readOnly={isReadonly}
           renderLeaf={renderLeaf}
           renderElement={renderElement}
-          className="w-full p-1.5 rounded-md bg-transparent disabled:cursor-not-allowed disabled:opacity-80"
+          className={classNames(
+            truncate && "!flex",
+            "w-full p-1.5 rounded-md bg-transparent disabled:cursor-not-allowed disabled:opacity-80",
+          )}
           placeholder="Start typing..."
           onKeyDown={(event) => {
             for (const hotkey in HOTKEYS) {

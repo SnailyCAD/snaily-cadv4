@@ -22,7 +22,7 @@ interface LeoState {
   setActiveWarrants(warrants: ActiveWarrant[]): void;
 }
 
-export const useLeoState = create<LeoState>((set) => ({
+export const useLeoState = create<LeoState>()((set) => ({
   activeOfficer: null,
   setActiveOfficer: (officer) => set({ activeOfficer: officer }),
 

@@ -23,6 +23,7 @@ const featuresRoute: Partial<Record<Feature, string>> = {
   STEAM_OAUTH: "/v1/auth/steam",
   COURTHOUSE_POSTS: "/v1/courthouse-posts",
   ACTIVE_WARRANTS: "/v1/records/active-warrants",
+  PANIC_BUTTON: "/v1/leo/panic-button",
 };
 
 @Middleware()

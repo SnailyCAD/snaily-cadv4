@@ -62,6 +62,7 @@ export default function CitizenLogs({ data }: Props) {
     if (typeof json === "boolean") {
       closeModal(ModalIds.AlertDeleteDLExam);
       asyncTable.setData((p) => p.filter((v) => v.id !== tempExam.id));
+      data.exams.length -= 1;
       examState.setTempId(null);
     }
   }
@@ -189,6 +190,7 @@ export default function CitizenLogs({ data }: Props) {
         onClose={() => examState.setTempId(null)}
         onCreate={(exam) => {
           asyncTable.setData((p) => [exam, ...p]);
+          data.exams.length += 1;
         }}
         onUpdate={(oldExam, newExam) => {
           asyncTable.setData((prev) => {
