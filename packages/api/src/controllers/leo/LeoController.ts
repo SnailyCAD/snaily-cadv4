@@ -60,15 +60,15 @@ export class LeoController {
         where: { status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } } },
       }),
       prisma.combinedLeoUnit.count(),
+      prisma.combinedLeoUnit.findMany({
+        include: combinedUnitProperties,
+      }),
       prisma.officer.findMany({
         where: { status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } } },
         include: leoProperties,
         skip: includeAll ? undefined : skip,
         take: includeAll ? undefined : 15,
         orderBy: { updatedAt: "desc" },
-      }),
-      prisma.combinedLeoUnit.findMany({
-        include: combinedUnitProperties,
       }),
     ]);
 
