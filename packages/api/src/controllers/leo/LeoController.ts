@@ -48,7 +48,7 @@ export class LeoController {
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("includeAll", Boolean) includeAll = false,
     // @QueryParams("query", String) query = "",
-  ): Promise<APITypes.GetActiveOfficersPaginatedData> {
+  ): Promise<APITypes.GetActiveOfficersData> {
     const unitsInactivityFilter = getInactivityFilter(cad, "lastStatusChangeTimestamp");
 
     if (unitsInactivityFilter) {
@@ -83,43 +83,6 @@ export class LeoController {
       officers: [...officersWithUpdatedStatus, ...combinedUnitsWithUpdatedStatus],
       totalCount: officerCount + combinedUnitCount,
     };
-  }
-
-  @Get("/active-officers-old")
-  @Description("Get all the active officers")
-  @UsePermissions({
-    fallback: (u) => u.isLeo || u.isDispatch || u.isEmsFd,
-    permissions: [Permissions.Leo, Permissions.Dispatch, Permissions.EmsFd],
-  })
-  async getActiveOfficers(
-    @Context("cad") cad: { miscCadSettings: MiscCadSettings },
-  ): Promise<APITypes.GetActiveOfficersData> {
-    const unitsInactivityFilter = getInactivityFilter(cad, "lastStatusChangeTimestamp");
-
-    if (unitsInactivityFilter) {
-      setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp);
-    }
-
-    const [officers, units] = await Promise.all([
-      prisma.officer.findMany({
-        where: { status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } } },
-        include: leoProperties,
-        take: 15,
-        orderBy: { updatedAt: "desc" },
-      }),
-      prisma.combinedLeoUnit.findMany({
-        include: combinedUnitProperties,
-      }),
-    ]);
-
-    const officersWithUpdatedStatus = officers.map((u) =>
-      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
-    );
-    const combinedUnitsWithUpdatedStatus = units.map((u) =>
-      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
-    );
-
-    return [...officersWithUpdatedStatus, ...combinedUnitsWithUpdatedStatus];
   }
 
   @Post("/panic-button")

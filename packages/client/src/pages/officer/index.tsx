@@ -30,7 +30,7 @@ import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import type {
   Get911CallsData,
   GetActiveOfficerData,
-  GetActiveOfficersPaginatedData,
+  GetActiveOfficersData,
   GetBolosData,
   GetEmsFdActiveDeputies,
   GetMyOfficersData,
@@ -71,7 +71,7 @@ const Modals = {
 
 interface Props {
   activeOfficer: GetActiveOfficerData;
-  activeOfficers: GetActiveOfficersPaginatedData;
+  activeOfficers: GetActiveOfficersData;
   userOfficers: GetMyOfficersData["officers"];
   calls: Get911CallsData;
   bolos: GetBolosData;

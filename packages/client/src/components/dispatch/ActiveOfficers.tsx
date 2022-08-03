@@ -30,10 +30,10 @@ import { HoverCard } from "components/shared/HoverCard";
 import { useDispatchState } from "state/dispatchState";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
-import type { GetActiveOfficersPaginatedData } from "@snailycad/types/api";
+import type { GetActiveOfficersData } from "@snailycad/types/api";
 
 interface Props {
-  initialOfficers: GetActiveOfficersPaginatedData;
+  initialOfficers: GetActiveOfficersData;
 }
 
 function ActiveOfficers({ initialOfficers }: Props) {
@@ -67,7 +67,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
       },
     },
     fetchOptions: {
-      onResponse: (json: GetActiveOfficersPaginatedData) => ({
+      onResponse: (json: GetActiveOfficersData) => ({
         data: json.officers,
         totalCount: json.totalCount,
       }),

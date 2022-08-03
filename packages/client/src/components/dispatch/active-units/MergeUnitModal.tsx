@@ -26,7 +26,7 @@ interface Props {
 export function MergeUnitModal({ unit, isDispatch, onClose }: Props) {
   const { activeOfficer, setActiveOfficer } = useLeoState();
   const { isOpen, closeModal } = useModal();
-  const { activeOfficers, setActiveOfficers } = useActiveOfficers();
+  const { activeOfficers, setActiveOfficerInMap } = useActiveOfficers();
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -56,21 +56,20 @@ export function MergeUnitModal({ unit, isDispatch, onClose }: Props) {
     });
 
     if (json.id) {
-      const newOfficers = [];
-
-      for (const officer of activeOfficers) {
+      for (const officer of Array.from(activeOfficers.values())) {
         if (values.ids.some((v) => v.value === officer.id)) {
+          // remove the officer from the map, they are in the new combined unit
+          setActiveOfficerInMap(officer.id);
           continue;
         }
 
-        newOfficers.push(officer);
+        setActiveOfficerInMap(officer);
       }
 
       if (!isDispatch) {
         setActiveOfficer(json);
       }
 
-      setActiveOfficers([json, ...newOfficers]);
       handleClose();
     }
   }
@@ -95,7 +94,9 @@ export function MergeUnitModal({ unit, isDispatch, onClose }: Props) {
             <FormField label={t("officers")}>
               <Select
                 isMulti
-                values={activeOfficers.filter(isUnitOfficer).map((v) => makeValuesOption(v))}
+                values={Array.from(activeOfficers.values())
+                  .filter(isUnitOfficer)
+                  .map((v) => makeValuesOption(v))}
                 name="ids"
                 onChange={handleChange}
                 value={values.ids}

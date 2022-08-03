@@ -88,7 +88,8 @@ function ActiveDeputies({ initialDeputies }: Props) {
         <p className="px-4 py-2">{t("Ems.noActiveDeputies")}</p>
       ) : (
         <>
-          <ActiveUnitsSearch type="ems-fd" />
+          {/* todo */}
+          <ActiveUnitsSearch search={{ search: "'", setSearch: () => void 0 }} type="ems-fd" />
 
           <Table
             isWithinCard

@@ -35,7 +35,7 @@ export function useAsyncTable<T>(options: Options<T>) {
 
     return _data;
   }, [options.state?.data, pageIndex, _data]);
-  const setData = options.state?.setData ?? _setData;
+  const setData = (options.state?.setData ?? _setData) as React.Dispatch<React.SetStateAction<T[]>>;
 
   const paginationFetch = React.useCallback(
     async ({ pageSize, pageIndex }: Omit<FetchOptions, "path" | "onResponse">) => {
