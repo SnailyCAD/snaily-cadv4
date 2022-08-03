@@ -42,7 +42,7 @@ export function InputSuggestions<Suggestion extends { id: string }>({
 
   const { state, execute } = useFetch();
   const { focusWithinProps } = useFocusWithin({
-    isDisabled: isMobile(),
+    isDisabled: isMobile({ tablet: true }),
     onBlurWithin: () => setOpen(false),
   });
 
