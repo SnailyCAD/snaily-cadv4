@@ -96,6 +96,7 @@ export class Socket {
       await prisma.officer.findMany({
         where: { status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } } },
         include: leoProperties,
+        orderBy: { updatedAt: "desc" },
       }),
     ]);
 

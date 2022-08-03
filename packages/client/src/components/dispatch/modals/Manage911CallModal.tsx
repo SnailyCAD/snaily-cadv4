@@ -72,7 +72,10 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
     : false;
 
   const allUnits = [...allOfficers, ...allDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
-  const units = [...activeOfficers, ...activeDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
+  const units = [...activeOfficers.values(), ...activeDeputies] as (
+    | EmsFdDeputy
+    | CombinedLeoUnit
+  )[];
 
   const handleCallStateUpdate = React.useCallback(
     (call: Full911Call) => {

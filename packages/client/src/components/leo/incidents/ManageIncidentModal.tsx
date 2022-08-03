@@ -15,17 +15,24 @@ import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Toggle } from "components/form/Toggle";
 import { FormRow } from "components/form/FormRow";
-import { useLeoState } from "state/leoState";
+import { ActiveOfficer, useLeoState } from "state/leoState";
 import { useRouter } from "next/router";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { IncidentEventsArea } from "./IncidentEventsArea";
 import { classNames } from "lib/classNames";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
-import { CombinedLeoUnit, EmsFdDeputy, LeoIncident, StatusValueType } from "@snailycad/types";
+import {
+  CombinedLeoUnit,
+  EmsFdDeputy,
+  LeoIncident,
+  Officer,
+  StatusValueType,
+} from "@snailycad/types";
 import { useValues } from "context/ValuesContext";
 import { isUnitCombined } from "@snailycad/utils";
 import { Input } from "components/form/inputs/Input";
 import type { PostIncidentsData, PutIncidentByIdData } from "@snailycad/types/api";
+import type { ActiveDeputy } from "state/emsFdState";
 
 interface Props {
   incident?: LeoIncident | null;
@@ -60,8 +67,11 @@ export function ManageIncidentModal({
   const areEventsReadonly = !isDispatch || isLeoIncidents;
   const areFieldsDisabled = !isDispatch && !isLeoIncidents;
 
-  const allUnits = [...allOfficers, ...allDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
-  const activeUnits = [...activeOfficers, ...activeDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
+  const allUnits = [...allOfficers, ...allDeputies] as (EmsFdDeputy | Officer | CombinedLeoUnit)[];
+  const activeUnits = [...activeOfficers.values(), ...activeDeputies] as (
+    | ActiveDeputy
+    | ActiveOfficer
+  )[];
   const unitsForSelect = isDispatch ? activeUnits : allUnits;
 
   function handleAddUpdateCallEvent(incident: LeoIncident) {
