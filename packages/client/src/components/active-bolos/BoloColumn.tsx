@@ -13,8 +13,8 @@ interface Props {
 }
 
 const ESTIMATED_SIZES = {
-  [BoloType.PERSON]: 100,
-  [BoloType.VEHICLE]: 170,
+  [BoloType.PERSON]: 200,
+  [BoloType.VEHICLE]: 250,
   [BoloType.OTHER]: 125,
 };
 
