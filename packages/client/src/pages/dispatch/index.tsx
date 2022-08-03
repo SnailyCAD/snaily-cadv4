@@ -102,7 +102,9 @@ export default function DispatchDashboard(props: DispatchPageProps) {
     state.setActiveIncidents(props.activeIncidents);
 
     state.setActiveDeputies(activeDeputies);
-    state.setActiveOfficers(activeOfficers);
+    for (const officer of activeOfficers) {
+      state.setActiveOfficerInMap(officer);
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props, activeDeputies, activeOfficers]);
@@ -123,7 +125,9 @@ export default function DispatchDashboard(props: DispatchPageProps) {
 
       <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
         <div className="w-full">
-          <ActiveOfficers initialOfficers={activeOfficers} />
+          <ActiveOfficers
+            initialOfficers={{ officers: activeOfficers, totalCount: activeOfficers.length }}
+          />
           <ActiveDeputies initialDeputies={activeDeputies} />
         </div>
       </div>

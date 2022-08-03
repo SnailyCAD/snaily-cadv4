@@ -32,15 +32,19 @@ export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
   const { codes10 } = useValues();
-  const { activeOfficers, activeDeputies, setActiveDeputies, setActiveOfficers } =
+  const { activeOfficers, activeDeputies, setActiveDeputies, setActiveOfficerInMap } =
     useDispatchState();
   const { generateCallsign } = useGenerateCallsign();
 
   const t = useTranslations("Leo");
-  const setUnits = type === "leo" ? setActiveOfficers : setActiveDeputies;
+  const setUnits = type === "leo" ? setActiveOfficerInMap : setActiveDeputies;
   const units = type === "leo" ? activeOfficers : activeDeputies;
 
-  const { state: statusState, setStatus } = useUnitStatusChange({ setUnits, units });
+  const { state: statusState, setStatus } = useUnitStatusChange({
+    shouldUseArray: type === "leo",
+    setUnits,
+    units,
+  });
 
   function handleClose() {
     onClose?.();

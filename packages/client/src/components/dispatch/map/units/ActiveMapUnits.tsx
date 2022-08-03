@@ -27,7 +27,7 @@ export function ActiveMapUnits({ players, openItems, setOpenItems }: Props) {
   const { activeDeputies } = useActiveDeputies();
   const units = makeActiveUnits({
     players,
-    activeOfficers,
+    activeOfficers: [...activeOfficers.values()],
     activeDeputies,
   });
 

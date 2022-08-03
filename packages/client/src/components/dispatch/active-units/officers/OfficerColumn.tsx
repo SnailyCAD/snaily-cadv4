@@ -29,10 +29,14 @@ interface Props {
 }
 
 export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) {
-  const { activeOfficers, setActiveOfficers } = useActiveOfficers();
+  const { activeOfficers, setActiveOfficerInMap } = useActiveOfficers();
 
   const { openModal } = useModal();
-  const { setStatus } = useUnitStatusChange({ units: activeOfficers, setUnits: setActiveOfficers });
+  const { setStatus } = useUnitStatusChange({
+    shouldUseArray: false,
+    units: activeOfficers,
+    setUnits: setActiveOfficerInMap,
+  });
   const { activeOfficer } = useLeoState();
   const { makeImageUrl } = useImageUrl();
   const { codes10 } = useValues();

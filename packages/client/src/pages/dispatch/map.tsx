@@ -48,7 +48,9 @@ export default function MapPage(props: Props) {
     const activeDeputies = [...props.deputies].filter(activeFilter);
 
     state.setActiveDeputies(activeDeputies);
-    state.setActiveOfficers(activeOfficers);
+    for (const officer of activeOfficers) {
+      state.setActiveOfficerInMap(officer);
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -56,7 +58,7 @@ export default function MapPage(props: Props) {
     state.setBolos,
     state.setAllOfficers,
     state.setActiveDeputies,
-    state.setActiveOfficers,
+    state.setActiveOfficerInMap,
     state.setAllDeputies,
     props,
   ]);

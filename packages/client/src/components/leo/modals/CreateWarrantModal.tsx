@@ -158,7 +158,7 @@ export function CreateWarrantModal({ warrant, onClose, onCreate, onUpdate }: Pro
                 <Select
                   isMulti
                   name="assignedOfficers"
-                  values={activeOfficers.map((unit) => ({
+                  values={Array.from(activeOfficers.values()).map((unit) => ({
                     label: isUnitCombined(unit)
                       ? generateCallsign(unit, "pairedUnitTemplate")
                       : `${generateCallsign(unit)} ${makeUnitName(unit)}`,

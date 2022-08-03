@@ -20,7 +20,7 @@ export function MultiValueContainerContextMenu(props: MultiValueGenericProps<any
   const { activeDeputies, activeOfficers } = useDispatchState();
 
   const unitId = props.data.value;
-  const unit = [...activeDeputies, ...activeOfficers].find((v) => v.id === unitId) as
+  const unit = [...activeDeputies, ...activeOfficers.values()].find((v) => v.id === unitId) as
     | EmsFdDeputy
     | CombinedLeoUnit
     | undefined;

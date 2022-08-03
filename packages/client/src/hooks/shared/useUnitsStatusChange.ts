@@ -4,11 +4,16 @@ import useFetch from "lib/useFetch";
 import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
 
 interface UnitStatusChangeArgs {
-  units: any[];
-  setUnits(units: any[]): void;
+  shouldUseArray?: boolean;
+  units: any[] | any;
+  setUnits(units: any[] | (string | any)): void;
 }
 
-export function useUnitStatusChange({ units, setUnits }: UnitStatusChangeArgs) {
+export function useUnitStatusChange({
+  units,
+  shouldUseArray = true,
+  setUnits,
+}: UnitStatusChangeArgs) {
   const { state, execute } = useFetch();
 
   const setStatus = React.useCallback(
@@ -16,10 +21,12 @@ export function useUnitStatusChange({ units, setUnits }: UnitStatusChangeArgs) {
       if (status.type === StatusValueType.SITUATION_CODE) return null;
 
       if (status.shouldDo === ShouldDoType.SET_OFF_DUTY) {
-        setUnits(units.filter((v) => v.id !== unitId));
+        const data = shouldUseArray ? units.filter((v: any) => v.id !== unitId) : unitId;
+
+        setUnits(data);
       } else {
         setUnits(
-          units.map((unit) => {
+          units.map((unit: any) => {
             if (unit.id === unitId) {
               return { ...unit, statusId: status.id, status };
             }

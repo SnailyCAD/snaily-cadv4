@@ -40,14 +40,7 @@ export function UnitRadioChannelModal({ unit, onClose }: Props) {
 
   function handleStateChange(json: any) {
     if (isOfficer(unit)) {
-      dispatchState.setActiveOfficers(
-        dispatchState.activeOfficers.map((off) => {
-          if (off.id === unit.id) {
-            return { ...unit, ...json };
-          }
-          return off;
-        }),
-      );
+      dispatchState.setActiveOfficerInMap({ ...unit, ...json });
     } else {
       dispatchState.setActiveDeputies(
         dispatchState.activeDeputies.map((dep) => {
