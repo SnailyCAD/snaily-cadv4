@@ -88,7 +88,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
         <p className="px-4 py-2">{t("Ems.noActiveDeputies")}</p>
       ) : (
         <>
-          <ActiveUnitsSearch />
+          <ActiveUnitsSearch type="ems-fd" />
 
           <Table
             isWithinCard
