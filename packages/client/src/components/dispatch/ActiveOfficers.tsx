@@ -40,7 +40,7 @@ interface Props {
 function ActiveOfficers({ initialOfficers }: Props) {
   const { activeOfficers: _activeOfficers, setActiveOfficerInMap } = useActiveOfficers();
   const { activeIncidents } = useActiveIncidents();
-  const { calls } = useDispatchState();
+  const { calls, resetActiveOfficers } = useDispatchState();
   const isMounted = useMounted();
   const activeOfficers = isMounted ? [..._activeOfficers.values()] : initialOfficers.officers;
 
@@ -64,7 +64,11 @@ function ActiveOfficers({ initialOfficers }: Props) {
     totalCount: initialOfficers.totalCount,
     state: {
       data: activeOfficers,
-      setData: (data) => {
+      setData: (data, query) => {
+        if (query) {
+          resetActiveOfficers();
+        }
+
         for (const officer of data) {
           setActiveOfficerInMap(officer);
         }
@@ -110,11 +114,11 @@ function ActiveOfficers({ initialOfficers }: Props) {
         </div>
       </header>
 
-      {asyncTable.data.length <= 0 ? (
+      {asyncTable.data.length <= 0 && !asyncTable.search.search ? (
         <p className="px-4 py-2 text-neutral-700 dark:text-gray-300">{t("noActiveOfficers")}</p>
       ) : (
         <>
-          <ActiveUnitsSearch search={asyncTable.search} />
+          <ActiveUnitsSearch type="leo" search={asyncTable.search} />
 
           <Table
             pagination={{

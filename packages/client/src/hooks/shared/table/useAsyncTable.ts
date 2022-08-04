@@ -13,7 +13,7 @@ interface Options<T> {
   totalCount: number;
   initialData: T[];
   scrollToTopOnDataChange?: boolean;
-  state?: { data: T[]; setData(data: T[]): void };
+  state?: { data: T[]; setData(data: T[], query?: string): void };
   fetchOptions: Pick<FetchOptions, "onResponse" | "path">;
 }
 
@@ -53,7 +53,8 @@ export function useAsyncTable<T>(options: Options<T>) {
       if (json && !error) {
         const jsonData = options.fetchOptions.onResponse(json);
 
-        setData(jsonData.data);
+        // @ts-expect-error ignore
+        setData(jsonData.data, search);
         setTotalCount(jsonData.totalCount);
 
         if (scrollToTopOnDataChange) {
@@ -72,7 +73,9 @@ export function useAsyncTable<T>(options: Options<T>) {
 
     if (json && !error) {
       const jsonData = options.fetchOptions.onResponse(json);
-      setData(jsonData.data);
+
+      // @ts-expect-error ignore
+      setData(jsonData.data, search);
       setTotalCount(jsonData.totalCount);
     }
   }, [search]); // eslint-disable-line
