@@ -2,7 +2,7 @@ import type * as React from "react";
 import * as RHoverCard from "@radix-ui/react-hover-card";
 import { classNames } from "lib/classNames";
 
-interface Props extends RHoverCard.HoverCardProps {
+export interface HoverCardProps extends RHoverCard.HoverCardProps {
   trigger: any;
   children: React.ReactNode;
   /** defaults to `false` */
@@ -10,6 +10,7 @@ interface Props extends RHoverCard.HoverCardProps {
   contentProps?: RHoverCard.HoverCardContentProps;
   showArrow?: boolean;
   disabled?: boolean;
+  side?: RHoverCard.HoverCardContentProps["side"];
 }
 
 export function HoverCard({
@@ -18,8 +19,9 @@ export function HoverCard({
   pointerEvents,
   contentProps,
   disabled,
+  side,
   ...rest
-}: Props) {
+}: HoverCardProps) {
   if (disabled) {
     return trigger;
   }
@@ -28,6 +30,7 @@ export function HoverCard({
     <RHoverCard.Root closeDelay={10} openDelay={0} {...rest}>
       <RHoverCard.Trigger asChild>{trigger}</RHoverCard.Trigger>
       <RHoverCard.Content
+        side={side}
         sideOffset={5}
         {...contentProps}
         className={classNames(

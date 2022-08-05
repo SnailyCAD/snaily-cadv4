@@ -71,7 +71,9 @@ export function BoloItem({ idx, bolo, handleDelete, handleEdit }: BoloItemProps)
 
           <div>
             <span className="font-semibold">{common("createdAt")}: </span>
-            <FullDate onlyDate>{bolo.createdAt}</FullDate>
+            <FullDate side="top" onlyDate>
+              {bolo.createdAt}
+            </FullDate>
           </div>
         </div>
       </div>
