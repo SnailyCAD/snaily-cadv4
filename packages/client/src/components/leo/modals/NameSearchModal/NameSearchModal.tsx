@@ -386,6 +386,10 @@ export function NameSearchModal() {
                         <Infofield className="max-w-[400px]" label={cT("occupation")}>
                           {currentResult.occupation || common("none")}
                         </Infofield>
+
+                        <Infofield className="max-w-[400px]" label={cT("additionalInfo")}>
+                          {currentResult.additionalInfo || common("none")}
+                        </Infofield>
                       </div>
                     </div>
 

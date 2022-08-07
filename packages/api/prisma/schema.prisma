@@ -307,6 +307,7 @@ model Citizen {
   phoneNumber          String?
   dateOfDead           DateTime?
   occupation           String?                       @db.Text
+  additionalInfo       String?                       @db.Text
   flags                Value[]                       @relation("citizenFlags")
   customFields         CustomFieldValue[]
   vehicles             RegisteredVehicle[]
