@@ -18,6 +18,7 @@ export const CREATE_CITIZEN_SCHEMA = z.object({
   waterLicense: z.string().max(255).nullable().optional(),
   phoneNumber: z.string().max(255).nullable().optional(),
   occupation: z.string().nullable().optional(),
+  additionalInfo: z.string().nullable().optional(),
   driversLicenseCategory: z.array(z.any()).nullable().optional(),
   pilotLicenseCategory: z.array(z.any()).nullable().optional(),
   waterLicenseCategory: z.array(z.any()).nullable().optional(),

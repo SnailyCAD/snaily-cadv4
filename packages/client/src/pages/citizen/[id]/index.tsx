@@ -141,6 +141,10 @@ export default function CitizenId() {
             <Infofield className="max-w-[400px]" label={t("occupation")}>
               {citizen.occupation || common("none")}
             </Infofield>
+
+            <Infofield className="max-w-[400px]" label={t("additionalInfo")}>
+              {citizen.additionalInfo || common("none")}
+            </Infofield>
           </div>
         </div>
 

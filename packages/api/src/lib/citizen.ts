@@ -23,6 +23,7 @@ export function citizenObjectFromData(
     imageId: validateImgurURL(data.image),
     socialSecurityNumber: data.socialSecurityNumber || generateString(9, { numbersOnly: true }),
     occupation: data.occupation || null,
+    additionalInfo: data.additionalInfo,
   };
 
   if (typeof defaultLicenseValueId !== "undefined") {

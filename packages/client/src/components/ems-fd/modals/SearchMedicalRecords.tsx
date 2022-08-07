@@ -196,6 +196,9 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                       <Infofield className="max-w-[400px]" label={t("Citizen.occupation")}>
                         {results.occupation || t("Common.none")}
                       </Infofield>
+                      <Infofield className="max-w-[400px]" label={t("Citizen.additionalInfo")}>
+                        {results.additionalInfo || t("Common.none")}
+                      </Infofield>
                     </div>
                   </div>
 

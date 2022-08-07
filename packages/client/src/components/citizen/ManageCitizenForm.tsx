@@ -78,6 +78,7 @@ export function ManageCitizenForm({
     phoneNumber: citizen?.phoneNumber ?? "",
     postal: citizen?.postal ?? "",
     occupation: citizen?.occupation ?? "",
+    additionalInfo: citizen?.additionalInfo ?? "",
     socialSecurityNumber: citizen?.socialSecurityNumber ?? "",
 
     driversLicense: citizen?.driversLicenseId ?? null,
@@ -287,6 +288,10 @@ export function ManageCitizenForm({
 
           <FormField optional errorMessage={errors.occupation} label={t("occupation")}>
             <Textarea name="occupation" onChange={handleChange} value={values.occupation} />
+          </FormField>
+
+          <FormField optional errorMessage={errors.additionalInfo} label={t("additionalInfo")}>
+            <Textarea name="additionalInfo" onChange={handleChange} value={values.additionalInfo} />
           </FormField>
 
           {showLicenseFields && ALLOW_CITIZEN_UPDATE_LICENSE ? (
