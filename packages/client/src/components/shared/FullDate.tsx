@@ -12,6 +12,12 @@ interface Props extends Omit<HoverCardProps, "trigger" | "children"> {
 export function FullDate({ children, onlyDate, isDateOfBirth, ...rest }: Props) {
   const isMounted = useMounted();
   const hmsString = onlyDate ? "" : "HH:mm:ss";
+
+  const isCorrectDate = isValidDate(children);
+  if (!isCorrectDate) {
+    return <span>Invalid Date</span>;
+  }
+
   let date = new Date(children).getTime();
 
   if (isDateOfBirth) {
@@ -30,4 +36,13 @@ export function FullDate({ children, onlyDate, isDateOfBirth, ...rest }: Props) 
       <span className="font-semibold">{formatted}</span>
     </HoverCard>
   );
+}
+
+function isValidDate(children: any) {
+  try {
+    new Date(children);
+    return true;
+  } catch {
+    return false;
+  }
 }
