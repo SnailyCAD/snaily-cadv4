@@ -40,8 +40,8 @@ export function useActiveWarrants() {
   }, [getActiveWarrants]);
 
   const isWarrantInArr = React.useCallback(
-    (bolo: Pick<ActiveWarrant, "id">) => {
-      return activeWarrants.some((v) => v.id === bolo.id);
+    (activeWarrant: Pick<ActiveWarrant, "id">) => {
+      return activeWarrants.some((v) => v.id === activeWarrant.id);
     },
     [activeWarrants],
   );
@@ -58,11 +58,11 @@ export function useActiveWarrants() {
 
   useListener(
     { eventName: SocketEvents.UpdateActiveWarrant, checkHasListeners: true },
-    (bolo: ActiveWarrant) => {
+    (activeWarrant: ActiveWarrant) => {
       setActiveWarrants(
         activeWarrants.map((v) => {
-          if (v.id === bolo.id) {
-            return bolo;
+          if (v.id === activeWarrant.id) {
+            return activeWarrant;
           }
 
           return v;

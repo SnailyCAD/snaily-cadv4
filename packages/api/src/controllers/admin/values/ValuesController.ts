@@ -59,6 +59,13 @@ export class ValuesController {
       paths.map(async (path) => {
         const type = getTypeFromPath(path);
 
+        // @ts-expect-error ignore this is safe.
+        if (type === "PENAL_CODE_GROUP") {
+          throw new BadRequest(
+            "`penal_code_group` must use the `/v1/admin/penal-code-group` API route (POST, PUT, DELETE).",
+          );
+        }
+
         const data = GET_VALUES[type];
         if (data) {
           return {
