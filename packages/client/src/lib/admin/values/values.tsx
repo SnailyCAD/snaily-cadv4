@@ -9,7 +9,6 @@ import {
   type DivisionValue,
   type VehicleValue,
   type Value,
-  WhatPages,
   ShouldDoType,
   QualificationValue,
   CallTypeValue,
@@ -23,22 +22,12 @@ import {
 import { DEPARTMENT_LABELS } from "components/admin/values/manage-modal/DepartmentFields";
 import { isBaseValue, hasValueObj } from "@snailycad/utils";
 import { useImageUrl } from "hooks/useImageUrl";
+import { makeDefaultWhatPages } from "./utils";
 
 const TYPE_LABELS = {
   [StatusValueType.SITUATION_CODE]: "Situation Code",
   [StatusValueType.STATUS_CODE]: "Status Code",
 };
-
-const DEFAULT_PAGES = [WhatPages.LEO, WhatPages.DISPATCH, WhatPages.EMS_FD];
-
-export function makeDefaultWhatPages(
-  status: (Omit<StatusValue, "whatPages"> & { whatPages: WhatPages[] | null }) | null,
-) {
-  if (!status) return [];
-  const whatPages = status.whatPages ?? [];
-
-  return whatPages.length <= 0 ? DEFAULT_PAGES : status.whatPages;
-}
 
 export function useTableDataOfType(type: ValueType) {
   const common = useTranslations("Common");

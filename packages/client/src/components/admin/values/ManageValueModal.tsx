@@ -22,9 +22,7 @@ import { AnyValue, DriversLicenseCategoryType, EmployeeAsEnum, ValueType } from 
 import { useTranslations } from "use-intl";
 import { Select } from "components/form/Select";
 import hexColor from "hex-color-regex";
-import { getDisabledFromValue, getValueStrFromValue } from "src/pages/admin/values/[path]";
 import { ModalIds } from "types/ModalIds";
-import { makeDefaultWhatPages } from "lib/admin/values";
 import { DepartmentFields } from "./manage-modal/DepartmentFields";
 import {
   StatusValueFields,
@@ -49,6 +47,11 @@ import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSele
 import { Textarea } from "components/form/Textarea";
 import { Toggle } from "components/form/Toggle";
 import type { PatchValueByIdData, PostValuesData } from "@snailycad/types/api";
+import {
+  getDisabledFromValue,
+  getValueStrFromValue,
+  makeDefaultWhatPages,
+} from "lib/admin/values/utils";
 
 interface Props {
   type: ValueType;

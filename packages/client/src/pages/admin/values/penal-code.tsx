@@ -18,7 +18,6 @@ import { ModalIds } from "types/ModalIds";
 import { ManagePenalCodeGroup } from "components/admin/values/penal-codes/ManagePenalCodeGroup";
 import { AlertModal } from "components/modal/AlertModal";
 import { Title } from "components/shared/Title";
-import { hasTableDataChanged } from "./[path]";
 import { OptionsDropdown } from "components/admin/values/import/OptionsDropdown";
 import { ImportValuesModal } from "components/admin/values/import/ImportValuesModal";
 import { Permissions } from "@snailycad/permissions";
@@ -28,6 +27,7 @@ import type {
   PutValuePositionsData,
   DeletePenalCodeGroupsData,
 } from "@snailycad/types/api";
+import { hasTableDataChanged } from "lib/admin/values/utils";
 
 const ManagePenalCode = dynamic(async () => {
   return (await import("components/admin/values/penal-codes/ManagePenalCode")).ManagePenalCode;

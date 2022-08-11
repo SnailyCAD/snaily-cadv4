@@ -1,9 +1,9 @@
 import { ReactSortable } from "react-sortablejs";
 import { ArrowsExpand } from "react-bootstrap-icons";
 import { useTranslations } from "use-intl";
-import { handleFilter, sortValues } from "src/pages/admin/values/[path]";
 import { Button } from "components/Button";
 import type { DriversLicenseCategoryValue } from "@snailycad/types";
+import { handleFilter, sortValues } from "lib/admin/values/utils";
 
 interface ListProps {
   values: DriversLicenseCategoryValue[];

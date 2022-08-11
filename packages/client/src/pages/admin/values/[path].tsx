@@ -1,20 +1,13 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
 import { useRouter } from "next/router";
-import compareAsc from "date-fns/compareAsc";
 import { Button } from "components/Button";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { useModal } from "state/modalState";
-import {
-  type AnyValue,
-  type PenalCode,
-  type PenalCodeGroup,
-  ValueType,
-  Rank,
-} from "@snailycad/types";
+import { type AnyValue, ValueType, Rank } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll, yesOrNoText } from "lib/utils";
@@ -22,7 +15,7 @@ import { Input } from "components/form/inputs/Input";
 import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
 import { IndeterminateCheckbox, Table } from "components/shared/Table";
-import { useTableDataOfType, useTableHeadersOfType } from "lib/admin/values";
+import { useTableDataOfType, useTableHeadersOfType } from "lib/admin/values/values";
 import { OptionsDropdown } from "components/admin/values/import/OptionsDropdown";
 import { Title } from "components/shared/Title";
 import { AlertModal } from "components/modal/AlertModal";
@@ -40,7 +33,13 @@ import type {
 } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import * as Tooltip from "@radix-ui/react-tooltip";
-import { isValueInUse } from "lib/admin/isValueInUse";
+import { isValueInUse } from "lib/admin/values/isValueInUse";
+import {
+  getCreatedAtFromValue,
+  getDisabledFromValue,
+  getValueStrFromValue,
+  hasTableDataChanged,
+} from "lib/admin/values/utils";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -361,80 +360,3 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
     },
   };
 };
-
-export function sortValues<T extends AnyValue>(values: T[]): T[] {
-  return values.sort((a, b) => {
-    const { position: posA, createdAt: crA } = findCreatedAtAndPosition(a);
-    const { position: posB, createdAt: crB } = findCreatedAtAndPosition(b);
-
-    return typeof posA === "number" && typeof posB === "number"
-      ? posA - posB
-      : compareAsc(crA, crB);
-  });
-}
-
-export function findCreatedAtAndPosition(value: AnyValue) {
-  if (isBaseValue(value)) {
-    return {
-      createdAt: new Date(value.createdAt),
-      position: value.position,
-    };
-  }
-
-  if (hasValueObj(value)) {
-    return {
-      createdAt: new Date(value.value.createdAt),
-      position: value.value.position,
-    };
-  }
-
-  return {
-    createdAt: new Date(value.createdAt),
-    position: value.position,
-  };
-}
-
-export function handleFilter(value: AnyValue, search: string) {
-  if (!search) return true;
-  const str = isBaseValue(value) ? value.value : hasValueObj(value) ? value.value.value : "";
-
-  if (str.toLowerCase().includes(search.toLowerCase())) return true;
-  return false;
-}
-
-export function getValueStrFromValue(value: AnyValue) {
-  const isBase = isBaseValue(value);
-  const hasObj = hasValueObj(value);
-  return isBase ? value.value : hasObj ? value.value.value : value.title;
-}
-
-export function getCreatedAtFromValue(value: AnyValue) {
-  const isBase = isBaseValue(value);
-  const hasObj = hasValueObj(value);
-  return isBase ? value.createdAt : hasObj ? value.value.createdAt : value.createdAt;
-}
-
-export function getDisabledFromValue(value: AnyValue) {
-  const isBase = isBaseValue(value);
-  const hasObj = hasValueObj(value);
-  return isBase ? value.isDisabled : hasObj ? value.value.isDisabled : false;
-}
-
-/**
- * only update db if the list was actually moved.
- */
-export function hasTableDataChanged(
-  prevList: (AnyValue | PenalCode | PenalCodeGroup)[],
-  newList: (AnyValue | PenalCode | PenalCodeGroup)[],
-) {
-  let wasMoved = false;
-
-  for (let i = 0; i < prevList.length; i++) {
-    if (prevList[i]?.id !== newList[i]?.id) {
-      wasMoved = true;
-      break;
-    }
-  }
-
-  return wasMoved;
-}
