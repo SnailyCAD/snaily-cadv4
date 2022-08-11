@@ -60,6 +60,10 @@ export class SteamOAuthController {
       prisma.cad.findFirst({ include: { autoSetUserProperties: true } }),
     ]);
 
+    if (!steamData) {
+      return res.redirect(`${redirectURL}/auth/login?error=could not fetch discord data`);
+    }
+
     const steamId = steamData.steamid;
     const steamUsername = steamData.personaname;
 
@@ -186,14 +190,26 @@ export class SteamOAuthController {
   }
 }
 
-async function getSteamData(steamId: string) {
+interface SteamData {
+  steamid: string;
+  personaname: string;
+  profileurl: string;
+}
+
+async function getSteamData(steamId: string): Promise<SteamData | null> {
   const data = await request(
     `${STEAM_API_URL}/ISteamUser/GetPlayerSummaries/v0002/?key=${STEAM_API_KEY}&steamids=${steamId}`,
     {
       method: "GET",
       headers: { accept: "application/json" },
     },
-  ).then((v) => v.body.json());
+  )
+    .then((v) => v.body.json())
+    .catch(() => null);
+
+  if (!data) {
+    return null;
+  }
 
   return data?.response?.players[0];
 }
