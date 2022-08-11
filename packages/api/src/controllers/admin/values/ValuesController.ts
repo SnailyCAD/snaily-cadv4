@@ -23,6 +23,8 @@ import { UsePermissions } from "middlewares/UsePermissions";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import type * as APITypes from "@snailycad/types/api";
 import { getImageWebPPath } from "utils/image";
+import { BULK_DELETE_SCHEMA } from "@snailycad/schemas";
+import { validateSchema } from "lib/validateSchema";
 
 const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
   QUALIFICATION: {
@@ -235,9 +237,9 @@ export class ValuesController {
     @BodyParams() body: unknown,
   ): Promise<APITypes.DeleteValuesBulkData> {
     const type = getTypeFromPath(path);
-    const ids = body as string[];
+    const data = validateSchema(BULK_DELETE_SCHEMA, body);
 
-    const arr = await Promise.all(ids.map(async (id) => this.deleteById(type, id)));
+    const arr = await Promise.all(data.map(async (id) => this.deleteById(type, id)));
 
     return arr.every((v) => v);
   }
