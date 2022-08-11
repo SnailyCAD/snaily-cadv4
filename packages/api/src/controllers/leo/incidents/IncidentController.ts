@@ -244,17 +244,13 @@ export class IncidentController {
       throw new NotFound("notFound");
     }
 
-    if (data.isActive) {
-      await prisma.$transaction(
-        incident.unitsInvolved.map(({ id }) =>
-          prisma.incidentInvolvedUnit.delete({ where: { id } }),
-        ),
-      );
-    }
-
-    await Promise.all(
-      incident.unitsInvolved.map(async (unit) => {
+    await Promise.all([
+      ...incident.unitsInvolved.map(({ id }) =>
+        prisma.incidentInvolvedUnit.delete({ where: { id } }),
+      ),
+      ...incident.unitsInvolved.map(async (unit) => {
         const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
+
         if (!prismaName) return;
 
         // @ts-expect-error method has the same properties
@@ -263,7 +259,7 @@ export class IncidentController {
           data: { activeIncidentId: null },
         });
       }),
-    );
+    ]);
 
     await prisma.leoIncident.update({
       where: { id: incidentId },
@@ -279,9 +275,7 @@ export class IncidentController {
       },
     });
 
-    if (data.isActive) {
-      await this.connectUnitsInvolved(incident.id, data, maxAssignmentsToIncidents);
-    }
+    await this.connectUnitsInvolved(incident.id, data, maxAssignmentsToIncidents);
 
     const updated = await prisma.leoIncident.findUniqueOrThrow({
       where: { id: incident.id },
