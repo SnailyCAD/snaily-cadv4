@@ -3,7 +3,7 @@ import { Get, Description } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import glob from "glob";
 import { join } from "node:path";
-import { statSync } from "node:fs";
+import { stat } from "node:fs/promises";
 import { UseBeforeEach } from "@tsed/common";
 import { IsAuth } from "middlewares/IsAuth";
 import { Rank, WhitelistStatus } from "@prisma/client";
@@ -69,9 +69,9 @@ export class AdminController {
       let totalSize = 0;
 
       await Promise.all(
-        items.map((item) => {
-          const stat = statSync(join(item));
-          totalSize += stat.size;
+        items.map(async (item) => {
+          const { size } = await stat(join(item));
+          totalSize += size;
         }),
       );
 

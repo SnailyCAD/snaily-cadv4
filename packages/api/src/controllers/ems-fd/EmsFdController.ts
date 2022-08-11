@@ -1,4 +1,3 @@
-import process from "node:process";
 import { Controller, UseBeforeEach, Use, MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { EMS_FD_DEPUTY_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
@@ -10,9 +9,9 @@ import type { cad, EmsFdDeputy } from "@snailycad/types";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { IsAuth } from "middlewares/IsAuth";
 import { ActiveDeputy } from "middlewares/ActiveDeputy";
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import { unitProperties } from "lib/leo/activeOfficer";
-import { validateImgurURL } from "utils/image";
+import { getImageWebPPath, validateImgurURL } from "utils/image";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
@@ -497,17 +496,19 @@ export class EmsFdController {
       throw new BadRequest("invalidImageType");
     }
 
-    // "image/png" -> "png"
-    const extension = file.mimetype.split("/")[file.mimetype.split("/").length - 1];
-    const path = `${process.cwd()}/public/units/${deputy.id}.${extension}`;
+    const image = await getImageWebPPath({
+      buffer: file.buffer,
+      pathType: "units",
+      id: deputy.id,
+    });
 
     const [data] = await Promise.all([
       prisma.emsFdDeputy.update({
         where: { id: deputy.id },
-        data: { imageId: `${deputy.id}.${extension}` },
+        data: { imageId: image.fileName },
         select: { imageId: true },
       }),
-      fs.writeFileSync(path, file.buffer),
+      fs.writeFile(image.path, image.buffer),
     ]);
 
     return data;
