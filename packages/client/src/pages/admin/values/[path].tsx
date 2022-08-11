@@ -29,7 +29,7 @@ import { AlertModal } from "components/modal/AlertModal";
 import { ModalIds } from "types/ModalIds";
 import { FullDate } from "components/shared/FullDate";
 import { useTableSelect } from "hooks/shared/useTableSelect";
-import { hasValueObj, isBaseValue } from "@snailycad/utils/typeguards";
+import { hasValueObj, isBaseValue, isPenalCodeValue } from "@snailycad/utils/typeguards";
 import { valueRoutes } from "components/admin/Sidebar/routes";
 import { Checkbox } from "components/form/inputs/Checkbox";
 import type {
@@ -39,6 +39,7 @@ import type {
   PutValuePositionsData,
 } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import * as Tooltip from "@radix-ui/react-tooltip";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -243,14 +244,34 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
                 <Button size="xs" onClick={() => handleEditClick(value)} variant="success">
                   {common("edit")}
                 </Button>
-                <Button
-                  size="xs"
-                  onClick={() => handleDeleteClick(value)}
-                  variant="danger"
-                  className="ml-2"
-                >
-                  {common("delete")}
-                </Button>
+
+                <Tooltip.Provider>
+                  <Tooltip.Root>
+                    <Tooltip.Trigger asChild>
+                      <Button
+                        size="xs"
+                        onClick={() => handleDeleteClick(value)}
+                        variant="danger"
+                        className="ml-2"
+                        disabled={isValueInUse(value)}
+                      >
+                        {common("delete")}
+                      </Button>
+                    </Tooltip.Trigger>
+
+                    <Tooltip.Portal className="z-[999]">
+                      <Tooltip.Content
+                        align="center"
+                        side="left"
+                        sideOffset={5}
+                        className="rounded-md bg-white dark:bg-dark-bright dark:text-white p-4"
+                      >
+                        you cannot delete this value because it is being used by another database
+                        item. You must first delete that item.
+                      </Tooltip.Content>
+                    </Tooltip.Portal>
+                  </Tooltip.Root>
+                </Tooltip.Provider>
               </>
             ),
           }))}
@@ -339,6 +360,60 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
     },
   };
 };
+
+const USED_COUNT_NAMES_PER_TYPE: Partial<Record<ValueType, string[]>> = {
+  BLOOD_GROUP: ["MedicalRecord"],
+  BUSINESS_ROLE: ["employees"],
+  CITIZEN_FLAG: ["citizenFlags"],
+  DEPARTMENT: ["Officer", "EmsFdDeputy", "Qualification", "CombinedLeoUnit"],
+  DIVISION: ["deputies", "officers", "officerDivisionsToDivision"],
+  ETHNICITY: ["ethnicityToValue"],
+  GENDER: ["genderToValue"],
+  IMPOUND_LOT: ["ImpoundedVehicle"],
+  LICENSE: [
+    "registrationStatusToValue",
+    "insuranceStatusToValue",
+    "pilotLicenseToValue",
+    "weaponLicenseToValue",
+    "waterLicenseToValue",
+    "driversLicenseToValue",
+  ],
+  OFFICER_RANK: ["officerRankDepartments"],
+  QUALIFICATION: ["UnitQualification"],
+  VEHICLE: ["RegisteredVehicle"],
+  WEAPON: ["weapon", "weaponModelToValue"],
+
+  VEHICLE_FLAG: ["vehicleFlags"],
+};
+
+export function isValueInUse(value: AnyValue) {
+  const isBase = isBaseValue(value);
+  const hasObj = hasValueObj(value);
+
+  if (isPenalCodeValue(value)) {
+    return false;
+  }
+
+  const baseCounts = isBase ? value._count : value.value._count;
+  const objCounts = hasObj ? value._count : {};
+
+  const counts = { ...baseCounts, ...objCounts } as Record<string, number>;
+  const valueType = isBase ? value.type : hasObj ? value.value.type : null;
+  if (!valueType) return false;
+
+  const keys = USED_COUNT_NAMES_PER_TYPE[valueType];
+  if (!keys) return false;
+
+  for (const _key of keys) {
+    const amount = counts[_key] ?? 0;
+
+    if (amount >= 1) {
+      return true;
+    }
+  }
+
+  return false;
+}
 
 export function sortValues<T extends AnyValue>(values: T[]): T[] {
   return values.sort((a, b) => {

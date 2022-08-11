@@ -141,7 +141,7 @@ export type Citizen = Prisma.Citizen & {
   weaponLicense: Prisma.Value | null;
   pilotLicense: Prisma.Value | null;
   waterLicense: Prisma.Value | null;
-  dlCategory: (Prisma.DriversLicenseCategoryValue & { value: Prisma.Value })[];
+  dlCategory: (Prisma.DriversLicenseCategoryValue & { value: Value })[];
   flags?: Prisma.Value[];
   notes?: Prisma.Note[];
 };
@@ -162,18 +162,24 @@ export type RegisteredVehicle = Prisma.RegisteredVehicle & {
 };
 
 export type Weapon = Prisma.Weapon & {
-  model: Prisma.WeaponValue & { value: Prisma.Value };
+  model: Prisma.WeaponValue & { value: Value };
   citizen: Prisma.Citizen;
-  registrationStatus: Prisma.Value;
+  registrationStatus: Value;
 };
 
 export type MedicalRecord = Prisma.MedicalRecord & {
-  bloodGroup: Prisma.Value | null;
+  bloodGroup: Value | null;
 };
 
 export type Value = Prisma.Value & {
   officerRankDepartments?: DepartmentValue[];
+  _count?: ValueCounts;
 };
+
+// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
+export interface ValueCounts {
+  [key: string]: number;
+}
 
 export type PenalCode = Prisma.PenalCode & {
   warningApplicable?: WarningApplicable | null;
@@ -192,19 +198,19 @@ export type Violation = Prisma.Violation & {
 
 export type SeizedItem = Prisma.SeizedItem;
 
-export type DivisionValue = Prisma.DivisionValue & { value: Prisma.Value };
+export type DivisionValue = Prisma.DivisionValue & { value: Value };
 
-export type CallTypeValue = Prisma.CallTypeValue & { value: Prisma.Value };
+export type CallTypeValue = Prisma.CallTypeValue & { value: Value };
 
-export type DepartmentValue = Prisma.DepartmentValue & { value: Prisma.Value };
+export type DepartmentValue = Prisma.DepartmentValue & { value: Value };
 
 export type DriversLicenseCategoryValue = Prisma.DriversLicenseCategoryValue & {
-  value: Prisma.Value;
+  value: Value;
 };
 
-export type VehicleValue = Prisma.VehicleValue & { value: Prisma.Value };
+export type VehicleValue = Prisma.VehicleValue & { value: Value };
 
-export type WeaponValue = Prisma.WeaponValue & { value: Prisma.Value };
+export type WeaponValue = Prisma.WeaponValue & { value: Value };
 
 export type Notification = Prisma.Notification;
 
@@ -230,7 +236,7 @@ export type Employee = Prisma.Employee & {
 export type BusinessPost = Prisma.BusinessPost;
 
 export type EmployeeValue = Prisma.EmployeeValue & {
-  value: Prisma.Value;
+  value: Value;
   as: Enums.EmployeeAsEnum;
 };
 
@@ -254,7 +260,7 @@ export type UnitQualification = Prisma.UnitQualification & {
 };
 
 export type QualificationValue = Prisma.QualificationValue & {
-  value: Prisma.Value;
+  value: Value;
   departments?: DepartmentValue[];
 };
 
@@ -264,7 +270,7 @@ export type LeoWhitelistStatus = Prisma.LeoWhitelistStatus & {
 };
 
 export type StatusValue = Prisma.StatusValue & {
-  value: Prisma.Value;
+  value: Value;
   departments?: DepartmentValue[];
 };
 
@@ -370,7 +376,7 @@ export type TruckLog = Prisma.TruckLog & {
 
 export type DLExam = Prisma.DLExam & {
   citizen: Prisma.Citizen;
-  license: Prisma.Value;
+  license: Value;
   categories?: DriversLicenseCategoryValue[];
 };
 
@@ -388,7 +394,7 @@ export type CourthousePost = Prisma.CourthousePost & {
   user: User;
 };
 
-export type ValueWithValueObj =
+export type ValueWithValueObj = (
   | VehicleValue
   | WeaponValue
   | StatusValue
@@ -397,6 +403,9 @@ export type ValueWithValueObj =
   | EmployeeValue
   | DriversLicenseCategoryValue
   | QualificationValue
-  | CallTypeValue;
+  | CallTypeValue
+) & {
+  _count?: ValueCounts;
+};
 
 export type AnyValue = Value | PenalCode | ValueWithValueObj;
