@@ -75,7 +75,11 @@ export class ValuesController {
             groups: [],
             // @ts-expect-error ignore
             values: await prisma[data.name].findMany({
-              include: { ...(data.include ?? {}), value: true },
+              include: {
+                ...(data.include ?? {}),
+                _count: true,
+                value: true,
+              },
               orderBy: { value: { position: "asc" } },
             }),
           };
@@ -102,10 +106,12 @@ export class ValuesController {
           values: await prisma.value.findMany({
             where: { type },
             orderBy: { position: "asc" },
-            include:
-              type === ValueType.OFFICER_RANK
+            include: {
+              _count: true,
+              ...(type === ValueType.OFFICER_RANK
                 ? { officerRankDepartments: { include: { value: true } } }
-                : undefined,
+                : {}),
+            },
           }),
         };
       }),

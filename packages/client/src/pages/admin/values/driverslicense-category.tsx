@@ -18,12 +18,12 @@ import { Input } from "components/form/inputs/Input";
 import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
 import { SortableList } from "components/admin/values/SortableList";
-import { handleFilter } from "./[path]";
 import { Title } from "components/shared/Title";
 import { ModalIds } from "types/ModalIds";
 import { AlertModal } from "components/modal/AlertModal";
 import { Permissions } from "@snailycad/permissions";
 import type { DeleteValueByIdData, PutValuePositionsData } from "@snailycad/types/api";
+import { handleFilter } from "lib/admin/values/utils";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;

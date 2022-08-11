@@ -27,6 +27,7 @@
     "@radix-ui/react-switch": "^1.0.0",
     "@radix-ui/react-tabs": "^1.0.0",
     "@radix-ui/react-toolbar": "^1.0.0",
+    "@radix-ui/react-tooltip": "^1.0.0",
     "@react-aria/focus": "^3.7.0",
     "@react-aria/interactions": "^3.10.0",
     "@react-aria/label": "^3.4.0",
