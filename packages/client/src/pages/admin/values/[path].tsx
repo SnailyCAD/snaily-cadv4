@@ -245,7 +245,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
                   {common("edit")}
                 </Button>
 
-                <Tooltip.Provider>
+                <Tooltip.Provider delayDuration={0}>
                   <Tooltip.Root>
                     <Tooltip.Trigger asChild>
                       <Button
