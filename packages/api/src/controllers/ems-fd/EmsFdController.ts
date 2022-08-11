@@ -508,7 +508,7 @@ export class EmsFdController {
         data: { imageId: image.fileName },
         select: { imageId: true },
       }),
-      fs.writeFile(image.path, image.imageBuffer),
+      fs.writeFile(image.path, image.buffer),
     ]);
 
     return data;

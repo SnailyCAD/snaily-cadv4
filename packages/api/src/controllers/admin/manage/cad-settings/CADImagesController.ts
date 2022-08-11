@@ -41,7 +41,7 @@ export class ManageCitizensController {
         data: { logoId: image.fileName },
         select: { logoId: true },
       }),
-      fs.writeFile(image.path, image.imageBuffer),
+      fs.writeFile(image.path, image.buffer),
     ]);
 
     return data;
@@ -70,7 +70,7 @@ export class ManageCitizensController {
             where: { id: cad.miscCadSettingsId! },
             data: { [file.originalname]: image.fileName },
           }),
-          fs.writeFile(image.path, image.imageBuffer),
+          fs.writeFile(image.path, image.buffer),
         ]);
 
         return data;

@@ -1620,7 +1620,6 @@ __metadata:
     cookie-parser: 1.4.6
     cors: 2.8.5
     cuid: ^2.1.8
-    cwebp: ^2.0.5
     discord-api-types: 0.37.0
     esbuild: ^0.14.51
     esbuild-register: ^3.3.3
@@ -4452,17 +4451,6 @@ __metadata:
   version: 2.1.8
   resolution: "cuid@npm:2.1.8"
   checksum: 12b85b3f5150a6f0b9e4f345c8d98299d74647419151751fa1132f6702fe2b5388ceceb1c9b49bad7cab1b3ac033c7cedea8ffc034930f90005b8a4345025288
-  languageName: node
-  linkType: hard
-
-"cwebp@npm:^2.0.5":
-  version: 2.0.5
-  resolution: "cwebp@npm:2.0.5"
-  dependencies:
-    raw-body: 2
-    through: ~2.3
-    when: 3
-  checksum: 4f89acdd3038dffbe3c6b5a6842a4deb6ca54ba19daa65e06ae7bda7678ac0a2690a7dbb1512e6835f0b638eac93cbd5e36a261eccd10f5bb94dd07c23ed62d0
   languageName: node
   linkType: hard
 
@@ -9362,7 +9350,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"raw-body@npm:2, raw-body@npm:2.5.1":
+"raw-body@npm:2.5.1":
   version: 2.5.1
   resolution: "raw-body@npm:2.5.1"
   dependencies:
@@ -11059,13 +11047,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"through@npm:~2.3":
-  version: 2.3.8
-  resolution: "through@npm:2.3.8"
-  checksum: a38c3e059853c494af95d50c072b83f8b676a9ba2818dcc5b108ef252230735c54e0185437618596c790bbba8fcdaef5b290405981ffa09dce67b1f1bf190cbd
-  languageName: node
-  linkType: hard
-
 "tiny-invariant@npm:1.0.6":
   version: 1.0.6
   resolution: "tiny-invariant@npm:1.0.6"
@@ -12111,13 +12092,6 @@ __metadata:
     tr46: ^1.0.1
     webidl-conversions: ^4.0.2
   checksum: fecb07c87290b47d2ec2fb6d6ca26daad3c9e211e0e531dd7566e7ff95b5b3525a57d4f32640ad4adf057717e0c215731db842ad761e61d947e81010e05cf5fd
-  languageName: node
-  linkType: hard
-
-"when@npm:3":
-  version: 3.7.8
-  resolution: "when@npm:3.7.8"
-  checksum: 1f7a3d4a125c61108c51a58b7e42350d290f0595c42fb864a38d403101b40ede28d29068c9f7a8c3e4e0128f2050f7cc68c7e82b3a39a9156f6929fc69bf42fb
   languageName: node
   linkType: hard
 

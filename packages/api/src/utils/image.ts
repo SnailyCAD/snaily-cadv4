@@ -32,11 +32,11 @@ interface RawImageToWebPOptions {
 
 export async function getImageWebPPath(options: RawImageToWebPOptions) {
   const sharpImage = sharp(options.buffer).webp({ quality: 80 });
-  const imageBuffer = await sharpImage.toBuffer();
+  const buffer = await sharpImage.toBuffer();
 
   const id = options.id ?? randomUUID();
   const fileName = `${id}.webp`;
   const path = `${process.cwd()}/public/${options.pathType}/${fileName}`;
 
-  return { imageBuffer, fileName, path };
+  return { buffer, fileName, path };
 }

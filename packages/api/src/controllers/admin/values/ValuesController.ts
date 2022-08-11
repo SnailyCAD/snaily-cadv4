@@ -177,7 +177,7 @@ export class ValuesController {
 
     const image = await getImageWebPPath({ buffer: file.buffer, pathType: "values", id });
 
-    await fs.writeFile(image.path, image.imageBuffer);
+    await fs.writeFile(image.path, image.buffer);
 
     let data;
     if (type === ValueType.QUALIFICATION) {
