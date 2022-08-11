@@ -1,4 +1,3 @@
-import process from "node:process";
 import fs from "node:fs/promises";
 import { Controller, UseBeforeEach, PlatformMulterFile, MultipartFile } from "@tsed/common";
 import { Delete, Get, Post, Put } from "@tsed/schema";
@@ -7,7 +6,7 @@ import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
-import { validateImgurURL } from "utils/image";
+import { getImageWebPPath, validateImgurURL } from "utils/image";
 import { User, MiscCadSettings, Feature, CadFeature } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
@@ -343,17 +342,19 @@ export class MyOfficersController {
       throw new ExtendedBadRequest({ image: "invalidImageType" });
     }
 
-    // "image/png" -> "png"
-    const extension = file.mimetype.split("/")[file.mimetype.split("/").length - 1];
-    const path = `${process.cwd()}/public/units/${officer.id}.${extension}`;
+    const image = await getImageWebPPath({
+      buffer: file.buffer,
+      pathType: "units",
+      id: officer.id,
+    });
 
     const [data] = await Promise.all([
       prisma.officer.update({
         where: { id: officer.id },
-        data: { imageId: `${officer.id}.${extension}` },
+        data: { imageId: image.fileName },
         select: { imageId: true },
       }),
-      fs.writeFile(path, file.buffer),
+      fs.writeFile(image.path, image.imageBuffer),
     ]);
 
     return data;

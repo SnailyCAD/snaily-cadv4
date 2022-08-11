@@ -1,5 +1,4 @@
-import fs from "node:fs";
-import process from "node:process";
+import fs from "node:fs/promises";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { BLEETER_SCHEMA } from "@snailycad/schemas";
 import {
@@ -21,6 +20,7 @@ import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import type { User } from "@prisma/client";
 import type * as APITypes from "@snailycad/types/api";
+import { getImageWebPPath } from "utils/image";
 
 @UseBeforeEach(IsAuth)
 @Controller("/bleeter")
@@ -133,17 +133,15 @@ export class BleeterController {
       throw new ExtendedBadRequest({ image: "invalidImageType" });
     }
 
-    // "image/png" -> "png"
-    const extension = file.mimetype.split("/")[file.mimetype.split("/").length - 1];
-    const path = `${process.cwd()}/public/bleeter/${post.id}.${extension}`;
+    const image = await getImageWebPPath({ buffer: file.buffer, pathType: "values", id: post.id });
 
     const [data] = await Promise.all([
       prisma.bleeterPost.update({
         where: { id: post.id },
-        data: { imageId: `${post.id}.${extension}` },
+        data: { imageId: image.fileName },
         select: { imageId: true },
       }),
-      fs.writeFileSync(path, file.buffer),
+      fs.writeFile(image.path, image.imageBuffer),
     ]);
 
     return data;

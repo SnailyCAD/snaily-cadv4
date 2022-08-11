@@ -9,8 +9,7 @@ import {
   PlatformMulterFile,
   Context,
 } from "@tsed/common";
-import process from "node:process";
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import { Delete, Description, Patch, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsValidPath } from "middlewares/ValidPath";
@@ -23,6 +22,7 @@ import { ValueType } from "@prisma/client";
 import { UsePermissions } from "middlewares/UsePermissions";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import type * as APITypes from "@snailycad/types/api";
+import { getImageWebPPath } from "utils/image";
 
 const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
   QUALIFICATION: {
@@ -175,23 +175,21 @@ export class ValuesController {
       }
     }
 
-    // "image/png" -> "png"
-    const extension = file.mimetype.split("/")[file.mimetype.split("/").length - 1];
-    const path = `${process.cwd()}/public/values/${id}.${extension}`;
+    const image = await getImageWebPPath({ buffer: file.buffer, pathType: "values", id });
 
-    await fs.writeFileSync(path, file.buffer);
+    await fs.writeFile(image.path, image.imageBuffer);
 
     let data;
     if (type === ValueType.QUALIFICATION) {
       data = await prisma.qualificationValue.update({
         where: { id },
-        data: { imageId: `${id}.${extension}` },
+        data: { imageId: image.fileName },
         select: { imageId: true },
       });
     } else if (type === ValueType.OFFICER_RANK) {
       data = await prisma.value.update({
         where: { id },
-        data: { officerRankImageId: `${id}.${extension}` },
+        data: { officerRankImageId: image.fileName },
         select: { officerRankImageId: true },
       });
     }

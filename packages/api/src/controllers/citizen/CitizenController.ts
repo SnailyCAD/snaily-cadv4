@@ -1,4 +1,3 @@
-import process from "node:process";
 import { UseBeforeEach, Context, MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
@@ -7,7 +6,7 @@ import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { BadRequest, Forbidden, NotFound } from "@tsed/exceptions";
 import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { generateString } from "utils/generateString";
@@ -20,6 +19,7 @@ import { isFeatureEnabled } from "lib/cad";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { citizenObjectFromData } from "lib/citizen";
 import type * as APITypes from "@snailycad/types/api";
+import { getImageWebPPath } from "utils/image";
 
 export const citizenInclude = {
   user: { select: userProperties },
@@ -321,17 +321,19 @@ export class CitizenController {
       throw new ExtendedBadRequest({ image: "invalidImageType" });
     }
 
-    // "image/png" -> "png"
-    const extension = file.mimetype.split("/")[file.mimetype.split("/").length - 1];
-    const path = `${process.cwd()}/public/citizens/${citizen.id}.${extension}`;
+    const image = await getImageWebPPath({
+      buffer: file.buffer,
+      pathType: "citizens",
+      id: citizen.id,
+    });
 
     const [data] = await Promise.all([
       prisma.citizen.update({
         where: { id: citizen.id },
-        data: { imageId: `${citizen.id}.${extension}` },
+        data: { imageId: image.fileName },
         select: { imageId: true },
       }),
-      fs.writeFileSync(path, file.buffer),
+      fs.writeFile(image.path, image.imageBuffer),
     ]);
 
     return data;

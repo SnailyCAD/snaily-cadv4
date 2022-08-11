@@ -1,4 +1,3 @@
-import process from "node:process";
 import { Controller } from "@tsed/di";
 import { Context } from "@tsed/platform-params";
 import { Post } from "@tsed/schema";
@@ -7,12 +6,12 @@ import { IsAuth } from "middlewares/IsAuth";
 import { BadRequest } from "@tsed/exceptions";
 import { MultipartFile, PlatformMulterFile, UseBefore } from "@tsed/common";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import { cad, Rank } from "@prisma/client";
-import { randomUUID } from "node:crypto";
 import { Permissions } from "@snailycad/permissions";
 import { UsePermissions } from "middlewares/UsePermissions";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { getImageWebPPath } from "utils/image";
 
 @Controller("/admin/manage/cad-settings/image")
 export class ManageCitizensController {
@@ -34,17 +33,15 @@ export class ManageCitizensController {
       throw new BadRequest("invalidImageType");
     }
 
-    // "image/png" -> "png"
-    const extension = file.mimetype.split("/")[file.mimetype.split("/").length - 1];
-    const path = `${process.cwd()}/public/cad/${cad.id}.${extension}`;
+    const image = await getImageWebPPath({ buffer: file.buffer, pathType: "cad", id: cad.id });
 
     const [data] = await Promise.all([
       prisma.cad.update({
         where: { id: cad.id },
-        data: { logoId: `${cad.id}.${extension}` },
+        data: { logoId: image.fileName },
         select: { logoId: true },
       }),
-      fs.writeFileSync(path, file.buffer),
+      fs.writeFile(image.path, image.imageBuffer),
     ]);
 
     return data;
@@ -62,23 +59,18 @@ export class ManageCitizensController {
   ) {
     await Promise.all(
       files.map(async (file) => {
-        console.log({ file });
-
         if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
           throw new BadRequest("invalidImageType");
         }
 
-        // "image/png" -> "png"
-        const extension = file.mimetype.split("/")[file.mimetype.split("/").length - 1];
-        const id = randomUUID();
-        const path = `${process.cwd()}/public/cad/${id}.${extension}`;
+        const image = await getImageWebPPath({ buffer: file.buffer, pathType: "cad" });
 
         const [data] = await Promise.all([
           prisma.miscCadSettings.update({
             where: { id: cad.miscCadSettingsId! },
-            data: { [file.originalname]: `${id}.${extension}` },
+            data: { [file.originalname]: image.fileName },
           }),
-          fs.writeFileSync(path, file.buffer),
+          fs.writeFile(image.path, image.imageBuffer),
         ]);
 
         return data;
