@@ -1192,7 +1192,7 @@ model TruckLog {
 // Exams
 model DLExam {
   id           String                        @id @default(uuid())
-  citizen      Citizen                       @relation(fields: [citizenId], references: [id])
+  citizen      Citizen                       @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId    String
   theoryExam   DLExamPassType?
   practiceExam DLExamPassType?

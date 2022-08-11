@@ -144,10 +144,6 @@ export default function LeoIncidents({
         <p className="mt-5">{t("noIncidents")}</p>
       ) : (
         <Table
-          defaultSort={{
-            columnId: "caseNumber",
-            descending: true,
-          }}
           data={incidents.map((incident) => {
             const nameAndCallsign = incident.creator
               ? `${generateCallsign(incident.creator)} ${makeUnitName(incident.creator)}`

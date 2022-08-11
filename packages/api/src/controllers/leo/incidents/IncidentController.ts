@@ -58,6 +58,7 @@ export class IncidentController {
     const incidents = await prisma.leoIncident.findMany({
       where: { NOT: { isActive: true } },
       include: incidentInclude,
+      orderBy: { caseNumber: "desc" },
     });
 
     return { incidents: incidents.map(officerOrDeputyToUnit) };
@@ -325,70 +326,72 @@ export class IncidentController {
     data: Pick<z.infer<typeof LEO_INCIDENT_SCHEMA>, "unitsInvolved" | "isActive">,
     maxAssignmentsToIncidents: number,
   ) {
-    await Promise.all(
-      (data.unitsInvolved ?? []).map(async (id: string) => {
-        const { unit, type } = await findUnit(id, {
-          NOT: { status: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
-        });
+    if (!data.unitsInvolved) return;
 
-        if (!unit) {
-          throw new BadRequest("unitOffDuty");
-        }
+    for (const unitId of data.unitsInvolved) {
+      if (typeof unitId !== "string") continue;
 
-        const types = {
-          combined: "combinedLeoId",
-          leo: "officerId",
-          "ems-fd": "emsFdDeputyId",
-        } as const;
+      const { unit, type } = await findUnit(unitId, {
+        NOT: { status: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
+      });
 
-        const assignmentCount = await prisma.incidentInvolvedUnit.count({
-          where: {
-            [types[type]]: unit.id,
-            incident: { isActive: true },
-          },
-        });
+      if (!unit) {
+        continue;
+      }
 
-        if (assignmentCount >= maxAssignmentsToIncidents) {
-          // skip this officer
-          return;
-        }
+      const types = {
+        combined: "combinedLeoId",
+        leo: "officerId",
+        "ems-fd": "emsFdDeputyId",
+      } as const;
 
-        const existing = await prisma.incidentInvolvedUnit.count({
-          where: {
-            [types[type]]: unit.id,
-            incidentId,
-          },
-        });
+      const assignmentCount = await prisma.incidentInvolvedUnit.count({
+        where: {
+          [types[type]]: unit.id,
+          incident: { isActive: true },
+        },
+      });
 
-        if (existing >= 1) {
-          return;
-        }
+      if (assignmentCount >= maxAssignmentsToIncidents) {
+        // skip this officer
+        continue;
+      }
 
-        const involvedUnit = await prisma.incidentInvolvedUnit.create({
-          data: {
-            incidentId,
-            [types[type]]: unit.id,
-          },
-        });
+      const existing = await prisma.incidentInvolvedUnit.count({
+        where: {
+          [types[type]]: unit.id,
+          incidentId,
+        },
+      });
 
-        const prismaName =
-          type === "combined"
-            ? "combinedLeoUnit"
-            : (types[type].replace("Id", "") as "officer" | "emsFdDeputy");
+      if (existing >= 1) {
+        continue;
+      }
 
-        // @ts-expect-error method has the same properties
-        await prisma[prismaName].update({
-          where: { id: unit.id },
-          data: { activeIncidentId: incidentId },
-        });
+      const involvedUnit = await prisma.incidentInvolvedUnit.create({
+        data: {
+          incidentId,
+          [types[type]]: unit.id,
+        },
+      });
 
-        await prisma.leoIncident.update({
-          where: { id: incidentId },
-          data: {
-            unitsInvolved: { connect: { id: involvedUnit.id } },
-          },
-        });
-      }),
-    );
+      const prismaName =
+        type === "combined"
+          ? "combinedLeoUnit"
+          : (types[type].replace("Id", "") as "officer" | "emsFdDeputy");
+
+      // @ts-expect-error method has the same properties
+      await prisma[prismaName].update({
+        where: { id: unit.id },
+        data: { activeIncidentId: incidentId },
+      });
+
+      await prisma.leoIncident.update({
+        where: { id: incidentId },
+        data: {
+          unitsInvolved: { connect: { id: involvedUnit.id } },
+        },
+      });
+    }
   }
 }
