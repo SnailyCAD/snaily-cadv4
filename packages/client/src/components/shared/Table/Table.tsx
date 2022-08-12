@@ -106,7 +106,7 @@ export function Table<TData extends RowData>({
     const pageEnd = pageStart + tableState.pagination.pageSize;
 
     return rows.slice(pageStart, pageEnd);
-  }, [tableState.pagination, table]);
+  }, [tableState, table]);
 
   return (
     <div
