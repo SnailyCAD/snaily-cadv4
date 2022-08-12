@@ -259,17 +259,19 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
                       </Button>
                     </Tooltip.Trigger>
 
-                    <Tooltip.Portal className="z-[999]">
-                      <Tooltip.Content
-                        align="center"
-                        side="left"
-                        sideOffset={5}
-                        className="rounded-md bg-white dark:bg-dark-bright dark:text-white p-4"
-                      >
-                        you cannot delete this value because it is being used by another database
-                        item. You must first delete that item.
-                      </Tooltip.Content>
-                    </Tooltip.Portal>
+                    {isValueInUse(value) ? (
+                      <Tooltip.Portal className="z-[999]">
+                        <Tooltip.Content
+                          align="center"
+                          side="left"
+                          sideOffset={5}
+                          className="rounded-md bg-white dark:bg-dark-bright dark:text-white p-4 max-w-[350px]"
+                        >
+                          You cannot delete this value because it is being used by another database
+                          item. You must first delete that item.
+                        </Tooltip.Content>
+                      </Tooltip.Portal>
+                    ) : null}
                   </Tooltip.Root>
                 </Tooltip.Provider>
               </>
