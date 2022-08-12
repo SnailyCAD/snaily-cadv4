@@ -5,53 +5,32 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "react-bootstrap-icons";
-import type { TableInstance } from "react-table";
-import type { TableData } from "./TableProps";
+import type { Table, RowData } from "@tanstack/react-table";
 
-type TablePicks =
-  | "canPreviousPage"
-  | "nextPage"
-  | "previousPage"
-  | "canNextPage"
-  | "gotoPage"
-  | "pageCount"
-  | "pageOptions"
-  | "state";
-
-interface Props<T extends object, RowProps extends object> {
-  instance: Pick<TableInstance<TableData<T, RowProps>>, TablePicks>;
-  paginationState?: "error" | "loading" | null;
+interface Props<TData extends RowData> {
+  table: Table<TData>;
 }
 
-export function TablePagination<T extends object, RowProps extends object>({
-  instance,
-  paginationState,
-}: Props<T, RowProps>) {
-  const isLoading = paginationState === "loading";
+// todo: add loading states if applicable
 
+export function TablePagination<TData extends RowData>({ table }: Props<TData>) {
   return (
     <div className="mt-5 flex justify-center items-center gap-3">
-      <Button
-        onClick={() => instance.gotoPage(0)}
-        disabled={isLoading || !instance.canPreviousPage}
-      >
+      <Button onClick={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()}>
         <ChevronDoubleLeft aria-label="Show first page" width={15} height={25} />
       </Button>
-      <Button
-        onClick={() => instance.previousPage()}
-        disabled={isLoading || !instance.canPreviousPage}
-      >
+      <Button onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
         <ChevronLeft aria-label="Previous page" width={15} height={25} />
       </Button>
       <span>
-        {instance.state.pageIndex + 1} of {instance.pageOptions.length}
+        {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
       </span>
-      <Button onClick={() => instance.nextPage()} disabled={isLoading || !instance.canNextPage}>
+      <Button onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
         <ChevronRight aria-label="Next page" width={15} height={25} />
       </Button>
       <Button
-        onClick={() => instance.gotoPage(instance.pageCount - 1)}
-        disabled={isLoading || !instance.canNextPage}
+        onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+        disabled={!table.getCanNextPage()}
       >
         <ChevronDoubleRight aria-label="Show last page" width={15} height={25} />
       </Button>

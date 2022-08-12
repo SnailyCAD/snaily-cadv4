@@ -1707,12 +1707,12 @@ __metadata:
     "@snailycad/schemas": 1.19.2
     "@snailycad/types": 1.19.2
     "@snailycad/utils": 1.19.2
+    "@tanstack/react-table": ^8.5.11
     "@tanstack/react-virtual": ^3.0.0-alpha.0
     "@tanstack/virtual-core": ^3.0.0-alpha.1
     "@types/leaflet": ^1.7.11
     "@types/react": ^18.0.15
     "@types/react-dom": ^18.0.6
-    "@types/react-table": ^7.7.12
     "@types/sortablejs": ^1.13.0
     "@types/uuid": ^8.3.4
     autoprefixer: ^10.4.8
@@ -1744,7 +1744,6 @@ __metadata:
     react-leaflet: ^4.0.1
     react-select: ^5.4.0
     react-sortablejs: ^6.1.4
-    react-table: ^7.8.0
     react-use: ^17.4.0
     rimraf: ^3.0.2
     sass: ^1.54.0
@@ -1989,12 +1988,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/react-table@npm:^8.5.11":
+  version: 8.5.11
+  resolution: "@tanstack/react-table@npm:8.5.11"
+  dependencies:
+    "@tanstack/table-core": 8.5.11
+  peerDependencies:
+    react: ">=16"
+    react-dom: ">=16"
+  checksum: 7ab4bfb6c6f2ea3d7a17332297cf77cdd3ca231fde8cb61be94dec603e3e7316bd7661c08c4430b02fd4cb7e7b42f733d854e8a872bb094529dc5d32f9dd2acc
+  languageName: node
+  linkType: hard
+
 "@tanstack/react-virtual@npm:^3.0.0-alpha.0":
   version: 3.0.0-beta.2
   resolution: "@tanstack/react-virtual@npm:3.0.0-beta.2"
   dependencies:
     "@reach/observe-rect": ^1.1.0
   checksum: 3fe623dd96603a47d4e7ebbd3f47e9e3aaa95ba36d6c94b6e4f14ff1de006b51d0afb79b80f388908d3caaace589f8c105e0824296e6094dd29fa1b4d5a63c3c
+  languageName: node
+  linkType: hard
+
+"@tanstack/table-core@npm:8.5.11":
+  version: 8.5.11
+  resolution: "@tanstack/table-core@npm:8.5.11"
+  checksum: f518ba072f0098e9cc2e609bb9da060e2c94c3aed09484effd9e2acb26a512e9566a00fabebb3fe5300763c715132464c4494307774d9a2e5ffc8ea3b7aa3f49
   languageName: node
   linkType: hard
 
@@ -2777,15 +2795,6 @@ __metadata:
   dependencies:
     "@types/react": "*"
   checksum: db571047af1a567631758700b9f7d143e566df939cfe5fbf7535347cc0c726a1cdbb5e3f8566d076e54cf708b6c1166689de194a9ba09ee35efc9e1d45911685
-  languageName: node
-  linkType: hard
-
-"@types/react-table@npm:^7.7.12":
-  version: 7.7.12
-  resolution: "@types/react-table@npm:7.7.12"
-  dependencies:
-    "@types/react": "*"
-  checksum: 287ea68e75b56c2e70e6d6491cd172348c7302b032789047eb2dca1b25b240684e48a60f58140575828b790f95724b9f3ec4d3adce82fc1c05d994def1449009
   languageName: node
   linkType: hard
 
@@ -9653,15 +9662,6 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 7ee8ef3aab74c7ae1d70ff34a27643d11ba1a8d62d072c767827d9ff9a520905223e567002e0bf6c772929d8ea1c781a3ba0cc4a563e92b1e3dc2eaa817ecbe8
-  languageName: node
-  linkType: hard
-
-"react-table@npm:^7.8.0":
-  version: 7.8.0
-  resolution: "react-table@npm:7.8.0"
-  peerDependencies:
-    react: ^16.8.3 || ^17.0.0-0 || ^18.0.0
-  checksum: 44ca0fb848c6869cd793cede8dc33072b38ebb8f8d2833565afe7cf3eac5d1fa455ac5fb9d06838b16fab0523d5d03e3e82f7645032f71245096e67b892313b9
   languageName: node
   linkType: hard
 

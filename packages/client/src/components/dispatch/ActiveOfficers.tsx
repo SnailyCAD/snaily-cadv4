@@ -30,12 +30,15 @@ import { HoverCard } from "components/shared/HoverCard";
 import { useDispatchState } from "state/dispatchState";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useMounted } from "@casper124578/useful";
+import { useTableState } from "components/shared/Table/Table";
 
 interface Props {
   initialOfficers: ActiveOfficer[];
 }
 
 function ActiveOfficers({ initialOfficers }: Props) {
+  const tableState = useTableState();
+
   const { activeOfficers: _activeOfficers } = useActiveOfficers();
   const { activeIncidents } = useActiveIncidents();
   const { calls } = useDispatchState();
@@ -95,8 +98,9 @@ function ActiveOfficers({ initialOfficers }: Props) {
 
           <Table
             isWithinCard
-            maxItemsPerPage={12}
             containerProps={{ className: "mb-3 px-4" }}
+            tableState={tableState}
+            pageSize={12}
             data={activeOfficers
               .filter((officer) => handleFilter(officer, leoSearch))
               .map((officer) => {
@@ -163,18 +167,18 @@ function ActiveOfficers({ initialOfficers }: Props) {
                 };
               })}
             columns={[
-              { Header: t("officer"), accessor: "officer" },
-              BADGE_NUMBERS ? { Header: t("badgeNumber"), accessor: "badgeNumber" } : null,
-              { Header: t("department"), accessor: "department" },
-              { Header: t("division"), accessor: "division" },
-              { Header: t("rank"), accessor: "rank" },
-              { Header: t("status"), accessor: "status" },
-              ACTIVE_INCIDENTS ? { Header: t("incident"), accessor: "incident" } : null,
-              { Header: t("activeCall"), accessor: "activeCall" },
+              { header: t("officer"), accessorKey: "officer" },
+              BADGE_NUMBERS ? { header: t("badgeNumber"), accessorKey: "badgeNumber" } : null,
+              { header: t("department"), accessorKey: "department" },
+              { header: t("division"), accessorKey: "division" },
+              { header: t("rank"), accessorKey: "rank" },
+              { header: t("status"), accessorKey: "status" },
+              ACTIVE_INCIDENTS ? { header: t("incident"), accessorKey: "incident" } : null,
+              { header: t("activeCall"), accessorKey: "activeCall" },
               RADIO_CHANNEL_MANAGEMENT
-                ? { Header: t("radioChannel"), accessor: "radioChannel" }
+                ? { header: t("radioChannel"), accessorKey: "radioChannel" }
                 : null,
-              isDispatch ? { Header: common("actions"), accessor: "actions" } : null,
+              isDispatch ? { header: common("actions"), accessorKey: "actions" } : null,
             ]}
           />
         </>
