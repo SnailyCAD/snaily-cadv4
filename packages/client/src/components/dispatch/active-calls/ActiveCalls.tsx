@@ -260,7 +260,7 @@ function _ActiveCalls({ initialCalls }: Props) {
         ) : (
           <Table
             tableState={tableState}
-            isWithinCard
+            features={{ isWithinCard: true }}
             filter={search}
             data={calls
               .sort((a, b) => compareDesc(new Date(a.updatedAt), new Date(b.updatedAt)))

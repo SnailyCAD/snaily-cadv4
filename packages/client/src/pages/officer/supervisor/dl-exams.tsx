@@ -105,16 +105,16 @@ export default function CitizenLogs({ data }: Props) {
             />
           </FormField>
 
-          {asyncTable.search.search && asyncTable.pagination.totalCount !== data.totalCount ? (
+          {asyncTable.search.search && asyncTable.pagination.totalDataCount !== data.totalCount ? (
             <p className="italic text-base font-semibold">
-              Showing {asyncTable.pagination.totalCount} result(s)
+              Showing {asyncTable.pagination.totalDataCount} result(s)
             </p>
           ) : null}
 
           <Table
             pagination={{
               enabled: true,
-              totalCount: asyncTable.pagination.totalCount,
+              totalCount: asyncTable.pagination.totalDataCount,
               fetchData: asyncTable.pagination,
             }}
             data={asyncTable.data.map((exam) => {

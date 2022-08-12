@@ -37,7 +37,9 @@ interface Props {
 }
 
 function ActiveOfficers({ initialOfficers }: Props) {
-  const tableState = useTableState();
+  const tableState = useTableState({
+    pagination: { pageSize: 12, totalDataCount: initialOfficers.length },
+  });
 
   const { activeOfficers: _activeOfficers } = useActiveOfficers();
   const { activeIncidents } = useActiveIncidents();
@@ -97,10 +99,9 @@ function ActiveOfficers({ initialOfficers }: Props) {
           <ActiveUnitsSearch type="leo" />
 
           <Table
-            isWithinCard
+            features={{ isWithinCard: true }}
             containerProps={{ className: "mb-3 px-4" }}
             tableState={tableState}
-            pageSize={12}
             data={activeOfficers
               .filter((officer) => handleFilter(officer, leoSearch))
               .map((officer) => {

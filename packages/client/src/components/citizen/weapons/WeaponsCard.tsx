@@ -105,18 +105,18 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
             </FormField>
 
             {asyncTable.search.search &&
-            asyncTable.pagination.totalCount !== props.weapons.length ? (
+            asyncTable.pagination.totalDataCount !== props.weapons.length ? (
               <p className="italic text-base font-semibold">
-                Showing {asyncTable.pagination.totalCount} result(s)
+                Showing {asyncTable.pagination.totalDataCount} result(s)
               </p>
             ) : null}
 
             <Table
-              isWithinCard
+              features={{ isWithinCard: true }}
               maxItemsPerPage={12}
               pagination={{
                 enabled: true,
-                totalCount: asyncTable.pagination.totalCount,
+                totalCount: asyncTable.pagination.totalDataCount,
                 fetchData: asyncTable.pagination,
               }}
               data={asyncTable.data.map((weapon) => ({

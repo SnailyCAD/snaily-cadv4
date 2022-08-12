@@ -91,7 +91,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
           <ActiveUnitsSearch type="ems-fd" />
 
           <Table
-            isWithinCard
+            features={{ isWithinCard: true }}
             containerProps={{ className: "mb-3 px-4" }}
             data={activeDeputies
               .filter((deputy) => handleFilter(deputy, emsSearch))

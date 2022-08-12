@@ -68,7 +68,7 @@ export function MedicalRecords() {
           <p className="text-neutral-700 dark:text-gray-400">{t("noMedicalRecords")}</p>
         ) : (
           <Table
-            isWithinCard
+            features={{ isWithinCard: true }}
             data={citizen.medicalRecords.map((record) => ({
               diseases: record.type,
               bloodGroup: record.bloodGroup?.value ?? common("none"),

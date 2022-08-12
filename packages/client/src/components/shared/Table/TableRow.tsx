@@ -6,12 +6,21 @@ interface Props<TData extends RowData> {
   row: Row<TData>;
   idx: number;
   tableActionsAlignment: TableActionsAlignment | null;
+  stickyBgColor: string;
 }
 
-export function TableRow<TData extends RowData>({ row, idx, tableActionsAlignment }: Props<TData>) {
+export function TableRow<TData extends RowData>({
+  row,
+  idx,
+  tableActionsAlignment,
+  stickyBgColor,
+}: Props<TData>) {
   const isLeft = tableActionsAlignment === TableActionsAlignment.LEFT;
   const isNone = tableActionsAlignment === TableActionsAlignment.NONE;
   const dir = isNone ? "" : isLeft ? "left-0" : "right-0";
+
+  // todo
+  stickyBgColor;
 
   return (
     <tr data-row-index={idx} key={row.id}>
@@ -23,10 +32,9 @@ export function TableRow<TData extends RowData>({ row, idx, tableActionsAlignmen
         return (
           <td
             className={classNames(
-              "first:px-5 m-0 text-left p-3 px-3",
-              isActions && `w-[10rem] sticky ${dir}`,
+              "m-0 text-left p-3 px-3",
+              isActions && `w-36 sticky ${dir}`,
               // isMove && "w-10",
-              cell.column.id === "actions" && "w-[100px] text-end",
             )}
             key={cell.id}
           >

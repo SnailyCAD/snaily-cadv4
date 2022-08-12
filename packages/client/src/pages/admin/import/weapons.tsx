@@ -99,9 +99,9 @@ export default function ImportWeaponsPage({ data }: Props) {
         />
       </FormField>
 
-      {asyncTable.search.search && asyncTable.pagination.totalCount !== data.totalCount ? (
+      {asyncTable.search.search && asyncTable.pagination.totalDataCount !== data.totalCount ? (
         <p className="italic text-base font-semibold">
-          Showing {asyncTable.pagination.totalCount} result(s)
+          Showing {asyncTable.pagination.totalDataCount} result(s)
         </p>
       ) : null}
 

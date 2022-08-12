@@ -16,6 +16,7 @@ import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
 import type { GetManageUsersData } from "@snailycad/types/api";
+import { useTableState } from "components/shared/Table/Table";
 
 export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
   const { cad } = useAuth();
@@ -32,6 +33,7 @@ export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
       onResponse: (json: GetManageUsersData) => ({ totalCount: json.totalCount, data: json.users }),
     },
   });
+  const tableState = useTableState({ pagination: asyncTable.pagination });
 
   return (
     <TabsContent aria-label={t("allUsers")} value="allUsers" className="mt-5">
@@ -48,18 +50,14 @@ export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
         ) : null}
       </FormField>
 
-      {asyncTable.search.search && asyncTable.pagination.totalCount !== totalCount ? (
+      {asyncTable.search.search && asyncTable.pagination.totalDataCount !== totalCount ? (
         <p className="italic text-base font-semibold">
-          Showing {asyncTable.pagination.totalCount} result(s)
+          Showing {asyncTable.pagination.totalDataCount} result(s)
         </p>
       ) : null}
 
       <Table
-        pagination={{
-          enabled: true,
-          totalCount: asyncTable.pagination.totalCount,
-          fetchData: asyncTable.pagination,
-        }}
+        tableState={tableState}
         data={asyncTable.data.map((user) => {
           const hasAdminPermissions = hasPermissions(
             defaultPermissions.allDefaultAdminPermissions,
@@ -108,18 +106,18 @@ export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
           };
         })}
         columns={[
-          { Header: "Username", accessor: "username" },
-          { Header: "Rank", accessor: "rank" },
-          { Header: "Admin Permissions", accessor: "isAdmin" },
-          { Header: "LEO Permissions", accessor: "isLeo" },
-          { Header: "EMS/FD Permissions", accessor: "isEmsFd" },
-          { Header: "Dispatch Permissions", accessor: "isDispatch" },
-          cad?.whitelisted ? { Header: "Whitelist Status", accessor: "whitelistStatus" } : null,
+          { header: "Username", accessorKey: "username" },
+          { header: "Rank", accessorKey: "rank" },
+          { header: "Admin Permissions", accessorKey: "isAdmin" },
+          { header: "LEO Permissions", accessorKey: "isLeo" },
+          { header: "EMS/FD Permissions", accessorKey: "isEmsFd" },
+          { header: "Dispatch Permissions", accessorKey: "isDispatch" },
+          cad?.whitelisted ? { header: "Whitelist Status", accessorKey: "whitelistStatus" } : null,
           hasPermissions(
             [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
             true,
           )
-            ? { Header: common("actions"), accessor: "actions" }
+            ? { header: common("actions"), accessorKey: "actions" }
             : null,
         ]}
       />

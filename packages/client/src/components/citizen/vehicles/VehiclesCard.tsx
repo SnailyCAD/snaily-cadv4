@@ -106,20 +106,20 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
             </FormField>
 
             {asyncTable.search.search &&
-            asyncTable.pagination.totalCount !== props.vehicles.length ? (
+            asyncTable.pagination.totalDataCount !== props.vehicles.length ? (
               <p className="italic text-base font-semibold">
-                Showing {asyncTable.pagination.totalCount} result(s)
+                Showing {asyncTable.pagination.totalDataCount} result(s)
               </p>
             ) : null}
 
             <Table
               pagination={{
                 enabled: true,
-                totalCount: asyncTable.pagination.totalCount,
+                totalCount: asyncTable.pagination.totalDataCount,
                 fetchData: asyncTable.pagination,
               }}
               maxItemsPerPage={12}
-              isWithinCard
+              features={{ isWithinCard: true }}
               data={asyncTable.data.map((vehicle) => ({
                 rowProps: {
                   title: vehicle.impounded ? t("vehicleImpounded") : undefined,

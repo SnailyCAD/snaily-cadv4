@@ -17,12 +17,12 @@ interface Options<T> {
 }
 
 export function useAsyncTable<T>(options: Options<T>) {
-  const [totalCount, setTotalCount] = React.useState(options.totalCount);
+  const [totalDataCount, setTotalCount] = React.useState(options.totalCount);
   const [data, setData] = React.useState(options.initialData);
   const [search, setSearch] = React.useState("");
   const { state, execute } = useFetch();
 
-  const paginationFetch = React.useCallback(
+  const handlePageChange = React.useCallback(
     async ({ pageSize, pageIndex }: Omit<FetchOptions, "path" | "onResponse">) => {
       const { json, error } = await execute({
         path: options.fetchOptions.path,
@@ -59,9 +59,10 @@ export function useAsyncTable<T>(options: Options<T>) {
   useDebounce(handleSearch, 250, [search, handleSearch]);
 
   const pagination = {
-    fetch: paginationFetch,
-    totalCount,
-    setTotalCount,
+    /** indicates whether data comes from the useAsyncTable hook. */
+    __ASYNC_TABLE__: true,
+    onPageChange: handlePageChange,
+    totalDataCount,
     state,
   };
 

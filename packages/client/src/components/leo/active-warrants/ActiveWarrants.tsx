@@ -51,7 +51,7 @@ export function ActiveWarrants() {
           <p className="py-2 text-neutral-700 dark:text-gray-300">{t("noActiveWarrants")}</p>
         ) : (
           <Table
-            isWithinCard
+            features={{ isWithinCard: true }}
             data={activeWarrants.filter(isActiveWarrant).map((warrant) => ({
               citizen: `${warrant.citizen.name} ${warrant.citizen.surname}`,
               description: warrant.description,

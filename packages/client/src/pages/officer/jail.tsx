@@ -84,7 +84,7 @@ export default function Jail({ data }: Props) {
         <Table
           pagination={{
             enabled: true,
-            totalCount: asyncTable.pagination.totalCount,
+            totalCount: asyncTable.pagination.totalDataCount,
             fetchData: asyncTable.pagination,
           }}
           defaultSort={{ columnId: "createdAt", descending: true }}

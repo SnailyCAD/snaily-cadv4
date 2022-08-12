@@ -118,7 +118,7 @@ export function ActiveIncidents() {
         <p className="px-4 py-2 text-neutral-700 dark:text-gray-300">{t("noActiveIncidents")}</p>
       ) : (
         <Table
-          isWithinCard
+          features={{ isWithinCard: true }}
           containerProps={{ className: "mb-3 mx-4" }}
           data={activeIncidents
             .sort((a, b) => compareDesc(new Date(a.updatedAt), new Date(b.updatedAt)))

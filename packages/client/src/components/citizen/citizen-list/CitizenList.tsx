@@ -24,23 +24,32 @@ function useInstance({ array, totalCount }: { totalCount: number; array: any[] }
   });
 
   const MAX_ITEMS_IN_TABLE = 35;
-  const PAGE_COUNT = Math.round(asyncTable.pagination.totalCount / MAX_ITEMS_IN_TABLE);
+  const PAGE_COUNT = Math.round(asyncTable.pagination.totalDataCount / MAX_ITEMS_IN_TABLE);
 
   async function nextPage() {
     const newPageIndex = currentPage + 1;
-    await asyncTable.pagination.fetch({ pageSize: MAX_ITEMS_IN_TABLE, pageIndex: newPageIndex });
+    await asyncTable.pagination.onPageChange({
+      pageSize: MAX_ITEMS_IN_TABLE,
+      pageIndex: newPageIndex,
+    });
     setCurrentPage(newPageIndex);
   }
 
   async function previousPage() {
     const newPageIndex = currentPage - 1;
-    await asyncTable.pagination.fetch({ pageSize: MAX_ITEMS_IN_TABLE, pageIndex: newPageIndex });
+    await asyncTable.pagination.onPageChange({
+      pageSize: MAX_ITEMS_IN_TABLE,
+      pageIndex: newPageIndex,
+    });
     setCurrentPage(newPageIndex);
   }
 
   async function gotoPage(pageIndex: number) {
     const newPageIndex = pageIndex;
-    await asyncTable.pagination.fetch({ pageSize: MAX_ITEMS_IN_TABLE, pageIndex: newPageIndex });
+    await asyncTable.pagination.onPageChange({
+      pageSize: MAX_ITEMS_IN_TABLE,
+      pageIndex: newPageIndex,
+    });
     setCurrentPage(newPageIndex);
   }
 
@@ -75,9 +84,9 @@ export function CitizenList({ citizens: data }: Props) {
       </FormField>
 
       {instance.asyncTable.search.search &&
-      instance.asyncTable.pagination.totalCount !== data.totalCount ? (
+      instance.asyncTable.pagination.totalDataCount !== data.totalCount ? (
         <p className="italic text-base font-semibold my-2">
-          Showing {instance.asyncTable.pagination.totalCount} result(s)
+          Showing {instance.asyncTable.pagination.totalDataCount} result(s)
         </p>
       ) : null}
 

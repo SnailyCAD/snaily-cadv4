@@ -3,7 +3,6 @@ import {
   ColumnDef,
   getCoreRowModel,
   getSortedRowModel,
-  OnChangeFn,
   RowData,
   RowSelectionState,
   SortingState,
@@ -13,21 +12,54 @@ import {
 } from "@tanstack/react-table";
 import { TableRow } from "./TableRow";
 import { TablePagination } from "./TablePagination";
-import { makeCheckboxHeader } from "./IndeterminateCheckbox";
+import { makeCheckboxHeader as makeCheckboxColumn } from "./IndeterminateCheckbox";
 import { classNames } from "lib/classNames";
 import { TableHeader } from "./TableHeader";
-// import type { TablePaginationOptions } from "src/hooks/useTablePagination";
-// import { makeCheckboxHeader } from "./IndeterminateCheckbox";
+import { useAuth } from "context/AuthContext";
+import { TableActionsAlignment } from "@snailycad/types";
+import { orderColumnsByTableActionsAlignment } from "lib/table/orderColumnsByTableActionsAlignment";
 
-export function useTableState() {
+interface TableStateOptions {
+  pagination?: {
+    __ASYNC_TABLE__?: boolean;
+    totalDataCount: number;
+    pageSize?: number;
+    onPageChange?(options: { pageSize: number; pageIndex: number }): void;
+  };
+}
+
+export function useTableState({ pagination: paginationOptions }: TableStateOptions = {}) {
+  const pageSize = paginationOptions?.pageSize ?? 35;
+
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 12,
+    pageSize,
   });
 
-  return { sorting, setSorting, rowSelection, setRowSelection, pagination, setPagination };
+  React.useEffect(() => {
+    paginationOptions?.onPageChange?.(pagination);
+  }, [pagination]); // eslint-disable-line
+
+  const _pagination = React.useMemo(
+    () => ({
+      pageSize: pagination.pageSize,
+      pageIndex: pagination.pageIndex,
+      totalDataCount: paginationOptions?.totalDataCount,
+      __ASYNC_TABLE__: paginationOptions?.__ASYNC_TABLE__,
+    }),
+    [pagination, paginationOptions],
+  );
+
+  return {
+    sorting,
+    setSorting,
+    rowSelection,
+    setRowSelection,
+    pagination: _pagination,
+    setPagination,
+  };
 }
 
 interface Props<TData extends RowData> {
@@ -35,17 +67,10 @@ interface Props<TData extends RowData> {
   columns: (ColumnDef<TData> | null)[];
 
   tableState: ReturnType<typeof useTableState>;
-
   containerProps?: { className?: string };
-  pageSize?: number;
-  pagination?: {
-    manualPagination: boolean;
-    totalPageCount?: number;
-    pageIndex?: number;
-    onChange?: OnChangeFn<PaginationState>;
-  };
 
   features?: {
+    isWithinCard?: boolean;
     rowSelection?: boolean;
     dragAndDrop?: boolean;
   };
@@ -55,29 +80,27 @@ export function Table<TData extends RowData>({
   data,
   columns,
   containerProps,
-  pageSize = 35,
   features,
   tableState,
 }: Props<TData>) {
+  const { user } = useAuth();
+  const dataLength = tableState.pagination.totalDataCount ?? data.length;
+  const pageCount = Math.ceil(dataLength / tableState.pagination.pageSize);
+
+  const tableActionsAlignment = user?.tableActionsAlignment ?? TableActionsAlignment.LEFT;
+  const stickyBgColor = features?.isWithinCard
+    ? "bg-gray-100 dark:bg-gray-2"
+    : "dark:bg-dark-bg bg-white";
+
   const tableColumns = React.useMemo(() => {
-    let cols: ColumnDef<TData>[] = [];
+    const cols = orderColumnsByTableActionsAlignment(tableActionsAlignment, columns);
 
     if (features?.rowSelection) {
-      cols = [makeCheckboxHeader(), ...cols];
-    }
-
-    for (const column of columns) {
-      if (!column) {
-        continue;
-      }
-
-      cols.push(column);
+      cols.unshift(makeCheckboxColumn());
     }
 
     return cols;
-  }, [columns, features?.rowSelection]);
-
-  const pageCount = Math.ceil(data.length / pageSize);
+  }, [columns, tableActionsAlignment, features?.rowSelection]);
 
   const table = useReactTable({
     data,
@@ -86,10 +109,10 @@ export function Table<TData extends RowData>({
     getSortedRowModel: getSortedRowModel(),
     enableRowSelection: true,
     enableSorting: true,
-    pageCount,
     onSortingChange: tableState.setSorting,
     onRowSelectionChange: tableState.setRowSelection,
     onPaginationChange: tableState.setPagination,
+    pageCount,
     manualPagination: true,
 
     state: {
@@ -101,6 +124,10 @@ export function Table<TData extends RowData>({
 
   const visibleTableRows = React.useMemo(() => {
     const rows = table.getRowModel().rows;
+
+    if (tableState.pagination.__ASYNC_TABLE__) {
+      return rows;
+    }
 
     const pageStart = tableState.pagination.pageSize * tableState.pagination.pageIndex;
     const pageEnd = pageStart + tableState.pagination.pageSize;
@@ -124,7 +151,7 @@ export function Table<TData extends RowData>({
                   <TableHeader<TData>
                     key={header.id}
                     header={header as Header<TData, any>}
-                    tableActionsAlignment={null}
+                    tableActionsAlignment={tableActionsAlignment}
                   />
                 );
               })}
@@ -133,7 +160,13 @@ export function Table<TData extends RowData>({
         </thead>
         <tbody>
           {visibleTableRows.map((row, idx) => (
-            <TableRow key={row.id} row={row} idx={idx} />
+            <TableRow<TData>
+              key={row.id}
+              row={row}
+              idx={idx}
+              tableActionsAlignment={tableActionsAlignment}
+              stickyBgColor={stickyBgColor}
+            />
           ))}
         </tbody>
       </table>

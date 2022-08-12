@@ -1,6 +1,6 @@
 import { TableActionsAlignment } from "@snailycad/types";
 import { expect, test } from "vitest";
-import { makeColumns } from "../src/lib/table/makeColumns";
+import { makeColumns } from "../src/lib/table/orderColumnsByTableActionsAlignment";
 
 const COLUMNS = [
   { accessor: "name" },
