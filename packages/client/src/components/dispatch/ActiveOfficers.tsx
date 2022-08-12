@@ -95,6 +95,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
 
           <Table
             isWithinCard
+            maxItemsPerPage={12}
             containerProps={{ className: "mb-3 px-4" }}
             data={activeOfficers
               .filter((officer) => handleFilter(officer, leoSearch))
