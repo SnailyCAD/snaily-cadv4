@@ -25,10 +25,13 @@ import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { generateString } from "utils/generateString";
 import { citizenInclude } from "./CitizenController";
 import type * as APITypes from "@snailycad/types/api";
+import type { RegisteredVehicle } from "@snailycad/types";
 
 @Controller("/vehicles")
 @UseBeforeEach(IsAuth)
 export class VehiclesController {
+  private VIN_NUMBER_LENGTH = 17;
+
   @Get("/:citizenId")
   async getCitizenVehicles(
     @PathParams("citizenId") citizenId: string,
@@ -159,7 +162,7 @@ export class VehiclesController {
         citizenId: citizen.id,
         modelId,
         registrationStatusId: data.registrationStatus,
-        vinNumber: data.vinNumber || generateString(17),
+        vinNumber: await this.generateOrValidateVINNumber(data.vinNumber || null),
         userId: user.id || undefined,
         insuranceStatusId: data.insuranceStatus,
         taxStatus: data.taxStatus as VehicleTaxStatus | null,
@@ -301,7 +304,7 @@ export class VehiclesController {
       }
     }
 
-    const updated = await prisma.registeredVehicle.update({
+    const updatedVehicle = await prisma.registeredVehicle.update({
       where: {
         id: vehicle.id,
       },
@@ -310,7 +313,9 @@ export class VehiclesController {
         modelId: isCustomEnabled ? valueModel?.id : data.model,
         color: data.color,
         registrationStatusId: data.registrationStatus,
-        vinNumber: data.vinNumber || vehicle.vinNumber,
+        vinNumber: data.vinNumber
+          ? await this.generateOrValidateVINNumber(data.vinNumber, vehicle)
+          : undefined,
         reportedStolen: data.reportedStolen ?? false,
         insuranceStatusId: data.insuranceStatus,
         taxStatus: data.taxStatus as VehicleTaxStatus | null,
@@ -324,7 +329,7 @@ export class VehiclesController {
       },
     });
 
-    return updated;
+    return updatedVehicle;
   }
 
   @Post("/transfer/:vehicleId")
@@ -420,5 +425,31 @@ export class VehiclesController {
     });
 
     return true;
+  }
+
+  private async generateOrValidateVINNumber(
+    _vinNumber?: string | null,
+    vehicle?: Pick<RegisteredVehicle, "id">,
+  ): Promise<string> {
+    const vinNumber = _vinNumber ?? generateString(this.VIN_NUMBER_LENGTH);
+
+    const existing = await prisma.registeredVehicle.findFirst({
+      where: {
+        vinNumber: { mode: "insensitive", equals: vinNumber },
+        NOT: vehicle ? { id: vehicle.id } : undefined,
+      },
+    });
+
+    console.log({ existing });
+
+    if (!existing) {
+      return vinNumber;
+    }
+
+    if (_vinNumber) {
+      throw new ExtendedBadRequest({ vinNumber: "vinNumberInUse" });
+    }
+
+    return this.generateOrValidateVINNumber(_vinNumber, vehicle);
   }
 }
