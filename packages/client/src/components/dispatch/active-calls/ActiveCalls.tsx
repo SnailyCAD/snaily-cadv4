@@ -37,6 +37,7 @@ import { useMounted } from "@casper124578/useful";
 import { isArrayEqual } from "lib/editor/isArrayEqual";
 import { dataToString } from "lib/editor/dataToString";
 import type { Descendant } from "slate";
+import { useTableState } from "components/shared/Table/Table";
 
 const ADDED_TO_CALL_SRC = "/sounds/added-to-call.mp3" as const;
 const INCOMING_CALL_SRC = "/sounds/incoming-call.mp3" as const;
@@ -50,6 +51,7 @@ interface Props {
 }
 
 function _ActiveCalls({ initialCalls }: Props) {
+  const tableState = useTableState();
   const { user } = useAuth();
   const { hasActiveDispatchers } = useActiveDispatchers();
 
@@ -257,6 +259,7 @@ function _ActiveCalls({ initialCalls }: Props) {
           <p className="py-2 text-neutral-700 dark:text-gray-300">{t("no911Calls")}</p>
         ) : (
           <Table
+            tableState={tableState}
             isWithinCard
             filter={search}
             data={calls
@@ -359,14 +362,14 @@ function _ActiveCalls({ initialCalls }: Props) {
                 };
               })}
             columns={[
-              { Header: "#", accessor: "caseNumber" },
-              { Header: t("caller"), accessor: "name" },
-              { Header: t("location"), accessor: "location" },
-              { Header: common("description"), accessor: "description" },
-              { Header: t("situationCode"), accessor: "situationCode" },
-              { Header: common("updatedAt"), accessor: "updatedAt" },
-              { Header: t("assignedUnits"), accessor: "assignedUnits" },
-              { Header: common("actions"), accessor: "actions" },
+              { header: "#", accessorKey: "caseNumber" },
+              { header: t("caller"), accessorKey: "name" },
+              { header: t("location"), accessorKey: "location" },
+              { header: common("description"), accessorKey: "description" },
+              { header: t("situationCode"), accessorKey: "situationCode" },
+              { header: common("updatedAt"), accessorKey: "updatedAt" },
+              { header: t("assignedUnits"), accessorKey: "assignedUnits" },
+              { header: common("actions"), accessorKey: "actions" },
             ]}
           />
         )}
