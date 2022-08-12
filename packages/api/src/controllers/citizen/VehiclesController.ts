@@ -440,7 +440,6 @@ export class VehiclesController {
       },
     });
 
-    console.log({ existing });
 
     if (!existing) {
       return vinNumber;
