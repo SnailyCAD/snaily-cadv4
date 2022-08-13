@@ -125,11 +125,6 @@ export function Table<TData extends _RowData>({
     tableState.dragDrop?.onListChange(originals);
   }
 
-  console.log({
-    data,
-    visibleTableRows,
-  });
-
   return (
     <div
       className={classNames(
