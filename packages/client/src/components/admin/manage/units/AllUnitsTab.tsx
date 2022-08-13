@@ -1,15 +1,20 @@
 import * as React from "react";
 import type { Unit } from "src/pages/admin/manage/units";
 import Link from "next/link";
-import { formatUnitDivisions, makeUnitName, yesOrNoText, formatOfficerDepartment } from "lib/utils";
+import {
+  formatUnitDivisions,
+  makeUnitName,
+  yesOrNoText,
+  formatOfficerDepartment,
+  isEmpty,
+} from "lib/utils";
 import { useTranslations } from "use-intl";
 import { Button, buttonVariants } from "components/Button";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
-import { IndeterminateCheckbox, Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { TabsContent } from "components/shared/TabList";
-import { useTableSelect } from "hooks/shared/table/useTableSelect";
 import { Status } from "components/shared/Status";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
@@ -18,13 +23,13 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { AlertModal } from "components/modal/AlertModal";
 import { OfficerRank } from "components/leo/OfficerRank";
-import { Checkbox } from "components/form/inputs/Checkbox";
 import type {
   DeleteManageUnitByIdData,
   GetManageUnitsData,
   PutManageUnitsOffDutyData,
 } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import { getSelectedTableRows } from "hooks/shared/table/useTableState";
 
 interface Props {
   units: GetManageUnitsData;
@@ -34,7 +39,8 @@ interface Props {
 export function AllUnitsTab({ search, units }: Props) {
   const [tempUnit, unitState] = useTemporaryItem(units);
 
-  const tableSelect = useTableSelect(units, (u) => `${u.id}-${u.type}`);
+  const tableState = useTableState({ search: { value: search } });
+
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageUnits], true);
   const hasDeletePermissions = hasPermissions([Permissions.DeleteUnits], true);
@@ -72,16 +78,22 @@ export function AllUnitsTab({ search, units }: Props) {
   }
 
   async function setSelectedUnitsOffDuty() {
-    if (tableSelect.selectedRows.length <= 0) return;
+    const selectedRows = getSelectedTableRows(
+      units,
+      tableState.rowSelection,
+      (unit) => `${unit.id}-${unit.type}`,
+    );
+
+    if (selectedRows.length <= 0) return;
 
     const { json } = await execute<PutManageUnitsOffDutyData>({
       path: "/admin/manage/units/off-duty",
       method: "PUT",
-      data: { ids: tableSelect.selectedRows },
+      data: { ids: selectedRows },
     });
 
     if (Array.isArray(json)) {
-      tableSelect.resetRows();
+      tableState.setRowSelection({});
       router.replace({
         pathname: router.pathname,
         query: router.query,
@@ -98,7 +110,7 @@ export function AllUnitsTab({ search, units }: Props) {
     <TabsContent value="allUnits">
       {hasManagePermissions && units.length >= 1 ? (
         <Button
-          disabled={tableSelect.selectedRows.length <= 0}
+          disabled={isEmpty(tableState.rowSelection)}
           onClick={setSelectedUnitsOffDuty}
           className="mt-3"
         >
@@ -110,7 +122,8 @@ export function AllUnitsTab({ search, units }: Props) {
         <p>{t("Management.noUnits")}</p>
       ) : (
         <Table
-          filter={search}
+          tableState={tableState}
+          features={{ rowSelection: hasManagePermissions }}
           data={units.map((unit) => {
             const departmentStatus = unit.whitelistStatus?.status;
             const departmentStatusFormatted = departmentStatus
@@ -118,12 +131,7 @@ export function AllUnitsTab({ search, units }: Props) {
               : "—";
 
             return {
-              dropdown: (
-                <Checkbox
-                  checked={tableSelect.selectedRows.includes(`${unit.id}-${unit.type}`)}
-                  onChange={() => tableSelect.handleCheckboxChange(unit)}
-                />
-              ),
+              id: unit.id,
               unit: LABELS[unit.type],
               name: makeUnitName(unit),
               user: (
@@ -174,33 +182,20 @@ export function AllUnitsTab({ search, units }: Props) {
             };
           })}
           columns={[
-            hasManagePermissions
-              ? {
-                  Header: (
-                    <IndeterminateCheckbox
-                      onChange={tableSelect.handleAllCheckboxes}
-                      checked={tableSelect.isTopCheckboxChecked}
-                      indeterminate={tableSelect.isIntermediate}
-                    />
-                  ),
-                  accessor: "dropdown",
-                  enableSorting: false,
-                }
-              : null,
-            { Header: `${t("Ems.deputy")}/${t("Leo.officer")}`, accessor: "unit" },
-            { Header: common("name"), accessor: "name" },
-            { Header: common("user"), accessor: "user" },
-            { Header: t("Leo.callsign"), accessor: "callsign" },
-            BADGE_NUMBERS ? { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" } : null,
-            { Header: t("Leo.department"), accessor: "department" },
-            { Header: t("Leo.division"), accessor: "division" },
-            { Header: t("Leo.rank"), accessor: "rank" },
-            { Header: t("Leo.position"), accessor: "position" },
-            { Header: t("Leo.status"), accessor: "status" },
-            { Header: t("Leo.suspended"), accessor: "suspended" },
-            { Header: t("Leo.status"), accessor: "departmentStatus" },
+            { header: `${t("Ems.deputy")}/${t("Leo.officer")}`, accessorKey: "unit" },
+            { header: common("name"), accessorKey: "name" },
+            { header: common("user"), accessorKey: "user" },
+            { header: t("Leo.callsign"), accessorKey: "callsign" },
+            BADGE_NUMBERS ? { header: t("Leo.badgeNumber"), accessorKey: "badgeNumber" } : null,
+            { header: t("Leo.department"), accessorKey: "department" },
+            { header: t("Leo.division"), accessorKey: "division" },
+            { header: t("Leo.rank"), accessorKey: "rank" },
+            { header: t("Leo.position"), accessorKey: "position" },
+            { header: t("Leo.status"), accessorKey: "status" },
+            { header: t("Leo.suspended"), accessorKey: "suspended" },
+            { header: t("Leo.status"), accessorKey: "departmentStatus" },
             hasManagePermissions || hasDeletePermissions
-              ? { Header: common("actions"), accessor: "actions" }
+              ? { header: common("actions"), accessorKey: "actions" }
               : null,
           ]}
         />

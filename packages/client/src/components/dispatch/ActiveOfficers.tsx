@@ -115,6 +115,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
                 const nameAndCallsign = `${generateCallsign(officer)} ${makeUnitName(officer)}`;
 
                 return {
+                  id: officer.id,
                   rowProps: { style: { background: !useDot ? color ?? undefined : undefined } },
                   name: nameAndCallsign,
                   officer: (

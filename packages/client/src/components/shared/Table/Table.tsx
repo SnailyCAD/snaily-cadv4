@@ -21,10 +21,14 @@ import { useTableState } from "hooks/shared/table/useTableState";
 import { ReactSortable } from "react-sortablejs";
 import { useMounted } from "@casper124578/useful";
 import { createTableDragDropColumn } from "lib/table/dndArrowHook";
+import { createTableCheckboxColumn } from "./IndeterminateCheckbox";
 
 export const DRAGGABLE_TABLE_HANDLE = "__TABLE_HANDLE__";
+export type _RowData = RowData & {
+  id: string;
+};
 
-interface Props<TData extends RowData> {
+interface Props<TData extends _RowData> {
   data: TData[];
   columns: (ColumnDef<TData> | null)[];
 
@@ -34,10 +38,11 @@ interface Props<TData extends RowData> {
   features?: {
     isWithinCard?: boolean;
     dragAndDrop?: boolean;
+    rowSelection?: boolean;
   };
 }
 
-export function Table<TData extends RowData>({
+export function Table<TData extends _RowData>({
   data,
   columns,
   containerProps,
@@ -56,6 +61,10 @@ export function Table<TData extends RowData>({
 
   const tableColumns = React.useMemo(() => {
     const cols = orderColumnsByTableActionsAlignment(tableActionsAlignment, columns);
+
+    if (features?.rowSelection) {
+      cols.unshift(createTableCheckboxColumn());
+    }
 
     if (features?.dragAndDrop) {
       cols.unshift(createTableDragDropColumn(tableState.dragDrop));

@@ -153,7 +153,7 @@ export function useTableDataOfType(type: ValueType) {
   return get;
 }
 
-export function useTableHeadersOfType(type: ValueType): ColumnDef<unknown>[] {
+export function useTableHeadersOfType(type: ValueType): ColumnDef<{ id: string }>[] {
   const common = useTranslations("Common");
   const t = useTranslations("Values");
 

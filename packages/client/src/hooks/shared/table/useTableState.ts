@@ -4,7 +4,7 @@ import type { RowSelectionState, SortingState, PaginationState } from "@tanstack
 interface TableStateOptions {
   search?: {
     value: string;
-    setValue(value: string): void;
+    setValue?(value: string): void;
   };
   dragDrop?: {
     onListChange(list: any[]): void;
@@ -57,4 +57,24 @@ export function useTableState({
     setGlobalFilter: search?.setValue,
     dragDrop,
   };
+}
+
+type MakeIdFunc<Obj, Id> = (obj: Obj) => Id;
+export function getSelectedTableRows<Id extends string, Obj extends { id: Id }>(
+  rows: Obj[],
+  selectedRows: Record<string, boolean>,
+  makeId?: MakeIdFunc<Obj, Id>,
+) {
+  const selectedRowIds: Id[] = [];
+
+  for (const selectedRow in selectedRows) {
+    const idx = parseInt(selectedRow, 10);
+    const item = rows[idx];
+    if (!item) continue;
+
+    const id = makeId?.(item) ?? item["id"];
+    selectedRowIds.push(id);
+  }
+
+  return selectedRowIds;
 }
