@@ -96,10 +96,6 @@ export class RecordsController {
         description: data.description,
         status: data.status as WarrantStatus,
       },
-      include: {
-        citizen: true,
-        assignedOfficers: { include: assignedOfficersInclude },
-      },
     });
 
     await assignUnitsToWarrant({
@@ -113,6 +109,7 @@ export class RecordsController {
       include: {
         citizen: true,
         officer: true,
+        assignedOfficers: { include: assignedOfficersInclude },
       },
     });
 
