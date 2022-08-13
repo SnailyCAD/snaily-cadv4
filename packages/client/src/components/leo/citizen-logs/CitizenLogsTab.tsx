@@ -85,14 +85,14 @@ export function CitizenLogsTab({ search, logs: data }: Props) {
                 };
               })}
             columns={[
-              { Header: common("type"), accessor: "type" },
-              { Header: t("citizen"), accessor: "citizen" },
-              { Header: t("officer"), accessor: "officer" },
-              { Header: t("postal"), accessor: "postal" },
-              { Header: t("status"), accessor: "status" },
-              { Header: t("notes"), accessor: "notes" },
-              { Header: t("violations"), accessor: "violations" },
-              { Header: common("createdAt"), accessor: "createdAt" },
+              { header: common("type"), accessorKey: "type" },
+              { header: t("citizen"), accessorKey: "citizen" },
+              { header: t("officer"), accessorKey: "officer" },
+              { header: t("postal"), accessorKey: "postal" },
+              { header: t("status"), accessorKey: "status" },
+              { header: t("notes"), accessorKey: "notes" },
+              { header: t("violations"), accessorKey: "violations" },
+              { header: common("createdAt"), accessorKey: "createdAt" },
             ]}
           />
         </>
@@ -110,8 +110,8 @@ export function CitizenLogsTab({ search, logs: data }: Props) {
             };
           })}
           columns={[
-            { Header: t("citizen"), accessor: "citizen" },
-            { Header: common("actions"), accessor: "actions" },
+            { header: t("citizen"), accessorKey: "citizen" },
+            { header: common("actions"), accessorKey: "actions" },
           ]}
         />
       )}

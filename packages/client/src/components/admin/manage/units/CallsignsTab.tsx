@@ -68,14 +68,14 @@ export function CallsignsTab({ search, units }: Props) {
             };
           })}
           columns={[
-            { Header: `${t("Ems.deputy")}/${t("Leo.officer")}`, accessor: "unit" },
-            { Header: common("name"), accessor: "name" },
-            { Header: t("Leo.callsign1"), accessor: "callsign1" },
-            { Header: t("Leo.callsign2"), accessor: "callsign2" },
-            { Header: t("Leo.callsign"), accessor: "callsign" },
-            { Header: t("Leo.department"), accessor: "department" },
-            { Header: common("user"), accessor: "user" },
-            { Header: common("actions"), accessor: "actions" },
+            { header: `${t("Ems.deputy")}/${t("Leo.officer")}`, accessorKey: "unit" },
+            { header: common("name"), accessorKey: "name" },
+            { header: t("Leo.callsign1"), accessorKey: "callsign1" },
+            { header: t("Leo.callsign2"), accessorKey: "callsign2" },
+            { header: t("Leo.callsign"), accessorKey: "callsign" },
+            { header: t("Leo.department"), accessorKey: "department" },
+            { header: common("user"), accessorKey: "user" },
+            { header: common("actions"), accessorKey: "actions" },
           ]}
         />
       )}

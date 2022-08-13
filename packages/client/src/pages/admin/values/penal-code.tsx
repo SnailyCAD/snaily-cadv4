@@ -259,9 +259,9 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
                 ),
               }))}
             columns={[
-              { Header: common("title"), accessor: "title" },
-              { Header: common("description"), accessor: "description" },
-              { Header: common("actions"), accessor: "actions" },
+              { header: common("title"), accessorKey: "title" },
+              { header: common("description"), accessorKey: "description" },
+              { header: common("actions"), accessorKey: "actions" },
             ]}
           />
         </>
@@ -307,8 +307,8 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
             ),
           }))}
           columns={[
-            { Header: common("name"), accessor: "value" },
-            { Header: common("actions"), accessor: "actions" },
+            { header: common("name"), accessorKey: "value" },
+            { header: common("actions"), accessorKey: "actions" },
           ]}
         />
       )}

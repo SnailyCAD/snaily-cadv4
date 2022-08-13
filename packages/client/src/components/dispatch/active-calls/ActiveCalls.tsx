@@ -20,7 +20,7 @@ import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { CallsFilters, useActiveCallsFilters } from "./CallsFilters";
 import { useCallsFilters } from "state/callsFiltersState";
 import { Filter } from "react-bootstrap-icons";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { classNames } from "lib/classNames";
 import { usePermission } from "hooks/usePermission";
@@ -37,7 +37,6 @@ import { useMounted } from "@casper124578/useful";
 import { isArrayEqual } from "lib/editor/isArrayEqual";
 import { dataToString } from "lib/editor/dataToString";
 import type { Descendant } from "slate";
-import { useTableState } from "components/shared/Table/Table";
 
 const ADDED_TO_CALL_SRC = "/sounds/added-to-call.mp3" as const;
 const INCOMING_CALL_SRC = "/sounds/incoming-call.mp3" as const;
@@ -273,6 +272,7 @@ function _ActiveCalls({ initialCalls }: Props) {
                   !shouldTruncate || isArrayEqual(call.descriptionData as any, DEFAULT_EDITOR_DATA);
 
                 return {
+                  id: call.id,
                   rowProps: {
                     className: isUnitAssigned ? "bg-gray-200 dark:bg-[#333639]" : undefined,
                   },

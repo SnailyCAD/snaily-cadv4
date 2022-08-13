@@ -76,11 +76,11 @@ export function NameChangeRequestsTab({ requests: data }: Props) {
             ),
           }))}
           columns={[
-            { Header: common("citizen"), accessor: "citizen" },
-            { Header: t("Courthouse.newName"), accessor: "newName" },
-            { Header: t("Courthouse.status"), accessor: "status" },
-            { Header: common("createdAt"), accessor: "createdAt" },
-            hasManagePermissions ? { Header: common("actions"), accessor: "actions" } : null,
+            { header: common("citizen"), accessorKey: "citizen" },
+            { header: t("Courthouse.newName"), accessorKey: "newName" },
+            { header: t("Courthouse.status"), accessorKey: "status" },
+            { header: common("createdAt"), accessorKey: "createdAt" },
+            hasManagePermissions ? { header: common("actions"), accessorKey: "actions" } : null,
           ]}
         />
       )}

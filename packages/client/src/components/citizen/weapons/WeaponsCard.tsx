@@ -141,11 +141,11 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
                 ),
               }))}
               columns={[
-                { Header: t("model"), accessor: "model" },
-                { Header: t("registrationStatus"), accessor: "registrationStatus" },
-                { Header: t("serialNumber"), accessor: "serialNumber" },
-                { Header: common("createdAt"), accessor: "createdAt" },
-                { Header: common("actions"), accessor: "actions" },
+                { header: t("model"), accessorKey: "model" },
+                { header: t("registrationStatus"), accessorKey: "registrationStatus" },
+                { header: t("serialNumber"), accessorKey: "serialNumber" },
+                { header: common("createdAt"), accessorKey: "createdAt" },
+                { header: common("actions"), accessorKey: "actions" },
               ]}
             />
           </>

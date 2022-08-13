@@ -80,9 +80,9 @@ export function CourtEntryDates({ onUpdate, onDelete, onCreate, dates }: Props) 
           ),
         }))}
         columns={[
-          { Header: t("date"), accessor: "date" },
-          { Header: t("note"), accessor: "note" },
-          { Header: common("actions"), accessor: "actions" },
+          { header: t("date"), accessorKey: "date" },
+          { header: t("note"), accessorKey: "note" },
+          { header: common("actions"), accessorKey: "actions" },
         ]}
       />
 

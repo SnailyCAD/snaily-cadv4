@@ -182,10 +182,10 @@ function QualificationAwardsTable({ unit, setUnit }: Props) {
           };
         })}
         columns={[
-          { Header: common("image"), accessor: "image" },
-          { Header: common("name"), accessor: "name" },
-          { Header: t("assignedAt"), accessor: "assignedAt" },
-          { Header: common("actions"), accessor: "actions" },
+          { header: common("image"), accessorKey: "image" },
+          { header: common("name"), accessorKey: "name" },
+          { header: t("assignedAt"), accessorKey: "assignedAt" },
+          { header: common("actions"), accessorKey: "actions" },
         ]}
       />
 

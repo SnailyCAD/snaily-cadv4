@@ -74,8 +74,8 @@ export function PendingEmployeesTab() {
               ),
             }))}
             columns={[
-              { Header: common("citizen"), accessor: "citizen" },
-              { Header: common("actions"), accessor: "actions" },
+              { header: common("citizen"), accessorKey: "citizen" },
+              { header: common("actions"), accessorKey: "actions" },
             ]}
           />
         )}

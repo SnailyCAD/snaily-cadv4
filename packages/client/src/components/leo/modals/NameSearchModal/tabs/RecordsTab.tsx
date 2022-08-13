@@ -190,12 +190,12 @@ function RecordsTable({ data }: { data: Record[] }) {
             ),
           }))}
         columns={[
-          { Header: t("Leo.violations"), accessor: "violations" },
-          { Header: t("Leo.postal"), accessor: "postal" },
-          { Header: t("Leo.officer"), accessor: "officer" },
-          { Header: t("Leo.notes"), accessor: "notes" },
-          { Header: common("createdAt"), accessor: "createdAt" },
-          isCitizen ? null : { Header: common("actions"), accessor: "actions" },
+          { header: t("Leo.violations"), accessorKey: "violations" },
+          { header: t("Leo.postal"), accessorKey: "postal" },
+          { header: t("Leo.officer"), accessorKey: "officer" },
+          { header: t("Leo.notes"), accessorKey: "notes" },
+          { header: common("createdAt"), accessorKey: "createdAt" },
+          isCitizen ? null : { header: common("actions"), accessorKey: "actions" },
         ]}
       />
     </div>

@@ -166,17 +166,17 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
                 ),
               }))}
             columns={[
-              { Header: tCitizen("fullName"), accessor: "name" },
-              { Header: tCitizen("dateOfBirth"), accessor: "dateOfBirth" },
-              { Header: tCitizen("gender"), accessor: "gender" },
-              { Header: tCitizen("ethnicity"), accessor: "ethnicity" },
-              { Header: tCitizen("hairColor"), accessor: "hairColor" },
-              { Header: tCitizen("eyeColor"), accessor: "eyeColor" },
-              { Header: tCitizen("weight"), accessor: "weight" },
-              { Header: tCitizen("height"), accessor: "height" },
-              { Header: "User", accessor: "user" },
+              { header: tCitizen("fullName"), accessorKey: "name" },
+              { header: tCitizen("dateOfBirth"), accessorKey: "dateOfBirth" },
+              { header: tCitizen("gender"), accessorKey: "gender" },
+              { header: tCitizen("ethnicity"), accessorKey: "ethnicity" },
+              { header: tCitizen("hairColor"), accessorKey: "hairColor" },
+              { header: tCitizen("eyeColor"), accessorKey: "eyeColor" },
+              { header: tCitizen("weight"), accessorKey: "weight" },
+              { header: tCitizen("height"), accessorKey: "height" },
+              { header: "User", accessorKey: "user" },
               hasPermissions([Permissions.ManageCitizens, Permissions.DeleteCitizens], true)
-                ? { Header: common("actions"), accessor: "actions" }
+                ? { header: common("actions"), accessorKey: "actions" }
                 : null,
             ]}
           />

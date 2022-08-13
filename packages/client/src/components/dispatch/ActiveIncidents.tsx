@@ -173,15 +173,15 @@ export function ActiveIncidents() {
               };
             })}
           columns={[
-            { Header: t("caseNumber"), accessor: "caseNumber" },
-            { Header: t("unitsInvolved"), accessor: "unitsInvolved" },
-            { Header: t("firearmsInvolved"), accessor: "firearmsInvolved" },
-            { Header: t("injuriesOrFatalities"), accessor: "injuriesOrFatalities" },
-            { Header: t("arrestsMade"), accessor: "arrestsMade" },
-            { Header: t("situationCode"), accessor: "situationCode" },
-            { Header: common("description"), accessor: "description" },
-            { Header: common("createdAt"), accessor: "createdAt" },
-            { Header: common("actions"), accessor: "actions" },
+            { header: t("caseNumber"), accessorKey: "caseNumber" },
+            { header: t("unitsInvolved"), accessorKey: "unitsInvolved" },
+            { header: t("firearmsInvolved"), accessorKey: "firearmsInvolved" },
+            { header: t("injuriesOrFatalities"), accessorKey: "injuriesOrFatalities" },
+            { header: t("arrestsMade"), accessorKey: "arrestsMade" },
+            { header: t("situationCode"), accessorKey: "situationCode" },
+            { header: common("description"), accessorKey: "description" },
+            { header: common("createdAt"), accessorKey: "createdAt" },
+            { header: common("actions"), accessorKey: "actions" },
           ]}
         />
       )}

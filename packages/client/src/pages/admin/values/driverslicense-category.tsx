@@ -253,11 +253,11 @@ function TableList(props: {
         ),
       }))}
       columns={[
-        { Header: "Value", accessor: "value" },
-        { Header: "Description", accessor: "description" },
-        { Header: "Created At", accessor: "createdAt" },
-        { Header: "Disabled", accessor: "isDisabled" },
-        { Header: "Actions", accessor: "actions" },
+        { header: "Value", accessorKey: "value" },
+        { header: "Description", accessorKey: "description" },
+        { header: "Created At", accessorKey: "createdAt" },
+        { header: "Disabled", accessorKey: "isDisabled" },
+        { header: "Actions", accessorKey: "actions" },
       ]}
     />
   );

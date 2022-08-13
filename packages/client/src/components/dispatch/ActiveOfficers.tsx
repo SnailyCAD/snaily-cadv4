@@ -30,7 +30,7 @@ import { HoverCard } from "components/shared/HoverCard";
 import { useDispatchState } from "state/dispatchState";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useMounted } from "@casper124578/useful";
-import { useTableState } from "components/shared/Table/Table";
+import { useTableState } from "components/shared/Table";
 
 interface Props {
   initialOfficers: ActiveOfficer[];

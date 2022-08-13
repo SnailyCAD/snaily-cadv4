@@ -110,10 +110,10 @@ export default function ManageCustomFields({ customFields: data }: Props) {
             ),
           }))}
           columns={[
-            { Header: common("name"), accessor: "name" },
-            { Header: "Category", accessor: "category" },
+            { header: common("name"), accessorKey: "name" },
+            { header: "Category", accessorKey: "category" },
             hasPermissions([Permissions.ViewCustomFields], true)
-              ? { Header: common("actions"), accessor: "actions" }
+              ? { header: common("actions"), accessorKey: "actions" }
               : null,
           ]}
         />

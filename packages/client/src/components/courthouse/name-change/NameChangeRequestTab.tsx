@@ -46,10 +46,10 @@ export function NameChangeRequestTab(props: Props) {
             createdAt: <FullDate>{request.createdAt}</FullDate>,
           }))}
           columns={[
-            { Header: common("citizen"), accessor: "citizen" },
-            { Header: "new name", accessor: "newName" },
-            { Header: "status", accessor: "status" },
-            { Header: common("createdAt"), accessor: "createdAt" },
+            { header: common("citizen"), accessorKey: "citizen" },
+            { header: "new name", accessorKey: "newName" },
+            { header: "status", accessorKey: "status" },
+            { header: common("createdAt"), accessorKey: "createdAt" },
           ]}
         />
       )}

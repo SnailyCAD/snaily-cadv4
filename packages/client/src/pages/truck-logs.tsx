@@ -89,12 +89,12 @@ export default function TruckLogs({ registeredVehicles, logs: data }: GetTruckLo
             ),
           }))}
           columns={[
-            { Header: t("driver"), accessor: "driver" },
-            { Header: t("vehicle"), accessor: "vehicle" },
-            { Header: t("startedAt"), accessor: "startedAt" },
-            { Header: t("endedAt"), accessor: "endedAt" },
-            { Header: t("notes"), accessor: "notes" },
-            { Header: common("actions"), accessor: "actions" },
+            { header: t("driver"), accessorKey: "driver" },
+            { header: t("vehicle"), accessorKey: "vehicle" },
+            { header: t("startedAt"), accessorKey: "startedAt" },
+            { header: t("endedAt"), accessorKey: "endedAt" },
+            { header: t("notes"), accessorKey: "notes" },
+            { header: common("actions"), accessorKey: "actions" },
           ]}
         />
       )}

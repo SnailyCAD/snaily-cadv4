@@ -158,12 +158,12 @@ export default function OfficerDashboard({
       </UtilityPanel>
 
       {CALLS_911 ? <ActiveCalls initialCalls={calls} /> : null}
-      {/* <ActiveBolos initialBolos={bolos} /> */}
-      {/* {ACTIVE_WARRANTS ? <ActiveWarrants /> : null} */}
+      <ActiveBolos initialBolos={bolos} />
+      {ACTIVE_WARRANTS ? <ActiveWarrants /> : null}
 
       <div className="mt-3">
         <ActiveOfficers initialOfficers={activeOfficers} />
-        {/* <ActiveDeputies initialDeputies={activeDeputies} /> */}
+        <ActiveDeputies initialDeputies={activeDeputies} />
       </div>
 
       <Modals.SelectOfficerModal />

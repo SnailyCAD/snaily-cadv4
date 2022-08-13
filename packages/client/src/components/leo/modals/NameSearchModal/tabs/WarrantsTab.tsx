@@ -120,10 +120,10 @@ export function NameSearchWarrantsTab() {
                 };
               })}
             columns={[
-              { Header: t("Leo.officer"), accessor: "officer" },
-              { Header: common("description"), accessor: "description" },
-              { Header: common("createdAt"), accessor: "createdAt" },
-              { Header: common("actions"), accessor: "actions" },
+              { header: t("Leo.officer"), accessorKey: "officer" },
+              { header: common("description"), accessorKey: "description" },
+              { header: common("createdAt"), accessorKey: "createdAt" },
+              { header: common("actions"), accessorKey: "actions" },
             ]}
           />
 

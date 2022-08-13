@@ -114,10 +114,10 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
             ),
           }))}
           columns={[
-            { Header: common("name"), accessor: "name" },
-            { Header: "Permissions", accessor: "permissions" },
-            { Header: common("createdAt"), accessor: "createdAt" },
-            hasManagePermissions ? { Header: common("actions"), accessor: "actions" } : null,
+            { header: common("name"), accessorKey: "name" },
+            { header: "Permissions", accessorKey: "permissions" },
+            { header: common("createdAt"), accessorKey: "createdAt" },
+            hasManagePermissions ? { header: common("actions"), accessorKey: "actions" } : null,
           ]}
         />
       )}

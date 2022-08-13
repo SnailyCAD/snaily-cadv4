@@ -158,15 +158,15 @@ export default function CitizenLogs({ data }: Props) {
               };
             })}
             columns={[
-              { Header: t("citizen"), accessor: "citizen" },
-              { Header: t("theoryExam"), accessor: "theoryExam" },
-              { Header: t("practiceExam"), accessor: "practiceExam" },
-              { Header: t("status"), accessor: "status" },
-              { Header: t("categories"), accessor: "categories" },
-              { Header: t("license"), accessor: "license" },
-              { Header: common("createdAt"), accessor: "createdAt" },
+              { header: t("citizen"), accessorKey: "citizen" },
+              { header: t("theoryExam"), accessorKey: "theoryExam" },
+              { header: t("practiceExam"), accessorKey: "practiceExam" },
+              { header: t("status"), accessorKey: "status" },
+              { header: t("categories"), accessorKey: "categories" },
+              { header: t("license"), accessorKey: "license" },
+              { header: common("createdAt"), accessorKey: "createdAt" },
               hasPermissions([Permissions.ManageDLExams], (u) => u.isSupervisor)
-                ? { Header: common("actions"), accessor: "actions" }
+                ? { header: common("actions"), accessorKey: "actions" }
                 : null,
             ]}
           />

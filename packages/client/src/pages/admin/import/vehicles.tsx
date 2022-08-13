@@ -126,14 +126,14 @@ export default function ImportVehiclesPage({ data }: Props) {
           ),
         }))}
         columns={[
-          { Header: veh("plate"), accessor: "plate" },
-          { Header: veh("model"), accessor: "model" },
-          { Header: veh("color"), accessor: "color" },
-          { Header: veh("registrationStatus"), accessor: "registrationStatus" },
-          { Header: veh("vinNumber"), accessor: "vinNumber" },
-          { Header: common("citizen"), accessor: "citizen" },
-          { Header: common("createdAt"), accessor: "createdAt" },
-          hasDeletePermissions ? { Header: common("actions"), accessor: "actions" } : null,
+          { header: veh("plate"), accessorKey: "plate" },
+          { header: veh("model"), accessorKey: "model" },
+          { header: veh("color"), accessorKey: "color" },
+          { header: veh("registrationStatus"), accessorKey: "registrationStatus" },
+          { header: veh("vinNumber"), accessorKey: "vinNumber" },
+          { header: common("citizen"), accessorKey: "citizen" },
+          { header: common("createdAt"), accessorKey: "createdAt" },
+          hasDeletePermissions ? { header: common("actions"), accessorKey: "actions" } : null,
         ]}
       />
 

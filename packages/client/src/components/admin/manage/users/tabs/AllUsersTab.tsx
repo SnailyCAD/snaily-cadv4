@@ -16,7 +16,7 @@ import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
 import type { GetManageUsersData } from "@snailycad/types/api";
-import { useTableState } from "components/shared/Table/Table";
+import { useTableState } from "components/shared/Table";
 
 export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
   const { cad } = useAuth();

@@ -32,10 +32,10 @@ export function TruckLogsTable({ result }: Props) {
             endedAt: log.endedAt,
           }))}
         columns={[
-          { Header: t("driver"), accessor: "driver" },
-          { Header: t("vehicle"), accessor: "vehicle" },
-          { Header: t("startedAt"), accessor: "startedAt" },
-          { Header: t("endedAt"), accessor: "endedAt" },
+          { header: t("driver"), accessorKey: "driver" },
+          { header: t("vehicle"), accessorKey: "vehicle" },
+          { header: t("startedAt"), accessorKey: "startedAt" },
+          { header: t("endedAt"), accessorKey: "endedAt" },
         ]}
       />
     </div>

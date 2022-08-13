@@ -96,11 +96,11 @@ export function CourtEntriesTab(props: Props) {
             ),
           }))}
           columns={[
-            { Header: t("title"), accessor: "title" },
-            { Header: t("caseNumber"), accessor: "caseNumber" },
-            { Header: common("description"), accessor: "description" },
-            { Header: common("createdAt"), accessor: "createdAt" },
-            { Header: common("actions"), accessor: "actions" },
+            { header: t("title"), accessorKey: "title" },
+            { header: t("caseNumber"), accessorKey: "caseNumber" },
+            { header: common("description"), accessorKey: "description" },
+            { header: common("createdAt"), accessorKey: "createdAt" },
+            { header: common("actions"), accessorKey: "actions" },
           ]}
         />
       )}

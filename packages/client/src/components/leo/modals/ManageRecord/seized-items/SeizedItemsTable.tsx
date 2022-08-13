@@ -77,10 +77,10 @@ export function SeizedItemsTable({ isReadOnly }: { isReadOnly?: boolean }) {
               ),
             }))}
             columns={[
-              { Header: common("name"), accessor: "item" },
-              { Header: t("quantity"), accessor: "quantity" },
-              { Header: t("illegal"), accessor: "illegal" },
-              { Header: common("actions"), accessor: "actions" },
+              { header: common("name"), accessorKey: "item" },
+              { header: t("quantity"), accessorKey: "quantity" },
+              { header: t("illegal"), accessorKey: "illegal" },
+              { header: common("actions"), accessorKey: "actions" },
             ]}
           />
         ) : (

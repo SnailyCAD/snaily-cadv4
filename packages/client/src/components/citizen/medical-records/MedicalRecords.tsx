@@ -90,10 +90,10 @@ export function MedicalRecords() {
               ),
             }))}
             columns={[
-              { Header: t("diseases"), accessor: "diseases" },
-              { Header: t("bloodGroup"), accessor: "bloodGroup" },
-              { Header: common("description"), accessor: "description" },
-              { Header: common("actions"), accessor: "actions" },
+              { header: t("diseases"), accessorKey: "diseases" },
+              { header: t("bloodGroup"), accessorKey: "bloodGroup" },
+              { header: common("description"), accessorKey: "description" },
+              { header: common("actions"), accessorKey: "actions" },
             ]}
           />
         )}

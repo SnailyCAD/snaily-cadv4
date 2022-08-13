@@ -96,13 +96,13 @@ export function DepartmentWhitelistingTab({ search, pendingOfficers }: Props) {
             ),
           }))}
           columns={[
-            { Header: common("name"), accessor: "name" },
-            { Header: t("Leo.callsign"), accessor: "callsign" },
-            { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" },
-            { Header: t("Leo.department"), accessor: "department" },
-            { Header: t("Leo.division"), accessor: "division" },
-            { Header: common("user"), accessor: "user" },
-            { Header: common("actions"), accessor: "actions" },
+            { header: common("name"), accessorKey: "name" },
+            { header: t("Leo.callsign"), accessorKey: "callsign" },
+            { header: t("Leo.badgeNumber"), accessorKey: "badgeNumber" },
+            { header: t("Leo.department"), accessorKey: "department" },
+            { header: t("Leo.division"), accessorKey: "division" },
+            { header: common("user"), accessorKey: "user" },
+            { header: common("actions"), accessorKey: "actions" },
           ]}
         />
       )}

@@ -119,15 +119,15 @@ export default function MyDeputies({ deputies: data }: Props) {
             ),
           }))}
           columns={[
-            { Header: t("Ems.deputy"), accessor: "deputy" },
-            { Header: t("Leo.callsign"), accessor: "callsign" },
-            BADGE_NUMBERS ? { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" } : null,
-            { Header: t("Leo.department"), accessor: "department" },
-            { Header: t("Leo.division"), accessor: "division" },
-            { Header: t("Leo.rank"), accessor: "rank" },
-            { Header: t("Leo.position"), accessor: "position" },
-            { Header: t("Leo.status"), accessor: "departmentStatus" },
-            { Header: common("actions"), accessor: "actions" },
+            { header: t("Ems.deputy"), accessorKey: "deputy" },
+            { header: t("Leo.callsign"), accessorKey: "callsign" },
+            BADGE_NUMBERS ? { header: t("Leo.badgeNumber"), accessorKey: "badgeNumber" } : null,
+            { header: t("Leo.department"), accessorKey: "department" },
+            { header: t("Leo.division"), accessorKey: "division" },
+            { header: t("Leo.rank"), accessorKey: "rank" },
+            { header: t("Leo.position"), accessorKey: "position" },
+            { header: t("Leo.status"), accessorKey: "departmentStatus" },
+            { header: common("actions"), accessorKey: "actions" },
           ]}
         />
       )}

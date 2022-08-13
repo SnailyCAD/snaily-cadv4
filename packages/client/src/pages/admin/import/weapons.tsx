@@ -119,12 +119,12 @@ export default function ImportWeaponsPage({ data }: Props) {
           ),
         }))}
         columns={[
-          { Header: wep("model"), accessor: "model" },
-          { Header: wep("registrationStatus"), accessor: "registrationStatus" },
-          { Header: wep("serialNumber"), accessor: "serialNumber" },
-          { Header: common("citizen"), accessor: "citizen" },
-          { Header: common("createdAt"), accessor: "createdAt" },
-          hasDeletePermissions ? { Header: common("actions"), accessor: "actions" } : null,
+          { header: wep("model"), accessorKey: "model" },
+          { header: wep("registrationStatus"), accessorKey: "registrationStatus" },
+          { header: wep("serialNumber"), accessorKey: "serialNumber" },
+          { header: common("citizen"), accessorKey: "citizen" },
+          { header: common("createdAt"), accessorKey: "createdAt" },
+          hasDeletePermissions ? { header: common("actions"), accessorKey: "actions" } : null,
         ]}
       />
 

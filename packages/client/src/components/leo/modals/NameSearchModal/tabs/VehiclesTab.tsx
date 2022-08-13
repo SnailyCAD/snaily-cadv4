@@ -59,13 +59,13 @@ export function NameSearchVehiclesTab() {
             createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
           }))}
           columns={[
-            { Header: t("Vehicles.plate"), accessor: "plate" },
-            { Header: t("Vehicles.model"), accessor: "model" },
-            { Header: t("Vehicles.color"), accessor: "color" },
-            { Header: t("Vehicles.registrationStatus"), accessor: "registrationStatus" },
-            { Header: t("Vehicles.vinNumber"), accessor: "vinNumber" },
-            DMV ? { Header: t("Vehicles.dmvStatus"), accessor: "dmvStatus" } : null,
-            { Header: common("createdAt"), accessor: "createdAt" },
+            { header: t("Vehicles.plate"), accessorKey: "plate" },
+            { header: t("Vehicles.model"), accessorKey: "model" },
+            { header: t("Vehicles.color"), accessorKey: "color" },
+            { header: t("Vehicles.registrationStatus"), accessorKey: "registrationStatus" },
+            { header: t("Vehicles.vinNumber"), accessorKey: "vinNumber" },
+            DMV ? { header: t("Vehicles.dmvStatus"), accessorKey: "dmvStatus" } : null,
+            { header: common("createdAt"), accessorKey: "createdAt" },
           ]}
         />
       )}

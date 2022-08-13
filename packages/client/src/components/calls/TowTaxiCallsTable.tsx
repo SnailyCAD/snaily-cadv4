@@ -117,13 +117,13 @@ export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props)
             ),
           }))}
           columns={[
-            { Header: t("location"), accessor: "location" },
-            { Header: t("postal"), accessor: "postal" },
-            { Header: common("description"), accessor: "description" },
-            { Header: t("caller"), accessor: "caller" },
-            { Header: t("assignedUnit"), accessor: "assignedUnit" },
-            { Header: common("createdAt"), accessor: "createdAt" },
-            hasManagePermissions ? { Header: common("actions"), accessor: "actions" } : null,
+            { header: t("location"), accessorKey: "location" },
+            { header: t("postal"), accessorKey: "postal" },
+            { header: common("description"), accessorKey: "description" },
+            { header: t("caller"), accessorKey: "caller" },
+            { header: t("assignedUnit"), accessorKey: "assignedUnit" },
+            { header: common("createdAt"), accessorKey: "createdAt" },
+            hasManagePermissions ? { header: common("actions"), accessorKey: "actions" } : null,
           ]}
         />
       )}

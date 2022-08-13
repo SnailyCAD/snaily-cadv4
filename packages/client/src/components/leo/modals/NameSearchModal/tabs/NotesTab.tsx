@@ -118,9 +118,9 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
             ),
           }))}
           columns={[
-            { Header: t("Leo.text"), accessor: "text" },
-            { Header: t("Common.createdAt"), accessor: "createdAt" },
-            { Header: t("Common.actions"), accessor: "actions" },
+            { header: t("Leo.text"), accessorKey: "text" },
+            { header: t("Common.createdAt"), accessorKey: "createdAt" },
+            { header: t("Common.actions"), accessorKey: "actions" },
           ]}
         />
       )}

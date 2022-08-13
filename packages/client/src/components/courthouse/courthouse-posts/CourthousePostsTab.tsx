@@ -109,9 +109,9 @@ export function CourthousePostsTab(props: Props) {
             ),
           }))}
           columns={[
-            { Header: t("title"), accessor: "title" },
-            { Header: common("createdAt"), accessor: "createdAt" },
-            { Header: common("actions"), accessor: "actions" },
+            { header: t("title"), accessorKey: "title" },
+            { header: common("createdAt"), accessorKey: "createdAt" },
+            { header: common("actions"), accessorKey: "actions" },
           ]}
         />
       )}

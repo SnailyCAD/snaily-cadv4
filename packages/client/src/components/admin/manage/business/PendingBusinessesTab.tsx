@@ -65,10 +65,10 @@ export function PendingBusinessesTab({ setBusinesses, businesses }: Props) {
           ),
         }))}
         columns={[
-          { Header: common("name"), accessor: "name" },
-          { Header: t("owner"), accessor: "owner" },
-          { Header: t("user"), accessor: "user" },
-          { Header: common("actions"), accessor: "actions" },
+          { header: common("name"), accessorKey: "name" },
+          { header: t("owner"), accessorKey: "owner" },
+          { header: t("user"), accessorKey: "user" },
+          { header: common("actions"), accessorKey: "actions" },
         ]}
       />
     </TabsContent>

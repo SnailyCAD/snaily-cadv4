@@ -115,12 +115,12 @@ export function EmployeesTab() {
           ),
         }))}
         columns={[
-          { Header: common("name"), accessor: "name" },
-          { Header: t("role"), accessor: "role" },
-          { Header: t("canCreatePosts"), accessor: "canCreatePosts" },
-          { Header: t("employeeOfTheMonth"), accessor: "employeeOfTheMonth" },
-          { Header: t("whitelistStatus"), accessor: "whitelistStatus" },
-          { Header: common("actions"), accessor: "actions" },
+          { header: common("name"), accessorKey: "name" },
+          { header: t("role"), accessorKey: "role" },
+          { header: t("canCreatePosts"), accessorKey: "canCreatePosts" },
+          { header: t("employeeOfTheMonth"), accessorKey: "employeeOfTheMonth" },
+          { header: t("whitelistStatus"), accessorKey: "whitelistStatus" },
+          { header: common("actions"), accessorKey: "actions" },
         ]}
       />
 

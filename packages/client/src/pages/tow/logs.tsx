@@ -86,12 +86,12 @@ export default function TowLogs(props: Props) {
             createdAt: <FullDate>{call.createdAt}</FullDate>,
           }))}
           columns={[
-            { Header: t("location"), accessor: "location" },
-            { Header: t("postal"), accessor: "postal" },
-            { Header: common("description"), accessor: "description" },
-            { Header: t("caller"), accessor: "caller" },
-            { Header: t("assignedUnit"), accessor: "assignedUnit" },
-            { Header: common("createdAt"), accessor: "createdAt" },
+            { header: t("location"), accessorKey: "location" },
+            { header: t("postal"), accessorKey: "postal" },
+            { header: common("description"), accessorKey: "description" },
+            { header: t("caller"), accessorKey: "caller" },
+            { header: t("assignedUnit"), accessorKey: "assignedUnit" },
+            { header: common("createdAt"), accessorKey: "createdAt" },
           ]}
         />
       )}

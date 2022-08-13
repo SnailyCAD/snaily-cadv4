@@ -102,9 +102,9 @@ export function AddressSearchModal() {
                     ),
                   }))}
                   columns={[
-                    { Header: t("citizen"), accessor: "citizen" },
-                    { Header: t("fullAddress"), accessor: "fullAddress" },
-                    { Header: common("actions"), accessor: "actions" },
+                    { header: t("citizen"), accessorKey: "citizen" },
+                    { header: t("fullAddress"), accessorKey: "fullAddress" },
+                    { header: common("actions"), accessorKey: "actions" },
                   ]}
                 />
               </div>

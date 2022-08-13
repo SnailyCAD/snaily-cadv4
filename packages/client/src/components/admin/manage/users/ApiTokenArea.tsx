@@ -30,8 +30,8 @@ export function ApiTokenArea({ user }: Props) {
                 createdAt: <FullDate>{log.createdAt}</FullDate>,
               }))}
               columns={[
-                { Header: "Route", accessor: "route" },
-                { Header: "Created At", accessor: "createdAt" },
+                { header: "Route", accessorKey: "route" },
+                { header: "Created At", accessorKey: "createdAt" },
               ]}
             />
           )}

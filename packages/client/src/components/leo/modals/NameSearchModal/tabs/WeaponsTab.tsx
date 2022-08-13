@@ -52,16 +52,16 @@ export function NameSearchWeaponsTab() {
           }))}
           columns={[
             {
-              Header: t("Weapons.model"),
-              accessor: "model",
+              header: t("Weapons.model"),
+              accessorKey: "model",
             },
             {
-              Header: t("Weapons.registrationStatus"),
-              accessor: "registrationStatus",
+              header: t("Weapons.registrationStatus"),
+              accessorKey: "registrationStatus",
             },
             {
-              Header: t("Weapons.serialNumber"),
-              accessor: "serialNumber",
+              header: t("Weapons.serialNumber"),
+              accessorKey: "serialNumber",
             },
           ]}
         />

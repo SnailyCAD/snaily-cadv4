@@ -74,9 +74,9 @@ function QualificationAwardsTable({ data }: { data: UnitQualification[] }) {
         };
       })}
       columns={[
-        { Header: common("image"), accessor: "image" },
-        { Header: common("name"), accessor: "name" },
-        { Header: t("assignedAt"), accessor: "assignedAt" },
+        { header: common("image"), accessorKey: "image" },
+        { header: common("name"), accessorKey: "name" },
+        { header: t("assignedAt"), accessorKey: "assignedAt" },
       ]}
     />
   );

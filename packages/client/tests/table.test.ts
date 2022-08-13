@@ -3,10 +3,10 @@ import { expect, test } from "vitest";
 import { makeColumns } from "../src/lib/table/orderColumnsByTableActionsAlignment";
 
 const COLUMNS = [
-  { accessor: "name" },
-  { accessor: "surname" },
-  { accessor: "age" },
-  { accessor: "actions" },
+  { accessorKey: "name" },
+  { accessorKey: "surname" },
+  { accessorKey: "age" },
+  { accessorKey: "actions" },
 ] as any;
 
 const LEFT = TableActionsAlignment.LEFT;

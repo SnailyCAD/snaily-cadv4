@@ -167,15 +167,15 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
                 ),
               }))}
               columns={[
-                { Header: t("plate"), accessor: "plate" },
-                { Header: t("model"), accessor: "model" },
-                { Header: t("color"), accessor: "color" },
-                { Header: t("registrationStatus"), accessor: "registrationStatus" },
-                { Header: t("insuranceStatus"), accessor: "insuranceStatus" },
-                { Header: t("vinNumber"), accessor: "vinNumber" },
-                DMV ? { Header: t("dmvStatus"), accessor: "dmvStatus" } : null,
-                { Header: common("createdAt"), accessor: "createdAt" },
-                { Header: common("actions"), accessor: "actions" },
+                { header: t("plate"), accessorKey: "plate" },
+                { header: t("model"), accessorKey: "model" },
+                { header: t("color"), accessorKey: "color" },
+                { header: t("registrationStatus"), accessorKey: "registrationStatus" },
+                { header: t("insuranceStatus"), accessorKey: "insuranceStatus" },
+                { header: t("vinNumber"), accessorKey: "vinNumber" },
+                DMV ? { header: t("dmvStatus"), accessorKey: "dmvStatus" } : null,
+                { header: common("createdAt"), accessorKey: "createdAt" },
+                { header: common("actions"), accessorKey: "actions" },
               ]}
             />
           </>

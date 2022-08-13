@@ -104,13 +104,13 @@ export function VehiclesTab() {
             ),
           }))}
           columns={[
-            { Header: t("Vehicles.plate"), accessor: "plate" },
-            { Header: t("Vehicles.model"), accessor: "model" },
-            { Header: t("Vehicles.color"), accessor: "color" },
-            { Header: t("Vehicles.registrationStatus"), accessor: "registrationStatus" },
-            { Header: t("Vehicles.vinNumber"), accessor: "vinNumber" },
-            { Header: common("createdAt"), accessor: "createdAt" },
-            { Header: common("actions"), accessor: "actions" },
+            { header: t("Vehicles.plate"), accessorKey: "plate" },
+            { header: t("Vehicles.model"), accessorKey: "model" },
+            { header: t("Vehicles.color"), accessorKey: "color" },
+            { header: t("Vehicles.registrationStatus"), accessorKey: "registrationStatus" },
+            { header: t("Vehicles.vinNumber"), accessorKey: "vinNumber" },
+            { header: common("createdAt"), accessorKey: "createdAt" },
+            { header: common("actions"), accessorKey: "actions" },
           ]}
         />
       )}

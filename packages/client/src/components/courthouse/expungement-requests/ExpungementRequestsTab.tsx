@@ -81,12 +81,12 @@ export function ExpungementRequestsTab(props: Props) {
             };
           })}
           columns={[
-            { Header: leo("citizen"), accessor: "citizen" },
-            { Header: leo("warrants"), accessor: "warrants" },
-            { Header: leo("arrestReports"), accessor: "arrestReports" },
-            { Header: leo("tickets"), accessor: "tickets" },
-            { Header: leo("status"), accessor: "status" },
-            { Header: common("createdAt"), accessor: "createdAt" },
+            { header: leo("citizen"), accessorKey: "citizen" },
+            { header: leo("warrants"), accessorKey: "warrants" },
+            { header: leo("arrestReports"), accessorKey: "arrestReports" },
+            { header: leo("tickets"), accessorKey: "tickets" },
+            { header: leo("status"), accessorKey: "status" },
+            { header: common("createdAt"), accessorKey: "createdAt" },
           ]}
         />
       )}
