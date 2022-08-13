@@ -1,6 +1,5 @@
 import * as React from "react";
 import {
-  ColumnDef,
   getCoreRowModel,
   getSortedRowModel,
   RowData,
@@ -9,6 +8,7 @@ import {
   getFilteredRowModel,
   FilterFn,
   Row,
+  AccessorKeyColumnDef,
 } from "@tanstack/react-table";
 import { TableRow } from "./TableRow";
 import { TablePagination } from "./TablePagination";
@@ -31,7 +31,7 @@ export type _RowData = RowData & {
 
 interface Props<TData extends _RowData> {
   data: TData[];
-  columns: (ColumnDef<TData> | null)[];
+  columns: (AccessorKeyColumnDef<TData> | null)[];
 
   tableState: ReturnType<typeof useTableState>;
   containerProps?: { style?: React.CSSProperties; className?: string };

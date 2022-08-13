@@ -1,11 +1,11 @@
 import { TableActionsAlignment } from "@snailycad/types";
-import type { ColumnDef, RowData } from "@tanstack/react-table";
+import type { AccessorKeyColumnDef, ColumnDef, RowData } from "@tanstack/react-table";
 
 export function orderColumnsByTableActionsAlignment<TData extends RowData>(
   tableActionsAlignment: TableActionsAlignment,
-  columns: (ColumnDef<TData> | null)[],
+  columns: (AccessorKeyColumnDef<TData> | null)[],
 ): ColumnDef<TData>[] {
-  const idxOfActions = columns.findIndex((v) => v?.id === "actions");
+  const idxOfActions = columns.findIndex((v) => v?.accessorKey === "actions");
   const isLeft = tableActionsAlignment === TableActionsAlignment.LEFT;
 
   const arr = [];

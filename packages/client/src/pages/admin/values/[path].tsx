@@ -38,7 +38,7 @@ import {
   getValueStrFromValue,
   hasTableDataChanged,
 } from "lib/admin/values/utils";
-import type { ColumnDef } from "@tanstack/react-table";
+import type { AccessorKeyColumnDef } from "@tanstack/react-table";
 import { getSelectedTableRows } from "hooks/shared/table/useTableState";
 
 const ManageValueModal = dynamic(async () => {
@@ -82,7 +82,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
       { header: t("isDisabled"), accessorKey: "isDisabled" },
       { header: common("createdAt"), accessorKey: "createdAt" },
       { header: common("actions"), accessorKey: "actions" },
-    ] as ColumnDef<{ id: string }>[];
+    ] as AccessorKeyColumnDef<{ id: string }>[];
   }, [extraTableHeaders, t, common]);
 
   async function setList(list: AnyValue[]) {
