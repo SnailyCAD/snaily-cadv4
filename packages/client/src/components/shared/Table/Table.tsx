@@ -125,6 +125,11 @@ export function Table<TData extends _RowData>({
     tableState.dragDrop?.onListChange(originals);
   }
 
+  console.log({
+    data,
+    visibleTableRows,
+  });
+
   return (
     <div
       className={classNames(
@@ -169,7 +174,7 @@ export function Table<TData extends _RowData>({
         </ReactSortable>
       </table>
 
-      <TablePagination table={table} />
+      {dataLength <= visibleTableRows.length ? null : <TablePagination table={table} />}
     </div>
   );
 }
