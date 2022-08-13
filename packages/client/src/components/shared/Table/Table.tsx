@@ -17,7 +17,7 @@ import { useAuth } from "context/AuthContext";
 import { TableActionsAlignment } from "@snailycad/types";
 import { orderColumnsByTableActionsAlignment } from "lib/table/orderColumnsByTableActionsAlignment";
 import { rankItem } from "@tanstack/match-sorter-utils";
-import { useTableState } from "hooks/shared/table/useTableState";
+import type { useTableState } from "hooks/shared/table/useTableState";
 import { ReactSortable } from "react-sortablejs";
 import { useMounted } from "@casper124578/useful";
 import { createTableDragDropColumn } from "lib/table/dndArrowHook";
@@ -182,6 +182,3 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
 
   return itemRank.passed;
 };
-
-export { useTableState };
-export { IndeterminateCheckbox } from "./IndeterminateCheckbox";
