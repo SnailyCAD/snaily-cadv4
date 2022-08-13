@@ -147,7 +147,6 @@ export function soundCamelCaseToKebabCase(sound: string) {
   return obj[sound] as Sounds;
 }
 
-// todo: add tests?
 export function isEmpty<Obj extends object>(obj: Obj) {
   return getObjLength(obj) === 0;
 }
