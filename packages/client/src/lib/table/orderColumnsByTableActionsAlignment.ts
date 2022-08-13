@@ -28,7 +28,7 @@ export function orderColumnsByTableActionsAlignment<TData extends RowData>(
       continue;
     }
 
-    if (column.id === "actions") continue;
+    if (column.accessorKey === "actions") continue;
     arr[i + 1] = column;
   }
 
