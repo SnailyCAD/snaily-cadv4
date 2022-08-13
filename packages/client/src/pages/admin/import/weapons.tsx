@@ -7,7 +7,7 @@ import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { Rank, Weapon } from "@snailycad/types";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
@@ -46,6 +46,7 @@ export default function ImportWeaponsPage({ data }: Props) {
     initialData: data.weapons,
     totalCount: data.totalCount,
   });
+  const tableState = useTableState({ pagination: asyncTable.pagination });
   const [tempWeapon, weaponState] = useTemporaryItem(asyncTable.data);
 
   function handleDeleteClick(weapon: Weapon) {
@@ -99,14 +100,16 @@ export default function ImportWeaponsPage({ data }: Props) {
         />
       </FormField>
 
-      {asyncTable.search.search && asyncTable.pagination.totalCount !== data.totalCount ? (
+      {asyncTable.search.search && asyncTable.pagination.totalDataCount !== data.totalCount ? (
         <p className="italic text-base font-semibold">
-          Showing {asyncTable.pagination.totalCount} result(s)
+          Showing {asyncTable.pagination.totalDataCount} result(s)
         </p>
       ) : null}
 
       <Table
+        tableState={tableState}
         data={asyncTable.data.map((weapon) => ({
+          id: weapon.id,
           model: weapon.model.value.value,
           registrationStatus: weapon.registrationStatus.value,
           serialNumber: weapon.serialNumber,
@@ -119,12 +122,12 @@ export default function ImportWeaponsPage({ data }: Props) {
           ),
         }))}
         columns={[
-          { Header: wep("model"), accessor: "model" },
-          { Header: wep("registrationStatus"), accessor: "registrationStatus" },
-          { Header: wep("serialNumber"), accessor: "serialNumber" },
-          { Header: common("citizen"), accessor: "citizen" },
-          { Header: common("createdAt"), accessor: "createdAt" },
-          hasDeletePermissions ? { Header: common("actions"), accessor: "actions" } : null,
+          { header: wep("model"), accessorKey: "model" },
+          { header: wep("registrationStatus"), accessorKey: "registrationStatus" },
+          { header: wep("serialNumber"), accessorKey: "serialNumber" },
+          { header: common("citizen"), accessorKey: "citizen" },
+          { header: common("createdAt"), accessorKey: "createdAt" },
+          hasDeletePermissions ? { header: common("actions"), accessorKey: "actions" } : null,
         ]}
       />
 

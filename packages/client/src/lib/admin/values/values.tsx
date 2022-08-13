@@ -23,6 +23,7 @@ import { DEPARTMENT_LABELS } from "components/admin/values/manage-modal/Departme
 import { isBaseValue, hasValueObj } from "@snailycad/utils";
 import { useImageUrl } from "hooks/useImageUrl";
 import { makeDefaultWhatPages } from "./utils";
+import type { ColumnDef } from "@tanstack/react-table";
 
 const TYPE_LABELS = {
   [StatusValueType.SITUATION_CODE]: "Situation Code",
@@ -152,62 +153,62 @@ export function useTableDataOfType(type: ValueType) {
   return get;
 }
 
-export function useTableHeadersOfType(type: ValueType) {
+export function useTableHeadersOfType(type: ValueType): ColumnDef<{ id: string }>[] {
   const common = useTranslations("Common");
   const t = useTranslations("Values");
 
   switch (type) {
     case ValueType.CODES_10: {
       return [
-        { Header: t("shouldDo"), accessor: "shouldDo" },
-        { Header: common("type"), accessor: "type" },
-        { Header: t("color"), accessor: "color" },
-        { Header: t("whatPages"), accessor: "whatPages" },
-        { Header: t("departments"), accessor: "departments" },
+        { header: t("shouldDo"), accessorKey: "shouldDo" },
+        { header: common("type"), accessorKey: "type" },
+        { header: t("color"), accessorKey: "color" },
+        { header: t("whatPages"), accessorKey: "whatPages" },
+        { header: t("departments"), accessorKey: "departments" },
       ];
     }
     case ValueType.DEPARTMENT: {
       return [
-        { Header: t("callsign"), accessor: "callsign" },
-        { Header: common("type"), accessor: "type" },
-        { Header: t("whitelisted"), accessor: "whitelisted" },
-        { Header: t("isDefaultDepartment"), accessor: "isDefaultDepartment" },
-        { Header: t("defaultOfficerRank"), accessor: "defaultOfficerRank" },
-        { Header: t("isConfidential"), accessor: "isConfidential" },
+        { header: t("callsign"), accessorKey: "callsign" },
+        { header: common("type"), accessorKey: "type" },
+        { header: t("whitelisted"), accessorKey: "whitelisted" },
+        { header: t("isDefaultDepartment"), accessorKey: "isDefaultDepartment" },
+        { header: t("defaultOfficerRank"), accessorKey: "defaultOfficerRank" },
+        { header: t("isConfidential"), accessorKey: "isConfidential" },
       ];
     }
     case ValueType.DIVISION: {
       return [
-        { Header: t("callsign"), accessor: "callsign" },
-        { Header: t("department"), accessor: "department" },
-        { Header: t("pairedUnitTemplate"), accessor: "pairedUnitTemplate" },
+        { header: t("callsign"), accessorKey: "callsign" },
+        { header: t("department"), accessorKey: "department" },
+        { header: t("pairedUnitTemplate"), accessorKey: "pairedUnitTemplate" },
       ];
     }
     case ValueType.VEHICLE:
     case ValueType.WEAPON: {
-      return [{ Header: t("gameHash"), accessor: "gameHash" }];
+      return [{ header: t("gameHash"), accessorKey: "gameHash" }];
     }
     case ValueType.LICENSE: {
       return [
-        { Header: t("licenseType"), accessor: "licenseType" },
-        { Header: t("isDefault"), accessor: "isDefault" },
+        { header: t("licenseType"), accessorKey: "licenseType" },
+        { header: t("isDefault"), accessorKey: "isDefault" },
       ];
     }
     case ValueType.QUALIFICATION: {
       return [
-        { Header: common("image"), accessor: "image" },
-        { Header: t("departments"), accessor: "departments" },
-        { Header: common("type"), accessor: "type" },
+        { header: common("image"), accessorKey: "image" },
+        { header: t("departments"), accessorKey: "departments" },
+        { header: common("type"), accessorKey: "type" },
       ];
     }
     case ValueType.OFFICER_RANK: {
       return [
-        { Header: common("image"), accessor: "image" },
-        { Header: t("departments"), accessor: "departments" },
+        { header: common("image"), accessorKey: "image" },
+        { header: t("departments"), accessorKey: "departments" },
       ];
     }
     case ValueType.CALL_TYPE: {
-      return [{ Header: t("priority"), accessor: "priority" }];
+      return [{ header: t("priority"), accessorKey: "priority" }];
     }
     default: {
       return [];

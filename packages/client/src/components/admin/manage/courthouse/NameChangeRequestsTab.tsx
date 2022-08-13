@@ -1,7 +1,7 @@
 import * as React from "react";
 import { TabsContent } from "@radix-ui/react-tabs";
 import { WhitelistStatus } from "@snailycad/types";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useTranslations } from "next-intl";
 import { Button } from "components/Button";
@@ -22,7 +22,7 @@ export function NameChangeRequestsTab({ requests: data }: Props) {
 
   const t = useTranslations();
   const common = useTranslations("Common");
-
+  const tableState = useTableState();
   const { state, execute } = useFetch();
   const pendingRequests = requests.filter((v) => v.status === WhitelistStatus.PENDING);
   const { hasPermissions } = usePermission();
@@ -48,7 +48,9 @@ export function NameChangeRequestsTab({ requests: data }: Props) {
         <p className="my-2">{t("Courthouse.noNameChangeRequests")}</p>
       ) : (
         <Table
+          tableState={tableState}
           data={pendingRequests.map((request) => ({
+            id: request.id,
             citizen: `${request.citizen.name} ${request.citizen.surname}`,
             newName: `${request.newName} ${request.newSurname}`,
             status: <Status state={request.status}>{request.status.toLowerCase()}</Status>,
@@ -76,11 +78,11 @@ export function NameChangeRequestsTab({ requests: data }: Props) {
             ),
           }))}
           columns={[
-            { Header: common("citizen"), accessor: "citizen" },
-            { Header: t("Courthouse.newName"), accessor: "newName" },
-            { Header: t("Courthouse.status"), accessor: "status" },
-            { Header: common("createdAt"), accessor: "createdAt" },
-            hasManagePermissions ? { Header: common("actions"), accessor: "actions" } : null,
+            { header: common("citizen"), accessorKey: "citizen" },
+            { header: t("Courthouse.newName"), accessorKey: "newName" },
+            { header: t("Courthouse.status"), accessorKey: "status" },
+            { header: common("createdAt"), accessorKey: "createdAt" },
+            hasManagePermissions ? { header: common("actions"), accessorKey: "actions" } : null,
           ]}
         />
       )}

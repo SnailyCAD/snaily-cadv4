@@ -1,19 +1,57 @@
-import { Checkbox } from "components/form/inputs/Checkbox";
 import * as React from "react";
+import type { ColumnDef, RowData } from "@tanstack/react-table";
+import { classNames } from "lib/classNames";
 
-type Props = JSX.IntrinsicElements["input"] & {
-  indeterminate?: boolean;
-  ref?: React.RefObject<HTMLInputElement>;
-};
-
-export function IndeterminateCheckbox({ indeterminate, ...props }: Props) {
+export function IndeterminateCheckbox({
+  indeterminate,
+  className = "",
+  ...rest
+}: { indeterminate?: boolean } & JSX.IntrinsicElements["input"]) {
+  const id = React.useId();
   const ref = React.useRef<HTMLInputElement>(null!);
 
   React.useEffect(() => {
     if (typeof indeterminate === "boolean") {
-      ref.current.indeterminate = !props.checked && indeterminate;
+      ref.current.indeterminate = !rest.checked && indeterminate;
     }
-  }, [ref, indeterminate, props.checked]);
+  }, [ref, rest.checked, indeterminate]);
 
-  return <Checkbox ref={ref} {...props} />;
+  return (
+    <span>
+      <label htmlFor={`checkbox_${id}`} className="sr-only">
+        Select table row
+      </label>
+      <input
+        id={`checkbox_${id}`}
+        type="checkbox"
+        ref={ref}
+        className={classNames("cursor-pointer", className)}
+        {...rest}
+      />
+    </span>
+  );
+}
+
+export function createTableCheckboxColumn<TData extends RowData>(): ColumnDef<TData> {
+  return {
+    id: "select",
+    header: ({ table }) => (
+      <IndeterminateCheckbox
+        {...{
+          checked: table.getIsAllRowsSelected(),
+          indeterminate: table.getIsSomeRowsSelected(),
+          onChange: table.getToggleAllRowsSelectedHandler(),
+        }}
+      />
+    ),
+    cell: ({ row }) => (
+      <IndeterminateCheckbox
+        {...{
+          checked: row.getIsSelected(),
+          indeterminate: row.getIsSomeSelected(),
+          onChange: row.getToggleSelectedHandler(),
+        }}
+      />
+    ),
+  };
 }

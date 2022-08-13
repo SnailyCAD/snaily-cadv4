@@ -9,7 +9,7 @@ import type { GetServerSideProps } from "next";
 import { Record, BaseCitizen, RecordRelease, ReleaseType } from "@snailycad/types";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import compareDesc from "date-fns/compareDesc";
 import { ReleaseCitizenModal } from "components/leo/jail/ReleaseCitizenModal";
@@ -37,6 +37,11 @@ export default function Jail({ data }: Props) {
       path: "/leo/jail",
     },
   });
+
+  const tableState = useTableState({
+    pagination: asyncTable.pagination,
+  });
+
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { openModal, closeModal } = useModal();
@@ -82,18 +87,17 @@ export default function Jail({ data }: Props) {
         <p className="mt-5">{t("noImprisonedCitizens")}</p>
       ) : (
         <Table
-          pagination={{
-            enabled: true,
-            totalCount: asyncTable.pagination.totalCount,
-            fetchData: asyncTable.pagination,
-          }}
-          defaultSort={{ columnId: "createdAt", descending: true }}
+          tableState={tableState}
           data={asyncTable.data.map((item) => {
             const [record] = item.Record.sort((a, b) =>
               compareDesc(new Date(a.createdAt), new Date(b.createdAt)),
             ).filter((v) => v.type === "ARREST_REPORT");
 
-            if (!record) return {};
+            if (!record) {
+              return {
+                id: item.id,
+              };
+            }
 
             const jailTime = record.violations.reduce((ac, cv) => ac + (cv.jailTime || 0), 0);
             const released = isReleased(record);
@@ -107,6 +111,7 @@ export default function Jail({ data }: Props) {
               : `Bail Posted (${citizen?.name} ${citizen?.surname})`;
 
             return {
+              id: item.id,
               rowProps: { style: released ? { opacity: "0.5" } : undefined },
               citizen: (
                 <Button onClick={() => handleNameClick(item)}>
@@ -135,13 +140,13 @@ export default function Jail({ data }: Props) {
             };
           })}
           columns={[
-            { Header: t("citizen"), accessor: "citizen" },
-            { Header: t("officer"), accessor: "officer" },
-            { Header: t("jailTime"), accessor: "jailTime" },
-            { Header: t("status"), accessor: "status" },
-            { Header: common("createdAt"), accessor: "createdAt" },
+            { header: t("citizen"), accessorKey: "citizen" },
+            { header: t("officer"), accessorKey: "officer" },
+            { header: t("jailTime"), accessorKey: "jailTime" },
+            { header: t("status"), accessorKey: "status" },
+            { header: common("createdAt"), accessorKey: "createdAt" },
             hasPermissions([Permissions.ManageJail], true)
-              ? { Header: common("actions"), accessor: "actions" }
+              ? { header: common("actions"), accessorKey: "actions" }
               : null,
           ]}
         />

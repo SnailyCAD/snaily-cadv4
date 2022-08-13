@@ -17,7 +17,7 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { usePermission, Permissions } from "hooks/usePermission";
@@ -56,6 +56,7 @@ export default function LeoIncidents({
   const [incidents, setIncidents] = React.useState(data);
   const [tempIncident, incidentState] = useTemporaryItem(incidents);
 
+  const tableState = useTableState();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { openModal, closeModal } = useModal();
@@ -144,12 +145,14 @@ export default function LeoIncidents({
         <p className="mt-5">{t("noIncidents")}</p>
       ) : (
         <Table
+          tableState={tableState}
           data={incidents.map((incident) => {
             const nameAndCallsign = incident.creator
               ? `${generateCallsign(incident.creator)} ${makeUnitName(incident.creator)}`
               : "";
 
             return {
+              id: incident.id,
               caseNumber: `#${incident.caseNumber}`,
               officer: (
                 <span // * 9 to fix overlapping issues with next table column
@@ -209,16 +212,16 @@ export default function LeoIncidents({
             };
           })}
           columns={[
-            { Header: t("caseNumber"), accessor: "caseNumber" },
-            { Header: t("officer"), accessor: "officer" },
-            { Header: t("unitsInvolved"), accessor: "unitsInvolved" },
-            { Header: t("firearmsInvolved"), accessor: "firearmsInvolved" },
-            { Header: t("injuriesOrFatalities"), accessor: "injuriesOrFatalities" },
-            { Header: t("arrestsMade"), accessor: "arrestsMade" },
-            { Header: t("situationCode"), accessor: "situationCode" },
-            { Header: common("description"), accessor: "description" },
-            { Header: common("createdAt"), accessor: "createdAt" },
-            { Header: common("actions"), accessor: "actions" },
+            { header: t("caseNumber"), accessorKey: "caseNumber" },
+            { header: t("officer"), accessorKey: "officer" },
+            { header: t("unitsInvolved"), accessorKey: "unitsInvolved" },
+            { header: t("firearmsInvolved"), accessorKey: "firearmsInvolved" },
+            { header: t("injuriesOrFatalities"), accessorKey: "injuriesOrFatalities" },
+            { header: t("arrestsMade"), accessorKey: "arrestsMade" },
+            { header: t("situationCode"), accessorKey: "situationCode" },
+            { header: common("description"), accessorKey: "description" },
+            { header: common("createdAt"), accessorKey: "createdAt" },
+            { header: common("actions"), accessorKey: "actions" },
           ]}
         />
       )}

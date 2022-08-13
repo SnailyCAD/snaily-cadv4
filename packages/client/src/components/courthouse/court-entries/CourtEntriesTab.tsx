@@ -4,7 +4,7 @@ import { TabsContent } from "components/shared/TabList";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import type { CourtEntry } from "@snailycad/types";
 import { FullDate } from "components/shared/FullDate";
 import { ManageCourtEntry } from "./ManageCourtEntry";
@@ -26,6 +26,7 @@ export function CourtEntriesTab(props: Props) {
   const common = useTranslations("Common");
   const { openModal, closeModal } = useModal();
   const { state, execute } = useFetch();
+  const tableState = useTableState();
 
   async function deleteCourtEntry() {
     if (!tempEntry) return;
@@ -69,8 +70,9 @@ export function CourtEntriesTab(props: Props) {
         <p className="mt-5">{t("noCourtEntries")}</p>
       ) : (
         <Table
-          defaultSort={{ columnId: "createdAt", descending: true }}
+          tableState={tableState}
           data={entries.map((entry) => ({
+            id: entry.id,
             title: entry.title,
             caseNumber: entry.caseNumber,
             createdAt: <FullDate>{entry.createdAt}</FullDate>,
@@ -96,11 +98,11 @@ export function CourtEntriesTab(props: Props) {
             ),
           }))}
           columns={[
-            { Header: t("title"), accessor: "title" },
-            { Header: t("caseNumber"), accessor: "caseNumber" },
-            { Header: common("description"), accessor: "description" },
-            { Header: common("createdAt"), accessor: "createdAt" },
-            { Header: common("actions"), accessor: "actions" },
+            { header: t("title"), accessorKey: "title" },
+            { header: t("caseNumber"), accessorKey: "caseNumber" },
+            { header: common("description"), accessorKey: "description" },
+            { header: common("createdAt"), accessorKey: "createdAt" },
+            { header: common("actions"), accessorKey: "actions" },
           ]}
         />
       )}

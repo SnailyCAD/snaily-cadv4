@@ -1,7 +1,7 @@
 import * as React from "react";
 import { CustomFieldCategory } from "@snailycad/types";
 import { Button } from "components/Button";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
 import { NameSearchResult, useNameSearch } from "state/search/nameSearchState";
@@ -48,6 +48,7 @@ function CitizenResults({ results }: any) {
   const { setCurrentResult } = useNameSearch();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
+  const tableState = useTableState();
 
   const citizens = results as NameSearchResult[];
 
@@ -59,7 +60,9 @@ function CitizenResults({ results }: any) {
 
   return (
     <Table
+      tableState={tableState}
       data={citizens.map((result) => ({
+        id: result.id,
         citizen: `${result.name} ${result.surname}`,
         actions: (
           <Button type="button" onClick={() => handleOpen(result)} size="xs">
@@ -68,8 +71,8 @@ function CitizenResults({ results }: any) {
         ),
       }))}
       columns={[
-        { Header: t("citizen"), accessor: "citizen" },
-        { Header: common("actions"), accessor: "actions" },
+        { header: t("citizen"), accessorKey: "citizen" },
+        { header: common("actions"), accessorKey: "actions" },
       ]}
     />
   );
@@ -79,6 +82,7 @@ function WeaponResults({ results }: any) {
   const { openModal, closeModal } = useModal();
   const { setCurrentResult } = useWeaponSearch();
   const t = useTranslations();
+  const tableState = useTableState();
 
   const citizens = results as NonNullable<WeaponSearchResult>[];
 
@@ -90,7 +94,9 @@ function WeaponResults({ results }: any) {
 
   return (
     <Table
+      tableState={tableState}
       data={citizens.map((result) => ({
+        id: result.id,
         weapon: (
           <Button type="button" size="xs" onClick={() => handleOpen(result)}>
             {result.model.value.value}
@@ -100,9 +106,9 @@ function WeaponResults({ results }: any) {
         owner: `${result.citizen.name} ${result.citizen.surname}`,
       }))}
       columns={[
-        { Header: t("Weapons.model"), accessor: "weapon" },
-        { Header: t("Weapons.serialNumber"), accessor: "serialNumber" },
-        { Header: t("Leo.owner"), accessor: "owner" },
+        { header: t("Weapons.model"), accessorKey: "weapon" },
+        { header: t("Weapons.serialNumber"), accessorKey: "serialNumber" },
+        { header: t("Leo.owner"), accessorKey: "owner" },
       ]}
     />
   );
@@ -112,6 +118,7 @@ function VehicleResults({ results }: any) {
   const { openModal, closeModal } = useModal();
   const { setCurrentResult } = useVehicleSearch();
   const t = useTranslations();
+  const tableState = useTableState();
 
   const citizens = results as VehicleSearchResult[];
 
@@ -123,7 +130,9 @@ function VehicleResults({ results }: any) {
 
   return (
     <Table
+      tableState={tableState}
       data={citizens.map((result) => ({
+        id: result.id,
         model: (
           <Button type="button" size="xs" onClick={() => handleOpen(result)}>
             {result.model.value.value}
@@ -133,9 +142,9 @@ function VehicleResults({ results }: any) {
         owner: `${result.citizen.name} ${result.citizen.surname}`,
       }))}
       columns={[
-        { Header: t("Vehicles.model"), accessor: "model" },
-        { Header: t("Vehicles.vinNumber"), accessor: "vinNumber" },
-        { Header: t("Leo.owner"), accessor: "owner" },
+        { header: t("Vehicles.model"), accessorKey: "model" },
+        { header: t("Vehicles.vinNumber"), accessorKey: "vinNumber" },
+        { header: t("Leo.owner"), accessorKey: "owner" },
       ]}
     />
   );

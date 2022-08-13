@@ -7,7 +7,7 @@ import { useModal } from "state/modalState";
 import { ManageMedicalRecordsModal } from "./ManageMedicalRecordsModal";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { useCitizen } from "context/CitizenContext";
 import type { DeleteCitizenMedicalRecordsData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
@@ -18,6 +18,7 @@ export function MedicalRecords() {
   const t = useTranslations("MedicalRecords");
   const common = useTranslations("Common");
   const { citizen, setCurrentCitizen } = useCitizen(false);
+  const tableState = useTableState();
 
   const [tempRecord, recordState] = useTemporaryItem(citizen.medicalRecords);
 
@@ -68,8 +69,10 @@ export function MedicalRecords() {
           <p className="text-neutral-700 dark:text-gray-400">{t("noMedicalRecords")}</p>
         ) : (
           <Table
-            isWithinCard
+            tableState={tableState}
+            features={{ isWithinCard: true }}
             data={citizen.medicalRecords.map((record) => ({
+              id: record.id,
               diseases: record.type,
               bloodGroup: record.bloodGroup?.value ?? common("none"),
               description: record.description || common("none"),
@@ -90,10 +93,10 @@ export function MedicalRecords() {
               ),
             }))}
             columns={[
-              { Header: t("diseases"), accessor: "diseases" },
-              { Header: t("bloodGroup"), accessor: "bloodGroup" },
-              { Header: common("description"), accessor: "description" },
-              { Header: common("actions"), accessor: "actions" },
+              { header: t("diseases"), accessorKey: "diseases" },
+              { header: t("bloodGroup"), accessorKey: "bloodGroup" },
+              { header: common("description"), accessorKey: "description" },
+              { header: common("actions"), accessorKey: "actions" },
             ]}
           />
         )}

@@ -12,7 +12,7 @@ import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { ModalIds } from "types/ModalIds";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { usePermission, Permissions } from "hooks/usePermission";
 import type {
@@ -32,6 +32,7 @@ export default function ImpoundLot({ vehicles: data }: Props) {
   const { state, execute } = useFetch();
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageImpoundLot], true);
+  const tableState = useTableState();
 
   const [vehicles, setVehicles] = React.useState(data);
   const [tempVehicle, vehicleState] = useTemporaryItem(vehicles);
@@ -70,7 +71,9 @@ export default function ImpoundLot({ vehicles: data }: Props) {
         <p className="mt-5">{t("noImpoundedVehicles")}</p>
       ) : (
         <Table
+          tableState={tableState}
           data={vehicles.map((item) => ({
+            id: item.id,
             plate: item.vehicle.plate,
             model: item.vehicle.model.value.value,
             location: item.location.value,
@@ -81,10 +84,10 @@ export default function ImpoundLot({ vehicles: data }: Props) {
             ),
           }))}
           columns={[
-            { Header: t("plate"), accessor: "plate" },
-            { Header: t("model"), accessor: "model" },
-            { Header: t("location"), accessor: "location" },
-            hasManagePermissions ? { Header: common("actions"), accessor: "actions" } : null,
+            { header: t("plate"), accessorKey: "plate" },
+            { header: t("model"), accessorKey: "model" },
+            { header: t("location"), accessorKey: "location" },
+            hasManagePermissions ? { header: common("actions"), accessorKey: "actions" } : null,
           ]}
         />
       )}

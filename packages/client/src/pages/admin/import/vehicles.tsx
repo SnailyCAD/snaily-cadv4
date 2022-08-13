@@ -7,7 +7,7 @@ import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { Rank, RegisteredVehicle } from "@snailycad/types";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
@@ -46,6 +46,7 @@ export default function ImportVehiclesPage({ data }: Props) {
     initialData: data.vehicles,
     totalCount: data.totalCount,
   });
+  const tableState = useTableState({ pagination: asyncTable.pagination });
   const [tempVehicle, vehicleState] = useTemporaryItem(asyncTable.data);
 
   function handleDeleteClick(vehicle: RegisteredVehicle) {
@@ -99,19 +100,16 @@ export default function ImportVehiclesPage({ data }: Props) {
         />
       </FormField>
 
-      {asyncTable.search.search && asyncTable.pagination.totalCount !== data.totalCount ? (
+      {asyncTable.search.search && asyncTable.pagination.totalDataCount !== data.totalCount ? (
         <p className="italic text-base font-semibold">
-          Showing {asyncTable.pagination.totalCount} result(s)
+          Showing {asyncTable.pagination.totalDataCount} result(s)
         </p>
       ) : null}
 
       <Table
-        pagination={{
-          enabled: true,
-          totalCount: asyncTable.pagination.totalCount,
-          fetchData: asyncTable.pagination,
-        }}
+        tableState={tableState}
         data={asyncTable.data.map((vehicle) => ({
+          id: vehicle.id,
           plate: vehicle.plate,
           model: vehicle.model.value.value,
           color: vehicle.color,
@@ -126,14 +124,14 @@ export default function ImportVehiclesPage({ data }: Props) {
           ),
         }))}
         columns={[
-          { Header: veh("plate"), accessor: "plate" },
-          { Header: veh("model"), accessor: "model" },
-          { Header: veh("color"), accessor: "color" },
-          { Header: veh("registrationStatus"), accessor: "registrationStatus" },
-          { Header: veh("vinNumber"), accessor: "vinNumber" },
-          { Header: common("citizen"), accessor: "citizen" },
-          { Header: common("createdAt"), accessor: "createdAt" },
-          hasDeletePermissions ? { Header: common("actions"), accessor: "actions" } : null,
+          { header: veh("plate"), accessorKey: "plate" },
+          { header: veh("model"), accessorKey: "model" },
+          { header: veh("color"), accessorKey: "color" },
+          { header: veh("registrationStatus"), accessorKey: "registrationStatus" },
+          { header: veh("vinNumber"), accessorKey: "vinNumber" },
+          { header: common("citizen"), accessorKey: "citizen" },
+          { header: common("createdAt"), accessorKey: "createdAt" },
+          hasDeletePermissions ? { header: common("actions"), accessorKey: "actions" } : null,
         ]}
       />
 

@@ -1,4 +1,4 @@
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { useFormikContext } from "formik";
 import { useTranslations } from "next-intl";
 import type { PenalCode } from "@snailycad/types";
@@ -16,6 +16,7 @@ export function PenalCodesTable({ isReadOnly, penalCodes }: Props) {
   const common = useTranslations("Common");
   const currency = common("currency");
   const { LEO_BAIL } = useFeatureEnabled();
+  const tableState = useTableState();
 
   function sumOf(type: "fine" | "jailTime" | "bail"): number {
     return values.violations.reduce((ac, cv) => ac + (parseInt(cv.value[type]?.value) || 0), 0);
@@ -36,13 +37,15 @@ export function PenalCodesTable({ isReadOnly, penalCodes }: Props) {
   return (
     <div className="w-full my-3 overflow-x-auto">
       <Table
+        tableState={tableState}
         data={penalCodes.map((penalCode) => ({
+          id: penalCode.id,
           title: penalCode.title,
           data: <TableItemForm isReadOnly={isReadOnly} penalCode={penalCode} />,
         }))}
         columns={[
-          { accessor: "title", Header: t("penalCode") },
-          { accessor: "data", Header: "Data" },
+          { accessorKey: "title", header: t("penalCode") },
+          { accessorKey: "data", header: "Data" },
         ]}
       />
       <p className="flex items-center justify-center w-full gap-2 p-2 px-3">

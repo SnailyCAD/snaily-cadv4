@@ -10,21 +10,19 @@ import { useModal } from "state/modalState";
 import { type AnyValue, ValueType, Rank } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
-import { requestAll, yesOrNoText } from "lib/utils";
+import { getObjLength, isEmpty, requestAll, yesOrNoText } from "lib/utils";
 import { Input } from "components/form/inputs/Input";
 import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
-import { IndeterminateCheckbox, Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { useTableDataOfType, useTableHeadersOfType } from "lib/admin/values/values";
 import { OptionsDropdown } from "components/admin/values/import/OptionsDropdown";
 import { Title } from "components/shared/Title";
 import { AlertModal } from "components/modal/AlertModal";
 import { ModalIds } from "types/ModalIds";
 import { FullDate } from "components/shared/FullDate";
-import { useTableSelect } from "hooks/shared/useTableSelect";
 import { hasValueObj, isBaseValue } from "@snailycad/utils/typeguards";
 import { valueRoutes } from "components/admin/Sidebar/routes";
-import { Checkbox } from "components/form/inputs/Checkbox";
 import type {
   DeleteValueByIdData,
   DeleteValuesBulkData,
@@ -40,6 +38,8 @@ import {
   getValueStrFromValue,
   hasTableDataChanged,
 } from "lib/admin/values/utils";
+import type { AccessorKeyColumnDef } from "@tanstack/react-table";
+import { getSelectedTableRows } from "hooks/shared/table/useTableState";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -57,7 +57,6 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   const [values, setValues] = React.useState<AnyValue[]>(data);
   const router = useRouter();
   const path = (router.query.path as string).toUpperCase().replace("-", "_");
-  const tableSelect = useTableSelect(values);
   const routeData = valueRoutes.find((v) => v.type === type);
 
   const [search, setSearch] = React.useState("");
@@ -71,26 +70,20 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
 
   const extraTableHeaders = useTableHeadersOfType(type);
   const extraTableData = useTableDataOfType(type);
+  const tableState = useTableState({
+    dragDrop: { onListChange: setList },
+    search: { value: search, setValue: setSearch },
+  });
 
-  const tableHeaders: any = React.useMemo(() => {
+  const tableHeaders = React.useMemo(() => {
     return [
-      {
-        Header: (
-          <IndeterminateCheckbox
-            onChange={tableSelect.handleAllCheckboxes}
-            checked={tableSelect.isTopCheckboxChecked}
-            indeterminate={tableSelect.isIntermediate}
-          />
-        ),
-        accessor: "checkbox",
-      },
-      { Header: "Value", accessor: "value" },
+      { header: "Value", accessorKey: "value" },
       ...extraTableHeaders,
-      { Header: t("isDisabled"), accessor: "isDisabled" },
-      { Header: common("createdAt"), accessor: "createdAt" },
-      { Header: common("actions"), accessor: "actions" },
-    ];
-  }, [extraTableHeaders, t, common, tableSelect]);
+      { header: t("isDisabled"), accessorKey: "isDisabled" },
+      { header: common("createdAt"), accessorKey: "createdAt" },
+      { header: common("actions"), accessorKey: "actions" },
+    ] as AccessorKeyColumnDef<{ id: string }>[];
+  }, [extraTableHeaders, t, common]);
 
   async function setList(list: AnyValue[]) {
     if (!hasTableDataChanged(values, list)) return;
@@ -148,17 +141,17 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   }
 
   async function handleDeleteSelected() {
-    if (tableSelect.selectedRows.length <= 0) return;
+    const selectedRows = getSelectedTableRows(data, tableState.rowSelection);
 
     const { json } = await execute<DeleteValuesBulkData>({
       path: `/admin/values/${type.toLowerCase()}/bulk-delete`,
       method: "DELETE",
-      data: tableSelect.selectedRows,
+      data: selectedRows,
     });
 
     if (json && typeof json === "boolean") {
-      setValues((p) => p.filter((v) => !tableSelect.selectedRows.includes(`${type}-${v.id}`)));
-      tableSelect.resetRows();
+      setValues((p) => p.filter((v) => !selectedRows.includes(v.id)));
+      tableState.setRowSelection({});
       closeModal(ModalIds.AlertDeleteSelectedValues);
     }
   }
@@ -200,7 +193,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         </div>
 
         <div className="flex gap-2">
-          {tableSelect.selectedRows.length <= 0 ? null : (
+          {isEmpty(tableState.rowSelection) ? null : (
             <Button onClick={() => openModal(ModalIds.AlertDeleteSelectedValues)} variant="danger">
               {t("deleteSelectedValues")}
             </Button>
@@ -218,23 +211,14 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         <p className="mt-5">There are no values yet for this type.</p>
       ) : (
         <Table
-          disabledColumnId={["checkbox"]}
+          tableState={tableState}
+          features={{ dragAndDrop: true, rowSelection: true }}
           containerProps={{
             style: { overflowY: "auto", maxHeight: "75vh" },
           }}
-          dragDrop={{
-            enabled: true,
-            handleMove: setList,
-          }}
-          filter={search}
           data={values.map((value) => ({
+            id: value.id,
             rowProps: { value },
-            checkbox: (
-              <Checkbox
-                checked={tableSelect.selectedRows.includes(value.id)}
-                onChange={() => tableSelect.handleCheckboxChange(value)}
-              />
-            ),
             value: getValueStrFromValue(value),
             ...extraTableData(value),
             isDisabled: common(yesOrNoText(getDisabledFromValue(value))),
@@ -307,7 +291,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
       <AlertModal
         id={ModalIds.AlertDeleteSelectedValues}
         description={t.rich("alert_deleteSelectedValues", {
-          length: tableSelect.selectedRows.length,
+          length: getObjLength(tableState.rowSelection),
         })}
         onDeleteClick={handleDeleteSelected}
         title={typeT("DELETE")}

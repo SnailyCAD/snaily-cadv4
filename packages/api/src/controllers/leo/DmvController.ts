@@ -32,6 +32,7 @@ export class DmvController {
     const vehicles = await prisma.registeredVehicle.findMany({
       where: { dmvStatus: WhitelistStatus.PENDING },
       include: vehicleInclude,
+      orderBy: { createdAt: "desc" },
     });
 
     return vehicles;

@@ -3,7 +3,7 @@ import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import compareDesc from "date-fns/compareDesc";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { yesOrNoText } from "lib/utils";
 import { FullDate } from "components/shared/FullDate";
 import { ModalIds } from "types/ModalIds";
@@ -34,6 +34,7 @@ export function ActiveIncidents() {
   const { activeIncidents, setActiveIncidents } = useActiveIncidents();
   const { state, execute } = useFetch();
   const dispatchState = useDispatchState();
+  const tableState = useTableState();
 
   async function handleAssignUnassignToIncident(
     incident: LeoIncident,
@@ -118,12 +119,14 @@ export function ActiveIncidents() {
         <p className="px-4 py-2 text-neutral-700 dark:text-gray-300">{t("noActiveIncidents")}</p>
       ) : (
         <Table
-          isWithinCard
+          tableState={tableState}
+          features={{ isWithinCard: true }}
           containerProps={{ className: "mb-3 mx-4" }}
           data={activeIncidents
             .sort((a, b) => compareDesc(new Date(a.updatedAt), new Date(b.updatedAt)))
             .map((incident) => {
               return {
+                id: incident.id,
                 caseNumber: `#${incident.caseNumber}`,
                 unitsInvolved: (
                   <InvolvedUnitsColumn
@@ -173,15 +176,15 @@ export function ActiveIncidents() {
               };
             })}
           columns={[
-            { Header: t("caseNumber"), accessor: "caseNumber" },
-            { Header: t("unitsInvolved"), accessor: "unitsInvolved" },
-            { Header: t("firearmsInvolved"), accessor: "firearmsInvolved" },
-            { Header: t("injuriesOrFatalities"), accessor: "injuriesOrFatalities" },
-            { Header: t("arrestsMade"), accessor: "arrestsMade" },
-            { Header: t("situationCode"), accessor: "situationCode" },
-            { Header: common("description"), accessor: "description" },
-            { Header: common("createdAt"), accessor: "createdAt" },
-            { Header: common("actions"), accessor: "actions" },
+            { header: t("caseNumber"), accessorKey: "caseNumber" },
+            { header: t("unitsInvolved"), accessorKey: "unitsInvolved" },
+            { header: t("firearmsInvolved"), accessorKey: "firearmsInvolved" },
+            { header: t("injuriesOrFatalities"), accessorKey: "injuriesOrFatalities" },
+            { header: t("arrestsMade"), accessorKey: "arrestsMade" },
+            { header: t("situationCode"), accessorKey: "situationCode" },
+            { header: common("description"), accessorKey: "description" },
+            { header: common("createdAt"), accessorKey: "createdAt" },
+            { header: common("actions"), accessorKey: "actions" },
           ]}
         />
       )}

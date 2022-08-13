@@ -1,5 +1,5 @@
 import { FullDate } from "components/shared/FullDate";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import formatDistance from "date-fns/formatDistance";
 import { useImageUrl } from "hooks/useImageUrl";
 import { makeUnitName } from "lib/utils";
@@ -22,10 +22,12 @@ type Props =
 export function OfficerLogsTable({ unit, logs }: Props) {
   const { makeImageUrl } = useImageUrl();
   const { generateCallsign } = useGenerateCallsign();
+  const tableState = useTableState();
   const t = useTranslations("Leo");
 
   return (
     <Table
+      tableState={tableState}
       data={logs.map((log) => {
         const startedAt = <FullDate>{log.startedAt}</FullDate>;
         const endedAt = log.endedAt ? <FullDate>{log.endedAt}</FullDate> : t("notEndedYet");
@@ -36,9 +38,12 @@ export function OfficerLogsTable({ unit, logs }: Props) {
             ? `${formatDistance(new Date(log.endedAt), new Date(log.startedAt))}`
             : t("notEndedYet");
 
-        if (!logUnit) return {};
+        if (!logUnit) {
+          return { id: log.id };
+        }
 
         return {
+          id: log.id,
           unit: (
             <span className="flex items-center capitalize">
               {logUnit.imageId ? (
@@ -58,10 +63,10 @@ export function OfficerLogsTable({ unit, logs }: Props) {
         };
       })}
       columns={[
-        { Header: t("unit"), accessor: "unit" },
-        { Header: t("startedAt"), accessor: "startedAt" },
-        { Header: t("endedAt"), accessor: "endedAt" },
-        { Header: t("totalTime"), accessor: "totalTime" },
+        { header: t("unit"), accessorKey: "unit" },
+        { header: t("startedAt"), accessorKey: "startedAt" },
+        { header: t("endedAt"), accessorKey: "endedAt" },
+        { header: t("totalTime"), accessorKey: "totalTime" },
       ]}
     />
   );

@@ -20,7 +20,7 @@ import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { CallsFilters, useActiveCallsFilters } from "./CallsFilters";
 import { useCallsFilters } from "state/callsFiltersState";
 import { Filter } from "react-bootstrap-icons";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { classNames } from "lib/classNames";
 import { usePermission } from "hooks/usePermission";
@@ -83,8 +83,9 @@ function _ActiveCalls({ initialCalls }: Props) {
   const { activeOfficer } = useLeoState();
   const { activeDeputy } = useEmsFdState();
   const { TOW, CALLS_911 } = useFeatureEnabled();
-  const { setShowFilters, showFilters, search } = useCallsFilters();
+  const { setShowFilters, showFilters, search, setSearch } = useCallsFilters();
   const handleCallsFilter = useActiveCallsFilters();
+  const tableState = useTableState({ search: { value: search, setValue: setSearch } });
 
   const hasDispatchPermissions = hasPermissions(
     defaultPermissions.defaultDispatchPermissions,
@@ -257,8 +258,8 @@ function _ActiveCalls({ initialCalls }: Props) {
           <p className="py-2 text-neutral-700 dark:text-gray-300">{t("no911Calls")}</p>
         ) : (
           <Table
-            isWithinCard
-            filter={search}
+            tableState={tableState}
+            features={{ isWithinCard: true }}
             data={calls
               .sort((a, b) => compareDesc(new Date(a.updatedAt), new Date(b.updatedAt)))
               .filter(handleCallsFilter)
@@ -271,6 +272,7 @@ function _ActiveCalls({ initialCalls }: Props) {
                   !shouldTruncate || isArrayEqual(call.descriptionData as any, DEFAULT_EDITOR_DATA);
 
                 return {
+                  id: call.id,
                   rowProps: {
                     className: isUnitAssigned ? "bg-gray-200 dark:bg-[#333639]" : undefined,
                   },
@@ -359,14 +361,14 @@ function _ActiveCalls({ initialCalls }: Props) {
                 };
               })}
             columns={[
-              { Header: "#", accessor: "caseNumber" },
-              { Header: t("caller"), accessor: "name" },
-              { Header: t("location"), accessor: "location" },
-              { Header: common("description"), accessor: "description" },
-              { Header: t("situationCode"), accessor: "situationCode" },
-              { Header: common("updatedAt"), accessor: "updatedAt" },
-              { Header: t("assignedUnits"), accessor: "assignedUnits" },
-              { Header: common("actions"), accessor: "actions" },
+              { header: "#", accessorKey: "caseNumber" },
+              { header: t("caller"), accessorKey: "name" },
+              { header: t("location"), accessorKey: "location" },
+              { header: common("description"), accessorKey: "description" },
+              { header: t("situationCode"), accessorKey: "situationCode" },
+              { header: common("updatedAt"), accessorKey: "updatedAt" },
+              { header: t("assignedUnits"), accessorKey: "assignedUnits" },
+              { header: common("actions"), accessorKey: "actions" },
             ]}
           />
         )}

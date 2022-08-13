@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "next-intl";
 import { ExpungementRequestStatus } from "@snailycad/types";
@@ -26,6 +26,7 @@ export function ExpungementRequestsTab(props: Props) {
   const t = useTranslations("Courthouse");
   const leo = useTranslations("Leo");
   const { openModal } = useModal();
+  const tableState = useTableState();
 
   return (
     <TabsContent value="expungementRequestsTab">
@@ -41,6 +42,7 @@ export function ExpungementRequestsTab(props: Props) {
         <p className="mt-5">{t("noExpungementRequests")}</p>
       ) : (
         <Table
+          tableState={tableState}
           data={requests.map((request) => {
             // accept requests delete the db entity, this results in show "NONE" for the type
             // therefore it shows "ACCEPTED"
@@ -66,6 +68,7 @@ export function ExpungementRequestsTab(props: Props) {
                     .join(", ") || common("none");
 
             return {
+              id: request.id,
               rowProps: {
                 className:
                   request.status !== ExpungementRequestStatus.PENDING
@@ -81,12 +84,12 @@ export function ExpungementRequestsTab(props: Props) {
             };
           })}
           columns={[
-            { Header: leo("citizen"), accessor: "citizen" },
-            { Header: leo("warrants"), accessor: "warrants" },
-            { Header: leo("arrestReports"), accessor: "arrestReports" },
-            { Header: leo("tickets"), accessor: "tickets" },
-            { Header: leo("status"), accessor: "status" },
-            { Header: common("createdAt"), accessor: "createdAt" },
+            { header: leo("citizen"), accessorKey: "citizen" },
+            { header: leo("warrants"), accessorKey: "warrants" },
+            { header: leo("arrestReports"), accessorKey: "arrestReports" },
+            { header: leo("tickets"), accessorKey: "tickets" },
+            { header: leo("status"), accessorKey: "status" },
+            { header: common("createdAt"), accessorKey: "createdAt" },
           ]}
         />
       )}

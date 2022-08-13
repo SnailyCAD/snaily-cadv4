@@ -8,7 +8,7 @@ import { Button, buttonVariants } from "components/Button";
 import { useTranslations } from "next-intl";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { Select } from "components/form/Select";
 import Link from "next/link";
 import { FullDate } from "components/shared/FullDate";
@@ -38,6 +38,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
       }),
     },
   });
+  const tableState = useTableState({ pagination: asyncTable.pagination });
 
   const [tempValue, valueState] = useTemporaryItem(asyncTable.data);
   const [reason, setReason] = React.useState("");
@@ -112,21 +113,18 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
             </FormField>
           </div>
 
-          {asyncTable.search.search && asyncTable.pagination.totalCount !== totalCount ? (
+          {asyncTable.search.search && asyncTable.pagination.totalDataCount !== totalCount ? (
             <p className="italic text-base font-semibold">
-              Showing {asyncTable.pagination.totalCount} result(s)
+              Showing {asyncTable.pagination.totalDataCount} result(s)
             </p>
           ) : null}
 
           <Table
-            pagination={{
-              enabled: true,
-              totalCount: asyncTable.pagination.totalCount,
-              fetchData: asyncTable.pagination,
-            }}
+            tableState={tableState}
             data={asyncTable.data
               .filter((v) => (userFilter ? String(v.userId) === userFilter : true))
               .map((citizen) => ({
+                id: citizen.id,
                 name: `${citizen.name} ${citizen.surname}`,
                 dateOfBirth: (
                   <FullDate isDateOfBirth onlyDate>
@@ -166,17 +164,17 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
                 ),
               }))}
             columns={[
-              { Header: tCitizen("fullName"), accessor: "name" },
-              { Header: tCitizen("dateOfBirth"), accessor: "dateOfBirth" },
-              { Header: tCitizen("gender"), accessor: "gender" },
-              { Header: tCitizen("ethnicity"), accessor: "ethnicity" },
-              { Header: tCitizen("hairColor"), accessor: "hairColor" },
-              { Header: tCitizen("eyeColor"), accessor: "eyeColor" },
-              { Header: tCitizen("weight"), accessor: "weight" },
-              { Header: tCitizen("height"), accessor: "height" },
-              { Header: "User", accessor: "user" },
+              { header: tCitizen("fullName"), accessorKey: "name" },
+              { header: tCitizen("dateOfBirth"), accessorKey: "dateOfBirth" },
+              { header: tCitizen("gender"), accessorKey: "gender" },
+              { header: tCitizen("ethnicity"), accessorKey: "ethnicity" },
+              { header: tCitizen("hairColor"), accessorKey: "hairColor" },
+              { header: tCitizen("eyeColor"), accessorKey: "eyeColor" },
+              { header: tCitizen("weight"), accessorKey: "weight" },
+              { header: tCitizen("height"), accessorKey: "height" },
+              { header: "User", accessorKey: "user" },
               hasPermissions([Permissions.ManageCitizens, Permissions.DeleteCitizens], true)
-                ? { Header: common("actions"), accessor: "actions" }
+                ? { header: common("actions"), accessorKey: "actions" }
                 : null,
             ]}
           />

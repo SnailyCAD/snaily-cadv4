@@ -2,7 +2,7 @@ import * as React from "react";
 import { QualificationValueType, UnitQualification } from "@snailycad/types";
 import { Button } from "components/Button";
 import { AlertModal } from "components/modal/AlertModal";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
@@ -87,6 +87,7 @@ export function QualificationsTable({ setUnit, unit }: Props) {
 function QualificationAwardsTable({ unit, setUnit }: Props) {
   const [tempQualification, qualificationState] = useTemporaryItem(unit.qualifications);
 
+  const tableState = useTableState();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { openModal, closeModal } = useModal();
@@ -142,8 +143,10 @@ function QualificationAwardsTable({ unit, setUnit }: Props) {
   return (
     <div>
       <Table
+        tableState={tableState}
         data={unit.qualifications.map((qa) => {
           return {
+            id: qa.id,
             image: <QualificationsHoverCard qualification={qa} />,
             name: qa.qualification.value.value,
             assignedAt: <FullDate>{qa.createdAt}</FullDate>,
@@ -182,10 +185,10 @@ function QualificationAwardsTable({ unit, setUnit }: Props) {
           };
         })}
         columns={[
-          { Header: common("image"), accessor: "image" },
-          { Header: common("name"), accessor: "name" },
-          { Header: t("assignedAt"), accessor: "assignedAt" },
-          { Header: common("actions"), accessor: "actions" },
+          { header: common("image"), accessorKey: "image" },
+          { header: common("name"), accessorKey: "name" },
+          { header: t("assignedAt"), accessorKey: "assignedAt" },
+          { header: common("actions"), accessorKey: "actions" },
         ]}
       />
 

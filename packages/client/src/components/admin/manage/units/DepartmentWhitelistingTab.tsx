@@ -5,7 +5,7 @@ import { formatUnitDivisions, makeUnitName, formatOfficerDepartment } from "lib/
 import { useTranslations } from "use-intl";
 import { Button, buttonVariants } from "components/Button";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { TabsContent } from "components/shared/TabList";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
@@ -27,6 +27,7 @@ export function DepartmentWhitelistingTab({ search, pendingOfficers }: Props) {
   const common = useTranslations("Common");
   const { generateCallsign } = useGenerateCallsign();
   const { state, execute } = useFetch();
+  const tableState = useTableState({ search: { value: search } });
 
   async function handleAcceptOrDecline(data: {
     unit: Unit;
@@ -55,8 +56,9 @@ export function DepartmentWhitelistingTab({ search, pendingOfficers }: Props) {
         <p>{t("Management.noPendingOfficers")}</p>
       ) : (
         <Table
-          filter={search}
+          tableState={tableState}
           data={pendingOfficers.map((officer) => ({
+            id: officer.id,
             name: makeUnitName(officer),
             callsign: generateCallsign(officer),
             badgeNumber: officer.badgeNumber,
@@ -96,13 +98,13 @@ export function DepartmentWhitelistingTab({ search, pendingOfficers }: Props) {
             ),
           }))}
           columns={[
-            { Header: common("name"), accessor: "name" },
-            { Header: t("Leo.callsign"), accessor: "callsign" },
-            { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" },
-            { Header: t("Leo.department"), accessor: "department" },
-            { Header: t("Leo.division"), accessor: "division" },
-            { Header: common("user"), accessor: "user" },
-            { Header: common("actions"), accessor: "actions" },
+            { header: common("name"), accessorKey: "name" },
+            { header: t("Leo.callsign"), accessorKey: "callsign" },
+            { header: t("Leo.badgeNumber"), accessorKey: "badgeNumber" },
+            { header: t("Leo.department"), accessorKey: "department" },
+            { header: t("Leo.division"), accessorKey: "division" },
+            { header: common("user"), accessorKey: "user" },
+            { header: common("actions"), accessorKey: "actions" },
           ]}
         />
       )}

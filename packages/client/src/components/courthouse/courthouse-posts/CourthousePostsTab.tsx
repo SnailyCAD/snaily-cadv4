@@ -4,7 +4,7 @@ import { TabsContent } from "components/shared/TabList";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import type { CourthousePost } from "@snailycad/types";
 import { FullDate } from "components/shared/FullDate";
 import { ManageCourtPostModal } from "./ManageCourtPostModal";
@@ -29,6 +29,7 @@ export function CourthousePostsTab(props: Props) {
   const { state, execute } = useFetch();
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageCourthousePosts], true);
+  const tableState = useTableState();
 
   async function deleteCourthousePost() {
     if (!tempPost) return;
@@ -76,7 +77,9 @@ export function CourthousePostsTab(props: Props) {
         <p className="mt-5">{t("noCourthousePosts")}</p>
       ) : (
         <Table
+          tableState={tableState}
           data={posts.map((post) => ({
+            id: post.id,
             title: post.title,
             createdAt: <FullDate>{post.createdAt}</FullDate>,
 
@@ -109,9 +112,9 @@ export function CourthousePostsTab(props: Props) {
             ),
           }))}
           columns={[
-            { Header: t("title"), accessor: "title" },
-            { Header: common("createdAt"), accessor: "createdAt" },
-            { Header: common("actions"), accessor: "actions" },
+            { header: t("title"), accessorKey: "title" },
+            { header: common("createdAt"), accessorKey: "createdAt" },
+            { header: common("actions"), accessorKey: "actions" },
           ]}
         />
       )}

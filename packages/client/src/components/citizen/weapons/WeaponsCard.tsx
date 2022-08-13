@@ -7,7 +7,7 @@ import { RegisterWeaponModal } from "./RegisterWeaponModal";
 import { useTranslations } from "use-intl";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { FullDate } from "components/shared/FullDate";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
@@ -37,6 +37,7 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
     totalCount: props.weapons.length,
     initialData: props.weapons,
   });
+  const tableState = useTableState({ pagination: { ...asyncTable.pagination, pageSize: 12 } });
   const [tempWeapon, weaponState] = useTemporaryItem(asyncTable.data);
 
   async function handleDelete() {
@@ -105,21 +106,17 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
             </FormField>
 
             {asyncTable.search.search &&
-            asyncTable.pagination.totalCount !== props.weapons.length ? (
+            asyncTable.pagination.totalDataCount !== props.weapons.length ? (
               <p className="italic text-base font-semibold">
-                Showing {asyncTable.pagination.totalCount} result(s)
+                Showing {asyncTable.pagination.totalDataCount} result(s)
               </p>
             ) : null}
 
             <Table
-              isWithinCard
-              maxItemsPerPage={12}
-              pagination={{
-                enabled: true,
-                totalCount: asyncTable.pagination.totalCount,
-                fetchData: asyncTable.pagination,
-              }}
+              tableState={tableState}
+              features={{ isWithinCard: true }}
               data={asyncTable.data.map((weapon) => ({
+                id: weapon.id,
                 model: weapon.model.value.value,
                 registrationStatus: weapon.registrationStatus.value,
                 serialNumber: weapon.serialNumber,
@@ -141,11 +138,11 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
                 ),
               }))}
               columns={[
-                { Header: t("model"), accessor: "model" },
-                { Header: t("registrationStatus"), accessor: "registrationStatus" },
-                { Header: t("serialNumber"), accessor: "serialNumber" },
-                { Header: common("createdAt"), accessor: "createdAt" },
-                { Header: common("actions"), accessor: "actions" },
+                { header: t("model"), accessorKey: "model" },
+                { header: t("registrationStatus"), accessorKey: "registrationStatus" },
+                { header: t("serialNumber"), accessorKey: "serialNumber" },
+                { header: common("createdAt"), accessorKey: "createdAt" },
+                { header: common("actions"), accessorKey: "actions" },
               ]}
             />
           </>

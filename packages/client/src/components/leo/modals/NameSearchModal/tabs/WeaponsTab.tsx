@@ -1,4 +1,4 @@
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { useModal } from "state/modalState";
@@ -15,6 +15,7 @@ export function NameSearchWeaponsTab() {
   const { currentResult } = useNameSearch();
   const { openModal } = useModal();
   const { setCurrentResult: setWeaponResult } = useWeaponSearch();
+  const tableState = useTableState();
 
   function handleWeaponClick(weapon: Weapon) {
     if (!currentResult || currentResult.isConfidential) return;
@@ -36,7 +37,9 @@ export function NameSearchWeaponsTab() {
         <p className="text-neutral-700 dark:text-gray-400 my-2">{t("Leo.noWeaponsCitizen")}</p>
       ) : (
         <Table
+          tableState={tableState}
           data={currentResult.weapons.map((weapon) => ({
+            id: weapon.id,
             model: (
               <Button
                 title={common("openInSearch")}
@@ -52,16 +55,16 @@ export function NameSearchWeaponsTab() {
           }))}
           columns={[
             {
-              Header: t("Weapons.model"),
-              accessor: "model",
+              header: t("Weapons.model"),
+              accessorKey: "model",
             },
             {
-              Header: t("Weapons.registrationStatus"),
-              accessor: "registrationStatus",
+              header: t("Weapons.registrationStatus"),
+              accessorKey: "registrationStatus",
             },
             {
-              Header: t("Weapons.serialNumber"),
-              accessor: "serialNumber",
+              header: t("Weapons.serialNumber"),
+              accessorKey: "serialNumber",
             },
           ]}
         />

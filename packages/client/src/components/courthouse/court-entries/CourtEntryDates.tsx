@@ -2,7 +2,7 @@ import * as React from "react";
 import type { CourtDate } from "@snailycad/types";
 import { Button } from "components/Button";
 import { FullDate } from "components/shared/FullDate";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { useTranslations } from "next-intl";
 import { ManageCourtDateModal } from "./ManageCourtDateModal";
 import { useModal } from "state/modalState";
@@ -22,6 +22,7 @@ export function CourtEntryDates({ onUpdate, onDelete, onCreate, dates }: Props) 
   const common = useTranslations("Common");
   const t = useTranslations("Courthouse");
   const { closeModal, openModal } = useModal();
+  const tableState = useTableState();
 
   function deleteCourtDate() {
     if (!tempDate) return;
@@ -54,7 +55,9 @@ export function CourtEntryDates({ onUpdate, onDelete, onCreate, dates }: Props) 
       </header>
 
       <Table
+        tableState={tableState}
         data={dates.map((date) => ({
+          id: date.id,
           date: <FullDate onlyDate>{date.date}</FullDate>,
           note: date.note || common("none"),
           actions: (
@@ -80,9 +83,9 @@ export function CourtEntryDates({ onUpdate, onDelete, onCreate, dates }: Props) 
           ),
         }))}
         columns={[
-          { Header: t("date"), accessor: "date" },
-          { Header: t("note"), accessor: "note" },
-          { Header: common("actions"), accessor: "actions" },
+          { header: t("date"), accessorKey: "date" },
+          { header: t("note"), accessorKey: "note" },
+          { header: common("actions"), accessorKey: "actions" },
         ]}
       />
 
