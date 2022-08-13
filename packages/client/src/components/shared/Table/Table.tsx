@@ -8,6 +8,7 @@ import {
   Header,
   getFilteredRowModel,
   FilterFn,
+  Row,
 } from "@tanstack/react-table";
 import { TableRow } from "./TableRow";
 import { TablePagination } from "./TablePagination";
@@ -102,7 +103,7 @@ export function Table<TData extends _RowData>({
   });
 
   const visibleTableRows = React.useMemo(() => {
-    const rows = table.getRowModel().rows;
+    const rows = table.getRowModel().rows as Row<TData>[];
 
     if (tableState.pagination.__ASYNC_TABLE__) {
       return rows;

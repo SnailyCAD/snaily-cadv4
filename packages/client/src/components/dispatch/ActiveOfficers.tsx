@@ -13,7 +13,7 @@ import { useAuth } from "context/AuthContext";
 import { CombinedLeoUnit, StatusViewMode, Officer } from "@snailycad/types";
 import { Filter } from "react-bootstrap-icons";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
-import { Table } from "components/shared/Table";
+import { useTableState, Table } from "components/shared/Table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { UnitRadioChannelModal } from "./active-units/UnitRadioChannelModal";
 import { ActiveUnitsSearch } from "./active-units/ActiveUnitsSearch";
@@ -30,7 +30,6 @@ import { HoverCard } from "components/shared/HoverCard";
 import { useDispatchState } from "state/dispatchState";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useMounted } from "@casper124578/useful";
-import { useTableState } from "components/shared/Table";
 
 interface Props {
   initialOfficers: ActiveOfficer[];
