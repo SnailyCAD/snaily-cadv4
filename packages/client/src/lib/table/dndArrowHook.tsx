@@ -1,34 +1,27 @@
-import type { TableData, TableProps } from "components/shared/Table/TableProps";
 import { classNames } from "lib/classNames";
-import { DRAGGABLE_TABLE_HANDLE } from "components/shared/Table";
+import { DRAGGABLE_TABLE_HANDLE, useTableState } from "components/shared/Table";
 import { ArrowDownUp, ArrowsExpand } from "react-bootstrap-icons";
-import type { Hooks, Cell } from "react-table";
+import type { ColumnDef, RowData } from "@tanstack/react-table";
 
-export function dndArrowHook<T extends object, RowProps extends object>(
-  hooks: Hooks<TableData<T, RowProps>>,
-  dragDropProps?: TableProps["dragDrop"],
-) {
-  if (!dragDropProps?.enabled) return;
+export function createTableDragDropColumn<TData extends RowData>(
+  tableState: ReturnType<typeof useTableState>["dragDrop"],
+): ColumnDef<TData> {
+  return {
+    id: "drag-drop",
+    header: () => <ArrowDownUp />,
+    cell: ({ row }) => {
+      const isDisabled = tableState?.disabledIndices?.includes(row.index);
 
-  hooks.visibleColumns.push((columns) => [
-    {
-      id: "move",
-      Header: () => <ArrowDownUp />,
-      Cell: (props: Cell<TableData<T, RowProps>>) => {
-        const isDisabled = dragDropProps.disabledIndices?.includes(props.row.index);
-
-        return (
-          <span
-            className={classNames(
-              isDisabled ? "cursor-not-allowed" : "cursor-move",
-              !isDisabled && DRAGGABLE_TABLE_HANDLE,
-            )}
-          >
-            <ArrowsExpand className="mr-2 text-gray-500 dark:text-gray-400" width={15} />
-          </span>
-        );
-      },
+      return (
+        <span
+          className={classNames(
+            isDisabled ? "cursor-not-allowed" : "cursor-move",
+            !isDisabled && DRAGGABLE_TABLE_HANDLE,
+          )}
+        >
+          <ArrowsExpand className="mr-2 text-gray-500 dark:text-gray-400" width={15} />
+        </span>
+      );
     },
-    ...columns,
-  ]);
+  };
 }

@@ -6,6 +6,10 @@ interface TableStateOptions {
     value: string;
     setValue(value: string): void;
   };
+  dragDrop?: {
+    onListChange(list: any[]): void;
+    disabledIndices?: number[];
+  };
   pagination?: {
     __ASYNC_TABLE__?: boolean;
     totalDataCount: number;
@@ -14,7 +18,11 @@ interface TableStateOptions {
   };
 }
 
-export function useTableState({ pagination: paginationOptions, search }: TableStateOptions = {}) {
+export function useTableState({
+  pagination: paginationOptions,
+  search,
+  dragDrop,
+}: TableStateOptions = {}) {
   const pageSize = paginationOptions?.pageSize ?? 35;
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -47,5 +55,6 @@ export function useTableState({ pagination: paginationOptions, search }: TableSt
     setPagination,
     globalFilter: search?.value,
     setGlobalFilter: search?.setValue,
+    dragDrop,
   };
 }

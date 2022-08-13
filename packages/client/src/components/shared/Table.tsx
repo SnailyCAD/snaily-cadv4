@@ -9,7 +9,7 @@
 //   useRowState,
 //   usePagination,
 //   type Column,
-//   TableState,
+//   tableState,
 // } from "react-table";
 // import { ReactSortable } from "react-sortablejs";
 // import type { TableData, TableProps } from "./Table/TableProps";
@@ -89,7 +89,7 @@
 //     state: tableState,
 //   } = instance;
 
-//   React.useEffect(() => {
+//   react.useEffect(() => {
 //     setState((p) => ({ ...p, ...instance.state }));
 
 //     return () => setState(null);
@@ -105,7 +105,7 @@
 //     props.dragDrop?.handleMove(originals);
 //   }
 
-//   React.useEffect(() => {
+//   react.useEffect(() => {
 //     if (!props.pagination?.enabled) return;
 
 //     props.pagination.fetchData.fetch({
@@ -115,11 +115,11 @@
 //     // eslint-disable-next-line react-hooks/exhaustive-deps
 //   }, [tableState.pageIndex, tableState.pageSize]);
 
-//   React.useEffect(() => {
+//   react.useEffect(() => {
 //     setGlobalFilter(props.filter);
 //   }, [props.filter, setGlobalFilter]);
 
-//   React.useEffect(() => {
+//   react.useEffect(() => {
 //     props.defaultSort &&
 //       toggleSortBy(props.defaultSort.columnId as string, props.defaultSort.descending);
 //   }, [props.defaultSort, toggleSortBy]);

@@ -21,7 +21,7 @@ import { Title } from "components/shared/Title";
 import { AlertModal } from "components/modal/AlertModal";
 import { ModalIds } from "types/ModalIds";
 import { FullDate } from "components/shared/FullDate";
-import { useTableSelect } from "hooks/shared/useTableSelect";
+import { useTableSelect } from "hooks/shared/table/useTableSelect";
 import { hasValueObj, isBaseValue } from "@snailycad/utils/typeguards";
 import { valueRoutes } from "components/admin/Sidebar/routes";
 import { Checkbox } from "components/form/inputs/Checkbox";
@@ -58,6 +58,8 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   const [values, setValues] = React.useState<AnyValue[]>(data);
   const router = useRouter();
   const path = (router.query.path as string).toUpperCase().replace("-", "_");
+
+  // todo: integrate with tableState
   const tableSelect = useTableSelect(values);
   const routeData = valueRoutes.find((v) => v.type === type);
 
@@ -72,7 +74,10 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
 
   const extraTableHeaders = useTableHeadersOfType(type);
   const extraTableData = useTableDataOfType(type);
-  const tableState = useTableState({ search: { value: search, setValue: setSearch } });
+  const tableState = useTableState({
+    dragDrop: { onListChange: setList },
+    search: { value: search, setValue: setSearch },
+  });
 
   const tableHeaders = React.useMemo(() => {
     return [
@@ -222,6 +227,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
       ) : (
         <Table
           tableState={tableState}
+          features={{ dragAndDrop: true }}
           containerProps={{
             style: { overflowY: "auto", maxHeight: "75vh" },
           }}

@@ -32,8 +32,9 @@ export function TableRow<TData extends RowData>({
     <tr data-row-index={idx} key={row.id}>
       {row.getVisibleCells().map((cell) => {
         const isActions = cell.column.id === "actions";
-        const cellValue =
-          cell.column.id === "select" ? cell.column.columnDef.cell : cell.getValue<any>();
+        const cellValue = ["drag-drop", "select"].includes(cell.column.id)
+          ? cell.column.columnDef.cell
+          : cell.getValue<any>();
 
         return (
           <td

@@ -9,7 +9,7 @@ import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
 import { IndeterminateCheckbox, Table } from "components/shared/Table";
 import { TabsContent } from "components/shared/TabList";
-import { useTableSelect } from "hooks/shared/useTableSelect";
+import { useTableSelect } from "hooks/shared/table/useTableSelect";
 import { Status } from "components/shared/Status";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";

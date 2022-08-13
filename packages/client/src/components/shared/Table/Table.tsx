@@ -11,7 +11,6 @@ import {
 } from "@tanstack/react-table";
 import { TableRow } from "./TableRow";
 import { TablePagination } from "./TablePagination";
-import { makeCheckboxHeader as makeCheckboxColumn } from "./IndeterminateCheckbox";
 import { classNames } from "lib/classNames";
 import { TableHeader } from "./TableHeader";
 import { useAuth } from "context/AuthContext";
@@ -19,6 +18,11 @@ import { TableActionsAlignment } from "@snailycad/types";
 import { orderColumnsByTableActionsAlignment } from "lib/table/orderColumnsByTableActionsAlignment";
 import { rankItem } from "@tanstack/match-sorter-utils";
 import { useTableState } from "hooks/shared/table/useTableState";
+import { ReactSortable } from "react-sortablejs";
+import { useMounted } from "@casper124578/useful";
+import { createTableDragDropColumn } from "lib/table/dndArrowHook";
+
+export const DRAGGABLE_TABLE_HANDLE = "__TABLE_HANDLE__";
 
 interface Props<TData extends RowData> {
   data: TData[];
@@ -29,7 +33,6 @@ interface Props<TData extends RowData> {
 
   features?: {
     isWithinCard?: boolean;
-    rowSelection?: boolean;
     dragAndDrop?: boolean;
   };
 }
@@ -41,6 +44,7 @@ export function Table<TData extends RowData>({
   features,
   tableState,
 }: Props<TData>) {
+  const isMounted = useMounted();
   const { user } = useAuth();
   const dataLength = tableState.pagination.totalDataCount ?? data.length;
   const pageCount = Math.ceil(dataLength / tableState.pagination.pageSize);
@@ -53,12 +57,12 @@ export function Table<TData extends RowData>({
   const tableColumns = React.useMemo(() => {
     const cols = orderColumnsByTableActionsAlignment(tableActionsAlignment, columns);
 
-    if (features?.rowSelection) {
-      cols.unshift(makeCheckboxColumn());
+    if (features?.dragAndDrop) {
+      cols.unshift(createTableDragDropColumn(tableState.dragDrop));
     }
 
     return cols;
-  }, [columns, tableActionsAlignment, features?.rowSelection]);
+  }, [columns, tableActionsAlignment, features?.dragAndDrop, tableState.dragDrop?.disabledIndices]); // eslint-disable-line
 
   const table = useReactTable({
     data,
@@ -101,6 +105,16 @@ export function Table<TData extends RowData>({
     return rows.slice(pageStart, pageEnd);
   }, [tableState, table]);
 
+  function handleMove(tableList: any[]) {
+    if (!isMounted || !features?.dragAndDrop) return;
+
+    const originals = tableList.map((list) => {
+      return list.original?.rowProps?.value;
+    });
+
+    tableState.dragDrop?.onListChange(originals);
+  }
+
   return (
     <div
       className={classNames(
@@ -124,7 +138,15 @@ export function Table<TData extends RowData>({
             </tr>
           ))}
         </thead>
-        <tbody>
+        <ReactSortable
+          animation={200}
+          className="mt-5"
+          list={table.getRowModel().rows}
+          tag="tbody"
+          disabled={!features?.dragAndDrop}
+          setList={handleMove}
+          handle={`.${DRAGGABLE_TABLE_HANDLE}`}
+        >
           {visibleTableRows.map((row, idx) => (
             <TableRow<TData>
               key={row.id}
@@ -134,7 +156,7 @@ export function Table<TData extends RowData>({
               stickyBgColor={stickyBgColor}
             />
           ))}
-        </tbody>
+        </ReactSortable>
       </table>
 
       <TablePagination table={table} />
