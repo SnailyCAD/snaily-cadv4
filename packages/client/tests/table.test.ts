@@ -17,16 +17,16 @@ test("Should correctly order table alignment LEFT", () => {
   expect(orderColumnsByTableActionsAlignment(LEFT, COLUMNS)).toMatchInlineSnapshot(`
     [
       {
-        "accessor": "actions",
+        "accessorKey": "actions",
       },
       {
-        "accessor": "name",
+        "accessorKey": "name",
       },
       {
-        "accessor": "surname",
+        "accessorKey": "surname",
       },
       {
-        "accessor": "age",
+        "accessorKey": "age",
       },
     ]
   `);
@@ -36,16 +36,16 @@ test("Should correctly order table alignment RIGHT", () => {
   expect(orderColumnsByTableActionsAlignment(RIGHT, COLUMNS)).toMatchInlineSnapshot(`
     [
       {
-        "accessor": "name",
+        "accessorKey": "name",
       },
       {
-        "accessor": "surname",
+        "accessorKey": "surname",
       },
       {
-        "accessor": "age",
+        "accessorKey": "age",
       },
       {
-        "accessor": "actions",
+        "accessorKey": "actions",
       },
     ]
   `);
@@ -55,16 +55,16 @@ test("Should correctly order table alignment NONE", () => {
   expect(orderColumnsByTableActionsAlignment(NONE, COLUMNS)).toMatchInlineSnapshot(`
     [
       {
-        "accessor": "name",
+        "accessorKey": "name",
       },
       {
-        "accessor": "surname",
+        "accessorKey": "surname",
       },
       {
-        "accessor": "age",
+        "accessorKey": "age",
       },
       {
-        "accessor": "actions",
+        "accessorKey": "actions",
       },
     ]
   `);
