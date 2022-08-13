@@ -39,6 +39,7 @@
     "@snailycad/schemas": "1.19.2",
     "@snailycad/types": "1.19.2",
     "@snailycad/utils": "1.19.2",
+    "@tanstack/match-sorter-utils": "^8.1.1",
     "@tanstack/react-table": "^8.5.11",
     "@tanstack/react-virtual": "^3.0.0-alpha.0",
     "@tanstack/virtual-core": "^3.0.0-alpha.1",

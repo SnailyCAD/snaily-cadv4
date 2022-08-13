@@ -51,7 +51,6 @@ interface Props {
 }
 
 function _ActiveCalls({ initialCalls }: Props) {
-  const tableState = useTableState();
   const { user } = useAuth();
   const { hasActiveDispatchers } = useActiveDispatchers();
 
@@ -85,8 +84,9 @@ function _ActiveCalls({ initialCalls }: Props) {
   const { activeOfficer } = useLeoState();
   const { activeDeputy } = useEmsFdState();
   const { TOW, CALLS_911 } = useFeatureEnabled();
-  const { setShowFilters, showFilters, search } = useCallsFilters();
+  const { setShowFilters, showFilters, search, setSearch } = useCallsFilters();
   const handleCallsFilter = useActiveCallsFilters();
+  const tableState = useTableState({ search: { value: search, setValue: setSearch } });
 
   const hasDispatchPermissions = hasPermissions(
     defaultPermissions.defaultDispatchPermissions,
@@ -261,7 +261,6 @@ function _ActiveCalls({ initialCalls }: Props) {
           <Table
             tableState={tableState}
             features={{ isWithinCard: true }}
-            filter={search}
             data={calls
               .sort((a, b) => compareDesc(new Date(a.updatedAt), new Date(b.updatedAt)))
               .filter(handleCallsFilter)

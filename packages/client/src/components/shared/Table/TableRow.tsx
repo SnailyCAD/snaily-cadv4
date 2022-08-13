@@ -19,8 +19,14 @@ export function TableRow<TData extends RowData>({
   const isNone = tableActionsAlignment === TableActionsAlignment.NONE;
   const dir = isNone ? "" : isLeft ? "left-0" : "right-0";
 
-  // todo
-  stickyBgColor;
+  const rowProps = (row.original as any).rowProps as Partial<Record<string, any>> | undefined;
+
+  const hasStyle = !!rowProps?.style;
+  const bgColor = hasStyle
+    ? null
+    : rowProps?.className?.includes("bg")
+    ? rowProps.className
+    : stickyBgColor;
 
   return (
     <tr data-row-index={idx} key={row.id}>
@@ -34,6 +40,7 @@ export function TableRow<TData extends RowData>({
             className={classNames(
               "m-0 text-left p-3 px-3",
               isActions && `w-36 sticky ${dir}`,
+              bgColor,
               // isMove && "w-10",
             )}
             key={cell.id}

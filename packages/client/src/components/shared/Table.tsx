@@ -175,4 +175,4 @@
 
 // export * from "./Table/IndeterminateCheckbox";
 
-export { Table } from "./Table/Table";
+export * from "./Table/Table";

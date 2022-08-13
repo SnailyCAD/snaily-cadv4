@@ -6,7 +6,7 @@ export function IndeterminateCheckbox({
   indeterminate,
   className = "",
   ...rest
-}: { indeterminate?: boolean } & React.HTMLAttributes<HTMLInputElement>) {
+}: { indeterminate?: boolean } & JSX.IntrinsicElements["input"]) {
   const id = React.useId();
   const ref = React.useRef<HTMLInputElement>(null!);
 

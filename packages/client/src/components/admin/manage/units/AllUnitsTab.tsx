@@ -111,7 +111,6 @@ export function AllUnitsTab({ search, units }: Props) {
       ) : (
         <Table
           filter={search}
-          disabledColumnId={["dropdown"]}
           data={units.map((unit) => {
             const departmentStatus = unit.whitelistStatus?.status;
             const departmentStatusFormatted = departmentStatus
@@ -185,6 +184,7 @@ export function AllUnitsTab({ search, units }: Props) {
                     />
                   ),
                   accessor: "dropdown",
+                  enableSorting: false,
                 }
               : null,
             { Header: `${t("Ems.deputy")}/${t("Leo.officer")}`, accessor: "unit" },

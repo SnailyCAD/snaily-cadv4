@@ -14,7 +14,7 @@ import { requestAll, yesOrNoText } from "lib/utils";
 import { Input } from "components/form/inputs/Input";
 import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
-import { IndeterminateCheckbox, Table } from "components/shared/Table";
+import { IndeterminateCheckbox, Table, useTableState } from "components/shared/Table";
 import { useTableDataOfType, useTableHeadersOfType } from "lib/admin/values/values";
 import { OptionsDropdown } from "components/admin/values/import/OptionsDropdown";
 import { Title } from "components/shared/Title";
@@ -40,6 +40,7 @@ import {
   getValueStrFromValue,
   hasTableDataChanged,
 } from "lib/admin/values/utils";
+import type { ColumnDef } from "@tanstack/react-table";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -71,25 +72,27 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
 
   const extraTableHeaders = useTableHeadersOfType(type);
   const extraTableData = useTableDataOfType(type);
+  const tableState = useTableState({ search: { value: search, setValue: setSearch } });
 
-  const tableHeaders: any = React.useMemo(() => {
+  const tableHeaders = React.useMemo(() => {
     return [
       {
-        Header: (
+        header: (
           <IndeterminateCheckbox
-            onChange={tableSelect.handleAllCheckboxes}
             checked={tableSelect.isTopCheckboxChecked}
+            onChange={tableSelect.handleAllCheckboxes}
             indeterminate={tableSelect.isIntermediate}
           />
         ),
-        accessor: "checkbox",
+        accessorKey: "checkbox",
+        enableSorting: false,
       },
-      { Header: "Value", accessor: "value" },
+      { header: "Value", accessorKey: "value" },
       ...extraTableHeaders,
-      { Header: t("isDisabled"), accessor: "isDisabled" },
-      { Header: common("createdAt"), accessor: "createdAt" },
-      { Header: common("actions"), accessor: "actions" },
-    ];
+      { header: t("isDisabled"), accessorKey: "isDisabled" },
+      { header: common("createdAt"), accessorKey: "createdAt" },
+      { header: common("actions"), accessorKey: "actions" },
+    ] as ColumnDef<unknown>[];
   }, [extraTableHeaders, t, common, tableSelect]);
 
   async function setList(list: AnyValue[]) {
@@ -218,15 +221,14 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         <p className="mt-5">There are no values yet for this type.</p>
       ) : (
         <Table
-          disabledColumnId={["checkbox"]}
+          tableState={tableState}
           containerProps={{
             style: { overflowY: "auto", maxHeight: "75vh" },
           }}
-          dragDrop={{
-            enabled: true,
-            handleMove: setList,
-          }}
-          filter={search}
+          // dragDrop={{
+          //   enabled: true,
+          //   handleMove: setList,
+          // }}
           data={values.map((value) => ({
             rowProps: { value },
             checkbox: (

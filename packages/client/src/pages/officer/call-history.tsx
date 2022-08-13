@@ -138,7 +138,6 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
           </div>
 
           <Table
-            disabledColumnId={["checkbox"]}
             filter={search}
             defaultSort={{ columnId: "createdAt", descending: false }}
             data={calls.map((call) => {
@@ -191,6 +190,7 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
                       />
                     ),
                     accessor: "checkbox",
+                    enableSorting: false,
                   }
                 : null,
               { Header: t("caller"), accessor: "caller" },

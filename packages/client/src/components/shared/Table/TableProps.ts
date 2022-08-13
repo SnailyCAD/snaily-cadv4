@@ -5,7 +5,6 @@ export interface TableProps<T extends object = {}, RowProps extends object = {}>
   columns: readonly (Column<TableData<T, RowProps>> | null)[];
   containerProps?: JSX.IntrinsicElements["div"];
   filter?: string;
-  disabledColumnId?: Column<TableData<T, RowProps>>["accessor"][];
   defaultSort?: DefaultSort<T, RowProps>;
   dragDrop?: DragDrop;
   isWithinCard?: boolean;

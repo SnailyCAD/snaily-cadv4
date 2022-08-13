@@ -4,11 +4,10 @@ import {
   getCoreRowModel,
   getSortedRowModel,
   RowData,
-  RowSelectionState,
-  SortingState,
   useReactTable,
   Header,
-  PaginationState,
+  getFilteredRowModel,
+  FilterFn,
 } from "@tanstack/react-table";
 import { TableRow } from "./TableRow";
 import { TablePagination } from "./TablePagination";
@@ -18,56 +17,15 @@ import { TableHeader } from "./TableHeader";
 import { useAuth } from "context/AuthContext";
 import { TableActionsAlignment } from "@snailycad/types";
 import { orderColumnsByTableActionsAlignment } from "lib/table/orderColumnsByTableActionsAlignment";
-
-interface TableStateOptions {
-  pagination?: {
-    __ASYNC_TABLE__?: boolean;
-    totalDataCount: number;
-    pageSize?: number;
-    onPageChange?(options: { pageSize: number; pageIndex: number }): void;
-  };
-}
-
-export function useTableState({ pagination: paginationOptions }: TableStateOptions = {}) {
-  const pageSize = paginationOptions?.pageSize ?? 35;
-
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
-  const [pagination, setPagination] = React.useState<PaginationState>({
-    pageIndex: 0,
-    pageSize,
-  });
-
-  React.useEffect(() => {
-    paginationOptions?.onPageChange?.(pagination);
-  }, [pagination]); // eslint-disable-line
-
-  const _pagination = React.useMemo(
-    () => ({
-      pageSize: pagination.pageSize,
-      pageIndex: pagination.pageIndex,
-      totalDataCount: paginationOptions?.totalDataCount,
-      __ASYNC_TABLE__: paginationOptions?.__ASYNC_TABLE__,
-    }),
-    [pagination, paginationOptions],
-  );
-
-  return {
-    sorting,
-    setSorting,
-    rowSelection,
-    setRowSelection,
-    pagination: _pagination,
-    setPagination,
-  };
-}
+import { rankItem } from "@tanstack/match-sorter-utils";
+import { useTableState } from "hooks/shared/table/useTableState";
 
 interface Props<TData extends RowData> {
   data: TData[];
   columns: (ColumnDef<TData> | null)[];
 
   tableState: ReturnType<typeof useTableState>;
-  containerProps?: { className?: string };
+  containerProps?: { style?: React.CSSProperties; className?: string };
 
   features?: {
     isWithinCard?: boolean;
@@ -105,20 +63,28 @@ export function Table<TData extends RowData>({
   const table = useReactTable({
     data,
     columns: tableColumns,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+    pageCount,
     enableRowSelection: true,
     enableSorting: true,
+    manualPagination: true,
+    globalFilterFn: fuzzyFilter,
+
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+
     onSortingChange: tableState.setSorting,
     onRowSelectionChange: tableState.setRowSelection,
     onPaginationChange: tableState.setPagination,
-    pageCount,
-    manualPagination: true,
-
+    onGlobalFilterChange: tableState.setGlobalFilter,
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: false,
     state: {
       sorting: tableState.sorting,
       rowSelection: tableState.rowSelection,
       pagination: tableState.pagination,
+      globalFilter: tableState.globalFilter,
     },
   });
 
@@ -175,3 +141,16 @@ export function Table<TData extends RowData>({
     </div>
   );
 }
+
+const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+  const itemRank = rankItem(row.getValue(columnId), value);
+
+  addMeta({
+    itemRank,
+  });
+
+  return itemRank.passed;
+};
+
+export { useTableState };
+export { IndeterminateCheckbox } from "./IndeterminateCheckbox";
