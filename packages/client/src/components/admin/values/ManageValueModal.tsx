@@ -41,6 +41,7 @@ import {
   isUnitQualification,
   isDLCategoryValue,
   isCallTypeValue,
+  isOfficerRankValue,
 } from "@snailycad/utils/typeguards";
 import { QualificationFields } from "./manage-modal/QualificationFields";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
@@ -207,8 +208,8 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     priority: value && isCallTypeValue(value) ? value.priority ?? undefined : undefined,
 
     officerRankImageId: "",
-    // @ts-expect-error todo: add typeguard for `OFFICER_RANK`
-    officerRankDepartments: value ? defaultDepartments(value) : undefined,
+    officerRankDepartments:
+      value && isOfficerRankValue(value) ? defaultDepartments(value) : undefined,
 
     showPicker: false,
     image: "",
