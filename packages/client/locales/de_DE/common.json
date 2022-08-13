@@ -150,6 +150,8 @@
     "captchaRequired": "Bitte bestätigen Sie, dass Sie kein Roboter sind.",
     "invalidCaptcha": "Wir konnten nicht überprüfen, ob Sie ein Mensch sind. Bitte kontaktieren Sie einen Administrator, wenn Sie glauben, dass dies ein Fehler ist.",
     "updateAvailable": "Eine neue Version von CAD ist verfügbar.",
-    "updateAvailableInfo": "Eine neue Version von CAD ist verfügbar. Bitte laden Sie sich die neue Version herunter: https://github.com/SnailyCAD/snaily-cadv4"
+    "updateAvailableInfo": "Eine neue Version von CAD ist verfügbar. Bitte laden Sie sich die neue Version herunter: https://github.com/SnailyCAD/snaily-cadv4",
+    "serialNumberInUse": "Die Seriennummer ist bereits in Gebrauch.",
+    "vinNumberInUse": "VIN-Nummer ist bereits in Gebrauch."
   }
 }

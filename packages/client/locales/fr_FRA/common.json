@@ -150,6 +150,8 @@
     "captchaRequired": "Une erreur s'est produite lors de la tentative de validation de votre CAPTCHA. Veuillez réessayer plus tard.",
     "invalidCaptcha": "Nous n'avons pas pu vérifier que vous êtes un être humain. Veuillez contacter un administrateur si vous pensez qu'il s'agit d'une erreur.",
     "updateAvailable": "Mise à jour disponible",
-    "updateAvailableInfo": "Une nouvelle mise à jour est disponible. Mettez à jour SnailyCAD pour profiter des avantages des dernières fonctionnalités et corrections. Cliquez-ici pour plus d'informations."
+    "updateAvailableInfo": "Une nouvelle mise à jour est disponible. Mettez à jour SnailyCAD pour profiter des avantages des dernières fonctionnalités et corrections. Cliquez-ici pour plus d'informations.",
+    "serialNumberInUse": "Le numéro de série est déjà utilisé.",
+    "vinNumberInUse": "Le numéro NIV est déjà utilisé."
   }
 }
