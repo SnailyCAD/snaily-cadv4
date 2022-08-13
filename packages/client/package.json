@@ -71,7 +71,7 @@
     "react-table": "^7.8.0",
     "react-use": "^17.4.0",
     "slate": "^0.82.0",
-    "slate-history": "^0.66.0",
+    "slate-history": "^0.81.3",
     "slate-react": "^0.82.0",
     "socket.io-client": "^4.5.1",
     "sortablejs": "^1.15.0",
