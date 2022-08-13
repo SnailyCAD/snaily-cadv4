@@ -88,6 +88,7 @@ export class AdminManageCitizensController {
   })
   async getRecordLogsForCitizen(): Promise<APITypes.GetManageRecordLogsData> {
     const citizens = await prisma.recordLog.findMany({
+      orderBy: { createdAt: "desc" },
       include: {
         warrant: { include: { officer: { include: leoProperties } } },
         records: { include: recordsInclude },

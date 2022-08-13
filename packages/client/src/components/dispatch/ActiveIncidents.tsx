@@ -3,7 +3,7 @@ import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import compareDesc from "date-fns/compareDesc";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { yesOrNoText } from "lib/utils";
 import { FullDate } from "components/shared/FullDate";
 import { ModalIds } from "types/ModalIds";
@@ -34,6 +34,7 @@ export function ActiveIncidents() {
   const { activeIncidents, setActiveIncidents } = useActiveIncidents();
   const { state, execute } = useFetch();
   const dispatchState = useDispatchState();
+  const tableState = useTableState();
 
   async function handleAssignUnassignToIncident(
     incident: LeoIncident,
@@ -118,12 +119,14 @@ export function ActiveIncidents() {
         <p className="px-4 py-2 text-neutral-700 dark:text-gray-300">{t("noActiveIncidents")}</p>
       ) : (
         <Table
+          tableState={tableState}
           features={{ isWithinCard: true }}
           containerProps={{ className: "mb-3 mx-4" }}
           data={activeIncidents
             .sort((a, b) => compareDesc(new Date(a.updatedAt), new Date(b.updatedAt)))
             .map((incident) => {
               return {
+                id: incident.id,
                 caseNumber: `#${incident.caseNumber}`,
                 unitsInvolved: (
                   <InvolvedUnitsColumn

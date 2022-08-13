@@ -10,7 +10,7 @@ import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
 import { Button } from "components/Button";
 import { useModal } from "state/modalState";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { ModalIds } from "types/ModalIds";
 import { ManageCustomFieldModal } from "components/admin/manage/custom-fields/ManageCustomFieldModal";
 import { AlertModal } from "components/modal/AlertModal";
@@ -26,6 +26,7 @@ interface Props {
 export default function ManageCustomFields({ customFields: data }: Props) {
   const [customFields, setCustomFields] = React.useState(data);
   const [tempField, fieldState] = useTemporaryItem(customFields);
+  const tableState = useTableState();
 
   const { state, execute } = useFetch();
   const { hasPermissions } = usePermission();
@@ -90,7 +91,9 @@ export default function ManageCustomFields({ customFields: data }: Props) {
         <p>{t("noCustomFields")}</p>
       ) : (
         <Table
+          tableState={tableState}
           data={customFields.map((field) => ({
+            id: field.id,
             name: field.name,
             category: field.category,
             actions: (

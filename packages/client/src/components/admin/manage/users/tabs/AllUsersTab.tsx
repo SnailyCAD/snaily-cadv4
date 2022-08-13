@@ -5,7 +5,7 @@ import { Rank } from "@snailycad/types";
 import { yesOrNoText } from "lib/utils";
 import { TabsContent } from "components/shared/TabList";
 import { buttonVariants } from "components/Button";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { Status } from "components/shared/Status";
 import { useAuth } from "context/AuthContext";
 import { usePermission, Permissions } from "hooks/usePermission";
@@ -16,7 +16,6 @@ import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
 import type { GetManageUsersData } from "@snailycad/types/api";
-import { useTableState } from "components/shared/Table";
 
 export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
   const { cad } = useAuth();
@@ -84,6 +83,7 @@ export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
           );
 
           return {
+            id: user.id,
             username: user.username,
             rank: user.rank,
             isAdmin: common(yesOrNoText(hasAdminPermissions)),

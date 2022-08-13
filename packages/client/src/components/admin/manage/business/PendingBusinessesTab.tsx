@@ -1,6 +1,6 @@
 import { TabsContent } from "components/shared/TabList";
 import { Button } from "components/Button";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { WhitelistStatus } from "@snailycad/types";
@@ -14,7 +14,7 @@ interface Props {
 export function PendingBusinessesTab({ setBusinesses, businesses }: Props) {
   const t = useTranslations("Management");
   const common = useTranslations("Common");
-
+  const tableState = useTableState();
   const { state, execute } = useFetch();
 
   async function acceptOrDecline(business: GetManageBusinessesData[number], type: WhitelistStatus) {
@@ -38,7 +38,9 @@ export function PendingBusinessesTab({ setBusinesses, businesses }: Props) {
       <p className="text-neutral-700 dark:text-gray-400">{t("info_pendingBusinesses")}</p>
 
       <Table
+        tableState={tableState}
         data={businesses.map((business) => ({
+          id: business.id,
           name: business.name,
           owner: `${business.citizen.name} ${business.citizen.surname}`,
           user: business.user.username,

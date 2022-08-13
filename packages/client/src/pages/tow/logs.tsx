@@ -7,7 +7,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { requestAll } from "lib/utils";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
@@ -33,6 +33,7 @@ export default function TowLogs(props: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
   const { openModal } = useModal();
+  const tableState = useTableState();
 
   useListener(SocketEvents.EndTowCall, handleCallEnd);
 
@@ -70,7 +71,9 @@ export default function TowLogs(props: Props) {
         <p className="mt-5">{t("noTowCalls")}</p>
       ) : (
         <Table
+          tableState={tableState}
           data={calls.map((call) => ({
+            id: call.id,
             location: call.location,
             postal: call.postal || common("none"),
             description:

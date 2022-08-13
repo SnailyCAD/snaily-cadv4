@@ -8,7 +8,7 @@ import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { formatCitizenAddress } from "lib/utils";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import type { PostDispatchAddressSearchData } from "@snailycad/types/api";
@@ -18,6 +18,7 @@ export function AddressSearchModal() {
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const { state, execute } = useFetch();
+  const tableState = useTableState();
 
   const [results, setResults] = React.useState<AddressSearchResult | null | boolean>(null);
 
@@ -92,7 +93,9 @@ export function AddressSearchModal() {
                 <h3 className="text-2xl font-semibold">{t("results")}</h3>
 
                 <Table
+                  tableState={tableState}
                   data={results.map((result) => ({
+                    id: result.id,
                     citizen: `${result.name} ${result.surname}`,
                     fullAddress: formatCitizenAddress(result),
                     actions: (

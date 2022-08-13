@@ -7,7 +7,7 @@ import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { Rank, RegisteredVehicle } from "@snailycad/types";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
@@ -46,6 +46,7 @@ export default function ImportVehiclesPage({ data }: Props) {
     initialData: data.vehicles,
     totalCount: data.totalCount,
   });
+  const tableState = useTableState({ pagination: asyncTable.pagination });
   const [tempVehicle, vehicleState] = useTemporaryItem(asyncTable.data);
 
   function handleDeleteClick(vehicle: RegisteredVehicle) {
@@ -106,12 +107,9 @@ export default function ImportVehiclesPage({ data }: Props) {
       ) : null}
 
       <Table
-        pagination={{
-          enabled: true,
-          totalCount: asyncTable.pagination.totalDataCount,
-          fetchData: asyncTable.pagination,
-        }}
+        tableState={tableState}
         data={asyncTable.data.map((vehicle) => ({
+          id: vehicle.id,
           plate: vehicle.plate,
           model: vehicle.model.value.value,
           color: vehicle.color,

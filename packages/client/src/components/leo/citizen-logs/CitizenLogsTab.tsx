@@ -2,7 +2,7 @@ import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { RecordType } from "@snailycad/types";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { FullDate } from "components/shared/FullDate";
@@ -26,6 +26,7 @@ export function CitizenLogsTab({ search, logs: data }: Props) {
   const logs = React.useMemo(() => uniqueList(data), [data]);
   const [currentLog, setCurrentLog] = React.useState<CitizenLog | null>(null);
 
+  const tableState = useTableState({ search: { value: search } });
   const { generateCallsign } = useGenerateCallsign();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
@@ -48,11 +49,7 @@ export function CitizenLogsTab({ search, logs: data }: Props) {
           </div>
 
           <Table
-            filter={search}
-            defaultSort={{
-              columnId: "createdAt",
-              descending: true,
-            }}
+            tableState={tableState}
             data={data
               .filter((v) => v.citizenId === currentLog.citizenId)
               .map((item) => {
@@ -77,6 +74,7 @@ export function CitizenLogsTab({ search, logs: data }: Props) {
                     };
 
                 return {
+                  id: item.id,
                   type,
                   citizen: `${item.citizen.name} ${item.citizen.surname}`,
                   officer: `${callsign} ${officerName}`,
@@ -98,9 +96,10 @@ export function CitizenLogsTab({ search, logs: data }: Props) {
         </>
       ) : (
         <Table
-          filter={search}
+          tableState={tableState}
           data={logs.map((item) => {
             return {
+              id: item.id,
               citizen: `${item.citizen.name} ${item.citizen.surname}`,
               actions: (
                 <Button size="xs" onClick={() => setCurrentLog(item)}>

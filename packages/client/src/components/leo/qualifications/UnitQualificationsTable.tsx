@@ -1,7 +1,7 @@
 import { EmsFdDeputy, Officer, QualificationValueType, UnitQualification } from "@snailycad/types";
 import { QualificationsHoverCard } from "components/admin/manage/units/QualificationHoverCard";
 import { FullDate } from "components/shared/FullDate";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { classNames } from "lib/classNames";
 import { useTranslations } from "next-intl";
 
@@ -48,11 +48,14 @@ export function UnitQualificationsTable({ unit }: Props) {
 function QualificationAwardsTable({ data }: { data: UnitQualification[] }) {
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
+  const tableState = useTableState();
 
   return (
     <Table
+      tableState={tableState}
       data={data.map((qa) => {
         return {
+          id: qa.id,
           image: <QualificationsHoverCard qualification={qa} />,
           name: (
             <p className="flex flex-col">

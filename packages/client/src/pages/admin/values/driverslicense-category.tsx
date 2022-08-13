@@ -29,7 +29,7 @@ import {
   handleFilter,
   hasTableDataChanged,
 } from "lib/admin/values/utils";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 
 const ManageValueModal = dynamic(async () => {
@@ -191,6 +191,7 @@ function TableList(props: {
   const [values, setValues] = React.useState(props.values);
   const { execute } = useFetch();
   const common = useTranslations("Common");
+  const tableState = useTableState({ dragDrop: { onListChange: setList } });
 
   React.useEffect(() => {
     setValues(props.values);
@@ -224,11 +225,9 @@ function TableList(props: {
 
   return (
     <Table
-      dragDrop={{
-        enabled: true,
-        handleMove: (list) => setList(list),
-      }}
+      tableState={tableState}
       data={values.map((value) => ({
+        id: value.id,
         rowProps: { value },
         value: getValueStrFromValue(value),
         description: value.description || common("none"),

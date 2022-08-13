@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { useModal } from "state/modalState";
 import { useFormikContext } from "formik";
 import { yesOrNoText } from "lib/utils";
@@ -16,6 +16,7 @@ export function SeizedItemsTable({ isReadOnly }: { isReadOnly?: boolean }) {
   const { openModal } = useModal();
   const [tempItem, itemState] = useTemporaryItem(values.seizedItems);
 
+  const tableState = useTableState();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
 
@@ -48,7 +49,9 @@ export function SeizedItemsTable({ isReadOnly }: { isReadOnly?: boolean }) {
 
         {values.seizedItems.length > 0 ? (
           <Table
+            tableState={tableState}
             data={values.seizedItems.map((v) => ({
+              id: v.id,
               item: v.item,
               quantity: v.quantity,
               illegal: common(yesOrNoText(v.illegal)),

@@ -10,7 +10,7 @@ import type { GetServerSideProps } from "next";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import useFetch from "lib/useFetch";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import type { DeleteTruckLogsData, GetTruckLogsData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
@@ -24,6 +24,7 @@ export default function TruckLogs({ registeredVehicles, logs: data }: GetTruckLo
   const { openModal, closeModal } = useModal();
   const [logs, setLogs] = React.useState(data);
   const [tempLog, logState] = useTemporaryItem(logs);
+  const tableState = useTableState();
 
   const t = useTranslations("TruckLogs");
   const common = useTranslations("Common");
@@ -66,7 +67,9 @@ export default function TruckLogs({ registeredVehicles, logs: data }: GetTruckLo
         <p className="mt-3">{t("noTruckLogs")}</p>
       ) : (
         <Table
+          tableState={tableState}
           data={logs.map((log) => ({
+            id: log.id,
             driver: log.citizen ? `${log.citizen.name} ${log.citizen.surname}` : "—",
             vehicle: log.vehicle?.model.value.value,
             startedAt: log.startedAt,

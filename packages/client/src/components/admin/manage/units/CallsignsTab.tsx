@@ -5,7 +5,7 @@ import { formatOfficerDepartment, makeUnitName } from "lib/utils";
 import { useTranslations } from "use-intl";
 import { Button, buttonVariants } from "components/Button";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { TabsContent } from "components/shared/TabList";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
@@ -24,6 +24,7 @@ export function CallsignsTab({ search, units }: Props) {
   const common = useTranslations("Common");
   const { generateCallsign } = useGenerateCallsign();
   const { openModal } = useModal();
+  const tableState = useTableState({ search: { value: search } });
 
   function handleManageClick(unit: Unit) {
     unitState.setTempId(unit.id);
@@ -41,9 +42,10 @@ export function CallsignsTab({ search, units }: Props) {
         <p>{t("Management.noUnits")}</p>
       ) : (
         <Table
-          filter={search}
+          tableState={tableState}
           data={units.map((unit) => {
             return {
+              id: unit.id,
               unit: LABELS[unit.type],
               name: makeUnitName(unit),
               user: (

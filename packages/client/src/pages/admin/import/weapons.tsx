@@ -7,7 +7,7 @@ import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { Rank, Weapon } from "@snailycad/types";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
@@ -46,6 +46,7 @@ export default function ImportWeaponsPage({ data }: Props) {
     initialData: data.weapons,
     totalCount: data.totalCount,
   });
+  const tableState = useTableState({ pagination: asyncTable.pagination });
   const [tempWeapon, weaponState] = useTemporaryItem(asyncTable.data);
 
   function handleDeleteClick(weapon: Weapon) {
@@ -106,7 +107,9 @@ export default function ImportWeaponsPage({ data }: Props) {
       ) : null}
 
       <Table
+        tableState={tableState}
         data={asyncTable.data.map((weapon) => ({
+          id: weapon.id,
           model: weapon.model.value.value,
           registrationStatus: weapon.registrationStatus.value,
           serialNumber: weapon.serialNumber,

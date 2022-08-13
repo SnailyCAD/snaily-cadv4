@@ -4,13 +4,14 @@ import { Button } from "components/Button";
 import { useBusinessState } from "state/businessState";
 import { Employee, WhitelistStatus } from "@snailycad/types";
 import useFetch from "lib/useFetch";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import type { PutBusinessEmployeesData } from "@snailycad/types/api";
 
 export function PendingEmployeesTab() {
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Business");
+  const tableState = useTableState();
 
   const { currentBusiness, currentEmployee, setCurrentBusiness } = useBusinessState();
 
@@ -49,7 +50,9 @@ export function PendingEmployeesTab() {
           <p>{t("noPendingEmployees")}</p>
         ) : (
           <Table
+            tableState={tableState}
             data={employees.map((employee) => ({
+              id: employee.id,
               citizen: `${employee.citizen.surname} ${employee.citizen.name}`,
               actions: (
                 <div>

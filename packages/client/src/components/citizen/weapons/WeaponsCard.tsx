@@ -7,7 +7,7 @@ import { RegisterWeaponModal } from "./RegisterWeaponModal";
 import { useTranslations } from "use-intl";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { FullDate } from "components/shared/FullDate";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
@@ -37,6 +37,7 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
     totalCount: props.weapons.length,
     initialData: props.weapons,
   });
+  const tableState = useTableState({ pagination: { ...asyncTable.pagination, pageSize: 12 } });
   const [tempWeapon, weaponState] = useTemporaryItem(asyncTable.data);
 
   async function handleDelete() {
@@ -112,14 +113,10 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
             ) : null}
 
             <Table
+              tableState={tableState}
               features={{ isWithinCard: true }}
-              maxItemsPerPage={12}
-              pagination={{
-                enabled: true,
-                totalCount: asyncTable.pagination.totalDataCount,
-                fetchData: asyncTable.pagination,
-              }}
               data={asyncTable.data.map((weapon) => ({
+                id: weapon.id,
                 model: weapon.model.value.value,
                 registrationStatus: weapon.registrationStatus.value,
                 serialNumber: weapon.serialNumber,

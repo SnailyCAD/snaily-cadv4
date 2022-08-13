@@ -4,7 +4,7 @@ import { TabsContent } from "components/shared/TabList";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { WhitelistStatus } from "@snailycad/types";
 import { Status } from "components/shared/Status";
 import { FullDate } from "components/shared/FullDate";
@@ -20,6 +20,7 @@ export function NameChangeRequestTab(props: Props) {
   const t = useTranslations("Courthouse");
   const { openModal } = useModal();
   const common = useTranslations("Common");
+  const tableState = useTableState();
 
   return (
     <TabsContent value="nameChangeRequestsTab">
@@ -35,8 +36,9 @@ export function NameChangeRequestTab(props: Props) {
         <p className="mt-5">{t("noNameChangeRequests")}</p>
       ) : (
         <Table
-          defaultSort={{ columnId: "createdAt", descending: true }}
+          tableState={tableState}
           data={requests.map((request) => ({
+            id: request.id,
             rowProps: {
               className: request.status !== WhitelistStatus.PENDING ? "opacity-50" : "",
             },

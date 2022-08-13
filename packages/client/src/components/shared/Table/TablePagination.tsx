@@ -8,7 +8,16 @@ import {
 import type { Table, RowData } from "@tanstack/react-table";
 
 interface Props<TData extends RowData> {
-  table: Table<TData>;
+  table: Pick<
+    Table<TData>,
+    | "getCanNextPage"
+    | "getCanPreviousPage"
+    | "setPageIndex"
+    | "getPageCount"
+    | "previousPage"
+    | "getState"
+    | "nextPage"
+  >;
 }
 
 // todo: add loading states if applicable

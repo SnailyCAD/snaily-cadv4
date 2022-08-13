@@ -17,7 +17,7 @@ import { Input } from "components/form/inputs/Input";
 import { requestAll, yesOrNoText } from "lib/utils";
 import { PendingBusinessesTab } from "components/admin/manage/business/PendingBusinessesTab";
 import { useAuth } from "context/AuthContext";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { Status } from "components/shared/Status";
 import { usePermission, Permissions } from "hooks/usePermission";
@@ -38,6 +38,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, openModal, closeModal } = useModal();
   const { hasPermissions } = usePermission();
+  const tableState = useTableState();
 
   const t = useTranslations("Management");
   const common = useTranslations("Common");
@@ -108,15 +109,9 @@ export default function ManageBusinesses({ businesses: data }: Props) {
             <p className="mt-5">{t("noBusinesses")}</p>
           ) : (
             <Table
-              defaultSort={
-                businessWhitelisted
-                  ? {
-                      columnId: "status",
-                      descending: false,
-                    }
-                  : undefined
-              }
+              tableState={tableState}
               data={businesses.map((business) => ({
+                id: business.id,
                 name: business.name,
                 owner: `${business.citizen.name} ${business.citizen.surname}`,
                 user: business.user.username,

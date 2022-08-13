@@ -1,4 +1,4 @@
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { compareDesc } from "date-fns";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useTranslations } from "next-intl";
@@ -12,6 +12,7 @@ export function TruckLogsTable({ result }: Props) {
   const t = useTranslations("TruckLogs");
   const { TRUCK_LOGS } = useFeatureEnabled();
   const truckLogs = result.TruckLog;
+  const tableState = useTableState();
 
   /** return null if truck-logs are disabled, or if there are no truck-logs for this plate. */
   if (!TRUCK_LOGS || truckLogs.length <= 0) {
@@ -23,9 +24,11 @@ export function TruckLogsTable({ result }: Props) {
       <h4 className="text-xl font-semibold">{t("truckLogs")}</h4>
 
       <Table
+        tableState={tableState}
         data={truckLogs
           .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
           .map((log) => ({
+            id: log.id,
             driver: `${result.citizen.name} ${result.citizen.surname}`,
             vehicle: result.model.value?.value,
             startedAt: log.startedAt,

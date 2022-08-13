@@ -2,7 +2,7 @@ import * as React from "react";
 import type { Note } from "@snailycad/types";
 import { Button } from "components/Button";
 import { FullDate } from "components/shared/FullDate";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
@@ -31,6 +31,7 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
   const { openModal, closeModal } = useModal();
   const { state, execute } = useFetch();
 
+  const tableState = useTableState();
   const notes = getNotesFromCurrentResult(currentResult);
   const [tempNote, noteState] = useTemporaryItem(notes);
 
@@ -91,7 +92,9 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
         <p className="text-neutral-700 dark:text-gray-400 my-2">{t("Leo.noNotes")}</p>
       ) : (
         <Table
+          tableState={tableState}
           data={notes.map((note) => ({
+            id: note.id,
             text: note.text,
             createdAt: <FullDate>{note.createdAt}</FullDate>,
             actions: (

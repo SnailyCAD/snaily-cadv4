@@ -10,7 +10,7 @@ import useFetch from "lib/useFetch";
 import { RegisterVehicleModal } from "components/citizen/vehicles/modals/RegisterVehicleModal";
 import { AlertModal } from "components/modal/AlertModal";
 import { FullDate } from "components/shared/FullDate";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import type { DeleteCitizenVehicleData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
@@ -20,6 +20,7 @@ export function VehiclesTab() {
   const common = useTranslations("Common");
   const bus = useTranslations("Business");
   const t = useTranslations();
+  const tableState = useTableState();
 
   const { currentBusiness, currentEmployee, setCurrentBusiness } = useBusinessState();
   const vehicles = currentBusiness?.vehicles ?? [];
@@ -74,7 +75,9 @@ export function VehiclesTab() {
         <p className="mt-2">{t("Business.noVehicles")}</p>
       ) : (
         <Table
+          tableState={tableState}
           data={vehicles.map((vehicle) => ({
+            id: vehicle.id,
             plate: vehicle.plate,
             model: vehicle.model.value.value,
             color: vehicle.color,

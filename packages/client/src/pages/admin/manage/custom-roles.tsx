@@ -10,7 +10,7 @@ import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
 import { Button } from "components/Button";
 import { useModal } from "state/modalState";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { ModalIds } from "types/ModalIds";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
@@ -26,6 +26,7 @@ interface Props {
 export default function ManageCustomRoles({ customRoles: data }: Props) {
   const [customRoles, setCustomRoles] = React.useState(data);
   const [tempRole, setTempRole] = React.useState<CustomRole | null>(null);
+  const tableState = useTableState();
 
   const { state, execute } = useFetch();
   const { hasPermissions } = usePermission();
@@ -93,7 +94,9 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
         <p>{t("noCustomRoles")}</p>
       ) : (
         <Table
+          tableState={tableState}
           data={customRoles.map((field) => ({
+            id: field.id,
             name: field.name,
             permissions: field.permissions.join(", "),
             createdAt: <FullDate>{field.createdAt}</FullDate>,

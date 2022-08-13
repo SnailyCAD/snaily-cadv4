@@ -8,7 +8,7 @@ import { Button, buttonVariants } from "components/Button";
 import { useTranslations } from "next-intl";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { Select } from "components/form/Select";
 import Link from "next/link";
 import { FullDate } from "components/shared/FullDate";
@@ -38,6 +38,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
       }),
     },
   });
+  const tableState = useTableState({ pagination: asyncTable.pagination });
 
   const [tempValue, valueState] = useTemporaryItem(asyncTable.data);
   const [reason, setReason] = React.useState("");
@@ -119,14 +120,11 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
           ) : null}
 
           <Table
-            pagination={{
-              enabled: true,
-              totalCount: asyncTable.pagination.totalDataCount,
-              fetchData: asyncTable.pagination,
-            }}
+            tableState={tableState}
             data={asyncTable.data
               .filter((v) => (userFilter ? String(v.userId) === userFilter : true))
               .map((citizen) => ({
+                id: citizen.id,
                 name: `${citizen.name} ${citizen.surname}`,
                 dateOfBirth: (
                   <FullDate isDateOfBirth onlyDate>

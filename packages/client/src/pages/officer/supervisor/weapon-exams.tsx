@@ -7,7 +7,7 @@ import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import { DLExam, DLExamStatus } from "@snailycad/types";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Title } from "components/shared/Title";
@@ -44,6 +44,7 @@ export default function CitizenLogs({ data }: Props) {
     totalCount: data.totalCount,
     initialData: data.exams,
   });
+  const tableState = useTableState({ pagination: asyncTable.pagination });
   const [tempExam, examState] = useTemporaryItem(asyncTable.data);
 
   const PASS_FAIL_LABELS = {
@@ -115,14 +116,12 @@ export default function CitizenLogs({ data }: Props) {
           ) : null}
 
           <Table
-            pagination={{
-              enabled: true,
-              totalCount: asyncTable.pagination.totalDataCount,
-              fetchData: asyncTable.pagination,
-            }}
+            tableState={tableState}
             data={asyncTable.data.map((exam) => {
               const hasPassedOrFailed = exam.status !== DLExamStatus.IN_PROGRESS;
+
               return {
+                id: exam.id,
                 rowProps: {
                   className: hasPassedOrFailed ? "opacity-60" : undefined,
                 },

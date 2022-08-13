@@ -7,7 +7,7 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { Status } from "components/shared/Status";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
@@ -39,6 +39,8 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
     totalCount: props.vehicles.length,
     initialData: props.vehicles,
   });
+  const tableState = useTableState({ pagination: { ...asyncTable.pagination, pageSize: 12 } });
+
   const [tempVehicle, vehicleState] = useTemporaryItem(asyncTable.data);
 
   async function handleDelete() {
@@ -113,14 +115,10 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
             ) : null}
 
             <Table
-              pagination={{
-                enabled: true,
-                totalCount: asyncTable.pagination.totalDataCount,
-                fetchData: asyncTable.pagination,
-              }}
-              maxItemsPerPage={12}
+              tableState={tableState}
               features={{ isWithinCard: true }}
               data={asyncTable.data.map((vehicle) => ({
+                id: vehicle.id,
                 rowProps: {
                   title: vehicle.impounded ? t("vehicleImpounded") : undefined,
                   className: vehicle.impounded ? "opacity-50" : undefined,

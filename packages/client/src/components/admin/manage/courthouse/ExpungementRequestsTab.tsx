@@ -1,7 +1,7 @@
 import * as React from "react";
 import { TabsContent } from "@radix-ui/react-tabs";
 import { ExpungementRequestStatus } from "@snailycad/types";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useTranslations } from "next-intl";
 import { getTitles } from "components/courthouse/expungement-requests/RequestExpungement";
@@ -23,7 +23,7 @@ export function ExpungementRequestsTab({ requests: data }: Props) {
 
   const t = useTranslations();
   const common = useTranslations("Common");
-
+  const tableState = useTableState();
   const { state, execute } = useFetch();
   const pendingRequests = requests.filter((v) => v.status === ExpungementRequestStatus.PENDING);
   const { hasPermissions } = usePermission();
@@ -49,7 +49,9 @@ export function ExpungementRequestsTab({ requests: data }: Props) {
         <p className="my-2">{t("Courthouse.noPendingRequests")}</p>
       ) : (
         <Table
+          tableState={tableState}
           data={pendingRequests.map((request) => ({
+            id: request.id,
             citizen: `${request.citizen.name} ${request.citizen.surname}`,
             warrants: request.warrants.map((w) => w.description).join(", ") || common("none"),
             arrestReports:

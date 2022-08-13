@@ -10,7 +10,7 @@ import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import dynamic from "next/dynamic";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { ArrowLeft } from "react-bootstrap-icons";
@@ -60,6 +60,13 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
   const [search, setSearch] = React.useState("");
   const [tempValue, setTempValue] = React.useState<PenalCode | null>(null);
   const { state, execute } = useFetch();
+  const tableState = useTableState({
+    search: { value: search },
+    dragDrop: {
+      onListChange: setList,
+      disabledIndices: [groups.findIndex((v) => v.id === "ungrouped")],
+    },
+  });
 
   const { isOpen, openModal, closeModal } = useModal();
 
@@ -112,16 +119,13 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
     }
   }
 
-  async function setList(
-    type: "PENAL_CODE" | "PENAL_CODE_GROUP",
-    list: (PenalCode | PenalCodeGroup)[],
-  ) {
-    const valuesToCheck = type === "PENAL_CODE" ? values : groups;
+  async function setList(list: (PenalCode | PenalCodeGroup)[]) {
+    const valuesToCheck = currentGroup ? groups : values;
     if (!hasTableDataChanged(valuesToCheck, list)) return;
 
-    if (type === "PENAL_CODE") {
+    if (currentGroup) {
       // @ts-expect-error todo: setup `type` check
-      setValues((p) =>
+      setGroups((p) =>
         list.map((v, idx) => {
           const prev = p.find((a) => a.id === v.id);
 
@@ -134,7 +138,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
       );
     } else {
       // @ts-expect-error todo: setup `type` check
-      setGroups((p) =>
+      setValues((p) =>
         list.map((v, idx) => {
           const prev = p.find((a) => a.id === v.id);
 
@@ -223,11 +227,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
           </header>
 
           <Table
-            filter={search}
-            dragDrop={{
-              enabled: true,
-              handleMove: (list) => setList("PENAL_CODE", list),
-            }}
+            tableState={tableState}
             data={values
               .filter((v) =>
                 currentGroup.id === "ungrouped" && v.groupId === null
@@ -235,6 +235,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
                   : v.groupId === currentGroup.id,
               )
               .map((code) => ({
+                id: code.id,
                 rowProps: { value: code },
                 title: code.title,
                 description: (
@@ -267,13 +268,9 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
         </>
       ) : (
         <Table
-          filter={search}
-          dragDrop={{
-            enabled: true,
-            handleMove: (list) => setList("PENAL_CODE_GROUP", list),
-            disabledIndices: [groups.findIndex((v) => v.id === "ungrouped")],
-          }}
+          tableState={tableState}
           data={groups.map((group) => ({
+            id: group.id,
             rowProps: { value: group },
             value: group.name,
             actions: (

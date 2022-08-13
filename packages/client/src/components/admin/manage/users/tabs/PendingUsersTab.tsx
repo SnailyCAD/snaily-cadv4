@@ -3,7 +3,7 @@ import { useTranslations } from "use-intl";
 import type { User } from "@snailycad/types";
 import { TabsContent } from "components/shared/TabList";
 import { Button } from "components/Button";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import useFetch from "lib/useFetch";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 import { FormField } from "components/form/FormField";
@@ -26,6 +26,7 @@ export function PendingUsersTab({ users, pendingCount }: GetManageUsersData) {
       onResponse: (json: GetManageUsersData) => ({ totalCount: json.totalCount, data: json.users }),
     },
   });
+  const tableState = useTableState({ pagination: asyncTable.pagination });
 
   async function handleAcceptOrDecline(user: Pick<User, "id">, type: "accept" | "decline") {
     const { json } = await execute<PostManageUserAcceptDeclineData>({
@@ -72,12 +73,9 @@ export function PendingUsersTab({ users, pendingCount }: GetManageUsersData) {
         <p>There are no users pending access.</p>
       ) : (
         <Table
-          pagination={{
-            enabled: true,
-            totalCount: asyncTable.pagination.totalDataCount,
-            fetchData: asyncTable.pagination,
-          }}
+          tableState={tableState}
           data={asyncTable.data.map((user) => ({
+            id: user.id,
             username: user.username,
             actions: (
               <>

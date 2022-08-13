@@ -12,7 +12,7 @@ import useFetch from "lib/useFetch";
 import { formatOfficerDepartment, makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useImageUrl } from "hooks/useImageUrl";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
@@ -38,6 +38,7 @@ export default function MyDeputies({ deputies: data }: Props) {
   const { generateCallsign } = useGenerateCallsign();
   const { makeImageUrl } = useImageUrl();
   const { BADGE_NUMBERS } = useFeatureEnabled();
+  const tableState = useTableState();
 
   const [deputies, setDeputies] = React.useState(data);
   const [tempDeputy, deputyState] = useTemporaryItem(deputies);
@@ -81,7 +82,9 @@ export default function MyDeputies({ deputies: data }: Props) {
         <p className="mt-5">{t("Ems.noDeputies")}</p>
       ) : (
         <Table
+          tableState={tableState}
           data={deputies.map((deputy) => ({
+            id: deputy.id,
             deputy: (
               <span className="flex items-center">
                 {deputy.imageId ? (

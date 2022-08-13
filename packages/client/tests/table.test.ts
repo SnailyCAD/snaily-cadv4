@@ -1,6 +1,6 @@
 import { TableActionsAlignment } from "@snailycad/types";
 import { expect, test } from "vitest";
-import { makeColumns } from "../src/lib/table/orderColumnsByTableActionsAlignment";
+import { orderColumnsByTableActionsAlignment } from "../src/lib/table/orderColumnsByTableActionsAlignment";
 
 const COLUMNS = [
   { accessorKey: "name" },
@@ -14,7 +14,7 @@ const RIGHT = TableActionsAlignment.RIGHT;
 const NONE = TableActionsAlignment.NONE;
 
 test("Should correctly order table alignment LEFT", () => {
-  expect(makeColumns(LEFT, COLUMNS)).toMatchInlineSnapshot(`
+  expect(orderColumnsByTableActionsAlignment(LEFT, COLUMNS)).toMatchInlineSnapshot(`
     [
       {
         "accessor": "actions",
@@ -33,7 +33,7 @@ test("Should correctly order table alignment LEFT", () => {
 });
 
 test("Should correctly order table alignment RIGHT", () => {
-  expect(makeColumns(RIGHT, COLUMNS)).toMatchInlineSnapshot(`
+  expect(orderColumnsByTableActionsAlignment(RIGHT, COLUMNS)).toMatchInlineSnapshot(`
     [
       {
         "accessor": "name",
@@ -52,7 +52,7 @@ test("Should correctly order table alignment RIGHT", () => {
 });
 
 test("Should correctly order table alignment NONE", () => {
-  expect(makeColumns(NONE, COLUMNS)).toMatchInlineSnapshot(`
+  expect(orderColumnsByTableActionsAlignment(NONE, COLUMNS)).toMatchInlineSnapshot(`
     [
       {
         "accessor": "name",
