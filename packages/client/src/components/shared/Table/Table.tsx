@@ -91,9 +91,7 @@ export function Table<TData extends _RowData>({
     onRowSelectionChange: tableState.setRowSelection,
     onPaginationChange: tableState.setPagination,
     onGlobalFilterChange: tableState.setGlobalFilter,
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: false,
+
     state: {
       sorting: tableState.sorting,
       rowSelection: tableState.rowSelection,

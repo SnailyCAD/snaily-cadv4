@@ -57,6 +57,7 @@ export class RecordsController {
   @Description("Get all active warrants (ACTIVE_WARRANTS must be enabled)")
   async getActiveWarrants() {
     const activeWarrants = await prisma.warrant.findMany({
+      orderBy: { updatedAt: "desc" },
       where: { status: "ACTIVE" },
       include: {
         citizen: true,

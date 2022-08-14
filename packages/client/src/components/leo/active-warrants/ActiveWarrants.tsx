@@ -17,7 +17,9 @@ export function ActiveWarrants() {
   const { generateCallsign } = useGenerateCallsign();
   const [tempWarrant, warrantState] = useTemporaryItem(activeWarrants);
   const t = useTranslations("Leo");
-  const tableState = useTableState();
+  const tableState = useTableState({
+    pagination: { pageSize: 12, totalDataCount: activeWarrants.length },
+  });
 
   const { openModal } = useModal();
   const common = useTranslations("Common");
@@ -38,10 +40,14 @@ export function ActiveWarrants() {
   return (
     <div className="overflow-hidden rounded-md card mt-3">
       <header className="flex items-center justify-between p-2 px-4 bg-gray-200 dark:bg-gray-3">
-        <h3 className="text-xl font-semibold">{t("activeWarrants")}</h3>
+        <h1 className="text-xl font-semibold">{t("activeWarrants")}</h1>
 
         <div>
-          <Button onClick={() => openModal(ModalIds.CreateWarrant, { isActive: true })}>
+          <Button
+            variant={null}
+            className="dark:bg-gray-2 dark:hover:bg-dark-bg bg-gray-500 hover:bg-gray-600 text-white"
+            onClick={() => openModal(ModalIds.CreateWarrant, { isActive: true })}
+          >
             {t("createWarrant")}
           </Button>
         </div>
