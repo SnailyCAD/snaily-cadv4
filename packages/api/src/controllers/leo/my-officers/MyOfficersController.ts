@@ -242,9 +242,7 @@ export class MyOfficersController {
     });
 
     const updatedOfficer = await prisma.officer.update({
-      where: {
-        id: officer.id,
-      },
+      where: { id: officer.id },
       data: {
         callsign: data.callsign,
         callsign2: data.callsign2,

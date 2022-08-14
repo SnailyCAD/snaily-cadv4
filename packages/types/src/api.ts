@@ -462,6 +462,7 @@ export type DeleteBusinessPostsData = boolean;
  */
 export interface GetIncidentsData {
   incidents: Types.LeoIncident[];
+  totalCount: number;
 }
 
 /**
