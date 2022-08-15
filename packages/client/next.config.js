@@ -4,7 +4,7 @@
  */
 const nextConfig = {
   i18n: {
-    locales: ["en", "en_gb", "ru", "cn", "tc", "fr_FRA", "de_DE"],
+    locales: ["en", "en-gb", "ru", "cn", "tc", "fr-FR", "de-DE"],
     defaultLocale: "en",
   },
   cleanDistDir: true,
