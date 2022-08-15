@@ -21,6 +21,7 @@ export function useAsyncTable<T>(options: Options<T>) {
   const [totalDataCount, setTotalCount] = React.useState(options.totalCount);
   const [_data, _setData] = React.useState(options.initialData);
   const [search, setSearch] = React.useState("");
+  const [extraParams, setExtraParams] = React.useState({});
   const { state: loadingState, execute } = useFetch();
 
   const scrollToTopOnDataChange = options.scrollToTopOnDataChange ?? true;
@@ -34,6 +35,7 @@ export function useAsyncTable<T>(options: Options<T>) {
         params: {
           skip: pageSize * pageIndex,
           query: search.trim() || undefined,
+          ...extraParams,
         },
       });
 
@@ -47,13 +49,13 @@ export function useAsyncTable<T>(options: Options<T>) {
         }
       }
     },
-    [search], // eslint-disable-line
+    [search, extraParams], // eslint-disable-line
   );
 
   const handleSearch = React.useCallback(async () => {
     const { json, error } = await execute({
       path: options.fetchOptions.path,
-      params: { query: search.trim() },
+      params: { query: search.trim(), ...extraParams },
     });
 
     if (json && !error) {
@@ -61,7 +63,7 @@ export function useAsyncTable<T>(options: Options<T>) {
       setData(jsonData.data);
       setTotalCount(jsonData.totalCount);
     }
-  }, [search]); // eslint-disable-line
+  }, [search, extraParams]); // eslint-disable-line
 
   useDebounce(handleSearch, 250, [search, handleSearch]);
 
@@ -76,6 +78,8 @@ export function useAsyncTable<T>(options: Options<T>) {
   const _search = {
     search,
     setSearch,
+    extraParams,
+    setExtraParams,
   };
 
   return {

@@ -62,13 +62,16 @@ export class Calls911Controller {
     @QueryParams("query", String) query = "",
     @QueryParams("includeAll", Boolean) includeAll = false,
     @QueryParams("take", Number) take = 12,
+    @QueryParams("department", String) department?: string,
+    @QueryParams("division", String) division?: string,
+    @QueryParams("assignedUnit", String) assignedUnit?: string,
   ): Promise<APITypes.Get911CallsData> {
     const inactivityFilter = getInactivityFilter(cad);
     if (inactivityFilter) {
       this.endInactiveCalls(inactivityFilter.updatedAt);
     }
     const where: Prisma.Call911WhereInput = {
-      ended: !includeEnded,
+      ended: includeEnded ? undefined : false,
       ...(inactivityFilter?.filter ?? {}),
       OR: query
         ? [
@@ -83,10 +86,29 @@ export class Calls911Controller {
         : undefined,
     };
 
+    if (department || division || assignedUnit) {
+      where.OR = [];
+    }
+
     if (parseInt(query) && where.OR) {
       // @ts-expect-error this can be ignored.
       where.OR = [...Array.from(where.OR), { caseNumber: { equals: parseInt(query) } }];
     }
+
+    if (department && where.OR) {
+      // @ts-expect-error this can be ignored.
+      where.OR = [...Array.from(where.OR), { departments: { some: { id: department } } }];
+    }
+    if (division && where.OR) {
+      // @ts-expect-error this can be ignored.
+      where.OR = [...Array.from(where.OR), { divisions: { some: { id: division } } }];
+    }
+    if (assignedUnit && where.OR) {
+      // @ts-expect-error this can be ignored.
+      where.OR = [...Array.from(where.OR), { assignedUnits: { some: { id: assignedUnit } } }];
+    }
+
+    console.log({ where: JSON.stringify(where, null, 4) });
 
     const [totalCount, calls] = await Promise.all([
       prisma.call911.count({ where }),

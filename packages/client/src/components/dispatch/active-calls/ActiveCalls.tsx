@@ -9,9 +9,7 @@ import useFetch from "lib/useFetch";
 import { useLeoState } from "state/leoState";
 import { useEmsFdState } from "state/emsFdState";
 import { DispatchCallTowModal } from "components/dispatch/modals/CallTowModal";
-import compareDesc from "date-fns/compareDesc";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { useActiveCallsFilters } from "./CallsFilters";
 import { useCallsFilters } from "state/callsFiltersState";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
@@ -54,7 +52,6 @@ function _ActiveCalls({ initialData }: Props) {
   const { activeOfficer } = useLeoState();
   const { activeDeputy } = useEmsFdState();
   const { search, setSearch } = useCallsFilters();
-  const handleCallsFilter = useActiveCallsFilters();
 
   const asyncTable = useAsyncTable({
     fetchOptions: {
@@ -136,42 +133,39 @@ function _ActiveCalls({ initialData }: Props) {
           <Table
             tableState={tableState}
             features={{ isWithinCard: true }}
-            data={calls
-              .sort((a, b) => compareDesc(new Date(a.updatedAt), new Date(b.updatedAt)))
-              .filter(handleCallsFilter)
-              .map((call) => {
-                const isUnitAssigned = isUnitAssignedToCall(call);
+            data={calls.map((call) => {
+              const isUnitAssigned = isUnitAssignedToCall(call);
 
-                return {
-                  id: call.id,
-                  rowProps: {
-                    className: isUnitAssigned ? "bg-gray-200 dark:bg-[#333639]" : undefined,
-                  },
-                  caseNumber: `#${call.caseNumber}`,
-                  name: `${call.name} ${call.viaDispatch ? `(${leo("dispatch")})` : ""}`,
-                  location: `${call.location} ${call.postal ? `(${call.postal})` : ""}`,
-                  description: <CallDescription call={call} />,
-                  situationCode: call.situationCode?.value.value ?? common("none"),
-                  updatedAt: <FullDate>{call.updatedAt}</FullDate>,
-                  assignedUnits: (
-                    <AssignedUnitsColumn
-                      handleAssignToCall={(call, unitId) =>
-                        handleAssignUnassignToCall(call, "assign", unitId)
-                      }
-                      call={call}
-                      isDispatch={isDispatch}
-                    />
-                  ),
-                  actions: (
-                    <ActiveCallsActionsColumn
-                      handleAssignUnassignToCall={handleAssignUnassignToCall}
-                      isUnitAssigned={isUnitAssigned}
-                      unit={unit}
-                      call={call}
-                    />
-                  ),
-                };
-              })}
+              return {
+                id: call.id,
+                rowProps: {
+                  className: isUnitAssigned ? "bg-gray-200 dark:bg-[#333639]" : undefined,
+                },
+                caseNumber: `#${call.caseNumber}`,
+                name: `${call.name} ${call.viaDispatch ? `(${leo("dispatch")})` : ""}`,
+                location: `${call.location} ${call.postal ? `(${call.postal})` : ""}`,
+                description: <CallDescription call={call} />,
+                situationCode: call.situationCode?.value.value ?? common("none"),
+                updatedAt: <FullDate>{call.updatedAt}</FullDate>,
+                assignedUnits: (
+                  <AssignedUnitsColumn
+                    handleAssignToCall={(call, unitId) =>
+                      handleAssignUnassignToCall(call, "assign", unitId)
+                    }
+                    call={call}
+                    isDispatch={isDispatch}
+                  />
+                ),
+                actions: (
+                  <ActiveCallsActionsColumn
+                    handleAssignUnassignToCall={handleAssignUnassignToCall}
+                    isUnitAssigned={isUnitAssigned}
+                    unit={unit}
+                    call={call}
+                  />
+                ),
+              };
+            })}
             columns={[
               { header: "#", accessorKey: "caseNumber" },
               { header: t("caller"), accessorKey: "name" },

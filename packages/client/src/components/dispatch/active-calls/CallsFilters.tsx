@@ -49,7 +49,10 @@ export function CallsFilters({ search, calls }: Props) {
         <Select
           isClearable
           value={department?.value?.id ?? null}
-          onChange={(e) => setDepartment(e.target)}
+          onChange={(e) => {
+            setDepartment(e.target);
+            search.setExtraParams({ department: e.target?.value?.id });
+          }}
           className="w-56"
           values={departments}
         />
@@ -59,7 +62,10 @@ export function CallsFilters({ search, calls }: Props) {
         <Select
           isClearable
           value={division?.value?.id ?? null}
-          onChange={(e) => setDivision(e.target)}
+          onChange={(e) => {
+            setDivision(e.target);
+            search.setExtraParams({ division: e.target?.value?.id });
+          }}
           className="w-56"
           values={divisions.filter((v) =>
             department?.value ? v.value.departmentId === department.value.id : true,
@@ -71,8 +77,11 @@ export function CallsFilters({ search, calls }: Props) {
         <Select
           isClearable
           value={assignedUnit?.value?.id ?? null}
-          onChange={(e) => setAssignedUnit(e.target)}
           className="w-56"
+          onChange={(e) => {
+            setAssignedUnit(e.target);
+            search.setExtraParams({ assignedUnit: e.target?.value?.id });
+          }}
           values={assignedUnits}
         />
       </FormField>
@@ -116,43 +125,4 @@ function makeOptions(calls: Full911Call[], type: Call911Filters) {
   });
 
   return arr;
-}
-
-export function useActiveCallsFilters() {
-  const { department, division, assignedUnit } = useCallsFilters();
-
-  const handleFilter = React.useCallback(
-    (value: Full911Call) => {
-      const isInDepartments = includesInArray(value.departments, department?.value?.id);
-      const isInDivisions = includesInArray(value.divisions, division?.value?.id);
-      const isInAssignedUnits = includesInArray(value.assignedUnits, assignedUnit?.value?.id);
-
-      /**
-       * show all calls if there is no filter
-       */
-      if (!department?.value && !division?.value && !assignedUnit?.value) return true;
-
-      /**
-       * department and division selected?
-       *  -> only show calls with that department and division
-       */
-      if (department?.value && division?.value && assignedUnit?.value) {
-        return isInDepartments && isInDivisions && isInAssignedUnits;
-      }
-
-      if (isInAssignedUnits) return true;
-      if (isInDepartments) return true;
-      if (isInDivisions) return true;
-
-      return false;
-    },
-    [department?.value, division?.value, assignedUnit?.value],
-  );
-
-  return handleFilter;
-}
-
-// arr can be undefined since it may not be connected to the call data.
-function includesInArray(arr: { id: string }[] | undefined, value: string | undefined) {
-  return arr?.some((v) => v.id === value);
 }
