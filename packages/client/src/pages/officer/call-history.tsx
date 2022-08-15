@@ -116,7 +116,6 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [officers, deputies]);
 
-  console.log({ asyncTable });
 
   return (
     <Layout
