@@ -61,6 +61,7 @@ export class Calls911Controller {
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query = "",
     @QueryParams("includeAll", Boolean) includeAll = false,
+    @QueryParams("take", Number) take = 12,
   ): Promise<APITypes.Get911CallsData> {
     const inactivityFilter = getInactivityFilter(cad);
     if (inactivityFilter) {
@@ -81,7 +82,7 @@ export class Calls911Controller {
                 { type: { value: { value: { contains: query, mode: "insensitive" } } } },
                 { situationCode: { value: { value: { contains: query, mode: "insensitive" } } } },
               ]
-            : [],
+            : undefined,
         };
 
     if (parseInt(query) && where?.OR) {
@@ -92,7 +93,7 @@ export class Calls911Controller {
     const [totalCount, calls] = await Promise.all([
       prisma.call911.count({ where }),
       prisma.call911.findMany({
-        take: includeAll ? undefined : 12,
+        take: includeAll ? undefined : take,
         skip: includeAll ? undefined : skip,
         include: callInclude,
         orderBy: { updatedAt: "desc" },

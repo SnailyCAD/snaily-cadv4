@@ -5,7 +5,9 @@ import { useTranslations } from "next-intl";
 import { Filter } from "react-bootstrap-icons";
 import { useCallsFilters } from "state/callsFiltersState";
 import type { Full911Call } from "state/dispatch/dispatchState";
-import { CallsFilters } from "./CallsFilters";
+import dynamic from "next/dynamic";
+
+const CallsFilters = dynamic(async () => (await import("./CallsFilters")).CallsFilters);
 
 interface Props {
   calls: Full911Call[];
@@ -39,9 +41,11 @@ export function ActiveCallsHeader({ calls, search }: Props) {
         </div>
       </header>
 
-      <div className="p-2 px-4">
-        <CallsFilters search={search} calls={calls} />
-      </div>
+      {calls.length <= 0 ? null : (
+        <div className="p-2 px-4">
+          <CallsFilters search={search} calls={calls} />
+        </div>
+      )}
     </>
   );
 }
