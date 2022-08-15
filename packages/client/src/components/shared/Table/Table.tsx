@@ -102,8 +102,9 @@ export function Table<TData extends _RowData>({
 
   const visibleTableRows = React.useMemo(() => {
     const rows = table.getRowModel().rows as Row<TData>[];
+    const isLengthier = rows.length > tableState.pagination.pageSize;
 
-    if (tableState.pagination.__ASYNC_TABLE__) {
+    if (tableState.pagination.__ASYNC_TABLE__ && !isLengthier) {
       return rows;
     }
 

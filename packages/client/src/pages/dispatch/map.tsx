@@ -37,7 +37,7 @@ export default function MapPage(props: Props) {
   const call911State = useCall911State();
 
   React.useEffect(() => {
-    call911State.setCalls(props.calls);
+    call911State.setCalls(props.calls.calls);
     state.setBolos(props.bolos);
     state.setAllOfficers(props.officers);
     state.setAllDeputies(props.deputies);

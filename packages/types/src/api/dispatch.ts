@@ -6,28 +6,31 @@ import type * as Types from "../index.js";
  * @method GET
  * @route /911-calls
  */
-export type Get911CallsData = (Types.Call911 & {
-  assignedUnits: Types.AssignedUnit[];
-  events: Types.Call911Event[];
-})[];
+export interface Get911CallsData {
+  calls: (Types.Call911 & {
+    assignedUnits: Types.AssignedUnit[];
+    events: Types.Call911Event[];
+  })[];
+  totalCount: number;
+}
 
 /**
  * @method GET
  * @route /911-calls/:id
  */
-export type Get911CallByIdData = Get911CallsData[number];
+export type Get911CallByIdData = Get911CallsData["calls"][number];
 
 /**
  * @method POST
  * @route /911-calls
  */
-export type Post911CallsData = Get911CallsData[number];
+export type Post911CallsData = Get911CallsData["calls"][number];
 
 /**
  * @method PUT
  * @route /911-calls/:id
  */
-export type Put911CallByIdData = Get911CallsData[number];
+export type Put911CallByIdData = Get911CallsData["calls"][number];
 
 /**
  * @method DELETE
@@ -53,25 +56,25 @@ export type PostLink911CallToIncident =
  * @method POST
  * @route /911-calls/:type/:callId
  */
-export type Post911CallAssignUnAssign = Get911CallsData[number];
+export type Post911CallAssignUnAssign = Get911CallsData["calls"][number];
 
 /**
  * @method POST
  * @route /911-calls/events
  */
-export type Post911CallEventsData = Get911CallsData[number];
+export type Post911CallEventsData = Get911CallsData["calls"][number];
 
 /**
  * @method PUT
  * @route /911-calls/events/:id
  */
-export type Put911CallEventByIdData = Get911CallsData[number];
+export type Put911CallEventByIdData = Get911CallsData["calls"][number];
 
 /**
  * @method DELETE
  * @route /911-calls/events/:id
  */
-export type Delete911CallEventByIdData = Get911CallsData[number];
+export type Delete911CallEventByIdData = Get911CallsData["calls"][number];
 
 /** dispatch */
 /**

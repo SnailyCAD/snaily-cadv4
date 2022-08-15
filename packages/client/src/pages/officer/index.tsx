@@ -125,7 +125,7 @@ export default function OfficerDashboard({
   React.useEffect(() => {
     leoState.setActiveOfficer(activeOfficer);
 
-    call911State.setCalls(calls);
+    call911State.setCalls(calls.calls);
     dispatchState.setBolos(bolos);
 
     dispatchState.setActiveDeputies(activeDeputies);
@@ -159,7 +159,7 @@ export default function OfficerDashboard({
         />
       </UtilityPanel>
 
-      {CALLS_911 ? <ActiveCalls initialCalls={calls} /> : null}
+      {CALLS_911 ? <ActiveCalls initialData={calls} /> : null}
       <ActiveBolos initialBolos={bolos} />
       {ACTIVE_WARRANTS ? <ActiveWarrants /> : null}
 

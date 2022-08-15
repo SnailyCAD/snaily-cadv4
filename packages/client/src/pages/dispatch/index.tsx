@@ -95,7 +95,7 @@ export default function DispatchDashboard(props: DispatchPageProps) {
   );
 
   React.useEffect(() => {
-    call911State.setCalls(props.calls);
+    call911State.setCalls(props.calls.calls);
     state.setBolos(props.bolos);
     state.setAllOfficers(props.officers);
 
@@ -131,7 +131,7 @@ export default function DispatchDashboard(props: DispatchPageProps) {
       </div>
 
       <div className="mt-3">
-        <ActiveCalls initialCalls={props.calls} />
+        <ActiveCalls initialData={props.calls} />
         <ActiveBolos initialBolos={props.bolos} />
         {ACTIVE_INCIDENTS ? <ActiveIncidents /> : null}
       </div>
