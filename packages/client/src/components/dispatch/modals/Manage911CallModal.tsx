@@ -9,11 +9,11 @@ import { Input } from "components/form/inputs/Input";
 import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
-import { Full911Call, useDispatchState } from "state/dispatchState";
+import { Full911Call, useDispatchState } from "state/dispatch/dispatchState";
 import { useRouter } from "next/router";
 import { Select, SelectValue } from "components/form/Select";
 import { AlertModal } from "components/modal/AlertModal";
-import { CallEventsArea } from "../active-calls/EventsArea";
+import { CallEventsArea } from "../events/EventsArea";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 import { EmsFdDeputy, StatusValueType, type CombinedLeoUnit } from "@snailycad/types";
@@ -33,11 +33,12 @@ import type {
   Post911CallsData,
   Put911CallByIdData,
 } from "@snailycad/types/api";
+import { useCall911State } from "state/dispatch/call911State";
 
 interface Props {
   call: Full911Call | null;
   forceOpen?: boolean;
-  setCall?: React.Dispatch<React.SetStateAction<Full911Call | null>>;
+  setCall?(call: Full911Call | null): void;
   onClose?(): void;
 }
 
@@ -48,7 +49,7 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
   const { state, execute } = useFetch();
-  const { setCalls, calls } = useDispatchState();
+  const { setCalls, calls } = useCall911State();
   const router = useRouter();
   const { hasPermissions } = usePermission();
   const { allOfficers, allDeputies, activeDeputies, activeOfficers } = useDispatchState();

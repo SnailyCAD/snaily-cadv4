@@ -5,7 +5,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { ActiveCalls } from "components/dispatch/active-calls/ActiveCalls";
-import { useDispatchState } from "state/dispatchState";
+import { useDispatchState } from "state/dispatch/dispatchState";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { DispatchModalButtons } from "components/dispatch/ModalButtons";
 import { useTranslations } from "use-intl";
@@ -23,6 +23,7 @@ import { Permissions } from "@snailycad/permissions";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import type { Get911CallsData, GetBolosData, GetDispatchData } from "@snailycad/types/api";
 import { UtilityPanel } from "components/shared/UtilityPanel";
+import { useCall911State } from "state/dispatch/call911State";
 
 const ActiveIncidents = dynamic(async () => {
   return (await import("components/dispatch/ActiveIncidents")).ActiveIncidents;
@@ -75,6 +76,7 @@ export default function DispatchDashboard(props: DispatchPageProps) {
   });
 
   const state = useDispatchState();
+  const call911State = useCall911State();
   const t = useTranslations("Leo");
   const signal100 = useSignal100();
   const panic = usePanicButton();
@@ -93,7 +95,7 @@ export default function DispatchDashboard(props: DispatchPageProps) {
   );
 
   React.useEffect(() => {
-    state.setCalls(props.calls);
+    call911State.setCalls(props.calls);
     state.setBolos(props.bolos);
     state.setAllOfficers(props.officers);
 

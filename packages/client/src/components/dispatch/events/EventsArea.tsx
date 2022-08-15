@@ -1,11 +1,11 @@
 import * as React from "react";
-import type { Full911Call } from "state/dispatchState";
+import type { Full911Call } from "state/dispatch/dispatchState";
 import type { FormikHelpers } from "formik";
 import compareDesc from "date-fns/compareDesc";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
-import { EventItem } from "../events/EventItem";
-import { UpdateEventForm } from "../events/UpdateEventForm";
+import { EventItem } from "./EventItem";
+import { UpdateEventForm } from "./UpdateEventForm";
 import type { Post911CallEventsData, Put911CallEventByIdData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 

@@ -5,7 +5,7 @@ import { dataToString } from "lib/editor/dataToString";
 import { isArrayEqual } from "lib/editor/isArrayEqual";
 import { useTranslations } from "next-intl";
 import type { Descendant } from "slate";
-import type { Full911Call } from "state/dispatchState";
+import type { Full911Call } from "state/dispatch/dispatchState";
 
 interface Props {
   call: Full911Call;

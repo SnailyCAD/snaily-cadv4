@@ -2,7 +2,7 @@ import * as React from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "components/Button";
 import { Manage911CallModal } from "components/dispatch/modals/Manage911CallModal";
-import type { Full911Call } from "state/dispatchState";
+import type { Full911Call } from "state/dispatch/dispatchState";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 
 interface Props {

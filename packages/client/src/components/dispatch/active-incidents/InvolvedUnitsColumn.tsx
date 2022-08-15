@@ -13,7 +13,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { classNames } from "lib/classNames";
 import { makeUnitName } from "lib/utils";
 import { useTranslations } from "next-intl";
-import { useDispatchState } from "state/dispatchState";
+import { useDispatchState } from "state/dispatch/dispatchState";
 import { DndActions } from "types/DndActions";
 
 interface Props {

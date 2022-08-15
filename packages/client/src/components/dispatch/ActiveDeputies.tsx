@@ -21,13 +21,13 @@ import { classNames } from "lib/classNames";
 import { Filter } from "react-bootstrap-icons";
 import { ActiveUnitsSearch } from "./active-units/ActiveUnitsSearch";
 import { useActiveUnitsFilter } from "hooks/shared/useActiveUnitsFilter";
-import { useDispatchState } from "state/dispatchState";
 import { ActiveCallColumn } from "./active-units/officers/ActiveCallColumn";
 import { ActiveIncidentColumn } from "./active-units/officers/ActiveIncidentColumn";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { DeputyColumn } from "./active-units/deputies/DeputyColumn";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useMounted } from "@casper124578/useful";
+import { useCall911State } from "state/dispatch/call911State";
 
 interface Props {
   initialDeputies: EmsFdDeputy[];
@@ -48,7 +48,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
   const { BADGE_NUMBERS, RADIO_CHANNEL_MANAGEMENT, ACTIVE_INCIDENTS } = useFeatureEnabled();
   const { emsSearch, showEmsFilters, setShowFilters } = useActiveUnitsState();
   const { handleFilter } = useActiveUnitsFilter();
-  const { calls } = useDispatchState();
+  const { calls } = useCall911State();
   const tableState = useTableState();
 
   const router = useRouter();

@@ -18,7 +18,7 @@ import { InvolvedUnitsColumn } from "./active-incidents/InvolvedUnitsColumn";
 import { DndActions } from "types/DndActions";
 import { classNames } from "lib/classNames";
 import { Droppable } from "components/shared/dnd/Droppable";
-import { useDispatchState } from "state/dispatchState";
+import { useDispatchState } from "state/dispatch/dispatchState";
 import type { PostIncidentsData, PutIncidentByIdData } from "@snailycad/types/api";
 
 export function ActiveIncidents() {

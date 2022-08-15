@@ -27,9 +27,9 @@ import { ActiveIncidentColumn } from "./active-units/officers/ActiveIncidentColu
 import { ActiveCallColumn } from "./active-units/officers/ActiveCallColumn";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { HoverCard } from "components/shared/HoverCard";
-import { useDispatchState } from "state/dispatchState";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useMounted } from "@casper124578/useful";
+import { useCall911State } from "state/dispatch/call911State";
 
 interface Props {
   initialOfficers: ActiveOfficer[];
@@ -42,7 +42,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
 
   const { activeOfficers: _activeOfficers } = useActiveOfficers();
   const { activeIncidents } = useActiveIncidents();
-  const { calls } = useDispatchState();
+  const { calls } = useCall911State();
   const isMounted = useMounted();
   const activeOfficers = isMounted ? _activeOfficers : initialOfficers;
 

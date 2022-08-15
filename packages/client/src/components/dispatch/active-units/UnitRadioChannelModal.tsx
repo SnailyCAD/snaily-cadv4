@@ -10,7 +10,7 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { Pencil } from "react-bootstrap-icons";
 import { useRouter } from "next/router";
-import { useDispatchState } from "state/dispatchState";
+import { useDispatchState } from "state/dispatch/dispatchState";
 import { handleValidate } from "lib/handleValidate";
 import { UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
 import { isUnitCombined, isUnitOfficer } from "@snailycad/utils";

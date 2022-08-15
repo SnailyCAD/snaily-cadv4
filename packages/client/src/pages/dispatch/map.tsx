@@ -7,12 +7,13 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import { useDispatchState } from "state/dispatchState";
+import { useDispatchState } from "state/dispatch/dispatchState";
 import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
 import type { DispatchPageProps } from ".";
 import { CombinedLeoUnit, EmsFdDeputy, Officer, ShouldDoType, ValueType } from "@snailycad/types";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
+import { useCall911State } from "state/dispatch/call911State";
 
 const Map = dynamic(async () => (await import("components/dispatch/map/Map")).Map, {
   ssr: false,
@@ -33,9 +34,10 @@ export default function MapPage(props: Props) {
 
   const { cad, user } = useAuth();
   const state = useDispatchState();
+  const call911State = useCall911State();
 
   React.useEffect(() => {
-    state.setCalls(props.calls);
+    call911State.setCalls(props.calls);
     state.setBolos(props.bolos);
     state.setAllOfficers(props.officers);
     state.setAllDeputies(props.deputies);
@@ -51,15 +53,7 @@ export default function MapPage(props: Props) {
     state.setActiveOfficers(activeOfficers);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    state.setCalls,
-    state.setBolos,
-    state.setAllOfficers,
-    state.setActiveDeputies,
-    state.setActiveOfficers,
-    state.setAllDeputies,
-    props,
-  ]);
+  }, [props]);
 
   if (!user || !cad) {
     return null;

@@ -8,7 +8,7 @@ import type { GetServerSideProps } from "next";
 import type { AssignedUnit } from "@snailycad/types";
 import { Table, useTableState } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { Full911Call, useDispatchState } from "state/dispatchState";
+import { Full911Call, useDispatchState } from "state/dispatch/dispatchState";
 import { Button } from "components/Button";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
