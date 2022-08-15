@@ -41,7 +41,7 @@ export function ActiveCallsHeader({ calls, search }: Props) {
         </div>
       </header>
 
-      {calls.length <= 0 && !search.search ? null : (
+      {calls.length <= 0 && search.state !== "loading" && !search.search ? null : (
         <div className="p-2 px-4">
           <CallsFilters search={search} calls={calls} />
         </div>

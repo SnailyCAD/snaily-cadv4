@@ -127,7 +127,7 @@ function _ActiveCalls({ initialData }: Props) {
       <ActiveCallsHeader search={asyncTable.search} calls={calls} />
 
       <div className="px-4">
-        {calls.length <= 0 && !asyncTable.search.search ? (
+        {calls.length <= 0 && asyncTable.state !== "loading" && !asyncTable.search.search ? (
           <p className="py-2 text-neutral-700 dark:text-gray-300">{t("no911Calls")}</p>
         ) : (
           <Table
