@@ -7,6 +7,7 @@ import { Input } from "components/form/inputs/Input";
 import { useCallsFilters } from "state/callsFiltersState";
 import { Select, SelectValue } from "components/form/Select";
 import type { useAsyncTable } from "components/shared/Table";
+import { Loader } from "components/Loader";
 
 interface Props {
   calls: Full911Call[];
@@ -41,8 +42,13 @@ export function CallsFilters({ search, calls }: Props) {
 
   return showFilters ? (
     <div className="flex items-center gap-2 mt-2">
-      <FormField className="w-full" label={common("search")}>
+      <FormField className="w-full relative" label={common("search")}>
         <Input onChange={(e) => search.setSearch(e.target.value)} value={search.search} />
+        {search.state === "loading" ? (
+          <span className="absolute top-[2.9rem] right-3 -translate-y-1/2">
+            <Loader />
+          </span>
+        ) : null}
       </FormField>
 
       <FormField label={t("departments")}>

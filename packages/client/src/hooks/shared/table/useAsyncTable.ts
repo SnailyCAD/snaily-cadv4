@@ -80,6 +80,7 @@ export function useAsyncTable<T>(options: Options<T>) {
     setSearch,
     extraParams,
     setExtraParams,
+    state: loadingState,
   };
 
   return {
