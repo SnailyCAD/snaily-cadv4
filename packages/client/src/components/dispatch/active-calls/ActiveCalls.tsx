@@ -13,7 +13,7 @@ import compareDesc from "date-fns/compareDesc";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useActiveCallsFilters } from "./CallsFilters";
 import { useCallsFilters } from "state/callsFiltersState";
-import { Table, useTableState } from "components/shared/Table";
+import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { classNames } from "lib/classNames";
 import { usePermission } from "hooks/usePermission";
@@ -21,7 +21,7 @@ import { defaultPermissions } from "@snailycad/permissions";
 import { Droppable } from "components/shared/dnd/Droppable";
 import { DndActions } from "types/DndActions";
 import { AssignedUnitsColumn } from "./AssignedUnitsColumn";
-import type { Post911CallAssignUnAssign } from "@snailycad/types/api";
+import type { Get911CallsData, Post911CallAssignUnAssign } from "@snailycad/types/api";
 import { useMounted } from "@casper124578/useful";
 import { CallDescription } from "./CallDescription";
 import { ActiveCallsHeader } from "./ActiveCallsHeader";
@@ -34,15 +34,15 @@ const DescriptionModal = dynamic(
 );
 
 interface Props {
-  initialCalls: Full911Call[];
+  initialData: Get911CallsData;
 }
 
-function _ActiveCalls({ initialCalls }: Props) {
+function _ActiveCalls({ initialData }: Props) {
   const { hasPermissions } = usePermission();
   const { draggingUnit } = useDispatchState();
-  const calls911State = useCall911State();
+  const call911State = useCall911State();
   const isMounted = useMounted();
-  const calls = isMounted ? calls911State.calls : initialCalls;
+  const calls = isMounted ? call911State.calls : initialData.calls;
 
   const t = useTranslations("Calls");
   const leo = useTranslations("Leo");
@@ -56,8 +56,22 @@ function _ActiveCalls({ initialCalls }: Props) {
   const { search, setSearch } = useCallsFilters();
   const handleCallsFilter = useActiveCallsFilters();
 
+  const asyncTable = useAsyncTable({
+    fetchOptions: {
+      path: "/911-calls",
+      onResponse: (json: Get911CallsData) => ({
+        data: json.calls,
+        totalCount: json.totalCount,
+      }),
+    },
+    initialData: initialData.calls,
+    totalCount: initialData.totalCount,
+    scrollToTopOnDataChange: false,
+    state: { data: calls, setData: call911State.setCalls },
+  });
+
   const tableState = useTableState({
-    pagination: { pageSize: 12, totalDataCount: calls.length },
+    pagination: { ...asyncTable.pagination, pageSize: 12 },
     search: { value: search, setValue: setSearch },
   });
 
@@ -97,7 +111,7 @@ function _ActiveCalls({ initialCalls }: Props) {
         return call;
       });
 
-      calls911State.setCalls(callsMapped);
+      call911State.setCalls(callsMapped);
     }
   }
 
@@ -187,18 +201,18 @@ function _ActiveCalls({ initialCalls }: Props) {
         </Droppable>
       ) : null}
 
-      <DispatchCallTowModal call={calls911State.currentlySelectedCall} />
-      {calls911State.currentlySelectedCall?.descriptionData ? (
+      <DispatchCallTowModal call={call911State.currentlySelectedCall} />
+      {call911State.currentlySelectedCall?.descriptionData ? (
         <DescriptionModal
-          onClose={() => calls911State.setCurrentlySelectedCall(null)}
-          value={calls911State.currentlySelectedCall.descriptionData}
+          onClose={() => call911State.setCurrentlySelectedCall(null)}
+          value={call911State.currentlySelectedCall.descriptionData}
         />
       ) : null}
 
       <Manage911CallModal
-        setCall={calls911State.setCurrentlySelectedCall}
-        onClose={() => calls911State.setCurrentlySelectedCall(null)}
-        call={calls911State.currentlySelectedCall}
+        setCall={call911State.setCurrentlySelectedCall}
+        onClose={() => call911State.setCurrentlySelectedCall(null)}
+        call={call911State.currentlySelectedCall}
       />
     </div>
   );

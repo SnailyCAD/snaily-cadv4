@@ -57,21 +57,28 @@ export class Calls911Controller {
   async get911Calls(
     @Context("cad") cad: { miscCadSettings: MiscCadSettings | null },
     @QueryParams("includeEnded", Boolean) includeEnded: boolean,
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("query", String) query = "",
+    @QueryParams("includeAll", Boolean) includeAll = false,
   ): Promise<APITypes.Get911CallsData> {
     const inactivityFilter = getInactivityFilter(cad);
     if (inactivityFilter) {
       this.endInactiveCalls(inactivityFilter.updatedAt);
     }
+    const where = includeEnded ? undefined : { ended: false, ...(inactivityFilter?.filter ?? {}) };
 
-    const calls = await prisma.call911.findMany({
-      include: callInclude,
-      orderBy: {
-        createdAt: "desc",
-      },
-      where: includeEnded ? undefined : { ended: false, ...(inactivityFilter?.filter ?? {}) },
-    });
+    const [totalCount, calls] = await Promise.all([
+      prisma.call911.count({ where }),
+      prisma.call911.findMany({
+        take: includeAll ? undefined : 12,
+        skip: includeAll ? undefined : skip,
+        include: callInclude,
+        orderBy: { updatedAt: "desc" },
+        where,
+      }),
+    ]);
 
-    return calls.map(officerOrDeputyToUnit);
+    return { totalCount, calls: calls.map(officerOrDeputyToUnit) };
   }
 
   @Get("/:id")

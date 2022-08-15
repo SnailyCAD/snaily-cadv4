@@ -12,15 +12,20 @@ interface FetchOptions {
 interface Options<T> {
   totalCount: number;
   initialData: T[];
-  setDataOnInitialDataChange?: boolean;
+  scrollToTopOnDataChange?: boolean;
   fetchOptions: Pick<FetchOptions, "onResponse" | "path">;
+  state?: { data: T[]; setData(data: T[], query?: string): void };
 }
 
 export function useAsyncTable<T>(options: Options<T>) {
   const [totalDataCount, setTotalCount] = React.useState(options.totalCount);
-  const [data, setData] = React.useState(options.initialData);
+  const [_data, _setData] = React.useState(options.initialData);
   const [search, setSearch] = React.useState("");
-  const { state, execute } = useFetch();
+  const { state: loadingState, execute } = useFetch();
+
+  const scrollToTopOnDataChange = options.scrollToTopOnDataChange ?? true;
+  const data = options.state?.data ?? _data;
+  const setData = (options.state?.setData ?? _setData) as React.Dispatch<React.SetStateAction<T[]>>;
 
   const handlePageChange = React.useCallback(
     async ({ pageSize, pageIndex }: Omit<FetchOptions, "path" | "onResponse">) => {
@@ -37,7 +42,9 @@ export function useAsyncTable<T>(options: Options<T>) {
         setData(jsonData.data);
         setTotalCount(jsonData.totalCount);
 
-        window.scrollTo({ behavior: "smooth", top: 0 });
+        if (scrollToTopOnDataChange) {
+          window.scrollTo({ behavior: "smooth", top: 0 });
+        }
       }
     },
     [search], // eslint-disable-line
@@ -63,7 +70,7 @@ export function useAsyncTable<T>(options: Options<T>) {
     __ASYNC_TABLE__: true,
     onPageChange: handlePageChange,
     totalDataCount,
-    state,
+    state: loadingState,
   };
 
   const _search = {
@@ -72,7 +79,7 @@ export function useAsyncTable<T>(options: Options<T>) {
   };
 
   return {
-    state,
+    state: loadingState,
     pagination,
     search: _search,
     data,

@@ -48,7 +48,7 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
   const dispatchState = useDispatchState();
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageCallHistory], true);
-  const [tempCall, callState] = useTemporaryItem(calls);
+  const [tempCall, callState] = useTemporaryItem(calls.calls);
 
   const tableState = useTableState({ search: { value: search, setValue: setSearch } });
   const { state, execute } = useFetch();

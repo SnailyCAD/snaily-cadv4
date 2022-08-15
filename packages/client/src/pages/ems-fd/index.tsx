@@ -78,7 +78,7 @@ export default function EmsFDDashboard({
   React.useEffect(() => {
     state.setActiveDeputy(activeDeputy);
     state.setDeputies(userDeputies);
-    call911State.setCalls(calls);
+    call911State.setCalls(calls.calls);
     dispatchState.setActiveDeputies(activeDeputies);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeDeputies, activeDeputy, calls]);
