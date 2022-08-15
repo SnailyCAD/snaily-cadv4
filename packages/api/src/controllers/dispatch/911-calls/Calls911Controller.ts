@@ -108,8 +108,6 @@ export class Calls911Controller {
       where.OR = [...Array.from(where.OR), { assignedUnits: { some: { id: assignedUnit } } }];
     }
 
-    console.log({ where: JSON.stringify(where, null, 4) });
-
     const [totalCount, calls] = await Promise.all([
       prisma.call911.count({ where }),
       prisma.call911.findMany({

@@ -62,8 +62,6 @@ export function RenderActiveCalls() {
 
     handleCallStateUpdate(call.id, callData);
 
-    console.log({ call });
-
     const { json } = await execute<Put911CallByIdData>({
       path: `/911-calls/${call.id}`,
       method: "PUT",
