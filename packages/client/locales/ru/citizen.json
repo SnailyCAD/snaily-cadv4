@@ -37,6 +37,7 @@
     "create911Call": "Вызвать 911",
     "socialSecurityNumber": "Номер социального страхования",
     "occupation": "Род занятий",
+    "additionalInfo": "Дополнительная информация",
     "manageOccupation": "Редактировать род занятий",
     "manageLicenses": "Управление лицензиями",
     "licenses": "Лицензии",
