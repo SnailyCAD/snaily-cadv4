@@ -67,25 +67,23 @@ export class Calls911Controller {
     if (inactivityFilter) {
       this.endInactiveCalls(inactivityFilter.updatedAt);
     }
-    const where: Prisma.Call911WhereInput | undefined = includeEnded
-      ? undefined
-      : {
-          ended: false,
-          ...(inactivityFilter?.filter ?? {}),
-          OR: query
-            ? [
-                { descriptionData: { array_contains: query } },
-                { name: { contains: query, mode: "insensitive" } },
-                { postal: { contains: query, mode: "insensitive" } },
-                { location: { contains: query, mode: "insensitive" } },
-                { description: { contains: query, mode: "insensitive" } },
-                { type: { value: { value: { contains: query, mode: "insensitive" } } } },
-                { situationCode: { value: { value: { contains: query, mode: "insensitive" } } } },
-              ]
-            : undefined,
-        };
+    const where: Prisma.Call911WhereInput = {
+      ended: !includeEnded,
+      ...(inactivityFilter?.filter ?? {}),
+      OR: query
+        ? [
+            { descriptionData: { array_contains: query } },
+            { name: { contains: query, mode: "insensitive" } },
+            { postal: { contains: query, mode: "insensitive" } },
+            { location: { contains: query, mode: "insensitive" } },
+            { description: { contains: query, mode: "insensitive" } },
+            { type: { value: { value: { contains: query, mode: "insensitive" } } } },
+            { situationCode: { value: { value: { contains: query, mode: "insensitive" } } } },
+          ]
+        : undefined,
+    };
 
-    if (parseInt(query) && where?.OR) {
+    if (parseInt(query) && where.OR) {
       // @ts-expect-error this can be ignored.
       where.OR = [...Array.from(where.OR), { caseNumber: { equals: parseInt(query) } }];
     }

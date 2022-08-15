@@ -116,6 +116,8 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [officers, deputies]);
 
+  console.log({ asyncTable });
+
   return (
     <Layout
       permissions={{
@@ -126,7 +128,7 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
     >
       <Title>{leo("callHistory")}</Title>
 
-      {data.totalCount <= 0 ? (
+      {data.calls.length <= 0 ? (
         <p className="mt-5">{"No calls ended yet."}</p>
       ) : (
         <>
@@ -150,6 +152,12 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
               </div>
             </FormField>
           </div>
+
+          {asyncTable.search.search && asyncTable.pagination.totalDataCount !== data.totalCount ? (
+            <p className="italic text-base font-semibold">
+              Showing {asyncTable.pagination.totalDataCount} result(s)
+            </p>
+          ) : null}
 
           <Table
             tableState={tableState}
