@@ -1,5 +1,5 @@
 import { useTranslations } from "use-intl";
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { useRouter } from "next/router";
 import { WEAPON_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
@@ -51,22 +51,27 @@ export function RegisterWeaponModal({ weapon, onClose, onCreate, onUpdate }: Pro
     onClose?.();
   }
 
-  async function onSubmit(values: typeof INITIAL_VALUES) {
+  async function onSubmit(
+    values: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
     if (weapon) {
-      const { json } = await execute<PutCitizenWeaponData>({
+      const { json } = await execute<PutCitizenWeaponData, typeof INITIAL_VALUES>({
         path: `/weapons/${weapon.id}`,
         method: "PUT",
         data: values,
+        helpers,
       });
 
       if (json?.id) {
         onUpdate?.(weapon, { ...weapon, ...json });
       }
     } else {
-      const { json } = await execute<PostCitizenWeaponData>({
+      const { json } = await execute<PostCitizenWeaponData, typeof INITIAL_VALUES>({
         path: "/weapons",
         method: "POST",
         data: values,
+        helpers,
       });
 
       if (json?.id) {

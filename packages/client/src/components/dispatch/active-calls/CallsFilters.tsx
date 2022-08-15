@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { Full911Call } from "state/dispatchState";
+import type { Full911Call } from "state/dispatch/dispatchState";
 import { makeUnitName } from "lib/utils";
 import { FormField } from "components/form/FormField";
 import { useTranslations } from "next-intl";

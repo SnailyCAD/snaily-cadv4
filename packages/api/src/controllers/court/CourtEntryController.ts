@@ -20,6 +20,7 @@ export class CourtEntryController {
   async getCourtEntries(): Promise<APITypes.GetCourtEntriesData> {
     const entries = await prisma.courtEntry.findMany({
       include: { dates: true },
+      orderBy: { createdAt: "desc" },
     });
 
     return entries;

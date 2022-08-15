@@ -2,7 +2,7 @@ import * as React from "react";
 import type { TaxiCall, TowCall } from "@snailycad/types";
 import { Button } from "components/Button";
 import { FullDate } from "components/shared/FullDate";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
@@ -38,6 +38,7 @@ export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props)
   const t = useTranslations("Calls");
   const leo = useTranslations("Leo");
   const { user } = useAuth();
+  const tableState = useTableState();
 
   const { hasPermissions } = usePermission();
   const fallback = type === "tow" ? user?.isTow : user?.isTaxi;
@@ -89,7 +90,9 @@ export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props)
         <p className="mt-5">{noCallsText}</p>
       ) : (
         <Table
+          tableState={tableState}
           data={calls.map((call) => ({
+            id: call.id,
             location: call.location,
             postal: call.postal || common("none"),
             description:
@@ -117,13 +120,13 @@ export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props)
             ),
           }))}
           columns={[
-            { Header: t("location"), accessor: "location" },
-            { Header: t("postal"), accessor: "postal" },
-            { Header: common("description"), accessor: "description" },
-            { Header: t("caller"), accessor: "caller" },
-            { Header: t("assignedUnit"), accessor: "assignedUnit" },
-            { Header: common("createdAt"), accessor: "createdAt" },
-            hasManagePermissions ? { Header: common("actions"), accessor: "actions" } : null,
+            { header: t("location"), accessorKey: "location" },
+            { header: t("postal"), accessorKey: "postal" },
+            { header: common("description"), accessorKey: "description" },
+            { header: t("caller"), accessorKey: "caller" },
+            { header: t("assignedUnit"), accessorKey: "assignedUnit" },
+            { header: common("createdAt"), accessorKey: "createdAt" },
+            hasManagePermissions ? { header: common("actions"), accessorKey: "actions" } : null,
           ]}
         />
       )}

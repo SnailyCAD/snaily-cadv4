@@ -15,6 +15,8 @@ import {
   canUseThirdPartyConnections,
   isUnitDisabled,
   omit,
+  isEmpty,
+  getObjLength,
 } from "../src/lib/utils";
 
 const DOB_1 = "1999-03-02";
@@ -292,4 +294,20 @@ test("Should correctly omit values from an object", () => {
   const myObj = { a: 1, b: 2, c: 3, d: 4 };
 
   expect(omit(myObj, ["a", "d"])).toMatchObject({ b: 2, c: 3 });
+});
+
+test("Object should be empty", () => {
+  expect(isEmpty({})).toBe(true);
+});
+
+test("Object should NOT be empty", () => {
+  expect(isEmpty({ a: true, c: true, b: true })).toBe(false);
+});
+
+test("Object keys length should be 3", () => {
+  expect(getObjLength({ a: true, c: true, b: true })).toBe(3);
+});
+
+test("Object keys length should be 0", () => {
+  expect(getObjLength({})).toBe(0);
 });

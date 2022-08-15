@@ -22,9 +22,7 @@ import { AnyValue, DriversLicenseCategoryType, EmployeeAsEnum, ValueType } from 
 import { useTranslations } from "use-intl";
 import { Select } from "components/form/Select";
 import hexColor from "hex-color-regex";
-import { getDisabledFromValue, getValueStrFromValue } from "src/pages/admin/values/[path]";
 import { ModalIds } from "types/ModalIds";
-import { makeDefaultWhatPages } from "lib/admin/values";
 import { DepartmentFields } from "./manage-modal/DepartmentFields";
 import {
   StatusValueFields,
@@ -43,12 +41,18 @@ import {
   isUnitQualification,
   isDLCategoryValue,
   isCallTypeValue,
+  isOfficerRankValue,
 } from "@snailycad/utils/typeguards";
 import { QualificationFields } from "./manage-modal/QualificationFields";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { Textarea } from "components/form/Textarea";
 import { Toggle } from "components/form/Toggle";
 import type { PatchValueByIdData, PostValuesData } from "@snailycad/types/api";
+import {
+  getDisabledFromValue,
+  getValueStrFromValue,
+  makeDefaultWhatPages,
+} from "lib/admin/values/utils";
 
 interface Props {
   type: ValueType;
@@ -204,8 +208,8 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     priority: value && isCallTypeValue(value) ? value.priority ?? undefined : undefined,
 
     officerRankImageId: "",
-    // @ts-expect-error todo: add typeguard for `OFFICER_RANK`
-    officerRankDepartments: value ? defaultDepartments(value) : undefined,
+    officerRankDepartments:
+      value && isOfficerRankValue(value) ? defaultDepartments(value) : undefined,
 
     showPicker: false,
     image: "",

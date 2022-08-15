@@ -183,33 +183,36 @@ export class Calls911Controller {
     }
 
     // reset assignedUnits. find a better way to do this?
-    await Promise.all(
-      call.assignedUnits.map(async ({ id }) => {
-        const unit = await prisma.assignedUnit.delete({
-          where: { id },
-        });
 
-        const types = {
-          officerId: "officer",
-          emsFdDeputyId: "emsFdDeputy",
-          combinedLeoId: "combinedLeoUnit",
-        } as const;
+    if (data.assignedUnits) {
+      await Promise.all(
+        call.assignedUnits.map(async ({ id }) => {
+          const unit = await prisma.assignedUnit.delete({
+            where: { id },
+          });
 
-        for (const type in types) {
-          const key = type as keyof typeof types;
-          const unitId = unit[key];
-          const name = types[key];
+          const types = {
+            officerId: "officer",
+            emsFdDeputyId: "emsFdDeputy",
+            combinedLeoId: "combinedLeoUnit",
+          } as const;
 
-          if (unitId) {
-            // @ts-expect-error they have the same properties for updating
-            await prisma[name].update({
-              where: { id: unitId },
-              data: { activeCallId: null },
-            });
+          for (const type in types) {
+            const key = type as keyof typeof types;
+            const unitId = unit[key];
+            const name = types[key];
+
+            if (unitId) {
+              // @ts-expect-error they have the same properties for updating
+              await prisma[name].update({
+                where: { id: unitId },
+                data: { activeCallId: null },
+              });
+            }
           }
-        }
-      }),
-    );
+        }),
+      );
+    }
 
     const positionData = data.position ?? null;
     const shouldRemovePosition = data.position === null;
@@ -248,22 +251,27 @@ export class Calls911Controller {
     });
 
     const unitIds = (data.assignedUnits ?? []) as string[];
-    await assignUnitsToCall({
-      callId: call.id,
-      maxAssignmentsToCalls,
-      unitIds,
-    });
+
+    if (data.assignedUnits) {
+      await assignUnitsToCall({
+        callId: call.id,
+        maxAssignmentsToCalls,
+        unitIds,
+      });
+    }
 
     await Promise.all([
       this.socket.emitUpdateOfficerStatus(),
       this.socket.emitUpdateDeputyStatus(),
     ]);
 
-    await linkOrUnlinkCallDepartmentsAndDivisions({
-      departments: (data.departments ?? []) as string[],
-      divisions: (data.divisions ?? []) as string[],
-      call,
-    });
+    if (data.departments || data.divisions) {
+      await linkOrUnlinkCallDepartmentsAndDivisions({
+        departments: (data.departments ?? []) as string[],
+        divisions: (data.divisions ?? []) as string[],
+        call,
+      });
+    }
 
     const updated = await prisma.call911.findUnique({
       where: {

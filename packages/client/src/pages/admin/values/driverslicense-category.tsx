@@ -13,17 +13,24 @@ import {
 } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
-import { requestAll } from "lib/utils";
+import { requestAll, yesOrNoText } from "lib/utils";
 import { Input } from "components/form/inputs/Input";
 import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
-import { SortableList } from "components/admin/values/SortableList";
-import { handleFilter } from "./[path]";
 import { Title } from "components/shared/Title";
 import { ModalIds } from "types/ModalIds";
 import { AlertModal } from "components/modal/AlertModal";
 import { Permissions } from "@snailycad/permissions";
 import type { DeleteValueByIdData, PutValuePositionsData } from "@snailycad/types/api";
+import {
+  getCreatedAtFromValue,
+  getDisabledFromValue,
+  getValueStrFromValue,
+  handleFilter,
+  hasTableDataChanged,
+} from "lib/admin/values/utils";
+import { Table, useTableState } from "components/shared/Table";
+import { FullDate } from "components/shared/FullDate";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -46,31 +53,6 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
   const t = useTranslations("Values");
   const typeT = useTranslations(type);
   const common = useTranslations("Common");
-
-  async function setList(clType: DriversLicenseCategoryType, list: DriversLicenseCategoryValue[]) {
-    setValues((p) => {
-      const filtered = p.filter((v) => v.type !== clType);
-
-      return [
-        ...list.map((v, idx) => {
-          const prev = p.find((a) => a.id === v.id);
-
-          if (prev) {
-            prev.value.position = idx;
-          }
-
-          return v;
-        }),
-        ...filtered,
-      ];
-    });
-
-    await execute<PutValuePositionsData>({
-      path: `/admin/values/${type.toLowerCase()}/positions`,
-      method: "PUT",
-      data: { ids: list.map((v) => v.valueId) },
-    });
-  }
 
   function handleDeleteClick(type: DriversLicenseCategoryType, value: DriversLicenseCategoryValue) {
     setTempValue({ value, type });
@@ -152,12 +134,11 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
             {valuesForType.length <= 0 ? (
               <p className="mt-3">There are no values yet for this type.</p>
             ) : (
-              <SortableList
+              <TableList
                 handleDelete={handleDeleteClick.bind(null, type) as any}
                 handleEdit={handleEditClick.bind(null, type) as any}
-                search={search}
+                type={type}
                 values={valuesForType}
-                setList={setList.bind(null, type)}
               />
             )}
           </section>
@@ -198,6 +179,86 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
         type={type}
       />
     </AdminLayout>
+  );
+}
+
+function TableList(props: {
+  type: DriversLicenseCategoryType;
+  values: DriversLicenseCategoryValue[];
+  handleDelete(value: DriversLicenseCategoryValue): void;
+  handleEdit(value: DriversLicenseCategoryValue): void;
+}) {
+  const [values, setValues] = React.useState(props.values);
+  const { execute } = useFetch();
+  const common = useTranslations("Common");
+  const tableState = useTableState({ dragDrop: { onListChange: setList } });
+
+  React.useEffect(() => {
+    setValues(props.values);
+  }, [props.values]);
+
+  async function setList(list: DriversLicenseCategoryValue[]) {
+    if (!hasTableDataChanged(values, list)) return;
+
+    setValues((p) =>
+      list.map((v, idx) => {
+        const prev = p.find((a) => a.id === v.id);
+
+        if (prev) {
+          prev.value.position = idx;
+        }
+
+        return v;
+      }),
+    );
+
+    await execute<PutValuePositionsData>({
+      path: "/admin/values/driverslicense_category/positions",
+      method: "PUT",
+      data: {
+        ids: list.map((v) => {
+          return v.valueId;
+        }),
+      },
+    });
+  }
+
+  return (
+    <Table
+      tableState={tableState}
+      data={values.map((value) => ({
+        id: value.id,
+        rowProps: { value },
+        value: getValueStrFromValue(value),
+        description: value.description || common("none"),
+        isDisabled: common(yesOrNoText(getDisabledFromValue(value))),
+        createdAt: <FullDate>{getCreatedAtFromValue(value)}</FullDate>,
+        actions: (
+          <>
+            <Button size="xs" onClick={() => props.handleEdit(value)} variant="success">
+              {common("edit")}
+            </Button>
+
+            <Button
+              size="xs"
+              onClick={() => props.handleDelete(value)}
+              variant="danger"
+              className="ml-2"
+              // disabled={isValueInUse(value)}
+            >
+              {common("delete")}
+            </Button>
+          </>
+        ),
+      }))}
+      columns={[
+        { header: "Value", accessorKey: "value" },
+        { header: "Description", accessorKey: "description" },
+        { header: "Created At", accessorKey: "createdAt" },
+        { header: "Disabled", accessorKey: "isDisabled" },
+        { header: "Actions", accessorKey: "actions" },
+      ]}
+    />
   );
 }
 

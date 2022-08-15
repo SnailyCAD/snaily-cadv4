@@ -8,7 +8,7 @@ import useFetch from "lib/useFetch";
 import { useNameSearch } from "state/search/nameSearchState";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { Select } from "components/form/Select";
 import { FullDate } from "components/shared/FullDate";
 import type { Warrant } from "@snailycad/types";
@@ -27,6 +27,7 @@ export function NameSearchWarrantsTab() {
   const { generateCallsign } = useGenerateCallsign();
   const { state, execute } = useFetch();
   const { currentResult, setCurrentResult } = useNameSearch();
+  const tableState = useTableState();
 
   async function handleDelete() {
     const warrant = getPayload<Warrant>(ModalIds.AlertRevokeWarrant);
@@ -88,12 +89,14 @@ export function NameSearchWarrantsTab() {
       ) : (
         <>
           <Table
+            tableState={tableState}
             data={currentResult.warrants
               .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
               .map((warrant) => {
                 const value = values.find((v) => v.value === warrant.status.toLowerCase());
 
                 return {
+                  id: warrant.id,
                   officer: warrant.officer
                     ? `${generateCallsign(warrant.officer)} ${makeUnitName(warrant.officer)}`
                     : "—",
@@ -120,10 +123,10 @@ export function NameSearchWarrantsTab() {
                 };
               })}
             columns={[
-              { Header: t("Leo.officer"), accessor: "officer" },
-              { Header: common("description"), accessor: "description" },
-              { Header: common("createdAt"), accessor: "createdAt" },
-              { Header: common("actions"), accessor: "actions" },
+              { header: t("Leo.officer"), accessorKey: "officer" },
+              { header: common("description"), accessorKey: "description" },
+              { header: common("createdAt"), accessorKey: "createdAt" },
+              { header: common("actions"), accessorKey: "actions" },
             ]}
           />
 

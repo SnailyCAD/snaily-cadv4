@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { AssignedWarrantOfficer, Warrant } from "@snailycad/types";
 import { Button } from "components/Button";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
@@ -17,6 +17,9 @@ export function ActiveWarrants() {
   const { generateCallsign } = useGenerateCallsign();
   const [tempWarrant, warrantState] = useTemporaryItem(activeWarrants);
   const t = useTranslations("Leo");
+  const tableState = useTableState({
+    pagination: { pageSize: 12, totalDataCount: activeWarrants.length },
+  });
 
   const { openModal } = useModal();
   const common = useTranslations("Common");
@@ -37,10 +40,14 @@ export function ActiveWarrants() {
   return (
     <div className="overflow-hidden rounded-md card mt-3">
       <header className="flex items-center justify-between p-2 px-4 bg-gray-200 dark:bg-gray-3">
-        <h3 className="text-xl font-semibold">{t("activeWarrants")}</h3>
+        <h1 className="text-xl font-semibold">{t("activeWarrants")}</h1>
 
         <div>
-          <Button onClick={() => openModal(ModalIds.CreateWarrant, { isActive: true })}>
+          <Button
+            variant={null}
+            className="dark:bg-gray-2 dark:hover:bg-dark-bg bg-gray-500 hover:bg-gray-600 text-white"
+            onClick={() => openModal(ModalIds.CreateWarrant, { isActive: true })}
+          >
             {t("createWarrant")}
           </Button>
         </div>
@@ -51,8 +58,10 @@ export function ActiveWarrants() {
           <p className="py-2 text-neutral-700 dark:text-gray-300">{t("noActiveWarrants")}</p>
         ) : (
           <Table
-            isWithinCard
+            tableState={tableState}
+            features={{ isWithinCard: true }}
             data={activeWarrants.filter(isActiveWarrant).map((warrant) => ({
+              id: warrant.id,
               citizen: `${warrant.citizen.name} ${warrant.citizen.surname}`,
               description: warrant.description,
               assignedOfficers:
@@ -66,10 +75,10 @@ export function ActiveWarrants() {
               ),
             }))}
             columns={[
-              { Header: "Citizen", accessor: "citizen" },
-              { Header: common("description"), accessor: "description" },
-              { Header: "assigned Officers", accessor: "assignedOfficers" },
-              { Header: common("actions"), accessor: "actions" },
+              { header: "Citizen", accessorKey: "citizen" },
+              { header: common("description"), accessorKey: "description" },
+              { header: "assigned Officers", accessorKey: "assignedOfficers" },
+              { header: common("actions"), accessorKey: "actions" },
             ]}
           />
         )}

@@ -6,30 +6,31 @@ import { ModalIds } from "types/ModalIds";
 import { Button } from "components/Button";
 import { useModal } from "state/modalState";
 import { CaretDownFill } from "react-bootstrap-icons";
-import type { Full911Call } from "state/dispatchState";
+import type { Full911Call } from "state/dispatch/dispatchState";
 import type { MapCallProps } from "./ActiveMapCalls";
 import { useTranslations } from "next-intl";
 import { Infofield } from "components/shared/Infofield";
 import { isUnitCombined } from "@snailycad/utils";
+import { useCall911State } from "state/dispatch/call911State";
 
 interface CallItemProps extends Omit<MapCallProps, "toggledId" | "openItems" | "setOpenItems"> {
   call: Full911Call;
-  setTempCall: React.Dispatch<React.SetStateAction<Full911Call | null>>;
 }
 
-export function CallItem({ call, setTempCall, hasMarker, setMarker }: CallItemProps) {
+export function CallItem({ call, hasMarker, setMarker }: CallItemProps) {
   const t = useTranslations("Calls");
   const common = useTranslations("Common");
   const { generateCallsign } = useGenerateCallsign();
   const { openModal } = useModal();
+  const { setCurrentlySelectedCall } = useCall911State();
 
   function handleEdit(call: Full911Call) {
     openModal(ModalIds.Manage911Call);
-    setTempCall(call);
+    setCurrentlySelectedCall(call);
   }
 
   function handleViewDescription(call: Full911Call) {
-    setTempCall(call);
+    setCurrentlySelectedCall(call);
     openModal(ModalIds.Description, call);
   }
 

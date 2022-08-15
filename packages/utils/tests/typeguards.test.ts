@@ -41,6 +41,12 @@ const DL_CATEGORY = {
   value: { value: "A", type: ValueType.DRIVERSLICENSE_CATEGORY },
 } as any;
 
+const OFFICER_RANK = {
+  value: "Officer",
+  type: ValueType.OFFICER_RANK,
+  createdAt: new Date(),
+} as any;
+
 test("typeguards.hasValueObj -> VEHICLE_VALUE", () => {
   expect(typeguards.hasValueObj(VEHICLE_VALUE)).toBe(true);
 });
@@ -91,6 +97,10 @@ test("typeguards.isUnitQualification -> QUALIFICATION_VALUE -> true", () => {
 
 test("typeguards.isDLCategoryValue -> DL_CATEGORY -> true", () => {
   expect(typeguards.isDLCategoryValue(DL_CATEGORY)).toBe(true);
+});
+
+test("typeguards.isOfficerRankValue -> OFFICER_RANK -> true", () => {
+  expect(typeguards.isOfficerRankValue(OFFICER_RANK)).toBe(true);
 });
 
 test("typeguards.isUnitOfficer -> OFFICER -> true", () => {

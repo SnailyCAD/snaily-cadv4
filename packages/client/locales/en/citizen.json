@@ -37,6 +37,7 @@
     "create911Call": "Create 911 Call",
     "socialSecurityNumber": "Social Security Number",
     "occupation": "Occupation",
+    "additionalInfo": "Additional Info",
     "manageOccupation": "Manage Occupation",
     "manageLicenses": "Manage Licenses",
     "licenses": "Licenses",

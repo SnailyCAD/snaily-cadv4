@@ -9,7 +9,7 @@ import { getTranslations } from "lib/getTranslation";
 import { useTranslations } from "use-intl";
 import { StatusesArea } from "components/shared/StatusesArea";
 import { useEmsFdState } from "state/emsFdState";
-import { useDispatchState } from "state/dispatchState";
+import { useDispatchState } from "state/dispatch/dispatchState";
 import { requestAll } from "lib/utils";
 import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
 import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
@@ -27,6 +27,7 @@ import type {
   GetEmsFdActiveDeputy,
   GetMyDeputiesData,
 } from "@snailycad/types/api";
+import { useCall911State } from "state/dispatch/call911State";
 
 interface Props {
   activeDeputy: GetEmsFdActiveDeputy | null;
@@ -72,11 +73,12 @@ export default function EmsFDDashboard({
   const panic = usePanicButton();
   const state = useEmsFdState();
   const dispatchState = useDispatchState();
+  const call911State = useCall911State();
 
   React.useEffect(() => {
     state.setActiveDeputy(activeDeputy);
     state.setDeputies(userDeputies);
-    dispatchState.setCalls(calls);
+    call911State.setCalls(calls);
     dispatchState.setActiveDeputies(activeDeputies);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeDeputies, activeDeputy, calls]);

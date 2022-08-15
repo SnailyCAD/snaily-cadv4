@@ -88,6 +88,7 @@ export class AdminManageCitizensController {
   })
   async getRecordLogsForCitizen(): Promise<APITypes.GetManageRecordLogsData> {
     const citizens = await prisma.recordLog.findMany({
+      orderBy: { createdAt: "desc" },
       include: {
         warrant: { include: { officer: { include: leoProperties } } },
         records: { include: recordsInclude },
@@ -185,9 +186,10 @@ export class AdminManageCitizensController {
         driversLicenseId: data.driversLicense || undefined,
         weaponLicenseId: data.weaponLicense || undefined,
         pilotLicenseId: data.pilotLicense || undefined,
-        phoneNumber: data.phoneNumber || null,
+        phoneNumber: data.phoneNumber,
         socialSecurityNumber: generateString(9, { numbersOnly: true }),
-        occupation: data.occupation || null,
+        occupation: data.occupation,
+        additionalInfo: data.additionalInfo,
         imageId: validateImgurURL(data.image),
         userId: data.userId || undefined,
         appearance: data.appearance || undefined,

@@ -183,8 +183,7 @@ export function NameSearchModal() {
   }
 
   const hasWarrants =
-    !currentResult?.isConfidential &&
-    (currentResult?.warrants?.filter((v) => v.status === "ACTIVE").length ?? 0) > 0;
+    !currentResult || currentResult.isConfidential ? false : currentResult.warrants.length > 0;
 
   const INITIAL_VALUES = {
     name: payloadName ?? "",
@@ -385,6 +384,10 @@ export function NameSearchModal() {
 
                         <Infofield className="max-w-[400px]" label={cT("occupation")}>
                           {currentResult.occupation || common("none")}
+                        </Infofield>
+
+                        <Infofield className="max-w-[400px]" label={cT("additionalInfo")}>
+                          {currentResult.additionalInfo || common("none")}
                         </Infofield>
                       </div>
                     </div>

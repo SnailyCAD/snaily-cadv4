@@ -3,12 +3,12 @@ import { useTranslations } from "use-intl";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { makeUnitName, requestAll } from "lib/utils";
+import { getObjLength, isEmpty, makeUnitName, requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import type { AssignedUnit } from "@snailycad/types";
-import { IndeterminateCheckbox, Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { Full911Call, useDispatchState } from "state/dispatchState";
+import { Full911Call, useDispatchState } from "state/dispatch/dispatchState";
 import { Button } from "components/Button";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
@@ -21,11 +21,9 @@ import { Title } from "components/shared/Title";
 import dynamic from "next/dynamic";
 import { FullDate } from "components/shared/FullDate";
 import { AlertModal } from "components/modal/AlertModal";
-import { useTableSelect } from "hooks/shared/useTableSelect";
 import { Manage911CallModal } from "components/dispatch/modals/Manage911CallModal";
 import { isUnitCombined } from "@snailycad/utils";
 import { usePermission, Permissions } from "hooks/usePermission";
-import { Checkbox } from "components/form/inputs/Checkbox";
 import type {
   DeletePurge911CallsData,
   Get911CallsData,
@@ -33,6 +31,7 @@ import type {
   GetIncidentsData,
 } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import { getSelectedTableRows } from "hooks/shared/table/useTableState";
 
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
@@ -51,8 +50,8 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
   const hasManagePermissions = hasPermissions([Permissions.ManageCallHistory], true);
   const [tempCall, callState] = useTemporaryItem(calls);
 
+  const tableState = useTableState({ search: { value: search, setValue: setSearch } });
   const { state, execute } = useFetch();
-  const tableSelect = useTableSelect(calls);
 
   const { openModal, closeModal } = useModal();
   const t = useTranslations("Calls");
@@ -71,14 +70,16 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
   }
 
   async function handlePurge() {
+    const selectedRows = getSelectedTableRows(data, tableState.rowSelection);
+    if (selectedRows.length <= 0) return;
+
     const { json } = await execute<DeletePurge911CallsData>({
       path: "/911-calls/purge",
       method: "DELETE",
-      data: { ids: tableSelect.selectedRows },
+      data: { ids: selectedRows },
     });
 
     if (json) {
-      const selectedRows = tableSelect.selectedRows;
       const updatedCalls = calls.filter((call) => !selectedRows.includes(call.id));
       setCalls(updatedCalls);
 
@@ -127,7 +128,7 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
                   <Button
                     onClick={() => openModal(ModalIds.AlertPurgeCalls)}
                     className="flex items-center gap-2 ml-2 min-w-fit"
-                    disabled={state === "loading" || tableSelect.selectedRows.length <= 0}
+                    disabled={state === "loading" || isEmpty(tableState.rowSelection)}
                   >
                     {state === "loading" ? <Loader /> : null}
                     {t("purgeSelected")}
@@ -138,19 +139,13 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
           </div>
 
           <Table
-            disabledColumnId={["checkbox"]}
-            filter={search}
-            defaultSort={{ columnId: "createdAt", descending: false }}
+            tableState={tableState}
+            features={{ rowSelection: hasManagePermissions }}
             data={calls.map((call) => {
               const caseNumbers = (call.incidents ?? []).map((i) => `#${i.caseNumber}`).join(", ");
 
               return {
-                checkbox: (
-                  <Checkbox
-                    checked={tableSelect.selectedRows.includes(call.id)}
-                    onChange={() => tableSelect.handleCheckboxChange(call)}
-                  />
-                ),
+                id: call.id,
                 rowProps: { call },
                 caller: call.name,
                 location: call.location,
@@ -181,26 +176,14 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
               };
             })}
             columns={[
-              hasManagePermissions
-                ? {
-                    Header: (
-                      <IndeterminateCheckbox
-                        onChange={tableSelect.handleAllCheckboxes}
-                        checked={tableSelect.isTopCheckboxChecked}
-                        indeterminate={tableSelect.isIntermediate}
-                      />
-                    ),
-                    accessor: "checkbox",
-                  }
-                : null,
-              { Header: t("caller"), accessor: "caller" },
-              { Header: t("location"), accessor: "location" },
-              { Header: t("postal"), accessor: "postal" },
-              { Header: common("description"), accessor: "description" },
-              { Header: t("assignedUnits"), accessor: "assignedUnits" },
-              { Header: leo("caseNumbers"), accessor: "caseNumbers" },
-              { Header: common("createdAt"), accessor: "createdAt" },
-              { Header: common("actions"), accessor: "actions" },
+              { header: t("caller"), accessorKey: "caller" },
+              { header: t("location"), accessorKey: "location" },
+              { header: t("postal"), accessorKey: "postal" },
+              { header: common("description"), accessorKey: "description" },
+              { header: t("assignedUnits"), accessorKey: "assignedUnits" },
+              { header: leo("caseNumbers"), accessorKey: "caseNumbers" },
+              { header: common("createdAt"), accessorKey: "createdAt" },
+              { header: common("actions"), accessorKey: "actions" },
             ]}
           />
         </>
@@ -224,7 +207,7 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
       <AlertModal
         title={t("purgeSelectedCalls")}
         description={t.rich("alert_purgeSelectedCalls", {
-          length: tableSelect.selectedRows.length,
+          length: getObjLength(tableState.rowSelection),
         })}
         id={ModalIds.AlertPurgeCalls}
         onDeleteClick={handlePurge}

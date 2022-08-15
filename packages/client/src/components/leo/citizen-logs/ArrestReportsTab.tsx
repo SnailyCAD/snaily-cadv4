@@ -2,7 +2,7 @@ import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { Record, RecordType, WhitelistStatus } from "@snailycad/types";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { FullDate } from "components/shared/FullDate";
 import { TabsContent } from "components/shared/TabList";
@@ -39,6 +39,7 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
   const router = useRouter();
+  const tableState = useTableState({ search: { value: search } });
 
   function handleViewClick(item: CitizenLog) {
     setTempRecord(item.records!);
@@ -69,11 +70,7 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
         <p className="mt-5">{t("noCitizenLogs")}</p>
       ) : (
         <Table
-          filter={search}
-          defaultSort={{
-            columnId: "createdAt",
-            descending: true,
-          }}
+          tableState={tableState}
           data={logs.map((item) => {
             const record = item.records!;
             const type = TYPE_LABELS[record.type];
@@ -83,6 +80,7 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
             const callsign = officer && generateCallsign(officer);
 
             return {
+              id: item.id,
               type,
               citizen: `${item.citizen.name} ${item.citizen.surname}`,
               officer: officer ? `${callsign} ${officerName}` : common("none"),
@@ -128,15 +126,15 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
             };
           })}
           columns={[
-            { Header: common("type"), accessor: "type" },
-            { Header: t("citizen"), accessor: "citizen" },
-            { Header: t("officer"), accessor: "officer" },
-            { Header: t("postal"), accessor: "postal" },
-            { Header: t("status"), accessor: "status" },
-            { Header: t("notes"), accessor: "notes" },
-            { Header: t("violations"), accessor: "violations" },
-            { Header: common("createdAt"), accessor: "createdAt" },
-            { Header: common("actions"), accessor: "actions" },
+            { header: common("type"), accessorKey: "type" },
+            { header: t("citizen"), accessorKey: "citizen" },
+            { header: t("officer"), accessorKey: "officer" },
+            { header: t("postal"), accessorKey: "postal" },
+            { header: t("status"), accessorKey: "status" },
+            { header: t("notes"), accessorKey: "notes" },
+            { header: t("violations"), accessorKey: "violations" },
+            { header: common("createdAt"), accessorKey: "createdAt" },
+            { header: common("actions"), accessorKey: "actions" },
           ]}
         />
       )}

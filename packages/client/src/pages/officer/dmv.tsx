@@ -7,7 +7,7 @@ import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import { WhitelistStatus } from "@snailycad/types";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { Permissions } from "hooks/usePermission";
@@ -25,6 +25,7 @@ export default function Dmv({ data }: Props) {
   const vT = useTranslations("Vehicles");
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
+  const tableState = useTableState();
 
   async function handleAcceptOrDecline(id: string, type: "ACCEPT" | "DECLINE") {
     const { json } = await execute<PostDMVVehiclesData>({
@@ -56,9 +57,10 @@ export default function Dmv({ data }: Props) {
         <p className="mt-5">{t("noVehiclesPendingApprovalInDmv")}</p>
       ) : (
         <Table
-          defaultSort={{ columnId: "createdAt", descending: true }}
+          tableState={tableState}
           data={pendingVehicles.map((vehicle) => {
             return {
+              id: vehicle.id,
               citizen: `${vehicle.citizen.name} ${vehicle.citizen.surname}`,
               createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
               plate: vehicle.plate,
@@ -94,15 +96,15 @@ export default function Dmv({ data }: Props) {
             };
           })}
           columns={[
-            { Header: vT("plate"), accessor: "plate" },
-            { Header: vT("model"), accessor: "model" },
-            { Header: vT("color"), accessor: "color" },
-            { Header: vT("registrationStatus"), accessor: "registrationStatus" },
-            { Header: vT("insuranceStatus"), accessor: "insuranceStatus" },
-            { Header: vT("vinNumber"), accessor: "vinNumber" },
-            { Header: vT("dmvStatus"), accessor: "dmvStatus" },
-            { Header: common("createdAt"), accessor: "createdAt" },
-            { Header: common("actions"), accessor: "actions" },
+            { header: vT("plate"), accessorKey: "plate" },
+            { header: vT("model"), accessorKey: "model" },
+            { header: vT("color"), accessorKey: "color" },
+            { header: vT("registrationStatus"), accessorKey: "registrationStatus" },
+            { header: vT("insuranceStatus"), accessorKey: "insuranceStatus" },
+            { header: vT("vinNumber"), accessorKey: "vinNumber" },
+            { header: vT("dmvStatus"), accessorKey: "dmvStatus" },
+            { header: common("createdAt"), accessorKey: "createdAt" },
+            { header: common("actions"), accessorKey: "actions" },
           ]}
         />
       )}

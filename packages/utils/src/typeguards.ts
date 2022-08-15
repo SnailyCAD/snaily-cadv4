@@ -70,6 +70,10 @@ export function isCallTypeValue(value: AnyValue): value is CallTypeValue {
   return hasValueObj(value) && value.value.type === ValueType.CALL_TYPE;
 }
 
+export function isOfficerRankValue(value: AnyValue): value is Value & { type: "OFFICER_RANK" } {
+  return isBaseValue(value) && value.type === ValueType.OFFICER_RANK;
+}
+
 export function isUnitCombined(
   unit: Officer | CombinedLeoUnit | EmsFdDeputy,
 ): unit is CombinedLeoUnit {

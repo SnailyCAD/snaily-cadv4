@@ -1,4 +1,5 @@
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
+import type { z } from "zod";
 import {
   CREATE_TICKET_SCHEMA,
   CREATE_WARRANT_SCHEMA,
@@ -7,7 +8,7 @@ import {
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
-import { UseBeforeEach } from "@tsed/platform-middlewares";
+import { UseBeforeEach, UseBefore } from "@tsed/platform-middlewares";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Controller } from "@tsed/di";
 import { IsAuth } from "middlewares/IsAuth";
@@ -44,7 +45,7 @@ const assignedOfficersInclude = {
   officer: { include: leoProperties },
 };
 
-@UseBeforeEach(IsAuth, ActiveOfficer)
+@UseBeforeEach(IsAuth)
 @Controller("/records")
 export class RecordsController {
   private socket: Socket;
@@ -56,6 +57,7 @@ export class RecordsController {
   @Description("Get all active warrants (ACTIVE_WARRANTS must be enabled)")
   async getActiveWarrants() {
     const activeWarrants = await prisma.warrant.findMany({
+      orderBy: { updatedAt: "desc" },
       where: { status: "ACTIVE" },
       include: {
         citizen: true,
@@ -66,6 +68,7 @@ export class RecordsController {
     return activeWarrants.map((warrant) => officerOrDeputyToUnit(warrant));
   }
 
+  @UseBefore(ActiveOfficer)
   @Post("/create-warrant")
   @Description("Create a new warrant")
   @UsePermissions({
@@ -96,10 +99,6 @@ export class RecordsController {
         description: data.description,
         status: data.status as WarrantStatus,
       },
-      include: {
-        citizen: true,
-        assignedOfficers: { include: assignedOfficersInclude },
-      },
     });
 
     await assignUnitsToWarrant({
@@ -113,6 +112,7 @@ export class RecordsController {
       include: {
         citizen: true,
         officer: true,
+        assignedOfficers: { include: assignedOfficersInclude },
       },
     });
 
@@ -131,6 +131,7 @@ export class RecordsController {
     return normalizedWarrant;
   }
 
+  @UseBefore(ActiveOfficer)
   @Put("/warrant/:id")
   @Description("Update a warrant by its id")
   @UsePermissions({
@@ -187,6 +188,7 @@ export class RecordsController {
     return normalizedWarrant;
   }
 
+  @UseBefore(ActiveOfficer)
   @Post("/")
   @Description("Create a new ticket, written warning or arrest report")
   @UsePermissions({
@@ -201,93 +203,23 @@ export class RecordsController {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
     const officer = getFirstOfficerFromActiveOfficer({ activeOfficer, allowDispatch: true });
 
-    const citizen = await prisma.citizen.findUnique({
-      where: {
-        id: data.citizenId,
-      },
+    const recordItem = await this.upsertRecord({
+      data,
+      cad,
+      officer,
+      recordId: null,
     });
-
-    if (!citizen) {
-      throw new ExtendedNotFound({ citizenId: "citizenNotFound" });
-    }
-
-    const isApprovalEnabled = isFeatureEnabled({
-      defaultReturn: false,
-      feature: Feature.CITIZEN_RECORD_APPROVAL,
-      features: cad.features,
-    });
-    const recordStatus = isApprovalEnabled ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED;
-
-    const ticket = await prisma.record.create({
-      data: {
-        type: data.type as RecordType,
-        citizenId: citizen.id,
-        officerId: officer?.id ?? null,
-        notes: data.notes,
-        postal: String(data.postal),
-        status: recordStatus,
-      },
-      include: {
-        officer: { include: leoProperties },
-        citizen: true,
-      },
-    });
-
-    if (ticket.type === "ARREST_REPORT") {
-      await prisma.citizen.update({
-        where: { id: citizen.id },
-        data: { arrested: true },
-      });
-    }
-
-    const violations = await Promise.all(
-      data.violations.map(async (rawItem) => {
-        const item = await validateRecordData({
-          ...rawItem,
-          ticketId: ticket.id,
-          cad,
-        });
-
-        return prisma.violation.create({
-          data: {
-            fine: item.fine,
-            bail: item.bail,
-            jailTime: item.jailTime,
-            penalCode: { connect: { id: item.penalCodeId } },
-            records: { connect: { id: ticket.id } },
-          },
-          include: {
-            penalCode: { include: { warningApplicable: true, warningNotApplicable: true } },
-          },
-        });
-      }),
-    );
-
-    const seizedItems = await Promise.all(
-      (data.seizedItems ?? []).map(async (item) => {
-        return prisma.seizedItem.create({
-          data: {
-            item: item.item,
-            illegal: item.illegal ?? false,
-            quantity: item.quantity ?? 1,
-            recordId: ticket.id,
-          },
-        });
-      }),
-    );
 
     await prisma.recordLog.create({
-      data: {
-        citizenId: citizen.id,
-        recordId: ticket.id,
-      },
+      data: { citizenId: recordItem.citizenId, recordId: recordItem.id },
     });
 
-    await this.handleDiscordWebhook({ ...ticket, violations });
+    await this.handleDiscordWebhook(recordItem);
 
-    return { ...ticket, violations, seizedItems };
+    return recordItem;
   }
 
+  @UseBefore(ActiveOfficer)
   @Put("/record/:id")
   @Description("Update a ticket, written warning or arrest report by its id")
   @UsePermissions({
@@ -301,68 +233,17 @@ export class RecordsController {
   ): Promise<APITypes.PutRecordsByIdData> {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
 
-    const record = await prisma.record.findUnique({
-      where: { id: recordId },
-      include: { violations: true, seizedItems: true },
+    const recordItem = await this.upsertRecord({
+      data,
+      cad,
+      recordId,
+      officer: null,
     });
 
-    if (!record) {
-      throw new NotFound("notFound");
-    }
-
-    const validatedViolations = await Promise.all(
-      data.violations.map(async (v) => validateRecordData({ ...v, ticketId: record.id, cad })),
-    );
-
-    await unlinkViolations(record.violations);
-    await unlinkSeizedItems(record.seizedItems);
-
-    const updated = await prisma.record.update({
-      where: { id: recordId },
-      data: {
-        notes: data.notes,
-        postal: data.postal,
-      },
-      include: { officer: { include: leoProperties } },
-    });
-
-    const violations = await prisma.$transaction(
-      validatedViolations.map((item) => {
-        return prisma.violation.create({
-          data: {
-            fine: item.fine,
-            bail: item.bail,
-            jailTime: item.jailTime,
-            penalCode: {
-              connect: {
-                id: item.penalCodeId,
-              },
-            },
-            records: { connect: { id: updated.id } },
-          },
-          include: {
-            penalCode: { include: { warningApplicable: true, warningNotApplicable: true } },
-          },
-        });
-      }),
-    );
-
-    const seizedItems = await prisma.$transaction(
-      (data.seizedItems ?? []).map((item) => {
-        return prisma.seizedItem.create({
-          data: {
-            item: item.item,
-            illegal: item.illegal ?? false,
-            quantity: item.quantity ?? 1,
-            recordId: updated.id,
-          },
-        });
-      }),
-    );
-
-    return { ...updated, violations, seizedItems };
+    return recordItem;
   }
 
+  @UseBefore(ActiveOfficer)
   @Delete("/:id")
   @Description("Delete a ticket, written warning or arrest report by its id")
   @UsePermissions({
@@ -399,6 +280,106 @@ export class RecordsController {
     });
 
     return true;
+  }
+
+  private async upsertRecord({
+    data,
+    cad,
+    recordId,
+    officer,
+  }: {
+    data: z.infer<typeof CREATE_TICKET_SCHEMA>;
+    recordId: string | null;
+    cad: any;
+    officer: Officer | null;
+  }) {
+    if (recordId) {
+      const record = await prisma.record.findUnique({
+        where: { id: recordId },
+        include: { violations: true, seizedItems: true },
+      });
+
+      if (!record) {
+        throw new NotFound("notFound");
+      }
+
+      await Promise.all([
+        unlinkViolations(record.violations),
+        unlinkSeizedItems(record.seizedItems),
+      ]);
+    }
+
+    const citizen = await prisma.citizen.findUnique({
+      where: { id: data.citizenId },
+    });
+
+    if (!citizen) {
+      throw new ExtendedNotFound({ citizenId: "citizenNotFound" });
+    }
+
+    const isApprovalEnabled = isFeatureEnabled({
+      defaultReturn: false,
+      feature: Feature.CITIZEN_RECORD_APPROVAL,
+      features: cad.features,
+    });
+    const recordStatus = isApprovalEnabled ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED;
+
+    const ticket = await prisma.record.upsert({
+      where: { id: String(recordId) },
+      create: {
+        type: data.type as RecordType,
+        citizenId: citizen.id,
+        officerId: officer?.id ?? null,
+        notes: data.notes,
+        postal: String(data.postal),
+        status: recordStatus,
+      },
+      update: { notes: data.notes, postal: data.postal },
+      include: { officer: { include: leoProperties }, citizen: true },
+    });
+
+    if (ticket.type === "ARREST_REPORT" && !recordId) {
+      await prisma.citizen.update({
+        where: { id: citizen.id },
+        data: { arrested: true },
+      });
+    }
+
+    const validatedViolations = await Promise.all(
+      data.violations.map(async (v) => validateRecordData({ ...v, ticketId: ticket.id, cad })),
+    );
+
+    const violations = await prisma.$transaction(
+      validatedViolations.map((item) => {
+        return prisma.violation.create({
+          data: {
+            fine: item.fine,
+            bail: item.bail,
+            jailTime: item.jailTime,
+            penalCode: { connect: { id: item.penalCodeId } },
+            records: { connect: { id: ticket.id } },
+          },
+          include: {
+            penalCode: { include: { warningApplicable: true, warningNotApplicable: true } },
+          },
+        });
+      }),
+    );
+
+    const seizedItems = await prisma.$transaction(
+      (data.seizedItems ?? []).map((item) => {
+        return prisma.seizedItem.create({
+          data: {
+            item: item.item,
+            illegal: item.illegal ?? false,
+            quantity: item.quantity ?? 1,
+            recordId: ticket.id,
+          },
+        });
+      }),
+    );
+
+    return { ...ticket, violations, seizedItems };
   }
 
   private async handleDiscordWebhook(

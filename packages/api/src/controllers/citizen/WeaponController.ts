@@ -14,10 +14,14 @@ import { generateString } from "utils/generateString";
 import { citizenInclude } from "./CitizenController";
 import type * as APITypes from "@snailycad/types/api";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import type { Weapon } from "@snailycad/types";
 
 @Controller("/weapons")
 @UseBeforeEach(IsAuth)
 export class WeaponController {
+  private MAX_ITEMS_PER_TABLE_PAGE = 12;
+  private SERIAL_NUMBER_LENGTH = 10;
+
   @Get("/:citizenId")
   async getCitizenWeapons(
     @PathParams("citizenId") citizenId: string,
@@ -52,7 +56,7 @@ export class WeaponController {
       prisma.weapon.count({ where }),
       prisma.weapon.findMany({
         where,
-        take: 12,
+        take: this.MAX_ITEMS_PER_TABLE_PAGE,
         skip,
         include: citizenInclude.weapons.include,
         orderBy: { createdAt: "desc" },
@@ -122,7 +126,7 @@ export class WeaponController {
       data: {
         citizenId: citizen.id,
         registrationStatusId: data.registrationStatus as string,
-        serialNumber: data.serialNumber || generateString(10),
+        serialNumber: await this.generateOrValidateSerialNumber(data.serialNumber || null),
         userId: user.id || undefined,
         modelId,
       },
@@ -162,7 +166,9 @@ export class WeaponController {
       data: {
         modelId: data.model,
         registrationStatusId: data.registrationStatus as string,
-        serialNumber: data.serialNumber || weapon.serialNumber,
+        serialNumber: data.serialNumber
+          ? await this.generateOrValidateSerialNumber(data.serialNumber, weapon)
+          : undefined,
       },
       include: citizenInclude.weapons.include,
     });
@@ -197,5 +203,29 @@ export class WeaponController {
     });
 
     return true;
+  }
+
+  private async generateOrValidateSerialNumber(
+    _serialNumber?: string | null,
+    weapon?: Pick<Weapon, "id">,
+  ): Promise<string> {
+    const serialNumber = _serialNumber ?? generateString(this.SERIAL_NUMBER_LENGTH);
+
+    const existing = await prisma.weapon.findFirst({
+      where: {
+        serialNumber: { mode: "insensitive", equals: serialNumber },
+        NOT: weapon ? { id: weapon.id } : undefined,
+      },
+    });
+
+    if (!existing) {
+      return serialNumber;
+    }
+
+    if (_serialNumber) {
+      throw new ExtendedBadRequest({ serialNumber: "serialNumberInUse" });
+    }
+
+    return this.generateOrValidateSerialNumber(_serialNumber, weapon);
   }
 }

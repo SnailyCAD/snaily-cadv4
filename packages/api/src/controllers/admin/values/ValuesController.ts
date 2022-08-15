@@ -9,8 +9,7 @@ import {
   PlatformMulterFile,
   Context,
 } from "@tsed/common";
-import process from "node:process";
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import { Delete, Description, Patch, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsValidPath } from "middlewares/ValidPath";
@@ -23,6 +22,9 @@ import { ValueType } from "@prisma/client";
 import { UsePermissions } from "middlewares/UsePermissions";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import type * as APITypes from "@snailycad/types/api";
+import { getImageWebPPath } from "utils/image";
+import { BULK_DELETE_SCHEMA } from "@snailycad/schemas";
+import { validateSchema } from "lib/validateSchema";
 
 const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
   QUALIFICATION: {
@@ -59,6 +61,13 @@ export class ValuesController {
       paths.map(async (path) => {
         const type = getTypeFromPath(path);
 
+        // @ts-expect-error ignore this is safe.
+        if (type === "PENAL_CODE_GROUP") {
+          throw new BadRequest(
+            "`penal_code_group` must use the `/v1/admin/penal-code-group` API route (POST, PUT, DELETE).",
+          );
+        }
+
         const data = GET_VALUES[type];
         if (data) {
           return {
@@ -66,7 +75,11 @@ export class ValuesController {
             groups: [],
             // @ts-expect-error ignore
             values: await prisma[data.name].findMany({
-              include: { ...(data.include ?? {}), value: true },
+              include: {
+                ...(data.include ?? {}),
+                _count: true,
+                value: true,
+              },
               orderBy: { value: { position: "asc" } },
             }),
           };
@@ -93,10 +106,12 @@ export class ValuesController {
           values: await prisma.value.findMany({
             where: { type },
             orderBy: { position: "asc" },
-            include:
-              type === ValueType.OFFICER_RANK
+            include: {
+              _count: true,
+              ...(type === ValueType.OFFICER_RANK
                 ? { officerRankDepartments: { include: { value: true } } }
-                : undefined,
+                : {}),
+            },
           }),
         };
       }),
@@ -168,23 +183,21 @@ export class ValuesController {
       }
     }
 
-    // "image/png" -> "png"
-    const extension = file.mimetype.split("/")[file.mimetype.split("/").length - 1];
-    const path = `${process.cwd()}/public/values/${id}.${extension}`;
+    const image = await getImageWebPPath({ buffer: file.buffer, pathType: "values", id });
 
-    await fs.writeFileSync(path, file.buffer);
+    await fs.writeFile(image.path, image.buffer);
 
     let data;
     if (type === ValueType.QUALIFICATION) {
       data = await prisma.qualificationValue.update({
         where: { id },
-        data: { imageId: `${id}.${extension}` },
+        data: { imageId: image.fileName },
         select: { imageId: true },
       });
     } else if (type === ValueType.OFFICER_RANK) {
       data = await prisma.value.update({
         where: { id },
-        data: { officerRankImageId: `${id}.${extension}` },
+        data: { officerRankImageId: image.fileName },
         select: { officerRankImageId: true },
       });
     }
@@ -230,9 +243,9 @@ export class ValuesController {
     @BodyParams() body: unknown,
   ): Promise<APITypes.DeleteValuesBulkData> {
     const type = getTypeFromPath(path);
-    const ids = body as string[];
+    const data = validateSchema(BULK_DELETE_SCHEMA, body);
 
-    const arr = await Promise.all(ids.map(async (id) => this.deleteById(type, id)));
+    const arr = await Promise.all(data.map(async (id) => this.deleteById(type, id)));
 
     return arr.every((v) => v);
   }

@@ -12,7 +12,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { EmsFdDeputy, StatusViewMode } from "@snailycad/types";
 import { useAuth } from "context/AuthContext";
 
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { UnitRadioChannelModal } from "./active-units/UnitRadioChannelModal";
@@ -21,13 +21,13 @@ import { classNames } from "lib/classNames";
 import { Filter } from "react-bootstrap-icons";
 import { ActiveUnitsSearch } from "./active-units/ActiveUnitsSearch";
 import { useActiveUnitsFilter } from "hooks/shared/useActiveUnitsFilter";
-import { useDispatchState } from "state/dispatchState";
 import { ActiveCallColumn } from "./active-units/officers/ActiveCallColumn";
 import { ActiveIncidentColumn } from "./active-units/officers/ActiveIncidentColumn";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { DeputyColumn } from "./active-units/deputies/DeputyColumn";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useMounted } from "@casper124578/useful";
+import { useCall911State } from "state/dispatch/call911State";
 
 interface Props {
   initialDeputies: EmsFdDeputy[];
@@ -48,7 +48,8 @@ function ActiveDeputies({ initialDeputies }: Props) {
   const { BADGE_NUMBERS, RADIO_CHANNEL_MANAGEMENT, ACTIVE_INCIDENTS } = useFeatureEnabled();
   const { emsSearch, showEmsFilters, setShowFilters } = useActiveUnitsState();
   const { handleFilter } = useActiveUnitsFilter();
-  const { calls } = useDispatchState();
+  const { calls } = useCall911State();
+  const tableState = useTableState();
 
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
@@ -91,7 +92,8 @@ function ActiveDeputies({ initialDeputies }: Props) {
           <ActiveUnitsSearch type="ems-fd" />
 
           <Table
-            isWithinCard
+            tableState={tableState}
+            features={{ isWithinCard: true }}
             containerProps={{ className: "mb-3 px-4" }}
             data={activeDeputies
               .filter((deputy) => handleFilter(deputy, emsSearch))
@@ -106,6 +108,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
                 const nameAndCallsign = `${generateCallsign(deputy)} ${makeUnitName(deputy)}`;
 
                 return {
+                  id: deputy.id,
                   rowProps: { style: { background: !useDot ? color ?? undefined : undefined } },
                   name: nameAndCallsign,
                   deputy: (
@@ -148,18 +151,18 @@ function ActiveDeputies({ initialDeputies }: Props) {
                 };
               })}
             columns={[
-              { Header: t("Ems.deputy"), accessor: "deputy" },
-              BADGE_NUMBERS ? { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" } : null,
-              { Header: t("Leo.department"), accessor: "department" },
-              { Header: t("Leo.division"), accessor: "division" },
-              { Header: t("Leo.rank"), accessor: "rank" },
-              { Header: t("Leo.status"), accessor: "status" },
+              { header: t("Ems.deputy"), accessorKey: "deputy" },
+              BADGE_NUMBERS ? { header: t("Leo.badgeNumber"), accessorKey: "badgeNumber" } : null,
+              { header: t("Leo.department"), accessorKey: "department" },
+              { header: t("Leo.division"), accessorKey: "division" },
+              { header: t("Leo.rank"), accessorKey: "rank" },
+              { header: t("Leo.status"), accessorKey: "status" },
               RADIO_CHANNEL_MANAGEMENT
-                ? { Header: t("Leo.radioChannel"), accessor: "radioChannel" }
+                ? { header: t("Leo.radioChannel"), accessorKey: "radioChannel" }
                 : null,
-              ACTIVE_INCIDENTS ? { Header: t("Leo.incident"), accessor: "incident" } : null,
-              { Header: t("Leo.activeCall"), accessor: "activeCall" },
-              isDispatch ? { Header: common("actions"), accessor: "actions" } : null,
+              ACTIVE_INCIDENTS ? { header: t("Leo.incident"), accessorKey: "incident" } : null,
+              { header: t("Leo.activeCall"), accessorKey: "activeCall" },
+              isDispatch ? { header: common("actions"), accessorKey: "actions" } : null,
             ]}
           />
         </>

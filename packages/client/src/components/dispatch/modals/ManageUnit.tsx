@@ -11,7 +11,7 @@ import { Loader } from "components/Loader";
 import { Select } from "components/form/Select";
 import type { ActiveOfficer } from "state/leoState";
 import { useValues } from "context/ValuesContext";
-import { useDispatchState } from "state/dispatchState";
+import { useDispatchState } from "state/dispatch/dispatchState";
 import type { ActiveDeputy } from "state/emsFdState";
 import { makeUnitName } from "lib/utils";
 import { CombinedLeoUnit, StatusValueType, StatusValue } from "@snailycad/types";

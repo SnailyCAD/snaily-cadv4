@@ -11,7 +11,7 @@ import { Button } from "components/Button";
 import { Pencil, X } from "react-bootstrap-icons";
 import { AlertModal } from "components/modal/AlertModal";
 import type { Delete911CallEventByIdData, DeleteIncidentEventByIdData } from "@snailycad/types/api";
-import type { Full911Call } from "state/dispatchState";
+import type { Full911Call } from "state/dispatch/dispatchState";
 
 interface EventItemProps<T extends IncidentEvent | Call911Event> {
   disabled?: boolean;

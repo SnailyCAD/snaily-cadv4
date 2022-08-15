@@ -1,5 +1,5 @@
 import { FullDate } from "components/shared/FullDate";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { Status } from "components/shared/Status";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useTranslations } from "use-intl";
@@ -18,6 +18,7 @@ export function NameSearchVehiclesTab() {
   const { currentResult } = useNameSearch();
   const { openModal } = useModal();
   const { setCurrentResult: setVehicleResult } = useVehicleSearch();
+  const tableState = useTableState();
 
   function handlePlateClick(vehicle: VehicleSearchResult) {
     if (!currentResult || currentResult.isConfidential) return;
@@ -38,7 +39,9 @@ export function NameSearchVehiclesTab() {
         <p className="text-neutral-700 dark:text-gray-400 my-2">{t("Leo.noVehiclesCitizen")}</p>
       ) : (
         <Table
+          tableState={tableState}
           data={currentResult.vehicles.map((vehicle) => ({
+            id: vehicle.id,
             plate: (
               <Button
                 title={common("openInSearch")}
@@ -59,13 +62,13 @@ export function NameSearchVehiclesTab() {
             createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
           }))}
           columns={[
-            { Header: t("Vehicles.plate"), accessor: "plate" },
-            { Header: t("Vehicles.model"), accessor: "model" },
-            { Header: t("Vehicles.color"), accessor: "color" },
-            { Header: t("Vehicles.registrationStatus"), accessor: "registrationStatus" },
-            { Header: t("Vehicles.vinNumber"), accessor: "vinNumber" },
-            DMV ? { Header: t("Vehicles.dmvStatus"), accessor: "dmvStatus" } : null,
-            { Header: common("createdAt"), accessor: "createdAt" },
+            { header: t("Vehicles.plate"), accessorKey: "plate" },
+            { header: t("Vehicles.model"), accessorKey: "model" },
+            { header: t("Vehicles.color"), accessorKey: "color" },
+            { header: t("Vehicles.registrationStatus"), accessorKey: "registrationStatus" },
+            { header: t("Vehicles.vinNumber"), accessorKey: "vinNumber" },
+            DMV ? { header: t("Vehicles.dmvStatus"), accessorKey: "dmvStatus" } : null,
+            { header: common("createdAt"), accessorKey: "createdAt" },
           ]}
         />
       )}

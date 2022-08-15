@@ -37,6 +37,7 @@
     "create911Call": "Appeler le 911",
     "socialSecurityNumber": "Numéro de Sécurité Sociale",
     "occupation": "Profession",
+    "additionalInfo": "Infos supplémentaires",
     "manageOccupation": "Gérer la profession",
     "manageLicenses": "Gérer les permis / licences",
     "licenses": "Licences",

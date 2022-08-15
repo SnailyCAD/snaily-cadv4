@@ -10,7 +10,7 @@ import useFetch from "lib/useFetch";
 import { RegisterVehicleModal } from "components/citizen/vehicles/modals/RegisterVehicleModal";
 import { AlertModal } from "components/modal/AlertModal";
 import { FullDate } from "components/shared/FullDate";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import type { DeleteCitizenVehicleData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
@@ -20,6 +20,7 @@ export function VehiclesTab() {
   const common = useTranslations("Common");
   const bus = useTranslations("Business");
   const t = useTranslations();
+  const tableState = useTableState();
 
   const { currentBusiness, currentEmployee, setCurrentBusiness } = useBusinessState();
   const vehicles = currentBusiness?.vehicles ?? [];
@@ -74,7 +75,9 @@ export function VehiclesTab() {
         <p className="mt-2">{t("Business.noVehicles")}</p>
       ) : (
         <Table
+          tableState={tableState}
           data={vehicles.map((vehicle) => ({
+            id: vehicle.id,
             plate: vehicle.plate,
             model: vehicle.model.value.value,
             color: vehicle.color,
@@ -104,13 +107,13 @@ export function VehiclesTab() {
             ),
           }))}
           columns={[
-            { Header: t("Vehicles.plate"), accessor: "plate" },
-            { Header: t("Vehicles.model"), accessor: "model" },
-            { Header: t("Vehicles.color"), accessor: "color" },
-            { Header: t("Vehicles.registrationStatus"), accessor: "registrationStatus" },
-            { Header: t("Vehicles.vinNumber"), accessor: "vinNumber" },
-            { Header: common("createdAt"), accessor: "createdAt" },
-            { Header: common("actions"), accessor: "actions" },
+            { header: t("Vehicles.plate"), accessorKey: "plate" },
+            { header: t("Vehicles.model"), accessorKey: "model" },
+            { header: t("Vehicles.color"), accessorKey: "color" },
+            { header: t("Vehicles.registrationStatus"), accessorKey: "registrationStatus" },
+            { header: t("Vehicles.vinNumber"), accessorKey: "vinNumber" },
+            { header: common("createdAt"), accessorKey: "createdAt" },
+            { header: common("actions"), accessorKey: "actions" },
           ]}
         />
       )}

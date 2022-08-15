@@ -18,6 +18,7 @@ export class NameChangeRequestController {
     const requests = await prisma.nameChangeRequest.findMany({
       where: { userId: user.id },
       include: { citizen: true },
+      orderBy: { createdAt: "desc" },
     });
 
     return requests;

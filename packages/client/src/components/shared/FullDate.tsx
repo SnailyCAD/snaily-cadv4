@@ -1,18 +1,23 @@
 import { useMounted } from "@casper124578/useful";
-import type { HoverCardProps } from "@radix-ui/react-hover-card";
 import format from "date-fns/format";
 import { formatDate } from "lib/utils";
-import { HoverCard } from "./HoverCard";
+import { HoverCardProps, HoverCard } from "./HoverCard";
 
-interface Props extends Omit<HoverCardProps, "children"> {
+interface Props extends Omit<HoverCardProps, "trigger" | "children"> {
   children: Date | string | number;
   onlyDate?: boolean;
   isDateOfBirth?: boolean;
 }
 
-export function FullDate({ children, onlyDate, isDateOfBirth }: Props) {
+export function FullDate({ children, onlyDate, isDateOfBirth, ...rest }: Props) {
   const isMounted = useMounted();
   const hmsString = onlyDate ? "" : "HH:mm:ss";
+
+  const isCorrectDate = isValidDate(children);
+  if (!isCorrectDate) {
+    return <span>Invalid Date</span>;
+  }
+
   let date = new Date(children).getTime();
 
   if (isDateOfBirth) {
@@ -23,8 +28,21 @@ export function FullDate({ children, onlyDate, isDateOfBirth }: Props) {
   const trigger = formatDate(children, { onlyDate: onlyDate ?? false });
 
   return (
-    <HoverCard openDelay={100} trigger={<span>{isMounted ? trigger : null}</span>}>
+    <HoverCard
+      openDelay={100}
+      trigger={<span className="z-30">{isMounted ? trigger : null}</span>}
+      {...rest}
+    >
       <span className="font-semibold">{formatted}</span>
     </HoverCard>
   );
+}
+
+function isValidDate(children: any) {
+  try {
+    new Date(children);
+    return true;
+  } catch {
+    return false;
+  }
 }

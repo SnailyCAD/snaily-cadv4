@@ -1,5 +1,6 @@
 import { Bolo, ShouldDoType, BoloType } from "@snailycad/types";
 import { Button } from "components/Button";
+import { FullDate } from "components/shared/FullDate";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
@@ -67,6 +68,13 @@ export function BoloItem({ idx, bolo, handleDelete, handleEdit }: BoloItemProps)
               ? `${generateCallsign(bolo.officer)} ${makeUnitName(bolo.officer)}`
               : t("Leo.dispatch")}
           </p>
+
+          <div>
+            <span className="font-semibold">{common("createdAt")}: </span>
+            <FullDate side="top" onlyDate>
+              {bolo.createdAt}
+            </FullDate>
+          </div>
         </div>
       </div>
       <div className="ml-2 min-w-fit">

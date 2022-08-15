@@ -13,7 +13,7 @@ import { useAuth } from "context/AuthContext";
 import { CombinedLeoUnit, StatusViewMode, Officer } from "@snailycad/types";
 import { Filter } from "react-bootstrap-icons";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
-import { Table } from "components/shared/Table";
+import { useTableState, Table } from "components/shared/Table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { UnitRadioChannelModal } from "./active-units/UnitRadioChannelModal";
 import { ActiveUnitsSearch } from "./active-units/ActiveUnitsSearch";
@@ -27,18 +27,22 @@ import { ActiveIncidentColumn } from "./active-units/officers/ActiveIncidentColu
 import { ActiveCallColumn } from "./active-units/officers/ActiveCallColumn";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { HoverCard } from "components/shared/HoverCard";
-import { useDispatchState } from "state/dispatchState";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useMounted } from "@casper124578/useful";
+import { useCall911State } from "state/dispatch/call911State";
 
 interface Props {
   initialOfficers: ActiveOfficer[];
 }
 
 function ActiveOfficers({ initialOfficers }: Props) {
+  const tableState = useTableState({
+    pagination: { pageSize: 12, totalDataCount: initialOfficers.length },
+  });
+
   const { activeOfficers: _activeOfficers } = useActiveOfficers();
   const { activeIncidents } = useActiveIncidents();
-  const { calls } = useDispatchState();
+  const { calls } = useCall911State();
   const isMounted = useMounted();
   const activeOfficers = isMounted ? _activeOfficers : initialOfficers;
 
@@ -94,8 +98,9 @@ function ActiveOfficers({ initialOfficers }: Props) {
           <ActiveUnitsSearch type="leo" />
 
           <Table
-            isWithinCard
+            features={{ isWithinCard: true }}
             containerProps={{ className: "mb-3 px-4" }}
+            tableState={tableState}
             data={activeOfficers
               .filter((officer) => handleFilter(officer, leoSearch))
               .map((officer) => {
@@ -109,6 +114,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
                 const nameAndCallsign = `${generateCallsign(officer)} ${makeUnitName(officer)}`;
 
                 return {
+                  id: officer.id,
                   rowProps: { style: { background: !useDot ? color ?? undefined : undefined } },
                   name: nameAndCallsign,
                   officer: (
@@ -162,18 +168,18 @@ function ActiveOfficers({ initialOfficers }: Props) {
                 };
               })}
             columns={[
-              { Header: t("officer"), accessor: "officer" },
-              BADGE_NUMBERS ? { Header: t("badgeNumber"), accessor: "badgeNumber" } : null,
-              { Header: t("department"), accessor: "department" },
-              { Header: t("division"), accessor: "division" },
-              { Header: t("rank"), accessor: "rank" },
-              { Header: t("status"), accessor: "status" },
-              ACTIVE_INCIDENTS ? { Header: t("incident"), accessor: "incident" } : null,
-              { Header: t("activeCall"), accessor: "activeCall" },
+              { header: t("officer"), accessorKey: "officer" },
+              BADGE_NUMBERS ? { header: t("badgeNumber"), accessorKey: "badgeNumber" } : null,
+              { header: t("department"), accessorKey: "department" },
+              { header: t("division"), accessorKey: "division" },
+              { header: t("rank"), accessorKey: "rank" },
+              { header: t("status"), accessorKey: "status" },
+              ACTIVE_INCIDENTS ? { header: t("incident"), accessorKey: "incident" } : null,
+              { header: t("activeCall"), accessorKey: "activeCall" },
               RADIO_CHANNEL_MANAGEMENT
-                ? { Header: t("radioChannel"), accessor: "radioChannel" }
+                ? { header: t("radioChannel"), accessorKey: "radioChannel" }
                 : null,
-              isDispatch ? { Header: common("actions"), accessor: "actions" } : null,
+              isDispatch ? { header: common("actions"), accessorKey: "actions" } : null,
             ]}
           />
         </>

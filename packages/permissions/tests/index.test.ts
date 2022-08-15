@@ -157,7 +157,39 @@ test("Should return 'true' if user has roles", () => {
   ).toBe(true);
 });
 
-// todo: add tests with roles
+test("Should return 'false' if user has roles", () => {
+  expect(
+    hasPermission({
+      permissionsToCheck: [Permissions.EmsFd],
+      userToCheck: {
+        rank: "USER",
+        permissions: [Permissions.Leo],
+        roles: [
+          {
+            permissions: [Permissions.Leo, Permissions.Dispatch],
+          },
+        ],
+      },
+    }),
+  ).toBe(false);
+});
+
+test("Should return 'true' if user has roles", () => {
+  expect(
+    hasPermission({
+      permissionsToCheck: [Permissions.Dispatch],
+      userToCheck: {
+        rank: "USER",
+        permissions: [Permissions.Leo],
+        roles: [
+          {
+            permissions: [Permissions.Leo, Permissions.Dispatch],
+          },
+        ],
+      },
+    }),
+  ).toBe(true);
+});
 
 test("Should return correct defaultPermissions", () => {
   expect(defaultPermissions.defaultLeoPermissions).toBeTypeOf("object");

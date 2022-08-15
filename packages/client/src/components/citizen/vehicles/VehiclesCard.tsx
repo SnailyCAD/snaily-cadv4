@@ -7,7 +7,7 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { Status } from "components/shared/Status";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
@@ -39,6 +39,8 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
     totalCount: props.vehicles.length,
     initialData: props.vehicles,
   });
+  const tableState = useTableState({ pagination: { ...asyncTable.pagination, pageSize: 12 } });
+
   const [tempVehicle, vehicleState] = useTemporaryItem(asyncTable.data);
 
   async function handleDelete() {
@@ -106,21 +108,17 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
             </FormField>
 
             {asyncTable.search.search &&
-            asyncTable.pagination.totalCount !== props.vehicles.length ? (
+            asyncTable.pagination.totalDataCount !== props.vehicles.length ? (
               <p className="italic text-base font-semibold">
-                Showing {asyncTable.pagination.totalCount} result(s)
+                Showing {asyncTable.pagination.totalDataCount} result(s)
               </p>
             ) : null}
 
             <Table
-              pagination={{
-                enabled: true,
-                totalCount: asyncTable.pagination.totalCount,
-                fetchData: asyncTable.pagination,
-              }}
-              maxItemsPerPage={12}
-              isWithinCard
+              tableState={tableState}
+              features={{ isWithinCard: true }}
               data={asyncTable.data.map((vehicle) => ({
+                id: vehicle.id,
                 rowProps: {
                   title: vehicle.impounded ? t("vehicleImpounded") : undefined,
                   className: vehicle.impounded ? "opacity-50" : undefined,
@@ -167,15 +165,15 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
                 ),
               }))}
               columns={[
-                { Header: t("plate"), accessor: "plate" },
-                { Header: t("model"), accessor: "model" },
-                { Header: t("color"), accessor: "color" },
-                { Header: t("registrationStatus"), accessor: "registrationStatus" },
-                { Header: t("insuranceStatus"), accessor: "insuranceStatus" },
-                { Header: t("vinNumber"), accessor: "vinNumber" },
-                DMV ? { Header: t("dmvStatus"), accessor: "dmvStatus" } : null,
-                { Header: common("createdAt"), accessor: "createdAt" },
-                { Header: common("actions"), accessor: "actions" },
+                { header: t("plate"), accessorKey: "plate" },
+                { header: t("model"), accessorKey: "model" },
+                { header: t("color"), accessorKey: "color" },
+                { header: t("registrationStatus"), accessorKey: "registrationStatus" },
+                { header: t("insuranceStatus"), accessorKey: "insuranceStatus" },
+                { header: t("vinNumber"), accessorKey: "vinNumber" },
+                DMV ? { header: t("dmvStatus"), accessorKey: "dmvStatus" } : null,
+                { header: common("createdAt"), accessorKey: "createdAt" },
+                { header: common("actions"), accessorKey: "actions" },
               ]}
             />
           </>

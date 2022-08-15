@@ -11,7 +11,7 @@ import useFetch from "lib/useFetch";
 import { useNameSearch } from "state/search/nameSearchState";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { ManageRecordModal } from "../../ManageRecordModal";
 import { FullDate } from "components/shared/FullDate";
 import { TabsContent } from "components/shared/TabList";
@@ -129,6 +129,8 @@ function RecordsTable({ data }: { data: Record[] }) {
   const isCitizen = router.pathname.startsWith("/citizen");
   const { generateCallsign } = useGenerateCallsign();
   const { currentResult } = useNameSearch();
+  const tableState = useTableState();
+
   const { hasPermissions } = usePermission();
   const hasDeletePermissions = hasPermissions(
     [
@@ -154,9 +156,11 @@ function RecordsTable({ data }: { data: Record[] }) {
   return (
     <div>
       <Table
+        tableState={tableState}
         data={data
           .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
           .map((record) => ({
+            id: record.id,
             violations: <ViolationsColumn violations={record.violations} />,
             postal: record.postal,
             officer: record.officer
@@ -190,12 +194,12 @@ function RecordsTable({ data }: { data: Record[] }) {
             ),
           }))}
         columns={[
-          { Header: t("Leo.violations"), accessor: "violations" },
-          { Header: t("Leo.postal"), accessor: "postal" },
-          { Header: t("Leo.officer"), accessor: "officer" },
-          { Header: t("Leo.notes"), accessor: "notes" },
-          { Header: common("createdAt"), accessor: "createdAt" },
-          isCitizen ? null : { Header: common("actions"), accessor: "actions" },
+          { header: t("Leo.violations"), accessorKey: "violations" },
+          { header: t("Leo.postal"), accessorKey: "postal" },
+          { header: t("Leo.officer"), accessorKey: "officer" },
+          { header: t("Leo.notes"), accessorKey: "notes" },
+          { header: common("createdAt"), accessorKey: "createdAt" },
+          isCitizen ? null : { header: common("actions"), accessorKey: "actions" },
         ]}
       />
     </div>

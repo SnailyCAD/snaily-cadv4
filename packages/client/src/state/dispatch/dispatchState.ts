@@ -14,9 +14,6 @@ import create from "zustand";
 export type Full911Call = Call911 & { assignedUnits: AssignedUnit[]; events: Call911Event[] };
 
 interface DispatchState {
-  calls: Full911Call[];
-  setCalls(calls: Full911Call[]): void;
-
   bolos: Bolo[];
   setBolos(bolos: Bolo[]): void;
 
@@ -43,9 +40,6 @@ interface DispatchState {
 }
 
 export const useDispatchState = create<DispatchState>()((set) => ({
-  calls: [],
-  setCalls: (calls) => set({ calls }),
-
   bolos: [],
   setBolos: (bolos) => set({ bolos }),
 

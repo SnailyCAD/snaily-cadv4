@@ -13,7 +13,7 @@ import useFetch from "lib/useFetch";
 import { formatOfficerDepartment, formatUnitDivisions, makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useImageUrl } from "hooks/useImageUrl";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
@@ -39,6 +39,7 @@ export default function MyOfficers({ officers: data }: Props) {
   const { generateCallsign } = useGenerateCallsign();
   const { makeImageUrl } = useImageUrl();
   const { BADGE_NUMBERS } = useFeatureEnabled();
+  const tableState = useTableState();
 
   const [officers, setOfficers] = React.useState<Officer[]>(data);
   const [tempOfficer, officerState] = useTemporaryItem(officers);
@@ -83,8 +84,10 @@ export default function MyOfficers({ officers: data }: Props) {
         <p className="mt-5">{t("noOfficers")}</p>
       ) : (
         <Table
+          tableState={tableState}
           data={officers.map((officer) => {
             return {
+              id: officer.id,
               officer: (
                 <span className="flex items-center">
                   {officer.imageId ? (
@@ -123,15 +126,15 @@ export default function MyOfficers({ officers: data }: Props) {
             };
           })}
           columns={[
-            { Header: t("officer"), accessor: "officer" },
-            { Header: t("callsign"), accessor: "callsign" },
-            BADGE_NUMBERS ? { Header: t("badgeNumber"), accessor: "badgeNumber" } : null,
-            { Header: t("department"), accessor: "department" },
-            { Header: t("division"), accessor: "division" },
-            { Header: t("rank"), accessor: "rank" },
-            { Header: t("position"), accessor: "position" },
-            { Header: t("status"), accessor: "departmentStatus" },
-            { Header: common("actions"), accessor: "actions" },
+            { header: t("officer"), accessorKey: "officer" },
+            { header: t("callsign"), accessorKey: "callsign" },
+            BADGE_NUMBERS ? { header: t("badgeNumber"), accessorKey: "badgeNumber" } : null,
+            { header: t("department"), accessorKey: "department" },
+            { header: t("division"), accessorKey: "division" },
+            { header: t("rank"), accessorKey: "rank" },
+            { header: t("position"), accessorKey: "position" },
+            { header: t("status"), accessorKey: "departmentStatus" },
+            { header: common("actions"), accessorKey: "actions" },
           ]}
         />
       )}

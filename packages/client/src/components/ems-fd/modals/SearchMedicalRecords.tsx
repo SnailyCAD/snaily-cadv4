@@ -8,7 +8,7 @@ import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
@@ -35,6 +35,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
   const { makeImageUrl } = useImageUrl();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
   const { cad } = useAuth();
+  const tableState = useTableState();
 
   const [results, setResults] = React.useState<SearchResult | null | undefined>(undefined);
 
@@ -196,6 +197,9 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                       <Infofield className="max-w-[400px]" label={t("Citizen.occupation")}>
                         {results.occupation || t("Common.none")}
                       </Infofield>
+                      <Infofield className="max-w-[400px]" label={t("Citizen.additionalInfo")}>
+                        {results.additionalInfo || t("Common.none")}
+                      </Infofield>
                     </div>
                   </div>
 
@@ -204,7 +208,9 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                       <p>No medical records</p>
                     ) : (
                       <Table
+                        tableState={tableState}
                         data={results.medicalRecords.map((record) => ({
+                          id: record.id,
                           type: record.type,
                           bloodGroup: record.bloodGroup?.value ?? t("Common.none"),
                           description: record.description || t("Common.none"),
@@ -221,10 +227,10 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                           ),
                         }))}
                         columns={[
-                          { Header: t("MedicalRecords.diseases"), accessor: "type" },
-                          { Header: t("MedicalRecords.bloodGroup"), accessor: "bloodGroup" },
-                          { Header: t("Common.description"), accessor: "description" },
-                          { Header: t("Common.actions"), accessor: "actions" },
+                          { header: t("MedicalRecords.diseases"), accessorKey: "type" },
+                          { header: t("MedicalRecords.bloodGroup"), accessorKey: "bloodGroup" },
+                          { header: t("Common.description"), accessorKey: "description" },
+                          { header: t("Common.actions"), accessorKey: "actions" },
                         ]}
                       />
                     )}

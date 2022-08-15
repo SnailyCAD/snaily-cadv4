@@ -7,7 +7,7 @@ import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import { DLExam, DLExamStatus } from "@snailycad/types";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Title } from "components/shared/Title";
@@ -44,6 +44,7 @@ export default function CitizenLogs({ data }: Props) {
     totalCount: data.totalCount,
     initialData: data.exams,
   });
+  const tableState = useTableState({ pagination: asyncTable.pagination });
   const [tempExam, examState] = useTemporaryItem(asyncTable.data);
 
   const PASS_FAIL_LABELS = {
@@ -105,21 +106,19 @@ export default function CitizenLogs({ data }: Props) {
             />
           </FormField>
 
-          {asyncTable.search.search && asyncTable.pagination.totalCount !== data.totalCount ? (
+          {asyncTable.search.search && asyncTable.pagination.totalDataCount !== data.totalCount ? (
             <p className="italic text-base font-semibold">
-              Showing {asyncTable.pagination.totalCount} result(s)
+              Showing {asyncTable.pagination.totalDataCount} result(s)
             </p>
           ) : null}
 
           <Table
-            pagination={{
-              enabled: true,
-              totalCount: asyncTable.pagination.totalCount,
-              fetchData: asyncTable.pagination,
-            }}
+            tableState={tableState}
             data={asyncTable.data.map((exam) => {
               const hasPassedOrFailed = exam.status !== DLExamStatus.IN_PROGRESS;
+
               return {
+                id: exam.id,
                 rowProps: {
                   className: hasPassedOrFailed ? "opacity-60" : undefined,
                 },
@@ -158,15 +157,15 @@ export default function CitizenLogs({ data }: Props) {
               };
             })}
             columns={[
-              { Header: t("citizen"), accessor: "citizen" },
-              { Header: t("theoryExam"), accessor: "theoryExam" },
-              { Header: t("practiceExam"), accessor: "practiceExam" },
-              { Header: t("status"), accessor: "status" },
-              { Header: t("categories"), accessor: "categories" },
-              { Header: t("license"), accessor: "license" },
-              { Header: common("createdAt"), accessor: "createdAt" },
+              { header: t("citizen"), accessorKey: "citizen" },
+              { header: t("theoryExam"), accessorKey: "theoryExam" },
+              { header: t("practiceExam"), accessorKey: "practiceExam" },
+              { header: t("status"), accessorKey: "status" },
+              { header: t("categories"), accessorKey: "categories" },
+              { header: t("license"), accessorKey: "license" },
+              { header: common("createdAt"), accessorKey: "createdAt" },
               hasPermissions([Permissions.ManageDLExams], (u) => u.isSupervisor)
-                ? { Header: common("actions"), accessor: "actions" }
+                ? { header: common("actions"), accessorKey: "actions" }
                 : null,
             ]}
           />

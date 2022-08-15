@@ -1,13 +1,15 @@
 import type { GetManageUserByIdData } from "@snailycad/types/api";
 import { FullDate } from "components/shared/FullDate";
 import { Infofield } from "components/shared/Infofield";
-import { Table } from "components/shared/Table";
+import { Table, useTableState } from "components/shared/Table";
 
 interface Props {
   user: GetManageUserByIdData;
 }
 
 export function ApiTokenArea({ user }: Props) {
+  const tableState = useTableState();
+
   return (
     <div className="p-4 mt-10 bg-gray-200 rounded-md dark:bg-gray-2">
       <h1 className="text-2xl font-semibold">API Token</h1>
@@ -21,7 +23,9 @@ export function ApiTokenArea({ user }: Props) {
 
           {!user.apiToken.logs.length ? null : (
             <Table
+              tableState={tableState}
               data={user.apiToken.logs.map((log) => ({
+                id: log.id,
                 route: (
                   <span className="font-mono">
                     <span className="font-semibold">{log.method}</span> {log.route}
@@ -30,8 +34,8 @@ export function ApiTokenArea({ user }: Props) {
                 createdAt: <FullDate>{log.createdAt}</FullDate>,
               }))}
               columns={[
-                { Header: "Route", accessor: "route" },
-                { Header: "Created At", accessor: "createdAt" },
+                { header: "Route", accessorKey: "route" },
+                { header: "Created At", accessorKey: "createdAt" },
               ]}
             />
           )}
