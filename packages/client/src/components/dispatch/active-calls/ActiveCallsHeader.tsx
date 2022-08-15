@@ -1,4 +1,5 @@
 import { Button } from "components/Button";
+import type { useAsyncTable } from "components/shared/Table";
 import { classNames } from "lib/classNames";
 import { useTranslations } from "next-intl";
 import { Filter } from "react-bootstrap-icons";
@@ -8,9 +9,10 @@ import { CallsFilters } from "./CallsFilters";
 
 interface Props {
   calls: Full911Call[];
+  search: ReturnType<typeof useAsyncTable>["search"];
 }
 
-export function ActiveCallsHeader({ calls }: Props) {
+export function ActiveCallsHeader({ calls, search }: Props) {
   const { setShowFilters, showFilters } = useCallsFilters();
   const t = useTranslations("Calls");
 
@@ -38,7 +40,7 @@ export function ActiveCallsHeader({ calls }: Props) {
       </header>
 
       <div className="p-2 px-4">
-        <CallsFilters calls={calls} />
+        <CallsFilters search={search} calls={calls} />
       </div>
     </>
   );

@@ -16,6 +16,7 @@ import {
   Call911,
   DiscordWebhookType,
   ShouldDoType,
+  Prisma,
 } from "@prisma/client";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import type { APIEmbed } from "discord-api-types/v10";
@@ -65,7 +66,28 @@ export class Calls911Controller {
     if (inactivityFilter) {
       this.endInactiveCalls(inactivityFilter.updatedAt);
     }
-    const where = includeEnded ? undefined : { ended: false, ...(inactivityFilter?.filter ?? {}) };
+    const where: Prisma.Call911WhereInput | undefined = includeEnded
+      ? undefined
+      : {
+          ended: false,
+          ...(inactivityFilter?.filter ?? {}),
+          OR: query
+            ? [
+                { descriptionData: { array_contains: query } },
+                { name: { contains: query, mode: "insensitive" } },
+                { postal: { contains: query, mode: "insensitive" } },
+                { location: { contains: query, mode: "insensitive" } },
+                { description: { contains: query, mode: "insensitive" } },
+                { type: { value: { value: { contains: query, mode: "insensitive" } } } },
+                { situationCode: { value: { value: { contains: query, mode: "insensitive" } } } },
+              ]
+            : [],
+        };
+
+    if (parseInt(query) && where?.OR) {
+      // @ts-expect-error this can be ignored.
+      where.OR = [...Array.from(where.OR), { caseNumber: { equals: parseInt(query) } }];
+    }
 
     const [totalCount, calls] = await Promise.all([
       prisma.call911.count({ where }),

@@ -6,19 +6,19 @@ import { useTranslations } from "next-intl";
 import { Input } from "components/form/inputs/Input";
 import { useCallsFilters } from "state/callsFiltersState";
 import { Select, SelectValue } from "components/form/Select";
+import type { useAsyncTable } from "components/shared/Table";
 
 interface Props {
   calls: Full911Call[];
+  search: ReturnType<typeof useAsyncTable>["search"];
 }
 
-export function CallsFilters({ calls }: Props) {
+export function CallsFilters({ search, calls }: Props) {
   const {
     department,
     setDepartment,
     setDivision,
     division,
-    search,
-    setSearch,
     showFilters,
     setAssignedUnit,
     assignedUnit,
@@ -42,7 +42,7 @@ export function CallsFilters({ calls }: Props) {
   return showFilters ? (
     <div className="flex items-center gap-2 mt-2">
       <FormField className="w-full" label={common("search")}>
-        <Input onChange={(e) => setSearch(e.target.value)} value={search} />
+        <Input onChange={(e) => search.setSearch(e.target.value)} value={search.search} />
       </FormField>
 
       <FormField label={t("departments")}>

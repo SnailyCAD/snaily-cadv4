@@ -111,7 +111,7 @@ export default function EmsFDDashboard({
 
       <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
         <div className="w-full">
-          <ActiveCalls initialCalls={calls} />
+          <ActiveCalls initialData={calls} />
         </div>
       </div>
 

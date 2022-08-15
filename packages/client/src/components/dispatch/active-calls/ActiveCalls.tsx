@@ -127,10 +127,10 @@ function _ActiveCalls({ initialData }: Props) {
     <div className="overflow-hidden rounded-md card">
       {audio.addedToCallAudio}
       {audio.incomingCallAudio}
-      <ActiveCallsHeader calls={calls} />
+      <ActiveCallsHeader search={asyncTable.search} calls={calls} />
 
       <div className="px-4">
-        {calls.length <= 0 ? (
+        {calls.length <= 0 && !asyncTable.search.search ? (
           <p className="py-2 text-neutral-700 dark:text-gray-300">{t("no911Calls")}</p>
         ) : (
           <Table
