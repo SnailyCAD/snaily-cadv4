@@ -104,11 +104,11 @@ export class ManageUsersController {
     ],
   })
   async getUserById(
-    @PathParams("id") userId: string,
+    @PathParams("id") id: string,
     @QueryParams("select-citizens") selectCitizens: boolean,
   ): Promise<APITypes.GetManageUserByIdData> {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
+    const user = await prisma.user.findFirst({
+      where: { OR: [{ id }, { discordId: id }, { steamId: id }] },
       select: manageUsersSelect(selectCitizens),
     });
 
