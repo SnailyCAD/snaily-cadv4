@@ -11,6 +11,7 @@ import { useActiveWarrants } from "hooks/realtime/useActiveWarrants";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { isUnitCombined } from "@snailycad/utils";
+import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
 export function ActiveWarrants() {
   const { activeWarrants, setActiveWarrants } = useActiveWarrants();
@@ -63,7 +64,7 @@ export function ActiveWarrants() {
             data={activeWarrants.filter(isActiveWarrant).map((warrant) => ({
               id: warrant.id,
               citizen: `${warrant.citizen.name} ${warrant.citizen.surname}`,
-              description: warrant.description,
+              description: <CallDescription data={{ description: warrant.description }} />,
               assignedOfficers:
                 warrant.assignedOfficers.length <= 0
                   ? common("none")

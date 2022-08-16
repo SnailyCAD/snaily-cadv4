@@ -144,7 +144,7 @@ function _ActiveCalls({ initialData }: Props) {
                 caseNumber: `#${call.caseNumber}`,
                 name: `${call.name} ${call.viaDispatch ? `(${leo("dispatch")})` : ""}`,
                 location: `${call.location} ${call.postal ? `(${call.postal})` : ""}`,
-                description: <CallDescription call={call} />,
+                description: <CallDescription data={call} />,
                 situationCode: call.situationCode?.value.value ?? common("none"),
                 updatedAt: <FullDate>{call.updatedAt}</FullDate>,
                 assignedUnits: (
