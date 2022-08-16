@@ -225,6 +225,7 @@ function TableList(props: {
 
   return (
     <Table
+      features={{ dragAndDrop: true }}
       tableState={tableState}
       data={values.map((value) => ({
         id: value.id,
