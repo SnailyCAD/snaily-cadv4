@@ -156,6 +156,7 @@ function RecordsTable({ data }: { data: Record[] }) {
   return (
     <div>
       <Table
+        features={{ isWithinCard: true }}
         tableState={tableState}
         data={data
           .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
