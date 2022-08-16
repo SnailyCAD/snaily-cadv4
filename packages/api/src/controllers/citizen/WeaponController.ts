@@ -140,7 +140,7 @@ export class WeaponController {
   @Description("Update a registered weapon")
   async updateWeapon(
     @Context("user") user: User,
-    @Context("cad") cad: cad,
+    @Context("cad") cad: cad & { features?: CadFeature[] },
     @PathParams("id") weaponId: string,
     @BodyParams() body: unknown,
   ): Promise<APITypes.PutCitizenWeaponData> {
@@ -159,12 +159,42 @@ export class WeaponController {
       throw new NotFound("NotFound");
     }
 
+    const isCustomEnabled = isFeatureEnabled({
+      features: cad.features,
+      feature: Feature.CUSTOM_TEXTFIELD_VALUES,
+      defaultReturn: false,
+    });
+
+    let modelId = data.model;
+
+    if (isCustomEnabled) {
+      const weaponModel = await prisma.weaponValue.findFirst({
+        where: { value: { value: { equals: data.model, mode: "insensitive" } } },
+      });
+
+      const newModel = await prisma.weaponValue.upsert({
+        where: { id: String(weaponModel?.id) },
+        update: {},
+        create: {
+          value: {
+            create: {
+              isDefault: false,
+              type: "WEAPON",
+              value: data.model,
+            },
+          },
+        },
+      });
+
+      modelId = newModel.id;
+    }
+
     const updated = await prisma.weapon.update({
       where: {
         id: weapon.id,
       },
       data: {
-        modelId: data.model,
+        modelId,
         registrationStatusId: data.registrationStatus as string,
         serialNumber: data.serialNumber
           ? await this.generateOrValidateSerialNumber(data.serialNumber, weapon)
