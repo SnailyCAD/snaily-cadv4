@@ -6,7 +6,7 @@ import { useDispatchState } from "state/dispatch/dispatchState";
 import { useAuth } from "context/AuthContext";
 import { useLeoState } from "state/leoState";
 import type { CombinedLeoUnit, Officer } from "@snailycad/types";
-import { isUnitOfficer } from "@snailycad/utils";
+import { isUnitCombined } from "@snailycad/utils";
 import type { GetActiveOfficersData } from "@snailycad/types/api";
 
 let ran = false;
@@ -21,11 +21,11 @@ export function useActiveOfficers() {
       setActiveOfficers(data);
 
       const activeOfficer = data.find((v) => {
-        if (isUnitOfficer(v)) {
-          return v.userId === user?.id;
+        if (isUnitCombined(v)) {
+          return v.officers.some((v) => v.userId === user?.id);
         }
 
-        return v.officers.some((v) => v.userId === user?.id);
+        return v.userId === user?.id;
       });
 
       if (activeOfficer) {

@@ -1,13 +1,20 @@
+import * as React from "react";
 import { useLocation } from "react-use";
 
 export function LocalhostDetector() {
   const location = useLocation();
+  const [isLocalhost, setIsLocalhost] = React.useState<boolean | undefined>(false);
 
-  const isDevelopmentMode = process.env.NODE_ENV === "development";
-  const isHostLocalhost = location.hostname === "localhost" || location.host?.includes("localhost");
-  const isUsingLocalhost = !isDevelopmentMode && isHostLocalhost;
+  React.useEffect(() => {
+    const isDevelopmentMode = process.env.NODE_ENV === "development";
+    const isHostLocalhost =
+      location.hostname === "localhost" || location.host?.includes("localhost");
+    const isUsingLocalhost = !isDevelopmentMode && isHostLocalhost;
 
-  if (!isUsingLocalhost) {
+    setIsLocalhost(isUsingLocalhost);
+  }, [location]);
+
+  if (!isLocalhost) {
     return null;
   }
 
