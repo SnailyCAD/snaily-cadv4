@@ -5,7 +5,7 @@ const USED_COUNT_NAMES_PER_TYPE: Partial<Record<ValueType, string[]>> = {
   BLOOD_GROUP: ["MedicalRecord"],
   BUSINESS_ROLE: ["employees"],
   CITIZEN_FLAG: ["citizenFlags"],
-  DEPARTMENT: ["Officer", "EmsFdDeputy", "Qualification", "CombinedLeoUnit"],
+  DEPARTMENT: ["Officer", "EmsFdDeputy", "Qualification", "CombinedLeoUnit", "LeoWhitelistStatus"],
   DIVISION: ["deputies", "officers", "officerDivisionsToDivision"],
   ETHNICITY: ["ethnicityToValue"],
   GENDER: ["genderToValue"],

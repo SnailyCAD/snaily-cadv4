@@ -58,7 +58,7 @@ export function OptionsDropdown({ type, values }: Props) {
 }
 
 function omitUnnecessaryProperties(values: readonly any[]) {
-  return values.map((v) => {
+  return [...values].map((v) => {
     delete v.id;
 
     if ("createdAt" in v) {

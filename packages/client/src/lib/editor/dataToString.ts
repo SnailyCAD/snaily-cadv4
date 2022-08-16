@@ -2,7 +2,7 @@ import { Editor, Element as SlateElement, Descendant } from "slate";
 
 export function dataToString(data: Descendant[] | null) {
   const string: string[] = [];
-  if (!data) return "";
+  if (!data) return null;
 
   for (const item of data) {
     if (Editor.isEditor(item)) continue;

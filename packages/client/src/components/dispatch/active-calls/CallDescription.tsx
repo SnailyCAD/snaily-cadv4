@@ -5,22 +5,28 @@ import { dataToString } from "lib/editor/dataToString";
 import { isArrayEqual } from "lib/editor/isArrayEqual";
 import { useTranslations } from "next-intl";
 import type { Descendant } from "slate";
-import type { Full911Call } from "state/dispatch/dispatchState";
 
 interface Props {
-  call: Full911Call;
+  data: { descriptionData?: any; description: string | null };
 }
 
-export function CallDescription({ call }: Props) {
+export function CallDescription({ data }: Props) {
   const common = useTranslations("Common");
 
-  const stringDescription = dataToString(call.descriptionData as Descendant[] | null);
+  const stringDescription =
+    dataToString(data.descriptionData as Descendant[] | null) ?? data.description;
+
+  if (!stringDescription) {
+    return <>{common("none")}</>;
+  }
+
   const isDescriptionLengthy = stringDescription.length >= 1;
   const shouldTruncate = stringDescription.length > 25;
   const hoverCardDisabled =
-    !shouldTruncate || isArrayEqual(call.descriptionData as any, DEFAULT_EDITOR_DATA);
+    !shouldTruncate || isArrayEqual(data.descriptionData as any, DEFAULT_EDITOR_DATA);
 
-  if (!isDescriptionLengthy || !call.description) {
+  const hasDescription = isDescriptionLengthy || !data.description;
+  if (!hasDescription) {
     return <>{common("none")}</>;
   }
 
@@ -34,14 +40,14 @@ export function CallDescription({ call }: Props) {
             shouldTruncate && "truncate-custom",
           )}
         >
-          {call.description || stringDescription}
+          {data.description || stringDescription}
         </div>
       }
     >
-      {call.description ? (
-        call.description
+      {data.description ? (
+        <p className="w-full whitespace-pre-wrap">{data.description}</p>
       ) : (
-        <Editor value={call.descriptionData ?? DEFAULT_EDITOR_DATA} isReadonly />
+        <Editor value={data.descriptionData ?? DEFAULT_EDITOR_DATA} isReadonly />
       )}
     </HoverCard>
   );

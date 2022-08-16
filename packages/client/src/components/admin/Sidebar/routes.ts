@@ -67,10 +67,12 @@ export const valueRoutes: SidebarRoute[] = [
   {
     type: ValueType.BUSINESS_ROLE,
     permissions: [Permissions.ManageValueBusinessRole],
+    hidden: ({ BUSINESS }) => !BUSINESS,
   },
   {
     type: ValueType.CALL_TYPE,
     permissions: [Permissions.ManageValueCallType],
+    hidden: ({ CALLS_911 }) => !CALLS_911,
   },
   {
     type: ValueType.CITIZEN_FLAG,

@@ -16,6 +16,7 @@ import {
   Call911,
   DiscordWebhookType,
   ShouldDoType,
+  Prisma,
 } from "@prisma/client";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import type { APIEmbed } from "discord-api-types/v10";
@@ -57,21 +58,68 @@ export class Calls911Controller {
   async get911Calls(
     @Context("cad") cad: { miscCadSettings: MiscCadSettings | null },
     @QueryParams("includeEnded", Boolean) includeEnded: boolean,
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("query", String) query = "",
+    @QueryParams("includeAll", Boolean) includeAll = false,
+    @QueryParams("take", Number) take = 12,
+    @QueryParams("department", String) department?: string,
+    @QueryParams("division", String) division?: string,
+    @QueryParams("assignedUnit", String) assignedUnit?: string,
   ): Promise<APITypes.Get911CallsData> {
     const inactivityFilter = getInactivityFilter(cad);
     if (inactivityFilter) {
       this.endInactiveCalls(inactivityFilter.updatedAt);
     }
+    const where: Prisma.Call911WhereInput = {
+      ended: includeEnded ? undefined : false,
+      ...(inactivityFilter?.filter ?? {}),
+      OR: query
+        ? [
+            { descriptionData: { array_contains: query } },
+            { name: { contains: query, mode: "insensitive" } },
+            { postal: { contains: query, mode: "insensitive" } },
+            { location: { contains: query, mode: "insensitive" } },
+            { description: { contains: query, mode: "insensitive" } },
+            { type: { value: { value: { contains: query, mode: "insensitive" } } } },
+            { situationCode: { value: { value: { contains: query, mode: "insensitive" } } } },
+          ]
+        : undefined,
+    };
 
-    const calls = await prisma.call911.findMany({
-      include: callInclude,
-      orderBy: {
-        createdAt: "desc",
-      },
-      where: includeEnded ? undefined : { ended: false, ...(inactivityFilter?.filter ?? {}) },
-    });
+    if (department || division || assignedUnit) {
+      where.OR = [];
+    }
 
-    return calls.map(officerOrDeputyToUnit);
+    if (parseInt(query) && where.OR) {
+      // @ts-expect-error this can be ignored.
+      where.OR = [...Array.from(where.OR), { caseNumber: { equals: parseInt(query) } }];
+    }
+
+    if (department && where.OR) {
+      // @ts-expect-error this can be ignored.
+      where.OR = [...Array.from(where.OR), { departments: { some: { id: department } } }];
+    }
+    if (division && where.OR) {
+      // @ts-expect-error this can be ignored.
+      where.OR = [...Array.from(where.OR), { divisions: { some: { id: division } } }];
+    }
+    if (assignedUnit && where.OR) {
+      // @ts-expect-error this can be ignored.
+      where.OR = [...Array.from(where.OR), { assignedUnits: { some: { id: assignedUnit } } }];
+    }
+
+    const [totalCount, calls] = await Promise.all([
+      prisma.call911.count({ where }),
+      prisma.call911.findMany({
+        take: includeAll ? undefined : take,
+        skip: includeAll ? undefined : skip,
+        include: callInclude,
+        orderBy: { updatedAt: "desc" },
+        where,
+      }),
+    ]);
+
+    return { totalCount, calls: calls.map(officerOrDeputyToUnit) };
   }
 
   @Get("/:id")
