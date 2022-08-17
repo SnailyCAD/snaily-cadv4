@@ -46,7 +46,11 @@ export class LeoController {
   async getActiveOfficers(
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
   ): Promise<APITypes.GetActiveOfficersData> {
-    const unitsInactivityFilter = getInactivityFilter(cad, "lastStatusChangeTimestamp");
+    const unitsInactivityFilter = getInactivityFilter(
+      cad,
+      "unitInactivityTimeout",
+      "lastStatusChangeTimestamp",
+    );
 
     if (unitsInactivityFilter) {
       setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp);

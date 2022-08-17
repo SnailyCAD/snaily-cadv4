@@ -146,7 +146,9 @@ export class ManageCitizensController {
         maxDepartmentsEachPerUser: data.maxDepartmentsEachPerUser,
         maxAssignmentsToCalls: data.maxAssignmentsToCalls,
         maxAssignmentsToIncidents: data.maxAssignmentsToIncidents,
-        inactivityTimeout: data.inactivityTimeout || null,
+        call911InactivityTimeout: data.call911InactivityTimeout || null,
+        incidentInactivityTimeout: data.incidentInactivityTimeout || null,
+        unitInactivityTimeout: data.unitInactivityTimeout || null,
         jailTimeScale: (data.jailTimeScaling || null) as JailTimeScale | null,
       },
     });
