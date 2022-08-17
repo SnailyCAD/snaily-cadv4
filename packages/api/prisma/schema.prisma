@@ -75,6 +75,10 @@ model MiscCadSettings {
   inactivityTimeout         Int?
   jailTimeScale             JailTimeScale?
 
+  call911InactivityTimeout  Int?
+  incidentInactivityTimeout Int?
+  unitInactivityTimeout     Int?
+
   /// deprecated, use `webhooks` instead
   call911WebhookId     String?
   statusesWebhookId    String?
