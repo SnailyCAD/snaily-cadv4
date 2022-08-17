@@ -51,9 +51,10 @@ type InactivityReturn<Prop extends string> = {
 
 export function getInactivityFilter<Prop extends string = "updatedAt">(
   cad: { miscCadSettings: MiscCadSettings | null },
+  type: "incidentInactivityTimeout" | "call911InactivityTimeout" | "unitInactivityTimeout",
   property?: Prop,
 ): InactivityReturn<Prop> | null {
-  const inactivityTimeout = cad.miscCadSettings?.inactivityTimeout ?? null;
+  const inactivityTimeout = cad.miscCadSettings?.[type] ?? null;
   const _prop = property ?? "updatedAt";
 
   if (!inactivityTimeout) {

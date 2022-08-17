@@ -86,7 +86,11 @@ export async function getActiveOfficer(
   });
 
   const cad = await prisma.cad.findFirst({ include: { miscCadSettings: true } });
-  const unitsInactivityFilter = getInactivityFilter(cad!, "lastStatusChangeTimestamp");
+  const unitsInactivityFilter = getInactivityFilter(
+    cad!,
+    "unitInactivityTimeout",
+    "lastStatusChangeTimestamp",
+  );
 
   const filters: Prisma.Enumerable<Prisma.OfficerWhereInput> = [
     { status: { shouldDo: "SET_OFF_DUTY" } },

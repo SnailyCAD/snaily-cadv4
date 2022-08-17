@@ -66,7 +66,7 @@ export class Calls911Controller {
     @QueryParams("division", String) division?: string,
     @QueryParams("assignedUnit", String) assignedUnit?: string,
   ): Promise<APITypes.Get911CallsData> {
-    const inactivityFilter = getInactivityFilter(cad);
+    const inactivityFilter = getInactivityFilter(cad, "call911InactivityTimeout");
     if (inactivityFilter) {
       this.endInactiveCalls(inactivityFilter.updatedAt);
     }
