@@ -41,8 +41,11 @@ export function useAsyncTable<T>(options: Options<T>) {
 
       if (json && !error) {
         const jsonData = options.fetchOptions.onResponse(json);
-        setData(jsonData.data);
-        setTotalCount(jsonData.totalCount);
+
+        if (Array.isArray(jsonData.data)) {
+          setData(jsonData.data);
+          setTotalCount(jsonData.totalCount);
+        }
 
         if (scrollToTopOnDataChange) {
           window.scrollTo({ behavior: "smooth", top: 0 });
@@ -60,8 +63,10 @@ export function useAsyncTable<T>(options: Options<T>) {
 
     if (json && !error) {
       const jsonData = options.fetchOptions.onResponse(json);
-      setData(jsonData.data);
-      setTotalCount(jsonData.totalCount);
+      if (Array.isArray(jsonData)) {
+        setData(jsonData.data);
+        setTotalCount(jsonData.totalCount);
+      }
     }
   }, [search, extraParams]); // eslint-disable-line
 
