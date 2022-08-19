@@ -1210,7 +1210,7 @@ model DLExam {
 
 model WeaponExam {
   id           String                        @id @default(uuid())
-  citizen      Citizen                       @relation("weaponExams", fields: [citizenId], references: [id])
+  citizen      Citizen                       @relation("weaponExams", fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId    String
   theoryExam   DLExamPassType?
   practiceExam DLExamPassType?

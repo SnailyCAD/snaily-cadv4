@@ -60,7 +60,7 @@ export class TaxiController {
 
     const call = await prisma.taxiCall.create({
       data: {
-        creatorId: data.creatorId,
+        creatorId: data.creatorId || null,
         description: data.description,
         descriptionData: data.descriptionData,
         location: data.location,
