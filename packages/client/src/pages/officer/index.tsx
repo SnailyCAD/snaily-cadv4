@@ -213,7 +213,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ req, local
     ["/leo/active-officer", null],
     ["/leo", { officers: [] }],
     ["/admin/values/codes_10", []],
-    ["/911-calls", []],
+    ["/911-calls", { calls: [], totalCount: 0 }],
     ["/bolos", []],
     ["/leo/active-officers", []],
     ["/ems-fd/active-deputies", []],
