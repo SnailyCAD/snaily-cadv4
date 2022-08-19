@@ -26,6 +26,8 @@ enum Steps {
 export function Manage2FAModal() {
   const { setUser, user } = useAuth();
   const [currentStep, setCurrentStep] = React.useState(Steps.EnterPassword);
+
+  const [totpCode, setTotpCode] = React.useState<string | null>(null);
   const [dataUri, setDataUri] = React.useState<string | null>(null);
   const [currentPassword, setCurrentPassword] = React.useState("");
 
@@ -81,9 +83,10 @@ export function Manage2FAModal() {
         helpers,
       });
 
-      if (typeof json === "string") {
+      if (json.qrCode) {
         setCurrentStep(Steps.ScanQRCode);
-        setDataUri(json);
+        setDataUri(json.qrCode);
+        setTotpCode(json.totpCode);
       }
     }
 
@@ -147,8 +150,19 @@ export function Manage2FAModal() {
             ) : null}
 
             {currentStep === Steps.ScanQRCode && dataUri ? (
-              <div className="flex flex-col items-center">
-                <p className="my-3 mb-5 text-neutral-700 dark:text-gray-400">{t("scanQRCode")}</p>
+              <div className="flex w-full flex-col items-center">
+                <p className="text-center my-3 text-base text-neutral-700 dark:text-gray-400">
+                  {t("scanQRCode")}
+                </p>
+                <div className="my-3 flex items-center gap-2 w-full">
+                  <span className="block h-[2px] bg-gray-3 w-full rounded-md" />
+                  <span className="min-w-fit text-sm uppercase dark:text-gray-300">OR</span>
+                  <span className="block h-[2px] bg-gray-3 w-full rounded-md" />
+                </div>
+                <p className="text-center text-base mb-5 text-neutral-700 dark:text-gray-400">
+                  Enter the following code manually:{" "}
+                  <code className="font-mono bg-gray-3 p-[1px] px-1.5 rounded-sm">{totpCode}</code>
+                </p>
 
                 <img
                   className="self-center"
