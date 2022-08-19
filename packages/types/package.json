@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/types",
-  "version": "1.21.0",
+  "version": "1.21.1",
   "exports": {
     ".": {
       "require": "./dist/index.js",
@@ -34,7 +34,7 @@
     "type-fest": "^2.18.0"
   },
   "devDependencies": {
-    "@snailycad/permissions": "1.21.0",
+    "@snailycad/permissions": "1.21.1",
     "discord-api-types": "0.37.2",
     "tsup": "^6.2.2",
     "typescript": "^4.7.4"
