@@ -8,7 +8,6 @@ import { yesOrNoText } from "lib/utils";
 import { FullDate } from "components/shared/FullDate";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
-import { DescriptionModal } from "components/modal/DescriptionModal/DescriptionModal";
 import { ManageIncidentModal } from "components/leo/incidents/ManageIncidentModal";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { AlertModal } from "components/modal/AlertModal";
@@ -20,6 +19,7 @@ import { classNames } from "lib/classNames";
 import { Droppable } from "components/shared/dnd/Droppable";
 import { useDispatchState } from "state/dispatch/dispatchState";
 import type { PostIncidentsData, PutIncidentByIdData } from "@snailycad/types/api";
+import { CallDescription } from "./active-calls/CallDescription";
 
 export function ActiveIncidents() {
   /**
@@ -78,11 +78,6 @@ export function ActiveIncidents() {
     }
   }
 
-  function handleViewDescription(incident: LeoIncident) {
-    setTempIncident(incident);
-    openModal(ModalIds.Description);
-  }
-
   function onEditClick(incident: LeoIncident) {
     openModal(ModalIds.ManageIncident);
     setTempIncident(incident);
@@ -139,17 +134,7 @@ export function ActiveIncidents() {
                 injuriesOrFatalities: common(yesOrNoText(incident.injuriesOrFatalities)),
                 arrestsMade: common(yesOrNoText(incident.arrestsMade)),
                 situationCode: incident.situationCode?.value.value ?? common("none"),
-                description: (
-                  <span className="block max-w-4xl min-w-[200px] break-words whitespace-pre-wrap">
-                    {incident.description && !incident.descriptionData ? (
-                      incident.description
-                    ) : (
-                      <Button size="xs" onClick={() => handleViewDescription(incident)}>
-                        {common("viewDescription")}
-                      </Button>
-                    )}
-                  </span>
-                ),
+                description: <CallDescription data={incident} />,
 
                 actions: (
                   <>
@@ -206,13 +191,6 @@ export function ActiveIncidents() {
           <p>{t("dropToUnassignFromIncident")}</p>
         </div>
       </Droppable>
-
-      {tempIncident?.descriptionData ? (
-        <DescriptionModal
-          onClose={() => setTempIncident(undefined)}
-          value={tempIncident.descriptionData}
-        />
-      ) : null}
 
       {typeof tempIncident === "undefined" ? null : (
         <ManageIncidentModal

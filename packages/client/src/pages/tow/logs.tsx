@@ -9,19 +9,11 @@ import type { GetServerSideProps } from "next";
 import { requestAll } from "lib/utils";
 import { Table, useTableState } from "components/shared/Table";
 import { Title } from "components/shared/Title";
-import { ModalIds } from "types/ModalIds";
-import { useModal } from "state/modalState";
-import { Button } from "components/Button";
-import dynamic from "next/dynamic";
 import { FullDate } from "components/shared/FullDate";
 import type { TowCall } from "@snailycad/types";
 import { Permissions } from "@snailycad/permissions";
 import type { GetTowCallsData } from "@snailycad/types/api";
-import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
-
-const DescriptionModal = dynamic(
-  async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
-);
+import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
 interface Props {
   calls: GetTowCallsData;
@@ -29,21 +21,14 @@ interface Props {
 
 export default function TowLogs(props: Props) {
   const [calls, setCalls] = React.useState<TowCall[]>(props.calls);
-  const [tempCall, callState] = useTemporaryItem(calls);
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
-  const { openModal } = useModal();
   const tableState = useTableState();
 
   useListener(SocketEvents.EndTowCall, handleCallEnd);
 
   function handleCallEnd(call: TowCall) {
     setCalls((p) => [call, ...p]);
-  }
-
-  function handleViewDescription(call: TowCall) {
-    callState.setTempId(call.id);
-    openModal(ModalIds.Description, call);
   }
 
   function assignedUnit(call: TowCall) {
@@ -76,14 +61,7 @@ export default function TowLogs(props: Props) {
             id: call.id,
             location: call.location,
             postal: call.postal || common("none"),
-            description:
-              call.description && !call.descriptionData ? (
-                call.description
-              ) : (
-                <Button size="xs" onClick={() => handleViewDescription(call)}>
-                  {common("viewDescription")}
-                </Button>
-              ),
+            description: <CallDescription nonCard data={call} />,
             caller: call.creator ? `${call.creator.name} ${call.creator.surname}` : "Dispatch",
             assignedUnit: assignedUnit(call),
             createdAt: <FullDate>{call.createdAt}</FullDate>,
@@ -98,13 +76,6 @@ export default function TowLogs(props: Props) {
           ]}
         />
       )}
-
-      {tempCall ? (
-        <DescriptionModal
-          onClose={() => callState.setTempId(null)}
-          value={tempCall.descriptionData}
-        />
-      ) : null}
     </Layout>
   );
 }

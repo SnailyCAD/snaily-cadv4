@@ -1,4 +1,4 @@
-import type { SlateEditor } from "components/modal/DescriptionModal/Editor";
+import type { SlateEditor } from "components/editor/Editor";
 import type { Text } from "components/modal/DescriptionModal/types";
 import { Editor, Transforms, Element as SlateElement } from "slate";
 

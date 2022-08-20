@@ -2,7 +2,7 @@ import * as React from "react";
 import { Star } from "react-bootstrap-icons";
 import Link from "next/link";
 import type { GetServerSideProps } from "next";
-import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
+import { dataToSlate, Editor } from "components/editor/Editor";
 import { Button, buttonVariants } from "components/Button";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";

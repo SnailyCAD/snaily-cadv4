@@ -30,6 +30,10 @@ html {
     @apply relative bg-gray-200/60 dark:bg-gray-2;
   }
 
+  .truncate-custom-non-card {
+    @apply bg-white dark:bg-dark-bg;
+  }
+
   .truncate-custom::after {
     content: "...";
     position: absolute;
