@@ -12,7 +12,7 @@ import { useTranslations } from "use-intl";
 import { CREATE_COMPANY_POST_SCHEMA } from "@snailycad/schemas";
 import { handleValidate } from "lib/handleValidate";
 import type { BusinessPost } from "@snailycad/types";
-import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
+import { dataToSlate, Editor } from "components/editor/Editor";
 import type { PostBusinessPostsData, PutBusinessPostsData } from "@snailycad/types/api";
 
 interface Props {

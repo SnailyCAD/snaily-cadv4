@@ -1,5 +1,5 @@
-import type { SlateEditor } from "components/modal/DescriptionModal/Editor";
-import type { Text } from "components/modal/DescriptionModal/types";
+import type { SlateEditor } from "components/editor/Editor";
+import type { Text } from "components/editor/types";
 import { Editor, Transforms, Element as SlateElement } from "slate";
 
 const LIST_TYPES = ["numbered-list", "bulleted-list"];

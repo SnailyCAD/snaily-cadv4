@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import { Full911Call, useDispatchState } from "state/dispatch/dispatchState";
 import type { AssignedUnit } from "@snailycad/types";
 import { useTranslations } from "use-intl";
-import dynamic from "next/dynamic";
 import useFetch from "lib/useFetch";
 import { useLeoState } from "state/leoState";
 import { useEmsFdState } from "state/emsFdState";
@@ -26,10 +25,6 @@ import { ActiveCallsHeader } from "./ActiveCallsHeader";
 import { ActiveCallsActionsColumn } from "./ActionsColumn";
 import { useCall911State } from "state/dispatch/call911State";
 import { useActiveCalls } from "hooks/realtime/useActiveCalls";
-
-const DescriptionModal = dynamic(
-  async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
-);
 
 interface Props {
   initialData: Get911CallsData;
@@ -196,12 +191,6 @@ function _ActiveCalls({ initialData }: Props) {
       ) : null}
 
       <DispatchCallTowModal call={call911State.currentlySelectedCall} />
-      {call911State.currentlySelectedCall?.descriptionData ? (
-        <DescriptionModal
-          onClose={() => call911State.setCurrentlySelectedCall(null)}
-          value={call911State.currentlySelectedCall.descriptionData}
-        />
-      ) : null}
 
       <Manage911CallModal
         setCall={call911State.setCurrentlySelectedCall}

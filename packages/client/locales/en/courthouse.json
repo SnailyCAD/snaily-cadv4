@@ -19,6 +19,7 @@
     "manageCourtEntry": "Manage court entry",
     "caseNumber": "Case Number",
     "title": "Title",
+    "description": "Description",
     "dates": "Dates",
     "addDate": "Add Date",
     "manageCourtDate": "Manage court date",

@@ -8,12 +8,12 @@ import { Table, useTableState } from "components/shared/Table";
 import type { CourthousePost } from "@snailycad/types";
 import { FullDate } from "components/shared/FullDate";
 import { ManageCourtPostModal } from "./ManageCourtPostModal";
-import { DescriptionModal } from "components/modal/DescriptionModal/DescriptionModal";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { usePermission, Permissions } from "hooks/usePermission";
 import type { DeleteCourthousePostsData, GetCourthousePostsData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
 interface Props {
   posts: GetCourthousePostsData;
@@ -44,11 +44,6 @@ export function CourthousePostsTab(props: Props) {
       postState.setTempId(null);
       closeModal(ModalIds.AlertDeleteCourthousePost);
     }
-  }
-
-  function handleViewDescription(post: CourthousePost) {
-    postState.setTempId(post.id);
-    openModal(ModalIds.Description, post);
   }
 
   function handleManageClick(post: CourthousePost) {
@@ -82,37 +77,31 @@ export function CourthousePostsTab(props: Props) {
             id: post.id,
             title: post.title,
             createdAt: <FullDate>{post.createdAt}</FullDate>,
-
-            actions: (
+            description: <CallDescription nonCard data={post} />,
+            actions: hasManagePermissions ? (
               <>
-                <Button size="xs" onClick={() => handleViewDescription(post)}>
-                  {common("viewDescription")}
+                <Button
+                  className="ml-2"
+                  onClick={() => handleManageClick(post)}
+                  size="xs"
+                  variant="success"
+                >
+                  {common("manage")}
                 </Button>
-                {hasManagePermissions ? (
-                  <>
-                    <Button
-                      className="ml-2"
-                      onClick={() => handleManageClick(post)}
-                      size="xs"
-                      variant="success"
-                    >
-                      {common("manage")}
-                    </Button>
-                    <Button
-                      onClick={() => handleDeleteClick(post)}
-                      className="ml-2"
-                      size="xs"
-                      variant="danger"
-                    >
-                      {common("delete")}
-                    </Button>
-                  </>
-                ) : null}
+                <Button
+                  onClick={() => handleDeleteClick(post)}
+                  className="ml-2"
+                  size="xs"
+                  variant="danger"
+                >
+                  {common("delete")}
+                </Button>
               </>
-            ),
+            ) : null,
           }))}
           columns={[
             { header: t("title"), accessorKey: "title" },
+            { header: t("description"), accessorKey: "description" },
             { header: common("createdAt"), accessorKey: "createdAt" },
             { header: common("actions"), accessorKey: "actions" },
           ]}
@@ -143,13 +132,6 @@ export function CourthousePostsTab(props: Props) {
             onClose={() => postState.setTempId(null)}
           />
         </>
-      ) : null}
-
-      {tempPost?.descriptionData ? (
-        <DescriptionModal
-          onClose={() => postState.setTempId(null)}
-          value={tempPost.descriptionData}
-        />
       ) : null}
     </TabsContent>
   );

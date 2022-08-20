@@ -11,16 +11,13 @@ import { usePermission, Permissions } from "hooks/usePermission";
 import { useAuth } from "context/AuthContext";
 import type { GetTaxiCallsData, GetTowCallsData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
 const AssignToCallModal = dynamic(
   async () => (await import("components/citizen/tow/AssignToTowCall")).AssignToCallModal,
 );
 const ManageCallModal = dynamic(
   async () => (await import("components/citizen/tow/ManageTowCall")).ManageCallModal,
-);
-
-const DescriptionModal = dynamic(
-  async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
 );
 
 interface Props {
@@ -45,11 +42,6 @@ export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props)
   const toCheckPerms =
     type === "tow" ? [Permissions.ManageTowCalls] : [Permissions.ManageTaxiCalls];
   const hasManagePermissions = hasPermissions(toCheckPerms, fallback ?? false);
-
-  function handleViewDescription(call: TowCall | TaxiCall) {
-    callState.setTempId(call.id);
-    openModal(ModalIds.Description, call);
-  }
 
   function assignClick(call: TowCall | TaxiCall) {
     openModal(ModalIds.AssignToTowCall);
@@ -95,14 +87,7 @@ export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props)
             id: call.id,
             location: call.location,
             postal: call.postal || common("none"),
-            description:
-              call.description && !call.descriptionData ? (
-                call.description
-              ) : (
-                <Button size="xs" onClick={() => handleViewDescription(call)}>
-                  {common("viewDescription")}
-                </Button>
-              ),
+            description: <CallDescription data={call} />,
             caller: call.creator
               ? `${call.creator.name} ${call.creator.surname}`
               : call.name ?? leo("dispatch"),
@@ -142,12 +127,6 @@ export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props)
         onUpdate={updateCalls}
         call={tempCall}
       />
-      {tempCall?.descriptionData ? (
-        <DescriptionModal
-          onClose={() => callState.setTempId(null)}
-          value={tempCall.descriptionData}
-        />
-      ) : null}
     </>
   );
 }

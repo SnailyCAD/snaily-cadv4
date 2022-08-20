@@ -5,7 +5,7 @@ import { FormRow } from "components/form/FormRow";
 import { Input } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
 import { AlertModal } from "components/modal/AlertModal";
-import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
+import { dataToSlate, Editor } from "components/editor/Editor";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";

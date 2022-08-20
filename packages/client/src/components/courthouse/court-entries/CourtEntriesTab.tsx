@@ -8,11 +8,11 @@ import { Table, useTableState } from "components/shared/Table";
 import type { CourtEntry } from "@snailycad/types";
 import { FullDate } from "components/shared/FullDate";
 import { ManageCourtEntry } from "./ManageCourtEntry";
-import { DescriptionModal } from "components/modal/DescriptionModal/DescriptionModal";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import type { DeleteCourtEntriesData, GetCourtEntriesData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
 interface Props {
   entries: GetCourtEntriesData;
@@ -43,11 +43,6 @@ export function CourtEntriesTab(props: Props) {
     }
   }
 
-  function handleViewDescription(entry: CourtEntry) {
-    entryState.setTempId(entry.id);
-    openModal(ModalIds.Description, entry);
-  }
-
   function handleManageClick(entry: CourtEntry) {
     entryState.setTempId(entry.id);
     openModal(ModalIds.ManageCourtEntry);
@@ -76,11 +71,7 @@ export function CourtEntriesTab(props: Props) {
             title: entry.title,
             caseNumber: entry.caseNumber,
             createdAt: <FullDate>{entry.createdAt}</FullDate>,
-            description: (
-              <Button size="xs" onClick={() => handleViewDescription(entry)}>
-                {common("viewDescription")}
-              </Button>
-            ),
+            description: <CallDescription nonCard data={entry} />,
             actions: (
               <>
                 <Button onClick={() => handleManageClick(entry)} size="xs" variant="success">
@@ -129,12 +120,6 @@ export function CourtEntriesTab(props: Props) {
         }
         onClose={() => entryState.setTempId(null)}
       />
-      {tempEntry?.descriptionData ? (
-        <DescriptionModal
-          onClose={() => entryState.setTempId(null)}
-          value={tempEntry.descriptionData}
-        />
-      ) : null}
     </TabsContent>
   );
 }

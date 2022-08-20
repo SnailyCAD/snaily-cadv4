@@ -2,7 +2,7 @@ import * as React from "react";
 import { Layout } from "components/Layout";
 import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
-import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
+import { dataToSlate, Editor } from "components/editor/Editor";
 import { useTranslations } from "next-intl";
 import type { GetServerSideProps } from "next";
 import { requestAll } from "lib/utils";
