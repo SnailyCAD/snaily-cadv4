@@ -19,6 +19,7 @@
     "manageCourtEntry": "Управлять судебными заседаниями",
     "caseNumber": "Номер дела",
     "title": "Название",
+    "description": "Описание",
     "dates": "Даты",
     "addDate": "Добавить дату",
     "manageCourtDate": "Изменить дату суда",
