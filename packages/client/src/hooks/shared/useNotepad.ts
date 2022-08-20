@@ -1,4 +1,4 @@
-import { dataToSlate, DEFAULT_EDITOR_DATA } from "components/modal/DescriptionModal/Editor";
+import { dataToSlate, DEFAULT_EDITOR_DATA } from "components/editor/Editor";
 import { useRouter } from "next/router";
 import * as React from "react";
 import type { Descendant } from "slate";

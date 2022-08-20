@@ -12,6 +12,7 @@ import { useTranslations } from "next-intl";
 import { Infofield } from "components/shared/Infofield";
 import { isUnitCombined } from "@snailycad/utils";
 import { useCall911State } from "state/dispatch/call911State";
+import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
 interface CallItemProps extends Omit<MapCallProps, "toggledId" | "openItems" | "setOpenItems"> {
   call: Full911Call;
@@ -27,11 +28,6 @@ export function CallItem({ call, hasMarker, setMarker }: CallItemProps) {
   function handleEdit(call: Full911Call) {
     openModal(ModalIds.Manage911Call);
     setCurrentlySelectedCall(call);
-  }
-
-  function handleViewDescription(call: Full911Call) {
-    setCurrentlySelectedCall(call);
-    openModal(ModalIds.Description, call);
   }
 
   const assignedUnits = React.useMemo(() => {
@@ -76,15 +72,14 @@ export function CallItem({ call, hasMarker, setMarker }: CallItemProps) {
             <Infofield label={common("name")}>{call.name}</Infofield>
             <Infofield label={t("location")}>{call.location}</Infofield>
             <Infofield label={t("postal")}>{call.postal || common("none")}</Infofield>
+            <Infofield label={t("description")}>
+              <CallDescription nonCard data={call} />
+            </Infofield>
             <Infofield label={t("assignedUnits")}>
               {assignedUnits.length <= 0 ? common("none") : assignedUnits}
             </Infofield>
 
             <div className="flex flex-col mt-4">
-              <Button onClick={() => handleViewDescription(call)}>
-                {common("viewDescription")}
-              </Button>
-
               <div className="grid grid-cols-2 grid-flow-col gap-2 mt-2">
                 <Button onClick={() => handleEdit(call)}>{common("manage")}</Button>
 

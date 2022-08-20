@@ -11,9 +11,9 @@ interface Call911State {
   setCurrentlySelectedCall(call: Full911Call | null): void;
 }
 
-export const useCall911State = create<Call911State>()((set) => ({
+export const useCall911State = create<Call911State>()((set, get) => ({
   calls: [],
-  setCalls: (calls) => set({ calls }),
+  setCalls: (calls) => set({ calls: Array.isArray(calls) ? calls : get().calls }),
 
   currentlySelectedCall: null,
   setCurrentlySelectedCall: (call) => set({ currentlySelectedCall: call }),

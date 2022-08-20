@@ -1,5 +1,5 @@
 import type { Record } from "@snailycad/types";
-import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
+import { dataToSlate, Editor } from "components/editor/Editor";
 import { HoverCard } from "components/shared/HoverCard";
 import { useTranslations } from "next-intl";
 

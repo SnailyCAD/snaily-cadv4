@@ -296,7 +296,11 @@ export class EmsFdController {
   async getActiveDeputies(
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
   ): Promise<APITypes.GetEmsFdActiveDeputies> {
-    const unitsInactivityFilter = getInactivityFilter(cad, "lastStatusChangeTimestamp");
+    const unitsInactivityFilter = getInactivityFilter(
+      cad,
+      "unitInactivityTimeout",
+      "lastStatusChangeTimestamp",
+    );
 
     if (unitsInactivityFilter) {
       setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp);

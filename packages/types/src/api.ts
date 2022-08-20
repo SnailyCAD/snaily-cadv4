@@ -124,7 +124,10 @@ export type PostVerify2FAData = boolean;
  * @method Post
  * @route /2fa/enable
  */
-export type PostEnable2FAData = string;
+export interface PostEnable2FAData {
+  qrCode: string;
+  totpCode: string;
+}
 
 /**
  * @method Delete

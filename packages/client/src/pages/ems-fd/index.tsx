@@ -137,7 +137,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ req, local
   const user = await getSessionUser(req);
   const [values, calls, { deputies }, activeDeputies, activeDeputy] = await requestAll(req, [
     ["/admin/values/codes_10", []],
-    ["/911-calls", []],
+    ["/911-calls", { calls: [], totalCount: 0 }],
     ["/ems-fd", { deputies: [] }],
     ["/ems-fd/active-deputies", []],
     ["/ems-fd/active-deputy", null],

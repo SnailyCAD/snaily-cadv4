@@ -75,6 +75,10 @@ model MiscCadSettings {
   inactivityTimeout         Int?
   jailTimeScale             JailTimeScale?
 
+  call911InactivityTimeout  Int?
+  incidentInactivityTimeout Int?
+  unitInactivityTimeout     Int?
+
   /// deprecated, use `webhooks` instead
   call911WebhookId     String?
   statusesWebhookId    String?
@@ -1206,7 +1210,7 @@ model DLExam {
 
 model WeaponExam {
   id           String                        @id @default(uuid())
-  citizen      Citizen                       @relation("weaponExams", fields: [citizenId], references: [id])
+  citizen      Citizen                       @relation("weaponExams", fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId    String
   theoryExam   DLExamPassType?
   practiceExam DLExamPassType?

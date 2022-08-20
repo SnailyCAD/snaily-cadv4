@@ -29,6 +29,7 @@ import type {
   GetIncidentsData,
 } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
 interface Props extends GetDispatchData {
   incidents: GetIncidentsData["incidents"];
@@ -42,10 +43,6 @@ const ManageIncidentModal = dynamic(async () => {
 const AlertModal = dynamic(async () => {
   return (await import("components/modal/AlertModal")).AlertModal;
 });
-
-const DescriptionModal = dynamic(
-  async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
-);
 
 export default function LeoIncidents({
   officers,
@@ -70,11 +67,6 @@ export default function LeoIncidents({
   const { hasPermissions } = usePermission();
 
   const isOfficerOnDuty = activeOfficer && activeOfficer.status?.shouldDo !== "SET_OFF_DUTY";
-
-  function handleViewDescription(incident: LeoIncident) {
-    incidentState.setTempId(incident.id);
-    openModal(ModalIds.Description);
-  }
 
   function onDeleteClick(incident: LeoIncident) {
     openModal(ModalIds.AlertDeleteIncident);
@@ -176,17 +168,7 @@ export default function LeoIncidents({
               injuriesOrFatalities: common(yesOrNoText(incident.injuriesOrFatalities)),
               arrestsMade: common(yesOrNoText(incident.arrestsMade)),
               situationCode: incident.situationCode?.value.value ?? common("none"),
-              description: (
-                <span className="block max-w-4xl min-w-[200px] break-words whitespace-pre-wrap">
-                  {incident.description && !incident.descriptionData ? (
-                    incident.description
-                  ) : (
-                    <Button size="xs" onClick={() => handleViewDescription(incident)}>
-                      {common("viewDescription")}
-                    </Button>
-                  )}
-                </span>
-              ),
+              description: <CallDescription data={incident} />,
               createdAt: <FullDate>{incident.createdAt}</FullDate>,
               actions: (
                 <>
@@ -250,13 +232,6 @@ export default function LeoIncidents({
           onDeleteClick={handleDelete}
           onClose={() => incidentState.setTempId(null)}
           state={state}
-        />
-      ) : null}
-
-      {tempIncident?.descriptionData ? (
-        <DescriptionModal
-          onClose={() => incidentState.setTempId(null)}
-          value={tempIncident.descriptionData}
         />
       ) : null}
     </Layout>

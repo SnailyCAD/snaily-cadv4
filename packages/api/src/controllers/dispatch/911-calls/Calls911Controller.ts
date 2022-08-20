@@ -66,7 +66,7 @@ export class Calls911Controller {
     @QueryParams("division", String) division?: string,
     @QueryParams("assignedUnit", String) assignedUnit?: string,
   ): Promise<APITypes.Get911CallsData> {
-    const inactivityFilter = getInactivityFilter(cad);
+    const inactivityFilter = getInactivityFilter(cad, "call911InactivityTimeout");
     if (inactivityFilter) {
       this.endInactiveCalls(inactivityFilter.updatedAt);
     }
@@ -159,7 +159,7 @@ export class Calls911Controller {
         location: data.location,
         postal: data.postal,
         description: data.description,
-        descriptionData: data.descriptionData,
+        descriptionData: data.descriptionData ?? undefined,
         name: data.name,
         userId: user.id || undefined,
         situationCodeId: data.situationCode ?? null,
@@ -292,7 +292,7 @@ export class Calls911Controller {
         name: data.name,
         userId: user.id,
         positionId: shouldRemovePosition ? null : position?.id ?? call.positionId,
-        descriptionData: data.descriptionData,
+        descriptionData: data.descriptionData ?? undefined,
         situationCodeId: data.situationCode === null ? null : data.situationCode,
         typeId: data.type,
       },

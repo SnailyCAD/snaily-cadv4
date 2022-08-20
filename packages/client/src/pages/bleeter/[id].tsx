@@ -14,7 +14,7 @@ import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { useImageUrl } from "hooks/useImageUrl";
 import { Title } from "components/shared/Title";
-import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
+import { dataToSlate, Editor } from "components/editor/Editor";
 import type { DeleteBleeterByIdData, GetBleeterByIdData } from "@snailycad/types/api";
 
 const ManageBleetModal = dynamic(

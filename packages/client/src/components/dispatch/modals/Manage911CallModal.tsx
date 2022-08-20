@@ -20,7 +20,7 @@ import { EmsFdDeputy, StatusValueType, type CombinedLeoUnit } from "@snailycad/t
 import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
 import { CALL_911_SCHEMA } from "@snailycad/schemas";
-import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
+import { dataToSlate, Editor } from "components/editor/Editor";
 import { useValues } from "context/ValuesContext";
 import { isUnitCombined } from "@snailycad/utils";
 import { toastMessage } from "lib/toastMessage";

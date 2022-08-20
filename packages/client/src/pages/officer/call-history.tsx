@@ -18,7 +18,6 @@ import { Input } from "components/form/inputs/Input";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { Title } from "components/shared/Title";
-import dynamic from "next/dynamic";
 import { FullDate } from "components/shared/FullDate";
 import { AlertModal } from "components/modal/AlertModal";
 import { Manage911CallModal } from "components/dispatch/modals/Manage911CallModal";
@@ -32,10 +31,7 @@ import type {
 } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { getSelectedTableRows } from "hooks/shared/table/useTableState";
-
-const DescriptionModal = dynamic(
-  async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
-);
+import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
 interface Props extends GetDispatchData {
   data: Get911CallsData;
@@ -95,11 +91,6 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
 
       closeModal(ModalIds.AlertPurgeCalls);
     }
-  }
-
-  function handleViewDescription(call: Full911Call) {
-    callState.setTempId(call.id);
-    openModal(ModalIds.Description, call);
   }
 
   function makeUnit(unit: AssignedUnit) {
@@ -169,14 +160,7 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
                 caller: call.name,
                 location: call.location,
                 postal: call.postal,
-                description:
-                  call.description && !call.descriptionData ? (
-                    call.description
-                  ) : (
-                    <Button size="xs" onClick={() => handleViewDescription(call)}>
-                      {common("viewDescription")}
-                    </Button>
-                  ),
+                description: <CallDescription data={call} />,
                 assignedUnits: call.assignedUnits.map(makeUnit).join(", ") || common("none"),
                 caseNumbers: caseNumbers || common("none"),
                 createdAt: <FullDate>{call.createdAt}</FullDate>,
@@ -233,13 +217,6 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
         deleteText={t("purge")}
       />
 
-      {tempCall?.descriptionData ? (
-        <DescriptionModal
-          onClose={() => callState.setTempId(null)}
-          value={tempCall.descriptionData}
-        />
-      ) : null}
-
       <Manage911CallModal call={tempCall} />
     </Layout>
   );
@@ -248,7 +225,7 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const user = await getSessionUser(req);
   const [calls, { incidents }, { deputies, officers }] = await requestAll(req, [
-    ["/911-calls?includeEnded=true&take=35", []],
+    ["/911-calls?includeEnded=true&take=35", { calls: [], totalCount: 0 }],
     ["/incidents", { incidents: [] }],
     ["/dispatch", { deputies: [], officers: [] }],
   ]);

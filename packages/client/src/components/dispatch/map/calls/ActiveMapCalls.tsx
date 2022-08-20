@@ -7,7 +7,6 @@ import type { Call911 } from "@snailycad/types";
 import { Manage911CallModal } from "components/dispatch/modals/Manage911CallModal";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
-import { DescriptionModal } from "components/modal/DescriptionModal/DescriptionModal";
 import { usePortal } from "@casper124578/useful";
 import { CallItem } from "./CallItem";
 import { useCall911State } from "state/dispatch/call911State";
@@ -80,10 +79,6 @@ export function ActiveMapCalls({ hasMarker, setOpenItems, openItems, setMarker }
         <Manage911CallModal
           onClose={() => calls911State.setCurrentlySelectedCall(null)}
           call={calls911State.currentlySelectedCall}
-        />
-        <DescriptionModal
-          onClose={() => calls911State.setCurrentlySelectedCall(null)}
-          value={calls911State.currentlySelectedCall?.descriptionData ?? undefined}
         />
       </div>,
       portalRef,

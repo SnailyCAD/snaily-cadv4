@@ -144,58 +144,6 @@ export function GeneralSettingsTab() {
             </SettingsFormField>
 
             <SettingsFormField
-              errorMessage={errors.whitelisted}
-              action="checkbox"
-              label="CAD Whitelist"
-              description="The CAD will be whitelisted. Any user that registers will need to be reviewed, they can be accepted or denied"
-            >
-              <Toggle
-                name="whitelisted"
-                onCheckedChange={handleChange}
-                value={values.whitelisted}
-              />
-            </SettingsFormField>
-
-            <SettingsFormField
-              errorMessage={errors.towWhitelisted}
-              action="checkbox"
-              label="Tow Whitelist"
-              description="Tow will be whitelisted, the permission can be given to any user."
-            >
-              <Toggle
-                name="towWhitelisted"
-                onCheckedChange={handleChange}
-                value={values.towWhitelisted}
-              />
-            </SettingsFormField>
-
-            <SettingsFormField
-              errorMessage={errors.taxiWhitelisted}
-              action="checkbox"
-              label="Taxi Whitelist"
-              description="Taxi will be whitelisted, the permission can be given to any user."
-            >
-              <Toggle
-                name="taxiWhitelisted"
-                onCheckedChange={handleChange}
-                value={values.taxiWhitelisted}
-              />
-            </SettingsFormField>
-
-            <SettingsFormField
-              errorMessage={errors.businessWhitelisted}
-              action="checkbox"
-              label="Business Whitelist"
-              description="Businesses will be whitelisted, they will need to be reviewed, they can be accepted or denied before they can be used."
-            >
-              <Toggle
-                name="businessWhitelisted"
-                onCheckedChange={handleChange}
-                value={values.businessWhitelisted}
-              />
-            </SettingsFormField>
-
-            <SettingsFormField
               errorMessage={errors.roleplayEnabled}
               action="checkbox"
               label="Roleplay Enabled"
@@ -207,6 +155,62 @@ export function GeneralSettingsTab() {
                 value={values.roleplayEnabled}
               />
             </SettingsFormField>
+
+            <section>
+              <h3 className="font-semibold text-xl mb-3">Whitelisting</h3>
+
+              <SettingsFormField
+                errorMessage={errors.whitelisted}
+                action="checkbox"
+                label="CAD Whitelist"
+                description="The CAD will be whitelisted. Any user that registers will need to be reviewed, they can be accepted or denied"
+              >
+                <Toggle
+                  name="whitelisted"
+                  onCheckedChange={handleChange}
+                  value={values.whitelisted}
+                />
+              </SettingsFormField>
+
+              <SettingsFormField
+                errorMessage={errors.towWhitelisted}
+                action="checkbox"
+                label="Tow Whitelist"
+                description="Tow will be whitelisted, the permission can be given to any user."
+              >
+                <Toggle
+                  name="towWhitelisted"
+                  onCheckedChange={handleChange}
+                  value={values.towWhitelisted}
+                />
+              </SettingsFormField>
+
+              <SettingsFormField
+                errorMessage={errors.taxiWhitelisted}
+                action="checkbox"
+                label="Taxi Whitelist"
+                description="Taxi will be whitelisted, the permission can be given to any user."
+              >
+                <Toggle
+                  name="taxiWhitelisted"
+                  onCheckedChange={handleChange}
+                  value={values.taxiWhitelisted}
+                />
+              </SettingsFormField>
+
+              <SettingsFormField
+                errorMessage={errors.businessWhitelisted}
+                action="checkbox"
+                label="Business Whitelist"
+                description="Businesses will be whitelisted, they will need to be reviewed, they can be accepted or denied before they can be used."
+              >
+                <Toggle
+                  name="businessWhitelisted"
+                  onCheckedChange={handleChange}
+                  value={values.businessWhitelisted}
+                />
+              </SettingsFormField>
+            </section>
 
             <Button disabled={state === "loading"} className="flex items-center" type="submit">
               {state === "loading" ? <Loader className="mr-3" /> : null}

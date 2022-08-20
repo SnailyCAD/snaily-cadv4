@@ -5,6 +5,7 @@ import { xToXArrAll } from "migrations/xToXArr";
 import { disabledFeatureToCadFeature } from "migrations/disabledFeatureToCadFeature";
 import { officersToUnitsInvolved } from "migrations/officersToUnitsInvolved";
 import { webhookIdToWebhooks } from "migrations/webhookIdToWebhooks";
+import { inactivityFilter } from "migrations/inactivityFilter";
 
 export const prisma = new PrismaClient({
   errorFormat: "colorless",
@@ -19,6 +20,7 @@ async function handleMigrations() {
     xToXArrAll(),
     disabledFeatureToCadFeature(),
     officersToUnitsInvolved(),
+    inactivityFilter(),
   ]);
 }
 

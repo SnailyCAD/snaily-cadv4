@@ -1,7 +1,7 @@
 import { components, MultiValueGenericProps } from "react-select";
 import { HoverCard } from "components/shared/HoverCard";
 import type { DriversLicenseCategoryValue } from "@snailycad/types";
-import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
+import { dataToSlate, Editor } from "components/editor/Editor";
 
 export function MultiValueContainerDescription(props: MultiValueGenericProps<any>) {
   const value = props.data as Pick<DriversLicenseCategoryValue, "description">;

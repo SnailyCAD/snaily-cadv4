@@ -11,7 +11,7 @@ import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
-import { DEFAULT_EDITOR_DATA, Editor } from "components/modal/DescriptionModal/Editor";
+import { DEFAULT_EDITOR_DATA, Editor } from "components/editor/Editor";
 import type { PostCourthousePostsData, PutCourthousePostsData } from "@snailycad/types/api";
 
 interface Props {
