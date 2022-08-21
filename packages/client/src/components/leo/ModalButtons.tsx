@@ -5,7 +5,7 @@ import { useTranslations } from "use-intl";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import useFetch from "lib/useFetch";
 import { makeUnitName } from "lib/utils";
-import { isUnitCombined } from "@snailycad/utils";
+import { isUnitCombined, isUnitOfficer } from "@snailycad/utils";
 import * as modalButtons from "components/modal-buttons/buttons";
 import { ModalButton } from "components/modal-buttons/ModalButton";
 import type { PostLeoTogglePanicButtonData } from "@snailycad/types/api";
@@ -14,6 +14,7 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { TonesModal } from "components/dispatch/modals/TonesModal";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { useImageUrl } from "hooks/useImageUrl";
 
 const buttons: modalButtons.ModalButton[] = [
   modalButtons.switchDivision,
@@ -38,6 +39,7 @@ export function ModalButtons() {
   const { state, execute } = useFetch();
   const { openModal } = useModal();
   const { PANIC_BUTTON } = useFeatureEnabled();
+  const { makeImageUrl } = useImageUrl();
 
   async function handlePanic() {
     if (!activeOfficer) return;
@@ -54,7 +56,7 @@ export function ModalButtons() {
     activeOfficer.status?.shouldDo === ShouldDoType.SET_OFF_DUTY ||
     activeOfficer.statusId === null;
 
-  const name =
+  const nameAndCallsign =
     !isButtonDisabled &&
     (isUnitCombined(activeOfficer)
       ? generateCallsign(activeOfficer, "pairedUnitTemplate")
@@ -65,7 +67,19 @@ export function ModalButtons() {
       {!isButtonDisabled ? (
         <p className="text-lg">
           <span className="font-semibold">{t("Leo.activeOfficer")}: </span>
-          {name}
+
+          {isUnitOfficer(activeOfficer) && activeOfficer.imageId ? (
+            <img
+              className="rounded-md w-[30px] h-[30px] object-cover mx-2 inline"
+              draggable={false}
+              src={makeImageUrl("units", activeOfficer.imageId)}
+              loading="lazy"
+              width={30}
+              height={30}
+              alt={String(nameAndCallsign)}
+            />
+          ) : null}
+          {nameAndCallsign}
         </p>
       ) : null}
 
