@@ -1,6 +1,7 @@
 import * as React from "react";
 import useFetch from "lib/useFetch";
 import { useDebounce } from "react-use";
+import { useMounted } from "@casper124578/useful";
 
 interface FetchOptions {
   pageSize: number;
@@ -24,6 +25,7 @@ export function useAsyncTable<T>(options: Options<T>) {
   const [search, setSearch] = React.useState("");
   const [extraParams, setExtraParams] = React.useState({});
   const { state: loadingState, execute } = useFetch();
+  const isMounted = useMounted();
 
   const scrollToTopOnDataChange = options.scrollToTopOnDataChange ?? true;
   const data = options.state?.data ?? _data;
@@ -32,6 +34,7 @@ export function useAsyncTable<T>(options: Options<T>) {
   const handlePageChange = React.useCallback(
     async ({ pageSize, pageIndex }: Omit<FetchOptions, "path" | "onResponse">) => {
       if (options.disabled) return;
+      if (!isMounted) return;
 
       const { json, error } = await execute({
         path: options.fetchOptions.path,
@@ -55,11 +58,12 @@ export function useAsyncTable<T>(options: Options<T>) {
         }
       }
     },
-    [search, extraParams, options.disabled], // eslint-disable-line
+    [search, extraParams, isMounted, options.disabled], // eslint-disable-line
   );
 
   const handleSearch = React.useCallback(async () => {
     if (options.disabled) return;
+    if (!isMounted) return;
 
     const { json, error } = await execute({
       path: options.fetchOptions.path,
@@ -68,12 +72,12 @@ export function useAsyncTable<T>(options: Options<T>) {
 
     if (json && !error) {
       const jsonData = options.fetchOptions.onResponse(json);
-      if (Array.isArray(jsonData)) {
+      if (Array.isArray(jsonData.data)) {
         setData(jsonData.data);
         setTotalCount(jsonData.totalCount);
       }
     }
-  }, [search, extraParams, options.disabled]); // eslint-disable-line
+  }, [search, extraParams, isMounted, options.disabled]); // eslint-disable-line
 
   useDebounce(handleSearch, 250, [search, handleSearch]);
 
