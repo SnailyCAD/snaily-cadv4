@@ -68,7 +68,7 @@ export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props)
 
   function assignedUnit(call: TowCall | TaxiCall) {
     return call.assignedUnit ? (
-      <span>
+      <span className="capitalize">
         {call.assignedUnit.name} {call.assignedUnit.surname}
       </span>
     ) : (
@@ -87,7 +87,7 @@ export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props)
             id: call.id,
             location: call.location,
             postal: call.postal || common("none"),
-            description: <CallDescription data={call} />,
+            description: <CallDescription nonCard data={call} />,
             caller: call.creator
               ? `${call.creator.name} ${call.creator.surname}`
               : call.name ?? leo("dispatch"),

@@ -193,7 +193,6 @@ function _ActiveCalls({ initialData }: Props) {
       ) : null}
 
       <DispatchCallTowModal call={call911State.currentlySelectedCall} />
-
       <Manage911CallModal
         setCall={call911State.setCurrentlySelectedCall}
         onClose={() => call911State.setCurrentlySelectedCall(null)}

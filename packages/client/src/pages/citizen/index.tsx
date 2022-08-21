@@ -44,12 +44,10 @@ export default function CitizenPage({ citizens }: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Title renderLayoutTitle={false}>{t("citizens")}</Title>
-
-      <h1 className="mb-3 text-3xl font-semibold">
-        {t("citizens")}
-        {showAop ? <span> - AOP: {areaOfPlay}</span> : null}
-      </h1>
+      <header className="mb-3">
+        <Title className="mb-2">{t("citizens")}</Title>
+        {showAop ? <h2 className="font-semibold text-xl">AOP: {areaOfPlay}</h2> : null}
+      </header>
 
       <ul className="grid grid-cols-1 gap-2 mb-3 sm:grid-cols-2 md:grid-cols-3">
         <li>
