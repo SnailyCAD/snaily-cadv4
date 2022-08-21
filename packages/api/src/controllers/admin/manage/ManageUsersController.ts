@@ -84,7 +84,7 @@ export class ManageUsersController {
 
     const shouldIncludeAll = includeAll;
     const users = await prisma.user.findMany({
-      select: userProperties(),
+      select: userProperties({ type: "all" }),
       where,
       take: shouldIncludeAll ? undefined : 35,
       skip: shouldIncludeAll ? undefined : Number(skip),

@@ -56,9 +56,15 @@ export default function EditCitizen() {
 
   return (
     <Layout className="dark:text-white">
-      <Title className="mb-3">
-        {t("editCitizen")} - {citizen.name} {citizen.surname}
-      </Title>
+      <header className="mb-3">
+        <Title className="mb-2">{t("editCitizen")}</Title>
+        <h2 className="text-lg">
+          {t.rich("editingCitizen", {
+            span: (children) => <span className="font-semibold">{children}</span>,
+            citizen: `${citizen.name} ${citizen.surname}`,
+          })}
+        </h2>
+      </header>
 
       <ManageCitizenForm citizen={citizen} onSubmit={onSubmit} state={state} />
     </Layout>

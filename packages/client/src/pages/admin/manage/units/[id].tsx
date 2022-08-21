@@ -38,6 +38,7 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
   const [unit, setUnit] = React.useState(data);
 
   const t = useTranslations("Leo");
+  const tAdmin = useTranslations("Management");
   const common = useTranslations("Common");
   const { codes10, department, division, officerRank } = useValues();
   const { state, execute } = useFetch();
@@ -86,9 +87,15 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
         permissions: [Permissions.ManageUnits],
       }}
     >
-      <Title>
-        {common("manage")} {makeUnitName(unit)}
-      </Title>
+      <header className="mb-3">
+        <Title className="mb-2">{tAdmin("editUnit")}</Title>
+        <h2 className="text-lg">
+          {tAdmin.rich("editing", {
+            span: (children) => <span className="font-semibold">{children}</span>,
+            user: makeUnitName(unit),
+          })}
+        </h2>
+      </header>
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (
