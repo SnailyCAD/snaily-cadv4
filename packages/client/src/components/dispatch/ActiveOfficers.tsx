@@ -134,6 +134,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
                           {isUnitOfficer(officer) && formatUnitDivisions(officer)}
                         </p>
                       }
+                      contentProps={{ className: "whitespace-pre-wrap" }}
                     >
                       {isUnitOfficer(officer) && formatUnitDivisions(officer)}
                     </HoverCard>
