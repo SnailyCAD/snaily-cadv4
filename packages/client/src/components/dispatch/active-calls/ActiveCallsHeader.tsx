@@ -12,9 +12,10 @@ const CallsFilters = dynamic(async () => (await import("./CallsFilters")).CallsF
 interface Props {
   calls: Full911Call[];
   search: ReturnType<typeof useAsyncTable>["search"];
+  hasCalls: boolean;
 }
 
-export function ActiveCallsHeader({ calls, search }: Props) {
+export function ActiveCallsHeader({ calls, search, hasCalls }: Props) {
   const { setShowFilters, showFilters } = useCallsFilters();
   const t = useTranslations("Calls");
 
@@ -41,8 +42,8 @@ export function ActiveCallsHeader({ calls, search }: Props) {
         </div>
       </header>
 
-      {calls.length <= 0 && search.state !== "loading" && !search.search ? null : (
-        <div className="p-2 px-4">
+      {!hasCalls ? null : (
+        <div className="px-4">
           <CallsFilters search={search} calls={calls} />
         </div>
       )}

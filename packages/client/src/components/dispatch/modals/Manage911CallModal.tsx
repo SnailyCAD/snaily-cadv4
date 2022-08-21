@@ -107,6 +107,7 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
 
     if (json) {
       handleClose();
+      setCalls(calls.filter((c) => c.id !== call.id));
     }
   }
 
