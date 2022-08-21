@@ -37,7 +37,6 @@ function _ActiveCalls({ initialData }: Props) {
   const isMounted = useMounted();
   const calls = isMounted ? call911State.calls : initialData.calls;
   const hasCalls = isMounted ? call911State.calls.length >= 1 : initialData.totalCount >= 1;
-  console.log({ hasCalls, isMounted, calls });
 
   const t = useTranslations("Calls");
   const leo = useTranslations("Leo");
