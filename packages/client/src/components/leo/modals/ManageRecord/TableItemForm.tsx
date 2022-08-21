@@ -17,8 +17,18 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
   const t = useTranslations("Leo");
   const { LEO_BAIL } = useFeatureEnabled();
 
-  const [minFine, maxFine] =
-    penalCode.warningNotApplicable?.fines ?? penalCode.warningApplicable?.fines ?? [];
+  const minFinesArr = [
+    penalCode.warningNotApplicable?.fines[0],
+    penalCode.warningApplicable?.fines[0],
+  ] as number[];
+  const maxFinesArr = [
+    penalCode.warningNotApplicable?.fines[1],
+    penalCode.warningApplicable?.fines[1],
+  ] as number[];
+
+  const minFine = Math.min(...minFinesArr);
+  const maxFine = Math.max(...maxFinesArr);
+
   const [minJailTime, maxJailTime] = penalCode.warningNotApplicable?.prisonTerm ?? [];
   const [minBail, maxBail] = penalCode.warningNotApplicable?.bail ?? [];
 
