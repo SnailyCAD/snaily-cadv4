@@ -156,6 +156,7 @@ export function CreateWarrantModal({ warrant, onClose, onCreate, onUpdate }: Pro
             {isActive ? (
               <FormField label="Assigned Officers">
                 <Select
+                  closeMenuOnSelect={false}
                   isMulti
                   name="assignedOfficers"
                   values={activeOfficers.map((unit) => ({

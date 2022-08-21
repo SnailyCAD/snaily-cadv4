@@ -231,6 +231,7 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
                     <Select
                       extra={{ showContextMenuForUnits: true }}
                       isMulti
+                      closeMenuOnSelect={false}
                       name="assignedUnits"
                       value={values.assignedUnits.map((value) => ({
                         label: makeLabel(value.value),
