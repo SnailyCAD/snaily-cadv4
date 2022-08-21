@@ -26,7 +26,7 @@ import type * as APITypes from "@snailycad/types/api";
 export class AdminManageCustomRolesController {
   @Get("/")
   async getCustomRoles(): Promise<APITypes.GetCustomRolesData> {
-    const roles = await prisma.customRole.findMany();
+    const roles = await prisma.customRole.findMany({ include: { discordRole: true } });
     return roles;
   }
 
