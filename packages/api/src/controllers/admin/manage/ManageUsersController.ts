@@ -37,7 +37,7 @@ import type * as APITypes from "@snailycad/types/api";
 
 const manageUsersSelect = (selectCitizens: boolean) =>
   ({
-    ...userProperties,
+    ...userProperties({ type: "all" }),
     ...(selectCitizens ? { citizens: { include: citizenInclude } } : {}),
     apiToken: { include: { logs: { take: 35, orderBy: { createdAt: "desc" } } } },
     roles: true,
@@ -84,7 +84,7 @@ export class ManageUsersController {
 
     const shouldIncludeAll = includeAll;
     const users = await prisma.user.findMany({
-      select: userProperties,
+      select: userProperties(),
       where,
       take: shouldIncludeAll ? undefined : 35,
       skip: shouldIncludeAll ? undefined : Number(skip),
@@ -135,7 +135,7 @@ export class ManageUsersController {
   ): Promise<APITypes.PostManageUsersSearchData> {
     const users = await prisma.user.findMany({
       where: { username: { contains: username, mode: "insensitive" } },
-      select: userProperties,
+      select: userProperties({ type: "server" }),
       take: 35,
     });
 
@@ -349,7 +349,7 @@ export class ManageUsersController {
         banReason: banType === "ban" ? data?.reason : null,
         banned: banType === "ban",
       },
-      select: userProperties,
+      select: userProperties({ type: "all" }),
     });
 
     if (banType === "ban") {

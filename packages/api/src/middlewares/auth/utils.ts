@@ -49,7 +49,7 @@ export async function handleDiscordSync(options: DiscordSyncOptions) {
     const updated = await prisma.user.update({
       where: { id: options.user.id },
       data: { lastDiscordSyncTimestamp: new Date() },
-      select: userProperties,
+      select: userProperties(),
     });
 
     await updateMemberRolesLogin(updated, options.cad.discordRolesId);

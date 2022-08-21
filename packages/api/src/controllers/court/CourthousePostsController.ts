@@ -17,7 +17,7 @@ export class CourthousePostsController {
   async getPosts(): Promise<APITypes.GetCourthousePostsData> {
     const posts = await prisma.courthousePost.findMany({
       orderBy: { createdAt: "desc" },
-      include: { user: { select: userProperties } },
+      include: { user: { select: userProperties() } },
     });
     return posts;
   }
@@ -39,7 +39,7 @@ export class CourthousePostsController {
         descriptionData: data.descriptionData,
         userId: user.id,
       },
-      include: { user: { select: userProperties } },
+      include: { user: { select: userProperties() } },
     });
 
     return post;
@@ -70,7 +70,7 @@ export class CourthousePostsController {
         title: data.title,
         descriptionData: data.descriptionData,
       },
-      include: { user: { select: userProperties } },
+      include: { user: { select: userProperties() } },
     });
 
     return updated;

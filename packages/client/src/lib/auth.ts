@@ -4,7 +4,11 @@ import type { GetUserData, PostUserLogoutData } from "@snailycad/types/api";
 
 export async function getSessionUser(req?: IncomingMessage): Promise<GetUserData | null> {
   try {
-    const { data } = await handleRequest<GetUserData | null>("/user", { req, method: "POST" });
+    const { data } = await handleRequest<GetUserData | null>("/user", {
+      req,
+      isSsr: true,
+      method: "POST",
+    });
 
     if (data?.id) {
       return data;
