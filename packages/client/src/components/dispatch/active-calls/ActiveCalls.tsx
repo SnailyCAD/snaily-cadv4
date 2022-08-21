@@ -50,6 +50,7 @@ function _ActiveCalls({ initialData }: Props) {
   const { search, setSearch } = useCallsFilters();
 
   const asyncTable = useAsyncTable({
+    disabled: !CALLS_911,
     fetchOptions: {
       path: "/911-calls",
       onResponse: (json: Get911CallsData) => ({
