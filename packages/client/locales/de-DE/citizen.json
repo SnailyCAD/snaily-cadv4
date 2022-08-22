@@ -6,6 +6,7 @@
     "createCitizen": "Bürger erstellen",
     "viewCitizen": "Ansicht Bürger",
     "editCitizen": "Bürger bearbeiten",
+    "editingCitizen": "Sie bearbeiten gerade <span>{user}</span>",
     "deleteCitizen": "Bürger löschen",
     "hairColor": "Haarfarbe",
     "eyeColor": "Augenfarbe",
