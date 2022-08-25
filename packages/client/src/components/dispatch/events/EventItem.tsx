@@ -72,12 +72,12 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
     <li
       ref={actionsRef}
       className={classNames(
-        "flex justify-between dark:hover:bg-dark-bright hover:bg-gray-200/70 rounded-md px-1.5",
-        (isEditing || open) && "dark:bg-dark-bright bg-gray-200/70",
+        "flex justify-between dark:hover:bg-secondary hover:bg-gray-200/70 rounded-md px-1.5",
+        (isEditing || open) && "dark:bg-secondary bg-gray-200/70",
       )}
     >
       <div>
-        <span className="select-none text-gray-800 dark:text-quaternary mr-1 font-semibold w-[90%]">
+        <span className="select-none text-gray-700 dark:text-gray-400 mr-1 font-semibold w-[90%]">
           <FullDate>{event.createdAt}</FullDate>:
         </span>
         <span>{event.description}</span>

@@ -94,14 +94,14 @@ export function ActiveIncidents() {
   }
 
   return (
-    <div className="mt-3 overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
-      <header className="flex items-center justify-between p-2 px-4 bg-gray-200 dark:bg-gray-3">
+    <div className="mt-3 overflow-hidden rounded-md card">
+      <header className="flex items-center justify-between p-2 px-4 bg-gray-200 dark:bg-secondary">
         <h3 className="text-xl font-semibold">{t("activeIncidents")}</h3>
 
         <div>
           <Button
             variant={null}
-            className="dark:bg-gray-2 dark:hover:bg-dark-bg bg-gray-500 hover:bg-gray-600 text-white"
+            className="bg-gray-500 hover:bg-gray-600 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 text-white"
             onClick={handleCreateIncident}
             disabled={!hasActiveDispatchers}
           >

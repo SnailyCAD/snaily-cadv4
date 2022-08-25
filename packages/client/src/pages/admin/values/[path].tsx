@@ -249,7 +249,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
                           align="center"
                           side="left"
                           sideOffset={5}
-                          className="rounded-md bg-white dark:bg-dark-bright dark:text-white p-4 max-w-[350px]"
+                          className="rounded-md bg-white dark:bg-tertiary dark:text-white p-4 max-w-[350px]"
                         >
                           You cannot delete this value because it is being used by another database
                           item. You must first delete that item.
