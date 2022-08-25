@@ -7,8 +7,13 @@ export type ButtonProps = JSX.IntrinsicElements["button"] & {
 };
 
 export const buttonVariants = {
+  primary: "dark:bg-primary dark:text-white hover:dark:bg-secondary", // todo: add focus state
+  secondary: "dark:bg-secondary hover:brightness-150",
+  tertiary: "dark:bg-tertiary hover:brightness-150",
+  senary: "dark:bg-senary hover:brightness-150",
+
   default:
-    "bg-gray-300 hover:bg-gray-400 text-black dark:hover:bg-gray-3 dark:bg-dark-bright dark:text-white transition-all",
+    "bg-gray-300 hover:bg-gray-400 text-black dark:hover:brightness-150 dark:bg-secondary dark:text-white border border-quinary transition-all",
   cancel: "bg-transparent hover:bg-transparent text-gray-800 dark:text-gray-200 transition-all",
   danger: "bg-red-500 hover:bg-red-600 text-black transition-all",
   success: "bg-emerald-500 hover:bg-emerald-600 text-black transition-all",

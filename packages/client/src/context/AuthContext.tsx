@@ -46,9 +46,7 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
     }
 
     setUser(user);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.pathname, router.asPath]);
+  }, [router]);
 
   React.useEffect(() => {
     const savedDarkTheme = initialData.userSavedIsDarkTheme

@@ -5,7 +5,7 @@ import useOnclickOutside from "react-cool-onclickoutside";
 import { useTranslations } from "next-intl";
 
 interface Props {
-  label: string;
+  label: string | null;
   children: React.ReactNode;
   className?: string;
   checkbox?: boolean;

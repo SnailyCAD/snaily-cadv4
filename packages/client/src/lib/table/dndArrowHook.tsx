@@ -19,7 +19,7 @@ export function createTableDragDropColumn<TData extends RowData>(
             !isDisabled && DRAGGABLE_TABLE_HANDLE,
           )}
         >
-          <ArrowsExpand className="mr-2 text-gray-500 dark:text-gray-400" width={15} />
+          <ArrowsExpand className="mr-2 text-gray-500 dark:text-quaternary" width={15} />
         </span>
       );
     },

@@ -23,15 +23,15 @@ html {
 
 @layer components {
   .card {
-    @apply rounded-md bg-gray-200/60 dark:bg-gray-2;
+    @apply rounded-md bg-gray-200/60 dark:border-quinary dark:bg-tertiary;
   }
 
   .truncate-custom {
-    @apply relative bg-gray-200/60 dark:bg-gray-2;
+    @apply relative bg-gray-200/60 dark:border-quinary dark:bg-tertiary;
   }
 
   .truncate-custom-non-card {
-    @apply bg-white dark:bg-dark-bg;
+    @apply bg-white dark:border-quinary dark:bg-primary;
   }
 
   .truncate-custom::after {
@@ -45,12 +45,16 @@ html {
 }
 
 #__next {
-  @apply min-h-screen dark:bg-dark-bg;
+  @apply min-h-screen dark:bg-primary;
 }
 
 p,
 li {
   @apply text-lg;
+}
+
+strong {
+  font-weight: 600;
 }
 
 [data-list-item="true"]::before {

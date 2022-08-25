@@ -77,7 +77,7 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
       )}
     >
       <div>
-        <span className="select-none text-gray-800 dark:text-gray-400 mr-1 font-semibold w-[90%]">
+        <span className="select-none text-gray-800 dark:text-quaternary mr-1 font-semibold w-[90%]">
           <FullDate>{event.createdAt}</FullDate>:
         </span>
         <span>{event.description}</span>

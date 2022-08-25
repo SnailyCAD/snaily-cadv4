@@ -11,7 +11,7 @@ interface Props extends DropdownMenu.MenuContentProps {
 }
 
 export function Dropdown({ trigger, children, extra, ...rest }: Props) {
-  const maxWidth = extra?.maxWidth ?? 150;
+  const maxWidth = extra?.maxWidth ?? 175;
 
   return (
     <DropdownMenu.Root>
@@ -27,7 +27,7 @@ export function Dropdown({ trigger, children, extra, ...rest }: Props) {
         {...rest}
         className={classNames(
           rest.className ?? "dropdown-left",
-          "z-50 p-1 bg-white rounded-md shadow-lg dropdown-fade w-36 dark:bg-dark-bright",
+          "z-50 p-2 bg-white rounded-md shadow-xl shadow-primary dropdown-fade w-40 dark:bg-primary border border-secondary",
         )}
       >
         {children}
@@ -61,9 +61,8 @@ Dropdown.LinkItem = function LinkItem({ children, ...rest }: JSX.IntrinsicElemen
         <a
           className={classNames(
             "outline-none block rounded-md transition-colors w-full text-left bg-transparent",
-            "dark:hover:bg-dark-bg focus:bg-gray-200 dark:focus:bg-dark-bg",
             buttonSizes.sm,
-            buttonVariants.default,
+            buttonVariants.primary,
             rest.className,
           )}
           {...rest}

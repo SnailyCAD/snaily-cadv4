@@ -24,7 +24,7 @@ export function CitizenListItem({ citizen }: Props) {
   );
 
   return (
-    <li className="flex items-center justify-between p-3 bg-gray-200 rounded-md dark:bg-gray-2">
+    <li className="flex items-center justify-between p-3 shadow-md rounded-md border dark:border-quinary dark:bg-tertiary">
       <div className="flex items-center space-x-3">
         {citizen.imageId ? (
           <img
@@ -44,13 +44,13 @@ export function CitizenListItem({ citizen }: Props) {
           </p>
 
           {SOCIAL_SECURITY_NUMBERS ? (
-            <p className="text-neutral-600 dark:text-gray-400">
-              SSN: {citizen.socialSecurityNumber}
+            <p className="text-neutral-600 dark:text-neutral-300">
+              <strong>SSN:</strong> {citizen.socialSecurityNumber}
             </p>
           ) : null}
           {COMMON_CITIZEN_CARDS && hasLeoPermissions ? (
-            <p className="text-neutral-600 dark:text-gray-400">
-              User: {citizen.user?.username ?? common("none")}
+            <p className="text-neutral-600 dark:text-neutral-300">
+              <strong>User:</strong> {citizen.user?.username ?? common("none")}
             </p>
           ) : null}
         </div>

@@ -130,7 +130,7 @@ export function InputSuggestions<Suggestion extends { id: string }>({
 
       {isOpen ? (
         <FocusScope restoreFocus={false}>
-          <div className="absolute z-50 w-full p-2 overflow-auto bg-white rounded-md shadow-md top-11 dark:bg-gray-3 max-h-60">
+          <div className="absolute z-50 w-full p-2 overflow-auto bg-white rounded-md shadow-md top-11 dark:bg-secondary max-h-60">
             <ul className="flex flex-col gap-y-1">
               {suggestions.length <= 0 ? (
                 <span className="text-neutral-600 dark:text-gray-500">{common("noOptions")}</span>
@@ -186,7 +186,7 @@ const Suggestion = React.forwardRef<HTMLButtonElement, SuggestionProps<Suggestio
         data-suggestion
         ref={ref}
         onKeyDown={onKeyDown}
-        className="p-1.5 px-2 transition-colors rounded-md cursor-pointer hover:bg-gray-200 focus:bg-gray-200 dark:hover:bg-dark-bg dark:focus:bg-dark-bg w-full"
+        className="p-1.5 px-2 transition-colors rounded-md cursor-pointer hover:bg-gray-200 focus:bg-gray-200 dark:hover:bg-tertiary dark:focus:bg-tertiary w-full"
         onClick={() => onSuggestionClick?.(suggestion)}
         type="button"
       >

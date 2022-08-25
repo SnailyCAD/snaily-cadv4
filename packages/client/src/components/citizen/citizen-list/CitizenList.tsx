@@ -79,11 +79,12 @@ export function CitizenList({ citizens: data }: Props) {
   }
 
   return (
-    <>
-      <FormField label="Search">
+    <div className="mt-5">
+      <FormField className="mb-2" label="Search">
         <Input
           value={instance.asyncTable.search.search}
           onChange={(e) => instance.asyncTable.search.setSearch(e.currentTarget.value)}
+          placeholder="John Doe"
         />
       </FormField>
 
@@ -98,7 +99,7 @@ export function CitizenList({ citizens: data }: Props) {
         className={
           data.citizens.length <= 0
             ? "flex flex-col space-y-3"
-            : "grid grid-cols-1 sm:grid-cols-2 gap-2"
+            : "grid grid-cols-1 sm:grid-cols-2 gap-3"
         }
       >
         {instance.asyncTable.data.map((citizen) => (
@@ -107,6 +108,6 @@ export function CitizenList({ citizens: data }: Props) {
       </ul>
 
       {data.totalCount > 35 ? <TablePagination table={instance as any} /> : null}
-    </>
+    </div>
   );
 }

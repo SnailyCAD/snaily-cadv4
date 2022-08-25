@@ -54,7 +54,7 @@ export function Modal({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-black/10" />
+            <div className="fixed inset-0 bg-black/40" />
           </Transition.Child>
 
           {/* this element is to trick the browser into centering the modal contents. */}
@@ -74,7 +74,7 @@ export function Modal({
             <Dialog.Panel
               style={modalStyles}
               className={classNames(
-                "max-w-[100%] inline-block p-4 px-6 my-8 text-left align-middle transition-all transform bg-white dark:bg-dark-bg dark:text-white shadow-xl rounded-lg",
+                "max-w-[100%] inline-block p-4 px-6 my-8 text-left align-middle transition-all transform bg-white dark:bg-tertiary dark:text-white shadow-xl rounded-lg",
                 isAlert ? "z-[998]" : "z-30",
                 className,
               )}
@@ -89,7 +89,7 @@ export function Modal({
                   type="button"
                   aria-label="Close Modal"
                   onClick={onClose}
-                  className="p-1.5 transition-all cursor-pointer rounded-lg hover:bg-gray-200 dark:hover:bg-dark-bright"
+                  className="p-1.5 transition-all cursor-pointer rounded-lg hover:bg-gray-200 dark:hover:bg-secondary"
                 >
                   <X width={25} height={25} />
                 </button>
