@@ -41,7 +41,6 @@ export async function handleRequest<T = any>(
         Session: parsedCookie ?? "",
         "Content-Type": "application/json",
         "is-from-dispatch": String(isDispatchUrl),
-        "is-from-ssr": String(options?.isSsr),
       },
     });
 

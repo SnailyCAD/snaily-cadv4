@@ -6,7 +6,6 @@ export async function getSessionUser(req?: IncomingMessage): Promise<GetUserData
   try {
     const { data } = await handleRequest<GetUserData | null>("/user", {
       req,
-      isSsr: !!req,
       method: "POST",
     });
 

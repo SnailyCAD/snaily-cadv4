@@ -19,7 +19,7 @@ const businessInclude = {
     },
   },
   user: {
-    select: userProperties(),
+    select: userProperties,
   },
 };
 

@@ -50,7 +50,7 @@ export class AccountController {
       data: {
         apiTokenId: apiToken.id,
       },
-      select: userProperties({ type: "all" }),
+      select: userProperties,
     });
 
     return updatedUser;
@@ -76,7 +76,7 @@ export class AccountController {
       data: {
         token: nanoid(56),
       },
-      select: userProperties({ type: "all" }),
+      select: userProperties,
     });
 
     return updated;
