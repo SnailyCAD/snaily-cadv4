@@ -133,7 +133,7 @@ export default function BusinessId(props: Props) {
               const publishedBy = currentBusiness.employees.find((em) => em.id === post.employeeId);
 
               return (
-                <li className="overflow-hidden bg-gray-100 rounded-md dark:bg-gray-2" key={post.id}>
+                <li className="overflow-hidden rounded-md card" key={post.id}>
                   <header className="flex items-center justify-between p-4">
                     <h3 className="text-2xl font-semibold">{post.title}</h3>
 

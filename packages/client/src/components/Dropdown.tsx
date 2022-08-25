@@ -61,8 +61,9 @@ Dropdown.LinkItem = function LinkItem({ children, ...rest }: JSX.IntrinsicElemen
         <a
           className={classNames(
             "outline-none block rounded-md transition-colors w-full text-left bg-transparent",
+            "dark:hover:bg-secondary focus:bg-gray-200 dark:focus:bg-secondary",
             buttonSizes.sm,
-            buttonVariants.primary,
+            buttonVariants.transparent,
             rest.className,
           )}
           {...rest}

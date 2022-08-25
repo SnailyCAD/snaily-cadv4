@@ -116,7 +116,7 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
 
   if (!onDutyCode && filteredCodes.length <= 0) {
     return (
-      <div className="text-lg mt-2 px-4 py-3 bg-gray-300/50 dark:bg-gray-2 dark:border-t-[1.5px] dark:border-gray-3">
+      <div className="text-lg mt-2 px-4 py-3 bg-gray-300/50 dark:bg-tertiary dark:border-t-[1.5px] dark:border-secondary">
         This CAD does not have any 10 codes. Please ask an admin to add some.
       </div>
     );
@@ -125,7 +125,7 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
   const departmentId = !isUnitOffDuty && "departmentId" in activeUnit && activeUnit.departmentId;
 
   return (
-    <ul className="status-buttons-grid mt-2 px-4 py-2 bg-gray-300/50 dark:bg-gray-2 dark:border-t-[1.5px] dark:border-gray-3">
+    <ul className="status-buttons-grid mt-2 px-4 py-2 bg-gray-300/50 dark:bg-tertiary dark:border-t-[1.5px] dark:border-secondary">
       {audio}
       <li>
         <Button

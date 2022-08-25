@@ -23,7 +23,7 @@ function Link(props: JSX.IntrinsicElements["a"]) {
   return (
     <a
       {...props}
-      className="underline text-neutral-800 dark:text-quaternary mx-2"
+      className="underline text-neutral-700 dark:text-gray-400 mx-2"
       target="_blank"
       rel="noopener noreferrer"
     />

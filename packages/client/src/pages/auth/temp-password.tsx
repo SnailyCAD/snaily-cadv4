@@ -63,7 +63,7 @@ export default function TempPassword() {
       <main className="flex flex-col items-center justify-center pt-20">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleChange, errors, isValid }) => (
-            <Form className="w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-2">
+            <Form className="w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-primary border dark:border-secondary">
               <h1 className="text-2xl font-semibold text-gray-800 dark:text-white">
                 {t("changePassword")}
               </h1>
