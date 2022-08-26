@@ -60,10 +60,12 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
 
     const mergedOptions = { ...restOptions, signal: abortControllerRef.current.signal };
 
-    const response = await handleRequest(path, { ...mergedOptions }).catch((e) => {
-      setState("error");
-      return e;
-    });
+    const response = await handleRequest(path, { ...mergedOptions, throwBadRequest: true }).catch(
+      (e) => {
+        setState("error");
+        return e;
+      },
+    );
 
     const error = isAxiosError<ErrorResponseData | null>(response) ? parseError(response) : null;
 

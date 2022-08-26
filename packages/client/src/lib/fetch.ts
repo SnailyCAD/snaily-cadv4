@@ -12,6 +12,7 @@ interface Options extends Omit<AxiosRequestConfig, "headers"> {
   method?: Method | string;
   data?: RequestData;
   isSsr?: boolean;
+  throwBadRequest?: boolean;
 }
 
 export async function handleRequest<T = any>(
@@ -46,6 +47,10 @@ export async function handleRequest<T = any>(
 
     return makeReturn(res);
   } catch (e) {
+    if (options?.throwBadRequest) {
+      throw e;
+    }
+
     return makeReturn(e);
   }
 }
