@@ -110,16 +110,13 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
           {({ isDragging }) => (
             <ActiveUnitsQualificationsCard canBeOpened={!isDragging} unit={officer}>
               <span
-                className={classNames(
-                  "flex items-center capitalize",
-                  canDrag ? "cursor-grab" : "cursor-default",
-                )}
+                className={classNames("capitalize", canDrag ? "cursor-grab" : "cursor-default")}
                 // * 9 to fix overlapping issues with next table column
-                style={{ minWidth: nameAndCallsign.length * 9 }}
+                style={{ minWidth: nameAndCallsign.length * 9 }} // todo: still necessary?
               >
                 {isUnitOfficer(officer) && officer.imageId ? (
                   <img
-                    className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                    className="rounded-md w-[30px] h-[30px] object-cover mr-2 inline-block"
                     draggable={false}
                     src={makeImageUrl("units", officer.imageId)}
                     loading="lazy"

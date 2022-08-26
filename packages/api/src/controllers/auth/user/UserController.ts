@@ -85,7 +85,7 @@ export class AccountController {
         soundSettingsId,
         locale: data.locale || null,
       },
-      select: userProperties({ type: "all" }),
+      select: userProperties,
     });
 
     setUserPreferencesCookies({

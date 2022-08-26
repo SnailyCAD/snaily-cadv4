@@ -170,7 +170,7 @@ export class DispatchController {
   ): Promise<APITypes.PostDispatchDispatchersStateData> {
     let dispatcher = await prisma.activeDispatchers.findFirst({
       where: { userId: user.id },
-      include: { user: { select: userProperties() } },
+      include: { user: { select: userProperties } },
     });
 
     if (value) {
@@ -178,7 +178,7 @@ export class DispatchController {
         dispatcher ??
         (await prisma.activeDispatchers.create({
           data: { userId: user.id },
-          include: { user: { select: userProperties() } },
+          include: { user: { select: userProperties } },
         }));
     } else {
       if (dispatcher) {

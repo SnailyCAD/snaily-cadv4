@@ -22,7 +22,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { getImageWebPPath } from "utils/image";
 
 export const citizenInclude = {
-  user: { select: userProperties() },
+  user: { select: userProperties },
   flags: true,
   vehicles: {
     orderBy: { createdAt: "desc" },
@@ -109,7 +109,7 @@ export class CitizenController {
       await prisma.citizen.findMany({
         where,
         orderBy: { updatedAt: "desc" },
-        include: { user: { select: userProperties() } },
+        include: { user: { select: userProperties } },
         skip,
         take: 35,
       }),

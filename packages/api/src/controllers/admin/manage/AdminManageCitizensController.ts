@@ -93,11 +93,7 @@ export class AdminManageCitizensController {
         warrant: { include: { officer: { include: leoProperties } } },
         records: { include: recordsInclude },
         citizen: {
-          include: {
-            user: { select: userProperties() },
-            gender: true,
-            ethnicity: true,
-          },
+          include: { user: { select: userProperties }, gender: true, ethnicity: true },
         },
       },
     });

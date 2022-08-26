@@ -1,6 +1,5 @@
 import type { GetServerSideProps } from "next";
 import { getTranslations } from "lib/getTranslation";
-import { handleRequest } from "lib/fetch";
 import { Title } from "components/shared/Title";
 import { AuthScreenImages } from "components/auth/AuthScreenImages";
 import { LocalhostDetector } from "components/auth/LocalhostDetector";
@@ -11,6 +10,7 @@ import { useTranslations } from "next-intl";
 import { LoginForm } from "components/auth/login/LoginForm";
 import { useRouter } from "next/router";
 import type { PostLoginUserData } from "@snailycad/types/api";
+import { requestAll } from "lib/utils";
 
 export default function Login() {
   const { cad } = useAuth();
@@ -49,9 +49,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
   const userSavedLocale = cookies.sn_locale ?? null;
   const userSavedIsDarkTheme = cookies.sn_isDarkTheme ?? null;
 
-  const { data } = await handleRequest("/admin/manage/cad-settings").catch(() => ({
-    data: null,
-  }));
+  const [data] = await requestAll(req, [["/admin/manage/cad-settings", {}]]);
 
   return {
     props: {

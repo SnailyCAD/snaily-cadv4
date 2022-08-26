@@ -20,40 +20,35 @@ enum GetSessionUserErrors {
   WhitelistDeclined = "whitelistDeclined",
 }
 
-export function userProperties(options?: { type: "client" | "server" | "all" }) {
-  const type = options?.type ?? "server";
-  const fetchExtra = ["all", "client"].includes(type);
-
-  return {
-    id: true,
-    username: true,
-    rank: true,
-    isLeo: true,
-    isSupervisor: true,
-    isEmsFd: true,
-    isDispatch: true,
-    isTow: true,
-    isTaxi: true,
-    banned: fetchExtra,
-    banReason: fetchExtra,
-    avatarUrl: true,
-    steamId: true,
-    whitelistStatus: fetchExtra,
-    tempPassword: fetchExtra,
-    isDarkTheme: true,
-    statusViewMode: true,
-    discordId: true,
-    tableActionsAlignment: true,
-    lastDiscordSyncTimestamp: true,
-    soundSettingsId: fetchExtra,
-    soundSettings: fetchExtra,
-    permissions: true,
-    apiToken: fetchExtra,
-    apiTokenId: fetchExtra,
-    roles: true,
-    locale: true,
-  };
-}
+export const userProperties = {
+  id: true,
+  username: true,
+  rank: true,
+  isLeo: true,
+  isSupervisor: true,
+  isEmsFd: true,
+  isDispatch: true,
+  isTow: true,
+  isTaxi: true,
+  banned: true,
+  banReason: true,
+  avatarUrl: true,
+  steamId: true,
+  whitelistStatus: true,
+  isDarkTheme: true,
+  tempPassword: true,
+  statusViewMode: true,
+  discordId: true,
+  tableActionsAlignment: true,
+  lastDiscordSyncTimestamp: true,
+  soundSettingsId: true,
+  soundSettings: true,
+  permissions: true,
+  apiToken: true,
+  apiTokenId: true,
+  roles: true,
+  locale: true,
+};
 
 export async function getSessionUser(req: Req, returnNullOnError?: false): Promise<GetUserData>;
 export async function getSessionUser(
@@ -84,10 +79,6 @@ export async function getSessionUser(
     header = req.cookies[name] || parse(String(req.headers.session))[name];
   }
 
-  const type = ["false", "undefined"].includes(String(req.headers["is-from-ssr"]))
-    ? "all"
-    : "server";
-
   let user;
   let apiTokenUsed;
   if (userApiTokenHeader && isUserAPITokensEnabled) {
@@ -102,7 +93,7 @@ export async function getSessionUser(
     apiTokenUsed = token;
     user = await prisma.user.findFirst({
       where: { apiToken: { token: userApiTokenHeader } },
-      select: userProperties({ type }),
+      select: userProperties,
     });
 
     if (user) {
@@ -128,7 +119,7 @@ export async function getSessionUser(
 
     user = await prisma.user.findUnique({
       where: { id: jwtPayload.userId },
-      select: userProperties({ type }),
+      select: userProperties,
     });
   }
 
