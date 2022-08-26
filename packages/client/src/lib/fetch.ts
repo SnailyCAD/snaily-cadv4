@@ -64,7 +64,7 @@ function makeReturn<T>(v: any): Omit<AxiosResponse<T>, "request"> {
   delete v.request;
 
   return {
-    data: v.data ?? {},
+    data: v.data,
     status: v.status,
     statusText: v.statusText,
     headers: v.headers,
