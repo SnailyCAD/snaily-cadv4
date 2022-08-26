@@ -27,7 +27,7 @@ export function Dropdown({ trigger, children, extra, open, onOpenChange, ...rest
         {...rest}
         className={classNames(
           rest.className ?? "dropdown-left",
-          "z-50 p-2 bg-white rounded-md shadow-xl shadow-primary dropdown-fade w-40 dark:bg-primary border dark:border-secondary",
+          "z-50 p-2 bg-gray-200 rounded-md shadow-xl dark:shadow-primary dropdown-fade w-40 dark:bg-primary dark:border dark:border-secondary",
         )}
       >
         {children}
@@ -44,7 +44,7 @@ Dropdown.Item = function DropdownItem({ children, ...rest }: Omit<ButtonProps, "
         variant="transparent"
         className={classNames(
           "my-0.5 rounded-md transition-colors w-full text-left bg-transparent",
-          "dark:hover:bg-secondary focus:bg-gray-200 dark:focus:bg-secondary",
+          "hover:bg-gray-200 dark:hover:bg-secondary focus:bg-gray-200 dark:focus:bg-secondary",
           rest.className,
         )}
       >
@@ -61,7 +61,7 @@ Dropdown.LinkItem = function LinkItem({ children, ...rest }: JSX.IntrinsicElemen
         <a
           className={classNames(
             "outline-none block rounded-md transition-colors w-full text-left bg-transparent",
-            "dark:hover:bg-secondary focus:bg-gray-200 dark:focus:bg-secondary",
+            "dark:hover:bg-secondary hover:bg-gray-400 focus:bg-gray-400 dark:focus:bg-secondary",
             buttonSizes.sm,
             buttonVariants.transparent,
             rest.className,

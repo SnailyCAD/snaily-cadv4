@@ -113,7 +113,7 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
           className={classNames(
             isWithinModal
               ? "bg-transparent pb-3"
-              : "shadow-md p-6 bg-gray-100 dark:bg-primary border dark:border-secondary",
+              : "shadow-md p-6 bg-gray-100 dark:bg-primary dark:border dark:border-secondary",
             "relative w-full max-w-md rounded-lg z-10",
           )}
         >

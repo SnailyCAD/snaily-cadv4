@@ -24,7 +24,7 @@ export function CitizenListItem({ citizen }: Props) {
   );
 
   return (
-    <li className="flex items-center justify-between p-3 shadow-md rounded-md border dark:border-quinary dark:bg-tertiary">
+    <li className="flex items-center justify-between bg-gray-300 p-3 dark:shadow-md rounded-md dark:border dark:border-quinary dark:bg-tertiary">
       <div className="flex items-center space-x-3">
         {citizen.imageId ? (
           <img
