@@ -37,9 +37,12 @@ export class ManageCitizensController {
       select: { ...CAD_SELECT(user, true), registrationCode: true },
     });
 
+    const registrationCode =
+      user?.rank === Rank.OWNER ? cad?.registrationCode : !!cad?.registrationCode;
+
     return {
       ...setDiscordAuth(cad as unknown as cad),
-      registrationCode: !!cad?.registrationCode,
+      registrationCode,
       version,
     } as APITypes.GetCADSettingsData;
   }
