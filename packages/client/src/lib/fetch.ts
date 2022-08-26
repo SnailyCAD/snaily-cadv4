@@ -63,5 +63,11 @@ export function findAPIUrl() {
 function makeReturn<T>(v: any): Omit<AxiosResponse<T>, "request"> {
   delete v.request;
 
-  return v;
+  return {
+    data: v.data ?? {},
+    status: v.status,
+    statusText: v.statusText,
+    headers: v.headers,
+    config: v.config,
+  };
 }
