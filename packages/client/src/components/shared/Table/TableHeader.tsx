@@ -37,21 +37,19 @@ export function TableHeader<TData extends RowData>({
         header.column.getToggleSortingHandler()?.(event);
       }}
     >
-      <span className="flex items-center gap-3">
-        {header.isPlaceholder
-          ? null
-          : flexRender(header.column.columnDef.header as any, header.getContext())}
-        {sortDirection ? (
-          <span>
-            <ArrowDownSquareFill
-              className="transition-transform duration-75"
-              style={{ transform: sortDirection === "desc" ? "" : "rotate(-180deg)" }}
-              width={15}
-              height={15}
-            />
-          </span>
-        ) : null}
-      </span>
+      {header.isPlaceholder
+        ? null
+        : flexRender(header.column.columnDef.header as any, header.getContext())}
+      {sortDirection ? (
+        <span>
+          <ArrowDownSquareFill
+            className="transition-transform duration-75 inline-block ml-2"
+            style={{ transform: sortDirection === "desc" ? "" : "rotate(-180deg)" }}
+            width={15}
+            height={15}
+          />
+        </span>
+      ) : null}
     </th>
   );
 }
