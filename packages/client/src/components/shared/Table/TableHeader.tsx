@@ -25,9 +25,8 @@ export function TableHeader<TData extends RowData>({
       className={classNames(
         "m-0 top-0 sticky p-2 px-3 font-semibold bg-gray-200 dark:bg-secondary lg:table-cell text-left select-none",
         "uppercase text-sm text-neutral-700 dark:text-gray-400 first:rounded-tl-md last:rounded-tr-md",
-        isActions ? `${dir} z-10` : "sticky",
+        isActions ? `${dir} z-10 w-[100px]` : "sticky",
         canSort && "cursor-pointer select-none",
-        isActions && "w-[100px] text-end",
       )}
       key={header.id}
       colSpan={header.colSpan}

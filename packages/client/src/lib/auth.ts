@@ -9,8 +9,8 @@ export async function getSessionUser(req?: IncomingMessage): Promise<GetUserData
       method: "POST",
     });
 
-    if (response.data?.id) {
-      return response.data;
+    if (response.data) {
+      return response.data ?? null;
     }
 
     return null;
