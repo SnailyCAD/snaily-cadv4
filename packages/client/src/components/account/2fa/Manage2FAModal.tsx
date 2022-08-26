@@ -155,13 +155,15 @@ export function Manage2FAModal() {
                   {t("scanQRCode")}
                 </p>
                 <div className="my-3 flex items-center gap-2 w-full">
-                  <span className="block h-[2px] bg-gray-3 w-full rounded-md" />
+                  <span className="block h-[2px] bg-secondary w-full rounded-md" />
                   <span className="min-w-fit text-sm uppercase dark:text-gray-300">OR</span>
-                  <span className="block h-[2px] bg-gray-3 w-full rounded-md" />
+                  <span className="block h-[2px] bg-secondary w-full rounded-md" />
                 </div>
                 <p className="text-center text-base mb-5 text-neutral-700 dark:text-gray-400">
                   Enter the following code manually:{" "}
-                  <code className="font-mono bg-gray-3 p-[1px] px-1.5 rounded-sm">{totpCode}</code>
+                  <code className="font-mono bg-secondary p-[1px] px-1.5 rounded-sm">
+                    {totpCode}
+                  </code>
                 </p>
 
                 <img

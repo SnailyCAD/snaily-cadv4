@@ -39,7 +39,7 @@ export function AccountDropdown() {
         >
           <span className="mr-2.5"> {user ? user.username : null}</span>
 
-          <PersonCircle className="text-dark-bg dark:text-gray-300" width={20} height={20} />
+          <PersonCircle className="text-neutral-800 dark:text-gray-300" width={20} height={20} />
         </Button>
       }
     >

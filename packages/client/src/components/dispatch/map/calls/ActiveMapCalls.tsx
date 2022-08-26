@@ -61,7 +61,7 @@ export function ActiveMapCalls({ hasMarker, setOpenItems, openItems, setMarker }
     createPortal(
       <div
         id="map-calls"
-        className="fixed z-50 p-3 h-[88vh] thin-scrollbar top-20 left-4 w-80 rounded-md shadow bg-gray-50 dark:bg-dark-bg dark:text-white overflow-y-auto"
+        className="fixed z-50 p-3 max-h-[88vh] thin-scrollbar top-20 left-4 w-80 rounded-md shadow bg-gray-50 dark:bg-tertiary dark:border dark:border-secondary dark:text-white overflow-y-auto"
       >
         <h1 className="text-xl font-semibold">{t("active911Calls")}</h1>
         {calls911State.calls.length <= 0 ? (

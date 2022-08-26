@@ -16,8 +16,6 @@ module.exports = {
         tertiary: "#1f1e26",
         quaternary: "#2f2e34",
         quinary: "#454349",
-        accent: "#237bff",
-        senary: "#1c1e1f",
 
         // "dark-bg": "#111111",
         // "dark-gray": "#2f2f2f",

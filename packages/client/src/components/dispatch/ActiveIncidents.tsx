@@ -182,7 +182,7 @@ export function ActiveIncidents() {
       >
         <div
           className={classNames(
-            "grid place-items-center z-50 border-2 border-slate-500 bg-gray-4 fixed bottom-3 left-3 right-4 h-60 shadow-sm rounded-md transition-opacity",
+            "grid place-items-center z-50 border-2 border-slate-500 dark:bg-quinary fixed bottom-3 left-3 right-4 h-60 shadow-sm rounded-md transition-opacity",
             dispatchState.draggingUnit === "incident"
               ? "pointer-events-all opacity-100"
               : "pointer-events-none opacity-0",

@@ -36,7 +36,7 @@ export function ActiveMapUnits({ players, openItems, setOpenItems }: Props) {
     createPortal(
       <div
         id="map-calls"
-        className="fixed z-50 p-3 top-20 right-4 w-80 rounded-md shadow bg-gray-50 dark:bg-dark-bg dark:text-white"
+        className="fixed z-50 p-3 top-20 right-4 w-80 rounded-md shadow bg-gray-50 dark:bg-tertiary dark:border dark:border-secondary dark:text-white"
       >
         <h1 className="text-xl font-semibold">{t("activeUnits")}</h1>
         {units.length <= 0 ? (

@@ -45,7 +45,7 @@ export function PasswordInput(props: Omit<Props, "type" | "ref">) {
         type="button"
         onClick={handleClick}
         size="xs"
-        className="absolute -translate-y-1/2 bg-gray-300 top-1/2 right-2 dark:bg-gray-3"
+        className="absolute -translate-y-1/2 bg-gray-300 top-1/2 right-2 dark:bg-tertiary"
       >
         {type === "password" ? common("show") : common("hide")}
       </Button>

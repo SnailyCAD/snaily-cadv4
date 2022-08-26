@@ -164,9 +164,9 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
 
               {showHorizontalLine ? (
                 <div className="my-7 flex items-center gap-2">
-                  <span className="h-[2px] bg-gray-3 w-full rounded-md" />
+                  <span className="h-[2px] bg-secondary w-full rounded-md" />
                   <span className="min-w-fit text-sm uppercase dark:text-gray-300">{t("or")}</span>
-                  <span className="h-[2px] bg-gray-3 w-full rounded-md" />
+                  <span className="h-[2px] bg-secondary w-full rounded-md" />
                 </div>
               ) : null}
 
