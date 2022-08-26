@@ -47,8 +47,8 @@ export function Nav({ maxWidth }: Props) {
   }, [viewport]);
 
   return (
-    <nav className="bg-white dark:bg-[#171717] shadow-sm sticky top-0 z-30">
-      <div style={{ maxWidth: maxWidth ?? "100rem" }} className="mx-auto px-4">
+    <nav className="bg-white dark:bg-tertiary shadow-sm sticky top-0 z-30">
+      <div style={{ maxWidth: maxWidth ?? "100rem" }} className="mx-auto px-4 md:px-6">
         <div className="flex items-center justify-between h-14">
           <button
             type="button"

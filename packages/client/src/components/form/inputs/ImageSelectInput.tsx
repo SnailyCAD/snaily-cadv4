@@ -14,9 +14,10 @@ interface Props {
   image: (File | string) | null;
   label?: string;
   valueKey?: string;
+  hideLabel?: boolean;
 }
 
-export function ImageSelectInput({ label, valueKey = "image", image, setImage }: Props) {
+export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, setImage }: Props) {
   const [useURL, setUseURL] = React.useState(false);
   const { errors, values, setFieldValue, handleChange } = useFormikContext<any>();
   const common = useTranslations("Common");
@@ -34,7 +35,11 @@ export function ImageSelectInput({ label, valueKey = "image", image, setImage }:
   }
 
   return useURL ? (
-    <FormField optional errorMessage={errors[valueKey] as string} label={label ?? common("image")}>
+    <FormField
+      optional
+      errorMessage={errors[valueKey] as string}
+      label={hideLabel ? null : label ?? common("image")}
+    >
       <div className="flex gap-2">
         <Input
           placeholder="https://i.imgur.com/xxxxxx"
@@ -57,7 +62,7 @@ export function ImageSelectInput({ label, valueKey = "image", image, setImage }:
       <FormField
         optional
         errorMessage={errors[valueKey] as string}
-        label={label ?? common("image")}
+        label={hideLabel ? null : label ?? common("image")}
       >
         <div className="flex">
           <Input

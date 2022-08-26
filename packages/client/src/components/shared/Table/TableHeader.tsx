@@ -23,7 +23,7 @@ export function TableHeader<TData extends RowData>({
   return (
     <th
       className={classNames(
-        "m-0 top-0 sticky p-2 px-3 font-semibold bg-gray-200 dark:bg-gray-3 lg:table-cell text-left select-none",
+        "m-0 top-0 sticky p-2 px-3 font-semibold bg-gray-200 dark:bg-secondary lg:table-cell text-left select-none",
         "uppercase text-sm text-neutral-700 dark:text-gray-400 first:rounded-tl-md last:rounded-tr-md",
         isActions ? `${dir} z-10` : "sticky",
         canSort && "cursor-pointer select-none",

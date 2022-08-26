@@ -40,7 +40,7 @@ export default function Bleeter({ posts }: Props) {
         <ul className="mt-5 space-y-3">
           {posts.map((post) => (
             <li
-              className="flex items-start justify-between p-4 rounded-md shadow-sm dark:bg-gray-2 bg-gray-200/80"
+              className="flex items-start justify-between p-4 rounded-md shadow-sm card"
               key={post.id}
             >
               <div>

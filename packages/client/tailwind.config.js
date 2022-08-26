@@ -4,16 +4,25 @@ module.exports = {
   darkMode: "class",
   theme: {
     extend: {
+      borderWidth: {
+        DEFAULT: "1.5px",
+      },
       screens: {
         nav: "900px",
       },
       colors: {
-        "dark-bg": "#1F2023",
-        "dark-gray": "#2f2f2f",
-        "gray-2": "#27282B",
-        "gray-3": "#303236",
-        "gray-4": "#2D2E31",
-        "dark-bright": "#2D2F36",
+        primary: "#16151a",
+        secondary: "#35343c",
+        tertiary: "#1f1e26",
+        quaternary: "#2f2e34",
+        quinary: "#454349",
+
+        // "dark-bg": "#111111",
+        // "dark-gray": "#2f2f2f",
+        // "gray-2": "#27282B",
+        // "gray-3": "#303236",
+        // "gray-4": "#2D2E31",
+        // "dark-bright": "#2D2F36",
       },
       // https://github.com/timolins/react-hot-toast/blob/main/site/tailwind.config.js#L21
       animation: {

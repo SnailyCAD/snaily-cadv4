@@ -11,7 +11,7 @@ export function ApiTokenArea({ user }: Props) {
   const tableState = useTableState();
 
   return (
-    <div className="p-4 mt-10 bg-gray-200 rounded-md dark:bg-gray-2">
+    <div className="p-4 mt-10 rounded-md card">
       <h1 className="text-2xl font-semibold">API Token</h1>
 
       {user.apiToken ? (

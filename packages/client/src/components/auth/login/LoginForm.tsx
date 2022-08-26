@@ -111,7 +111,9 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
       {({ handleChange, errors, values, isValid }) => (
         <Form
           className={classNames(
-            isWithinModal ? "bg-transparent pb-3" : " shadow-md p-6 bg-gray-100 dark:bg-gray-2",
+            isWithinModal
+              ? "bg-transparent pb-3"
+              : "shadow-md p-6 bg-gray-100 dark:bg-primary dark:border dark:border-secondary",
             "relative w-full max-w-md rounded-lg z-10",
           )}
         >
@@ -119,7 +121,7 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
             <TwoFactorAuthScreen errorMessage={errors.totpCode} isLoading={state === "loading"} />
           ) : (
             <>
-              <header className="mb-3">
+              <header className="mb-5">
                 <h1 className="text-3xl font-bold text-gray-800 dark:text-white">{t("login")}</h1>
 
                 {ALLOW_REGULAR_LOGIN && !isWithinModal ? (
@@ -162,9 +164,9 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
 
               {showHorizontalLine ? (
                 <div className="my-7 flex items-center gap-2">
-                  <span className="h-[2px] bg-gray-3 w-full rounded-md" />
+                  <span className="h-[2px] bg-secondary w-full rounded-md" />
                   <span className="min-w-fit text-sm uppercase dark:text-gray-300">{t("or")}</span>
-                  <span className="h-[2px] bg-gray-3 w-full rounded-md" />
+                  <span className="h-[2px] bg-secondary w-full rounded-md" />
                 </div>
               ) : null}
 

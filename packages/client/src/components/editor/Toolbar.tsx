@@ -36,7 +36,7 @@ export function Toolbar() {
           icon={<TypeStrikethrough aria-label="strikethrough" />}
         />
       </RToolbar.ToolbarToggleGroup>
-      <RToolbar.Separator className="w-[1px] bg-neutral-400 dark:bg-gray-3 mx-1" />
+      <RToolbar.Separator className="w-[1px] bg-neutral-400 dark:bg-secondary mx-1" />
       <RToolbar.ToolbarToggleGroup
         aria-label="Block formatting"
         className="flex gap-1"

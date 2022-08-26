@@ -4,17 +4,17 @@ import { classNames } from "lib/classNames";
 import { Button, ButtonProps, buttonSizes, buttonVariants } from "components/Button";
 import Link from "next/link";
 
-interface Props extends DropdownMenu.MenuContentProps {
+interface Props extends DropdownMenu.MenuContentProps, DropdownMenu.DropdownMenuProps {
   trigger: any;
   children: React.ReactNode;
   extra?: { maxWidth?: number };
 }
 
-export function Dropdown({ trigger, children, extra, ...rest }: Props) {
-  const maxWidth = extra?.maxWidth ?? 150;
+export function Dropdown({ trigger, children, extra, open, onOpenChange, ...rest }: Props) {
+  const maxWidth = extra?.maxWidth ?? 175;
 
   return (
-    <DropdownMenu.Root>
+    <DropdownMenu.Root open={open} onOpenChange={onOpenChange}>
       <DropdownMenu.Trigger className="flex items-center gap-1 px-1.5" asChild>
         {trigger}
       </DropdownMenu.Trigger>
@@ -27,7 +27,7 @@ export function Dropdown({ trigger, children, extra, ...rest }: Props) {
         {...rest}
         className={classNames(
           rest.className ?? "dropdown-left",
-          "z-50 p-1 bg-white rounded-md shadow-lg dropdown-fade w-36 dark:bg-dark-bright",
+          "z-50 p-2 bg-gray-200 rounded-md shadow-xl dark:shadow-primary dropdown-fade w-40 dark:bg-primary dark:border dark:border-secondary",
         )}
       >
         {children}
@@ -44,7 +44,7 @@ Dropdown.Item = function DropdownItem({ children, ...rest }: Omit<ButtonProps, "
         variant="transparent"
         className={classNames(
           "my-0.5 rounded-md transition-colors w-full text-left bg-transparent",
-          "dark:hover:bg-dark-bg focus:bg-gray-200 dark:focus:bg-dark-bg",
+          "hover:bg-gray-200 dark:hover:bg-secondary focus:bg-gray-200 dark:focus:bg-secondary",
           rest.className,
         )}
       >
@@ -61,9 +61,9 @@ Dropdown.LinkItem = function LinkItem({ children, ...rest }: JSX.IntrinsicElemen
         <a
           className={classNames(
             "outline-none block rounded-md transition-colors w-full text-left bg-transparent",
-            "dark:hover:bg-dark-bg focus:bg-gray-200 dark:focus:bg-dark-bg",
+            "dark:hover:bg-secondary hover:bg-gray-400 focus:bg-gray-400 dark:focus:bg-secondary",
             buttonSizes.sm,
-            buttonVariants.default,
+            buttonVariants.transparent,
             rest.className,
           )}
           {...rest}

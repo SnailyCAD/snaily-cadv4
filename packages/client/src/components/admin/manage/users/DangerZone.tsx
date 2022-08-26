@@ -70,7 +70,7 @@ export function DangerZone({ user, setUser }: Props) {
   }
 
   return (
-    <div className="p-4 mt-5 bg-gray-200 rounded-md dark:bg-gray-2">
+    <div className="p-4 mt-5 rounded-md card">
       <h1 className="text-2xl font-semibold">Danger Zone</h1>
 
       <div className="flex mt-3">

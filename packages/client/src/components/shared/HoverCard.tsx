@@ -35,13 +35,13 @@ export function HoverCard({
         {...contentProps}
         className={classNames(
           pointerEvents ? "pointer-events-auto" : "pointer-events-none",
-          "bg-gray-200 dark:bg-dark-bright shadow-lg w-full max-w-2xl p-3 rounded-md dark:text-white hover-card dropdown-fade !z-10",
+          "bg-gray-200 dark:border dark:border-secondary dark:bg-tertiary shadow-lg w-full max-w-2xl p-3 rounded-md dark:text-white hover-card dropdown-fade !z-10",
           contentProps?.className,
         )}
       >
         {children}
         {rest.showArrow ?? true ? (
-          <RHoverCard.Arrow className="fill-current text-white dark:text-dark-bright" />
+          <RHoverCard.Arrow className="fill-current text-white dark:text-tertiary" />
         ) : null}
       </RHoverCard.Content>
     </RHoverCard.Root>

@@ -45,7 +45,7 @@ export function AdminSidebar() {
       <aside
         style={{ height: "calc(100vh - 3.5rem)" }}
         className={classNames(
-          "top-14 pt-5 pb-3 px-2 bg-gray-100 dark:bg-[#171717] flex flex-col overflow-x-hidden overflow-y-auto transition-[width] duration-100 thin-scrollbar",
+          "top-14 pt-5 pb-3 px-2 bg-gray-100 dark:bg-tertiary flex flex-col overflow-x-hidden overflow-y-auto transition-[width] duration-100 thin-scrollbar",
           menuOpen
             ? "fixed z-40 w-72 justify-start items-start"
             : "sticky w-14 nav:w-72 justify-end nav:justify-start items-center nav:items-start",
@@ -157,8 +157,8 @@ function SidebarItem({ route, href, text, isActive, onRouteClick }: ItemProps) {
         <a
           onClick={onRouteClick}
           className={classNames(
-            "transition-colors rounded-md block px-4 py-1 dark:text-white hover:bg-gray-200 dark:hover:bg-dark-gray",
-            isActive && "bg-gray-300 dark:bg-dark-gray dark:text-white",
+            "transition-colors rounded-md block px-4 py-1 dark:text-white hover:bg-gray-200 dark:hover:bg-secondary",
+            isActive && "bg-gray-300 dark:bg-secondary dark:text-white",
           )}
         >
           {text}

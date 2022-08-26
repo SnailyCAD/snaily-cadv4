@@ -70,7 +70,7 @@ export function ActiveUnitsQualificationsCard({ canBeOpened = true, unit, childr
     <HoverCard
       openDelay={500}
       showArrow={false}
-      contentProps={{ sideOffset: 0, side: "bottom", className: "dark:bg-gray-2" }}
+      contentProps={{ sideOffset: 0, side: "bottom" }}
       pointerEvents
       trigger={<span ref={hoverRef}>{children}</span>}
     >

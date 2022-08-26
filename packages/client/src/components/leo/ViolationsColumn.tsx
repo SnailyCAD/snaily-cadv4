@@ -24,7 +24,7 @@ export function ViolationsColumn({ violations }: Props) {
             openDelay={350}
             key={violation.id}
             trigger={
-              <span className="dark:hover:bg-dark-bright px-1 py-0.5 cursor-help rounded-sm">
+              <span className="dark:hover:bg-tertiary px-1 py-0.5 cursor-help rounded-sm">
                 {violation.penalCode.title} {comma}
               </span>
             }
