@@ -5,8 +5,8 @@ import { type TranslationValues, useTranslations } from "use-intl";
 import Common from "../../locales/en/common.json";
 import type { FormikHelpers } from "formik";
 import { toastMessage } from "./toastMessage";
-import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { useModal } from "../state/modalState";
+import { ModalIds } from "../types/ModalIds";
 
 interface UseFetchOptions {
   overwriteState: State | null;
