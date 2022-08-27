@@ -92,7 +92,7 @@ export function Nav({ maxWidth }: Props) {
               className={classNames(
                 "nav:flex",
                 menuOpen
-                  ? "grid place-content-center fixed top-[3.6rem] left-0 bg-white dark:bg-[#171717] w-screen space-y-2 py-3 animate-enter"
+                  ? "grid place-content-center fixed top-[3.6rem] left-0 bg-white dark:bg-tertiary w-screen space-y-2 py-3 animate-enter"
                   : "hidden nav:flex-row space-x-1 items-center",
               )}
             >
