@@ -61,7 +61,11 @@ export default function Dmv({ data }: Props) {
           data={pendingVehicles.map((vehicle) => {
             return {
               id: vehicle.id,
-              citizen: `${vehicle.citizen.name} ${vehicle.citizen.surname}`,
+              citizen: (
+                <span className="capitalize">
+                  {vehicle.citizen.name} {vehicle.citizen.surname}
+                </span>
+              ),
               createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
               plate: vehicle.plate,
               model: vehicle.model.value.value,
@@ -97,6 +101,7 @@ export default function Dmv({ data }: Props) {
           })}
           columns={[
             { header: vT("plate"), accessorKey: "plate" },
+            { header: vT("owner"), accessorKey: "citizen" },
             { header: vT("model"), accessorKey: "model" },
             { header: vT("color"), accessorKey: "color" },
             { header: vT("registrationStatus"), accessorKey: "registrationStatus" },
