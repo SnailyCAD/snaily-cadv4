@@ -3,6 +3,7 @@ import type { IncomingMessage } from "connect";
 import nookies from "nookies";
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";
 import { IFRAME_COOKIE_NAME } from "../pages/api/token";
+import { getErrorObj } from "./useFetch";
 
 export type RequestData = Record<string, unknown>;
 
@@ -66,7 +67,7 @@ export function findAPIUrl() {
 }
 
 function makeReturn<T>(v: any): Omit<AxiosResponse<T>, "request"> {
-  delete v.request;
+  const errorObj = getErrorObj(v);
 
   return {
     data: v.data,
@@ -74,5 +75,6 @@ function makeReturn<T>(v: any): Omit<AxiosResponse<T>, "request"> {
     statusText: v.statusText,
     headers: v.headers,
     config: v.config,
+    ...errorObj,
   };
 }

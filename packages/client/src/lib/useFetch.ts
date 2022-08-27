@@ -60,12 +60,10 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
 
     const mergedOptions = { ...restOptions, signal: abortControllerRef.current.signal };
 
-    const response = await handleRequest(path, { ...mergedOptions, throwBadRequest: true }).catch(
-      (e) => {
-        setState("error");
-        return e;
-      },
-    );
+    const response = await handleRequest(path, { ...mergedOptions }).catch((e) => {
+      setState("error");
+      return e;
+    });
 
     const error = isAxiosError<ErrorResponseData | null>(response) ? parseError(response) : null;
 
@@ -171,7 +169,7 @@ function isErrorKey(key: string | ErrorObj): key is ErrorMessage {
   return Object.keys(Common.Errors).includes(key);
 }
 
-function getErrorObj(error: unknown) {
+export function getErrorObj(error: unknown) {
   let errorObj = {};
 
   if (isAxiosError(error)) {
