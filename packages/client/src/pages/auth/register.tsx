@@ -71,13 +71,6 @@ export default function Register({ cad }: Props) {
       helpers,
     });
 
-    if (process.env.IFRAME_SUPPORT_ENABLED === "true" && json.session) {
-      await fetch("/api/token", {
-        method: "POST",
-        body: json.session,
-      });
-    }
-
     if (json.isOwner) {
       router.push("/admin/manage/cad-settings");
     } else if (json.userId) {

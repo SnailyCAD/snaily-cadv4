@@ -27,7 +27,7 @@ const INITIAL_VALUES = {
 
 interface Props {
   isWithinModal?: boolean;
-  onFormSubmitted(data: { from: string; json: PostLoginUserData }): void;
+  onFormSubmitted(data: { from: string }): void;
 }
 
 export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
@@ -77,7 +77,7 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
       });
     } else if (json?.userId) {
       const from = typeof router.query.from === "string" ? router.query.from : "/citizen";
-      onFormSubmitted({ from, json });
+      onFormSubmitted({ from });
     }
   }
 

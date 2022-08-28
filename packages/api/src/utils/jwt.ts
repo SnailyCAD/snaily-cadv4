@@ -12,9 +12,7 @@ export function signJWT(value: any, expiresInSeconds: number | string) {
   return sign(value, secret, { expiresIn: expiresInSeconds });
 }
 
-export function verifyJWT(
-  value: string,
-): { userId: string; officerId?: string; deputyId?: string } | null {
+export function verifyJWT(value: string) {
   const secret = process.env.JWT_SECRET ?? "NONE";
 
   if (secret === "NONE") {
@@ -22,7 +20,7 @@ export function verifyJWT(
   }
 
   try {
-    return verify(value, secret) as { userId: string };
+    return verify(value, secret) as { userId: string; sessionId: string; exp: number; iat: number };
   } catch {
     return null;
   }

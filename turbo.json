@@ -36,8 +36,7 @@
         "^build",
         "$CORS_ORIGIN_URL",
         "$NEXT_PUBLIC_PROD_ORIGIN",
-        "$NODE_ENV",
-        "$IFRAME_SUPPORT_ENABLED"
+        "$NODE_ENV"
       ],
       "outputs": [".next/**", "dist/**"],
       "cache": false
