@@ -1,6 +1,7 @@
 import type { UnitQualification } from "@snailycad/types";
 import { HoverCard } from "components/shared/HoverCard";
 import { useImageUrl } from "hooks/useImageUrl";
+import Image from "next/future/image";
 
 interface Props {
   qualification: UnitQualification;
@@ -11,7 +12,7 @@ export function QualificationsHoverCard({ qualification }: Props) {
   const imgUrl = makeImageUrl("values", qualification.qualification.imageId);
 
   const trigger = imgUrl ? (
-    <img loading="lazy" src={imgUrl} width={50} height={50} className="object-cover" />
+    <Image loading="lazy" src={imgUrl} width={50} height={50} className="object-cover" />
   ) : (
     <span className="cursor-default">—</span>
   );
@@ -25,7 +26,7 @@ export function QualificationsHoverCard({ qualification }: Props) {
       <div className="min-w-[250px] w-full max-w-[400px] flex flex-row gap-4">
         {imgUrl ? (
           <div className="min-w-[70px]">
-            <img
+            <Image
               loading="lazy"
               src={imgUrl}
               width={70}

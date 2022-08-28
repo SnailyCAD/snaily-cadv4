@@ -14,6 +14,7 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import type { NameSearchResult } from "state/search/nameSearchState";
 import type { DeleteReleaseJailedCitizenData } from "@snailycad/types/api";
+import Image from "next/future/image";
 
 interface Props {
   citizen: (BaseCitizen & { recordId: string }) | null;
@@ -92,11 +93,13 @@ export function ReleaseCitizenModal({ onSuccess, citizen }: Props) {
                   Component={({ suggestion }) => (
                     <div className="flex items-center">
                       {suggestion.imageId ? (
-                        <img
+                        <Image
                           className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                           draggable={false}
-                          src={makeImageUrl("citizens", suggestion.imageId)}
+                          src={makeImageUrl("citizens", suggestion.imageId)!}
                           loading="lazy"
+                          width={30}
+                          height={30}
                         />
                       ) : null}
                       <p>

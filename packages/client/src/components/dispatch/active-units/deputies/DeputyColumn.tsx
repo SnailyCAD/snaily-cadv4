@@ -9,6 +9,7 @@ import { ActiveUnitsQualificationsCard } from "components/leo/qualifications/Act
 import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import type { EmsFdDeputy } from "@snailycad/types";
+import Image from "next/future/image";
 
 interface Props {
   isDispatch: boolean;
@@ -48,10 +49,10 @@ export function DeputyColumn({ deputy, isDispatch, nameAndCallsign }: Props) {
                 className="capitalize cursor-default"
               >
                 {deputy.imageId ? (
-                  <img
+                  <Image
                     className="rounded-md w-[30px] h-[30px] object-cover mr-2 inline-block"
                     draggable={false}
-                    src={makeImageUrl("units", deputy.imageId)}
+                    src={makeImageUrl("units", deputy.imageId)!}
                     loading="lazy"
                     width={30}
                     height={30}

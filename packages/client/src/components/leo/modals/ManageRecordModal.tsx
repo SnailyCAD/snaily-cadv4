@@ -24,6 +24,7 @@ import { SeizedItemsTable } from "./ManageRecord/seized-items/SeizedItemsTable";
 import { toastMessage } from "lib/toastMessage";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { PostRecordsData, PutRecordsByIdData } from "@snailycad/types/api";
+import Image from "next/future/image";
 
 interface Props {
   record?: Record | null;
@@ -192,11 +193,13 @@ export function ManageRecordModal({
                   <div className="flex items-center">
                     <div className="mr-2 min-w-[25px]">
                       {suggestion.imageId ? (
-                        <img
-                          className="rounded-md w-[35px] h-[35px] object-cover"
+                        <Image
+                          className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                           draggable={false}
-                          src={makeImageUrl("citizens", suggestion.imageId)}
+                          src={makeImageUrl("citizens", suggestion.imageId)!}
                           loading="lazy"
+                          width={30}
+                          height={30}
                         />
                       ) : (
                         <PersonFill className="text-gray-500/60 w-[25px] h-[25px]" />

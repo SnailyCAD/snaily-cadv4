@@ -13,6 +13,14 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  experimental: {
+    images: {
+      allowFutureImage: true,
+    },
+  },
+  images: {
+    domains: ["localhost"],
+  },
 };
 
 /** @type {typeof nextConfig} */

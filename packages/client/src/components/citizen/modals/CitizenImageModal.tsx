@@ -3,6 +3,7 @@ import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { useImageUrl } from "hooks/useImageUrl";
 import { ModalIds } from "types/ModalIds";
+import Image from "next/future/image";
 
 interface Props {
   citizen: Citizen;
@@ -19,10 +20,12 @@ export function CitizenImageModal({ citizen }: Props) {
       isOpen={isOpen(ModalIds.CitizenImage)}
     >
       <div className="flex items-center justify-center mt-10">
-        <img
+        <Image
           draggable={false}
           className="rounded-md w-[40em] h-[40em] object-cover"
-          src={makeImageUrl("citizens", citizen.imageId!)}
+          src={makeImageUrl("citizens", citizen.imageId!)!}
+          width={640}
+          height={640}
         />
       </div>
     </Modal>

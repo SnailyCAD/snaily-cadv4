@@ -23,6 +23,7 @@ import type {
   PostEmsFdMedicalRecordsSearchData,
 } from "@snailycad/types/api";
 import { classNames } from "lib/classNames";
+import Image from "next/future/image";
 
 interface Props {
   onClose?(): void;
@@ -105,11 +106,13 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                 Component={({ suggestion }) => (
                   <div className="flex items-center">
                     {suggestion.imageId ? (
-                      <img
-                        className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                      <Image
+                        className="rounded-md w-[35px] h-[35px] object-cover"
                         draggable={false}
-                        src={makeImageUrl("citizens", suggestion.imageId)}
+                        src={makeImageUrl("citizens", suggestion.imageId)!}
                         loading="lazy"
+                        width={35}
+                        height={35}
                       />
                     ) : null}
                     <p>
@@ -146,11 +149,13 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                       onClick={() => openModal(ModalIds.CitizenImage)}
                       className="cursor-pointer"
                     >
-                      <img
+                      <Image
                         className="rounded-md w-[100px] h-[100px] object-cover"
                         draggable={false}
-                        src={makeImageUrl("citizens", results.imageId)}
+                        src={makeImageUrl("citizens", results.imageId)!}
                         loading="lazy"
+                        width={100}
+                        height={100}
                       />
                     </button>
                   ) : (

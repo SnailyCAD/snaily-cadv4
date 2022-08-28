@@ -24,6 +24,7 @@ import { isBaseValue, hasValueObj } from "@snailycad/utils";
 import { useImageUrl } from "hooks/useImageUrl";
 import { makeDefaultWhatPages } from "./utils";
 import type { ColumnDef } from "@tanstack/react-table";
+import Image from "next/future/image";
 
 const TYPE_LABELS = {
   [StatusValueType.SITUATION_CODE]: "Situation Code",
@@ -115,7 +116,7 @@ export function useTableDataOfType(type: ValueType) {
 
         return {
           image: imgUrl ? (
-            <img loading="lazy" src={imgUrl} width={50} height={50} className="object-cover" />
+            <Image loading="lazy" src={imgUrl} width={50} height={50} className="object-cover" />
           ) : (
             "—"
           ),
@@ -130,7 +131,7 @@ export function useTableDataOfType(type: ValueType) {
 
         return {
           image: imgUrl ? (
-            <img loading="lazy" src={imgUrl} width={50} height={50} className="object-cover" />
+            <Image loading="lazy" src={imgUrl} width={50} height={50} className="object-cover" />
           ) : (
             "—"
           ),

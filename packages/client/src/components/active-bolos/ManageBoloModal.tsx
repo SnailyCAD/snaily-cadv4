@@ -21,6 +21,7 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { useSSRSafeId } from "@react-aria/ssr";
 import type { NameSearchResult } from "state/search/nameSearchState";
 import type { PostBolosData, PutBolosData } from "@snailycad/types/api";
+import Image from "next/future/image";
 
 interface Props {
   onClose?(): void;
@@ -209,11 +210,13 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                     <div className="flex items-center">
                       <div className="mr-2 min-w-[25px]">
                         {suggestion.imageId ? (
-                          <img
+                          <Image
                             className="rounded-md w-[35px] h-[35px] object-cover"
                             draggable={false}
-                            src={makeImageUrl("citizens", suggestion.imageId)}
+                            src={makeImageUrl("citizens", suggestion.imageId)!}
                             loading="lazy"
+                            width={35}
+                            height={35}
                           />
                         ) : (
                           <PersonFill className="text-gray-500/60 w-[25px] h-[25px]" />

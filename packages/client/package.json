@@ -5,7 +5,7 @@
     "dev": "yarn rimraf .env && yarn next dev",
     "watch": "npm run dev",
     "build": "yarn validate && yarn next-build",
-    "next-build": "yarn next build",
+    "next-build": "yarn create-images-domain && yarn next build",
     "start": "yarn next start",
     "start:proxy-experimental": "yarn next start --port 80",
     "format": "yarn prettier --write \"**/*.{js,jsx,ts,tsx,md,css,json}\" --ignore-path .gitignore",
@@ -14,7 +14,8 @@
     "typecheck": "yarn tsc --noEmit",
     "copy-env": "node ../../scripts/copy-env.mjs --client",
     "test:watch": "yarn vitest --watch",
-    "test": "yarn vitest run"
+    "test": "yarn vitest run",
+    "create-images-domain": "node ../../scripts/create-images-domain.mjs"
   },
   "dependencies": {
     "@casper124578/use-socket.io": "4.1.2",

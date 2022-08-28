@@ -5,6 +5,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useImageUrl } from "hooks/useImageUrl";
 import { usePermission } from "hooks/usePermission";
 import { useTranslations } from "next-intl";
+import Image from "next/future/image";
 import Link from "next/link";
 import { PersonFill } from "react-bootstrap-icons";
 
@@ -27,12 +28,14 @@ export function CitizenListItem({ citizen }: Props) {
     <li className="flex items-center justify-between bg-gray-300 p-3 dark:shadow-md rounded-md dark:border dark:border-quinary dark:bg-tertiary">
       <div className="flex items-center space-x-3">
         {citizen.imageId ? (
-          <img
+          <Image
             alt={`${citizen.name} ${citizen.surname}`}
             draggable={false}
             className="object-cover rounded-md w-14 h-14"
-            src={makeImageUrl("citizens", citizen.imageId)}
+            src={makeImageUrl("citizens", citizen.imageId)!}
             loading="lazy"
+            width={56}
+            height={56}
           />
         ) : (
           <PersonFill className="w-12 h-12 text-gray-500/60" />
