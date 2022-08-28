@@ -19,6 +19,7 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { NameSearchResult } from "state/search/nameSearchState";
 import type { PostEmsFdMedicalRecord } from "@snailycad/types/api";
+import Image from "next/future/image";
 
 interface Props {
   onCreate?(newV: MedicalRecord): void;
@@ -86,11 +87,13 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
                 Component={({ suggestion }) => (
                   <div className="flex items-center">
                     {suggestion.imageId ? (
-                      <img
-                        className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                      <Image
+                        className="rounded-md w-[35px] h-[35px] object-cover"
                         draggable={false}
-                        src={makeImageUrl("citizens", suggestion.imageId)}
+                        src={makeImageUrl("citizens", suggestion.imageId)!}
                         loading="lazy"
+                        width={35}
+                        height={35}
                       />
                     ) : null}
                     <p>

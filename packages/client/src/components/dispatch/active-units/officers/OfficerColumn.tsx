@@ -21,6 +21,7 @@ import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { classNames } from "lib/classNames";
 import { ActiveUnitsQualificationsCard } from "components/leo/qualifications/ActiveUnitsQualificationsCard";
 import type { PostDispatchStatusUnmergeUnitById } from "@snailycad/types/api";
+import Image from "next/future/image";
 
 interface Props {
   officer: Officer | CombinedLeoUnit;
@@ -115,10 +116,10 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
                 style={{ minWidth: nameAndCallsign.length * 9 }} // todo: still necessary?
               >
                 {isUnitOfficer(officer) && officer.imageId ? (
-                  <img
+                  <Image
                     className="rounded-md w-[30px] h-[30px] object-cover mr-2 inline-block"
                     draggable={false}
-                    src={makeImageUrl("units", officer.imageId)}
+                    src={makeImageUrl("units", officer.imageId)!}
                     loading="lazy"
                     width={30}
                     height={30}

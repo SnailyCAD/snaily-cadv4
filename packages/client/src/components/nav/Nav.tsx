@@ -17,6 +17,7 @@ import Head from "next/head";
 import { usePermission } from "hooks/usePermission";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import { Rank } from "@snailycad/types";
+import Image from "next/future/image";
 
 interface Props {
   maxWidth?: string;
@@ -73,7 +74,7 @@ export function Nav({ maxWidth }: Props) {
                       <link rel="shortcut icon" href={url} />
                       <meta name="og:image" content={url} />
                     </Head>
-                    <img
+                    <Image
                       alt={cad?.name || "SnailyCAD"}
                       width={30}
                       height={30}
