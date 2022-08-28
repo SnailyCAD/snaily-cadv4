@@ -14,7 +14,8 @@
     "typecheck": "yarn tsc --noEmit",
     "copy-env": "node ../../scripts/copy-env.mjs --client",
     "test:watch": "yarn vitest --watch",
-    "test": "yarn vitest run"
+    "test": "yarn vitest run",
+    "create-images-domain": "node ../../scripts/create-images-domain.mjs"
   },
   "dependencies": {
     "@casper124578/use-socket.io": "4.1.2",
