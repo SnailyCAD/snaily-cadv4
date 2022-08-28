@@ -12,8 +12,7 @@ import { findAPIUrl } from "lib/fetch";
 
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import * as Sentry from "@sentry/react";
-import * as Tracing from "@sentry/tracing";
+import { setTags } from "@sentry/react";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import type { cad } from "@snailycad/types";
 import { useMounted } from "@casper124578/useful";
@@ -27,13 +26,6 @@ const ReauthorizeSessionModal = dynamic(
   },
 );
 
-Sentry.init({
-  dsn: "https://6e31d0dc886d482091e293edb73eb10e@o518232.ingest.sentry.io/6553264",
-  tracesSampleRate: 1.0,
-  integrations: [new Tracing.BrowserTracing()],
-  attachStacktrace: true,
-});
-
 function App({ Component, router, pageProps }: AppProps) {
   const isMounted = useMounted();
   const { hostname, protocol, port } = new URL(findAPIUrl());
@@ -41,7 +33,7 @@ function App({ Component, router, pageProps }: AppProps) {
 
   const cad = pageProps?.cad as cad | null;
   if (cad?.version) {
-    Sentry.setTags({
+    setTags({
       "snailycad.version": cad.version.currentVersion,
       "snailycad.commitHash": cad.version.currentCommitHash,
     });
@@ -78,4 +70,4 @@ function App({ Component, router, pageProps }: AppProps) {
   );
 }
 
-export default Sentry.withProfiler(App);
+export default App;
