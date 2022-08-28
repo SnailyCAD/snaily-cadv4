@@ -22,15 +22,11 @@
         "$SECURE_COOKIES_FOR_IFRAME",
         "$PORT_CLIENT"
       ],
-      "outputs": [
-        ".env"
-      ],
+      "outputs": [".env"],
       "cache": false
     },
     "create-images-domain": {
-      "dependsOn": [
-        "^copy-env"
-      ],
+      "dependsOn": ["^copy-env"],
       "cache": false
     },
     "build": {
@@ -42,36 +38,22 @@
         "$NODE_ENV",
         "$IFRAME_SUPPORT_ENABLED"
       ],
-      "outputs": [
-        ".next/**",
-        "dist/**"
-      ],
+      "outputs": [".next/**", "dist/**"],
       "cache": false
     },
     "typecheck": {
-      "dependsOn": [
-        "^typecheck"
-      ],
+      "dependsOn": ["^typecheck"],
       "outputs": []
     },
     "test": {
-      "dependsOn": [
-        "^test"
-      ],
+      "dependsOn": ["^test"],
       "outputs": []
     },
     "watch": {
       "cache": false,
-      "outputs": [
-        ".next/**",
-        "dist/**"
-      ],
-      "dependsOn": [
-        "^watch"
-      ]
+      "outputs": [".next/**", "dist/**"],
+      "dependsOn": ["^watch"]
     }
   },
-  "globalDependencies": [
-    "**/.env"
-  ]
+  "globalDependencies": ["**/.env"]
 }
