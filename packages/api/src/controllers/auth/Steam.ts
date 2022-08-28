@@ -103,7 +103,6 @@ export class SteamOAuthController {
         },
       });
 
-      // todo: replace this function with the function created in `setUserTokenCookies`
       validateUser(user);
 
       // authenticate user with cookie
