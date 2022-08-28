@@ -179,7 +179,7 @@ function createUserData(user: User) {
 
 export function canManageInvariant<T extends Error>(
   userId: string | null | undefined,
-  authUser: User,
+  authUser: Pick<User, "rank" | "id">,
   error: T,
 ): asserts userId {
   if (!userId && (authUser.rank as string) !== "API_TOKEN") {
