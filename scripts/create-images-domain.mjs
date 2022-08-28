@@ -65,3 +65,5 @@ stringArray.splice(startIndex + 1, endIndex - startIndex, JSON.stringify(nextCon
 const config = stringArray.join("\n").replace(/const nextConfig = {/, "const nextConfig =");
 
 writeNextConfig(config);
+
+console.log("Image domain added to next.config.js");

@@ -29,13 +29,14 @@
     },
     "create-images-domain": {
       "dependsOn": [
-        "^copy-env"
+        "^create-images-domain"
       ],
       "cache": false
     },
     "build": {
       "dependsOn": [
         "copy-env",
+        "^create-images-domain",
         "^build",
         "$CORS_ORIGIN_URL",
         "$NEXT_PUBLIC_PROD_ORIGIN",

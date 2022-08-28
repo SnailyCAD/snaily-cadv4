@@ -19,7 +19,7 @@ const nextConfig = {
     },
   },
   images: {
-    domains: ["localhost", "localhost"],
+    domains: ["localhost"],
   },
 };
 
