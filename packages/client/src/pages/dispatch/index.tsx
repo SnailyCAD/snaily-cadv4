@@ -24,6 +24,7 @@ import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import type { Get911CallsData, GetBolosData, GetDispatchData } from "@snailycad/types/api";
 import { UtilityPanel } from "components/shared/UtilityPanel";
 import { useCall911State } from "state/dispatch/call911State";
+import { DndProvider } from "components/shared/dnd/DndProvider";
 
 const ActiveIncidents = dynamic(async () => {
   return (await import("components/dispatch/ActiveIncidents")).ActiveIncidents;
@@ -123,18 +124,19 @@ export default function DispatchDashboard(props: DispatchPageProps) {
         <DispatchModalButtons />
       </UtilityPanel>
 
-      <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
-        <div className="w-full">
-          <ActiveOfficers initialOfficers={activeOfficers} />
-          <ActiveDeputies initialDeputies={activeDeputies} />
+      <DndProvider>
+        <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
+          <div className="w-full">
+            <ActiveOfficers initialOfficers={activeOfficers} />
+            <ActiveDeputies initialDeputies={activeDeputies} />
+          </div>
         </div>
-      </div>
-
-      <div className="mt-3">
-        <ActiveCalls initialData={props.calls} />
-        <ActiveBolos initialBolos={props.bolos} />
-        {ACTIVE_INCIDENTS ? <ActiveIncidents /> : null}
-      </div>
+        <div className="mt-3">
+          <ActiveCalls initialData={props.calls} />
+          <ActiveBolos initialBolos={props.bolos} />
+          {ACTIVE_INCIDENTS ? <ActiveIncidents /> : null}
+        </div>
+      </DndProvider>
 
       <Modals.NotepadModal />
       {/* name search have their own vehicle/weapon search modal */}
