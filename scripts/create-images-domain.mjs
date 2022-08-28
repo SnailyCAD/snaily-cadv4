@@ -1,6 +1,7 @@
 import "dotenv/config";
 import process from "node:process";
 import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 import { readFile, writeFile } from "node:fs/promises";
 import { format } from "prettier";
 
@@ -17,7 +18,7 @@ function getNextConfigPath() {
   }
 
   const configFilePath = join(dir, "next.config.js");
-  return configFilePath;
+  return pathToFileURL(configFilePath);
 }
 
 async function loadNextConfig() {
@@ -33,7 +34,7 @@ function writeNextConfig(data) {
   if (process.env.NODE_ENV === "development") return;
 
   const configFilePath = getNextConfigPath();
-  return writeFile(configFilePath, format(data, { parser: "babel" }));
+  return writeFile(configFilePath, format(data, { parser: "typescript" }));
 }
 
 function urlToDomain(fullUrl) {
@@ -57,7 +58,7 @@ nextConfig.images.domains = ["localhost", domain];
 
 const stringArray = text.split("\n");
 const startIndex = stringArray.findIndex((line) => line.includes("const nextConfig = {"));
-const endIndex = stringArray.findIndex((line) => line === "};");
+const endIndex = stringArray.findIndex((line) => line.startsWith("};"));
 
 stringArray.splice(startIndex + 1, endIndex - startIndex, JSON.stringify(nextConfig, null, 4));
 
