@@ -6,13 +6,13 @@ import { getSessionUser } from "lib/auth/getSessionUser";
 import { prisma } from "lib/prisma";
 import { isRouteDisabled } from "./utils";
 
-interface GetUserFromCADAPITokenOptions {
+interface SetGlobalUserFromCADAPITokenOptions {
   req: Req;
   res: Res;
   apiTokenHeader: string | string[];
 }
 
-export async function getUserFromCADAPIToken(options: GetUserFromCADAPITokenOptions) {
+export async function setGlobalUserFromCADAPIToken(options: SetGlobalUserFromCADAPITokenOptions) {
   const cad = await prisma.cad.findFirst({
     select: {
       apiToken: true,
@@ -28,7 +28,7 @@ export async function getUserFromCADAPIToken(options: GetUserFromCADAPITokenOpti
     throw new BadRequest("routeIsDisabled");
   }
 
-  const fakeUser = {
+  const globalUser = {
     isDispatch: true,
     isLeo: true,
     isEmsFd: true,
@@ -41,11 +41,11 @@ export async function getUserFromCADAPIToken(options: GetUserFromCADAPITokenOpti
     permissions: allPermissions,
   };
 
-  return fakeUser;
+  return globalUser;
 }
 
 export async function getUserFromSession(
-  options: Omit<GetUserFromCADAPITokenOptions, "apiTokenHeader">,
+  options: Omit<SetGlobalUserFromCADAPITokenOptions, "apiTokenHeader">,
 ) {
   const user = await getSessionUser({
     req: options.req,

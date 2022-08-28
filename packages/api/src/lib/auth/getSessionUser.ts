@@ -1,15 +1,16 @@
 import type { Req, Res } from "@tsed/common";
-import { NotFound, Unauthorized } from "@tsed/exceptions";
+import { Unauthorized } from "@tsed/exceptions";
 import { parse } from "cookie";
 import { Cookie, USER_API_TOKEN_HEADER } from "@snailycad/config";
 import { signJWT, verifyJWT } from "utils/jwt";
 import { prisma } from "lib/prisma";
-import { Feature, WhitelistStatus, type User } from "@snailycad/types";
+import { Feature, type User } from "@snailycad/types";
 import { isFeatureEnabled } from "lib/cad";
 import type { GetUserData } from "@snailycad/types/api";
 import { setCookie } from "utils/setCookie";
 import { ACCESS_TOKEN_EXPIRES_MS, ACCESS_TOKEN_EXPIRES_S } from "./setUserTokenCookies";
 import { getUserFromUserAPIToken } from "./getUserFromUserAPIToken";
+import { validateUserData } from "./validateUser";
 
 export enum GetSessionUserErrors {
   InvalidAPIToken = "invalid user API token",
@@ -174,34 +175,6 @@ export async function getSessionUser(
 function createUserData(user: User) {
   const { tempPassword, ...rest } = user;
   return { ...rest, tempPassword: null, hasTempPassword: !!tempPassword } as GetUserData;
-}
-
-function validateUserData(
-  user: User | null,
-  returnNullOnError?: false,
-): asserts user is GetUserData;
-function validateUserData(user: User | null, returnNullOnError?: boolean) {
-  if (!user) {
-    if (returnNullOnError) return null;
-    throw new Unauthorized(GetSessionUserErrors.NotFound);
-  }
-
-  if (user.banned) {
-    if (returnNullOnError) return null;
-    throw new NotFound(GetSessionUserErrors.UserBanned);
-  }
-
-  if (user.whitelistStatus === WhitelistStatus.PENDING) {
-    if (returnNullOnError) return null;
-    throw new NotFound(GetSessionUserErrors.WhitelistPending);
-  }
-
-  if (user.whitelistStatus === WhitelistStatus.DECLINED) {
-    if (returnNullOnError) return null;
-    throw new NotFound(GetSessionUserErrors.WhitelistDeclined);
-  }
-
-  return user;
 }
 
 export function canManageInvariant<T extends Error>(

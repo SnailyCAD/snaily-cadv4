@@ -6,7 +6,7 @@ import { Unauthorized } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { getCADVersion } from "@snailycad/utils/version";
 import { handleDiscordSync } from "./auth/utils";
-import { getUserFromCADAPIToken, getUserFromSession } from "./auth/getUser";
+import { setGlobalUserFromCADAPIToken, getUserFromSession } from "./auth/getUser";
 import type { cad } from "@snailycad/types";
 
 @Middleware()
@@ -16,7 +16,7 @@ export class IsAuth implements MiddlewareMethods {
 
     let user;
     if (globalCADApiToken) {
-      const fakeUser = await getUserFromCADAPIToken({
+      const fakeUser = await setGlobalUserFromCADAPIToken({
         res,
         req,
         apiTokenHeader: globalCADApiToken,
@@ -31,28 +31,13 @@ export class IsAuth implements MiddlewareMethods {
       throw new Unauthorized("Unauthorized");
     }
 
-    let cad = await prisma.cad.findFirst({
-      select: CAD_SELECT(user),
-    });
-
-    if (cad && !cad.miscCadSettings) {
-      cad = await prisma.cad.update({
-        where: { id: cad.id },
-        data: {
-          miscCadSettings: {
-            create: {},
-          },
-        },
-        select: CAD_SELECT(user),
-      });
+    const cad = await prisma.cad.findFirst({ select: CAD_SELECT(user) });
+    if (cad) {
+      ctx.set("cad", { ...setDiscordAuth(cad as cad), version: await getCADVersion() });
     }
 
     if (user) {
       await handleDiscordSync({ user, cad });
-    }
-
-    if (cad) {
-      ctx.set("cad", { ...setDiscordAuth(cad as cad), version: await getCADVersion() });
     }
   }
 }
