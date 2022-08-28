@@ -3,7 +3,7 @@ import { ModalIds } from "types/ModalIds";
 import { ShouldDoType } from "@snailycad/types";
 import { useModal } from "state/modalState";
 import { useTranslations } from "use-intl";
-import { useEmsFdState } from "state/emsFdState";
+import { ActiveDeputy, useEmsFdState } from "state/emsFdState";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 import useFetch from "lib/useFetch";
@@ -11,6 +11,7 @@ import type { PostEmsFdTogglePanicButtonData } from "@snailycad/types/api";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { TonesModal } from "components/dispatch/modals/TonesModal";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { useMounted } from "@casper124578/useful";
 
 interface MButton {
   nameKey: [string, string];
@@ -32,14 +33,20 @@ const buttons: MButton[] = [
   },
 ];
 
-export function ModalButtons() {
-  const { activeDeputy } = useEmsFdState();
+export function ModalButtons({
+  initialActiveDeputy,
+}: {
+  initialActiveDeputy: ActiveDeputy | null;
+}) {
+  const _activeDeputy = useEmsFdState((s) => s.activeDeputy);
+  const isMounted = useMounted();
   const { openModal } = useModal();
   const t = useTranslations();
   const { generateCallsign } = useGenerateCallsign();
   const { execute } = useFetch();
   const { hasActiveDispatchers } = useActiveDispatchers();
   const { PANIC_BUTTON } = useFeatureEnabled();
+  const activeDeputy = isMounted ? _activeDeputy : initialActiveDeputy;
 
   const isButtonDisabled =
     !activeDeputy ||

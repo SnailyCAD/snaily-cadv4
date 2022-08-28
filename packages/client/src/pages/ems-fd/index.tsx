@@ -98,7 +98,7 @@ export default function EmsFDDashboard({
 
       <UtilityPanel>
         <div className="px-4">
-          <ModalButtons />
+          <ModalButtons initialActiveDeputy={activeDeputy} />
         </div>
 
         <StatusesArea
@@ -106,6 +106,7 @@ export default function EmsFDDashboard({
           units={dispatchState.activeDeputies}
           setActiveUnit={state.setActiveDeputy}
           activeUnit={state.activeDeputy}
+          initialData={activeDeputy}
         />
       </UtilityPanel>
 

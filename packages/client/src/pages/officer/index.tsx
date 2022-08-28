@@ -149,7 +149,7 @@ export default function OfficerDashboard({
 
       <UtilityPanel>
         <div className="px-4">
-          <ModalButtons />
+          <ModalButtons initialActiveOfficer={activeOfficer} />
         </div>
 
         <StatusesArea
@@ -157,6 +157,7 @@ export default function OfficerDashboard({
           units={dispatchState.activeOfficers}
           activeUnit={leoState.activeOfficer}
           setActiveUnit={leoState.setActiveOfficer}
+          initialData={activeOfficer}
         />
       </UtilityPanel>
 

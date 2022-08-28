@@ -38,6 +38,7 @@ import type {
   PostLeoSearchCitizenData,
   PutSearchActionsLicensesData,
 } from "@snailycad/types/api";
+import Image from "next/future/image";
 
 const VehicleSearchModal = dynamic(
   async () => (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal,
@@ -208,11 +209,13 @@ export function NameSearchModal() {
                 Component={({ suggestion }) => (
                   <div className="flex items-center">
                     {suggestion.imageId ? (
-                      <img
+                      <Image
                         className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                         draggable={false}
-                        src={makeImageUrl("citizens", suggestion.imageId)}
+                        src={makeImageUrl("citizens", suggestion.imageId)!}
                         loading="lazy"
+                        width={30}
+                        height={30}
                       />
                     ) : null}
                     <p>
@@ -250,11 +253,13 @@ export function NameSearchModal() {
                     <div className="flex items-center">
                       <div className="mr-2 min-w-[50px]">
                         {result.imageId ? (
-                          <img
+                          <Image
                             className="rounded-md w-[50px] h-[50px] object-cover"
                             draggable={false}
-                            src={makeImageUrl("citizens", result.imageId)}
+                            src={makeImageUrl("citizens", result.imageId)!}
                             loading="lazy"
+                            width={50}
+                            height={50}
                           />
                         ) : (
                           <PersonFill className="text-gray-500/60 w-[50px] h-[50px]" />
@@ -327,11 +332,13 @@ export function NameSearchModal() {
                           onClick={() => openModal(ModalIds.CitizenImage)}
                           className="cursor-pointer"
                         >
-                          <img
+                          <Image
                             className="rounded-md w-[100px] h-[100px] object-cover"
                             draggable={false}
-                            src={makeImageUrl("citizens", currentResult.imageId)}
+                            src={makeImageUrl("citizens", currentResult.imageId)!}
                             loading="lazy"
+                            width={100}
+                            height={100}
                           />
                         </button>
                       ) : (

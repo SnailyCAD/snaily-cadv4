@@ -13,8 +13,10 @@ import { Officer, ShouldDoType, WhatPages, type StatusValue } from "@snailycad/t
 import { useAudio } from "react-use";
 import { useAuth } from "context/AuthContext";
 import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
+import { useMounted } from "@casper124578/useful";
 
 interface Props<T extends ActiveOfficer | ActiveDeputy> {
+  initialData: T | null;
   activeUnit: T | null;
   units: T[];
   setActiveUnit(unit: T | null): void;
@@ -23,11 +25,13 @@ interface Props<T extends ActiveOfficer | ActiveDeputy> {
 
 const STATUS_UPDATE_SRC = "/sounds/status-update.mp3" as const;
 export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
-  activeUnit,
+  initialData,
+  activeUnit: _activeUnit,
   units,
   setActiveUnit,
   setUnits,
 }: Props<T>) {
+  const isMounted = useMounted();
   const { codes10 } = useValues();
   const { openModal } = useModal();
   const { execute } = useFetch();
@@ -37,6 +41,7 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
   const modalId = isEmsFd ? ModalIds.SelectDeputy : ModalIds.SelectOfficer;
   const socketEvent = isEmsFd ? SocketEvents.UpdateEmsFdStatus : SocketEvents.UpdateOfficerStatus;
   const whatPagesType = isEmsFd ? WhatPages.EMS_FD : WhatPages.LEO;
+  const activeUnit = isMounted ? _activeUnit : initialData;
 
   const shouldPlayStatusUpdateSound = user?.soundSettings?.statusUpdate ?? false;
   const [audio, , controls] = useAudio({

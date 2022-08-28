@@ -1,5 +1,5 @@
 import { Button } from "components/Button";
-import { useLeoState } from "state/leoState";
+import { ActiveOfficer, useLeoState } from "state/leoState";
 import { ShouldDoType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
@@ -15,6 +15,8 @@ import { useModal } from "state/modalState";
 import { TonesModal } from "components/dispatch/modals/TonesModal";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useImageUrl } from "hooks/useImageUrl";
+import Image from "next/future/image";
+import { useMounted } from "@casper124578/useful";
 
 const buttons: modalButtons.ModalButton[] = [
   modalButtons.switchDivision,
@@ -31,11 +33,14 @@ const buttons: modalButtons.ModalButton[] = [
   modalButtons.notepadBtn,
 ];
 
-export function ModalButtons() {
-  const { activeOfficer } = useLeoState();
+export function ModalButtons({ initialActiveOfficer }: { initialActiveOfficer: ActiveOfficer }) {
+  const _activeOfficer = useLeoState((s) => s.activeOfficer);
+  const isMounted = useMounted();
+  const activeOfficer = isMounted ? _activeOfficer : initialActiveOfficer;
+
   const t = useTranslations();
   const { generateCallsign } = useGenerateCallsign();
-  const { hasActiveDispatchers } = useActiveDispatchers();
+  const { state: activeDispatchersState, hasActiveDispatchers } = useActiveDispatchers();
   const { state, execute } = useFetch();
   const { openModal } = useModal();
   const { PANIC_BUTTON } = useFeatureEnabled();
@@ -69,10 +74,10 @@ export function ModalButtons() {
           <span className="font-semibold">{t("Leo.activeOfficer")}: </span>
 
           {isUnitOfficer(activeOfficer) && activeOfficer.imageId ? (
-            <img
+            <Image
               className="rounded-md w-[30px] h-[30px] object-cover mx-2 inline"
               draggable={false}
-              src={makeImageUrl("units", activeOfficer.imageId)}
+              src={makeImageUrl("units", activeOfficer.imageId)!}
               loading="lazy"
               width={30}
               height={30}
@@ -107,7 +112,7 @@ export function ModalButtons() {
           </Button>
         ) : null}
 
-        {!hasActiveDispatchers ? (
+        {activeDispatchersState !== "loading" && !hasActiveDispatchers ? (
           <>
             <Button disabled={isButtonDisabled} onClick={() => openModal(ModalIds.Tones)}>
               {t("Leo.tones")}
