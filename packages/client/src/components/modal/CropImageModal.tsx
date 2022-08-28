@@ -4,6 +4,7 @@ import type CropperJS from "cropperjs";
 import { Button } from "components/Button";
 import { useTranslations } from "use-intl";
 import { Modal } from "./Modal";
+import "cropperjs/dist/cropper.css";
 
 interface Props {
   onSuccess(url: Blob, filename: string): void;

@@ -1,5 +1,4 @@
 import type { AppProps } from "next/app";
-import "cropperjs/dist/cropper.css";
 import { SSRProvider } from "@react-aria/ssr";
 import { Toaster } from "react-hot-toast";
 import { NextIntlProvider } from "next-intl";
@@ -10,9 +9,7 @@ import "styles/globals.scss";
 import { SocketProvider } from "@casper124578/use-socket.io";
 import { findAPIUrl } from "lib/fetch";
 
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { setTags } from "@sentry/react";
+import { setTags } from "@sentry/nextjs";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import type { cad } from "@snailycad/types";
 import { useMounted } from "@casper124578/useful";
@@ -50,16 +47,14 @@ function App({ Component, router, pageProps }: AppProps) {
           >
             <ValuesProvider initialData={pageProps}>
               <CitizenProvider initialData={pageProps}>
-                <DndProvider backend={HTML5Backend}>
-                  <GoogleReCaptchaProvider
-                    reCaptchaKey={process.env.NEXT_PUBLIC_GOOGLE_CAPTCHA_SITE_KEY as string}
-                    scriptProps={{ async: true, defer: true, appendTo: "body" }}
-                    useRecaptchaNet
-                  >
-                    {isMounted ? <ReauthorizeSessionModal /> : null}
-                    <Component {...pageProps} />
-                  </GoogleReCaptchaProvider>
-                </DndProvider>
+                <GoogleReCaptchaProvider
+                  reCaptchaKey={process.env.NEXT_PUBLIC_GOOGLE_CAPTCHA_SITE_KEY as string}
+                  scriptProps={{ async: true, defer: true, appendTo: "body" }}
+                  useRecaptchaNet
+                >
+                  {isMounted ? <ReauthorizeSessionModal /> : null}
+                  <Component {...pageProps} />
+                </GoogleReCaptchaProvider>
                 <Toaster position="top-right" />
               </CitizenProvider>
             </ValuesProvider>

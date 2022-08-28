@@ -30,4 +30,5 @@ module.exports = withSentryConfig(nextConfig, {
   project: "snailycad-client",
   authToken: "bce2b8a2e79f4336a3b115f171e675ab639d2d1f809a40919ca4493257a9c0e0",
   release: "default",
+  silent: true,
 });
