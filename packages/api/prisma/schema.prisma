@@ -234,6 +234,7 @@ model User {
   apiTokenId               String?
   roles                    CustomRole[]
   locale                   String?
+  sessions                 UserSession[]
 
   // relational data
   citizens             Citizen[]
@@ -255,6 +256,14 @@ model User {
   User2FA              User2FA[]
   NameChangeRequest    NameChangeRequest[]
   CourthousePost       CourthousePost[]
+}
+
+model UserSession {
+  id           String   @id @default(cuid())
+  refreshToken String   @unique
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expires      DateTime
 }
 
 model UserSoundSettings {

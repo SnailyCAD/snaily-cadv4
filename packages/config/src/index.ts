@@ -1,5 +1,6 @@
 export enum Cookie {
-  Session = "snaily-cad-session",
+  AccessToken = "snaily-cad-session",
+  RefreshToken = "snaily-cad-refresh-token",
 }
 
 export const API_TOKEN_HEADER = "snaily-cad-api-token" as const;

@@ -22,11 +22,15 @@
         "$SECURE_COOKIES_FOR_IFRAME",
         "$PORT_CLIENT"
       ],
-      "outputs": [".env"],
+      "outputs": [
+        ".env"
+      ],
       "cache": false
     },
     "create-images-domain": {
-      "dependsOn": ["^create-images-domain"],
+      "dependsOn": [
+        "^create-images-domain"
+      ],
       "cache": false
     },
     "build": {
@@ -36,25 +40,38 @@
         "^build",
         "$CORS_ORIGIN_URL",
         "$NEXT_PUBLIC_PROD_ORIGIN",
-        "$NODE_ENV",
-        "$IFRAME_SUPPORT_ENABLED"
+        "$NODE_ENV"
       ],
-      "outputs": [".next/**", "dist/**"],
+      "outputs": [
+        ".next/**",
+        "dist/**"
+      ],
       "cache": false
     },
     "typecheck": {
-      "dependsOn": ["^typecheck"],
+      "dependsOn": [
+        "^typecheck"
+      ],
       "outputs": []
     },
     "test": {
-      "dependsOn": ["^test"],
+      "dependsOn": [
+        "^test"
+      ],
       "outputs": []
     },
     "watch": {
       "cache": false,
-      "outputs": [".next/**", "dist/**"],
-      "dependsOn": ["^watch"]
+      "outputs": [
+        ".next/**",
+        "dist/**"
+      ],
+      "dependsOn": [
+        "^watch"
+      ]
     }
   },
-  "globalDependencies": ["**/.env"]
+  "globalDependencies": [
+    "**/.env"
+  ]
 }

@@ -1,7 +1,7 @@
 import process from "node:process";
 import { Rank, User, CadFeature, Feature } from "@prisma/client";
 import { API_TOKEN_HEADER } from "@snailycad/config";
-import { Context, Middleware, Req, MiddlewareMethods } from "@tsed/common";
+import { Context, Middleware, Req, MiddlewareMethods, Res } from "@tsed/common";
 import { Unauthorized } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { getCADVersion } from "@snailycad/utils/version";
@@ -11,19 +11,23 @@ import type { cad } from "@snailycad/types";
 
 @Middleware()
 export class IsAuth implements MiddlewareMethods {
-  async use(@Req() req: Req, @Context() ctx: Context) {
-    const apiTokenHeader = req.headers[API_TOKEN_HEADER];
+  async use(@Req() req: Req, @Res() res: Res, @Context() ctx: Context) {
+    const globalCADApiToken = req.headers[API_TOKEN_HEADER];
 
     let user;
-    if (apiTokenHeader) {
-      const fakeUser = await getUserFromCADAPIToken({ req, apiTokenHeader });
+    if (globalCADApiToken) {
+      const fakeUser = await getUserFromCADAPIToken({
+        res,
+        req,
+        apiTokenHeader: globalCADApiToken,
+      });
       ctx.set("user", fakeUser);
     } else {
-      user = await getUserFromSession({ req });
+      user = await getUserFromSession({ res, req });
       ctx.set("user", user);
     }
 
-    if (!apiTokenHeader && !user) {
+    if (!globalCADApiToken && !user) {
       throw new Unauthorized("Unauthorized");
     }
 

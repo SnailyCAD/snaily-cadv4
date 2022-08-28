@@ -9,7 +9,6 @@ import { useAuth } from "context/AuthContext";
 import { useTranslations } from "next-intl";
 import { LoginForm } from "components/auth/login/LoginForm";
 import { useRouter } from "next/router";
-import type { PostLoginUserData } from "@snailycad/types/api";
 import { requestAll } from "lib/utils";
 
 export default function Login() {
@@ -17,14 +16,7 @@ export default function Login() {
   const t = useTranslations("Auth");
   const router = useRouter();
 
-  async function handleSubmit({ from, json }: { from: string; json: PostLoginUserData }) {
-    if (process.env.IFRAME_SUPPORT_ENABLED === "true" && json.session) {
-      await fetch("/api/token", {
-        method: "POST",
-        body: json.session,
-      });
-    }
-
+  async function handleSubmit({ from }: { from: string }) {
     router.push(from);
   }
 
