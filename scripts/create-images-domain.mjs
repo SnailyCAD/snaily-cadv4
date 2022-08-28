@@ -4,8 +4,6 @@ import { join } from "node:path";
 import { readFile, writeFile } from "node:fs/promises";
 import { format } from "prettier";
 
-if (process.env.NODE_ENV === "development") return;
-
 const UNIX_SLASHES_REGEX = /\/packages\/client/;
 const WIN_SLASHES_REGEX = /\\packages\\client/;
 
