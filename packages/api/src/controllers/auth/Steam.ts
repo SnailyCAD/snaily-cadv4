@@ -74,7 +74,7 @@ export class SteamOAuthController {
       validateUser(user);
 
       // authenticate user with cookie
-      setUserTokenCookies({ user, res });
+      await setUserTokenCookies({ user, res });
 
       return res.redirect(`${redirectURL}/citizen`);
     }
@@ -106,7 +106,7 @@ export class SteamOAuthController {
       validateUser(user);
 
       // authenticate user with cookie
-      setUserTokenCookies({ user, res });
+      await setUserTokenCookies({ user, res });
 
       return res.redirect(`${redirectURL}/citizen`);
     }
