@@ -31,8 +31,17 @@ export class IsAuth implements MiddlewareMethods {
       throw new Unauthorized("Unauthorized");
     }
 
-    const cad = await prisma.cad.findFirst({ select: CAD_SELECT(user) });
+    let cad = await prisma.cad.findFirst({ select: CAD_SELECT(user) });
+
     if (cad) {
+      if (!cad.miscCadSettings) {
+        cad = await prisma.cad.update({
+          select: CAD_SELECT(user),
+          where: { id: cad.id },
+          data: { miscCadSettings: { create: {} } },
+        });
+      }
+
       ctx.set("cad", { ...setDiscordAuth(cad as cad), version: await getCADVersion() });
     }
 
