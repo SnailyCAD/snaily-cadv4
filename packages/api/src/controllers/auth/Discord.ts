@@ -87,7 +87,7 @@ export class DiscordAuth {
       validateUser(updatedWithRoles ?? user);
 
       // authenticate user with cookie
-      setUserTokenCookies({ user, res });
+      await setUserTokenCookies({ user, res });
 
       return res.redirect(`${redirectURL}/citizen`);
     }
@@ -120,7 +120,7 @@ export class DiscordAuth {
       validateUser(updatedWithRoles ?? user);
 
       // authenticate user with cookie
-      setUserTokenCookies({ user, res });
+      await setUserTokenCookies({ user, res });
 
       return res.redirect(`${redirectURL}/citizen`);
     }
