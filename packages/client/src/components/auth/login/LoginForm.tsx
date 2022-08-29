@@ -7,7 +7,7 @@ import { Input, PasswordInput } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
 import { Button } from "components/Button";
 import { TwoFactorAuthScreen } from "components/auth/TwoFactorAuthScreen";
-import { findAPIUrl } from "lib/fetch";
+import { getAPIUrl } from "lib/fetch/getAPIUrl";
 import { useRouter } from "next/router";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
@@ -82,14 +82,14 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
   }
 
   function handleDiscordLogin() {
-    const url = findAPIUrl();
+    const url = getAPIUrl();
 
     const fullUrl = `${url}/auth/discord`;
     window.location.href = fullUrl;
   }
 
   function handleSteamLogin() {
-    const url = findAPIUrl();
+    const url = getAPIUrl();
 
     const fullUrl = `${url}/auth/steam`;
     window.location.href = fullUrl;

@@ -1,5 +1,5 @@
 import { Loader } from "components/Loader";
-import { findAPIUrl } from "lib/fetch";
+import { getAPIUrl } from "lib/fetch/getAPIUrl";
 import type { GetServerSideProps } from "next";
 
 export default function ApiDocs() {
@@ -13,7 +13,7 @@ export default function ApiDocs() {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const apiURL = findAPIUrl();
+  const apiURL = getAPIUrl();
   const destination = apiURL.replace("/v1", "/api-docs");
 
   return {

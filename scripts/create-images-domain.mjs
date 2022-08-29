@@ -34,7 +34,18 @@ function writeNextConfig(data) {
   if (process.env.NODE_ENV === "development") return;
 
   const configFilePath = getNextConfigPath();
-  return writeFile(configFilePath, format(data, { parser: "typescript" }));
+  return writeFile(
+    configFilePath,
+    format(data, {
+      endOfLine: "auto",
+      semi: true,
+      trailingComma: "all",
+      singleQuote: false,
+      printWidth: 100,
+      tabWidth: 2,
+      parser: "typescript",
+    }),
+  );
 }
 
 function urlToDomain(fullUrl) {
@@ -52,17 +63,19 @@ function urlToDomain(fullUrl) {
 }
 
 const domain = urlToDomain(process.env.NEXT_PUBLIC_PROD_ORIGIN);
-const { data: nextConfig, text } = await loadNextConfig();
-
-nextConfig.images.domains = ["localhost", domain];
+const { text } = await loadNextConfig();
 
 const stringArray = text.split("\n");
-const startIndex = stringArray.findIndex((line) => line.includes("const nextConfig = {"));
-const endIndex = stringArray.findIndex((line) => line.startsWith("};"));
 
-stringArray.splice(startIndex + 1, endIndex - startIndex, JSON.stringify(nextConfig, null, 4));
+const imagesIndex = stringArray.findIndex((line) => line.includes("images: { // start images"));
+const imagesEndIndex = stringArray.findIndex((line) => line.includes("}, // end images"));
 
-const config = stringArray.join("\n").replace(/const nextConfig = {/, "const nextConfig =");
+let imagesData = stringArray.slice(imagesIndex, imagesEndIndex).join("\n");
+imagesData = imagesData.replace(/localhost"\]/, `localhost", "${domain}"]`);
+
+stringArray.splice(imagesIndex, imagesEndIndex - imagesIndex, imagesData);
+
+const config = stringArray.join("\n");
 
 writeNextConfig(config);
 

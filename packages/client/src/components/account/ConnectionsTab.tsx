@@ -3,7 +3,7 @@ import { useTranslations } from "use-intl";
 import { TabsContent } from "components/shared/TabList";
 import { Button } from "components/Button";
 import { useAuth } from "context/AuthContext";
-import { findAPIUrl } from "lib/fetch";
+import { getAPIUrl } from "lib/fetch/getAPIUrl";
 import useFetch from "lib/useFetch";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
@@ -40,7 +40,7 @@ export function ConnectionsTab() {
   ];
 
   function handleConnectClick(type: ConnectionKeys) {
-    const url = findAPIUrl();
+    const url = getAPIUrl();
 
     // append date so browsers don't cache this URL.
     const fullUrl = `${url}/auth/${type}?v=${new Date().toISOString()}`;

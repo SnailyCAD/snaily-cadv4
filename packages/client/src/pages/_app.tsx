@@ -1,18 +1,17 @@
 import type { AppProps } from "next/app";
 import { SSRProvider } from "@react-aria/ssr";
-import { Toaster } from "react-hot-toast";
 import { NextIntlProvider } from "next-intl";
 import { AuthProvider } from "context/AuthContext";
 import { ValuesProvider } from "context/ValuesContext";
 import { CitizenProvider } from "context/CitizenContext";
 import "styles/globals.scss";
 import { SocketProvider } from "@casper124578/use-socket.io";
-import { findAPIUrl } from "lib/fetch";
+import { getAPIUrl } from "lib/fetch/getAPIUrl";
 
 import { setTags } from "@sentry/nextjs";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
-import type { cad } from "@snailycad/types";
-import { useMounted } from "@casper124578/useful";
+import type { cad, User } from "@snailycad/types";
+import { useMounted } from "@casper124578/useful/hooks/useMounted";
 import dynamic from "next/dynamic";
 
 const ReauthorizeSessionModal = dynamic(
@@ -23,10 +22,14 @@ const ReauthorizeSessionModal = dynamic(
   },
 );
 
-function App({ Component, router, pageProps }: AppProps) {
+const Toaster = dynamic(async () => (await import("react-hot-toast")).Toaster, { ssr: false });
+
+export default function App({ Component, router, pageProps }: AppProps) {
   const isMounted = useMounted();
-  const { hostname, protocol, port } = new URL(findAPIUrl());
-  const url = `${protocol}//${hostname}:${port}`;
+  const { protocol, host } = new URL(getAPIUrl());
+  const url = `${protocol}//${host}`;
+  const user = pageProps.session as User | null;
+  const locale = user?.locale ?? router.locale ?? "en";
 
   const cad = pageProps?.cad as cad | null;
   if (cad?.version) {
@@ -40,11 +43,7 @@ function App({ Component, router, pageProps }: AppProps) {
     <SSRProvider>
       <SocketProvider uri={url} options={{ reconnectionDelay: 10_000 }}>
         <AuthProvider initialData={pageProps}>
-          <NextIntlProvider
-            onError={console.warn}
-            locale={router.locale ?? "en"}
-            messages={pageProps.messages}
-          >
+          <NextIntlProvider onError={console.warn} locale={locale} messages={pageProps.messages}>
             <ValuesProvider initialData={pageProps}>
               <CitizenProvider initialData={pageProps}>
                 <GoogleReCaptchaProvider
@@ -64,5 +63,3 @@ function App({ Component, router, pageProps }: AppProps) {
     </SSRProvider>
   );
 }
-
-export default App;

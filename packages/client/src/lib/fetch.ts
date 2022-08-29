@@ -1,6 +1,7 @@
 import axios, { type Method, type AxiosRequestConfig, type AxiosResponse } from "axios";
 import type { IncomingMessage } from "connect";
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";
+import { getAPIUrl } from "./fetch/getAPIUrl";
 import { getErrorObj } from "./useFetch";
 
 export type RequestData = Record<string, unknown>;
@@ -20,7 +21,7 @@ export async function handleRequest<T = any>(
 ): Promise<AxiosResponse<T, T>> {
   const { req, method, data } = options ?? {};
 
-  const apiUrl = findAPIUrl();
+  const apiUrl = getAPIUrl();
   const location = typeof window !== "undefined" ? window.location : null;
   const isDispatchUrl = (location?.pathname ?? req?.url) === "/dispatch";
   const parsedCookie = req?.headers.cookie;
@@ -47,16 +48,6 @@ export async function handleRequest<T = any>(
 
     return makeReturn(e);
   }
-}
-
-export function findAPIUrl() {
-  const envUrl = process.env.NEXT_PUBLIC_PROD_ORIGIN ?? "http://localhost:8080/v1";
-
-  if (process.env.NODE_ENV === "development") {
-    return "http://localhost:8080/v1";
-  }
-
-  return envUrl;
 }
 
 function makeReturn<T>(v: any): Omit<AxiosResponse<T>, "request"> {
