@@ -13,7 +13,7 @@ import type { IncomingMessage } from "connect";
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";
 import format from "date-fns/format";
 import differenceInYears from "date-fns/differenceInYears";
-import type { Sounds } from "./server/getAvailableSounds";
+import type { Sounds } from "./server/getAvailableSounds.server";
 
 export function calculateAge(dateOfBirth: string | Date): string {
   const difference = differenceInYears(new Date(), new Date(dateOfBirth));

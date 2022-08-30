@@ -1,3 +1,4 @@
+import * as React from "react";
 import { TabsContent } from "components/shared/TabList";
 import * as Accordion from "@radix-ui/react-accordion";
 import { Button } from "components/Button";
@@ -11,11 +12,12 @@ import { StatusViewMode, TableActionsAlignment } from "@snailycad/types";
 import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
 import nextConfig from "../../../next.config";
-import type { Sounds } from "lib/server/getAvailableSounds";
+import type { Sounds } from "lib/server/getAvailableSounds.server";
 import { soundCamelCaseToKebabCase } from "lib/utils";
 import { CaretDownFill } from "react-bootstrap-icons";
 import { useRouter } from "next/router";
 import type { PatchUserData } from "@snailycad/types/api";
+import { useAudio } from "react-use";
 
 interface Props {
   availableSounds: Record<Sounds, boolean>;
@@ -28,6 +30,12 @@ export function AppearanceTab({ availableSounds }: Props) {
   const common = useTranslations("Common");
   const availableLanguages = nextConfig.i18n?.locales;
   const router = useRouter();
+  const [currentSrc, setCurrentSrc] = React.useState("");
+
+  const [audio, , controls] = useAudio({
+    src: currentSrc,
+    autoPlay: false,
+  });
 
   const STATUS_VIEW_MODE_LABELS = {
     [StatusViewMode.DOT_COLOR]: t("dotColor"),
@@ -81,6 +89,8 @@ export function AppearanceTab({ availableSounds }: Props) {
 
   return (
     <TabsContent aria-label={t("appearanceSettings")} value="appearanceSettings">
+      {audio}
+
       <h1 className="text-2xl font-semibold">{t("appearanceSettings")}</h1>
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (
@@ -137,7 +147,7 @@ export function AppearanceTab({ availableSounds }: Props) {
                 if (!soundAvailable) return null;
 
                 return (
-                  <div className="mb-3" key={fieldName}>
+                  <div className="mb-3 flex flex-row gap-5" key={fieldName}>
                     <FormField className="!mb-0" label={t(fieldName)} checkbox>
                       <Toggle
                         value={values.soundSettings[fieldName]}
@@ -146,6 +156,18 @@ export function AppearanceTab({ availableSounds }: Props) {
                         disabled={!soundAvailable}
                       />
                     </FormField>
+
+                    <Button
+                      size="xs"
+                      type="button"
+                      onClick={() => {
+                        setCurrentSrc(`/sounds/${kebabCase}.mp3`);
+                        controls.volume(0.1);
+                        controls.play();
+                      }}
+                    >
+                      Test sound (Double Click)
+                    </Button>
                   </div>
                 );
               })}

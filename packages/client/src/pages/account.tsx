@@ -15,7 +15,7 @@ import { Title } from "components/shared/Title";
 import { toastMessage } from "lib/toastMessage";
 import { canUseThirdPartyConnections } from "lib/utils";
 import { usePermission, Permissions } from "hooks/usePermission";
-import { getAvailableSounds, Sounds } from "lib/server/getAvailableSounds";
+import { getAvailableSounds, Sounds } from "lib/server/getAvailableSounds.server";
 import { AccountInfoTab } from "components/account/AccountInfoTab";
 
 const AccountSettingsTab = dynamic(async () => {
