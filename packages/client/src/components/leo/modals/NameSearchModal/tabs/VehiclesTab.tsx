@@ -39,6 +39,7 @@ export function NameSearchVehiclesTab() {
         <p className="text-neutral-700 dark:text-gray-400 my-2">{t("Leo.noVehiclesCitizen")}</p>
       ) : (
         <Table
+          features={{ isWithinCard: true }}
           tableState={tableState}
           data={currentResult.vehicles.map((vehicle) => ({
             id: vehicle.id,
