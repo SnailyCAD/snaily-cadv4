@@ -22,6 +22,11 @@ export const CREATE_TICKET_SCHEMA = z.object({
   seizedItems: z.array(SEIZED_ITEM_SCHEMA).optional(),
   postal: z.string().min(1).max(255),
   notes: z.string().nullable().optional(),
+  paymentStatus: z
+    .string()
+    .regex(/PAID|UNPAID/)
+    .optional()
+    .nullable(),
 });
 
 export const CREATE_WARRANT_SCHEMA = z.object({

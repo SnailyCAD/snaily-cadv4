@@ -26,6 +26,7 @@ import {
   DiscordWebhookType,
   CombinedLeoUnit,
   Officer,
+  PaymentStatus,
 } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { validateRecordData } from "lib/records/validateRecordData";
@@ -333,6 +334,7 @@ export class RecordsController {
         notes: data.notes,
         postal: String(data.postal),
         status: recordStatus,
+        paymentStatus: (data.paymentStatus ?? null) as PaymentStatus | null,
       },
       update: { notes: data.notes, postal: data.postal },
       include: { officer: { include: leoProperties }, citizen: true },

@@ -18,6 +18,7 @@ import { TabsContent } from "components/shared/TabList";
 import { Permissions, usePermission } from "hooks/usePermission";
 import { ViolationsColumn } from "components/leo/ViolationsColumn";
 import type { DeleteRecordsByIdData } from "@snailycad/types/api";
+import { Status } from "components/shared/Status";
 
 export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitizen?: boolean }) {
   const t = useTranslations();
@@ -167,6 +168,11 @@ function RecordsTable({ data }: { data: Record[] }) {
             officer: record.officer
               ? `${generateCallsign(record.officer)} ${makeUnitName(record.officer)}`
               : common("none"),
+            paymentStatus: record.paymentStatus ? (
+              <Status state={record.paymentStatus}>{record.paymentStatus.toLowerCase()}</Status>
+            ) : (
+              "—"
+            ),
             notes: record.notes || common("none"),
             createdAt: <FullDate>{record.createdAt}</FullDate>,
             actions: isCitizen ? null : (
@@ -198,6 +204,7 @@ function RecordsTable({ data }: { data: Record[] }) {
           { header: t("Leo.violations"), accessorKey: "violations" },
           { header: t("Leo.postal"), accessorKey: "postal" },
           { header: t("Leo.officer"), accessorKey: "officer" },
+          { header: t("Leo.paymentStatus"), accessorKey: "paymentStatus" },
           { header: t("Leo.notes"), accessorKey: "notes" },
           { header: common("createdAt"), accessorKey: "createdAt" },
           isCitizen ? null : { header: common("actions"), accessorKey: "actions" },

@@ -1065,6 +1065,7 @@ model Record {
   expungementRequestId String?
   seizedItems          SeizedItem[]
   status               WhitelistStatus?    @default(ACCEPTED)
+  paymentStatus        PaymentStatus?
 }
 
 model RecordRelease {
@@ -1440,6 +1441,11 @@ enum JailTimeScale {
   HOURS
   MINUTES
   SECONDS
+}
+
+enum PaymentStatus {
+  PAID
+  UNPAID
 }
 
 // other
