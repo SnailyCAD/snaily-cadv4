@@ -23,7 +23,7 @@ export function useAsyncTable<T>(options: Options<T>) {
   const [totalDataCount, setTotalCount] = React.useState(options.totalCount);
   const [_data, _setData] = React.useState(options.initialData);
   const [search, setSearch] = React.useState("");
-  const [extraParams, setExtraParams] = React.useState({});
+  const [extraParams, setExtraParams] = React.useState<Record<string, any>>({});
   const { state: loadingState, execute } = useFetch();
   const isMounted = useMounted();
 
@@ -64,6 +64,8 @@ export function useAsyncTable<T>(options: Options<T>) {
   const handleSearch = React.useCallback(async () => {
     if (options.disabled) return;
     if (!isMounted) return;
+
+    console.log({ extraParams });
 
     const { json, error } = await execute({
       path: options.fetchOptions.path,

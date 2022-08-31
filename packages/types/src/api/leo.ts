@@ -32,7 +32,10 @@ export type DeleteMyOfficerByIdData = boolean;
  * @method GET
  * @route /my-officers/logs
  */
-export type GetMyOfficersLogsData = (Types.OfficerLog & { officer: Types.Officer | null })[];
+export interface GetMyOfficersLogsData {
+  logs: (Types.OfficerLog & { officer: Types.Officer | null })[];
+  totalCount: number;
+}
 
 /**
  * @method POST

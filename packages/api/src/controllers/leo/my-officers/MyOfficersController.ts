@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import { Controller, UseBeforeEach, PlatformMulterFile, MultipartFile } from "@tsed/common";
 import { Delete, Get, Post, Put } from "@tsed/schema";
 import { CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
-import { BodyParams, Context, PathParams } from "@tsed/platform-params";
+import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
@@ -299,18 +299,26 @@ export class MyOfficersController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
-  async getOfficerLogs(@Context("user") user: User): Promise<APITypes.GetMyOfficersLogsData> {
-    const logs = await prisma.officerLog.findMany({
-      where: { userId: user.id, emsFdDeputyId: null },
-      include: {
-        officer: {
-          include: leoProperties,
-        },
-      },
-      orderBy: { startedAt: "desc" },
-    });
+  async getOfficerLogs(
+    @Context("user") user: User,
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("includeAll", Boolean) includeAll = false,
+    @QueryParams("officerId", String) officerId?: string,
+  ): Promise<APITypes.GetMyOfficersLogsData> {
+    const where = { userId: user.id, emsFdDeputyId: null, officerId: officerId || undefined };
 
-    return logs;
+    const [totalCount, logs] = await Promise.all([
+      prisma.officerLog.count({ where }),
+      prisma.officerLog.findMany({
+        take: includeAll ? undefined : 25,
+        skip: includeAll ? undefined : skip,
+        where,
+        include: { officer: { include: leoProperties } },
+        orderBy: { startedAt: "desc" },
+      }),
+    ]);
+
+    return { totalCount, logs };
   }
 
   @Post("/image/:id")
