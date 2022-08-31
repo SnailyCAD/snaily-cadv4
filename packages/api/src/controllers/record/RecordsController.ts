@@ -234,6 +234,8 @@ export class RecordsController {
   ): Promise<APITypes.PutRecordsByIdData> {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
 
+    console.log({ data });
+
     const recordItem = await this.upsertRecord({
       data,
       cad,
@@ -336,7 +338,11 @@ export class RecordsController {
         status: recordStatus,
         paymentStatus: (data.paymentStatus ?? null) as PaymentStatus | null,
       },
-      update: { notes: data.notes, postal: data.postal },
+      update: {
+        notes: data.notes,
+        postal: data.postal,
+        paymentStatus: (data.paymentStatus ?? null) as PaymentStatus | null,
+      },
       include: { officer: { include: leoProperties }, citizen: true },
     });
 
