@@ -20,13 +20,13 @@ export function DiscordWebhooksTab({ canWarn }: { canWarn: boolean }) {
   const { cad, setCad } = useAuth();
 
   const INITIAL_VALUES = {
-    call911Webhook: makeInitialValue(cad!, DiscordWebhookType.CALL_911),
-    statusesWebhook: makeInitialValue(cad!, DiscordWebhookType.UNIT_STATUS),
-    panicButtonWebhook: makeInitialValue(cad!, DiscordWebhookType.PANIC_BUTTON),
-    boloWebhook: makeInitialValue(cad!, DiscordWebhookType.BOLO),
-    vehicleImpoundedWebhook: makeInitialValue(cad!, DiscordWebhookType.VEHICLE_IMPOUNDED),
-    citizenRecordsWebhook: makeInitialValue(cad!, DiscordWebhookType.CITIZEN_RECORD),
-    warrantsWebhook: makeInitialValue(cad!, DiscordWebhookType.WARRANTS),
+    call911Webhook: makeInitialValue(cad, DiscordWebhookType.CALL_911),
+    statusesWebhook: makeInitialValue(cad, DiscordWebhookType.UNIT_STATUS),
+    panicButtonWebhook: makeInitialValue(cad, DiscordWebhookType.PANIC_BUTTON),
+    boloWebhook: makeInitialValue(cad, DiscordWebhookType.BOLO),
+    vehicleImpoundedWebhook: makeInitialValue(cad, DiscordWebhookType.VEHICLE_IMPOUNDED),
+    citizenRecordsWebhook: makeInitialValue(cad, DiscordWebhookType.CITIZEN_RECORD),
+    warrantsWebhook: makeInitialValue(cad, DiscordWebhookType.WARRANTS),
   };
 
   React.useEffect(() => {
@@ -143,8 +143,8 @@ export function DiscordWebhooksTab({ canWarn }: { canWarn: boolean }) {
   );
 }
 
-function makeInitialValue(cad: cad, type: string) {
-  const webhook = cad.miscCadSettings?.webhooks?.find((v) => v.type === type);
+function makeInitialValue(cad: cad | null, type: string) {
+  const webhook = cad?.miscCadSettings?.webhooks?.find((v) => v.type === type);
   if (!webhook) return { id: null, type, extraMessage: "" };
 
   return {
