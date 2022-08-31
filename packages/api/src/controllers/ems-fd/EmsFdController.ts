@@ -1,7 +1,7 @@
 import { Controller, UseBeforeEach, Use, MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { EMS_FD_DEPUTY_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
-import { BodyParams, Context, PathParams } from "@tsed/platform-params";
+import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { type MiscCadSettings, ShouldDoType, type User, CadFeature, Feature } from "@prisma/client";
@@ -55,14 +55,26 @@ export class EmsFdController {
     fallback: (u) => u.isEmsFd,
     permissions: [Permissions.EmsFd],
   })
-  async getDeputyLogs(@Context("user") user: User): Promise<APITypes.GetMyDeputiesLogsData> {
-    const logs = await prisma.officerLog.findMany({
-      where: { userId: user.id, officerId: null },
-      include: { emsFdDeputy: { include: unitProperties } },
-      orderBy: { startedAt: "desc" },
-    });
+  async getDeputyLogs(
+    @Context("user") user: User,
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("includeAll", Boolean) includeAll = false,
+    @QueryParams("emsFdDeputyId", String) emsFdDeputyId?: string,
+  ): Promise<APITypes.GetMyDeputiesLogsData> {
+    const where = { userId: user.id, officerId: null, emsFdDeputyId: emsFdDeputyId || undefined };
 
-    return logs;
+    const [totalCount, logs] = await Promise.all([
+      prisma.officerLog.count({ where }),
+      prisma.officerLog.findMany({
+        take: includeAll ? undefined : 25,
+        skip: includeAll ? undefined : skip,
+        where,
+        include: { emsFdDeputy: { include: unitProperties } },
+        orderBy: { startedAt: "desc" },
+      }),
+    ]);
+
+    return { totalCount, logs };
   }
 
   @Post("/")

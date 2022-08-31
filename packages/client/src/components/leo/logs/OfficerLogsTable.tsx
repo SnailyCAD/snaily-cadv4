@@ -1,5 +1,5 @@
 import { FullDate } from "components/shared/FullDate";
-import { Table, useTableState } from "components/shared/Table";
+import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import formatDistance from "date-fns/formatDistance";
 import { useImageUrl } from "hooks/useImageUrl";
 import { makeUnitName } from "lib/utils";
@@ -9,27 +9,30 @@ import type { EmsFdDeputy, Officer, OfficerLog } from "@snailycad/types";
 import type { OfficerLogWithDeputy } from "src/pages/ems-fd/my-deputy-logs";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import Image from "next/future/image";
+import type { GetMyDeputiesLogsData, GetMyOfficersLogsData } from "@snailycad/types/api";
+
+type OfficerLogData = GetMyOfficersLogsData["logs"][number] | GetMyDeputiesLogsData["logs"][number];
 
 type Props =
   | {
       unit?: never;
-      logs: OfficerLogWithOfficer[] | OfficerLogWithDeputy[];
+      asyncTable: ReturnType<typeof useAsyncTable<any>>;
     }
   | {
       unit: Officer | EmsFdDeputy | null;
-      logs: OfficerLog[];
+      asyncTable: ReturnType<typeof useAsyncTable<any>>;
     };
 
-export function OfficerLogsTable({ unit, logs }: Props) {
+export function OfficerLogsTable({ unit, asyncTable }: Props) {
   const { makeImageUrl } = useImageUrl();
   const { generateCallsign } = useGenerateCallsign();
-  const tableState = useTableState();
+  const tableState = useTableState({ pagination: { ...asyncTable.pagination, pageSize: 25 } });
   const t = useTranslations("Leo");
 
   return (
     <Table
       tableState={tableState}
-      data={logs.map((log) => {
+      data={(asyncTable.data as OfficerLogData[]).map((log) => {
         const startedAt = <FullDate>{log.startedAt}</FullDate>;
         const endedAt = log.endedAt ? <FullDate>{log.endedAt}</FullDate> : t("notEndedYet");
         const logUnit = getUnitFromLog(log) ?? unit;

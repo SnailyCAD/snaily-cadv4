@@ -33,9 +33,12 @@ export type DeleteMyDeputyByIdData = boolean;
  * @method GET
  * @route /ems-fd/logs
  */
-export type GetMyDeputiesLogsData = (Types.OfficerLog & {
-  emsFdDeputy: Types.EmsFdDeputy | null;
-})[];
+export interface GetMyDeputiesLogsData {
+  logs: (Types.OfficerLog & {
+    emsFdDeputy: Types.EmsFdDeputy | null;
+  })[];
+  totalCount: number;
+}
 
 /**
  * @method POST
