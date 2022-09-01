@@ -117,7 +117,7 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
 
   const filteredCodes = codes10.values.filter((v) => handleWhatPagesFilter(v, whatPagesType));
   const onDutyCode = filteredCodes.find((v) => v.shouldDo === ShouldDoType.SET_ON_DUTY);
-  const isOnDutyActive = !isUnitOffDuty && onDutyCode?.id === activeUnit?.status?.id;
+  const isOnDutyActive = !isUnitOffDuty && onDutyCode?.id === activeUnit.status?.id;
 
   if (!onDutyCode && filteredCodes.length <= 0) {
     return (

@@ -34,8 +34,7 @@ export function AdvancedCitizensTab() {
 
   function handleRemoveItem(id: string) {
     setCitizens((prev) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { [id]: foo, ...rest } = prev;
+      const { [id]: _foo, ...rest } = prev;
 
       return rest;
     });

@@ -52,7 +52,7 @@ export function GeneralSettingsTab() {
       if (validatedImage && typeof validatedImage === "object") {
         const {
           json: { logoId },
-        } = await execute({
+        } = await execute<PutCADSettingsData, typeof INITIAL_VALUES>({
           path: "/admin/manage/cad-settings/image",
           method: "POST",
           data: fd,
