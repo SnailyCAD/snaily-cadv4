@@ -176,7 +176,7 @@ export function ActiveIncidents() {
 
       <Droppable
         onDrop={({ incident, unit }) =>
-          handleAssignUnassignToIncident(incident, unit.unit.id, "unassign")
+          handleAssignUnassignToIncident(incident, unit.unit?.id, "unassign")
         }
         accepts={[DndActions.UnassignUnitFromIncident]}
       >
