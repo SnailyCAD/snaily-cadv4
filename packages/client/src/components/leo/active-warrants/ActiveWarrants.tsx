@@ -40,13 +40,13 @@ export function ActiveWarrants() {
 
   return (
     <div className="overflow-hidden rounded-md card mt-3">
-      <header className="flex items-center justify-between p-2 px-4 bg-gray-200 dark:bg-gray-3">
+      <header className="flex items-center justify-between p-2 px-4 bg-gray-200 dark:bg-secondary">
         <h1 className="text-xl font-semibold">{t("activeWarrants")}</h1>
 
         <div>
           <Button
             variant={null}
-            className="dark:bg-gray-2 dark:hover:bg-dark-bg bg-gray-500 hover:bg-gray-600 text-white"
+            className="dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 bg-gray-500 hover:bg-gray-600 text-white"
             onClick={() => openModal(ModalIds.CreateWarrant, { isActive: true })}
           >
             {t("createWarrant")}

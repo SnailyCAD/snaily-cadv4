@@ -7,7 +7,7 @@ import { Input, PasswordInput } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
 import { Button } from "components/Button";
 import { TwoFactorAuthScreen } from "components/auth/TwoFactorAuthScreen";
-import { findAPIUrl } from "lib/fetch";
+import { getAPIUrl } from "lib/fetch/getAPIUrl";
 import { useRouter } from "next/router";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
@@ -27,7 +27,7 @@ const INITIAL_VALUES = {
 
 interface Props {
   isWithinModal?: boolean;
-  onFormSubmitted(data: { from: string; json: PostLoginUserData }): void;
+  onFormSubmitted(data: { from: string }): void;
 }
 
 export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
@@ -77,19 +77,19 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
       });
     } else if (json?.userId) {
       const from = typeof router.query.from === "string" ? router.query.from : "/citizen";
-      onFormSubmitted({ from, json });
+      onFormSubmitted({ from });
     }
   }
 
   function handleDiscordLogin() {
-    const url = findAPIUrl();
+    const url = getAPIUrl();
 
     const fullUrl = `${url}/auth/discord`;
     window.location.href = fullUrl;
   }
 
   function handleSteamLogin() {
-    const url = findAPIUrl();
+    const url = getAPIUrl();
 
     const fullUrl = `${url}/auth/steam`;
     window.location.href = fullUrl;
@@ -111,7 +111,9 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
       {({ handleChange, errors, values, isValid }) => (
         <Form
           className={classNames(
-            isWithinModal ? "bg-transparent pb-3" : " shadow-md p-6 bg-gray-100 dark:bg-gray-2",
+            isWithinModal
+              ? "bg-transparent pb-3"
+              : "shadow-md p-6 bg-gray-100 dark:bg-primary dark:border dark:border-secondary",
             "relative w-full max-w-md rounded-lg z-10",
           )}
         >
@@ -119,7 +121,7 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
             <TwoFactorAuthScreen errorMessage={errors.totpCode} isLoading={state === "loading"} />
           ) : (
             <>
-              <header className="mb-3">
+              <header className="mb-5">
                 <h1 className="text-3xl font-bold text-gray-800 dark:text-white">{t("login")}</h1>
 
                 {ALLOW_REGULAR_LOGIN && !isWithinModal ? (
@@ -162,9 +164,9 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
 
               {showHorizontalLine ? (
                 <div className="my-7 flex items-center gap-2">
-                  <span className="h-[2px] bg-gray-3 w-full rounded-md" />
+                  <span className="h-[2px] bg-secondary w-full rounded-md" />
                   <span className="min-w-fit text-sm uppercase dark:text-gray-300">{t("or")}</span>
-                  <span className="h-[2px] bg-gray-3 w-full rounded-md" />
+                  <span className="h-[2px] bg-secondary w-full rounded-md" />
                 </div>
               ) : null}
 

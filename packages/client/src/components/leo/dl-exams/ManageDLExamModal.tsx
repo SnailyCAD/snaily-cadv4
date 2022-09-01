@@ -22,6 +22,7 @@ import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import type { NameSearchResult } from "state/search/nameSearchState";
 import type { PostDLExamsData, PutDLExamByIdData } from "@snailycad/types/api";
+import Image from "next/future/image";
 
 interface Props {
   exam: DLExam | null;
@@ -119,11 +120,13 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
                 Component={({ suggestion }) => (
                   <div className="flex items-center">
                     {suggestion.imageId ? (
-                      <img
+                      <Image
                         className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                         draggable={false}
-                        src={makeImageUrl("citizens", suggestion.imageId)}
+                        src={makeImageUrl("citizens", suggestion.imageId)!}
                         loading="lazy"
+                        width={30}
+                        height={30}
                       />
                     ) : null}
                     <p>

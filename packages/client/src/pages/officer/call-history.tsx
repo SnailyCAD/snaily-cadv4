@@ -160,7 +160,7 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
                 caller: call.name,
                 location: call.location,
                 postal: call.postal,
-                description: <CallDescription data={call} />,
+                description: <CallDescription nonCard data={call} />,
                 assignedUnits: call.assignedUnits.map(makeUnit).join(", ") || common("none"),
                 caseNumbers: caseNumbers || common("none"),
                 createdAt: <FullDate>{call.createdAt}</FullDate>,

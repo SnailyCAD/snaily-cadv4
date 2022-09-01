@@ -1,7 +1,18 @@
-import { DLExamStatus, ExpungementRequestStatus, WhitelistStatus } from "@snailycad/types";
+import {
+  DLExamStatus,
+  ExpungementRequestStatus,
+  PaymentStatus,
+  WhitelistStatus,
+} from "@snailycad/types";
 
 interface Props {
-  state: WhitelistStatus | ExpungementRequestStatus | DLExamStatus | null | undefined;
+  state:
+    | WhitelistStatus
+    | ExpungementRequestStatus
+    | DLExamStatus
+    | PaymentStatus
+    | null
+    | undefined;
   children: string | null | undefined;
 }
 
@@ -16,12 +27,14 @@ export function Status({ state, children }: Props) {
     [WhitelistStatus.ACCEPTED]: Colors.GREEN,
     [ExpungementRequestStatus.ACCEPTED]: Colors.GREEN,
     [DLExamStatus.PASSED]: Colors.GREEN,
+    [PaymentStatus.PAID]: Colors.GREEN,
     [WhitelistStatus.PENDING]: Colors.ORANGE,
     [ExpungementRequestStatus.PENDING]: Colors.ORANGE,
     [DLExamStatus.IN_PROGRESS]: Colors.ORANGE,
     [WhitelistStatus.DECLINED]: Colors.RED,
     [ExpungementRequestStatus.DENIED]: Colors.RED,
     [DLExamStatus.FAILED]: Colors.RED,
+    [PaymentStatus.UNPAID]: Colors.RED,
   };
 
   const text = !children ? "" : children.toLowerCase().replace(/_/g, " ");

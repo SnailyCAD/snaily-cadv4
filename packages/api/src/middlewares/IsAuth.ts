@@ -1,54 +1,52 @@
 import process from "node:process";
 import { Rank, User, CadFeature, Feature } from "@prisma/client";
 import { API_TOKEN_HEADER } from "@snailycad/config";
-import { Context, Middleware, Req, MiddlewareMethods } from "@tsed/common";
+import { Context, Middleware, Req, MiddlewareMethods, Res } from "@tsed/common";
 import { Unauthorized } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { getCADVersion } from "@snailycad/utils/version";
 import { handleDiscordSync } from "./auth/utils";
-import { getUserFromCADAPIToken, getUserFromSession } from "./auth/getUser";
+import { setGlobalUserFromCADAPIToken, getUserFromSession } from "./auth/getUser";
 import type { cad } from "@snailycad/types";
 
 @Middleware()
 export class IsAuth implements MiddlewareMethods {
-  async use(@Req() req: Req, @Context() ctx: Context) {
-    const apiTokenHeader = req.headers[API_TOKEN_HEADER];
+  async use(@Req() req: Req, @Res() res: Res, @Context() ctx: Context) {
+    const globalCADApiToken = req.headers[API_TOKEN_HEADER];
 
     let user;
-    if (apiTokenHeader) {
-      const fakeUser = await getUserFromCADAPIToken({ req, apiTokenHeader });
+    if (globalCADApiToken) {
+      const fakeUser = await setGlobalUserFromCADAPIToken({
+        res,
+        req,
+        apiTokenHeader: globalCADApiToken,
+      });
       ctx.set("user", fakeUser);
     } else {
-      user = await getUserFromSession({ req });
+      user = await getUserFromSession({ res, req });
       ctx.set("user", user);
     }
 
-    if (!apiTokenHeader && !user) {
+    if (!globalCADApiToken && !user) {
       throw new Unauthorized("Unauthorized");
     }
 
-    let cad = await prisma.cad.findFirst({
-      select: CAD_SELECT(user),
-    });
+    let cad = await prisma.cad.findFirst({ select: CAD_SELECT(user) });
 
-    if (cad && !cad.miscCadSettings) {
-      cad = await prisma.cad.update({
-        where: { id: cad.id },
-        data: {
-          miscCadSettings: {
-            create: {},
-          },
-        },
-        select: CAD_SELECT(user),
-      });
+    if (cad) {
+      if (!cad.miscCadSettings) {
+        cad = await prisma.cad.update({
+          select: CAD_SELECT(user),
+          where: { id: cad.id },
+          data: { miscCadSettings: { create: {} } },
+        });
+      }
+
+      ctx.set("cad", { ...setDiscordAuth(cad as cad), version: await getCADVersion() });
     }
 
     if (user) {
       await handleDiscordSync({ user, cad });
-    }
-
-    if (cad) {
-      ctx.set("cad", { ...setDiscordAuth(cad as cad), version: await getCADVersion() });
     }
   }
 }

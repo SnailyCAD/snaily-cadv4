@@ -151,6 +151,7 @@ export function ManageIncidentModal({
               <div>
                 <FormField errorMessage={errors.unitsInvolved as string} label={t("unitsInvolved")}>
                   <Select
+                    closeMenuOnSelect={false}
                     disabled={areFieldsDisabled}
                     isMulti
                     value={values.unitsInvolved}

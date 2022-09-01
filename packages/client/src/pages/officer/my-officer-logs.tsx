@@ -12,7 +12,9 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Title } from "components/shared/Title";
 import { OfficerLogsTable } from "components/leo/logs/OfficerLogsTable";
 import { Permissions } from "@snailycad/permissions";
-import type { GetMyOfficersLogsData } from "@snailycad/types/api";
+import type { GetMyOfficersData, GetMyOfficersLogsData } from "@snailycad/types/api";
+import useFetch from "lib/useFetch";
+import { useAsyncTable } from "components/shared/Table";
 
 export type OfficerLogWithOfficer = OfficerLog & { officer: Officer };
 
@@ -20,27 +22,50 @@ interface Props {
   logs: GetMyOfficersLogsData;
 }
 
+function useGetUserOfficers() {
+  const [officers, setOfficers] = React.useState<Officer[]>([]);
+  const { execute } = useFetch();
+
+  const getOfficers = React.useCallback(async () => {
+    const { json } = await execute<GetMyOfficersData>({ path: "/leo", method: "GET" });
+
+    if (Array.isArray(json.officers)) {
+      setOfficers(json.officers);
+    }
+  }, []); // eslint-disable-line
+
+  React.useEffect(() => {
+    getOfficers();
+  }, [getOfficers]);
+
+  return officers;
+}
+
 export default function MyOfficersLogs({ logs: data }: Props) {
-  const [logs, setLogs] = React.useState(data);
-  const [officerId, setOfficerId] = React.useState<string | null>(null);
+  const asyncTable = useAsyncTable({
+    fetchOptions: {
+      onResponse: (json: GetMyOfficersLogsData) => ({
+        data: json.logs,
+        totalCount: json.totalCount,
+      }),
+      path: "/leo/logs",
+    },
+    totalCount: data.totalCount,
+    initialData: data.logs,
+  });
+
+  const officers = useGetUserOfficers();
 
   const t = useTranslations("Leo");
   const { generateCallsign } = useGenerateCallsign();
 
-  const filtered = logs.filter((v) => (officerId ? v.officerId === officerId : true));
-  const officers = logs.reduce(
+  const officerNames = officers.reduce(
     (ac, cv) => ({
       ...ac,
-      ...(cv.officerId && cv.officer
-        ? { [cv.officerId]: `${generateCallsign(cv.officer)} ${makeUnitName(cv.officer)}` }
-        : {}),
+      [cv.id]: `${generateCallsign(cv)} ${makeUnitName(cv)}`,
     }),
-    {},
+    {} as Record<string, string>,
   );
-
-  React.useEffect(() => {
-    setLogs(data);
-  }, [data]);
 
   return (
     <Layout
@@ -55,10 +80,13 @@ export default function MyOfficersLogs({ logs: data }: Props) {
             <FormField label="Group By Officer">
               <Select
                 isClearable
-                onChange={(e) => setOfficerId(e.target.value)}
-                value={officerId}
-                values={Object.entries(officers).map(([id, name]) => ({
-                  label: name as string,
+                onChange={(e) => {
+                  console.log(e);
+                  asyncTable.search.setExtraParams({ officerId: e.target.value });
+                }}
+                value={asyncTable.search.extraParams.officerId}
+                values={Object.entries(officerNames).map(([id, name]) => ({
+                  label: name,
                   value: id,
                 }))}
               />
@@ -67,10 +95,10 @@ export default function MyOfficersLogs({ logs: data }: Props) {
         </div>
       </header>
 
-      {logs.length <= 0 ? (
+      {data.totalCount <= 0 ? (
         <p className="mt-5">{t("noOfficers")}</p>
       ) : (
-        <OfficerLogsTable unit={null} logs={filtered} />
+        <OfficerLogsTable unit={null} asyncTable={asyncTable} />
       )}
     </Layout>
   );
@@ -78,7 +106,7 @@ export default function MyOfficersLogs({ logs: data }: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const user = await getSessionUser(req);
-  const [logs] = await requestAll(req, [["/leo/logs", []]]);
+  const [logs] = await requestAll(req, [["/leo/logs", { logs: [], totalCount: 0 }]]);
 
   return {
     props: {

@@ -151,7 +151,7 @@ export class LeoController {
     const release = await prisma.recordRelease.create({
       data: {
         type,
-        citizenId: type === ReleaseType.BAIL_POSTED ? releasedById : null,
+        citizenId: type === ReleaseType.BAIL_POSTED ? releasedById || null : null,
       },
     });
 

@@ -8,7 +8,7 @@ import type { GetServerSideProps } from "next";
 import { useTranslations } from "use-intl";
 import { Title } from "components/shared/Title";
 import { TabList } from "components/shared/TabList";
-import { AllUnitsTab } from "components/admin/manage/units/AllUnitsTab";
+import { AllUnitsTab } from "components/admin/manage/units/tabs/all-units-tab/AllUnitsTab";
 import { WhitelistStatus, Rank } from "@snailycad/types";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { FormField } from "components/form/FormField";

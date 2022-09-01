@@ -1,16 +1,18 @@
-import process from "node:process";
-import type { Req } from "@tsed/common";
-import { Forbidden, NotFound, Unauthorized } from "@tsed/exceptions";
+import type { Req, Res } from "@tsed/common";
+import { Unauthorized } from "@tsed/exceptions";
 import { parse } from "cookie";
 import { Cookie, USER_API_TOKEN_HEADER } from "@snailycad/config";
-import { verifyJWT } from "utils/jwt";
+import { signJWT, verifyJWT } from "utils/jwt";
 import { prisma } from "lib/prisma";
-import { Feature, WhitelistStatus, type User } from "@prisma/client";
+import { Feature, type User } from "@snailycad/types";
 import { isFeatureEnabled } from "lib/cad";
-import { hasPermission, Permissions } from "@snailycad/permissions";
 import type { GetUserData } from "@snailycad/types/api";
+import { setCookie } from "utils/setCookie";
+import { ACCESS_TOKEN_EXPIRES_MS, ACCESS_TOKEN_EXPIRES_S } from "./setUserTokenCookies";
+import { getUserFromUserAPIToken } from "./getUserFromUserAPIToken";
+import { validateUserData } from "./validateUser";
 
-enum GetSessionUserErrors {
+export enum GetSessionUserErrors {
   InvalidAPIToken = "invalid user API token",
   InvalidPermissionsForUserAPIToken = "invalid permissions for user API Token",
   Unauthorized = "Unauthorized",
@@ -48,18 +50,34 @@ export const userProperties = {
   apiTokenId: true,
   roles: true,
   locale: true,
+  createdAt: true,
+  updatedAt: true,
 };
 
-export async function getSessionUser(req: Req, returnNullOnError?: false): Promise<GetUserData>;
+interface GetSessionUserOptions<ReturnNullOnError extends boolean> {
+  returnNullOnError?: ReturnNullOnError;
+  req: Req;
+  res: Res;
+}
+
+export async function getSessionUser(options: GetSessionUserOptions<false>): Promise<GetUserData>;
 export async function getSessionUser(
-  req: Req,
-  returnNullOnError?: true,
+  options: GetSessionUserOptions<true>,
 ): Promise<GetUserData | null>;
 export async function getSessionUser(
-  req: Req,
-  returnNullOnError = false,
+  options: GetSessionUserOptions<boolean>,
 ): Promise<GetUserData | null> {
-  let header = req.cookies[Cookie.Session] || parse(String(req.headers.session))[Cookie.Session];
+  const accessToken: string | undefined =
+    options.req.cookies[Cookie.AccessToken] ||
+    parse(String(options.req.headers.session))[Cookie.AccessToken];
+
+  const refreshToken: string | undefined =
+    options.req.cookies[Cookie.RefreshToken] ||
+    parse(String(options.req.headers.session))[Cookie.RefreshToken];
+
+  const userApiTokenHeader = options.req.headers[USER_API_TOKEN_HEADER]
+    ? String(options.req.headers[USER_API_TOKEN_HEADER])
+    : undefined;
 
   const cad = await prisma.cad.findFirst({ select: { features: true } });
   const isUserAPITokensEnabled = isFeatureEnabled({
@@ -68,98 +86,100 @@ export async function getSessionUser(
     defaultReturn: false,
   });
 
-  let userApiTokenHeader;
-  if (isUserAPITokensEnabled) {
-    const _header = req.headers[USER_API_TOKEN_HEADER];
-    userApiTokenHeader = _header ? String(_header) : undefined;
-  }
-
-  if (process.env.IFRAME_SUPPORT_ENABLED === "true" && !header) {
-    const name = "snaily-cad-iframe-cookie";
-    header = req.cookies[name] || parse(String(req.headers.session))[name];
-  }
-
-  let user;
-  let apiTokenUsed;
+  /**
+   * `userApiTokenHeader` is defined (passed via headers) and `isUserAPITokensEnabled` is true (feature is enabled)
+   * -> then we will try to get the user from the user's API token
+   *
+   * -> if the user exists, we validate them if they're not banned, awaiting whitelisting, etc.
+   * -> if the validation fails, we throw an error respectively.
+   * -> if the validations succeeds, we return the user.
+   *
+   * -> if `userApiTokenHeader` or `isUserAPITokensEnabled` is false, we will try to get the user from the access token (cookies)
+   */
   if (userApiTokenHeader && isUserAPITokensEnabled) {
-    const token = await prisma.apiToken.findFirst({
-      where: { token: userApiTokenHeader },
-    });
+    const { apiToken, user } = await getUserFromUserAPIToken(userApiTokenHeader);
+    validateUserData(user);
 
-    if (!token) {
-      throw new Forbidden(GetSessionUserErrors.InvalidAPIToken);
-    }
-
-    apiTokenUsed = token;
-    user = await prisma.user.findFirst({
-      where: { apiToken: { token: userApiTokenHeader } },
-      select: userProperties,
-    });
-
-    if (user) {
-      const hasPersonalApiTokenPerms = hasPermission({
-        userToCheck: user,
-        permissionsToCheck: [Permissions.UsePersonalApiToken],
-      });
-
-      if (!hasPersonalApiTokenPerms) {
-        throw new Forbidden(GetSessionUserErrors.InvalidPermissionsForUserAPIToken);
-      }
-    }
-  } else {
-    if (!header && !returnNullOnError) {
-      throw new Unauthorized(GetSessionUserErrors.Unauthorized);
-    }
-
-    const jwtPayload = verifyJWT(header);
-    if (!jwtPayload) {
-      if (returnNullOnError) return null;
-      throw new Unauthorized(GetSessionUserErrors.Unauthorized);
-    }
-
-    user = await prisma.user.findUnique({
-      where: { id: jwtPayload.userId },
-      select: userProperties,
-    });
-  }
-
-  if (!user) {
-    if (returnNullOnError) return null;
-    throw new Unauthorized(GetSessionUserErrors.NotFound);
-  }
-
-  if (user.banned) {
-    if (returnNullOnError) return null;
-    throw new NotFound(GetSessionUserErrors.UserBanned);
-  }
-
-  if (user.whitelistStatus === WhitelistStatus.PENDING) {
-    if (returnNullOnError) return null;
-    throw new NotFound(GetSessionUserErrors.WhitelistPending);
-  }
-
-  if (user.whitelistStatus === WhitelistStatus.DECLINED) {
-    if (returnNullOnError) return null;
-    throw new NotFound(GetSessionUserErrors.WhitelistDeclined);
-  }
-
-  if (apiTokenUsed) {
     await prisma.apiToken.update({
-      where: { id: apiTokenUsed.id },
+      where: { id: apiToken.id },
       data: {
-        uses: (apiTokenUsed.uses ?? 0) + 1,
-        logs: { create: { method: req.method, route: req.originalUrl } },
+        uses: { increment: 1 },
+        logs: { create: { method: options.req.method, route: options.req.originalUrl } },
       },
     });
+
+    return createUserData(user);
   }
 
-  const { tempPassword, ...rest } = user ?? {};
+  if (!accessToken && !refreshToken) {
+    if (options.returnNullOnError) return null;
+    throw new Unauthorized(GetSessionUserErrors.Unauthorized);
+  }
+
+  const accessTokenPayload = accessToken && verifyJWT(accessToken);
+
+  /**
+   * if there's a valid access token. We return the user saved in the database.
+   */
+  if (accessTokenPayload) {
+    const user = await prisma.user.findUnique({
+      where: { id: accessTokenPayload.userId },
+      select: userProperties,
+    });
+
+    validateUserData(user);
+
+    return createUserData(user);
+  }
+
+  if (!refreshToken) {
+    if (options.returnNullOnError) return null;
+    throw new Unauthorized(GetSessionUserErrors.Unauthorized);
+  }
+
+  const refreshTokenPayload = verifyJWT(refreshToken);
+  if (refreshTokenPayload) {
+    const user = await prisma.user.findFirst({
+      select: userProperties,
+      where: {
+        sessions: {
+          some: {
+            refreshToken,
+            id: refreshTokenPayload.sessionId,
+            expires: { gte: new Date() },
+          },
+        },
+      },
+    });
+
+    validateUserData(user);
+
+    const newAccessToken = signJWT({ userId: user.id }, ACCESS_TOKEN_EXPIRES_S);
+
+    setCookie({
+      res: options.res,
+      name: Cookie.AccessToken,
+      expires: ACCESS_TOKEN_EXPIRES_MS,
+      value: newAccessToken,
+    });
+
+    return createUserData(user);
+  }
+
+  if (options.returnNullOnError) {
+    return null;
+  }
+  throw new Unauthorized(GetSessionUserErrors.Unauthorized);
+}
+
+function createUserData(user: User) {
+  const { tempPassword, ...rest } = user;
   return { ...rest, tempPassword: null, hasTempPassword: !!tempPassword } as GetUserData;
 }
 
 export function canManageInvariant<T extends Error>(
   userId: string | null | undefined,
-  authUser: User,
+  authUser: Pick<User, "rank" | "id">,
   error: T,
 ): asserts userId {
   if (!userId && (authUser.rank as string) !== "API_TOKEN") {

@@ -71,13 +71,6 @@ export default function Register({ cad }: Props) {
       helpers,
     });
 
-    if (process.env.IFRAME_SUPPORT_ENABLED === "true" && json.session) {
-      await fetch("/api/token", {
-        method: "POST",
-        body: json.session,
-      });
-    }
-
     if (json.isOwner) {
       router.push("/admin/manage/cad-settings");
     } else if (json.userId) {
@@ -107,7 +100,7 @@ export default function Register({ cad }: Props) {
 
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleChange, errors, isValid }) => (
-            <Form className="w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-2 z-10">
+            <Form className="w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-primary dark:border dark:border-secondary z-10">
               <header className="mb-3">
                 <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
                   {t("register")}

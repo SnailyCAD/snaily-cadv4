@@ -52,7 +52,7 @@ export function GeneralSettingsTab() {
       if (validatedImage && typeof validatedImage === "object") {
         const {
           json: { logoId },
-        } = await execute({
+        } = await execute<PutCADSettingsData, typeof INITIAL_VALUES>({
           path: "/admin/manage/cad-settings/image",
           method: "POST",
           data: fd,
@@ -100,13 +100,6 @@ export function GeneralSettingsTab() {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, values, errors }) => (
           <form autoComplete="off" className="mt-3" onSubmit={handleSubmit}>
-            <div>
-              <ImageSelectInput label="CAD Logo" image={logo} setImage={setLogo} />
-              <small className="block text-[15px] -mt-2 mb-3">
-                <b>Note:</b> page reload may be required.
-              </small>
-            </div>
-
             <SettingsFormField
               errorMessage={errors.name}
               action="input"
@@ -114,6 +107,19 @@ export function GeneralSettingsTab() {
               description="The name to the CAD. This can be the name of your community, etc."
             >
               <Input onChange={handleChange} value={values.name} name="name" />
+            </SettingsFormField>
+
+            <SettingsFormField
+              errorMessage={errors.name}
+              action="input"
+              label="CAD Logo"
+              description={
+                <span className="text-base italic">
+                  <b>Note:</b> page reload may be required.
+                </span>
+              }
+            >
+              <ImageSelectInput label="CAD Logo" image={logo} setImage={setLogo} />
             </SettingsFormField>
 
             {AOP ? (

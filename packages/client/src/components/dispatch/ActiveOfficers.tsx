@@ -68,16 +68,16 @@ function ActiveOfficers({ initialOfficers }: Props) {
   }
 
   return (
-    <div className="overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
-      <header className="p-2 px-4 bg-gray-200 dark:bg-gray-3 flex items-center justify-between">
+    <div className="overflow-hidden rounded-md card">
+      <header className="p-2 px-4 bg-gray-200 dark:bg-secondary flex items-center justify-between">
         <h1 className="text-xl font-semibold">{t("activeOfficers")}</h1>
 
         <div>
           <Button
             variant="cancel"
             className={classNames(
-              "px-1.5 hover:bg-gray-500 dark:hover:bg-dark-bg group",
-              showLeoFilters && "dark:!bg-dark-bg !bg-gray-500",
+              "px-1.5 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
+              showLeoFilters && "dark:!bg-secondary !bg-gray-500",
             )}
             onClick={() => setShowFilters("leo", !showLeoFilters)}
             title={common("filters")}
@@ -134,6 +134,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
                           {isUnitOfficer(officer) && formatUnitDivisions(officer)}
                         </p>
                       }
+                      contentProps={{ className: "whitespace-pre-wrap" }}
                     >
                       {isUnitOfficer(officer) && formatUnitDivisions(officer)}
                     </HoverCard>

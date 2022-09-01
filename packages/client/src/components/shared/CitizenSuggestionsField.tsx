@@ -2,6 +2,7 @@ import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { useFormikContext } from "formik";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useImageUrl } from "hooks/useImageUrl";
+import Image from "next/future/image";
 import type { NameSearchResult } from "state/search/nameSearchState";
 
 interface Props {
@@ -36,11 +37,13 @@ export function CitizenSuggestionsField<Suggestion extends NameSearchResult>({
       Component={({ suggestion }) => (
         <div className="flex items-center">
           {suggestion.imageId ? (
-            <img
+            <Image
               className="rounded-md w-[30px] h-[30px] object-cover mr-2"
               draggable={false}
-              src={makeImageUrl("citizens", suggestion.imageId)}
+              src={makeImageUrl("citizens", suggestion.imageId)!}
               loading="lazy"
+              width={30}
+              height={30}
             />
           ) : null}
           <p>

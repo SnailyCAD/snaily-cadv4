@@ -1,6 +1,7 @@
 import * as React from "react";
 import useFetch from "lib/useFetch";
 import { useDebounce } from "react-use";
+import { useMounted } from "@casper124578/useful";
 
 interface FetchOptions {
   pageSize: number;
@@ -10,6 +11,7 @@ interface FetchOptions {
 }
 
 interface Options<T> {
+  disabled?: boolean;
   totalCount: number;
   initialData: T[];
   scrollToTopOnDataChange?: boolean;
@@ -21,8 +23,9 @@ export function useAsyncTable<T>(options: Options<T>) {
   const [totalDataCount, setTotalCount] = React.useState(options.totalCount);
   const [_data, _setData] = React.useState(options.initialData);
   const [search, setSearch] = React.useState("");
-  const [extraParams, setExtraParams] = React.useState({});
+  const [extraParams, setExtraParams] = React.useState<Record<string, any>>({});
   const { state: loadingState, execute } = useFetch();
+  const isMounted = useMounted();
 
   const scrollToTopOnDataChange = options.scrollToTopOnDataChange ?? true;
   const data = options.state?.data ?? _data;
@@ -30,6 +33,9 @@ export function useAsyncTable<T>(options: Options<T>) {
 
   const handlePageChange = React.useCallback(
     async ({ pageSize, pageIndex }: Omit<FetchOptions, "path" | "onResponse">) => {
+      if (options.disabled) return;
+      if (!isMounted) return;
+
       const { json, error } = await execute({
         path: options.fetchOptions.path,
         params: {
@@ -52,10 +58,15 @@ export function useAsyncTable<T>(options: Options<T>) {
         }
       }
     },
-    [search, extraParams], // eslint-disable-line
+    [search, extraParams, isMounted, options.disabled], // eslint-disable-line
   );
 
   const handleSearch = React.useCallback(async () => {
+    if (options.disabled) return;
+    if (!isMounted) return;
+
+    console.log({ extraParams });
+
     const { json, error } = await execute({
       path: options.fetchOptions.path,
       params: { query: search.trim(), ...extraParams },
@@ -63,12 +74,12 @@ export function useAsyncTable<T>(options: Options<T>) {
 
     if (json && !error) {
       const jsonData = options.fetchOptions.onResponse(json);
-      if (Array.isArray(jsonData)) {
+      if (Array.isArray(jsonData.data)) {
         setData(jsonData.data);
         setTotalCount(jsonData.totalCount);
       }
     }
-  }, [search, extraParams]); // eslint-disable-line
+  }, [search, extraParams, isMounted, options.disabled]); // eslint-disable-line
 
   useDebounce(handleSearch, 250, [search, handleSearch]);
 

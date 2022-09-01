@@ -5,6 +5,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useImageUrl } from "hooks/useImageUrl";
 import { usePermission } from "hooks/usePermission";
 import { useTranslations } from "next-intl";
+import Image from "next/future/image";
 import Link from "next/link";
 import { PersonFill } from "react-bootstrap-icons";
 
@@ -24,33 +25,35 @@ export function CitizenListItem({ citizen }: Props) {
   );
 
   return (
-    <li className="flex items-center justify-between p-3 bg-gray-200 rounded-md dark:bg-gray-2">
+    <li className="flex items-center justify-between bg-gray-300 p-3 dark:shadow-md rounded-md dark:border dark:border-quinary dark:bg-tertiary">
       <div className="flex items-center space-x-3">
         {citizen.imageId ? (
-          <img
+          <Image
             alt={`${citizen.name} ${citizen.surname}`}
             draggable={false}
             className="object-cover rounded-md w-14 h-14"
-            src={makeImageUrl("citizens", citizen.imageId)}
+            src={makeImageUrl("citizens", citizen.imageId)!}
             loading="lazy"
+            width={56}
+            height={56}
           />
         ) : (
           <PersonFill className="w-12 h-12 text-gray-500/60" />
         )}
 
         <div className="flex flex-col">
-          <p className="text-xl font-semibold">
+          <p className="text-xl font-semibold capitalize">
             {citizen.name} {citizen.surname}
           </p>
 
           {SOCIAL_SECURITY_NUMBERS ? (
-            <p className="text-neutral-600 dark:text-gray-400">
-              SSN: {citizen.socialSecurityNumber}
+            <p className="text-neutral-600 dark:text-neutral-300">
+              <strong>SSN:</strong> {citizen.socialSecurityNumber}
             </p>
           ) : null}
           {COMMON_CITIZEN_CARDS && hasLeoPermissions ? (
-            <p className="text-neutral-600 dark:text-gray-400">
-              User: {citizen.user?.username ?? common("none")}
+            <p className="text-neutral-600 dark:text-neutral-300">
+              <strong>User:</strong> {citizen.user?.username ?? common("none")}
             </p>
           ) : null}
         </div>

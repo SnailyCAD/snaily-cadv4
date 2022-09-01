@@ -94,14 +94,14 @@ export function ActiveIncidents() {
   }
 
   return (
-    <div className="mt-3 overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
-      <header className="flex items-center justify-between p-2 px-4 bg-gray-200 dark:bg-gray-3">
+    <div className="mt-3 overflow-hidden rounded-md card">
+      <header className="flex items-center justify-between p-2 px-4 bg-gray-200 dark:bg-secondary">
         <h3 className="text-xl font-semibold">{t("activeIncidents")}</h3>
 
         <div>
           <Button
             variant={null}
-            className="dark:bg-gray-2 dark:hover:bg-dark-bg bg-gray-500 hover:bg-gray-600 text-white"
+            className="bg-gray-500 hover:bg-gray-600 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 text-white"
             onClick={handleCreateIncident}
             disabled={!hasActiveDispatchers}
           >
@@ -176,13 +176,13 @@ export function ActiveIncidents() {
 
       <Droppable
         onDrop={({ incident, unit }) =>
-          handleAssignUnassignToIncident(incident, unit.unit.id, "unassign")
+          handleAssignUnassignToIncident(incident, unit.unit?.id, "unassign")
         }
         accepts={[DndActions.UnassignUnitFromIncident]}
       >
         <div
           className={classNames(
-            "grid place-items-center z-50 border-2 border-slate-500 bg-gray-4 fixed bottom-3 left-3 right-4 h-60 shadow-sm rounded-md transition-opacity",
+            "grid place-items-center z-50 border-2 border-slate-500 dark:bg-quinary fixed bottom-3 left-3 right-4 h-60 shadow-sm rounded-md transition-opacity",
             dispatchState.draggingUnit === "incident"
               ? "pointer-events-all opacity-100"
               : "pointer-events-none opacity-0",

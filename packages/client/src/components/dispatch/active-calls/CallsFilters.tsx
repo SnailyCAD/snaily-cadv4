@@ -8,6 +8,9 @@ import { useCallsFilters } from "state/callsFiltersState";
 import { Select, SelectValue } from "components/form/Select";
 import type { useAsyncTable } from "components/shared/Table";
 import { Loader } from "components/Loader";
+import { useValues } from "context/ValuesContext";
+import type { DepartmentValue, DivisionValue } from "@snailycad/types";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 
 interface Props {
   calls: Full911Call[];
@@ -27,10 +30,12 @@ export function CallsFilters({ search, calls }: Props) {
 
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
+  const { generateCallsign } = useGenerateCallsign();
 
-  const departments = makeOptions(calls, "departments");
-  const divisions = makeOptions(calls, "divisions");
-  const assignedUnits = makeOptions(calls, "assignedUnits");
+  const values = useValues();
+  const departments = makeOptions(values.department.values);
+  const divisions = makeOptions(values.division.values);
+  const assignedUnits = makeAssignedUnitOptions(calls, generateCallsign);
 
   React.useEffect(() => {
     if (!showFilters) {
@@ -97,38 +102,35 @@ export function CallsFilters({ search, calls }: Props) {
 
 export type Call911Filters = "departments" | "divisions" | "assignedUnits";
 
-function makeOptions(calls: Full911Call[], type: Call911Filters) {
-  const arr: SelectValue<{ id: string; departmentId?: string | null }>[] = [];
+function makeOptions<T extends DepartmentValue | DivisionValue>(values: T[]) {
+  return values.map((v) => ({
+    value: v,
+    label: v.value.value,
+  }));
+}
+
+function makeAssignedUnitOptions(calls: Full911Call[], generateCallsign: (unit: any) => string) {
+  const map = new Map<string, SelectValue<{ id: string }>>();
 
   calls.forEach((call) => {
-    const data = call[type];
+    const data = call.assignedUnits;
 
     if (Array.isArray(data)) {
       data.forEach((v) => {
-        const label = "value" in v ? v.value.value : makeUnitName(v.unit);
-        const value = "value" in v ? v.id : v.id;
+        const label = `${generateCallsign(v.unit)} ${makeUnitName(v.unit)}`;
+        const value = v.id;
 
-        const obj = {
-          value: {
-            id: value,
-            departmentId: type === "divisions" && "departmentId" in v ? v.departmentId : undefined,
-          },
+        const obj: SelectValue<{ id: string }> = {
+          value: { id: value },
           label,
         };
 
-        const existing = arr.some((v) => v.value?.id === obj.value.id);
-        if (!existing) {
-          arr.push(obj);
+        if (!map.has(value)) {
+          map.set(value, obj);
         }
       });
-
-      return;
-    }
-
-    if (data) {
-      arr.push({ value: data, label: data });
     }
   });
 
-  return arr;
+  return Array.from(map.values());
 }

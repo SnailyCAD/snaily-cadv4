@@ -49,7 +49,7 @@ export function Select({ name, onChange, ...rest }: Props) {
     typeof window !== "undefined" &&
     window.document.body.classList.contains("dark");
 
-  const theme = useDarkTheme ? { backgroundColor: "rgb(39, 40, 43)", color: "white" } : {};
+  const theme = useDarkTheme ? { backgroundColor: "rgb(53, 52, 60)", color: "white" } : {};
   const fixedClearable =
     Array.isArray(value) && value.some((v) => typeof v.isFixed !== "undefined");
 
@@ -131,29 +131,29 @@ export function styles({
       background: option.isFocused
         ? backgroundColor === "white"
           ? "#D4D4D4"
-          : "#1F2023"
+          : "#1f1e26"
         : "transparent",
       ":hover": {
         background: option.isDisabled
           ? "none"
           : backgroundColor === "white"
           ? "#D4D4D4"
-          : "#1F2023",
+          : "#1f1e26",
       },
     }),
     menu: (prov) => ({
       ...prov,
       width: "100%",
       color,
-      padding: "0.3rem",
+      padding: "0.5rem",
       backgroundColor,
       boxShadow: "0 8px 16px rgba(0, 0, 0, 0.5)",
     }),
     multiValue: (base) => ({
       ...base,
       color: "#000",
-      borderColor: backgroundColor === "white" ? "#D4D4D4" : "#1F2023",
-      backgroundColor: backgroundColor === "white" ? "#D4D4D4" : "#1F2023",
+      borderColor: backgroundColor === "white" ? "#D4D4D4" : "#1f1e26",
+      backgroundColor: backgroundColor === "white" ? "#D4D4D4" : "#1f1e26",
     }),
     noOptionsMessage: (base) => ({
       ...base,
@@ -161,7 +161,7 @@ export function styles({
     }),
     multiValueLabel: (base) => ({
       ...base,
-      backgroundColor: backgroundColor === "white" ? "#D4D4D4" : "#1F2023",
+      backgroundColor: backgroundColor === "white" ? "#D4D4D4" : "#1f1e26",
       color,
       padding: "0.2rem",
       borderRadius: "2px 0 0 2px",
@@ -173,7 +173,7 @@ export function styles({
 
       return {
         ...base,
-        backgroundColor: backgroundColor === "white" ? "#D4D4D4" : "#1F2023",
+        backgroundColor: backgroundColor === "white" ? "#D4D4D4" : "#1f1e26",
         color,
         borderRadius: "0 2px 2px 0",
         cursor: "pointer",

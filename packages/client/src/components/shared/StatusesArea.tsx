@@ -13,8 +13,10 @@ import { Officer, ShouldDoType, WhatPages, type StatusValue } from "@snailycad/t
 import { useAudio } from "react-use";
 import { useAuth } from "context/AuthContext";
 import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
+import { useMounted } from "@casper124578/useful";
 
 interface Props<T extends ActiveOfficer | ActiveDeputy> {
+  initialData: T | null;
   activeUnit: T | null;
   units: T[];
   setActiveUnit(unit: T | null): void;
@@ -23,11 +25,13 @@ interface Props<T extends ActiveOfficer | ActiveDeputy> {
 
 const STATUS_UPDATE_SRC = "/sounds/status-update.mp3" as const;
 export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
-  activeUnit,
+  initialData,
+  activeUnit: _activeUnit,
   units,
   setActiveUnit,
   setUnits,
 }: Props<T>) {
+  const isMounted = useMounted();
   const { codes10 } = useValues();
   const { openModal } = useModal();
   const { execute } = useFetch();
@@ -37,6 +41,7 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
   const modalId = isEmsFd ? ModalIds.SelectDeputy : ModalIds.SelectOfficer;
   const socketEvent = isEmsFd ? SocketEvents.UpdateEmsFdStatus : SocketEvents.UpdateOfficerStatus;
   const whatPagesType = isEmsFd ? WhatPages.EMS_FD : WhatPages.LEO;
+  const activeUnit = isMounted ? _activeUnit : initialData;
 
   const shouldPlayStatusUpdateSound = user?.soundSettings?.statusUpdate ?? false;
   const [audio, , controls] = useAudio({
@@ -112,11 +117,11 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
 
   const filteredCodes = codes10.values.filter((v) => handleWhatPagesFilter(v, whatPagesType));
   const onDutyCode = filteredCodes.find((v) => v.shouldDo === ShouldDoType.SET_ON_DUTY);
-  const isOnDutyActive = !isUnitOffDuty && onDutyCode?.id === activeUnit?.status?.id;
+  const isOnDutyActive = !isUnitOffDuty && onDutyCode?.id === activeUnit.status?.id;
 
   if (!onDutyCode && filteredCodes.length <= 0) {
     return (
-      <div className="text-lg mt-2 px-4 py-3 bg-gray-300/50 dark:bg-gray-2 dark:border-t-[1.5px] dark:border-gray-3">
+      <div className="text-lg mt-2 px-4 py-3 bg-gray-300/50 dark:bg-tertiary dark:border-t-[1.5px] dark:border-secondary">
         This CAD does not have any 10 codes. Please ask an admin to add some.
       </div>
     );
@@ -125,7 +130,7 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
   const departmentId = !isUnitOffDuty && "departmentId" in activeUnit && activeUnit.departmentId;
 
   return (
-    <ul className="status-buttons-grid mt-2 px-4 py-2 bg-gray-300/50 dark:bg-gray-2 dark:border-t-[1.5px] dark:border-gray-3">
+    <ul className="status-buttons-grid mt-2 px-4 py-2 bg-gray-300/50 dark:bg-tertiary dark:border-t-[1.5px] dark:border-secondary">
       {audio}
       <li>
         <Button

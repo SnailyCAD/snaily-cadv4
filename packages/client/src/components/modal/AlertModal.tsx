@@ -35,7 +35,7 @@ export function AlertModal(props: Props) {
       isOpen={props.forceOpen ?? isOpen(props.id)}
       isAlert
     >
-      <p className="my-3">{props.description}</p>
+      <p className="my-3 dark:text-gray-300">{props.description}</p>
       <div className="flex items-center justify-end gap-2 mt-2">
         <Button variant="cancel" disabled={props.state === "loading"} onClick={handleClose}>
           {common("cancel")}

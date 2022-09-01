@@ -16,7 +16,7 @@ export function dataToString(data: Descendant[] | null) {
 
     if (SlateElement.isElement(item)) {
       item.children.forEach((child) => {
-        string.push(child.text);
+        string.push(child.text.trim());
       });
     }
   }

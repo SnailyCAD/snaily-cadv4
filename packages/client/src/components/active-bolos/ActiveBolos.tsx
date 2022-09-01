@@ -58,15 +58,15 @@ export function ActiveBolos({ initialBolos }: Props) {
 
   return (
     <div className="mt-3 overflow-hidden card">
-      <header className="flex items-center justify-between p-2 px-4 bg-gray-200 dark:bg-gray-3">
+      <header className="flex items-center justify-between p-2 px-4 bg-gray-200 dark:bg-secondary">
         <h1 className="text-xl font-semibold">{t("activeBolos")}</h1>
 
         <div>
           <Button
             variant="cancel"
             className={classNames(
-              "px-1.5 hover:bg-gray-500 dark:hover:bg-dark-bg group",
-              showFilters && "dark:!bg-dark-bg !bg-gray-500",
+              "px-1.5 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
+              showFilters && "dark:!bg-secondary !bg-gray-500",
             )}
             onClick={() => setShowFilters(!showFilters)}
             title={t("filters")}

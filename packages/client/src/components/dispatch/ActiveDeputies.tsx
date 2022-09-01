@@ -62,16 +62,16 @@ function ActiveDeputies({ initialDeputies }: Props) {
   }
 
   return (
-    <div className="mt-3 overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
-      <header className="p-2 px-4 bg-gray-200 dark:bg-gray-3 flex items-center justify-between">
+    <div className="mt-3 overflow-hidden rounded-md card">
+      <header className="p-2 px-4 bg-gray-200 dark:bg-secondary flex items-center justify-between">
         <h1 className="text-xl font-semibold">{t("Ems.activeDeputies")}</h1>
 
         <div>
           <Button
             variant="cancel"
             className={classNames(
-              "px-1.5 hover:bg-gray-500 dark:hover:bg-dark-bg group",
-              showEmsFilters && "dark:!bg-dark-bg !bg-gray-500",
+              "px-1.5 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
+              showEmsFilters && "dark:!bg-secondary !bg-gray-500",
             )}
             onClick={() => setShowFilters("ems-fd", !showEmsFilters)}
             title={common("filters")}

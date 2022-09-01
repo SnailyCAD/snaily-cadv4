@@ -17,6 +17,7 @@ import Head from "next/head";
 import { usePermission } from "hooks/usePermission";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import { Rank } from "@snailycad/types";
+import Image from "next/future/image";
 
 interface Props {
   maxWidth?: string;
@@ -47,8 +48,8 @@ export function Nav({ maxWidth }: Props) {
   }, [viewport]);
 
   return (
-    <nav className="bg-white dark:bg-[#171717] shadow-sm sticky top-0 z-30">
-      <div style={{ maxWidth: maxWidth ?? "100rem" }} className="mx-auto px-4">
+    <nav className="bg-white dark:bg-tertiary shadow-sm sticky top-0 z-30">
+      <div style={{ maxWidth: maxWidth ?? "100rem" }} className="mx-auto px-4 md:px-6">
         <div className="flex items-center justify-between h-14">
           <button
             type="button"
@@ -73,7 +74,7 @@ export function Nav({ maxWidth }: Props) {
                       <link rel="shortcut icon" href={url} />
                       <meta name="og:image" content={url} />
                     </Head>
-                    <img
+                    <Image
                       alt={cad?.name || "SnailyCAD"}
                       width={30}
                       height={30}
@@ -92,7 +93,7 @@ export function Nav({ maxWidth }: Props) {
               className={classNames(
                 "nav:flex",
                 menuOpen
-                  ? "grid place-content-center fixed top-[3.6rem] left-0 bg-white dark:bg-[#171717] w-screen space-y-2 py-3 animate-enter"
+                  ? "grid place-content-center fixed top-[3.6rem] left-0 bg-white dark:bg-tertiary w-screen space-y-2 py-3 animate-enter"
                   : "hidden nav:flex-row space-x-1 items-center",
               )}
             >

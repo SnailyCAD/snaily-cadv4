@@ -10,14 +10,8 @@ import { Description } from "@tsed/schema";
 import { request } from "undici";
 import { findRedirectURL, findUrl } from "./Discord";
 import { getSessionUser } from "lib/auth/getSessionUser";
-import { signJWT } from "utils/jwt";
-import {
-  AUTH_TOKEN_EXPIRES_MS,
-  AUTH_TOKEN_EXPIRES_S,
-  getDefaultPermissionsForNewUser,
-} from "./Auth";
-import { setCookie } from "utils/setCookie";
-import { Cookie } from "@snailycad/config";
+import { getDefaultPermissionsForNewUser } from "./Auth";
+import { setUserTokenCookies } from "lib/auth/setUserTokenCookies";
 
 const callbackUrl = makeCallbackURL(findUrl());
 const STEAM_API_KEY = process.env["STEAM_API_KEY"];
@@ -56,7 +50,7 @@ export class SteamOAuthController {
 
     const [steamData, authUser, cad] = await Promise.all([
       getSteamData(rawSteamId),
-      getSessionUser(req, true),
+      getSessionUser({ req, res, returnNullOnError: true }),
       prisma.cad.findFirst({ include: { autoSetUserProperties: true } }),
     ]);
 
@@ -80,13 +74,7 @@ export class SteamOAuthController {
       validateUser(user);
 
       // authenticate user with cookie
-      const jwtToken = signJWT({ userId: user.id }, AUTH_TOKEN_EXPIRES_S);
-      setCookie({
-        res,
-        name: Cookie.Session,
-        expires: AUTH_TOKEN_EXPIRES_MS,
-        value: jwtToken,
-      });
+      await setUserTokenCookies({ user, res });
 
       return res.redirect(`${redirectURL}/citizen`);
     }
@@ -117,13 +105,8 @@ export class SteamOAuthController {
 
       validateUser(user);
 
-      const jwtToken = signJWT({ userId: user.id }, AUTH_TOKEN_EXPIRES_S);
-      setCookie({
-        res,
-        name: Cookie.Session,
-        expires: AUTH_TOKEN_EXPIRES_MS,
-        value: jwtToken,
-      });
+      // authenticate user with cookie
+      await setUserTokenCookies({ user, res });
 
       return res.redirect(`${redirectURL}/citizen`);
     }

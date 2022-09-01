@@ -72,7 +72,7 @@ export class AdminManageUnitsController {
   async getUnit(@PathParams("id") id: string): Promise<APITypes.GetManageUnitByIdData> {
     const extraInclude = {
       qualifications: { include: { qualification: { include: { value: true } } } },
-      logs: true,
+      logs: { take: 25, orderBy: { createdAt: "desc" } },
     };
 
     const isUnitId = isCuid(id);

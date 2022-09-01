@@ -23,11 +23,10 @@ export function TableHeader<TData extends RowData>({
   return (
     <th
       className={classNames(
-        "m-0 top-0 sticky p-2 px-3 font-semibold bg-gray-200 dark:bg-gray-3 lg:table-cell text-left select-none",
+        "m-0 top-0 sticky p-2 px-3 font-semibold bg-gray-200 dark:bg-secondary lg:table-cell text-left select-none",
         "uppercase text-sm text-neutral-700 dark:text-gray-400 first:rounded-tl-md last:rounded-tr-md",
-        isActions ? `${dir} z-10` : "sticky",
+        isActions ? `${dir} z-10 w-[100px]` : "sticky",
         canSort && "cursor-pointer select-none",
-        isActions && "w-[100px] text-end",
       )}
       key={header.id}
       colSpan={header.colSpan}
@@ -37,21 +36,19 @@ export function TableHeader<TData extends RowData>({
         header.column.getToggleSortingHandler()?.(event);
       }}
     >
-      <span className="flex items-center gap-3">
-        {header.isPlaceholder
-          ? null
-          : flexRender(header.column.columnDef.header as any, header.getContext())}
-        {sortDirection ? (
-          <span>
-            <ArrowDownSquareFill
-              className="transition-transform duration-75"
-              style={{ transform: sortDirection === "desc" ? "" : "rotate(-180deg)" }}
-              width={15}
-              height={15}
-            />
-          </span>
-        ) : null}
-      </span>
+      {header.isPlaceholder
+        ? null
+        : flexRender(header.column.columnDef.header as any, header.getContext())}
+      {sortDirection ? (
+        <span>
+          <ArrowDownSquareFill
+            className="transition-transform duration-75 inline-block ml-2"
+            style={{ transform: sortDirection === "desc" ? "" : "rotate(-180deg)" }}
+            width={15}
+            height={15}
+          />
+        </span>
+      ) : null}
     </th>
   );
 }

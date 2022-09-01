@@ -9,19 +9,13 @@ import { encode } from "utils/discord";
 import { prisma } from "lib/prisma";
 import { getSessionUser } from "lib/auth/getSessionUser";
 import { cad, CadFeature, Feature, Rank, WhitelistStatus, type User } from "@prisma/client";
-import {
-  AUTH_TOKEN_EXPIRES_MS,
-  AUTH_TOKEN_EXPIRES_S,
-  getDefaultPermissionsForNewUser,
-} from "./Auth";
-import { signJWT } from "utils/jwt";
-import { setCookie } from "utils/setCookie";
-import { Cookie } from "@snailycad/config";
+import { getDefaultPermissionsForNewUser } from "./Auth";
 import { IsAuth } from "middlewares/IsAuth";
 import { DISCORD_API_URL } from "lib/discord/config";
 import { updateMemberRolesLogin } from "lib/discord/auth";
 import { Description } from "@tsed/schema";
 import { isFeatureEnabled } from "lib/cad";
+import { setUserTokenCookies } from "lib/auth/setUserTokenCookies";
 
 const callbackUrl = makeCallbackURL(findUrl());
 const DISCORD_CLIENT_ID = process.env["DISCORD_CLIENT_ID"];
@@ -62,7 +56,10 @@ export class DiscordAuth {
       return res.redirect(`${redirectURL}/auth/login?error=invalidCode`);
     }
 
-    const [data, authUser] = await Promise.all([getDiscordData(code), getSessionUser(req, true)]);
+    const [data, authUser] = await Promise.all([
+      getDiscordData(code),
+      getSessionUser({ req, res, returnNullOnError: true }),
+    ]);
 
     if (!data || !data.id) {
       return res.redirect(`${redirectURL}/auth/login?error=could not fetch discord data`);
@@ -90,13 +87,7 @@ export class DiscordAuth {
       validateUser(updatedWithRoles ?? user);
 
       // authenticate user with cookie
-      const jwtToken = signJWT({ userId: user.id }, AUTH_TOKEN_EXPIRES_S);
-      setCookie({
-        res,
-        name: Cookie.Session,
-        expires: AUTH_TOKEN_EXPIRES_MS,
-        value: jwtToken,
-      });
+      await setUserTokenCookies({ user, res });
 
       return res.redirect(`${redirectURL}/citizen`);
     }
@@ -128,13 +119,8 @@ export class DiscordAuth {
       const updatedWithRoles = await updateMemberRolesLogin(user, discordRolesId);
       validateUser(updatedWithRoles ?? user);
 
-      const jwtToken = signJWT({ userId: user.id }, AUTH_TOKEN_EXPIRES_S);
-      setCookie({
-        res,
-        name: Cookie.Session,
-        expires: AUTH_TOKEN_EXPIRES_MS,
-        value: jwtToken,
-      });
+      // authenticate user with cookie
+      await setUserTokenCookies({ user, res });
 
       return res.redirect(`${redirectURL}/citizen`);
     }

@@ -99,6 +99,7 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
             id: field.id,
             name: field.name,
             permissions: field.permissions.join(", "),
+            discordRole: field.discordRole?.name ?? common("none"),
             createdAt: <FullDate>{field.createdAt}</FullDate>,
             actions: (
               <>
@@ -119,6 +120,7 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
           columns={[
             { header: common("name"), accessorKey: "name" },
             { header: "Permissions", accessorKey: "permissions" },
+            { header: "Discord Role", accessorKey: "discordRole" },
             { header: common("createdAt"), accessorKey: "createdAt" },
             hasManagePermissions ? { header: common("actions"), accessorKey: "actions" } : null,
           ]}

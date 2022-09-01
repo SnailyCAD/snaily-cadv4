@@ -1,5 +1,5 @@
 import * as React from "react";
-import * as L from "leaflet";
+import L from "leaflet";
 import { Marker, Popup, useMap } from "react-leaflet";
 import { convertToMap } from "lib/map/utils";
 import { blipTypes } from "lib/map/blips";

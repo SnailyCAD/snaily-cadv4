@@ -22,7 +22,7 @@ interface ContextValue<Custom = Value> {
   values: Custom extends undefined ? Value[] : Custom[];
 }
 
-interface Context {
+export interface ValueContext {
   license: ContextValue;
   gender: ContextValue;
   ethnicity: ContextValue;
@@ -45,7 +45,7 @@ interface Context {
   callType: ContextValue<CallTypeValue>;
 }
 
-const ValuesContext = React.createContext<Context | undefined>(undefined);
+const ValuesContext = React.createContext<ValueContext | undefined>(undefined);
 
 interface ProviderProps {
   children: React.ReactNode;
@@ -85,7 +85,7 @@ export function ValuesProvider({ initialData, children }: ProviderProps) {
       }
 
       return { ...obj, [normalizeValue(valueType)]: removeDisabledValues(valuesForType) };
-    }, {} as Context);
+    }, {} as ValueContext);
   }, [values]); // eslint-disable-line
 
   const value = { ...data, setValues };

@@ -8,6 +8,7 @@ export function MultiValueContainerPenalCode(props: MultiValueGenericProps<any>)
 
   return (
     <HoverCard
+      pointerEvents
       trigger={
         <div>
           <components.MultiValueContainer {...props} />

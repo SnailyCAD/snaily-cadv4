@@ -26,18 +26,19 @@ export function TabList<Tabs extends Tab[]>({
       defaultValue={defaultValue}
       className="w-full px-2 sm:px-0"
     >
-      <Tabs.List className="flex p-1 pl-0 pb-0 gap-x-5 border-b-[1.75px] border-gray-300 dark:border-gray-2 overflow-y-auto thin-scrollbar">
+      <Tabs.List className="relative flex p-1 pl-0 pb-0 gap-x-5 overflow-y-auto thin-scrollbar">
         {tabs.map((tab) => (
           <Tabs.Trigger
             value={tab.value}
             key={tab.value}
             className={classNames(
-              "tabs-list py-1.5 pb-2 border-b-2 border-transparent text-gray-800 dark:text-gray-200 transition-border duration-100 min-w-fit",
+              "z-20 tabs-list py-1.5 pb-2 border-b-2 border-transparent text-gray-800 dark:text-gray-200 transition-border duration-100 min-w-fit",
             )}
           >
             {tab.name}
           </Tabs.Trigger>
         ))}
+        <span className="absolute bottom-0 z-10 h-[2px] w-full bg-gray-300 dark:bg-tertiary" />
       </Tabs.List>
 
       <div className="mt-3">{children}</div>

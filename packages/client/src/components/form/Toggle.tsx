@@ -22,7 +22,7 @@ export const Toggle = React.forwardRef<HTMLButtonElement, Props>(
         checked={value}
         className={classNames(
           "relative h-6 transition-all rounded-full shadow-sm min-w-[44px] w-11 disabled:opacity-50 disabled:cursor-not-allowed",
-          value ? "bg-blue-400" : "bg-gray-200 dark:bg-gray-3",
+          value ? "bg-blue-400" : "bg-gray-200 dark:bg-secondary",
         )}
       >
         <SwitchPrimitive.Thumb

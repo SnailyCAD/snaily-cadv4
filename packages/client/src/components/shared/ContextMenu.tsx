@@ -50,9 +50,9 @@ export function ContextMenu({ items, canBeOpened = true, asChild, children }: Pr
         alignOffset={5}
         className={classNames(
           "flex flex-col z-50",
-          "shadow-md",
-          "bg-white dark:bg-dark-bright shadow-sm",
-          "p-1.5 rounded-md min-w-[15rem] max-h-[25rem] overflow-auto",
+          "shadow-sm shadow-primary",
+          "bg-white dark:bg-primary border dark:border-secondary",
+          "p-2 rounded-md min-w-[15rem] max-h-[25rem] overflow-auto",
         )}
         style={{ scrollbarWidth: "thin" }}
       >

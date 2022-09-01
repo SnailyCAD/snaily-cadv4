@@ -89,8 +89,7 @@ export function UnitRadioChannelModal({ unit, onClose }: Props) {
 
         {isDispatch ? (
           <Button
-            variant={null}
-            className="dark:bg-dark-bg bg-gray-500 hover:bg-gray-600 px-1.5"
+            className="px-1.5"
             onClick={() => setIsOpen(true)}
             disabled={!hasActiveDispatchers}
           >

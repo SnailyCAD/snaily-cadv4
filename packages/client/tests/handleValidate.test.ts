@@ -22,18 +22,6 @@ it("Should correctly validate an INVALID object, schema: AUTH_SCHEMA", () => {
   expect(handleValidate(AUTH_SCHEMA)(data)).toMatchInlineSnapshot(`
     {
       "password": "String must contain at least 8 character(s)",
-      "username": "Invalid",
     }
   `);
-});
-
-it("Should correctly validate an unknown error", () => {
-  const data = {
-    username: "cannot_#have_special_characters@",
-    password: "toshort",
-    registrationCode: "test-123",
-  };
-
-  // @ts-expect-error expected for this test
-  expect(handleValidate(new Error("test"))(data)).toMatchInlineSnapshot("{}");
 });

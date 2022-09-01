@@ -257,3 +257,10 @@ export const CustomFieldCategory = {
 } as const;
 
 export type CustomFieldCategory = typeof CustomFieldCategory[keyof typeof CustomFieldCategory];
+
+export const PaymentStatus = {
+  PAID: "PAID",
+  UNPAID: "UNPAID",
+} as const;
+
+export type PaymentStatus = typeof PaymentStatus[keyof typeof PaymentStatus];

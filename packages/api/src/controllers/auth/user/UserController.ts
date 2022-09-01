@@ -159,7 +159,14 @@ export class AccountController {
 
     setCookie({
       res,
-      name: Cookie.Session,
+      name: Cookie.AccessToken,
+      expires: 0,
+      value: "",
+    });
+
+    setCookie({
+      res,
+      name: Cookie.RefreshToken,
       expires: 0,
       value: "",
     });

@@ -14,7 +14,13 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Textarea } from "components/form/Textarea";
-import { type Citizen, RecordType, type PenalCode, type Record } from "@snailycad/types";
+import {
+  type Citizen,
+  RecordType,
+  type PenalCode,
+  type Record,
+  PaymentStatus,
+} from "@snailycad/types";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
@@ -24,6 +30,8 @@ import { SeizedItemsTable } from "./ManageRecord/seized-items/SeizedItemsTable";
 import { toastMessage } from "lib/toastMessage";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { PostRecordsData, PutRecordsByIdData } from "@snailycad/types/api";
+import Image from "next/future/image";
+import { Toggle } from "components/form/Toggle";
 
 interface Props {
   record?: Record | null;
@@ -153,6 +161,7 @@ export function ManageRecordModal({
     postal: record?.postal ?? "",
     notes: record?.notes ?? "",
     seizedItems: record?.seizedItems ?? [],
+    paymentStatus: record?.paymentStatus ?? null,
   };
 
   return (
@@ -163,7 +172,7 @@ export function ManageRecordModal({
       className="w-[800px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, setValues, errors, values, isValid }) => (
+        {({ handleChange, setValues, setFieldValue, errors, values, isValid }) => (
           <Form autoComplete="off">
             <FormField errorMessage={errors.citizenId} label={t("citizen")}>
               <InputSuggestions<Citizen>
@@ -192,11 +201,13 @@ export function ManageRecordModal({
                   <div className="flex items-center">
                     <div className="mr-2 min-w-[25px]">
                       {suggestion.imageId ? (
-                        <img
-                          className="rounded-md w-[35px] h-[35px] object-cover"
+                        <Image
+                          className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                           draggable={false}
-                          src={makeImageUrl("citizens", suggestion.imageId)}
+                          src={makeImageUrl("citizens", suggestion.imageId)!}
                           loading="lazy"
+                          width={30}
+                          height={30}
                         />
                       ) : (
                         <PersonFill className="text-gray-500/60 w-[25px] h-[25px]" />
@@ -240,6 +251,20 @@ export function ManageRecordModal({
                 value={values.notes}
                 name="notes"
                 onChange={handleChange}
+              />
+            </FormField>
+
+            <FormField optional errorMessage={errors.paymentStatus} label={t("recordPaid")}>
+              <Toggle
+                disabled={isReadOnly}
+                value={values.paymentStatus === PaymentStatus.PAID}
+                name="paymentStatus"
+                onCheckedChange={(event) => {
+                  setFieldValue(
+                    "paymentStatus",
+                    event.target.value ? PaymentStatus.PAID : PaymentStatus.UNPAID,
+                  );
+                }}
               />
             </FormField>
 

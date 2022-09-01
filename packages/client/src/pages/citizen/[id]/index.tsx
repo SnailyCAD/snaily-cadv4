@@ -26,6 +26,7 @@ import { FullDate } from "components/shared/FullDate";
 import { RecordsTab } from "components/leo/modals/NameSearchModal/tabs/RecordsTab";
 import { classNames } from "lib/classNames";
 import type { DeleteCitizenByIdData } from "@snailycad/types/api";
+import Image from "next/future/image";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const CitizenImageModal = dynamic(
@@ -91,12 +92,14 @@ export default function CitizenId() {
               className="cursor-pointer"
               aria-label="View citizen image"
             >
-              <img
+              <Image
                 alt={`${citizen.name} ${citizen.surname}`}
                 className="rounded-md w-[150px] h-[150px] object-cover"
                 draggable={false}
-                src={makeImageUrl("citizens", citizen.imageId)}
+                src={makeImageUrl("citizens", citizen.imageId)!}
                 loading="lazy"
+                width={150}
+                height={150}
               />
             </button>
           ) : (

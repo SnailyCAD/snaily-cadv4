@@ -6,6 +6,7 @@
     "createCitizen": "Create Citizen",
     "viewCitizen": "View Citizen",
     "editCitizen": "Edit Citizen",
+    "editingCitizen": "You are currently editing <span>{citizen}</span>.",
     "deleteCitizen": "Delete Citizen",
     "hairColor": "Hair Color",
     "eyeColor": "Eye Color",

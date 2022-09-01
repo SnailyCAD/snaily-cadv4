@@ -91,9 +91,15 @@ export default function ManageCitizens(props: Props) {
         permissions: [Permissions.BanUsers, Permissions.ManageUsers, Permissions.DeleteUsers],
       }}
     >
-      <Title>
-        {common("manage")} {user.username}
-      </Title>
+      <header className="mb-3">
+        <Title className="mb-2">{t("editUser")}</Title>
+        <h2 className="text-lg">
+          {t.rich("editing", {
+            span: (children) => <span className="font-semibold">{children}</span>,
+            user: user.username,
+          })}
+        </h2>
+      </header>
 
       <div className="mt-5">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>

@@ -3,9 +3,6 @@ import { Controller, BodyParams, Post, Res, Response } from "@tsed/common";
 import { hashSync, genSaltSync, compareSync } from "bcrypt";
 import { BadRequest } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
-import { setCookie } from "utils/setCookie";
-import { signJWT } from "utils/jwt";
-import { Cookie } from "@snailycad/config";
 import { findOrCreateCAD, isFeatureEnabled } from "lib/cad";
 import { AUTH_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
@@ -18,10 +15,8 @@ import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import { setUserPreferencesCookies } from "lib/auth/setUserPreferencesCookies";
 import type * as APITypes from "@snailycad/types/api";
 import { request } from "undici";
+import { setUserTokenCookies } from "lib/auth/setUserTokenCookies";
 
-// expire after 5 hours
-export const AUTH_TOKEN_EXPIRES_MS = 60 * 60 * 1000 * 5;
-export const AUTH_TOKEN_EXPIRES_S = AUTH_TOKEN_EXPIRES_MS / 1000;
 const GOOGLE_CAPTCHA_SECRET = process.env.GOOGLE_CAPTCHA_SECRET;
 const GOOGLE_CAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify";
 interface PartialGoogleCaptchaResponse {
@@ -47,6 +42,10 @@ export class AuthController {
         username: { mode: "insensitive", equals: data.username },
       },
     });
+
+    if (!user?.discordId && !data.username.match(/^([a-z_.\d]+)*[a-z\d]+$/i)) {
+      throw new ExtendedBadRequest({ username: "Invalid" });
+    }
 
     if (!user) {
       throw new ExtendedNotFound({ username: "userNotFound" });
@@ -89,14 +88,7 @@ export class AuthController {
       throwOnNotEnabled: false,
     });
 
-    const jwtToken = signJWT({ userId: user.id }, AUTH_TOKEN_EXPIRES_S);
-    setCookie({
-      res,
-      name: Cookie.Session,
-      expires: AUTH_TOKEN_EXPIRES_MS,
-      value: jwtToken,
-    });
-
+    await setUserTokenCookies({ user, res });
     setUserPreferencesCookies({
       isDarkTheme: user.isDarkTheme,
       locale: user.locale ?? null,
@@ -105,10 +97,6 @@ export class AuthController {
 
     if (user.tempPassword) {
       return { hasTempPassword: true };
-    }
-
-    if (process.env.IFRAME_SUPPORT_ENABLED === "true") {
-      return { userId: user.id, session: jwtToken };
     }
 
     return { userId: user.id };
@@ -225,21 +213,12 @@ export class AuthController {
       throw new BadRequest("whitelistPending");
     }
 
-    const jwtToken = signJWT({ userId: user.id }, AUTH_TOKEN_EXPIRES_S);
-    setCookie({
+    await setUserTokenCookies({ user, res });
+    setUserPreferencesCookies({
+      isDarkTheme: user.isDarkTheme,
+      locale: user.locale ?? null,
       res,
-      name: Cookie.Session,
-      expires: AUTH_TOKEN_EXPIRES_MS,
-      value: jwtToken,
     });
-
-    if (process.env.IFRAME_SUPPORT_ENABLED === "true") {
-      return {
-        userId: user.id,
-        session: jwtToken,
-        isOwner: extraUserData.rank === Rank.OWNER,
-      };
-    }
 
     return { userId: user.id, isOwner: extraUserData.rank === Rank.OWNER };
   }

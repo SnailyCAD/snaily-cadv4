@@ -37,6 +37,7 @@ export function PenalCodesTable({ isReadOnly, penalCodes }: Props) {
   return (
     <div className="w-full my-3 overflow-x-auto">
       <Table
+        features={{ isWithinCard: true }}
         tableState={tableState}
         data={penalCodes.map((penalCode) => ({
           id: penalCode.id,

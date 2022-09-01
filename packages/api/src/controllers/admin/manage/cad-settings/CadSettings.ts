@@ -11,7 +11,7 @@ import { Delete, Get, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { CAD_SELECT, IsAuth, setDiscordAuth } from "middlewares/IsAuth";
 import { BadRequest } from "@tsed/exceptions";
-import { Req, UseBefore } from "@tsed/common";
+import { Req, Res, UseBefore } from "@tsed/common";
 import { Socket } from "services/SocketService";
 import { nanoid } from "nanoid";
 import { validateSchema } from "lib/validateSchema";
@@ -29,17 +29,23 @@ export class ManageCitizensController {
   }
 
   @Get("/")
-  async getCadSettings(@Req() request: Req): Promise<APITypes.GetCADSettingsData> {
-    const user = await getSessionUser(request, true);
+  async getCadSettings(
+    @Req() request: Req,
+    @Res() response: Res,
+  ): Promise<APITypes.GetCADSettingsData> {
+    const user = await getSessionUser({ req: request, res: response, returnNullOnError: true });
     const version = await getCADVersion();
 
     const cad = await prisma.cad.findFirst({
       select: { ...CAD_SELECT(user, true), registrationCode: true },
     });
 
+    const registrationCode =
+      user?.rank === Rank.OWNER ? cad?.registrationCode : !!cad?.registrationCode;
+
     return {
       ...setDiscordAuth(cad as unknown as cad),
-      registrationCode: !!cad?.registrationCode,
+      registrationCode,
       version,
     } as APITypes.GetCADSettingsData;
   }

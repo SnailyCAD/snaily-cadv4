@@ -28,6 +28,7 @@ import type {
   GetMyDeputiesData,
 } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call911State";
+import { DndProvider } from "components/shared/dnd/DndProvider";
 
 interface Props {
   activeDeputy: GetEmsFdActiveDeputy | null;
@@ -98,7 +99,7 @@ export default function EmsFDDashboard({
 
       <UtilityPanel>
         <div className="px-4">
-          <ModalButtons />
+          <ModalButtons initialActiveDeputy={activeDeputy} />
         </div>
 
         <StatusesArea
@@ -106,19 +107,21 @@ export default function EmsFDDashboard({
           units={dispatchState.activeDeputies}
           setActiveUnit={state.setActiveDeputy}
           activeUnit={state.activeDeputy}
+          initialData={activeDeputy}
         />
       </UtilityPanel>
 
-      <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
-        <div className="w-full">
-          <ActiveCalls initialData={calls} />
+      <DndProvider>
+        <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
+          <div className="w-full">
+            <ActiveCalls initialData={calls} />
+          </div>
         </div>
-      </div>
-
-      <div className="mt-3">
-        <ActiveOfficers initialOfficers={[]} />
-        <ActiveDeputies initialDeputies={activeDeputies} />
-      </div>
+        <div className="mt-3">
+          <ActiveOfficers initialOfficers={[]} />
+          <ActiveDeputies initialDeputies={activeDeputies} />
+        </div>
+      </DndProvider>
 
       <SelectDeputyModal />
 

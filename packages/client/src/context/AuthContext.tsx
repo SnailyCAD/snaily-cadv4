@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useRouter } from "next/router";
-import { getSessionUser } from "lib/auth";
 import type { cad as CAD, User } from "@snailycad/types";
 import { Loader } from "components/Loader";
 import { useIsRouteFeatureEnabled } from "hooks/auth/useIsRouteFeatureEnabled";
@@ -38,6 +37,7 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
   const isEnabled = useIsRouteFeatureEnabled(cad ?? {});
 
   const handleGetUser = React.useCallback(async () => {
+    const { getSessionUser } = await import("lib/auth");
     const user = await getSessionUser();
 
     if (!user && !NO_LOADING_ROUTES.includes(router.pathname)) {
@@ -46,9 +46,7 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
     }
 
     setUser(user);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.pathname, router.asPath]);
+  }, [router]);
 
   React.useEffect(() => {
     const savedDarkTheme = initialData.userSavedIsDarkTheme

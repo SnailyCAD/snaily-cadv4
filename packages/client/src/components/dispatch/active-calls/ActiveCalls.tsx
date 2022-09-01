@@ -36,6 +36,7 @@ function _ActiveCalls({ initialData }: Props) {
   const call911State = useCall911State();
   const isMounted = useMounted();
   const calls = isMounted ? call911State.calls : initialData.calls;
+  const hasCalls = isMounted ? call911State.calls.length >= 1 : initialData.totalCount >= 1;
 
   const t = useTranslations("Calls");
   const leo = useTranslations("Leo");
@@ -49,6 +50,7 @@ function _ActiveCalls({ initialData }: Props) {
   const { search, setSearch } = useCallsFilters();
 
   const asyncTable = useAsyncTable({
+    disabled: !CALLS_911,
     fetchOptions: {
       path: "/911-calls",
       onResponse: (json: Get911CallsData) => ({
@@ -122,7 +124,7 @@ function _ActiveCalls({ initialData }: Props) {
       <ActiveCallsHeader search={asyncTable.search} calls={calls} />
 
       <div className="px-4">
-        {calls.length <= 0 && asyncTable.state !== "loading" && !asyncTable.search.search ? (
+        {!hasCalls ? (
           <p className="py-2 text-neutral-700 dark:text-gray-300">{t("no911Calls")}</p>
         ) : (
           <Table
@@ -134,7 +136,7 @@ function _ActiveCalls({ initialData }: Props) {
               return {
                 id: call.id,
                 rowProps: {
-                  className: isUnitAssigned ? "bg-gray-200 dark:bg-[#333639]" : undefined,
+                  className: isUnitAssigned ? "bg-gray-200 dark:bg-quinary" : undefined,
                 },
                 caseNumber: `#${call.caseNumber}`,
                 name: `${call.name} ${call.viaDispatch ? `(${leo("dispatch")})` : ""}`,
@@ -179,7 +181,7 @@ function _ActiveCalls({ initialData }: Props) {
         <Droppable onDrop={handleUnassign} accepts={[DndActions.UnassignUnitFrom911Call]}>
           <div
             className={classNames(
-              "grid place-items-center z-50 border-2 border-slate-500 bg-gray-400 dark:bg-gray-4 fixed bottom-3 left-3 right-4 h-60 shadow-sm rounded-md transition-opacity",
+              "grid place-items-center z-50 border-2 border-slate-500 bg-gray-400 dark:bg-quinary fixed bottom-3 left-3 right-4 h-60 shadow-sm rounded-md transition-opacity",
               draggingUnit === "call"
                 ? "pointer-events-all opacity-100"
                 : "pointer-events-none opacity-0",
@@ -191,7 +193,6 @@ function _ActiveCalls({ initialData }: Props) {
       ) : null}
 
       <DispatchCallTowModal call={call911State.currentlySelectedCall} />
-
       <Manage911CallModal
         setCall={call911State.setCurrentlySelectedCall}
         onClose={() => call911State.setCurrentlySelectedCall(null)}

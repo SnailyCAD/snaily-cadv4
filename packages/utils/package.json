@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/utils",
-  "version": "1.21.1",
+  "version": "1.23.2",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -47,13 +47,13 @@
     "test": "yarn vitest run"
   },
   "devDependencies": {
-    "@snailycad/types": "1.21.1",
+    "@snailycad/types": "1.23.2",
     "c8": "^7.12.0",
     "tslib": "^2.4.0",
-    "tsup": "^6.2.2",
-    "typescript": "^4.7.4",
-    "vite": "^3.0.7",
-    "vitest": "^0.21.1"
+    "tsup": "^6.2.3",
+    "typescript": "^4.8.2",
+    "vite": "^3.0.9",
+    "vitest": "^0.22.1"
   },
   "tsup": {
     "entry": [

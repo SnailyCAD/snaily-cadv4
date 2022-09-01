@@ -12,7 +12,9 @@ import { Title } from "components/shared/Title";
 import { OfficerLogsTable } from "components/leo/logs/OfficerLogsTable";
 import { Permissions } from "@snailycad/permissions";
 import type { EmsFdDeputy, OfficerLog } from "@snailycad/types";
-import type { GetMyDeputiesLogsData } from "@snailycad/types/api";
+import type { GetMyDeputiesData, GetMyDeputiesLogsData } from "@snailycad/types/api";
+import { useAsyncTable } from "components/shared/Table";
+import useFetch from "lib/useFetch";
 
 export type OfficerLogWithDeputy = OfficerLog & { emsFdDeputy: EmsFdDeputy };
 
@@ -20,31 +22,50 @@ interface Props {
   logs: GetMyDeputiesLogsData;
 }
 
+function useGetUserDeputies() {
+  const [officers, setDeputies] = React.useState<EmsFdDeputy[]>([]);
+  const { execute } = useFetch();
+
+  const getDeputies = React.useCallback(async () => {
+    const { json } = await execute<GetMyDeputiesData>({ path: "/ems-fd", method: "GET" });
+
+    if (Array.isArray(json.deputies)) {
+      setDeputies(json.deputies);
+    }
+  }, []); // eslint-disable-line
+
+  React.useEffect(() => {
+    getDeputies();
+  }, [getDeputies]);
+
+  return officers;
+}
+
 export default function MyDeputyLogs({ logs: data }: Props) {
-  const [logs, setLogs] = React.useState(data);
-  const [deputyId, setDeputyId] = React.useState<string | null>(null);
+  const deputies = useGetUserDeputies();
+
+  const asyncTable = useAsyncTable({
+    fetchOptions: {
+      onResponse: (json: GetMyDeputiesLogsData) => ({
+        data: json.logs,
+        totalCount: json.totalCount,
+      }),
+      path: "/ems-fd/logs",
+    },
+    totalCount: data.totalCount,
+    initialData: data.logs,
+  });
 
   const t = useTranslations();
   const { generateCallsign } = useGenerateCallsign();
 
-  const filtered = logs.filter((v) => (deputyId ? v.emsFdDeputyId === deputyId : true));
-  const officers = logs.reduce(
+  const deputyNames = deputies.reduce(
     (ac, cv) => ({
       ...ac,
-      ...(cv.emsFdDeputyId && cv.emsFdDeputy
-        ? {
-            [cv.emsFdDeputyId]: `${generateCallsign(cv.emsFdDeputy)} ${makeUnitName(
-              cv.emsFdDeputy,
-            )}`,
-          }
-        : {}),
+      [cv.id]: `${generateCallsign(cv)} ${makeUnitName(cv)}`,
     }),
-    {},
+    {} as Record<string, string>,
   );
-
-  React.useEffect(() => {
-    setLogs(data);
-  }, [data]);
 
   return (
     <Layout
@@ -59,9 +80,9 @@ export default function MyDeputyLogs({ logs: data }: Props) {
             <FormField label="Group By Deputy">
               <Select
                 isClearable
-                onChange={(e) => setDeputyId(e.target.value)}
-                value={deputyId}
-                values={Object.entries(officers).map(([id, name]) => ({
+                onChange={(e) => asyncTable.search.setExtraParams({ deputyId: e.target.value })}
+                value={asyncTable.search.extraParams.deputyId}
+                values={Object.entries(deputyNames).map(([id, name]) => ({
                   label: name as string,
                   value: id,
                 }))}
@@ -71,10 +92,10 @@ export default function MyDeputyLogs({ logs: data }: Props) {
         </div>
       </header>
 
-      {logs.length <= 0 ? (
+      {data.totalCount <= 0 ? (
         <p className="mt-5">{t("Ems.noDeputies")}</p>
       ) : (
-        <OfficerLogsTable unit={null} logs={filtered} />
+        <OfficerLogsTable unit={null} asyncTable={asyncTable} />
       )}
     </Layout>
   );
@@ -82,7 +103,7 @@ export default function MyDeputyLogs({ logs: data }: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const user = await getSessionUser(req);
-  const [logs] = await requestAll(req, [["/ems-fd/logs", []]]);
+  const [logs] = await requestAll(req, [["/ems-fd/logs", { logs: [], totalCount: 0 }]]);
 
   return {
     props: {

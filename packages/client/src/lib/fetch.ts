@@ -1,8 +1,8 @@
 import axios, { type Method, type AxiosRequestConfig, type AxiosResponse } from "axios";
 import type { IncomingMessage } from "connect";
-import nookies from "nookies";
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";
-import { IFRAME_COOKIE_NAME } from "../pages/api/token";
+import { getAPIUrl } from "./fetch/getAPIUrl";
+import { getErrorObj } from "./useFetch";
 
 export type RequestData = Record<string, unknown>;
 
@@ -12,6 +12,7 @@ interface Options extends Omit<AxiosRequestConfig, "headers"> {
   method?: Method | string;
   data?: RequestData;
   isSsr?: boolean;
+  throwBadRequest?: boolean;
 }
 
 export async function handleRequest<T = any>(
@@ -20,15 +21,10 @@ export async function handleRequest<T = any>(
 ): Promise<AxiosResponse<T, T>> {
   const { req, method, data } = options ?? {};
 
-  const apiUrl = findAPIUrl();
+  const apiUrl = getAPIUrl();
   const location = typeof window !== "undefined" ? window.location : null;
   const isDispatchUrl = (location?.pathname ?? req?.url) === "/dispatch";
-  let parsedCookie = req?.headers.cookie;
-  const cookies = nookies.get({ req });
-
-  if (process.env.IFRAME_SUPPORT_ENABLED === "true" && !parsedCookie) {
-    parsedCookie = cookies[IFRAME_COOKIE_NAME]!;
-  }
+  const parsedCookie = req?.headers.cookie;
 
   try {
     const res = await axios({
@@ -46,22 +42,23 @@ export async function handleRequest<T = any>(
 
     return makeReturn(res);
   } catch (e) {
+    if (options?.throwBadRequest) {
+      throw e;
+    }
+
     return makeReturn(e);
   }
 }
 
-export function findAPIUrl() {
-  const envUrl = process.env.NEXT_PUBLIC_PROD_ORIGIN ?? "http://localhost:8080/v1";
-
-  if (process.env.NODE_ENV === "development") {
-    return "http://localhost:8080/v1";
-  }
-
-  return envUrl;
-}
-
 function makeReturn<T>(v: any): Omit<AxiosResponse<T>, "request"> {
-  delete v.request;
+  const errorObj = getErrorObj(v);
 
-  return v;
+  return {
+    data: v.data,
+    status: v.status,
+    statusText: v.statusText,
+    headers: v.headers,
+    config: v.config,
+    ...errorObj,
+  };
 }
