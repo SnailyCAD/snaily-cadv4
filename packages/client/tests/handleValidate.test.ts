@@ -22,7 +22,6 @@ it("Should correctly validate an INVALID object, schema: AUTH_SCHEMA", () => {
   expect(handleValidate(AUTH_SCHEMA)(data)).toMatchInlineSnapshot(`
     {
       "password": "String must contain at least 8 character(s)",
-      "username": "Invalid",
     }
   `);
 });
