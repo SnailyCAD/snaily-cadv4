@@ -26,14 +26,3 @@ it("Should correctly validate an INVALID object, schema: AUTH_SCHEMA", () => {
     }
   `);
 });
-
-it("Should correctly validate an unknown error", () => {
-  const data = {
-    username: "cannot_#have_special_characters@",
-    password: "toshort",
-    registrationCode: "test-123",
-  };
-
-  // @ts-expect-error expected for this test
-  expect(handleValidate(new Error("test"))(data)).toMatchInlineSnapshot("{}");
-});

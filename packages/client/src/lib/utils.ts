@@ -151,6 +151,6 @@ export function isEmpty<Obj extends object>(obj: Obj) {
   return getObjLength(obj) === 0;
 }
 
-export function getObjLength<Obj>(obj: Obj) {
+export function getObjLength<Obj extends object>(obj: Obj) {
   return Object.keys(obj).length;
 }
