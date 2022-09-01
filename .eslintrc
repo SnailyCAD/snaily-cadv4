@@ -27,7 +27,8 @@
     "@typescript-eslint/no-unnecessary-condition": "error",
     "@typescript-eslint/no-unnecessary-boolean-literal-compare": "error",
     "@typescript-eslint/no-redundant-type-constituents": "off",
-    "@next/next/no-server-import-in-page": "off"
+    "@next/next/no-server-import-in-page": "off",
+    "@typescript-eslint/no-unused-vars": "off"
   },
   "overrides": [
     {
