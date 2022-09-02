@@ -6,6 +6,7 @@
     "createCitizen": "Создать гражданина",
     "viewCitizen": "Просмотр",
     "editCitizen": "Редактировать",
+    "editingCitizen": "Вы редактируете <span>{citizen}</span>.",
     "deleteCitizen": "Удалить",
     "hairColor": "Цвет волос",
     "eyeColor": "Цвет глаз",
