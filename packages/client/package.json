@@ -8,8 +8,6 @@
     "next-build": "yarn create-images-domain && yarn next build",
     "start": "yarn next start",
     "start:proxy-experimental": "yarn next start --port 80",
-    "format": "yarn prettier --write \"**/*.{js,jsx,ts,tsx,md,css,json}\" --ignore-path .gitignore",
-    "lint": "yarn eslint . --ext .ts,.js,.tsx,.jsx,",
     "validate": "node ../../scripts/validate.mjs",
     "typecheck": "yarn tsc --noEmit",
     "copy-env": "node ../../scripts/copy-env.mjs --client",
