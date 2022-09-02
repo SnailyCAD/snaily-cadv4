@@ -80,10 +80,7 @@ export default function MyOfficersLogs({ logs: data }: Props) {
             <FormField label="Group By Officer">
               <Select
                 isClearable
-                onChange={(e) => {
-                  console.log(e);
-                  asyncTable.search.setExtraParams({ officerId: e.target.value });
-                }}
+                onChange={(e) => asyncTable.search.setExtraParams({ officerId: e.target.value })}
                 value={asyncTable.search.extraParams.officerId}
                 values={Object.entries(officerNames).map(([id, name]) => ({
                   label: name,

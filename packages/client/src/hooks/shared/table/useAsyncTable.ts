@@ -65,8 +65,6 @@ export function useAsyncTable<T>(options: Options<T>) {
     if (options.disabled) return;
     if (!isMounted) return;
 
-    console.log({ extraParams });
-
     const { json, error } = await execute({
       path: options.fetchOptions.path,
       params: { query: search.trim(), ...extraParams },

@@ -234,8 +234,6 @@ export class RecordsController {
   ): Promise<APITypes.PutRecordsByIdData> {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
 
-    console.log({ data });
-
     const recordItem = await this.upsertRecord({
       data,
       cad,
