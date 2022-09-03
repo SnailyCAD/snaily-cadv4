@@ -34,7 +34,7 @@ import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { isFeatureEnabled } from "lib/cad";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
-import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
+import { getFirstOfficerFromActiveOfficer, getInactivityFilter } from "lib/leo/utils";
 import type * as APITypes from "@snailycad/types/api";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { Socket } from "services/SocketService";
@@ -56,10 +56,15 @@ export class RecordsController {
 
   @Get("/active-warrants")
   @Description("Get all active warrants (ACTIVE_WARRANTS must be enabled)")
-  async getActiveWarrants() {
+  async getActiveWarrants(@Context("cad") cad: cad) {
+    const inactivityFilter = getInactivityFilter(cad, "activeWarrantsInactivityTimeout");
+    if (inactivityFilter) {
+      this.endInactiveWarrants(inactivityFilter.updatedAt);
+    }
+
     const activeWarrants = await prisma.warrant.findMany({
       orderBy: { updatedAt: "desc" },
-      where: { status: "ACTIVE" },
+      where: { status: "ACTIVE", ...(inactivityFilter?.filter ?? {}) },
       include: {
         citizen: true,
         assignedOfficers: { include: assignedOfficersInclude },
@@ -386,6 +391,13 @@ export class RecordsController {
     );
 
     return { ...ticket, violations, seizedItems };
+  }
+
+  private async endInactiveWarrants(updatedAt: Date) {
+    await prisma.warrant.updateMany({
+      where: { updatedAt: { not: { gte: updatedAt } } },
+      data: { status: "INACTIVE" },
+    });
   }
 
   private async handleDiscordWebhook(

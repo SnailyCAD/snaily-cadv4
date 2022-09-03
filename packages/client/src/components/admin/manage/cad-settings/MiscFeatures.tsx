@@ -118,6 +118,8 @@ export function MiscFeatures() {
     call911InactivityTimeout: miscSettings.call911InactivityTimeout ?? "",
     incidentInactivityTimeout: miscSettings.incidentInactivityTimeout ?? "",
     unitInactivityTimeout: miscSettings.unitInactivityTimeout ?? "",
+    activeWarrantsInactivityTimeout: miscSettings.activeWarrantsInactivityTimeout ?? "",
+    boloInactivityTimeout: miscSettings.boloInactivityTimeout ?? "",
   };
 
   return (
@@ -178,7 +180,7 @@ export function MiscFeatures() {
                 optional
                 action="short-input"
                 label="911-call Inactivity Timeout"
-                description="Calls that have not been updated after this timeout will be automatically ended/set off-duty. The format must be in minutes. (Default: none)"
+                description="Calls that have not been updated after this timeout will be automatically ended. The format must be in minutes. (Default: none)"
                 errorMessage={errors.call911InactivityTimeout}
               >
                 <Input
@@ -217,6 +219,38 @@ export function MiscFeatures() {
                   type="number"
                   name="unitInactivityTimeout"
                   value={values.unitInactivityTimeout}
+                  onChange={handleChange}
+                  placeholder="120"
+                />
+              </SettingsFormField>
+
+              <SettingsFormField
+                optional
+                action="short-input"
+                label="BOLO Inactivity Timeout"
+                description="BOLOs that have not been updated after this timeout will be automatically ended. The format must be in minutes. (Default: none)"
+                errorMessage={errors.boloInactivityTimeout}
+              >
+                <Input
+                  type="number"
+                  name="boloInactivityTimeout"
+                  value={values.boloInactivityTimeout}
+                  onChange={handleChange}
+                  placeholder="120"
+                />
+              </SettingsFormField>
+
+              <SettingsFormField
+                optional
+                action="short-input"
+                label="Active Warrants Inactivity Timeout"
+                description="Active Warrants that have not been updated after this timeout will be automatically set as non-active. The format must be in minutes. (Default: none)"
+                errorMessage={errors.activeWarrantsInactivityTimeout}
+              >
+                <Input
+                  type="number"
+                  name="activeWarrantsInactivityTimeout"
+                  value={values.activeWarrantsInactivityTimeout}
                   onChange={handleChange}
                   placeholder="120"
                 />
