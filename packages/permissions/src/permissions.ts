@@ -21,6 +21,7 @@ export enum Permissions {
   DeleteCitizenRecords = "DeleteCitizenRecords",
   ManageCustomRoles = "ManageCustomRoles",
   ViewCustomRoles = "ViewCustomRoles",
+  ManageWarrants = "ManageWarrants",
 
   Dispatch = "Dispatch",
   EmsFd = "EmsFd",

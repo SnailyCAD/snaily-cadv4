@@ -8,6 +8,7 @@ import { useModal } from "state/modalState";
 import { useRouter } from "next/router";
 import type { EmsFdDeputy } from "@snailycad/types";
 import type { ActiveOfficer } from "state/leoState";
+import { useAuth } from "context/AuthContext";
 
 type ButtonProps = Pick<JSX.IntrinsicElements["button"], "name" | "type" | "title" | "disabled">;
 interface Props extends ButtonProps {
@@ -21,9 +22,10 @@ export function ModalButton({ button: buttonFn, unit, ...buttonProps }: Props) {
   const { hasActiveDispatchers } = useActiveDispatchers();
   const { openModal } = useModal();
   const router = useRouter();
+  const { user } = useAuth();
 
   const isDispatch = router.pathname === "/dispatch";
-  const btnArgs = { ...features, hasActiveDispatchers, isDispatch, unit };
+  const btnArgs = { ...features, hasActiveDispatchers, isDispatch, unit, user };
   const button = buttonFn(btnArgs as Args<any>);
   const isEnabled = button.isEnabled ?? true;
 

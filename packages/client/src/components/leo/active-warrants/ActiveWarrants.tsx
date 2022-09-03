@@ -12,8 +12,15 @@ import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { isUnitCombined } from "@snailycad/utils";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
+import { Permissions, usePermission } from "hooks/usePermission";
 
 export function ActiveWarrants() {
+  const { hasPermissions } = usePermission();
+  const hasManageWarrantsPermissions = hasPermissions(
+    [Permissions.ManageWarrants],
+    (u) => u.isLeo || u.isSupervisor,
+  );
+
   const { activeWarrants, setActiveWarrants } = useActiveWarrants();
   const { generateCallsign } = useGenerateCallsign();
   const [tempWarrant, warrantState] = useTemporaryItem(activeWarrants);
@@ -43,15 +50,17 @@ export function ActiveWarrants() {
       <header className="flex items-center justify-between p-2 px-4 bg-gray-200 dark:bg-secondary">
         <h1 className="text-xl font-semibold">{t("activeWarrants")}</h1>
 
-        <div>
-          <Button
-            variant={null}
-            className="dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 bg-gray-500 hover:bg-gray-600 text-white"
-            onClick={() => openModal(ModalIds.CreateWarrant, { isActive: true })}
-          >
-            {t("createWarrant")}
-          </Button>
-        </div>
+        {hasManageWarrantsPermissions ? (
+          <div>
+            <Button
+              variant={null}
+              className="dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 bg-gray-500 hover:bg-gray-600 text-white"
+              onClick={() => openModal(ModalIds.CreateWarrant, { isActive: true })}
+            >
+              {t("createWarrant")}
+            </Button>
+          </div>
+        ) : null}
       </header>
 
       <div className="px-4">
@@ -69,37 +78,41 @@ export function ActiveWarrants() {
                 warrant.assignedOfficers.length <= 0
                   ? common("none")
                   : assignedOfficers(warrant.assignedOfficers),
-              actions: (
+              actions: hasManageWarrantsPermissions ? (
                 <Button variant="success" onClick={() => handleEditClick(warrant)} size="xs">
                   {common("edit")}
                 </Button>
-              ),
+              ) : null,
             }))}
             columns={[
               { header: "Citizen", accessorKey: "citizen" },
               { header: common("description"), accessorKey: "description" },
               { header: "assigned Officers", accessorKey: "assignedOfficers" },
-              { header: common("actions"), accessorKey: "actions" },
+              hasManageWarrantsPermissions
+                ? { header: common("actions"), accessorKey: "actions" }
+                : null,
             ]}
           />
         )}
       </div>
 
-      <CreateWarrantModal
-        onClose={() => warrantState.setTempId(null)}
-        warrant={tempWarrant}
-        onCreate={(warrant) => {
-          setActiveWarrants([...activeWarrants, warrant]);
-        }}
-        onUpdate={(previous, warrant) => {
-          const copied = [...activeWarrants];
-          const idx = copied.indexOf(previous);
+      {hasManageWarrantsPermissions ? (
+        <CreateWarrantModal
+          onClose={() => warrantState.setTempId(null)}
+          warrant={tempWarrant}
+          onCreate={(warrant) => {
+            setActiveWarrants([...activeWarrants, warrant]);
+          }}
+          onUpdate={(previous, warrant) => {
+            const copied = [...activeWarrants];
+            const idx = copied.indexOf(previous);
 
-          copied[idx] = warrant;
-          setActiveWarrants(copied);
-          warrantState.setTempId(null);
-        }}
-      />
+            copied[idx] = warrant;
+            setActiveWarrants(copied);
+            warrantState.setTempId(null);
+          }}
+        />
+      ) : null}
     </div>
   );
 }
