@@ -43,12 +43,13 @@ export class AuthController {
       },
     });
 
-    if (!user?.discordId && !data.username.match(/^([a-z_.\d]+)*[a-z\d]+$/i)) {
-      throw new ExtendedBadRequest({ username: "Invalid" });
-    }
-
     if (!user) {
       throw new ExtendedNotFound({ username: "userNotFound" });
+    }
+
+    const nonDiscordUserUsernameRegex = /^([a-z_.\d]+)*[a-z\d]+$/i;
+    if (!user.discordId && !nonDiscordUserUsernameRegex.test(user.username)) {
+      throw new ExtendedBadRequest({ username: "Invalid" });
     }
 
     if (user.whitelistStatus === WhitelistStatus.PENDING) {

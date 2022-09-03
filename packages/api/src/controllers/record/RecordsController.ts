@@ -13,7 +13,6 @@ import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Controller } from "@tsed/di";
 import { IsAuth } from "middlewares/IsAuth";
 import {
-  CadFeature,
   Citizen,
   Feature,
   Record,
@@ -40,6 +39,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { Socket } from "services/SocketService";
 import { assignUnitsToWarrant } from "lib/records/assignToWarrant";
+import type { cad } from "@snailycad/types";
 
 const assignedOfficersInclude = {
   combinedUnit: { include: combinedUnitProperties },
@@ -154,8 +154,8 @@ export class RecordsController {
       throw new NotFound("warrantNotFound");
     }
 
-    await Promise.all(
-      warrant.assignedOfficers.map(async ({ id }) =>
+    await prisma.$transaction(
+      warrant.assignedOfficers.map(({ id }) =>
         prisma.assignedWarrantOfficer.delete({
           where: { id },
         }),
@@ -198,7 +198,7 @@ export class RecordsController {
   })
   async createTicket(
     @BodyParams() body: unknown,
-    @Context("cad") cad: { features?: CadFeature[] },
+    @Context("cad") cad: cad,
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
   ): Promise<APITypes.PostRecordsData> {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
@@ -228,7 +228,7 @@ export class RecordsController {
     permissions: [Permissions.Leo],
   })
   async updateRecordById(
-    @Context("cad") cad: { features?: CadFeature[] },
+    @Context("cad") cad: cad,
     @BodyParams() body: unknown,
     @PathParams("id") recordId: string,
   ): Promise<APITypes.PutRecordsByIdData> {
@@ -291,7 +291,7 @@ export class RecordsController {
   }: {
     data: z.infer<typeof CREATE_TICKET_SCHEMA>;
     recordId: string | null;
-    cad: any;
+    cad: cad;
     officer: Officer | null;
   }) {
     if (recordId) {
@@ -352,7 +352,7 @@ export class RecordsController {
     }
 
     const validatedViolations = await Promise.all(
-      data.violations.map(async (v) => validateRecordData({ ...v, ticketId: ticket.id, cad })),
+      data.violations.map((v) => validateRecordData({ ...v, ticketId: ticket.id, cad })),
     );
 
     const violations = await prisma.$transaction(

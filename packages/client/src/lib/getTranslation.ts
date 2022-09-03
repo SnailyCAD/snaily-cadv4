@@ -4,7 +4,7 @@ import path from "node:path";
 const cwd = process.cwd();
 
 export async function getNextI18Config() {
-  const nextConfig = await (await import("../../next.config")).default;
+  const nextConfig = (await import("../../next.config")).default;
   return nextConfig.i18n;
 }
 
