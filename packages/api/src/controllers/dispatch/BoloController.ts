@@ -14,8 +14,9 @@ import { Bolo, BoloType, CombinedLeoUnit, DiscordWebhookType, Officer } from "@p
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import type { APIEmbed } from "discord-api-types/v10";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
-import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
+import { getFirstOfficerFromActiveOfficer, getInactivityFilter } from "lib/leo/utils";
 import type * as APITypes from "@snailycad/types/api";
+import type { cad } from "@snailycad/types";
 
 @Controller("/bolos")
 @UseBeforeEach(IsAuth)
@@ -31,8 +32,14 @@ export class BoloController {
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   @Description("Get all the bolos")
-  async getBolos(): Promise<APITypes.GetBolosData> {
+  async getBolos(@Context("cad") cad: cad): Promise<APITypes.GetBolosData> {
+    const inactivityFilter = getInactivityFilter(cad, "boloInactivityTimeout");
+    if (inactivityFilter) {
+      this.endInactiveBolos(inactivityFilter.updatedAt);
+    }
+
     const bolos = await prisma.bolo.findMany({
+      where: inactivityFilter?.filter,
       include: {
         officer: {
           include: leoProperties,
@@ -214,6 +221,12 @@ export class BoloController {
     this.socket.emitCreateBolo(bolo);
 
     return bolo;
+  }
+
+  private async endInactiveBolos(updatedAt: Date) {
+    await prisma.bolo.deleteMany({
+      where: { updatedAt: { not: { gte: updatedAt } } },
+    });
   }
 }
 

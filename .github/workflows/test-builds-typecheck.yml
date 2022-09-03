@@ -1,10 +1,18 @@
 name: Typecheck & test builds in workspaces/*
 
-on: [push, pull_request]
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    types: [opened, synchronize]
 
 jobs:
-  typecheck:
+  build:
+    name: Build & Typecheck
     runs-on: ubuntu-latest
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 
     strategy:
       matrix:
@@ -15,18 +23,10 @@ jobs:
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
+          fetch-depth: 2
           cache: yarn
           cache-dependency-path: yarn.lock
           node-version: ${{ matrix.node-version }}
-
-      - name: Turbo Cache
-        id: turbo-cache
-        uses: actions/cache@v2
-        with:
-          path: .turbo
-          key: turbo-${{ github.job }}-${{ github.event.pull_request.head.ref }}-${{ github.event.pull_request.head.sha }}
-          restore-keys: |
-            turbo-${{ github.job }}-${{ github.event.pull_request.head.ref }}-
 
       - name: Next.js Cache
         id: nextjs-cache

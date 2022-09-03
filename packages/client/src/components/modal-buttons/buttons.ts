@@ -1,10 +1,12 @@
-import type { EmsFdDeputy, Feature } from "@snailycad/types";
+import { hasPermission, Permissions } from "@snailycad/permissions";
+import type { EmsFdDeputy, Feature, User } from "@snailycad/types";
 import { isUnitOfficer } from "@snailycad/utils";
 import type { ActiveOfficer } from "state/leoState";
 import { ModalIds } from "types/ModalIds";
 
 export type Args<T> = Record<Feature | "hasActiveDispatchers" | "isDispatch", boolean> & {
   unit: EmsFdDeputy | ActiveOfficer | null;
+  user: User;
 } & T;
 export interface ModalButton<T = unknown> {
   (args: Args<T>): {
@@ -72,9 +74,10 @@ export const createBoloBtn: ModalButton = () => ({
   nameKey: ["Leo", "createBolo"],
 });
 
-export const createWarrantBtn: ModalButton = () => ({
+export const createWarrantBtn: ModalButton = ({ user }) => ({
   modalId: ModalIds.CreateWarrant,
   nameKey: ["Leo", "createWarrant"],
+  isEnabled: hasPermission({ userToCheck: user, permissionsToCheck: [Permissions.ManageWarrants] }),
 });
 
 export const notepadBtn: ModalButton = () => ({

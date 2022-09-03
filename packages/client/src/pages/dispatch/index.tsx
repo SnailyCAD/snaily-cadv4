@@ -124,19 +124,21 @@ export default function DispatchDashboard(props: DispatchPageProps) {
         <DispatchModalButtons />
       </UtilityPanel>
 
-      <DndProvider>
-        <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
-          <div className="w-full">
-            <ActiveOfficers initialOfficers={activeOfficers} />
-            <ActiveDeputies initialDeputies={activeDeputies} />
+      <div id="dispatch">
+        <DndProvider id="dispatch">
+          <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
+            <div className="w-full">
+              <ActiveOfficers initialOfficers={activeOfficers} />
+              <ActiveDeputies initialDeputies={activeDeputies} />
+            </div>
           </div>
-        </div>
-        <div className="mt-3">
-          <ActiveCalls initialData={props.calls} />
-          <ActiveBolos initialBolos={props.bolos} />
-          {ACTIVE_INCIDENTS ? <ActiveIncidents /> : null}
-        </div>
-      </DndProvider>
+          <div className="mt-3">
+            <ActiveCalls initialData={props.calls} />
+            <ActiveBolos initialBolos={props.bolos} />
+            {ACTIVE_INCIDENTS ? <ActiveIncidents /> : null}
+          </div>
+        </DndProvider>
+      </div>
 
       <Modals.NotepadModal />
       {/* name search have their own vehicle/weapon search modal */}

@@ -111,17 +111,19 @@ export default function EmsFDDashboard({
         />
       </UtilityPanel>
 
-      <DndProvider>
-        <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
-          <div className="w-full">
-            <ActiveCalls initialData={calls} />
+      <div id="ems-fd">
+        <DndProvider id="ems-fd">
+          <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
+            <div className="w-full">
+              <ActiveCalls initialData={calls} />
+            </div>
           </div>
-        </div>
-        <div className="mt-3">
-          <ActiveOfficers initialOfficers={[]} />
-          <ActiveDeputies initialDeputies={activeDeputies} />
-        </div>
-      </DndProvider>
+          <div className="mt-3">
+            <ActiveOfficers initialOfficers={[]} />
+            <ActiveDeputies initialDeputies={activeDeputies} />
+          </div>
+        </DndProvider>
+      </div>
 
       <SelectDeputyModal />
 

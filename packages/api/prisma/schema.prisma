@@ -75,9 +75,11 @@ model MiscCadSettings {
   inactivityTimeout         Int?
   jailTimeScale             JailTimeScale?
 
-  call911InactivityTimeout  Int?
-  incidentInactivityTimeout Int?
-  unitInactivityTimeout     Int?
+  call911InactivityTimeout        Int?
+  incidentInactivityTimeout       Int?
+  unitInactivityTimeout           Int?
+  boloInactivityTimeout           Int?
+  activeWarrantsInactivityTimeout Int?
 
   /// deprecated, use `webhooks` instead
   call911WebhookId     String?
@@ -204,37 +206,38 @@ model DiscordRole {
 }
 
 model User {
-  id                       String                @id @default(cuid())
-  username                 String                @unique @db.VarChar(255)
-  password                 String                @db.Text
-  rank                     Rank                  @default(USER)
-  isLeo                    Boolean               @default(false)
-  isSupervisor             Boolean               @default(false)
-  isEmsFd                  Boolean               @default(false)
-  isDispatch               Boolean               @default(false)
-  isTow                    Boolean               @default(false)
-  isTaxi                   Boolean               @default(true)
-  banned                   Boolean               @default(false)
+  id                       String                    @id @default(cuid())
+  username                 String                    @unique @db.VarChar(255)
+  password                 String                    @db.Text
+  rank                     Rank                      @default(USER)
+  isLeo                    Boolean                   @default(false)
+  isSupervisor             Boolean                   @default(false)
+  isEmsFd                  Boolean                   @default(false)
+  isDispatch               Boolean                   @default(false)
+  isTow                    Boolean                   @default(false)
+  isTaxi                   Boolean                   @default(true)
+  banned                   Boolean                   @default(false)
   banReason                String?
-  avatarUrl                String?               @db.Text
-  steamId                  String?               @db.VarChar(255)
-  whitelistStatus          WhitelistStatus       @default(ACCEPTED)
-  isDarkTheme              Boolean               @default(true)
+  avatarUrl                String?                   @db.Text
+  steamId                  String?                   @db.VarChar(255)
+  whitelistStatus          WhitelistStatus           @default(ACCEPTED)
+  isDarkTheme              Boolean                   @default(true)
   tempPassword             String?
-  statusViewMode           StatusViewMode        @default(DOT_COLOR)
-  tableActionsAlignment    TableActionsAlignment @default(RIGHT)
-  createdAt                DateTime              @default(now())
-  updatedAt                DateTime              @default(now()) @updatedAt
+  statusViewMode           StatusViewMode            @default(DOT_COLOR)
+  tableActionsAlignment    TableActionsAlignment     @default(RIGHT)
+  createdAt                DateTime                  @default(now())
+  updatedAt                DateTime                  @default(now()) @updatedAt
   discordId                String?
   lastDiscordSyncTimestamp DateTime?
   permissions              String[]
-  soundSettings            UserSoundSettings?    @relation(fields: [soundSettingsId], references: [id])
+  soundSettings            UserSoundSettings?        @relation(fields: [soundSettingsId], references: [id])
   soundSettingsId          String?
-  apiToken                 ApiToken?             @relation(fields: [apiTokenId], references: [id])
+  apiToken                 ApiToken?                 @relation(fields: [apiTokenId], references: [id])
   apiTokenId               String?
   roles                    CustomRole[]
   locale                   String?
   sessions                 UserSession[]
+  toAddDefaultPermissions  ToAddDefaultPermissions[]
 
   // relational data
   citizens             Citizen[]
@@ -264,6 +267,17 @@ model UserSession {
   userId       String
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expires      DateTime
+}
+
+model ToAddDefaultPermissions {
+  id          String                     @id @default(cuid())
+  key         ToAddDefaultPermissionsKey
+  user        User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  permissions String[]
+  addedAt     DateTime                   @default(now())
+
+  @@unique([key, userId])
 }
 
 model UserSoundSettings {
@@ -1446,6 +1460,10 @@ enum JailTimeScale {
 enum PaymentStatus {
   PAID
   UNPAID
+}
+
+enum ToAddDefaultPermissionsKey {
+  MANAGE_WARRANTS_PERMISSIONS
 }
 
 // other
