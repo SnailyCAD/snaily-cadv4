@@ -73,8 +73,8 @@ export class RecordsController {
   @Post("/create-warrant")
   @Description("Create a new warrant")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
-    permissions: [Permissions.Leo],
+    fallback: (u) => u.isLeo || u.isSupervisor,
+    permissions: [Permissions.ManageWarrants, Permissions.DeleteCitizenRecords],
   })
   async createWarrant(
     @BodyParams() body: unknown,

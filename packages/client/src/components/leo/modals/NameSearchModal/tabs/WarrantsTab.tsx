@@ -14,6 +14,7 @@ import { FullDate } from "components/shared/FullDate";
 import type { Warrant } from "@snailycad/types";
 import { TabsContent } from "components/shared/TabList";
 import type { DeleteRecordsByIdData, PutWarrantsData } from "@snailycad/types/api";
+import { Permissions, usePermission } from "hooks/usePermission";
 
 const values = [
   { label: "Inactive", value: "inactive" },
@@ -28,6 +29,12 @@ export function NameSearchWarrantsTab() {
   const { state, execute } = useFetch();
   const { currentResult, setCurrentResult } = useNameSearch();
   const tableState = useTableState();
+
+  const { hasPermissions } = usePermission();
+  const hasManageWarrantsPermissions = hasPermissions(
+    [Permissions.ManageWarrants],
+    (u) => u.isLeo || u.isSupervisor,
+  );
 
   async function handleDelete() {
     const warrant = getPayload<Warrant>(ModalIds.AlertRevokeWarrant);
@@ -103,7 +110,7 @@ export function NameSearchWarrantsTab() {
                     : "—",
                   description: warrant.description,
                   createdAt: <FullDate>{warrant.createdAt}</FullDate>,
-                  actions: (
+                  actions: hasManageWarrantsPermissions ? (
                     <div className="flex gap-2">
                       <Select
                         onChange={(e) => handleChange(e.target.value, warrant)}
@@ -120,14 +127,16 @@ export function NameSearchWarrantsTab() {
                         {t("Leo.revoke")}
                       </Button>
                     </div>
-                  ),
+                  ) : null,
                 };
               })}
             columns={[
               { header: t("Leo.officer"), accessorKey: "officer" },
               { header: common("description"), accessorKey: "description" },
               { header: common("createdAt"), accessorKey: "createdAt" },
-              { header: common("actions"), accessorKey: "actions" },
+              hasManageWarrantsPermissions
+                ? { header: common("actions"), accessorKey: "actions" }
+                : null,
             ]}
           />
 
