@@ -5,7 +5,7 @@ export const CALL_GTA_MAP_POSITION_SCHEMA = z.object({
   x: z.number(),
   y: z.number(),
   z: z.number(),
-  heading: z.string(),
+  heading: z.number(),
 });
 
 export const CALL_911_SCHEMA = z.object({
