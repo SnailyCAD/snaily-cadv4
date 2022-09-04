@@ -1,6 +1,13 @@
 import { z } from "zod";
 import { SELECT_VALUE } from "../leo";
 
+export const CALL_GTA_MAP_POSITION_SCHEMA = z.object({
+  x: z.number(),
+  y: z.number(),
+  z: z.number(),
+  heading: z.number(),
+});
+
 export const CALL_911_SCHEMA = z.object({
   location: z.string().min(2),
   description: z.string().optional(),
@@ -13,6 +20,7 @@ export const CALL_911_SCHEMA = z.object({
   divisions: z.array(z.string().or(SELECT_VALUE)).optional(),
   situationCode: z.string().max(255).nullable().optional(),
   type: z.string().nullable().optional(),
+  gtaMapPosition: CALL_GTA_MAP_POSITION_SCHEMA,
 });
 
 export const LINK_INCIDENT_TO_CALL_SCHEMA = z.object({
