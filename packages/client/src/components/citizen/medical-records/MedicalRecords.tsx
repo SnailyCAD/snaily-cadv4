@@ -11,6 +11,7 @@ import { Table, useTableState } from "components/shared/Table";
 import { useCitizen } from "context/CitizenContext";
 import type { DeleteCitizenMedicalRecordsData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import { FullDate } from "components/shared/FullDate";
 
 export function MedicalRecords() {
   const { state, execute } = useFetch();
@@ -76,6 +77,7 @@ export function MedicalRecords() {
               diseases: record.type,
               bloodGroup: record.bloodGroup?.value ?? common("none"),
               description: record.description || common("none"),
+              createdAt: <FullDate>{record.createdAt}</FullDate>,
               actions: (
                 <>
                   <Button onClick={() => handleEditClick(record)} size="xs" variant="success">
@@ -96,6 +98,7 @@ export function MedicalRecords() {
               { header: t("diseases"), accessorKey: "diseases" },
               { header: t("bloodGroup"), accessorKey: "bloodGroup" },
               { header: common("description"), accessorKey: "description" },
+              { header: common("createdAt"), accessorKey: "createdAt" },
               { header: common("actions"), accessorKey: "actions" },
             ]}
           />
