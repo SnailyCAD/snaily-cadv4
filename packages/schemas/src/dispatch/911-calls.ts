@@ -20,7 +20,7 @@ export const CALL_911_SCHEMA = z.object({
   divisions: z.array(z.string().or(SELECT_VALUE)).optional(),
   situationCode: z.string().max(255).nullable().optional(),
   type: z.string().nullable().optional(),
-  gtaMapPosition: CALL_GTA_MAP_POSITION_SCHEMA,
+  gtaMapPosition: CALL_GTA_MAP_POSITION_SCHEMA.nullable().optional(),
 });
 
 export const LINK_INCIDENT_TO_CALL_SCHEMA = z.object({
