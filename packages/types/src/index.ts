@@ -306,6 +306,7 @@ export type Call911 = Prisma.Call911 & {
   incidents?: LeoIncident[];
   viaDispatch: boolean | null;
   type: CallTypeValue | null;
+  gtaMapPosition?: Prisma.GTAMapPosition | null;
 };
 
 export type Position = Prisma.Position;
