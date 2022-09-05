@@ -53,30 +53,8 @@ export function RenderActiveCalls() {
   }
 
   async function handleMarkerChange(call: Full911Call, type: "remove" | "set") {
-    let coords = convertToMap(0, 0, map);
-
-    const positions = calls.map((c) => c.position);
-
-    let isMiddleOccupied = false;
-
-    function parseFloatToInt(x: number | null | undefined) {
-      return parseInt(String(x), 10);
-    }
-
-    for (const position of positions) {
-      console.log({ position, coords });
-
-      if (
-        parseFloatToInt(position?.lat) === parseFloatToInt(coords.lat) &&
-        parseFloatToInt(position?.lng) === parseFloatToInt(coords.lng)
-      ) {
-        isMiddleOccupied = true;
-        coords = convertToMap(150, 0, map);
-        break;
-      }
-    }
-
-    console.log({ isMiddleOccupied });
+    const index = calls.findIndex((v) => v.id === call.id);
+    const coords = convertToMap(150 * index, 0, map);
 
     const callData =
       type === "set"
