@@ -53,7 +53,8 @@ export function RenderActiveCalls() {
   }
 
   async function handleMarkerChange(call: Full911Call, type: "remove" | "set") {
-    const coords = convertToMap(0, 0, map);
+    const index = calls.findIndex((v) => v.id === call.id);
+    const coords = convertToMap(150 * index, 0, map);
 
     const callData =
       type === "set"
