@@ -996,7 +996,7 @@ model GTAMapPosition {
   x       Float
   y       Float
   z       Float
-  heading Int
+  heading Float
 
   Call911 Call911[]
 }
