@@ -53,7 +53,13 @@ export function RenderActiveCalls() {
   }
 
   async function handleMarkerChange(call: Full911Call, type: "remove" | "set") {
-    const coords = convertToMap(0, 0, map);
+    let x = 0;
+    let y = 0;
+    if (call.gtaMapPosition.x && call.gtaMapPosition.y) {
+      x = call.gtaMapPosition.x;
+      y = call.gtaMapPosition.y;
+    }
+    const coords = convertToMap(x, y, map);
 
     const callData =
       type === "set"
