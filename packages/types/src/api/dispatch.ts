@@ -150,5 +150,5 @@ export type GetDispatchPlayerBySteamIdData = Pick<
   Types.User,
   "username" | "id" | "isEmsFd" | "isLeo" | "isDispatch" | "permissions" | "rank" | "steamId"
 > & {
-  unit: Types.Officer | Types.CombinedLeoUnit | Types.EmsFdDeputy;
+  unit: Types.Officer | Types.CombinedLeoUnit | Types.EmsFdDeputy | null;
 };

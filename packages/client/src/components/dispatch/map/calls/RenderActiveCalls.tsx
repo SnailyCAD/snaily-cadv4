@@ -9,6 +9,7 @@ import { Button } from "components/Button";
 import { useTranslations } from "next-intl";
 import type { Put911CallByIdData } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call911State";
+import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
 export function RenderActiveCalls() {
   const map = useMap();
@@ -109,6 +110,9 @@ export function RenderActiveCalls() {
               <p style={{ margin: 2, fontSize: 18 }}>
                 <strong>{t("caller")}: </strong> {call.name}
               </p>
+              <div style={{ display: "inline-block", margin: 2, fontSize: 18 }}>
+                <strong>{t("description")}: </strong> <CallDescription data={call} />
+              </div>
 
               <div className="flex gap-2 mt-2">
                 <Button size="xs" className="!text-base" onClick={() => handleToggle(call.id)}>
