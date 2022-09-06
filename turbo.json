@@ -11,8 +11,12 @@
       "outputs": ["next.config.js"],
       "cache": false
     },
+    "validate-locales": {
+      "dependsOn": ["^validate-locales"],
+      "cache": false
+    },
     "build": {
-      "dependsOn": ["^copy-env", "^create-images-domain", "^build"],
+      "dependsOn": ["^copy-env", "^create-images-domain", "^validate-locales", "^build"],
       "outputs": [".next/**", "dist/**"],
       "cache": false
     },
