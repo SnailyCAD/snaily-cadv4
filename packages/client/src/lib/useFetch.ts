@@ -6,7 +6,7 @@ import type { FormikHelpers } from "formik";
 import { toastMessage } from "./toastMessage";
 import { useModal } from "../state/modalState";
 import { ModalIds } from "../types/ModalIds";
-import { useAuth } from "context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import { getNextI18nConfig } from "./i18n/getNextI18nConfig";
 
 interface UseFetchOptions {
