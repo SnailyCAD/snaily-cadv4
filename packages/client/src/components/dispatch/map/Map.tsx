@@ -1,5 +1,5 @@
 import * as React from "react";
-import L from "leaflet";
+import { CRS } from "leaflet";
 import { MapContainer, TileLayer } from "react-leaflet";
 import { getMapBounds } from "lib/map/utils";
 import { RenderMapBlips } from "./RenderMapBlips";
@@ -28,7 +28,7 @@ export function Map() {
         map && setMap(map);
       }}
       style={{ zIndex: 1, height: "calc(100vh - 3.5rem)", width: "100%" }}
-      crs={L.CRS.Simple}
+      crs={CRS.Simple}
       center={[0, 0]}
       zoom={-2}
       bounds={bounds}
