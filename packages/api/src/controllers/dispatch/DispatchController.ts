@@ -273,10 +273,6 @@ export class DispatchController {
 
     const unit = officer ?? deputy ?? null;
 
-    if (!unit) {
-      return null;
-    }
-
     return { ...user, unit };
   }
 

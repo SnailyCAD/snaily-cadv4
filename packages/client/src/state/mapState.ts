@@ -1,11 +1,24 @@
 import create from "zustand";
 
+export enum MapItem {
+  CALLS,
+  UNITS_ONLY,
+  BLIPS,
+}
+
 interface DispatchMapState {
-  blipsHidden: boolean;
-  setBlipsHidden(b: boolean): void;
+  hiddenItems: Partial<Record<MapItem, boolean>>;
+  setItem(item: MapItem): void;
 }
 
 export const useDispatchMapState = create<DispatchMapState>()((set) => ({
-  blipsHidden: false,
-  setBlipsHidden: (v) => set({ blipsHidden: v }),
+  hiddenItems: {},
+  setItem(item) {
+    set((state) => ({
+      hiddenItems: {
+        ...state.hiddenItems,
+        [item]: !state.hiddenItems[item],
+      },
+    }));
+  },
 }));

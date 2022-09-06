@@ -1,15 +1,15 @@
 import * as React from "react";
-import L from "leaflet";
-import { Marker, Popup, useMap } from "react-leaflet";
+import { icon as leafletIcon } from "leaflet";
+import { Marker, Tooltip, useMap } from "react-leaflet";
 import { convertToMap } from "lib/map/utils";
 import { blipTypes } from "lib/map/blips";
 import { BLIP_SIZES, Blip, BlipsData, MarkerType } from "types/Map";
-import { useDispatchMapState } from "state/mapState";
+import { MapItem, useDispatchMapState } from "state/mapState";
 
 export function RenderMapBlips() {
   const map = useMap();
   const [blips, setBlips] = React.useState<Blip[]>([]);
-  const { blipsHidden } = useDispatchMapState();
+  const { hiddenItems } = useDispatchMapState();
 
   const doBlips = React.useCallback(async () => {
     setBlips(await generateBlips(map));
@@ -19,7 +19,7 @@ export function RenderMapBlips() {
     doBlips();
   }, [doBlips]);
 
-  if (blipsHidden) {
+  if (hiddenItems[MapItem.BLIPS]) {
     return null;
   }
 
@@ -33,11 +33,7 @@ export function RenderMapBlips() {
             key={`${blip.name}-${idx}`}
             position={blip.pos}
           >
-            <Popup>
-              <p className="text-base !m-0">
-                <strong>Name: </strong> {blip.type} - {blip.name}
-              </p>
-            </Popup>
+            <Tooltip direction="top">{blip.name}</Tooltip>
           </Marker>
         );
       })}
@@ -73,7 +69,7 @@ async function generateBlips(map: L.Map) {
         pos: converted,
         rawPos: pos,
         type: Number(id),
-        icon: markerData ? L.icon(markerData) : undefined,
+        icon: markerData ? leafletIcon(markerData) : undefined,
       };
 
       createdBlips.push(blip);
