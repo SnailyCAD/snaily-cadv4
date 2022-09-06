@@ -6,6 +6,8 @@ import type { FormikHelpers } from "formik";
 import { toastMessage } from "./toastMessage";
 import { useModal } from "../state/modalState";
 import { ModalIds } from "../types/ModalIds";
+import { useAuth } from "context/AuthContext";
+import { getNextI18nConfig } from "./i18n/getNextI18nConfig";
 
 interface UseFetchOptions {
   overwriteState: State | null;
@@ -44,6 +46,7 @@ interface Return<Data> {
 export default function useFetch({ overwriteState }: UseFetchOptions = { overwriteState: null }) {
   const [state, setState] = React.useState<State | null>(null);
   const { openModal } = useModal();
+  const { user } = useAuth();
 
   const t = useTranslations("Errors");
   const abortControllerRef = React.useRef<NullableAbortController>(null);
@@ -72,7 +75,8 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
       const errors = parseErrors(response);
       const errorTitle = parseErrorTitle(response);
 
-      const errorMessages = (await import("../../locales/en/common.json")).Errors;
+      const locale = user?.locale ?? (await getNextI18nConfig()).defaultLocale;
+      const errorMessages = (await import(`../../locales/${locale}/common.json`)).Errors;
 
       const hasKey = isErrorKey(error, errorMessages);
       const key = hasKey ? error : "unknown";
