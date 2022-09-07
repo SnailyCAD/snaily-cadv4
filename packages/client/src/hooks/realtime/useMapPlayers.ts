@@ -15,7 +15,9 @@ import { omit } from "lib/utils";
 import type { GetDispatchPlayerBySteamIdData } from "@snailycad/types/api";
 
 export function useMapPlayers() {
-  const [players, setPlayers] = React.useState<(MapPlayer | PlayerDataEventPayload)[]>([]);
+  const [players, setPlayers] = React.useState<Map<string, MapPlayer | PlayerDataEventPayload>>(
+    new Map<string, MapPlayer | PlayerDataEventPayload>(),
+  );
   const [socket, setSocket] = React.useState<WebSocket | null>(null);
 
   const { cad } = useAuth();
@@ -24,13 +26,10 @@ export function useMapPlayers() {
 
   const handleSearchPlayer = React.useCallback(
     async (steamId: string | null, player: PlayerDataEventPayload) => {
-      const existing = players.find((v) =>
-        "steamId" in v ? v.steamId === steamId : v.identifier === player.identifier,
-      );
+      const existing = players.get(player.identifier);
 
       if (existing) {
-        const copied = [...players];
-        const idx = copied.findIndex((v) => v.identifier === player.identifier);
+        const copied = new Map(players);
 
         const omittedExisting = omit(existing, [
           "License Plate",
@@ -41,7 +40,7 @@ export function useMapPlayers() {
           "pos",
         ]);
 
-        copied[idx] = { ...omittedExisting, ...player, convertedSteamId: steamId };
+        copied.set(player.identifier, { ...omittedExisting, ...player, convertedSteamId: steamId });
         setPlayers(copied);
 
         return;
@@ -53,12 +52,18 @@ export function useMapPlayers() {
       });
 
       if (!json.steamId) {
-        setPlayers((p) => [...p, player]);
+        setPlayers((map) => {
+          map.set(player.identifier, player);
+          return map;
+        });
         return;
       }
 
       const data = { ...player, ...json, convertedSteamId: steamId };
-      setPlayers((p) => [...p, data]);
+      setPlayers((map) => {
+        map.set(player.identifier, data);
+        return map;
+      });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [players],
@@ -83,7 +88,10 @@ export function useMapPlayers() {
   );
 
   const onPlayerLeft = React.useCallback((data: PlayerLeftEvent) => {
-    setPlayers((p) => p.filter((v) => v.identifier !== data.payload));
+    setPlayers((map) => {
+      map.delete(data.payload);
+      return map;
+    });
   }, []);
 
   const onMessage = React.useCallback(
