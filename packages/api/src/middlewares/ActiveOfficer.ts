@@ -11,7 +11,7 @@ export class ActiveOfficer implements MiddlewareMethods {
       throw new Unauthorized("Unauthorized");
     }
 
-    const officer = user && (await getActiveOfficer(req, user, ctx));
+    const officer = user && (await getActiveOfficer({ req, user, ctx }));
 
     ctx.set("activeOfficer", officer);
   }
