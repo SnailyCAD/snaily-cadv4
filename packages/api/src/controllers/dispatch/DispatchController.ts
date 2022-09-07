@@ -23,7 +23,6 @@ import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
 import { getInactivityFilter } from "lib/leo/utils";
 import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
-import { Req } from "@tsed/common";
 import { getActiveDeputy } from "lib/ems-fd";
 import type * as APITypes from "@snailycad/types/api";
 
@@ -243,11 +242,7 @@ export class DispatchController {
     fallback: (u) => u.isDispatch,
     permissions: [Permissions.Dispatch, Permissions.LiveMap],
   })
-  async findUserBySteamId(
-    @Req() req: Req,
-    @PathParams("steamId") steamId: string,
-    @Context() ctx: Context,
-  ) {
+  async findUserBySteamId(@PathParams("steamId") steamId: string, @Context() ctx: Context) {
     const user = await prisma.user.findFirst({
       where: { steamId },
       select: {
@@ -267,8 +262,8 @@ export class DispatchController {
     }
 
     const [officer, deputy] = await Promise.all([
-      getActiveOfficer(req, user, ctx),
-      getActiveDeputy(req, user, ctx),
+      getActiveOfficer({ user, ctx }),
+      getActiveDeputy({ user, ctx }),
     ]);
 
     const unit = officer ?? deputy ?? null;

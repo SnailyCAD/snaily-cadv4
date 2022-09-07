@@ -42,16 +42,18 @@ export const combinedUnitProperties = {
   officers: { include: _leoProperties },
 };
 
-export async function getActiveOfficer(
-  req: Req,
-  user: Pick<User, "rank" | "id" | "permissions" | "isEmsFd" | "isDispatch" | "isLeo">,
-  ctx: Context,
-) {
+interface GetActiveOfficerOptions {
+  ctx: Context;
+  user: Pick<User, "rank" | "id" | "permissions">;
+  req?: Req;
+}
+
+export async function getActiveOfficer(options: GetActiveOfficerOptions) {
   // dispatch is allowed to use officer routes
   let isDispatch = false;
-  if (req.headers["is-from-dispatch"]?.toString() === "true") {
+  if (options.req?.headers["is-from-dispatch"]?.toString() === "true") {
     const hasDispatchPermissions = hasPermission({
-      userToCheck: user,
+      userToCheck: options.user,
       permissionsToCheck: defaultPermissions.defaultDispatchPermissions,
       fallback: (user) => user.isDispatch,
     });
@@ -63,7 +65,7 @@ export async function getActiveOfficer(
     }
   } else {
     const hasLeoPermissions = hasPermission({
-      userToCheck: user,
+      userToCheck: options.user,
       permissionsToCheck: defaultPermissions.defaultLeoPermissions,
       fallback: (user) => user.isLeo,
     });
@@ -80,7 +82,7 @@ export async function getActiveOfficer(
   const combinedUnit = await prisma.combinedLeoUnit.findFirst({
     where: {
       NOT: { status: { shouldDo: "SET_OFF_DUTY" } },
-      officers: { some: { userId: user.id } },
+      officers: { some: { userId: options.user.id } },
     },
     include: combinedUnitProperties,
   });
@@ -105,7 +107,7 @@ export async function getActiveOfficer(
 
   const officer = await prisma.officer.findFirst({
     where: {
-      userId: user.id,
+      userId: options.user.id,
       NOT: { OR: filters },
     },
     include: leoProperties,
@@ -114,7 +116,7 @@ export async function getActiveOfficer(
   const activeOfficerOrCombinedUnit = combinedUnit ?? officer;
 
   if (!activeOfficerOrCombinedUnit) {
-    ctx.delete("activeOfficer");
+    options.ctx.delete("activeOfficer");
     throw new BadRequest("noActiveOfficer");
   }
 
