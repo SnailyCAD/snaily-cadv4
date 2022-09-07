@@ -262,8 +262,8 @@ export class DispatchController {
     }
 
     const [officer, deputy] = await Promise.all([
-      getActiveOfficer({ user, ctx }),
-      getActiveDeputy({ user, ctx }),
+      getActiveOfficer({ user, ctx }).catch(() => null),
+      getActiveDeputy({ user, ctx }).catch(() => null),
     ]);
 
     const unit = officer ?? deputy ?? null;
