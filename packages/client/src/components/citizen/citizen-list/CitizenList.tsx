@@ -66,7 +66,7 @@ function useInstance({ array, totalCount }: { totalCount: number; array: any[] }
 
     asyncTable,
     pageCount: PAGE_COUNT,
-    pageOptions: PAGE_COUNT <= 0 ? new Array(PAGE_COUNT + 1) : new Array(PAGE_COUNT),
+    pageOptions: PAGE_COUNT <= 0 ? new Array(1) : new Array(PAGE_COUNT),
   };
 }
 

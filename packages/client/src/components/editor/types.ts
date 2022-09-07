@@ -28,12 +28,12 @@ export interface BlockquoteElement {
 
 export interface ListItemElement {
   type: "list-item";
-  children: Text[];
+  children?: Text[];
 }
 
 export interface BulletItemElement {
   type: "bulleted-list";
-  children: ListItemElement[];
+  children?: ListItemElement[];
 }
 
 export interface CheckListItemElement {
