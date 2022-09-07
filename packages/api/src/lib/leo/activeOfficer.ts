@@ -1,7 +1,7 @@
 import type { User, Prisma } from "@prisma/client";
-import { defaultPermissions, hasPermission, Permissions } from "@snailycad/permissions";
+import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import type { Req, Context } from "@tsed/common";
-import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
+import { BadRequest, Forbidden } from "@tsed/exceptions";
 import { userProperties } from "lib/auth/getSessionUser";
 import { prisma } from "lib/prisma";
 import { getInactivityFilter } from "./utils";
@@ -52,12 +52,12 @@ export async function getActiveOfficer(
   if (req.headers["is-from-dispatch"]?.toString() === "true") {
     const hasDispatchPermissions = hasPermission({
       userToCheck: user,
-      permissionsToCheck: [Permissions.Dispatch],
+      permissionsToCheck: defaultPermissions.defaultDispatchPermissions,
       fallback: (user) => user.isDispatch,
     });
 
     if (!hasDispatchPermissions) {
-      throw new Unauthorized("Must be dispatch to use this header.");
+      throw new Forbidden("Must be dispatch to use this header.");
     } else {
       isDispatch = true;
     }

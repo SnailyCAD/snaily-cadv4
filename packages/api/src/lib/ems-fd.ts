@@ -1,7 +1,7 @@
 import { Prisma, ShouldDoType, User } from "@prisma/client";
-import { defaultPermissions, hasPermission, Permissions } from "@snailycad/permissions";
+import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import type { Req, Context } from "@tsed/common";
-import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
+import { BadRequest, Forbidden } from "@tsed/exceptions";
 import { unitProperties } from "lib/leo/activeOfficer";
 import { getInactivityFilter } from "./leo/utils";
 import { prisma } from "./prisma";
@@ -16,12 +16,12 @@ export async function getActiveDeputy(
   if (req.headers["is-from-dispatch"]?.toString() === "true") {
     const hasDispatchPermissions = hasPermission({
       userToCheck: user,
-      permissionsToCheck: [Permissions.Dispatch],
+      permissionsToCheck: defaultPermissions.defaultDispatchPermissions,
       fallback: (user) => user.isDispatch,
     });
 
     if (!hasDispatchPermissions) {
-      throw new Unauthorized("Must be dispatch to use this header.");
+      throw new Forbidden("Must be dispatch to use this header.");
     } else {
       isDispatch = true;
     }
