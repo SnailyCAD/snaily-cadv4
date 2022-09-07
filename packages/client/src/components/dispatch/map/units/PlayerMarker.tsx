@@ -1,13 +1,14 @@
 import { convertToMap } from "lib/map/utils";
 import * as React from "react";
 import { Marker, Popup, Tooltip, useMap } from "react-leaflet";
-import { defaultPermissions, hasPermission } from "@snailycad/permissions";
+import { defaultPermissions, hasPermission, Permissions } from "@snailycad/permissions";
 import { Button } from "components/Button";
 import type { MapPlayer, PlayerDataEventPayload } from "types/Map";
 import { icon as leafletIcon } from "leaflet";
 import { useTranslations } from "next-intl";
 import { MapItem, useDispatchMapState } from "state/mapState";
 import { useAuth } from "context/AuthContext";
+import { Rank } from "@snailycad/types";
 
 interface Props {
   player: MapPlayer | PlayerDataEventPayload;
@@ -51,7 +52,17 @@ export function PlayerMarker({ player, handleToggle }: Props) {
       fallback: player.isEmsFd,
     });
 
-  const hasPermissions = hasEmsFdPermissions || hasLeoPermissions;
+  const hasPermissions =
+    isCADUser &&
+    hasPermission({
+      userToCheck: user,
+      permissionsToCheck: [
+        Permissions.ManageUsers,
+        ...defaultPermissions.defaultDispatchPermissions,
+      ],
+      fallback: user?.rank !== Rank.USER,
+    });
+
   const showUnitsOnly = hiddenItems[MapItem.UNITS_ONLY];
   const playerSteamId = "convertedSteamId" in player ? player.convertedSteamId : null;
 
