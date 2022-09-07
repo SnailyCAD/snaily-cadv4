@@ -5,12 +5,20 @@ import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { MapItem, useDispatchMapState } from "state/mapState";
+import { Permissions, usePermission } from "hooks/usePermission";
+import { Rank } from "@snailycad/types";
 
 export function MapActions() {
   const t = useTranslations();
   const portalRef = usePortal("MapActions");
   const { openModal } = useModal();
   const mapState = useDispatchMapState();
+
+  const { hasPermissions } = usePermission();
+  const hasManageUsersPermissions = hasPermissions(
+    [Permissions.ManageUsers],
+    (u) => u.rank !== Rank.USER,
+  );
 
   return (
     portalRef &&
@@ -22,11 +30,13 @@ export function MapActions() {
         <Button onClick={() => mapState.setItem(MapItem.CALLS)}>
           {mapState.hiddenItems[MapItem.CALLS] ? t("Leo.showCalls") : t("Leo.hideCalls")}
         </Button>
-        <Button onClick={() => mapState.setItem(MapItem.UNITS_ONLY)}>
-          {mapState.hiddenItems[MapItem.UNITS_ONLY]
-            ? t("Leo.showAllPlayers")
-            : t("Leo.showUnitsOnly")}
-        </Button>
+        {hasManageUsersPermissions ? (
+          <Button onClick={() => mapState.setItem(MapItem.UNITS_ONLY)}>
+            {mapState.hiddenItems[MapItem.UNITS_ONLY]
+              ? t("Leo.showAllPlayers")
+              : t("Leo.showUnitsOnly")}
+          </Button>
+        ) : null}
         <Button onClick={() => openModal(ModalIds.Manage911Call)}>
           {t("Calls.create911Call")}
         </Button>

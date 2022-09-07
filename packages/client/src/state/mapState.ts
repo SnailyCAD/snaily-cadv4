@@ -12,7 +12,7 @@ interface DispatchMapState {
 }
 
 export const useDispatchMapState = create<DispatchMapState>()((set) => ({
-  hiddenItems: {},
+  hiddenItems: { [MapItem.UNITS_ONLY]: true },
   setItem(item) {
     set((state) => ({
       hiddenItems: {

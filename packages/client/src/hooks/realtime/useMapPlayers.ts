@@ -49,6 +49,7 @@ export function useMapPlayers() {
       const { json } = await execute<GetDispatchPlayerBySteamIdData>({
         path: `/dispatch/players/${steamId}`,
         method: "GET",
+        noToast: true,
       });
 
       if (!json.steamId) {
