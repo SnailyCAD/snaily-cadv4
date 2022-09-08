@@ -217,6 +217,7 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                             loading="lazy"
                             width={35}
                             height={35}
+                            alt={`${suggestion.name} ${suggestion.surname}`}
                           />
                         ) : (
                           <PersonFill className="text-gray-500/60 w-[25px] h-[25px]" />

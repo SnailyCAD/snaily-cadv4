@@ -44,6 +44,7 @@ export function CitizenSuggestionsField<Suggestion extends NameSearchResult>({
               loading="lazy"
               width={30}
               height={30}
+              alt={`${suggestion.name} ${suggestion.surname}`}
             />
           ) : null}
           <p>

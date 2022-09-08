@@ -143,6 +143,7 @@ export function CreateWarrantModal({ warrant, onClose, onCreate, onUpdate }: Pro
                           loading="lazy"
                           width={30}
                           height={30}
+                          alt={`${suggestion.name} ${suggestion.surname}`}
                         />
                       ) : (
                         <PersonFill className="text-gray-500/60 w-[25px] h-[25px]" />

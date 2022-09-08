@@ -24,7 +24,7 @@ const ReauthorizeSessionModal = dynamic(
 
 const Toaster = dynamic(async () => (await import("react-hot-toast")).Toaster, { ssr: false });
 
-export default function App({ Component, router, pageProps }: AppProps) {
+export default function App({ Component, router, pageProps }: AppProps<any>) {
   const isMounted = useMounted();
   const { protocol, host } = new URL(getAPIUrl());
   const url = `${protocol}//${host}`;

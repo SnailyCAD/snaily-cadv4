@@ -210,6 +210,7 @@ export function NameSearchModal() {
                   <div className="flex items-center">
                     {suggestion.imageId ? (
                       <Image
+                        alt={`${suggestion.name} ${suggestion.surname}`}
                         className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                         draggable={false}
                         src={makeImageUrl("citizens", suggestion.imageId)!}
@@ -260,6 +261,7 @@ export function NameSearchModal() {
                             loading="lazy"
                             width={50}
                             height={50}
+                            alt={`${result.name} ${result.surname}`}
                           />
                         ) : (
                           <PersonFill className="text-gray-500/60 w-[50px] h-[50px]" />
@@ -339,6 +341,7 @@ export function NameSearchModal() {
                             loading="lazy"
                             width={100}
                             height={100}
+                            alt={`${currentResult.name} ${currentResult.surname}`}
                           />
                         </button>
                       ) : (

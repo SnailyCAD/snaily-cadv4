@@ -113,6 +113,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                         loading="lazy"
                         width={35}
                         height={35}
+                        alt={`${suggestion.name} ${suggestion.surname}`}
                       />
                     ) : null}
                     <p>
@@ -156,6 +157,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                         loading="lazy"
                         width={100}
                         height={100}
+                        alt={`${results.name} ${results.surname}`}
                       />
                     </button>
                   ) : (
