@@ -1,6 +1,6 @@
 import { Controller } from "@tsed/di";
 import { Description, Get, Post, Put } from "@tsed/schema";
-import { BodyParams, PathParams, Context } from "@tsed/platform-params";
+import { QueryParams, BodyParams, PathParams, Context } from "@tsed/platform-params";
 import { BadRequest } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { Socket } from "services/SocketService";
@@ -235,6 +235,49 @@ export class DispatchController {
     }
 
     return updated;
+  }
+
+  @Get("/players")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch,
+    permissions: [Permissions.Dispatch, Permissions.LiveMap],
+  })
+  async getCADUsersBySteamIds(
+    @QueryParams("steamIds", String) steamIds: string,
+    @Context() ctx: Context,
+  ) {
+    const users = [];
+
+    for (const steamId of steamIds.split(",")) {
+      const user = await prisma.user.findFirst({
+        where: { steamId },
+        select: {
+          username: true,
+          id: true,
+          isEmsFd: true,
+          isLeo: true,
+          isDispatch: true,
+          permissions: true,
+          rank: true,
+          steamId: true,
+        },
+      });
+
+      if (!user) {
+        continue;
+      }
+
+      const [officer, deputy] = await Promise.all([
+        getActiveOfficer({ user, ctx }).catch(() => null),
+        getActiveDeputy({ user, ctx }).catch(() => null),
+      ]);
+
+      const unit = officer ?? deputy ?? null;
+
+      users.push({ ...user, unit });
+    }
+
+    return users;
   }
 
   @Get("/players/:steamId")
