@@ -15,14 +15,9 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  experimental: {
-    images: {
-      allowFutureImage: true,
-    },
-  },
   // prettier-ignore
   images: { // start images
-    domains: ["i.imgur.com", "cdn.discordapp.com", "localhost"]
+    domains: ["i.imgur.com", "cdn.discordapp.com", "localhost", "localhost"]
   }, // end images
   // prettier-enable
   webpack(config, { webpack }) {
