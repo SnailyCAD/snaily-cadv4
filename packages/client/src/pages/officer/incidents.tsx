@@ -160,6 +160,7 @@ export default function LeoIncidents({
                       loading="lazy"
                       width={30}
                       height={30}
+                      alt={`${incident.creator.citizen.name} ${incident.creator.citizen.surname}`}
                     />
                   ) : null}
                   {incident.creator ? nameAndCallsign : t("dispatch")}

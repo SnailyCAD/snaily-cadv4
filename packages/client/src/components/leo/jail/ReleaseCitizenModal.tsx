@@ -100,6 +100,7 @@ export function ReleaseCitizenModal({ onSuccess, citizen }: Props) {
                           loading="lazy"
                           width={30}
                           height={30}
+                          alt={`${suggestion.name} ${suggestion.surname}`}
                         />
                       ) : null}
                       <p>

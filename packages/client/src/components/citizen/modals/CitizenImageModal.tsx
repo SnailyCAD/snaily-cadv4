@@ -26,6 +26,7 @@ export function CitizenImageModal({ citizen }: Props) {
           src={makeImageUrl("citizens", citizen.imageId!)!}
           width={640}
           height={640}
+          alt={`${citizen.name} ${citizen.surname}`}
         />
       </div>
     </Modal>

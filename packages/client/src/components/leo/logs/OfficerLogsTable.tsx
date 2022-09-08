@@ -58,6 +58,7 @@ export function OfficerLogsTable({ unit, asyncTable }: Props) {
                   loading="lazy"
                   width={30}
                   height={30}
+                  alt={`${logUnit.citizen.name} ${logUnit.citizen.surname}`}
                 />
               ) : null}
               {generateCallsign(logUnit)} {makeUnitName(logUnit)}
