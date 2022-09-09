@@ -74,6 +74,68 @@ test("Should merge 2 arrays -> 1 unique array without accessor", () => {
   expect(merge(arr1, arr2)).toMatchObject(["A", "B", "C", "F", "D", "E"]);
 });
 
+test("Should merge 2 arrays -> 1 unique array without accessor", () => {
+  const permissionsToGive = [
+    "Leo",
+    "ViewIncidents",
+    "ViewImpoundLot",
+    "ViewJail",
+    "ViewCallHistory",
+    "ViewDLExams",
+    "ViewWeaponExams",
+    "ViewCitizenLogs",
+  ];
+  const userPermissions = [
+    "ManageIncidents",
+    "ManageImpoundLot",
+    "ManageJail",
+    "ManageCallHistory",
+    "LiveMap",
+    "ManageDLExams",
+    "ManageWeaponExams",
+    "ManageDMV",
+    "DeleteCitizenRecords",
+    "ManageWarrants",
+    "Dispatch",
+    "ViewTaxiCalls",
+    "ManageTaxiCalls",
+    "ViewTowCalls",
+    "ManageTowCalls",
+    "ViewTowLogs",
+    "CreateBusinesses",
+  ];
+
+  expect(merge(permissionsToGive, userPermissions)).toMatchInlineSnapshot(`
+    [
+      "Leo",
+      "ViewIncidents",
+      "ViewImpoundLot",
+      "ViewJail",
+      "ViewCallHistory",
+      "ViewDLExams",
+      "ViewWeaponExams",
+      "ViewCitizenLogs",
+      "ManageIncidents",
+      "ManageImpoundLot",
+      "ManageJail",
+      "ManageCallHistory",
+      "LiveMap",
+      "ManageDLExams",
+      "ManageWeaponExams",
+      "ManageDMV",
+      "DeleteCitizenRecords",
+      "ManageWarrants",
+      "Dispatch",
+      "ViewTaxiCalls",
+      "ManageTaxiCalls",
+      "ViewTowCalls",
+      "ManageTowCalls",
+      "ViewTowLogs",
+      "CreateBusinesses",
+    ]
+  `);
+});
+
 test("Should merge 2 arrays -> 1 unique array with accessor", () => {
   const arr1 = [{ id: "A" }, { id: "B" }, { id: "C" }];
   const arr2 = [{ id: "C" }, { id: "D" }, { id: "F" }];

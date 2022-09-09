@@ -42,8 +42,9 @@ export async function handleDiscordSync(options: DiscordSyncOptions) {
   if (!options.cad?.discordRolesId || !options.user.discordId) return;
 
   const hasThreeMinTimeoutEnded =
-    !options.user.lastDiscordSyncTimestamp ||
-    THREE_MIN_TIMEOUT_MS - (Date.now() - options.user.lastDiscordSyncTimestamp.getTime()) < 0;
+    // !options.user.lastDiscordSyncTimestamp ||
+    // THREE_MIN_TIMEOUT_MS - (Date.now() - options.user.lastDiscordSyncTimestamp.getTime()) < 0;
+    true;
 
   if (hasThreeMinTimeoutEnded) {
     const updated = await prisma.user.update({

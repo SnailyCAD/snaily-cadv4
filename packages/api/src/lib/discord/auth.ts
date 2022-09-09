@@ -2,7 +2,7 @@ import { DiscordRole, Rank, User, WhitelistStatus } from "@snailycad/types";
 import { APIGuildMember, Routes, type RESTGetAPIGuildMemberResult } from "discord-api-types/v10";
 import { getRest, GUILD_ID } from "lib/discord/config";
 import { prisma } from "lib/prisma";
-import { manyToManyHelper, merge } from "utils/manyToMany";
+import { manyToManyHelper } from "utils/manyToMany";
 
 /**
  * fetch the roles from the wanting to authenticate user and append the respective permissions to the user
@@ -91,7 +91,7 @@ export async function updateMemberRolesLogin(
   }
 
   const customRoles = await getCustomRoleDiscordRolesByDiscordMember(discordMember);
-  const mergedPermissions = merge(user.permissions, permissionsToGive);
+  const mergedPermissions = [...new Set([...user.permissions, ...permissionsToGive])];
 
   const disconnectConnectArray = manyToManyHelper(
     user.roles?.map((v) => v.id) ?? [],
@@ -106,12 +106,6 @@ export async function updateMemberRolesLogin(
 
   const updateData = {
     permissions: user.rank === Rank.OWNER ? [] : mergedPermissions,
-    isLeo: discordRoles.leoRoles.length <= 0 ? undefined : isLeo,
-    isEmsFd: discordRoles.emsFdRoles.length <= 0 ? undefined : isEmsFd,
-    isSupervisor: discordRoles.leoSupervisorRoles.length <= 0 ? undefined : isSupervisor,
-    isDispatch: discordRoles.dispatchRoles.length <= 0 ? undefined : isDispatch,
-    isTow: discordRoles.towRoles.length <= 0 ? undefined : isTow,
-    isTaxi: discordRoles.taxiRoles.length <= 0 ? undefined : isTaxi,
     rank:
       user.rank !== Rank.OWNER
         ? doesDiscordMemberHaveRole(discordRoles.adminRoleId, discordMember.roles)
