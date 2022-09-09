@@ -22,7 +22,7 @@ import type { SlateElements, Text } from "./types";
 
 export function Toolbar() {
   return (
-    <RToolbar.Root className="flex gap-1 mb-5">
+    <RToolbar.Root className="flex gap-1 mb-5 overflow-x-auto">
       <RToolbar.ToolbarToggleGroup
         className="flex gap-1"
         type="multiple"

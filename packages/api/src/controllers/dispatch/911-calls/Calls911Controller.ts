@@ -43,6 +43,7 @@ export const callInclude = {
   divisions: { include: _leoProperties.division.include },
   situationCode: { include: { value: true } },
   type: { include: { value: true } },
+  gtaMapPosition: true,
 };
 
 @Controller("/911-calls")
@@ -168,6 +169,18 @@ export class Calls911Controller {
       },
       include: callInclude,
     });
+
+    if (data.gtaMapPosition) {
+      await prisma.gTAMapPosition.create({
+        data: {
+          x: data.gtaMapPosition.x,
+          y: data.gtaMapPosition.y,
+          z: data.gtaMapPosition.z,
+          heading: data.gtaMapPosition.heading,
+          Call911: { connect: { id: call.id } },
+        },
+      });
+    }
 
     const unitIds = (data.assignedUnits ?? []) as string[];
     await assignUnitsToCall({
@@ -297,6 +310,21 @@ export class Calls911Controller {
         typeId: data.type,
       },
     });
+
+    if (data.gtaMapPosition) {
+      const createUpdateData = {
+        x: data.gtaMapPosition.x,
+        y: data.gtaMapPosition.y,
+        z: data.gtaMapPosition.z,
+        heading: data.gtaMapPosition.heading,
+      };
+
+      await prisma.gTAMapPosition.upsert({
+        where: { id: String(call.gtaMapPositionId) },
+        create: createUpdateData,
+        update: createUpdateData,
+      });
+    }
 
     const unitIds = (data.assignedUnits ?? []) as string[];
 

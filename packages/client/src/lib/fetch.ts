@@ -23,7 +23,9 @@ export async function handleRequest<T = any>(
 
   const apiUrl = getAPIUrl();
   const location = typeof window !== "undefined" ? window.location : null;
-  const isDispatchUrl = (location?.pathname ?? req?.url) === "/dispatch";
+  const isDispatchUrl = ["/dispatch", "/dispatch/map"].includes(
+    String(location?.pathname ?? req?.url),
+  );
   const parsedCookie = req?.headers.cookie;
 
   try {

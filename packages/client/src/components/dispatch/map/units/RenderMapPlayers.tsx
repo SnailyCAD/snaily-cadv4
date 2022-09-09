@@ -18,13 +18,17 @@ export function RenderMapPlayers() {
     });
   }
 
+  const playerValues = React.useMemo(() => {
+    return [...players.values()];
+  }, [players]);
+
   return (
     <>
-      {players.map((player) => (
+      {[...players.values()].map((player) => (
         <PlayerMarker key={player.identifier} handleToggle={handleToggle} player={player} />
       ))}
 
-      <ActiveMapUnits setOpenItems={setOpenItems} openItems={openItems} players={players} />
+      <ActiveMapUnits setOpenItems={setOpenItems} openItems={openItems} players={playerValues} />
     </>
   );
 }

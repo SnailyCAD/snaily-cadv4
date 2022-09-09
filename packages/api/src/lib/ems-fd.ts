@@ -1,33 +1,35 @@
 import { Prisma, ShouldDoType, User } from "@prisma/client";
-import { defaultPermissions, hasPermission, Permissions } from "@snailycad/permissions";
+import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import type { Req, Context } from "@tsed/common";
-import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
+import { BadRequest, Forbidden } from "@tsed/exceptions";
 import { unitProperties } from "lib/leo/activeOfficer";
 import { getInactivityFilter } from "./leo/utils";
 import { prisma } from "./prisma";
 
-export async function getActiveDeputy(
-  req: Req,
-  user: Pick<User, "rank" | "id" | "permissions" | "isEmsFd" | "isDispatch" | "isLeo">,
-  ctx: Context,
-) {
+interface GetActiveDeputyOptions {
+  ctx: Context;
+  user: Pick<User, "rank" | "id" | "permissions">;
+  req?: Req;
+}
+
+export async function getActiveDeputy(options: GetActiveDeputyOptions) {
   // dispatch is allowed to use ems-fd routes
   let isDispatch = false;
-  if (req.headers["is-from-dispatch"]?.toString() === "true") {
+  if (options.req?.headers["is-from-dispatch"]?.toString() === "true") {
     const hasDispatchPermissions = hasPermission({
-      userToCheck: user,
-      permissionsToCheck: [Permissions.Dispatch],
+      userToCheck: options.user,
+      permissionsToCheck: defaultPermissions.defaultDispatchPermissions,
       fallback: (user) => user.isDispatch,
     });
 
     if (!hasDispatchPermissions) {
-      throw new Unauthorized("Must be dispatch to use this header.");
+      throw new Forbidden("Must be dispatch to use this header.");
     } else {
       isDispatch = true;
     }
   } else {
     const hasEmsFdPermissions = hasPermission({
-      userToCheck: user,
+      userToCheck: options.user,
       permissionsToCheck: defaultPermissions.defaultEmsFdPermissions,
       fallback: (user) => user.isEmsFd,
     });
@@ -61,14 +63,14 @@ export async function getActiveDeputy(
 
   const deputy = await prisma.emsFdDeputy.findFirst({
     where: {
-      userId: user.id,
+      userId: options.user.id,
       NOT: { OR: filters },
     },
     include: unitProperties,
   });
 
   if (!deputy) {
-    ctx.delete("activeDeputy");
+    options.ctx.delete("activeDeputy");
     throw new BadRequest("noActiveDeputy");
   }
 

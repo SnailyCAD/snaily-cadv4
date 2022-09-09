@@ -8,14 +8,14 @@ export function dataToString(data: Descendant[] | null) {
     if (Editor.isEditor(item)) continue;
 
     if (SlateElement.isElement(item) && item.type === "bulleted-list") {
-      const children = item.children.flatMap((c) => c.children).map((v) => v.text);
+      const children = item.children?.flatMap((c) => c.children).map((v) => v?.text) ?? [];
 
       string.push(children.join(" "));
       continue;
     }
 
     if (SlateElement.isElement(item)) {
-      item.children.forEach((child) => {
+      item.children?.forEach((child) => {
         string.push(child.text.trim());
       });
     }

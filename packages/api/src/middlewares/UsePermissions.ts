@@ -31,7 +31,7 @@ export class UsePermissionsMiddleware implements MiddlewareMethods {
     });
 
     if (!hasPerm) {
-      throw new Forbidden("Invalid permissions");
+      throw new Forbidden("Invalid permissions (UsePermissions)");
     }
   }
 }

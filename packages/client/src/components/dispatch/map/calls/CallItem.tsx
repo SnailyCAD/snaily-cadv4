@@ -73,7 +73,7 @@ export function CallItem({ call, hasMarker, setMarker }: CallItemProps) {
             <Infofield label={t("location")}>{call.location}</Infofield>
             <Infofield label={t("postal")}>{call.postal || common("none")}</Infofield>
             <Infofield label={t("description")}>
-              <CallDescription nonCard data={call} />
+              <CallDescription data={call} />
             </Infofield>
             <Infofield label={t("assignedUnits")}>
               {assignedUnits.length <= 0 ? common("none") : assignedUnits}

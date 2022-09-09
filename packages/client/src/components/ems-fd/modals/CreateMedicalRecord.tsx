@@ -94,6 +94,7 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
                         loading="lazy"
                         width={35}
                         height={35}
+                        alt={`${suggestion.name} ${suggestion.surname}`}
                       />
                     ) : null}
                     <p>

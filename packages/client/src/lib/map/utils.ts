@@ -1,4 +1,4 @@
-import L from "leaflet";
+import { LatLngBounds } from "leaflet";
 import type { XYZ } from "types/Map";
 
 const TILE_SIZE = 1024 as const;
@@ -17,7 +17,7 @@ export function getMapBounds(map: L.Map) {
   const southWest = map.unproject([0, h], 0);
   const northEast = map.unproject([w, 0], 0);
 
-  return new L.LatLngBounds(southWest, northEast);
+  return new LatLngBounds(southWest, northEast);
 }
 
 export function convertToMap(rawX: XYZ["x"], rawY: XYZ["y"], map: L.Map) {

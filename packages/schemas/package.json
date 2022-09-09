@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/schemas",
-  "version": "1.23.3",
+  "version": "1.24.0",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -29,7 +29,7 @@
     "typescript": "^4.8.2"
   },
   "dependencies": {
-    "zod": "^3.18.0"
+    "zod": "^3.19.0"
   },
   "tsup": {
     "entry": [

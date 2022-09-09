@@ -1,7 +1,7 @@
 import type { User, Prisma } from "@prisma/client";
-import { defaultPermissions, hasPermission, Permissions } from "@snailycad/permissions";
+import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import type { Req, Context } from "@tsed/common";
-import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
+import { BadRequest, Forbidden } from "@tsed/exceptions";
 import { userProperties } from "lib/auth/getSessionUser";
 import { prisma } from "lib/prisma";
 import { getInactivityFilter } from "./utils";
@@ -42,28 +42,30 @@ export const combinedUnitProperties = {
   officers: { include: _leoProperties },
 };
 
-export async function getActiveOfficer(
-  req: Req,
-  user: Pick<User, "rank" | "id" | "permissions" | "isEmsFd" | "isDispatch" | "isLeo">,
-  ctx: Context,
-) {
+interface GetActiveOfficerOptions {
+  ctx: Context;
+  user: Pick<User, "rank" | "id" | "permissions">;
+  req?: Req;
+}
+
+export async function getActiveOfficer(options: GetActiveOfficerOptions) {
   // dispatch is allowed to use officer routes
   let isDispatch = false;
-  if (req.headers["is-from-dispatch"]?.toString() === "true") {
+  if (options.req?.headers["is-from-dispatch"]?.toString() === "true") {
     const hasDispatchPermissions = hasPermission({
-      userToCheck: user,
-      permissionsToCheck: [Permissions.Dispatch],
+      userToCheck: options.user,
+      permissionsToCheck: defaultPermissions.defaultDispatchPermissions,
       fallback: (user) => user.isDispatch,
     });
 
     if (!hasDispatchPermissions) {
-      throw new Unauthorized("Must be dispatch to use this header.");
+      throw new Forbidden("Must be dispatch to use this header.");
     } else {
       isDispatch = true;
     }
   } else {
     const hasLeoPermissions = hasPermission({
-      userToCheck: user,
+      userToCheck: options.user,
       permissionsToCheck: defaultPermissions.defaultLeoPermissions,
       fallback: (user) => user.isLeo,
     });
@@ -80,7 +82,7 @@ export async function getActiveOfficer(
   const combinedUnit = await prisma.combinedLeoUnit.findFirst({
     where: {
       NOT: { status: { shouldDo: "SET_OFF_DUTY" } },
-      officers: { some: { userId: user.id } },
+      officers: { some: { userId: options.user.id } },
     },
     include: combinedUnitProperties,
   });
@@ -105,7 +107,7 @@ export async function getActiveOfficer(
 
   const officer = await prisma.officer.findFirst({
     where: {
-      userId: user.id,
+      userId: options.user.id,
       NOT: { OR: filters },
     },
     include: leoProperties,
@@ -114,7 +116,7 @@ export async function getActiveOfficer(
   const activeOfficerOrCombinedUnit = combinedUnit ?? officer;
 
   if (!activeOfficerOrCombinedUnit) {
-    ctx.delete("activeOfficer");
+    options.ctx.delete("activeOfficer");
     throw new BadRequest("noActiveOfficer");
   }
 

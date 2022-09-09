@@ -1,8 +1,8 @@
 import * as React from "react";
 import { useRouter } from "next/router";
 import type { cad as CAD, User } from "@snailycad/types";
-import { Loader } from "components/Loader";
-import { useIsRouteFeatureEnabled } from "hooks/auth/useIsRouteFeatureEnabled";
+import { Loader } from "../components/Loader";
+import { useIsRouteFeatureEnabled } from "../hooks/auth/useIsRouteFeatureEnabled";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 

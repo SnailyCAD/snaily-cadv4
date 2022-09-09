@@ -12,7 +12,14 @@ export function QualificationsHoverCard({ qualification }: Props) {
   const imgUrl = makeImageUrl("values", qualification.qualification.imageId);
 
   const trigger = imgUrl ? (
-    <Image loading="lazy" src={imgUrl} width={50} height={50} className="object-cover" />
+    <Image
+      alt={qualification.qualification.value.value}
+      loading="lazy"
+      src={imgUrl}
+      width={50}
+      height={50}
+      className="object-cover"
+    />
   ) : (
     <span className="cursor-default">—</span>
   );
@@ -32,6 +39,7 @@ export function QualificationsHoverCard({ qualification }: Props) {
               width={70}
               height={70}
               className="object-cover rounded-sm"
+              alt={qualification.qualification.value.value}
             />
           </div>
         ) : null}
