@@ -1,6 +1,6 @@
 import process from "node:process";
 import type { Buffer } from "node:buffer";
-import { IMGUR_REGEX } from "@snailycad/config";
+import { IMAGES_REGEX } from "@snailycad/config";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import sharp from "sharp";
 import { randomUUID } from "node:crypto";
@@ -17,7 +17,7 @@ export function validateImgurURL(image: unknown) {
     throw new ExtendedBadRequest({ image: "invalidImageURL" });
   }
 
-  if (!image.match(IMGUR_REGEX)) {
+  if (!image.match(IMAGES_REGEX)) {
     throw new ExtendedBadRequest({ image: "invalidImageURL" });
   }
 

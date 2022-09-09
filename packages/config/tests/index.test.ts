@@ -1,20 +1,22 @@
-import { IMGUR_REGEX, allowedFileExtensions } from "../src/index";
+import { IMAGES_REGEX, allowedFileExtensions } from "../src/index";
 import { test, expect } from "vitest";
 
-const ALLOWED_URL1 = "https://i.imgur.com/3yMqQbL.jpeg";
 const DISALLOWED_URL1 = "https://imgur.com/t/artcrawl/7CvDC3G";
-const DISALLOWED_URL2 = "https://i.imgur.com/taIbN7s.mp4";
 
-test(`URL must match IMGUR_REGEX: ${ALLOWED_URL1}`, () => {
-  expect(IMGUR_REGEX.test(ALLOWED_URL1)).toBe(true);
+test("URL must match IMAGES_REGEX", () => {
+  expect(
+    IMAGES_REGEX.test(
+      "https://cdn.discordapp.com/attachments/968165951465984070/1013054845843947600/screenshot.jpg",
+    ),
+  ).toBe(true);
 });
 
-test(`URL must not match IMGUR_REGEX: ${DISALLOWED_URL1}`, () => {
-  expect(IMGUR_REGEX.test(DISALLOWED_URL1)).toBe(false);
+test(`URL must not match IMAGES_REGEX: ${DISALLOWED_URL1}`, () => {
+  expect(IMAGES_REGEX.test(DISALLOWED_URL1)).toBe(false);
 });
 
-test(`URL must not match IMGUR_REGEX: ${DISALLOWED_URL2}`, () => {
-  expect(IMGUR_REGEX.test(DISALLOWED_URL2)).toBe(false);
+test("URL must match IMAGES_REGEX", () => {
+  expect(IMAGES_REGEX.test("https://i.imgur.com/3yMqQbL.jpeg")).toBe(true);
 });
 
 test("Must include image/png in `allowedFileExtensions`", () => {

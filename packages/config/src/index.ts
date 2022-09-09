@@ -16,7 +16,7 @@ export const allowedFileExtensions = [
   "image/jpg",
   "image/webp",
 ] as const;
-export const IMGUR_REGEX = /https:\/\/i.imgur.com\/[A-Za-z0-9]\w+.(jpeg|png|gif|jpg)/g;
+export const IMAGES_REGEX = /https:\/\/(i.imgur.com|cdn.discordapp.com)\/.+/gi;
 
 export * from "./socket-events";
 export * from "./routes";

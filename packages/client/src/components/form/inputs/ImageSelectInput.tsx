@@ -7,7 +7,7 @@ import { Input } from "./Input";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { CropImageModal } from "components/modal/CropImageModal";
-import { AllowedFileExtension, allowedFileExtensions, IMGUR_REGEX } from "@snailycad/config";
+import { AllowedFileExtension, allowedFileExtensions, IMAGES_REGEX } from "@snailycad/config";
 
 interface Props {
   setImage: React.Dispatch<React.SetStateAction<(File | string) | null>>;
@@ -116,7 +116,7 @@ export function validateFile(image: File | string | null, helpers: FormikHelpers
   if (typeof image === "string") {
     if (image.trim() === "") return null;
 
-    if (!image.match(IMGUR_REGEX)) {
+    if (!image.match(IMAGES_REGEX)) {
       throw helpers.setFieldError("image", "Image URL must match https://i.imgur.com/xxxxxx");
     }
 
