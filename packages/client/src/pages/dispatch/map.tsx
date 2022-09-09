@@ -22,6 +22,10 @@ const Map = dynamic(async () => (await import("components/dispatch/map/Map")).Ma
 
 type Props = Pick<DispatchPageProps, "bolos" | "calls" | "deputies" | "officers">;
 
+function activeFilter(v: EmsFdDeputy | Officer | CombinedLeoUnit) {
+  return Boolean(v.statusId && v.status?.shouldDo !== ShouldDoType.SET_OFF_DUTY);
+}
+
 export default function MapPage(props: Props) {
   useLoadValuesClientSide({
     valueTypes: [
@@ -36,24 +40,28 @@ export default function MapPage(props: Props) {
   const state = useDispatchState();
   const call911State = useCall911State();
 
+  const activeOfficers = React.useMemo(
+    () => [...props.officers].filter(activeFilter),
+    [props.officers],
+  );
+
+  const activeDeputies = React.useMemo(
+    () => [...props.deputies].filter(activeFilter),
+    [props.deputies],
+  );
+
   React.useEffect(() => {
     call911State.setCalls(props.calls.calls);
     state.setBolos(props.bolos);
+
     state.setAllOfficers(props.officers);
     state.setAllDeputies(props.deputies);
-
-    function activeFilter(v: EmsFdDeputy | Officer | CombinedLeoUnit) {
-      return Boolean(v.statusId && v.status?.shouldDo !== ShouldDoType.SET_OFF_DUTY);
-    }
-
-    const activeOfficers = [...props.officers].filter(activeFilter);
-    const activeDeputies = [...props.deputies].filter(activeFilter);
 
     state.setActiveDeputies(activeDeputies);
     state.setActiveOfficers(activeOfficers);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props]);
+  }, [props, activeDeputies, activeOfficers]);
 
   if (!user || !cad) {
     return null;

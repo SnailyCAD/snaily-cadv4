@@ -23,7 +23,7 @@ export function useMapPlayers() {
 
   const { cad } = useAuth();
   const url = getCADURL(cad);
-  const { execute } = useFetch();
+  const { execute, state } = useFetch();
 
   const getCADUsers = React.useCallback(
     async (steamIds: (Player & { convertedSteamId?: string | null })[]) => {
@@ -75,14 +75,17 @@ export function useMapPlayers() {
   const onPlayerData = React.useCallback(
     async (data: PlayerDataEvent) => {
       const usersToFetch = [];
+      const map = new Map(players);
 
       for (const player of data.payload) {
-        if (players.has(player.identifier)) {
+        const previous = players.get(player.identifier);
+        if (previous) {
+          map.set(player.identifier, { ...previous, ...player });
           continue;
         }
 
         if (!player.identifier || !player.identifier.startsWith("steam:")) {
-          players.set(player.identifier, player);
+          map.set(player.identifier, player);
           continue;
         }
 
@@ -91,9 +94,13 @@ export function useMapPlayers() {
         usersToFetch.push({ ...player, convertedSteamId });
       }
 
+      setPlayers(map);
+
+      if (state === "loading") return;
+
       await getCADUsers(usersToFetch);
     },
-    [getCADUsers, players],
+    [getCADUsers, state, players],
   );
 
   const onPlayerLeft = React.useCallback((data: PlayerLeftEvent) => {
