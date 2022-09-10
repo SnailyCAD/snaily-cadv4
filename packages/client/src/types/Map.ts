@@ -1,5 +1,5 @@
 import type { EmsFdDeputy, Officer, User } from "@snailycad/types";
-import type { PointTuple, LatLngLiteral } from "leaflet";
+import type { PointTuple, LatLngLiteral, Icon } from "leaflet";
 
 export interface Player {
   Weapon?: string;
@@ -41,7 +41,7 @@ export interface Blip {
   pos: LatLngLiteral;
   rawPos?: XYZ;
   type: number;
-  icon: L.Icon | undefined;
+  icon?: Icon | undefined;
 }
 
 export interface MarkerType {
