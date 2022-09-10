@@ -28,6 +28,9 @@ const nextConfig = {
     );
     return config;
   },
+  sentry: {
+    hideSourceMaps: false,
+  },
 }; // end config
 
 const withSentryNextConfig = withSentryConfig?.(nextConfig, {
@@ -37,6 +40,7 @@ const withSentryNextConfig = withSentryConfig?.(nextConfig, {
   authToken: "bce2b8a2e79f4336a3b115f171e675ab639d2d1f809a40919ca4493257a9c0e0",
   release: "default",
   silent: true,
+  hideSourceMaps: false,
 });
 
 /** @type {typeof nextConfig} */

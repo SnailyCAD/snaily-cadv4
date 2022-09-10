@@ -16,7 +16,7 @@
       "cache": false
     },
     "build": {
-      "dependsOn": ["^copy-env", "^create-images-domain", "^validate-locales", "^build"],
+      "dependsOn": ["copy-env", "create-images-domain", "validate-locales", "^build"],
       "outputs": [".next/**", "dist/**"],
       "cache": false
     },
