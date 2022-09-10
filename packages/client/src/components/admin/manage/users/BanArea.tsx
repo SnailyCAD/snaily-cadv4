@@ -44,7 +44,7 @@ export function BanArea({ user, setUser }: Props) {
   const validate = handleValidate(BAN_SCHEMA);
 
   return (
-    <div className="p-4 mt-10 card rounded-md">
+    <div className="p-4 mt-5 card dark:border rounded-md">
       <h1 className="text-2xl font-semibold">Ban area</h1>
 
       {user.banned && user.rank !== "OWNER" ? (

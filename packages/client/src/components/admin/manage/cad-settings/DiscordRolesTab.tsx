@@ -122,8 +122,8 @@ export function DiscordRolesTab() {
         </div>
 
         <p className="my-3 text-neutral-700 dark:text-gray-400 max-w-2xl">
-          When a user authenticates via Discord, the respective permissions will granted to that
-          user from their Discord roles
+          When a user authenticates via Discord, the respective permissions will be granted to that
+          user from their Discord roles.
         </p>
       </header>
 

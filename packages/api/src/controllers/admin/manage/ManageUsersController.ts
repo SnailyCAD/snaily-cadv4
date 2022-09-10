@@ -28,7 +28,6 @@ import { genSaltSync, hashSync } from "bcrypt";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import { updateMemberRoles } from "lib/discord/admin";
 import { isDiscordIdInUse } from "utils/discord";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { isFeatureEnabled } from "lib/cad";
@@ -186,7 +185,6 @@ export class ManageUsersController {
   async updateUserRolesById(
     @PathParams("id") userId: string,
     @BodyParams() body: unknown,
-    @Context("cad") cad: { discordRolesId: string | null },
   ): Promise<APITypes.PutManageUserByIdRolesData> {
     const data = validateSchema(ROLES_SCHEMA, body);
     const user = await prisma.user.findUnique({ where: { id: userId }, include: { roles: true } });
@@ -215,10 +213,6 @@ export class ManageUsersController {
       select: manageUsersSelect(false),
     });
 
-    if (updated.discordId) {
-      await updateMemberRoles(updated, cad.discordRolesId);
-    }
-
     return updated;
   }
 
@@ -228,7 +222,6 @@ export class ManageUsersController {
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
   async updateUserById(
-    @Context("cad") cad: { discordRolesId: string | null },
     @PathParams("id") userId: string,
     @BodyParams() body: unknown,
   ): Promise<APITypes.PutManageUserByIdData> {
@@ -264,10 +257,6 @@ export class ManageUsersController {
       },
       select: manageUsersSelect(false),
     });
-
-    if (updated.discordId) {
-      await updateMemberRoles(updated, cad.discordRolesId);
-    }
 
     return updated;
   }
@@ -397,7 +386,6 @@ export class ManageUsersController {
   async acceptOrDeclineUser(
     @PathParams("id") userId: string,
     @PathParams("type") type: "accept" | "decline",
-    @Context("cad") cad: cad & { discordRolesId: string | null },
   ): Promise<APITypes.PostManageUserAcceptDeclineData> {
     if (!["accept", "decline"].includes(type)) {
       throw new BadRequest("invalidType");
@@ -416,16 +404,10 @@ export class ManageUsersController {
     }
 
     const whitelistStatus = type === "accept" ? WhitelistStatus.ACCEPTED : WhitelistStatus.DECLINED;
-    const updated = await prisma.user.update({
-      where: {
-        id: user.id,
-      },
+    await prisma.user.update({
+      where: { id: user.id },
       data: { whitelistStatus },
     });
-
-    if (updated.discordId && cad.whitelisted) {
-      await updateMemberRoles(updated, cad.discordRolesId);
-    }
 
     return true;
   }

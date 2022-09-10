@@ -14,7 +14,6 @@ import { useAuth } from "context/AuthContext";
 import { Button, buttonVariants } from "components/Button";
 import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
-import { Toggle } from "components/form/Toggle";
 import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
 import { Input } from "components/form/inputs/Input";
@@ -104,7 +103,7 @@ export default function ManageCitizens(props: Props) {
       <div className="mt-5">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleChange, setFieldValue, isValid, values, errors }) => (
-            <Form>
+            <Form className="p-4 rounded-md dark:border card">
               <FormField errorMessage={errors.rank} label="Rank">
                 <Select
                   name="rank"
@@ -127,90 +126,28 @@ export default function ManageCitizens(props: Props) {
                 </small>
               </FormField>
 
-              {values.useOldPerms ? (
-                <>
-                  <FormRow flexLike className="mt-5">
-                    <FormField errorMessage={errors.isLeo} label="Leo Access">
-                      <Toggle name="isLeo" onCheckedChange={handleChange} value={values.isLeo} />
-                    </FormField>
-                    <FormField errorMessage={errors.isSupervisor} label="LEO Supervisor">
-                      <Toggle
-                        name="isSupervisor"
-                        onCheckedChange={handleChange}
-                        value={values.isSupervisor}
-                      />
-                    </FormField>
-                    <FormField errorMessage={errors.isDispatch} label="Dispatch Access">
-                      <Toggle
-                        name="isDispatch"
-                        onCheckedChange={handleChange}
-                        value={values.isDispatch}
-                      />
-                    </FormField>
-                    <FormField errorMessage={errors.isEmsFd} label="EMS-FD Access">
-                      <Toggle
-                        name="isEmsFd"
-                        onCheckedChange={handleChange}
-                        value={values.isEmsFd}
-                      />
-                    </FormField>
-                    <FormField errorMessage={errors.isTow} label="Tow Access">
-                      <Toggle name="isTow" onCheckedChange={handleChange} value={values.isTow} />
-                    </FormField>
-                    <FormField errorMessage={errors.isTaxi} label="Taxi Access">
-                      <Toggle name="isTaxi" onCheckedChange={handleChange} value={values.isTaxi} />
-                    </FormField>
-                  </FormRow>
-
-                  <Button
-                    className="my-4"
-                    type="button"
-                    onClick={() => setFieldValue("useOldPerms", false)}
-                  >
-                    {t("useNewPermissions")}
-                  </Button>
-                </>
-              ) : (
-                <SettingsFormField
-                  description="A detailed permissions system where you can assign many actions to a user."
-                  label={
-                    <>
-                      <span className="p-0.5 px-1 rounded-md bg-gradient-to-tr from-[#1150d4] to-[#a245fc] text-sm mr-2 uppercase">
-                        new
-                      </span>
-                      <span>{t("detailedPermissions")}</span>
-                    </>
-                  }
+              <SettingsFormField
+                description="A detailed permissions system where you can assign many actions to a user."
+                label={t("detailedPermissions")}
+              >
+                <Button
+                  disabled={user.rank === Rank.OWNER}
+                  type="button"
+                  onClick={() => openModal(ModalIds.ManagePermissions)}
                 >
-                  <Button
-                    disabled={user.rank === Rank.OWNER}
-                    type="button"
-                    onClick={() => openModal(ModalIds.ManagePermissions)}
-                  >
-                    {t("managePermissions")}
-                  </Button>
+                  {t("managePermissions")}
+                </Button>
 
-                  <Button
-                    variant="cancel"
-                    className="ml-2 text-base"
-                    disabled={user.rank === Rank.OWNER}
-                    type="button"
-                    onClick={() => openModal(ModalIds.ManageRoles)}
-                  >
-                    {t("manageRoles")}
-                  </Button>
-
-                  <Button
-                    disabled={user.rank === Rank.OWNER}
-                    variant="cancel"
-                    className="ml-2 text-base"
-                    type="button"
-                    onClick={() => openModal(ModalIds.AlertUseOldPermissions)}
-                  >
-                    {t("useOldPermissions")}
-                  </Button>
-                </SettingsFormField>
-              )}
+                <Button
+                  variant="cancel"
+                  className="ml-2 text-base"
+                  disabled={user.rank === Rank.OWNER}
+                  type="button"
+                  onClick={() => openModal(ModalIds.ManageRoles)}
+                >
+                  {t("manageRoles")}
+                </Button>
+              </SettingsFormField>
 
               <FormRow>
                 <FormField optional errorMessage={errors.steamId} label="Steam ID">
@@ -222,13 +159,13 @@ export default function ManageCitizens(props: Props) {
                 </FormField>
               </FormRow>
 
-              <div className="flex justify-end">
+              <div className="flex justify-end mt-3">
                 <Link href="/admin/manage/users">
                   <a
                     href="/admin/manage/users"
                     className={classNames(buttonVariants.cancel, "p-1 px-4 rounded-md")}
                   >
-                    {common("cancel")}
+                    {common("goBack")}
                   </a>
                 </Link>
                 <Button
@@ -262,9 +199,6 @@ export default function ManageCitizens(props: Props) {
           )}
         </Formik>
 
-        <ManagePermissionsModal onUpdate={(user) => setUser(user)} user={user} />
-        <ManageRolesModal onUpdate={(user) => setUser(user)} roles={props.roles} user={user} />
-
         {USER_API_TOKENS ? <ApiTokenArea user={user} /> : null}
 
         {user.rank !== Rank.OWNER ? (
@@ -278,6 +212,9 @@ export default function ManageCitizens(props: Props) {
           </>
         ) : null}
       </div>
+
+      <ManagePermissionsModal onUpdate={(user) => setUser(user)} user={user} />
+      <ManageRolesModal onUpdate={(user) => setUser(user)} roles={props.roles} user={user} />
     </AdminLayout>
   );
 }
