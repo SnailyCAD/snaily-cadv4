@@ -73,6 +73,7 @@ export function useMapPlayers() {
         }
 
         for (const player of payload) {
+          if (!player.identifier) continue;
           newMap.set(player.identifier, { ...player, ...user });
         }
       }
