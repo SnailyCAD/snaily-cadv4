@@ -69,11 +69,12 @@ export async function updateMemberRolesLogin(
   for (const _key in grantablePermissions) {
     const key = _key as keyof typeof grantablePermissions;
     const { value, permissions } = grantablePermissions[key];
+    const correctedPermissions = permissions.map((p) => p.replace(/ +/g, ""));
 
     if (value === true) {
-      permissions.length && permissionsToGive.push(...permissions);
+      correctedPermissions.length && permissionsToGive.push(...correctedPermissions);
     } else {
-      user.permissions = user.permissions.filter((v) => !permissions.includes(v));
+      user.permissions = user.permissions.filter((v) => !correctedPermissions.includes(v));
     }
   }
 
