@@ -11,8 +11,9 @@ export interface ModalProps {
   dialogClassName?: string;
   isOpen: boolean;
   className?: string;
-  onClose(): void;
   isAlert?: boolean;
+  extraActions?: React.ReactNode;
+  onClose(): void;
 }
 
 export function Modal({
@@ -23,6 +24,7 @@ export function Modal({
   className,
   isAlert,
   dialogClassName,
+  extraActions,
   onClose,
 }: ModalProps) {
   const { canBeClosed } = useModal();
@@ -81,18 +83,21 @@ export function Modal({
             >
               <Dialog.Title
                 as="h3"
-                className="flex items-center justify-between mb-2 text-xl font-semibold text-gray-900 dark:text-white"
+                className="flex items-center justify-between mb-2 text-2xl font-semibold text-gray-900 dark:text-white"
               >
                 {title}
 
-                <button
-                  type="button"
-                  aria-label="Close Modal"
-                  onClick={onClose}
-                  className="p-1.5 transition-all cursor-pointer rounded-lg hover:bg-gray-200 dark:hover:bg-secondary"
-                >
-                  <X width={25} height={25} />
-                </button>
+                <div className="flex items-center gap-2">
+                  {extraActions}
+                  <button
+                    type="button"
+                    aria-label="Close Modal"
+                    onClick={onClose}
+                    className="p-1.5 transition-all cursor-pointer rounded-lg hover:bg-gray-200 dark:hover:bg-secondary"
+                  >
+                    <X width={25} height={25} />
+                  </button>
+                </div>
               </Dialog.Title>
 
               {children}

@@ -1,6 +1,10 @@
 import { Controller } from "@tsed/di";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
-import { CALL_911_SCHEMA, LINK_INCIDENT_TO_CALL_SCHEMA } from "@snailycad/schemas";
+import {
+  UPDATE_ASSIGNED_UNIT_SCHEMA,
+  CALL_911_SCHEMA,
+  LINK_INCIDENT_TO_CALL_SCHEMA,
+} from "@snailycad/schemas";
 import { HeaderParams, BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -564,6 +568,58 @@ export class Calls911Controller {
     this.socket.emitUpdate911Call(officerOrDeputyToUnit(updated));
 
     return officerOrDeputyToUnit(updated);
+  }
+
+  @Put("/:callId/assigned-units/:assignedUnitId")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
+    permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
+  })
+  async updateAssignedUnit(
+    @PathParams("callId") callId: string,
+    @PathParams("assignedUnitId") assignedUnitId: string,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PUT911CallAssignedUnit> {
+    const data = validateSchema(UPDATE_ASSIGNED_UNIT_SCHEMA, body);
+
+    const call = await prisma.call911.findUnique({
+      where: { id: callId },
+    });
+
+    if (!call) {
+      throw new NotFound("callNotFound");
+    }
+
+    const assignedUnit = await prisma.assignedUnit.findUnique({
+      where: { id: assignedUnitId },
+    });
+
+    if (!assignedUnit) {
+      throw new NotFound("unitNotFound");
+    }
+
+    const existingPrimaryUnit = await prisma.assignedUnit.findFirst({
+      where: { call911Id: call.id, isPrimary: true, NOT: { id: assignedUnit.id } },
+    });
+
+    if (existingPrimaryUnit) {
+      throw new BadRequest("alreadyHasPrimaryUnit");
+    }
+
+    const updatedCall = await prisma.call911.update({
+      where: { id: call.id },
+      data: {
+        assignedUnits: {
+          update: {
+            where: { id: assignedUnit.id },
+            data: { isPrimary: data.isPrimary },
+          },
+        },
+      },
+      include: callInclude,
+    });
+
+    return officerOrDeputyToUnit(updatedCall);
   }
 
   private async endInactiveCalls(updatedAt: Date) {
