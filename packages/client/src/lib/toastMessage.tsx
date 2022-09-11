@@ -2,7 +2,7 @@ import { X } from "react-bootstrap-icons";
 import toast, { type ToastOptions, ErrorIcon, CheckmarkIcon } from "react-hot-toast";
 
 interface Options extends ToastOptions {
-  message: string;
+  message: string | React.ReactNode;
   title?: string;
   icon?: "success" | "error" | null;
 }
