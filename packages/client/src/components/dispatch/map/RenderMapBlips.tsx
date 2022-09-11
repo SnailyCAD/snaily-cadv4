@@ -77,7 +77,7 @@ async function generateBlips(map: L.Map) {
   return blips;
 }
 
-function generateMarkerTypes() {
+export function generateMarkerTypes() {
   const markerTypes: Record<number, MarkerType> = {};
 
   let blipCss = `.blip {
