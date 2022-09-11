@@ -36,6 +36,10 @@ export function UnitItem({ setTempUnit, player }: CallItemProps) {
     openModal(ModalIds.ManageUnit);
   }
 
+  function handleShowOnMap() {
+    player.ref?.togglePopup();
+  }
+
   return (
     <div className="p-2">
       <Accordion.Item value={player.id}>
@@ -56,15 +60,16 @@ export function UnitItem({ setTempUnit, player }: CallItemProps) {
         <Accordion.Content className="pt-2 text-base text-neutral-800 dark:text-white">
           <div className="map-column">
             <Infofield label={t("status")}>{player.unit?.status?.value.value}</Infofield>
-            <Infofield label={t("user")}>{player.username}</Infofield>
+            <Infofield label={common("user")}>{player.username}</Infofield>
             {RADIO_CHANNEL_MANAGEMENT ? (
               <Infofield className="flex !flex-row gap-2 mt-1" label={t("radioChannel")}>
                 <UnitRadioChannelModal unit={player.unit!} />
               </Infofield>
             ) : null}
 
-            <div className="flex flex-row gap-2 mt-3">
+            <div className="flex flex-row gap-2 mt-5">
               <Button onClick={() => handleStatusClick()}>{common("manage")}</Button>
+              <Button onClick={() => handleShowOnMap()}>Toggle unit on map</Button>
             </div>
           </div>
         </Accordion.Content>

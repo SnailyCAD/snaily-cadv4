@@ -31,6 +31,8 @@ export function useMapPlayers() {
       steamIds: (Player & { convertedSteamId?: string | null })[],
       payload: PlayerDataEventPayload[],
     ) => {
+      let _prevPlayerData = prevPlayerData;
+
       const { json } =
         steamIds.length <= 0
           ? { json: prevPlayerData }
@@ -43,6 +45,7 @@ export function useMapPlayers() {
             });
 
       if (steamIds.length >= 1) {
+        _prevPlayerData = json;
         setPrevPlayerData(json);
       }
 
@@ -50,7 +53,7 @@ export function useMapPlayers() {
 
       for (const player of payload) {
         const steamId = steamIds.find((v) => v.identifier === player.identifier)?.convertedSteamId;
-        const user = prevPlayerData.find((v) => v.steamId === steamId);
+        const user = _prevPlayerData.find((v) => v.steamId === steamId);
         const existing = players.get(player.identifier);
 
         if (existing) {
@@ -72,15 +75,13 @@ export function useMapPlayers() {
           continue;
         }
 
-        for (const player of payload) {
-          if (!player.identifier) continue;
-          newMap.set(player.identifier, { ...player, ...user });
-        }
+        if (!player.identifier) continue;
+        newMap.set(player.identifier, { convertedSteamId: steamId, ...player, ...user });
       }
 
       setPlayers(newMap);
     },
-    [players], // eslint-disable-line react-hooks/exhaustive-deps
+    [players, prevPlayerData], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   const onPlayerData = React.useCallback(

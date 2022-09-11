@@ -73,7 +73,12 @@ export function PlayerMarker({ player, handleToggle }: Props) {
   }
 
   return (
-    <Marker icon={PLAYER_ICON} key={player.identifier} position={pos}>
+    <Marker
+      ref={(ref) => (player.ref = ref)}
+      icon={PLAYER_ICON}
+      key={player.identifier}
+      position={pos}
+    >
       <Tooltip direction="top">{player.name}</Tooltip>
 
       <Popup minWidth={500}>

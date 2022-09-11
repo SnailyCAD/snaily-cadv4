@@ -71,11 +71,15 @@ function makeActiveUnits({ players, activeOfficers, activeDeputies }: ActiveUnit
 
   for (const activeUnit of [..._activeOfficers, ...activeDeputies]) {
     const steamId = activeUnit.user.steamId;
-    const player = players.find((v) => "steamId" in v && v.steamId === steamId);
+    const player = players.find(
+      (v) =>
+        ("steamId" in v && v.steamId === steamId) ||
+        ("convertedSteamId" in v && v.convertedSteamId === steamId),
+    );
 
     if (!player || !("steamId" in player)) continue;
 
-    const existing = activeUnits.some((v) => v.steamId === player.steamId);
+    const existing = activeUnits.some((v) => v.steamId === player.convertedSteamId);
 
     if (player && !existing) {
       activeUnits.push({ ...player, unit: activeUnit });
