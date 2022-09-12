@@ -12,7 +12,6 @@ export interface ModalProps {
   isOpen: boolean;
   className?: string;
   isAlert?: boolean;
-  extraActions?: React.ReactNode;
   onClose(): void;
 }
 
@@ -24,7 +23,6 @@ export function Modal({
   className,
   isAlert,
   dialogClassName,
-  extraActions,
   onClose,
 }: ModalProps) {
   const { canBeClosed } = useModal();
@@ -87,17 +85,14 @@ export function Modal({
               >
                 {title}
 
-                <div className="flex items-center gap-2">
-                  {extraActions}
-                  <button
-                    type="button"
-                    aria-label="Close Modal"
-                    onClick={onClose}
-                    className="p-1.5 transition-all cursor-pointer rounded-lg hover:bg-gray-200 dark:hover:bg-secondary"
-                  >
-                    <X width={25} height={25} />
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  aria-label="Close Modal"
+                  onClick={onClose}
+                  className="p-1.5 transition-all cursor-pointer rounded-lg hover:bg-gray-200 dark:hover:bg-secondary"
+                >
+                  <X width={25} height={25} />
+                </button>
               </Dialog.Title>
 
               {children}
