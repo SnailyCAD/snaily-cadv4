@@ -168,8 +168,15 @@ export class AdminManageCitizensController {
     @BodyParams() body: unknown,
   ): Promise<APITypes.PutManageCitizenByIdData> {
     const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
+    const citizen = await prisma.citizen.findUnique({
+      where: { id },
+    });
 
-    const citizen = await prisma.citizen.update({
+    if (!citizen) {
+      throw new NotFound("citizenNotFound");
+    }
+
+    const updatedCitizen = await prisma.citizen.update({
       where: { id },
       data: {
         address: data.address,
@@ -187,7 +194,9 @@ export class AdminManageCitizensController {
         weaponLicenseId: data.weaponLicense || undefined,
         pilotLicenseId: data.pilotLicense || undefined,
         phoneNumber: data.phoneNumber,
-        socialSecurityNumber: generateString(9, { numbersOnly: true }),
+        socialSecurityNumber:
+          data.socialSecurityNumber ||
+          (!citizen.socialSecurityNumber ? generateString(9, { numbersOnly: true }) : undefined),
         occupation: data.occupation,
         additionalInfo: data.additionalInfo,
         imageId: validateImgurURL(data.image),
@@ -197,7 +206,7 @@ export class AdminManageCitizensController {
       include: citizenInclude,
     });
 
-    return citizen;
+    return updatedCitizen;
   }
 
   @Delete("/:id")
