@@ -47,53 +47,6 @@ test("Should return correct many-to-many array ({id: Number}) for Prisma -> addi
   `);
 });
 
-test("Should return correct many-to-many array ({id: Number}) for Prisma -> deletion", () => {
-  const currentArr = [{ id: 1 }, { id: 2 }, { id: 3 }];
-  const newArr = [{ id: 3 }];
-
-  expect(manyToManyHelper(currentArr, newArr, { accessor: "id", mode: "delete-create" }))
-    .toMatchInlineSnapshot(`
-    [
-      {
-        "delete": {
-          "id": 1,
-        },
-      },
-      {
-        "delete": {
-          "id": 2,
-        },
-      },
-    ]
-  `);
-});
-
-test("Should return correct many-to-many array ({id: Number}) for Prisma -> create & deletion", () => {
-  const currentArr = [{ id: 1 }, { id: 2 }, { id: 3 }];
-  const newArr = [{ id: 3 }, { id: 4 }];
-
-  expect(manyToManyHelper(currentArr, newArr, { accessor: "id", mode: "delete-create" }))
-    .toMatchInlineSnapshot(`
-    [
-      {
-        "delete": {
-          "id": 1,
-        },
-      },
-      {
-        "delete": {
-          "id": 2,
-        },
-      },
-      {
-        "create": {
-          "id": 4,
-        },
-      },
-    ]
-  `);
-});
-
 test("Should return correct many-to-many array (id: String) for Prisma -> addition & disconnect", () => {
   const currentArr = ["a", "b", "c"];
   const newArr = ["a", "b", "d"];

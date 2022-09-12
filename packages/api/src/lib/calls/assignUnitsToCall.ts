@@ -18,13 +18,12 @@ export async function assignUnitsToCall({ socket, call, unitIds, maxAssignmentsT
   const deleteCreateArr = manyToManyHelper(
     call.assignedUnits.map((u) => String(u.officerId || u.emsFdDeputyId || u.combinedLeoId)),
     unitIds.map((v) => v.id),
-    { mode: "delete-create" },
   );
 
   await Promise.all(
     deleteCreateArr.map(async (data) => {
-      const deletionId = "delete" in data && data.delete?.id;
-      const creationId = "create" in data && data.create?.id;
+      const deletionId = "disconnect" in data && data.disconnect?.id;
+      const creationId = "connect" in data && data.connect?.id;
 
       if (deletionId) {
         return handleDeleteAssignedUnit({ unitId: deletionId, call });
