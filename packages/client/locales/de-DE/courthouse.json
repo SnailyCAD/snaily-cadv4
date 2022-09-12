@@ -19,6 +19,7 @@
     "manageCourtEntry": "Gerichtseintrag verwalten",
     "caseNumber": "Fallnummer",
     "title": "Titel",
+    "description": "Beschreibung",
     "dates": "Daten",
     "addDate": "Datum hinzufügen",
     "manageCourtDate": "Gerichtstermin verwalten",

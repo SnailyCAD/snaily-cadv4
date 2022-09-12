@@ -152,6 +152,7 @@
     "updateAvailable": "Eine neue Version von CAD ist verfügbar.",
     "updateAvailableInfo": "Eine neue Version von CAD ist verfügbar. Bitte laden Sie sich die neue Version herunter: https://github.com/SnailyCAD/snaily-cadv4",
     "serialNumberInUse": "Die Seriennummer ist bereits in Gebrauch.",
-    "vinNumberInUse": "VIN-Nummer ist bereits in Gebrauch."
+    "vinNumberInUse": "VIN-Nummer ist bereits in Gebrauch.",
+    "alreadyHasPrimaryUnit": "Dieser Anruf hat bereits eine primäre Einheit."
   }
 }
