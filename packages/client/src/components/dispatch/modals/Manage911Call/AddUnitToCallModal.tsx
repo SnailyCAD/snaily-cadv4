@@ -9,7 +9,7 @@ import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { Select } from "components/form/Select";
-import { Full911Call, useDispatchState } from "state/dispatch/dispatchState";
+import { useDispatchState } from "state/dispatch/dispatchState";
 import { makeUnitName } from "lib/utils";
 import type { CombinedLeoUnit, EmsFdDeputy } from "@snailycad/types";
 import { isUnitCombined } from "@snailycad/utils";
@@ -19,17 +19,17 @@ import type { Put911CallByIdData } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call911State";
 
 interface Props {
-  call: Full911Call;
   onClose?(): void;
 }
 
-export function AddUnitToCallModal({ call, onClose }: Props) {
+export function AddUnitToCallModal({ onClose }: Props) {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
   const { allOfficers, allDeputies, activeDeputies, activeOfficers } = useDispatchState();
   const { generateCallsign } = useGenerateCallsign();
   const call911State = useCall911State();
+  const call = call911State.currentlySelectedCall!;
 
   const allUnits = [...allOfficers, ...allDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
   const units = [...activeOfficers, ...activeDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];

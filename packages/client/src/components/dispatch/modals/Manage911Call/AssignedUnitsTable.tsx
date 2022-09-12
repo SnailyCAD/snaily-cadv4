@@ -17,11 +17,9 @@ import { AddUnitToCallModal } from "./AddUnitToCallModal";
 import { Loader } from "components/Loader";
 import { FullDate } from "components/shared/FullDate";
 
-interface Props {
-  call: Full911Call;
-}
-
-export function AssignedUnitsTable({ call }: Props) {
+export function AssignedUnitsTable() {
+  const call911State = useCall911State();
+  const call = call911State.currentlySelectedCall!;
   const assignedUnits = call.assignedUnits ?? [];
   const { generateCallsign } = useGenerateCallsign();
   const tableState = useTableState();
@@ -29,7 +27,6 @@ export function AssignedUnitsTable({ call }: Props) {
   const t = useTranslations("Calls");
   const { openModal } = useModal();
   const { state, execute } = useFetch();
-  const call911State = useCall911State();
 
   async function handleUnassignFromCall(unit: AssignedUnit) {
     const newAssignedUnits = [...call.assignedUnits]
@@ -80,42 +77,49 @@ export function AssignedUnitsTable({ call }: Props) {
       <Table
         features={{ isWithinCard: true }}
         tableState={tableState}
-        data={assignedUnits.map((unit) => {
-          const callsignAndName =
-            unit.unit && `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
+        data={assignedUnits
+          .sort((a) => {
+            return a.isPrimary ? -1 : 1;
+          })
+          .map((unit) => {
+            const callsignAndName =
+              unit.unit && `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
 
-          const color = unit.unit?.status?.color;
-          const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
+            const color = unit.unit?.status?.color;
+            const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
 
-          return {
-            rowProps: { style: { background: !useDot ? color ?? undefined : undefined } },
-            id: unit.id,
-            unit: callsignAndName,
-            status: (
-              <span className="flex items-center">
-                {useDot && color ? (
-                  <span style={{ background: color }} className="block w-3 h-3 mr-2 rounded-full" />
-                ) : null}
-                {unit.unit?.status?.value?.value}
-              </span>
-            ),
-            role: <RoleColumn unit={unit} />,
-            updatedAt: <FullDate>{unit.updatedAt}</FullDate>,
-            actions: (
-              <Button
-                className="flex items-center gap-2"
-                disabled={state === "loading"}
-                onClick={() => handleUnassignFromCall(unit)}
-                size="xs"
-                variant="danger"
-                type="button"
-              >
-                {state === "loading" ? <Loader /> : null}
-                {t("unassign")}
-              </Button>
-            ),
-          };
-        })}
+            return {
+              rowProps: { style: { background: !useDot ? color ?? undefined : undefined } },
+              id: unit.id,
+              unit: callsignAndName,
+              status: (
+                <span className="flex items-center">
+                  {useDot && color ? (
+                    <span
+                      style={{ background: color }}
+                      className="block w-3 h-3 mr-2 rounded-full"
+                    />
+                  ) : null}
+                  {unit.unit?.status?.value?.value}
+                </span>
+              ),
+              role: <RoleColumn unit={unit} />,
+              updatedAt: <FullDate>{unit.updatedAt}</FullDate>,
+              actions: (
+                <Button
+                  className="flex items-center gap-2"
+                  disabled={state === "loading"}
+                  onClick={() => handleUnassignFromCall(unit)}
+                  size="xs"
+                  variant="danger"
+                  type="button"
+                >
+                  {state === "loading" ? <Loader /> : null}
+                  {t("unassign")}
+                </Button>
+              ),
+            };
+          })}
         columns={[
           { header: "Unit", accessorKey: "unit" },
           { header: "Status", accessorKey: "status" },
@@ -125,7 +129,7 @@ export function AssignedUnitsTable({ call }: Props) {
         ]}
       />
 
-      <AddUnitToCallModal call={call} />
+      <AddUnitToCallModal />
     </div>
   );
 }
@@ -141,9 +145,7 @@ function RoleColumn({ unit }: RoleColumnProps) {
 
   React.useEffect(() => {
     setIsPrimary(String(unit.isPrimary ?? "false"));
-  }, [unit.isPrimary]);
-
-  console.log({ isPrimary: unit.isPrimary });
+  }, [unit]);
 
   async function handleUpdatePrimary(value: string) {
     if (!currentlySelectedCall) return;

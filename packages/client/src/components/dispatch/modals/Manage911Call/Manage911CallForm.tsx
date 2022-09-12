@@ -235,7 +235,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
                 />
               </FormField>
 
-              {call ? <AssignedUnitsTable call={call} /> : null}
+              {call ? <AssignedUnitsTable /> : null}
             </>
           )}
 

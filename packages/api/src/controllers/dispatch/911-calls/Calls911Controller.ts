@@ -560,19 +560,19 @@ export class Calls911Controller {
       throw new NotFound("callNotFound");
     }
 
+    if (data.isPrimary) {
+      await prisma.assignedUnit.updateMany({
+        where: { call911Id: call.id },
+        data: { isPrimary: false },
+      });
+    }
+
     const assignedUnit = await prisma.assignedUnit.findUnique({
       where: { id: assignedUnitId },
     });
 
     if (!assignedUnit) {
       throw new NotFound("unitNotFound");
-    }
-
-    if (data.isPrimary) {
-      await prisma.assignedUnit.updateMany({
-        where: { call911Id: call.id },
-        data: { isPrimary: false },
-      });
     }
 
     const updatedCall = await prisma.call911.update({
