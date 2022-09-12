@@ -29,14 +29,13 @@ export function AddUnitToCallModal({ call, onClose }: Props) {
   const { state, execute } = useFetch();
   const { allOfficers, allDeputies, activeDeputies, activeOfficers } = useDispatchState();
   const { generateCallsign } = useGenerateCallsign();
-  const setCurrentlySelectedCall = useCall911State((s) => s.setCurrentlySelectedCall);
+  const call911State = useCall911State();
 
   const allUnits = [...allOfficers, ...allDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
   const units = [...activeOfficers, ...activeDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
   const filteredUnits = units.filter((unit) => {
     return call.assignedUnits?.every((assignedUnit) => assignedUnit.unit?.id !== unit.id) ?? true;
   });
-  const isPrimaryAvailable = call.assignedUnits.every((unit) => unit.isPrimary === false);
 
   const t = useTranslations("Calls");
 
@@ -69,7 +68,16 @@ export function AddUnitToCallModal({ call, onClose }: Props) {
 
     if (json.id) {
       handleClose();
-      setCurrentlySelectedCall({ ...call, ...json });
+      call911State.setCurrentlySelectedCall({ ...call, ...json });
+      call911State.setCalls(
+        call911State.calls.map((_call) => {
+          if (_call.id === call.id) {
+            return { ..._call, ...json };
+          }
+
+          return _call;
+        }),
+      );
     }
   }
 
@@ -111,12 +119,7 @@ export function AddUnitToCallModal({ call, onClose }: Props) {
             </FormField>
 
             <FormField className="mt-3" checkbox label={t("primaryUnit")}>
-              <Toggle
-                disabled={!isPrimaryAvailable}
-                onCheckedChange={handleChange}
-                value={values.isPrimary}
-                name="isPrimary"
-              />
+              <Toggle onCheckedChange={handleChange} value={values.isPrimary} name="isPrimary" />
             </FormField>
 
             <footer className="flex mt-5 justify-end">

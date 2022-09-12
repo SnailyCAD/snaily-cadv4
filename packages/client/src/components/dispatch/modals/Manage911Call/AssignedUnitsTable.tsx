@@ -15,6 +15,7 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { AddUnitToCallModal } from "./AddUnitToCallModal";
 import { Loader } from "components/Loader";
+import { FullDate } from "components/shared/FullDate";
 
 interface Props {
   call: Full911Call;
@@ -28,7 +29,7 @@ export function AssignedUnitsTable({ call }: Props) {
   const t = useTranslations("Calls");
   const { openModal } = useModal();
   const { state, execute } = useFetch();
-  const setCurrentlySelectedCall = useCall911State((s) => s.setCurrentlySelectedCall);
+  const call911State = useCall911State();
 
   async function handleUnassignFromCall(unit: AssignedUnit) {
     const newAssignedUnits = [...call.assignedUnits]
@@ -37,8 +38,6 @@ export function AssignedUnitsTable({ call }: Props) {
         id: v.officerId || v.emsFdDeputyId || v.combinedLeoId,
         isPrimary: v.isPrimary,
       }));
-
-    console.log({ newAssignedUnits });
 
     const { json } = await execute<PUT911CallAssignedUnit>({
       path: `/911-calls/${call.id}`,
@@ -54,13 +53,22 @@ export function AssignedUnitsTable({ call }: Props) {
       },
     });
 
-    if (json) {
-      setCurrentlySelectedCall({ ...call, ...json });
+    if (json.id) {
+      call911State.setCurrentlySelectedCall({ ...call, ...json });
+      call911State.setCalls(
+        call911State.calls.map((_call) => {
+          if (_call.id === call.id) {
+            return { ..._call, ...json };
+          }
+
+          return _call;
+        }),
+      );
     }
   }
 
   return (
-    <div className="mt-4">
+    <div className="mt-4 max-h-[40rem]">
       <header className="flex items-center justify-between gap-2 mb-3">
         <h2 className="font-semibold text-2xl">{t("assignedUnits")}</h2>
 
@@ -92,6 +100,7 @@ export function AssignedUnitsTable({ call }: Props) {
               </span>
             ),
             role: <RoleColumn unit={unit} />,
+            updatedAt: <FullDate>{unit.updatedAt}</FullDate>,
             actions: (
               <Button
                 className="flex items-center gap-2"
@@ -111,6 +120,7 @@ export function AssignedUnitsTable({ call }: Props) {
           { header: "Unit", accessorKey: "unit" },
           { header: "Status", accessorKey: "status" },
           { header: "Role", accessorKey: "role" },
+          { header: "Updated at", accessorKey: "updatedAt" },
           { header: "Actions", accessorKey: "actions" },
         ]}
       />
@@ -128,6 +138,12 @@ function RoleColumn({ unit }: RoleColumnProps) {
   const { currentlySelectedCall, calls, setCalls, setCurrentlySelectedCall } = useCall911State();
   const [isPrimary, setIsPrimary] = React.useState(String(unit.isPrimary ?? "false"));
   const { execute } = useFetch();
+
+  React.useEffect(() => {
+    setIsPrimary(String(unit.isPrimary ?? "false"));
+  }, [unit.isPrimary]);
+
+  console.log({ isPrimary: unit.isPrimary });
 
   async function handleUpdatePrimary(value: string) {
     if (!currentlySelectedCall) return;

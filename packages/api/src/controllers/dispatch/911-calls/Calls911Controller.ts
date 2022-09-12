@@ -568,12 +568,11 @@ export class Calls911Controller {
       throw new NotFound("unitNotFound");
     }
 
-    const existingPrimaryUnit = await prisma.assignedUnit.findFirst({
-      where: { call911Id: call.id, isPrimary: true, NOT: { id: assignedUnit.id } },
-    });
-
-    if (existingPrimaryUnit) {
-      throw new BadRequest("alreadyHasPrimaryUnit");
+    if (data.isPrimary) {
+      await prisma.assignedUnit.updateMany({
+        where: { call911Id: call.id },
+        data: { isPrimary: false },
+      });
     }
 
     const updatedCall = await prisma.call911.update({
