@@ -8,13 +8,18 @@ export const CALL_GTA_MAP_POSITION_SCHEMA = z.object({
   heading: z.number(),
 });
 
+export const ASSIGNED_UNIT = z.object({
+  id: z.string().min(2),
+  isPrimary: z.boolean().optional(),
+});
+
 export const CALL_911_SCHEMA = z.object({
   location: z.string().min(2),
   description: z.string().optional(),
   descriptionData: z.any().nullable().optional(),
   name: z.string().min(2).max(255),
   postal: z.string().nullable().optional(),
-  assignedUnits: z.array(z.string().or(SELECT_VALUE)).optional(),
+  assignedUnits: z.array(ASSIGNED_UNIT.or(SELECT_VALUE)).optional(),
   position: z.any().optional(),
   departments: z.array(z.string().or(SELECT_VALUE)).optional(),
   divisions: z.array(z.string().or(SELECT_VALUE)).optional(),

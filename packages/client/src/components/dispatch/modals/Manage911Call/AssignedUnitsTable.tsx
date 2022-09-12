@@ -8,7 +8,13 @@ import useFetch from "lib/useFetch";
 import { useCall911State } from "state/dispatch/call911State";
 import type { PUT911CallAssignedUnit } from "@snailycad/types/api";
 import { useAuth } from "context/AuthContext";
-import { StatusViewMode } from "@snailycad/types";
+import { AssignedUnit, StatusViewMode } from "@snailycad/types";
+import { useTranslations } from "next-intl";
+import { Button } from "components/Button";
+import { useModal } from "state/modalState";
+import { ModalIds } from "types/ModalIds";
+import { AddUnitToCallModal } from "./AddUnitToCallModal";
+import { Loader } from "components/Loader";
 
 interface Props {
   call: Full911Call;
@@ -19,15 +25,56 @@ export function AssignedUnitsTable({ call }: Props) {
   const { generateCallsign } = useGenerateCallsign();
   const tableState = useTableState();
   const { user } = useAuth();
+  const t = useTranslations("Calls");
+  const { openModal } = useModal();
+  const { state, execute } = useFetch();
+  const setCurrentlySelectedCall = useCall911State((s) => s.setCurrentlySelectedCall);
+
+  async function handleUnassignFromCall(unit: AssignedUnit) {
+    const newAssignedUnits = [...call.assignedUnits]
+      .filter((v) => v.id !== unit.id)
+      .map((v) => ({
+        id: v.officerId || v.emsFdDeputyId || v.combinedLeoId,
+        isPrimary: v.isPrimary,
+      }));
+
+    console.log({ newAssignedUnits });
+
+    const { json } = await execute<PUT911CallAssignedUnit>({
+      path: `/911-calls/${call.id}`,
+      method: "PUT",
+      data: {
+        ...call,
+        situationCode: call.situationCodeId,
+        type: call.typeId,
+        events: undefined,
+        divisions: undefined,
+        departments: undefined,
+        assignedUnits: newAssignedUnits,
+      },
+    });
+
+    if (json) {
+      setCurrentlySelectedCall({ ...call, ...json });
+    }
+  }
 
   return (
-    <div>
+    <div className="mt-4">
+      <header className="flex items-center justify-between gap-2 mb-3">
+        <h2 className="font-semibold text-2xl">{t("assignedUnits")}</h2>
+
+        <Button size="xs" type="button" onClick={() => openModal(ModalIds.AddAssignedUnit)}>
+          {t("addUnit")}
+        </Button>
+      </header>
+
       <Table
         features={{ isWithinCard: true }}
         tableState={tableState}
         data={assignedUnits.map((unit) => {
           const callsignAndName =
-            unit.unit && `${generateCallsign(unit.unit)} - ${makeUnitName(unit.unit)}`;
+            unit.unit && `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
 
           const color = unit.unit?.status?.color;
           const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
@@ -45,14 +92,30 @@ export function AssignedUnitsTable({ call }: Props) {
               </span>
             ),
             role: <RoleColumn unit={unit} />,
+            actions: (
+              <Button
+                className="flex items-center gap-2"
+                disabled={state === "loading"}
+                onClick={() => handleUnassignFromCall(unit)}
+                size="xs"
+                variant="danger"
+                type="button"
+              >
+                {state === "loading" ? <Loader /> : null}
+                {t("unassign")}
+              </Button>
+            ),
           };
         })}
         columns={[
           { header: "Unit", accessorKey: "unit" },
           { header: "Status", accessorKey: "status" },
           { header: "Role", accessorKey: "role" },
+          { header: "Actions", accessorKey: "actions" },
         ]}
       />
+
+      <AddUnitToCallModal call={call} />
     </div>
   );
 }

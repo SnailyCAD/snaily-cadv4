@@ -3,15 +3,22 @@ export type DisconnectOrConnect<
   Accessor extends T extends string ? never : keyof T,
   ShowExisting extends boolean = false,
 > = ShowExisting extends false
-  ? { disconnect?: { id: T[Accessor] | Accessor } } | { connect?: { id: T[Accessor] | Accessor } }
+  ?
+      | { disconnect?: { id: T[Accessor] | Accessor } }
+      | { connect?: { id: T[Accessor] | Accessor } }
+      | { delete?: { id: T[Accessor] | Accessor } }
+      | { create?: { id: T[Accessor] | Accessor } }
   :
       | { existing?: { id: T[Accessor] | Accessor } }
       | { disconnect?: { id: T[Accessor] | Accessor } }
-      | { connect?: { id: T[Accessor] | Accessor } };
+      | { connect?: { id: T[Accessor] | Accessor } }
+      | { delete?: { id: T[Accessor] | Accessor } }
+      | { create?: { id: T[Accessor] | Accessor } };
 
 interface ManyToManyOptions<Accessor, ShowExisting extends boolean = false> {
   accessor?: Accessor;
   showExisting?: ShowExisting;
+  mode?: "disconnect-connect" | "delete-create";
 }
 
 export function manyToManyHelper<
@@ -23,6 +30,7 @@ export function manyToManyHelper<
   const arr = merge(currentArr, incomingArr);
   const accessor = options?.accessor;
   const showExisting = options?.showExisting ?? false;
+  const mode = options?.mode ?? "disconnect-connect";
 
   for (const item of arr) {
     const existsInCurrent = currentArr.some(
@@ -34,15 +42,19 @@ export function manyToManyHelper<
     );
 
     if (!existsInCurrent && existsInIncoming) {
+      const connectOrCreate = mode === "disconnect-connect" ? "connect" : "create";
+
       connectDisconnectArr.push({
-        connect: { id: getAccessor(item, accessor) },
+        [connectOrCreate]: { id: getAccessor(item, accessor) },
       });
       continue;
     }
 
     if (existsInCurrent && !existsInIncoming) {
+      const disconnectOrDelete = mode === "disconnect-connect" ? "disconnect" : "delete";
+
       connectDisconnectArr.push({
-        disconnect: { id: getAccessor(item, accessor) },
+        [disconnectOrDelete]: { id: getAccessor(item, accessor) },
       });
       continue;
     }

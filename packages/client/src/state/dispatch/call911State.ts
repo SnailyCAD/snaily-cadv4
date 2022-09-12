@@ -9,9 +9,6 @@ interface Call911State {
 
   currentlySelectedCall: Full911Call | null;
   setCurrentlySelectedCall(call: Full911Call | null): void;
-
-  isExpandedView: boolean;
-  setIsExpandedView(isExpandedView: boolean): void;
 }
 
 export const useCall911State = create<Call911State>()((set, get) => ({
@@ -20,7 +17,4 @@ export const useCall911State = create<Call911State>()((set, get) => ({
 
   currentlySelectedCall: null,
   setCurrentlySelectedCall: (call) => set({ currentlySelectedCall: call }),
-
-  isExpandedView: true,
-  setIsExpandedView: (isExpandedView) => set({ isExpandedView }),
 }));

@@ -4,6 +4,7 @@ import {
   UPDATE_ASSIGNED_UNIT_SCHEMA,
   CALL_911_SCHEMA,
   LINK_INCIDENT_TO_CALL_SCHEMA,
+  ASSIGNED_UNIT,
 } from "@snailycad/schemas";
 import { HeaderParams, BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -37,6 +38,7 @@ import {
   assignedUnitsInclude,
   incidentInclude,
 } from "controllers/leo/incidents/IncidentController";
+import type { z } from "zod";
 
 export const callInclude = {
   position: true,
@@ -186,9 +188,9 @@ export class Calls911Controller {
       });
     }
 
-    const unitIds = (data.assignedUnits ?? []) as string[];
+    const unitIds = (data.assignedUnits ?? []) as z.infer<typeof ASSIGNED_UNIT>[];
     await assignUnitsToCall({
-      callId: call.id,
+      call,
       maxAssignmentsToCalls,
       socket: this.socket,
       unitIds,
@@ -247,38 +249,6 @@ export class Calls911Controller {
       throw new NotFound("callNotFound");
     }
 
-    // reset assignedUnits. find a better way to do this?
-
-    if (data.assignedUnits) {
-      await Promise.all(
-        call.assignedUnits.map(async ({ id }) => {
-          const unit = await prisma.assignedUnit.delete({
-            where: { id },
-          });
-
-          const types = {
-            officerId: "officer",
-            emsFdDeputyId: "emsFdDeputy",
-            combinedLeoId: "combinedLeoUnit",
-          } as const;
-
-          for (const type in types) {
-            const key = type as keyof typeof types;
-            const unitId = unit[key];
-            const name = types[key];
-
-            if (unitId) {
-              // @ts-expect-error they have the same properties for updating
-              await prisma[name].update({
-                where: { id: unitId },
-                data: { activeCallId: null },
-              });
-            }
-          }
-        }),
-      );
-    }
-
     const positionData = data.position ?? null;
     const shouldRemovePosition = data.position === null;
 
@@ -330,11 +300,11 @@ export class Calls911Controller {
       });
     }
 
-    const unitIds = (data.assignedUnits ?? []) as string[];
+    const unitIds = (data.assignedUnits ?? []) as z.infer<typeof ASSIGNED_UNIT>[];
 
     if (data.assignedUnits) {
       await assignUnitsToCall({
-        callId: call.id,
+        call,
         maxAssignmentsToCalls,
         unitIds,
       });

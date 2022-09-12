@@ -16,8 +16,6 @@ import { useEmsFdState } from "state/emsFdState";
 import type { Delete911CallByIdData } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call911State";
 import { Manage911CallForm } from "./Manage911Call/Manage911CallForm";
-import { Button } from "components/Button";
-import { ArrowsFullscreen, FullscreenExit } from "react-bootstrap-icons";
 import { Infofield } from "components/shared/Infofield";
 import { FullDate } from "components/shared/FullDate";
 import { makeUnitName } from "lib/utils";
@@ -36,7 +34,7 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
   const { isOpen, closeModal } = useModal();
   const t = useTranslations("Calls");
   const { state, execute } = useFetch();
-  const { setCalls, setIsExpandedView, isExpandedView, calls } = useCall911State();
+  const { setCalls, calls } = useCall911State();
   const router = useRouter();
   const { hasPermissions } = usePermission();
   const { generateCallsign } = useGenerateCallsign();
@@ -99,25 +97,10 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
       isOpen={forceOpen ?? isOpen(ModalIds.Manage911Call)}
       onClose={handleClose}
       title={call ? t("manage911Call") : t("create911Call")}
-      className={call ? (isExpandedView ? "!max-w-[100rem] w-full" : "w-[1200px]") : "w-[650px]"}
-      extraActions={
-        call ? (
-          <Button
-            onClick={() => setIsExpandedView(!isExpandedView)}
-            variant="transparent"
-            className="!p-2 transition-all cursor-pointer rounded-lg hover:bg-gray-200 dark:hover:bg-secondary"
-          >
-            {isExpandedView ? (
-              <FullscreenExit aria-label="Exit expanded view" width={18} height={18} />
-            ) : (
-              <ArrowsFullscreen aria-label="Enter expanded view" width={18} height={18} />
-            )}
-          </Button>
-        ) : null
-      }
+      className={call ? "!max-w-[100rem] w-full" : "w-[650px]"}
     >
       {/* todo: custom component for expanded view */}
-      {isExpandedView && call ? (
+      {call ? (
         <div className="mb-4 flex flex-wrap flex-row gap-4 max-w-[1050px]">
           <Infofield label={t("call")}>#{call?.caseNumber}</Infofield>
           <Infofield label={t("lastUpdatedAt")}>

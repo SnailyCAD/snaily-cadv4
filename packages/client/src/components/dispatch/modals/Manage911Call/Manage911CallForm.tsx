@@ -39,7 +39,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
   const { execute, state } = useFetch();
-  const { setCalls, calls, isExpandedView } = useCall911State();
+  const { setCalls, calls } = useCall911State();
   const { closeModal } = useModal();
 
   const validate = handleValidate(CALL_911_SCHEMA);
@@ -223,59 +223,19 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
                 </FormField>
               </FormRow>
 
-              {isExpandedView ? (
-                <>
-                  <FormField
-                    className="max-w-[750px]"
-                    errorMessage={errors.description}
-                    label={common("description")}
-                  >
-                    <Editor
-                      value={values.descriptionData}
-                      onChange={(v) => setFieldValue("descriptionData", v)}
-                      isReadonly={isDisabled}
-                    />
-                  </FormField>
+              <FormField
+                className="max-w-[750px]"
+                errorMessage={errors.description}
+                label={common("description")}
+              >
+                <Editor
+                  value={values.descriptionData}
+                  onChange={(v) => setFieldValue("descriptionData", v)}
+                  isReadonly={isDisabled}
+                />
+              </FormField>
 
-                  {call ? <AssignedUnitsTable call={call} /> : null}
-                </>
-              ) : (
-                <>
-                  <FormField
-                    errorMessage={errors.assignedUnits as string}
-                    label={t("assignedUnits")}
-                  >
-                    <Select
-                      extra={{ showContextMenuForUnits: true }}
-                      isMulti
-                      closeMenuOnSelect={false}
-                      name="assignedUnits"
-                      value={values.assignedUnits.map((value) => ({
-                        label: makeLabel(value.value),
-                        value: value.value,
-                      }))}
-                      values={units.map((unit) => ({
-                        label: makeLabel(unit.id),
-                        value: unit.id,
-                      }))}
-                      onChange={handleChange}
-                      disabled={isDisabled}
-                    />
-                  </FormField>
-
-                  <FormField
-                    className="max-w-[750px]"
-                    errorMessage={errors.description}
-                    label={common("description")}
-                  >
-                    <Editor
-                      value={values.descriptionData}
-                      onChange={(v) => setFieldValue("descriptionData", v)}
-                      isReadonly={isDisabled}
-                    />
-                  </FormField>
-                </>
-              )}
+              {call ? <AssignedUnitsTable call={call} /> : null}
             </>
           )}
 
