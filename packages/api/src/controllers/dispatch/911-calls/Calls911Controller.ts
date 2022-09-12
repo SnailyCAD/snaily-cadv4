@@ -1,6 +1,11 @@
 import { Controller } from "@tsed/di";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
-import { CALL_911_SCHEMA, LINK_INCIDENT_TO_CALL_SCHEMA } from "@snailycad/schemas";
+import {
+  UPDATE_ASSIGNED_UNIT_SCHEMA,
+  CALL_911_SCHEMA,
+  LINK_INCIDENT_TO_CALL_SCHEMA,
+  ASSIGNED_UNIT,
+} from "@snailycad/schemas";
 import { HeaderParams, BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -33,6 +38,7 @@ import {
   assignedUnitsInclude,
   incidentInclude,
 } from "controllers/leo/incidents/IncidentController";
+import type { z } from "zod";
 
 export const callInclude = {
   position: true,
@@ -182,9 +188,9 @@ export class Calls911Controller {
       });
     }
 
-    const unitIds = (data.assignedUnits ?? []) as string[];
+    const unitIds = (data.assignedUnits ?? []) as z.infer<typeof ASSIGNED_UNIT>[];
     await assignUnitsToCall({
-      callId: call.id,
+      call,
       maxAssignmentsToCalls,
       socket: this.socket,
       unitIds,
@@ -243,38 +249,6 @@ export class Calls911Controller {
       throw new NotFound("callNotFound");
     }
 
-    // reset assignedUnits. find a better way to do this?
-
-    if (data.assignedUnits) {
-      await Promise.all(
-        call.assignedUnits.map(async ({ id }) => {
-          const unit = await prisma.assignedUnit.delete({
-            where: { id },
-          });
-
-          const types = {
-            officerId: "officer",
-            emsFdDeputyId: "emsFdDeputy",
-            combinedLeoId: "combinedLeoUnit",
-          } as const;
-
-          for (const type in types) {
-            const key = type as keyof typeof types;
-            const unitId = unit[key];
-            const name = types[key];
-
-            if (unitId) {
-              // @ts-expect-error they have the same properties for updating
-              await prisma[name].update({
-                where: { id: unitId },
-                data: { activeCallId: null },
-              });
-            }
-          }
-        }),
-      );
-    }
-
     const positionData = data.position ?? null;
     const shouldRemovePosition = data.position === null;
 
@@ -326,11 +300,11 @@ export class Calls911Controller {
       });
     }
 
-    const unitIds = (data.assignedUnits ?? []) as string[];
+    const unitIds = (data.assignedUnits ?? []) as z.infer<typeof ASSIGNED_UNIT>[];
 
     if (data.assignedUnits) {
       await assignUnitsToCall({
-        callId: call.id,
+        call,
         maxAssignmentsToCalls,
         unitIds,
       });
@@ -564,6 +538,57 @@ export class Calls911Controller {
     this.socket.emitUpdate911Call(officerOrDeputyToUnit(updated));
 
     return officerOrDeputyToUnit(updated);
+  }
+
+  @Put("/:callId/assigned-units/:assignedUnitId")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
+    permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
+  })
+  async updateAssignedUnit(
+    @PathParams("callId") callId: string,
+    @PathParams("assignedUnitId") assignedUnitId: string,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PUT911CallAssignedUnit> {
+    const data = validateSchema(UPDATE_ASSIGNED_UNIT_SCHEMA, body);
+
+    const call = await prisma.call911.findUnique({
+      where: { id: callId },
+    });
+
+    if (!call) {
+      throw new NotFound("callNotFound");
+    }
+
+    if (data.isPrimary) {
+      await prisma.assignedUnit.updateMany({
+        where: { call911Id: call.id },
+        data: { isPrimary: false },
+      });
+    }
+
+    const assignedUnit = await prisma.assignedUnit.findUnique({
+      where: { id: assignedUnitId },
+    });
+
+    if (!assignedUnit) {
+      throw new NotFound("unitNotFound");
+    }
+
+    const updatedCall = await prisma.call911.update({
+      where: { id: call.id },
+      data: {
+        assignedUnits: {
+          update: {
+            where: { id: assignedUnit.id },
+            data: { isPrimary: data.isPrimary },
+          },
+        },
+      },
+      include: callInclude,
+    });
+
+    return officerOrDeputyToUnit(updatedCall);
   }
 
   private async endInactiveCalls(updatedAt: Date) {

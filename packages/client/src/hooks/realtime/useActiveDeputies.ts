@@ -7,12 +7,37 @@ import { useDispatchState } from "state/dispatch/dispatchState";
 import { useEmsFdState } from "state/emsFdState";
 import type { EmsFdDeputy } from "@snailycad/types";
 import type { GetEmsFdActiveDeputies } from "@snailycad/types/api";
+import { useCall911State } from "state/dispatch/call911State";
 
 export function useActiveDeputies() {
   const { user } = useAuth();
   const { activeDeputies, setActiveDeputies } = useDispatchState();
   const { state, execute } = useFetch();
   const { setActiveDeputy } = useEmsFdState();
+  const call911State = useCall911State();
+
+  const handleCallsState = React.useCallback(
+    (data: EmsFdDeputy[]) => {
+      const updatedCalls = [...call911State.calls].map((call) => {
+        const newAssignedUnits = [...call.assignedUnits].map((assignedUnit) => {
+          const deputy = data.find((v) => v.id === assignedUnit.emsFdDeputyId);
+
+          if (deputy) {
+            return { ...assignedUnit, unit: deputy };
+          }
+
+          return assignedUnit;
+        });
+
+        call.assignedUnits = newAssignedUnits;
+
+        return call;
+      });
+
+      call911State.setCalls(updatedCalls);
+    },
+    [call911State.calls], // eslint-disable-line react-hooks/exhaustive-deps
+  );
 
   const handleState = React.useCallback(
     (data: EmsFdDeputy[]) => {
@@ -46,6 +71,7 @@ export function useActiveDeputies() {
   useListener(SocketEvents.UpdateEmsFdStatus, (data: EmsFdDeputy[] | null) => {
     if (data && Array.isArray(data)) {
       handleState(data);
+      handleCallsState(data);
       return;
     }
 
