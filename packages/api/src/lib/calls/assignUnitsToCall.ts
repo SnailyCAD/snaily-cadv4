@@ -144,6 +144,13 @@ async function handleCreateAssignedUnit(options: HandleCreateAssignedUnitOptions
     data: { activeCallId: options.call.id },
   });
 
+  if (options.isPrimary) {
+    await prisma.assignedUnit.updateMany({
+      where: { call911Id: options.call.id },
+      data: { isPrimary: false },
+    });
+  }
+
   const assignedUnit = await prisma.assignedUnit.create({
     data: {
       isPrimary: options.isPrimary,

@@ -4,6 +4,7 @@ import { Button } from "components/Button";
 import { Manage911CallModal } from "components/dispatch/modals/Manage911CallModal";
 import type { Full911Call } from "state/dispatch/dispatchState";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { useCall911State } from "state/dispatch/call911State";
 
 interface Props {
   call: Full911Call | null;
@@ -15,10 +16,12 @@ export function ActiveCallColumn({ call, isDispatch }: Props) {
   const common = useTranslations("Common");
   const { hasActiveDispatchers } = useActiveDispatchers();
   const isBtnDisabled = !hasActiveDispatchers && isDispatch;
+  const { setCurrentlySelectedCall } = useCall911State();
 
   function handleOpen() {
     if (isBtnDisabled) return;
 
+    setCurrentlySelectedCall(call);
     setOpen(true);
   }
 

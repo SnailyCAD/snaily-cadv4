@@ -8,6 +8,7 @@ import { useLeoState } from "state/leoState";
 import type { CombinedLeoUnit, Officer } from "@snailycad/types";
 import { isUnitCombined } from "@snailycad/utils";
 import type { GetActiveOfficersData } from "@snailycad/types/api";
+import { useCall911State } from "state/dispatch/call911State";
 
 let ran = false;
 export function useActiveOfficers() {
@@ -15,6 +16,34 @@ export function useActiveOfficers() {
   const { activeOfficers, setActiveOfficers } = useDispatchState();
   const { state, execute } = useFetch();
   const { setActiveOfficer } = useLeoState();
+  const call911State = useCall911State();
+
+  const handleCallsState = React.useCallback(
+    (data: (Officer | CombinedLeoUnit)[]) => {
+      const updatedCalls = [...call911State.calls].map((call) => {
+        const newAssignedUnits = [...call.assignedUnits].map((assignedUnit) => {
+          const unitIds = [assignedUnit.officerId, assignedUnit.combinedLeoId];
+          const officer = data.find((v) => unitIds.includes(v.id));
+
+          if (officer) {
+            return {
+              ...assignedUnit,
+              unit: officer,
+            };
+          }
+
+          return assignedUnit;
+        });
+
+        call.assignedUnits = newAssignedUnits;
+
+        return call;
+      });
+
+      call911State.setCalls(updatedCalls);
+    },
+    [call911State.calls], // eslint-disable-line react-hooks/exhaustive-deps
+  );
 
   const handleState = React.useCallback(
     (data: (Officer | CombinedLeoUnit)[]) => {
@@ -58,6 +87,7 @@ export function useActiveOfficers() {
   useListener(SocketEvents.UpdateOfficerStatus, (data: (Officer | CombinedLeoUnit)[] | null) => {
     if (data && Array.isArray(data)) {
       handleState(data);
+      handleCallsState(data);
       return;
     }
 
