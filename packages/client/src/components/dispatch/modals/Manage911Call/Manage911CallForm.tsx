@@ -1,14 +1,11 @@
 import { useRouter } from "next/router";
 import type { Post911CallsData, Put911CallByIdData } from "@snailycad/types/api";
-import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { makeUnitName } from "lib/utils";
-import { EmsFdDeputy, StatusValueType, type CombinedLeoUnit } from "@snailycad/types";
+import { StatusValueType } from "@snailycad/types";
 import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
 import { CALL_911_SCHEMA } from "@snailycad/schemas";
 import { dataToSlate, Editor } from "components/editor/Editor";
 import { useValues } from "context/ValuesContext";
-import { isUnitCombined } from "@snailycad/utils";
 import { toastMessage } from "lib/toastMessage";
 import { ModalIds } from "types/ModalIds";
 import { Form, Formik } from "formik";
@@ -16,8 +13,8 @@ import { Input } from "components/form/inputs/Input";
 import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
-import { Full911Call, useDispatchState } from "state/dispatch/dispatchState";
-import { Select, SelectValue } from "components/form/Select";
+import type { Full911Call } from "state/dispatch/dispatchState";
+import { Select } from "components/form/Select";
 import { Button } from "components/Button";
 import { useTranslations } from "next-intl";
 import { useCall911State } from "state/dispatch/call911State";
@@ -33,8 +30,6 @@ interface Props {
 
 export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose }: Props) {
   const router = useRouter();
-  const { allOfficers, allDeputies, activeDeputies, activeOfficers } = useDispatchState();
-  const { generateCallsign } = useGenerateCallsign();
   const { department, division, codes10, callType } = useValues();
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
@@ -44,8 +39,6 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
 
   const validate = handleValidate(CALL_911_SCHEMA);
   const isCitizen = router.pathname.includes("/citizen");
-  const allUnits = [...allOfficers, ...allDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
-  const units = [...activeOfficers, ...activeDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
 
   function handleEndClick() {
     if (!call || isDisabled) return;
@@ -53,22 +46,11 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
     setShowAlert(true);
   }
 
-  function makeLabel(value: string | undefined) {
-    const unit = allUnits.find((v) => v.id === value) ?? units.find((v) => v.id === value);
-
-    if (unit && isUnitCombined(unit)) {
-      return generateCallsign(unit, "pairedUnitTemplate");
-    }
-
-    return unit ? `${generateCallsign(unit)} ${makeUnitName(unit)}` : "";
-  }
-
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (isDisabled) return;
 
     const requestData = {
       ...values,
-      assignedUnits: values.assignedUnits.map(({ value }) => value),
       departments: values.departments.map(({ value }) => value),
       divisions: values.divisions.map(({ value }) => value),
     };
@@ -116,11 +98,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
     divisions: call?.divisions?.map((dep) => ({ value: dep.id, label: dep.value.value })) ?? [],
     situationCode: call?.situationCodeId ?? null,
     type: call?.typeId ?? null,
-    assignedUnits:
-      call?.assignedUnits.map((unit) => ({
-        label: makeLabel(unit.unit?.id),
-        value: unit.unit?.id,
-      })) ?? ([] as SelectValue[]),
+    assignedUnits: undefined,
   };
 
   return (
