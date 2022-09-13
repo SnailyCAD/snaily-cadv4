@@ -619,7 +619,7 @@ model WeaponValue {
 
 model CallTypeValue {
   id       String    @id @default(cuid())
-  priority Int?
+  priority String?
   valueId  String
   value    Value     @relation("callTypeValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
   Call911  Call911[]
