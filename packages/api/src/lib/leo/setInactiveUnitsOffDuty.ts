@@ -3,11 +3,9 @@ import type { Officer, EmsFdDeputy, CombinedLeoUnit } from "@prisma/client";
 import { prisma } from "lib/prisma";
 
 export async function setInactiveUnitsOffDuty(lastStatusChangeTimestamp: Date) {
-  await Promise.all([
+  await prisma.$transaction([
     prisma.officer.updateMany({
-      where: {
-        lastStatusChangeTimestamp: { lte: lastStatusChangeTimestamp },
-      },
+      where: { lastStatusChangeTimestamp: { lte: lastStatusChangeTimestamp } },
       data: { statusId: null, activeCallId: null, activeIncidentId: null },
     }),
     prisma.emsFdDeputy.updateMany({
@@ -17,9 +15,7 @@ export async function setInactiveUnitsOffDuty(lastStatusChangeTimestamp: Date) {
       data: { statusId: null, activeCallId: null },
     }),
     prisma.combinedLeoUnit.deleteMany({
-      where: {
-        lastStatusChangeTimestamp: { lte: lastStatusChangeTimestamp },
-      },
+      where: { lastStatusChangeTimestamp: { lte: lastStatusChangeTimestamp } },
     }),
   ]);
 }
