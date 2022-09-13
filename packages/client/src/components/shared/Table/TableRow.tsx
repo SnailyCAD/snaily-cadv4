@@ -44,6 +44,7 @@ export function TableRow<TData extends RowData>({
               bgColor,
               // isMove && "w-10",
             )}
+            style={rowProps?.style}
             key={cell.id}
           >
             {flexRender(cellValue, cell.getContext())}
