@@ -152,6 +152,7 @@
     "updateAvailable": "Добступно обновление",
     "updateAvailableInfo": "Доступно обновление. Обновите ваш SnailyCAD, чтобы получить свежие функции и обновления. Кликните для информации.",
     "serialNumberInUse": "Серийный номер уже используется",
-    "vinNumberInUse": "VIN номер уже используется"
+    "vinNumberInUse": "VIN номер уже используется",
+    "alreadyHasPrimaryUnit": "У вызова уже есть основной юнит"
   }
 }
