@@ -17,7 +17,11 @@ import { AddUnitToCallModal } from "./AddUnitToCallModal";
 import { Loader } from "components/Loader";
 import { FullDate } from "components/shared/FullDate";
 
-export function AssignedUnitsTable() {
+interface Props {
+  isDisabled: boolean;
+}
+
+export function AssignedUnitsTable({ isDisabled }: Props) {
   const call911State = useCall911State();
   const call = call911State.currentlySelectedCall!;
   const assignedUnits = call.assignedUnits ?? [];
@@ -69,9 +73,11 @@ export function AssignedUnitsTable() {
       <header className="flex items-center justify-between gap-2 mb-3">
         <h2 className="font-semibold text-2xl">{t("assignedUnits")}</h2>
 
-        <Button size="xs" type="button" onClick={() => openModal(ModalIds.AddAssignedUnit)}>
-          {t("addUnit")}
-        </Button>
+        {isDisabled ? null : (
+          <Button size="xs" type="button" onClick={() => openModal(ModalIds.AddAssignedUnit)}>
+            {t("addUnit")}
+          </Button>
+        )}
       </header>
 
       <Table
@@ -103,12 +109,12 @@ export function AssignedUnitsTable() {
                   {unit.unit?.status?.value?.value}
                 </span>
               ),
-              role: <RoleColumn unit={unit} />,
+              role: <RoleColumn isDisabled={isDisabled} unit={unit} />,
               updatedAt: <FullDate>{unit.updatedAt}</FullDate>,
               actions: (
                 <Button
                   className="flex items-center gap-2"
-                  disabled={state === "loading"}
+                  disabled={isDisabled || state === "loading"}
                   onClick={() => handleUnassignFromCall(unit)}
                   size="xs"
                   variant="danger"
@@ -125,20 +131,21 @@ export function AssignedUnitsTable() {
           { header: "Status", accessorKey: "status" },
           { header: "Role", accessorKey: "role" },
           { header: "Updated at", accessorKey: "updatedAt" },
-          { header: "Actions", accessorKey: "actions" },
+          isDisabled ? null : { header: "Actions", accessorKey: "actions" },
         ]}
       />
 
-      <AddUnitToCallModal />
+      {isDisabled ? null : <AddUnitToCallModal />}
     </div>
   );
 }
 
 interface RoleColumnProps {
   unit: Full911Call["assignedUnits"][number];
+  isDisabled: boolean;
 }
 
-function RoleColumn({ unit }: RoleColumnProps) {
+function RoleColumn({ unit, isDisabled }: RoleColumnProps) {
   const { currentlySelectedCall, calls, setCalls, setCurrentlySelectedCall } = useCall911State();
   const [isPrimary, setIsPrimary] = React.useState(String(unit.isPrimary ?? "false"));
   const { execute } = useFetch();
@@ -169,6 +176,10 @@ function RoleColumn({ unit }: RoleColumnProps) {
       );
       setIsPrimary(value);
     }
+  }
+
+  if (isDisabled) {
+    return isPrimary === "true" ? "Primary" : "None";
   }
 
   return (
