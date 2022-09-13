@@ -69,7 +69,7 @@ export function AssignedUnitsTable({ isDisabled }: Props) {
   }
 
   return (
-    <div className="mt-4 max-h-[40rem]">
+    <div className="mt-4">
       <header className="flex items-center justify-between gap-2 mb-3">
         <h2 className="font-semibold text-2xl">{t("assignedUnits")}</h2>
 
@@ -80,60 +80,60 @@ export function AssignedUnitsTable({ isDisabled }: Props) {
         )}
       </header>
 
-      <Table
-        features={{ isWithinCard: true }}
-        tableState={tableState}
-        data={assignedUnits
-          .sort((a) => {
-            return a.isPrimary ? -1 : 1;
-          })
-          .map((unit) => {
-            const callsignAndName =
-              unit.unit && `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
+      <div className="max-h-[35rem] overflow-y-auto">
+        <Table
+          features={{ isWithinCard: true }}
+          tableState={tableState}
+          data={assignedUnits
+            .sort((a) => (a.isPrimary ? -1 : 1))
+            .map((unit) => {
+              const callsignAndName =
+                unit.unit && `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
 
-            const color = unit.unit?.status?.color;
-            const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
+              const color = unit.unit?.status?.color;
+              const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
 
-            return {
-              rowProps: { style: { background: !useDot ? color ?? undefined : undefined } },
-              id: unit.id,
-              unit: callsignAndName,
-              status: (
-                <span className="flex items-center">
-                  {useDot && color ? (
-                    <span
-                      style={{ background: color }}
-                      className="block w-3 h-3 mr-2 rounded-full"
-                    />
-                  ) : null}
-                  {unit.unit?.status?.value?.value}
-                </span>
-              ),
-              role: <RoleColumn isDisabled={isDisabled} unit={unit} />,
-              updatedAt: <FullDate>{unit.updatedAt}</FullDate>,
-              actions: (
-                <Button
-                  className="flex items-center gap-2"
-                  disabled={isDisabled || state === "loading"}
-                  onClick={() => handleUnassignFromCall(unit)}
-                  size="xs"
-                  variant="danger"
-                  type="button"
-                >
-                  {state === "loading" ? <Loader /> : null}
-                  {t("unassign")}
-                </Button>
-              ),
-            };
-          })}
-        columns={[
-          { header: "Unit", accessorKey: "unit" },
-          { header: "Status", accessorKey: "status" },
-          { header: "Role", accessorKey: "role" },
-          { header: "Updated at", accessorKey: "updatedAt" },
-          isDisabled ? null : { header: "Actions", accessorKey: "actions" },
-        ]}
-      />
+              return {
+                rowProps: { style: { background: !useDot ? color ?? undefined : undefined } },
+                id: unit.id,
+                unit: callsignAndName,
+                status: (
+                  <span className="flex items-center">
+                    {useDot && color ? (
+                      <span
+                        style={{ background: color }}
+                        className="block w-3 h-3 mr-2 rounded-full"
+                      />
+                    ) : null}
+                    {unit.unit?.status?.value?.value}
+                  </span>
+                ),
+                role: <RoleColumn isDisabled={isDisabled} unit={unit} />,
+                updatedAt: <FullDate>{unit.updatedAt}</FullDate>,
+                actions: (
+                  <Button
+                    className="flex items-center gap-2"
+                    disabled={isDisabled || state === "loading"}
+                    onClick={() => handleUnassignFromCall(unit)}
+                    size="xs"
+                    variant="danger"
+                    type="button"
+                  >
+                    {state === "loading" ? <Loader /> : null}
+                    {t("unassign")}
+                  </Button>
+                ),
+              };
+            })}
+          columns={[
+            { header: "Unit", accessorKey: "unit" },
+            { header: "Status", accessorKey: "status" },
+            { header: "Role", accessorKey: "role" },
+            { header: "Updated at", accessorKey: "updatedAt" },
+            isDisabled ? null : { header: "Actions", accessorKey: "actions" },
+          ]}
+        />
+      </div>
 
       {isDisabled ? null : <AddUnitToCallModal />}
     </div>
