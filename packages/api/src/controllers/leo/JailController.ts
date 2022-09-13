@@ -51,7 +51,7 @@ export class LeoController {
       OR: [{ arrested: true }, { Record: { some: { release: { isNot: null } } } }],
     };
 
-    const [totalCount, citizens] = await Promise.all([
+    const [totalCount, citizens] = await prisma.$transaction([
       prisma.citizen.count({ where }),
       prisma.citizen.findMany({
         where,

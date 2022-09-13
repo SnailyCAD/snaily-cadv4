@@ -44,7 +44,7 @@ export class DLExamsController {
         }
       : undefined;
 
-    const [exams, totalCount] = await Promise.all([
+    const [exams, totalCount] = await prisma.$transaction([
       prisma.dLExam.findMany({
         include: dlExamIncludes,
         orderBy: { createdAt: "desc" },

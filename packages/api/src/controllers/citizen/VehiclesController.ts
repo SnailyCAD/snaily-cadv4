@@ -64,7 +64,7 @@ export class VehiclesController {
         : {}),
     };
 
-    const [totalCount, vehicles] = await Promise.all([
+    const [totalCount, vehicles] = await prisma.$transaction([
       prisma.registeredVehicle.count({ where }),
       prisma.registeredVehicle.findMany({
         where,

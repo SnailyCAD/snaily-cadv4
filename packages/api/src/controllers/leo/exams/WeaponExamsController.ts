@@ -44,7 +44,7 @@ export class WeaponExamsController {
         }
       : undefined;
 
-    const [exams, totalCount] = await Promise.all([
+    const [exams, totalCount] = await prisma.$transaction([
       prisma.weaponExam.findMany({
         include: dlExamIncludes,
         orderBy: { createdAt: "desc" },

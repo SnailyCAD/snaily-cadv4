@@ -102,11 +102,9 @@ export class CitizenController {
       ],
     };
 
-    const [citizensCount, citizens] = await Promise.all([
-      await prisma.citizen.count({
-        where,
-      }),
-      await prisma.citizen.findMany({
+    const [citizensCount, citizens] = await prisma.$transaction([
+      prisma.citizen.count({ where }),
+      prisma.citizen.findMany({
         where,
         orderBy: { updatedAt: "desc" },
         include: { user: { select: userProperties } },

@@ -63,7 +63,7 @@ export class EmsFdController {
   ): Promise<APITypes.GetMyDeputiesLogsData> {
     const where = { userId: user.id, officerId: null, emsFdDeputyId: emsFdDeputyId || undefined };
 
-    const [totalCount, logs] = await Promise.all([
+    const [totalCount, logs] = await prisma.$transaction([
       prisma.officerLog.count({ where }),
       prisma.officerLog.findMany({
         take: includeAll ? undefined : 25,

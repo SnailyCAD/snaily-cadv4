@@ -56,7 +56,7 @@ export class LeoController {
       setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp);
     }
 
-    const [officers, units] = await Promise.all([
+    const [officers, units] = await prisma.$transaction([
       prisma.officer.findMany({
         where: { status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } } },
         include: leoProperties,

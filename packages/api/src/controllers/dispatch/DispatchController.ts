@@ -52,13 +52,9 @@ export class DispatchController {
       setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp);
     }
 
-    const [officers, units] = await Promise.all([
-      await prisma.officer.findMany({
-        include: leoProperties,
-      }),
-      await prisma.combinedLeoUnit.findMany({
-        include: combinedUnitProperties,
-      }),
+    const [officers, units] = await prisma.$transaction([
+      prisma.officer.findMany({ include: leoProperties }),
+      prisma.combinedLeoUnit.findMany({ include: combinedUnitProperties }),
     ]);
 
     const deputies = await prisma.emsFdDeputy.findMany({

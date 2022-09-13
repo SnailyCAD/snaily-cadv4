@@ -76,7 +76,7 @@ export class ManageUsersController {
           }
         : undefined;
 
-    const [totalCount, pendingCount] = await Promise.all([
+    const [totalCount, pendingCount] = await prisma.$transaction([
       prisma.user.count({ where }),
       prisma.user.count({ where: { whitelistStatus: WhitelistStatus.PENDING } }),
     ]);

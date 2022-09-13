@@ -62,7 +62,7 @@ export class AdminManageCitizensController {
         }
       : undefined;
 
-    const [totalCount, citizens] = await Promise.all([
+    const [totalCount, citizens] = await prisma.$transaction([
       prisma.citizen.count({ where }),
       prisma.citizen.findMany({
         where,

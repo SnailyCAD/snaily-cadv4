@@ -52,7 +52,7 @@ export class WeaponController {
         : {}),
     };
 
-    const [totalCount, weapons] = await Promise.all([
+    const [totalCount, weapons] = await prisma.$transaction([
       prisma.weapon.count({ where }),
       prisma.weapon.findMany({
         where,
