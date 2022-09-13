@@ -201,21 +201,21 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
                 </FormField>
               </FormRow>
 
-              <FormField
-                className="max-w-[750px]"
-                errorMessage={errors.description}
-                label={common("description")}
-              >
-                <Editor
-                  value={values.descriptionData}
-                  onChange={(v) => setFieldValue("descriptionData", v)}
-                  isReadonly={isDisabled}
-                />
-              </FormField>
-
               {call ? <AssignedUnitsTable isDisabled={isDisabled} /> : null}
             </>
           )}
+
+          <FormField
+            className="max-w-[750px]"
+            errorMessage={errors.description}
+            label={common("description")}
+          >
+            <Editor
+              value={values.descriptionData}
+              onChange={(v) => setFieldValue("descriptionData", v)}
+              isReadonly={isDisabled}
+            />
+          </FormField>
 
           <footer className={`mt-5 flex ${call ? "justify-between" : "justify-end"}`}>
             {call ? (
