@@ -179,7 +179,7 @@ function RoleColumn({ unit, isDisabled }: RoleColumnProps) {
   }
 
   if (isDisabled) {
-    return isPrimary === "true" ? "Primary" : "None";
+    return <p>{isPrimary === "true" ? "Primary" : "None"}</p>;
   }
 
   return (
