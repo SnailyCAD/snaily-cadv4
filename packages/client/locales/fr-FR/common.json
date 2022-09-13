@@ -152,6 +152,7 @@
     "updateAvailable": "Mise à jour disponible",
     "updateAvailableInfo": "Une nouvelle mise à jour est disponible. Mettez à jour SnailyCAD pour profiter des avantages des dernières fonctionnalités et corrections. Cliquez-ici pour plus d'informations.",
     "serialNumberInUse": "Le numéro de série est déjà utilisé.",
-    "vinNumberInUse": "Le numéro NIV est déjà utilisé."
+    "vinNumberInUse": "Le numéro NIV est déjà utilisé.",
+    "alreadyHasPrimaryUnit": "Cet appel a déjà une unité primaire"
   }
 }

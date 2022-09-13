@@ -1,11 +1,16 @@
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
+import { Button } from "components/Button";
 import { useAuth } from "context/AuthContext";
+import { toastMessage } from "lib/toastMessage";
+import toast from "react-hot-toast";
 import { useAudio } from "react-use";
 import { useCall911State } from "state/dispatch/call911State";
 import type { Full911Call } from "state/dispatch/dispatchState";
 import type { ActiveDeputy } from "state/emsFdState";
 import type { ActiveOfficer } from "state/leoState";
+import { useModal } from "state/modalState";
+import { ModalIds } from "types/ModalIds";
 
 interface UseActiveCallsOptions {
   calls: Full911Call[];
@@ -18,6 +23,7 @@ const INCOMING_CALL_SRC = "/sounds/incoming-call.mp3" as const;
 export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
   const call911State = useCall911State();
   const { user } = useAuth();
+  const { openModal } = useModal();
 
   const shouldPlayAddedToCallSound = user?.soundSettings?.addedToCall ?? false;
   const shouldPlayIncomingCallSound = user?.soundSettings?.incomingCall ?? false;
@@ -31,6 +37,34 @@ export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
     autoPlay: false,
     src: INCOMING_CALL_SRC,
   });
+
+  function handleShowToast(call: Full911Call, previousCall: Partial<Full911Call> = {}) {
+    const messageId = toastMessage({
+      duration: Infinity,
+      title: "Assigned to call",
+      icon: "success",
+      message: (
+        <div>
+          <p>You have been assigned to call #{call.caseNumber}.</p>
+
+          <Button
+            onClick={() => {
+              openModal(ModalIds.Manage911Call);
+              call911State.setCurrentlySelectedCall({
+                ...previousCall,
+                ...call,
+              });
+
+              toast.remove(messageId);
+            }}
+            className="mt-2 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125"
+          >
+            View call
+          </Button>
+        </div>
+      ),
+    });
+  }
 
   useListener(
     SocketEvents.Create911Call,
@@ -46,10 +80,14 @@ export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
         incomingCallControls.play();
       }
 
-      if (wasAssignedToCall && shouldPlayAddedToCallSound) {
-        addedToCallControls.seek(0);
-        addedToCallControls.volume(0.3);
-        addedToCallControls.play();
+      if (wasAssignedToCall) {
+        handleShowToast(call);
+
+        if (shouldPlayAddedToCallSound) {
+          addedToCallControls.seek(0);
+          addedToCallControls.volume(0.3);
+          addedToCallControls.play();
+        }
       }
 
       call911State.setCalls([call, ...calls]);
@@ -84,12 +122,16 @@ export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
           !prevCall.assignedUnits.some((u) => u.unit?.id === unit?.id) &&
           call.assignedUnits.some((v) => v.unit?.id === unit?.id);
 
-        if (wasAssignedToCall && shouldPlayAddedToCallSound) {
-          addedToCallControls.seek(0);
-          addedToCallControls.volume(0.3);
-          addedToCallControls.play();
-        } else {
-          addedToCallControls.pause();
+        if (wasAssignedToCall) {
+          handleShowToast(call);
+
+          if (shouldPlayAddedToCallSound) {
+            addedToCallControls.seek(0);
+            addedToCallControls.volume(0.3);
+            addedToCallControls.play();
+          } else {
+            addedToCallControls.pause();
+          }
         }
       }
 

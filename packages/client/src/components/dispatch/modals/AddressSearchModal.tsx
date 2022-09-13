@@ -93,6 +93,7 @@ export function AddressSearchModal() {
                 <h3 className="text-2xl font-semibold">{t("results")}</h3>
 
                 <Table
+                  features={{ isWithinCard: true }}
                   tableState={tableState}
                   data={results.map((result) => ({
                     id: result.id,

@@ -1010,6 +1010,7 @@ model Position {
 
 model AssignedUnit {
   id            String           @id @default(uuid())
+  isPrimary     Boolean?         @default(false)
   officer       Officer?         @relation(fields: [officerId], references: [id])
   officerId     String?
   deputy        EmsFdDeputy?     @relation(fields: [emsFdDeputyId], references: [id])

@@ -11,8 +11,8 @@ export interface ModalProps {
   dialogClassName?: string;
   isOpen: boolean;
   className?: string;
-  onClose(): void;
   isAlert?: boolean;
+  onClose(): void;
 }
 
 export function Modal({
@@ -81,7 +81,7 @@ export function Modal({
             >
               <Dialog.Title
                 as="h3"
-                className="flex items-center justify-between mb-2 text-xl font-semibold text-gray-900 dark:text-white"
+                className="flex items-center justify-between mb-2 text-2xl font-semibold text-gray-900 dark:text-white"
               >
                 {title}
 

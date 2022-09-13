@@ -19,6 +19,7 @@
     "manageCourtEntry": "Gérer l'entrée",
     "caseNumber": "Numéro de Dossier",
     "title": "Titre",
+    "description": "Description",
     "dates": "Dates",
     "addDate": "Ajouter Date",
     "manageCourtDate": "Gérer date",

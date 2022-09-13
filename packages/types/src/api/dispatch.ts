@@ -59,6 +59,12 @@ export type PostLink911CallToIncident =
 export type Post911CallAssignUnAssign = Get911CallsData["calls"][number];
 
 /**
+ * @method PUT
+ * @route /911-calls/:callId/assigned-units/:assignedUnitId
+ */
+export type PUT911CallAssignedUnit = Get911CallsData["calls"][number];
+
+/**
  * @method POST
  * @route /911-calls/events
  */

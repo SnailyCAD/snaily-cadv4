@@ -152,6 +152,7 @@
     "updateAvailable": "Update Available",
     "updateAvailableInfo": "A new update is available. Please update your SnailyCAD to take advantage of the latest features and bug fixes. Click for more information.",
     "serialNumberInUse": "Serial Number is already in use.",
-    "vinNumberInUse": "VIN Number is already in use."
+    "vinNumberInUse": "VIN Number is already in use.",
+    "alreadyHasPrimaryUnit": "This call already has a primary unit."
   }
 }
