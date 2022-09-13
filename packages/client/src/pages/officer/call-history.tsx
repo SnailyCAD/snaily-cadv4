@@ -32,6 +32,7 @@ import type {
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { getSelectedTableRows } from "hooks/shared/table/useTableState";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
+import { useCall911State } from "state/dispatch/call911State";
 
 interface Props extends GetDispatchData {
   data: Get911CallsData;
@@ -42,6 +43,7 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
   const dispatchState = useDispatchState();
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageCallHistory], true);
+  const { setCurrentlySelectedCall } = useCall911State();
 
   const asyncTable = useAsyncTable({
     fetchOptions: {
@@ -68,11 +70,13 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
   function handleLinkClick(call: Full911Call) {
     callState.setTempId(call.id);
     openModal(ModalIds.LinkCallToIncident);
+    setCurrentlySelectedCall(call);
   }
 
   function handleViewClick(call: Full911Call) {
     callState.setTempId(call.id);
     openModal(ModalIds.Manage911Call);
+    setCurrentlySelectedCall(call);
   }
 
   async function handlePurge() {
