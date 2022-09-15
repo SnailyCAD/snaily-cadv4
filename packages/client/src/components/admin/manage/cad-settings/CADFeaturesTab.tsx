@@ -231,18 +231,10 @@ export function CADFeaturesTab() {
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!cad) return;
-    const featuresArr = [];
-
-    for (const feature in values.features) {
-      const feat = values.features[feature as Feature];
-      const featObj = {
-        feature,
-        isEnabled:
-          feat?.isEnabled ?? DEFAULT_DISABLED_FEATURES[feature as Feature]?.isEnabled ?? true,
-      };
-
-      featuresArr.push(featObj);
-    }
+    const featuresArr = Object.entries(values.features).map(([key, value]) => ({
+      feature: key as Feature,
+      isEnabled: value.isEnabled,
+    }));
 
     const { json } = await execute<PutCADFeaturesData>({
       path: "/admin/manage/cad-settings/features",
