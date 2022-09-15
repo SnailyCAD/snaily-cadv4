@@ -25,6 +25,7 @@ import { ActiveCallsHeader } from "./ActiveCallsHeader";
 import { ActiveCallsActionsColumn } from "./ActionsColumn";
 import { useCall911State } from "state/dispatch/call911State";
 import { useActiveCalls } from "hooks/realtime/useActiveCalls";
+import { CaseNumberColumn } from "./CaseNumberColumn";
 
 interface Props {
   initialData: Get911CallsData;
@@ -138,7 +139,7 @@ function _ActiveCalls({ initialData }: Props) {
                 rowProps: {
                   className: isUnitAssigned ? "bg-gray-200 dark:bg-quinary" : undefined,
                 },
-                caseNumber: `#${call.caseNumber}`,
+                caseNumber: <CaseNumberColumn call={call} />,
                 name: `${call.name} ${call.viaDispatch ? `(${leo("dispatch")})` : ""}`,
                 location: `${call.location} ${call.postal ? `(${call.postal})` : ""}`,
                 description: <CallDescription data={call} />,
