@@ -198,18 +198,12 @@ export function ManagePermissionsModal({ user, onUpdate, isReadOnly }: Props) {
 }
 
 function makePermissionsData(data: Record<PermissionNames, boolean>) {
-  const newPermissions: Partial<Record<PermissionNames, Permissions>> = {};
+  const newPermissions: ([] | [PermissionNames, Permissions])[] = Object.entries(data).map(
+    ([permission, value]) =>
+      value ? [permission as PermissionNames, Permissions[permission as PermissionNames]] : [],
+  );
 
-  for (const key in data) {
-    const permission = data[key as PermissionNames];
-    if (!permission) {
-      continue;
-    }
-
-    newPermissions[key as PermissionNames] = Permissions[key as PermissionNames];
-  }
-
-  return newPermissions;
+  return Object.fromEntries(newPermissions);
 }
 
 export function formatPermissionName(permission: string) {
