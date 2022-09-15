@@ -206,7 +206,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
           <Button onClick={() => openModal(ModalIds.ManagePenalCodeGroup)}>
             {t("addPenalCodeGroup")}
           </Button>
-          <OptionsDropdown type={type} values={values} />
+          <OptionsDropdown type={type} values={data} />
         </div>
       </header>
 

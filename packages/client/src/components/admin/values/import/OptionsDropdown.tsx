@@ -5,10 +5,10 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { useDownload } from "@casper124578/useful";
 import { Dropdown } from "components/Dropdown";
-import { PenalCode, ValueType } from "@snailycad/types";
-import { isDivisionValue, isStatusValue } from "@snailycad/utils";
-import type { AnyValue } from "@snailycad/types";
+import type { PenalCode, ValueType, AnyValue } from "@snailycad/types";
+import { isPenalCodeValue, isDivisionValue, isStatusValue } from "@snailycad/utils";
 import format from "date-fns/format";
+import { omit } from "lib/utils";
 
 interface Props {
   type: ValueType;
@@ -47,10 +47,7 @@ export function OptionsDropdown({ type, values }: Props) {
       <Dropdown.Item onClick={() => openModal(ModalIds.ImportValues)}>
         {t("importValues")}
       </Dropdown.Item>
-      <Dropdown.Item
-        disabled={values.length <= 0 || type === ValueType.PENAL_CODE}
-        onClick={handleExport}
-      >
+      <Dropdown.Item disabled={values.length <= 0} onClick={handleExport}>
         {t("exportValues")}
       </Dropdown.Item>
     </Dropdown>
@@ -75,6 +72,18 @@ function omitUnnecessaryProperties(values: readonly any[]) {
 
     if (isDivisionValue(v)) {
       delete (v as any).department;
+    }
+
+    if (isPenalCodeValue(v)) {
+      return {
+        ...omit(v, ["createdAt", "updatedAt", "position", "warningApplicable"]),
+        warningApplicable: !!v.warningApplicable,
+        warningNotApplicable: !!v.warningNotApplicable,
+        warningFines: v.warningApplicable ? v.warningApplicable.fines : [],
+        warningNotFines: v.warningNotApplicable ? v.warningNotApplicable.fines : [],
+        prisonTerm: v.warningNotApplicable ? v.warningNotApplicable.prisonTerm : [],
+        bail: v.warningNotApplicable ? v.warningNotApplicable.bail : [],
+      };
     }
 
     const value = { value: v.value.value, position: v.value.position };
