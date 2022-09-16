@@ -15,6 +15,7 @@ export const DEFAULT_DISABLED_FEATURES: Partial<Record<Feature, { isEnabled: boo
   WEAPON_EXAMS: { isEnabled: false },
   ACTIVE_WARRANTS: { isEnabled: false },
   CITIZEN_DELETE_ON_DEAD: { isEnabled: false },
+  WARRANT_STATUS_APPROVAL: { isEnabled: false },
 };
 
 export function useFeatureEnabled(features?: CadFeature[]) {

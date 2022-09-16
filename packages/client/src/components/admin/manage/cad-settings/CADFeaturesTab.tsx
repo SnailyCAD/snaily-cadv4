@@ -209,6 +209,10 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     name: "Panic Buttons",
     description: "When enabled, this will allow LEO and EMS-FD to press a panic button.",
   },
+  WARRANT_STATUS_APPROVAL: {
+    name: "Warrant Status Approval",
+    description: "When enabled, this will require supervisors to approve 'active' warrants.",
+  },
 };
 
 export function CADFeaturesTab() {
