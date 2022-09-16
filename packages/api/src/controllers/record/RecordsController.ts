@@ -82,6 +82,7 @@ export class RecordsController {
     permissions: [Permissions.ManageWarrants, Permissions.DeleteCitizenRecords],
   })
   async createWarrant(
+    @Context("cad") cad: cad,
     @BodyParams() body: unknown,
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
   ): Promise<APITypes.PostCreateWarrantData> {
@@ -98,12 +99,23 @@ export class RecordsController {
       throw new NotFound("citizenNotFound");
     }
 
+    const isWarrantApprovalEnabled = isFeatureEnabled({
+      feature: Feature.WARRANT_STATUS_APPROVAL,
+      features: cad.features,
+      defaultReturn: false,
+    });
+
+    const approvalStatus = isWarrantApprovalEnabled
+      ? WhitelistStatus.PENDING
+      : WhitelistStatus.ACCEPTED;
+
     const warrant = await prisma.warrant.create({
       data: {
         citizenId: citizen.id,
         officerId: officer?.id ?? null,
         description: data.description,
         status: data.status as WarrantStatus,
+        approvalStatus,
       },
     });
 

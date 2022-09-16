@@ -1117,6 +1117,7 @@ model Warrant {
   RecordLog            RecordLog[]
   ExpungementRequest   ExpungementRequest?      @relation(fields: [expungementRequestId], references: [id])
   expungementRequestId String?
+  approvalStatus       WhitelistStatus?         @default(ACCEPTED)
 }
 
 model RecordLog {
@@ -1517,4 +1518,5 @@ enum Feature {
   ACTIVE_WARRANTS
   CITIZEN_DELETE_ON_DEAD
   PANIC_BUTTON
+  WARRANT_STATUS_APPROVAL
 }

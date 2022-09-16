@@ -34,6 +34,8 @@ export default function ManageCourthouse({ expungementRequests, nameChangeReques
     true,
   );
 
+  const hasManageWarrantPerms = hasPermissions([Permissions.ManagePendingWarrants], true);
+
   const TABS = [];
 
   if (hasExpungementPerms) {
@@ -42,6 +44,10 @@ export default function ManageCourthouse({ expungementRequests, nameChangeReques
 
   if (hasNameChangePerms) {
     TABS.push({ value: "name-change-requests", name: t("MANAGE_NAME_CHANGE_REQUESTS") });
+  }
+
+  if (hasManageWarrantPerms) {
+    TABS.push({ value: "pending-warrants", name: t("MANAGE_PENDING_WARRANTS") });
   }
 
   return (
@@ -53,13 +59,14 @@ export default function ManageCourthouse({ expungementRequests, nameChangeReques
           Permissions.ManageNameChangeRequests,
           Permissions.ViewExpungementRequests,
           Permissions.ManageExpungementRequests,
+          Permissions.ManagePendingWarrants,
         ],
       }}
     >
       <header className="mb-5">
         <Title>{t("MANAGE_COURTHOUSE")}</Title>
         <p className="text-neutral-700 dark:text-gray-400 my-2">
-          Here you can manage expungement requests and name change requests.
+          Here you can manage expungement requests, name change requests and pending warrants.
         </p>
       </header>
 
