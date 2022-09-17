@@ -68,7 +68,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
   }
 
   return (
-    <div className="overflow-hidden rounded-md card">
+    <div className="rounded-md card">
       <header className="p-2 px-4 bg-gray-200 dark:bg-secondary flex items-center justify-between">
         <h1 className="text-xl font-semibold">{t("activeOfficers")}</h1>
 

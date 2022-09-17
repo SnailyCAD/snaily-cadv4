@@ -118,7 +118,7 @@ function _ActiveCalls({ initialData }: Props) {
   }
 
   return (
-    <div className="overflow-hidden rounded-md card">
+    <div className="rounded-md card">
       {audio.addedToCallAudio}
       {audio.incomingCallAudio}
       <ActiveCallsHeader search={asyncTable.search} calls={calls} />

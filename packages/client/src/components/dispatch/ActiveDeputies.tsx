@@ -62,7 +62,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
   }
 
   return (
-    <div className="mt-3 overflow-hidden rounded-md card">
+    <div className="mt-3 rounded-md card">
       <header className="p-2 px-4 bg-gray-200 dark:bg-secondary flex items-center justify-between">
         <h1 className="text-xl font-semibold">{t("Ems.activeDeputies")}</h1>
 
@@ -133,11 +133,11 @@ function ActiveDeputies({ initialDeputies }: Props) {
                       {deputy.status?.value?.value}
                     </span>
                   ),
-                  radioChannel: <UnitRadioChannelModal unit={deputy} />,
                   incident: (
                     <ActiveIncidentColumn isDispatch={isDispatch} incident={activeIncident} />
                   ),
                   activeCall: <ActiveCallColumn isDispatch={isDispatch} call={activeCall} />,
+                  radioChannel: <UnitRadioChannelModal unit={deputy} />,
                   actions: isDispatch ? (
                     <Button
                       disabled={!hasActiveDispatchers}
@@ -157,11 +157,11 @@ function ActiveDeputies({ initialDeputies }: Props) {
               { header: t("Leo.division"), accessorKey: "division" },
               { header: t("Leo.rank"), accessorKey: "rank" },
               { header: t("Leo.status"), accessorKey: "status" },
+              ACTIVE_INCIDENTS ? { header: t("Leo.incident"), accessorKey: "incident" } : null,
+              { header: t("Leo.activeCall"), accessorKey: "activeCall" },
               RADIO_CHANNEL_MANAGEMENT
                 ? { header: t("Leo.radioChannel"), accessorKey: "radioChannel" }
                 : null,
-              ACTIVE_INCIDENTS ? { header: t("Leo.incident"), accessorKey: "incident" } : null,
-              { header: t("Leo.activeCall"), accessorKey: "activeCall" },
               isDispatch ? { header: common("actions"), accessorKey: "actions" } : null,
             ]}
           />
