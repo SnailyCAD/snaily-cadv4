@@ -36,6 +36,7 @@ export const Feature = {
   ACTIVE_WARRANTS: "ACTIVE_WARRANTS",
   CITIZEN_DELETE_ON_DEAD: "CITIZEN_DELETE_ON_DEAD",
   PANIC_BUTTON: "PANIC_BUTTON",
+  WARRANT_STATUS_APPROVAL: "WARRANT_STATUS_APPROVAL",
 } as const;
 
 export type Feature = typeof Feature[keyof typeof Feature];

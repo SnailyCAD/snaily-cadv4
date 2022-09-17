@@ -6,7 +6,7 @@ import {
   UPDATE_WARRANT_SCHEMA,
 } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { NotFound } from "@tsed/exceptions";
+import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { UseBeforeEach, UseBefore } from "@tsed/platform-middlewares";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
@@ -41,7 +41,7 @@ import { Socket } from "services/SocketService";
 import { assignUnitsToWarrant } from "lib/records/assignToWarrant";
 import type { cad } from "@snailycad/types";
 
-const assignedOfficersInclude = {
+export const assignedOfficersInclude = {
   combinedUnit: { include: combinedUnitProperties },
   officer: { include: leoProperties },
 };
@@ -64,7 +64,7 @@ export class RecordsController {
 
     const activeWarrants = await prisma.warrant.findMany({
       orderBy: { updatedAt: "desc" },
-      where: { status: "ACTIVE", ...(inactivityFilter?.filter ?? {}) },
+      where: { status: "ACTIVE", approvalStatus: "ACCEPTED", ...(inactivityFilter?.filter ?? {}) },
       include: {
         citizen: true,
         assignedOfficers: { include: assignedOfficersInclude },
@@ -82,6 +82,7 @@ export class RecordsController {
     permissions: [Permissions.ManageWarrants, Permissions.DeleteCitizenRecords],
   })
   async createWarrant(
+    @Context("cad") cad: cad,
     @BodyParams() body: unknown,
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
   ): Promise<APITypes.PostCreateWarrantData> {
@@ -98,12 +99,24 @@ export class RecordsController {
       throw new NotFound("citizenNotFound");
     }
 
+    const isWarrantApprovalEnabled = isFeatureEnabled({
+      feature: Feature.WARRANT_STATUS_APPROVAL,
+      features: cad.features,
+      defaultReturn: false,
+    });
+
+    const approvalStatus =
+      data.status === "ACTIVE" && isWarrantApprovalEnabled
+        ? WhitelistStatus.PENDING
+        : WhitelistStatus.ACCEPTED;
+
     const warrant = await prisma.warrant.create({
       data: {
         citizenId: citizen.id,
         officerId: officer?.id ?? null,
         description: data.description,
         status: data.status as WarrantStatus,
+        approvalStatus,
       },
     });
 
@@ -130,6 +143,10 @@ export class RecordsController {
         warrantId: warrant.id,
       },
     });
+
+    if (approvalStatus === WhitelistStatus.PENDING) {
+      throw new BadRequest("warrantApprovalRequired");
+    }
 
     const normalizedWarrant = officerOrDeputyToUnit(updatedWarrant);
     this.socket.emitCreateActiveWarrant(normalizedWarrant);

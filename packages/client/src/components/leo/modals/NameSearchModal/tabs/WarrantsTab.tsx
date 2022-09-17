@@ -15,6 +15,7 @@ import type { Warrant } from "@snailycad/types";
 import { TabsContent } from "components/shared/TabList";
 import type { DeleteRecordsByIdData, PutWarrantsData } from "@snailycad/types/api";
 import { Permissions, usePermission } from "hooks/usePermission";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 const values = [
   { label: "Inactive", value: "inactive" },
@@ -29,12 +30,22 @@ export function NameSearchWarrantsTab() {
   const { state, execute } = useFetch();
   const { currentResult, setCurrentResult } = useNameSearch();
   const tableState = useTableState();
+  const { WARRANT_STATUS_APPROVAL } = useFeatureEnabled();
 
   const { hasPermissions } = usePermission();
   const hasManageWarrantsPermissions = hasPermissions(
     [Permissions.ManageWarrants],
     (u) => u.isLeo || u.isSupervisor,
   );
+
+  const hasManagePendingWarrantsPermissions = hasPermissions(
+    [Permissions.ManagePendingWarrants],
+    (u) => u.isSupervisor,
+  );
+
+  const hasManagePermissions = WARRANT_STATUS_APPROVAL
+    ? hasManagePendingWarrantsPermissions
+    : hasManageWarrantsPermissions;
 
   async function handleDelete() {
     const warrant = getPayload<Warrant>(ModalIds.AlertRevokeWarrant);
@@ -110,14 +121,17 @@ export function NameSearchWarrantsTab() {
                     : "—",
                   description: warrant.description,
                   createdAt: <FullDate>{warrant.createdAt}</FullDate>,
+                  status: warrant.status,
                   actions: hasManageWarrantsPermissions ? (
                     <div className="flex gap-2">
-                      <Select
-                        onChange={(e) => handleChange(e.target.value, warrant)}
-                        className="w-40"
-                        values={values}
-                        value={value ?? null}
-                      />
+                      {hasManagePermissions ? (
+                        <Select
+                          onChange={(e) => handleChange(e.target.value, warrant)}
+                          className="w-40"
+                          values={values}
+                          value={value ?? null}
+                        />
+                      ) : null}
                       <Button
                         type="button"
                         onClick={() => handleDeleteClick(warrant)}
@@ -134,6 +148,7 @@ export function NameSearchWarrantsTab() {
               { header: t("Leo.officer"), accessorKey: "officer" },
               { header: common("description"), accessorKey: "description" },
               { header: common("createdAt"), accessorKey: "createdAt" },
+              hasManagePermissions ? null : { header: t("Leo.status"), accessorKey: "status" },
               hasManageWarrantsPermissions
                 ? { header: common("actions"), accessorKey: "actions" }
                 : null,

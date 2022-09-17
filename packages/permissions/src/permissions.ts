@@ -63,6 +63,8 @@ export enum Permissions {
   ViewNameChangeRequests = "ViewNameChangeRequests",
   ManageNameChangeRequests = "ManageNameChangeRequests",
 
+  ManagePendingWarrants = "ManagePendingWarrants",
+
   ManageCourthousePosts = "ManageCourthousePosts",
 
   ImportCitizens = "ImportCitizens",

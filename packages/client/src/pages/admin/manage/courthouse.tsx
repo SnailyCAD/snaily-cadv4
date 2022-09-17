@@ -2,10 +2,12 @@ import { Rank } from "@snailycad/types";
 import type {
   GetManageExpungementRequests,
   GetManageNameChangeRequests,
+  GetManagePendingWarrants,
 } from "@snailycad/types/api";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { ExpungementRequestsTab } from "components/admin/manage/courthouse/ExpungementRequestsTab";
 import { NameChangeRequestsTab } from "components/admin/manage/courthouse/NameChangeRequestsTab";
+import { PendingWarrantsTab } from "components/admin/manage/courthouse/PendingWarrantsTab";
 import { TabList } from "components/shared/TabList";
 import { Title } from "components/shared/Title";
 import { Permissions, usePermission } from "hooks/usePermission";
@@ -18,9 +20,14 @@ import { useTranslations } from "next-intl";
 interface Props {
   expungementRequests: GetManageExpungementRequests;
   nameChangeRequests: GetManageNameChangeRequests;
+  pendingWarrants: GetManagePendingWarrants;
 }
 
-export default function ManageCourthouse({ expungementRequests, nameChangeRequests }: Props) {
+export default function ManageCourthouse({
+  expungementRequests,
+  nameChangeRequests,
+  pendingWarrants,
+}: Props) {
   const { hasPermissions } = usePermission();
   const t = useTranslations("Management");
 
@@ -34,6 +41,8 @@ export default function ManageCourthouse({ expungementRequests, nameChangeReques
     true,
   );
 
+  const hasManageWarrantPerms = hasPermissions([Permissions.ManagePendingWarrants], true);
+
   const TABS = [];
 
   if (hasExpungementPerms) {
@@ -42,6 +51,10 @@ export default function ManageCourthouse({ expungementRequests, nameChangeReques
 
   if (hasNameChangePerms) {
     TABS.push({ value: "name-change-requests", name: t("MANAGE_NAME_CHANGE_REQUESTS") });
+  }
+
+  if (hasManageWarrantPerms) {
+    TABS.push({ value: "pending-warrants", name: t("MANAGE_PENDING_WARRANTS") });
   }
 
   return (
@@ -53,19 +66,21 @@ export default function ManageCourthouse({ expungementRequests, nameChangeReques
           Permissions.ManageNameChangeRequests,
           Permissions.ViewExpungementRequests,
           Permissions.ManageExpungementRequests,
+          Permissions.ManagePendingWarrants,
         ],
       }}
     >
       <header className="mb-5">
         <Title>{t("MANAGE_COURTHOUSE")}</Title>
         <p className="text-neutral-700 dark:text-gray-400 my-2">
-          Here you can manage expungement requests and name change requests.
+          Here you can manage expungement requests, name change requests and pending warrants.
         </p>
       </header>
 
       <TabList tabs={TABS}>
         {hasExpungementPerms ? <ExpungementRequestsTab requests={expungementRequests} /> : null}
         {hasNameChangePerms ? <NameChangeRequestsTab requests={nameChangeRequests} /> : null}
+        {hasManageWarrantPerms ? <PendingWarrantsTab warrants={pendingWarrants} /> : null}
       </TabList>
     </AdminLayout>
   );
@@ -73,15 +88,17 @@ export default function ManageCourthouse({ expungementRequests, nameChangeReques
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const user = await getSessionUser(req);
-  const [nameChangeRequests, expungementRequests] = await requestAll(req, [
+  const [nameChangeRequests, expungementRequests, pendingWarrants] = await requestAll(req, [
     ["/admin/manage/name-change-requests", []],
     ["/admin/manage/expungement-requests", []],
+    ["/admin/manage/pending-warrants", []],
   ]);
 
   return {
     props: {
       nameChangeRequests,
       expungementRequests,
+      pendingWarrants,
       session: user,
       messages: {
         ...(await getTranslations(

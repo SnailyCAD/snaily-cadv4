@@ -46,6 +46,7 @@ export const managementRoutes: SidebarRoute[] = [
       Permissions.ManageNameChangeRequests,
       Permissions.ViewExpungementRequests,
       Permissions.ManageExpungementRequests,
+      Permissions.ManagePendingWarrants,
     ],
     hidden: ({ COURTHOUSE }) => !COURTHOUSE,
   },
