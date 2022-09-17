@@ -94,7 +94,7 @@ export function ActiveIncidents() {
   }
 
   return (
-    <div className="mt-3 overflow-hidden rounded-md card">
+    <div className="mt-3 rounded-md card">
       <header className="flex items-center justify-between p-2 px-4 bg-gray-200 dark:bg-secondary">
         <h1 className="text-xl font-semibold">{t("activeIncidents")}</h1>
 

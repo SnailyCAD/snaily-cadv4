@@ -131,7 +131,7 @@ export function Table<TData extends _RowData>({
         containerProps?.className,
       )}
     >
-      <table className="w-full overflow-hidden whitespace-nowrap max-h-64">
+      <table className="w-full whitespace-nowrap max-h-64">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
