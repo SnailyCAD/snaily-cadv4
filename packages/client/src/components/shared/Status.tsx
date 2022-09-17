@@ -39,8 +39,6 @@ export function Status({ state, children }: Props) {
 
   const text = !children ? "" : children.toLowerCase().replace(/_/g, " ");
 
-  console.log({ state });
-
   return (
     <span className="capitalize">
       {state ? (
