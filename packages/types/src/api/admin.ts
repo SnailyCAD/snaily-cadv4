@@ -362,6 +362,22 @@ export type GetManageNameChangeRequests = (Prisma.NameChangeRequest & {
 export type PutManageNameChangeRequests = Prisma.NameChangeRequest;
 
 /**
+ * @method Get
+ * @route /admin/manage/pending-warrants
+ */
+export type GetManagePendingWarrants = (Prisma.Warrant & {
+  citizen: Prisma.Citizen;
+  assignedOfficers: Types.AssignedWarrantOfficer[];
+  officer: Types.Officer;
+})[];
+
+/**
+ * @method Put
+ * @route /admin/manage/pending-warrants/:id
+ */
+export type PutManagePendingWarrants = boolean;
+
+/**
  * @method GET
  * @route /admin/manage/custom-roles
  */

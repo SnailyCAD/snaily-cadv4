@@ -8,10 +8,12 @@ import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import type * as APITypes from "@snailycad/types/api";
-import type { Warrant } from "@snailycad/types";
+import { assignedOfficersInclude } from "controllers/record/RecordsController";
+import { leoProperties } from "lib/leo/activeOfficer";
+import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 
 @UseBeforeEach(IsAuth)
-@Controller("/admin/manage/name-change-requests")
+@Controller("/admin/manage/pending-warrants")
 export class AdminManageWarrantsController {
   @Get("/")
   @Description("Get all pending warrants")
@@ -19,13 +21,17 @@ export class AdminManageWarrantsController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManagePendingWarrants],
   })
-  async getRequests() {
+  async getPendingWarrants(): Promise<APITypes.GetManagePendingWarrants> {
     const pendingWarrants = await prisma.warrant.findMany({
       where: { approvalStatus: WhitelistStatus.PENDING },
-      include: { citizen: true },
+      include: {
+        citizen: true,
+        assignedOfficers: { include: assignedOfficersInclude },
+        officer: { include: leoProperties },
+      },
     });
 
-    return pendingWarrants;
+    return pendingWarrants.map((v) => officerOrDeputyToUnit(v));
   }
 
   @Put("/:id")
@@ -37,7 +43,7 @@ export class AdminManageWarrantsController {
   async acceptOrDeclineNameChangeRequest(
     @PathParams("id") id: string,
     @BodyParams("type") type: WhitelistStatus,
-  ) {
+  ): Promise<APITypes.PutManagePendingWarrants> {
     const isCorrect = Object.values(WhitelistStatus).includes(type);
     if (!isCorrect) {
       throw new BadRequest("invalidType");
@@ -51,9 +57,8 @@ export class AdminManageWarrantsController {
       throw new NotFound("warrantNotFound");
     }
 
-    let updated: Warrant;
     if (type === WhitelistStatus.ACCEPTED) {
-      updated = await prisma.warrant.update({
+      await prisma.warrant.update({
         where: { id: warrant.id },
         data: {
           status: WarrantStatus.ACTIVE,
@@ -61,7 +66,7 @@ export class AdminManageWarrantsController {
         },
       });
     } else {
-      updated = await prisma.warrant.update({
+      await prisma.warrant.update({
         where: { id: warrant.id },
         data: {
           status: WarrantStatus.INACTIVE,
@@ -70,6 +75,6 @@ export class AdminManageWarrantsController {
       });
     }
 
-    return updated;
+    return true;
   }
 }
