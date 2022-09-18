@@ -122,9 +122,10 @@ export class SearchController {
     @BodyParams("name") fullName: string,
     @Context("cad") cad: cad & { features?: CadFeature[] },
     @Context("user") user: User,
+    @BodyParams("id") citizenId?: string,
     @QueryParams("fromAuthUserOnly", Boolean) fromAuthUserOnly = false,
   ): Promise<APITypes.PostLeoSearchCitizenData> {
-    if (!fullName) {
+    if (!fullName && !citizenId) {
       throw new ExtendedBadRequest({ name: "Must provide a name (first, last or fullname)." });
     }
 
@@ -132,6 +133,18 @@ export class SearchController {
 
     if ((!name || name.length < 2) && !surname) {
       return [];
+    }
+
+    if (citizenId) {
+      const citizens = await prisma.citizen.findMany({
+        where: { id: citizenId },
+        take: 35,
+        ...citizenSearchIncludeOrSelect(user, cad),
+      });
+
+      return appendConfidential(
+        await appendCustomFields(citizens, CustomFieldCategory.CITIZEN),
+      ) as APITypes.PostLeoSearchCitizenData;
     }
 
     const checkUserId = shouldCheckCitizenUserId({ cad, user });

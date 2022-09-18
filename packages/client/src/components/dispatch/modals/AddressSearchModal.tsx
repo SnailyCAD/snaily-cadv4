@@ -30,7 +30,10 @@ export function AddressSearchModal() {
 
   function handleOpen(citizen: AddressSearchResult[number]) {
     closeModal(ModalIds.AddressSearch);
-    openModal(ModalIds.NameSearch, { name: `${citizen.name} ${citizen.surname}` });
+    openModal(ModalIds.NameSearch, {
+      ...citizen,
+      name: `${citizen.name} ${citizen.surname}`,
+    });
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
