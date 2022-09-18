@@ -54,15 +54,15 @@ const CreateCitizenModal = dynamic(
 
 function AutoSubmit() {
   const { getPayload } = useModal();
-  const payloadName = getPayload<Citizen>(ModalIds.NameSearch)?.name;
+  const payloadCitizen = getPayload<Citizen>(ModalIds.NameSearch);
   const { submitForm } = useFormikContext();
 
   // if there's a name, auto-submit the form.
   React.useEffect(() => {
-    if (payloadName) {
+    if (payloadCitizen) {
       submitForm();
     }
-  }, [payloadName, submitForm]);
+  }, [payloadCitizen, submitForm]);
 
   return null;
 }
@@ -85,7 +85,7 @@ export function NameSearchModal() {
   const isLeo = router.pathname === "/officer";
   const { results, currentResult, setCurrentResult, setResults } = useNameSearch();
 
-  const payloadName = getPayload<Citizen>(ModalIds.NameSearch)?.name;
+  const payloadCitizen = getPayload<Citizen>(ModalIds.NameSearch);
 
   const bolo = React.useMemo(() => {
     if (!currentResult) return null;
@@ -143,7 +143,7 @@ export function NameSearchModal() {
 
     const first = Array.isArray(json) ? json[0] : json;
 
-    if (first && first?.id === currentResult?.id) {
+    if (first && (first?.id === currentResult?.id || first?.id === payloadCitizen?.id)) {
       setCurrentResult(first);
     }
 
@@ -187,7 +187,8 @@ export function NameSearchModal() {
     !currentResult || currentResult.isConfidential ? false : currentResult.warrants.length > 0;
 
   const INITIAL_VALUES = {
-    name: payloadName ?? "",
+    name: payloadCitizen?.name ?? "",
+    id: payloadCitizen?.id,
   };
 
   return (

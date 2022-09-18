@@ -70,7 +70,7 @@ export default function Jail({ data }: Props) {
   }
 
   function handleNameClick(item: BaseCitizen & { Record: Record[] }) {
-    openModal(ModalIds.NameSearch, { name: `${item.name} ${item.surname}` });
+    openModal(ModalIds.NameSearch, { ...item, name: `${item.name} ${item.surname}` });
   }
 
   return (

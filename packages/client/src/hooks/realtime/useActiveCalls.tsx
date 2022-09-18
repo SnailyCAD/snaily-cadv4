@@ -27,6 +27,7 @@ export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
 
   const shouldPlayAddedToCallSound = user?.soundSettings?.addedToCall ?? false;
   const shouldPlayIncomingCallSound = user?.soundSettings?.incomingCall ?? false;
+  const shouldSpeakIncomingCall = user?.soundSettings?.speech ?? true;
 
   const [addedToCallAudio, , addedToCallControls] = useAudio({
     autoPlay: false,
@@ -38,7 +39,29 @@ export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
     src: INCOMING_CALL_SRC,
   });
 
+  function handleSpeech(call: Full911Call) {
+    try {
+      const speech = window.speechSynthesis;
+
+      const utterThis = new SpeechSynthesisUtterance(
+        `You have been assigned to call #${call.caseNumber}. ${
+          call.type ? `Call type: ${call.type?.value.value}.` : ""
+        }`,
+      );
+      utterThis.rate = 0.8;
+
+      speech.speak(utterThis);
+    } catch (e) {
+      console.log(e);
+      console.log("Failed to speak.");
+    }
+  }
+
   function handleShowToast(call: Full911Call, previousCall: Partial<Full911Call> = {}) {
+    if (shouldSpeakIncomingCall) {
+      handleSpeech(call);
+    }
+
     const messageId = toastMessage({
       duration: Infinity,
       title: "Assigned to call",

@@ -64,6 +64,7 @@ export function AppearanceTab({ availableSounds }: Props) {
       stopRoleplay: user.soundSettings?.stopRoleplay ?? false,
       statusUpdate: user.soundSettings?.statusUpdate ?? false,
       incomingCall: user.soundSettings?.incomingCall ?? false,
+      speech: user.soundSettings?.speech ?? true,
     },
   };
   const sounds = Object.keys(INITIAL_VALUES.soundSettings);
@@ -85,7 +86,9 @@ export function AppearanceTab({ availableSounds }: Props) {
   }
 
   const availableSoundsArr = sounds.filter((v) => availableSounds[soundCamelCaseToKebabCase(v)]);
-  const unAvailableSoundsArr = sounds.filter((v) => !availableSounds[soundCamelCaseToKebabCase(v)]);
+  const unAvailableSoundsArr = sounds.filter(
+    (v) => v !== "speech" && !availableSounds[soundCamelCaseToKebabCase(v)],
+  );
 
   return (
     <TabsContent aria-label={t("appearanceSettings")} value="appearanceSettings">
@@ -139,12 +142,23 @@ export function AppearanceTab({ availableSounds }: Props) {
             <div className="mb-5">
               <h2 className="text-2xl font-semibold mb-3">{t("sounds")}</h2>
 
+              <div className="mb-3">
+                <FormField className="!mb-0" label="Speech" checkbox>
+                  <Toggle
+                    value={values.soundSettings.speech}
+                    onCheckedChange={handleChange}
+                    name="soundSettings.speech"
+                  />
+                </FormField>
+              </div>
+
               {availableSoundsArr.map((_name) => {
                 const fieldName = _name as keyof typeof INITIAL_VALUES.soundSettings;
                 const kebabCase = soundCamelCaseToKebabCase(fieldName);
                 const soundAvailable = !!availableSounds[kebabCase];
 
                 if (!soundAvailable) return null;
+                if (fieldName === "speech") return null;
 
                 return (
                   <div className="mb-3 flex flex-row gap-5" key={fieldName}>
