@@ -145,10 +145,8 @@ export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
           !prevCall.assignedUnits.some((u) => u.unit?.id === unit?.id) &&
           call.assignedUnits.some((v) => v.unit?.id === unit?.id);
 
-        console.log({ wasAssignedToCall });
 
         if (wasAssignedToCall) {
-          console.log({ call, wasAssignedToCall });
 
           handleShowToast(call);
 
