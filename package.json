@@ -1,13 +1,14 @@
 {
   "private": true,
   "name": "snailycad",
-  "version": "1.25.3",
+  "version": "2.0.0",
   "packageManager": "yarn@3.2.0",
   "workspaces": [
+    "apps/**",
     "packages/**"
   ],
   "scripts": {
-    "start": "yarn run concurrently \"yarn workspace @snailycad/client start\" \"yarn workspace @snailycad/api generate && yarn workspace @snailycad/api start\"",
+    "start": "yarn run concurrently \"yarn workspace @snailycad/web start\" \"yarn workspace @snailycad/api generate && yarn workspace @snailycad/api start\"",
     "dev": "yarn turbo run watch --parallel",
     "format:quick": "pretty-quick --staged --pattern \"packages/**/*.{js,jsx,ts,tsx,md,css,json}\"",
     "format": "prettier --write \"./packages/**/**/*.{js,jsx,ts,tsx,md,css,json}\" --ignore-path .gitignore",
@@ -31,6 +32,6 @@
     "husky": "^8.0.1",
     "prettier": "^2.7.1",
     "pretty-quick": "^3.1.3",
-    "turbo": "^1.4.6"
+    "turbo": "^1.4.7"
   }
 }
