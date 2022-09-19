@@ -6,28 +6,29 @@ import prettier from "prettier";
 const { format } = prettier;
 
 const PACKAGES_PATH = join(process.cwd(), "packages");
+const APPS_PATH = join(process.cwd(), "apps");
 
 const packages = readdirSync(PACKAGES_PATH).filter((v) => !v.endsWith(".md"));
-const utilPackages = packages.filter((v) => !["client", "api"].includes(v));
+const apps = readdirSync(APPS_PATH).filter((v) => !v.endsWith(".md"));
+const allPackages = [...packages, ...apps];
 
 const version = await askNewVersion();
 
-for (const pkg of packages) {
-  const packageJsonPath = join(PACKAGES_PATH, pkg, "package.json");
+for (const pkg of allPackages) {
+  const isApp = apps.includes(pkg);
+  const packageJsonPath = join(isApp ? APPS_PATH : PACKAGES_PATH, pkg, "package.json");
 
   const packageJsonContentJSON = getJson(packageJsonPath);
   if (!packageJsonContentJSON) continue;
   packageJsonContentJSON.version = version;
 
-  for (const utilPkg of utilPackages) {
-    const isInDep = packageJsonContentJSON.dependencies?.[`@snailycad/${utilPkg}`];
-    const isInDevDep = packageJsonContentJSON.devDependencies?.[`@snailycad/${utilPkg}`];
+  const isInDep = packageJsonContentJSON.dependencies?.[`@snailycad/${pkg}`];
+  const isInDevDep = packageJsonContentJSON.devDependencies?.[`@snailycad/${pkg}`];
 
-    if (isInDep) {
-      packageJsonContentJSON.dependencies[`@snailycad/${utilPkg}`] = version;
-    } else if (isInDevDep) {
-      packageJsonContentJSON.devDependencies[`@snailycad/${utilPkg}`] = version;
-    }
+  if (isInDep) {
+    packageJsonContentJSON.dependencies[`@snailycad/${pkg}`] = version;
+  } else if (isInDevDep) {
+    packageJsonContentJSON.devDependencies[`@snailycad/${pkg}`] = version;
   }
 
   writeFileSync(packageJsonPath, stringifyAndFormat(packageJsonContentJSON));
