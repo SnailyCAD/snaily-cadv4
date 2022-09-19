@@ -2266,70 +2266,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/config@1.25.3, @snailycad/config@workspace:packages/config":
+"@snailycad/client@workspace:apps/client":
   version: 0.0.0-use.local
-  resolution: "@snailycad/config@workspace:packages/config"
-  dependencies:
-    tsup: ^6.2.3
-    typescript: ^4.8.3
-    vite: ^3.1.1
-    vitest: ^0.23.2
-  languageName: unknown
-  linkType: soft
-
-"@snailycad/permissions@1.25.3, @snailycad/permissions@workspace:packages/permissions":
-  version: 0.0.0-use.local
-  resolution: "@snailycad/permissions@workspace:packages/permissions"
-  dependencies:
-    tsup: ^6.2.3
-    type-fest: ^2.19.0
-    typescript: ^4.8.3
-    vite: ^3.1.1
-    vitest: ^0.23.2
-    zod: ^3.19.1
-  languageName: unknown
-  linkType: soft
-
-"@snailycad/schemas@1.25.3, @snailycad/schemas@workspace:packages/schemas":
-  version: 0.0.0-use.local
-  resolution: "@snailycad/schemas@workspace:packages/schemas"
-  dependencies:
-    tslib: ^2.4.0
-    tsup: ^6.2.3
-    typescript: ^4.8.3
-    zod: ^3.19.1
-  languageName: unknown
-  linkType: soft
-
-"@snailycad/types@1.25.3, @snailycad/types@workspace:packages/types":
-  version: 0.0.0-use.local
-  resolution: "@snailycad/types@workspace:packages/types"
-  dependencies:
-    "@snailycad/permissions": 1.25.3
-    discord-api-types: 0.37.9
-    tsup: ^6.2.3
-    type-fest: ^2.19.0
-    typescript: ^4.8.3
-  languageName: unknown
-  linkType: soft
-
-"@snailycad/utils@1.25.3, @snailycad/utils@workspace:packages/utils":
-  version: 0.0.0-use.local
-  resolution: "@snailycad/utils@workspace:packages/utils"
-  dependencies:
-    "@snailycad/types": 1.25.3
-    c8: ^7.12.0
-    tslib: ^2.4.0
-    tsup: ^6.2.3
-    typescript: ^4.8.3
-    vite: ^3.1.1
-    vitest: ^0.23.2
-  languageName: unknown
-  linkType: soft
-
-"@snailycad/web@workspace:apps/web":
-  version: 0.0.0-use.local
-  resolution: "@snailycad/web@workspace:apps/web"
+  resolution: "@snailycad/client@workspace:apps/client"
   dependencies:
     "@casper124578/use-socket.io": 4.1.3
     "@casper124578/useful": ^2.0.4
@@ -2408,6 +2347,67 @@ __metadata:
     vitest: ^0.23.2
     zod: ^3.19.1
     zustand: ^4.1.1
+  languageName: unknown
+  linkType: soft
+
+"@snailycad/config@1.25.3, @snailycad/config@workspace:packages/config":
+  version: 0.0.0-use.local
+  resolution: "@snailycad/config@workspace:packages/config"
+  dependencies:
+    tsup: ^6.2.3
+    typescript: ^4.8.3
+    vite: ^3.1.1
+    vitest: ^0.23.2
+  languageName: unknown
+  linkType: soft
+
+"@snailycad/permissions@1.25.3, @snailycad/permissions@workspace:packages/permissions":
+  version: 0.0.0-use.local
+  resolution: "@snailycad/permissions@workspace:packages/permissions"
+  dependencies:
+    tsup: ^6.2.3
+    type-fest: ^2.19.0
+    typescript: ^4.8.3
+    vite: ^3.1.1
+    vitest: ^0.23.2
+    zod: ^3.19.1
+  languageName: unknown
+  linkType: soft
+
+"@snailycad/schemas@1.25.3, @snailycad/schemas@workspace:packages/schemas":
+  version: 0.0.0-use.local
+  resolution: "@snailycad/schemas@workspace:packages/schemas"
+  dependencies:
+    tslib: ^2.4.0
+    tsup: ^6.2.3
+    typescript: ^4.8.3
+    zod: ^3.19.1
+  languageName: unknown
+  linkType: soft
+
+"@snailycad/types@1.25.3, @snailycad/types@workspace:packages/types":
+  version: 0.0.0-use.local
+  resolution: "@snailycad/types@workspace:packages/types"
+  dependencies:
+    "@snailycad/permissions": 1.25.3
+    discord-api-types: 0.37.9
+    tsup: ^6.2.3
+    type-fest: ^2.19.0
+    typescript: ^4.8.3
+  languageName: unknown
+  linkType: soft
+
+"@snailycad/utils@1.25.3, @snailycad/utils@workspace:packages/utils":
+  version: 0.0.0-use.local
+  resolution: "@snailycad/utils@workspace:packages/utils"
+  dependencies:
+    "@snailycad/types": 1.25.3
+    c8: ^7.12.0
+    tslib: ^2.4.0
+    tsup: ^6.2.3
+    typescript: ^4.8.3
+    vite: ^3.1.1
+    vitest: ^0.23.2
   languageName: unknown
   linkType: soft
 

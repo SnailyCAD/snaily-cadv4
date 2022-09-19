@@ -17,8 +17,7 @@
     },
     "build": {
       "dependsOn": ["copy-env", "create-images-domain", "validate-locales", "^build"],
-      "outputs": [".next/**", "dist/**"],
-      "cache": false
+      "outputs": [".next/**", "dist/**"]
     },
     "typecheck": {
       "dependsOn": ["^typecheck"],

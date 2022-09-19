@@ -42,7 +42,7 @@ services:
 
     user: node
     image: node:16
-    command: "yarn workspace @snailycad/web start"
+    command: "yarn workspace @snailycad/client start"
     ports:
       - "3000:3000"
     expose:
