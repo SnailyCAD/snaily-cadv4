@@ -4,11 +4,11 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { readFile } from "node:fs/promises";
 
-const UNIX_SLASHES_REGEX = /\/packages\/client/;
-const WIN_SLASHES_REGEX = /\\packages\\client/;
+const UNIX_SLASHES_REGEX = /\/apps\/client/;
+const WIN_SLASHES_REGEX = /\\apps\\client/;
 
-function getClientPackagesPath() {
-  let dir = join(process.cwd(), "packages", "client");
+function getClientAppPath() {
+  let dir = join(process.cwd(), "apps", "client");
   const unixMatch = process.cwd().match(UNIX_SLASHES_REGEX);
   const winMatch = process.cwd().match(WIN_SLASHES_REGEX);
 
@@ -20,14 +20,14 @@ function getClientPackagesPath() {
 }
 
 async function loadNextConfigI18n() {
-  const path = pathToFileURL(join(getClientPackagesPath(), "next.config.js"));
+  const path = pathToFileURL(join(getClientAppPath(), "next.config.js"));
   const nextConfig = (await import(path)).default.i18n;
 
   return nextConfig;
 }
 
 async function doesLocaleExist(locale) {
-  const path = pathToFileURL(join(getClientPackagesPath(), "locales", locale, "common.json"));
+  const path = pathToFileURL(join(getClientAppPath(), "locales", locale, "common.json"));
 
   try {
     await readFile(path);

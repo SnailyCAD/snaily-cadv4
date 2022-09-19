@@ -2,8 +2,6 @@
 
 This directory holds all the packages for SnailyCADv4 to function.
 
-- `api/`: This directory powers SnailyCADv4's API. This processes all the incoming requests.
-- `client/`: This is what you as the end user will see on the screen in the browser.
 - `config/`: This package holds some simple configuration that is shared between the API and client.
 - `permissions/`: This package holds all SnailyCADv4's permissions. It also exports functions to check user permissions.
 - `schemas/`: This package exports validation schemas. This is used by both the client and API to validate form fields.

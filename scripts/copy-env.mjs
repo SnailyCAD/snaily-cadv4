@@ -7,8 +7,8 @@ import { EOL } from "node:os";
 
 const DEFAULT_PORT = "3000";
 
-const UNIX_SLASHES_REGEX = /\/packages\/client/;
-const WIN_SLASHES_REGEX = /\\packages\\client/;
+const UNIX_SLASHES_REGEX = /\/apps\/client/;
+const WIN_SLASHES_REGEX = /\\apps\\client/;
 
 async function addPortToClientPackageJson() {
   if (process.env.NODE_ENV === "development") return;
@@ -17,7 +17,7 @@ async function addPortToClientPackageJson() {
     const port = process.env.PORT_CLIENT;
     if (!port) return;
 
-    let dir = join(process.cwd(), "packages", "client");
+    let dir = join(process.cwd(), "apps", "client");
     const unixMatch = process.cwd().match(UNIX_SLASHES_REGEX);
     const winMatch = process.cwd().match(WIN_SLASHES_REGEX);
 
@@ -44,16 +44,11 @@ async function addPortToClientPackageJson() {
 const [, , ...args] = process.argv;
 const copyToClient = hasArg("--client");
 const copyToApi = hasArg("--api");
-const copyToTelemetry = hasArg("--telemetry");
 
 let ENV_FILE_PATH = join(process.cwd(), ".env");
 
-if (
-  ENV_FILE_PATH.endsWith("/packages/client/.env") ||
-  ENV_FILE_PATH.endsWith("/packages/api/.env") ||
-  ENV_FILE_PATH.endsWith("/packages/telemetry/.env")
-) {
-  ENV_FILE_PATH = ENV_FILE_PATH.replace(/packages\/(client|api|telemetry)\//, "");
+if (ENV_FILE_PATH.endsWith("/apps/client/.env") || ENV_FILE_PATH.endsWith("/apps/api/.env")) {
+  ENV_FILE_PATH = ENV_FILE_PATH.replace(/apps\/(client|api)\//, "");
 }
 
 /**
@@ -81,19 +76,14 @@ async function copyEnv(distDir) {
 }
 
 if (copyToClient) {
-  const CLIENT_PACKAGE_PATH = join(process.cwd(), "packages", "client");
+  const CLIENT_PACKAGE_PATH = join(process.cwd(), "apps", "client");
   addPortToClientPackageJson();
   copyEnv(CLIENT_PACKAGE_PATH);
 }
 
 if (copyToApi) {
-  const API_PACKAGE_PATH = join(process.cwd(), "packages", "api");
+  const API_PACKAGE_PATH = join(process.cwd(), "apps", "api");
   copyEnv(API_PACKAGE_PATH);
-}
-
-if (copyToTelemetry) {
-  const TL_PACKAGE_PATH = join(process.cwd(), "packages", "telemetry");
-  copyEnv(TL_PACKAGE_PATH);
 }
 
 function hasArg(arg) {

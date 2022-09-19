@@ -5,11 +5,11 @@ import { pathToFileURL } from "node:url";
 import { readFile, writeFile } from "node:fs/promises";
 import { format } from "prettier";
 
-const UNIX_SLASHES_REGEX = /\/packages\/client/;
-const WIN_SLASHES_REGEX = /\\packages\\client/;
+const UNIX_SLASHES_REGEX = /\/apps\/client/;
+const WIN_SLASHES_REGEX = /\\apps\\client/;
 
 function getNextConfigPath() {
-  let dir = join(process.cwd(), "packages", "client");
+  let dir = join(process.cwd(), "apps", "client");
   const unixMatch = process.cwd().match(UNIX_SLASHES_REGEX);
   const winMatch = process.cwd().match(WIN_SLASHES_REGEX);
 
