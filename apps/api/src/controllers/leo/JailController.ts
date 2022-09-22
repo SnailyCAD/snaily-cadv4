@@ -1,5 +1,5 @@
 import { Context, Controller, UseBeforeEach } from "@tsed/common";
-import { Delete, Description, Get } from "@tsed/schema";
+import { ContentType, Delete, Description, Get } from "@tsed/schema";
 import { QueryParams, BodyParams, PathParams } from "@tsed/platform-params";
 import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -35,6 +35,7 @@ const citizenInclude = {
 
 @Controller("/leo/jail")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class LeoController {
   @Get("/")
   @Description("Get all the citizens who are jailed")

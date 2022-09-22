@@ -1,5 +1,5 @@
 import { Controller } from "@tsed/di";
-import { Delete, Description, Get, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import {
   UPDATE_ASSIGNED_UNIT_SCHEMA,
   CALL_911_SCHEMA,
@@ -54,6 +54,7 @@ export const callInclude = {
 
 @Controller("/911-calls")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class Calls911Controller {
   private socket: Socket;
   constructor(socket: Socket) {

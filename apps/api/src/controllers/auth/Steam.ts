@@ -6,7 +6,7 @@ import { URL } from "node:url";
 import { prisma } from "lib/prisma";
 import { Rank, User, WhitelistStatus } from "@prisma/client";
 import { IsAuth } from "middlewares/IsAuth";
-import { Description } from "@tsed/schema";
+import { ContentType, Description } from "@tsed/schema";
 import { request } from "undici";
 import { findRedirectURL, findUrl } from "./Discord";
 import { getSessionUser } from "lib/auth/getSessionUser";
@@ -18,6 +18,7 @@ const STEAM_API_KEY = process.env["STEAM_API_KEY"];
 export const STEAM_API_URL = "https://api.steampowered.com";
 
 @Controller("/auth/steam")
+@ContentType("application/json")
 export class SteamOAuthController {
   @Get("/")
   @Description("Redirect to Steam's OAuth2 URL")

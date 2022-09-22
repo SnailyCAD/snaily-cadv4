@@ -1,6 +1,6 @@
 import { Controller } from "@tsed/di";
 import { Context } from "@tsed/platform-params";
-import { Post } from "@tsed/schema";
+import { ContentType, Post } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { BadRequest } from "@tsed/exceptions";
@@ -14,6 +14,7 @@ import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { getImageWebPPath } from "utils/image";
 
 @Controller("/admin/manage/cad-settings/image")
+@ContentType("application/json")
 export class ManageCitizensController {
   @UseBefore(IsAuth)
   @Post("/")

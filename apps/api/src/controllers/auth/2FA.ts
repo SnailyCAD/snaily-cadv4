@@ -4,7 +4,7 @@ import { authenticator } from "otplib";
 import { BodyParams, Context, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest } from "@tsed/exceptions";
-import { Delete, Description, Post } from "@tsed/schema";
+import { ContentType, Delete, Description, Post } from "@tsed/schema";
 import { compareSync } from "bcrypt";
 import qrcode from "qrcode";
 import { prisma } from "lib/prisma";
@@ -16,6 +16,7 @@ import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/2fa")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class UserTwoFactorAuthenticationController {
   @Post("/verify")
   @Description("Verify a totpCode for the authenticated user's account")

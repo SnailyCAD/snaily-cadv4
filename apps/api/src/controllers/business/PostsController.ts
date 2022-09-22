@@ -1,7 +1,7 @@
 import { Controller } from "@tsed/di";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { Delete, Hidden, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Hidden, Post, Put } from "@tsed/schema";
 import { IsAuth } from "middlewares/IsAuth";
 import { CREATE_COMPANY_POST_SCHEMA, DELETE_COMPANY_POST_SCHEMA } from "@snailycad/schemas";
 import { Forbidden, NotFound } from "@tsed/exceptions";
@@ -14,6 +14,7 @@ import type * as APITypes from "@snailycad/types/api";
 @UseBeforeEach(IsAuth)
 @Controller("/businesses/posts")
 @Hidden()
+@ContentType("application/json")
 export class BusinessPostsController {
   @Post("/:id")
   async createPost(

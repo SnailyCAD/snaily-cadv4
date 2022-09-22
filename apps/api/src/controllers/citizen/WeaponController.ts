@@ -3,7 +3,7 @@ import { WEAPON_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
-import { Post, Delete, Put, Description, Get } from "@tsed/schema";
+import { Post, Delete, Put, Description, Get, ContentType } from "@tsed/schema";
 import { canManageInvariant } from "lib/auth/getSessionUser";
 import { isFeatureEnabled } from "lib/cad";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
@@ -18,6 +18,7 @@ import type { Weapon } from "@snailycad/types";
 
 @Controller("/weapons")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class WeaponController {
   private MAX_ITEMS_PER_TABLE_PAGE = 12;
   private SERIAL_NUMBER_LENGTH = 10;

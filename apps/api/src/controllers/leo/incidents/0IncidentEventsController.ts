@@ -1,5 +1,5 @@
 import { Controller, UseBeforeEach } from "@tsed/common";
-import { Delete, Description, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Description, Post, Put } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
@@ -14,6 +14,7 @@ import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/incidents/events")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class IncidentEventsController {
   private socket: Socket;
   constructor(socket: Socket) {

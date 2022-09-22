@@ -1,5 +1,5 @@
 import { Controller } from "@tsed/di";
-import { Description, Get, Post, Put } from "@tsed/schema";
+import { ContentType, Description, Get, Post, Put } from "@tsed/schema";
 import { QueryParams, BodyParams, PathParams, Context } from "@tsed/platform-params";
 import { BadRequest } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -28,6 +28,7 @@ import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class DispatchController {
   private socket: Socket;
   constructor(socket: Socket) {

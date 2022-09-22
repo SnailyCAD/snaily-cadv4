@@ -1,6 +1,6 @@
 import { BodyParams, Controller, PathParams, UseBeforeEach } from "@tsed/common";
 import { IsAuth } from "middlewares/IsAuth";
-import { Delete, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Post, Put } from "@tsed/schema";
 import { validateSchema } from "lib/validateSchema";
 import { NOTE_SCHEMA } from "@snailycad/schemas";
 import { prisma } from "lib/prisma";
@@ -11,6 +11,7 @@ import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/notes")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class NotesController {
   @Post("/")
   @UsePermissions({

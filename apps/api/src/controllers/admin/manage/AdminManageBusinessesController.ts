@@ -3,7 +3,7 @@ import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { Delete, Description, Get, Put } from "@tsed/schema";
+import { ContentType, Delete, Description, Get, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/getSessionUser";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
@@ -25,6 +25,7 @@ const businessInclude = {
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/businesses")
+@ContentType("application/json")
 export class AdminManageBusinessesController {
   @Get("/")
   @Description("Get all the businesses within the CAD")

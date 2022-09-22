@@ -1,5 +1,5 @@
 import { Controller } from "@tsed/di";
-import { Get, Description } from "@tsed/schema";
+import { Get, Description, ContentType } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import glob from "glob";
 import { join } from "node:path";
@@ -13,6 +13,7 @@ import type { GetAdminDashboardData } from "@snailycad/types/api";
 
 @Controller("/admin")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class AdminController {
   @Get("/")
   @Description("Get simple CAD stats")

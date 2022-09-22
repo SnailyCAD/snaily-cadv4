@@ -1,5 +1,5 @@
 import { Controller } from "@tsed/di";
-import { Delete, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Post, Put } from "@tsed/schema";
 import { CALL_911_EVENT_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { NotFound } from "@tsed/exceptions";
@@ -15,6 +15,7 @@ import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/911-calls/events")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class Calls911Controller {
   private socket: Socket;
   constructor(socket: Socket) {

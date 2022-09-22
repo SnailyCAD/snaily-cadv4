@@ -6,7 +6,7 @@ import {
   PlatformMulterFile,
   Context,
 } from "@tsed/common";
-import { Post } from "@tsed/schema";
+import { ContentType, Post } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsValidPath } from "middlewares/ValidPath";
 import { BadRequest } from "@tsed/exceptions";
@@ -49,6 +49,7 @@ import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
 @Controller("/admin/values/import/:path")
 @UseBeforeEach(IsAuth, IsValidPath)
+@ContentType("application/json")
 export class ImportValuesViaFileController {
   @Post("/")
   @UsePermissions(getPermissionsForValuesRequest)

@@ -2,7 +2,7 @@ import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { Delete, Description, Get, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/getSessionUser";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { prisma } from "lib/prisma";
@@ -33,6 +33,7 @@ const recordsInclude = {
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/citizens")
+@ContentType("application/json")
 export class AdminManageCitizensController {
   @Get("/")
   @Description("Get all the citizens within the CAD")

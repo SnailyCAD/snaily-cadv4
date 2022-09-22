@@ -14,7 +14,7 @@ import { VEHICLE_SCHEMA, DELETE_VEHICLE_SCHEMA, TRANSFER_VEHICLE_SCHEMA } from "
 import { UseBeforeEach, Context, BodyParams, PathParams, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
-import { Delete, Description, Get, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { canManageInvariant } from "lib/auth/getSessionUser";
 import { isFeatureEnabled } from "lib/cad";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
@@ -29,6 +29,7 @@ import type { RegisteredVehicle } from "@snailycad/types";
 
 @Controller("/vehicles")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class VehiclesController {
   private VIN_NUMBER_LENGTH = 17;
 

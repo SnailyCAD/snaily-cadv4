@@ -1,7 +1,7 @@
 import { Controller } from "@tsed/di";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { Delete, Hidden, Put } from "@tsed/schema";
+import { ContentType, Delete, Hidden, Put } from "@tsed/schema";
 import { IsAuth } from "middlewares/IsAuth";
 import { UPDATE_EMPLOYEE_SCHEMA, FIRE_EMPLOYEE_SCHEMA } from "@snailycad/schemas";
 import { NotFound } from "@tsed/exceptions";
@@ -15,6 +15,7 @@ import type * as APITypes from "@snailycad/types/api";
 @UseBeforeEach(IsAuth)
 @Controller("/businesses/employees")
 @Hidden()
+@ContentType("application/json")
 export class BusinessEmployeeController {
   @Put("/:businessId/:id")
   async updateEmployee(

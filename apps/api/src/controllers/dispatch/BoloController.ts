@@ -1,5 +1,5 @@
 import { Controller } from "@tsed/di";
-import { Delete, Description, Get, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { CREATE_BOLO_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { NotFound } from "@tsed/exceptions";
@@ -20,6 +20,7 @@ import type { cad } from "@snailycad/types";
 
 @Controller("/bolos")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class BoloController {
   private socket: Socket;
   constructor(socket: Socket) {

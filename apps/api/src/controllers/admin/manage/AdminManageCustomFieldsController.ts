@@ -3,7 +3,7 @@ import { CUSTOM_FIELDS_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, PathParams, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
-import { Delete, Description, Get, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
@@ -11,6 +11,7 @@ import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 @Controller("/admin/manage/custom-fields")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class AdminManageCustomFieldsController {
   @Get("/")
   @Description("Get all the custom fields within the CAD")

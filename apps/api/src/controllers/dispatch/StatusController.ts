@@ -19,7 +19,7 @@ import { Req, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { Description, Put } from "@tsed/schema";
+import { ContentType, Description, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/activeOfficer";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
@@ -37,6 +37,7 @@ import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class StatusController {
   private socket: Socket;
   constructor(socket: Socket) {

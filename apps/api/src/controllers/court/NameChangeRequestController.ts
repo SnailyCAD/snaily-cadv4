@@ -1,5 +1,5 @@
 import type { User } from "@prisma/client";
-import { Get, Post } from "@tsed/schema";
+import { ContentType, Get, Post } from "@tsed/schema";
 import { BodyParams, Context, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { IsAuth } from "middlewares/IsAuth";
@@ -12,6 +12,7 @@ import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/name-change")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class NameChangeRequestController {
   @Get("/")
   async getUserRequests(@Context("user") user: User): Promise<APITypes.GetNameChangeRequestsData> {

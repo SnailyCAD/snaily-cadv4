@@ -8,7 +8,7 @@ import {
 import { DL_EXAM_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Controller, BodyParams, PathParams, QueryParams } from "@tsed/common";
 import { NotFound } from "@tsed/exceptions";
-import { Delete, Get, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
@@ -24,6 +24,7 @@ const dlExamIncludes = {
 
 @Controller("/leo/weapon-exams")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class WeaponExamsController {
   @Get("/")
   @UsePermissions({

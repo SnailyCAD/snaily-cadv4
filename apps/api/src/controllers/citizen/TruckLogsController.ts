@@ -3,7 +3,7 @@ import { CREATE_TRUCK_LOG_SCHEMA } from "@snailycad/schemas";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { Delete, Get, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
@@ -14,6 +14,7 @@ import { citizenInclude } from "./CitizenController";
 
 @Controller("/truck-logs")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class TruckLogsController {
   @Get("/")
   async getTruckLogs(@Context("user") user: User): Promise<APITypes.GetTruckLogsData> {

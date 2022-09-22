@@ -1,5 +1,5 @@
 import { BodyParams, Controller, PathParams, UseBeforeEach } from "@tsed/common";
-import { Delete, Description, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Description, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/IsAuth";
@@ -11,6 +11,7 @@ import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/admin/penal-code-group")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class ValuesController {
   @Post("/")
   @Description("Create a new penal-code group")

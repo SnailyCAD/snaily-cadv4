@@ -1,5 +1,5 @@
 import { Controller } from "@tsed/di";
-import { Get, Post, Description, Delete } from "@tsed/schema";
+import { Get, Post, Description, Delete, ContentType } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { WEAPON_SCHEMA_ARR } from "@snailycad/schemas/dist/admin/import/weapons";
 import {
@@ -22,6 +22,7 @@ const weaponsInclude = { ...citizenInclude.weapons.include, citizen: true };
 
 @Controller("/admin/import/weapons")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class ImportWeaponsController {
   @Get("/")
   @Description("Get all the Weapons in the CAD (paginated)")

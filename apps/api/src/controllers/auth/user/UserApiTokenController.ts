@@ -3,7 +3,7 @@ import { BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest } from "@tsed/exceptions";
 import { UseBefore } from "@tsed/platform-middlewares";
-import { Delete, Description, Put } from "@tsed/schema";
+import { ContentType, Delete, Description, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/getSessionUser";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
@@ -13,6 +13,7 @@ import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/user/api-token")
 @UseBefore(IsAuth)
+@ContentType("application/json")
 export class AccountController {
   @Put("/")
   @Description("Enable or disable the authenticated user's API Token.")

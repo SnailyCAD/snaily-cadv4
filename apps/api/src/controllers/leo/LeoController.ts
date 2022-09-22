@@ -1,5 +1,5 @@
 import { Controller, UseBeforeEach, UseBefore } from "@tsed/common";
-import { Delete, Description, Get, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { SWITCH_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -19,6 +19,7 @@ import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class LeoController {
   private socket: Socket;
   constructor(socket: Socket) {

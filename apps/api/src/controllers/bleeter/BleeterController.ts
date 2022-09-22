@@ -13,7 +13,7 @@ import {
   MultipartFile,
 } from "@tsed/common";
 import { NotFound } from "@tsed/exceptions";
-import { Delete, Description, Put } from "@tsed/schema";
+import { ContentType, Delete, Description, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { validateSchema } from "lib/validateSchema";
@@ -24,6 +24,7 @@ import { getImageWebPPath } from "utils/image";
 
 @UseBeforeEach(IsAuth)
 @Controller("/bleeter")
+@ContentType("application/json")
 export class BleeterController {
   @Get("/")
   @Description("Get **all** bleeter posts, ordered by `createdAt`")

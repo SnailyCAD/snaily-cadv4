@@ -24,7 +24,7 @@ import {
   CustomFieldCategory,
 } from "@prisma/client";
 import { UseBeforeEach, Context } from "@tsed/common";
-import { Description, Post, Put } from "@tsed/schema";
+import { ContentType, Description, Post, Put } from "@tsed/schema";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { validateSchema } from "lib/validateSchema";
 import { manyToManyHelper } from "utils/manyToMany";
@@ -42,6 +42,7 @@ import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/search/actions")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class SearchActionsController {
   @Put("/licenses/:citizenId")
   @Description("Update the licenses for a citizen by their id")

@@ -1,7 +1,7 @@
 import { Context, Res, BodyParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { UseBefore } from "@tsed/platform-middlewares";
-import { Delete, Description, Patch, Post } from "@tsed/schema";
+import { ContentType, Delete, Description, Patch, Post } from "@tsed/schema";
 import { Cookie } from "@snailycad/config";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
@@ -21,6 +21,7 @@ import type { User } from "@snailycad/types";
 
 @Controller("/user")
 @UseBefore(IsAuth)
+@ContentType("application/json")
 export class AccountController {
   private socket: Socket;
   constructor(socket: Socket) {

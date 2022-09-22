@@ -4,7 +4,7 @@ import { PathParams, BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { Delete, Description, Get, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { validateMaxDivisionsPerUnit } from "controllers/leo/my-officers/MyOfficersController";
 import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/activeOfficer";
 import { findUnit } from "lib/leo/findUnit";
@@ -31,6 +31,7 @@ export type AcceptDeclineType = typeof ACCEPT_DECLINE_TYPES[number];
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/units")
+@ContentType("application/json")
 export class AdminManageUnitsController {
   private socket: Socket;
   constructor(socket: Socket) {

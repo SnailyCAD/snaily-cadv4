@@ -3,7 +3,7 @@ import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, PathParams } from "@tsed/platform-params";
-import { Get, Put } from "@tsed/schema";
+import { ContentType, Get, Put } from "@tsed/schema";
 import { expungementRequestInclude } from "controllers/court/ExpungementRequestsController";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
@@ -12,6 +12,7 @@ import type * as APITypes from "@snailycad/types/api";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/expungement-requests")
+@ContentType("application/json")
 export class AdminManageExpungementRequests {
   @Get("/")
   @UsePermissions({

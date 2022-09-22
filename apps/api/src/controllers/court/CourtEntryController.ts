@@ -1,4 +1,4 @@
-import { Delete, Get, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Get, Post, Put } from "@tsed/schema";
 import { BodyParams, PathParams, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { IsAuth } from "middlewares/IsAuth";
@@ -11,6 +11,7 @@ import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/court-entries")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class CourtEntryController {
   @Get("/")
   @UsePermissions({

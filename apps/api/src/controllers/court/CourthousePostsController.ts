@@ -1,6 +1,6 @@
 import { Rank, User } from "@prisma/client";
 import { BodyParams, Context, Controller, PathParams, UseBeforeEach } from "@tsed/common";
-import { Delete, Get, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
@@ -12,6 +12,7 @@ import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/courthouse-posts")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class CourthousePostsController {
   @Get("/")
   async getPosts(): Promise<APITypes.GetCourthousePostsData> {

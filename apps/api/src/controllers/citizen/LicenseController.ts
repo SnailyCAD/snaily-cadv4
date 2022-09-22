@@ -3,7 +3,7 @@ import { LICENSE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
-import { Description, Put } from "@tsed/schema";
+import { ContentType, Description, Put } from "@tsed/schema";
 import { canManageInvariant } from "lib/auth/getSessionUser";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
@@ -16,6 +16,7 @@ import { citizenInclude } from "./CitizenController";
 
 @Controller("/licenses")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class LicensesController {
   @Put("/:id")
   @Description("Update the licenses of a citizen")

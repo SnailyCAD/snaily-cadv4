@@ -1,5 +1,5 @@
 import { Controller } from "@tsed/di";
-import { Post, Description, AcceptMime } from "@tsed/schema";
+import { Post, Description, AcceptMime, ContentType } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { BodyParams, MultipartFile, PlatformMulterFile, UseBeforeEach } from "@tsed/common";
 import { IsAuth } from "middlewares/IsAuth";
@@ -15,6 +15,7 @@ import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/admin/import/citizens")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class ImportCitizensController {
   @Post("/file")
   @Description("Import citizens in the CAD via file upload")

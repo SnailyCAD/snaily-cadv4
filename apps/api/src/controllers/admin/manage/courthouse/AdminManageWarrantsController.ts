@@ -3,7 +3,7 @@ import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, PathParams } from "@tsed/platform-params";
-import { Description, Get, Put } from "@tsed/schema";
+import { ContentType, Description, Get, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
@@ -14,6 +14,7 @@ import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/pending-warrants")
+@ContentType("application/json")
 export class AdminManageWarrantsController {
   @Get("/")
   @Description("Get all pending warrants")

@@ -1,5 +1,5 @@
 import { Controller, UseBeforeEach } from "@tsed/common";
-import { Description, Post } from "@tsed/schema";
+import { ContentType, Description, Post } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { BodyParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
@@ -8,6 +8,7 @@ import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 @Controller("/search")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class SearchController {
   @Post("/address")
   @Description("Search citizens by their address")

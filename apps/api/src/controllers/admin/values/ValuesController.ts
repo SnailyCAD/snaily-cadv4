@@ -10,7 +10,7 @@ import {
   Context,
 } from "@tsed/common";
 import fs from "node:fs/promises";
-import { Delete, Description, Patch, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Description, Patch, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsValidPath } from "middlewares/ValidPath";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -46,6 +46,7 @@ const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
 
 @Controller("/admin/values/:path")
 @UseBeforeEach(IsAuth, IsValidPath)
+@ContentType("application/json")
 export class ValuesController {
   @Get("/")
   @Description("Get all the values by the specified types")

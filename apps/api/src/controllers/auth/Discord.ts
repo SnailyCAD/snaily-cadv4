@@ -13,7 +13,7 @@ import { getDefaultPermissionsForNewUser } from "./Auth";
 import { IsAuth } from "middlewares/IsAuth";
 import { DISCORD_API_URL } from "lib/discord/config";
 import { updateMemberRolesLogin } from "lib/discord/auth";
-import { Description } from "@tsed/schema";
+import { ContentType, Description } from "@tsed/schema";
 import { isFeatureEnabled } from "lib/cad";
 import { setUserTokenCookies } from "lib/auth/setUserTokenCookies";
 
@@ -22,6 +22,7 @@ const DISCORD_CLIENT_ID = process.env["DISCORD_CLIENT_ID"];
 const DISCORD_CLIENT_SECRET = process.env["DISCORD_CLIENT_SECRET"];
 
 @Controller("/auth/discord")
+@ContentType("application/json")
 export class DiscordAuth {
   @Get("/")
   @Description("Redirect to Discord OAuth2 URL")

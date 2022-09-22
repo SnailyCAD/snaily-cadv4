@@ -7,7 +7,7 @@ import {
 } from "@snailycad/schemas";
 import { Controller } from "@tsed/di";
 import { BodyParams, Context } from "@tsed/platform-params";
-import { Delete, Get, Put } from "@tsed/schema";
+import { ContentType, Delete, Get, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { CAD_SELECT, IsAuth, setDiscordAuth } from "middlewares/IsAuth";
 import { BadRequest } from "@tsed/exceptions";
@@ -22,6 +22,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 
 @Controller("/admin/manage/cad-settings")
+@ContentType("application/json")
 export class ManageCitizensController {
   private socket: Socket;
   constructor(socket: Socket) {

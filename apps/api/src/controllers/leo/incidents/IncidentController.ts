@@ -1,5 +1,5 @@
 import { Controller, UseBefore, UseBeforeEach } from "@tsed/common";
-import { Delete, Description, Get, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { NotFound, InternalServerError, BadRequest } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
@@ -42,6 +42,7 @@ export const incidentInclude = {
 
 @Controller("/incidents")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class IncidentController {
   private socket: Socket;
   constructor(socket: Socket) {

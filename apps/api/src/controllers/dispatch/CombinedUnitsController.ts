@@ -1,6 +1,6 @@
 import { Controller } from "@tsed/di";
 import { BodyParams, PathParams, UseBeforeEach } from "@tsed/common";
-import { Description, Post } from "@tsed/schema";
+import { ContentType, Description, Post } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { ShouldDoType } from "@prisma/client";
@@ -13,6 +13,7 @@ import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class CombinedUnitsController {
   private socket: Socket;
   constructor(socket: Socket) {

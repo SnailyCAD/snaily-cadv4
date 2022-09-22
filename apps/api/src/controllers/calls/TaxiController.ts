@@ -6,7 +6,7 @@ import {
   PathParams,
   UseBeforeEach,
 } from "@tsed/common";
-import { Description, Delete, Get, Post, Put } from "@tsed/schema";
+import { Description, Delete, Get, Post, Put, ContentType } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { TOW_SCHEMA, UPDATE_TOW_SCHEMA } from "@snailycad/schemas";
 import { NotFound } from "@tsed/exceptions";
@@ -21,6 +21,7 @@ import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/taxi")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class TaxiController {
   private socket: Socket;
   constructor(socket: Socket) {

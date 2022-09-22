@@ -1,4 +1,4 @@
-import { Delete, Description, Get, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import type { z } from "zod";
 import {
   CREATE_TICKET_SCHEMA,
@@ -48,6 +48,7 @@ export const assignedOfficersInclude = {
 
 @UseBeforeEach(IsAuth)
 @Controller("/records")
+@ContentType("application/json")
 export class RecordsController {
   private socket: Socket;
   constructor(socket: Socket) {

@@ -9,7 +9,7 @@ import { validateSchema } from "lib/validateSchema";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { validateUser2FA } from "lib/auth/2fa";
-import { Description, Returns } from "@tsed/schema";
+import { ContentType, Description, Returns } from "@tsed/schema";
 import { User, WhitelistStatus, Rank, AutoSetUserProperties, cad, Feature } from "@prisma/client";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import { setUserPreferencesCookies } from "lib/auth/setUserPreferencesCookies";
@@ -25,6 +25,7 @@ interface PartialGoogleCaptchaResponse {
 }
 
 @Controller("/auth")
+@ContentType("application/json")
 export class AuthController {
   @Post("/login")
   @Description("Authenticate a user via username and password")

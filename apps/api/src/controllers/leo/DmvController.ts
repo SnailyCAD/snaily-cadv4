@@ -2,7 +2,7 @@ import { WhitelistStatus } from "@prisma/client";
 import { BodyParams, PathParams, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { Description, Get, Post } from "@tsed/schema";
+import { ContentType, Description, Get, Post } from "@tsed/schema";
 import {
   AcceptDeclineType,
   ACCEPT_DECLINE_TYPES,
@@ -21,6 +21,7 @@ const vehicleInclude = {
 
 @Controller("/leo/dmv")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class DmvController {
   @Get("/")
   @Description("Get pending vehicles for the dmv")

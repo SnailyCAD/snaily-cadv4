@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import { Controller, UseBeforeEach, PlatformMulterFile, MultipartFile } from "@tsed/common";
-import { Delete, Get, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Get, Post, Put } from "@tsed/schema";
 import { CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
 import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -24,6 +24,7 @@ import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class MyOfficersController {
   @Get("/")
   @UsePermissions({

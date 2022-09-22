@@ -12,7 +12,7 @@ import { PathParams, BodyParams, Context, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { Delete, Description, Get, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/getSessionUser";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
@@ -45,6 +45,7 @@ const manageUsersSelect = (selectCitizens: boolean) =>
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/users")
+@ContentType("application/json")
 export class ManageUsersController {
   private socket: Socket;
   constructor(socket: Socket) {

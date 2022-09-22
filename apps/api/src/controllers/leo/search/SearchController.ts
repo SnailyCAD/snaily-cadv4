@@ -1,5 +1,5 @@
 import { Controller, UseBeforeEach, Context } from "@tsed/common";
-import { Description, Header, Post } from "@tsed/schema";
+import { ContentType, Description, Post } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { BodyParams, QueryParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
@@ -114,7 +114,7 @@ const weaponsInclude = {
 
 @Controller("/search")
 @UseBeforeEach(IsAuth)
-@Header("content-type", "application/json")
+@ContentType("application/json")
 export class SearchController {
   @Post("/name")
   @Description("Search citizens by their name, surname or fullname. Returns the first 35 results.")

@@ -1,7 +1,7 @@
 import { Controller } from "@tsed/di";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
-import { Delete, Get, Hidden, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Get, Hidden, Post, Put } from "@tsed/schema";
 import { IsAuth } from "middlewares/IsAuth";
 import {
   CREATE_COMPANY_SCHEMA,
@@ -34,6 +34,7 @@ const businessInclude = {
 @UseBeforeEach(IsAuth)
 @Controller("/businesses")
 @Hidden()
+@ContentType("application/json")
 export class BusinessController {
   @Get("/")
   async getBusinessesByUser(@Context("user") user: User): Promise<APITypes.GetBusinessesData> {

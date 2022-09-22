@@ -1,5 +1,5 @@
 import { Controller, UseBeforeEach, Use, MultipartFile, PlatformMulterFile } from "@tsed/common";
-import { Delete, Description, Get, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { EMS_FD_DEPUTY_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
 import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -27,6 +27,7 @@ import { isFeatureEnabled } from "lib/cad";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
+@ContentType("application/json")
 export class EmsFdController {
   private socket: Socket;
   constructor(socket: Socket) {
