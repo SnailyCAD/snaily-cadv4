@@ -19,10 +19,14 @@ import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
 
 export function SelectOfficerModal() {
   const { userOfficers, setActiveOfficer } = useLeoState();
-  const { isOpen, closeModal } = useModal();
+  const { isOpen, closeModal, getPayload } = useModal();
   const common = useTranslations("Common");
+  const error = useTranslations("Errors");
   const t = useTranslations("Leo");
   const { generateCallsign } = useGenerateCallsign();
+
+  const payload = getPayload<{ includeStatuses: boolean }>(ModalIds.SelectOfficer);
+  const includeStatuses = payload?.includeStatuses ?? false;
 
   const { codes10 } = useValues();
   const onDutyCode = codes10.values.find((v) => v.shouldDo === ShouldDoType.SET_ON_DUTY);
@@ -35,7 +39,7 @@ export function SelectOfficerModal() {
       path: `/dispatch/status/${values.officer}`,
       method: "PUT",
       data: {
-        status: onDutyCode.id,
+        status: includeStatuses ? values.status : onDutyCode.id,
       },
     });
 
@@ -48,6 +52,7 @@ export function SelectOfficerModal() {
   const validate = handleValidate(SELECT_OFFICER_SCHEMA);
   const INITIAL_VALUES = {
     officer: "",
+    status: null,
   };
 
   return (
@@ -60,6 +65,10 @@ export function SelectOfficerModal() {
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
+            {includeStatuses ? (
+              <p className="my-3 text-neutral-700 dark:text-gray-400">{error("noActiveOfficer")}</p>
+            ) : null}
+
             <FormField errorMessage={errors.officer} label={t("officer")}>
               <Select
                 value={values.officer}
@@ -73,6 +82,23 @@ export function SelectOfficerModal() {
                 }))}
               />
             </FormField>
+
+            {includeStatuses ? (
+              <FormField label={t("status")}>
+                <Select
+                  value={values.status}
+                  name="status"
+                  onChange={handleChange}
+                  isClearable
+                  values={codes10.values
+                    .filter((v) => v.shouldDo !== "SET_OFF_DUTY" && v.type === "STATUS_CODE")
+                    .map((status) => ({
+                      label: status.value.value,
+                      value: status.id,
+                    }))}
+                />
+              </FormField>
+            ) : null}
 
             <footer className="flex justify-end mt-5">
               <Button
