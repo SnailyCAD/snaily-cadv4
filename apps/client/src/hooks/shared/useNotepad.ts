@@ -21,7 +21,7 @@ export function useNotepad() {
     if (!routeId) return;
     if (typeof window === "undefined") return;
 
-    const localRaw = window.localStorage.getItem(routeId);
+    const localRaw = "localStorage" in window && window.localStorage.getItem(routeId);
     const local = dataToSlate({
       descriptionData: localRaw ? JSON.parse(localRaw) : DEFAULT_EDITOR_DATA,
     });
