@@ -237,6 +237,7 @@
     "hideCalls": "Cacher les appels",
     "showUnitsOnly": "Afficher les unités seulement",
     "showAllPlayers": "Afficher tous les joueurs",
+    "warrantCreatedButApprovalRequired": "Le mandat a été créé mais il doit être approuvé avant d'être actif.",
     "alert_deleteNote": "Êtes-vous sûr de vouloir supprimer cette note ? Cette action ne peut être annulée.",
     "alert_deleteQualification": "Êtes-vous sur de vouloir supprimer cette qualification ? Cette action ne peut être annulée.",
     "alert_deleteDLExam": "Êtes-vous sûr de vouloir supprimer cet examen du permis de conduire ? Cette action ne peut être annulée.",
