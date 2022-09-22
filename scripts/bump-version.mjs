@@ -19,16 +19,19 @@ for (const pkg of allPackages) {
   const packageJsonPath = join(isApp ? APPS_PATH : PACKAGES_PATH, pkg, "package.json");
 
   const packageJsonContentJSON = getJson(packageJsonPath);
+
   if (!packageJsonContentJSON) continue;
   packageJsonContentJSON.version = version;
 
-  const isInDep = packageJsonContentJSON.dependencies?.[`@snailycad/${pkg}`];
-  const isInDevDep = packageJsonContentJSON.devDependencies?.[`@snailycad/${pkg}`];
+  for (const utilPkg of packages) {
+    const isInDep = packageJsonContentJSON.dependencies?.[`@snailycad/${utilPkg}`];
+    const isInDevDep = packageJsonContentJSON.devDependencies?.[`@snailycad/${utilPkg}`];
 
-  if (isInDep) {
-    packageJsonContentJSON.dependencies[`@snailycad/${pkg}`] = version;
-  } else if (isInDevDep) {
-    packageJsonContentJSON.devDependencies[`@snailycad/${pkg}`] = version;
+    if (isInDep) {
+      packageJsonContentJSON.dependencies[`@snailycad/${utilPkg}`] = version;
+    } else if (isInDevDep) {
+      packageJsonContentJSON.devDependencies[`@snailycad/${utilPkg}`] = version;
+    }
   }
 
   writeFileSync(packageJsonPath, stringifyAndFormat(packageJsonContentJSON));
