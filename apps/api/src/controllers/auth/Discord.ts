@@ -256,7 +256,13 @@ export function findUrl() {
 }
 
 export function findRedirectURL() {
-  return process.env.CORS_ORIGIN_URL ?? "http://localhost:3000";
+  const url = process.env.CORS_ORIGIN_URL ?? "http://localhost:3000";
+
+  if (url.includes("*") && process.env.NEXT_PUBLIC_CLIENT_URL) {
+    return process.env.NEXT_PUBLIC_CLIENT_URL;
+  }
+
+  return url;
 }
 
 function makeCallbackURL(base: string) {
