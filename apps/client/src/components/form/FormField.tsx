@@ -9,7 +9,7 @@ interface Props {
   children: React.ReactNode;
   className?: string;
   checkbox?: boolean;
-  errorMessage?: string;
+  errorMessage?: any;
 
   hideLabel?: boolean;
   boldLabel?: boolean;
