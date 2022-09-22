@@ -32,11 +32,14 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
   const [minJailTime, maxJailTime] = penalCode.warningNotApplicable?.prisonTerm ?? [];
   const [minBail, maxBail] = penalCode.warningNotApplicable?.bail ?? [];
 
-  const jailTimeDisabled = isReadOnly || !penalCode.warningNotApplicable?.prisonTerm;
+  const jailTimeDisabled = isReadOnly || !penalCode.warningNotApplicable?.prisonTerm.length;
+  const bailDisabled = isReadOnly || !penalCode.warningNotApplicable?.bail.length;
   const warningNotApplicableDisabled =
     isReadOnly || !penalCode.warningNotApplicableId || jailTimeDisabled;
   const finesDisabled =
-    isReadOnly || (!penalCode.warningNotApplicable?.fines && !penalCode.warningApplicable?.fines);
+    isReadOnly ||
+    !penalCode.warningNotApplicable?.fines.length ||
+    !penalCode.warningApplicable?.fines.length;
 
   const { setFieldValue, values, errors } = useFormikContext<any>();
   const violationErrors = (errors.violations ?? {}) as Record<
@@ -81,9 +84,30 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
     setFieldValue("violations", updatedArr);
   };
 
+  const jailTimeBailDescription = (
+    <span className="text-sm">
+      <b>{t("jailTime")}: </b> <b>Min:</b> {minJailTime} <b>Max:</b> {maxJailTime}
+      <span className="mx-[39px]" />
+      {bailDisabled ? null : (
+        <>
+          <b>{t("bail")}: </b> <b>Min:</b> {minBail} <b>Max:</b> {maxBail}
+        </>
+      )}
+    </span>
+  );
+
+  const finesDescription = (
+    <span className="text-sm">
+      <b>{t("fines")}: </b> <b>Min:</b> {minFine} <b>Max:</b> {maxFine}
+    </span>
+  );
+
   return (
     <div className="flex flex-col">
-      <FieldWrapper errorMessage={violationErrors[penalCode.id]?.fine}>
+      <FieldWrapper
+        errorMessage={violationErrors[penalCode.id]?.fine}
+        description={finesDisabled ? null : finesDescription}
+      >
         <div className="flex items-center">
           <FormField className="mb-0" label={t("fines")} checkbox>
             <Checkbox
@@ -111,6 +135,7 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
         errorMessage={
           violationErrors[penalCode.id]?.jailTime || violationErrors[penalCode.id]?.bail
         }
+        description={jailTimeDisabled ? null : jailTimeBailDescription}
       >
         <div className="flex items-center mt-1">
           <FormField className="mb-0" label={t("jailTime")} checkbox>
@@ -140,7 +165,10 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
                 onChange={handleValueChange.bind(null, "bail", undefined)}
                 name="bail.value"
                 disabled={
-                  isReadOnly || warningNotApplicableDisabled || !currentValue.jailTime?.enabled
+                  isReadOnly ||
+                  bailDisabled ||
+                  warningNotApplicableDisabled ||
+                  !currentValue.jailTime?.enabled
                 }
                 className="py-0.5 min-w-[125px] max-w-[125px] ml-5"
                 value={!isNaN(currentValue.bail?.value) ? currentValue.bail?.value : ""}
@@ -158,15 +186,21 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
 function FieldWrapper({
   children,
   errorMessage,
+  description,
 }: {
   children: React.ReactNode;
   errorMessage?: string;
+  description?: React.ReactNode;
 }) {
   return (
     <div className="flex flex-col mb-2">
       {children}
 
-      {errorMessage ? <span className="mt-1 font-medium text-red-500">{errorMessage}</span> : null}
+      {errorMessage ? (
+        <span className="mt-1 font-medium text-red-500">{errorMessage}</span>
+      ) : description ? (
+        <span className="mt-1 font-medium">{description}</span>
+      ) : null}
     </div>
   );
 }
