@@ -110,9 +110,9 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
         restOptions.noToast !== error &&
         !hasAddedError
       ) {
-        toastMessage({ message: t(key), title: errorTitle });
+        toastMessage({ message: t(key), title: `${errorTitle} ${error ? `(${error})` : ""}` });
       } else if (!restOptions.noToast && !hasAddedError) {
-        toastMessage({ message: t(key), title: errorTitle });
+        toastMessage({ message: t(key), title: `${errorTitle} ${error ? `(${error})` : ""}` });
       }
 
       setState("error");

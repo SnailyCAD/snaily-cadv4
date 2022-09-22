@@ -40,6 +40,7 @@ export function WeaponSearchModal({ id = ModalIds.WeaponSearch }: Props) {
     if (!currentResult) return;
 
     openModal(ModalIds.NameSearch, {
+      ...currentResult.citizen,
       name: `${currentResult.citizen.name} ${currentResult.citizen.surname}`,
     });
     closeModal(ModalIds.WeaponSearchWithinName);

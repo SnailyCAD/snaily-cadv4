@@ -54,7 +54,10 @@ function CitizenResults({ results }: any) {
 
   function handleOpen(citizen: any) {
     closeModal(ModalIds.CustomFieldSearch);
-    openModal(ModalIds.NameSearch, { name: `${citizen.name} ${citizen.surname}` });
+    openModal(ModalIds.NameSearch, {
+      ...citizen,
+      name: `${citizen.name} ${citizen.surname}`,
+    });
     setCurrentResult(citizen);
   }
 

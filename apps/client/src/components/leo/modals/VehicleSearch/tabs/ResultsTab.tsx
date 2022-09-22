@@ -40,6 +40,7 @@ export function ResultsTab() {
     if (!currentResult) return;
 
     openModal(ModalIds.NameSearch, {
+      ...currentResult.citizen,
       name: `${currentResult.citizen.name} ${currentResult.citizen.surname}`,
     });
     closeModal(ModalIds.VehicleSearchWithinName);
