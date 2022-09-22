@@ -18,7 +18,7 @@ interface Props {
   description: React.ReactNode;
   action?: "input" | "checkbox" | "short-input";
   children: ReactNode;
-  errorMessage?: string | null;
+  errorMessage?: any;
   optional?: boolean;
 }
 
