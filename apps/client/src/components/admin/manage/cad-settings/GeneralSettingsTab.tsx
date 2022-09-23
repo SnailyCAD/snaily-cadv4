@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useAuth } from "context/AuthContext";
-import { Rank } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { Input, PasswordInput } from "components/form/inputs/Input";
 import { Toggle } from "components/form/Toggle";
@@ -21,7 +20,7 @@ import type { PutCADSettingsData } from "@snailycad/types/api";
 export function GeneralSettingsTab() {
   const [logo, setLogo] = React.useState<(File | string) | null>(null);
   const { state, execute } = useFetch();
-  const { user, cad, setCad } = useAuth();
+  const { cad, setCad } = useAuth();
   const { AOP } = useFeatureEnabled();
 
   const common = useTranslations("Common");
@@ -69,10 +68,6 @@ export function GeneralSettingsTab() {
       });
       setCad({ ...cad, ...json });
     }
-  }
-
-  if (user?.rank !== Rank.OWNER) {
-    return null;
   }
 
   if (!cad) {
