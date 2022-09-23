@@ -589,7 +589,10 @@ export class Calls911Controller {
       include: callInclude,
     });
 
-    return officerOrDeputyToUnit(updatedCall);
+    const normalizedCall = officerOrDeputyToUnit(updatedCall);
+    this.socket.emitUpdate911Call(normalizedCall);
+
+    return normalizedCall;
   }
 
   private async endInactiveCalls(updatedAt: Date) {
