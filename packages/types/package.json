@@ -31,11 +31,11 @@
     "typecheck": "yarn workspace @snailycad/api generate && yarn tsc --noEmit"
   },
   "dependencies": {
-    "type-fest": "^2.19.0"
+    "type-fest": "^3.0.0"
   },
   "devDependencies": {
     "@snailycad/permissions": "1.26.2",
-    "discord-api-types": "0.37.9",
+    "discord-api-types": "0.37.10",
     "tsup": "^6.2.3",
     "typescript": "^4.8.3"
   },
