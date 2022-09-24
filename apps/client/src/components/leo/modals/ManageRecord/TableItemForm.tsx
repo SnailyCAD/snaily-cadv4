@@ -18,12 +18,12 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
   const { LEO_BAIL } = useFeatureEnabled();
 
   const minFinesArr = [
-    penalCode.warningNotApplicable?.fines[0],
-    penalCode.warningApplicable?.fines[0],
+    penalCode.warningNotApplicable?.fines[0] ?? 0,
+    penalCode.warningApplicable?.fines[0] ?? 0,
   ] as number[];
   const maxFinesArr = [
-    penalCode.warningNotApplicable?.fines[1],
-    penalCode.warningApplicable?.fines[1],
+    penalCode.warningNotApplicable?.fines[1] ?? 0,
+    penalCode.warningApplicable?.fines[1] ?? 0,
   ] as number[];
 
   const minFine = Math.min(...minFinesArr);
@@ -37,9 +37,9 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
   const warningNotApplicableDisabled =
     isReadOnly || !penalCode.warningNotApplicableId || jailTimeDisabled;
   const finesDisabled =
-    isReadOnly ||
-    !penalCode.warningNotApplicable?.fines.length ||
-    !penalCode.warningApplicable?.fines.length;
+    isReadOnly || !penalCode.warningNotApplicable?.fines || !penalCode.warningApplicable?.fines;
+
+  console.log({ penalCode, finesDisabled });
 
   const { setFieldValue, values, errors } = useFormikContext<any>();
   const violationErrors = (errors.violations ?? {}) as Record<

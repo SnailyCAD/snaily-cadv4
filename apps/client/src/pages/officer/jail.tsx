@@ -6,7 +6,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { makeUnitName, requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import { Record, BaseCitizen, RecordRelease, ReleaseType } from "@snailycad/types";
+import { Record, BaseCitizen, RecordRelease, ReleaseType, ValueType } from "@snailycad/types";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { Table, useTableState } from "components/shared/Table";
@@ -20,12 +20,17 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { NameSearchModal } from "components/leo/modals/NameSearchModal/NameSearchModal";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 import type { GetJailedCitizensData } from "@snailycad/types/api";
+import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 
 interface Props {
   data: GetJailedCitizensData;
 }
 
 export default function Jail({ data }: Props) {
+  useLoadValuesClientSide({
+    valueTypes: [ValueType.PENAL_CODE],
+  });
+
   const asyncTable = useAsyncTable({
     initialData: data.jailedCitizens,
     totalCount: data.totalCount,

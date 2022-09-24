@@ -47,8 +47,19 @@ export async function validateRecordData(options: Options): Promise<Return> {
     return handleBadRequest(new NotFound("penalCodeNotFound"), options.ticketId);
   }
 
-  const minMaxFines =
-    penalCode.warningApplicable?.fines ?? penalCode?.warningNotApplicable?.fines ?? [];
+  const minFinesArr = [
+    penalCode.warningNotApplicable?.fines[0] ?? 0,
+    penalCode.warningApplicable?.fines[0] ?? 0,
+  ] as number[];
+  const maxFinesArr = [
+    penalCode.warningNotApplicable?.fines[1] ?? 0,
+    penalCode.warningApplicable?.fines[1] ?? 0,
+  ] as number[];
+
+  const minFine = Math.min(...minFinesArr);
+  const maxFine = Math.max(...maxFinesArr);
+  const minMaxFines = [minFine, maxFine];
+
   const minMaxPrisonTerm = penalCode.warningNotApplicable?.prisonTerm ?? [];
   const minMaxBail = (isBailEnabled && penalCode.warningNotApplicable?.bail) || [];
 
