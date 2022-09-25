@@ -24,10 +24,11 @@ import { getCADVersion } from "@snailycad/utils/version";
 import * as Sentry from "@sentry/node";
 
 const rootDir = __dirname;
+const processEnvPort = process.env.PORT || process.env.PORT_API;
 
 @Configuration({
   rootDir,
-  port: process.env.PORT_API ? parseInt(process.env.PORT_API) : 8080,
+  port: processEnvPort ? parseInt(processEnvPort) : 8080,
   logger: {
     debug: true,
     level: process.env.NODE_ENV === "production" ? "error" : "info",
