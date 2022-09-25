@@ -21,7 +21,7 @@ this is a web based integration for communities who love police roleplaying and 
 - [Bugs reports & Feature requests](https://github.com/SnailyCAD/snaily-cadv4/issues)
 - [Contributing](./.github/CONTRIBUTING.md)
 
-## License
+## License 
 
 [MIT © Dev-CasperTheGhost](./LICENSE)
 
