@@ -1,5 +1,7 @@
 # [SnailyCADv4](https://snailycad.caspertheghost.me)
 
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/lqLdjV?referralCode=zxxB_p)
+
 ![license](https://img.shields.io/github/license/SnailyCAD/snaily-cadv4?color=gr&style=flat-square)
 ![contributors](https://img.shields.io/github/contributors/SnailyCAD/snaily-cadv4?color=gr&style=flat-square)
 ![stars](https://img.shields.io/github/stars/SnailyCAD/snaily-cadv4?style=flat-square&color=gr)
@@ -21,7 +23,7 @@ this is a web based integration for communities who love police roleplaying and 
 - [Bugs reports & Feature requests](https://github.com/SnailyCAD/snaily-cadv4/issues)
 - [Contributing](./.github/CONTRIBUTING.md)
 
-## License 
+## License
 
 [MIT © Dev-CasperTheGhost](./LICENSE)
 
