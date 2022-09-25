@@ -4,8 +4,8 @@ import {
   type RESTPostAPIWebhookWithTokenJSONBody,
   Routes,
 } from "discord-api-types/v10";
-import { getRest } from "lib/discord/config";
 import { prisma } from "lib/prisma";
+import { performDiscordRequest } from "./performDiscordRequest";
 
 export async function sendDiscordWebhook(
   type: DiscordWebhookType,
@@ -14,14 +14,16 @@ export async function sendDiscordWebhook(
   const webhook = await prisma.discordWebhook.findUnique({
     where: { type },
   });
+  if (!webhook) return;
 
-  if (!webhook || !webhook.webhookId) return;
+  const webhookData = await performDiscordRequest({
+    async handler(rest) {
+      if (!webhook.webhookId) return;
 
-  const rest = getRest();
-
-  const webhookData = (await rest
-    .get(Routes.webhook(webhook.webhookId))
-    .catch(() => null)) as RESTGetAPIWebhookResult | null;
+      const data = await rest.get(Routes.webhook(webhook.webhookId));
+      return data as RESTGetAPIWebhookResult | null;
+    },
+  });
 
   if (!webhookData) return;
 
@@ -29,7 +31,12 @@ export async function sendDiscordWebhook(
     ...data,
     content: webhook.extraMessage ?? undefined,
   };
-  await rest.post(Routes.webhook(webhookData.id, webhookData.token), {
-    body: normalizedData,
+
+  await performDiscordRequest({
+    async handler(rest) {
+      await rest.post(Routes.webhook(webhookData.id, webhookData.token), {
+        body: normalizedData,
+      });
+    },
   });
 }

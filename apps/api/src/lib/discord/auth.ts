@@ -1,8 +1,9 @@
 import { DiscordRole, Rank, User, WhitelistStatus } from "@snailycad/types";
 import { APIGuildMember, Routes, type RESTGetAPIGuildMemberResult } from "discord-api-types/v10";
-import { getRest, GUILD_ID } from "lib/discord/config";
+import { GUILD_ID } from "lib/discord/config";
 import { prisma } from "lib/prisma";
 import { manyToManyHelper } from "utils/manyToMany";
+import { performDiscordRequest } from "./performDiscordRequest";
 
 /**
  * fetch the roles from the wanting to authenticate user and append the respective permissions to the user
@@ -11,7 +12,7 @@ export async function updateMemberRolesLogin(
   user: Pick<User, "id" | "rank" | "discordId" | "whitelistStatus" | "permissions" | "roles">,
   discordRolesId: string | null,
 ) {
-  if (!GUILD_ID || !discordRolesId || !user.discordId) return;
+  if (!discordRolesId) return;
 
   const discordRoles = await prisma.discordRoles.findUnique({
     where: { id: String(discordRolesId) },
@@ -28,13 +29,17 @@ export async function updateMemberRolesLogin(
   });
 
   if (!discordRoles) return;
-  const rest = getRest();
 
   const cad = await prisma.cad.findFirst();
 
-  const discordMember = (await rest
-    .get(Routes.guildMember(GUILD_ID, user.discordId))
-    .catch(() => null)) as RESTGetAPIGuildMemberResult | null;
+  const discordMember = await performDiscordRequest({
+    async handler(rest) {
+      if (!GUILD_ID || !user.discordId) return null;
+
+      const data = await rest.get(Routes.guildMember(GUILD_ID, user.discordId));
+      return data as RESTGetAPIGuildMemberResult | null;
+    },
+  });
 
   if (!discordMember?.user?.id || discordMember.pending) return;
 

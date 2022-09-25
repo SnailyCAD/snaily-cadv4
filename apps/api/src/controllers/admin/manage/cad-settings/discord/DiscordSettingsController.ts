@@ -8,11 +8,11 @@ import { Rank, cad, DiscordRole } from "@prisma/client";
 import { BadRequest } from "@tsed/exceptions";
 import { DISCORD_SETTINGS_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
-import { getRest } from "lib/discord/config";
 import { manyToManyHelper } from "utils/manyToMany";
 import type * as APITypes from "@snailycad/types/api";
 import { Permissions } from "@snailycad/permissions";
 import { UsePermissions } from "middlewares/UsePermissions";
+import { performDiscordRequest } from "lib/discord/performDiscordRequest";
 
 const guildId = process.env.DISCORD_SERVER_ID;
 
@@ -26,8 +26,12 @@ export class DiscordSettingsController {
       throw new BadRequest("mustSetBotTokenGuildId");
     }
 
-    const rest = getRest();
-    const roles = (await rest.get(Routes.guildRoles(guildId))) as RESTGetAPIGuildRolesResult | null;
+    const roles = await performDiscordRequest({
+      async handler(rest) {
+        const roles = await rest.get(Routes.guildRoles(guildId));
+        return roles as RESTGetAPIGuildRolesResult | null;
+      },
+    });
 
     const discordRoles = await prisma.discordRoles.upsert({
       where: { id: String(cad.discordRolesId) },
@@ -81,9 +85,12 @@ export class DiscordSettingsController {
     }
 
     const data = validateSchema(DISCORD_SETTINGS_SCHEMA, body);
-
-    const rest = getRest();
-    const roles = (await rest.get(Routes.guildRoles(guildId))) as RESTGetAPIGuildRolesResult | null;
+    const roles = await performDiscordRequest({
+      async handler(rest) {
+        const roles = await rest.get(Routes.guildRoles(guildId));
+        return roles as RESTGetAPIGuildRolesResult | null;
+      },
+    });
 
     const rolesBody = Array.isArray(roles) ? roles : [];
 

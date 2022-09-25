@@ -14,11 +14,11 @@ import { cad, DiscordWebhook, DiscordWebhookType, MiscCadSettings, Rank } from "
 import { BadRequest } from "@tsed/exceptions";
 import { DISCORD_WEBHOOKS_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
-import { getRest } from "lib/discord/config";
 import type * as APITypes from "@snailycad/types/api";
 import { resolve } from "node:path";
 import { encodeFromFile } from "@snaily-cad/image-data-uri";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
+import { performDiscordRequest } from "lib/discord/performDiscordRequest";
 
 const guildId = process.env.DISCORD_SERVER_ID;
 
@@ -36,9 +36,13 @@ export class DiscordWebhooksController {
       throw new BadRequest("mustSetBotTokenGuildId");
     }
 
-    const rest = getRest();
     const [channels, miscCadSettings] = await Promise.all([
-      (await rest.get(Routes.guildChannels(guildId))) as RESTGetAPIGuildChannelsResult | null,
+      await performDiscordRequest({
+        async handler(rest) {
+          const data = await rest.get(Routes.guildChannels(guildId));
+          return data as RESTGetAPIGuildChannelsResult | null;
+        },
+      }),
       await prisma.miscCadSettings.upsert({
         where: { id: String(cad.miscCadSettingsId) },
         update: {},
@@ -84,11 +88,12 @@ export class DiscordWebhooksController {
     }
 
     const data = validateSchema(DISCORD_WEBHOOKS_SCHEMA, body);
-
-    const rest = getRest();
-    const channels = (await rest.get(
-      Routes.guildChannels(guildId),
-    )) as RESTGetAPIGuildChannelsResult | null;
+    const channels = await performDiscordRequest({
+      async handler(rest) {
+        const channels = await rest.get(Routes.guildChannels(guildId));
+        return channels as RESTGetAPIGuildChannelsResult | null;
+      },
+    });
 
     const channelsBody = Array.isArray(channels) ? channels : [];
     const entries = Object.entries(data);
@@ -162,11 +167,13 @@ export class DiscordWebhooksController {
     name,
     iconId,
   }: MakeWebhookForChannelOptions) {
-    const rest = getRest();
-
     // delete previous webhook if exists.
     if ((prevId && !channelId) || (prevId && channelId !== prevId)) {
-      await rest.delete(Routes.webhook(prevId)).catch(() => null);
+      await performDiscordRequest({
+        async handler(rest) {
+          await rest.delete(Routes.webhook(prevId));
+        },
+      });
     }
 
     if (!channelId) return null;
@@ -175,22 +182,38 @@ export class DiscordWebhooksController {
 
     // use pre-existing webhook if the channelId is the same.
     if (prevId && channelId === prevId) {
-      const prevWebhookData = (await rest
-        .get(Routes.webhook(prevId))
-        .catch(() => null)) as RESTGetAPIWebhookResult | null;
+      const prevWebhookData = await performDiscordRequest({
+        async handler(rest) {
+          const data = await rest.get(Routes.webhook(prevId));
+          return data as RESTGetAPIWebhookResult | null;
+        },
+      });
 
       if (prevWebhookData?.id) {
-        await rest.patch(Routes.webhook(prevId), {
-          body: { name, avatar: avatarURI },
+        await performDiscordRequest({
+          async handler(rest) {
+            await rest.patch(Routes.webhook(prevId), {
+              body: { name, avatar: avatarURI },
+            });
+          },
         });
 
         return { webhookId: prevWebhookData.id, channelId };
       }
     }
 
-    const createdWebhook = (await rest.post(Routes.channelWebhooks(channelId), {
-      body: { name, avatar: avatarURI },
-    })) as RESTGetAPIWebhookResult;
+    const createdWebhook = await performDiscordRequest<RESTGetAPIWebhookResult>({
+      async handler(rest) {
+        const createdWebhook = await rest.post(Routes.channelWebhooks(channelId), {
+          body: { name, avatar: avatarURI },
+        });
+        return createdWebhook as RESTGetAPIWebhookResult;
+      },
+    });
+
+    if (!createdWebhook) {
+      throw new BadRequest("unableToCreateWebhook");
+    }
 
     return { webhookId: createdWebhook.id, channelId };
   }
