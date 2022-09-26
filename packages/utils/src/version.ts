@@ -22,6 +22,8 @@ export async function getCADVersion() {
 }
 
 async function getLocalPackageVersion(): Promise<string | null> {
+  console.log({ PROCESS_CWD: process.cwd() });
+
   try {
     const packageJsonPath = resolve(process.cwd(), "package.json");
     const packageJson = await readFile(packageJsonPath, "utf-8").catch(() => null);

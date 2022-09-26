@@ -69,6 +69,8 @@ export class AdminController {
       const items = glob.sync(`${path}/**/*.*`);
       let totalSize = 0;
 
+      console.log({ ADMIN_PATH: path });
+
       await Promise.all(
         items.map(async (item) => {
           const { size } = await stat(join(item));
