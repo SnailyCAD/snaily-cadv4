@@ -52,7 +52,6 @@ export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
 
       speech.speak(utterThis);
     } catch (e) {
-      console.log(e);
       console.log("Failed to speak.");
     }
   }

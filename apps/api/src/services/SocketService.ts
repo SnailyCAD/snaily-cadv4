@@ -91,10 +91,13 @@ export class Socket {
   async emitUpdateOfficerStatus() {
     const [officers, units] = await prisma.$transaction([
       prisma.officer.findMany({
+        orderBy: { updatedAt: "desc" },
         where: { status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } } },
         include: leoProperties,
       }),
-      prisma.combinedLeoUnit.findMany({ include: combinedUnitProperties }),
+      prisma.combinedLeoUnit.findMany({
+        include: combinedUnitProperties,
+      }),
     ]);
 
     const data = [...officers, ...units];
@@ -104,6 +107,7 @@ export class Socket {
 
   async emitUpdateDeputyStatus() {
     const deputies = await prisma.emsFdDeputy.findMany({
+      orderBy: { updatedAt: "desc" },
       where: { status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } } },
       include: unitProperties,
     });
