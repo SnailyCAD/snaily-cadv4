@@ -13,21 +13,57 @@ interface Props {
   isReadOnly?: boolean;
 }
 
+function hasFines(penalCode: PenalCode) {
+  const fines1 = penalCode.warningApplicable?.fines;
+  const fines2 = penalCode.warningNotApplicable?.fines;
+
+  return Boolean(fines1 || fines2);
+}
+
+function getMinFines(penalCode: PenalCode) {
+  const fines1 = penalCode.warningApplicable?.fines ?? [];
+  const fines2 = penalCode.warningNotApplicable?.fines ?? [];
+
+  if (fines1.length > 0 && fines2.length > 0) {
+    return Math.min(...fines1, ...fines2);
+  }
+
+  if (fines1.length > 0) {
+    return Math.min(...fines1);
+  }
+
+  if (fines2.length > 0) {
+    return Math.min(...fines2);
+  }
+
+  return 0;
+}
+
+function getMaxFines(penalCode: PenalCode) {
+  const fines1 = penalCode.warningApplicable?.fines ?? [];
+  const fines2 = penalCode.warningNotApplicable?.fines ?? [];
+
+  if (fines1.length > 0 && fines2.length > 0) {
+    return Math.max(...fines1, ...fines2);
+  }
+
+  if (fines1.length > 0) {
+    return Math.max(...fines1);
+  }
+
+  if (fines2.length > 0) {
+    return Math.max(...fines2);
+  }
+
+  return 0;
+}
+
 export function TableItemForm({ penalCode, isReadOnly }: Props) {
   const t = useTranslations("Leo");
   const { LEO_BAIL } = useFeatureEnabled();
 
-  const minFinesArr = [
-    penalCode.warningNotApplicable?.fines[0] ?? 0,
-    penalCode.warningApplicable?.fines[0] ?? 0,
-  ] as number[];
-  const maxFinesArr = [
-    penalCode.warningNotApplicable?.fines[1] ?? 0,
-    penalCode.warningApplicable?.fines[1] ?? 0,
-  ] as number[];
-
-  const minFine = Math.min(...minFinesArr);
-  const maxFine = Math.max(...maxFinesArr);
+  const minFine = getMinFines(penalCode);
+  const maxFine = getMaxFines(penalCode);
 
   const [minJailTime, maxJailTime] = penalCode.warningNotApplicable?.prisonTerm ?? [];
   const [minBail, maxBail] = penalCode.warningNotApplicable?.bail ?? [];
@@ -36,10 +72,7 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
   const bailDisabled = isReadOnly || !penalCode.warningNotApplicable?.bail.length;
   const warningNotApplicableDisabled =
     isReadOnly || !penalCode.warningNotApplicableId || jailTimeDisabled;
-  const finesDisabled =
-    isReadOnly || !penalCode.warningNotApplicable?.fines || !penalCode.warningApplicable?.fines;
-
-  console.log({ penalCode, finesDisabled });
+  const finesDisabled = isReadOnly || !hasFines(penalCode);
 
   const { setFieldValue, values, errors } = useFormikContext<any>();
   const violationErrors = (errors.violations ?? {}) as Record<

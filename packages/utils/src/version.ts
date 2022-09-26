@@ -38,6 +38,10 @@ async function getLocalPackageVersion(): Promise<string | null> {
 
 function getCurrentGitHash() {
   try {
+    if (process.env.RAILWAY_GIT_COMMIT_SHA) {
+      return process.env.RAILWAY_GIT_COMMIT_SHA as string;
+    }
+
     const command = "git";
 
     const outputBuffer = spawnSync(command, ["rev-parse", "--short=7", "HEAD"]);
