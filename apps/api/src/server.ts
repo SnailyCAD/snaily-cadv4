@@ -26,8 +26,6 @@ import * as Sentry from "@sentry/node";
 const rootDir = __dirname;
 const processEnvPort = process.env.PORT || process.env.PORT_API;
 
-console.log({ ROOT_DIR: rootDir });
-
 @Configuration({
   rootDir,
   port: processEnvPort ? parseInt(processEnvPort) : 8080,
