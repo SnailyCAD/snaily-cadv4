@@ -31,6 +31,7 @@
     "deleteCourthousePost": "Supprimer la publication",
     "addCourthousePost": "Ajouter une publication",
     "noCourthousePosts": "Il n'y a pas de publications pour le moment.",
+    "createdBy": "Créé par",
     "alert_deleteCourthousePost": "Êtes-vous sûr de vouloir supprimer cette publication ? Cette action ne peut être annulée.",
     "alert_deleteCourtEntry": "Êtes-vous sûr de vouloir supprimer cette entrée ? Cette action ne peut être annulée.",
     "alert_deleteCourtDate": "Êtes-vous sûr de vouloir supprimer cette date ? Cette action ne peut être annulée."
