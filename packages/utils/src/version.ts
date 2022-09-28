@@ -22,7 +22,7 @@ export async function getCADVersion() {
 }
 
 async function getLocalPackageVersion(): Promise<string | null> {
-  console.log({ PROCESS_CWD: process.cwd() });
+  console.log({ PROCESS_CWD: process.cwd() })x;
 
   try {
     const packageJsonPath = resolve(process.cwd(), "package.json");
