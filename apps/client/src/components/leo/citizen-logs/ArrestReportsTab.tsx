@@ -81,6 +81,7 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
 
             return {
               id: item.id,
+              caseNumber: `#${record.caseNumber}`,
               type,
               citizen: `${item.citizen.name} ${item.citizen.surname}`,
               officer: officer ? `${callsign} ${officerName}` : common("none"),
@@ -127,6 +128,7 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
           })}
           columns={[
             { header: common("type"), accessorKey: "type" },
+            { header: t("caseNumber"), accessorKey: "caseNumber" },
             { header: t("citizen"), accessorKey: "citizen" },
             { header: t("officer"), accessorKey: "officer" },
             { header: t("postal"), accessorKey: "postal" },

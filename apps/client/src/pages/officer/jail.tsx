@@ -118,6 +118,7 @@ export default function Jail({ data }: Props) {
             return {
               id: item.id,
               rowProps: { style: released ? { opacity: "0.5" } : undefined },
+              caseNumber: `#${record.caseNumber}`,
               citizen: (
                 <Button onClick={() => handleNameClick(item)}>
                   {item.name} {item.surname}{" "}
@@ -145,6 +146,7 @@ export default function Jail({ data }: Props) {
             };
           })}
           columns={[
+            { header: t("caseNumber"), accessorKey: "caseNumber" },
             { header: t("citizen"), accessorKey: "citizen" },
             { header: t("officer"), accessorKey: "officer" },
             { header: t("jailTime"), accessorKey: "jailTime" },

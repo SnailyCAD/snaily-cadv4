@@ -1076,6 +1076,7 @@ model Bolo {
 // tickets, arrest reports, warrants, written warnings
 model Record {
   id                   String              @id @default(uuid())
+  caseNumber           Int                 @default(autoincrement())
   type                 RecordType
   citizen              Citizen             @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId            String
