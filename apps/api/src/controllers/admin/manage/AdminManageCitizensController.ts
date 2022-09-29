@@ -88,9 +88,15 @@ export class AdminManageCitizensController {
     ],
   })
   async getRecordLogsForCitizen(): Promise<APITypes.GetManageRecordLogsData> {
+<<<<<<< HEAD
     const [totalCount, recordLogs] = await prisma.$transaction([
       prisma.recordLog.count(),
       prisma.recordLog.findMany({
+=======
+    const [totalCount, recordLogs] = await prisma.$transaction(
+      await prisma.recordLog.count(),
+      await prisma.recordLog.findMany({
+>>>>>>> eb032d82 (:bug: fix: crashing citizen logs page + lazy loading)
         orderBy: { createdAt: "desc" },
         include: {
           warrant: { include: { officer: { include: leoProperties } } },
@@ -100,9 +106,15 @@ export class AdminManageCitizensController {
           },
         },
       }),
+<<<<<<< HEAD
     ]);
 
     return { logs: recordLogs, totalCount };
+=======
+    );
+
+    return { recordLogs, totalCount };
+>>>>>>> eb032d82 (:bug: fix: crashing citizen logs page + lazy loading)
   }
 
   @Get("/:id")

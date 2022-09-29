@@ -136,8 +136,13 @@ function AllCitizenLogsTable({ logs, search, setCurrentLog }: AllCitizenLogsTabl
   );
 }
 
+<<<<<<< HEAD
 function uniqueList({ logs }: GetManageRecordLogsData) {
   const arr: GetManageRecordLogsData["logs"] = [];
+=======
+function uniqueList(logs: CitizenLog[]) {
+  const arr: CitizenLog[] = [];
+>>>>>>> eb032d82 (:bug: fix: crashing citizen logs page + lazy loading)
 
   for (let i = 0; i < logs.length; i++) {
     const citizenId = logs[i]?.citizenId;
