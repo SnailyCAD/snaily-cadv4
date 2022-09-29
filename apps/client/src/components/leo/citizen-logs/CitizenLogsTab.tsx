@@ -76,45 +76,59 @@ export function CitizenLogsTab({ search, logs: data }: Props) {
                 return {
                   id: item.id,
                   type,
-                  citizen: `${item.citizen.name} ${item.citizen.surname}`,
+                  createdAt: createdAt ? <FullDate>{createdAt}</FullDate> : "—",
                   officer: `${callsign} ${officerName}`,
                   ...extra,
-                  createdAt: createdAt ? <FullDate>{createdAt}</FullDate> : "—",
                 };
               })}
             columns={[
               { header: common("type"), accessorKey: "type" },
-              { header: t("citizen"), accessorKey: "citizen" },
+              { header: common("createdAt"), accessorKey: "createdAt" },
               { header: t("officer"), accessorKey: "officer" },
               { header: t("postal"), accessorKey: "postal" },
               { header: t("status"), accessorKey: "status" },
               { header: t("notes"), accessorKey: "notes" },
               { header: t("violations"), accessorKey: "violations" },
-              { header: common("createdAt"), accessorKey: "createdAt" },
             ]}
           />
         </>
       ) : (
-        <Table
-          tableState={tableState}
-          data={logs.map((item) => {
-            return {
-              id: item.id,
-              citizen: `${item.citizen.name} ${item.citizen.surname}`,
-              actions: (
-                <Button size="xs" onClick={() => setCurrentLog(item)}>
-                  {common("view")}
-                </Button>
-              ),
-            };
-          })}
-          columns={[
-            { header: t("citizen"), accessorKey: "citizen" },
-            { header: common("actions"), accessorKey: "actions" },
-          ]}
-        />
+        <AllCitizenLogsTable setCurrentLog={setCurrentLog} search={search} logs={logs} />
       )}
     </TabsContent>
+  );
+}
+
+interface AllCitizenLogsTableProps {
+  setCurrentLog(log: CitizenLog): void;
+  search: string;
+  logs: CitizenLog[];
+}
+
+function AllCitizenLogsTable({ logs, search, setCurrentLog }: AllCitizenLogsTableProps) {
+  const common = useTranslations("Common");
+  const t = useTranslations("Leo");
+  const tableState = useTableState({ search: { value: search } });
+
+  return (
+    <Table
+      tableState={tableState}
+      data={logs.map((item) => {
+        return {
+          id: item.id,
+          citizen: `${item.citizen.name} ${item.citizen.surname}`,
+          actions: (
+            <Button size="xs" onClick={() => setCurrentLog(item)}>
+              {common("view")}
+            </Button>
+          ),
+        };
+      })}
+      columns={[
+        { header: t("citizen"), accessorKey: "citizen" },
+        { header: common("actions"), accessorKey: "actions" },
+      ]}
+    />
   );
 }
 

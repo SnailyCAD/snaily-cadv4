@@ -88,18 +88,21 @@ export class AdminManageCitizensController {
     ],
   })
   async getRecordLogsForCitizen(): Promise<APITypes.GetManageRecordLogsData> {
-    const citizens = await prisma.recordLog.findMany({
-      orderBy: { createdAt: "desc" },
-      include: {
-        warrant: { include: { officer: { include: leoProperties } } },
-        records: { include: recordsInclude },
-        citizen: {
-          include: { user: { select: userProperties }, gender: true, ethnicity: true },
+    const [totalCount, recordLogs] = await prisma.$transaction(
+      await prisma.recordLog.count(),
+      await prisma.recordLog.findMany({
+        orderBy: { createdAt: "desc" },
+        include: {
+          warrant: { include: { officer: { include: leoProperties } } },
+          records: { include: recordsInclude },
+          citizen: {
+            include: { user: { select: userProperties }, gender: true, ethnicity: true },
+          },
         },
-      },
-    });
+      }),
+    );
 
-    return citizens;
+    return { recordLogs, totalCount };
   }
 
   @Get("/:id")
