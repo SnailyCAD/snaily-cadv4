@@ -163,6 +163,7 @@ function RecordsTable({ data }: { data: Record[] }) {
           .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
           .map((record) => ({
             id: record.id,
+            caseNumber: `#${record.caseNumber}`,
             violations: <ViolationsColumn violations={record.violations} />,
             postal: record.postal,
             officer: record.officer
@@ -201,6 +202,7 @@ function RecordsTable({ data }: { data: Record[] }) {
             ),
           }))}
         columns={[
+          { header: t("Leo.caseNumber"), accessorKey: "caseNumber" },
           { header: t("Leo.violations"), accessorKey: "violations" },
           { header: t("Leo.postal"), accessorKey: "postal" },
           { header: t("Leo.officer"), accessorKey: "officer" },
