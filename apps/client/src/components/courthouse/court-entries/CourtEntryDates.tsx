@@ -55,6 +55,7 @@ export function CourtEntryDates({ onUpdate, onDelete, onCreate, dates }: Props) 
       </header>
 
       <Table
+        features={{ isWithinCard: true }}
         tableState={tableState}
         data={dates.map((date) => ({
           id: date.id,
