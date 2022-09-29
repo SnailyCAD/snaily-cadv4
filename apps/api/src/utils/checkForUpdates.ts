@@ -35,7 +35,7 @@ ${green(bold("Update available!"))} ${underline(versions.currentVersion)} -> ${u
 Documentation: https://cad-docs.caspertheghost.me/docs/installations/updating
       `;
 
-      console.log(message);
+      console.info(message);
     }
   }
 }
