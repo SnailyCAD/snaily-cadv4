@@ -6,6 +6,7 @@ import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import type { Citizen, RecordLog } from "@snailycad/types";
+import type { GetManageRecordLogsData } from "@snailycad/types/api";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Title } from "components/shared/Title";
@@ -17,7 +18,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 export type CitizenLog = RecordLog & { citizen: Citizen };
 interface Props {
-  logs: CitizenLog[];
+  logs: GetManageRecordLogsData;
 }
 
 export default function CitizenLogs({ logs }: Props) {
@@ -57,7 +58,9 @@ export default function CitizenLogs({ logs }: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const user = await getSessionUser(req);
-  const [logs] = await requestAll(req, [["/admin/manage/citizens/records-logs", []]]);
+  const [logs] = await requestAll(req, [
+    ["/admin/manage/citizens/records-logs", { totalCount: 0, logs: [] }],
+  ]);
 
   return {
     props: {

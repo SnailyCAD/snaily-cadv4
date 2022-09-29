@@ -126,15 +126,18 @@ export interface GetManageCitizensData {
  * @method GET
  * @route /admin/manage/citizens/record-logs
  */
-export type GetManageRecordLogsData = (Prisma.RecordLog & {
-  citizen: Prisma.Citizen & {
-    user: Types.User | null;
-    ethnicity: Prisma.Value;
-    gender: Prisma.Value;
-  };
-  warrant: (Prisma.Warrant & {}) | null;
-  records: (Prisma.Record & {}) | null;
-})[];
+export interface GetManageRecordLogsData {
+  totalCount: number;
+  logs: (Prisma.RecordLog & {
+    citizen: Prisma.Citizen & {
+      user: Types.User | null;
+      ethnicity: Prisma.Value;
+      gender: Prisma.Value;
+    };
+    warrant: (Prisma.Warrant & {}) | null;
+    records: (Prisma.Record & {}) | null;
+  })[];
+}
 
 /**
  * @method GET

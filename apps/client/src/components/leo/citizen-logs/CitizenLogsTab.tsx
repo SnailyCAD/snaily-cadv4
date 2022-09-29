@@ -10,10 +10,11 @@ import { TabsContent } from "components/shared/TabList";
 import type { CitizenLog } from "src/pages/officer/supervisor/citizen-logs";
 import { makeUnitName } from "lib/utils";
 import { ViolationsColumn } from "../ViolationsColumn";
+import type { GetManageRecordLogsData } from "@snailycad/types/api";
 
 interface Props {
   search: string;
-  logs: CitizenLog[];
+  logs: GetManageRecordLogsData;
 }
 
 const TYPE_LABELS = {
@@ -132,8 +133,8 @@ function AllCitizenLogsTable({ logs, search, setCurrentLog }: AllCitizenLogsTabl
   );
 }
 
-function uniqueList(logs: CitizenLog[]) {
-  const arr: CitizenLog[] = [];
+function uniqueList({ logs }: GetManageRecordLogsData) {
+  const arr: GetManageRecordLogsData["logs"] = [];
 
   for (let i = 0; i < logs.length; i++) {
     const citizenId = logs[i]?.citizenId;

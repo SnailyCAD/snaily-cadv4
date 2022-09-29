@@ -16,11 +16,11 @@ import { Status } from "components/shared/Status";
 import { useRouter } from "next/router";
 import { HoverCard } from "components/shared/HoverCard";
 import { ViolationsColumn } from "../ViolationsColumn";
-import type { PostCitizenRecordLogsData } from "@snailycad/types/api";
+import type { GetManageRecordLogsData, PostCitizenRecordLogsData } from "@snailycad/types/api";
 
 interface Props {
   search: string;
-  logs: CitizenLog[];
+  logs: GetManageRecordLogsData;
 }
 
 const TYPE_LABELS = {
@@ -152,8 +152,8 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
   );
 }
 
-function uniqueList(logs: CitizenLog[]) {
-  const arrestReports: CitizenLog[] = [];
+function uniqueList({ logs }: GetManageRecordLogsData) {
+  const arrestReports: GetManageRecordLogsData["logs"] = [];
 
   for (let i = 0; i < logs.length; i++) {
     const log = logs[i]!;

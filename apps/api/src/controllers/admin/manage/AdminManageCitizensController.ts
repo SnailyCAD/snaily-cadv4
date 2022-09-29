@@ -88,9 +88,9 @@ export class AdminManageCitizensController {
     ],
   })
   async getRecordLogsForCitizen(): Promise<APITypes.GetManageRecordLogsData> {
-    const [totalCount, recordLogs] = await prisma.$transaction(
-      await prisma.recordLog.count(),
-      await prisma.recordLog.findMany({
+    const [totalCount, recordLogs] = await prisma.$transaction([
+      prisma.recordLog.count(),
+      prisma.recordLog.findMany({
         orderBy: { createdAt: "desc" },
         include: {
           warrant: { include: { officer: { include: leoProperties } } },
@@ -100,9 +100,9 @@ export class AdminManageCitizensController {
           },
         },
       }),
-    );
+    ]);
 
-    return { recordLogs, totalCount };
+    return { logs: recordLogs, totalCount };
   }
 
   @Get("/:id")
