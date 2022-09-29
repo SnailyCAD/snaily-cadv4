@@ -103,7 +103,7 @@ export function CourthousePostsTab(props: Props) {
             { header: t("title"), accessorKey: "title" },
             { header: t("description"), accessorKey: "description" },
             { header: common("createdAt"), accessorKey: "createdAt" },
-            { header: common("actions"), accessorKey: "actions" },
+            hasManagePermissions ? { header: common("actions"), accessorKey: "actions" } : null,
           ]}
         />
       )}
