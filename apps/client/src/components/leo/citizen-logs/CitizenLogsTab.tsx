@@ -61,16 +61,18 @@ export function CitizenLogsTab({ search, logs: data }: Props) {
 
                 const extra = item.records
                   ? {
+                      caseNumber: `#${item.records?.caseNumber}`,
                       status: "—",
                       postal: item.records.postal || common("none"),
                       notes: item.records.notes || common("none"),
                       violations: <ViolationsColumn violations={item.records.violations} />,
                     }
                   : {
-                      postal: "—",
+                      caseNumber: "—",
                       status: item.warrant?.status,
-                      violations: "—",
+                      postal: "—",
                       notes: "—",
+                      violations: "—",
                     };
 
                 return {
@@ -83,6 +85,7 @@ export function CitizenLogsTab({ search, logs: data }: Props) {
                 };
               })}
             columns={[
+              { header: t("caseNumber"), accessorKey: "caseNumber" },
               { header: common("type"), accessorKey: "type" },
               { header: t("citizen"), accessorKey: "citizen" },
               { header: t("officer"), accessorKey: "officer" },
