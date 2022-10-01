@@ -4,15 +4,17 @@ import { prisma } from "lib/prisma";
 import glob from "glob";
 import { join } from "node:path";
 import { stat } from "node:fs/promises";
-import { UseBeforeEach } from "@tsed/common";
+import { UseBefore } from "@tsed/common";
 import { IsAuth } from "middlewares/IsAuth";
 import { Rank, WhitelistStatus } from "@prisma/client";
 import { UsePermissions } from "middlewares/UsePermissions";
 import { defaultPermissions } from "@snailycad/permissions";
 import type { GetAdminDashboardData } from "@snailycad/types/api";
+import { fetch } from "undici";
+import { getCADVersion } from "@snailycad/utils/version";
+import { captureException } from "@sentry/node";
 
 @Controller("/admin")
-@UseBeforeEach(IsAuth)
 @ContentType("application/json")
 export class AdminController {
   @Get("/")
@@ -21,6 +23,7 @@ export class AdminController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: defaultPermissions.allDefaultAdminPermissions,
   })
+  @UseBefore(IsAuth)
   async getData(): Promise<GetAdminDashboardData> {
     const [activeUsers, pendingUsers, bannedUsers] = await Promise.all([
       await prisma.user.count({ where: { whitelistStatus: WhitelistStatus.ACCEPTED } }),
@@ -61,6 +64,31 @@ export class AdminController {
         totalSize: 0,
       },
     };
+  }
+
+  @Get("/changelog")
+  @Description("Get the changelog from GitHub.")
+  async getChangelog() {
+    try {
+      const version = await getCADVersion();
+      console.log({ version });
+
+      const response = await fetch(
+        `https://api.github.com/repos/SnailyCAD/snaily-cadv4/releases/tags/${version?.currentVersion}`,
+        {
+          headers: {
+            accept: "application/json",
+            Authorization: "token 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",
+          },
+        },
+      );
+
+      const json = (await response.json()) as { body: string };
+      return json.body;
+    } catch (e) {
+      captureException(e);
+      return null;
+    }
   }
 
   private async imageData() {

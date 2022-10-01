@@ -87,7 +87,8 @@
     "dmv": "Department of Motor Vehicles",
     "penalCodes": "Penal Codes",
     "weaponExams": "Weapon Exams",
-    "myDeputyLogs": "My deputy logs"
+    "myDeputyLogs": "My deputy logs",
+    "whatsNew": "What's New"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",
