@@ -4,7 +4,7 @@ import { prisma } from "lib/prisma";
 import glob from "glob";
 import { join } from "node:path";
 import { stat } from "node:fs/promises";
-import { UseBefore } from "@tsed/common";
+import { Res, UseBefore } from "@tsed/common";
 import { IsAuth } from "middlewares/IsAuth";
 import { Rank, WhitelistStatus } from "@prisma/client";
 import { UsePermissions } from "middlewares/UsePermissions";
@@ -68,11 +68,9 @@ export class AdminController {
 
   @Get("/changelog")
   @Description("Get the changelog from GitHub.")
-  async getChangelog() {
+  async getChangelog(@Res() res: Res) {
     try {
       const version = await getCADVersion();
-      console.log({ version });
-
       const response = await fetch(
         `https://api.github.com/repos/SnailyCAD/snaily-cadv4/releases/tags/${version?.currentVersion}`,
         {
@@ -81,6 +79,9 @@ export class AdminController {
           },
         },
       );
+
+      const ONE_DAY = 60 * 60 * 24;
+      res.setHeader("Cache-Control", `public, max-age=${ONE_DAY}`);
 
       const json = (await response.json()) as { body: string };
       return json.body;
