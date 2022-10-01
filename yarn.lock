@@ -1906,7 +1906,6 @@ __metadata:
     react-use: ^17.4.0
     remark-gfm: ^3.0.1
     remark-github: ^11.2.4
-    remark-plugin-refined-github: ^0.0.2
     rimraf: ^3.0.2
     sass: ^1.55.0
     slate: ^0.82.1
@@ -6823,13 +6822,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"github-reserved-names@npm:^2.0.4":
-  version: 2.0.4
-  resolution: "github-reserved-names@npm:2.0.4"
-  checksum: 66767559ecddd17defae000eb078e6235e8c3d9a2976057fb85e32db4c862a81ee4fbc6e4d1bf9adcb9f40d317d7e9e465a611381ee8b8199f92e6b698361279
-  languageName: node
-  linkType: hard
-
 "glob-parent@npm:^2.0.0":
   version: 2.0.0
   resolution: "glob-parent@npm:2.0.0"
@@ -10630,17 +10622,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"remark-plugin-refined-github@npm:^0.0.2":
-  version: 0.0.2
-  resolution: "remark-plugin-refined-github@npm:0.0.2"
-  dependencies:
-    mdast-util-to-string: ^3.1.0
-    shorten-repo-url: ^2.3.0
-    unist-util-visit: ^4.1.1
-  checksum: de57426e66a13f4b8ba581f0e19cb4a1f65b2b1ac55289acd731946809b0a8eb4163bba1682ddee94c5216c2f7d0db6b395251740b898285ec1a834df57e7224
-  languageName: node
-  linkType: hard
-
 "remark-rehype@npm:^10.0.0":
   version: 10.1.0
   resolution: "remark-rehype@npm:10.1.0"
@@ -11105,15 +11086,6 @@ __metadata:
   version: 1.7.3
   resolution: "shell-quote@npm:1.7.3"
   checksum: aca58e73a3a5d933d02e0bdddedc53ee14f7c2ec264f97ac915b9d4482d077a38e422aa664631d60a672cd3cdb4054eb2e6c0303f54882453dacb6483e482d34
-  languageName: node
-  linkType: hard
-
-"shorten-repo-url@npm:^2.3.0":
-  version: 2.3.0
-  resolution: "shorten-repo-url@npm:2.3.0"
-  dependencies:
-    github-reserved-names: ^2.0.4
-  checksum: 79f7096412cb421097ba3dc1ee9543d4612b6556aef41d9d317168ce3c187b425cb13f3d0320e27635a758017d1d5aa9f4abf7b92e4d63be59589d1368dfda10
   languageName: node
   linkType: hard
 
@@ -12504,7 +12476,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"unist-util-visit@npm:^4.0.0, unist-util-visit@npm:^4.1.1":
+"unist-util-visit@npm:^4.0.0":
   version: 4.1.1
   resolution: "unist-util-visit@npm:4.1.1"
   dependencies:
