@@ -78,7 +78,6 @@ export class AdminController {
         {
           headers: {
             accept: "application/json",
-            Authorization: "token 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",
           },
         },
       );
