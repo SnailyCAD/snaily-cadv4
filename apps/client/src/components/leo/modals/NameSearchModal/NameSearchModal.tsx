@@ -184,7 +184,7 @@ export function NameSearchModal() {
   }
 
   const hasWarrants =
-    !currentResult || currentResult.isConfidential ? false : currentResult.warrants.length > 0;
+    !currentResult || currentResult.isConfidential ? false : currentResult.warrants?.length > 0;
 
   const INITIAL_VALUES = {
     name: payloadCitizen?.name ?? "",
