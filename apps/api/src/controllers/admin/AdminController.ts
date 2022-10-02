@@ -10,9 +10,8 @@ import { Rank, WhitelistStatus } from "@prisma/client";
 import { UsePermissions } from "middlewares/UsePermissions";
 import { defaultPermissions } from "@snailycad/permissions";
 import type { GetAdminDashboardData } from "@snailycad/types/api";
-import { fetch } from "undici";
+import axios from "axios";
 import { getCADVersion } from "@snailycad/utils/version";
-import { captureException } from "@sentry/node";
 
 @Controller("/admin")
 @ContentType("application/json")
@@ -71,22 +70,17 @@ export class AdminController {
   async getChangelog(@Res() res: Res) {
     try {
       const version = await getCADVersion();
-      const response = await fetch(
-        `https://api.github.com/repos/SnailyCAD/snaily-cadv4/releases/tags/${version?.currentVersion}`,
-        {
-          headers: {
-            accept: "application/json",
-          },
-        },
-      );
+      const response = await axios({
+        url: `https://api.github.com/repos/SnailyCAD/snaily-cadv4/releases/tags/${version?.currentVersion}`,
+        headers: { accept: "application/vnd.github+json" },
+      });
 
       const ONE_DAY = 60 * 60 * 24;
       res.setHeader("Cache-Control", `public, max-age=${ONE_DAY}`);
 
-      const json = (await response.json()) as { body: string };
-      return json.body;
+      const json = response.data as { body: string };
+      return json;
     } catch (e) {
-      captureException(e);
       return null;
     }
   }

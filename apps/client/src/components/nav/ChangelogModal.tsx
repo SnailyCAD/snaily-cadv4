@@ -19,12 +19,12 @@ export function ChangelogModal() {
   const fetchLatestChangelog = React.useCallback(async () => {
     if (body) return;
 
-    const { json } = await execute<string>({
+    const { json } = await execute<{ body: string }>({
       path: "/admin/changelog",
     });
 
     if (json) {
-      setBody(json);
+      setBody(typeof json === "string" ? json : json.body);
     }
   }, [cad?.version?.currentVersion, body]); // eslint-disable-line react-hooks/exhaustive-deps
 
