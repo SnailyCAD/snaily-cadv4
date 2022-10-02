@@ -18,12 +18,12 @@ import { captureException } from "@sentry/node";
 @ContentType("application/json")
 export class AdminController {
   @Get("/")
+  @UseBefore(IsAuth)
   @Description("Get simple CAD stats")
   @UsePermissions({
     fallback: (u) => u.rank !== Rank.USER,
     permissions: defaultPermissions.allDefaultAdminPermissions,
   })
-  @UseBefore(IsAuth)
   async getData(): Promise<GetAdminDashboardData> {
     const [activeUsers, pendingUsers, bannedUsers] = await Promise.all([
       await prisma.user.count({ where: { whitelistStatus: WhitelistStatus.ACCEPTED } }),
