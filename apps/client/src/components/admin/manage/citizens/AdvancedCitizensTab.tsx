@@ -79,6 +79,7 @@ export function AdvancedCitizensTab() {
                   onBlur={(e) => handleChange("surname", id, e)}
                 />
               </FormField>
+
               <FormField className="w-full" label="Date of Birth">
                 <Input
                   type="date"

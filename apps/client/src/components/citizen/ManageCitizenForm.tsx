@@ -151,23 +151,10 @@ export function ManageCitizenForm({
           </FormRow>
 
           <FormRow flexLike={!SOCIAL_SECURITY_NUMBERS}>
-            {/* <FormField
-              className="w-full"
-              errorMessage={errors.dateOfBirth as string}
-              label={t("dateOfBirth")}
-            >
-              <Input
-                type="date"
-                value={values.dateOfBirth}
-                onChange={handleChange}
-                name="dateOfBirth"
-              />
-            </FormField> */}
-
             <DatePickerField
               errorMessage={errors.dateOfBirth as string}
               value={values.dateOfBirth}
-              onChange={(v) => setFieldValue("dateOfBirth", v)}
+              onChange={(value) => setFieldValue("dateOfBirth", value.toString())}
               label={t("dateOfBirth")}
             />
 
@@ -284,15 +271,4 @@ export function ManageCitizenForm({
       )}
     </Formik>
   );
-}
-
-export function isDate(value: string | null | Date): value is Date {
-  if (!value) return false;
-
-  try {
-    const date = new Date(value);
-    return !!date;
-  } catch {
-    return false;
-  }
 }
