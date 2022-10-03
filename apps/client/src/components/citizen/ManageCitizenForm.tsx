@@ -68,7 +68,10 @@ export function ManageCitizenForm({
     username: citizen?.user?.username ?? "",
     name: citizen?.name ?? "",
     surname: citizen?.surname ?? "",
-    dateOfBirth: citizen?.dateOfBirth ?? new Date(),
+    dateOfBirth:
+      citizen && isDate(citizen.dateOfBirth)
+        ? new Date(citizen.dateOfBirth.toString()).toISOString().slice(0, 10)
+        : new Date().toDateString(),
     gender: citizen?.genderId ?? "",
     ethnicity: citizen?.ethnicityId ?? "",
     weight: citizen?.weight ?? "",
@@ -157,17 +160,8 @@ export function ManageCitizenForm({
             >
               <Input
                 type="date"
-                value={
-                  isDate(values.dateOfBirth)
-                    ? new Date(values.dateOfBirth.toString()).toISOString().slice(0, 10)
-                    : String(values.dateOfBirth)
-                }
-                onChange={(e) =>
-                  handleChange({
-                    ...e,
-                    target: { name: "dateOfBirth", value: e.target.valueAsDate },
-                  })
-                }
+                value={values.dateOfBirth}
+                onChange={handleChange}
                 name="dateOfBirth"
               />
             </FormField>
@@ -287,7 +281,7 @@ export function ManageCitizenForm({
   );
 }
 
-export function isDate(value: string | null | Date) {
+export function isDate(value: string | null | Date): value is Date {
   if (!value) return false;
 
   try {
