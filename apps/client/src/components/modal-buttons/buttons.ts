@@ -17,13 +17,13 @@ export interface ModalButton<T = unknown> {
   };
 }
 
-export const switchDivision: ModalButton = ({ unit }) => {
+export const switchDivision: ModalButton = ({ DIVISIONS, unit }) => {
   const isEnabled = unit ? isUnitOfficer(unit) && (unit.callsigns?.length ?? 0) >= 1 : false;
 
   return {
     modalId: ModalIds.SwitchDivisionCallsign,
     nameKey: ["Leo", "switchDivisionCallsign"],
-    isEnabled,
+    isEnabled: DIVISIONS && isEnabled,
   };
 };
 

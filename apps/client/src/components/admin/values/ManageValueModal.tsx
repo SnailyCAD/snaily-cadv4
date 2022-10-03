@@ -53,6 +53,7 @@ import {
   getValueStrFromValue,
   makeDefaultWhatPages,
 } from "lib/admin/values/utils";
+import { DivisionFields } from "./manage-modal/DivisionFields";
 
 interface Props {
   type: ValueType;
@@ -244,42 +245,15 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (
           <Form>
-            {type === "DIVISION" ? (
-              <FormField label="Department">
-                <Select
-                  values={department.values.map((v) => ({
-                    value: v.id,
-                    label: v.value.value,
-                  }))}
-                  name="departmentId"
-                  onChange={handleChange}
-                  value={values.departmentId}
-                />
+            {type === ValueType.DIVISION ? null : (
+              <FormField errorMessage={errors.value} label="Value">
+                <Input autoFocus name="value" onChange={handleChange} value={values.value} />
               </FormField>
-            ) : null}
+            )}
 
-            <FormField errorMessage={errors.value} label="Value">
-              <Input autoFocus name="value" onChange={handleChange} value={values.value} />
-            </FormField>
+            {type === ValueType.LICENSE ? <LicenseFields /> : null}
 
-            {type === "LICENSE" ? <LicenseFields /> : null}
-
-            {["DIVISION"].includes(type) ? (
-              <>
-                <FormField optional label="Callsign Symbol">
-                  <Input name="callsign" onChange={handleChange} value={values.callsign} />
-                </FormField>
-
-                <FormField optional label="Paired Unit Template">
-                  <Input
-                    name="pairedUnitTemplate"
-                    onChange={handleChange}
-                    value={values.pairedUnitTemplate}
-                  />
-                </FormField>
-              </>
-            ) : null}
-
+            {type === ValueType.DIVISION ? <DivisionFields /> : null}
             {type === ValueType.DEPARTMENT ? <DepartmentFields /> : null}
             {type === ValueType.QUALIFICATION ? (
               <QualificationFields image={image} setImage={setImage} />

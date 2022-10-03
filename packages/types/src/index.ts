@@ -362,7 +362,7 @@ export type CourtDate = Prisma.CourtDate;
 
 export type EmsFdDeputy = Prisma.EmsFdDeputy & {
   department: Officer["department"];
-  division: Officer["divisions"][number];
+  division?: Officer["divisions"][number] | null;
   rank: Officer["rank"];
   status: Officer["status"];
   citizen: Officer["citizen"];

@@ -13,6 +13,7 @@ import { AlertDeclineOfficerModal } from "./AlertDeclineOfficerModal";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import type { PostManageUnitAcceptDeclineDepartmentData } from "@snailycad/types/api";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
   pendingOfficers: Unit[];
@@ -28,6 +29,7 @@ export function DepartmentWhitelistingTab({ search, pendingOfficers }: Props) {
   const { generateCallsign } = useGenerateCallsign();
   const { state, execute } = useFetch();
   const tableState = useTableState({ search: { value: search } });
+  const { DIVISIONS } = useFeatureEnabled();
 
   async function handleAcceptOrDecline(data: {
     unit: Unit;
@@ -102,7 +104,7 @@ export function DepartmentWhitelistingTab({ search, pendingOfficers }: Props) {
             { header: t("Leo.callsign"), accessorKey: "callsign" },
             { header: t("Leo.badgeNumber"), accessorKey: "badgeNumber" },
             { header: t("Leo.department"), accessorKey: "department" },
-            { header: t("Leo.division"), accessorKey: "division" },
+            DIVISIONS ? { header: t("LEO.division"), accessorKey: "division" } : null,
             { header: common("user"), accessorKey: "user" },
             { header: common("actions"), accessorKey: "actions" },
           ]}

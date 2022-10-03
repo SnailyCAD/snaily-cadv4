@@ -11,6 +11,7 @@ import { Loader } from "components/Loader";
 import { useValues } from "context/ValuesContext";
 import type { DepartmentValue, DivisionValue } from "@snailycad/types";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
   calls: Full911Call[];
@@ -36,6 +37,7 @@ export function CallsFilters({ search, calls }: Props) {
   const departments = makeOptions(values.department.values);
   const divisions = makeOptions(values.division.values);
   const assignedUnits = makeAssignedUnitOptions(calls, generateCallsign);
+  const { DIVISIONS } = useFeatureEnabled();
 
   React.useEffect(() => {
     if (!showFilters) {
@@ -69,20 +71,22 @@ export function CallsFilters({ search, calls }: Props) {
         />
       </FormField>
 
-      <FormField label={t("divisions")}>
-        <Select
-          isClearable
-          value={division?.value?.id ?? null}
-          onChange={(e) => {
-            setDivision(e.target);
-            search.setExtraParams({ division: e.target?.value?.id });
-          }}
-          className="w-56"
-          values={divisions.filter((v) =>
-            department?.value ? v.value.departmentId === department.value.id : true,
-          )}
-        />
-      </FormField>
+      {DIVISIONS ? (
+        <FormField label={t("divisions")}>
+          <Select
+            isClearable
+            value={division?.value?.id ?? null}
+            onChange={(e) => {
+              setDivision(e.target);
+              search.setExtraParams({ division: e.target?.value?.id });
+            }}
+            className="w-56"
+            values={divisions.filter((v) =>
+              department?.value ? v.value.departmentId === department.value.id : true,
+            )}
+          />
+        </FormField>
+      ) : null}
 
       <FormField label={t("assignedUnits")}>
         <Select

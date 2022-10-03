@@ -90,6 +90,7 @@ export const valueRoutes: SidebarRoute[] = [
   {
     type: ValueType.DIVISION,
     permissions: [Permissions.ManageValueDivision],
+    hidden: ({ DIVISIONS }) => !DIVISIONS,
   },
   {
     type: ValueType.DRIVERSLICENSE_CATEGORY,

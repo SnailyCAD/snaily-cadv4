@@ -19,6 +19,7 @@ import { classNames } from "lib/classNames";
 import type { GetManageUnitByIdData, PutManageUnitData } from "@snailycad/types/api";
 import { TabsContent } from "@radix-ui/react-tabs";
 import { QualificationsTable } from "../../QualificationsTable";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
   unit: GetManageUnitByIdData;
@@ -32,6 +33,7 @@ export function ManageUnitTab({ unit: data }: Props) {
   const { codes10, department, division, officerRank } = useValues();
   const { state, execute } = useFetch();
   const router = useRouter();
+  const { BADGE_NUMBERS, DIVISIONS } = useFeatureEnabled();
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
@@ -99,41 +101,43 @@ export function ManageUnitTab({ unit: data }: Props) {
               />
             </FormField>
 
-            <FormField
-              errorMessage={isUnitOfficer(unit) ? (errors.divisions as string) : errors.division}
-              label={t("division")}
-            >
-              {isUnitOfficer(unit) ? (
-                <Select
-                  isMulti
-                  value={values.divisions}
-                  name="divisions"
-                  onChange={handleChange}
-                  values={division.values
-                    .filter((v) =>
-                      values.department ? v.departmentId === values.department : true,
-                    )
-                    .map((value) => ({
-                      label: value.value.value,
-                      value: value.id,
-                    }))}
-                />
-              ) : (
-                <Select
-                  name="division"
-                  onChange={handleChange}
-                  value={values.division}
-                  values={division.values
-                    .filter((v) =>
-                      values.department ? v.departmentId === values.department : true,
-                    )
-                    .map((value) => ({
-                      label: value.value.value,
-                      value: value.id,
-                    }))}
-                />
-              )}
-            </FormField>
+            {DIVISIONS ? (
+              <FormField
+                errorMessage={isUnitOfficer(unit) ? (errors.divisions as string) : errors.division}
+                label={t("division")}
+              >
+                {isUnitOfficer(unit) ? (
+                  <Select
+                    isMulti
+                    value={values.divisions}
+                    name="divisions"
+                    onChange={handleChange}
+                    values={division.values
+                      .filter((v) =>
+                        values.department ? v.departmentId === values.department : true,
+                      )
+                      .map((value) => ({
+                        label: value.value.value,
+                        value: value.id,
+                      }))}
+                  />
+                ) : (
+                  <Select
+                    name="division"
+                    onChange={handleChange}
+                    value={values.division}
+                    values={division.values
+                      .filter((v) =>
+                        values.department ? v.departmentId === values.department : true,
+                      )
+                      .map((value) => ({
+                        label: value.value.value,
+                        value: value.id,
+                      }))}
+                  />
+                )}
+              </FormField>
+            ) : null}
 
             <FormRow>
               <FormField label={t("rank")}>
@@ -162,23 +166,25 @@ export function ManageUnitTab({ unit: data }: Props) {
               </FormField>
             </FormRow>
 
-            <FormField errorMessage={errors.badgeNumber} label={t("badgeNumber")}>
-              <Input
-                type="number"
-                value={values.badgeNumber}
-                name="badgeNumber"
-                onChange={(e) =>
-                  handleChange({
-                    ...e,
-                    target: {
-                      ...e.target,
-                      id: "badgeNumber",
-                      value: e.target.valueAsNumber,
-                    },
-                  })
-                }
-              />
-            </FormField>
+            {BADGE_NUMBERS ? (
+              <FormField errorMessage={errors.badgeNumber} label={t("badgeNumber")}>
+                <Input
+                  type="number"
+                  value={values.badgeNumber}
+                  name="badgeNumber"
+                  onChange={(e) =>
+                    handleChange({
+                      ...e,
+                      target: {
+                        ...e.target,
+                        id: "badgeNumber",
+                        value: e.target.valueAsNumber,
+                      },
+                    })
+                  }
+                />
+              </FormField>
+            ) : null}
 
             <FormRow>
               <FormField errorMessage={errors.callsign} label={"Callsign Symbol 1"}>

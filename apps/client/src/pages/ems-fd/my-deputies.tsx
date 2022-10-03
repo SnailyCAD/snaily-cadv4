@@ -38,7 +38,7 @@ export default function MyDeputies({ deputies: data }: Props) {
   const { state, execute } = useFetch();
   const { generateCallsign } = useGenerateCallsign();
   const { makeImageUrl } = useImageUrl();
-  const { BADGE_NUMBERS } = useFeatureEnabled();
+  const { DIVISIONS, BADGE_NUMBERS } = useFeatureEnabled();
   const tableState = useTableState();
 
   const [deputies, setDeputies] = React.useState(data);
@@ -106,7 +106,7 @@ export default function MyDeputies({ deputies: data }: Props) {
             badgeNumber: deputy.badgeNumber,
             department: formatOfficerDepartment(deputy) ?? common("none"),
             departmentStatus: <UnitDepartmentStatus unit={deputy} />,
-            division: deputy.division.value.value,
+            division: deputy.division?.value.value ?? common("none"),
             rank: <OfficerRank unit={deputy} />,
             position: deputy.position ?? common("none"),
             actions: (
@@ -130,7 +130,7 @@ export default function MyDeputies({ deputies: data }: Props) {
             { header: t("Leo.callsign"), accessorKey: "callsign" },
             BADGE_NUMBERS ? { header: t("Leo.badgeNumber"), accessorKey: "badgeNumber" } : null,
             { header: t("Leo.department"), accessorKey: "department" },
-            { header: t("Leo.division"), accessorKey: "division" },
+            DIVISIONS ? { header: t("Leo.division"), accessorKey: "division" } : null,
             { header: t("Leo.rank"), accessorKey: "rank" },
             { header: t("Leo.position"), accessorKey: "position" },
             { header: t("Leo.status"), accessorKey: "departmentStatus" },

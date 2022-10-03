@@ -8,5 +8,5 @@ export const SELECT_DEPUTY_SCHEMA = z.object({
 export const EMS_FD_DEPUTY_SCHEMA = CREATE_OFFICER_SCHEMA.omit({
   divisions: true,
 }).extend({
-  division: z.string().min(2).max(255).optional(),
+  division: z.string().max(255).optional(),
 });

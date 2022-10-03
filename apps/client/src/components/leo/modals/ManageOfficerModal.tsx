@@ -42,7 +42,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const formRef = React.useRef<HTMLFormElement>(null);
-  const { BADGE_NUMBERS } = useFeatureEnabled();
+  const { BADGE_NUMBERS, DIVISIONS } = useFeatureEnabled();
 
   const { state, execute } = useFetch();
   const { department, division } = useValues();
@@ -196,22 +196,24 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
                 />
               </FormField>
 
-              <FormField errorMessage={errors.divisions as string} label={t("division")}>
-                <Select
-                  isMulti
-                  value={values.divisions}
-                  name="divisions"
-                  onChange={handleChange}
-                  values={division.values
-                    .filter((v) =>
-                      values.department ? v.departmentId === values.department : true,
-                    )
-                    .map((value) => ({
-                      label: value.value.value,
-                      value: value.id,
-                    }))}
-                />
-              </FormField>
+              {DIVISIONS ? (
+                <FormField errorMessage={errors.divisions as string} label={t("division")}>
+                  <Select
+                    isMulti
+                    value={values.divisions}
+                    name="divisions"
+                    onChange={handleChange}
+                    values={division.values
+                      .filter((v) =>
+                        values.department ? v.departmentId === values.department : true,
+                      )
+                      .map((value) => ({
+                        label: value.value.value,
+                        value: value.id,
+                      }))}
+                  />
+                </FormField>
+              ) : null}
 
               <CallSignPreview
                 divisions={division.values.filter((v) =>
@@ -252,6 +254,7 @@ export function makeDivisionsObjectMap(officer: Officer) {
   const callsigns = officer.callsigns ?? [];
 
   for (const callsign of callsigns) {
+    if (!callsign.divisionId) continue;
     obj[callsign.divisionId] = callsign;
   }
 

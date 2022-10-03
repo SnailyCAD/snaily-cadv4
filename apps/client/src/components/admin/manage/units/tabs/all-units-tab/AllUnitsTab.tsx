@@ -50,7 +50,7 @@ export function AllUnitsTab({ search, units }: Props) {
   const common = useTranslations("Common");
   const { generateCallsign } = useGenerateCallsign();
   const router = useRouter();
-  const { BADGE_NUMBERS } = useFeatureEnabled();
+  const { DIVISIONS, BADGE_NUMBERS } = useFeatureEnabled();
   const { openModal, closeModal } = useModal();
 
   function handleDeleteClick(unit: Unit) {
@@ -188,7 +188,7 @@ export function AllUnitsTab({ search, units }: Props) {
             { header: t("Leo.callsign"), accessorKey: "callsign" },
             BADGE_NUMBERS ? { header: t("Leo.badgeNumber"), accessorKey: "badgeNumber" } : null,
             { header: t("Leo.department"), accessorKey: "department" },
-            { header: t("Leo.division"), accessorKey: "division" },
+            DIVISIONS ? { header: t("Leo.division"), accessorKey: "division" } : null,
             { header: t("Leo.rank"), accessorKey: "rank" },
             { header: t("Leo.position"), accessorKey: "position" },
             { header: t("Leo.status"), accessorKey: "status" },
