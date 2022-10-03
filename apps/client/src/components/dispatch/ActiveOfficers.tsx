@@ -53,7 +53,8 @@ function ActiveOfficers({ initialOfficers }: Props) {
   const { user } = useAuth();
 
   const { hasActiveDispatchers } = useActiveDispatchers();
-  const { BADGE_NUMBERS, ACTIVE_INCIDENTS, RADIO_CHANNEL_MANAGEMENT } = useFeatureEnabled();
+  const { BADGE_NUMBERS, ACTIVE_INCIDENTS, RADIO_CHANNEL_MANAGEMENT, DIVISIONS } =
+    useFeatureEnabled();
   const { leoSearch, showLeoFilters, setShowFilters } = useActiveUnitsState();
   const { handleFilter } = useActiveUnitsFilter();
 
@@ -172,7 +173,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
               { header: t("officer"), accessorKey: "officer" },
               BADGE_NUMBERS ? { header: t("badgeNumber"), accessorKey: "badgeNumber" } : null,
               { header: t("department"), accessorKey: "department" },
-              { header: t("division"), accessorKey: "division" },
+              DIVISIONS ? { header: t("division"), accessorKey: "division" } : null,
               { header: t("rank"), accessorKey: "rank" },
               { header: t("status"), accessorKey: "status" },
               ACTIVE_INCIDENTS ? { header: t("incident"), accessorKey: "incident" } : null,

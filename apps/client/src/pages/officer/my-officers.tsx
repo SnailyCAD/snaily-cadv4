@@ -39,7 +39,7 @@ export default function MyOfficers({ officers: data }: Props) {
   const { state, execute } = useFetch();
   const { generateCallsign } = useGenerateCallsign();
   const { makeImageUrl } = useImageUrl();
-  const { BADGE_NUMBERS } = useFeatureEnabled();
+  const { DIVISIONS, BADGE_NUMBERS } = useFeatureEnabled();
   const tableState = useTableState();
 
   const [officers, setOfficers] = React.useState<Officer[]>(data);
@@ -134,7 +134,7 @@ export default function MyOfficers({ officers: data }: Props) {
             { header: t("callsign"), accessorKey: "callsign" },
             BADGE_NUMBERS ? { header: t("badgeNumber"), accessorKey: "badgeNumber" } : null,
             { header: t("department"), accessorKey: "department" },
-            { header: t("division"), accessorKey: "division" },
+            DIVISIONS ? { header: t("division"), accessorKey: "division" } : null,
             { header: t("rank"), accessorKey: "rank" },
             { header: t("position"), accessorKey: "position" },
             { header: t("status"), accessorKey: "departmentStatus" },

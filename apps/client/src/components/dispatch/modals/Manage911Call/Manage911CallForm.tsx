@@ -20,6 +20,7 @@ import { useTranslations } from "next-intl";
 import { useCall911State } from "state/dispatch/call911State";
 import { useModal } from "state/modalState";
 import { AssignedUnitsTable } from "./AssignedUnitsTable";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
   call: Full911Call | null;
@@ -36,6 +37,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
   const { execute, state } = useFetch();
   const { setCalls, calls } = useCall911State();
   const { closeModal } = useModal();
+  const { DIVISIONS } = useFeatureEnabled();
 
   const validate = handleValidate(CALL_911_SCHEMA);
   const isCitizen = router.pathname.includes("/citizen");
@@ -143,8 +145,12 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
             </FormField>
           ) : (
             <>
-              <FormRow>
-                <FormField errorMessage={errors.departments as string} label={t("departments")}>
+              <FormRow flexLike={!DIVISIONS}>
+                <FormField
+                  className="w-full"
+                  errorMessage={errors.departments as string}
+                  label={t("departments")}
+                >
                   <Select
                     isMulti
                     name="departments"
@@ -155,30 +161,37 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
                     }))}
                     onChange={handleChange}
                     disabled={isDisabled}
+                    className="w-full"
                   />
                 </FormField>
 
-                <FormField errorMessage={errors.divisions as string} label={t("divisions")}>
-                  <Select
-                    isMulti
-                    name="divisions"
-                    value={values.divisions}
-                    values={division.values
-                      .filter((div) => {
-                        const isInDepartment = values.departments.some(
-                          (v) => v.value === div.departmentId,
-                        );
+                {DIVISIONS ? (
+                  <FormField
+                    className="w-full"
+                    errorMessage={errors.divisions as string}
+                    label={t("divisions")}
+                  >
+                    <Select
+                      isMulti
+                      name="divisions"
+                      value={values.divisions}
+                      values={division.values
+                        .filter((div) => {
+                          const isInDepartment = values.departments.some(
+                            (v) => v.value === div.departmentId,
+                          );
 
-                        return values.departments.length > 0 ? isInDepartment : true;
-                      })
-                      .map((division) => ({
-                        label: division.value.value,
-                        value: division.id,
-                      }))}
-                    onChange={handleChange}
-                    disabled={isDisabled}
-                  />
-                </FormField>
+                          return values.departments.length > 0 ? isInDepartment : true;
+                        })
+                        .map((division) => ({
+                          label: division.value.value,
+                          value: division.id,
+                        }))}
+                      onChange={handleChange}
+                      disabled={isDisabled}
+                    />
+                  </FormField>
+                ) : null}
               </FormRow>
 
               <FormRow>

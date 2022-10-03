@@ -38,7 +38,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
   const common = useTranslations("Common");
   const t = useTranslations();
   const formRef = React.useRef<HTMLFormElement>(null);
-  const { BADGE_NUMBERS } = useFeatureEnabled();
+  const { BADGE_NUMBERS, DIVISIONS } = useFeatureEnabled();
 
   const { state, execute } = useFetch();
   const { department, division } = useValues();
@@ -182,19 +182,23 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
               />
             </FormField>
 
-            <FormField errorMessage={errors.division} label={t("Leo.division")}>
-              <Select
-                value={values.division}
-                name="division"
-                onChange={handleChange}
-                values={division.values
-                  .filter((v) => (values.department ? v.departmentId === values.department : true))
-                  .map((value) => ({
-                    label: value.value.value,
-                    value: value.id,
-                  }))}
-              />
-            </FormField>
+            {DIVISIONS ? (
+              <FormField errorMessage={errors.division} label={t("Leo.division")}>
+                <Select
+                  value={values.division}
+                  name="division"
+                  onChange={handleChange}
+                  values={division.values
+                    .filter((v) =>
+                      values.department ? v.departmentId === values.department : true,
+                    )
+                    .map((value) => ({
+                      label: value.value.value,
+                      value: value.id,
+                    }))}
+                />
+              </FormField>
+            ) : null}
 
             <CallSignPreview
               divisions={division.values.filter((v) => values.division === v.id)}

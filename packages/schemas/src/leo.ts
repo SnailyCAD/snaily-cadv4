@@ -9,7 +9,7 @@ export const SELECT_VALUE = z.object({
 export const INDIVIDUAL_CALLSIGN_SCHEMA = z.object({
   callsign: z.string().max(255),
   callsign2: z.string().max(255),
-  divisionId: z.string().min(2).max(255),
+  divisionId: z.string().min(2).max(255).optional(),
 });
 
 export const CREATE_OFFICER_SCHEMA = z.object({
@@ -19,7 +19,7 @@ export const CREATE_OFFICER_SCHEMA = z.object({
   callsign2: z.string().min(1).max(255),
   rank: z.string().max(255).nullable(),
   badgeNumber: z.number().min(1),
-  divisions: z.array(z.string().min(2).max(255).or(SELECT_VALUE)).min(1),
+  divisions: z.array(z.string().min(2).max(255).or(SELECT_VALUE)).optional(),
   image: z.any().or(z.string()).optional(),
   callsigns: z.record(INDIVIDUAL_CALLSIGN_SCHEMA).optional().nullable(),
 });
@@ -28,10 +28,10 @@ export const UPDATE_UNIT_SCHEMA = z.object({
   callsign: z.string().min(1).max(255),
   callsign2: z.string().min(1).max(255),
   department: z.string().min(2).max(255),
-  division: z.string().min(2).max(255).nullable(),
+  division: z.string().min(2).max(255).nullable().optional(),
   rank: z.string().max(255).nullable(),
   position: z.string().nullable().optional(),
-  divisions: z.array(z.string().min(2).max(255).or(SELECT_VALUE)).nullable(),
+  divisions: z.array(z.string().min(2).max(255).or(SELECT_VALUE)).nullable().optional(),
   status: z.string().max(255).nullable(),
   suspended: z.boolean().nullable(),
   badgeNumber: z.number().min(1),
