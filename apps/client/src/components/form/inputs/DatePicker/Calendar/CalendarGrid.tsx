@@ -3,7 +3,6 @@ import { getWeeksInMonth } from "@internationalized/date";
 import type { CalendarState } from "@react-stately/calendar";
 import { useLocale } from "next-intl";
 import { CalendarCell } from "./CalendarCell";
-// import { CalendarCell } from "./CalendarCell";
 
 export function CalendarGrid({ state, ...props }: { state: CalendarState }) {
   const locale = useLocale();
