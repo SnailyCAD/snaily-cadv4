@@ -20,6 +20,7 @@ import {
 } from "controllers/admin/manage/AdminManageUnitsController";
 import { isCuid } from "cuid";
 import type * as APITypes from "@snailycad/types/api";
+import { validateSocialSecurityNumber } from "lib/citizen/validateSSN";
 
 const recordsInclude = {
   officer: { include: leoProperties },
@@ -175,6 +176,13 @@ export class AdminManageCitizensController {
 
     if (!citizen) {
       throw new NotFound("citizenNotFound");
+    }
+
+    if (data.socialSecurityNumber) {
+      await validateSocialSecurityNumber({
+        socialSecurityNumber: data.socialSecurityNumber,
+        citizenId: citizen.id,
+      });
     }
 
     const updatedCitizen = await prisma.citizen.update({
