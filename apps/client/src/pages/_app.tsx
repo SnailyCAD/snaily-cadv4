@@ -8,7 +8,6 @@ import "styles/globals.scss";
 import "styles/fonts.scss";
 import { SocketProvider } from "@casper124578/use-socket.io";
 import { getAPIUrl } from "lib/fetch/getAPIUrl";
-import { OverlayContainer } from "@react-aria/overlays";
 
 import { setTags } from "@sentry/nextjs";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
