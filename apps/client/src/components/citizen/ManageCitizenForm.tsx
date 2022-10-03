@@ -21,6 +21,7 @@ import {
   createDefaultLicensesValues,
   ManageLicensesFormFields,
 } from "./licenses/ManageLicensesFormFields";
+import { DatePickerField } from "components/form/inputs/DatePicker/DatePickerField";
 
 interface Props {
   citizen: (Citizen & { user?: User | null }) | null;
@@ -68,10 +69,7 @@ export function ManageCitizenForm({
     username: citizen?.user?.username ?? "",
     name: citizen?.name ?? "",
     surname: citizen?.surname ?? "",
-    dateOfBirth:
-      citizen && isDate(citizen.dateOfBirth)
-        ? new Date(citizen.dateOfBirth.toString()).toISOString().slice(0, 10)
-        : new Date().toDateString(),
+    dateOfBirth: citizen?.dateOfBirth ?? undefined,
     gender: citizen?.genderId ?? "",
     ethnicity: citizen?.ethnicityId ?? "",
     weight: citizen?.weight ?? "",
@@ -107,7 +105,7 @@ export function ManageCitizenForm({
 
   return (
     <Formik validate={validate} onSubmit={handleSubmit} initialValues={INITIAL_VALUES}>
-      {({ handleChange, setValues, values, errors, isValid }) => (
+      {({ handleChange, setValues, setFieldValue, values, errors, isValid }) => (
         <Form>
           {allowEditingUser ? (
             <FormField errorMessage={errors.userId} label="User">
@@ -153,18 +151,12 @@ export function ManageCitizenForm({
           </FormRow>
 
           <FormRow flexLike={!SOCIAL_SECURITY_NUMBERS}>
-            <FormField
-              className="w-full"
+            <DatePickerField
               errorMessage={errors.dateOfBirth as string}
+              value={values.dateOfBirth}
+              onChange={(value) => setFieldValue("dateOfBirth", value.toString())}
               label={t("dateOfBirth")}
-            >
-              <Input
-                type="date"
-                value={values.dateOfBirth}
-                onChange={handleChange}
-                name="dateOfBirth"
-              />
-            </FormField>
+            />
 
             {SOCIAL_SECURITY_NUMBERS ? (
               <FormField
@@ -279,15 +271,4 @@ export function ManageCitizenForm({
       )}
     </Formik>
   );
-}
-
-export function isDate(value: string | null | Date): value is Date {
-  if (!value) return false;
-
-  try {
-    const date = new Date(value);
-    return !!date;
-  } catch {
-    return false;
-  }
 }
