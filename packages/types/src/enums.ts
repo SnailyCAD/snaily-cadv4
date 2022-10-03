@@ -38,6 +38,7 @@ export const Feature = {
   PANIC_BUTTON: "PANIC_BUTTON",
   WARRANT_STATUS_APPROVAL: "WARRANT_STATUS_APPROVAL",
   DIVISIONS: "DIVISIONS",
+  TONES: "TONES",
 } as const;
 
 export type Feature = typeof Feature[keyof typeof Feature];

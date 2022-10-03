@@ -33,7 +33,7 @@ export function DispatchModalButtons() {
   const features = useFeatureEnabled();
   const { activeDispatchers, setActiveDispatchers } = useActiveDispatchers();
   const { user } = useAuth();
-  const { ACTIVE_DISPATCHERS } = useFeatureEnabled();
+  const { ACTIVE_DISPATCHERS, TONES } = useFeatureEnabled();
   const { openModal } = useModal();
 
   const isActive = ACTIVE_DISPATCHERS ? activeDispatchers.some((v) => v.userId === user?.id) : true;
@@ -72,9 +72,11 @@ export function DispatchModalButtons() {
         {signal100Enabled ? t("Leo.disableSignal100") : t("Leo.enableSignal100")}
       </Button>
 
-      <Button disabled={!isActive} onClick={() => openModal(ModalIds.Tones)}>
-        {t("Leo.tones")}
-      </Button>
+      {TONES ? (
+        <Button disabled={!isActive} onClick={() => openModal(ModalIds.Tones)}>
+          {t("Leo.tones")}
+        </Button>
+      ) : null}
 
       {features.ACTIVE_DISPATCHERS ? (
         <Button onClick={handleStateChangeDispatcher}>
@@ -82,7 +84,7 @@ export function DispatchModalButtons() {
         </Button>
       ) : null}
 
-      <TonesModal types={["leo", "ems-fd"]} />
+      {TONES ? <TonesModal types={["leo", "ems-fd"]} /> : null}
     </div>
   );
 }

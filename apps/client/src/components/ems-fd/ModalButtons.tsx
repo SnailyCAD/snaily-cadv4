@@ -45,7 +45,7 @@ export function ModalButtons({
   const { generateCallsign } = useGenerateCallsign();
   const { execute } = useFetch();
   const { hasActiveDispatchers } = useActiveDispatchers();
-  const { PANIC_BUTTON } = useFeatureEnabled();
+  const { PANIC_BUTTON, TONES } = useFeatureEnabled();
   const activeDeputy = isMounted ? _activeDeputy : initialActiveDeputy;
 
   const isButtonDisabled =
@@ -96,7 +96,7 @@ export function ModalButtons({
           </Button>
         ) : null}
 
-        {!hasActiveDispatchers ? (
+        {!hasActiveDispatchers && TONES ? (
           <>
             <Button disabled={isButtonDisabled} onClick={() => openModal(ModalIds.Tones)}>
               {t("Leo.tones")}

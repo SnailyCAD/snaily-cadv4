@@ -43,7 +43,7 @@ export function ModalButtons({ initialActiveOfficer }: { initialActiveOfficer: A
   const { state: activeDispatchersState, hasActiveDispatchers } = useActiveDispatchers();
   const { state, execute } = useFetch();
   const { openModal } = useModal();
-  const { PANIC_BUTTON } = useFeatureEnabled();
+  const { TONES, PANIC_BUTTON } = useFeatureEnabled();
   const { makeImageUrl } = useImageUrl();
 
   async function handlePanic() {
@@ -112,7 +112,7 @@ export function ModalButtons({ initialActiveOfficer }: { initialActiveOfficer: A
           </Button>
         ) : null}
 
-        {activeDispatchersState !== "loading" && !hasActiveDispatchers ? (
+        {activeDispatchersState !== "loading" && !hasActiveDispatchers && TONES ? (
           <>
             <Button disabled={isButtonDisabled} onClick={() => openModal(ModalIds.Tones)}>
               {t("Leo.tones")}
