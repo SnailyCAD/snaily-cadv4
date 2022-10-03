@@ -411,7 +411,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@formatjs/ecma402-abstract@npm:^1.11.4":
+"@formatjs/ecma402-abstract@npm:1.12.0, @formatjs/ecma402-abstract@npm:^1.11.4":
   version: 1.12.0
   resolution: "@formatjs/ecma402-abstract@npm:1.12.0"
   dependencies:
@@ -430,6 +430,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@formatjs/fast-memoize@npm:1.2.6":
+  version: 1.2.6
+  resolution: "@formatjs/fast-memoize@npm:1.2.6"
+  dependencies:
+    tslib: 2.4.0
+  checksum: cdb944a9207b5d74e0b4cdcd047e32d904b52b8f893227809a906f65882a46ae8b342872161d797dffd4fafd565f91efebb18989ffe888786bb5e5d911bc0193
+  languageName: node
+  linkType: hard
+
 "@formatjs/icu-messageformat-parser@npm:2.1.0":
   version: 2.1.0
   resolution: "@formatjs/icu-messageformat-parser@npm:2.1.0"
@@ -438,6 +447,27 @@ __metadata:
     "@formatjs/icu-skeleton-parser": 1.3.6
     tslib: ^2.1.0
   checksum: 8dab4d102b334dd7ab25b85817b074f1b54845d02f9ef9fa5a1fa6a9723176ad28a59d845fdc0eeedb868b891e61a4c530384b123db29f5b14e1f3f8b207373f
+  languageName: node
+  linkType: hard
+
+"@formatjs/icu-messageformat-parser@npm:2.1.8":
+  version: 2.1.8
+  resolution: "@formatjs/icu-messageformat-parser@npm:2.1.8"
+  dependencies:
+    "@formatjs/ecma402-abstract": 1.12.0
+    "@formatjs/icu-skeleton-parser": 1.3.13
+    tslib: 2.4.0
+  checksum: 2cb12a404dc9e02f94bac1907a3e0ced5018c56e053177e893757f51703559a241051badf9970edde7780ea9f10389f2458c5c6de83b3e97905b48892b916d67
+  languageName: node
+  linkType: hard
+
+"@formatjs/icu-skeleton-parser@npm:1.3.13":
+  version: 1.3.13
+  resolution: "@formatjs/icu-skeleton-parser@npm:1.3.13"
+  dependencies:
+    "@formatjs/ecma402-abstract": 1.12.0
+    tslib: 2.4.0
+  checksum: 8d52b4da2e25b1ab79300da1e7026b740467d3e66e99ae61cf7b6e890dc4a5790ee9c66944319a3f7a74d3e2807c81fa8573e7d33337311ffd9128b90d03c8c7
   languageName: node
   linkType: hard
 
@@ -515,6 +545,43 @@ __metadata:
   version: 1.2.1
   resolution: "@humanwhocodes/object-schema@npm:1.2.1"
   checksum: a824a1ec31591231e4bad5787641f59e9633827d0a2eaae131a288d33c9ef0290bd16fda8da6f7c0fcb014147865d12118df10db57f27f41e20da92369fcb3f1
+  languageName: node
+  linkType: hard
+
+"@internationalized/date@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "@internationalized/date@npm:3.0.1"
+  dependencies:
+    "@babel/runtime": ^7.6.2
+  checksum: ff51a00550322a5df3d3051e8ffdf3d7741851149e8ba300883e01402249602e87cc50b27b972753d9af88c5374df83c24adf58cae5e269100cb946a3b12cd56
+  languageName: node
+  linkType: hard
+
+"@internationalized/message@npm:^3.0.9":
+  version: 3.0.9
+  resolution: "@internationalized/message@npm:3.0.9"
+  dependencies:
+    "@babel/runtime": ^7.6.2
+    intl-messageformat: ^10.1.0
+  checksum: b3f7f5a8e1d8df99efb3463ca07edb976ecf95d28de19a47d92fb19c093052b1a092aeaa226dc69d07143854bdbeb8519a0ac8ba8c900c4b0f565151d735ca7f
+  languageName: node
+  linkType: hard
+
+"@internationalized/number@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "@internationalized/number@npm:3.1.1"
+  dependencies:
+    "@babel/runtime": ^7.6.2
+  checksum: 9979ea1ca7388de75193c9d36f19d928fbcb715d456d153c30cafadd2ce1ceae011f55c966d424f4561ec04de14d3b48b8fe16a9e2737273829a813c4f7203a3
+  languageName: node
+  linkType: hard
+
+"@internationalized/string@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@internationalized/string@npm:3.0.0"
+  dependencies:
+    "@babel/runtime": ^7.6.2
+  checksum: fc347cf80cd4ee009d1c467dca2c6908a919ad152086bf5e8c1a0aede0383fb317695fc5d82abe033ec90ad62108297130b653b63b9529f2e032999798ae4a81
   languageName: node
   linkType: hard
 
@@ -1421,6 +1488,70 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-aria/calendar@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "@react-aria/calendar@npm:3.0.2"
+  dependencies:
+    "@babel/runtime": ^7.6.2
+    "@internationalized/date": ^3.0.1
+    "@react-aria/i18n": ^3.6.0
+    "@react-aria/interactions": ^3.11.0
+    "@react-aria/live-announcer": ^3.1.1
+    "@react-aria/utils": ^3.13.3
+    "@react-stately/calendar": ^3.0.2
+    "@react-types/button": ^3.6.1
+    "@react-types/calendar": ^3.0.2
+    "@react-types/shared": ^3.14.1
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+    react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: 9dbbedc9f60138491703ae5afde6841e1c9d0ff79af853e68b5aef75c93c1e31ce3447a88bb568b52752ada70e8cb431b3219d8a0481a5bc7398db8e62c09199
+  languageName: node
+  linkType: hard
+
+"@react-aria/datepicker@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "@react-aria/datepicker@npm:3.1.1"
+  dependencies:
+    "@babel/runtime": ^7.6.2
+    "@internationalized/date": ^3.0.1
+    "@internationalized/number": ^3.1.1
+    "@internationalized/string": ^3.0.0
+    "@react-aria/focus": ^3.8.0
+    "@react-aria/i18n": ^3.6.0
+    "@react-aria/interactions": ^3.11.0
+    "@react-aria/label": ^3.4.1
+    "@react-aria/spinbutton": ^3.1.3
+    "@react-aria/utils": ^3.13.3
+    "@react-stately/datepicker": ^3.0.2
+    "@react-types/button": ^3.6.1
+    "@react-types/calendar": ^3.0.2
+    "@react-types/datepicker": ^3.1.1
+    "@react-types/dialog": ^3.4.3
+    "@react-types/shared": ^3.14.1
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+    react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: ca9982f69213c41c6913ab6ca28fb4f89b2b028367dbfc152c3002a651632631139977a245406fce96a90593fc3b80a62eb808504af0af6522518963f9661bdc
+  languageName: node
+  linkType: hard
+
+"@react-aria/dialog@npm:^3.3.1":
+  version: 3.3.1
+  resolution: "@react-aria/dialog@npm:3.3.1"
+  dependencies:
+    "@babel/runtime": ^7.6.2
+    "@react-aria/focus": ^3.8.0
+    "@react-aria/utils": ^3.13.3
+    "@react-stately/overlays": ^3.4.1
+    "@react-types/dialog": ^3.4.3
+    "@react-types/shared": ^3.14.1
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: ba924f07a7974b0f9a90902c8b2a41490536194e38b53dc069b4ba275c4a557f4aa4ab87e22e2b1f69d8aa8ef42ede142bf45273bf3e55ff9a38cd687d0ee235
+  languageName: node
+  linkType: hard
+
 "@react-aria/focus@npm:^3.8.0":
   version: 3.8.0
   resolution: "@react-aria/focus@npm:3.8.0"
@@ -1433,6 +1564,24 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
   checksum: 2250e610c3753d008e01d39bed41d961bf795a4cec8873b76fda0adc3ad48811ae5cad0d2e222cca41c43454666d492e130113533e1609fd3cea8721108863a3
+  languageName: node
+  linkType: hard
+
+"@react-aria/i18n@npm:^3.6.0":
+  version: 3.6.0
+  resolution: "@react-aria/i18n@npm:3.6.0"
+  dependencies:
+    "@babel/runtime": ^7.6.2
+    "@internationalized/date": ^3.0.1
+    "@internationalized/message": ^3.0.9
+    "@internationalized/number": ^3.1.1
+    "@internationalized/string": ^3.0.0
+    "@react-aria/ssr": ^3.3.0
+    "@react-aria/utils": ^3.13.3
+    "@react-types/shared": ^3.14.1
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: ede9cd611e15fe2975556dfe695bdcb67cbcb8d2dfff7677174f86f1418421491fbbbfd8eab40e724a8db24877d2f980df6e50d26d29d5b3e607ca39b42befc3
   languageName: node
   linkType: hard
 
@@ -1463,6 +1612,53 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-aria/live-announcer@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "@react-aria/live-announcer@npm:3.1.1"
+  dependencies:
+    "@babel/runtime": ^7.6.2
+  checksum: feb02fe339ed1ce005b3fc6f07366ea100fbdfc3e42688f52d4e6704f6e09724b37f4e6b0c121578081940af11004421aab1b1a91f99c7193c4c2945ff43f92c
+  languageName: node
+  linkType: hard
+
+"@react-aria/overlays@npm:^3.10.1":
+  version: 3.10.1
+  resolution: "@react-aria/overlays@npm:3.10.1"
+  dependencies:
+    "@babel/runtime": ^7.6.2
+    "@react-aria/i18n": ^3.6.0
+    "@react-aria/interactions": ^3.11.0
+    "@react-aria/ssr": ^3.3.0
+    "@react-aria/utils": ^3.13.3
+    "@react-aria/visually-hidden": ^3.4.1
+    "@react-stately/overlays": ^3.4.1
+    "@react-types/button": ^3.6.1
+    "@react-types/overlays": ^3.6.3
+    "@react-types/shared": ^3.14.1
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+    react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: b83ec155d34a2cfe7c26d4b4bd5b620c3895642521717c99212aa0878fb4716cc42665a7f80b844185ee4ee4f7e1a367b42399724fa769079d46f29b1c7b67ef
+  languageName: node
+  linkType: hard
+
+"@react-aria/spinbutton@npm:^3.1.3":
+  version: 3.1.3
+  resolution: "@react-aria/spinbutton@npm:3.1.3"
+  dependencies:
+    "@babel/runtime": ^7.6.2
+    "@react-aria/i18n": ^3.6.0
+    "@react-aria/live-announcer": ^3.1.1
+    "@react-aria/utils": ^3.13.3
+    "@react-types/button": ^3.6.1
+    "@react-types/shared": ^3.14.1
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+    react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: a829c6b9047d104f23224368569354a2ab8fc8a415103fa1d571a4028f4e1954525a965bafdc82ae5d1082a6b0b5cf2623c1b93b6f053446733326214d980fd9
+  languageName: node
+  linkType: hard
+
 "@react-aria/ssr@npm:^3.3.0":
   version: 3.3.0
   resolution: "@react-aria/ssr@npm:3.3.0"
@@ -1486,6 +1682,21 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
   checksum: b6d87ddb8e1d93b00405473099390c854647d81c0419de53cc4a7f02bdcca6d030776fba9f4b241400af13082bafc820dd5ce05c168e8f5a2c43a1b2660fb2ad
+  languageName: node
+  linkType: hard
+
+"@react-aria/visually-hidden@npm:^3.4.1":
+  version: 3.4.1
+  resolution: "@react-aria/visually-hidden@npm:3.4.1"
+  dependencies:
+    "@babel/runtime": ^7.6.2
+    "@react-aria/interactions": ^3.11.0
+    "@react-aria/utils": ^3.13.3
+    "@react-types/shared": ^3.14.1
+    clsx: ^1.1.1
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: aea61d3ffbc2ac36074227cce1d41847ec250756a822874592d44830124da06b5e2f5b10b0726a38fe4263f19b5bc8fd7d7e141d2c4dc8853411913ff730fd8f
   languageName: node
   linkType: hard
 
@@ -1521,6 +1732,52 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-stately/calendar@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "@react-stately/calendar@npm:3.0.2"
+  dependencies:
+    "@babel/runtime": ^7.6.2
+    "@internationalized/date": ^3.0.1
+    "@react-stately/utils": ^3.5.1
+    "@react-types/calendar": ^3.0.2
+    "@react-types/datepicker": ^3.1.1
+    "@react-types/shared": ^3.14.1
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: c093cab8761b1e16603abcde63f78dfefdb7fdf4cc269e41602ab3a7c93f9391d29ac68cc66e030c553305af7d96ff9afa3795123211a59316819937a8181956
+  languageName: node
+  linkType: hard
+
+"@react-stately/datepicker@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "@react-stately/datepicker@npm:3.0.2"
+  dependencies:
+    "@babel/runtime": ^7.6.2
+    "@internationalized/date": ^3.0.1
+    "@internationalized/string": ^3.0.0
+    "@react-stately/overlays": ^3.4.1
+    "@react-stately/utils": ^3.5.1
+    "@react-types/datepicker": ^3.1.1
+    "@react-types/shared": ^3.14.1
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: d0250033d8f4625442177eac1ced6fe446877df9607bd1d7bdea11daae47166072304ee66d4ce1fe12886ef24c0cc1983ac5807a1fe07b05a5749d6b8302f47b
+  languageName: node
+  linkType: hard
+
+"@react-stately/overlays@npm:^3.4.1":
+  version: 3.4.1
+  resolution: "@react-stately/overlays@npm:3.4.1"
+  dependencies:
+    "@babel/runtime": ^7.6.2
+    "@react-stately/utils": ^3.5.1
+    "@react-types/overlays": ^3.6.3
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: 3e0e8711c55198b75cb23a682530969c997fdd21c280a9a1356327ff3806252a70ef13e4efc7734902edfd58d6c2cc9d2624a37d8394ad44e9d33b09186510e3
+  languageName: node
+  linkType: hard
+
 "@react-stately/utils@npm:^3.5.1":
   version: 3.5.1
   resolution: "@react-stately/utils@npm:3.5.1"
@@ -1532,6 +1789,54 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-types/button@npm:^3.6.1":
+  version: 3.6.1
+  resolution: "@react-types/button@npm:3.6.1"
+  dependencies:
+    "@react-types/shared": ^3.14.1
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: c9a177a436be81fe26cc3a876e73b708b235a3c713318b9956cabf942476996cb11e59fe614300647a3d96089873c9d7036dda24e83bf7e5a4c2aa836726f0dc
+  languageName: node
+  linkType: hard
+
+"@react-types/calendar@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "@react-types/calendar@npm:3.0.2"
+  dependencies:
+    "@internationalized/date": ^3.0.1
+    "@react-types/shared": ^3.14.1
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: a3fd271d85064837c3b7a495e4048c25da1bbbc21015cfadd970f9959e8c802c9152e25ea772ffd815655e392ce07ce75c688726e70bb4cf6959605bc8257c8e
+  languageName: node
+  linkType: hard
+
+"@react-types/datepicker@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "@react-types/datepicker@npm:3.1.1"
+  dependencies:
+    "@internationalized/date": ^3.0.1
+    "@react-types/overlays": ^3.6.3
+    "@react-types/shared": ^3.14.1
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: a3ab8ae22da8105ffebdebb5c89f212cda4d6f2203f7579cbd733e36afb4d2c7e4f986082becacaa66e7d1b4a99ef109952ddae7760d4bb0685e71d53894e316
+  languageName: node
+  linkType: hard
+
+"@react-types/dialog@npm:^3.4.3":
+  version: 3.4.3
+  resolution: "@react-types/dialog@npm:3.4.3"
+  dependencies:
+    "@react-types/overlays": ^3.6.3
+    "@react-types/shared": ^3.14.1
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: 96946e273cfb81d0d536e6f4077e8a1ca19a5a9cb3ae2e26e0993f15650726584574dffc1af1374f4ab16e8940d82e275d44f8d54719da72b6584ff85867197b
+  languageName: node
+  linkType: hard
+
 "@react-types/label@npm:^3.6.3":
   version: 3.6.3
   resolution: "@react-types/label@npm:3.6.3"
@@ -1540,6 +1845,17 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
   checksum: 25f722b15c1a823f61f5a3200268c3973ab1888d7434621a12e64eca9065427a736a2334f4c2108f590a6b85fc512dda99d21d271f71634efbe5dd3ebb01229d
+  languageName: node
+  linkType: hard
+
+"@react-types/overlays@npm:^3.6.3":
+  version: 3.6.3
+  resolution: "@react-types/overlays@npm:3.6.3"
+  dependencies:
+    "@react-types/shared": ^3.14.1
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: 8688db82adeda13e922f9805a5c9bd9f64e97e91c0ebf32409964e9d661828a4bb31907551dcdcd611807efa9824ff78aa8cb2ee4b0acfab001cbff5572336d4
   languageName: node
   linkType: hard
 
@@ -1842,6 +2158,7 @@ __metadata:
     "@casper124578/use-socket.io": 4.1.3
     "@casper124578/useful": ^2.0.5
     "@headlessui/react": ^1.7.3
+    "@internationalized/date": ^3.0.1
     "@next/bundle-analyzer": ^12.3.1
     "@radix-ui/react-accordion": ^1.0.0
     "@radix-ui/react-context-menu": ^1.0.0
@@ -1851,10 +2168,16 @@ __metadata:
     "@radix-ui/react-tabs": ^1.0.0
     "@radix-ui/react-toolbar": ^1.0.0
     "@radix-ui/react-tooltip": ^1.0.0
+    "@react-aria/calendar": ^3.0.2
+    "@react-aria/datepicker": ^3.1.1
+    "@react-aria/dialog": ^3.3.1
     "@react-aria/focus": ^3.8.0
     "@react-aria/interactions": ^3.11.0
     "@react-aria/label": ^3.4.1
+    "@react-aria/overlays": ^3.10.1
     "@react-aria/ssr": ^3.3.0
+    "@react-aria/utils": ^3.13.3
+    "@react-stately/datepicker": ^3.0.2
     "@sentry/nextjs": ^7.14.0
     "@sentry/react": ^7.14.0
     "@sentry/tracing": ^7.14.0
@@ -7334,6 +7657,18 @@ __metadata:
     has: ^1.0.3
     side-channel: ^1.0.4
   checksum: 1944f92e981e47aebc98a88ff0db579fd90543d937806104d0b96557b10c1f170c51fb777b97740a8b6ddeec585fca8c39ae99fd08a8e058dfc8ab70937238bf
+  languageName: node
+  linkType: hard
+
+"intl-messageformat@npm:^10.1.0":
+  version: 10.1.5
+  resolution: "intl-messageformat@npm:10.1.5"
+  dependencies:
+    "@formatjs/ecma402-abstract": 1.12.0
+    "@formatjs/fast-memoize": 1.2.6
+    "@formatjs/icu-messageformat-parser": 2.1.8
+    tslib: 2.4.0
+  checksum: 0e95843c74f099c5f3c9e21812f929c392a39b37f0c7b0102f15b1608dc20bbf94dc39d4f42d5146d1c5036841ba3195d9c3cf4cbd13eb0b335c74b47c71cdd3
   languageName: node
   linkType: hard
 

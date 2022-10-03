@@ -21,6 +21,7 @@ import {
   createDefaultLicensesValues,
   ManageLicensesFormFields,
 } from "./licenses/ManageLicensesFormFields";
+import { DatePickerField } from "components/form/inputs/DatePicker/DatePickerField";
 
 interface Props {
   citizen: (Citizen & { user?: User | null }) | null;
@@ -68,10 +69,7 @@ export function ManageCitizenForm({
     username: citizen?.user?.username ?? "",
     name: citizen?.name ?? "",
     surname: citizen?.surname ?? "",
-    dateOfBirth:
-      citizen && isDate(citizen.dateOfBirth)
-        ? new Date(citizen.dateOfBirth.toString()).toISOString().slice(0, 10)
-        : new Date().toDateString(),
+    dateOfBirth: citizen?.dateOfBirth ?? undefined,
     gender: citizen?.genderId ?? "",
     ethnicity: citizen?.ethnicityId ?? "",
     weight: citizen?.weight ?? "",
@@ -107,7 +105,7 @@ export function ManageCitizenForm({
 
   return (
     <Formik validate={validate} onSubmit={handleSubmit} initialValues={INITIAL_VALUES}>
-      {({ handleChange, setValues, values, errors, isValid }) => (
+      {({ handleChange, setValues, setFieldValue, values, errors, isValid }) => (
         <Form>
           {allowEditingUser ? (
             <FormField errorMessage={errors.userId} label="User">
@@ -153,7 +151,7 @@ export function ManageCitizenForm({
           </FormRow>
 
           <FormRow flexLike={!SOCIAL_SECURITY_NUMBERS}>
-            <FormField
+            {/* <FormField
               className="w-full"
               errorMessage={errors.dateOfBirth as string}
               label={t("dateOfBirth")}
@@ -164,7 +162,14 @@ export function ManageCitizenForm({
                 onChange={handleChange}
                 name="dateOfBirth"
               />
-            </FormField>
+            </FormField> */}
+
+            <DatePickerField
+              errorMessage={errors.dateOfBirth as string}
+              value={values.dateOfBirth}
+              onChange={(v) => setFieldValue("dateOfBirth", v)}
+              label={t("dateOfBirth")}
+            />
 
             {SOCIAL_SECURITY_NUMBERS ? (
               <FormField
