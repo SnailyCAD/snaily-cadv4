@@ -106,7 +106,7 @@ export default function MyDeputies({ deputies: data }: Props) {
             badgeNumber: deputy.badgeNumber,
             department: formatOfficerDepartment(deputy) ?? common("none"),
             departmentStatus: <UnitDepartmentStatus unit={deputy} />,
-            division: deputy.division.value.value,
+            division: deputy.division?.value.value ?? common("none"),
             rank: <OfficerRank unit={deputy} />,
             position: deputy.position ?? common("none"),
             actions: (

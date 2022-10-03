@@ -254,6 +254,7 @@ export function makeDivisionsObjectMap(officer: Officer) {
   const callsigns = officer.callsigns ?? [];
 
   for (const callsign of callsigns) {
+    if (!callsign.divisionId) continue;
     obj[callsign.divisionId] = callsign;
   }
 

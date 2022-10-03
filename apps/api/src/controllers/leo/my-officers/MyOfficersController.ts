@@ -198,7 +198,14 @@ export class MyOfficersController {
       throw new NotFound("officerNotFound");
     }
 
-    await validateMaxDivisionsPerUnit(data.divisions as string[], cad);
+    if (divisionsEnabled) {
+      if (!data.divisions || data.divisions.length <= 0) {
+        throw new ExtendedBadRequest({ divisions: "Must have at least 1 item" });
+      }
+
+      await validateMaxDivisionsPerUnit(data.divisions as string[], cad);
+    }
+
     await validateDuplicateCallsigns({
       callsign1: data.callsign,
       callsign2: data.callsign2,

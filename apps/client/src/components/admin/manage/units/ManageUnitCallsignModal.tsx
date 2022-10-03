@@ -1,4 +1,5 @@
 import { UPDATE_UNIT_CALLSIGN_SCHEMA } from "@snailycad/schemas";
+import type { DivisionValue } from "@snailycad/types";
 import type { PutManageUnitCallsignData } from "@snailycad/types/api";
 import { isUnitOfficer } from "@snailycad/utils";
 import { Button } from "components/Button";
@@ -45,7 +46,9 @@ export function ManageUnitCallsignModal({ unit }: Props) {
   }
 
   const validate = handleValidate(UPDATE_UNIT_CALLSIGN_SCHEMA);
-  const divisions = isUnitOfficer(unit) ? unit.divisions : [unit.division];
+  const divisions = (isUnitOfficer(unit) ? unit.divisions : [unit.division]).filter(
+    Number,
+  ) as DivisionValue[];
   const INITIAL_VALUES = {
     citizenId: unit.citizenId,
     callsign: unit.callsign,
