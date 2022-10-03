@@ -15,8 +15,6 @@ export function Popover(props: Props) {
   const ref = React.useRef<HTMLDivElement>(null);
   const { popoverRef = ref, isOpen, onClose, children, ...otherProps } = props;
 
-  // handle events that should cause the popup to close,
-  // e.g. blur, clicking outside, or pressing the escape key.
   const { overlayProps } = useOverlay(
     {
       isOpen,
@@ -29,8 +27,6 @@ export function Popover(props: Props) {
   const { modalProps } = useModal();
   const { dialogProps } = useDialog(otherProps, popoverRef);
 
-  // add a hidden <DismissButton> component at the end of the popover
-  // to allow screen reader users to dismiss the popup easily.
   return (
     <FocusScope contain restoreFocus>
       <div
