@@ -1488,6 +1488,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-aria/button@npm:^3.6.1":
+  version: 3.6.1
+  resolution: "@react-aria/button@npm:3.6.1"
+  dependencies:
+    "@babel/runtime": ^7.6.2
+    "@react-aria/focus": ^3.8.0
+    "@react-aria/interactions": ^3.11.0
+    "@react-aria/utils": ^3.13.3
+    "@react-stately/toggle": ^3.4.1
+    "@react-types/button": ^3.6.1
+    "@react-types/shared": ^3.14.1
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: b7c520e7d7b885314cd3455f7b50cfd47f423740873718a2fed9a5721904cd29673efb210101896464afd9392adfec3cba546d118b8f4e6e84cb9ab7ee4b7018
+  languageName: node
+  linkType: hard
+
 "@react-aria/calendar@npm:^3.0.2":
   version: 3.0.2
   resolution: "@react-aria/calendar@npm:3.0.2"
@@ -1778,6 +1795,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-stately/toggle@npm:^3.4.1":
+  version: 3.4.1
+  resolution: "@react-stately/toggle@npm:3.4.1"
+  dependencies:
+    "@babel/runtime": ^7.6.2
+    "@react-stately/utils": ^3.5.1
+    "@react-types/checkbox": ^3.3.3
+    "@react-types/shared": ^3.14.1
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: 6cc297ac5c840aa20a6d304947a4d869b857c9dc522b7e77cf798f1815ebd5e5ae1f00aeb812fa452fbbfada1069e814b9e1aaf2751b747f875f8b88d88c21fe
+  languageName: node
+  linkType: hard
+
 "@react-stately/utils@npm:^3.5.1":
   version: 3.5.1
   resolution: "@react-stately/utils@npm:3.5.1"
@@ -1809,6 +1840,17 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
   checksum: a3fd271d85064837c3b7a495e4048c25da1bbbc21015cfadd970f9959e8c802c9152e25ea772ffd815655e392ce07ce75c688726e70bb4cf6959605bc8257c8e
+  languageName: node
+  linkType: hard
+
+"@react-types/checkbox@npm:^3.3.3":
+  version: 3.3.3
+  resolution: "@react-types/checkbox@npm:3.3.3"
+  dependencies:
+    "@react-types/shared": ^3.14.1
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: d1da491ff3bf14f894dbeab5ace3a397ead306d2cc4a820d2a653e038a5628495417feb10a4e07c05dcfce208ae9303c35de7e57d1b21a6b59ca1acca11b80d8
   languageName: node
   linkType: hard
 
@@ -2168,6 +2210,7 @@ __metadata:
     "@radix-ui/react-tabs": ^1.0.0
     "@radix-ui/react-toolbar": ^1.0.0
     "@radix-ui/react-tooltip": ^1.0.0
+    "@react-aria/button": ^3.6.1
     "@react-aria/calendar": ^3.0.2
     "@react-aria/datepicker": ^3.1.1
     "@react-aria/dialog": ^3.3.1
