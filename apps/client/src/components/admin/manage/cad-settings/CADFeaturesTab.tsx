@@ -218,6 +218,11 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     description:
       "When enabled, this will require officers and EMS-FD deputies to provide their division(s).",
   },
+  TONES: {
+    name: "Tones",
+    description:
+      "When enabled, this will allow Dispatch to create temporary messages for LEO and EMS/FD.",
+  },
 };
 
 export function CADFeaturesTab() {
