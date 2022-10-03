@@ -26,10 +26,9 @@ export class DiscordSettingsController {
       throw new BadRequest("mustSetBotTokenGuildId");
     }
 
-    const roles = await performDiscordRequest({
-      async handler(rest) {
-        const roles = await rest.get(Routes.guildRoles(guildId));
-        return roles as RESTGetAPIGuildRolesResult | null;
+    const roles = await performDiscordRequest<RESTGetAPIGuildRolesResult>({
+      handler(rest) {
+        return rest.get(Routes.guildRoles(guildId));
       },
     });
 
@@ -85,10 +84,9 @@ export class DiscordSettingsController {
     }
 
     const data = validateSchema(DISCORD_SETTINGS_SCHEMA, body);
-    const roles = await performDiscordRequest({
-      async handler(rest) {
-        const roles = await rest.get(Routes.guildRoles(guildId));
-        return roles as RESTGetAPIGuildRolesResult | null;
+    const roles = await performDiscordRequest<RESTGetAPIGuildRolesResult>({
+      handler(rest) {
+        return rest.get(Routes.guildRoles(guildId));
       },
     });
 

@@ -37,10 +37,9 @@ export class DiscordWebhooksController {
     }
 
     const [channels, miscCadSettings] = await Promise.all([
-      await performDiscordRequest({
-        async handler(rest) {
-          const data = await rest.get(Routes.guildChannels(guildId));
-          return data as RESTGetAPIGuildChannelsResult | null;
+      await performDiscordRequest<RESTGetAPIGuildChannelsResult>({
+        handler(rest) {
+          return rest.get(Routes.guildChannels(guildId));
         },
       }),
       await prisma.miscCadSettings.upsert({
@@ -88,10 +87,9 @@ export class DiscordWebhooksController {
     }
 
     const data = validateSchema(DISCORD_WEBHOOKS_SCHEMA, body);
-    const channels = await performDiscordRequest({
-      async handler(rest) {
-        const channels = await rest.get(Routes.guildChannels(guildId));
-        return channels as RESTGetAPIGuildChannelsResult | null;
+    const channels = await performDiscordRequest<RESTGetAPIGuildChannelsResult>({
+      handler(rest) {
+        return rest.get(Routes.guildChannels(guildId));
       },
     });
 
@@ -182,17 +180,16 @@ export class DiscordWebhooksController {
 
     // use pre-existing webhook if the channelId is the same.
     if (prevId && channelId === prevId) {
-      const prevWebhookData = await performDiscordRequest({
-        async handler(rest) {
-          const data = await rest.get(Routes.webhook(prevId));
-          return data as RESTGetAPIWebhookResult | null;
+      const prevWebhookData = await performDiscordRequest<RESTGetAPIWebhookResult>({
+        handler(rest) {
+          return rest.get(Routes.webhook(prevId));
         },
       });
 
       if (prevWebhookData?.id) {
         await performDiscordRequest({
-          async handler(rest) {
-            await rest.patch(Routes.webhook(prevId), {
+          handler(rest) {
+            rest.patch(Routes.webhook(prevId), {
               body: { name, avatar: avatarURI },
             });
           },
@@ -203,11 +200,8 @@ export class DiscordWebhooksController {
     }
 
     const createdWebhook = await performDiscordRequest<RESTGetAPIWebhookResult>({
-      async handler(rest) {
-        const createdWebhook = await rest.post(Routes.channelWebhooks(channelId), {
-          body: { name, avatar: avatarURI },
-        });
-        return createdWebhook as RESTGetAPIWebhookResult;
+      handler(rest) {
+        return rest.post(Routes.channelWebhooks(channelId), { body: { name, avatar: avatarURI } });
       },
     });
 
