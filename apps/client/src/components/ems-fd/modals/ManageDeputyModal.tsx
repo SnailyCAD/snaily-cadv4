@@ -71,9 +71,8 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
         helpers,
       });
 
-      deputyId = deputy.id;
-
       if (json.id) {
+        deputyId = deputy.id;
         onUpdate?.(deputy, json);
       }
     } else {

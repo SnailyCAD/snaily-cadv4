@@ -149,7 +149,7 @@ export class EmsFdController {
           (defaultDepartment
             ? defaultDepartment.defaultOfficerRankId
             : department.defaultOfficerRankId) || undefined,
-        divisionId: data.division,
+        divisionId: data.division || null,
         badgeNumber: data.badgeNumber,
         citizenId: citizen.id,
         imageId: validateImgurURL(data.image),
