@@ -53,6 +53,7 @@ import {
   getValueStrFromValue,
   makeDefaultWhatPages,
 } from "lib/admin/values/utils";
+import { DivisionFields } from "./manage-modal/DivisionFields";
 
 interface Props {
   type: ValueType;
@@ -252,6 +253,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
 
             {type === ValueType.LICENSE ? <LicenseFields /> : null}
 
+            {type === ValueType.DIVISION ? <DivisionFields /> : null}
             {type === ValueType.DEPARTMENT ? <DepartmentFields /> : null}
             {type === ValueType.QUALIFICATION ? (
               <QualificationFields image={image} setImage={setImage} />
