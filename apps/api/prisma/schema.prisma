@@ -806,14 +806,14 @@ model Officer {
 }
 
 model IndividualDivisionCallsign {
-  id         String        @id @default(uuid())
-  divisionId String
+  id         String         @id @default(uuid())
+  divisionId String?
+  division   DivisionValue? @relation(fields: [divisionId], references: [id])
   callsign   String
   callsign2  String
   officerId  String
-  officer    Officer       @relation(fields: [officerId], references: [id], onDelete: Cascade)
-  division   DivisionValue @relation(fields: [divisionId], references: [id])
-  Officer    Officer[]     @relation("divisionCallsign")
+  officer    Officer        @relation(fields: [officerId], references: [id], onDelete: Cascade)
+  Officer    Officer[]      @relation("divisionCallsign")
 }
 
 model UnitQualification {

@@ -1,4 +1,4 @@
-import { MiscCadSettings, Rank, WhitelistStatus } from "@prisma/client";
+import { Feature, Rank, WhitelistStatus } from "@prisma/client";
 import { UPDATE_UNIT_SCHEMA, UPDATE_UNIT_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import { PathParams, BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
@@ -19,6 +19,8 @@ import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { manyToManyHelper } from "utils/manyToMany";
 import { isCuid } from "cuid";
 import type * as APITypes from "@snailycad/types/api";
+import { isFeatureEnabled } from "lib/cad";
+import type { cad } from "@snailycad/types";
 
 const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_UNIT"] as const;
 type Action = typeof ACTIONS[number];
@@ -218,7 +220,7 @@ export class AdminManageUnitsController {
   async updateUnit(
     @PathParams("id") id: string,
     @BodyParams() body: unknown,
-    @Context("cad") cad: { miscCadSettings: MiscCadSettings },
+    @Context("cad") cad: cad,
   ): Promise<APITypes.PutManageUnitData> {
     const data = validateSchema(UPDATE_UNIT_SCHEMA, body);
 
@@ -241,22 +243,30 @@ export class AdminManageUnitsController {
     }
 
     if (type === "officer") {
-      if (!data.divisions || data.divisions.length <= 0) {
-        throw new ExtendedBadRequest({ divisions: "Must have at least 1 item" });
+      const divisionsEnabled = isFeatureEnabled({
+        feature: Feature.DIVISIONS,
+        defaultReturn: true,
+        features: cad.features,
+      });
+
+      if (divisionsEnabled) {
+        if (!data.divisions || data.divisions.length <= 0) {
+          throw new ExtendedBadRequest({ divisions: "Must have at least 1 item" });
+        }
+
+        await validateMaxDivisionsPerUnit(data.divisions, cad);
+
+        const disconnectConnectArr = manyToManyHelper(
+          (unit.divisions as { id: string }[]).map((v) => v.id),
+          data.divisions as string[],
+        );
+
+        await prisma.$transaction(
+          disconnectConnectArr.map((v) =>
+            prisma.officer.update({ where: { id: unit.id }, data: { divisions: v } }),
+          ),
+        );
       }
-
-      await validateMaxDivisionsPerUnit(data.divisions, cad);
-
-      const disconnectConnectArr = manyToManyHelper(
-        (unit.divisions as { id: string }[]).map((v) => v.id),
-        data.divisions as string[],
-      );
-
-      await prisma.$transaction(
-        disconnectConnectArr.map((v) =>
-          prisma.officer.update({ where: { id: unit.id }, data: { divisions: v } }),
-        ),
-      );
     }
 
     // @ts-expect-error ignore
