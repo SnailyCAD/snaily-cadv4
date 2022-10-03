@@ -6,7 +6,7 @@ import { prisma } from "lib/prisma";
 import { Socket } from "services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
-import type { cad, MiscCadSettings, User } from "@prisma/client";
+import type { cad, MiscCadSettings, User } from "@snailycad/types";
 import { validateSchema } from "lib/validateSchema";
 import { TONES_SCHEMA, UPDATE_AOP_SCHEMA, UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
 import {
@@ -317,10 +317,12 @@ export class DispatchController {
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
     fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
   })
-  async handleTones(@BodyParams() body: unknown): Promise<APITypes.PostDispatchTonesData> {
+  async handleTones(
+    @BodyParams() body: unknown,
+    @Context("user") user: User,
+  ): Promise<APITypes.PostDispatchTonesData> {
     const data = validateSchema(TONES_SCHEMA, body);
-
-    this.socket.emitTones(data);
+    this.socket.emitTones({ ...data, user });
 
     return true;
   }

@@ -24,6 +24,7 @@ const featuresRoute: Partial<Record<Feature, string>> = {
   COURTHOUSE_POSTS: "/v1/courthouse-posts",
   ACTIVE_WARRANTS: "/v1/records/active-warrants",
   PANIC_BUTTON: "/v1/leo/panic-button",
+  TONES: "/v1/dispatch/tones",
 };
 
 @Middleware()
