@@ -7,6 +7,7 @@ import { Loader } from "components/Loader";
 import ReactMarkdown from "react-markdown";
 import remarkGithub from "remark-github";
 import remarkGfm from "remark-gfm";
+import remarkEmoji from "remark-emoji";
 import { remarkGitHubReferences } from "lib/editor/remarkGitHubReferences";
 import useFetch from "lib/useFetch";
 
@@ -50,6 +51,7 @@ export function ChangelogModal() {
             remarkGfm,
             [remarkGithub, { repository: "SnailyCAD/snaily-cadv4" }],
             remarkGitHubReferences,
+            remarkEmoji,
           ]}
           className="prose prose-2xl dark:prose-invert"
         >
