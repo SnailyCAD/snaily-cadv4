@@ -154,7 +154,7 @@ export function ManageCitizenForm({
             <DatePickerField
               errorMessage={errors.dateOfBirth as string}
               value={values.dateOfBirth}
-              onChange={(value) => setFieldValue("dateOfBirth", value.toString())}
+              onChange={(value) => setFieldValue("dateOfBirth", value?.toString())}
               label={t("dateOfBirth")}
             />
 
