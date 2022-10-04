@@ -360,8 +360,6 @@ export class SearchActionsController {
     @BodyParams() body: unknown,
     @PathParams("vehicleId") vehicleId: string,
   ): Promise<APITypes.PostSearchActionsCreateVehicle> {
-    console.log("here");
-
     const data = validateSchema(IMPOUND_VEHICLE_SCHEMA, body);
 
     const vehicle = await prisma.registeredVehicle.findUnique({
