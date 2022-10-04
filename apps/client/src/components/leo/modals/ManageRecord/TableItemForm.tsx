@@ -20,7 +20,7 @@ function hasFines(penalCode: PenalCode) {
   return Boolean(fines1 || fines2);
 }
 
-function getMinFines(penalCode: PenalCode) {
+export function getPenalCodeMinFines(penalCode: PenalCode) {
   const fines1 = penalCode.warningApplicable?.fines ?? [];
   const fines2 = penalCode.warningNotApplicable?.fines ?? [];
 
@@ -39,7 +39,7 @@ function getMinFines(penalCode: PenalCode) {
   return 0;
 }
 
-function getMaxFines(penalCode: PenalCode) {
+export function getPenalCodeMaxFines(penalCode: PenalCode) {
   const fines1 = penalCode.warningApplicable?.fines ?? [];
   const fines2 = penalCode.warningNotApplicable?.fines ?? [];
 
@@ -62,8 +62,8 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
   const t = useTranslations("Leo");
   const { LEO_BAIL } = useFeatureEnabled();
 
-  const minFine = getMinFines(penalCode);
-  const maxFine = getMaxFines(penalCode);
+  const minFine = getPenalCodeMinFines(penalCode);
+  const maxFine = getPenalCodeMaxFines(penalCode);
 
   const [minJailTime, maxJailTime] = penalCode.warningNotApplicable?.prisonTerm ?? [];
   const [minBail, maxBail] = penalCode.warningNotApplicable?.bail ?? [];
