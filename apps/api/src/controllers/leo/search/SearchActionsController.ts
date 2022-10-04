@@ -62,7 +62,7 @@ export class SearchActionsController {
       where: {
         id: citizenId,
       },
-      include: { dlCategory: true },
+      include: { dlCategory: true, suspendedLicenses: true },
     });
 
     if (!citizen) {
