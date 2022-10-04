@@ -5,6 +5,7 @@ import {
   CREATE_CITIZEN_SCHEMA,
   VEHICLE_SCHEMA,
   IMPOUND_VEHICLE_SCHEMA,
+  SUSPEND_CITIZEN_LICENSE_SCHEMA,
 } from "@snailycad/schemas";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -476,5 +477,43 @@ export class SearchActionsController {
     });
 
     return appendCustomFields(vehicle, CustomFieldCategory.VEHICLE);
+  }
+
+  @Post("/suspend-license")
+  @Description("Suspend a citizen's license")
+  async suspendCitizenLicense(
+    @BodyParams() body: unknown,
+    @Context("cad") cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings | null },
+    @Context("user") user: User,
+  ) {
+    const data = validateSchema(SUSPEND_CITIZEN_LICENSE_SCHEMA, body);
+
+    const citizen = await prisma.citizen.findUnique({
+      where: { id: data.citizenId },
+    });
+
+    if (!citizen) {
+      throw new BadRequest("notFound");
+    }
+
+    const suspendedLicenses = await prisma.suspendedCitizenLicenses.upsert({
+      where: { id: String(citizen.suspendedLicensesId) },
+      create: {
+        [data.licenseType]: true,
+      },
+      update: {
+        [data.licenseType]: true,
+      },
+    });
+
+    const updatedCitizen = await prisma.citizen.update({
+      where: { id: citizen.id },
+      data: {
+        suspendedLicensesId: suspendedLicenses.id,
+      },
+      ...citizenSearchIncludeOrSelect(user, cad),
+    });
+
+    return appendCustomFields(updatedCitizen, CustomFieldCategory.CITIZEN);
   }
 }
