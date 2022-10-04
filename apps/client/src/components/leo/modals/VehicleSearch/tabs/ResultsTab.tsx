@@ -149,8 +149,18 @@ export function ResultsTab() {
           >
             {common(yesOrNoText(currentResult.reportedStolen))}
           </Infofield>
+          <Infofield
+            childrenProps={{
+              className: classNames(
+                "capitalize",
+                currentResult.impounded && "text-red-700 font-semibold",
+              ),
+            }}
+            label={t("impounded")}
+          >
+            {common(yesOrNoText(currentResult.impounded))}
+          </Infofield>
         </li>
-
         <CustomFieldsArea currentResult={currentResult} isLeo={isLeo} />
       </ul>
 

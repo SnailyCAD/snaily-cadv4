@@ -4,6 +4,7 @@ import {
   LEO_VEHICLE_LICENSE_SCHEMA,
   CREATE_CITIZEN_SCHEMA,
   VEHICLE_SCHEMA,
+  IMPOUND_VEHICLE_SCHEMA,
 } from "@snailycad/schemas";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -351,6 +352,48 @@ export class SearchActionsController {
     });
 
     return citizen as APITypes.PostSearchActionsCreateCitizen;
+  }
+
+  @Post("/impound/:vehicleId")
+  @Description("Impound a vehicle from plate search")
+  async impoundVehicle(
+    @BodyParams() body: unknown,
+    @PathParams("vehicleId") vehicleId: string,
+  ): Promise<APITypes.PostSearchActionsCreateVehicle> {
+    console.log("here");
+
+    const data = validateSchema(IMPOUND_VEHICLE_SCHEMA, body);
+
+    const vehicle = await prisma.registeredVehicle.findUnique({
+      where: { id: vehicleId },
+    });
+
+    if (!vehicle) {
+      throw new NotFound("NotFound");
+    }
+
+    if (vehicle.impounded) {
+      throw new BadRequest("vehicleAlreadyImpounded");
+    }
+
+    await prisma.impoundedVehicle.create({
+      data: {
+        valueId: data.impoundLot,
+        registeredVehicleId: vehicle.id,
+      },
+    });
+
+    const impoundedVehicle = await prisma.registeredVehicle.update({
+      where: {
+        id: vehicle.id,
+      },
+      data: {
+        impounded: true,
+      },
+      include: vehicleSearchInclude,
+    });
+
+    return appendCustomFields(impoundedVehicle, CustomFieldCategory.VEHICLE);
   }
 
   @Post("/vehicle")
