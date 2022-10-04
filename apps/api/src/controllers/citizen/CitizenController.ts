@@ -243,6 +243,7 @@ export class CitizenController {
         userId: user.id || undefined,
         ...citizenObjectFromData(data, defaultLicenseValueId),
       },
+      include: { suspendedLicenses: true },
     });
 
     await updateCitizenLicenseCategories(citizen, data);
