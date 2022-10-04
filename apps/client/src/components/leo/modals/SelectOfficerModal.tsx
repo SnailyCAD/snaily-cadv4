@@ -103,7 +103,7 @@ export function SelectOfficerModal() {
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.SelectOfficer)}
+                onPress={() => closeModal(ModalIds.SelectOfficer)}
                 variant="cancel"
               >
                 {common("cancel")}

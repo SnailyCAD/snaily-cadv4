@@ -74,7 +74,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
               "px-1.5 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
               showEmsFilters && "dark:!bg-secondary !bg-gray-500",
             )}
-            onClick={() => setShowFilters("ems-fd", !showEmsFilters)}
+            onPress={() => setShowFilters("ems-fd", !showEmsFilters)}
             title={common("filters")}
             disabled={activeDeputies.length <= 0}
           >
@@ -142,7 +142,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
                   actions: isDispatch ? (
                     <Button
                       disabled={!hasActiveDispatchers}
-                      onClick={() => handleEditClick(deputy)}
+                      onPress={() => handleEditClick(deputy)}
                       size="xs"
                       variant="success"
                     >

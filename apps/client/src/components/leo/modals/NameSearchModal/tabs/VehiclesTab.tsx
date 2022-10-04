@@ -48,7 +48,7 @@ export function NameSearchVehiclesTab() {
                 title={common("openInSearch")}
                 size="xs"
                 type="button"
-                onClick={() => handlePlateClick(vehicle as VehicleSearchResult)}
+                onPress={() => handlePlateClick(vehicle as VehicleSearchResult)}
               >
                 {vehicle.plate}
               </Button>

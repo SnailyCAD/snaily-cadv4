@@ -54,7 +54,7 @@ export function UpdateEventForm<T extends IncidentEvent | Call911Event>({
 
           <footer className="flex justify-end mt-5">
             {event ? (
-              <Button variant="cancel" onClick={() => setEvent(null)} type="reset">
+              <Button variant="cancel" onPress={() => setEvent(null)} type="reset">
                 {common("cancel")}
               </Button>
             ) : null}

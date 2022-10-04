@@ -75,7 +75,7 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
           <Form>
             <FormField errorMessage={errors.citizenId} label={t("citizen")}>
               <InputSuggestions<NameSearchResult>
-                onSuggestionClick={(suggestion) => {
+                onSuggestionPress={(suggestion) => {
                   const newValues = {
                     ...values,
                     citizenId: suggestion.id,
@@ -141,7 +141,7 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.CreateMedicalRecord)}
+                onPress={() => closeModal(ModalIds.CreateMedicalRecord)}
                 variant="cancel"
               >
                 {common("cancel")}

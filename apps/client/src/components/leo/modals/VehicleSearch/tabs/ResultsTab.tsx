@@ -61,7 +61,7 @@ export function ResultsTab() {
               title={common("openInSearch")}
               size="xs"
               type="button"
-              onClick={handleNameClick}
+              onPress={handleNameClick}
             >
               {currentResult.citizen.name} {currentResult.citizen.surname}
             </Button>
@@ -118,7 +118,7 @@ export function ResultsTab() {
           <Infofield className="capitalize flex items-center gap-2" label={vT("flags")}>
             <Button
               type="button"
-              onClick={handleEditVehicleFlags}
+              onPress={handleEditVehicleFlags}
               title={t("manageVehicleFlags")}
               aria-label={t("manageVehicleFlags")}
               className="px-1 mr-2"

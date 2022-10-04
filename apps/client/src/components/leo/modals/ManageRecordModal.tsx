@@ -183,7 +183,7 @@ export function ManageRecordModal({
                   disabled: isReadOnly || !!record,
                   errorMessage: errors.citizenName,
                 }}
-                onSuggestionClick={(suggestion) => {
+                onSuggestionPress={(suggestion) => {
                   const newValues = {
                     ...values,
                     citizenId: suggestion.id,
@@ -270,7 +270,7 @@ export function ManageRecordModal({
             </FormField>
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onClick={() => closeModal(data[type].id)} variant="cancel">
+              <Button type="reset" onPress={() => closeModal(data[type].id)} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button

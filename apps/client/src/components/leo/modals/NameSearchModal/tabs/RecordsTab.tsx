@@ -185,7 +185,7 @@ function RecordsTable({ data }: { data: Record[] }) {
                 <>
                   <Button
                     type="button"
-                    onClick={() => handleEditClick(record)}
+                    onPress={() => handleEditClick(record)}
                     size="xs"
                     variant="success"
                   >
@@ -196,7 +196,7 @@ function RecordsTable({ data }: { data: Record[] }) {
                     <Button
                       className="ml-2"
                       type="button"
-                      onClick={() => handleDeleteClick(record)}
+                      onPress={() => handleDeleteClick(record)}
                       size="xs"
                       variant="danger"
                     >

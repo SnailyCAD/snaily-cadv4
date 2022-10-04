@@ -118,14 +118,14 @@ export function RenderActiveCalls() {
                 </div>
 
                 <div className="flex gap-2 mt-2">
-                  <Button size="xs" className="!text-base" onClick={() => handleToggle(call.id)}>
+                  <Button size="xs" className="!text-base" onPress={() => handleToggle(call.id)}>
                     {t("toggleCall")}
                   </Button>
                   <Button
                     size="xs"
                     variant="danger"
                     className="!text-base"
-                    onClick={() => handleMarkerChange(call, "remove")}
+                    onPress={() => handleMarkerChange(call, "remove")}
                   >
                     {t("removeMarker")}
                   </Button>

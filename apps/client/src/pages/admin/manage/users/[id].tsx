@@ -133,7 +133,7 @@ export default function ManageCitizens(props: Props) {
                 <Button
                   disabled={user.rank === Rank.OWNER}
                   type="button"
-                  onClick={() => openModal(ModalIds.ManagePermissions)}
+                  onPress={() => openModal(ModalIds.ManagePermissions)}
                 >
                   {t("managePermissions")}
                 </Button>
@@ -143,7 +143,7 @@ export default function ManageCitizens(props: Props) {
                   className="ml-2 text-base"
                   disabled={user.rank === Rank.OWNER}
                   type="button"
-                  onClick={() => openModal(ModalIds.ManageRoles)}
+                  onPress={() => openModal(ModalIds.ManageRoles)}
                 >
                   {t("manageRoles")}
                 </Button>

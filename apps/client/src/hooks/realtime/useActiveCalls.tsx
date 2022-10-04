@@ -70,7 +70,7 @@ export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
           <p>You have been assigned to call #{call.caseNumber}.</p>
 
           <Button
-            onClick={() => {
+            onPress={() => {
               openModal(ModalIds.Manage911Call);
               call911State.setCurrentlySelectedCall({
                 ...previousCall,

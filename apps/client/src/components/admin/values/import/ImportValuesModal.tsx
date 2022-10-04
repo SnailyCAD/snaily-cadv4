@@ -93,7 +93,7 @@ export function ImportValuesModal({ onImport, type }: Props) {
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.ImportValues)}
+                onPress={() => closeModal(ModalIds.ImportValues)}
                 variant="cancel"
               >
                 Cancel

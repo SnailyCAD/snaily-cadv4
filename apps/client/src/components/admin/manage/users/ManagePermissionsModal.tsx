@@ -151,7 +151,7 @@ export function ManagePermissionsModal({ user, onUpdate, isReadOnly }: Props) {
                         <Button
                           type="button"
                           size="xs"
-                          onClick={() => handleToggleAll(group, values, setValues)}
+                          onPress={() => handleToggleAll(group, values, setValues)}
                         >
                           Toggle all
                         </Button>

@@ -70,7 +70,7 @@ export function ExpungementRequestsTab({ requests: data }: Props) {
               <>
                 <Button
                   disabled={state === "loading"}
-                  onClick={() => handleUpdate(request.id, ExpungementRequestStatus.ACCEPTED)}
+                  onPress={() => handleUpdate(request.id, ExpungementRequestStatus.ACCEPTED)}
                   variant="success"
                   size="xs"
                 >
@@ -79,7 +79,7 @@ export function ExpungementRequestsTab({ requests: data }: Props) {
                 <Button
                   className="ml-2"
                   disabled={state === "loading"}
-                  onClick={() => handleUpdate(request.id, ExpungementRequestStatus.DENIED)}
+                  onPress={() => handleUpdate(request.id, ExpungementRequestStatus.DENIED)}
                   variant="danger"
                   size="xs"
                 >

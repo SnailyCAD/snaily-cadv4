@@ -85,7 +85,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
         <header className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold">{t("yourVehicles")}</h1>
 
-          <Button onClick={() => openModal(ModalIds.RegisterVehicle)} size="xs">
+          <Button onPress={() => openModal(ModalIds.RegisterVehicle)} size="xs">
             {t("addVehicle")}
           </Button>
         </header>
@@ -137,7 +137,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
                   <>
                     <Button
                       disabled={vehicle.impounded}
-                      onClick={() => handleTransferClick(vehicle)}
+                      onPress={() => handleTransferClick(vehicle)}
                       size="xs"
                     >
                       {t("transfer")}
@@ -145,7 +145,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
 
                     <Button
                       disabled={vehicle.impounded}
-                      onClick={() => handleEditClick(vehicle)}
+                      onPress={() => handleEditClick(vehicle)}
                       size="xs"
                       className="ml-2"
                     >
@@ -155,7 +155,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
                     <Button
                       disabled={vehicle.impounded}
                       className="ml-2"
-                      onClick={() => handleDeleteClick(vehicle)}
+                      onPress={() => handleDeleteClick(vehicle)}
                       size="xs"
                       variant="danger"
                     >

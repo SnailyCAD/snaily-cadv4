@@ -56,7 +56,7 @@ export function BanArea({ user, setUser }: Props) {
           <Button
             className="flex items-center mt-2"
             disabled={state === "loading"}
-            onClick={handleUnban}
+            onPress={handleUnban}
           >
             {state === "loading" ? <Loader className="mr-3" /> : null}
             Unban

@@ -102,7 +102,7 @@ export function UserApiTokenTab() {
             <div className="flex">
               {user?.apiTokenId ? (
                 <Button
-                  onClick={() => handleRegenerate(setFieldValue)}
+                  onPress={() => handleRegenerate(setFieldValue)}
                   variant="danger"
                   className="flex items-center mr-2"
                   type="button"

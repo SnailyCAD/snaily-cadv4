@@ -55,7 +55,7 @@ export function ManageAOPModal() {
             <footer className="flex justify-end gap-2">
               <Button
                 variant="cancel"
-                onClick={() => closeModal(ModalIds.ManageAOP)}
+                onPress={() => closeModal(ModalIds.ManageAOP)}
                 className="flex items-center"
                 type="reset"
               >

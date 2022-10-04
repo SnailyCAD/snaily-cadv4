@@ -76,7 +76,7 @@ export default function MyDeputies({ deputies: data }: Props) {
       <header className="flex items-center justify-between">
         <Title className="!mb-0">{t("Ems.myDeputies")}</Title>
 
-        <Button onClick={() => openModal(ModalIds.ManageDeputy)}>{t("Ems.createDeputy")}</Button>
+        <Button onPress={() => openModal(ModalIds.ManageDeputy)}>{t("Ems.createDeputy")}</Button>
       </header>
 
       {deputies.length <= 0 ? (
@@ -111,11 +111,11 @@ export default function MyDeputies({ deputies: data }: Props) {
             position: deputy.position ?? common("none"),
             actions: (
               <>
-                <Button size="xs" onClick={() => handleEditClick(deputy)} variant="success">
+                <Button size="xs" onPress={() => handleEditClick(deputy)} variant="success">
                   {common("edit")}
                 </Button>
                 <Button
-                  onClick={() => handleDeleteClick(deputy)}
+                  onPress={() => handleDeleteClick(deputy)}
                   className="ml-2"
                   variant="danger"
                   size="xs"

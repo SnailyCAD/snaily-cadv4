@@ -171,7 +171,7 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
               ) : null}
 
               {user && !isWithinModal ? (
-                <Button type="button" onClick={handleContinueAs} className="w-full mb-2">
+                <Button type="button" onPress={handleContinueAs} className="w-full mb-2">
                   {t.rich("continueAs", { username: user.username })}
                 </Button>
               ) : null}
@@ -179,7 +179,7 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
               {showDiscordOAuth ? (
                 <Button
                   type="button"
-                  onClick={handleDiscordLogin}
+                  onPress={handleDiscordLogin}
                   className="flex items-center justify-center gap-3 w-full"
                 >
                   <Discord />
@@ -190,7 +190,7 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
               {showSteamOAuth ? (
                 <Button
                   type="button"
-                  onClick={handleSteamLogin}
+                  onPress={handleSteamLogin}
                   className="flex items-center justify-center gap-3 w-full mt-2"
                 >
                   <Steam />

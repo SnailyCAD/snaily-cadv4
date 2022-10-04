@@ -133,7 +133,7 @@ export function ManageVehicleLicensesModal() {
             <footer className="flex items-center justify-end gap-2 mt-5">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.ManageVehicleLicenses)}
+                onPress={() => closeModal(ModalIds.ManageVehicleLicenses)}
                 variant="cancel"
               >
                 {common("cancel")}

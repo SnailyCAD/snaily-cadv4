@@ -82,7 +82,7 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
         <header className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold">{t("yourWeapons")}</h1>
 
-          <Button onClick={() => openModal(ModalIds.RegisterWeapon)} size="xs">
+          <Button onPress={() => openModal(ModalIds.RegisterWeapon)} size="xs">
             {t("addWeapon")}
           </Button>
         </header>
@@ -123,12 +123,12 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
                 createdAt: <FullDate>{weapon.createdAt}</FullDate>,
                 actions: (
                   <>
-                    <Button onClick={() => handleEditClick(weapon)} size="xs" variant="success">
+                    <Button onPress={() => handleEditClick(weapon)} size="xs" variant="success">
                       {common("edit")}
                     </Button>
                     <Button
                       className="ml-2"
-                      onClick={() => handleDeleteClick(weapon)}
+                      onPress={() => handleDeleteClick(weapon)}
                       size="xs"
                       variant="danger"
                     >

@@ -157,14 +157,14 @@ export function ManageCallModal({ onDelete, onUpdate, onClose, isTow: tow, call 
                   className="flex items-center mr-2"
                   disabled={state === "loading"}
                   type="button"
-                  onClick={() => openModal(ModalIds.AlertEndTowCall)}
+                  onPress={() => openModal(ModalIds.AlertEndTowCall)}
                 >
                   {state === "loading" ? <Loader className="mr-2" /> : null}
                   {t("endCall")}
                 </Button>
               ) : null}
               <div className="flex items-center">
-                <Button type="reset" onClick={handleClose} variant="cancel">
+                <Button type="reset" onPress={handleClose} variant="cancel">
                   {common("cancel")}
                 </Button>
                 <Button

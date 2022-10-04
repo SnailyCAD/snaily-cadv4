@@ -105,7 +105,7 @@ export function ImportModal<T extends ImportData>({ onImport, id, url }: Props<T
             </p>
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onClick={() => closeModal(id)} variant="cancel">
+              <Button type="reset" onPress={() => closeModal(id)} variant="cancel">
                 Cancel
               </Button>
               <Button className="flex items-center" disabled={state === "loading"} type="submit">

@@ -161,7 +161,7 @@ export default function CitizenId() {
             </a>
           </Link>
           {ALLOW_CITIZEN_DELETION_BY_NON_ADMIN ? (
-            <Button onClick={() => openModal(ModalIds.AlertDeleteCitizen)} variant="danger">
+            <Button onPress={() => openModal(ModalIds.AlertDeleteCitizen)} variant="danger">
               {t("deleteCitizen")}
             </Button>
           ) : null}

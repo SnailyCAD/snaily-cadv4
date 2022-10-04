@@ -54,7 +54,7 @@ export function AccountInfoTab() {
               </FormField>
             </FormRow>
 
-            <Button onClick={handleViewPermissions} className="mt-4">
+            <Button onPress={handleViewPermissions} className="mt-4">
               {t("Account.viewMyPermissions")}
             </Button>
 

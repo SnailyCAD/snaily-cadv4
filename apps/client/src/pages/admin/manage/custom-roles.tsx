@@ -83,7 +83,7 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
 
         <div>
           {hasManagePermissions ? (
-            <Button onClick={() => openModal(ModalIds.ManageCustomRole)}>
+            <Button onPress={() => openModal(ModalIds.ManageCustomRole)}>
               {t("createCustomRole")}
             </Button>
           ) : null}
@@ -103,14 +103,14 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
             createdAt: <FullDate>{field.createdAt}</FullDate>,
             actions: (
               <>
-                <Button size="xs" variant="success" onClick={() => handleEditClick(field)}>
+                <Button size="xs" variant="success" onPress={() => handleEditClick(field)}>
                   {common("edit")}
                 </Button>
                 <Button
                   className="ml-2"
                   size="xs"
                   variant="danger"
-                  onClick={() => handleDeleteClick(field)}
+                  onPress={() => handleDeleteClick(field)}
                 >
                   {common("delete")}
                 </Button>

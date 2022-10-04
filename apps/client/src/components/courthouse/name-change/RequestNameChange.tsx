@@ -79,7 +79,7 @@ export function RequestNameChangeModal({ onCreate }: Props) {
 
             <footer className="flex justify-end mt-5">
               <Button
-                onClick={() => closeModal(ModalIds.RequestNameChange)}
+                onPress={() => closeModal(ModalIds.RequestNameChange)}
                 variant="cancel"
                 type="reset"
               >

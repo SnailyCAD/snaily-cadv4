@@ -81,7 +81,7 @@ export default function ImportWeaponsPage({ data }: Props) {
           <Title className="!mb-0">{t("IMPORT_WEAPONS")}</Title>
 
           <div>
-            <Button onClick={() => openModal(ModalIds.ImportWeapons)}>{t("importViaFile")}</Button>
+            <Button onPress={() => openModal(ModalIds.ImportWeapons)}>{t("importViaFile")}</Button>
           </div>
         </div>
 
@@ -116,7 +116,7 @@ export default function ImportWeaponsPage({ data }: Props) {
           citizen: `${weapon.citizen.name} ${weapon.citizen.surname}`,
           createdAt: <FullDate>{weapon.createdAt}</FullDate>,
           actions: (
-            <Button size="xs" variant="danger" onClick={() => handleDeleteClick(weapon)}>
+            <Button size="xs" variant="danger" onPress={() => handleDeleteClick(weapon)}>
               {common("delete")}
             </Button>
           ),

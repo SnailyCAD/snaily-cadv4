@@ -87,7 +87,7 @@ export function SwitchDivisionCallsignModal() {
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.SwitchDivisionCallsign)}
+                onPress={() => closeModal(ModalIds.SwitchDivisionCallsign)}
                 variant="cancel"
               >
                 {common("cancel")}

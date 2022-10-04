@@ -174,7 +174,7 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
             ) : (
               <FormField errorMessage={errors.model} label={tVehicle("model")}>
                 <InputSuggestions<VehicleValue>
-                  onSuggestionClick={(suggestion) => {
+                  onSuggestionPress={(suggestion) => {
                     setValues({
                       ...values,
                       modelName: suggestion.value.value,
@@ -294,7 +294,7 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
             ) : null}
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onClick={handleClose} variant="cancel">
+              <Button type="reset" onPress={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button

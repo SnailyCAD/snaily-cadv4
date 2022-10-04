@@ -45,9 +45,9 @@ export default function BusinessPage(props: GetBusinessesData) {
         <Title className="!mb-0">{t("businesses")}</Title>
 
         <div>
-          <Button onClick={() => openModal(ModalIds.JoinBusiness)}>{t("joinBusiness")}</Button>
+          <Button onPress={() => openModal(ModalIds.JoinBusiness)}>{t("joinBusiness")}</Button>
           {hasCreateBusinessesPerms ? (
-            <Button className="ml-2" onClick={() => openModal(ModalIds.CreateBusiness)}>
+            <Button className="ml-2" onPress={() => openModal(ModalIds.CreateBusiness)}>
               {t("createBusiness")}
             </Button>
           ) : null}

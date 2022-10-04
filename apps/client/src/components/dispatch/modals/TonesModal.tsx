@@ -92,7 +92,7 @@ export function TonesModal({ types }: Props) {
             <footer className="flex justify-end gap-2">
               <Button
                 variant="cancel"
-                onClick={() => closeModal(ModalIds.Tones)}
+                onPress={() => closeModal(ModalIds.Tones)}
                 className="flex items-center"
                 type="reset"
               >

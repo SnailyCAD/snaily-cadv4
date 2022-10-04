@@ -78,7 +78,7 @@ export function DangerZone({ user, setUser }: Props) {
           variant="danger"
           className="flex items-center"
           disabled={state === "loading"}
-          onClick={() => openModal(ModalIds.AlertDeleteUser)}
+          onPress={() => openModal(ModalIds.AlertDeleteUser)}
         >
           {state === "loading" ? <Loader className="mr-3" /> : null}
           Delete User
@@ -88,7 +88,7 @@ export function DangerZone({ user, setUser }: Props) {
           variant="danger"
           className="flex items-center ml-2"
           disabled={state === "loading"}
-          onClick={() => openModal(ModalIds.AlertGiveTempPassword)}
+          onPress={() => openModal(ModalIds.AlertGiveTempPassword)}
         >
           {state === "loading" ? <Loader className="mr-3" /> : null}
           Temporary Password
@@ -99,7 +99,7 @@ export function DangerZone({ user, setUser }: Props) {
             variant="danger"
             className="flex items-center ml-2"
             disabled={state === "loading"}
-            onClick={() => openModal(ModalIds.AlertDisableUser2FA)}
+            onPress={() => openModal(ModalIds.AlertDisableUser2FA)}
           >
             {state === "loading" ? <Loader className="mr-3" /> : null}
             Disable Two Factor Authentication
@@ -111,7 +111,7 @@ export function DangerZone({ user, setUser }: Props) {
             variant="danger"
             className="flex items-center ml-2"
             disabled={state === "loading"}
-            onClick={() => openModal(ModalIds.AlertRevokePersonalApiToken)}
+            onPress={() => openModal(ModalIds.AlertRevokePersonalApiToken)}
           >
             {state === "loading" ? <Loader className="mr-3" /> : null}
             Revoke Personal API Token

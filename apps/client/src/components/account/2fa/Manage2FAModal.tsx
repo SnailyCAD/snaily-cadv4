@@ -193,7 +193,7 @@ export function Manage2FAModal() {
             ) : null}
 
             <footer className="mt-7 flex justify-end">
-              <Button type="reset" onClick={onCancel} variant="cancel">
+              <Button type="reset" onPress={onCancel} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button

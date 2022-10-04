@@ -103,7 +103,7 @@ export function MergeUnitModal({ unit, isDispatch, onClose }: Props) {
             </FormField>
 
             <footer className="flex mt-5 justify-end">
-              <Button onClick={handleClose} type="button" variant="cancel">
+              <Button onPress={handleClose} type="button" variant="cancel">
                 {common("cancel")}
               </Button>
               <Button

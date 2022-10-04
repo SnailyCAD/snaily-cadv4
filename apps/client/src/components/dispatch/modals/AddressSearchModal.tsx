@@ -67,7 +67,7 @@ export function AddressSearchModal() {
           <Form>
             <FormField errorMessage={errors.address} label={t("enterAddress")}>
               <InputSuggestions<AddressSearchResult[number]>
-                onSuggestionClick={(suggestion) => {
+                onSuggestionPress={(suggestion) => {
                   setFieldValue("address", suggestion.address);
                   setResults([suggestion]);
                 }}
@@ -103,7 +103,7 @@ export function AddressSearchModal() {
                     citizen: `${result.name} ${result.surname}`,
                     fullAddress: formatCitizenAddress(result),
                     actions: (
-                      <Button type="button" onClick={() => handleOpen(result)} size="xs">
+                      <Button type="button" onPress={() => handleOpen(result)} size="xs">
                         {t("viewInNameSearch")}
                       </Button>
                     ),
@@ -120,7 +120,7 @@ export function AddressSearchModal() {
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.AddressSearch)}
+                onPress={() => closeModal(ModalIds.AddressSearch)}
                 variant="cancel"
               >
                 {common("cancel")}

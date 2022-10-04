@@ -61,7 +61,7 @@ export function ManageLicensesModal({
               <footer className="flex justify-end mt-5">
                 <Button
                   type="reset"
-                  onClick={() => closeModal(ModalIds.ManageLicenses)}
+                  onPress={() => closeModal(ModalIds.ManageLicenses)}
                   variant="cancel"
                 >
                   {common("cancel")}

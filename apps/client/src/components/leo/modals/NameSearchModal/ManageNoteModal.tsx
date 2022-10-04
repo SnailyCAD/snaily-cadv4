@@ -88,7 +88,7 @@ export function ManageNoteModal({ onCreate, onUpdate, onClose, currentResult, ty
               <Button
                 disabled={state === "loading"}
                 type="reset"
-                onClick={handleClose}
+                onPress={handleClose}
                 variant="cancel"
               >
                 {common("cancel")}

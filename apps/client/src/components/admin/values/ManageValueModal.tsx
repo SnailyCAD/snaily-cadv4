@@ -322,7 +322,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.ManageValue)}
+                onPress={() => closeModal(ModalIds.ManageValue)}
                 variant="cancel"
               >
                 Cancel

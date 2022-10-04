@@ -78,7 +78,7 @@ export default function MyOfficers({ officers: data }: Props) {
       <header className="flex items-center justify-between">
         <Title className="!mb-0">{t("myOfficers")}</Title>
 
-        <Button onClick={() => openModal(ModalIds.ManageOfficer)}>{t("createOfficer")}</Button>
+        <Button onPress={() => openModal(ModalIds.ManageOfficer)}>{t("createOfficer")}</Button>
       </header>
 
       {officers.length <= 0 ? (
@@ -114,11 +114,11 @@ export default function MyOfficers({ officers: data }: Props) {
               position: officer.position ?? common("none"),
               actions: (
                 <>
-                  <Button size="xs" onClick={() => handleEditClick(officer)} variant="success">
+                  <Button size="xs" onPress={() => handleEditClick(officer)} variant="success">
                     {common("edit")}
                   </Button>
                   <Button
-                    onClick={() => handleDeleteClick(officer)}
+                    onPress={() => handleDeleteClick(officer)}
                     className="ml-2"
                     variant="danger"
                     size="xs"

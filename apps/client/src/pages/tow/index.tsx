@@ -70,7 +70,7 @@ export default function Tow(props: Props) {
       <header className="flex items-center justify-between mb-5">
         <Title className="!mb-0">{t("tow")}</Title>
 
-        <Button onClick={onCreateClick}>{t("createTowCall")}</Button>
+        <Button onPress={onCreateClick}>{t("createTowCall")}</Button>
       </header>
 
       <TowTaxiCallsTable

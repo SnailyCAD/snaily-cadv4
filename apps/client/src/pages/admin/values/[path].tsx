@@ -194,11 +194,11 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
 
         <div className="flex gap-2">
           {isEmpty(tableState.rowSelection) ? null : (
-            <Button onClick={() => openModal(ModalIds.AlertDeleteSelectedValues)} variant="danger">
+            <Button onPress={() => openModal(ModalIds.AlertDeleteSelectedValues)} variant="danger">
               {t("deleteSelectedValues")}
             </Button>
           )}
-          <Button onClick={() => openModal(ModalIds.ManageValue)}>{typeT("ADD")}</Button>
+          <Button onPress={() => openModal(ModalIds.ManageValue)}>{typeT("ADD")}</Button>
           <OptionsDropdown type={type} values={values} />
         </div>
       </header>
@@ -225,7 +225,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
             createdAt: <FullDate>{getCreatedAtFromValue(value)}</FullDate>,
             actions: (
               <>
-                <Button size="xs" onClick={() => handleEditClick(value)} variant="success">
+                <Button size="xs" onPress={() => handleEditClick(value)} variant="success">
                   {common("edit")}
                 </Button>
 
@@ -234,7 +234,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
                     <Tooltip.Trigger asChild>
                       <Button
                         size="xs"
-                        onClick={() => handleDeleteClick(value)}
+                        onPress={() => handleDeleteClick(value)}
                         variant="danger"
                         className="ml-2"
                         disabled={isValueInUse(value)}

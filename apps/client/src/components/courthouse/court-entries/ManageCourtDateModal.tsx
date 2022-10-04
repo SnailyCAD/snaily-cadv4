@@ -66,7 +66,7 @@ export function ManageCourtDateModal({ onCreate, onUpdate, onClose, date }: Prop
             </FormField>
 
             <footer className="flex justify-end mt-5">
-              <Button onClick={handleClose} variant="cancel" type="reset">
+              <Button onPress={handleClose} variant="cancel" type="reset">
                 {common("cancel")}
               </Button>
               <Button className="flex items-center" type="submit">

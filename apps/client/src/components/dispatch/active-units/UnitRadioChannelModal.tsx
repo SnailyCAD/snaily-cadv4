@@ -90,7 +90,7 @@ export function UnitRadioChannelModal({ unit, onClose }: Props) {
         {isDispatch ? (
           <Button
             className="px-1.5"
-            onClick={() => setIsOpen(true)}
+            onPress={() => setIsOpen(true)}
             disabled={!hasActiveDispatchers}
           >
             <Pencil aria-label={t("manageRadioChannel")} className="fill-current text-white" />
@@ -113,7 +113,7 @@ export function UnitRadioChannelModal({ unit, onClose }: Props) {
                 </FormField>
 
                 <footer className="flex mt-5 justify-end">
-                  <Button onClick={handleClose} type="button" variant="cancel">
+                  <Button onPress={handleClose} type="button" variant="cancel">
                     {common("cancel")}
                   </Button>
                   <Button

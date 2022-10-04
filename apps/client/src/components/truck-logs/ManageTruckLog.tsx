@@ -125,7 +125,7 @@ export function ManageTruckLogModal({
 
             <footer className="flex justify-end mt-5">
               <div className="flex items-center">
-                <Button type="reset" onClick={handleClose} variant="cancel">
+                <Button type="reset" onPress={handleClose} variant="cancel">
                   {common("cancel")}
                 </Button>
                 <Button

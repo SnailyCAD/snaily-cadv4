@@ -136,7 +136,7 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
         <Button
           className={classNames("w-full min-w-[5em] text-base", isOnDutyActive && "font-semibold")}
           variant={isOnDutyActive ? "blue" : "default"}
-          onClick={() => handleOnDuty(onDutyCode)}
+          onPress={() => handleOnDuty(onDutyCode)}
         >
           {onDutyCode?.value.value}
         </Button>
@@ -158,7 +158,7 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
           return (
             <li key={code.id}>
               <Button
-                onClick={() => handleStatusUpdate(code)}
+                onPress={() => handleStatusUpdate(code)}
                 disabled={isUnitOffDuty}
                 variant={variant}
                 className={classNames("text-base w-full min-w-[5em]", isActive && "font-semibold")}

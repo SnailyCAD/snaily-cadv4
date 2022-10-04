@@ -244,13 +244,13 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
 
           <footer className={`mt-5 flex ${call ? "justify-between" : "justify-end"}`}>
             {call ? (
-              <Button onClick={handleEndClick} type="button" variant="danger" disabled={isDisabled}>
+              <Button onPress={handleEndClick} type="button" variant="danger" disabled={isDisabled}>
                 {t("endCall")}
               </Button>
             ) : null}
 
             <div className="flex">
-              <Button onClick={handleClose} type="button" variant="cancel">
+              <Button onPress={handleClose} type="button" variant="cancel">
                 {common("cancel")}
               </Button>
               <Button

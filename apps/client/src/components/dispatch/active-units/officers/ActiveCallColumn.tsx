@@ -31,7 +31,7 @@ export function ActiveCallColumn({ call, isDispatch }: Props) {
 
   return (
     <>
-      <Button disabled={isBtnDisabled} onClick={handleOpen}>
+      <Button disabled={isBtnDisabled} onPress={handleOpen}>
         #{call.caseNumber}
       </Button>
 

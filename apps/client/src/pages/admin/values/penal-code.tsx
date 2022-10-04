@@ -202,8 +202,8 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
         <Title className="!mb-0">{typeT("MANAGE")}</Title>
 
         <div className="flex gap-2">
-          <Button onClick={() => openModal(ModalIds.ManageValue)}>{typeT("ADD")}</Button>
-          <Button onClick={() => openModal(ModalIds.ManagePenalCodeGroup)}>
+          <Button onPress={() => openModal(ModalIds.ManageValue)}>{typeT("ADD")}</Button>
+          <Button onPress={() => openModal(ModalIds.ManagePenalCodeGroup)}>
             {t("addPenalCodeGroup")}
           </Button>
           <OptionsDropdown type={type} values={data} />
@@ -221,7 +221,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
           <header className="flex items-center justify-between">
             <h1 className="text-xl font-semibold">{currentGroup.name}</h1>
 
-            <Button onClick={handleViewAllGroups} className="flex items-center gap-3">
+            <Button onPress={handleViewAllGroups} className="flex items-center gap-3">
               <ArrowLeft /> View all groups
             </Button>
           </header>
@@ -245,12 +245,12 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
                 ),
                 actions: (
                   <>
-                    <Button onClick={() => handleEditClick(code)} size="xs" variant="success">
+                    <Button onPress={() => handleEditClick(code)} size="xs" variant="success">
                       {common("edit")}
                     </Button>
                     <Button
                       className="ml-2"
-                      onClick={() => handleDeleteClick(code)}
+                      onPress={() => handleDeleteClick(code)}
                       size="xs"
                       variant="danger"
                     >
@@ -275,14 +275,14 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
             value: group.name,
             actions: (
               <>
-                <Button onClick={() => setCurrentGroup(group)} size="xs">
+                <Button onPress={() => setCurrentGroup(group)} size="xs">
                   {common("view")}
                 </Button>
                 {group.id !== "ungrouped" ? (
                   <>
                     <Button
                       className="ml-2"
-                      onClick={() => handleEditGroup(group)}
+                      onPress={() => handleEditGroup(group)}
                       size="xs"
                       variant="success"
                       disabled={group.id === "ungrouped"}
@@ -291,7 +291,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
                     </Button>
                     <Button
                       className="ml-2"
-                      onClick={() => handleDeleteGroupClick(group)}
+                      onPress={() => handleDeleteGroupClick(group)}
                       size="xs"
                       variant="danger"
                       disabled={group.id === "ungrouped"}

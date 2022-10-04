@@ -83,7 +83,7 @@ export function ReleaseCitizenModal({ onSuccess, citizen }: Props) {
             {values.type === ReleaseType.BAIL_POSTED ? (
               <FormField errorMessage={errors.releasedById} label={t("bailPostedBy")}>
                 <InputSuggestions<NameSearchResult>
-                  onSuggestionClick={(suggestion) => {
+                  onSuggestionPress={(suggestion) => {
                     setValues({
                       ...values,
                       releasedById: suggestion.id,
@@ -128,7 +128,7 @@ export function ReleaseCitizenModal({ onSuccess, citizen }: Props) {
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.AlertReleaseCitizen)}
+                onPress={() => closeModal(ModalIds.AlertReleaseCitizen)}
                 variant="cancel"
               >
                 Cancel

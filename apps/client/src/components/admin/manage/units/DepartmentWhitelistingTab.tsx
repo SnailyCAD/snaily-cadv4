@@ -80,7 +80,7 @@ export function DepartmentWhitelistingTab({ search, pendingOfficers }: Props) {
               <>
                 <Button
                   disabled={state === "loading"}
-                  onClick={() => handleAcceptOrDecline({ unit: officer, type: "ACCEPT" })}
+                  onPress={() => handleAcceptOrDecline({ unit: officer, type: "ACCEPT" })}
                   size="xs"
                   variant="success"
                 >
@@ -88,7 +88,7 @@ export function DepartmentWhitelistingTab({ search, pendingOfficers }: Props) {
                 </Button>
 
                 <Button
-                  onClick={() => openModal(ModalIds.AlertDeclineOfficer, officer)}
+                  onPress={() => openModal(ModalIds.AlertDeclineOfficer, officer)}
                   disabled={state === "loading"}
                   className="ml-2"
                   size="xs"

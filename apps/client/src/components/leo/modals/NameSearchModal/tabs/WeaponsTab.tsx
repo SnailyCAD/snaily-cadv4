@@ -17,7 +17,7 @@ export function NameSearchWeaponsTab() {
   const { setCurrentResult: setWeaponResult } = useWeaponSearch();
   const tableState = useTableState();
 
-  function handleWeaponClick(weapon: Weapon) {
+  function handleWeaponPress(weapon: Weapon) {
     if (!currentResult || currentResult.isConfidential) return;
 
     // todo: set correct data for `allCustomFields` and `customFields`
@@ -46,7 +46,7 @@ export function NameSearchWeaponsTab() {
                 title={common("openInSearch")}
                 size="xs"
                 type="button"
-                onClick={() => handleWeaponClick(weapon)}
+                onPress={() => handleWeaponPress(weapon)}
               >
                 {weapon.model.value.value}
               </Button>

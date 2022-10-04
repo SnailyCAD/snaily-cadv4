@@ -82,7 +82,7 @@ export function ManageUnitCallsignModal({ unit }: Props) {
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.ManageUnitCallsign)}
+                onPress={() => closeModal(ModalIds.ManageUnitCallsign)}
                 variant="cancel"
               >
                 {t("Common.cancel")}

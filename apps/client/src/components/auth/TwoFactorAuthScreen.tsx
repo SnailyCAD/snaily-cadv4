@@ -63,7 +63,7 @@ export function TwoFactorAuthScreen({ isLoading, errorMessage }: Props) {
       </FormField>
 
       <div className="flex gap-2 justify-end mt-8">
-        <Button type="button" onClick={handleCancel}>
+        <Button type="button" onPress={handleCancel}>
           {common("cancel")}
         </Button>
 

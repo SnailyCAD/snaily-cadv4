@@ -155,7 +155,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
                         className="ml-2"
                         size="xs"
                         variant="danger"
-                        onClick={() => handleDeleteClick(citizen)}
+                        onPress={() => handleDeleteClick(citizen)}
                       >
                         {common("delete")}
                       </Button>
@@ -204,7 +204,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
           <Button
             variant="cancel"
             disabled={state === "loading"}
-            onClick={() => closeModal(ModalIds.AlertDeleteCitizen)}
+            onPress={() => closeModal(ModalIds.AlertDeleteCitizen)}
           >
             {common("cancel")}
           </Button>
@@ -212,7 +212,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
             disabled={state === "loading"}
             className="flex items-center"
             variant="danger"
-            onClick={handleDelete}
+            onPress={handleDelete}
           >
             {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}{" "}
             {common("delete")}

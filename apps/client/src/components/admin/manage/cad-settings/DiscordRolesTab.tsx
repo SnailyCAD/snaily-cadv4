@@ -116,7 +116,7 @@ export function DiscordRolesTab() {
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold">Discord Roles</h2>
 
-          <Button onClick={refreshRoles} className="h-fit min-w-fit">
+          <Button onPress={refreshRoles} className="h-fit min-w-fit">
             Refresh Roles
           </Button>
         </div>

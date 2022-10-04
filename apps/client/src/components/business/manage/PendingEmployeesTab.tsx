@@ -58,7 +58,7 @@ export function PendingEmployeesTab() {
                 <div>
                   <Button
                     disabled={state === "loading"}
-                    onClick={() => handleUpdate(employee, "accept")}
+                    onPress={() => handleUpdate(employee, "accept")}
                     variant="success"
                     size="xs"
                   >
@@ -66,7 +66,7 @@ export function PendingEmployeesTab() {
                   </Button>
                   <Button
                     disabled={state === "loading"}
-                    onClick={() => handleUpdate(employee, "decline")}
+                    onPress={() => handleUpdate(employee, "decline")}
                     className="ml-2"
                     size="xs"
                     variant="danger"

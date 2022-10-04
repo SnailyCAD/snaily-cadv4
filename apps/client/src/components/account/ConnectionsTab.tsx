@@ -83,7 +83,7 @@ export function ConnectionsTab() {
               <div className="min-w-fit">
                 {connection.value ? (
                   <Button
-                    onClick={() => handleUnlink(connection.key)}
+                    onPress={() => handleUnlink(connection.key)}
                     disabled={!ALLOW_REGULAR_LOGIN || state === "loading"}
                     variant="danger"
                     className="text-base"
@@ -91,7 +91,7 @@ export function ConnectionsTab() {
                     {state === "loading" ? t("disconnecting") : connection.disconnect}
                   </Button>
                 ) : (
-                  <Button className="text-base" onClick={() => handleConnectClick(connection.key)}>
+                  <Button className="text-base" onPress={() => handleConnectClick(connection.key)}>
                     {connection.connect}
                   </Button>
                 )}

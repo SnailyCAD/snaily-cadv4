@@ -124,7 +124,7 @@ export function AddUnitToCallModal({ onClose }: Props) {
 
             <footer className="flex mt-5 justify-end">
               <div className="flex">
-                <Button onClick={handleClose} type="button" variant="cancel">
+                <Button onPress={handleClose} type="button" variant="cancel">
                   {common("cancel")}
                 </Button>
                 <Button className="flex items-center ml-2" type="submit">

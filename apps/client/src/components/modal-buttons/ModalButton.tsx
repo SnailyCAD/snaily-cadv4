@@ -38,7 +38,7 @@ export function ModalButton({ button: buttonFn, unit, ...buttonProps }: Props) {
       id={button.nameKey[1]}
       disabled={buttonProps.disabled}
       title={buttonProps.disabled ? "Go on-duty before continuing" : t(button.nameKey.join("."))}
-      onClick={() => openModal(button.modalId)}
+      onPress={() => openModal(button.modalId)}
       type="button"
       {...buttonProps}
       className="text-base"

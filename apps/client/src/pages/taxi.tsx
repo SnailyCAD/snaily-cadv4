@@ -65,7 +65,7 @@ export default function Taxi(props: Props) {
       <header className="flex items-center justify-between mb-5">
         <Title>{t("taxi")}</Title>
 
-        <Button onClick={onCreateClick}>{t("createTaxiCall")}</Button>
+        <Button onPress={onCreateClick}>{t("createTaxiCall")}</Button>
       </header>
 
       <TowTaxiCallsTable

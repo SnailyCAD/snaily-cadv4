@@ -28,7 +28,7 @@ export default function ImportCitizensPage() {
           <Title className="!mb-0">{t("IMPORT_CITIZENS")}</Title>
 
           <div className="min-w-fit w-fit">
-            <Button onClick={() => openModal(ModalIds.ImportCitizens)}>Import via file</Button>
+            <Button onPress={() => openModal(ModalIds.ImportCitizens)}>Import via file</Button>
           </div>
         </div>
 

@@ -72,10 +72,10 @@ export function CropImageModal({ onSuccess, image, isOpen = false, onClose, opti
       )}
 
       <div className="flex items-center justify-end gap-2 mt-2">
-        <Button variant="cancel" onClick={onClose}>
+        <Button variant="cancel" onPress={onClose}>
           {common("cancel")}
         </Button>
-        <Button disabled={!image} className="flex items-center" onClick={getCropData}>
+        <Button disabled={!image} className="flex items-center" onPress={getCropData}>
           {common("save")}
         </Button>
       </div>

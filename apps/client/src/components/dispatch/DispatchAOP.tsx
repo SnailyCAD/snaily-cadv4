@@ -17,7 +17,7 @@ export function DispatchAOP() {
         {" "}
         - AOP: {areaOfPlay}
         <Button
-          onClick={() => openModal(ModalIds.ManageAOP)}
+          onPress={() => openModal(ModalIds.ManageAOP)}
           variant={null}
           className="px-1.5 p-1 ml-2 bg-gray-500 hover:bg-gray-600 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 text-white"
           aria-label={t("updateAOP")}

@@ -134,7 +134,7 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
                 />
                 {hasManagePermissions ? (
                   <Button
-                    onClick={() => openModal(ModalIds.AlertPurgeCalls)}
+                    onPress={() => openModal(ModalIds.AlertPurgeCalls)}
                     className="flex items-center gap-2 ml-2 min-w-fit"
                     disabled={state === "loading" || isEmpty(tableState.rowSelection)}
                   >
@@ -171,11 +171,11 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
                 actions: (
                   <>
                     {hasManagePermissions ? (
-                      <Button onClick={() => handleLinkClick(call)} size="xs">
+                      <Button onPress={() => handleLinkClick(call)} size="xs">
                         {leo("linkToIncident")}
                       </Button>
                     ) : null}
-                    <Button className="ml-2" onClick={() => handleViewClick(call)} size="xs">
+                    <Button className="ml-2" onPress={() => handleViewClick(call)} size="xs">
                       {leo("viewCall")}
                     </Button>
                   </>

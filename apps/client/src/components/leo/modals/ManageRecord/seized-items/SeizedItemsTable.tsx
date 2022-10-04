@@ -41,7 +41,7 @@ export function SeizedItemsTable({ isReadOnly }: { isReadOnly?: boolean }) {
         <Button
           className="absolute right-0 top-0"
           type="button"
-          onClick={() => openModal(ModalIds.ManageSeizedItems)}
+          onPress={() => openModal(ModalIds.ManageSeizedItems)}
           disabled={isReadOnly}
         >
           {t("add")}
@@ -62,7 +62,7 @@ export function SeizedItemsTable({ isReadOnly }: { isReadOnly?: boolean }) {
                     disabled={isReadOnly}
                     size="xs"
                     type="button"
-                    onClick={() => handleEditClick(v)}
+                    onPress={() => handleEditClick(v)}
                     variant="success"
                   >
                     {common("edit")}
@@ -71,7 +71,7 @@ export function SeizedItemsTable({ isReadOnly }: { isReadOnly?: boolean }) {
                     className="ml-2"
                     size="xs"
                     type="button"
-                    onClick={() => handleDeleteClick(v)}
+                    onPress={() => handleDeleteClick(v)}
                     variant="danger"
                     disabled={isReadOnly}
                   >

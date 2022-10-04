@@ -118,7 +118,7 @@ export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {
               {isUnitCombined(unit) ? (
                 <Button
                   disabled={state === "loading"}
-                  onClick={handleUnmerge}
+                  onPress={handleUnmerge}
                   type="button"
                   variant="danger"
                   className="flex items-center ml-2"
@@ -130,7 +130,7 @@ export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {
               ) : null}
 
               <div className="flex">
-                <Button onClick={handleClose} type="button" variant="cancel">
+                <Button onPress={handleClose} type="button" variant="cancel">
                   {common("cancel")}
                 </Button>
                 <Button className="flex items-center ml-2" type="submit">

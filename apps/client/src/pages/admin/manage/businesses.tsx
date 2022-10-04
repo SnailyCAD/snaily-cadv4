@@ -120,7 +120,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
                 actions: (
                   <Button
                     className="ml-2"
-                    onClick={() => handleDeleteClick(business)}
+                    onPress={() => handleDeleteClick(business)}
                     size="xs"
                     variant="danger"
                   >
@@ -168,7 +168,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
           <Button
             variant="cancel"
             disabled={state === "loading"}
-            onClick={() => closeModal(ModalIds.AlertDeleteBusiness)}
+            onPress={() => closeModal(ModalIds.AlertDeleteBusiness)}
           >
             {common("cancel")}
           </Button>
@@ -176,7 +176,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
             disabled={state === "loading"}
             className="flex items-center"
             variant="danger"
-            onClick={handleDelete}
+            onPress={handleDelete}
           >
             {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}{" "}
             {common("delete")}

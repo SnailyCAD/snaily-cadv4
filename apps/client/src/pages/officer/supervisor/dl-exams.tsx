@@ -90,7 +90,7 @@ export default function CitizenLogs({ data }: Props) {
 
         {hasPermissions([Permissions.ManageDLExams], (u) => u.isSupervisor) ? (
           <div>
-            <Button onClick={() => openModal(ModalIds.ManageDLExam)}>{t("createDLExam")}</Button>
+            <Button onPress={() => openModal(ModalIds.ManageDLExam)}>{t("createDLExam")}</Button>
           </div>
         ) : null}
       </header>
@@ -140,7 +140,7 @@ export default function CitizenLogs({ data }: Props) {
                 actions: (
                   <>
                     {hasPassedOrFailed ? null : (
-                      <Button variant="success" size="xs" onClick={() => handleEditClick(exam)}>
+                      <Button variant="success" size="xs" onPress={() => handleEditClick(exam)}>
                         {common("edit")}
                       </Button>
                     )}
@@ -148,7 +148,7 @@ export default function CitizenLogs({ data }: Props) {
                       className="ml-2"
                       variant="danger"
                       size="xs"
-                      onClick={() => handleDeleteClick(exam)}
+                      onPress={() => handleDeleteClick(exam)}
                     >
                       {common("delete")}
                     </Button>

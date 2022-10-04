@@ -80,7 +80,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
               "px-1.5 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
               showLeoFilters && "dark:!bg-secondary !bg-gray-500",
             )}
-            onClick={() => setShowFilters("leo", !showLeoFilters)}
+            onPress={() => setShowFilters("leo", !showLeoFilters)}
             title={common("filters")}
             disabled={activeOfficers.length <= 0}
           >
@@ -160,7 +160,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
                   actions: isDispatch ? (
                     <Button
                       disabled={!hasActiveDispatchers}
-                      onClick={() => handleEditClick(officer)}
+                      onPress={() => handleEditClick(officer)}
                       size="xs"
                       variant="success"
                     >

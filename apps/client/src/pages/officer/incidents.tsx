@@ -127,7 +127,7 @@ export default function LeoIncidents({
           <Button
             title={!isOfficerOnDuty ? "You must have an active officer." : ""}
             disabled={!isOfficerOnDuty}
-            onClick={() => openModal(ModalIds.ManageIncident)}
+            onPress={() => openModal(ModalIds.ManageIncident)}
           >
             {t("createIncident")}
           </Button>
@@ -181,7 +181,7 @@ export default function LeoIncidents({
                       size="xs"
                       variant="success"
                       className="mr-2"
-                      onClick={() => onEditClick(incident)}
+                      onPress={() => onEditClick(incident)}
                       disabled={!isOfficerOnDuty}
                     >
                       {common("edit")}
@@ -189,7 +189,7 @@ export default function LeoIncidents({
                   ) : null}
 
                   {hasPermissions([Permissions.ManageIncidents], user?.isSupervisor ?? false) ? (
-                    <Button size="xs" variant="danger" onClick={() => onDeleteClick(incident)}>
+                    <Button size="xs" variant="danger" onPress={() => onDeleteClick(incident)}>
                       {common("delete")}
                     </Button>
                   ) : null}

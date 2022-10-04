@@ -65,7 +65,7 @@ export function ContextMenu({ items, canBeOpened = true, asChild, children }: Pr
           ) : (
             <Component
               key={v4()}
-              onClick={component === "Item" ? handleClick.bind(null, item) : undefined}
+              onPress={component === "Item" ? handleClick.bind(null, item) : undefined}
               {...rest}
             >
               {item.name}

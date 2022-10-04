@@ -169,7 +169,7 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
             <ImageSelectInput image={image} setImage={setImage} />
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onClick={handleClose} variant="cancel">
+              <Button type="reset" onPress={handleClose} variant="cancel">
                 Cancel
               </Button>
               <Button className="flex items-center" disabled={state === "loading"} type="submit">

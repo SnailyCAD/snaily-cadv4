@@ -120,7 +120,7 @@ export function ManageBusinessTab() {
 
             <footer className="flex justify-between mt-5">
               <Button
-                onClick={() => openModal(ModalIds.AlertDeleteBusiness)}
+                onPress={() => openModal(ModalIds.AlertDeleteBusiness)}
                 type="reset"
                 variant="danger"
               >

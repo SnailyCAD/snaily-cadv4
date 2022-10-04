@@ -3,7 +3,7 @@ import { classNames } from "lib/classNames";
 import { AriaButtonProps, useButton } from "@react-aria/button";
 import { mergeProps } from "@react-aria/utils";
 
-type BaseButtonProps = JSX.IntrinsicElements["button"] & AriaButtonProps;
+type BaseButtonProps = Omit<JSX.IntrinsicElements["button"], "onPress"> & AriaButtonProps;
 export type ButtonProps = BaseButtonProps & {
   size?: keyof typeof buttonSizes;
   variant?: keyof typeof buttonVariants | null;

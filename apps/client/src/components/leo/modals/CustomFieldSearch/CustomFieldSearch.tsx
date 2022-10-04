@@ -104,7 +104,7 @@ export function CustomFieldSearch() {
             <footer className="mt-4 pt-3 flex justify-end">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.CustomFieldSearch)}
+                onPress={() => closeModal(ModalIds.CustomFieldSearch)}
                 variant="cancel"
               >
                 {common("cancel")}

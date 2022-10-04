@@ -137,7 +137,7 @@ export function CreateWarrantModal({ warrant, readOnly, onClose, onCreate, onUpd
                   errorMessage: errors.citizenId,
                   disabled: readOnly,
                 }}
-                onSuggestionClick={(suggestion) => {
+                onSuggestionPress={(suggestion) => {
                   setFieldValue("citizenId", suggestion.id);
                   setFieldValue("citizenName", `${suggestion.name} ${suggestion.surname}`);
                 }}
@@ -213,7 +213,7 @@ export function CreateWarrantModal({ warrant, readOnly, onClose, onCreate, onUpd
             </FormField>
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onClick={handleClose} variant="cancel">
+              <Button type="reset" onPress={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button

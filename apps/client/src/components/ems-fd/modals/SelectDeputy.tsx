@@ -79,7 +79,7 @@ export function SelectDeputyModal() {
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.SelectDeputy)}
+                onPress={() => closeModal(ModalIds.SelectDeputy)}
                 variant="cancel"
               >
                 {common("cancel")}

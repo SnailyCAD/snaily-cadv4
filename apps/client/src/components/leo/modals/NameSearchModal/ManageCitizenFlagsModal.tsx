@@ -72,7 +72,7 @@ export function ManageCitizenFlagsModal() {
               <Button
                 disabled={state === "loading"}
                 type="reset"
-                onClick={() => closeModal(ModalIds.ManageCitizenFlags)}
+                onPress={() => closeModal(ModalIds.ManageCitizenFlags)}
                 variant="cancel"
               >
                 {common("cancel")}

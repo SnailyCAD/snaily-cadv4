@@ -78,7 +78,7 @@ export default function ImpoundLot({ vehicles: data }: Props) {
             model: item.vehicle.model.value.value,
             location: item.location.value,
             actions: (
-              <Button onClick={() => handleCheckoutClick(item)} className="ml-2" size="xs">
+              <Button onPress={() => handleCheckoutClick(item)} className="ml-2" size="xs">
                 {t("allowCheckout")}
               </Button>
             ),
@@ -102,14 +102,14 @@ export default function ImpoundLot({ vehicles: data }: Props) {
           <Button
             variant="cancel"
             disabled={state === "loading"}
-            onClick={() => closeModal(ModalIds.AlertCheckoutImpoundedVehicle)}
+            onPress={() => closeModal(ModalIds.AlertCheckoutImpoundedVehicle)}
           >
             {common("no")}
           </Button>
           <Button
             disabled={state === "loading"}
             className="flex items-center"
-            onClick={handleCheckout}
+            onPress={handleCheckout}
           >
             {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}{" "}
             {common("yes")}

@@ -208,7 +208,7 @@ function ResultsForm({ result, onSuccess, handleClose }: ResultProps) {
           </FormField>
 
           <footer className="flex justify-end mt-5">
-            <Button onClick={handleClose} variant="cancel" type="reset">
+            <Button onPress={handleClose} variant="cancel" type="reset">
               {common("cancel")}
             </Button>
             <Button

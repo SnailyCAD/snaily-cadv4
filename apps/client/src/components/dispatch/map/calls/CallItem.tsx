@@ -81,11 +81,11 @@ export function CallItem({ call, hasMarker, setMarker }: CallItemProps) {
 
             <div className="flex flex-col mt-4">
               <div className="grid grid-cols-2 grid-flow-col gap-2 mt-2">
-                <Button onClick={() => handleEdit(call)}>{common("manage")}</Button>
+                <Button onPress={() => handleEdit(call)}>{common("manage")}</Button>
 
                 <Button
                   className="col-span-2"
-                  onClick={() => setMarker(call, hasMarker(call.id) ? "remove" : "set")}
+                  onPress={() => setMarker(call, hasMarker(call.id) ? "remove" : "set")}
                 >
                   {hasMarker(call.id) ? t("removeMarker") : t("setMarker")}
                 </Button>

@@ -79,7 +79,7 @@ export function ModalButtons({
             key={idx}
             disabled={isButtonDisabled}
             title={isButtonDisabled ? "Go on-duty before continuing" : button.nameKey[1]}
-            onClick={() => openModal(button.modalId)}
+            onPress={() => openModal(button.modalId)}
           >
             {t(button.nameKey.join("."))}
           </Button>
@@ -90,7 +90,7 @@ export function ModalButtons({
             id="panicButton"
             disabled={isButtonDisabled}
             title={isButtonDisabled ? "Go on-duty before continuing" : t("Leo.panicButton")}
-            onClick={handlePanic}
+            onPress={handlePanic}
           >
             {t("Leo.panicButton")}
           </Button>
@@ -98,7 +98,7 @@ export function ModalButtons({
 
         {!hasActiveDispatchers && TONES ? (
           <>
-            <Button disabled={isButtonDisabled} onClick={() => openModal(ModalIds.Tones)}>
+            <Button disabled={isButtonDisabled} onPress={() => openModal(ModalIds.Tones)}>
               {t("Leo.tones")}
             </Button>
 

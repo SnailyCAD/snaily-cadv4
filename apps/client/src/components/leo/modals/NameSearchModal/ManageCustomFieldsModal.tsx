@@ -115,7 +115,7 @@ export function ManageCustomFieldsModal({
               <Button
                 disabled={state === "loading"}
                 type="reset"
-                onClick={() => closeModal(ModalIds.ManageCitizenCustomFields)}
+                onPress={() => closeModal(ModalIds.ManageCitizenCustomFields)}
                 variant="cancel"
               >
                 {common("cancel")}

@@ -115,7 +115,7 @@ export function ManageEmployeeModal({ onClose, onUpdate, employee }: Props) {
             </FormRow>
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onClick={handleClose} variant="cancel">
+              <Button type="reset" onPress={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button

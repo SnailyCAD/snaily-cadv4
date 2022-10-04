@@ -68,8 +68,8 @@ export function UnitItem({ setTempUnit, player }: CallItemProps) {
             ) : null}
 
             <div className="flex flex-row gap-2 mt-5">
-              <Button onClick={() => handleStatusClick()}>{common("manage")}</Button>
-              <Button onClick={() => handleShowOnMap()}>Toggle unit on map</Button>
+              <Button onPress={() => handleStatusClick()}>{common("manage")}</Button>
+              <Button onPress={() => handleShowOnMap()}>Toggle unit on map</Button>
             </div>
           </div>
         </Accordion.Content>

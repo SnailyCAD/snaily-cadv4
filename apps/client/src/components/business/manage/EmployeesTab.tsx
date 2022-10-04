@@ -97,7 +97,7 @@ export function EmployeesTab() {
                   employee.role?.as === EmployeeAsEnum.OWNER ||
                   employee.whitelistStatus === WhitelistStatus.PENDING
                 }
-                onClick={() => handleManageClick(employee)}
+                onPress={() => handleManageClick(employee)}
                 variant="success"
               >
                 {common("manage")}
@@ -108,7 +108,7 @@ export function EmployeesTab() {
                   employee.role?.as === EmployeeAsEnum.OWNER ||
                   employee.whitelistStatus === WhitelistStatus.PENDING
                 }
-                onClick={() => handleFireClick(employee)}
+                onPress={() => handleFireClick(employee)}
                 className="ml-2"
                 variant="danger"
               >

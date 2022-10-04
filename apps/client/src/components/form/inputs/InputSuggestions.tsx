@@ -4,7 +4,7 @@ import { useFocusWithin } from "@react-aria/interactions";
 import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
 import * as React from "react";
-import useOnclickOutside from "react-cool-onclickoutside";
+import useonPressOutside from "react-cool-onclickoutside";
 import { Input } from "./Input";
 import { useTranslations } from "next-intl";
 import { useDebounce } from "react-use";
@@ -16,7 +16,7 @@ const MIN_LENGTH = 2 as const;
 
 interface Props<Suggestion extends { id: string }> {
   inputProps?: Omit<JSX.IntrinsicElements["input"], "ref"> & { errorMessage?: string };
-  onSuggestionClick?(suggestion: Suggestion): void;
+  onSuggestionPress?(suggestion: Suggestion): void;
   Component({ suggestion }: { suggestion: Suggestion }): JSX.Element;
   options: {
     apiPath: string | ApiPathFunc;
@@ -28,7 +28,7 @@ interface Props<Suggestion extends { id: string }> {
 
 export function InputSuggestions<Suggestion extends { id: string }>({
   Component,
-  onSuggestionClick,
+  onSuggestionPress,
   options,
   inputProps,
 }: Props<Suggestion>) {
@@ -46,7 +46,7 @@ export function InputSuggestions<Suggestion extends { id: string }>({
     onBlurWithin: () => setOpen(false),
   });
 
-  const ref = useOnclickOutside(() => setOpen(false));
+  const ref = useonPressOutside(() => setOpen(false));
   const firstItemRef = React.useRef<HTMLButtonElement>(null);
 
   async function onSearch(value: string) {
@@ -78,8 +78,8 @@ export function InputSuggestions<Suggestion extends { id: string }>({
     }
   }
 
-  function handleSuggestionClick(suggestion: Suggestion) {
-    onSuggestionClick?.(suggestion);
+  function handleSuggestionPress(suggestion: Suggestion) {
+    onSuggestionPress?.(suggestion);
     setOpen(false);
   }
 
@@ -138,7 +138,7 @@ export function InputSuggestions<Suggestion extends { id: string }>({
 
               {suggestions.map((suggestion, idx) => (
                 <Suggestion
-                  onSuggestionClick={handleSuggestionClick}
+                  onSuggestionPress={handleSuggestionPress}
                   key={suggestion.id}
                   suggestion={suggestion}
                   Component={Component}
@@ -155,13 +155,13 @@ export function InputSuggestions<Suggestion extends { id: string }>({
 
 type SuggestionProps<Suggestion extends { id: string }> = Pick<
   Props<Suggestion>,
-  "Component" | "onSuggestionClick"
+  "Component" | "onSuggestionPress"
 > & {
   suggestion: Suggestion;
 };
 
 const Suggestion = React.forwardRef<HTMLButtonElement, SuggestionProps<Suggestion>>(
-  ({ suggestion, onSuggestionClick, Component }, ref) => {
+  ({ suggestion, onSuggestionPress, Component }, ref) => {
     const focusManager = useFocusManager();
 
     function onKeyDown(e: React.KeyboardEvent<HTMLButtonElement>) {
@@ -187,7 +187,7 @@ const Suggestion = React.forwardRef<HTMLButtonElement, SuggestionProps<Suggestio
         ref={ref}
         onKeyDown={onKeyDown}
         className="p-1.5 px-2 transition-colors rounded-md cursor-pointer hover:bg-gray-200 focus:bg-gray-200 dark:hover:bg-tertiary dark:focus:bg-tertiary w-full"
-        onClick={() => onSuggestionClick?.(suggestion)}
+        onClick={() => onSuggestionPress?.(suggestion)}
         type="button"
       >
         <Component suggestion={suggestion} />

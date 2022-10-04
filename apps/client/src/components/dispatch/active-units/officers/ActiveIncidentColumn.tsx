@@ -36,7 +36,7 @@ export function ActiveIncidentColumn({ incident, isDispatch }: Props) {
     <>
       <Button
         disabled={isBtnDisabled}
-        onClick={() =>
+        onPress={() =>
           handleIncidentOpen({
             ...incident,
             isActive: true,

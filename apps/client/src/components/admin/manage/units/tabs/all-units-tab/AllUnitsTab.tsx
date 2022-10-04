@@ -111,7 +111,7 @@ export function AllUnitsTab({ search, units }: Props) {
       {hasManagePermissions && units.length >= 1 ? (
         <Button
           disabled={isEmpty(tableState.rowSelection)}
-          onClick={setSelectedUnitsOffDuty}
+          onPress={setSelectedUnitsOffDuty}
           className="mt-3"
         >
           {t("Management.setSelectedOffDuty")}
@@ -171,7 +171,7 @@ export function AllUnitsTab({ search, units }: Props) {
                     <Button
                       size="xs"
                       className="ml-2"
-                      onClick={() => handleDeleteClick(unit)}
+                      onPress={() => handleDeleteClick(unit)}
                       variant="danger"
                     >
                       {common("delete")}

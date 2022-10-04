@@ -122,7 +122,7 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
               <h3 className="text-xl font-semibold">{type}</h3>
 
               <Button
-                onClick={() => {
+                onPress={() => {
                   openModal(ModalIds.ManageValue);
                   setTempValue((p) => p && { ...p, type });
                 }}
@@ -236,13 +236,13 @@ function TableList(props: {
         createdAt: <FullDate>{getCreatedAtFromValue(value)}</FullDate>,
         actions: (
           <>
-            <Button size="xs" onClick={() => props.handleEdit(value)} variant="success">
+            <Button size="xs" onPress={() => props.handleEdit(value)} variant="success">
               {common("edit")}
             </Button>
 
             <Button
               size="xs"
-              onClick={() => props.handleDelete(value)}
+              onPress={() => props.handleDelete(value)}
               variant="danger"
               className="ml-2"
               // disabled={isValueInUse(value)}

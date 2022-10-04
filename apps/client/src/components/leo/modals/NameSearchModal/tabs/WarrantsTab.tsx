@@ -134,7 +134,7 @@ export function NameSearchWarrantsTab() {
                       ) : null}
                       <Button
                         type="button"
-                        onClick={() => handleDeleteClick(warrant)}
+                        onPress={() => handleDeleteClick(warrant)}
                         size="xs"
                         variant="danger"
                       >

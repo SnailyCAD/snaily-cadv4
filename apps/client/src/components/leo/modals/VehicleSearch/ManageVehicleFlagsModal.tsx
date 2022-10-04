@@ -84,7 +84,7 @@ export function ManageVehicleFlagsModal() {
               <Button
                 disabled={state === "loading"}
                 type="reset"
-                onClick={() => closeModal(ModalIds.ManageVehicleFlags)}
+                onPress={() => closeModal(ModalIds.ManageVehicleFlags)}
                 variant="cancel"
               >
                 {common("cancel")}

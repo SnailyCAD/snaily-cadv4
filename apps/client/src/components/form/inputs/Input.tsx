@@ -43,7 +43,7 @@ export function PasswordInput(props: Omit<Props, "type" | "ref">) {
       <Input {...props} type={type} ref={ref} />
       <Button
         type="button"
-        onClick={handleClick}
+        onPress={handleClick}
         size="xs"
         className="absolute -translate-y-1/2 bg-gray-300 top-1/2 right-2 dark:bg-tertiary"
       >

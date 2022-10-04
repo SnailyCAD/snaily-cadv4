@@ -129,7 +129,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
           <Form>
             <FormField errorMessage={errors.plateOrVin} label={t("plateOrVin")}>
               <InputSuggestions<VehicleSearchResult>
-                onSuggestionClick={(suggestion) => {
+                onSuggestionPress={(suggestion) => {
                   setFieldValue("plateOrVin", suggestion.vinNumber);
                   setCurrentResult(suggestion);
                 }}
@@ -199,7 +199,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
             >
               <div>
                 {CREATE_USER_CITIZEN_LEO && isLeo ? (
-                  <Button type="button" onClick={() => openModal(ModalIds.RegisterVehicle)}>
+                  <Button type="button" onPress={() => openModal(ModalIds.RegisterVehicle)}>
                     {t("createVehicle")}
                   </Button>
                 ) : null}
@@ -209,7 +209,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
                     {showMarkStolen ? (
                       <Button
                         type="button"
-                        onClick={() => handleMarkStolen()}
+                        onPress={() => handleMarkStolen()}
                         variant="cancel"
                         className="px-1.5"
                       >
@@ -220,7 +220,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
                     {currentResult ? (
                       <Button
                         type="button"
-                        onClick={() => handleEditLicenses()}
+                        onPress={() => handleEditLicenses()}
                         variant="cancel"
                         className="px-1.5"
                       >
@@ -232,7 +232,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
               </div>
 
               <div className="flex">
-                <Button type="reset" onClick={() => closeModal(id)} variant="cancel">
+                <Button type="reset" onPress={() => closeModal(id)} variant="cancel">
                   {common("cancel")}
                 </Button>
                 <Button

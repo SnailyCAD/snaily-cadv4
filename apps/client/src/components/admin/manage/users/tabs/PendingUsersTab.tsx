@@ -81,7 +81,7 @@ export function PendingUsersTab({ users, pendingCount }: GetManageUsersData) {
               <>
                 <Button
                   size="xs"
-                  onClick={() => handleAcceptOrDecline(user, "accept")}
+                  onPress={() => handleAcceptOrDecline(user, "accept")}
                   className="mr-2"
                   variant="success"
                   disabled={state === "loading"}
@@ -90,7 +90,7 @@ export function PendingUsersTab({ users, pendingCount }: GetManageUsersData) {
                 </Button>
                 <Button
                   size="xs"
-                  onClick={() => handleAcceptOrDecline(user, "decline")}
+                  onPress={() => handleAcceptOrDecline(user, "decline")}
                   variant="danger"
                   disabled={state === "loading"}
                 >

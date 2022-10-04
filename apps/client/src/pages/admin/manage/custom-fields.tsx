@@ -81,7 +81,7 @@ export default function ManageCustomFields({ customFields: data }: Props) {
         </div>
 
         <div>
-          <Button onClick={() => openModal(ModalIds.ManageCustomField)}>
+          <Button onPress={() => openModal(ModalIds.ManageCustomField)}>
             {t("createCustomField")}
           </Button>
         </div>
@@ -98,14 +98,14 @@ export default function ManageCustomFields({ customFields: data }: Props) {
             category: field.category,
             actions: (
               <>
-                <Button size="xs" variant="success" onClick={() => handleEditClick(field)}>
+                <Button size="xs" variant="success" onPress={() => handleEditClick(field)}>
                   {common("edit")}
                 </Button>
                 <Button
                   className="ml-2"
                   size="xs"
                   variant="danger"
-                  onClick={() => handleDeleteClick(field)}
+                  onPress={() => handleDeleteClick(field)}
                 >
                   {common("delete")}
                 </Button>

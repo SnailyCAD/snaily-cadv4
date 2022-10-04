@@ -121,7 +121,7 @@ export function StatusValueFields() {
             variant="cancel"
             className="p-0 px-1 ml-2"
             type="button"
-            onClick={() => setFieldValue("showPicker", !values.showPicker)}
+            onPress={() => setFieldValue("showPicker", !values.showPicker)}
             aria-label="Color Picker"
             title="Color Picker"
           >

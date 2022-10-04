@@ -31,7 +31,7 @@ export default function Bleeter({ posts }: Props) {
       <header className="flex items-center justify-between">
         <Title className="!mb-0">{t("bleeter")}</Title>
 
-        <Button onClick={() => openModal(ModalIds.ManageBleetModal)}>{t("createBleet")}</Button>
+        <Button onPress={() => openModal(ModalIds.ManageBleetModal)}>{t("createBleet")}</Button>
       </header>
 
       {posts.length <= 0 ? (

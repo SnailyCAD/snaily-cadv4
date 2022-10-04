@@ -102,14 +102,14 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
               status: <Status state={record.status}>{record.status?.toLowerCase()}</Status>,
               actions: (
                 <>
-                  <Button size="xs" className="mr-2" onClick={() => handleViewClick(item)}>
+                  <Button size="xs" className="mr-2" onPress={() => handleViewClick(item)}>
                     {common("view")}
                   </Button>
                   <Button
                     variant="success"
                     size="xs"
                     className="mr-2"
-                    onClick={() => handleAcceptDeclineClick(record, "ACCEPT")}
+                    onPress={() => handleAcceptDeclineClick(record, "ACCEPT")}
                     disabled={state === "loading"}
                   >
                     {common("accept")}
@@ -117,7 +117,7 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
                   <Button
                     variant="danger"
                     size="xs"
-                    onClick={() => handleAcceptDeclineClick(record, "DECLINE")}
+                    onPress={() => handleAcceptDeclineClick(record, "DECLINE")}
                     disabled={state === "loading"}
                   >
                     {common("decline")}

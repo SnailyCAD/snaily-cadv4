@@ -68,7 +68,7 @@ export function ActiveBolos({ initialBolos }: Props) {
               "px-1.5 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
               showFilters && "dark:!bg-secondary !bg-gray-500",
             )}
-            onClick={() => setShowFilters(!showFilters)}
+            onPress={() => setShowFilters(!showFilters)}
             title={t("filters")}
             disabled={bolos.length <= 0}
           >

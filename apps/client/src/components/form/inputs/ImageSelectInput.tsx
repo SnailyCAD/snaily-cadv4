@@ -52,7 +52,7 @@ export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, 
           value={values[valueKey]}
         />
 
-        <Button type="button" onClick={() => handleSetURL(false)}>
+        <Button type="button" onPress={() => handleSetURL(false)}>
           {common("image")}
         </Button>
       </div>
@@ -78,19 +78,19 @@ export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, 
           <Button
             className="mr-2"
             type="button"
-            onClick={() => {
+            onPress={() => {
               openModal(ModalIds.CropImageModal);
             }}
           >
             {common("crop")}
           </Button>
-          <Button className="mr-2 min-w-fit" type="button" onClick={() => handleSetURL(true)}>
+          <Button className="mr-2 min-w-fit" type="button" onPress={() => handleSetURL(true)}>
             {common("imgur")}
           </Button>
           <Button
             type="button"
             variant="danger"
-            onClick={() => {
+            onPress={() => {
               setFieldValue(valueKey, null);
               setImage(null);
             }}

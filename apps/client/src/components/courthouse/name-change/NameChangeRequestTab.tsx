@@ -27,7 +27,7 @@ export function NameChangeRequestTab(props: Props) {
       <header className="flex justify-between items-center">
         <h3 className="text-2xl font-semibold">{t("nameChangeRequests")}</h3>
 
-        <Button onClick={() => openModal(ModalIds.RequestNameChange)}>
+        <Button onPress={() => openModal(ModalIds.RequestNameChange)}>
           {t("requestNameChange")}
         </Button>
       </header>

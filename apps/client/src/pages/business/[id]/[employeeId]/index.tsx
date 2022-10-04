@@ -109,7 +109,7 @@ export default function BusinessId(props: Props) {
 
         <div>
           {currentEmployee.canCreatePosts ? (
-            <Button onClick={() => openModal(ModalIds.ManageBusinessPost)} className="mr-2">
+            <Button onPress={() => openModal(ModalIds.ManageBusinessPost)} className="mr-2">
               {t("createPost")}
             </Button>
           ) : null}
@@ -139,11 +139,11 @@ export default function BusinessId(props: Props) {
 
                     {post.employeeId === currentEmployee.id ? (
                       <div>
-                        <Button onClick={() => handleEdit(post)} size="xs" variant="success">
+                        <Button onPress={() => handleEdit(post)} size="xs" variant="success">
                           {common("edit")}
                         </Button>
                         <Button
-                          onClick={() => handleDelete(post)}
+                          onPress={() => handleDelete(post)}
                           className="ml-2"
                           size="xs"
                           variant="danger"

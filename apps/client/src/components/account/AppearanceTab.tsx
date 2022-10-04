@@ -174,7 +174,7 @@ export function AppearanceTab({ availableSounds }: Props) {
                     <Button
                       size="xs"
                       type="button"
-                      onClick={() => {
+                      onPress={() => {
                         setCurrentSrc(`/sounds/${kebabCase}.mp3`);
                         controls.volume(0.1);
                         controls.play();

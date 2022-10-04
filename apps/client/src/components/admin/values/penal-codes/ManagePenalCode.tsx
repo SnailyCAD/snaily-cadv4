@@ -169,7 +169,7 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.ManageValue)}
+                onPress={() => closeModal(ModalIds.ManageValue)}
                 variant="cancel"
               >
                 Cancel

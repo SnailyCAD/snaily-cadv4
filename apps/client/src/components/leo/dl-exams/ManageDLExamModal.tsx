@@ -110,7 +110,7 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
           <Form>
             <FormField errorMessage={errors.citizenId} label={common("citizen")}>
               <InputSuggestions<NameSearchResult>
-                onSuggestionClick={(suggestion) => {
+                onSuggestionPress={(suggestion) => {
                   setValues({
                     ...values,
                     citizenName: `${suggestion.name} ${suggestion.surname}`,
@@ -209,7 +209,7 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
             </FormField>
 
             <footer className="flex items-center justify-end gap-2 mt-5">
-              <Button type="reset" onClick={handleClose} variant="cancel">
+              <Button type="reset" onPress={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button className="flex items-center" disabled={state === "loading"} type="submit">

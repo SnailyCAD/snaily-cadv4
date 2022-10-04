@@ -59,7 +59,7 @@ export function NameChangeRequestsTab({ requests: data }: Props) {
               <>
                 <Button
                   disabled={state === "loading"}
-                  onClick={() => handleUpdate(request.id, WhitelistStatus.ACCEPTED)}
+                  onPress={() => handleUpdate(request.id, WhitelistStatus.ACCEPTED)}
                   variant="success"
                   size="xs"
                 >
@@ -68,7 +68,7 @@ export function NameChangeRequestsTab({ requests: data }: Props) {
                 <Button
                   className="ml-2"
                   disabled={state === "loading"}
-                  onClick={() => handleUpdate(request.id, WhitelistStatus.DECLINED)}
+                  onPress={() => handleUpdate(request.id, WhitelistStatus.DECLINED)}
                   variant="danger"
                   size="xs"
                 >

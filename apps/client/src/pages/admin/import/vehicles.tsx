@@ -81,7 +81,7 @@ export default function ImportVehiclesPage({ data }: Props) {
           <Title className="!mb-0">{t("IMPORT_VEHICLES")}</Title>
 
           <div>
-            <Button onClick={() => openModal(ModalIds.ImportVehicles)}>{t("importViaFile")}</Button>
+            <Button onPress={() => openModal(ModalIds.ImportVehicles)}>{t("importViaFile")}</Button>
           </div>
         </div>
 
@@ -118,7 +118,7 @@ export default function ImportVehiclesPage({ data }: Props) {
           citizen: `${vehicle.citizen.name} ${vehicle.citizen.surname}`,
           createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
           actions: (
-            <Button size="xs" variant="danger" onClick={() => handleDeleteClick(vehicle)}>
+            <Button size="xs" variant="danger" onPress={() => handleDeleteClick(vehicle)}>
               {common("delete")}
             </Button>
           ),

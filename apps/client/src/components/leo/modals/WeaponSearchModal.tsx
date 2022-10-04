@@ -105,7 +105,7 @@ export function WeaponSearchModal({ id = ModalIds.WeaponSearch }: Props) {
                         title={common("openInSearch")}
                         size="xs"
                         type="button"
-                        onClick={handleNameClick}
+                        onPress={handleNameClick}
                       >
                         {currentResult.citizen.name} {currentResult.citizen.surname}
                       </Button>
@@ -118,7 +118,7 @@ export function WeaponSearchModal({ id = ModalIds.WeaponSearch }: Props) {
             )}
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onClick={() => closeModal(id)} variant="cancel">
+              <Button type="reset" onPress={() => closeModal(id)} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button

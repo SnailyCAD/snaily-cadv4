@@ -119,7 +119,7 @@ export function ManageCourtEntry({ courtEntry, onClose, onCreate, onUpdate }: Pr
             />
 
             <footer className="flex justify-end mt-5">
-              <Button onClick={handleClose} variant="cancel" type="reset">
+              <Button onPress={handleClose} variant="cancel" type="reset">
                 {common("cancel")}
               </Button>
               <Button className="flex items-center" disabled={state === "loading"} type="submit">

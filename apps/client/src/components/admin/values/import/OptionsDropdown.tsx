@@ -44,10 +44,10 @@ export function OptionsDropdown({ type, values }: Props) {
         </Button>
       }
     >
-      <Dropdown.Item onClick={() => openModal(ModalIds.ImportValues)}>
+      <Dropdown.Item onPress={() => openModal(ModalIds.ImportValues)}>
         {t("importValues")}
       </Dropdown.Item>
-      <Dropdown.Item disabled={values.length <= 0} onClick={handleExport}>
+      <Dropdown.Item disabled={values.length <= 0} onPress={handleExport}>
         {t("exportValues")}
       </Dropdown.Item>
     </Dropdown>

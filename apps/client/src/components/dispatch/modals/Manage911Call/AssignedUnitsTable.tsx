@@ -74,7 +74,7 @@ export function AssignedUnitsTable({ isDisabled }: Props) {
         <h2 className="font-semibold text-2xl">{t("assignedUnits")}</h2>
 
         {isDisabled ? null : (
-          <Button size="xs" type="button" onClick={() => openModal(ModalIds.AddAssignedUnit)}>
+          <Button size="xs" type="button" onPress={() => openModal(ModalIds.AddAssignedUnit)}>
             {t("addUnit")}
           </Button>
         )}
@@ -114,7 +114,7 @@ export function AssignedUnitsTable({ isDisabled }: Props) {
                   <Button
                     className="flex items-center gap-2"
                     disabled={isDisabled || state === "loading"}
-                    onClick={() => handleUnassignFromCall(unit)}
+                    onPress={() => handleUnassignFromCall(unit)}
                     size="xs"
                     variant="danger"
                     type="button"

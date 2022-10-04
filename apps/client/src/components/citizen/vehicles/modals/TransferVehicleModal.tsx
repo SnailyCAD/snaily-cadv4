@@ -84,7 +84,7 @@ export function TransferVehicleModal({ onTransfer, vehicle }: Props) {
             <footer className="mt-5 flex justify-end">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.TransferVehicle)}
+                onPress={() => closeModal(ModalIds.TransferVehicle)}
                 variant="cancel"
               >
                 {common("cancel")}

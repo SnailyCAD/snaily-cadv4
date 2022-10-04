@@ -74,7 +74,7 @@ export function LinkCallToIncidentModal({ incidents, onSave, call }: Props) {
             <footer className="flex items-center justify-end gap-2 mt-5">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.LinkCallToIncident)}
+                onPress={() => closeModal(ModalIds.LinkCallToIncident)}
                 variant="cancel"
               >
                 {common("cancel")}

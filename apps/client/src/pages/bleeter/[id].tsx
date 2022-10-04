@@ -55,11 +55,11 @@ export default function BleetPost({ post }: Props) {
         <div>
           {user?.id === post.userId ? (
             <>
-              <Button onClick={() => openModal(ModalIds.ManageBleetModal)} variant="success">
+              <Button onPress={() => openModal(ModalIds.ManageBleetModal)} variant="success">
                 {common("edit")}
               </Button>
               <Button
-                onClick={() => openModal(ModalIds.AlertDeleteBleet)}
+                onPress={() => openModal(ModalIds.AlertDeleteBleet)}
                 className="ml-2"
                 variant="danger"
               >

@@ -102,7 +102,7 @@ export function ActiveIncidents() {
           <Button
             variant={null}
             className="bg-gray-500 hover:bg-gray-600 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 text-white"
-            onClick={handleCreateIncident}
+            onPress={handleCreateIncident}
             disabled={!hasActiveDispatchers}
           >
             {t("createIncident")}
@@ -139,7 +139,7 @@ export function ActiveIncidents() {
                 actions: (
                   <>
                     <Button
-                      onClick={() => onEditClick(incident)}
+                      onPress={() => onEditClick(incident)}
                       disabled={!hasActiveDispatchers}
                       size="xs"
                       variant="success"
@@ -148,7 +148,7 @@ export function ActiveIncidents() {
                     </Button>
 
                     <Button
-                      onClick={() => onEndClick(incident)}
+                      onPress={() => onEndClick(incident)}
                       disabled={!hasActiveDispatchers}
                       size="xs"
                       variant="danger"

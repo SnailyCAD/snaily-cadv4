@@ -89,11 +89,11 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
             className="p-0 px-1 mr-2"
             size="xs"
             variant="cancel"
-            onClick={() => setTempEvent(event.id)}
+            onPress={() => setTempEvent(event.id)}
           >
             <Pencil width={15} />
           </Button>
-          <Button className="p-0 px-1" size="xs" variant="cancel" onClick={handleOpen}>
+          <Button className="p-0 px-1" size="xs" variant="cancel" onPress={handleOpen}>
             <X width={20} height={20} />
           </Button>
         </div>

@@ -63,7 +63,7 @@ export function CallsignsTab({ search, units }: Props) {
               callsign: generateCallsign(unit),
               department: formatOfficerDepartment(unit) ?? common("none"),
               actions: (
-                <Button size="xs" onClick={() => handleManageClick(unit)}>
+                <Button size="xs" onPress={() => handleManageClick(unit)}>
                   {common("manage")}
                 </Button>
               ),

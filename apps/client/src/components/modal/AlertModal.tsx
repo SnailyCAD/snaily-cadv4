@@ -37,14 +37,14 @@ export function AlertModal(props: Props) {
     >
       <p className="my-3 dark:text-gray-300">{props.description}</p>
       <div className="flex items-center justify-end gap-2 mt-2">
-        <Button variant="cancel" disabled={props.state === "loading"} onClick={handleClose}>
+        <Button variant="cancel" disabled={props.state === "loading"} onPress={handleClose}>
           {common("cancel")}
         </Button>
         <Button
           disabled={props.state === "loading"}
           variant="danger"
           className="flex items-center"
-          onClick={props.onDeleteClick}
+          onPress={props.onDeleteClick}
         >
           {props.state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}{" "}
           {props.deleteText ? props.deleteText : common("delete")}

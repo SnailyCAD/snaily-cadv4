@@ -120,7 +120,7 @@ export function ManageCitizenForm({
                   name: "username",
                   onChange: handleChange,
                 }}
-                onSuggestionClick={(suggestion) => {
+                onSuggestionPress={(suggestion) => {
                   setValues({ ...values, userId: suggestion.id, username: suggestion.username });
                 }}
                 Component={({ suggestion }) => <p className="flex ">{suggestion.username}</p>}

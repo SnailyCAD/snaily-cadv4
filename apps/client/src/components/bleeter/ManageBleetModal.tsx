@@ -120,7 +120,7 @@ export function ManageBleetModal({ post }: Props) {
                 <Button
                   className="mr-2"
                   type="button"
-                  onClick={() => {
+                  onPress={() => {
                     openModal(ModalIds.CropImageModal);
                   }}
                 >
@@ -140,7 +140,7 @@ export function ManageBleetModal({ post }: Props) {
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.ManageBleetModal)}
+                onPress={() => closeModal(ModalIds.ManageBleetModal)}
                 variant="cancel"
               >
                 {common("cancel")}

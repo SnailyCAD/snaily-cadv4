@@ -66,7 +66,7 @@ function CurrentLogView({ logs: data, search, currentLog, setCurrentLog }: Curre
           {currentLog.citizen.name} {currentLog.citizen.surname}
         </h3>
 
-        <Button className="flex items-center gap-2" onClick={() => setCurrentLog(null)}>
+        <Button className="flex items-center gap-2" onPress={() => setCurrentLog(null)}>
           <ArrowLeft />
           {"View all"}
         </Button>
@@ -143,7 +143,7 @@ function AllRecordLogs({ logs, search, setCurrentLog }: AllRecordLogsProps) {
           id: item.id,
           citizen: `${item.citizen.name} ${item.citizen.surname}`,
           actions: (
-            <Button size="xs" onClick={() => setCurrentLog(item)}>
+            <Button size="xs" onPress={() => setCurrentLog(item)}>
               {common("view")}
             </Button>
           ),
