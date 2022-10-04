@@ -44,7 +44,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
 
   const isLeo = router.pathname === "/officer";
   const showMarkVehicleAsStolenButton = currentResult && isLeo && !currentResult.reportedStolen;
-  const showImpoundVehicleButton = currentResult && isLeo && !currentResult.reportedStolen;
+  const showImpoundVehicleButton = currentResult && isLeo && !currentResult.impounded;
 
   const bolo = React.useMemo(() => {
     if (!currentResult) return null;
