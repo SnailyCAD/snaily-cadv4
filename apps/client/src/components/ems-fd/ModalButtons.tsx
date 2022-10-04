@@ -1,6 +1,6 @@
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
-import { ShouldDoType } from "@snailycad/types";
+import { Rank, ShouldDoType } from "@snailycad/types";
 import { useModal } from "state/modalState";
 import { useTranslations } from "use-intl";
 import { ActiveDeputy, useEmsFdState } from "state/emsFdState";
@@ -12,6 +12,8 @@ import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { TonesModal } from "components/dispatch/modals/TonesModal";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useMounted } from "@casper124578/useful";
+import { usePermission } from "hooks/usePermission";
+import { defaultPermissions } from "@snailycad/permissions";
 
 interface MButton {
   nameKey: [string, string];
@@ -48,10 +50,22 @@ export function ModalButtons({
   const { PANIC_BUTTON, TONES } = useFeatureEnabled();
   const activeDeputy = isMounted ? _activeDeputy : initialActiveDeputy;
 
-  const isButtonDisabled =
-    !activeDeputy ||
-    activeDeputy.status?.shouldDo === ShouldDoType.SET_OFF_DUTY ||
-    activeDeputy.statusId === null;
+  const { hasPermissions } = usePermission();
+  const isAdmin = hasPermissions(
+    defaultPermissions.allDefaultAdminPermissions,
+    (u) => u.rank !== Rank.USER,
+  );
+
+  const isButtonDisabled = isAdmin
+    ? false
+    : !activeDeputy ||
+      activeDeputy.status?.shouldDo === ShouldDoType.SET_OFF_DUTY ||
+      activeDeputy.statusId === null;
+
+  const nameAndCallsign =
+    activeDeputy &&
+    !isButtonDisabled &&
+    `${generateCallsign(activeDeputy)} ${makeUnitName(activeDeputy)}`;
 
   async function handlePanic() {
     if (!activeDeputy) return;
@@ -68,7 +82,7 @@ export function ModalButtons({
       {!isButtonDisabled ? (
         <p className="text-lg">
           <span className="font-semibold">{t("Ems.activeDeputy")}: </span>
-          {generateCallsign(activeDeputy)} {makeUnitName(activeDeputy)}
+          {nameAndCallsign}
         </p>
       ) : null}
 

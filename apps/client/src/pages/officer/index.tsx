@@ -7,7 +7,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { useLeoState } from "state/leoState";
-import { Record, RecordType, ValueType } from "@snailycad/types";
+import { Rank, Record, RecordType, ValueType } from "@snailycad/types";
 import { ActiveCalls } from "components/dispatch/active-calls/ActiveCalls";
 import { useDispatchState } from "state/dispatch/dispatchState";
 import { ModalButtons } from "components/leo/ModalButtons";
@@ -22,7 +22,7 @@ import { Title } from "components/shared/Title";
 import { UtilityPanel } from "components/shared/UtilityPanel";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import { Permissions } from "@snailycad/permissions";
+import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import { useNameSearch } from "state/search/nameSearchState";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useTones } from "hooks/global/useTones";
@@ -38,6 +38,7 @@ import type {
 import { CreateWarrantModal } from "components/leo/modals/CreateWarrantModal";
 import { useCall911State } from "state/dispatch/call911State";
 import { DndProvider } from "components/shared/dnd/DndProvider";
+import { usePermission } from "hooks/usePermission";
 
 const Modals = {
   CreateWarrantModal: dynamic(async () => {
@@ -111,6 +112,11 @@ export default function OfficerDashboard({
   const panic = usePanicButton();
   const { isOpen } = useModal();
   const { LEO_TICKETS, ACTIVE_WARRANTS, CALLS_911 } = useFeatureEnabled();
+  const { hasPermissions } = usePermission();
+  const isAdmin = hasPermissions(
+    defaultPermissions.allDefaultAdminPermissions,
+    (u) => u.rank !== Rank.USER,
+  );
 
   const { currentResult, setCurrentResult } = useNameSearch();
 
@@ -175,7 +181,7 @@ export default function OfficerDashboard({
 
       <Modals.SelectOfficerModal />
 
-      {leoState.activeOfficer ? (
+      {isAdmin || leoState.activeOfficer ? (
         <>
           <Modals.SwitchDivisionCallsignModal />
           <Modals.NotepadModal />

@@ -1,5 +1,6 @@
 import { Prisma, ShouldDoType, User } from "@prisma/client";
 import { defaultPermissions, hasPermission } from "@snailycad/permissions";
+import { Rank } from "@snailycad/types";
 import type { Req, Context } from "@tsed/common";
 import { BadRequest, Forbidden } from "@tsed/exceptions";
 import { unitProperties } from "lib/leo/activeOfficer";
@@ -15,6 +16,16 @@ interface GetActiveDeputyOptions {
 export async function getActiveDeputy(options: GetActiveDeputyOptions) {
   // dispatch is allowed to use ems-fd routes
   let isDispatch = false;
+  const isAdmin = hasPermission({
+    userToCheck: options.user,
+    permissionsToCheck: defaultPermissions.allDefaultAdminPermissions,
+    fallback: (u) => u.rank !== Rank.USER,
+  });
+
+  if (isAdmin) {
+    return null;
+  }
+
   if (options.req?.headers["is-from-dispatch"]?.toString() === "true") {
     const hasDispatchPermissions = hasPermission({
       userToCheck: options.user,

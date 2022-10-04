@@ -13,6 +13,7 @@ import {
   CadFeature,
   Feature,
   DiscordWebhookType,
+  Rank,
 } from "@prisma/client";
 import { UPDATE_OFFICER_STATUS_SCHEMA } from "@snailycad/schemas";
 import { Req, UseBeforeEach } from "@tsed/common";
@@ -31,7 +32,7 @@ import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { findUnit } from "lib/leo/findUnit";
 import { isFeatureEnabled } from "lib/cad";
-import { hasPermission } from "@snailycad/permissions";
+import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 import type * as APITypes from "@snailycad/types/api";
 
@@ -61,13 +62,19 @@ export class StatusController {
     const bodyStatusId = data.status;
 
     const isFromDispatch = req.headers["is-from-dispatch"]?.toString() === "true";
+    const isAdmin = hasPermission({
+      userToCheck: user,
+      permissionsToCheck: defaultPermissions.allDefaultAdminPermissions,
+      fallback: (user) => user.rank !== Rank.USER,
+    });
     const isDispatch =
-      isFromDispatch &&
-      hasPermission({
-        userToCheck: user,
-        permissionsToCheck: [Permissions.Dispatch],
-        fallback: (user) => user.isDispatch,
-      });
+      isAdmin ||
+      (isFromDispatch &&
+        hasPermission({
+          userToCheck: user,
+          permissionsToCheck: [Permissions.Dispatch],
+          fallback: (user) => user.isDispatch,
+        }));
 
     const { type, unit } = await findUnit(unitId, { userId: isDispatch ? undefined : user.id });
 

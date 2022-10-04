@@ -16,8 +16,8 @@ import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { Title } from "components/shared/Title";
 import { UtilityPanel } from "components/shared/UtilityPanel";
-import { ValueType } from "@snailycad/types";
-import { Permissions } from "@snailycad/permissions";
+import { Rank, ValueType } from "@snailycad/types";
+import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import { usePanicButton } from "hooks/shared/usePanicButton";
 import { useTones } from "hooks/global/useTones";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
@@ -29,6 +29,7 @@ import type {
 } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call911State";
 import { DndProvider } from "components/shared/dnd/DndProvider";
+import { usePermission } from "hooks/usePermission";
 
 interface Props {
   activeDeputy: GetEmsFdActiveDeputy | null;
@@ -75,6 +76,11 @@ export default function EmsFDDashboard({
   const state = useEmsFdState();
   const dispatchState = useDispatchState();
   const call911State = useCall911State();
+  const { hasPermissions } = usePermission();
+  const isAdmin = hasPermissions(
+    defaultPermissions.allDefaultAdminPermissions,
+    (u) => u.rank !== Rank.USER,
+  );
 
   React.useEffect(() => {
     state.setActiveDeputy(activeDeputy);
@@ -127,7 +133,7 @@ export default function EmsFDDashboard({
 
       <SelectDeputyModal />
 
-      {state.activeDeputy ? (
+      {isAdmin || state.activeDeputy ? (
         <>
           <NotepadModal />
           <CreateMedicalRecordModal />
