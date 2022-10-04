@@ -129,6 +129,12 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
             </FormField>
           </div>
 
+          {!isLeo && values.suspended.driverLicense ? (
+            <p className="-mt-2 text-base mb-3 text-neutral-700 dark:text-gray-400">
+              {t("licenseSuspendedInfo")}
+            </p>
+          ) : null}
+
           {isLeo ? (
             <hr className="my-2 mb-3 border-t border-secondary dark:border-quinary" />
           ) : null}
@@ -185,6 +191,12 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
           </FormField>
         </div>
 
+        {!isLeo && values.suspended.pilotLicense ? (
+          <p className="-mt-2 text-base mb-3 text-neutral-700 dark:text-gray-400">
+            {t("licenseSuspendedInfo")}
+          </p>
+        ) : null}
+
         {isLeo ? <hr className="my-2 mb-3 border-t border-secondary dark:border-quinary" /> : null}
       </section>
 
@@ -238,6 +250,12 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
           </FormField>
         </div>
 
+        {!isLeo && values.suspended.waterLicense ? (
+          <p className="-mt-2 text-base mb-3 text-neutral-700 dark:text-gray-400">
+            {t("licenseSuspendedInfo")}
+          </p>
+        ) : null}
+
         {isLeo ? <hr className="my-2 mb-3 border-t border-secondary dark:border-quinary" /> : null}
       </section>
 
@@ -289,6 +307,12 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
               />
             </FormField>
           </div>
+
+          {!isLeo && values.suspended.firearmsLicense ? (
+            <p className="-mt-2 text-base mb-3 text-neutral-700 dark:text-gray-400">
+              {t("licenseSuspendedInfo")}
+            </p>
+          ) : null}
         </section>
       ) : null}
     </>

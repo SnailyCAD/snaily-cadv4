@@ -108,8 +108,6 @@ export function CitizenLicenses({ citizen }: Props) {
           return null;
         }
 
-        console.log({ isSuspended });
-
         return (
           <div key={type}>
             {isSuspended ? (

@@ -38,7 +38,7 @@ export class LicensesController {
       where: {
         id: citizenId,
       },
-      include: { dlCategory: true },
+      include: { dlCategory: true, suspendedLicenses: true },
     });
 
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
@@ -49,16 +49,18 @@ export class LicensesController {
     }
 
     await updateCitizenLicenseCategories(citizen, data);
+    const suspendedLicenses = citizen.suspendedLicenses;
 
     const updated = await prisma.citizen.update({
       where: {
         id: citizen.id,
       },
       data: {
-        driversLicenseId: isDLExamEnabled ? undefined : data.driversLicense,
-        pilotLicenseId: data.pilotLicense,
-        weaponLicenseId: data.weaponLicense,
-        waterLicenseId: data.waterLicense,
+        driversLicenseId:
+          isDLExamEnabled || suspendedLicenses?.driverLicense ? undefined : data.driversLicense,
+        pilotLicenseId: suspendedLicenses?.pilotLicense ? undefined : data.pilotLicense,
+        weaponLicenseId: suspendedLicenses?.firearmsLicense ? undefined : data.weaponLicense,
+        waterLicenseId: suspendedLicenses?.waterLicense ? undefined : data.waterLicense,
       },
       include: citizenInclude,
     });
