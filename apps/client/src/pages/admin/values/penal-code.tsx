@@ -28,6 +28,7 @@ import type {
   DeletePenalCodeGroupsData,
 } from "@snailycad/types/api";
 import { hasTableDataChanged } from "lib/admin/values/utils";
+import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
 const ManagePenalCode = dynamic(async () => {
   return (await import("components/admin/values/penal-codes/ManagePenalCode")).ManagePenalCode;
@@ -238,11 +239,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
                 id: code.id,
                 rowProps: { value: code },
                 title: code.title,
-                description: (
-                  <p className="max-w-4xl text-base min-w-[300px] break-words whitespace-pre-wrap">
-                    {code.description}
-                  </p>
-                ),
+                description: <CallDescription nonCard data={code} />,
                 actions: (
                   <>
                     <Button onPress={() => handleEditClick(code)} size="xs" variant="success">
