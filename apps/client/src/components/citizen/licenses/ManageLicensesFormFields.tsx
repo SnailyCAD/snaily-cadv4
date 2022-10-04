@@ -9,14 +9,15 @@ import { Select } from "components/form/Select";
 import { filterLicenseTypes } from "lib/utils";
 import { classNames } from "lib/classNames";
 import { Toggle } from "components/form/Toggle";
+import type { LicenseInitialValues } from "./ManageLicensesModal";
 
-export function createDefaultLicensesValues(citizen: Citizen | null) {
+export function createDefaultLicensesValues(citizen: Citizen | null): LicenseInitialValues {
   return {
     suspended: {
-      driversLicense: false,
-      pilotLicense: false,
-      firearmsLicense: false,
-      waterLicense: false,
+      driverLicense: citizen?.suspendedLicenses?.driverLicense ?? false,
+      pilotLicense: citizen?.suspendedLicenses?.pilotLicense ?? false,
+      firearmsLicense: citizen?.suspendedLicenses?.firearmsLicense ?? false,
+      waterLicense: citizen?.suspendedLicenses?.waterLicense ?? false,
     },
     driversLicense: citizen?.driversLicenseId ?? null,
     pilotLicense: citizen?.pilotLicenseId ?? null,
@@ -83,8 +84,8 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
             <FormField label={"Suspended Drivers license"} checkbox>
               <Toggle
                 onCheckedChange={handleChange}
-                name="suspended.driversLicense"
-                value={values.suspended.driversLicense}
+                name="suspended.driverLicense"
+                value={values.suspended.driverLicense}
                 onChange={handleChange}
               />
             </FormField>
@@ -93,7 +94,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
           <div className={formRowClassName}>
             <FormField errorMessage={errors.driversLicense} label={t("driversLicense")}>
               <Select
-                disabled={isLeo && values.suspended.driversLicense}
+                disabled={isLeo && values.suspended.driverLicense}
                 isClearable={allowRemoval}
                 values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
                   (license) => ({
@@ -111,7 +112,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
               label={t("driversLicenseCategory")}
             >
               <Select
-                disabled={isLeo && values.suspended.driversLicense}
+                disabled={isLeo && values.suspended.driverLicense}
                 extra={{ showDLCategoryDescriptions: true }}
                 isMulti
                 values={driverslicenseCategory.values

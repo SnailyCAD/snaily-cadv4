@@ -66,6 +66,13 @@ export const WEAPON_SCHEMA = z.object({
   serialNumber: z.string().max(255).optional(),
 });
 
+const SUSPENDED_SCHEMA = z.object({
+  driverLicense: z.boolean(),
+  pilotLicense: z.boolean(),
+  waterLicense: z.boolean(),
+  firearmsLicense: z.boolean(),
+});
+
 export const LICENSE_SCHEMA = CREATE_CITIZEN_SCHEMA.pick({
   driversLicense: true,
   driversLicenseCategory: true,
@@ -75,6 +82,8 @@ export const LICENSE_SCHEMA = CREATE_CITIZEN_SCHEMA.pick({
   firearmLicenseCategory: true,
   waterLicense: true,
   waterLicenseCategory: true,
+}).extend({
+  suspended: SUSPENDED_SCHEMA.optional().nullable(),
 });
 
 export const MEDICAL_RECORD_SCHEMA = z.object({

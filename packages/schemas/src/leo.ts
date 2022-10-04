@@ -106,10 +106,3 @@ export const SWITCH_CALLSIGN_SCHEMA = z.object({
 export const IMPOUND_VEHICLE_SCHEMA = z.object({
   impoundLot: z.string().min(2),
 });
-
-const LICENSE_TYPE = z.enum(["driverLicense", "pilotLicense", "waterLicense", "firearmsLicense"]);
-export const SUSPEND_CITIZEN_LICENSE_SCHEMA = z.object({
-  citizenId: z.string().min(2),
-  licenseType: LICENSE_TYPE,
-  value: z.boolean(),
-});

@@ -25,6 +25,7 @@ import { validateSocialSecurityNumber } from "lib/citizen/validateSSN";
 export const citizenInclude = {
   user: { select: userProperties },
   flags: true,
+  suspendedLicenses: true,
   vehicles: {
     orderBy: { createdAt: "desc" },
     include: {
