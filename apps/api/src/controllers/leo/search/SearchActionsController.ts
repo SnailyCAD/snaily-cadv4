@@ -498,12 +498,8 @@ export class SearchActionsController {
 
     const suspendedLicenses = await prisma.suspendedCitizenLicenses.upsert({
       where: { id: String(citizen.suspendedLicensesId) },
-      create: {
-        [data.licenseType]: true,
-      },
-      update: {
-        [data.licenseType]: true,
-      },
+      create: { [data.licenseType]: data.value },
+      update: { [data.licenseType]: data.value },
     });
 
     const updatedCitizen = await prisma.citizen.update({
