@@ -94,7 +94,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
           <div className={formRowClassName}>
             <FormField errorMessage={errors.driversLicense} label={t("driversLicense")}>
               <Select
-                disabled={isLeo && values.suspended.driverLicense}
+                disabled={values.suspended.driverLicense}
                 isClearable={allowRemoval}
                 values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
                   (license) => ({
@@ -112,7 +112,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
               label={t("driversLicenseCategory")}
             >
               <Select
-                disabled={isLeo && values.suspended.driverLicense}
+                disabled={values.suspended.driverLicense}
                 extra={{ showDLCategoryDescriptions: true }}
                 isMulti
                 values={driverslicenseCategory.values
@@ -150,7 +150,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
         <div className={formRowClassName}>
           <FormField errorMessage={errors.pilotLicense} label={t("pilotLicense")}>
             <Select
-              disabled={isLeo && values.suspended.pilotLicense}
+              disabled={values.suspended.pilotLicense}
               isClearable={allowRemoval}
               values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
                 (license) => ({
@@ -168,7 +168,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
             label={t("pilotLicenseCategory")}
           >
             <Select
-              disabled={isLeo && values.suspended.pilotLicense}
+              disabled={values.suspended.pilotLicense}
               isMulti
               extra={{ showDLCategoryDescriptions: true }}
               values={driverslicenseCategory.values
@@ -203,7 +203,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
         <div className={formRowClassName}>
           <FormField errorMessage={errors.waterLicense} label={t("waterLicense")}>
             <Select
-              disabled={isLeo && values.suspended.waterLicense}
+              disabled={values.suspended.waterLicense}
               isClearable={allowRemoval}
               values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
                 (license) => ({
@@ -221,7 +221,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
             label={t("waterLicenseCategory")}
           >
             <Select
-              disabled={isLeo && values.suspended.waterLicense}
+              disabled={values.suspended.waterLicense}
               isMulti
               extra={{ showDLCategoryDescriptions: true }}
               values={driverslicenseCategory.values
@@ -257,7 +257,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
           <div className={formRowClassName}>
             <FormField errorMessage={errors.weaponLicense} label={t("weaponLicense")}>
               <Select
-                disabled={isLeo && values.suspended.firearmsLicense}
+                disabled={values.suspended.firearmsLicense}
                 values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map((v) => ({
                   label: v.value,
                   value: v.id,
@@ -273,7 +273,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
               label={t("firearmLicenseCategory")}
             >
               <Select
-                disabled={isLeo && values.suspended.firearmsLicense}
+                disabled={values.suspended.firearmsLicense}
                 extra={{ showDLCategoryDescriptions: true }}
                 values={driverslicenseCategory.values
                   .filter((v) => v.type === DriversLicenseCategoryType.FIREARM)

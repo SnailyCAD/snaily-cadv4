@@ -17,7 +17,7 @@ const nextConfig = {
   },
   // prettier-ignore
   images: { // start images
-    domains: ["i.imgur.com", "cdn.discordapp.com", "localhost", "localhost"]
+    domains: ["i.imgur.com", "cdn.discordapp.com", "localhost", "localhost", "localhost"]
   }, // end images
   // prettier-enable
   webpack(config, { webpack }) {
