@@ -33,6 +33,7 @@ export default function ManageCustomFields({ customFields: data }: Props) {
   const { openModal, closeModal } = useModal();
   const t = useTranslations("Management");
   const common = useTranslations("Common");
+  const hasManagePermissions = hasPermissions([Permissions.ManageCustomFields], true);
 
   async function handleDelete() {
     if (!tempField) return;
@@ -80,11 +81,13 @@ export default function ManageCustomFields({ customFields: data }: Props) {
           </p>
         </div>
 
-        <div>
-          <Button onPress={() => openModal(ModalIds.ManageCustomField)}>
-            {t("createCustomField")}
-          </Button>
-        </div>
+        {hasManagePermissions ? (
+          <div>
+            <Button onPress={() => openModal(ModalIds.ManageCustomField)}>
+              {t("createCustomField")}
+            </Button>
+          </div>
+        ) : null}
       </header>
 
       {customFields.length <= 0 ? (
@@ -115,9 +118,7 @@ export default function ManageCustomFields({ customFields: data }: Props) {
           columns={[
             { header: common("name"), accessorKey: "name" },
             { header: "Category", accessorKey: "category" },
-            hasPermissions([Permissions.ViewCustomFields], true)
-              ? { header: common("actions"), accessorKey: "actions" }
-              : null,
+            hasManagePermissions ? { header: common("actions"), accessorKey: "actions" } : null,
           ]}
         />
       )}
