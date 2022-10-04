@@ -73,6 +73,7 @@ export const enum ModalIds {
   ManageCitizenCustomFields = "ManageCitizenCustomFieldsModal",
   CustomFieldSearch = "CustomFieldSearchModal",
   AddAssignedUnit = "AddAssignedUnitModal",
+  ImpoundVehicle = "ImpoundVehicleModal",
 
   SearchMedicalRecord = "SearchMedicalRecordModal",
   CreateMedicalRecord = "CreateMedicalRecordModal",

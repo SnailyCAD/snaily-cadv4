@@ -23,6 +23,7 @@ import { NotesTab } from "./NameSearchModal/tabs/NotesTab";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { RegisterVehicleModal } from "components/citizen/vehicles/modals/RegisterVehicleModal";
 import type { PostMarkStolenData } from "@snailycad/types/api";
+import { ImpoundVehicleModal } from "./VehicleSearch/ImpoundVehicleModal";
 
 interface Props {
   id?: ModalIds.VehicleSearch | ModalIds.VehicleSearchWithinName;
@@ -42,7 +43,8 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   const { CREATE_USER_CITIZEN_LEO } = useFeatureEnabled();
 
   const isLeo = router.pathname === "/officer";
-  const showMarkStolen = currentResult && isLeo && !currentResult.reportedStolen;
+  const showMarkVehicleAsStolenButton = currentResult && isLeo && !currentResult.reportedStolen;
+  const showImpoundVehicleButton = currentResult && isLeo && !currentResult.impounded;
 
   const bolo = React.useMemo(() => {
     if (!currentResult) return null;
@@ -111,6 +113,10 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
         });
       }
     }
+  }
+
+  async function handleImpoundVehicle() {
+    openModal(ModalIds.ImpoundVehicle);
   }
 
   const INITIAL_VALUES = {
@@ -206,7 +212,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
 
                 {currentResult && isLeo ? (
                   <>
-                    {showMarkStolen ? (
+                    {showMarkVehicleAsStolenButton ? (
                       <Button
                         type="button"
                         onPress={() => handleMarkStolen()}
@@ -214,6 +220,17 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
                         className="px-1.5"
                       >
                         {vT("reportAsStolen")}
+                      </Button>
+                    ) : null}
+
+                    {showImpoundVehicleButton ? (
+                      <Button
+                        type="button"
+                        onPress={() => handleImpoundVehicle()}
+                        variant="cancel"
+                        className="px-1.5"
+                      >
+                        {t("impoundVehicle")}
                       </Button>
                     ) : null}
 
@@ -259,6 +276,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
         )}
       </Formik>
 
+      <ImpoundVehicleModal />
       <ManageVehicleFlagsModal />
       <ManageVehicleLicensesModal />
       {CREATE_USER_CITIZEN_LEO && isLeo ? (

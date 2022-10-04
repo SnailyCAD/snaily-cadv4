@@ -102,3 +102,7 @@ export const NOTE_SCHEMA = z.object({
 export const SWITCH_CALLSIGN_SCHEMA = z.object({
   callsign: z.string().min(2).nullable().optional(),
 });
+
+export const IMPOUND_VEHICLE_SCHEMA = z.object({
+  impoundLot: z.string().min(2),
+});
