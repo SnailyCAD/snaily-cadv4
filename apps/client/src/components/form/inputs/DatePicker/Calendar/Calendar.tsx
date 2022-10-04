@@ -5,10 +5,10 @@ import { createCalendar } from "@internationalized/date";
 import { CalendarGrid } from "./CalendarGrid";
 import { Button } from "components/Button";
 import { ChevronLeft, ChevronRight } from "react-bootstrap-icons";
-import { useLocale } from "next-intl";
+import { useLocale } from "@react-aria/i18n";
 
 export function Calendar(props: CalendarProps<any>) {
-  const locale = useLocale();
+  const { locale } = useLocale();
   const state = useCalendarState({
     ...props,
     locale,

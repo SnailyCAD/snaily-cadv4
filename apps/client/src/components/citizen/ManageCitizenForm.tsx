@@ -22,6 +22,7 @@ import {
   ManageLicensesFormFields,
 } from "./licenses/ManageLicensesFormFields";
 import { DatePickerField } from "components/form/inputs/DatePicker/DatePickerField";
+import parseISO from "date-fns/parseISO";
 
 interface Props {
   citizen: (Citizen & { user?: User | null }) | null;
@@ -69,7 +70,8 @@ export function ManageCitizenForm({
     username: citizen?.user?.username ?? "",
     name: citizen?.name ?? "",
     surname: citizen?.surname ?? "",
-    dateOfBirth: citizen?.dateOfBirth ?? undefined,
+    dateOfBirth:
+      typeof citizen?.dateOfBirth === "string" ? parseISO(citizen.dateOfBirth) : undefined,
     gender: citizen?.genderId ?? "",
     ethnicity: citizen?.ethnicityId ?? "",
     weight: citizen?.weight ?? "",
@@ -154,7 +156,9 @@ export function ManageCitizenForm({
             <DatePickerField
               errorMessage={errors.dateOfBirth as string}
               value={values.dateOfBirth}
-              onChange={(value) => setFieldValue("dateOfBirth", value?.toString())}
+              onChange={(value) =>
+                value && setFieldValue("dateOfBirth", parseISO(value.toString()))
+              }
               label={t("dateOfBirth")}
             />
 

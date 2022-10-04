@@ -1,13 +1,12 @@
 import * as React from "react";
-import { useLocale } from "next-intl";
+import { useLocale } from "@react-aria/i18n";
 import { useDateFieldState, DateSegment, DateFieldState } from "@react-stately/datepicker";
 import { AriaDatePickerProps, useDateField, useDateSegment } from "@react-aria/datepicker";
 import { createCalendar } from "@internationalized/date";
 import { classNames } from "lib/classNames";
 
 export function DateField(props: AriaDatePickerProps<any>) {
-  const locale = useLocale();
-
+  const { locale } = useLocale();
   const state = useDateFieldState({
     ...props,
     locale,
@@ -33,6 +32,7 @@ function DateSegment({ segment, state }: { segment: DateSegment; state: DateFiel
   return (
     <div
       {...segmentProps}
+      autoCapitalize="off"
       ref={ref}
       style={{
         ...segmentProps.style,
