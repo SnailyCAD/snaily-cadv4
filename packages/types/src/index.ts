@@ -144,7 +144,10 @@ export type Citizen = Prisma.Citizen & {
   dlCategory: (Prisma.DriversLicenseCategoryValue & { value: Value })[];
   flags?: Prisma.Value[];
   notes?: Prisma.Note[];
+  suspendedLicenses?: SuspendedCitizenLicenses | null;
 };
+
+export type SuspendedCitizenLicenses = Prisma.SuspendedCitizenLicenses;
 
 export type Note = Prisma.Note & {
   createdBy?: Officer | null;

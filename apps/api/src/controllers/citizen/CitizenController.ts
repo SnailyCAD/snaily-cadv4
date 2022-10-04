@@ -25,6 +25,7 @@ import { validateSocialSecurityNumber } from "lib/citizen/validateSSN";
 export const citizenInclude = {
   user: { select: userProperties },
   flags: true,
+  suspendedLicenses: true,
   vehicles: {
     orderBy: { createdAt: "desc" },
     include: {
@@ -242,6 +243,7 @@ export class CitizenController {
         userId: user.id || undefined,
         ...citizenObjectFromData(data, defaultLicenseValueId),
       },
+      include: { suspendedLicenses: true },
     });
 
     await updateCitizenLicenseCategories(citizen, data);

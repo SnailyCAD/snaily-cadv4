@@ -23,6 +23,7 @@ import {
   WhitelistStatus,
   User,
   CustomFieldCategory,
+  SuspendedCitizenLicenses,
 } from "@prisma/client";
 import { UseBeforeEach, Context } from "@tsed/common";
 import { ContentType, Description, Post, Put } from "@tsed/schema";
@@ -61,7 +62,7 @@ export class SearchActionsController {
       where: {
         id: citizenId,
       },
-      include: { dlCategory: true },
+      include: { dlCategory: true, suspendedLicenses: true },
     });
 
     if (!citizen) {
@@ -69,6 +70,22 @@ export class SearchActionsController {
     }
 
     await updateCitizenLicenseCategories(citizen, data);
+
+    let suspendedLicenses: SuspendedCitizenLicenses | undefined;
+    if (data.suspended) {
+      const createUpdateData = {
+        driverLicense: data.suspended.driverLicense,
+        firearmsLicense: data.suspended.firearmsLicense,
+        pilotLicense: data.suspended.pilotLicense,
+        waterLicense: data.suspended.waterLicense,
+      };
+
+      suspendedLicenses = await prisma.suspendedCitizenLicenses.upsert({
+        where: { id: String(citizen.suspendedLicensesId) },
+        create: createUpdateData,
+        update: createUpdateData,
+      });
+    }
 
     const updated = await prisma.citizen.update({
       where: {
@@ -79,6 +96,7 @@ export class SearchActionsController {
         pilotLicenseId: data.pilotLicense,
         weaponLicenseId: data.weaponLicense,
         waterLicenseId: data.waterLicense,
+        suspendedLicensesId: suspendedLicenses?.id,
       },
       include: citizenInclude,
     });

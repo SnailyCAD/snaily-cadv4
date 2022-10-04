@@ -3,6 +3,7 @@ import type { z } from "zod";
 import type { DriversLicenseCategoryValue, Citizen, Prisma } from "@prisma/client";
 import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
 import { prisma } from "lib/prisma";
+import type { SuspendedCitizenLicenses } from "@snailycad/types";
 
 type LicenseSchema = Pick<
   z.infer<typeof LICENSE_SCHEMA>,
@@ -13,15 +14,26 @@ type LicenseSchema = Pick<
 >;
 
 export async function updateCitizenLicenseCategories(
-  citizen: Citizen & { dlCategory?: DriversLicenseCategoryValue[] },
+  citizen: Citizen & {
+    dlCategory?: DriversLicenseCategoryValue[];
+    suspendedLicenses: SuspendedCitizenLicenses | null;
+  },
   data: Partial<LicenseSchema>,
   include?: Prisma.CitizenInclude,
 ) {
+  const suspendedLicenses = citizen.suspendedLicenses;
+
   const newArr = [
-    ...(data.driversLicenseCategory ?? []),
-    ...(data.pilotLicenseCategory ?? []),
-    ...(data.waterLicenseCategory ?? []),
-    ...(data.firearmLicenseCategory ?? []),
+    ...returnNonSuspendedCategory(
+      data.driversLicenseCategory ?? [],
+      suspendedLicenses?.driverLicense,
+    ),
+    ...returnNonSuspendedCategory(data.pilotLicenseCategory ?? [], suspendedLicenses?.pilotLicense),
+    ...returnNonSuspendedCategory(data.waterLicenseCategory ?? [], suspendedLicenses?.waterLicense),
+    ...returnNonSuspendedCategory(
+      data.firearmLicenseCategory ?? [],
+      suspendedLicenses?.firearmsLicense,
+    ),
   ];
   const disconnectConnectArr = manyToManyHelper(citizen.dlCategory?.map((v) => v.id) ?? [], newArr);
 
@@ -38,4 +50,12 @@ export async function updateCitizenLicenseCategories(
   );
 
   return last;
+}
+
+function returnNonSuspendedCategory(categoryIds: string[], suspendedLicense = false) {
+  if (suspendedLicense) {
+    return [];
+  }
+
+  return categoryIds;
 }

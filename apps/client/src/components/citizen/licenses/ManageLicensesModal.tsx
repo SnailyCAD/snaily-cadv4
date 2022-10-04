@@ -8,7 +8,7 @@ import type { SelectValue } from "components/form/Select";
 import { Button } from "components/Button";
 import { Loader } from "components/Loader";
 import { handleValidate } from "lib/handleValidate";
-import type { Citizen } from "@snailycad/types";
+import type { Citizen, SuspendedCitizenLicenses } from "@snailycad/types";
 import { createDefaultLicensesValues, ManageLicensesFormFields } from "./ManageLicensesFormFields";
 
 interface Props {
@@ -24,6 +24,7 @@ export interface LicenseInitialValues {
   pilotLicense: string | null;
   weaponLicense: string | null;
   waterLicense: string | null;
+  suspended: Omit<SuspendedCitizenLicenses, "id">;
 
   driversLicenseCategory: SelectValue[] | null;
   pilotLicenseCategory: SelectValue[] | null;
