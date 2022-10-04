@@ -20,6 +20,7 @@ import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { citizenObjectFromData } from "lib/citizen";
 import type * as APITypes from "@snailycad/types/api";
 import { getImageWebPPath } from "utils/image";
+import { validateSocialSecurityNumber } from "lib/citizen/validateSSN";
 
 export const citizenInclude = {
   user: { select: userProperties },
@@ -230,6 +231,12 @@ export class CitizenController {
     });
     const defaultLicenseValueId = defaultLicenseValue?.id ?? null;
 
+    if (data.socialSecurityNumber) {
+      await validateSocialSecurityNumber({
+        socialSecurityNumber: data.socialSecurityNumber,
+      });
+    }
+
     const citizen = await prisma.citizen.create({
       data: {
         userId: user.id || undefined,
@@ -268,6 +275,13 @@ export class CitizenController {
 
     if (date > now) {
       throw new ExtendedBadRequest({ dateOfBirth: "dateLargerThanNow" });
+    }
+
+    if (data.socialSecurityNumber) {
+      await validateSocialSecurityNumber({
+        socialSecurityNumber: data.socialSecurityNumber,
+        citizenId: citizen.id,
+      });
     }
 
     const updated = await prisma.citizen.update({
