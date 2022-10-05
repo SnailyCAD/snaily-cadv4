@@ -28,9 +28,9 @@ export class LicensesController {
   ): Promise<APITypes.PutCitizenLicensesByIdData> {
     const data = validateSchema(LICENSE_SCHEMA, body);
 
-    const isDLExamEnabled = isFeatureEnabled({
+    const isLicenseExamsEnabled = isFeatureEnabled({
       features: cad.features,
-      feature: Feature.DL_EXAMS,
+      feature: Feature.LICENSE_EXAMS,
       defaultReturn: false,
     });
 
@@ -57,7 +57,9 @@ export class LicensesController {
       },
       data: {
         driversLicenseId:
-          isDLExamEnabled || suspendedLicenses?.driverLicense ? undefined : data.driversLicense,
+          isLicenseExamsEnabled || suspendedLicenses?.driverLicense
+            ? undefined
+            : data.driversLicense,
         pilotLicenseId: suspendedLicenses?.pilotLicense ? undefined : data.pilotLicense,
         weaponLicenseId: suspendedLicenses?.firearmsLicense ? undefined : data.weaponLicense,
         waterLicenseId: suspendedLicenses?.waterLicense ? undefined : data.waterLicense,

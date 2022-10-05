@@ -32,10 +32,9 @@ interface Props {
   onClose?(): void;
 }
 
-export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpdate }: Props) {
+export function ManageExamModal({ exam, type = "dl", onClose, onCreate, onUpdate }: Props) {
   const common = useTranslations("Common");
-  const t = useTranslations("Leo");
-  const cT = useTranslations("Vehicles");
+  const t = useTranslations();
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
   const { makeImageUrl } = useImageUrl();
@@ -44,12 +43,12 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
   const apiPath = type === "dl" ? "dl-exams" : "weapon-exams";
 
   const PASS_FAIL_VALUES = [
-    { label: cT("passed"), value: DLExamPassType.PASSED },
-    { label: cT("failed"), value: DLExamPassType.FAILED },
+    { label: t("Vehicles.passed"), value: DLExamPassType.PASSED },
+    { label: t("Vehicles.failed"), value: DLExamPassType.FAILED },
   ];
 
   function handleClose() {
-    closeModal(ModalIds.ManageDLExam);
+    closeModal(ModalIds.ManageExam);
     onClose?.();
   }
 
@@ -67,7 +66,7 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
       });
 
       if (json.id) {
-        closeModal(ModalIds.ManageDLExam);
+        closeModal(ModalIds.ManageExam);
         onUpdate?.(exam, json);
       }
     } else {
@@ -78,7 +77,7 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
       });
 
       if (json.id) {
-        closeModal(ModalIds.ManageDLExam);
+        closeModal(ModalIds.ManageExam);
         onCreate?.(json);
       }
     }
@@ -100,8 +99,8 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
 
   return (
     <Modal
-      title={exam ? t("editDLExam") : t("createDLExam")}
-      isOpen={isOpen(ModalIds.ManageDLExam)}
+      title={exam ? t("licenseExams.editExam") : t("licenseExams.createExam")}
+      isOpen={isOpen(ModalIds.ManageExam)}
       onClose={handleClose}
       className="min-w-[600px]"
     >
@@ -152,7 +151,7 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
               />
             </FormField>
 
-            <FormField errorMessage={errors.license} label={t("license")}>
+            <FormField errorMessage={errors.license} label={t("Leo.license")}>
               <Select
                 value={values.license}
                 onChange={handleChange}
@@ -168,7 +167,10 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
               />
             </FormField>
 
-            <FormField errorMessage={errors.categories as string} label={t("categories")}>
+            <FormField
+              errorMessage={errors.categories as string}
+              label={t("licenseExams.categories")}
+            >
               <Select
                 closeMenuOnSelect={false}
                 isMulti
@@ -188,7 +190,7 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
               />
             </FormField>
 
-            <FormField errorMessage={errors.theoryExam} label={t("theoryExam")}>
+            <FormField errorMessage={errors.theoryExam} label={t("licenseExams.theoryExam")}>
               <Select
                 isClearable
                 value={values.theoryExam}
@@ -198,7 +200,7 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
               />
             </FormField>
 
-            <FormField errorMessage={errors.practiceExam} label={t("practiceExam")}>
+            <FormField errorMessage={errors.practiceExam} label={t("licenseExams.practiceExam")}>
               <Select
                 isClearable
                 value={values.practiceExam}
