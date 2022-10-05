@@ -38,7 +38,7 @@ export default function CitizenLogs({ data }: Props) {
   const asyncTable = useAsyncTable({
     fetchOptions: {
       onResponse: (json: GetDLExamsData) => ({ data: json.exams, totalCount: json.totalCount }),
-      path: "/leo/dl-exams",
+      path: "/leo/license-exams",
     },
     totalCount: data.totalCount,
     initialData: data.exams,
@@ -55,7 +55,7 @@ export default function CitizenLogs({ data }: Props) {
   async function handleDelete() {
     if (!tempExam) return;
     const { json } = await execute<DeleteExamByIdData>({
-      path: `/leo/dl-exams/${tempExam.id}`,
+      path: `/leo/license-exams/${tempExam.id}`,
       method: "DELETE",
     });
 
@@ -205,7 +205,7 @@ export default function CitizenLogs({ data }: Props) {
 export const getServerSideProps: GetServerSideProps<Props> = async ({ req, locale }) => {
   const user = await getSessionUser(req);
   const [exams, values] = await requestAll(req, [
-    ["/leo/exams", { exams: [], totalCount: 0 }],
+    ["/leo/license-exams", { exams: [], totalCount: 0 }],
     ["/admin/values/driverslicense_category?paths=license", []],
   ]);
 

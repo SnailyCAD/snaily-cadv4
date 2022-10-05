@@ -378,13 +378,11 @@ export type TruckLog = Prisma.TruckLog & {
   vehicle: RegisteredVehicle | null;
 };
 
-export type DLExam = Prisma.DLExam & {
+export type LicenseExam = Prisma.LicenseExam & {
   citizen: Prisma.Citizen;
   license: Value;
   categories?: DriversLicenseCategoryValue[];
 };
-
-export type WeaponExam = DLExam;
 
 export type CustomField = Prisma.CustomField;
 

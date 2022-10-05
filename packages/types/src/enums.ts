@@ -237,20 +237,20 @@ export const ExpungementRequestStatus = {
 export type ExpungementRequestStatus =
   typeof ExpungementRequestStatus[keyof typeof ExpungementRequestStatus];
 
-export const DLExamPassType = {
+export const LicenseExamPassType = {
   PASSED: "PASSED",
   FAILED: "FAILED",
 } as const;
 
-export type DLExamPassType = typeof DLExamPassType[keyof typeof DLExamPassType];
+export type LicenseExamPassType = typeof LicenseExamPassType[keyof typeof LicenseExamPassType];
 
-export const DLExamStatus = {
+export const LicenseExamStatus = {
   IN_PROGRESS: "IN_PROGRESS",
   PASSED: "PASSED",
   FAILED: "FAILED",
 } as const;
 
-export type DLExamStatus = typeof DLExamStatus[keyof typeof DLExamStatus];
+export type LicenseExamStatus = typeof LicenseExamStatus[keyof typeof LicenseExamStatus];
 
 export const CustomFieldCategory = {
   CITIZEN: "CITIZEN",
