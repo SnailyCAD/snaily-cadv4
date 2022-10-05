@@ -9,8 +9,6 @@ export async function examsToLicenseExams() {
     prisma.dLExam.findMany({ include: { categories: true } }),
   ]);
 
-  console.log({ features });
-
   await Promise.all([
     ...weaponExams.map(async (weaponExam) => {
       const exam = await prisma.licenseExam.create({

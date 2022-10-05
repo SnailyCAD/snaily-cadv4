@@ -125,8 +125,6 @@ export default function CitizenLogs({ data }: Props) {
             data={asyncTable.data.map((exam) => {
               const hasPassedOrFailed = exam.status !== LicenseExamStatus.IN_PROGRESS;
 
-              console.log({ hasPassedOrFailed });
-
               return {
                 id: exam.id,
                 rowProps: {
