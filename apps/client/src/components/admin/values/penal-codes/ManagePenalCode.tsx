@@ -8,7 +8,7 @@ import { Form, Formik, useFormikContext } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
-import type { PenalCode, PenalCodeGroup, ValueType } from "@snailycad/types";
+import { PenalCode, PenalCodeGroup, ValueType, PenalCodeType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { FormRow } from "components/form/FormRow";
 import { Select } from "components/form/Select";
@@ -47,6 +47,7 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
       prisonTerm: values.warningNotApplicable ? values.prisonTerm.values : null,
       bail: LEO_BAIL && values.warningNotApplicable ? values.bail.values : null,
       groupId: values.group === "ungrouped" || !values.group ? null : values.group,
+      type: values.type,
     };
 
     if (penalCode) {
@@ -76,6 +77,7 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
 
   const INITIAL_VALUES = {
     title: penalCode?.title ?? "",
+    type: penalCode?.type ?? null,
     description: penalCode?.description ?? "",
     descriptionData: dataToSlate(penalCode),
     group: penalCode?.groupId ?? "",
@@ -113,6 +115,18 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
           <Form>
             <FormField errorMessage={errors.title} label="Title">
               <Input autoFocus name="title" onChange={handleChange} value={values.title} />
+            </FormField>
+
+            <FormField errorMessage={errors.type} label="Type" optional>
+              <Select
+                name="type"
+                onChange={handleChange}
+                value={values.type}
+                values={Object.values(PenalCodeType).map((value) => ({
+                  value,
+                  label: value,
+                }))}
+              />
             </FormField>
 
             <FormField errorMessage={errors.description} label="Description">

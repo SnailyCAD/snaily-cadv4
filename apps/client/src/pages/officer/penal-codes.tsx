@@ -64,6 +64,9 @@ export default function PenalCodesPage() {
                     <h3 className="text-2xl font-semibold">{penalCode.title}</h3>
 
                     <div className="mt-2">
+                      <Infofield label={common("type")}>
+                        {penalCode.type?.toLowerCase() ?? common("none")}
+                      </Infofield>
                       <Infofield label={t("warningApplicable")}>
                         {String(Boolean(penalCode.warningApplicable))}
                       </Infofield>

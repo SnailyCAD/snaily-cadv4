@@ -267,3 +267,11 @@ export const PaymentStatus = {
 } as const;
 
 export type PaymentStatus = typeof PaymentStatus[keyof typeof PaymentStatus];
+
+export const PenalCodeType = {
+  INFRACTION: "INFRACTION",
+  MISDEMEANOR: "MISDEMEANOR",
+  FELONY: "FELONY",
+} as const;
+
+export type PenalCodeType = typeof PenalCodeType[keyof typeof PenalCodeType];
