@@ -9,7 +9,7 @@ import useFetch from "lib/useFetch";
 import { Button } from "components/Button";
 import { ChangePasswordArea } from "components/account/ChangePasswordArea";
 import { Manage2FAModal } from "./2fa/Manage2FAModal";
-import { Loader } from "@snailycad/ui";
+import { ProgressCircle } from "@snailycad/ui";
 import { TwoFactorAuthArea } from "./2fa/TwoFactorAuthArea";
 import { handleValidate } from "lib/handleValidate";
 import type { PatchUserData } from "@snailycad/types/api";
@@ -60,7 +60,7 @@ export function AccountSettingsTab() {
                 type="submit"
                 disabled={state === "loading"}
               >
-                {state === "loading" ? <Loader /> : null}
+                {state === "loading" ? <ProgressCircle /> : null}
                 {common("save")}
               </Button>
             </div>

@@ -45,7 +45,9 @@
     "@react-aria/progress": "^3.3.2",
     "@react-aria/select": "^3.8.2",
     "@react-aria/textfield": "^3.7.2",
-    "@react-aria/utils": "^3.14.0"
+    "@react-aria/utils": "^3.14.0",
+    "@react-stately/select": "^3.3.2",
+    "next-intl": "^2.7.6"
   },
   "peerDependencies": {
     "react": ">=18.2.0",
