@@ -79,7 +79,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
   return (
     <>
       {DL_EXAMS && !isLeo ? null : (
-        <section>
+        <section className="w-full">
           {isLeo ? (
             <FormField label={"Suspended Drivers license"} checkbox>
               <Toggle
@@ -141,7 +141,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
         </section>
       )}
 
-      <section>
+      <section className="w-full">
         {isLeo ? (
           <FormField label={"Suspended Pilot license"} checkbox>
             <Toggle
@@ -200,7 +200,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
         {isLeo ? <hr className="my-2 mb-3 border-t border-secondary dark:border-quinary" /> : null}
       </section>
 
-      <section>
+      <section className="w-full">
         {isLeo ? (
           <FormField label={"Suspended Water license"} checkbox>
             <Toggle
@@ -260,7 +260,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
       </section>
 
       {WEAPON_REGISTRATION && !WEAPON_EXAMS ? (
-        <section>
+        <section className="w-full">
           {isLeo ? (
             <FormField label={"Suspended Firearms license"} checkbox>
               <Toggle

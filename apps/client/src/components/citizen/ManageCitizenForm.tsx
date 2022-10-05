@@ -157,7 +157,7 @@ export function ManageCitizenForm({
               errorMessage={errors.dateOfBirth as string}
               value={values.dateOfBirth}
               onChange={(value) =>
-                value && setFieldValue("dateOfBirth", parseISO(value.toString()))
+                value && setFieldValue("dateOfBirth", parseISO(value?.toString()))
               }
               label={t("dateOfBirth")}
             />
@@ -166,6 +166,7 @@ export function ManageCitizenForm({
               <FormField
                 errorMessage={errors.socialSecurityNumber}
                 label={t("socialSecurityNumber")}
+                optional
               >
                 <Input
                   value={values.socialSecurityNumber}

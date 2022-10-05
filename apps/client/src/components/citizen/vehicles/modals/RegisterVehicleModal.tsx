@@ -141,14 +141,6 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
               />
             </FormField>
 
-            <FormField optional errorMessage={errors.vinNumber} label={tVehicle("vinNumber")}>
-              <Input
-                value={values.vinNumber.toUpperCase()}
-                name="vinNumber"
-                onChange={handleChange}
-              />
-            </FormField>
-
             {CUSTOM_TEXTFIELD_VALUES ? (
               <FormField errorMessage={errors.model} label={tVehicle("model")}>
                 <Input
@@ -205,6 +197,18 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
                 labelFieldName="name"
                 valueFieldName="citizenId"
                 isDisabled={isDisabled}
+              />
+            </FormField>
+
+            <FormField errorMessage={errors.color} label={tVehicle("color")}>
+              <Input onChange={handleChange} name="color" value={values.color} />
+            </FormField>
+
+            <FormField optional errorMessage={errors.vinNumber} label={tVehicle("vinNumber")}>
+              <Input
+                value={values.vinNumber.toUpperCase()}
+                name="vinNumber"
+                onChange={handleChange}
               />
             </FormField>
 
@@ -267,10 +271,6 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
                 />
               </FormField>
             </FormRow>
-
-            <FormField errorMessage={errors.color} label={tVehicle("color")}>
-              <Input onChange={handleChange} name="color" value={values.color} />
-            </FormField>
 
             {vehicle ? (
               <FormRow>
