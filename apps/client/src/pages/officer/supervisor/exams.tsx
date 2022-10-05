@@ -6,7 +6,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import { DLExam, DLExamStatus } from "@snailycad/types";
+import { LicenseExam, LicenseExamStatus } from "@snailycad/types";
 import { Table, useTableState } from "components/shared/Table";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
@@ -14,92 +14,97 @@ import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { Permissions } from "@snailycad/permissions";
 import { Status } from "components/shared/Status";
-import { ManageDLExamModal } from "components/leo/dl-exams/ManageDLExamModal";
+import { ManageExamModal } from "components/leo/exams/ManageExamModal";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { usePermission } from "hooks/usePermission";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
-import type { DeleteWeaponExamByIdData, GetWeaponExamsData } from "@snailycad/types/api";
+import type { GetLicenseExamsData, DeleteLicenseExamByIdData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 interface Props {
-  data: GetWeaponExamsData;
+  data: GetLicenseExamsData;
 }
 
 export default function CitizenLogs({ data }: Props) {
   const { hasPermissions } = usePermission();
   const { openModal, closeModal } = useModal();
-  const t = useTranslations("Leo");
+  const t = useTranslations();
   const common = useTranslations("Common");
-  const cT = useTranslations("Vehicles");
   const { state, execute } = useFetch();
 
   const asyncTable = useAsyncTable({
     fetchOptions: {
-      onResponse: (json: GetWeaponExamsData) => ({ data: json.exams, totalCount: json.totalCount }),
-      path: "/leo/weapon-exams",
+      onResponse: (json: GetLicenseExamsData) => ({
+        data: json.exams,
+        totalCount: json.totalCount,
+      }),
+      path: "/leo/license-exams",
     },
     totalCount: data.totalCount,
     initialData: data.exams,
   });
   const tableState = useTableState({ pagination: asyncTable.pagination });
   const [tempExam, examState] = useTemporaryItem(asyncTable.data);
+  const hasManagePermissions = hasPermissions(
+    [Permissions.ManageLicenseExams],
+    (u) => u.isSupervisor,
+  );
 
   const PASS_FAIL_LABELS = {
-    PASSED: cT("passed"),
-    FAILED: cT("failed"),
-    IN_PROGRESS: cT("inProgress"),
+    PASSED: t("Vehicles.passed"),
+    FAILED: t("Vehicles.failed"),
+    IN_PROGRESS: t("Vehicles.inProgress"),
   };
 
   async function handleDelete() {
     if (!tempExam) return;
-    const { json } = await execute<DeleteWeaponExamByIdData>({
-      path: `/leo/weapon-exams/${tempExam.id}`,
+    const { json } = await execute<DeleteLicenseExamByIdData>({
+      path: `/leo/license-exams/${tempExam.id}`,
       method: "DELETE",
     });
 
     if (typeof json === "boolean") {
-      closeModal(ModalIds.AlertDeleteDLExam);
+      closeModal(ModalIds.AlertDeleteExam);
       asyncTable.setData((p) => p.filter((v) => v.id !== tempExam.id));
-      data.exams.length -= 1;
       examState.setTempId(null);
     }
   }
 
-  function handleDeleteClick(exam: DLExam) {
+  function handleDeleteClick(exam: LicenseExam) {
     examState.setTempId(exam.id);
-    openModal(ModalIds.AlertDeleteDLExam);
+    openModal(ModalIds.AlertDeleteExam);
   }
 
-  function handleEditClick(exam: DLExam) {
+  function handleEditClick(exam: LicenseExam) {
     examState.setTempId(exam.id);
-    openModal(ModalIds.ManageDLExam);
+    openModal(ModalIds.ManageExam);
   }
 
   return (
     <Layout
       permissions={{
         fallback: (u) => u.isLeo,
-        permissions: [Permissions.ViewWeaponExams, Permissions.ManageWeaponExams],
+        permissions: [Permissions.ViewLicenseExams, Permissions.ManageLicenseExams],
       }}
       className="dark:text-white"
     >
       <header className="flex items-center justify-between">
-        <Title className="!mb-0">{t("weaponExams")}</Title>
+        <Title className="!mb-0">{t("licenseExams.exams")}</Title>
 
-        {hasPermissions([Permissions.ManageWeaponExams], (u) => u.isSupervisor) ? (
+        {hasManagePermissions ? (
           <div>
-            <Button onPress={() => openModal(ModalIds.ManageDLExam)}>
-              {t("createWeaponExam")}
+            <Button onPress={() => openModal(ModalIds.ManageExam)}>
+              {t("licenseExams.createExam")}
             </Button>
           </div>
         ) : null}
       </header>
 
       {data.exams.length <= 0 ? (
-        <p className="mt-5">{t("noWeaponExams")}</p>
+        <p className="mt-5">{t("licenseExams.noExams")}</p>
       ) : (
         <>
           <FormField label={common("search")} className="my-2">
@@ -118,13 +123,14 @@ export default function CitizenLogs({ data }: Props) {
           <Table
             tableState={tableState}
             data={asyncTable.data.map((exam) => {
-              const hasPassedOrFailed = exam.status !== DLExamStatus.IN_PROGRESS;
+              const hasPassedOrFailed = exam.status !== LicenseExamStatus.IN_PROGRESS;
 
               return {
                 id: exam.id,
                 rowProps: {
                   className: hasPassedOrFailed ? "opacity-60" : undefined,
                 },
+                type: exam.type,
                 citizen: `${exam.citizen.name} ${exam.citizen.surname}`,
                 theoryExam: (
                   <span className="capitalize">
@@ -160,36 +166,36 @@ export default function CitizenLogs({ data }: Props) {
               };
             })}
             columns={[
-              { header: t("citizen"), accessorKey: "citizen" },
-              { header: t("theoryExam"), accessorKey: "theoryExam" },
-              { header: t("practiceExam"), accessorKey: "practiceExam" },
-              { header: t("status"), accessorKey: "status" },
-              { header: t("categories"), accessorKey: "categories" },
-              { header: t("license"), accessorKey: "license" },
+              { header: common("type"), accessorKey: "type" },
+              { header: t("Leo.citizen"), accessorKey: "citizen" },
+              { header: t("licenseExams.theoryExam"), accessorKey: "theoryExam" },
+              { header: t("licenseExams.practiceExam"), accessorKey: "practiceExam" },
+              { header: t("Leo.status"), accessorKey: "status" },
+              { header: t("licenseExams.categories"), accessorKey: "categories" },
+              { header: t("Leo.license"), accessorKey: "license" },
               { header: common("createdAt"), accessorKey: "createdAt" },
-              hasPermissions([Permissions.ManageWeaponExams], (u) => u.isSupervisor)
-                ? { header: common("actions"), accessorKey: "actions" }
-                : null,
+              hasManagePermissions ? { header: common("actions"), accessorKey: "actions" } : null,
             ]}
           />
         </>
       )}
 
       <AlertModal
-        title={t("deleteDLExam")}
-        id={ModalIds.AlertDeleteDLExam}
-        description={t("alert_deleteDLExam")}
+        title={t("licenseExams.deleteExam")}
+        id={ModalIds.AlertDeleteExam}
+        description={t("licenseExams.alert_deleteExam")}
         onDeleteClick={handleDelete}
         state={state}
         onClose={() => examState.setTempId(null)}
       />
 
-      <ManageDLExamModal
-        type="weapon"
+      <ManageExamModal
         onClose={() => examState.setTempId(null)}
         onCreate={(exam) => {
           asyncTable.setData((p) => [exam, ...p]);
-          data.exams.length += 1;
+          if (asyncTable.data.length <= 0) {
+            asyncTable.data.length = 1;
+          }
         }}
         onUpdate={(oldExam, newExam) => {
           asyncTable.setData((prev) => {
@@ -209,7 +215,7 @@ export default function CitizenLogs({ data }: Props) {
 export const getServerSideProps: GetServerSideProps<Props> = async ({ req, locale }) => {
   const user = await getSessionUser(req);
   const [exams, values] = await requestAll(req, [
-    ["/leo/weapon-exams", { exams: [], totalCount: 0 }],
+    ["/leo/license-exams", { exams: [], totalCount: 0 }],
     ["/admin/values/driverslicense_category?paths=license", []],
   ]);
 
@@ -219,7 +225,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ req, local
       session: user,
       data: exams,
       messages: {
-        ...(await getTranslations(["leo", "citizen", "common"], user?.locale ?? locale)),
+        ...(await getTranslations(
+          ["leo", "licenseExams", "citizen", "common"],
+          user?.locale ?? locale,
+        )),
       },
     },
   };

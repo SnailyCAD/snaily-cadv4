@@ -1,9 +1,10 @@
-import { DL_EXAM_SCHEMA } from "@snailycad/schemas";
+import { LICENSE_EXAM_SCHEMA } from "@snailycad/schemas";
 import {
-  DLExam,
-  DLExamPassType,
+  LicenseExam,
+  LicenseExamPassType,
   DriversLicenseCategoryType,
   ValueLicenseType,
+  LicenseExamType,
 } from "@snailycad/types";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
@@ -21,35 +22,32 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import type { NameSearchResult } from "state/search/nameSearchState";
-import type { PostDLExamsData, PutDLExamByIdData } from "@snailycad/types/api";
+import type { PostLicenseExamsData, PutLicenseExamByIdData } from "@snailycad/types/api";
 import Image from "next/future/image";
 
 interface Props {
-  exam: DLExam | null;
-  type?: "dl" | "weapon";
-  onUpdate?(oldExam: DLExam, newExam: DLExam): void;
-  onCreate?(exam: DLExam): void;
+  exam: LicenseExam | null;
+  onUpdate?(oldExam: LicenseExam, newExam: LicenseExam): void;
+  onCreate?(exam: LicenseExam): void;
   onClose?(): void;
 }
 
-export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpdate }: Props) {
+export function ManageExamModal({ exam, onClose, onCreate, onUpdate }: Props) {
   const common = useTranslations("Common");
-  const t = useTranslations("Leo");
-  const cT = useTranslations("Vehicles");
+  const t = useTranslations();
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
   const { makeImageUrl } = useImageUrl();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
   const { driverslicenseCategory, license } = useValues();
-  const apiPath = type === "dl" ? "dl-exams" : "weapon-exams";
 
   const PASS_FAIL_VALUES = [
-    { label: cT("passed"), value: DLExamPassType.PASSED },
-    { label: cT("failed"), value: DLExamPassType.FAILED },
+    { label: t("Vehicles.passed"), value: LicenseExamPassType.PASSED },
+    { label: t("Vehicles.failed"), value: LicenseExamPassType.FAILED },
   ];
 
   function handleClose() {
-    closeModal(ModalIds.ManageDLExam);
+    closeModal(ModalIds.ManageExam);
     onClose?.();
   }
 
@@ -60,32 +58,33 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
     };
 
     if (exam) {
-      const { json } = await execute<PutDLExamByIdData>({
-        path: `/leo/${apiPath}/${exam.id}`,
+      const { json } = await execute<PutLicenseExamByIdData>({
+        path: `/leo/license-exams/${exam.id}`,
         method: "PUT",
         data,
       });
 
       if (json.id) {
-        closeModal(ModalIds.ManageDLExam);
+        closeModal(ModalIds.ManageExam);
         onUpdate?.(exam, json);
       }
     } else {
-      const { json } = await execute<PostDLExamsData>({
-        path: `/leo/${apiPath}`,
+      const { json } = await execute<PostLicenseExamsData>({
+        path: "/leo/license-exams",
         method: "POST",
         data,
       });
 
       if (json.id) {
-        closeModal(ModalIds.ManageDLExam);
+        closeModal(ModalIds.ManageExam);
         onCreate?.(json);
       }
     }
   }
 
-  const validate = handleValidate(DL_EXAM_SCHEMA);
+  const validate = handleValidate(LICENSE_EXAM_SCHEMA);
   const INITIAL_VALUES = {
+    type: exam?.type ?? null,
     citizenId: exam?.citizenId ?? null,
     citizenName: exam ? `${exam.citizen.name} ${exam.citizen.surname}` : "",
     theoryExam: exam?.theoryExam ?? null,
@@ -98,16 +97,36 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
       })) ?? null,
   };
 
+  const filterTypes = {
+    [LicenseExamType.DRIVER]: DriversLicenseCategoryType.AUTOMOTIVE,
+    [LicenseExamType.FIREARM]: DriversLicenseCategoryType.FIREARM,
+    [LicenseExamType.WATER]: DriversLicenseCategoryType.WATER,
+    [LicenseExamType.PILOT]: DriversLicenseCategoryType.AVIATION,
+  } as const;
+
   return (
     <Modal
-      title={exam ? t("editDLExam") : t("createDLExam")}
-      isOpen={isOpen(ModalIds.ManageDLExam)}
+      title={exam ? t("licenseExams.editExam") : t("licenseExams.createExam")}
+      isOpen={isOpen(ModalIds.ManageExam)}
       onClose={handleClose}
       className="min-w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, setValues, errors, values }) => (
           <Form>
+            <FormField errorMessage={errors.type} label={common("type")}>
+              <Select
+                disabled={!!exam}
+                value={values.type}
+                onChange={handleChange}
+                name="type"
+                values={Object.values(LicenseExamType).map((v) => ({
+                  label: v.toLowerCase(),
+                  value: v,
+                }))}
+              />
+            </FormField>
+
             <FormField errorMessage={errors.citizenId} label={common("citizen")}>
               <InputSuggestions<NameSearchResult>
                 onSuggestionPress={(suggestion) => {
@@ -152,7 +171,7 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
               />
             </FormField>
 
-            <FormField errorMessage={errors.license} label={t("license")}>
+            <FormField errorMessage={errors.license} label={t("Leo.license")}>
               <Select
                 value={values.license}
                 onChange={handleChange}
@@ -168,7 +187,10 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
               />
             </FormField>
 
-            <FormField errorMessage={errors.categories as string} label={t("categories")}>
+            <FormField
+              errorMessage={errors.categories as string}
+              label={t("licenseExams.categories")}
+            >
               <Select
                 closeMenuOnSelect={false}
                 isMulti
@@ -176,11 +198,7 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
                 onChange={handleChange}
                 name="categories"
                 values={driverslicenseCategory.values
-                  .filter((v) =>
-                    type === "dl"
-                      ? v.type !== DriversLicenseCategoryType.FIREARM
-                      : v.type === DriversLicenseCategoryType.FIREARM,
-                  )
+                  .filter((v) => values.type && v.type === filterTypes[values.type])
                   .map((v) => ({
                     label: v.value.value,
                     value: v.id,
@@ -188,7 +206,7 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
               />
             </FormField>
 
-            <FormField errorMessage={errors.theoryExam} label={t("theoryExam")}>
+            <FormField errorMessage={errors.theoryExam} label={t("licenseExams.theoryExam")}>
               <Select
                 isClearable
                 value={values.theoryExam}
@@ -198,7 +216,7 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
               />
             </FormField>
 
-            <FormField errorMessage={errors.practiceExam} label={t("practiceExam")}>
+            <FormField errorMessage={errors.practiceExam} label={t("licenseExams.practiceExam")}>
               <Select
                 isClearable
                 value={values.practiceExam}

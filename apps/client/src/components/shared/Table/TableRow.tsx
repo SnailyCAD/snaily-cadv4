@@ -19,7 +19,7 @@ export function TableRow<TData extends RowData>({
   const isNone = tableActionsAlignment === TableActionsAlignment.NONE;
   const dir = isNone ? "" : isLeft ? "left-0" : "right-0";
 
-  const rowProps = (row.original as any).rowProps as Partial<Record<string, any>> | undefined;
+  const rowProps = (row.original as any)?.rowProps as Partial<Record<string, any>> | undefined;
 
   const hasStyle = !!rowProps?.style;
   const bgColor = hasStyle
@@ -29,12 +29,12 @@ export function TableRow<TData extends RowData>({
     : stickyBgColor;
 
   return (
-    <tr data-row-index={idx} key={row.id}>
+    <tr {...rowProps} data-row-index={idx} key={row.id}>
       {row.getVisibleCells().map((cell) => {
         const isActions = cell.column.id === "actions";
         const cellValue = ["drag-drop", "select"].includes(cell.column.id)
           ? cell.column.columnDef.cell
-          : cell.getValue<any>();
+          : cell.renderValue<any>();
 
         return (
           <td
@@ -44,7 +44,6 @@ export function TableRow<TData extends RowData>({
               bgColor,
               // isMove && "w-10",
             )}
-            style={rowProps?.style}
             key={cell.id}
           >
             {flexRender(cellValue, cell.getContext())}

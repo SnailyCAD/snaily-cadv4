@@ -70,7 +70,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
 
   const { license, driverslicenseCategory } = useValues();
   const t = useTranslations("Citizen");
-  const { WEAPON_REGISTRATION, WEAPON_EXAMS, DL_EXAMS } = useFeatureEnabled();
+  const { WEAPON_REGISTRATION, LICENSE_EXAMS } = useFeatureEnabled();
   const formRowClassName = classNames(
     "w-full",
     flexType === "row" ? "grid grid-cols-2 gap-2" : "flex flex-col",
@@ -78,7 +78,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
 
   return (
     <>
-      {DL_EXAMS && !isLeo ? null : (
+      {LICENSE_EXAMS && !isLeo ? null : (
         <section className="w-full">
           {isLeo ? (
             <FormField label={"Suspended Drivers license"} checkbox>
@@ -259,7 +259,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
         {isLeo ? <hr className="my-2 mb-3 border-t border-secondary dark:border-quinary" /> : null}
       </section>
 
-      {WEAPON_REGISTRATION && !WEAPON_EXAMS ? (
+      {!WEAPON_REGISTRATION ? null : LICENSE_EXAMS && !isLeo ? null : (
         <section className="w-full">
           {isLeo ? (
             <FormField label={"Suspended Firearms license"} checkbox>
@@ -314,7 +314,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
             </p>
           ) : null}
         </section>
-      ) : null}
+      )}
     </>
   );
 }

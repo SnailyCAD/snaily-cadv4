@@ -364,6 +364,7 @@ model Citizen {
   WeaponExam           WeaponExam[]                  @relation("weaponExams")
   suspendedLicenses    SuspendedCitizenLicenses?     @relation(fields: [suspendedLicensesId], references: [id])
   suspendedLicensesId  String?
+  LicenseExam          LicenseExam[]
 }
 
 model SuspendedCitizenLicenses {
@@ -502,6 +503,7 @@ model Value {
   QualificationValue              QualificationValue[]
   CallTypeValue                   CallTypeValue[]               @relation("callTypeValueToValue")
   WeaponExam                      WeaponExam[]                  @relation("weaponExamToLicense")
+  LicenseExam                     LicenseExam[]                 @relation("examToLicense")
 }
 
 model PenalCode {
@@ -604,14 +606,16 @@ model DepartmentValue {
 }
 
 model DriversLicenseCategoryValue {
-  id          String                     @id @default(cuid())
-  valueId     String
-  value       Value                      @relation("driversLicenseCategoryToValue", fields: [valueId], references: [id], onDelete: Cascade)
-  type        DriversLicenseCategoryType
-  description String?
-  citizens    Citizen[]                  @relation("dlCategoryToDLCategory")
-  DLExam      DLExam[]
-  WeaponExam  WeaponExam[]
+  id            String                     @id @default(cuid())
+  valueId       String
+  value         Value                      @relation("driversLicenseCategoryToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  type          DriversLicenseCategoryType
+  description   String?
+  citizens      Citizen[]                  @relation("dlCategoryToDLCategory")
+  DLExam        DLExam[]
+  WeaponExam    WeaponExam[]
+  LicenseExam   LicenseExam?               @relation(fields: [licenseExamId], references: [id])
+  licenseExamId String?
 }
 
 model VehicleValue {
@@ -1246,6 +1250,21 @@ model TruckLog {
 }
 
 // Exams
+model LicenseExam {
+  id           String                        @id @default(uuid())
+  theoryExam   DLExamPassType?
+  practiceExam DLExamPassType?
+  status       DLExamStatus                  @default(IN_PROGRESS)
+  createdAt    DateTime                      @default(now())
+  updatedAt    DateTime                      @default(now()) @updatedAt
+  type         LicenseExamType
+  citizen      Citizen                       @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId    String
+  license      Value                         @relation("examToLicense", fields: [licenseId], references: [id])
+  licenseId    String
+  categories   DriversLicenseCategoryValue[]
+}
+
 model DLExam {
   id           String                        @id @default(uuid())
   citizen      Citizen                       @relation(fields: [citizenId], references: [id], onDelete: Cascade)
@@ -1315,6 +1334,13 @@ model CourthousePost {
   descriptionData Json?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @default(now()) @updatedAt
+}
+
+enum LicenseExamType {
+  DRIVER
+  FIREARM
+  WATER
+  PILOT
 }
 
 enum QualificationValueType {
@@ -1523,6 +1549,7 @@ enum Feature {
   ALLOW_REGULAR_LOGIN
   RADIO_CHANNEL_MANAGEMENT
   ALLOW_CITIZEN_DELETION_BY_NON_ADMIN
+  /// @deprecated, use `LICENSE_EXAMS` instead
   DL_EXAMS
   DMV
   BADGE_NUMBERS
@@ -1534,6 +1561,7 @@ enum Feature {
   LEO_TICKETS
   LEO_BAIL
   COURTHOUSE_POSTS
+  /// @deprecated, use `LICENSE_EXAMS` instead
   WEAPON_EXAMS
   ACTIVE_WARRANTS
   CITIZEN_DELETE_ON_DEAD
@@ -1541,4 +1569,5 @@ enum Feature {
   WARRANT_STATUS_APPROVAL
   DIVISIONS
   TONES
+  LICENSE_EXAMS
 }
