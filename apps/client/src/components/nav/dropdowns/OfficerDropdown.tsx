@@ -68,11 +68,14 @@ export function OfficerDropdown() {
       show: hasPermissions([Permissions.ViewCitizenLogs], (u) => u.isSupervisor),
     },
     {
-      name: t("dlExams"),
+      name: t("licenseExams"),
       href: "/officer/supervisor/exams",
       show:
         LICENSE_EXAMS &&
-        hasPermissions([Permissions.ViewDLExams, Permissions.ManageDLExams], (u) => u.isSupervisor),
+        hasPermissions(
+          [Permissions.ViewLicenseExams, Permissions.ManageLicenseExams],
+          (u) => u.isSupervisor,
+        ),
     },
     {
       name: t("manageUnits"),

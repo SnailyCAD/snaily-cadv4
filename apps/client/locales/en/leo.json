@@ -255,7 +255,7 @@
     "alert_deleteBolo": "Are you sure you want to delete this bolo? This action cannot be undone"
   },
   "licenseExams": {
-    "exams": "license exams",
+    "exams": "License Exams",
     "noExams": "There are no license exams yet.",
     "editExam": "Edit license exam",
     "theoryExam": "Theory Exam",

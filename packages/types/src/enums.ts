@@ -252,6 +252,15 @@ export const LicenseExamStatus = {
 
 export type LicenseExamStatus = typeof LicenseExamStatus[keyof typeof LicenseExamStatus];
 
+export const LicenseExamType = {
+  DRIVER: "DRIVER",
+  FIREARM: "FIREARM",
+  WATER: "WATER",
+  PILOT: "PILOT",
+} as const;
+
+export type LicenseExamType = typeof LicenseExamType[keyof typeof LicenseExamType];
+
 export const CustomFieldCategory = {
   CITIZEN: "CITIZEN",
   WEAPON: "WEAPON",

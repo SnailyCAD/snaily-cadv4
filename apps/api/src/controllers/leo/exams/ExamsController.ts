@@ -1,6 +1,11 @@
-import type { Prisma } from "@prisma/client";
-import { LicenseExam } from "@snailycad/types";
-import { DL_EXAM_SCHEMA } from "@snailycad/schemas";
+import type {
+  Prisma,
+  LicenseExam,
+  DriversLicenseCategoryValue,
+  LicenseExamType,
+} from "@prisma/client";
+import { LicenseExamPassType, LicenseExamStatus } from "@snailycad/types";
+import { LICENSE_EXAM_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Controller, BodyParams, PathParams, QueryParams } from "@tsed/common";
 import { NotFound } from "@tsed/exceptions";
 import { ContentType, Delete, Get, Post, Put } from "@tsed/schema";
@@ -17,19 +22,19 @@ const licenseExamIncludes = {
   categories: { include: { value: true } },
 };
 
-@Controller("/leo/exams")
+@Controller("/leo/license-exams")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
 export class LicenseExamsController {
   @Get("/")
   @UsePermissions({
     fallback: (u) => u.isSupervisor,
-    permissions: [Permissions.ViewlicenseExams, Permissions.ManagelicenseExams],
+    permissions: [Permissions.ViewLicenseExams, Permissions.ManageLicenseExams],
   })
   async getAlllicenseExams(
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query = "",
-  ): Promise<APITypes.GetlicenseExamsData> {
+  ): Promise<APITypes.GetLicenseExamsData> {
     const where: Prisma.LicenseExamWhereInput | undefined = query
       ? {
           OR: [
@@ -57,17 +62,18 @@ export class LicenseExamsController {
   @Post("/")
   @UsePermissions({
     fallback: (u) => u.isSupervisor,
-    permissions: [Permissions.ManagelicenseExams],
+    permissions: [Permissions.ManageLicenseExams],
   })
-  async createlicenseExam(@BodyParams() body: unknown): Promise<APITypes.PostlicenseExamsData> {
-    const data = validateSchema(DL_EXAM_SCHEMA, body);
+  async createlicenseExam(@BodyParams() body: unknown): Promise<APITypes.PostLicenseExamsData> {
+    const data = validateSchema(LICENSE_EXAM_SCHEMA, body);
 
     const status = this.getExamStatus(data);
     const exam = await prisma.licenseExam.create({
       data: {
+        type: data.type as LicenseExamType,
         citizenId: data.citizenId,
-        practiceExam: data.practiceExam as licenseExamPassType | null,
-        theoryExam: data.theoryExam as licenseExamPassType | null,
+        practiceExam: data.practiceExam as LicenseExamPassType | null,
+        theoryExam: data.theoryExam as LicenseExamPassType | null,
         licenseId: data.license,
         status,
       },
@@ -84,7 +90,7 @@ export class LicenseExamsController {
       ),
     );
 
-    if (status === licenseExamStatus.PASSED) {
+    if (status === LicenseExamStatus.PASSED) {
       await this.grantLicenseToCitizen(exam);
     }
 
@@ -99,20 +105,20 @@ export class LicenseExamsController {
   @Put("/:id")
   @UsePermissions({
     fallback: (u) => u.isSupervisor,
-    permissions: [Permissions.ManagelicenseExams],
+    permissions: [Permissions.ManageLicenseExams],
   })
   async updatelicenseExam(
     @PathParams("id") examId: string,
     @BodyParams() body: unknown,
-  ): Promise<APITypes.PutlicenseExamByIdData> {
-    const data = validateSchema(DL_EXAM_SCHEMA, body);
+  ): Promise<APITypes.PutLicenseExamByIdData> {
+    const data = validateSchema(LICENSE_EXAM_SCHEMA, body);
 
     const exam = await prisma.licenseExam.findUnique({
       where: { id: examId },
       include: { categories: true },
     });
 
-    if (!exam || exam.status !== licenseExamStatus.IN_PROGRESS) {
+    if (!exam || exam.status !== LicenseExamStatus.IN_PROGRESS) {
       throw new NotFound("examNotFound");
     }
 
@@ -131,15 +137,15 @@ export class LicenseExamsController {
     );
 
     const status = this.getExamStatus(data);
-    if (status === licenseExamStatus.PASSED) {
+    if (status === LicenseExamPassType.PASSED) {
       await this.grantLicenseToCitizen(exam);
     }
 
     const updated = await prisma.licenseExam.update({
       where: { id: examId },
       data: {
-        practiceExam: data.practiceExam as licenseExamPassType | null,
-        theoryExam: data.theoryExam as licenseExamPassType | null,
+        practiceExam: data.practiceExam as LicenseExamPassType | null,
+        theoryExam: data.theoryExam as LicenseExamPassType | null,
         status,
       },
       include: licenseExamIncludes,
@@ -151,11 +157,11 @@ export class LicenseExamsController {
   @Delete("/:id")
   @UsePermissions({
     fallback: (u) => u.isSupervisor,
-    permissions: [Permissions.ManagelicenseExams],
+    permissions: [Permissions.ManageLicenseExams],
   })
   async deletelicenseExam(
     @PathParams("id") examId: string,
-  ): Promise<APITypes.DeletelicenseExamByIdData> {
+  ): Promise<APITypes.DeleteLicenseExamByIdData> {
     const exam = await prisma.licenseExam.findUnique({
       where: { id: examId },
       include: { categories: true },
@@ -174,22 +180,22 @@ export class LicenseExamsController {
 
   private getExamStatus(data: ExamData) {
     if (!data.theoryExam || !data.practiceExam) {
-      return licenseExamStatus.IN_PROGRESS;
+      return LicenseExamStatus.IN_PROGRESS;
     }
 
     const oneOfTypeFailed =
-      data.theoryExam === licenseExamPassType.FAILED ||
-      data.practiceExam === licenseExamPassType.FAILED;
+      data.theoryExam === LicenseExamPassType.FAILED ||
+      data.practiceExam === LicenseExamPassType.FAILED;
 
     if (oneOfTypeFailed) {
-      return licenseExamStatus.FAILED;
+      return LicenseExamPassType.FAILED;
     }
 
-    return licenseExamStatus.PASSED;
+    return LicenseExamPassType.PASSED;
   }
 
   private async grantLicenseToCitizen(
-    exam: licenseExam & { categories: DriversLicenseCategoryValue[] },
+    exam: Omit<LicenseExam, "citizen" | "license"> & { categories: DriversLicenseCategoryValue[] },
   ) {
     const citizen = await prisma.citizen.findUnique({
       where: { id: exam.citizenId },

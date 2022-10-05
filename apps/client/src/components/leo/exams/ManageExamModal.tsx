@@ -1,9 +1,10 @@
-import { DL_EXAM_SCHEMA } from "@snailycad/schemas";
+import { LICENSE_EXAM_SCHEMA } from "@snailycad/schemas";
 import {
-  DLExam,
-  DLExamPassType,
+  LicenseExam,
+  LicenseExamPassType,
   DriversLicenseCategoryType,
   ValueLicenseType,
+  LicenseExamType,
 } from "@snailycad/types";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
@@ -21,14 +22,14 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import type { NameSearchResult } from "state/search/nameSearchState";
-import type { PostDLExamsData, PutDLExamByIdData } from "@snailycad/types/api";
+import type { PostLicenseExamsData, PutLicenseExamByIdData } from "@snailycad/types/api";
 import Image from "next/future/image";
 
 interface Props {
-  exam: DLExam | null;
+  exam: LicenseExam | null;
   type?: "dl" | "weapon";
-  onUpdate?(oldExam: DLExam, newExam: DLExam): void;
-  onCreate?(exam: DLExam): void;
+  onUpdate?(oldExam: LicenseExam, newExam: LicenseExam): void;
+  onCreate?(exam: LicenseExam): void;
   onClose?(): void;
 }
 
@@ -40,11 +41,10 @@ export function ManageExamModal({ exam, type = "dl", onClose, onCreate, onUpdate
   const { makeImageUrl } = useImageUrl();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
   const { driverslicenseCategory, license } = useValues();
-  const apiPath = type === "dl" ? "dl-exams" : "weapon-exams";
 
   const PASS_FAIL_VALUES = [
-    { label: t("Vehicles.passed"), value: DLExamPassType.PASSED },
-    { label: t("Vehicles.failed"), value: DLExamPassType.FAILED },
+    { label: t("Vehicles.passed"), value: LicenseExamPassType.PASSED },
+    { label: t("Vehicles.failed"), value: LicenseExamPassType.FAILED },
   ];
 
   function handleClose() {
@@ -59,8 +59,8 @@ export function ManageExamModal({ exam, type = "dl", onClose, onCreate, onUpdate
     };
 
     if (exam) {
-      const { json } = await execute<PutDLExamByIdData>({
-        path: `/leo/${apiPath}/${exam.id}`,
+      const { json } = await execute<PutLicenseExamByIdData>({
+        path: `/leo/license-exams/${exam.id}`,
         method: "PUT",
         data,
       });
@@ -70,8 +70,8 @@ export function ManageExamModal({ exam, type = "dl", onClose, onCreate, onUpdate
         onUpdate?.(exam, json);
       }
     } else {
-      const { json } = await execute<PostDLExamsData>({
-        path: `/leo/${apiPath}`,
+      const { json } = await execute<PostLicenseExamsData>({
+        path: "/leo/license-exams",
         method: "POST",
         data,
       });
@@ -83,8 +83,9 @@ export function ManageExamModal({ exam, type = "dl", onClose, onCreate, onUpdate
     }
   }
 
-  const validate = handleValidate(DL_EXAM_SCHEMA);
+  const validate = handleValidate(LICENSE_EXAM_SCHEMA);
   const INITIAL_VALUES = {
+    type: exam?.type ?? null,
     citizenId: exam?.citizenId ?? null,
     citizenName: exam ? `${exam.citizen.name} ${exam.citizen.surname}` : "",
     theoryExam: exam?.theoryExam ?? null,
@@ -107,6 +108,19 @@ export function ManageExamModal({ exam, type = "dl", onClose, onCreate, onUpdate
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, setValues, errors, values }) => (
           <Form>
+            <FormField errorMessage={errors.type} label={common("type")}>
+              <Select
+                disabled={!!exam}
+                value={values.type}
+                onChange={handleChange}
+                name="type"
+                values={Object.values(LicenseExamType).map((v) => ({
+                  label: v.toLowerCase(),
+                  value: v,
+                }))}
+              />
+            </FormField>
+
             <FormField errorMessage={errors.citizenId} label={common("citizen")}>
               <InputSuggestions<NameSearchResult>
                 onSuggestionPress={(suggestion) => {
