@@ -268,6 +268,7 @@ export const typeHandlers = {
           title: item.title,
           description: item.description,
           descriptionData: item.descriptionData ?? [],
+          type: item.type ?? null,
           groupId: item.groupId,
           ...(await upsertWarningApplicable({
             body: item,
@@ -280,6 +281,7 @@ export const typeHandlers = {
           description: item.description,
           descriptionData: item.descriptionData ?? [],
           groupId: item.groupId,
+          type: item.type ?? null,
           ...(await upsertWarningApplicable({
             body: item,
             cad,
