@@ -40,7 +40,7 @@
     "@react-aria/label": "^3.4.1",
     "@react-aria/overlays": "^3.10.1",
     "@react-aria/ssr": "^3.3.0",
-    "@react-aria/utils": "^3.13.3",
+    "@react-aria/utils": "^3.14.0",
     "@react-stately/datepicker": "^3.0.2",
     "@sentry/nextjs": "^7.14.0",
     "@sentry/react": "^7.14.0",

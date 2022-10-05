@@ -10,15 +10,14 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import type { MedicalRecord } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
-import { Input } from "components/form/inputs/Input";
 import { useCitizen } from "context/CitizenContext";
-import { Textarea } from "components/form/Textarea";
 import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
 import type {
   PostCitizenMedicalRecordsData,
   PutCitizenMedicalRecordsData,
 } from "@snailycad/types/api";
+import { TextField } from "@snailycad/ui";
 
 interface Props {
   medicalRecord: MedicalRecord | null;
@@ -82,11 +81,15 @@ export function ManageMedicalRecordsModal({ medicalRecord, onClose, onCreate, on
       className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, errors, values, isValid }) => (
+        {({ handleChange, setFieldValue, errors, values, isValid }) => (
           <Form>
-            <FormField errorMessage={errors.type} label={t("diseases")}>
-              <Input onChange={handleChange} name="type" value={values.type} />
-            </FormField>
+            <TextField
+              label={t("diseases")}
+              value={values.type}
+              onChange={(value) => setFieldValue("type", value)}
+              name="type"
+              errorMessage={errors.type}
+            />
 
             <FormField errorMessage={errors.bloodGroup} label={t("bloodGroup")}>
               <Select
@@ -104,9 +107,14 @@ export function ManageMedicalRecordsModal({ medicalRecord, onClose, onCreate, on
               ) : null}
             </FormField>
 
-            <FormField errorMessage={errors.description} label={common("description")}>
-              <Textarea value={values.description} name="description" onChange={handleChange} />
-            </FormField>
+            <TextField
+              label={common("description")}
+              errorMessage={errors.description}
+              value={values.description}
+              onChange={(value) => setFieldValue("description", value)}
+              name="description"
+              isTextarea
+            />
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onPress={handleClose} variant="cancel">

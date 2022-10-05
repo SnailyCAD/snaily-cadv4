@@ -2576,7 +2576,7 @@ __metadata:
     "@react-aria/label": ^3.4.1
     "@react-aria/overlays": ^3.10.1
     "@react-aria/ssr": ^3.3.0
-    "@react-aria/utils": ^3.13.3
+    "@react-aria/utils": ^3.14.0
     "@react-stately/datepicker": ^3.0.2
     "@sentry/nextjs": ^7.14.0
     "@sentry/react": ^7.14.0
@@ -2710,7 +2710,11 @@ __metadata:
 <<<<<<< HEAD
 =======
     next-intl: ^2.7.6
+<<<<<<< HEAD
 >>>>>>> 71339735 (:tada: feat: UI1)
+=======
+    tailwindcss: ^3.1.8
+>>>>>>> 9d46844f (:tada: feat: working UI package)
     tslib: ^2.4.0
     tsup: ^6.2.3
     typescript: ^4.8.4
