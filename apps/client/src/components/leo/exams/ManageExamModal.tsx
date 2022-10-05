@@ -27,13 +27,12 @@ import Image from "next/future/image";
 
 interface Props {
   exam: LicenseExam | null;
-  type?: "dl" | "weapon";
   onUpdate?(oldExam: LicenseExam, newExam: LicenseExam): void;
   onCreate?(exam: LicenseExam): void;
   onClose?(): void;
 }
 
-export function ManageExamModal({ exam, type = "dl", onClose, onCreate, onUpdate }: Props) {
+export function ManageExamModal({ exam, onClose, onCreate, onUpdate }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations();
   const { isOpen, closeModal } = useModal();
@@ -97,6 +96,13 @@ export function ManageExamModal({ exam, type = "dl", onClose, onCreate, onUpdate
         value: v.id,
       })) ?? null,
   };
+
+  const filterTypes = {
+    [LicenseExamType.DRIVER]: DriversLicenseCategoryType.AUTOMOTIVE,
+    [LicenseExamType.FIREARM]: DriversLicenseCategoryType.FIREARM,
+    [LicenseExamType.WATER]: DriversLicenseCategoryType.WATER,
+    [LicenseExamType.PILOT]: DriversLicenseCategoryType.AVIATION,
+  } as const;
 
   return (
     <Modal
@@ -192,11 +198,7 @@ export function ManageExamModal({ exam, type = "dl", onClose, onCreate, onUpdate
                 onChange={handleChange}
                 name="categories"
                 values={driverslicenseCategory.values
-                  .filter((v) =>
-                    type === "dl"
-                      ? v.type !== DriversLicenseCategoryType.FIREARM
-                      : v.type === DriversLicenseCategoryType.FIREARM,
-                  )
+                  .filter((v) => values.type && v.type === filterTypes[values.type])
                   .map((v) => ({
                     label: v.value.value,
                     value: v.id,
