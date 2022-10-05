@@ -1,10 +1,10 @@
-import type { GetStaticProps } from "next";
+import type { GetServerSideProps } from "next";
 
 export default function Page() {
   return null;
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   return {
     redirect: {
       destination: "/officer/supervisor/exams",
