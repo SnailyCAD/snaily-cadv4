@@ -239,6 +239,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
                 id: code.id,
                 rowProps: { value: code },
                 title: code.title,
+                type: code.type?.toLowerCase() ?? common("none"),
                 description: <CallDescription nonCard data={code} />,
                 actions: (
                   <>
@@ -258,6 +259,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
               }))}
             columns={[
               { header: common("title"), accessorKey: "title" },
+              { header: common("type"), accessorKey: "type" },
               { header: common("description"), accessorKey: "description" },
               { header: common("actions"), accessorKey: "actions" },
             ]}

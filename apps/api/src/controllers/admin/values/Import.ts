@@ -37,6 +37,7 @@ import {
   Value,
   CadFeature,
   cad,
+  PenalCodeType,
 } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { upsertWarningApplicable } from "lib/records/penal-code";
@@ -268,6 +269,7 @@ export const typeHandlers = {
           title: item.title,
           description: item.description,
           descriptionData: item.descriptionData ?? [],
+          type: (item.type ?? null) as PenalCodeType | null,
           groupId: item.groupId,
           ...(await upsertWarningApplicable({
             body: item,
@@ -280,6 +282,7 @@ export const typeHandlers = {
           description: item.description,
           descriptionData: item.descriptionData ?? [],
           groupId: item.groupId,
+          type: (item.type ?? null) as PenalCodeType | null,
           ...(await upsertWarningApplicable({
             body: item,
             cad,

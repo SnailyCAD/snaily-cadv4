@@ -368,7 +368,7 @@ model Citizen {
 
 model SuspendedCitizenLicenses {
   id              String    @id @default(uuid())
-  driverLicense  Boolean   @default(false)
+  driverLicense   Boolean   @default(false)
   pilotLicense    Boolean   @default(false)
   waterLicense    Boolean   @default(false)
   firearmsLicense Boolean   @default(false)
@@ -511,6 +511,7 @@ model PenalCode {
   title                  String                @db.VarChar(255)
   description            String?               @db.Text
   descriptionData        Json?
+  type                   PenalCodeType?
   warningApplicable      WarningApplicable?    @relation(fields: [warningApplicableId], references: [id])
   warningApplicableId    String?
   warningNotApplicable   WarningNotApplicable? @relation(fields: [warningNotApplicableId], references: [id])
@@ -1491,6 +1492,12 @@ enum PaymentStatus {
 
 enum ToAddDefaultPermissionsKey {
   MANAGE_WARRANTS_PERMISSIONS
+}
+
+enum PenalCodeType {
+  INFRACTION
+  MISDEMEANOR
+  FELONY
 }
 
 // other
