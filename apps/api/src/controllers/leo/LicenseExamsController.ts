@@ -208,10 +208,18 @@ export class LicenseExamsController {
       accessor: "id",
     });
 
+    const prismaNames = {
+      DRIVER: "driversLicenseId",
+      FIREARM: "weaponLicenseId",
+      WATER: "waterLicenseId",
+      PILOT: "pilotLicenseId",
+    } as const;
+    const prismaName = prismaNames[exam.type];
+
     await prisma.$transaction([
       prisma.citizen.update({
         where: { id: citizen.id },
-        data: { driversLicenseId: exam.licenseId },
+        data: { [prismaName]: exam.licenseId },
       }),
       ...connectDisconnectArr.map((item) =>
         prisma.citizen.update({
