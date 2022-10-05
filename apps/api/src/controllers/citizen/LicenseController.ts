@@ -2,7 +2,7 @@ import { cad, CadFeature, Feature, User } from "@prisma/client";
 import { LICENSE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
-import { NotFound } from "@tsed/exceptions";
+import { Forbidden, NotFound } from "@tsed/exceptions";
 import { ContentType, Description, Put } from "@tsed/schema";
 import { canManageInvariant } from "lib/auth/getSessionUser";
 import { prisma } from "lib/prisma";
@@ -34,6 +34,10 @@ export class LicensesController {
       defaultReturn: false,
     });
 
+    if (isLicenseExamsEnabled) {
+      throw new Forbidden("citizenNotAllowedToEditLicenses");
+    }
+
     const citizen = await prisma.citizen.findUnique({
       where: {
         id: citizenId,
@@ -56,10 +60,7 @@ export class LicensesController {
         id: citizen.id,
       },
       data: {
-        driversLicenseId:
-          isLicenseExamsEnabled || suspendedLicenses?.driverLicense
-            ? undefined
-            : data.driversLicense,
+        driversLicenseId: suspendedLicenses?.driverLicense ? undefined : data.driversLicense,
         pilotLicenseId: suspendedLicenses?.pilotLicense ? undefined : data.pilotLicense,
         weaponLicenseId: suspendedLicenses?.firearmsLicense ? undefined : data.weaponLicense,
         waterLicenseId: suspendedLicenses?.waterLicense ? undefined : data.waterLicense,

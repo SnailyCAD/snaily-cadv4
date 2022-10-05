@@ -15,9 +15,10 @@ const types = ["driversLicense", "pilotLicense", "waterLicense", "weaponLicense"
 export function LicensesCard() {
   const { openModal, closeModal } = useModal();
   const { citizen, setCurrentCitizen } = useCitizen(false);
-  const { ALLOW_CITIZEN_UPDATE_LICENSE, COMMON_CITIZEN_CARDS } = useFeatureEnabled();
+  const { ALLOW_CITIZEN_UPDATE_LICENSE, LICENSE_EXAMS, COMMON_CITIZEN_CARDS } = useFeatureEnabled();
   const t = useTranslations("Citizen");
   const { execute, state } = useFetch();
+  const showManageLicensesButtonModal = !(LICENSE_EXAMS || !ALLOW_CITIZEN_UPDATE_LICENSE);
 
   async function onSubmit(values: LicenseInitialValues) {
     const { json } = await execute<PutCitizenLicensesByIdData>({
@@ -43,7 +44,7 @@ export function LicensesCard() {
       <header className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">{t("licenses")}</h1>
 
-        {ALLOW_CITIZEN_UPDATE_LICENSE ? (
+        {showManageLicensesButtonModal ? (
           <Button onPress={() => openModal(ModalIds.ManageLicenses)} size="xs">
             {t("manageLicenses")}
           </Button>
@@ -54,7 +55,7 @@ export function LicensesCard() {
         <CitizenLicenses citizen={citizen} />
       </div>
 
-      {ALLOW_CITIZEN_UPDATE_LICENSE ? (
+      {showManageLicensesButtonModal ? (
         <ManageLicensesModal
           isLeo={COMMON_CITIZEN_CARDS}
           state={state}
