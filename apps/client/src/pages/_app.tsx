@@ -8,6 +8,7 @@ import "styles/globals.scss";
 import "styles/fonts.scss";
 import { SocketProvider } from "@casper124578/use-socket.io";
 import { getAPIUrl } from "lib/fetch/getAPIUrl";
+import { I18nProvider } from "@react-aria/i18n";
 
 import { setTags } from "@sentry/nextjs";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
@@ -42,25 +43,27 @@ export default function App({ Component, router, pageProps }: AppProps<any>) {
 
   return (
     <SSRProvider>
-      <SocketProvider uri={url} options={{ reconnectionDelay: 10_000 }}>
-        <AuthProvider initialData={pageProps}>
-          <NextIntlProvider onError={console.warn} locale={locale} messages={pageProps.messages}>
-            <ValuesProvider initialData={pageProps}>
-              <CitizenProvider initialData={pageProps}>
-                <GoogleReCaptchaProvider
-                  reCaptchaKey={process.env.NEXT_PUBLIC_GOOGLE_CAPTCHA_SITE_KEY as string}
-                  scriptProps={{ async: true, defer: true, appendTo: "body" }}
-                  useRecaptchaNet
-                >
-                  {isMounted ? <ReauthorizeSessionModal /> : null}
-                  <Component {...pageProps} />
-                </GoogleReCaptchaProvider>
-                <Toaster position="top-right" />
-              </CitizenProvider>
-            </ValuesProvider>
-          </NextIntlProvider>
-        </AuthProvider>
-      </SocketProvider>
+      <I18nProvider locale={locale}>
+        <SocketProvider uri={url} options={{ reconnectionDelay: 10_000 }}>
+          <AuthProvider initialData={pageProps}>
+            <NextIntlProvider onError={console.warn} locale={locale} messages={pageProps.messages}>
+              <ValuesProvider initialData={pageProps}>
+                <CitizenProvider initialData={pageProps}>
+                  <GoogleReCaptchaProvider
+                    reCaptchaKey={process.env.NEXT_PUBLIC_GOOGLE_CAPTCHA_SITE_KEY as string}
+                    scriptProps={{ async: true, defer: true, appendTo: "body" }}
+                    useRecaptchaNet
+                  >
+                    {isMounted ? <ReauthorizeSessionModal /> : null}
+                    <Component {...pageProps} />
+                  </GoogleReCaptchaProvider>
+                  <Toaster position="top-right" />
+                </CitizenProvider>
+              </ValuesProvider>
+            </NextIntlProvider>
+          </AuthProvider>
+        </SocketProvider>
+      </I18nProvider>
     </SSRProvider>
   );
 }
