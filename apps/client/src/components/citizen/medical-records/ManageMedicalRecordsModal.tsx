@@ -2,7 +2,6 @@ import { useTranslations } from "use-intl";
 import { Form, Formik } from "formik";
 import { MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
-import { FormField } from "components/form/FormField";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
@@ -11,7 +10,6 @@ import { ModalIds } from "types/ModalIds";
 import type { MedicalRecord } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import { useCitizen } from "context/CitizenContext";
-import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
 import type {
   PostCitizenMedicalRecordsData,
@@ -81,7 +79,7 @@ export function ManageMedicalRecordsModal({ medicalRecord, onClose, onCreate, on
       className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setFieldValue, errors, values, isValid }) => (
+        {({ setFieldValue, errors, values, isValid }) => (
           <Form>
             <TextField
               label={t("diseases")}
