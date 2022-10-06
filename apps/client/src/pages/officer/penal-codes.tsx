@@ -10,7 +10,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { useValues } from "context/ValuesContext";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
+import { Input} from "@snailycad/ui";
 import { Infofield } from "components/shared/Infofield";
 import {
   getPenalCodeMaxFines,

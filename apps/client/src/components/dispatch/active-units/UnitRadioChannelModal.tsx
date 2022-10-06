@@ -2,7 +2,7 @@ import * as React from "react";
 import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 import { Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
+import { Input} from "@snailycad/ui";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { Form, Formik } from "formik";

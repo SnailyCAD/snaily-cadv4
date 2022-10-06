@@ -7,7 +7,7 @@ import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import type { Citizen, RecordLog } from "@snailycad/types";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
+import { Input} from "@snailycad/ui";
 import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
 import { TabList } from "components/shared/TabList";

@@ -13,7 +13,7 @@ import { Loader } from "components/Loader";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { ModalIds } from "types/ModalIds";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
+import { Input} from "@snailycad/ui";
 import { requestAll, yesOrNoText } from "lib/utils";
 import { PendingBusinessesTab } from "components/admin/manage/business/PendingBusinessesTab";
 import { useAuth } from "context/AuthContext";

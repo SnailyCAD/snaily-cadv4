@@ -24,7 +24,7 @@ import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { CombinedLeoUnit, EmsFdDeputy, LeoIncident, StatusValueType } from "@snailycad/types";
 import { useValues } from "context/ValuesContext";
 import { isUnitCombined } from "@snailycad/utils";
-import { Input } from "components/form/inputs/Input";
+import { Input} from "@snailycad/ui";
 import type { PostIncidentsData, PutIncidentByIdData } from "@snailycad/types/api";
 
 interface Props {

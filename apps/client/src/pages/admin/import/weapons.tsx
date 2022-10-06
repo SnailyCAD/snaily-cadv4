@@ -10,7 +10,7 @@ import { Rank, Weapon } from "@snailycad/types";
 import { Table, useTableState } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
+import { Input} from "@snailycad/ui";
 import { Button } from "@snailycad/ui";
 import { ImportModal } from "components/admin/import/ImportModal";
 import { ModalIds } from "types/ModalIds";

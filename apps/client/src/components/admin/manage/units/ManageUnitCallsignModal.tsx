@@ -4,7 +4,7 @@ import type { PutManageUnitCallsignData } from "@snailycad/types/api";
 import { isUnitOfficer } from "@snailycad/utils";
 import { Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
+import { Input} from "@snailycad/ui";
 import { CallSignPreview } from "components/leo/CallsignPreview";
 import { AdvancedSettings } from "components/leo/modals/AdvancedSettings";
 import { makeDivisionsObjectMap } from "components/leo/modals/ManageOfficerModal";

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
+import { Input} from "@snailycad/ui";
 import type { Bolo } from "@snailycad/types";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useTranslations } from "next-intl";

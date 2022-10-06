@@ -9,7 +9,7 @@ import type { GetServerSideProps } from "next";
 import { LicenseExam, LicenseExamStatus } from "@snailycad/types";
 import { Table, useTableState } from "components/shared/Table";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
+import { Input} from "@snailycad/ui";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { Permissions } from "@snailycad/permissions";

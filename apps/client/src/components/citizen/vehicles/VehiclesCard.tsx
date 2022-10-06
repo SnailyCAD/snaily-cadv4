@@ -15,7 +15,7 @@ import { TransferVehicleModal } from "./modals/TransferVehicleModal";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 import { useCitizen } from "context/CitizenContext";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
+import { Input} from "@snailycad/ui";
 import { Loader } from "components/Loader";
 import type { DeleteCitizenVehicleData, GetCitizenVehiclesData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";

@@ -2,7 +2,7 @@ import * as React from "react";
 import { useFormikContext } from "formik";
 import { useTranslations } from "next-intl";
 import useDigitInput from "react-digit-input";
-import { Input } from "components/form/inputs/Input";
+import { Input} from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Button } from "@snailycad/ui";
 import { Loader } from "components/Loader";

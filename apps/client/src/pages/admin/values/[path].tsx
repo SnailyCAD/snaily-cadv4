@@ -11,7 +11,7 @@ import { type AnyValue, ValueType, Rank } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { getObjLength, isEmpty, requestAll, yesOrNoText } from "lib/utils";
-import { Input } from "components/form/inputs/Input";
+import { Input} from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
 import { Table, useTableState } from "components/shared/Table";

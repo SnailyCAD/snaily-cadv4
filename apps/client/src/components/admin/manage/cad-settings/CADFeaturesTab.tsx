@@ -9,7 +9,7 @@ import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { Toggle } from "components/form/Toggle";
 import type { CadFeature, Feature } from "@snailycad/types";
-import { Input } from "components/form/inputs/Input";
+import { Input} from "@snailycad/ui";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { TabsContent } from "components/shared/TabList";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";

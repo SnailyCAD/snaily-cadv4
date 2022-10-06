@@ -8,7 +8,7 @@ import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { Input } from "components/form/inputs/Input";
+import { Input} from "@snailycad/ui";
 import { Infofield } from "components/shared/Infofield";
 import { useWeaponSearch, WeaponSearchResult } from "state/search/weaponSearchState";
 import { CustomFieldsArea } from "./CustomFieldsArea";

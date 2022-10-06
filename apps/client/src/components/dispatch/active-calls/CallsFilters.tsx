@@ -3,7 +3,7 @@ import type { Full911Call } from "state/dispatch/dispatchState";
 import { makeUnitName } from "lib/utils";
 import { FormField } from "components/form/FormField";
 import { useTranslations } from "next-intl";
-import { Input } from "components/form/inputs/Input";
+import { Input} from "@snailycad/ui";
 import { useCallsFilters } from "state/callsFiltersState";
 import { Select, SelectValue } from "components/form/Select";
 import type { useAsyncTable } from "components/shared/Table";

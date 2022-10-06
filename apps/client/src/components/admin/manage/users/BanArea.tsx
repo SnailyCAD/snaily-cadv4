@@ -1,6 +1,6 @@
 import { Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
+import { Input} from "@snailycad/ui";
 import { Loader } from "components/Loader";
 import { Form, Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";

@@ -3,7 +3,7 @@ import { CitizenListItem } from "components/citizen/citizen-list/CitizenListItem
 import { TablePagination } from "components/shared/Table/TablePagination";
 import { useTranslations } from "next-intl";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
+import { Input} from "@snailycad/ui";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 import type { GetCitizensData } from "@snailycad/types/api";
 

@@ -12,7 +12,7 @@ import { requestAll } from "lib/utils";
 import dynamic from "next/dynamic";
 import { Table, useTableState } from "components/shared/Table";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
+import { Input} from "@snailycad/ui";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { ModalIds } from "types/ModalIds";
 import { ManagePenalCodeGroup } from "components/admin/values/penal-codes/ManagePenalCodeGroup";

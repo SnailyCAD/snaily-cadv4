@@ -10,7 +10,7 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { Select } from "components/form/Select";
-import { Input } from "components/form/inputs/Input";
+import { Input} from "@snailycad/ui";
 import { CustomFieldResults } from "./CustomFieldResults";
 import { handleValidate } from "lib/handleValidate";
 import { CUSTOM_FIELD_SEARCH_SCHEMA } from "@snailycad/schemas";
