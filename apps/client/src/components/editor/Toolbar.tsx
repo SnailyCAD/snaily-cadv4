@@ -11,7 +11,7 @@ import {
   TypeUnderline,
 } from "react-bootstrap-icons";
 import { useSlate } from "slate-react";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { classNames } from "lib/classNames";
 import { isBlockActive, toggleMark, toggleBlock, isMarkActive } from "lib/editor/utils";
 import type { SlateElements, Text } from "./types";

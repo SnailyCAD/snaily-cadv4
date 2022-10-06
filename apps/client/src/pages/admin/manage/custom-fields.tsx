@@ -8,7 +8,7 @@ import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { Table, useTableState } from "components/shared/Table";
 import { ModalIds } from "types/ModalIds";

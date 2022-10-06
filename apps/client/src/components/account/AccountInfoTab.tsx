@@ -5,7 +5,7 @@ import { useAuth } from "context/AuthContext";
 import { FormField } from "components/form/FormField";
 import { Input, PasswordInput } from "components/form/inputs/Input";
 import { FormRow } from "components/form/FormRow";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { ManagePermissionsModal } from "components/admin/manage/users/ManagePermissionsModal";

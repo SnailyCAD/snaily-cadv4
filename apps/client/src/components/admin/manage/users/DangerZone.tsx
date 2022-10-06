@@ -1,4 +1,4 @@
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";

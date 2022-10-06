@@ -1,7 +1,7 @@
 import { Form, Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
 
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Loader } from "components/Loader";
 import { useAuth } from "context/AuthContext";

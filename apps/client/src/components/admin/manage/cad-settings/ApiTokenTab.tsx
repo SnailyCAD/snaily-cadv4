@@ -1,6 +1,6 @@
 import type * as React from "react";
 import { TabsContent } from "components/shared/TabList";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { PasswordInput } from "components/form/inputs/Input";
 import { Toggle } from "components/form/Toggle";
 import { Loader } from "components/Loader";

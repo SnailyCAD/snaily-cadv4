@@ -2,7 +2,7 @@ import { UPDATE_UNIT_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import type { DivisionValue } from "@snailycad/types";
 import type { PutManageUnitCallsignData } from "@snailycad/types/api";
 import { isUnitOfficer } from "@snailycad/utils";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { CallSignPreview } from "components/leo/CallsignPreview";

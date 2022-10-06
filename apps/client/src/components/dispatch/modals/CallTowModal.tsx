@@ -1,5 +1,5 @@
 import { TOW_SCHEMA } from "@snailycad/schemas";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { FormRow } from "components/form/FormRow";
 import { Input } from "components/form/inputs/Input";

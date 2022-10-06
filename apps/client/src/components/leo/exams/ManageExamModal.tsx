@@ -6,7 +6,7 @@ import {
   ValueLicenseType,
   LicenseExamType,
 } from "@snailycad/types";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { Select } from "components/form/Select";

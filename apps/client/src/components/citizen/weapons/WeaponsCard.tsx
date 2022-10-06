@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import type { Weapon } from "@snailycad/types";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";

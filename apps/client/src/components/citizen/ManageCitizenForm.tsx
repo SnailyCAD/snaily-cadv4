@@ -1,6 +1,6 @@
 import * as React from "react";
 import Link from "next/link";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { FormRow } from "components/form/FormRow";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";

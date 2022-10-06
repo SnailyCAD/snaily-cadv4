@@ -5,7 +5,7 @@ import { useModal } from "state/modalState";
 import { Modal } from "components/modal/Modal";
 import { ModalIds } from "types/ModalIds";
 import type { SelectValue } from "components/form/Select";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { Loader } from "components/Loader";
 import { handleValidate } from "lib/handleValidate";
 import type { Citizen, SuspendedCitizenLicenses } from "@snailycad/types";

@@ -4,7 +4,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { Feature, User } from "@snailycad/types";
 import { useTranslations } from "next-intl";
 import { Dropdown } from "components/Dropdown";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { classNames } from "lib/classNames";
 import { useAuth } from "context/AuthContext";
 import { usePermission, Permissions } from "hooks/usePermission";

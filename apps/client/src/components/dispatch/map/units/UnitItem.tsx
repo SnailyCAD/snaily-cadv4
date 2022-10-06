@@ -4,7 +4,7 @@ import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { CaretDownFill } from "react-bootstrap-icons";
 import type { MapPlayer } from "types/Map";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";

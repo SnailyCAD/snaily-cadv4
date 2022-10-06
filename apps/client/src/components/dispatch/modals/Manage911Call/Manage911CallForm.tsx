@@ -15,7 +15,7 @@ import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import type { Full911Call } from "state/dispatch/dispatchState";
 import { Select } from "components/form/Select";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { useTranslations } from "next-intl";
 import { useCall911State } from "state/dispatch/call911State";
 import { useModal } from "state/modalState";

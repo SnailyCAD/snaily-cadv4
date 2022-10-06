@@ -3,7 +3,7 @@ import type { Unit } from "src/pages/admin/manage/units";
 import Link from "next/link";
 import { formatOfficerDepartment, makeUnitName } from "lib/utils";
 import { useTranslations } from "use-intl";
-import { Button, buttonVariants } from "components/Button";
+import { Button, buttonVariants } from "@snailycad/ui";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Table, useTableState } from "components/shared/Table";
 import { TabsContent } from "components/shared/TabList";

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { CustomFieldCategory } from "@snailycad/types";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { Table, useTableState } from "components/shared/Table";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";

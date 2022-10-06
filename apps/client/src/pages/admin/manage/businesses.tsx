@@ -1,7 +1,7 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
 import { TabsContent, TabList } from "components/shared/TabList";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";

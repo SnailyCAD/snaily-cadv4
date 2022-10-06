@@ -5,7 +5,7 @@ import { Marker, Popup, useMap } from "react-leaflet";
 import type { Full911Call } from "state/dispatch/dispatchState";
 import { ActiveMapCalls } from "./ActiveMapCalls";
 import { convertToMap } from "lib/map/utils";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { useTranslations } from "next-intl";
 import type { Put911CallByIdData } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call911State";

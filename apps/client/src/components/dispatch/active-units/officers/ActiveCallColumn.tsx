@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "next-intl";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { Manage911CallModal } from "components/dispatch/modals/Manage911CallModal";
 import type { Full911Call } from "state/dispatch/dispatchState";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";

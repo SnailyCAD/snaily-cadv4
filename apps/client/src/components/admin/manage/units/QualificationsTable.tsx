@@ -1,6 +1,6 @@
 import * as React from "react";
 import { QualificationValueType, UnitQualification } from "@snailycad/types";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { AlertModal } from "components/modal/AlertModal";
 import { Table, useTableState } from "components/shared/Table";
 import useFetch from "lib/useFetch";

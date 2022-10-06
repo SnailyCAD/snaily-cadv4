@@ -1,4 +1,4 @@
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { ModalIds } from "types/ModalIds";
 import { Rank, ShouldDoType } from "@snailycad/types";
 import { useModal } from "state/modalState";

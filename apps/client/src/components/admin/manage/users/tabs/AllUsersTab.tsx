@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Rank } from "@snailycad/types";
 import { yesOrNoText } from "lib/utils";
 import { TabsContent } from "components/shared/TabList";
-import { buttonVariants } from "components/Button";
+import { buttonVariants } from "@snailycad/ui";
 import { Table, useTableState } from "components/shared/Table";
 import { Status } from "components/shared/Status";
 import { useAuth } from "context/AuthContext";

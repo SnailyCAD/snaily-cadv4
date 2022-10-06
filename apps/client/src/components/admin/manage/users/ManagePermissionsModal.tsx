@@ -12,7 +12,7 @@ import {
 import { FormField } from "components/form/FormField";
 import { Toggle } from "components/form/Toggle";
 import { Form, Formik } from "formik";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { Input } from "components/form/inputs/Input";

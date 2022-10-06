@@ -2,7 +2,7 @@ import * as React from "react";
 import { Form, Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
 
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { Loader } from "components/Loader";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";

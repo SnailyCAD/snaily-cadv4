@@ -1,6 +1,6 @@
 import { defaultPermissions } from "@snailycad/permissions";
 import { Bolo, ShouldDoType, BoloType, Rank } from "@snailycad/types";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { FullDate } from "components/shared/FullDate";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";

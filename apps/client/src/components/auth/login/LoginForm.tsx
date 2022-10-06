@@ -5,7 +5,7 @@ import { Discord, Steam } from "react-bootstrap-icons";
 import { FormField } from "components/form/FormField";
 import { Input, PasswordInput } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { TwoFactorAuthScreen } from "components/auth/TwoFactorAuthScreen";
 import { getAPIUrl } from "lib/fetch/getAPIUrl";
 import { useRouter } from "next/router";

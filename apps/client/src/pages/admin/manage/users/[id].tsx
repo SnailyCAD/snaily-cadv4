@@ -11,7 +11,7 @@ import { AdminLayout } from "components/admin/AdminLayout";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { useAuth } from "context/AuthContext";
-import { Button, buttonVariants } from "components/Button";
+import { Button, buttonVariants } from "@snailycad/ui";
 import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
 import { FormRow } from "components/form/FormRow";

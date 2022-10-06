@@ -3,7 +3,7 @@ import { useCalendarState } from "@react-stately/calendar";
 import { CalendarProps, useCalendar } from "@react-aria/calendar";
 import { createCalendar } from "@internationalized/date";
 import { CalendarGrid } from "./CalendarGrid";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { ChevronLeft, ChevronRight } from "react-bootstrap-icons";
 import { useLocale } from "@react-aria/i18n";
 

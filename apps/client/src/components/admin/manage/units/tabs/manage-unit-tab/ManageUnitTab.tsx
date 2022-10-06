@@ -5,7 +5,7 @@ import { Form, Formik, FormikHelpers } from "formik";
 import { FormField } from "components/form/FormField";
 import { useValues } from "context/ValuesContext";
 import { Select } from "components/form/Select";
-import { Button, buttonVariants } from "components/Button";
+import { Button, buttonVariants } from "@snailycad/ui";
 import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
 import Link from "next/link";

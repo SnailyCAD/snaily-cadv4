@@ -1,4 +1,4 @@
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { Infofield } from "components/shared/Infofield";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";

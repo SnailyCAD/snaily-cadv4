@@ -28,8 +28,25 @@ export const buttonSizes = {
 } as const;
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = "default", size = "sm", className = "", onPress, isDisabled, ...rest }, ref) => {
-    const { buttonProps } = useButton({ onPress, isDisabled, ...rest }, ref as any);
+  (
+    {
+      variant = "default",
+      size = "sm",
+      className = "",
+      isDisabled,
+      onPress,
+      onPressChange,
+      onPressStart,
+      onPressEnd,
+      onPressUp,
+      ...rest
+    },
+    ref,
+  ) => {
+    const { buttonProps } = useButton(
+      { onPress, onPressChange, onPressStart, onPressEnd, onPressUp, isDisabled, ...rest },
+      ref as any,
+    );
 
     return (
       <button

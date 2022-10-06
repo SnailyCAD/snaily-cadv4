@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { Select, SelectValue } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { TabsContent } from "components/shared/TabList";

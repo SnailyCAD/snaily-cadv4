@@ -5,7 +5,7 @@ import { BaseCitizen, Record, ReleaseType } from "@snailycad/types";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "next-intl";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { Form, Formik, FormikHelpers } from "formik";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";

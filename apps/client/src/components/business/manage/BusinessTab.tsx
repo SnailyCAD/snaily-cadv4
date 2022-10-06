@@ -10,7 +10,7 @@ import { CREATE_COMPANY_SCHEMA } from "@snailycad/schemas";
 import { Input } from "components/form/inputs/Input";
 import { handleValidate } from "lib/handleValidate";
 import { Toggle } from "components/form/Toggle";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { Loader } from "components/Loader";
 import { useRouter } from "next/router";
 import { SettingsFormField } from "components/form/SettingsFormField";

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { CREATE_TICKET_SCHEMA } from "@snailycad/schemas";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import type { SelectValue } from "components/form/Select";

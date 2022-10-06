@@ -1,6 +1,6 @@
 import { defaultPermissions } from "@snailycad/permissions";
 import type { Citizen, User } from "@snailycad/types";
-import { buttonVariants } from "components/Button";
+import { buttonVariants } from "@snailycad/ui";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useImageUrl } from "hooks/useImageUrl";
 import { usePermission } from "hooks/usePermission";

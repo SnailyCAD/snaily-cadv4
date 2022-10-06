@@ -4,7 +4,7 @@ import { useModal } from "state/modalState";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { ModalIds } from "types/ModalIds";
-import { Button, buttonVariants } from "components/Button";
+import { Button, buttonVariants } from "@snailycad/ui";
 import { useTranslations } from "next-intl";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";

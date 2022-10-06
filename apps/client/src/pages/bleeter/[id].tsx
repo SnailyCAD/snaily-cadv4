@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { useAuth } from "context/AuthContext";
 import { getSessionUser } from "lib/auth";

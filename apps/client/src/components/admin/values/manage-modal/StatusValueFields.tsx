@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import { QualificationValue, ShouldDoType, StatusValue, Value, WhatPages } from "@snailycad/types";
 
 import { Eyedropper } from "react-bootstrap-icons";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { useValues } from "context/ValuesContext";
 
 const HexColorPicker = dynamic(async () => (await import("react-colorful")).HexColorPicker);

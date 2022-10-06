@@ -1,7 +1,7 @@
 import * as React from "react";
 import { TabsContent } from "components/shared/TabList";
 import * as Accordion from "@radix-ui/react-accordion";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Toggle } from "components/form/Toggle";
 import { useAuth } from "context/AuthContext";

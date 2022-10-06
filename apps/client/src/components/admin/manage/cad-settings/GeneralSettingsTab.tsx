@@ -3,7 +3,7 @@ import { useAuth } from "context/AuthContext";
 import { useTranslations } from "use-intl";
 import { Input, PasswordInput } from "components/form/inputs/Input";
 import { Toggle } from "components/form/Toggle";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { TabsContent } from "components/shared/TabList";

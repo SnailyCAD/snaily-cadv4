@@ -1,4 +1,4 @@
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { ActiveOfficer, useLeoState } from "state/leoState";
 import { Rank, ShouldDoType } from "@snailycad/types";
 import { useTranslations } from "use-intl";

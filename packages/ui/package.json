@@ -10,9 +10,7 @@
   "scripts": {
     "build": "yarn tsup",
     "watch": "yarn tsup --watch --silent=false",
-    "typecheck": "yarn tsc --noEmit",
-    "test:watch": "yarn vitest --watch",
-    "test": "yarn vitest run"
+    "typecheck": "yarn tsc --noEmit"
   },
   "devDependencies": {
     "@snailycad/types": "workplace:*",

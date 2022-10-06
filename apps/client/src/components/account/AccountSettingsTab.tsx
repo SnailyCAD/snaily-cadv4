@@ -6,7 +6,7 @@ import { useAuth } from "context/AuthContext";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import useFetch from "lib/useFetch";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { ChangePasswordArea } from "components/account/ChangePasswordArea";
 import { Manage2FAModal } from "./2fa/Manage2FAModal";
 import { ProgressCircle } from "@snailycad/ui";
