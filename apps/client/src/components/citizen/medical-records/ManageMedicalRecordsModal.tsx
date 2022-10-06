@@ -17,7 +17,7 @@ import type {
   PostCitizenMedicalRecordsData,
   PutCitizenMedicalRecordsData,
 } from "@snailycad/types/api";
-import { TextField } from "@snailycad/ui";
+import { TextField, SelectField } from "@snailycad/ui";
 
 interface Props {
   medicalRecord: MedicalRecord | null;
@@ -91,21 +91,21 @@ export function ManageMedicalRecordsModal({ medicalRecord, onClose, onCreate, on
               errorMessage={errors.type}
             />
 
-            <FormField errorMessage={errors.bloodGroup} label={t("bloodGroup")}>
-              <Select
-                values={bloodGroup.values.map((v) => ({
-                  value: v.id,
-                  label: v.value,
-                }))}
-                onChange={handleChange}
-                name="bloodGroup"
-                value={values.bloodGroup}
-              />
-
+            <SelectField
+              errorMessage={errors.bloodGroup}
+              label={t("bloodGroup")}
+              selectedKey={values.bloodGroup}
+              onSelectionChange={(value) => setFieldValue("bloodGroup", value)}
+              name="type"
+              options={bloodGroup.values.map((v) => ({
+                value: v.id,
+                label: v.value,
+              }))}
+            >
               {bloodGroupId && bloodGroupId !== values.bloodGroup ? (
                 <small className="mt-2 text-base">{t("info_bloodgroup")}</small>
               ) : null}
-            </FormField>
+            </SelectField>
 
             <TextField
               label={common("description")}

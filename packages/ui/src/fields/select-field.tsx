@@ -10,31 +10,28 @@ import { ListBox } from "../list/list-box";
 import { Button } from "../button";
 import { ChevronDown } from "react-bootstrap-icons";
 
-interface Props<T extends { value: string; label: React.ReactNode; isDisabled: boolean }>
-  extends Omit<AriaSelectProps<T>, "children"> {
+export interface SelectValue {
+  value: string;
+  label: React.ReactNode;
+  isDisabled?: boolean;
+}
+
+interface Props<T extends SelectValue> extends Omit<AriaSelectProps<T>, "children"> {
   label: string;
 
-  children?: AriaSelectProps<T>["children"];
+  children?: React.ReactNode;
   options: T[];
   isOptional?: boolean;
   className?: string;
   labelClassnames?: string;
 }
 
-export function SelectField<
-  T extends { value: string; label: React.ReactNode; isDisabled: boolean },
->(props: Props<T>) {
+export function SelectField<T extends SelectValue>(props: Props<T>) {
   const optionalText = useTranslations("Common")("optionalField");
 
   const children = React.useMemo(() => {
-    const hasArrayChildren = Array.isArray(props.children) && props.children.length > 0;
-
-    if ((props.children && hasArrayChildren) || !!props.children) {
-      return props.children;
-    }
-
     return props.options.map((option) => <Item key={option.value}>{option.label}</Item>);
-  }, [props.options, props.children]);
+  }, [props.options]);
 
   const disabledKeys = React.useMemo(() => {
     return props.options.filter((v) => Boolean(v.isDisabled)).map((v) => v.value);
@@ -75,6 +72,7 @@ export function SelectField<
         </Popover>
       )}
 
+      {props.children}
       {props.errorMessage && (
         <span {...errorMessageProps} className="mt-1 font-medium text-red-500">
           {props.errorMessage}
