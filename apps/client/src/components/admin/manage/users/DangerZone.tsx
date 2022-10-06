@@ -1,5 +1,4 @@
-import { Button } from "@snailycad/ui";
-import { Loader } from "components/Loader";
+import { Loader, Button } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
 import { ModalIds } from "types/ModalIds";

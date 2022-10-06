@@ -1,7 +1,6 @@
 import { useTranslations } from "use-intl";
 import { Form, Formik } from "formik";
 import { MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
-import { Button } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
@@ -14,7 +13,7 @@ import type {
   PostCitizenMedicalRecordsData,
   PutCitizenMedicalRecordsData,
 } from "@snailycad/types/api";
-import { TextField, SelectField, ProgressCircle } from "@snailycad/ui";
+import { Button, TextField, SelectField, Loader } from "@snailycad/ui";
 
 interface Props {
   medicalRecord: MedicalRecord | null;
@@ -122,7 +121,7 @@ export function ManageMedicalRecordsModal({ medicalRecord, onClose, onCreate, on
                 disabled={!isValid || state === "loading"}
                 type="submit"
               >
-                {state === "loading" ? <ProgressCircle /> : null}
+                {state === "loading" ? <Loader /> : null}
                 {medicalRecord ? common("save") : common("create")}
               </Button>
             </footer>

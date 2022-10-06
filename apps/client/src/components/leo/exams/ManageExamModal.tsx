@@ -6,11 +6,10 @@ import {
   ValueLicenseType,
   LicenseExamType,
 } from "@snailycad/types";
-import { Button } from "@snailycad/ui";
+import { Loader, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { Select } from "components/form/Select";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { useValues } from "context/ValuesContext";

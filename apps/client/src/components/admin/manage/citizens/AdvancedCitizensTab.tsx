@@ -1,13 +1,11 @@
 import * as React from "react";
-import { Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { FormRow } from "components/form/FormRow";
-import { Input } from "@snailycad/ui";
+import { Button, Loader, Input } from "@snailycad/ui";
 import { v4 } from "uuid";
 import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
 import useFetch from "lib/useFetch";
-import { Loader } from "components/Loader";
 import { X } from "react-bootstrap-icons";
 import { ImportModal } from "components/admin/import/ImportModal";
 import { ModalIds } from "types/ModalIds";

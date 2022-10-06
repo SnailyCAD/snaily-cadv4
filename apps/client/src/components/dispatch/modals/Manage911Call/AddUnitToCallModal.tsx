@@ -1,13 +1,12 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { Button } from "@snailycad/ui";
+import { Loader, Button } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { Form, Formik } from "formik";
 import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
-import { Loader } from "components/Loader";
 import { Select } from "components/form/Select";
 import { useDispatchState } from "state/dispatch/dispatchState";
 import { makeUnitName } from "lib/utils";

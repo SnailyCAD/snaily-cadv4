@@ -2,10 +2,8 @@ import * as React from "react";
 import { useFormikContext } from "formik";
 import { useTranslations } from "next-intl";
 import useDigitInput from "react-digit-input";
-import { Input } from "@snailycad/ui";
+import { Button, Loader, Input } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { Button } from "@snailycad/ui";
-import { Loader } from "components/Loader";
 
 interface Props {
   errorMessage?: string;

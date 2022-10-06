@@ -1,12 +1,11 @@
 import { FormField } from "components/form/FormField";
-import { Input } from "@snailycad/ui";
 import { Select } from "components/form/Select";
 import { useFormikContext } from "formik";
 import dynamic from "next/dynamic";
 import { QualificationValue, ShouldDoType, StatusValue, Value, WhatPages } from "@snailycad/types";
 
 import { Eyedropper } from "react-bootstrap-icons";
-import { Button } from "@snailycad/ui";
+import { Input, Button } from "@snailycad/ui";
 import { useValues } from "context/ValuesContext";
 
 const HexColorPicker = dynamic(async () => (await import("react-colorful")).HexColorPicker);

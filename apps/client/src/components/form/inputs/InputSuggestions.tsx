@@ -1,7 +1,7 @@
 import { FocusScope, useFocusManager } from "@react-aria/focus";
 import type { Method } from "axios";
 import { useFocusWithin } from "@react-aria/interactions";
-import { Loader } from "components/Loader";
+import { Loader } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import * as React from "react";
 import useonPressOutside from "react-cool-onclickoutside";

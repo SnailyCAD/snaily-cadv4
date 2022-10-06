@@ -1,9 +1,7 @@
 import { COURTHOUSE_POST_SCHEMA } from "@snailycad/schemas";
 import type { CourthousePost } from "@snailycad/types";
-import { Button } from "@snailycad/ui";
+import { Input, Loader, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { Input } from "@snailycad/ui";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik, FormikHelpers } from "formik";

@@ -2,14 +2,12 @@ import * as React from "react";
 import { Form, Formik } from "formik";
 import { useTranslations } from "use-intl";
 
-import { Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { Loader } from "components/Loader";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { Toggle } from "components/form/Toggle";
 import type { CadFeature, Feature } from "@snailycad/types";
-import { Input } from "@snailycad/ui";
+import { Button, Loader, Input } from "@snailycad/ui";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { TabsContent } from "components/shared/TabList";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";

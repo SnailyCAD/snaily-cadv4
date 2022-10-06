@@ -1,10 +1,8 @@
 import * as React from "react";
 import Link from "next/link";
-import { Button } from "@snailycad/ui";
+import { Loader, Input, Button } from "@snailycad/ui";
 import { FormRow } from "components/form/FormRow";
 import { FormField } from "components/form/FormField";
-import { Input } from "@snailycad/ui";
-import { Loader } from "components/Loader";
 import { Select } from "components/form/Select";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";

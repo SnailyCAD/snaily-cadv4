@@ -5,7 +5,7 @@ interface Props {
   className?: string;
 }
 
-export function ProgressCircle(props: Props) {
+export function Loader(props: Props) {
   const { progressBarProps } = useProgressBar({ label: "loading..." });
 
   return (

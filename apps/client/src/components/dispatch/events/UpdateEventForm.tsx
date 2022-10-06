@@ -1,8 +1,7 @@
 import * as React from "react";
 import { Form, Formik, FormikHelpers, useFormikContext } from "formik";
 import { FormField } from "components/form/FormField";
-import { Button } from "@snailycad/ui";
-import { Loader } from "components/Loader";
+import { Button, Loader } from "@snailycad/ui";
 import { Textarea } from "components/form/Textarea";
 import type { Call911Event, IncidentEvent } from "@snailycad/types";
 import { useTranslations } from "next-intl";

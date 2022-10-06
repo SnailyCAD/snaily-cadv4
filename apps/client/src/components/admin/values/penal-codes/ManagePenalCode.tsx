@@ -1,8 +1,6 @@
 import { PENAL_CODE_SCHEMA } from "@snailycad/schemas";
-import { Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { Input } from "@snailycad/ui";
-import { Loader } from "components/Loader";
+import { Input, Loader, Button } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { Form, Formik, useFormikContext } from "formik";
 import { handleValidate } from "lib/handleValidate";

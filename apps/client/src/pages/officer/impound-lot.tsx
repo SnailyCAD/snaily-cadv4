@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { Button } from "@snailycad/ui";
+import { Loader, Button } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -10,7 +10,6 @@ import type { ImpoundedVehicle } from "@snailycad/types";
 import { useModal } from "state/modalState";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
-import { Loader } from "components/Loader";
 import { ModalIds } from "types/ModalIds";
 import { Table, useTableState } from "components/shared/Table";
 import { Title } from "components/shared/Title";

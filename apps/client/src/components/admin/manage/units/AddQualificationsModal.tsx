@@ -3,10 +3,9 @@ import type {
   GetManageUnitByIdData,
   PostManageUnitAddQualificationData,
 } from "@snailycad/types/api";
-import { Button } from "@snailycad/ui";
+import { Loader, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useValues } from "context/ValuesContext";
 import { Form, Formik } from "formik";

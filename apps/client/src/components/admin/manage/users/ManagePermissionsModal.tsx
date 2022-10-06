@@ -12,10 +12,8 @@ import {
 import { FormField } from "components/form/FormField";
 import { Toggle } from "components/form/Toggle";
 import { Form, Formik } from "formik";
-import { Button } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
-import { Loader } from "components/Loader";
-import { Input } from "@snailycad/ui";
+import { Input, Loader, Button } from "@snailycad/ui";
 import type { GetManageUserByIdData, PutManageUserPermissionsByIdData } from "@snailycad/types/api";
 
 interface Props {
