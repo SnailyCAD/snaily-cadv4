@@ -3,7 +3,7 @@ import { Modal } from "components/modal/Modal";
 import { useAuth } from "context/AuthContext";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import { Loader } from "components/Loader";
+import { Loader } from "@snailycad/ui";
 import ReactMarkdown from "react-markdown";
 import remarkGithub from "remark-github";
 import remarkGfm from "remark-gfm";

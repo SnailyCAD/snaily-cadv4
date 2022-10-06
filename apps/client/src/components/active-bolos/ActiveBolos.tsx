@@ -11,7 +11,7 @@ import { BoloColumn } from "./BoloColumn";
 import type { DeleteBolosData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useMounted } from "@casper124578/useful";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { classNames } from "lib/classNames";
 import { Filter } from "react-bootstrap-icons";
 import dynamic from "next/dynamic";

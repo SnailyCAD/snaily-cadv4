@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useAuth } from "context/AuthContext";
 import { classNames } from "lib/classNames";
 import { Dropdown } from "components/Dropdown";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { useLocalStorage } from "react-use";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";

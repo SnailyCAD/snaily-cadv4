@@ -1,6 +1,6 @@
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
 import { toastMessage } from "lib/toastMessage";
 import toast from "react-hot-toast";

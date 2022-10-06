@@ -7,12 +7,11 @@ import { useTranslations } from "use-intl";
 
 import useFetch from "lib/useFetch";
 import { FormField } from "components/form/FormField";
-import { Input, PasswordInput } from "components/form/inputs/Input";
-import { Loader } from "components/Loader";
+import { PasswordInput } from "components/form/inputs/Input";
 import { handleValidate } from "lib/handleValidate";
 import type { GetServerSideProps } from "next";
 import { getTranslations } from "lib/getTranslation";
-import { Button } from "components/Button";
+import { Button, Input, Loader } from "@snailycad/ui";
 import type { cad } from "@snailycad/types";
 import { handleRequest } from "lib/fetch";
 import { Title } from "components/shared/Title";

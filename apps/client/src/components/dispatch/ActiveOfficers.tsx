@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import type { ActiveOfficer } from "state/leoState";
 import { ManageUnitModal } from "./modals/ManageUnit";
 import { useModal } from "state/modalState";

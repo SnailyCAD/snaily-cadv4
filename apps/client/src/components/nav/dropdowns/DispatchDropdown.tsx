@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { ChevronDown } from "react-bootstrap-icons";
 import { useTranslations } from "next-intl";
 import { Dropdown } from "components/Dropdown";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { classNames } from "lib/classNames";
 import { usePermission, Permissions } from "hooks/usePermission";
 

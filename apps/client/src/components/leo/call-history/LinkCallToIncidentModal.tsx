@@ -1,8 +1,7 @@
 import { LINK_INCIDENT_TO_CALL_SCHEMA } from "@snailycad/schemas";
-import { Button } from "components/Button";
+import { Loader, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select, SelectValue } from "components/form/Select";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";

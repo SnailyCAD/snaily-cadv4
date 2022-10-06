@@ -1,6 +1,6 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
-import { Button } from "components/Button";
+import { Input, Button } from "@snailycad/ui";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
@@ -12,7 +12,6 @@ import { requestAll } from "lib/utils";
 import dynamic from "next/dynamic";
 import { Table, useTableState } from "components/shared/Table";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { ModalIds } from "types/ModalIds";
 import { ManagePenalCodeGroup } from "components/admin/values/penal-codes/ManagePenalCodeGroup";

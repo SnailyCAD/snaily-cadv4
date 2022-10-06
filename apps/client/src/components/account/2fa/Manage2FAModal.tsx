@@ -1,8 +1,7 @@
 import * as React from "react";
-import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
-import { Input, PasswordInput } from "components/form/inputs/Input";
-import { Loader } from "components/Loader";
+import { PasswordInput } from "components/form/inputs/Input";
+import { Input, Button, Loader } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik, FormikHelpers } from "formik";

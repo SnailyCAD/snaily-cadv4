@@ -1,4 +1,4 @@
-import { Loader } from "components/Loader";
+import { Loader } from "@snailycad/ui";
 import { getAPIUrl } from "lib/fetch/getAPIUrl";
 import type { GetServerSideProps } from "next";
 

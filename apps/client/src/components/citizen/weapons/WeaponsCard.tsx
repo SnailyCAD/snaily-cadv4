@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button } from "components/Button";
+import { Input, Loader, Button } from "@snailycad/ui";
 import type { Weapon } from "@snailycad/types";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
@@ -13,8 +13,6 @@ import { FullDate } from "components/shared/FullDate";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 import { useCitizen } from "context/CitizenContext";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
-import { Loader } from "components/Loader";
 import type { DeleteCitizenWeaponData, GetCitizenWeaponsData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 

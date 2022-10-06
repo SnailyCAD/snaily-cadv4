@@ -5,7 +5,7 @@ import { Table, useTableState } from "components/shared/Table";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useTranslations } from "next-intl";
 import { getTitles } from "components/courthouse/expungement-requests/RequestExpungement";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { FullDate } from "components/shared/FullDate";
 import { Status } from "components/shared/Status";
 import useFetch from "lib/useFetch";

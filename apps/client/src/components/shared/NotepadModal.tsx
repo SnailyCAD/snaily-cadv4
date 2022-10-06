@@ -1,5 +1,5 @@
 import { useTranslations } from "use-intl";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { useNotepad } from "hooks/shared/useNotepad";

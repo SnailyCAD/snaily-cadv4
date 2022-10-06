@@ -10,11 +10,10 @@ import type { PUT911CallAssignedUnit } from "@snailycad/types/api";
 import { useAuth } from "context/AuthContext";
 import { AssignedUnit, StatusViewMode } from "@snailycad/types";
 import { useTranslations } from "next-intl";
-import { Button } from "components/Button";
+import { Button, Loader } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { AddUnitToCallModal } from "./AddUnitToCallModal";
-import { Loader } from "components/Loader";
 import { FullDate } from "components/shared/FullDate";
 
 interface Props {

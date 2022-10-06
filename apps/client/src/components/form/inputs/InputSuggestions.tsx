@@ -1,11 +1,10 @@
 import { FocusScope, useFocusManager } from "@react-aria/focus";
 import type { Method } from "axios";
 import { useFocusWithin } from "@react-aria/interactions";
-import { Loader } from "components/Loader";
+import { Input, Loader } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import * as React from "react";
 import useonPressOutside from "react-cool-onclickoutside";
-import { Input } from "./Input";
 import { useTranslations } from "next-intl";
 import { useDebounce } from "react-use";
 import { isMobile } from "is-mobile";

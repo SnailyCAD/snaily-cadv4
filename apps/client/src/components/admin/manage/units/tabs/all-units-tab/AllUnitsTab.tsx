@@ -9,7 +9,7 @@ import {
   isEmpty,
 } from "lib/utils";
 import { useTranslations } from "use-intl";
-import { Button, buttonVariants } from "components/Button";
+import { Button, buttonVariants } from "@snailycad/ui";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";

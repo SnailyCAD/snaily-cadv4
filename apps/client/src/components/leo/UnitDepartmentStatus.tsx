@@ -1,5 +1,5 @@
 import { EmsFdDeputy, Officer, WhitelistStatus } from "@snailycad/types";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { HoverCard } from "components/shared/HoverCard";
 import { Status } from "components/shared/Status";
 import { useTranslations } from "next-intl";

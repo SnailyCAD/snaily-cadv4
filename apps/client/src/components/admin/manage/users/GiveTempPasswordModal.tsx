@@ -4,7 +4,7 @@ import { useModal } from "state/modalState";
 import type { User } from "@snailycad/types";
 import { ModalIds } from "types/ModalIds";
 import { Modal } from "components/modal/Modal";
-import { Loader } from "components/Loader";
+import { Loader } from "@snailycad/ui";
 import { useTranslations } from "use-intl";
 import type { PostManageUsersGiveTempPasswordData } from "@snailycad/types/api";
 

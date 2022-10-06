@@ -2,10 +2,9 @@ import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Form, Formik, FormikHelpers } from "formik";
 import { VEHICLE_SCHEMA } from "@snailycad/schemas";
-import { Button } from "components/Button";
+import { Button, Input, Loader } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useValues } from "src/context/ValuesContext";
@@ -18,7 +17,6 @@ import {
   WhitelistStatus,
 } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
-import { Input } from "components/form/inputs/Input";
 import { useCitizen } from "context/CitizenContext";
 import { useRouter } from "next/router";
 import { useAuth } from "context/AuthContext";

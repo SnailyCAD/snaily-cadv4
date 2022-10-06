@@ -8,7 +8,7 @@ import { getTitles } from "./RequestExpungement";
 import { Status } from "components/shared/Status";
 import { FullDate } from "components/shared/FullDate";
 import { useModal } from "state/modalState";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { ModalIds } from "types/ModalIds";
 import type { GetExpungementRequestsData } from "@snailycad/types/api";
 

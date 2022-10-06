@@ -1,7 +1,5 @@
 import * as React from "react";
-import { Button } from "components/Button";
-
-import { Loader } from "components/Loader";
+import { Button, Loader } from "@snailycad/ui";
 import { TabsContent } from "components/shared/TabList";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";

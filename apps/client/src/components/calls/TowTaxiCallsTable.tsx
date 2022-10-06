@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { TaxiCall, TowCall } from "@snailycad/types";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { FullDate } from "components/shared/FullDate";
 import { Table, useTableState } from "components/shared/Table";
 import { useTranslations } from "next-intl";

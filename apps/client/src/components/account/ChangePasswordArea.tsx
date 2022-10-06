@@ -1,6 +1,6 @@
 import { CHANGE_PASSWORD_SCHEMA } from "@snailycad/schemas";
 import type { PostUserPasswordData } from "@snailycad/types/api";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { PasswordInput } from "components/form/inputs/Input";
 import { Form, Formik, FormikHelpers } from "formik";

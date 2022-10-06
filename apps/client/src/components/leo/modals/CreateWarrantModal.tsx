@@ -1,10 +1,8 @@
 import { Form, Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
-import { Button } from "components/Button";
+import { Textarea, Loader, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
-import { Textarea } from "components/form/Textarea";
-import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";

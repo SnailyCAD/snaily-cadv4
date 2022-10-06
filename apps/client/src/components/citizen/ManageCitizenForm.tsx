@@ -1,10 +1,8 @@
 import * as React from "react";
 import Link from "next/link";
-import { Button } from "components/Button";
+import { Textarea, Loader, Input, Button } from "@snailycad/ui";
 import { FormRow } from "components/form/FormRow";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
-import { Loader } from "components/Loader";
 import { Select } from "components/form/Select";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
@@ -14,7 +12,6 @@ import { handleValidate } from "lib/handleValidate";
 import { Form, Formik, FormikHelpers } from "formik";
 import type { User, Citizen } from "@snailycad/types";
 import { useTranslations } from "next-intl";
-import { Textarea } from "components/form/Textarea";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import {

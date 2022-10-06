@@ -1,12 +1,11 @@
 import { Form, Formik, useFormikContext } from "formik";
 import { useTranslations } from "use-intl";
-import { Button } from "components/Button";
+import { Input, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import type { SeizedItem } from "@snailycad/types";
-import { Input } from "components/form/inputs/Input";
 import { Toggle } from "components/form/Toggle";
 
 interface Props {

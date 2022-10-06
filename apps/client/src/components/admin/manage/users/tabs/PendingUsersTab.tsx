@@ -2,13 +2,11 @@ import * as React from "react";
 import { useTranslations } from "use-intl";
 import type { User } from "@snailycad/types";
 import { TabsContent } from "components/shared/TabList";
-import { Button } from "components/Button";
 import { Table, useTableState } from "components/shared/Table";
 import useFetch from "lib/useFetch";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
-import { Loader } from "components/Loader";
+import { Input, Loader, Button } from "@snailycad/ui";
 import { useRouter } from "next/router";
 import type { GetManageUsersData, PostManageUserAcceptDeclineData } from "@snailycad/types/api";
 

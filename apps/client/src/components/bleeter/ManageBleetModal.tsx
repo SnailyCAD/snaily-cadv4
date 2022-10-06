@@ -2,10 +2,8 @@ import { Form, Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
 import { useRouter } from "next/router";
 
-import { Button } from "components/Button";
+import { Loader, Input, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import useFetch from "lib/useFetch";

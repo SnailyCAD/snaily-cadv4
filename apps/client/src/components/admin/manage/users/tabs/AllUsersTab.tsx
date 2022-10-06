@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Rank } from "@snailycad/types";
 import { yesOrNoText } from "lib/utils";
 import { TabsContent } from "components/shared/TabList";
-import { buttonVariants } from "components/Button";
 import { Table, useTableState } from "components/shared/Table";
 import { Status } from "components/shared/Status";
 import { useAuth } from "context/AuthContext";
@@ -13,8 +12,7 @@ import { defaultPermissions } from "@snailycad/permissions";
 import { classNames } from "lib/classNames";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
-import { Loader } from "components/Loader";
+import { buttonVariants, Input, Loader } from "@snailycad/ui";
 import type { GetManageUsersData } from "@snailycad/types/api";
 
 export function AllUsersTab({ users, totalCount }: GetManageUsersData) {

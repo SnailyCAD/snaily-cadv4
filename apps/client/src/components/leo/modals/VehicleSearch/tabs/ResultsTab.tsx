@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { useTranslations } from "use-intl";
 import { yesOrNoText } from "lib/utils";
 import { classNames } from "lib/classNames";

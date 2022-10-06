@@ -1,13 +1,11 @@
-import { Button } from "components/Button";
+import { Textarea, Loader, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { Textarea } from "components/form/Textarea";
 import { Toggle } from "components/form/Toggle";
 import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";

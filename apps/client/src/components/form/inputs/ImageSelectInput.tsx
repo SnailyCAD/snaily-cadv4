@@ -1,9 +1,8 @@
 import * as React from "react";
-import { Button } from "components/Button";
+import { Input, Button } from "@snailycad/ui";
 import { FormikHelpers, useFormikContext } from "formik";
 import { useTranslations } from "next-intl";
 import { FormField } from "../FormField";
-import { Input } from "./Input";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { CropImageModal } from "components/modal/CropImageModal";

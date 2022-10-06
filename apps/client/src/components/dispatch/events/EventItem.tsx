@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { FullDate } from "components/shared/FullDate";
 import { classNames } from "lib/classNames";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { Pencil, X } from "react-bootstrap-icons";
 import { AlertModal } from "components/modal/AlertModal";
 import type { Delete911CallEventByIdData, DeleteIncidentEventByIdData } from "@snailycad/types/api";

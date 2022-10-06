@@ -1,7 +1,6 @@
 import * as React from "react";
 import { TabsContent } from "components/shared/TabList";
 import * as Accordion from "@radix-ui/react-accordion";
-import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Toggle } from "components/form/Toggle";
 import { useAuth } from "context/AuthContext";
@@ -10,7 +9,7 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
 import { StatusViewMode, TableActionsAlignment } from "@snailycad/types";
 import { Select } from "components/form/Select";
-import { Loader } from "components/Loader";
+import { Button, Loader } from "@snailycad/ui";
 import nextConfig from "../../../next.config";
 import type { Sounds } from "lib/server/getAvailableSounds.server";
 import { soundCamelCaseToKebabCase } from "lib/utils";

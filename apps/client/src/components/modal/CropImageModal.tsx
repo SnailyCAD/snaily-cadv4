@@ -1,7 +1,7 @@
 import * as React from "react";
 import Cropper from "react-cropper";
 import type CropperJS from "cropperjs";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { useTranslations } from "use-intl";
 import { Modal } from "./Modal";
 import "cropperjs/dist/cropper.css";

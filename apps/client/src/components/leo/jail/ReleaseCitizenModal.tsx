@@ -1,11 +1,10 @@
 import { Modal } from "components/modal/Modal";
-import { Loader } from "components/Loader";
+import { Button, Loader } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import { BaseCitizen, Record, ReleaseType } from "@snailycad/types";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "next-intl";
-import { Button } from "components/Button";
 import { Form, Formik, FormikHelpers } from "formik";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";

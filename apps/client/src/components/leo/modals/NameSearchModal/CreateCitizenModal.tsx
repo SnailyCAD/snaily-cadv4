@@ -5,7 +5,7 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { ManageCitizenForm } from "components/citizen/ManageCitizenForm";
-import { Loader } from "components/Loader";
+import { Loader } from "@snailycad/ui";
 import type { SelectValue } from "components/form/Select";
 import { useNameSearch } from "state/search/nameSearchState";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";

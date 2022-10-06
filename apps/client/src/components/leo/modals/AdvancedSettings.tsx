@@ -2,7 +2,7 @@ import * as Accordion from "@radix-ui/react-accordion";
 import type { IndividualDivisionCallsign } from "@snailycad/types";
 import { FormField } from "components/form/FormField";
 import { FormRow } from "components/form/FormRow";
-import { Input } from "components/form/inputs/Input";
+import { Input } from "@snailycad/ui";
 import type { SelectValue } from "components/form/Select";
 import { useFormikContext } from "formik";
 import { CaretDownFill } from "react-bootstrap-icons";

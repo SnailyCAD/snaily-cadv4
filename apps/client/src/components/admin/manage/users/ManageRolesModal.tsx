@@ -6,9 +6,8 @@ import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { FormField } from "components/form/FormField";
 import { Form, Formik } from "formik";
-import { Button } from "components/Button";
+import { Loader, Button } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
-import { Loader } from "components/Loader";
 import { Select } from "components/form/Select";
 import type { PutManageUserByIdRolesData } from "@snailycad/types/api";
 

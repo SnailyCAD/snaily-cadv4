@@ -4,7 +4,7 @@ import { FormField } from "components/form/FormField";
 import { ImageSelectInput } from "components/form/inputs/ImageSelectInput";
 import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
-import { Textarea } from "components/form/Textarea";
+import { Textarea } from "@snailycad/ui";
 import { QualificationValueType } from "@snailycad/types";
 
 export function QualificationFields({ image, setImage }: any) {

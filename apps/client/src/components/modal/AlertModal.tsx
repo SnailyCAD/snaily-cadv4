@@ -1,6 +1,5 @@
 import * as React from "react";
-import { Button } from "components/Button";
-import { Loader } from "components/Loader";
+import { Loader, Button } from "@snailycad/ui";
 import { classNames } from "lib/classNames";
 import { useModal } from "state/modalState";
 import { useTranslations } from "use-intl";

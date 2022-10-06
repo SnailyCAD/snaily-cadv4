@@ -3,7 +3,7 @@ module.exports = {
   future: {
     hoverOnlyWhenSupported: true,
   },
-  content: ["./src/**/*.tsx"],
+  content: ["./src/**/*.tsx", "../../packages/ui/src/**/*.tsx"],
   darkMode: "class",
   theme: {
     extend: {

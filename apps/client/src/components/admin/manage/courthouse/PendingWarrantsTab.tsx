@@ -3,7 +3,7 @@ import { TabsContent } from "@radix-ui/react-tabs";
 import { Warrant, WhitelistStatus } from "@snailycad/types";
 import { Table, useTableState } from "components/shared/Table";
 import { useTranslations } from "next-intl";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { FullDate } from "components/shared/FullDate";
 import useFetch from "lib/useFetch";
 import type { GetManagePendingWarrants, PutManagePendingWarrants } from "@snailycad/types/api";

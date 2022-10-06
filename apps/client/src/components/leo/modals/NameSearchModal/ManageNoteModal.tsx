@@ -1,5 +1,5 @@
 import type { Note } from "@snailycad/types";
-import { Button } from "components/Button";
+import { Textarea, Loader, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
@@ -7,8 +7,6 @@ import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
-import { Textarea } from "components/form/Textarea";
-import { Loader } from "components/Loader";
 import type { VehicleSearchResult } from "state/search/vehicleSearchState";
 import type { NameSearchResult } from "state/search/nameSearchState";
 import type { PutNotesData, PostNotesData } from "@snailycad/types/api";
