@@ -30,7 +30,6 @@ export function Option({ item, state }: OptionProps) {
       )}
     >
       {item.rendered}
-      {/* {isSelected && <CheckIcon aria-hidden="true" className="w-5 h-5 text-pink-600" />} */}
     </li>
   );
 }

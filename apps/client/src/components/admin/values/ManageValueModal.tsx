@@ -9,7 +9,7 @@ import {
   CALL_TYPE_SCHEMA,
 } from "@snailycad/schemas";
 import { FormField } from "components/form/FormField";
-import { Input, Loader, Button } from "@snailycad/ui";
+import { Textarea, Input, Loader, Button } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { Form, Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
@@ -43,7 +43,6 @@ import {
 } from "@snailycad/utils/typeguards";
 import { QualificationFields } from "./manage-modal/QualificationFields";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
-import { Textarea } from "components/form/Textarea";
 import { Toggle } from "components/form/Toggle";
 import type { PatchValueByIdData, PostValuesData } from "@snailycad/types/api";
 import {

@@ -1,5 +1,5 @@
 import { CREATE_TRUCK_LOG_SCHEMA } from "@snailycad/schemas";
-import { Input, Loader, Button } from "@snailycad/ui";
+import { Textarea, Input, Loader, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { FormRow } from "components/form/FormRow";
 import { Select } from "components/form/Select";
@@ -11,7 +11,6 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import type { RegisteredVehicle } from "@snailycad/types";
 import { useTranslations } from "use-intl";
-import { Textarea } from "components/form/Textarea";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import type { GetTruckLogsData, PostTruckLogsData, PutTruckLogsData } from "@snailycad/types/api";
 

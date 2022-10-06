@@ -1,6 +1,6 @@
 import * as React from "react";
 import Link from "next/link";
-import { Loader, Input, Button } from "@snailycad/ui";
+import { Textarea, Loader, Input, Button } from "@snailycad/ui";
 import { FormRow } from "components/form/FormRow";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
@@ -12,7 +12,6 @@ import { handleValidate } from "lib/handleValidate";
 import { Form, Formik, FormikHelpers } from "formik";
 import type { User, Citizen } from "@snailycad/types";
 import { useTranslations } from "next-intl";
-import { Textarea } from "components/form/Textarea";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import {

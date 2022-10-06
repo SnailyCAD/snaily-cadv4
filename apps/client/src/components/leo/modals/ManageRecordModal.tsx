@@ -1,6 +1,6 @@
 import * as React from "react";
 import { CREATE_TICKET_SCHEMA } from "@snailycad/schemas";
-import { Input, Loader, Button } from "@snailycad/ui";
+import { Textarea, Input, Loader, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import type { SelectValue } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
@@ -11,7 +11,6 @@ import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { Textarea } from "components/form/Textarea";
 import {
   type Citizen,
   RecordType,

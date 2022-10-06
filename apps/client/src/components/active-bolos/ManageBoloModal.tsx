@@ -1,6 +1,5 @@
 import { FormField } from "components/form/FormField";
-import { Button, Loader, Input } from "@snailycad/ui";
-import { Textarea } from "components/form/Textarea";
+import { Textarea, Button, Loader, Input } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";

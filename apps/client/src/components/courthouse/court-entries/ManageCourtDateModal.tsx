@@ -1,5 +1,5 @@
 import { COURT_DATE_SCHEMA } from "@snailycad/schemas";
-import { Button } from "@snailycad/ui";
+import { Textarea, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
@@ -8,7 +8,6 @@ import { handleValidate } from "lib/handleValidate";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import type { CourtDate } from "@snailycad/types";
-import { Textarea } from "components/form/Textarea";
 import { v4 } from "uuid";
 import { DatePickerField } from "components/form/inputs/DatePicker/DatePickerField";
 

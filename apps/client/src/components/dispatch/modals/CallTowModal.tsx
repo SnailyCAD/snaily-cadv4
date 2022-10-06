@@ -1,9 +1,8 @@
 import { TOW_SCHEMA } from "@snailycad/schemas";
-import { Loader, Input, Button } from "@snailycad/ui";
+import { Textarea, Loader, Input, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { FormRow } from "components/form/FormRow";
 import { Select } from "components/form/Select";
-import { Textarea } from "components/form/Textarea";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { useValues } from "context/ValuesContext";
