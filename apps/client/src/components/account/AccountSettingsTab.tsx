@@ -5,7 +5,7 @@ import { CHANGE_USER_SCHEMA } from "@snailycad/schemas";
 import { useAuth } from "context/AuthContext";
 import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
-import { ProgressCircle, Input, Button } from "@snailycad/ui";
+import { Loader, Input, Button } from "@snailycad/ui";
 import { ChangePasswordArea } from "components/account/ChangePasswordArea";
 import { Manage2FAModal } from "./2fa/Manage2FAModal";
 import { TwoFactorAuthArea } from "./2fa/TwoFactorAuthArea";
@@ -58,7 +58,7 @@ export function AccountSettingsTab() {
                 type="submit"
                 disabled={state === "loading"}
               >
-                {state === "loading" ? <ProgressCircle /> : null}
+                {state === "loading" ? <Loader /> : null}
                 {common("save")}
               </Button>
             </div>
