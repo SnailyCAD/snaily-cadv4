@@ -16,7 +16,7 @@ import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
 import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
-import { Input} from "@snailycad/ui";
+import { Input } from "@snailycad/ui";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { ManagePermissionsModal } from "components/admin/manage/users/ManagePermissionsModal";

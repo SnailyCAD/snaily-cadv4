@@ -9,7 +9,7 @@ import { useValues } from "context/ValuesContext";
 import { toastMessage } from "lib/toastMessage";
 import { ModalIds } from "types/ModalIds";
 import { Form, Formik } from "formik";
-import { Input} from "@snailycad/ui";
+import { Input } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";

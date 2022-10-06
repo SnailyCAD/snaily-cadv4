@@ -18,7 +18,7 @@ import {
   WhitelistStatus,
 } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
-import { Input} from "@snailycad/ui";
+import { Input } from "@snailycad/ui";
 import { useCitizen } from "context/CitizenContext";
 import { useRouter } from "next/router";
 import { useAuth } from "context/AuthContext";

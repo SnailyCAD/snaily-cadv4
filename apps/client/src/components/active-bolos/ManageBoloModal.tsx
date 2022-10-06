@@ -1,6 +1,6 @@
 import { Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { Input} from "@snailycad/ui";
+import { Input } from "@snailycad/ui";
 import { Textarea } from "components/form/Textarea";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";

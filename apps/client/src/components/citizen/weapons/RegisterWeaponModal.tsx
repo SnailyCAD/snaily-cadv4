@@ -14,7 +14,7 @@ import { ModalIds } from "types/ModalIds";
 import { ValueLicenseType, Weapon, WeaponValue } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import { useCitizen } from "context/CitizenContext";
-import { Input} from "@snailycad/ui";
+import { Input } from "@snailycad/ui";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { filterLicenseTypes } from "lib/utils";
 import { toastMessage } from "lib/toastMessage";

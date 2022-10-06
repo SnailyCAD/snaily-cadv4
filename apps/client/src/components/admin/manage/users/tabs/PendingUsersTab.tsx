@@ -7,7 +7,7 @@ import { Table, useTableState } from "components/shared/Table";
 import useFetch from "lib/useFetch";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 import { FormField } from "components/form/FormField";
-import { Input} from "@snailycad/ui";
+import { Input } from "@snailycad/ui";
 import { Loader } from "components/Loader";
 import { useRouter } from "next/router";
 import type { GetManageUsersData, PostManageUserAcceptDeclineData } from "@snailycad/types/api";

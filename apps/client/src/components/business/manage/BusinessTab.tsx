@@ -7,7 +7,7 @@ import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { Form, Formik } from "formik";
 import { CREATE_COMPANY_SCHEMA } from "@snailycad/schemas";
-import { Input} from "@snailycad/ui";
+import { Input } from "@snailycad/ui";
 import { handleValidate } from "lib/handleValidate";
 import { Toggle } from "components/form/Toggle";
 import { Button } from "@snailycad/ui";

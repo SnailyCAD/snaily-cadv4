@@ -14,7 +14,7 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { LinkCallToIncidentModal } from "components/leo/call-history/LinkCallToIncidentModal";
 import { FormField } from "components/form/FormField";
-import { Input} from "@snailycad/ui";
+import { Input } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { Title } from "components/shared/Title";

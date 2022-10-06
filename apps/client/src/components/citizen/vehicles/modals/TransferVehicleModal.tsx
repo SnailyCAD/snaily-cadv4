@@ -7,7 +7,7 @@ import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
-import { Input} from "@snailycad/ui";
+import { Input } from "@snailycad/ui";
 import type { RegisteredVehicle } from "@snailycad/types";
 import { FormRow } from "components/form/FormRow";
 import { ModalIds } from "types/ModalIds";

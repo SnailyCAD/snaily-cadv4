@@ -6,7 +6,7 @@ import { Button } from "@snailycad/ui";
 import { Loader } from "components/Loader";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
-import { Input} from "@snailycad/ui";
+import { Input } from "@snailycad/ui";
 import { JailTimeScale, MiscCadSettings } from "@snailycad/types";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { SettingsFormField } from "components/form/SettingsFormField";

@@ -10,7 +10,7 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import type { MedicalRecord } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
-import { Input} from "@snailycad/ui";
+import { Input } from "@snailycad/ui";
 import { Textarea } from "components/form/Textarea";
 import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";

@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { Toggle } from "components/form/Toggle";
 import { FormRow } from "components/form/FormRow";
-import { Input} from "@snailycad/ui";
+import { Input } from "@snailycad/ui";
 import { isUnitOfficer } from "@snailycad/utils";
 import { classNames } from "lib/classNames";
 import type { GetManageUnitByIdData, PutManageUnitData } from "@snailycad/types/api";

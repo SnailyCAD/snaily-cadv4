@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Button } from "@snailycad/ui";
 import { FormRow } from "components/form/FormRow";
 import { FormField } from "components/form/FormField";
-import { Input} from "@snailycad/ui";
+import { Input } from "@snailycad/ui";
 import { Loader } from "components/Loader";
 import { Select } from "components/form/Select";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";

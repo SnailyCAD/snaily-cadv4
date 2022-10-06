@@ -7,7 +7,7 @@ import { ModalIds } from "types/ModalIds";
 import { Button, buttonVariants } from "@snailycad/ui";
 import { useTranslations } from "next-intl";
 import { FormField } from "components/form/FormField";
-import { Input} from "@snailycad/ui";
+import { Input } from "@snailycad/ui";
 import { Table, useTableState } from "components/shared/Table";
 import { Select } from "components/form/Select";
 import Link from "next/link";

@@ -14,7 +14,7 @@ import { usePermission, Permissions } from "hooks/usePermission";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { FormRow } from "components/form/FormRow";
-import { Input} from "@snailycad/ui";
+import { Input } from "@snailycad/ui";
 import { CallsignsTab } from "components/admin/manage/units/CallsignsTab";
 import type { GetManageUnitsData } from "@snailycad/types/api";
 

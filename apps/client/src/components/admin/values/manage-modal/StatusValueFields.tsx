@@ -1,5 +1,5 @@
 import { FormField } from "components/form/FormField";
-import { Input} from "@snailycad/ui";
+import { Input } from "@snailycad/ui";
 import { Select } from "components/form/Select";
 import { useFormikContext } from "formik";
 import dynamic from "next/dynamic";

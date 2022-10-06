@@ -13,7 +13,7 @@ import { defaultPermissions } from "@snailycad/permissions";
 import { classNames } from "lib/classNames";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 import { FormField } from "components/form/FormField";
-import { Input} from "@snailycad/ui";
+import { Input } from "@snailycad/ui";
 import { Loader } from "components/Loader";
 import type { GetManageUsersData } from "@snailycad/types/api";
 

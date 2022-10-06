@@ -6,7 +6,7 @@ import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import type { SeizedItem } from "@snailycad/types";
-import { Input} from "@snailycad/ui";
+import { Input } from "@snailycad/ui";
 import { Toggle } from "components/form/Toggle";
 
 interface Props {

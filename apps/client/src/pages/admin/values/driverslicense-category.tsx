@@ -14,7 +14,7 @@ import {
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll, yesOrNoText } from "lib/utils";
-import { Input} from "@snailycad/ui";
+import { Input } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
 import { Title } from "components/shared/Title";
