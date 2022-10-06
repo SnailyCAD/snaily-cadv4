@@ -46,31 +46,36 @@ export function SelectField<T extends SelectValue>(props: Props<T>) {
   );
 
   return (
-    <div className={classNames("flex flex-col mb-3 relative", props.className)}>
+    <div className={classNames("flex flex-col mb-3", props.className)}>
       <label {...labelProps} className={classNames("mb-1 dark:text-white", props.labelClassnames)}>
         {props.label}{" "}
         {props.isOptional ? <span className="text-sm italic">({optionalText})</span> : null}
       </label>
 
-      <HiddenSelect state={state} triggerRef={ref} label={props.label} name={props.name} />
-      <Button
-        {...triggerProps}
-        className="w-full h-10 flex items-center justify-between  hover:!bg-gray-500 hover:dark:!bg-secondary hover:dark:!brightness-100 hover:!border-gray-500"
-        ref={ref}
-      >
-        <span {...valueProps}>
-          {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
-          {state.selectedItem ? state.selectedItem.rendered : "Select an option"}
-        </span>
-        <span aria-hidden="true" style={{ paddingLeft: 5 }}>
-          <ChevronDown />
-        </span>
-      </Button>
-      {state.isOpen && (
-        <Popover isOpen={state.isOpen} onClose={state.close}>
-          <ListBox {...menuProps} state={state} />
-        </Popover>
-      )}
+      <div className="relative">
+        <HiddenSelect state={state} triggerRef={ref} label={props.label} name={props.name} />
+        <Button
+          {...triggerProps}
+          className={classNames(
+            "w-full h-10 flex items-center justify-between !border-gray-200 dark:!border-gray-700 dark:!bg-secondary hover:!bg-gray-500 hover:dark:!bg-secondary hover:dark:!brightness-100 hover:!border-gray-800",
+            state.isOpen && "dark:!border-gray-500",
+          )}
+          ref={ref}
+        >
+          <span {...valueProps}>
+            {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
+            {state.selectedItem ? state.selectedItem.rendered : "Select an option"}
+          </span>
+          <span aria-hidden="true" style={{ paddingLeft: 5 }}>
+            <ChevronDown />
+          </span>
+        </Button>
+        {state.isOpen && (
+          <Popover isOpen={state.isOpen} onClose={state.close}>
+            <ListBox {...menuProps} state={state} />
+          </Popover>
+        )}
+      </div>
 
       {props.children}
       {props.errorMessage && (
