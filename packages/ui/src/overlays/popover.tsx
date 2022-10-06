@@ -20,11 +20,11 @@ export function Popover(props: Props) {
   const { dialogProps } = useDialog(otherProps, popoverRef);
 
   return (
-    <FocusScope contain restoreFocus>
+    <FocusScope contain>
       <div
         {...mergeProps(overlayProps, modalProps, dialogProps)}
         ref={popoverRef}
-        className="absolute top-full bg-gray-200 dark:bg-primary dark:border dark:border-secondary rounded-md shadow-lg mt-2 p-8 z-10"
+        className="w-full absolute top-full bg-gray-200 dark:bg-primary dark:border dark:border-secondary rounded-md shadow-lg mt-2 p-2 z-10"
       >
         {children}
         <DismissButton onDismiss={onClose} />

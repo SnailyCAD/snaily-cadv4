@@ -47,8 +47,11 @@
     "@react-aria/select": "^3.8.2",
     "@react-aria/textfield": "^3.7.2",
     "@react-aria/utils": "^3.14.0",
+    "@react-stately/collections": "^3.4.4",
+    "@react-stately/list": "^3.5.4",
     "@react-stately/select": "^3.3.2",
-    "next-intl": "^2.7.6"
+    "next-intl": "^2.7.6",
+    "react-bootstrap-icons": "^1.9.1"
   },
   "peerDependencies": {
     "react": ">=18.2.0",
