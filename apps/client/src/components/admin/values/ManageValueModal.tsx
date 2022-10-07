@@ -22,11 +22,7 @@ import { Select } from "components/form/Select";
 import hexColor from "hex-color-regex";
 import { ModalIds } from "types/ModalIds";
 import { DepartmentFields } from "./manage-modal/DepartmentFields";
-import {
-  StatusValueFields,
-  useDefaultDepartments,
-  WHAT_PAGES_LABELS,
-} from "./manage-modal/StatusValueFields";
+import { StatusValueFields, useDefaultDepartments } from "./manage-modal/StatusValueFields";
 import { LicenseFields } from "./manage-modal/LicenseFields";
 import {
   isEmployeeValue,
@@ -105,7 +101,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     const data = {
       ...values,
       type: dlType ? dlType : values.type,
-      whatPages: values.whatPages?.map((v) => v.value),
+      whatPages: values.whatPages,
       departments: values.departments?.map((v) => v.value),
       officerRankDepartments: values.officerRankDepartments?.map((v) => v.value),
     };
@@ -181,13 +177,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
       value && (isStatusValue(value) || isUnitQualification(value))
         ? defaultDepartments(value)
         : undefined,
-    whatPages:
-      value && isStatusValue(value)
-        ? makeDefaultWhatPages(value)?.map((v) => ({
-            label: WHAT_PAGES_LABELS[v],
-            value: v,
-          }))
-        : [],
+    whatPages: value && isStatusValue(value) ? makeDefaultWhatPages(value) : [],
 
     pairedUnitTemplate: value && isDivisionValue(value) ? value.pairedUnitTemplate ?? "" : "",
     departmentId: value && isDivisionValue(value) ? value.departmentId : "",
@@ -268,7 +258,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
                 options={BUSINESS_VALUES}
                 name="as"
                 onSelectionChange={(key) => setFieldValue("as", key)}
-                selectedKey={values.as}
+                selectedKeys={values.as}
               />
             ) : null}
 
