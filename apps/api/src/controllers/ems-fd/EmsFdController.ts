@@ -54,7 +54,7 @@ export class EmsFdController {
   @Get("/logs")
   @UsePermissions({
     fallback: (u) => u.isEmsFd,
-    permissions: [Permissions.EmsFd],
+    permissions: [Permissions.EmsFd, Permissions.ViewUnits, Permissions.ManageUnits],
   })
   async getDeputyLogs(
     @Context("user") user: User,

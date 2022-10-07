@@ -328,7 +328,7 @@ export class MyOfficersController {
   @Get("/logs")
   @UsePermissions({
     fallback: (u) => u.isLeo,
-    permissions: [Permissions.Leo],
+    permissions: [Permissions.Leo, Permissions.ViewUnits, Permissions.ManageUnits],
   })
   async getOfficerLogs(
     @Context("user") user: User,
