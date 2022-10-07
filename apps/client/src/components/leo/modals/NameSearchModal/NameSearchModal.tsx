@@ -182,8 +182,8 @@ export function NameSearchModal() {
     });
   }
 
-  const hasWarrants =
-    !currentResult || currentResult.isConfidential ? false : currentResult.warrants?.length > 0;
+  const warrants = !currentResult || currentResult.isConfidential ? [] : currentResult.warrants;
+  const hasActiveWarrants = warrants.filter((v) => v.status === "ACTIVE").length > 0;
 
   const INITIAL_VALUES = {
     name: payloadCitizen?.name ?? "",
@@ -320,7 +320,7 @@ export function NameSearchModal() {
                     </div>
                   ) : null}
 
-                  {hasWarrants ? (
+                  {hasActiveWarrants ? (
                     <div className="p-2 my-2 font-semibold bg-red-700 rounded-md">
                       {t("hasWarrants")}
                     </div>

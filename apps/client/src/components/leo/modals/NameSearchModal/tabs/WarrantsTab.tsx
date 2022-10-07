@@ -129,7 +129,7 @@ export function NameSearchWarrantsTab() {
                           onChange={(e) => handleChange(e.target.value, warrant)}
                           className="w-40"
                           values={values}
-                          value={value ?? null}
+                          value={value?.value ?? null}
                         />
                       ) : null}
                       <Button
