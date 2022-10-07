@@ -72,8 +72,16 @@ export function StatusValueFields() {
         label="Should Do"
         options={SHOULD_DO_VALUES}
         name="shouldDo"
-        onSelectionChange={(key) => setFieldValue("shouldDo", key)}
         selectedKey={values.shouldDo}
+        onSelectionChange={(key) => setFieldValue("shouldDo", key)}
+      />
+
+      <SelectField
+        label="What Pages"
+        options={WHAT_PAGES_VALUES}
+        name="whatPages"
+        selectedKeys={values.whatPages}
+        onSelectionChange={(keys) => setFieldValue("whatPages", keys)}
       />
 
       <FormField errorMessage={errors.whatPages as string} label="What Pages">

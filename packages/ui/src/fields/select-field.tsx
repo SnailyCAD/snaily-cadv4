@@ -1,15 +1,14 @@
 import * as React from "react";
-import { HiddenSelect, useSelect } from "@react-aria/select";
-import { useSelectState } from "@react-stately/select";
 import type { AriaSelectProps } from "@react-types/select";
-import type { Node } from "@react-types/shared";
 import { Item } from "@react-stately/collections";
 import { useTranslations } from "next-intl";
 import { classNames } from "../utils/classNames";
 import { Popover } from "../overlays/popover";
 import { ListBox } from "../list/list-box";
-import { Button } from "../button";
+import { Button, buttonSizes, buttonVariants } from "../button";
 import { ChevronDown, X } from "react-bootstrap-icons";
+import { useMultiSelectState } from "../hooks/select/useMultiSelectState";
+import { useMultiSelect } from "../hooks/select/useMultiSelect";
 
 export interface SelectValue {
   value: string;
@@ -17,21 +16,25 @@ export interface SelectValue {
   isDisabled?: boolean;
 }
 
-interface Props<T extends SelectValue> extends Omit<AriaSelectProps<T>, "children"> {
+type Props<T extends SelectValue> = Omit<AriaSelectProps<T>, "children" | "selectedKey"> & {
   label: string;
   isClearable?: boolean;
   isOptional?: boolean;
-
   children?: React.ReactNode;
   options: T[];
   className?: string;
   labelClassnames?: string;
   hiddenLabel?: boolean;
-}
+
+  onSelectionChange?: Parameters<typeof useMultiSelectState>["0"]["onSelectionChange"];
+  selectedKeys?: Parameters<typeof useMultiSelectState>["0"]["selectedKeys"];
+  selectionMode?: "single" | "multiple";
+};
 
 export function SelectField<T extends SelectValue>(props: Props<T>) {
   const common = useTranslations("Common");
   const optionalText = common("optionalField");
+  const selectionMode = props.selectionMode ?? "single";
 
   const children = React.useMemo(() => {
     return props.options.map((option) => <Item key={option.value}>{option.label}</Item>);
@@ -41,14 +44,41 @@ export function SelectField<T extends SelectValue>(props: Props<T>) {
     return props.options.filter((v) => Boolean(v.isDisabled)).map((v) => v.value);
   }, [props.options]);
 
-  const state = useSelectState<T>({ ...props, children, disabledKeys });
+  const selectedKeys = React.useMemo(() => {
+    if (props.selectedKeys === "all") {
+      return "all";
+    }
+
+    if (props.selectedKeys instanceof Set) {
+      return props.selectedKeys;
+    }
+
+    if (Array.isArray(props.selectedKeys)) {
+      return props.selectedKeys;
+    }
+
+    return [props.selectedKeys];
+  }, [props.selectedKeys]);
+
+  const disallowEmptySelection = !props.isClearable;
+  const state = useMultiSelectState({
+    ...props,
+    selectedKeys,
+    children,
+    disabledKeys,
+    disallowEmptySelection,
+    selectionMode,
+  });
+
   const ref = React.useRef<null>(null);
-  const { labelProps, errorMessageProps, triggerProps, valueProps, menuProps } = useSelect(
-    { ...props, children },
+  const { labelProps, triggerProps, errorMessageProps, valueProps, menuProps } = useMultiSelect(
+    { ...props, disallowEmptySelection, children, disabledKeys },
     state,
     ref,
   );
-  const selectedItem = state.selectedItem as Node<T> | null;
+
+  const selectedItems = selectionMode === "multiple" ? state.selectedItems : null;
+  const selectedItem = selectionMode === "single" ? state.selectedItems?.[0] : null;
 
   return (
     <div className={classNames("flex flex-col mb-3", props.className)}>
@@ -65,31 +95,58 @@ export function SelectField<T extends SelectValue>(props: Props<T>) {
       </label>
 
       <div className="relative">
-        <HiddenSelect state={state} triggerRef={ref} label={props.label} name={props.name} />
         <Button
           {...triggerProps}
           className={classNames(
-            "w-full h-10 flex items-center justify-between border dark:!border-gray-700 !bg-white !border-gray-200 dark:!bg-secondary hover:!border-gray-500 hover:dark:!bg-secondary hover:dark:!brightness-100",
+            buttonVariants.default,
+            buttonSizes.sm,
+            "rounded-md w-full h-10 flex items-center justify-between border dark:!border-gray-700 !bg-white !border-gray-200 dark:!bg-secondary hover:!border-gray-500 hover:dark:!bg-secondary hover:dark:!brightness-100",
             state.isOpen && "dark:!border-gray-500 !border-gray-500",
           )}
           ref={ref}
         >
-          <span
+          <div
             {...valueProps}
-            className={classNames(!selectedItem && "text-neutral-700 dark:text-gray-400")}
+            className={classNames(
+              "flex items-center gap-2",
+              !(selectedItems || selectedItem) && "text-neutral-700 dark:text-gray-400",
+            )}
           >
-            {selectedItem ? selectedItem.rendered : common("select")}
-          </span>
+            {selectedItems ? (
+              selectedItems.map((item) => (
+                <span
+                  className="text-sm flex items-center justify-between p-0.5 px-1.5 rounded-sm bg-tertiary h-7"
+                  key={item.key}
+                >
+                  <span className="pr-1">{item.textValue}</span>
+                  <Button
+                    className="!px-0.5 hover:!bg-primary"
+                    variant="transparent"
+                    role="button"
+                    onPress={() => {
+                      const copied = [...state.selectedKeys].filter((v) => v !== item.key);
+                      state.setSelectedKeys(copied);
+                    }}
+                  >
+                    <X className="w-5 h-5" />
+                  </Button>
+                </span>
+              ))
+            ) : selectedItem ? (
+              <span>{selectedItem.textValue}</span>
+            ) : (
+              common("select")
+            )}
+          </div>
           <div className="flex items-center">
-            {props.isClearable && selectedItem ? (
+            {props.isClearable && selectedItems ? (
               <>
                 <Button
                   variant="transparent"
                   className="dark:text-gray-400 hover:!text-white !px-0"
                   aria-label="Clear"
                   onPress={() => {
-                    // @ts-expect-error null is available if the props allow `isClearable`
-                    state.setSelectedKey(null);
+                    state.setSelectedKeys([]);
                   }}
                 >
                   <X className="h-6 w-6" />
