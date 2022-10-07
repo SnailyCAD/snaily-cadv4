@@ -11,6 +11,7 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { ManageUnitCallsignModal } from "./ManageUnitCallsignModal";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import { Permissions, usePermission } from "hooks/usePermission";
 
 interface Props {
   units: Unit[];
@@ -20,11 +21,13 @@ interface Props {
 export function CallsignsTab({ search, units }: Props) {
   const [tempUnit, unitState] = useTemporaryItem(units);
 
+  const { hasPermissions } = usePermission();
   const t = useTranslations();
   const common = useTranslations("Common");
   const { generateCallsign } = useGenerateCallsign();
   const { openModal } = useModal();
   const tableState = useTableState({ search: { value: search } });
+  const hasViewUsersPermissions = hasPermissions([Permissions.ViewUsers], true);
 
   function handleManageClick(unit: Unit) {
     unitState.setTempId(unit.id);
@@ -48,7 +51,7 @@ export function CallsignsTab({ search, units }: Props) {
               id: unit.id,
               unit: LABELS[unit.type],
               name: makeUnitName(unit),
-              user: (
+              user: hasViewUsersPermissions ? (
                 <Link href={`/admin/manage/users/${unit.userId}`}>
                   <a
                     href={`/admin/manage/users/${unit.userId}`}
@@ -57,6 +60,8 @@ export function CallsignsTab({ search, units }: Props) {
                     {unit.user.username}
                   </a>
                 </Link>
+              ) : (
+                unit.user.username
               ),
               callsign1: unit.callsign,
               callsign2: unit.callsign2,

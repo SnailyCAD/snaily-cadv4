@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import type { PostManageUnitAcceptDeclineDepartmentData } from "@snailycad/types/api";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { Permissions, usePermission } from "hooks/usePermission";
 
 interface Props {
   pendingOfficers: Unit[];
@@ -23,6 +24,7 @@ interface Props {
 export function DepartmentWhitelistingTab({ search, pendingOfficers }: Props) {
   const router = useRouter();
 
+  const { hasPermissions } = usePermission();
   const { openModal, closeModal } = useModal();
   const t = useTranslations();
   const common = useTranslations("Common");
@@ -30,6 +32,7 @@ export function DepartmentWhitelistingTab({ search, pendingOfficers }: Props) {
   const { state, execute } = useFetch();
   const tableState = useTableState({ search: { value: search } });
   const { DIVISIONS } = useFeatureEnabled();
+  const hasViewUsersPermissions = hasPermissions([Permissions.ViewUsers], true);
 
   async function handleAcceptOrDecline(data: {
     unit: Unit;
@@ -66,7 +69,7 @@ export function DepartmentWhitelistingTab({ search, pendingOfficers }: Props) {
             badgeNumber: officer.badgeNumber,
             department: formatOfficerDepartment(officer) ?? common("none"),
             division: formatUnitDivisions(officer),
-            user: (
+            user: hasViewUsersPermissions ? (
               <Link href={`/admin/manage/users/${officer.userId}`}>
                 <a
                   href={`/admin/manage/users/${officer.userId}`}
@@ -75,6 +78,8 @@ export function DepartmentWhitelistingTab({ search, pendingOfficers }: Props) {
                   {officer.user.username}
                 </a>
               </Link>
+            ) : (
+              officer.user.username
             ),
             actions: (
               <>

@@ -44,6 +44,7 @@ export function AllUnitsTab({ search, units }: Props) {
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageUnits], true);
   const hasDeletePermissions = hasPermissions([Permissions.DeleteUnits], true);
+  const hasViewUsersPermissions = hasPermissions([Permissions.ViewUsers], true);
   const { state, execute } = useFetch();
 
   const t = useTranslations();
@@ -134,7 +135,7 @@ export function AllUnitsTab({ search, units }: Props) {
               id: unit.id,
               unit: LABELS[unit.type],
               name: makeUnitName(unit),
-              user: (
+              user: hasViewUsersPermissions ? (
                 <Link href={`/admin/manage/users/${unit.userId}`}>
                   <a
                     href={`/admin/manage/users/${unit.userId}`}
@@ -143,6 +144,8 @@ export function AllUnitsTab({ search, units }: Props) {
                     {unit.user.username}
                   </a>
                 </Link>
+              ) : (
+                unit.user.username
               ),
               callsign: generateCallsign(unit),
               badgeNumber: unit.badgeNumber,
