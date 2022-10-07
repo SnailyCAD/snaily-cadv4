@@ -52,7 +52,8 @@
     "left": "Left",
     "right": "Right",
     "user": "User",
-    "savedSettingsSuccess": "Settings successfully saved."
+    "savedSettingsSuccess": "Settings successfully saved.",
+    "select": "Select..."
   },
   "Nav": {
     "citizen": "Citizen",

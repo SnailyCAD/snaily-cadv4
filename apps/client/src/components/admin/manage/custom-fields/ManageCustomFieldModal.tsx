@@ -1,5 +1,4 @@
-import { FormField } from "components/form/FormField";
-import { Loader, Button, Input } from "@snailycad/ui";
+import { Loader, Button, TextField, SelectField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { Form, Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
@@ -7,7 +6,6 @@ import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { CustomField, CustomFieldCategory } from "@snailycad/types";
 import { useTranslations } from "use-intl";
-import { Select } from "components/form/Select";
 import { ModalIds } from "types/ModalIds";
 import { CUSTOM_FIELDS_SCHEMA } from "@snailycad/schemas";
 import type { POstManageCustomFieldsData, PutManageCustomFieldsData } from "@snailycad/types/api";
@@ -81,20 +79,25 @@ export function ManageCustomFieldModal({ field, onClose, onCreate, onUpdate }: P
       isOpen={isOpen(ModalIds.ManageCustomField)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, values, errors }) => (
+        {({ setFieldValue, values, errors }) => (
           <Form>
-            <FormField errorMessage={errors.name} label={common("name")}>
-              <Input autoFocus name="name" onChange={handleChange} value={values.name} />
-            </FormField>
+            <TextField
+              errorMessage={errors.name}
+              label={common("name")}
+              autoFocus
+              name="name"
+              onChange={(value) => setFieldValue("name", value)}
+              value={values.name}
+            />
 
-            <FormField errorMessage={errors.category} label="Category">
-              <Select
-                values={CATEGORIES}
-                name="category"
-                onChange={handleChange}
-                value={values.category}
-              />
-            </FormField>
+            <SelectField
+              errorMessage={errors.category}
+              label="Category"
+              options={CATEGORIES}
+              name="category"
+              onSelectionChange={(key) => setFieldValue("category", key)}
+              selectedKey={values.category}
+            />
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onPress={handleClose} variant="cancel">

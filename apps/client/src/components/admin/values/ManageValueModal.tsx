@@ -9,7 +9,7 @@ import {
   CALL_TYPE_SCHEMA,
 } from "@snailycad/schemas";
 import { FormField } from "components/form/FormField";
-import { Textarea, Input, Loader, Button } from "@snailycad/ui";
+import { Loader, Button, SelectField, TextField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { Form, Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
@@ -240,12 +240,17 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
       isOpen={isOpen(ModalIds.ManageValue)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, values, errors }) => (
+        {({ handleChange, setFieldValue, values, errors }) => (
           <Form>
             {type === ValueType.DIVISION ? null : (
-              <FormField errorMessage={errors.value} label="Value">
-                <Input autoFocus name="value" onChange={handleChange} value={values.value} />
-              </FormField>
+              <TextField
+                errorMessage={errors.value}
+                label="Value"
+                autoFocus
+                name="value"
+                onChange={(value) => setFieldValue("value", value)}
+                value={values.value}
+              />
             )}
 
             {type === ValueType.LICENSE ? <LicenseFields /> : null}
@@ -257,37 +262,42 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             ) : null}
 
             {type === ValueType.BUSINESS_ROLE ? (
-              <FormField label="As (this is so the database knows what to use.)">
-                <Select
-                  values={BUSINESS_VALUES}
-                  name="as"
-                  onChange={handleChange}
-                  value={values.as}
-                />
-              </FormField>
+              <SelectField
+                errorMessage={errors.as}
+                label="As (this is so the database knows what to use.)"
+                options={BUSINESS_VALUES}
+                name="as"
+                onSelectionChange={(key) => setFieldValue("as", key)}
+                selectedKey={values.as}
+              />
             ) : null}
 
             {["VEHICLE", "WEAPON"].includes(type) ? (
-              <FormField optional label="Game Hash">
-                <Input name="hash" onChange={handleChange} value={values.hash} />
-              </FormField>
+              <TextField
+                isOptional
+                errorMessage={errors.hash}
+                label="Game Hash"
+                name="hash"
+                onChange={(value) => setFieldValue("hash", value)}
+                value={values.hash}
+              />
             ) : null}
 
             {type === ValueType.CALL_TYPE ? (
-              <FormField errorMessage={errors.priority} optional label="Priority">
-                <Input
-                  type="number"
-                  name="priority"
-                  onChange={handleChange}
-                  value={values.priority}
-                />
-              </FormField>
+              <TextField
+                type="number"
+                isOptional
+                errorMessage={errors.priority}
+                label="Priority"
+                name="priority"
+                onChange={(value) => setFieldValue("priority", value)}
+                value={values.priority}
+              />
             ) : null}
 
             {type === ValueType.OFFICER_RANK ? (
               <>
                 <ImageSelectInput valueKey="officerRankImageId" image={image} setImage={setImage} />
-
                 <FormField optional label="Departments">
                   <Select
                     isMulti
@@ -305,9 +315,15 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             ) : null}
 
             {type === ValueType.DRIVERSLICENSE_CATEGORY ? (
-              <FormField optional label="Description">
-                <Textarea name="description" onChange={handleChange} value={values.description} />
-              </FormField>
+              <TextField
+                isTextarea
+                isOptional
+                errorMessage={errors.description}
+                label="Description"
+                name="description"
+                onChange={(value) => setFieldValue("description", value)}
+                value={values.description}
+              />
             ) : null}
 
             {type === "CODES_10" ? <StatusValueFields /> : null}

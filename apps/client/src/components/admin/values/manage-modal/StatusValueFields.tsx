@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { QualificationValue, ShouldDoType, StatusValue, Value, WhatPages } from "@snailycad/types";
 
 import { Eyedropper } from "react-bootstrap-icons";
-import { Input, Button } from "@snailycad/ui";
+import { Input, Button, SelectField } from "@snailycad/ui";
 import { useValues } from "context/ValuesContext";
 
 const HexColorPicker = dynamic(async () => (await import("react-colorful")).HexColorPicker);
@@ -68,14 +68,13 @@ export function StatusValueFields() {
 
   return (
     <>
-      <FormField errorMessage={errors.shouldDo as string} label="Should Do">
-        <Select
-          values={SHOULD_DO_VALUES}
-          name="shouldDo"
-          onChange={handleChange}
-          value={values.shouldDo}
-        />
-      </FormField>
+      <SelectField
+        label="Should Do"
+        options={SHOULD_DO_VALUES}
+        name="shouldDo"
+        onSelectionChange={(key) => setFieldValue("shouldDo", key)}
+        selectedKey={values.shouldDo}
+      />
 
       <FormField errorMessage={errors.whatPages as string} label="What Pages">
         <Select

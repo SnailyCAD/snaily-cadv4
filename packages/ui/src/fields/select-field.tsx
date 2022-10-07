@@ -2,13 +2,14 @@ import * as React from "react";
 import { HiddenSelect, useSelect } from "@react-aria/select";
 import { useSelectState } from "@react-stately/select";
 import type { AriaSelectProps } from "@react-types/select";
+import type { Node } from "@react-types/shared";
 import { Item } from "@react-stately/collections";
 import { useTranslations } from "next-intl";
 import { classNames } from "../utils/classNames";
 import { Popover } from "../overlays/popover";
 import { ListBox } from "../list/list-box";
 import { Button } from "../button";
-import { ChevronDown } from "react-bootstrap-icons";
+import { ChevronDown, X } from "react-bootstrap-icons";
 
 export interface SelectValue {
   value: string;
@@ -18,17 +19,19 @@ export interface SelectValue {
 
 interface Props<T extends SelectValue> extends Omit<AriaSelectProps<T>, "children"> {
   label: string;
+  isClearable?: boolean;
+  isOptional?: boolean;
 
   children?: React.ReactNode;
   options: T[];
-  isOptional?: boolean;
   className?: string;
   labelClassnames?: string;
   hiddenLabel?: boolean;
 }
 
 export function SelectField<T extends SelectValue>(props: Props<T>) {
-  const optionalText = useTranslations("Common")("optionalField");
+  const common = useTranslations("Common");
+  const optionalText = common("optionalField");
 
   const children = React.useMemo(() => {
     return props.options.map((option) => <Item key={option.value}>{option.label}</Item>);
@@ -45,6 +48,7 @@ export function SelectField<T extends SelectValue>(props: Props<T>) {
     state,
     ref,
   );
+  const selectedItem = state.selectedItem as Node<T> | null;
 
   return (
     <div className={classNames("flex flex-col mb-3", props.className)}>
@@ -70,13 +74,33 @@ export function SelectField<T extends SelectValue>(props: Props<T>) {
           )}
           ref={ref}
         >
-          <span {...valueProps}>
-            {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
-            {state.selectedItem ? state.selectedItem.rendered : "Select an option"}
+          <span
+            {...valueProps}
+            className={classNames(!selectedItem && "text-neutral-700 dark:text-gray-400")}
+          >
+            {selectedItem ? selectedItem.rendered : common("select")}
           </span>
-          <span aria-hidden="true" style={{ paddingLeft: 5 }}>
-            <ChevronDown />
-          </span>
+          <div className="flex items-center">
+            {props.isClearable && selectedItem ? (
+              <>
+                <Button
+                  variant="transparent"
+                  className="dark:text-gray-400 hover:!text-white !px-0"
+                  aria-label="Clear"
+                  onPress={() => {
+                    // @ts-expect-error null is available if the props allow `isClearable`
+                    state.setSelectedKey(null);
+                  }}
+                >
+                  <X className="h-6 w-6" />
+                </Button>
+                <div className="w-[1px] h-4 rounded-md dark:bg-gray-500/80 mx-1" />
+              </>
+            ) : null}
+            <span aria-hidden="true" style={{ paddingLeft: 5 }}>
+              <ChevronDown />
+            </span>
+          </div>
         </Button>
         {state.isOpen && (
           <Popover isOpen={state.isOpen} onClose={state.close}>
