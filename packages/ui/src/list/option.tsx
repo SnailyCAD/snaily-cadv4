@@ -4,6 +4,7 @@ import type { Node } from "@react-types/shared";
 import type { ListState } from "@react-stately/list";
 import { buttonSizes } from "../button";
 import { classNames } from "../utils/classNames";
+import { Check } from "react-bootstrap-icons";
 
 interface OptionProps {
   item: Node<unknown>;
@@ -24,12 +25,14 @@ export function Option({ item, state }: OptionProps) {
       ref={ref}
       className={classNames(
         buttonSizes.sm,
-        "rounded-md my-1 hover:bg-secondary cursor-pointer",
+        "flex items-center justify-between",
+        "rounded-md my-1 dark:text-white hover:bg-secondary focus:bg-secondary cursor-pointer",
         (isSelected || isFocused) && "bg-secondary",
         isDisabled && "cursor-not-allowed opacity-70",
       )}
     >
       {item.rendered}
+      {isSelected ? <Check className="dark:text-gray-400" /> : null}
     </li>
   );
 }

@@ -24,6 +24,7 @@ interface Props<T extends SelectValue> extends Omit<AriaSelectProps<T>, "childre
   isOptional?: boolean;
   className?: string;
   labelClassnames?: string;
+  hiddenLabel?: boolean;
 }
 
 export function SelectField<T extends SelectValue>(props: Props<T>) {
@@ -47,7 +48,14 @@ export function SelectField<T extends SelectValue>(props: Props<T>) {
 
   return (
     <div className={classNames("flex flex-col mb-3", props.className)}>
-      <label {...labelProps} className={classNames("mb-1 dark:text-white", props.labelClassnames)}>
+      <label
+        {...labelProps}
+        className={classNames(
+          "mb-1 dark:text-white",
+          props.hiddenLabel && "sr-only",
+          props.labelClassnames,
+        )}
+      >
         {props.label}{" "}
         {props.isOptional ? <span className="text-sm italic">({optionalText})</span> : null}
       </label>

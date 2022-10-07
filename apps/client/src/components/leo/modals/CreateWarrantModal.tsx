@@ -1,6 +1,6 @@
 import { Form, Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
-import { Textarea, Loader, Button } from "@snailycad/ui";
+import { Textarea, Loader, Button, SelectField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import useFetch from "lib/useFetch";
@@ -19,6 +19,7 @@ import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useActiveOfficers } from "hooks/realtime/useActiveOfficers";
 import Image from "next/future/image";
+import { WarrantStatus } from "@snailycad/types";
 
 interface Props {
   onClose?(): void;
@@ -188,8 +189,8 @@ export function CreateWarrantModal({ warrant, readOnly, onClose, onCreate, onUpd
               </FormField>
             ) : null}
 
-            <FormField errorMessage={errors.status} label={t("status")}>
-              <Select
+            {/* <FormField errorMessage={errors.status} label={t("status")}> */}
+            {/* <Select
                 disabled={readOnly}
                 values={[
                   { label: "Active", value: "ACTIVE" },
@@ -198,8 +199,20 @@ export function CreateWarrantModal({ warrant, readOnly, onClose, onCreate, onUpd
                 name="status"
                 onChange={handleChange}
                 value={values.status}
-              />
-            </FormField>
+              /> */}
+
+            <SelectField
+              errorMessage={errors.status}
+              isDisabled={readOnly}
+              label={t("status")}
+              onSelectionChange={(value) => setFieldValue("status", value)}
+              options={[
+                { label: "Active", value: WarrantStatus.ACTIVE },
+                { label: "Inactive", value: WarrantStatus.INACTIVE },
+              ]}
+              selectedKey={values.status}
+            />
+            {/* </FormField> */}
 
             <FormField errorMessage={errors.description} label={common("description")}>
               <Textarea
