@@ -16,6 +16,10 @@ export function getSelectedKeyOrKeys<T extends SelectValue>(props: Options<T>) {
     return [props.selectedKey];
   }
 
+  if (props.selectedKey === null) {
+    return [];
+  }
+
   if (props.selectedKeys === "all") {
     return "all";
   }
