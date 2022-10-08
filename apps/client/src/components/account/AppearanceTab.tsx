@@ -124,7 +124,6 @@ export function AppearanceTab({ availableSounds }: Props) {
               selectedKey={values.statusViewMode}
               onSelectionChange={(value) => setFieldValue("statusViewMode", value)}
               name="statusViewMode"
-              isDisabled
             />
 
             <SelectField

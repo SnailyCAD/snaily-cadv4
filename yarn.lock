@@ -1566,7 +1566,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-aria/dialog@npm:^3.3.1":
+"@react-aria/dialog@npm:^3.3.1, @react-aria/dialog@npm:^3.4.0":
   version: 3.4.0
   resolution: "@react-aria/dialog@npm:3.4.0"
   dependencies:
@@ -1730,30 +1730,6 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
   checksum: 4de4f8ad52d63c0375fa89949261dc540001fcf82b547934e402929ca080f57d33702d7972f890c59d7f6da346a7eb6944b78331169f09fca7cc4e9338933a67
-  languageName: node
-  linkType: hard
-
-"@react-aria/select@npm:^3.8.2":
-  version: 3.8.2
-  resolution: "@react-aria/select@npm:3.8.2"
-  dependencies:
-    "@babel/runtime": ^7.6.2
-    "@react-aria/i18n": ^3.6.1
-    "@react-aria/interactions": ^3.12.0
-    "@react-aria/label": ^3.4.2
-    "@react-aria/listbox": ^3.7.0
-    "@react-aria/menu": ^3.6.2
-    "@react-aria/selection": ^3.11.0
-    "@react-aria/utils": ^3.14.0
-    "@react-aria/visually-hidden": ^3.5.0
-    "@react-stately/select": ^3.3.2
-    "@react-types/button": ^3.6.2
-    "@react-types/select": ^3.6.4
-    "@react-types/shared": ^3.15.0
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
-    react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
-  checksum: d92afc863473048c04907c75787008b1823c3a9f695e35b3c50d548db46455649e414094f0cc2a6423a9e53b66e2b6467196d90ead40e8d91c5d7f9aede29c18
   languageName: node
   linkType: hard
 
@@ -2701,14 +2677,23 @@ __metadata:
   dependencies:
     "@react-aria/button": ^3.6.2
     "@react-aria/combobox": ^3.4.2
+    "@react-aria/dialog": ^3.4.0
+    "@react-aria/focus": ^3.9.0
+    "@react-aria/interactions": ^3.12.0
+    "@react-aria/label": ^3.4.2
+    "@react-aria/listbox": ^3.7.0
+    "@react-aria/menu": ^3.6.2
+    "@react-aria/overlays": ^3.11.0
     "@react-aria/progress": ^3.3.2
-    "@react-aria/select": ^3.8.2
     "@react-aria/textfield": ^3.7.2
     "@react-aria/utils": ^3.14.0
     "@react-stately/collections": ^3.4.4
     "@react-stately/list": ^3.5.4
+    "@react-stately/menu": ^3.4.2
     "@react-stately/select": ^3.3.2
-    "@react-stately/selection": ^3.11.0
+    "@react-types/overlays": ^3.6.4
+    "@react-types/select": ^3.6.4
+    "@react-types/shared": ^3.15.0
     "@snailycad/types": "workplace:*"
     next-intl: ^2.7.6
     react-bootstrap-icons: ^1.9.1
