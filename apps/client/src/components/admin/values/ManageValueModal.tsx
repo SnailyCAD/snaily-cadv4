@@ -16,7 +16,13 @@ import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { useValues } from "context/ValuesContext";
-import { AnyValue, DriversLicenseCategoryType, EmployeeAsEnum, ValueType } from "@snailycad/types";
+import {
+  AnyValue,
+  DriversLicenseCategoryType,
+  EmployeeAsEnum,
+  QualificationValueType,
+  ValueType,
+} from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { Select } from "components/form/Select";
 import hexColor from "hex-color-regex";
@@ -168,7 +174,9 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
         ? value.description ?? ""
         : "",
     qualificationType:
-      value && isUnitQualification(value) ? value.qualificationType : "qualification",
+      value && isUnitQualification(value)
+        ? value.qualificationType
+        : QualificationValueType.QUALIFICATION,
 
     shouldDo: value && isStatusValue(value) ? value.shouldDo : "",
     color: value && isStatusValue(value) ? value.color ?? "" : "",

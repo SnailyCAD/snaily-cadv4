@@ -46,8 +46,8 @@ export function useMultiSelectState<T extends {}>(props: MultiSelectProps<T>): M
         }
 
         if (props.selectionMode === "single" && keys !== "all") {
-          const first = Array.from(keys.values()).at(0)!;
-          props.onSelectionChange(first);
+          const first = Array.from(keys.values()).at(0) ?? null;
+          props.onSelectionChange(first!);
         } else {
           const array = typeof keys === "object" && Array.from(keys.values());
           if (!array) {

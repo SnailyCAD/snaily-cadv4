@@ -189,18 +189,6 @@ export function CreateWarrantModal({ warrant, readOnly, onClose, onCreate, onUpd
               </FormField>
             ) : null}
 
-            {/* <FormField errorMessage={errors.status} label={t("status")}> */}
-            {/* <Select
-                disabled={readOnly}
-                values={[
-                  { label: "Active", value: "ACTIVE" },
-                  { label: "Inactive", value: "INACTIVE" },
-                ]}
-                name="status"
-                onChange={handleChange}
-                value={values.status}
-              /> */}
-
             <SelectField
               errorMessage={errors.status}
               isDisabled={readOnly}
@@ -212,7 +200,6 @@ export function CreateWarrantModal({ warrant, readOnly, onClose, onCreate, onUpd
               ]}
               selectedKey={values.status}
             />
-            {/* </FormField> */}
 
             <FormField errorMessage={errors.description} label={common("description")}>
               <Textarea
