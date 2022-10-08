@@ -26,13 +26,15 @@ export function Option({ item, state }: OptionProps) {
       className={classNames(
         buttonSizes.sm,
         "flex items-center justify-between",
-        "rounded-md my-1 dark:text-white hover:bg-secondary focus:bg-secondary cursor-pointer",
-        (isSelected || isFocused) && "bg-secondary",
+        "rounded-md my-1 dark:text-white dark:hover:bg-secondary hover:bg-gray-400 focus:bg-gray-400 dark:focus:bg-secondary  cursor-pointer",
+        (isSelected || isFocused) && "dark:bg-secondary bg-gray-400",
         isDisabled && "cursor-not-allowed opacity-70",
       )}
     >
       {item.rendered}
-      {isSelected ? <Check className="dark:text-gray-400" /> : null}
+      {isSelected ? (
+        <Check aria-label={`Selected ${item.textValue}`} className="dark:text-gray-400" />
+      ) : null}
     </li>
   );
 }

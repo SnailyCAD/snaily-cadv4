@@ -69,8 +69,8 @@ export function SelectField<T extends SelectValue>(props: Props<T>) {
         <Button
           {...triggerProps}
           className={classNames(
-            "w-full h-10 flex items-center justify-between !border-gray-200 dark:!border-gray-700 dark:!bg-secondary hover:!bg-gray-500 hover:dark:!bg-secondary hover:dark:!brightness-100 hover:!border-gray-800",
-            state.isOpen && "dark:!border-gray-500",
+            "w-full h-10 flex items-center justify-between border dark:!border-gray-700 !bg-white !border-gray-200 dark:!bg-secondary hover:!border-gray-500 hover:dark:!bg-secondary hover:dark:!brightness-100",
+            state.isOpen && "dark:!border-gray-500 !border-gray-500",
           )}
           ref={ref}
         >
