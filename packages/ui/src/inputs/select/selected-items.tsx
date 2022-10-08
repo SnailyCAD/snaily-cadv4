@@ -20,12 +20,12 @@ export function SelectedItems<T extends SelectValue>({ selectionMode, state }: P
       <>
         {selectedItems.map((item) => (
           <span
-            className="text-sm flex items-center justify-between p-0.5 px-1.5 rounded-sm bg-tertiary h-7"
+            className="text-sm flex items-center justify-between p-0.5 px-1.5 rounded-sm bg-gray-300 dark:bg-tertiary h-7"
             key={item.key}
           >
             <span className="pr-1">{item.textValue}</span>
             <Button
-              className="!px-0.5 hover:!bg-primary"
+              className="!px-0.5 hover:!bg-gray-400 dark:hover:!bg-primary"
               variant="transparent"
               role="button"
               onPress={() => {
