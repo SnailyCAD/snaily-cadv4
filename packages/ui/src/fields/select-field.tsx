@@ -84,8 +84,11 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
           className={classNames(
             buttonVariants.default,
             buttonSizes.sm,
-            "rounded-md w-full h-10 flex items-center justify-between border dark:!border-gray-700 !bg-white !border-gray-200 dark:!bg-secondary hover:!border-gray-500 hover:dark:!bg-secondary hover:dark:!brightness-100",
-            state.isOpen && "dark:!border-gray-500 !border-gray-500",
+            "cursor-default rounded-md w-full h-10 flex items-center justify-between border dark:!border-gray-700 !bg-white !border-gray-200 dark:!bg-secondary hover:!border-gray-500 hover:dark:!bg-secondary hover:dark:!brightness-100",
+            (state.isOpen || state.isFocused) &&
+              !props.isDisabled &&
+              "dark:!border-gray-500 !border-gray-500",
+            props.isDisabled && "!cursor-not-allowed opacity-80",
           )}
           ref={ref}
         >

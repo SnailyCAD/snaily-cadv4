@@ -1,4 +1,4 @@
-import type * as React from "react";
+import * as React from "react";
 import { MenuTriggerState, useMenuTriggerState } from "@react-stately/menu";
 import { MultiSelectListState, useMultiSelectListState } from "./useMultiSelectListState";
 
@@ -28,9 +28,14 @@ export interface MultiSelectProps<T>
   onSelectionChange?(keys: React.Key[] | React.Key): any;
 }
 
-export type MultiSelectState<T> = MultiSelectListState<T> & MenuTriggerState;
+export interface MultiSelectState<T> extends MultiSelectListState<T>, MenuTriggerState {
+  isFocused: boolean;
+  setIsFocused(isFocused: boolean): void;
+}
 
 export function useMultiSelectState<T extends {}>(props: MultiSelectProps<T>): MultiSelectState<T> {
+  const [isFocused, setIsFocused] = React.useState(false);
+
   const triggerState = useMenuTriggerState(props);
   const listState = useMultiSelectListState({
     ...props,
@@ -63,5 +68,7 @@ export function useMultiSelectState<T extends {}>(props: MultiSelectProps<T>): M
   return {
     ...listState,
     ...triggerState,
+    isFocused,
+    setIsFocused,
   };
 }

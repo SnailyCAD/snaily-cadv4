@@ -42,14 +42,36 @@ export function useMultiSelect<T>(
     labelProps: {
       ...labelProps,
       onClick: () => {
-        if (!props.isDisabled) {
-          ref.current?.focus();
+        if (state.isFocused) return;
 
+        if (!isDisabled) {
+          ref.current?.focus();
+          state.setIsFocused(true);
           setInteractionModality("keyboard");
+
+          state.setOpen(true);
         }
       },
     },
-    triggerProps: mergeProps(domProps, { ...triggerProps }),
+    triggerProps: mergeProps(domProps, {
+      ...triggerProps,
+      onFocus(e: React.FocusEvent) {
+        if (state.isFocused) return;
+        state.setIsFocused(true);
+
+        if (props.onFocus) {
+          props.onFocus(e);
+        }
+      },
+      onBlur(e: React.FocusEvent) {
+        if (state.isOpen) return;
+        state.setIsFocused(false);
+
+        if (props.onBlur) {
+          props.onBlur(e);
+        }
+      },
+    }),
     valueProps: { id: valueId },
     menuProps: {
       ...menuProps,
