@@ -9,9 +9,8 @@ import type { GetServerSideProps } from "next";
 import { CustomRole, Rank } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
 import { useAuth } from "context/AuthContext";
-import { Input, Loader, Button, buttonVariants } from "@snailycad/ui";
+import { Input, Loader, Button, buttonVariants, SelectField } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
@@ -102,27 +101,27 @@ export default function ManageCitizens(props: Props) {
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleChange, setFieldValue, isValid, values, errors }) => (
             <Form className="p-4 rounded-md dark:border card">
-              <FormField errorMessage={errors.rank} label="Rank">
-                <Select
-                  name="rank"
-                  onChange={handleChange}
-                  disabled={isRankDisabled}
-                  value={values.rank}
-                  values={
-                    isRankDisabled
-                      ? [{ value: user.rank, label: user.rank }]
-                      : [
-                          { value: "ADMIN", label: "Admin" },
-                          { value: "USER", label: "User" },
-                        ]
-                  }
-                />
-
+              <SelectField
+                errorMessage={errors.rank}
+                label="Rank"
+                name="rank"
+                onSelectionChange={(key) => setFieldValue("rank", key)}
+                isClearable
+                selectedKey={values.rank}
+                options={
+                  isRankDisabled
+                    ? [{ value: user.rank, label: user.rank }]
+                    : [
+                        { value: "ADMIN", label: "Admin" },
+                        { value: "USER", label: "User" },
+                      ]
+                }
+              >
                 <small className="text-base mt-2 text-neutral-600 dark:text-gray-300 mb-3">
                   The rank does not have any influence on the permissions of the user. It is only
                   used to identify the user in the system.
                 </small>
-              </FormField>
+              </SelectField>
 
               <SettingsFormField
                 description="A detailed permissions system where you can assign many actions to a user."

@@ -6,7 +6,7 @@ import {
   ValueLicenseType,
   LicenseExamType,
 } from "@snailycad/types";
-import { Loader, Button } from "@snailycad/ui";
+import { Loader, Button, SelectField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { Select } from "components/form/Select";
@@ -111,20 +111,20 @@ export function ManageExamModal({ exam, onClose, onCreate, onUpdate }: Props) {
       className="min-w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setValues, errors, values }) => (
+        {({ handleChange, setFieldValue, setValues, errors, values }) => (
           <Form>
-            <FormField errorMessage={errors.type} label={common("type")}>
-              <Select
-                disabled={!!exam}
-                value={values.type}
-                onChange={handleChange}
-                name="type"
-                values={Object.values(LicenseExamType).map((v) => ({
-                  label: v.toLowerCase(),
-                  value: v,
-                }))}
-              />
-            </FormField>
+            <SelectField
+              errorMessage={errors.type}
+              label={common("type")}
+              isDisabled={!!exam}
+              name="type"
+              options={Object.values(LicenseExamType).map((v) => ({
+                label: v.toLowerCase(),
+                value: v,
+              }))}
+              selectedKey={values.type}
+              onSelectionChange={(key) => setFieldValue("type", key)}
+            />
 
             <FormField errorMessage={errors.citizenId} label={common("citizen")}>
               <InputSuggestions<NameSearchResult>
@@ -205,25 +205,27 @@ export function ManageExamModal({ exam, onClose, onCreate, onUpdate }: Props) {
               />
             </FormField>
 
-            <FormField errorMessage={errors.theoryExam} label={t("licenseExams.theoryExam")}>
-              <Select
-                isClearable
-                value={values.theoryExam}
-                onChange={handleChange}
-                name="theoryExam"
-                values={PASS_FAIL_VALUES}
-              />
-            </FormField>
+            <SelectField
+              isClearable
+              label={t("licenseExams.theoryExam")}
+              errorMessage={errors.theoryExam}
+              isDisabled={!!exam}
+              name="theoryExam"
+              options={PASS_FAIL_VALUES}
+              selectedKey={values.theoryExam}
+              onSelectionChange={(key) => setFieldValue("theoryExam", key)}
+            />
 
-            <FormField errorMessage={errors.practiceExam} label={t("licenseExams.practiceExam")}>
-              <Select
-                isClearable
-                value={values.practiceExam}
-                onChange={handleChange}
-                name="practiceExam"
-                values={PASS_FAIL_VALUES}
-              />
-            </FormField>
+            <SelectField
+              isClearable
+              label={t("licenseExams.practiceExam")}
+              errorMessage={errors.practiceExam}
+              isDisabled={!!exam}
+              name="practiceExam"
+              options={PASS_FAIL_VALUES}
+              selectedKey={values.practiceExam}
+              onSelectionChange={(key) => setFieldValue("practiceExam", key)}
+            />
 
             <footer className="flex items-center justify-end gap-2 mt-5">
               <Button type="reset" onPress={handleClose} variant="cancel">
