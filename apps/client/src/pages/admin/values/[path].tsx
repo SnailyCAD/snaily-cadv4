@@ -1,7 +1,7 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
 import { useRouter } from "next/router";
-import { Input, Button } from "@snailycad/ui";
+import { Button, TextField } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -11,7 +11,6 @@ import { type AnyValue, ValueType, Rank } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { getObjLength, isEmpty, requestAll, yesOrNoText } from "lib/utils";
-import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
 import { Table, useTableState } from "components/shared/Table";
 import { useTableDataOfType, useTableHeadersOfType } from "lib/admin/values/values";
@@ -202,9 +201,13 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         </div>
       </header>
 
-      <FormField label={common("search")} className="my-2">
-        <Input onChange={(e) => setSearch(e.target.value)} value={search} />
-      </FormField>
+      <TextField
+        label={common("search")}
+        className="my-2"
+        name="search"
+        value={search}
+        onChange={(value) => setSearch(value)}
+      />
 
       {values.length <= 0 ? (
         <p className="mt-5">There are no values yet for this type.</p>

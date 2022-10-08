@@ -3,9 +3,8 @@ import { useTranslations } from "use-intl";
 import { Form, Formik, FormikHelpers } from "formik";
 import { CHANGE_USER_SCHEMA } from "@snailycad/schemas";
 import { useAuth } from "context/AuthContext";
-import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
-import { Loader, Input, Button } from "@snailycad/ui";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import { ChangePasswordArea } from "components/account/ChangePasswordArea";
 import { Manage2FAModal } from "./2fa/Manage2FAModal";
 import { TwoFactorAuthArea } from "./2fa/TwoFactorAuthArea";
@@ -46,11 +45,15 @@ export function AccountSettingsTab() {
     <TabsContent aria-label={t("Account.accountSettings")} value="accountSettings">
       <h1 className="text-2xl font-semibold">{t("Account.accountSettings")}</h1>
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, values, errors }) => (
+        {({ setFieldValue, values, errors }) => (
           <Form className="mt-2">
-            <FormField label={t("Auth.username")} errorMessage={errors.username}>
-              <Input value={values.username} onChange={handleChange} name="username" />
-            </FormField>
+            <TextField
+              label={t("Auth.username")}
+              errorMessage={errors.username}
+              defaultValue={values.username}
+              name="username"
+              onChange={(value) => setFieldValue("username", value)}
+            />
 
             <div className="flex items-center gap-2">
               <Button

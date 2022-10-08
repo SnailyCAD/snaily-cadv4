@@ -9,8 +9,7 @@ import { Title } from "components/shared/Title";
 import { Rank, RegisteredVehicle } from "@snailycad/types";
 import { Table, useTableState } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
-import { FormField } from "components/form/FormField";
-import { Button, Input } from "@snailycad/ui";
+import { Button, Loader, TextField } from "@snailycad/ui";
 import { ImportModal } from "components/admin/import/ImportModal";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
@@ -90,14 +89,20 @@ export default function ImportVehiclesPage({ data }: Props) {
         </p>
       </header>
 
-      <FormField label={common("search")} className="my-2 w-full">
-        <Input
-          className="w-full"
-          placeholder="filter by plate, model, color, etc."
-          onChange={(e) => asyncTable.search.setSearch(e.target.value)}
-          value={asyncTable.search.search}
-        />
-      </FormField>
+      <TextField
+        label={common("search")}
+        className="w-full relative"
+        name="search"
+        onChange={(value) => asyncTable.search.setSearch(value)}
+        value={asyncTable.search.search}
+        placeholder="Plate, Model, Color, ..."
+      >
+        {asyncTable.search.state === "loading" ? (
+          <span className="absolute top-[2.4rem] right-2.5">
+            <Loader />
+          </span>
+        ) : null}
+      </TextField>
 
       {asyncTable.search.search && asyncTable.pagination.totalDataCount !== data.totalCount ? (
         <p className="italic text-base font-semibold">

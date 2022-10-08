@@ -5,7 +5,7 @@ import { useAuth } from "context/AuthContext";
 import { FormField } from "components/form/FormField";
 import { PasswordInput } from "components/form/inputs/Input";
 import { FormRow } from "components/form/FormRow";
-import { Input, Button } from "@snailycad/ui";
+import { Button, TextField } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { ManagePermissionsModal } from "components/admin/manage/users/ManagePermissionsModal";
@@ -39,19 +39,34 @@ export function AccountInfoTab() {
                 <PasswordInput disabled defaultValue={values.id} name="id" />
               </FormField>
 
-              <FormField label={t("Auth.username")} errorMessage={errors.username}>
-                <Input disabled defaultValue={values.username} name="username" />
-              </FormField>
+              <TextField
+                label={t("Auth.username")}
+                errorMessage={errors.username}
+                isDisabled
+                isReadOnly
+                defaultValue={values.username}
+                name="username"
+              />
             </FormRow>
 
             <FormRow>
-              <FormField label="Discord id" errorMessage={errors.discordId}>
-                <Input disabled defaultValue={String(values.discordId)} name="discordId" />
-              </FormField>
+              <TextField
+                label="Discord Id"
+                errorMessage={errors.discordId}
+                isDisabled
+                isReadOnly
+                defaultValue={String(values.discordId)}
+                name="discordId"
+              />
 
-              <FormField label="Steam id" errorMessage={errors.steamId}>
-                <Input disabled defaultValue={String(values.steamId)} name="steamId" />
-              </FormField>
+              <TextField
+                label="Steam Id"
+                errorMessage={errors.steamId}
+                isDisabled
+                isReadOnly
+                defaultValue={String(values.steamId)}
+                name="steamId"
+              />
             </FormRow>
 
             <Button onPress={handleViewPermissions} className="mt-4">

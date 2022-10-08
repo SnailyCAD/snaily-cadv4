@@ -9,8 +9,7 @@ import { requestAll } from "lib/utils";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { useValues } from "context/ValuesContext";
-import { FormField } from "components/form/FormField";
-import { Input } from "@snailycad/ui";
+import { TextField } from "@snailycad/ui";
 import { Infofield } from "components/shared/Infofield";
 import {
   getPenalCodeMaxFines,
@@ -46,9 +45,13 @@ export default function PenalCodesPage() {
         <p className="mt-5">{t("noPenalCodes")}</p>
       ) : (
         <>
-          <FormField label={common("search")} className="mt-2">
-            <Input onChange={(e) => setSearch(e.target.value)} value={search} />
-          </FormField>
+          <TextField
+            label={common("search")}
+            className="my-2"
+            name="search"
+            value={search}
+            onChange={(value) => setSearch(value)}
+          />
 
           <ul className="flex flex-col mt-3 gap-y-2">
             {filtered.map((penalCode) => {

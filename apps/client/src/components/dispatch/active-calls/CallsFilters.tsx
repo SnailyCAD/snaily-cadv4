@@ -3,7 +3,7 @@ import type { Full911Call } from "state/dispatch/dispatchState";
 import { makeUnitName } from "lib/utils";
 import { FormField } from "components/form/FormField";
 import { useTranslations } from "next-intl";
-import { Loader, Input } from "@snailycad/ui";
+import { Loader, TextField } from "@snailycad/ui";
 import { useCallsFilters } from "state/callsFiltersState";
 import { Select, SelectValue } from "components/form/Select";
 import type { useAsyncTable } from "components/shared/Table";
@@ -48,14 +48,20 @@ export function CallsFilters({ search, calls }: Props) {
 
   return showFilters ? (
     <div className="flex items-center gap-2 mt-2">
-      <FormField className="w-full relative" label={common("search")}>
-        <Input onChange={(e) => search.setSearch(e.target.value)} value={search.search} />
+      <TextField
+        label={common("search")}
+        className="w-full relative"
+        name="search"
+        onChange={(value) => search.setSearch(value)}
+        value={search.search}
+        placeholder="#, Name, Location, ..."
+      >
         {search.state === "loading" ? (
-          <span className="absolute top-[2.9rem] right-3 -translate-y-1/2">
+          <span className="absolute top-[2.4rem] right-2.5">
             <Loader />
           </span>
         ) : null}
-      </FormField>
+      </TextField>
 
       <FormField label={t("departments")}>
         <Select

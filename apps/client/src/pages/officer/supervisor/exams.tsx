@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { Input, Button } from "@snailycad/ui";
+import { Button, TextField } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -8,7 +8,6 @@ import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import { LicenseExam, LicenseExamStatus } from "@snailycad/types";
 import { Table, useTableState } from "components/shared/Table";
-import { FormField } from "components/form/FormField";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { Permissions } from "@snailycad/permissions";
@@ -106,12 +105,13 @@ export default function CitizenLogs({ data }: Props) {
         <p className="mt-5">{t("licenseExams.noExams")}</p>
       ) : (
         <>
-          <FormField label={common("search")} className="my-2">
-            <Input
-              onChange={(e) => asyncTable.search.setSearch(e.target.value)}
-              value={asyncTable.search.search}
-            />
-          </FormField>
+          <TextField
+            label={common("search")}
+            className="my-2"
+            name="search"
+            value={asyncTable.search.search}
+            onChange={(value) => asyncTable.search.setSearch(value)}
+          />
 
           {asyncTable.search.search && asyncTable.pagination.totalDataCount !== data.totalCount ? (
             <p className="italic text-base font-semibold">

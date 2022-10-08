@@ -1,6 +1,6 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
-import { Input, Button } from "@snailycad/ui";
+import { Button, TextField } from "@snailycad/ui";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
@@ -14,7 +14,6 @@ import {
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll, yesOrNoText } from "lib/utils";
-import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
 import { Title } from "components/shared/Title";
 import { ModalIds } from "types/ModalIds";
@@ -104,9 +103,13 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
         </h2>
       </header>
 
-      <FormField label={common("search")} className="my-2">
-        <Input onChange={(e) => setSearch(e.target.value)} value={search} className="" />
-      </FormField>
+      <TextField
+        label={common("search")}
+        className="my-2"
+        name="search"
+        value={search}
+        onChange={(value) => setSearch(value)}
+      />
 
       {Object.values(DriversLicenseCategoryType).map((type) => {
         const valuesForType = values.filter((v) => v.type === type);
