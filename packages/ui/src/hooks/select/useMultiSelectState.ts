@@ -1,3 +1,4 @@
+import type * as React from "react";
 import { MenuTriggerState, useMenuTriggerState } from "@react-stately/menu";
 import { MultiSelectListState, useMultiSelectListState } from "./useMultiSelectListState";
 
@@ -11,7 +12,6 @@ import type {
   MultipleSelection,
   TextInputBase,
   Validation,
-  Selection,
 } from "@react-types/shared";
 
 export interface MultiSelectProps<T>
@@ -21,10 +21,11 @@ export interface MultiSelectProps<T>
     Validation,
     LabelableProps,
     TextInputBase,
-    MultipleSelection,
+    Omit<MultipleSelection, "onSelectionChange">,
     FocusableProps,
     OverlayTriggerProps {
   shouldFlip?: boolean;
+  onSelectionChange?(keys: React.Key[] | React.Key): any;
 }
 
 export type MultiSelectState<T> = MultiSelectListState<T> & MenuTriggerState;
@@ -36,14 +37,19 @@ export function useMultiSelectState<T extends {}>(props: MultiSelectProps<T>): M
     onSelectionChange: (keys) => {
       if (typeof props.onSelectionChange === "function") {
         if (keys === "all") {
-          props.onSelectionChange(new Set(listState.collection.getKeys()));
+          props.onSelectionChange(Array.from(new Set(listState.collection.getKeys()).values()));
         }
 
         if (props.selectionMode === "single" && keys !== "all") {
           const first = Array.from(keys.values()).at(0)!;
-          props.onSelectionChange(first as Selection);
+          props.onSelectionChange(first);
         } else {
-          props.onSelectionChange(keys);
+          const array = typeof keys === "object" && Array.from(keys.values());
+          if (!array) {
+            return;
+          }
+
+          props.onSelectionChange(array);
         }
       }
 

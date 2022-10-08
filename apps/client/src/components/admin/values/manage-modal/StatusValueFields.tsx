@@ -69,14 +69,16 @@ export function StatusValueFields() {
   return (
     <>
       <SelectField
+        errorMessage={errors.shouldDo as string}
         label="Should Do"
         options={SHOULD_DO_VALUES}
         name="shouldDo"
-        selectedKeys={values.shouldDo}
+        selectedKey={values.shouldDo}
         onSelectionChange={(key) => setFieldValue("shouldDo", key)}
       />
 
       <SelectField
+        errorMessage={errors.whatPages as string}
         isClearable
         selectionMode="multiple"
         label="What Pages"

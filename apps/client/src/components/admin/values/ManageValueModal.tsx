@@ -258,7 +258,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
                 options={BUSINESS_VALUES}
                 name="as"
                 onSelectionChange={(key) => setFieldValue("as", key)}
-                selectedKeys={values.as}
+                selectedKey={values.as}
               />
             ) : null}
 

@@ -1,14 +1,16 @@
 import * as React from "react";
 import type { AriaSelectProps } from "@react-types/select";
 import { Item } from "@react-stately/collections";
-import { useTranslations } from "next-intl";
 import { classNames } from "../utils/classNames";
 import { Popover } from "../overlays/popover";
 import { ListBox } from "../list/list-box";
 import { Button, buttonSizes, buttonVariants } from "../button";
-import { ChevronDown, X } from "react-bootstrap-icons";
 import { useMultiSelectState } from "../hooks/select/useMultiSelectState";
 import { useMultiSelect } from "../hooks/select/useMultiSelect";
+import { getSelectedKeyOrKeys } from "../utils/select/getSelectedKeyOrKeys";
+import { SelectedItems } from "../inputs/select/selected-items";
+import { SelectActions } from "../inputs/select/select-actions";
+import { SelectLabel } from "../inputs/select/select-label";
 
 export interface SelectValue {
   value: string;
@@ -16,7 +18,10 @@ export interface SelectValue {
   isDisabled?: boolean;
 }
 
-type Props<T extends SelectValue> = Omit<AriaSelectProps<T>, "children" | "selectedKey"> & {
+export type SelectFieldProps<T extends SelectValue> = Omit<
+  AriaSelectProps<T>,
+  "children" | "selectedKey"
+> & {
   label: string;
   isClearable?: boolean;
   isOptional?: boolean;
@@ -28,12 +33,11 @@ type Props<T extends SelectValue> = Omit<AriaSelectProps<T>, "children" | "selec
 
   onSelectionChange?: Parameters<typeof useMultiSelectState>["0"]["onSelectionChange"];
   selectedKeys?: Parameters<typeof useMultiSelectState>["0"]["selectedKeys"];
+  selectedKey?: React.Key | null;
   selectionMode?: "single" | "multiple";
 };
 
-export function SelectField<T extends SelectValue>(props: Props<T>) {
-  const common = useTranslations("Common");
-  const optionalText = common("optionalField");
+export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
   const selectionMode = props.selectionMode ?? "single";
 
   const children = React.useMemo(() => {
@@ -44,21 +48,11 @@ export function SelectField<T extends SelectValue>(props: Props<T>) {
     return props.options.filter((v) => Boolean(v.isDisabled)).map((v) => v.value);
   }, [props.options]);
 
-  const selectedKeys = React.useMemo(() => {
-    if (props.selectedKeys === "all") {
-      return "all";
-    }
-
-    if (props.selectedKeys instanceof Set) {
-      return props.selectedKeys;
-    }
-
-    if (Array.isArray(props.selectedKeys)) {
-      return props.selectedKeys;
-    }
-
-    return [props.selectedKeys];
-  }, [props.selectedKeys]);
+  const selectedKeys = React.useMemo(
+    () =>
+      getSelectedKeyOrKeys({ selectedKey: props.selectedKey, selectedKeys: props.selectedKeys }),
+    [props.selectedKeys, props.selectedKey],
+  );
 
   const disallowEmptySelection = !props.isClearable;
   const state = useMultiSelectState({
@@ -72,7 +66,7 @@ export function SelectField<T extends SelectValue>(props: Props<T>) {
 
   const ref = React.useRef<null>(null);
   const { labelProps, triggerProps, errorMessageProps, valueProps, menuProps } = useMultiSelect(
-    { ...props, disallowEmptySelection, children, disabledKeys },
+    { ...props, selectedKey: undefined, disallowEmptySelection, children, disabledKeys },
     state,
     ref,
   );
@@ -82,17 +76,7 @@ export function SelectField<T extends SelectValue>(props: Props<T>) {
 
   return (
     <div className={classNames("flex flex-col mb-3", props.className)}>
-      <label
-        {...labelProps}
-        className={classNames(
-          "mb-1 dark:text-white",
-          props.hiddenLabel && "sr-only",
-          props.labelClassnames,
-        )}
-      >
-        {props.label}{" "}
-        {props.isOptional ? <span className="text-sm italic">({optionalText})</span> : null}
-      </label>
+      <SelectLabel {...props} labelProps={labelProps} />
 
       <div className="relative">
         <Button
@@ -112,52 +96,13 @@ export function SelectField<T extends SelectValue>(props: Props<T>) {
               !(selectedItems || selectedItem) && "text-neutral-700 dark:text-gray-400",
             )}
           >
-            {selectedItems ? (
-              selectedItems.map((item) => (
-                <span
-                  className="text-sm flex items-center justify-between p-0.5 px-1.5 rounded-sm bg-tertiary h-7"
-                  key={item.key}
-                >
-                  <span className="pr-1">{item.textValue}</span>
-                  <Button
-                    className="!px-0.5 hover:!bg-primary"
-                    variant="transparent"
-                    role="button"
-                    onPress={() => {
-                      const copied = [...state.selectedKeys].filter((v) => v !== item.key);
-                      state.setSelectedKeys(copied);
-                    }}
-                  >
-                    <X className="w-5 h-5" />
-                  </Button>
-                </span>
-              ))
-            ) : selectedItem ? (
-              <span>{selectedItem.textValue}</span>
-            ) : (
-              common("select")
-            )}
+            <SelectedItems selectionMode={selectionMode} state={state} />
           </div>
-          <div className="flex items-center">
-            {props.isClearable && selectedItems ? (
-              <>
-                <Button
-                  variant="transparent"
-                  className="dark:text-gray-400 hover:!text-white !px-0"
-                  aria-label="Clear"
-                  onPress={() => {
-                    state.setSelectedKeys([]);
-                  }}
-                >
-                  <X className="h-6 w-6" />
-                </Button>
-                <div className="w-[1px] h-4 rounded-md dark:bg-gray-500/80 mx-1" />
-              </>
-            ) : null}
-            <span aria-hidden="true" style={{ paddingLeft: 5 }}>
-              <ChevronDown />
-            </span>
-          </div>
+          <SelectActions
+            selectionMode={selectionMode}
+            state={state}
+            isClearable={props.isClearable}
+          />
         </Button>
         {state.isOpen && (
           <Popover isOpen={state.isOpen} onClose={state.close}>
