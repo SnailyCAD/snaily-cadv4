@@ -69,23 +69,24 @@ export function StatusValueFields() {
   return (
     <>
       <SelectField
+        errorMessage={errors.shouldDo as string}
         label="Should Do"
         options={SHOULD_DO_VALUES}
         name="shouldDo"
-        onSelectionChange={(key) => setFieldValue("shouldDo", key)}
         selectedKey={values.shouldDo}
+        onSelectionChange={(key) => setFieldValue("shouldDo", key)}
       />
 
-      <FormField errorMessage={errors.whatPages as string} label="What Pages">
-        <Select
-          values={WHAT_PAGES_VALUES}
-          name="whatPages"
-          onChange={handleChange}
-          value={values.whatPages}
-          isMulti
-          closeMenuOnSelect={false}
-        />
-      </FormField>
+      <SelectField
+        errorMessage={errors.whatPages as string}
+        isClearable
+        selectionMode="multiple"
+        label="What Pages"
+        options={WHAT_PAGES_VALUES}
+        name="whatPages"
+        selectedKeys={values.whatPages}
+        onSelectionChange={(keys) => setFieldValue("whatPages", keys)}
+      />
 
       {values.shouldDo === ShouldDoType.SET_ON_DUTY ? null : (
         <FormField errorMessage={errors.departments as string} label="Departments">

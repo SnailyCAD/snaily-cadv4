@@ -1512,33 +1512,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-aria/combobox@npm:^3.4.2":
-  version: 3.4.2
-  resolution: "@react-aria/combobox@npm:3.4.2"
-  dependencies:
-    "@babel/runtime": ^7.6.2
-    "@react-aria/i18n": ^3.6.1
-    "@react-aria/interactions": ^3.12.0
-    "@react-aria/listbox": ^3.7.0
-    "@react-aria/live-announcer": ^3.1.1
-    "@react-aria/menu": ^3.6.2
-    "@react-aria/overlays": ^3.11.0
-    "@react-aria/selection": ^3.11.0
-    "@react-aria/textfield": ^3.7.2
-    "@react-aria/utils": ^3.14.0
-    "@react-stately/collections": ^3.4.4
-    "@react-stately/combobox": ^3.2.2
-    "@react-stately/layout": ^3.8.0
-    "@react-types/button": ^3.6.2
-    "@react-types/combobox": ^3.5.4
-    "@react-types/shared": ^3.15.0
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
-    react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
-  checksum: beeddd177d67b5d2462f1a588d66e293ad654c66d96dab7808c422fc8812dc9fe001827fe2be566df2c5280c61a91231bd832a318a11ec87b3db70e97298751b
-  languageName: node
-  linkType: hard
-
 "@react-aria/datepicker@npm:^3.1.1":
   version: 3.1.2
   resolution: "@react-aria/datepicker@npm:3.1.2"
@@ -1566,7 +1539,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-aria/dialog@npm:^3.3.1":
+"@react-aria/dialog@npm:^3.3.1, @react-aria/dialog@npm:^3.4.0":
   version: 3.4.0
   resolution: "@react-aria/dialog@npm:3.4.0"
   dependencies:
@@ -1733,30 +1706,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-aria/select@npm:^3.8.2":
-  version: 3.8.2
-  resolution: "@react-aria/select@npm:3.8.2"
-  dependencies:
-    "@babel/runtime": ^7.6.2
-    "@react-aria/i18n": ^3.6.1
-    "@react-aria/interactions": ^3.12.0
-    "@react-aria/label": ^3.4.2
-    "@react-aria/listbox": ^3.7.0
-    "@react-aria/menu": ^3.6.2
-    "@react-aria/selection": ^3.11.0
-    "@react-aria/utils": ^3.14.0
-    "@react-aria/visually-hidden": ^3.5.0
-    "@react-stately/select": ^3.3.2
-    "@react-types/button": ^3.6.2
-    "@react-types/select": ^3.6.4
-    "@react-types/shared": ^3.15.0
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
-    react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
-  checksum: d92afc863473048c04907c75787008b1823c3a9f695e35b3c50d548db46455649e414094f0cc2a6423a9e53b66e2b6467196d90ead40e8d91c5d7f9aede29c18
-  languageName: node
-  linkType: hard
-
 "@react-aria/selection@npm:^3.11.0":
   version: 3.11.0
   resolution: "@react-aria/selection@npm:3.11.0"
@@ -1909,23 +1858,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-stately/combobox@npm:^3.2.2":
-  version: 3.2.2
-  resolution: "@react-stately/combobox@npm:3.2.2"
-  dependencies:
-    "@babel/runtime": ^7.6.2
-    "@react-stately/list": ^3.5.4
-    "@react-stately/menu": ^3.4.2
-    "@react-stately/select": ^3.3.2
-    "@react-stately/utils": ^3.5.1
-    "@react-types/combobox": ^3.5.4
-    "@react-types/shared": ^3.15.0
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
-  checksum: 32033b8354cc8bbba9e74157397ba1823000e45de21cead984e2f1209f334bbbcd1bd5d0db8ed1e0b04304020dcb0f2f3e1f982937711b73eeed3bc972626b96
-  languageName: node
-  linkType: hard
-
 "@react-stately/datepicker@npm:^3.0.2, @react-stately/datepicker@npm:^3.1.0":
   version: 3.1.0
   resolution: "@react-stately/datepicker@npm:3.1.0"
@@ -1940,21 +1872,6 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
   checksum: 288cc69f89ea3485f5d2c1086cfa2f431b83d209f937cbc71a14433c9c2c3bd1e44ef403487685707d4b146cdcca3119783d2b72487d6429e44bff17f3fb9106
-  languageName: node
-  linkType: hard
-
-"@react-stately/layout@npm:^3.8.0":
-  version: 3.8.0
-  resolution: "@react-stately/layout@npm:3.8.0"
-  dependencies:
-    "@babel/runtime": ^7.6.2
-    "@react-stately/virtualizer": ^3.3.1
-    "@react-types/grid": ^3.1.4
-    "@react-types/shared": ^3.15.0
-    "@react-types/table": ^3.3.2
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
-  checksum: cea22004a1b4200b1166de29ed40fdec09db83fb970a6afe42e2ec12a2ddb1efc0333ebf5be7c11b39d771d93bdcd3f9875ccf580ed9ea3b4fd86f6547546c09
   languageName: node
   linkType: hard
 
@@ -2073,19 +1990,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-stately/virtualizer@npm:^3.3.1":
-  version: 3.3.1
-  resolution: "@react-stately/virtualizer@npm:3.3.1"
-  dependencies:
-    "@babel/runtime": ^7.6.2
-    "@react-aria/utils": ^3.14.0
-    "@react-types/shared": ^3.15.0
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
-  checksum: 441764eab2700fae1ca16aea87d6d2ecdd478e4ff9ffa0b0d91ed234b087515785c1c83d9b3498c640867168deca3ac2e7f00fa4c2913f8bd45fa59586819dac
-  languageName: node
-  linkType: hard
-
 "@react-types/button@npm:^3.6.2":
   version: 3.6.2
   resolution: "@react-types/button@npm:3.6.2"
@@ -2120,17 +2024,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-types/combobox@npm:^3.5.4":
-  version: 3.5.4
-  resolution: "@react-types/combobox@npm:3.5.4"
-  dependencies:
-    "@react-types/shared": ^3.15.0
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
-  checksum: 3922ed17c40697800a5aaad11da075af8d8702aa91b55e31584be7833a6a1ec6a252ce90440d64d5cb10a10234d01cac0c7466c7527711c17650ef6d6de83084
-  languageName: node
-  linkType: hard
-
 "@react-types/datepicker@npm:^3.1.2":
   version: 3.1.2
   resolution: "@react-types/datepicker@npm:3.1.2"
@@ -2153,17 +2046,6 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
   checksum: ffcfdbb24aa4950a065a550ba9c0c6f902d25bc12e306943033394223cea4c865ca89ccc85224884a0dcd75fe2cf2835264d838090a9f92b7a664c9cdf390569
-  languageName: node
-  linkType: hard
-
-"@react-types/grid@npm:^3.1.4":
-  version: 3.1.4
-  resolution: "@react-types/grid@npm:3.1.4"
-  dependencies:
-    "@react-types/shared": ^3.15.0
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
-  checksum: 5281102face5e65d1f19b4f4dcf9b1ac00fa5178268c9fe0aa3b1e2958282bf76ee6596865b1564f34ee1afcd70ddbb98e369c41245f31211ea8a09af6f4539f
   languageName: node
   linkType: hard
 
@@ -2240,18 +2122,6 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
   checksum: 4bae4444b1002ca4a51ca45313d9ed4469a09b114366a8a8c3a2277f22d36c721fa0132225b4fb461ee2e26ee1fca3b9b2562949faa854d255f2618265911a49
-  languageName: node
-  linkType: hard
-
-"@react-types/table@npm:^3.3.2":
-  version: 3.3.2
-  resolution: "@react-types/table@npm:3.3.2"
-  dependencies:
-    "@react-types/grid": ^3.1.4
-    "@react-types/shared": ^3.15.0
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
-  checksum: 53a3fadb08c3cacb519fdbde0b1e3e25ebc7f42c17aca123a31acf337adc1fa57a4418fc731403025d7ee17ac189c03aff8e432499a798a42320b3b5ea62914e
   languageName: node
   linkType: hard
 
@@ -2700,14 +2570,23 @@ __metadata:
   resolution: "@snailycad/ui@workspace:packages/ui"
   dependencies:
     "@react-aria/button": ^3.6.2
-    "@react-aria/combobox": ^3.4.2
+    "@react-aria/dialog": ^3.4.0
+    "@react-aria/focus": ^3.9.0
+    "@react-aria/interactions": ^3.12.0
+    "@react-aria/label": ^3.4.2
+    "@react-aria/listbox": ^3.7.0
+    "@react-aria/menu": ^3.6.2
+    "@react-aria/overlays": ^3.11.0
     "@react-aria/progress": ^3.3.2
-    "@react-aria/select": ^3.8.2
     "@react-aria/textfield": ^3.7.2
     "@react-aria/utils": ^3.14.0
     "@react-stately/collections": ^3.4.4
     "@react-stately/list": ^3.5.4
+    "@react-stately/menu": ^3.4.2
     "@react-stately/select": ^3.3.2
+    "@react-types/overlays": ^3.6.4
+    "@react-types/select": ^3.6.4
+    "@react-types/shared": ^3.15.0
     "@snailycad/types": "workplace:*"
     next-intl: ^2.7.6
     react-bootstrap-icons: ^1.9.1
@@ -2715,8 +2594,6 @@ __metadata:
     tslib: ^2.4.0
     tsup: ^6.2.3
     typescript: ^4.8.4
-    vite: ^3.1.4
-    vitest: ^0.23.4
   peerDependencies:
     react: ">=18.2.0"
     react-dom: ">=18.2.0"

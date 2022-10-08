@@ -21,7 +21,6 @@ export function Popover(props: Props) {
   const { modalProps } = useModal();
   const { dialogProps } = useDialog(otherProps, popoverRef);
   const pos = outerRef.current?.getBoundingClientRect();
-  console.log({ pos });
 
   return (
     <div ref={outerRef}>
