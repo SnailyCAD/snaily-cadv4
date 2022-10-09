@@ -1,6 +1,6 @@
 import * as React from "react";
 import { AriaTextFieldOptions, useTextField } from "@react-aria/textfield";
-import { classNames } from "../utils/classNames";
+import { classNames } from "../../utils/classNames";
 import { useTranslations } from "next-intl";
 import { Input } from "../inputs/input";
 import { Textarea } from "../inputs/textarea";
@@ -32,7 +32,7 @@ export function TextField(props: Props) {
 
   return (
     <div className={classNames("text-field flex flex-col mb-3", props.className)}>
-      <label {...labelProps} className={classNames("mb-1", props.labelClassnames)}>
+      <label {...labelProps} className={classNames("mb-1 dark:text-white", props.labelClassnames)}>
         {props.label}{" "}
         {props.isOptional ? <span className="text-sm italic">({optionalText})</span> : null}
       </label>

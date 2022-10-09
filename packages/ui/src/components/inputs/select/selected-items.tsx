@@ -2,7 +2,7 @@ import { useTranslations } from "next-intl";
 import { X } from "react-bootstrap-icons";
 import { Button } from "../../button";
 import type { SelectValue } from "../../fields/select-field";
-import type { MultiSelectState } from "../../hooks/select/useMultiSelectState";
+import type { MultiSelectState } from "../../../hooks/select/useMultiSelectState";
 
 interface Props<T extends SelectValue> {
   state: MultiSelectState<T>;

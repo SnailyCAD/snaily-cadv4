@@ -1,5 +1,5 @@
 import * as React from "react";
-import { classNames } from "./utils/classNames";
+import { classNames } from "../utils/classNames";
 import { AriaButtonProps, useButton } from "@react-aria/button";
 import { mergeProps } from "@react-aria/utils";
 

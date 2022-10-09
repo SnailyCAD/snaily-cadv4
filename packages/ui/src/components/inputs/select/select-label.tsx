@@ -1,6 +1,6 @@
 import { useTranslations } from "next-intl";
 import type { SelectFieldProps, SelectValue } from "../../fields/select-field";
-import { classNames } from "../../utils/classNames";
+import { classNames } from "../../../utils/classNames";
 
 interface Props<T extends SelectValue> extends SelectFieldProps<T> {
   labelProps: any;

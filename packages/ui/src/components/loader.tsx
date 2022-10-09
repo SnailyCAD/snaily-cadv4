@@ -1,5 +1,5 @@
 import { useProgressBar } from "@react-aria/progress";
-import { classNames } from "./utils/classNames";
+import { classNames } from "../utils/classNames";
 
 interface Props {
   className?: string;

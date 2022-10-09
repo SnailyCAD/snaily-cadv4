@@ -1,4 +1,4 @@
-import type { SelectFieldProps, SelectValue } from "../../fields/select-field";
+import type { SelectFieldProps, SelectValue } from "../../components/fields/select-field";
 
 type Options<T extends SelectValue> = Pick<SelectFieldProps<T>, "selectedKey" | "selectedKeys">;
 

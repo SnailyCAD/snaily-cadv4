@@ -3,7 +3,7 @@ import { useOption } from "@react-aria/listbox";
 import type { Node } from "@react-types/shared";
 import type { ListState } from "@react-stately/list";
 import { buttonSizes } from "../button";
-import { classNames } from "../utils/classNames";
+import { classNames } from "../../utils/classNames";
 import { Check } from "react-bootstrap-icons";
 
 interface OptionProps {
