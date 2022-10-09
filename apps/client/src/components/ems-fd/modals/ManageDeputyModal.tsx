@@ -1,6 +1,6 @@
 import * as React from "react";
 import { EMS_FD_DEPUTY_SCHEMA } from "@snailycad/schemas";
-import { Loader, Input, Button } from "@snailycad/ui";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
@@ -123,7 +123,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
       className="w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, handleSubmit, errors, values, isValid }) => (
+        {({ handleChange, setFieldValue, handleSubmit, errors, values, isValid }) => (
           <form ref={formRef} onSubmit={handleSubmit}>
             <ImageSelectInput image={image} setImage={setImage} />
 
@@ -136,33 +136,32 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
             </FormField>
 
             {BADGE_NUMBERS ? (
-              <FormField errorMessage={errors.badgeNumber} label={t("Leo.badgeNumber")}>
-                <Input
-                  type="number"
-                  value={values.badgeNumber}
-                  name="badgeNumber"
-                  onChange={(e) =>
-                    handleChange({
-                      ...e,
-                      target: {
-                        ...e.target,
-                        id: "badgeNumber",
-                        value: e.target.valueAsNumber,
-                      },
-                    })
-                  }
-                />
-              </FormField>
+              <TextField
+                errorMessage={errors.badgeNumber}
+                label={t("Leo.badgeNumber")}
+                autoFocus
+                name="badgeNumber"
+                onChange={(value) => setFieldValue("badgeNumber", parseInt(value))}
+                value={String(values.badgeNumber)}
+              />
             ) : null}
 
             <FormRow>
-              <FormField errorMessage={errors.callsign} label={t("Leo.callsign1")}>
-                <Input value={values.callsign} name="callsign" onChange={handleChange} />
-              </FormField>
+              <TextField
+                errorMessage={errors.callsign}
+                label={t("Leo.callsign1")}
+                name="callsign"
+                onChange={(value) => setFieldValue("callsign", value)}
+                value={values.callsign}
+              />
 
-              <FormField errorMessage={errors.callsign2} label={t("Leo.callsign2")}>
-                <Input value={values.callsign2} name="callsign2" onChange={handleChange} />
-              </FormField>
+              <TextField
+                errorMessage={errors.callsign2}
+                label={t("Leo.callsign2")}
+                name="callsign2"
+                onChange={(value) => setFieldValue("callsign2", value)}
+                value={values.callsign2}
+              />
             </FormRow>
 
             <FormField errorMessage={errors.department} label={t("Leo.department")}>

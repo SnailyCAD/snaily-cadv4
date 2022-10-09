@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { CustomField } from "@snailycad/types";
-import { Input, Loader, Button } from "@snailycad/ui";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
@@ -73,7 +73,7 @@ export function CustomFieldSearch() {
       className="w-[850px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, errors, values, isValid }) => (
+        {({ handleChange, setFieldValue, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.customFieldId} label={t("customField")}>
               <Select
@@ -88,14 +88,13 @@ export function CustomFieldSearch() {
               />
             </FormField>
 
-            <FormField errorMessage={errors.query} label={t("query")}>
-              <Input
-                disabled={state === "loading"}
-                onChange={handleChange}
-                name="query"
-                value={values.query}
-              />
-            </FormField>
+            <TextField
+              label={t("query")}
+              className="w-full relative"
+              name="query"
+              onChange={(value) => setFieldValue("query", value)}
+              value={values.query}
+            />
 
             {results ? <CustomFieldResults results={results} /> : null}
 

@@ -53,7 +53,8 @@
     "right": "Right",
     "user": "User",
     "savedSettingsSuccess": "Settings successfully saved.",
-    "select": "Select..."
+    "select": "Select...",
+    "item": "Item"
   },
   "Nav": {
     "citizen": "Citizen",

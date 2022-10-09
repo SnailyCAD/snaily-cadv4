@@ -1,5 +1,4 @@
-import { Button, Loader, Input } from "@snailycad/ui";
-import { FormField } from "components/form/FormField";
+import { Button, Loader, TextField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
@@ -67,11 +66,16 @@ export function ManagePenalCodeGroup({ onCreate, onUpdate, onClose, group }: Pro
       isOpen={isOpen(ModalIds.ManagePenalCodeGroup)}
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, values, errors }) => (
+        {({ setFieldValue, values, errors }) => (
           <Form>
-            <FormField errorMessage={errors.name} label="Name">
-              <Input autoFocus name="name" onChange={handleChange} value={values.name} />
-            </FormField>
+            <TextField
+              errorMessage={errors.name}
+              autoFocus
+              isRequired
+              label="Name"
+              value={values.name}
+              onChange={(value) => setFieldValue("name", value)}
+            />
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onPress={handleClose} variant="cancel">

@@ -2,7 +2,7 @@ import { Form, Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
 import { useRouter } from "next/router";
 
-import { Loader, Input, Button } from "@snailycad/ui";
+import { Loader, Input, Button, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
@@ -103,7 +103,7 @@ export function ManageBleetModal({ post }: Props) {
       className="w-[700px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setFieldValue, isValid, values, errors }) => (
+        {({ setFieldValue, isValid, values, errors }) => (
           <Form>
             <FormField optional errorMessage={errors.image as string} label={t("headerImage")}>
               <div className="flex">
@@ -127,9 +127,14 @@ export function ManageBleetModal({ post }: Props) {
               </div>
             </FormField>
 
-            <FormField errorMessage={errors.title} label={t("bleetTitle")}>
-              <Input name="title" value={values.title} onChange={handleChange} />
-            </FormField>
+            <TextField
+              errorMessage={errors.title}
+              autoFocus
+              isRequired
+              label={t("bleetTitle")}
+              value={values.title}
+              onChange={(value) => setFieldValue("title", value)}
+            />
 
             <FormField errorMessage={errors.body} label={t("bleetBody")}>
               <Editor value={values.bodyData} onChange={(v) => setFieldValue("bodyData", v)} />

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Discord, Steam } from "react-bootstrap-icons";
 import { FormField } from "components/form/FormField";
 import { PasswordInput } from "components/form/inputs/Input";
-import { Button, Input, Loader } from "@snailycad/ui";
+import { Button, Loader, TextField } from "@snailycad/ui";
 import { TwoFactorAuthScreen } from "components/auth/TwoFactorAuthScreen";
 import { getAPIUrl } from "lib/fetch/getAPIUrl";
 import { useRouter } from "next/router";
@@ -107,7 +107,7 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
 
   return (
     <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-      {({ handleChange, errors, values, isValid }) => (
+      {({ handleChange, setFieldValue, errors, values, isValid }) => (
         <Form
           className={classNames(
             isWithinModal
@@ -143,9 +143,14 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
 
               {ALLOW_REGULAR_LOGIN ? (
                 <>
-                  <FormField errorMessage={errors.username} label={t("username")}>
-                    <Input type="text" name="username" onChange={handleChange} />
-                  </FormField>
+                  <TextField
+                    errorMessage={errors.username}
+                    autoFocus
+                    isRequired
+                    label="Username"
+                    value={values.username}
+                    onChange={(value) => setFieldValue("username", value)}
+                  />
 
                   <FormField errorMessage={errors.password} label={t("password")}>
                     <PasswordInput name="password" onChange={handleChange} />

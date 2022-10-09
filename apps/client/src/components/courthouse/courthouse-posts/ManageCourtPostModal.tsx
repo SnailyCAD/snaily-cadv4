@@ -1,6 +1,6 @@
 import { COURTHOUSE_POST_SCHEMA } from "@snailycad/schemas";
 import type { CourthousePost } from "@snailycad/types";
-import { Input, Loader, Button } from "@snailycad/ui";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
@@ -75,11 +75,16 @@ export function ManageCourtPostModal({ post, onClose, onCreate, onUpdate }: Prop
       className="w-[750px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ values, errors, setFieldValue, handleChange }) => (
+        {({ values, errors, setFieldValue }) => (
           <Form>
-            <FormField label={t("title")} errorMessage={errors.title}>
-              <Input name="title" value={values.title} onChange={handleChange} />
-            </FormField>
+            <TextField
+              errorMessage={errors.title}
+              autoFocus
+              isRequired
+              label={t("title")}
+              value={values.title}
+              onChange={(value) => setFieldValue("title", value)}
+            />
 
             <FormField
               label={common("description")}

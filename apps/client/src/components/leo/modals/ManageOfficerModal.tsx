@@ -1,6 +1,6 @@
 import * as React from "react";
 import { CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
-import { Input, Loader, Button } from "@snailycad/ui";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
@@ -133,7 +133,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
       className={officer ? "w-[1000px]" : "w-[650px]"}
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, handleSubmit, errors, values, isValid }) => (
+        {({ handleChange, setFieldValue, handleSubmit, errors, values, isValid }) => (
           <form
             className={classNames(officer && "flex flex-col md:flex-row gap-5")}
             ref={formRef}
@@ -151,33 +151,31 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
               </FormField>
 
               {BADGE_NUMBERS ? (
-                <FormField errorMessage={errors.badgeNumber} label={t("badgeNumber")}>
-                  <Input
-                    type="number"
-                    value={values.badgeNumber}
-                    name="badgeNumber"
-                    onChange={(e) =>
-                      handleChange({
-                        ...e,
-                        target: {
-                          ...e.target,
-                          id: "badgeNumber",
-                          value: e.target.valueAsNumber,
-                        },
-                      })
-                    }
-                  />
-                </FormField>
+                <TextField
+                  errorMessage={errors.badgeNumber}
+                  label={t("badgeNumber")}
+                  name="badgeNumber"
+                  onChange={(value) => setFieldValue("badgeNumber", parseInt(value))}
+                  value={String(values.badgeNumber)}
+                />
               ) : null}
 
               <FormRow>
-                <FormField errorMessage={errors.callsign} label={t("callsign1")}>
-                  <Input value={values.callsign} name="callsign" onChange={handleChange} />
-                </FormField>
+                <TextField
+                  errorMessage={errors.callsign}
+                  label={t("callsign1")}
+                  name="callsign"
+                  onChange={(value) => setFieldValue("callsign", value)}
+                  value={values.callsign}
+                />
 
-                <FormField errorMessage={errors.callsign2} label={t("callsign2")}>
-                  <Input value={values.callsign2} name="callsign2" onChange={handleChange} />
-                </FormField>
+                <TextField
+                  errorMessage={errors.callsign2}
+                  label={t("callsign2")}
+                  name="callsign2"
+                  onChange={(value) => setFieldValue("callsign2", value)}
+                  value={values.callsign2}
+                />
               </FormRow>
 
               <FormField errorMessage={errors.department as string} label={t("department")}>

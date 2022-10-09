@@ -1,7 +1,6 @@
 import * as React from "react";
 import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
-import { Loader, Input, Button } from "@snailycad/ui";
-import { FormField } from "components/form/FormField";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
@@ -104,11 +103,16 @@ export function UnitRadioChannelModal({ unit, onClose }: Props) {
           className="min-w-[500px]"
         >
           <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-            {({ values, errors, handleChange }) => (
+            {({ values, errors, setFieldValue }) => (
               <Form>
-                <FormField errorMessage={errors.radioChannel} label={t("radioChannel")}>
-                  <Input name="radioChannel" onChange={handleChange} value={values.radioChannel} />
-                </FormField>
+                <TextField
+                  errorMessage={errors.radioChannel}
+                  autoFocus
+                  isRequired
+                  label={t("radioChannel")}
+                  value={values.radioChannel}
+                  onChange={(value) => setFieldValue("radioChannel", value)}
+                />
 
                 <footer className="flex mt-5 justify-end">
                   <Button onPress={handleClose} type="button" variant="cancel">

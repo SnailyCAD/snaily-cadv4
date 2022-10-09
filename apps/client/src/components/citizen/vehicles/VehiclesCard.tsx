@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { Loader, Input, Button } from "@snailycad/ui";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import type { RegisteredVehicle } from "@snailycad/types";
 import { RegisterVehicleModal } from "./modals/RegisterVehicleModal";
 import { ModalIds } from "types/ModalIds";
@@ -14,7 +14,6 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { TransferVehicleModal } from "./modals/TransferVehicleModal";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 import { useCitizen } from "context/CitizenContext";
-import { FormField } from "components/form/FormField";
 import type { DeleteCitizenVehicleData, GetCitizenVehiclesData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
@@ -92,18 +91,20 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
           <p className="text-neutral-700 dark:text-gray-400">{t("noVehicles")}</p>
         ) : (
           <>
-            <FormField label={common("search")} className="w-full relative">
-              <Input
-                placeholder="john doe"
-                onChange={(e) => asyncTable.search.setSearch(e.target.value)}
-                value={asyncTable.search.search}
-              />
-              {asyncTable.state === "loading" ? (
+            <TextField
+              label={common("search")}
+              className="w-full relative"
+              name="search"
+              onChange={asyncTable.search.setSearch}
+              value={asyncTable.search.search}
+              placeholder="VIN Number, Plate, Model, ..."
+            >
+              {asyncTable.search.state === "loading" ? (
                 <span className="absolute top-[2.4rem] right-2.5">
                   <Loader />
                 </span>
               ) : null}
-            </FormField>
+            </TextField>
 
             {asyncTable.search.search &&
             asyncTable.pagination.totalDataCount !== props.vehicles.length ? (

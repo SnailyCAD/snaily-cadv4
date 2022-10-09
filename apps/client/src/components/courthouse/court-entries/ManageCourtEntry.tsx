@@ -1,6 +1,6 @@
 import { COURT_ENTRY_SCHEMA } from "@snailycad/schemas";
 import type { CourtDate, CourtEntry } from "@snailycad/types";
-import { Input, Loader, Button } from "@snailycad/ui";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
@@ -78,15 +78,23 @@ export function ManageCourtEntry({ courtEntry, onClose, onCreate, onUpdate }: Pr
       className="w-[750px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ values, errors, setFieldValue, handleChange }) => (
+        {({ values, errors, setFieldValue }) => (
           <Form>
-            <FormField label={t("title")} errorMessage={errors.title}>
-              <Input name="title" value={values.title} onChange={handleChange} />
-            </FormField>
+            <TextField
+              label={t("title")}
+              name="title"
+              value={values.title}
+              onChange={(value) => setFieldValue("title", value)}
+              errorMessage={errors.title}
+            />
 
-            <FormField label={t("caseNumber")} errorMessage={errors.caseNumber}>
-              <Input name="caseNumber" value={values.caseNumber} onChange={handleChange} />
-            </FormField>
+            <TextField
+              label={t("caseNumber")}
+              name="caseNumber"
+              value={values.caseNumber}
+              onChange={(value) => setFieldValue("caseNumber", value)}
+              errorMessage={errors.caseNumber}
+            />
 
             <FormField
               label={common("description")}

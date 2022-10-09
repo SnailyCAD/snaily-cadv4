@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Input, Loader, Button } from "@snailycad/ui";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import type { Weapon } from "@snailycad/types";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
@@ -12,7 +12,6 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { FullDate } from "components/shared/FullDate";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 import { useCitizen } from "context/CitizenContext";
-import { FormField } from "components/form/FormField";
 import type { DeleteCitizenWeaponData, GetCitizenWeaponsData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
@@ -89,19 +88,20 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
           <p className="text-neutral-700 dark:text-gray-400">{t("noWeapons")}</p>
         ) : (
           <>
-            {/* todo: make this a component */}
-            <FormField label={common("search")} className="w-full relative">
-              <Input
-                placeholder="john doe"
-                onChange={(e) => asyncTable.search.setSearch(e.target.value)}
-                value={asyncTable.search.search}
-              />
-              {asyncTable.state === "loading" ? (
+            <TextField
+              label={common("search")}
+              className="w-full relative"
+              name="search"
+              onChange={asyncTable.search.setSearch}
+              value={asyncTable.search.search}
+              placeholder="Serial Number, Model, ..."
+            >
+              {asyncTable.search.state === "loading" ? (
                 <span className="absolute top-[2.4rem] right-2.5">
                   <Loader />
                 </span>
               ) : null}
-            </FormField>
+            </TextField>
 
             {asyncTable.search.search &&
             asyncTable.pagination.totalDataCount !== props.weapons.length ? (

@@ -1,6 +1,6 @@
 import { Form, Formik, useFormikContext } from "formik";
 import { useTranslations } from "use-intl";
-import { Input, Button } from "@snailycad/ui";
+import { Button, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
@@ -61,18 +61,22 @@ export function ManageSeizedItemsModal({ item, onClose }: Props) {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors, isValid }) => (
           <Form autoComplete="off">
-            <FormField errorMessage={errors.item} label={common("name")}>
-              <Input name="item" onChange={handleChange} value={values.item} />
-            </FormField>
+            <TextField
+              label={common("item")}
+              className="w-full relative"
+              name="item"
+              onChange={(value) => setFieldValue("item", value)}
+              value={values.item}
+            />
 
-            <FormField errorMessage={errors.quantity} label={t("quantity")}>
-              <Input
-                type="number"
-                name="quantity"
-                onChange={handleChange}
-                value={values.quantity}
-              />
-            </FormField>
+            <TextField
+              type="number"
+              label={t("quantity")}
+              className="w-full relative"
+              name="quantity"
+              onChange={(value) => setFieldValue("quantity", parseInt(value))}
+              value={String(values.quantity)}
+            />
 
             <FormField className="mt-1" checkbox errorMessage={errors.illegal} label={t("illegal")}>
               <Toggle name="illegal" onCheckedChange={handleChange} value={values.illegal} />

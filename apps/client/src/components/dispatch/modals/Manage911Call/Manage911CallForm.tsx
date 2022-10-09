@@ -9,7 +9,7 @@ import { useValues } from "context/ValuesContext";
 import { toastMessage } from "lib/toastMessage";
 import { ModalIds } from "types/ModalIds";
 import { Form, Formik } from "formik";
-import { Button, Loader, Input } from "@snailycad/ui";
+import { Button, Loader, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
 import type { Full911Call } from "state/dispatch/dispatchState";
@@ -105,28 +105,35 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
     <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
       {({ handleChange, setFieldValue, values, errors }) => (
         <Form className="w-full h-full">
-          <FormField errorMessage={errors.name} label={common("name")}>
-            <Input disabled={isDisabled} name="name" value={values.name} onChange={handleChange} />
-          </FormField>
+          <TextField
+            label={common("name")}
+            name="name"
+            onChange={(value) => setFieldValue("name", value)}
+            value={values.name}
+            errorMessage={errors.name}
+            isDisabled={isDisabled}
+          />
 
-          <FormRow>
-            <FormField errorMessage={errors.location} label={t("location")}>
-              <Input
-                disabled={isDisabled}
-                name="location"
-                value={values.location}
-                onChange={handleChange}
-              />
-            </FormField>
+          <FormRow flexLike>
+            <TextField
+              label={t("location")}
+              name="location"
+              onChange={(value) => setFieldValue("location", value)}
+              value={values.location}
+              errorMessage={errors.location}
+              isDisabled={isDisabled}
+              className="w-full"
+            />
 
-            <FormField errorMessage={errors.postal} label={t("postal")}>
-              <Input
-                disabled={isDisabled}
-                name="postal"
-                value={values.postal}
-                onChange={handleChange}
-              />
-            </FormField>
+            <TextField
+              label={t("postal")}
+              name="postal"
+              onChange={(value) => setFieldValue("postal", value)}
+              value={values.postal}
+              errorMessage={errors.postal}
+              isDisabled={isDisabled}
+              className="w-1/4"
+            />
           </FormRow>
 
           {router.pathname.includes("/citizen") ? (
