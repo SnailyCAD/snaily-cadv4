@@ -1,5 +1,5 @@
 import { FormField } from "components/form/FormField";
-import { Textarea, Button, Loader, Input } from "@snailycad/ui";
+import { Button, Loader, TextField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
@@ -173,13 +173,23 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                   />
                 </FormField>
 
-                <FormField optional errorMessage={errors.model} label={leo("model")}>
-                  <Input name="model" onChange={handleChange} value={values.model} />
-                </FormField>
+                <TextField
+                  label={leo("model")}
+                  isOptional
+                  errorMessage={errors.model}
+                  name="model"
+                  onChange={(value) => setFieldValue("model", value)}
+                  value={values.model}
+                />
 
-                <FormField optional errorMessage={errors.color} label={leo("color")}>
-                  <Input name="color" onChange={handleChange} value={values.color} />
-                </FormField>
+                <TextField
+                  label={leo("color")}
+                  isOptional
+                  errorMessage={errors.color}
+                  name="color"
+                  onChange={(value) => setFieldValue("color", value)}
+                  value={values.color}
+                />
               </>
             ) : null}
 
@@ -229,9 +239,14 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
               </FormField>
             ) : null}
 
-            <FormField errorMessage={errors.description} label={common("description")}>
-              <Textarea name="description" onChange={handleChange} value={values.description} />
-            </FormField>
+            <TextField
+              isTextarea
+              errorMessage={errors.description}
+              label={common("description")}
+              name="description"
+              onChange={(value) => setFieldValue("description", value)}
+              value={values.description}
+            />
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onPress={handleClose} variant="cancel">

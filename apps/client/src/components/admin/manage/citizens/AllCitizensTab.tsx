@@ -3,7 +3,7 @@ import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
-import { Input, Loader, Button, buttonVariants, TextField } from "@snailycad/ui";
+import { Loader, Button, buttonVariants, TextField } from "@snailycad/ui";
 import { useTranslations } from "next-intl";
 import { FormField } from "components/form/FormField";
 import { Table, useTableState } from "components/shared/Table";
@@ -195,9 +195,8 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
               },
             })}
           </p>
-          <FormField label="Reason">
-            <Input ref={reasonRef} value={reason} onChange={(e) => setReason(e.target.value)} />
-          </FormField>
+
+          <TextField label="Reason" inputRef={reasonRef} value={reason} onChange={setReason} />
         </div>
 
         <div className="flex items-center justify-end gap-2 mt-2">

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { FormField } from "components/form/FormField";
 import { FormRow } from "components/form/FormRow";
-import { Button, Loader, Input } from "@snailycad/ui";
+import { Button, Loader, TextField } from "@snailycad/ui";
 import { v4 } from "uuid";
 import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
@@ -68,23 +68,27 @@ export function AdvancedCitizensTab() {
                 </Button>
               </div>
 
-              <FormField className="w-full" label="Name">
-                <Input defaultValue={value.name} onBlur={(e) => handleChange("name", id, e)} />
-              </FormField>
-              <FormField className="w-full" label="Surname">
-                <Input
-                  defaultValue={value.surname}
-                  onBlur={(e) => handleChange("surname", id, e)}
-                />
-              </FormField>
+              <TextField
+                className="w-full"
+                label="Name"
+                defaultValue={value.name}
+                onBlur={(e) => handleChange("name", id, e)}
+              />
 
-              <FormField className="w-full" label="Date of Birth">
-                <Input
-                  type="date"
-                  defaultValue={value.dateOfBirth}
-                  onBlur={(e) => handleChange("dateOfBirth", id, e)}
-                />
-              </FormField>
+              <TextField
+                className="w-full"
+                label="Surname"
+                defaultValue={value.surname}
+                onBlur={(e) => handleChange("surname", id, e)}
+              />
+
+              <TextField
+                type="date"
+                label="Date of Birth"
+                defaultValue={value.surname}
+                onBlur={(e) => handleChange("dateOfBirth", id, e)}
+              />
+
               <FormField className="w-full" label="Gender">
                 <Select
                   value={value.gender}

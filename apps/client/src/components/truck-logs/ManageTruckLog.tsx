@@ -1,5 +1,5 @@
 import { CREATE_TRUCK_LOG_SCHEMA } from "@snailycad/schemas";
-import { Textarea, Input, Loader, Button } from "@snailycad/ui";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { FormRow } from "components/form/FormRow";
 import { Select } from "components/form/Select";
@@ -84,16 +84,22 @@ export function ManageTruckLogModal({
       className="w-[700px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, values, isValid, errors }) => (
+        {({ handleChange, setFieldValue, values, isValid, errors }) => (
           <Form>
             <FormRow>
-              <FormField errorMessage={errors.startedAt} label={t("startedAt")}>
-                <Input onChange={handleChange} name="startedAt" value={values.startedAt} />
-              </FormField>
+              <TextField
+                errorMessage={errors.startedAt}
+                label="Started At"
+                value={values.startedAt}
+                onChange={(value) => setFieldValue("startedAt", value)}
+              />
 
-              <FormField errorMessage={errors.endedAt} label={t("endedAt")}>
-                <Input onChange={handleChange} name="endedAt" value={values.endedAt} />
-              </FormField>
+              <TextField
+                errorMessage={errors.endedAt}
+                label="Ended At"
+                value={values.endedAt}
+                onChange={(value) => setFieldValue("endedAt", value)}
+              />
             </FormRow>
 
             <FormField errorMessage={errors.citizenId} label={t("driver")}>
@@ -116,9 +122,14 @@ export function ManageTruckLogModal({
               />
             </FormField>
 
-            <FormField optional errorMessage={errors.notes} label={t("notes")}>
-              <Textarea name="notes" onChange={handleChange} value={values.notes} />
-            </FormField>
+            <TextField
+              isTextarea
+              isOptional
+              errorMessage={errors.notes}
+              label={t("notes")}
+              value={values.notes}
+              onChange={(value) => setFieldValue("notes", value)}
+            />
 
             <footer className="flex justify-end mt-5">
               <div className="flex items-center">

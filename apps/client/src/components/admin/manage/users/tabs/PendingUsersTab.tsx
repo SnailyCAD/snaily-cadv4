@@ -5,8 +5,7 @@ import { TabsContent } from "components/shared/TabList";
 import { Table, useTableState } from "components/shared/Table";
 import useFetch from "lib/useFetch";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
-import { FormField } from "components/form/FormField";
-import { Input, Loader, Button } from "@snailycad/ui";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import { useRouter } from "next/router";
 import type { GetManageUsersData, PostManageUserAcceptDeclineData } from "@snailycad/types/api";
 
@@ -48,18 +47,20 @@ export function PendingUsersTab({ users, pendingCount }: GetManageUsersData) {
     <TabsContent aria-label={t("pendingUsers")} value="pendingUsers">
       <h3 className="my-4 text-xl font-semibold">{t("pendingUsers")}</h3>
 
-      <FormField label={common("search")} className="my-2 relative">
-        <Input
-          placeholder="john doe"
-          onChange={(e) => asyncTable.search.setSearch(e.target.value)}
-          value={asyncTable.search.search}
-        />
-        {asyncTable.state === "loading" ? (
+      <TextField
+        label={common("search")}
+        className="w-full relative"
+        name="search"
+        onChange={(value) => asyncTable.search.setSearch(value)}
+        value={asyncTable.search.search}
+        placeholder="Search..."
+      >
+        {asyncTable.search.state === "loading" ? (
           <span className="absolute top-[2.4rem] right-2.5">
             <Loader />
           </span>
         ) : null}
-      </FormField>
+      </TextField>
 
       {asyncTable.search.search && asyncTable.pagination.totalDataCount !== pendingCount ? (
         <p className="italic text-base font-semibold">

@@ -2,8 +2,7 @@ import { UPDATE_UNIT_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import type { DivisionValue } from "@snailycad/types";
 import type { PutManageUnitCallsignData } from "@snailycad/types/api";
 import { isUnitOfficer } from "@snailycad/utils";
-import { FormField } from "components/form/FormField";
-import { Button, Loader, Input } from "@snailycad/ui";
+import { Button, Loader, TextField } from "@snailycad/ui";
 import { CallSignPreview } from "components/leo/CallsignPreview";
 import { AdvancedSettings } from "components/leo/modals/AdvancedSettings";
 import { makeDivisionsObjectMap } from "components/leo/modals/ManageOfficerModal";
@@ -63,15 +62,24 @@ export function ManageUnitCallsignModal({ unit }: Props) {
       className="min-w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={handleSubmit}>
-        {({ handleChange, errors, values, isValid }) => (
+        {({ setFieldValue, errors, values, isValid }) => (
           <Form>
-            <FormField errorMessage={errors.callsign} label={t("Leo.callsign1")}>
-              <Input name="callsign" value={values.callsign} onChange={handleChange} />
-            </FormField>
+            <TextField
+              errorMessage={errors.callsign}
+              label={t("Leo.callsign1")}
+              autoFocus
+              name="callsign"
+              onChange={(value) => setFieldValue("callsign", value)}
+              value={values.callsign}
+            />
 
-            <FormField errorMessage={errors.callsign2} label={t("Leo.callsign2")}>
-              <Input name="callsign2" value={values.callsign2} onChange={handleChange} />
-            </FormField>
+            <TextField
+              errorMessage={errors.callsign2}
+              label={t("Leo.callsign2")}
+              name="callsign2"
+              onChange={(value) => setFieldValue("callsign2", value)}
+              value={values.callsign2}
+            />
 
             <CallSignPreview department={unit.department} divisions={divisions} />
 

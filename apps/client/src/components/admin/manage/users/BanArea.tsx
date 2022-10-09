@@ -1,5 +1,4 @@
-import { Input, Loader, Button } from "@snailycad/ui";
-import { FormField } from "components/form/FormField";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import { Form, Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
@@ -62,16 +61,16 @@ export function BanArea({ user, setUser }: Props) {
         </div>
       ) : (
         <Formik validate={validate} onSubmit={onSubmit} initialValues={{ reason: "" }}>
-          {({ handleChange, values, errors, isValid }) => (
+          {({ setFieldValue, values, errors, isValid }) => (
             <Form className="mt-3">
-              <FormField errorMessage={errors.reason} label={common("reason")}>
-                <Input
-                  className="bg-gray-100"
-                  value={values.reason}
-                  onChange={handleChange}
-                  name="reason"
-                />
-              </FormField>
+              <TextField
+                errorMessage={errors.reason}
+                label={common("reason")}
+                autoFocus
+                name="reason"
+                onChange={(value) => setFieldValue("reason", value)}
+                value={values.reason}
+              />
 
               <Button
                 className="flex items-center"

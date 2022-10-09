@@ -5,7 +5,7 @@ import { Form, Formik, FormikHelpers } from "formik";
 import { FormField } from "components/form/FormField";
 import { useValues } from "context/ValuesContext";
 import { Select } from "components/form/Select";
-import { Input, Loader, Button, buttonVariants } from "@snailycad/ui";
+import { Loader, Button, buttonVariants, TextField } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import Link from "next/link";
 import toast from "react-hot-toast";
@@ -72,7 +72,7 @@ export function ManageUnitTab({ unit: data }: Props) {
   return (
     <TabsContent value="manage-unit">
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, values, errors }) => (
+        {({ setFieldValue, handleChange, values, errors }) => (
           <Form>
             <FormField label={t("status")}>
               <Select
@@ -159,39 +159,44 @@ export function ManageUnitTab({ unit: data }: Props) {
                 />
               </FormField>
 
-              <FormField optional label={t("position")}>
-                <Input name="position" onChange={handleChange} value={values.position} />
-              </FormField>
+              <TextField
+                errorMessage={errors.position}
+                label={t("position")}
+                autoFocus
+                name="position"
+                onChange={(value) => setFieldValue("position", value)}
+                value={values.position}
+              />
             </FormRow>
 
             {BADGE_NUMBERS ? (
-              <FormField errorMessage={errors.badgeNumber} label={t("badgeNumber")}>
-                <Input
-                  type="number"
-                  value={values.badgeNumber}
-                  name="badgeNumber"
-                  onChange={(e) =>
-                    handleChange({
-                      ...e,
-                      target: {
-                        ...e.target,
-                        id: "badgeNumber",
-                        value: e.target.valueAsNumber,
-                      },
-                    })
-                  }
-                />
-              </FormField>
+              <TextField
+                errorMessage={errors.badgeNumber}
+                label={t("badgeNumber")}
+                autoFocus
+                name="badgeNumber"
+                onChange={(value) => setFieldValue("badgeNumber", parseInt(value))}
+                value={String(values.badgeNumber)}
+              />
             ) : null}
 
             <FormRow>
-              <FormField errorMessage={errors.callsign} label={"Callsign Symbol 1"}>
-                <Input value={values.callsign} name="callsign" onChange={handleChange} />
-              </FormField>
+              <TextField
+                errorMessage={errors.callsign}
+                label={t("callsign1")}
+                autoFocus
+                name="callsign"
+                onChange={(value) => setFieldValue("callsign", value)}
+                value={values.callsign}
+              />
 
-              <FormField errorMessage={errors.callsign2} label={"Callsign Symbol 2"}>
-                <Input value={values.callsign2} name="callsign2" onChange={handleChange} />
-              </FormField>
+              <TextField
+                errorMessage={errors.callsign2}
+                label={t("callsign2")}
+                name="callsign2"
+                onChange={(value) => setFieldValue("callsign2", value)}
+                value={values.callsign2}
+              />
             </FormRow>
 
             <FormField label={t("suspended")}>

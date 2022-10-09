@@ -1,7 +1,7 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
 import { TabsContent, TabList } from "components/shared/TabList";
-import { Loader, Input, Button } from "@snailycad/ui";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -11,7 +11,6 @@ import { WhitelistStatus, Rank } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { ModalIds } from "types/ModalIds";
-import { FormField } from "components/form/FormField";
 import { requestAll, yesOrNoText } from "lib/utils";
 import { PendingBusinessesTab } from "components/admin/manage/business/PendingBusinessesTab";
 import { useAuth } from "context/AuthContext";
@@ -157,9 +156,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
               },
             })}
           </p>
-          <FormField label="Reason">
-            <Input ref={reasonRef} value={reason} onChange={(e) => setReason(e.target.value)} />
-          </FormField>
+          <TextField label="Reason" inputRef={reasonRef} value={reason} onChange={setReason} />
         </div>
 
         <div className="flex items-center justify-end gap-2 mt-2">

@@ -1,6 +1,6 @@
 import { PENAL_CODE_SCHEMA } from "@snailycad/schemas";
 import { FormField } from "components/form/FormField";
-import { Input, Loader, Button, SelectField } from "@snailycad/ui";
+import { Loader, Button, SelectField, TextField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { Form, Formik, useFormikContext } from "formik";
 import { handleValidate } from "lib/handleValidate";
@@ -111,9 +111,14 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, setFieldValue, values, errors }) => (
           <Form>
-            <FormField errorMessage={errors.title} label="Title">
-              <Input autoFocus name="title" onChange={handleChange} value={values.title} />
-            </FormField>
+            <TextField
+              errorMessage={errors.title}
+              label="Title"
+              autoFocus
+              name="title"
+              onChange={(value) => setFieldValue("title", value)}
+              value={values.title}
+            />
 
             <SelectField
               errorMessage={errors.type}
@@ -200,7 +205,7 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
 }
 
 function FieldsRow({ keyValue }: { keyValue: `fines${number}` | "prisonTerm" | "bail" }) {
-  const { values, handleChange, setFieldValue } = useFormikContext<any>();
+  const { values, setFieldValue } = useFormikContext<any>();
 
   const disabled = keyValue === "fines1" ? !values.warningApplicable : !values.warningNotApplicable;
   const fieldDisabled = !values[keyValue].enabled;
@@ -226,33 +231,32 @@ function FieldsRow({ keyValue }: { keyValue: `fines${number}` | "prisonTerm" | "
       </FormField>
 
       <FormRow className="items-center" flexLike>
-        <FormField label="Min.">
-          <Input
-            required
-            min={0}
-            type="number"
-            onChange={handleChange}
-            name={`${keyValue}.values[0]`}
-            value={values[keyValue].values[0]}
-            placeholder="Min."
-            className="min-w-[100px]"
-            disabled={isDisabled}
-          />
-        </FormField>
+        <TextField
+          label="Min."
+          autoFocus
+          onChange={(value) => setFieldValue(`${keyValue}.values[0]`, value)}
+          isRequired
+          type="number"
+          name={`${keyValue}.values[0]`}
+          value={values[keyValue].values[0]}
+          placeholder="Min."
+          className="min-w-[100px]"
+          isDisabled={isDisabled}
+        />
+
         <span className="mb-2.5">{" - "}</span>
-        <FormField label="Max.">
-          <Input
-            required
-            min={0}
-            type="number"
-            onChange={handleChange}
-            name={`${keyValue}.values[1]`}
-            value={values[keyValue].values[1]}
-            placeholder="Max."
-            className="min-w-[100px]"
-            disabled={isDisabled}
-          />
-        </FormField>
+        <TextField
+          label="Max."
+          autoFocus
+          onChange={(value) => setFieldValue(`${keyValue}.values[1]`, value)}
+          isRequired
+          type="number"
+          name={`${keyValue}.values[1]`}
+          value={values[keyValue].values[1]}
+          placeholder="Max."
+          className="min-w-[100px]"
+          isDisabled={isDisabled}
+        />
       </FormRow>
     </FormRow>
   );

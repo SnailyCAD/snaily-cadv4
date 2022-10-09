@@ -1,6 +1,6 @@
 import * as React from "react";
 import { FormField } from "components/form/FormField";
-import { Button, Input, Loader } from "@snailycad/ui";
+import { Button, Loader, TextField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { Form, Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
@@ -131,11 +131,16 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
       isOpen={isOpen(ModalIds.ManageCustomRole)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, values, errors }) => (
+        {({ handleChange, setFieldValue, values, errors }) => (
           <Form>
-            <FormField errorMessage={errors.name} label={common("name")}>
-              <Input autoFocus name="name" onChange={handleChange} value={values.name} />
-            </FormField>
+            <TextField
+              errorMessage={errors.name}
+              label={common("name")}
+              autoFocus
+              name="name"
+              onChange={(value) => setFieldValue("name", value)}
+              value={values.name}
+            />
 
             <FormField errorMessage={errors.permissions as string} label="Permissions">
               <Select
