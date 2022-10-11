@@ -100,6 +100,7 @@ export function InputSuggestions<Suggestion extends { id: string }>({
   function handleBlur(e: React.FocusEvent<HTMLInputElement>) {
     if (suggestions.length >= 1 || options.allowUnknown) return;
 
+    // @ts-expect-error ignore for now.
     inputProps?.onChange?.({ ...e, target: { ...e.target, name: e.target.name, value: "" } });
     setLocalValue("");
     e.target.value = "";
