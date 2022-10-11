@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import dynamic from "next/dynamic";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { useModal } from "state/modalState";
 import { getSessionUser } from "lib/auth";
@@ -38,7 +38,7 @@ export default function MyDeputies({ deputies: data }: Props) {
   const { state, execute } = useFetch();
   const { generateCallsign } = useGenerateCallsign();
   const { makeImageUrl } = useImageUrl();
-  const { BADGE_NUMBERS } = useFeatureEnabled();
+  const { DIVISIONS, BADGE_NUMBERS } = useFeatureEnabled();
   const tableState = useTableState();
 
   const [deputies, setDeputies] = React.useState(data);
@@ -76,7 +76,7 @@ export default function MyDeputies({ deputies: data }: Props) {
       <header className="flex items-center justify-between">
         <Title className="!mb-0">{t("Ems.myDeputies")}</Title>
 
-        <Button onClick={() => openModal(ModalIds.ManageDeputy)}>{t("Ems.createDeputy")}</Button>
+        <Button onPress={() => openModal(ModalIds.ManageDeputy)}>{t("Ems.createDeputy")}</Button>
       </header>
 
       {deputies.length <= 0 ? (
@@ -106,16 +106,16 @@ export default function MyDeputies({ deputies: data }: Props) {
             badgeNumber: deputy.badgeNumber,
             department: formatOfficerDepartment(deputy) ?? common("none"),
             departmentStatus: <UnitDepartmentStatus unit={deputy} />,
-            division: deputy.division.value.value,
+            division: deputy.division?.value.value ?? common("none"),
             rank: <OfficerRank unit={deputy} />,
             position: deputy.position ?? common("none"),
             actions: (
               <>
-                <Button size="xs" onClick={() => handleEditClick(deputy)} variant="success">
+                <Button size="xs" onPress={() => handleEditClick(deputy)} variant="success">
                   {common("edit")}
                 </Button>
                 <Button
-                  onClick={() => handleDeleteClick(deputy)}
+                  onPress={() => handleDeleteClick(deputy)}
                   className="ml-2"
                   variant="danger"
                   size="xs"
@@ -130,7 +130,7 @@ export default function MyDeputies({ deputies: data }: Props) {
             { header: t("Leo.callsign"), accessorKey: "callsign" },
             BADGE_NUMBERS ? { header: t("Leo.badgeNumber"), accessorKey: "badgeNumber" } : null,
             { header: t("Leo.department"), accessorKey: "department" },
-            { header: t("Leo.division"), accessorKey: "division" },
+            DIVISIONS ? { header: t("Leo.division"), accessorKey: "division" } : null,
             { header: t("Leo.rank"), accessorKey: "rank" },
             { header: t("Leo.position"), accessorKey: "position" },
             { header: t("Leo.status"), accessorKey: "departmentStatus" },

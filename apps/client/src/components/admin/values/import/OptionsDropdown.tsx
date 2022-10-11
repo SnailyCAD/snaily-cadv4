@@ -1,6 +1,6 @@
 import { ThreeDots } from "react-bootstrap-icons";
 import { useTranslations } from "next-intl";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { useDownload } from "@casper124578/useful";
@@ -44,10 +44,10 @@ export function OptionsDropdown({ type, values }: Props) {
         </Button>
       }
     >
-      <Dropdown.Item onClick={() => openModal(ModalIds.ImportValues)}>
+      <Dropdown.Item onPress={() => openModal(ModalIds.ImportValues)}>
         {t("importValues")}
       </Dropdown.Item>
-      <Dropdown.Item disabled={values.length <= 0} onClick={handleExport}>
+      <Dropdown.Item disabled={values.length <= 0} onPress={handleExport}>
         {t("exportValues")}
       </Dropdown.Item>
     </Dropdown>

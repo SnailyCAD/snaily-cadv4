@@ -1,8 +1,7 @@
 import { SELECT_OFFICER_SCHEMA } from "@snailycad/schemas";
-import { Button } from "components/Button";
+import { Loader, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
@@ -103,7 +102,7 @@ export function SelectOfficerModal() {
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.SelectOfficer)}
+                onPress={() => closeModal(ModalIds.SelectOfficer)}
                 variant="cancel"
               >
                 {common("cancel")}

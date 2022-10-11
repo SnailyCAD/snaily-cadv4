@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { Button } from "components/Button";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import type { RegisteredVehicle } from "@snailycad/types";
 import { RegisterVehicleModal } from "./modals/RegisterVehicleModal";
 import { ModalIds } from "types/ModalIds";
@@ -14,9 +14,6 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { TransferVehicleModal } from "./modals/TransferVehicleModal";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 import { useCitizen } from "context/CitizenContext";
-import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
-import { Loader } from "components/Loader";
 import type { DeleteCitizenVehicleData, GetCitizenVehiclesData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
@@ -85,7 +82,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
         <header className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold">{t("yourVehicles")}</h1>
 
-          <Button onClick={() => openModal(ModalIds.RegisterVehicle)} size="xs">
+          <Button onPress={() => openModal(ModalIds.RegisterVehicle)} size="xs">
             {t("addVehicle")}
           </Button>
         </header>
@@ -94,18 +91,20 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
           <p className="text-neutral-700 dark:text-gray-400">{t("noVehicles")}</p>
         ) : (
           <>
-            <FormField label={common("search")} className="w-full relative">
-              <Input
-                placeholder="john doe"
-                onChange={(e) => asyncTable.search.setSearch(e.target.value)}
-                value={asyncTable.search.search}
-              />
-              {asyncTable.state === "loading" ? (
+            <TextField
+              label={common("search")}
+              className="w-full relative"
+              name="search"
+              onChange={asyncTable.search.setSearch}
+              value={asyncTable.search.search}
+              placeholder="VIN Number, Plate, Model, ..."
+            >
+              {asyncTable.search.state === "loading" ? (
                 <span className="absolute top-[2.4rem] right-2.5">
                   <Loader />
                 </span>
               ) : null}
-            </FormField>
+            </TextField>
 
             {asyncTable.search.search &&
             asyncTable.pagination.totalDataCount !== props.vehicles.length ? (
@@ -137,7 +136,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
                   <>
                     <Button
                       disabled={vehicle.impounded}
-                      onClick={() => handleTransferClick(vehicle)}
+                      onPress={() => handleTransferClick(vehicle)}
                       size="xs"
                     >
                       {t("transfer")}
@@ -145,7 +144,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
 
                     <Button
                       disabled={vehicle.impounded}
-                      onClick={() => handleEditClick(vehicle)}
+                      onPress={() => handleEditClick(vehicle)}
                       size="xs"
                       className="ml-2"
                     >
@@ -155,7 +154,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
                     <Button
                       disabled={vehicle.impounded}
                       className="ml-2"
-                      onClick={() => handleDeleteClick(vehicle)}
+                      onPress={() => handleDeleteClick(vehicle)}
                       size="xs"
                       variant="danger"
                     >

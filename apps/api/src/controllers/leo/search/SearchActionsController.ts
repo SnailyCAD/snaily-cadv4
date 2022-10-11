@@ -4,6 +4,7 @@ import {
   LEO_VEHICLE_LICENSE_SCHEMA,
   CREATE_CITIZEN_SCHEMA,
   VEHICLE_SCHEMA,
+  IMPOUND_VEHICLE_SCHEMA,
 } from "@snailycad/schemas";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -22,6 +23,7 @@ import {
   WhitelistStatus,
   User,
   CustomFieldCategory,
+  SuspendedCitizenLicenses,
 } from "@prisma/client";
 import { UseBeforeEach, Context } from "@tsed/common";
 import { ContentType, Description, Post, Put } from "@tsed/schema";
@@ -60,7 +62,7 @@ export class SearchActionsController {
       where: {
         id: citizenId,
       },
-      include: { dlCategory: true },
+      include: { dlCategory: true, suspendedLicenses: true },
     });
 
     if (!citizen) {
@@ -68,6 +70,22 @@ export class SearchActionsController {
     }
 
     await updateCitizenLicenseCategories(citizen, data);
+
+    let suspendedLicenses: SuspendedCitizenLicenses | undefined;
+    if (data.suspended) {
+      const createUpdateData = {
+        driverLicense: data.suspended.driverLicense,
+        firearmsLicense: data.suspended.firearmsLicense,
+        pilotLicense: data.suspended.pilotLicense,
+        waterLicense: data.suspended.waterLicense,
+      };
+
+      suspendedLicenses = await prisma.suspendedCitizenLicenses.upsert({
+        where: { id: String(citizen.suspendedLicensesId) },
+        create: createUpdateData,
+        update: createUpdateData,
+      });
+    }
 
     const updated = await prisma.citizen.update({
       where: {
@@ -78,6 +96,7 @@ export class SearchActionsController {
         pilotLicenseId: data.pilotLicense,
         weaponLicenseId: data.weaponLicense,
         waterLicenseId: data.waterLicense,
+        suspendedLicensesId: suspendedLicenses?.id,
       },
       include: citizenInclude,
     });
@@ -351,6 +370,46 @@ export class SearchActionsController {
     });
 
     return citizen as APITypes.PostSearchActionsCreateCitizen;
+  }
+
+  @Post("/impound/:vehicleId")
+  @Description("Impound a vehicle from plate search")
+  async impoundVehicle(
+    @BodyParams() body: unknown,
+    @PathParams("vehicleId") vehicleId: string,
+  ): Promise<APITypes.PostSearchActionsCreateVehicle> {
+    const data = validateSchema(IMPOUND_VEHICLE_SCHEMA, body);
+
+    const vehicle = await prisma.registeredVehicle.findUnique({
+      where: { id: vehicleId },
+    });
+
+    if (!vehicle) {
+      throw new NotFound("NotFound");
+    }
+
+    if (vehicle.impounded) {
+      throw new BadRequest("vehicleAlreadyImpounded");
+    }
+
+    await prisma.impoundedVehicle.create({
+      data: {
+        valueId: data.impoundLot,
+        registeredVehicleId: vehicle.id,
+      },
+    });
+
+    const impoundedVehicle = await prisma.registeredVehicle.update({
+      where: {
+        id: vehicle.id,
+      },
+      data: {
+        impounded: true,
+      },
+      include: vehicleSearchInclude,
+    });
+
+    return appendCustomFields(impoundedVehicle, CustomFieldCategory.VEHICLE);
   }
 
   @Post("/vehicle")

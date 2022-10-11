@@ -1,10 +1,8 @@
 import * as React from "react";
 import Link from "next/link";
-import { Button } from "components/Button";
+import { Textarea, Loader, Input, Button } from "@snailycad/ui";
 import { FormRow } from "components/form/FormRow";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
-import { Loader } from "components/Loader";
 import { Select } from "components/form/Select";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
@@ -14,13 +12,14 @@ import { handleValidate } from "lib/handleValidate";
 import { Form, Formik, FormikHelpers } from "formik";
 import type { User, Citizen } from "@snailycad/types";
 import { useTranslations } from "next-intl";
-import { Textarea } from "components/form/Textarea";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import {
   createDefaultLicensesValues,
   ManageLicensesFormFields,
 } from "./licenses/ManageLicensesFormFields";
+import { DatePickerField } from "components/form/inputs/DatePicker/DatePickerField";
+import parseISO from "date-fns/parseISO";
 
 interface Props {
   citizen: (Citizen & { user?: User | null }) | null;
@@ -68,7 +67,8 @@ export function ManageCitizenForm({
     username: citizen?.user?.username ?? "",
     name: citizen?.name ?? "",
     surname: citizen?.surname ?? "",
-    dateOfBirth: citizen?.dateOfBirth ?? new Date(),
+    dateOfBirth:
+      typeof citizen?.dateOfBirth === "string" ? parseISO(citizen.dateOfBirth) : undefined,
     gender: citizen?.genderId ?? "",
     ethnicity: citizen?.ethnicityId ?? "",
     weight: citizen?.weight ?? "",
@@ -104,7 +104,7 @@ export function ManageCitizenForm({
 
   return (
     <Formik validate={validate} onSubmit={handleSubmit} initialValues={INITIAL_VALUES}>
-      {({ handleChange, setValues, values, errors, isValid }) => (
+      {({ handleChange, setValues, setFieldValue, values, errors, isValid }) => (
         <Form>
           {allowEditingUser ? (
             <FormField errorMessage={errors.userId} label="User">
@@ -119,7 +119,7 @@ export function ManageCitizenForm({
                   name: "username",
                   onChange: handleChange,
                 }}
-                onSuggestionClick={(suggestion) => {
+                onSuggestionPress={(suggestion) => {
                   setValues({ ...values, userId: suggestion.id, username: suggestion.username });
                 }}
                 Component={({ suggestion }) => <p className="flex ">{suggestion.username}</p>}
@@ -150,32 +150,20 @@ export function ManageCitizenForm({
           </FormRow>
 
           <FormRow flexLike={!SOCIAL_SECURITY_NUMBERS}>
-            <FormField
-              className="w-full"
+            <DatePickerField
               errorMessage={errors.dateOfBirth as string}
+              value={values.dateOfBirth}
+              onChange={(value) =>
+                value && setFieldValue("dateOfBirth", parseISO(value?.toString()))
+              }
               label={t("dateOfBirth")}
-            >
-              <Input
-                type="date"
-                value={
-                  isDate(values.dateOfBirth)
-                    ? new Date(values.dateOfBirth.toString()).toISOString().slice(0, 10)
-                    : String(values.dateOfBirth)
-                }
-                onChange={(e) =>
-                  handleChange({
-                    ...e,
-                    target: { name: "dateOfBirth", value: e.target.valueAsDate },
-                  })
-                }
-                name="dateOfBirth"
-              />
-            </FormField>
+            />
 
             {SOCIAL_SECURITY_NUMBERS ? (
               <FormField
                 errorMessage={errors.socialSecurityNumber}
                 label={t("socialSecurityNumber")}
+                optional
               >
                 <Input
                   value={values.socialSecurityNumber}
@@ -285,15 +273,4 @@ export function ManageCitizenForm({
       )}
     </Formik>
   );
-}
-
-export function isDate(value: string | null | Date) {
-  if (!value) return false;
-
-  try {
-    const date = new Date(value);
-    return !!date;
-  } catch {
-    return false;
-  }
 }

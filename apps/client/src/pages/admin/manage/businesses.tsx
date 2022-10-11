@@ -1,7 +1,7 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
 import { TabsContent, TabList } from "components/shared/TabList";
-import { Button } from "components/Button";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -9,11 +9,8 @@ import type { GetServerSideProps } from "next";
 import { useModal } from "state/modalState";
 import { WhitelistStatus, Rank } from "@snailycad/types";
 import useFetch from "lib/useFetch";
-import { Loader } from "components/Loader";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { ModalIds } from "types/ModalIds";
-import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
 import { requestAll, yesOrNoText } from "lib/utils";
 import { PendingBusinessesTab } from "components/admin/manage/business/PendingBusinessesTab";
 import { useAuth } from "context/AuthContext";
@@ -120,7 +117,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
                 actions: (
                   <Button
                     className="ml-2"
-                    onClick={() => handleDeleteClick(business)}
+                    onPress={() => handleDeleteClick(business)}
                     size="xs"
                     variant="danger"
                   >
@@ -159,16 +156,14 @@ export default function ManageBusinesses({ businesses: data }: Props) {
               },
             })}
           </p>
-          <FormField label="Reason">
-            <Input ref={reasonRef} value={reason} onChange={(e) => setReason(e.target.value)} />
-          </FormField>
+          <TextField label="Reason" inputRef={reasonRef} value={reason} onChange={setReason} />
         </div>
 
         <div className="flex items-center justify-end gap-2 mt-2">
           <Button
             variant="cancel"
             disabled={state === "loading"}
-            onClick={() => closeModal(ModalIds.AlertDeleteBusiness)}
+            onPress={() => closeModal(ModalIds.AlertDeleteBusiness)}
           >
             {common("cancel")}
           </Button>
@@ -176,7 +171,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
             disabled={state === "loading"}
             className="flex items-center"
             variant="danger"
-            onClick={handleDelete}
+            onPress={handleDelete}
           >
             {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}{" "}
             {common("delete")}

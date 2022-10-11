@@ -1,24 +1,19 @@
 import { useTranslations } from "use-intl";
 import { Form, Formik } from "formik";
 import { MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
-import { Button } from "components/Button";
-import { FormField } from "components/form/FormField";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import type { MedicalRecord } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
-import { Input } from "components/form/inputs/Input";
 import { useCitizen } from "context/CitizenContext";
-import { Textarea } from "components/form/Textarea";
-import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
 import type {
   PostCitizenMedicalRecordsData,
   PutCitizenMedicalRecordsData,
 } from "@snailycad/types/api";
+import { Button, TextField, SelectField, Loader } from "@snailycad/ui";
 
 interface Props {
   medicalRecord: MedicalRecord | null;
@@ -82,42 +77,51 @@ export function ManageMedicalRecordsModal({ medicalRecord, onClose, onCreate, on
       className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, errors, values, isValid }) => (
+        {({ setFieldValue, errors, values, isValid }) => (
           <Form>
-            <FormField errorMessage={errors.type} label={t("diseases")}>
-              <Input onChange={handleChange} name="type" value={values.type} />
-            </FormField>
+            <TextField
+              label={t("diseases")}
+              value={values.type}
+              onChange={(value) => setFieldValue("type", value)}
+              name="type"
+              errorMessage={errors.type}
+            />
 
-            <FormField errorMessage={errors.bloodGroup} label={t("bloodGroup")}>
-              <Select
-                values={bloodGroup.values.map((v) => ({
-                  value: v.id,
-                  label: v.value,
-                }))}
-                onChange={handleChange}
-                name="bloodGroup"
-                value={values.bloodGroup}
-              />
-
+            <SelectField
+              errorMessage={errors.bloodGroup}
+              label={t("bloodGroup")}
+              selectedKey={values.bloodGroup}
+              onSelectionChange={(value) => setFieldValue("bloodGroup", value)}
+              name="type"
+              options={bloodGroup.values.map((v) => ({
+                value: v.id,
+                label: v.value,
+              }))}
+            >
               {bloodGroupId && bloodGroupId !== values.bloodGroup ? (
                 <small className="mt-2 text-base">{t("info_bloodgroup")}</small>
               ) : null}
-            </FormField>
+            </SelectField>
 
-            <FormField errorMessage={errors.description} label={common("description")}>
-              <Textarea value={values.description} name="description" onChange={handleChange} />
-            </FormField>
+            <TextField
+              label={common("description")}
+              errorMessage={errors.description}
+              value={values.description}
+              onChange={(value) => setFieldValue("description", value)}
+              name="description"
+              isTextarea
+            />
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onClick={handleClose} variant="cancel">
+              <Button type="reset" onPress={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button
-                className="flex items-center"
+                className="flex items-center gap-2"
                 disabled={!isValid || state === "loading"}
                 type="submit"
               >
-                {state === "loading" ? <Loader className="mr-2" /> : null}
+                {state === "loading" ? <Loader /> : null}
                 {medicalRecord ? common("save") : common("create")}
               </Button>
             </footer>

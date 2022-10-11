@@ -1,6 +1,6 @@
 import * as React from "react";
 import { CustomFieldCategory } from "@snailycad/types";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { Table, useTableState } from "components/shared/Table";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
@@ -68,7 +68,7 @@ function CitizenResults({ results }: any) {
         id: result.id,
         citizen: `${result.name} ${result.surname}`,
         actions: (
-          <Button type="button" onClick={() => handleOpen(result)} size="xs">
+          <Button type="button" onPress={() => handleOpen(result)} size="xs">
             {t("viewInNameSearch")}
           </Button>
         ),
@@ -101,7 +101,7 @@ function WeaponResults({ results }: any) {
       data={citizens.map((result) => ({
         id: result.id,
         weapon: (
-          <Button type="button" size="xs" onClick={() => handleOpen(result)}>
+          <Button type="button" size="xs" onPress={() => handleOpen(result)}>
             {result.model.value.value}
           </Button>
         ),
@@ -137,7 +137,7 @@ function VehicleResults({ results }: any) {
       data={citizens.map((result) => ({
         id: result.id,
         model: (
-          <Button type="button" size="xs" onClick={() => handleOpen(result)}>
+          <Button type="button" size="xs" onPress={() => handleOpen(result)}>
             {result.model.value.value}
           </Button>
         ),

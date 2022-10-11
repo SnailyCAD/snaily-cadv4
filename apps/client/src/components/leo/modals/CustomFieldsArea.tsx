@@ -1,4 +1,4 @@
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { Infofield } from "components/shared/Infofield";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
@@ -46,7 +46,7 @@ export function CustomFieldsArea({ currentResult, isLeo }: Props) {
           size="xs"
           type="button"
           className="mt-2"
-          onClick={() => openModal(ModalIds.ManageCitizenCustomFields)}
+          onPress={() => openModal(ModalIds.ManageCitizenCustomFields)}
         >
           {t("manageCustomFields")}
         </Button>

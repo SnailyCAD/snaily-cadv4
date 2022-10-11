@@ -3,7 +3,7 @@ import { Table, useTableState } from "components/shared/Table";
 import { Status } from "components/shared/Status";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useTranslations } from "use-intl";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicleSearchState";
 import { useModal } from "state/modalState";
 import { useNameSearch } from "state/search/nameSearchState";
@@ -48,7 +48,7 @@ export function NameSearchVehiclesTab() {
                 title={common("openInSearch")}
                 size="xs"
                 type="button"
-                onClick={() => handlePlateClick(vehicle as VehicleSearchResult)}
+                onPress={() => handlePlateClick(vehicle as VehicleSearchResult)}
               >
                 {vehicle.plate}
               </Button>

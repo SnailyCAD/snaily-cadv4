@@ -8,7 +8,7 @@ import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { Table, useTableState } from "components/shared/Table";
 import { ModalIds } from "types/ModalIds";
@@ -33,6 +33,7 @@ export default function ManageCustomFields({ customFields: data }: Props) {
   const { openModal, closeModal } = useModal();
   const t = useTranslations("Management");
   const common = useTranslations("Common");
+  const hasManagePermissions = hasPermissions([Permissions.ManageCustomFields], true);
 
   async function handleDelete() {
     if (!tempField) return;
@@ -80,11 +81,13 @@ export default function ManageCustomFields({ customFields: data }: Props) {
           </p>
         </div>
 
-        <div>
-          <Button onClick={() => openModal(ModalIds.ManageCustomField)}>
-            {t("createCustomField")}
-          </Button>
-        </div>
+        {hasManagePermissions ? (
+          <div>
+            <Button onPress={() => openModal(ModalIds.ManageCustomField)}>
+              {t("createCustomField")}
+            </Button>
+          </div>
+        ) : null}
       </header>
 
       {customFields.length <= 0 ? (
@@ -98,14 +101,14 @@ export default function ManageCustomFields({ customFields: data }: Props) {
             category: field.category,
             actions: (
               <>
-                <Button size="xs" variant="success" onClick={() => handleEditClick(field)}>
+                <Button size="xs" variant="success" onPress={() => handleEditClick(field)}>
                   {common("edit")}
                 </Button>
                 <Button
                   className="ml-2"
                   size="xs"
                   variant="danger"
-                  onClick={() => handleDeleteClick(field)}
+                  onPress={() => handleDeleteClick(field)}
                 >
                   {common("delete")}
                 </Button>
@@ -115,9 +118,7 @@ export default function ManageCustomFields({ customFields: data }: Props) {
           columns={[
             { header: common("name"), accessorKey: "name" },
             { header: "Category", accessorKey: "category" },
-            hasPermissions([Permissions.ViewCustomFields], true)
-              ? { header: common("actions"), accessorKey: "actions" }
-              : null,
+            hasManagePermissions ? { header: common("actions"), accessorKey: "actions" } : null,
           ]}
         />
       )}

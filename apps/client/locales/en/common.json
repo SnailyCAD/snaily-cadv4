@@ -52,7 +52,9 @@
     "left": "Left",
     "right": "Right",
     "user": "User",
-    "savedSettingsSuccess": "Settings successfully saved."
+    "savedSettingsSuccess": "Settings successfully saved.",
+    "select": "Select...",
+    "item": "Item"
   },
   "Nav": {
     "citizen": "Citizen",
@@ -83,11 +85,11 @@
     "callHistory": "Call History",
     "citizenLogs": "Citizen Logs",
     "courthouse": "Courthouse",
-    "dlExams": "Driver License Exams",
+    "licenseExams": "License Exams",
     "dmv": "Department of Motor Vehicles",
     "penalCodes": "Penal Codes",
-    "weaponExams": "Weapon Exams",
-    "myDeputyLogs": "My deputy logs"
+    "myDeputyLogs": "My deputy logs",
+    "whatsNew": "What's New"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",
@@ -154,6 +156,8 @@
     "serialNumberInUse": "Serial Number is already in use.",
     "vinNumberInUse": "VIN Number is already in use.",
     "alreadyHasPrimaryUnit": "This call already has a primary unit.",
-    "noActiveOfficer": "You don't have any active officer at this moment, please get back on-duty first."
+    "noActiveOfficer": "You don't have any active officer at this moment, please get back on-duty first.",
+    "socialSecurityNumberTaken": "This social security number is already in use.",
+    "citizenNotAllowedToEditLicenses": "You as a citizen are not allowed to edit your own licenses. Please contact an officer to manage your licenses."
   }
 }

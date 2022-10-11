@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { FullDate } from "components/shared/FullDate";
 import { classNames } from "lib/classNames";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { Pencil, X } from "react-bootstrap-icons";
 import { AlertModal } from "components/modal/AlertModal";
 import type { Delete911CallEventByIdData, DeleteIncidentEventByIdData } from "@snailycad/types/api";
@@ -89,11 +89,11 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
             className="p-0 px-1 mr-2"
             size="xs"
             variant="cancel"
-            onClick={() => setTempEvent(event.id)}
+            onPress={() => setTempEvent(event.id)}
           >
             <Pencil width={15} />
           </Button>
-          <Button className="p-0 px-1" size="xs" variant="cancel" onClick={handleOpen}>
+          <Button className="p-0 px-1" size="xs" variant="cancel" onPress={handleOpen}>
             <X width={20} height={20} />
           </Button>
         </div>

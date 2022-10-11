@@ -1,10 +1,8 @@
 import * as React from "react";
 import { CREATE_TICKET_SCHEMA } from "@snailycad/schemas";
-import { Button } from "components/Button";
+import { Textarea, Loader, Button, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
 import type { SelectValue } from "components/form/Select";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { useValues } from "context/ValuesContext";
@@ -13,7 +11,6 @@ import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { Textarea } from "components/form/Textarea";
 import {
   type Citizen,
   RecordType,
@@ -183,7 +180,7 @@ export function ManageRecordModal({
                   disabled: isReadOnly || !!record,
                   errorMessage: errors.citizenName,
                 }}
-                onSuggestionClick={(suggestion) => {
+                onSuggestionPress={(suggestion) => {
                   const newValues = {
                     ...values,
                     citizenId: suggestion.id,
@@ -222,14 +219,13 @@ export function ManageRecordModal({
               />
             </FormField>
 
-            <FormField errorMessage={errors.postal} label={t("postal")}>
-              <Input
-                disabled={isReadOnly}
-                value={values.postal}
-                name="postal"
-                onChange={handleChange}
-              />
-            </FormField>
+            <TextField
+              name="postal"
+              label={t("postal")}
+              isDisabled={isReadOnly}
+              errorMessage={errors.postal}
+              onChange={(value) => setFieldValue("postal", value)}
+            />
 
             <FormField label={t("violations")}>
               <SelectPenalCode
@@ -270,7 +266,7 @@ export function ManageRecordModal({
             </FormField>
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onClick={() => closeModal(data[type].id)} variant="cancel">
+              <Button type="reset" onPress={() => closeModal(data[type].id)} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button

@@ -1,4 +1,4 @@
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import {
   ChevronDoubleLeft,
   ChevronDoubleRight,
@@ -25,20 +25,20 @@ interface Props<TData extends RowData> {
 export function TablePagination<TData extends RowData>({ table }: Props<TData>) {
   return (
     <div className="mt-5 flex justify-center items-center gap-3">
-      <Button onClick={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()}>
+      <Button onPress={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()}>
         <ChevronDoubleLeft aria-label="Show first page" width={15} height={25} />
       </Button>
-      <Button onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
+      <Button onPress={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
         <ChevronLeft aria-label="Previous page" width={15} height={25} />
       </Button>
       <span>
         {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
       </span>
-      <Button onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+      <Button onPress={() => table.nextPage()} disabled={!table.getCanNextPage()}>
         <ChevronRight aria-label="Next page" width={15} height={25} />
       </Button>
       <Button
-        onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+        onPress={() => table.setPageIndex(table.getPageCount() - 1)}
         disabled={!table.getCanNextPage()}
       >
         <ChevronDoubleRight aria-label="Show last page" width={15} height={25} />

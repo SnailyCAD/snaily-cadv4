@@ -1,7 +1,5 @@
-import { Button } from "components/Button";
+import { Input, Loader, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
@@ -93,7 +91,7 @@ export function ManageBusinessPostModal({ onClose, onCreate, onUpdate, post }: P
             </FormField>
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onClick={handleClose} variant="cancel">
+              <Button type="reset" onPress={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button

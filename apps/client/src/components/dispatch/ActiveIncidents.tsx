@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import compareDesc from "date-fns/compareDesc";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { Table, useTableState } from "components/shared/Table";
@@ -102,7 +102,7 @@ export function ActiveIncidents() {
           <Button
             variant={null}
             className="bg-gray-500 hover:bg-gray-600 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 text-white"
-            onClick={handleCreateIncident}
+            onPress={handleCreateIncident}
             disabled={!hasActiveDispatchers}
           >
             {t("createIncident")}
@@ -139,7 +139,7 @@ export function ActiveIncidents() {
                 actions: (
                   <>
                     <Button
-                      onClick={() => onEditClick(incident)}
+                      onPress={() => onEditClick(incident)}
                       disabled={!hasActiveDispatchers}
                       size="xs"
                       variant="success"
@@ -148,7 +148,7 @@ export function ActiveIncidents() {
                     </Button>
 
                     <Button
-                      onClick={() => onEndClick(incident)}
+                      onPress={() => onEndClick(incident)}
                       disabled={!hasActiveDispatchers}
                       size="xs"
                       variant="danger"

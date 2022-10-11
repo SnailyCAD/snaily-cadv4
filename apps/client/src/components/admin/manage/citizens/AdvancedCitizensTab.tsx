@@ -1,13 +1,11 @@
 import * as React from "react";
-import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { FormRow } from "components/form/FormRow";
-import { Input } from "components/form/inputs/Input";
+import { Button, Loader, TextField } from "@snailycad/ui";
 import { v4 } from "uuid";
 import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
 import useFetch from "lib/useFetch";
-import { Loader } from "components/Loader";
 import { X } from "react-bootstrap-icons";
 import { ImportModal } from "components/admin/import/ImportModal";
 import { ModalIds } from "types/ModalIds";
@@ -64,28 +62,33 @@ export function AdvancedCitizensTab() {
                   type="button"
                   className="px-1"
                   variant="transparent"
-                  onClick={() => handleRemoveItem(id)}
+                  onPress={() => handleRemoveItem(id)}
                 >
                   <X width={20} height={20} aria-label="Remove item" />
                 </Button>
               </div>
 
-              <FormField className="w-full" label="Name">
-                <Input defaultValue={value.name} onBlur={(e) => handleChange("name", id, e)} />
-              </FormField>
-              <FormField className="w-full" label="Surname">
-                <Input
-                  defaultValue={value.surname}
-                  onBlur={(e) => handleChange("surname", id, e)}
-                />
-              </FormField>
-              <FormField className="w-full" label="Date of Birth">
-                <Input
-                  type="date"
-                  defaultValue={value.dateOfBirth}
-                  onBlur={(e) => handleChange("dateOfBirth", id, e)}
-                />
-              </FormField>
+              <TextField
+                className="w-full"
+                label="Name"
+                defaultValue={value.name}
+                onBlur={(e) => handleChange("name", id, e)}
+              />
+
+              <TextField
+                className="w-full"
+                label="Surname"
+                defaultValue={value.surname}
+                onBlur={(e) => handleChange("surname", id, e)}
+              />
+
+              <TextField
+                type="date"
+                label="Date of Birth"
+                defaultValue={value.surname}
+                onBlur={(e) => handleChange("dateOfBirth", id, e)}
+              />
+
               <FormField className="w-full" label="Gender">
                 <Select
                   value={value.gender}
@@ -113,7 +116,7 @@ export function AdvancedCitizensTab() {
         <div className="flex items-center justify-end gap-2 mt-3">
           <Button
             type="button"
-            onClick={() => {
+            onPress={() => {
               setCitizens((p) => ({ ...p, ...createInitialCitizen() }));
             }}
           >

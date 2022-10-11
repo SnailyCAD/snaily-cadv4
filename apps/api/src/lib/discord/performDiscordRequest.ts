@@ -1,15 +1,15 @@
 import type { REST } from "@discordjs/rest";
 import { getRest } from "./config";
 
-interface Options<T> {
+interface Options {
   onError?(error: unknown): void;
-  handler(rest: REST): Promise<T>;
+  handler(rest: REST): unknown;
 }
 
-export async function performDiscordRequest<T>(options: Options<T>): Promise<T | null> {
+export async function performDiscordRequest<T>(options: Options): Promise<T | null> {
   try {
     const rest = getRest();
-    return options.handler(rest);
+    return (await options.handler(rest)) as T | null;
   } catch (error) {
     options.onError?.(error);
     return null;

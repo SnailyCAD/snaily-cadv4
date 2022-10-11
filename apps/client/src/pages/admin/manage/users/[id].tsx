@@ -8,15 +8,11 @@ import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { CustomRole, Rank } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
-import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
 import { useAuth } from "context/AuthContext";
-import { Button, buttonVariants } from "components/Button";
-import { Loader } from "components/Loader";
+import { Loader, Button, buttonVariants, SelectField, TextField } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
-import { Input } from "components/form/inputs/Input";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { ManagePermissionsModal } from "components/admin/manage/users/ManagePermissionsModal";
@@ -102,29 +98,28 @@ export default function ManageCitizens(props: Props) {
 
       <div className="mt-5">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-          {({ handleChange, setFieldValue, isValid, values, errors }) => (
+          {({ setFieldValue, isValid, values, errors }) => (
             <Form className="p-4 rounded-md dark:border card">
-              <FormField errorMessage={errors.rank} label="Rank">
-                <Select
-                  name="rank"
-                  onChange={handleChange}
-                  disabled={isRankDisabled}
-                  value={values.rank}
-                  values={
-                    isRankDisabled
-                      ? [{ value: user.rank, label: user.rank }]
-                      : [
-                          { value: "ADMIN", label: "Admin" },
-                          { value: "USER", label: "User" },
-                        ]
-                  }
-                />
-
+              <SelectField
+                errorMessage={errors.rank}
+                label="Rank"
+                name="rank"
+                onSelectionChange={(key) => setFieldValue("rank", key)}
+                selectedKey={values.rank}
+                options={
+                  isRankDisabled
+                    ? [{ value: user.rank, label: user.rank }]
+                    : [
+                        { value: "ADMIN", label: "Admin" },
+                        { value: "USER", label: "User" },
+                      ]
+                }
+              >
                 <small className="text-base mt-2 text-neutral-600 dark:text-gray-300 mb-3">
                   The rank does not have any influence on the permissions of the user. It is only
                   used to identify the user in the system.
                 </small>
-              </FormField>
+              </SelectField>
 
               <SettingsFormField
                 description="A detailed permissions system where you can assign many actions to a user."
@@ -133,7 +128,7 @@ export default function ManageCitizens(props: Props) {
                 <Button
                   disabled={user.rank === Rank.OWNER}
                   type="button"
-                  onClick={() => openModal(ModalIds.ManagePermissions)}
+                  onPress={() => openModal(ModalIds.ManagePermissions)}
                 >
                   {t("managePermissions")}
                 </Button>
@@ -143,20 +138,30 @@ export default function ManageCitizens(props: Props) {
                   className="ml-2 text-base"
                   disabled={user.rank === Rank.OWNER}
                   type="button"
-                  onClick={() => openModal(ModalIds.ManageRoles)}
+                  onPress={() => openModal(ModalIds.ManageRoles)}
                 >
                   {t("manageRoles")}
                 </Button>
               </SettingsFormField>
 
               <FormRow>
-                <FormField optional errorMessage={errors.steamId} label="Steam ID">
-                  <Input name="steamId" onChange={handleChange} value={values.steamId} />
-                </FormField>
+                <TextField
+                  isOptional
+                  label="Steam ID"
+                  name="steamId"
+                  onChange={(value) => setFieldValue("steamId", value)}
+                  value={values.steamId}
+                  errorMessage={errors.steamId}
+                />
 
-                <FormField optional errorMessage={errors.discordId} label="Discord ID">
-                  <Input name="discordId" onChange={handleChange} value={values.discordId} />
-                </FormField>
+                <TextField
+                  isOptional
+                  label="Discord ID"
+                  name="discordId"
+                  onChange={(value) => setFieldValue("discordId", value)}
+                  value={values.discordId}
+                  errorMessage={errors.discordId}
+                />
               </FormRow>
 
               <div className="flex justify-end mt-3">

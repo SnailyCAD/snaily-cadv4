@@ -1,7 +1,7 @@
 import * as React from "react";
 import Cropper from "react-cropper";
 import type CropperJS from "cropperjs";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { useTranslations } from "use-intl";
 import { Modal } from "./Modal";
 import "cropperjs/dist/cropper.css";
@@ -72,10 +72,10 @@ export function CropImageModal({ onSuccess, image, isOpen = false, onClose, opti
       )}
 
       <div className="flex items-center justify-end gap-2 mt-2">
-        <Button variant="cancel" onClick={onClose}>
+        <Button variant="cancel" onPress={onClose}>
           {common("cancel")}
         </Button>
-        <Button disabled={!image} className="flex items-center" onClick={getCropData}>
+        <Button disabled={!image} className="flex items-center" onPress={getCropData}>
           {common("save")}
         </Button>
       </div>

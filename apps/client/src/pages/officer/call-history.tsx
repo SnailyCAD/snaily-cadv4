@@ -9,14 +9,12 @@ import type { AssignedUnit } from "@snailycad/types";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Full911Call, useDispatchState } from "state/dispatch/dispatchState";
-import { Button } from "components/Button";
+import { Input, Loader, Button } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { LinkCallToIncidentModal } from "components/leo/call-history/LinkCallToIncidentModal";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
 import useFetch from "lib/useFetch";
-import { Loader } from "components/Loader";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { AlertModal } from "components/modal/AlertModal";
@@ -134,7 +132,7 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
                 />
                 {hasManagePermissions ? (
                   <Button
-                    onClick={() => openModal(ModalIds.AlertPurgeCalls)}
+                    onPress={() => openModal(ModalIds.AlertPurgeCalls)}
                     className="flex items-center gap-2 ml-2 min-w-fit"
                     disabled={state === "loading" || isEmpty(tableState.rowSelection)}
                   >
@@ -171,11 +169,11 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
                 actions: (
                   <>
                     {hasManagePermissions ? (
-                      <Button onClick={() => handleLinkClick(call)} size="xs">
+                      <Button onPress={() => handleLinkClick(call)} size="xs">
                         {leo("linkToIncident")}
                       </Button>
                     ) : null}
-                    <Button className="ml-2" onClick={() => handleViewClick(call)} size="xs">
+                    <Button className="ml-2" onPress={() => handleViewClick(call)} size="xs">
                       {leo("viewCall")}
                     </Button>
                   </>

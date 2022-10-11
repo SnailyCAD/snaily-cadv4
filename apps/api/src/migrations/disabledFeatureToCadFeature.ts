@@ -2,20 +2,24 @@ import { prisma } from "lib/prisma";
 import { Feature } from "@prisma/client";
 
 const FEATURES: Feature[] = Object.values(Feature);
+const DEPRECATED_FEATURES = [
+  Feature.DL_EXAMS,
+  Feature.WEAPON_EXAMS,
+  Feature.DISALLOW_TEXTFIELD_SELECTION,
+] as Feature[];
 
 const DEFAULTS: Partial<Record<Feature, { isEnabled: boolean }>> = {
   CUSTOM_TEXTFIELD_VALUES: { isEnabled: false },
-  DL_EXAMS: { isEnabled: false },
   DMV: { isEnabled: false },
   USER_API_TOKENS: { isEnabled: false },
   CITIZEN_RECORD_APPROVAL: { isEnabled: false },
   COMMON_CITIZEN_CARDS: { isEnabled: false },
   STEAM_OAUTH: { isEnabled: false },
   CREATE_USER_CITIZEN_LEO: { isEnabled: false },
-  WEAPON_EXAMS: { isEnabled: false },
   ACTIVE_WARRANTS: { isEnabled: false },
   CITIZEN_DELETE_ON_DEAD: { isEnabled: false },
   WARRANT_STATUS_APPROVAL: { isEnabled: false },
+  LICENSE_EXAMS: { isEnabled: false },
 };
 
 export async function disabledFeatureToCadFeature() {
@@ -25,6 +29,10 @@ export async function disabledFeatureToCadFeature() {
   const disabledFeatures = cad.disabledFeatures ?? [];
 
   for (const feature of FEATURES) {
+    if (DEPRECATED_FEATURES.includes(feature)) {
+      continue;
+    }
+
     const isDisabled = disabledFeatures.includes(feature);
     const isEnabled = DEFAULTS[feature]?.isEnabled ?? !isDisabled;
 

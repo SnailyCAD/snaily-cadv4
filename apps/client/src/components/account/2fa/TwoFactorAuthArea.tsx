@@ -1,6 +1,6 @@
 import { useTranslations } from "next-intl";
 import { useAuth } from "context/AuthContext";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 
@@ -18,7 +18,7 @@ export function TwoFactorAuthArea() {
         className="mt-3"
         variant={is2faEnabled ? "danger" : "default"}
         type="button"
-        onClick={() => openModal(ModalIds.Manage2FA, !!is2faEnabled)}
+        onPress={() => openModal(ModalIds.Manage2FA, !!is2faEnabled)}
       >
         {is2faEnabled ? t("disable2FA") : t("enable2FA")}
       </Button>

@@ -4,11 +4,11 @@ import { FormField } from "components/form/FormField";
 import { ImageSelectInput } from "components/form/inputs/ImageSelectInput";
 import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
-import { Textarea } from "components/form/Textarea";
+import { SelectField, Textarea } from "@snailycad/ui";
 import { QualificationValueType } from "@snailycad/types";
 
 export function QualificationFields({ image, setImage }: any) {
-  const { values, errors, handleChange } = useFormikContext<any>();
+  const { values, errors, setFieldValue, handleChange } = useFormikContext<any>();
   const { department } = useValues();
 
   const TYPES = [
@@ -18,15 +18,15 @@ export function QualificationFields({ image, setImage }: any) {
 
   return (
     <>
-      <FormField errorMessage={errors.qualificationType as string} label="Type">
-        <Select
-          isClearable={false}
-          values={TYPES}
-          name="qualificationType"
-          onChange={handleChange}
-          value={values.qualificationType}
-        />
-      </FormField>
+      <SelectField
+        errorMessage={errors.qualificationType as string}
+        label="Type"
+        name="qualificationType"
+        options={TYPES}
+        onSelectionChange={(key) => setFieldValue("qualificationType", key)}
+        isClearable={false}
+        selectedKey={values.qualificationType}
+      />
 
       <FormField errorMessage={errors.departments as string} label="Departments">
         <Select

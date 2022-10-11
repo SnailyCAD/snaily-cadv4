@@ -1,4 +1,4 @@
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
 import Link from "next/link";
 import { WhitelistStatus } from "@snailycad/types";

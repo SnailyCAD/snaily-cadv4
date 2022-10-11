@@ -1,14 +1,12 @@
 import { Modal } from "components/modal/Modal";
-import { Loader } from "components/Loader";
+import { Button, Loader, SelectField } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import { BaseCitizen, Record, ReleaseType } from "@snailycad/types";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "next-intl";
-import { Button } from "components/Button";
 import { Form, Formik, FormikHelpers } from "formik";
 import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useImageUrl } from "hooks/useImageUrl";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
@@ -74,16 +72,21 @@ export function ReleaseCitizenModal({ onSuccess, citizen }: Props) {
       <p className="my-3">{t("releaseCitizen")}</p>
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setValues, errors, values, isValid }) => (
+        {({ handleChange, setFieldValue, setValues, errors, values, isValid }) => (
           <Form>
-            <FormField errorMessage={errors.type} label={common("type")}>
-              <Select values={TYPES} value={values.type} name="type" onChange={handleChange} />
-            </FormField>
+            <SelectField
+              label={common("type")}
+              errorMessage={errors.type}
+              name="type"
+              options={TYPES}
+              selectedKey={values.type}
+              onSelectionChange={(key) => setFieldValue("type", key)}
+            />
 
             {values.type === ReleaseType.BAIL_POSTED ? (
               <FormField errorMessage={errors.releasedById} label={t("bailPostedBy")}>
                 <InputSuggestions<NameSearchResult>
-                  onSuggestionClick={(suggestion) => {
+                  onSuggestionPress={(suggestion) => {
                     setValues({
                       ...values,
                       releasedById: suggestion.id,
@@ -128,7 +131,7 @@ export function ReleaseCitizenModal({ onSuccess, citizen }: Props) {
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.AlertReleaseCitizen)}
+                onPress={() => closeModal(ModalIds.AlertReleaseCitizen)}
                 variant="cancel"
               >
                 Cancel

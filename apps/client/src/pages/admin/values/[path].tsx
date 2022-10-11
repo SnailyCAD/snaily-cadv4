@@ -1,7 +1,7 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
 import { useRouter } from "next/router";
-import { Button } from "components/Button";
+import { Button, TextField } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -11,8 +11,6 @@ import { type AnyValue, ValueType, Rank } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { getObjLength, isEmpty, requestAll, yesOrNoText } from "lib/utils";
-import { Input } from "components/form/inputs/Input";
-import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
 import { Table, useTableState } from "components/shared/Table";
 import { useTableDataOfType, useTableHeadersOfType } from "lib/admin/values/values";
@@ -194,18 +192,22 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
 
         <div className="flex gap-2">
           {isEmpty(tableState.rowSelection) ? null : (
-            <Button onClick={() => openModal(ModalIds.AlertDeleteSelectedValues)} variant="danger">
+            <Button onPress={() => openModal(ModalIds.AlertDeleteSelectedValues)} variant="danger">
               {t("deleteSelectedValues")}
             </Button>
           )}
-          <Button onClick={() => openModal(ModalIds.ManageValue)}>{typeT("ADD")}</Button>
+          <Button onPress={() => openModal(ModalIds.ManageValue)}>{typeT("ADD")}</Button>
           <OptionsDropdown type={type} values={values} />
         </div>
       </header>
 
-      <FormField label={common("search")} className="my-2">
-        <Input onChange={(e) => setSearch(e.target.value)} value={search} />
-      </FormField>
+      <TextField
+        label={common("search")}
+        className="my-2"
+        name="search"
+        value={search}
+        onChange={(value) => setSearch(value)}
+      />
 
       {values.length <= 0 ? (
         <p className="mt-5">There are no values yet for this type.</p>
@@ -225,7 +227,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
             createdAt: <FullDate>{getCreatedAtFromValue(value)}</FullDate>,
             actions: (
               <>
-                <Button size="xs" onClick={() => handleEditClick(value)} variant="success">
+                <Button size="xs" onPress={() => handleEditClick(value)} variant="success">
                   {common("edit")}
                 </Button>
 
@@ -234,7 +236,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
                     <Tooltip.Trigger asChild>
                       <Button
                         size="xs"
-                        onClick={() => handleDeleteClick(value)}
+                        onPress={() => handleDeleteClick(value)}
                         variant="danger"
                         className="ml-2"
                         disabled={isValueInUse(value)}

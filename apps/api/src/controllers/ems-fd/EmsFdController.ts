@@ -54,7 +54,7 @@ export class EmsFdController {
   @Get("/logs")
   @UsePermissions({
     fallback: (u) => u.isEmsFd,
-    permissions: [Permissions.EmsFd],
+    permissions: [Permissions.EmsFd, Permissions.ViewUnits, Permissions.ManageUnits],
   })
   async getDeputyLogs(
     @Context("user") user: User,
@@ -86,19 +86,27 @@ export class EmsFdController {
   async createEmsFdDeputy(
     @BodyParams() body: unknown,
     @Context("user") user: User,
-    @Context("cad") cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
+    @Context("cad") cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
   ): Promise<APITypes.PostMyDeputiesData> {
     const data = validateSchema(EMS_FD_DEPUTY_SCHEMA, body);
 
-    const division = await prisma.divisionValue.findFirst({
-      where: {
-        id: data.division,
-        departmentId: data.department,
-      },
+    const divisionsEnabled = isFeatureEnabled({
+      feature: Feature.DIVISIONS,
+      defaultReturn: true,
+      features: cad.features,
     });
 
-    if (!division) {
-      throw new ExtendedBadRequest({ division: "divisionNotInDepartment" });
+    if (divisionsEnabled) {
+      const division = await prisma.divisionValue.findFirst({
+        where: {
+          id: data.division,
+          departmentId: data.department,
+        },
+      });
+
+      if (!division) {
+        throw new ExtendedBadRequest({ division: "divisionNotInDepartment" });
+      }
     }
 
     await validateMaxDepartmentsEachPerUser({
@@ -141,7 +149,7 @@ export class EmsFdController {
           (defaultDepartment
             ? defaultDepartment.defaultOfficerRankId
             : department.defaultOfficerRankId) || undefined,
-        divisionId: data.division!,
+        divisionId: data.division || null,
         badgeNumber: data.badgeNumber,
         citizenId: citizen.id,
         imageId: validateImgurURL(data.image),
@@ -166,7 +174,7 @@ export class EmsFdController {
     @PathParams("id") deputyId: string,
     @BodyParams() body: unknown,
     @Context("user") user: User,
-    @Context("cad") cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
+    @Context("cad") cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
   ): Promise<APITypes.PutMyDeputyByIdData> {
     const data = validateSchema(EMS_FD_DEPUTY_SCHEMA, body);
 
@@ -182,15 +190,23 @@ export class EmsFdController {
       throw new NotFound("deputyNotFound");
     }
 
-    const division = await prisma.divisionValue.findFirst({
-      where: {
-        id: data.division,
-        departmentId: data.department,
-      },
+    const divisionsEnabled = isFeatureEnabled({
+      feature: Feature.DIVISIONS,
+      defaultReturn: true,
+      features: cad.features,
     });
 
-    if (!division) {
-      throw new ExtendedBadRequest({ division: "divisionNotInDepartment" });
+    if (divisionsEnabled) {
+      const division = await prisma.divisionValue.findFirst({
+        where: {
+          id: data.division,
+          departmentId: data.department,
+        },
+      });
+
+      if (!division) {
+        throw new ExtendedBadRequest({ division: "divisionNotInDepartment" });
+      }
     }
 
     await validateMaxDepartmentsEachPerUser({

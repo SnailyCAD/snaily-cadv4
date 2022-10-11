@@ -2,10 +2,8 @@ import * as React from "react";
 import { useFormikContext } from "formik";
 import { useTranslations } from "next-intl";
 import useDigitInput from "react-digit-input";
-import { Input } from "components/form/inputs/Input";
+import { Button, Loader, Input } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { Button } from "components/Button";
-import { Loader } from "components/Loader";
 
 interface Props {
   errorMessage?: string;
@@ -63,7 +61,7 @@ export function TwoFactorAuthScreen({ isLoading, errorMessage }: Props) {
       </FormField>
 
       <div className="flex gap-2 justify-end mt-8">
-        <Button type="button" onClick={handleCancel}>
+        <Button type="button" onPress={handleCancel}>
           {common("cancel")}
         </Button>
 

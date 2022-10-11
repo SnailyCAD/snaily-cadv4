@@ -1,8 +1,5 @@
-import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
-import { Textarea } from "components/form/Textarea";
-import { Loader } from "components/Loader";
+import { Button, Loader, TextField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
@@ -103,7 +100,7 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
             <FormField errorMessage={errors.type} label={common("type")}>
               <FormRow>
                 <Button
-                  onClick={() => setFieldValue("type", BoloType.PERSON)}
+                  onPress={() => setFieldValue("type", BoloType.PERSON)}
                   variant={values.type === BoloType.PERSON ? "blue" : "default"}
                   className={classNames("flex justify-center")}
                   type="button"
@@ -114,7 +111,7 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                   <Person aria-labelledby={personTypeId} width={30} height={30} />
                 </Button>
                 <Button
-                  onClick={() => setFieldValue("type", BoloType.VEHICLE)}
+                  onPress={() => setFieldValue("type", BoloType.VEHICLE)}
                   variant={values.type === BoloType.VEHICLE ? "blue" : "default"}
                   className={classNames("flex justify-center")}
                   type="button"
@@ -134,7 +131,7 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                   </svg>
                 </Button>
                 <Button
-                  onClick={() => setFieldValue("type", BoloType.OTHER)}
+                  onPress={() => setFieldValue("type", BoloType.OTHER)}
                   variant={values.type === BoloType.OTHER ? "blue" : "default"}
                   className={classNames("flex justify-center")}
                   type="button"
@@ -162,7 +159,7 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                       dataKey: "plateOrVin",
                       allowUnknown: true,
                     }}
-                    onSuggestionClick={(suggestion) => {
+                    onSuggestionPress={(suggestion) => {
                       setFieldValue("plate", suggestion.plate);
                       setFieldValue("model", suggestion.model.value.value);
                       setFieldValue("color", suggestion.color);
@@ -176,13 +173,23 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                   />
                 </FormField>
 
-                <FormField optional errorMessage={errors.model} label={leo("model")}>
-                  <Input name="model" onChange={handleChange} value={values.model} />
-                </FormField>
+                <TextField
+                  label={leo("model")}
+                  isOptional
+                  errorMessage={errors.model}
+                  name="model"
+                  onChange={(value) => setFieldValue("model", value)}
+                  value={values.model}
+                />
 
-                <FormField optional errorMessage={errors.color} label={leo("color")}>
-                  <Input name="color" onChange={handleChange} value={values.color} />
-                </FormField>
+                <TextField
+                  label={leo("color")}
+                  isOptional
+                  errorMessage={errors.color}
+                  name="color"
+                  onChange={(value) => setFieldValue("color", value)}
+                  value={values.color}
+                />
               </>
             ) : null}
 
@@ -203,7 +210,7 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                     dataKey: "name",
                     allowUnknown: true,
                   }}
-                  onSuggestionClick={(suggestion) => {
+                  onSuggestionPress={(suggestion) => {
                     setFieldValue("name", `${suggestion.name} ${suggestion.surname}`);
                   }}
                   Component={({ suggestion }) => (
@@ -232,12 +239,17 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
               </FormField>
             ) : null}
 
-            <FormField errorMessage={errors.description} label={common("description")}>
-              <Textarea name="description" onChange={handleChange} value={values.description} />
-            </FormField>
+            <TextField
+              isTextarea
+              errorMessage={errors.description}
+              label={common("description")}
+              name="description"
+              onChange={(value) => setFieldValue("description", value)}
+              value={values.description}
+            />
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onClick={handleClose} variant="cancel">
+              <Button type="reset" onPress={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button

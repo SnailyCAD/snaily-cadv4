@@ -1,7 +1,6 @@
 import * as React from "react";
-import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
+import { Button, Input } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
@@ -115,7 +114,7 @@ export function ManageCustomFieldsModal({
               <Button
                 disabled={state === "loading"}
                 type="reset"
-                onClick={() => closeModal(ModalIds.ManageCitizenCustomFields)}
+                onPress={() => closeModal(ModalIds.ManageCitizenCustomFields)}
                 variant="cancel"
               >
                 {common("cancel")}

@@ -1,6 +1,6 @@
 import { Select } from "components/form/Select";
 import { SettingsFormField } from "components/form/SettingsFormField";
-import { Textarea } from "components/form/Textarea";
+import { Textarea } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { useFormikContext } from "formik";
 import type { GetCADDiscordWebhooksData } from "@snailycad/types/api";

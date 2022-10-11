@@ -8,7 +8,12 @@ export const IMPORT_CITIZENS_SCHEMA = z.object({
   surname: z.string().min(1).max(255),
   gender: z.string().min(1).max(255),
   ethnicity: z.string().min(1).max(255),
-  dateOfBirth: z.date().or(z.string().min(2)),
+  dateOfBirth: z
+    .date()
+    .min(new Date(1900, 0, 1))
+    .max(new Date())
+    .describe("ISO format")
+    .or(z.string().min(2)),
   address: z.string().max(255).nullable().optional(),
   eyeColor: z.string().max(255).nullable().optional(),
   hairColor: z.string().max(255).nullable().optional(),

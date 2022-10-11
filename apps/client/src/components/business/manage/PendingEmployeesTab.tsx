@@ -1,6 +1,6 @@
 import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "use-intl";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { useBusinessState } from "state/businessState";
 import { Employee, WhitelistStatus } from "@snailycad/types";
 import useFetch from "lib/useFetch";
@@ -58,7 +58,7 @@ export function PendingEmployeesTab() {
                 <div>
                   <Button
                     disabled={state === "loading"}
-                    onClick={() => handleUpdate(employee, "accept")}
+                    onPress={() => handleUpdate(employee, "accept")}
                     variant="success"
                     size="xs"
                   >
@@ -66,7 +66,7 @@ export function PendingEmployeesTab() {
                   </Button>
                   <Button
                     disabled={state === "loading"}
-                    onClick={() => handleUpdate(employee, "decline")}
+                    onPress={() => handleUpdate(employee, "decline")}
                     className="ml-2"
                     size="xs"
                     variant="danger"

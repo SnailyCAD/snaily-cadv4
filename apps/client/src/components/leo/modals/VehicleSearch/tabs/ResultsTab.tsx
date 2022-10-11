@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { useTranslations } from "use-intl";
 import { yesOrNoText } from "lib/utils";
 import { classNames } from "lib/classNames";
@@ -61,7 +61,7 @@ export function ResultsTab() {
               title={common("openInSearch")}
               size="xs"
               type="button"
-              onClick={handleNameClick}
+              onPress={handleNameClick}
             >
               {currentResult.citizen.name} {currentResult.citizen.surname}
             </Button>
@@ -118,7 +118,7 @@ export function ResultsTab() {
           <Infofield className="capitalize flex items-center gap-2" label={vT("flags")}>
             <Button
               type="button"
-              onClick={handleEditVehicleFlags}
+              onPress={handleEditVehicleFlags}
               title={t("manageVehicleFlags")}
               aria-label={t("manageVehicleFlags")}
               className="px-1 mr-2"
@@ -149,8 +149,18 @@ export function ResultsTab() {
           >
             {common(yesOrNoText(currentResult.reportedStolen))}
           </Infofield>
+          <Infofield
+            childrenProps={{
+              className: classNames(
+                "capitalize",
+                currentResult.impounded && "text-red-700 font-semibold",
+              ),
+            }}
+            label={t("impounded")}
+          >
+            {common(yesOrNoText(currentResult.impounded))}
+          </Infofield>
         </li>
-
         <CustomFieldsArea currentResult={currentResult} isLeo={isLeo} />
       </ul>
 

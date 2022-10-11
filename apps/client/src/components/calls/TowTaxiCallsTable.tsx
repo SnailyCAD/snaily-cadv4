@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { TaxiCall, TowCall } from "@snailycad/types";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { FullDate } from "components/shared/FullDate";
 import { Table, useTableState } from "components/shared/Table";
 import { useTranslations } from "next-intl";
@@ -95,10 +95,10 @@ export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props)
             createdAt: <FullDate>{call.createdAt}</FullDate>,
             actions: (
               <>
-                <Button onClick={() => editClick(call)} size="xs" variant="success">
+                <Button onPress={() => editClick(call)} size="xs" variant="success">
                   {common("edit")}
                 </Button>
-                <Button className="ml-2" onClick={() => assignClick(call)} size="xs">
+                <Button className="ml-2" onPress={() => assignClick(call)} size="xs">
                   {t("assignToCall")}
                 </Button>
               </>

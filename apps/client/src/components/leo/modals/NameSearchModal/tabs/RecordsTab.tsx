@@ -3,7 +3,7 @@ import compareDesc from "date-fns/compareDesc";
 import { useRouter } from "next/router";
 import { Record, RecordType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
@@ -131,6 +131,7 @@ function RecordsTable({ data }: { data: Record[] }) {
   const { generateCallsign } = useGenerateCallsign();
   const { currentResult } = useNameSearch();
   const tableState = useTableState();
+  const currency = common("currency");
 
   const { hasPermissions } = usePermission();
   const hasDeletePermissions = hasPermissions(
@@ -161,50 +162,58 @@ function RecordsTable({ data }: { data: Record[] }) {
         tableState={tableState}
         data={data
           .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
-          .map((record) => ({
-            id: record.id,
-            violations: <ViolationsColumn violations={record.violations} />,
-            postal: record.postal,
-            officer: record.officer
-              ? `${generateCallsign(record.officer)} ${makeUnitName(record.officer)}`
-              : common("none"),
-            paymentStatus: record.paymentStatus ? (
-              <Status state={record.paymentStatus}>{record.paymentStatus.toLowerCase()}</Status>
-            ) : (
-              "—"
-            ),
-            notes: record.notes || common("none"),
-            createdAt: <FullDate>{record.createdAt}</FullDate>,
-            actions: isCitizen ? null : (
-              <>
-                <Button
-                  type="button"
-                  onClick={() => handleEditClick(record)}
-                  size="xs"
-                  variant="success"
-                >
-                  {common("edit")}
-                </Button>
+          .map((record) => {
+            const totalCost = record.violations.reduce((ac, cv) => ac + (cv.fine ?? 0), 0);
 
-                {hasDeletePermissions ? (
+            return {
+              id: record.id,
+              caseNumber: `#${record.caseNumber}`,
+              violations: <ViolationsColumn violations={record.violations} />,
+              postal: record.postal,
+              officer: record.officer
+                ? `${generateCallsign(record.officer)} ${makeUnitName(record.officer)}`
+                : common("none"),
+              paymentStatus: record.paymentStatus ? (
+                <Status state={record.paymentStatus}>{record.paymentStatus.toLowerCase()}</Status>
+              ) : (
+                "—"
+              ),
+              totalCost: `${currency}${totalCost}`,
+              notes: record.notes || common("none"),
+              createdAt: <FullDate>{record.createdAt}</FullDate>,
+              actions: isCitizen ? null : (
+                <>
                   <Button
-                    className="ml-2"
                     type="button"
-                    onClick={() => handleDeleteClick(record)}
+                    onPress={() => handleEditClick(record)}
                     size="xs"
-                    variant="danger"
+                    variant="success"
                   >
-                    {common("delete")}
+                    {common("edit")}
                   </Button>
-                ) : null}
-              </>
-            ),
-          }))}
+
+                  {hasDeletePermissions ? (
+                    <Button
+                      className="ml-2"
+                      type="button"
+                      onPress={() => handleDeleteClick(record)}
+                      size="xs"
+                      variant="danger"
+                    >
+                      {common("delete")}
+                    </Button>
+                  ) : null}
+                </>
+              ),
+            };
+          })}
         columns={[
+          { header: t("Leo.caseNumber"), accessorKey: "caseNumber" },
           { header: t("Leo.violations"), accessorKey: "violations" },
           { header: t("Leo.postal"), accessorKey: "postal" },
           { header: t("Leo.officer"), accessorKey: "officer" },
           { header: t("Leo.paymentStatus"), accessorKey: "paymentStatus" },
+          isCitizen ? { header: t("Leo.totalCost"), accessorKey: "totalCost" } : null,
           { header: t("Leo.notes"), accessorKey: "notes" },
           { header: common("createdAt"), accessorKey: "createdAt" },
           isCitizen ? null : { header: common("actions"), accessorKey: "actions" },

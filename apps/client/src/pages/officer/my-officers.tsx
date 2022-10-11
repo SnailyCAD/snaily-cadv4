@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import dynamic from "next/dynamic";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { useModal } from "state/modalState";
 import { getSessionUser } from "lib/auth";
@@ -39,7 +39,7 @@ export default function MyOfficers({ officers: data }: Props) {
   const { state, execute } = useFetch();
   const { generateCallsign } = useGenerateCallsign();
   const { makeImageUrl } = useImageUrl();
-  const { BADGE_NUMBERS } = useFeatureEnabled();
+  const { DIVISIONS, BADGE_NUMBERS } = useFeatureEnabled();
   const tableState = useTableState();
 
   const [officers, setOfficers] = React.useState<Officer[]>(data);
@@ -78,7 +78,7 @@ export default function MyOfficers({ officers: data }: Props) {
       <header className="flex items-center justify-between">
         <Title className="!mb-0">{t("myOfficers")}</Title>
 
-        <Button onClick={() => openModal(ModalIds.ManageOfficer)}>{t("createOfficer")}</Button>
+        <Button onPress={() => openModal(ModalIds.ManageOfficer)}>{t("createOfficer")}</Button>
       </header>
 
       {officers.length <= 0 ? (
@@ -114,11 +114,11 @@ export default function MyOfficers({ officers: data }: Props) {
               position: officer.position ?? common("none"),
               actions: (
                 <>
-                  <Button size="xs" onClick={() => handleEditClick(officer)} variant="success">
+                  <Button size="xs" onPress={() => handleEditClick(officer)} variant="success">
                     {common("edit")}
                   </Button>
                   <Button
-                    onClick={() => handleDeleteClick(officer)}
+                    onPress={() => handleDeleteClick(officer)}
                     className="ml-2"
                     variant="danger"
                     size="xs"
@@ -134,7 +134,7 @@ export default function MyOfficers({ officers: data }: Props) {
             { header: t("callsign"), accessorKey: "callsign" },
             BADGE_NUMBERS ? { header: t("badgeNumber"), accessorKey: "badgeNumber" } : null,
             { header: t("department"), accessorKey: "department" },
-            { header: t("division"), accessorKey: "division" },
+            DIVISIONS ? { header: t("division"), accessorKey: "division" } : null,
             { header: t("rank"), accessorKey: "rank" },
             { header: t("position"), accessorKey: "position" },
             { header: t("status"), accessorKey: "departmentStatus" },

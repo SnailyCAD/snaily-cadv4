@@ -5,7 +5,7 @@ import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { Button, buttonVariants } from "components/Button";
+import { Button, buttonVariants } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import dynamic from "next/dynamic";
@@ -31,7 +31,7 @@ export default function Bleeter({ posts }: Props) {
       <header className="flex items-center justify-between">
         <Title className="!mb-0">{t("bleeter")}</Title>
 
-        <Button onClick={() => openModal(ModalIds.ManageBleetModal)}>{t("createBleet")}</Button>
+        <Button onPress={() => openModal(ModalIds.ManageBleetModal)}>{t("createBleet")}</Button>
       </header>
 
       {posts.length <= 0 ? (

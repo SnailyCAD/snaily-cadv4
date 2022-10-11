@@ -1,13 +1,12 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { Button } from "components/Button";
+import { Loader, Button } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { Form, Formik } from "formik";
 import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
-import { Loader } from "components/Loader";
 import { Select } from "components/form/Select";
 import type { ActiveOfficer } from "state/leoState";
 import { useValues } from "context/ValuesContext";
@@ -118,7 +117,7 @@ export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {
               {isUnitCombined(unit) ? (
                 <Button
                   disabled={state === "loading"}
-                  onClick={handleUnmerge}
+                  onPress={handleUnmerge}
                   type="button"
                   variant="danger"
                   className="flex items-center ml-2"
@@ -130,7 +129,7 @@ export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {
               ) : null}
 
               <div className="flex">
-                <Button onClick={handleClose} type="button" variant="cancel">
+                <Button onPress={handleClose} type="button" variant="cancel">
                   {common("cancel")}
                 </Button>
                 <Button className="flex items-center ml-2" type="submit">

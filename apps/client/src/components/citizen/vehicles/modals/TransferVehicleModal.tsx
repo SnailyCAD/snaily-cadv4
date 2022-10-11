@@ -1,13 +1,11 @@
 import * as React from "react";
-import { Button } from "components/Button";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
-import { Input } from "components/form/inputs/Input";
 import type { RegisteredVehicle } from "@snailycad/types";
 import { FormRow } from "components/form/FormRow";
 import { ModalIds } from "types/ModalIds";
@@ -64,13 +62,8 @@ export function TransferVehicleModal({ onTransfer, vehicle }: Props) {
             </p>
 
             <FormRow>
-              <FormField label={t("plate")}>
-                <Input disabled defaultValue={vehicle.plate} />
-              </FormField>
-
-              <FormField label={t("model")}>
-                <Input disabled defaultValue={vehicle.model.value.value} />
-              </FormField>
+              <TextField label={t("plate")} isDisabled defaultValue={vehicle.plate} />
+              <TextField label={t("model")} isDisabled defaultValue={vehicle.model.value.value} />
             </FormRow>
 
             <FormField errorMessage={errors.ownerId} label={t("owner")}>
@@ -84,7 +77,7 @@ export function TransferVehicleModal({ onTransfer, vehicle }: Props) {
             <footer className="mt-5 flex justify-end">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.TransferVehicle)}
+                onPress={() => closeModal(ModalIds.TransferVehicle)}
                 variant="cancel"
               >
                 {common("cancel")}

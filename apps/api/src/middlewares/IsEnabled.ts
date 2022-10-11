@@ -16,14 +16,14 @@ const featuresRoute: Partial<Record<Feature, string>> = {
   COURTHOUSE: "/v1/expungement-requests",
   ALLOW_CITIZEN_UPDATE_LICENSE: "/v1/licenses",
   RADIO_CHANNEL_MANAGEMENT: "/v1/dispatch/radio-channel",
-  DL_EXAMS: "/leo/dl-exams",
-  WEAPON_EXAMS: "/leo/weapon-exams",
+  LICENSE_EXAMS: "/leo/exams",
   DMV: "/leo/dmv",
   USER_API_TOKENS: "/user/api-token",
   STEAM_OAUTH: "/v1/auth/steam",
   COURTHOUSE_POSTS: "/v1/courthouse-posts",
   ACTIVE_WARRANTS: "/v1/records/active-warrants",
   PANIC_BUTTON: "/v1/leo/panic-button",
+  TONES: "/v1/dispatch/tones",
 };
 
 @Middleware()

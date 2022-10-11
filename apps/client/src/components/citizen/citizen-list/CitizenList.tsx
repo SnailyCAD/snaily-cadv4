@@ -2,8 +2,7 @@ import * as React from "react";
 import { CitizenListItem } from "components/citizen/citizen-list/CitizenListItem";
 import { TablePagination } from "components/shared/Table/TablePagination";
 import { useTranslations } from "next-intl";
-import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
+import { TextField } from "@snailycad/ui";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 import type { GetCitizensData } from "@snailycad/types/api";
 
@@ -80,13 +79,14 @@ export function CitizenList({ citizens: data }: Props) {
 
   return (
     <div className="mt-5">
-      <FormField className="mb-2" label="Search">
-        <Input
-          value={instance.asyncTable.search.search}
-          onChange={(e) => instance.asyncTable.search.setSearch(e.currentTarget.value)}
-          placeholder="John Doe"
-        />
-      </FormField>
+      <TextField
+        className="mb-2"
+        label="Search"
+        name="search"
+        value={instance.asyncTable.search.search}
+        onChange={(value) => instance.asyncTable.search.setSearch(value)}
+        placeholder="John Doe"
+      />
 
       {instance.asyncTable.search.search &&
       instance.asyncTable.pagination.totalDataCount !== data.totalCount ? (

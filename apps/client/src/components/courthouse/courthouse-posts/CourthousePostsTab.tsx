@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { TabsContent } from "components/shared/TabList";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
@@ -62,7 +62,7 @@ export function CourthousePostsTab(props: Props) {
         <h3 className="text-2xl font-semibold">{t("courthousePosts")}</h3>
 
         {hasManagePermissions ? (
-          <Button onClick={() => openModal(ModalIds.ManageCourthousePost)}>
+          <Button onPress={() => openModal(ModalIds.ManageCourthousePost)}>
             {t("addCourthousePost")}
           </Button>
         ) : null}
@@ -82,14 +82,14 @@ export function CourthousePostsTab(props: Props) {
               <>
                 <Button
                   className="ml-2"
-                  onClick={() => handleManageClick(post)}
+                  onPress={() => handleManageClick(post)}
                   size="xs"
                   variant="success"
                 >
                   {common("manage")}
                 </Button>
                 <Button
-                  onClick={() => handleDeleteClick(post)}
+                  onPress={() => handleDeleteClick(post)}
                   className="ml-2"
                   size="xs"
                   variant="danger"
@@ -103,7 +103,7 @@ export function CourthousePostsTab(props: Props) {
             { header: t("title"), accessorKey: "title" },
             { header: t("description"), accessorKey: "description" },
             { header: common("createdAt"), accessorKey: "createdAt" },
-            { header: common("actions"), accessorKey: "actions" },
+            hasManagePermissions ? { header: common("actions"), accessorKey: "actions" } : null,
           ]}
         />
       )}

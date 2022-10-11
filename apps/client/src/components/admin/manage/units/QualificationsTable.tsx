@@ -1,6 +1,6 @@
 import * as React from "react";
 import { QualificationValueType, UnitQualification } from "@snailycad/types";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { AlertModal } from "components/modal/AlertModal";
 import { Table, useTableState } from "components/shared/Table";
 import useFetch from "lib/useFetch";
@@ -42,7 +42,7 @@ export function QualificationsTable({ setUnit, unit }: Props) {
 
           <div>
             <Button
-              onClick={() =>
+              onPress={() =>
                 openModal(ModalIds.ManageUnitQualifications, QualificationValueType.QUALIFICATION)
               }
             >
@@ -63,7 +63,7 @@ export function QualificationsTable({ setUnit, unit }: Props) {
           <h2 className="text-xl font-semibold">{t("unitAwards")}</h2>
           <div>
             <Button
-              onClick={() =>
+              onPress={() =>
                 openModal(ModalIds.ManageUnitQualifications, QualificationValueType.AWARD)
               }
             >
@@ -154,7 +154,7 @@ function QualificationAwardsTable({ unit, setUnit }: Props) {
               <>
                 {qa.suspendedAt ? (
                   <Button
-                    onClick={() => handleSuspendOrUnsuspend("unsuspend", qa)}
+                    onPress={() => handleSuspendOrUnsuspend("unsuspend", qa)}
                     disabled={state === "loading"}
                     size="xs"
                     variant="success"
@@ -164,7 +164,7 @@ function QualificationAwardsTable({ unit, setUnit }: Props) {
                 ) : (
                   <Button
                     disabled={state === "loading"}
-                    onClick={() => handleSuspendOrUnsuspend("suspend", qa)}
+                    onPress={() => handleSuspendOrUnsuspend("suspend", qa)}
                     size="xs"
                     variant="amber"
                   >
@@ -173,7 +173,7 @@ function QualificationAwardsTable({ unit, setUnit }: Props) {
                 )}
                 <Button
                   disabled={state === "loading"}
-                  onClick={() => handleDeleteClick(qa)}
+                  onPress={() => handleDeleteClick(qa)}
                   className="ml-2"
                   size="xs"
                   variant="danger"

@@ -11,7 +11,7 @@ import {
   TypeUnderline,
 } from "react-bootstrap-icons";
 import { useSlate } from "slate-react";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { classNames } from "lib/classNames";
 import { isBlockActive, toggleMark, toggleBlock, isMarkActive } from "lib/editor/utils";
 import type { SlateElements, Text } from "./types";
@@ -68,7 +68,7 @@ function BlockButton({ format, icon }: BlockButtonProps) {
         type="button"
         variant={isActive ? null : "default"}
         className={classNames(isActive && "text-white bg-neutral-700")}
-        onClick={() => toggleBlock(editor, format)}
+        onPress={() => toggleBlock(editor, format)}
       >
         {icon}
       </Button>
@@ -92,7 +92,7 @@ function MarkButton({ format, icon }: MarkButtonProps) {
         type="button"
         variant={isActive ? null : "default"}
         className={classNames(isActive && "text-white bg-neutral-700")}
-        onClick={() => toggleMark(editor, format)}
+        onPress={() => toggleMark(editor, format)}
       >
         {icon}
       </Button>

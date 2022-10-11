@@ -1,9 +1,7 @@
 import * as React from "react";
 import { Form, Formik, FormikHelpers, useFormikContext } from "formik";
 import { FormField } from "components/form/FormField";
-import { Button } from "components/Button";
-import { Loader } from "components/Loader";
-import { Textarea } from "components/form/Textarea";
+import { Textarea, Button, Loader } from "@snailycad/ui";
 import type { Call911Event, IncidentEvent } from "@snailycad/types";
 import { useTranslations } from "next-intl";
 
@@ -54,7 +52,7 @@ export function UpdateEventForm<T extends IncidentEvent | Call911Event>({
 
           <footer className="flex justify-end mt-5">
             {event ? (
-              <Button variant="cancel" onClick={() => setEvent(null)} type="reset">
+              <Button variant="cancel" onPress={() => setEvent(null)} type="reset">
                 {common("cancel")}
               </Button>
             ) : null}

@@ -362,6 +362,18 @@ model Citizen {
   DLExam               DLExam[]
   notes                Note[]
   WeaponExam           WeaponExam[]                  @relation("weaponExams")
+  suspendedLicenses    SuspendedCitizenLicenses?     @relation(fields: [suspendedLicensesId], references: [id])
+  suspendedLicensesId  String?
+  LicenseExam          LicenseExam[]
+}
+
+model SuspendedCitizenLicenses {
+  id              String    @id @default(uuid())
+  driverLicense   Boolean   @default(false)
+  pilotLicense    Boolean   @default(false)
+  waterLicense    Boolean   @default(false)
+  firearmsLicense Boolean   @default(false)
+  citizens        Citizen[]
 }
 
 model Note {
@@ -491,6 +503,7 @@ model Value {
   QualificationValue              QualificationValue[]
   CallTypeValue                   CallTypeValue[]               @relation("callTypeValueToValue")
   WeaponExam                      WeaponExam[]                  @relation("weaponExamToLicense")
+  LicenseExam                     LicenseExam[]                 @relation("examToLicense")
 }
 
 model PenalCode {
@@ -500,6 +513,7 @@ model PenalCode {
   title                  String                @db.VarChar(255)
   description            String?               @db.Text
   descriptionData        Json?
+  type                   PenalCodeType?
   warningApplicable      WarningApplicable?    @relation(fields: [warningApplicableId], references: [id])
   warningApplicableId    String?
   warningNotApplicable   WarningNotApplicable? @relation(fields: [warningNotApplicableId], references: [id])
@@ -592,14 +606,16 @@ model DepartmentValue {
 }
 
 model DriversLicenseCategoryValue {
-  id          String                     @id @default(cuid())
-  valueId     String
-  value       Value                      @relation("driversLicenseCategoryToValue", fields: [valueId], references: [id], onDelete: Cascade)
-  type        DriversLicenseCategoryType
-  description String?
-  citizens    Citizen[]                  @relation("dlCategoryToDLCategory")
-  DLExam      DLExam[]
-  WeaponExam  WeaponExam[]
+  id            String                     @id @default(cuid())
+  valueId       String
+  value         Value                      @relation("driversLicenseCategoryToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  type          DriversLicenseCategoryType
+  description   String?
+  citizens      Citizen[]                  @relation("dlCategoryToDLCategory")
+  DLExam        DLExam[]
+  WeaponExam    WeaponExam[]
+  LicenseExam   LicenseExam?               @relation(fields: [licenseExamId], references: [id])
+  licenseExamId String?
 }
 
 model VehicleValue {
@@ -806,14 +822,14 @@ model Officer {
 }
 
 model IndividualDivisionCallsign {
-  id         String        @id @default(uuid())
-  divisionId String
+  id         String         @id @default(uuid())
+  divisionId String?
+  division   DivisionValue? @relation(fields: [divisionId], references: [id])
   callsign   String
   callsign2  String
   officerId  String
-  officer    Officer       @relation(fields: [officerId], references: [id], onDelete: Cascade)
-  division   DivisionValue @relation(fields: [divisionId], references: [id])
-  Officer    Officer[]     @relation("divisionCallsign")
+  officer    Officer        @relation(fields: [officerId], references: [id], onDelete: Cascade)
+  Officer    Officer[]      @relation("divisionCallsign")
 }
 
 model UnitQualification {
@@ -1076,6 +1092,7 @@ model Bolo {
 // tickets, arrest reports, warrants, written warnings
 model Record {
   id                   String              @id @default(uuid())
+  caseNumber           Int                 @default(autoincrement())
   type                 RecordType
   citizen              Citizen             @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId            String
@@ -1186,8 +1203,8 @@ model EmsFdDeputy {
   callsign                  String                 @db.VarChar(255)
   callsign2                 String                 @db.VarChar(255)
   incremental               Int?
-  division                  DivisionValue          @relation("emsFdDivisionToDivision", fields: [divisionId], references: [id])
-  divisionId                String
+  division                  DivisionValue?         @relation("emsFdDivisionToDivision", fields: [divisionId], references: [id])
+  divisionId                String?
   position                  String?                @db.Text
   rank                      Value?                 @relation("emsFdRankToValue", fields: [rankId], references: [id])
   rankId                    String?
@@ -1233,6 +1250,21 @@ model TruckLog {
 }
 
 // Exams
+model LicenseExam {
+  id           String                        @id @default(uuid())
+  theoryExam   DLExamPassType?
+  practiceExam DLExamPassType?
+  status       DLExamStatus                  @default(IN_PROGRESS)
+  createdAt    DateTime                      @default(now())
+  updatedAt    DateTime                      @default(now()) @updatedAt
+  type         LicenseExamType
+  citizen      Citizen                       @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId    String
+  license      Value                         @relation("examToLicense", fields: [licenseId], references: [id])
+  licenseId    String
+  categories   DriversLicenseCategoryValue[]
+}
+
 model DLExam {
   id           String                        @id @default(uuid())
   citizen      Citizen                       @relation(fields: [citizenId], references: [id], onDelete: Cascade)
@@ -1302,6 +1334,13 @@ model CourthousePost {
   descriptionData Json?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @default(now()) @updatedAt
+}
+
+enum LicenseExamType {
+  DRIVER
+  FIREARM
+  WATER
+  PILOT
 }
 
 enum QualificationValueType {
@@ -1481,6 +1520,12 @@ enum ToAddDefaultPermissionsKey {
   MANAGE_WARRANTS_PERMISSIONS
 }
 
+enum PenalCodeType {
+  INFRACTION
+  MISDEMEANOR
+  FELONY
+}
+
 // other
 enum Feature {
   BLEETER
@@ -1504,6 +1549,7 @@ enum Feature {
   ALLOW_REGULAR_LOGIN
   RADIO_CHANNEL_MANAGEMENT
   ALLOW_CITIZEN_DELETION_BY_NON_ADMIN
+  /// @deprecated, use `LICENSE_EXAMS` instead
   DL_EXAMS
   DMV
   BADGE_NUMBERS
@@ -1515,9 +1561,13 @@ enum Feature {
   LEO_TICKETS
   LEO_BAIL
   COURTHOUSE_POSTS
+  /// @deprecated, use `LICENSE_EXAMS` instead
   WEAPON_EXAMS
   ACTIVE_WARRANTS
   CITIZEN_DELETE_ON_DEAD
   PANIC_BUTTON
   WARRANT_STATUS_APPROVAL
+  DIVISIONS
+  TONES
+  LICENSE_EXAMS
 }

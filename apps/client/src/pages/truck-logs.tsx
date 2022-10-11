@@ -1,6 +1,6 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { useModal } from "state/modalState";
 import { getSessionUser } from "lib/auth";
@@ -60,7 +60,7 @@ export default function TruckLogs({ registeredVehicles, logs: data }: GetTruckLo
       <header className="flex items-center justify-between">
         <Title>{t("truckLogs")}</Title>
 
-        <Button onClick={() => openModal(ModalIds.ManageTruckLog)}>{t("createTruckLog")}</Button>
+        <Button onPress={() => openModal(ModalIds.ManageTruckLog)}>{t("createTruckLog")}</Button>
       </header>
 
       {logs.length <= 0 ? (
@@ -77,11 +77,11 @@ export default function TruckLogs({ registeredVehicles, logs: data }: GetTruckLo
             notes: log.notes ?? common("none"),
             actions: (
               <>
-                <Button onClick={() => handleEditClick(log)} size="xs" variant="success">
+                <Button onPress={() => handleEditClick(log)} size="xs" variant="success">
                   {common("edit")}
                 </Button>
                 <Button
-                  onClick={() => handleDeleteClick(log)}
+                  onPress={() => handleDeleteClick(log)}
                   className="ml-2"
                   size="xs"
                   variant="danger"

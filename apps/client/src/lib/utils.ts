@@ -49,7 +49,7 @@ export function yesOrNoText(t: boolean): "yes" | "no" {
 }
 
 export function formatUnitDivisions(unit: Officer | EmsFdDeputy) {
-  const division = isUnitOfficer(unit) ? null : unit.division.value.value;
+  const division = isUnitOfficer(unit) ? null : unit.division?.value.value;
   if (!("divisions" in unit)) return division as string;
   const divisions = unit.divisions.map((d) => d.value.value).join(", ");
 

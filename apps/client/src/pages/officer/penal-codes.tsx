@@ -9,8 +9,12 @@ import { requestAll } from "lib/utils";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { useValues } from "context/ValuesContext";
-import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
+import { TextField } from "@snailycad/ui";
+import { Infofield } from "components/shared/Infofield";
+import {
+  getPenalCodeMaxFines,
+  getPenalCodeMinFines,
+} from "components/leo/modals/ManageRecord/TableItemForm";
 
 export default function PenalCodesPage() {
   const t = useTranslations("Leo");
@@ -41,17 +45,49 @@ export default function PenalCodesPage() {
         <p className="mt-5">{t("noPenalCodes")}</p>
       ) : (
         <>
-          <FormField label={common("search")} className="mt-2">
-            <Input onChange={(e) => setSearch(e.target.value)} value={search} />
-          </FormField>
+          <TextField
+            label={common("search")}
+            className="my-2"
+            name="search"
+            value={search}
+            onChange={(value) => setSearch(value)}
+          />
 
           <ul className="flex flex-col mt-3 gap-y-2">
             {filtered.map((penalCode) => {
               const description = dataToSlate(penalCode);
+              const maxFine = getPenalCodeMaxFines(penalCode);
+              const minFine = getPenalCodeMinFines(penalCode);
+              const [minJailTime, maxJailTime] = penalCode.warningNotApplicable?.prisonTerm ?? [];
+              const [minBail, maxBail] = penalCode.warningNotApplicable?.bail ?? [];
 
               return (
                 <li className="card p-4" key={penalCode.id}>
-                  <h3 className="text-2xl font-semibold">{penalCode.title}</h3>
+                  <header>
+                    <h3 className="text-2xl font-semibold">{penalCode.title}</h3>
+
+                    <div className="mt-2">
+                      <Infofield label={common("type")}>
+                        {penalCode.type?.toLowerCase() ?? common("none")}
+                      </Infofield>
+                      <Infofield label={t("warningApplicable")}>
+                        {String(Boolean(penalCode.warningApplicable))}
+                      </Infofield>
+                      <Infofield label={t("fines")}>
+                        {minFine}-{maxFine}
+                      </Infofield>
+                      {typeof minJailTime !== "undefined" ? (
+                        <Infofield label={t("jailTime")}>
+                          {minJailTime}-{maxJailTime}
+                        </Infofield>
+                      ) : null}
+                      {typeof minBail !== "undefined" ? (
+                        <Infofield label={t("bail")}>
+                          {minBail}-{maxBail}
+                        </Infofield>
+                      ) : null}
+                    </div>
+                  </header>
 
                   <Editor isReadonly value={description} />
                 </li>

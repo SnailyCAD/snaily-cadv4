@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { Note } from "@snailycad/types";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { FullDate } from "components/shared/FullDate";
 import { Table, useTableState } from "components/shared/Table";
 import { TabsContent } from "components/shared/TabList";
@@ -82,7 +82,7 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
         <h3 className="text-xl font-semibold">{t("Leo.notes")}</h3>
 
         <div>
-          <Button type="button" onClick={handleAddClick}>
+          <Button type="button" onPress={handleAddClick}>
             {t("Leo.addNote")}
           </Button>
         </div>
@@ -104,7 +104,7 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
                   type="button"
                   variant="success"
                   size="xs"
-                  onClick={() => handleEditClick(note)}
+                  onPress={() => handleEditClick(note)}
                 >
                   {t("Common.edit")}
                 </Button>
@@ -114,7 +114,7 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
                   variant="danger"
                   className="ml-2"
                   size="xs"
-                  onClick={() => handleDeleteClick(note)}
+                  onPress={() => handleDeleteClick(note)}
                 >
                   {t("Common.delete")}
                 </Button>

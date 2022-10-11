@@ -1,8 +1,7 @@
 import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
-import { Button } from "components/Button";
+import { Input, Loader, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select, SelectValue } from "components/form/Select";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
@@ -24,7 +23,6 @@ import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { CombinedLeoUnit, EmsFdDeputy, LeoIncident, StatusValueType } from "@snailycad/types";
 import { useValues } from "context/ValuesContext";
 import { isUnitCombined } from "@snailycad/utils";
-import { Input } from "components/form/inputs/Input";
 import type { PostIncidentsData, PutIncidentByIdData } from "@snailycad/types/api";
 
 interface Props {
@@ -233,7 +231,7 @@ export function ManageIncidentModal({
               </div>
 
               <footer className="flex justify-end mt-5">
-                <Button type="reset" onClick={handleClose} variant="cancel">
+                <Button type="reset" onPress={handleClose} variant="cancel">
                   {common("cancel")}
                 </Button>
                 <Button

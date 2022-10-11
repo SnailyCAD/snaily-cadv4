@@ -1,8 +1,7 @@
 import * as React from "react";
 import type { CustomField } from "@snailycad/types";
-import { Button } from "components/Button";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
@@ -10,7 +9,6 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { Select } from "components/form/Select";
-import { Input } from "components/form/inputs/Input";
 import { CustomFieldResults } from "./CustomFieldResults";
 import { handleValidate } from "lib/handleValidate";
 import { CUSTOM_FIELD_SEARCH_SCHEMA } from "@snailycad/schemas";
@@ -75,7 +73,7 @@ export function CustomFieldSearch() {
       className="w-[850px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, errors, values, isValid }) => (
+        {({ handleChange, setFieldValue, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.customFieldId} label={t("customField")}>
               <Select
@@ -90,21 +88,20 @@ export function CustomFieldSearch() {
               />
             </FormField>
 
-            <FormField errorMessage={errors.query} label={t("query")}>
-              <Input
-                disabled={state === "loading"}
-                onChange={handleChange}
-                name="query"
-                value={values.query}
-              />
-            </FormField>
+            <TextField
+              label={t("query")}
+              className="w-full relative"
+              name="query"
+              onChange={(value) => setFieldValue("query", value)}
+              value={values.query}
+            />
 
             {results ? <CustomFieldResults results={results} /> : null}
 
             <footer className="mt-4 pt-3 flex justify-end">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.CustomFieldSearch)}
+                onPress={() => closeModal(ModalIds.CustomFieldSearch)}
                 variant="cancel"
               >
                 {common("cancel")}

@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Rank } from "@snailycad/types";
 import { yesOrNoText } from "lib/utils";
 import { TabsContent } from "components/shared/TabList";
-import { buttonVariants } from "components/Button";
 import { Table, useTableState } from "components/shared/Table";
 import { Status } from "components/shared/Status";
 import { useAuth } from "context/AuthContext";
@@ -12,9 +11,7 @@ import { usePermission, Permissions } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
 import { classNames } from "lib/classNames";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
-import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
-import { Loader } from "components/Loader";
+import { buttonVariants, Loader, TextField } from "@snailycad/ui";
 import type { GetManageUsersData } from "@snailycad/types/api";
 
 export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
@@ -36,18 +33,20 @@ export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
 
   return (
     <TabsContent aria-label={t("allUsers")} value="allUsers" className="mt-5">
-      <FormField label={common("search")} className="my-2 relative">
-        <Input
-          placeholder="john doe"
-          onChange={(e) => asyncTable.search.setSearch(e.target.value)}
-          value={asyncTable.search.search}
-        />
+      <TextField
+        label={common("search")}
+        className="my-2 w-full relative"
+        name="search"
+        onChange={(value) => asyncTable.search.setSearch(value)}
+        value={asyncTable.search.search}
+        placeholder="CasperTheGhost"
+      >
         {asyncTable.state === "loading" ? (
           <span className="absolute top-[2.4rem] right-2.5">
             <Loader />
           </span>
         ) : null}
-      </FormField>
+      </TextField>
 
       {asyncTable.search.search && asyncTable.pagination.totalDataCount !== totalCount ? (
         <p className="italic text-base font-semibold">

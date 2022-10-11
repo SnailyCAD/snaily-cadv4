@@ -1,11 +1,10 @@
 import * as React from "react";
 import { useAuth } from "context/AuthContext";
 import { useTranslations } from "use-intl";
-import { Input, PasswordInput } from "components/form/inputs/Input";
+import { PasswordInput } from "components/form/inputs/Input";
 import { Toggle } from "components/form/Toggle";
-import { Button } from "components/Button";
 import useFetch from "lib/useFetch";
-import { Loader } from "components/Loader";
+import { Button, Input, Loader } from "@snailycad/ui";
 import { TabsContent } from "components/shared/TabList";
 import { handleValidate } from "lib/handleValidate";
 import { CAD_SETTINGS_SCHEMA } from "@snailycad/schemas";

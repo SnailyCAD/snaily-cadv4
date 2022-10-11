@@ -3,10 +3,9 @@ import type {
   GetManageUnitByIdData,
   PostManageUnitAddQualificationData,
 } from "@snailycad/types/api";
-import { Button } from "components/Button";
+import { Loader, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useValues } from "context/ValuesContext";
 import { Form, Formik } from "formik";
@@ -84,7 +83,7 @@ export function AddQualificationsModal({ unit, setUnit }: Props) {
             </FormField>
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onClick={handleClose} variant="cancel">
+              <Button type="reset" onPress={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button

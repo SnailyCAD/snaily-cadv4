@@ -21,6 +21,7 @@ import { leoProperties } from "lib/leo/activeOfficer";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import type * as APITypes from "@snailycad/types/api";
+import type { cad } from "@snailycad/types";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -51,7 +52,7 @@ export class MyOfficersController {
   async createOfficer(
     @BodyParams() body: unknown,
     @Context("user") user: User,
-    @Context("cad") cad: { features: CadFeature[]; miscCadSettings: MiscCadSettings },
+    @Context("cad") cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings },
   ): Promise<APITypes.PostMyOfficersData> {
     const data = validateSchema(CREATE_OFFICER_SCHEMA, body);
 
@@ -67,13 +68,25 @@ export class MyOfficersController {
       throw new NotFound("citizenNotFound");
     }
 
-    await validateMaxDivisionsPerUnit(data.divisions, cad);
-    await validateMaxDepartmentsEachPerUser({
-      departmentId: data.department,
-      userId: user.id,
-      cad,
-      type: "officer",
+    const divisionsEnabled = isFeatureEnabled({
+      feature: Feature.DIVISIONS,
+      defaultReturn: true,
+      features: cad.features,
     });
+
+    if (divisionsEnabled) {
+      if (!data.divisions || data.divisions.length <= 0) {
+        throw new ExtendedBadRequest({ divisions: "Must have at least 1 item" });
+      }
+
+      await validateMaxDivisionsPerUnit(data.divisions, cad);
+      await validateMaxDepartmentsEachPerUser({
+        departmentId: data.department,
+        userId: user.id,
+        cad,
+        type: "officer",
+      });
+    }
 
     const officerCount = await prisma.officer.count({
       where: { userId: user.id },
@@ -104,7 +117,7 @@ export class MyOfficersController {
     });
 
     const incremental = await findNextAvailableIncremental({ type: "leo" });
-    const officer = await prisma.officer.create({
+    let officer: any = await prisma.officer.create({
       data: {
         callsign: data.callsign,
         callsign2: data.callsign2,
@@ -123,33 +136,35 @@ export class MyOfficersController {
       include: leoProperties,
     });
 
-    const disconnectConnectArr = manyToManyHelper([], data.divisions as string[]);
+    if (divisionsEnabled) {
+      const disconnectConnectArr = manyToManyHelper([], data.divisions as string[]);
 
-    await updateOfficerDivisionsCallsigns({
-      officerId: officer.id,
-      disconnectConnectArr,
-      callsigns: data.callsigns,
-    });
+      await updateOfficerDivisionsCallsigns({
+        officerId: officer.id,
+        disconnectConnectArr,
+        callsigns: data.callsigns,
+      });
 
-    const updated = getLastOfArray(
-      await prisma.$transaction(
-        disconnectConnectArr.map((v, idx) =>
-          prisma.officer.update({
-            where: { id: officer.id },
-            data: { divisions: v },
-            include:
-              idx + 1 === disconnectConnectArr.length
-                ? {
-                    ...leoProperties,
-                    qualifications: { include: { qualification: { include: { value: true } } } },
-                  }
-                : undefined,
-          }),
+      officer = getLastOfArray(
+        await prisma.$transaction(
+          disconnectConnectArr.map((v, idx) =>
+            prisma.officer.update({
+              where: { id: officer.id },
+              data: { divisions: v },
+              include:
+                idx + 1 === disconnectConnectArr.length
+                  ? {
+                      ...leoProperties,
+                      qualifications: { include: { qualification: { include: { value: true } } } },
+                    }
+                  : undefined,
+            }),
+          ),
         ),
-      ),
-    );
+      );
+    }
 
-    return updated as APITypes.PostMyOfficersData;
+    return officer as APITypes.PostMyOfficersData;
   }
 
   @Put("/:id")
@@ -161,9 +176,15 @@ export class MyOfficersController {
     @PathParams("id") officerId: string,
     @BodyParams() body: unknown,
     @Context("user") user: User,
-    @Context("cad") cad: { features: CadFeature[]; miscCadSettings: MiscCadSettings },
+    @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings },
   ): Promise<APITypes.PutMyOfficerByIdData> {
     const data = validateSchema(CREATE_OFFICER_SCHEMA, body);
+
+    const divisionsEnabled = isFeatureEnabled({
+      feature: Feature.DIVISIONS,
+      defaultReturn: true,
+      features: cad.features,
+    });
 
     const officer = await prisma.officer.findFirst({
       where: {
@@ -177,7 +198,14 @@ export class MyOfficersController {
       throw new NotFound("officerNotFound");
     }
 
-    await validateMaxDivisionsPerUnit(data.divisions as string[], cad);
+    if (divisionsEnabled) {
+      if (!data.divisions || data.divisions.length <= 0) {
+        throw new ExtendedBadRequest({ divisions: "Must have at least 1 item" });
+      }
+
+      await validateMaxDivisionsPerUnit(data.divisions as string[], cad);
+    }
+
     await validateDuplicateCallsigns({
       callsign1: data.callsign,
       callsign2: data.callsign2,
@@ -209,16 +237,24 @@ export class MyOfficersController {
       officer,
     );
 
-    const disconnectConnectArr = manyToManyHelper(
-      officer.divisions.map((v) => v.id),
-      data.divisions as string[],
-    );
+    if (divisionsEnabled) {
+      const disconnectConnectArr = manyToManyHelper(
+        officer.divisions.map((v) => v.id),
+        data.divisions as string[],
+      );
 
-    await prisma.$transaction(
-      disconnectConnectArr.map((v) =>
-        prisma.officer.update({ where: { id: officer.id }, data: { divisions: v } }),
-      ),
-    );
+      await prisma.$transaction(
+        disconnectConnectArr.map((v) =>
+          prisma.officer.update({ where: { id: officer.id }, data: { divisions: v } }),
+        ),
+      );
+
+      await updateOfficerDivisionsCallsigns({
+        officerId: officer.id,
+        disconnectConnectArr,
+        callsigns: data.callsigns,
+      });
+    }
 
     const isBadgeNumbersEnabled = isFeatureEnabled({
       feature: Feature.BADGE_NUMBERS,
@@ -235,12 +271,6 @@ export class MyOfficersController {
     const incremental = officer.incremental
       ? undefined
       : await findNextAvailableIncremental({ type: "leo" });
-
-    await updateOfficerDivisionsCallsigns({
-      officerId: officer.id,
-      disconnectConnectArr,
-      callsigns: data.callsigns,
-    });
 
     const updatedOfficer = await prisma.officer.update({
       where: {
@@ -298,7 +328,7 @@ export class MyOfficersController {
   @Get("/logs")
   @UsePermissions({
     fallback: (u) => u.isLeo,
-    permissions: [Permissions.Leo],
+    permissions: [Permissions.Leo, Permissions.ViewUnits, Permissions.ManageUnits],
   })
   async getOfficerLogs(
     @Context("user") user: User,
@@ -370,10 +400,7 @@ export class MyOfficersController {
   }
 }
 
-export async function validateMaxDivisionsPerUnit(
-  arr: unknown[],
-  cad: { miscCadSettings: MiscCadSettings } | null,
-) {
+export async function validateMaxDivisionsPerUnit(arr: unknown[], cad: cad | null) {
   const { maxDivisionsPerOfficer } = cad?.miscCadSettings ?? {};
 
   if (maxDivisionsPerOfficer && arr.length > maxDivisionsPerOfficer) {

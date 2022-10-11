@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { ManageUnitModal } from "./modals/ManageUnit";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
@@ -45,7 +45,8 @@ function ActiveDeputies({ initialDeputies }: Props) {
   const { generateCallsign } = useGenerateCallsign();
   const { user } = useAuth();
   const { hasActiveDispatchers } = useActiveDispatchers();
-  const { BADGE_NUMBERS, RADIO_CHANNEL_MANAGEMENT, ACTIVE_INCIDENTS } = useFeatureEnabled();
+  const { DIVISIONS, BADGE_NUMBERS, RADIO_CHANNEL_MANAGEMENT, ACTIVE_INCIDENTS } =
+    useFeatureEnabled();
   const { emsSearch, showEmsFilters, setShowFilters } = useActiveUnitsState();
   const { handleFilter } = useActiveUnitsFilter();
   const { calls } = useCall911State();
@@ -73,7 +74,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
               "px-1.5 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
               showEmsFilters && "dark:!bg-secondary !bg-gray-500",
             )}
-            onClick={() => setShowFilters("ems-fd", !showEmsFilters)}
+            onPress={() => setShowFilters("ems-fd", !showEmsFilters)}
             title={common("filters")}
             disabled={activeDeputies.length <= 0}
           >
@@ -141,7 +142,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
                   actions: isDispatch ? (
                     <Button
                       disabled={!hasActiveDispatchers}
-                      onClick={() => handleEditClick(deputy)}
+                      onPress={() => handleEditClick(deputy)}
                       size="xs"
                       variant="success"
                     >
@@ -154,7 +155,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
               { header: t("Ems.deputy"), accessorKey: "deputy" },
               BADGE_NUMBERS ? { header: t("Leo.badgeNumber"), accessorKey: "badgeNumber" } : null,
               { header: t("Leo.department"), accessorKey: "department" },
-              { header: t("Leo.division"), accessorKey: "division" },
+              DIVISIONS ? { header: t("Leo.division"), accessorKey: "division" } : null,
               { header: t("Leo.rank"), accessorKey: "rank" },
               { header: t("Leo.status"), accessorKey: "status" },
               ACTIVE_INCIDENTS ? { header: t("Leo.incident"), accessorKey: "incident" } : null,

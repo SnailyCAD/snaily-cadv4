@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { CourtDate } from "@snailycad/types";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { FullDate } from "components/shared/FullDate";
 import { Table, useTableState } from "components/shared/Table";
 import { useTranslations } from "next-intl";
@@ -48,13 +48,14 @@ export function CourtEntryDates({ onUpdate, onDelete, onCreate, dates }: Props) 
         <h3 className="text-2xl font-semibold">{t("dates")}</h3>
 
         <div>
-          <Button onClick={() => openModal(ModalIds.ManageCourtDate)} type="button">
+          <Button onPress={() => openModal(ModalIds.ManageCourtDate)} type="button">
             {t("addDate")}
           </Button>
         </div>
       </header>
 
       <Table
+        features={{ isWithinCard: true }}
         tableState={tableState}
         data={dates.map((date) => ({
           id: date.id,
@@ -64,7 +65,7 @@ export function CourtEntryDates({ onUpdate, onDelete, onCreate, dates }: Props) 
             <>
               <Button
                 type="button"
-                onClick={() => handleManageClick(date)}
+                onPress={() => handleManageClick(date)}
                 variant="success"
                 size="xs"
               >
@@ -73,7 +74,7 @@ export function CourtEntryDates({ onUpdate, onDelete, onCreate, dates }: Props) 
               <Button
                 type="button"
                 className="ml-2"
-                onClick={() => handleDeleteClick(date)}
+                onPress={() => handleDeleteClick(date)}
                 variant="danger"
                 size="xs"
               >

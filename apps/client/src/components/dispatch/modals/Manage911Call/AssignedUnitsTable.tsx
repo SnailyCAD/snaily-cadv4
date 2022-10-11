@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Select } from "components/form/Select";
 import { Table, useTableState } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
@@ -10,11 +9,10 @@ import type { PUT911CallAssignedUnit } from "@snailycad/types/api";
 import { useAuth } from "context/AuthContext";
 import { AssignedUnit, StatusViewMode } from "@snailycad/types";
 import { useTranslations } from "next-intl";
-import { Button } from "components/Button";
+import { Button, Loader, SelectField } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { AddUnitToCallModal } from "./AddUnitToCallModal";
-import { Loader } from "components/Loader";
 import { FullDate } from "components/shared/FullDate";
 
 interface Props {
@@ -74,7 +72,7 @@ export function AssignedUnitsTable({ isDisabled }: Props) {
         <h2 className="font-semibold text-2xl">{t("assignedUnits")}</h2>
 
         {isDisabled ? null : (
-          <Button size="xs" type="button" onClick={() => openModal(ModalIds.AddAssignedUnit)}>
+          <Button size="xs" type="button" onPress={() => openModal(ModalIds.AddAssignedUnit)}>
             {t("addUnit")}
           </Button>
         )}
@@ -114,7 +112,7 @@ export function AssignedUnitsTable({ isDisabled }: Props) {
                   <Button
                     className="flex items-center gap-2"
                     disabled={isDisabled || state === "loading"}
-                    onClick={() => handleUnassignFromCall(unit)}
+                    onPress={() => handleUnassignFromCall(unit)}
                     size="xs"
                     variant="danger"
                     type="button"
@@ -149,6 +147,7 @@ function RoleColumn({ unit, isDisabled }: RoleColumnProps) {
   const { currentlySelectedCall, calls, setCalls, setCurrentlySelectedCall } = useCall911State();
   const [isPrimary, setIsPrimary] = React.useState(String(unit.isPrimary ?? "false"));
   const { execute } = useFetch();
+  const t = useTranslations("Calls");
 
   React.useEffect(() => {
     setIsPrimary(String(unit.isPrimary ?? "false"));
@@ -183,10 +182,12 @@ function RoleColumn({ unit, isDisabled }: RoleColumnProps) {
   }
 
   return (
-    <Select
-      value={isPrimary}
-      onChange={(event) => handleUpdatePrimary(event.target.value)}
-      values={[
+    <SelectField
+      label={t("primaryUnit")}
+      hiddenLabel
+      selectedKey={isPrimary}
+      onSelectionChange={(key) => handleUpdatePrimary(key as string)}
+      options={[
         { label: "Primary", value: "true" },
         { label: "None", value: "false" },
       ]}

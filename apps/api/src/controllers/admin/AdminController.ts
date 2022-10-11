@@ -4,18 +4,20 @@ import { prisma } from "lib/prisma";
 import glob from "glob";
 import { join } from "node:path";
 import { stat } from "node:fs/promises";
-import { UseBeforeEach } from "@tsed/common";
+import { Res, UseBefore } from "@tsed/common";
 import { IsAuth } from "middlewares/IsAuth";
 import { Rank, WhitelistStatus } from "@prisma/client";
 import { UsePermissions } from "middlewares/UsePermissions";
 import { defaultPermissions } from "@snailycad/permissions";
 import type { GetAdminDashboardData } from "@snailycad/types/api";
+import axios from "axios";
+import { getCADVersion } from "@snailycad/utils/version";
 
 @Controller("/admin")
-@UseBeforeEach(IsAuth)
 @ContentType("application/json")
 export class AdminController {
   @Get("/")
+  @UseBefore(IsAuth)
   @Description("Get simple CAD stats")
   @UsePermissions({
     fallback: (u) => u.rank !== Rank.USER,
@@ -61,6 +63,26 @@ export class AdminController {
         totalSize: 0,
       },
     };
+  }
+
+  @Get("/changelog")
+  @Description("Get the changelog from GitHub.")
+  async getChangelog(@Res() res: Res) {
+    try {
+      const version = await getCADVersion();
+      const response = await axios({
+        url: `https://api.github.com/repos/SnailyCAD/snaily-cadv4/releases/tags/${version?.currentVersion}`,
+        headers: { accept: "application/vnd.github+json" },
+      });
+
+      const ONE_DAY = 60 * 60 * 24;
+      res.setHeader("Cache-Control", `public, max-age=${ONE_DAY}`);
+
+      const json = response.data as { body: string };
+      return json;
+    } catch (e) {
+      return null;
+    }
   }
 
   private async imageData() {

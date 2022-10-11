@@ -1,7 +1,4 @@
-import { Button } from "components/Button";
-import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
-import { Loader } from "components/Loader";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useAuth } from "context/AuthContext";
 import { useModal } from "state/modalState";
@@ -46,16 +43,21 @@ export function ManageAOPModal() {
       className="w-[600px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, values, errors, isValid }) => (
+        {({ setFieldValue, values, errors, isValid }) => (
           <Form>
-            <FormField errorMessage={errors.aop} label={t("areaOfPlay")}>
-              <Input autoFocus name="aop" onChange={handleChange} value={values.aop} required />
-            </FormField>
+            <TextField
+              errorMessage={errors.aop}
+              autoFocus
+              isRequired
+              label={t("areaOfPlay")}
+              value={values.aop}
+              onChange={(value) => setFieldValue("aop", value)}
+            />
 
             <footer className="flex justify-end gap-2">
               <Button
                 variant="cancel"
-                onClick={() => closeModal(ModalIds.ManageAOP)}
+                onPress={() => closeModal(ModalIds.ManageAOP)}
                 className="flex items-center"
                 type="reset"
               >

@@ -42,6 +42,7 @@
     "manageOccupation": "Manage Occupation",
     "manageLicenses": "Manage Licenses",
     "licenses": "Licenses",
+    "licenseSuspendedInfo": "License is suspended. Please contact an officer to revoke the suspension.",
     "alert_deleteCitizen": "Are you sure you want to delete <span>{citizen}</span>? This action cannot be undone."
   },
   "Vehicles": {

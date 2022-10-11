@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { Record, RecordType, WhitelistStatus } from "@snailycad/types";
 import { Table, useTableState } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
@@ -81,6 +81,7 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
 
             return {
               id: item.id,
+              caseNumber: `#${record.caseNumber}`,
               type,
               citizen: `${item.citizen.name} ${item.citizen.surname}`,
               officer: officer ? `${callsign} ${officerName}` : common("none"),
@@ -101,14 +102,14 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
               status: <Status state={record.status}>{record.status?.toLowerCase()}</Status>,
               actions: (
                 <>
-                  <Button size="xs" className="mr-2" onClick={() => handleViewClick(item)}>
+                  <Button size="xs" className="mr-2" onPress={() => handleViewClick(item)}>
                     {common("view")}
                   </Button>
                   <Button
                     variant="success"
                     size="xs"
                     className="mr-2"
-                    onClick={() => handleAcceptDeclineClick(record, "ACCEPT")}
+                    onPress={() => handleAcceptDeclineClick(record, "ACCEPT")}
                     disabled={state === "loading"}
                   >
                     {common("accept")}
@@ -116,7 +117,7 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
                   <Button
                     variant="danger"
                     size="xs"
-                    onClick={() => handleAcceptDeclineClick(record, "DECLINE")}
+                    onPress={() => handleAcceptDeclineClick(record, "DECLINE")}
                     disabled={state === "loading"}
                   >
                     {common("decline")}
@@ -127,6 +128,7 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
           })}
           columns={[
             { header: common("type"), accessorKey: "type" },
+            { header: t("caseNumber"), accessorKey: "caseNumber" },
             { header: t("citizen"), accessorKey: "citizen" },
             { header: t("officer"), accessorKey: "officer" },
             { header: t("postal"), accessorKey: "postal" },

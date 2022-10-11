@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { Button } from "components/Button";
+import { Loader, Button } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -10,7 +10,6 @@ import type { ImpoundedVehicle } from "@snailycad/types";
 import { useModal } from "state/modalState";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
-import { Loader } from "components/Loader";
 import { ModalIds } from "types/ModalIds";
 import { Table, useTableState } from "components/shared/Table";
 import { Title } from "components/shared/Title";
@@ -78,7 +77,7 @@ export default function ImpoundLot({ vehicles: data }: Props) {
             model: item.vehicle.model.value.value,
             location: item.location.value,
             actions: (
-              <Button onClick={() => handleCheckoutClick(item)} className="ml-2" size="xs">
+              <Button onPress={() => handleCheckoutClick(item)} className="ml-2" size="xs">
                 {t("allowCheckout")}
               </Button>
             ),
@@ -102,14 +101,14 @@ export default function ImpoundLot({ vehicles: data }: Props) {
           <Button
             variant="cancel"
             disabled={state === "loading"}
-            onClick={() => closeModal(ModalIds.AlertCheckoutImpoundedVehicle)}
+            onPress={() => closeModal(ModalIds.AlertCheckoutImpoundedVehicle)}
           >
             {common("no")}
           </Button>
           <Button
             disabled={state === "loading"}
             className="flex items-center"
-            onClick={handleCheckout}
+            onPress={handleCheckout}
           >
             {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}{" "}
             {common("yes")}

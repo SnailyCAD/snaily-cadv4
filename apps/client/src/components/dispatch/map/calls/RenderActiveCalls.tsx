@@ -5,7 +5,7 @@ import { Marker, Popup, useMap } from "react-leaflet";
 import type { Full911Call } from "state/dispatch/dispatchState";
 import { ActiveMapCalls } from "./ActiveMapCalls";
 import { convertToMap } from "lib/map/utils";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { useTranslations } from "next-intl";
 import type { Put911CallByIdData } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call911State";
@@ -118,14 +118,14 @@ export function RenderActiveCalls() {
                 </div>
 
                 <div className="flex gap-2 mt-2">
-                  <Button size="xs" className="!text-base" onClick={() => handleToggle(call.id)}>
+                  <Button size="xs" className="!text-base" onPress={() => handleToggle(call.id)}>
                     {t("toggleCall")}
                   </Button>
                   <Button
                     size="xs"
                     variant="danger"
                     className="!text-base"
-                    onClick={() => handleMarkerChange(call, "remove")}
+                    onPress={() => handleMarkerChange(call, "remove")}
                   >
                     {t("removeMarker")}
                   </Button>

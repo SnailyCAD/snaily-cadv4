@@ -1,8 +1,6 @@
 import * as React from "react";
-import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
-import { Loader } from "components/Loader";
+import { Button, Loader, TextField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { Form, Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
@@ -133,11 +131,16 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
       isOpen={isOpen(ModalIds.ManageCustomRole)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, values, errors }) => (
+        {({ handleChange, setFieldValue, values, errors }) => (
           <Form>
-            <FormField errorMessage={errors.name} label={common("name")}>
-              <Input autoFocus name="name" onChange={handleChange} value={values.name} />
-            </FormField>
+            <TextField
+              errorMessage={errors.name}
+              label={common("name")}
+              autoFocus
+              name="name"
+              onChange={(value) => setFieldValue("name", value)}
+              value={values.name}
+            />
 
             <FormField errorMessage={errors.permissions as string} label="Permissions">
               <Select
@@ -169,7 +172,7 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
             <ImageSelectInput image={image} setImage={setImage} />
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onClick={handleClose} variant="cancel">
+              <Button type="reset" onPress={handleClose} variant="cancel">
                 Cancel
               </Button>
               <Button className="flex items-center" disabled={state === "loading"} type="submit">

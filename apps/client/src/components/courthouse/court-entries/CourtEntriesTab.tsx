@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { TabsContent } from "components/shared/TabList";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
@@ -58,7 +58,7 @@ export function CourtEntriesTab(props: Props) {
       <header className="flex justify-between items-center">
         <h3 className="text-2xl font-semibold">{t("courtEntries")}</h3>
 
-        <Button onClick={() => openModal(ModalIds.ManageCourtEntry)}>{t("addCourtEntry")}</Button>
+        <Button onPress={() => openModal(ModalIds.ManageCourtEntry)}>{t("addCourtEntry")}</Button>
       </header>
 
       {entries.length <= 0 ? (
@@ -74,11 +74,11 @@ export function CourtEntriesTab(props: Props) {
             description: <CallDescription nonCard data={entry} />,
             actions: (
               <>
-                <Button onClick={() => handleManageClick(entry)} size="xs" variant="success">
+                <Button onPress={() => handleManageClick(entry)} size="xs" variant="success">
                   {common("manage")}
                 </Button>
                 <Button
-                  onClick={() => handleDeleteClick(entry)}
+                  onPress={() => handleDeleteClick(entry)}
                   className="ml-2"
                   size="xs"
                   variant="danger"

@@ -8,8 +8,7 @@ const featuresRoute: Partial<Record<Feature, string>> = {
   TAXI: "/taxi",
   TRUCK_LOGS: "/truck-logs",
   BUSINESS: "/business",
-  DL_EXAMS: "/officer/supervisor/dl-exams",
-  WEAPON_EXAMS: "/officer/supervisor/weapon-exams",
+  LICENSE_EXAMS: "/officer/supervisor/exams",
   DMV: "/officer/dmv",
 };
 

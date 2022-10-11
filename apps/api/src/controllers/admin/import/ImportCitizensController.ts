@@ -60,7 +60,7 @@ export class ImportCitizensController {
             postal: data.postal ?? null,
             phoneNumber: data.phoneNumber ?? null,
           },
-          include: { gender: true, ethnicity: true },
+          include: { gender: true, ethnicity: true, suspendedLicenses: true },
         });
 
         if (data.vehicles) {

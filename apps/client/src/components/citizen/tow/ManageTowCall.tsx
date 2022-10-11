@@ -1,9 +1,7 @@
 import { TOW_SCHEMA } from "@snailycad/schemas";
-import { Button } from "components/Button";
+import { Input, Loader, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { FormRow } from "components/form/FormRow";
-import { Input } from "components/form/inputs/Input";
-import { Loader } from "components/Loader";
 import { AlertModal } from "components/modal/AlertModal";
 import { dataToSlate, Editor } from "components/editor/Editor";
 import { Modal } from "components/modal/Modal";
@@ -157,14 +155,14 @@ export function ManageCallModal({ onDelete, onUpdate, onClose, isTow: tow, call 
                   className="flex items-center mr-2"
                   disabled={state === "loading"}
                   type="button"
-                  onClick={() => openModal(ModalIds.AlertEndTowCall)}
+                  onPress={() => openModal(ModalIds.AlertEndTowCall)}
                 >
                   {state === "loading" ? <Loader className="mr-2" /> : null}
                   {t("endCall")}
                 </Button>
               ) : null}
               <div className="flex items-center">
-                <Button type="reset" onClick={handleClose} variant="cancel">
+                <Button type="reset" onPress={handleClose} variant="cancel">
                   {common("cancel")}
                 </Button>
                 <Button

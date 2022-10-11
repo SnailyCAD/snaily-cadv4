@@ -1,7 +1,6 @@
 import * as React from "react";
-import { Button } from "components/Button";
+import { Loader, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik, useFormikContext } from "formik";
@@ -183,8 +182,8 @@ export function NameSearchModal() {
     });
   }
 
-  const hasWarrants =
-    !currentResult || currentResult.isConfidential ? false : currentResult.warrants.length > 0;
+  const warrants = !currentResult || currentResult.isConfidential ? [] : currentResult.warrants;
+  const hasActiveWarrants = warrants.filter((v) => v.status === "ACTIVE").length > 0;
 
   const INITIAL_VALUES = {
     name: payloadCitizen?.name ?? "",
@@ -203,7 +202,7 @@ export function NameSearchModal() {
           <Form>
             <FormField errorMessage={errors.name} label={cT("fullName")}>
               <InputSuggestions<NameSearchResult>
-                onSuggestionClick={(suggestion: NameSearchResult) => {
+                onSuggestionPress={(suggestion: NameSearchResult) => {
                   setFieldValue("name", `${suggestion.name} ${suggestion.surname}`);
                   setCurrentResult(suggestion);
                 }}
@@ -276,7 +275,7 @@ export function NameSearchModal() {
                       </p>
                     </div>
 
-                    <Button type="button" onClick={() => setCurrentResult(result)}>
+                    <Button type="button" onPress={() => setCurrentResult(result)}>
                       {common("view")}
                     </Button>
                   </li>
@@ -296,7 +295,7 @@ export function NameSearchModal() {
                       <Button
                         className="flex items-center justify-between gap-2"
                         type="button"
-                        onClick={() => setCurrentResult(null)}
+                        onPress={() => setCurrentResult(null)}
                       >
                         <ArrowLeft />
                         {t("viewAllResults")}
@@ -321,7 +320,7 @@ export function NameSearchModal() {
                     </div>
                   ) : null}
 
-                  {hasWarrants ? (
+                  {hasActiveWarrants ? (
                     <div className="p-2 my-2 font-semibold bg-red-700 rounded-md">
                       {t("hasWarrants")}
                     </div>
@@ -414,7 +413,7 @@ export function NameSearchModal() {
                             size="xs"
                             type="button"
                             className="mt-2"
-                            onClick={() => openModal(ModalIds.ManageLicenses)}
+                            onPress={() => openModal(ModalIds.ManageLicenses)}
                           >
                             {t("editLicenses")}
                           </Button>
@@ -431,7 +430,7 @@ export function NameSearchModal() {
                             size="xs"
                             type="button"
                             className="mt-2"
-                            onClick={() => openModal(ModalIds.ManageCitizenFlags)}
+                            onPress={() => openModal(ModalIds.ManageCitizenFlags)}
                           >
                             {t("manageCitizenFlags")}
                           </Button>
@@ -458,7 +457,7 @@ export function NameSearchModal() {
             >
               <div>
                 {CREATE_USER_CITIZEN_LEO ? (
-                  <Button type="button" onClick={() => openModal(ModalIds.CreateCitizen)}>
+                  <Button type="button" onPress={() => openModal(ModalIds.CreateCitizen)}>
                     {t("createCitizen")}
                   </Button>
                 ) : null}
@@ -468,7 +467,7 @@ export function NameSearchModal() {
                       <Button
                         key={type}
                         type="button"
-                        onClick={() => handleOpenCreateRecord(type)}
+                        onPress={() => handleOpenCreateRecord(type)}
                         variant="cancel"
                         className="px-1.5"
                       >
@@ -479,7 +478,7 @@ export function NameSearchModal() {
                     <Button
                       size="xs"
                       type="button"
-                      onClick={handleDeclare}
+                      onPress={handleDeclare}
                       disabled={state === "loading"}
                       variant="cancel"
                       className="px-1.5"
@@ -493,7 +492,7 @@ export function NameSearchModal() {
               <div className="flex">
                 <Button
                   type="reset"
-                  onClick={() => closeModal(ModalIds.NameSearch)}
+                  onPress={() => closeModal(ModalIds.NameSearch)}
                   variant="cancel"
                 >
                   {common("cancel")}

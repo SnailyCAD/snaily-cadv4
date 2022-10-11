@@ -1,4 +1,4 @@
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { Full911Call } from "state/dispatch/dispatchState";
@@ -64,7 +64,7 @@ export function ActiveCallsActionsColumn({
         disabled={isDispatch ? !hasActiveDispatchers : !isUnitActive}
         size="xs"
         variant="success"
-        onClick={() => handleManageClick(call)}
+        onPress={() => handleManageClick(call)}
       >
         {isDispatch ? common("manage") : common("view")}
       </Button>
@@ -74,7 +74,7 @@ export function ActiveCallsActionsColumn({
           className="ml-2"
           disabled={!isUnitActive}
           size="xs"
-          onClick={() => handleAssignUnassignToCall(call, "unassign")}
+          onPress={() => handleAssignUnassignToCall(call, "unassign")}
         >
           {t("unassignFromCall")}
         </Button>
@@ -83,7 +83,7 @@ export function ActiveCallsActionsColumn({
           className="ml-2"
           disabled={!isUnitActive}
           size="xs"
-          onClick={() => handleAssignUnassignToCall(call, "assign")}
+          onPress={() => handleAssignUnassignToCall(call, "assign")}
         >
           {t("assignToCall")}
         </Button>
@@ -94,7 +94,7 @@ export function ActiveCallsActionsColumn({
           disabled={isDispatch ? !hasActiveDispatchers : !isUnitActive}
           size="xs"
           className="ml-2"
-          onClick={() => handleCallTow(call)}
+          onPress={() => handleCallTow(call)}
         >
           {t("callTow")}
         </Button>

@@ -1,9 +1,7 @@
 import { COURT_ENTRY_SCHEMA } from "@snailycad/schemas";
 import type { CourtDate, CourtEntry } from "@snailycad/types";
-import { Button } from "components/Button";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik, FormikHelpers } from "formik";
@@ -80,15 +78,23 @@ export function ManageCourtEntry({ courtEntry, onClose, onCreate, onUpdate }: Pr
       className="w-[750px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ values, errors, setFieldValue, handleChange }) => (
+        {({ values, errors, setFieldValue }) => (
           <Form>
-            <FormField label={t("title")} errorMessage={errors.title}>
-              <Input name="title" value={values.title} onChange={handleChange} />
-            </FormField>
+            <TextField
+              label={t("title")}
+              name="title"
+              value={values.title}
+              onChange={(value) => setFieldValue("title", value)}
+              errorMessage={errors.title}
+            />
 
-            <FormField label={t("caseNumber")} errorMessage={errors.caseNumber}>
-              <Input name="caseNumber" value={values.caseNumber} onChange={handleChange} />
-            </FormField>
+            <TextField
+              label={t("caseNumber")}
+              name="caseNumber"
+              value={values.caseNumber}
+              onChange={(value) => setFieldValue("caseNumber", value)}
+              errorMessage={errors.caseNumber}
+            />
 
             <FormField
               label={common("description")}
@@ -119,7 +125,7 @@ export function ManageCourtEntry({ courtEntry, onClose, onCreate, onUpdate }: Pr
             />
 
             <footer className="flex justify-end mt-5">
-              <Button onClick={handleClose} variant="cancel" type="reset">
+              <Button onPress={handleClose} variant="cancel" type="reset">
                 {common("cancel")}
               </Button>
               <Button className="flex items-center" disabled={state === "loading"} type="submit">

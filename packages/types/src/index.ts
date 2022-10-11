@@ -144,7 +144,10 @@ export type Citizen = Prisma.Citizen & {
   dlCategory: (Prisma.DriversLicenseCategoryValue & { value: Value })[];
   flags?: Prisma.Value[];
   notes?: Prisma.Note[];
+  suspendedLicenses?: SuspendedCitizenLicenses | null;
 };
+
+export type SuspendedCitizenLicenses = Prisma.SuspendedCitizenLicenses;
 
 export type Note = Prisma.Note & {
   createdBy?: Officer | null;
@@ -362,7 +365,7 @@ export type CourtDate = Prisma.CourtDate;
 
 export type EmsFdDeputy = Prisma.EmsFdDeputy & {
   department: Officer["department"];
-  division: Officer["divisions"][number];
+  division?: Officer["divisions"][number] | null;
   rank: Officer["rank"];
   status: Officer["status"];
   citizen: Officer["citizen"];
@@ -375,13 +378,11 @@ export type TruckLog = Prisma.TruckLog & {
   vehicle: RegisteredVehicle | null;
 };
 
-export type DLExam = Prisma.DLExam & {
+export type LicenseExam = Prisma.LicenseExam & {
   citizen: Prisma.Citizen;
   license: Value;
   categories?: DriversLicenseCategoryValue[];
 };
-
-export type WeaponExam = DLExam;
 
 export type CustomField = Prisma.CustomField;
 

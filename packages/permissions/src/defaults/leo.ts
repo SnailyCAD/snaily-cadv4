@@ -14,6 +14,8 @@ export const defaultLeoPermissions = [
   Permissions.ManageDLExams,
   Permissions.ViewWeaponExams,
   Permissions.ManageWeaponExams,
+  Permissions.ViewLicenseExams,
+  Permissions.ManageLicenseExams,
   Permissions.ManageDMV,
   Permissions.DeleteCitizenRecords,
   Permissions.ViewCitizenLogs,

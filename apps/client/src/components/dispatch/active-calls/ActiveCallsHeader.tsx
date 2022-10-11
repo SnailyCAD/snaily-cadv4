@@ -1,4 +1,4 @@
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import type { useAsyncTable } from "components/shared/Table";
 import { classNames } from "lib/classNames";
 import { useTranslations } from "next-intl";
@@ -29,7 +29,7 @@ export function ActiveCallsHeader({ calls, search }: Props) {
               "px-1.5 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
               showFilters && "dark:!bg-secondary !bg-gray-500",
             )}
-            onClick={() => setShowFilters(!showFilters)}
+            onPress={() => setShowFilters(!showFilters)}
             title={t("callFilters")}
             disabled={calls.length <= 0}
           >

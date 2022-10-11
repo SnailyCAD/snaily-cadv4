@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useField } from "@react-aria/label";
 import { classNames } from "lib/classNames";
-import useOnclickOutside from "react-cool-onclickoutside";
+import useonPressOutside from "react-cool-onclickoutside";
 import { useTranslations } from "next-intl";
 
 interface Props {
@@ -29,7 +29,7 @@ export function FormField({
   hideLabel,
 }: Props) {
   const [menuOpen, setMenuOpen] = React.useState(false);
-  const ref = useOnclickOutside(() => setMenuOpen(false));
+  const ref = useonPressOutside(() => setMenuOpen(false));
   const { labelProps, fieldProps, errorMessageProps } = useField({ label, errorMessage });
   const common = useTranslations("Common");
   const optionalText = common("optionalField");

@@ -1,9 +1,8 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Form, Formik } from "formik";
-import { Button } from "components/Button";
+import { Loader, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
@@ -99,7 +98,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
           <Form>
             <FormField errorMessage={errors.name} label={t("MedicalRecords.citizen")}>
               <InputSuggestions<SearchResult>
-                onSuggestionClick={(suggestion) => {
+                onSuggestionPress={(suggestion) => {
                   setFieldValue("name", `${suggestion.name} ${suggestion.surname}`);
                   handleFoundName(suggestion);
                 }}
@@ -226,7 +225,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                               size="xs"
                               variant={results.dead ? "success" : "danger"}
                               type="button"
-                              onClick={handleDeclare}
+                              onPress={handleDeclare}
                               disabled={state === "loading"}
                             >
                               {results.dead ? t("Ems.declareAlive") : t("Ems.declareDead")}
@@ -258,7 +257,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                 <Button
                   size="xs"
                   type="button"
-                  onClick={handleDeclare}
+                  onPress={handleDeclare}
                   disabled={state === "loading"}
                   variant="cancel"
                   className="px-1.5"
@@ -270,7 +269,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
               <div className="flex gap-2">
                 <Button
                   type="reset"
-                  onClick={() => closeModal(ModalIds.SearchMedicalRecord)}
+                  onPress={() => closeModal(ModalIds.SearchMedicalRecord)}
                   variant="cancel"
                 >
                   {t("Common.cancel")}

@@ -6,19 +6,21 @@ import { classNames } from "lib/classNames";
 import { useTranslations } from "next-intl";
 
 interface Props {
-  unit: (EmsFdDeputy | Officer) & { qualifications: UnitQualification[] };
+  unit: (EmsFdDeputy | Officer) & { qualifications?: UnitQualification[] };
 }
 
 export function UnitQualificationsTable({ unit }: Props) {
   const t = useTranslations("Leo");
 
-  const awards = unit.qualifications.filter(
-    (v) => v.qualification.qualificationType === QualificationValueType.AWARD,
-  );
+  const awards =
+    unit.qualifications?.filter(
+      (v) => v.qualification.qualificationType === QualificationValueType.AWARD,
+    ) ?? [];
 
-  const qualifications = unit.qualifications.filter(
-    (v) => v.qualification.qualificationType === QualificationValueType.QUALIFICATION,
-  );
+  const qualifications =
+    unit.qualifications?.filter(
+      (v) => v.qualification.qualificationType === QualificationValueType.QUALIFICATION,
+    ) ?? [];
 
   return (
     <div className="mt-3">

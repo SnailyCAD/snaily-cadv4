@@ -6,7 +6,7 @@ import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { AdvancedCitizensTab } from "components/admin/manage/citizens/AdvancedCitizensTab";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { Rank } from "@snailycad/types";
@@ -28,7 +28,7 @@ export default function ImportCitizensPage() {
           <Title className="!mb-0">{t("IMPORT_CITIZENS")}</Title>
 
           <div className="min-w-fit w-fit">
-            <Button onClick={() => openModal(ModalIds.ImportCitizens)}>Import via file</Button>
+            <Button onPress={() => openModal(ModalIds.ImportCitizens)}>Import via file</Button>
           </div>
         </div>
 

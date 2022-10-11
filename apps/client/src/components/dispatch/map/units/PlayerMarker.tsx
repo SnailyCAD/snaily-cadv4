@@ -2,7 +2,7 @@ import { convertToMap } from "lib/map/utils";
 import * as React from "react";
 import { Marker, Popup, Tooltip, useMap } from "react-leaflet";
 import { defaultPermissions, hasPermission } from "@snailycad/permissions";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import type { MapPlayer, PlayerDataEventPayload } from "types/Map";
 import { icon as leafletIcon } from "leaflet";
 import { useTranslations } from "next-intl";
@@ -125,7 +125,7 @@ export function PlayerMarker({ player, handleToggle }: Props) {
 
         {"id" in player && player.unit?.id ? (
           <div className="mt-3">
-            <Button size="xs" className="!text-base" onClick={() => handleToggle(player.id)}>
+            <Button size="xs" className="!text-base" onPress={() => handleToggle(player.id)}>
               {t("togglePlayer")}
             </Button>
           </div>

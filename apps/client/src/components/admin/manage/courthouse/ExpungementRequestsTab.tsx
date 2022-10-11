@@ -5,7 +5,7 @@ import { Table, useTableState } from "components/shared/Table";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useTranslations } from "next-intl";
 import { getTitles } from "components/courthouse/expungement-requests/RequestExpungement";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { FullDate } from "components/shared/FullDate";
 import { Status } from "components/shared/Status";
 import useFetch from "lib/useFetch";
@@ -70,7 +70,7 @@ export function ExpungementRequestsTab({ requests: data }: Props) {
               <>
                 <Button
                   disabled={state === "loading"}
-                  onClick={() => handleUpdate(request.id, ExpungementRequestStatus.ACCEPTED)}
+                  onPress={() => handleUpdate(request.id, ExpungementRequestStatus.ACCEPTED)}
                   variant="success"
                   size="xs"
                 >
@@ -79,7 +79,7 @@ export function ExpungementRequestsTab({ requests: data }: Props) {
                 <Button
                   className="ml-2"
                   disabled={state === "loading"}
-                  onClick={() => handleUpdate(request.id, ExpungementRequestStatus.DENIED)}
+                  onPress={() => handleUpdate(request.id, ExpungementRequestStatus.DENIED)}
                   variant="danger"
                   size="xs"
                 >

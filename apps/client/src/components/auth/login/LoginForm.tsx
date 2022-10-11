@@ -3,9 +3,8 @@ import { Form, Formik, FormikHelpers } from "formik";
 import Link from "next/link";
 import { Discord, Steam } from "react-bootstrap-icons";
 import { FormField } from "components/form/FormField";
-import { Input, PasswordInput } from "components/form/inputs/Input";
-import { Loader } from "components/Loader";
-import { Button } from "components/Button";
+import { PasswordInput } from "components/form/inputs/Input";
+import { Button, Loader, TextField } from "@snailycad/ui";
 import { TwoFactorAuthScreen } from "components/auth/TwoFactorAuthScreen";
 import { getAPIUrl } from "lib/fetch/getAPIUrl";
 import { useRouter } from "next/router";
@@ -108,7 +107,7 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
 
   return (
     <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-      {({ handleChange, errors, values, isValid }) => (
+      {({ handleChange, setFieldValue, errors, values, isValid }) => (
         <Form
           className={classNames(
             isWithinModal
@@ -144,9 +143,14 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
 
               {ALLOW_REGULAR_LOGIN ? (
                 <>
-                  <FormField errorMessage={errors.username} label={t("username")}>
-                    <Input type="text" name="username" onChange={handleChange} />
-                  </FormField>
+                  <TextField
+                    errorMessage={errors.username}
+                    autoFocus
+                    isRequired
+                    label="Username"
+                    value={values.username}
+                    onChange={(value) => setFieldValue("username", value)}
+                  />
 
                   <FormField errorMessage={errors.password} label={t("password")}>
                     <PasswordInput name="password" onChange={handleChange} />
@@ -171,7 +175,7 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
               ) : null}
 
               {user && !isWithinModal ? (
-                <Button type="button" onClick={handleContinueAs} className="w-full mb-2">
+                <Button type="button" onPress={handleContinueAs} className="w-full mb-2">
                   {t.rich("continueAs", { username: user.username })}
                 </Button>
               ) : null}
@@ -179,7 +183,7 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
               {showDiscordOAuth ? (
                 <Button
                   type="button"
-                  onClick={handleDiscordLogin}
+                  onPress={handleDiscordLogin}
                   className="flex items-center justify-center gap-3 w-full"
                 >
                   <Discord />
@@ -190,7 +194,7 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
               {showSteamOAuth ? (
                 <Button
                   type="button"
-                  onClick={handleSteamLogin}
+                  onPress={handleSteamLogin}
                   className="flex items-center justify-center gap-3 w-full mt-2"
                 >
                   <Steam />

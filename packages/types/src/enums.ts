@@ -21,7 +21,6 @@ export const Feature = {
   ALLOW_REGULAR_LOGIN: "ALLOW_REGULAR_LOGIN",
   RADIO_CHANNEL_MANAGEMENT: "RADIO_CHANNEL_MANAGEMENT",
   ALLOW_CITIZEN_DELETION_BY_NON_ADMIN: "ALLOW_CITIZEN_DELETION_BY_NON_ADMIN",
-  DL_EXAMS: "DL_EXAMS",
   DMV: "DMV",
   BADGE_NUMBERS: "BADGE_NUMBERS",
   USER_API_TOKENS: "USER_API_TOKENS",
@@ -32,11 +31,13 @@ export const Feature = {
   LEO_TICKETS: "LEO_TICKETS",
   LEO_BAIL: "LEO_BAIL",
   COURTHOUSE_POSTS: "COURTHOUSE_POSTS",
-  WEAPON_EXAMS: "WEAPON_EXAMS",
   ACTIVE_WARRANTS: "ACTIVE_WARRANTS",
   CITIZEN_DELETE_ON_DEAD: "CITIZEN_DELETE_ON_DEAD",
   PANIC_BUTTON: "PANIC_BUTTON",
   WARRANT_STATUS_APPROVAL: "WARRANT_STATUS_APPROVAL",
+  DIVISIONS: "DIVISIONS",
+  TONES: "TONES",
+  LICENSE_EXAMS: "LICENSE_EXAMS",
 } as const;
 
 export type Feature = typeof Feature[keyof typeof Feature];
@@ -236,20 +237,29 @@ export const ExpungementRequestStatus = {
 export type ExpungementRequestStatus =
   typeof ExpungementRequestStatus[keyof typeof ExpungementRequestStatus];
 
-export const DLExamPassType = {
+export const LicenseExamPassType = {
   PASSED: "PASSED",
   FAILED: "FAILED",
 } as const;
 
-export type DLExamPassType = typeof DLExamPassType[keyof typeof DLExamPassType];
+export type LicenseExamPassType = typeof LicenseExamPassType[keyof typeof LicenseExamPassType];
 
-export const DLExamStatus = {
+export const LicenseExamStatus = {
   IN_PROGRESS: "IN_PROGRESS",
   PASSED: "PASSED",
   FAILED: "FAILED",
 } as const;
 
-export type DLExamStatus = typeof DLExamStatus[keyof typeof DLExamStatus];
+export type LicenseExamStatus = typeof LicenseExamStatus[keyof typeof LicenseExamStatus];
+
+export const LicenseExamType = {
+  DRIVER: "DRIVER",
+  FIREARM: "FIREARM",
+  WATER: "WATER",
+  PILOT: "PILOT",
+} as const;
+
+export type LicenseExamType = typeof LicenseExamType[keyof typeof LicenseExamType];
 
 export const CustomFieldCategory = {
   CITIZEN: "CITIZEN",
@@ -265,3 +275,11 @@ export const PaymentStatus = {
 } as const;
 
 export type PaymentStatus = typeof PaymentStatus[keyof typeof PaymentStatus];
+
+export const PenalCodeType = {
+  INFRACTION: "INFRACTION",
+  MISDEMEANOR: "MISDEMEANOR",
+  FELONY: "FELONY",
+} as const;
+
+export type PenalCodeType = typeof PenalCodeType[keyof typeof PenalCodeType];

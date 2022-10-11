@@ -1,6 +1,6 @@
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { ActiveOfficer, useLeoState } from "state/leoState";
-import { ShouldDoType } from "@snailycad/types";
+import { Rank, ShouldDoType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import useFetch from "lib/useFetch";
@@ -17,6 +17,8 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useImageUrl } from "hooks/useImageUrl";
 import Image from "next/future/image";
 import { useMounted } from "@casper124578/useful";
+import { usePermission } from "hooks/usePermission";
+import { defaultPermissions } from "@snailycad/permissions";
 
 const buttons: modalButtons.ModalButton[] = [
   modalButtons.switchDivision,
@@ -37,13 +39,19 @@ export function ModalButtons({ initialActiveOfficer }: { initialActiveOfficer: A
   const _activeOfficer = useLeoState((s) => s.activeOfficer);
   const isMounted = useMounted();
   const activeOfficer = isMounted ? _activeOfficer : initialActiveOfficer;
+  const { hasPermissions } = usePermission();
+
+  const isAdmin = hasPermissions(
+    defaultPermissions.allDefaultAdminPermissions,
+    (u) => u.rank !== Rank.USER,
+  );
 
   const t = useTranslations();
   const { generateCallsign } = useGenerateCallsign();
   const { state: activeDispatchersState, hasActiveDispatchers } = useActiveDispatchers();
   const { state, execute } = useFetch();
   const { openModal } = useModal();
-  const { PANIC_BUTTON } = useFeatureEnabled();
+  const { TONES, PANIC_BUTTON } = useFeatureEnabled();
   const { makeImageUrl } = useImageUrl();
 
   async function handlePanic() {
@@ -56,12 +64,14 @@ export function ModalButtons({ initialActiveOfficer }: { initialActiveOfficer: A
     });
   }
 
-  const isButtonDisabled =
-    !activeOfficer ||
-    activeOfficer.status?.shouldDo === ShouldDoType.SET_OFF_DUTY ||
-    activeOfficer.statusId === null;
+  const isButtonDisabled = isAdmin
+    ? false
+    : !activeOfficer ||
+      activeOfficer.status?.shouldDo === ShouldDoType.SET_OFF_DUTY ||
+      activeOfficer.statusId === null;
 
   const nameAndCallsign =
+    activeOfficer &&
     !isButtonDisabled &&
     (isUnitCombined(activeOfficer)
       ? generateCallsign(activeOfficer, "pairedUnitTemplate")
@@ -69,7 +79,7 @@ export function ModalButtons({ initialActiveOfficer }: { initialActiveOfficer: A
 
   return (
     <div className="py-2">
-      {!isButtonDisabled ? (
+      {!isButtonDisabled && activeOfficer ? (
         <p className="text-lg">
           <span className="font-semibold">{t("Leo.activeOfficer")}: </span>
 
@@ -106,15 +116,15 @@ export function ModalButtons({ initialActiveOfficer }: { initialActiveOfficer: A
             id="panicButton"
             disabled={state === "loading" || isButtonDisabled}
             title={isButtonDisabled ? "Go on-duty before continuing" : t("Leo.panicButton")}
-            onClick={handlePanic}
+            onPress={handlePanic}
           >
             {t("Leo.panicButton")}
           </Button>
         ) : null}
 
-        {activeDispatchersState !== "loading" && !hasActiveDispatchers ? (
+        {activeDispatchersState !== "loading" && !hasActiveDispatchers && TONES ? (
           <>
-            <Button disabled={isButtonDisabled} onClick={() => openModal(ModalIds.Tones)}>
+            <Button disabled={isButtonDisabled} onPress={() => openModal(ModalIds.Tones)}>
               {t("Leo.tones")}
             </Button>
             <TonesModal types={["leo"]} />

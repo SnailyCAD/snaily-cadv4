@@ -1,7 +1,10 @@
 import * as React from "react";
-import { classNames } from "lib/classNames";
+import { classNames } from "../utils/classNames";
+import { AriaButtonProps, useButton } from "@react-aria/button";
+import { mergeProps } from "@react-aria/utils";
 
-export type ButtonProps = JSX.IntrinsicElements["button"] & {
+type BaseButtonProps = Omit<JSX.IntrinsicElements["button"], "onPress"> & AriaButtonProps;
+export type ButtonProps = BaseButtonProps & {
   size?: keyof typeof buttonSizes;
   variant?: keyof typeof buttonVariants | null;
 };
@@ -25,16 +28,37 @@ export const buttonSizes = {
 } as const;
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = "default", size = "sm", className = "", ...rest }, ref) => (
-    <button
-      className={classNames(
-        "rounded-md disabled:opacity-60 disabled:cursor-not-allowed transition-colors",
-        buttonSizes[size],
-        variant && buttonVariants[variant],
-        className,
-      )}
-      {...rest}
-      ref={ref}
-    />
-  ),
+  (
+    {
+      variant = "default",
+      size = "sm",
+      className = "",
+      isDisabled,
+      onPress,
+      onPressChange,
+      onPressStart,
+      onPressEnd,
+      onPressUp,
+      ...rest
+    },
+    ref,
+  ) => {
+    const { buttonProps } = useButton(
+      { onPress, onPressChange, onPressStart, onPressEnd, onPressUp, isDisabled, ...rest },
+      ref as any,
+    );
+
+    return (
+      <button
+        className={classNames(
+          "rounded-md disabled:opacity-60 disabled:cursor-not-allowed transition-colors",
+          buttonSizes[size],
+          variant && buttonVariants[variant],
+          className,
+        )}
+        {...mergeProps(rest, buttonProps)}
+        ref={ref}
+      />
+    );
+  },
 );

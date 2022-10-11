@@ -4,7 +4,7 @@ import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { CaretDownFill } from "react-bootstrap-icons";
 import type { MapPlayer } from "types/Map";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
@@ -68,8 +68,8 @@ export function UnitItem({ setTempUnit, player }: CallItemProps) {
             ) : null}
 
             <div className="flex flex-row gap-2 mt-5">
-              <Button onClick={() => handleStatusClick()}>{common("manage")}</Button>
-              <Button onClick={() => handleShowOnMap()}>Toggle unit on map</Button>
+              <Button onPress={() => handleStatusClick()}>{common("manage")}</Button>
+              <Button onPress={() => handleShowOnMap()}>Toggle unit on map</Button>
             </div>
           </div>
         </Accordion.Content>

@@ -1,4 +1,4 @@
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import type { NextPageContext } from "next";
 import NextErrorComponent, { ErrorProps } from "next/error";
 import * as Sentry from "@sentry/nextjs";
@@ -20,7 +20,7 @@ function ErrorPage({ statusCode }: ErrorPageProps) {
             "Application error: a client-side exception has occurred (see the browser console for more information)."}
         </p>
 
-        <Button className="mt-5 max-w-fit" onClick={handleReload}>
+        <Button className="mt-5 max-w-fit" onPress={handleReload}>
           Reload page
         </Button>
       </div>

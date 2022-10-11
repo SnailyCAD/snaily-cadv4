@@ -3,7 +3,7 @@ import * as Accordion from "@radix-ui/react-accordion";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { ModalIds } from "types/ModalIds";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { CaretDownFill } from "react-bootstrap-icons";
 import type { Full911Call } from "state/dispatch/dispatchState";
@@ -81,11 +81,11 @@ export function CallItem({ call, hasMarker, setMarker }: CallItemProps) {
 
             <div className="flex flex-col mt-4">
               <div className="grid grid-cols-2 grid-flow-col gap-2 mt-2">
-                <Button onClick={() => handleEdit(call)}>{common("manage")}</Button>
+                <Button onPress={() => handleEdit(call)}>{common("manage")}</Button>
 
                 <Button
                   className="col-span-2"
-                  onClick={() => setMarker(call, hasMarker(call.id) ? "remove" : "set")}
+                  onPress={() => setMarker(call, hasMarker(call.id) ? "remove" : "set")}
                 >
                   {hasMarker(call.id) ? t("removeMarker") : t("setMarker")}
                 </Button>

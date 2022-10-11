@@ -2,10 +2,9 @@ import { useTranslations } from "use-intl";
 import { Form, Formik, FormikHelpers } from "formik";
 import { useRouter } from "next/router";
 import { WEAPON_SCHEMA } from "@snailycad/schemas";
-import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
-import { Loader } from "components/Loader";
+import { Loader, Input, Button } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useValues } from "src/context/ValuesContext";
@@ -14,7 +13,6 @@ import { ModalIds } from "types/ModalIds";
 import { ValueLicenseType, Weapon, WeaponValue } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import { useCitizen } from "context/CitizenContext";
-import { Input } from "components/form/inputs/Input";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { filterLicenseTypes } from "lib/utils";
 import { toastMessage } from "lib/toastMessage";
@@ -126,7 +124,7 @@ export function RegisterWeaponModal({ weapon, onClose, onCreate, onUpdate }: Pro
             ) : (
               <FormField errorMessage={errors.model} label={tVehicle("model")}>
                 <InputSuggestions<WeaponValue>
-                  onSuggestionClick={(suggestion) => {
+                  onSuggestionPress={(suggestion) => {
                     setValues({
                       ...values,
                       modelName: suggestion.value.value,
@@ -183,7 +181,7 @@ export function RegisterWeaponModal({ weapon, onClose, onCreate, onUpdate }: Pro
             </FormField>
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onClick={handleClose} variant="cancel">
+              <Button type="reset" onPress={handleClose} variant="cancel">
                 Cancel
               </Button>
               <Button

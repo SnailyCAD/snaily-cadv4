@@ -9,9 +9,7 @@ import { Title } from "components/shared/Title";
 import { Rank, Weapon } from "@snailycad/types";
 import { Table, useTableState } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
-import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
-import { Button } from "components/Button";
+import { Button, Loader, TextField } from "@snailycad/ui";
 import { ImportModal } from "components/admin/import/ImportModal";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
@@ -81,7 +79,7 @@ export default function ImportWeaponsPage({ data }: Props) {
           <Title className="!mb-0">{t("IMPORT_WEAPONS")}</Title>
 
           <div>
-            <Button onClick={() => openModal(ModalIds.ImportWeapons)}>{t("importViaFile")}</Button>
+            <Button onPress={() => openModal(ModalIds.ImportWeapons)}>{t("importViaFile")}</Button>
           </div>
         </div>
 
@@ -91,14 +89,20 @@ export default function ImportWeaponsPage({ data }: Props) {
         </p>
       </header>
 
-      <FormField label={common("search")} className="my-2 w-full">
-        <Input
-          className="w-full"
-          placeholder="filter by plate, model, color, etc."
-          onChange={(e) => asyncTable.search.setSearch(e.target.value)}
-          value={asyncTable.search.search}
-        />
-      </FormField>
+      <TextField
+        label={common("search")}
+        className="w-full relative"
+        name="search"
+        onChange={(value) => asyncTable.search.setSearch(value)}
+        value={asyncTable.search.search}
+        placeholder="Serial Number, Model, ..."
+      >
+        {asyncTable.search.state === "loading" ? (
+          <span className="absolute top-[2.4rem] right-2.5">
+            <Loader />
+          </span>
+        ) : null}
+      </TextField>
 
       {asyncTable.search.search && asyncTable.pagination.totalDataCount !== data.totalCount ? (
         <p className="italic text-base font-semibold">
@@ -116,7 +120,7 @@ export default function ImportWeaponsPage({ data }: Props) {
           citizen: `${weapon.citizen.name} ${weapon.citizen.surname}`,
           createdAt: <FullDate>{weapon.createdAt}</FullDate>,
           actions: (
-            <Button size="xs" variant="danger" onClick={() => handleDeleteClick(weapon)}>
+            <Button size="xs" variant="danger" onPress={() => handleDeleteClick(weapon)}>
               {common("delete")}
             </Button>
           ),

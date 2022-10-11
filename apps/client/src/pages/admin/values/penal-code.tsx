@@ -1,6 +1,6 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
-import { Button } from "components/Button";
+import { Button, TextField } from "@snailycad/ui";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
@@ -11,8 +11,6 @@ import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import dynamic from "next/dynamic";
 import { Table, useTableState } from "components/shared/Table";
-import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { ModalIds } from "types/ModalIds";
 import { ManagePenalCodeGroup } from "components/admin/values/penal-codes/ManagePenalCodeGroup";
@@ -28,6 +26,7 @@ import type {
   DeletePenalCodeGroupsData,
 } from "@snailycad/types/api";
 import { hasTableDataChanged } from "lib/admin/values/utils";
+import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
 const ManagePenalCode = dynamic(async () => {
   return (await import("components/admin/values/penal-codes/ManagePenalCode")).ManagePenalCode;
@@ -202,17 +201,21 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
         <Title className="!mb-0">{typeT("MANAGE")}</Title>
 
         <div className="flex gap-2">
-          <Button onClick={() => openModal(ModalIds.ManageValue)}>{typeT("ADD")}</Button>
-          <Button onClick={() => openModal(ModalIds.ManagePenalCodeGroup)}>
+          <Button onPress={() => openModal(ModalIds.ManageValue)}>{typeT("ADD")}</Button>
+          <Button onPress={() => openModal(ModalIds.ManagePenalCodeGroup)}>
             {t("addPenalCodeGroup")}
           </Button>
           <OptionsDropdown type={type} values={data} />
         </div>
       </header>
 
-      <FormField label={common("search")} className="my-2">
-        <Input onChange={(e) => setSearch(e.target.value)} value={search} className="" />
-      </FormField>
+      <TextField
+        label={common("search")}
+        className="my-2"
+        name="search"
+        value={search}
+        onChange={(value) => setSearch(value)}
+      />
 
       {values.length <= 0 && !currentGroup ? (
         <p className="mt-5">There are no penal codes yet.</p>
@@ -221,7 +224,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
           <header className="flex items-center justify-between">
             <h1 className="text-xl font-semibold">{currentGroup.name}</h1>
 
-            <Button onClick={handleViewAllGroups} className="flex items-center gap-3">
+            <Button onPress={handleViewAllGroups} className="flex items-center gap-3">
               <ArrowLeft /> View all groups
             </Button>
           </header>
@@ -238,19 +241,16 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
                 id: code.id,
                 rowProps: { value: code },
                 title: code.title,
-                description: (
-                  <p className="max-w-4xl text-base min-w-[300px] break-words whitespace-pre-wrap">
-                    {code.description}
-                  </p>
-                ),
+                type: code.type?.toLowerCase() ?? common("none"),
+                description: <CallDescription nonCard data={code} />,
                 actions: (
                   <>
-                    <Button onClick={() => handleEditClick(code)} size="xs" variant="success">
+                    <Button onPress={() => handleEditClick(code)} size="xs" variant="success">
                       {common("edit")}
                     </Button>
                     <Button
                       className="ml-2"
-                      onClick={() => handleDeleteClick(code)}
+                      onPress={() => handleDeleteClick(code)}
                       size="xs"
                       variant="danger"
                     >
@@ -261,6 +261,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
               }))}
             columns={[
               { header: common("title"), accessorKey: "title" },
+              { header: common("type"), accessorKey: "type" },
               { header: common("description"), accessorKey: "description" },
               { header: common("actions"), accessorKey: "actions" },
             ]}
@@ -275,14 +276,14 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
             value: group.name,
             actions: (
               <>
-                <Button onClick={() => setCurrentGroup(group)} size="xs">
+                <Button onPress={() => setCurrentGroup(group)} size="xs">
                   {common("view")}
                 </Button>
                 {group.id !== "ungrouped" ? (
                   <>
                     <Button
                       className="ml-2"
-                      onClick={() => handleEditGroup(group)}
+                      onPress={() => handleEditGroup(group)}
                       size="xs"
                       variant="success"
                       disabled={group.id === "ungrouped"}
@@ -291,7 +292,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
                     </Button>
                     <Button
                       className="ml-2"
-                      onClick={() => handleDeleteGroupClick(group)}
+                      onPress={() => handleDeleteGroupClick(group)}
                       size="xs"
                       variant="danger"
                       disabled={group.id === "ungrouped"}

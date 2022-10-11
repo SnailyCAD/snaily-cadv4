@@ -1,7 +1,5 @@
 import * as React from "react";
-import { Button } from "components/Button";
-
-import { Loader } from "components/Loader";
+import { Button, Loader } from "@snailycad/ui";
 import { TabsContent } from "components/shared/TabList";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
@@ -69,7 +67,7 @@ export function DiscordWebhooksTab({ canWarn }: { canWarn: boolean }) {
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold">Discord Webhooks</h2>
 
-          <Button onClick={refreshChannels} className="h-fit min-w-fit">
+          <Button onPress={refreshChannels} className="h-fit min-w-fit">
             Refresh Channels
           </Button>
         </div>

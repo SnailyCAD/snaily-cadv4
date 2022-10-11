@@ -2,10 +2,9 @@ import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Form, Formik, FormikHelpers } from "formik";
 import { VEHICLE_SCHEMA } from "@snailycad/schemas";
-import { Button } from "components/Button";
+import { Button, Input, Loader, SelectField, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useValues } from "src/context/ValuesContext";
@@ -18,7 +17,6 @@ import {
   WhitelistStatus,
 } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
-import { Input } from "components/form/inputs/Input";
 import { useCitizen } from "context/CitizenContext";
 import { useRouter } from "next/router";
 import { useAuth } from "context/AuthContext";
@@ -129,25 +127,16 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
       className="w-[700px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setValues, errors, values, isValid }) => (
+        {({ handleChange, setFieldValue, setValues, errors, values, isValid }) => (
           <Form>
-            <FormField errorMessage={errors.plate} label={tVehicle("plate")}>
-              <Input
-                onChange={handleChange}
-                name="plate"
-                value={values.plate.toUpperCase()}
-                max={maxPlateLength}
-                maxLength={maxPlateLength}
-              />
-            </FormField>
-
-            <FormField optional errorMessage={errors.vinNumber} label={tVehicle("vinNumber")}>
-              <Input
-                value={values.vinNumber.toUpperCase()}
-                name="vinNumber"
-                onChange={handleChange}
-              />
-            </FormField>
+            <TextField
+              errorMessage={errors.plate}
+              label={tVehicle("plate")}
+              onChange={(value) => setFieldValue("plate", value.toUpperCase())}
+              name="plate"
+              value={values.plate.toUpperCase()}
+              maxLength={maxPlateLength}
+            />
 
             {CUSTOM_TEXTFIELD_VALUES ? (
               <FormField errorMessage={errors.model} label={tVehicle("model")}>
@@ -174,7 +163,7 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
             ) : (
               <FormField errorMessage={errors.model} label={tVehicle("model")}>
                 <InputSuggestions<VehicleValue>
-                  onSuggestionClick={(suggestion) => {
+                  onSuggestionPress={(suggestion) => {
                     setValues({
                       ...values,
                       modelName: suggestion.value.value,
@@ -207,6 +196,23 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
                 isDisabled={isDisabled}
               />
             </FormField>
+
+            <TextField
+              errorMessage={errors.color}
+              label={tVehicle("color")}
+              onChange={(value) => setFieldValue("color", value)}
+              name="color"
+              value={values.color}
+            />
+
+            <TextField
+              errorMessage={errors.vinNumber}
+              label={tVehicle("vinNumber")}
+              onChange={(value) => setFieldValue("vinNumber", value.toUpperCase())}
+              name="vinNumber"
+              value={values.vinNumber.toUpperCase()}
+              isOptional
+            />
 
             <FormRow>
               <FormField
@@ -244,33 +250,28 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
             </FormRow>
 
             <FormRow>
-              <FormField
+              <SelectField
+                isOptional
                 errorMessage={errors.inspectionStatus}
                 label={tVehicle("inspectionStatus")}
-              >
-                <Select
-                  isClearable
-                  values={INSPECTION_STATUS}
-                  value={values.inspectionStatus}
-                  name="inspectionStatus"
-                  onChange={handleChange}
-                />
-              </FormField>
+                name="inspectionStatus"
+                options={INSPECTION_STATUS}
+                onSelectionChange={(key) => setFieldValue("inspectionStatus", key)}
+                isClearable
+                selectedKey={values.inspectionStatus}
+              />
 
-              <FormField errorMessage={errors.taxStatus} label={tVehicle("taxStatus")}>
-                <Select
-                  isClearable
-                  values={TAX_STATUS}
-                  value={values.taxStatus}
-                  name="taxStatus"
-                  onChange={handleChange}
-                />
-              </FormField>
+              <SelectField
+                isOptional
+                errorMessage={errors.taxStatus}
+                label={tVehicle("taxStatus")}
+                name="taxStatus"
+                options={TAX_STATUS}
+                onSelectionChange={(key) => setFieldValue("taxStatus", key)}
+                isClearable
+                selectedKey={values.taxStatus}
+              />
             </FormRow>
-
-            <FormField errorMessage={errors.color} label={tVehicle("color")}>
-              <Input onChange={handleChange} name="color" value={values.color} />
-            </FormField>
 
             {vehicle ? (
               <FormRow>
@@ -294,7 +295,7 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
             ) : null}
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onClick={handleClose} variant="cancel">
+              <Button type="reset" onPress={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button

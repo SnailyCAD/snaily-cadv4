@@ -5,17 +5,16 @@ import { useAuth } from "context/AuthContext";
 export const DEFAULT_DISABLED_FEATURES: Partial<Record<Feature, { isEnabled: boolean }>> = {
   CUSTOM_TEXTFIELD_VALUES: { isEnabled: false },
   DISCORD_AUTH: { isEnabled: false },
-  DL_EXAMS: { isEnabled: false },
   DMV: { isEnabled: false },
   USER_API_TOKENS: { isEnabled: false },
   CITIZEN_RECORD_APPROVAL: { isEnabled: false },
   COMMON_CITIZEN_CARDS: { isEnabled: false },
   STEAM_OAUTH: { isEnabled: false },
   CREATE_USER_CITIZEN_LEO: { isEnabled: false },
-  WEAPON_EXAMS: { isEnabled: false },
   ACTIVE_WARRANTS: { isEnabled: false },
   CITIZEN_DELETE_ON_DEAD: { isEnabled: false },
   WARRANT_STATUS_APPROVAL: { isEnabled: false },
+  LICENSE_EXAMS: { isEnabled: false },
 };
 
 export function useFeatureEnabled(features?: CadFeature[]) {

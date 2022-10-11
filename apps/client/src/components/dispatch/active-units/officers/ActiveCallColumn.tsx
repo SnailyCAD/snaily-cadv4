@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "next-intl";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { Manage911CallModal } from "components/dispatch/modals/Manage911CallModal";
 import type { Full911Call } from "state/dispatch/dispatchState";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
@@ -31,7 +31,7 @@ export function ActiveCallColumn({ call, isDispatch }: Props) {
 
   return (
     <>
-      <Button disabled={isBtnDisabled} onClick={handleOpen}>
+      <Button disabled={isBtnDisabled} onPress={handleOpen}>
         #{call.caseNumber}
       </Button>
 

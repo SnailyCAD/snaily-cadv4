@@ -1,9 +1,8 @@
 import type * as React from "react";
 import { TabsContent } from "components/shared/TabList";
-import { Button } from "components/Button";
 import { PasswordInput } from "components/form/inputs/Input";
 import { Toggle } from "components/form/Toggle";
-import { Loader } from "components/Loader";
+import { Button, Loader } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
 import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
@@ -103,7 +102,7 @@ export function ApiTokenTab() {
             <div className="flex">
               {cad?.apiTokenId ? (
                 <Button
-                  onClick={() => handleRegenerate(setFieldValue)}
+                  onPress={() => handleRegenerate(setFieldValue)}
                   variant="danger"
                   className="flex items-center mr-2"
                   type="button"

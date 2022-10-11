@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { AssignedWarrantOfficer, Warrant } from "@snailycad/types";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { Table, useTableState } from "components/shared/Table";
 import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
@@ -55,7 +55,7 @@ export function ActiveWarrants() {
             <Button
               variant={null}
               className="dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 bg-gray-500 hover:bg-gray-600 text-white"
-              onClick={() => openModal(ModalIds.CreateWarrant, { isActive: true })}
+              onPress={() => openModal(ModalIds.CreateWarrant, { isActive: true })}
             >
               {t("createWarrant")}
             </Button>
@@ -79,7 +79,7 @@ export function ActiveWarrants() {
                   ? common("none")
                   : assignedOfficers(warrant.assignedOfficers),
               actions: hasManageWarrantsPermissions ? (
-                <Button variant="success" onClick={() => handleEditClick(warrant)} size="xs">
+                <Button variant="success" onPress={() => handleEditClick(warrant)} size="xs">
                   {common("edit")}
                 </Button>
               ) : null,

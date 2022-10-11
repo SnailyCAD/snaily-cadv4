@@ -16,12 +16,10 @@ export async function sendDiscordWebhook(
   });
   if (!webhook) return;
 
-  const webhookData = await performDiscordRequest({
-    async handler(rest) {
-      if (!webhook.webhookId) return;
-
-      const data = await rest.get(Routes.webhook(webhook.webhookId));
-      return data as RESTGetAPIWebhookResult | null;
+  const webhookData = await performDiscordRequest<RESTGetAPIWebhookResult>({
+    handler(rest) {
+      if (!webhook.webhookId) return null;
+      return rest.get(Routes.webhook(webhook.webhookId));
     },
   });
 
@@ -33,8 +31,8 @@ export async function sendDiscordWebhook(
   };
 
   await performDiscordRequest({
-    async handler(rest) {
-      await rest.post(Routes.webhook(webhookData.id, webhookData.token), {
+    handler(rest) {
+      rest.post(Routes.webhook(webhookData.id, webhookData.token), {
         body: normalizedData,
       });
     },

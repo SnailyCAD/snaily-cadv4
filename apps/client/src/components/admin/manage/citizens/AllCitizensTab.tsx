@@ -2,12 +2,10 @@ import * as React from "react";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import useFetch from "lib/useFetch";
-import { Loader } from "components/Loader";
 import { ModalIds } from "types/ModalIds";
-import { Button, buttonVariants } from "components/Button";
+import { Loader, Button, buttonVariants, TextField } from "@snailycad/ui";
 import { useTranslations } from "next-intl";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
 import { Table, useTableState } from "components/shared/Table";
 import { Select } from "components/form/Select";
 import Link from "next/link";
@@ -87,18 +85,20 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
       ) : (
         <ul className="mt-5">
           <div className="flex items-center gap-2">
-            <FormField label={common("search")} className="w-full relative">
-              <Input
-                placeholder="john doe"
-                onChange={(e) => asyncTable.search.setSearch(e.target.value)}
-                value={asyncTable.search.search}
-              />
+            <TextField
+              label={common("search")}
+              className="w-full relative"
+              name="search"
+              onChange={(value) => asyncTable.search.setSearch(value)}
+              value={asyncTable.search.search}
+              placeholder="John Doe"
+            >
               {asyncTable.state === "loading" ? (
                 <span className="absolute top-[2.4rem] right-2.5">
                   <Loader />
                 </span>
               ) : null}
-            </FormField>
+            </TextField>
 
             <FormField className="w-40" label="Filter">
               <Select
@@ -155,7 +155,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
                         className="ml-2"
                         size="xs"
                         variant="danger"
-                        onClick={() => handleDeleteClick(citizen)}
+                        onPress={() => handleDeleteClick(citizen)}
                       >
                         {common("delete")}
                       </Button>
@@ -195,16 +195,15 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
               },
             })}
           </p>
-          <FormField label="Reason">
-            <Input ref={reasonRef} value={reason} onChange={(e) => setReason(e.target.value)} />
-          </FormField>
+
+          <TextField label="Reason" inputRef={reasonRef} value={reason} onChange={setReason} />
         </div>
 
         <div className="flex items-center justify-end gap-2 mt-2">
           <Button
             variant="cancel"
             disabled={state === "loading"}
-            onClick={() => closeModal(ModalIds.AlertDeleteCitizen)}
+            onPress={() => closeModal(ModalIds.AlertDeleteCitizen)}
           >
             {common("cancel")}
           </Button>
@@ -212,7 +211,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
             disabled={state === "loading"}
             className="flex items-center"
             variant="danger"
-            onClick={handleDelete}
+            onPress={handleDelete}
           >
             {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}{" "}
             {common("delete")}

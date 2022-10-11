@@ -8,7 +8,7 @@ import { getTitles } from "./RequestExpungement";
 import { Status } from "components/shared/Status";
 import { FullDate } from "components/shared/FullDate";
 import { useModal } from "state/modalState";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { ModalIds } from "types/ModalIds";
 import type { GetExpungementRequestsData } from "@snailycad/types/api";
 
@@ -33,7 +33,7 @@ export function ExpungementRequestsTab(props: Props) {
       <header className="flex justify-between items-center">
         <h3 className="text-2xl font-semibold">{t("expungementRequests")}</h3>
 
-        <Button onClick={() => openModal(ModalIds.RequestExpungement)}>
+        <Button onPress={() => openModal(ModalIds.RequestExpungement)}>
           {t("requestExpungement")}
         </Button>
       </header>

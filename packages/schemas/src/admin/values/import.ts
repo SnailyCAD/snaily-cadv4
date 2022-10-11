@@ -87,6 +87,8 @@ export const DIVISION_ARR = z.array(DIVISION_SCHEMA).min(1);
  * penal code
  */
 
+const PENAL_CODE_TYPE_REGEX = /FELONY|MISDEMEANOR|INFRACTION/;
+
 export const PENAL_CODE_SCHEMA = z.object({
   title: z.string().min(2).max(255),
   descriptionData: z.array(z.any()).optional().nullable(),
@@ -98,6 +100,7 @@ export const PENAL_CODE_SCHEMA = z.object({
   warningNotFines: z.any().nullable().optional(),
   bail: z.any().nullable().optional(),
   prisonTerm: z.any().nullable().optional(),
+  type: z.string().regex(PENAL_CODE_TYPE_REGEX).optional().nullable(),
 });
 
 export const PENAL_CODE_ARR = z.array(PENAL_CODE_SCHEMA).min(1);

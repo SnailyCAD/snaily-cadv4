@@ -1,7 +1,6 @@
 import * as React from "react";
-import { Button } from "components/Button";
 import { Select, SelectValue } from "components/form/Select";
-import { Loader } from "components/Loader";
+import { Button, Loader } from "@snailycad/ui";
 import { TabsContent } from "components/shared/TabList";
 import { Form, Formik, useFormikContext } from "formik";
 import useFetch from "lib/useFetch";
@@ -116,7 +115,7 @@ export function DiscordRolesTab() {
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold">Discord Roles</h2>
 
-          <Button onClick={refreshRoles} className="h-fit min-w-fit">
+          <Button onPress={refreshRoles} className="h-fit min-w-fit">
             Refresh Roles
           </Button>
         </div>

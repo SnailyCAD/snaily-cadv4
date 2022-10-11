@@ -1,17 +1,14 @@
 import { useTranslations } from "use-intl";
 import { Form, Formik } from "formik";
 import { MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
-import { Button } from "components/Button";
+import { Textarea, Loader, Input, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import type { MedicalRecord } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
-import { Input } from "components/form/inputs/Input";
-import { Textarea } from "components/form/Textarea";
 import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
@@ -75,7 +72,7 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
           <Form>
             <FormField errorMessage={errors.citizenId} label={t("citizen")}>
               <InputSuggestions<NameSearchResult>
-                onSuggestionClick={(suggestion) => {
+                onSuggestionPress={(suggestion) => {
                   const newValues = {
                     ...values,
                     citizenId: suggestion.id,
@@ -141,7 +138,7 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.CreateMedicalRecord)}
+                onPress={() => closeModal(ModalIds.CreateMedicalRecord)}
                 variant="cancel"
               >
                 {common("cancel")}

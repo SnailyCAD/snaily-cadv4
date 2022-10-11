@@ -1,14 +1,12 @@
 import { PENAL_CODE_SCHEMA } from "@snailycad/schemas";
-import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
-import { Loader } from "components/Loader";
+import { Loader, Button, SelectField, TextField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { Form, Formik, useFormikContext } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
-import type { PenalCode, PenalCodeGroup, ValueType } from "@snailycad/types";
+import { PenalCode, PenalCodeGroup, ValueType, PenalCodeType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { FormRow } from "components/form/FormRow";
 import { Select } from "components/form/Select";
@@ -47,6 +45,7 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
       prisonTerm: values.warningNotApplicable ? values.prisonTerm.values : null,
       bail: LEO_BAIL && values.warningNotApplicable ? values.bail.values : null,
       groupId: values.group === "ungrouped" || !values.group ? null : values.group,
+      type: values.type,
     };
 
     if (penalCode) {
@@ -76,6 +75,7 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
 
   const INITIAL_VALUES = {
     title: penalCode?.title ?? "",
+    type: penalCode?.type ?? null,
     description: penalCode?.description ?? "",
     descriptionData: dataToSlate(penalCode),
     group: penalCode?.groupId ?? "",
@@ -111,9 +111,27 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, setFieldValue, values, errors }) => (
           <Form>
-            <FormField errorMessage={errors.title} label="Title">
-              <Input autoFocus name="title" onChange={handleChange} value={values.title} />
-            </FormField>
+            <TextField
+              errorMessage={errors.title}
+              label="Title"
+              autoFocus
+              name="title"
+              onChange={(value) => setFieldValue("title", value)}
+              value={values.title}
+            />
+
+            <SelectField
+              errorMessage={errors.type}
+              label="Type"
+              name="type"
+              options={Object.values(PenalCodeType).map((value) => ({
+                value,
+                label: value.toLowerCase(),
+              }))}
+              onSelectionChange={(key) => setFieldValue("type", key)}
+              isClearable={false}
+              selectedKey={values.type}
+            />
 
             <FormField errorMessage={errors.description} label="Description">
               <Editor
@@ -169,7 +187,7 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.ManageValue)}
+                onPress={() => closeModal(ModalIds.ManageValue)}
                 variant="cancel"
               >
                 Cancel
@@ -187,7 +205,7 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
 }
 
 function FieldsRow({ keyValue }: { keyValue: `fines${number}` | "prisonTerm" | "bail" }) {
-  const { values, handleChange, setFieldValue } = useFormikContext<any>();
+  const { values, setFieldValue } = useFormikContext<any>();
 
   const disabled = keyValue === "fines1" ? !values.warningApplicable : !values.warningNotApplicable;
   const fieldDisabled = !values[keyValue].enabled;
@@ -213,33 +231,32 @@ function FieldsRow({ keyValue }: { keyValue: `fines${number}` | "prisonTerm" | "
       </FormField>
 
       <FormRow className="items-center" flexLike>
-        <FormField label="Min.">
-          <Input
-            required
-            min={0}
-            type="number"
-            onChange={handleChange}
-            name={`${keyValue}.values[0]`}
-            value={values[keyValue].values[0]}
-            placeholder="Min."
-            className="min-w-[100px]"
-            disabled={isDisabled}
-          />
-        </FormField>
+        <TextField
+          label="Min."
+          autoFocus
+          onChange={(value) => setFieldValue(`${keyValue}.values[0]`, value)}
+          isRequired
+          type="number"
+          name={`${keyValue}.values[0]`}
+          value={values[keyValue].values[0]}
+          placeholder="Min."
+          className="min-w-[100px]"
+          isDisabled={isDisabled}
+        />
+
         <span className="mb-2.5">{" - "}</span>
-        <FormField label="Max.">
-          <Input
-            required
-            min={0}
-            type="number"
-            onChange={handleChange}
-            name={`${keyValue}.values[1]`}
-            value={values[keyValue].values[1]}
-            placeholder="Max."
-            className="min-w-[100px]"
-            disabled={isDisabled}
-          />
-        </FormField>
+        <TextField
+          label="Max."
+          autoFocus
+          onChange={(value) => setFieldValue(`${keyValue}.values[1]`, value)}
+          isRequired
+          type="number"
+          name={`${keyValue}.values[1]`}
+          value={values[keyValue].values[1]}
+          placeholder="Max."
+          className="min-w-[100px]"
+          isDisabled={isDisabled}
+        />
       </FormRow>
     </FormRow>
   );

@@ -1,6 +1,6 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
-import { Button } from "components/Button";
+import { Button, TextField } from "@snailycad/ui";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
@@ -14,8 +14,6 @@ import {
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll, yesOrNoText } from "lib/utils";
-import { Input } from "components/form/inputs/Input";
-import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
 import { Title } from "components/shared/Title";
 import { ModalIds } from "types/ModalIds";
@@ -105,9 +103,13 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
         </h2>
       </header>
 
-      <FormField label={common("search")} className="my-2">
-        <Input onChange={(e) => setSearch(e.target.value)} value={search} className="" />
-      </FormField>
+      <TextField
+        label={common("search")}
+        className="my-2"
+        name="search"
+        value={search}
+        onChange={(value) => setSearch(value)}
+      />
 
       {Object.values(DriversLicenseCategoryType).map((type) => {
         const valuesForType = values.filter((v) => v.type === type);
@@ -122,7 +124,7 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
               <h3 className="text-xl font-semibold">{type}</h3>
 
               <Button
-                onClick={() => {
+                onPress={() => {
                   openModal(ModalIds.ManageValue);
                   setTempValue((p) => p && { ...p, type });
                 }}
@@ -236,13 +238,13 @@ function TableList(props: {
         createdAt: <FullDate>{getCreatedAtFromValue(value)}</FullDate>,
         actions: (
           <>
-            <Button size="xs" onClick={() => props.handleEdit(value)} variant="success">
+            <Button size="xs" onPress={() => props.handleEdit(value)} variant="success">
               {common("edit")}
             </Button>
 
             <Button
               size="xs"
-              onClick={() => props.handleDelete(value)}
+              onPress={() => props.handleDelete(value)}
               variant="danger"
               className="ml-2"
               // disabled={isValueInUse(value)}

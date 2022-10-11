@@ -1,10 +1,8 @@
 import * as React from "react";
 import { EMS_FD_DEPUTY_SCHEMA } from "@snailycad/schemas";
-import { Button } from "components/Button";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
 import { Select } from "components/form/Select";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { useValues } from "context/ValuesContext";
@@ -38,7 +36,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
   const common = useTranslations("Common");
   const t = useTranslations();
   const formRef = React.useRef<HTMLFormElement>(null);
-  const { BADGE_NUMBERS } = useFeatureEnabled();
+  const { BADGE_NUMBERS, DIVISIONS } = useFeatureEnabled();
 
   const { state, execute } = useFetch();
   const { department, division } = useValues();
@@ -71,9 +69,8 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
         helpers,
       });
 
-      deputyId = deputy.id;
-
       if (json.id) {
+        deputyId = deputy.id;
         onUpdate?.(deputy, json);
       }
     } else {
@@ -126,7 +123,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
       className="w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, handleSubmit, errors, values, isValid }) => (
+        {({ handleChange, setFieldValue, handleSubmit, errors, values, isValid }) => (
           <form ref={formRef} onSubmit={handleSubmit}>
             <ImageSelectInput image={image} setImage={setImage} />
 
@@ -139,33 +136,32 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
             </FormField>
 
             {BADGE_NUMBERS ? (
-              <FormField errorMessage={errors.badgeNumber} label={t("Leo.badgeNumber")}>
-                <Input
-                  type="number"
-                  value={values.badgeNumber}
-                  name="badgeNumber"
-                  onChange={(e) =>
-                    handleChange({
-                      ...e,
-                      target: {
-                        ...e.target,
-                        id: "badgeNumber",
-                        value: e.target.valueAsNumber,
-                      },
-                    })
-                  }
-                />
-              </FormField>
+              <TextField
+                errorMessage={errors.badgeNumber}
+                label={t("Leo.badgeNumber")}
+                autoFocus
+                name="badgeNumber"
+                onChange={(value) => setFieldValue("badgeNumber", parseInt(value))}
+                value={String(values.badgeNumber)}
+              />
             ) : null}
 
             <FormRow>
-              <FormField errorMessage={errors.callsign} label={t("Leo.callsign1")}>
-                <Input value={values.callsign} name="callsign" onChange={handleChange} />
-              </FormField>
+              <TextField
+                errorMessage={errors.callsign}
+                label={t("Leo.callsign1")}
+                name="callsign"
+                onChange={(value) => setFieldValue("callsign", value)}
+                value={values.callsign}
+              />
 
-              <FormField errorMessage={errors.callsign2} label={t("Leo.callsign2")}>
-                <Input value={values.callsign2} name="callsign2" onChange={handleChange} />
-              </FormField>
+              <TextField
+                errorMessage={errors.callsign2}
+                label={t("Leo.callsign2")}
+                name="callsign2"
+                onChange={(value) => setFieldValue("callsign2", value)}
+                value={values.callsign2}
+              />
             </FormRow>
 
             <FormField errorMessage={errors.department} label={t("Leo.department")}>
@@ -182,19 +178,23 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
               />
             </FormField>
 
-            <FormField errorMessage={errors.division} label={t("Leo.division")}>
-              <Select
-                value={values.division}
-                name="division"
-                onChange={handleChange}
-                values={division.values
-                  .filter((v) => (values.department ? v.departmentId === values.department : true))
-                  .map((value) => ({
-                    label: value.value.value,
-                    value: value.id,
-                  }))}
-              />
-            </FormField>
+            {DIVISIONS ? (
+              <FormField errorMessage={errors.division} label={t("Leo.division")}>
+                <Select
+                  value={values.division}
+                  name="division"
+                  onChange={handleChange}
+                  values={division.values
+                    .filter((v) =>
+                      values.department ? v.departmentId === values.department : true,
+                    )
+                    .map((value) => ({
+                      label: value.value.value,
+                      value: value.id,
+                    }))}
+                />
+              </FormField>
+            ) : null}
 
             <CallSignPreview
               divisions={division.values.filter((v) => values.division === v.id)}
@@ -204,7 +204,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
             {deputy ? <UnitQualificationsTable unit={deputy as any} /> : null}
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onClick={handleClose} variant="cancel">
+              <Button type="reset" onPress={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button

@@ -13,7 +13,7 @@ export function citizenObjectFromData(
     weight: data.weight,
     height: data.height,
     hairColor: data.hairColor,
-    dateOfBirth: new Date(data.dateOfBirth),
+    dateOfBirth: data.dateOfBirth,
     ethnicityId: data.ethnicity,
     name: data.name,
     surname: data.surname,

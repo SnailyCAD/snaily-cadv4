@@ -1,4 +1,5 @@
-import { Feature, cad, CadFeature, User } from "@prisma/client";
+import { Feature, CadFeature, User } from "@prisma/client";
+import type { cad } from "@snailycad/types";
 import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { isFeatureEnabled } from "lib/cad";
 

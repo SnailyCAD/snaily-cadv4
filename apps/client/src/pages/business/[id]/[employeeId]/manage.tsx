@@ -14,7 +14,7 @@ import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { EmployeesTab } from "components/business/manage/EmployeesTab";
 import Link from "next/link";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 
 interface Props {
   employee: FullEmployee | null;

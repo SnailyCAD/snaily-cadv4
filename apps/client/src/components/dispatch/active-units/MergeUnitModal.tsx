@@ -1,8 +1,7 @@
 import * as React from "react";
 import type { Officer } from "@snailycad/types";
-import { Button } from "components/Button";
+import { Loader, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
@@ -103,7 +102,7 @@ export function MergeUnitModal({ unit, isDispatch, onClose }: Props) {
             </FormField>
 
             <footer className="flex mt-5 justify-end">
-              <Button onClick={handleClose} type="button" variant="cancel">
+              <Button onPress={handleClose} type="button" variant="cancel">
                 {common("cancel")}
               </Button>
               <Button

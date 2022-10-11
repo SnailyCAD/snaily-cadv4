@@ -1,9 +1,7 @@
 import { NAME_CHANGE_REQUEST_SCHEMA } from "@snailycad/schemas";
-import { Button } from "components/Button";
+import { Input, Loader, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { FormRow } from "components/form/FormRow";
-import { Input } from "components/form/inputs/Input";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik, FormikHelpers } from "formik";
@@ -79,7 +77,7 @@ export function RequestNameChangeModal({ onCreate }: Props) {
 
             <footer className="flex justify-end mt-5">
               <Button
-                onClick={() => closeModal(ModalIds.RequestNameChange)}
+                onPress={() => closeModal(ModalIds.RequestNameChange)}
                 variant="cancel"
                 type="reset"
               >

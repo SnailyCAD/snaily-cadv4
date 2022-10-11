@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -116,10 +116,11 @@ export default function Jail({ data }: Props) {
               : `Bail Posted (${citizen?.name} ${citizen?.surname})`;
 
             return {
-              id: item.id,
               rowProps: { style: released ? { opacity: "0.5" } : undefined },
+              id: item.id,
+              caseNumber: `#${record.caseNumber}`,
               citizen: (
-                <Button onClick={() => handleNameClick(item)}>
+                <Button onPress={() => handleNameClick(item)}>
                   {item.name} {item.surname}{" "}
                   {SOCIAL_SECURITY_NUMBERS && item.socialSecurityNumber
                     ? `(SSN: ${item.socialSecurityNumber})`
@@ -135,7 +136,7 @@ export default function Jail({ data }: Props) {
               actions: (
                 <Button
                   disabled={released}
-                  onClick={() => handleCheckoutClick(item, record.id)}
+                  onPress={() => handleCheckoutClick(item, record.id)}
                   className="ml-2"
                   size="xs"
                 >
@@ -145,6 +146,7 @@ export default function Jail({ data }: Props) {
             };
           })}
           columns={[
+            { header: t("caseNumber"), accessorKey: "caseNumber" },
             { header: t("citizen"), accessorKey: "citizen" },
             { header: t("officer"), accessorKey: "officer" },
             { header: t("jailTime"), accessorKey: "jailTime" },

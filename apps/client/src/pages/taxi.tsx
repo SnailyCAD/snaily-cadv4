@@ -4,7 +4,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import type { TaxiCall } from "@snailycad/types";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { useTranslations } from "use-intl";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
@@ -65,7 +65,7 @@ export default function Taxi(props: Props) {
       <header className="flex items-center justify-between mb-5">
         <Title>{t("taxi")}</Title>
 
-        <Button onClick={onCreateClick}>{t("createTaxiCall")}</Button>
+        <Button onPress={onCreateClick}>{t("createTaxiCall")}</Button>
       </header>
 
       <TowTaxiCallsTable

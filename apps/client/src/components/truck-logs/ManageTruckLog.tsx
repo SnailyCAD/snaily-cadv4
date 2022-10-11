@@ -1,10 +1,8 @@
 import { CREATE_TRUCK_LOG_SCHEMA } from "@snailycad/schemas";
-import { Button } from "components/Button";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { FormRow } from "components/form/FormRow";
-import { Input } from "components/form/inputs/Input";
 import { Select } from "components/form/Select";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
@@ -13,7 +11,6 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import type { RegisteredVehicle } from "@snailycad/types";
 import { useTranslations } from "use-intl";
-import { Textarea } from "components/form/Textarea";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import type { GetTruckLogsData, PostTruckLogsData, PutTruckLogsData } from "@snailycad/types/api";
 
@@ -87,16 +84,22 @@ export function ManageTruckLogModal({
       className="w-[700px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, values, isValid, errors }) => (
+        {({ handleChange, setFieldValue, values, isValid, errors }) => (
           <Form>
             <FormRow>
-              <FormField errorMessage={errors.startedAt} label={t("startedAt")}>
-                <Input onChange={handleChange} name="startedAt" value={values.startedAt} />
-              </FormField>
+              <TextField
+                errorMessage={errors.startedAt}
+                label="Started At"
+                value={values.startedAt}
+                onChange={(value) => setFieldValue("startedAt", value)}
+              />
 
-              <FormField errorMessage={errors.endedAt} label={t("endedAt")}>
-                <Input onChange={handleChange} name="endedAt" value={values.endedAt} />
-              </FormField>
+              <TextField
+                errorMessage={errors.endedAt}
+                label="Ended At"
+                value={values.endedAt}
+                onChange={(value) => setFieldValue("endedAt", value)}
+              />
             </FormRow>
 
             <FormField errorMessage={errors.citizenId} label={t("driver")}>
@@ -119,13 +122,18 @@ export function ManageTruckLogModal({
               />
             </FormField>
 
-            <FormField optional errorMessage={errors.notes} label={t("notes")}>
-              <Textarea name="notes" onChange={handleChange} value={values.notes} />
-            </FormField>
+            <TextField
+              isTextarea
+              isOptional
+              errorMessage={errors.notes}
+              label={t("notes")}
+              value={values.notes}
+              onChange={(value) => setFieldValue("notes", value)}
+            />
 
             <footer className="flex justify-end mt-5">
               <div className="flex items-center">
-                <Button type="reset" onClick={handleClose} variant="cancel">
+                <Button type="reset" onPress={handleClose} variant="cancel">
                   {common("cancel")}
                 </Button>
                 <Button

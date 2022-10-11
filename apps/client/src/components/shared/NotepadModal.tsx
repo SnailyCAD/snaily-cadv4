@@ -1,5 +1,5 @@
 import { useTranslations } from "use-intl";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { useNotepad } from "hooks/shared/useNotepad";
@@ -25,10 +25,10 @@ export function NotepadModal() {
       <Editor value={value} onChange={setValue} />
 
       <footer className="flex justify-end mt-5">
-        <Button onClick={handleReset} variant="danger">
+        <Button onPress={handleReset} variant="danger">
           {common("reset")}
         </Button>
-        <Button onClick={() => closeModal(ModalIds.Notepad)} className="ml-2" type="submit">
+        <Button onPress={() => closeModal(ModalIds.Notepad)} className="ml-2" type="submit">
           {common("save")}
         </Button>
       </footer>

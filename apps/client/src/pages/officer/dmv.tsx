@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -79,7 +79,7 @@ export default function Dmv({ data }: Props) {
               actions: (
                 <>
                   <Button
-                    onClick={() => handleAcceptOrDecline(vehicle.id, "ACCEPT")}
+                    onPress={() => handleAcceptOrDecline(vehicle.id, "ACCEPT")}
                     disabled={vehicle.dmvStatus !== WhitelistStatus.PENDING || state === "loading"}
                     variant="success"
                     size="xs"
@@ -87,7 +87,7 @@ export default function Dmv({ data }: Props) {
                     {common("accept")}
                   </Button>
                   <Button
-                    onClick={() => handleAcceptOrDecline(vehicle.id, "DECLINE")}
+                    onPress={() => handleAcceptOrDecline(vehicle.id, "DECLINE")}
                     disabled={vehicle.dmvStatus !== WhitelistStatus.PENDING || state === "loading"}
                     variant="danger"
                     className="ml-2"

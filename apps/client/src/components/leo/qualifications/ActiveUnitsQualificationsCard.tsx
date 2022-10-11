@@ -5,7 +5,7 @@ import { isUnitCombined } from "@snailycad/utils";
 import { HoverCard } from "components/shared/HoverCard";
 import useFetch from "lib/useFetch";
 import create from "zustand";
-import { Loader } from "components/Loader";
+import { Loader } from "@snailycad/ui";
 import { UnitQualificationsTable } from "./UnitQualificationsTable";
 import type { GetUnitQualificationsByUnitIdData } from "@snailycad/types/api";
 

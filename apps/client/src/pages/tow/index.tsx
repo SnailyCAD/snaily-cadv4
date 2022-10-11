@@ -7,7 +7,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import type { TaxiCall, TowCall } from "@snailycad/types";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { requestAll } from "lib/utils";
@@ -70,7 +70,7 @@ export default function Tow(props: Props) {
       <header className="flex items-center justify-between mb-5">
         <Title className="!mb-0">{t("tow")}</Title>
 
-        <Button onClick={onCreateClick}>{t("createTowCall")}</Button>
+        <Button onPress={onCreateClick}>{t("createTowCall")}</Button>
       </header>
 
       <TowTaxiCallsTable

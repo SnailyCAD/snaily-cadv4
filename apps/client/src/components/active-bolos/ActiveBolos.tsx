@@ -11,7 +11,7 @@ import { BoloColumn } from "./BoloColumn";
 import type { DeleteBolosData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useMounted } from "@casper124578/useful";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { classNames } from "lib/classNames";
 import { Filter } from "react-bootstrap-icons";
 import dynamic from "next/dynamic";
@@ -68,7 +68,7 @@ export function ActiveBolos({ initialBolos }: Props) {
               "px-1.5 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
               showFilters && "dark:!bg-secondary !bg-gray-500",
             )}
-            onClick={() => setShowFilters(!showFilters)}
+            onPress={() => setShowFilters(!showFilters)}
             title={t("filters")}
             disabled={bolos.length <= 0}
           >

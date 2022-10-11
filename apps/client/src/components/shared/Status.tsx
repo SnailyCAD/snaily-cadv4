@@ -1,5 +1,5 @@
 import {
-  DLExamStatus,
+  LicenseExamStatus,
   ExpungementRequestStatus,
   PaymentStatus,
   WhitelistStatus,
@@ -9,7 +9,7 @@ interface Props {
   state:
     | WhitelistStatus
     | ExpungementRequestStatus
-    | DLExamStatus
+    | LicenseExamStatus
     | PaymentStatus
     | null
     | undefined;
@@ -26,14 +26,14 @@ export function Status({ state, children }: Props) {
   const colors = {
     [WhitelistStatus.ACCEPTED]: Colors.GREEN,
     [ExpungementRequestStatus.ACCEPTED]: Colors.GREEN,
-    [DLExamStatus.PASSED]: Colors.GREEN,
+    [LicenseExamStatus.PASSED]: Colors.GREEN,
     [PaymentStatus.PAID]: Colors.GREEN,
     [WhitelistStatus.PENDING]: Colors.ORANGE,
     [ExpungementRequestStatus.PENDING]: Colors.ORANGE,
-    [DLExamStatus.IN_PROGRESS]: Colors.ORANGE,
+    [LicenseExamStatus.IN_PROGRESS]: Colors.ORANGE,
     [WhitelistStatus.DECLINED]: Colors.RED,
     [ExpungementRequestStatus.DENIED]: Colors.RED,
-    [DLExamStatus.FAILED]: Colors.RED,
+    [LicenseExamStatus.FAILED]: Colors.RED,
     [PaymentStatus.UNPAID]: Colors.RED,
   };
 

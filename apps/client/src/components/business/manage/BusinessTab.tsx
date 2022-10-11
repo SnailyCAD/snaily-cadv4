@@ -7,11 +7,9 @@ import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { Form, Formik } from "formik";
 import { CREATE_COMPANY_SCHEMA } from "@snailycad/schemas";
-import { Input } from "components/form/inputs/Input";
+import { Button, Loader, Input } from "@snailycad/ui";
 import { handleValidate } from "lib/handleValidate";
 import { Toggle } from "components/form/Toggle";
-import { Button } from "components/Button";
-import { Loader } from "components/Loader";
 import { useRouter } from "next/router";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { FormRow } from "components/form/FormRow";
@@ -120,7 +118,7 @@ export function ManageBusinessTab() {
 
             <footer className="flex justify-between mt-5">
               <Button
-                onClick={() => openModal(ModalIds.AlertDeleteBusiness)}
+                onPress={() => openModal(ModalIds.AlertDeleteBusiness)}
                 type="reset"
                 variant="danger"
               >

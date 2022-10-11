@@ -1,4 +1,4 @@
-import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
+import type { CombinedLeoUnit, DivisionValue, EmsFdDeputy, Officer } from "@snailycad/types";
 import { isUnitCombined } from "@snailycad/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
@@ -24,8 +24,11 @@ export function useActiveUnitsFilter() {
     const status = unit.status?.value.value ?? common("none");
     const radioChannel = unit.radioChannelId ?? common("none");
     const badgeNumber = !isCombined && unit.badgeNumber;
-    const divisions =
-      "divisions" in unit ? unit.divisions : "division" in unit ? [unit.division] : [];
+
+    const divisions = (
+      "divisions" in unit ? unit.divisions : "division" in unit ? [unit.division] : []
+    ).filter(Number) as DivisionValue[];
+
     const divisionString = divisions.map((v) => v.value.value).join(",");
 
     const searchableArr = [

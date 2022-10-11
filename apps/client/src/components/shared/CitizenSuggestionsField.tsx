@@ -27,7 +27,7 @@ export function CitizenSuggestionsField<Suggestion extends NameSearchResult>({
 
   return (
     <InputSuggestions<Suggestion>
-      onSuggestionClick={(suggestion) => {
+      onSuggestionPress={(suggestion) => {
         setValues({
           ...values,
           [valueFieldName]: suggestion.id,

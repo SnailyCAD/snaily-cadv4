@@ -1,8 +1,6 @@
 import * as React from "react";
-import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
-import { Loader } from "components/Loader";
+import { Input, Loader, Button } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
@@ -93,7 +91,7 @@ export function ImportValuesModal({ onImport, type }: Props) {
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.ImportValues)}
+                onPress={() => closeModal(ModalIds.ImportValues)}
                 variant="cancel"
               >
                 Cancel

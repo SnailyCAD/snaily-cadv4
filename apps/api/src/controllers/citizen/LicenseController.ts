@@ -2,7 +2,7 @@ import { cad, CadFeature, Feature, User } from "@prisma/client";
 import { LICENSE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
-import { NotFound } from "@tsed/exceptions";
+import { Forbidden, NotFound } from "@tsed/exceptions";
 import { ContentType, Description, Put } from "@tsed/schema";
 import { canManageInvariant } from "lib/auth/getSessionUser";
 import { prisma } from "lib/prisma";
@@ -28,17 +28,21 @@ export class LicensesController {
   ): Promise<APITypes.PutCitizenLicensesByIdData> {
     const data = validateSchema(LICENSE_SCHEMA, body);
 
-    const isDLExamEnabled = isFeatureEnabled({
+    const isLicenseExamsEnabled = isFeatureEnabled({
       features: cad.features,
-      feature: Feature.DL_EXAMS,
+      feature: Feature.LICENSE_EXAMS,
       defaultReturn: false,
     });
+
+    if (isLicenseExamsEnabled) {
+      throw new Forbidden("citizenNotAllowedToEditLicenses");
+    }
 
     const citizen = await prisma.citizen.findUnique({
       where: {
         id: citizenId,
       },
-      include: { dlCategory: true },
+      include: { dlCategory: true, suspendedLicenses: true },
     });
 
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
@@ -49,16 +53,17 @@ export class LicensesController {
     }
 
     await updateCitizenLicenseCategories(citizen, data);
+    const suspendedLicenses = citizen.suspendedLicenses;
 
     const updated = await prisma.citizen.update({
       where: {
         id: citizen.id,
       },
       data: {
-        driversLicenseId: isDLExamEnabled ? undefined : data.driversLicense,
-        pilotLicenseId: data.pilotLicense,
-        weaponLicenseId: data.weaponLicense,
-        waterLicenseId: data.waterLicense,
+        driversLicenseId: suspendedLicenses?.driverLicense ? undefined : data.driversLicense,
+        pilotLicenseId: suspendedLicenses?.pilotLicense ? undefined : data.pilotLicense,
+        weaponLicenseId: suspendedLicenses?.firearmsLicense ? undefined : data.weaponLicense,
+        waterLicenseId: suspendedLicenses?.waterLicense ? undefined : data.waterLicense,
       },
       include: citizenInclude,
     });

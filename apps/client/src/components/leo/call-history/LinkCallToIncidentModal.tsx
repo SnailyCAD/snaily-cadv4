@@ -1,8 +1,7 @@
 import { LINK_INCIDENT_TO_CALL_SCHEMA } from "@snailycad/schemas";
-import { Button } from "components/Button";
+import { Loader, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select, SelectValue } from "components/form/Select";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
@@ -74,7 +73,7 @@ export function LinkCallToIncidentModal({ incidents, onSave, call }: Props) {
             <footer className="flex items-center justify-end gap-2 mt-5">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.LinkCallToIncident)}
+                onPress={() => closeModal(ModalIds.LinkCallToIncident)}
                 variant="cancel"
               >
                 {common("cancel")}

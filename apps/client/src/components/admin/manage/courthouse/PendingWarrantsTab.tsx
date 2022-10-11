@@ -3,7 +3,7 @@ import { TabsContent } from "@radix-ui/react-tabs";
 import { Warrant, WhitelistStatus } from "@snailycad/types";
 import { Table, useTableState } from "components/shared/Table";
 import { useTranslations } from "next-intl";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { FullDate } from "components/shared/FullDate";
 import useFetch from "lib/useFetch";
 import type { GetManagePendingWarrants, PutManagePendingWarrants } from "@snailycad/types/api";
@@ -69,12 +69,12 @@ export function PendingWarrantsTab({ warrants: data }: Props) {
               createdAt: <FullDate>{warrant.createdAt}</FullDate>,
               actions: (
                 <>
-                  <Button onClick={() => handleViewWarrant(warrant)} size="xs">
+                  <Button onPress={() => handleViewWarrant(warrant)} size="xs">
                     View Warrant
                   </Button>
                   <Button
                     disabled={state === "loading"}
-                    onClick={() => handleUpdate(warrant.id, WhitelistStatus.ACCEPTED)}
+                    onPress={() => handleUpdate(warrant.id, WhitelistStatus.ACCEPTED)}
                     variant="success"
                     size="xs"
                     className="ml-2"
@@ -84,7 +84,7 @@ export function PendingWarrantsTab({ warrants: data }: Props) {
                   <Button
                     className="ml-2"
                     disabled={state === "loading"}
-                    onClick={() => handleUpdate(warrant.id, WhitelistStatus.DECLINED)}
+                    onPress={() => handleUpdate(warrant.id, WhitelistStatus.DECLINED)}
                     variant="danger"
                     size="xs"
                   >

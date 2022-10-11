@@ -1,11 +1,11 @@
-import {
-  DLExam,
-  DLExamPassType,
-  DLExamStatus,
-  DriversLicenseCategoryValue,
+import type {
   Prisma,
+  LicenseExam,
+  DriversLicenseCategoryValue,
+  LicenseExamType,
 } from "@prisma/client";
-import { DL_EXAM_SCHEMA } from "@snailycad/schemas";
+import { LicenseExamPassType, LicenseExamStatus } from "@snailycad/types";
+import { LICENSE_EXAM_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Controller, BodyParams, PathParams, QueryParams } from "@tsed/common";
 import { NotFound } from "@tsed/exceptions";
 import { ContentType, Delete, Get, Post, Put } from "@tsed/schema";
@@ -16,26 +16,26 @@ import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { manyToManyHelper } from "utils/manyToMany";
 import type * as APITypes from "@snailycad/types/api";
 
-const dlExamIncludes = {
+const licenseExamIncludes = {
   citizen: true,
   license: true,
   categories: { include: { value: true } },
 };
 
-@Controller("/leo/dl-exams")
+@Controller("/leo/license-exams")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
-export class DLExamsController {
+export class LicenseExamsController {
   @Get("/")
   @UsePermissions({
     fallback: (u) => u.isSupervisor,
-    permissions: [Permissions.ViewDLExams, Permissions.ManageDLExams],
+    permissions: [Permissions.ViewLicenseExams, Permissions.ManageLicenseExams],
   })
-  async getAllDLExams(
+  async getAlllicenseExams(
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query = "",
-  ): Promise<APITypes.GetDLExamsData> {
-    const where: Prisma.DLExamWhereInput | undefined = query
+  ): Promise<APITypes.GetLicenseExamsData> {
+    const where: Prisma.LicenseExamWhereInput | undefined = query
       ? {
           OR: [
             { license: { value: { contains: query, mode: "insensitive" } } },
@@ -46,14 +46,14 @@ export class DLExamsController {
       : undefined;
 
     const [exams, totalCount] = await prisma.$transaction([
-      prisma.dLExam.findMany({
-        include: dlExamIncludes,
+      prisma.licenseExam.findMany({
+        include: licenseExamIncludes,
         orderBy: { createdAt: "desc" },
         where,
         skip,
         take: 35,
       }),
-      prisma.dLExam.count({ where }),
+      prisma.licenseExam.count({ where }),
     ]);
 
     return { exams, totalCount };
@@ -62,17 +62,18 @@ export class DLExamsController {
   @Post("/")
   @UsePermissions({
     fallback: (u) => u.isSupervisor,
-    permissions: [Permissions.ManageDLExams],
+    permissions: [Permissions.ManageLicenseExams],
   })
-  async createDLEXam(@BodyParams() body: unknown): Promise<APITypes.PostDLExamsData> {
-    const data = validateSchema(DL_EXAM_SCHEMA, body);
+  async createlicenseExam(@BodyParams() body: unknown): Promise<APITypes.PostLicenseExamsData> {
+    const data = validateSchema(LICENSE_EXAM_SCHEMA, body);
 
     const status = this.getExamStatus(data);
-    const exam = await prisma.dLExam.create({
+    const exam = await prisma.licenseExam.create({
       data: {
+        type: data.type as LicenseExamType,
         citizenId: data.citizenId,
-        practiceExam: data.practiceExam as DLExamPassType | null,
-        theoryExam: data.theoryExam as DLExamPassType | null,
+        practiceExam: data.practiceExam as LicenseExamPassType | null,
+        theoryExam: data.theoryExam as LicenseExamPassType | null,
         licenseId: data.license,
         status,
       },
@@ -82,20 +83,20 @@ export class DLExamsController {
     const connectDisconnectArr = manyToManyHelper([], data.categories as string[]);
     await prisma.$transaction(
       connectDisconnectArr.map((item) =>
-        prisma.dLExam.update({
+        prisma.licenseExam.update({
           where: { id: exam.id },
           data: { categories: item },
         }),
       ),
     );
 
-    if (status === DLExamStatus.PASSED) {
+    if (status === LicenseExamStatus.PASSED) {
       await this.grantLicenseToCitizen(exam);
     }
 
-    const updated = await prisma.dLExam.findUniqueOrThrow({
+    const updated = await prisma.licenseExam.findUniqueOrThrow({
       where: { id: exam.id },
-      include: dlExamIncludes,
+      include: licenseExamIncludes,
     });
 
     return updated;
@@ -104,20 +105,20 @@ export class DLExamsController {
   @Put("/:id")
   @UsePermissions({
     fallback: (u) => u.isSupervisor,
-    permissions: [Permissions.ManageDLExams],
+    permissions: [Permissions.ManageLicenseExams],
   })
-  async updateDLEXam(
+  async updatelicenseExam(
     @PathParams("id") examId: string,
     @BodyParams() body: unknown,
-  ): Promise<APITypes.PutDLExamByIdData> {
-    const data = validateSchema(DL_EXAM_SCHEMA, body);
+  ): Promise<APITypes.PutLicenseExamByIdData> {
+    const data = validateSchema(LICENSE_EXAM_SCHEMA, body);
 
-    const exam = await prisma.dLExam.findUnique({
+    const exam = await prisma.licenseExam.findUnique({
       where: { id: examId },
       include: { categories: true },
     });
 
-    if (!exam || exam.status !== DLExamStatus.IN_PROGRESS) {
+    if (!exam || exam.status !== LicenseExamStatus.IN_PROGRESS) {
       throw new NotFound("examNotFound");
     }
 
@@ -128,7 +129,7 @@ export class DLExamsController {
 
     await prisma.$transaction(
       connectDisconnectArr.map((item) =>
-        prisma.dLExam.update({
+        prisma.licenseExam.update({
           where: { id: exam.id },
           data: { categories: item },
         }),
@@ -136,18 +137,18 @@ export class DLExamsController {
     );
 
     const status = this.getExamStatus(data);
-    if (status === DLExamStatus.PASSED) {
+    if (status === LicenseExamPassType.PASSED) {
       await this.grantLicenseToCitizen(exam);
     }
 
-    const updated = await prisma.dLExam.update({
+    const updated = await prisma.licenseExam.update({
       where: { id: examId },
       data: {
-        practiceExam: data.practiceExam as DLExamPassType | null,
-        theoryExam: data.theoryExam as DLExamPassType | null,
+        practiceExam: data.practiceExam as LicenseExamPassType | null,
+        theoryExam: data.theoryExam as LicenseExamPassType | null,
         status,
       },
-      include: dlExamIncludes,
+      include: licenseExamIncludes,
     });
 
     return updated;
@@ -156,10 +157,12 @@ export class DLExamsController {
   @Delete("/:id")
   @UsePermissions({
     fallback: (u) => u.isSupervisor,
-    permissions: [Permissions.ManageDLExams],
+    permissions: [Permissions.ManageLicenseExams],
   })
-  async deleteDLEXam(@PathParams("id") examId: string): Promise<APITypes.DeleteDLExamByIdData> {
-    const exam = await prisma.dLExam.findUnique({
+  async deletelicenseExam(
+    @PathParams("id") examId: string,
+  ): Promise<APITypes.DeleteLicenseExamByIdData> {
+    const exam = await prisma.licenseExam.findUnique({
       where: { id: examId },
       include: { categories: true },
     });
@@ -168,7 +171,7 @@ export class DLExamsController {
       throw new NotFound("examNotFound");
     }
 
-    await prisma.dLExam.delete({
+    await prisma.licenseExam.delete({
       where: { id: examId },
     });
 
@@ -177,21 +180,22 @@ export class DLExamsController {
 
   private getExamStatus(data: ExamData) {
     if (!data.theoryExam || !data.practiceExam) {
-      return DLExamStatus.IN_PROGRESS;
+      return LicenseExamStatus.IN_PROGRESS;
     }
 
     const oneOfTypeFailed =
-      data.theoryExam === DLExamPassType.FAILED || data.practiceExam === DLExamPassType.FAILED;
+      data.theoryExam === LicenseExamPassType.FAILED ||
+      data.practiceExam === LicenseExamPassType.FAILED;
 
     if (oneOfTypeFailed) {
-      return DLExamStatus.FAILED;
+      return LicenseExamPassType.FAILED;
     }
 
-    return DLExamStatus.PASSED;
+    return LicenseExamPassType.PASSED;
   }
 
   private async grantLicenseToCitizen(
-    exam: DLExam & { categories: DriversLicenseCategoryValue[] },
+    exam: Omit<LicenseExam, "citizen" | "license"> & { categories: DriversLicenseCategoryValue[] },
   ) {
     const citizen = await prisma.citizen.findUnique({
       where: { id: exam.citizenId },
@@ -204,10 +208,18 @@ export class DLExamsController {
       accessor: "id",
     });
 
+    const prismaNames = {
+      DRIVER: "driversLicenseId",
+      FIREARM: "weaponLicenseId",
+      WATER: "waterLicenseId",
+      PILOT: "pilotLicenseId",
+    } as const;
+    const prismaName = prismaNames[exam.type];
+
     await prisma.$transaction([
       prisma.citizen.update({
         where: { id: citizen.id },
-        data: { driversLicenseId: exam.licenseId },
+        data: { [prismaName]: exam.licenseId },
       }),
       ...connectDisconnectArr.map((item) =>
         prisma.citizen.update({

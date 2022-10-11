@@ -7,7 +7,7 @@ import type { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { Layout } from "components/Layout";
 import { useModal } from "state/modalState";
-import { Button, buttonVariants } from "components/Button";
+import { Button, buttonVariants } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import { getTranslations } from "lib/getTranslation";
 import { VehiclesCard } from "components/citizen/vehicles/VehiclesCard";
@@ -161,7 +161,7 @@ export default function CitizenId() {
             </a>
           </Link>
           {ALLOW_CITIZEN_DELETION_BY_NON_ADMIN ? (
-            <Button onClick={() => openModal(ModalIds.AlertDeleteCitizen)} variant="danger">
+            <Button onPress={() => openModal(ModalIds.AlertDeleteCitizen)} variant="danger">
               {t("deleteCitizen")}
             </Button>
           ) : null}

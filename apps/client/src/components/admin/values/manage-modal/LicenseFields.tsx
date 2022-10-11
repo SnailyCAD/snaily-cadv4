@@ -1,6 +1,6 @@
 import { ValueLicenseType } from "@snailycad/types";
+import { SelectField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
 import { Toggle } from "components/form/Toggle";
 import { useFormikContext } from "formik";
 
@@ -16,19 +16,19 @@ const LICENSE_TYPES = Object.values(ValueLicenseType).map((v) => ({
 }));
 
 export function LicenseFields() {
-  const { values, errors, handleChange } = useFormikContext<any>();
+  const { values, errors, setFieldValue, handleChange } = useFormikContext<any>();
 
   return (
     <>
-      <FormField errorMessage={errors.licenseType as string} label="Type">
-        <Select
-          isClearable
-          name="licenseType"
-          onChange={handleChange}
-          value={values.licenseType}
-          values={LICENSE_TYPES}
-        />
-
+      <SelectField
+        isClearable
+        errorMessage={errors.licenseType as string}
+        label="Type"
+        options={LICENSE_TYPES}
+        name="licenseType"
+        onSelectionChange={(key) => setFieldValue("licenseType", key)}
+        selectedKey={values.licenseType}
+      >
         <ul className="mt-5">
           <li className="my-1.5 text-base">
             - <b>None:</b>{" "}
@@ -50,7 +50,7 @@ export function LicenseFields() {
             vehicle.
           </li>
         </ul>
-      </FormField>
+      </SelectField>
 
       {!values.licenseType || values.licenseType === ValueLicenseType.LICENSE ? (
         <div className="flex flex-col w-full">

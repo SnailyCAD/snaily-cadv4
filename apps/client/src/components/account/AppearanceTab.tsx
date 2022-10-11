@@ -1,7 +1,6 @@
 import * as React from "react";
 import { TabsContent } from "components/shared/TabList";
 import * as Accordion from "@radix-ui/react-accordion";
-import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Toggle } from "components/form/Toggle";
 import { useAuth } from "context/AuthContext";
@@ -10,7 +9,7 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
 import { StatusViewMode, TableActionsAlignment } from "@snailycad/types";
 import { Select } from "components/form/Select";
-import { Loader } from "components/Loader";
+import { Button, Loader, SelectField } from "@snailycad/ui";
 import nextConfig from "../../../next.config";
 import type { Sounds } from "lib/server/getAvailableSounds.server";
 import { soundCamelCaseToKebabCase } from "lib/utils";
@@ -96,7 +95,7 @@ export function AppearanceTab({ availableSounds }: Props) {
 
       <h1 className="text-2xl font-semibold">{t("appearanceSettings")}</h1>
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, values, errors }) => (
+        {({ handleChange, setFieldValue, values, errors }) => (
           <Form className="mt-3">
             <FormField checkbox errorMessage={errors.isDarkTheme} label={t("darkTheme")}>
               <Toggle
@@ -115,29 +114,29 @@ export function AppearanceTab({ availableSounds }: Props) {
               />
             </FormField>
 
-            <FormField errorMessage={errors.statusViewMode} label={t("statusView")}>
-              <Select
-                values={Object.values(StatusViewMode).map((v) => ({
-                  value: v,
-                  label: STATUS_VIEW_MODE_LABELS[v],
-                }))}
-                value={values.statusViewMode}
-                onChange={handleChange}
-                name="statusViewMode"
-              />
-            </FormField>
+            <SelectField
+              errorMessage={errors.statusViewMode}
+              label={t("statusView")}
+              options={Object.values(StatusViewMode).map((v) => ({
+                value: v,
+                label: STATUS_VIEW_MODE_LABELS[v],
+              }))}
+              selectedKey={values.statusViewMode}
+              onSelectionChange={(value) => setFieldValue("statusViewMode", value)}
+              name="statusViewMode"
+            />
 
-            <FormField errorMessage={errors.tableActionsAlignment} label={t("tableAlignment")}>
-              <Select
-                values={Object.values(TableActionsAlignment).map((v) => ({
-                  value: v,
-                  label: TABLE_ALIGNMENT_LABELS[v],
-                }))}
-                value={values.tableActionsAlignment}
-                onChange={handleChange}
-                name="tableActionsAlignment"
-              />
-            </FormField>
+            <SelectField
+              errorMessage={errors.tableActionsAlignment}
+              label={t("tableAlignment")}
+              options={Object.values(TableActionsAlignment).map((v) => ({
+                value: v,
+                label: TABLE_ALIGNMENT_LABELS[v],
+              }))}
+              selectedKey={values.tableActionsAlignment}
+              onSelectionChange={(value) => setFieldValue("tableActionsAlignment", value)}
+              name="tableActionsAlignment"
+            />
 
             <div className="mb-5">
               <h2 className="text-2xl font-semibold mb-3">{t("sounds")}</h2>
@@ -174,7 +173,7 @@ export function AppearanceTab({ availableSounds }: Props) {
                     <Button
                       size="xs"
                       type="button"
-                      onClick={() => {
+                      onPress={() => {
                         setCurrentSrc(`/sounds/${kebabCase}.mp3`);
                         controls.volume(0.1);
                         controls.play();

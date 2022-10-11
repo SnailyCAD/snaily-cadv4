@@ -1,5 +1,5 @@
 import type { Value } from "@snailycad/types";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
@@ -72,7 +72,7 @@ export function ManageCitizenFlagsModal() {
               <Button
                 disabled={state === "loading"}
                 type="reset"
-                onClick={() => closeModal(ModalIds.ManageCitizenFlags)}
+                onPress={() => closeModal(ModalIds.ManageCitizenFlags)}
                 variant="cancel"
               >
                 {common("cancel")}

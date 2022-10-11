@@ -1,5 +1,5 @@
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
+import { SelectField, TextField } from "@snailycad/ui";
 import { Select } from "components/form/Select";
 import { useFormikContext } from "formik";
 import { Toggle } from "components/form/Toggle";
@@ -21,13 +21,21 @@ export function DepartmentFields() {
 
   return (
     <>
-      <FormField label="Type">
-        <Select values={DEPARTMENT_TYPES} name="type" onChange={handleChange} value={values.type} />
-      </FormField>
+      <SelectField
+        label="Type"
+        options={DEPARTMENT_TYPES}
+        name="type"
+        onSelectionChange={(key) => setFieldValue("type", key)}
+        selectedKey={values.type}
+      />
 
-      <FormField optional label="Callsign Symbol">
-        <Input name="callsign" onChange={handleChange} value={values.callsign} />
-      </FormField>
+      <TextField
+        label="Callsign Symbol"
+        isOptional
+        name="callsign"
+        onChange={(value) => setFieldValue("callsign", value)}
+        value={values.callsign}
+      />
 
       <FormField optional errorMessage={errors.defaultOfficerRankId as string} label="Default Rank">
         <Select

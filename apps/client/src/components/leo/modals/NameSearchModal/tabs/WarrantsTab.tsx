@@ -1,6 +1,6 @@
 import compareDesc from "date-fns/compareDesc";
 import { useTranslations } from "use-intl";
-import { Button } from "components/Button";
+import { SelectField, Button } from "@snailycad/ui";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
@@ -9,17 +9,16 @@ import { useNameSearch } from "state/search/nameSearchState";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Table, useTableState } from "components/shared/Table";
-import { Select } from "components/form/Select";
 import { FullDate } from "components/shared/FullDate";
-import type { Warrant } from "@snailycad/types";
+import { Warrant, WarrantStatus } from "@snailycad/types";
 import { TabsContent } from "components/shared/TabList";
 import type { DeleteRecordsByIdData, PutWarrantsData } from "@snailycad/types/api";
 import { Permissions, usePermission } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 const values = [
-  { label: "Inactive", value: "inactive" },
-  { label: "Active", value: "active" },
+  { label: "Inactive", value: WarrantStatus.INACTIVE },
+  { label: "Active", value: WarrantStatus.ACTIVE },
 ];
 
 export function NameSearchWarrantsTab() {
@@ -112,8 +111,6 @@ export function NameSearchWarrantsTab() {
             data={currentResult.warrants
               .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
               .map((warrant) => {
-                const value = values.find((v) => v.value === warrant.status.toLowerCase());
-
                 return {
                   id: warrant.id,
                   officer: warrant.officer
@@ -125,16 +122,18 @@ export function NameSearchWarrantsTab() {
                   actions: hasManageWarrantsPermissions ? (
                     <div className="flex gap-2">
                       {hasManagePermissions ? (
-                        <Select
-                          onChange={(e) => handleChange(e.target.value, warrant)}
+                        <SelectField
+                          hiddenLabel
+                          label={t("Leo.status")}
+                          onSelectionChange={(value) => handleChange(value as string, warrant)}
                           className="w-40"
-                          values={values}
-                          value={value ?? null}
+                          options={values}
+                          selectedKey={warrant.status ?? null}
                         />
                       ) : null}
                       <Button
                         type="button"
-                        onClick={() => handleDeleteClick(warrant)}
+                        onPress={() => handleDeleteClick(warrant)}
                         size="xs"
                         variant="danger"
                       >

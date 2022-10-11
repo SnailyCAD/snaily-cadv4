@@ -14,7 +14,7 @@ import { usePermission, Permissions } from "hooks/usePermission";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { FormRow } from "components/form/FormRow";
-import { Input } from "components/form/inputs/Input";
+import { TextField } from "@snailycad/ui";
 import { CallsignsTab } from "components/admin/manage/units/CallsignsTab";
 import type { GetManageUnitsData } from "@snailycad/types/api";
 
@@ -96,9 +96,12 @@ export default function SupervisorPanelPage({ units }: Props) {
       <Title>{t("Management.MANAGE_UNITS")}</Title>
 
       <FormRow flexLike>
-        <FormField className="w-full" label={t("Common.search")}>
-          <Input value={search} onChange={(e) => setSearch(e.target.value)} />
-        </FormField>
+        <TextField
+          className="w-full"
+          label={t("Common.search")}
+          value={search}
+          onChange={setSearch}
+        />
 
         <FormField className="w-60" label="Filter by Department">
           <Select

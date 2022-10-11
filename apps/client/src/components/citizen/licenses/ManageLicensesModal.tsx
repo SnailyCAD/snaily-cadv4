@@ -5,10 +5,9 @@ import { useModal } from "state/modalState";
 import { Modal } from "components/modal/Modal";
 import { ModalIds } from "types/ModalIds";
 import type { SelectValue } from "components/form/Select";
-import { Button } from "components/Button";
-import { Loader } from "components/Loader";
+import { Button, Loader } from "@snailycad/ui";
 import { handleValidate } from "lib/handleValidate";
-import type { Citizen } from "@snailycad/types";
+import type { Citizen, SuspendedCitizenLicenses } from "@snailycad/types";
 import { createDefaultLicensesValues, ManageLicensesFormFields } from "./ManageLicensesFormFields";
 
 interface Props {
@@ -24,6 +23,7 @@ export interface LicenseInitialValues {
   pilotLicense: string | null;
   weaponLicense: string | null;
   waterLicense: string | null;
+  suspended: Omit<SuspendedCitizenLicenses, "id">;
 
   driversLicenseCategory: SelectValue[] | null;
   pilotLicenseCategory: SelectValue[] | null;
@@ -61,7 +61,7 @@ export function ManageLicensesModal({
               <footer className="flex justify-end mt-5">
                 <Button
                   type="reset"
-                  onClick={() => closeModal(ModalIds.ManageLicenses)}
+                  onPress={() => closeModal(ModalIds.ManageLicenses)}
                   variant="cancel"
                 >
                   {common("cancel")}

@@ -1,12 +1,11 @@
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/inputs/Input";
 import { Select } from "components/form/Select";
 import { useFormikContext } from "formik";
 import dynamic from "next/dynamic";
 import { QualificationValue, ShouldDoType, StatusValue, Value, WhatPages } from "@snailycad/types";
 
 import { Eyedropper } from "react-bootstrap-icons";
-import { Button } from "components/Button";
+import { Input, Button, SelectField } from "@snailycad/ui";
 import { useValues } from "context/ValuesContext";
 
 const HexColorPicker = dynamic(async () => (await import("react-colorful")).HexColorPicker);
@@ -69,25 +68,25 @@ export function StatusValueFields() {
 
   return (
     <>
-      <FormField errorMessage={errors.shouldDo as string} label="Should Do">
-        <Select
-          values={SHOULD_DO_VALUES}
-          name="shouldDo"
-          onChange={handleChange}
-          value={values.shouldDo}
-        />
-      </FormField>
+      <SelectField
+        errorMessage={errors.shouldDo as string}
+        label="Should Do"
+        options={SHOULD_DO_VALUES}
+        name="shouldDo"
+        selectedKey={values.shouldDo}
+        onSelectionChange={(key) => setFieldValue("shouldDo", key)}
+      />
 
-      <FormField errorMessage={errors.whatPages as string} label="What Pages">
-        <Select
-          values={WHAT_PAGES_VALUES}
-          name="whatPages"
-          onChange={handleChange}
-          value={values.whatPages}
-          isMulti
-          closeMenuOnSelect={false}
-        />
-      </FormField>
+      <SelectField
+        errorMessage={errors.whatPages as string}
+        isClearable
+        selectionMode="multiple"
+        label="What Pages"
+        options={WHAT_PAGES_VALUES}
+        name="whatPages"
+        selectedKeys={values.whatPages}
+        onSelectionChange={(keys) => setFieldValue("whatPages", keys)}
+      />
 
       {values.shouldDo === ShouldDoType.SET_ON_DUTY ? null : (
         <FormField errorMessage={errors.departments as string} label="Departments">
@@ -121,7 +120,7 @@ export function StatusValueFields() {
             variant="cancel"
             className="p-0 px-1 ml-2"
             type="button"
-            onClick={() => setFieldValue("showPicker", !values.showPicker)}
+            onPress={() => setFieldValue("showPicker", !values.showPicker)}
             aria-label="Color Picker"
             title="Color Picker"
           >

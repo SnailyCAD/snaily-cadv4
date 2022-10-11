@@ -1,14 +1,12 @@
 import * as React from "react";
-import { Button } from "components/Button";
+import { Input, Loader, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { Input } from "components/form/inputs/Input";
 import { Infofield } from "components/shared/Infofield";
 import { useWeaponSearch, WeaponSearchResult } from "state/search/weaponSearchState";
 import { CustomFieldsArea } from "./CustomFieldsArea";
@@ -105,7 +103,7 @@ export function WeaponSearchModal({ id = ModalIds.WeaponSearch }: Props) {
                         title={common("openInSearch")}
                         size="xs"
                         type="button"
-                        onClick={handleNameClick}
+                        onPress={handleNameClick}
                       >
                         {currentResult.citizen.name} {currentResult.citizen.surname}
                       </Button>
@@ -118,7 +116,7 @@ export function WeaponSearchModal({ id = ModalIds.WeaponSearch }: Props) {
             )}
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onClick={() => closeModal(id)} variant="cancel">
+              <Button type="reset" onPress={() => closeModal(id)} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button

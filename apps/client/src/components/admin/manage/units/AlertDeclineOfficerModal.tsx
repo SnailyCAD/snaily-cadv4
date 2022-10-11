@@ -1,7 +1,4 @@
-import { Button } from "components/Button";
-import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
-import { Loader } from "components/Loader";
+import { Loader, Button, SelectField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
@@ -46,19 +43,19 @@ export function AlertDeclineOfficerModal({
         initialValues={INITIAL_VALUES}
         onSubmit={(d, helpers) => onSubmit({ ...d, helpers, unit: unit! })}
       >
-        {({ handleChange, errors, values, isValid }) => (
+        {({ setFieldValue, errors, values, isValid }) => (
           <Form>
-            <FormField errorMessage={errors.action} label={t("action")}>
-              <Select
-                value={values.action}
-                name="action"
-                onChange={handleChange}
-                values={ACTIONS}
-              />
-            </FormField>
+            <SelectField
+              errorMessage={errors.action}
+              label={t("action")}
+              options={ACTIONS}
+              name="action"
+              onSelectionChange={(key) => setFieldValue("action", key)}
+              selectedKey={values.action}
+            />
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onClick={handleClose} variant="cancel">
+              <Button type="reset" onPress={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button

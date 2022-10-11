@@ -2,11 +2,9 @@ import * as React from "react";
 import { Form, Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
 
-import { Button } from "components/Button";
-import { Loader } from "components/Loader";
+import { Textarea, Loader, Input, Button } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
-import { Input } from "components/form/inputs/Input";
 import { JailTimeScale, MiscCadSettings } from "@snailycad/types";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { SettingsFormField } from "components/form/SettingsFormField";
@@ -14,8 +12,8 @@ import { TabsContent } from "components/shared/TabList";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { Select } from "components/form/Select";
 import { toastMessage } from "lib/toastMessage";
-import { Textarea } from "components/form/Textarea";
 import type { PutCADMiscSettingsData } from "@snailycad/types/api";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 export function MiscFeatures() {
   const [headerId, setHeaderId] = React.useState<(File | string) | null>(null);
@@ -24,6 +22,7 @@ export function MiscFeatures() {
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
   const { cad, setCad } = useAuth();
+  const { DIVISIONS } = useFeatureEnabled();
 
   // infinity -> null, "" -> null
   function cleanValues(values: typeof INITIAL_VALUES) {
@@ -323,20 +322,22 @@ export function MiscFeatures() {
                 />
               </SettingsFormField>
 
-              <SettingsFormField
-                label="Max divisions per officer"
-                action="short-input"
-                description="The maximum amount of divisions per officer. (Default: Infinity)"
-                errorMessage={errors.maxDivisionsPerOfficer}
-              >
-                <Input
-                  name="maxDivisionsPerOfficer"
-                  type="number"
-                  value={values.maxDivisionsPerOfficer}
-                  onChange={handleChange}
-                  min={1}
-                />
-              </SettingsFormField>
+              {DIVISIONS ? (
+                <SettingsFormField
+                  label="Max divisions per officer"
+                  action="short-input"
+                  description="The maximum amount of divisions per officer. (Default: Infinity)"
+                  errorMessage={errors.maxDivisionsPerOfficer}
+                >
+                  <Input
+                    name="maxDivisionsPerOfficer"
+                    type="number"
+                    value={values.maxDivisionsPerOfficer}
+                    onChange={handleChange}
+                    min={1}
+                  />
+                </SettingsFormField>
+              ) : null}
 
               <SettingsFormField
                 label="Max assignments to incidents per officer"

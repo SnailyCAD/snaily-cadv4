@@ -8,7 +8,7 @@ import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { Table, useTableState } from "components/shared/Table";
 import { ModalIds } from "types/ModalIds";
@@ -83,7 +83,7 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
 
         <div>
           {hasManagePermissions ? (
-            <Button onClick={() => openModal(ModalIds.ManageCustomRole)}>
+            <Button onPress={() => openModal(ModalIds.ManageCustomRole)}>
               {t("createCustomRole")}
             </Button>
           ) : null}
@@ -103,14 +103,14 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
             createdAt: <FullDate>{field.createdAt}</FullDate>,
             actions: (
               <>
-                <Button size="xs" variant="success" onClick={() => handleEditClick(field)}>
+                <Button size="xs" variant="success" onPress={() => handleEditClick(field)}>
                   {common("edit")}
                 </Button>
                 <Button
                   className="ml-2"
                   size="xs"
                   variant="danger"
-                  onClick={() => handleDeleteClick(field)}
+                  onPress={() => handleDeleteClick(field)}
                 >
                   {common("delete")}
                 </Button>

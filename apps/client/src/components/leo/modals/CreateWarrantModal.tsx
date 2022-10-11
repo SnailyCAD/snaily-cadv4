@@ -1,10 +1,8 @@
 import { Form, Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
-import { Button } from "components/Button";
+import { Textarea, Loader, Button, SelectField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
-import { Textarea } from "components/form/Textarea";
-import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
@@ -21,6 +19,7 @@ import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useActiveOfficers } from "hooks/realtime/useActiveOfficers";
 import Image from "next/future/image";
+import { WarrantStatus } from "@snailycad/types";
 
 interface Props {
   onClose?(): void;
@@ -137,7 +136,7 @@ export function CreateWarrantModal({ warrant, readOnly, onClose, onCreate, onUpd
                   errorMessage: errors.citizenId,
                   disabled: readOnly,
                 }}
-                onSuggestionClick={(suggestion) => {
+                onSuggestionPress={(suggestion) => {
                   setFieldValue("citizenId", suggestion.id);
                   setFieldValue("citizenName", `${suggestion.name} ${suggestion.surname}`);
                 }}
@@ -190,18 +189,17 @@ export function CreateWarrantModal({ warrant, readOnly, onClose, onCreate, onUpd
               </FormField>
             ) : null}
 
-            <FormField errorMessage={errors.status} label={t("status")}>
-              <Select
-                disabled={readOnly}
-                values={[
-                  { label: "Active", value: "ACTIVE" },
-                  { label: "Inactive", value: "INACTIVE" },
-                ]}
-                name="status"
-                onChange={handleChange}
-                value={values.status}
-              />
-            </FormField>
+            <SelectField
+              errorMessage={errors.status}
+              isDisabled={readOnly}
+              label={t("status")}
+              onSelectionChange={(value) => setFieldValue("status", value)}
+              options={[
+                { label: "Active", value: WarrantStatus.ACTIVE },
+                { label: "Inactive", value: WarrantStatus.INACTIVE },
+              ]}
+              selectedKey={values.status}
+            />
 
             <FormField errorMessage={errors.description} label={common("description")}>
               <Textarea
@@ -213,7 +211,7 @@ export function CreateWarrantModal({ warrant, readOnly, onClose, onCreate, onUpd
             </FormField>
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onClick={handleClose} variant="cancel">
+              <Button type="reset" onPress={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button
