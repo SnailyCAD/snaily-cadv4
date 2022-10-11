@@ -12,7 +12,7 @@ import type * as APITypes from "@snailycad/types/api";
 @Controller("/admin/penal-code-group")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
-export class ValuesController {
+export class PenalCodeGroupController {
   @Post("/")
   @Description("Create a new penal-code group")
   @UsePermissions({

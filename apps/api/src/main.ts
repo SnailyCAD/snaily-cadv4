@@ -5,6 +5,7 @@ import { getCADVersion } from "@snailycad/utils/version";
 import * as Sentry from "@sentry/node";
 import * as Tracing from "@sentry/tracing";
 import { prisma } from "lib/prisma";
+import { importProviders } from "@tsed/components-scan";
 
 Sentry.init({
   dsn: "https://308dd96b826c4e38a814fc9bae681687@o518232.ingest.sentry.io/6553288",
@@ -15,9 +16,19 @@ Sentry.init({
   tracesSampleRate: 1.0,
 });
 
+const rootDir = __dirname;
+
 async function bootstrap() {
   try {
-    const platform = await PlatformExpress.bootstrap(Server);
+    const scannedProviders = await importProviders({
+      mount: {
+        "/v1": [`${rootDir}/controllers/**/*.ts`],
+      },
+    });
+
+    const platform = await PlatformExpress.bootstrap(Server, {
+      ...scannedProviders,
+    });
 
     await platform.listen();
     const versions = await getCADVersion();

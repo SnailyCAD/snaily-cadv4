@@ -17,7 +17,7 @@ const citizenSearchInclude = {
 @Controller("/search")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
-export class SearchController {
+export class EMSFDSearchController {
   @Post("/medical-records")
   @Description("Search medical records by citizen name")
   @UsePermissions({

@@ -23,7 +23,7 @@ import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 
 @Controller("/admin/manage/cad-settings")
 @ContentType("application/json")
-export class ManageCitizensController {
+export class CADSettingsController {
   private socket: Socket;
   constructor(socket: Socket) {
     this.socket = socket;

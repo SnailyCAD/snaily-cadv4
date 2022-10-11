@@ -16,7 +16,7 @@ import type * as APITypes from "@snailycad/types/api";
 @Controller("/911-calls/events")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
-export class Calls911Controller {
+export class Calls911EventsController {
   private socket: Socket;
   constructor(socket: Socket) {
     this.socket = socket;

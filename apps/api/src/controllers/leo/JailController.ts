@@ -36,7 +36,7 @@ const citizenInclude = {
 @Controller("/leo/jail")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
-export class LeoController {
+export class JailController {
   @Get("/")
   @Description("Get all the citizens who are jailed")
   @UsePermissions({
