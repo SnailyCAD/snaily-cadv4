@@ -74,11 +74,6 @@ export class Server {
   settings!: Configuration;
 
   public $beforeRoutesInit() {
-    if (process.env.EXPERIMENTAL_SECURE_CONTEXT) {
-      const app = this.app.callback();
-      app.set("trust proxy", 1);
-    }
-
     this.app.get("/", async (_: Request, res: Response) => {
       const versions = await getCADVersion();
 

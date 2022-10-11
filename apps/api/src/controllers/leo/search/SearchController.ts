@@ -115,7 +115,7 @@ const weaponsInclude = {
 @Controller("/search")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
-export class SearchController {
+export class LeoSearchController {
   @Post("/name")
   @Description("Search citizens by their name, surname or fullname. Returns the first 35 results.")
   async searchName(
