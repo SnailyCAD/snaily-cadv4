@@ -5,7 +5,7 @@ import { Permissions } from "@snailycad/permissions";
 import { dataToSlate, Editor } from "components/editor/Editor";
 import { useTranslations } from "next-intl";
 import type { GetServerSideProps } from "next";
-import { requestAll } from "lib/utils";
+import { requestAll, yesOrNoText } from "lib/utils";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { useValues } from "context/ValuesContext";
@@ -70,6 +70,7 @@ export default function PenalCodesPage() {
                       <Infofield label={common("type")}>
                         {penalCode.type?.toLowerCase() ?? common("none")}
                       </Infofield>
+                      <Infofield label="Is Primary">{yesOrNoText(penalCode.isPrimary)}</Infofield>
                       <Infofield label={t("warningApplicable")}>
                         {String(Boolean(penalCode.warningApplicable))}
                       </Infofield>
