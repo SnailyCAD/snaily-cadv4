@@ -271,6 +271,7 @@ export const typeHandlers = {
           descriptionData: item.descriptionData ?? [],
           type: (item.type ?? null) as PenalCodeType | null,
           groupId: item.groupId,
+          isPrimary: item.isPrimary ?? true,
           ...(await upsertWarningApplicable({
             body: item,
             cad,
@@ -282,6 +283,7 @@ export const typeHandlers = {
           description: item.description,
           descriptionData: item.descriptionData ?? [],
           groupId: item.groupId,
+          isPrimary: item.isPrimary ?? true,
           type: (item.type ?? null) as PenalCodeType | null,
           ...(await upsertWarningApplicable({
             body: item,

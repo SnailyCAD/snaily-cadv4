@@ -1,6 +1,6 @@
 import { PENAL_CODE_SCHEMA } from "@snailycad/schemas";
 import { FormField } from "components/form/FormField";
-import { Loader, Button, SelectField, TextField } from "@snailycad/ui";
+import { Loader, Button, SelectField, TextField, Input } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { Form, Formik, useFormikContext } from "formik";
 import { handleValidate } from "lib/handleValidate";
@@ -76,6 +76,7 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
   const INITIAL_VALUES = {
     title: penalCode?.title ?? "",
     type: penalCode?.type ?? null,
+    isPrimary: penalCode?.isPrimary ?? true,
     description: penalCode?.description ?? "",
     descriptionData: dataToSlate(penalCode),
     group: penalCode?.groupId ?? "",
@@ -132,6 +133,15 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
               isClearable={false}
               selectedKey={values.type}
             />
+
+            <FormField checkbox errorMessage={errors.isPrimary} label="Is Primary">
+              <Input
+                checked={values.isPrimary}
+                name="type"
+                onChange={(e) => setFieldValue("isPrimary", e.target.checked)}
+                type="checkbox"
+              />
+            </FormField>
 
             <FormField errorMessage={errors.description} label="Description">
               <Editor

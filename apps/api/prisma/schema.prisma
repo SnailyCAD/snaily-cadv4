@@ -513,6 +513,7 @@ model PenalCode {
   title                  String                @db.VarChar(255)
   description            String?               @db.Text
   descriptionData        Json?
+  isPrimary              Boolean               @default(true)
   type                   PenalCodeType?
   warningApplicable      WarningApplicable?    @relation(fields: [warningApplicableId], references: [id])
   warningApplicableId    String?

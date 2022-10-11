@@ -8,7 +8,7 @@ import { useModal } from "state/modalState";
 import { type PenalCode, type PenalCodeGroup, ValueType, Rank } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
-import { requestAll } from "lib/utils";
+import { requestAll, yesOrNoText } from "lib/utils";
 import dynamic from "next/dynamic";
 import { Table, useTableState } from "components/shared/Table";
 import { ArrowLeft } from "react-bootstrap-icons";
@@ -242,6 +242,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
                 rowProps: { value: code },
                 title: code.title,
                 type: code.type?.toLowerCase() ?? common("none"),
+                isPrimary: common(yesOrNoText(code.isPrimary)),
                 description: <CallDescription nonCard data={code} />,
                 actions: (
                   <>
@@ -262,6 +263,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
             columns={[
               { header: common("title"), accessorKey: "title" },
               { header: common("type"), accessorKey: "type" },
+              { header: "Is Primary", accessorKey: "isPrimary" },
               { header: common("description"), accessorKey: "description" },
               { header: common("actions"), accessorKey: "actions" },
             ]}

@@ -101,6 +101,7 @@ export const PENAL_CODE_SCHEMA = z.object({
   bail: z.any().nullable().optional(),
   prisonTerm: z.any().nullable().optional(),
   type: z.string().regex(PENAL_CODE_TYPE_REGEX).optional().nullable(),
+  isPrimary: z.boolean().optional().nullable(),
 });
 
 export const PENAL_CODE_ARR = z.array(PENAL_CODE_SCHEMA).min(1);
