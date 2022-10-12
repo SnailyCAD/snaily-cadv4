@@ -7,7 +7,7 @@ import type { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { Layout } from "components/Layout";
 import { useModal } from "state/modalState";
-import { Button, buttonVariants } from "@snailycad/ui";
+import { BreadcrumbItem, Breadcrumbs, Button, buttonVariants } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import { getTranslations } from "lib/getTranslation";
 import { VehiclesCard } from "components/citizen/vehicles/VehiclesCard";
@@ -79,6 +79,13 @@ export default function CitizenId() {
 
   return (
     <Layout className="dark:text-white">
+      <Breadcrumbs>
+        <BreadcrumbItem href="/citizen">{t("citizen")}</BreadcrumbItem>
+        <BreadcrumbItem>
+          {citizen.name} {citizen.surname}
+        </BreadcrumbItem>
+      </Breadcrumbs>
+
       <Title renderLayoutTitle={false}>
         {citizen.name} {citizen.surname}
       </Title>

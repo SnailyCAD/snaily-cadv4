@@ -13,6 +13,8 @@ import type { GetManageUnitByIdData } from "@snailycad/types/api";
 import { TabList } from "components/shared/TabList";
 import { ManageUnitTab } from "components/admin/manage/units/tabs/manage-unit-tab/ManageUnitTab";
 import { UnitLogsTab } from "components/admin/manage/units/tabs/manage-unit-tab/UnitLogsTab";
+import { BreadcrumbItem, Breadcrumbs } from "@snailycad/ui";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 
 interface Props {
   unit: GetManageUnitByIdData;
@@ -21,6 +23,7 @@ interface Props {
 export default function SupervisorPanelPage({ unit: data }: Props) {
   useLoadValuesClientSide({ valueTypes: [ValueType.QUALIFICATION] });
 
+  const { generateCallsign } = useGenerateCallsign();
   const tAdmin = useTranslations("Management");
 
   return (
@@ -30,15 +33,17 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
         permissions: [Permissions.ManageUnits],
       }}
     >
-      <header className="mb-3">
-        <Title className="mb-2">{tAdmin("editUnit")}</Title>
-        <h2 className="text-lg">
-          {tAdmin.rich("editing", {
-            span: (children) => <span className="font-semibold">{children}</span>,
-            user: makeUnitName(data),
-          })}
-        </h2>
-      </header>
+      <Breadcrumbs>
+        <BreadcrumbItem href="/admin/manage/units">{tAdmin("MANAGE_UNITS")}</BreadcrumbItem>
+        <BreadcrumbItem>{tAdmin("editUnit")}</BreadcrumbItem>
+        <BreadcrumbItem>
+          {generateCallsign(data)} {makeUnitName(data)}
+        </BreadcrumbItem>
+      </Breadcrumbs>
+
+      <Title renderLayoutTitle={false} className="mb-2">
+        {tAdmin("editUnit")}
+      </Title>
 
       <TabList
         tabs={[

@@ -37,6 +37,7 @@
     ]
   },
   "dependencies": {
+    "@react-aria/breadcrumbs": "^3.3.2",
     "@react-aria/button": "^3.6.2",
     "@react-aria/dialog": "^3.4.0",
     "@react-aria/focus": "^3.9.0",
@@ -46,17 +47,20 @@
     "@react-aria/menu": "^3.6.2",
     "@react-aria/overlays": "^3.11.0",
     "@react-aria/progress": "^3.3.2",
+    "@react-aria/radio": "^3.4.0",
     "@react-aria/textfield": "^3.7.2",
     "@react-aria/utils": "^3.14.0",
     "@react-stately/collections": "^3.4.4",
     "@react-stately/list": "^3.5.4",
     "@react-stately/menu": "^3.4.2",
+    "@react-stately/radio": "^3.6.0",
     "@react-stately/select": "^3.3.2",
     "@react-types/overlays": "^3.6.4",
     "@react-types/select": "^3.6.4",
     "@react-types/shared": "^3.15.0",
     "next-intl": "^2.7.6",
-    "react-bootstrap-icons": "^1.9.1"
+    "react-bootstrap-icons": "^1.9.1",
+    "tailwind-merge": "^1.6.1"
   },
   "peerDependencies": {
     "react": ">=18.2.0",

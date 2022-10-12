@@ -9,11 +9,11 @@ interface Props<T extends SelectValue> {
   selectionMode: "single" | "multiple";
 }
 
-export function SelectedItems<T extends SelectValue>({ selectionMode, state }: Props<T>) {
+export function SelectedItems<T extends SelectValue>(props: Props<T>) {
   const common = useTranslations("Common");
 
-  const selectedItems = selectionMode === "multiple" ? state.selectedItems : null;
-  const selectedItem = selectionMode === "single" ? state.selectedItems?.[0] : null;
+  const selectedItems = props.selectionMode === "multiple" ? props.state.selectedItems : null;
+  const selectedItem = props.selectionMode === "single" ? props.state.selectedItems?.[0] : null;
 
   if (selectedItems && selectedItems.length > 0) {
     return (
@@ -29,8 +29,8 @@ export function SelectedItems<T extends SelectValue>({ selectionMode, state }: P
               variant="transparent"
               role="button"
               onPress={() => {
-                const copied = [...state.selectedKeys].filter((v) => v !== item.key);
-                state.setSelectedKeys(copied);
+                const copied = [...props.state.selectedKeys].filter((v) => v !== item.key);
+                props.state.setSelectedKeys(copied);
               }}
             >
               <X className="w-5 h-5" />

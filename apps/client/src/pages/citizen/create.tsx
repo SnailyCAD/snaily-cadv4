@@ -11,6 +11,7 @@ import { Title } from "components/shared/Title";
 import { ManageCitizenForm } from "components/citizen/ManageCitizenForm";
 import type { SelectValue } from "components/form/Select";
 import type { PostCitizenImageByIdData, PostCitizensData } from "@snailycad/types/api";
+import { BreadcrumbItem, Breadcrumbs } from "@snailycad/ui";
 
 export default function CreateCitizen() {
   const { state, execute } = useFetch();
@@ -64,6 +65,11 @@ export default function CreateCitizen() {
 
   return (
     <Layout className="dark:text-white">
+      <Breadcrumbs>
+        <BreadcrumbItem href="/citizen">{t("citizen")}</BreadcrumbItem>
+        <BreadcrumbItem>{t("createCitizen")}</BreadcrumbItem>
+      </Breadcrumbs>
+
       <Title>{t("createCitizen")}</Title>
 
       <ManageCitizenForm onSubmit={onSubmit} citizen={null} state={state} showLicenseFields />

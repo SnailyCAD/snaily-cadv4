@@ -1,7 +1,7 @@
 import * as React from "react";
-import { classNames } from "../utils/classNames";
 import { AriaButtonProps, useButton } from "@react-aria/button";
 import { mergeProps } from "@react-aria/utils";
+import { twMerge } from "tailwind-merge";
 
 type BaseButtonProps = Omit<JSX.IntrinsicElements["button"], "onPress"> & AriaButtonProps;
 export type ButtonProps = BaseButtonProps & {
@@ -50,7 +50,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     return (
       <button
-        className={classNames(
+        className={twMerge(
           "rounded-md disabled:opacity-60 disabled:cursor-not-allowed transition-colors",
           buttonSizes[size],
           variant && buttonVariants[variant],

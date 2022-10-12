@@ -9,7 +9,15 @@ import type { GetServerSideProps } from "next";
 import { CustomRole, Rank } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { useAuth } from "context/AuthContext";
-import { Loader, Button, buttonVariants, SelectField, TextField } from "@snailycad/ui";
+import {
+  Loader,
+  Button,
+  buttonVariants,
+  SelectField,
+  TextField,
+  Breadcrumbs,
+  BreadcrumbItem,
+} from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
@@ -86,15 +94,15 @@ export default function ManageCitizens(props: Props) {
         permissions: [Permissions.BanUsers, Permissions.ManageUsers, Permissions.DeleteUsers],
       }}
     >
-      <header className="mb-3">
-        <Title className="mb-2">{t("editUser")}</Title>
-        <h2 className="text-lg">
-          {t.rich("editing", {
-            span: (children) => <span className="font-semibold">{children}</span>,
-            user: user.username,
-          })}
-        </h2>
-      </header>
+      <Breadcrumbs>
+        <BreadcrumbItem href="/admin/manage/users">{t("MANAGE_USERS")}</BreadcrumbItem>
+        <BreadcrumbItem>{t("editUser")}</BreadcrumbItem>
+        <BreadcrumbItem>{user.username}</BreadcrumbItem>
+      </Breadcrumbs>
+
+      <Title renderLayoutTitle={false} className="mb-2">
+        {t("editUser")}
+      </Title>
 
       <div className="mt-5">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>

@@ -13,8 +13,7 @@ import dynamic from "next/dynamic";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { EmployeesTab } from "components/business/manage/EmployeesTab";
-import Link from "next/link";
-import { Button } from "@snailycad/ui";
+import { BreadcrumbItem, Breadcrumbs } from "@snailycad/ui";
 
 interface Props {
   employee: FullEmployee | null;
@@ -75,17 +74,17 @@ export default function BusinessId(props: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <header className="flex items-center justify-between">
-        <Title className="!mb-0">
-          {currentBusiness.name} - {common("manage")}
-        </Title>
+      <Title renderLayoutTitle={false} className="!mb-0">
+        {common("manage")}
+      </Title>
 
-        <div>
-          <Link href={`/business/${currentBusiness.id}/${currentEmployee.id}`}>
-            <Button>{common("goBack")}</Button>
-          </Link>
-        </div>
-      </header>
+      <Breadcrumbs>
+        <BreadcrumbItem href="/business">{t("business")}</BreadcrumbItem>
+        <BreadcrumbItem href={`/citizen/${currentBusiness.id}`}>
+          {currentBusiness.name}
+        </BreadcrumbItem>
+        <BreadcrumbItem>{common("manage")}</BreadcrumbItem>
+      </Breadcrumbs>
 
       <div className="mt-3">
         <TabList tabs={tabs}>

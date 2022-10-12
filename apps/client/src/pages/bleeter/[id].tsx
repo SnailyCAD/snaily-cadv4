@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button } from "@snailycad/ui";
+import { BreadcrumbItem, Breadcrumbs, Button } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { useAuth } from "context/AuthContext";
 import { getSessionUser } from "lib/auth";
@@ -49,6 +49,11 @@ export default function BleetPost({ post }: Props) {
 
   return (
     <Layout className="dark:text-white">
+      <Breadcrumbs>
+        <BreadcrumbItem href="/bleeter">{t("bleeter")}</BreadcrumbItem>
+        <BreadcrumbItem href={`/bleeter/${post.id}`}>{post.title}</BreadcrumbItem>
+      </Breadcrumbs>
+
       <header className="flex items-center justify-between pb-2 border-b-2">
         <Title className="!mb-0">{post.title}</Title>
 

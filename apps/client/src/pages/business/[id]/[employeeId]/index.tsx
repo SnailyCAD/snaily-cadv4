@@ -3,7 +3,7 @@ import { Star } from "react-bootstrap-icons";
 import Link from "next/link";
 import type { GetServerSideProps } from "next";
 import { dataToSlate, Editor } from "components/editor/Editor";
-import { Button, buttonVariants } from "@snailycad/ui";
+import { BreadcrumbItem, Breadcrumbs, Button, buttonVariants } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -104,6 +104,13 @@ export default function BusinessId(props: Props) {
 
   return (
     <Layout className="dark:text-white">
+      <Breadcrumbs>
+        <BreadcrumbItem href="/business">{t("business")}</BreadcrumbItem>
+        <BreadcrumbItem href={`/citizen/${currentBusiness.id}`}>
+          {currentBusiness.name}
+        </BreadcrumbItem>
+      </Breadcrumbs>
+
       <header className="flex items-center justify-between">
         <Title className="!mb-0">{currentBusiness.name}</Title>
 

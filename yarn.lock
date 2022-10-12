@@ -1482,6 +1482,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-aria/breadcrumbs@npm:^3.3.2":
+  version: 3.3.2
+  resolution: "@react-aria/breadcrumbs@npm:3.3.2"
+  dependencies:
+    "@babel/runtime": ^7.6.2
+    "@react-aria/i18n": ^3.6.1
+    "@react-aria/interactions": ^3.12.0
+    "@react-aria/link": ^3.3.4
+    "@react-aria/utils": ^3.14.0
+    "@react-types/breadcrumbs": ^3.4.4
+    "@react-types/shared": ^3.15.0
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: c0e861aa0ae945f46d05b8c97345569f64209806b6d4b7c02dbda530aeb516fe87f2103e66613f70eed40264195a90e59ff2fdabac0d72e3b39c4b8a09634bee
+  languageName: node
+  linkType: hard
+
 "@react-aria/button@npm:^3.6.1, @react-aria/button@npm:^3.6.2":
   version: 3.6.2
   resolution: "@react-aria/button@npm:3.6.2"
@@ -1624,6 +1641,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-aria/link@npm:^3.3.4":
+  version: 3.3.4
+  resolution: "@react-aria/link@npm:3.3.4"
+  dependencies:
+    "@babel/runtime": ^7.6.2
+    "@react-aria/focus": ^3.9.0
+    "@react-aria/interactions": ^3.12.0
+    "@react-aria/utils": ^3.14.0
+    "@react-types/link": ^3.3.4
+    "@react-types/shared": ^3.15.0
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: 16f2b8f317ef30e56d02536a7175545b342b14b5de4bc7111dfcf70b85e185f3d2148fc2cc45fa512b338456525a91e34607491c526f76f28c5794779f2fb64d
+  languageName: node
+  linkType: hard
+
 "@react-aria/listbox@npm:^3.7.0":
   version: 3.7.0
   resolution: "@react-aria/listbox@npm:3.7.0"
@@ -1711,6 +1744,25 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
   checksum: 4de4f8ad52d63c0375fa89949261dc540001fcf82b547934e402929ca080f57d33702d7972f890c59d7f6da346a7eb6944b78331169f09fca7cc4e9338933a67
+  languageName: node
+  linkType: hard
+
+"@react-aria/radio@npm:^3.4.0":
+  version: 3.4.0
+  resolution: "@react-aria/radio@npm:3.4.0"
+  dependencies:
+    "@babel/runtime": ^7.6.2
+    "@react-aria/focus": ^3.9.0
+    "@react-aria/i18n": ^3.6.1
+    "@react-aria/interactions": ^3.12.0
+    "@react-aria/label": ^3.4.2
+    "@react-aria/utils": ^3.14.0
+    "@react-stately/radio": ^3.6.0
+    "@react-types/radio": ^3.3.0
+    "@react-types/shared": ^3.15.0
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: a0d09585727d0b546d55a99082cbe8e26b6e4acf823fc76a073d659fe96dea6a8941e2ac8f50ee6deddb0c3acf35486649386a2aa5e90f263ed45d4fbce86d91
   languageName: node
   linkType: hard
 
@@ -1926,6 +1978,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-stately/radio@npm:^3.6.0":
+  version: 3.6.0
+  resolution: "@react-stately/radio@npm:3.6.0"
+  dependencies:
+    "@babel/runtime": ^7.6.2
+    "@react-stately/utils": ^3.5.1
+    "@react-types/radio": ^3.3.0
+    "@react-types/shared": ^3.15.0
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: 2e48be448d3ecc3f5a18671f017f94e99f695d65ac65f7d7bfd3a27651630881485720868b8982e940064eeb3e4d51a06e6f71d9dc64c090bb3554927540bf58
+  languageName: node
+  linkType: hard
+
 "@react-stately/select@npm:^3.3.2":
   version: 3.3.2
   resolution: "@react-stately/select@npm:3.3.2"
@@ -1995,6 +2061,18 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
   checksum: f748331ae393f97b3e6fcccd37b767358f49229520b9500f82ed4c620bff36ef3c01d4ba9679ac7b9d6d78c5f6e711186c98bd0e6482ec27a6fbf26c5d0aa3cc
+  languageName: node
+  linkType: hard
+
+"@react-types/breadcrumbs@npm:^3.4.4":
+  version: 3.4.4
+  resolution: "@react-types/breadcrumbs@npm:3.4.4"
+  dependencies:
+    "@react-types/link": ^3.3.4
+    "@react-types/shared": ^3.15.0
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: 494146cf9f75cea6fe4fe879ffd67c8f670b20286cd0ee8a01adb9f3450d2dbc2b432f85e3fe4bb8832dc2115a448916de8dadc81aeb4bcde46cda92da84fe3c
   languageName: node
   linkType: hard
 
@@ -2068,6 +2146,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-types/link@npm:^3.3.4":
+  version: 3.3.4
+  resolution: "@react-types/link@npm:3.3.4"
+  dependencies:
+    "@react-aria/interactions": ^3.12.0
+    "@react-types/shared": ^3.15.0
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: 462561ca2039e63d81490230cfefa6741a68bd1c34598810d46bc98755adecde102b7e7b86b3b36b1ee01a3c29d08ed5de37d13853a7eda75aec3c2a210e9aee
+  languageName: node
+  linkType: hard
+
 "@react-types/listbox@npm:^3.3.4":
   version: 3.3.4
   resolution: "@react-types/listbox@npm:3.3.4"
@@ -2110,6 +2200,17 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
   checksum: 6e3f3f5eebbf25a52995c833c5c4dbe67cc99b53e500eaa5d6820ba781ea693a36232c968cfab91bdba7de6a44cf2e09c3acbfef91f8a1879d09c107dc676cb7
+  languageName: node
+  linkType: hard
+
+"@react-types/radio@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "@react-types/radio@npm:3.3.0"
+  dependencies:
+    "@react-types/shared": ^3.15.0
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: 19f10fff20d5aaf3d344df2732893da9fc0593c9cabb71484858774a3f1c74cb11e5b3da6ec61c4d491bddb224ef582a10d2c72140605b8717cb4964034a98ec
   languageName: node
   linkType: hard
 
@@ -2633,6 +2734,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snailycad/ui@workspace:packages/ui"
   dependencies:
+    "@react-aria/breadcrumbs": ^3.3.2
     "@react-aria/button": ^3.6.2
     "@react-aria/dialog": ^3.4.0
     "@react-aria/focus": ^3.9.0
@@ -2642,11 +2744,13 @@ __metadata:
     "@react-aria/menu": ^3.6.2
     "@react-aria/overlays": ^3.11.0
     "@react-aria/progress": ^3.3.2
+    "@react-aria/radio": ^3.4.0
     "@react-aria/textfield": ^3.7.2
     "@react-aria/utils": ^3.14.0
     "@react-stately/collections": ^3.4.4
     "@react-stately/list": ^3.5.4
     "@react-stately/menu": ^3.4.2
+    "@react-stately/radio": ^3.6.0
     "@react-stately/select": ^3.3.2
     "@react-types/overlays": ^3.6.4
     "@react-types/select": ^3.6.4
@@ -2654,6 +2758,7 @@ __metadata:
     "@snailycad/types": 1.27.2
     next-intl: ^2.7.6
     react-bootstrap-icons: ^1.9.1
+    tailwind-merge: ^1.6.1
     tailwindcss: ^3.1.8
     tslib: ^2.4.0
     tsup: ^6.2.3
@@ -12054,6 +12159,13 @@ __metadata:
   version: 4.14.2
   resolution: "swagger-ui-dist@npm:4.14.2"
   checksum: 8d452a840bce3a2fc2f0a4b803c5458654c934daaa09a1485ab85a17bd050d092ebb4cd126920bf36bec3f349316516e178ef4a199a122a47a25a71f06549453
+  languageName: node
+  linkType: hard
+
+"tailwind-merge@npm:^1.6.1":
+  version: 1.6.1
+  resolution: "tailwind-merge@npm:1.6.1"
+  checksum: d698c457a29d7defc6f0946ea4fc117250ab35b24791a02e9ce3a8015614d2460679717f7fc200b7dc93b29529d959a7d39bca9856e40e8ed9044705e6ea9fac
   languageName: node
   linkType: hard
 
