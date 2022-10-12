@@ -9,24 +9,20 @@ interface Props<T extends SelectValue> {
   isClearable: boolean | undefined;
 }
 
-export function SelectActions<T extends SelectValue>({
-  state,
-  selectionMode,
-  isClearable,
-}: Props<T>) {
-  const selectedItems = selectionMode === "multiple" ? state.selectedItems : null;
-  const selectedItem = selectionMode === "single" ? state.selectedItems?.[0] : null;
+export function SelectActions<T extends SelectValue>(props: Props<T>) {
+  const selectedItems = props.selectionMode === "multiple" ? props.state.selectedItems : null;
+  const selectedItem = props.selectionMode === "single" ? props.state.selectedItems?.[0] : null;
 
   return (
     <div className="flex items-center">
-      {isClearable && (selectedItems || selectedItem) ? (
+      {props.isClearable && (selectedItems || selectedItem) ? (
         <>
           <Button
             variant="transparent"
             className="dark:text-gray-400 hover:!text-white !px-0"
             aria-label="Clear"
             onPress={() => {
-              state.setSelectedKeys([]);
+              props.state.setSelectedKeys([]);
             }}
           >
             <X className="h-6 w-6" />

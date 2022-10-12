@@ -10,7 +10,8 @@ import { useMultiSelect } from "../../hooks/select/useMultiSelect";
 import { getSelectedKeyOrKeys } from "../../utils/select/getSelectedKeyOrKeys";
 import { SelectedItems } from "../inputs/select/selected-items";
 import { SelectActions } from "../inputs/select/select-actions";
-import { SelectLabel } from "../inputs/select/select-label";
+import { ErrorMessage } from "../error-message";
+import { Label } from "../label";
 
 export interface SelectValue {
   value: string;
@@ -76,7 +77,7 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
 
   return (
     <div className={classNames("flex flex-col mb-3", props.className)}>
-      <SelectLabel {...props} labelProps={labelProps} />
+      <Label {...props} labelProps={labelProps} />
 
       <div className="relative">
         <Button
@@ -84,11 +85,14 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
           className={classNames(
             buttonVariants.default,
             buttonSizes.sm,
-            "cursor-default rounded-md w-full h-10 flex items-center justify-between border dark:!border-gray-700 !bg-white !border-gray-200 dark:!bg-secondary hover:!border-gray-500 hover:dark:!bg-secondary hover:dark:!brightness-100",
+            "cursor-default rounded-md w-full h-10 flex items-center justify-between border !bg-white dark:!bg-secondary hover:dark:!bg-secondary hover:dark:!brightness-100",
             (state.isOpen || state.isFocused) &&
               !props.isDisabled &&
               "dark:!border-gray-500 !border-gray-500",
             props.isDisabled && "!cursor-not-allowed opacity-80",
+            props.errorMessage
+              ? "!border-red-500 focus:!border-red-700 dark:focus:!border-red-700"
+              : "dark:!border-gray-700 !border-gray-200 hover:!border-gray-500",
           )}
           ref={ref}
         >
@@ -115,10 +119,9 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
       </div>
 
       {props.children}
+
       {props.errorMessage && (
-        <span {...errorMessageProps} className="mt-1 font-medium text-red-500">
-          {props.errorMessage}
-        </span>
+        <ErrorMessage errorMessage={props.errorMessage} errorMessageProps={errorMessageProps} />
       )}
     </div>
   );

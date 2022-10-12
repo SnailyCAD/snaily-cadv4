@@ -11,11 +11,11 @@ interface OptionProps {
   state: ListState<unknown>;
 }
 
-export function Option({ item, state }: OptionProps) {
+export function Option(props: OptionProps) {
   const ref = React.useRef<HTMLLIElement>(null);
   const { optionProps, isDisabled, isFocused, isSelected } = useOption(
-    { key: item.key },
-    state,
+    { key: props.item.key },
+    props.state,
     ref,
   );
 
@@ -31,9 +31,9 @@ export function Option({ item, state }: OptionProps) {
         isDisabled && "cursor-not-allowed opacity-70",
       )}
     >
-      {item.rendered}
+      {props.item.rendered}
       {isSelected ? (
-        <Check aria-label={`Selected ${item.textValue}`} className="dark:text-gray-400" />
+        <Check aria-label={`Selected ${props.item.textValue}`} className="dark:text-gray-400" />
       ) : null}
     </li>
   );
