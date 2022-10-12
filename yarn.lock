@@ -1482,6 +1482,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-aria/breadcrumbs@npm:^3.3.2":
+  version: 3.3.2
+  resolution: "@react-aria/breadcrumbs@npm:3.3.2"
+  dependencies:
+    "@babel/runtime": ^7.6.2
+    "@react-aria/i18n": ^3.6.1
+    "@react-aria/interactions": ^3.12.0
+    "@react-aria/link": ^3.3.4
+    "@react-aria/utils": ^3.14.0
+    "@react-types/breadcrumbs": ^3.4.4
+    "@react-types/shared": ^3.15.0
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: c0e861aa0ae945f46d05b8c97345569f64209806b6d4b7c02dbda530aeb516fe87f2103e66613f70eed40264195a90e59ff2fdabac0d72e3b39c4b8a09634bee
+  languageName: node
+  linkType: hard
+
 "@react-aria/button@npm:^3.6.1, @react-aria/button@npm:^3.6.2":
   version: 3.6.2
   resolution: "@react-aria/button@npm:3.6.2"
@@ -1621,6 +1638,22 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
   checksum: 56f42958c9516663cf627f9d18247af7d52cca9ad31c70cd15374729dc475ffb054718839d019017f34d16ef46b43d20a6a8da430b1aadf07d10f0fba994aa9f
+  languageName: node
+  linkType: hard
+
+"@react-aria/link@npm:^3.3.4":
+  version: 3.3.4
+  resolution: "@react-aria/link@npm:3.3.4"
+  dependencies:
+    "@babel/runtime": ^7.6.2
+    "@react-aria/focus": ^3.9.0
+    "@react-aria/interactions": ^3.12.0
+    "@react-aria/utils": ^3.14.0
+    "@react-types/link": ^3.3.4
+    "@react-types/shared": ^3.15.0
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: 16f2b8f317ef30e56d02536a7175545b342b14b5de4bc7111dfcf70b85e185f3d2148fc2cc45fa512b338456525a91e34607491c526f76f28c5794779f2fb64d
   languageName: node
   linkType: hard
 
@@ -2031,6 +2064,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-types/breadcrumbs@npm:^3.4.4":
+  version: 3.4.4
+  resolution: "@react-types/breadcrumbs@npm:3.4.4"
+  dependencies:
+    "@react-types/link": ^3.3.4
+    "@react-types/shared": ^3.15.0
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: 494146cf9f75cea6fe4fe879ffd67c8f670b20286cd0ee8a01adb9f3450d2dbc2b432f85e3fe4bb8832dc2115a448916de8dadc81aeb4bcde46cda92da84fe3c
+  languageName: node
+  linkType: hard
+
 "@react-types/button@npm:^3.6.2":
   version: 3.6.2
   resolution: "@react-types/button@npm:3.6.2"
@@ -2098,6 +2143,18 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
   checksum: ff889e9b3cf26f607b170cc9d35fdc7b9d5ecf0fa7f8afac825a3807a143510db2c1f4af38ce903b4c34826488c3f0db1042ba4a484cf7444c53d80fbcbada2d
+  languageName: node
+  linkType: hard
+
+"@react-types/link@npm:^3.3.4":
+  version: 3.3.4
+  resolution: "@react-types/link@npm:3.3.4"
+  dependencies:
+    "@react-aria/interactions": ^3.12.0
+    "@react-types/shared": ^3.15.0
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: 462561ca2039e63d81490230cfefa6741a68bd1c34598810d46bc98755adecde102b7e7b86b3b36b1ee01a3c29d08ed5de37d13853a7eda75aec3c2a210e9aee
   languageName: node
   linkType: hard
 
@@ -2677,6 +2734,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snailycad/ui@workspace:packages/ui"
   dependencies:
+    "@react-aria/breadcrumbs": ^3.3.2
     "@react-aria/button": ^3.6.2
     "@react-aria/dialog": ^3.4.0
     "@react-aria/focus": ^3.9.0

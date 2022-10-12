@@ -37,6 +37,7 @@
     ]
   },
   "dependencies": {
+    "@react-aria/breadcrumbs": "^3.3.2",
     "@react-aria/button": "^3.6.2",
     "@react-aria/dialog": "^3.4.0",
     "@react-aria/focus": "^3.9.0",

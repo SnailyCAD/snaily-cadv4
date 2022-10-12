@@ -17,13 +17,14 @@ import type {
   PostCitizenImageByIdData,
   PutManageCitizenByIdData,
 } from "@snailycad/types/api";
+import { BreadcrumbItem, Breadcrumbs } from "@snailycad/ui";
 
 interface Props {
   citizen: GetManageCitizenByIdData;
 }
 
 export default function ManageCitizens({ citizen }: Props) {
-  const common = useTranslations("Common");
+  const t = useTranslations();
   const { state, execute } = useFetch();
   const router = useRouter();
 
@@ -78,8 +79,18 @@ export default function ManageCitizens({ citizen }: Props) {
         permissions: [Permissions.ManageCitizens],
       }}
     >
-      <Title>
-        {common("manage")} {citizen.name} {citizen.surname}
+      <Breadcrumbs>
+        <BreadcrumbItem href="/admin/manage/citizens">
+          {t("Management.MANAGE_CITIZENS")}
+        </BreadcrumbItem>
+        <BreadcrumbItem>{t("Citizen.editCitizen")}</BreadcrumbItem>
+        <BreadcrumbItem>
+          {citizen.name} {citizen.surname}
+        </BreadcrumbItem>
+      </Breadcrumbs>
+
+      <Title renderLayoutTitle={false}>
+        {t("Common.manage")} {citizen.name} {citizen.surname}
       </Title>
 
       <div className="mt-5">
