@@ -101,6 +101,7 @@ export default function ManageCitizens(props: Props) {
           {({ setFieldValue, isValid, values, errors }) => (
             <Form className="p-4 rounded-md dark:border card">
               <SelectField
+                isDisabled={isRankDisabled}
                 errorMessage={errors.rank}
                 label="Rank"
                 name="rank"
