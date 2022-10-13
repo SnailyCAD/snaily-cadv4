@@ -59,7 +59,7 @@ export function ManageSeizedItemsModal({ item, onClose }: Props) {
       className="w-[600px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, values, errors, isValid }) => (
+        {({ handleChange, setFieldValue, values, errors, isValid }) => (
           <Form autoComplete="off">
             <TextField
               label={common("item")}
