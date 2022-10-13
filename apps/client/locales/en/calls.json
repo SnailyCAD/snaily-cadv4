@@ -65,6 +65,8 @@
     "unitAssignedToCall": "<span>{unit}</span> has been assigned to this call.",
     "unitUnassignedToCall": "<span>{unit}</span> has been unassigned from this call.",
     "unitsAssignedToCall": "<span>{unit}</span> have been assigned to this call.",
-    "unitsUnassignedToCall": "<span>{unit}</span> have been unassigned from this call."
+    "unitsUnassignedToCall": "<span>{unit}</span> have been unassigned from this call.",
+    "unitArrivedOnScene": "<span>{unit}</span> has arrived on scene.",
+    "unitPressPanicButton": "<span>{unit}</span> has pressed the panic button."
   }
 }
