@@ -306,10 +306,7 @@ export function NameSearchModal() {
                   {currentResult.dead && currentResult.dateOfDead ? (
                     <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
                       {t("citizenDead", {
-                        date: format(
-                          new Date(currentResult.dateOfDead ?? new Date()),
-                          "MMMM do yyyy",
-                        ),
+                        date: format(new Date(currentResult.dateOfDead), "MMMM do yyyy"),
                       })}
                     </div>
                   ) : null}
