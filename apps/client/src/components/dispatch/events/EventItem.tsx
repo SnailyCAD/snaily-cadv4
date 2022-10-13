@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { Call911Event, IncidentEvent, LeoIncident } from "@snailycad/types";
+import type { AssignedUnit, Call911Event, IncidentEvent, LeoIncident } from "@snailycad/types";
 import { useModal } from "state/modalState";
 import { useHoverDirty } from "react-use";
 import useFetch from "lib/useFetch";
@@ -12,6 +12,8 @@ import { Pencil, X } from "react-bootstrap-icons";
 import { AlertModal } from "components/modal/AlertModal";
 import type { Delete911CallEventByIdData, DeleteIncidentEventByIdData } from "@snailycad/types/api";
 import type { Full911Call } from "state/dispatch/dispatchState";
+import { makeUnitName } from "lib/utils";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 
 interface EventItemProps<T extends IncidentEvent | Call911Event> {
   disabled?: boolean;
@@ -33,7 +35,9 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
   const actionsRef = React.useRef<HTMLLIElement>(null);
   const isHovering = useHoverDirty(actionsRef);
   const t = useTranslations("Calls");
+  const tEvent = useTranslations("Events");
   const { execute } = useFetch();
+  const { generateCallsign } = useGenerateCallsign();
   const [open, setOpen] = React.useState(false);
 
   function handleOpen() {
@@ -68,6 +72,24 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
     }
   }
 
+  const eventDescription = React.useMemo(() => {
+    const translationData = "translationData" in event && (event.translationData as any);
+    if (translationData && event.description && translationData?.units) {
+      const units = translationData.units as AssignedUnit[];
+
+      return tEvent.rich(event.description, {
+        span: (children) => <span className="font-medium">{children}</span>,
+        unit: units
+          .map((unit) =>
+            unit.unit ? `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}` : "A unit",
+          )
+          .join(", "),
+      });
+    }
+
+    return event.description;
+  }, [event]); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <li
       ref={actionsRef}
@@ -80,7 +102,7 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
         <span className="select-none text-gray-700 dark:text-gray-400 mr-1 font-semibold w-[90%]">
           <FullDate>{event.createdAt}</FullDate>:
         </span>
-        <span>{event.description}</span>
+        <span>{eventDescription}</span>
       </div>
 
       {disabled ? null : (

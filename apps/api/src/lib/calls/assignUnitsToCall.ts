@@ -6,6 +6,8 @@ import type { Socket } from "services/SocketService";
 import { manyToManyHelper } from "utils/manyToMany";
 import type { z } from "zod";
 import type { ASSIGNED_UNIT } from "@snailycad/schemas";
+import { assignedUnitsInclude } from "controllers/leo/incidents/IncidentController";
+import { createAssignedText } from "./createAssignedText";
 
 interface Options {
   call: Call911 & { assignedUnits: AssignedUnit[] };
@@ -15,32 +17,60 @@ interface Options {
 }
 
 export async function assignUnitsToCall({ socket, call, unitIds, maxAssignmentsToCalls }: Options) {
-  const deleteCreateArr = manyToManyHelper(
+  const disconnectConnectArr = manyToManyHelper(
     call.assignedUnits.map((u) => String(u.officerId || u.emsFdDeputyId || u.combinedLeoId)),
     unitIds.map((v) => v.id),
   );
 
+  console.log({ disconnectConnectArr });
+
+  const disconnectedUnits: NonNullable<Awaited<ReturnType<typeof handleDeleteAssignedUnit>>>[] = [];
+  const connectedUnits: NonNullable<Awaited<ReturnType<typeof handleDeleteAssignedUnit>>>[] = [];
+
   await Promise.all(
-    deleteCreateArr.map(async (data) => {
+    disconnectConnectArr.map(async (data) => {
       const deletionId = "disconnect" in data && data.disconnect?.id;
       const creationId = "connect" in data && data.connect?.id;
 
       if (deletionId) {
-        return handleDeleteAssignedUnit({ unitId: deletionId, call });
+        const callData = await handleDeleteAssignedUnit({ unitId: deletionId, call });
+        if (!callData) return;
+        disconnectedUnits.push(callData);
+        return callData;
       }
 
       if (creationId) {
         const isPrimary = unitIds.find((v) => v.id === creationId)?.isPrimary;
-        return handleCreateAssignedUnit({
+        const callData = await handleCreateAssignedUnit({
           unitId: creationId,
           isPrimary: isPrimary ?? false,
           maxAssignmentsToCalls,
           call,
         });
+        if (!callData) return;
+
+        connectedUnits.push(callData.assignedUnit);
+        return callData.call;
       }
 
       return null;
     }),
+  );
+
+  const translationData = createAssignedText({
+    disconnectedUnits,
+    connectedUnits,
+  });
+  await prisma.$transaction(
+    translationData.map((data) =>
+      prisma.call911Event.create({
+        data: {
+          call911Id: call.id,
+          translationData: data as any,
+          description: data.key,
+        },
+      }),
+    ),
   );
 
   if (socket) {
@@ -49,7 +79,7 @@ export async function assignUnitsToCall({ socket, call, unitIds, maxAssignmentsT
   }
 }
 
-async function handleDeleteAssignedUnit(
+export async function handleDeleteAssignedUnit(
   options: Omit<HandleCreateAssignedUnitOptions, "maxAssignmentsToCalls" | "isPrimary">,
 ) {
   const types = {
@@ -67,6 +97,7 @@ async function handleDeleteAssignedUnit(
         { emsFdDeputyId: options.unitId },
       ],
     },
+    include: assignedUnitsInclude.include,
   });
   if (!assignedUnit) return;
 
@@ -86,7 +117,7 @@ async function handleDeleteAssignedUnit(
     }
   }
 
-  return true;
+  return assignedUnit;
 }
 
 interface HandleCreateAssignedUnitOptions {
@@ -156,10 +187,14 @@ async function handleCreateAssignedUnit(options: HandleCreateAssignedUnitOptions
       call911Id: options.call.id,
       [types[type]]: unit.id,
     },
+    include: assignedUnitsInclude.include,
   });
 
-  return prisma.call911.update({
-    where: { id: options.call.id },
-    data: { assignedUnits: { connect: { id: assignedUnit.id } } },
-  });
+  return {
+    call: prisma.call911.update({
+      where: { id: options.call.id },
+      data: { assignedUnits: { connect: { id: assignedUnit.id } } },
+    }),
+    assignedUnit,
+  };
 }
