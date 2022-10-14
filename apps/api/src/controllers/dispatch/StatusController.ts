@@ -167,7 +167,7 @@ export class StatusController {
       }
     }
 
-    let updatedUnit;
+    let updatedUnit: any;
     const shouldFindIncremental = code.shouldDo === ShouldDoType.SET_ON_DUTY && !unit.incremental;
     const statusId = code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id;
 
@@ -193,6 +193,37 @@ export class StatusController {
         data: { statusId, lastStatusChangeTimestamp: new Date() },
         include: combinedUnitProperties,
       });
+    }
+
+    if (code.shouldDo === ShouldDoType.PANIC_BUTTON) {
+      const calls = await prisma.call911.findMany({
+        where: {
+          assignedUnits: {
+            some: {
+              OR: [
+                { officerId: updatedUnit.id },
+                { combinedLeoId: updatedUnit.id },
+                { emsFdDeputyId: updatedUnit.id },
+              ],
+            },
+          },
+        },
+      });
+
+      await prisma.$transaction(
+        calls.map((call) =>
+          prisma.call911Event.create({
+            data: {
+              call911Id: call.id,
+              description: "unitPressedPanicButton",
+              translationData: {
+                key: "unitPressedPanicButton",
+                units: [{ ...updatedUnit, unit: updatedUnit }],
+              } as any,
+            },
+          }),
+        ),
+      );
     }
 
     if (type === "leo") {
