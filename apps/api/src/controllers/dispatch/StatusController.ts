@@ -35,6 +35,8 @@ import { isFeatureEnabled } from "lib/cad";
 import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 import type * as APITypes from "@snailycad/types/api";
+import { callInclude } from "./911-calls/Calls911Controller";
+import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -167,7 +169,7 @@ export class StatusController {
       }
     }
 
-    let updatedUnit: any;
+    let updatedUnit;
     const shouldFindIncremental = code.shouldDo === ShouldDoType.SET_ON_DUTY && !unit.incremental;
     const statusId = code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id;
 
@@ -195,35 +197,35 @@ export class StatusController {
       });
     }
 
-    if (code.shouldDo === ShouldDoType.PANIC_BUTTON) {
-      const calls = await prisma.call911.findMany({
-        where: {
-          assignedUnits: {
-            some: {
-              OR: [
-                { officerId: updatedUnit.id },
-                { combinedLeoId: updatedUnit.id },
-                { emsFdDeputyId: updatedUnit.id },
-              ],
+    if (updatedUnit.activeCallId) {
+      const keys = {
+        [ShouldDoType.PANIC_BUTTON]: "unitPressedPanicButton",
+        [ShouldDoType.ON_SCENE]: "unitOnScene",
+        [ShouldDoType.EN_ROUTE]: "unitEnRoute",
+      } as Record<ShouldDoType, string>;
+      const key = keys[code.shouldDo];
+
+      if (key) {
+        const call = await prisma.call911.update({
+          include: callInclude,
+          where: {
+            id: updatedUnit.activeCallId,
+          },
+          data: {
+            events: {
+              create: {
+                description: key,
+                translationData: {
+                  key,
+                  units: [{ ...updatedUnit, unit: updatedUnit }],
+                } as any,
+              },
             },
           },
-        },
-      });
+        });
 
-      await prisma.$transaction(
-        calls.map((call) =>
-          prisma.call911Event.create({
-            data: {
-              call911Id: call.id,
-              description: "unitPressedPanicButton",
-              translationData: {
-                key: "unitPressedPanicButton",
-                units: [{ ...updatedUnit, unit: updatedUnit }],
-              } as any,
-            },
-          }),
-        ),
-      );
+        this.socket.emitUpdate911Call(officerOrDeputyToUnit(call));
+      }
     }
 
     if (type === "leo") {

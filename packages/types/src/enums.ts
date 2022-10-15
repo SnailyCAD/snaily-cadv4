@@ -179,6 +179,8 @@ export const ShouldDoType = {
   SET_ASSIGNED: "SET_ASSIGNED",
   SET_STATUS: "SET_STATUS",
   PANIC_BUTTON: "PANIC_BUTTON",
+  EN_ROUTE: "EN_ROUTE",
+  ON_SCENE: "ON_SCENE",
 } as const;
 
 export type ShouldDoType = typeof ShouldDoType[keyof typeof ShouldDoType];

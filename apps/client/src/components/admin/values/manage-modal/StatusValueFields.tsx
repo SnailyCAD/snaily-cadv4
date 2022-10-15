@@ -23,6 +23,8 @@ export const SHOULD_DO_LABELS: Record<ShouldDoType, string> = {
   [ShouldDoType.SET_ON_DUTY]: "Set On duty",
   [ShouldDoType.SET_ASSIGNED]: "Set Assigned",
   [ShouldDoType.PANIC_BUTTON]: "Panic Button",
+  [ShouldDoType.EN_ROUTE]: "En Route",
+  [ShouldDoType.ON_SCENE]: "On Scene",
 };
 
 export const WHAT_PAGES_LABELS: Record<WhatPages, string> = {

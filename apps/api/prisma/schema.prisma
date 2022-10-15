@@ -1457,6 +1457,8 @@ enum ShouldDoType {
   SET_ASSIGNED
   SET_STATUS
   PANIC_BUTTON
+  EN_ROUTE
+  ON_SCENE
 }
 
 enum BoloType {
