@@ -5,13 +5,8 @@ import {
   cad,
   Officer,
   StatusValue,
-  EmsFdDeputy,
-  Citizen,
-  CombinedLeoUnit,
-  Value,
   WhitelistStatus,
   CadFeature,
-  Feature,
   DiscordWebhookType,
   Rank,
 } from "@prisma/client";
@@ -26,17 +21,19 @@ import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/a
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { Socket } from "services/SocketService";
 import { IsAuth } from "middlewares/IsAuth";
-import { generateCallsign } from "@snailycad/utils/callsign";
 import { validateSchema } from "lib/validateSchema";
 import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { findUnit } from "lib/leo/findUnit";
-import { isFeatureEnabled } from "lib/cad";
 import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 import type * as APITypes from "@snailycad/types/api";
-import { callInclude } from "./911-calls/Calls911Controller";
-import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
+import {
+  createPanicButtonEmbed,
+  createWebhookData,
+  HandlePanicButtonPressedOptions,
+} from "lib/dispatch/webhooks";
+import { createCallEventOnStatusChange } from "lib/dispatch/createCallEventOnStatusChange";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -198,34 +195,11 @@ export class StatusController {
     }
 
     if (updatedUnit.activeCallId) {
-      const keys = {
-        [ShouldDoType.PANIC_BUTTON]: "unitPressedPanicButton",
-        [ShouldDoType.ON_SCENE]: "unitOnScene",
-        [ShouldDoType.EN_ROUTE]: "unitEnRoute",
-      } as Record<ShouldDoType, string>;
-      const key = keys[code.shouldDo];
-
-      if (key) {
-        const call = await prisma.call911.update({
-          include: callInclude,
-          where: {
-            id: updatedUnit.activeCallId,
-          },
-          data: {
-            events: {
-              create: {
-                description: key,
-                translationData: {
-                  key,
-                  units: [{ ...updatedUnit, unit: updatedUnit }],
-                } as any,
-              },
-            },
-          },
-        });
-
-        this.socket.emitUpdate911Call(officerOrDeputyToUnit(call));
-      }
+      createCallEventOnStatusChange({
+        unit: updatedUnit,
+        status: code,
+        socket: this.socket,
+      });
     }
 
     if (type === "leo") {
@@ -297,90 +271,4 @@ export class StatusController {
       this.socket.emitPanicButtonLeo(options.unit, "OFF");
     }
   }
-}
-
-interface HandlePanicButtonPressedOptions {
-  status: StatusValue;
-  unit: (
-    | ((Officer | EmsFdDeputy) & { citizen: Pick<Citizen, "name" | "surname"> })
-    | CombinedLeoUnit
-  ) & {
-    status?: StatusValue | null;
-  };
-  cad: cad & { miscCadSettings: MiscCadSettings };
-}
-
-type V<T> = T & { value: Value };
-
-export type Unit = { status: V<StatusValue> | null } & (
-  | ((Officer | EmsFdDeputy) & {
-      citizen: Pick<Citizen, "name" | "surname">;
-    })
-  | CombinedLeoUnit
-);
-
-function createWebhookData(
-  cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
-  unit: Unit,
-) {
-  const isBadgeNumberEnabled = isFeatureEnabled({
-    defaultReturn: true,
-    feature: Feature.BADGE_NUMBERS,
-    features: cad.features,
-  });
-
-  const isNotCombined = "citizenId" in unit;
-
-  const status = unit.status?.value.value ?? "Off-duty";
-  const unitName = isNotCombined ? `${unit.citizen.name} ${unit.citizen.surname}` : "";
-  const callsign = generateCallsign(unit as any, cad.miscCadSettings.callsignTemplate);
-  const badgeNumber = isBadgeNumberEnabled && isNotCombined ? `${unit.badgeNumber} - ` : "";
-  const officerName = isNotCombined ? `${badgeNumber}${callsign} ${unitName}` : `${callsign}`;
-
-  return {
-    embeds: [
-      {
-        title: "Status Change",
-        description: `Unit **${officerName}** has changed their status to ${status}`,
-        fields: [
-          {
-            name: "Status",
-            value: status,
-            inline: true,
-          },
-        ],
-      },
-    ],
-  };
-}
-
-function createPanicButtonEmbed(
-  cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
-  unit: HandlePanicButtonPressedOptions["unit"],
-) {
-  const isCombined = !("citizen" in unit);
-
-  const isBadgeNumberEnabled = isFeatureEnabled({
-    defaultReturn: true,
-    feature: Feature.BADGE_NUMBERS,
-    features: cad.features,
-  });
-
-  const unitName = isCombined ? null : `${unit.citizen.name} ${unit.citizen.surname}`;
-  const template = isCombined
-    ? cad.miscCadSettings.pairedUnitSymbol
-    : cad.miscCadSettings.callsignTemplate;
-
-  const callsign = generateCallsign(unit as any, template);
-  const badgeNumber = isBadgeNumberEnabled || isCombined ? "" : `${unit.badgeNumber} - `;
-  const officerName = isCombined ? `${callsign}` : `${badgeNumber}${callsign} ${unitName}`;
-
-  return {
-    embeds: [
-      {
-        title: "Panic Button",
-        description: `Unit **${officerName}** has pressed the panic button`,
-      },
-    ],
-  };
 }
