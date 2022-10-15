@@ -57,16 +57,16 @@ export async function getActiveOfficer(options: GetActiveOfficerOptions) {
     fallback: (u) => u.rank !== Rank.USER,
   });
 
-  if (isAdmin) {
-    return null;
-  }
-
   if (options.req?.headers["is-from-dispatch"]?.toString() === "true") {
     const hasDispatchPermissions = hasPermission({
       userToCheck: options.user,
       permissionsToCheck: defaultPermissions.defaultDispatchPermissions,
       fallback: (user) => user.isDispatch,
     });
+
+    if (isAdmin && !hasDispatchPermissions) {
+      isDispatch = true;
+    }
 
     if (!hasDispatchPermissions) {
       throw new Forbidden("Must be dispatch to use this header.");
@@ -79,6 +79,10 @@ export async function getActiveOfficer(options: GetActiveOfficerOptions) {
       permissionsToCheck: defaultPermissions.defaultLeoPermissions,
       fallback: (user) => user.isLeo,
     });
+
+    if (isAdmin && !hasLeoPermissions) {
+      isDispatch = true;
+    }
 
     if (!hasLeoPermissions) {
       throw new Forbidden("Invalid Permissions");
