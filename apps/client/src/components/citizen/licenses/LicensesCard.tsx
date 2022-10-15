@@ -138,7 +138,7 @@ export function CitizenLicenses({ citizen }: Props) {
                 </Infofield>
 
                 {licenseNumber && citizen[type] ? (
-                  <Infofield className="pl-3" label={t(`Citizen.${licenseNumberType}`)}>
+                  <Infofield className="pl-3" label={t("Citizen.licenseNumber")}>
                     {licenseNumber}
                   </Infofield>
                 ) : null}

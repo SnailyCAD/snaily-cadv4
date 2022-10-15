@@ -43,10 +43,7 @@
     "manageLicenses": "Manage Licenses",
     "licenses": "Licenses",
     "licenseSuspendedInfo": "License is suspended. Please contact an officer to revoke the suspension.",
-    "driversLicenseNumber": "License Number",
-    "pilotLicenseNumber": "License Number",
-    "waterLicenseNumber": "License Number",
-    "weaponLicenseNumber": "License Number",
+    "licenseNumber": "License Number",
     "alert_deleteCitizen": "Are you sure you want to delete <span>{citizen}</span>? This action cannot be undone."
   },
   "Vehicles": {
