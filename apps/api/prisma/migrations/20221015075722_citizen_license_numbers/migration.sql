@@ -7,4 +7,5 @@ ADD COLUMN     "weaponLicenseNumber" TEXT;
 -- AlterTable
 ALTER TABLE "MiscCadSettings" ADD COLUMN     "driversLicenseNumberLength" INTEGER DEFAULT 8,
 ADD COLUMN     "pilotLicenseNumberLength" INTEGER DEFAULT 6,
-ADD COLUMN     "weaponfirearmLicenseNumberLength" INTEGER DEFAULT 8;
+ADD COLUMN     "waterLicenseNumberLength" INTEGER DEFAULT 8,
+ADD COLUMN     "weaponLicenseNumberLength" INTEGER DEFAULT 8;

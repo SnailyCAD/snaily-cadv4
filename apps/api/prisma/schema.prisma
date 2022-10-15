@@ -81,9 +81,10 @@ model MiscCadSettings {
   boloInactivityTimeout           Int?
   activeWarrantsInactivityTimeout Int?
 
-  driversLicenseNumberLength       Int? @default(8)
-  pilotLicenseNumberLength         Int? @default(6)
-  weaponfirearmLicenseNumberLength Int? @default(8)
+  driversLicenseNumberLength Int? @default(8)
+  pilotLicenseNumberLength   Int? @default(6)
+  weaponLicenseNumberLength  Int? @default(8)
+  waterLicenseNumberLength   Int? @default(8)
 
   /// deprecated, use `webhooks` instead
   call911WebhookId     String?
