@@ -365,7 +365,11 @@ export class SearchActionsController {
     const defaultLicenseValueId = defaultLicenseValue?.id ?? null;
 
     const citizen = await prisma.citizen.create({
-      data: citizenObjectFromData(data, defaultLicenseValueId),
+      data: citizenObjectFromData({
+        data,
+        defaultLicenseValueId,
+        cad,
+      }),
       ...citizenSearchIncludeOrSelect(user, cad),
     });
 

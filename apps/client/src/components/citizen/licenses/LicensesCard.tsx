@@ -6,7 +6,7 @@ import { LicenseInitialValues, ManageLicensesModal } from "./ManageLicensesModal
 import { CitizenWithVehAndWep, useCitizen } from "context/CitizenContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Infofield } from "components/shared/Infofield";
-import { DriversLicenseCategoryType, SuspendedCitizenLicenses } from "@snailycad/types";
+import { Citizen, DriversLicenseCategoryType, SuspendedCitizenLicenses } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import type { PutCitizenLicensesByIdData } from "@snailycad/types/api";
 
@@ -76,33 +76,46 @@ interface Props {
     | "weaponLicense"
     | "waterLicense"
     | "suspendedLicenses"
+    | "pilotLicenseNumber"
+    | "waterLicenseNumber"
+    | "weaponLicenseNumber"
+    | "driversLicenseNumber"
   >;
 }
 
 type SuspendedLicenseType = keyof Omit<SuspendedCitizenLicenses, "id">;
+type LicenseNumbers = keyof Pick<
+  Citizen,
+  "pilotLicenseNumber" | "waterLicenseNumber" | "weaponLicenseNumber" | "driversLicenseNumber"
+>;
+
 export function CitizenLicenses({ citizen }: Props) {
   const t = useTranslations();
   const common = useTranslations("Common");
   const { WEAPON_REGISTRATION } = useFeatureEnabled();
 
-  const categoryTypes: Record<string, [DriversLicenseCategoryType, SuspendedLicenseType]> = {
-    driversLicense: [DriversLicenseCategoryType.AUTOMOTIVE, "driverLicense"],
-    pilotLicense: [DriversLicenseCategoryType.AVIATION, "pilotLicense"],
-    waterLicense: [DriversLicenseCategoryType.WATER, "waterLicense"],
-    weaponLicense: [DriversLicenseCategoryType.FIREARM, "firearmsLicense"],
+  const categoryTypes: Record<
+    string,
+    [DriversLicenseCategoryType, [SuspendedLicenseType, LicenseNumbers]]
+  > = {
+    driversLicense: [
+      DriversLicenseCategoryType.AUTOMOTIVE,
+      ["driverLicense", "driversLicenseNumber"],
+    ],
+    pilotLicense: [DriversLicenseCategoryType.AVIATION, ["pilotLicense", "pilotLicenseNumber"]],
+    waterLicense: [DriversLicenseCategoryType.WATER, ["waterLicense", "waterLicenseNumber"]],
+    weaponLicense: [DriversLicenseCategoryType.FIREARM, ["firearmsLicense", "weaponLicenseNumber"]],
   };
 
   return (
     <>
       {types.map((type) => {
-        const [categoryType, suspendedType] = categoryTypes[type] as [
-          DriversLicenseCategoryType,
-          SuspendedLicenseType,
-        ];
+        const [categoryType, [suspendedType, licenseNumberType]] = categoryTypes[type]!;
 
         const isSuspended = citizen.suspendedLicenses?.[suspendedType] ?? false;
         const category =
           categoryTypes[type] && citizen.dlCategory.filter((v) => v.type === categoryType);
+        const licenseNumber = citizen[licenseNumberType];
 
         const returnNull = type === "weaponLicense" && !WEAPON_REGISTRATION;
         if (returnNull) {
@@ -123,6 +136,12 @@ export function CitizenLicenses({ citizen }: Props) {
                 <Infofield label={t(`Citizen.${type}`)}>
                   {citizen[type]?.value ?? common("none")}
                 </Infofield>
+
+                {licenseNumber && citizen[type] ? (
+                  <Infofield className="pl-3" label={t("Citizen.licenseNumber")}>
+                    {licenseNumber}
+                  </Infofield>
+                ) : null}
 
                 {category && category.length > 0 ? (
                   <Infofield label={common("categories")} className="pl-3">

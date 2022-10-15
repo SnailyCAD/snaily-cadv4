@@ -1,38 +1,54 @@
-import type { Prisma } from "@prisma/client";
+import type { Prisma, cad, CadFeature, MiscCadSettings } from "@prisma/client";
 import type { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { generateString } from "utils/generateString";
 import { validateImgurURL } from "utils/image";
 
-export function citizenObjectFromData(
-  data: Zod.infer<typeof CREATE_CITIZEN_SCHEMA>,
-  defaultLicenseValueId?: string | null,
-) {
+interface Options {
+  data: Zod.infer<typeof CREATE_CITIZEN_SCHEMA>;
+  defaultLicenseValueId?: string | null;
+  cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings | null };
+}
+
+export function citizenObjectFromData(options: Options) {
+  const miscCadSettings = options.cad.miscCadSettings;
+
   let obj: Prisma.CitizenUncheckedCreateInput = {
-    address: data.address,
-    postal: data.postal || null,
-    weight: data.weight,
-    height: data.height,
-    hairColor: data.hairColor,
-    dateOfBirth: data.dateOfBirth,
-    ethnicityId: data.ethnicity,
-    name: data.name,
-    surname: data.surname,
-    genderId: data.gender,
-    eyeColor: data.eyeColor,
-    phoneNumber: data.phoneNumber || null,
-    imageId: validateImgurURL(data.image),
-    socialSecurityNumber: data.socialSecurityNumber || generateString(9, { numbersOnly: true }),
-    occupation: data.occupation || null,
-    additionalInfo: data.additionalInfo,
+    address: options.data.address,
+    postal: options.data.postal || null,
+    weight: options.data.weight,
+    height: options.data.height,
+    hairColor: options.data.hairColor,
+    dateOfBirth: options.data.dateOfBirth,
+    ethnicityId: options.data.ethnicity,
+    name: options.data.name,
+    surname: options.data.surname,
+    genderId: options.data.gender,
+    eyeColor: options.data.eyeColor,
+    phoneNumber: options.data.phoneNumber || null,
+    imageId: validateImgurURL(options.data.image),
+    socialSecurityNumber:
+      options.data.socialSecurityNumber || generateString(9, { numbersOnly: true }),
+    occupation: options.data.occupation || null,
+    additionalInfo: options.data.additionalInfo,
+    driversLicenseNumber: generateString(miscCadSettings?.driversLicenseNumberLength ?? 8),
+    weaponLicenseNumber: generateString(miscCadSettings?.weaponLicenseNumberLength ?? 8, {
+      numbersOnly: true,
+    }),
+    pilotLicenseNumber: generateString(miscCadSettings?.pilotLicenseNumberLength ?? 8, {
+      numbersOnly: true,
+    }),
+    waterLicenseNumber: generateString(miscCadSettings?.waterLicenseNumberLength ?? 8, {
+      numbersOnly: true,
+    }),
   };
 
-  if (typeof defaultLicenseValueId !== "undefined") {
+  if (typeof options.defaultLicenseValueId !== "undefined") {
     obj = {
       ...obj,
-      driversLicenseId: data.driversLicense || defaultLicenseValueId,
-      weaponLicenseId: data.weaponLicense || defaultLicenseValueId,
-      pilotLicenseId: data.pilotLicense || defaultLicenseValueId,
-      waterLicenseId: data.waterLicense || defaultLicenseValueId,
+      driversLicenseId: options.data.driversLicense || options.defaultLicenseValueId,
+      weaponLicenseId: options.data.weaponLicense || options.defaultLicenseValueId,
+      pilotLicenseId: options.data.pilotLicense || options.defaultLicenseValueId,
+      waterLicenseId: options.data.waterLicense || options.defaultLicenseValueId,
     };
   }
 
