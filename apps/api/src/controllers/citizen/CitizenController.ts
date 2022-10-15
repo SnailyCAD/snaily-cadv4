@@ -241,7 +241,11 @@ export class CitizenController {
     const citizen = await prisma.citizen.create({
       data: {
         userId: user.id || undefined,
-        ...citizenObjectFromData(data, defaultLicenseValueId),
+        ...citizenObjectFromData({
+          data,
+          defaultLicenseValueId,
+          cad,
+        }),
       },
       include: { suspendedLicenses: true },
     });
@@ -254,7 +258,7 @@ export class CitizenController {
   async updateCitizen(
     @PathParams("id") citizenId: string,
     @Context("user") user: User,
-    @Context("cad") cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
+    @Context("cad") cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings | null },
     @BodyParams() body: unknown,
   ): Promise<APITypes.PutCitizenByIdData> {
     const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
@@ -291,7 +295,10 @@ export class CitizenController {
         id: citizen.id,
       },
       data: {
-        ...citizenObjectFromData(data),
+        ...citizenObjectFromData({
+          data,
+          cad,
+        }),
         socialSecurityNumber:
           data.socialSecurityNumber ??
           (!citizen.socialSecurityNumber ? generateString(9, { numbersOnly: true }) : undefined),

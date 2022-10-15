@@ -18,6 +18,7 @@ export function LicenseNumbersSection() {
         errorMessage={errors.driversLicenseNumberLength}
         description="The length of the drivers license number (Default: 8)"
         label="Drivers License Number Length"
+        action="short-input"
       >
         <Input
           type="number"
@@ -31,6 +32,7 @@ export function LicenseNumbersSection() {
         errorMessage={errors.weaponLicenseNumberLength}
         description="The length of the weapon license number (Default: 8)"
         label="Weapon License Number Length"
+        action="short-input"
       >
         <Input
           type="number"
@@ -44,6 +46,7 @@ export function LicenseNumbersSection() {
         errorMessage={errors.pilotLicenseNumberLength}
         description="The length of the pilot license number (Default: 6)"
         label="Pilot License Number Length"
+        action="short-input"
       >
         <Input
           type="number"
@@ -57,6 +60,7 @@ export function LicenseNumbersSection() {
         errorMessage={errors.waterLicenseNumberLength}
         description="The length of the water license number (Default: 8)"
         label="Water License Number Length"
+        action="short-input"
       >
         <Input
           type="number"

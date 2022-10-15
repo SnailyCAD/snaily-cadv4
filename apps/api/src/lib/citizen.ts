@@ -1,13 +1,12 @@
-import type { Prisma } from "@prisma/client";
+import type { Prisma, cad, CadFeature, MiscCadSettings } from "@prisma/client";
 import type { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
-import type { cad } from "@snailycad/types";
 import { generateString } from "utils/generateString";
 import { validateImgurURL } from "utils/image";
 
 interface Options {
   data: Zod.infer<typeof CREATE_CITIZEN_SCHEMA>;
   defaultLicenseValueId?: string | null;
-  cad: cad;
+  cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings | null };
 }
 
 export function citizenObjectFromData(options: Options) {
