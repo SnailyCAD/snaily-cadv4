@@ -8,3 +8,6 @@
 
 ALTER TYPE "ShouldDoType" ADD VALUE 'EN_ROUTE';
 ALTER TYPE "ShouldDoType" ADD VALUE 'ON_SCENE';
+
+-- AlterTable
+ALTER TABLE "Call911Event" ADD COLUMN     "translationData" JSONB;
