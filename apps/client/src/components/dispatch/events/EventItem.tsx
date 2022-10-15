@@ -31,6 +31,8 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
   setTempEvent,
   onEventDelete,
 }: EventItemProps<T>) {
+  const [isEditable, setIsEditable] = React.useState(!disabled);
+
   const { openModal, closeModal } = useModal();
   const actionsRef = React.useRef<HTMLLIElement>(null);
   const isHovering = useHoverDirty(actionsRef);
@@ -77,6 +79,8 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
     if (translationData && event.description && translationData?.units) {
       const units = translationData.units as AssignedUnit[];
 
+      setIsEditable(false);
+
       return tEvent.rich(event.description, {
         span: (children) => <span className="font-medium">{children}</span>,
         unit: units
@@ -105,7 +109,7 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
         <span>{eventDescription}</span>
       </div>
 
-      {disabled ? null : (
+      {isEditable ? (
         <div className={classNames(isHovering || open || isEditing ? "flex" : "hidden")}>
           <Button
             className="p-0 px-1 mr-2"
@@ -119,9 +123,9 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
             <X width={20} height={20} />
           </Button>
         </div>
-      )}
+      ) : null}
 
-      {open && !disabled ? (
+      {open && isEditable ? (
         <AlertModal
           description={t("alert_deleteCallEvent")}
           onDeleteClick={deleteEvent}
