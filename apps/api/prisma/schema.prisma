@@ -1068,12 +1068,13 @@ model IncidentInvolvedUnit {
 }
 
 model Call911Event {
-  id          String   @id @default(uuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now()) @updatedAt
-  call        Call911  @relation(fields: [call911Id], references: [id], onDelete: Cascade)
-  call911Id   String
-  description String   @db.Text
+  id              String   @id @default(uuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
+  call            Call911  @relation(fields: [call911Id], references: [id], onDelete: Cascade)
+  call911Id       String
+  description     String   @db.Text
+  translationData Json?
 }
 
 model Bolo {
@@ -1456,6 +1457,8 @@ enum ShouldDoType {
   SET_ASSIGNED
   SET_STATUS
   PANIC_BUTTON
+  EN_ROUTE
+  ON_SCENE
 }
 
 enum BoloType {
