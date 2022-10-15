@@ -32,7 +32,6 @@
     "vitest": "^0.23.4"
   },
   "dependencies": {
-    "type-fest": "^3.0.0",
     "zod": "^3.19.1"
   },
   "tsup": {
@@ -55,5 +54,6 @@
         "dist/permissions.d.ts"
       ]
     }
-  }
+  },
+  "sideEffects": false
 }

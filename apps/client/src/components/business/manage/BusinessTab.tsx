@@ -145,7 +145,6 @@ export function ManageBusinessTab() {
         title={t("deleteBusiness")}
         description={t.rich("alert_deleteBusiness", {
           business: currentBusiness.name,
-          span: (children) => <span className="font-semibold">{children}</span>,
         })}
         deleteText={t("deleteBusiness")}
         state={state}

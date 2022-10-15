@@ -1,21 +1,21 @@
 import * as React from "react";
-import {
-  type DepartmentValue,
-  type DivisionValue,
-  type DriversLicenseCategoryValue,
-  type EmployeeValue,
-  type PenalCode,
-  type PenalCodeGroup,
-  type StatusValue,
-  type Value,
-  ValueType,
-  type VehicleValue,
+import type {
+  DepartmentValue,
+  DivisionValue,
+  DriversLicenseCategoryValue,
+  EmployeeValue,
+  PenalCode,
+  PenalCodeGroup,
+  StatusValue,
+  Value,
+  VehicleValue,
   QualificationValue,
   CallTypeValue,
 } from "@snailycad/types";
+import { ValueType } from "@snailycad/types";
 import type { GetValuesData } from "@snailycad/types/api";
 import { hasValueObj, isBaseValue, isPenalCodeValue } from "@snailycad/utils";
-import { useRouter } from "next/router";
+import type { Router } from "next/router";
 
 interface ContextValue<Custom = Value> {
   type: ValueType;
@@ -48,12 +48,12 @@ export interface ValueContext {
 const ValuesContext = React.createContext<ValueContext | undefined>(undefined);
 
 interface ProviderProps {
+  router: Router;
   children: React.ReactNode;
   initialData: { values: GetValuesData };
 }
 
-export function ValuesProvider({ initialData, children }: ProviderProps) {
-  const router = useRouter();
+export function ValuesProvider({ initialData, children, router }: ProviderProps) {
   const isAdmin = router.pathname.startsWith("/admin");
   const [values, setValues] = React.useState<ProviderProps["initialData"]["values"]>(
     Array.isArray(initialData.values) ? initialData.values : [],

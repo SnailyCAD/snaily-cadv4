@@ -146,7 +146,6 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
         id={ModalIds.AlertDeleteCustomRole}
         title={t("deleteCustomRole")}
         description={t.rich("alert_deleteCustomRole", {
-          span: (children) => <span className="font-semibold">{children}</span>,
           role: tempRole?.name,
         })}
         onDeleteClick={handleDelete}

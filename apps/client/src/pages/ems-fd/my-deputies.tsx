@@ -156,7 +156,6 @@ export default function MyDeputies({ deputies: data }: Props) {
       <AlertModal
         title={t("Ems.deleteDeputy")}
         description={t.rich("Ems.alert_deleteDeputy", {
-          span: (children) => <span className="font-semibold">{children}</span>,
           deputy: tempDeputy && makeUnitName(tempDeputy),
         })}
         id={ModalIds.AlertDeleteDeputy}

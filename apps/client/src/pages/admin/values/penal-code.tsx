@@ -317,9 +317,6 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
         id={ModalIds.AlertDeleteValue}
         description={t.rich("alert_deleteValue", {
           value: tempValue?.title ?? "",
-          span: (children) => {
-            return <span className="font-semibold">{children}</span>;
-          },
         })}
         onDeleteClick={handleDelete}
         title={typeT("DELETE")}

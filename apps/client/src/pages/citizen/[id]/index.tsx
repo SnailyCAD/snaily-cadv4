@@ -195,9 +195,6 @@ export default function CitizenId() {
           title={t("deleteCitizen")}
           description={t.rich("alert_deleteCitizen", {
             citizen: `${citizen.name} ${citizen.surname}`,
-            span: (children) => {
-              return <span className="font-semibold">{children}</span>;
-            },
           })}
           id={ModalIds.AlertDeleteCitizen}
           state={state}

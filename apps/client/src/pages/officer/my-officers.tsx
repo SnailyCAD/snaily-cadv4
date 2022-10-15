@@ -160,7 +160,6 @@ export default function MyOfficers({ officers: data }: Props) {
       <AlertModal
         title={t("deleteOfficer")}
         description={t.rich("alert_deleteOfficer", {
-          span: (children) => <span className="font-semibold">{children}</span>,
           officer: tempOfficer && makeUnitName(tempOfficer),
         })}
         id={ModalIds.AlertDeleteOfficer}

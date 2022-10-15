@@ -1499,7 +1499,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-aria/button@npm:^3.6.1, @react-aria/button@npm:^3.6.2":
+"@react-aria/button@npm:^3.6.2":
   version: 3.6.2
   resolution: "@react-aria/button@npm:3.6.2"
   dependencies:
@@ -2422,7 +2422,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/react@npm:7.14.2, @sentry/react@npm:^7.14.0":
+"@sentry/react@npm:7.14.2":
   version: 7.14.2
   resolution: "@sentry/react@npm:7.14.2"
   dependencies:
@@ -2601,7 +2601,6 @@ __metadata:
     "@radix-ui/react-tabs": ^1.0.0
     "@radix-ui/react-toolbar": ^1.0.0
     "@radix-ui/react-tooltip": ^1.0.0
-    "@react-aria/button": ^3.6.1
     "@react-aria/calendar": ^3.0.2
     "@react-aria/datepicker": ^3.1.1
     "@react-aria/dialog": ^3.3.1
@@ -2614,7 +2613,6 @@ __metadata:
     "@react-aria/utils": ^3.14.0
     "@react-stately/datepicker": ^3.0.2
     "@sentry/nextjs": ^7.14.0
-    "@sentry/react": ^7.14.0
     "@sentry/tracing": ^7.14.0
     "@snailycad/config": 1.27.4
     "@snailycad/permissions": 1.27.4
@@ -2673,8 +2671,8 @@ __metadata:
     socket.io-client: ^4.5.2
     sortablejs: ^1.15.0
     tailwindcss: ^3.1.8
-    type-fest: ^3.0.0
     typescript: ^4.8.4
+    use-intl: ^2.7.6
     uuid: ^9.0.0
     vite: ^3.1.4
     vitest: ^0.23.4
@@ -2699,7 +2697,6 @@ __metadata:
   resolution: "@snailycad/permissions@workspace:packages/permissions"
   dependencies:
     tsup: ^6.2.3
-    type-fest: ^3.0.0
     typescript: ^4.8.4
     vite: ^3.1.4
     vitest: ^0.23.4
@@ -2725,7 +2722,6 @@ __metadata:
     "@snailycad/permissions": 1.27.4
     discord-api-types: 0.37.11
     tsup: ^6.2.3
-    type-fest: ^3.0.0
     typescript: ^4.8.4
   languageName: unknown
   linkType: soft
@@ -2763,6 +2759,7 @@ __metadata:
     tslib: ^2.4.0
     tsup: ^6.2.3
     typescript: ^4.8.4
+    vite: ^3.1.8
   peerDependencies:
     react: ">=18.2.0"
     react-dom: ">=18.2.0"
@@ -12727,13 +12724,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"type-fest@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "type-fest@npm:3.0.0"
-  checksum: 04c00bb3db91d7b98cddb948840926e5703384fb240550a2f1a152cf0781e293efd7001bb013ad84bd7b388cdb052bb6445afdc2d2be8f5529e3bc0ba03bb938
-  languageName: node
-  linkType: hard
-
 "type-is@npm:^1.6.4, type-is@npm:~1.6.18":
   version: 1.6.18
   resolution: "type-is@npm:1.6.18"
@@ -13195,6 +13185,38 @@ __metadata:
   bin:
     vite: bin/vite.js
   checksum: cd0a0bb11777d9006f408a67ef1063c1771baaf091f9e4f102f0fdaec77559784b76788e80a398ac8fe2fc90027e83712ae860ed51510b81c4153d8c5ca5fb37
+  languageName: node
+  linkType: hard
+
+"vite@npm:^3.1.8":
+  version: 3.1.8
+  resolution: "vite@npm:3.1.8"
+  dependencies:
+    esbuild: ^0.15.9
+    fsevents: ~2.3.2
+    postcss: ^8.4.16
+    resolve: ^1.22.1
+    rollup: ~2.78.0
+  peerDependencies:
+    less: "*"
+    sass: "*"
+    stylus: "*"
+    terser: ^5.4.0
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  peerDependenciesMeta:
+    less:
+      optional: true
+    sass:
+      optional: true
+    stylus:
+      optional: true
+    terser:
+      optional: true
+  bin:
+    vite: bin/vite.js
+  checksum: 982696ad134577dd9915c4c3548ad36ddcf5dc6d341058548a670a13d860e4cdaaf2b320a59221f178018df089d148b9980e9a344316bef12b698a1c1abc7390
   languageName: node
   linkType: hard
 

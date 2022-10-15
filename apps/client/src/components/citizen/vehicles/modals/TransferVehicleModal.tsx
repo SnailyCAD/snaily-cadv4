@@ -57,7 +57,6 @@ export function TransferVehicleModal({ onTransfer, vehicle }: Props) {
             <p className="my-2 mb-5">
               {t.rich("transferVehicleInfo", {
                 model: vehicle.model.value.value,
-                span: (children) => <span className="font-semibold">{children}</span>,
               })}
             </p>
 

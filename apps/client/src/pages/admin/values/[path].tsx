@@ -277,9 +277,6 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
               : hasValueObj(tempValue)
               ? tempValue.value.value
               : tempValue.title),
-          span: (children) => {
-            return <span className="font-semibold">{children}</span>;
-          },
         })}
         onDeleteClick={handleDelete}
         title={typeT("DELETE")}

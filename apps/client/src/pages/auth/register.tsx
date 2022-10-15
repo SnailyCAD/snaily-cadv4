@@ -22,7 +22,7 @@ import { parseCookies } from "nookies";
 import { VersionDisplay } from "components/shared/VersionDisplay";
 import type { PostRegisterUserData } from "@snailycad/types/api";
 
-import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 const INITIAL_VALUES = {
   username: "",
@@ -39,7 +39,7 @@ const hasGoogleCaptchaSiteKey =
   typeof process.env.NEXT_PUBLIC_GOOGLE_CAPTCHA_SITE_KEY === "string" &&
   process.env.NEXT_PUBLIC_GOOGLE_CAPTCHA_SITE_KEY.length > 0;
 
-export default function Register({ cad }: Props) {
+function Register({ cad }: Props) {
   const router = useRouter();
   const { state, execute } = useFetch();
   const t = useTranslations("Auth");
@@ -163,6 +163,22 @@ export default function Register({ cad }: Props) {
       </main>
     </>
   );
+}
+
+export default function RegisterPage(props: Props) {
+  if (process.env.NEXT_PUBLIC_GOOGLE_CAPTCHA_SITE_KEY?.trim()) {
+    return (
+      <GoogleReCaptchaProvider
+        reCaptchaKey={process.env.NEXT_PUBLIC_GOOGLE_CAPTCHA_SITE_KEY}
+        scriptProps={{ async: true, defer: true, appendTo: "body" }}
+        useRecaptchaNet
+      >
+        <Register {...props} />
+      </GoogleReCaptchaProvider>
+    );
+  }
+
+  return <Register {...props} />;
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {

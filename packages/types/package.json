@@ -30,9 +30,6 @@
     "watch": "yarn tsup --watch --silent=false",
     "typecheck": "yarn workspace @snailycad/api generate && yarn tsc --noEmit"
   },
-  "dependencies": {
-    "type-fest": "^3.0.0"
-  },
   "devDependencies": {
     "@snailycad/permissions": "1.27.4",
     "discord-api-types": "0.37.11",
@@ -52,5 +49,6 @@
       "cjs",
       "esm"
     ]
-  }
+  },
+  "sideEffects": false
 }

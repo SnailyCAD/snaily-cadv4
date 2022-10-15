@@ -45,5 +45,6 @@
       "cjs",
       "esm"
     ]
-  }
+  },
+  "sideEffects": false
 }

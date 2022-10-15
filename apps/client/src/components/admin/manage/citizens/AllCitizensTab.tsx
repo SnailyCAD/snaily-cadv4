@@ -190,9 +190,6 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
           <p className="my-3">
             {tCitizen.rich("alert_deleteCitizen", {
               citizen: tempValue && `${tempValue.name} ${tempValue.surname}`,
-              span: (children) => {
-                return <span className="font-semibold">{children}</span>;
-              },
             })}
           </p>
 

@@ -17,7 +17,8 @@
     "tailwindcss": "^3.1.8",
     "tslib": "^2.4.0",
     "tsup": "^6.2.3",
-    "typescript": "^4.8.4"
+    "typescript": "^4.8.4",
+    "vite": "^3.1.8"
   },
   "tsup": {
     "entry": [
@@ -33,7 +34,29 @@
       "esm"
     ],
     "external": [
-      "react"
+      "react",
+      "react-bootstrap-icons",
+      "next-intl",
+      "next/link",
+      "@react-aria/button",
+      "@react-aria/breadcrumbs",
+      "@react-aria/dialog",
+      "@react-aria/focus",
+      "@react-aria/interactions",
+      "@react-aria/label",
+      "@react-aria/listbox",
+      "@react-aria/menu",
+      "@react-aria/overlays",
+      "@react-aria/progress",
+      "@react-aria/radio",
+      "@react-aria/textfield",
+      "@react-aria/utils",
+      "@react-stately/collections",
+      "@react-stately/list",
+      "@react-stately/menu",
+      "@react-stately/radio",
+      "@react-stately/select",
+      "tailwind-merge"
     ]
   },
   "dependencies": {
@@ -65,5 +88,6 @@
   "peerDependencies": {
     "react": ">=18.2.0",
     "react-dom": ">=18.2.0"
-  }
+  },
+  "sideEffects": false
 }

@@ -4,7 +4,6 @@ import type { cad as CAD, User } from "@snailycad/types";
 import { useIsRouteFeatureEnabled } from "../hooks/auth/useIsRouteFeatureEnabled";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
-import { Loader } from "@snailycad/ui";
 
 interface Context {
   user: User | null;
@@ -94,9 +93,7 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
   if (!NO_LOADING_ROUTES.includes(router.pathname) && !user) {
     return (
       <div id="unauthorized" className="fixed inset-0 grid bg-transparent place-items-center">
-        <span aria-label="loading...">
-          <Loader className="w-14 h-14 border-[3px]" />
-        </span>
+        <span aria-label="loading...">{/* <Loader className="w-14 h-14 border-[3px]" /> */}</span>
       </div>
     );
   }

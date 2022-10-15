@@ -19,7 +19,7 @@ class CustomDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          <meta charSet="utf-8" />
+          <meta charSet="UTF-8" />
           <link rel="shortcut icon" type="image/png" href="/favicon.png" />
         </Head>
 

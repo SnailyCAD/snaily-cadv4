@@ -82,7 +82,6 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
       setIsEditable(false);
 
       return tEvent.rich(event.description, {
-        span: (children) => <span className="font-medium">{children}</span>,
         unit: units
           .map((unit) =>
             unit.unit ? `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}` : "A unit",

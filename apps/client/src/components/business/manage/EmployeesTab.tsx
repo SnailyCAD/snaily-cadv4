@@ -132,7 +132,6 @@ export function EmployeesTab() {
         title={t("fireEmployee")}
         description={t.rich("alert_fireEmployee", {
           employee: tempEmployee && `${tempEmployee.citizen.name} ${tempEmployee.citizen.surname}`,
-          span: (children) => <span className="font-semibold">{children}</span>,
         })}
         onDeleteClick={handleFireEmployee}
         deleteText={t("fire")}

@@ -151,9 +151,6 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
         id={ModalIds.AlertDeleteValue}
         description={t.rich("alert_deleteValue", {
           value: tempValue?.value?.value.value ?? "",
-          span: (children) => {
-            return <span className="font-semibold">{children}</span>;
-          },
         })}
         onDeleteClick={handleDelete}
         title={typeT("DELETE")}

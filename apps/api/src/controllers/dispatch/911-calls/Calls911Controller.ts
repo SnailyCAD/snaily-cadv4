@@ -65,7 +65,7 @@ export class Calls911Controller {
   @Description("Get all 911 calls")
   async get911Calls(
     @Context("cad") cad: { miscCadSettings: MiscCadSettings | null },
-    @QueryParams("includeEnded", Boolean) includeEnded: boolean,
+    @QueryParams("includeEnded", Boolean) includeEnded?: boolean,
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query = "",
     @QueryParams("includeAll", Boolean) includeAll = false,
@@ -115,6 +115,11 @@ export class Calls911Controller {
       // @ts-expect-error this can be ignored.
       where.OR = [...Array.from(where.OR), { assignedUnits: { some: { id: assignedUnit } } }];
     }
+
+    // todo
+    // isFromServer
+    // if the request is from the server, we want to only return information that is required to render the UI.
+    // once the UI is rendered, we can then fetch the rest of the data.
 
     const [totalCount, calls] = await Promise.all([
       prisma.call911.count({ where }),

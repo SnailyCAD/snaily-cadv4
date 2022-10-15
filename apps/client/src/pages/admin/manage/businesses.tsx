@@ -151,9 +151,6 @@ export default function ManageBusinesses({ businesses: data }: Props) {
           <p className="my-3">
             {t.rich("alert_deleteBusiness", {
               name: tempValue?.name ?? "",
-              span: (children) => {
-                return <span className="font-semibold">{children}</span>;
-              },
             })}
           </p>
           <TextField label="Reason" inputRef={reasonRef} value={reason} onChange={setReason} />
