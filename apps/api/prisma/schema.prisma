@@ -566,6 +566,7 @@ model Violation {
   penalCode   PenalCode @relation(fields: [penalCodeId], references: [id])
   penalCodeId String
   records     Record[]
+  counts      Int
 }
 
 model SeizedItem {

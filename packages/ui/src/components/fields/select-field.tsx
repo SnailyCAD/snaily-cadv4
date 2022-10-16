@@ -1,6 +1,7 @@
 import * as React from "react";
 import type { AriaSelectProps } from "@react-types/select";
 import { Item } from "@react-stately/collections";
+import { ModalProvider } from "@react-aria/overlays";
 import { classNames } from "../../utils/classNames";
 import { Popover } from "../overlays/popover";
 import { ListBox } from "../list/list-box";

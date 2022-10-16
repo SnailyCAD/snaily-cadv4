@@ -77,7 +77,7 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
   const { setFieldValue, values, errors } = useFormikContext<any>();
   const violationErrors = (errors.violations ?? {}) as Record<
     string,
-    { fine?: string; jailTime?: string; bail?: string }
+    { fine?: string; jailTime?: string; bail?: string; counts?: string }
   >;
 
   const current = values.violations.find(
@@ -102,6 +102,13 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
     const updatedArr = [...values.violations] as SelectValue<PenalCode>[];
 
     const newValue = e?.target.valueAsNumber ?? (penalCode as any)[fieldName]?.value ?? "";
+
+    if (fieldName === "counts") {
+      const int = parseInt(newValue);
+      if (int > 10) {
+        return;
+      }
+    }
 
     updatedArr[idx] = {
       label: penalCode.title,
@@ -129,6 +136,12 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
     </span>
   );
 
+  const countDescription = (
+    <span className="text-sm">
+      <b>Counts: </b> <b>Min:</b> {1} <b>Max:</b> {10}
+    </span>
+  );
+
   const finesDescription = (
     <span className="text-sm">
       <b>{t("fines")}: </b> <b>Min:</b> {minFine} <b>Max:</b> {maxFine}
@@ -136,82 +149,100 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
   );
 
   return (
-    <div className="flex flex-col">
-      <FieldWrapper
-        errorMessage={violationErrors[penalCode.id]?.fine}
-        description={finesDisabled ? null : finesDescription}
-      >
-        <div className="flex items-center">
-          <FormField className="mb-0" label={t("fines")} checkbox>
-            <Checkbox
-              disabled={finesDisabled}
-              onChange={() => handleValueChange("fine", !currentValue.fine?.enabled)}
-              checked={currentValue.fine?.enabled ?? false}
-              name="fine.enabled"
-              style={{ width: 20 }}
-            />
-          </FormField>
+    <div className="flex flex-row gap-5">
+      <FieldWrapper description={countDescription}>
+        <FormField className="!mb-0" label="Counts">
           <Input
-            name="fine.value"
-            onChange={handleValueChange.bind(null, "fine", undefined)}
-            min={minFine}
-            max={maxFine}
+            max={10}
+            min={1}
+            name="fine.counts"
+            onChange={handleValueChange.bind(null, "counts", undefined)}
             type="number"
-            disabled={isReadOnly || !currentValue.fine?.enabled}
-            className="max-w-[125px] min-w-[125px] ml-5 py-0.5"
-            value={!isNaN(currentValue.fine?.value) ? currentValue.fine?.value : ""}
+            disabled={isReadOnly}
+            className="max-w-[125px] min-w-[125px] py-0.5"
+            value={!isNaN(currentValue.counts?.value) ? currentValue.counts?.value : ""}
           />
-        </div>
+        </FormField>
       </FieldWrapper>
 
-      <FieldWrapper
-        errorMessage={
-          violationErrors[penalCode.id]?.jailTime || violationErrors[penalCode.id]?.bail
-        }
-        description={jailTimeDisabled ? null : jailTimeBailDescription}
-      >
-        <div className="flex items-center mt-1">
-          <FormField className="mb-0" label={t("jailTime")} checkbox>
-            <Checkbox
-              onChange={() => handleValueChange("jailTime", !currentValue.jailTime?.enabled)}
-              checked={currentValue.jailTime?.enabled ?? false}
-              name="jailTime.enabled"
-              disabled={warningNotApplicableDisabled}
-              style={{ width: 20 }}
-            />
-          </FormField>
-          <Input
-            name="jailTime.value"
-            onChange={handleValueChange.bind(null, "jailTime", undefined)}
-            min={minJailTime}
-            max={maxJailTime}
-            type="number"
-            disabled={isReadOnly || warningNotApplicableDisabled || !currentValue.jailTime?.enabled}
-            className="max-w-[125px] min-w-[125px] ml-5 py-0.5"
-            value={!isNaN(currentValue.jailTime?.value) ? currentValue.jailTime?.value : ""}
-          />
-          {LEO_BAIL ? (
-            <div className="flex flex-row items-center mb-0 ml-5">
-              <label>{t("bail")}</label>
-              <Input
-                type="number"
-                onChange={handleValueChange.bind(null, "bail", undefined)}
-                name="bail.value"
-                disabled={
-                  isReadOnly ||
-                  bailDisabled ||
-                  warningNotApplicableDisabled ||
-                  !currentValue.jailTime?.enabled
-                }
-                className="py-0.5 min-w-[125px] max-w-[125px] ml-5"
-                value={!isNaN(currentValue.bail?.value) ? currentValue.bail?.value : ""}
-                min={minBail}
-                max={maxBail}
+      <div className="flex flex-col">
+        <FieldWrapper
+          errorMessage={violationErrors[penalCode.id]?.fine}
+          description={finesDisabled ? null : finesDescription}
+        >
+          <div className="flex items-center">
+            <FormField className="mb-0" label={t("fines")} checkbox>
+              <Checkbox
+                disabled={finesDisabled}
+                onChange={() => handleValueChange("fine", !currentValue.fine?.enabled)}
+                checked={currentValue.fine?.enabled ?? false}
+                name="fine.enabled"
+                style={{ width: 20 }}
               />
-            </div>
-          ) : null}
-        </div>
-      </FieldWrapper>
+            </FormField>
+            <Input
+              name="fine.value"
+              onChange={handleValueChange.bind(null, "fine", undefined)}
+              min={minFine}
+              max={maxFine}
+              type="number"
+              disabled={isReadOnly || !currentValue.fine?.enabled}
+              className="max-w-[125px] min-w-[125px] ml-5 py-0.5"
+              value={!isNaN(currentValue.fine?.value) ? currentValue.fine?.value : ""}
+            />
+          </div>
+        </FieldWrapper>
+        <FieldWrapper
+          errorMessage={
+            violationErrors[penalCode.id]?.jailTime || violationErrors[penalCode.id]?.bail
+          }
+          description={jailTimeDisabled ? null : jailTimeBailDescription}
+        >
+          <div className="flex items-center mt-1">
+            <FormField className="mb-0" label={t("jailTime")} checkbox>
+              <Checkbox
+                onChange={() => handleValueChange("jailTime", !currentValue.jailTime?.enabled)}
+                checked={currentValue.jailTime?.enabled ?? false}
+                name="jailTime.enabled"
+                disabled={warningNotApplicableDisabled}
+                style={{ width: 20 }}
+              />
+            </FormField>
+            <Input
+              name="jailTime.value"
+              onChange={handleValueChange.bind(null, "jailTime", undefined)}
+              min={minJailTime}
+              max={maxJailTime}
+              type="number"
+              disabled={
+                isReadOnly || warningNotApplicableDisabled || !currentValue.jailTime?.enabled
+              }
+              className="max-w-[125px] min-w-[125px] ml-5 py-0.5"
+              value={!isNaN(currentValue.jailTime?.value) ? currentValue.jailTime?.value : ""}
+            />
+            {LEO_BAIL ? (
+              <div className="flex flex-row items-center mb-0 ml-5">
+                <label>{t("bail")}</label>
+                <Input
+                  type="number"
+                  onChange={handleValueChange.bind(null, "bail", undefined)}
+                  name="bail.value"
+                  disabled={
+                    isReadOnly ||
+                    bailDisabled ||
+                    warningNotApplicableDisabled ||
+                    !currentValue.jailTime?.enabled
+                  }
+                  className="py-0.5 min-w-[125px] max-w-[125px] ml-5"
+                  value={!isNaN(currentValue.bail?.value) ? currentValue.bail?.value : ""}
+                  min={minBail}
+                  max={maxBail}
+                />
+              </div>
+            ) : null}
+          </div>
+        </FieldWrapper>
+      </div>
     </div>
   );
 }
