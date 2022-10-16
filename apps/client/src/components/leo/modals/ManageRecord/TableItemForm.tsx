@@ -88,7 +88,10 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
     fine: { enabled: false, value: "" },
     jailTime: { enabled: false, value: "" },
     bail: { value: "" },
+    counts: 1,
   };
+
+  console.log({ values });
 
   const handleValueChange = (
     fieldName: string,
@@ -120,7 +123,6 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
         },
       },
     };
-
     setFieldValue("violations", updatedArr);
   };
 

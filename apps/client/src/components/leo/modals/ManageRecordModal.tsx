@@ -99,6 +99,7 @@ export function ManageRecordModal({
         bail: LEO_BAIL && value.jailTime?.enabled ? value.bail?.value : null,
         jailTime: value.jailTime?.enabled ? value.jailTime?.value : null,
         fine: value.fine?.enabled ? value.fine?.value : null,
+        counts: value.counts?.value ?? null,
       })),
     };
 
@@ -151,6 +152,7 @@ export function ManageRecordModal({
           key: v.penalCodeId,
           ...v.penalCode,
           fine: { enabled: !!v.fine, value: v.fine },
+          counts: { enabled: true, value: v.counts },
           jailTime: { enabled: !!v.jailTime, value: v.jailTime },
           bail: { enabled: LEO_BAIL ? !!v.jailTime : false, value: v.bail },
         },

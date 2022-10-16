@@ -15,6 +15,7 @@ interface Options {
   fine?: number | null;
   jailTime?: number | null;
   bail?: number | null;
+  counts?: number | null;
   ticketId: string;
   cad: { features?: CadFeature[] };
 }
@@ -62,6 +63,22 @@ export async function validateRecordData(options: Options): Promise<Return> {
 
   const minMaxPrisonTerm = penalCode.warningNotApplicable?.prisonTerm ?? [];
   const minMaxBail = (isBailEnabled && penalCode.warningNotApplicable?.bail) || [];
+  const minMaxCounts = [1, 10];
+
+  if (options.counts && exists(minMaxCounts) && !isCorrect(minMaxCounts, options.counts)) {
+    const name = `violations.${options.penalCodeId}.counts`;
+    console.log({ count: options.counts });
+
+    return handleBadRequest(
+      new ExtendedBadRequest({
+        [name]: {
+          message: "counts_invalidDataReceived",
+          data: { min: minMaxPrisonTerm[0] || 0, max: minMaxPrisonTerm[1] || 0 },
+        },
+      }),
+      options.ticketId,
+    );
+  }
 
   // these if statements could be cleaned up?..
   if (options.fine && exists(minMaxFines) && !isCorrect(minMaxFines, options.fine)) {

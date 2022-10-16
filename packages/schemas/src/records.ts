@@ -4,6 +4,7 @@ const VIOLATION = z.object({
   fine: z.number().nullable().optional(),
   jailTime: z.number().nullable().optional(),
   bail: z.number().nullable().optional(),
+  counts: z.number().nullable().optional(),
   // optional on client, required on server
   penalCodeId: z.string().optional(),
 });
