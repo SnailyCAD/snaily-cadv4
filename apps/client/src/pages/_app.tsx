@@ -8,7 +8,6 @@ import "styles/globals.scss";
 import "styles/fonts.scss";
 import { SocketProvider } from "@casper124578/use-socket.io";
 import { getAPIUrl } from "lib/fetch/getAPIUrl";
-import { ModalProvider } from "@react-aria/overlays";
 import { setTags } from "@sentry/nextjs";
 import type { cad, User } from "@snailycad/types";
 import { useMounted } from "@casper124578/useful/hooks/useMounted";
@@ -40,31 +39,33 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps<
 
   return (
     <SSRProvider>
-      <ModalProvider>
-        <SocketProvider uri={url} options={{ reconnectionDelay: 10_000 }}>
-          <AuthProvider initialData={pageProps}>
-            <NextIntlProvider
-              defaultTranslationValues={{
-                span: (children) => <span className="font-semibold">{children}</span>,
-              }}
-              onError={console.warn}
-              locale={locale}
-              messages={pageProps.messages}
-            >
-              <ValuesProvider router={router} initialData={pageProps}>
-                <CitizenProvider initialData={pageProps}>
-                  <Head>
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                  </Head>
-                  {isMounted ? <ReauthorizeSessionModal /> : null}
-                  <Component {...pageProps} err={(rest as any).err} />
-                  <Toaster position="top-right" />
-                </CitizenProvider>
-              </ValuesProvider>
-            </NextIntlProvider>
-          </AuthProvider>
-        </SocketProvider>
-      </ModalProvider>
+      <SocketProvider uri={url} options={{ reconnectionDelay: 10_000 }}>
+        <AuthProvider initialData={pageProps}>
+          <NextIntlProvider
+            defaultTranslationValues={{
+              span: (children) => <span className="font-semibold">{children}</span>,
+            }}
+            onError={console.warn}
+            locale={locale}
+            messages={pageProps.messages}
+          >
+            <ValuesProvider router={router} initialData={pageProps}>
+              <CitizenProvider initialData={pageProps}>
+                <Head>
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                </Head>
+                {isMounted ? (
+                  <>
+                    <ReauthorizeSessionModal />
+                    <Toaster position="top-right" />
+                  </>
+                ) : null}
+                <Component {...pageProps} err={(rest as any).err} />
+              </CitizenProvider>
+            </ValuesProvider>
+          </NextIntlProvider>
+        </AuthProvider>
+      </SocketProvider>
     </SSRProvider>
   );
 }

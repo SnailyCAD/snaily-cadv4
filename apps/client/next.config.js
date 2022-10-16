@@ -47,5 +47,5 @@ const withSentryNextConfig = withSentryConfig?.(nextConfig, {
 const config = withSentryNextConfig ?? nextConfig;
 
 /** @type {typeof nextConfig} */
-// module.exports = analyze({ enabled: process.env.ANALYZE === "true" })(nextConfig);
+// module.exports = analyze({ enabled: true })(nextConfig);
 module.exports = config;

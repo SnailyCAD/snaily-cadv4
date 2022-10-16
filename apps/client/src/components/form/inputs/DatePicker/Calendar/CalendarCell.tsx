@@ -26,15 +26,15 @@ export function CalendarCell({ state, date }: Props) {
   const { focusProps, isFocusVisible } = useFocusRing();
 
   return (
-    <td {...cellProps} className={`py-0.5 relative ${isFocusVisible ? "z-10" : "z-0"}`}>
+    <td {...cellProps} className={`py-0.5 ${isFocusVisible ? "z-10" : "z-0"}`}>
       <div
         {...mergeProps(buttonProps, focusProps)}
         ref={ref}
         hidden={isOutsideVisibleRange}
         className={classNames(
-          "w-10 h-10 outline-none group",
+          "w-10 h-10 outline-none group flex items-center justify-center",
           isSelected && (isInvalid ? "bg-red-300" : "bg-blue-600 text-white rounded-md"),
-          isDisabled && "disabled",
+          isDisabled && "opacity-50 cursor-default",
         )}
       >
         <div

@@ -11,7 +11,9 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import dynamic from "next/dynamic";
 
-const ChangelogModal = dynamic(async () => (await import("../ChangelogModal")).ChangelogModal);
+const ChangelogModal = dynamic(async () => (await import("../ChangelogModal")).ChangelogModal, {
+  ssr: false,
+});
 
 export function AccountDropdown() {
   const [isOpen, setOpen] = React.useState(false);
