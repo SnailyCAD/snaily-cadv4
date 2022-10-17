@@ -67,7 +67,6 @@ export async function validateRecordData(options: Options): Promise<Return> {
 
   if (options.counts && exists(minMaxCounts) && !isCorrect(minMaxCounts, options.counts)) {
     const name = `violations.${options.penalCodeId}.counts`;
-    console.log({ count: options.counts });
 
     return handleBadRequest(
       new ExtendedBadRequest({
