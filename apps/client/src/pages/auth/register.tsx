@@ -136,7 +136,7 @@ function Register({ cad }: Props) {
               ) : null}
 
               {hasGoogleCaptchaSiteKey ? (
-                <p className="mt-5 text-sm text-neutral-700">
+                <p className="mt-5 text-sm text-neutral-700 dark:text-gray-400">
                   This site is protected by reCAPTCHA and the Google{" "}
                   <a className="underline" href="https://policies.google.com/privacy">
                     Privacy Policy
@@ -166,19 +166,15 @@ function Register({ cad }: Props) {
 }
 
 export default function RegisterPage(props: Props) {
-  if (process.env.NEXT_PUBLIC_GOOGLE_CAPTCHA_SITE_KEY?.trim()) {
-    return (
-      <GoogleReCaptchaProvider
-        reCaptchaKey={process.env.NEXT_PUBLIC_GOOGLE_CAPTCHA_SITE_KEY}
-        scriptProps={{ async: true, defer: true, appendTo: "body" }}
-        useRecaptchaNet
-      >
-        <Register {...props} />
-      </GoogleReCaptchaProvider>
-    );
-  }
-
-  return <Register {...props} />;
+  return (
+    <GoogleReCaptchaProvider
+      reCaptchaKey={process.env.NEXT_PUBLIC_GOOGLE_CAPTCHA_SITE_KEY ?? ""}
+      scriptProps={{ async: true, defer: true, appendTo: "body" }}
+      useRecaptchaNet
+    >
+      <Register {...props} />
+    </GoogleReCaptchaProvider>
+  );
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
