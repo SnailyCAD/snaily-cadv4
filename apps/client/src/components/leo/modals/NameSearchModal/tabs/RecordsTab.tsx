@@ -163,7 +163,22 @@ function RecordsTable({ data }: { data: Record[] }) {
         data={data
           .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
           .map((record) => {
-            const totalCost = record.violations.reduce((ac, cv) => ac + (cv.fine ?? 0), 0);
+            function totalCost(): number {
+              let sum = 0;
+
+              for (const violation of record.violations) {
+                if (!violation.fine) continue;
+                const counts = violation.counts ? violation.counts : 1;
+
+                sum += counts * violation.fine;
+              }
+
+              return sum;
+            }
+
+            function formatSum(sum: number) {
+              return Intl.NumberFormat().format(sum);
+            }
 
             return {
               id: record.id,
@@ -178,7 +193,7 @@ function RecordsTable({ data }: { data: Record[] }) {
               ) : (
                 "—"
               ),
-              totalCost: `${currency}${totalCost}`,
+              totalCost: `${currency}${formatSum(totalCost())}`,
               notes: record.notes || common("none"),
               createdAt: <FullDate>{record.createdAt}</FullDate>,
               actions: isCitizen ? null : (

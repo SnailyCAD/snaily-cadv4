@@ -13,7 +13,6 @@ import { SelectedItems } from "../inputs/select/selected-items";
 import { SelectActions } from "../inputs/select/select-actions";
 import { ErrorMessage } from "../error-message";
 import { Label } from "../label";
-import { ModalProvider } from "@react-aria/overlays";
 
 export interface SelectValue {
   value: string;
