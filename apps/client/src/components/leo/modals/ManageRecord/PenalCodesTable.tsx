@@ -19,7 +19,17 @@ export function PenalCodesTable({ isReadOnly, penalCodes }: Props) {
   const tableState = useTableState();
 
   function sumOf(type: "fine" | "jailTime" | "bail"): number {
-    return values.violations.reduce((ac, cv) => ac + (parseInt(cv.value[type]?.value) || 0), 0);
+    let sum = 0;
+
+    for (const violation of values.violations) {
+      const counts = parseInt(violation.value.counts?.value) || 1;
+
+      if (violation.value[type]?.value) {
+        sum += parseInt(violation.value[type]?.value) * counts;
+      }
+    }
+
+    return sum;
   }
 
   function formatSum(sum: number) {

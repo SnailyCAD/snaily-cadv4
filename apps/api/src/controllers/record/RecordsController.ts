@@ -382,6 +382,7 @@ export class RecordsController {
       validatedViolations.map((item) => {
         return prisma.violation.create({
           data: {
+            counts: item.counts,
             fine: item.fine,
             bail: item.bail,
             jailTime: item.jailTime,

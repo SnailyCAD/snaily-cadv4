@@ -13,6 +13,7 @@ interface Props {
 
   hideLabel?: boolean;
   boldLabel?: boolean;
+  labelClassName?: string;
 
   /** make a form field as optional */
   optional?: boolean;
@@ -27,6 +28,7 @@ export function FormField({
   errorMessage,
   optional,
   hideLabel,
+  labelClassName,
 }: Props) {
   const [menuOpen, setMenuOpen] = React.useState(false);
   const ref = useonPressOutside(() => setMenuOpen(false));
@@ -39,6 +41,7 @@ export function FormField({
     boldLabel && "font-semibold",
     checkbox && "ml-2 w-full",
     hideLabel && "hidden",
+    labelClassName,
   );
 
   const [child, ...rest] = Array.isArray(children) ? children : [children];
