@@ -12,6 +12,7 @@ import { SelectedItems } from "../inputs/select/selected-items";
 import { SelectActions } from "../inputs/select/select-actions";
 import { ErrorMessage } from "../error-message";
 import { Label } from "../label";
+import { ModalProvider } from "@react-aria/overlays";
 
 export interface SelectValue {
   value: string;
@@ -76,53 +77,52 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
   const selectedItem = selectionMode === "single" ? state.selectedItems?.[0] : null;
 
   return (
-    <div className={classNames("flex flex-col mb-3", props.className)}>
-      <Label {...props} labelProps={labelProps} />
-
-      <div className="relative">
-        <Button
-          {...triggerProps}
-          className={classNames(
-            buttonVariants.default,
-            buttonSizes.sm,
-            "cursor-default rounded-md w-full h-10 flex items-center justify-between border !bg-white dark:!bg-secondary hover:dark:!bg-secondary hover:dark:!brightness-100",
-            (state.isOpen || state.isFocused) &&
-              !props.isDisabled &&
-              "dark:!border-gray-500 !border-gray-500",
-            props.isDisabled && "!cursor-not-allowed opacity-80",
-            props.errorMessage
-              ? "!border-red-500 focus:!border-red-700 dark:focus:!border-red-700"
-              : "dark:!border-gray-700 !border-gray-200 hover:!border-gray-500",
-          )}
-          ref={ref}
-        >
-          <div
-            {...valueProps}
+    <ModalProvider>
+      <div className={classNames("flex flex-col mb-3", props.className)}>
+        <Label {...props} labelProps={labelProps} />
+        <div className="relative">
+          <Button
+            {...triggerProps}
             className={classNames(
-              "flex items-center gap-2",
-              !(selectedItems || selectedItem) && "text-neutral-700 dark:text-gray-400",
+              buttonVariants.default,
+              buttonSizes.sm,
+              "cursor-default rounded-md w-full h-10 flex items-center justify-between border !bg-white dark:!bg-secondary hover:dark:!bg-secondary hover:dark:!brightness-100",
+              (state.isOpen || state.isFocused) &&
+                !props.isDisabled &&
+                "dark:!border-gray-500 !border-gray-500",
+              props.isDisabled && "!cursor-not-allowed opacity-80",
+              props.errorMessage
+                ? "!border-red-500 focus:!border-red-700 dark:focus:!border-red-700"
+                : "dark:!border-gray-700 !border-gray-200 hover:!border-gray-500",
             )}
+            ref={ref}
           >
-            <SelectedItems selectionMode={selectionMode} state={state} />
-          </div>
-          <SelectActions
-            selectionMode={selectionMode}
-            state={state}
-            isClearable={props.isClearable}
-          />
-        </Button>
-        {state.isOpen && (
-          <Popover isOpen={state.isOpen} onClose={state.close}>
-            <ListBox {...menuProps} state={state} />
-          </Popover>
+            <div
+              {...valueProps}
+              className={classNames(
+                "flex items-center gap-2",
+                !(selectedItems || selectedItem) && "text-neutral-700 dark:text-gray-400",
+              )}
+            >
+              <SelectedItems selectionMode={selectionMode} state={state} />
+            </div>
+            <SelectActions
+              selectionMode={selectionMode}
+              state={state}
+              isClearable={props.isClearable}
+            />
+          </Button>
+          {state.isOpen && (
+            <Popover isOpen={state.isOpen} onClose={state.close}>
+              <ListBox {...menuProps} state={state} />
+            </Popover>
+          )}
+        </div>
+        {props.children}
+        {props.errorMessage && (
+          <ErrorMessage errorMessage={props.errorMessage} errorMessageProps={errorMessageProps} />
         )}
       </div>
-
-      {props.children}
-
-      {props.errorMessage && (
-        <ErrorMessage errorMessage={props.errorMessage} errorMessageProps={errorMessageProps} />
-      )}
-    </div>
+    </ModalProvider>
   );
 }
