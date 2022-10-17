@@ -1,6 +1,4 @@
 import * as React from "react";
-import { FormField } from "components/form/FormField";
-import { PasswordInput } from "components/form/inputs/Input";
 import { Button, Loader, TextField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
@@ -132,21 +130,22 @@ export function Manage2FAModal() {
       className="w-[500px]"
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, setFieldValue, values, isValid, errors }) => (
+        {({ setFieldValue, values, isValid, errors }) => (
           <Form>
             {currentStep === Steps.EnterPassword ? (
-              <FormField errorMessage={errors.currentPassword} label={t("currentPassword")}>
-                <PasswordInput
-                  autoFocus
-                  name="currentPassword"
-                  value={values.currentPassword}
-                  required
-                  onChange={(e) => {
-                    handleChange(e);
-                    setCurrentPassword(e.currentTarget.value);
-                  }}
-                />
-              </FormField>
+              <TextField
+                isRequired
+                autoFocus
+                type="password"
+                name="currentPassword"
+                value={values.currentPassword}
+                onChange={(value) => {
+                  setFieldValue("currentPassword", value);
+                  setCurrentPassword(value);
+                }}
+                errorMessage={errors.currentPassword}
+                label={t("currentPassword")}
+              />
             ) : null}
 
             {currentStep === Steps.ScanQRCode && dataUri ? (

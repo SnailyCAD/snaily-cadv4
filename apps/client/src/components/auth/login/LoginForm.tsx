@@ -2,8 +2,6 @@ import * as React from "react";
 import { Form, Formik, FormikHelpers } from "formik";
 import Link from "next/link";
 import { Discord, Steam } from "react-bootstrap-icons";
-import { FormField } from "components/form/FormField";
-import { PasswordInput } from "components/form/inputs/Input";
 import { Button, Loader, TextField } from "@snailycad/ui";
 import { TwoFactorAuthScreen } from "components/auth/TwoFactorAuthScreen";
 import { getAPIUrl } from "lib/fetch/getAPIUrl";
@@ -107,7 +105,7 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
 
   return (
     <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-      {({ handleChange, setFieldValue, errors, values, isValid }) => (
+      {({ setFieldValue, errors, values, isValid }) => (
         <Form
           className={classNames(
             isWithinModal
@@ -152,9 +150,14 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
                     onChange={(value) => setFieldValue("username", value)}
                   />
 
-                  <FormField errorMessage={errors.password} label={t("password")}>
-                    <PasswordInput name="password" onChange={handleChange} />
-                  </FormField>
+                  <TextField
+                    type="password"
+                    errorMessage={errors.password}
+                    isRequired
+                    label="Password"
+                    value={values.password}
+                    onChange={(value) => setFieldValue("password", value)}
+                  />
 
                   <Button
                     disabled={!isValid || state === "loading"}

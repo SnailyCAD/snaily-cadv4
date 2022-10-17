@@ -6,12 +6,10 @@ import { AUTH_SCHEMA } from "@snailycad/schemas";
 import { useTranslations } from "use-intl";
 
 import useFetch from "lib/useFetch";
-import { FormField } from "components/form/FormField";
-import { PasswordInput } from "components/form/inputs/Input";
 import { handleValidate } from "lib/handleValidate";
 import type { GetServerSideProps } from "next";
 import { getTranslations } from "lib/getTranslation";
-import { Button, Input, Loader } from "@snailycad/ui";
+import { Button, Loader, TextField } from "@snailycad/ui";
 import type { cad } from "@snailycad/types";
 import { handleRequest } from "lib/fetch";
 import { Title } from "components/shared/Title";
@@ -98,7 +96,7 @@ function Register({ cad }: Props) {
         <LocalhostDetector />
 
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-          {({ handleChange, errors, isValid }) => (
+          {({ setFieldValue, errors, isValid }) => (
             <Form className="w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-primary dark:border dark:border-secondary z-10">
               <header className="mb-3">
                 <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
@@ -117,22 +115,36 @@ function Register({ cad }: Props) {
                 ) : null}
               </header>
 
-              <FormField errorMessage={errors.username} label={t("username")}>
-                <Input type="text" name="username" onChange={handleChange} />
-              </FormField>
+              <TextField
+                errorMessage={errors.username}
+                label={t("username")}
+                name="username"
+                onChange={(value) => setFieldValue("username", value)}
+              />
 
-              <FormField errorMessage={errors.password} label={t("password")}>
-                <PasswordInput name="password" onChange={handleChange} />
-              </FormField>
+              <TextField
+                type="password"
+                errorMessage={errors.password}
+                label={t("password")}
+                name="password"
+                onChange={(value) => setFieldValue("password", value)}
+              />
 
-              <FormField errorMessage={errors.confirmPassword} label={t("confirmPassword")}>
-                <PasswordInput name="confirmPassword" onChange={handleChange} />
-              </FormField>
+              <TextField
+                type="password"
+                errorMessage={errors.confirmPassword}
+                label={t("confirmPassword")}
+                name="confirmPassword"
+                onChange={(value) => setFieldValue("confirmPassword", value)}
+              />
 
               {cad.registrationCode ? (
-                <FormField errorMessage={errors.registrationCode} label={t("registrationCode")}>
-                  <Input name="registrationCode" onChange={handleChange} />
-                </FormField>
+                <TextField
+                  errorMessage={errors.registrationCode}
+                  label={t("registrationCode")}
+                  name="registrationCode"
+                  onChange={(value) => setFieldValue("registrationCode", value)}
+                />
               ) : null}
 
               {hasGoogleCaptchaSiteKey ? (

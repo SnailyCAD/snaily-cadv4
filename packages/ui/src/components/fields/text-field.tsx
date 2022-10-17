@@ -5,6 +5,7 @@ import { Input } from "../inputs/input";
 import { Textarea } from "../inputs/textarea";
 import { ErrorMessage } from "../error-message";
 import { Label } from "../label";
+import { PasswordInput } from "../inputs/password-input";
 
 interface Props extends AriaTextFieldOptions<"input"> {
   label: React.ReactNode;
@@ -29,7 +30,7 @@ export function TextField(props: Props) {
   );
 
   return (
-    <div className={classNames("text-field flex flex-col mb-3", props.className)}>
+    <div className={classNames("relative text-field flex flex-col mb-3", props.className)}>
       <Label element="span" {...props} labelProps={labelProps} />
 
       {props.isTextarea ? (
@@ -38,6 +39,8 @@ export function TextField(props: Props) {
         <Input ref={ref} errorMessage={props.errorMessage} {...(inputProps as any)} />
       )}
       {props.children}
+
+      {props.type === "password" ? <PasswordInput inputRef={ref} /> : null}
 
       {props.errorMessage && (
         <ErrorMessage errorMessage={props.errorMessage} errorMessageProps={errorMessageProps} />

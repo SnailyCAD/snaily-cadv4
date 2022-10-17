@@ -2,8 +2,6 @@ import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "use-intl";
 import { Form, Formik } from "formik";
 import { useAuth } from "context/AuthContext";
-import { FormField } from "components/form/FormField";
-import { PasswordInput } from "components/form/inputs/Input";
 import { FormRow } from "components/form/FormRow";
 import { Button, TextField } from "@snailycad/ui";
 import { useModal } from "state/modalState";
@@ -35,9 +33,14 @@ export function AccountInfoTab() {
         {({ values, errors }) => (
           <Form className="mt-2">
             <FormRow>
-              <FormField label="Account id" errorMessage={errors.id}>
-                <PasswordInput disabled defaultValue={values.id} name="id" />
-              </FormField>
+              <TextField
+                type="password"
+                label="Account id"
+                errorMessage={errors.id}
+                isDisabled
+                defaultValue={values.id}
+                name="id"
+              />
 
               <TextField
                 label={t("Auth.username")}

@@ -5,12 +5,10 @@ import { useTranslations } from "use-intl";
 
 import useFetch from "lib/useFetch";
 
-import { FormField } from "components/form/FormField";
-import { PasswordInput } from "components/form/inputs/Input";
 import { handleValidate } from "lib/handleValidate";
 import type { GetServerSideProps } from "next";
 import { getTranslations } from "lib/getTranslation";
-import { Button, Loader } from "@snailycad/ui";
+import { Button, Loader, TextField } from "@snailycad/ui";
 import { getSessionUser } from "lib/auth";
 import { useAuth } from "context/AuthContext";
 import { Title } from "components/shared/Title";
@@ -61,7 +59,7 @@ export default function TempPassword() {
 
       <main className="flex flex-col items-center justify-center pt-20">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-          {({ handleChange, errors, isValid }) => (
+          {({ setFieldValue, values, errors, isValid }) => (
             <Form className="w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-primary dark:border dark:border-secondary">
               <h1 className="text-2xl font-semibold text-gray-800 dark:text-white">
                 {t("changePassword")}
@@ -71,13 +69,23 @@ export default function TempPassword() {
                 {t("savePasswordInfo")}
               </p>
 
-              <FormField errorMessage={errors.newPassword} label={t("password")}>
-                <PasswordInput name="newPassword" onChange={handleChange} />
-              </FormField>
+              <TextField
+                type="password"
+                name="newPassword"
+                value={values.newPassword}
+                onChange={(value) => setFieldValue("newPassword", value)}
+                errorMessage={errors.newPassword}
+                label={t("password")}
+              />
 
-              <FormField errorMessage={errors.confirmPassword} label={t("confirmPassword")}>
-                <PasswordInput name="confirmPassword" onChange={handleChange} />
-              </FormField>
+              <TextField
+                type="password"
+                name="confirmPassword"
+                value={values.confirmPassword}
+                onChange={(value) => setFieldValue("confirmPassword", value)}
+                errorMessage={errors.confirmPassword}
+                label={t("confirmPassword")}
+              />
 
               <div className="mt-3">
                 <Button

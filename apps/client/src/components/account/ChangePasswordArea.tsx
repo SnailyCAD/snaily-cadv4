@@ -1,8 +1,6 @@
 import { CHANGE_PASSWORD_SCHEMA } from "@snailycad/schemas";
 import type { PostUserPasswordData } from "@snailycad/types/api";
-import { Button } from "@snailycad/ui";
-import { FormField } from "components/form/FormField";
-import { PasswordInput } from "components/form/inputs/Input";
+import { Button, TextField } from "@snailycad/ui";
 import { Form, Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
@@ -46,31 +44,34 @@ export function ChangePasswordArea() {
     <section className="mt-7">
       <h2 className="text-2xl font-semibold">{t("passwordSettings")}</h2>
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, values, errors }) => (
+        {({ setFieldValue, values, errors }) => (
           <Form className="mt-2">
-            <FormField errorMessage={errors.currentPassword} label={t("currentPassword")}>
-              <PasswordInput
-                value={values.currentPassword}
-                onChange={handleChange}
-                name="currentPassword"
-              />
-            </FormField>
+            <TextField
+              type="password"
+              name="currentPassword"
+              value={values.currentPassword}
+              onChange={(value) => setFieldValue("currentPassword", value)}
+              errorMessage={errors.currentPassword}
+              label={t("currentPassword")}
+            />
 
-            <FormField errorMessage={errors.newPassword} label={t("newPassword")}>
-              <PasswordInput
-                value={values.newPassword}
-                onChange={handleChange}
-                name="newPassword"
-              />
-            </FormField>
+            <TextField
+              type="password"
+              name="newPassword"
+              value={values.newPassword}
+              onChange={(value) => setFieldValue("newPassword", value)}
+              errorMessage={errors.newPassword}
+              label={t("newPassword")}
+            />
 
-            <FormField errorMessage={errors.confirmPassword} label={t("confirmNewPassword")}>
-              <PasswordInput
-                value={values.confirmPassword}
-                onChange={handleChange}
-                name="confirmPassword"
-              />
-            </FormField>
+            <TextField
+              type="password"
+              name="confirmPassword"
+              value={values.confirmPassword}
+              onChange={(value) => setFieldValue("confirmPassword", value)}
+              errorMessage={errors.confirmPassword}
+              label={t("confirmNewPassword")}
+            />
 
             <Button type="submit" disabled={state === "loading"}>
               {common("save")}
