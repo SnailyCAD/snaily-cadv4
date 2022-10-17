@@ -1,4 +1,4 @@
-import { Input, Loader, Button } from "@snailycad/ui";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
@@ -69,7 +69,7 @@ export function CreateBusinessModal({ onCreate }: Props) {
       onClose={handleClose}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, errors, values, isValid }) => (
+        {({ handleChange, setFieldValue, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.ownerId} label={t("citizen")}>
               <CitizenSuggestionsField
@@ -79,28 +79,33 @@ export function CreateBusinessModal({ onCreate }: Props) {
               />
             </FormField>
 
-            <FormField errorMessage={errors.name} label={t("name")}>
-              <Input name="name" onChange={handleChange} value={values.name} />
-            </FormField>
+            <TextField
+              errorMessage={errors.name}
+              label={t("name")}
+              name="name"
+              onChange={(value) => setFieldValue("name", value)}
+              value={values.name}
+            />
 
             <FormRow flexLike>
-              <FormField className="w-full" errorMessage={errors.address} label={t("address")}>
-                <Input
-                  className="w-full"
-                  name="address"
-                  onChange={handleChange}
-                  value={values.address}
-                />
-              </FormField>
+              <TextField
+                errorMessage={errors.address}
+                label={t("address")}
+                name="address"
+                onChange={(value) => setFieldValue("address", value)}
+                value={values.address}
+                className="w-full"
+              />
 
-              <FormField optional errorMessage={errors.postal} label={common("postal")}>
-                <Input
-                  className="min-w-[200px]"
-                  name="postal"
-                  onChange={handleChange}
-                  value={values.postal}
-                />
-              </FormField>
+              <TextField
+                isOptional
+                errorMessage={errors.postal}
+                label={common("postal")}
+                name="postal"
+                onChange={(value) => setFieldValue("postal", value)}
+                value={values.postal}
+                className="min-w-[200px]"
+              />
             </FormRow>
 
             <FormField errorMessage={errors.whitelisted} label={t("whitelisted")}>
