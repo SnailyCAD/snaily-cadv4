@@ -1,5 +1,5 @@
 import { WhitelistStatus } from "@prisma/client";
-import { BodyParams, PathParams, UseBeforeEach } from "@tsed/common";
+import { BodyParams, PathParams, QueryParams, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { ContentType, Description, Get, Post } from "@tsed/schema";
@@ -29,16 +29,23 @@ export class DmvController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.ManageDMV],
   })
-  async getPendingVehicles(): Promise<APITypes.GetDMVPendingVehiclesData> {
-    const vehicles = await prisma.registeredVehicle.findMany({
-      where: { dmvStatus: WhitelistStatus.PENDING },
-      include: vehicleInclude,
-      orderBy: { createdAt: "desc" },
-    });
+  async getPendingVehicles(
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("includeAll", Boolean) includeAll = false,
+  ): Promise<APITypes.GetDMVPendingVehiclesData> {
+    const [totalCount, vehicles] = await prisma.$transaction([
+      prisma.registeredVehicle.count({ where: { dmvStatus: { not: null } } }),
+      prisma.registeredVehicle.findMany({
+        where: { dmvStatus: { not: null } },
+        include: vehicleInclude,
+        orderBy: { createdAt: "desc" },
+        take: includeAll ? undefined : 35,
+        skip: includeAll ? undefined : skip,
+      }),
+    ]);
 
-    return vehicles;
+    return { vehicles, totalCount };
   }
-
   @Post("/:vehicleId")
   @Description("Accept or decline a pending vehicle in the dmv")
   async acceptOrDeclineVehicle(
