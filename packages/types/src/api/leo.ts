@@ -50,10 +50,7 @@ export interface PostMyOfficerByIdData {
  * @method GET
  * @route /leo/dmv
  */
-export interface GetDMVPendingVehiclesData {
-  vehicles: Types.RegisteredVehicle[];
-  totalCount: number;
-}
+export type GetDMVPendingVehiclesData = Types.RegisteredVehicle[];
 
 /**
  * @method POST
