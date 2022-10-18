@@ -7,7 +7,7 @@ import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import { WhitelistStatus } from "@snailycad/types";
-import { Table, useTableState } from "components/shared/Table";
+import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { Permissions } from "hooks/usePermission";
@@ -20,12 +20,23 @@ interface Props {
 }
 
 export default function Dmv({ data }: Props) {
-  const [pendingVehicles, setPendingVehicles] = React.useState(data);
   const t = useTranslations("Leo");
   const vT = useTranslations("Vehicles");
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
-  const tableState = useTableState();
+
+  const asyncTable = useAsyncTable({
+    fetchOptions: {
+      onResponse: (json: GetDMVPendingVehiclesData) => ({
+        data: json.vehicles,
+        totalCount: json.totalCount,
+      }),
+      path: "/leo/dmv",
+    },
+    initialData: data.vehicles,
+    totalCount: data.totalCount,
+  });
+  const tableState = useTableState({ pagination: asyncTable.pagination });
 
   async function handleAcceptOrDecline(id: string, type: "ACCEPT" | "DECLINE") {
     const { json } = await execute<PostDMVVehiclesData>({
@@ -35,11 +46,11 @@ export default function Dmv({ data }: Props) {
     });
 
     if (json) {
-      const copy = [...pendingVehicles];
+      const copy = [...asyncTable.data];
       const idx = copy.findIndex((v) => v.id === id);
       copy[idx] = json;
 
-      setPendingVehicles(copy);
+      asyncTable.setData(copy);
     }
   }
 
@@ -53,13 +64,16 @@ export default function Dmv({ data }: Props) {
     >
       <Title>{t("dmv")}</Title>
 
-      {pendingVehicles.length <= 0 ? (
+      {asyncTable.data.length <= 0 ? (
         <p className="mt-5">{t("noVehiclesPendingApprovalInDmv")}</p>
       ) : (
         <Table
           tableState={tableState}
-          data={pendingVehicles.map((vehicle) => {
+          data={asyncTable.data.map((vehicle) => {
             return {
+              rowProps: {
+                className: vehicle.dmvStatus === "PENDING" ? "opacity-100" : "opacity-50",
+              },
               id: vehicle.id,
               citizen: (
                 <span className="capitalize">
@@ -83,6 +97,7 @@ export default function Dmv({ data }: Props) {
                     disabled={vehicle.dmvStatus !== WhitelistStatus.PENDING || state === "loading"}
                     variant="success"
                     size="xs"
+                    isDisabled={vehicle.dmvStatus !== WhitelistStatus.PENDING}
                   >
                     {common("accept")}
                   </Button>
@@ -92,6 +107,7 @@ export default function Dmv({ data }: Props) {
                     variant="danger"
                     className="ml-2"
                     size="xs"
+                    isDisabled={vehicle.dmvStatus !== WhitelistStatus.PENDING}
                   >
                     {common("decline")}
                   </Button>

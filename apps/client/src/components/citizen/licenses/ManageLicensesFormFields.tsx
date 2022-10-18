@@ -10,14 +10,20 @@ import { filterLicenseTypes } from "lib/utils";
 import { classNames } from "lib/classNames";
 import { Toggle } from "components/form/Toggle";
 import type { LicenseInitialValues } from "./ManageLicensesModal";
+import { TextField } from "@snailycad/ui";
+import { FormRow } from "components/form/FormRow";
 
 export function createDefaultLicensesValues(citizen: Citizen | null): LicenseInitialValues {
   return {
     suspended: {
       driverLicense: citizen?.suspendedLicenses?.driverLicense ?? false,
+      driverLicenseTime: citizen?.suspendedLicenses?.driverLicenseTime ?? null,
       pilotLicense: citizen?.suspendedLicenses?.pilotLicense ?? false,
+      pilotLicenseTime: citizen?.suspendedLicenses?.pilotLicenseTime ?? null,
       firearmsLicense: citizen?.suspendedLicenses?.firearmsLicense ?? false,
+      firearmsLicenseTime: citizen?.suspendedLicenses?.firearmsLicenseTime ?? null,
       waterLicense: citizen?.suspendedLicenses?.waterLicense ?? false,
+      waterLicenseTime: citizen?.suspendedLicenses?.waterLicenseTime ?? null,
     },
     driversLicense: citizen?.driversLicenseId ?? null,
     pilotLicense: citizen?.pilotLicenseId ?? null,
@@ -81,14 +87,20 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
       {LICENSE_EXAMS && !isLeo ? null : (
         <section className="w-full">
           {isLeo ? (
-            <FormField label={"Suspended Drivers license"} checkbox>
-              <Toggle
-                onCheckedChange={handleChange}
-                name="suspended.driverLicense"
-                value={values.suspended.driverLicense}
-                onChange={handleChange}
-              />
-            </FormField>
+            <FormRow>
+              <FormField label={"Suspended Drivers license"}>
+                <Toggle
+                  onCheckedChange={handleChange}
+                  name="suspended.driverLicense"
+                  value={values.suspended.driverLicense}
+                  onChange={handleChange}
+                />
+              </FormField>
+
+              {values.suspended.driverLicense ? (
+                <TextField placeholder="Seconds" label="Suspended For (seconds)" isOptional />
+              ) : null}
+            </FormRow>
           ) : null}
 
           <div className={formRowClassName}>
