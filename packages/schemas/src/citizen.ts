@@ -89,6 +89,10 @@ export const LICENSE_SCHEMA = CREATE_CITIZEN_SCHEMA.pick({
   waterLicenseCategory: true,
 }).extend({
   suspended: SUSPENDED_SCHEMA.optional().nullable(),
+  driverLicenseTime: z.number().nullable().optional(),
+  pilotLicenseTime: z.number().nullable().optional(),
+  firearmsLicenseTime: z.number().nullable().optional(),
+  waterLicenseTime: z.number().nullable().optional(),
 });
 
 export const MEDICAL_RECORD_SCHEMA = z.object({

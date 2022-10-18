@@ -10,14 +10,20 @@ import { filterLicenseTypes } from "lib/utils";
 import { classNames } from "lib/classNames";
 import { Toggle } from "components/form/Toggle";
 import type { LicenseInitialValues } from "./ManageLicensesModal";
+import { TextField } from "@snailycad/ui";
+import { FormRow } from "components/form/FormRow";
 
 export function createDefaultLicensesValues(citizen: Citizen | null): LicenseInitialValues {
   return {
     suspended: {
       driverLicense: citizen?.suspendedLicenses?.driverLicense ?? false,
+      driverLicenseTime: citizen?.suspendedLicenses?.driverLicenseTime ?? null,
       pilotLicense: citizen?.suspendedLicenses?.pilotLicense ?? false,
+      pilotLicenseTime: citizen?.suspendedLicenses?.pilotLicenseTime ?? null,
       firearmsLicense: citizen?.suspendedLicenses?.firearmsLicense ?? false,
+      firearmsLicenseTime: citizen?.suspendedLicenses?.firearmsLicenseTime ?? null,
       waterLicense: citizen?.suspendedLicenses?.waterLicense ?? false,
+      waterLicenseTime: citizen?.suspendedLicenses?.waterLicenseTime ?? null,
     },
     driversLicense: citizen?.driversLicenseId ?? null,
     pilotLicense: citizen?.pilotLicenseId ?? null,
@@ -65,7 +71,7 @@ interface Props {
 }
 
 export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Props) {
-  const { values, errors, handleChange } =
+  const { values, setFieldValue, errors, handleChange } =
     useFormikContext<ReturnType<typeof createDefaultLicensesValues>>();
 
   const { license, driverslicenseCategory } = useValues();
@@ -81,14 +87,33 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
       {LICENSE_EXAMS && !isLeo ? null : (
         <section className="w-full">
           {isLeo ? (
-            <FormField label={"Suspended Drivers license"} checkbox>
-              <Toggle
-                onCheckedChange={handleChange}
-                name="suspended.driverLicense"
-                value={values.suspended.driverLicense}
-                onChange={handleChange}
-              />
-            </FormField>
+            <FormRow>
+              <FormField label={"Suspended Drivers license"}>
+                <Toggle
+                  onCheckedChange={handleChange}
+                  name="suspended.driverLicense"
+                  value={values.suspended.driverLicense}
+                  onChange={handleChange}
+                />
+              </FormField>
+
+              {values.suspended.driverLicense ? (
+                <TextField
+                  type="number"
+                  value={
+                    values.suspended.driverLicenseTime
+                      ? String(values.suspended.driverLicenseTime)
+                      : undefined
+                  }
+                  onChange={(value) =>
+                    setFieldValue("suspended.driverLicenseTime", parseInt(value, 10))
+                  }
+                  placeholder="Seconds"
+                  label="Suspended For (seconds)"
+                  isOptional
+                />
+              ) : null}
+            </FormRow>
           ) : null}
 
           <div className={formRowClassName}>
@@ -143,14 +168,33 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
 
       <section className="w-full">
         {isLeo ? (
-          <FormField label={"Suspended Pilot license"} checkbox>
-            <Toggle
-              onCheckedChange={handleChange}
-              name="suspended.pilotLicense"
-              value={values.suspended.pilotLicense}
-              onChange={handleChange}
-            />
-          </FormField>
+          <FormRow>
+            <FormField label={"Suspended Pilot license"} checkbox>
+              <Toggle
+                onCheckedChange={handleChange}
+                name="suspended.pilotLicense"
+                value={values.suspended.pilotLicense}
+                onChange={handleChange}
+              />
+            </FormField>
+
+            {values.suspended.pilotLicense ? (
+              <TextField
+                type="number"
+                value={
+                  values.suspended.pilotLicenseTime
+                    ? String(values.suspended.pilotLicenseTime)
+                    : undefined
+                }
+                onChange={(value) =>
+                  setFieldValue("suspended.pilotLicenseTime", parseInt(value, 10))
+                }
+                placeholder="Seconds"
+                label="Suspended For (seconds)"
+                isOptional
+              />
+            ) : null}
+          </FormRow>
         ) : null}
 
         <div className={formRowClassName}>
@@ -202,14 +246,33 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
 
       <section className="w-full">
         {isLeo ? (
-          <FormField label={"Suspended Water license"} checkbox>
-            <Toggle
-              onCheckedChange={handleChange}
-              name="suspended.waterLicense"
-              value={values.suspended.waterLicense}
-              onChange={handleChange}
-            />
-          </FormField>
+          <FormRow>
+            <FormField label={"Suspended Water license"} checkbox>
+              <Toggle
+                onCheckedChange={handleChange}
+                name="suspended.waterLicense"
+                value={values.suspended.waterLicense}
+                onChange={handleChange}
+              />
+            </FormField>
+
+            {values.suspended.waterLicense ? (
+              <TextField
+                type="number"
+                value={
+                  values.suspended.waterLicenseTime
+                    ? String(values.suspended.waterLicenseTime)
+                    : undefined
+                }
+                onChange={(value) =>
+                  setFieldValue("suspended.waterLicenseTime", parseInt(value, 10))
+                }
+                placeholder="Seconds"
+                label="Suspended For (seconds)"
+                isOptional
+              />
+            ) : null}
+          </FormRow>
         ) : null}
 
         <div className={formRowClassName}>
@@ -262,14 +325,33 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
       {!WEAPON_REGISTRATION ? null : LICENSE_EXAMS && !isLeo ? null : (
         <section className="w-full">
           {isLeo ? (
-            <FormField label={"Suspended Firearms license"} checkbox>
-              <Toggle
-                onCheckedChange={handleChange}
-                name="suspended.firearmsLicense"
-                value={values.suspended.firearmsLicense}
-                onChange={handleChange}
-              />
-            </FormField>
+            <FormRow>
+              <FormField label={"Suspended Firearms license"} checkbox>
+                <Toggle
+                  onCheckedChange={handleChange}
+                  name="suspended.firearmsLicense"
+                  value={values.suspended.firearmsLicense}
+                  onChange={handleChange}
+                />
+              </FormField>
+
+              {values.suspended.firearmsLicense ? (
+                <TextField
+                  type="number"
+                  value={
+                    values.suspended.firearmsLicenseTime
+                      ? String(values.suspended.firearmsLicenseTime)
+                      : undefined
+                  }
+                  onChange={(value) =>
+                    setFieldValue("suspended.firearmsLicenseTime", parseInt(value, 10))
+                  }
+                  placeholder="Seconds"
+                  label="Suspended For (seconds)"
+                  isOptional
+                />
+              ) : null}
+            </FormRow>
           ) : null}
 
           <div className={formRowClassName}>
