@@ -523,10 +523,33 @@ export class Calls911Controller {
       },
     });
 
+    /**
+     * if the unit already has an active call, move the call to the stack.
+     * once the call is ended, the new activeCall will be the latest call in the stack.
+     */
+    let activeCallId = callType === "assign" ? (unit?.activeCallId ? undefined : call.id) : null;
+
+    if (callType === "unassign") {
+      const otherAssignedToCall = await prisma.assignedUnit.findFirst({
+        orderBy: { createdAt: "desc" },
+        where: {
+          OR: [
+            { officerId: rawUnitId },
+            { combinedLeoId: rawUnitId },
+            { emsFdDeputyId: rawUnitId },
+          ],
+        },
+      });
+
+      if (otherAssignedToCall) {
+        activeCallId = otherAssignedToCall.call911Id;
+      }
+    }
+
     // @ts-expect-error they have the same properties for updating
     await prisma[prismaNames[type]].update({
       where: { id: unit.id },
-      data: { activeCallId: callType === "assign" ? callId : null, statusId: assignedToStatus?.id },
+      data: { activeCallId, statusId: assignedToStatus?.id },
     });
 
     await Promise.all([

@@ -82,7 +82,7 @@ export async function assignUnitsToCall({ socket, call, unitIds, maxAssignmentsT
 export async function handleDeleteAssignedUnit(
   options: Omit<HandleCreateAssignedUnitOptions, "maxAssignmentsToCalls" | "isPrimary">,
 ) {
-  const types = {
+  const prismaNames = {
     officerId: "officer",
     emsFdDeputyId: "emsFdDeputy",
     combinedLeoId: "combinedLeoUnit",
@@ -103,16 +103,29 @@ export async function handleDeleteAssignedUnit(
 
   const unit = await prisma.assignedUnit.delete({ where: { id: assignedUnit.id } });
 
-  for (const type in types) {
-    const key = type as keyof typeof types;
+  const otherAssignedToCall = await prisma.assignedUnit.findFirst({
+    orderBy: { createdAt: "desc" },
+    where: {
+      OR: [
+        { officerId: options.unitId },
+        { combinedLeoId: options.unitId },
+        { emsFdDeputyId: options.unitId },
+      ],
+    },
+  });
+
+  console.log({ otherAssignedToCall });
+
+  for (const type in prismaNames) {
+    const key = type as keyof typeof prismaNames;
     const unitId = unit[key];
-    const name = types[key];
+    const prismaName = prismaNames[key];
 
     if (unitId) {
       // @ts-expect-error they have the same properties for updating
-      await prisma[name].update({
+      await prisma[prismaName].update({
         where: { id: unitId },
-        data: { activeCallId: null },
+        data: { activeCallId: otherAssignedToCall?.id ?? null },
       });
     }
   }
@@ -168,10 +181,16 @@ async function handleCreateAssignedUnit(options: HandleCreateAssignedUnitOptions
     });
   }
 
+  /**
+   * if the unit already has an active call, move the call to the stack.
+   * once the call is ended, the new activeCall will be the latest call in the stack.
+   */
+  const activeCallId = unit?.activeCallId ? undefined : options.call.id;
+
   // @ts-expect-error they have the same properties for updating
   await prisma[prismaModalName].update({
     where: { id: unit.id },
-    data: { activeCallId: options.call.id },
+    data: { activeCallId },
   });
 
   if (options.isPrimary) {
