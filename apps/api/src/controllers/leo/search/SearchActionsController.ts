@@ -72,7 +72,6 @@ export class SearchActionsController {
     await updateCitizenLicenseCategories(citizen, data);
 
     let suspendedLicenses: SuspendedCitizenLicenses | undefined;
-    console.log({ data });
 
     if (data.suspended) {
       const createUpdateData = {

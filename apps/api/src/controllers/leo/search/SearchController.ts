@@ -25,6 +25,7 @@ import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import type * as APITypes from "@snailycad/types/api";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { setEndedSuspendedLicenses } from "lib/citizen/setEndedSuspendedLicenses";
 
 export const vehicleSearchInclude = {
   model: { include: { value: true } },
@@ -172,7 +173,7 @@ export class LeoSearchController {
     });
 
     return appendConfidential(
-      await appendCustomFields(citizens, CustomFieldCategory.CITIZEN),
+      await appendCustomFields(setEndedSuspendedLicenses(citizens), CustomFieldCategory.CITIZEN),
     ) as APITypes.PostLeoSearchCitizenData;
   }
 

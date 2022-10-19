@@ -73,7 +73,7 @@ export const WEAPON_SCHEMA = z.object({
 
 const END_TIME = z
   .date()
-  .min(new Date())
+  // .min(new Date())
   .describe("ISO format")
   .or(z.string().min(2))
   .nullable()
