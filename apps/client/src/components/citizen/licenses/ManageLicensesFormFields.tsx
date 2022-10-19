@@ -10,20 +10,21 @@ import { filterLicenseTypes } from "lib/utils";
 import { classNames } from "lib/classNames";
 import { Toggle } from "components/form/Toggle";
 import type { LicenseInitialValues } from "./ManageLicensesModal";
-import { TextField } from "@snailycad/ui";
 import { FormRow } from "components/form/FormRow";
+import { DatePickerField } from "components/form/inputs/DatePicker/DatePickerField";
+import parseISO from "date-fns/parseISO";
 
 export function createDefaultLicensesValues(citizen: Citizen | null): LicenseInitialValues {
   return {
     suspended: {
       driverLicense: citizen?.suspendedLicenses?.driverLicense ?? false,
-      driverLicenseTime: citizen?.suspendedLicenses?.driverLicenseTime ?? null,
+      driverLicenseTimeEnd: citizen?.suspendedLicenses?.driverLicenseTimeEnd ?? null,
       pilotLicense: citizen?.suspendedLicenses?.pilotLicense ?? false,
-      pilotLicenseTime: citizen?.suspendedLicenses?.pilotLicenseTime ?? null,
+      pilotLicenseTimeEnd: citizen?.suspendedLicenses?.pilotLicenseTimeEnd ?? null,
       firearmsLicense: citizen?.suspendedLicenses?.firearmsLicense ?? false,
-      firearmsLicenseTime: citizen?.suspendedLicenses?.firearmsLicenseTime ?? null,
+      firearmsLicenseTimeEnd: citizen?.suspendedLicenses?.firearmsLicenseTimeEnd ?? null,
       waterLicense: citizen?.suspendedLicenses?.waterLicense ?? false,
-      waterLicenseTime: citizen?.suspendedLicenses?.waterLicenseTime ?? null,
+      waterLicenseTimeEnd: citizen?.suspendedLicenses?.waterLicenseTimeEnd ?? null,
     },
     driversLicense: citizen?.driversLicenseId ?? null,
     pilotLicense: citizen?.pilotLicenseId ?? null,
@@ -98,19 +99,17 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
               </FormField>
 
               {values.suspended.driverLicense ? (
-                <TextField
-                  type="number"
+                <DatePickerField
+                  optional
+                  label="End date"
                   value={
-                    values.suspended.driverLicenseTime
-                      ? String(values.suspended.driverLicenseTime)
+                    values.suspended.driverLicenseTimeEnd
+                      ? values.suspended.driverLicenseTimeEnd
                       : undefined
                   }
                   onChange={(value) =>
-                    setFieldValue("suspended.driverLicenseTime", parseInt(value, 10))
+                    setFieldValue("suspended.driverLicenseTimeEnd", parseISO(value?.toString()))
                   }
-                  placeholder="Seconds"
-                  label="Suspended For (seconds)"
-                  isOptional
                 />
               ) : null}
             </FormRow>
@@ -179,19 +178,17 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
             </FormField>
 
             {values.suspended.pilotLicense ? (
-              <TextField
-                type="number"
+              <DatePickerField
+                optional
+                label="End date"
                 value={
-                  values.suspended.pilotLicenseTime
-                    ? String(values.suspended.pilotLicenseTime)
+                  values.suspended.pilotLicenseTimeEnd
+                    ? values.suspended.pilotLicenseTimeEnd
                     : undefined
                 }
                 onChange={(value) =>
-                  setFieldValue("suspended.pilotLicenseTime", parseInt(value, 10))
+                  setFieldValue("suspended.pilotLicenseTimeEnd", parseISO(value?.toString()))
                 }
-                placeholder="Seconds"
-                label="Suspended For (seconds)"
-                isOptional
               />
             ) : null}
           </FormRow>
@@ -257,19 +254,17 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
             </FormField>
 
             {values.suspended.waterLicense ? (
-              <TextField
-                type="number"
+              <DatePickerField
+                optional
+                label="End date"
                 value={
-                  values.suspended.waterLicenseTime
-                    ? String(values.suspended.waterLicenseTime)
+                  values.suspended.waterLicenseTimeEnd
+                    ? values.suspended.waterLicenseTimeEnd
                     : undefined
                 }
                 onChange={(value) =>
-                  setFieldValue("suspended.waterLicenseTime", parseInt(value, 10))
+                  setFieldValue("suspended.waterLicenseTimeEnd", parseISO(value?.toString()))
                 }
-                placeholder="Seconds"
-                label="Suspended For (seconds)"
-                isOptional
               />
             ) : null}
           </FormRow>
@@ -322,6 +317,8 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
         {isLeo ? <hr className="my-2 mb-3 border-t border-secondary dark:border-quinary" /> : null}
       </section>
 
+      {console.log(errors)}
+
       {!WEAPON_REGISTRATION ? null : LICENSE_EXAMS && !isLeo ? null : (
         <section className="w-full">
           {isLeo ? (
@@ -336,19 +333,17 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
               </FormField>
 
               {values.suspended.firearmsLicense ? (
-                <TextField
-                  type="number"
+                <DatePickerField
+                  optional
+                  label="End date"
                   value={
-                    values.suspended.firearmsLicenseTime
-                      ? String(values.suspended.firearmsLicenseTime)
+                    values.suspended.firearmsLicenseTimeEnd
+                      ? values.suspended.firearmsLicenseTimeEnd
                       : undefined
                   }
                   onChange={(value) =>
-                    setFieldValue("suspended.firearmsLicenseTime", parseInt(value, 10))
+                    setFieldValue("suspended.firearmsLicenseTimeEnd", parseISO(value?.toString()))
                   }
-                  placeholder="Seconds"
-                  label="Suspended For (seconds)"
-                  isOptional
                 />
               ) : null}
             </FormRow>

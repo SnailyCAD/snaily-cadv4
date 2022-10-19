@@ -377,16 +377,16 @@ model Citizen {
 }
 
 model SuspendedCitizenLicenses {
-  id                  String    @id @default(uuid())
-  driverLicense       Boolean   @default(false)
-  driverLicenseTime   Int?
-  pilotLicense        Boolean   @default(false)
-  pilotLicenseTime    Int?
-  waterLicense        Boolean   @default(false)
-  waterLicenseTime    Int?
-  firearmsLicense     Boolean   @default(false)
-  firearmsLicenseTime Int?
-  citizens            Citizen[]
+  id                     String    @id @default(uuid())
+  driverLicense          Boolean   @default(false)
+  driverLicenseTimeEnd   DateTime?
+  pilotLicense           Boolean   @default(false)
+  pilotLicenseTimeEnd    DateTime?
+  waterLicense           Boolean   @default(false)
+  waterLicenseTimeEnd    DateTime?
+  firearmsLicense        Boolean   @default(false)
+  firearmsLicenseTimeEnd DateTime?
+  citizens               Citizen[]
 }
 
 model Note {

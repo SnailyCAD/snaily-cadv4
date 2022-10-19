@@ -5,6 +5,7 @@ import type { CalendarDate } from "@internationalized/date";
 import { useFocusRing } from "@react-aria/focus";
 import { mergeProps } from "@react-aria/utils";
 import { classNames } from "lib/classNames";
+import isToday from "date-fns/isToday";
 
 interface Props {
   state: CalendarState;
@@ -23,6 +24,7 @@ export function CalendarCell({ state, date }: Props) {
     isInvalid,
   } = useCalendarCell({ date }, state, ref);
 
+  const _isToday = isToday(date.toDate("UTC"));
   const { focusProps, isFocusVisible } = useFocusRing();
 
   return (
@@ -38,8 +40,12 @@ export function CalendarCell({ state, date }: Props) {
         )}
       >
         <div
+          title={_isToday ? "Today" : undefined}
           className={classNames(
             "w-full h-full flex items-center justify-center transition-colors",
+            _isToday &&
+              !isSelected &&
+              "bg-blue-400 text-neutral-800 rounded-2xl hover:rounded-md !transition-all",
             isDisabled && !isInvalid && "text-gray-400",
             isFocusVisible && "ring-2 group-focus:z-2 ring-blue-600",
             !isSelected && !isDisabled && "hover:bg-blue-400 hover:text-neutral-800",

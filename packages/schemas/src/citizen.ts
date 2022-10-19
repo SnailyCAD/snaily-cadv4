@@ -71,11 +71,23 @@ export const WEAPON_SCHEMA = z.object({
   serialNumber: z.string().max(255).optional(),
 });
 
+const END_TIME = z
+  .date()
+  .min(new Date())
+  .describe("ISO format")
+  .or(z.string().min(2))
+  .nullable()
+  .optional();
+
 const SUSPENDED_SCHEMA = z.object({
   driverLicense: z.boolean(),
+  driverLicenseTimeEnd: END_TIME,
   pilotLicense: z.boolean(),
+  pilotLicenseTimeEnd: END_TIME,
   waterLicense: z.boolean(),
+  waterLicenseTimeEnd: END_TIME,
   firearmsLicense: z.boolean(),
+  firearmsLicenseTimeEnd: END_TIME,
 });
 
 export const LICENSE_SCHEMA = CREATE_CITIZEN_SCHEMA.pick({
@@ -89,10 +101,6 @@ export const LICENSE_SCHEMA = CREATE_CITIZEN_SCHEMA.pick({
   waterLicenseCategory: true,
 }).extend({
   suspended: SUSPENDED_SCHEMA.optional().nullable(),
-  driverLicenseTime: z.number().nullable().optional(),
-  pilotLicenseTime: z.number().nullable().optional(),
-  firearmsLicenseTime: z.number().nullable().optional(),
-  waterLicenseTime: z.number().nullable().optional(),
 });
 
 export const MEDICAL_RECORD_SCHEMA = z.object({
