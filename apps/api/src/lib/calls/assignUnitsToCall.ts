@@ -8,6 +8,7 @@ import type { z } from "zod";
 import type { ASSIGNED_UNIT } from "@snailycad/schemas";
 import { assignedUnitsInclude } from "controllers/leo/incidents/IncidentController";
 import { createAssignedText } from "./createAssignedText";
+import { getNextActiveCallId } from "./getNextActiveCall";
 
 interface Options {
   call: Call911 & { assignedUnits: AssignedUnit[] };
@@ -103,19 +104,6 @@ export async function handleDeleteAssignedUnit(
 
   const unit = await prisma.assignedUnit.delete({ where: { id: assignedUnit.id } });
 
-  const otherAssignedToCall = await prisma.assignedUnit.findFirst({
-    orderBy: { createdAt: "desc" },
-    where: {
-      OR: [
-        { officerId: options.unitId },
-        { combinedLeoId: options.unitId },
-        { emsFdDeputyId: options.unitId },
-      ],
-    },
-  });
-
-  console.log({ otherAssignedToCall });
-
   for (const type in prismaNames) {
     const key = type as keyof typeof prismaNames;
     const unitId = unit[key];
@@ -125,7 +113,13 @@ export async function handleDeleteAssignedUnit(
       // @ts-expect-error they have the same properties for updating
       await prisma[prismaName].update({
         where: { id: unitId },
-        data: { activeCallId: otherAssignedToCall?.id ?? null },
+        data: {
+          activeCallId: await getNextActiveCallId({
+            callId: options.call.id,
+            type: "unassign",
+            unit: { id: options.unitId },
+          }),
+        },
       });
     }
   }
@@ -181,16 +175,16 @@ async function handleCreateAssignedUnit(options: HandleCreateAssignedUnitOptions
     });
   }
 
-  /**
-   * if the unit already has an active call, move the call to the stack.
-   * once the call is ended, the new activeCall will be the latest call in the stack.
-   */
-  const activeCallId = unit?.activeCallId ? undefined : options.call.id;
-
   // @ts-expect-error they have the same properties for updating
   await prisma[prismaModalName].update({
     where: { id: unit.id },
-    data: { activeCallId },
+    data: {
+      activeCallId: await getNextActiveCallId({
+        callId: options.call.id,
+        type: "assign",
+        unit: { id: options.unitId },
+      }),
+    },
   });
 
   if (options.isPrimary) {

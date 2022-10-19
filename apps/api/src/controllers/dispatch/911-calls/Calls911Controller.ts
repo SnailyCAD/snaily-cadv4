@@ -39,6 +39,7 @@ import {
   incidentInclude,
 } from "controllers/leo/incidents/IncidentController";
 import type { z } from "zod";
+import { getNextActiveCallId } from "lib/calls/getNextActiveCall";
 
 export const callInclude = {
   position: true,
@@ -382,10 +383,19 @@ export class Calls911Controller {
       const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
       if (!prismaName) return;
 
+      const rawUnitId = unit.officerId ?? unit.emsFdDeputyId ?? unit.combinedLeoId;
+      if (!rawUnitId) return;
+
       // @ts-expect-error method has the same properties
       return prisma[prismaName].update({
         where: { id: unitId },
-        data: { activeCallId: null },
+        data: {
+          activeCallId: await getNextActiveCallId({
+            callId: call.id,
+            type: "unassign",
+            unit: { ...unit, id: rawUnitId },
+          }),
+        },
       });
     });
 
@@ -523,33 +533,17 @@ export class Calls911Controller {
       },
     });
 
-    /**
-     * if the unit already has an active call, move the call to the stack.
-     * once the call is ended, the new activeCall will be the latest call in the stack.
-     */
-    let activeCallId = callType === "assign" ? (unit?.activeCallId ? undefined : call.id) : null;
-
-    if (callType === "unassign") {
-      const otherAssignedToCall = await prisma.assignedUnit.findFirst({
-        orderBy: { createdAt: "desc" },
-        where: {
-          OR: [
-            { officerId: rawUnitId },
-            { combinedLeoId: rawUnitId },
-            { emsFdDeputyId: rawUnitId },
-          ],
-        },
-      });
-
-      if (otherAssignedToCall) {
-        activeCallId = otherAssignedToCall.call911Id;
-      }
-    }
-
     // @ts-expect-error they have the same properties for updating
     await prisma[prismaNames[type]].update({
       where: { id: unit.id },
-      data: { activeCallId, statusId: assignedToStatus?.id },
+      data: {
+        activeCallId: await getNextActiveCallId({
+          callId: call.id,
+          type: callType,
+          unit,
+        }),
+        statusId: assignedToStatus?.id,
+      },
     });
 
     await Promise.all([
