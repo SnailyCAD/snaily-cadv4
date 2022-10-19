@@ -29,8 +29,6 @@ export async function getNextActiveCallId(options: Options) {
       },
     });
 
-    console.log({ otherAssignedToCall });
-
     if (otherAssignedToCall) {
       nextActiveCallId = otherAssignedToCall.call911Id;
     }
