@@ -317,7 +317,6 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
         {isLeo ? <hr className="my-2 mb-3 border-t border-secondary dark:border-quinary" /> : null}
       </section>
 
-      {console.log(errors)}
 
       {!WEAPON_REGISTRATION ? null : LICENSE_EXAMS && !isLeo ? null : (
         <section className="w-full">
