@@ -39,6 +39,7 @@ import {
   incidentInclude,
 } from "controllers/leo/incidents/IncidentController";
 import type { z } from "zod";
+import { getNextActiveCallId } from "lib/calls/getNextActiveCall";
 
 export const callInclude = {
   position: true,
@@ -380,12 +381,18 @@ export class Calls911Controller {
 
     const unitPromises = call.assignedUnits.map(async (unit) => {
       const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
-      if (!prismaName) return;
+      if (!prismaName || !unitId) return;
 
       // @ts-expect-error method has the same properties
       return prisma[prismaName].update({
         where: { id: unitId },
-        data: { activeCallId: null },
+        data: {
+          activeCallId: await getNextActiveCallId({
+            callId: call.id,
+            type: "unassign",
+            unit: { ...unit, id: unitId },
+          }),
+        },
       });
     });
 
@@ -526,7 +533,14 @@ export class Calls911Controller {
     // @ts-expect-error they have the same properties for updating
     await prisma[prismaNames[type]].update({
       where: { id: unit.id },
-      data: { activeCallId: callType === "assign" ? callId : null, statusId: assignedToStatus?.id },
+      data: {
+        activeCallId: await getNextActiveCallId({
+          callId: call.id,
+          type: callType,
+          unit,
+        }),
+        statusId: assignedToStatus?.id,
+      },
     });
 
     await Promise.all([

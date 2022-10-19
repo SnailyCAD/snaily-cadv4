@@ -27,7 +27,7 @@ export function toastMessage(options: Options) {
                   {title}
                 </p>
               ) : null}
-              <p className="text-lg text-neutral-500 dark:text-gray-300">{message}</p>
+              <div className="text-lg text-neutral-500 dark:text-gray-300">{message}</div>
             </div>
           </div>
         </div>
