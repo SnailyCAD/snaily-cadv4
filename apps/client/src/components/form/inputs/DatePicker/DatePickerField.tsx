@@ -16,7 +16,7 @@ import { useMounted } from "@casper124578/useful";
 const Popover = dynamic(async () => (await import("./Popover")).Popover);
 
 interface FieldProps {
-  errorMessage: string;
+  errorMessage?: string;
   label: string;
   optional?: boolean;
   labelClassnames?: string;

@@ -9,6 +9,7 @@ import { Infofield } from "components/shared/Infofield";
 import { Citizen, DriversLicenseCategoryType, SuspendedCitizenLicenses } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import type { PutCitizenLicensesByIdData } from "@snailycad/types/api";
+import { FullDate } from "components/shared/FullDate";
 
 const types = ["driversLicense", "pilotLicense", "waterLicense", "weaponLicense"] as const;
 
@@ -96,26 +97,37 @@ export function CitizenLicenses({ citizen }: Props) {
 
   const categoryTypes: Record<
     string,
-    [DriversLicenseCategoryType, [SuspendedLicenseType, LicenseNumbers]]
+    [DriversLicenseCategoryType, [SuspendedLicenseType, SuspendedLicenseType, LicenseNumbers]]
   > = {
     driversLicense: [
       DriversLicenseCategoryType.AUTOMOTIVE,
-      ["driverLicense", "driversLicenseNumber"],
+      ["driverLicense", "driverLicenseTimeEnd", "driversLicenseNumber"],
     ],
-    pilotLicense: [DriversLicenseCategoryType.AVIATION, ["pilotLicense", "pilotLicenseNumber"]],
-    waterLicense: [DriversLicenseCategoryType.WATER, ["waterLicense", "waterLicenseNumber"]],
-    weaponLicense: [DriversLicenseCategoryType.FIREARM, ["firearmsLicense", "weaponLicenseNumber"]],
+    pilotLicense: [
+      DriversLicenseCategoryType.AVIATION,
+      ["pilotLicense", "pilotLicenseTimeEnd", "pilotLicenseNumber"],
+    ],
+    waterLicense: [
+      DriversLicenseCategoryType.WATER,
+      ["waterLicense", "waterLicenseTimeEnd", "waterLicenseNumber"],
+    ],
+    weaponLicense: [
+      DriversLicenseCategoryType.FIREARM,
+      ["firearmsLicense", "firearmsLicenseTimeEnd", "weaponLicenseNumber"],
+    ],
   };
 
   return (
     <>
       {types.map((type) => {
-        const [categoryType, [suspendedType, licenseNumberType]] = categoryTypes[type]!;
+        const [categoryType, [suspendedType, suspendedTimeEndType, licenseNumberType]] =
+          categoryTypes[type]!;
 
         const isSuspended = citizen.suspendedLicenses?.[suspendedType] ?? false;
         const category =
           categoryTypes[type] && citizen.dlCategory.filter((v) => v.type === categoryType);
         const licenseNumber = citizen[licenseNumberType];
+        const suspendedTimeEnd = isSuspended && citizen.suspendedLicenses?.[suspendedTimeEndType];
 
         const returnNull = type === "weaponLicense" && !WEAPON_REGISTRATION;
         if (returnNull) {
@@ -130,6 +142,12 @@ export function CitizenLicenses({ citizen }: Props) {
                 label={t(`Citizen.${type}`)}
               >
                 {t("Leo.suspended")}
+                {typeof suspendedTimeEnd === "string" ? (
+                  <span>
+                    {" "}
+                    ({t("Leo.endsOn")} <FullDate onlyDate>{new Date(suspendedTimeEnd)}</FullDate>)
+                  </span>
+                ) : null}
               </Infofield>
             ) : (
               <>

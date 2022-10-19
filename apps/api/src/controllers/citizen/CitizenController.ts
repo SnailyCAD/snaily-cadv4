@@ -21,6 +21,7 @@ import { citizenObjectFromData } from "lib/citizen";
 import type * as APITypes from "@snailycad/types/api";
 import { getImageWebPPath } from "utils/image";
 import { validateSocialSecurityNumber } from "lib/citizen/validateSSN";
+import { setEndedSuspendedLicenses } from "lib/citizen/setEndedSuspendedLicenses";
 
 export const citizenInclude = {
   user: { select: userProperties },
@@ -139,7 +140,12 @@ export class CitizenController {
       throw new NotFound("notFound");
     }
 
-    return citizen;
+    const [_citizen] = await setEndedSuspendedLicenses([citizen]);
+    if (!_citizen) {
+      throw new NotFound("notFound");
+    }
+
+    return _citizen;
   }
 
   @Delete("/:id")

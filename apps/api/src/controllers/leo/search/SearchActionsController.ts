@@ -72,12 +72,17 @@ export class SearchActionsController {
     await updateCitizenLicenseCategories(citizen, data);
 
     let suspendedLicenses: SuspendedCitizenLicenses | undefined;
+
     if (data.suspended) {
       const createUpdateData = {
         driverLicense: data.suspended.driverLicense,
+        driverLicenseTimeEnd: data.suspended.driverLicenseTimeEnd,
         firearmsLicense: data.suspended.firearmsLicense,
+        firearmsLicenseTimeEnd: data.suspended.firearmsLicenseTimeEnd,
         pilotLicense: data.suspended.pilotLicense,
+        pilotLicenseTimeEnd: data.suspended.pilotLicenseTimeEnd,
         waterLicense: data.suspended.waterLicense,
+        waterLicenseTimeEnd: data.suspended.waterLicenseTimeEnd,
       };
 
       suspendedLicenses = await prisma.suspendedCitizenLicenses.upsert({
