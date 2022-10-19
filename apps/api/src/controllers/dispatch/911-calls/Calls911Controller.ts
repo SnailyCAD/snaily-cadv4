@@ -381,10 +381,7 @@ export class Calls911Controller {
 
     const unitPromises = call.assignedUnits.map(async (unit) => {
       const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
-      if (!prismaName) return;
-
-      const rawUnitId = unit.officerId ?? unit.emsFdDeputyId ?? unit.combinedLeoId;
-      if (!rawUnitId) return;
+      if (!prismaName || !unitId) return;
 
       // @ts-expect-error method has the same properties
       return prisma[prismaName].update({
@@ -393,7 +390,7 @@ export class Calls911Controller {
           activeCallId: await getNextActiveCallId({
             callId: call.id,
             type: "unassign",
-            unit: { ...unit, id: rawUnitId },
+            unit: { ...unit, id: unitId },
           }),
         },
       });

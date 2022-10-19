@@ -182,7 +182,7 @@ async function handleCreateAssignedUnit(options: HandleCreateAssignedUnitOptions
       activeCallId: await getNextActiveCallId({
         callId: options.call.id,
         type: "assign",
-        unit: { id: options.unitId },
+        unit,
       }),
     },
   });
