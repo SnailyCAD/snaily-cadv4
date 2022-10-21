@@ -188,9 +188,9 @@ export function getErrorObj(error: unknown) {
       message: error.message,
       status: error.response?.status,
       response: error.response,
-      method: error.config.method,
-      data: error.config.data,
-      url: error.config.url,
+      method: error.config?.method,
+      data: error.config?.data,
+      url: error.config?.url,
     };
   }
 
