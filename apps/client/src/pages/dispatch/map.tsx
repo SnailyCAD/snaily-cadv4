@@ -41,7 +41,7 @@ export default function MapPage(props: Props) {
   const call911State = useCall911State();
 
   const activeOfficers = React.useMemo(
-    () => [...props.officers].filter(activeFilter),
+    () => [...props.officers.officers].filter(activeFilter),
     [props.officers],
   );
 
@@ -54,11 +54,13 @@ export default function MapPage(props: Props) {
     call911State.setCalls(props.calls.calls);
     state.setBolos(props.bolos);
 
-    state.setAllOfficers(props.officers);
+    state.setAllOfficers(props.officers.officers);
     state.setAllDeputies(props.deputies);
 
     state.setActiveDeputies(activeDeputies);
-    state.setActiveOfficers(activeOfficers);
+    if (state.activeOfficers.length <= 0) {
+      state.setActiveOfficers(activeOfficers);
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props, activeDeputies, activeOfficers]);
@@ -96,7 +98,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
     ["/admin/values/codes_10", []],
     ["/911-calls", { calls: [], totalCount: 0 }],
     ["/bolos", []],
-    ["/dispatch", { deputies: [], officers: [] }],
+    ["/dispatch?isServer=true", { deputies: [], officers: [] }],
   ]);
 
   return {

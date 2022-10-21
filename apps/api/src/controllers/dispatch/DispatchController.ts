@@ -42,6 +42,7 @@ export class DispatchController {
   })
   async getDispatchData(
     @Context("cad") cad: { miscCadSettings: MiscCadSettings | null },
+    @QueryParams("isServer", Boolean) isServer: boolean,
   ): Promise<APITypes.GetDispatchData> {
     const unitsInactivityFilter = getInactivityFilter(
       cad,
@@ -53,9 +54,18 @@ export class DispatchController {
       setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp);
     }
 
-    const [officers, units] = await prisma.$transaction([
-      prisma.officer.findMany({ include: leoProperties }),
-      prisma.combinedLeoUnit.findMany({ include: combinedUnitProperties }),
+    const [officerCount, combinedUnitsCount, officers, units] = await prisma.$transaction([
+      prisma.officer.count({ orderBy: { updatedAt: "desc" } }),
+      prisma.combinedLeoUnit.count(),
+      prisma.officer.findMany({
+        take: isServer ? 15 : undefined,
+        orderBy: { updatedAt: "desc" },
+        include: leoProperties,
+      }),
+      prisma.combinedLeoUnit.findMany({
+        take: isServer ? 10 : undefined,
+        include: combinedUnitProperties,
+      }),
     ]);
 
     const deputies = await prisma.emsFdDeputy.findMany({
@@ -93,7 +103,10 @@ export class DispatchController {
 
     return {
       deputies: deputiesWithUpdatedStatus,
-      officers: [...officersWithUpdatedStatus, ...combinedUnitsWithUpdatedStatus],
+      officers: {
+        totalCount: officerCount + combinedUnitsCount,
+        officers: [...officersWithUpdatedStatus, ...combinedUnitsWithUpdatedStatus],
+      },
       activeIncidents: correctedIncidents,
       activeDispatchers,
     };

@@ -30,21 +30,22 @@ import { HoverCard } from "components/shared/HoverCard";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useMounted } from "@casper124578/useful";
 import { useCall911State } from "state/dispatch/call911State";
+import type { GetActiveOfficersData } from "@snailycad/types/api";
 
 interface Props {
-  initialOfficers: ActiveOfficer[];
+  initialOfficers: GetActiveOfficersData;
 }
 
 function ActiveOfficers({ initialOfficers }: Props) {
   const tableState = useTableState({
-    pagination: { pageSize: 12, totalDataCount: initialOfficers.length },
+    pagination: { pageSize: 12, totalDataCount: initialOfficers.totalCount },
   });
 
   const { activeOfficers: _activeOfficers } = useActiveOfficers();
   const { activeIncidents } = useActiveIncidents();
   const { calls } = useCall911State();
   const isMounted = useMounted();
-  const activeOfficers = isMounted ? _activeOfficers : initialOfficers;
+  const activeOfficers = isMounted ? _activeOfficers : initialOfficers.officers;
 
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
