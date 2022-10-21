@@ -1,7 +1,7 @@
 import { Controller, UseBeforeEach, UseBefore } from "@tsed/common";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { SWITCH_CALLSIGN_SCHEMA } from "@snailycad/schemas";
-import { BodyParams, Context, PathParams } from "@tsed/platform-params";
+import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
@@ -46,6 +46,7 @@ export class LeoController {
   })
   async getActiveOfficers(
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
+    @QueryParams("isServer", Boolean) isServer: boolean,
   ): Promise<APITypes.GetActiveOfficersData> {
     const unitsInactivityFilter = getInactivityFilter(
       cad,
@@ -57,13 +58,21 @@ export class LeoController {
       setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp);
     }
 
-    const [officers, units] = await prisma.$transaction([
+    const [officerCount, combinedUnitCount, officers, units] = await prisma.$transaction([
+      prisma.officer.count({
+        orderBy: { updatedAt: "desc" },
+        where: { status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } } },
+      }),
+      prisma.combinedLeoUnit.count(),
       prisma.officer.findMany({
+        orderBy: { updatedAt: "desc" },
         where: { status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } } },
         include: leoProperties,
+        take: isServer ? 15 : undefined,
       }),
       prisma.combinedLeoUnit.findMany({
         include: combinedUnitProperties,
+        take: isServer ? 10 : undefined,
       }),
     ]);
 
@@ -74,7 +83,10 @@ export class LeoController {
       filterInactiveUnits({ unit: u, unitsInactivityFilter }),
     );
 
-    return [...officersWithUpdatedStatus, ...combinedUnitsWithUpdatedStatus];
+    return {
+      totalCount: officerCount + combinedUnitCount,
+      officers: [...officersWithUpdatedStatus, ...combinedUnitsWithUpdatedStatus],
+    };
   }
 
   @Post("/panic-button")

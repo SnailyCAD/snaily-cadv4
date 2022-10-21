@@ -86,7 +86,7 @@ export default function DispatchDashboard(props: DispatchPageProps) {
   const { isOpen } = useModal();
 
   const activeOfficers = React.useMemo(
-    () => [...props.officers].filter(activeFilter),
+    () => [...props.officers.officers].filter(activeFilter),
     [props.officers],
   );
 
@@ -98,17 +98,20 @@ export default function DispatchDashboard(props: DispatchPageProps) {
   React.useEffect(() => {
     call911State.setCalls(props.calls.calls);
     state.setBolos(props.bolos);
-    state.setAllOfficers(props.officers);
 
+    if (state.activeOfficers.length <= 0) {
+      state.setActiveOfficers(activeOfficers);
+    }
+
+    state.setAllOfficers(props.officers.officers);
     state.setAllDeputies(props.deputies);
     state.setActiveDispatchers(props.activeDispatchers);
     state.setActiveIncidents(props.activeIncidents);
 
     state.setActiveDeputies(activeDeputies);
-    state.setActiveOfficers(activeOfficers);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props, activeDeputies, activeOfficers]);
+  }, [props, state.activeOfficers, activeDeputies, activeOfficers]);
 
   return (
     <Layout
@@ -128,7 +131,7 @@ export default function DispatchDashboard(props: DispatchPageProps) {
         <DndProvider id="dispatch">
           <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
             <div className="w-full">
-              <ActiveOfficers initialOfficers={activeOfficers} />
+              <ActiveOfficers initialOfficers={props.officers} />
               <ActiveDeputies initialDeputies={activeDeputies} />
             </div>
           </div>
@@ -162,7 +165,15 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       ["/admin/values/codes_10", []],
       ["/911-calls", { calls: [], totalCount: 0 }],
       ["/bolos", []],
-      ["/dispatch", { deputies: [], officers: [], activeDispatchers: [], activeIncidents: [] }],
+      [
+        "/dispatch?isServer=true",
+        {
+          deputies: [],
+          officers: { officers: [], totalCount: 0 },
+          activeDispatchers: [],
+          activeIncidents: [],
+        },
+      ],
     ]);
 
   return {

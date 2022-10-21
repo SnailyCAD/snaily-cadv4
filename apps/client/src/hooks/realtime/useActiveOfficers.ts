@@ -45,10 +45,8 @@ export function useActiveOfficers() {
     [call911State.calls], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
-  const handleState = React.useCallback(
+  const handleSetActiveOfficer = React.useCallback(
     (data: (Officer | CombinedLeoUnit)[]) => {
-      setActiveOfficers(data);
-
       const activeOfficer = data.find((v) => {
         if (isUnitCombined(v)) {
           return v.officers.some((v) => v.userId === user?.id);
@@ -71,11 +69,12 @@ export function useActiveOfficers() {
       noToast: true,
     });
 
-    if (json && Array.isArray(json)) {
-      handleState(json);
+    if (Array.isArray(json.officers)) {
+      setActiveOfficers(json.officers);
+      handleSetActiveOfficer(json.officers);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id, handleState]);
+  }, [user?.id, handleSetActiveOfficer]);
 
   React.useEffect(() => {
     if (!ran) {
@@ -86,7 +85,7 @@ export function useActiveOfficers() {
 
   useListener(SocketEvents.UpdateOfficerStatus, (data: (Officer | CombinedLeoUnit)[] | null) => {
     if (data && Array.isArray(data)) {
-      handleState(data);
+      handleSetActiveOfficer(data);
       handleCallsState(data);
       return;
     }
