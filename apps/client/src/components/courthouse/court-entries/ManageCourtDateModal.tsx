@@ -55,7 +55,7 @@ export function ManageCourtDateModal({ onCreate, onUpdate, onClose, date }: Prop
           <Form>
             <DatePickerField
               value={values.date}
-              onChange={(value) => setFieldValue("date", value.toDate("UTC"))}
+              onChange={(value) => setFieldValue("date", value?.toDate("UTC"))}
               label={t("date")}
               errorMessage={errors.date as string}
             />

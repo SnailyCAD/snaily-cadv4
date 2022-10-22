@@ -1,10 +1,10 @@
 import * as React from "react";
-import { useDatePickerState, DatePickerStateOptions } from "@react-stately/datepicker";
+import { useDatePickerState } from "@react-stately/datepicker";
 import { useDatePicker, AriaDateFieldProps } from "@react-aria/datepicker";
 import { Calendar2, ExclamationCircle } from "react-bootstrap-icons";
 import { Button } from "../button";
 import { useTranslations } from "next-intl";
-import { parseDate } from "@internationalized/date";
+import { DateValue, parseDate } from "@internationalized/date";
 import formatISO9075 from "date-fns/formatISO9075";
 import { ModalProvider } from "@react-aria/overlays";
 import { classNames } from "../../utils/classNames";
@@ -27,7 +27,7 @@ interface Props extends AriaDateFieldProps<any> {
   isOptional?: boolean;
   errorMessage?: React.ReactNode;
   labelClassnames?: string;
-  onChange: DatePickerStateOptions["onChange"];
+  onChange(value: DateValue | null): void;
   value?: Date;
 }
 
