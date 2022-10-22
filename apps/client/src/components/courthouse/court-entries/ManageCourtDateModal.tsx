@@ -22,8 +22,6 @@ export function ManageCourtDateModal({ onCreate, onUpdate, onClose, date }: Prop
   const common = useTranslations("Common");
   const t = useTranslations("Courthouse");
 
-  console.log({ date });
-
   const validate = handleValidate(COURT_DATE_SCHEMA);
   const INITIAL_VALUES = {
     note: date?.note ?? "",
