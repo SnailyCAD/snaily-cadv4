@@ -1,5 +1,5 @@
 import { TOW_SCHEMA } from "@snailycad/schemas";
-import { Textarea, Loader, Input, Button } from "@snailycad/ui";
+import { Loader, Input, Button, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { FormRow } from "components/form/FormRow";
 import { Select } from "components/form/Select";
@@ -176,9 +176,14 @@ export function DispatchCallTowModal({ call }: Props) {
               />
             </FormField>
 
-            <FormField errorMessage={errors.description} label={common("description")}>
-              <Textarea name="description" onChange={handleChange} value={values.description} />
-            </FormField>
+            <TextField
+              isTextarea
+              errorMessage={errors.description}
+              label={common("description")}
+              name="description"
+              onChange={(value) => setFieldValue("description", value)}
+              value={values.description}
+            />
 
             <ImpoundLocationInfo />
 

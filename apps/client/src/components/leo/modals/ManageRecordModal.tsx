@@ -1,6 +1,6 @@
 import * as React from "react";
 import { CREATE_TICKET_SCHEMA } from "@snailycad/schemas";
-import { Textarea, Loader, Button, TextField } from "@snailycad/ui";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import type { SelectValue } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
@@ -244,14 +244,16 @@ export function ManageRecordModal({
             />
             <SeizedItemsTable isReadOnly={isReadOnly} />
 
-            <FormField optional errorMessage={errors.notes} label={t("notes")}>
-              <Textarea
-                disabled={isReadOnly}
-                value={values.notes}
-                name="notes"
-                onChange={handleChange}
-              />
-            </FormField>
+            <TextField
+              isTextarea
+              isOptional
+              isDisabled={isReadOnly}
+              errorMessage={errors.notes}
+              label={t("notes")}
+              value={values.notes}
+              name="notes"
+              onChange={(value) => setFieldValue("notes", value)}
+            />
 
             <FormField optional errorMessage={errors.paymentStatus} label={t("recordPaid")}>
               <Toggle

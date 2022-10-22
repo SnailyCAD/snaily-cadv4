@@ -1,6 +1,6 @@
 import { Form, Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
-import { Textarea, Loader, Button, SelectField } from "@snailycad/ui";
+import { Loader, Button, SelectField, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import useFetch from "lib/useFetch";
@@ -201,14 +201,15 @@ export function CreateWarrantModal({ warrant, readOnly, onClose, onCreate, onUpd
               selectedKey={values.status}
             />
 
-            <FormField errorMessage={errors.description} label={common("description")}>
-              <Textarea
-                disabled={readOnly}
-                name="description"
-                onChange={handleChange}
-                value={values.description}
-              />
-            </FormField>
+            <TextField
+              isTextarea
+              errorMessage={errors.description}
+              label={common("description")}
+              isOptional={readOnly}
+              name="description"
+              onChange={(value) => setFieldValue("description", value)}
+              value={values.description}
+            />
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onPress={handleClose} variant="cancel">

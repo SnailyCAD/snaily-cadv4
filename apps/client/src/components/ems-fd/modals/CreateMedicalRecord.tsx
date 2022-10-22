@@ -1,7 +1,7 @@
 import { useTranslations } from "use-intl";
 import { Form, Formik } from "formik";
 import { MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
-import { Textarea, Loader, Input, Button } from "@snailycad/ui";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
@@ -68,7 +68,7 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
       className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setValues, errors, values, isValid }) => (
+        {({ handleChange, setFieldValue, setValues, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.citizenId} label={t("citizen")}>
               <InputSuggestions<NameSearchResult>
@@ -127,13 +127,22 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
               />
             </FormField>
 
-            <FormField errorMessage={errors.type} label={common("type")}>
-              <Input onChange={handleChange} name="type" value={values.type} />
-            </FormField>
+            <TextField
+              onChange={(value) => setFieldValue("type", value)}
+              name="type"
+              value={values.type}
+              errorMessage={errors.type}
+              label={common("type")}
+            />
 
-            <FormField errorMessage={errors.description} label={common("description")}>
-              <Textarea value={values.description} name="description" onChange={handleChange} />
-            </FormField>
+            <TextField
+              isTextarea
+              errorMessage={errors.description}
+              label={common("description")}
+              value={values.description}
+              name="description"
+              onChange={(value) => setFieldValue("description", value)}
+            />
 
             <footer className="flex justify-end mt-5">
               <Button

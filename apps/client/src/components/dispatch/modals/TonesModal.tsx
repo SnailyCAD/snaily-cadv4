@@ -1,4 +1,4 @@
-import { Textarea, Loader, Button } from "@snailycad/ui";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
@@ -56,7 +56,7 @@ export function TonesModal({ types }: Props) {
       className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, values, errors, isValid }) => (
+        {({ handleChange, setFieldValue, values, errors, isValid }) => (
           <Form>
             <p className="my-3 text-neutral-700 dark:text-gray-400">{t("notesInfo")}</p>
 
@@ -78,14 +78,15 @@ export function TonesModal({ types }: Props) {
               ) : null}
             </FormRow>
 
-            <FormField errorMessage={errors.description} label={common("description")}>
-              <Textarea
-                autoFocus
-                name="description"
-                onChange={handleChange}
-                value={values.description}
-              />
-            </FormField>
+            <TextField
+              isTextarea
+              errorMessage={errors.description}
+              label={common("description")}
+              autoFocus
+              name="description"
+              onChange={(value) => setFieldValue("description", value)}
+              value={values.description}
+            />
 
             <footer className="flex justify-end gap-2">
               <Button

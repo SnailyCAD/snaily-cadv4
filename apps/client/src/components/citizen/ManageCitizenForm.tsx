@@ -1,6 +1,6 @@
 import * as React from "react";
 import Link from "next/link";
-import { DatePickerField, Textarea, Loader, Input, Button } from "@snailycad/ui";
+import { DatePickerField, Loader, Input, Button, TextField } from "@snailycad/ui";
 import { FormRow } from "components/form/FormRow";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
@@ -129,23 +129,23 @@ export function ManageCitizenForm({
           <ImageSelectInput image={image} setImage={setImage} />
 
           <FormRow>
-            <FormField errorMessage={errors.name} label={t("name")}>
-              <Input
-                value={values.name}
-                onChange={handleChange}
-                name="name"
-                disabled={isNamesFieldDisabled}
-              />
-            </FormField>
+            <TextField
+              errorMessage={errors.name}
+              label={t("name")}
+              value={values.name}
+              onChange={(value) => setFieldValue("name", value)}
+              name="name"
+              isDisabled={isNamesFieldDisabled}
+            />
 
-            <FormField errorMessage={errors.surname} label={t("surname")}>
-              <Input
-                value={values.surname}
-                onChange={handleChange}
-                name="surname"
-                disabled={isNamesFieldDisabled}
-              />
-            </FormField>
+            <TextField
+              errorMessage={errors.surname}
+              label={t("surname")}
+              value={values.surname}
+              onChange={(value) => setFieldValue("surname", value)}
+              name="surname"
+              isDisabled={isNamesFieldDisabled}
+            />
           </FormRow>
 
           <FormRow flexLike={!SOCIAL_SECURITY_NUMBERS}>
@@ -198,51 +198,90 @@ export function ManageCitizenForm({
           </FormRow>
 
           <FormRow>
-            <FormField errorMessage={errors.hairColor} label={t("hairColor")}>
-              <Input value={values.hairColor} onChange={handleChange} name="hairColor" />
-            </FormField>
+            <TextField
+              errorMessage={errors.hairColor}
+              label={t("hairColor")}
+              value={values.hairColor}
+              onChange={(value) => setFieldValue("hairColor", value)}
+              name="hairColor"
+            />
 
-            <FormField errorMessage={errors.eyeColor} label={t("eyeColor")}>
-              <Input value={values.eyeColor} onChange={handleChange} name="eyeColor" />
-            </FormField>
+            <TextField
+              errorMessage={errors.eyeColor}
+              label={t("eyeColor")}
+              value={values.eyeColor}
+              onChange={(value) => setFieldValue("eyeColor", value)}
+              name="eyeColor"
+            />
           </FormRow>
 
           <FormRow>
-            <FormField errorMessage={errors.weight} label={`${t("weight")} ${weightPrefix}`}>
-              <Input value={values.weight} onChange={handleChange} name="weight" />
-            </FormField>
+            <TextField
+              errorMessage={errors.weight}
+              label={`${t("weight")} ${weightPrefix}`}
+              value={values.weight}
+              onChange={(value) => setFieldValue("weight", value)}
+              name="weight"
+            />
 
-            <FormField errorMessage={errors.height} label={`${t("height")} ${heightPrefix}`}>
-              <Input value={values.height} onChange={handleChange} name="height" />
-            </FormField>
+            <TextField
+              errorMessage={errors.height}
+              label={`${t("height")} ${heightPrefix}`}
+              value={values.height}
+              onChange={(value) => setFieldValue("height", value)}
+              name="height"
+            />
           </FormRow>
 
           <FormRow flexLike>
-            <FormField className="w-full" errorMessage={errors.address} label={t("address")}>
-              <Input value={values.address} onChange={handleChange} name="address" />
-            </FormField>
+            <TextField
+              className="w-full"
+              errorMessage={errors.address}
+              label={t("address")}
+              value={values.address}
+              onChange={(value) => setFieldValue("address", value)}
+              name="address"
+            />
 
-            <FormField optional errorMessage={errors.postal} label={common("postal")}>
-              <Input
-                className="min-w-[300px]"
-                name="postal"
-                onChange={handleChange}
-                value={values.postal}
-              />
-            </FormField>
+            <TextField
+              isOptional
+              className="w-full max-w-[200px]"
+              errorMessage={errors.postal}
+              label={common("postal")}
+              value={values.postal}
+              onChange={(value) => setFieldValue("postal", value)}
+              name="postal"
+            />
           </FormRow>
 
-          <FormField optional errorMessage={errors.phoneNumber} label={t("phoneNumber")}>
-            <Input value={values.phoneNumber} onChange={handleChange} name="phoneNumber" />
-          </FormField>
+          <TextField
+            isOptional
+            errorMessage={errors.phoneNumber}
+            label={t("phoneNumber")}
+            value={values.phoneNumber}
+            onChange={(value) => setFieldValue("phoneNumber", value)}
+            name="phoneNumber"
+          />
 
-          <FormField optional errorMessage={errors.occupation} label={t("occupation")}>
-            <Textarea name="occupation" onChange={handleChange} value={values.occupation} />
-          </FormField>
+          <TextField
+            isTextarea
+            isOptional
+            errorMessage={errors.occupation}
+            label={t("occupation")}
+            name="occupation"
+            onChange={(value) => setFieldValue("occupation", value)}
+            value={values.occupation}
+          />
 
-          <FormField optional errorMessage={errors.additionalInfo} label={t("additionalInfo")}>
-            <Textarea name="additionalInfo" onChange={handleChange} value={values.additionalInfo} />
-          </FormField>
+          <TextField
+            isTextarea
+            isOptional
+            errorMessage={errors.additionalInfo}
+            label={t("additionalInfo")}
+            name="additionalInfo"
+            onChange={(value) => setFieldValue("additionalInfo", value)}
+            value={values.additionalInfo}
+          />
 
           {showLicenseFields && ALLOW_CITIZEN_UPDATE_LICENSE ? (
             <FormRow flexLike className="mt-5">
