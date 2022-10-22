@@ -104,7 +104,7 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
         <div className="mb-4 flex flex-wrap flex-row gap-4 max-w-[1050px]">
           <Infofield label={t("call")}>#{call?.caseNumber}</Infofield>
           <Infofield label={t("lastUpdatedAt")}>
-            <FullDate>{call?.updatedAt}</FullDate>
+            <FullDate formatRelative={false}>{call?.updatedAt}</FullDate>
           </Infofield>
           {primaryUnit ? <Infofield label={t("primaryUnit")}>{primaryUnit}</Infofield> : null}
           {call.type ? <Infofield label={t("type")}>{call?.type.value.value}</Infofield> : null}

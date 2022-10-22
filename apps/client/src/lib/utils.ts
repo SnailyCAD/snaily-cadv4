@@ -14,6 +14,7 @@ import type { NextApiRequestCookies } from "next/dist/server/api-utils";
 import format from "date-fns/format";
 import differenceInYears from "date-fns/differenceInYears";
 import type { Sounds } from "./server/getAvailableSounds.server";
+import formatRelative from "date-fns/formatRelative/index";
 
 export function calculateAge(dateOfBirth: string | Date): string {
   const difference = differenceInYears(new Date(), new Date(dateOfBirth));
@@ -61,10 +62,18 @@ export function formatCitizenAddress(citizen: Pick<Citizen, "address" | "postal"
   return `${address}${postal ? ` (${postal})` : ""}`;
 }
 
-export function formatDate(date: string | Date | number, options?: { onlyDate: boolean }) {
+export function formatDate(
+  date: string | Date | number,
+  options?: { formatRelative?: boolean; onlyDate: boolean },
+) {
   const dateObj = new Date(date);
   const hmsString = options?.onlyDate ? "" : " HH:mm:ss";
-  return format(dateObj, `yyyy-MM-dd${hmsString}`);
+
+  if (options?.formatRelative === false) {
+    return format(dateObj, `yyyy-MM-dd${hmsString}`);
+  }
+
+  return formatRelative(dateObj, new Date());
 }
 
 export function filterLicenseTypes(licenses: Value[], type: ValueLicenseType) {

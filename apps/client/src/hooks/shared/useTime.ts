@@ -7,7 +7,7 @@ export function useTime() {
   React.useEffect(() => {
     function setTime() {
       if (ref.current) {
-        ref.current.textContent = format(new Date(), "HH:mm:ss - yyyy-MM-dd");
+        ref.current.textContent = format(new Date(), "PPpp");
       }
     }
 
