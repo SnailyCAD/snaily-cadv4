@@ -19,7 +19,6 @@ export function FullDate({ children, onlyDate, isDateOfBirth, ...rest }: Props) 
   }
 
   let date = new Date(children).getTime();
-
   if (isDateOfBirth) {
     date = date + 5 * 60 * 60 * 1000;
   }

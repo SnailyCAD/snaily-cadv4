@@ -1,6 +1,6 @@
 import * as React from "react";
 import Link from "next/link";
-import { Textarea, Loader, Input, Button } from "@snailycad/ui";
+import { DatePickerField, Textarea, Loader, Input, Button } from "@snailycad/ui";
 import { FormRow } from "components/form/FormRow";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
@@ -18,7 +18,6 @@ import {
   createDefaultLicensesValues,
   ManageLicensesFormFields,
 } from "./licenses/ManageLicensesFormFields";
-import { DatePickerField } from "components/form/inputs/DatePicker/DatePickerField";
 import parseISO from "date-fns/parseISO";
 
 interface Props {
@@ -153,9 +152,7 @@ export function ManageCitizenForm({
             <DatePickerField
               errorMessage={errors.dateOfBirth as string}
               value={values.dateOfBirth}
-              onChange={(value) =>
-                value && setFieldValue("dateOfBirth", parseISO(value?.toString()))
-              }
+              onChange={(value) => value && setFieldValue("dateOfBirth", value.toDate("UTC"))}
               label={t("dateOfBirth")}
             />
 

@@ -11,8 +11,7 @@ import { classNames } from "lib/classNames";
 import { Toggle } from "components/form/Toggle";
 import type { LicenseInitialValues } from "./ManageLicensesModal";
 import { FormRow } from "components/form/FormRow";
-import { DatePickerField } from "components/form/inputs/DatePicker/DatePickerField";
-import parseISO from "date-fns/parseISO";
+import { DatePickerField } from "@snailycad/ui";
 
 export function createDefaultLicensesValues(citizen: Citizen | null): LicenseInitialValues {
   return {
@@ -100,7 +99,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
 
               {values.suspended.driverLicense ? (
                 <DatePickerField
-                  optional
+                  isOptional
                   label="End date"
                   value={
                     values.suspended.driverLicenseTimeEnd
@@ -108,7 +107,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
                       : undefined
                   }
                   onChange={(value) =>
-                    setFieldValue("suspended.driverLicenseTimeEnd", parseISO(value?.toString()))
+                    setFieldValue("suspended.driverLicenseTimeEnd", value?.toDate("UTC"))
                   }
                 />
               ) : null}
@@ -179,7 +178,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
 
             {values.suspended.pilotLicense ? (
               <DatePickerField
-                optional
+                isOptional
                 label="End date"
                 value={
                   values.suspended.pilotLicenseTimeEnd
@@ -187,7 +186,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
                     : undefined
                 }
                 onChange={(value) =>
-                  setFieldValue("suspended.pilotLicenseTimeEnd", parseISO(value?.toString()))
+                  setFieldValue("suspended.pilotLicenseTimeEnd", value?.toDate("UTC"))
                 }
               />
             ) : null}
@@ -255,7 +254,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
 
             {values.suspended.waterLicense ? (
               <DatePickerField
-                optional
+                isOptional
                 label="End date"
                 value={
                   values.suspended.waterLicenseTimeEnd
@@ -263,7 +262,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
                     : undefined
                 }
                 onChange={(value) =>
-                  setFieldValue("suspended.waterLicenseTimeEnd", parseISO(value?.toString()))
+                  setFieldValue("suspended.waterLicenseTimeEnd", value?.toDate("UTC"))
                 }
               />
             ) : null}
@@ -332,7 +331,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
 
               {values.suspended.firearmsLicense ? (
                 <DatePickerField
-                  optional
+                  isOptional
                   label="End date"
                   value={
                     values.suspended.firearmsLicenseTimeEnd
@@ -340,7 +339,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
                       : undefined
                   }
                   onChange={(value) =>
-                    setFieldValue("suspended.firearmsLicenseTimeEnd", parseISO(value?.toString()))
+                    setFieldValue("suspended.firearmsLicenseTimeEnd", value?.toDate("UTC"))
                   }
                 />
               ) : null}

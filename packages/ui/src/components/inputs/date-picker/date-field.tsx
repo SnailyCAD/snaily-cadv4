@@ -3,7 +3,7 @@ import { useLocale } from "@react-aria/i18n";
 import { useDateFieldState, DateSegment, DateFieldState } from "@react-stately/datepicker";
 import { AriaDatePickerProps, useDateField, useDateSegment } from "@react-aria/datepicker";
 import { createCalendar } from "@internationalized/date";
-import { classNames } from "lib/classNames";
+import { classNames } from "../../../utils/classNames";
 
 export function DateField(props: AriaDatePickerProps<any>) {
   const { locale } = useLocale();
@@ -25,9 +25,9 @@ export function DateField(props: AriaDatePickerProps<any>) {
   );
 }
 
-function DateSegment({ segment, state }: { segment: DateSegment; state: DateFieldState }) {
+function DateSegment(props: { segment: DateSegment; state: DateFieldState }) {
   const ref = React.useRef<HTMLDivElement | null>(null);
-  const { segmentProps } = useDateSegment(segment, state, ref);
+  const { segmentProps } = useDateSegment(props.segment, props.state, ref);
 
   return (
     <div
@@ -36,27 +36,28 @@ function DateSegment({ segment, state }: { segment: DateSegment; state: DateFiel
       ref={ref}
       style={{
         ...segmentProps.style,
-        // eslint-disable-next-line eqeqeq
-        minWidth: segment.maxValue != null ? `${String(segment.maxValue).length}ch` : undefined,
+        minWidth:
+          // eslint-disable-next-line eqeqeq
+          props.segment.maxValue != null ? `${String(props.segment.maxValue).length}ch` : undefined,
       }}
       className={classNames(
         "px-0.5 tabular-nums text-right outline-none rounded-sm focus:bg-blue-600 focus:text-white group",
-        !segment.isEditable ? "text-gray-500" : "text-neutral-800 dark:text-white",
-        segment.type === "literal" && "mx-1",
+        !props.segment.isEditable ? "text-gray-500" : "text-neutral-800 dark:text-white",
+        props.segment.type === "literal" && "mx-1",
       )}
     >
       <span
         aria-hidden="true"
         className="block w-full text-center italic text-gray-500 group-focus:text-white"
         style={{
-          visibility: segment.isPlaceholder ? "visible" : "hidden",
-          height: segment.isPlaceholder ? "" : 0,
+          visibility: props.segment.isPlaceholder ? "visible" : "hidden",
+          height: props.segment.isPlaceholder ? "" : 0,
           pointerEvents: "none",
         }}
       >
-        {segment.placeholder}
+        {props.segment.placeholder}
       </span>
-      {segment.isPlaceholder ? "" : segment.text}
+      {props.segment.isPlaceholder ? "" : props.segment.text}
     </div>
   );
 }

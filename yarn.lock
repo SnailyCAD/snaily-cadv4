@@ -2528,7 +2528,6 @@ __metadata:
     "@casper124578/use-socket.io": 4.1.3
     "@casper124578/useful": ^2.0.5
     "@headlessui/react": ^1.7.3
-    "@internationalized/date": ^3.0.1
     "@next/bundle-analyzer": ^12.3.1
     "@radix-ui/react-accordion": ^1.0.1
     "@radix-ui/react-context-menu": ^2.0.1
@@ -2538,23 +2537,17 @@ __metadata:
     "@radix-ui/react-tabs": ^1.0.1
     "@radix-ui/react-toolbar": ^1.0.1
     "@radix-ui/react-tooltip": ^1.0.2
-    "@react-aria/calendar": ^3.0.3
-    "@react-aria/datepicker": ^3.1.2
-    "@react-aria/dialog": ^3.4.0
     "@react-aria/focus": ^3.9.0
-    "@react-aria/i18n": ^3.6.1
     "@react-aria/interactions": ^3.12.0
     "@react-aria/label": ^3.4.2
-    "@react-aria/overlays": ^3.11.0
     "@react-aria/ssr": ^3.3.0
-    "@react-aria/utils": ^3.14.0
-    "@react-stately/datepicker": ^3.1.0
     "@sentry/nextjs": ^7.16.0
     "@sentry/tracing": ^7.16.0
     "@snailycad/config": 1.28.0
     "@snailycad/permissions": 1.28.0
     "@snailycad/schemas": 1.28.0
     "@snailycad/types": 1.28.0
+    "@snailycad/ui": 1.28.0
     "@snailycad/utils": 1.28.0
     "@tailwindcss/typography": ^0.5.7
     "@tanstack/match-sorter-utils": ^8.5.14
@@ -2663,14 +2656,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/ui@workspace:packages/ui":
+"@snailycad/ui@1.28.0, @snailycad/ui@workspace:packages/ui":
   version: 0.0.0-use.local
   resolution: "@snailycad/ui@workspace:packages/ui"
   dependencies:
+    "@internationalized/date": ^3.0.1
     "@react-aria/breadcrumbs": ^3.3.2
     "@react-aria/button": ^3.6.2
+    "@react-aria/calendar": ^3.0.3
+    "@react-aria/datepicker": ^3.1.2
     "@react-aria/dialog": ^3.4.0
     "@react-aria/focus": ^3.9.0
+    "@react-aria/i18n": ^3.6.1
     "@react-aria/interactions": ^3.12.0
     "@react-aria/label": ^3.4.2
     "@react-aria/listbox": ^3.7.0
@@ -2680,7 +2677,9 @@ __metadata:
     "@react-aria/radio": ^3.4.0
     "@react-aria/textfield": ^3.7.2
     "@react-aria/utils": ^3.14.0
+    "@react-stately/calendar": ^3.0.3
     "@react-stately/collections": ^3.4.4
+    "@react-stately/datepicker": ^3.1.0
     "@react-stately/list": ^3.5.4
     "@react-stately/menu": ^3.4.2
     "@react-stately/radio": ^3.6.0
@@ -2697,7 +2696,8 @@ __metadata:
     typescript: ^4.8.4
     vite: ^3.1.8
   peerDependencies:
-    next-intl: ^2.8.0
+    date-fns: ">=2.29.3"
+    next-intl: ">=2.8.0"
     react: ">=18.2.0"
     react-dom: ">=18.2.0"
   languageName: unknown

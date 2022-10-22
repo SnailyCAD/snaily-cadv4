@@ -4,7 +4,7 @@ import { useCalendarCell } from "@react-aria/calendar";
 import type { CalendarDate } from "@internationalized/date";
 import { useFocusRing } from "@react-aria/focus";
 import { mergeProps } from "@react-aria/utils";
-import { classNames } from "lib/classNames";
+import { classNames } from "../../../../utils/classNames";
 import isToday from "date-fns/isToday";
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
   date: CalendarDate;
 }
 
-export function CalendarCell({ state, date }: Props) {
+export function CalendarCell(props: Props) {
   const ref = React.useRef<HTMLDivElement | null>(null);
   const {
     cellProps,
@@ -22,9 +22,9 @@ export function CalendarCell({ state, date }: Props) {
     isDisabled,
     formattedDate,
     isInvalid,
-  } = useCalendarCell({ date }, state, ref);
+  } = useCalendarCell({ date: props.date }, props.state, ref);
 
-  const _isToday = isToday(date.toDate("UTC"));
+  const _isToday = isToday(props.date.toDate("UTC"));
   const { focusProps, isFocusVisible } = useFocusRing();
 
   return (
