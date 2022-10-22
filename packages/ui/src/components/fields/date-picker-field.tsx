@@ -1,30 +1,33 @@
 import * as React from "react";
 import { useDatePickerState, DatePickerStateOptions } from "@react-stately/datepicker";
-import { useDatePicker } from "@react-aria/datepicker";
-import { DateField } from "./DateField";
+import { useDatePicker, AriaDateFieldProps } from "@react-aria/datepicker";
 import { Calendar2, ExclamationCircle } from "react-bootstrap-icons";
-import { Button } from "@snailycad/ui";
+import { Button } from "../button";
 import { useTranslations } from "next-intl";
 import { parseDate } from "@internationalized/date";
 import formatISO9075 from "date-fns/formatISO9075";
 import { ModalProvider } from "@react-aria/overlays";
-import { Calendar } from "./Calendar/Calendar";
-import { classNames } from "lib/classNames";
+import { classNames } from "../../utils/classNames";
 import dynamic from "next/dynamic";
 import { useMounted } from "@casper124578/useful";
+import { Popover } from "../overlays/popover";
+import { DateField } from "../inputs/date-picker/date-field";
 
-const Popover = dynamic(async () => (await import("./Popover")).Popover);
+const Calendar = dynamic(
+  async () => (await import("../inputs/date-picker/calendar/calendar")).Calendar,
+);
 
-interface FieldProps {
-  errorMessage?: string;
+interface Props extends AriaDateFieldProps<any> {
   label: string;
-  optional?: boolean;
+  isDisabled?: boolean;
+  isOptional?: boolean;
+  errorMessage?: React.ReactNode;
   labelClassnames?: string;
   onChange: DatePickerStateOptions["onChange"];
   value?: Date;
 }
 
-export function DatePickerField({ value: _value, ...rest }: FieldProps) {
+export function DatePickerField({ value: _value, ...rest }: Props) {
   const common = useTranslations("Common");
   const optionalText = common("optionalField");
   const isMounted = useMounted();
@@ -47,10 +50,10 @@ export function DatePickerField({ value: _value, ...rest }: FieldProps) {
 
   return (
     <ModalProvider>
-      <div className="relative inline-flex flex-col text-left mb-3">
+      <div className="relative inline-flex flex-col text-left mb-3 w-full">
         <label {...labelProps} className={classNames("mb-1 dark:text-white", rest.labelClassnames)}>
           {rest.label}{" "}
-          {rest.optional ? <span className="text-sm italic">({optionalText})</span> : null}
+          {rest.isOptional ? <span className="text-sm italic">({optionalText})</span> : null}
         </label>
         <div {...groupProps} ref={ref} className="flex group">
           <div className="relative bg-white dark:bg-secondary p-1.5 px-3 w-full rounded-l-md border border-r-0 border-gray-200 dark:border-quinary">

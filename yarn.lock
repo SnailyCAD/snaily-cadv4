@@ -2669,8 +2669,11 @@ __metadata:
   dependencies:
     "@react-aria/breadcrumbs": ^3.3.2
     "@react-aria/button": ^3.6.2
+    "@react-aria/calendar": ^3.0.3
+    "@react-aria/datepicker": ^3.1.2
     "@react-aria/dialog": ^3.4.0
     "@react-aria/focus": ^3.9.0
+    "@react-aria/i18n": ^3.6.1
     "@react-aria/interactions": ^3.12.0
     "@react-aria/label": ^3.4.2
     "@react-aria/listbox": ^3.7.0
@@ -2680,7 +2683,9 @@ __metadata:
     "@react-aria/radio": ^3.4.0
     "@react-aria/textfield": ^3.7.2
     "@react-aria/utils": ^3.14.0
+    "@react-stately/calendar": ^3.0.3
     "@react-stately/collections": ^3.4.4
+    "@react-stately/datepicker": ^3.1.0
     "@react-stately/list": ^3.5.4
     "@react-stately/menu": ^3.4.2
     "@react-stately/radio": ^3.6.0
@@ -2697,7 +2702,8 @@ __metadata:
     typescript: ^4.8.4
     vite: ^3.1.8
   peerDependencies:
-    next-intl: ^2.8.0
+    date-fns: ">=2.29.3"
+    next-intl: ">=2.8.0"
     react: ">=18.2.0"
     react-dom: ">=18.2.0"
   languageName: unknown

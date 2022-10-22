@@ -2,11 +2,11 @@ import { useLocale } from "@react-aria/i18n";
 import { useCalendarGrid } from "@react-aria/calendar";
 import { getWeeksInMonth } from "@internationalized/date";
 import type { CalendarState } from "@react-stately/calendar";
-import { CalendarCell } from "./CalendarCell";
+import { CalendarCell } from "./calendar-cell";
 
-export function CalendarGrid({ state, ...props }: { state: CalendarState }) {
+export function CalendarGrid({ state, ...rest }: { state: CalendarState }) {
   const { locale } = useLocale();
-  const { gridProps, headerProps, weekDays } = useCalendarGrid(props, state);
+  const { gridProps, headerProps, weekDays } = useCalendarGrid(rest, state);
 
   const weeksInMonth = getWeeksInMonth(state.visibleRange.start, locale);
 

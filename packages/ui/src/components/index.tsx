@@ -8,3 +8,4 @@ export * from "./button";
 export { RadioGroupField, Radio } from "./fields/radio-group-field";
 export * from "./breadcrumbs/breadcrumbs";
 export * from "./breadcrumbs/breadcrumb-item";
+export { DatePickerField, parseDateOfBirth } from "./fields/date-picker-field";
