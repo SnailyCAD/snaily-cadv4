@@ -61,10 +61,12 @@
       "@react-stately/calendar",
       "@react-aria/i18n",
       "@react-stately/datepicker",
-      "@react-aria/datepicker"
+      "@react-aria/datepicker",
+      "@internationalized/date"
     ]
   },
   "dependencies": {
+    "@internationalized/date": "^3.0.1",
     "@react-aria/breadcrumbs": "^3.3.2",
     "@react-aria/button": "^3.6.2",
     "@react-aria/calendar": "^3.0.3",

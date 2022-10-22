@@ -12,9 +12,13 @@ import dynamic from "next/dynamic";
 import { useMounted } from "@casper124578/useful";
 import { Popover } from "../overlays/popover";
 import { DateField } from "../inputs/date-picker/date-field";
+import { Loader } from "../loader";
 
 const Calendar = dynamic(
   async () => (await import("../inputs/date-picker/calendar/calendar")).Calendar,
+  {
+    loading: () => <Loader />,
+  },
 );
 
 interface Props extends AriaDateFieldProps<any> {
