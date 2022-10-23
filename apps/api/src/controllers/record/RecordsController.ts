@@ -26,6 +26,7 @@ import {
   CombinedLeoUnit,
   Officer,
   PaymentStatus,
+  User,
 } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { validateRecordData } from "lib/records/validateRecordData";
@@ -40,6 +41,7 @@ import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { Socket } from "services/SocketService";
 import { assignUnitsToWarrant } from "lib/records/assignToWarrant";
 import type { cad } from "@snailycad/types";
+import { userProperties } from "lib/auth/getSessionUser";
 
 export const assignedOfficersInclude = {
   combinedUnit: { include: combinedUnitProperties },
@@ -130,7 +132,7 @@ export class RecordsController {
     const updatedWarrant = await prisma.warrant.findUniqueOrThrow({
       where: { id: warrant.id },
       include: {
-        citizen: true,
+        citizen: { include: { user: { select: userProperties } } },
         officer: true,
         assignedOfficers: { include: assignedOfficersInclude },
       },
@@ -364,7 +366,10 @@ export class RecordsController {
         postal: data.postal,
         paymentStatus: (data.paymentStatus ?? null) as PaymentStatus | null,
       },
-      include: { officer: { include: leoProperties }, citizen: true },
+      include: {
+        officer: { include: leoProperties },
+        citizen: { include: { user: { select: userProperties } } },
+      },
     });
 
     if (ticket.type === "ARREST_REPORT" && !recordId) {
@@ -420,12 +425,18 @@ export class RecordsController {
   }
 
   private async handleDiscordWebhook(
-    ticket: ((Record & { violations: Violation[] }) | Warrant) & { citizen: Citizen },
+    ticket: ((Record & { violations: Violation[] }) | Warrant) & {
+      citizen: Citizen & { user?: Pick<User, "discordId"> | null };
+    },
     type: DiscordWebhookType = DiscordWebhookType.CITIZEN_RECORD,
   ) {
     try {
       const data = createWebhookData(ticket);
-      await sendDiscordWebhook(type, data);
+      await sendDiscordWebhook({
+        type,
+        data,
+        extraMessageData: { userDiscordId: ticket.citizen.user?.discordId },
+      });
     } catch (error) {
       console.error("Could not send Discord webhook.", error);
     }

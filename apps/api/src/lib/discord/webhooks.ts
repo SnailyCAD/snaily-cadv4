@@ -7,12 +7,15 @@ import {
 import { prisma } from "lib/prisma";
 import { performDiscordRequest } from "./performDiscordRequest";
 
-export async function sendDiscordWebhook(
-  type: DiscordWebhookType,
-  data: Partial<RESTPostAPIWebhookWithTokenJSONBody>,
-) {
+interface SendDiscordWebhookOptions {
+  type: DiscordWebhookType;
+  data: Partial<RESTPostAPIWebhookWithTokenJSONBody>;
+  extraMessageData?: { userDiscordId?: string | null };
+}
+
+export async function sendDiscordWebhook(options: SendDiscordWebhookOptions) {
   const webhook = await prisma.discordWebhook.findUnique({
-    where: { type },
+    where: { type: options.type },
   });
   if (!webhook) return;
 
@@ -26,8 +29,8 @@ export async function sendDiscordWebhook(
   if (!webhookData) return;
 
   const normalizedData: Partial<RESTPostAPIWebhookWithTokenJSONBody> = {
-    ...data,
-    content: webhook.extraMessage ?? undefined,
+    ...options.data,
+    content: formatExtraMessage({ ...options, ...webhook }) ?? undefined,
   };
 
   await performDiscordRequest({
@@ -37,4 +40,18 @@ export async function sendDiscordWebhook(
       });
     },
   });
+}
+
+function formatExtraMessage(
+  options: Pick<SendDiscordWebhookOptions, "extraMessageData"> & { extraMessage?: string | null },
+) {
+  if (!options.extraMessage) return undefined;
+  if (!options.extraMessageData) return options.extraMessage;
+
+  const userDiscordId = options.extraMessageData.userDiscordId;
+  const userMention = userDiscordId ? `<@${userDiscordId}>` : "Unknown User";
+  const userIdRegex = /\{userId\}/;
+
+  const newMessage = options.extraMessage.replace(userIdRegex, userMention);
+  return newMessage;
 }

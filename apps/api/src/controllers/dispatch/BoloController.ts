@@ -84,7 +84,7 @@ export class BoloController {
 
     try {
       const embed = createBoloEmbed(bolo);
-      await sendDiscordWebhook(DiscordWebhookType.BOLO, embed);
+      await sendDiscordWebhook({ type: DiscordWebhookType.BOLO, data: embed });
     } catch (error) {
       console.error("[cad_bolo]: Could not send Discord webhook.", error);
     }

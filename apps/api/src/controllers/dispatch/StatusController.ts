@@ -230,7 +230,7 @@ export class StatusController {
 
     try {
       const data = createWebhookData(cad, updatedUnit);
-      await sendDiscordWebhook(DiscordWebhookType.UNIT_STATUS, data);
+      await sendDiscordWebhook({ type: DiscordWebhookType.UNIT_STATUS, data });
     } catch (error) {
       console.error("Could not send Discord webhook.", error);
     }
@@ -263,7 +263,7 @@ export class StatusController {
 
       try {
         const embed = createPanicButtonEmbed(options.cad, options.unit);
-        await sendDiscordWebhook(DiscordWebhookType.PANIC_BUTTON, embed);
+        await sendDiscordWebhook({ type: DiscordWebhookType.PANIC_BUTTON, data: embed });
       } catch (error) {
         console.error("[cad_panicButton]: Could not send Discord webhook.", error);
       }

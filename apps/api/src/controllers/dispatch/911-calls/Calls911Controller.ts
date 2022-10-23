@@ -218,7 +218,7 @@ export class Calls911Controller {
 
     try {
       const data = this.createWebhookData(normalizedCall);
-      await sendDiscordWebhook(DiscordWebhookType.CALL_911, data);
+      await sendDiscordWebhook({ type: DiscordWebhookType.CALL_911, data });
     } catch (error) {
       console.error("Could not send Discord webhook.", error);
     }

@@ -137,7 +137,7 @@ export class TowController {
 
       try {
         const data = createWebhookData(impoundedVehicle);
-        await sendDiscordWebhook(DiscordWebhookType.VEHICLE_IMPOUNDED, data);
+        await sendDiscordWebhook({ type: DiscordWebhookType.VEHICLE_IMPOUNDED, data });
       } catch (error) {
         console.error("Could not send Discord webhook.", error);
       }
