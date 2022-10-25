@@ -84,11 +84,9 @@ export default function DispatchDashboard(props: DispatchPageProps) {
 
   const { ACTIVE_INCIDENTS } = useFeatureEnabled();
   const { isOpen } = useModal();
-
-  const activeOfficers = React.useMemo(
-    () => [...props.officers.officers].filter(activeFilter),
-    [props.officers],
-  );
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, react-hooks/exhaustive-deps
+  const _officers = props.officers?.officers ?? [];
+  const activeOfficers = React.useMemo(() => [..._officers].filter(activeFilter), [_officers]);
 
   const activeDeputies = React.useMemo(
     () => [...props.deputies].filter(activeFilter),
@@ -103,7 +101,7 @@ export default function DispatchDashboard(props: DispatchPageProps) {
       state.setActiveOfficers(activeOfficers);
     }
 
-    state.setAllOfficers(props.officers.officers);
+    state.setAllOfficers(_officers);
     state.setAllDeputies(props.deputies);
     state.setActiveDispatchers(props.activeDispatchers);
     state.setActiveIncidents(props.activeIncidents);

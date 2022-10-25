@@ -40,10 +40,9 @@ export default function MapPage(props: Props) {
   const state = useDispatchState();
   const call911State = useCall911State();
 
-  const activeOfficers = React.useMemo(
-    () => [...props.officers.officers].filter(activeFilter),
-    [props.officers],
-  );
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, react-hooks/exhaustive-deps
+  const _officers = props.officers?.officers ?? [];
+  const activeOfficers = React.useMemo(() => [..._officers].filter(activeFilter), [_officers]);
 
   const activeDeputies = React.useMemo(
     () => [...props.deputies].filter(activeFilter),
@@ -98,7 +97,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
     ["/admin/values/codes_10", []],
     ["/911-calls", { calls: [], totalCount: 0 }],
     ["/bolos", []],
-    ["/dispatch?isServer=true", { deputies: [], officers: [] }],
+    ["/dispatch?isServer=true", { deputies: [], officers: { officers: [], totalCount: 0 } }],
   ]);
 
   return {
