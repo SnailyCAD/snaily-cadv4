@@ -136,7 +136,10 @@ function _ActiveCalls({ initialData }: Props) {
               return {
                 id: call.id,
                 rowProps: {
-                  className: isUnitAssigned ? "bg-gray-200 dark:bg-quinary" : undefined,
+                  className: classNames(
+                    isUnitAssigned && "bg-gray-200 dark:bg-quinary",
+                    call.isSignal100 && "bg-red-500 dark:bg-red-700",
+                  ),
                 },
                 caseNumber: `#${call.caseNumber}`,
                 name: `${call.name} ${call.viaDispatch ? `(${leo("dispatch")})` : ""}`,
