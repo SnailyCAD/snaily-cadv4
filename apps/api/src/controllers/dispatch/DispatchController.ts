@@ -1,7 +1,7 @@
 import { Controller } from "@tsed/di";
 import { ContentType, Description, Get, Post, Put } from "@tsed/schema";
 import { QueryParams, BodyParams, PathParams, Context } from "@tsed/platform-params";
-import { BadRequest } from "@tsed/exceptions";
+import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { Socket } from "services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
@@ -148,6 +148,7 @@ export class DispatchController {
   async setSignal100(
     @Context("cad") cad: cad,
     @BodyParams("value") value: boolean,
+    @BodyParams("callId") callId?: string,
   ): Promise<APITypes.PostDispatchSignal100Data> {
     if (typeof value !== "boolean") {
       throw new BadRequest("body.valueIsRequired");
@@ -161,6 +162,26 @@ export class DispatchController {
         signal100Enabled: value,
       },
     });
+
+    if (callId) {
+      const call = await prisma.call911.findUnique({
+        where: { id: callId },
+      });
+
+      if (!call) {
+        throw new NotFound("callNotFound");
+      }
+
+      await prisma.call911.update({
+        where: { id: call.id },
+        data: { isSignal100: true },
+      });
+    } else if (!value) {
+      await prisma.call911.updateMany({
+        where: { isSignal100: true },
+        data: { isSignal100: false },
+      });
+    }
 
     this.socket.emitSignal100(value);
 

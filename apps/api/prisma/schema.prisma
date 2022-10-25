@@ -1021,6 +1021,7 @@ model Call911 {
   CombinedLeoUnit  CombinedLeoUnit[] @relation("CombinedLeoUnitActiveCall")
   gtaMapPosition   GTAMapPosition?   @relation(fields: [gtaMapPositionId], references: [id])
   gtaMapPositionId String?
+  isSignal100      Boolean?          @default(false)
 }
 
 model GTAMapPosition {

@@ -4,6 +4,7 @@ import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { useTranslations } from "use-intl";
 import { useAudio } from "react-use";
+import { useCall911State } from "state/dispatch/call911State";
 
 const SIGNAL_100_SRC = "/sounds/signal100.mp3";
 export function useSignal100() {
@@ -44,6 +45,16 @@ export function useSignal100() {
 
 function Component({ audio, enabled }: { audio: any; enabled: boolean }) {
   const t = useTranslations("Leo");
+  const { calls } = useCall911State();
+
+  const callsWithSignal100 = React.useMemo(
+    () =>
+      calls
+        .filter((call) => call.isSignal100)
+        .map((call) => `#${call.caseNumber}`)
+        .join(", "),
+    [calls],
+  );
 
   return (
     <>
@@ -51,7 +62,10 @@ function Component({ audio, enabled }: { audio: any; enabled: boolean }) {
 
       {enabled ? (
         <div role="alert" className="p-2 px-3 my-2 font-semibold text-white bg-red-500 rounded-md">
-          <p>{t("signal100enabled")}</p>
+          <p>
+            {t("signal100enabled")}{" "}
+            {callsWithSignal100.length > 0 ? `(${callsWithSignal100})` : null}
+          </p>
         </div>
       ) : null}
     </>

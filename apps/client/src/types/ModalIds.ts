@@ -80,6 +80,7 @@ export const enum ModalIds {
   SelectDeputy = "SelectDeputyModal",
   ManageDeputy = "ManageDeputyModal",
   ManageAOP = "ManageAOPModal",
+  EnableSignal100 = "EnableSignal100",
 
   ManageTruckLog = "ManageTruckLogModal",
 
