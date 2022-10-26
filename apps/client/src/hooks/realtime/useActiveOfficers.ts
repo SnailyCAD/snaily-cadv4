@@ -47,6 +47,8 @@ export function useActiveOfficers() {
 
   const handleSetActiveOfficer = React.useCallback(
     (data: (Officer | CombinedLeoUnit)[]) => {
+      setActiveOfficers(data);
+
       const activeOfficer = data.find((v) => {
         if (isUnitCombined(v)) {
           return v.officers.some((v) => v.userId === user?.id);
@@ -70,7 +72,6 @@ export function useActiveOfficers() {
     });
 
     if (Array.isArray(json.officers)) {
-      setActiveOfficers(json.officers);
       handleSetActiveOfficer(json.officers);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
