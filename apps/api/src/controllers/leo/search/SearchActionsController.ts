@@ -24,6 +24,7 @@ import {
   User,
   CustomFieldCategory,
   SuspendedCitizenLicenses,
+  DiscordWebhookType,
 } from "@prisma/client";
 import { UseBeforeEach, Context } from "@tsed/common";
 import { ContentType, Description, Post, Put } from "@tsed/schema";
@@ -41,6 +42,8 @@ import {
 import { citizenObjectFromData } from "lib/citizen";
 import { generateString } from "utils/generateString";
 import type * as APITypes from "@snailycad/types/api";
+import { createVehicleImpoundedWebhookData } from "controllers/calls/TowController";
+import { sendDiscordWebhook } from "lib/discord/webhooks";
 
 @Controller("/search/actions")
 @UseBeforeEach(IsAuth)
@@ -417,6 +420,13 @@ export class SearchActionsController {
       },
       include: vehicleSearchInclude,
     });
+
+    try {
+      const data = createVehicleImpoundedWebhookData(impoundedVehicle);
+      await sendDiscordWebhook({ type: DiscordWebhookType.VEHICLE_IMPOUNDED, data });
+    } catch (error) {
+      console.error("Could not send Discord webhook.", error);
+    }
 
     return appendCustomFields(impoundedVehicle, CustomFieldCategory.VEHICLE);
   }
