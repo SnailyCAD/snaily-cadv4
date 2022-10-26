@@ -28,6 +28,11 @@ export async function handleRequest<T = any>(
   );
   const parsedCookie = req?.headers.cookie;
 
+  let contentType = "application/json";
+  if (data instanceof FormData) {
+    contentType = "multipart/form-data";
+  }
+
   try {
     const res = await axios({
       url: `${apiUrl}${path}`,
@@ -37,7 +42,7 @@ export async function handleRequest<T = any>(
       params: options?.params,
       headers: {
         Session: parsedCookie ?? "",
-        "Content-Type": "application/json",
+        "Content-Type": contentType,
         "is-from-dispatch": String(isDispatchUrl),
       },
     });
