@@ -60,5 +60,15 @@
     "alert_deleteCallEvent": "Вы уверены, что хотите удалить событие? Это дейтвие необратимо.",
     "alert_end911Call": "Вы уверены, что хотите завершить вызов?",
     "alert_endTowCall": "Вы уверены, что хотите завершить вызов?"
+  },
+  "Events": {
+    "unitAssignedToCall": "<span>{unit}</span> был прикреплен к вызову.",
+    "unitUnassignedToCall": "<span>{unit}</span> был откреплен от вызова.",
+    "unitsAssignedToCall": "<span>{unit}</span> был прикреплен к вызову.",
+    "unitsUnassignedToCall": "<span>{unit}</span> был откреплен от вызова.",
+    "unitArrivedOnScene": "<span>{unit}</span> прибыл на место происшествия.",
+    "unitPressedPanicButton": "<span>{unit}</span> нажал кнопку паники",
+    "unitEnRoute": "<span>{unit}</span> в пути.",
+    "unitOnScene": "<span>{unit}</span> на месте происшествия."
   }
 }

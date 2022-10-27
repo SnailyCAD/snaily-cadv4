@@ -43,6 +43,7 @@
     "manageLicenses": "Управление лицензиями",
     "licenses": "Лицензии",
     "licenseSuspendedInfo": "Лицензия приостановлена. Обратитесь к офицеру полиции для отмены приостановления",
+    "licenseNumber": "Номер лицензии",
     "alert_deleteCitizen": "Вы уверены, что хотите удалить <span>{citizen}</span>? Это действие необратимо."
   },
   "Vehicles": {
