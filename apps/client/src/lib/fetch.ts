@@ -29,7 +29,10 @@ export async function handleRequest<T = any>(
   const parsedCookie = req?.headers.cookie;
 
   let contentType = "application/json";
-  if (data instanceof FormData) {
+  const formData = data as unknown as FormData | undefined;
+
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (formData?.get?.("file") || formData?.get?.("image")) {
     contentType = "multipart/form-data";
   }
 
