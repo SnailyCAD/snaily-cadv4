@@ -52,11 +52,6 @@ export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
       const utterThis = new SpeechSynthesisUtterance(text);
 
       const availableVoice = availableVoices.find((voice) => voice.voiceURI === voiceURI);
-
-      console.log({ shouldSpeakIncomingCall, speechVoice: user?.soundSettings?.speechVoice });
-
-      console.log({ availableVoice, voiceURI });
-
       if (voiceURI && availableVoice) {
         utterThis.voice = availableVoice;
       }
