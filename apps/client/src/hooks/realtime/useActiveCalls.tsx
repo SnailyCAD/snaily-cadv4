@@ -11,6 +11,7 @@ import type { ActiveDeputy } from "state/emsFdState";
 import type { ActiveOfficer } from "state/leoState";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
+import { useTranslations } from "use-intl";
 
 interface UseActiveCallsOptions {
   calls: Full911Call[];
@@ -24,10 +25,13 @@ export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
   const call911State = useCall911State();
   const { user } = useAuth();
   const { openModal } = useModal();
+  const t = useTranslations();
 
   const shouldPlayAddedToCallSound = user?.soundSettings?.addedToCall ?? false;
   const shouldPlayIncomingCallSound = user?.soundSettings?.incomingCall ?? false;
   const shouldSpeakIncomingCall = user?.soundSettings?.speech ?? true;
+  const voiceURI = user?.soundSettings?.speechVoice;
+  const availableVoices = typeof window !== "undefined" ? window.speechSynthesis.getVoices() : [];
 
   const [addedToCallAudio, , addedToCallControls] = useAudio({
     autoPlay: false,
@@ -41,16 +45,25 @@ export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
 
   function handleSpeech(call: Full911Call) {
     try {
-      const speech = window.speechSynthesis;
+      const text = t(call.type?.value ? "Leo.assignedToCall#WithType" : "Leo.assignedToCall#", {
+        callType: call.type?.value.value,
+        caseNumber: call.caseNumber,
+      });
+      const utterThis = new SpeechSynthesisUtterance(text);
 
-      const utterThis = new SpeechSynthesisUtterance(
-        `You have been assigned to call #${call.caseNumber}. ${
-          call.type ? `Call type: ${call.type?.value.value}.` : ""
-        }`,
-      );
-      utterThis.rate = 0.8;
+      const availableVoice = availableVoices.find((voice) => voice.voiceURI === voiceURI);
 
-      speech.speak(utterThis);
+      console.log({ shouldSpeakIncomingCall, speechVoice: user?.soundSettings?.speechVoice });
+
+      console.log({ availableVoice, voiceURI });
+
+      if (voiceURI && availableVoice) {
+        utterThis.voice = availableVoice;
+      }
+
+      utterThis.rate = 0.9;
+
+      window.speechSynthesis.speak(utterThis);
     } catch (e) {
       console.error("Failed to speak.");
     }
@@ -67,7 +80,12 @@ export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
       icon: "success",
       message: (
         <div>
-          <p>You have been assigned to call #{call.caseNumber}.</p>
+          <p>
+            {t(call.type?.value ? "Leo.assignedToCall#WithType" : "Leo.assignedToCall#", {
+              callType: call.type?.value.value,
+              caseNumber: call.caseNumber,
+            })}
+          </p>
 
           <Button
             onPress={() => {
