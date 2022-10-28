@@ -28,7 +28,7 @@ import {
   Officer,
   CombinedLeoUnit,
 } from "@prisma/client";
-import { UseBeforeEach, Context } from "@tsed/common";
+import { UseBeforeEach, Context, UseBefore } from "@tsed/common";
 import { ContentType, Description, Post, Put } from "@tsed/schema";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { validateSchema } from "lib/validateSchema";
@@ -47,6 +47,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { createVehicleImpoundedWebhookData } from "controllers/calls/TowController";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
+import { ActiveOfficer } from "middlewares/ActiveOfficer";
 
 @Controller("/search/actions")
 @UseBeforeEach(IsAuth)
@@ -387,6 +388,7 @@ export class SearchActionsController {
     return citizen as APITypes.PostSearchActionsCreateCitizen;
   }
 
+  @UseBefore(ActiveOfficer)
   @Post("/impound/:vehicleId")
   @Description("Impound a vehicle from plate search")
   async impoundVehicle(
