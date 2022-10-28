@@ -23,6 +23,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { RegisterVehicleModal } from "components/citizen/vehicles/modals/RegisterVehicleModal";
 import type { PostMarkStolenData } from "@snailycad/types/api";
 import { ImpoundVehicleModal } from "./VehicleSearch/ImpoundVehicleModal";
+import { AllowImpoundedVehicleCheckoutModal } from "./AllowImpoundedVehicleCheckoutModal";
 
 interface Props {
   id?: ModalIds.VehicleSearch | ModalIds.VehicleSearchWithinName;
@@ -231,7 +232,16 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
                       >
                         {t("impoundVehicle")}
                       </Button>
-                    ) : null}
+                    ) : (
+                      <Button
+                        type="button"
+                        onPress={() => openModal(ModalIds.AlertCheckoutImpoundedVehicle)}
+                        variant="cancel"
+                        className="px-1.5"
+                      >
+                        {t("allowCheckout")}
+                      </Button>
+                    )}
 
                     {currentResult ? (
                       <Button
@@ -278,6 +288,10 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
       <ImpoundVehicleModal />
       <ManageVehicleFlagsModal />
       <ManageVehicleLicensesModal />
+      <AllowImpoundedVehicleCheckoutModal
+        onCheckout={(vehicle) => setCurrentResult({ ...vehicle, impounded: false })}
+        vehicle={currentResult}
+      />
       {CREATE_USER_CITIZEN_LEO && isLeo ? (
         <RegisterVehicleModal
           onCreate={(vehicle) => {

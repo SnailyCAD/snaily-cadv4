@@ -25,8 +25,10 @@ import {
   CustomFieldCategory,
   SuspendedCitizenLicenses,
   DiscordWebhookType,
+  Officer,
+  CombinedLeoUnit,
 } from "@prisma/client";
-import { UseBeforeEach, Context } from "@tsed/common";
+import { UseBeforeEach, Context, UseBefore } from "@tsed/common";
 import { ContentType, Description, Post, Put } from "@tsed/schema";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { validateSchema } from "lib/validateSchema";
@@ -44,6 +46,8 @@ import { generateString } from "utils/generateString";
 import type * as APITypes from "@snailycad/types/api";
 import { createVehicleImpoundedWebhookData } from "controllers/calls/TowController";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
+import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
+import { ActiveOfficer } from "middlewares/ActiveOfficer";
 
 @Controller("/search/actions")
 @UseBeforeEach(IsAuth)
@@ -384,13 +388,16 @@ export class SearchActionsController {
     return citizen as APITypes.PostSearchActionsCreateCitizen;
   }
 
+  @UseBefore(ActiveOfficer)
   @Post("/impound/:vehicleId")
   @Description("Impound a vehicle from plate search")
   async impoundVehicle(
     @BodyParams() body: unknown,
     @PathParams("vehicleId") vehicleId: string,
+    @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
   ): Promise<APITypes.PostSearchActionsCreateVehicle> {
     const data = validateSchema(IMPOUND_VEHICLE_SCHEMA, body);
+    const officer = getFirstOfficerFromActiveOfficer({ allowDispatch: true, activeOfficer });
 
     const vehicle = await prisma.registeredVehicle.findUnique({
       where: { id: vehicleId },
@@ -408,16 +415,13 @@ export class SearchActionsController {
       data: {
         valueId: data.impoundLot,
         registeredVehicleId: vehicle.id,
+        officerId: officer?.id ?? null,
       },
     });
 
     const impoundedVehicle = await prisma.registeredVehicle.update({
-      where: {
-        id: vehicle.id,
-      },
-      data: {
-        impounded: true,
-      },
+      where: { id: vehicle.id },
+      data: { impounded: true },
       include: vehicleSearchInclude,
     });
 
