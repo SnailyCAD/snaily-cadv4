@@ -64,6 +64,7 @@ export class UserController {
         statusUpdate: data.soundSettings.statusUpdate,
         incomingCall: data.soundSettings.incomingCall,
         speech: data.soundSettings.speech,
+        speechVoice: data.soundSettings.speechVoice,
       };
 
       const updated = await prisma.userSoundSettings.upsert({

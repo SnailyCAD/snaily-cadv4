@@ -64,6 +64,7 @@ export function AppearanceTab({ availableSounds }: Props) {
       statusUpdate: user.soundSettings?.statusUpdate ?? false,
       incomingCall: user.soundSettings?.incomingCall ?? false,
       speech: user.soundSettings?.speech ?? true,
+      speechVoice: user.soundSettings?.speechVoice ?? null,
     },
   };
   const sounds = Object.keys(INITIAL_VALUES.soundSettings);
@@ -88,6 +89,8 @@ export function AppearanceTab({ availableSounds }: Props) {
   const unAvailableSoundsArr = sounds.filter(
     (v) => v !== "speech" && !availableSounds[soundCamelCaseToKebabCase(v)],
   );
+
+  const voices = typeof window !== "undefined" ? window.speechSynthesis.getVoices() : [];
 
   return (
     <TabsContent aria-label={t("appearanceSettings")} value="appearanceSettings">
@@ -141,86 +144,106 @@ export function AppearanceTab({ availableSounds }: Props) {
             <div className="mb-5">
               <h2 className="text-2xl font-semibold mb-3">{t("sounds")}</h2>
 
-              <div className="mb-3">
-                <FormField className="!mb-0" label="Speech" checkbox>
+              <section id="speech" className="mb-5">
+                <h3 className="text-xl font-semibold mb-3">{t("speech")}</h3>
+
+                <FormField label={t("speech")} checkbox>
                   <Toggle
                     value={values.soundSettings.speech}
                     onCheckedChange={handleChange}
                     name="soundSettings.speech"
                   />
                 </FormField>
-              </div>
 
-              {availableSoundsArr.map((_name) => {
-                const fieldName = _name as keyof typeof INITIAL_VALUES.soundSettings;
-                const kebabCase = soundCamelCaseToKebabCase(fieldName);
-                const soundAvailable = !!availableSounds[kebabCase];
+                <FormField label={t("speechVoice")}>
+                  <Select
+                    values={voices.map((voice) => ({
+                      label: voice.name,
+                      value: voice.voiceURI,
+                    }))}
+                    value={values.soundSettings.speechVoice}
+                    onChange={handleChange}
+                    name="soundSettings.speechVoice"
+                  />
+                </FormField>
+              </section>
 
-                if (!soundAvailable) return null;
-                if (fieldName === "speech") return null;
+              <section>
+                <h3 className="text-xl font-semibold mb-3">{t("otherSounds")}</h3>
 
-                return (
-                  <div className="mb-3 flex flex-row gap-5" key={fieldName}>
-                    <FormField className="!mb-0" label={t(fieldName)} checkbox>
-                      <Toggle
-                        value={values.soundSettings[fieldName]}
-                        onCheckedChange={handleChange}
-                        name={`soundSettings.${fieldName}`}
-                        disabled={!soundAvailable}
-                      />
-                    </FormField>
+                {availableSoundsArr.map((_name) => {
+                  const fieldName = _name as keyof typeof INITIAL_VALUES.soundSettings;
+                  const kebabCase = soundCamelCaseToKebabCase(fieldName);
+                  const soundAvailable = !!availableSounds[kebabCase];
 
-                    <Button
-                      size="xs"
-                      type="button"
-                      onPress={() => {
-                        setCurrentSrc(`/sounds/${kebabCase}.mp3`);
-                        controls.volume(0.1);
-                        controls.play();
-                      }}
-                    >
-                      Test sound (Double Click)
-                    </Button>
-                  </div>
-                );
-              })}
+                  if (!soundAvailable) return null;
+                  if (["speech", "speechVoice"].includes(fieldName)) return null;
 
-              {unAvailableSoundsArr.length <= 0 ? null : (
-                <Accordion.Root className="mt-4" type="multiple">
-                  <Accordion.Item value="unavailable-sounds">
-                    <Accordion.Trigger
-                      title="Click to expand"
-                      className="accordion-state gap-2 flex items-center justify-between pt-1 text-lg font-semibold text-left"
-                    >
-                      <p>Unavailable Sounds</p>
+                  return (
+                    <div className="mb-3 flex flex-row gap-5" key={fieldName}>
+                      <FormField className="!mb-0" label={t(fieldName)} checkbox>
+                        <Toggle
+                          value={values.soundSettings[fieldName] as boolean}
+                          onCheckedChange={handleChange}
+                          name={`soundSettings.${fieldName}`}
+                          disabled={!soundAvailable}
+                        />
+                      </FormField>
 
-                      <CaretDownFill
-                        width={16}
-                        height={16}
-                        className="transform w-4 h-4 transition-transform accordion-state-transform"
-                      />
-                    </Accordion.Trigger>
+                      <Button
+                        size="xs"
+                        type="button"
+                        onPress={() => {
+                          setCurrentSrc(`/sounds/${kebabCase}.mp3`);
+                          controls.volume(0.1);
+                          controls.play();
+                        }}
+                      >
+                        Test sound (Double Click)
+                      </Button>
+                    </div>
+                  );
+                })}
+              </section>
 
-                    <Accordion.Content className="mt-3">
-                      {unAvailableSoundsArr.map((sound) => (
-                        <p key={sound}>{t(sound)}</p>
-                      ))}
+              <section>
+                {unAvailableSoundsArr.length <= 0 ? null : (
+                  <Accordion.Root className="mt-4" type="multiple">
+                    <Accordion.Item value="unavailable-sounds">
+                      <Accordion.Trigger
+                        title="Click to expand"
+                        className="accordion-state gap-2 flex items-center justify-between pt-1 text-lg font-semibold text-left"
+                      >
+                        <h3 className="text-xl font-semibold mb-3">{t("unavailableSounds")}</h3>
 
-                      <p className="mt-2">
-                        These sounds are unavailable.
-                        <a
-                          className="ml-1 underline"
-                          rel="noreferrer"
-                          target="_blank"
-                          href="https://cad-docs.caspertheghost.me/docs/guides/how-set-custom-sounds"
-                        >
-                          They must be added by an admin.
-                        </a>
-                      </p>
-                    </Accordion.Content>
-                  </Accordion.Item>
-                </Accordion.Root>
-              )}
+                        <CaretDownFill
+                          width={16}
+                          height={16}
+                          className="transform w-4 h-4 transition-transform accordion-state-transform"
+                        />
+                      </Accordion.Trigger>
+
+                      <Accordion.Content className="mt-3">
+                        {unAvailableSoundsArr.map((sound) => (
+                          <p key={sound}>{t(sound)}</p>
+                        ))}
+
+                        <p className="mt-2">
+                          These sounds are unavailable.
+                          <a
+                            className="ml-1 underline"
+                            rel="noreferrer"
+                            target="_blank"
+                            href="https://cad-docs.caspertheghost.me/docs/guides/how-set-custom-sounds"
+                          >
+                            They must be added by an admin.
+                          </a>
+                        </p>
+                      </Accordion.Content>
+                    </Accordion.Item>
+                  </Accordion.Root>
+                )}
+              </section>
             </div>
 
             <Button

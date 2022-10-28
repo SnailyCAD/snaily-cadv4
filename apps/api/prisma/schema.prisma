@@ -288,6 +288,7 @@ model ToAddDefaultPermissions {
 model UserSoundSettings {
   id           String  @id @default(uuid())
   speech       Boolean @default(true)
+  speechVoice  String?
   panicButton  Boolean @default(true)
   signal100    Boolean @default(true)
   addedToCall  Boolean @default(false)
