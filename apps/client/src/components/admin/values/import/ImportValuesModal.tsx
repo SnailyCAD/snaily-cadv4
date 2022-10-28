@@ -66,8 +66,6 @@ export function ImportValuesModal({ onImport, type }: Props) {
                 <Input
                   style={{ width: "95%", marginRight: "0.5em" }}
                   onChange={(e) => {
-                    console.log({});
-
                     handleChange(e);
                     setFile(e.target.files?.[0] ?? null);
                   }}

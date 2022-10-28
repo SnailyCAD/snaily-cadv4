@@ -280,7 +280,8 @@ export type StatusValue = Prisma.StatusValue & {
 export type OfficerLog = Prisma.OfficerLog;
 
 export type ImpoundedVehicle = Prisma.ImpoundedVehicle & {
-  vehicle: Prisma.RegisteredVehicle & { model: VehicleValue };
+  officer?: Officer | null;
+  vehicle: Prisma.RegisteredVehicle & { citizen: BaseCitizen; model: VehicleValue };
   location: Prisma.Value;
 };
 

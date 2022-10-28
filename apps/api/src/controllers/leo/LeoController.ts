@@ -190,8 +190,9 @@ export class LeoController {
     const vehicles = await prisma.impoundedVehicle.findMany({
       include: {
         location: true,
+        officer: { include: leoProperties },
         vehicle: {
-          include: { model: { include: { value: true } } },
+          include: { citizen: true, model: { include: { value: true } } },
         },
       },
     });
@@ -208,18 +209,16 @@ export class LeoController {
   async checkoutImpoundedVehicle(
     @PathParams("id") id: string,
   ): Promise<APITypes.DeleteLeoCheckoutImpoundedVehicleData> {
-    const vehicle = await prisma.impoundedVehicle.findUnique({
-      where: { id },
+    const vehicle = await prisma.impoundedVehicle.findFirst({
+      where: { OR: [{ id }, { registeredVehicleId: id }] },
     });
 
     if (!vehicle) {
       throw new NotFound("vehicleNotFound");
     }
 
-    await prisma.impoundedVehicle.delete({
-      where: {
-        id,
-      },
+    await prisma.impoundedVehicle.deleteMany({
+      where: { OR: [{ id }, { registeredVehicleId: id }] },
     });
 
     await prisma.registeredVehicle.update({

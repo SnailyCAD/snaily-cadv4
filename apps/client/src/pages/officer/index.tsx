@@ -233,8 +233,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ req, local
     ["/ems-fd/active-deputies", []],
   ]);
 
-  console.log({ activeOfficers });
-
   return {
     props: {
       session: user,

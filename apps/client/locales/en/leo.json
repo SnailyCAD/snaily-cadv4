@@ -228,6 +228,8 @@
     "warningApplicable": "Warning Applicable",
     "impounded": "Impounded",
     "impoundVehicle": "Impound Vehicle",
+    "impoundedBy": "Impounded by",
+    "impoundedAt": "Impounded at",
     "endsOn": "Ends on",
     "warrantCreatedButApprovalRequired": "Successfully created the warrant, however this CAD requires approval for warrants to be active. The warrant will be available once it has been approved.",
     "alert_deleteNote": "Are you sure you want to delete this note? This action cannot be undone.",
