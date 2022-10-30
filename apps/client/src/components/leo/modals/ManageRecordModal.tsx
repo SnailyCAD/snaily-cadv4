@@ -27,7 +27,7 @@ import { SeizedItemsTable } from "./ManageRecord/seized-items/SeizedItemsTable";
 import { toastMessage } from "lib/toastMessage";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { PostRecordsData, PutRecordsByIdData } from "@snailycad/types/api";
-import Image from "next/future/image";
+import Image from "next/image";
 import { Toggle } from "components/form/Toggle";
 
 interface Props {

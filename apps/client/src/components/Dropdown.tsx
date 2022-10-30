@@ -54,22 +54,24 @@ Dropdown.Item = function DropdownItem({ children, ...rest }: Omit<ButtonProps, "
   );
 };
 
-Dropdown.LinkItem = function LinkItem({ children, ...rest }: JSX.IntrinsicElements["a"]) {
+Dropdown.LinkItem = function LinkItem({
+  children,
+  ...rest
+}: Omit<JSX.IntrinsicElements["a"], "ref">) {
   return (
     <DropdownMenu.Item className="hover:outline-none">
-      <Link href={rest.href!}>
-        <a
-          className={classNames(
-            "outline-none block rounded-md transition-colors w-full text-left bg-transparent",
-            "dark:hover:bg-secondary hover:bg-gray-400 focus:bg-gray-400 dark:focus:bg-secondary",
-            buttonSizes.sm,
-            buttonVariants.transparent,
-            rest.className,
-          )}
-          {...rest}
-        >
-          {children}
-        </a>
+      <Link
+        {...rest}
+        className={classNames(
+          "outline-none block rounded-md transition-colors w-full text-left bg-transparent",
+          "dark:hover:bg-secondary hover:bg-gray-400 focus:bg-gray-400 dark:focus:bg-secondary",
+          buttonSizes.sm,
+          buttonVariants.transparent,
+          rest.className,
+        )}
+        href={rest.href!}
+      >
+        {children}
       </Link>
     </DropdownMenu.Item>
   );

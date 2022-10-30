@@ -92,10 +92,8 @@ export default function BusinessId(props: Props) {
       <Layout className="dark:text-white">
         <p>
           {t("businessWhitelistedCAD")}{" "}
-          <Link href="/business">
-            <a href="/business" className="underline">
-              Return
-            </a>
+          <Link href="/business" className="underline">
+            Return
           </Link>
         </p>
       </Layout>
@@ -121,13 +119,11 @@ export default function BusinessId(props: Props) {
             </Button>
           ) : null}
           {owner?.citizenId === currentEmployee.citizenId ? (
-            <Link href={`/business/${currentBusiness.id}/${currentEmployee.id}/manage`}>
-              <a
-                href={`/business/${currentBusiness.id}/${currentEmployee.id}/manage`}
-                className={classNames(buttonVariants.default, "p-1 px-4 rounded-md")}
-              >
-                {common("manage")}
-              </a>
+            <Link
+              href={`/business/${currentBusiness.id}/${currentEmployee.id}/manage`}
+              className={classNames(buttonVariants.default, "p-1 px-4 rounded-md")}
+            >
+              {common("manage")}
             </Link>
           ) : null}
         </div>

@@ -5,7 +5,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useImageUrl } from "hooks/useImageUrl";
 import { usePermission } from "hooks/usePermission";
 import { useTranslations } from "next-intl";
-import Image from "next/future/image";
+import Image from "next/image";
 import Link from "next/link";
 import { PersonFill } from "react-bootstrap-icons";
 
@@ -59,13 +59,11 @@ export function CitizenListItem({ citizen }: Props) {
         </div>
       </div>
 
-      <Link href={`/citizen/${citizen.id}`}>
-        <a
-          href={`/citizen/${citizen.id}`}
-          className={`rounded-md transition-all p-1 px-3 ${buttonVariants.default}`}
-        >
-          {t("viewCitizen")}
-        </a>
+      <Link
+        href={`/citizen/${citizen.id}`}
+        className={`rounded-md transition-all p-1 px-3 ${buttonVariants.default}`}
+      >
+        {t("viewCitizen")}
       </Link>
     </li>
   );

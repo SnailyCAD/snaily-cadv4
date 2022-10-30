@@ -30,7 +30,7 @@ import type {
 } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
-import Image from "next/future/image";
+import Image from "next/image";
 
 interface Props extends GetDispatchData {
   incidents: GetIncidentsData["incidents"];

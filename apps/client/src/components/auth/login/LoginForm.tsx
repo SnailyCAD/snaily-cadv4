@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Form, Formik, FormikHelpers } from "formik";
 import Link from "next/link";
 import { Discord, Steam } from "react-bootstrap-icons";
@@ -122,13 +121,11 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
                 <h1 className="text-3xl font-bold text-gray-800 dark:text-white">{t("login")}</h1>
 
                 {ALLOW_REGULAR_LOGIN && !isWithinModal ? (
-                  <Link href="/auth/register">
-                    <a
-                      href="/auth/register"
-                      className="inline-block mt-2 underline text-neutral-700 dark:text-gray-200"
-                    >
-                      {t("noAccount")}
-                    </a>
+                  <Link
+                    href="/auth/register"
+                    className="inline-block mt-2 underline text-neutral-700 dark:text-gray-200"
+                  >
+                    {t("noAccount")}
                   </Link>
                 ) : null}
               </header>

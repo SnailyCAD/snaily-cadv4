@@ -24,7 +24,7 @@ import { isBaseValue, hasValueObj } from "@snailycad/utils";
 import { useImageUrl } from "hooks/useImageUrl";
 import { makeDefaultWhatPages } from "./utils";
 import type { ColumnDef } from "@tanstack/react-table";
-import Image from "next/future/image";
+import Image from "next/image";
 
 const TYPE_LABELS = {
   [StatusValueType.SITUATION_CODE]: "Situation Code",

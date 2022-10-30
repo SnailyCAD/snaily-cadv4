@@ -104,13 +104,11 @@ function Register({ cad }: Props) {
                 </h1>
 
                 {ALLOW_REGULAR_LOGIN ? (
-                  <Link href="/auth/login">
-                    <a
-                      href="/auth/login"
-                      className="inline-block mt-2 underline text-neutral-700 dark:text-gray-200"
-                    >
-                      {t("hasAccount")}
-                    </a>
+                  <Link
+                    href="/auth/login"
+                    className="inline-block mt-2 underline text-neutral-700 dark:text-gray-200"
+                  >
+                    {t("hasAccount")}
                   </Link>
                 ) : null}
               </header>

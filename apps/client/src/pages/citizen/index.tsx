@@ -51,13 +51,11 @@ export default function CitizenPage({ citizens }: Props) {
 
       <ul className="grid grid-cols-1 gap-2 mb-3 sm:grid-cols-2 md:grid-cols-3">
         <li>
-          <Link href="/citizen/create">
-            <a
-              href="/citizen/create"
-              className={`rounded-md transition-all p-1 px-4 ${buttonVariants.default} block w-full`}
-            >
-              {t("createCitizen")}
-            </a>
+          <Link
+            href="/citizen/create"
+            className={`rounded-md transition-all p-1 px-4 ${buttonVariants.default} block w-full`}
+          >
+            {t("createCitizen")}
           </Link>
         </li>
         <li>

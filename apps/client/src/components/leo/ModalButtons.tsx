@@ -15,7 +15,7 @@ import { useModal } from "state/modalState";
 import { TonesModal } from "components/dispatch/modals/TonesModal";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useImageUrl } from "hooks/useImageUrl";
-import Image from "next/future/image";
+import Image from "next/image";
 import { useMounted } from "@casper124578/useful";
 import { usePermission } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";

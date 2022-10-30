@@ -204,13 +204,11 @@ export function ManageUnitTab({ unit: data }: Props) {
             </FormField>
 
             <footer className="flex justify-end">
-              <Link href="/admin/manage/units">
-                <a
-                  href="/admin/manage/units"
-                  className={classNames(buttonVariants.cancel, "p-1 px-4 rounded-md")}
-                >
-                  {common("cancel")}
-                </a>
+              <Link
+                href="/admin/manage/units"
+                className={classNames(buttonVariants.cancel, "p-1 px-4 rounded-md")}
+              >
+                {common("cancel")}
               </Link>
 
               <Button type="submit" className="flex items-center">

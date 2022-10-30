@@ -18,7 +18,7 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { useSSRSafeId } from "@react-aria/ssr";
 import type { NameSearchResult } from "state/search/nameSearchState";
 import type { PostBolosData, PutBolosData } from "@snailycad/types/api";
-import Image from "next/future/image";
+import Image from "next/image";
 
 interface Props {
   onClose?(): void;

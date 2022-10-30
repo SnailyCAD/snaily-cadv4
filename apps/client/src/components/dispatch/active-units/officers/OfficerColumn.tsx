@@ -21,7 +21,7 @@ import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { classNames } from "lib/classNames";
 import { ActiveUnitsQualificationsCard } from "components/leo/qualifications/ActiveUnitsQualificationsCard";
 import type { PostDispatchStatusUnmergeUnitById } from "@snailycad/types/api";
-import Image from "next/future/image";
+import Image from "next/image";
 
 interface Props {
   officer: Officer | CombinedLeoUnit;

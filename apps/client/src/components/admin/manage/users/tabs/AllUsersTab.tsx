@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useTranslations } from "use-intl";
 import Link from "next/link";
 import { Rank } from "@snailycad/types";
@@ -93,13 +92,11 @@ export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
               <Status state={user.whitelistStatus}>{user.whitelistStatus.toLowerCase()}</Status>
             ),
             actions: (
-              <Link href={`/admin/manage/users/${user.id}`}>
-                <a
-                  className={classNames(buttonVariants.default, "p-0.5 px-2 rounded-md")}
-                  href={`/admin/manage/users/${user.id}`}
-                >
-                  {common("manage")}
-                </a>
+              <Link
+                className={classNames(buttonVariants.default, "p-0.5 px-2 rounded-md")}
+                href={`/admin/manage/users/${user.id}`}
+              >
+                {common("manage")}
               </Link>
             ),
           };

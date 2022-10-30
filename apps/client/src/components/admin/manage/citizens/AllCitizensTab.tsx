@@ -141,13 +141,11 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
                 actions: (
                   <>
                     {hasPermissions([Permissions.ManageCitizens], true) ? (
-                      <Link href={`/admin/manage/citizens/${citizen.id}`}>
-                        <a
-                          href={`/admin/manage/citizens/${citizen.id}`}
-                          className={classNames(buttonVariants.success, "p-0.5 px-2 rounded-md")}
-                        >
-                          {common("edit")}
-                        </a>
+                      <Link
+                        href={`/admin/manage/citizens/${citizen.id}`}
+                        className={classNames(buttonVariants.success, "p-0.5 px-2 rounded-md")}
+                      >
+                        {common("edit")}
                       </Link>
                     ) : null}
                     {hasPermissions([Permissions.DeleteCitizens], true) ? (

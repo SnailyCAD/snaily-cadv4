@@ -21,7 +21,7 @@ import { OfficerRank } from "components/leo/OfficerRank";
 import { UnitDepartmentStatus } from "components/leo/UnitDepartmentStatus";
 import type { DeleteMyOfficerByIdData, GetMyOfficersData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
-import Image from "next/future/image";
+import Image from "next/image";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageOfficerModal = dynamic(
