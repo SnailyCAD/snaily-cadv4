@@ -104,7 +104,7 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
   }
 
   React.useEffect(() => {
-    dispatchState.setAllOfficers(officers.officers);
+    dispatchState.setAllOfficers(officers);
     dispatchState.setAllDeputies(deputies);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [officers, deputies]);

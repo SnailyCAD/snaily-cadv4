@@ -40,9 +40,10 @@ export default function MapPage(props: Props) {
   const state = useDispatchState();
   const call911State = useCall911State();
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, react-hooks/exhaustive-deps
-  const _officers = props.officers?.officers ?? [];
-  const activeOfficers = React.useMemo(() => [..._officers].filter(activeFilter), [_officers]);
+  const activeOfficers = React.useMemo(
+    () => [...props.officers].filter(activeFilter),
+    [props.officers],
+  );
 
   const activeDeputies = React.useMemo(
     () => [...props.deputies].filter(activeFilter),
@@ -53,13 +54,11 @@ export default function MapPage(props: Props) {
     call911State.setCalls(props.calls.calls);
     state.setBolos(props.bolos);
 
-    state.setAllOfficers(props.officers.officers);
+    state.setAllOfficers(props.officers);
     state.setAllDeputies(props.deputies);
 
     state.setActiveDeputies(activeDeputies);
-    if (state.activeOfficers.length <= 0) {
-      state.setActiveOfficers(activeOfficers);
-    }
+    state.setActiveOfficers(activeOfficers);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props, activeDeputies, activeOfficers]);
@@ -97,7 +96,11 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
     ["/admin/values/codes_10", []],
     ["/911-calls", { calls: [], totalCount: 0 }],
     ["/bolos", []],
+<<<<<<< HEAD
     ["/dispatch?isServer=true", { deputies: [], officers: { officers: [], totalCount: 0 } }],
+=======
+    ["/dispatch", { deputies: [], officers: [] }],
+>>>>>>> parent of e6e3b00d (:hammer: chore: load first 25 officers (improve server time) (#1185))
   ]);
 
   return {

@@ -27,7 +27,7 @@ test("Should correctly calculate age", () => {
 });
 
 test("Should correctly calculate age", () => {
-  expect(calculateAge(DOB_2)).toMatchInlineSnapshot('"69"');
+  expect(calculateAge(DOB_2)).toMatchInlineSnapshot('"68"');
 });
 
 test("Should return 'yes' -> true", () => {

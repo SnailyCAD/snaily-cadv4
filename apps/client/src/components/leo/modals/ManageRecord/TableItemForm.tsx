@@ -91,6 +91,8 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
     counts: 1,
   };
 
+  console.log({ values });
+
   const handleValueChange = (
     fieldName: string,
     enabled?: boolean,
