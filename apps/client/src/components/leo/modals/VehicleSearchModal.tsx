@@ -85,13 +85,14 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
     openModal(ModalIds.ManageVehicleLicenses);
   }
 
-  async function handleMarkStolen() {
+  async function handleMarkStolen(stolen: boolean) {
     if (!currentResult) return;
 
     const { json } = await execute<PostMarkStolenData>({
       path: `/bolos/mark-stolen/${currentResult.id}`,
       method: "POST",
       data: {
+        value: stolen,
         id: currentResult.id,
         color: currentResult.color,
         modelId: currentResult.modelId,
@@ -100,7 +101,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
     });
 
     if (json) {
-      const updatedVehicle = { ...currentResult, reportedStolen: true };
+      const updatedVehicle = { ...currentResult, reportedStolen: stolen };
 
       setCurrentResult(updatedVehicle);
 
@@ -215,13 +216,22 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
                     {showMarkVehicleAsStolenButton ? (
                       <Button
                         type="button"
-                        onPress={() => handleMarkStolen()}
+                        onPress={() => handleMarkStolen(true)}
                         variant="cancel"
                         className="px-1.5"
                       >
                         {vT("reportAsStolen")}
                       </Button>
-                    ) : null}
+                    ) : (
+                      <Button
+                        type="button"
+                        onPress={() => handleMarkStolen(false)}
+                        variant="cancel"
+                        className="px-1.5"
+                      >
+                        {vT("unmarkAsStolen")}
+                      </Button>
+                    )}
 
                     {showImpoundVehicleButton ? (
                       <Button

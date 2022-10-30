@@ -174,7 +174,7 @@ export class BoloController {
     permissions: [Permissions.Dispatch, Permissions.Leo],
   })
   async reportVehicleStolen(@BodyParams() body: any): Promise<APITypes.PostMarkStolenData> {
-    const { id, color, plate } = body;
+    const { id, color, plate, value } = body;
 
     const vehicle = await prisma.registeredVehicle.findUnique({
       where: { id },
@@ -185,43 +185,47 @@ export class BoloController {
       throw new NotFound("vehicleNotFound");
     }
 
+    const isStolen = typeof value === "boolean" ? value : true;
+
     await prisma.registeredVehicle.update({
       where: {
         id: vehicle.id,
       },
-      data: {
-        reportedStolen: true,
-      },
+      data: { reportedStolen: isStolen },
     });
 
-    let existingId = "";
-    if (plate) {
-      const existing = await prisma.bolo.findFirst({
-        where: { plate, type: BoloType.VEHICLE, description: "stolen" },
+    let bolo: Bolo | undefined;
+
+    if (isStolen) {
+      let existingId = "";
+      if (plate) {
+        const existing = await prisma.bolo.findFirst({
+          where: { plate, type: BoloType.VEHICLE, description: "stolen" },
+        });
+
+        if (existing) {
+          existingId = existing.id;
+        }
+      }
+
+      const data = {
+        description: "stolen",
+        type: BoloType.VEHICLE,
+        color: color || null,
+        model: vehicle?.model?.value?.value ?? null,
+        plate: plate || null,
+      };
+
+      const bolo = await prisma.bolo.upsert({
+        where: { id: existingId },
+        create: data,
+        update: data,
       });
 
-      if (existing) {
-        existingId = existing.id;
-      }
+      this.socket.emitCreateBolo(bolo);
     }
 
-    const data = {
-      description: "stolen",
-      type: BoloType.VEHICLE,
-      color: color || null,
-      model: vehicle?.model?.value?.value ?? null,
-      plate: plate || null,
-    };
-
-    const bolo = await prisma.bolo.upsert({
-      where: { id: existingId },
-      create: data,
-      update: data,
-    });
-
-    this.socket.emitCreateBolo(bolo);
-
-    return bolo;
+    return bolo ?? true;
   }
 
   private async endInactiveBolos(updatedAt: Date) {

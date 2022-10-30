@@ -233,7 +233,7 @@ export type DeleteBolosData = boolean;
  * @method POST
  * @route /bolos/mark-stolen/:id
  */
-export type PostMarkStolenData = Prisma.Bolo;
+export type PostMarkStolenData = Prisma.Bolo | true;
 
 /** citizens */
 /**
