@@ -23,7 +23,6 @@ export async function assignUnitsToCall({ socket, call, unitIds, maxAssignmentsT
     unitIds.map((v) => v.id),
   );
 
-
   const disconnectedUnits: NonNullable<Awaited<ReturnType<typeof handleDeleteAssignedUnit>>>[] = [];
   const connectedUnits: NonNullable<Awaited<ReturnType<typeof handleDeleteAssignedUnit>>>[] = [];
 
