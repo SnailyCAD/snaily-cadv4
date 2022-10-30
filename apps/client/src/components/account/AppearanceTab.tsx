@@ -157,6 +157,7 @@ export function AppearanceTab({ availableSounds }: Props) {
 
                 <FormField label={t("speechVoice")}>
                   <Select
+                    disabled={!values.soundSettings.speech}
                     values={voices.map((voice) => ({
                       label: voice.name,
                       value: voice.voiceURI,
