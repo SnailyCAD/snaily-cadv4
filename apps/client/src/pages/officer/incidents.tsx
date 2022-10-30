@@ -106,7 +106,7 @@ export default function LeoIncidents({
   }
 
   React.useEffect(() => {
-    dispatchState.setAllOfficers(officers.officers);
+    dispatchState.setAllOfficers(officers);
     dispatchState.setAllDeputies(deputies);
     setActiveOfficer(activeOfficer);
     // eslint-disable-next-line react-hooks/exhaustive-deps

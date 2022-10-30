@@ -1,6 +1,5 @@
 import type * as Prisma from "@prisma/client";
 import type * as Types from "../index.js";
-import type { GetActiveOfficersData } from "./leo.js";
 
 /** calls */
 /**
@@ -90,7 +89,7 @@ export type Delete911CallEventByIdData = Get911CallsData["calls"][number];
  */
 export interface GetDispatchData {
   deputies: Types.EmsFdDeputy[];
-  officers: GetActiveOfficersData;
+  officers: (Types.Officer | Types.CombinedLeoUnit)[];
   activeIncidents: Types.LeoIncident[];
   activeDispatchers: (Prisma.ActiveDispatchers & {
     user: Pick<Types.User, "id" | "rank" | "username" | "isLeo" | "isEmsFd">;
