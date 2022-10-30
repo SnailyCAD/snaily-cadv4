@@ -185,7 +185,6 @@ export class LeoController {
       },
     });
 
-    console.log({ vehicles });
 
     return vehicles;
   }

@@ -96,11 +96,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
     ["/admin/values/codes_10", []],
     ["/911-calls", { calls: [], totalCount: 0 }],
     ["/bolos", []],
-<<<<<<< HEAD
-    ["/dispatch?isServer=true", { deputies: [], officers: { officers: [], totalCount: 0 } }],
-=======
     ["/dispatch", { deputies: [], officers: [] }],
->>>>>>> parent of e6e3b00d (:hammer: chore: load first 25 officers (improve server time) (#1185))
   ]);
 
   return {
