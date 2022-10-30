@@ -37,7 +37,7 @@ import type {
   PostLeoSearchCitizenData,
   PutSearchActionsLicensesData,
 } from "@snailycad/types/api";
-import Image from "next/future/image";
+import Image from "next/image";
 
 const VehicleSearchModal = dynamic(
   async () => (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal,

@@ -22,7 +22,7 @@ import type {
   PostEmsFdMedicalRecordsSearchData,
 } from "@snailycad/types/api";
 import { classNames } from "lib/classNames";
-import Image from "next/future/image";
+import Image from "next/image";
 import format from "date-fns/format";
 
 interface Props {

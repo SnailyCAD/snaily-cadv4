@@ -174,13 +174,11 @@ export default function ManageCitizens(props: Props) {
               </FormRow>
 
               <div className="flex justify-end mt-3">
-                <Link href="/admin/manage/users">
-                  <a
-                    href="/admin/manage/users"
-                    className={classNames(buttonVariants.cancel, "p-1 px-4 rounded-md")}
-                  >
-                    {common("goBack")}
-                  </a>
+                <Link
+                  href="/admin/manage/users"
+                  className={classNames(buttonVariants.cancel, "p-1 px-4 rounded-md")}
+                >
+                  {common("goBack")}
                 </Link>
                 <Button
                   className="flex items-center"

@@ -2,7 +2,7 @@ import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { useFormikContext } from "formik";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useImageUrl } from "hooks/useImageUrl";
-import Image from "next/future/image";
+import Image from "next/image";
 import type { NameSearchResult } from "state/search/nameSearchState";
 
 interface Props {

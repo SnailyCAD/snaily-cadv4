@@ -9,7 +9,7 @@ import { ActiveUnitsQualificationsCard } from "components/leo/qualifications/Act
 import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import type { EmsFdDeputy } from "@snailycad/types";
-import Image from "next/future/image";
+import Image from "next/image";
 
 interface Props {
   isDispatch: boolean;

@@ -12,7 +12,7 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import type { NameSearchResult } from "state/search/nameSearchState";
 import type { DeleteReleaseJailedCitizenData } from "@snailycad/types/api";
-import Image from "next/future/image";
+import Image from "next/image";
 
 interface Props {
   citizen: (BaseCitizen & { recordId: string }) | null;

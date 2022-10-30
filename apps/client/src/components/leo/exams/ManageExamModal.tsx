@@ -22,7 +22,7 @@ import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import type { NameSearchResult } from "state/search/nameSearchState";
 import type { PostLicenseExamsData, PutLicenseExamByIdData } from "@snailycad/types/api";
-import Image from "next/future/image";
+import Image from "next/image";
 
 interface Props {
   exam: LicenseExam | null;

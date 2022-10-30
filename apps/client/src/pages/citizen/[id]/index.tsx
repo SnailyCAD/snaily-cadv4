@@ -26,7 +26,7 @@ import { FullDate } from "components/shared/FullDate";
 import { RecordsTab } from "components/leo/modals/NameSearchModal/tabs/RecordsTab";
 import { classNames } from "lib/classNames";
 import type { DeleteCitizenByIdData } from "@snailycad/types/api";
-import Image from "next/future/image";
+import Image from "next/image";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const CitizenImageModal = dynamic(
@@ -159,13 +159,11 @@ export default function CitizenId() {
         </div>
 
         <div className="flex gap-2">
-          <Link href={`/citizen/${citizen.id}/edit`}>
-            <a
-              className={classNames(buttonVariants.default, "p-1 px-4 rounded-md")}
-              href={`/citizen/${citizen.id}/edit`}
-            >
-              {t("editCitizen")}
-            </a>
+          <Link
+            className={classNames(buttonVariants.default, "p-1 px-4 rounded-md")}
+            href={`/citizen/${citizen.id}/edit`}
+          >
+            {t("editCitizen")}
           </Link>
           {ALLOW_CITIZEN_DELETION_BY_NON_ADMIN ? (
             <Button onPress={() => openModal(ModalIds.AlertDeleteCitizen)} variant="danger">

@@ -18,7 +18,7 @@ import { isUnitCombined } from "@snailycad/utils";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useActiveOfficers } from "hooks/realtime/useActiveOfficers";
-import Image from "next/future/image";
+import Image from "next/image";
 import { WarrantStatus } from "@snailycad/types";
 
 interface Props {

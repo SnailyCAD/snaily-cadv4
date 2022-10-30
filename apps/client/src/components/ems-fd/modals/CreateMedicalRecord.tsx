@@ -16,7 +16,7 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { NameSearchResult } from "state/search/nameSearchState";
 import type { PostEmsFdMedicalRecord } from "@snailycad/types/api";
-import Image from "next/future/image";
+import Image from "next/image";
 
 interface Props {
   onCreate?(newV: MedicalRecord): void;
