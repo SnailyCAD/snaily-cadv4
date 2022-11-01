@@ -42,6 +42,7 @@ const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
     include: { department: { include: { value: true } } },
   },
   CALL_TYPE: { name: "callTypeValue" },
+  ADDRESS: { name: "addressValue" },
 };
 
 @Controller("/admin/values/:path")
@@ -78,7 +79,7 @@ export class ValuesController {
             values: await prisma[data.name].findMany({
               include: {
                 ...(data.include ?? {}),
-                _count: true,
+                ...(type === "ADDRESS" ? {} : { _count: true }),
                 value: true,
               },
               orderBy: { value: { position: "asc" } },
@@ -127,11 +128,32 @@ export class ValuesController {
     const data = GET_VALUES[type];
 
     if (data) {
+      let where: any = {
+        value: { isDisabled: false, value: { contains: query, mode: "insensitive" } },
+      };
+
+      if (ValueType.ADDRESS === type) {
+        where = {
+          OR: [
+            { value: { value: { contains: query, mode: "insensitive" } } },
+            { county: { contains: query, mode: "insensitive" } },
+            { postal: { contains: query, mode: "insensitive" } },
+          ],
+          AND: [
+            {
+              value: {
+                isDisabled: false,
+              },
+            },
+          ],
+        };
+      }
+
       // @ts-expect-error ignore
       const values = await prisma[data.name].findMany({
         include: { ...(data.include ?? {}), value: true },
         orderBy: { value: { position: "asc" } },
-        where: { value: { isDisabled: false, value: { contains: query, mode: "insensitive" } } },
+        where,
       });
 
       return values;

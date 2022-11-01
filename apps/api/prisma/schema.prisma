@@ -523,7 +523,7 @@ model Value {
 
 model AddressValue {
   id      String  @id @default(cuid())
-  value   Value   @relation("addressValueToValue", fields: [valueId], references: [id])
+  value   Value   @relation("addressValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
   valueId String
   county  String?
   postal  String?

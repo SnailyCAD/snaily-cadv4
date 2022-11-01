@@ -54,7 +54,8 @@
     "user": "User",
     "savedSettingsSuccess": "Settings successfully saved.",
     "select": "Select...",
-    "item": "Item"
+    "item": "Item",
+    "address": "Address"
   },
   "Nav": {
     "citizen": "Citizen",
