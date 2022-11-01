@@ -518,6 +518,19 @@ model Value {
   CallTypeValue                   CallTypeValue[]               @relation("callTypeValueToValue")
   WeaponExam                      WeaponExam[]                  @relation("weaponExamToLicense")
   LicenseExam                     LicenseExam[]                 @relation("examToLicense")
+  AddressValue                    AddressValue[]                @relation("addressValueToValue")
+}
+
+model AddressValue {
+  id String @id @default(cuid())
+
+  value   Value   @relation("addressValueToValue", fields: [valueId], references: [id])
+  valueId String
+  county  String?
+  postal  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model PenalCode {
@@ -1594,4 +1607,5 @@ enum Feature {
   DIVISIONS
   TONES
   LICENSE_EXAMS
+  POSTAL_DROPDOWNS
 }
