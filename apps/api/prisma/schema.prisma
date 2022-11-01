@@ -522,7 +522,7 @@ model Value {
 }
 
 model AddressValue {
-  id      String  @id @default(cuid())
+  id      String  @id @default(uuid())
   value   Value   @relation("addressValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
   valueId String
   county  String?
@@ -1604,5 +1604,4 @@ enum Feature {
   DIVISIONS
   TONES
   LICENSE_EXAMS
-  POSTAL_DROPDOWNS
 }

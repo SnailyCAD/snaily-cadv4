@@ -1,7 +1,4 @@
 -- AlterEnum
-ALTER TYPE "Feature" ADD VALUE 'POSTAL_DROPDOWNS';
-
--- AlterEnum
 ALTER TYPE "ValueType" ADD VALUE 'ADDRESS';
 
 -- CreateTable
@@ -15,4 +12,4 @@ CREATE TABLE "AddressValue" (
 );
 
 -- AddForeignKey
-ALTER TABLE "AddressValue" ADD CONSTRAINT "AddressValue_valueId_fkey" FOREIGN KEY ("valueId") REFERENCES "Value"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "AddressValue" ADD CONSTRAINT "AddressValue_valueId_fkey" FOREIGN KEY ("valueId") REFERENCES "Value"("id") ON DELETE CASCADE ON UPDATE CASCADE;

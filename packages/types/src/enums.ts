@@ -38,7 +38,6 @@ export const Feature = {
   DIVISIONS: "DIVISIONS",
   TONES: "TONES",
   LICENSE_EXAMS: "LICENSE_EXAMS",
-  POSTAL_DROPDOWNS: "POSTAL_DROPDOWNS",
 } as const;
 
 export type Feature = typeof Feature[keyof typeof Feature];
