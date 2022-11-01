@@ -522,15 +522,11 @@ model Value {
 }
 
 model AddressValue {
-  id String @id @default(cuid())
-
+  id      String  @id @default(cuid())
   value   Value   @relation("addressValueToValue", fields: [valueId], references: [id])
   valueId String
   county  String?
   postal  String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model PenalCode {

@@ -400,6 +400,7 @@ export type CourthousePost = Prisma.CourthousePost & {
 };
 
 export type ValueWithValueObj = (
+  | AddressValue
   | VehicleValue
   | WeaponValue
   | StatusValue
@@ -409,7 +410,6 @@ export type ValueWithValueObj = (
   | DriversLicenseCategoryValue
   | QualificationValue
   | CallTypeValue
-  | AddressValue
 ) & {
   _count?: ValueCounts;
 };
