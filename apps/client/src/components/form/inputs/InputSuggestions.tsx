@@ -136,7 +136,7 @@ export function InputSuggestions<Suggestion extends { id: string }>({
         <FocusScope restoreFocus={false}>
           <div
             className={classNames(
-              "absolute z-50 w-full p-2 overflow-auto bg-white rounded-md shadow-md top-11 dark:bg-secondary max-h-60",
+              "absolute z-50 w-full right-0 p-2 overflow-auto bg-white rounded-md shadow-md top-11 dark:bg-secondary max-h-60",
               className,
             )}
           >
