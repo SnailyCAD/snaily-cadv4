@@ -1453,6 +1453,7 @@ enum ValueType {
   CITIZEN_FLAG
   QUALIFICATION
   CALL_TYPE
+  ADDRESS
 }
 
 enum DriversLicenseCategoryType {

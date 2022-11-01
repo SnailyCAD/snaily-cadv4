@@ -128,6 +128,7 @@ export const ValueType = {
   CITIZEN_FLAG: "CITIZEN_FLAG",
   QUALIFICATION: "QUALIFICATION",
   CALL_TYPE: "CALL_TYPE",
+  ADDRESS: "ADDRESS",
 } as const;
 
 export type ValueType = typeof ValueType[keyof typeof ValueType];

@@ -201,6 +201,8 @@ export type Violation = Prisma.Violation & {
 
 export type SeizedItem = Prisma.SeizedItem;
 
+export type AddressValue = Prisma.AddressValue & { value: Value };
+
 export type DivisionValue = Prisma.DivisionValue & { value: Value };
 
 export type CallTypeValue = Prisma.CallTypeValue & { value: Value };
@@ -407,6 +409,7 @@ export type ValueWithValueObj = (
   | DriversLicenseCategoryValue
   | QualificationValue
   | CallTypeValue
+  | AddressValue
 ) & {
   _count?: ValueCounts;
 };
