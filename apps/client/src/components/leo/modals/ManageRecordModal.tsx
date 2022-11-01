@@ -1,4 +1,3 @@
-import * as React from "react";
 import { CREATE_TICKET_SCHEMA } from "@snailycad/schemas";
 import { Loader, Button, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
@@ -29,6 +28,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { PostRecordsData, PutRecordsByIdData } from "@snailycad/types/api";
 import Image from "next/image";
 import { Toggle } from "components/form/Toggle";
+import { AddressPostalSelect } from "components/form/select/PostalSelect";
 
 interface Props {
   record?: Record | null;
@@ -221,13 +221,7 @@ export function ManageRecordModal({
               />
             </FormField>
 
-            <TextField
-              name="postal"
-              label={t("postal")}
-              isDisabled={isReadOnly}
-              errorMessage={errors.postal}
-              onChange={(value) => setFieldValue("postal", value)}
-            />
+            <AddressPostalSelect postalOnly />
 
             <FormField label={t("violations")}>
               <SelectPenalCode

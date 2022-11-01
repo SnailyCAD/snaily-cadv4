@@ -19,6 +19,7 @@ import { useCall911State } from "state/dispatch/call911State";
 import { useModal } from "state/modalState";
 import { AssignedUnitsTable } from "./AssignedUnitsTable";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { AddressPostalSelect } from "components/form/select/PostalSelect";
 
 interface Props {
   call: Full911Call | null;
@@ -114,27 +115,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
             isDisabled={isDisabled}
           />
 
-          <FormRow flexLike>
-            <TextField
-              label={t("location")}
-              name="location"
-              onChange={(value) => setFieldValue("location", value)}
-              value={values.location}
-              errorMessage={errors.location}
-              isDisabled={isDisabled}
-              className="w-full"
-            />
-
-            <TextField
-              label={t("postal")}
-              name="postal"
-              onChange={(value) => setFieldValue("postal", value)}
-              value={values.postal}
-              errorMessage={errors.postal}
-              isDisabled={isDisabled}
-              className="w-1/4"
-            />
-          </FormRow>
+          <AddressPostalSelect addressLabel="location" />
 
           {router.pathname.includes("/citizen") ? (
             <FormField

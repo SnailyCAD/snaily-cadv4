@@ -139,13 +139,7 @@ export class ValuesController {
             { county: { contains: query, mode: "insensitive" } },
             { postal: { contains: query, mode: "insensitive" } },
           ],
-          AND: [
-            {
-              value: {
-                isDisabled: false,
-              },
-            },
-          ],
+          AND: [{ value: { isDisabled: false } }],
         };
       }
 

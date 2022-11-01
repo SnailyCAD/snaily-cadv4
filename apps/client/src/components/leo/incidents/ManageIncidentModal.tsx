@@ -1,5 +1,5 @@
 import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
-import { Input, Loader, Button } from "@snailycad/ui";
+import { Loader, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select, SelectValue } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
@@ -24,6 +24,7 @@ import { CombinedLeoUnit, EmsFdDeputy, LeoIncident, StatusValueType } from "@sna
 import { useValues } from "context/ValuesContext";
 import { isUnitCombined } from "@snailycad/utils";
 import type { PostIncidentsData, PutIncidentByIdData } from "@snailycad/types/api";
+import { AddressPostalSelect } from "components/form/select/PostalSelect";
 
 interface Props {
   incident?: LeoIncident | null;
@@ -192,11 +193,13 @@ export function ManageIncidentModal({
                     />
                   </FormField>
                 </FormRow>
-                <FormRow className="mt-1">
+
+                <FormRow flexLike>
                   <FormField
                     optional
                     errorMessage={errors.situationCodeId}
                     label={t("situationCode")}
+                    className="w-full"
                   >
                     <Select
                       disabled={areFieldsDisabled}
@@ -212,15 +215,9 @@ export function ManageIncidentModal({
                       value={values.situationCodeId}
                     />
                   </FormField>
-                  <FormField errorMessage={errors.postal} label={t("postal")}>
-                    <Input
-                      disabled={areFieldsDisabled}
-                      name="postal"
-                      value={values.postal}
-                      onChange={handleChange}
-                    />
-                  </FormField>
+                  <AddressPostalSelect postalOnly addressLabel="location" />
                 </FormRow>
+
                 <FormField errorMessage={errors.description} label={common("description")}>
                   <Editor
                     isReadonly={areFieldsDisabled}

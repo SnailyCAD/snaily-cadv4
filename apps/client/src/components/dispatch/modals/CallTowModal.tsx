@@ -1,7 +1,6 @@
 import { TOW_SCHEMA } from "@snailycad/schemas";
 import { Loader, Input, Button, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { FormRow } from "components/form/FormRow";
 import { Select } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
@@ -20,6 +19,7 @@ import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import type { VehicleSearchResult } from "state/search/vehicleSearchState";
 import { Checkbox } from "components/form/inputs/Checkbox";
 import type { PostTowCallsData } from "@snailycad/types/api";
+import { AddressPostalSelect } from "components/form/select/PostalSelect";
 
 interface Props {
   call: Full911Call | null;
@@ -99,15 +99,7 @@ export function DispatchCallTowModal({ call }: Props) {
               </FormField>
             ) : null}
 
-            <FormRow>
-              <FormField errorMessage={errors.location} label={t("Calls.location")}>
-                <Input name="location" value={values.location} onChange={handleChange} />
-              </FormField>
-
-              <FormField errorMessage={errors.postal} label={t("Calls.postal")}>
-                <Input name="postal" value={values.postal} onChange={handleChange} />
-              </FormField>
-            </FormRow>
+            <AddressPostalSelect addressLabel="location" />
 
             {isLeo || isDispatch ? (
               <>
