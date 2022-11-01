@@ -42,6 +42,7 @@ import {
   isDLCategoryValue,
   isCallTypeValue,
   isOfficerRankValue,
+  isAddressValue,
 } from "@snailycad/utils/typeguards";
 import { QualificationFields } from "./manage-modal/QualificationFields";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
@@ -53,6 +54,7 @@ import {
   makeDefaultWhatPages,
 } from "lib/admin/values/utils";
 import { DivisionFields } from "./manage-modal/DivisionFields";
+import { AddressFields } from "./manage-modal/AddressFields";
 
 interface Props {
   type: ValueType;
@@ -207,6 +209,9 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     officerRankDepartments:
       value && isOfficerRankValue(value) ? defaultDepartments(value) : undefined,
 
+    postal: value && isAddressValue(value) ? value.postal ?? "" : "",
+    county: value && isAddressValue(value) ? value.county ?? "" : "",
+
     showPicker: false,
     image: "",
   };
@@ -258,6 +263,8 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             {type === ValueType.QUALIFICATION ? (
               <QualificationFields image={image} setImage={setImage} />
             ) : null}
+
+            {type === ValueType.ADDRESS ? <AddressFields /> : null}
 
             {type === ValueType.BUSINESS_ROLE ? (
               <SelectField

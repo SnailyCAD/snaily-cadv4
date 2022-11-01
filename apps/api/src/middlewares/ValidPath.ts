@@ -22,6 +22,7 @@ const validPaths = [
   "penal_code_group",
   "qualification",
   "call_type",
+  "address",
 ];
 
 @Middleware()

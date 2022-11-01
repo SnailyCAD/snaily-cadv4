@@ -62,6 +62,10 @@ export const managementRoutes: SidebarRoute[] = [
 
 export const valueRoutes: SidebarRoute[] = [
   {
+    type: ValueType.ADDRESS,
+    permissions: [Permissions.ManageValueAddress],
+  },
+  {
     type: ValueType.BLOOD_GROUP,
     permissions: [Permissions.ManageValueBloodGroup],
   },

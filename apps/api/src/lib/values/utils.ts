@@ -25,9 +25,11 @@ export type ValuesSelect =
   | ({ name: "departmentValue" } & Prisma.DepartmentValueFindManyArgs)
   | ({ name: "divisionValue" } & Prisma.DivisionValueFindManyArgs)
   | ({ name: "qualificationValue" } & Prisma.QualificationValueFindManyArgs)
-  | ({ name: "callTypeValue" } & Prisma.CallTypeValueFindManyArgs);
+  | ({ name: "callTypeValue" } & Prisma.CallTypeValueFindManyArgs)
+  | ({ name: "addressValue" } & Prisma.AddressValueFindManyArgs);
 
 export const permissionsForRouteType: Record<ValueType, Permissions[]> = {
+  ADDRESS: [Permissions.ManageValueAddress],
   BLOOD_GROUP: [Permissions.ManageValueBloodGroup],
   BUSINESS_ROLE: [Permissions.ManageValueBusinessRole],
   CITIZEN_FLAG: [Permissions.ManageValueCitizenFlag],
