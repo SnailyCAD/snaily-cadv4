@@ -8,12 +8,15 @@ import useonPressOutside from "react-cool-onclickoutside";
 import { useTranslations } from "next-intl";
 import { useDebounce } from "react-use";
 import { isMobile } from "is-mobile";
+import { classNames } from "lib/classNames";
 
 type ApiPathFunc = (inputValue: string) => string;
 type Suggestion = { id: string } & Record<string, unknown>;
 const MIN_LENGTH = 2 as const;
 
 interface Props<Suggestion extends { id: string }> {
+  className?: string;
+  preSuggestions?: Suggestion[];
   inputProps?: Omit<JSX.IntrinsicElements["input"], "ref"> & { errorMessage?: string };
   onSuggestionPress?(suggestion: Suggestion): void;
   Component({ suggestion }: { suggestion: Suggestion }): JSX.Element;
@@ -30,9 +33,11 @@ export function InputSuggestions<Suggestion extends { id: string }>({
   onSuggestionPress,
   options,
   inputProps,
+  preSuggestions,
+  className,
 }: Props<Suggestion>) {
   const [isOpen, setOpen] = React.useState(false);
-  const [suggestions, setSuggestions] = React.useState<Suggestion[]>([]);
+  const [suggestions, setSuggestions] = React.useState<Suggestion[]>(preSuggestions ?? []);
 
   const [localValue, setLocalValue] = React.useState("");
   useDebounce(async () => onSearch(localValue), 150, [localValue]);
@@ -129,7 +134,12 @@ export function InputSuggestions<Suggestion extends { id: string }>({
 
       {isOpen ? (
         <FocusScope restoreFocus={false}>
-          <div className="absolute z-50 w-full p-2 overflow-auto bg-white rounded-md shadow-md top-11 dark:bg-secondary max-h-60">
+          <div
+            className={classNames(
+              "absolute z-50 w-full right-0 p-2 overflow-auto bg-white rounded-md shadow-md top-11 dark:bg-secondary max-h-60",
+              className,
+            )}
+          >
             <ul className="flex flex-col gap-y-1">
               {suggestions.length <= 0 ? (
                 <span className="text-neutral-600 dark:text-gray-500">{common("noOptions")}</span>

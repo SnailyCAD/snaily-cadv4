@@ -13,6 +13,7 @@ import {
   QualificationValue,
   CallTypeValue,
   type AnyValue,
+  AddressValue,
 } from "@snailycad/types";
 import {
   SHOULD_DO_LABELS,
@@ -47,6 +48,14 @@ export function useTableDataOfType(type: ValueType) {
     if (valueType !== type) return;
 
     switch (type) {
+      case ValueType.ADDRESS: {
+        const v = value as AddressValue;
+
+        return {
+          postal: v.postal,
+          county: v.county,
+        };
+      }
       case ValueType.CODES_10: {
         const v = value as StatusValue;
         const whatPages = makeDefaultWhatPages(v);
@@ -173,6 +182,13 @@ export function useTableHeadersOfType(type: ValueType): ColumnDef<{ id: string }
   const t = useTranslations("Values");
 
   switch (type) {
+    case ValueType.ADDRESS: {
+      return [
+        { header: t("county"), accessorKey: "county" },
+        { header: common("postal"), accessorKey: "postal" },
+      ];
+    }
+
     case ValueType.CODES_10: {
       return [
         { header: t("shouldDo"), accessorKey: "shouldDo" },

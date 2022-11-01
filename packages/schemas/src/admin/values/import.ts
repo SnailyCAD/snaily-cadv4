@@ -17,6 +17,14 @@ export const HASH_SCHEMA = BASE_VALUE_SCHEMA.extend({
 
 export const HASH_SCHEMA_ARR = z.array(HASH_SCHEMA).min(1);
 
+/** address */
+export const ADDRESS_SCHEMA = BASE_VALUE_SCHEMA.extend({
+  postal: z.string().optional().nullable(),
+  county: z.string().optional().nullable(),
+});
+
+export const ADDRESS_SCHEMA_ARR = z.array(ADDRESS_SCHEMA);
+
 /**
  * codes_10
  */

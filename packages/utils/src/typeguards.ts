@@ -16,6 +16,7 @@ import {
   PenalCode,
   AnyValue,
   ValueWithValueObj,
+  AddressValue,
 } from "@snailycad/types";
 
 export function isPenalCodeValue(value: AnyValue): value is PenalCode {
@@ -68,6 +69,10 @@ export function isDLCategoryValue(value: AnyValue): value is DriversLicenseCateg
 
 export function isCallTypeValue(value: AnyValue): value is CallTypeValue {
   return hasValueObj(value) && value.value.type === ValueType.CALL_TYPE;
+}
+
+export function isAddressValue(value: AnyValue): value is AddressValue {
+  return hasValueObj(value) && value.value.type === ValueType.ADDRESS;
 }
 
 export function isOfficerRankValue(value: AnyValue): value is Value & { type: "OFFICER_RANK" } {

@@ -91,6 +91,7 @@ export enum Permissions {
   ManageValueCitizenFlag = "ManageValueCitizenFlag",
   ManageValueQualification = "ManageValueQualification",
   ManageValueCallType = "ManageValueCallType",
+  ManageValueAddress = "ManageValueAddress",
 
   // other
   UsePersonalApiToken = "UsePersonalApiToken",

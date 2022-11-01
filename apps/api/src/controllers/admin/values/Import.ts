@@ -23,6 +23,7 @@ import {
   PENAL_CODE_ARR,
   QUALIFICATION_ARR,
   CALL_TYPE_ARR,
+  ADDRESS_SCHEMA_ARR,
 } from "@snailycad/schemas";
 import {
   type DepartmentType,
@@ -103,6 +104,24 @@ interface HandlerOptions {
 }
 
 export const typeHandlers = {
+  ADDRESS: async ({ body, id }: HandlerOptions) => {
+    const data = validateSchema(ADDRESS_SCHEMA_ARR, body);
+
+    return prisma.$transaction(
+      data.map((item) => {
+        return prisma.addressValue.upsert({
+          where: { id: String(id) },
+          ...makePrismaData(ValueType.ADDRESS, {
+            postal: item.postal,
+            county: item.county,
+            value: item.value,
+            isDisabled: item.isDisabled,
+          }),
+          include: { value: true },
+        });
+      }),
+    );
+  },
   VEHICLE: async ({ body, id }: HandlerOptions) => {
     const data = validateSchema(HASH_SCHEMA_ARR, body);
 

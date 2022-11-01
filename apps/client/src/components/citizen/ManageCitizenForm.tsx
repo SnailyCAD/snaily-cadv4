@@ -19,6 +19,7 @@ import {
   ManageLicensesFormFields,
 } from "./licenses/ManageLicensesFormFields";
 import parseISO from "date-fns/parseISO";
+import { AddressPostalSelect } from "components/form/select/PostalSelect";
 
 interface Props {
   citizen: (Citizen & { user?: User | null }) | null;
@@ -233,26 +234,7 @@ export function ManageCitizenForm({
             />
           </FormRow>
 
-          <FormRow flexLike>
-            <TextField
-              className="w-full"
-              errorMessage={errors.address}
-              label={t("address")}
-              value={values.address}
-              onChange={(value) => setFieldValue("address", value)}
-              name="address"
-            />
-
-            <TextField
-              isOptional
-              className="w-full max-w-[200px]"
-              errorMessage={errors.postal}
-              label={common("postal")}
-              value={values.postal}
-              onChange={(value) => setFieldValue("postal", value)}
-              name="postal"
-            />
-          </FormRow>
+          <AddressPostalSelect />
 
           <TextField
             isOptional

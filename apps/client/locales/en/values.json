@@ -25,6 +25,7 @@
     "isConfidential": "Is Confidential",
     "priority": "Priority",
     "isDisabled": "Disabled",
+    "county": "County",
     "alert_deletePenalCodeGroup": "Are you sure you want to delete <span>{group}</span>? This action cannot be undone.",
     "alert_deleteValue": "Are you sure you want to delete <span>{value}</span>? This action cannot be undone!",
     "alert_deleteSelectedValues": "Are you sure you want to delete {length} items? This action cannot be undone"
@@ -136,5 +137,11 @@
     "ADD": "Add Call Type",
     "DELETE": "Delete Call Type",
     "EDIT": "Edit Call Type"
+  },
+  "ADDRESS": {
+    "MANAGE": "Manage Addresses",
+    "ADD": "Add Address",
+    "DELETE": "Delete Address",
+    "EDIT": "Edit Address"
   }
 }

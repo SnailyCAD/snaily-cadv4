@@ -518,6 +518,15 @@ model Value {
   CallTypeValue                   CallTypeValue[]               @relation("callTypeValueToValue")
   WeaponExam                      WeaponExam[]                  @relation("weaponExamToLicense")
   LicenseExam                     LicenseExam[]                 @relation("examToLicense")
+  AddressValue                    AddressValue[]                @relation("addressValueToValue")
+}
+
+model AddressValue {
+  id      String  @id @default(uuid())
+  value   Value   @relation("addressValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  valueId String
+  county  String?
+  postal  String?
 }
 
 model PenalCode {
@@ -1440,6 +1449,7 @@ enum ValueType {
   CITIZEN_FLAG
   QUALIFICATION
   CALL_TYPE
+  ADDRESS
 }
 
 enum DriversLicenseCategoryType {
