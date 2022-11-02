@@ -1,0 +1,28 @@
+diff --git a/node_modules/@sentry/nextjs/esm/config/loaders/prefixLoader.js b/node_modules/@sentry/nextjs/esm/config/loaders/prefixLoader.js
+index ed41fcf..afee7be 100644
+--- a/node_modules/@sentry/nextjs/esm/config/loaders/prefixLoader.js
++++ b/node_modules/@sentry/nextjs/esm/config/loaders/prefixLoader.js
+@@ -14,7 +14,7 @@ function prefixLoader( userCode) {
+ 
+   // Fill in the placeholder
+   let templateCode = fs.readFileSync(templatePath).toString();
+-  templateCode = templateCode.replace('__DIST_DIR__', distDir);
++  templateCode = templateCode.replace('__DIST_DIR__', distDir.replace(/\\/g, '\\\\'));
+ 
+   return `${templateCode}\n${userCode}`;
+ }
+diff --git a/node_modules/@sentry/nextjs/esm/config/loaders/proxyLoader.js b/node_modules/@sentry/nextjs/esm/config/loaders/proxyLoader.js
+index 2003dc0..ec9726c 100644
+--- a/node_modules/@sentry/nextjs/esm/config/loaders/proxyLoader.js
++++ b/node_modules/@sentry/nextjs/esm/config/loaders/proxyLoader.js
+@@ -44,8 +44,8 @@ async function proxyLoader( userCode) {
+   this.addDependency(templatePath);
+ 
+   // Inject the route and the path to the file we're wrapping into the template
+-  templateCode = templateCode.replace(/__ROUTE__/g, parameterizedRoute);
+-  templateCode = templateCode.replace(/__RESOURCE_PATH__/g, this.resourcePath);
++  templateCode = templateCode.replace(/__ROUTE__/g, parameterizedRoute.replace(/\\/g, '\\\\'));
++  templateCode = templateCode.replace(/__RESOURCE_PATH__/g, this.resourcePath.replace(/\\/g, '\\\\'));
+ 
+   // Run the proxy module code through Rollup, in order to split the `export * from '<wrapped file>'` out into
+   // individual exports (which nextjs seems to require).
