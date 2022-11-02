@@ -2367,7 +2367,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/nextjs@npm:^7.16.0":
+"@sentry/nextjs@npm:7.17.3":
   version: 7.17.3
   resolution: "@sentry/nextjs@npm:7.17.3"
   dependencies:
@@ -2392,6 +2392,34 @@ __metadata:
     webpack:
       optional: true
   checksum: 83869b16e0c03f6e30d4ce5d2b994ef01bf36dedf9d5e2fc6ebda91518307df0217c8ec88e57f22f3a3d715dc6a3c7d026fe45e9973bb1e0e9f9a1064ce0a0f2
+  languageName: node
+  linkType: hard
+
+"@sentry/nextjs@patch:@sentry/nextjs@npm%3A7.17.3#./.yarn/patches/@sentry-nextjs-npm-7.17.3-882f25bb0a.patch::locator=snailycad%40workspace%3A.":
+  version: 7.17.3
+  resolution: "@sentry/nextjs@patch:@sentry/nextjs@npm%3A7.17.3#./.yarn/patches/@sentry-nextjs-npm-7.17.3-882f25bb0a.patch::version=7.17.3&hash=8bd58c&locator=snailycad%40workspace%3A."
+  dependencies:
+    "@rollup/plugin-sucrase": 4.0.4
+    "@rollup/plugin-virtual": 3.0.0
+    "@sentry/core": 7.17.3
+    "@sentry/integrations": 7.17.3
+    "@sentry/node": 7.17.3
+    "@sentry/react": 7.17.3
+    "@sentry/tracing": 7.17.3
+    "@sentry/types": 7.17.3
+    "@sentry/utils": 7.17.3
+    "@sentry/webpack-plugin": 1.19.0
+    chalk: 3.0.0
+    rollup: 2.78.0
+    tslib: ^1.9.3
+  peerDependencies:
+    next: ^10.0.8 || ^11.0 || ^12.0 || ^13.0
+    react: 15.x || 16.x || 17.x || 18.x
+    webpack: ">= 4.0.0"
+  peerDependenciesMeta:
+    webpack:
+      optional: true
+  checksum: 155bec850d4646d74f590bda9d3efbf074ab11c75e1d4ca1e6b083dfbab3a9a652e503ee9a2e54531b6ade662c067140919a1308f9d976a135464a511b6648dc
   languageName: node
   linkType: hard
 
