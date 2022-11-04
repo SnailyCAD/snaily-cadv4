@@ -41,7 +41,9 @@ async function bootstrap() {
       "snailycad.commitHash": versions?.currentCommitHash,
     });
 
-    console.log(`SnailyCADv4 is running ${versionStr}`);
+    const nodeVersion = process.versions.node;
+
+    console.log(`SnailyCADv4 is running ${versionStr}. Node version: ${nodeVersion}`);
   } catch (er) {
     $log.error(er);
   }
