@@ -18,17 +18,17 @@ services:
     container_name: "snaily-cad-api"
 
     user: node
-    image: node:16
+    image: node:18
     command: "yarn workspace @snailycad/api start"
     ports:
       - "8080:8080"
     expose:
       - 8080
     volumes:
-      - .:/srv/api
+      - .:/srv/app/api
     env_file:
       - .env
-    working_dir: /srv/api
+    working_dir: /srv/app/api
     depends_on:
       - postgres
     environment:
@@ -41,19 +41,19 @@ services:
     container_name: "snaily-cad-client"
 
     user: node
-    image: node:16
+    image: node:18
     command: "yarn workspace @snailycad/client start"
     ports:
       - "3000:3000"
     expose:
       - 3000
     volumes:
-      - .:/srv/client
+      - .:/srv/app/client
     env_file:
       - .env
     environment:
       NODE_ENV: production
-    working_dir: /srv/client
+    working_dir: /srv/app/client
     depends_on:
       - api
     networks:
