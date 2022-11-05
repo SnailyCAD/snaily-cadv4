@@ -1,0 +1,14 @@
+{
+  "Bleeter": {
+    "bleeter": "Bleeter",
+    "noPosts": "Ainda não há mensagens no bleeter. Volte mais tarde",
+    "createBleet": "Criar Bleet",
+    "editBleet": "Editar Bleet",
+    "deleteBleet": "Excluir Bleet",
+    "viewBleet": "Ver Bleet",
+    "headerImage": "Imagem de Cabeçalho",
+    "bleetTitle": "Título do Bleet",
+    "bleetBody": "Corpo do Bleet",
+    "alert_deleteBleet": "Tem certeza que deseja excluir \"<span>{title}</span>\"? Esta ação não pode ser desfeita."
+  }
+}
