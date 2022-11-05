@@ -8,7 +8,7 @@ const { withSentryConfig } = require("@sentry/nextjs");
  */
 const nextConfig = {
   i18n: {
-    locales: ["en", "en-gb", "ru", "cn", "tc", "fr-FR", "de-DE"],
+    locales: ["en", "en-gb", "ru", "cn", "tc", "fr-FR", "de-DE", "pt-BR"],
     defaultLocale: "en",
   },
   cleanDistDir: true,
