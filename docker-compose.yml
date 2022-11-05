@@ -11,7 +11,7 @@ services:
     networks:
       - cad_web
     volumes:
-      - ./.data:/var/lib/postgresql/data
+      - ./.dev-data:/var/lib/postgresql/data
 
   api:
     container_name: "snaily-cad-api"
