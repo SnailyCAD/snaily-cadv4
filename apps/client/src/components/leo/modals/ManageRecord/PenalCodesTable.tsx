@@ -8,9 +8,10 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 interface Props {
   penalCodes: PenalCode[];
   isReadOnly?: boolean;
+  isWithinCard?: boolean;
 }
 
-export function PenalCodesTable({ isReadOnly, penalCodes }: Props) {
+export function PenalCodesTable({ isReadOnly, penalCodes, isWithinCard = true }: Props) {
   const { values } = useFormikContext<{ violations: any[] }>();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");

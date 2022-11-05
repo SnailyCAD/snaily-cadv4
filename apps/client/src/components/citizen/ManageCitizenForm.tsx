@@ -13,14 +13,14 @@ import {
 } from "@snailycad/ui";
 import { FormRow } from "components/form/FormRow";
 import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
+import { Select, SelectValue } from "components/form/Select";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { CREATE_CITIZEN_SCHEMA, CREATE_CITIZEN_WITH_OFFICER_SCHEMA } from "@snailycad/schemas";
 import { useAuth } from "context/AuthContext";
 import { useValues } from "context/ValuesContext";
 import { handleValidate } from "lib/handleValidate";
 import type { FormikHelpers } from "formik";
-import type { User, Citizen } from "@snailycad/types";
+import type { User, Citizen, PenalCode } from "@snailycad/types";
 import { useTranslations } from "next-intl";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import {
@@ -93,6 +93,7 @@ export function ManageCitizenForm({
     occupation: citizen?.occupation ?? "",
     additionalInfo: citizen?.additionalInfo ?? "",
     socialSecurityNumber: citizen?.socialSecurityNumber ?? "",
+    violations: [] as SelectValue<PenalCode>[],
     ...createDefaultLicensesValues(citizen),
   };
 
@@ -106,7 +107,7 @@ export function ManageCitizenForm({
     if (validatedImage) {
       if (typeof validatedImage === "object") {
         fd = new FormData();
-        fd.set("image", validatedImage, validatedImage.name);
+        fd.set("Citizen.image", validatedImage, validatedImage.name);
       }
     }
 
