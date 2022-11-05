@@ -45,7 +45,12 @@ export function AddressPostalSelect({ postalOnly, addressLabel = "address" }: Pr
   return (
     <FormRow disabled={postalOnly} flexLike>
       {postalOnly ? null : (
-        <FormField className="w-full" label={common(addressLabel)}>
+        <FormField
+          optional
+          errorMessage={errors[addressLabel]}
+          className="w-full"
+          label={common(addressLabel)}
+        >
           <InputSuggestions
             Component={({ suggestion }) => (
               <div className="flex flex-col items-start text-left">
@@ -75,7 +80,7 @@ export function AddressPostalSelect({ postalOnly, addressLabel = "address" }: Pr
         </FormField>
       )}
 
-      <FormField label={common("postal")}>
+      <FormField errorMessage={errors.postal} label={common("postal")} optional>
         <InputSuggestions
           className="w-[300px]"
           onSuggestionPress={handleSuggestionPress}

@@ -3,8 +3,9 @@ node_modules
 yarn-error.log
 dist
 .env
-.data
 
+
+# uploaded images
 apps/api/public/**/*.png
 apps/api/public/**/*.svg
 apps/api/public/**/*.jpg
@@ -12,8 +13,14 @@ apps/api/public/**/*.jpeg
 apps/api/public/**/*.gif
 apps/api/public/**/*.webp
 
+# custom sounds & custom favicon
+apps/client/public/favicon.png
+apps/client/public/sounds/*.mp3
+
+# eslint
 .eslintcache
 
+# yarn
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
@@ -21,18 +28,18 @@ apps/api/public/**/*.webp
 !.yarn/sdks
 !.yarn/versions
 
+# typescript
 .vscode/settings.json
 tsconfig.tsbuildinfo
 
-apps/client/public/favicon.png
-apps/client/public/sounds/*.mp3
-
+# misc
 .husky/_
 .turbo
 apps/**/coverage
 packages/**/coverage
-
 test.mjs
+.data
+.dev-data
 
 # Sentry
 .sentryclirc
