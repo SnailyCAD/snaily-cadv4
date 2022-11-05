@@ -4,6 +4,8 @@ ARG BUILD_CONTEXT
 
 WORKDIR /app
 
+ENV NODE_ENV "production"
+
 COPY package.json .
 
 COPY yarn.lock .
@@ -20,6 +22,8 @@ WORKDIR /app
 RUN yarn set version stable
 
 RUN yarn install
+
+RUN yarn cache clean
 
 COPY ./apps/$BUILD_CONTEXT apps/$BUILD_CONTEXT
 
