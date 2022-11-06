@@ -6,7 +6,6 @@ const LIST_TYPES = ["numbered-list", "bulleted-list"];
 
 export function isMarkActive(editor: SlateEditor, format: keyof Omit<Text, "text">) {
   const marks = Editor.marks(editor);
-
   return marks ? marks[format] === true : false;
 }
 

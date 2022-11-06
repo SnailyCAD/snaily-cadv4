@@ -48,6 +48,7 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
             onError={console.warn}
             locale={locale}
             messages={pageProps.messages}
+            now={new Date()}
           >
             <ValuesProvider router={router} initialData={pageProps}>
               <CitizenProvider initialData={pageProps}>
