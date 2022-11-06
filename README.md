@@ -25,7 +25,9 @@ this is a web based integration for communities who love police roleplaying and 
 
 ## Sponsors
 
-[![GameFocal](https://gamefocal.com/assets/dash/images/brand/logo.png)](https://gamefocal.com?ref=snailycad)
+<a href="https://gamefocal.com?ref=snailycad">
+<img alt="GameFocal" width="150" src="https://gamefocal.com/assets/dash/images/brand/logo.png" />
+</a>
 
 - [runesasia](https://github.com/runesasia)
 - [jxckUK](https://github.com/jxckUK)
