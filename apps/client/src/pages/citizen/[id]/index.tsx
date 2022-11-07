@@ -42,7 +42,7 @@ export default function CitizenId() {
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
   const router = useRouter();
-  const { citizen } = useCitizen();
+  const { citizen, setCurrentCitizen } = useCitizen();
   const { makeImageUrl } = useImageUrl();
   const { cad } = useAuth();
   const { SOCIAL_SECURITY_NUMBERS, WEAPON_REGISTRATION, ALLOW_CITIZEN_DELETION_BY_NON_ADMIN } =
@@ -58,6 +58,19 @@ export default function CitizenId() {
     if (typeof data.json === "boolean" && data.json) {
       closeModal(ModalIds.AlertDeleteCitizen);
       router.push("/citizen");
+    }
+  }
+
+  async function handleDeceased() {
+    if (!citizen) return;
+    const data = await execute<DeleteCitizenByIdData>({
+      path: `/citizen/${citizen.id}/deceased`,
+      method: "POST",
+    });
+
+    if (typeof data.json === "boolean" && data.json) {
+      closeModal(ModalIds.AlertMarkDeceased);
+      setCurrentCitizen({ ...citizen, dead: true, dateOfDead: new Date() });
     }
   }
 
@@ -89,6 +102,15 @@ export default function CitizenId() {
       <Title renderLayoutTitle={false}>
         {citizen.name} {citizen.surname}
       </Title>
+
+      {citizen.dead && citizen.dateOfDead ? (
+        <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
+          {t.rich("citizenDead", {
+            // @ts-expect-error this is a valid element type
+            date: <FullDate>{citizen.dateOfDead}</FullDate>,
+          })}
+        </div>
+      ) : null}
 
       <div className="flex items-start justify-between p-4 card">
         <div className="flex flex-col items-start sm:flex-row">
@@ -166,9 +188,17 @@ export default function CitizenId() {
             {t("editCitizen")}
           </Link>
           {ALLOW_CITIZEN_DELETION_BY_NON_ADMIN ? (
-            <Button onPress={() => openModal(ModalIds.AlertDeleteCitizen)} variant="danger">
-              {t("deleteCitizen")}
-            </Button>
+            <>
+              <Button onPress={() => openModal(ModalIds.AlertDeleteCitizen)} variant="danger">
+                {t("deleteCitizen")}
+              </Button>
+
+              {!citizen.dead ? (
+                <Button onPress={() => openModal(ModalIds.AlertMarkDeceased)} variant="danger">
+                  {t("markCitizenDeceased")}
+                </Button>
+              ) : null}
+            </>
           ) : null}
         </div>
       </div>
@@ -188,15 +218,30 @@ export default function CitizenId() {
       <CitizenImageModal citizen={citizen} />
 
       {ALLOW_CITIZEN_DELETION_BY_NON_ADMIN ? (
-        <AlertModal
-          onDeleteClick={handleDelete}
-          title={t("deleteCitizen")}
-          description={t.rich("alert_deleteCitizen", {
-            citizen: `${citizen.name} ${citizen.surname}`,
-          })}
-          id={ModalIds.AlertDeleteCitizen}
-          state={state}
-        />
+        <>
+          <AlertModal
+            onDeleteClick={handleDelete}
+            title={t("deleteCitizen")}
+            description={t.rich("alert_deleteCitizen", {
+              citizen: `${citizen.name} ${citizen.surname}`,
+            })}
+            id={ModalIds.AlertDeleteCitizen}
+            state={state}
+          />
+
+          {!citizen.dead ? (
+            <AlertModal
+              deleteText={t("markCitizenDeceased")}
+              onDeleteClick={handleDeceased}
+              title={t("markCitizenDeceased")}
+              description={t.rich("alert_markCitizenDeceased", {
+                citizen: `${citizen.name} ${citizen.surname}`,
+              })}
+              id={ModalIds.AlertMarkDeceased}
+              state={state}
+            />
+          ) : null}
+        </>
       ) : null}
     </Layout>
   );
