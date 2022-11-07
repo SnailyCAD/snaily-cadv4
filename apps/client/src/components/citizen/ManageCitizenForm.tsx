@@ -234,7 +234,7 @@ export function ManageCitizenForm({
             />
           </FormRow>
 
-          <AddressPostalSelect />
+          <AddressPostalSelect addressOptional={false} />
 
           <TextField
             isOptional
