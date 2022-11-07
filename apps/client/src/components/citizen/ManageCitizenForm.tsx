@@ -29,6 +29,10 @@ import {
 } from "./licenses/ManageLicensesFormFields";
 import parseISO from "date-fns/parseISO";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
+import {
+  getManageOfficerFieldsDefaults,
+  ManageOfficerFields,
+} from "components/leo/manage-officer/manage-officer-fields";
 
 interface Props {
   citizen: (Citizen & { user?: User | null }) | null;
@@ -56,7 +60,7 @@ export function ManageCitizenForm({
   const [image, setImage] = React.useState<File | string | null>(null);
   const { cad } = useAuth();
   const { gender, ethnicity } = useValues();
-  const { SOCIAL_SECURITY_NUMBERS, ALLOW_CITIZEN_UPDATE_LICENSE } = useFeatureEnabled();
+  const features = useFeatureEnabled();
   const validate = handleValidate(CREATE_CITIZEN_SCHEMA);
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
@@ -72,6 +76,7 @@ export function ManageCitizenForm({
     : "";
 
   const INITIAL_VALUES = {
+    ...getManageOfficerFieldsDefaults({ features, officer: null }),
     userId: citizen?.userId ?? "",
     username: citizen?.user?.username ?? "",
     name: citizen?.name ?? "",
@@ -116,7 +121,8 @@ export function ManageCitizenForm({
       titles={[
         "Basic Information",
         "Optional Information",
-        showLicenseFields && ALLOW_CITIZEN_UPDATE_LICENSE ? "License Information" : null,
+        showLicenseFields && features.ALLOW_CITIZEN_UPDATE_LICENSE ? "License Information" : null,
+        "Officer",
       ]}
       validate={validate}
       onSubmit={handleSubmit}
@@ -190,7 +196,7 @@ export function ManageCitizenForm({
               />
             </FormRow>
 
-            <FormRow flexLike={!SOCIAL_SECURITY_NUMBERS}>
+            <FormRow flexLike={!features.SOCIAL_SECURITY_NUMBERS}>
               <DatePickerField
                 errorMessage={errors.dateOfBirth as string}
                 value={values.dateOfBirth}
@@ -198,7 +204,7 @@ export function ManageCitizenForm({
                 label={t("dateOfBirth")}
               />
 
-              {SOCIAL_SECURITY_NUMBERS ? (
+              {features.SOCIAL_SECURITY_NUMBERS ? (
                 <FormField
                   errorMessage={errors.socialSecurityNumber}
                   label={t("socialSecurityNumber")}
@@ -315,7 +321,7 @@ export function ManageCitizenForm({
         )}
       </MultiFormStep>
 
-      {showLicenseFields && ALLOW_CITIZEN_UPDATE_LICENSE ? (
+      {showLicenseFields && features.ALLOW_CITIZEN_UPDATE_LICENSE ? (
         <MultiFormStep>
           {() => (
             <FormRow flexLike>
@@ -324,6 +330,13 @@ export function ManageCitizenForm({
           )}
         </MultiFormStep>
       ) : null}
+
+      {/* todo:
+            - custom onsubmit
+            - load values
+            - load translations
+          */}
+      <MultiFormStep>{() => <ManageOfficerFields />}</MultiFormStep>
     </MultiForm>
   );
 }
