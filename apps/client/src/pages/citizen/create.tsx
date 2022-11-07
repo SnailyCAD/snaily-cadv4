@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useRouter } from "next/router";
 import { useTranslations } from "use-intl";
 import { Layout } from "components/Layout";
