@@ -27,13 +27,18 @@ export function FullDate({ children, onlyDate, isDateOfBirth, ...rest }: Props) 
       openDelay={100}
       trigger={
         <span className="z-30">
-          {isMounted ? formatDateTime(date, { dateStyle: "medium", timeStyle: "medium" }) : null}
+          {isMounted
+            ? formatDateTime(date, {
+                dateStyle: "medium",
+                timeStyle: onlyDate ? undefined : "medium",
+              })
+            : null}
         </span>
       }
       {...rest}
     >
       <span className="font-semibold">
-        {formatDateTime(date, { dateStyle: "full", timeStyle: "medium" })}
+        {formatDateTime(date, { dateStyle: "full", timeStyle: onlyDate ? undefined : "medium" })}
       </span>
     </HoverCard>
   );
