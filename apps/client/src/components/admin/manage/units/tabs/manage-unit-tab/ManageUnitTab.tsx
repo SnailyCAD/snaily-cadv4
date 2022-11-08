@@ -66,7 +66,7 @@ export function ManageUnitTab({ unit: data }: Props) {
     rank: unit.rankId,
     position: unit.position ?? "",
     suspended: unit.suspended,
-    badgeNumber: unit.badgeNumber ?? 0,
+    badgeNumber: unit.badgeNumber ?? undefined,
   };
 
   return (
@@ -162,7 +162,6 @@ export function ManageUnitTab({ unit: data }: Props) {
               <TextField
                 errorMessage={errors.position}
                 label={t("position")}
-                autoFocus
                 name="position"
                 onChange={(value) => setFieldValue("position", value)}
                 value={values.position}
@@ -173,7 +172,6 @@ export function ManageUnitTab({ unit: data }: Props) {
               <TextField
                 errorMessage={errors.badgeNumber}
                 label={t("badgeNumber")}
-                autoFocus
                 name="badgeNumber"
                 onChange={(value) => setFieldValue("badgeNumber", parseInt(value))}
                 value={String(values.badgeNumber)}
@@ -184,7 +182,6 @@ export function ManageUnitTab({ unit: data }: Props) {
               <TextField
                 errorMessage={errors.callsign}
                 label={t("callsign1")}
-                autoFocus
                 name="callsign"
                 onChange={(value) => setFieldValue("callsign", value)}
                 value={values.callsign}
