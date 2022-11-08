@@ -62,7 +62,12 @@ export class IncidentController {
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("includeAll", Boolean) includeAll = false,
   ): Promise<APITypes.GetIncidentsData> {
-    const where = activeType === "active" ? { isActive: true } : activeType === "inactive" ? { NOT: { isActive: true } } : {};
+    const where =
+      activeType === "active"
+        ? { isActive: true }
+        : activeType === "inactive"
+        ? { NOT: { isActive: true } }
+        : {};
 
     const [totalCount, incidents] = await Promise.all([
       prisma.leoIncident.count({
