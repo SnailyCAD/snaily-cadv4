@@ -928,7 +928,7 @@ model OfficerLog {
 
 model ImpoundedVehicle {
   id                  String            @id @default(uuid())
-  vehicle             RegisteredVehicle @relation(fields: [registeredVehicleId], references: [id])
+  vehicle             RegisteredVehicle @relation(fields: [registeredVehicleId], references: [id], onDelete: Cascade)
   registeredVehicleId String
   location            Value             @relation(fields: [valueId], references: [id])
   valueId             String

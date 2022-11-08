@@ -13,7 +13,7 @@ import {
 import { VEHICLE_SCHEMA, DELETE_VEHICLE_SCHEMA, TRANSFER_VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
-import { NotFound } from "@tsed/exceptions";
+import { BadRequest, NotFound } from "@tsed/exceptions";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { canManageInvariant } from "lib/auth/getSessionUser";
 import { isFeatureEnabled } from "lib/cad";
@@ -223,6 +223,10 @@ export class VehiclesController {
       throw new NotFound("notFound");
     }
 
+    if (vehicle.impounded) {
+      throw new BadRequest("vehicleIsImpounded");
+    }
+
     const existing = await prisma.registeredVehicle.findFirst({
       where: {
         AND: [{ plate: data.plate.toUpperCase() }, { plate: { not: vehicle.plate.toUpperCase() } }],
@@ -388,6 +392,10 @@ export class VehiclesController {
 
     if (!vehicle) {
       throw new NotFound("notFound");
+    }
+
+    if (vehicle.impounded) {
+      throw new BadRequest("vehicleIsImpounded");
     }
 
     if (data.businessId && data.employeeId) {
