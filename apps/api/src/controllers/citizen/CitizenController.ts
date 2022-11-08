@@ -5,7 +5,7 @@ import { QueryParams, BodyParams, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { BadRequest, Forbidden, NotFound } from "@tsed/exceptions";
-import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
+import { CREATE_CITIZEN_SCHEMA, CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
 import fs from "node:fs/promises";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { leoProperties } from "lib/leo/activeOfficer";
@@ -22,6 +22,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { getImageWebPPath } from "utils/image";
 import { validateSocialSecurityNumber } from "lib/citizen/validateSSN";
 import { setEndedSuspendedLicenses } from "lib/citizen/setEndedSuspendedLicenses";
+import { createOfficer } from "controllers/leo/my-officers/create-officer";
 
 export const citizenInclude = {
   user: { select: userProperties },
@@ -225,14 +226,14 @@ export class CitizenController {
 
   @Post("/")
   async createCitizen(
-    @Context("cad") cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings | null },
+    @Context("cad") cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings },
     @Context("user") user: User,
     @BodyParams() body: unknown,
   ): Promise<APITypes.PostCitizensData> {
     const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
 
     const miscSettings = cad.miscCadSettings;
-    if (miscSettings?.maxCitizensPerUser) {
+    if (miscSettings.maxCitizensPerUser) {
       const count = await prisma.citizen.count({
         where: {
           userId: user.id,
@@ -294,6 +295,18 @@ export class CitizenController {
     });
 
     await updateCitizenLicenseCategories(citizen, data);
+
+    if ((data as any).callsign2) {
+      await createOfficer({
+        body,
+        citizen,
+        cad,
+        user,
+        schema: CREATE_OFFICER_SCHEMA.omit({ citizenId: true, image: true }),
+        includeProperties: false,
+      });
+    }
+
     return citizen;
   }
 

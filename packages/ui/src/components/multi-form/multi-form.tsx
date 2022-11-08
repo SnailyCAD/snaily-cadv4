@@ -3,30 +3,49 @@ import { Form, Formik, FormikConfig, FormikProps, FormikValues } from "formik";
 import { classNames } from "../../utils/classNames";
 import { Button } from "../button";
 import { ArrowLeft, ArrowRight } from "react-bootstrap-icons";
-import { MultiFormStep } from "./multi-form-step";
+import { MultiFormStep, MultiFormStepItem } from "./multi-form-step";
 
 interface Props<FormValues extends FormikValues>
   extends Omit<FormikConfig<FormValues>, "children"> {
   children: ReturnType<typeof MultiFormStep>[];
-  titles: (string | null)[];
   submitButton(formState: FormikProps<FormValues>): React.ReactNode;
   canceler?(formState: FormikProps<FormValues>): React.ReactNode;
+  onStepChange(step: number): void;
 }
 
 function MultiForm<FormValues extends FormikValues>(props: Props<FormValues>) {
   const [currentStep, setCurrentStep] = React.useState(0);
   const [snapshot, setSnapshot] = React.useState<FormValues>(props.initialValues);
+  const [submittedSteps, setSubmittedSteps] = React.useState<string[]>([]);
 
   const steps = React.Children.toArray(props.children);
   const isFirstStep = currentStep === 0;
   const isLastStep = currentStep === steps.length - 1;
 
+  const titles = React.useMemo(() => {
+    return steps.map((step) => {
+      if (React.isValidElement<MultiFormStepItem<FormValues>>(step)) {
+        return step.props.title;
+      }
+
+      return null;
+    });
+  }, [steps]);
+
   const getActiveStep = React.useCallback(
     (formikState: any) => {
-      return React.cloneElement(steps[currentStep] as React.ReactElement, { formikState });
+      const elementProps = (steps[currentStep] as any)?.props ?? {};
+
+      const element = React.cloneElement(steps[currentStep] as React.ReactElement, {
+        ...elementProps,
+        formikState,
+      });
+      return element;
     },
     [currentStep, steps],
   );
+
+  console.log({ submittedSteps });
 
   return (
     <Formik<FormValues> {...props} initialValues={snapshot}>
@@ -36,12 +55,13 @@ function MultiForm<FormValues extends FormikValues>(props: Props<FormValues>) {
         return (
           <div>
             <ul className="flex gap-2">
-              {props.titles.map((title, idx) => {
+              {titles.map((title, idx) => {
                 // conditional rendering of the steps
                 // eslint-disable-next-line eqeqeq
                 if (title == null) return null;
 
-                const isActive = props.titles.indexOf(title) === currentStep;
+                const isActive = titles.indexOf(title) === currentStep;
+                const hasBeenSubmitted = submittedSteps.includes(title);
                 const stepNumber = idx + 1;
 
                 return (
@@ -51,7 +71,9 @@ function MultiForm<FormValues extends FormikValues>(props: Props<FormValues>) {
                       type="button"
                       className={classNames(
                         "h-7",
-                        isActive ? "text-blue-500" : "text-neutral-600 dark:text-gray-400",
+                        hasBeenSubmitted || isActive
+                          ? "text-blue-500"
+                          : "text-neutral-600 dark:text-gray-400",
                       )}
                       onClick={() => setCurrentStep(idx)}
                     >
@@ -60,7 +82,9 @@ function MultiForm<FormValues extends FormikValues>(props: Props<FormValues>) {
                     <span
                       className={classNames(
                         "block h-1 w-full rounded-sm",
-                        isActive ? "bg-blue-500" : "bg-neutral-600 dark:bg-gray-400",
+                        hasBeenSubmitted || isActive
+                          ? "bg-blue-500"
+                          : "bg-neutral-600 dark:bg-gray-400",
                       )}
                     />
                   </li>
@@ -92,6 +116,7 @@ function MultiForm<FormValues extends FormikValues>(props: Props<FormValues>) {
                         if (Object.keys(errors).length === 0) {
                           setSnapshot(formikState.values);
                           setCurrentStep((p) => (p >= steps.length ? steps.length : p + 1));
+                          setSubmittedSteps((p) => [...p, titles[currentStep]!]);
                         }
                       }}
                       className="flex gap-2 items-center"

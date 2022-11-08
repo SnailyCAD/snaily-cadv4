@@ -17,11 +17,16 @@ import { useValues } from "context/ValuesContext";
 import { AdvancedSettings } from "../modals/AdvancedSettings";
 
 interface ManageOfficerFieldsProps {
+  hideCitizenField?: boolean;
   image?: File | string | null;
   setImage?: React.Dispatch<React.SetStateAction<File | string | null>>;
 }
 
-export function ManageOfficerFields({ image, setImage }: ManageOfficerFieldsProps) {
+export function ManageOfficerFields({
+  hideCitizenField,
+  image,
+  setImage,
+}: ManageOfficerFieldsProps) {
   const { department, division } = useValues();
   const { setFieldValue, handleChange, errors, values } =
     useFormikContext<ReturnType<typeof getManageOfficerFieldsDefaults>>();
@@ -32,14 +37,16 @@ export function ManageOfficerFields({ image, setImage }: ManageOfficerFieldsProp
     <>
       {setImage && image ? <ImageSelectInput setImage={setImage} image={image} /> : null}
 
-      <CitizenSuggestionsField
-        autoFocus
-        allowsCustomValue
-        label={t("citizen")}
-        fromAuthUserOnly
-        labelFieldName="name"
-        valueFieldName="citizenId"
-      />
+      {hideCitizenField ? null : (
+        <CitizenSuggestionsField
+          autoFocus
+          allowsCustomValue
+          label={t("citizen")}
+          fromAuthUserOnly
+          labelFieldName="name"
+          valueFieldName="citizenId"
+        />
+      )}
 
       {BADGE_NUMBERS ? (
         <TextField

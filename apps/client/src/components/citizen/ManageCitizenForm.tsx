@@ -15,7 +15,7 @@ import { FormRow } from "components/form/FormRow";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
-import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
+import { CREATE_CITIZEN_SCHEMA, CREATE_CITIZEN_WITH_OFFICER_SCHEMA } from "@snailycad/schemas";
 import { useAuth } from "context/AuthContext";
 import { useValues } from "context/ValuesContext";
 import { handleValidate } from "lib/handleValidate";
@@ -29,17 +29,17 @@ import {
 } from "./licenses/ManageLicensesFormFields";
 import parseISO from "date-fns/parseISO";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
-import {
-  getManageOfficerFieldsDefaults,
-  ManageOfficerFields,
-} from "components/leo/manage-officer/manage-officer-fields";
+import { getManageOfficerFieldsDefaults } from "components/leo/manage-officer/manage-officer-fields";
+import { CreateOfficerStep } from "./manage-citizen-form/create-officer-step";
 
 interface Props {
   citizen: (Citizen & { user?: User | null }) | null;
   state: "error" | "loading" | null;
+  // todo: features object
   showLicenseFields?: boolean;
   allowEditingName?: boolean;
   allowEditingUser?: boolean;
+  allowCreatingOfficer?: boolean;
   cancelURL?: string;
   onSubmit(arg0: {
     data: any;
@@ -55,13 +55,16 @@ export function ManageCitizenForm({
   allowEditingName,
   showLicenseFields,
   allowEditingUser,
+  allowCreatingOfficer,
   cancelURL = `/citizen/${citizen?.id}`,
 }: Props) {
   const [image, setImage] = React.useState<File | string | null>(null);
   const { cad } = useAuth();
   const { gender, ethnicity } = useValues();
   const features = useFeatureEnabled();
-  const validate = handleValidate(CREATE_CITIZEN_SCHEMA);
+  const [validationSchema, setValidationSchema] = React.useState<any>(CREATE_CITIZEN_SCHEMA);
+
+  const validate = handleValidate(validationSchema);
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
 
@@ -118,12 +121,18 @@ export function ManageCitizenForm({
 
   return (
     <MultiForm
-      titles={[
-        "Basic Information",
-        "Optional Information",
-        showLicenseFields && features.ALLOW_CITIZEN_UPDATE_LICENSE ? "License Information" : null,
-        "Officer",
-      ]}
+      onStepChange={(step) => {
+        // todo: remove magic numbers
+        // 3 = create officer
+        const schema = step === 3 ? CREATE_CITIZEN_WITH_OFFICER_SCHEMA : CREATE_CITIZEN_SCHEMA;
+        setValidationSchema(schema);
+      }}
+      // titles={[
+      //   "Basic Information",
+      //   "Optional Information",
+      //   showLicenseFields && features.ALLOW_CITIZEN_UPDATE_LICENSE ? "License Information" : null,
+      //   allowCreatingOfficer ? "Officer" : null,
+      // ]}
       validate={validate}
       onSubmit={handleSubmit}
       initialValues={INITIAL_VALUES}
@@ -143,7 +152,7 @@ export function ManageCitizenForm({
         </Link>
       )}
     >
-      <MultiFormStep<typeof INITIAL_VALUES>>
+      <MultiFormStep<typeof INITIAL_VALUES> title="Basic Information" isRequired>
         {({ values, errors, setValues, setFieldValue, handleChange }) => (
           <>
             <ImageSelectInput image={image} setImage={setImage} />
@@ -286,7 +295,7 @@ export function ManageCitizenForm({
         )}
       </MultiFormStep>
 
-      <MultiFormStep<typeof INITIAL_VALUES>>
+      <MultiFormStep<typeof INITIAL_VALUES> title="Optional Information">
         {({ values, errors, setFieldValue }) => (
           <>
             <TextField
@@ -322,7 +331,7 @@ export function ManageCitizenForm({
       </MultiFormStep>
 
       {showLicenseFields && features.ALLOW_CITIZEN_UPDATE_LICENSE ? (
-        <MultiFormStep>
+        <MultiFormStep title="License Information">
           {() => (
             <FormRow flexLike>
               <ManageLicensesFormFields flexType="column" isLeo={false} allowRemoval />
@@ -331,12 +340,9 @@ export function ManageCitizenForm({
         </MultiFormStep>
       ) : null}
 
-      {/* todo:
-            - custom onsubmit
-            - load values
-            - load translations
-          */}
-      <MultiFormStep>{() => <ManageOfficerFields />}</MultiFormStep>
+      {allowCreatingOfficer ? (
+        <MultiFormStep title="Officer">{() => <CreateOfficerStep />}</MultiFormStep>
+      ) : null}
     </MultiForm>
   );
 }

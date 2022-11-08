@@ -124,9 +124,9 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
             ref={formRef}
             onSubmit={handleSubmit}
           >
-            <ManageOfficerFields image={image} setImage={setImage} />
-
             <div>
+              <ManageOfficerFields image={image} setImage={setImage} />
+
               <footer className="flex justify-end mt-5">
                 <Button type="reset" onPress={handleClose} variant="cancel">
                   {common("cancel")}

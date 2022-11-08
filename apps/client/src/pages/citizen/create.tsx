@@ -71,7 +71,13 @@ export default function CreateCitizen() {
 
       <Title>{t("createCitizen")}</Title>
 
-      <ManageCitizenForm onSubmit={onSubmit} citizen={null} state={state} showLicenseFields />
+      <ManageCitizenForm
+        onSubmit={onSubmit}
+        citizen={null}
+        state={state}
+        allowCreatingOfficer
+        showLicenseFields
+      />
     </Layout>
   );
 }
