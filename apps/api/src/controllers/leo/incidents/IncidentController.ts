@@ -40,6 +40,8 @@ export const incidentInclude = {
   unitsInvolved: assignedUnitsInclude,
 };
 
+type ActiveTypes = "active" | "inactive" | "all";
+
 @Controller("/incidents")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
@@ -56,11 +58,11 @@ export class IncidentController {
     fallback: (u) => u.isDispatch || u.isLeo,
   })
   async getAllIncidents(
-    @QueryParams("includeActive", Boolean) includeActive?: boolean,
+    @QueryParams("activeType", ActiveTypes) activeType = "inactive",
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("includeAll", Boolean) includeAll = false,
   ): Promise<APITypes.GetIncidentsData> {
-    const where = includeActive ? {} : { NOT: { isActive: true } };
+    const where = activeType === "active" ? { isActive: true } : activeType === "inactive" ? { NOT: { isActive: true } } : {};
 
     const [totalCount, incidents] = await Promise.all([
       prisma.leoIncident.count({
