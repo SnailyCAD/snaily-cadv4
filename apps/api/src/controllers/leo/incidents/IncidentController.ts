@@ -58,7 +58,7 @@ export class IncidentController {
     fallback: (u) => u.isDispatch || u.isLeo,
   })
   async getAllIncidents(
-    @QueryParams("activeType", ActiveTypes) activeType = "inactive",
+    @QueryParams("activeType", String) activeType: ActiveTypes = "inactive",
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("includeAll", Boolean) includeAll = false,
   ): Promise<APITypes.GetIncidentsData> {
