@@ -118,7 +118,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
     callsign: officer?.callsign ?? "",
     callsign2: officer?.callsign2 ?? "",
     divisions: officer?.divisions.map((v) => ({ value: v.id, label: v.value.value })) ?? [],
-    badgeNumber: BADGE_NUMBERS ? officer?.badgeNumber ?? "" : 123,
+    badgeNumber: BADGE_NUMBERS ? officer?.badgeNumber ?? undefined : undefined,
     citizenId: officer?.citizenId ?? "",
     name: officer ? `${officer.citizen.name} ${officer.citizen.surname}` : "",
     image: undefined,

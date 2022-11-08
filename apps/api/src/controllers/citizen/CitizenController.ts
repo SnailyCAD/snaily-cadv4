@@ -186,6 +186,43 @@ export class CitizenController {
     return true;
   }
 
+  @Post("/:id/deceased")
+  async markCitizenDeceased(
+    @Context("user") user: User,
+    @Context("cad") cad: cad & { features?: CadFeature[] },
+    @PathParams("id") citizenId: string,
+  ): Promise<APITypes.DeleteCitizenByIdData> {
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
+
+    const allowDeletion = isFeatureEnabled({
+      features: cad.features,
+      feature: Feature.ALLOW_CITIZEN_DELETION_BY_NON_ADMIN,
+      defaultReturn: true,
+    });
+
+    if (!allowDeletion) {
+      throw new Forbidden("onlyAdminsCanDeleteCitizens");
+    }
+
+    const citizen = await prisma.citizen.findFirst({
+      where: {
+        id: citizenId,
+        userId: checkCitizenUserId ? user.id : undefined,
+      },
+    });
+
+    if (!citizen) {
+      throw new NotFound("notFound");
+    }
+
+    await prisma.citizen.update({
+      where: { id: citizen.id },
+      data: { dead: true, dateOfDead: new Date() },
+    });
+
+    return true;
+  }
+
   @Post("/")
   async createCitizen(
     @Context("cad") cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings | null },

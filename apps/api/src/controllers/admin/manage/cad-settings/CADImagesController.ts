@@ -58,6 +58,10 @@ export class ManageCitizensController {
     @Context("cad") cad: cad,
     @MultipartFile("files", 4) files: PlatformMulterFile[],
   ) {
+    if (!Array.isArray(files)) {
+      throw new BadRequest("mustUploadMultipleImagesUnderFiles");
+    }
+
     await Promise.all(
       files.map(async (file) => {
         if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {

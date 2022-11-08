@@ -464,6 +464,7 @@ export type DeleteBusinessPostsData = boolean;
  * @route /incidents
  */
 export interface GetIncidentsData {
+  totalCount: number;
   incidents: Types.LeoIncident[];
 }
 

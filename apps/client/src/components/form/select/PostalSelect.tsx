@@ -11,11 +11,19 @@ import { InputSuggestions } from "../inputs/InputSuggestions";
 let hasFetched = false;
 
 interface Props {
+  /**
+   * @default true
+   */
+  addressOptional?: boolean;
   addressLabel?: "address" | "location";
   postalOnly?: boolean;
 }
 
-export function AddressPostalSelect({ postalOnly, addressLabel = "address" }: Props) {
+export function AddressPostalSelect({
+  postalOnly,
+  addressOptional = true,
+  addressLabel = "address",
+}: Props) {
   const { values, errors, setValues, handleChange } = useFormikContext<{
     postal: string | null;
     address: string | null;
@@ -46,7 +54,7 @@ export function AddressPostalSelect({ postalOnly, addressLabel = "address" }: Pr
     <FormRow disabled={postalOnly} flexLike>
       {postalOnly ? null : (
         <FormField
-          optional
+          optional={addressOptional}
           errorMessage={errors[addressLabel]}
           className="w-full"
           label={common(addressLabel)}

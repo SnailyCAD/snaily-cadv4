@@ -23,6 +23,17 @@ this is a web based integration for communities who love police roleplaying and 
 - [Bugs reports & Feature requests](https://github.com/SnailyCAD/snaily-cadv4/issues)
 - [Contributing](./.github/CONTRIBUTING.md)
 
+## Sponsors
+
+<a href="https://gamefocal.com?ref=snailycad">
+<img alt="GameFocal" width="150" src="https://gamefocal.com/assets/dash/images/brand/logo.png" />
+</a>
+
+- [runesasia](https://github.com/runesasia)
+- [jxckUK](https://github.com/jxckUK)
+- [Creizy](https://github.com/Creizy)
+- [Northern524](https://github.com/Northern524)
+
 ## License
 
 [MIT © Dev-CasperTheGhost](./LICENSE)

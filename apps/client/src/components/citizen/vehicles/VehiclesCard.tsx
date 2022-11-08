@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Loader, Button, TextField } from "@snailycad/ui";
 import type { RegisteredVehicle } from "@snailycad/types";

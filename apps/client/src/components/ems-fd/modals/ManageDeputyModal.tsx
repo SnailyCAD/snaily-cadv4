@@ -111,7 +111,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
     callsign: deputy?.callsign ?? "",
     callsign2: deputy?.callsign2 ?? "",
     division: deputy?.divisionId ?? "",
-    badgeNumber: BADGE_NUMBERS ? deputy?.badgeNumber ?? "" : 123,
+    badgeNumber: BADGE_NUMBERS ? deputy?.badgeNumber ?? undefined : undefined,
     image: undefined,
   };
 

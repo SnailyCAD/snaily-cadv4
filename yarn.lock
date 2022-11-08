@@ -670,10 +670,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/env@npm:13.0.0":
-  version: 13.0.0
-  resolution: "@next/env@npm:13.0.0"
-  checksum: 3146f10324366283c22bce0b700a8ae6c7dffad63cb81d698300c1795e7121d1fa0c2b6e0cbf7f7614117b0c3aa15556e88a7727a7b0e59aed054c2dfecb7d58
+"@next/env@npm:13.0.2":
+  version: 13.0.2
+  resolution: "@next/env@npm:13.0.2"
+  checksum: e84eca92328421d9824a82177b018234b2cd0aa59a482569b7a52b16eaabdafe6343f21bec7d15035cb8ea831929097c7d92c711d295630f6b74a655f9ddcad6
   languageName: node
   linkType: hard
 
@@ -686,102 +686,102 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/eslint-plugin-next@npm:13.0.0":
-  version: 13.0.0
-  resolution: "@next/eslint-plugin-next@npm:13.0.0"
+"@next/eslint-plugin-next@npm:13.0.2":
+  version: 13.0.2
+  resolution: "@next/eslint-plugin-next@npm:13.0.2"
   dependencies:
     glob: 7.1.7
-  checksum: 03d3e359165e477978baa4862d88ffe6e4a1d0d944b7e3dc93c1d426b9769fdef6f115b1ac2933c95bdaa3d760667225935736523445330ed9c5b2d62bc055a5
+  checksum: 36570701f4ad8763bfac6a7531dc06124ddbd2b819339a77b47d777ba0037a5302d9f42e17128222b3695c44f130caa106e453bc29872be802ad68da5788ec17
   languageName: node
   linkType: hard
 
-"@next/swc-android-arm-eabi@npm:13.0.0":
-  version: 13.0.0
-  resolution: "@next/swc-android-arm-eabi@npm:13.0.0"
+"@next/swc-android-arm-eabi@npm:13.0.2":
+  version: 13.0.2
+  resolution: "@next/swc-android-arm-eabi@npm:13.0.2"
   conditions: os=android & cpu=arm
   languageName: node
   linkType: hard
 
-"@next/swc-android-arm64@npm:13.0.0":
-  version: 13.0.0
-  resolution: "@next/swc-android-arm64@npm:13.0.0"
+"@next/swc-android-arm64@npm:13.0.2":
+  version: 13.0.2
+  resolution: "@next/swc-android-arm64@npm:13.0.2"
   conditions: os=android & cpu=arm64
   languageName: node
   linkType: hard
 
-"@next/swc-darwin-arm64@npm:13.0.0":
-  version: 13.0.0
-  resolution: "@next/swc-darwin-arm64@npm:13.0.0"
+"@next/swc-darwin-arm64@npm:13.0.2":
+  version: 13.0.2
+  resolution: "@next/swc-darwin-arm64@npm:13.0.2"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@next/swc-darwin-x64@npm:13.0.0":
-  version: 13.0.0
-  resolution: "@next/swc-darwin-x64@npm:13.0.0"
+"@next/swc-darwin-x64@npm:13.0.2":
+  version: 13.0.2
+  resolution: "@next/swc-darwin-x64@npm:13.0.2"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@next/swc-freebsd-x64@npm:13.0.0":
-  version: 13.0.0
-  resolution: "@next/swc-freebsd-x64@npm:13.0.0"
+"@next/swc-freebsd-x64@npm:13.0.2":
+  version: 13.0.2
+  resolution: "@next/swc-freebsd-x64@npm:13.0.2"
   conditions: os=freebsd & cpu=x64
   languageName: node
   linkType: hard
 
-"@next/swc-linux-arm-gnueabihf@npm:13.0.0":
-  version: 13.0.0
-  resolution: "@next/swc-linux-arm-gnueabihf@npm:13.0.0"
+"@next/swc-linux-arm-gnueabihf@npm:13.0.2":
+  version: 13.0.2
+  resolution: "@next/swc-linux-arm-gnueabihf@npm:13.0.2"
   conditions: os=linux & cpu=arm
   languageName: node
   linkType: hard
 
-"@next/swc-linux-arm64-gnu@npm:13.0.0":
-  version: 13.0.0
-  resolution: "@next/swc-linux-arm64-gnu@npm:13.0.0"
+"@next/swc-linux-arm64-gnu@npm:13.0.2":
+  version: 13.0.2
+  resolution: "@next/swc-linux-arm64-gnu@npm:13.0.2"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@next/swc-linux-arm64-musl@npm:13.0.0":
-  version: 13.0.0
-  resolution: "@next/swc-linux-arm64-musl@npm:13.0.0"
+"@next/swc-linux-arm64-musl@npm:13.0.2":
+  version: 13.0.2
+  resolution: "@next/swc-linux-arm64-musl@npm:13.0.2"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@next/swc-linux-x64-gnu@npm:13.0.0":
-  version: 13.0.0
-  resolution: "@next/swc-linux-x64-gnu@npm:13.0.0"
+"@next/swc-linux-x64-gnu@npm:13.0.2":
+  version: 13.0.2
+  resolution: "@next/swc-linux-x64-gnu@npm:13.0.2"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@next/swc-linux-x64-musl@npm:13.0.0":
-  version: 13.0.0
-  resolution: "@next/swc-linux-x64-musl@npm:13.0.0"
+"@next/swc-linux-x64-musl@npm:13.0.2":
+  version: 13.0.2
+  resolution: "@next/swc-linux-x64-musl@npm:13.0.2"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@next/swc-win32-arm64-msvc@npm:13.0.0":
-  version: 13.0.0
-  resolution: "@next/swc-win32-arm64-msvc@npm:13.0.0"
+"@next/swc-win32-arm64-msvc@npm:13.0.2":
+  version: 13.0.2
+  resolution: "@next/swc-win32-arm64-msvc@npm:13.0.2"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@next/swc-win32-ia32-msvc@npm:13.0.0":
-  version: 13.0.0
-  resolution: "@next/swc-win32-ia32-msvc@npm:13.0.0"
+"@next/swc-win32-ia32-msvc@npm:13.0.2":
+  version: 13.0.2
+  resolution: "@next/swc-win32-ia32-msvc@npm:13.0.2"
   conditions: os=win32 & cpu=ia32
   languageName: node
   linkType: hard
 
-"@next/swc-win32-x64-msvc@npm:13.0.0":
-  version: 13.0.0
-  resolution: "@next/swc-win32-x64-msvc@npm:13.0.0"
+"@next/swc-win32-x64-msvc@npm:13.0.2":
+  version: 13.0.2
+  resolution: "@next/swc-win32-x64-msvc@npm:13.0.2"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -2483,11 +2483,11 @@ __metadata:
     "@sentry/node": ^7.17.4
     "@sentry/tracing": ^7.17.4
     "@snaily-cad/image-data-uri": ^3.1.0
-    "@snailycad/config": 1.31.0
-    "@snailycad/permissions": 1.31.0
-    "@snailycad/schemas": 1.31.0
-    "@snailycad/types": 1.31.0
-    "@snailycad/utils": 1.31.0
+    "@snailycad/config": 1.32.0
+    "@snailycad/permissions": 1.32.0
+    "@snailycad/schemas": 1.32.0
+    "@snailycad/types": 1.32.0
+    "@snailycad/utils": 1.32.0
     "@swc/core": ^1.3.14
     "@swc/helpers": ^0.4.12
     "@tsed/common": ^7.2.3
@@ -2565,12 +2565,12 @@ __metadata:
     "@react-aria/ssr": ^3.3.0
     "@sentry/nextjs": ^7.17.4
     "@sentry/tracing": ^7.17.4
-    "@snailycad/config": 1.31.0
-    "@snailycad/permissions": 1.31.0
-    "@snailycad/schemas": 1.31.0
-    "@snailycad/types": 1.31.0
-    "@snailycad/ui": 1.31.0
-    "@snailycad/utils": 1.31.0
+    "@snailycad/config": 1.32.0
+    "@snailycad/permissions": 1.32.0
+    "@snailycad/schemas": 1.32.0
+    "@snailycad/types": 1.32.0
+    "@snailycad/ui": 1.32.0
+    "@snailycad/utils": 1.32.0
     "@tailwindcss/typography": ^0.5.7
     "@tanstack/match-sorter-utils": ^8.5.14
     "@tanstack/react-table": ^8.5.22
@@ -2585,19 +2585,19 @@ __metadata:
     axios: ^1.1.3
     bignumber.js: ^9.1.0
     date-fns: ^2.29.3
-    eslint-config-next: latest
+    eslint-config-next: ^13.0.2
     formik: ^2.2.9
     hex-color-regex: ^1.1.0
     is-hotkey: ^0.2.0
     is-mobile: ^3.1.1
     leaflet: ^1.9.2
     mdast-util-find-and-replace: ^2.2.1
-    next: latest
+    next: ^13.0.2
     next-intl: 2.9.1
     nookies: ^2.5.2
     postcss: ^8.4.18
     pretty-bytes: ^6.0.0
-    react: latest
+    react: 18.2.0
     react-bootstrap-icons: ^1.9.1
     react-colorful: ^5.6.1
     react-cool-onclickoutside: ^1.7.0
@@ -2605,7 +2605,7 @@ __metadata:
     react-digit-input: ^2.1.0
     react-dnd: 16.0.1
     react-dnd-html5-backend: 16.0.1
-    react-dom: latest
+    react-dom: 18.2.0
     react-google-recaptcha-v3: ^1.10.0
     react-hot-toast: ^2.4.0
     react-leaflet: ^4.1.0
@@ -2634,7 +2634,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/config@1.31.0, @snailycad/config@workspace:packages/config":
+"@snailycad/config@1.32.0, @snailycad/config@workspace:packages/config":
   version: 0.0.0-use.local
   resolution: "@snailycad/config@workspace:packages/config"
   dependencies:
@@ -2645,7 +2645,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/permissions@1.31.0, @snailycad/permissions@workspace:packages/permissions":
+"@snailycad/permissions@1.32.0, @snailycad/permissions@workspace:packages/permissions":
   version: 0.0.0-use.local
   resolution: "@snailycad/permissions@workspace:packages/permissions"
   dependencies:
@@ -2657,7 +2657,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/schemas@1.31.0, @snailycad/schemas@workspace:packages/schemas":
+"@snailycad/schemas@1.32.0, @snailycad/schemas@workspace:packages/schemas":
   version: 0.0.0-use.local
   resolution: "@snailycad/schemas@workspace:packages/schemas"
   dependencies:
@@ -2668,18 +2668,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/types@1.31.0, @snailycad/types@workspace:packages/types":
+"@snailycad/types@1.32.0, @snailycad/types@workspace:packages/types":
   version: 0.0.0-use.local
   resolution: "@snailycad/types@workspace:packages/types"
   dependencies:
-    "@snailycad/permissions": 1.31.0
+    "@snailycad/permissions": 1.32.0
     discord-api-types: 0.37.16
     tsup: ^6.3.0
     typescript: ^4.8.4
   languageName: unknown
   linkType: soft
 
-"@snailycad/ui@1.31.0, @snailycad/ui@workspace:packages/ui":
+"@snailycad/ui@1.32.0, @snailycad/ui@workspace:packages/ui":
   version: 0.0.0-use.local
   resolution: "@snailycad/ui@workspace:packages/ui"
   dependencies:
@@ -2710,7 +2710,7 @@ __metadata:
     "@react-types/overlays": ^3.6.4
     "@react-types/select": ^3.6.4
     "@react-types/shared": ^3.15.0
-    "@snailycad/types": 1.31.0
+    "@snailycad/types": 1.32.0
     react-bootstrap-icons: ^1.9.1
     tailwind-merge: ^1.7.0
     tailwindcss: ^3.2.1
@@ -2726,11 +2726,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/utils@1.31.0, @snailycad/utils@workspace:packages/utils":
+"@snailycad/utils@1.32.0, @snailycad/utils@workspace:packages/utils":
   version: 0.0.0-use.local
   resolution: "@snailycad/utils@workspace:packages/utils"
   dependencies:
-    "@snailycad/types": 1.31.0
+    "@snailycad/types": 1.32.0
     c8: ^7.12.0
     tslib: ^2.4.1
     tsup: ^6.3.0
@@ -6403,11 +6403,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-next@npm:latest":
-  version: 13.0.0
-  resolution: "eslint-config-next@npm:13.0.0"
+"eslint-config-next@npm:^13.0.2":
+  version: 13.0.2
+  resolution: "eslint-config-next@npm:13.0.2"
   dependencies:
-    "@next/eslint-plugin-next": 13.0.0
+    "@next/eslint-plugin-next": 13.0.2
     "@rushstack/eslint-patch": ^1.1.3
     "@typescript-eslint/parser": ^5.21.0
     eslint-import-resolver-node: ^0.3.6
@@ -6422,7 +6422,7 @@ __metadata:
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 69f04df8d831aba78df30edec2ce7a7cc5779af89159bfdc42f015d2e038a26e8b2b6e8407873a3827098f5abd21b5657aace0ff014d345465ae98d133ddb285
+  checksum: 7ad2e102de629f72f478c1405fb335816842401f8855e8da251b61714bcec92d9e21b132de67d630ba26b22bf16cd3771ffd689f839ba293043b8c7fa4f6660a
   languageName: node
   linkType: hard
 
@@ -9825,24 +9825,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next@npm:latest":
-  version: 13.0.0
-  resolution: "next@npm:13.0.0"
+"next@npm:^13.0.2":
+  version: 13.0.2
+  resolution: "next@npm:13.0.2"
   dependencies:
-    "@next/env": 13.0.0
-    "@next/swc-android-arm-eabi": 13.0.0
-    "@next/swc-android-arm64": 13.0.0
-    "@next/swc-darwin-arm64": 13.0.0
-    "@next/swc-darwin-x64": 13.0.0
-    "@next/swc-freebsd-x64": 13.0.0
-    "@next/swc-linux-arm-gnueabihf": 13.0.0
-    "@next/swc-linux-arm64-gnu": 13.0.0
-    "@next/swc-linux-arm64-musl": 13.0.0
-    "@next/swc-linux-x64-gnu": 13.0.0
-    "@next/swc-linux-x64-musl": 13.0.0
-    "@next/swc-win32-arm64-msvc": 13.0.0
-    "@next/swc-win32-ia32-msvc": 13.0.0
-    "@next/swc-win32-x64-msvc": 13.0.0
+    "@next/env": 13.0.2
+    "@next/swc-android-arm-eabi": 13.0.2
+    "@next/swc-android-arm64": 13.0.2
+    "@next/swc-darwin-arm64": 13.0.2
+    "@next/swc-darwin-x64": 13.0.2
+    "@next/swc-freebsd-x64": 13.0.2
+    "@next/swc-linux-arm-gnueabihf": 13.0.2
+    "@next/swc-linux-arm64-gnu": 13.0.2
+    "@next/swc-linux-arm64-musl": 13.0.2
+    "@next/swc-linux-x64-gnu": 13.0.2
+    "@next/swc-linux-x64-musl": 13.0.2
+    "@next/swc-win32-arm64-msvc": 13.0.2
+    "@next/swc-win32-ia32-msvc": 13.0.2
+    "@next/swc-win32-x64-msvc": 13.0.2
     "@swc/helpers": 0.4.11
     caniuse-lite: ^1.0.30001406
     postcss: 8.4.14
@@ -9851,8 +9851,8 @@ __metadata:
   peerDependencies:
     fibers: ">= 3.1.0"
     node-sass: ^6.0.0 || ^7.0.0
-    react: ^18.0.0-0
-    react-dom: ^18.0.0-0
+    react: ^18.2.0
+    react-dom: ^18.2.0
     sass: ^1.3.0
   dependenciesMeta:
     "@next/swc-android-arm-eabi":
@@ -9890,7 +9890,7 @@ __metadata:
       optional: true
   bin:
     next: dist/bin/next
-  checksum: 7b5c84728783433c07e3eac65d5d85434f6c056a3e55c417c7636e08d8e1af2532d83f75b8448ddc5c9525145a6a7c93e8482744ee3f2d647841b152306da939
+  checksum: f6fea2ee34a8c490834cbd7688cfb346337a4dc8530282bf50ee94e20277ad66cb00a614c92c07f8b00832795eaa3a10847f10c8d540789b0b1b1f2914a3b239
   languageName: node
   linkType: hard
 
@@ -10979,7 +10979,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:latest":
+"react-dom@npm:18.2.0":
   version: 18.2.0
   resolution: "react-dom@npm:18.2.0"
   dependencies:
@@ -11212,7 +11212,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:>=17, react@npm:latest":
+"react@npm:18.2.0, react@npm:>=17":
   version: 18.2.0
   resolution: "react@npm:18.2.0"
   dependencies:

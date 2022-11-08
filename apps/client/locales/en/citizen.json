@@ -45,6 +45,9 @@
     "licenseSuspendedInfo": "License is suspended. Please contact an officer to revoke the suspension.",
     "licenseNumber": "License Number",
     "unmarkAsStolen": "Unmark as Stolen",
+    "markCitizenDeceased": "Mark Citizen Deceased",
+    "citizenDead": "WARNING: This citizen died on {date}",
+    "alert_markCitizenDeceased": "Are you sure you want to delete <span>{citizen}</span>? Only EMS/FD can mark you alive again.",
     "alert_deleteCitizen": "Are you sure you want to delete <span>{citizen}</span>? This action cannot be undone."
   },
   "Vehicles": {
