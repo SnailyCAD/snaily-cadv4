@@ -56,6 +56,25 @@ export class ImportVehiclesController {
     return { totalCount, vehicles };
   }
 
+  @Get("/plates")
+  @Description("Get all the vehicle plates in the CAD")
+  async getVehiclePlates(
+    @QueryParams("query", String) query = "",
+  ): Promise<APITypes.GetImportVehiclesPlatesData> {
+    const where: Prisma.RegisteredVehicleWhereInput | undefined = query
+      ? {
+          plate: { contains: query, mode: "insensitive" },
+        }
+      : undefined;
+
+    const vehicles = await prisma.registeredVehicle.findMany({
+      select: { plate: true },
+      where,
+    });
+
+    return vehicles;
+  }
+
   @Post("/")
   @Description("Import vehicles in the CAD via body data")
   async importVehicles(@BodyParams() body: any): Promise<APITypes.PostImportVehiclesData> {

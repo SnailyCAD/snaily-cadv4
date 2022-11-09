@@ -43,6 +43,12 @@ export interface GetImportVehiclesData {
 }
 
 /**
+ * @method GET
+ * @route /admin/import/vehicles/plates
+ */
+export type GetImportVehiclesPlatesData = { plate: string }[];
+
+/**
  * @method POST
  * @route /admin/import/vehicles
  */
