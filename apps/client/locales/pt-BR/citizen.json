@@ -45,6 +45,9 @@
     "licenseSuspendedInfo": "A licença está suspensa. Entre em contato com um oficial para revogar a suspensão.",
     "licenseNumber": "Número da Licença",
     "unmarkAsStolen": "Desmarcar como Roubado",
+    "markCitizenDeceased": "Marcar Cidadão como Falecido",
+    "citizenDead": "AVISO: este cidadão morreu em {date}",
+    "alert_markCitizenDeceased": "Tem certeza de que deseja excluir <span>{citizen}</span>? Somente o Médico/Bombeiro pode marcá-lo vivo novamente.",
     "alert_deleteCitizen": "Tem certeza de que deseja excluir <span>{citizen}</span>? Esta ação não pode ser desfeita."
   },
   "Vehicles": {
