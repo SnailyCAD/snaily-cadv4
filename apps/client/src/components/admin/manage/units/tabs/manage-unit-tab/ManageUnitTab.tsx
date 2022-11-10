@@ -66,7 +66,7 @@ export function ManageUnitTab({ unit: data }: Props) {
     rank: unit.rankId,
     position: unit.position ?? "",
     suspended: unit.suspended,
-    badgeNumber: unit.badgeNumber ?? undefined,
+    badgeNumber: BADGE_NUMBERS ? unit.badgeNumber ?? undefined : undefined,
   };
 
   return (

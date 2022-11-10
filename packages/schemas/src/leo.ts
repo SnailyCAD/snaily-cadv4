@@ -34,7 +34,7 @@ export const UPDATE_UNIT_SCHEMA = z.object({
   divisions: z.array(z.string().min(2).max(255).or(SELECT_VALUE)).nullable().optional(),
   status: z.string().max(255).nullable(),
   suspended: z.boolean().nullable(),
-  badgeNumber: z.number().min(1),
+  badgeNumber: z.number().min(1).optional(),
   callsigns: z.record(INDIVIDUAL_CALLSIGN_SCHEMA).optional().nullable(),
 });
 

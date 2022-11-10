@@ -105,6 +105,10 @@ export class MyOfficersController {
       features: cad.features,
     });
 
+    if (!isBadgeNumbersEnabled) {
+      throw new ExtendedBadRequest({ badgeNumber: "Required" });
+    }
+
     const { defaultDepartment, department, whitelistStatusId } = await handleWhitelistStatus(
       data.department,
       null,
@@ -261,6 +265,10 @@ export class MyOfficersController {
       defaultReturn: true,
       features: cad.features,
     });
+
+    if (!isBadgeNumbersEnabled) {
+      throw new ExtendedBadRequest({ badgeNumber: "Required" });
+    }
 
     const rank = officer.rankId
       ? undefined

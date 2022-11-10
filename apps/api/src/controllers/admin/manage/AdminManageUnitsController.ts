@@ -242,6 +242,16 @@ export class AdminManageUnitsController {
       throw new NotFound("unitNotFound");
     }
 
+    const isBadgeNumbersEnabled = isFeatureEnabled({
+      feature: Feature.BADGE_NUMBERS,
+      defaultReturn: true,
+      features: cad.features,
+    });
+
+    if (!isBadgeNumbersEnabled) {
+      throw new ExtendedBadRequest({ badgeNumber: "Required" });
+    }
+
     if (type === "officer") {
       const divisionsEnabled = isFeatureEnabled({
         feature: Feature.DIVISIONS,
