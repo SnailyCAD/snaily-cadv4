@@ -173,7 +173,11 @@ export function ManageUnitTab({ unit: data }: Props) {
                 errorMessage={errors.badgeNumber}
                 label={t("badgeNumber")}
                 name="badgeNumber"
-                onChange={(value) => setFieldValue("badgeNumber", parseInt(value))}
+                onChange={(value) => {
+                  isNaN(Number(value))
+                    ? setFieldValue("badgeNumber", value)
+                    : setFieldValue("badgeNumber", parseInt(value));
+                }}
                 value={String(values.badgeNumber)}
               />
             ) : null}

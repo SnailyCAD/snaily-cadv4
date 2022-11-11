@@ -141,7 +141,11 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
                 label={t("Leo.badgeNumber")}
                 autoFocus
                 name="badgeNumber"
-                onChange={(value) => setFieldValue("badgeNumber", parseInt(value))}
+                onChange={(value) => {
+                  isNaN(Number(value))
+                    ? setFieldValue("badgeNumber", value)
+                    : setFieldValue("badgeNumber", parseInt(value));
+                }}
                 value={String(values.badgeNumber)}
               />
             ) : null}
