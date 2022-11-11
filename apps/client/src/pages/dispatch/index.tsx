@@ -134,8 +134,8 @@ export default function DispatchDashboard(props: DispatchPageProps) {
           </div>
           <div className="mt-3">
             <ActiveCalls initialData={props.calls} />
-            <ActiveBolos initialBolos={props.bolos} />
             {ACTIVE_INCIDENTS ? <ActiveIncidents /> : null}
+            <ActiveBolos initialBolos={props.bolos} />
           </div>
         </DndProvider>
       </div>
