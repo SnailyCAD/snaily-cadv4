@@ -15,6 +15,7 @@ import { useAsyncList } from "@react-stately/data";
 import { Button } from "../button";
 import { ChevronDown } from "react-bootstrap-icons";
 import { useDebounce } from "react-use";
+import type { Node } from "@react-types/shared";
 
 interface AsyncListFieldFetchOptions {
   apiPath: string | ((query: string | undefined) => string);
@@ -22,13 +23,15 @@ interface AsyncListFieldFetchOptions {
   bodyKey?: string;
 }
 
-export interface AsyncListFieldProps<T extends object> extends ComboBoxProps<T> {
+export interface AsyncListFieldProps<T extends object>
+  extends Omit<ComboBoxProps<T>, "onSelectionChange"> {
   label: React.ReactNode;
   isOptional?: boolean;
 
   errorMessage?: string | null;
   className?: string;
   includeMenu?: boolean;
+  onSelectionChange(value: string): void;
 
   fetchOptions: AsyncListFieldFetchOptions;
 }
@@ -76,6 +79,18 @@ export function AsyncListSearchField<T extends object>(props: AsyncListFieldProp
     [localValue],
   );
 
+  function handleSelectionChange(key: React.Key) {
+    const item = state.collection.getItem(key) as Node<T> | null;
+
+    if (item) {
+      setLocalValue(item.textValue);
+    } else {
+      setLocalValue("");
+    }
+
+    props.onSelectionChange(key.toString());
+  }
+
   const listOptions = {
     items: list.items,
     inputValue: localValue,
@@ -86,13 +101,14 @@ export function AsyncListSearchField<T extends object>(props: AsyncListFieldProp
   const state = useComboBoxState({
     ...props,
     ...listOptions,
-    allowsCustomValue: false,
+    onSelectionChange: handleSelectionChange,
     defaultFilter: contains,
   });
 
   const { buttonProps, inputProps, listBoxProps, errorMessageProps, labelProps } = useComboBox(
     {
       ...props,
+      onSelectionChange: handleSelectionChange,
       inputRef: ref,
       listBoxRef,
       popoverRef,
@@ -144,7 +160,6 @@ export { Item };
 // todo: place in `@snailycad/utils`
 export function getAPIUrl() {
   const envUrl = process.env.NEXT_PUBLIC_PROD_ORIGIN ?? "http://localhost:8080/v1";
-  console.log(envUrl);
 
   if (process.env.NODE_ENV === "development") {
     return "http://localhost:8080/v1";

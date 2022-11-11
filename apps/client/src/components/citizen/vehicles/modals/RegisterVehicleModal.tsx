@@ -34,7 +34,6 @@ import { filterLicenseTypes } from "lib/utils";
 import { FormRow } from "components/form/FormRow";
 import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";
 import { toastMessage } from "lib/toastMessage";
-import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import type { PostCitizenVehicleData, PutCitizenVehicleData } from "@snailycad/types/api";
 
@@ -104,8 +103,6 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
     }
   }
 
-  console.log(AsyncListSearchField);
-
   const INITIAL_VALUES = {
     model: vehicle ? (CUSTOM_TEXTFIELD_VALUES ? vehicle.model.value.value : vehicle.modelId) : "",
     modelName: vehicle?.model.value.value ?? "",
@@ -170,46 +167,23 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
                 </datalist>
               </FormField>
             ) : (
-              <FormField errorMessage={errors.model} label={tVehicle("model")}>
-                <InputSuggestions<VehicleValue>
-                  onSuggestionPress={(suggestion) => {
-                    setValues({
-                      ...values,
-                      modelName: suggestion.value.value,
-                      model: suggestion.id,
-                    });
-                  }}
-                  Component={({ suggestion }) => (
-                    <p className="w-full text-left">{suggestion.value.value}</p>
-                  )}
-                  options={{
-                    apiPath: (value) => `/admin/values/vehicle/search?query=${value}`,
-                    method: "GET",
-                  }}
-                  inputProps={{
-                    value: values.modelName,
-                    name: "modelName",
-                    onChange: handleChange,
-                    errorMessage: errors.model,
-                  }}
-                />
-              </FormField>
+              <AsyncListSearchField<VehicleValue>
+                errorMessage={errors.model}
+                label={tVehicle("model")}
+                onSelectionChange={(key) => {
+                  setFieldValue("model", key);
+                }}
+                selectedKey={values.model}
+                fetchOptions={{
+                  apiPath: (value) => `/admin/values/vehicle/search?query=${value}`,
+                  method: "GET",
+                }}
+              >
+                {(item) => {
+                  return <Item textValue={item.value.value}>{item.value.value}</Item>;
+                }}
+              </AsyncListSearchField>
             )}
-
-            <AsyncListSearchField<VehicleValue>
-              errorMessage={errors.model}
-              label={tVehicle("model")}
-              onSelectionChange={(key) => setFieldValue("model", key)}
-              selectedKey={values.model}
-              fetchOptions={{
-                apiPath: (value) => `/admin/values/vehicle/search?query=${value}`,
-                method: "GET",
-              }}
-            >
-              {(item) => {
-                return <Item textValue={item.value.value}>{item.value.value}</Item>;
-              }}
-            </AsyncListSearchField>
 
             <FormField errorMessage={errors.citizenId} label={tVehicle("owner")}>
               <CitizenSuggestionsField
