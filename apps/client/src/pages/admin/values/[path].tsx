@@ -80,7 +80,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
       { header: t("isDisabled"), accessorKey: "isDisabled" },
       { header: common("createdAt"), accessorKey: "createdAt" },
       { header: common("actions"), accessorKey: "actions" },
-    ] as AccessorKeyColumnDef<{ id: string }>[];
+    ] as AccessorKeyColumnDef<{ id: string }, "id">[];
   }, [extraTableHeaders, t, common]);
 
   async function setList(list: AnyValue[]) {

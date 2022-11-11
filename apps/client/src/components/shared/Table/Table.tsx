@@ -31,7 +31,7 @@ export type _RowData = RowData & {
 
 interface Props<TData extends _RowData> {
   data: TData[];
-  columns: (AccessorKeyColumnDef<TData> | null)[];
+  columns: (AccessorKeyColumnDef<TData, keyof TData> | null)[];
 
   tableState: ReturnType<typeof useTableState>;
   containerProps?: { style?: React.CSSProperties; className?: string };
