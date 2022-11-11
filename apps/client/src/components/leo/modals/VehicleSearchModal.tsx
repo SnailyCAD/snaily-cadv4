@@ -1,6 +1,5 @@
 import * as React from "react";
-import { Loader, Button } from "@snailycad/ui";
-import { FormField } from "components/form/FormField";
+import { Loader, Button, Item, AsyncListSearchField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
@@ -9,7 +8,6 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { BoloType, CustomFieldCategory } from "@snailycad/types";
 import { useRouter } from "next/router";
-import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicleSearchState";
 import { ManageVehicleFlagsModal } from "./VehicleSearch/ManageVehicleFlagsModal";
 import { ManageVehicleLicensesModal } from "./VehicleSearch/ManageVehicleLicensesModal";
@@ -121,6 +119,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   }
 
   const INITIAL_VALUES = {
+    vinNumber: currentResult?.vinNumber ?? "",
     plateOrVin: currentResult?.vinNumber ?? "",
   };
 
@@ -132,34 +131,34 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
       className="w-[750px]"
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, setFieldValue, errors, values, isValid }) => (
+        {({ setFieldValue, errors, values, isValid }) => (
           <Form>
-            <FormField errorMessage={errors.plateOrVin} label={t("plateOrVin")}>
-              <InputSuggestions<VehicleSearchResult>
-                onSuggestionPress={(suggestion) => {
-                  setFieldValue("plateOrVin", suggestion.vinNumber);
-                  setCurrentResult(suggestion);
-                }}
-                Component={({ suggestion }) => (
-                  <div className="flex items-center">
-                    <p>
-                      {suggestion.plate.toUpperCase()} ({suggestion.vinNumber})
-                    </p>
-                  </div>
-                )}
-                options={{
-                  apiPath: "/search/vehicle?includeMany=true",
-                  method: "POST",
-                  dataKey: "plateOrVin",
-                  allowUnknown: true,
-                }}
-                inputProps={{
-                  value: values.plateOrVin,
-                  name: "plateOrVin",
-                  onChange: handleChange,
-                }}
-              />
-            </FormField>
+            <AsyncListSearchField<VehicleSearchResult>
+              localValue={{
+                value: values.vinNumber,
+                onChange: (value) => setFieldValue("vinNumber", value),
+              }}
+              errorMessage={errors.plateOrVin}
+              label={t("plateOrVin")}
+              onSelectionChange={(node) => {
+                if (!node) return;
+
+                setFieldValue("plateOrVin", node.value.vinNumber);
+                setCurrentResult(node.value);
+              }}
+              selectedKey={values.plateOrVin}
+              fetchOptions={{
+                apiPath: "/search/vehicle?includeMany=true",
+                method: "POST",
+                bodyKey: "plateOrVin",
+              }}
+            >
+              {(item) => (
+                <Item key={item.vinNumber} textValue={item.vinNumber}>
+                  {item.plate.toUpperCase()} ({item.vinNumber})
+                </Item>
+              )}
+            </AsyncListSearchField>
 
             {!currentResult ? (
               typeof currentResult === "undefined" ? null : (

@@ -214,9 +214,11 @@ export class LeoSearchController {
     permissions: [Permissions.Leo, Permissions.Dispatch],
   })
   async searchVehicle(
-    @BodyParams("plateOrVin") plateOrVin: string,
+    @BodyParams("plateOrVin", String) plateOrVin: string,
     @QueryParams("includeMany", Boolean) includeMany: boolean,
   ): Promise<APITypes.PostLeoSearchVehicleData> {
+    console.log({ plateOrVin, includeMany });
+
     if (!plateOrVin || plateOrVin.length < 3) {
       return null;
     }

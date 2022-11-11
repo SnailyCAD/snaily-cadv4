@@ -20,7 +20,7 @@ export function Popover(props: Props) {
       <div
         {...overlayProps}
         ref={popoverRef}
-        className="w-full absolute top-full bg-gray-200 dark:bg-primary dark:border dark:border-secondary rounded-md shadow-lg mt-2 p-2 z-10"
+        className="w-full absolute z-50 top-full bg-gray-200 dark:bg-primary dark:border dark:border-secondary rounded-md shadow-lg mt-2 p-2"
       >
         {children}
         <DismissButton onDismiss={onClose} />

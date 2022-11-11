@@ -168,10 +168,14 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
               </FormField>
             ) : (
               <AsyncListSearchField<VehicleValue>
+                localValue={{
+                  value: values.modelName,
+                  onChange: (value) => setFieldValue("modelName", value),
+                }}
                 errorMessage={errors.model}
                 label={tVehicle("model")}
-                onSelectionChange={(key) => {
-                  setFieldValue("model", key);
+                onSelectionChange={(node) => {
+                  setFieldValue("model", node?.key);
                 }}
                 selectedKey={values.model}
                 fetchOptions={{

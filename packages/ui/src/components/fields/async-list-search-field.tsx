@@ -16,6 +16,7 @@ import { Button } from "../button";
 import { ChevronDown } from "react-bootstrap-icons";
 import { useDebounce } from "react-use";
 import type { Node } from "@react-types/shared";
+import { useTranslations } from "next-intl";
 
 interface AsyncListFieldFetchOptions {
   apiPath: string | ((query: string | undefined) => string);
@@ -31,19 +32,21 @@ export interface AsyncListFieldProps<T extends object>
   errorMessage?: string | null;
   className?: string;
   includeMenu?: boolean;
-  onSelectionChange(value: string): void;
+  onSelectionChange(item: Node<T> | null): void;
 
   fetchOptions: AsyncListFieldFetchOptions;
+  localValue: {
+    value: string;
+    onChange(value: string): void;
+  };
 }
 
 export function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
-  const [localValue, setLocalValue] = React.useState("");
-
   const ref = React.useRef<any>(null);
   const listBoxRef = React.useRef<HTMLUListElement | null>(null);
   const popoverRef = React.useRef<HTMLDivElement | null>(null);
-  const buttonRef = React.useRef<HTMLButtonElement | null>(null);
   const includeMenu = props.includeMenu ?? true;
+  const common = useTranslations("Common");
 
   const list = useAsyncList<T>({
     async load({ signal, filterText }) {
@@ -61,6 +64,9 @@ export function AsyncListSearchField<T extends object>(props: AsyncListFieldProp
         signal,
         method: props.fetchOptions.method ?? "GET",
         body: body && props.fetchOptions.method === "POST" ? JSON.stringify(body) : undefined,
+        headers: {
+          "content-type": "application/json",
+        },
       });
       const json = await res.json();
       const itemsArray = Array.isArray(json) ? json : [];
@@ -73,46 +79,48 @@ export function AsyncListSearchField<T extends object>(props: AsyncListFieldProp
 
   useDebounce(
     () => {
-      list.setFilterText(localValue);
+      list.setFilterText(props.localValue.value);
     },
     200,
-    [localValue],
+    [props.localValue.value],
   );
 
   function handleSelectionChange(key: React.Key) {
     const item = state.collection.getItem(key) as Node<T> | null;
 
     if (item) {
-      setLocalValue(item.textValue);
+      props.onSelectionChange(item);
+      props.localValue.onChange(item.textValue);
     } else {
-      setLocalValue("");
+      props.onSelectionChange(null);
+      props.localValue.onChange("");
     }
-
-    props.onSelectionChange(key.toString());
   }
 
   const listOptions = {
     items: list.items,
-    inputValue: localValue,
-    onInputChange: setLocalValue,
+    inputValue: props.localValue.value,
+    onInputChange: props.localValue.onChange,
   };
 
   const { contains } = useFilter({ sensitivity: "base" });
   const state = useComboBoxState({
     ...props,
     ...listOptions,
+    allowsCustomValue: true,
+    allowsEmptyCollection: true,
     onSelectionChange: handleSelectionChange,
     defaultFilter: contains,
   });
 
-  const { buttonProps, inputProps, listBoxProps, errorMessageProps, labelProps } = useComboBox(
+  const { inputProps, listBoxProps, errorMessageProps, labelProps } = useComboBox(
     {
       ...props,
+      allowsCustomValue: true,
       onSelectionChange: handleSelectionChange,
       inputRef: ref,
       listBoxRef,
       popoverRef,
-      buttonRef,
     },
     state,
   );
@@ -130,7 +138,7 @@ export function AsyncListSearchField<T extends object>(props: AsyncListFieldProp
         />
         {includeMenu ? (
           <Button
-            {...buttonProps}
+            onPress={() => state.open()}
             className={classNames(
               "!rounded-l-none !border-l-0 px-2",
               props.errorMessage &&
@@ -143,7 +151,11 @@ export function AsyncListSearchField<T extends object>(props: AsyncListFieldProp
         ) : null}
         {includeMenu && state.isOpen ? (
           <Popover isOpen={state.isOpen} onClose={state.close} popoverRef={popoverRef}>
-            <AsyncListFieldListBox {...listBoxProps} listBoxRef={listBoxRef} state={state} />
+            {state.collection.size > 0 ? (
+              <AsyncListFieldListBox {...listBoxProps} listBoxRef={listBoxRef} state={state} />
+            ) : (
+              common("noOptions")
+            )}
           </Popover>
         ) : null}
       </div>
