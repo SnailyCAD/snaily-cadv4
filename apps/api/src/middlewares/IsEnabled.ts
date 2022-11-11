@@ -4,7 +4,7 @@ import { prisma } from "lib/prisma";
 import { BadRequest } from "@tsed/exceptions";
 import { setDiscordAuth } from "./IsAuth";
 
-const featuresRoute: Partial<Record<Feature, string>> = {
+const featuresRoute: Partial<Record<Feature, `/v1/${string}`>> = {
   TOW: "/v1/tow",
   BLEETER: "/v1/bleeter",
   TAXI: "/v1/taxi",
@@ -16,9 +16,9 @@ const featuresRoute: Partial<Record<Feature, string>> = {
   COURTHOUSE: "/v1/expungement-requests",
   ALLOW_CITIZEN_UPDATE_LICENSE: "/v1/licenses",
   RADIO_CHANNEL_MANAGEMENT: "/v1/dispatch/radio-channel",
-  LICENSE_EXAMS: "/leo/exams",
-  DMV: "/leo/dmv",
-  USER_API_TOKENS: "/user/api-token",
+  LICENSE_EXAMS: "/v1/leo/exams",
+  DMV: "/v1/leo/dmv",
+  USER_API_TOKENS: "/v1/user/api-token",
   STEAM_OAUTH: "/v1/auth/steam",
   COURTHOUSE_POSTS: "/v1/courthouse-posts",
   ACTIVE_WARRANTS: "/v1/records/active-warrants",
@@ -44,8 +44,8 @@ export class IsEnabled implements MiddlewareMethods {
         continue;
       }
 
-      const route = featuresRoute[feature.feature];
-      if (req.originalUrl.includes(route!) || req.baseUrl.includes(route!)) {
+      const route = featuresRoute[feature.feature]!;
+      if (req.originalUrl.includes(route)) {
         throw new BadRequest("featureNotEnabled");
       }
     }
