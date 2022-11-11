@@ -12,6 +12,7 @@ import { findRedirectURL, findUrl } from "./Discord";
 import { getSessionUser } from "lib/auth/getSessionUser";
 import { getDefaultPermissionsForNewUser } from "./Auth";
 import { setUserTokenCookies } from "lib/auth/setUserTokenCookies";
+import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 
 const callbackUrl = makeCallbackURL(findUrl());
 const STEAM_API_KEY = process.env["STEAM_API_KEY"];
@@ -19,6 +20,7 @@ export const STEAM_API_URL = "https://api.steampowered.com";
 
 @Controller("/auth/steam")
 @ContentType("application/json")
+@IsFeatureEnabled({ feature: Feature.STEAM_OAUTH })
 export class SteamOAuthController {
   @Get("/")
   @Description("Redirect to Steam's OAuth2 URL")

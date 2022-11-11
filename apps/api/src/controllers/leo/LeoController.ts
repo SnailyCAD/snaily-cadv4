@@ -8,7 +8,7 @@ import { IsAuth } from "middlewares/IsAuth";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Socket } from "services/SocketService";
 import { combinedUnitProperties, leoProperties } from "lib/leo/activeOfficer";
-import { ShouldDoType, User } from "@prisma/client";
+import { Feature, ShouldDoType, User } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 import { getInactivityFilter } from "lib/leo/utils";
@@ -16,6 +16,7 @@ import { findUnit } from "lib/leo/findUnit";
 import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
 import type { CombinedLeoUnit, Officer, MiscCadSettings } from "@snailycad/types";
 import type * as APITypes from "@snailycad/types/api";
+import { IsFeatureEnabled } from "middlewares/is-enabled";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -78,6 +79,7 @@ export class LeoController {
   }
 
   @Post("/panic-button")
+  @IsFeatureEnabled({ feature: Feature.PANIC_BUTTON })
   @Description("Set the panic button for an officer by their id")
   @UsePermissions({
     fallback: (u) => u.isLeo,

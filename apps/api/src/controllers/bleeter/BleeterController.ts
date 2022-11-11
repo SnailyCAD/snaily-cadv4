@@ -21,10 +21,13 @@ import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import type { User } from "@prisma/client";
 import type * as APITypes from "@snailycad/types/api";
 import { getImageWebPPath } from "utils/image";
+import { IsFeatureEnabled } from "middlewares/is-enabled";
+import { Feature } from "@snailycad/types";
 
 @UseBeforeEach(IsAuth)
 @Controller("/bleeter")
 @ContentType("application/json")
+@IsFeatureEnabled({ feature: Feature.BLEETER })
 export class BleeterController {
   @Get("/")
   @Description("Get **all** bleeter posts, ordered by `createdAt`")

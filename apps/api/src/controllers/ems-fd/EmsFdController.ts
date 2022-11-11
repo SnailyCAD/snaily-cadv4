@@ -24,6 +24,7 @@ import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { Socket } from "services/SocketService";
 import type * as APITypes from "@snailycad/types/api";
 import { isFeatureEnabled } from "lib/cad";
+import { IsFeatureEnabled } from "middlewares/is-enabled";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
@@ -453,6 +454,7 @@ export class EmsFdController {
 
   @Post("/panic-button")
   @Description("Set the panic button for an ems-fd deputy by their id")
+  @IsFeatureEnabled({ feature: Feature.PANIC_BUTTON })
   @UsePermissions({
     fallback: (u) => u.isEmsFd,
     permissions: [Permissions.EmsFd],
