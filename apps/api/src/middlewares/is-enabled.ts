@@ -49,8 +49,6 @@ class IsFeatureEnabledImplementation implements MiddlewareMethods {
       DEFAULT_DISABLED_FEATURES[options.feature as IsFeatureEnabledOptions["feature"]]?.isEnabled ??
       true;
 
-    console.log({ isEnabled, cadFeature });
-
     if (!isEnabled) {
       throw new FeatureNotEnabled(options);
     }
