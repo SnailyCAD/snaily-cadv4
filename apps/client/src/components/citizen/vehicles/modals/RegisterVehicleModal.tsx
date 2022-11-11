@@ -1,8 +1,15 @@
-import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Form, Formik, FormikHelpers } from "formik";
 import { VEHICLE_SCHEMA } from "@snailycad/schemas";
-import { Button, Input, Loader, SelectField, TextField } from "@snailycad/ui";
+import {
+  Item,
+  AsyncListSearchField,
+  Button,
+  Input,
+  Loader,
+  SelectField,
+  TextField,
+} from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
@@ -97,6 +104,8 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
     }
   }
 
+  console.log(AsyncListSearchField);
+
   const INITIAL_VALUES = {
     model: vehicle ? (CUSTOM_TEXTFIELD_VALUES ? vehicle.model.value.value : vehicle.modelId) : "",
     modelName: vehicle?.model.value.value ?? "",
@@ -187,6 +196,21 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
               </FormField>
             )}
 
+            <AsyncListSearchField<VehicleValue>
+              errorMessage={errors.model}
+              label={tVehicle("model")}
+              onSelectionChange={(key) => setFieldValue("model", key)}
+              selectedKey={values.model}
+              fetchOptions={{
+                apiPath: (value) => `/admin/values/vehicle/search?query=${value}`,
+                method: "GET",
+              }}
+            >
+              {(item) => {
+                return <Item textValue={item.value.value}>{item.value.value}</Item>;
+              }}
+            </AsyncListSearchField>
+
             <FormField errorMessage={errors.citizenId} label={tVehicle("owner")}>
               <CitizenSuggestionsField
                 fromAuthUserOnly={!isLeo}
@@ -257,8 +281,8 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
                 name="inspectionStatus"
                 options={INSPECTION_STATUS}
                 onSelectionChange={(key) => setFieldValue("inspectionStatus", key)}
-                isClearable
                 selectedKey={values.inspectionStatus}
+                isClearable
               />
 
               <SelectField

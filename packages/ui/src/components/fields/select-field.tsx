@@ -4,7 +4,7 @@ import { Item } from "@react-stately/collections";
 import { ModalProvider } from "@react-aria/overlays";
 import { classNames } from "../../utils/classNames";
 import { Popover } from "../overlays/popover";
-import { ListBox } from "../list/list-box";
+import { ListBox } from "../list/select/list-box";
 import { Button, buttonSizes, buttonVariants } from "../button";
 import { useMultiSelectState } from "../../hooks/select/useMultiSelectState";
 import { useMultiSelect } from "../../hooks/select/useMultiSelect";

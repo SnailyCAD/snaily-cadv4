@@ -148,6 +148,7 @@ export class ValuesController {
         include: { ...(data.include ?? {}), value: true },
         orderBy: { value: { position: "asc" } },
         where,
+        take: 35,
       });
 
       return values;
@@ -156,6 +157,7 @@ export class ValuesController {
     const values = await prisma.value.findMany({
       where: { type, isDisabled: false, value: { contains: query, mode: "insensitive" } },
       orderBy: { position: "asc" },
+      take: 35,
     });
 
     return values;
