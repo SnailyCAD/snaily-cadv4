@@ -11,10 +11,12 @@ import { validateSchema } from "lib/validateSchema";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import type * as APITypes from "@snailycad/types/api";
 import { citizenInclude } from "./CitizenController";
+import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 
 @Controller("/truck-logs")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
+@IsFeatureEnabled({ feature: Feature.TRUCK_LOGS })
 export class TruckLogsController {
   @Get("/")
   async getTruckLogs(@Context("user") user: User): Promise<APITypes.GetTruckLogsData> {

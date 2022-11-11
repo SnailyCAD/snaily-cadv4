@@ -11,6 +11,7 @@ import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import type * as APITypes from "@snailycad/types/api";
+import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 
 const vehicleInclude = {
   model: { include: { value: true } },
@@ -22,6 +23,7 @@ const vehicleInclude = {
 @Controller("/leo/dmv")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
+@IsFeatureEnabled({ feature: Feature.DMV })
 export class DmvController {
   @Get("/")
   @Description("Get pending vehicles for the dmv")
