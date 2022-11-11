@@ -1,3 +1,4 @@
+import "dotenv/config";
 import "@tsed/swagger";
 import "@tsed/socketio";
 import "@tsed/platform-express";
