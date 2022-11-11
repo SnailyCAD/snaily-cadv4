@@ -20,10 +20,8 @@ services:
     image: node:16
     command: "yarn workspace @snailycad/api dev"
     ports:
-      - "8080:8080"
       - "${PORT_API}:${PORT_API}"
     expose:
-      - 8080
       - ${PORT_API}
     volumes:
       - .:/srv/api
