@@ -8,7 +8,7 @@ import "styles/globals.scss";
 import "styles/fonts.scss";
 import { SocketProvider } from "@casper124578/use-socket.io";
 import { getAPIUrl } from "lib/fetch/getAPIUrl";
-import { setTags } from "@sentry/nextjs";
+import { setTag, setTags } from "@sentry/nextjs";
 import type { cad, User } from "@snailycad/types";
 import { useMounted } from "@casper124578/useful/hooks/useMounted";
 import dynamic from "next/dynamic";
@@ -28,10 +28,12 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
   const url = `${protocol}//${host}`;
   const user = pageProps.session as User | null;
   const locale = user?.locale ?? router.locale ?? "en";
+  trySetUserTimezone();
 
   const cad = pageProps?.cad as cad | null;
   if (cad?.version) {
     setTags({
+      "snailycad.locale": locale,
       "snailycad.version": cad.version.currentVersion,
       "snailycad.commitHash": cad.version.currentCommitHash,
     });
@@ -69,4 +71,14 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
       </SocketProvider>
     </SSRProvider>
   );
+}
+
+function trySetUserTimezone() {
+  try {
+    if (typeof window !== "undefined") {
+      setTag("snailycad.timezone", Intl.DateTimeFormat().resolvedOptions().timeZone);
+    }
+  } catch {
+    // ignore
+  }
 }
