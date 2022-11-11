@@ -105,7 +105,7 @@ export class MyOfficersController {
       features: cad.features,
     });
 
-    if (!isBadgeNumbersEnabled) {
+    if (isBadgeNumbersEnabled && !data.badgeNumber) {
       throw new ExtendedBadRequest({ badgeNumber: "Required" });
     }
 
@@ -266,7 +266,7 @@ export class MyOfficersController {
       features: cad.features,
     });
 
-    if (!isBadgeNumbersEnabled) {
+    if (isBadgeNumbersEnabled && !data.badgeNumber) {
       throw new ExtendedBadRequest({ badgeNumber: "Required" });
     }
 

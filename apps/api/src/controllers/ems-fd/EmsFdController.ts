@@ -96,6 +96,16 @@ export class EmsFdController {
       features: cad.features,
     });
 
+    const isBadgeNumbersEnabled = isFeatureEnabled({
+      feature: Feature.BADGE_NUMBERS,
+      defaultReturn: true,
+      features: cad.features,
+    });
+
+    if (isBadgeNumbersEnabled && !data.badgeNumber) {
+      throw new ExtendedBadRequest({ badgeNumber: "Required" });
+    }
+
     if (divisionsEnabled) {
       const division = await prisma.divisionValue.findFirst({
         where: {
@@ -195,6 +205,16 @@ export class EmsFdController {
       defaultReturn: true,
       features: cad.features,
     });
+
+    const isBadgeNumbersEnabled = isFeatureEnabled({
+      feature: Feature.BADGE_NUMBERS,
+      defaultReturn: true,
+      features: cad.features,
+    });
+
+    if (isBadgeNumbersEnabled && !data.badgeNumber) {
+      throw new ExtendedBadRequest({ badgeNumber: "Required" });
+    }
 
     if (divisionsEnabled) {
       const division = await prisma.divisionValue.findFirst({
