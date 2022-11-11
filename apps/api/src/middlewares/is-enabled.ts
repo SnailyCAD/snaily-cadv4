@@ -2,17 +2,17 @@ import { Middleware, MiddlewareMethods, Context } from "@tsed/common";
 import { UseBefore } from "@tsed/platform-middlewares";
 import { StoreSet, useDecorators } from "@tsed/core";
 import type { Feature as DatabaseFeature } from "@prisma/client";
-import { BadRequest } from "@tsed/exceptions";
 import { Feature as TypesFeature } from "@snailycad/types";
 import { setDiscordAuth } from "./IsAuth";
 import { prisma } from "lib/prisma";
+import { FeatureNotEnabled } from "src/exceptions/FeatureNotEnabled";
 
-interface Options {
+export interface IsFeatureEnabledOptions {
   feature: TypesFeature | DatabaseFeature;
 }
 
 export const DEFAULT_DISABLED_FEATURES: Partial<
-  Record<Options["feature"], { isEnabled: boolean }>
+  Record<IsFeatureEnabledOptions["feature"], { isEnabled: boolean }>
 > = {
   CUSTOM_TEXTFIELD_VALUES: { isEnabled: false },
   DISCORD_AUTH: { isEnabled: false },
@@ -31,7 +31,7 @@ export const DEFAULT_DISABLED_FEATURES: Partial<
 @Middleware()
 class IsFeatureEnabledImplementation implements MiddlewareMethods {
   async use(@Context() ctx: Context) {
-    const options = ctx.endpoint.get<Options>(IsFeatureEnabledImplementation);
+    const options = ctx.endpoint.get<IsFeatureEnabledOptions>(IsFeatureEnabledImplementation);
 
     const cad = setDiscordAuth(
       await prisma.cad.findFirst({
@@ -46,18 +46,18 @@ class IsFeatureEnabledImplementation implements MiddlewareMethods {
 
     const isEnabled =
       cadFeature?.isEnabled ??
-      DEFAULT_DISABLED_FEATURES[options.feature as Options["feature"]]?.isEnabled ??
+      DEFAULT_DISABLED_FEATURES[options.feature as IsFeatureEnabledOptions["feature"]]?.isEnabled ??
       true;
 
     console.log({ isEnabled, cadFeature });
 
     if (!isEnabled) {
-      throw new BadRequest("featureNotEnabled");
+      throw new FeatureNotEnabled(options);
     }
   }
 }
 
-export function IsFeatureEnabled(data: Options) {
+export function IsFeatureEnabled(data: IsFeatureEnabledOptions) {
   return useDecorators(
     StoreSet(IsFeatureEnabledImplementation, data),
     UseBefore(IsFeatureEnabledImplementation),
