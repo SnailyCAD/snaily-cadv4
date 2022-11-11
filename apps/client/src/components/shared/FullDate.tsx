@@ -22,17 +22,19 @@ export function FullDate({ children, onlyDate, isDateOfBirth, ...rest }: Props) 
     date = date + 5 * 60 * 60 * 1000;
   }
 
+  if (!isMounted) {
+    return null;
+  }
+
   return (
     <HoverCard
       openDelay={100}
       trigger={
         <span className="z-30">
-          {isMounted
-            ? formatDateTime(date, {
-                dateStyle: "medium",
-                timeStyle: onlyDate ? undefined : "medium",
-              })
-            : null}
+          {formatDateTime(date, {
+            dateStyle: "medium",
+            timeStyle: onlyDate ? undefined : "medium",
+          })}
         </span>
       }
       {...rest}
