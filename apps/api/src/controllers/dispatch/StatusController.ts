@@ -28,6 +28,7 @@ import { findUnit } from "lib/leo/findUnit";
 import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 import type * as APITypes from "@snailycad/types/api";
+import type { EmsFdDeputy, OfficerLog, CombinedLeoUnit } from "@snailycad/types";
 import {
   createPanicButtonEmbed,
   createWebhookData,
@@ -166,7 +167,7 @@ export class StatusController {
       }
     }
 
-    let updatedUnit;
+    let updatedUnit: EmsFdDeputy | OfficerLog | CombinedLeoUnit | null = null;
     const shouldFindIncremental = code.shouldDo === ShouldDoType.SET_ON_DUTY && !unit.incremental;
     const statusId = code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id;
 
@@ -194,7 +195,7 @@ export class StatusController {
       });
     }
 
-    if (updatedUnit.activeCallId) {
+    if (updatedUnit?.activeCallId) {
       createCallEventOnStatusChange({
         unit: updatedUnit,
         status: code,
