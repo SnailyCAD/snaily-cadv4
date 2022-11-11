@@ -30,7 +30,6 @@ import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import type * as APITypes from "@snailycad/types/api";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
-import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 
 const CITIZEN_SELECTS = {
   name: true,
@@ -46,7 +45,6 @@ export const towIncludes = {
 @Controller("/tow")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
-@IsFeatureEnabled({ feature: Feature.TOW })
 export class TowController {
   private socket: Socket;
   constructor(socket: Socket) {

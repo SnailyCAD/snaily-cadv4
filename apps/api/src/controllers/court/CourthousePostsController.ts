@@ -9,12 +9,10 @@ import { COURTHOUSE_POST_SCHEMA } from "@snailycad/schemas";
 import { userProperties } from "lib/auth/getSessionUser";
 import { NotFound } from "@tsed/exceptions";
 import type * as APITypes from "@snailycad/types/api";
-import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 
 @Controller("/courthouse-posts")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
-@IsFeatureEnabled({ feature: Feature.COURTHOUSE })
 export class CourthousePostsController {
   @Get("/")
   async getPosts(): Promise<APITypes.GetCourthousePostsData> {

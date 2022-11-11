@@ -13,12 +13,10 @@ import { isFeatureEnabled } from "lib/cad";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import type * as APITypes from "@snailycad/types/api";
 import { citizenInclude } from "./CitizenController";
-import { IsFeatureEnabled } from "middlewares/is-enabled";
 
 @Controller("/licenses")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
-@IsFeatureEnabled({ feature: Feature.ALLOW_CITIZEN_UPDATE_LICENSE })
 export class LicensesController {
   @Put("/:id")
   @Description("Update the licenses of a citizen")

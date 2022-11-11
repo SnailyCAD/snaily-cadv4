@@ -16,7 +16,6 @@ import { updateMemberRolesLogin } from "lib/discord/auth";
 import { ContentType, Description } from "@tsed/schema";
 import { isFeatureEnabled } from "lib/cad";
 import { setUserTokenCookies } from "lib/auth/setUserTokenCookies";
-import { IsFeatureEnabled } from "middlewares/is-enabled";
 
 const callbackUrl = makeCallbackURL(findUrl());
 const DISCORD_CLIENT_ID = process.env["DISCORD_CLIENT_ID"];
@@ -24,7 +23,6 @@ const DISCORD_CLIENT_SECRET = process.env["DISCORD_CLIENT_SECRET"];
 
 @Controller("/auth/discord")
 @ContentType("application/json")
-@IsFeatureEnabled({ feature: Feature.DISCORD_AUTH })
 export class DiscordAuth {
   @Get("/")
   @Description("Redirect to Discord OAuth2 URL")

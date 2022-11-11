@@ -15,12 +15,10 @@ import { citizenInclude } from "./CitizenController";
 import type * as APITypes from "@snailycad/types/api";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import type { Weapon } from "@snailycad/types";
-import { IsFeatureEnabled } from "middlewares/is-enabled";
 
 @Controller("/weapons")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
-@IsFeatureEnabled({ feature: Feature.WEAPON_REGISTRATION })
 export class WeaponController {
   private MAX_ITEMS_PER_TABLE_PAGE = 12;
   private SERIAL_NUMBER_LENGTH = 10;

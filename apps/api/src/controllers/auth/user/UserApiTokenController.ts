@@ -1,4 +1,4 @@
-import { Feature, User } from "@snailycad/types";
+import type { User } from "@snailycad/types";
 import { BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest } from "@tsed/exceptions";
@@ -10,12 +10,10 @@ import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { nanoid } from "nanoid";
 import type * as APITypes from "@snailycad/types/api";
-import { IsFeatureEnabled } from "middlewares/is-enabled";
 
 @Controller("/user/api-token")
 @UseBefore(IsAuth)
 @ContentType("application/json")
-@IsFeatureEnabled({ feature: Feature.USER_API_TOKENS })
 export class AccountController {
   @Put("/")
   @Description("Enable or disable the authenticated user's API Token.")

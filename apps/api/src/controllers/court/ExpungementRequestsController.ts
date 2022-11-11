@@ -7,7 +7,6 @@ import { citizenInclude } from "controllers/citizen/CitizenController";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import type * as APITypes from "@snailycad/types/api";
-import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 
 export const expungementRequestInclude = {
   citizen: true,
@@ -17,7 +16,6 @@ export const expungementRequestInclude = {
 
 @Controller("/expungement-requests")
 @UseBeforeEach(IsAuth)
-@IsFeatureEnabled({ feature: Feature.COURTHOUSE })
 @ContentType("application/json")
 export class ExpungementRequestsController {
   @Get("/")

@@ -10,13 +10,11 @@ import { validateBusinessAcceptance } from "utils/businesses";
 import { validateSchema } from "lib/validateSchema";
 import type { cad, User } from "@prisma/client";
 import type * as APITypes from "@snailycad/types/api";
-import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 
 @UseBeforeEach(IsAuth)
 @Controller("/businesses/posts")
 @Hidden()
 @ContentType("application/json")
-@IsFeatureEnabled({ feature: Feature.BUSINESS })
 export class BusinessPostsController {
   @Post("/:id")
   async createPost(

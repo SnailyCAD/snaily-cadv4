@@ -8,12 +8,10 @@ import { COURT_ENTRY_SCHEMA } from "@snailycad/schemas";
 import { NotFound } from "@tsed/exceptions";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import type * as APITypes from "@snailycad/types/api";
-import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 
 @Controller("/court-entries")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
-@IsFeatureEnabled({ feature: Feature.COURTHOUSE })
 export class CourtEntryController {
   @Get("/")
   @UsePermissions({

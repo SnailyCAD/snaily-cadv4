@@ -40,7 +40,6 @@ import {
 } from "controllers/leo/incidents/IncidentController";
 import type { z } from "zod";
 import { getNextActiveCallId } from "lib/calls/getNextActiveCall";
-import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 
 export const callInclude = {
   position: true,
@@ -57,7 +56,6 @@ export const callInclude = {
 @Controller("/911-calls")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
-@IsFeatureEnabled({ feature: Feature.CALLS_911 })
 export class Calls911Controller {
   private socket: Socket;
   constructor(socket: Socket) {

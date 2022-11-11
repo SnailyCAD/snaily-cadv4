@@ -11,13 +11,11 @@ import { validateBusinessAcceptance } from "utils/businesses";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import type * as APITypes from "@snailycad/types/api";
-import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 
 @UseBeforeEach(IsAuth)
 @Controller("/businesses/employees")
 @Hidden()
 @ContentType("application/json")
-@IsFeatureEnabled({ feature: Feature.BUSINESS })
 export class BusinessEmployeeController {
   @Put("/:businessId/:id")
   async updateEmployee(

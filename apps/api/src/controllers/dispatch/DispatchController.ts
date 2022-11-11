@@ -25,8 +25,6 @@ import { getInactivityFilter } from "lib/leo/utils";
 import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
 import { getActiveDeputy } from "lib/ems-fd";
 import type * as APITypes from "@snailycad/types/api";
-import { IsFeatureEnabled } from "middlewares/is-enabled";
-import { Feature } from "@prisma/client";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -219,7 +217,6 @@ export class DispatchController {
     fallback: (u) => u.isDispatch,
     permissions: [Permissions.Dispatch],
   })
-  @IsFeatureEnabled({ feature: Feature.RADIO_CHANNEL_MANAGEMENT })
   async updateRadioChannel(
     @PathParams("unitId") unitId: string,
     @BodyParams() body: unknown,
@@ -337,7 +334,6 @@ export class DispatchController {
   }
 
   @Post("/tones")
-  @IsFeatureEnabled({ feature: Feature.TONES })
   @UsePermissions({
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
     fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,

@@ -93,37 +93,30 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
       }
 
       let hasAddedError = false as boolean; // as boolean because eslint gets upset otherwise.
-      if (options.helpers) {
-        for (const error of errors) {
-          Object.entries(error).map(([key, value]) => {
-            const translationOptions = typeof value === "string" ? undefined : value.data;
-            const translationKey = typeof value === "string" ? value : value.message;
+      for (const error of errors) {
+        Object.entries(error).map(([key, value]) => {
+          const translationOptions = typeof value === "string" ? undefined : value.data;
+          const translationKey = typeof value === "string" ? value : value.message;
 
-            const message = isErrorKey(translationKey, errorMessages)
-              ? t(translationKey, translationOptions)
-              : translationKey;
+          const message = isErrorKey(translationKey, errorMessages)
+            ? t(translationKey, translationOptions)
+            : translationKey;
 
-            if (message && restOptions.helpers) {
-              restOptions.helpers.setFieldError(key, message);
-              hasAddedError = true;
-            }
-          });
-        }
+          if (message && restOptions.helpers) {
+            restOptions.helpers.setFieldError(key, message);
+            hasAddedError = true;
+          }
+        });
       }
-
-      const featureNotEnabledOptions = getFeatureNotEnabledError(response);
-      const translationOptions = featureNotEnabledOptions?.data ?? undefined;
-      const translationKey = featureNotEnabledOptions?.message ?? key;
-      const message = isErrorKey(key, errorMessages) ? t(translationKey, translationOptions) : key;
 
       if (
         typeof restOptions.noToast === "string" &&
         restOptions.noToast !== error &&
         !hasAddedError
       ) {
-        toastMessage({ message, title: `${errorTitle} ${error ? `(${error})` : ""}` });
+        toastMessage({ message: t(key), title: `${errorTitle} ${error ? `(${error})` : ""}` });
       } else if (!restOptions.noToast && !hasAddedError) {
-        toastMessage({ message, title: `${errorTitle} ${error ? `(${error})` : ""}` });
+        toastMessage({ message: t(key), title: `${errorTitle} ${error ? `(${error})` : ""}` });
       }
 
       setState("error");
@@ -164,18 +157,6 @@ function parseError(
   }
 
   return message || "unknown";
-}
-
-function getFeatureNotEnabledError(error: AxiosError<ErrorResponseData | null>): ErrorObj | null {
-  const errors = parseErrors(error);
-  const message = error.response?.data?.message ?? error.message;
-
-  const [_error] = errors;
-  if (_error && message === "featureNotEnabled") {
-    return _error as unknown as ErrorObj;
-  }
-
-  return null;
 }
 
 function parseErrors(error: AxiosError<ErrorResponseData | null>) {
