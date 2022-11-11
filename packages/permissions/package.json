@@ -42,6 +42,7 @@
     "bundle": false,
     "platform": "node",
     "target": "node16",
+    "treeshake": true,
     "silent": true,
     "format": [
       "cjs",

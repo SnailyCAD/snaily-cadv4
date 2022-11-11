@@ -31,6 +31,7 @@
     "platform": "node",
     "target": "node16",
     "silent": true,
+    "treeshake": true,
     "format": [
       "esm"
     ],

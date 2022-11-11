@@ -36,6 +36,7 @@
     "dts": true,
     "bundle": false,
     "platform": "node",
+    "treeshake": true,
     "target": "node16",
     "silent": true,
     "format": [
