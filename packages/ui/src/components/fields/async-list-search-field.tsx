@@ -171,13 +171,16 @@ export function AsyncListSearchField<T extends object>(props: AsyncListFieldProp
         {includeMenu && state.isOpen ? (
           <Popover isOpen={state.isOpen} onClose={state.close} popoverRef={popoverRef}>
             {/* todo: add translation */}
-            {/* <p>Start typing...</p> */}
 
             {state.collection.size > 0 ? (
               <AsyncListFieldListBox {...listBoxProps} listBoxRef={listBoxRef} state={state} />
             ) : (
               <p className="cursor-default text-base text-neutral-700 dark:text-gray-400">
-                {common("noOptions")}
+                {state.inputValue === ""
+                  ? common("startTyping")
+                  : list.loadingState === "filtering"
+                  ? common("searching")
+                  : common("noOptions")}
               </p>
             )}
           </Popover>
