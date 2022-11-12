@@ -221,7 +221,7 @@ export function ManageRecordModal({
               />
             </FormField>
 
-            <AddressPostalSelect postalOnly />
+            <AddressPostalSelect postalOptional={false} postalOnly />
 
             <FormField label={t("violations")}>
               <SelectPenalCode
