@@ -2677,8 +2677,6 @@ __metadata:
     "@radix-ui/react-tabs": ^1.0.1
     "@radix-ui/react-toolbar": ^1.0.1
     "@radix-ui/react-tooltip": ^1.0.2
-    "@react-aria/focus": ^3.9.0
-    "@react-aria/interactions": ^3.12.0
     "@react-aria/label": ^3.4.2
     "@react-aria/ssr": ^3.3.0
     "@sentry/nextjs": ^7.19.0
@@ -2707,7 +2705,6 @@ __metadata:
     formik: ^2.2.9
     hex-color-regex: ^1.1.0
     is-hotkey: ^0.2.0
-    is-mobile: ^3.1.1
     leaflet: ^1.9.2
     mdast-util-find-and-replace: ^2.2.1
     next: ^13.0.3
@@ -8410,13 +8407,6 @@ __metadata:
   version: 1.0.1
   resolution: "is-lambda@npm:1.0.1"
   checksum: 93a32f01940220532e5948538699ad610d5924ac86093fcee83022252b363eb0cc99ba53ab084a04e4fb62bf7b5731f55496257a4c38adf87af9c4d352c71c35
-  languageName: node
-  linkType: hard
-
-"is-mobile@npm:^3.1.1":
-  version: 3.1.1
-  resolution: "is-mobile@npm:3.1.1"
-  checksum: b7c549020ac4674520378623afc4976694ff686eb3761cfad12da936ba9c2d675687bdc3c82eadf5a25147ce51c682800679bf835e31de272f05c026cd2b2f14
   languageName: node
   linkType: hard
 

@@ -154,6 +154,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
                 apiPath: "/search/vehicle?includeMany=true",
                 method: "POST",
                 bodyKey: "plateOrVin",
+                filterTextRequired: true,
               }}
             >
               {(item) => (

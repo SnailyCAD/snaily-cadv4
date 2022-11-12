@@ -95,6 +95,7 @@ export function WeaponSearchModal({ id = ModalIds.WeaponSearch }: Props) {
                 apiPath: "/search/weapon?includeMany=true",
                 method: "POST",
                 bodyKey: "serialNumber",
+                filterTextRequired: true,
               }}
             >
               {(item) => (

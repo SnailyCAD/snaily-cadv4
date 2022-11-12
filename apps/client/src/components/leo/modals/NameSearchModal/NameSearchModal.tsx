@@ -220,6 +220,7 @@ export function NameSearchModal() {
                 apiPath: "/search/name?includeMany=true",
                 method: "POST",
                 bodyKey: "name",
+                filterTextRequired: true,
               }}
             >
               {(item) => {

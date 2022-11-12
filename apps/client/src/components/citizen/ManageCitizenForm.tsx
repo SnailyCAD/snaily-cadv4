@@ -1,6 +1,14 @@
 import * as React from "react";
 import Link from "next/link";
-import { DatePickerField, Loader, Input, Button, TextField } from "@snailycad/ui";
+import {
+  DatePickerField,
+  Loader,
+  Input,
+  Button,
+  TextField,
+  AsyncListSearchField,
+  Item,
+} from "@snailycad/ui";
 import { FormRow } from "components/form/FormRow";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
@@ -13,7 +21,6 @@ import { Form, Formik, FormikHelpers } from "formik";
 import type { User, Citizen } from "@snailycad/types";
 import { useTranslations } from "next-intl";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import {
   createDefaultLicensesValues,
   ManageLicensesFormFields,
@@ -107,24 +114,31 @@ export function ManageCitizenForm({
       {({ handleChange, setValues, setFieldValue, values, errors, isValid }) => (
         <Form>
           {allowEditingUser ? (
-            <FormField errorMessage={errors.userId} label="User">
-              <InputSuggestions<User>
-                options={{
-                  apiPath: "/admin/manage/users/search",
-                  method: "POST",
-                  dataKey: "username",
-                }}
-                inputProps={{
-                  value: values.username,
-                  name: "username",
-                  onChange: handleChange,
-                }}
-                onSuggestionPress={(suggestion) => {
-                  setValues({ ...values, userId: suggestion.id, username: suggestion.username });
-                }}
-                Component={({ suggestion }) => <p className="flex ">{suggestion.username}</p>}
-              />
-            </FormField>
+            <AsyncListSearchField<User>
+              autoFocus
+              setValues={({ localValue, node }) => {
+                setValues({
+                  ...values,
+                  userId: node?.value.id ?? values.userId,
+                  username: localValue ?? values.username,
+                });
+              }}
+              localValue={values.username}
+              errorMessage={errors.username}
+              label="User"
+              selectedKey={values.userId}
+              fetchOptions={{
+                apiPath: "/admin/manage/users/search",
+                method: "POST",
+                bodyKey: "username",
+              }}
+            >
+              {(item) => (
+                <Item key={item.id} textValue={item.username}>
+                  <p>{item.username}</p>
+                </Item>
+              )}
+            </AsyncListSearchField>
           ) : null}
 
           <ImageSelectInput image={image} setImage={setImage} />
