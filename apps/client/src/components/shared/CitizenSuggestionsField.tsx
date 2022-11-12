@@ -14,6 +14,8 @@ interface Props {
   /** @default `false` */
   allowsCustomValue?: boolean;
   isDisabled?: boolean;
+  isOptional?: boolean;
+  makeKey?(item: NameSearchResult): string;
 }
 
 export function CitizenSuggestionsField<Suggestion extends NameSearchResult>(props: Props) {
@@ -26,6 +28,7 @@ export function CitizenSuggestionsField<Suggestion extends NameSearchResult>(pro
       autoFocus={props.autoFocus}
       className="w-full"
       isDisabled={props.isDisabled}
+      isOptional={props.isOptional}
       allowsCustomValue={props.allowsCustomValue}
       setValues={({ localValue, node }) => {
         const labelValue =
@@ -47,9 +50,10 @@ export function CitizenSuggestionsField<Suggestion extends NameSearchResult>(pro
     >
       {(item) => {
         const name = `${item.name} ${item.surname}`;
+        const key = props.makeKey ? props.makeKey(item) : item.id;
 
         return (
-          <Item key={item.id} textValue={name}>
+          <Item key={key} textValue={name}>
             <div className="flex items-center">
               {item.imageId ? (
                 <Image
