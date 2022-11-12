@@ -28,7 +28,6 @@ export function RequestExpungement({
   );
 
   const t = useTranslations("Courthouse");
-  const leo = useTranslations("Leo");
   const common = useTranslations("Common");
 
   function handleClose() {
@@ -64,15 +63,16 @@ export function RequestExpungement({
     >
       <div>
         <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-          {({ values, errors }) => (
+          {({ values }) => (
             <Form className="flex items-center gap-2">
-              <FormField className="w-full" errorMessage={errors.citizenId} label={leo("citizen")}>
-                <CitizenSuggestionsField
-                  fromAuthUserOnly
-                  labelFieldName="citizenName"
-                  valueFieldName="citizenId"
-                />
-              </FormField>
+              <CitizenSuggestionsField
+                autoFocus
+                allowsCustomValue
+                label={common("citizen")}
+                fromAuthUserOnly
+                labelFieldName="citizenName"
+                valueFieldName="citizenId"
+              />
 
               <Button
                 className="flex items-center mt-4"

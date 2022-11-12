@@ -127,13 +127,14 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
           <form ref={formRef} onSubmit={handleSubmit}>
             <ImageSelectInput image={image} setImage={setImage} />
 
-            <FormField errorMessage={errors.citizenId} label={t("Leo.citizen")}>
-              <CitizenSuggestionsField
-                fromAuthUserOnly
-                labelFieldName="name"
-                valueFieldName="citizenId"
-              />
-            </FormField>
+            <CitizenSuggestionsField
+              autoFocus
+              allowsCustomValue
+              label={t("Leo.citizen")}
+              fromAuthUserOnly
+              labelFieldName="name"
+              valueFieldName="citizenId"
+            />
 
             {BADGE_NUMBERS ? (
               <TextField

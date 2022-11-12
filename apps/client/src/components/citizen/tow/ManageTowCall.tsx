@@ -123,13 +123,14 @@ export function ManageCallModal({ onDelete, onUpdate, onClose, isTow: tow, call 
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ setFieldValue, values, isValid, errors }) => (
           <Form>
-            <FormField errorMessage={errors.creatorId} label={t("citizen")}>
-              <CitizenSuggestionsField
-                fromAuthUserOnly
-                labelFieldName="creatorName"
-                valueFieldName="creatorId"
-              />
-            </FormField>
+            <CitizenSuggestionsField
+              autoFocus
+              allowsCustomValue
+              label={t("citizen")}
+              fromAuthUserOnly
+              labelFieldName="creatorName"
+              valueFieldName="creatorId"
+            />
 
             <AddressPostalSelect addressLabel="location" />
 

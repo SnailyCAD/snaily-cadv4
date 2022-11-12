@@ -190,15 +190,14 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
               </AsyncListSearchField>
             )}
 
-            <FormField errorMessage={errors.citizenId} label={tVehicle("owner")}>
-              <CitizenSuggestionsField
-                fromAuthUserOnly={!isLeo}
-                allowUnknown={isLeo}
-                labelFieldName="name"
-                valueFieldName="citizenId"
-                isDisabled={isDisabled}
-              />
-            </FormField>
+            <CitizenSuggestionsField
+              allowsCustomValue
+              label={tVehicle("owner")}
+              fromAuthUserOnly={!isLeo}
+              labelFieldName="name"
+              valueFieldName="citizenId"
+              isDisabled={isDisabled}
+            />
 
             <TextField
               errorMessage={errors.color}

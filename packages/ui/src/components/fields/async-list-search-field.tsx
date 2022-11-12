@@ -44,9 +44,11 @@ export function AsyncListSearchField<T extends object>(props: AsyncListFieldProp
   const ref = React.useRef<any>(null);
   const listBoxRef = React.useRef<HTMLUListElement | null>(null);
   const popoverRef = React.useRef<HTMLDivElement | null>(null);
+  const buttonRef = React.useRef<HTMLButtonElement | null>(null);
   const includeMenu = props.includeMenu ?? true;
   const common = useTranslations("Common");
 
+  // todo: option to require a search value before fetching
   const list = useAsyncList<T>({
     async load({ signal, filterText }) {
       const apiPath =
@@ -119,6 +121,7 @@ export function AsyncListSearchField<T extends object>(props: AsyncListFieldProp
       inputRef: ref,
       listBoxRef,
       popoverRef,
+      buttonRef,
     },
     state,
   );
@@ -146,6 +149,8 @@ export function AsyncListSearchField<T extends object>(props: AsyncListFieldProp
         ) : null}
         {includeMenu ? (
           <Button
+            disabled={inputProps.disabled}
+            ref={buttonRef}
             onPress={() => state.open()}
             className={classNames(
               "!rounded-l-none !border-l-0 px-2",
@@ -162,7 +167,6 @@ export function AsyncListSearchField<T extends object>(props: AsyncListFieldProp
         ) : null}
         {includeMenu && state.isOpen ? (
           <Popover isOpen={state.isOpen} onClose={state.close} popoverRef={popoverRef}>
-            {/* todo: add loader */}
             {/* todo: add translation */}
             {/* <p>Start typing...</p> */}
 

@@ -142,13 +142,14 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
             <div>
               <ImageSelectInput setImage={setImage} image={image} />
 
-              <FormField errorMessage={errors.citizenId} label={t("citizen")}>
-                <CitizenSuggestionsField
-                  fromAuthUserOnly
-                  labelFieldName="name"
-                  valueFieldName="citizenId"
-                />
-              </FormField>
+              <CitizenSuggestionsField
+                autoFocus
+                allowsCustomValue
+                label={t("citizen")}
+                fromAuthUserOnly
+                labelFieldName="name"
+                valueFieldName="citizenId"
+              />
 
               {BADGE_NUMBERS ? (
                 <TextField

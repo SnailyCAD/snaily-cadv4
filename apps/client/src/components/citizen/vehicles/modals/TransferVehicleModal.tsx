@@ -1,6 +1,4 @@
-import * as React from "react";
 import { Loader, Button, TextField } from "@snailycad/ui";
-import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
@@ -52,7 +50,7 @@ export function TransferVehicleModal({ onTransfer, vehicle }: Props) {
       className="w-[750px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ errors, isValid }) => (
+        {({ isValid }) => (
           <Form>
             <p className="my-2 mb-5">
               {t.rich("transferVehicleInfo", {
@@ -65,13 +63,14 @@ export function TransferVehicleModal({ onTransfer, vehicle }: Props) {
               <TextField label={t("model")} isDisabled defaultValue={vehicle.model.value.value} />
             </FormRow>
 
-            <FormField errorMessage={errors.ownerId} label={t("owner")}>
-              <CitizenSuggestionsField
-                fromAuthUserOnly={false}
-                labelFieldName="name"
-                valueFieldName="ownerId"
-              />
-            </FormField>
+            <CitizenSuggestionsField
+              autoFocus
+              allowsCustomValue
+              label={t("owner")}
+              fromAuthUserOnly={false}
+              labelFieldName="name"
+              valueFieldName="ownerId"
+            />
 
             <footer className="mt-5 flex justify-end">
               <Button

@@ -144,15 +144,14 @@ export function RegisterWeaponModal({ weapon, onClose, onCreate, onUpdate }: Pro
               </AsyncListSearchField>
             )}
 
-            <FormField errorMessage={errors.citizenId} label={tVehicle("owner")}>
-              <CitizenSuggestionsField
-                fromAuthUserOnly={!isLeo}
-                allowUnknown={isLeo}
-                labelFieldName="name"
-                valueFieldName="citizenId"
-                isDisabled={isDisabled}
-              />
-            </FormField>
+            <CitizenSuggestionsField
+              allowsCustomValue
+              label={tVehicle("owner")}
+              fromAuthUserOnly={!isLeo}
+              labelFieldName="name"
+              valueFieldName="citizenId"
+              isDisabled={isDisabled}
+            />
 
             <FormField
               errorMessage={errors.registrationStatus}
