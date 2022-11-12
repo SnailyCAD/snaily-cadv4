@@ -10,7 +10,6 @@ import { Input } from "../inputs/input";
 import { ErrorMessage } from "../error-message";
 import { Popover } from "../overlays/async-list/popover";
 import { AsyncListFieldListBox } from "../list/async-list/async-list-list-box";
-// import { useFilter } from "@react-aria/i18n";
 import { useAsyncList } from "@react-stately/data";
 import { Button } from "../button";
 import { ChevronDown } from "react-bootstrap-icons";
@@ -20,6 +19,7 @@ import { useTranslations } from "next-intl";
 import { Loader } from "../loader";
 
 interface AsyncListFieldFetchOptions {
+  filterTextRequired?: boolean;
   apiPath: string | ((query: string | undefined) => string);
   method?: "POST" | "GET" | null;
   bodyKey?: string;
@@ -48,9 +48,12 @@ export function AsyncListSearchField<T extends object>(props: AsyncListFieldProp
   const includeMenu = props.includeMenu ?? true;
   const common = useTranslations("Common");
 
-  // todo: option to require a search value before fetching
   const list = useAsyncList<T>({
     async load({ signal, filterText }) {
+      if (props.fetchOptions.filterTextRequired && !filterText) {
+        return { items: [] };
+      }
+
       const apiPath =
         typeof props.fetchOptions.apiPath === "string"
           ? props.fetchOptions.apiPath
@@ -191,7 +194,7 @@ export function AsyncListSearchField<T extends object>(props: AsyncListFieldProp
 export { Item };
 
 // todo: place in `@snailycad/utils`
-export function getAPIUrl() {
+function getAPIUrl() {
   const envUrl = process.env.NEXT_PUBLIC_PROD_ORIGIN ?? "http://localhost:8080/v1";
 
   if (process.env.NODE_ENV === "development") {

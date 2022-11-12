@@ -16,41 +16,33 @@ interface Props {
   isDisabled?: boolean;
 }
 
-// todo: fix props
-export function CitizenSuggestionsField<Suggestion extends NameSearchResult>({
-  label,
-  labelFieldName,
-  valueFieldName,
-  fromAuthUserOnly,
-  allowsCustomValue = false,
-  isDisabled = false,
-  autoFocus,
-}: Props) {
+export function CitizenSuggestionsField<Suggestion extends NameSearchResult>(props: Props) {
   const { setValues, errors, values } = useFormikContext<any>();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
   const { makeImageUrl } = useImageUrl();
 
   return (
     <AsyncListSearchField<Suggestion>
-      autoFocus={autoFocus}
+      autoFocus={props.autoFocus}
       className="w-full"
-      isDisabled={isDisabled}
-      allowsCustomValue={allowsCustomValue}
+      isDisabled={props.isDisabled}
+      allowsCustomValue={props.allowsCustomValue}
       setValues={({ localValue, node }) => {
         const labelValue =
-          typeof localValue !== "undefined" ? { [labelFieldName]: localValue } : {};
-        const valueField = node ? { [valueFieldName]: node.key as string } : {};
+          typeof localValue !== "undefined" ? { [props.labelFieldName]: localValue } : {};
+        const valueField = node ? { [props.valueFieldName]: node.key as string } : {};
 
         setValues({ ...values, ...labelValue, ...valueField });
       }}
-      localValue={values[labelFieldName]}
-      errorMessage={errors[valueFieldName] as string}
-      label={label}
-      selectedKey={values[valueFieldName]}
+      localValue={values[props.labelFieldName]}
+      errorMessage={errors[props.valueFieldName] as string}
+      label={props.label}
+      selectedKey={values[props.valueFieldName]}
       fetchOptions={{
-        apiPath: `/search/name${fromAuthUserOnly ? "?fromAuthUserOnly=true" : ""}`,
+        apiPath: `/search/name${props.fromAuthUserOnly ? "?fromAuthUserOnly=true" : ""}`,
         method: "POST",
         bodyKey: "name",
+        filterTextRequired: true,
       }}
     >
       {(item) => {
