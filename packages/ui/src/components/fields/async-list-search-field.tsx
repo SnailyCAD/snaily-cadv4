@@ -32,13 +32,11 @@ export interface AsyncListFieldProps<T extends object>
   errorMessage?: string | null;
   className?: string;
   includeMenu?: boolean;
-  onSelectionChange(item: Node<T> | null): void;
 
   fetchOptions: AsyncListFieldFetchOptions;
-  localValue: {
-    value: string;
-    onChange(value: string): void;
-  };
+
+  localValue: string;
+  setValues(values: { localValue?: string; node?: Node<T> | null }): void;
 }
 
 export function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
@@ -79,35 +77,37 @@ export function AsyncListSearchField<T extends object>(props: AsyncListFieldProp
 
   useDebounce(
     () => {
-      list.setFilterText(props.localValue.value);
+      list.setFilterText(props.localValue);
     },
     200,
-    [props.localValue.value],
+    [props.localValue],
   );
 
-  function handleSelectionChange(key: React.Key) {
+  function handleSelectionChange(key?: React.Key, value?: string) {
+    if (!key) {
+      props.setValues({ localValue: value ?? "" });
+      return;
+    }
+
     const item = state.collection.getItem(key) as Node<T> | null;
 
     if (item) {
-      props.onSelectionChange(item);
-      props.localValue.onChange(item.textValue);
+      props.setValues({ localValue: item.textValue, node: item });
     } else {
-      props.onSelectionChange(null);
-      props.localValue.onChange("");
+      props.setValues({ localValue: value ?? "", node: null });
     }
   }
 
   const listOptions = {
     items: list.items,
-    inputValue: props.localValue.value,
-    onInputChange: props.localValue.onChange,
+    inputValue: props.localValue,
+    onInputChange: (value: string) => handleSelectionChange(undefined, value),
   };
 
   const { contains } = useFilter({ sensitivity: "base" });
   const state = useComboBoxState({
     ...props,
     ...listOptions,
-    allowsCustomValue: true,
     allowsEmptyCollection: true,
     onSelectionChange: handleSelectionChange,
     defaultFilter: contains,
@@ -116,7 +116,6 @@ export function AsyncListSearchField<T extends object>(props: AsyncListFieldProp
   const { inputProps, listBoxProps, errorMessageProps, labelProps } = useComboBox(
     {
       ...props,
-      allowsCustomValue: true,
       onSelectionChange: handleSelectionChange,
       inputRef: ref,
       listBoxRef,

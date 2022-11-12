@@ -131,21 +131,22 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
       className="w-[750px]"
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ setFieldValue, errors, values, isValid }) => (
+        {({ setValues, errors, values, isValid }) => (
           <Form>
             <AsyncListSearchField<VehicleSearchResult>
-              localValue={{
-                value: values.vinNumber,
-                onChange: (value) => setFieldValue("vinNumber", value),
+              setValues={({ localValue, node }) => {
+                const vinNumber = localValue ? { vinNumber: localValue } : {};
+                const plateOrVin = node ? { plateOrVin: node.key as string } : {};
+
+                if (node) {
+                  setCurrentResult(node.value);
+                }
+
+                setValues({ ...values, ...vinNumber, ...plateOrVin });
               }}
+              localValue={values.vinNumber}
               errorMessage={errors.plateOrVin}
               label={t("plateOrVin")}
-              onSelectionChange={(node) => {
-                if (!node) return;
-
-                setFieldValue("plateOrVin", node.value.vinNumber);
-                setCurrentResult(node.value);
-              }}
               selectedKey={values.plateOrVin}
               fetchOptions={{
                 apiPath: "/search/vehicle?includeMany=true",
