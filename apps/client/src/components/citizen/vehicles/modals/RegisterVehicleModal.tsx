@@ -170,7 +170,8 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
               <AsyncListSearchField<VehicleValue>
                 localValue={values.modelName}
                 setValues={({ localValue, node }) => {
-                  const modelName = localValue ? { modelName: localValue } : {};
+                  const modelName =
+                    typeof localValue !== "undefined" ? { modelName: localValue } : {};
                   const model = node ? { model: node.key as string } : {};
 
                   setValues({ ...values, ...modelName, ...model });

@@ -134,6 +134,8 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
         {({ setValues, errors, values, isValid }) => (
           <Form>
             <AsyncListSearchField<VehicleSearchResult>
+              allowsCustomValue
+              autoFocus
               setValues={({ localValue, node }) => {
                 const vinNumber = localValue ? { vinNumber: localValue } : {};
                 const plateOrVin = node ? { plateOrVin: node.key as string } : {};

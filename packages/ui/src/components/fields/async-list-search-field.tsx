@@ -10,13 +10,14 @@ import { Input } from "../inputs/input";
 import { ErrorMessage } from "../error-message";
 import { Popover } from "../overlays/async-list/popover";
 import { AsyncListFieldListBox } from "../list/async-list/async-list-list-box";
-import { useFilter } from "@react-aria/i18n";
+// import { useFilter } from "@react-aria/i18n";
 import { useAsyncList } from "@react-stately/data";
 import { Button } from "../button";
 import { ChevronDown } from "react-bootstrap-icons";
 import { useDebounce } from "react-use";
 import type { Node } from "@react-types/shared";
 import { useTranslations } from "next-intl";
+import { Loader } from "../loader";
 
 interface AsyncListFieldFetchOptions {
   apiPath: string | ((query: string | undefined) => string);
@@ -104,13 +105,11 @@ export function AsyncListSearchField<T extends object>(props: AsyncListFieldProp
     onInputChange: (value: string) => handleSelectionChange(undefined, value),
   };
 
-  const { contains } = useFilter({ sensitivity: "base" });
   const state = useComboBoxState({
     ...props,
     ...listOptions,
     allowsEmptyCollection: true,
     onSelectionChange: handleSelectionChange,
-    defaultFilter: contains,
   });
 
   const { inputProps, listBoxProps, errorMessageProps, labelProps } = useComboBox(
@@ -135,11 +134,24 @@ export function AsyncListSearchField<T extends object>(props: AsyncListFieldProp
           errorMessage={props.errorMessage}
           className={classNames(inputProps.className, includeMenu && "rounded-r-none")}
         />
+        {["filtering"].includes(list.loadingState) ? (
+          <div
+            className={classNames(
+              "absolute top-0 bottom-0 flex items-center justify-center",
+              includeMenu ? "right-11" : "right-2",
+            )}
+          >
+            <Loader />
+          </div>
+        ) : null}
         {includeMenu ? (
           <Button
             onPress={() => state.open()}
             className={classNames(
               "!rounded-l-none !border-l-0 px-2",
+              state.isFocused
+                ? "border-gray-800 dark:border-gray-500"
+                : "border-gray-200 dark:border-gray-700",
               props.errorMessage &&
                 "!border-red-500 focus:!border-red-700 dark:!focus:border-red-700",
             )}
@@ -150,10 +162,16 @@ export function AsyncListSearchField<T extends object>(props: AsyncListFieldProp
         ) : null}
         {includeMenu && state.isOpen ? (
           <Popover isOpen={state.isOpen} onClose={state.close} popoverRef={popoverRef}>
+            {/* todo: add loader */}
+            {/* todo: add translation */}
+            {/* <p>Start typing...</p> */}
+
             {state.collection.size > 0 ? (
               <AsyncListFieldListBox {...listBoxProps} listBoxRef={listBoxRef} state={state} />
             ) : (
-              common("noOptions")
+              <p className="cursor-default text-base text-neutral-700 dark:text-gray-400">
+                {common("noOptions")}
+              </p>
             )}
           </Popover>
         ) : null}
