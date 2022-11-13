@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Discord, Steam } from "react-bootstrap-icons";
 import { Button, Loader, TextField } from "@snailycad/ui";
 import { TwoFactorAuthScreen } from "components/auth/TwoFactorAuthScreen";
-import { getAPIUrl } from "lib/fetch/getAPIUrl";
+import { getAPIUrl } from "@snailycad/utils/api-url";
 import { useRouter } from "next/router";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
