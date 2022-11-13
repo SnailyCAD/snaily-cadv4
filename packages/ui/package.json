@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "yarn tsup",
+    "build": "yarn rimraf ./dist && yarn tsup",
     "watch": "yarn tsup --watch --silent=false",
     "typecheck": "yarn tsc --noEmit"
   },
