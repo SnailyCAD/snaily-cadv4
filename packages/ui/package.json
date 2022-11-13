@@ -99,6 +99,7 @@
     "@react-types/overlays": "^3.6.4",
     "@react-types/select": "^3.6.4",
     "@react-types/shared": "^3.15.0",
+    "@snailycad/utils": "1.32.0",
     "react-bootstrap-icons": "^1.9.1",
     "tailwind-merge": "^1.8.0"
   },
