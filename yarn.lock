@@ -2832,6 +2832,7 @@ __metadata:
     "@snailycad/types": 1.32.0
     "@snailycad/utils": 1.32.0
     react-bootstrap-icons: ^1.9.1
+    rimraf: ^3.0.2
     tailwind-merge: ^1.8.0
     tailwindcss: ^3.2.3
     tslib: ^2.4.1
