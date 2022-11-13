@@ -2,8 +2,8 @@ import * as React from "react";
 import { useOption } from "@react-aria/listbox";
 import type { Node } from "@react-types/shared";
 import type { ListState } from "@react-stately/list";
-import { buttonSizes } from "../button";
-import { classNames } from "../../utils/classNames";
+import { buttonSizes } from "../../button";
+import { classNames } from "../../../utils/classNames";
 import { Check } from "react-bootstrap-icons";
 
 interface OptionProps {
@@ -11,7 +11,7 @@ interface OptionProps {
   state: ListState<unknown>;
 }
 
-export function Option(props: OptionProps) {
+export function AsyncListFieldOption(props: OptionProps) {
   const ref = React.useRef<HTMLLIElement>(null);
   const { optionProps, isDisabled, isFocused, isSelected } = useOption(
     { key: props.item.key },

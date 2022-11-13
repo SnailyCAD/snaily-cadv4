@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { WEAPON_SCHEMA } from "@snailycad/schemas";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
-import { Loader, Input, Button } from "@snailycad/ui";
+import { Loader, Input, Button, Item, AsyncListSearchField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useValues } from "src/context/ValuesContext";
@@ -16,7 +16,6 @@ import { useCitizen } from "context/CitizenContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { filterLicenseTypes } from "lib/utils";
 import { toastMessage } from "lib/toastMessage";
-import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import type { PostCitizenWeaponData, PutCitizenWeaponData } from "@snailycad/types/api";
 
@@ -122,41 +121,37 @@ export function RegisterWeaponModal({ weapon, onClose, onCreate, onUpdate }: Pro
                 </datalist>
               </FormField>
             ) : (
-              <FormField errorMessage={errors.model} label={tVehicle("model")}>
-                <InputSuggestions<WeaponValue>
-                  onSuggestionPress={(suggestion) => {
-                    setValues({
-                      ...values,
-                      modelName: suggestion.value.value,
-                      model: suggestion.id,
-                    });
-                  }}
-                  Component={({ suggestion }) => (
-                    <p className="w-full text-left">{suggestion.value.value}</p>
-                  )}
-                  options={{
-                    apiPath: (value) => `/admin/values/weapon/search?query=${value}`,
-                    method: "GET",
-                  }}
-                  inputProps={{
-                    value: values.modelName,
-                    name: "modelName",
-                    onChange: handleChange,
-                    errorMessage: errors.model,
-                  }}
-                />
-              </FormField>
+              <AsyncListSearchField<WeaponValue>
+                localValue={values.modelName}
+                setValues={({ localValue, node }) => {
+                  const modelName =
+                    typeof localValue !== "undefined" ? { modelName: localValue } : {};
+                  const model = node ? { model: node.key as string } : {};
+
+                  setValues({ ...values, ...modelName, ...model });
+                }}
+                errorMessage={errors.model}
+                label={tVehicle("model")}
+                selectedKey={values.model}
+                fetchOptions={{
+                  apiPath: (value) => `/admin/values/weapon/search?query=${value}`,
+                  method: "GET",
+                }}
+              >
+                {(item) => {
+                  return <Item textValue={item.value.value}>{item.value.value}</Item>;
+                }}
+              </AsyncListSearchField>
             )}
 
-            <FormField errorMessage={errors.citizenId} label={tVehicle("owner")}>
-              <CitizenSuggestionsField
-                fromAuthUserOnly={!isLeo}
-                allowUnknown={isLeo}
-                labelFieldName="name"
-                valueFieldName="citizenId"
-                isDisabled={isDisabled}
-              />
-            </FormField>
+            <CitizenSuggestionsField
+              allowsCustomValue
+              label={tVehicle("owner")}
+              fromAuthUserOnly={!isLeo}
+              labelFieldName="name"
+              valueFieldName="citizenId"
+              isDisabled={isDisabled}
+            />
 
             <FormField
               errorMessage={errors.registrationStatus}

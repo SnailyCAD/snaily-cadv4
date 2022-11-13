@@ -11,12 +11,8 @@ import type { MedicalRecord } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
-import { InputSuggestions } from "components/form/inputs/InputSuggestions";
-import { useImageUrl } from "hooks/useImageUrl";
-import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import type { NameSearchResult } from "state/search/nameSearchState";
 import type { PostEmsFdMedicalRecord } from "@snailycad/types/api";
-import Image from "next/image";
+import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 
 interface Props {
   onCreate?(newV: MedicalRecord): void;
@@ -29,8 +25,6 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("MedicalRecords");
   const { bloodGroup } = useValues();
-  const { makeImageUrl } = useImageUrl();
-  const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
 
   const validate = handleValidate(MEDICAL_RECORD_SCHEMA);
 
@@ -68,52 +62,15 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
       className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setFieldValue, setValues, errors, values, isValid }) => (
+        {({ handleChange, setFieldValue, errors, values, isValid }) => (
           <Form>
-            <FormField errorMessage={errors.citizenId} label={t("citizen")}>
-              <InputSuggestions<NameSearchResult>
-                onSuggestionPress={(suggestion) => {
-                  const newValues = {
-                    ...values,
-                    citizenId: suggestion.id,
-                    citizenName: `${suggestion.name} ${suggestion.surname}`,
-                  };
-
-                  setValues(newValues, true);
-                }}
-                Component={({ suggestion }) => (
-                  <div className="flex items-center">
-                    {suggestion.imageId ? (
-                      <Image
-                        className="rounded-md w-[35px] h-[35px] object-cover"
-                        draggable={false}
-                        src={makeImageUrl("citizens", suggestion.imageId)!}
-                        loading="lazy"
-                        width={35}
-                        height={35}
-                        alt={`${suggestion.name} ${suggestion.surname}`}
-                      />
-                    ) : null}
-                    <p>
-                      {suggestion.name} {suggestion.surname}{" "}
-                      {SOCIAL_SECURITY_NUMBERS && suggestion.socialSecurityNumber ? (
-                        <>(SSN: {suggestion.socialSecurityNumber})</>
-                      ) : null}
-                    </p>
-                  </div>
-                )}
-                options={{
-                  apiPath: "/search/name",
-                  method: "POST",
-                  dataKey: "name",
-                }}
-                inputProps={{
-                  value: values.citizenName,
-                  name: "citizenName",
-                  onChange: handleChange,
-                }}
-              />
-            </FormField>
+            <CitizenSuggestionsField
+              autoFocus
+              fromAuthUserOnly={false}
+              label={common("citizen")}
+              labelFieldName="citizenName"
+              valueFieldName="citizenId"
+            />
 
             <FormField errorMessage={errors.bloodGroup} label={t("bloodGroup")}>
               <Select

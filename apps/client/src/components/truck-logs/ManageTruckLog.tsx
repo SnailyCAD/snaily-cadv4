@@ -102,13 +102,13 @@ export function ManageTruckLogModal({
               />
             </FormRow>
 
-            <FormField errorMessage={errors.citizenId} label={t("driver")}>
-              <CitizenSuggestionsField
-                fromAuthUserOnly
-                labelFieldName="citizenName"
-                valueFieldName="citizenId"
-              />
-            </FormField>
+            <CitizenSuggestionsField
+              allowsCustomValue
+              label={t("driver")}
+              fromAuthUserOnly
+              labelFieldName="citizenName"
+              valueFieldName="citizenId"
+            />
 
             <FormField errorMessage={errors.vehicleId} label={t("vehicle")}>
               <Select

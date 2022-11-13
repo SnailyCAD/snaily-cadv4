@@ -56,7 +56,9 @@
     "select": "Select...",
     "item": "Item",
     "address": "Address",
-    "location": "Location"
+    "location": "Location",
+    "startTyping": "Start typing...",
+    "searching": "Searching..."
   },
   "Nav": {
     "citizen": "Citizen",

@@ -8,12 +8,13 @@ import { Rank, User, WhitelistStatus } from "@prisma/client";
 import { IsAuth } from "middlewares/IsAuth";
 import { ContentType, Description } from "@tsed/schema";
 import { request } from "undici";
-import { findRedirectURL, findUrl } from "./Discord";
+import { findRedirectURL } from "./Discord";
 import { getSessionUser } from "lib/auth/getSessionUser";
 import { getDefaultPermissionsForNewUser } from "./Auth";
 import { setUserTokenCookies } from "lib/auth/setUserTokenCookies";
+import { getAPIUrl } from "@snailycad/utils/api-url";
 
-const callbackUrl = makeCallbackURL(findUrl());
+const callbackUrl = makeCallbackURL(getAPIUrl());
 const STEAM_API_KEY = process.env["STEAM_API_KEY"];
 export const STEAM_API_URL = "https://api.steampowered.com";
 

@@ -7,7 +7,7 @@ import { CitizenProvider } from "context/CitizenContext";
 import "styles/globals.scss";
 import "styles/fonts.scss";
 import { SocketProvider } from "@casper124578/use-socket.io";
-import { getAPIUrl } from "lib/fetch/getAPIUrl";
+import { getAPIUrl } from "@snailycad/utils/api-url";
 import { setTag, setTags } from "@sentry/nextjs";
 import type { cad, User } from "@snailycad/types";
 import { useMounted } from "@casper124578/useful/hooks/useMounted";

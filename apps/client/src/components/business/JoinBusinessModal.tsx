@@ -68,13 +68,14 @@ export function JoinBusinessModal({ onCreate }: Props) {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField errorMessage={errors.citizenId} label={t("citizen")}>
-              <CitizenSuggestionsField
-                labelFieldName="citizenName"
-                valueFieldName="citizenId"
-                fromAuthUserOnly
-              />
-            </FormField>
+            <CitizenSuggestionsField
+              autoFocus
+              allowsCustomValue
+              label={t("citizen")}
+              fromAuthUserOnly
+              labelFieldName="citizenName"
+              valueFieldName="citizenId"
+            />
 
             <FormField errorMessage={errors.businessId} label={t("business")}>
               <Select

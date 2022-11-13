@@ -10,25 +10,16 @@ import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import {
-  type Citizen,
-  RecordType,
-  type PenalCode,
-  type Record,
-  PaymentStatus,
-} from "@snailycad/types";
-import { InputSuggestions } from "components/form/inputs/InputSuggestions";
-import { PersonFill } from "react-bootstrap-icons";
-import { useImageUrl } from "hooks/useImageUrl";
+import { RecordType, type PenalCode, type Record, PaymentStatus } from "@snailycad/types";
 import { PenalCodesTable } from "./ManageRecord/PenalCodesTable";
 import { SelectPenalCode } from "./ManageRecord/SelectPenalCode";
 import { SeizedItemsTable } from "./ManageRecord/seized-items/SeizedItemsTable";
 import { toastMessage } from "lib/toastMessage";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { PostRecordsData, PutRecordsByIdData } from "@snailycad/types/api";
-import Image from "next/image";
 import { Toggle } from "components/form/Toggle";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
+import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 
 interface Props {
   record?: Record | null;
@@ -77,7 +68,6 @@ export function ManageRecordModal({
 
   const { state, execute } = useFetch();
   const { penalCode } = useValues();
-  const { makeImageUrl } = useImageUrl();
   const penalCodes =
     type === "WRITTEN_WARNING"
       ? penalCode.values.filter(
@@ -171,57 +161,18 @@ export function ManageRecordModal({
       className="w-[800px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, setValues, setFieldValue, errors, values, isValid }) => (
+        {({ handleChange, setFieldValue, errors, values, isValid }) => (
           <Form autoComplete="off">
-            <FormField errorMessage={errors.citizenId} label={t("citizen")}>
-              <InputSuggestions<Citizen>
-                inputProps={{
-                  value: values.citizenName,
-                  name: "citizenName",
-                  onChange: handleChange,
-                  disabled: isReadOnly || !!record,
-                  errorMessage: errors.citizenName,
-                }}
-                onSuggestionPress={(suggestion) => {
-                  const newValues = {
-                    ...values,
-                    citizenId: suggestion.id,
-                    citizenName: `${suggestion.name} ${suggestion.surname}`,
-                  };
+            <CitizenSuggestionsField
+              autoFocus
+              fromAuthUserOnly={false}
+              label={t("citizen")}
+              isDisabled={isReadOnly || !!record}
+              labelFieldName="citizenName"
+              valueFieldName="citizenId"
+            />
 
-                  setValues(newValues, true);
-                }}
-                options={{
-                  apiPath: "/search/name",
-                  dataKey: "name",
-                  method: "POST",
-                }}
-                Component={({ suggestion }) => (
-                  <div className="flex items-center">
-                    <div className="mr-2 min-w-[25px]">
-                      {suggestion.imageId ? (
-                        <Image
-                          className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-                          draggable={false}
-                          src={makeImageUrl("citizens", suggestion.imageId)!}
-                          loading="lazy"
-                          width={30}
-                          height={30}
-                          alt={`${suggestion.name} ${suggestion.surname}`}
-                        />
-                      ) : (
-                        <PersonFill className="text-gray-500/60 w-[25px] h-[25px]" />
-                      )}
-                    </div>
-                    <p>
-                      {suggestion.name} {suggestion.surname}
-                    </p>
-                  </div>
-                )}
-              />
-            </FormField>
-
-            <AddressPostalSelect postalOnly />
+            <AddressPostalSelect postalOptional={false} postalOnly />
 
             <FormField label={t("violations")}>
               <SelectPenalCode

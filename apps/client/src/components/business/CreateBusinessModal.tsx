@@ -71,13 +71,14 @@ export function CreateBusinessModal({ onCreate }: Props) {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, setFieldValue, errors, values, isValid }) => (
           <Form>
-            <FormField errorMessage={errors.ownerId} label={t("citizen")}>
-              <CitizenSuggestionsField
-                fromAuthUserOnly
-                labelFieldName="ownerName"
-                valueFieldName="ownerId"
-              />
-            </FormField>
+            <CitizenSuggestionsField
+              autoFocus
+              allowsCustomValue
+              label={t("citizen")}
+              fromAuthUserOnly
+              labelFieldName="citizenName"
+              valueFieldName="ownerId"
+            />
 
             <TextField
               errorMessage={errors.name}

@@ -1,6 +1,5 @@
 import * as React from "react";
-import { Loader, Button } from "@snailycad/ui";
-import { FormField } from "components/form/FormField";
+import { Loader, Button, AsyncListSearchField, Item } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik, useFormikContext } from "formik";
@@ -18,7 +17,6 @@ import { ArrowLeft, PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useAuth } from "context/AuthContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { Infofield } from "components/shared/Infofield";
 import { CitizenLicenses } from "components/citizen/licenses/LicensesCard";
 import { FullDate } from "components/shared/FullDate";
@@ -186,6 +184,7 @@ export function NameSearchModal() {
   const hasActiveWarrants = warrants.filter((v) => v.status === "ACTIVE").length > 0;
 
   const INITIAL_VALUES = {
+    searchValue: payloadCitizen?.name ?? "",
     name: payloadCitizen?.name ?? "",
     id: payloadCitizen?.id,
   };
@@ -198,48 +197,60 @@ export function NameSearchModal() {
       className="w-[850px]"
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, setFieldValue, errors, values, isValid }) => (
+        {({ setValues, errors, values, isValid }) => (
           <Form>
-            <FormField errorMessage={errors.name} label={cT("fullName")}>
-              <InputSuggestions<NameSearchResult>
-                onSuggestionPress={(suggestion: NameSearchResult) => {
-                  setFieldValue("name", `${suggestion.name} ${suggestion.surname}`);
-                  setCurrentResult(suggestion);
-                }}
-                Component={({ suggestion }) => (
-                  <div className="flex items-center">
-                    {suggestion.imageId ? (
-                      <Image
-                        alt={`${suggestion.name} ${suggestion.surname}`}
-                        className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-                        draggable={false}
-                        src={makeImageUrl("citizens", suggestion.imageId)!}
-                        loading="lazy"
-                        width={30}
-                        height={30}
-                      />
-                    ) : null}
-                    <p>
-                      {suggestion.name} {suggestion.surname}{" "}
-                      {SOCIAL_SECURITY_NUMBERS && suggestion.socialSecurityNumber ? (
-                        <>(SSN: {suggestion.socialSecurityNumber})</>
+            <AsyncListSearchField<NameSearchResult>
+              autoFocus
+              setValues={({ localValue, node }) => {
+                const searchValue =
+                  typeof localValue !== "undefined" ? { searchValue: localValue } : {};
+                const name = node ? { name: node.key as string } : {};
+
+                if (node) {
+                  setCurrentResult(node.value);
+                }
+
+                setValues({ ...values, ...searchValue, ...name });
+              }}
+              localValue={values.searchValue}
+              errorMessage={errors.name}
+              label={cT("fullName")}
+              selectedKey={values.name}
+              fetchOptions={{
+                apiPath: "/search/name?includeMany=true",
+                method: "POST",
+                bodyKey: "name",
+                filterTextRequired: true,
+              }}
+            >
+              {(item) => {
+                const name = `${item.name} ${item.surname}`;
+
+                return (
+                  <Item key={name} textValue={name}>
+                    <div className="flex items-center">
+                      {item.imageId ? (
+                        <Image
+                          alt={`${item.name} ${item.surname}`}
+                          className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                          draggable={false}
+                          src={makeImageUrl("citizens", item.imageId)!}
+                          loading="lazy"
+                          width={30}
+                          height={30}
+                        />
                       ) : null}
-                    </p>
-                  </div>
-                )}
-                options={{
-                  apiPath: "/search/name",
-                  method: "POST",
-                  dataKey: "name",
-                  allowUnknown: true,
-                }}
-                inputProps={{
-                  value: values.name,
-                  name: "name",
-                  onChange: handleChange,
-                }}
-              />
-            </FormField>
+                      <p>
+                        {name}{" "}
+                        {SOCIAL_SECURITY_NUMBERS && item.socialSecurityNumber ? (
+                          <>(SSN: {item.socialSecurityNumber})</>
+                        ) : null}
+                      </p>
+                    </div>
+                  </Item>
+                );
+              }}
+            </AsyncListSearchField>
 
             {typeof results === "boolean" ? (
               <div className="mt-5">

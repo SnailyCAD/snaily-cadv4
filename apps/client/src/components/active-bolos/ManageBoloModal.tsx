@@ -1,5 +1,5 @@
 import { FormField } from "components/form/FormField";
-import { Button, Loader, TextField } from "@snailycad/ui";
+import { AsyncListSearchField, Button, Item, Loader, TextField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
@@ -10,15 +10,12 @@ import { Bolo, BoloType, RegisteredVehicle } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { CREATE_BOLO_SCHEMA } from "@snailycad/schemas";
 import { useDispatchState } from "state/dispatch/dispatchState";
-import { Person, PersonFill, ThreeDots } from "react-bootstrap-icons";
+import { PersonFill, ThreeDots } from "react-bootstrap-icons";
 import { FormRow } from "components/form/FormRow";
 import { classNames } from "lib/classNames";
-import { InputSuggestions } from "components/form/inputs/InputSuggestions";
-import { useImageUrl } from "hooks/useImageUrl";
 import { useSSRSafeId } from "@react-aria/ssr";
-import type { NameSearchResult } from "state/search/nameSearchState";
 import type { PostBolosData, PutBolosData } from "@snailycad/types/api";
-import Image from "next/image";
+import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 
 interface Props {
   onClose?(): void;
@@ -30,7 +27,6 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
   const { bolos, setBolos } = useDispatchState();
-  const { makeImageUrl } = useImageUrl();
   const t = useTranslations("Bolos");
   const leo = useTranslations("Leo");
 
@@ -80,7 +76,9 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
   const validate = handleValidate(CREATE_BOLO_SCHEMA);
   const INITIAL_VALUES = {
     type: bolo?.type ?? BoloType.PERSON,
+    nameSearch: bolo?.name ?? "",
     name: bolo?.name ?? "",
+    plateSearch: bolo?.plate ?? "",
     plate: bolo?.plate ?? "",
     color: bolo?.color ?? "",
     description: bolo?.description ?? "",
@@ -95,7 +93,7 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
       className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setFieldValue, values, errors, isValid }) => (
+        {({ setValues, setFieldValue, values, errors, isValid }) => (
           <Form autoComplete="off">
             <FormField errorMessage={errors.type} label={common("type")}>
               <FormRow>
@@ -108,7 +106,7 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                   aria-label="Person Type"
                   id={personTypeId}
                 >
-                  <Person aria-labelledby={personTypeId} width={30} height={30} />
+                  <PersonFill aria-labelledby={personTypeId} width={30} height={30} />
                 </Button>
                 <Button
                   onPress={() => setFieldValue("type", BoloType.VEHICLE)}
@@ -146,32 +144,40 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
 
             {values.type === BoloType.VEHICLE ? (
               <>
-                <FormField optional errorMessage={errors.plate} label={leo("plate")}>
-                  <InputSuggestions<RegisteredVehicle>
-                    inputProps={{
-                      id: "plate",
-                      onChange: handleChange,
-                      value: values.plate,
-                    }}
-                    options={{
-                      apiPath: "/search/vehicle?includeMany=true",
-                      method: "POST",
-                      dataKey: "plateOrVin",
-                      allowUnknown: true,
-                    }}
-                    onSuggestionPress={(suggestion) => {
-                      setFieldValue("plate", suggestion.plate);
-                      setFieldValue("model", suggestion.model.value.value);
-                      setFieldValue("color", suggestion.color);
-                    }}
-                    Component={({ suggestion }) => (
-                      <div className="flex items-center">
-                        {suggestion.plate.toUpperCase()} (
-                        {suggestion.model.value.value.toUpperCase()})
-                      </div>
-                    )}
-                  />
-                </FormField>
+                <AsyncListSearchField<RegisteredVehicle>
+                  label={leo("plate")}
+                  errorMessage={errors.plate}
+                  isOptional
+                  fetchOptions={{
+                    apiPath: "/search/vehicle?includeMany=true",
+                    method: "POST",
+                    bodyKey: "plateOrVin",
+                    filterTextRequired: true,
+                  }}
+                  allowsCustomValue
+                  localValue={values.plateSearch}
+                  setValues={({ node, localValue }) => {
+                    const vehicle = node
+                      ? {
+                          plate: node.value.plate,
+                          color: node.value.color,
+                          model: node.value.model.value.value,
+                        }
+                      : {};
+
+                    setValues({
+                      ...values,
+                      ...vehicle,
+                      plateSearch: localValue ?? node?.value.plate ?? "",
+                    });
+                  }}
+                >
+                  {(item) => (
+                    <Item textValue={item.plate} key={item.plate}>
+                      {item.plate.toUpperCase()} ({item.model.value.value.toUpperCase()})
+                    </Item>
+                  )}
+                </AsyncListSearchField>
 
                 <TextField
                   label={leo("model")}
@@ -194,49 +200,16 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
             ) : null}
 
             {values.type === BoloType.PERSON ? (
-              <FormField optional errorMessage={errors.name} label={common("name")}>
-                <InputSuggestions<NameSearchResult>
-                  inputProps={{
-                    id: "name",
-                    onChange: handleChange,
-                    value: values.name,
-                    autoComplete: "false",
-                    autoCorrect: "false",
-                    list: "null",
-                  }}
-                  options={{
-                    apiPath: "/search/name?includeMany=true",
-                    method: "POST",
-                    dataKey: "name",
-                    allowUnknown: true,
-                  }}
-                  onSuggestionPress={(suggestion) => {
-                    setFieldValue("name", `${suggestion.name} ${suggestion.surname}`);
-                  }}
-                  Component={({ suggestion }) => (
-                    <div className="flex items-center">
-                      <div className="mr-2 min-w-[25px]">
-                        {suggestion.imageId ? (
-                          <Image
-                            className="rounded-md w-[35px] h-[35px] object-cover"
-                            draggable={false}
-                            src={makeImageUrl("citizens", suggestion.imageId)!}
-                            loading="lazy"
-                            width={35}
-                            height={35}
-                            alt={`${suggestion.name} ${suggestion.surname}`}
-                          />
-                        ) : (
-                          <PersonFill className="text-gray-500/60 w-[25px] h-[25px]" />
-                        )}
-                      </div>
-                      <p>
-                        {suggestion.name} {suggestion.surname}
-                      </p>
-                    </div>
-                  )}
-                />
-              </FormField>
+              <CitizenSuggestionsField
+                isOptional
+                allowsCustomValue
+                autoFocus
+                fromAuthUserOnly={false}
+                label={common("name")}
+                labelFieldName="nameSearch"
+                valueFieldName="name"
+                makeKey={(item) => `${item.name} ${item.surname}`}
+              />
             ) : null}
 
             <TextField
