@@ -3,7 +3,6 @@ import { useComboBox } from "@react-aria/combobox";
 import { useComboBoxState } from "@react-stately/combobox";
 import { Item } from "@react-stately/collections";
 import type { ComboBoxProps } from "@react-types/combobox";
-
 import { classNames } from "../../utils/classNames";
 import { Label } from "../label";
 import { Input } from "../inputs/input";
@@ -41,7 +40,7 @@ export interface AsyncListFieldProps<T extends object>
   setValues(values: { localValue?: string; node?: Node<T> | null }): void;
 }
 
-export function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
+function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
   const ref = React.useRef<any>(null);
   const listBoxRef = React.useRef<HTMLUListElement | null>(null);
   const popoverRef = React.useRef<HTMLDivElement | null>(null);
@@ -193,4 +192,4 @@ export function AsyncListSearchField<T extends object>(props: AsyncListFieldProp
   );
 }
 
-export { Item };
+export { Item, AsyncListSearchField };
