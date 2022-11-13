@@ -21,6 +21,10 @@
       "require": "./dist/version.js",
       "import": "./dist/version.mjs"
     },
+    "./api-url": {
+      "require": "./dist/api-url.js",
+      "import": "./dist/api-url.mjs"
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -36,6 +40,9 @@
       ],
       "version": [
         "dist/version.d.ts"
+      ],
+      "api-url": [
+        "dist/api-url.d.ts"
       ]
     }
   },

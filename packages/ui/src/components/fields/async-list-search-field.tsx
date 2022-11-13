@@ -17,6 +17,7 @@ import { useDebounce } from "react-use";
 import type { Node } from "@react-types/shared";
 import { useTranslations } from "next-intl";
 import { Loader } from "../loader";
+import { getAPIUrl } from "@snailycad/utils/api-url";
 
 interface AsyncListFieldFetchOptions {
   filterTextRequired?: boolean;
@@ -170,8 +171,6 @@ export function AsyncListSearchField<T extends object>(props: AsyncListFieldProp
         ) : null}
         {includeMenu && state.isOpen ? (
           <Popover isOpen={state.isOpen} onClose={state.close} popoverRef={popoverRef}>
-            {/* todo: add translation */}
-
             {state.collection.size > 0 ? (
               <AsyncListFieldListBox {...listBoxProps} listBoxRef={listBoxRef} state={state} />
             ) : (
@@ -195,14 +194,3 @@ export function AsyncListSearchField<T extends object>(props: AsyncListFieldProp
 }
 
 export { Item };
-
-// todo: place in `@snailycad/utils`
-function getAPIUrl() {
-  const envUrl = process.env.NEXT_PUBLIC_PROD_ORIGIN ?? "http://localhost:8080/v1";
-
-  if (process.env.NODE_ENV === "development") {
-    return "http://localhost:8080/v1";
-  }
-
-  return envUrl;
-}
