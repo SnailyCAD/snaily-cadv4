@@ -1,0 +1,23 @@
+{
+  "Ems": {
+    "emsFd": "HZS/ZZS",
+    "createMedicalRecord": "Vytvořit lékařský záznam",
+    "searchMedicalRecord": "Vyhledat lékařský záznam",
+    "activeDeputies": "Aktivní složky",
+    "selectDeputy": "Vybrat složku",
+    "deputy": "Příslušník",
+    "myDeputies": "Moji příslušníci",
+    "createDeputy": "Vytvořit Příslušníka",
+    "editDeputy": "Upravit Příslušníka",
+    "deputyName": "Jméno",
+    "deleteDeputy": "vymazat Příslušníka",
+    "noDeputies": "Nemáš žádné příslušníky",
+    "noActiveDeputies": "Momentálně nejsou aktivní příslušníci",
+    "citizenNoMedicalRecords": "Tento civilista nemá žádný lékařský záznam.",
+    "activeDeputy": "Aktivní příslušník",
+    "declareDead": "Prohlásit za mrtvého",
+    "declareAlive": "Prohlásit za živého",
+    "myDeputyLogs": "LOG",
+    "alert_deleteDeputy": "Jsi si jistý, že chceš vymazat <span>{deputy}</span>? Tato akce nelze vzít zpět."
+  }
+}

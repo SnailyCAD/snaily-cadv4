@@ -1,0 +1,15 @@
+{
+  "TruckLogs": {
+    "truckLogs": "Truck Logs",
+    "createTruckLog": "Create Truck Log",
+    "editTruckLog": "Edit Truck Log",
+    "deleteTruckLog": "Delete Truck Log",
+    "driver": "Driver",
+    "vehicle": "Vehicle",
+    "startedAt": "Started At",
+    "endedAt": "Ended At",
+    "noTruckLogs": "You don't have any truck logs yet.",
+    "notes": "Notes",
+    "alert_deleteTruckLog": "Are you sure you want to delete this truck log? This action cannot be undone."
+  }
+}
