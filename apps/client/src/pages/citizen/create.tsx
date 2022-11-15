@@ -75,8 +75,11 @@ export default function CreateCitizen() {
         onSubmit={onSubmit}
         citizen={null}
         state={state}
-        allowCreatingOfficer
-        showLicenseFields
+        formFeatures={{
+          "edit-name": true,
+          "license-fields": true,
+          "officer-creation": true,
+        }}
       />
     </Layout>
   );
@@ -93,7 +96,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
       values,
       session: user,
       messages: {
-        ...(await getTranslations(["citizen", "common"], user?.locale ?? locale)),
+        ...(await getTranslations(["citizen", "leo", "ems-fd", "common"], user?.locale ?? locale)),
       },
     },
   };

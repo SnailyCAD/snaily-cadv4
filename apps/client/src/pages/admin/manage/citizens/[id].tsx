@@ -95,9 +95,11 @@ export default function ManageCitizens({ citizen }: Props) {
 
       <div className="mt-5">
         <ManageCitizenForm
-          allowEditingName
-          allowEditingUser
-          showLicenseFields
+          formFeatures={{
+            "edit-name": true,
+            "edit-user": true,
+            "license-fields": true,
+          }}
           citizen={citizen}
           onSubmit={handleSubmit}
           state={state}

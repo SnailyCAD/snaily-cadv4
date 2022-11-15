@@ -32,14 +32,11 @@ import { AddressPostalSelect } from "components/form/select/PostalSelect";
 import { getManageOfficerFieldsDefaults } from "components/leo/manage-officer/manage-officer-fields";
 import { CreateOfficerStep } from "./manage-citizen-form/create-officer-step";
 
+type FormFeatures = "officer-creation" | "edit-user" | "edit-name" | "license-fields";
 interface Props {
   citizen: (Citizen & { user?: User | null }) | null;
   state: "error" | "loading" | null;
-  // todo: features object
-  showLicenseFields?: boolean;
-  allowEditingName?: boolean;
-  allowEditingUser?: boolean;
-  allowCreatingOfficer?: boolean;
+  formFeatures: Partial<Record<FormFeatures, boolean>>;
   cancelURL?: string;
   onSubmit(arg0: {
     data: any;
@@ -52,10 +49,7 @@ export function ManageCitizenForm({
   onSubmit,
   state,
   citizen,
-  allowEditingName,
-  showLicenseFields,
-  allowEditingUser,
-  allowCreatingOfficer,
+  formFeatures,
   cancelURL = `/citizen/${citizen?.id}`,
 }: Props) {
   const [image, setImage] = React.useState<File | string | null>(null);
@@ -69,7 +63,7 @@ export function ManageCitizenForm({
   const common = useTranslations("Common");
 
   const isNamesFieldDisabled =
-    typeof allowEditingName !== "undefined" ? !allowEditingName : !!citizen;
+    typeof formFeatures["edit-name"] !== "undefined" ? !formFeatures["edit-name"] : !!citizen;
   const weightPrefix = cad?.miscCadSettings?.weightPrefix
     ? `(${cad.miscCadSettings.weightPrefix})`
     : "";
@@ -175,7 +169,7 @@ export function ManageCitizenForm({
           <>
             <ImageSelectInput image={image} setImage={setImage} />
 
-            {allowEditingUser ? (
+            {formFeatures["edit-user"] ? (
               <AsyncListSearchField<User>
                 autoFocus
                 setValues={({ localValue, node }) => {
@@ -348,7 +342,7 @@ export function ManageCitizenForm({
         )}
       </MultiFormStep>
 
-      {showLicenseFields && features.ALLOW_CITIZEN_UPDATE_LICENSE ? (
+      {formFeatures["license-fields"] && features.ALLOW_CITIZEN_UPDATE_LICENSE ? (
         <MultiFormStep title="License Information">
           {() => (
             <FormRow flexLike>
@@ -358,7 +352,7 @@ export function ManageCitizenForm({
         </MultiFormStep>
       ) : null}
 
-      {allowCreatingOfficer ? (
+      {formFeatures["officer-creation"] ? (
         <MultiFormStep title="Officer">{() => <CreateOfficerStep />}</MultiFormStep>
       ) : null}
     </MultiForm>
