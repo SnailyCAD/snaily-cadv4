@@ -138,15 +138,8 @@ export function ManageCitizenForm({
             {isOfficerStep ? (
               <Button
                 className="flex items-center gap-2"
-                type="button"
+                type="submit"
                 disabled={!formikState.isValid || state === "loading"}
-                onPress={() => {
-                  React.startTransition(() => {
-                    setValidationSchema(CREATE_CITIZEN_WITH_OFFICER_SCHEMA);
-                  });
-
-                  formikState.submitForm();
-                }}
               >
                 {state === "loading" ? <Loader /> : null}
                 {citizen ? common("save") : "Create with officer"}
