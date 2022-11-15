@@ -482,7 +482,7 @@ function createWebhookData(
     fields.push({ name: "Status", value: data.status.toLowerCase(), inline: true });
   } else {
     fields.push(
-      { name: "Postal", value: data.postal, inline: true },
+      { name: "Postal", value: data.postal || "-", inline: true },
       { name: "Record Type", value: data.type.toLowerCase(), inline: true },
       { name: "Total Bail", value: totalBail, inline: true },
       { name: "Total Fine amount", value: totalFines, inline: true },

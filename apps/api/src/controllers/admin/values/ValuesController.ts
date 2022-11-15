@@ -12,7 +12,7 @@ import {
 import fs from "node:fs/promises";
 import { ContentType, Delete, Description, Patch, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
-import { IsValidPath } from "middlewares/ValidPath";
+import { IsValidPath, validValuePaths } from "middlewares/ValidPath";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/IsAuth";
 import { typeHandlers } from "./Import";
@@ -52,16 +52,20 @@ export class ValuesController {
   @Get("/")
   @Description("Get all the values by the specified types")
   async getValueByPath(
-    @PathParams("path") path: string,
+    @PathParams("path") path: (string & {}) | "all",
     @QueryParams("paths") rawPaths: string,
   ): Promise<APITypes.GetValuesData | APITypes.GetValuesPenalCodesData> {
     // allow more paths in one request
-    const paths =
+    let paths =
       typeof rawPaths === "string" ? [...new Set([path, ...rawPaths.split(",")])] : [path];
+
+    if (path === "all") {
+      paths = validValuePaths.filter((v) => v !== "penal_code_group");
+    }
 
     const values = await Promise.all(
       paths.map(async (path) => {
-        const type = getTypeFromPath(path);
+        const type = getTypeFromPath(path) as ValueType;
 
         // @ts-expect-error ignore this is safe.
         if (type === "PENAL_CODE_GROUP") {

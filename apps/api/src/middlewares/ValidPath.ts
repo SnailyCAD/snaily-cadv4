@@ -2,7 +2,7 @@ import { PathParams, QueryParams, Middleware, MiddlewareMethods } from "@tsed/co
 import { BadRequest } from "@tsed/exceptions";
 
 // penal_code_group is only allowed for /position
-const validPaths = [
+export const validValuePaths = [
   "license",
   "gender",
   "ethnicity",
@@ -31,9 +31,13 @@ export class IsValidPath implements MiddlewareMethods {
     const paths =
       typeof rawPaths === "string" ? [...new Set([path, ...rawPaths.split(",")])] : [path];
 
+    if (path === "all") {
+      return;
+    }
+
     for (const path of paths) {
-      if (!validPaths.includes(path)) {
-        throw new BadRequest(`Invalid Path: ${path}. Valid paths: ${validPaths.join(", ")}`);
+      if (!validValuePaths.includes(path)) {
+        throw new BadRequest(`Invalid Path: ${path}. Valid paths: ${validValuePaths.join(", ")}`);
       }
     }
   }

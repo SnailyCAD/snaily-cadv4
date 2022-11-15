@@ -50,7 +50,7 @@ export const permissionsForRouteType: Record<ValueType, Permissions[]> = {
   CALL_TYPE: [Permissions.ManageValueCallType],
 };
 
-export function getTypeFromPath(path: string) {
+export function getTypeFromPath(path: string & {}) {
   return path.replace("-", "_").toUpperCase() as ValueType;
 }
 
@@ -60,7 +60,14 @@ export function getPermissionsForValuesRequest(request: Req) {
     throw new BadRequest("Must specify `params.path`");
   }
 
-  const type = getTypeFromPath(path);
+  const type = getTypeFromPath(path) as ValueType | "all";
+  if (type === "all") {
+    return {
+      permissions: Object.values(permissionsForRouteType).flat(1),
+      fallback: (u: User) => u.rank !== Rank.USER,
+    };
+  }
+
   return {
     permissions: permissionsForRouteType[type],
     fallback: (u: User) => u.rank !== Rank.USER,
