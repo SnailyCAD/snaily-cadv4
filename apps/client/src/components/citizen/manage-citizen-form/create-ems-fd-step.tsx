@@ -11,5 +11,5 @@ export function CreateEmsFdStep() {
             - load translations
           */
 
-  return <MultiFormStep>{() => <p>todo</p>}</MultiFormStep>;
+  return <MultiFormStep title="Create EMS/FD Deputy">{() => <p>todo</p>}</MultiFormStep>;
 }
