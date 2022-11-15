@@ -8,9 +8,12 @@ import { MultiFormStep, MultiFormStepItem } from "./multi-form-step";
 interface Props<FormValues extends FormikValues>
   extends Omit<FormikConfig<FormValues>, "children"> {
   children: ReturnType<typeof MultiFormStep>[];
-  submitButton(formState: FormikProps<FormValues>): React.ReactNode;
+  submitButton(state: {
+    formikState: FormikProps<FormValues>;
+    activeStep: React.ReactElement<MultiFormStepItem<FormValues>>;
+  }): React.ReactNode;
   canceler?(formState: FormikProps<FormValues>): React.ReactNode;
-  onStepChange(step: number): void;
+  onStepChange?(step: number): void;
 }
 
 function MultiForm<FormValues extends FormikValues>(props: Props<FormValues>) {
@@ -36,16 +39,17 @@ function MultiForm<FormValues extends FormikValues>(props: Props<FormValues>) {
     (formikState: any) => {
       const elementProps = (steps[currentStep] as any)?.props ?? {};
 
-      const element = React.cloneElement(steps[currentStep] as React.ReactElement, {
-        ...elementProps,
-        formikState,
-      });
+      const element = React.cloneElement(
+        steps[currentStep] as React.ReactElement<MultiFormStepItem<FormValues>>,
+        {
+          ...elementProps,
+          formikState,
+        },
+      );
       return element;
     },
     [currentStep, steps],
   );
-
-  console.log({ submittedSteps });
 
   return (
     <Formik<FormValues> {...props} initialValues={snapshot}>
@@ -124,7 +128,9 @@ function MultiForm<FormValues extends FormikValues>(props: Props<FormValues>) {
                       Next <ArrowRight />
                     </Button>
                   )}
-                  {isLastStep ? props.submitButton(formikState) : null}
+                  {isLastStep || (!isFirstStep && !activeStep.props.isRequired)
+                    ? props.submitButton({ formikState, activeStep })
+                    : null}
                 </div>
               </footer>
             </Form>

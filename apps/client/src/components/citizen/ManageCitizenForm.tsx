@@ -127,25 +127,50 @@ export function ManageCitizenForm({
         const schema = step === 3 ? CREATE_CITIZEN_WITH_OFFICER_SCHEMA : CREATE_CITIZEN_SCHEMA;
         setValidationSchema(schema);
       }}
-      // titles={[
-      //   "Basic Information",
-      //   "Optional Information",
-      //   showLicenseFields && features.ALLOW_CITIZEN_UPDATE_LICENSE ? "License Information" : null,
-      //   allowCreatingOfficer ? "Officer" : null,
-      // ]}
       validate={validate}
       onSubmit={handleSubmit}
       initialValues={INITIAL_VALUES}
-      submitButton={({ isValid }) => (
-        <Button
-          className="flex items-center gap-2"
-          type="submit"
-          disabled={!isValid || state === "loading"}
-        >
-          {state === "loading" ? <Loader /> : null}
-          {citizen ? common("save") : common("create")}
-        </Button>
-      )}
+      submitButton={({ formikState, activeStep }) => {
+        const isOfficerStep = activeStep.props.title === "Officer";
+
+        return (
+          <>
+            {isOfficerStep ? (
+              <Button
+                className="flex items-center gap-2"
+                type="button"
+                disabled={!formikState.isValid || state === "loading"}
+                onPress={() => {
+                  React.startTransition(() => {
+                    setValidationSchema(CREATE_CITIZEN_WITH_OFFICER_SCHEMA);
+                  });
+
+                  formikState.submitForm();
+                }}
+              >
+                {state === "loading" ? <Loader /> : null}
+                {citizen ? common("save") : "Create with officer"}
+              </Button>
+            ) : null}
+
+            <Button
+              className="flex items-center gap-2"
+              type="button"
+              disabled={(!isOfficerStep && !formikState.isValid) || state === "loading"}
+              onPress={() => {
+                React.startTransition(() => {
+                  setValidationSchema(CREATE_CITIZEN_SCHEMA);
+                });
+
+                formikState.submitForm();
+              }}
+            >
+              {state === "loading" ? <Loader /> : null}
+              {citizen ? common("save") : common("create")}
+            </Button>
+          </>
+        );
+      }}
       canceler={() => (
         <Link href={citizen ? cancelURL : "/citizen"} className="mr-2 underline">
           {common("cancel")}
