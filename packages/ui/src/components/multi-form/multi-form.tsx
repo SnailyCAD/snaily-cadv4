@@ -118,6 +118,7 @@ function MultiForm<FormValues extends FormikValues>(props: Props<FormValues>) {
                       onPress={async () => {
                         const errors = await formikState.validateForm();
                         if (Object.keys(errors).length === 0) {
+                          props.onStepChange?.(currentStep + 1);
                           setSnapshot(formikState.values);
                           setCurrentStep((p) => (p >= steps.length ? steps.length : p + 1));
                           setSubmittedSteps((p) => [...p, titles[currentStep]!]);

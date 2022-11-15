@@ -151,11 +151,11 @@ export function ManageCitizenForm({
               type="button"
               disabled={(!isOfficerStep && !formikState.isValid) || state === "loading"}
               onPress={() => {
-                React.startTransition(() => {
-                  setValidationSchema(CREATE_CITIZEN_SCHEMA);
-                });
+                setValidationSchema(CREATE_CITIZEN_SCHEMA);
 
-                formikState.submitForm();
+                setTimeout(() => {
+                  formikState.submitForm();
+                }, 10);
               }}
             >
               {state === "loading" ? <Loader /> : null}
