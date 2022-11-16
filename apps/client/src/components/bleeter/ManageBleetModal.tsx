@@ -122,7 +122,7 @@ export function ManageBleetModal({ post }: Props) {
                     openModal(ModalIds.CropImageModal);
                   }}
                 >
-                  Crop
+                  {common("crop")}
                 </Button>
               </div>
             </FormField>
