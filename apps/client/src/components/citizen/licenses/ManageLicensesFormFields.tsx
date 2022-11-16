@@ -167,7 +167,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
       <section className="w-full">
         {isLeo ? (
           <FormRow>
-            <FormField label={t("suspendPilotLicense")} checkbox>
+            <FormField label={t("Leo.suspendPilotLicense")} checkbox>
               <Toggle
                 onCheckedChange={handleChange}
                 name="suspended.pilotLicense"

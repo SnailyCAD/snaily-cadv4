@@ -14,7 +14,7 @@ export function toastMessage(options: Options) {
       icon === "success" ? (
         <CheckmarkIcon />
       ) : icon === "info" ? (
-        <InfoCircleFill />
+        <InfoCircleFill className="fill-current text-blue-500 drop-shadow-sm w-5 h-5" />
       ) : (
         <ErrorIcon />
       )
