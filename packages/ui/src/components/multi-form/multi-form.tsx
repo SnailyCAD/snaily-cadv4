@@ -112,6 +112,7 @@ function MultiForm<FormValues extends FormikValues>(props: Props<FormValues>) {
                     <Button
                       onPress={() => {
                         setCurrentStep((p) => (p <= 0 ? 0 : p - 1));
+                        props.onStepChange?.(currentStep - 1);
                       }}
                       className="flex gap-2 items-center"
                     >

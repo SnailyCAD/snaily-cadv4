@@ -8,10 +8,10 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 interface Props {
   penalCodes: PenalCode[];
   isReadOnly?: boolean;
-  isWithinCard?: boolean;
+  isWithinCardOrModal?: boolean;
 }
 
-export function PenalCodesTable({ isReadOnly, penalCodes, isWithinCard = true }: Props) {
+export function PenalCodesTable({ isReadOnly, penalCodes, isWithinCardOrModal = true }: Props) {
   const { values } = useFormikContext<{ violations: any[] }>();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
@@ -48,7 +48,7 @@ export function PenalCodesTable({ isReadOnly, penalCodes, isWithinCard = true }:
   return (
     <div className="w-full my-3 overflow-x-auto">
       <Table
-        features={{ isWithinCardOrModal: true }}
+        features={{ isWithinCardOrModal }}
         tableState={tableState}
         data={penalCodes.map((penalCode) => ({
           id: penalCode.id,

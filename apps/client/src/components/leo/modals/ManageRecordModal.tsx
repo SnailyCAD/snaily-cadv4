@@ -22,23 +22,33 @@ import { AddressPostalSelect } from "components/form/select/PostalSelect";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 
 interface Props {
+  hideCitizenField?: boolean;
   record?: Record | null;
   type: RecordType;
-  id?: ModalIds.ManageRecord | ModalIds.CreateTicket;
+  id?:
+    | ModalIds.ManageRecord
+    | ModalIds.CreateTicket
+    | ModalIds.CreateArrestReport
+    | ModalIds.CreateWrittenWarning;
   isEdit?: boolean;
   isReadOnly?: boolean;
   onUpdate?(data: Record): void;
   onCreate?(data: Record): void;
+  customSubmitHandler?(data: any): Awaited<boolean>;
+  onClose?(): void;
 }
 
 export function ManageRecordModal({
   onUpdate,
   onCreate,
+  onClose,
   isReadOnly,
   record,
   type,
   isEdit,
   id,
+  customSubmitHandler,
+  hideCitizenField,
 }: Props) {
   const { isOpen, closeModal, getPayload } = useModal();
   const common = useTranslations("Common");
@@ -75,6 +85,11 @@ export function ManageRecordModal({
         )
       : penalCode.values;
 
+  function handleClose() {
+    onClose?.();
+    closeModal(data[type].id);
+  }
+
   async function onSubmit(
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
@@ -95,6 +110,14 @@ export function ManageRecordModal({
 
     validateRecords(values.violations, helpers);
 
+    if (customSubmitHandler) {
+      const closable = await customSubmitHandler(requestData);
+      if (closable) {
+        handleClose();
+      }
+      return;
+    }
+
     if (record) {
       const { json } = await execute<PutRecordsByIdData, typeof INITIAL_VALUES>({
         path: `/records/record/${record.id}`,
@@ -105,7 +128,7 @@ export function ManageRecordModal({
 
       if (json.id) {
         onUpdate?.(json);
-        closeModal(data[type].id);
+        handleClose();
       }
     } else {
       const { json } = await execute<PostRecordsData, typeof INITIAL_VALUES>({
@@ -123,7 +146,7 @@ export function ManageRecordModal({
         });
 
         onCreate?.(json);
-        closeModal(data[type].id);
+        handleClose();
       }
     }
   }
@@ -136,17 +159,23 @@ export function ManageRecordModal({
     citizenId: record?.citizenId ?? payload?.citizenId ?? "",
     citizenName: payload?.citizenName ?? "",
     violations:
-      record?.violations.map((v) => ({
-        label: v.penalCode.title,
-        value: {
-          key: v.penalCodeId,
-          ...v.penalCode,
-          fine: { enabled: !!v.fine, value: v.fine },
-          counts: { enabled: true, value: v.counts },
-          jailTime: { enabled: !!v.jailTime, value: v.jailTime },
-          bail: { enabled: LEO_BAIL ? !!v.jailTime : false, value: v.bail },
-        },
-      })) ?? ([] as SelectValue<PenalCode>[]),
+      record?.violations.map((v) => {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        const penalCode = v.penalCode ?? penalCodes.find((p) => p.id === v.penalCodeId);
+
+        return {
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+          label: penalCode?.title,
+          value: {
+            key: v.penalCodeId,
+            ...penalCode,
+            fine: { enabled: !!v.fine, value: v.fine },
+            counts: { enabled: true, value: v.counts },
+            jailTime: { enabled: !!v.jailTime, value: v.jailTime },
+            bail: { enabled: LEO_BAIL ? !!v.jailTime : false, value: v.bail },
+          },
+        };
+      }) ?? ([] as SelectValue<PenalCode>[]),
     postal: record?.postal ?? "",
     notes: record?.notes ?? "",
     seizedItems: record?.seizedItems ?? [],
@@ -163,14 +192,16 @@ export function ManageRecordModal({
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, setFieldValue, errors, values, isValid }) => (
           <Form autoComplete="off">
-            <CitizenSuggestionsField
-              autoFocus
-              fromAuthUserOnly={false}
-              label={t("citizen")}
-              isDisabled={isReadOnly || !!record}
-              labelFieldName="citizenName"
-              valueFieldName="citizenId"
-            />
+            {hideCitizenField ? null : (
+              <CitizenSuggestionsField
+                autoFocus
+                fromAuthUserOnly={false}
+                label={t("citizen")}
+                isDisabled={isReadOnly || !!record}
+                labelFieldName="citizenName"
+                valueFieldName="citizenId"
+              />
+            )}
 
             <AddressPostalSelect postalOptional={false} postalOnly />
 

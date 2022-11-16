@@ -31,8 +31,14 @@ import parseISO from "date-fns/parseISO";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
 import { getManageOfficerFieldsDefaults } from "components/leo/manage-officer/manage-officer-fields";
 import { CreateOfficerStep } from "./manage-citizen-form/create-officer-step";
+import { CreatePreviousRecordsStep } from "./manage-citizen-form/create-previous-records-step";
 
-type FormFeatures = "officer-creation" | "edit-user" | "edit-name" | "license-fields";
+type FormFeatures =
+  | "officer-creation"
+  | "edit-user"
+  | "edit-name"
+  | "license-fields"
+  | "previous-records";
 interface Props {
   citizen: (Citizen & { user?: User | null }) | null;
   state: "error" | "loading" | null;
@@ -94,6 +100,7 @@ export function ManageCitizenForm({
     additionalInfo: citizen?.additionalInfo ?? "",
     socialSecurityNumber: citizen?.socialSecurityNumber ?? "",
     violations: [] as SelectValue<PenalCode>[],
+    records: [],
     ...createDefaultLicensesValues(citizen),
   };
 
@@ -119,7 +126,7 @@ export function ManageCitizenForm({
       onStepChange={(step) => {
         // todo: remove magic numbers
         // 3 = create officer
-        const schema = step === 3 ? CREATE_CITIZEN_WITH_OFFICER_SCHEMA : CREATE_CITIZEN_SCHEMA;
+        const schema = step === 4 ? CREATE_CITIZEN_WITH_OFFICER_SCHEMA : CREATE_CITIZEN_SCHEMA;
         setValidationSchema(schema);
       }}
       validate={validate}
@@ -350,6 +357,12 @@ export function ManageCitizenForm({
               <ManageLicensesFormFields flexType="column" isLeo={false} allowRemoval />
             </FormRow>
           )}
+        </MultiFormStep>
+      ) : null}
+
+      {formFeatures?.["previous-records"] ? (
+        <MultiFormStep title={t("previousRecords")}>
+          {() => <CreatePreviousRecordsStep />}
         </MultiFormStep>
       ) : null}
 

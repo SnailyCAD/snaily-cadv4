@@ -122,35 +122,58 @@ export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitize
   );
 }
 
-function RecordsTable({ data }: { data: Record[] }) {
+export function RecordsTable({
+  data,
+  hasDeletePermissions,
+  onDelete,
+  onEdit,
+}: {
+  onEdit?(record: Record): void;
+  onDelete?(record: Record): void;
+  hasDeletePermissions?: boolean;
+  data: Record[];
+}) {
   const common = useTranslations("Common");
   const { openModal } = useModal();
   const t = useTranslations();
   const router = useRouter();
-  const isCitizen = router.pathname.startsWith("/citizen");
+  const isCitizen = router.pathname.startsWith("/citizen") && router.pathname !== "/citizen/create";
   const { generateCallsign } = useGenerateCallsign();
   const { currentResult } = useNameSearch();
   const tableState = useTableState();
   const currency = common("currency");
 
   const { hasPermissions } = usePermission();
-  const hasDeletePermissions = hasPermissions(
-    [
-      Permissions.ManageExpungementRequests,
-      Permissions.ManageNameChangeRequests,
-      Permissions.DeleteCitizenRecords,
-    ],
-    (u) => u.isSupervisor,
-  );
+  const _hasDeletePermissions =
+    hasDeletePermissions ??
+    hasPermissions(
+      [
+        Permissions.ManageExpungementRequests,
+        Permissions.ManageNameChangeRequests,
+        Permissions.DeleteCitizenRecords,
+      ],
+      (u) => u.isSupervisor,
+    );
 
   function handleDeleteClick(record: Record) {
-    if (!hasDeletePermissions) return;
+    if (onDelete) {
+      onDelete(record);
+      return;
+    }
+
+    if (!_hasDeletePermissions) return;
     openModal(ModalIds.AlertDeleteRecord, record);
   }
 
   function handleEditClick(record: Record) {
+    if (onEdit) {
+      onEdit(record);
+      return;
+    }
+
     openModal(ModalIds.ManageRecord, {
       ...record,
+      citizenId: `${currentResult?.name} ${currentResult?.surname}`,
       citizenName: `${currentResult?.name} ${currentResult?.surname}`,
     });
   }
@@ -181,8 +204,9 @@ function RecordsTable({ data }: { data: Record[] }) {
             }
 
             return {
+              type: record.type,
               id: record.id,
-              caseNumber: `#${record.caseNumber}`,
+              caseNumber: record.caseNumber ? `#${record.caseNumber}` : "-",
               violations: <ViolationsColumn violations={record.violations} />,
               postal: record.postal,
               officer: record.officer
@@ -195,7 +219,8 @@ function RecordsTable({ data }: { data: Record[] }) {
               ),
               totalCost: `${currency}${formatSum(totalCost())}`,
               notes: record.notes || common("none"),
-              createdAt: <FullDate>{record.createdAt}</FullDate>,
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+              createdAt: record.createdAt ? <FullDate>{record.createdAt}</FullDate> : "-",
               actions: isCitizen ? null : (
                 <>
                   <Button
@@ -207,7 +232,7 @@ function RecordsTable({ data }: { data: Record[] }) {
                     {common("edit")}
                   </Button>
 
-                  {hasDeletePermissions ? (
+                  {_hasDeletePermissions ? (
                     <Button
                       className="ml-2"
                       type="button"
@@ -223,6 +248,7 @@ function RecordsTable({ data }: { data: Record[] }) {
             };
           })}
         columns={[
+          { header: common("type"), accessorKey: "type" },
           { header: t("Leo.caseNumber"), accessorKey: "caseNumber" },
           { header: t("Leo.violations"), accessorKey: "violations" },
           { header: t("Leo.postal"), accessorKey: "postal" },
