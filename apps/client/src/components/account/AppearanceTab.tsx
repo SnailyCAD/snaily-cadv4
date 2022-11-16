@@ -13,7 +13,7 @@ import { Button, Loader, SelectField } from "@snailycad/ui";
 import nextConfig from "../../../next.config";
 import type { Sounds } from "lib/server/getAvailableSounds.server";
 import { soundCamelCaseToKebabCase } from "lib/utils";
-import { CaretDownFill, WindowX } from "react-bootstrap-icons";
+import { CaretDownFill } from "react-bootstrap-icons";
 import { useRouter } from "next/router";
 import type { PatchUserData } from "@snailycad/types/api";
 import { useAudio } from "react-use";
