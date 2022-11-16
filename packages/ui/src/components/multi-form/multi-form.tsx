@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Form, Formik, FormikConfig, FormikProps, FormikValues } from "formik";
+import { FormikHelpers, Form, Formik, FormikConfig, FormikProps, FormikValues } from "formik";
 import { classNames } from "../../utils/classNames";
 import { Button } from "../button";
 import { ArrowLeft, ArrowRight } from "react-bootstrap-icons";
@@ -24,6 +24,11 @@ function MultiForm<FormValues extends FormikValues>(props: Props<FormValues>) {
   const steps = React.Children.toArray(props.children);
   const isFirstStep = currentStep === 0;
   const isLastStep = currentStep === steps.length - 1;
+
+  function handleSubmit(values: FormValues, formikHelpers: FormikHelpers<FormValues>) {
+    const newHelpers = { ...formikHelpers, setCurrentStep };
+    props.onSubmit(values, newHelpers);
+  }
 
   const titles = React.useMemo(() => {
     return steps.map((step) => {
@@ -52,7 +57,7 @@ function MultiForm<FormValues extends FormikValues>(props: Props<FormValues>) {
   );
 
   return (
-    <Formik<FormValues> {...props} initialValues={snapshot}>
+    <Formik<FormValues> {...props} onSubmit={handleSubmit} initialValues={snapshot}>
       {(formikState) => {
         const activeStep = getActiveStep(formikState);
 

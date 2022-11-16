@@ -260,7 +260,7 @@ export class CitizenController {
       });
 
       if (existing) {
-        throw new ExtendedBadRequest({ name: "nameAlreadyTaken" });
+        throw new ExtendedBadRequest({ name: "nameAlreadyTaken" }, "nameAlreadyTaken");
       }
     }
 
@@ -268,7 +268,7 @@ export class CitizenController {
     const now = Date.now();
 
     if (date > now) {
-      throw new ExtendedBadRequest({ dateOfBirth: "dateLargerThanNow" });
+      throw new ExtendedBadRequest({ dateOfBirth: "dateLargerThanNow" }, "dateLargerThanNow");
     }
 
     const defaultLicenseValue = await prisma.value.findFirst({
@@ -392,11 +392,11 @@ export class CitizenController {
     }
 
     if (!file) {
-      throw new ExtendedBadRequest({ file: "No file provided." });
+      throw new ExtendedBadRequest({ file: "No file provided." }, "invalidImageType");
     }
 
     if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
-      throw new ExtendedBadRequest({ image: "invalidImageType" });
+      throw new ExtendedBadRequest({ image: "invalidImageType" }, "invalidImageType");
     }
 
     const image = await getImageWebPPath({

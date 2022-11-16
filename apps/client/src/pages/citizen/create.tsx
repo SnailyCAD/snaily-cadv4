@@ -26,7 +26,7 @@ export default function CreateCitizen() {
     data: any;
     helpers: any;
   }) {
-    const { json } = await execute<PostCitizensData>({
+    const { json, error } = await execute<PostCitizensData>({
       path: "/citizen",
       method: "POST",
       helpers,
@@ -46,6 +46,11 @@ export default function CreateCitizen() {
           : data.firearmLicenseCategory,
       },
     });
+
+    const errors = ["dateLargerThanNow", "nameAlreadyTaken", "invalidImageType"];
+    if (errors.includes(error as string)) {
+      helpers.setCurrentStep(0);
+    }
 
     if (json?.id) {
       if (formData) {
