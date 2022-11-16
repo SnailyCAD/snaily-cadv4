@@ -25,6 +25,7 @@
     "isConfidential": "Est Confidentiel",
     "priority": "Priorité",
     "isDisabled": "Désactivé",
+    "county": "Comté",
     "alert_deletePenalCodeGroup": "Êtes-vous sûr de vouloir supprimer <span>{group}</span> ? Cette action ne peut être annulée.",
     "alert_deleteValue": "Êtes-vous sûr de vouloir supprimer <span>{value}</span> ? Cette action ne peut être annulée.",
     "alert_deleteSelectedValues": "Êtes-vous sûr de vouloir supprimer {length} élément(s) ? Cette action ne peut être annulée."
@@ -136,5 +137,11 @@
     "ADD": "Ajouter type d'appel",
     "DELETE": "Supprimer type d'appel",
     "EDIT": "Modifier type d'appel"
+  },
+  "ADDRESS": {
+    "MANAGE": "Gérer Adresses",
+    "ADD": "Ajouter Adresse",
+    "DELETE": "Supprimer Adresse",
+    "EDIT": "Modifier Adresse"
   }
 }

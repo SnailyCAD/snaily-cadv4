@@ -42,6 +42,17 @@
     "manageOccupation": "Gérer la profession",
     "manageLicenses": "Gérer les permis / licences",
     "licenses": "Licences",
+    "licenseSuspendedInfo": "Licence suspendue. Veuillez contacter un officier pour révoquer la suspension.",
+    "licenseNumber": "Numéro de license",
+    "unmarkAsStolen": "Ne plus marquer comme volé.",
+    "markCitizenDeceased": "Marquer le citoyen comme décédé.",
+    "citizenDead": "ATTENTION : Ce citoyen est décédé le {date}",
+    "basicInformation": "Informations de base",
+    "optionalInformation": "Informations optionnelles",
+    "licenseInformation": "Informations sur la licence",
+    "officer": "Officier",
+    "createWithOfficer": "Créer avec Officier",
+    "alert_markCitizenDeceased": "Êtes-vous sûr de vouloir tuer <span>{citizen}</span> ? Seuls les EMS/FD pourront le faire revivre.",
     "alert_deleteCitizen": "Êtes-vous sûr de vouloir supprimer <span>{citizen}</span> ? Cette action ne peut être annulée."
   },
   "Vehicles": {
