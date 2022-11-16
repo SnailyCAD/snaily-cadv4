@@ -36,7 +36,7 @@ type FormFeatures = "officer-creation" | "edit-user" | "edit-name" | "license-fi
 interface Props {
   citizen: (Citizen & { user?: User | null }) | null;
   state: "error" | "loading" | null;
-  formFeatures: Partial<Record<FormFeatures, boolean>>;
+  formFeatures?: Partial<Record<FormFeatures, boolean>>;
   cancelURL?: string;
   onSubmit(arg0: {
     data: any;
@@ -63,7 +63,7 @@ export function ManageCitizenForm({
   const common = useTranslations("Common");
 
   const isNamesFieldDisabled =
-    typeof formFeatures["edit-name"] !== "undefined" ? !formFeatures["edit-name"] : !!citizen;
+    typeof formFeatures?.["edit-name"] !== "undefined" ? !formFeatures["edit-name"] : !!citizen;
   const weightPrefix = cad?.miscCadSettings?.weightPrefix
     ? `(${cad.miscCadSettings.weightPrefix})`
     : "";
@@ -169,7 +169,7 @@ export function ManageCitizenForm({
           <>
             <ImageSelectInput image={image} setImage={setImage} />
 
-            {formFeatures["edit-user"] ? (
+            {formFeatures?.["edit-user"] ? (
               <AsyncListSearchField<User>
                 autoFocus
                 setValues={({ localValue, node }) => {
@@ -342,7 +342,7 @@ export function ManageCitizenForm({
         )}
       </MultiFormStep>
 
-      {formFeatures["license-fields"] && features.ALLOW_CITIZEN_UPDATE_LICENSE ? (
+      {formFeatures?.["license-fields"] && features.ALLOW_CITIZEN_UPDATE_LICENSE ? (
         <MultiFormStep title={t("licenseInformation")}>
           {() => (
             <FormRow flexLike>
@@ -352,7 +352,7 @@ export function ManageCitizenForm({
         </MultiFormStep>
       ) : null}
 
-      {formFeatures["officer-creation"] ? (
+      {formFeatures?.["officer-creation"] ? (
         <MultiFormStep title={t("officer")}>{() => <CreateOfficerStep />}</MultiFormStep>
       ) : null}
     </MultiForm>
