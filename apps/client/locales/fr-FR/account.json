@@ -46,7 +46,11 @@
     "disconnectSteamText": "Cela ne vous permettra plus de vous connecter avec Steam.",
     "connectSteamText": "Cela vous permettra de vous connecter avec Steam.",
     "locale": "Langue",
-    "viewMyPermissions": "Voir mes permissions"
+    "viewMyPermissions": "Voir mes permissions",
+    "speech": "Parole",
+    "speechVoice": "Voix de la parole",
+    "otherSounds": "Autres Sons",
+    "unavailableSounds": "Sons Indisponibles"
   },
   "Notifications": {
     "CITIZEN_DELETED": "<span>{citizen}</span> a été supprimé. Raison : {reason}"
