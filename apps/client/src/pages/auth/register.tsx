@@ -21,6 +21,7 @@ import { VersionDisplay } from "components/shared/VersionDisplay";
 import type { PostRegisterUserData } from "@snailycad/types/api";
 
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { toastMessage } from "lib/toastMessage";
 
 const INITIAL_VALUES = {
   username: "",
@@ -43,6 +44,7 @@ function Register({ cad }: Props) {
   const t = useTranslations("Auth");
   const { ALLOW_REGULAR_LOGIN } = useFeatureEnabled();
   const validate = handleValidate(AUTH_SCHEMA);
+  const common = useTranslations();
 
   const { executeRecaptcha } = useGoogleReCaptcha();
 
@@ -61,12 +63,21 @@ function Register({ cad }: Props) {
     }
 
     const captchaResult = await executeRecaptcha?.("registerUserAccount");
-    const { json } = await execute<PostRegisterUserData, typeof INITIAL_VALUES>({
+    const { json, error } = await execute<PostRegisterUserData, typeof INITIAL_VALUES>({
       path: "/auth/register",
       data: { ...values, captchaResult },
       method: "POST",
       helpers,
+      noToast: "whitelistPending",
     });
+
+    if (error === "whitelistPending") {
+      toastMessage({
+        icon: "info",
+        message: t("Errors.whitelistPending"),
+        title: common("Common.information"),
+      });
+    }
 
     if (json.isOwner) {
       router.push("/admin/manage/cad-settings");

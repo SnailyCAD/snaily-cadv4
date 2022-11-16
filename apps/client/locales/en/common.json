@@ -58,7 +58,8 @@
     "address": "Address",
     "location": "Location",
     "startTyping": "Start typing...",
-    "searching": "Searching..."
+    "searching": "Searching...",
+    "information": "Information"
   },
   "Nav": {
     "citizen": "Citizen",
