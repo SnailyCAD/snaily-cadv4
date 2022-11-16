@@ -123,10 +123,10 @@ export function ManageCitizenForm({
 
   return (
     <MultiForm
-      onStepChange={(step) => {
-        // todo: remove magic numbers
-        // 3 = create officer
-        const schema = step === 4 ? CREATE_CITIZEN_WITH_OFFICER_SCHEMA : CREATE_CITIZEN_SCHEMA;
+      onStepChange={(activeStep) => {
+        const isOfficerStep = activeStep.props.id === "officer";
+
+        const schema = isOfficerStep ? CREATE_CITIZEN_WITH_OFFICER_SCHEMA : CREATE_CITIZEN_SCHEMA;
         setValidationSchema(schema);
       }}
       validate={validate}
@@ -172,7 +172,11 @@ export function ManageCitizenForm({
         </Link>
       )}
     >
-      <MultiFormStep<typeof INITIAL_VALUES> title={t("basicInformation")} isRequired>
+      <MultiFormStep<typeof INITIAL_VALUES>
+        title={t("basicInformation")}
+        id="basic-information"
+        isRequired
+      >
         {({ values, errors, setValues, setFieldValue, handleChange }) => (
           <>
             <ImageSelectInput image={image} setImage={setImage} />
@@ -315,7 +319,10 @@ export function ManageCitizenForm({
         )}
       </MultiFormStep>
 
-      <MultiFormStep<typeof INITIAL_VALUES> title={t("optionalInformation")}>
+      <MultiFormStep<typeof INITIAL_VALUES>
+        id="optional-information"
+        title={t("optionalInformation")}
+      >
         {({ values, errors, setFieldValue }) => (
           <>
             <TextField
@@ -351,7 +358,7 @@ export function ManageCitizenForm({
       </MultiFormStep>
 
       {formFeatures?.["license-fields"] && features.ALLOW_CITIZEN_UPDATE_LICENSE ? (
-        <MultiFormStep title={t("licenseInformation")}>
+        <MultiFormStep id="license-information" title={t("licenseInformation")}>
           {() => (
             <FormRow flexLike>
               <ManageLicensesFormFields flexType="column" isLeo={false} allowRemoval />
@@ -361,13 +368,15 @@ export function ManageCitizenForm({
       ) : null}
 
       {formFeatures?.["previous-records"] && features.CITIZEN_CREATION_RECORDS ? (
-        <MultiFormStep title={t("previousRecords")}>
+        <MultiFormStep id="previous-records" title={t("previousRecords")}>
           {() => <CreatePreviousRecordsStep />}
         </MultiFormStep>
       ) : null}
 
       {formFeatures?.["officer-creation"] ? (
-        <MultiFormStep title={t("officer")}>{() => <CreateOfficerStep />}</MultiFormStep>
+        <MultiFormStep id="officer" title={t("officer")}>
+          {() => <CreateOfficerStep />}
+        </MultiFormStep>
       ) : null}
     </MultiForm>
   );

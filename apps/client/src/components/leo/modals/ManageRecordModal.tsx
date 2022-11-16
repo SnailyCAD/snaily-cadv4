@@ -111,7 +111,7 @@ export function ManageRecordModal({
     validateRecords(values.violations, helpers);
 
     if (customSubmitHandler) {
-      const closable = await customSubmitHandler(requestData);
+      const closable = await customSubmitHandler({ ...requestData, id: record?.id });
       if (closable) {
         handleClose();
       }
@@ -185,7 +185,7 @@ export function ManageRecordModal({
   return (
     <Modal
       title={t(data[type].title)}
-      onClose={() => closeModal(data[type].id)}
+      onClose={handleClose}
       isOpen={isOpen(data[type].id)}
       className="w-[800px]"
     >
@@ -246,7 +246,7 @@ export function ManageRecordModal({
             </FormField>
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onPress={() => closeModal(data[type].id)} variant="cancel">
+              <Button type="reset" onPress={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button

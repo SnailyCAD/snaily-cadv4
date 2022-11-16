@@ -137,7 +137,10 @@ export function RecordsTable({
   const { openModal } = useModal();
   const t = useTranslations();
   const router = useRouter();
-  const isCitizen = router.pathname.startsWith("/citizen") && router.pathname !== "/citizen/create";
+
+  const isCitizenCreation = router.pathname === "/citizen/create";
+  const isCitizen = router.pathname.startsWith("/citizen") && !isCitizenCreation;
+
   const { generateCallsign } = useGenerateCallsign();
   const { currentResult } = useNameSearch();
   const tableState = useTableState();
@@ -181,7 +184,7 @@ export function RecordsTable({
   return (
     <div>
       <Table
-        features={{ isWithinCardOrModal: true }}
+        features={{ isWithinCardOrModal: !isCitizenCreation }}
         tableState={tableState}
         data={data
           .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
@@ -204,7 +207,9 @@ export function RecordsTable({
             }
 
             return {
-              type: record.type,
+              type: (
+                <span className="capitalize">{record.type.toLowerCase().replace("_", " ")}</span>
+              ),
               id: record.id,
               caseNumber: record.caseNumber ? `#${record.caseNumber}` : "-",
               violations: <ViolationsColumn violations={record.violations} />,
@@ -248,15 +253,15 @@ export function RecordsTable({
             };
           })}
         columns={[
-          { header: common("type"), accessorKey: "type" },
-          { header: t("Leo.caseNumber"), accessorKey: "caseNumber" },
+          isCitizenCreation ? { header: common("type"), accessorKey: "type" } : null,
+          isCitizenCreation ? null : { header: t("Leo.caseNumber"), accessorKey: "caseNumber" },
           { header: t("Leo.violations"), accessorKey: "violations" },
           { header: t("Leo.postal"), accessorKey: "postal" },
           { header: t("Leo.officer"), accessorKey: "officer" },
           { header: t("Leo.paymentStatus"), accessorKey: "paymentStatus" },
           isCitizen ? { header: t("Leo.totalCost"), accessorKey: "totalCost" } : null,
           { header: t("Leo.notes"), accessorKey: "notes" },
-          { header: common("createdAt"), accessorKey: "createdAt" },
+          isCitizenCreation ? null : { header: common("createdAt"), accessorKey: "createdAt" },
           isCitizen ? null : { header: common("actions"), accessorKey: "actions" },
         ]}
       />

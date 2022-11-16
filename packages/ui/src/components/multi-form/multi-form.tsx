@@ -13,7 +13,7 @@ interface Props<FormValues extends FormikValues>
     activeStep: React.ReactElement<MultiFormStepItem<FormValues>>;
   }): React.ReactNode;
   canceler?(formState: FormikProps<FormValues>): React.ReactNode;
-  onStepChange?(step: number): void;
+  onStepChange?(step: React.ReactElement<MultiFormStepItem<FormValues>>): void;
 }
 
 function MultiForm<FormValues extends FormikValues>(props: Props<FormValues>) {
@@ -41,11 +41,11 @@ function MultiForm<FormValues extends FormikValues>(props: Props<FormValues>) {
   }, [steps]);
 
   const getActiveStep = React.useCallback(
-    (formikState: any) => {
-      const elementProps = (steps[currentStep] as any)?.props ?? {};
+    (formikState: any, stepNumber: number) => {
+      const elementProps = (steps[stepNumber] as any)?.props ?? {};
 
       const element = React.cloneElement(
-        steps[currentStep] as React.ReactElement<MultiFormStepItem<FormValues>>,
+        steps[stepNumber] as React.ReactElement<MultiFormStepItem<FormValues>>,
         {
           ...elementProps,
           formikState,
@@ -53,13 +53,13 @@ function MultiForm<FormValues extends FormikValues>(props: Props<FormValues>) {
       );
       return element;
     },
-    [currentStep, steps],
+    [steps],
   );
 
   return (
     <Formik<FormValues> {...props} onSubmit={handleSubmit} initialValues={snapshot}>
       {(formikState) => {
-        const activeStep = getActiveStep(formikState);
+        const activeStep = getActiveStep(formikState, currentStep);
 
         return (
           <div>
@@ -111,8 +111,8 @@ function MultiForm<FormValues extends FormikValues>(props: Props<FormValues>) {
                   {isFirstStep ? null : (
                     <Button
                       onPress={() => {
+                        props.onStepChange?.(getActiveStep(formikState, currentStep - 1));
                         setCurrentStep((p) => (p <= 0 ? 0 : p - 1));
-                        props.onStepChange?.(currentStep - 1);
                       }}
                       className="flex gap-2 items-center"
                     >
@@ -124,7 +124,7 @@ function MultiForm<FormValues extends FormikValues>(props: Props<FormValues>) {
                       onPress={async () => {
                         const errors = await formikState.validateForm();
                         if (Object.keys(errors).length === 0) {
-                          props.onStepChange?.(currentStep + 1);
+                          props.onStepChange?.(getActiveStep(formikState, currentStep + 1));
                           setSnapshot(formikState.values);
                           setCurrentStep((p) => (p >= steps.length ? steps.length : p + 1));
                           setSubmittedSteps((p) => [...p, titles[currentStep]!]);
