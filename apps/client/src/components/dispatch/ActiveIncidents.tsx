@@ -115,7 +115,7 @@ export function ActiveIncidents() {
       ) : (
         <Table
           tableState={tableState}
-          features={{ isWithinCard: true }}
+          features={{ isWithinCardOrModal: true }}
           containerProps={{ className: "mb-3 mx-4" }}
           data={activeIncidents
             .sort((a, b) => compareDesc(new Date(a.updatedAt), new Date(b.updatedAt)))

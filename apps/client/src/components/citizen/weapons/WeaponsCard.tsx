@@ -112,7 +112,7 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
 
             <Table
               tableState={tableState}
-              features={{ isWithinCard: true }}
+              features={{ isWithinCardOrModal: true }}
               data={asyncTable.data.map((weapon) => ({
                 id: weapon.id,
                 model: weapon.model.value.value,

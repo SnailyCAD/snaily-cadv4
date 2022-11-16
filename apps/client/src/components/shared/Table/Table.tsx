@@ -37,7 +37,7 @@ interface Props<TData extends _RowData> {
   containerProps?: { style?: React.CSSProperties; className?: string };
 
   features?: {
-    isWithinCard?: boolean;
+    isWithinCardOrModal?: boolean;
     dragAndDrop?: boolean;
     rowSelection?: boolean;
   };
@@ -56,7 +56,7 @@ export function Table<TData extends _RowData>({
   const pageCount = Math.ceil(dataLength / tableState.pagination.pageSize);
 
   const tableActionsAlignment = user?.tableActionsAlignment ?? TableActionsAlignment.LEFT;
-  const stickyBgColor = features?.isWithinCard
+  const stickyBgColor = features?.isWithinCardOrModal
     ? "bg-gray-100 dark:bg-tertiary"
     : "dark:bg-primary bg-white";
 

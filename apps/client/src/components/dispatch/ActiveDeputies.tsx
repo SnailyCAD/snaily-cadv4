@@ -94,7 +94,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
 
           <Table
             tableState={tableState}
-            features={{ isWithinCard: true }}
+            features={{ isWithinCardOrModal: true }}
             containerProps={{ className: "mb-3 px-4" }}
             data={activeDeputies
               .filter((deputy) => handleFilter(deputy, emsSearch))

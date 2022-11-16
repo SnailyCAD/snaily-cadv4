@@ -80,7 +80,7 @@ export function AssignedUnitsTable({ isDisabled }: Props) {
 
       <div className="max-h-[35rem] overflow-y-auto">
         <Table
-          features={{ isWithinCard: true }}
+          features={{ isWithinCardOrModal: true }}
           tableState={tableState}
           data={assignedUnits
             .sort((a) => (a.isPrimary ? -1 : 1))

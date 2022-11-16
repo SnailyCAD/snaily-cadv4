@@ -129,7 +129,7 @@ function _ActiveCalls({ initialData }: Props) {
         ) : (
           <Table
             tableState={tableState}
-            features={{ isWithinCard: true }}
+            features={{ isWithinCardOrModal: true }}
             data={calls.map((call) => {
               const isUnitAssigned = isUnitAssignedToCall(call);
 

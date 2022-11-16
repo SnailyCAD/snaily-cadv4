@@ -93,7 +93,7 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
       ) : (
         <Table
           tableState={tableState}
-          features={{ isWithinCard: true }}
+          features={{ isWithinCardOrModal: true }}
           data={notes.map((note) => ({
             id: note.id,
             text: note.text,
