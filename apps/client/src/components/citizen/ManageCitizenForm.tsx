@@ -360,7 +360,7 @@ export function ManageCitizenForm({
         </MultiFormStep>
       ) : null}
 
-      {formFeatures?.["previous-records"] ? (
+      {formFeatures?.["previous-records"] && features.CITIZEN_CREATION_RECORDS ? (
         <MultiFormStep title={t("previousRecords")}>
           {() => <CreatePreviousRecordsStep />}
         </MultiFormStep>
