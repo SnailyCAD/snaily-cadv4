@@ -7,6 +7,5 @@ export function CreateOfficerStep() {
     valueTypes: [ValueType.DEPARTMENT, ValueType.DIVISION],
   });
 
-
   return <ManageOfficerFields hideCitizenField />;
 }

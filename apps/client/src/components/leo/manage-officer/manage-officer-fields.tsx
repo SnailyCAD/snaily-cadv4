@@ -53,11 +53,11 @@ export function ManageOfficerFields({
           errorMessage={errors.badgeNumber}
           label={t("badgeNumber")}
           name="badgeNumber"
-  				onChange={(value) => {
-                    isNaN(Number(value))
-                      ? setFieldValue("badgeNumber", value)
-                      : setFieldValue("badgeNumber", parseInt(value));
-                  }}
+          onChange={(value) => {
+            isNaN(Number(value))
+              ? setFieldValue("badgeNumber", value)
+              : setFieldValue("badgeNumber", parseInt(value));
+          }}
           value={String(values.badgeNumber)}
         />
       ) : null}
