@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import useFetch from "lib/useFetch";
@@ -94,7 +93,12 @@ export function CreateCitizenModal() {
           <Loader className="w-14 h-14 border-[3px]" />
         </div>
       ) : (
-        <ManageCitizenForm onSubmit={onSubmit} citizen={null} state={state} />
+        <ManageCitizenForm
+          formFeatures={{ "edit-name": true }}
+          onSubmit={onSubmit}
+          citizen={null}
+          state={state}
+        />
       )}
     </Modal>
   );

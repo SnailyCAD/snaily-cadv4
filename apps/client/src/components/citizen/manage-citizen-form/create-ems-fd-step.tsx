@@ -7,9 +7,5 @@ export function CreateEmsFdStep() {
     valueTypes: [ValueType.DEPARTMENT, ValueType.DIVISION],
   });
 
-  /* todo:
-            - load translations
-          */
-
   return <MultiFormStep title="Create EMS/FD Deputy">{() => <p>todo</p>}</MultiFormStep>;
 }

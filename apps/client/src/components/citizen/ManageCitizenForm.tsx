@@ -136,7 +136,7 @@ export function ManageCitizenForm({
                 disabled={!formikState.isValid || state === "loading"}
               >
                 {state === "loading" ? <Loader /> : null}
-                {citizen ? common("save") : "Create with officer"}
+                {t("createWithOfficer")}
               </Button>
             ) : null}
 
@@ -164,7 +164,7 @@ export function ManageCitizenForm({
         </Link>
       )}
     >
-      <MultiFormStep<typeof INITIAL_VALUES> title="Basic Information" isRequired>
+      <MultiFormStep<typeof INITIAL_VALUES> title={t("basicInformation")} isRequired>
         {({ values, errors, setValues, setFieldValue, handleChange }) => (
           <>
             <ImageSelectInput image={image} setImage={setImage} />
@@ -307,7 +307,7 @@ export function ManageCitizenForm({
         )}
       </MultiFormStep>
 
-      <MultiFormStep<typeof INITIAL_VALUES> title="Optional Information">
+      <MultiFormStep<typeof INITIAL_VALUES> title={t("optionalInformation")}>
         {({ values, errors, setFieldValue }) => (
           <>
             <TextField
@@ -343,7 +343,7 @@ export function ManageCitizenForm({
       </MultiFormStep>
 
       {formFeatures["license-fields"] && features.ALLOW_CITIZEN_UPDATE_LICENSE ? (
-        <MultiFormStep title="License Information">
+        <MultiFormStep title={t("licenseInformation")}>
           {() => (
             <FormRow flexLike>
               <ManageLicensesFormFields flexType="column" isLeo={false} allowRemoval />
@@ -353,7 +353,7 @@ export function ManageCitizenForm({
       ) : null}
 
       {formFeatures["officer-creation"] ? (
-        <MultiFormStep title="Officer">{() => <CreateOfficerStep />}</MultiFormStep>
+        <MultiFormStep title={t("officer")}>{() => <CreateOfficerStep />}</MultiFormStep>
       ) : null}
     </MultiForm>
   );
