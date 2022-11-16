@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import useFetch from "lib/useFetch";
@@ -40,7 +39,7 @@ export function CreateCitizenModal() {
     data: any;
     helpers: any;
   }) {
-    const { json } = await execute<PostSearchActionsCreateCitizen>({
+    const { json, error } = await execute<PostSearchActionsCreateCitizen>({
       path: "/search/actions/citizen",
       method: "POST",
       helpers,
@@ -60,6 +59,11 @@ export function CreateCitizenModal() {
           : data.firearmLicenseCategory,
       },
     });
+
+    const errors = ["dateLargerThanNow", "nameAlreadyTaken", "invalidImageType"];
+    if (errors.includes(error as string)) {
+      helpers.setCurrentStep(0);
+    }
 
     if (json.id) {
       let imageJson;
@@ -94,7 +98,12 @@ export function CreateCitizenModal() {
           <Loader className="w-14 h-14 border-[3px]" />
         </div>
       ) : (
-        <ManageCitizenForm onSubmit={onSubmit} citizen={null} state={state} />
+        <ManageCitizenForm
+          formFeatures={{ "edit-name": true }}
+          onSubmit={onSubmit}
+          citizen={null}
+          state={state}
+        />
       )}
     </Modal>
   );
