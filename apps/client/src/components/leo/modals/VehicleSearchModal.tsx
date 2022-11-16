@@ -43,6 +43,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   const isLeo = router.pathname === "/officer";
   const showMarkVehicleAsStolenButton = currentResult && isLeo && !currentResult.reportedStolen;
   const showImpoundVehicleButton = currentResult && isLeo && !currentResult.impounded;
+  const showCreateVehicleButton = CREATE_USER_CITIZEN_LEO && isLeo && !currentResult;
 
   const bolo = React.useMemo(() => {
     if (!currentResult) return null;
@@ -208,7 +209,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
               }`}
             >
               <div>
-                {CREATE_USER_CITIZEN_LEO && isLeo ? (
+                {showCreateVehicleButton ? (
                   <Button type="button" onPress={() => openModal(ModalIds.RegisterVehicle)}>
                     {t("createVehicle")}
                   </Button>

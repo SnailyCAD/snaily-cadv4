@@ -49,7 +49,7 @@ export function SeizedItemsTable({ isReadOnly }: { isReadOnly?: boolean }) {
 
         {values.seizedItems.length > 0 ? (
           <Table
-            features={{ isWithinCard: true }}
+            features={{ isWithinCardOrModal: true }}
             tableState={tableState}
             data={values.seizedItems.map((v) => ({
               id: v.id,

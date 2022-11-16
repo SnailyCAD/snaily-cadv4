@@ -47,6 +47,13 @@ export function AppearanceTab({ availableSounds }: Props) {
     [TableActionsAlignment.RIGHT]: common("right"),
   };
 
+  const voices = React.useMemo(() => {
+    if (typeof window === "undefined") return;
+    if (!("speechSynthesis" in window)) return;
+    if (typeof window.speechSynthesis.getVoices !== "function") return;
+    return window.speechSynthesis.getVoices();
+  }, []);
+
   if (!user) {
     return null;
   }
@@ -89,8 +96,6 @@ export function AppearanceTab({ availableSounds }: Props) {
   const unAvailableSoundsArr = sounds.filter(
     (v) => v !== "speech" && !availableSounds[soundCamelCaseToKebabCase(v)],
   );
-
-  const voices = typeof window !== "undefined" ? window.speechSynthesis.getVoices() : [];
 
   return (
     <TabsContent aria-label={t("appearanceSettings")} value="appearanceSettings">
@@ -144,30 +149,30 @@ export function AppearanceTab({ availableSounds }: Props) {
             <div className="mb-5">
               <h2 className="text-2xl font-semibold mb-3">{t("sounds")}</h2>
 
-              <section id="speech" className="mb-5">
-                <h3 className="text-xl font-semibold mb-3">{t("speech")}</h3>
-
-                <FormField label={t("speech")} checkbox>
-                  <Toggle
-                    value={values.soundSettings.speech}
-                    onCheckedChange={handleChange}
-                    name="soundSettings.speech"
-                  />
-                </FormField>
-
-                <FormField label={t("speechVoice")}>
-                  <Select
-                    disabled={!values.soundSettings.speech}
-                    values={voices.map((voice) => ({
-                      label: voice.name,
-                      value: voice.voiceURI,
-                    }))}
-                    value={values.soundSettings.speechVoice}
-                    onChange={handleChange}
-                    name="soundSettings.speechVoice"
-                  />
-                </FormField>
-              </section>
+              {voices ? (
+                <section id="speech" className="mb-5">
+                  <h3 className="text-xl font-semibold mb-3">{t("speech")}</h3>
+                  <FormField label={t("speech")} checkbox>
+                    <Toggle
+                      value={values.soundSettings.speech}
+                      onCheckedChange={handleChange}
+                      name="soundSettings.speech"
+                    />
+                  </FormField>
+                  <FormField label={t("speechVoice")}>
+                    <Select
+                      disabled={!values.soundSettings.speech}
+                      values={voices.map((voice) => ({
+                        label: voice.name,
+                        value: voice.voiceURI,
+                      }))}
+                      value={values.soundSettings.speechVoice}
+                      onChange={handleChange}
+                      name="soundSettings.speechVoice"
+                    />
+                  </FormField>
+                </section>
+              ) : null}
 
               <section>
                 <h3 className="text-xl font-semibold mb-3">{t("otherSounds")}</h3>

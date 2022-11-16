@@ -99,7 +99,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
           <ActiveUnitsSearch type="leo" />
 
           <Table
-            features={{ isWithinCard: true }}
+            features={{ isWithinCardOrModal: true }}
             containerProps={{ className: "mb-3 px-4" }}
             tableState={tableState}
             data={activeOfficers

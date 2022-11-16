@@ -106,7 +106,7 @@ export function NameSearchWarrantsTab() {
       ) : (
         <>
           <Table
-            features={{ isWithinCard: true }}
+            features={{ isWithinCardOrModal: true }}
             tableState={tableState}
             data={currentResult.warrants
               .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))

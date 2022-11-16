@@ -75,7 +75,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
     useFormikContext<ReturnType<typeof createDefaultLicensesValues>>();
 
   const { license, driverslicenseCategory } = useValues();
-  const t = useTranslations("Citizen");
+  const t = useTranslations();
   const { WEAPON_REGISTRATION, LICENSE_EXAMS } = useFeatureEnabled();
   const formRowClassName = classNames(
     "w-full",
@@ -88,7 +88,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
         <section className="w-full">
           {isLeo ? (
             <FormRow>
-              <FormField label={"Suspended Drivers license"}>
+              <FormField label={t("Leo.suspendDriversLicense")}>
                 <Toggle
                   onCheckedChange={handleChange}
                   name="suspended.driverLicense"
@@ -100,7 +100,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
               {values.suspended.driverLicense ? (
                 <DatePickerField
                   isOptional
-                  label="End date"
+                  label={t("Leo.endDate")}
                   value={
                     values.suspended.driverLicenseTimeEnd
                       ? values.suspended.driverLicenseTimeEnd
@@ -115,7 +115,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
           ) : null}
 
           <div className={formRowClassName}>
-            <FormField errorMessage={errors.driversLicense} label={t("driversLicense")}>
+            <FormField errorMessage={errors.driversLicense} label={t("Citizen.driversLicense")}>
               <Select
                 disabled={values.suspended.driverLicense}
                 isClearable={allowRemoval}
@@ -132,7 +132,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
             </FormField>
             <FormField
               errorMessage={errors.driversLicenseCategory as string}
-              label={t("driversLicenseCategory")}
+              label={t("Citizen.driversLicenseCategory")}
             >
               <Select
                 disabled={values.suspended.driverLicense}
@@ -154,7 +154,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
 
           {!isLeo && values.suspended.driverLicense ? (
             <p className="-mt-2 text-base mb-3 text-neutral-700 dark:text-gray-400">
-              {t("licenseSuspendedInfo")}
+              {t("Citizen.licenseSuspendedInfo")}
             </p>
           ) : null}
 
@@ -167,7 +167,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
       <section className="w-full">
         {isLeo ? (
           <FormRow>
-            <FormField label={"Suspended Pilot license"} checkbox>
+            <FormField label={t("Leo.suspendPilotLicense")} checkbox>
               <Toggle
                 onCheckedChange={handleChange}
                 name="suspended.pilotLicense"
@@ -179,7 +179,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
             {values.suspended.pilotLicense ? (
               <DatePickerField
                 isOptional
-                label="End date"
+                label={t("Leo.endDate")}
                 value={
                   values.suspended.pilotLicenseTimeEnd
                     ? values.suspended.pilotLicenseTimeEnd
@@ -194,7 +194,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
         ) : null}
 
         <div className={formRowClassName}>
-          <FormField errorMessage={errors.pilotLicense} label={t("pilotLicense")}>
+          <FormField errorMessage={errors.pilotLicense} label={t("Citizen.pilotLicense")}>
             <Select
               disabled={values.suspended.pilotLicense}
               isClearable={allowRemoval}
@@ -211,7 +211,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
           </FormField>
           <FormField
             errorMessage={errors.pilotLicenseCategory as string}
-            label={t("pilotLicenseCategory")}
+            label={t("Citizen.pilotLicenseCategory")}
           >
             <Select
               disabled={values.suspended.pilotLicense}
@@ -233,7 +233,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
 
         {!isLeo && values.suspended.pilotLicense ? (
           <p className="-mt-2 text-base mb-3 text-neutral-700 dark:text-gray-400">
-            {t("licenseSuspendedInfo")}
+            {t("Citizen.licenseSuspendedInfo")}
           </p>
         ) : null}
 
@@ -243,7 +243,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
       <section className="w-full">
         {isLeo ? (
           <FormRow>
-            <FormField label={"Suspended Water license"} checkbox>
+            <FormField label={t("Leo.suspendWaterLicense")} checkbox>
               <Toggle
                 onCheckedChange={handleChange}
                 name="suspended.waterLicense"
@@ -255,7 +255,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
             {values.suspended.waterLicense ? (
               <DatePickerField
                 isOptional
-                label="End date"
+                label={t("Leo.endDate")}
                 value={
                   values.suspended.waterLicenseTimeEnd
                     ? values.suspended.waterLicenseTimeEnd
@@ -270,7 +270,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
         ) : null}
 
         <div className={formRowClassName}>
-          <FormField errorMessage={errors.waterLicense} label={t("waterLicense")}>
+          <FormField errorMessage={errors.waterLicense} label={t("Citizen.waterLicense")}>
             <Select
               disabled={values.suspended.waterLicense}
               isClearable={allowRemoval}
@@ -287,7 +287,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
           </FormField>
           <FormField
             errorMessage={errors.waterLicenseCategory as string}
-            label={t("waterLicenseCategory")}
+            label={t("Citizen.waterLicenseCategory")}
           >
             <Select
               disabled={values.suspended.waterLicense}
@@ -309,7 +309,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
 
         {!isLeo && values.suspended.waterLicense ? (
           <p className="-mt-2 text-base mb-3 text-neutral-700 dark:text-gray-400">
-            {t("licenseSuspendedInfo")}
+            {t("Citizen.licenseSuspendedInfo")}
           </p>
         ) : null}
 
@@ -320,7 +320,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
         <section className="w-full">
           {isLeo ? (
             <FormRow>
-              <FormField label={"Suspended Firearms license"} checkbox>
+              <FormField label={t("Leo.suspendFirearmsLicense")} checkbox>
                 <Toggle
                   onCheckedChange={handleChange}
                   name="suspended.firearmsLicense"
@@ -332,7 +332,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
               {values.suspended.firearmsLicense ? (
                 <DatePickerField
                   isOptional
-                  label="End date"
+                  label={t("Leo.endDate")}
                   value={
                     values.suspended.firearmsLicenseTimeEnd
                       ? values.suspended.firearmsLicenseTimeEnd
@@ -347,7 +347,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
           ) : null}
 
           <div className={formRowClassName}>
-            <FormField errorMessage={errors.weaponLicense} label={t("weaponLicense")}>
+            <FormField errorMessage={errors.weaponLicense} label={t("Citizen.weaponLicense")}>
               <Select
                 disabled={values.suspended.firearmsLicense}
                 values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map((v) => ({
@@ -362,7 +362,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
             </FormField>
             <FormField
               errorMessage={errors.firearmLicenseCategory as string}
-              label={t("firearmLicenseCategory")}
+              label={t("Citizen.firearmLicenseCategory")}
             >
               <Select
                 disabled={values.suspended.firearmsLicense}
@@ -384,7 +384,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
 
           {!isLeo && values.suspended.firearmsLicense ? (
             <p className="-mt-2 text-base mb-3 text-neutral-700 dark:text-gray-400">
-              {t("licenseSuspendedInfo")}
+              {t("Citizen.licenseSuspendedInfo")}
             </p>
           ) : null}
         </section>

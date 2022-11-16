@@ -69,7 +69,7 @@ export function ActiveWarrants() {
         ) : (
           <Table
             tableState={tableState}
-            features={{ isWithinCard: true }}
+            features={{ isWithinCardOrModal: true }}
             data={activeWarrants.filter(isActiveWarrant).map((warrant) => ({
               id: warrant.id,
               citizen: `${warrant.citizen.name} ${warrant.citizen.surname}`,

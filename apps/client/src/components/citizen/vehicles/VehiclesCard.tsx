@@ -114,7 +114,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
 
             <Table
               tableState={tableState}
-              features={{ isWithinCard: true }}
+              features={{ isWithinCardOrModal: true }}
               data={asyncTable.data.map((vehicle) => ({
                 id: vehicle.id,
                 rowProps: {
