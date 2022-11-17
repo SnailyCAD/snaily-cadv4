@@ -1,25 +1,20 @@
 import * as React from "react";
-import { Loader, Button, AsyncListSearchField, Item } from "@snailycad/ui";
+import { Button, AsyncListSearchField, Item } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik, useFormikContext } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { CustomFieldCategory, Citizen, RecordType, BoloType } from "@snailycad/types";
-import { calculateAge, formatCitizenAddress } from "lib/utils";
+import { CustomFieldCategory, Citizen, BoloType } from "@snailycad/types";
 import format from "date-fns/format";
 import { NameSearchTabsContainer } from "./tabs/TabsContainer";
 import { NameSearchResult, useNameSearch } from "state/search/nameSearchState";
-import { normalizeValue } from "context/ValuesContext";
 import { useRouter } from "next/router";
 import { ArrowLeft, PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
-import { useAuth } from "context/AuthContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Infofield } from "components/shared/Infofield";
-import { CitizenLicenses } from "components/citizen/licenses/LicensesCard";
-import { FullDate } from "components/shared/FullDate";
 import dynamic from "next/dynamic";
 import {
   LicenseInitialValues,
@@ -30,12 +25,11 @@ import { CitizenImageModal } from "components/citizen/modals/CitizenImageModal";
 import { ManageCustomFieldsModal } from "./ManageCustomFieldsModal";
 import { CustomFieldsArea } from "../CustomFieldsArea";
 import { useBolos } from "hooks/realtime/useBolos";
-import type {
-  PostEmsFdDeclareCitizenById,
-  PostLeoSearchCitizenData,
-  PutSearchActionsLicensesData,
-} from "@snailycad/types/api";
+import type { PostLeoSearchCitizenData, PutSearchActionsLicensesData } from "@snailycad/types/api";
 import Image from "next/image";
+import { NameSearchBasicInformation } from "./sections/basic-information";
+import { NameSearchLicensesSection } from "./sections/licenses-section";
+import { NameSearchFooter } from "./sections/footer";
 
 const VehicleSearchModal = dynamic(
   async () => (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal,
@@ -70,11 +64,9 @@ export function NameSearchModal() {
   const cT = useTranslations("Citizen");
   const vT = useTranslations("Vehicles");
   const t = useTranslations("Leo");
-  const ems = useTranslations("Ems");
   const { state, execute } = useFetch();
   const router = useRouter();
   const { makeImageUrl } = useImageUrl();
-  const { cad } = useAuth();
   const { SOCIAL_SECURITY_NUMBERS, CREATE_USER_CITIZEN_LEO } = useFeatureEnabled();
   const { bolos } = useBolos();
 
@@ -152,34 +144,6 @@ export function NameSearchModal() {
     }
   }
 
-  async function handleDeclare() {
-    if (!currentResult) return;
-
-    const { json } = await execute<PostEmsFdDeclareCitizenById>({
-      path: `/ems-fd/declare/${currentResult.id}`,
-      method: "POST",
-    });
-
-    if (json.id) {
-      setCurrentResult({ ...currentResult, ...json });
-    }
-  }
-
-  function handleOpenCreateRecord(type: RecordType) {
-    if (!currentResult) return;
-
-    const modalId = {
-      [RecordType.ARREST_REPORT]: ModalIds.CreateArrestReport,
-      [RecordType.TICKET]: ModalIds.CreateTicket,
-      [RecordType.WRITTEN_WARNING]: ModalIds.CreateWrittenWarning,
-    };
-
-    openModal(modalId[type], {
-      citizenName: `${currentResult.name} ${currentResult.surname}`,
-      citizenId: currentResult.id,
-    });
-  }
-
   const warrants = !currentResult || currentResult.isConfidential ? [] : currentResult.warrants;
   const hasActiveWarrants = warrants.filter((v) => v.status === "ACTIVE").length > 0;
 
@@ -197,7 +161,7 @@ export function NameSearchModal() {
       className="w-[850px]"
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ setValues, errors, values, isValid }) => (
+        {({ setValues, errors, values }) => (
           <Form>
             <AsyncListSearchField<NameSearchResult>
               autoFocus
@@ -356,77 +320,11 @@ export function NameSearchModal() {
                         <PersonFill className="text-gray-500/60 w-[100px] h-[100px]" />
                       )}
                     </div>
-                    <div className="w-full">
-                      <div className="flex flex-col">
-                        <Infofield label={cT("fullName")}>
-                          {currentResult.name} {currentResult.surname}
-                        </Infofield>
 
-                        {SOCIAL_SECURITY_NUMBERS && currentResult.socialSecurityNumber ? (
-                          <Infofield label={cT("socialSecurityNumber")}>
-                            {currentResult.socialSecurityNumber}
-                          </Infofield>
-                        ) : null}
-
-                        <Infofield label={cT("dateOfBirth")}>
-                          <FullDate isDateOfBirth onlyDate>
-                            {currentResult.dateOfBirth}
-                          </FullDate>{" "}
-                          ({cT("age")}: {calculateAge(currentResult.dateOfBirth)})
-                        </Infofield>
-
-                        <Infofield label={cT("gender")}>{currentResult.gender.value}</Infofield>
-                        <Infofield label={cT("ethnicity")}>
-                          {currentResult.ethnicity.value}
-                        </Infofield>
-                        <Infofield label={cT("hairColor")}>{currentResult.hairColor}</Infofield>
-                        <Infofield label={cT("eyeColor")}>{currentResult.eyeColor}</Infofield>
-                      </div>
-
-                      <div className="flex flex-col">
-                        <Infofield label={cT("weight")}>
-                          {currentResult.weight} {cad?.miscCadSettings?.weightPrefix}
-                        </Infofield>
-
-                        <Infofield label={cT("height")}>
-                          {currentResult.height} {cad?.miscCadSettings?.heightPrefix}
-                        </Infofield>
-
-                        <Infofield label={cT("address")}>
-                          {formatCitizenAddress(currentResult)}
-                        </Infofield>
-
-                        <Infofield label={cT("phoneNumber")}>
-                          {currentResult.phoneNumber || common("none")}
-                        </Infofield>
-
-                        <Infofield className="max-w-[400px]" label={cT("occupation")}>
-                          {currentResult.occupation || common("none")}
-                        </Infofield>
-
-                        <Infofield className="max-w-[400px]" label={cT("additionalInfo")}>
-                          {currentResult.additionalInfo || common("none")}
-                        </Infofield>
-                      </div>
-                    </div>
+                    <NameSearchBasicInformation />
 
                     <div className="w-full">
-                      <div>
-                        <ul className="flex flex-col">
-                          <CitizenLicenses citizen={currentResult} />
-                        </ul>
-
-                        {isLeo ? (
-                          <Button
-                            size="xs"
-                            type="button"
-                            className="mt-2"
-                            onPress={() => openModal(ModalIds.ManageLicenses)}
-                          >
-                            {t("editLicenses")}
-                          </Button>
-                        ) : null}
-                      </div>
+                      <NameSearchLicensesSection isLeo={isLeo} />
 
                       <div className="mt-4">
                         <Infofield label={vT("flags")}>
@@ -456,65 +354,7 @@ export function NameSearchModal() {
               )
             ) : null}
 
-            <footer
-              className={`mt-4 pt-3 flex ${
-                (currentResult || CREATE_USER_CITIZEN_LEO) && isLeo
-                  ? "justify-between"
-                  : "justify-end"
-              }`}
-            >
-              <div>
-                {CREATE_USER_CITIZEN_LEO ? (
-                  <Button type="button" onPress={() => openModal(ModalIds.CreateCitizen)}>
-                    {t("createCitizen")}
-                  </Button>
-                ) : null}
-                {currentResult && !currentResult.isConfidential && isLeo ? (
-                  <>
-                    {Object.values(RecordType).map((type) => (
-                      <Button
-                        key={type}
-                        type="button"
-                        onPress={() => handleOpenCreateRecord(type)}
-                        variant="cancel"
-                        className="px-1.5"
-                      >
-                        {t(normalizeValue(`CREATE_${type}`))}
-                      </Button>
-                    ))}
-
-                    <Button
-                      size="xs"
-                      type="button"
-                      onPress={handleDeclare}
-                      disabled={state === "loading"}
-                      variant="cancel"
-                      className="px-1.5"
-                    >
-                      {currentResult.dead ? ems("declareAlive") : ems("declareDead")}
-                    </Button>
-                  </>
-                ) : null}
-              </div>
-
-              <div className="flex">
-                <Button
-                  type="reset"
-                  onPress={() => closeModal(ModalIds.NameSearch)}
-                  variant="cancel"
-                >
-                  {common("cancel")}
-                </Button>
-                <Button
-                  className="flex items-center"
-                  disabled={!isValid || state === "loading"}
-                  type="submit"
-                >
-                  {state === "loading" ? <Loader className="mr-2" /> : null}
-                  {common("search")}
-                </Button>
-              </div>
-            </footer>
+            <NameSearchFooter isLeo={isLeo} loadingState={state} />
 
             <AutoSubmit />
             <VehicleSearchModal id={ModalIds.VehicleSearchWithinName} />
