@@ -99,6 +99,7 @@ export function CreateCitizenModal() {
         </div>
       ) : (
         <ManageCitizenForm
+          cancelURL="#"
           formFeatures={{ "edit-name": true }}
           onSubmit={onSubmit}
           citizen={null}
