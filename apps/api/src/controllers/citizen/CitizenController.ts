@@ -326,7 +326,7 @@ export class CitizenController {
     @Context("cad") cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings | null },
     @BodyParams() body: unknown,
   ): Promise<APITypes.PutCitizenByIdData> {
-    const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
+    const data = validateSchema(CREATE_CITIZEN_SCHEMA.partial(), body);
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
 
     const citizen = await prisma.citizen.findUnique({
@@ -341,11 +341,13 @@ export class CitizenController {
       throw new NotFound("citizenNotFound");
     }
 
-    const date = new Date(data.dateOfBirth).getTime();
-    const now = Date.now();
+    const date = data.dateOfBirth ? new Date(data.dateOfBirth).getTime() : undefined;
+    if (date) {
+      const now = Date.now();
 
-    if (date > now) {
-      throw new ExtendedBadRequest({ dateOfBirth: "dateLargerThanNow" });
+      if (date > now) {
+        throw new ExtendedBadRequest({ dateOfBirth: "dateLargerThanNow" });
+      }
     }
 
     if (data.socialSecurityNumber) {

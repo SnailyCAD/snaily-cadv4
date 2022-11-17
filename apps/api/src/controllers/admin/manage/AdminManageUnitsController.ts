@@ -168,7 +168,7 @@ export class AdminManageUnitsController {
     @PathParams("unitId") unitId: string,
     @BodyParams() body: unknown,
   ): Promise<APITypes.PutManageUnitCallsignData> {
-    const data = validateSchema(UPDATE_UNIT_CALLSIGN_SCHEMA, body);
+    const data = validateSchema(UPDATE_UNIT_CALLSIGN_SCHEMA.partial(), body);
 
     const { type, unit } = await findUnit(unitId);
 
@@ -182,12 +182,14 @@ export class AdminManageUnitsController {
     } as const;
     const t = prismaNames[type];
 
-    await validateDuplicateCallsigns({
-      callsign1: data.callsign,
-      callsign2: data.callsign2,
-      unitId: unit.id,
-      type,
-    });
+    if (data.callsign && data.callsign2) {
+      await validateDuplicateCallsigns({
+        callsign1: data.callsign,
+        callsign2: data.callsign2,
+        unitId: unit.id,
+        type,
+      });
+    }
 
     if (type === "leo") {
       await updateOfficerDivisionsCallsigns({
