@@ -101,7 +101,7 @@ export function ManageCitizenForm({
     socialSecurityNumber: citizen?.socialSecurityNumber ?? "",
     violations: [] as SelectValue<PenalCode>[],
     records: [],
-    ...createDefaultLicensesValues(citizen),
+    ...(formFeatures?.["license-fields"] ? createDefaultLicensesValues(citizen) : {}),
   };
 
   async function handleSubmit(
