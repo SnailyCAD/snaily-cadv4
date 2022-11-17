@@ -10,6 +10,8 @@ import { useFormikContext } from "formik";
 import { RecordsTable } from "components/leo/modals/NameSearchModal/tabs/RecordsTab";
 import { v4 } from "uuid";
 
+let valuesFetched = false;
+
 export function CreatePreviousRecordsStep() {
   const t = useTranslations();
   const [type, setType] = React.useState<RecordType | null>(null);
@@ -20,7 +22,12 @@ export function CreatePreviousRecordsStep() {
 
   useLoadValuesClientSide({
     valueTypes: [ValueType.PENAL_CODE],
+    enabled: !valuesFetched,
   });
+
+  React.useEffect(() => {
+    valuesFetched = true;
+  }, []);
 
   function handleOpen(type: RecordType) {
     const id =
@@ -77,7 +84,7 @@ export function CreatePreviousRecordsStep() {
   }
 
   return (
-    <>
+    <div className="mb-5">
       <p>{t("Citizen.createPreviousRecordsStepDescription")}</p>
 
       <div className="flex gap-2 my-3">
@@ -126,6 +133,6 @@ export function CreatePreviousRecordsStep() {
           }}
         />
       ) : null}
-    </>
+    </div>
   );
 }
