@@ -2,6 +2,7 @@ import { FormikProps, FormikValues, useFormikContext } from "formik";
 
 export interface MultiFormStepItem<FormValues extends FormikValues> {
   title: string;
+  id: string;
   isRequired?: boolean;
   children(formikState: FormikProps<FormValues>): JSX.Element | null;
 }

@@ -92,6 +92,7 @@ export function AddressPostalSelect(props: Props) {
             handleSuggestionPress({ ...values, type: "address" });
           }}
           fetchOptions={{
+            filterTextRequired: true,
             apiPath(inputValue) {
               return `/admin/values/address/search?query=${inputValue}`;
             },
@@ -123,6 +124,7 @@ export function AddressPostalSelect(props: Props) {
           handleSuggestionPress({ ...values, type: "postal" });
         }}
         fetchOptions={{
+          filterTextRequired: true,
           apiPath(inputValue) {
             return `/admin/values/address/search?query=${inputValue}`;
           },

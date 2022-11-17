@@ -84,6 +84,7 @@ export default function CreateCitizen() {
           "edit-name": true,
           "license-fields": true,
           "officer-creation": true,
+          "previous-records": true,
         }}
       />
     </Layout>

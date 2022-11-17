@@ -13,14 +13,14 @@ import {
 } from "@snailycad/ui";
 import { FormRow } from "components/form/FormRow";
 import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
+import { Select, SelectValue } from "components/form/Select";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { CREATE_CITIZEN_SCHEMA, CREATE_CITIZEN_WITH_OFFICER_SCHEMA } from "@snailycad/schemas";
 import { useAuth } from "context/AuthContext";
 import { useValues } from "context/ValuesContext";
 import { handleValidate } from "lib/handleValidate";
 import type { FormikHelpers } from "formik";
-import type { User, Citizen } from "@snailycad/types";
+import type { User, Citizen, PenalCode } from "@snailycad/types";
 import { useTranslations } from "next-intl";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import {
@@ -31,8 +31,14 @@ import parseISO from "date-fns/parseISO";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
 import { getManageOfficerFieldsDefaults } from "components/leo/manage-officer/manage-officer-fields";
 import { CreateOfficerStep } from "./manage-citizen-form/create-officer-step";
+import { CreatePreviousRecordsStep } from "./manage-citizen-form/create-previous-records-step";
 
-type FormFeatures = "officer-creation" | "edit-user" | "edit-name" | "license-fields";
+type FormFeatures =
+  | "officer-creation"
+  | "edit-user"
+  | "edit-name"
+  | "license-fields"
+  | "previous-records";
 interface Props {
   citizen: (Citizen & { user?: User | null }) | null;
   state: "error" | "loading" | null;
@@ -93,6 +99,8 @@ export function ManageCitizenForm({
     occupation: citizen?.occupation ?? "",
     additionalInfo: citizen?.additionalInfo ?? "",
     socialSecurityNumber: citizen?.socialSecurityNumber ?? "",
+    violations: [] as SelectValue<PenalCode>[],
+    records: [],
     ...createDefaultLicensesValues(citizen),
   };
 
@@ -106,7 +114,7 @@ export function ManageCitizenForm({
     if (validatedImage) {
       if (typeof validatedImage === "object") {
         fd = new FormData();
-        fd.set("image", validatedImage, validatedImage.name);
+        fd.set("Citizen.image", validatedImage, validatedImage.name);
       }
     }
 
@@ -115,10 +123,10 @@ export function ManageCitizenForm({
 
   return (
     <MultiForm
-      onStepChange={(step) => {
-        // todo: remove magic numbers
-        // 3 = create officer
-        const schema = step === 3 ? CREATE_CITIZEN_WITH_OFFICER_SCHEMA : CREATE_CITIZEN_SCHEMA;
+      onStepChange={(activeStep) => {
+        const isOfficerStep = activeStep.props.id === "officer";
+
+        const schema = isOfficerStep ? CREATE_CITIZEN_WITH_OFFICER_SCHEMA : CREATE_CITIZEN_SCHEMA;
         setValidationSchema(schema);
       }}
       validate={validate}
@@ -164,7 +172,11 @@ export function ManageCitizenForm({
         </Link>
       )}
     >
-      <MultiFormStep<typeof INITIAL_VALUES> title={t("basicInformation")} isRequired>
+      <MultiFormStep<typeof INITIAL_VALUES>
+        title={t("basicInformation")}
+        id="basic-information"
+        isRequired
+      >
         {({ values, errors, setValues, setFieldValue, handleChange }) => (
           <>
             <ImageSelectInput image={image} setImage={setImage} />
@@ -307,7 +319,10 @@ export function ManageCitizenForm({
         )}
       </MultiFormStep>
 
-      <MultiFormStep<typeof INITIAL_VALUES> title={t("optionalInformation")}>
+      <MultiFormStep<typeof INITIAL_VALUES>
+        id="optional-information"
+        title={t("optionalInformation")}
+      >
         {({ values, errors, setFieldValue }) => (
           <>
             <TextField
@@ -343,7 +358,7 @@ export function ManageCitizenForm({
       </MultiFormStep>
 
       {formFeatures?.["license-fields"] && features.ALLOW_CITIZEN_UPDATE_LICENSE ? (
-        <MultiFormStep title={t("licenseInformation")}>
+        <MultiFormStep id="license-information" title={t("licenseInformation")}>
           {() => (
             <FormRow flexLike>
               <ManageLicensesFormFields flexType="column" isLeo={false} allowRemoval />
@@ -352,8 +367,16 @@ export function ManageCitizenForm({
         </MultiFormStep>
       ) : null}
 
+      {formFeatures?.["previous-records"] && features.CITIZEN_CREATION_RECORDS ? (
+        <MultiFormStep id="previous-records" title={t("previousRecords")}>
+          {() => <CreatePreviousRecordsStep />}
+        </MultiFormStep>
+      ) : null}
+
       {formFeatures?.["officer-creation"] ? (
-        <MultiFormStep title={t("officer")}>{() => <CreateOfficerStep />}</MultiFormStep>
+        <MultiFormStep id="officer" title={t("officer")}>
+          {() => <CreateOfficerStep />}
+        </MultiFormStep>
       ) : null}
     </MultiForm>
   );
