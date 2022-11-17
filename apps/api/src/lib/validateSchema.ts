@@ -1,10 +1,10 @@
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { z } from "zod";
 
-export function validateSchema<Extra extends object, Schema extends z.ZodType<any, any, any>>(
+export function validateSchema<Schema extends z.ZodType<any, any, any>>(
   schema: Schema,
   values: unknown,
-): z.infer<Schema> & Extra {
+): z.infer<Schema> {
   let data = {};
   const errors: Record<string, string> = {};
 
@@ -29,5 +29,5 @@ export function validateSchema<Extra extends object, Schema extends z.ZodType<an
     throw new ExtendedBadRequest(errors);
   }
 
-  return data as z.infer<Schema> & Extra;
+  return data as z.infer<Schema>;
 }
