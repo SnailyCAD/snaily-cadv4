@@ -10,11 +10,11 @@ interface Props extends DropdownMenu.MenuContentProps, DropdownMenu.DropdownMenu
   extra?: { maxWidth?: number };
 }
 
-export function Dropdown({ trigger, children, extra, open, onOpenChange, ...rest }: Props) {
+export function Dropdown({ trigger, children, extra, open, modal, onOpenChange, ...rest }: Props) {
   const maxWidth = extra?.maxWidth ?? 175;
 
   return (
-    <DropdownMenu.Root modal={rest.modal} open={open} onOpenChange={onOpenChange}>
+    <DropdownMenu.Root modal={modal} open={open} onOpenChange={onOpenChange}>
       <DropdownMenu.Trigger className="flex items-center gap-1 px-1.5" asChild>
         {trigger}
       </DropdownMenu.Trigger>
