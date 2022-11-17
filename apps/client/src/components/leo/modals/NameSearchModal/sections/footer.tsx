@@ -1,5 +1,6 @@
 import { Button, Loader } from "@snailycad/ui";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { classNames } from "lib/classNames";
 import { useModal } from "state/modalState";
 import { useNameSearch } from "state/search/nameSearchState";
 import { ModalIds } from "types/ModalIds";
@@ -17,15 +18,13 @@ export function NameSearchFooter(props: Props) {
   const t = useTranslations();
   const { closeModal } = useModal();
 
+  const showActions = (currentResult || CREATE_USER_CITIZEN_LEO) && props.isLeo;
+
   return (
     <footer
-      className={`mt-4 pt-3 flex ${
-        (currentResult || CREATE_USER_CITIZEN_LEO) && props.isLeo
-          ? "justify-between"
-          : "justify-end"
-      }`}
+      className={classNames("mt-4 pt-3 flex", showActions ? "justify-between" : "justify-end")}
     >
-      <NameSearchFooterActions isLeo={props.isLeo} />
+      {showActions ? <NameSearchFooterActions isLeo={props.isLeo} /> : null}
 
       <div className="flex">
         <Button type="reset" onPress={() => closeModal(ModalIds.NameSearch)} variant="cancel">

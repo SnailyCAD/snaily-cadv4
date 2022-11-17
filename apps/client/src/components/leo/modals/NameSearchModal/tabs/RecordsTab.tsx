@@ -176,7 +176,6 @@ export function RecordsTable({
 
     openModal(ModalIds.ManageRecord, {
       ...record,
-      citizenId: `${currentResult?.name} ${currentResult?.surname}`,
       citizenName: `${currentResult?.name} ${currentResult?.surname}`,
     });
   }
