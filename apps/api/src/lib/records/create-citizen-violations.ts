@@ -1,5 +1,4 @@
 import type { cad } from "@snailycad/types";
-import { BadRequest } from "@tsed/exceptions";
 import { upsertRecord } from "./upsert-record";
 import type { z } from "zod";
 import type { CREATE_TICKET_SCHEMA } from "@snailycad/schemas";
@@ -23,6 +22,6 @@ export async function createCitizenViolations(options: Options) {
       }),
     );
   } catch {
-    throw new BadRequest("errorCreatingViolations");
+    /* empty */
   }
 }
