@@ -23,6 +23,7 @@ import { getImageWebPPath } from "utils/image";
 import { validateSocialSecurityNumber } from "lib/citizen/validateSSN";
 import { setEndedSuspendedLicenses } from "lib/citizen/setEndedSuspendedLicenses";
 import { createOfficer } from "controllers/leo/my-officers/create-officer";
+import { createCitizenViolations } from "lib/records/create-citizen-violations";
 
 export const citizenInclude = {
   user: { select: userProperties },
@@ -295,6 +296,14 @@ export class CitizenController {
     });
 
     await updateCitizenLicenseCategories(citizen, data);
+
+    if (data.records) {
+      await createCitizenViolations({
+        cad,
+        data: data.records,
+        citizenId: citizen.id,
+      });
+    }
 
     if ((data as any).callsign2) {
       await createOfficer({

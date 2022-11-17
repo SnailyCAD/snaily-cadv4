@@ -38,18 +38,7 @@ interface Props {
   onClose?(): void;
 }
 
-export function ManageRecordModal({
-  onUpdate,
-  onCreate,
-  onClose,
-  isReadOnly,
-  record,
-  type,
-  isEdit,
-  id,
-  customSubmitHandler,
-  hideCitizenField,
-}: Props) {
+export function ManageRecordModal(props: Props) {
   const { isOpen, closeModal, getPayload } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -57,21 +46,21 @@ export function ManageRecordModal({
 
   const data = {
     [RecordType.TICKET]: {
-      isEdit,
-      title: isEdit ? "editTicket" : "createTicket",
-      id: id ?? ModalIds.CreateTicket,
+      isEdit: props.isEdit,
+      title: props.isEdit ? "editTicket" : "createTicket",
+      id: props.id ?? ModalIds.CreateTicket,
       success: "successCreateTicket",
     },
     [RecordType.ARREST_REPORT]: {
-      isEdit,
-      title: isEdit ? "editArrestReport" : "createArrestReport",
-      id: id ?? ModalIds.CreateArrestReport,
+      isEdit: props.isEdit,
+      title: props.isEdit ? "editArrestReport" : "createArrestReport",
+      id: props.id ?? ModalIds.CreateArrestReport,
       success: "successCreateArrestReport",
     },
     [RecordType.WRITTEN_WARNING]: {
-      isEdit,
-      title: isEdit ? "editWrittenWarning" : "createWrittenWarning",
-      id: id ?? ModalIds.CreateWrittenWarning,
+      isEdit: props.isEdit,
+      title: props.isEdit ? "editWrittenWarning" : "createWrittenWarning",
+      id: props.id ?? ModalIds.CreateWrittenWarning,
       success: "successCreateWarning",
     },
   };
@@ -79,26 +68,26 @@ export function ManageRecordModal({
   const { state, execute } = useFetch();
   const { penalCode } = useValues();
   const penalCodes =
-    type === "WRITTEN_WARNING"
+    props.type === "WRITTEN_WARNING"
       ? penalCode.values.filter(
           (v) => v.warningApplicableId !== null && v.warningNotApplicableId === null,
         )
       : penalCode.values;
 
   function handleClose() {
-    onClose?.();
-    closeModal(data[type].id);
+    props.onClose?.();
+    closeModal(data[props.type].id);
   }
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
-    if (isReadOnly) return;
+    if (props.isReadOnly) return;
 
     const requestData = {
       ...values,
-      type,
+      type: props.type,
       violations: values.violations.map(({ value }: { value: any }) => ({
         penalCodeId: value.id,
         bail: LEO_BAIL && value.jailTime?.enabled ? value.bail?.value : null,
@@ -110,24 +99,24 @@ export function ManageRecordModal({
 
     validateRecords(values.violations, helpers);
 
-    if (customSubmitHandler) {
-      const closable = await customSubmitHandler({ ...requestData, id: record?.id });
+    if (props.customSubmitHandler) {
+      const closable = await props.customSubmitHandler({ ...requestData, id: props.record?.id });
       if (closable) {
         handleClose();
       }
       return;
     }
 
-    if (record) {
+    if (props.record) {
       const { json } = await execute<PutRecordsByIdData, typeof INITIAL_VALUES>({
-        path: `/records/record/${record.id}`,
+        path: `/records/record/${props.record.id}`,
         method: "PUT",
         data: requestData,
         helpers,
       });
 
       if (json.id) {
-        onUpdate?.(json);
+        props.onUpdate?.(json);
         handleClose();
       }
     } else {
@@ -141,25 +130,25 @@ export function ManageRecordModal({
       if (json.id) {
         toastMessage({
           title: common("success"),
-          message: t(data[type].success, { citizen: values.citizenName }),
+          message: t(data[props.type].success, { citizen: values.citizenName }),
           icon: "success",
         });
 
-        onCreate?.(json);
+        props.onCreate?.(json);
         handleClose();
       }
     }
   }
 
-  const payload = getPayload<{ citizenId: string; citizenName: string }>(data[type].id);
+  const payload = getPayload<{ citizenId: string; citizenName: string }>(data[props.type].id);
   const validate = handleValidate(CREATE_TICKET_SCHEMA);
 
   const INITIAL_VALUES = {
-    type,
-    citizenId: record?.citizenId ?? payload?.citizenId ?? "",
+    type: props.type,
+    citizenId: props.record?.citizenId ?? payload?.citizenId ?? "",
     citizenName: payload?.citizenName ?? "",
     violations:
-      record?.violations.map((v) => {
+      props.record?.violations.map((v) => {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         const penalCode = v.penalCode ?? penalCodes.find((p) => p.id === v.penalCodeId);
 
@@ -176,28 +165,28 @@ export function ManageRecordModal({
           },
         };
       }) ?? ([] as SelectValue<PenalCode>[]),
-    postal: record?.postal ?? "",
-    notes: record?.notes ?? "",
-    seizedItems: record?.seizedItems ?? [],
-    paymentStatus: record?.paymentStatus ?? null,
+    postal: props.record?.postal ?? "",
+    notes: props.record?.notes ?? "",
+    seizedItems: props.record?.seizedItems ?? [],
+    paymentStatus: props.record?.paymentStatus ?? null,
   };
 
   return (
     <Modal
-      title={t(data[type].title)}
+      title={t(data[props.type].title)}
       onClose={handleClose}
-      isOpen={isOpen(data[type].id)}
+      isOpen={isOpen(data[props.type].id)}
       className="w-[800px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, setFieldValue, errors, values, isValid }) => (
           <Form autoComplete="off">
-            {hideCitizenField ? null : (
+            {props.hideCitizenField ? null : (
               <CitizenSuggestionsField
                 autoFocus
                 fromAuthUserOnly={false}
                 label={t("citizen")}
-                isDisabled={isReadOnly || !!record}
+                isDisabled={props.isReadOnly || !!props.record}
                 labelFieldName="citizenName"
                 valueFieldName="citizenId"
               />
@@ -207,7 +196,7 @@ export function ManageRecordModal({
 
             <FormField label={t("violations")}>
               <SelectPenalCode
-                isReadOnly={isReadOnly}
+                isReadOnly={props.isReadOnly}
                 penalCodes={penalCodes}
                 value={values.violations}
                 handleChange={handleChange}
@@ -215,15 +204,15 @@ export function ManageRecordModal({
             </FormField>
 
             <PenalCodesTable
-              isReadOnly={isReadOnly}
+              isReadOnly={props.isReadOnly}
               penalCodes={values.violations.map((v) => v.value)}
             />
-            <SeizedItemsTable isReadOnly={isReadOnly} />
+            <SeizedItemsTable isReadOnly={props.isReadOnly} />
 
             <TextField
               isTextarea
               isOptional
-              isDisabled={isReadOnly}
+              isDisabled={props.isReadOnly}
               errorMessage={errors.notes}
               label={t("notes")}
               value={values.notes}
@@ -233,7 +222,7 @@ export function ManageRecordModal({
 
             <FormField optional errorMessage={errors.paymentStatus} label={t("recordPaid")}>
               <Toggle
-                disabled={isReadOnly}
+                disabled={props.isReadOnly}
                 value={values.paymentStatus === PaymentStatus.PAID}
                 name="paymentStatus"
                 onCheckedChange={(event) => {
@@ -251,11 +240,11 @@ export function ManageRecordModal({
               </Button>
               <Button
                 className="flex items-center"
-                disabled={isReadOnly || !isValid || state === "loading"}
+                disabled={props.isReadOnly || !isValid || state === "loading"}
                 type="submit"
               >
                 {state === "loading" ? <Loader className="mr-2" /> : null}
-                {record ? common("save") : common("create")}
+                {props.record ? common("save") : common("create")}
               </Button>
             </footer>
           </Form>
