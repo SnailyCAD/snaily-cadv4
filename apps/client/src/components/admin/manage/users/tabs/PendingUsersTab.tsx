@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useTranslations } from "use-intl";
 import type { User } from "@snailycad/types";
 import { TabsContent } from "components/shared/TabList";

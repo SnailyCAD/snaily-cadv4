@@ -1,4 +1,4 @@
-import * as React from "react";
+import type * as React from "react";
 import { Root as AccordionRoot } from "@radix-ui/react-accordion";
 import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";

@@ -1,4 +1,4 @@
-import * as React from "react";
+import type * as React from "react";
 import * as Accordion from "@radix-ui/react-accordion";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";

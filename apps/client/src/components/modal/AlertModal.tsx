@@ -1,4 +1,4 @@
-import * as React from "react";
+import type * as React from "react";
 import { Loader, Button } from "@snailycad/ui";
 import { classNames } from "lib/classNames";
 import { useModal } from "state/modalState";
@@ -34,7 +34,7 @@ export function AlertModal(props: Props) {
       isOpen={props.forceOpen ?? isOpen(props.id)}
       isAlert
     >
-      <p className="my-3 dark:text-gray-300">{props.description}</p>
+      <div className="my-3 dark:text-gray-300">{props.description}</div>
       <div className="flex items-center justify-end gap-2 mt-2">
         <Button variant="cancel" disabled={props.state === "loading"} onPress={handleClose}>
           {common("cancel")}

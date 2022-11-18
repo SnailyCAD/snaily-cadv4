@@ -211,7 +211,7 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
       />
       <AlertModal
         title={t("purgeSelectedCalls")}
-        description={t.rich("alert_purgeSelectedCalls", {
+        description={t("alert_purgeSelectedCalls", {
           length: getObjLength(tableState.rowSelection),
         })}
         id={ModalIds.AlertPurgeCalls}

@@ -1,4 +1,3 @@
-import * as React from "react";
 import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "use-intl";
 import { Button } from "@snailycad/ui";

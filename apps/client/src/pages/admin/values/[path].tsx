@@ -269,7 +269,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
 
       <AlertModal
         id={ModalIds.AlertDeleteValue}
-        description={t.rich("alert_deleteValue", {
+        description={t("alert_deleteValue", {
           value:
             tempValue &&
             (isBaseValue(tempValue)
@@ -289,7 +289,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
 
       <AlertModal
         id={ModalIds.AlertDeleteSelectedValues}
-        description={t.rich("alert_deleteSelectedValues", {
+        description={t("alert_deleteSelectedValues", {
           length: getObjLength(tableState.rowSelection),
         })}
         onDeleteClick={handleDeleteSelected}

@@ -43,12 +43,12 @@ export function BoloColumn({ bolos, boloType, setTempBolo }: Props) {
   return (
     <div key={boloType}>
       <h1 className="my-2 text-xl font-semibold capitalize">
-        {t.rich("typeBolos", { type: boloType.toLowerCase() })}
+        {t("typeBolos", { type: boloType.toLowerCase() })}
       </h1>
 
       {bolos.length <= 0 ? (
         <p className="text-neutral-700 dark:text-gray-300">
-          {t.rich("noActiveBolosForType", {
+          {t("noActiveBolosForType", {
             type: t(boloType.toLowerCase()),
           })}
         </p>

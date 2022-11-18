@@ -65,7 +65,7 @@ export function InvolvedUnitsColumn({ handleAssignUnassignToIncident, incident }
                 {() => {
                   const comma = idx + 1 === incident.unitsInvolved.length ? "" : ", ";
                   return (
-                    <p
+                    <span
                       className={classNames(
                         "text-base",
                         canDrag ? "!cursor-move" : "cursor-default",
@@ -73,7 +73,7 @@ export function InvolvedUnitsColumn({ handleAssignUnassignToIncident, incident }
                     >
                       {makeAssignedUnit(unit)}
                       {comma}
-                    </p>
+                    </span>
                   );
                 }}
               </Draggable>

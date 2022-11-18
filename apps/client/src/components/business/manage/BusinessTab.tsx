@@ -129,7 +129,7 @@ export function ManageBusinessTab() {
       <AlertModal
         id={ModalIds.AlertDeleteBusiness}
         title={t("deleteBusiness")}
-        description={t.rich("alert_deleteBusiness", {
+        description={t("alert_deleteBusiness", {
           business: currentBusiness.name,
         })}
         deleteText={t("deleteBusiness")}

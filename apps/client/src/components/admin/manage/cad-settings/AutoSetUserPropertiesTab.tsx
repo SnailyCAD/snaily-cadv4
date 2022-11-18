@@ -59,7 +59,6 @@ export function AutoSetUserPropertiesTab() {
       <p className="my-3 text-neutral-700 dark:text-gray-200">
         This will automatically set these properties to what value is set below when a user creates
         an account.
-        <br />
       </p>
 
       <p className="text-neutral-700 dark:text-gray-200">

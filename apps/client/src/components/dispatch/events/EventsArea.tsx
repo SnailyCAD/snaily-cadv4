@@ -1,4 +1,3 @@
-import * as React from "react";
 import type { Full911Call } from "state/dispatch/dispatchState";
 import type { FormikHelpers } from "formik";
 import compareDesc from "date-fns/compareDesc";

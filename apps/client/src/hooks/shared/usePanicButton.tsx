@@ -63,7 +63,7 @@ function Component({
       {unit ? (
         <div role="alert" className="p-2 px-3 my-2 font-semibold text-white bg-red-500 rounded-md">
           <p>
-            {t.rich("panicButtonLeo", {
+            {t("panicButtonLeo", {
               officer: `${callsign} ${makeUnitName(unit)}`,
             })}
           </p>

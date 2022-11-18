@@ -96,11 +96,9 @@ export function ImportModal<T extends ImportData>({ onImport, id, url }: Props<T
               </div>
             </FormField>
 
-            <p>
-              <a className="underline" target="_blank" rel="noreferrer" href={data[id].docsUrl}>
-                Documentation
-              </a>
-            </p>
+            <a className="underline" target="_blank" rel="noreferrer" href={data[id].docsUrl}>
+              Documentation
+            </a>
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onPress={() => closeModal(id)} variant="cancel">

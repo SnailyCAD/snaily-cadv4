@@ -1,4 +1,3 @@
-import * as React from "react";
 import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "use-intl";
 import { Button } from "@snailycad/ui";
@@ -130,7 +129,7 @@ export function EmployeesTab() {
       <AlertModal
         id={ModalIds.AlertFireEmployee}
         title={t("fireEmployee")}
-        description={t.rich("alert_fireEmployee", {
+        description={t("alert_fireEmployee", {
           employee: tempEmployee && `${tempEmployee.citizen.name} ${tempEmployee.citizen.surname}`,
         })}
         onDeleteClick={handleFireEmployee}

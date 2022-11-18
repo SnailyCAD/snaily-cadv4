@@ -35,7 +35,9 @@ export function ManageOfficerFields({
 
   return (
     <>
-      {setImage && image ? <ImageSelectInput setImage={setImage} image={image} /> : null}
+      {setImage && typeof image !== "undefined" ? (
+        <ImageSelectInput setImage={setImage} image={image} />
+      ) : null}
 
       {hideCitizenField ? null : (
         <CitizenSuggestionsField
