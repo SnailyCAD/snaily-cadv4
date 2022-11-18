@@ -17,13 +17,13 @@ export function FullDate({ children, onlyDate, isDateOfBirth, ...rest }: Props) 
     return <span>Invalid Date</span>;
   }
 
+  if (!isMounted) {
+    return null;
+  }
+
   let date = new Date(children).getTime();
   if (isDateOfBirth) {
     date = date + 5 * 60 * 60 * 1000;
-  }
-
-  if (!isMounted) {
-    return null;
   }
 
   return (
