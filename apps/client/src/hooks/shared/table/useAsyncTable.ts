@@ -14,6 +14,7 @@ interface FetchOptions {
 
 interface Options<T> {
   search?: string;
+  // todo: onPageChange
 
   disabled?: boolean;
   totalCount: number;
