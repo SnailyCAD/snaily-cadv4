@@ -149,7 +149,7 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
 
       <AlertModal
         id={ModalIds.AlertDeleteValue}
-        description={t("alert_deleteValue", {
+        description={t.rich("alert_deleteValue", {
           value: tempValue?.value?.value.value ?? "",
         })}
         onDeleteClick={handleDelete}

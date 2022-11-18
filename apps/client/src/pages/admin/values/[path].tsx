@@ -269,7 +269,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
 
       <AlertModal
         id={ModalIds.AlertDeleteValue}
-        description={t("alert_deleteValue", {
+        description={t.rich("alert_deleteValue", {
           value:
             tempValue &&
             (isBaseValue(tempValue)

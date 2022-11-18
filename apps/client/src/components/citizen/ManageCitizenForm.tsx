@@ -32,6 +32,7 @@ import { AddressPostalSelect } from "components/form/select/PostalSelect";
 import { getManageOfficerFieldsDefaults } from "components/leo/manage-officer/manage-officer-fields";
 import { CreateOfficerStep } from "./manage-citizen-form/create-officer-step";
 import { CreatePreviousRecordsStep } from "./manage-citizen-form/create-previous-records-step";
+import { Permissions, usePermission } from "hooks/usePermission";
 
 type FormFeatures =
   | "officer-creation"
@@ -63,6 +64,7 @@ export function ManageCitizenForm({
   const { gender, ethnicity } = useValues();
   const features = useFeatureEnabled();
   const [validationSchema, setValidationSchema] = React.useState<any>(CREATE_CITIZEN_SCHEMA);
+  const { hasPermissions } = usePermission();
 
   const validate = handleValidate(validationSchema);
   const t = useTranslations("Citizen");
@@ -373,7 +375,7 @@ export function ManageCitizenForm({
         </MultiFormStep>
       ) : null}
 
-      {formFeatures?.["officer-creation"] ? (
+      {formFeatures?.["officer-creation"] && hasPermissions([Permissions.Leo], (u) => u.isLeo) ? (
         <MultiFormStep id="officer" title={t("officer")}>
           {() => <CreateOfficerStep />}
         </MultiFormStep>
