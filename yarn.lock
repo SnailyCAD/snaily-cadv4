@@ -2601,11 +2601,11 @@ __metadata:
     "@sentry/node": ^7.19.0
     "@sentry/tracing": ^7.19.0
     "@snaily-cad/image-data-uri": ^3.1.0
-    "@snailycad/config": 1.32.0
-    "@snailycad/permissions": 1.32.0
-    "@snailycad/schemas": 1.32.0
-    "@snailycad/types": 1.32.0
-    "@snailycad/utils": 1.32.0
+    "@snailycad/config": 1.33.0
+    "@snailycad/permissions": 1.33.0
+    "@snailycad/schemas": 1.33.0
+    "@snailycad/types": 1.33.0
+    "@snailycad/utils": 1.33.0
     "@swc/core": ^1.3.14
     "@swc/helpers": ^0.4.12
     "@tsed/common": ^7.3.0
@@ -2681,12 +2681,12 @@ __metadata:
     "@react-aria/ssr": ^3.3.0
     "@sentry/nextjs": ^7.19.0
     "@sentry/tracing": ^7.19.0
-    "@snailycad/config": 1.32.0
-    "@snailycad/permissions": 1.32.0
-    "@snailycad/schemas": 1.32.0
-    "@snailycad/types": 1.32.0
-    "@snailycad/ui": 1.32.0
-    "@snailycad/utils": 1.32.0
+    "@snailycad/config": 1.33.0
+    "@snailycad/permissions": 1.33.0
+    "@snailycad/schemas": 1.33.0
+    "@snailycad/types": 1.33.0
+    "@snailycad/ui": 1.33.0
+    "@snailycad/utils": 1.33.0
     "@tailwindcss/typography": ^0.5.8
     "@tanstack/match-sorter-utils": ^8.5.14
     "@tanstack/react-table": ^8.5.22
@@ -2750,7 +2750,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/config@1.32.0, @snailycad/config@workspace:packages/config":
+"@snailycad/config@1.33.0, @snailycad/config@workspace:packages/config":
   version: 0.0.0-use.local
   resolution: "@snailycad/config@workspace:packages/config"
   dependencies:
@@ -2761,7 +2761,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/permissions@1.32.0, @snailycad/permissions@workspace:packages/permissions":
+"@snailycad/permissions@1.33.0, @snailycad/permissions@workspace:packages/permissions":
   version: 0.0.0-use.local
   resolution: "@snailycad/permissions@workspace:packages/permissions"
   dependencies:
@@ -2773,7 +2773,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/schemas@1.32.0, @snailycad/schemas@workspace:packages/schemas":
+"@snailycad/schemas@1.33.0, @snailycad/schemas@workspace:packages/schemas":
   version: 0.0.0-use.local
   resolution: "@snailycad/schemas@workspace:packages/schemas"
   dependencies:
@@ -2784,18 +2784,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/types@1.32.0, @snailycad/types@workspace:packages/types":
+"@snailycad/types@1.33.0, @snailycad/types@workspace:packages/types":
   version: 0.0.0-use.local
   resolution: "@snailycad/types@workspace:packages/types"
   dependencies:
-    "@snailycad/permissions": 1.32.0
+    "@snailycad/permissions": 1.33.0
     discord-api-types: 0.37.17
     tsup: ^6.4.0
     typescript: ^4.8.4
   languageName: unknown
   linkType: soft
 
-"@snailycad/ui@1.32.0, @snailycad/ui@workspace:packages/ui":
+"@snailycad/ui@1.33.0, @snailycad/ui@workspace:packages/ui":
   version: 0.0.0-use.local
   resolution: "@snailycad/ui@workspace:packages/ui"
   dependencies:
@@ -2830,8 +2830,8 @@ __metadata:
     "@react-types/overlays": ^3.6.4
     "@react-types/select": ^3.6.4
     "@react-types/shared": ^3.15.0
-    "@snailycad/types": 1.32.0
-    "@snailycad/utils": 1.32.0
+    "@snailycad/types": 1.33.0
+    "@snailycad/utils": 1.33.0
     react-bootstrap-icons: ^1.9.1
     rimraf: ^3.0.2
     tailwind-merge: ^1.8.0
@@ -2848,11 +2848,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/utils@1.32.0, @snailycad/utils@workspace:packages/utils":
+"@snailycad/utils@1.33.0, @snailycad/utils@workspace:packages/utils":
   version: 0.0.0-use.local
   resolution: "@snailycad/utils@workspace:packages/utils"
   dependencies:
-    "@snailycad/types": 1.32.0
+    "@snailycad/types": 1.33.0
     c8: ^7.12.0
     tslib: ^2.4.1
     tsup: ^6.4.0
