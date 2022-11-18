@@ -1,4 +1,3 @@
-import * as React from "react";
 import type { CourtDate } from "@snailycad/types";
 import { Button } from "@snailycad/ui";
 import { FullDate } from "components/shared/FullDate";

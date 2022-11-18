@@ -1,4 +1,3 @@
-import * as React from "react";
 import type { AssignedWarrantOfficer, Warrant } from "@snailycad/types";
 import { Button } from "@snailycad/ui";
 import { Table, useTableState } from "components/shared/Table";

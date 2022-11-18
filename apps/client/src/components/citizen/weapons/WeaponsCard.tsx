@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Loader, Button, TextField } from "@snailycad/ui";
 import type { Weapon } from "@snailycad/types";
 import { ModalIds } from "types/ModalIds";

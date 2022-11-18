@@ -1,4 +1,4 @@
-import * as React from "react";
+import type * as React from "react";
 import { QualificationValueType, UnitQualification } from "@snailycad/types";
 import { Button } from "@snailycad/ui";
 import { AlertModal } from "components/modal/AlertModal";

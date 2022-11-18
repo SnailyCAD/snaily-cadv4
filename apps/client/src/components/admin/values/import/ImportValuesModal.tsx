@@ -77,16 +77,14 @@ export function ImportValuesModal({ onImport, type }: Props) {
               </div>
             </FormField>
 
-            <p>
-              <a
-                className="underline"
-                target="_blank"
-                rel="noreferrer"
-                href="https://cad-docs.caspertheghost.me/docs/developer/importing-values"
-              >
-                Documentation
-              </a>
-            </p>
+            <a
+              className="underline"
+              target="_blank"
+              rel="noreferrer"
+              href="https://cad-docs.caspertheghost.me/docs/developer/importing-values"
+            >
+              Documentation
+            </a>
 
             <footer className="flex justify-end mt-5">
               <Button
