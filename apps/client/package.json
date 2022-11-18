@@ -31,6 +31,7 @@
     "@radix-ui/react-tooltip": "^1.0.2",
     "@react-aria/label": "^3.4.2",
     "@react-aria/ssr": "^3.3.0",
+    "@react-stately/data": "^3.8.0",
     "@sentry/nextjs": "^7.19.0",
     "@sentry/tracing": "^7.19.0",
     "@snailycad/config": "1.33.0",

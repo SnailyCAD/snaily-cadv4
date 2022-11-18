@@ -56,7 +56,9 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
   const path = (router.query.path as string).toUpperCase().replace("-", "_");
   const routeData = valueRoutes.find((v) => v.type === type);
 
+  const [search, setSearch] = React.useState("");
   const asyncTable = useAsyncTable({
+    search,
     fetchOptions: {
       onResponse(json: GetValuesData) {
         const [forType] = json;
@@ -69,7 +71,6 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
     totalCount,
   });
 
-  const [search, setSearch] = React.useState("");
   const [tempValue, valueState] = useTemporaryItem(asyncTable.data);
   const { state, execute } = useFetch();
 
@@ -205,10 +206,10 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
         className="my-2"
         name="search"
         value={search}
-        onChange={(value) => setSearch(value)}
+        onChange={setSearch}
       />
 
-      {asyncTable.data.length <= 0 ? (
+      {asyncTable.list.items.length <= 0 ? (
         <p className="mt-5">There are no values yet for this type.</p>
       ) : (
         <Table
@@ -217,7 +218,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
           containerProps={{
             style: { overflowY: "auto", maxHeight: "75vh" },
           }}
-          data={asyncTable.data.map((value) => ({
+          data={asyncTable.list.items.map((value) => ({
             id: value.id,
             rowProps: { value },
             value: getValueStrFromValue(value),
