@@ -105,6 +105,7 @@ export class ValuesController {
 
         if (type === "PENAL_CODE") {
           return {
+            // todo: add counts
             type,
             groups: await prisma.penalCodeGroup.findMany({ orderBy: { position: "asc" } }),
             values: await prisma.penalCode.findMany({
@@ -118,11 +119,12 @@ export class ValuesController {
           };
         }
 
-        return {
-          type,
-          groups: [],
-          // todo: add counts
-          values: await prisma.value.findMany({
+        const [totalCount, values] = await prisma.$transaction([
+          prisma.value.count({
+            where: { type },
+            orderBy: { position: "asc" },
+          }),
+          prisma.value.findMany({
             where: { type },
             orderBy: { position: "asc" },
             include: {
@@ -132,6 +134,13 @@ export class ValuesController {
                 : {}),
             },
           }),
+        ]);
+
+        return {
+          type,
+          groups: [],
+          values,
+          totalCount,
         };
       }),
     );

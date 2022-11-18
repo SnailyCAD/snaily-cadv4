@@ -19,10 +19,8 @@ import { Title } from "components/shared/Title";
 import { AlertModal } from "components/modal/AlertModal";
 import { ModalIds } from "types/ModalIds";
 import { FullDate } from "components/shared/FullDate";
-import { hasValueObj, isBaseValue } from "@snailycad/utils/typeguards";
 import { valueRoutes } from "components/admin/Sidebar/routes";
 import type {
-  DeleteValueByIdData,
   DeleteValuesBulkData,
   GetValuesData,
   PutValuePositionsData,
@@ -38,6 +36,8 @@ import {
 } from "lib/admin/values/utils";
 import type { AccessorKeyColumnDef } from "@tanstack/react-table";
 import { getSelectedTableRows } from "hooks/shared/table/useTableState";
+import { SearchArea } from "components/admin/values/search/search-area";
+import { AlertDeleteValueModal } from "components/admin/values/alert-delete-value-modal";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -55,8 +55,6 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
   const router = useRouter();
   const path = (router.query.path as string).toUpperCase().replace("-", "_");
   const routeData = valueRoutes.find((v) => v.type === type);
-
-  console.log({ data, totalCount });
 
   const asyncTable = useAsyncTable({
     fetchOptions: {
@@ -136,21 +134,6 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
   function handleEditClick(value: AnyValue) {
     valueState.setTempId(value.id);
     openModal(ModalIds.ManageValue);
-  }
-
-  async function handleDelete() {
-    if (!tempValue) return;
-
-    const { json } = await execute<DeleteValueByIdData>({
-      path: `/admin/values/${type.toLowerCase()}/${tempValue.id}`,
-      method: "DELETE",
-    });
-
-    if (json) {
-      asyncTable.setData((p) => p.filter((v) => v.id !== tempValue.id));
-      valueState.setTempId(null);
-      closeModal(ModalIds.AlertDeleteValue);
-    }
   }
 
   async function handleDeleteSelected() {
@@ -283,25 +266,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
         />
       )}
 
-      <AlertModal
-        id={ModalIds.AlertDeleteValue}
-        description={t.rich("alert_deleteValue", {
-          value:
-            tempValue &&
-            (isBaseValue(tempValue)
-              ? tempValue.value
-              : hasValueObj(tempValue)
-              ? tempValue.value.value
-              : tempValue.title),
-        })}
-        onDeleteClick={handleDelete}
-        title={typeT("DELETE")}
-        state={state}
-        onClose={() => {
-          // wait for animation to play out
-          setTimeout(() => valueState.setTempId(null), 100);
-        }}
-      />
+      <AlertDeleteValueModal type={type} tempValue={tempValue} />
 
       <AlertModal
         id={ModalIds.AlertDeleteSelectedValues}
