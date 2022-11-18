@@ -1,7 +1,7 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
 import { useRouter } from "next/router";
-import { Button, TextField } from "@snailycad/ui";
+import { Button } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -201,13 +201,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
         </div>
       </header>
 
-      <TextField
-        label={common("search")}
-        className="my-2"
-        name="search"
-        value={search}
-        onChange={setSearch}
-      />
+      <SearchArea search={{ search, setSearch }} asyncTable={asyncTable} totalCount={totalCount} />
 
       {asyncTable.list.items.length <= 0 ? (
         <p className="mt-5">There are no values yet for this type.</p>
