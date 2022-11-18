@@ -10,6 +10,7 @@ export type GetValuesData<Value extends AnyValue = AnyValue> = {
   values: Value[];
   type: Prisma.ValueType;
   groups?: PenalCodeGroup[];
+  totalCount: number;
 }[];
 
 /**

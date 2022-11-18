@@ -54,6 +54,7 @@ export class ValuesController {
   async getValueByPath(
     @PathParams("path") path: (string & {}) | "all",
     @QueryParams("paths") rawPaths: string,
+    @QueryParams("skip", Number) skip = 0,
   ): Promise<APITypes.GetValuesData | APITypes.GetValuesPenalCodesData> {
     // allow more paths in one request
     let paths =
@@ -76,18 +77,29 @@ export class ValuesController {
 
         const data = GET_VALUES[type];
         if (data) {
-          return {
-            type,
-            groups: [],
+          const [totalCount, values] = await prisma.$transaction([
             // @ts-expect-error ignore
-            values: await prisma[data.name].findMany({
+            prisma[data.name].count({
+              orderBy: { value: { position: "asc" } },
+            }),
+            // @ts-expect-error ignore
+            prisma[data.name].findMany({
               include: {
                 ...(data.include ?? {}),
                 ...(type === "ADDRESS" ? {} : { _count: true }),
                 value: true,
               },
               orderBy: { value: { position: "asc" } },
+              take: 35,
+              skip,
             }),
+          ]);
+
+          return {
+            type,
+            groups: [],
+            values,
+            totalCount,
           };
         }
 
@@ -109,6 +121,7 @@ export class ValuesController {
         return {
           type,
           groups: [],
+          // todo: add counts
           values: await prisma.value.findMany({
             where: { type },
             orderBy: { position: "asc" },

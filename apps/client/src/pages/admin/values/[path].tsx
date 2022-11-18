@@ -12,7 +12,7 @@ import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { getObjLength, isEmpty, requestAll, yesOrNoText } from "lib/utils";
 import dynamic from "next/dynamic";
-import { Table, useTableState } from "components/shared/Table";
+import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { useTableDataOfType, useTableHeadersOfType } from "lib/admin/values/values";
 import { OptionsDropdown } from "components/admin/values/import/OptionsDropdown";
 import { Title } from "components/shared/Title";
@@ -51,14 +51,28 @@ interface Props {
   pathValues: GetValuesData[number];
 }
 
-export default function ValuePath({ pathValues: { type, values: data } }: Props) {
-  const [values, setValues] = React.useState<AnyValue[]>(data);
+export default function ValuePath({ pathValues: { totalCount, type, values: data } }: Props) {
   const router = useRouter();
   const path = (router.query.path as string).toUpperCase().replace("-", "_");
   const routeData = valueRoutes.find((v) => v.type === type);
 
+  console.log({ data, totalCount });
+
+  const asyncTable = useAsyncTable({
+    fetchOptions: {
+      onResponse(json: GetValuesData) {
+        const [forType] = json;
+        if (!forType) return { data, totalCount };
+        return { data: forType.values, totalCount: forType.totalCount };
+      },
+      path: `/admin/values/${type.toLowerCase()}`,
+    },
+    initialData: data,
+    totalCount,
+  });
+
   const [search, setSearch] = React.useState("");
-  const [tempValue, valueState] = useTemporaryItem(values);
+  const [tempValue, valueState] = useTemporaryItem(asyncTable.data);
   const { state, execute } = useFetch();
 
   const { isOpen, openModal, closeModal } = useModal();
@@ -69,6 +83,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   const extraTableHeaders = useTableHeadersOfType(type);
   const extraTableData = useTableDataOfType(type);
   const tableState = useTableState({
+    pagination: asyncTable.pagination,
     dragDrop: { onListChange: setList },
     search: { value: search, setValue: setSearch },
   });
@@ -84,9 +99,9 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   }, [extraTableHeaders, t, common]);
 
   async function setList(list: AnyValue[]) {
-    if (!hasTableDataChanged(values, list)) return;
+    if (!hasTableDataChanged(asyncTable.data, list)) return;
 
-    setValues((p) =>
+    asyncTable.setData((p) =>
       list.map((v, idx) => {
         const prev = p.find((a) => a.id === v.id);
 
@@ -132,7 +147,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
     });
 
     if (json) {
-      setValues((p) => p.filter((v) => v.id !== tempValue.id));
+      asyncTable.setData((p) => p.filter((v) => v.id !== tempValue.id));
       valueState.setTempId(null);
       closeModal(ModalIds.AlertDeleteValue);
     }
@@ -148,15 +163,15 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
     });
 
     if (json && typeof json === "boolean") {
-      setValues((p) => p.filter((v) => !selectedRows.includes(v.id)));
+      asyncTable.setData((p) => p.filter((v) => !selectedRows.includes(v.id)));
       tableState.setRowSelection({});
       closeModal(ModalIds.AlertDeleteSelectedValues);
     }
   }
 
   React.useEffect(() => {
-    setValues(data);
-  }, [data]);
+    asyncTable.setData(data);
+  }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
 
   React.useEffect(() => {
     // reset form values
@@ -186,7 +201,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         <div>
           <Title className="!mb-0">{typeT("MANAGE")}</Title>
           <h2 className="text-lg font-semibold">
-            {t("totalItems")}: <span className="font-normal">{values.length}</span>
+            {t("totalItems")}: <span className="font-normal">{totalCount}</span>
           </h2>
         </div>
 
@@ -197,7 +212,8 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
             </Button>
           )}
           <Button onPress={() => openModal(ModalIds.ManageValue)}>{typeT("ADD")}</Button>
-          <OptionsDropdown type={type} values={values} />
+          {/* todo: this will not properly work */}
+          <OptionsDropdown type={type} values={asyncTable.data} />
         </div>
       </header>
 
@@ -209,7 +225,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         onChange={(value) => setSearch(value)}
       />
 
-      {values.length <= 0 ? (
+      {asyncTable.data.length <= 0 ? (
         <p className="mt-5">There are no values yet for this type.</p>
       ) : (
         <Table
@@ -218,7 +234,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
           containerProps={{
             style: { overflowY: "auto", maxHeight: "75vh" },
           }}
-          data={values.map((value) => ({
+          data={asyncTable.data.map((value) => ({
             id: value.id,
             rowProps: { value },
             value: getValueStrFromValue(value),
@@ -299,10 +315,10 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
 
       <ManageValueModal
         onCreate={(value) => {
-          setValues((p) => [value, ...p]);
+          asyncTable.setData((p) => [value, ...p]);
         }}
         onUpdate={(old, newV) => {
-          setValues((p) => {
+          asyncTable.setData((p) => {
             const idx = p.indexOf(old);
             p[idx] = newV;
 
@@ -312,7 +328,10 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         value={tempValue}
         type={type}
       />
-      <ImportValuesModal onImport={(data) => setValues((p) => [...data, ...p])} type={type} />
+      <ImportValuesModal
+        onImport={(data) => asyncTable.setData((p) => [...data, ...p])}
+        type={type}
+      />
     </AdminLayout>
   );
 }
