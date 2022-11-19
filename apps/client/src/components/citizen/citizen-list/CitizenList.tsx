@@ -44,7 +44,10 @@ export function CitizenList({ citizens: data }: Props) {
       </ul>
 
       {data.totalCount > MAX_CITIZENS_PER_PAGE ? (
-        <TablePagination table={citizensList as any} />
+        <TablePagination
+          isLoading={citizensList.asyncTable.pagination.isLoading}
+          table={citizensList as any}
+        />
       ) : null}
     </div>
   );

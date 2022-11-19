@@ -168,7 +168,9 @@ export function Table<TData extends _RowData>({
         </ReactSortable>
       </table>
 
-      {dataLength <= visibleTableRows.length ? null : <TablePagination table={table} />}
+      {dataLength <= visibleTableRows.length ? null : (
+        <TablePagination isLoading={tableState.pagination.isLoading} table={table} />
+      )}
     </div>
   );
 }

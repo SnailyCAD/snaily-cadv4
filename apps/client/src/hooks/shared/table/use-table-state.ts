@@ -11,6 +11,7 @@ interface TableStateOptions {
     disabledIndices?: number[];
   };
   pagination?: {
+    isLoading: boolean;
     __ASYNC_TABLE__?: boolean;
     totalDataCount: number;
     pageSize?: number;
@@ -40,6 +41,7 @@ export function useTableState({
     () => ({
       pageSize: pagination.pageSize,
       pageIndex: pagination.pageIndex,
+      isLoading: paginationOptions?.isLoading ?? false,
       totalDataCount: paginationOptions?.totalDataCount,
       __ASYNC_TABLE__: paginationOptions?.__ASYNC_TABLE__,
     }),

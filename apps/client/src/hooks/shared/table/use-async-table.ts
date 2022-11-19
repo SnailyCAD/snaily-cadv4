@@ -23,7 +23,7 @@ interface Options<T> {
 
 export function useAsyncTable<T>(options: Options<T>) {
   const [totalDataCount, setTotalCount] = React.useState(options.totalCount);
-  const { execute } = useFetch();
+  const { state: loadingState, execute } = useFetch();
   const isMounted = useMounted();
   const scrollToTopOnDataChange = options.scrollToTopOnDataChange ?? true;
 
@@ -77,9 +77,6 @@ export function useAsyncTable<T>(options: Options<T>) {
     [options.search],
   );
 
-  const [_data, _setData] = React.useState(options.initialData);
-  const { state: loadingState } = useFetch();
-
   const handlePageChange = React.useCallback(
     async (fetchOptions: Omit<FetchOptions, "path" | "onResponse">) => {
       if (options.disabled) return;
@@ -94,7 +91,7 @@ export function useAsyncTable<T>(options: Options<T>) {
     __ASYNC_TABLE__: true,
     onPageChange: handlePageChange,
     totalDataCount,
-    state: loadingState,
+    isLoading: loadingState === "loading",
   };
 
   return {
