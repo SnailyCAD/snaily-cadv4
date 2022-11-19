@@ -1,3 +1,4 @@
+import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button, TextField } from "@snailycad/ui";
 import { Layout } from "components/Layout";
@@ -26,6 +27,7 @@ interface Props {
 }
 
 export default function CitizenLogs({ data }: Props) {
+  const [search, setSearch] = React.useState("");
   const { hasPermissions } = usePermission();
   const { openModal, closeModal } = useModal();
   const t = useTranslations();
@@ -108,11 +110,11 @@ export default function CitizenLogs({ data }: Props) {
             label={common("search")}
             className="my-2"
             name="search"
-            value={asyncTable.search.search}
-            onChange={(value) => asyncTable.search.setSearch(value)}
+            value={search}
+            onChange={setSearch}
           />
 
-          {asyncTable.search.search && asyncTable.pagination.totalDataCount !== data.totalCount ? (
+          {search && asyncTable.pagination.totalDataCount !== data.totalCount ? (
             <p className="italic text-base font-semibold">
               Showing {asyncTable.pagination.totalDataCount} result(s)
             </p>

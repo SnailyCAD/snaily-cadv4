@@ -30,8 +30,7 @@ export function SearchArea<T>(props: SearchAreaProps<T>) {
         ) : null}
       </TextField>
 
-      {props.asyncTable.search.search &&
-      props.asyncTable.pagination.totalDataCount !== props.totalCount ? (
+      {props.search.search && props.asyncTable.pagination.totalDataCount !== props.totalCount ? (
         <p className="italic text-base font-semibold">
           Showing {props.asyncTable.pagination.totalDataCount} result(s)
         </p>

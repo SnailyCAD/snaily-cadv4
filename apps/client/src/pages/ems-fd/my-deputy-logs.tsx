@@ -80,8 +80,13 @@ export default function MyDeputyLogs({ logs: data }: Props) {
             <FormField label="Group By Deputy">
               <Select
                 isClearable
-                onChange={(e) => asyncTable.search.setExtraParams({ deputyId: e.target.value })}
-                value={asyncTable.search.extraParams.deputyId}
+                onChange={(e) => {
+                  asyncTable.list.sort({
+                    ...asyncTable.list.sortDescriptor,
+                    deputyId: e.target.value,
+                  });
+                }}
+                value={asyncTable.list.sortDescriptor?.deputyId}
                 values={Object.entries(deputyNames).map(([id, name]) => ({
                   label: name as string,
                   value: id,

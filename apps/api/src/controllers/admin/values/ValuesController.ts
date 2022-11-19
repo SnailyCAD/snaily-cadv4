@@ -56,6 +56,7 @@ export class ValuesController {
     @QueryParams("paths") rawPaths: string,
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query = "",
+    @QueryParams("includeAll", Boolean) includeAll = false,
   ): Promise<APITypes.GetValuesData | APITypes.GetValuesPenalCodesData> {
     // allow more paths in one request
     let paths =
@@ -86,10 +87,7 @@ export class ValuesController {
 
           const [totalCount, values] = await prisma.$transaction([
             // @ts-expect-error ignore
-            prisma[data.name].count({
-              orderBy: { value: { position: "asc" } },
-              where,
-            }),
+            prisma[data.name].count({ orderBy: { value: { position: "asc" } }, where }),
             // @ts-expect-error ignore
             prisma[data.name].findMany({
               where,
@@ -99,8 +97,8 @@ export class ValuesController {
                 value: true,
               },
               orderBy: { value: { position: "asc" } },
-              take: 35,
-              skip,
+              take: includeAll ? undefined : 35,
+              skip: includeAll ? undefined : skip,
             }),
           ]);
 
@@ -135,12 +133,11 @@ export class ValuesController {
         });
 
         const [totalCount, values] = await prisma.$transaction([
-          prisma.value.count({
-            where,
-            orderBy: { position: "asc" },
-          }),
+          prisma.value.count({ where, orderBy: { position: "asc" } }),
           prisma.value.findMany({
             where,
+            take: includeAll ? undefined : 35,
+            skip: includeAll ? undefined : skip,
             orderBy: { position: "asc" },
             include: {
               _count: true,

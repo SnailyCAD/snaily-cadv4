@@ -2,8 +2,7 @@ import * as React from "react";
 import useFetch from "lib/useFetch";
 import { useDebounce } from "react-use";
 import { useMounted } from "@casper124578/useful";
-import { useAsyncList, useListData } from "@react-stately/data";
-import { handleRequest } from "lib/fetch";
+import { AsyncListData, useAsyncList } from "@react-stately/data";
 
 interface FetchOptions {
   pageSize: number;
@@ -14,7 +13,6 @@ interface FetchOptions {
 
 interface Options<T> {
   search?: string;
-  // todo: onPageChange
 
   disabled?: boolean;
   totalCount: number;
@@ -30,16 +28,23 @@ export function useAsyncTable<T>(options: Options<T>) {
   const [totalDataCount, setTotalCount] = React.useState(options.totalCount);
   const [items, setItems] = React.useState<T[]>(options.initialData);
 
+  React.useEffect(() => {
+    setItems(options.initialData);
+  }, [options.initialData]);
+
   const asyncList = useAsyncList<T>({
+    initialFilterText: options.search,
     async load(state) {
       const sortDescriptor = state.sortDescriptor as Record<string, any>;
       const skip = Number(sortDescriptor.pageIndex * sortDescriptor.pageSize) || 0;
 
-      console.log({ state });
+      // page size is not supported on any of the API endpoints
+      delete sortDescriptor.pageSize;
 
       const response = await execute({
         path: options.fetchOptions.path,
         params: {
+          ...sortDescriptor,
           query: sortDescriptor.query,
           skip,
         },
@@ -57,7 +62,7 @@ export function useAsyncTable<T>(options: Options<T>) {
         items: json.data,
       };
     },
-  });
+  }) as AsyncListData<T> & { sortDescriptor?: any; sort(descriptor: any): void };
 
   useDebounce(
     () => {
@@ -70,7 +75,6 @@ export function useAsyncTable<T>(options: Options<T>) {
   );
 
   const [_data, _setData] = React.useState(options.initialData);
-  const [extraParams, setExtraParams] = React.useState<Record<string, any>>({});
   const { state: loadingState } = useFetch();
   const isMounted = useMounted();
 
@@ -83,45 +87,16 @@ export function useAsyncTable<T>(options: Options<T>) {
       if (options.disabled) return;
       if (!isMounted) return;
 
-      asyncList.sort({
-        pageIndex,
-        pageSize,
-      } as any);
+      asyncList.sort({ ...asyncList.sortDescriptor, pageIndex, pageSize });
     },
-    [options.search, extraParams, isMounted, options.disabled], // eslint-disable-line
+    [isMounted, asyncList.sortDescriptor, options.disabled], // eslint-disable-line
   );
-
-  // const handleSearch = React.useCallback(async () => {
-  //   if (options.disabled) return;
-  //   if (!isMounted) return;
-
-  //   const { json, error } = await execute({
-  //     path: options.fetchOptions.path,
-  //     params: { query: search.trim(), ...extraParams },
-  //   });
-
-  //   if (json && !error) {
-  //     const jsonData = options.fetchOptions.onResponse(json);
-  //     if (Array.isArray(jsonData.data)) {
-  //       setData(jsonData.data);
-  //       setTotalCount(jsonData.totalCount);
-  //     }
-  //   }
-  // }, [search, extraParams, isMounted, options.disabled]); // eslint-disable-line
 
   const pagination = {
     /** indicates whether data comes from the useAsyncTable hook. */
     __ASYNC_TABLE__: true,
     onPageChange: handlePageChange,
     totalDataCount,
-    state: loadingState,
-  };
-
-  const _search = {
-    search: options.search,
-    // setSearch,
-    extraParams,
-    setExtraParams,
     state: loadingState,
   };
 
@@ -134,7 +109,6 @@ export function useAsyncTable<T>(options: Options<T>) {
     list,
     state: loadingState,
     pagination,
-    search: _search,
     data,
     setData,
   };
