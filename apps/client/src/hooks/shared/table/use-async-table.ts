@@ -86,7 +86,7 @@ export function useAsyncTable<T>(options: Options<T>) {
 
       asyncList.sort({ ...asyncList.sortDescriptor, ...fetchOptions });
     },
-    [isMounted, asyncList.sortDescriptor, options.disabled], // eslint-disable-line
+    [isMounted, asyncList.sortDescriptor, options.disabled, options.fetchOptions], // eslint-disable-line
   );
 
   const pagination = {

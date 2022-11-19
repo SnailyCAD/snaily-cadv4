@@ -65,7 +65,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
         if (!forType) return { data, totalCount };
         return { data: forType.values, totalCount: forType.totalCount };
       },
-      path: `/admin/values/${type.toLowerCase()}`,
+      path: `/admin/values/${type.toLowerCase()}?includeAll=false`,
     },
     initialData: data,
     totalCount,
