@@ -16,7 +16,7 @@ interface Options<T> {
 
   disabled?: boolean;
   totalCount: number;
-  initialData: T[];
+  initialData?: T[];
   scrollToTopOnDataChange?: boolean;
   fetchOptions: Pick<FetchOptions, "onResponse" | "path">;
 }
@@ -31,7 +31,7 @@ export function useAsyncTable<T>(options: Options<T>) {
     initialFilterText: options.search,
     async load(state) {
       if (!isMounted) {
-        return { items: options.initialData };
+        return { items: options.initialData ?? [] };
       }
 
       const sortDescriptor = state.sortDescriptor as Record<string, any>;
@@ -57,7 +57,7 @@ export function useAsyncTable<T>(options: Options<T>) {
       }
 
       return {
-        items: json.data,
+        items: json.data ?? [],
       };
     },
   }) as AsyncListData<T> & { sortDescriptor?: any; sort(descriptor: any): void };
@@ -97,6 +97,6 @@ export function useAsyncTable<T>(options: Options<T>) {
   return {
     ...asyncList,
     pagination,
-    items: isMounted ? asyncList.items : options.initialData,
+    items: isMounted ? asyncList.items : options.initialData ?? [],
   };
 }
