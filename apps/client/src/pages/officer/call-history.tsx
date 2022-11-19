@@ -144,7 +144,9 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
 
           {search && asyncTable.pagination.totalDataCount !== data.totalCount ? (
             <p className="italic text-base font-semibold">
-              Showing {asyncTable.pagination.totalDataCount} result(s)
+              {common.rich("showingXResults", {
+                amount: asyncTable.pagination.totalDataCount,
+              })}
             </p>
           ) : null}
 

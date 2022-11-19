@@ -97,16 +97,9 @@ export function useAsyncTable<T>(options: Options<T>) {
     state: loadingState,
   };
 
-  const list = {
-    ...asyncList,
-    items: isMounted ? asyncList.items : options.initialData,
-  };
-
-  const isLoading = ["loading", "filtering", "sorting"].includes(loadingState as string);
-
   return {
-    ...list,
-    isLoading,
+    ...asyncList,
     pagination,
+    items: isMounted ? asyncList.items : options.initialData,
   };
 }

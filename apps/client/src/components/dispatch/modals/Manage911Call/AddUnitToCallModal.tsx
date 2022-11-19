@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Loader, Button } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";

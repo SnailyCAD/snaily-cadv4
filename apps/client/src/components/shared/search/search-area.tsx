@@ -29,7 +29,9 @@ export function SearchArea<T>(props: SearchAreaProps<T>) {
 
       {props.search.search && props.asyncTable.pagination.totalDataCount !== props.totalCount ? (
         <p className="italic text-base font-semibold">
-          Showing {props.asyncTable.pagination.totalDataCount} result(s)
+          {common.rich("showingXResults", {
+            amount: props.asyncTable.pagination.totalDataCount,
+          })}
         </p>
       ) : null}
     </>

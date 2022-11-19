@@ -118,7 +118,9 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
 
           {search && asyncTable.pagination.totalDataCount !== totalCount ? (
             <p className="italic text-base font-semibold">
-              Showing {asyncTable.pagination.totalDataCount} result(s)
+              {common.rich("showingXResults", {
+                amount: asyncTable.pagination.totalDataCount,
+              })}
             </p>
           ) : null}
 
