@@ -140,7 +140,7 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
           errorMessage={props.errorMessage}
           className={classNames(inputProps.className, includeMenu && "rounded-r-none")}
         />
-        {["filtering"].includes(list.loadingState) ? (
+        {list.isLoading ? (
           <div
             className={classNames(
               "absolute top-0 bottom-0 flex items-center justify-center",

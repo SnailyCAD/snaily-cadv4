@@ -1,4 +1,5 @@
-import { Loader, Button, TextField } from "@snailycad/ui";
+import * as React from "react";
+import { Button } from "@snailycad/ui";
 import type { Weapon } from "@snailycad/types";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
@@ -9,12 +10,15 @@ import useFetch from "lib/useFetch";
 import { Table, useTableState } from "components/shared/Table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { FullDate } from "components/shared/FullDate";
-import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
+import { useAsyncTable } from "hooks/shared/table/use-async-table";
 import { useCitizen } from "context/CitizenContext";
 import type { DeleteCitizenWeaponData, GetCitizenWeaponsData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import { SearchArea } from "components/shared/search/search-area";
 
 export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
+  const [search, setSearch] = React.useState("");
+
   const { openModal, closeModal } = useModal();
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
@@ -34,7 +38,7 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
     initialData: props.weapons,
   });
   const tableState = useTableState({ pagination: { ...asyncTable.pagination, pageSize: 12 } });
-  const [tempWeapon, weaponState] = useTemporaryItem(asyncTable.data);
+  const [tempWeapon, weaponState] = useTemporaryItem(asyncTable.items);
 
   async function handleDelete() {
     if (!tempWeapon) return;
@@ -45,13 +49,7 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
     });
 
     if (typeof json === "boolean" && json) {
-      const newData = asyncTable.data.filter((v) => v.id !== tempWeapon.id);
-
-      if (newData.length <= 0) {
-        props.weapons.length = 0;
-      }
-
-      asyncTable.setData(newData);
+      asyncTable.remove(tempWeapon.id);
       weaponState.setTempId(null);
       closeModal(ModalIds.AlertDeleteWeapon);
     }
@@ -83,36 +81,20 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
           </Button>
         </header>
 
-        {asyncTable.data.length <= 0 ? (
+        {asyncTable.items.length <= 0 ? (
           <p className="text-neutral-700 dark:text-gray-400">{t("noWeapons")}</p>
         ) : (
           <>
-            <TextField
-              label={common("search")}
-              className="w-full relative"
-              name="search"
-              onChange={asyncTable.search.setSearch}
-              value={asyncTable.search.search}
-              placeholder="Serial Number, Model, ..."
-            >
-              {asyncTable.search.state === "loading" ? (
-                <span className="absolute top-[2.4rem] right-2.5">
-                  <Loader />
-                </span>
-              ) : null}
-            </TextField>
-
-            {asyncTable.search.search &&
-            asyncTable.pagination.totalDataCount !== props.weapons.length ? (
-              <p className="italic text-base font-semibold">
-                Showing {asyncTable.pagination.totalDataCount} result(s)
-              </p>
-            ) : null}
+            <SearchArea
+              asyncTable={asyncTable}
+              search={{ search, setSearch }}
+              totalCount={props.weapons.length}
+            />
 
             <Table
               tableState={tableState}
               features={{ isWithinCardOrModal: true }}
-              data={asyncTable.data.map((weapon) => ({
+              data={asyncTable.items.map((weapon) => ({
                 id: weapon.id,
                 model: weapon.model.value.value,
                 registrationStatus: weapon.registrationStatus.value,
@@ -149,15 +131,10 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
       <RegisterWeaponModal
         onCreate={(weapon) => {
           closeModal(ModalIds.RegisterWeapon);
-          asyncTable.setData((p) => [...p, weapon]);
-          props.weapons.length += 1;
+          asyncTable.append(weapon);
         }}
-        onUpdate={(old, newW) => {
-          asyncTable.setData((p) => {
-            const idx = p.indexOf(old);
-            p[idx] = newW;
-            return p;
-          });
+        onUpdate={(previousWeapon, newWeapon) => {
+          asyncTable.update(previousWeapon.id, newWeapon);
           closeModal(ModalIds.RegisterWeapon);
         }}
         weapon={tempWeapon}

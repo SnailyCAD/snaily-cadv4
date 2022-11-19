@@ -32,7 +32,7 @@ export function OfficerLogsTable({ unit, asyncTable }: Props) {
   return (
     <Table
       tableState={tableState}
-      data={(asyncTable.data as OfficerLogData[]).map((log) => {
+      data={(asyncTable.items as OfficerLogData[]).map((log) => {
         const startedAt = <FullDate>{log.startedAt}</FullDate>;
         const endedAt = log.endedAt ? <FullDate>{log.endedAt}</FullDate> : t("notEndedYet");
         const logUnit = getUnitFromLog(log) ?? unit;

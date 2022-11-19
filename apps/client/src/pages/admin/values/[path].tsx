@@ -1,7 +1,7 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
 import { useRouter } from "next/router";
-import { Button, TextField } from "@snailycad/ui";
+import { Button } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -12,17 +12,15 @@ import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { getObjLength, isEmpty, requestAll, yesOrNoText } from "lib/utils";
 import dynamic from "next/dynamic";
-import { Table, useTableState } from "components/shared/Table";
+import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { useTableDataOfType, useTableHeadersOfType } from "lib/admin/values/values";
 import { OptionsDropdown } from "components/admin/values/import/OptionsDropdown";
 import { Title } from "components/shared/Title";
 import { AlertModal } from "components/modal/AlertModal";
 import { ModalIds } from "types/ModalIds";
 import { FullDate } from "components/shared/FullDate";
-import { hasValueObj, isBaseValue } from "@snailycad/utils/typeguards";
 import { valueRoutes } from "components/admin/Sidebar/routes";
 import type {
-  DeleteValueByIdData,
   DeleteValuesBulkData,
   GetValuesData,
   PutValuePositionsData,
@@ -37,7 +35,9 @@ import {
   hasTableDataChanged,
 } from "lib/admin/values/utils";
 import type { AccessorKeyColumnDef } from "@tanstack/react-table";
-import { getSelectedTableRows } from "hooks/shared/table/useTableState";
+import { getSelectedTableRows } from "hooks/shared/table/use-table-state";
+import { SearchArea } from "components/shared/search/search-area";
+import { AlertDeleteValueModal } from "components/admin/values/alert-delete-value-modal";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -51,14 +51,27 @@ interface Props {
   pathValues: GetValuesData[number];
 }
 
-export default function ValuePath({ pathValues: { type, values: data } }: Props) {
-  const [values, setValues] = React.useState<AnyValue[]>(data);
+export default function ValuePath({ pathValues: { totalCount, type, values: data } }: Props) {
   const router = useRouter();
   const path = (router.query.path as string).toUpperCase().replace("-", "_");
   const routeData = valueRoutes.find((v) => v.type === type);
 
   const [search, setSearch] = React.useState("");
-  const [tempValue, valueState] = useTemporaryItem(values);
+  const asyncTable = useAsyncTable({
+    search,
+    fetchOptions: {
+      onResponse(json: GetValuesData) {
+        const [forType] = json;
+        if (!forType) return { data, totalCount };
+        return { data: forType.values, totalCount: forType.totalCount };
+      },
+      path: `/admin/values/${type.toLowerCase()}?includeAll=false`,
+    },
+    initialData: data,
+    totalCount,
+  });
+
+  const [tempValue, valueState] = useTemporaryItem(asyncTable.items);
   const { state, execute } = useFetch();
 
   const { isOpen, openModal, closeModal } = useModal();
@@ -69,8 +82,8 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   const extraTableHeaders = useTableHeadersOfType(type);
   const extraTableData = useTableDataOfType(type);
   const tableState = useTableState({
+    pagination: asyncTable.pagination,
     dragDrop: { onListChange: setList },
-    search: { value: search, setValue: setSearch },
   });
 
   const tableHeaders = React.useMemo(() => {
@@ -84,23 +97,18 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   }, [extraTableHeaders, t, common]);
 
   async function setList(list: AnyValue[]) {
-    if (!hasTableDataChanged(values, list)) return;
+    if (!hasTableDataChanged(asyncTable.items, list)) return;
 
-    setValues((p) =>
-      list.map((v, idx) => {
-        const prev = p.find((a) => a.id === v.id);
+    for (const [index, value] of list.entries()) {
+      if ("position" in value) {
+        value.position = index;
+      } else {
+        value.value.position = index;
+      }
 
-        if (prev) {
-          if ("position" in prev) {
-            prev.position = idx;
-          } else {
-            prev.value.position = idx;
-          }
-        }
-
-        return v;
-      }),
-    );
+      asyncTable.move(value.id, index);
+      asyncTable.update(value.id, value);
+    }
 
     await execute<PutValuePositionsData>({
       path: `/admin/values/${type.toLowerCase()}/positions`,
@@ -123,21 +131,6 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
     openModal(ModalIds.ManageValue);
   }
 
-  async function handleDelete() {
-    if (!tempValue) return;
-
-    const { json } = await execute<DeleteValueByIdData>({
-      path: `/admin/values/${type.toLowerCase()}/${tempValue.id}`,
-      method: "DELETE",
-    });
-
-    if (json) {
-      setValues((p) => p.filter((v) => v.id !== tempValue.id));
-      valueState.setTempId(null);
-      closeModal(ModalIds.AlertDeleteValue);
-    }
-  }
-
   async function handleDeleteSelected() {
     const selectedRows = getSelectedTableRows(data, tableState.rowSelection);
 
@@ -148,15 +141,12 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
     });
 
     if (json && typeof json === "boolean") {
-      setValues((p) => p.filter((v) => !selectedRows.includes(v.id)));
+      asyncTable.remove(...selectedRows);
+
       tableState.setRowSelection({});
       closeModal(ModalIds.AlertDeleteSelectedValues);
     }
   }
-
-  React.useEffect(() => {
-    setValues(data);
-  }, [data]);
 
   React.useEffect(() => {
     // reset form values
@@ -186,7 +176,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         <div>
           <Title className="!mb-0">{typeT("MANAGE")}</Title>
           <h2 className="text-lg font-semibold">
-            {t("totalItems")}: <span className="font-normal">{values.length}</span>
+            {t("totalItems")}: <span className="font-normal">{totalCount}</span>
           </h2>
         </div>
 
@@ -197,19 +187,14 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
             </Button>
           )}
           <Button onPress={() => openModal(ModalIds.ManageValue)}>{typeT("ADD")}</Button>
-          <OptionsDropdown type={type} values={values} />
+          {/* todo: this will not properly work */}
+          <OptionsDropdown type={type} values={asyncTable.items} />
         </div>
       </header>
 
-      <TextField
-        label={common("search")}
-        className="my-2"
-        name="search"
-        value={search}
-        onChange={(value) => setSearch(value)}
-      />
+      <SearchArea search={{ search, setSearch }} asyncTable={asyncTable} totalCount={totalCount} />
 
-      {values.length <= 0 ? (
+      {asyncTable.items.length <= 0 ? (
         <p className="mt-5">There are no values yet for this type.</p>
       ) : (
         <Table
@@ -218,7 +203,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
           containerProps={{
             style: { overflowY: "auto", maxHeight: "75vh" },
           }}
-          data={values.map((value) => ({
+          data={asyncTable.items.map((value) => ({
             id: value.id,
             rowProps: { value },
             value: getValueStrFromValue(value),
@@ -267,24 +252,10 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         />
       )}
 
-      <AlertModal
-        id={ModalIds.AlertDeleteValue}
-        description={t.rich("alert_deleteValue", {
-          value:
-            tempValue &&
-            (isBaseValue(tempValue)
-              ? tempValue.value
-              : hasValueObj(tempValue)
-              ? tempValue.value.value
-              : tempValue.title),
-        })}
-        onDeleteClick={handleDelete}
-        title={typeT("DELETE")}
-        state={state}
-        onClose={() => {
-          // wait for animation to play out
-          setTimeout(() => valueState.setTempId(null), 100);
-        }}
+      <AlertDeleteValueModal
+        type={type}
+        valueState={[tempValue, valueState]}
+        asyncTable={asyncTable}
       />
 
       <AlertModal
@@ -299,20 +270,15 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
 
       <ManageValueModal
         onCreate={(value) => {
-          setValues((p) => [value, ...p]);
+          asyncTable.append(value);
         }}
-        onUpdate={(old, newV) => {
-          setValues((p) => {
-            const idx = p.indexOf(old);
-            p[idx] = newV;
-
-            return p;
-          });
+        onUpdate={(previousValue, newValue) => {
+          asyncTable.update(previousValue.id, newValue);
         }}
         value={tempValue}
         type={type}
       />
-      <ImportValuesModal onImport={(data) => setValues((p) => [...data, ...p])} type={type} />
+      <ImportValuesModal onImport={(data) => asyncTable.append(...data)} type={type} />
     </AdminLayout>
   );
 }

@@ -16,7 +16,6 @@ import dynamic from "next/dynamic";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
-import { useRouter } from "next/router";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
@@ -63,7 +62,7 @@ export default function LeoIncidents({
     },
   });
 
-  const [tempIncident, incidentState] = useTemporaryItem(asyncTable.data);
+  const [tempIncident, incidentState] = useTemporaryItem(asyncTable.items);
   const tableState = useTableState({ pagination: asyncTable.pagination });
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
@@ -74,7 +73,6 @@ export default function LeoIncidents({
   const { makeImageUrl } = useImageUrl();
   const { user } = useAuth();
   const { state, execute } = useFetch();
-  const router = useRouter();
   const { hasPermissions } = usePermission();
 
   const isOfficerOnDuty = activeOfficer && activeOfficer.status?.shouldDo !== "SET_OFF_DUTY";
@@ -108,10 +106,8 @@ export default function LeoIncidents({
     if (json) {
       closeModal(ModalIds.AlertDeleteIncident);
       incidentState.setTempId(null);
-      router.replace({
-        pathname: router.pathname,
-        query: router.query,
-      });
+
+      asyncTable.remove(tempIncident.id);
     }
   }
 
@@ -144,12 +140,12 @@ export default function LeoIncidents({
         ) : null}
       </header>
 
-      {asyncTable.data.length <= 0 ? (
+      {asyncTable.items.length <= 0 ? (
         <p className="mt-5">{t("noIncidents")}</p>
       ) : (
         <Table
           tableState={tableState}
-          data={asyncTable.data.map((incident) => {
+          data={asyncTable.items.map((incident) => {
             const nameAndCallsign = incident.creator
               ? `${generateCallsign(incident.creator)} ${makeUnitName(incident.creator)}`
               : "";
@@ -225,18 +221,10 @@ export default function LeoIncidents({
       {isOfficerOnDuty && hasPermissions([Permissions.ManageIncidents], true) ? (
         <ManageIncidentModal
           onCreate={(incident) => {
-            asyncTable.setData((p) => [incident, ...p]);
-            if (asyncTable.data.length <= 0) {
-              asyncTable.data.length = 1;
-            }
+            asyncTable.append(incident);
           }}
           onUpdate={(oldIncident, incident) => {
-            asyncTable.setData((prev) => {
-              const idx = prev.findIndex((i) => i.id === oldIncident.id);
-              prev[idx] = { ...oldIncident, ...incident };
-
-              return prev;
-            });
+            asyncTable.update(oldIncident.id, { ...oldIncident, ...incident });
           }}
           onClose={() => incidentState.setTempId(null)}
           incident={tempIncident}

@@ -59,7 +59,8 @@
     "location": "Location",
     "startTyping": "Start typing...",
     "searching": "Searching...",
-    "information": "Information"
+    "information": "Information",
+    "showingXResults": "Showing <span>{amount}</span> result(s)"
   },
   "Nav": {
     "citizen": "Citizen",

@@ -50,6 +50,7 @@ function _ActiveCalls({ initialData }: Props) {
   const { search, setSearch } = useCallsFilters();
 
   const asyncTable = useAsyncTable({
+    search,
     disabled: !CALLS_911,
     fetchOptions: {
       path: "/911-calls",
@@ -61,8 +62,11 @@ function _ActiveCalls({ initialData }: Props) {
     initialData: initialData.calls,
     totalCount: initialData.totalCount,
     scrollToTopOnDataChange: false,
-    state: { data: calls, setData: call911State.setCalls },
   });
+
+  React.useEffect(() => {
+    call911State.setCalls(asyncTable.items);
+  }, [asyncTable.items]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const tableState = useTableState({
     pagination: { ...asyncTable.pagination, pageSize: 12 },
@@ -121,7 +125,7 @@ function _ActiveCalls({ initialData }: Props) {
     <div className="rounded-md card">
       {audio.addedToCallAudio}
       {audio.incomingCallAudio}
-      <ActiveCallsHeader search={asyncTable.search} calls={calls} />
+      <ActiveCallsHeader asyncTable={asyncTable} calls={calls} />
 
       <div className="px-4">
         {!hasCalls ? (

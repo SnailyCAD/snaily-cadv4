@@ -12,7 +12,7 @@ import Link from "next/link";
 import { FullDate } from "components/shared/FullDate";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { classNames } from "lib/classNames";
-import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
+import { useAsyncTable } from "hooks/shared/table/use-async-table";
 import type { DeleteManageCitizenByIdData, GetManageCitizensData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
@@ -25,7 +25,10 @@ interface Props {
 }
 
 export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens }: Props) {
+  const [search, setSearch] = React.useState("");
+
   const asyncTable = useAsyncTable({
+    search,
     initialData,
     totalCount,
     fetchOptions: {
@@ -38,10 +41,10 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
   });
   const tableState = useTableState({ pagination: asyncTable.pagination });
 
-  const [tempValue, valueState] = useTemporaryItem(asyncTable.data);
+  const [tempValue, valueState] = useTemporaryItem(asyncTable.items);
   const [reason, setReason] = React.useState("");
   const [userFilter, setUserFilter] = React.useState<string | null>(null);
-  const users = React.useMemo(() => makeUsersList(asyncTable.data), [asyncTable.data]);
+  const users = React.useMemo(() => makeUsersList(asyncTable.items), [asyncTable.items]);
   const { hasPermissions } = usePermission();
 
   const reasonRef = React.useRef<HTMLInputElement>(null);
@@ -89,11 +92,11 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
               label={common("search")}
               className="w-full relative"
               name="search"
-              onChange={(value) => asyncTable.search.setSearch(value)}
-              value={asyncTable.search.search}
+              onChange={setSearch}
+              value={search}
               placeholder="John Doe"
             >
-              {asyncTable.state === "loading" ? (
+              {asyncTable.isLoading ? (
                 <span className="absolute top-[2.4rem] right-2.5">
                   <Loader />
                 </span>
@@ -113,15 +116,17 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
             </FormField>
           </div>
 
-          {asyncTable.search.search && asyncTable.pagination.totalDataCount !== totalCount ? (
+          {search && asyncTable.pagination.totalDataCount !== totalCount ? (
             <p className="italic text-base font-semibold">
-              Showing {asyncTable.pagination.totalDataCount} result(s)
+              {common.rich("showingXResults", {
+                amount: asyncTable.pagination.totalDataCount,
+              })}
             </p>
           ) : null}
 
           <Table
             tableState={tableState}
-            data={asyncTable.data
+            data={asyncTable.items
               .filter((v) => (userFilter ? String(v.userId) === userFilter : true))
               .map((citizen) => ({
                 id: citizen.id,

@@ -1,5 +1,5 @@
 import { defaultPermissions } from "@snailycad/permissions";
-import type { Citizen, User } from "@snailycad/types";
+import type { GetCitizensData } from "@snailycad/types/api";
 import { buttonVariants } from "@snailycad/ui";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useImageUrl } from "hooks/useImageUrl";
@@ -10,7 +10,7 @@ import Link from "next/link";
 import { PersonFill } from "react-bootstrap-icons";
 
 interface Props {
-  citizen: Citizen & { user?: Pick<User, "username"> };
+  citizen: GetCitizensData["citizens"][number];
 }
 
 export function CitizenListItem({ citizen }: Props) {

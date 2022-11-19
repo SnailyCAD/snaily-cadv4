@@ -1988,6 +1988,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-stately/data@npm:^3.8.0":
+  version: 3.8.0
+  resolution: "@react-stately/data@npm:3.8.0"
+  dependencies:
+    "@babel/runtime": ^7.6.2
+    "@react-types/shared": ^3.16.0
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: 6dba8e6e28a2ca7927c03e2b33850ecfa1904f6b85060b28803b21b203b5209e3049c7cfaa36744e36e6176475d600073621f5e9c2ac0c0a6c6de89bfdf93b78
+  languageName: node
+  linkType: hard
+
 "@react-stately/datepicker@npm:^3.1.0":
   version: 3.1.0
   resolution: "@react-stately/datepicker@npm:3.1.0"
@@ -2354,6 +2366,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-types/shared@npm:^3.16.0":
+  version: 3.16.0
+  resolution: "@react-types/shared@npm:3.16.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: 3bb3aa77f4938fcd7788c5c5abf24f8f3d3c034d555962e44202d09673844cbb31d7b280edc9ac432bdd06847bc253527f8946f2604b9c88d5fcb96fdc56fbd1
+  languageName: node
+  linkType: hard
+
 "@react-types/table@npm:^3.3.2":
   version: 3.3.2
   resolution: "@react-types/table@npm:3.3.2"
@@ -2679,6 +2700,7 @@ __metadata:
     "@radix-ui/react-tooltip": ^1.0.2
     "@react-aria/label": ^3.4.2
     "@react-aria/ssr": ^3.3.0
+    "@react-stately/data": ^3.8.0
     "@sentry/nextjs": ^7.19.0
     "@sentry/tracing": ^7.19.0
     "@snailycad/config": 1.33.0

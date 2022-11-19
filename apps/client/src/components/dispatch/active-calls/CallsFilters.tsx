@@ -14,10 +14,10 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
   calls: Full911Call[];
-  search: ReturnType<typeof useAsyncTable>["search"];
+  asyncTable: ReturnType<typeof useAsyncTable<Full911Call>>;
 }
 
-export function CallsFilters({ search, calls }: Props) {
+export function CallsFilters({ asyncTable, calls }: Props) {
   const {
     department,
     setDepartment,
@@ -26,6 +26,8 @@ export function CallsFilters({ search, calls }: Props) {
     showFilters,
     setAssignedUnit,
     assignedUnit,
+    search,
+    setSearch,
   } = useCallsFilters();
 
   const common = useTranslations("Common");
@@ -52,11 +54,11 @@ export function CallsFilters({ search, calls }: Props) {
         label={common("search")}
         className="w-full relative"
         name="search"
-        onChange={(value) => search.setSearch(value)}
-        value={search.search}
+        onChange={setSearch}
+        value={search}
         placeholder="#, Name, Location, ..."
       >
-        {search.state === "loading" ? (
+        {asyncTable.isLoading ? (
           <span className="absolute top-[2.4rem] right-2.5">
             <Loader />
           </span>
@@ -69,7 +71,10 @@ export function CallsFilters({ search, calls }: Props) {
           value={department?.value?.id ?? null}
           onChange={(e) => {
             setDepartment(e.target);
-            search.setExtraParams({ department: e.target?.value?.id });
+            asyncTable.sort({
+              ...asyncTable.sortDescriptor,
+              department: e.target?.value?.id,
+            });
           }}
           className="w-56"
           values={departments}
@@ -83,7 +88,10 @@ export function CallsFilters({ search, calls }: Props) {
             value={division?.value?.id ?? null}
             onChange={(e) => {
               setDivision(e.target);
-              search.setExtraParams({ division: e.target?.value?.id });
+              asyncTable.sort({
+                ...asyncTable.sortDescriptor,
+                division: e.target?.value?.id,
+              });
             }}
             className="w-56"
             values={divisions.filter((v) =>
@@ -100,7 +108,10 @@ export function CallsFilters({ search, calls }: Props) {
           className="w-56"
           onChange={(e) => {
             setAssignedUnit(e.target);
-            search.setExtraParams({ assignedUnit: e.target?.value?.id });
+            asyncTable.sort({
+              ...asyncTable.sortDescriptor,
+              assignedUnit: e.target?.value?.id,
+            });
           }}
           values={assignedUnits}
         />

@@ -18,7 +18,7 @@ import { useAuth } from "context/AuthContext";
 import { TableActionsAlignment } from "@snailycad/types";
 import { orderColumnsByTableActionsAlignment } from "lib/table/orderColumnsByTableActionsAlignment";
 import { rankItem } from "@tanstack/match-sorter-utils";
-import type { useTableState } from "hooks/shared/table/useTableState";
+import type { useTableState } from "hooks/shared/table/use-table-state";
 import { ReactSortable } from "react-sortablejs";
 import { useMounted } from "@casper124578/useful";
 import { createTableDragDropColumn } from "lib/table/dndArrowHook";
@@ -168,7 +168,9 @@ export function Table<TData extends _RowData>({
         </ReactSortable>
       </table>
 
-      {dataLength <= visibleTableRows.length ? null : <TablePagination table={table} />}
+      {dataLength <= visibleTableRows.length ? null : (
+        <TablePagination isLoading={tableState.pagination.isLoading} table={table} />
+      )}
     </div>
   );
 }

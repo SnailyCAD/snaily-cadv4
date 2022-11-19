@@ -18,7 +18,7 @@ import { IsAuth } from "middlewares/IsAuth";
 import { typeHandlers } from "./Import";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { ValuesSelect, getTypeFromPath, getPermissionsForValuesRequest } from "lib/values/utils";
-import { ValueType } from "@prisma/client";
+import { Prisma, ValueType } from "@prisma/client";
 import { UsePermissions } from "middlewares/UsePermissions";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import type * as APITypes from "@snailycad/types/api";
@@ -54,6 +54,9 @@ export class ValuesController {
   async getValueByPath(
     @PathParams("path") path: (string & {}) | "all",
     @QueryParams("paths") rawPaths: string,
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("query", String) query = "",
+    @QueryParams("includeAll", Boolean) includeAll = true,
   ): Promise<APITypes.GetValuesData | APITypes.GetValuesPenalCodesData> {
     // allow more paths in one request
     let paths =
@@ -74,20 +77,36 @@ export class ValuesController {
           );
         }
 
+        const where = this.createSearchWhereObject({
+          path,
+          query,
+          showDisabled: true,
+        });
+
         const data = GET_VALUES[type];
         if (data) {
-          return {
-            type,
-            groups: [],
+          const [totalCount, values] = await prisma.$transaction([
             // @ts-expect-error ignore
-            values: await prisma[data.name].findMany({
+            prisma[data.name].count({ orderBy: { value: { position: "asc" } }, where }),
+            // @ts-expect-error ignore
+            prisma[data.name].findMany({
+              where,
               include: {
                 ...(data.include ?? {}),
                 ...(type === "ADDRESS" ? {} : { _count: true }),
                 value: true,
               },
               orderBy: { value: { position: "asc" } },
+              take: includeAll ? undefined : 35,
+              skip: includeAll ? undefined : skip,
             }),
+          ]);
+
+          return {
+            groups: [],
+            type,
+            values,
+            totalCount,
           };
         }
 
@@ -106,11 +125,12 @@ export class ValuesController {
           };
         }
 
-        return {
-          type,
-          groups: [],
-          values: await prisma.value.findMany({
-            where: { type },
+        const [totalCount, values] = await prisma.$transaction([
+          prisma.value.count({ where, orderBy: { position: "asc" } }),
+          prisma.value.findMany({
+            where,
+            take: includeAll ? undefined : 35,
+            skip: includeAll ? undefined : skip,
             orderBy: { position: "asc" },
             include: {
               _count: true,
@@ -119,6 +139,13 @@ export class ValuesController {
                 : {}),
             },
           }),
+        ]);
+
+        return {
+          groups: [],
+          type,
+          values,
+          totalCount,
         };
       }),
     );
@@ -132,26 +159,15 @@ export class ValuesController {
     const data = GET_VALUES[type];
 
     if (data) {
-      let where: any = {
-        value: { isDisabled: false, value: { contains: query, mode: "insensitive" } },
-      };
-
-      if (ValueType.ADDRESS === type) {
-        where = {
-          OR: [
-            { value: { value: { contains: query, mode: "insensitive" } } },
-            { county: { contains: query, mode: "insensitive" } },
-            { postal: { contains: query, mode: "insensitive" } },
-          ],
-          AND: [{ value: { isDisabled: false } }],
-        };
-      }
-
       // @ts-expect-error ignore
       const values = await prisma[data.name].findMany({
         include: { ...(data.include ?? {}), value: true },
         orderBy: { value: { position: "asc" } },
-        where,
+        where: this.createSearchWhereObject({
+          path,
+          query,
+          showDisabled: false,
+        }),
         take: 35,
       });
 
@@ -337,6 +353,60 @@ export class ValuesController {
     );
 
     return true;
+  }
+
+  private createSearchWhereObject({
+    path,
+    query,
+    showDisabled = true,
+  }: {
+    path: string;
+    query: string;
+    showDisabled?: boolean;
+  }) {
+    const type = getTypeFromPath(path);
+    const data = GET_VALUES[type];
+
+    if (type === "PENAL_CODE") {
+      const where: Prisma.PenalCodeWhereInput = {
+        OR: [
+          { title: { contains: query, mode: "insensitive" } },
+          { description: { contains: query, mode: "insensitive" } },
+          { descriptionData: { array_contains: query } },
+          { group: { name: { contains: query, mode: "insensitive" } } },
+        ],
+      };
+
+      return where;
+    }
+
+    if (data) {
+      let where: any = {
+        value: {
+          isDisabled: showDisabled ? undefined : false,
+          value: { contains: query, mode: "insensitive" },
+        },
+      };
+
+      if (ValueType.ADDRESS === type) {
+        where = {
+          OR: [
+            { value: { value: { contains: query, mode: "insensitive" } } },
+            { county: { contains: query, mode: "insensitive" } },
+            { postal: { contains: query, mode: "insensitive" } },
+          ],
+          AND: [{ value: { isDisabled: showDisabled ? undefined : false } }],
+        };
+      }
+
+      return where;
+    }
+
+    return {
+      type,
+      isDisabled: showDisabled ? undefined : false,
+      value: { contains: query, mode: "insensitive" },
+    };
   }
 
   private async deleteById(type: ValueType, id: string) {
