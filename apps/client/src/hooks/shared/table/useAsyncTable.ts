@@ -24,6 +24,7 @@ interface Options<T> {
 
 export function useAsyncTable<T>(options: Options<T>) {
   const { execute } = useFetch();
+  const isMounted = useMounted();
 
   const [totalDataCount, setTotalCount] = React.useState(options.totalCount);
   const [items, setItems] = React.useState<T[]>(options.initialData);
@@ -35,6 +36,10 @@ export function useAsyncTable<T>(options: Options<T>) {
   const asyncList = useAsyncList<T>({
     initialFilterText: options.search,
     async load(state) {
+      if (!isMounted) {
+        return { items: options.initialData };
+      }
+
       const sortDescriptor = state.sortDescriptor as Record<string, any>;
       const skip = Number(sortDescriptor.pageIndex * sortDescriptor.pageSize) || 0;
 
@@ -76,8 +81,6 @@ export function useAsyncTable<T>(options: Options<T>) {
 
   const [_data, _setData] = React.useState(options.initialData);
   const { state: loadingState } = useFetch();
-  const isMounted = useMounted();
-
   const scrollToTopOnDataChange = options.scrollToTopOnDataChange ?? true;
   const data = options.state?.data ?? _data;
   const setData = (options.state?.setData ?? _setData) as React.Dispatch<React.SetStateAction<T[]>>;
@@ -85,7 +88,6 @@ export function useAsyncTable<T>(options: Options<T>) {
   const handlePageChange = React.useCallback(
     async ({ pageSize, pageIndex }: Omit<FetchOptions, "path" | "onResponse">) => {
       if (options.disabled) return;
-      if (!isMounted) return;
 
       asyncList.sort({ ...asyncList.sortDescriptor, pageIndex, pageSize });
     },
@@ -102,14 +104,14 @@ export function useAsyncTable<T>(options: Options<T>) {
 
   const list = {
     ...asyncList,
-    items,
+    items: isMounted ? asyncList.items : items,
   };
 
   return {
-    list,
+    ...list,
     state: loadingState,
     pagination,
-    data,
-    setData,
+    // data,
+    // setData,
   };
 }

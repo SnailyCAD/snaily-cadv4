@@ -58,7 +58,7 @@ export function CallsFilters({ asyncTable, calls }: Props) {
         value={search}
         placeholder="#, Name, Location, ..."
       >
-        {asyncTable.list.loadingState === "sorting" ? (
+        {asyncTable.loadingState === "sorting" ? (
           <span className="absolute top-[2.4rem] right-2.5">
             <Loader />
           </span>
@@ -71,8 +71,8 @@ export function CallsFilters({ asyncTable, calls }: Props) {
           value={department?.value?.id ?? null}
           onChange={(e) => {
             setDepartment(e.target);
-            asyncTable.list.sort({
-              ...asyncTable.list.sortDescriptor,
+            asyncTable.sort({
+              ...asyncTable.sortDescriptor,
               department: e.target?.value?.id,
             });
           }}
@@ -88,8 +88,8 @@ export function CallsFilters({ asyncTable, calls }: Props) {
             value={division?.value?.id ?? null}
             onChange={(e) => {
               setDivision(e.target);
-              asyncTable.list.sort({
-                ...asyncTable.list.sortDescriptor,
+              asyncTable.sort({
+                ...asyncTable.sortDescriptor,
                 division: e.target?.value?.id,
               });
             }}
@@ -108,8 +108,8 @@ export function CallsFilters({ asyncTable, calls }: Props) {
           className="w-56"
           onChange={(e) => {
             setAssignedUnit(e.target);
-            asyncTable.list.sort({
-              ...asyncTable.list.sortDescriptor,
+            asyncTable.sort({
+              ...asyncTable.sortDescriptor,
               assignedUnit: e.target?.value?.id,
             });
           }}

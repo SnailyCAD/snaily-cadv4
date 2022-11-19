@@ -168,7 +168,6 @@ export function ManageExamModal({ exam, onClose, onCreate, onUpdate }: Props) {
               isClearable
               label={t("licenseExams.theoryExam")}
               errorMessage={errors.theoryExam}
-              isDisabled={!!exam}
               name="theoryExam"
               options={PASS_FAIL_VALUES}
               selectedKey={values.theoryExam}
@@ -179,7 +178,6 @@ export function ManageExamModal({ exam, onClose, onCreate, onUpdate }: Props) {
               isClearable
               label={t("licenseExams.practiceExam")}
               errorMessage={errors.practiceExam}
-              isDisabled={!!exam}
               name="practiceExam"
               options={PASS_FAIL_VALUES}
               selectedKey={values.practiceExam}

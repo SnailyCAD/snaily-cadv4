@@ -36,7 +36,7 @@ import {
 } from "lib/admin/values/utils";
 import type { AccessorKeyColumnDef } from "@tanstack/react-table";
 import { getSelectedTableRows } from "hooks/shared/table/useTableState";
-import { SearchArea } from "components/admin/values/search/search-area";
+import { SearchArea } from "components/shared/search/search-area";
 import { AlertDeleteValueModal } from "components/admin/values/alert-delete-value-modal";
 
 const ManageValueModal = dynamic(async () => {
@@ -71,7 +71,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
     totalCount,
   });
 
-  const [tempValue, valueState] = useTemporaryItem(asyncTable.data);
+  const [tempValue, valueState] = useTemporaryItem(asyncTable.items);
   const { state, execute } = useFetch();
 
   const { isOpen, openModal, closeModal } = useModal();
@@ -84,7 +84,6 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
   const tableState = useTableState({
     pagination: asyncTable.pagination,
     dragDrop: { onListChange: setList },
-    search: { value: search, setValue: setSearch },
   });
 
   const tableHeaders = React.useMemo(() => {
@@ -98,23 +97,18 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
   }, [extraTableHeaders, t, common]);
 
   async function setList(list: AnyValue[]) {
-    if (!hasTableDataChanged(asyncTable.data, list)) return;
+    if (!hasTableDataChanged(asyncTable.items, list)) return;
 
-    asyncTable.setData((p) =>
-      list.map((v, idx) => {
-        const prev = p.find((a) => a.id === v.id);
+    for (const [index, value] of list.entries()) {
+      if ("position" in value) {
+        value.position = index;
+      } else {
+        value.value.position = index;
+      }
 
-        if (prev) {
-          if ("position" in prev) {
-            prev.position = idx;
-          } else {
-            prev.value.position = idx;
-          }
-        }
-
-        return v;
-      }),
-    );
+      asyncTable.move(value.id, index);
+      asyncTable.update(value.id, value);
+    }
 
     await execute<PutValuePositionsData>({
       path: `/admin/values/${type.toLowerCase()}/positions`,
@@ -147,15 +141,12 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
     });
 
     if (json && typeof json === "boolean") {
-      asyncTable.setData((p) => p.filter((v) => !selectedRows.includes(v.id)));
+      asyncTable.remove(...selectedRows);
+
       tableState.setRowSelection({});
       closeModal(ModalIds.AlertDeleteSelectedValues);
     }
   }
-
-  React.useEffect(() => {
-    asyncTable.setData(data);
-  }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
 
   React.useEffect(() => {
     // reset form values
@@ -197,13 +188,13 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
           )}
           <Button onPress={() => openModal(ModalIds.ManageValue)}>{typeT("ADD")}</Button>
           {/* todo: this will not properly work */}
-          <OptionsDropdown type={type} values={asyncTable.data} />
+          <OptionsDropdown type={type} values={asyncTable.items} />
         </div>
       </header>
 
       <SearchArea search={{ search, setSearch }} asyncTable={asyncTable} totalCount={totalCount} />
 
-      {asyncTable.list.items.length <= 0 ? (
+      {asyncTable.items.length <= 0 ? (
         <p className="mt-5">There are no values yet for this type.</p>
       ) : (
         <Table
@@ -212,7 +203,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
           containerProps={{
             style: { overflowY: "auto", maxHeight: "75vh" },
           }}
-          data={asyncTable.list.items.map((value) => ({
+          data={asyncTable.items.map((value) => ({
             id: value.id,
             rowProps: { value },
             value: getValueStrFromValue(value),
@@ -275,23 +266,15 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
 
       <ManageValueModal
         onCreate={(value) => {
-          asyncTable.setData((p) => [value, ...p]);
+          asyncTable.append(value);
         }}
-        onUpdate={(old, newV) => {
-          asyncTable.setData((p) => {
-            const idx = p.indexOf(old);
-            p[idx] = newV;
-
-            return p;
-          });
+        onUpdate={(previousValue, newValue) => {
+          asyncTable.update(previousValue.id, newValue);
         }}
         value={tempValue}
         type={type}
       />
-      <ImportValuesModal
-        onImport={(data) => asyncTable.setData((p) => [...data, ...p])}
-        type={type}
-      />
+      <ImportValuesModal onImport={(data) => asyncTable.append(...data)} type={type} />
     </AdminLayout>
   );
 }

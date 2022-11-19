@@ -10,9 +10,7 @@ interface SearchAreaProps<T> {
 
 export function SearchArea<T>(props: SearchAreaProps<T>) {
   const common = useTranslations("Common");
-  const isLoading = ["filtering", "loading", "sorting"].includes(
-    props.asyncTable.list.loadingState,
-  );
+  const isLoading = ["filtering", "loading", "sorting"].includes(props.asyncTable.loadingState);
 
   return (
     <>
