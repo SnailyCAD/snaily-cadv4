@@ -11,7 +11,7 @@ interface TableStateOptions {
     disabledIndices?: number[];
   };
   pagination?: {
-    isLoading: boolean;
+    isLoading?: boolean;
     __ASYNC_TABLE__?: boolean;
     totalDataCount: number;
     pageSize?: number;
