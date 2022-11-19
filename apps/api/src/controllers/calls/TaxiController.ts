@@ -13,15 +13,17 @@ import { NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/IsAuth";
 import { Socket } from "services/SocketService";
 import { validateSchema } from "lib/validateSchema";
-import type { User } from "@prisma/client";
+import { Feature, User } from "@prisma/client";
 import { canManageInvariant } from "lib/auth/getSessionUser";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { towIncludes } from "./TowController";
 import type * as APITypes from "@snailycad/types/api";
+import { IsFeatureEnabled } from "middlewares/is-enabled";
 
 @Controller("/taxi")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
+@IsFeatureEnabled({ feature: Feature.TAXI })
 export class TaxiController {
   private socket: Socket;
   constructor(socket: Socket) {
