@@ -37,6 +37,7 @@ import { assignUnitsToWarrant } from "lib/records/assignToWarrant";
 import type { cad } from "@snailycad/types";
 import { userProperties } from "lib/auth/getSessionUser";
 import { upsertRecord } from "lib/records/upsert-record";
+import { IsFeatureEnabled } from "middlewares/is-enabled";
 
 export const assignedOfficersInclude = {
   combinedUnit: { include: combinedUnitProperties },
@@ -54,6 +55,7 @@ export class RecordsController {
 
   @Get("/active-warrants")
   @Description("Get all active warrants (ACTIVE_WARRANTS must be enabled)")
+  @IsFeatureEnabled({ feature: Feature.ACTIVE_WARRANTS })
   async getActiveWarrants(@Context("cad") cad: cad) {
     const inactivityFilter = getInactivityFilter(cad, "activeWarrantsInactivityTimeout");
     if (inactivityFilter) {

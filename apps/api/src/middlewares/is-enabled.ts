@@ -29,9 +29,9 @@ export const DEFAULT_DISABLED_FEATURES: Partial<
 };
 
 @Middleware()
-class IsFeatureEnabledImplementation implements MiddlewareMethods {
+class IsFeatureEnabledMiddleware implements MiddlewareMethods {
   async use(@Context() ctx: Context) {
-    const options = ctx.endpoint.get<IsFeatureEnabledOptions>(IsFeatureEnabledImplementation);
+    const options = ctx.endpoint.get<IsFeatureEnabledOptions>(IsFeatureEnabledMiddleware);
 
     const cad = setDiscordAuth(
       await prisma.cad.findFirst({
@@ -57,8 +57,8 @@ class IsFeatureEnabledImplementation implements MiddlewareMethods {
 
 export function IsFeatureEnabled(data: IsFeatureEnabledOptions) {
   return useDecorators(
-    StoreSet(IsFeatureEnabledImplementation, data),
-    UseBefore(IsFeatureEnabledImplementation),
+    StoreSet(IsFeatureEnabledMiddleware, data),
+    UseBefore(IsFeatureEnabledMiddleware),
   );
 }
 

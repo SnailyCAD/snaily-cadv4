@@ -1,13 +1,24 @@
 import * as React from "react";
-import type { AxiosRequestConfig, AxiosError } from "axios";
+import type { AxiosRequestConfig } from "axios";
 import { handleRequest } from "./fetch";
-import { type TranslationValues, useTranslations } from "use-intl";
+import { useTranslations } from "use-intl";
 import type { FormikHelpers } from "formik";
 import { toastMessage } from "./toastMessage";
 import { useModal } from "../state/modalState";
 import { ModalIds } from "../types/ModalIds";
 import { useAuth } from "../context/AuthContext";
 import { getNextI18nConfig } from "./i18n/getNextI18nConfig";
+import {
+  ErrorMessage,
+  ErrorResponseData,
+  getErrorObj,
+  getFeatureNotEnabledError,
+  isAxiosError,
+  isErrorKey,
+  parseError,
+  parseErrors,
+  parseErrorTitle,
+} from "./fetch/errors";
 
 interface UseFetchOptions {
   overwriteState: State | null;
@@ -16,27 +27,11 @@ interface UseFetchOptions {
 type NullableAbortController = AbortController | null;
 type State = "loading" | "error";
 
-type ErrorMessages = typeof import("../../locales/en/common.json")["Errors"];
-export type ErrorMessage = keyof ErrorMessages;
-
 type Options<Helpers extends object = object> = AxiosRequestConfig & {
   path: string;
   noToast?: boolean | ErrorMessage | (string & {});
   helpers?: FormikHelpers<Helpers>;
 };
-
-interface ErrorObj {
-  message: ErrorMessage;
-  data: TranslationValues;
-}
-
-interface ErrorResponseData {
-  name: string;
-  message: string;
-  status: number;
-  errors: Record<string, ErrorMessage | ErrorObj>[];
-  stack: string;
-}
 
 interface Return<Data> {
   json: Data;
@@ -93,30 +88,37 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
       }
 
       let hasAddedError = false as boolean; // as boolean because eslint gets upset otherwise.
-      for (const error of errors) {
-        Object.entries(error).map(([key, value]) => {
-          const translationOptions = typeof value === "string" ? undefined : value.data;
-          const translationKey = typeof value === "string" ? value : value.message;
+      if (options.helpers) {
+        for (const error of errors) {
+          Object.entries(error).map(([key, value]) => {
+            const translationOptions = typeof value === "string" ? undefined : value.data;
+            const translationKey = typeof value === "string" ? value : value.message;
 
-          const message = isErrorKey(translationKey, errorMessages)
-            ? t(translationKey, translationOptions)
-            : translationKey;
+            const message = isErrorKey(translationKey, errorMessages)
+              ? t(translationKey, translationOptions)
+              : translationKey;
 
-          if (message && restOptions.helpers) {
-            restOptions.helpers.setFieldError(key, message);
-            hasAddedError = true;
-          }
-        });
+            if (message && restOptions.helpers) {
+              restOptions.helpers.setFieldError(key, message);
+              hasAddedError = true;
+            }
+          });
+        }
       }
+
+      const featureNotEnabledOptions = getFeatureNotEnabledError(response);
+      const translationOptions = featureNotEnabledOptions?.data ?? undefined;
+      const translationKey = featureNotEnabledOptions?.message ?? key;
+      const message = isErrorKey(key, errorMessages) ? t(translationKey, translationOptions) : key;
 
       if (
         typeof restOptions.noToast === "string" &&
         restOptions.noToast !== error &&
         !hasAddedError
       ) {
-        toastMessage({ message: t(key), title: `${errorTitle} ${error ? `(${error})` : ""}` });
+        toastMessage({ message, title: `${errorTitle} ${error ? `(${error})` : ""}` });
       } else if (!restOptions.noToast && !hasAddedError) {
-        toastMessage({ message: t(key), title: `${errorTitle} ${error ? `(${error})` : ""}` });
+        toastMessage({ message, title: `${errorTitle} ${error ? `(${error})` : ""}` });
       }
 
       setState("error");
@@ -144,55 +146,4 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
   }, []);
 
   return { execute, state };
-}
-
-function parseError(
-  error: AxiosError<ErrorResponseData | null>,
-): ErrorMessage | "unknown" | (string & {}) {
-  const message = error.response?.data?.message ?? error.message;
-  const name = error.name;
-
-  if (name && !message && ["NOT_FOUND", "Error"].includes(name)) {
-    return name;
-  }
-
-  return message || "unknown";
-}
-
-function parseErrors(error: AxiosError<ErrorResponseData | null>) {
-  return error.response?.data?.errors ?? [];
-}
-
-function parseErrorTitle(error: AxiosError<ErrorResponseData | null>) {
-  const name = (error.response?.data?.name ?? error.message) as string | undefined;
-  if (!name) return;
-
-  return name.toLowerCase().replace(/_/g, " ");
-}
-
-function isAxiosError<T>(error: unknown): error is AxiosError<T, T> {
-  if (!error) return false;
-  return error instanceof Error || (typeof error === "object" && "response" in error);
-}
-
-function isErrorKey(key: string | ErrorObj, errorMessages: ErrorMessages): key is ErrorMessage {
-  if (typeof key !== "string") return false;
-  return Object.keys(errorMessages).includes(key);
-}
-
-export function getErrorObj(error: unknown) {
-  let errorObj = {};
-
-  if (isAxiosError(error)) {
-    errorObj = {
-      message: error.message,
-      status: error.response?.status,
-      response: error.response,
-      method: error.config?.method,
-      data: error.config?.data,
-      url: error.config?.url,
-    };
-  }
-
-  return errorObj;
 }

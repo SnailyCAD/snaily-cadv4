@@ -24,10 +24,12 @@ import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { Socket } from "services/SocketService";
 import type * as APITypes from "@snailycad/types/api";
 import { isFeatureEnabled } from "lib/cad";
+import { IsFeatureEnabled } from "middlewares/is-enabled";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
+@IsFeatureEnabled({ feature: Feature.PANIC_BUTTON })
 export class EmsFdController {
   private socket: Socket;
   constructor(socket: Socket) {

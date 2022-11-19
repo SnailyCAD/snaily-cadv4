@@ -14,8 +14,9 @@ import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 import { getInactivityFilter } from "lib/leo/utils";
 import { findUnit } from "lib/leo/findUnit";
 import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
-import type { CombinedLeoUnit, Officer, MiscCadSettings } from "@snailycad/types";
+import { CombinedLeoUnit, Officer, MiscCadSettings, Feature } from "@snailycad/types";
 import type * as APITypes from "@snailycad/types/api";
+import { IsFeatureEnabled } from "middlewares/is-enabled";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -79,6 +80,7 @@ export class LeoController {
 
   @Post("/panic-button")
   @Description("Set the panic button for an officer by their id")
+  @IsFeatureEnabled({ feature: Feature.PANIC_BUTTON })
   @UsePermissions({
     fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],

@@ -2,7 +2,7 @@ import axios, { type Method, type AxiosRequestConfig, type AxiosResponse } from 
 import type { IncomingMessage } from "connect";
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";
 import { getAPIUrl } from "@snailycad/utils/api-url";
-import { getErrorObj } from "./useFetch";
+import { getErrorObj } from "./fetch/errors";
 
 export type RequestData = Record<string, unknown>;
 
