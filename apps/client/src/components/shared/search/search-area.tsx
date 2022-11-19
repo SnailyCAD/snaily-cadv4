@@ -10,7 +10,6 @@ interface SearchAreaProps<T> {
 
 export function SearchArea<T>(props: SearchAreaProps<T>) {
   const common = useTranslations("Common");
-  const isLoading = ["filtering", "loading", "sorting"].includes(props.asyncTable.loadingState);
 
   return (
     <>
@@ -21,7 +20,7 @@ export function SearchArea<T>(props: SearchAreaProps<T>) {
         onChange={props.search.setSearch}
         value={props.search.search}
       >
-        {isLoading ? (
+        {props.asyncTable.isLoading ? (
           <span className="absolute top-[2.4rem] right-2.5">
             <Loader />
           </span>

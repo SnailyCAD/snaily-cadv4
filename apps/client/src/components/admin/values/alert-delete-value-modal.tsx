@@ -6,29 +6,34 @@ import { hasValueObj, isBaseValue } from "@snailycad/utils/typeguards";
 import type { DeleteValueByIdData } from "@snailycad/types/api";
 import { useModal } from "state/modalState";
 import type { AnyValue, ValueType } from "@snailycad/types";
+import type { useAsyncTable } from "components/shared/Table";
+import type { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
-interface AlertDeleteValueModalProps {
-  tempValue: AnyValue | null;
+interface AlertDeleteValueModalProps<T extends AnyValue> {
+  asyncTable: ReturnType<typeof useAsyncTable<T>>;
+  valueState: ReturnType<typeof useTemporaryItem<string, T>>;
   type: ValueType;
 }
 
-export function AlertDeleteValueModal(props: AlertDeleteValueModalProps) {
+export function AlertDeleteValueModal<T extends AnyValue>(props: AlertDeleteValueModalProps<T>) {
   const { state, execute } = useFetch();
   const t = useTranslations("Values");
   const typeT = useTranslations(props.type);
   const { closeModal } = useModal();
+  const [tempValue, valueState] = props.valueState;
 
   async function handleDelete() {
-    if (!props.tempValue) return;
+    if (!tempValue) return;
 
     const { json } = await execute<DeleteValueByIdData>({
-      path: `/admin/values/${props.type.toLowerCase()}/${props.tempValue.id}`,
+      path: `/admin/values/${props.type.toLowerCase()}/${tempValue.id}`,
       method: "DELETE",
     });
 
     if (json) {
-      props.asyncTable.setData((p) => p.filter((v) => v.id !== props.tempValue.id));
+      props.asyncTable.remove(tempValue.id);
       valueState.setTempId(null);
+
       closeModal(ModalIds.AlertDeleteValue);
     }
   }
@@ -38,12 +43,12 @@ export function AlertDeleteValueModal(props: AlertDeleteValueModalProps) {
       id={ModalIds.AlertDeleteValue}
       description={t.rich("alert_deleteValue", {
         value:
-          props.tempValue &&
-          (isBaseValue(props.tempValue)
-            ? props.tempValue.value
-            : hasValueObj(props.tempValue)
-            ? props.tempValue.value.value
-            : props.tempValue.title),
+          tempValue &&
+          (isBaseValue(tempValue)
+            ? tempValue.value
+            : hasValueObj(tempValue)
+            ? tempValue.value.value
+            : tempValue.title),
       })}
       onDeleteClick={handleDelete}
       title={typeT("DELETE")}

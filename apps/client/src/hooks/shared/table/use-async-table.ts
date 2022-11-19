@@ -19,7 +19,6 @@ interface Options<T> {
   initialData: T[];
   scrollToTopOnDataChange?: boolean;
   fetchOptions: Pick<FetchOptions, "onResponse" | "path">;
-  state?: { data: T[]; setData(data: T[], query?: string): void };
 }
 
 export function useAsyncTable<T>(options: Options<T>) {
@@ -80,8 +79,6 @@ export function useAsyncTable<T>(options: Options<T>) {
 
   const [_data, _setData] = React.useState(options.initialData);
   const { state: loadingState } = useFetch();
-  const data = options.state?.data ?? _data;
-  const setData = (options.state?.setData ?? _setData) as React.Dispatch<React.SetStateAction<T[]>>;
 
   const handlePageChange = React.useCallback(
     async (fetchOptions: Omit<FetchOptions, "path" | "onResponse">) => {
@@ -105,11 +102,11 @@ export function useAsyncTable<T>(options: Options<T>) {
     items: isMounted ? asyncList.items : options.initialData,
   };
 
+  const isLoading = ["loading", "filtering", "sorting"].includes(loadingState as string);
+
   return {
     ...list,
-    state: loadingState,
+    isLoading,
     pagination,
-    // data,
-    // setData,
   };
 }

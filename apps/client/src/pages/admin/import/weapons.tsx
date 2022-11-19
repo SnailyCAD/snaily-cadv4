@@ -13,7 +13,7 @@ import { Button } from "@snailycad/ui";
 import { ImportModal } from "components/admin/import/ImportModal";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
-import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
+import { useAsyncTable } from "hooks/shared/table/use-async-table";
 import type { GetImportWeaponsData, PostImportWeaponsData } from "@snailycad/types/api";
 import { AlertModal } from "components/modal/AlertModal";
 import { Permissions, usePermission } from "hooks/usePermission";

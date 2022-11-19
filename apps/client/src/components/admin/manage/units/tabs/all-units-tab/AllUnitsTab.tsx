@@ -28,7 +28,7 @@ import type {
   PutManageUnitsOffDutyData,
 } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
-import { getSelectedTableRows } from "hooks/shared/table/useTableState";
+import { getSelectedTableRows } from "hooks/shared/table/use-table-state";
 
 interface Props {
   units: GetManageUnitsData;

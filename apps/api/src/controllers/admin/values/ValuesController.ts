@@ -18,7 +18,7 @@ import { IsAuth } from "middlewares/IsAuth";
 import { typeHandlers } from "./Import";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { ValuesSelect, getTypeFromPath, getPermissionsForValuesRequest } from "lib/values/utils";
-import { ValueType } from "@prisma/client";
+import { Prisma, ValueType } from "@prisma/client";
 import { UsePermissions } from "middlewares/UsePermissions";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import type * as APITypes from "@snailycad/types/api";
@@ -77,14 +77,14 @@ export class ValuesController {
           );
         }
 
+        const where = this.createSearchWhereObject({
+          path,
+          query,
+          showDisabled: true,
+        });
+
         const data = GET_VALUES[type];
         if (data) {
-          const where = this.createSearchWhereObject({
-            path,
-            query,
-            showDisabled: true,
-          });
-
           const [totalCount, values] = await prisma.$transaction([
             // @ts-expect-error ignore
             prisma[data.name].count({ orderBy: { value: { position: "asc" } }, where }),
@@ -103,19 +103,18 @@ export class ValuesController {
           ]);
 
           return {
-            type,
             groups: [],
+            type,
             values,
             totalCount,
           };
         }
 
         if (type === "PENAL_CODE") {
-          return {
-            // todo: add counts
-            type,
-            groups: await prisma.penalCodeGroup.findMany({ orderBy: { position: "asc" } }),
-            values: await prisma.penalCode.findMany({
+          const [totalCount, penalCodes] = await prisma.$transaction([
+            prisma.penalCode.count({ where, orderBy: { position: "asc" } }),
+            prisma.penalCode.findMany({
+              where,
               orderBy: { title: "asc" },
               include: {
                 warningApplicable: true,
@@ -123,14 +122,15 @@ export class ValuesController {
                 group: true,
               },
             }),
+          ]);
+
+          return {
+            type,
+            groups: await prisma.penalCodeGroup.findMany({ orderBy: { position: "asc" } }),
+            values: penalCodes,
+            totalCount,
           };
         }
-
-        const where = this.createSearchWhereObject({
-          path,
-          query,
-          showDisabled: true,
-        });
 
         const [totalCount, values] = await prisma.$transaction([
           prisma.value.count({ where, orderBy: { position: "asc" } }),
@@ -149,8 +149,8 @@ export class ValuesController {
         ]);
 
         return {
-          type,
           groups: [],
+          type,
           values,
           totalCount,
         };
@@ -373,6 +373,19 @@ export class ValuesController {
   }) {
     const type = getTypeFromPath(path);
     const data = GET_VALUES[type];
+
+    if (type === "PENAL_CODE") {
+      const where: Prisma.PenalCodeWhereInput = {
+        OR: [
+          { title: { contains: query, mode: "insensitive" } },
+          { description: { contains: query, mode: "insensitive" } },
+          { descriptionData: { array_contains: query } },
+          { group: { name: { contains: query, mode: "insensitive" } } },
+        ],
+      };
+
+      return where;
+    }
 
     if (data) {
       let where: any = {

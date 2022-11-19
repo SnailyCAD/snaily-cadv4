@@ -62,8 +62,11 @@ function _ActiveCalls({ initialData }: Props) {
     initialData: initialData.calls,
     totalCount: initialData.totalCount,
     scrollToTopOnDataChange: false,
-    state: { data: calls, setData: call911State.setCalls },
   });
+
+  React.useEffect(() => {
+    call911State.setCalls(asyncTable.items);
+  }, [asyncTable.items]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const tableState = useTableState({
     pagination: { ...asyncTable.pagination, pageSize: 12 },

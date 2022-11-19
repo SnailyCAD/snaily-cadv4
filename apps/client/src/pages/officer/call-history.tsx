@@ -28,7 +28,7 @@ import type {
   GetIncidentsData,
 } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
-import { getSelectedTableRows } from "hooks/shared/table/useTableState";
+import { getSelectedTableRows } from "hooks/shared/table/use-table-state";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 import { useCall911State } from "state/dispatch/call911State";
 

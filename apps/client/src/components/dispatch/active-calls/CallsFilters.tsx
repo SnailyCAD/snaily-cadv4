@@ -58,7 +58,7 @@ export function CallsFilters({ asyncTable, calls }: Props) {
         value={search}
         placeholder="#, Name, Location, ..."
       >
-        {asyncTable.loadingState === "sorting" ? (
+        {asyncTable.isLoading ? (
           <span className="absolute top-[2.4rem] right-2.5">
             <Loader />
           </span>

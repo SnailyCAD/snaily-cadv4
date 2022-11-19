@@ -35,7 +35,7 @@ import {
   hasTableDataChanged,
 } from "lib/admin/values/utils";
 import type { AccessorKeyColumnDef } from "@tanstack/react-table";
-import { getSelectedTableRows } from "hooks/shared/table/useTableState";
+import { getSelectedTableRows } from "hooks/shared/table/use-table-state";
 import { SearchArea } from "components/shared/search/search-area";
 import { AlertDeleteValueModal } from "components/admin/values/alert-delete-value-modal";
 
@@ -252,7 +252,11 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
         />
       )}
 
-      <AlertDeleteValueModal type={type} tempValue={tempValue} />
+      <AlertDeleteValueModal
+        type={type}
+        valueState={[tempValue, valueState]}
+        asyncTable={asyncTable}
+      />
 
       <AlertModal
         id={ModalIds.AlertDeleteSelectedValues}
