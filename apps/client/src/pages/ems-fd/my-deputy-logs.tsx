@@ -81,12 +81,12 @@ export default function MyDeputyLogs({ logs: data }: Props) {
               <Select
                 isClearable
                 onChange={(e) => {
-                  asyncTable.list.sort({
-                    ...asyncTable.list.sortDescriptor,
+                  asyncTable.sort({
+                    ...asyncTable.sortDescriptor,
                     deputyId: e.target.value,
                   });
                 }}
-                value={asyncTable.list.sortDescriptor?.deputyId}
+                value={asyncTable.sortDescriptor?.deputyId}
                 values={Object.entries(deputyNames).map(([id, name]) => ({
                   label: name as string,
                   value: id,

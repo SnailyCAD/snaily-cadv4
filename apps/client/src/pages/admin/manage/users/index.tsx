@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useTranslations } from "use-intl";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";

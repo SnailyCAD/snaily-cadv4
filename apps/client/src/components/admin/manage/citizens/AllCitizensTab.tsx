@@ -25,7 +25,10 @@ interface Props {
 }
 
 export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens }: Props) {
+  const [search, setSearch] = React.useState("");
+
   const asyncTable = useAsyncTable({
+    search,
     initialData,
     totalCount,
     fetchOptions: {
@@ -38,10 +41,10 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
   });
   const tableState = useTableState({ pagination: asyncTable.pagination });
 
-  const [tempValue, valueState] = useTemporaryItem(asyncTable.data);
+  const [tempValue, valueState] = useTemporaryItem(asyncTable.items);
   const [reason, setReason] = React.useState("");
   const [userFilter, setUserFilter] = React.useState<string | null>(null);
-  const users = React.useMemo(() => makeUsersList(asyncTable.data), [asyncTable.data]);
+  const users = React.useMemo(() => makeUsersList(asyncTable.items), [asyncTable.items]);
   const { hasPermissions } = usePermission();
 
   const reasonRef = React.useRef<HTMLInputElement>(null);
@@ -89,8 +92,8 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
               label={common("search")}
               className="w-full relative"
               name="search"
-              onChange={(value) => asyncTable.search.setSearch(value)}
-              value={asyncTable.search.search}
+              onChange={setSearch}
+              value={search}
               placeholder="John Doe"
             >
               {asyncTable.state === "loading" ? (
@@ -113,7 +116,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
             </FormField>
           </div>
 
-          {asyncTable.search.search && asyncTable.pagination.totalDataCount !== totalCount ? (
+          {search && asyncTable.pagination.totalDataCount !== totalCount ? (
             <p className="italic text-base font-semibold">
               Showing {asyncTable.pagination.totalDataCount} result(s)
             </p>
@@ -121,7 +124,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
 
           <Table
             tableState={tableState}
-            data={asyncTable.data
+            data={asyncTable.items
               .filter((v) => (userFilter ? String(v.userId) === userFilter : true))
               .map((citizen) => ({
                 id: citizen.id,

@@ -222,7 +222,7 @@ export default function CitizenId() {
           <AlertModal
             onDeleteClick={handleDelete}
             title={t("deleteCitizen")}
-            description={t("alert_deleteCitizen", {
+            description={t.rich("alert_deleteCitizen", {
               citizen: `${citizen.name} ${citizen.surname}`,
             })}
             id={ModalIds.AlertDeleteCitizen}

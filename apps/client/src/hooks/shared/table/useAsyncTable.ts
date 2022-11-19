@@ -23,15 +23,10 @@ interface Options<T> {
 }
 
 export function useAsyncTable<T>(options: Options<T>) {
+  const [totalDataCount, setTotalCount] = React.useState(options.totalCount);
   const { execute } = useFetch();
   const isMounted = useMounted();
-
-  const [totalDataCount, setTotalCount] = React.useState(options.totalCount);
-  const [items, setItems] = React.useState<T[]>(options.initialData);
-
-  React.useEffect(() => {
-    setItems(options.initialData);
-  }, [options.initialData]);
+  const scrollToTopOnDataChange = options.scrollToTopOnDataChange ?? true;
 
   const asyncList = useAsyncList<T>({
     initialFilterText: options.search,
@@ -57,7 +52,6 @@ export function useAsyncTable<T>(options: Options<T>) {
 
       const json = options.fetchOptions.onResponse(response.json);
       setTotalCount(json.totalCount);
-      setItems(json.data);
 
       if (scrollToTopOnDataChange) {
         window.scrollTo({ behavior: "smooth", top: 0 });
@@ -68,6 +62,11 @@ export function useAsyncTable<T>(options: Options<T>) {
       };
     },
   }) as AsyncListData<T> & { sortDescriptor?: any; sort(descriptor: any): void };
+
+  React.useEffect(() => {
+    // when the initial data changes, we need to update the async list data
+    asyncList.reload();
+  }, [options.initialData]); // eslint-disable-line
 
   useDebounce(
     () => {
@@ -81,15 +80,14 @@ export function useAsyncTable<T>(options: Options<T>) {
 
   const [_data, _setData] = React.useState(options.initialData);
   const { state: loadingState } = useFetch();
-  const scrollToTopOnDataChange = options.scrollToTopOnDataChange ?? true;
   const data = options.state?.data ?? _data;
   const setData = (options.state?.setData ?? _setData) as React.Dispatch<React.SetStateAction<T[]>>;
 
   const handlePageChange = React.useCallback(
-    async ({ pageSize, pageIndex }: Omit<FetchOptions, "path" | "onResponse">) => {
+    async (fetchOptions: Omit<FetchOptions, "path" | "onResponse">) => {
       if (options.disabled) return;
 
-      asyncList.sort({ ...asyncList.sortDescriptor, pageIndex, pageSize });
+      asyncList.sort({ ...asyncList.sortDescriptor, ...fetchOptions });
     },
     [isMounted, asyncList.sortDescriptor, options.disabled], // eslint-disable-line
   );
@@ -104,7 +102,7 @@ export function useAsyncTable<T>(options: Options<T>) {
 
   const list = {
     ...asyncList,
-    items: isMounted ? asyncList.items : items,
+    items: isMounted ? asyncList.items : options.initialData,
   };
 
   return {
