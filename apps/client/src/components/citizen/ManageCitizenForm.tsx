@@ -114,7 +114,7 @@ export function ManageCitizenForm({
     const validatedImage = validateFile(image, helpers);
 
     if (validatedImage) {
-      if (typeof validatedImage === "object") {
+      if (typeof validatedImage !== "string") {
         fd = new FormData();
         fd.set("Citizen.image", validatedImage, validatedImage.name);
       }
