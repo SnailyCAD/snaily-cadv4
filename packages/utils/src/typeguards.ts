@@ -79,6 +79,12 @@ export function isOfficerRankValue(value: AnyValue): value is Value & { type: "O
   return isBaseValue(value) && value.type === ValueType.OFFICER_RANK;
 }
 
+export function isEmergencyVehicleValue(
+  value: AnyValue,
+): value is Value & { type: "EMERGENCY_VEHICLE" } {
+  return isBaseValue(value) && value.type === ValueType.EMERGENCY_VEHICLE;
+}
+
 export function isUnitCombined(
   unit: Officer | CombinedLeoUnit | EmsFdDeputy,
 ): unit is CombinedLeoUnit {

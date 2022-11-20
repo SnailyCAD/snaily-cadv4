@@ -43,6 +43,7 @@ import {
   isCallTypeValue,
   isOfficerRankValue,
   isAddressValue,
+  isEmergencyVehicleValue,
 } from "@snailycad/utils/typeguards";
 import { QualificationFields } from "./manage-modal/QualificationFields";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
@@ -55,6 +56,7 @@ import {
 } from "lib/admin/values/utils";
 import { DivisionFields } from "./manage-modal/DivisionFields";
 import { AddressFields } from "./manage-modal/AddressFields";
+import { EmergencyVehicleFields } from "./manage-modal/EmergencyVehicleFields";
 
 interface Props {
   type: ValueType;
@@ -184,7 +186,8 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     color: value && isStatusValue(value) ? value.color ?? "" : "",
     type: value && (isStatusValue(value) || isDepartmentValue(value)) ? value.type : "STATUS_CODE",
     departments:
-      value && (isStatusValue(value) || isUnitQualification(value))
+      value &&
+      (isStatusValue(value) || isUnitQualification(value) || isEmergencyVehicleValue(value))
         ? defaultDepartments(value)
         : undefined,
     whatPages: value && isStatusValue(value) ? makeDefaultWhatPages(value) : [],
@@ -211,6 +214,8 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
 
     postal: value && isAddressValue(value) ? value.postal ?? "" : "",
     county: value && isAddressValue(value) ? value.county ?? "" : "",
+
+    divisions: value && isEmergencyVehicleValue(value) ? value.divisions : undefined,
 
     showPicker: false,
     image: "",
@@ -256,6 +261,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
               />
             )}
 
+            {type === ValueType.EMERGENCY_VEHICLE ? <EmergencyVehicleFields /> : null}
             {type === ValueType.LICENSE ? <LicenseFields /> : null}
 
             {type === ValueType.DIVISION ? <DivisionFields /> : null}
