@@ -54,7 +54,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
     const validatedImage = validateFile(image, helpers);
 
     if (validatedImage) {
-      if (typeof validatedImage === "object") {
+      if (typeof validatedImage !== "string") {
         fd.set("image", validatedImage, validatedImage.name);
       }
     }

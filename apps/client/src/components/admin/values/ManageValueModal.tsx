@@ -152,7 +152,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     const validatedImage = validateFile(image, helpers);
 
     if (validatedImage) {
-      if (typeof validatedImage === "object") {
+      if (typeof validatedImage !== "string") {
         fd.set("image", validatedImage, validatedImage.name);
       }
     }
