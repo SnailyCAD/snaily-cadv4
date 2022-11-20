@@ -1,5 +1,5 @@
 import { SELECT_DEPUTY_SCHEMA } from "@snailycad/schemas";
-import { Loader, Button } from "@snailycad/ui";
+import { Loader, Button, AsyncListSearchField, Item } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
@@ -15,6 +15,7 @@ import { EmsFdDeputy, ShouldDoType } from "@snailycad/types";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { isUnitDisabled, makeUnitName } from "lib/utils";
 import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
+import type { EmergencyVehicleValue } from "@snailycad/types";
 
 export function SelectDeputyModal() {
   const { deputies, setActiveDeputy } = useEmsFdState();
@@ -49,6 +50,8 @@ export function SelectDeputyModal() {
   const validate = handleValidate(SELECT_DEPUTY_SCHEMA);
   const INITIAL_VALUES = {
     deputy: "",
+    vehicleId: "",
+    vehicleSearch: "",
   };
 
   return (
@@ -59,7 +62,7 @@ export function SelectDeputyModal() {
       className="w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, errors, values, isValid }) => (
+        {({ handleChange, setValues, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.deputy} label={t("deputy")}>
               <Select
@@ -74,6 +77,20 @@ export function SelectDeputyModal() {
                 }))}
               />
             </FormField>
+
+            <AsyncListSearchField<EmergencyVehicleValue>
+              label={t("vehicle")}
+              localValue={values.vehicleSearch}
+              setValues={({ localValue, node }) => {
+                setValues({ ...values, vehicleId: "", vehicleSearch: localValue ?? "" });
+              }}
+              fetchOptions={{
+                apiPath: (query) => `/admin/values/emergency_vehicle/search?query=${query}`,
+                filterTextRequired: true,
+              }}
+            >
+              {(item) => <Item key={item.id}>{item.value.value}</Item>}
+            </AsyncListSearchField>
 
             <footer className="flex justify-end mt-5">
               <Button

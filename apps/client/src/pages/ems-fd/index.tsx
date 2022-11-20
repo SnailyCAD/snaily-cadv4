@@ -43,7 +43,7 @@ const NotepadModal = dynamic(async () => {
 });
 
 const SelectDeputyModal = dynamic(async () => {
-  return (await import("components/ems-fd/modals/SelectDeputy")).SelectDeputyModal;
+  return (await import("components/ems-fd/modals/select-deputy-modal")).SelectDeputyModal;
 });
 
 const CreateMedicalRecordModal = dynamic(async () => {

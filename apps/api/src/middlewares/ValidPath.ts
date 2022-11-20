@@ -23,6 +23,7 @@ export const validValuePaths = [
   "qualification",
   "call_type",
   "address",
+  "emergency_vehicle",
 ];
 
 @Middleware()

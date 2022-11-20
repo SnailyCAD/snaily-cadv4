@@ -8,6 +8,7 @@ interface FetchOptions {
   pageSize: number;
   pageIndex: number;
   path: string;
+  requireFilterText?: boolean;
   onResponse(json: unknown): { data: any; totalCount: number };
 }
 
@@ -18,7 +19,7 @@ interface Options<T> {
   totalCount: number;
   initialData?: T[];
   scrollToTopOnDataChange?: boolean;
-  fetchOptions: Pick<FetchOptions, "onResponse" | "path">;
+  fetchOptions: Pick<FetchOptions, "onResponse" | "path" | "requireFilterText">;
 }
 
 export function useAsyncTable<T>(options: Options<T>) {
@@ -30,12 +31,16 @@ export function useAsyncTable<T>(options: Options<T>) {
   const asyncList = useAsyncList<T>({
     initialFilterText: options.search,
     async load(state) {
-      if (!isMounted) {
+      const sortDescriptor = state.sortDescriptor as Record<string, any>;
+      const skip = Number(sortDescriptor.pageIndex * sortDescriptor.pageSize) || 0;
+
+      if (options.fetchOptions.requireFilterText && !sortDescriptor.query) {
         return { items: options.initialData ?? [] };
       }
 
-      const sortDescriptor = state.sortDescriptor as Record<string, any>;
-      const skip = Number(sortDescriptor.pageIndex * sortDescriptor.pageSize) || 0;
+      if (!isMounted) {
+        return { items: options.initialData ?? [] };
+      }
 
       // page size is not supported on any of the API endpoints
       delete sortDescriptor.pageSize;

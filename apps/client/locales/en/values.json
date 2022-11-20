@@ -143,5 +143,11 @@
     "ADD": "Add Address",
     "DELETE": "Delete Address",
     "EDIT": "Edit Address"
+  },
+  "EMERGENCY_VEHICLE": {
+    "MANAGE": "Manage Emergency Vehicles",
+    "ADD": "Add Emergency Vehicle",
+    "DELETE": "Delete Emergency Vehicle",
+    "EDIT": "Edit Emergency Vehicle"
   }
 }

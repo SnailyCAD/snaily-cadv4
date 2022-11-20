@@ -101,6 +101,10 @@ export const valueRoutes: SidebarRoute[] = [
     permissions: [Permissions.ManageValueDLCategory],
   },
   {
+    type: ValueType.EMERGENCY_VEHICLE,
+    permissions: [Permissions.ManageValueEmergencyVehicle],
+  },
+  {
     type: ValueType.ETHNICITY,
     permissions: [Permissions.ManageValueEthnicity],
   },
