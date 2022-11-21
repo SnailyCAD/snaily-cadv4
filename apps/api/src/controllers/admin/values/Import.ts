@@ -447,17 +447,19 @@ export const typeHandlers = {
         item.divisions ?? [],
       );
 
-      await prisma.$transaction(
-        departmentDcArr.map((v, idx) =>
-          prisma.emergencyVehicleValue.update({
-            where: { id: updatedValue.id },
-            data: { departments: v },
-            include: idx + 1 === departmentDcArr.length ? valueInclude : undefined,
-          }),
+      const updatedWithDepartment = getLastOfArray(
+        await prisma.$transaction(
+          departmentDcArr.map((v, idx) =>
+            prisma.emergencyVehicleValue.update({
+              where: { id: updatedValue.id },
+              data: { departments: v },
+              include: idx + 1 === departmentDcArr.length ? valueInclude : undefined,
+            }),
+          ),
         ),
       );
 
-      const updated = getLastOfArray(
+      const updatedWithDivision = getLastOfArray(
         await prisma.$transaction(
           divisionsDcArr.map((v, idx) =>
             prisma.emergencyVehicleValue.update({
@@ -469,7 +471,7 @@ export const typeHandlers = {
         ),
       );
 
-      return updated || updatedValue;
+      return updatedWithDivision || updatedWithDepartment || updatedValue;
     });
   },
   GENDER: async (options: HandlerOptions) => typeHandlers.GENERIC({ ...options, type: "GENDER" }),
