@@ -56,7 +56,7 @@ export function ManageOfficerFields({
           label={t("badgeNumber")}
           name="badgeNumber"
           onChange={(value) => {
-            isNaN(Number(value))
+            isNaN(parseInt(value))
               ? setFieldValue("badgeNumber", value)
               : setFieldValue("badgeNumber", parseInt(value));
           }}

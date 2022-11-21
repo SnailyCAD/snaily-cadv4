@@ -143,7 +143,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
                 autoFocus
                 name="badgeNumber"
                 onChange={(value) => {
-                  isNaN(Number(value))
+                  isNaN(parseInt(value))
                     ? setFieldValue("badgeNumber", value)
                     : setFieldValue("badgeNumber", parseInt(value));
                 }}
