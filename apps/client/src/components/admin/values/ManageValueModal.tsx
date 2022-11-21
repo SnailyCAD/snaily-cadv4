@@ -113,6 +113,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
       type: dlType ? dlType : values.type,
       whatPages: values.whatPages,
       departments: values.departments?.map((v) => v.value),
+      divisions: values.divisions?.map((v) => v.value),
       officerRankDepartments: values.officerRankDepartments?.map((v) => v.value),
     };
 

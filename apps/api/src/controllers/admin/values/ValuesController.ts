@@ -43,6 +43,14 @@ const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
   },
   CALL_TYPE: { name: "callTypeValue" },
   ADDRESS: { name: "addressValue" },
+  EMERGENCY_VEHICLE: {
+    name: "emergencyVehicleValue",
+    include: {
+      value: true,
+      departments: true,
+      divisions: true,
+    },
+  },
 };
 
 @Controller("/admin/values/:path")

@@ -79,7 +79,7 @@ export function SelectDeputyModal() {
             </FormField>
 
             <AsyncListSearchField<EmergencyVehicleValue>
-              label={t("vehicle")}
+              label={t("emergencyVehicle")}
               localValue={values.vehicleSearch}
               setValues={({ localValue, node }) => {
                 setValues({ ...values, vehicleId: "", vehicleSearch: localValue ?? "" });

@@ -416,6 +416,7 @@ export type ValueWithValueObj = (
   | DriversLicenseCategoryValue
   | QualificationValue
   | CallTypeValue
+  | EmergencyVehicleValue
 ) & {
   _count?: ValueCounts;
 };
