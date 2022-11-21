@@ -1,5 +1,5 @@
 import * as React from "react";
-import { CitizenListItem } from "components/citizen/citizen-list/CitizenListItem";
+import { CitizenListItem } from "components/citizen/citizen-list/citizen-list-item";
 import { TablePagination } from "components/shared/Table/TablePagination";
 import { useTranslations } from "next-intl";
 import type { GetCitizensData } from "@snailycad/types/api";
@@ -27,7 +27,7 @@ export function CitizenList({ citizens: data }: Props) {
     <div className="mt-5">
       <SearchArea
         search={{ search, setSearch }}
-        asyncTable={citizensList as any}
+        asyncTable={citizensList}
         totalCount={data.totalCount}
       />
 
@@ -38,14 +38,14 @@ export function CitizenList({ citizens: data }: Props) {
             : "grid grid-cols-1 sm:grid-cols-2 gap-3"
         }
       >
-        {citizensList.asyncTable.items.map((citizen) => (
+        {citizensList.items.map((citizen) => (
           <CitizenListItem key={citizen.id} citizen={citizen} />
         ))}
       </ul>
 
       {data.totalCount > MAX_CITIZENS_PER_PAGE ? (
         <TablePagination
-          isLoading={citizensList.asyncTable.pagination.isLoading}
+          isLoading={citizensList.pagination.isLoading}
           table={citizensList as any}
         />
       ) : null}

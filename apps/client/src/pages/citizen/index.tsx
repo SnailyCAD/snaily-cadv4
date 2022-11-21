@@ -13,7 +13,7 @@ import { requestAll } from "lib/utils";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useAreaOfPlay } from "hooks/global/useAreaOfPlay";
 import { Title } from "components/shared/Title";
-import { CitizenList } from "components/citizen/citizen-list/CitizenList";
+import { CitizenList } from "components/citizen/citizen-list/citizen-list";
 import type { GetCitizensData } from "@snailycad/types/api";
 
 const RegisterVehicleModal = dynamic(
