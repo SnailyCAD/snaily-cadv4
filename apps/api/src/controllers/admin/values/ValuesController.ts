@@ -47,8 +47,8 @@ const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
     name: "emergencyVehicleValue",
     include: {
       value: true,
-      departments: true,
-      divisions: true,
+      departments: { include: { value: true } },
+      divisions: { include: { value: true } },
     },
   },
 };

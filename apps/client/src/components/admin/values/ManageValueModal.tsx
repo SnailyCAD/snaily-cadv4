@@ -56,7 +56,7 @@ import {
 } from "lib/admin/values/utils";
 import { DivisionFields } from "./manage-modal/DivisionFields";
 import { AddressFields } from "./manage-modal/AddressFields";
-import { EmergencyVehicleFields } from "./manage-modal/EmergencyVehicleFields";
+import { EmergencyVehicleFields, useDefaultDivisions } from "./manage-modal/EmergencyVehicleFields";
 
 interface Props {
   type: ValueType;
@@ -99,6 +99,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
   const t = useTranslations(type);
   const common = useTranslations("Common");
   const defaultDepartments = useDefaultDepartments();
+  const defaultDivisions = useDefaultDivisions();
 
   const title = !value ? t("ADD") : t("EDIT");
   const footerTitle = !value ? t("ADD") : common("save");
@@ -216,7 +217,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     postal: value && isAddressValue(value) ? value.postal ?? "" : "",
     county: value && isAddressValue(value) ? value.county ?? "" : "",
 
-    divisions: value && isEmergencyVehicleValue(value) ? value.divisions : undefined,
+    divisions: value && isEmergencyVehicleValue(value) ? defaultDivisions(value) : undefined,
 
     showPicker: false,
     image: "",
