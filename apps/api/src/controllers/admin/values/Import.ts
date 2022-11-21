@@ -448,10 +448,11 @@ export const typeHandlers = {
       );
 
       await prisma.$transaction(
-        departmentDcArr.map((v) =>
+        departmentDcArr.map((v, idx) =>
           prisma.emergencyVehicleValue.update({
             where: { id: updatedValue.id },
             data: { departments: v },
+            include: idx + 1 === departmentDcArr.length ? valueInclude : undefined,
           }),
         ),
       );
