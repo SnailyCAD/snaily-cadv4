@@ -1,17 +1,17 @@
 import { SELECT_OFFICER_SCHEMA } from "@snailycad/schemas";
-import { Loader, Button } from "@snailycad/ui";
+import { Loader, Button, AsyncListSearchField, Item } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { useLeoState } from "state/leoState";
 import { useValues } from "context/ValuesContext";
-import { Officer, ShouldDoType } from "@snailycad/types";
+import { EmergencyVehicleValue, Officer, ShouldDoType } from "@snailycad/types";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { isUnitDisabled, makeUnitName } from "lib/utils";
 import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
@@ -31,15 +31,21 @@ export function SelectOfficerModal() {
   const onDutyCode = codes10.values.find((v) => v.shouldDo === ShouldDoType.SET_ON_DUTY);
   const { state, execute } = useFetch();
 
-  async function onSubmit(values: typeof INITIAL_VALUES) {
+  async function onSubmit(
+    values: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
     if (!onDutyCode) return;
 
-    const { json } = await execute<PutDispatchStatusByUnitId>({
-      path: `/dispatch/status/${values.officer}`,
+    const officerId = values.officer?.id;
+    const { json } = await execute<PutDispatchStatusByUnitId, typeof INITIAL_VALUES>({
+      path: `/dispatch/status/${officerId}`,
       method: "PUT",
       data: {
         status: includeStatuses ? values.status : onDutyCode.id,
+        vehicleId: values.vehicleId,
       },
+      helpers,
     });
 
     if (json.id) {
@@ -50,8 +56,11 @@ export function SelectOfficerModal() {
 
   const validate = handleValidate(SELECT_OFFICER_SCHEMA);
   const INITIAL_VALUES = {
-    officer: "",
+    officerId: "",
+    officer: null as Officer | null,
     status: null,
+    vehicleId: null as string | null,
+    vehicleSearch: "",
   };
 
   return (
@@ -62,7 +71,7 @@ export function SelectOfficerModal() {
       className="w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, errors, values, isValid }) => (
+        {({ handleChange, setValues, errors, values, isValid }) => (
           <Form>
             {includeStatuses ? (
               <p className="my-3 text-neutral-700 dark:text-gray-400">{error("noActiveOfficer")}</p>
@@ -70,17 +79,41 @@ export function SelectOfficerModal() {
 
             <FormField errorMessage={errors.officer} label={t("officer")}>
               <Select
-                value={values.officer}
+                value={
+                  values.officer
+                    ? `${generateCallsign(values.officer)} ${makeUnitName(values.officer)}`
+                    : null
+                }
                 name="officer"
                 onChange={handleChange}
                 isClearable
                 values={userOfficers.map((officer) => ({
                   label: `${generateCallsign(officer)} ${makeUnitName(officer)}`,
-                  value: officer.id,
+                  value: officer,
                   isDisabled: isUnitDisabled(officer),
                 }))}
               />
             </FormField>
+
+            <AsyncListSearchField<EmergencyVehicleValue>
+              errorMessage={errors.vehicleId}
+              isOptional
+              label={t("patrolVehicle")}
+              localValue={values.vehicleSearch}
+              setValues={({ localValue, node }) => {
+                const vehicleId = !node ? {} : { vehicleId: node.key as string };
+                const searchValue =
+                  typeof localValue === "undefined" ? {} : { vehicleSearch: localValue };
+
+                setValues({ ...values, ...vehicleId, ...searchValue });
+              }}
+              fetchOptions={{
+                apiPath: (query) => `/admin/values/emergency_vehicle/search?query=${query}`,
+                filterTextRequired: true,
+              }}
+            >
+              {(item) => <Item key={item.id}>{item.value.value}</Item>}
+            </AsyncListSearchField>
 
             {includeStatuses ? (
               <FormField label={t("status")}>

@@ -1,10 +1,10 @@
 import { SELECT_DEPUTY_SCHEMA } from "@snailycad/schemas";
-import { Loader, Button } from "@snailycad/ui";
+import { Loader, Button, AsyncListSearchField, Item } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
@@ -15,6 +15,7 @@ import { EmsFdDeputy, ShouldDoType } from "@snailycad/types";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { isUnitDisabled, makeUnitName } from "lib/utils";
 import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
+import type { EmergencyVehicleValue } from "@snailycad/types";
 
 export function SelectDeputyModal() {
   const { deputies, setActiveDeputy } = useEmsFdState();
@@ -28,16 +29,20 @@ export function SelectDeputyModal() {
   const { codes10 } = useValues();
   const onDutyCode = codes10.values.find((v) => v.shouldDo === ShouldDoType.SET_ON_DUTY);
 
-  async function onSubmit(values: typeof INITIAL_VALUES) {
+  async function onSubmit(
+    values: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
     if (!onDutyCode) return;
 
-    const { json } = await execute<PutDispatchStatusByUnitId>({
+    const { json } = await execute<PutDispatchStatusByUnitId, typeof INITIAL_VALUES>({
       path: `/dispatch/status/${values.deputy}`,
       method: "PUT",
       data: {
         ...values,
         status: onDutyCode.id,
       },
+      helpers,
     });
 
     if (json.id) {
@@ -49,6 +54,8 @@ export function SelectDeputyModal() {
   const validate = handleValidate(SELECT_DEPUTY_SCHEMA);
   const INITIAL_VALUES = {
     deputy: "",
+    vehicleId: null as string | null,
+    vehicleSearch: "",
   };
 
   return (
@@ -59,7 +66,7 @@ export function SelectDeputyModal() {
       className="w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, errors, values, isValid }) => (
+        {({ handleChange, setValues, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.deputy} label={t("deputy")}>
               <Select
@@ -74,6 +81,26 @@ export function SelectDeputyModal() {
                 }))}
               />
             </FormField>
+
+            <AsyncListSearchField<EmergencyVehicleValue>
+              errorMessage={errors.vehicleId}
+              isOptional
+              label={t("emergencyVehicle")}
+              localValue={values.vehicleSearch}
+              setValues={({ localValue, node }) => {
+                const vehicleId = !node ? {} : { vehicleId: node.key as string };
+                const searchValue =
+                  typeof localValue === "undefined" ? {} : { vehicleSearch: localValue };
+
+                setValues({ ...values, ...vehicleId, ...searchValue });
+              }}
+              fetchOptions={{
+                apiPath: (query) => `/admin/values/emergency_vehicle/search?query=${query}`,
+                filterTextRequired: true,
+              }}
+            >
+              {(item) => <Item key={item.id}>{item.value.value}</Item>}
+            </AsyncListSearchField>
 
             <footer className="flex justify-end mt-5">
               <Button

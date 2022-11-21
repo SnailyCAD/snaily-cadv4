@@ -24,6 +24,7 @@ import {
   QUALIFICATION_ARR,
   CALL_TYPE_ARR,
   ADDRESS_SCHEMA_ARR,
+  EMERGENCY_VEHICLE_ARR,
 } from "@snailycad/schemas";
 import {
   type DepartmentType,
@@ -416,6 +417,62 @@ export const typeHandlers = {
         });
       }),
     );
+  },
+  EMERGENCY_VEHICLE: async ({ body, id }: HandlerOptions) => {
+    const data = validateSchema(EMERGENCY_VEHICLE_ARR, body);
+
+    const valueInclude = {
+      value: true,
+      divisions: { include: { value: true } },
+      departments: { include: { value: true } },
+    };
+
+    return handlePromiseAll(data, async (item) => {
+      const updatedValue = await prisma.emergencyVehicleValue.upsert({
+        where: { id: String(id) },
+        ...makePrismaData(ValueType.EMERGENCY_VEHICLE, {
+          value: item.value,
+          isDisabled: item.isDisabled,
+        }),
+        include: valueInclude,
+      });
+
+      const departmentDcArr = manyToManyHelper(
+        updatedValue.departments.map((v) => v.id),
+        item.departments ?? [],
+      );
+
+      const divisionsDcArr = manyToManyHelper(
+        updatedValue.divisions.map((v) => v.id),
+        item.divisions ?? [],
+      );
+
+      const updatedWithDepartment = getLastOfArray(
+        await prisma.$transaction(
+          departmentDcArr.map((v, idx) =>
+            prisma.emergencyVehicleValue.update({
+              where: { id: updatedValue.id },
+              data: { departments: v },
+              include: idx + 1 === departmentDcArr.length ? valueInclude : undefined,
+            }),
+          ),
+        ),
+      );
+
+      const updatedWithDivision = getLastOfArray(
+        await prisma.$transaction(
+          divisionsDcArr.map((v, idx) =>
+            prisma.emergencyVehicleValue.update({
+              where: { id: updatedValue.id },
+              data: { divisions: v },
+              include: idx + 1 === divisionsDcArr.length ? valueInclude : undefined,
+            }),
+          ),
+        ),
+      );
+
+      return updatedWithDivision || updatedWithDepartment || updatedValue;
+    });
   },
   GENDER: async (options: HandlerOptions) => typeHandlers.GENERIC({ ...options, type: "GENDER" }),
   ETHNICITY: async (options: HandlerOptions) =>

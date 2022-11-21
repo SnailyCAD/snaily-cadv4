@@ -26,7 +26,8 @@ export type ValuesSelect =
   | ({ name: "divisionValue" } & Prisma.DivisionValueFindManyArgs)
   | ({ name: "qualificationValue" } & Prisma.QualificationValueFindManyArgs)
   | ({ name: "callTypeValue" } & Prisma.CallTypeValueFindManyArgs)
-  | ({ name: "addressValue" } & Prisma.AddressValueFindManyArgs);
+  | ({ name: "addressValue" } & Prisma.AddressValueFindManyArgs)
+  | ({ name: "emergencyVehicleValue" } & Prisma.EmergencyVehicleValueFindManyArgs);
 
 export const permissionsForRouteType: Record<ValueType, Permissions[]> = {
   ADDRESS: [Permissions.ManageValueAddress],
@@ -37,6 +38,7 @@ export const permissionsForRouteType: Record<ValueType, Permissions[]> = {
   DEPARTMENT: [Permissions.ManageValueDepartment],
   DIVISION: [Permissions.ManageValueDivision],
   DRIVERSLICENSE_CATEGORY: [Permissions.ManageValueDLCategory],
+  EMERGENCY_VEHICLE: [Permissions.ManageValueEmergencyVehicle],
   ETHNICITY: [Permissions.ManageValueEthnicity],
   GENDER: [Permissions.ManageValueGender],
   IMPOUND_LOT: [Permissions.ManageValueImpoundLot],

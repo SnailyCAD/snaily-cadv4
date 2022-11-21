@@ -130,6 +130,7 @@ export const ValueType = {
   QUALIFICATION: "QUALIFICATION",
   CALL_TYPE: "CALL_TYPE",
   ADDRESS: "ADDRESS",
+  EMERGENCY_VEHICLE: "EMERGENCY_VEHICLE",
 } as const;
 
 export type ValueType = typeof ValueType[keyof typeof ValueType];

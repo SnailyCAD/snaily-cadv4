@@ -53,6 +53,7 @@ function _ActiveCalls({ initialData }: Props) {
     search,
     disabled: !CALLS_911,
     fetchOptions: {
+      requireFilterText: true,
       path: "/911-calls",
       onResponse: (json: Get911CallsData) => ({
         data: json.calls,

@@ -18,6 +18,7 @@
     "declareDead": "Declare dead",
     "declareAlive": "Declare alive",
     "myDeputyLogs": "My deputy logs",
+    "emergencyVehicle": "Emergency Vehicle",
     "alert_deleteDeputy": "Are you sure you want to delete <span>{deputy}</span>? This action cannot be undone."
   }
 }

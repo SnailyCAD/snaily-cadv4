@@ -11,8 +11,8 @@ import { StatusesArea } from "components/shared/StatusesArea";
 import { useEmsFdState } from "state/emsFdState";
 import { useDispatchState } from "state/dispatch/dispatchState";
 import { requestAll } from "lib/utils";
-import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
-import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
+import { ActiveDeputies } from "components/dispatch/active-deputies";
+import { ActiveOfficers } from "components/dispatch/active-officers";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { Title } from "components/shared/Title";
 import { UtilityPanel } from "components/shared/UtilityPanel";
@@ -43,7 +43,7 @@ const NotepadModal = dynamic(async () => {
 });
 
 const SelectDeputyModal = dynamic(async () => {
-  return (await import("components/ems-fd/modals/SelectDeputy")).SelectDeputyModal;
+  return (await import("components/ems-fd/modals/select-deputy-modal")).SelectDeputyModal;
 });
 
 const CreateMedicalRecordModal = dynamic(async () => {
