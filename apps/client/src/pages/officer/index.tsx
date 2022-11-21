@@ -13,7 +13,7 @@ import { useDispatchState } from "state/dispatch/dispatchState";
 import { ModalButtons } from "components/leo/ModalButtons";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { requestAll } from "lib/utils";
-import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
+import { ActiveOfficers } from "components/dispatch/active-officers";
 import { ActiveDeputies } from "components/dispatch/active-deputies";
 import { ActiveWarrants } from "components/leo/active-warrants/ActiveWarrants";
 import { useSignal100 } from "hooks/shared/useSignal100";

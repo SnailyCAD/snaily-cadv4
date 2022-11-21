@@ -9,7 +9,7 @@ import { useDispatchState } from "state/dispatch/dispatchState";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { DispatchModalButtons } from "components/dispatch/ModalButtons";
 import { useTranslations } from "use-intl";
-import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
+import { ActiveOfficers } from "components/dispatch/active-officers";
 import { ActiveDeputies } from "components/dispatch/active-deputies";
 import { requestAll } from "lib/utils";
 import { useSignal100 } from "hooks/shared/useSignal100";

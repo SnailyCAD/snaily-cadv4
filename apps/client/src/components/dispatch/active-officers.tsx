@@ -152,6 +152,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
                       {officer.status?.value?.value}
                     </span>
                   ),
+                  vehicle: officer.activeVehicle?.value.value ?? common("none"),
                   incident: (
                     <ActiveIncidentColumn isDispatch={isDispatch} incident={activeIncident} />
                   ),
@@ -176,6 +177,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
               DIVISIONS ? { header: t("division"), accessorKey: "division" } : null,
               { header: t("rank"), accessorKey: "rank" },
               { header: t("status"), accessorKey: "status" },
+              { header: t("patrolVehicle"), accessorKey: "vehicle" },
               ACTIVE_INCIDENTS ? { header: t("incident"), accessorKey: "incident" } : null,
               { header: t("activeCall"), accessorKey: "activeCall" },
               RADIO_CHANNEL_MANAGEMENT

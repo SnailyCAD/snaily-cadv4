@@ -12,7 +12,7 @@ import { useEmsFdState } from "state/emsFdState";
 import { useDispatchState } from "state/dispatch/dispatchState";
 import { requestAll } from "lib/utils";
 import { ActiveDeputies } from "components/dispatch/active-deputies";
-import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
+import { ActiveOfficers } from "components/dispatch/active-officers";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { Title } from "components/shared/Title";
 import { UtilityPanel } from "components/shared/UtilityPanel";
