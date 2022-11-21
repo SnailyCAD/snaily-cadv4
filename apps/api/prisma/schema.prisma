@@ -640,8 +640,9 @@ model EmergencyVehicleValue {
   departments DepartmentValue[]
   divisions   DivisionValue[]
 
-  Officers      Officer[]     @relation("activeEmergencyVehicle_leo")
-  EmsFdDeputies EmsFdDeputy[] @relation("activeEmergencyVehicle_emsfd")
+  Officers        Officer[]         @relation("activeEmergencyVehicle_leo")
+  EmsFdDeputies   EmsFdDeputy[]     @relation("activeEmergencyVehicle_emsfd")
+  CombinedLeoUnit CombinedLeoUnit[] @relation("activeEmergencyVehicle_combined_unit")
 }
 
 model DriversLicenseCategoryValue {
@@ -1007,6 +1008,8 @@ model CombinedLeoUnit {
   activeIncident            LeoIncident?             @relation("combinedActiveIncident", fields: [activeIncidentId], references: [id])
   activeIncidentId          String?
   lastStatusChangeTimestamp DateTime?
+  activeVehicle             EmergencyVehicleValue?   @relation("activeEmergencyVehicle_combined_unit", fields: [activeVehicleId], references: [id], onDelete: SetNull)
+  activeVehicleId           String?
   AssignedUnit              AssignedUnit[]
   IncidentInvolvedUnit      IncidentInvolvedUnit[]
   AssignedWarrantOfficer    AssignedWarrantOfficer[]

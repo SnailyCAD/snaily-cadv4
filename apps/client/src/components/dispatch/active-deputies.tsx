@@ -134,6 +134,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
                       {deputy.status?.value?.value}
                     </span>
                   ),
+                  vehicle: deputy.activeVehicle?.value.value ?? common("none"),
                   incident: (
                     <ActiveIncidentColumn isDispatch={isDispatch} incident={activeIncident} />
                   ),
@@ -158,6 +159,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
               DIVISIONS ? { header: t("Leo.division"), accessorKey: "division" } : null,
               { header: t("Leo.rank"), accessorKey: "rank" },
               { header: t("Leo.status"), accessorKey: "status" },
+              { header: t("Ems.emergencyVehicle"), accessorKey: "vehicle" },
               ACTIVE_INCIDENTS ? { header: t("Leo.incident"), accessorKey: "incident" } : null,
               { header: t("Leo.activeCall"), accessorKey: "activeCall" },
               RADIO_CHANNEL_MANAGEMENT

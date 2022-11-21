@@ -10,7 +10,7 @@ import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { DispatchModalButtons } from "components/dispatch/ModalButtons";
 import { useTranslations } from "use-intl";
 import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
-import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
+import { ActiveDeputies } from "components/dispatch/active-deputies";
 import { requestAll } from "lib/utils";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { usePanicButton } from "hooks/shared/usePanicButton";

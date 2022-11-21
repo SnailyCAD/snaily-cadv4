@@ -61,6 +61,7 @@ export class ValuesController {
   @Description("Get all the values by the specified types")
   async getValueByPath(
     @PathParams("path") path: (string & {}) | "all",
+    @QueryParams() queryParams: any,
     @QueryParams("paths") rawPaths: string,
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query = "",
@@ -88,6 +89,7 @@ export class ValuesController {
         const where = this.createSearchWhereObject({
           path,
           query,
+          queryParams,
           showDisabled: true,
         });
 
@@ -162,7 +164,11 @@ export class ValuesController {
   }
 
   @Get("/search")
-  async searchValues(@PathParams("path") path: string, @QueryParams("query") query: string) {
+  async searchValues(
+    @PathParams("path") path: string,
+    @QueryParams("query") query: string,
+    @QueryParams() queryParams: any,
+  ) {
     const type = getTypeFromPath(path);
     const data = GET_VALUES[type];
 
@@ -174,6 +180,7 @@ export class ValuesController {
         where: this.createSearchWhereObject({
           path,
           query,
+          queryParams,
           showDisabled: false,
         }),
         take: 35,
@@ -367,10 +374,12 @@ export class ValuesController {
     path,
     query,
     showDisabled = true,
+    queryParams,
   }: {
     path: string;
     query: string;
     showDisabled?: boolean;
+    queryParams: any;
   }) {
     const type = getTypeFromPath(path);
     const data = GET_VALUES[type];
@@ -395,6 +404,27 @@ export class ValuesController {
           value: { contains: query, mode: "insensitive" },
         },
       };
+
+      if (ValueType.EMERGENCY_VEHICLE === type) {
+        const divisionIds = String(queryParams.divisions).split(",");
+
+        const whereAND = [
+          { value: { isDisabled: showDisabled ? undefined : false } },
+          { value: { value: { contains: query, mode: "insensitive" } } },
+        ] as any[];
+
+        if (queryParams.department) {
+          whereAND.push({ departments: { some: { id: queryParams.department } } });
+        }
+
+        if (queryParams.divisions) {
+          whereAND.push(...divisionIds.map((id) => ({ divisions: { some: { id } } })));
+        }
+
+        where = {
+          AND: whereAND,
+        };
+      }
 
       if (ValueType.ADDRESS === type) {
         where = {

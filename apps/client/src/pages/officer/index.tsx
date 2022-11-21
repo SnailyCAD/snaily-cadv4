@@ -14,7 +14,7 @@ import { ModalButtons } from "components/leo/ModalButtons";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { requestAll } from "lib/utils";
 import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
-import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
+import { ActiveDeputies } from "components/dispatch/active-deputies";
 import { ActiveWarrants } from "components/leo/active-warrants/ActiveWarrants";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { usePanicButton } from "hooks/shared/usePanicButton";
@@ -61,7 +61,7 @@ const Modals = {
     return (await import("components/shared/NotepadModal")).NotepadModal;
   }),
   SelectOfficerModal: dynamic(async () => {
-    return (await import("components/leo/modals/SelectOfficerModal")).SelectOfficerModal;
+    return (await import("components/leo/modals/select-officer-modal")).SelectOfficerModal;
   }),
   ManageRecordModal: dynamic(async () => {
     return (await import("components/leo/modals/ManageRecordModal")).ManageRecordModal;

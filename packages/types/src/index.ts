@@ -262,6 +262,7 @@ export type Officer = Prisma.Officer & {
   rank: Prisma.Value | null;
   activeIncident?: Prisma.LeoIncident | null;
   callsigns?: IndividualDivisionCallsign[];
+  activeVehicle: EmergencyVehicleValue | null;
 };
 
 export type IndividualDivisionCallsign = Prisma.IndividualDivisionCallsign;
@@ -380,6 +381,7 @@ export type EmsFdDeputy = Prisma.EmsFdDeputy & {
   citizen: Officer["citizen"];
   user: Officer["user"];
   whitelistStatus?: Officer["whitelistStatus"];
+  activeVehicle: EmergencyVehicleValue | null;
 };
 
 export type TruckLog = Prisma.TruckLog & {

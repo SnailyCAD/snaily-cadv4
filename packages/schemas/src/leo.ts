@@ -52,10 +52,11 @@ export const UPDATE_UNIT_CALLSIGN_SCHEMA = z.object({
 export const UPDATE_OFFICER_STATUS_SCHEMA = z.object({
   status: z.string().min(2).max(255),
   suspended: z.boolean().optional(),
+  vehicleId: z.string().nullable().optional(),
 });
 
 export const SELECT_OFFICER_SCHEMA = z.object({
-  officer: z.string().min(2).max(255),
+  officer: z.object({ id: z.string().min(2).max(255) }),
 });
 
 export const LEO_INCIDENT_SCHEMA = z.object({

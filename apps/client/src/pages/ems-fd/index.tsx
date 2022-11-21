@@ -11,7 +11,7 @@ import { StatusesArea } from "components/shared/StatusesArea";
 import { useEmsFdState } from "state/emsFdState";
 import { useDispatchState } from "state/dispatch/dispatchState";
 import { requestAll } from "lib/utils";
-import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
+import { ActiveDeputies } from "components/dispatch/active-deputies";
 import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { Title } from "components/shared/Title";

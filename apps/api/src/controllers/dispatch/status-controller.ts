@@ -4,11 +4,14 @@ import {
   MiscCadSettings,
   cad,
   Officer,
+  CombinedLeoUnit,
+  EmsFdDeputy,
   StatusValue,
   WhitelistStatus,
   CadFeature,
   DiscordWebhookType,
   Rank,
+  Feature,
 } from "@prisma/client";
 import { UPDATE_OFFICER_STATUS_SCHEMA } from "@snailycad/schemas";
 import { Req, UseBeforeEach } from "@tsed/common";
@@ -28,13 +31,15 @@ import { findUnit } from "lib/leo/findUnit";
 import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 import type * as APITypes from "@snailycad/types/api";
-import type { EmsFdDeputy, OfficerLog, CombinedLeoUnit } from "@snailycad/types";
 import {
   createPanicButtonEmbed,
   createWebhookData,
   HandlePanicButtonPressedOptions,
 } from "lib/dispatch/webhooks";
 import { createCallEventOnStatusChange } from "lib/dispatch/createCallEventOnStatusChange";
+import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
+import { isUnitOfficer } from "@snailycad/utils";
+import { isFeatureEnabled } from "lib/cad";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -76,6 +81,12 @@ export class StatusController {
           fallback: (user) => user.isDispatch,
         }));
 
+    const isDivisionsEnabled = isFeatureEnabled({
+      defaultReturn: true,
+      feature: Feature.DIVISIONS,
+      features: cad.features ?? [],
+    });
+
     const { type, unit } = await findUnit(unitId, { userId: isDispatch ? undefined : user.id });
 
     if (!unit) {
@@ -84,6 +95,39 @@ export class StatusController {
 
     if ("suspended" in unit && unit.suspended) {
       throw new BadRequest("unitSuspended");
+    }
+
+    const code = await prisma.statusValue.findFirst({
+      where: { id: bodyStatusId },
+      include: { value: true },
+    });
+
+    let activeEmergencyVehicleId: string | undefined;
+    if (data.vehicleId && code?.shouldDo === ShouldDoType.SET_ON_DUTY) {
+      const divisionIds = isDivisionsEnabled
+        ? // @ts-expect-error type mismatch
+          isUnitOfficer(unit)
+          ? unit.divisions.map((v) => v.id)
+          : [(unit as EmsFdDeputy).divisionId ?? undefined]
+        : [];
+
+      console.log({ divisionIds });
+
+      const _emergencyVehicle = await prisma.emergencyVehicleValue.findFirst({
+        where: {
+          id: data.vehicleId,
+          AND: [
+            ...divisionIds.map((id) => ({ divisions: { some: { id } } })),
+            unit.departmentId ? { departments: { some: { id: unit.departmentId } } } : {},
+          ],
+        },
+      });
+
+      if (!_emergencyVehicle) {
+        throw new ExtendedNotFound({ vehicleId: "vehicleNotFound" });
+      }
+
+      activeEmergencyVehicleId = _emergencyVehicle.id;
     }
 
     /**
@@ -101,11 +145,6 @@ export class StatusController {
         throw new BadRequest("officerIsCombined");
       }
     }
-
-    const code = await prisma.statusValue.findFirst({
-      where: { id: bodyStatusId },
-      include: { value: true },
-    });
 
     if (!code) {
       throw new NotFound("statusNotFound");
@@ -167,7 +206,7 @@ export class StatusController {
       }
     }
 
-    let updatedUnit: EmsFdDeputy | OfficerLog | CombinedLeoUnit | null = null;
+    let updatedUnit: EmsFdDeputy | Officer | CombinedLeoUnit | null = null;
     const shouldFindIncremental = code.shouldDo === ShouldDoType.SET_ON_DUTY && !unit.incremental;
     const statusId = code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id;
 
@@ -178,19 +217,33 @@ export class StatusController {
     if (type === "leo") {
       updatedUnit = await prisma.officer.update({
         where: { id: unit.id },
-        data: { statusId, incremental, lastStatusChangeTimestamp: new Date() },
+        data: {
+          activeVehicleId: activeEmergencyVehicleId,
+          statusId,
+          incremental,
+          lastStatusChangeTimestamp: new Date(),
+        },
         include: leoProperties,
       });
     } else if (type === "ems-fd") {
       updatedUnit = await prisma.emsFdDeputy.update({
         where: { id: unit.id },
-        data: { statusId, incremental, lastStatusChangeTimestamp: new Date() },
+        data: {
+          activeVehicleId: activeEmergencyVehicleId,
+          statusId,
+          incremental,
+          lastStatusChangeTimestamp: new Date(),
+        },
         include: unitProperties,
       });
     } else {
       updatedUnit = await prisma.combinedLeoUnit.update({
         where: { id: unit.id },
-        data: { statusId, lastStatusChangeTimestamp: new Date() },
+        data: {
+          activeVehicleId: activeEmergencyVehicleId,
+          statusId,
+          lastStatusChangeTimestamp: new Date(),
+        },
         include: combinedUnitProperties,
       });
     }
@@ -230,6 +283,7 @@ export class StatusController {
     }
 
     try {
+      // @ts-expect-error type mismatch. the types are correct.
       const data = createWebhookData(cad, updatedUnit);
       await sendDiscordWebhook({ type: DiscordWebhookType.UNIT_STATUS, data });
     } catch (error) {
@@ -242,6 +296,7 @@ export class StatusController {
       await this.socket.emitUpdateDeputyStatus();
     }
 
+    // @ts-expect-error type mismatch. the types are correct.
     return updatedUnit;
   }
 
