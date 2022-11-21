@@ -4,7 +4,7 @@ import { Button } from "@snailycad/ui";
 import { Table, useTableState } from "components/shared/Table";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
-import { NameSearchResult, useNameSearch } from "state/search/nameSearchState";
+import { NameSearchResult, useNameSearch } from "state/search/name-search-state";
 import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicleSearchState";
 import { useWeaponSearch, WeaponSearchResult } from "state/search/weaponSearchState";
 import { ModalIds } from "types/ModalIds";
@@ -45,7 +45,7 @@ export function CustomFieldResults({ results }: Props) {
 
 function CitizenResults({ results }: any) {
   const { openModal, closeModal } = useModal();
-  const { setCurrentResult } = useNameSearch();
+  const setCurrentResult = useNameSearch((state) => state.setCurrentResult);
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const tableState = useTableState();

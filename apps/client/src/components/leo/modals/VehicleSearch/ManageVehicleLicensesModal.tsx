@@ -12,15 +12,22 @@ import { ModalIds } from "types/ModalIds";
 import { ValueLicenseType } from "@snailycad/types";
 import { useVehicleSearch } from "state/search/vehicleSearchState";
 import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";
-import { useNameSearch } from "state/search/nameSearchState";
+import { useNameSearch } from "state/search/name-search-state";
 import type { PutSearchActionsVehicleLicensesData } from "@snailycad/types/api";
+import shallow from "zustand/shallow";
 
 export function ManageVehicleLicensesModal() {
   const common = useTranslations("Common");
   const { isOpen, closeModal } = useModal();
   const { license } = useValues();
   const { currentResult, setCurrentResult } = useVehicleSearch();
-  const nameSearchState = useNameSearch();
+  const nameSearchState = useNameSearch(
+    (state) => ({
+      currentResult: state.currentResult,
+      setCurrentResult: state.setCurrentResult,
+    }),
+    shallow,
+  );
   const { state, execute } = useFetch();
 
   const t = useTranslations();

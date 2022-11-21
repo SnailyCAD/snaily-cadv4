@@ -9,7 +9,7 @@ import { useTranslations } from "use-intl";
 import { CustomFieldCategory, Citizen, BoloType } from "@snailycad/types";
 import format from "date-fns/format";
 import { NameSearchTabsContainer } from "./tabs/TabsContainer";
-import { NameSearchResult, useNameSearch } from "state/search/nameSearchState";
+import { NameSearchResult, useNameSearch } from "state/search/name-search-state";
 import { useRouter } from "next/router";
 import { ArrowLeft, PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
@@ -30,6 +30,7 @@ import Image from "next/image";
 import { NameSearchBasicInformation } from "./sections/basic-information";
 import { NameSearchLicensesSection } from "./sections/licenses-section";
 import { NameSearchFooter } from "./sections/footer";
+import shallow from "zustand/shallow";
 
 const VehicleSearchModal = dynamic(
   async () => (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal,
@@ -72,7 +73,15 @@ export function NameSearchModal() {
 
   const { openModal } = useModal();
   const isLeo = router.pathname === "/officer";
-  const { results, currentResult, setCurrentResult, setResults } = useNameSearch();
+  const { results, currentResult, setCurrentResult, setResults } = useNameSearch(
+    (state) => ({
+      results: state.results,
+      currentResult: state.currentResult,
+      setCurrentResult: state.setCurrentResult,
+      setResults: state.setResults,
+    }),
+    shallow,
+  );
 
   const payloadCitizen = getPayload<Citizen>(ModalIds.NameSearch);
 
@@ -165,7 +174,14 @@ export function NameSearchModal() {
           <Form>
             <AsyncListSearchField<NameSearchResult>
               autoFocus
+              allowsCustomValue
               setValues={({ localValue, node }) => {
+                // when the menu closes, it will set the `searchValue` to `""`. We want to keep the value of the search
+                if (!node && !localValue) {
+                  setValues({ ...values, name: values.searchValue });
+                  return;
+                }
+
                 const searchValue =
                   typeof localValue !== "undefined" ? { searchValue: localValue } : {};
                 const name = node ? { name: node.key as string } : {};

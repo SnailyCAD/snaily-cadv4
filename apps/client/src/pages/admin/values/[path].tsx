@@ -296,7 +296,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
   };
 
   const paths = pathsRecord[path];
-  const pathsStr = paths ? `?paths=${paths}` : "";
+  const pathsStr = paths ? `?paths=${paths}&includeAll=false` : "?includeAll=false";
 
   const user = await getSessionUser(req);
   const [values] = await requestAll(req, [[`/admin/values/${path}${pathsStr}`, []]]);

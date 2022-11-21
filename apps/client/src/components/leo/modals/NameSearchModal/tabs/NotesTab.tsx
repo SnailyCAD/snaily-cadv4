@@ -6,7 +6,7 @@ import { Table, useTableState } from "components/shared/Table";
 import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
-import type { NameSearchResult } from "state/search/nameSearchState";
+import type { NameSearchResult } from "state/search/name-search-state";
 import type { VehicleSearchResult } from "state/search/vehicleSearchState";
 import { ModalIds } from "types/ModalIds";
 import { ManageNoteModal } from "../ManageNoteModal";

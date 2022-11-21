@@ -7,7 +7,7 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import type { VehicleSearchResult } from "state/search/vehicleSearchState";
-import type { NameSearchResult } from "state/search/nameSearchState";
+import type { NameSearchResult } from "state/search/name-search-state";
 import type { PutNotesData, PostNotesData } from "@snailycad/types/api";
 
 interface Props {

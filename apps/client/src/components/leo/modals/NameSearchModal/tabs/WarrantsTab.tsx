@@ -5,7 +5,7 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
-import { useNameSearch } from "state/search/nameSearchState";
+import { useNameSearch } from "state/search/name-search-state";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Table, useTableState } from "components/shared/Table";
@@ -15,6 +15,7 @@ import { TabsContent } from "components/shared/TabList";
 import type { DeleteRecordsByIdData, PutWarrantsData } from "@snailycad/types/api";
 import { Permissions, usePermission } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import shallow from "zustand/shallow";
 
 const values = [
   { label: "Inactive", value: WarrantStatus.INACTIVE },
@@ -27,7 +28,13 @@ export function NameSearchWarrantsTab() {
   const t = useTranslations();
   const { generateCallsign } = useGenerateCallsign();
   const { state, execute } = useFetch();
-  const { currentResult, setCurrentResult } = useNameSearch();
+  const { currentResult, setCurrentResult } = useNameSearch(
+    (state) => ({
+      currentResult: state.currentResult,
+      setCurrentResult: state.setCurrentResult,
+    }),
+    shallow,
+  );
   const tableState = useTableState();
   const { WARRANT_STATUS_APPROVAL } = useFeatureEnabled();
 

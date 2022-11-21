@@ -1,7 +1,7 @@
 import { Button } from "@snailycad/ui";
 import { CitizenLicenses } from "components/citizen/licenses/LicensesCard";
 import { useModal } from "state/modalState";
-import { useNameSearch } from "state/search/nameSearchState";
+import { useNameSearch } from "state/search/name-search-state";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 
@@ -10,7 +10,7 @@ interface Props {
 }
 
 export function NameSearchLicensesSection(props: Props) {
-  const { currentResult } = useNameSearch();
+  const currentResult = useNameSearch((state) => state.currentResult);
   const t = useTranslations();
   const { openModal } = useModal();
 

@@ -3,11 +3,11 @@ import { Infofield } from "components/shared/Infofield";
 import { useAuth } from "context/AuthContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { calculateAge, formatCitizenAddress } from "lib/utils";
-import { useNameSearch } from "state/search/nameSearchState";
+import { useNameSearch } from "state/search/name-search-state";
 import { useTranslations } from "use-intl";
 
 export function NameSearchBasicInformation() {
-  const { currentResult } = useNameSearch();
+  const currentResult = useNameSearch((state) => state.currentResult);
   const t = useTranslations();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
   const { cad } = useAuth();

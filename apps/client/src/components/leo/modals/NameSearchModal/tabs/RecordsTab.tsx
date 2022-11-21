@@ -8,7 +8,7 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
-import { useNameSearch } from "state/search/nameSearchState";
+import { useNameSearch } from "state/search/name-search-state";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Table, useTableState } from "components/shared/Table";
@@ -19,12 +19,19 @@ import { Permissions, usePermission } from "hooks/usePermission";
 import { ViolationsColumn } from "components/leo/ViolationsColumn";
 import type { DeleteRecordsByIdData } from "@snailycad/types/api";
 import { Status } from "components/shared/Status";
+import shallow from "zustand/shallow";
 
 export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitizen?: boolean }) {
   const t = useTranslations();
   const { state, execute } = useFetch();
   const { getPayload, closeModal } = useModal();
-  const { currentResult, setCurrentResult } = useNameSearch();
+  const { currentResult, setCurrentResult } = useNameSearch(
+    (state) => ({
+      currentResult: state.currentResult,
+      setCurrentResult: state.setCurrentResult,
+    }),
+    shallow,
+  );
 
   const tempItem = getPayload<Record>(ModalIds.AlertDeleteRecord);
   const tempEditRecord = getPayload<Record>(ModalIds.ManageRecord);
@@ -142,7 +149,7 @@ export function RecordsTable({
   const isCitizen = router.pathname.startsWith("/citizen") && !isCitizenCreation;
 
   const { generateCallsign } = useGenerateCallsign();
-  const { currentResult } = useNameSearch();
+  const currentResult = useNameSearch((state) => state.currentResult);
   const tableState = useTableState();
   const currency = common("currency");
 

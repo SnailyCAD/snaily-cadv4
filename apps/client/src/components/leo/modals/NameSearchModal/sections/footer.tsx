@@ -2,7 +2,7 @@ import { Button, Loader } from "@snailycad/ui";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { classNames } from "lib/classNames";
 import { useModal } from "state/modalState";
-import { useNameSearch } from "state/search/nameSearchState";
+import { useNameSearch } from "state/search/name-search-state";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { NameSearchFooterActions } from "./footer-actions";
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export function NameSearchFooter(props: Props) {
-  const { currentResult } = useNameSearch();
+  const currentResult = useNameSearch((state) => state.currentResult);
   const { CREATE_USER_CITIZEN_LEO } = useFeatureEnabled();
   const t = useTranslations();
   const { closeModal } = useModal();

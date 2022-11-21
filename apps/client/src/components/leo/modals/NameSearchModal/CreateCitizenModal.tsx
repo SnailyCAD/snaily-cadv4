@@ -6,7 +6,7 @@ import { ModalIds } from "types/ModalIds";
 import { ManageCitizenForm } from "components/citizen/ManageCitizenForm";
 import { Loader } from "@snailycad/ui";
 import type { SelectValue } from "components/form/Select";
-import { useNameSearch } from "state/search/nameSearchState";
+import { useNameSearch } from "state/search/name-search-state";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import { ValueType } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
@@ -14,12 +14,19 @@ import type {
   PostCitizenImageByIdData,
   PostSearchActionsCreateCitizen,
 } from "@snailycad/types/api";
+import shallow from "zustand/shallow";
 
 export function CreateCitizenModal() {
   const { isOpen, closeModal } = useModal();
   const t = useTranslations("Leo");
   const { state, execute } = useFetch();
-  const { setCurrentResult, setResults } = useNameSearch();
+  const { setCurrentResult, setResults } = useNameSearch(
+    (state) => ({
+      setCurrentResult: state.setCurrentResult,
+      setResults: state.setResults,
+    }),
+    shallow,
+  );
   const { CREATE_USER_CITIZEN_LEO } = useFeatureEnabled();
   const { isLoading } = useLoadValuesClientSide({
     enabled: CREATE_USER_CITIZEN_LEO,

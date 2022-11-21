@@ -2,7 +2,7 @@ import { Table, useTableState } from "components/shared/Table";
 import { useTranslations } from "use-intl";
 import { Button } from "@snailycad/ui";
 import { useModal } from "state/modalState";
-import { useNameSearch } from "state/search/nameSearchState";
+import { useNameSearch } from "state/search/name-search-state";
 import { ModalIds } from "types/ModalIds";
 
 import { TabsContent } from "components/shared/TabList";
@@ -12,7 +12,7 @@ import { useWeaponSearch } from "state/search/weaponSearchState";
 export function NameSearchWeaponsTab() {
   const t = useTranslations();
   const common = useTranslations("Common");
-  const { currentResult } = useNameSearch();
+  const currentResult = useNameSearch((state) => state.currentResult);
   const { openModal } = useModal();
   const { setCurrentResult: setWeaponResult } = useWeaponSearch();
   const tableState = useTableState();

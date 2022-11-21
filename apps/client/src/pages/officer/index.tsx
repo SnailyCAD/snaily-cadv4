@@ -23,7 +23,7 @@ import { UtilityPanel } from "components/shared/UtilityPanel";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
-import { useNameSearch } from "state/search/nameSearchState";
+import { useNameSearch } from "state/search/name-search-state";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useTones } from "hooks/global/useTones";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
@@ -39,6 +39,7 @@ import { CreateWarrantModal } from "components/leo/modals/CreateWarrantModal";
 import { useCall911State } from "state/dispatch/call911State";
 import { DndProvider } from "components/shared/dnd/DndProvider";
 import { usePermission } from "hooks/usePermission";
+import shallow from "zustand/shallow";
 
 const Modals = {
   CreateWarrantModal: dynamic(async () => {
@@ -118,7 +119,13 @@ export default function OfficerDashboard({
     (u) => u.rank !== Rank.USER,
   );
 
-  const { currentResult, setCurrentResult } = useNameSearch();
+  const { currentResult, setCurrentResult } = useNameSearch(
+    (state) => ({
+      currentResult: state.currentResult,
+      setCurrentResult: state.setCurrentResult,
+    }),
+    shallow,
+  );
 
   function handleRecordCreate(data: Record) {
     if (!currentResult || currentResult.isConfidential) return;

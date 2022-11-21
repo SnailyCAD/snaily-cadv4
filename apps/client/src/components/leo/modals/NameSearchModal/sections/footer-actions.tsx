@@ -7,9 +7,10 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import useFetch from "lib/useFetch";
 import { ThreeDotsVertical } from "react-bootstrap-icons";
 import { useModal } from "state/modalState";
-import { useNameSearch } from "state/search/nameSearchState";
+import { useNameSearch } from "state/search/name-search-state";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
+import shallow from "zustand/shallow";
 
 interface Props {
   isLeo?: boolean;
@@ -20,7 +21,13 @@ export function NameSearchFooterActions(props: Props) {
   const { openModal } = useModal();
   const t = useTranslations();
   const { state, execute } = useFetch();
-  const { currentResult, setCurrentResult } = useNameSearch();
+  const { currentResult, setCurrentResult } = useNameSearch(
+    (state) => ({
+      currentResult: state.currentResult,
+      setCurrentResult: state.setCurrentResult,
+    }),
+    shallow,
+  );
 
   async function handleDeclare() {
     if (!currentResult) return;
