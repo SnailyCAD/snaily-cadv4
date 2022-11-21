@@ -2,6 +2,9 @@
 ALTER TYPE "ValueType" ADD VALUE 'EMERGENCY_VEHICLE';
 
 -- AlterTable
+ALTER TABLE "CombinedLeoUnit" ADD COLUMN     "activeVehicleId" TEXT;
+
+-- AlterTable
 ALTER TABLE "EmsFdDeputy" ADD COLUMN     "activeVehicleId" TEXT;
 
 -- AlterTable
@@ -44,6 +47,9 @@ ALTER TABLE "EmergencyVehicleValue" ADD CONSTRAINT "EmergencyVehicleValue_valueI
 
 -- AddForeignKey
 ALTER TABLE "Officer" ADD CONSTRAINT "Officer_activeVehicleId_fkey" FOREIGN KEY ("activeVehicleId") REFERENCES "EmergencyVehicleValue"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "CombinedLeoUnit" ADD CONSTRAINT "CombinedLeoUnit_activeVehicleId_fkey" FOREIGN KEY ("activeVehicleId") REFERENCES "EmergencyVehicleValue"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "EmsFdDeputy" ADD CONSTRAINT "EmsFdDeputy_activeVehicleId_fkey" FOREIGN KEY ("activeVehicleId") REFERENCES "EmergencyVehicleValue"("id") ON DELETE SET NULL ON UPDATE CASCADE;
