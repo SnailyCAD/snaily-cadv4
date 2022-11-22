@@ -234,7 +234,7 @@ export default function CitizenId() {
               deleteText={t("markCitizenDeceased")}
               onDeleteClick={handleDeceased}
               title={t("markCitizenDeceased")}
-              description={t("alert_markCitizenDeceased", {
+              description={t.rich("alert_markCitizenDeceased", {
                 citizen: `${citizen.name} ${citizen.surname}`,
               })}
               id={ModalIds.AlertMarkDeceased}
