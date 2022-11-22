@@ -99,6 +99,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
 
               {values.suspended.driverLicense ? (
                 <DatePickerField
+                  errorMessage={errors.suspended?.driverLicenseTimeEnd}
                   isOptional
                   label={t("Leo.endDate")}
                   value={
@@ -178,6 +179,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
 
             {values.suspended.pilotLicense ? (
               <DatePickerField
+                errorMessage={errors.suspended?.pilotLicenseTimeEnd}
                 isOptional
                 label={t("Leo.endDate")}
                 value={
@@ -255,6 +257,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
             {values.suspended.waterLicense ? (
               <DatePickerField
                 isOptional
+                errorMessage={errors.suspended?.waterLicenseTimeEnd}
                 label={t("Leo.endDate")}
                 value={
                   values.suspended.waterLicenseTimeEnd
@@ -333,6 +336,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
                 <DatePickerField
                   isOptional
                   label={t("Leo.endDate")}
+                  errorMessage={errors.suspended?.firearmsLicenseTimeEnd}
                   value={
                     values.suspended.firearmsLicenseTimeEnd
                       ? values.suspended.firearmsLicenseTimeEnd
