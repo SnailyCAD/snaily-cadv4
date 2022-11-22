@@ -7,14 +7,14 @@ import { ModalIds } from "types/ModalIds";
 
 import { TabsContent } from "components/shared/TabList";
 import type { Weapon } from "@snailycad/types";
-import { useWeaponSearch } from "state/search/weaponSearchState";
+import { useWeaponSearch } from "state/search/weapon-search-state";
 
 export function NameSearchWeaponsTab() {
   const t = useTranslations();
   const common = useTranslations("Common");
   const currentResult = useNameSearch((state) => state.currentResult);
   const { openModal } = useModal();
-  const { setCurrentResult: setWeaponResult } = useWeaponSearch();
+  const setWeaponResult = useWeaponSearch((state) => state.setCurrentResult);
   const tableState = useTableState();
 
   function handleWeaponPress(weapon: Weapon) {

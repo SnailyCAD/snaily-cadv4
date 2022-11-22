@@ -15,7 +15,7 @@ import { useEmsFdState } from "state/emsFdState";
 import { useLeoState } from "state/leoState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import type { VehicleSearchResult } from "state/search/vehicleSearchState";
+import type { VehicleSearchResult } from "state/search/vehicle-search-state";
 import { Checkbox } from "components/form/inputs/Checkbox";
 import type { PostTowCallsData } from "@snailycad/types/api";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";

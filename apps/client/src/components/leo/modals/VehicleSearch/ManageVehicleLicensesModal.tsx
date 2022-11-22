@@ -10,7 +10,7 @@ import { filterLicenseTypes } from "lib/utils";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { ValueLicenseType } from "@snailycad/types";
-import { useVehicleSearch } from "state/search/vehicleSearchState";
+import { useVehicleSearch } from "state/search/vehicle-search-state";
 import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";
 import { useNameSearch } from "state/search/name-search-state";
 import type { PutSearchActionsVehicleLicensesData } from "@snailycad/types/api";

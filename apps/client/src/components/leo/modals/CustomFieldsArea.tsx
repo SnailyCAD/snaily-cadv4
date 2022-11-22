@@ -3,8 +3,8 @@ import { Infofield } from "components/shared/Infofield";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
 import type { NameSearchResult } from "state/search/name-search-state";
-import type { VehicleSearchResult } from "state/search/vehicleSearchState";
-import type { WeaponSearchResult } from "state/search/weaponSearchState";
+import type { VehicleSearchResult } from "state/search/vehicle-search-state";
+import type { WeaponSearchResult } from "state/search/weapon-search-state";
 import { ModalIds } from "types/ModalIds";
 
 interface Props {

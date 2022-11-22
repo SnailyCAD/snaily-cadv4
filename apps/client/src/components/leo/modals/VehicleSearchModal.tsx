@@ -8,7 +8,7 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { BoloType, CustomFieldCategory } from "@snailycad/types";
 import { useRouter } from "next/router";
-import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicleSearchState";
+import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicle-search-state";
 import { ManageVehicleFlagsModal } from "./VehicleSearch/ManageVehicleFlagsModal";
 import { ManageVehicleLicensesModal } from "./VehicleSearch/ManageVehicleLicensesModal";
 import { ManageCustomFieldsModal } from "./NameSearchModal/ManageCustomFieldsModal";
@@ -39,6 +39,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   const { isOpen, openModal, closeModal } = useModal();
   const common = useTranslations("Common");
   const vT = useTranslations("Vehicles");
+  const cT = useTranslations("Citizen");
   const t = useTranslations("Leo");
   const { state, execute } = useFetch();
   const router = useRouter();
@@ -237,7 +238,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
                         variant="cancel"
                         className="px-1.5"
                       >
-                        {vT("unmarkAsStolen")}
+                        {cT("unmarkAsStolen")}
                       </Button>
                     )}
 

@@ -5,8 +5,8 @@ import { Table, useTableState } from "components/shared/Table";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
 import { NameSearchResult, useNameSearch } from "state/search/name-search-state";
-import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicleSearchState";
-import { useWeaponSearch, WeaponSearchResult } from "state/search/weaponSearchState";
+import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicle-search-state";
+import { useWeaponSearch, WeaponSearchResult } from "state/search/weapon-search-state";
 import { ModalIds } from "types/ModalIds";
 import type { CustomFieldResults } from "./CustomFieldSearch";
 
@@ -83,7 +83,7 @@ function CitizenResults({ results }: any) {
 
 function WeaponResults({ results }: any) {
   const { openModal, closeModal } = useModal();
-  const { setCurrentResult } = useWeaponSearch();
+  const setCurrentResult = useWeaponSearch((state) => state.setCurrentResult);
   const t = useTranslations();
   const tableState = useTableState();
 
@@ -119,7 +119,7 @@ function WeaponResults({ results }: any) {
 
 function VehicleResults({ results }: any) {
   const { openModal, closeModal } = useModal();
-  const { setCurrentResult } = useVehicleSearch();
+  const setCurrentResult = useVehicleSearch((state) => state.setCurrentResult);
   const t = useTranslations();
   const tableState = useTableState();
 
