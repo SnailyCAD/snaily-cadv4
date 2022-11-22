@@ -48,6 +48,7 @@ export class AdminManageUnitsController {
       Permissions.DeleteUnits,
       Permissions.ManageUnits,
       Permissions.ManageUnitCallsigns,
+      Permissions.ManageAwardsAndQualifications,
     ],
   })
   async getUnits(): Promise<APITypes.GetManageUnitsData> {
@@ -69,7 +70,12 @@ export class AdminManageUnitsController {
   )
   @UsePermissions({
     fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
-    permissions: [Permissions.ViewUnits, Permissions.DeleteUnits, Permissions.ManageUnits],
+    permissions: [
+      Permissions.ViewUnits,
+      Permissions.DeleteUnits,
+      Permissions.ManageUnits,
+      Permissions.ManageAwardsAndQualifications,
+    ],
   })
   async getUnit(@PathParams("id") id: string): Promise<APITypes.GetManageUnitByIdData> {
     const extraInclude = {
@@ -428,7 +434,7 @@ export class AdminManageUnitsController {
   @Post("/:unitId/qualifications")
   @UsePermissions({
     fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
-    permissions: [Permissions.ManageUnits],
+    permissions: [Permissions.ManageUnits, Permissions.ManageAwardsAndQualifications],
   })
   async addUnitQualification(
     @PathParams("unitId") unitId: string,
@@ -474,7 +480,7 @@ export class AdminManageUnitsController {
   @Delete("/:unitId/qualifications/:qualificationId")
   @UsePermissions({
     fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
-    permissions: [Permissions.ManageUnits],
+    permissions: [Permissions.ManageUnits, Permissions.ManageAwardsAndQualifications],
   })
   async deleteUnitQualification(
     @PathParams("unitId") unitId: string,
@@ -500,7 +506,7 @@ export class AdminManageUnitsController {
   @Put("/:unitId/qualifications/:qualificationId")
   @UsePermissions({
     fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
-    permissions: [Permissions.ManageUnits],
+    permissions: [Permissions.ManageUnits, Permissions.ManageAwardsAndQualifications],
   })
   async suspendOrUnsuspendUnitQualification(
     @PathParams("unitId") unitId: string,
@@ -553,7 +559,7 @@ export class AdminManageUnitsController {
     const unit = await findUnit(unitId);
 
     if (unit.type === "combined") {
-      throw new BadRequest("Cannot add qualifications to combined units");
+      throw new BadRequest("Cannot delete combined units");
     }
 
     if (!unit.unit) {

@@ -28,6 +28,7 @@ export const managementRoutes: SidebarRoute[] = [
       Permissions.ManageUnits,
       Permissions.DeleteUnits,
       Permissions.ManageUnitCallsigns,
+      Permissions.ManageAwardsAndQualifications,
     ],
   },
   {

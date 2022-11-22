@@ -18,11 +18,12 @@ import type {
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 interface Props {
+  hasManagePermissions: boolean;
   unit: GetManageUnitByIdData;
   setUnit: React.Dispatch<React.SetStateAction<GetManageUnitByIdData>>;
 }
 
-export function QualificationsTable({ setUnit, unit }: Props) {
+export function QualificationsTable({ hasManagePermissions, setUnit, unit }: Props) {
   const t = useTranslations("Leo");
   const { openModal } = useModal();
 
@@ -35,7 +36,7 @@ export function QualificationsTable({ setUnit, unit }: Props) {
   );
 
   return (
-    <div className="mt-10">
+    <div className={hasManagePermissions ? "mt-10" : undefined}>
       <div id="qualifications">
         <header className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">{t("unitQualifications")}</h2>
@@ -84,7 +85,7 @@ export function QualificationsTable({ setUnit, unit }: Props) {
   );
 }
 
-function QualificationAwardsTable({ unit, setUnit }: Props) {
+function QualificationAwardsTable({ unit, setUnit }: Omit<Props, "hasManagePermissions">) {
   const [tempQualification, qualificationState] = useTemporaryItem(unit.qualifications);
 
   const tableState = useTableState();
