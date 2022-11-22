@@ -42,6 +42,11 @@ export function AllUnitsTab({ search, units }: Props) {
 
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageUnits], true);
+  const hasManageAwardsPermissions = hasPermissions(
+    [Permissions.ManageAwardsAndQualifications],
+    true,
+  );
+
   const hasDeletePermissions = hasPermissions([Permissions.DeleteUnits], true);
   const hasViewUsersPermissions = hasPermissions([Permissions.ViewUsers], true);
   const { state, execute } = useFetch();
@@ -157,7 +162,7 @@ export function AllUnitsTab({ search, units }: Props) {
               suspended: common(yesOrNoText(unit.suspended)),
               actions: (
                 <>
-                  {hasManagePermissions ? (
+                  {hasManagePermissions || hasManageAwardsPermissions ? (
                     <Link
                       href={`/admin/manage/units/${unit.id}`}
                       className={classNames("p-0.5 px-2 rounded-md", buttonVariants.success)}
@@ -192,7 +197,7 @@ export function AllUnitsTab({ search, units }: Props) {
             { header: t("Leo.status"), accessorKey: "status" },
             { header: t("Leo.suspended"), accessorKey: "suspended" },
             { header: t("Leo.status"), accessorKey: "departmentStatus" },
-            hasManagePermissions || hasDeletePermissions
+            hasManagePermissions || hasManageAwardsPermissions || hasDeletePermissions
               ? { header: common("actions"), accessorKey: "actions" }
               : null,
           ]}

@@ -12,6 +12,7 @@ export const defaultManagementPermissions = [
   Permissions.ManageUnits,
   Permissions.DeleteUnits,
   Permissions.ManageUnitCallsigns,
+  Permissions.ManageAwardsAndQualifications,
   Permissions.ViewBusinesses,
   Permissions.ManageBusinesses,
   Permissions.DeleteBusinesses,

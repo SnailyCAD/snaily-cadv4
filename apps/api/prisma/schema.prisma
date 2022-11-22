@@ -1574,6 +1574,7 @@ enum PaymentStatus {
 
 enum ToAddDefaultPermissionsKey {
   MANAGE_WARRANTS_PERMISSIONS
+  MANAGE_AWARDS_AND_QUALIFICATIONS
 }
 
 enum PenalCodeType {
