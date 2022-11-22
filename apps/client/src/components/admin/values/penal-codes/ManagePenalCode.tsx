@@ -117,7 +117,7 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
               label="Title"
               autoFocus
               name="title"
-              onChange={(value) => setFieldValue("title", value)}
+              onChange={(value) => setFieldValue("title", String(value))}
               value={values.title}
             />
 

@@ -19,7 +19,7 @@ export function handleValidate<Schema extends ZodSchema, Values = any>(schema: S
           const path = fieldError.path;
 
           // a nested field
-          if (path.length >= 1) {
+          if (path.length > 1) {
             const [rootFieldName, nestedField] = path as [string, string];
             const rootField = errors[rootFieldName] ?? {};
 
