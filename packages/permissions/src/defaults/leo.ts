@@ -20,6 +20,7 @@ export const defaultLeoPermissions = [
   Permissions.DeleteCitizenRecords,
   Permissions.ViewCitizenLogs,
   Permissions.ManageWarrants,
+  Permissions.ManageAwardsAndQualifications,
 ];
 
 export const defaultDispatchPermissions = [Permissions.Dispatch, Permissions.LiveMap];
