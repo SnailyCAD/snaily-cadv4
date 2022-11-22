@@ -79,7 +79,7 @@ export function ModalButtons({ initialActiveOfficer }: { initialActiveOfficer: A
 
   return (
     <div className="py-2">
-      {!isButtonDisabled && activeOfficer ? (
+      {nameAndCallsign && activeOfficer ? (
         <p className="text-lg">
           <span className="font-semibold">{t("Leo.activeOfficer")}: </span>
 

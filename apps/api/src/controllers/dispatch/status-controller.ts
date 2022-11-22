@@ -111,8 +111,6 @@ export class StatusController {
           : [(unit as EmsFdDeputy).divisionId ?? undefined]
         : [];
 
-      console.log({ divisionIds });
-
       const _emergencyVehicle = await prisma.emergencyVehicleValue.findFirst({
         where: {
           id: data.vehicleId,

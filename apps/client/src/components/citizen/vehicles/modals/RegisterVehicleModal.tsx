@@ -29,13 +29,14 @@ import { useRouter } from "next/router";
 import { useAuth } from "context/AuthContext";
 import { Toggle } from "components/form/Toggle";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { useBusinessState } from "state/businessState";
+import { useBusinessState } from "state/business-state";
 import { filterLicenseTypes } from "lib/utils";
 import { FormRow } from "components/form/FormRow";
 import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";
 import { toastMessage } from "lib/toastMessage";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import type { PostCitizenVehicleData, PutCitizenVehicleData } from "@snailycad/types/api";
+import shallow from "zustand/shallow";
 
 interface Props {
   vehicle: RegisteredVehicle | null;
@@ -54,7 +55,14 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
   const router = useRouter();
   const { cad } = useAuth();
   const { CUSTOM_TEXTFIELD_VALUES } = useFeatureEnabled();
-  const { currentBusiness, currentEmployee } = useBusinessState();
+  const { currentBusiness, currentEmployee } = useBusinessState(
+    (state) => ({
+      currentBusiness: state.currentBusiness,
+      currentEmployee: state.currentEmployee,
+    }),
+    shallow,
+  );
+
   const { INSPECTION_STATUS, TAX_STATUS } = useVehicleLicenses();
 
   const { vehicle: vehicles, license } = useValues();

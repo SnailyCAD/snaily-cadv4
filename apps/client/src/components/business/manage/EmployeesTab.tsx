@@ -1,7 +1,7 @@
 import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "use-intl";
 import { Button } from "@snailycad/ui";
-import { FullEmployee, useBusinessState } from "state/businessState";
+import { FullEmployee, useBusinessState } from "state/business-state";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { ManageEmployeeModal } from "./ManageEmployeeModal";
@@ -13,6 +13,7 @@ import { yesOrNoText } from "lib/utils";
 import { Status } from "components/shared/Status";
 import type { DeleteBusinessFireEmployeeData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import shallow from "zustand/shallow";
 
 export function EmployeesTab() {
   const { state, execute } = useFetch();
@@ -20,7 +21,15 @@ export function EmployeesTab() {
   const common = useTranslations("Common");
   const t = useTranslations("Business");
 
-  const { currentBusiness, currentEmployee, setCurrentBusiness } = useBusinessState();
+  const { currentBusiness, currentEmployee, setCurrentBusiness } = useBusinessState(
+    (state) => ({
+      currentBusiness: state.currentBusiness,
+      currentEmployee: state.currentEmployee,
+      setCurrentBusiness: state.setCurrentBusiness,
+    }),
+    shallow,
+  );
+
   const employees = currentBusiness?.employees ?? [];
   const [tempEmployee, employeeState] = useTemporaryItem(employees);
   const tableState = useTableState();

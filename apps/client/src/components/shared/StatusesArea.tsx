@@ -87,7 +87,11 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
     if (!activeUnit) return;
     if (status.id === activeUnit.statusId) return;
 
-    setActiveUnit({ ...activeUnit, statusId: status.id, status });
+    if (status.shouldDo === ShouldDoType.SET_OFF_DUTY) {
+      setActiveUnit(null);
+    } else {
+      setActiveUnit({ ...activeUnit, statusId: status.id, status });
+    }
 
     if (status.shouldDo === ShouldDoType.SET_OFF_DUTY) {
       setUnits(units.filter((v) => v.id !== activeUnit.id));
@@ -111,7 +115,11 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
     });
 
     if (json.id) {
-      setActiveUnit({ ...activeUnit, ...json });
+      if (!json.status || json.status.shouldDo === ShouldDoType.SET_OFF_DUTY) {
+        setActiveUnit(null);
+      } else {
+        setActiveUnit({ ...activeUnit, ...json });
+      }
     }
   }
 

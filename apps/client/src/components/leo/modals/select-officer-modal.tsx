@@ -16,6 +16,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { isUnitDisabled, makeUnitName } from "lib/utils";
 import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
 import shallow from "zustand/shallow";
+import { useDispatchState } from "state/dispatch/dispatchState";
 
 export function SelectOfficerModal() {
   const { userOfficers, setActiveOfficer } = useLeoState(
@@ -25,6 +26,14 @@ export function SelectOfficerModal() {
     }),
     shallow,
   );
+  const { activeOfficers, setActiveOfficers } = useDispatchState(
+    (state) => ({
+      activeOfficers: state.activeOfficers,
+      setActiveOfficers: state.setActiveOfficers,
+    }),
+    shallow,
+  );
+
   const { isOpen, closeModal, getPayload } = useModal();
   const common = useTranslations("Common");
   const error = useTranslations("Errors");
@@ -58,6 +67,12 @@ export function SelectOfficerModal() {
     if (json.id) {
       closeModal(ModalIds.SelectOfficer);
       setActiveOfficer(json as Officer);
+
+      const isUnitInActiveUnits = activeOfficers.some((o) => o.id === json.id);
+
+      if (!isUnitInActiveUnits) {
+        setActiveOfficers([json as Officer, ...activeOfficers]);
+      }
     }
   }
 
