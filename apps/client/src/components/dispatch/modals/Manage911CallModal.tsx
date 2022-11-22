@@ -11,8 +11,8 @@ import { CallEventsArea } from "../events/EventsArea";
 
 import { usePermission } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
-import { useLeoState } from "state/leoState";
-import { useEmsFdState } from "state/emsFdState";
+import { useLeoState } from "state/leo-state";
+import { useEmsFdState } from "state/ems-fd-state";
 import type { Delete911CallByIdData } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call911State";
 import { Manage911CallForm } from "./Manage911Call/Manage911CallForm";
@@ -39,8 +39,8 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
   const { hasPermissions } = usePermission();
   const { generateCallsign } = useGenerateCallsign();
 
-  const { activeOfficer } = useLeoState();
-  const { activeDeputy } = useEmsFdState();
+  const activeOfficer = useLeoState((state) => state.activeOfficer);
+  const activeDeputy = useEmsFdState((state) => state.activeDeputy);
 
   const hasDispatchPermissions = hasPermissions(
     defaultPermissions.defaultDispatchPermissions,

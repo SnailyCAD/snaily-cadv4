@@ -9,15 +9,22 @@ import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { useLeoState } from "state/leoState";
+import { useLeoState } from "state/leo-state";
 import { useValues } from "context/ValuesContext";
 import { EmergencyVehicleValue, Officer, ShouldDoType } from "@snailycad/types";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { isUnitDisabled, makeUnitName } from "lib/utils";
 import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
+import shallow from "zustand/shallow";
 
 export function SelectOfficerModal() {
-  const { userOfficers, setActiveOfficer } = useLeoState();
+  const { userOfficers, setActiveOfficer } = useLeoState(
+    (state) => ({
+      userOfficers: state.userOfficers,
+      setActiveOfficer: state.setActiveOfficer,
+    }),
+    shallow,
+  );
   const { isOpen, closeModal, getPayload } = useModal();
   const common = useTranslations("Common");
   const error = useTranslations("Errors");

@@ -4,7 +4,7 @@ import { SocketEvents } from "@snailycad/config";
 import useFetch from "lib/useFetch";
 import { useDispatchState } from "state/dispatch/dispatchState";
 import { useAuth } from "context/AuthContext";
-import { useLeoState } from "state/leoState";
+import { useLeoState } from "state/leo-state";
 import type { CombinedLeoUnit, Officer } from "@snailycad/types";
 import { isUnitCombined } from "@snailycad/utils";
 import type { GetActiveOfficersData } from "@snailycad/types/api";
@@ -15,7 +15,7 @@ export function useActiveOfficers() {
   const { user } = useAuth();
   const { activeOfficers, setActiveOfficers } = useDispatchState();
   const { state, execute } = useFetch();
-  const { setActiveOfficer } = useLeoState();
+  const setActiveOfficer = useLeoState((state) => state.setActiveOfficer);
   const call911State = useCall911State();
 
   const handleCallsState = React.useCallback(

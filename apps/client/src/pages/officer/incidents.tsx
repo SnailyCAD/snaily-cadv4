@@ -11,7 +11,7 @@ import { ModalIds } from "types/ModalIds";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import type { IncidentInvolvedUnit, LeoIncident } from "@snailycad/types";
 import { useDispatchState } from "state/dispatch/dispatchState";
-import { useLeoState } from "state/leoState";
+import { useLeoState } from "state/leo-state";
 import dynamic from "next/dynamic";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useAuth } from "context/AuthContext";
@@ -68,7 +68,7 @@ export default function LeoIncidents({
   const common = useTranslations("Common");
   const { openModal, closeModal } = useModal();
   const dispatchState = useDispatchState();
-  const { setActiveOfficer } = useLeoState();
+  const setActiveOfficer = useLeoState((state) => state.setActiveOfficer);
   const { generateCallsign } = useGenerateCallsign();
   const { makeImageUrl } = useImageUrl();
   const { user } = useAuth();

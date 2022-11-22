@@ -14,7 +14,7 @@ import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Toggle } from "components/form/Toggle";
 import { FormRow } from "components/form/FormRow";
-import { useLeoState } from "state/leoState";
+import { useLeoState } from "state/leo-state";
 import { useRouter } from "next/router";
 import { dataToSlate, Editor } from "components/editor/Editor";
 import { IncidentEventsArea } from "./IncidentEventsArea";
@@ -47,7 +47,7 @@ export function ManageIncidentModal({
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const { generateCallsign } = useGenerateCallsign();
-  const { activeOfficer } = useLeoState();
+  const activeOfficer = useLeoState((state) => state.activeOfficer);
   const { codes10 } = useValues();
   const router = useRouter();
   const { state, execute } = useFetch();

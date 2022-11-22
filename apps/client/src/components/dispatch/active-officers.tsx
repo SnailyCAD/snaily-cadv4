@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "@snailycad/ui";
-import type { ActiveOfficer } from "state/leoState";
+import type { ActiveOfficer } from "state/leo-state";
 import { ManageUnitModal } from "./modals/ManageUnit";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";

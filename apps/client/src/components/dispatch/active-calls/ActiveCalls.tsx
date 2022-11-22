@@ -5,8 +5,8 @@ import { Full911Call, useDispatchState } from "state/dispatch/dispatchState";
 import type { AssignedUnit } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import useFetch from "lib/useFetch";
-import { useLeoState } from "state/leoState";
-import { useEmsFdState } from "state/emsFdState";
+import { useLeoState } from "state/leo-state";
+import { useEmsFdState } from "state/ems-fd-state";
 import { DispatchCallTowModal } from "components/dispatch/modals/CallTowModal";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useCallsFilters } from "state/callsFiltersState";
@@ -45,8 +45,8 @@ function _ActiveCalls({ initialData }: Props) {
 
   const { CALLS_911 } = useFeatureEnabled();
   const { execute } = useFetch();
-  const { activeOfficer } = useLeoState();
-  const { activeDeputy } = useEmsFdState();
+  const activeOfficer = useLeoState((state) => state.activeOfficer);
+  const activeDeputy = useEmsFdState((state) => state.activeDeputy);
   const { search, setSearch } = useCallsFilters();
 
   const asyncTable = useAsyncTable({

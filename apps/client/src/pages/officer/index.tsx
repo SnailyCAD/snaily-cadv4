@@ -6,7 +6,7 @@ import { StatusesArea } from "components/shared/StatusesArea";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { useLeoState } from "state/leoState";
+import { useLeoState } from "state/leo-state";
 import { Rank, Record, RecordType, ValueType } from "@snailycad/types";
 import { ActiveCalls } from "components/dispatch/active-calls/ActiveCalls";
 import { useDispatchState } from "state/dispatch/dispatchState";

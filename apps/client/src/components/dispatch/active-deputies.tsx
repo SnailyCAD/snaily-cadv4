@@ -4,7 +4,7 @@ import { Button } from "@snailycad/ui";
 import { ManageUnitModal } from "./modals/ManageUnit";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import type { ActiveDeputy } from "state/emsFdState";
+import type { ActiveDeputy } from "state/ems-fd-state";
 import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
 import { useRouter } from "next/router";
 import { formatUnitDivisions, makeUnitName } from "lib/utils";

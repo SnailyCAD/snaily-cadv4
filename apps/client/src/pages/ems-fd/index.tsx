@@ -8,7 +8,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { useTranslations } from "use-intl";
 import { StatusesArea } from "components/shared/StatusesArea";
-import { useEmsFdState } from "state/emsFdState";
+import { useEmsFdState } from "state/ems-fd-state";
 import { useDispatchState } from "state/dispatch/dispatchState";
 import { requestAll } from "lib/utils";
 import { ActiveDeputies } from "components/dispatch/active-deputies";

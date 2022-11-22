@@ -9,7 +9,7 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { toastMessage } from "lib/toastMessage";
 import type { PostCreateWarrantData, PutWarrantsData } from "@snailycad/types/api";
-import type { ActiveWarrant } from "state/leoState";
+import type { ActiveWarrant } from "state/leo-state";
 import { isUnitCombined } from "@snailycad/utils";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";

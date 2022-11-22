@@ -9,16 +9,23 @@ import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { useEmsFdState } from "state/emsFdState";
+import { useEmsFdState } from "state/ems-fd-state";
 import { useValues } from "context/ValuesContext";
 import { EmsFdDeputy, ShouldDoType } from "@snailycad/types";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { isUnitDisabled, makeUnitName } from "lib/utils";
 import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
 import type { EmergencyVehicleValue } from "@snailycad/types";
+import shallow from "zustand/shallow";
 
 export function SelectDeputyModal() {
-  const { deputies, setActiveDeputy } = useEmsFdState();
+  const { setActiveDeputy, deputies } = useEmsFdState(
+    (state) => ({
+      setActiveDeputy: state.setActiveDeputy,
+      deputies: state.deputies,
+    }),
+    shallow,
+  );
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Ems");
