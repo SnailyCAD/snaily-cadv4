@@ -116,6 +116,24 @@ export class UserController {
     const userId = ctx.get("user").id;
     ctx.delete("user");
 
+    setCookie({
+      res,
+      name: Cookie.AccessToken,
+      expires: 0,
+      value: "",
+    });
+
+    setCookie({
+      res,
+      name: Cookie.RefreshToken,
+      expires: 0,
+      value: "",
+    });
+
+    await prisma.activeDispatchers.deleteMany({
+      where: { userId },
+    });
+
     const officer = await prisma.officer.findFirst({
       where: {
         userId,
@@ -159,20 +177,6 @@ export class UserController {
       });
       await this.socket.emitUpdateDeputyStatus();
     }
-
-    setCookie({
-      res,
-      name: Cookie.AccessToken,
-      expires: 0,
-      value: "",
-    });
-
-    setCookie({
-      res,
-      name: Cookie.RefreshToken,
-      expires: 0,
-      value: "",
-    });
 
     return true;
   }
