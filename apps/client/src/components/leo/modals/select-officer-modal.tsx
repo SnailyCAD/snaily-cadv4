@@ -16,7 +16,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { isUnitDisabled, makeUnitName } from "lib/utils";
 import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
 import shallow from "zustand/shallow";
-import { useDispatchState } from "state/dispatch/dispatchState";
+import { useDispatchState } from "state/dispatch/dispatch-state";
 
 export function SelectOfficerModal() {
   const { userOfficers, setActiveOfficer } = useLeoState(

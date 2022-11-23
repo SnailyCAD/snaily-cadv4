@@ -2,7 +2,7 @@ import * as React from "react";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import useFetch from "lib/useFetch";
-import { useDispatchState } from "state/dispatch/dispatchState";
+import { useDispatchState } from "state/dispatch/dispatch-state";
 import { useAuth } from "context/AuthContext";
 import { useLeoState } from "state/leo-state";
 import type { CombinedLeoUnit, Officer } from "@snailycad/types";

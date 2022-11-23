@@ -12,7 +12,7 @@ import { Form, Formik } from "formik";
 import { Button, Loader, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
-import type { Full911Call } from "state/dispatch/dispatchState";
+import type { Full911Call } from "state/dispatch/dispatch-state";
 import { Select } from "components/form/Select";
 import { useTranslations } from "next-intl";
 import { useCall911State } from "state/dispatch/call-911-state";

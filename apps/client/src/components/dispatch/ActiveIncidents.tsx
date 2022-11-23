@@ -17,7 +17,7 @@ import { InvolvedUnitsColumn } from "./active-incidents/InvolvedUnitsColumn";
 import { DndActions } from "types/DndActions";
 import { classNames } from "lib/classNames";
 import { Droppable } from "components/shared/dnd/Droppable";
-import { useDispatchState } from "state/dispatch/dispatchState";
+import { useDispatchState } from "state/dispatch/dispatch-state";
 import type { PostIncidentsData, PutIncidentByIdData } from "@snailycad/types/api";
 import { CallDescription } from "./active-calls/CallDescription";
 
@@ -33,7 +33,7 @@ export function ActiveIncidents() {
   const { openModal, closeModal } = useModal();
   const { activeIncidents, setActiveIncidents } = useActiveIncidents();
   const { state, execute } = useFetch();
-  const dispatchState = useDispatchState();
+  const draggingUnit = useDispatchState((state) => state.draggingUnit);
   const tableState = useTableState();
 
   async function handleAssignUnassignToIncident(
@@ -183,7 +183,7 @@ export function ActiveIncidents() {
         <div
           className={classNames(
             "grid place-items-center z-50 border-2 border-slate-500 dark:bg-quinary fixed bottom-3 left-3 right-4 h-60 shadow-sm rounded-md transition-opacity",
-            dispatchState.draggingUnit === "incident"
+            draggingUnit === "incident"
               ? "pointer-events-all opacity-100"
               : "pointer-events-none opacity-0",
           )}

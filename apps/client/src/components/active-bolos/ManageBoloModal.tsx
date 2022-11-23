@@ -9,13 +9,14 @@ import { ModalIds } from "types/ModalIds";
 import { Bolo, BoloType, RegisteredVehicle } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { CREATE_BOLO_SCHEMA } from "@snailycad/schemas";
-import { useDispatchState } from "state/dispatch/dispatchState";
+import { useDispatchState } from "state/dispatch/dispatch-state";
 import { PersonFill, ThreeDots } from "react-bootstrap-icons";
 import { FormRow } from "components/form/FormRow";
 import { classNames } from "lib/classNames";
 import { useSSRSafeId } from "@react-aria/ssr";
 import type { PostBolosData, PutBolosData } from "@snailycad/types/api";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
+import shallow from "zustand/shallow";
 
 interface Props {
   onClose?(): void;
@@ -26,7 +27,13 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
   const common = useTranslations("Common");
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
-  const { bolos, setBolos } = useDispatchState();
+  const { bolos, setBolos } = useDispatchState(
+    (state) => ({
+      bolos: state.bolos,
+      setBolos: state.setBolos,
+    }),
+    shallow,
+  );
   const t = useTranslations("Bolos");
   const leo = useTranslations("Leo");
 

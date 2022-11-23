@@ -10,7 +10,7 @@ import { handleValidate } from "lib/handleValidate";
 import { toastMessage } from "lib/toastMessage";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
-import type { Full911Call } from "state/dispatch/dispatchState";
+import type { Full911Call } from "state/dispatch/dispatch-state";
 import { useEmsFdState } from "state/ems-fd-state";
 import { useLeoState } from "state/leo-state";
 import { ModalIds } from "types/ModalIds";

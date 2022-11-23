@@ -7,7 +7,7 @@ import { Form, Formik } from "formik";
 import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
 import { Select } from "components/form/Select";
-import { useDispatchState } from "state/dispatch/dispatchState";
+import { useDispatchState } from "state/dispatch/dispatch-state";
 import { makeUnitName } from "lib/utils";
 import type { CombinedLeoUnit, EmsFdDeputy } from "@snailycad/types";
 import { isUnitCombined } from "@snailycad/utils";

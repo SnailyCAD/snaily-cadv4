@@ -2,7 +2,7 @@ import * as React from "react";
 import type { LeafletEvent } from "leaflet";
 import useFetch from "lib/useFetch";
 import { Marker, Popup, useMap } from "react-leaflet";
-import type { Full911Call } from "state/dispatch/dispatchState";
+import type { Full911Call } from "state/dispatch/dispatch-state";
 import { ActiveMapCalls } from "./ActiveMapCalls";
 import { convertToMap } from "lib/map/utils";
 import { Button } from "@snailycad/ui";

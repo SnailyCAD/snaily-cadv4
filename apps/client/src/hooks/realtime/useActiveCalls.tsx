@@ -6,7 +6,7 @@ import { toastMessage } from "lib/toastMessage";
 import toast from "react-hot-toast";
 import { useAudio } from "react-use";
 import { useCall911State } from "state/dispatch/call-911-state";
-import type { Full911Call } from "state/dispatch/dispatchState";
+import type { Full911Call } from "state/dispatch/dispatch-state";
 import type { ActiveDeputy } from "state/ems-fd-state";
 import type { ActiveOfficer } from "state/leo-state";
 import { useModal } from "state/modalState";

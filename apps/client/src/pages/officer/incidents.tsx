@@ -10,7 +10,7 @@ import { Button } from "@snailycad/ui";
 import { ModalIds } from "types/ModalIds";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import type { IncidentInvolvedUnit, LeoIncident } from "@snailycad/types";
-import { useDispatchState } from "state/dispatch/dispatchState";
+import { useDispatchState } from "state/dispatch/dispatch-state";
 import { useLeoState } from "state/leo-state";
 import dynamic from "next/dynamic";
 import { useImageUrl } from "hooks/useImageUrl";

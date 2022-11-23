@@ -4,7 +4,7 @@ import { classNames } from "lib/classNames";
 import { useTranslations } from "next-intl";
 import { Filter } from "react-bootstrap-icons";
 import { useCallsFilters } from "state/callsFiltersState";
-import type { Full911Call } from "state/dispatch/dispatchState";
+import type { Full911Call } from "state/dispatch/dispatch-state";
 import dynamic from "next/dynamic";
 
 const CallsFilters = dynamic(async () => (await import("./call-filters")).CallsFilters);

@@ -4,7 +4,7 @@ import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import useFetch from "lib/useFetch";
-import type { Full911Call } from "state/dispatch/dispatchState";
+import type { Full911Call } from "state/dispatch/dispatch-state";
 import { useRouter } from "next/router";
 import { AlertModal } from "components/modal/AlertModal";
 import { CallEventsArea } from "../events/EventsArea";

@@ -1,4 +1,4 @@
-import type { Full911Call } from "state/dispatch/dispatchState";
+import type { Full911Call } from "state/dispatch/dispatch-state";
 import type { FormikHelpers } from "formik";
 import compareDesc from "date-fns/compareDesc";
 import useFetch from "lib/useFetch";

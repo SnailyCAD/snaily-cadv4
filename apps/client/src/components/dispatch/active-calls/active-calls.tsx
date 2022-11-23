@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Manage911CallModal } from "components/dispatch/modals/Manage911CallModal";
 import { useRouter } from "next/router";
-import { Full911Call, useDispatchState } from "state/dispatch/dispatchState";
+import { Full911Call, useDispatchState } from "state/dispatch/dispatch-state";
 import type { AssignedUnit } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import useFetch from "lib/useFetch";
@@ -33,7 +33,7 @@ interface Props {
 
 function _ActiveCalls({ initialData }: Props) {
   const { hasPermissions } = usePermission();
-  const { draggingUnit } = useDispatchState();
+  const draggingUnit = useDispatchState((state) => state.draggingUnit);
   const call911State = useCall911State(
     (state) => ({
       calls: state.calls,

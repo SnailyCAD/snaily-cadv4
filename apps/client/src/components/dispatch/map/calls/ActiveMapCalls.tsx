@@ -2,7 +2,7 @@ import type * as React from "react";
 import { Root as AccordionRoot } from "@radix-ui/react-accordion";
 import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
-import type { Full911Call } from "state/dispatch/dispatchState";
+import type { Full911Call } from "state/dispatch/dispatch-state";
 import type { Call911 } from "@snailycad/types";
 import { Manage911CallModal } from "components/dispatch/modals/Manage911CallModal";
 import { useListener } from "@casper124578/use-socket.io";

@@ -9,7 +9,7 @@ import { getTranslations } from "lib/getTranslation";
 import { useTranslations } from "use-intl";
 import { StatusesArea } from "components/shared/StatusesArea";
 import { useEmsFdState } from "state/ems-fd-state";
-import { useDispatchState } from "state/dispatch/dispatchState";
+import { useDispatchState } from "state/dispatch/dispatch-state";
 import { requestAll } from "lib/utils";
 import { ActiveDeputies } from "components/dispatch/active-deputies";
 import { ActiveOfficers } from "components/dispatch/active-officers";
