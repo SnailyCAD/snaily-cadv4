@@ -19,7 +19,7 @@ services:
 
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: prod.Dockerfile
       args:
         - BUILD_CONTEXT=api
     ports:
@@ -37,7 +37,7 @@ services:
 
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: prod.Dockerfile
       args:
         - BUILD_CONTEXT=client
 
