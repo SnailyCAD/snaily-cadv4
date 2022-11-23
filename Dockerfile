@@ -1,5 +1,6 @@
 #build
 FROM node:18 as build
+
 ARG BUILD_CONTEXT
 
 WORKDIR /app
