@@ -2673,6 +2673,7 @@ __metadata:
     cors: 2.8.5
     cuid: ^2.1.8
     discord-api-types: 0.37.18
+    dotenv: ^16.0.3
     esbuild: ^0.15.14
     esbuild-register: ^3.4.1
     express: 4.18.2
