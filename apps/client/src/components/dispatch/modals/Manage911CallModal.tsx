@@ -14,12 +14,13 @@ import { defaultPermissions } from "@snailycad/permissions";
 import { useLeoState } from "state/leo-state";
 import { useEmsFdState } from "state/ems-fd-state";
 import type { Delete911CallByIdData } from "@snailycad/types/api";
-import { useCall911State } from "state/dispatch/call911State";
+import { useCall911State } from "state/dispatch/call-911-state";
 import { Manage911CallForm } from "./Manage911Call/Manage911CallForm";
 import { Infofield } from "components/shared/Infofield";
 import { FullDate } from "components/shared/FullDate";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
+import shallow from "zustand/shallow";
 
 interface Props {
   call: Full911Call | null;
@@ -34,7 +35,14 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
   const { isOpen, closeModal } = useModal();
   const t = useTranslations("Calls");
   const { state, execute } = useFetch();
-  const { setCalls, calls } = useCall911State();
+  const { setCalls, calls } = useCall911State(
+    (state) => ({
+      setCalls: state.setCalls,
+      calls: state.calls,
+    }),
+    shallow,
+  );
+
   const router = useRouter();
   const { hasPermissions } = usePermission();
   const { generateCallsign } = useGenerateCallsign();

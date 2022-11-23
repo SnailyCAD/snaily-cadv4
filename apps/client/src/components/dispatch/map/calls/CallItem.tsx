@@ -11,7 +11,7 @@ import type { MapCallProps } from "./ActiveMapCalls";
 import { useTranslations } from "next-intl";
 import { Infofield } from "components/shared/Infofield";
 import { isUnitCombined } from "@snailycad/utils";
-import { useCall911State } from "state/dispatch/call911State";
+import { useCall911State } from "state/dispatch/call-911-state";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
 interface CallItemProps extends Omit<MapCallProps, "toggledId" | "openItems" | "setOpenItems"> {
@@ -23,7 +23,7 @@ export function CallItem({ call, hasMarker, setMarker }: CallItemProps) {
   const common = useTranslations("Common");
   const { generateCallsign } = useGenerateCallsign();
   const { openModal } = useModal();
-  const { setCurrentlySelectedCall } = useCall911State();
+  const setCurrentlySelectedCall = useCall911State((state) => state.setCurrentlySelectedCall);
 
   function handleEdit(call: Full911Call) {
     openModal(ModalIds.Manage911Call);

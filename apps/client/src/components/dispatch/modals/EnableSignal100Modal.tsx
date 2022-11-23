@@ -5,14 +5,22 @@ import { Select } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
-import { useCall911State } from "state/dispatch/call911State";
+import { useCall911State } from "state/dispatch/call-911-state";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
+import shallow from "zustand/shallow";
 
 export function EnableSignal100Modal() {
   const { isOpen, closeModal } = useModal();
-  const { calls, setCalls } = useCall911State();
+  const { setCalls, calls } = useCall911State(
+    (state) => ({
+      setCalls: state.setCalls,
+      calls: state.calls,
+    }),
+    shallow,
+  );
+
   const t = useTranslations();
   const { execute, state } = useFetch();
 

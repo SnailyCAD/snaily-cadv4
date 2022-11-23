@@ -21,10 +21,11 @@ import { AssignedUnitsColumn } from "./AssignedUnitsColumn";
 import type { Get911CallsData, Post911CallAssignUnAssign } from "@snailycad/types/api";
 import { useMounted } from "@casper124578/useful";
 import { CallDescription } from "./CallDescription";
-import { ActiveCallsHeader } from "./ActiveCallsHeader";
-import { ActiveCallsActionsColumn } from "./ActionsColumn";
-import { useCall911State } from "state/dispatch/call911State";
+import { ActiveCallsHeader } from "./active-calls-header";
+import { ActiveCallsActionsColumn } from "./actions-column";
+import { useCall911State } from "state/dispatch/call-911-state";
 import { useActiveCalls } from "hooks/realtime/useActiveCalls";
+import shallow from "zustand/shallow";
 
 interface Props {
   initialData: Get911CallsData;
@@ -33,7 +34,16 @@ interface Props {
 function _ActiveCalls({ initialData }: Props) {
   const { hasPermissions } = usePermission();
   const { draggingUnit } = useDispatchState();
-  const call911State = useCall911State();
+  const call911State = useCall911State(
+    (state) => ({
+      calls: state.calls,
+      setCalls: state.setCalls,
+      currentlySelectedCall: state.currentlySelectedCall,
+      setCurrentlySelectedCall: state.setCurrentlySelectedCall,
+    }),
+    shallow,
+  );
+
   const isMounted = useMounted();
   const calls = isMounted ? call911State.calls : initialData.calls;
   const hasCalls = isMounted ? call911State.calls.length >= 1 : initialData.totalCount >= 1;
@@ -47,7 +57,13 @@ function _ActiveCalls({ initialData }: Props) {
   const { execute } = useFetch();
   const activeOfficer = useLeoState((state) => state.activeOfficer);
   const activeDeputy = useEmsFdState((state) => state.activeDeputy);
-  const { search, setSearch } = useCallsFilters();
+  const { search, setSearch } = useCallsFilters(
+    (state) => ({
+      search: state.search,
+      setSearch: state.setSearch,
+    }),
+    shallow,
+  );
 
   const asyncTable = useAsyncTable({
     search,

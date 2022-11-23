@@ -8,7 +8,7 @@ import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { useLeoState } from "state/leo-state";
 import { Rank, Record, RecordType, ValueType } from "@snailycad/types";
-import { ActiveCalls } from "components/dispatch/active-calls/ActiveCalls";
+import { ActiveCalls } from "components/dispatch/active-calls/active-calls";
 import { useDispatchState } from "state/dispatch/dispatchState";
 import { ModalButtons } from "components/leo/ModalButtons";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
@@ -36,7 +36,7 @@ import type {
   GetMyOfficersData,
 } from "@snailycad/types/api";
 import { CreateWarrantModal } from "components/leo/modals/CreateWarrantModal";
-import { useCall911State } from "state/dispatch/call911State";
+import { useCall911State } from "state/dispatch/call-911-state";
 import { DndProvider } from "components/shared/dnd/DndProvider";
 import { usePermission } from "hooks/usePermission";
 import shallow from "zustand/shallow";
@@ -106,7 +106,7 @@ export default function OfficerDashboard({
 
   const leoState = useLeoState();
   const dispatchState = useDispatchState();
-  const call911State = useCall911State();
+  const set911Calls = useCall911State((state) => state.setCalls);
   const t = useTranslations("Leo");
   const signal100 = useSignal100();
   const tones = useTones("leo");
@@ -139,7 +139,7 @@ export default function OfficerDashboard({
   React.useEffect(() => {
     leoState.setActiveOfficer(activeOfficer);
 
-    call911State.setCalls(calls.calls);
+    set911Calls(calls.calls);
     dispatchState.setBolos(bolos);
 
     dispatchState.setActiveDeputies(activeDeputies);

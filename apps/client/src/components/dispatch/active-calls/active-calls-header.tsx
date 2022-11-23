@@ -7,7 +7,7 @@ import { useCallsFilters } from "state/callsFiltersState";
 import type { Full911Call } from "state/dispatch/dispatchState";
 import dynamic from "next/dynamic";
 
-const CallsFilters = dynamic(async () => (await import("./CallsFilters")).CallsFilters);
+const CallsFilters = dynamic(async () => (await import("./call-filters")).CallsFilters);
 
 interface Props {
   calls: Full911Call[];

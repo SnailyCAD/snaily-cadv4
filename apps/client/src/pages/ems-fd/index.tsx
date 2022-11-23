@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Layout } from "components/Layout";
-import { ActiveCalls } from "components/dispatch/active-calls/ActiveCalls";
+import { ActiveCalls } from "components/dispatch/active-calls/active-calls";
 import { ModalButtons } from "components/ems-fd/ModalButtons";
 import dynamic from "next/dynamic";
 import type { GetServerSideProps } from "next";
@@ -27,7 +27,7 @@ import type {
   GetEmsFdActiveDeputy,
   GetMyDeputiesData,
 } from "@snailycad/types/api";
-import { useCall911State } from "state/dispatch/call911State";
+import { useCall911State } from "state/dispatch/call-911-state";
 import { DndProvider } from "components/shared/dnd/DndProvider";
 import { usePermission } from "hooks/usePermission";
 
@@ -75,7 +75,7 @@ export default function EmsFDDashboard({
   const panic = usePanicButton();
   const state = useEmsFdState();
   const dispatchState = useDispatchState();
-  const call911State = useCall911State();
+  const set911Calls = useCall911State((state) => state.setCalls);
   const { hasPermissions } = usePermission();
   const isAdmin = hasPermissions(
     defaultPermissions.allDefaultAdminPermissions,
@@ -85,7 +85,7 @@ export default function EmsFDDashboard({
   React.useEffect(() => {
     state.setActiveDeputy(activeDeputy);
     state.setDeputies(userDeputies);
-    call911State.setCalls(calls.calls);
+    set911Calls(calls.calls);
     dispatchState.setActiveDeputies(activeDeputies);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeDeputies, activeDeputy, calls]);

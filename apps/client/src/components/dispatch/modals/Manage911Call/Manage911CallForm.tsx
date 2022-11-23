@@ -15,11 +15,12 @@ import useFetch from "lib/useFetch";
 import type { Full911Call } from "state/dispatch/dispatchState";
 import { Select } from "components/form/Select";
 import { useTranslations } from "next-intl";
-import { useCall911State } from "state/dispatch/call911State";
+import { useCall911State } from "state/dispatch/call-911-state";
 import { useModal } from "state/modalState";
 import { AssignedUnitsTable } from "./AssignedUnitsTable";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
+import shallow from "zustand/shallow";
 
 interface Props {
   call: Full911Call | null;
@@ -34,7 +35,13 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
   const { execute, state } = useFetch();
-  const { setCalls, calls } = useCall911State();
+  const { setCalls, calls } = useCall911State(
+    (state) => ({
+      setCalls: state.setCalls,
+      calls: state.calls,
+    }),
+    shallow,
+  );
   const { closeModal } = useModal();
   const { DIVISIONS } = useFeatureEnabled();
 

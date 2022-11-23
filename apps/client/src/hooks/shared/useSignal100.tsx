@@ -4,7 +4,7 @@ import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { useTranslations } from "use-intl";
 import { useAudio } from "react-use";
-import { useCall911State } from "state/dispatch/call911State";
+import { useCall911State } from "state/dispatch/call-911-state";
 
 const SIGNAL_100_SRC = "/sounds/signal100.mp3";
 export function useSignal100() {
@@ -45,7 +45,7 @@ export function useSignal100() {
 
 function Component({ audio, enabled }: { audio: any; enabled: boolean }) {
   const t = useTranslations("Leo");
-  const { calls } = useCall911State();
+  const calls = useCall911State((state) => state.calls);
 
   const callsWithSignal100 = React.useMemo(
     () =>

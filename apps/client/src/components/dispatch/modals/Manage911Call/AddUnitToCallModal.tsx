@@ -14,7 +14,7 @@ import { isUnitCombined } from "@snailycad/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Toggle } from "components/form/Toggle";
 import type { Put911CallByIdData } from "@snailycad/types/api";
-import { useCall911State } from "state/dispatch/call911State";
+import { useCall911State } from "state/dispatch/call-911-state";
 
 interface Props {
   onClose?(): void;

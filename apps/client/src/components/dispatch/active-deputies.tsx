@@ -16,7 +16,7 @@ import { Table, useTableState } from "components/shared/Table";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { UnitRadioChannelModal } from "./active-units/UnitRadioChannelModal";
-import { useActiveUnitsState } from "state/activeUnitsState";
+import { useActiveUnitsState } from "state/active-unit-state";
 import { classNames } from "lib/classNames";
 import { Filter } from "react-bootstrap-icons";
 import { ActiveUnitsSearch } from "./active-units/ActiveUnitsSearch";
@@ -27,7 +27,8 @@ import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { DeputyColumn } from "./active-units/deputies/DeputyColumn";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useMounted } from "@casper124578/useful";
-import { useCall911State } from "state/dispatch/call911State";
+import { useCall911State } from "state/dispatch/call-911-state";
+import shallow from "zustand/shallow";
 
 interface Props {
   initialDeputies: EmsFdDeputy[];
@@ -47,9 +48,16 @@ function ActiveDeputies({ initialDeputies }: Props) {
   const { hasActiveDispatchers } = useActiveDispatchers();
   const { DIVISIONS, BADGE_NUMBERS, RADIO_CHANNEL_MANAGEMENT, ACTIVE_INCIDENTS } =
     useFeatureEnabled();
-  const { emsSearch, showEmsFilters, setShowFilters } = useActiveUnitsState();
+  const { emsSearch, showEmsFilters, setShowFilters } = useActiveUnitsState(
+    (state) => ({
+      emsSearch: state.emsSearch,
+      showEmsFilters: state.showEmsFilters,
+      setShowFilters: state.setShowFilters,
+    }),
+    shallow,
+  );
   const { handleFilter } = useActiveUnitsFilter();
-  const { calls } = useCall911State();
+  const active911Calls = useCall911State((state) => state.calls);
   const tableState = useTableState();
 
   const router = useRouter();
@@ -104,7 +112,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
 
                 const activeIncident =
                   activeIncidents.find((v) => v.id === deputy.activeIncidentId) ?? null;
-                const activeCall = calls.find((v) => v.id === deputy.activeCallId) ?? null;
+                const activeCall = active911Calls.find((v) => v.id === deputy.activeCallId) ?? null;
 
                 const nameAndCallsign = `${generateCallsign(deputy)} ${makeUnitName(deputy)}`;
 

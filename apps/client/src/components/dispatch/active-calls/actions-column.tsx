@@ -11,7 +11,7 @@ import type { ActiveDeputy } from "state/ems-fd-state";
 import { ShouldDoType } from "@snailycad/types";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "next-intl";
-import { useCall911State } from "state/dispatch/call911State";
+import { useCall911State } from "state/dispatch/call-911-state";
 
 interface Props {
   call: Full911Call;

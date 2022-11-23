@@ -4,7 +4,7 @@ import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { ActiveCalls } from "components/dispatch/active-calls/ActiveCalls";
+import { ActiveCalls } from "components/dispatch/active-calls/active-calls";
 import { useDispatchState } from "state/dispatch/dispatchState";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { DispatchModalButtons } from "components/dispatch/ModalButtons";
@@ -23,7 +23,7 @@ import { Permissions } from "@snailycad/permissions";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import type { Get911CallsData, GetBolosData, GetDispatchData } from "@snailycad/types/api";
 import { UtilityPanel } from "components/shared/UtilityPanel";
-import { useCall911State } from "state/dispatch/call911State";
+import { useCall911State } from "state/dispatch/call-911-state";
 import { DndProvider } from "components/shared/dnd/DndProvider";
 
 const ActiveIncidents = dynamic(async () => {
@@ -77,7 +77,7 @@ export default function DispatchDashboard(props: DispatchPageProps) {
   });
 
   const state = useDispatchState();
-  const call911State = useCall911State();
+  const set911Calls = useCall911State((state) => state.setCalls);
   const t = useTranslations("Leo");
   const signal100 = useSignal100();
   const panic = usePanicButton();
@@ -96,7 +96,7 @@ export default function DispatchDashboard(props: DispatchPageProps) {
   );
 
   React.useEffect(() => {
-    call911State.setCalls(props.calls.calls);
+    set911Calls(props.calls.calls);
     state.setBolos(props.bolos);
     state.setAllOfficers(props.officers);
 

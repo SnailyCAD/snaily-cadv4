@@ -9,7 +9,7 @@ import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { usePortal } from "@casper124578/useful";
 import { CallItem } from "./CallItem";
-import { useCall911State } from "state/dispatch/call911State";
+import { useCall911State } from "state/dispatch/call-911-state";
 
 export interface MapCallProps {
   hasMarker(callId: string): boolean;

@@ -18,7 +18,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { UnitRadioChannelModal } from "./active-units/UnitRadioChannelModal";
 import { ActiveUnitsSearch } from "./active-units/ActiveUnitsSearch";
 import { classNames } from "lib/classNames";
-import { useActiveUnitsState } from "state/activeUnitsState";
+import { useActiveUnitsState } from "state/active-unit-state";
 import { useActiveUnitsFilter } from "hooks/shared/useActiveUnitsFilter";
 import { MergeUnitModal } from "./active-units/MergeUnitModal";
 import { OfficerColumn } from "./active-units/officers/OfficerColumn";
@@ -29,7 +29,8 @@ import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { HoverCard } from "components/shared/HoverCard";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useMounted } from "@casper124578/useful";
-import { useCall911State } from "state/dispatch/call911State";
+import { useCall911State } from "state/dispatch/call-911-state";
+import shallow from "zustand/shallow";
 
 interface Props {
   initialOfficers: ActiveOfficer[];
@@ -42,7 +43,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
 
   const { activeOfficers: _activeOfficers } = useActiveOfficers();
   const { activeIncidents } = useActiveIncidents();
-  const { calls } = useCall911State();
+  const active911Calls = useCall911State((state) => state.calls);
   const isMounted = useMounted();
   const activeOfficers = isMounted ? _activeOfficers : initialOfficers;
 
@@ -55,7 +56,14 @@ function ActiveOfficers({ initialOfficers }: Props) {
   const { hasActiveDispatchers } = useActiveDispatchers();
   const { BADGE_NUMBERS, ACTIVE_INCIDENTS, RADIO_CHANNEL_MANAGEMENT, DIVISIONS } =
     useFeatureEnabled();
-  const { leoSearch, showLeoFilters, setShowFilters } = useActiveUnitsState();
+  const { leoSearch, showLeoFilters, setShowFilters } = useActiveUnitsState(
+    (state) => ({
+      leoSearch: state.leoSearch,
+      showLeoFilters: state.showLeoFilters,
+      setShowFilters: state.setShowFilters,
+    }),
+    shallow,
+  );
   const { handleFilter } = useActiveUnitsFilter();
 
   const router = useRouter();
@@ -109,7 +117,8 @@ function ActiveOfficers({ initialOfficers }: Props) {
 
                 const activeIncident =
                   activeIncidents.find((v) => v.id === officer.activeIncidentId) ?? null;
-                const activeCall = calls.find((v) => v.id === officer.activeCallId) ?? null;
+                const activeCall =
+                  active911Calls.find((v) => v.id === officer.activeCallId) ?? null;
 
                 const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
                 const nameAndCallsign = `${generateCallsign(officer)} ${makeUnitName(officer)}`;
