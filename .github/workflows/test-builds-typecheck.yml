@@ -43,7 +43,7 @@ jobs:
         run: yarn
 
       - name: Run turbo build
-        run: yarn turbo run build
+        run: yarn turbo run build --filter=\!@snailycad/api
 
       - name: Run turbo typecheck
         run: yarn turbo run typecheck
