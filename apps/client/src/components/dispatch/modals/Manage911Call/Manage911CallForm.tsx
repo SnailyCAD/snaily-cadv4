@@ -220,7 +220,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
               </FormRow>
 
               <FormField
-                className="max-w-[750px]"
+                // className="max-w-[750px]"
                 errorMessage={errors.description}
                 label={common("description")}
               >

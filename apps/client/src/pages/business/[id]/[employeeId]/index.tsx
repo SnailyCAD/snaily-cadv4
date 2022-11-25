@@ -218,7 +218,9 @@ export default function BusinessId(props: Props) {
       {currentEmployee.canCreatePosts ? (
         <ManageBusinessPostModal
           post={tempPost}
-          onUpdate={() => void 0}
+          onUpdate={(oldPost, newPost) => {
+            businessActions.setPosts(posts.map((p) => (p.id === oldPost.id ? newPost : p)));
+          }}
           onCreate={(post) => businessActions.setPosts([post, ...posts])}
           onClose={() => setTimeout(() => postState.setTempId(null), 100)}
         />
