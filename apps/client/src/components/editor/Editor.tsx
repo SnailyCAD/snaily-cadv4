@@ -33,6 +33,7 @@ interface EditorProps {
   value: any;
   onChange?(value: Descendant[]): void;
   truncate?: boolean;
+  errorMessage?: string;
 }
 
 export const DEFAULT_EDITOR_DATA = [
@@ -49,7 +50,7 @@ const HOTKEYS = {
   "mod+s": "strikethrough",
 } as const;
 
-export function Editor({ isReadonly, value, onChange, truncate }: EditorProps) {
+export function Editor(props: EditorProps) {
   const renderElement = React.useCallback(
     (props: RenderElementProps) => <Element {...props} />,
     [],
@@ -61,22 +62,47 @@ export function Editor({ isReadonly, value, onChange, truncate }: EditorProps) {
   );
 
   function handleChange(value: Descendant[]) {
-    onChange?.(value);
+    props.onChange?.(value);
   }
 
+  // handle state changes
+  React.useEffect(() => {
+    editor.children = props.value;
+    editor.onChange();
+  }, [props.value]); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
-    <div className="mt-1">
-      <Slate editor={editor} value={value as Descendant[]} onChange={handleChange}>
-        {isReadonly ? null : <Toolbar />}
+    <div
+      className={classNames(
+        "mt-1 rounded-md border w-full shadow-sm",
+        !props.isReadonly ? "bg-secondary text-white overflow-hidden" : "px-1.5 py-2",
+        props.errorMessage ? "border-red-500 focus:border-red-700" : "border-gray-700",
+      )}
+    >
+      <Slate
+        editor={editor}
+        value={props.value as Descendant[]}
+        onChange={(value) => {
+          const isAstChange = editor.operations.some(
+            (operation) => operation.type !== "set_selection",
+          );
+
+          if (isAstChange) {
+            handleChange(value);
+          }
+        }}
+      >
+        {props.isReadonly ? null : <Toolbar />}
         <Editable
           spellCheck="false"
           autoComplete="off"
-          readOnly={isReadonly}
+          readOnly={props.isReadonly}
           renderLeaf={renderLeaf}
           renderElement={renderElement}
           className={classNames(
-            truncate && "!flex",
-            "w-full p-1.5 rounded-md bg-transparent disabled:cursor-not-allowed disabled:opacity-80",
+            "w-full bg-transparent disabled:cursor-not-allowed disabled:opacity-80 py-1.5",
+            props.truncate && "!flex",
+            props.isReadonly ? "px-0" : "px-2",
           )}
           placeholder="Start typing..."
           onKeyDown={(event) => {
@@ -96,19 +122,19 @@ export function Editor({ isReadonly, value, onChange, truncate }: EditorProps) {
 
 function Leaf({ attributes, children, leaf }: RenderLeafProps) {
   if (leaf.bold) {
-    children = <strong>{children}</strong>;
+    children = <strong {...attributes}>{children}</strong>;
   }
 
   if (leaf.italic) {
-    children = <em>{children}</em>;
+    children = <em {...attributes}>{children}</em>;
   }
 
   if (leaf.underline) {
-    children = <u>{children}</u>;
+    children = <u {...attributes}>{children}</u>;
   }
 
   if (leaf.strikethrough) {
-    children = <s>{children}</s>;
+    children = <s {...attributes}>{children}</s>;
   }
 
   return <span {...attributes}>{children}</span>;

@@ -125,11 +125,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
           <AddressPostalSelect addressLabel="location" />
 
           {router.pathname.includes("/citizen") ? (
-            <FormField
-              className="max-w-[750px]"
-              errorMessage={errors.description}
-              label={common("description")}
-            >
+            <FormField errorMessage={errors.description} label={common("description")}>
               <Editor
                 value={values.descriptionData}
                 onChange={(v) => setFieldValue("descriptionData", v)}
@@ -219,11 +215,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
                 </FormField>
               </FormRow>
 
-              <FormField
-                className="max-w-[750px]"
-                errorMessage={errors.description}
-                label={common("description")}
-              >
+              <FormField errorMessage={errors.description} label={common("description")}>
                 <Editor
                   value={values.descriptionData}
                   onChange={(v) => setFieldValue("descriptionData", v)}
