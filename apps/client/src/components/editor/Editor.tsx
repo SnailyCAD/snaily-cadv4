@@ -66,8 +66,10 @@ export function Editor(props: EditorProps) {
   }
 
   // handle state changes
-  editor.children = props.value;
-  editor.onChange();
+  React.useEffect(() => {
+    editor.children = props.value;
+    editor.onChange();
+  }, [props.value]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div
@@ -97,10 +99,6 @@ export function Editor(props: EditorProps) {
           readOnly={props.isReadonly}
           renderLeaf={renderLeaf}
           renderElement={renderElement}
-          // className={classNames(
-          //   props.truncate && "!flex",
-          //   "w-full p-1.5 rounded-md bg-transparent disabled:cursor-not-allowed disabled:opacity-80",
-          // )}
           className={classNames(
             "w-full bg-transparent disabled:cursor-not-allowed disabled:opacity-80 py-1.5",
             props.truncate && "!flex",
@@ -124,19 +122,19 @@ export function Editor(props: EditorProps) {
 
 function Leaf({ attributes, children, leaf }: RenderLeafProps) {
   if (leaf.bold) {
-    children = <strong>{children}</strong>;
+    children = <strong {...attributes}>{children}</strong>;
   }
 
   if (leaf.italic) {
-    children = <em>{children}</em>;
+    children = <em {...attributes}>{children}</em>;
   }
 
   if (leaf.underline) {
-    children = <u>{children}</u>;
+    children = <u {...attributes}>{children}</u>;
   }
 
   if (leaf.strikethrough) {
-    children = <s>{children}</s>;
+    children = <s {...attributes}>{children}</s>;
   }
 
   return <span {...attributes}>{children}</span>;
