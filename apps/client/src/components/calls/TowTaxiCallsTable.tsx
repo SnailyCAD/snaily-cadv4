@@ -17,7 +17,7 @@ const AssignToCallModal = dynamic(
   async () => (await import("components/citizen/tow/AssignToTowCall")).AssignToCallModal,
 );
 const ManageCallModal = dynamic(
-  async () => (await import("components/citizen/tow/ManageTowCall")).ManageCallModal,
+  async () => (await import("components/citizen/tow/manage-tow-call")).ManageCallModal,
 );
 
 interface Props {
@@ -125,6 +125,9 @@ export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props)
         onClose={() => callState.setTempId(null)}
         onDelete={handleCallEnd}
         onUpdate={updateCalls}
+        onCreate={(call) => {
+          setCalls((p) => [call, ...p]);
+        }}
         call={tempCall}
       />
     </>

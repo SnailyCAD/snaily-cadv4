@@ -31,10 +31,11 @@ interface Props {
     newC: PutTaxiCallsData | PutTowCallsData,
   ): void;
   onDelete?(call: PutTaxiCallsData | PutTowCallsData): void;
+  onCreate?(call: PostTaxiCallsData | PostTowCallsData): void;
   onClose?(): void;
 }
 
-export function ManageCallModal({ onDelete, onUpdate, onClose, isTow: tow, call }: Props) {
+export function ManageCallModal(props: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
   const { isOpen, closeModal, openModal } = useModal();
@@ -42,41 +43,41 @@ export function ManageCallModal({ onDelete, onUpdate, onClose, isTow: tow, call 
   const router = useRouter();
 
   const isTowPath = router.pathname === "/tow";
-  const isTow = typeof tow === "undefined" ? isTowPath : tow;
+  const isTow = typeof props.isTow === "undefined" ? isTowPath : props.isTow;
   const title = isTow
-    ? call
+    ? props.call
       ? t("editTowCall")
       : t("createTowCall")
-    : call
+    : props.call
     ? t("editTaxiCall")
     : t("createTaxiCall");
 
   async function handleEndCall() {
-    if (!call) return;
+    if (!props.call) return;
 
-    const path = isTow ? `/tow/${call.id}` : `/taxi/${call.id}`;
+    const path = isTow ? `/tow/${props.call.id}` : `/taxi/${props.call.id}`;
     const { json } = await execute<DeleteTowCallsData | DeleteTaxiCallsData>({
       path,
       method: "DELETE",
     });
 
     if (json) {
-      onDelete?.(call);
+      props.onDelete?.(props.call);
       closeModal(ModalIds.ManageTowCall);
     }
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    if (call) {
-      const path = isTow ? `/tow/${call.id}` : `/taxi/${call.id}`;
+    if (props.call) {
+      const path = isTow ? `/tow/${props.call.id}` : `/taxi/${props.call.id}`;
       const { json } = await execute<PutTowCallsData | PutTaxiCallsData>({
         path,
         method: "PUT",
-        data: { ...call, ...values },
+        data: { ...props.call, ...values },
       });
 
       if (json.id) {
-        onUpdate?.(call, json);
+        props.onUpdate?.(props.call, json);
       }
     } else {
       const { json } = await execute<PostTaxiCallsData | PostTowCallsData>({
@@ -86,6 +87,7 @@ export function ManageCallModal({ onDelete, onUpdate, onClose, isTow: tow, call 
       });
 
       if (json.id) {
+        props.onCreate?.(json);
         toastMessage({
           title: common("success"),
           message: t(isTow ? "towCallCreated" : "taxiCallCreated"),
@@ -99,16 +101,18 @@ export function ManageCallModal({ onDelete, onUpdate, onClose, isTow: tow, call 
 
   function handleClose() {
     closeModal(ModalIds.ManageTowCall);
-    onClose?.();
+    props.onClose?.();
   }
 
   const INITIAL_VALUES = {
-    location: call?.location ?? "",
-    postal: call?.postal ?? "",
-    creatorId: call?.creatorId ?? "",
-    creatorName: call?.creator ? `${call.creator.name} ${call.creator.surname}` : "",
-    description: call?.description ?? "",
-    descriptionData: dataToSlate(call),
+    location: props.call?.location ?? "",
+    postal: props.call?.postal ?? "",
+    creatorId: props.call?.creatorId ?? "",
+    creatorName: props.call?.creator
+      ? `${props.call.creator.name} ${props.call.creator.surname}`
+      : "",
+    description: props.call?.description ?? "",
+    descriptionData: dataToSlate(props.call),
   };
 
   const validate = handleValidate(TOW_SCHEMA);
@@ -141,8 +145,8 @@ export function ManageCallModal({ onDelete, onUpdate, onClose, isTow: tow, call 
               />
             </FormField>
 
-            <footer className={`mt-5 flex ${call ? "justify-between" : "justify-end"}`}>
-              {call ? (
+            <footer className={`mt-5 flex ${props.call ? "justify-between" : "justify-end"}`}>
+              {props.call ? (
                 <Button
                   variant="danger"
                   className="flex items-center mr-2"
@@ -164,7 +168,7 @@ export function ManageCallModal({ onDelete, onUpdate, onClose, isTow: tow, call 
                   type="submit"
                 >
                   {state === "loading" ? <Loader className="mr-2" /> : null}
-                  {call ? common("save") : common("create")}
+                  {props.call ? common("save") : common("create")}
                 </Button>
               </div>
             </footer>

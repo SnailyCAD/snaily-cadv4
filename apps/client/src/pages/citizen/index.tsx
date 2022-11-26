@@ -24,7 +24,7 @@ const RegisterWeaponModal = dynamic(
   async () => (await import("components/citizen/weapons/RegisterWeaponModal")).RegisterWeaponModal,
 );
 const ManageCallModal = dynamic(
-  async () => (await import("components/citizen/tow/ManageTowCall")).ManageCallModal,
+  async () => (await import("components/citizen/tow/manage-tow-call")).ManageCallModal,
 );
 const Manage911CallModal = dynamic(
   async () => (await import("components/dispatch/modals/Manage911CallModal")).Manage911CallModal,

@@ -176,7 +176,8 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
         <div>
           <Title className="!mb-0">{typeT("MANAGE")}</Title>
           <h2 className="text-lg font-semibold">
-            {t("totalItems")}: <span className="font-normal">{totalCount}</span>
+            {t("totalItems")}:{" "}
+            <span className="font-normal">{asyncTable.pagination.totalDataCount}</span>
           </h2>
         </div>
 
