@@ -1,7 +1,7 @@
 import { components, MultiValueGenericProps } from "react-select";
 import { HoverCard } from "components/shared/HoverCard";
 import type { PenalCode } from "@snailycad/types";
-import { dataToSlate, Editor } from "components/editor/Editor";
+import { dataToSlate, Editor } from "components/editor/editor";
 
 export function MultiValueContainerPenalCode(props: MultiValueGenericProps<any>) {
   const penalCode = props.data.value as PenalCode;

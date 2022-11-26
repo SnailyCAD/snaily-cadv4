@@ -2,7 +2,7 @@ import { TOW_SCHEMA } from "@snailycad/schemas";
 import { Loader, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { AlertModal } from "components/modal/AlertModal";
-import { dataToSlate, Editor } from "components/editor/Editor";
+import { dataToSlate, Editor } from "components/editor/editor";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";

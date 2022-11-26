@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { Record } from "@snailycad/types";
-import { dataToSlate, Editor } from "components/editor/Editor";
+import { dataToSlate, Editor } from "components/editor/editor";
 import { HoverCard } from "components/shared/HoverCard";
 import { useValues } from "context/ValuesContext";
 import { useTranslations } from "next-intl";

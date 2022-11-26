@@ -1,7 +1,7 @@
 import { classNames } from "lib/classNames";
 import { Transforms } from "slate";
 import { ReactEditor, useReadOnly, useSlateStatic, type RenderElementProps } from "slate-react";
-import type { CheckListItemElement as ICheckListItemElement } from "./types";
+import type { CheckListItemElement as ICheckListItemElement } from "../types";
 
 type Props = RenderElementProps & { element: ICheckListItemElement };
 
