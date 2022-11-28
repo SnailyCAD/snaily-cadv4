@@ -55,7 +55,9 @@ const processEnvPort = process.env.PORT || process.env.PORT_API;
     cors({ origin: process.env.CORS_ORIGIN_URL ?? "http://localhost:3000", credentials: true }),
     Sentry.Handlers.requestHandler({
       request: true,
+      serverName: true,
     }),
+    Sentry.Handlers.tracingHandler(),
   ],
   swagger: [{ path: "/api-docs", specVersion: "3.0.3" }],
   socketIO: {

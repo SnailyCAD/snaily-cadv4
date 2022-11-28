@@ -15,6 +15,8 @@ import { useAreaOfPlay } from "hooks/global/useAreaOfPlay";
 import { Title } from "components/shared/Title";
 import { CitizenList } from "components/citizen/citizen-list/citizen-list";
 import type { GetCitizensData } from "@snailycad/types/api";
+import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
+import { ValueType } from "@snailycad/types";
 
 const RegisterVehicleModal = dynamic(
   async () =>
@@ -35,6 +37,10 @@ interface Props {
 }
 
 export default function CitizenPage({ citizens }: Props) {
+  useLoadValuesClientSide({
+    valueTypes: [ValueType.LICENSE],
+  });
+
   const t = useTranslations("Citizen");
   const { TOW, TAXI, WEAPON_REGISTRATION, CALLS_911 } = useFeatureEnabled();
 
@@ -118,15 +124,11 @@ export default function CitizenPage({ citizens }: Props) {
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, req }) => {
   const user = await getSessionUser(req);
-  const [data, values] = await requestAll(req, [
-    ["/citizen", { citizens: [], totalCount: 0 }],
-    ["/admin/values/license", []],
-  ]);
+  const [data] = await requestAll(req, [["/citizen", { citizens: [], totalCount: 0 }]]);
 
   return {
     props: {
-      values,
-      citizens: data ?? [],
+      citizens: data,
       session: user,
       messages: {
         ...(await getTranslations(["citizen", "calls", "common"], user?.locale ?? locale)),
