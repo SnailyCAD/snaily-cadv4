@@ -182,9 +182,11 @@ export function NameSearchModal() {
                   return;
                 }
 
+                console.log({ localValue, node });
+
                 const searchValue =
                   typeof localValue !== "undefined" ? { searchValue: localValue } : {};
-                const name = node ? { name: node.key as string } : {};
+                const name = node ? { name: node.textValue as string } : {};
 
                 if (node) {
                   setCurrentResult(node.value);
@@ -207,7 +209,7 @@ export function NameSearchModal() {
                 const name = `${item.name} ${item.surname}`;
 
                 return (
-                  <Item key={name} textValue={name}>
+                  <Item key={item.id} textValue={name}>
                     <div className="flex items-center">
                       {item.imageId ? (
                         <Image
