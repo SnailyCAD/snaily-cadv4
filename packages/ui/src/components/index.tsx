@@ -10,3 +10,4 @@ export * from "./breadcrumbs/breadcrumbs";
 export * from "./breadcrumbs/breadcrumb-item";
 export * from "./fields/date-picker-field";
 export * from "./fields/async-list-search-field";
+export * from "./multi-form/multi-form";

@@ -38,6 +38,7 @@ export const Feature = {
   DIVISIONS: "DIVISIONS",
   TONES: "TONES",
   LICENSE_EXAMS: "LICENSE_EXAMS",
+  CITIZEN_CREATION_RECORDS: "CITIZEN_CREATION_RECORDS",
 } as const;
 
 export type Feature = typeof Feature[keyof typeof Feature];
@@ -129,6 +130,7 @@ export const ValueType = {
   QUALIFICATION: "QUALIFICATION",
   CALL_TYPE: "CALL_TYPE",
   ADDRESS: "ADDRESS",
+  EMERGENCY_VEHICLE: "EMERGENCY_VEHICLE",
 } as const;
 
 export type ValueType = typeof ValueType[keyof typeof ValueType];

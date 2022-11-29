@@ -8,10 +8,11 @@ import { useValues } from "context/ValuesContext";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
-import { useVehicleSearch } from "state/search/vehicleSearchState";
+import { useVehicleSearch } from "state/search/vehicle-search-state";
 import { ModalIds } from "types/ModalIds";
-import { useNameSearch } from "state/search/nameSearchState";
+import { useNameSearch } from "state/search/name-search-state";
 import type { PutSearchActionsVehicleFlagsData } from "@snailycad/types/api";
+import shallow from "zustand/shallow";
 
 export function ManageVehicleFlagsModal() {
   const { isOpen, closeModal } = useModal();
@@ -19,7 +20,13 @@ export function ManageVehicleFlagsModal() {
   const t = useTranslations("Leo");
   const veh = useTranslations("Vehicles");
   const { currentResult, setCurrentResult } = useVehicleSearch();
-  const nameSearchState = useNameSearch();
+  const nameSearchState = useNameSearch(
+    (state) => ({
+      currentResult: state.currentResult,
+      setCurrentResult: state.setCurrentResult,
+    }),
+    shallow,
+  );
   const { vehicleFlag } = useValues();
   const { state, execute } = useFetch();
 

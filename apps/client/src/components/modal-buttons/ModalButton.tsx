@@ -7,7 +7,7 @@ import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { useModal } from "state/modalState";
 import { useRouter } from "next/router";
 import type { EmsFdDeputy } from "@snailycad/types";
-import type { ActiveOfficer } from "state/leoState";
+import type { ActiveOfficer } from "state/leo-state";
 import { useAuth } from "context/AuthContext";
 
 type ButtonProps = Pick<JSX.IntrinsicElements["button"], "name" | "type" | "title" | "disabled">;

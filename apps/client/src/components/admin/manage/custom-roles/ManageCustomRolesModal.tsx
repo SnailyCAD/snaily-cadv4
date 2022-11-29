@@ -100,7 +100,7 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
     if (validatedImage) {
       const fd = new FormData();
 
-      if (typeof validatedImage === "object") {
+      if (typeof validatedImage !== "string") {
         fd.set("image", validatedImage, validatedImage.name);
       }
 

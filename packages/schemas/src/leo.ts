@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { VEHICLE_SCHEMA } from "./citizen";
+import { CREATE_CITIZEN_SCHEMA, VEHICLE_SCHEMA } from "./citizen";
 
 export const SELECT_VALUE = z.object({
   value: z.any(),
@@ -24,6 +24,11 @@ export const CREATE_OFFICER_SCHEMA = z.object({
   callsigns: z.record(INDIVIDUAL_CALLSIGN_SCHEMA).optional().nullable(),
 });
 
+export const CREATE_CITIZEN_WITH_OFFICER_SCHEMA = CREATE_OFFICER_SCHEMA.omit({
+  citizenId: true,
+  image: true,
+}).and(CREATE_CITIZEN_SCHEMA);
+
 export const UPDATE_UNIT_SCHEMA = z.object({
   callsign: z.string().min(1).max(255),
   callsign2: z.string().min(1).max(255),
@@ -47,10 +52,11 @@ export const UPDATE_UNIT_CALLSIGN_SCHEMA = z.object({
 export const UPDATE_OFFICER_STATUS_SCHEMA = z.object({
   status: z.string().min(2).max(255),
   suspended: z.boolean().optional(),
+  vehicleId: z.string().nullable().optional(),
 });
 
 export const SELECT_OFFICER_SCHEMA = z.object({
-  officer: z.string().min(2).max(255),
+  officer: z.object({ id: z.string().min(2).max(255) }),
 });
 
 export const LEO_INCIDENT_SCHEMA = z.object({

@@ -21,6 +21,7 @@ export enum Permissions {
   ManageCustomRoles = "ManageCustomRoles",
   ViewCustomRoles = "ViewCustomRoles",
   ManageWarrants = "ManageWarrants",
+  ManageAwardsAndQualifications = "ManageAwardsAndQualifications",
 
   Dispatch = "Dispatch",
   EmsFd = "EmsFd",
@@ -92,6 +93,7 @@ export enum Permissions {
   ManageValueQualification = "ManageValueQualification",
   ManageValueCallType = "ManageValueCallType",
   ManageValueAddress = "ManageValueAddress",
+  ManageValueEmergencyVehicle = "ManageValueEmergencyVehicle",
 
   // other
   UsePersonalApiToken = "UsePersonalApiToken",

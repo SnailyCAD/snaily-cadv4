@@ -3,7 +3,7 @@ import { useFormikContext } from "formik";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useImageUrl } from "hooks/useImageUrl";
 import Image from "next/image";
-import type { NameSearchResult } from "state/search/nameSearchState";
+import type { NameSearchResult } from "state/search/name-search-state";
 
 interface Props {
   label: string;

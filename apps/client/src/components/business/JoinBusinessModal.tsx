@@ -10,7 +10,7 @@ import { JOIN_COMPANY_SCHEMA } from "@snailycad/schemas";
 import { handleValidate } from "lib/handleValidate";
 import { Select } from "components/form/Select";
 import { useRouter } from "next/router";
-import { useBusinessState } from "state/businessState";
+import { useBusinessState } from "state/business-state";
 import { toastMessage } from "lib/toastMessage";
 import { WhitelistStatus } from "@snailycad/types";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";

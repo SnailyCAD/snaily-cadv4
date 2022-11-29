@@ -235,6 +235,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                         <p>No medical records</p>
                       ) : (
                         <Table
+                          features={{ isWithinCardOrModal: true }}
                           tableState={tableState}
                           data={results.medicalRecords.map((record) => ({
                             id: record.id,

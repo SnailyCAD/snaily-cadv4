@@ -4,7 +4,7 @@ import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { useNotepad } from "hooks/shared/useNotepad";
 import { ModalIds } from "types/ModalIds";
-import { DEFAULT_EDITOR_DATA, Editor } from "components/editor/Editor";
+import { DEFAULT_EDITOR_DATA, Editor } from "components/editor/editor";
 
 export function NotepadModal() {
   const { isOpen, closeModal } = useModal();

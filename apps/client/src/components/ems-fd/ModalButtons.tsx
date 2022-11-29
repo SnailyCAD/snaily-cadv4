@@ -3,7 +3,7 @@ import { ModalIds } from "types/ModalIds";
 import { Rank, ShouldDoType } from "@snailycad/types";
 import { useModal } from "state/modalState";
 import { useTranslations } from "use-intl";
-import { ActiveDeputy, useEmsFdState } from "state/emsFdState";
+import { ActiveDeputy, useEmsFdState } from "state/ems-fd-state";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 import useFetch from "lib/useFetch";

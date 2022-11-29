@@ -4,7 +4,7 @@ import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
-import { useBusinessState } from "state/businessState";
+import { useBusinessState } from "state/business-state";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { UPDATE_EMPLOYEE_SCHEMA } from "@snailycad/schemas";
@@ -15,6 +15,7 @@ import { FormRow } from "components/form/FormRow";
 import { useValues } from "context/ValuesContext";
 import { Employee, EmployeeAsEnum } from "@snailycad/types";
 import type { PutBusinessEmployeesData } from "@snailycad/types/api";
+import shallow from "zustand/shallow";
 
 interface Props {
   onUpdate(old: Employee, newPost: Employee): void;
@@ -23,7 +24,14 @@ interface Props {
 }
 
 export function ManageEmployeeModal({ onClose, onUpdate, employee }: Props) {
-  const { currentBusiness, currentEmployee } = useBusinessState();
+  const { currentBusiness, currentEmployee } = useBusinessState(
+    (state) => ({
+      currentBusiness: state.currentBusiness,
+      currentEmployee: state.currentEmployee,
+    }),
+    shallow,
+  );
+
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
   const common = useTranslations("Common");

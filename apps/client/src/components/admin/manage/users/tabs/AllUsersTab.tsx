@@ -1,3 +1,4 @@
+import * as React from "react";
 import { useTranslations } from "use-intl";
 import Link from "next/link";
 import { Rank } from "@snailycad/types";
@@ -9,11 +10,14 @@ import { useAuth } from "context/AuthContext";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
 import { classNames } from "lib/classNames";
-import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
-import { buttonVariants, Loader, TextField } from "@snailycad/ui";
+import { useAsyncTable } from "hooks/shared/table/use-async-table";
+import { buttonVariants } from "@snailycad/ui";
 import type { GetManageUsersData } from "@snailycad/types/api";
+import { SearchArea } from "components/shared/search/search-area";
 
 export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
+  const [search, setSearch] = React.useState("");
+
   const { cad } = useAuth();
   const { hasPermissions } = usePermission();
 
@@ -21,6 +25,7 @@ export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
   const common = useTranslations("Common");
 
   const asyncTable = useAsyncTable({
+    search,
     initialData: users,
     totalCount,
     fetchOptions: {
@@ -32,30 +37,11 @@ export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
 
   return (
     <TabsContent aria-label={t("allUsers")} value="allUsers" className="mt-5">
-      <TextField
-        label={common("search")}
-        className="my-2 w-full relative"
-        name="search"
-        onChange={(value) => asyncTable.search.setSearch(value)}
-        value={asyncTable.search.search}
-        placeholder="CasperTheGhost"
-      >
-        {asyncTable.state === "loading" ? (
-          <span className="absolute top-[2.4rem] right-2.5">
-            <Loader />
-          </span>
-        ) : null}
-      </TextField>
-
-      {asyncTable.search.search && asyncTable.pagination.totalDataCount !== totalCount ? (
-        <p className="italic text-base font-semibold">
-          Showing {asyncTable.pagination.totalDataCount} result(s)
-        </p>
-      ) : null}
+      <SearchArea totalCount={totalCount} asyncTable={asyncTable} search={{ search, setSearch }} />
 
       <Table
         tableState={tableState}
-        data={asyncTable.data.map((user) => {
+        data={asyncTable.items.map((user) => {
           const hasAdminPermissions = hasPermissions(
             defaultPermissions.allDefaultAdminPermissions,
             user.rank !== Rank.USER,

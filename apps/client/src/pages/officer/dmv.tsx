@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "@snailycad/ui";
 import { Layout } from "components/Layout";
@@ -46,11 +45,7 @@ export default function Dmv({ data }: Props) {
     });
 
     if (json) {
-      const copy = [...asyncTable.data];
-      const idx = copy.findIndex((v) => v.id === id);
-      copy[idx] = json;
-
-      asyncTable.setData(copy);
+      asyncTable.update(id, json);
     }
   }
 
@@ -64,12 +59,12 @@ export default function Dmv({ data }: Props) {
     >
       <Title>{t("dmv")}</Title>
 
-      {asyncTable.data.length <= 0 ? (
+      {asyncTable.items.length <= 0 ? (
         <p className="mt-5">{t("noVehiclesPendingApprovalInDmv")}</p>
       ) : (
         <Table
           tableState={tableState}
-          data={asyncTable.data.map((vehicle) => {
+          data={asyncTable.items.map((vehicle) => {
             return {
               rowProps: {
                 className: vehicle.dmvStatus === "PENDING" ? "opacity-100" : "opacity-50",

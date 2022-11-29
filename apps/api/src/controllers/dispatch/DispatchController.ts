@@ -6,7 +6,7 @@ import { prisma } from "lib/prisma";
 import { Socket } from "services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
-import type { cad, MiscCadSettings, User } from "@snailycad/types";
+import { cad, Feature, MiscCadSettings, User } from "@snailycad/types";
 import { validateSchema } from "lib/validateSchema";
 import { TONES_SCHEMA, UPDATE_AOP_SCHEMA, UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
 import {
@@ -25,6 +25,7 @@ import { getInactivityFilter } from "lib/leo/utils";
 import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
 import { getActiveDeputy } from "lib/ems-fd";
 import type * as APITypes from "@snailycad/types/api";
+import { IsFeatureEnabled } from "middlewares/is-enabled";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -213,6 +214,7 @@ export class DispatchController {
   }
 
   @Put("/radio-channel/:unitId")
+  @IsFeatureEnabled({ feature: Feature.RADIO_CHANNEL_MANAGEMENT })
   @UsePermissions({
     fallback: (u) => u.isDispatch,
     permissions: [Permissions.Dispatch],
@@ -334,6 +336,7 @@ export class DispatchController {
   }
 
   @Post("/tones")
+  @IsFeatureEnabled({ feature: Feature.TONES })
   @UsePermissions({
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
     fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,

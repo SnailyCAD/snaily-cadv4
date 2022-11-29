@@ -2,19 +2,19 @@ import { Table, useTableState } from "components/shared/Table";
 import { useTranslations } from "use-intl";
 import { Button } from "@snailycad/ui";
 import { useModal } from "state/modalState";
-import { useNameSearch } from "state/search/nameSearchState";
+import { useNameSearch } from "state/search/name-search-state";
 import { ModalIds } from "types/ModalIds";
 
 import { TabsContent } from "components/shared/TabList";
 import type { Weapon } from "@snailycad/types";
-import { useWeaponSearch } from "state/search/weaponSearchState";
+import { useWeaponSearch } from "state/search/weapon-search-state";
 
 export function NameSearchWeaponsTab() {
   const t = useTranslations();
   const common = useTranslations("Common");
-  const { currentResult } = useNameSearch();
+  const currentResult = useNameSearch((state) => state.currentResult);
   const { openModal } = useModal();
-  const { setCurrentResult: setWeaponResult } = useWeaponSearch();
+  const setWeaponResult = useWeaponSearch((state) => state.setCurrentResult);
   const tableState = useTableState();
 
   function handleWeaponPress(weapon: Weapon) {
@@ -37,7 +37,7 @@ export function NameSearchWeaponsTab() {
         <p className="text-neutral-700 dark:text-gray-400 my-2">{t("Leo.noWeaponsCitizen")}</p>
       ) : (
         <Table
-          features={{ isWithinCard: true }}
+          features={{ isWithinCardOrModal: true }}
           tableState={tableState}
           data={currentResult.weapons.map((weapon) => ({
             id: weapon.id,

@@ -131,9 +131,12 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
               </header>
 
               {errorMessage ? (
-                <p className="bg-red-500/80 text-black w-full py-1.5 px-3 my-3 rounded-md">
+                <div
+                  role="alert"
+                  className="bg-red-500/80 text-black w-full py-1.5 px-3 my-3 rounded-md"
+                >
                   {errorMessage}
-                </p>
+                </div>
               ) : null}
 
               {ALLOW_REGULAR_LOGIN ? (
@@ -176,7 +179,7 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
 
               {user && !isWithinModal ? (
                 <Button type="button" onPress={handleContinueAs} className="w-full mb-2">
-                  {t.rich("continueAs", { username: user.username })}
+                  {t("continueAs", { username: user.username })}
                 </Button>
               ) : null}
 

@@ -53,7 +53,7 @@ export function TransferVehicleModal({ onTransfer, vehicle }: Props) {
         {({ isValid }) => (
           <Form>
             <p className="my-2 mb-5">
-              {t.rich("transferVehicleInfo", {
+              {t("transferVehicleInfo", {
                 model: vehicle.model.value.value,
               })}
             </p>

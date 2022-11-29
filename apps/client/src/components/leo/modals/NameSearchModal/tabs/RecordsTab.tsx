@@ -8,7 +8,7 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
-import { useNameSearch } from "state/search/nameSearchState";
+import { useNameSearch } from "state/search/name-search-state";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Table, useTableState } from "components/shared/Table";
@@ -19,12 +19,19 @@ import { Permissions, usePermission } from "hooks/usePermission";
 import { ViolationsColumn } from "components/leo/ViolationsColumn";
 import type { DeleteRecordsByIdData } from "@snailycad/types/api";
 import { Status } from "components/shared/Status";
+import shallow from "zustand/shallow";
 
 export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitizen?: boolean }) {
   const t = useTranslations();
   const { state, execute } = useFetch();
   const { getPayload, closeModal } = useModal();
-  const { currentResult, setCurrentResult } = useNameSearch();
+  const { currentResult, setCurrentResult } = useNameSearch(
+    (state) => ({
+      currentResult: state.currentResult,
+      setCurrentResult: state.setCurrentResult,
+    }),
+    shallow,
+  );
 
   const tempItem = getPayload<Record>(ModalIds.AlertDeleteRecord);
   const tempEditRecord = getPayload<Record>(ModalIds.ManageRecord);
@@ -122,33 +129,58 @@ export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitize
   );
 }
 
-function RecordsTable({ data }: { data: Record[] }) {
+export function RecordsTable({
+  data,
+  hasDeletePermissions,
+  onDelete,
+  onEdit,
+}: {
+  onEdit?(record: Record): void;
+  onDelete?(record: Record): void;
+  hasDeletePermissions?: boolean;
+  data: Record[];
+}) {
   const common = useTranslations("Common");
   const { openModal } = useModal();
   const t = useTranslations();
   const router = useRouter();
-  const isCitizen = router.pathname.startsWith("/citizen");
+
+  const isCitizenCreation = router.pathname === "/citizen/create";
+  const isCitizen = router.pathname.startsWith("/citizen") && !isCitizenCreation;
+
   const { generateCallsign } = useGenerateCallsign();
-  const { currentResult } = useNameSearch();
+  const currentResult = useNameSearch((state) => state.currentResult);
   const tableState = useTableState();
   const currency = common("currency");
 
   const { hasPermissions } = usePermission();
-  const hasDeletePermissions = hasPermissions(
-    [
-      Permissions.ManageExpungementRequests,
-      Permissions.ManageNameChangeRequests,
-      Permissions.DeleteCitizenRecords,
-    ],
-    (u) => u.isSupervisor,
-  );
+  const _hasDeletePermissions =
+    hasDeletePermissions ??
+    hasPermissions(
+      [
+        Permissions.ManageExpungementRequests,
+        Permissions.ManageNameChangeRequests,
+        Permissions.DeleteCitizenRecords,
+      ],
+      (u) => u.isSupervisor,
+    );
 
   function handleDeleteClick(record: Record) {
-    if (!hasDeletePermissions) return;
+    if (onDelete) {
+      onDelete(record);
+      return;
+    }
+
+    if (!_hasDeletePermissions) return;
     openModal(ModalIds.AlertDeleteRecord, record);
   }
 
   function handleEditClick(record: Record) {
+    if (onEdit) {
+      onEdit(record);
+      return;
+    }
+
     openModal(ModalIds.ManageRecord, {
       ...record,
       citizenName: `${currentResult?.name} ${currentResult?.surname}`,
@@ -158,7 +190,7 @@ function RecordsTable({ data }: { data: Record[] }) {
   return (
     <div>
       <Table
-        features={{ isWithinCard: true }}
+        features={{ isWithinCardOrModal: !isCitizenCreation }}
         tableState={tableState}
         data={data
           .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
@@ -181,8 +213,11 @@ function RecordsTable({ data }: { data: Record[] }) {
             }
 
             return {
+              type: (
+                <span className="capitalize">{record.type.toLowerCase().replace("_", " ")}</span>
+              ),
               id: record.id,
-              caseNumber: `#${record.caseNumber}`,
+              caseNumber: record.caseNumber ? `#${record.caseNumber}` : "-",
               violations: <ViolationsColumn violations={record.violations} />,
               postal: record.postal,
               officer: record.officer
@@ -195,7 +230,8 @@ function RecordsTable({ data }: { data: Record[] }) {
               ),
               totalCost: `${currency}${formatSum(totalCost())}`,
               notes: record.notes || common("none"),
-              createdAt: <FullDate>{record.createdAt}</FullDate>,
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+              createdAt: record.createdAt ? <FullDate>{record.createdAt}</FullDate> : "-",
               actions: isCitizen ? null : (
                 <>
                   <Button
@@ -207,7 +243,7 @@ function RecordsTable({ data }: { data: Record[] }) {
                     {common("edit")}
                   </Button>
 
-                  {hasDeletePermissions ? (
+                  {_hasDeletePermissions ? (
                     <Button
                       className="ml-2"
                       type="button"
@@ -223,14 +259,15 @@ function RecordsTable({ data }: { data: Record[] }) {
             };
           })}
         columns={[
-          { header: t("Leo.caseNumber"), accessorKey: "caseNumber" },
+          isCitizenCreation ? { header: common("type"), accessorKey: "type" } : null,
+          isCitizenCreation ? null : { header: t("Leo.caseNumber"), accessorKey: "caseNumber" },
           { header: t("Leo.violations"), accessorKey: "violations" },
           { header: t("Leo.postal"), accessorKey: "postal" },
           { header: t("Leo.officer"), accessorKey: "officer" },
           { header: t("Leo.paymentStatus"), accessorKey: "paymentStatus" },
           isCitizen ? { header: t("Leo.totalCost"), accessorKey: "totalCost" } : null,
           { header: t("Leo.notes"), accessorKey: "notes" },
-          { header: common("createdAt"), accessorKey: "createdAt" },
+          isCitizenCreation ? null : { header: common("createdAt"), accessorKey: "createdAt" },
           isCitizen ? null : { header: common("actions"), accessorKey: "actions" },
         ]}
       />

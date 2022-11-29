@@ -8,7 +8,7 @@ import { Res, UseBefore } from "@tsed/common";
 import { IsAuth } from "middlewares/IsAuth";
 import { Rank, WhitelistStatus } from "@prisma/client";
 import { UsePermissions } from "middlewares/UsePermissions";
-import { defaultPermissions } from "@snailycad/permissions";
+import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import type { GetAdminDashboardData } from "@snailycad/types/api";
 import axios from "axios";
 import { getCADVersion } from "@snailycad/utils/version";
@@ -21,7 +21,10 @@ export class AdminController {
   @Description("Get simple CAD stats")
   @UsePermissions({
     fallback: (u) => u.rank !== Rank.USER,
-    permissions: defaultPermissions.allDefaultAdminPermissions,
+    permissions: [
+      ...defaultPermissions.allDefaultAdminPermissions,
+      Permissions.ManageAwardsAndQualifications,
+    ],
   })
   async getData(): Promise<GetAdminDashboardData> {
     const [activeUsers, pendingUsers, bannedUsers] = await Promise.all([

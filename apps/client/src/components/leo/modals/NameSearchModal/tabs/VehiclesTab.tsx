@@ -4,9 +4,9 @@ import { Status } from "components/shared/Status";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useTranslations } from "use-intl";
 import { Button } from "@snailycad/ui";
-import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicleSearchState";
+import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicle-search-state";
 import { useModal } from "state/modalState";
-import { useNameSearch } from "state/search/nameSearchState";
+import { useNameSearch } from "state/search/name-search-state";
 import { ModalIds } from "types/ModalIds";
 
 import { TabsContent } from "components/shared/TabList";
@@ -15,7 +15,7 @@ export function NameSearchVehiclesTab() {
   const t = useTranslations();
   const common = useTranslations("Common");
   const { DMV } = useFeatureEnabled();
-  const { currentResult } = useNameSearch();
+  const currentResult = useNameSearch((state) => state.currentResult);
   const { openModal } = useModal();
   const { setCurrentResult: setVehicleResult } = useVehicleSearch();
   const tableState = useTableState();
@@ -39,7 +39,7 @@ export function NameSearchVehiclesTab() {
         <p className="text-neutral-700 dark:text-gray-400 my-2">{t("Leo.noVehiclesCitizen")}</p>
       ) : (
         <Table
-          features={{ isWithinCard: true }}
+          features={{ isWithinCardOrModal: true }}
           tableState={tableState}
           data={currentResult.vehicles.map((vehicle) => ({
             id: vehicle.id,

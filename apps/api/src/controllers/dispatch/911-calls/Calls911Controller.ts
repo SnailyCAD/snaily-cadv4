@@ -40,6 +40,7 @@ import {
 } from "controllers/leo/incidents/IncidentController";
 import type { z } from "zod";
 import { getNextActiveCallId } from "lib/calls/getNextActiveCall";
+import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 
 export const callInclude = {
   position: true,
@@ -56,6 +57,7 @@ export const callInclude = {
 @Controller("/911-calls")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
+@IsFeatureEnabled({ feature: Feature.CALLS_911 })
 export class Calls911Controller {
   private socket: Socket;
   constructor(socket: Socket) {
@@ -238,7 +240,7 @@ export class Calls911Controller {
     @Context("user") user: User,
     @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings },
   ): Promise<APITypes.Put911CallByIdData> {
-    const data = validateSchema(CALL_911_SCHEMA, body);
+    const data = validateSchema(CALL_911_SCHEMA.partial(), body);
     const maxAssignmentsToCalls = cad.miscCadSettings.maxAssignmentsToCalls ?? Infinity;
 
     const call = await prisma.call911.findUnique({

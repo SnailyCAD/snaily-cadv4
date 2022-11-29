@@ -35,7 +35,12 @@ export default function SupervisorPanelPage({ units }: Props) {
   const { hasPermissions } = usePermission();
 
   const hasViewPermissions = hasPermissions(
-    [Permissions.ManageUnits, Permissions.ViewUnits, Permissions.DeleteUnits],
+    [
+      Permissions.ManageUnits,
+      Permissions.ViewUnits,
+      Permissions.DeleteUnits,
+      Permissions.ManageAwardsAndQualifications,
+    ],
     true,
   );
   const hasManagePermissions = hasPermissions([Permissions.ManageUnits], true);
@@ -90,6 +95,7 @@ export default function SupervisorPanelPage({ units }: Props) {
           Permissions.DeleteUnits,
           Permissions.ManageUnits,
           Permissions.ManageUnitCallsigns,
+          Permissions.ManageAwardsAndQualifications,
         ],
       }}
     >

@@ -135,7 +135,10 @@ export function Nav({ maxWidth }: Props) {
               ) : null}
 
               {hasPermissions(
-                defaultPermissions.allDefaultAdminPermissions,
+                [
+                  ...defaultPermissions.allDefaultAdminPermissions,
+                  Permissions.ManageAwardsAndQualifications,
+                ],
                 user?.rank !== Rank.USER,
               ) ? (
                 <Link

@@ -169,7 +169,7 @@ export class AdminManageCitizensController {
     @PathParams("id") id: string,
     @BodyParams() body: unknown,
   ): Promise<APITypes.PutManageCitizenByIdData> {
-    const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
+    const data = validateSchema(CREATE_CITIZEN_SCHEMA.partial(), body);
     const citizen = await prisma.citizen.findUnique({
       where: { id },
     });
@@ -199,9 +199,9 @@ export class AdminManageCitizensController {
         surname: data.surname,
         genderId: data.gender,
         eyeColor: data.eyeColor,
-        driversLicenseId: data.driversLicense || undefined,
-        weaponLicenseId: data.weaponLicense || undefined,
-        pilotLicenseId: data.pilotLicense || undefined,
+        driversLicenseId: data.driversLicense,
+        weaponLicenseId: data.weaponLicense,
+        pilotLicenseId: data.pilotLicense,
         phoneNumber: data.phoneNumber,
         socialSecurityNumber:
           data.socialSecurityNumber ||
@@ -210,7 +210,7 @@ export class AdminManageCitizensController {
         additionalInfo: data.additionalInfo,
         imageId: validateImgurURL(data.image),
         userId: data.userId || undefined,
-        appearance: data.appearance || undefined,
+        appearance: data.appearance,
       },
       include: citizenInclude,
     });

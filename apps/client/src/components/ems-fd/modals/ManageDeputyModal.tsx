@@ -54,7 +54,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
     const validatedImage = validateFile(image, helpers);
 
     if (validatedImage) {
-      if (typeof validatedImage === "object") {
+      if (typeof validatedImage !== "string") {
         fd.set("image", validatedImage, validatedImage.name);
       }
     }
@@ -143,7 +143,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
                 autoFocus
                 name="badgeNumber"
                 onChange={(value) => {
-                  isNaN(Number(value))
+                  isNaN(parseInt(value))
                     ? setFieldValue("badgeNumber", value)
                     : setFieldValue("badgeNumber", parseInt(value));
                 }}

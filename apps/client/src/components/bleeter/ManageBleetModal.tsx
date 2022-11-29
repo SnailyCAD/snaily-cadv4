@@ -11,7 +11,7 @@ import { ModalIds } from "types/ModalIds";
 import { handleValidate } from "lib/handleValidate";
 import { BLEETER_SCHEMA } from "@snailycad/schemas";
 import { CropImageModal } from "components/modal/CropImageModal";
-import { dataToSlate, Editor } from "components/editor/Editor";
+import { dataToSlate, Editor } from "components/editor/editor";
 import type {
   GetBleeterByIdData,
   PostBleeterByIdData,
@@ -122,7 +122,7 @@ export function ManageBleetModal({ post }: Props) {
                     openModal(ModalIds.CropImageModal);
                   }}
                 >
-                  Crop
+                  {common("crop")}
                 </Button>
               </div>
             </FormField>

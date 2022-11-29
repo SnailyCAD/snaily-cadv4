@@ -80,6 +80,8 @@ export function ValuesProvider({ initialData, children, router }: ProviderProps)
       const valuesForType = values.find((v) => v.type === valueType) ?? {
         values: [],
         type: valueType,
+        groups: [],
+        totalCount: 0,
       };
 
       if (valuesForType.type === "PENAL_CODE" && valuesForType.groups) {

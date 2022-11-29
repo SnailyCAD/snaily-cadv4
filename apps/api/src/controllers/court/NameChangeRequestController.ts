@@ -9,10 +9,12 @@ import { NAME_CHANGE_REQUEST_SCHEMA } from "@snailycad/schemas";
 import { NotFound } from "@tsed/exceptions";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import type * as APITypes from "@snailycad/types/api";
+import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 
 @Controller("/name-change")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
+@IsFeatureEnabled({ feature: Feature.COURTHOUSE })
 export class NameChangeRequestController {
   @Get("/")
   async getUserRequests(@Context("user") user: User): Promise<APITypes.GetNameChangeRequestsData> {

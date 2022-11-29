@@ -1,4 +1,3 @@
-import * as React from "react";
 import type { CourtDate } from "@snailycad/types";
 import { Button } from "@snailycad/ui";
 import { FullDate } from "components/shared/FullDate";
@@ -55,7 +54,7 @@ export function CourtEntryDates({ onUpdate, onDelete, onCreate, dates }: Props) 
       </header>
 
       <Table
-        features={{ isWithinCard: true }}
+        features={{ isWithinCardOrModal: true }}
         tableState={tableState}
         data={dates.map((date) => ({
           id: date.id,

@@ -2,7 +2,7 @@ import axios, { type Method, type AxiosRequestConfig, type AxiosResponse } from 
 import type { IncomingMessage } from "connect";
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";
 import { getAPIUrl } from "@snailycad/utils/api-url";
-import { getErrorObj } from "./useFetch";
+import { getErrorObj } from "./fetch/errors";
 
 export type RequestData = Record<string, unknown>;
 
@@ -28,11 +28,11 @@ export async function handleRequest<T = any>(
   );
   const parsedCookie = req?.headers.cookie;
 
-  let contentType = "application/json";
+  let contentType = options?.headers?.["content-type"] ?? "application/json";
   const formData = data as unknown as FormData | undefined;
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (formData?.get?.("file") || formData?.get?.("image")) {
+  if ((formData?.get?.("file") || formData?.get?.("image")) && contentType === "application/json") {
     contentType = "multipart/form-data";
   }
 

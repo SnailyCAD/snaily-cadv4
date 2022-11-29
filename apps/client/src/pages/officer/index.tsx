@@ -6,15 +6,15 @@ import { StatusesArea } from "components/shared/StatusesArea";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { useLeoState } from "state/leoState";
+import { useLeoState } from "state/leo-state";
 import { Rank, Record, RecordType, ValueType } from "@snailycad/types";
-import { ActiveCalls } from "components/dispatch/active-calls/ActiveCalls";
-import { useDispatchState } from "state/dispatch/dispatchState";
+import { ActiveCalls } from "components/dispatch/active-calls/active-calls";
+import { useDispatchState } from "state/dispatch/dispatch-state";
 import { ModalButtons } from "components/leo/ModalButtons";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { requestAll } from "lib/utils";
-import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
-import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
+import { ActiveOfficers } from "components/dispatch/active-officers";
+import { ActiveDeputies } from "components/dispatch/active-deputies";
 import { ActiveWarrants } from "components/leo/active-warrants/ActiveWarrants";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { usePanicButton } from "hooks/shared/usePanicButton";
@@ -23,7 +23,7 @@ import { UtilityPanel } from "components/shared/UtilityPanel";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
-import { useNameSearch } from "state/search/nameSearchState";
+import { useNameSearch } from "state/search/name-search-state";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useTones } from "hooks/global/useTones";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
@@ -36,9 +36,10 @@ import type {
   GetMyOfficersData,
 } from "@snailycad/types/api";
 import { CreateWarrantModal } from "components/leo/modals/CreateWarrantModal";
-import { useCall911State } from "state/dispatch/call911State";
+import { useCall911State } from "state/dispatch/call-911-state";
 import { DndProvider } from "components/shared/dnd/DndProvider";
 import { usePermission } from "hooks/usePermission";
+import shallow from "zustand/shallow";
 
 const Modals = {
   CreateWarrantModal: dynamic(async () => {
@@ -61,7 +62,7 @@ const Modals = {
     return (await import("components/shared/NotepadModal")).NotepadModal;
   }),
   SelectOfficerModal: dynamic(async () => {
-    return (await import("components/leo/modals/SelectOfficerModal")).SelectOfficerModal;
+    return (await import("components/leo/modals/select-officer-modal")).SelectOfficerModal;
   }),
   ManageRecordModal: dynamic(async () => {
     return (await import("components/leo/modals/ManageRecordModal")).ManageRecordModal;
@@ -105,7 +106,7 @@ export default function OfficerDashboard({
 
   const leoState = useLeoState();
   const dispatchState = useDispatchState();
-  const call911State = useCall911State();
+  const set911Calls = useCall911State((state) => state.setCalls);
   const t = useTranslations("Leo");
   const signal100 = useSignal100();
   const tones = useTones("leo");
@@ -118,7 +119,13 @@ export default function OfficerDashboard({
     (u) => u.rank !== Rank.USER,
   );
 
-  const { currentResult, setCurrentResult } = useNameSearch();
+  const { currentResult, setCurrentResult } = useNameSearch(
+    (state) => ({
+      currentResult: state.currentResult,
+      setCurrentResult: state.setCurrentResult,
+    }),
+    shallow,
+  );
 
   function handleRecordCreate(data: Record) {
     if (!currentResult || currentResult.isConfidential) return;
@@ -132,7 +139,7 @@ export default function OfficerDashboard({
   React.useEffect(() => {
     leoState.setActiveOfficer(activeOfficer);
 
-    call911State.setCalls(calls.calls);
+    set911Calls(calls.calls);
     dispatchState.setBolos(bolos);
 
     dispatchState.setActiveDeputies(activeDeputies);

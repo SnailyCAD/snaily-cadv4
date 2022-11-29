@@ -7,7 +7,7 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Infofield } from "components/shared/Infofield";
-import { useWeaponSearch, WeaponSearchResult } from "state/search/weaponSearchState";
+import { useWeaponSearch, WeaponSearchResult } from "state/search/weapon-search-state";
 import { CustomFieldsArea } from "./CustomFieldsArea";
 import { useRouter } from "next/router";
 import { ManageCustomFieldsModal } from "./NameSearchModal/ManageCustomFieldsModal";

@@ -8,11 +8,11 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { BoloType, CustomFieldCategory } from "@snailycad/types";
 import { useRouter } from "next/router";
-import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicleSearchState";
+import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicle-search-state";
 import { ManageVehicleFlagsModal } from "./VehicleSearch/ManageVehicleFlagsModal";
 import { ManageVehicleLicensesModal } from "./VehicleSearch/ManageVehicleLicensesModal";
 import { ManageCustomFieldsModal } from "./NameSearchModal/ManageCustomFieldsModal";
-import { useNameSearch } from "state/search/nameSearchState";
+import { useNameSearch } from "state/search/name-search-state";
 import { useBolos } from "hooks/realtime/useBolos";
 import { TabList } from "components/shared/TabList";
 import { ResultsTab } from "./VehicleSearch/tabs/ResultsTab";
@@ -22,6 +22,7 @@ import { RegisterVehicleModal } from "components/citizen/vehicles/modals/Registe
 import type { PostMarkStolenData } from "@snailycad/types/api";
 import { ImpoundVehicleModal } from "./VehicleSearch/ImpoundVehicleModal";
 import { AllowImpoundedVehicleCheckoutModal } from "./AllowImpoundedVehicleCheckoutModal";
+import shallow from "zustand/shallow";
 
 interface Props {
   id?: ModalIds.VehicleSearch | ModalIds.VehicleSearchWithinName;
@@ -29,12 +30,16 @@ interface Props {
 
 export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   const { currentResult, setCurrentResult } = useVehicleSearch();
-  const nameSearchState = useNameSearch();
+  const nameSearchState = useNameSearch(
+    (state) => ({ currentResult: state.currentResult, setCurrentResult: state.setCurrentResult }),
+    shallow,
+  );
   const { bolos } = useBolos();
 
   const { isOpen, openModal, closeModal } = useModal();
   const common = useTranslations("Common");
   const vT = useTranslations("Vehicles");
+  const cT = useTranslations("Citizen");
   const t = useTranslations("Leo");
   const { state, execute } = useFetch();
   const router = useRouter();
@@ -43,6 +48,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   const isLeo = router.pathname === "/officer";
   const showMarkVehicleAsStolenButton = currentResult && isLeo && !currentResult.reportedStolen;
   const showImpoundVehicleButton = currentResult && isLeo && !currentResult.impounded;
+  const showCreateVehicleButton = CREATE_USER_CITIZEN_LEO && isLeo && !currentResult;
 
   const bolo = React.useMemo(() => {
     if (!currentResult) return null;
@@ -208,7 +214,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
               }`}
             >
               <div>
-                {CREATE_USER_CITIZEN_LEO && isLeo ? (
+                {showCreateVehicleButton ? (
                   <Button type="button" onPress={() => openModal(ModalIds.RegisterVehicle)}>
                     {t("createVehicle")}
                   </Button>
@@ -232,7 +238,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
                         variant="cancel"
                         className="px-1.5"
                       >
-                        {vT("unmarkAsStolen")}
+                        {cT("unmarkAsStolen")}
                       </Button>
                     )}
 

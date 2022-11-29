@@ -1,4 +1,4 @@
-import { Feature, Rank, WhitelistStatus } from "@prisma/client";
+import { Feature, Rank, WhitelistStatus, cad, CadFeature, MiscCadSettings } from "@prisma/client";
 import { UPDATE_UNIT_SCHEMA, UPDATE_UNIT_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import { PathParams, BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
@@ -20,7 +20,6 @@ import { manyToManyHelper } from "utils/manyToMany";
 import { isCuid } from "cuid";
 import type * as APITypes from "@snailycad/types/api";
 import { isFeatureEnabled } from "lib/cad";
-import type { cad } from "@snailycad/types";
 
 const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_UNIT"] as const;
 type Action = typeof ACTIONS[number];
@@ -49,6 +48,7 @@ export class AdminManageUnitsController {
       Permissions.DeleteUnits,
       Permissions.ManageUnits,
       Permissions.ManageUnitCallsigns,
+      Permissions.ManageAwardsAndQualifications,
     ],
   })
   async getUnits(): Promise<APITypes.GetManageUnitsData> {
@@ -70,7 +70,12 @@ export class AdminManageUnitsController {
   )
   @UsePermissions({
     fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
-    permissions: [Permissions.ViewUnits, Permissions.DeleteUnits, Permissions.ManageUnits],
+    permissions: [
+      Permissions.ViewUnits,
+      Permissions.DeleteUnits,
+      Permissions.ManageUnits,
+      Permissions.ManageAwardsAndQualifications,
+    ],
   })
   async getUnit(@PathParams("id") id: string): Promise<APITypes.GetManageUnitByIdData> {
     const extraInclude = {
@@ -169,7 +174,7 @@ export class AdminManageUnitsController {
     @PathParams("unitId") unitId: string,
     @BodyParams() body: unknown,
   ): Promise<APITypes.PutManageUnitCallsignData> {
-    const data = validateSchema(UPDATE_UNIT_CALLSIGN_SCHEMA, body);
+    const data = validateSchema(UPDATE_UNIT_CALLSIGN_SCHEMA.partial(), body);
 
     const { type, unit } = await findUnit(unitId);
 
@@ -183,12 +188,14 @@ export class AdminManageUnitsController {
     } as const;
     const t = prismaNames[type];
 
-    await validateDuplicateCallsigns({
-      callsign1: data.callsign,
-      callsign2: data.callsign2,
-      unitId: unit.id,
-      type,
-    });
+    if (data.callsign && data.callsign2) {
+      await validateDuplicateCallsigns({
+        callsign1: data.callsign,
+        callsign2: data.callsign2,
+        unitId: unit.id,
+        type,
+      });
+    }
 
     if (type === "leo") {
       await updateOfficerDivisionsCallsigns({
@@ -220,7 +227,7 @@ export class AdminManageUnitsController {
   async updateUnit(
     @PathParams("id") id: string,
     @BodyParams() body: unknown,
-    @Context("cad") cad: cad,
+    @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings; features?: CadFeature[] },
   ): Promise<APITypes.PutManageUnitData> {
     const data = validateSchema(UPDATE_UNIT_SCHEMA, body);
 
@@ -427,7 +434,7 @@ export class AdminManageUnitsController {
   @Post("/:unitId/qualifications")
   @UsePermissions({
     fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
-    permissions: [Permissions.ManageUnits],
+    permissions: [Permissions.ManageUnits, Permissions.ManageAwardsAndQualifications],
   })
   async addUnitQualification(
     @PathParams("unitId") unitId: string,
@@ -473,7 +480,7 @@ export class AdminManageUnitsController {
   @Delete("/:unitId/qualifications/:qualificationId")
   @UsePermissions({
     fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
-    permissions: [Permissions.ManageUnits],
+    permissions: [Permissions.ManageUnits, Permissions.ManageAwardsAndQualifications],
   })
   async deleteUnitQualification(
     @PathParams("unitId") unitId: string,
@@ -499,7 +506,7 @@ export class AdminManageUnitsController {
   @Put("/:unitId/qualifications/:qualificationId")
   @UsePermissions({
     fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
-    permissions: [Permissions.ManageUnits],
+    permissions: [Permissions.ManageUnits, Permissions.ManageAwardsAndQualifications],
   })
   async suspendOrUnsuspendUnitQualification(
     @PathParams("unitId") unitId: string,
@@ -552,7 +559,7 @@ export class AdminManageUnitsController {
     const unit = await findUnit(unitId);
 
     if (unit.type === "combined") {
-      throw new BadRequest("Cannot add qualifications to combined units");
+      throw new BadRequest("Cannot delete combined units");
     }
 
     if (!unit.unit) {

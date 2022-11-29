@@ -33,12 +33,17 @@ export default function EditCitizen() {
   }) {
     if (!citizen) return;
 
-    const { json } = await execute<PutCitizenByIdData>({
+    const { json, error } = await execute<PutCitizenByIdData>({
       path: `/citizen/${citizen.id}`,
       method: "PUT",
       data,
       helpers,
     });
+
+    const errors = ["dateLargerThanNow", "nameAlreadyTaken", "invalidImageType"];
+    if (errors.includes(error as string)) {
+      helpers.setCurrentStep(0);
+    }
 
     if (formData) {
       await execute<PostCitizenImageByIdData>({

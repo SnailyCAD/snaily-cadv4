@@ -5,8 +5,9 @@ import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
 import { NameSearchWarrantsTab } from "./WarrantsTab";
 import { RecordsTab } from "./RecordsTab";
-import { useNameSearch } from "state/search/nameSearchState";
+import { useNameSearch } from "state/search/name-search-state";
 import { RecordType } from "@snailycad/types";
+import shallow from "zustand/shallow";
 
 const NameSearchWeaponsTab = dynamic(
   async () => (await import("./WeaponsTab")).NameSearchWeaponsTab,
@@ -16,7 +17,13 @@ const NameSearchNotesTabs = dynamic(async () => (await import("./NotesTab")).Not
 export function NameSearchTabsContainer() {
   const { WEAPON_REGISTRATION } = useFeatureEnabled();
   const t = useTranslations();
-  const { currentResult, setCurrentResult } = useNameSearch();
+  const { currentResult, setCurrentResult } = useNameSearch(
+    (state) => ({
+      currentResult: state.currentResult,
+      setCurrentResult: state.setCurrentResult,
+    }),
+    shallow,
+  );
 
   if (!currentResult || currentResult.isConfidential) {
     return null;

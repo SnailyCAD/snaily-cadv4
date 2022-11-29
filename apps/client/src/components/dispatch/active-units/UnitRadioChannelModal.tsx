@@ -7,7 +7,7 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { Pencil } from "react-bootstrap-icons";
 import { useRouter } from "next/router";
-import { useDispatchState } from "state/dispatch/dispatchState";
+import { useDispatchState } from "state/dispatch/dispatch-state";
 import { handleValidate } from "lib/handleValidate";
 import { UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
 import { isUnitCombined, isUnitOfficer } from "@snailycad/utils";
@@ -24,7 +24,12 @@ export function UnitRadioChannelModal({ unit, onClose }: Props) {
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
-  const dispatchState = useDispatchState();
+  const dispatchState = useDispatchState((state) => ({
+    setActiveOfficers: state.setActiveOfficers,
+    setActiveDeputies: state.setActiveDeputies,
+    activeOfficers: state.activeOfficers,
+    activeDeputies: state.activeDeputies,
+  }));
   const { hasActiveDispatchers } = useActiveDispatchers();
 
   const router = useRouter();

@@ -14,6 +14,7 @@ import { type User, EmployeeAsEnum, MiscCadSettings, WhitelistStatus, cad } from
 import { validateSchema } from "lib/validateSchema";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import type * as APITypes from "@snailycad/types/api";
+import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 
 const businessInclude = {
   citizen: {
@@ -35,6 +36,7 @@ const businessInclude = {
 @Controller("/businesses")
 @Hidden()
 @ContentType("application/json")
+@IsFeatureEnabled({ feature: Feature.BUSINESS })
 export class BusinessController {
   @Get("/")
   async getBusinessesByUser(@Context("user") user: User): Promise<APITypes.GetBusinessesData> {

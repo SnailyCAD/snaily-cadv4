@@ -5,13 +5,14 @@ import { useAuth } from "context/AuthContext";
 import { toastMessage } from "lib/toastMessage";
 import toast from "react-hot-toast";
 import { useAudio } from "react-use";
-import { useCall911State } from "state/dispatch/call911State";
-import type { Full911Call } from "state/dispatch/dispatchState";
-import type { ActiveDeputy } from "state/emsFdState";
-import type { ActiveOfficer } from "state/leoState";
+import { useCall911State } from "state/dispatch/call-911-state";
+import type { Full911Call } from "state/dispatch/dispatch-state";
+import type { ActiveDeputy } from "state/ems-fd-state";
+import type { ActiveOfficer } from "state/leo-state";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
+import shallow from "zustand/shallow";
 
 interface UseActiveCallsOptions {
   calls: Full911Call[];
@@ -22,7 +23,14 @@ const ADDED_TO_CALL_SRC = "/sounds/added-to-call.mp3" as const;
 const INCOMING_CALL_SRC = "/sounds/incoming-call.mp3" as const;
 
 export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
-  const call911State = useCall911State();
+  const call911State = useCall911State(
+    (state) => ({
+      currentlySelectedCall: state.currentlySelectedCall,
+      setCalls: state.setCalls,
+      setCurrentlySelectedCall: state.setCurrentlySelectedCall,
+    }),
+    shallow,
+  );
   const { user } = useAuth();
   const { openModal } = useModal();
   const t = useTranslations();
@@ -184,7 +192,7 @@ export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
         }),
       );
     },
-    [calls, unit?.id, addedToCallControls, shouldPlayAddedToCallSound, call911State.setCalls],
+    [calls, unit?.id, addedToCallControls, shouldPlayAddedToCallSound],
   );
 
   return {

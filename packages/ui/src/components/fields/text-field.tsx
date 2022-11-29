@@ -31,7 +31,7 @@ export function TextField(props: Props) {
 
   return (
     <div className={classNames("relative text-field flex flex-col mb-3", props.className)}>
-      <Label element="span" {...props} labelProps={labelProps} />
+      <Label {...props} labelProps={labelProps} />
 
       {props.isTextarea ? (
         <Textarea ref={ref} errorMessage={props.errorMessage} {...(inputProps as any)} />

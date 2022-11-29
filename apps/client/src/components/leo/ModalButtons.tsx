@@ -1,5 +1,5 @@
 import { Button } from "@snailycad/ui";
-import { ActiveOfficer, useLeoState } from "state/leoState";
+import { ActiveOfficer, useLeoState } from "state/leo-state";
 import { Rank, ShouldDoType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
@@ -79,7 +79,7 @@ export function ModalButtons({ initialActiveOfficer }: { initialActiveOfficer: A
 
   return (
     <div className="py-2">
-      {!isButtonDisabled && activeOfficer ? (
+      {nameAndCallsign && activeOfficer ? (
         <p className="text-lg">
           <span className="font-semibold">{t("Leo.activeOfficer")}: </span>
 

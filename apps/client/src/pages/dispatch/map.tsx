@@ -7,13 +7,13 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import { useDispatchState } from "state/dispatch/dispatchState";
+import { useDispatchState } from "state/dispatch/dispatch-state";
 import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
 import type { DispatchPageProps } from ".";
 import { CombinedLeoUnit, EmsFdDeputy, Officer, ShouldDoType, ValueType } from "@snailycad/types";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
-import { useCall911State } from "state/dispatch/call911State";
+import { useCall911State } from "state/dispatch/call-911-state";
 
 const Map = dynamic(async () => (await import("components/dispatch/map/Map")).Map, {
   ssr: false,
@@ -38,7 +38,7 @@ export default function MapPage(props: Props) {
 
   const { cad, user } = useAuth();
   const state = useDispatchState();
-  const call911State = useCall911State();
+  const set911Calls = useCall911State((state) => state.setCalls);
 
   const activeOfficers = React.useMemo(
     () => [...props.officers].filter(activeFilter),
@@ -51,7 +51,7 @@ export default function MapPage(props: Props) {
   );
 
   React.useEffect(() => {
-    call911State.setCalls(props.calls.calls);
+    set911Calls(props.calls.calls);
     state.setBolos(props.bolos);
 
     state.setAllOfficers(props.officers);

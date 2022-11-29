@@ -1,5 +1,4 @@
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
-import type { z } from "zod";
 import {
   CREATE_TICKET_SCHEMA,
   CREATE_WARRANT_SCHEMA,
@@ -16,8 +15,6 @@ import {
   Citizen,
   Feature,
   Record,
-  RecordType,
-  SeizedItem,
   Violation,
   Warrant,
   WarrantStatus,
@@ -25,13 +22,10 @@ import {
   DiscordWebhookType,
   CombinedLeoUnit,
   Officer,
-  PaymentStatus,
   User,
 } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
-import { validateRecordData } from "lib/records/validateRecordData";
 import { combinedUnitProperties, leoProperties } from "lib/leo/activeOfficer";
-import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { isFeatureEnabled } from "lib/cad";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
@@ -42,6 +36,8 @@ import { Socket } from "services/SocketService";
 import { assignUnitsToWarrant } from "lib/records/assignToWarrant";
 import type { cad } from "@snailycad/types";
 import { userProperties } from "lib/auth/getSessionUser";
+import { upsertRecord } from "lib/records/upsert-record";
+import { IsFeatureEnabled } from "middlewares/is-enabled";
 
 export const assignedOfficersInclude = {
   combinedUnit: { include: combinedUnitProperties },
@@ -59,6 +55,7 @@ export class RecordsController {
 
   @Get("/active-warrants")
   @Description("Get all active warrants (ACTIVE_WARRANTS must be enabled)")
+  @IsFeatureEnabled({ feature: Feature.ACTIVE_WARRANTS })
   async getActiveWarrants(@Context("cad") cad: cad) {
     const inactivityFilter = getInactivityFilter(cad, "activeWarrantsInactivityTimeout");
     if (inactivityFilter) {
@@ -229,7 +226,7 @@ export class RecordsController {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
     const officer = getFirstOfficerFromActiveOfficer({ activeOfficer, allowDispatch: true });
 
-    const recordItem = await this.upsertRecord({
+    const recordItem = await upsertRecord({
       data,
       cad,
       officer,
@@ -259,7 +256,7 @@ export class RecordsController {
   ): Promise<APITypes.PutRecordsByIdData> {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
 
-    const recordItem = await this.upsertRecord({
+    const recordItem = await upsertRecord({
       data,
       cad,
       recordId,
@@ -308,115 +305,6 @@ export class RecordsController {
     return true;
   }
 
-  private async upsertRecord({
-    data,
-    cad,
-    recordId,
-    officer,
-  }: {
-    data: z.infer<typeof CREATE_TICKET_SCHEMA>;
-    recordId: string | null;
-    cad: cad;
-    officer: Officer | null;
-  }) {
-    if (recordId) {
-      const record = await prisma.record.findUnique({
-        where: { id: recordId },
-        include: { violations: true, seizedItems: true },
-      });
-
-      if (!record) {
-        throw new NotFound("notFound");
-      }
-
-      await Promise.all([
-        unlinkViolations(record.violations),
-        unlinkSeizedItems(record.seizedItems),
-      ]);
-    }
-
-    const citizen = await prisma.citizen.findUnique({
-      where: { id: data.citizenId },
-    });
-
-    if (!citizen) {
-      throw new ExtendedNotFound({ citizenId: "citizenNotFound" });
-    }
-
-    const isApprovalEnabled = isFeatureEnabled({
-      defaultReturn: false,
-      feature: Feature.CITIZEN_RECORD_APPROVAL,
-      features: cad.features,
-    });
-    const recordStatus = isApprovalEnabled ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED;
-
-    const ticket = await prisma.record.upsert({
-      where: { id: String(recordId) },
-      create: {
-        type: data.type as RecordType,
-        citizenId: citizen.id,
-        officerId: officer?.id ?? null,
-        notes: data.notes,
-        postal: String(data.postal),
-        status: recordStatus,
-        paymentStatus: (data.paymentStatus ?? null) as PaymentStatus | null,
-      },
-      update: {
-        notes: data.notes,
-        postal: data.postal,
-        paymentStatus: (data.paymentStatus ?? null) as PaymentStatus | null,
-      },
-      include: {
-        officer: { include: leoProperties },
-        citizen: { include: { user: { select: userProperties } } },
-      },
-    });
-
-    if (ticket.type === "ARREST_REPORT" && !recordId) {
-      await prisma.citizen.update({
-        where: { id: citizen.id },
-        data: { arrested: true },
-      });
-    }
-
-    const validatedViolations = await Promise.all(
-      data.violations.map((v) => validateRecordData({ ...v, ticketId: ticket.id, cad })),
-    );
-
-    const violations = await prisma.$transaction(
-      validatedViolations.map((item) => {
-        return prisma.violation.create({
-          data: {
-            counts: item.counts,
-            fine: item.fine,
-            bail: item.bail,
-            jailTime: item.jailTime,
-            penalCode: { connect: { id: item.penalCodeId } },
-            records: { connect: { id: ticket.id } },
-          },
-          include: {
-            penalCode: { include: { warningApplicable: true, warningNotApplicable: true } },
-          },
-        });
-      }),
-    );
-
-    const seizedItems = await prisma.$transaction(
-      (data.seizedItems ?? []).map((item) => {
-        return prisma.seizedItem.create({
-          data: {
-            item: item.item,
-            illegal: item.illegal ?? false,
-            quantity: item.quantity ?? 1,
-            recordId: ticket.id,
-          },
-        });
-      }),
-    );
-
-    return { ...ticket, violations, seizedItems };
-  }
-
   private async endInactiveWarrants(updatedAt: Date) {
     await prisma.warrant.updateMany({
       where: { updatedAt: { not: { gte: updatedAt } } },
@@ -443,22 +331,6 @@ export class RecordsController {
   }
 }
 
-async function unlinkViolations(violations: Pick<Violation, "id">[]) {
-  await Promise.all(
-    violations.map(async ({ id }) => {
-      await prisma.violation.delete({ where: { id } });
-    }),
-  );
-}
-
-async function unlinkSeizedItems(items: Pick<SeizedItem, "id">[]) {
-  await Promise.all(
-    items.map(async ({ id }) => {
-      await prisma.seizedItem.delete({ where: { id } });
-    }),
-  );
-}
-
 function createWebhookData(
   data: ((Record & { violations: Violation[] }) | Warrant) & { citizen: Citizen },
 ) {
@@ -482,7 +354,7 @@ function createWebhookData(
     fields.push({ name: "Status", value: data.status.toLowerCase(), inline: true });
   } else {
     fields.push(
-      { name: "Postal", value: data.postal, inline: true },
+      { name: "Postal", value: data.postal || "-", inline: true },
       { name: "Record Type", value: data.type.toLowerCase(), inline: true },
       { name: "Total Bail", value: totalBail, inline: true },
       { name: "Total Fine amount", value: totalFines, inline: true },

@@ -10,15 +10,16 @@ import { handleValidate } from "lib/handleValidate";
 import { toastMessage } from "lib/toastMessage";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
-import type { Full911Call } from "state/dispatch/dispatchState";
-import { useEmsFdState } from "state/emsFdState";
-import { useLeoState } from "state/leoState";
+import type { Full911Call } from "state/dispatch/dispatch-state";
+import { useEmsFdState } from "state/ems-fd-state";
+import { useLeoState } from "state/leo-state";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import type { VehicleSearchResult } from "state/search/vehicleSearchState";
+import type { VehicleSearchResult } from "state/search/vehicle-search-state";
 import { Checkbox } from "components/form/inputs/Checkbox";
 import type { PostTowCallsData } from "@snailycad/types/api";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
+import shallow from "zustand/shallow";
 
 interface Props {
   call: Full911Call | null;
@@ -29,8 +30,20 @@ export function DispatchCallTowModal({ call }: Props) {
   const t = useTranslations();
   const { isOpen, closeModal, getPayload } = useModal();
   const { state, execute } = useFetch();
-  const { activeOfficer, userOfficers } = useLeoState();
-  const { activeDeputy, deputies } = useEmsFdState();
+  const { activeOfficer, userOfficers } = useLeoState(
+    (state) => ({
+      activeOfficer: state.activeOfficer,
+      userOfficers: state.userOfficers,
+    }),
+    shallow,
+  );
+  const { activeDeputy, deputies } = useEmsFdState(
+    (state) => ({
+      activeDeputy: state.activeDeputy,
+      deputies: state.deputies,
+    }),
+    shallow,
+  );
   const router = useRouter();
   const { impoundLot } = useValues();
 
