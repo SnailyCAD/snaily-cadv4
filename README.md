@@ -1,6 +1,6 @@
 # [SnailyCADv4](https://snailycad.caspertheghost.me)
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/lqLdjV?referralCode=zxxB_p)
+<!-- [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/lqLdjV?referralCode=zxxB_p) -->
 
 ![license](https://img.shields.io/github/license/SnailyCAD/snaily-cadv4?color=gr&style=flat-square)
 ![contributors](https://img.shields.io/github/contributors/SnailyCAD/snaily-cadv4?color=gr&style=flat-square)
