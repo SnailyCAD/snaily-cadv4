@@ -41,7 +41,7 @@
     "additionalInfo": "Doplňující informace",
     "manageOccupation": "Uprav povolání",
     "manageLicenses": "Uprav průkazy",
-    "licenses": "průkazy",
+    "licenses": "Průkazy",
     "alert_deleteCitizen": "Jsi si jistý, že chceš smazat <span>{citizen}</span>? Toto nelze vrátit zpět."
   },
   "Vehicles": {
