@@ -377,7 +377,7 @@ function createWebhookData(
       ? data.violations.reduce((ac, cv) => {
           return ac + (cv[name] || 0);
         }, 0)
-      : null;
+      : 0;
 
     return String(total);
   }

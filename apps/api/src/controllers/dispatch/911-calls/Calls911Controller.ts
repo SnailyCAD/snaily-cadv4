@@ -627,7 +627,7 @@ export class Calls911Controller {
 
   // creates the webhook structure that will get sent to Discord.
   private createWebhookData(call: Call911): { embeds: APIEmbed[] } {
-    const caller = call.name;
+    const caller = call.name || "Unknown";
     const location = `${call.location} ${call.postal ? call.postal : ""}`;
     const description = call.description || "Could not render description via Discord";
 
