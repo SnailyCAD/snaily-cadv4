@@ -63,7 +63,7 @@ export function useCitizensList(options: UseCitizensListOptions) {
     previousPage: previousPage as any,
 
     pageCount: PAGE_COUNT,
-    pageOptions: PAGE_COUNT <= 0 ? new Array(1) : new Array(PAGE_COUNT),
+    pageOptions: !PAGE_COUNT ? new Array(1) : new Array(PAGE_COUNT),
     ...asyncTable,
   };
 }
