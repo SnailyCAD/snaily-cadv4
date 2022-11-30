@@ -72,7 +72,7 @@ export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, 
             }}
             type="file"
             name={valueKey}
-            value={values[valueKey] ?? ""}
+            value={typeof values[valueKey] === "string" ? undefined : values[valueKey]}
           />
           <Button
             className="mr-2"

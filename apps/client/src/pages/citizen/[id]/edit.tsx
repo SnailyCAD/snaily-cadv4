@@ -45,12 +45,17 @@ export default function EditCitizen() {
       helpers.setCurrentStep(0);
     }
 
+    console.log({ formData });
+
     if (formData) {
       await execute<PostCitizenImageByIdData>({
         path: `/citizen/${citizen.id}`,
         method: "POST",
         data: formData,
         helpers,
+        headers: {
+          "content-type": "multipart/form-data",
+        },
       });
     }
 

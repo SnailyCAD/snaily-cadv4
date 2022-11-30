@@ -108,6 +108,9 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
         path: `/admin/manage/custom-roles/${jsonId}/image`,
         method: "POST",
         data: fd,
+        headers: {
+          "content-type": "multipart/form-data",
+        },
       });
     }
   }

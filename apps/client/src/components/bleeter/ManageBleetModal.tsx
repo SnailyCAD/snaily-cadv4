@@ -73,6 +73,9 @@ export function ManageBleetModal({ post }: Props) {
           method: "POST",
           data: fd,
           helpers,
+          headers: {
+            "content-type": "multipart/form-data",
+          },
         });
       }
     }

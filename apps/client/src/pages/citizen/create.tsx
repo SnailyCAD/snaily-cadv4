@@ -59,6 +59,9 @@ export default function CreateCitizen() {
           method: "POST",
           data: formData,
           helpers,
+          headers: {
+            "content-type": "multipart/form-data",
+          },
         });
       }
 

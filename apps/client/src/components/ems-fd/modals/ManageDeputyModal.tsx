@@ -94,6 +94,9 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
         method: "POST",
         data: fd,
         helpers,
+        headers: {
+          "content-type": "multipart/form-data",
+        },
       });
     }
 

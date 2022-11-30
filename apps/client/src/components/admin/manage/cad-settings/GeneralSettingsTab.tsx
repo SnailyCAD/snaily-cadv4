@@ -55,6 +55,9 @@ export function GeneralSettingsTab() {
           method: "POST",
           data: fd,
           helpers,
+          headers: {
+            "content-type": "multipart/form-data",
+          },
         });
 
         json.logoId = logoId;

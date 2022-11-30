@@ -116,7 +116,7 @@ export function ManageCitizenForm({
     if (validatedImage) {
       if (typeof validatedImage !== "string") {
         fd = new FormData();
-        fd.set("Citizen.image", validatedImage, validatedImage.name);
+        fd.set("image", validatedImage, validatedImage.name);
       }
     }
 
