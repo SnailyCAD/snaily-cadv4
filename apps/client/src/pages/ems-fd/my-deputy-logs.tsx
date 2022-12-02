@@ -46,6 +46,7 @@ export default function MyDeputyLogs({ logs: data }: Props) {
 
   const asyncTable = useAsyncTable({
     fetchOptions: {
+      pageSize: 25,
       onResponse: (json: GetMyDeputiesLogsData) => ({
         data: json.logs,
         totalCount: json.totalCount,
@@ -81,12 +82,12 @@ export default function MyDeputyLogs({ logs: data }: Props) {
               <Select
                 isClearable
                 onChange={(e) => {
-                  asyncTable.sort({
-                    ...asyncTable.sortDescriptor,
+                  asyncTable.setFilters((prev) => ({
+                    ...prev,
                     deputyId: e.target.value,
-                  });
+                  }));
                 }}
-                value={asyncTable.sortDescriptor?.deputyId}
+                value={asyncTable.filters?.deputyId ?? null}
                 values={Object.entries(deputyNames).map(([id, name]) => ({
                   label: name as string,
                   value: id,

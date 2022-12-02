@@ -69,6 +69,7 @@ function _ActiveCalls({ initialData }: Props) {
     search,
     disabled: !CALLS_911,
     fetchOptions: {
+      pageSize: 12,
       requireFilterText: true,
       path: "/911-calls",
       onResponse: (json: Get911CallsData) => ({
@@ -86,7 +87,7 @@ function _ActiveCalls({ initialData }: Props) {
   }, [asyncTable.items]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const tableState = useTableState({
-    pagination: { ...asyncTable.pagination, pageSize: 12 },
+    pagination: asyncTable.pagination,
     search: { value: search, setValue: setSearch },
   });
 

@@ -71,10 +71,11 @@ export function CallsFilters({ asyncTable, calls }: Props) {
           value={department?.value?.id ?? null}
           onChange={(e) => {
             setDepartment(e.target);
-            asyncTable.sort({
-              ...asyncTable.sortDescriptor,
-              department: e.target?.value?.id,
-            });
+
+            asyncTable.setFilters((prev) => ({
+              ...prev,
+              department: e.target?.value?.id ?? null,
+            }));
           }}
           className="w-56"
           values={departments}
@@ -88,10 +89,10 @@ export function CallsFilters({ asyncTable, calls }: Props) {
             value={division?.value?.id ?? null}
             onChange={(e) => {
               setDivision(e.target);
-              asyncTable.sort({
-                ...asyncTable.sortDescriptor,
-                division: e.target?.value?.id,
-              });
+              asyncTable.setFilters((prev) => ({
+                ...prev,
+                division: e.target?.value?.id ?? null,
+              }));
             }}
             className="w-56"
             values={divisions.filter((v) =>
@@ -108,10 +109,11 @@ export function CallsFilters({ asyncTable, calls }: Props) {
           className="w-56"
           onChange={(e) => {
             setAssignedUnit(e.target);
-            asyncTable.sort({
-              ...asyncTable.sortDescriptor,
-              assignedUnit: e.target?.value?.id,
-            });
+
+            asyncTable.setFilters((prev) => ({
+              ...prev,
+              assignedUnit: e.target?.value?.id ?? null,
+            }));
           }}
           values={assignedUnits}
         />

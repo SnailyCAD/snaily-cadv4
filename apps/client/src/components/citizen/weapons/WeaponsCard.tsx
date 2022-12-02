@@ -28,6 +28,7 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
 
   const asyncTable = useAsyncTable({
     fetchOptions: {
+      pageSize: 12,
       onResponse: (json: GetCitizenWeaponsData) => ({
         data: json.weapons,
         totalCount: json.totalCount,
@@ -37,7 +38,7 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
     totalCount: props.weapons.length,
     initialData: props.weapons,
   });
-  const tableState = useTableState({ pagination: { ...asyncTable.pagination, pageSize: 12 } });
+  const tableState = useTableState({ pagination: asyncTable.pagination });
   const [tempWeapon, weaponState] = useTemporaryItem(asyncTable.items);
 
   async function handleDelete() {

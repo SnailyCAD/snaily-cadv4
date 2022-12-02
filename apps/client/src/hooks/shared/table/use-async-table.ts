@@ -29,6 +29,7 @@ export function useAsyncTable<T>(options: Options<T>) {
   const { state: loadingState, execute } = useFetch();
 
   const [debouncedSearch, setDebouncedSearch] = React.useState(options.search);
+  const [filters, setFilters] = React.useState<Record<string, string> | null>(null);
   const [totalDataCount, setTotalCount] = React.useState(options.totalCount);
   const [paginationOptions, setPagination] = React.useState({
     pageSize: options.fetchOptions.pageSize ?? 35,
@@ -38,20 +39,28 @@ export function useAsyncTable<T>(options: Options<T>) {
   useQuery({
     initialData: options.initialData,
     queryFn: fetchData,
-    queryKey: [paginationOptions.pageIndex, debouncedSearch],
+    queryKey: [paginationOptions.pageIndex, debouncedSearch, filters],
   });
 
   async function fetchData(context: QueryFunctionContext<any>) {
-    const [pageIndex, search] = context.queryKey;
+    const [pageIndex, search, filters = {}] = context.queryKey;
     const path = options.fetchOptions.path;
     const skip = Number(pageIndex * paginationOptions.pageSize) || 0;
 
-    const params = {
+    const searchParams = new URLSearchParams({
       query: search,
-      skip,
-    };
+      skip: skip.toString(),
+    });
 
-    const { json } = await execute({ path, params });
+    for (const filterKey in filters) {
+      const filterValue = filters[filterKey];
+
+      if (typeof filterValue !== "undefined" && filterValue !== null) {
+        searchParams.append(filterKey, filterValue);
+      }
+    }
+
+    const { json } = await execute({ path, params: Object.fromEntries(searchParams) });
     const toReturnData = options.fetchOptions.onResponse(json);
     setTotalCount(toReturnData.totalCount);
 
@@ -79,6 +88,8 @@ export function useAsyncTable<T>(options: Options<T>) {
 
   return {
     ...list,
+    filters,
+    setFilters,
     isLoading: loadingState === "loading",
     pagination,
   };
