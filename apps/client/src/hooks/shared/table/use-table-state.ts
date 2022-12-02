@@ -1,5 +1,6 @@
 import * as React from "react";
-import type { RowSelectionState, SortingState, PaginationState } from "@tanstack/react-table";
+import type { RowSelectionState, SortingState } from "@tanstack/react-table";
+import type { useAsyncTable } from "./use-async-table";
 
 interface TableStateOptions {
   search?: {
@@ -10,43 +11,20 @@ interface TableStateOptions {
     onListChange(list: any[]): void;
     disabledIndices?: number[];
   };
-  pagination?: {
-    isLoading?: boolean;
-    __ASYNC_TABLE__?: boolean;
-    totalDataCount: number;
-    pageSize?: number;
-    onPageChange?(options: { pageSize: number; pageIndex: number }): void;
-  };
+  pagination?: ReturnType<typeof useAsyncTable>["pagination"];
 }
 
-export function useTableState({
-  pagination: paginationOptions,
-  search,
-  dragDrop,
-}: TableStateOptions = {}) {
-  const pageSize = paginationOptions?.pageSize ?? 35;
-
+export function useTableState({ pagination, search, dragDrop }: TableStateOptions = {}) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
-  const [pagination, setPagination] = React.useState<PaginationState>({
-    pageIndex: 0,
-    pageSize,
-  });
 
-  React.useEffect(() => {
-    paginationOptions?.onPageChange?.(pagination);
-  }, [pagination]); // eslint-disable-line
-
-  const _pagination = React.useMemo(
-    () => ({
-      pageSize: pagination.pageSize,
-      pageIndex: pagination.pageIndex,
-      isLoading: paginationOptions?.isLoading ?? false,
-      totalDataCount: paginationOptions?.totalDataCount,
-      __ASYNC_TABLE__: paginationOptions?.__ASYNC_TABLE__,
-    }),
-    [pagination, paginationOptions],
-  );
+  const _pagination = {
+    pageSize: pagination?.pageSize ?? 35,
+    pageIndex: pagination?.pageIndex ?? 0,
+    isLoading: pagination?.isLoading ?? false,
+    totalDataCount: pagination?.totalDataCount,
+    __ASYNC_TABLE__: pagination?.__ASYNC_TABLE__,
+  };
 
   return {
     sorting,
@@ -54,7 +32,7 @@ export function useTableState({
     rowSelection,
     setRowSelection,
     pagination: _pagination,
-    setPagination,
+    setPagination: pagination?.setPagination,
     globalFilter: search?.value,
     setGlobalFilter: search?.setValue,
     dragDrop,

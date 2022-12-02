@@ -40,8 +40,6 @@ it("Should correctly validate an INVALID nested object, schema: LICENSE_SCHEMA",
     },
   };
 
-  console.log({ data });
-
   expect(handleValidate(LICENSE_SCHEMA)(data)).toMatchInlineSnapshot(
     {
       suspended: {
