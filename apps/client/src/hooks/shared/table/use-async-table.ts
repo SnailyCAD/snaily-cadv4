@@ -37,20 +37,21 @@ export function useAsyncTable<T>(options: Options<T>) {
   });
 
   useQuery({
-    initialData: options.initialData,
+    initialData: options.initialData ?? [],
     queryFn: fetchData,
     queryKey: [paginationOptions.pageIndex, debouncedSearch, filters],
   });
 
   async function fetchData(context: QueryFunctionContext<any>) {
-    const [pageIndex, search, filters = {}] = context.queryKey;
+    const [pageIndex, search, _filters] = context.queryKey;
     const path = options.fetchOptions.path;
     const skip = Number(pageIndex * paginationOptions.pageSize) || 0;
+    const filters = _filters || {};
 
-    const searchParams = new URLSearchParams({
-      query: search,
-      skip: skip.toString(),
-    });
+    const searchParams = new URLSearchParams();
+
+    filters.query = search;
+    filters.skip = skip;
 
     for (const filterKey in filters) {
       const filterValue = filters[filterKey];
