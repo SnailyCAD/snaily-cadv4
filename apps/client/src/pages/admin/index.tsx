@@ -69,6 +69,34 @@ export default function Admin({ counts }: Props) {
         />
       </Group>
 
+      <Group name="LEO">
+        <Item count={counts.officerCount} name="total" />
+        <Item
+          count={counts.onDutyOfficers}
+          name={"On Duty"}
+          percentage={(100 / counts.officerCount) * counts.onDutyOfficers}
+        />
+        <Item
+          count={counts.suspendedOfficers}
+          name="suspended"
+          percentage={(100 / counts.officerCount) * counts.suspendedOfficers}
+        />
+      </Group>
+
+      <Group name="EMS/FD">
+        <Item count={counts.emsDeputiesCount} name="total" />
+        <Item
+          count={counts.onDutyEmsDeputies}
+          name={"On Duty"}
+          percentage={(100 / counts.emsDeputiesCount) * counts.onDutyEmsDeputies}
+        />
+        <Item
+          count={counts.suspendedEmsFDDeputies}
+          name="suspended"
+          percentage={(100 / counts.emsDeputiesCount) * counts.suspendedEmsFDDeputies}
+        />
+      </Group>
+
       <Group name="Images">
         <Item count={counts.imageData.count} name="total" />
         <Item count={prettyBytes(counts.imageData.totalSize, { binary: true })} name="" />

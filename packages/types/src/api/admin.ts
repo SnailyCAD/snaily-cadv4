@@ -16,6 +16,12 @@ export interface GetAdminDashboardData {
   vehicles: number;
   impoundedVehicles: number;
   vehiclesInBOLO: number;
+  officerCount: number;
+  onDutyOfficers: number;
+  emsDeputiesCount: number;
+  suspendedOfficers: number;
+  suspendedEmsFDDeputies: number;
+  onDutyEmsDeputies: number;
   imageData: { count: number; totalSize: number };
 }
 
