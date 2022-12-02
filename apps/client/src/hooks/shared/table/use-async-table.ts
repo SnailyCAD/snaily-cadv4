@@ -25,25 +25,35 @@ interface Options<T> {
 
 export function useAsyncTable<T>(options: Options<T>) {
   const [debouncedSearch, setDebouncedSearch] = React.useState(options.search);
-
-  const { data, error } = useQuery({
+  const [totalDataCount, setTotalCount] = React.useState(options.totalCount);
+ 
+  const scrollToTopOnDataChange = options.scrollToTopOnDataChange ?? true;
+  
+  const { data, error, isLoading } = useQuery({
     initialData: options.initialData,
     queryFn: fetchData,
-    queryKey: [options.fetchOptions.path, debouncedSearch],
+    queryKey: [options.fetchOptions.path, options.pageIndex, options.pageSize, debouncedSearch],
     keepPreviousData: true,
   });
 
   async function fetchData(context: QueryFunctionContext<any>) {
-    const [pathFn, search] = context.queryKey;
+    // improve handling of these items
+    const [pathFn, pageIndex, pageSize, search] = context.queryKey;
     const path = typeof pathFn === "function" ? pathFn(search) : pathFn;
-
+    const skip = Number(pageIndex * pageSize) || 0;
+    
     const params = {
       query: search,
+      skip,
     };
 
     const { json } = await execute({ path, params });
     const toReturnData = options.fetchOptions.onResponse(json);
     setTotalCount(toReturnData.totalCount);
+    
+    if (scrollToTopOnDataChange) {
+      window.scrollTo({ behavior: "smooth", top: 0 });
+    }
 
     return toReturnData.data;
   }
@@ -62,11 +72,9 @@ export function useAsyncTable<T>(options: Options<T>) {
     list.setItems(data);
   }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const [totalDataCount, setTotalCount] = React.useState(options.totalCount);
   const { state: loadingState, execute } = useFetch();
   const isMounted = useMounted();
-  const scrollToTopOnDataChange = options.scrollToTopOnDataChange ?? true;
-
+ 
   const asyncList = useAsyncList<T>({
     initialFilterText: options.search,
     async load(state) {
@@ -141,6 +149,7 @@ export function useAsyncTable<T>(options: Options<T>) {
 
   return {
     ...list,
+    isLoading,
     pagination,
     items: list.items,
   };
