@@ -2,7 +2,8 @@ import * as React from "react";
 import useFetch from "lib/useFetch";
 import { useDebounce } from "react-use";
 import { useMounted } from "@casper124578/useful";
-import { AsyncListData, useAsyncList } from "@react-stately/data";
+import { AsyncListData, useListData, useAsyncList } from "@react-stately/data";
+import { useQuery, QueryFunctionContext } from "@tanstack/react-query";
 
 interface FetchOptions {
   pageSize: number;
@@ -23,6 +24,44 @@ interface Options<T> {
 }
 
 export function useAsyncTable<T>(options: Options<T>) {
+  const [debouncedSearch, setDebouncedSearch] = React.useState(options.search);
+
+  const { data, error } = useQuery({
+    initialData: options.initialData,
+    queryFn: fetchData,
+    queryKey: [options.fetchOptions.path, debouncedSearch],
+    keepPreviousData: true,
+  });
+
+  async function fetchData(context: QueryFunctionContext<any>) {
+    const [pathFn, search] = context.queryKey;
+    const path = typeof pathFn === "function" ? pathFn(search) : pathFn;
+
+    const params = {
+      query: search,
+    };
+
+    const { json } = await execute({ path, params });
+    const toReturnData = options.fetchOptions.onResponse(json);
+    setTotalCount(toReturnData.totalCount);
+
+    return toReturnData.data;
+  }
+
+  useDebounce(
+    () => {
+      setDebouncedSearch(options.search);
+    },
+    200,
+    [options.search],
+  );
+
+  const list = useListData({ initialItems: options.initialData });
+  React.useEffect(() => {
+    // todo: this is a hack, fix this
+    list.setItems(data);
+  }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const [totalDataCount, setTotalCount] = React.useState(options.totalCount);
   const { state: loadingState, execute } = useFetch();
   const isMounted = useMounted();
@@ -31,6 +70,7 @@ export function useAsyncTable<T>(options: Options<T>) {
   const asyncList = useAsyncList<T>({
     initialFilterText: options.search,
     async load(state) {
+      return { items: [] };
       const sortDescriptor = state.sortDescriptor as Record<string, any>;
       const skip = Number(sortDescriptor.pageIndex * sortDescriptor.pageSize) || 0;
 
@@ -100,8 +140,8 @@ export function useAsyncTable<T>(options: Options<T>) {
   };
 
   return {
-    ...asyncList,
+    ...list,
     pagination,
-    items: isMounted ? asyncList.items : options.initialData ?? [],
+    items: list.items,
   };
 }

@@ -13,6 +13,7 @@ import type { cad, User } from "@snailycad/types";
 import { useMounted } from "@casper124578/useful/hooks/useMounted";
 import dynamic from "next/dynamic";
 import Head from "next/head";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const ReauthorizeSessionModal = dynamic(
   async () =>
@@ -21,6 +22,14 @@ const ReauthorizeSessionModal = dynamic(
 );
 
 const Toaster = dynamic(async () => (await import("react-hot-toast")).Toaster, { ssr: false });
+const ReactQueryDevtools = dynamic(
+  async () => (await import("@tanstack/react-query-devtools")).ReactQueryDevtools,
+  {
+    ssr: false,
+  },
+);
+
+const queryClient = new QueryClient();
 
 export default function App({ Component, router, pageProps, ...rest }: AppProps) {
   const isMounted = useMounted();
@@ -40,36 +49,39 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
   }
 
   return (
-    <SSRProvider>
-      <SocketProvider uri={url} options={{ reconnectionDelay: 10_000 }}>
-        <AuthProvider initialData={pageProps}>
-          <NextIntlProvider
-            defaultTranslationValues={{
-              span: (children) => <span className="font-semibold">{children}</span>,
-            }}
-            onError={console.warn}
-            locale={locale}
-            messages={pageProps.messages}
-            now={new Date()}
-          >
-            <ValuesProvider router={router} initialData={pageProps}>
-              <CitizenProvider initialData={pageProps}>
-                <Head>
-                  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                </Head>
-                {isMounted ? (
-                  <>
-                    <ReauthorizeSessionModal />
-                    <Toaster position="top-right" />
-                  </>
-                ) : null}
-                <Component {...pageProps} err={(rest as any).err} />
-              </CitizenProvider>
-            </ValuesProvider>
-          </NextIntlProvider>
-        </AuthProvider>
-      </SocketProvider>
-    </SSRProvider>
+    <QueryClientProvider client={queryClient}>
+      {process.env.NODE_ENV === "development" ? <ReactQueryDevtools /> : null}
+      <SSRProvider>
+        <SocketProvider uri={url} options={{ reconnectionDelay: 10_000 }}>
+          <AuthProvider initialData={pageProps}>
+            <NextIntlProvider
+              defaultTranslationValues={{
+                span: (children) => <span className="font-semibold">{children}</span>,
+              }}
+              onError={console.warn}
+              locale={locale}
+              messages={pageProps.messages}
+              now={new Date()}
+            >
+              <ValuesProvider router={router} initialData={pageProps}>
+                <CitizenProvider initialData={pageProps}>
+                  <Head>
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                  </Head>
+                  {isMounted ? (
+                    <>
+                      <ReauthorizeSessionModal />
+                      <Toaster position="top-right" />
+                    </>
+                  ) : null}
+                  <Component {...pageProps} err={(rest as any).err} />
+                </CitizenProvider>
+              </ValuesProvider>
+            </NextIntlProvider>
+          </AuthProvider>
+        </SocketProvider>
+      </SSRProvider>
+    </QueryClientProvider>
   );
 }
 

@@ -37,5 +37,11 @@
   },
   "engines": {
     "node": ">=16.13.0"
+  },
+  "resolutions": {
+    "@react-stately/data@^3.8.0": "patch:@react-stately/data@npm%3A3.8.0#./.yarn/patches/@react-stately-data-npm-3.8.0-cbeceba708.patch"
+  },
+  "dependencies": {
+    "@tanstack/react-query-devtools": "^4.19.0"
   }
 }
