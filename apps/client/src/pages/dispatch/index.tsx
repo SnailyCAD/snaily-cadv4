@@ -6,7 +6,7 @@ import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { ActiveCalls } from "components/dispatch/active-calls/active-calls";
 import { useDispatchState } from "state/dispatch/dispatch-state";
-import { ActiveBolos } from "components/active-bolos/ActiveBolos";
+import { ActiveBolos } from "components/active-bolos/active-bolos";
 import { DispatchModalButtons } from "components/dispatch/ModalButtons";
 import { useTranslations } from "use-intl";
 import { ActiveOfficers } from "components/dispatch/active-officers";
@@ -27,7 +27,7 @@ import { useCall911State } from "state/dispatch/call-911-state";
 import { DndProvider } from "components/shared/dnd/DndProvider";
 
 const ActiveIncidents = dynamic(async () => {
-  return (await import("components/dispatch/ActiveIncidents")).ActiveIncidents;
+  return (await import("components/dispatch/active-incidents")).ActiveIncidents;
 });
 
 const Modals = {

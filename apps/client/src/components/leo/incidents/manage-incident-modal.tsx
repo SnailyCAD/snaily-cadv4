@@ -144,7 +144,12 @@ export function ManageIncidentModal({
       className={incident ? "w-[1000px] " : "w-[600px]"}
     >
       <div className={classNames(incident && "flex flex-col md:flex-row min-h-[450px] gap-3")}>
-        <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
+        <Formik
+          enableReinitialize
+          validate={validate}
+          initialValues={INITIAL_VALUES}
+          onSubmit={onSubmit}
+        >
           {({ handleChange, setFieldValue, errors, values, isValid }) => (
             <Form className="w-full flex flex-col justify-between">
               <div>

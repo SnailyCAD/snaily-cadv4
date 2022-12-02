@@ -11,7 +11,7 @@ import { Rank, Record, RecordType, ValueType } from "@snailycad/types";
 import { ActiveCalls } from "components/dispatch/active-calls/active-calls";
 import { useDispatchState } from "state/dispatch/dispatch-state";
 import { ModalButtons } from "components/leo/ModalButtons";
-import { ActiveBolos } from "components/active-bolos/ActiveBolos";
+import { ActiveBolos } from "components/active-bolos/active-bolos";
 import { requestAll } from "lib/utils";
 import { ActiveOfficers } from "components/dispatch/active-officers";
 import { ActiveDeputies } from "components/dispatch/active-deputies";

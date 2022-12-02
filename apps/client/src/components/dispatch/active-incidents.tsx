@@ -8,7 +8,7 @@ import { yesOrNoText } from "lib/utils";
 import { FullDate } from "components/shared/FullDate";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
-import { ManageIncidentModal } from "components/leo/incidents/ManageIncidentModal";
+import { ManageIncidentModal } from "components/leo/incidents/manage-incident-modal";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
