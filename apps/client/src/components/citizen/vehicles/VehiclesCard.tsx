@@ -30,6 +30,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
 
   const asyncTable = useAsyncTable({
     fetchOptions: {
+      pageSize: 12,
       onResponse: (json: GetCitizenVehiclesData) => ({
         data: json.vehicles,
         totalCount: json.totalCount,
@@ -39,7 +40,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
     totalCount: props.vehicles.length,
     initialData: props.vehicles,
   });
-  const tableState = useTableState({ pagination: { ...asyncTable.pagination, pageSize: 12 } });
+  const tableState = useTableState({ pagination: asyncTable.pagination });
 
   const [tempVehicle, vehicleState] = useTemporaryItem(asyncTable.items);
 

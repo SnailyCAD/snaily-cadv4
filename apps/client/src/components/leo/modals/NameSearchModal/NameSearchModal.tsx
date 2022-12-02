@@ -182,8 +182,6 @@ export function NameSearchModal() {
                   return;
                 }
 
-                console.log({ localValue, node });
-
                 const searchValue =
                   typeof localValue !== "undefined" ? { searchValue: localValue } : {};
                 const name = node ? { name: node.textValue as string } : {};
