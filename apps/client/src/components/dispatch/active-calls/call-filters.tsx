@@ -140,7 +140,7 @@ function makeAssignedUnitOptions(calls: Full911Call[], generateCallsign: (unit: 
     if (Array.isArray(data)) {
       data.forEach((v) => {
         const label = `${generateCallsign(v.unit)} ${makeUnitName(v.unit)}`;
-        const value = v.id;
+        const value = v.unit?.id ?? v.id;
 
         const obj: SelectValue<{ id: string }> = {
           value: { id: value },
