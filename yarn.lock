@@ -1990,7 +1990,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-stately/data@npm:3.8.0":
+"@react-stately/data@npm:^3.8.0":
   version: 3.8.0
   resolution: "@react-stately/data@npm:3.8.0"
   dependencies:
@@ -1999,18 +1999,6 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
   checksum: 6dba8e6e28a2ca7927c03e2b33850ecfa1904f6b85060b28803b21b203b5209e3049c7cfaa36744e36e6176475d600073621f5e9c2ac0c0a6c6de89bfdf93b78
-  languageName: node
-  linkType: hard
-
-"@react-stately/data@patch:@react-stately/data@npm%3A3.8.0#./.yarn/patches/@react-stately-data-npm-3.8.0-cbeceba708.patch::locator=snailycad%40workspace%3A.":
-  version: 3.8.0
-  resolution: "@react-stately/data@patch:@react-stately/data@npm%3A3.8.0#./.yarn/patches/@react-stately-data-npm-3.8.0-cbeceba708.patch::version=3.8.0&hash=9d109a&locator=snailycad%40workspace%3A."
-  dependencies:
-    "@babel/runtime": ^7.6.2
-    "@react-types/shared": ^3.16.0
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
-  checksum: 600714c6d85d95f61b61f310ae71a6cce21825c93a3c28291809c9b9f111729003ca154e17afb7876bae97e605d3f589a0fc65c7e9a4e56b0d07601bd38d973b
   languageName: node
   linkType: hard
 
@@ -2747,6 +2735,7 @@ __metadata:
     "@tailwindcss/typography": ^0.5.8
     "@tanstack/match-sorter-utils": ^8.7.0
     "@tanstack/react-query": ^4.19.0
+    "@tanstack/react-query-devtools": ^4.19.0
     "@tanstack/react-table": ^8.7.0
     "@tanstack/react-virtual": ^3.0.0-alpha.0
     "@tanstack/virtual-core": ^3.0.0-alpha.1
@@ -12470,7 +12459,6 @@ __metadata:
     "@casper124578/eslint-config": 5.0.1
     "@casper124578/eslint-config-next": 5.0.0
     "@casper124578/eslint-config-react": 5.0.0
-    "@tanstack/react-query-devtools": ^4.19.0
     "@typescript-eslint/eslint-plugin": latest
     colorette: 2.0.19
     concurrently: ^7.6.0
