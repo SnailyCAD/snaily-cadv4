@@ -99,7 +99,12 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
       title={bolo ? t("editBolo") : t("createBolo")}
       className="w-[600px]"
     >
-      <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
+      <Formik
+        enableReinitialize
+        validate={validate}
+        onSubmit={onSubmit}
+        initialValues={INITIAL_VALUES}
+      >
         {({ setValues, setFieldValue, values, errors, isValid }) => (
           <Form autoComplete="off">
             <FormField errorMessage={errors.type} label={common("type")}>

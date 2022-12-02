@@ -110,7 +110,12 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
   };
 
   return (
-    <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
+    <Formik
+      enableReinitialize
+      validate={validate}
+      onSubmit={onSubmit}
+      initialValues={INITIAL_VALUES}
+    >
       {({ handleChange, setFieldValue, values, errors }) => (
         <Form className="w-full h-full">
           <TextField

@@ -6,7 +6,7 @@ import * as React from "react";
 import { ModalIds } from "types/ModalIds";
 import { Bolo, BoloType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
-import { ManageBoloModal } from "./ManageBoloModal";
+import { ManageBoloModal } from "./manage-bolo-modal";
 import { BoloColumn } from "./BoloColumn";
 import type { DeleteBolosData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
