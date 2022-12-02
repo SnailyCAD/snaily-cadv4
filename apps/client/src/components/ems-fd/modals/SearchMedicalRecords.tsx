@@ -124,7 +124,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                 const name = `${item.name} ${item.surname}`;
 
                 return (
-                  <Item key={name} textValue={name}>
+                  <Item key={item.id} textValue={name}>
                     <div className="flex items-center">
                       {item.imageId ? (
                         <Image
