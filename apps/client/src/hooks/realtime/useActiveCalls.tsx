@@ -1,6 +1,7 @@
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { Button } from "@snailycad/ui";
+import { getSynthesisVoices } from "components/account/AppearanceTab";
 import { useAuth } from "context/AuthContext";
 import { toastMessage } from "lib/toastMessage";
 import toast from "react-hot-toast";
@@ -35,11 +36,11 @@ export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
   const { openModal } = useModal();
   const t = useTranslations();
 
+  const availableVoices = getSynthesisVoices() ?? [];
   const shouldPlayAddedToCallSound = user?.soundSettings?.addedToCall ?? false;
   const shouldPlayIncomingCallSound = user?.soundSettings?.incomingCall ?? false;
   const shouldSpeakIncomingCall = user?.soundSettings?.speech ?? true;
   const voiceURI = user?.soundSettings?.speechVoice;
-  const availableVoices = typeof window !== "undefined" ? window.speechSynthesis.getVoices() : [];
 
   const [addedToCallAudio, , addedToCallControls] = useAudio({
     autoPlay: false,

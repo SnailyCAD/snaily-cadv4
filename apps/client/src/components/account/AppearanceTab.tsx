@@ -47,13 +47,7 @@ export function AppearanceTab({ availableSounds }: Props) {
     [TableActionsAlignment.RIGHT]: common("right"),
   };
 
-  const voices = React.useMemo(() => {
-    if (typeof window === "undefined") return;
-    if (!("speechSynthesis" in window)) return;
-    if (typeof window.speechSynthesis.getVoices !== "function") return;
-    return window.speechSynthesis.getVoices();
-  }, []);
-
+  const voices = getSynthesisVoices();
   if (!user) {
     return null;
   }
@@ -265,4 +259,11 @@ export function AppearanceTab({ availableSounds }: Props) {
       </Formik>
     </TabsContent>
   );
+}
+
+export function getSynthesisVoices() {
+  if (typeof window === "undefined") return;
+  if (!("speechSynthesis" in window)) return;
+  if (typeof window.speechSynthesis.getVoices !== "function") return;
+  return window.speechSynthesis.getVoices();
 }
