@@ -27,6 +27,7 @@ export class TruckLogsController {
     const [totalCount, logs] = await prisma.$transaction([
       prisma.truckLog.count({ where: { userId: user.id } }),
       prisma.truckLog.findMany({
+        orderBy: { createdAt: "desc" },
         where: { userId: user.id },
         include: { citizen: true, vehicle: { include: citizenInclude.vehicles.include } },
         take: includeAll ? undefined : 35,
