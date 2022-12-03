@@ -26,7 +26,7 @@ export function PendingUsersTab(props: GetManageUsersData) {
       onResponse: (json: GetManageUsersData) => ({ totalCount: json.totalCount, data: json.users }),
     },
   });
-  const tableState = useTableState({ pagination: asyncTable.pagination });
+  const tableState = useTableState({ asyncTable });
 
   async function handleAcceptOrDecline(user: User, type: "accept" | "decline") {
     const { json } = await execute<PostManageUserAcceptDeclineData>({

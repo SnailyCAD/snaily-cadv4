@@ -56,7 +56,7 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
   });
 
   const tableState = useTableState({
-    pagination: asyncTable.pagination,
+    asyncTable,
     search: { value: search, setValue: setSearch },
   });
   const { state, execute } = useFetch();

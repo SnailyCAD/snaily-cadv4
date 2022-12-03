@@ -48,7 +48,7 @@ export default function ImportWeaponsPage({ data }: Props) {
     initialData: data.weapons,
     totalCount: data.totalCount,
   });
-  const tableState = useTableState({ pagination: asyncTable.pagination });
+  const tableState = useTableState({ asyncTable });
   const [tempWeapon, weaponState] = useTemporaryItem(asyncTable.items);
 
   function handleDeleteClick(weapon: Weapon) {

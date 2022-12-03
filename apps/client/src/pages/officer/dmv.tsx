@@ -35,7 +35,7 @@ export default function Dmv({ data }: Props) {
     initialData: data.vehicles,
     totalCount: data.totalCount,
   });
-  const tableState = useTableState({ pagination: asyncTable.pagination });
+  const tableState = useTableState({ asyncTable });
 
   async function handleAcceptOrDecline(id: string, type: "ACCEPT" | "DECLINE") {
     const { json } = await execute<PostDMVVehiclesData>({

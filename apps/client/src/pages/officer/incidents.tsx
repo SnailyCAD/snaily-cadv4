@@ -63,7 +63,7 @@ export default function LeoIncidents({
   });
 
   const [tempIncident, incidentState] = useTemporaryItem(asyncTable.items);
-  const tableState = useTableState({ pagination: asyncTable.pagination });
+  const tableState = useTableState({ asyncTable });
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { openModal, closeModal } = useModal();

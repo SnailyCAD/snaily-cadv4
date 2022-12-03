@@ -38,7 +38,7 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
     totalCount: props.weapons.length,
     initialData: props.weapons,
   });
-  const tableState = useTableState({ pagination: asyncTable.pagination });
+  const tableState = useTableState({ asyncTable });
   const [tempWeapon, weaponState] = useTemporaryItem(asyncTable.items);
 
   async function handleDelete() {

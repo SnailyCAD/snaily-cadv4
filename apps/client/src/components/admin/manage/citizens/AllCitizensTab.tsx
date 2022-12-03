@@ -39,7 +39,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
       }),
     },
   });
-  const tableState = useTableState({ pagination: asyncTable.pagination });
+  const tableState = useTableState({ asyncTable });
 
   const [tempValue, valueState] = useTemporaryItem(asyncTable.items);
   const [reason, setReason] = React.useState("");

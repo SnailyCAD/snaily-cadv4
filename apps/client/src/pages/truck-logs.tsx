@@ -32,7 +32,7 @@ export default function TruckLogs({ logs: initialLogs, totalCount }: GetTruckLog
   });
 
   const [tempLog, logState] = useTemporaryItem(asyncTable.items);
-  const tableState = useTableState({ pagination: asyncTable.pagination });
+  const tableState = useTableState({ asyncTable });
 
   const t = useTranslations("TruckLogs");
   const common = useTranslations("Common");

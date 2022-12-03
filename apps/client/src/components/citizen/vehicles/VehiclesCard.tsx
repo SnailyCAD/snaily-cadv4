@@ -40,7 +40,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
     totalCount: props.vehicles.length,
     initialData: props.vehicles,
   });
-  const tableState = useTableState({ pagination: asyncTable.pagination });
+  const tableState = useTableState({ asyncTable });
 
   const [tempVehicle, vehicleState] = useTemporaryItem(asyncTable.items);
 

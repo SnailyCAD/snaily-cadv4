@@ -47,7 +47,7 @@ export default function CitizenLogs({ data }: Props) {
     totalCount: data.totalCount,
     initialData: data.exams,
   });
-  const tableState = useTableState({ pagination: asyncTable.pagination });
+  const tableState = useTableState({ asyncTable });
   const [tempExam, examState] = useTemporaryItem(asyncTable.items);
   const hasManagePermissions = hasPermissions(
     [Permissions.ManageLicenseExams],

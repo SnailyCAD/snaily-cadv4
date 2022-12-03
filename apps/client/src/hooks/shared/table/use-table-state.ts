@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { RowSelectionState, SortingState } from "@tanstack/react-table";
+import type { RowSelectionState } from "@tanstack/react-table";
 import type { useAsyncTable } from "./use-async-table";
 
 interface TableStateOptions {
@@ -11,28 +11,26 @@ interface TableStateOptions {
     onListChange(list: any[]): void;
     disabledIndices?: number[];
   };
-  pagination?: Partial<ReturnType<typeof useAsyncTable>["pagination"]>;
+  asyncTable?: ReturnType<typeof useAsyncTable>;
 }
 
-export function useTableState({ pagination, search, dragDrop }: TableStateOptions = {}) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+export function useTableState({ asyncTable, search, dragDrop }: TableStateOptions = {}) {
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
 
   const _pagination = {
-    pageSize: pagination?.pageSize ?? 35,
-    pageIndex: pagination?.pageIndex ?? 0,
-    isLoading: pagination?.isLoading ?? false,
-    totalDataCount: pagination?.totalDataCount,
-    __ASYNC_TABLE__: pagination?.__ASYNC_TABLE__,
+    ...(asyncTable?.pagination ?? {}),
+    pageSize: asyncTable?.pagination.pageSize ?? 35,
+    pageIndex: asyncTable?.pagination.pageIndex ?? 0,
+    isLoading: asyncTable?.pagination.isLoading ?? false,
   };
 
   return {
-    sorting,
-    setSorting,
+    sorting: asyncTable?.sorting,
+    setSorting: asyncTable?.setSorting,
     rowSelection,
     setRowSelection,
     pagination: _pagination,
-    setPagination: pagination?.setPagination,
+    setPagination: asyncTable?.pagination.setPagination,
     globalFilter: search?.value,
     setGlobalFilter: search?.setValue,
     dragDrop,

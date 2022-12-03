@@ -44,7 +44,7 @@ export default function Jail({ data }: Props) {
   });
 
   const tableState = useTableState({
-    pagination: asyncTable.pagination,
+    asyncTable,
   });
 
   const t = useTranslations("Leo");

@@ -1,3 +1,4 @@
+import setObject from "lodash.set";
 import { Controller } from "@tsed/di";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import {
@@ -64,6 +65,15 @@ export class Calls911Controller {
     this.socket = socket;
   }
 
+  parseSortString(sortString: unknown) {
+    if (typeof sortString !== "string") return;
+    const [id, type] = sortString.split(":");
+    if (!id || !type) return;
+
+    const path = id.replace(/-/g, ".");
+    return setObject({}, path, type === "asc" ? "asc" : "desc");
+  }
+
   @Get("/")
   @Description("Get all 911 calls")
   async get911Calls(
@@ -76,6 +86,7 @@ export class Calls911Controller {
     @QueryParams("department", String) department?: string,
     @QueryParams("division", String) division?: string,
     @QueryParams("assignedUnit", String) assignedUnit?: string,
+    @QueryParams("sort", String) sort?: string,
   ): Promise<APITypes.Get911CallsData> {
     const inactivityFilter = getInactivityFilter(cad, "call911InactivityTimeout");
     if (inactivityFilter) {
@@ -124,13 +135,17 @@ export class Calls911Controller {
     // if the request is from the server, we want to only return information that is required to render the UI.
     // once the UI is rendered, we can then fetch the rest of the data.
 
+    const sortOrder = this.parseSortString(sort) ?? {
+      updatedAt: "desc",
+    };
+
     const [totalCount, calls] = await Promise.all([
       prisma.call911.count({ where }),
       prisma.call911.findMany({
         take: includeAll ? undefined : take,
         skip: includeAll ? undefined : skip,
         include: callInclude,
-        orderBy: { updatedAt: "desc" },
+        orderBy: sortOrder,
         where,
       }),
     ]);

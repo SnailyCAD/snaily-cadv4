@@ -26,7 +26,7 @@ type Props =
 export function OfficerLogsTable({ unit, asyncTable }: Props) {
   const { makeImageUrl } = useImageUrl();
   const { generateCallsign } = useGenerateCallsign();
-  const tableState = useTableState({ pagination: asyncTable.pagination });
+  const tableState = useTableState({ asyncTable });
   const t = useTranslations("Leo");
 
   return (

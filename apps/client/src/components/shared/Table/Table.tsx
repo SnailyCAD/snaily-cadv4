@@ -82,6 +82,7 @@ export function Table<TData extends _RowData>({
     enableSorting: true,
     manualPagination: true,
     globalFilterFn: fuzzyFilter,
+    manualSorting: tableState.pagination.serverSorting,
 
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),

@@ -82,7 +82,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
   const extraTableHeaders = useTableHeadersOfType(type);
   const extraTableData = useTableDataOfType(type);
   const tableState = useTableState({
-    pagination: asyncTable.pagination,
+    asyncTable,
     dragDrop: { onListChange: setList },
   });
 

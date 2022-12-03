@@ -47,7 +47,7 @@ export default function ImportVehiclesPage({ data }: Props) {
     initialData: data.vehicles,
     totalCount: data.totalCount,
   });
-  const tableState = useTableState({ pagination: asyncTable.pagination });
+  const tableState = useTableState({ asyncTable });
   const [tempVehicle, vehicleState] = useTemporaryItem(asyncTable.items);
 
   function handleDeleteClick(vehicle: RegisteredVehicle) {

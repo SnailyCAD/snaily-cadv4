@@ -67,6 +67,7 @@ function _ActiveCalls({ initialData }: Props) {
 
   const asyncTable = useAsyncTable({
     search,
+    serverSorting: true,
     disabled: !CALLS_911,
     fetchOptions: {
       pageSize: 12,
@@ -87,7 +88,7 @@ function _ActiveCalls({ initialData }: Props) {
   }, [asyncTable.items]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const tableState = useTableState({
-    pagination: asyncTable.pagination,
+    asyncTable,
     search: { value: search, setValue: setSearch },
   });
 
@@ -166,8 +167,8 @@ function _ActiveCalls({ initialData }: Props) {
                 caseNumber: `#${call.caseNumber}`,
                 name: `${call.name} ${call.viaDispatch ? `(${leo("dispatch")})` : ""}`,
                 location: `${call.location} ${call.postal ? `(${call.postal})` : ""}`,
-                description: <CallDescription data={call} />,
-                situationCode: call.situationCode?.value.value ?? common("none"),
+                descriptionData: <CallDescription data={call} />,
+                "situationCode-value-value": call.situationCode?.value.value ?? common("none"),
                 updatedAt: <FullDate>{call.updatedAt}</FullDate>,
                 assignedUnits: (
                   <AssignedUnitsColumn
@@ -192,10 +193,10 @@ function _ActiveCalls({ initialData }: Props) {
               { header: "#", accessorKey: "caseNumber" },
               { header: t("caller"), accessorKey: "name" },
               { header: t("location"), accessorKey: "location" },
-              { header: common("description"), accessorKey: "description" },
-              { header: t("situationCode"), accessorKey: "situationCode" },
+              { header: common("description"), accessorKey: "descriptionData" },
+              { header: t("situationCode"), accessorKey: "situationCode-value-value" },
               { header: common("updatedAt"), accessorKey: "updatedAt" },
-              { header: t("assignedUnits"), accessorKey: "assignedUnits" },
+              { header: t("assignedUnits"), accessorKey: "assignedUnits", enableSorting: false },
               { header: common("actions"), accessorKey: "actions" },
             ]}
           />

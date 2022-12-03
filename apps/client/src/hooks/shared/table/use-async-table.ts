@@ -3,6 +3,7 @@ import useFetch from "lib/useFetch";
 import { useDebounce } from "react-use";
 import { useQuery, QueryFunctionContext } from "@tanstack/react-query";
 import { useList } from "./use-list";
+import type { SortingState } from "@tanstack/react-table";
 
 interface FetchOptions {
   pageSize?: number;
@@ -14,6 +15,7 @@ interface FetchOptions {
 
 interface Options<T> {
   search?: string;
+  serverSorting?: boolean;
 
   disabled?: boolean;
   totalCount: number;
@@ -31,6 +33,7 @@ export function useAsyncTable<T>(options: Options<T>) {
   const [debouncedSearch, setDebouncedSearch] = React.useState(options.search);
   const [filters, setFilters] = React.useState<Record<string, string> | null>(null);
   const [totalDataCount, setTotalCount] = React.useState(options.totalCount);
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [paginationOptions, setPagination] = React.useState({
     pageSize: options.fetchOptions.pageSize ?? 35,
     pageIndex: options.fetchOptions.pageIndex ?? 0,
@@ -39,19 +42,24 @@ export function useAsyncTable<T>(options: Options<T>) {
   useQuery({
     initialData: options.initialData ?? [],
     queryFn: fetchData,
-    queryKey: [paginationOptions.pageIndex, debouncedSearch, filters],
+    queryKey: [paginationOptions.pageIndex, debouncedSearch, filters, sorting],
   });
 
   async function fetchData(context: QueryFunctionContext<any>) {
-    const [pageIndex, search, _filters] = context.queryKey;
+    const [pageIndex, search, _filters, _sorting] = context.queryKey;
     const path = options.fetchOptions.path;
     const skip = Number(pageIndex * paginationOptions.pageSize) || 0;
     const filters = _filters || {};
+    const sorting = _sorting || [];
 
     const searchParams = new URLSearchParams();
 
     filters.query = search;
     filters.skip = skip;
+
+    for (const sort of sorting) {
+      filters.sort = `${sort.id}:${sort.desc ? "desc" : "asc"}`;
+    }
 
     for (const filterKey in filters) {
       const filterValue = filters[filterKey];
@@ -84,6 +92,7 @@ export function useAsyncTable<T>(options: Options<T>) {
     totalDataCount,
     isLoading: loadingState === "loading",
     setPagination,
+    serverSorting: options.serverSorting ?? false,
     ...paginationOptions,
   } as const;
 
@@ -91,6 +100,8 @@ export function useAsyncTable<T>(options: Options<T>) {
     ...list,
     filters,
     setFilters,
+    sorting,
+    setSorting,
     isLoading: loadingState === "loading",
     pagination,
   };
