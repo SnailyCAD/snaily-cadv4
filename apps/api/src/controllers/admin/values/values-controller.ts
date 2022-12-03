@@ -25,6 +25,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { getImageWebPPath } from "utils/image";
 import { BULK_DELETE_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
+import { parseSortString } from "utils/sorting";
 
 const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
   QUALIFICATION: {
@@ -66,6 +67,7 @@ export class ValuesController {
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query = "",
     @QueryParams("includeAll", Boolean) includeAll = true,
+    @QueryParams("sort", String) sort?: string,
   ): Promise<APITypes.GetValuesData | APITypes.GetValuesPenalCodesData> {
     // allow more paths in one request
     let paths =
@@ -74,6 +76,10 @@ export class ValuesController {
     if (path === "all") {
       paths = validValuePaths.filter((v) => v !== "penal_code_group");
     }
+
+    const sortOrder = parseSortString(sort) ?? {
+      value: { position: "asc" },
+    };
 
     const values = await Promise.all(
       paths.map(async (path) => {
@@ -97,7 +103,7 @@ export class ValuesController {
         if (data) {
           const [totalCount, values] = await prisma.$transaction([
             // @ts-expect-error ignore
-            prisma[data.name].count({ orderBy: { value: { position: "asc" } }, where }),
+            prisma[data.name].count({ orderBy: sortOrder, where }),
             // @ts-expect-error ignore
             prisma[data.name].findMany({
               where,
@@ -106,7 +112,7 @@ export class ValuesController {
                 ...(type === "ADDRESS" ? {} : { _count: true }),
                 value: true,
               },
-              orderBy: { value: { position: "asc" } },
+              orderBy: sortOrder,
               take: includeAll ? undefined : 35,
               skip: includeAll ? undefined : skip,
             }),

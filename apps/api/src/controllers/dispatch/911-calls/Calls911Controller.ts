@@ -1,4 +1,3 @@
-import setObject from "lodash.set";
 import { Controller } from "@tsed/di";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import {
@@ -42,6 +41,7 @@ import {
 import type { z } from "zod";
 import { getNextActiveCallId } from "lib/calls/getNextActiveCall";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
+import { parseSortString } from "utils/sorting";
 
 export const callInclude = {
   position: true,
@@ -63,15 +63,6 @@ export class Calls911Controller {
   private socket: Socket;
   constructor(socket: Socket) {
     this.socket = socket;
-  }
-
-  parseSortString(sortString: unknown) {
-    if (typeof sortString !== "string") return;
-    const [id, type] = sortString.split(":");
-    if (!id || !type) return;
-
-    const path = id.replace(/-/g, ".");
-    return setObject({}, path, type === "asc" ? "asc" : "desc");
   }
 
   @Get("/")
@@ -135,7 +126,7 @@ export class Calls911Controller {
     // if the request is from the server, we want to only return information that is required to render the UI.
     // once the UI is rendered, we can then fetch the rest of the data.
 
-    const sortOrder = this.parseSortString(sort) ?? {
+    const sortOrder = parseSortString(sort) ?? {
       updatedAt: "desc",
     };
 

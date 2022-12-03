@@ -69,7 +69,11 @@ export function useAsyncTable<T>(options: Options<T>) {
       }
     }
 
-    const { json } = await execute({ path, params: Object.fromEntries(searchParams) });
+    const { json } = await execute({
+      signal: context.signal,
+      path,
+      params: Object.fromEntries(searchParams),
+    });
     const toReturnData = options.fetchOptions.onResponse(json);
     setTotalCount(toReturnData.totalCount);
 

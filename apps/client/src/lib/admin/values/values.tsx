@@ -195,7 +195,7 @@ export function useTableHeadersOfType(type: ValueType): ColumnDef<{ id: string }
         { header: common("type"), accessorKey: "type" },
         { header: t("color"), accessorKey: "color" },
         { header: t("whatPages"), accessorKey: "whatPages" },
-        { header: t("departments"), accessorKey: "departments" },
+        { header: t("departments"), accessorKey: "departments", enableSorting: false },
       ];
     }
     case ValueType.DEPARTMENT: {
@@ -228,14 +228,14 @@ export function useTableHeadersOfType(type: ValueType): ColumnDef<{ id: string }
     case ValueType.QUALIFICATION: {
       return [
         { header: common("image"), accessorKey: "image" },
-        { header: t("departments"), accessorKey: "departments" },
+        { header: t("departments"), accessorKey: "departments", enableSorting: false },
         { header: common("type"), accessorKey: "type" },
       ];
     }
     case ValueType.OFFICER_RANK: {
       return [
         { header: common("image"), accessorKey: "image" },
-        { header: t("departments"), accessorKey: "departments" },
+        { header: t("departments"), accessorKey: "departments", enableSorting: false },
       ];
     }
     case ValueType.CALL_TYPE: {

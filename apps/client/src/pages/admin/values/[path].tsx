@@ -59,6 +59,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
   const [search, setSearch] = React.useState("");
   const asyncTable = useAsyncTable({
     search,
+    serverSorting: true,
     fetchOptions: {
       onResponse(json: GetValuesData) {
         const [forType] = json;
@@ -88,9 +89,9 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
 
   const tableHeaders = React.useMemo(() => {
     return [
-      { header: "Value", accessorKey: "value" },
+      { header: "Value", accessorKey: "value-value" },
       ...extraTableHeaders,
-      { header: t("isDisabled"), accessorKey: "isDisabled" },
+      { header: t("isDisabled"), accessorKey: "isDisabled", enableSorting: false },
       { header: common("createdAt"), accessorKey: "createdAt" },
       { header: common("actions"), accessorKey: "actions" },
     ] as AccessorKeyColumnDef<{ id: string }, "id">[];
@@ -207,7 +208,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
           data={asyncTable.items.map((value) => ({
             id: value.id,
             rowProps: { value },
-            value: getValueStrFromValue(value),
+            "value-value": getValueStrFromValue(value),
             ...extraTableData(value),
             isDisabled: common(yesOrNoText(getDisabledFromValue(value))),
             createdAt: <FullDate>{getCreatedAtFromValue(value)}</FullDate>,

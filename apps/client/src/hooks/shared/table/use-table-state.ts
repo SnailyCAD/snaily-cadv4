@@ -11,7 +11,9 @@ interface TableStateOptions {
     onListChange(list: any[]): void;
     disabledIndices?: number[];
   };
-  asyncTable?: ReturnType<typeof useAsyncTable>;
+  asyncTable?: Omit<ReturnType<typeof useAsyncTable>, "pagination"> & {
+    pagination: Partial<ReturnType<typeof useAsyncTable>["pagination"]>;
+  };
 }
 
 export function useTableState({ asyncTable, search, dragDrop }: TableStateOptions = {}) {

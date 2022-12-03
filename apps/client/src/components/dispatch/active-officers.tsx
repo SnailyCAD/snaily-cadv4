@@ -38,7 +38,7 @@ interface Props {
 
 function ActiveOfficers({ initialOfficers }: Props) {
   const tableState = useTableState({
-    pagination: { pageSize: 12, totalDataCount: initialOfficers.length },
+    asyncTable: { pagination: { pageSize: 12, totalDataCount: initialOfficers.length } },
   });
 
   const { activeOfficers: _activeOfficers } = useActiveOfficers();
