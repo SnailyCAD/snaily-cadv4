@@ -2,7 +2,7 @@ import type { CadFeature, User } from "@prisma/client";
 import { CREATE_TRUCK_LOG_SCHEMA } from "@snailycad/schemas";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
-import { BodyParams, Context, PathParams } from "@tsed/platform-params";
+import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
 import { ContentType, Delete, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
@@ -19,25 +19,22 @@ import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 @IsFeatureEnabled({ feature: Feature.TRUCK_LOGS })
 export class TruckLogsController {
   @Get("/")
-  async getTruckLogs(@Context("user") user: User): Promise<APITypes.GetTruckLogsData> {
-    const logs = await prisma.truckLog.findMany({
-      where: {
-        userId: user.id,
-      },
-      include: {
-        citizen: true,
-        vehicle: { include: citizenInclude.vehicles.include },
-      },
-    });
+  async getTruckLogs(
+    @Context("user") user: User,
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("includeAll", Boolean) includeAll = false,
+  ): Promise<APITypes.GetTruckLogsData> {
+    const [totalCount, logs] = await prisma.$transaction([
+      prisma.truckLog.count({ where: { userId: user.id } }),
+      prisma.truckLog.findMany({
+        where: { userId: user.id },
+        include: { citizen: true, vehicle: { include: citizenInclude.vehicles.include } },
+        take: includeAll ? undefined : 35,
+        skip: includeAll ? undefined : skip,
+      }),
+    ]);
 
-    const registeredVehicles = await prisma.registeredVehicle.findMany({
-      where: {
-        userId: user.id,
-      },
-      include: citizenInclude.vehicles.include,
-    });
-
-    return { logs, registeredVehicles };
+    return { logs, totalCount };
   }
 
   @Post("/")

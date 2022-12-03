@@ -29,8 +29,8 @@ export class ImportVehiclesController {
   @Description("Get all the vehicles in the CAD (paginated)")
   async getVehicles(
     @QueryParams("skip", Number) skip = 0,
-    @QueryParams("query", String) query = "",
     @QueryParams("includeAll", Boolean) includeAll = false,
+    @QueryParams("query", String) query = "",
   ): Promise<APITypes.GetImportVehiclesData> {
     const where: Prisma.RegisteredVehicleWhereInput | undefined = query
       ? {

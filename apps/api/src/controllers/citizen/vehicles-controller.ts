@@ -33,6 +33,38 @@ import type { RegisteredVehicle } from "@snailycad/types";
 export class VehiclesController {
   private VIN_NUMBER_LENGTH = 17;
 
+  @Get("/search")
+  async searchCitizenVehicles(
+    @Context("user") user: User,
+    @QueryParams("query", String) query: string,
+    @QueryParams("citizenId", String) citizenId?: string,
+  ) {
+    const where: Prisma.RegisteredVehicleWhereInput = {
+      ...{ userId: user.id },
+      ...(citizenId ? { citizenId } : {}),
+      ...(query
+        ? {
+            OR: [
+              { color: { contains: query, mode: "insensitive" } },
+              { model: { value: { value: { contains: query, mode: "insensitive" } } } },
+              { registrationStatus: { value: { contains: query, mode: "insensitive" } } },
+              { vinNumber: { contains: query, mode: "insensitive" } },
+              { plate: { contains: query, mode: "insensitive" } },
+            ],
+          }
+        : {}),
+    };
+
+    const vehicles = await prisma.registeredVehicle.findMany({
+      where,
+      take: 30,
+      include: citizenInclude.vehicles.include,
+      orderBy: { createdAt: "desc" },
+    });
+
+    return vehicles;
+  }
+
   @Get("/:citizenId")
   async getCitizenVehicles(
     @PathParams("citizenId") citizenId: string,

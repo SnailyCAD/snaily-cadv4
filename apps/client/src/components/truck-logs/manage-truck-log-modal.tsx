@@ -1,34 +1,25 @@
 import { CREATE_TRUCK_LOG_SCHEMA } from "@snailycad/schemas";
-import { Loader, Button, TextField } from "@snailycad/ui";
-import { FormField } from "components/form/FormField";
+import { Loader, Button, TextField, AsyncListSearchField, Item } from "@snailycad/ui";
 import { FormRow } from "components/form/FormRow";
-import { Select } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
-import type { RegisteredVehicle } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import type { GetTruckLogsData, PostTruckLogsData, PutTruckLogsData } from "@snailycad/types/api";
+import type { RegisteredVehicle } from "@snailycad/types";
 
 interface Props {
   log: GetTruckLogsData["logs"][number] | null;
-  registeredVehicles: Omit<RegisteredVehicle, "citizen">[];
   onUpdate?(old: GetTruckLogsData["logs"][number], newLog: GetTruckLogsData["logs"][number]): void;
   onCreate?(log: GetTruckLogsData["logs"][number]): void;
   onClose?(): void;
 }
 
-export function ManageTruckLogModal({
-  onUpdate,
-  onCreate,
-  onClose,
-  registeredVehicles,
-  log,
-}: Props) {
+export function ManageTruckLogModal({ onUpdate, onCreate, onClose, log }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("TruckLogs");
   const { isOpen, closeModal } = useModal();
@@ -69,8 +60,9 @@ export function ManageTruckLogModal({
     endedAt: log?.endedAt ?? "",
     startedAt: log?.startedAt ?? "",
     vehicleId: log?.vehicleId ?? "",
+    vehicleName: log?.vehicle?.model.value.value ?? "",
     citizenId: log?.citizenId ?? "",
-    citizenName: log?.citizen ? `$${log.citizen.name} ${log.citizen.surname}` : "",
+    citizenName: log?.citizen ? `${log.citizen.name} ${log.citizen.surname}` : "",
     notes: log?.notes ?? "",
   };
 
@@ -84,7 +76,7 @@ export function ManageTruckLogModal({
       className="w-[700px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, setFieldValue, values, isValid, errors }) => (
+        {({ setFieldValue, setValues, values, isValid, errors }) => (
           <Form>
             <FormRow>
               <TextField
@@ -110,17 +102,28 @@ export function ManageTruckLogModal({
               valueFieldName="citizenId"
             />
 
-            <FormField errorMessage={errors.vehicleId} label={t("vehicle")}>
-              <Select
-                name="vehicleId"
-                onChange={handleChange}
-                values={registeredVehicles.map((vehicle) => ({
-                  label: vehicle.model.value.value,
-                  value: vehicle.id,
-                }))}
-                value={values.vehicleId}
-              />
-            </FormField>
+            <AsyncListSearchField<RegisteredVehicle>
+              selectedKey={values.vehicleId}
+              localValue={values.vehicleName}
+              errorMessage={errors.vehicleId}
+              setValues={({ localValue, node }) => {
+                const vehicleName =
+                  typeof localValue !== "undefined" ? { vehicleName: localValue } : {};
+                const vehicleId = node ? { vehicleId: node.key as string } : {};
+
+                setValues({ ...values, ...vehicleName, ...vehicleId });
+              }}
+              label={t("vehicle")}
+              fetchOptions={{
+                apiPath: (query) => `/vehicles/search?query=${query}&citizenId=${values.citizenId}`,
+              }}
+            >
+              {(item) => (
+                <Item key={item.id} textValue={item.model.value.value}>
+                  {item.model.value.value} ({item.plate.toUpperCase()})
+                </Item>
+              )}
+            </AsyncListSearchField>
 
             <TextField
               isTextarea

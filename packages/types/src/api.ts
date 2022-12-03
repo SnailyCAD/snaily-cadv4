@@ -183,7 +183,7 @@ export interface GetTruckLogsData {
     citizen: Prisma.Citizen | null;
     vehicle: Omit<Types.RegisteredVehicle, "citizen"> | null;
   })[];
-  registeredVehicles: Omit<Types.RegisteredVehicle, "citizen">[];
+  totalCount: number;
 }
 
 /**
