@@ -4,7 +4,14 @@ import { EMS_FD_DEPUTY_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas"
 import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
-import { type MiscCadSettings, ShouldDoType, type User, CadFeature, Feature } from "@prisma/client";
+import {
+  type cad as DBCad,
+  type MiscCadSettings,
+  ShouldDoType,
+  type User,
+  CadFeature,
+  Feature,
+} from "@prisma/client";
 import type { cad, EmsFdDeputy } from "@snailycad/types";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { IsAuth } from "middlewares/IsAuth";
@@ -25,6 +32,7 @@ import { Socket } from "services/SocketService";
 import type * as APITypes from "@snailycad/types/api";
 import { isFeatureEnabled } from "lib/cad";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
+import { handlePanicButtonPressed } from "lib/leo/send-panic-button-webhook";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
@@ -461,6 +469,7 @@ export class EmsFdController {
   })
   async panicButton(
     @Context("user") user: User,
+    @Context("cad") cad: DBCad & { miscCadSettings: MiscCadSettings },
     @BodyParams("deputyId") deputyId: string,
   ): Promise<APITypes.PostEmsFdTogglePanicButtonData> {
     let deputy = await prisma.emsFdDeputy.findFirst({
@@ -513,6 +522,16 @@ export class EmsFdController {
           data: { statusId: code.id },
           include: unitProperties,
         });
+
+        if (deputy.status) {
+          handlePanicButtonPressed({
+            force: true,
+            cad,
+            socket: this.socket,
+            status: deputy.status,
+            unit: deputy,
+          });
+        }
       }
     }
 
