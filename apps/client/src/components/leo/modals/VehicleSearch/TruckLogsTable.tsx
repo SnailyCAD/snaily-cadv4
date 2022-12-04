@@ -24,6 +24,7 @@ export function TruckLogsTable({ result }: Props) {
       <h4 className="text-xl font-semibold">{t("truckLogs")}</h4>
 
       <Table
+        features={{ isWithinCardOrModal: true }}
         tableState={tableState}
         data={truckLogs
           .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
