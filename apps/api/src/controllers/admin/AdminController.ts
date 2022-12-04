@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { stat } from "node:fs/promises";
 import { Res, UseBefore } from "@tsed/common";
 import { IsAuth } from "middlewares/IsAuth";
-import { Rank, WhitelistStatus } from "@prisma/client";
+import { Prisma, Rank, WhitelistStatus } from "@prisma/client";
 import { UsePermissions } from "middlewares/UsePermissions";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import type { GetAdminDashboardData } from "@snailycad/types/api";
@@ -49,16 +49,21 @@ export class AdminController {
       prisma.bolo.count({ where: { type: "VEHICLE" } }),
     ]);
 
+    const filters: Prisma.Enumerable<Prisma.OfficerWhereInput> = [
+      { status: { shouldDo: "SET_OFF_DUTY" } },
+      { status: { is: null } },
+    ];
+
     const [officerCount, onDutyOfficers, suspendedOfficers] = await prisma.$transaction([
       prisma.officer.count(),
-      prisma.officer.count({ where: { NOT: { status: { shouldDo: "SET_OFF_DUTY" } } } }),
+      prisma.officer.count({ where: { NOT: { OR: filters } } }),
       prisma.officer.count({ where: { suspended: true } }),
     ]);
 
     const [emsDeputiesCount, onDutyEmsDeputies, suspendedEmsFDDeputies] = await prisma.$transaction(
       [
         prisma.emsFdDeputy.count(),
-        prisma.emsFdDeputy.count({ where: { NOT: { status: { shouldDo: "SET_OFF_DUTY" } } } }),
+        prisma.emsFdDeputy.count({ where: { NOT: { OR: filters } } }),
         prisma.emsFdDeputy.count({ where: { suspended: true } }),
       ],
     );
