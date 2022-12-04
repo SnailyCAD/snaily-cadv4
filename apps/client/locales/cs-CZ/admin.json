@@ -1,11 +1,11 @@
 {
   "Management": {
-    "management": "Management",
-    "adminDashboard": "Admin Dashboard",
+    "management": "Správa",
+    "adminDashboard": "Admin Panel",
     "MANAGE_CITIZENS": "Správa Civilistů",
     "MANAGE_BUSINESSES": "Správa Podniků",
     "MANAGE_USERS": "Správa Uživatelů",
-    "MANAGE_UNITS": "Správa Hlídek",
+    "MANAGE_UNITS": "Správa Příslušníků",
     "MANAGE_EXPUNGEMENT_REQUESTS": "Správa žádostí o výmaz",
     "MANAGE_NAME_CHANGE_REQUESTS": "Správa změny jména",
     "MANAGE_CAD_SETTINGS": "Nastavení",
