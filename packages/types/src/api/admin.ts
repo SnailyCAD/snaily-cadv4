@@ -286,6 +286,15 @@ export interface GetManageUsersData {
 
 /**
  * @method Get
+ * @route /admin/manage/users/prune
+ */
+export interface GetManageUsersInactiveUsers {
+  totalCount: number;
+  users: Types.User[];
+}
+
+/**
+ * @method Get
  * @route /admin/manage/users/:id
  */
 export type GetManageUserByIdData = Types.User & {
