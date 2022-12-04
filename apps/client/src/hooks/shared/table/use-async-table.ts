@@ -73,7 +73,11 @@ export function useAsyncTable<T>(options: Options<T>) {
       window.scrollTo({ behavior: "smooth", top: 0 });
     }
 
-    return list.setItems(toReturnData.data);
+    if (Array.isArray(toReturnData.data)) {
+      return list.setItems(toReturnData.data);
+    }
+
+    return [];
   }
 
   useDebounce(() => setDebouncedSearch(options.search), 200, [options.search]);
