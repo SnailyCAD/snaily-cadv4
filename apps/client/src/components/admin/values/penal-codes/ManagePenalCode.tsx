@@ -243,7 +243,7 @@ function FieldsRow({ keyValue }: { keyValue: `fines${number}` | "prisonTerm" | "
       <FormRow className="items-center" flexLike>
         <TextField
           label="Min."
-          autoFocus
+
           onChange={(value) => setFieldValue(`${keyValue}.values[0]`, value)}
           isRequired
           type="number"
@@ -257,7 +257,6 @@ function FieldsRow({ keyValue }: { keyValue: `fines${number}` | "prisonTerm" | "
         <span className="mb-2.5">{" - "}</span>
         <TextField
           label="Max."
-          autoFocus
           onChange={(value) => setFieldValue(`${keyValue}.values[1]`, value)}
           isRequired
           type="number"

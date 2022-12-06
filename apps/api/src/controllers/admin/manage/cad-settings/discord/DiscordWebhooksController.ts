@@ -188,7 +188,7 @@ export class DiscordWebhooksController {
 
       if (prevWebhookData?.id) {
         await performDiscordRequest({
-          handler(rest) {
+          async handler(rest) {
             rest.patch(Routes.webhook(prevId), {
               body: { name, avatar: avatarURI },
             });

@@ -173,7 +173,7 @@ export class TowController {
       data: {
         creatorId: data.creatorId,
         description: data.description,
-        descriptionData: data.descriptionData,
+        descriptionData: data.descriptionData ?? null,
         location: data.location,
         postal: data.postal,
         deliveryAddressId: data.deliveryAddressId,
