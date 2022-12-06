@@ -18,7 +18,6 @@ Sentry.init({
   integrations: [
     new Sentry.Integrations.Http({ tracing: true }),
     new Tracing.Integrations.Prisma({ client: prisma }),
-    new ProfilingIntegration(),
   ],
   tracesSampleRate: 1.0,
 });
