@@ -4,7 +4,6 @@ import { Server } from "./server";
 import { getCADVersion } from "@snailycad/utils/version";
 import * as Sentry from "@sentry/node";
 import * as Tracing from "@sentry/tracing";
-import { ProfilingIntegration } from "@sentry/profiling-node";
 import { prisma } from "lib/prisma";
 import { importProviders } from "@tsed/components-scan";
 

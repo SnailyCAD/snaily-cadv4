@@ -2486,18 +2486,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/hub@npm:^7.16.0":
-  version: 7.21.1
-  resolution: "@sentry/hub@npm:7.21.1"
-  dependencies:
-    "@sentry/core": 7.21.1
-    "@sentry/types": 7.21.1
-    "@sentry/utils": 7.21.1
-    tslib: ^1.9.3
-  checksum: 7ed60751594eb357f8c85aae1002f92fc889254b3471e754edea774e8f71d228d6d9c72c8e06af2964045b4fcf6cb3e868aa018e50d75071e333ab72f28fdac4
-  languageName: node
-  linkType: hard
-
 "@sentry/integrations@npm:7.21.1":
   version: 7.21.1
   resolution: "@sentry/integrations@npm:7.21.1"
@@ -2538,7 +2526,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/node@npm:7.21.1, @sentry/node@npm:^7.16.0, @sentry/node@npm:^7.21.1":
+"@sentry/node@npm:7.21.1, @sentry/node@npm:^7.21.1":
   version: 7.21.1
   resolution: "@sentry/node@npm:7.21.1"
   dependencies:
@@ -2550,22 +2538,6 @@ __metadata:
     lru_map: ^0.3.3
     tslib: ^1.9.3
   checksum: 45f99ca9c3dd5a2aeef4d1366c31f4cca3dc5bfc79698aeaf2ff2e966165702e26a395b0fecca807b672f7fdec523a92ddb37def09728b16b39f8aef7776179f
-  languageName: node
-  linkType: hard
-
-"@sentry/profiling-node@npm:^0.0.12":
-  version: 0.0.12
-  resolution: "@sentry/profiling-node@npm:0.0.12"
-  dependencies:
-    "@sentry/hub": ^7.16.0
-    "@sentry/node": ^7.16.0
-    "@sentry/tracing": ^7.16.0
-    "@sentry/types": ^7.16.0
-    "@sentry/utils": ^7.16.0
-    nan: ^2.17.0
-    node-abi: ^3.28.0
-    node-gyp: ^9.3.0
-  checksum: c6f4f33eb0734fb3e2bb60907dc2fafabbc6806596d959fc6052ce9b1843dc8b50c2109300e47be9dd3e07f3a04aa0b70c5bda88a3fcb257ddf47dee98b2bbb3
   languageName: node
   linkType: hard
 
@@ -2584,7 +2556,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/tracing@npm:7.21.1, @sentry/tracing@npm:^7.16.0, @sentry/tracing@npm:^7.21.1":
+"@sentry/tracing@npm:7.21.1, @sentry/tracing@npm:^7.21.1":
   version: 7.21.1
   resolution: "@sentry/tracing@npm:7.21.1"
   dependencies:
@@ -2596,14 +2568,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/types@npm:7.21.1, @sentry/types@npm:^7.16.0":
+"@sentry/types@npm:7.21.1":
   version: 7.21.1
   resolution: "@sentry/types@npm:7.21.1"
   checksum: 0c89b3077aae599d4f4d918449c98b2da6be3820ec99036bb600c6e977ec0a6a906cc12bcb373ef42408b2e081163088c97f185cb349d1fdb2fc704a73de259b
   languageName: node
   linkType: hard
 
-"@sentry/utils@npm:7.21.1, @sentry/utils@npm:^7.16.0":
+"@sentry/utils@npm:7.21.1":
   version: 7.21.1
   resolution: "@sentry/utils@npm:7.21.1"
   dependencies:
@@ -2641,7 +2613,6 @@ __metadata:
     "@discordjs/rest": ^1.3.0
     "@prisma/client": ^4.6.1
     "@sentry/node": ^7.21.1
-    "@sentry/profiling-node": ^0.0.12
     "@sentry/tracing": ^7.21.1
     "@snaily-cad/image-data-uri": ^3.1.0
     "@snailycad/config": 1.35.4
@@ -10116,15 +10087,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nan@npm:^2.17.0":
-  version: 2.17.0
-  resolution: "nan@npm:2.17.0"
-  dependencies:
-    node-gyp: latest
-  checksum: ec609aeaf7e68b76592a3ba96b372aa7f5df5b056c1e37410b0f1deefbab5a57a922061e2c5b369bae9c7c6b5e6eecf4ad2dac8833a1a7d3a751e0a7c7f849ed
-  languageName: node
-  linkType: hard
-
 "nano-css@npm:^5.3.1":
   version: 5.3.5
   resolution: "nano-css@npm:5.3.5"
@@ -10271,15 +10233,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-abi@npm:^3.28.0":
-  version: 3.28.0
-  resolution: "node-abi@npm:3.28.0"
-  dependencies:
-    semver: ^7.3.5
-  checksum: ed8db5e58fc9e1400a3f74d8815b6981208a4fca2031e2c5f5986f58f7e3a1f4161dae82c655f9114892b3f46c21c02feec10fbac0f8ffcfd26a3d57447093d1
-  languageName: node
-  linkType: hard
-
 "node-abi@npm:^3.3.0":
   version: 3.26.0
   resolution: "node-abi@npm:3.26.0"
@@ -10318,26 +10271,6 @@ __metadata:
     encoding:
       optional: true
   checksum: 8d816ffd1ee22cab8301c7756ef04f3437f18dace86a1dae22cf81db8ef29c0bf6655f3215cb0cdb22b420b6fe141e64b26905e7f33f9377a7fa59135ea3e10b
-  languageName: node
-  linkType: hard
-
-"node-gyp@npm:^9.3.0":
-  version: 9.3.0
-  resolution: "node-gyp@npm:9.3.0"
-  dependencies:
-    env-paths: ^2.2.0
-    glob: ^7.1.4
-    graceful-fs: ^4.2.6
-    make-fetch-happen: ^10.0.3
-    nopt: ^6.0.0
-    npmlog: ^6.0.0
-    rimraf: ^3.0.2
-    semver: ^7.3.5
-    tar: ^6.1.2
-    which: ^2.0.2
-  bin:
-    node-gyp: bin/node-gyp.js
-  checksum: 589ddd3ed967724ef425f9624bfa47cf73022640ab3eba6d556e92cdc4ddef33b63fce3a467c93b995a3f61df92eafd3c3d1e8dbe4a2c00c383334487dea99c3
   languageName: node
   linkType: hard
 
