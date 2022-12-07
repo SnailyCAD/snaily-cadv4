@@ -303,7 +303,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
   const path = (query.path as string).replace("-", "_") as Lowercase<ValueType>;
 
   const user = await getSessionUser(req);
-  const [pathValues] = await requestAll(req, [[`/admin/values/${path}`, []]]);
+  const [pathValues] = await requestAll(req, [[`/admin/values/${path}?includeAll=false`, []]]);
 
   return {
     props: {
