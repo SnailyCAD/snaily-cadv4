@@ -243,7 +243,6 @@ function FieldsRow({ keyValue }: { keyValue: `fines${number}` | "prisonTerm" | "
       <FormRow className="items-center" flexLike>
         <TextField
           label="Min."
-
           onChange={(value) => setFieldValue(`${keyValue}.values[0]`, value)}
           isRequired
           type="number"
