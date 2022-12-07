@@ -42,6 +42,10 @@ export function useAsyncTable<T>(options: Options<T>) {
     queryKey: [paginationOptions.pageIndex, debouncedSearch, filters],
   });
 
+  React.useEffect(() => {
+    list.setItems(options.initialData ?? []);
+  }, [options.initialData]); // eslint-disable-line react-hooks/exhaustive-deps
+
   async function fetchData(context: QueryFunctionContext<any>) {
     const [pageIndex, search, _filters] = context.queryKey;
     const path = options.fetchOptions.path;
