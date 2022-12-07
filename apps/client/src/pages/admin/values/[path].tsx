@@ -38,6 +38,7 @@ import type { AccessorKeyColumnDef } from "@tanstack/react-table";
 import { getSelectedTableRows } from "hooks/shared/table/use-table-state";
 import { SearchArea } from "components/shared/search/search-area";
 import { AlertDeleteValueModal } from "components/admin/values/alert-delete-value-modal";
+import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -55,6 +56,20 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
   const router = useRouter();
   const path = (router.query.path as string).toUpperCase().replace("-", "_");
   const routeData = valueRoutes.find((v) => v.type === type);
+
+  const pathsRecord: Partial<Record<ValueType, ValueType[]>> = {
+    [ValueType.DEPARTMENT]: [ValueType.OFFICER_RANK],
+    [ValueType.DIVISION]: [ValueType.DEPARTMENT],
+    [ValueType.QUALIFICATION]: [ValueType.DEPARTMENT],
+    [ValueType.CODES_10]: [ValueType.DEPARTMENT],
+    [ValueType.OFFICER_RANK]: [ValueType.DEPARTMENT],
+    [ValueType.EMERGENCY_VEHICLE]: [ValueType.DEPARTMENT, ValueType.DIVISION],
+  };
+
+  useLoadValuesClientSide({
+    // @ts-expect-error - this is fine
+    valueTypes: pathsRecord[type] ? pathsRecord[type] : [],
+  });
 
   const [search, setSearch] = React.useState("");
   const asyncTable = useAsyncTable({
@@ -287,25 +302,12 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
 export const getServerSideProps: GetServerSideProps = async ({ locale, req, query }) => {
   const path = (query.path as string).replace("-", "_") as Lowercase<ValueType>;
 
-  const pathsRecord: Partial<Record<Lowercase<ValueType>, string>> = {
-    department: "officer_rank",
-    division: "department",
-    qualification: "department",
-    codes_10: "department",
-    officer_rank: "department",
-    emergency_vehicle: "department,division",
-  };
-
-  const paths = pathsRecord[path];
-  const pathsStr = paths ? `?paths=${paths}&includeAll=false` : "?includeAll=false";
-
   const user = await getSessionUser(req);
-  const [values] = await requestAll(req, [[`/admin/values/${path}${pathsStr}`, []]]);
+  const [pathValues] = await requestAll(req, [[`/admin/values/${path}`, []]]);
 
   return {
     props: {
-      values,
-      pathValues: values?.[0] ?? { type: path, values: [] },
+      pathValues: pathValues?.[0] ?? { type: path, values: [] },
       session: user,
       messages: {
         ...(await getTranslations(["admin", "values", "common"], user?.locale ?? locale)),
