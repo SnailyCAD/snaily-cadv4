@@ -228,17 +228,14 @@ export function AppearanceTab({ availableSounds }: Props) {
                           <p key={sound}>{t(sound)}</p>
                         ))}
 
-                        <p className="mt-2">
-                          These sounds are unavailable.
-                          <a
-                            className="ml-1 underline"
-                            rel="noreferrer"
-                            target="_blank"
-                            href="https://cad-docs.caspertheghost.me/docs/guides/how-set-custom-sounds"
-                          >
-                            They must be added by an admin.
-                          </a>
-                        </p>
+                        <a
+                          className="mt-2 ml-1 underline"
+                          rel="noreferrer"
+                          target="_blank"
+                          href="https://cad-docs.caspertheghost.me/docs/guides/how-set-custom-sounds"
+                        >
+                          {t("unavailableSoundsMessage")}
+                        </a>
                       </Accordion.Content>
                     </Accordion.Item>
                   </Accordion.Root>
