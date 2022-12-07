@@ -124,6 +124,7 @@ export function MiscFeatures() {
     unitInactivityTimeout: miscSettings.unitInactivityTimeout ?? "",
     activeWarrantsInactivityTimeout: miscSettings.activeWarrantsInactivityTimeout ?? "",
     boloInactivityTimeout: miscSettings.boloInactivityTimeout ?? "",
+    activeDispatchersInactivityTimeout: miscSettings.activeDispatchersInactivityTimeout ?? "",
 
     driversLicenseNumberLength: miscSettings.driversLicenseNumberLength ?? 8,
     weaponLicenseNumberLength: miscSettings.weaponLicenseNumberLength ?? 8,
