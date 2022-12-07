@@ -522,21 +522,17 @@ export class EmsFdController {
           data: { statusId: code.id },
           include: unitProperties,
         });
-
-        if (deputy.status) {
-          handlePanicButtonPressed({
-            force: true,
-            cad,
-            socket: this.socket,
-            status: deputy.status,
-            unit: deputy,
-          });
-        }
       }
     }
 
     await this.socket.emitUpdateDeputyStatus();
-    this.socket.emitPanicButtonLeo(deputy, panicType);
+    handlePanicButtonPressed({
+      force: panicType === "ON",
+      cad,
+      socket: this.socket,
+      status: deputy.status,
+      unit: deputy,
+    });
 
     return deputy;
   }

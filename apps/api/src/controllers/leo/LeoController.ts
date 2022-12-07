@@ -155,18 +155,6 @@ export class LeoController {
           data: { statusId: code.id },
           include: type === "officer" ? leoProperties : combinedUnitProperties,
         });
-
-        console.log({ officer });
-
-        if (officer?.status) {
-          handlePanicButtonPressed({
-            force: true,
-            cad,
-            socket: this.socket,
-            status: officer.status,
-            unit: officer,
-          });
-        }
       }
     }
 
@@ -175,7 +163,13 @@ export class LeoController {
     }
 
     await this.socket.emitUpdateOfficerStatus();
-    this.socket.emitPanicButtonLeo(officer, panicType);
+    handlePanicButtonPressed({
+      force: panicType === "ON",
+      cad,
+      socket: this.socket,
+      status: officer.status,
+      unit: officer,
+    });
 
     return officer;
   }

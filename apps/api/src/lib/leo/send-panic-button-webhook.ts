@@ -16,7 +16,7 @@ import type { Socket } from "services/SocketService";
 export interface HandlePanicButtonPressedOptions {
   force?: boolean;
   socket: Socket;
-  status: StatusValue;
+  status?: StatusValue | null;
   unit: (
     | ((Officer | EmsFdDeputy) & { citizen: Pick<Citizen, "name" | "surname"> })
     | CombinedLeoUnit
@@ -30,8 +30,8 @@ export function isUnitCurrentlyInPanicMode(unit: HandlePanicButtonPressedOptions
   return unit.status?.shouldDo === ShouldDoType.PANIC_BUTTON;
 }
 
-export function isStatusPanicButton(status: StatusValue) {
-  return status.shouldDo === ShouldDoType.PANIC_BUTTON;
+export function isStatusPanicButton(status?: StatusValue | null) {
+  return status?.shouldDo === ShouldDoType.PANIC_BUTTON;
 }
 
 export async function handlePanicButtonPressed(options: HandlePanicButtonPressedOptions) {

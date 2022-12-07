@@ -19,6 +19,7 @@ import Image from "next/image";
 import { useMounted } from "@casper124578/useful";
 import { usePermission } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
+import { useValues } from "context/ValuesContext";
 
 const buttons: modalButtons.ModalButton[] = [
   modalButtons.switchDivision,
@@ -53,6 +54,11 @@ export function ModalButtons({ initialActiveOfficer }: { initialActiveOfficer: A
   const { openModal } = useModal();
   const { TONES, PANIC_BUTTON } = useFeatureEnabled();
   const { makeImageUrl } = useImageUrl();
+
+  const { codes10 } = useValues();
+  const panicButtonCode = codes10.values.find(
+    (code) => code.shouldDo === ShouldDoType.PANIC_BUTTON,
+  );
 
   async function handlePanic() {
     if (!activeOfficer) return;
@@ -111,7 +117,7 @@ export function ModalButtons({ initialActiveOfficer }: { initialActiveOfficer: A
           );
         })}
 
-        {PANIC_BUTTON ? (
+        {PANIC_BUTTON && panicButtonCode ? (
           <Button
             id="panicButton"
             disabled={state === "loading" || isButtonDisabled}
