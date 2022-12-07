@@ -75,11 +75,12 @@ model MiscCadSettings {
   inactivityTimeout         Int?
   jailTimeScale             JailTimeScale?
 
-  call911InactivityTimeout        Int?
-  incidentInactivityTimeout       Int?
-  unitInactivityTimeout           Int?
-  boloInactivityTimeout           Int?
-  activeWarrantsInactivityTimeout Int?
+  call911InactivityTimeout          Int?
+  incidentInactivityTimeout         Int?
+  unitInactivityTimeout             Int?
+  boloInactivityTimeout             Int?
+  activeWarrantsInactivityTimeout   Int?
+  activeDispatchersInactivityTimeout Int?
 
   driversLicenseNumberLength Int? @default(8)
   pilotLicenseNumberLength   Int? @default(6)

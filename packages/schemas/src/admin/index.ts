@@ -41,6 +41,7 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
   call911InactivityTimeout: z.number().gt(1).optional().nullable(),
   incidentInactivityTimeout: z.number().gt(1).optional().nullable(),
   unitInactivityTimeout: z.number().gt(1).optional().nullable(),
+  activeDispatchersInactivityTimeout: z.number().gt(1).optional().nullable(),
   boloInactivityTimeout: z.number().gt(1).optional().nullable(),
   activeWarrantsInactivityTimeout: z.number().gt(1).optional().nullable(),
   jailTimeScaling: z
