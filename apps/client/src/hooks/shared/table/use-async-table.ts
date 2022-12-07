@@ -77,7 +77,7 @@ export function useAsyncTable<T>(options: Options<T>) {
       return list.setItems(toReturnData.data);
     }
 
-    return [];
+    return list.setItems([]);
   }
 
   useDebounce(() => setDebouncedSearch(options.search), 200, [options.search]);
