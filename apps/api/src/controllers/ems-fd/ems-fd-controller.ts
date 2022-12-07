@@ -37,7 +37,6 @@ import { handlePanicButtonPressed } from "lib/leo/send-panic-button-webhook";
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
-@IsFeatureEnabled({ feature: Feature.PANIC_BUTTON })
 export class EmsFdController {
   private socket: Socket;
   constructor(socket: Socket) {
@@ -462,6 +461,7 @@ export class EmsFdController {
   }
 
   @Post("/panic-button")
+  @IsFeatureEnabled({ feature: Feature.PANIC_BUTTON })
   @Description("Set the panic button for an ems-fd deputy by their id")
   @UsePermissions({
     fallback: (u) => u.isEmsFd,
