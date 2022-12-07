@@ -157,14 +157,15 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+  const user = await getSessionUser(req);
   const [customRoles] = await requestAll(req, [["/admin/manage/custom-roles", []]]);
 
   return {
     props: {
       customRoles,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["admin", "values", "common"], locale)),
+        ...(await getTranslations(["admin", "values", "common"], user?.locale ?? locale)),
       },
     },
   };
