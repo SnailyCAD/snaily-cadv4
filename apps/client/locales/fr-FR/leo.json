@@ -239,6 +239,7 @@
     "suspendWaterLicense": "Suspendre permis de navigation",
     "suspendFirearmsLicense": "Suspendre permis d'armes à feu",
     "endDate": "Date de fin",
+    "patrolVehicle": "Véhicule de patrouille",
     "alert_deleteNote": "Êtes-vous sûr de vouloir supprimer cette note ? Cette action ne peut être annulée.",
     "alert_deleteQualification": "Êtes-vous sur de vouloir supprimer cette qualification ? Cette action ne peut être annulée.",
     "vehicleImpoundLocation": "La plaque d'immatriculation fournie ({plate}) sera mis en fourrière à {impoundLocation}. Vous pourrez visualiser ce véhicule sur la page de la fourrière.",

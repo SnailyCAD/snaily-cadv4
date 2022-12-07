@@ -143,5 +143,11 @@
     "ADD": "Ajouter Adresse",
     "DELETE": "Supprimer Adresse",
     "EDIT": "Modifier Adresse"
+  },
+  "EMERGENCY_VEHICLE": {
+    "MANAGE": "Gérer Véhicules d'Urgences",
+    "ADD": "Ajouter Véhicule d'Urgence",
+    "DELETE": "Supprimer Véhicule d'Urgence",
+    "EDIT": "Modifier Véhicule d'Urgence"
   }
 }
