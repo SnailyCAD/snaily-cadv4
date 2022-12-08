@@ -43,10 +43,16 @@
     "steam": "Steam",
     "connectSteam": "Подключить аккаунт Steam",
     "disconnectSteam": "Отключить аккаунт Steam",
-    "disconnectSteamText": "Это действие отключит возможность входить через Steam.",
-    "connectSteamText": "Это действие включит возможность входить через Steam.",
+    "disconnectSteamText": "Это действие отключит возможность входить через Steam",
+    "connectSteamText": "Это действие включит возможность входить через Steam",
     "locale": "Локализация",
-    "viewMyPermissions": "Посмотреть мои разрешения"
+    "viewMyPermissions": "Посмотреть мои разрешения",
+    "speech": "Озвучивание",
+    "speechVoice": "Голос озвучивания",
+    "otherSounds": "Другие звуки",
+    "unavailableSounds": "Недоступные звуки",
+    "unavailableSoundsMessage": "Этот звук недоступен. Он может быть добавлен администратором",
+    "userApiTokenDescription": "Этот токен может быть использован для подключения к SnailyCAD API"
   },
   "Notifications": {
     "CITIZEN_DELETED": "<span>{citizen}</span> был удалён. Причина: {reason}"
