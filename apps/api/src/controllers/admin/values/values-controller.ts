@@ -301,7 +301,10 @@ export class ValuesController {
 
     const arr = await Promise.all(data.map(async (id) => this.deleteById(type, id)));
 
-    return arr.every((v) => v);
+    const successfullyDeleted = arr.filter((v) => v === true).length;
+    const failedToDeleteIds = arr.filter((v) => typeof v === "string").map((v) => v as string);
+
+    return { success: successfullyDeleted, failedIds: failedToDeleteIds };
   }
 
   @Delete("/:id")
@@ -448,41 +451,45 @@ export class ValuesController {
   }
 
   private async deleteById(type: ValueType, id: string) {
-    const data = GET_VALUES[type];
+    try {
+      const data = GET_VALUES[type];
 
-    if (data) {
-      // @ts-expect-error ignore
-      const deleted = await prisma[data.name].delete({
-        where: {
-          id,
-        },
-      });
+      if (data) {
+        // @ts-expect-error ignore
+        const deleted = await prisma[data.name].delete({
+          where: {
+            id,
+          },
+        });
+
+        await prisma.value.delete({
+          where: {
+            id: deleted.valueId,
+          },
+        });
+
+        return true;
+      }
+
+      if (type === "PENAL_CODE") {
+        await prisma.penalCode.delete({
+          where: {
+            id,
+          },
+        });
+
+        return true;
+      }
 
       await prisma.value.delete({
         where: {
-          id: deleted.valueId,
-        },
-      });
-
-      return true;
-    }
-
-    if (type === "PENAL_CODE") {
-      await prisma.penalCode.delete({
-        where: {
           id,
         },
       });
 
       return true;
+    } catch {
+      return id;
     }
-
-    await prisma.value.delete({
-      where: {
-        id,
-      },
-    });
-
-    return true;
   }
 }

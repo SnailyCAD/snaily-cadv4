@@ -27,6 +27,7 @@ import type {
 } from "@snailycad/types/api";
 import { hasTableDataChanged } from "lib/admin/values/utils";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
+import { toastMessage } from "lib/toastMessage";
 
 const ManagePenalCode = dynamic(async () => {
   return (await import("components/admin/values/penal-codes/ManagePenalCode")).ManagePenalCode;
@@ -180,10 +181,23 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
       method: "DELETE",
     });
 
-    if (json) {
-      setValues((p) => p.filter((v) => v.id !== tempValue.id));
+    if (typeof json === "string") {
+      toastMessage({
+        title: "Delete Value",
+        icon: "info",
+        message: t.rich("failedDeleteValue", {
+          value: tempValue.title,
+        }),
+      });
+
       setTempValue(null);
       closeModal(ModalIds.AlertDeleteValue);
+    } else {
+      if (json) {
+        setValues((p) => p.filter((v) => v.id !== tempValue.id));
+        setTempValue(null);
+        closeModal(ModalIds.AlertDeleteValue);
+      }
     }
   }
 

@@ -39,6 +39,7 @@ import { getSelectedTableRows } from "hooks/shared/table/use-table-state";
 import { SearchArea } from "components/shared/search/search-area";
 import { AlertDeleteValueModal } from "components/admin/values/alert-delete-value-modal";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
+import { toastMessage } from "lib/toastMessage";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -155,11 +156,20 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
       data: selectedRows,
     });
 
-    if (json && typeof json === "boolean") {
-      asyncTable.remove(...selectedRows);
+    if (json) {
+      asyncTable.remove(...selectedRows.filter((id) => !json.failedIds.includes(id)));
 
       tableState.setRowSelection({});
       closeModal(ModalIds.AlertDeleteSelectedValues);
+
+      toastMessage({
+        title: "Delete Values",
+        icon: "info",
+        message: t("deletedSelectedValues", {
+          failed: json.failedIds.length,
+          deleted: json.success,
+        }),
+      });
     }
   }
 

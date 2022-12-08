@@ -34,13 +34,16 @@ export type PostValuesData<Value extends AnyValue = AnyValue> = Value;
  * @method DELETE
  * @route /admin/values/:path/bulk-delete
  */
-export type DeleteValuesBulkData = boolean;
+export interface DeleteValuesBulkData {
+  failedIds: string[];
+  success: number;
+}
 
 /**
  * @method DELETE
  * @route /admin/values/:path/:id
  */
-export type DeleteValueByIdData = boolean;
+export type DeleteValueByIdData = boolean | string;
 
 /**
  * @method PATCH
