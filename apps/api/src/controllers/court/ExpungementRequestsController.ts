@@ -1,4 +1,4 @@
-import { User, WhitelistStatus } from "@prisma/client";
+import { Feature, User, WhitelistStatus } from "@prisma/client";
 import { BodyParams, Context, PathParams, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -7,6 +7,7 @@ import { citizenInclude } from "controllers/citizen/CitizenController";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import type * as APITypes from "@snailycad/types/api";
+import { IsFeatureEnabled } from "middlewares/is-enabled";
 
 export const expungementRequestInclude = {
   citizen: true,
@@ -17,6 +18,7 @@ export const expungementRequestInclude = {
 @Controller("/expungement-requests")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
+@IsFeatureEnabled({ feature: Feature.COURTHOUSE })
 export class ExpungementRequestsController {
   @Get("/")
   async getRequestPerUser(

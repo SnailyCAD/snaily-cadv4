@@ -1,4 +1,3 @@
-import * as React from "react";
 import type { Unit } from "src/pages/admin/manage/units";
 import Link from "next/link";
 import { formatOfficerDepartment, makeUnitName } from "lib/utils";
@@ -52,13 +51,11 @@ export function CallsignsTab({ search, units }: Props) {
               unit: LABELS[unit.type],
               name: makeUnitName(unit),
               user: hasViewUsersPermissions ? (
-                <Link href={`/admin/manage/users/${unit.userId}`}>
-                  <a
-                    href={`/admin/manage/users/${unit.userId}`}
-                    className={`rounded-md transition-all p-1 px-1.5 ${buttonVariants.default}`}
-                  >
-                    {unit.user.username}
-                  </a>
+                <Link
+                  href={`/admin/manage/users/${unit.userId}`}
+                  className={`rounded-md transition-all p-1 px-1.5 ${buttonVariants.default}`}
+                >
+                  {unit.user.username}
                 </Link>
               ) : (
                 unit.user.username

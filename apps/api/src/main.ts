@@ -9,6 +9,12 @@ import { importProviders } from "@tsed/components-scan";
 
 Sentry.init({
   dsn: "https://308dd96b826c4e38a814fc9bae681687@o518232.ingest.sentry.io/6553288",
+  tracesSampleRate: 1.0,
+  attachStacktrace: true,
+});
+
+Sentry.init({
+  dsn: "https://308dd96b826c4e38a814fc9bae681687@o518232.ingest.sentry.io/6553288",
   integrations: [
     new Sentry.Integrations.Http({ tracing: true }),
     new Tracing.Integrations.Prisma({ client: prisma }),
@@ -41,7 +47,9 @@ async function bootstrap() {
       "snailycad.commitHash": versions?.currentCommitHash,
     });
 
-    console.log(`SnailyCADv4 is running ${versionStr}`);
+    const nodeVersion = process.versions.node;
+
+    console.log(`SnailyCADv4 is running ${versionStr}. Node version: ${nodeVersion}`);
   } catch (er) {
     $log.error(er);
   }

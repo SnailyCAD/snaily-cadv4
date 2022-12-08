@@ -75,11 +75,12 @@ model MiscCadSettings {
   inactivityTimeout         Int?
   jailTimeScale             JailTimeScale?
 
-  call911InactivityTimeout        Int?
-  incidentInactivityTimeout       Int?
-  unitInactivityTimeout           Int?
-  boloInactivityTimeout           Int?
-  activeWarrantsInactivityTimeout Int?
+  call911InactivityTimeout           Int?
+  incidentInactivityTimeout          Int?
+  unitInactivityTimeout              Int?
+  boloInactivityTimeout              Int?
+  activeWarrantsInactivityTimeout    Int?
+  activeDispatchersInactivityTimeout Int?
 
   driversLicenseNumberLength Int? @default(8)
   pilotLicenseNumberLength   Int? @default(6)
@@ -288,6 +289,7 @@ model ToAddDefaultPermissions {
 model UserSoundSettings {
   id           String  @id @default(uuid())
   speech       Boolean @default(true)
+  speechVoice  String?
   panicButton  Boolean @default(true)
   signal100    Boolean @default(true)
   addedToCall  Boolean @default(false)
@@ -446,6 +448,7 @@ model Weapon {
   serialNumber         String             @unique @db.VarChar(255)
   registrationStatus   Value              @relation("weaponRegistrationStatusToValue", fields: [registrationStatusId], references: [id])
   registrationStatusId String
+  bofStatus            WhitelistStatus?
   model                WeaponValue        @relation("weaponModelToValue", fields: [modelId], references: [id])
   modelId              String
   customFields         CustomFieldValue[]
@@ -517,6 +520,16 @@ model Value {
   CallTypeValue                   CallTypeValue[]               @relation("callTypeValueToValue")
   WeaponExam                      WeaponExam[]                  @relation("weaponExamToLicense")
   LicenseExam                     LicenseExam[]                 @relation("examToLicense")
+  AddressValue                    AddressValue[]                @relation("addressValueToValue")
+  EmergencyVehicleValue           EmergencyVehicleValue[]       @relation("emergencyVehicleToValue")
+}
+
+model AddressValue {
+  id      String  @id @default(uuid())
+  value   Value   @relation("addressValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  valueId String
+  county  String?
+  postal  String?
 }
 
 model PenalCode {
@@ -595,29 +608,43 @@ model DivisionValue {
   pairedUnitTemplate         String?
   Call911                    Call911[]
   IndividualDivisionCallsign IndividualDivisionCallsign[]
+  EmergencyVehicleValue      EmergencyVehicleValue[]
 }
 
 model DepartmentValue {
-  id                   String               @id @default(cuid())
-  value                Value                @relation("departmentToValue", fields: [valueId], references: [id], onDelete: Cascade)
-  valueId              String
-  callsign             String?
-  whitelisted          Boolean              @default(false)
-  isDefaultDepartment  Boolean              @default(false)
-  type                 DepartmentType       @default(LEO)
-  EmsFdDeputy          EmsFdDeputy[]        @relation("emsFdDepartmentToDepartment")
-  Officer              Officer[]            @relation("officerDepartmentToDepartment")
-  division             DivisionValue[]      @relation("divisionDepartmentToValue")
-  LeoWhitelistStatus   LeoWhitelistStatus[]
-  Call911              Call911[]
-  StatusValue          StatusValue?         @relation(fields: [statusValueId], references: [id])
-  statusValueId        String?
-  defaultOfficerRank   Value?               @relation("departmentValueToOfficerRank", fields: [defaultOfficerRankId], references: [id])
-  defaultOfficerRankId String?
-  isConfidential       Boolean              @default(false)
-  Qualification        QualificationValue[]
-  CombinedLeoUnit      CombinedLeoUnit[]
-  Value                Value[]              @relation("officerRankDepartments")
+  id                    String                  @id @default(cuid())
+  value                 Value                   @relation("departmentToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  valueId               String
+  callsign              String?
+  whitelisted           Boolean                 @default(false)
+  isDefaultDepartment   Boolean                 @default(false)
+  type                  DepartmentType          @default(LEO)
+  EmsFdDeputy           EmsFdDeputy[]           @relation("emsFdDepartmentToDepartment")
+  Officer               Officer[]               @relation("officerDepartmentToDepartment")
+  division              DivisionValue[]         @relation("divisionDepartmentToValue")
+  LeoWhitelistStatus    LeoWhitelistStatus[]
+  Call911               Call911[]
+  StatusValue           StatusValue?            @relation(fields: [statusValueId], references: [id])
+  statusValueId         String?
+  defaultOfficerRank    Value?                  @relation("departmentValueToOfficerRank", fields: [defaultOfficerRankId], references: [id])
+  defaultOfficerRankId  String?
+  isConfidential        Boolean                 @default(false)
+  Qualification         QualificationValue[]
+  CombinedLeoUnit       CombinedLeoUnit[]
+  Value                 Value[]                 @relation("officerRankDepartments")
+  EmergencyVehicleValue EmergencyVehicleValue[]
+}
+
+model EmergencyVehicleValue {
+  id          String            @id @default(cuid())
+  value       Value             @relation("emergencyVehicleToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  valueId     String
+  departments DepartmentValue[]
+  divisions   DivisionValue[]
+
+  Officers        Officer[]         @relation("activeEmergencyVehicle_leo")
+  EmsFdDeputies   EmsFdDeputy[]     @relation("activeEmergencyVehicle_emsfd")
+  CombinedLeoUnit CombinedLeoUnit[] @relation("activeEmergencyVehicle_combined_unit")
 }
 
 model DriversLicenseCategoryValue {
@@ -834,6 +861,9 @@ model Officer {
   Note                        Note[]
   callsigns                   IndividualDivisionCallsign[]
   AssignedWarrantOfficer      AssignedWarrantOfficer[]
+  ImpoundedVehicle            ImpoundedVehicle[]
+  activeVehicle               EmergencyVehicleValue?       @relation("activeEmergencyVehicle_leo", fields: [activeVehicleId], references: [id], onDelete: SetNull)
+  activeVehicleId             String?
 }
 
 model IndividualDivisionCallsign {
@@ -917,12 +947,15 @@ model OfficerLog {
 
 model ImpoundedVehicle {
   id                  String            @id @default(uuid())
-  vehicle             RegisteredVehicle @relation(fields: [registeredVehicleId], references: [id])
+  vehicle             RegisteredVehicle @relation(fields: [registeredVehicleId], references: [id], onDelete: Cascade)
   registeredVehicleId String
   location            Value             @relation(fields: [valueId], references: [id])
   valueId             String
-  createdAt           DateTime          @default(now())
-  updatedAt           DateTime          @default(now()) @updatedAt
+  officer             Officer?          @relation(fields: [officerId], references: [id])
+  officerId           String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model LeoIncident {
@@ -977,6 +1010,8 @@ model CombinedLeoUnit {
   activeIncident            LeoIncident?             @relation("combinedActiveIncident", fields: [activeIncidentId], references: [id])
   activeIncidentId          String?
   lastStatusChangeTimestamp DateTime?
+  activeVehicle             EmergencyVehicleValue?   @relation("activeEmergencyVehicle_combined_unit", fields: [activeVehicleId], references: [id], onDelete: SetNull)
+  activeVehicleId           String?
   AssignedUnit              AssignedUnit[]
   IncidentInvolvedUnit      IncidentInvolvedUnit[]
   AssignedWarrantOfficer    AssignedWarrantOfficer[]
@@ -1248,6 +1283,8 @@ model EmsFdDeputy {
   lastStatusChangeTimestamp DateTime?
   qualifications            UnitQualification[]
   IncidentInvolvedUnit      IncidentInvolvedUnit[]
+  activeVehicle             EmergencyVehicleValue? @relation("activeEmergencyVehicle_emsfd", fields: [activeVehicleId], references: [id], onDelete: SetNull)
+  activeVehicleId           String?
 }
 
 // truck logs
@@ -1435,6 +1472,8 @@ enum ValueType {
   CITIZEN_FLAG
   QUALIFICATION
   CALL_TYPE
+  ADDRESS
+  EMERGENCY_VEHICLE
 }
 
 enum DriversLicenseCategoryType {
@@ -1537,6 +1576,7 @@ enum PaymentStatus {
 
 enum ToAddDefaultPermissionsKey {
   MANAGE_WARRANTS_PERMISSIONS
+  MANAGE_AWARDS_AND_QUALIFICATIONS
 }
 
 enum PenalCodeType {
@@ -1589,4 +1629,6 @@ enum Feature {
   DIVISIONS
   TONES
   LICENSE_EXAMS
+  CITIZEN_CREATION_RECORDS // See #1188
+  BUREAU_OF_FIREARMS // See #1298
 }

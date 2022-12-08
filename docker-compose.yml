@@ -11,7 +11,7 @@ services:
     networks:
       - cad_web
     volumes:
-      - ./.data:/var/lib/postgresql/data
+      - ./.dev-data:/var/lib/postgresql/data
 
   api:
     container_name: "snaily-cad-api"
@@ -20,9 +20,9 @@ services:
     image: node:16
     command: "yarn workspace @snailycad/api dev"
     ports:
-      - "8080:8080"
+      - "${PORT_API}:${PORT_API}"
     expose:
-      - 8080
+      - ${PORT_API}
     volumes:
       - .:/srv/api
     env_file:

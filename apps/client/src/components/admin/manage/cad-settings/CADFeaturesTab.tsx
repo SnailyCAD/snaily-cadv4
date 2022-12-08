@@ -214,6 +214,15 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     description:
       "When enabled, this will allow Dispatch to create temporary messages for LEO and EMS/FD.",
   },
+  CITIZEN_CREATION_RECORDS: {
+    name: "Citizen Creation Records",
+    description: "When enabled, this allow citizens to add charges and flags to their citizen.",
+  },
+  BUREAU_OF_FIREARMS: {
+    name: "Bureau of Firearms",
+    description:
+      "When enabled, weapons must first be approved by the Bureau of Firearms within the CAD.",
+  },
 };
 
 export function CADFeaturesTab() {

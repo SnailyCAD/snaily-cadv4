@@ -1,13 +1,16 @@
-import type { SlateEditor } from "components/editor/Editor";
+import type { SlateEditor } from "components/editor/editor";
 import type { Text } from "components/editor/types";
 import { Editor, Transforms, Element as SlateElement } from "slate";
 
 const LIST_TYPES = ["numbered-list", "bulleted-list"];
 
 export function isMarkActive(editor: SlateEditor, format: keyof Omit<Text, "text">) {
-  const marks = Editor.marks(editor);
-
-  return marks ? marks[format] === true : false;
+  try {
+    const marks = Editor.marks(editor);
+    return marks ? marks[format] === true : false;
+  } catch (error) {
+    return false;
+  }
 }
 
 export function toggleBlock(editor: SlateEditor, format: SlateElement["type"]) {
@@ -41,15 +44,19 @@ export function toggleMark(editor: SlateEditor, format: keyof Omit<Text, "text">
 }
 
 export function isBlockActive(editor: SlateEditor, format: SlateElement["type"]) {
-  const { selection } = editor;
-  if (!selection) return false;
+  try {
+    const { selection } = editor;
+    if (!selection) return false;
 
-  const [match] = Array.from(
-    Editor.nodes(editor, {
-      at: Editor.unhangRange(editor, selection),
-      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === format,
-    }),
-  );
+    const [match] = Array.from(
+      Editor.nodes(editor, {
+        at: Editor.unhangRange(editor, selection),
+        match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === format,
+      }),
+    );
 
-  return !!match;
+    return !!match;
+  } catch (error) {
+    return false;
+  }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/utils",
-  "version": "1.29.2",
+  "version": "1.36.0",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -21,6 +21,10 @@
       "require": "./dist/version.js",
       "import": "./dist/version.mjs"
     },
+    "./api-url": {
+      "require": "./dist/api-url.js",
+      "import": "./dist/api-url.mjs"
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -36,6 +40,9 @@
       ],
       "version": [
         "dist/version.d.ts"
+      ],
+      "api-url": [
+        "dist/api-url.d.ts"
       ]
     }
   },
@@ -47,13 +54,13 @@
     "test": "yarn vitest run"
   },
   "devDependencies": {
-    "@snailycad/types": "1.29.2",
+    "@snailycad/types": "1.36.0",
     "c8": "^7.12.0",
-    "tslib": "^2.4.0",
-    "tsup": "^6.3.0",
-    "typescript": "^4.8.4",
-    "vite": "^3.1.8",
-    "vitest": "^0.24.3"
+    "tslib": "^2.4.1",
+    "tsup": "^6.5.0",
+    "typescript": "^4.9.3",
+    "vite": "^3.2.4",
+    "vitest": "^0.25.3"
   },
   "tsup": {
     "entry": [
@@ -64,6 +71,7 @@
     "platform": "node",
     "target": "node16",
     "silent": true,
+    "treeshake": true,
     "format": [
       "cjs",
       "esm"

@@ -1,5 +1,5 @@
 import { Loader } from "@snailycad/ui";
-import { getAPIUrl } from "lib/fetch/getAPIUrl";
+import { getAPIUrl } from "@snailycad/utils/api-url";
 import type { GetServerSideProps } from "next";
 
 export default function ApiDocs() {

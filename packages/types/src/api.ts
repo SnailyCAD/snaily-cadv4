@@ -183,7 +183,7 @@ export interface GetTruckLogsData {
     citizen: Prisma.Citizen | null;
     vehicle: Omit<Types.RegisteredVehicle, "citizen"> | null;
   })[];
-  registeredVehicles: Omit<Types.RegisteredVehicle, "citizen">[];
+  totalCount: number;
 }
 
 /**
@@ -233,7 +233,7 @@ export type DeleteBolosData = boolean;
  * @method POST
  * @route /bolos/mark-stolen/:id
  */
-export type PostMarkStolenData = Prisma.Bolo;
+export type PostMarkStolenData = Prisma.Bolo | true;
 
 /** citizens */
 /**
@@ -464,6 +464,7 @@ export type DeleteBusinessPostsData = boolean;
  * @route /incidents
  */
 export interface GetIncidentsData {
+  totalCount: number;
   incidents: Types.LeoIncident[];
 }
 

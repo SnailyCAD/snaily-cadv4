@@ -6,7 +6,7 @@ import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 import { useTranslations } from "next-intl";
-import { Full911Call, useDispatchState } from "state/dispatch/dispatchState";
+import { Full911Call, useDispatchState } from "state/dispatch/dispatch-state";
 import { DndActions } from "types/DndActions";
 
 interface Props {
@@ -18,7 +18,7 @@ interface Props {
 export function AssignedUnitsColumn({ handleAssignToCall, isDispatch, call }: Props) {
   const common = useTranslations("Common");
   const { generateCallsign } = useGenerateCallsign();
-  const dispatchState = useDispatchState();
+  const setDraggingUnit = useDispatchState((state) => state.setDraggingUnit);
   const { hasActiveDispatchers } = useActiveDispatchers();
   const canDrag = hasActiveDispatchers && isDispatch;
 
@@ -45,7 +45,7 @@ export function AssignedUnitsColumn({ handleAssignToCall, isDispatch, call }: Pr
               <Draggable
                 canDrag={canDrag}
                 onDrag={(isDragging) => {
-                  dispatchState.setDraggingUnit(isDragging ? "call" : null);
+                  setDraggingUnit(isDragging ? "call" : null);
                 }}
                 key={unit.id}
                 item={{ call, unit }}

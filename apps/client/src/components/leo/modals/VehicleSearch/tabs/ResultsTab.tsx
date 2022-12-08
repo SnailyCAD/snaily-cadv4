@@ -1,11 +1,10 @@
-import * as React from "react";
 import { Button } from "@snailycad/ui";
 import { useTranslations } from "use-intl";
 import { yesOrNoText } from "lib/utils";
 import { classNames } from "lib/classNames";
 import { Infofield } from "components/shared/Infofield";
 import { FullDate } from "components/shared/FullDate";
-import { useVehicleSearch } from "state/search/vehicleSearchState";
+import { useVehicleSearch } from "state/search/vehicle-search-state";
 import { Pencil } from "react-bootstrap-icons";
 import { Status } from "components/shared/Status";
 import { TabsContent } from "components/shared/TabList";
@@ -18,7 +17,7 @@ import { ModalIds } from "types/ModalIds";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 export function ResultsTab() {
-  const { currentResult } = useVehicleSearch();
+  const currentResult = useVehicleSearch((state) => state.currentResult);
   const { INSPECTION_STATUS_LABELS, TAX_STATUS_LABELS } = useVehicleLicenses();
   const { openModal, closeModal } = useModal();
   const { BUSINESS, DMV } = useFeatureEnabled();

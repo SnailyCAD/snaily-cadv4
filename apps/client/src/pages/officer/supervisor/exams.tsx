@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { Button, TextField } from "@snailycad/ui";
+import { Button } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -18,15 +18,17 @@ import { ModalIds } from "types/ModalIds";
 import { usePermission } from "hooks/usePermission";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
-import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
+import { useAsyncTable } from "hooks/shared/table/use-async-table";
 import type { GetLicenseExamsData, DeleteLicenseExamByIdData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import { SearchArea } from "components/shared/search/search-area";
 
 interface Props {
   data: GetLicenseExamsData;
 }
 
 export default function CitizenLogs({ data }: Props) {
+  const [search, setSearch] = React.useState("");
   const { hasPermissions } = usePermission();
   const { openModal, closeModal } = useModal();
   const t = useTranslations();
@@ -34,6 +36,7 @@ export default function CitizenLogs({ data }: Props) {
   const { state, execute } = useFetch();
 
   const asyncTable = useAsyncTable({
+    search,
     fetchOptions: {
       onResponse: (json: GetLicenseExamsData) => ({
         data: json.exams,
@@ -45,7 +48,7 @@ export default function CitizenLogs({ data }: Props) {
     initialData: data.exams,
   });
   const tableState = useTableState({ pagination: asyncTable.pagination });
-  const [tempExam, examState] = useTemporaryItem(asyncTable.data);
+  const [tempExam, examState] = useTemporaryItem(asyncTable.items);
   const hasManagePermissions = hasPermissions(
     [Permissions.ManageLicenseExams],
     (u) => u.isSupervisor,
@@ -66,7 +69,8 @@ export default function CitizenLogs({ data }: Props) {
 
     if (typeof json === "boolean") {
       closeModal(ModalIds.AlertDeleteExam);
-      asyncTable.setData((p) => p.filter((v) => v.id !== tempExam.id));
+
+      asyncTable.remove(tempExam.id);
       examState.setTempId(null);
     }
   }
@@ -101,27 +105,19 @@ export default function CitizenLogs({ data }: Props) {
         ) : null}
       </header>
 
-      {data.exams.length <= 0 ? (
+      {asyncTable.items.length <= 0 ? (
         <p className="mt-5">{t("licenseExams.noExams")}</p>
       ) : (
         <>
-          <TextField
-            label={common("search")}
-            className="my-2"
-            name="search"
-            value={asyncTable.search.search}
-            onChange={(value) => asyncTable.search.setSearch(value)}
+          <SearchArea
+            totalCount={data.totalCount}
+            search={{ search, setSearch }}
+            asyncTable={asyncTable}
           />
-
-          {asyncTable.search.search && asyncTable.pagination.totalDataCount !== data.totalCount ? (
-            <p className="italic text-base font-semibold">
-              Showing {asyncTable.pagination.totalDataCount} result(s)
-            </p>
-          ) : null}
 
           <Table
             tableState={tableState}
-            data={asyncTable.data.map((exam) => {
+            data={asyncTable.items.map((exam) => {
               const hasPassedOrFailed = exam.status !== LicenseExamStatus.IN_PROGRESS;
 
               return {
@@ -191,18 +187,10 @@ export default function CitizenLogs({ data }: Props) {
       <ManageExamModal
         onClose={() => examState.setTempId(null)}
         onCreate={(exam) => {
-          asyncTable.setData((p) => [exam, ...p]);
-          if (asyncTable.data.length <= 0) {
-            asyncTable.data.length = 1;
-          }
+          asyncTable.append(exam);
         }}
         onUpdate={(oldExam, newExam) => {
-          asyncTable.setData((prev) => {
-            const idx = prev.findIndex((v) => v.id === oldExam.id);
-            prev[idx] = newExam;
-
-            return prev;
-          });
+          asyncTable.update(oldExam.id, newExam);
           examState.setTempId(null);
         }}
         exam={tempExam}

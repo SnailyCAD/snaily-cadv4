@@ -16,13 +16,16 @@ import { updateMemberRolesLogin } from "lib/discord/auth";
 import { ContentType, Description } from "@tsed/schema";
 import { isFeatureEnabled } from "lib/cad";
 import { setUserTokenCookies } from "lib/auth/setUserTokenCookies";
+import { getAPIUrl } from "@snailycad/utils/api-url";
+import { IsFeatureEnabled } from "middlewares/is-enabled";
 
-const callbackUrl = makeCallbackURL(findUrl());
+const callbackUrl = makeCallbackURL(getAPIUrl());
 const DISCORD_CLIENT_ID = process.env["DISCORD_CLIENT_ID"];
 const DISCORD_CLIENT_SECRET = process.env["DISCORD_CLIENT_SECRET"];
 
 @Controller("/auth/discord")
 @ContentType("application/json")
+@IsFeatureEnabled({ feature: Feature.DISCORD_AUTH })
 export class DiscordAuth {
   @Get("/")
   @Description("Redirect to Discord OAuth2 URL")
@@ -242,17 +245,6 @@ async function getDiscordData(code: string): Promise<APIUser | null> {
     .catch(() => null);
 
   return meData;
-}
-
-export function findUrl() {
-  const envUrl = process.env.NEXT_PUBLIC_PROD_ORIGIN ?? "http://localhost:8080/v1";
-  const includesDockerContainerName = envUrl === "http://api:8080/v1";
-
-  if (includesDockerContainerName) {
-    return "http://localhost:8080/v1";
-  }
-
-  return envUrl;
 }
 
 export function findRedirectURL() {

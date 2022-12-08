@@ -5,6 +5,7 @@ type Props = JSX.IntrinsicElements["div"] & {
   children: React.ReactNode;
   justify?: boolean;
   flexLike?: boolean;
+  disabled?: boolean;
 };
 
 export function FormRow({
@@ -12,6 +13,7 @@ export function FormRow({
   flexLike = false,
   children,
   className = "",
+  disabled,
   ...rest
 }: Props) {
   const cols = Array.isArray(children)
@@ -21,12 +23,16 @@ export function FormRow({
   return (
     <div
       {...rest}
-      className={classNames(
-        "w-full gap-2",
-        flexLike ? "grid grid-cols-1 sm:flex" : cols,
-        justify && "justify-between",
-        className,
-      )}
+      className={
+        disabled
+          ? ""
+          : classNames(
+              "w-full gap-2",
+              flexLike ? "grid grid-cols-1 sm:flex" : cols,
+              justify && "justify-between",
+              className,
+            )
+      }
     >
       {children}
     </div>

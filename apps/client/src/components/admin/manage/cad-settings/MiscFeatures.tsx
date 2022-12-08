@@ -69,12 +69,12 @@ export function MiscFeatures() {
 
     if (header || background) {
       let imgCount = 0;
-      if (header && typeof header === "object") {
+      if (header && typeof header !== "string") {
         imgCount += 1;
         fd.append("files", header, "authScreenHeaderImageId");
       }
 
-      if (background && typeof background === "object") {
+      if (background && typeof background !== "string") {
         imgCount += 1;
         fd.append("files", background, "authScreenBgImageId");
       }
@@ -84,6 +84,9 @@ export function MiscFeatures() {
           path: "/admin/manage/cad-settings/image/auth",
           method: "POST",
           data: fd,
+          headers: {
+            "content-type": "multipart/form-data",
+          },
         });
       }
     }
@@ -121,6 +124,7 @@ export function MiscFeatures() {
     unitInactivityTimeout: miscSettings.unitInactivityTimeout ?? "",
     activeWarrantsInactivityTimeout: miscSettings.activeWarrantsInactivityTimeout ?? "",
     boloInactivityTimeout: miscSettings.boloInactivityTimeout ?? "",
+    activeDispatchersInactivityTimeout: miscSettings.activeDispatchersInactivityTimeout ?? "",
 
     driversLicenseNumberLength: miscSettings.driversLicenseNumberLength ?? 8,
     weaponLicenseNumberLength: miscSettings.weaponLicenseNumberLength ?? 8,

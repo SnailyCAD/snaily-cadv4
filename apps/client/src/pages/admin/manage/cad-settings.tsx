@@ -56,7 +56,7 @@ export default function CadSettings() {
     { name: t("FEATURES"), value: SettingsTabs.Features },
     { name: t("MISC_SETTINGS"), value: SettingsTabs.MiscSettings },
     { name: "Auto set user properties", value: SettingsTabs.AutoSetProperties },
-    { name: "Api Token", value: SettingsTabs.APIToken },
+    { name: "API Token", value: SettingsTabs.APIToken },
     { name: "Discord Roles", value: SettingsTabs.DiscordRoles },
     { name: "Discord Webhooks", value: SettingsTabs.DiscordWebhooks },
   ];

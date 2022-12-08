@@ -10,7 +10,7 @@ import { PenalCode, PenalCodeGroup, ValueType, PenalCodeType } from "@snailycad/
 import { useTranslations } from "use-intl";
 import { FormRow } from "components/form/FormRow";
 import { Select } from "components/form/Select";
-import { dataToSlate, Editor } from "components/editor/Editor";
+import { dataToSlate, Editor } from "components/editor/editor";
 import { ModalIds } from "types/ModalIds";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Checkbox } from "components/form/inputs/Checkbox";
@@ -117,7 +117,7 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
               label="Title"
               autoFocus
               name="title"
-              onChange={(value) => setFieldValue("title", value)}
+              onChange={(value) => setFieldValue("title", String(value))}
               value={values.title}
             />
 
@@ -243,7 +243,6 @@ function FieldsRow({ keyValue }: { keyValue: `fines${number}` | "prisonTerm" | "
       <FormRow className="items-center" flexLike>
         <TextField
           label="Min."
-          autoFocus
           onChange={(value) => setFieldValue(`${keyValue}.values[0]`, value)}
           isRequired
           type="number"
@@ -257,7 +256,6 @@ function FieldsRow({ keyValue }: { keyValue: `fines${number}` | "prisonTerm" | "
         <span className="mb-2.5">{" - "}</span>
         <TextField
           label="Max."
-          autoFocus
           onChange={(value) => setFieldValue(`${keyValue}.values[1]`, value)}
           isRequired
           type="number"

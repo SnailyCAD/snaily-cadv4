@@ -49,13 +49,11 @@ export default function Bleeter({ posts }: Props) {
               </div>
 
               <div>
-                <Link href={`/bleeter/${post.id}`}>
-                  <a
-                    className={classNames(buttonVariants.default, "p-1 px-4 rounded-md")}
-                    href={`/bleeter/${post.id}`}
-                  >
-                    {t("viewBleet")}
-                  </a>
+                <Link
+                  className={classNames(buttonVariants.default, "p-1 px-4 rounded-md")}
+                  href={`/bleeter/${post.id}`}
+                >
+                  {t("viewBleet")}
                 </Link>
               </div>
             </li>

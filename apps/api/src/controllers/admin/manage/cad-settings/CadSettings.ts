@@ -156,6 +156,7 @@ export class CADSettingsController {
         call911InactivityTimeout: data.call911InactivityTimeout || null,
         incidentInactivityTimeout: data.incidentInactivityTimeout || null,
         unitInactivityTimeout: data.unitInactivityTimeout || null,
+        activeDispatchersInactivityTimeout: data.activeDispatchersInactivityTimeout || null,
         jailTimeScale: (data.jailTimeScaling || null) as JailTimeScale | null,
       },
     });

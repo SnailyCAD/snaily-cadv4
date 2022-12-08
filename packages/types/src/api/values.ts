@@ -10,6 +10,7 @@ export type GetValuesData<Value extends AnyValue = AnyValue> = {
   values: Value[];
   type: Prisma.ValueType;
   groups?: PenalCodeGroup[];
+  totalCount: number;
 }[];
 
 /**
@@ -20,6 +21,7 @@ export type GetValuesPenalCodesData = {
   type: "PENAL_CODE";
   groups: PenalCodeGroup[];
   values: (Types.PenalCode & { group: PenalCodeGroup | null })[];
+  totalCount: number;
 }[];
 
 /**

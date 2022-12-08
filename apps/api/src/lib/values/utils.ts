@@ -25,9 +25,12 @@ export type ValuesSelect =
   | ({ name: "departmentValue" } & Prisma.DepartmentValueFindManyArgs)
   | ({ name: "divisionValue" } & Prisma.DivisionValueFindManyArgs)
   | ({ name: "qualificationValue" } & Prisma.QualificationValueFindManyArgs)
-  | ({ name: "callTypeValue" } & Prisma.CallTypeValueFindManyArgs);
+  | ({ name: "callTypeValue" } & Prisma.CallTypeValueFindManyArgs)
+  | ({ name: "addressValue" } & Prisma.AddressValueFindManyArgs)
+  | ({ name: "emergencyVehicleValue" } & Prisma.EmergencyVehicleValueFindManyArgs);
 
 export const permissionsForRouteType: Record<ValueType, Permissions[]> = {
+  ADDRESS: [Permissions.ManageValueAddress],
   BLOOD_GROUP: [Permissions.ManageValueBloodGroup],
   BUSINESS_ROLE: [Permissions.ManageValueBusinessRole],
   CITIZEN_FLAG: [Permissions.ManageValueCitizenFlag],
@@ -35,6 +38,7 @@ export const permissionsForRouteType: Record<ValueType, Permissions[]> = {
   DEPARTMENT: [Permissions.ManageValueDepartment],
   DIVISION: [Permissions.ManageValueDivision],
   DRIVERSLICENSE_CATEGORY: [Permissions.ManageValueDLCategory],
+  EMERGENCY_VEHICLE: [Permissions.ManageValueEmergencyVehicle],
   ETHNICITY: [Permissions.ManageValueEthnicity],
   GENDER: [Permissions.ManageValueGender],
   IMPOUND_LOT: [Permissions.ManageValueImpoundLot],
@@ -48,7 +52,7 @@ export const permissionsForRouteType: Record<ValueType, Permissions[]> = {
   CALL_TYPE: [Permissions.ManageValueCallType],
 };
 
-export function getTypeFromPath(path: string) {
+export function getTypeFromPath(path: string & {}) {
   return path.replace("-", "_").toUpperCase() as ValueType;
 }
 
@@ -58,7 +62,14 @@ export function getPermissionsForValuesRequest(request: Req) {
     throw new BadRequest("Must specify `params.path`");
   }
 
-  const type = getTypeFromPath(path);
+  const type = getTypeFromPath(path) as ValueType | "all";
+  if (type === "all") {
+    return {
+      permissions: Object.values(permissionsForRouteType).flat(1),
+      fallback: (u: User) => u.rank !== Rank.USER,
+    };
+  }
+
   return {
     permissions: permissionsForRouteType[type],
     fallback: (u: User) => u.rank !== Rank.USER,

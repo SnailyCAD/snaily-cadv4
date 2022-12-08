@@ -1,7 +1,7 @@
 import { Controller, UseBefore, UseBeforeEach } from "@tsed/common";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { NotFound, InternalServerError, BadRequest } from "@tsed/exceptions";
-import { BodyParams, Context, PathParams } from "@tsed/platform-params";
+import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { leoProperties, unitProperties, _leoProperties } from "lib/leo/activeOfficer";
@@ -40,6 +40,8 @@ export const incidentInclude = {
   unitsInvolved: assignedUnitsInclude,
 };
 
+type ActiveTypes = "active" | "inactive" | "all";
+
 @Controller("/incidents")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
@@ -55,14 +57,33 @@ export class IncidentController {
     permissions: [Permissions.Dispatch, Permissions.ViewIncidents, Permissions.ManageIncidents],
     fallback: (u) => u.isDispatch || u.isLeo,
   })
-  async getAllIncidents(): Promise<APITypes.GetIncidentsData> {
-    const incidents = await prisma.leoIncident.findMany({
-      where: { NOT: { isActive: true } },
-      include: incidentInclude,
-      orderBy: { caseNumber: "desc" },
-    });
+  async getAllIncidents(
+    @QueryParams("activeType", String) activeType: ActiveTypes = "inactive",
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("includeAll", Boolean) includeAll = false,
+  ): Promise<APITypes.GetIncidentsData> {
+    const where =
+      activeType === "active"
+        ? { isActive: true }
+        : activeType === "inactive"
+        ? { NOT: { isActive: true } }
+        : {};
 
-    return { incidents: incidents.map(officerOrDeputyToUnit) };
+    const [totalCount, incidents] = await Promise.all([
+      prisma.leoIncident.count({
+        where,
+        orderBy: { caseNumber: "desc" },
+      }),
+      prisma.leoIncident.findMany({
+        where,
+        include: incidentInclude,
+        orderBy: { caseNumber: "desc" },
+        take: includeAll ? undefined : 25,
+        skip: includeAll ? undefined : skip,
+      }),
+    ]);
+
+    return { totalCount, incidents: incidents.map(officerOrDeputyToUnit) };
   }
 
   @Get("/:id")

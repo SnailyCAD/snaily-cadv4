@@ -1,4 +1,3 @@
-import * as React from "react";
 import type { Unit } from "src/pages/admin/manage/units";
 import Link from "next/link";
 import {
@@ -29,7 +28,7 @@ import type {
   PutManageUnitsOffDutyData,
 } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
-import { getSelectedTableRows } from "hooks/shared/table/useTableState";
+import { getSelectedTableRows } from "hooks/shared/table/use-table-state";
 
 interface Props {
   units: GetManageUnitsData;
@@ -43,6 +42,11 @@ export function AllUnitsTab({ search, units }: Props) {
 
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageUnits], true);
+  const hasManageAwardsPermissions = hasPermissions(
+    [Permissions.ManageAwardsAndQualifications],
+    true,
+  );
+
   const hasDeletePermissions = hasPermissions([Permissions.DeleteUnits], true);
   const hasViewUsersPermissions = hasPermissions([Permissions.ViewUsers], true);
   const { state, execute } = useFetch();
@@ -136,13 +140,11 @@ export function AllUnitsTab({ search, units }: Props) {
               unit: LABELS[unit.type],
               name: makeUnitName(unit),
               user: hasViewUsersPermissions ? (
-                <Link href={`/admin/manage/users/${unit.userId}`}>
-                  <a
-                    href={`/admin/manage/users/${unit.userId}`}
-                    className={`rounded-md transition-all p-1 px-1.5 ${buttonVariants.default}`}
-                  >
-                    {unit.user.username}
-                  </a>
+                <Link
+                  href={`/admin/manage/users/${unit.userId}`}
+                  className={`rounded-md transition-all p-1 px-1.5 ${buttonVariants.default}`}
+                >
+                  {unit.user.username}
                 </Link>
               ) : (
                 unit.user.username
@@ -160,14 +162,12 @@ export function AllUnitsTab({ search, units }: Props) {
               suspended: common(yesOrNoText(unit.suspended)),
               actions: (
                 <>
-                  {hasManagePermissions ? (
-                    <Link href={`/admin/manage/units/${unit.id}`}>
-                      <a
-                        href={`/admin/manage/units/${unit.id}`}
-                        className={classNames("p-0.5 px-2 rounded-md", buttonVariants.success)}
-                      >
-                        {common("manage")}
-                      </a>
+                  {hasManagePermissions || hasManageAwardsPermissions ? (
+                    <Link
+                      href={`/admin/manage/units/${unit.id}`}
+                      className={classNames("p-0.5 px-2 rounded-md", buttonVariants.success)}
+                    >
+                      {common("manage")}
                     </Link>
                   ) : null}
                   {hasDeletePermissions ? (
@@ -197,7 +197,7 @@ export function AllUnitsTab({ search, units }: Props) {
             { header: t("Leo.status"), accessorKey: "status" },
             { header: t("Leo.suspended"), accessorKey: "suspended" },
             { header: t("Leo.status"), accessorKey: "departmentStatus" },
-            hasManagePermissions || hasDeletePermissions
+            hasManagePermissions || hasManageAwardsPermissions || hasDeletePermissions
               ? { header: common("actions"), accessorKey: "actions" }
               : null,
           ]}

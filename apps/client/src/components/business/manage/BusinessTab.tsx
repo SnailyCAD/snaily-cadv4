@@ -1,6 +1,6 @@
 import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "use-intl";
-import { useBusinessState } from "state/businessState";
+import { useBusinessState } from "state/business-state";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { AlertModal } from "components/modal/AlertModal";
@@ -12,8 +12,9 @@ import { handleValidate } from "lib/handleValidate";
 import { Toggle } from "components/form/Toggle";
 import { useRouter } from "next/router";
 import { SettingsFormField } from "components/form/SettingsFormField";
-import { FormRow } from "components/form/FormRow";
 import type { DeleteBusinessByIdData, PutBusinessByIdData } from "@snailycad/types/api";
+import { AddressPostalSelect } from "components/form/select/PostalSelect";
+import shallow from "zustand/shallow";
 
 export function ManageBusinessTab() {
   const { state, execute } = useFetch();
@@ -22,7 +23,14 @@ export function ManageBusinessTab() {
   const t = useTranslations("Business");
   const router = useRouter();
 
-  const { currentBusiness, currentEmployee, setCurrentBusiness } = useBusinessState();
+  const { currentBusiness, currentEmployee, setCurrentBusiness } = useBusinessState(
+    (state) => ({
+      currentBusiness: state.currentBusiness,
+      currentEmployee: state.currentEmployee,
+      setCurrentBusiness: state.setCurrentBusiness,
+    }),
+    shallow,
+  );
 
   if (!currentBusiness) {
     return null;
@@ -86,21 +94,7 @@ export function ManageBusinessTab() {
               errorMessage={errors.address}
               label={t("address")}
             >
-              <FormRow flexLike>
-                <Input
-                  className="w-full"
-                  name="address"
-                  onChange={handleChange}
-                  value={values.address}
-                />
-                <Input
-                  className="w-[200px]"
-                  name="postal"
-                  onChange={handleChange}
-                  value={values.postal}
-                  placeholder={common("postal")}
-                />
-              </FormRow>
+              <AddressPostalSelect />
             </SettingsFormField>
 
             <SettingsFormField
@@ -143,7 +137,7 @@ export function ManageBusinessTab() {
       <AlertModal
         id={ModalIds.AlertDeleteBusiness}
         title={t("deleteBusiness")}
-        description={t.rich("alert_deleteBusiness", {
+        description={t("alert_deleteBusiness", {
           business: currentBusiness.name,
         })}
         deleteText={t("deleteBusiness")}

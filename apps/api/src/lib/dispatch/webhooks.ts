@@ -6,23 +6,12 @@ import type {
   MiscCadSettings,
   StatusValue,
   Value,
-  cad,
   CadFeature,
 } from "@prisma/client";
 import { Feature } from "@snailycad/types";
 import { generateCallsign } from "@snailycad/utils";
 import { isFeatureEnabled } from "lib/cad";
-
-export interface HandlePanicButtonPressedOptions {
-  status: StatusValue;
-  unit: (
-    | ((Officer | EmsFdDeputy) & { citizen: Pick<Citizen, "name" | "surname"> })
-    | CombinedLeoUnit
-  ) & {
-    status?: StatusValue | null;
-  };
-  cad: cad & { miscCadSettings: MiscCadSettings };
-}
+import type { HandlePanicButtonPressedOptions } from "lib/leo/send-panic-button-webhook";
 
 type V<T> = T & { value: Value };
 

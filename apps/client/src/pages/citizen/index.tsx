@@ -13,18 +13,21 @@ import { requestAll } from "lib/utils";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useAreaOfPlay } from "hooks/global/useAreaOfPlay";
 import { Title } from "components/shared/Title";
-import { CitizenList } from "components/citizen/citizen-list/CitizenList";
+import { CitizenList } from "components/citizen/citizen-list/citizen-list";
 import type { GetCitizensData } from "@snailycad/types/api";
+import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
+import { ValueType } from "@snailycad/types";
 
 const RegisterVehicleModal = dynamic(
   async () =>
     (await import("components/citizen/vehicles/modals/RegisterVehicleModal")).RegisterVehicleModal,
 );
 const RegisterWeaponModal = dynamic(
-  async () => (await import("components/citizen/weapons/RegisterWeaponModal")).RegisterWeaponModal,
+  async () =>
+    (await import("components/citizen/weapons/register-weapon-modal")).RegisterWeaponModal,
 );
 const ManageCallModal = dynamic(
-  async () => (await import("components/citizen/tow/ManageTowCall")).ManageCallModal,
+  async () => (await import("components/citizen/tow/manage-tow-call")).ManageCallModal,
 );
 const Manage911CallModal = dynamic(
   async () => (await import("components/dispatch/modals/Manage911CallModal")).Manage911CallModal,
@@ -35,6 +38,10 @@ interface Props {
 }
 
 export default function CitizenPage({ citizens }: Props) {
+  useLoadValuesClientSide({
+    valueTypes: [ValueType.LICENSE],
+  });
+
   const t = useTranslations("Citizen");
   const { TOW, TAXI, WEAPON_REGISTRATION, CALLS_911 } = useFeatureEnabled();
 
@@ -51,13 +58,11 @@ export default function CitizenPage({ citizens }: Props) {
 
       <ul className="grid grid-cols-1 gap-2 mb-3 sm:grid-cols-2 md:grid-cols-3">
         <li>
-          <Link href="/citizen/create">
-            <a
-              href="/citizen/create"
-              className={`rounded-md transition-all p-1 px-4 ${buttonVariants.default} block w-full`}
-            >
-              {t("createCitizen")}
-            </a>
+          <Link
+            href="/citizen/create"
+            className={`rounded-md transition-all p-1 px-4 ${buttonVariants.default} block w-full`}
+          >
+            {t("createCitizen")}
           </Link>
         </li>
         <li>
@@ -120,15 +125,11 @@ export default function CitizenPage({ citizens }: Props) {
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, req }) => {
   const user = await getSessionUser(req);
-  const [data, values] = await requestAll(req, [
-    ["/citizen", { citizens: [], totalCount: 0 }],
-    ["/admin/values/license", []],
-  ]);
+  const [data] = await requestAll(req, [["/citizen", { citizens: [], totalCount: 0 }]]);
 
   return {
     props: {
-      values,
-      citizens: data ?? [],
+      citizens: data,
       session: user,
       messages: {
         ...(await getTranslations(["citizen", "calls", "common"], user?.locale ?? locale)),

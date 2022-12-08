@@ -59,11 +59,20 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
   const [search, setSearch] = React.useState("");
   const [tempValue, setTempValue] = React.useState<PenalCode | null>(null);
   const { state, execute } = useFetch();
+  const [paginationOptions, setPagination] = React.useState({
+    pageSize: 35,
+    pageIndex: 0,
+  });
+
   const tableState = useTableState({
     search: { value: search },
     dragDrop: {
       onListChange: setList,
       disabledIndices: [groups.findIndex((v) => v.id === "ungrouped")],
+    },
+    pagination: {
+      ...paginationOptions,
+      setPagination,
     },
   });
 

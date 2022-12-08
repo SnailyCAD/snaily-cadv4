@@ -45,21 +45,19 @@ function LinkElement(props: Props) {
   const { itemProps } = useBreadcrumbItem({ ...props, elementType: "a" }, ref);
 
   return (
-    <Link href={props.href || "#"}>
-      <a
-        {...itemProps}
-        ref={ref}
-        href={props.href || "#"}
-        className={classNames(
-          props.isDisabled ? "text-gray-400" : "text-blue-500",
-          !props.isCurrent && "hover:text-blue-600",
-          props.isCurrent || props.isDisabled ? "no-underline" : "underline",
-          props.isCurrent ? "font-semibold" : "font-normal",
-          props.isCurrent || props.isDisabled ? "cursor-default" : "cursor-pointer",
-        )}
-      >
-        {props.children}
-      </a>
+    <Link
+      {...itemProps}
+      ref={ref}
+      className={classNames(
+        props.isDisabled ? "text-gray-400" : "text-blue-500",
+        !props.isCurrent && "hover:text-blue-600",
+        props.isCurrent || props.isDisabled ? "no-underline" : "underline",
+        props.isCurrent ? "font-semibold" : "font-normal",
+        props.isCurrent || props.isDisabled ? "cursor-default" : "cursor-pointer",
+      )}
+      href={props.href || "#"}
+    >
+      {props.children}
     </Link>
   );
 }

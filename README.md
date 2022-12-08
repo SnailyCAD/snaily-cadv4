@@ -1,6 +1,6 @@
 # [SnailyCADv4](https://snailycad.caspertheghost.me)
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/lqLdjV?referralCode=zxxB_p)
+<!-- [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/lqLdjV?referralCode=zxxB_p) -->
 
 ![license](https://img.shields.io/github/license/SnailyCAD/snaily-cadv4?color=gr&style=flat-square)
 ![contributors](https://img.shields.io/github/contributors/SnailyCAD/snaily-cadv4?color=gr&style=flat-square)
@@ -22,6 +22,17 @@ this is a web based integration for communities who love police roleplaying and 
 - [Features List](https://cad-docs.caspertheghost.me/docs/features)
 - [Bugs reports & Feature requests](https://github.com/SnailyCAD/snaily-cadv4/issues)
 - [Contributing](./.github/CONTRIBUTING.md)
+
+## Sponsors
+
+<a href="https://gamefocal.com?ref=snailycad">
+<img alt="GameFocal" width="150" src="https://gamefocal.com/assets/dash/images/brand/logo.png" />
+</a>
+
+- [runesasia](https://github.com/runesasia)
+- [jxckUK](https://github.com/jxckUK)
+- [Creizy](https://github.com/Creizy)
+- [Northern524](https://github.com/Northern524)
 
 ## License
 

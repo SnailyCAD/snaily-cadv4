@@ -60,13 +60,29 @@ export function DatePickerField({ value: _value, ...rest }: Props) {
           {rest.isOptional ? <span className="text-sm italic">({optionalText})</span> : null}
         </label>
         <div {...groupProps} ref={ref} className="flex group">
-          <div className="relative bg-white dark:bg-secondary p-1.5 px-3 w-full rounded-l-md border border-r-0 border-gray-200 dark:border-quinary">
-            {isMounted ? <DateField {...fieldProps} /> : null}
+          <div
+            className={classNames(
+              "relative bg-white dark:bg-secondary p-1.5 px-3 w-full rounded-l-md border border-r-0",
+              rest.isDisabled ? "cursor-not-allowed opacity-80" : "",
+              rest.errorMessage
+                ? "border-red-500 focus:border-red-700 dark:focus:border-red-700"
+                : "border-gray-200 dark:border-quinary",
+            )}
+          >
+            {isMounted ? <DateField errorMessage={rest.errorMessage} {...fieldProps} /> : null}
             {state.validationState === "invalid" && (
               <ExclamationCircle className="w-6 h-6 text-red-500 absolute right-1" />
             )}
           </div>
-          <Button {...buttonProps} type="button" className="rounded-l-none">
+          <Button
+            {...buttonProps}
+            type="button"
+            className={classNames(
+              "rounded-l-none",
+              rest.errorMessage &&
+                "!border-red-500 focus:!border-red-700 dark:!focus:border-red-700",
+            )}
+          >
             <Calendar2 className="w-5 h-5 fill-white" />
           </Button>
         </div>

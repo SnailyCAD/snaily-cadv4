@@ -11,6 +11,7 @@ import type {
   VehicleValue,
   QualificationValue,
   CallTypeValue,
+  AddressValue,
 } from "@snailycad/types";
 import { ValueType } from "@snailycad/types";
 import type { GetValuesData } from "@snailycad/types/api";
@@ -41,8 +42,9 @@ export interface ValueContext {
   driverslicenseCategory: ContextValue<DriversLicenseCategoryValue>;
   impoundLot: ContextValue;
   qualification: ContextValue<QualificationValue>;
-  setValues: React.Dispatch<React.SetStateAction<GetValuesData>>;
   callType: ContextValue<CallTypeValue>;
+  address: ContextValue<AddressValue>;
+  setValues: React.Dispatch<React.SetStateAction<GetValuesData>>;
 }
 
 const ValuesContext = React.createContext<ValueContext | undefined>(undefined);
@@ -78,6 +80,8 @@ export function ValuesProvider({ initialData, children, router }: ProviderProps)
       const valuesForType = values.find((v) => v.type === valueType) ?? {
         values: [],
         type: valueType,
+        groups: [],
+        totalCount: 0,
       };
 
       if (valuesForType.type === "PENAL_CODE" && valuesForType.groups) {

@@ -1,4 +1,3 @@
-import * as React from "react";
 import type { LeoIncident } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";

@@ -6,7 +6,7 @@ import { prisma } from "lib/prisma";
 import { Socket } from "services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
-import type { cad, MiscCadSettings, User } from "@snailycad/types";
+import { cad, Feature, MiscCadSettings, User } from "@snailycad/types";
 import { validateSchema } from "lib/validateSchema";
 import { TONES_SCHEMA, UPDATE_AOP_SCHEMA, UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
 import {
@@ -25,6 +25,7 @@ import { getInactivityFilter } from "lib/leo/utils";
 import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
 import { getActiveDeputy } from "lib/ems-fd";
 import type * as APITypes from "@snailycad/types/api";
+import { IsFeatureEnabled } from "middlewares/is-enabled";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -42,30 +43,25 @@ export class DispatchController {
   })
   async getDispatchData(
     @Context("cad") cad: { miscCadSettings: MiscCadSettings | null },
-    @QueryParams("isServer", Boolean) isServer: boolean,
   ): Promise<APITypes.GetDispatchData> {
     const unitsInactivityFilter = getInactivityFilter(
       cad,
       "unitInactivityTimeout",
       "lastStatusChangeTimestamp",
     );
+    const dispatcherInactivityTimeout = getInactivityFilter(
+      cad,
+      "activeDispatchersInactivityTimeout",
+      "updatedAt",
+    );
 
     if (unitsInactivityFilter) {
       setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp);
     }
 
-    const [officerCount, combinedUnitsCount, officers, units] = await prisma.$transaction([
-      prisma.officer.count({ orderBy: { updatedAt: "desc" } }),
-      prisma.combinedLeoUnit.count(),
-      prisma.officer.findMany({
-        take: isServer ? 15 : undefined,
-        orderBy: { updatedAt: "desc" },
-        include: leoProperties,
-      }),
-      prisma.combinedLeoUnit.findMany({
-        take: isServer ? 10 : undefined,
-        include: combinedUnitProperties,
-      }),
+    const [officers, units] = await prisma.$transaction([
+      prisma.officer.findMany({ include: leoProperties }),
+      prisma.combinedLeoUnit.findMany({ include: combinedUnitProperties }),
     ]);
 
     const deputies = await prisma.emsFdDeputy.findMany({
@@ -73,6 +69,7 @@ export class DispatchController {
     });
 
     const activeDispatchers = await prisma.activeDispatchers.findMany({
+      where: dispatcherInactivityTimeout?.filter,
       include: {
         user: {
           select: { id: true, username: true, rank: true, isLeo: true, isEmsFd: true },
@@ -83,6 +80,10 @@ export class DispatchController {
     const incidentInactivityFilter = getInactivityFilter(cad, "incidentInactivityTimeout");
     if (incidentInactivityFilter) {
       this.endInactiveIncidents(incidentInactivityFilter.updatedAt);
+    }
+
+    if (dispatcherInactivityTimeout) {
+      this.endInactiveDispatchers(dispatcherInactivityTimeout.updatedAt);
     }
 
     const activeIncidents = await prisma.leoIncident.findMany({
@@ -103,10 +104,7 @@ export class DispatchController {
 
     return {
       deputies: deputiesWithUpdatedStatus,
-      officers: {
-        totalCount: officerCount + combinedUnitsCount,
-        officers: [...officersWithUpdatedStatus, ...combinedUnitsWithUpdatedStatus],
-      },
+      officers: [...officersWithUpdatedStatus, ...combinedUnitsWithUpdatedStatus],
       activeIncidents: correctedIncidents,
       activeDispatchers,
     };
@@ -226,6 +224,7 @@ export class DispatchController {
   }
 
   @Put("/radio-channel/:unitId")
+  @IsFeatureEnabled({ feature: Feature.RADIO_CHANNEL_MANAGEMENT })
   @UsePermissions({
     fallback: (u) => u.isDispatch,
     permissions: [Permissions.Dispatch],
@@ -347,6 +346,7 @@ export class DispatchController {
   }
 
   @Post("/tones")
+  @IsFeatureEnabled({ feature: Feature.TONES })
   @UsePermissions({
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
     fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
@@ -384,6 +384,18 @@ export class DispatchController {
             }),
           ),
         );
+      }),
+    );
+  }
+
+  private async endInactiveDispatchers(updatedAt: Date) {
+    const activeDispatchers = await prisma.activeDispatchers.findMany({
+      where: { updatedAt: { not: { gte: updatedAt } } },
+    });
+
+    await Promise.all(
+      activeDispatchers.map(async (dispatcher) => {
+        await prisma.activeDispatchers.delete({ where: { id: dispatcher.id } });
       }),
     );
   }

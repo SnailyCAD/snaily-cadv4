@@ -6,7 +6,7 @@ import { Cookie } from "@snailycad/config";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { setCookie } from "utils/setCookie";
-import { cad, ShouldDoType, StatusViewMode, TableActionsAlignment } from "@prisma/client";
+import { cad, Rank, ShouldDoType, StatusViewMode, TableActionsAlignment } from "@prisma/client";
 import { NotFound } from "@tsed/exceptions";
 import { CHANGE_PASSWORD_SCHEMA, CHANGE_USER_SCHEMA } from "@snailycad/schemas";
 import { compareSync, genSaltSync, hashSync } from "bcrypt";
@@ -64,6 +64,7 @@ export class UserController {
         statusUpdate: data.soundSettings.statusUpdate,
         incomingCall: data.soundSettings.incomingCall,
         speech: data.soundSettings.speech,
+        speechVoice: data.soundSettings.speechVoice,
       };
 
       const updated = await prisma.userSoundSettings.upsert({
@@ -102,6 +103,10 @@ export class UserController {
   @Delete("/")
   @Description("Delete the authenticated user's account")
   async deleteAuthUser(@Context("user") user: User) {
+    if (user.rank === Rank.OWNER) {
+      throw new ExtendedBadRequest({ rank: "cannotDeleteOwner" });
+    }
+
     await prisma.user.delete({
       where: {
         id: user.id,
@@ -114,6 +119,24 @@ export class UserController {
   async logoutUser(@Res() res: Res, @Context() ctx: Context): Promise<APITypes.PostUserLogoutData> {
     const userId = ctx.get("user").id;
     ctx.delete("user");
+
+    setCookie({
+      res,
+      name: Cookie.AccessToken,
+      expires: 0,
+      value: "",
+    });
+
+    setCookie({
+      res,
+      name: Cookie.RefreshToken,
+      expires: 0,
+      value: "",
+    });
+
+    await prisma.activeDispatchers.deleteMany({
+      where: { userId },
+    });
 
     const officer = await prisma.officer.findFirst({
       where: {
@@ -158,20 +181,6 @@ export class UserController {
       });
       await this.socket.emitUpdateDeputyStatus();
     }
-
-    setCookie({
-      res,
-      name: Cookie.AccessToken,
-      expires: 0,
-      value: "",
-    });
-
-    setCookie({
-      res,
-      name: Cookie.RefreshToken,
-      expires: 0,
-      value: "",
-    });
 
     return true;
   }

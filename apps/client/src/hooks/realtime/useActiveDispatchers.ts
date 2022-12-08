@@ -2,7 +2,7 @@ import * as React from "react";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import useFetch from "lib/useFetch";
-import { useDispatchState } from "state/dispatch/dispatchState";
+import { useDispatchState } from "state/dispatch/dispatch-state";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useRouter } from "next/router";
 import type { GetDispatchData } from "@snailycad/types/api";
@@ -26,7 +26,7 @@ export function useActiveDispatchers() {
     if (json.activeDispatchers) {
       dispatchState.setActiveDispatchers(json.activeDispatchers);
       dispatchState.setActiveIncidents(json.activeIncidents);
-      dispatchState.setAllOfficers(json.officers.officers);
+      dispatchState.setAllOfficers(json.officers);
       dispatchState.setAllDeputies(json.deputies);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

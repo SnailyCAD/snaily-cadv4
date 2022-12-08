@@ -8,18 +8,25 @@ import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
-import { useVehicleSearch } from "state/search/vehicleSearchState";
-import { useNameSearch } from "state/search/nameSearchState";
+import { useVehicleSearch } from "state/search/vehicle-search-state";
+import { useNameSearch } from "state/search/name-search-state";
 import type { PostSearchActionsCreateVehicle } from "@snailycad/types/api";
 import { handleValidate } from "lib/handleValidate";
 import { IMPOUND_VEHICLE_SCHEMA } from "@snailycad/schemas";
+import shallow from "zustand/shallow";
 
 export function ImpoundVehicleModal() {
   const common = useTranslations("Common");
   const { isOpen, closeModal } = useModal();
   const { impoundLot } = useValues();
   const { currentResult, setCurrentResult } = useVehicleSearch();
-  const nameSearchState = useNameSearch();
+  const nameSearchState = useNameSearch(
+    (state) => ({
+      currentResult: state.currentResult,
+      setCurrentResult: state.setCurrentResult,
+    }),
+    shallow,
+  );
   const { state, execute } = useFetch();
 
   const t = useTranslations();

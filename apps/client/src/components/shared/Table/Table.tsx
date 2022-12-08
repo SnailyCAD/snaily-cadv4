@@ -18,7 +18,7 @@ import { useAuth } from "context/AuthContext";
 import { TableActionsAlignment } from "@snailycad/types";
 import { orderColumnsByTableActionsAlignment } from "lib/table/orderColumnsByTableActionsAlignment";
 import { rankItem } from "@tanstack/match-sorter-utils";
-import type { useTableState } from "hooks/shared/table/useTableState";
+import type { useTableState } from "hooks/shared/table/use-table-state";
 import { ReactSortable } from "react-sortablejs";
 import { useMounted } from "@casper124578/useful";
 import { createTableDragDropColumn } from "lib/table/dndArrowHook";
@@ -31,13 +31,13 @@ export type _RowData = RowData & {
 
 interface Props<TData extends _RowData> {
   data: TData[];
-  columns: (AccessorKeyColumnDef<TData> | null)[];
+  columns: (AccessorKeyColumnDef<TData, keyof TData> | null)[];
 
   tableState: ReturnType<typeof useTableState>;
   containerProps?: { style?: React.CSSProperties; className?: string };
 
   features?: {
-    isWithinCard?: boolean;
+    isWithinCardOrModal?: boolean;
     dragAndDrop?: boolean;
     rowSelection?: boolean;
   };
@@ -56,7 +56,7 @@ export function Table<TData extends _RowData>({
   const pageCount = Math.ceil(dataLength / tableState.pagination.pageSize);
 
   const tableActionsAlignment = user?.tableActionsAlignment ?? TableActionsAlignment.LEFT;
-  const stickyBgColor = features?.isWithinCard
+  const stickyBgColor = features?.isWithinCardOrModal
     ? "bg-gray-100 dark:bg-tertiary"
     : "dark:bg-primary bg-white";
 
@@ -168,7 +168,9 @@ export function Table<TData extends _RowData>({
         </ReactSortable>
       </table>
 
-      {dataLength <= visibleTableRows.length ? null : <TablePagination table={table} />}
+      {dataLength <= visibleTableRows.length ? null : (
+        <TablePagination isLoading={tableState.pagination.isLoading} table={table} />
+      )}
     </div>
   );
 }

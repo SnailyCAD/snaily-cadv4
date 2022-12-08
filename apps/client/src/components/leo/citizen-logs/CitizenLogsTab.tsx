@@ -10,6 +10,7 @@ import { TabsContent } from "components/shared/TabList";
 import type { CitizenLog } from "src/pages/officer/supervisor/citizen-logs";
 import { makeUnitName } from "lib/utils";
 import { ViolationsColumn } from "../ViolationsColumn";
+import { Status } from "components/shared/Status";
 
 interface Props {
   search: string;
@@ -90,6 +91,13 @@ function CurrentLogView({ logs: data, search, currentLog, setCurrentLog }: Curre
                   postal: item.records.postal || common("none"),
                   notes: item.records.notes || common("none"),
                   violations: <ViolationsColumn violations={item.records.violations} />,
+                  paymentStatus: item.records.paymentStatus ? (
+                    <Status state={item.records.paymentStatus}>
+                      {item.records.paymentStatus.toLowerCase()}
+                    </Status>
+                  ) : (
+                    "—"
+                  ),
                 }
               : {
                   caseNumber: "—",
@@ -115,6 +123,7 @@ function CurrentLogView({ logs: data, search, currentLog, setCurrentLog }: Curre
           { header: t("officer"), accessorKey: "officer" },
           { header: t("postal"), accessorKey: "postal" },
           { header: t("status"), accessorKey: "status" },
+          { header: t("Leo.paymentStatus"), accessorKey: "paymentStatus" },
           { header: t("notes"), accessorKey: "notes" },
           { header: t("violations"), accessorKey: "violations" },
           { header: common("createdAt"), accessorKey: "createdAt" },

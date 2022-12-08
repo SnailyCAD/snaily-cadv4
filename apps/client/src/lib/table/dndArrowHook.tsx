@@ -5,7 +5,7 @@ import type { ColumnDef, RowData } from "@tanstack/react-table";
 
 export function createTableDragDropColumn<TData extends RowData>(
   tableState: ReturnType<typeof useTableState>["dragDrop"],
-): ColumnDef<TData> {
+): ColumnDef<TData, keyof TData> {
   return {
     id: "drag-drop",
     header: () => <ArrowDownUp />,

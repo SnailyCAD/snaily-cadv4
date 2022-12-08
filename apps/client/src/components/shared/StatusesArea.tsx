@@ -6,8 +6,8 @@ import { useValues } from "context/ValuesContext";
 import { classNames } from "lib/classNames";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
-import type { ActiveDeputy } from "state/emsFdState";
-import type { ActiveOfficer } from "state/leoState";
+import type { ActiveDeputy } from "state/ems-fd-state";
+import type { ActiveOfficer } from "state/leo-state";
 import { ModalIds } from "types/ModalIds";
 import { Officer, ShouldDoType, WhatPages, type StatusValue } from "@snailycad/types";
 import { useAudio } from "react-use";
@@ -87,7 +87,11 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
     if (!activeUnit) return;
     if (status.id === activeUnit.statusId) return;
 
-    setActiveUnit({ ...activeUnit, statusId: status.id, status });
+    if (status.shouldDo === ShouldDoType.SET_OFF_DUTY) {
+      setActiveUnit(null);
+    } else {
+      setActiveUnit({ ...activeUnit, statusId: status.id, status });
+    }
 
     if (status.shouldDo === ShouldDoType.SET_OFF_DUTY) {
       setUnits(units.filter((v) => v.id !== activeUnit.id));
@@ -111,7 +115,11 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
     });
 
     if (json.id) {
-      setActiveUnit({ ...activeUnit, ...json });
+      if (!json.status || json.status.shouldDo === ShouldDoType.SET_OFF_DUTY) {
+        setActiveUnit(null);
+      } else {
+        setActiveUnit({ ...activeUnit, ...json });
+      }
     }
   }
 

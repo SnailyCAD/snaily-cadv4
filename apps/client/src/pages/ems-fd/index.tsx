@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Layout } from "components/Layout";
-import { ActiveCalls } from "components/dispatch/active-calls/ActiveCalls";
+import { ActiveCalls } from "components/dispatch/active-calls/active-calls";
 import { ModalButtons } from "components/ems-fd/ModalButtons";
 import dynamic from "next/dynamic";
 import type { GetServerSideProps } from "next";
@@ -8,11 +8,11 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { useTranslations } from "use-intl";
 import { StatusesArea } from "components/shared/StatusesArea";
-import { useEmsFdState } from "state/emsFdState";
-import { useDispatchState } from "state/dispatch/dispatchState";
+import { useEmsFdState } from "state/ems-fd-state";
+import { useDispatchState } from "state/dispatch/dispatch-state";
 import { requestAll } from "lib/utils";
-import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
-import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
+import { ActiveDeputies } from "components/dispatch/active-deputies";
+import { ActiveOfficers } from "components/dispatch/active-officers";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { Title } from "components/shared/Title";
 import { UtilityPanel } from "components/shared/UtilityPanel";
@@ -27,7 +27,7 @@ import type {
   GetEmsFdActiveDeputy,
   GetMyDeputiesData,
 } from "@snailycad/types/api";
-import { useCall911State } from "state/dispatch/call911State";
+import { useCall911State } from "state/dispatch/call-911-state";
 import { DndProvider } from "components/shared/dnd/DndProvider";
 import { usePermission } from "hooks/usePermission";
 
@@ -43,7 +43,7 @@ const NotepadModal = dynamic(async () => {
 });
 
 const SelectDeputyModal = dynamic(async () => {
-  return (await import("components/ems-fd/modals/SelectDeputy")).SelectDeputyModal;
+  return (await import("components/ems-fd/modals/select-deputy-modal")).SelectDeputyModal;
 });
 
 const CreateMedicalRecordModal = dynamic(async () => {
@@ -75,7 +75,7 @@ export default function EmsFDDashboard({
   const panic = usePanicButton();
   const state = useEmsFdState();
   const dispatchState = useDispatchState();
-  const call911State = useCall911State();
+  const set911Calls = useCall911State((state) => state.setCalls);
   const { hasPermissions } = usePermission();
   const isAdmin = hasPermissions(
     defaultPermissions.allDefaultAdminPermissions,
@@ -85,7 +85,7 @@ export default function EmsFDDashboard({
   React.useEffect(() => {
     state.setActiveDeputy(activeDeputy);
     state.setDeputies(userDeputies);
-    call911State.setCalls(calls.calls);
+    set911Calls(calls.calls);
     dispatchState.setActiveDeputies(activeDeputies);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeDeputies, activeDeputy, calls]);
@@ -125,7 +125,7 @@ export default function EmsFDDashboard({
             </div>
           </div>
           <div className="mt-3">
-            <ActiveOfficers initialOfficers={{ officers: [], totalCount: 0 }} />
+            <ActiveOfficers initialOfficers={[]} />
             <ActiveDeputies initialDeputies={activeDeputies} />
           </div>
         </DndProvider>

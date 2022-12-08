@@ -11,7 +11,7 @@ import { Button } from "@snailycad/ui";
 import { Pencil, X } from "react-bootstrap-icons";
 import { AlertModal } from "components/modal/AlertModal";
 import type { Delete911CallEventByIdData, DeleteIncidentEventByIdData } from "@snailycad/types/api";
-import type { Full911Call } from "state/dispatch/dispatchState";
+import type { Full911Call } from "state/dispatch/dispatch-state";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 

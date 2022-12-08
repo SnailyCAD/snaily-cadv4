@@ -30,7 +30,7 @@ export function useLoadValuesClientSide(options: Options) {
     if (!enabled) return;
 
     if (options.valueTypes.length <= 0) {
-      throw new Error("Must provide at least 1 value type");
+      return;
     }
 
     const [first, ...rest] = options.valueTypes;

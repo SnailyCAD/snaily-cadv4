@@ -1,7 +1,7 @@
 import type { UnitQualification } from "@snailycad/types";
 import { HoverCard } from "components/shared/HoverCard";
 import { useImageUrl } from "hooks/useImageUrl";
-import Image from "next/future/image";
+import Image from "next/image";
 
 interface Props {
   qualification: UnitQualification;

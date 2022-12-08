@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "@snailycad/ui";
 import { Layout } from "components/Layout";
@@ -46,11 +45,7 @@ export default function Dmv({ data }: Props) {
     });
 
     if (json) {
-      const copy = [...asyncTable.data];
-      const idx = copy.findIndex((v) => v.id === id);
-      copy[idx] = json;
-
-      asyncTable.setData(copy);
+      asyncTable.update(id, json);
     }
   }
 
@@ -64,12 +59,12 @@ export default function Dmv({ data }: Props) {
     >
       <Title>{t("dmv")}</Title>
 
-      {asyncTable.data.length <= 0 ? (
+      {asyncTable.items.length <= 0 ? (
         <p className="mt-5">{t("noVehiclesPendingApprovalInDmv")}</p>
       ) : (
         <Table
           tableState={tableState}
-          data={asyncTable.data.map((vehicle) => {
+          data={asyncTable.items.map((vehicle) => {
             return {
               rowProps: {
                 className: vehicle.dmvStatus === "PENDING" ? "opacity-100" : "opacity-50",
@@ -80,6 +75,9 @@ export default function Dmv({ data }: Props) {
                   {vehicle.citizen.name} {vehicle.citizen.surname}
                 </span>
               ),
+              dmvStatus: (
+                <Status state={vehicle.dmvStatus}>{vehicle.dmvStatus?.toLowerCase()}</Status>
+              ),
               createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
               plate: vehicle.plate,
               model: vehicle.model.value.value,
@@ -87,9 +85,6 @@ export default function Dmv({ data }: Props) {
               registrationStatus: vehicle.registrationStatus.value,
               insuranceStatus: vehicle.insuranceStatus?.value ?? common("none"),
               vinNumber: vehicle.vinNumber,
-              dmvStatus: (
-                <Status state={vehicle.dmvStatus}>{vehicle.dmvStatus?.toLowerCase()}</Status>
-              ),
               actions: (
                 <>
                   <Button
@@ -118,12 +113,12 @@ export default function Dmv({ data }: Props) {
           columns={[
             { header: vT("plate"), accessorKey: "plate" },
             { header: vT("owner"), accessorKey: "citizen" },
+            { header: vT("dmvStatus"), accessorKey: "dmvStatus" },
             { header: vT("model"), accessorKey: "model" },
             { header: vT("color"), accessorKey: "color" },
             { header: vT("registrationStatus"), accessorKey: "registrationStatus" },
             { header: vT("insuranceStatus"), accessorKey: "insuranceStatus" },
             { header: vT("vinNumber"), accessorKey: "vinNumber" },
-            { header: vT("dmvStatus"), accessorKey: "dmvStatus" },
             { header: common("createdAt"), accessorKey: "createdAt" },
             { header: common("actions"), accessorKey: "actions" },
           ]}

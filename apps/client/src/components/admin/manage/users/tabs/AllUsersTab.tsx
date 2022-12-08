@@ -10,18 +10,33 @@ import { useAuth } from "context/AuthContext";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
 import { classNames } from "lib/classNames";
-import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
-import { buttonVariants, Loader, TextField } from "@snailycad/ui";
+import { useAsyncTable } from "hooks/shared/table/use-async-table";
+import { buttonVariants } from "@snailycad/ui";
 import type { GetManageUsersData } from "@snailycad/types/api";
+import { SearchArea } from "components/shared/search/search-area";
+import dynamic from "next/dynamic";
+
+const PruneUsersModal = dynamic(
+  async () => (await import("../modals/prune-users-modal")).PruneUsersModal,
+  { ssr: false },
+);
 
 export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
+  const [search, setSearch] = React.useState("");
+
   const { cad } = useAuth();
   const { hasPermissions } = usePermission();
 
   const t = useTranslations("Management");
   const common = useTranslations("Common");
 
+  const hasManagePermissions = hasPermissions(
+    [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
+    true,
+  );
+
   const asyncTable = useAsyncTable({
+    search,
     initialData: users,
     totalCount,
     fetchOptions: {
@@ -33,30 +48,11 @@ export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
 
   return (
     <TabsContent aria-label={t("allUsers")} value="allUsers" className="mt-5">
-      <TextField
-        label={common("search")}
-        className="my-2 w-full relative"
-        name="search"
-        onChange={(value) => asyncTable.search.setSearch(value)}
-        value={asyncTable.search.search}
-        placeholder="CasperTheGhost"
-      >
-        {asyncTable.state === "loading" ? (
-          <span className="absolute top-[2.4rem] right-2.5">
-            <Loader />
-          </span>
-        ) : null}
-      </TextField>
-
-      {asyncTable.search.search && asyncTable.pagination.totalDataCount !== totalCount ? (
-        <p className="italic text-base font-semibold">
-          Showing {asyncTable.pagination.totalDataCount} result(s)
-        </p>
-      ) : null}
+      <SearchArea totalCount={totalCount} asyncTable={asyncTable} search={{ search, setSearch }} />
 
       <Table
         tableState={tableState}
-        data={asyncTable.data.map((user) => {
+        data={asyncTable.items.map((user) => {
           const hasAdminPermissions = hasPermissions(
             defaultPermissions.allDefaultAdminPermissions,
             user.rank !== Rank.USER,
@@ -93,13 +89,11 @@ export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
               <Status state={user.whitelistStatus}>{user.whitelistStatus.toLowerCase()}</Status>
             ),
             actions: (
-              <Link href={`/admin/manage/users/${user.id}`}>
-                <a
-                  className={classNames(buttonVariants.default, "p-0.5 px-2 rounded-md")}
-                  href={`/admin/manage/users/${user.id}`}
-                >
-                  {common("manage")}
-                </a>
+              <Link
+                className={classNames(buttonVariants.default, "p-0.5 px-2 rounded-md")}
+                href={`/admin/manage/users/${user.id}`}
+              >
+                {common("manage")}
               </Link>
             ),
           };
@@ -112,14 +106,12 @@ export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
           { header: "EMS/FD Permissions", accessorKey: "isEmsFd" },
           { header: "Dispatch Permissions", accessorKey: "isDispatch" },
           cad?.whitelisted ? { header: "Whitelist Status", accessorKey: "whitelistStatus" } : null,
-          hasPermissions(
-            [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
-            true,
-          )
-            ? { header: common("actions"), accessorKey: "actions" }
-            : null,
+
+          hasManagePermissions ? { header: common("actions"), accessorKey: "actions" } : null,
         ]}
       />
+
+      {hasManagePermissions ? <PruneUsersModal /> : null}
     </TabsContent>
   );
 }

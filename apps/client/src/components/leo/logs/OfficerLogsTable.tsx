@@ -8,7 +8,7 @@ import type { OfficerLogWithOfficer } from "src/pages/officer/my-officer-logs";
 import type { EmsFdDeputy, Officer, OfficerLog } from "@snailycad/types";
 import type { OfficerLogWithDeputy } from "src/pages/ems-fd/my-deputy-logs";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import Image from "next/future/image";
+import Image from "next/image";
 import type { GetMyDeputiesLogsData, GetMyOfficersLogsData } from "@snailycad/types/api";
 
 type OfficerLogData = GetMyOfficersLogsData["logs"][number] | GetMyDeputiesLogsData["logs"][number];
@@ -26,13 +26,13 @@ type Props =
 export function OfficerLogsTable({ unit, asyncTable }: Props) {
   const { makeImageUrl } = useImageUrl();
   const { generateCallsign } = useGenerateCallsign();
-  const tableState = useTableState({ pagination: { ...asyncTable.pagination, pageSize: 25 } });
+  const tableState = useTableState({ pagination: asyncTable.pagination });
   const t = useTranslations("Leo");
 
   return (
     <Table
       tableState={tableState}
-      data={(asyncTable.data as OfficerLogData[]).map((log) => {
+      data={(asyncTable.items as OfficerLogData[]).map((log) => {
         const startedAt = <FullDate>{log.startedAt}</FullDate>;
         const endedAt = log.endedAt ? <FullDate>{log.endedAt}</FullDate> : t("notEndedYet");
         const logUnit = getUnitFromLog(log) ?? unit;

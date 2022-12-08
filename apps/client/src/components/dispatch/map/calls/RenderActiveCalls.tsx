@@ -2,20 +2,28 @@ import * as React from "react";
 import type { LeafletEvent } from "leaflet";
 import useFetch from "lib/useFetch";
 import { Marker, Popup, useMap } from "react-leaflet";
-import type { Full911Call } from "state/dispatch/dispatchState";
+import type { Full911Call } from "state/dispatch/dispatch-state";
 import { ActiveMapCalls } from "./ActiveMapCalls";
 import { convertToMap } from "lib/map/utils";
 import { Button } from "@snailycad/ui";
 import { useTranslations } from "next-intl";
 import type { Put911CallByIdData } from "@snailycad/types/api";
-import { useCall911State } from "state/dispatch/call911State";
+import { useCall911State } from "state/dispatch/call-911-state";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 import { MapItem, useDispatchMapState } from "state/mapState";
+import shallow from "zustand/shallow";
 
 export function RenderActiveCalls() {
   const map = useMap();
   const { execute } = useFetch();
-  const { calls, setCalls } = useCall911State();
+  const { setCalls, calls } = useCall911State(
+    (state) => ({
+      setCalls: state.setCalls,
+      calls: state.calls,
+    }),
+    shallow,
+  );
+
   const t = useTranslations("Calls");
   const [openItems, setOpenItems] = React.useState<string[]>([]);
   const { hiddenItems } = useDispatchMapState();

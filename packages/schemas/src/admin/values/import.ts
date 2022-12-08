@@ -17,6 +17,14 @@ export const HASH_SCHEMA = BASE_VALUE_SCHEMA.extend({
 
 export const HASH_SCHEMA_ARR = z.array(HASH_SCHEMA).min(1);
 
+/** address */
+export const ADDRESS_SCHEMA = BASE_VALUE_SCHEMA.extend({
+  postal: z.string().optional().nullable(),
+  county: z.string().optional().nullable(),
+});
+
+export const ADDRESS_SCHEMA_ARR = z.array(ADDRESS_SCHEMA);
+
 /**
  * codes_10
  */
@@ -124,3 +132,14 @@ export const CALL_TYPE_SCHEMA = BASE_VALUE_SCHEMA.extend({
 });
 
 export const CALL_TYPE_ARR = z.array(CALL_TYPE_SCHEMA).min(1);
+
+/**
+ * emergency vehicles
+ */
+
+export const EMERGENCY_VEHICLE_SCHEMA = BASE_VALUE_SCHEMA.extend({
+  departments: z.array(z.string()).min(1),
+  divisions: z.array(z.string()).min(1),
+});
+
+export const EMERGENCY_VEHICLE_ARR = z.array(EMERGENCY_VEHICLE_SCHEMA).min(1);

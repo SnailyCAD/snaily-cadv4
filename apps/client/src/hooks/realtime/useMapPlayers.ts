@@ -140,7 +140,11 @@ export function useMapPlayers() {
 
   React.useEffect(() => {
     if (!socket && url) {
-      setSocket(new WebSocket(url));
+      const newSocket = makeSocketConnection(url);
+
+      if (newSocket) {
+        setSocket(newSocket);
+      }
     }
   }, [url, socket]);
 
@@ -191,4 +195,28 @@ function getCADURL(cad: cad | null) {
   }
 
   return liveMapURL;
+}
+
+function makeSocketConnection(url: string) {
+  try {
+    return new WebSocket(url);
+  } catch (error) {
+    const isSecurityError = error instanceof Error && error.name === "SecurityError";
+
+    if (isSecurityError) {
+      toastMessage({
+        message: `Unable to make a Websocket connection to ${url}. The connections are not secure.`,
+        title: "Security Error",
+        duration: Infinity,
+      });
+    }
+
+    toastMessage({
+      message: `Unable to make a Websocket connection to ${url}`,
+      title: "Connection Error",
+      duration: Infinity,
+    });
+
+    return null;
+  }
 }

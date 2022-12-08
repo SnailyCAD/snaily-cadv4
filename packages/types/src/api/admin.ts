@@ -16,6 +16,12 @@ export interface GetAdminDashboardData {
   vehicles: number;
   impoundedVehicles: number;
   vehiclesInBOLO: number;
+  officerCount: number;
+  onDutyOfficers: number;
+  emsDeputiesCount: number;
+  suspendedOfficers: number;
+  suspendedEmsFDDeputies: number;
+  onDutyEmsDeputies: number;
   imageData: { count: number; totalSize: number };
 }
 
@@ -41,6 +47,12 @@ export interface GetImportVehiclesData {
     Business: Prisma.Business[];
   })[];
 }
+
+/**
+ * @method GET
+ * @route /admin/import/vehicles/plates
+ */
+export type GetImportVehiclesPlatesData = { plate: string }[];
 
 /**
  * @method POST
@@ -269,6 +281,15 @@ export type DeleteManageUnitByIdData = boolean;
 export interface GetManageUsersData {
   totalCount: number;
   pendingCount: number;
+  users: Types.User[];
+}
+
+/**
+ * @method Get
+ * @route /admin/manage/users/prune
+ */
+export interface GetManageUsersInactiveUsers {
+  totalCount: number;
   users: Types.User[];
 }
 

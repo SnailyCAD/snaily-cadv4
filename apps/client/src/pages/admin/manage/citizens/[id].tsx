@@ -8,7 +8,6 @@ import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { ManageCitizenForm } from "components/citizen/ManageCitizenForm";
 import useFetch from "lib/useFetch";
-import type { FormikHelpers } from "formik";
 import { useRouter } from "next/router";
 import { Permissions } from "@snailycad/permissions";
 import type { SelectValue } from "components/form/Select";
@@ -35,9 +34,9 @@ export default function ManageCitizens({ citizen }: Props) {
   }: {
     data: any;
     formData?: FormData;
-    helpers: FormikHelpers<any>;
+    helpers: any;
   }) {
-    const { json } = await execute<PutManageCitizenByIdData>({
+    const { json, error } = await execute<PutManageCitizenByIdData>({
       path: `/admin/manage/citizens/${citizen.id}`,
       method: "PUT",
       helpers,
@@ -57,6 +56,11 @@ export default function ManageCitizens({ citizen }: Props) {
           : data.firearmLicenseCategory,
       },
     });
+
+    const errors = ["dateLargerThanNow", "nameAlreadyTaken", "invalidImageType"];
+    if (errors.includes(error as string)) {
+      helpers.setCurrentStep(0);
+    }
 
     if (formData) {
       await execute<PostCitizenImageByIdData>({
@@ -95,9 +99,11 @@ export default function ManageCitizens({ citizen }: Props) {
 
       <div className="mt-5">
         <ManageCitizenForm
-          allowEditingName
-          allowEditingUser
-          showLicenseFields
+          formFeatures={{
+            "edit-name": true,
+            "edit-user": true,
+            "license-fields": true,
+          }}
           citizen={citizen}
           onSubmit={handleSubmit}
           state={state}

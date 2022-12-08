@@ -4,7 +4,7 @@ import { generateString } from "utils/generateString";
 import { validateImgurURL } from "utils/image";
 
 interface Options {
-  data: Zod.infer<typeof CREATE_CITIZEN_SCHEMA>;
+  data: Partial<Zod.infer<typeof CREATE_CITIZEN_SCHEMA>>;
   defaultLicenseValueId?: string | null;
   cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings | null };
 }
@@ -12,7 +12,7 @@ interface Options {
 export function citizenObjectFromData(options: Options) {
   const miscCadSettings = options.cad.miscCadSettings;
 
-  let obj: Prisma.CitizenUncheckedCreateInput = {
+  let obj: Prisma.CitizenUncheckedCreateInput | Prisma.CitizenUncheckedUpdateInput = {
     address: options.data.address,
     postal: options.data.postal || null,
     weight: options.data.weight,
@@ -52,5 +52,5 @@ export function citizenObjectFromData(options: Options) {
     };
   }
 
-  return obj;
+  return obj as Prisma.CitizenUncheckedCreateInput;
 }

@@ -6,12 +6,14 @@ import { join } from "node:path";
 import { stat } from "node:fs/promises";
 import { Res, UseBefore } from "@tsed/common";
 import { IsAuth } from "middlewares/IsAuth";
-import { Rank, WhitelistStatus } from "@prisma/client";
+import { Prisma, Rank, WhitelistStatus } from "@prisma/client";
 import { UsePermissions } from "middlewares/UsePermissions";
-import { defaultPermissions } from "@snailycad/permissions";
+import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import type { GetAdminDashboardData } from "@snailycad/types/api";
 import axios from "axios";
 import { getCADVersion } from "@snailycad/utils/version";
+
+const ONE_DAY = 60 * 60 * 24;
 
 @Controller("/admin")
 @ContentType("application/json")
@@ -21,27 +23,52 @@ export class AdminController {
   @Description("Get simple CAD stats")
   @UsePermissions({
     fallback: (u) => u.rank !== Rank.USER,
-    permissions: defaultPermissions.allDefaultAdminPermissions,
+    permissions: [
+      ...defaultPermissions.allDefaultAdminPermissions,
+      Permissions.ManageAwardsAndQualifications,
+    ],
   })
-  async getData(): Promise<GetAdminDashboardData> {
-    const [activeUsers, pendingUsers, bannedUsers] = await Promise.all([
-      await prisma.user.count({ where: { whitelistStatus: WhitelistStatus.ACCEPTED } }),
-      await prisma.user.count({ where: { whitelistStatus: WhitelistStatus.PENDING } }),
-      await prisma.user.count({ where: { banned: true } }),
+  async getData(@Res() res: Res): Promise<GetAdminDashboardData> {
+    const [activeUsers, pendingUsers, bannedUsers] = await prisma.$transaction([
+      prisma.user.count({ where: { whitelistStatus: WhitelistStatus.ACCEPTED } }),
+      prisma.user.count({ where: { whitelistStatus: WhitelistStatus.PENDING } }),
+      prisma.user.count({ where: { banned: true } }),
     ]);
 
-    const [createdCitizens, citizensInBolo, arrestCitizens, deadCitizens] = await Promise.all([
-      await prisma.citizen.count(),
-      await prisma.bolo.count({ where: { type: "PERSON" } }),
-      await prisma.citizen.count({ where: { Record: { some: { type: "ARREST_REPORT" } } } }),
-      await prisma.citizen.count({ where: { dead: true } }),
+    const [createdCitizens, citizensInBolo, arrestCitizens, deadCitizens] =
+      await prisma.$transaction([
+        prisma.citizen.count(),
+        prisma.bolo.count({ where: { type: "PERSON" } }),
+        prisma.citizen.count({ where: { Record: { some: { type: "ARREST_REPORT" } } } }),
+        prisma.citizen.count({ where: { dead: true } }),
+      ]);
+
+    const [vehicles, impoundedVehicles, vehiclesInBOLO] = await prisma.$transaction([
+      prisma.registeredVehicle.count(),
+      prisma.registeredVehicle.count({ where: { impounded: true } }),
+      prisma.bolo.count({ where: { type: "VEHICLE" } }),
     ]);
 
-    const [vehicles, impoundedVehicles, vehiclesInBOLO] = await Promise.all([
-      await prisma.registeredVehicle.count(),
-      await prisma.registeredVehicle.count({ where: { impounded: true } }),
-      await prisma.bolo.count({ where: { type: "VEHICLE" } }),
+    const filters: Prisma.Enumerable<Prisma.OfficerWhereInput> = [
+      { status: { shouldDo: "SET_OFF_DUTY" } },
+      { status: { is: null } },
+    ];
+
+    const [officerCount, onDutyOfficers, suspendedOfficers] = await prisma.$transaction([
+      prisma.officer.count(),
+      prisma.officer.count({ where: { NOT: { OR: filters } } }),
+      prisma.officer.count({ where: { suspended: true } }),
     ]);
+
+    const [emsDeputiesCount, onDutyEmsDeputies, suspendedEmsFDDeputies] = await prisma.$transaction(
+      [
+        prisma.emsFdDeputy.count(),
+        prisma.emsFdDeputy.count({ where: { NOT: { OR: filters } } }),
+        prisma.emsFdDeputy.count({ where: { suspended: true } }),
+      ],
+    );
+
+    res.setHeader("Cache-Control", `public, max-age=${ONE_DAY}`);
 
     const imageData = await this.imageData().catch(() => null);
 
@@ -54,6 +81,14 @@ export class AdminController {
       citizensInBolo,
       arrestCitizens,
       deadCitizens,
+
+      officerCount,
+      onDutyOfficers,
+      suspendedOfficers,
+
+      emsDeputiesCount,
+      onDutyEmsDeputies,
+      suspendedEmsFDDeputies,
 
       vehicles,
       impoundedVehicles,
@@ -75,7 +110,6 @@ export class AdminController {
         headers: { accept: "application/vnd.github+json" },
       });
 
-      const ONE_DAY = 60 * 60 * 24;
       res.setHeader("Cache-Control", `public, max-age=${ONE_DAY}`);
 
       const json = response.data as { body: string };

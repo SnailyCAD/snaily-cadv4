@@ -1,10 +1,9 @@
-import * as React from "react";
 import { Form, Formik, FormikHelpers } from "formik";
 import Link from "next/link";
 import { Discord, Steam } from "react-bootstrap-icons";
 import { Button, Loader, TextField } from "@snailycad/ui";
 import { TwoFactorAuthScreen } from "components/auth/TwoFactorAuthScreen";
-import { getAPIUrl } from "lib/fetch/getAPIUrl";
+import { getAPIUrl } from "@snailycad/utils/api-url";
 import { useRouter } from "next/router";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
@@ -122,21 +121,22 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
                 <h1 className="text-3xl font-bold text-gray-800 dark:text-white">{t("login")}</h1>
 
                 {ALLOW_REGULAR_LOGIN && !isWithinModal ? (
-                  <Link href="/auth/register">
-                    <a
-                      href="/auth/register"
-                      className="inline-block mt-2 underline text-neutral-700 dark:text-gray-200"
-                    >
-                      {t("noAccount")}
-                    </a>
+                  <Link
+                    href="/auth/register"
+                    className="inline-block mt-2 underline text-neutral-700 dark:text-gray-200"
+                  >
+                    {t("noAccount")}
                   </Link>
                 ) : null}
               </header>
 
               {errorMessage ? (
-                <p className="bg-red-500/80 text-black w-full py-1.5 px-3 my-3 rounded-md">
+                <div
+                  role="alert"
+                  className="bg-red-500/80 text-black w-full py-1.5 px-3 my-3 rounded-md"
+                >
                   {errorMessage}
-                </p>
+                </div>
               ) : null}
 
               {ALLOW_REGULAR_LOGIN ? (
@@ -179,7 +179,7 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
 
               {user && !isWithinModal ? (
                 <Button type="button" onPress={handleContinueAs} className="w-full mb-2">
-                  {t.rich("continueAs", { username: user.username })}
+                  {t("continueAs", { username: user.username })}
                 </Button>
               ) : null}
 

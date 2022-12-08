@@ -7,7 +7,7 @@ import useFetch from "lib/useFetch";
 import { useUnitStatusChange } from "hooks/shared/useUnitsStatusChange";
 import { isUnitCombined, isUnitOfficer } from "@snailycad/utils";
 import { useActiveOfficers } from "hooks/realtime/useActiveOfficers";
-import { ActiveOfficer, useLeoState } from "state/leoState";
+import { ActiveOfficer, useLeoState } from "state/leo-state";
 import { ArrowRight } from "react-bootstrap-icons";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
@@ -21,7 +21,7 @@ import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { classNames } from "lib/classNames";
 import { ActiveUnitsQualificationsCard } from "components/leo/qualifications/ActiveUnitsQualificationsCard";
 import type { PostDispatchStatusUnmergeUnitById } from "@snailycad/types/api";
-import Image from "next/future/image";
+import Image from "next/image";
 
 interface Props {
   officer: Officer | CombinedLeoUnit;
@@ -34,7 +34,7 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
 
   const { openModal } = useModal();
   const { setStatus } = useUnitStatusChange({ units: activeOfficers, setUnits: setActiveOfficers });
-  const { activeOfficer } = useLeoState();
+  const activeOfficer = useLeoState((state) => state.activeOfficer);
   const { makeImageUrl } = useImageUrl();
   const { codes10 } = useValues();
   const { execute } = useFetch();

@@ -47,6 +47,7 @@ export function AppearanceTab({ availableSounds }: Props) {
     [TableActionsAlignment.RIGHT]: common("right"),
   };
 
+  const voices = getSynthesisVoices();
   if (!user) {
     return null;
   }
@@ -64,6 +65,7 @@ export function AppearanceTab({ availableSounds }: Props) {
       statusUpdate: user.soundSettings?.statusUpdate ?? false,
       incomingCall: user.soundSettings?.incomingCall ?? false,
       speech: user.soundSettings?.speech ?? true,
+      speechVoice: user.soundSettings?.speechVoice ?? null,
     },
   };
   const sounds = Object.keys(INITIAL_VALUES.soundSettings);
@@ -141,86 +143,104 @@ export function AppearanceTab({ availableSounds }: Props) {
             <div className="mb-5">
               <h2 className="text-2xl font-semibold mb-3">{t("sounds")}</h2>
 
-              <div className="mb-3">
-                <FormField className="!mb-0" label="Speech" checkbox>
-                  <Toggle
-                    value={values.soundSettings.speech}
-                    onCheckedChange={handleChange}
-                    name="soundSettings.speech"
-                  />
-                </FormField>
-              </div>
+              {voices ? (
+                <section id="speech" className="mb-5">
+                  <h3 className="text-xl font-semibold mb-3">{t("speech")}</h3>
+                  <FormField label={t("speech")} checkbox>
+                    <Toggle
+                      value={values.soundSettings.speech}
+                      onCheckedChange={handleChange}
+                      name="soundSettings.speech"
+                    />
+                  </FormField>
+                  <FormField label={t("speechVoice")}>
+                    <Select
+                      disabled={!values.soundSettings.speech}
+                      values={voices.map((voice) => ({
+                        label: voice.name,
+                        value: voice.voiceURI,
+                      }))}
+                      value={values.soundSettings.speechVoice}
+                      onChange={handleChange}
+                      name="soundSettings.speechVoice"
+                    />
+                  </FormField>
+                </section>
+              ) : null}
 
-              {availableSoundsArr.map((_name) => {
-                const fieldName = _name as keyof typeof INITIAL_VALUES.soundSettings;
-                const kebabCase = soundCamelCaseToKebabCase(fieldName);
-                const soundAvailable = !!availableSounds[kebabCase];
+              <section>
+                <h3 className="text-xl font-semibold mb-3">{t("otherSounds")}</h3>
 
-                if (!soundAvailable) return null;
-                if (fieldName === "speech") return null;
+                {availableSoundsArr.map((_name) => {
+                  const fieldName = _name as keyof typeof INITIAL_VALUES.soundSettings;
+                  const kebabCase = soundCamelCaseToKebabCase(fieldName);
+                  const soundAvailable = !!availableSounds[kebabCase];
 
-                return (
-                  <div className="mb-3 flex flex-row gap-5" key={fieldName}>
-                    <FormField className="!mb-0" label={t(fieldName)} checkbox>
-                      <Toggle
-                        value={values.soundSettings[fieldName]}
-                        onCheckedChange={handleChange}
-                        name={`soundSettings.${fieldName}`}
-                        disabled={!soundAvailable}
-                      />
-                    </FormField>
+                  if (!soundAvailable) return null;
+                  if (["speech", "speechVoice"].includes(fieldName)) return null;
 
-                    <Button
-                      size="xs"
-                      type="button"
-                      onPress={() => {
-                        setCurrentSrc(`/sounds/${kebabCase}.mp3`);
-                        controls.volume(0.1);
-                        controls.play();
-                      }}
-                    >
-                      Test sound (Double Click)
-                    </Button>
-                  </div>
-                );
-              })}
+                  return (
+                    <div className="mb-3 flex flex-row gap-5" key={fieldName}>
+                      <FormField className="!mb-0" label={t(fieldName)} checkbox>
+                        <Toggle
+                          value={values.soundSettings[fieldName] as boolean}
+                          onCheckedChange={handleChange}
+                          name={`soundSettings.${fieldName}`}
+                          disabled={!soundAvailable}
+                        />
+                      </FormField>
 
-              {unAvailableSoundsArr.length <= 0 ? null : (
-                <Accordion.Root className="mt-4" type="multiple">
-                  <Accordion.Item value="unavailable-sounds">
-                    <Accordion.Trigger
-                      title="Click to expand"
-                      className="accordion-state gap-2 flex items-center justify-between pt-1 text-lg font-semibold text-left"
-                    >
-                      <p>Unavailable Sounds</p>
+                      <Button
+                        size="xs"
+                        type="button"
+                        onPress={() => {
+                          setCurrentSrc(`/sounds/${kebabCase}.mp3`);
+                          controls.volume(0.1);
+                          controls.play();
+                        }}
+                      >
+                        Test sound (Double Click)
+                      </Button>
+                    </div>
+                  );
+                })}
+              </section>
 
-                      <CaretDownFill
-                        width={16}
-                        height={16}
-                        className="transform w-4 h-4 transition-transform accordion-state-transform"
-                      />
-                    </Accordion.Trigger>
+              <section>
+                {unAvailableSoundsArr.length <= 0 ? null : (
+                  <Accordion.Root className="mt-4" type="multiple">
+                    <Accordion.Item value="unavailable-sounds">
+                      <Accordion.Trigger
+                        title="Click to expand"
+                        className="accordion-state gap-2 flex items-center justify-between pt-1 text-lg font-semibold text-left"
+                      >
+                        <h3 className="text-xl font-semibold mb-3">{t("unavailableSounds")}</h3>
 
-                    <Accordion.Content className="mt-3">
-                      {unAvailableSoundsArr.map((sound) => (
-                        <p key={sound}>{t(sound)}</p>
-                      ))}
+                        <CaretDownFill
+                          width={16}
+                          height={16}
+                          className="transform w-4 h-4 transition-transform accordion-state-transform"
+                        />
+                      </Accordion.Trigger>
 
-                      <p className="mt-2">
-                        These sounds are unavailable.
+                      <Accordion.Content className="mt-3">
+                        {unAvailableSoundsArr.map((sound) => (
+                          <p key={sound}>{t(sound)}</p>
+                        ))}
+
                         <a
-                          className="ml-1 underline"
+                          className="mt-2 ml-1 underline"
                           rel="noreferrer"
                           target="_blank"
                           href="https://cad-docs.caspertheghost.me/docs/guides/how-set-custom-sounds"
                         >
-                          They must be added by an admin.
+                          {t("unavailableSoundsMessage")}
                         </a>
-                      </p>
-                    </Accordion.Content>
-                  </Accordion.Item>
-                </Accordion.Root>
-              )}
+                      </Accordion.Content>
+                    </Accordion.Item>
+                  </Accordion.Root>
+                )}
+              </section>
             </div>
 
             <Button
@@ -236,4 +256,11 @@ export function AppearanceTab({ availableSounds }: Props) {
       </Formik>
     </TabsContent>
   );
+}
+
+export function getSynthesisVoices() {
+  if (typeof window === "undefined") return;
+  if (!("speechSynthesis" in window)) return;
+  if (typeof window.speechSynthesis.getVoices !== "function") return;
+  return window.speechSynthesis.getVoices();
 }

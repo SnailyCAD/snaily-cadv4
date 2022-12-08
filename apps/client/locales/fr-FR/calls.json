@@ -60,5 +60,15 @@
     "alert_deleteCallEvent": "Êtes-vous sûr de vouloir supprimer cet événement ? Cette action ne peut être annulée.",
     "alert_end911Call": "Êtes-vous sûr de vouloir terminer cet appel ?",
     "alert_endTowCall": "Êtes-vous sûr de vouloir terminer cet appel ?"
+  },
+  "Events": {
+    "unitAssignedToCall": "<span>{unit}</span> a été assignée à cet appel.",
+    "unitUnassignedToCall": "<span>{unit}</span> a été désassignée de cet appel.",
+    "unitsAssignedToCall": "<span>{unit}</span> ont été assignées à cet appel.",
+    "unitsUnassignedToCall": "<span>{unit}</span> ont été désassignées de cet appel.",
+    "unitArrivedOnScene": "<span>{unit}</span> arrivée sur les lieux.",
+    "unitPressedPanicButton": "<span>{unit}</span> a appuyé sur le bouton de panique.",
+    "unitEnRoute": "<span>{unit}</span> est en route.",
+    "unitOnScene": "<span>{unit}</span> est sur scène."
   }
 }

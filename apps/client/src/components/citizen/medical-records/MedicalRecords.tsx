@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "@snailycad/ui";
 import type { MedicalRecord, Value } from "@snailycad/types";
@@ -71,7 +70,7 @@ export function MedicalRecords() {
         ) : (
           <Table
             tableState={tableState}
-            features={{ isWithinCard: true }}
+            features={{ isWithinCardOrModal: true }}
             data={citizen.medicalRecords.map((record) => ({
               id: record.id,
               diseases: record.type,

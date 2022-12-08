@@ -159,7 +159,7 @@ export class JailController {
     const updatedCitizen = await prisma.citizen.update({
       where: { id: citizen.id },
       data: {
-        arrested: true,
+        arrested: false,
         Record: {
           update: {
             where: { id: record.id },

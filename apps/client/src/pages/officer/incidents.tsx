@@ -10,14 +10,13 @@ import { Button } from "@snailycad/ui";
 import { ModalIds } from "types/ModalIds";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import type { IncidentInvolvedUnit, LeoIncident } from "@snailycad/types";
-import { useDispatchState } from "state/dispatch/dispatchState";
-import { useLeoState } from "state/leoState";
+import { useDispatchState } from "state/dispatch/dispatch-state";
+import { useLeoState } from "state/leo-state";
 import dynamic from "next/dynamic";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
-import { useRouter } from "next/router";
-import { Table, useTableState } from "components/shared/Table";
+import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { usePermission, Permissions } from "hooks/usePermission";
@@ -30,15 +29,15 @@ import type {
 } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
-import Image from "next/future/image";
+import Image from "next/image";
 
 interface Props extends GetDispatchData {
-  incidents: GetIncidentsData["incidents"];
+  incidents: GetIncidentsData;
   activeOfficer: GetActiveOfficerData | null;
 }
 
 const ManageIncidentModal = dynamic(async () => {
-  return (await import("components/leo/incidents/ManageIncidentModal")).ManageIncidentModal;
+  return (await import("components/leo/incidents/manage-incident-modal")).ManageIncidentModal;
 });
 
 const AlertModal = dynamic(async () => {
@@ -49,22 +48,31 @@ export default function LeoIncidents({
   officers,
   deputies,
   activeOfficer,
-  incidents: data,
+  incidents: initialData,
 }: Props) {
-  const [incidents, setIncidents] = React.useState(data);
-  const [tempIncident, incidentState] = useTemporaryItem(incidents);
+  const asyncTable = useAsyncTable({
+    initialData: initialData.incidents,
+    totalCount: initialData.totalCount,
+    fetchOptions: {
+      onResponse: (json: GetIncidentsData) => ({
+        data: json.incidents,
+        totalCount: json.totalCount,
+      }),
+      path: "/incidents",
+    },
+  });
 
-  const tableState = useTableState();
+  const [tempIncident, incidentState] = useTemporaryItem(asyncTable.items);
+  const tableState = useTableState({ pagination: asyncTable.pagination });
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { openModal, closeModal } = useModal();
   const dispatchState = useDispatchState();
-  const { setActiveOfficer } = useLeoState();
+  const setActiveOfficer = useLeoState((state) => state.setActiveOfficer);
   const { generateCallsign } = useGenerateCallsign();
   const { makeImageUrl } = useImageUrl();
   const { user } = useAuth();
   const { state, execute } = useFetch();
-  const router = useRouter();
   const { hasPermissions } = usePermission();
 
   const isOfficerOnDuty = activeOfficer && activeOfficer.status?.shouldDo !== "SET_OFF_DUTY";
@@ -98,15 +106,13 @@ export default function LeoIncidents({
     if (json) {
       closeModal(ModalIds.AlertDeleteIncident);
       incidentState.setTempId(null);
-      router.replace({
-        pathname: router.pathname,
-        query: router.query,
-      });
+
+      asyncTable.remove(tempIncident.id);
     }
   }
 
   React.useEffect(() => {
-    dispatchState.setAllOfficers(officers.officers);
+    dispatchState.setAllOfficers(officers);
     dispatchState.setAllDeputies(deputies);
     setActiveOfficer(activeOfficer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -134,12 +140,12 @@ export default function LeoIncidents({
         ) : null}
       </header>
 
-      {incidents.length <= 0 ? (
+      {asyncTable.items.length <= 0 ? (
         <p className="mt-5">{t("noIncidents")}</p>
       ) : (
         <Table
           tableState={tableState}
-          data={incidents.map((incident) => {
+          data={asyncTable.items.map((incident) => {
             const nameAndCallsign = incident.creator
               ? `${generateCallsign(incident.creator)} ${makeUnitName(incident.creator)}`
               : "";
@@ -214,14 +220,11 @@ export default function LeoIncidents({
 
       {isOfficerOnDuty && hasPermissions([Permissions.ManageIncidents], true) ? (
         <ManageIncidentModal
-          onCreate={(incident) => setIncidents((p) => [incident, ...p])}
+          onCreate={(incident) => {
+            asyncTable.append(incident);
+          }}
           onUpdate={(oldIncident, incident) => {
-            setIncidents((prev) => {
-              const idx = prev.findIndex((i) => i.id === oldIncident.id);
-              prev[idx] = { ...oldIncident, ...incident };
-
-              return prev;
-            });
+            asyncTable.update(oldIncident.id, { ...oldIncident, ...incident });
           }}
           onClose={() => incidentState.setTempId(null)}
           incident={tempIncident}
@@ -244,8 +247,8 @@ export default function LeoIncidents({
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const user = await getSessionUser(req);
-  const [{ incidents }, { officers, deputies }, activeOfficer, values] = await requestAll(req, [
-    ["/incidents", { incidents: [] }],
+  const [incidents, { officers, deputies }, activeOfficer, values] = await requestAll(req, [
+    ["/incidents", { incidents: [], totalCount: 0 }],
     ["/dispatch", { deputies: [], officers: [] }],
     ["/leo/active-officer", null],
     ["/admin/values/codes_10", []],

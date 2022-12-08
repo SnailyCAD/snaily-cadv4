@@ -10,11 +10,11 @@ import { CREATE_COMPANY_SCHEMA } from "@snailycad/schemas";
 import { handleValidate } from "lib/handleValidate";
 import { Toggle } from "components/form/Toggle";
 import { useRouter } from "next/router";
-import { FormRow } from "components/form/FormRow";
 import { toastMessage } from "lib/toastMessage";
 import { WhitelistStatus } from "@snailycad/types";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import type { GetBusinessesData, PostCreateBusinessData } from "@snailycad/types/api";
+import { AddressPostalSelect } from "components/form/select/PostalSelect";
 
 interface Props {
   onCreate?(employee: GetBusinessesData["businesses"][number]): void;
@@ -71,13 +71,14 @@ export function CreateBusinessModal({ onCreate }: Props) {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, setFieldValue, errors, values, isValid }) => (
           <Form>
-            <FormField errorMessage={errors.ownerId} label={t("citizen")}>
-              <CitizenSuggestionsField
-                fromAuthUserOnly
-                labelFieldName="ownerName"
-                valueFieldName="ownerId"
-              />
-            </FormField>
+            <CitizenSuggestionsField
+              autoFocus
+              allowsCustomValue
+              label={t("citizen")}
+              fromAuthUserOnly
+              labelFieldName="citizenName"
+              valueFieldName="ownerId"
+            />
 
             <TextField
               errorMessage={errors.name}
@@ -87,26 +88,7 @@ export function CreateBusinessModal({ onCreate }: Props) {
               value={values.name}
             />
 
-            <FormRow flexLike>
-              <TextField
-                errorMessage={errors.address}
-                label={t("address")}
-                name="address"
-                onChange={(value) => setFieldValue("address", value)}
-                value={values.address}
-                className="w-full"
-              />
-
-              <TextField
-                isOptional
-                errorMessage={errors.postal}
-                label={common("postal")}
-                name="postal"
-                onChange={(value) => setFieldValue("postal", value)}
-                value={values.postal}
-                className="min-w-[200px]"
-              />
-            </FormRow>
+            <AddressPostalSelect />
 
             <FormField errorMessage={errors.whitelisted} label={t("whitelisted")}>
               <Toggle

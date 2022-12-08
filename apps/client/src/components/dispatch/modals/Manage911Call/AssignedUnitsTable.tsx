@@ -2,9 +2,9 @@ import * as React from "react";
 import { Table, useTableState } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
-import type { Full911Call } from "state/dispatch/dispatchState";
+import type { Full911Call } from "state/dispatch/dispatch-state";
 import useFetch from "lib/useFetch";
-import { useCall911State } from "state/dispatch/call911State";
+import { useCall911State } from "state/dispatch/call-911-state";
 import type { PUT911CallAssignedUnit } from "@snailycad/types/api";
 import { useAuth } from "context/AuthContext";
 import { AssignedUnit, StatusViewMode } from "@snailycad/types";
@@ -80,7 +80,7 @@ export function AssignedUnitsTable({ isDisabled }: Props) {
 
       <div className="max-h-[35rem] overflow-y-auto">
         <Table
-          features={{ isWithinCard: true }}
+          features={{ isWithinCardOrModal: true }}
           tableState={tableState}
           data={assignedUnits
             .sort((a) => (a.isPrimary ? -1 : 1))

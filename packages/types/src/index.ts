@@ -201,6 +201,14 @@ export type Violation = Prisma.Violation & {
 
 export type SeizedItem = Prisma.SeizedItem;
 
+export type AddressValue = Prisma.AddressValue & { value: Value };
+
+export type EmergencyVehicleValue = Prisma.EmergencyVehicleValue & {
+  divisions?: DivisionValue[];
+  departments?: DepartmentValue[];
+  value: Value;
+};
+
 export type DivisionValue = Prisma.DivisionValue & { value: Value };
 
 export type CallTypeValue = Prisma.CallTypeValue & { value: Value };
@@ -254,6 +262,7 @@ export type Officer = Prisma.Officer & {
   rank: Prisma.Value | null;
   activeIncident?: Prisma.LeoIncident | null;
   callsigns?: IndividualDivisionCallsign[];
+  activeVehicle: EmergencyVehicleValue | null;
 };
 
 export type IndividualDivisionCallsign = Prisma.IndividualDivisionCallsign;
@@ -280,7 +289,8 @@ export type StatusValue = Prisma.StatusValue & {
 export type OfficerLog = Prisma.OfficerLog;
 
 export type ImpoundedVehicle = Prisma.ImpoundedVehicle & {
-  vehicle: Prisma.RegisteredVehicle & { model: VehicleValue };
+  officer?: Officer | null;
+  vehicle: Prisma.RegisteredVehicle & { citizen: BaseCitizen; model: VehicleValue };
   location: Prisma.Value;
 };
 
@@ -297,6 +307,7 @@ export type CombinedLeoUnit = Prisma.CombinedLeoUnit & {
   status: Officer["status"];
   department: Officer["department"];
   officers: Omit<Officer, "activeIncident">[];
+  activeVehicle?: Officer["activeVehicle"];
 };
 
 export type ActiveDispatchers = Prisma.ActiveDispatchers;
@@ -371,6 +382,7 @@ export type EmsFdDeputy = Prisma.EmsFdDeputy & {
   citizen: Officer["citizen"];
   user: Officer["user"];
   whitelistStatus?: Officer["whitelistStatus"];
+  activeVehicle: EmergencyVehicleValue | null;
 };
 
 export type TruckLog = Prisma.TruckLog & {
@@ -397,6 +409,7 @@ export type CourthousePost = Prisma.CourthousePost & {
 };
 
 export type ValueWithValueObj = (
+  | AddressValue
   | VehicleValue
   | WeaponValue
   | StatusValue
@@ -406,6 +419,7 @@ export type ValueWithValueObj = (
   | DriversLicenseCategoryValue
   | QualificationValue
   | CallTypeValue
+  | EmergencyVehicleValue
 ) & {
   _count?: ValueCounts;
 };

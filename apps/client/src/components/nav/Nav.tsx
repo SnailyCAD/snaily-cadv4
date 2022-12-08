@@ -17,7 +17,7 @@ import Head from "next/head";
 import { usePermission } from "hooks/usePermission";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import { Rank } from "@snailycad/types";
-import Image from "next/future/image";
+import Image from "next/image";
 
 interface Props {
   maxWidth?: string;
@@ -122,35 +122,34 @@ export function Nav({ maxWidth }: Props) {
               ) : null}
 
               {user && COURTHOUSE ? (
-                <Link href="/courthouse">
-                  <a
-                    role="listitem"
-                    href="/courthouse"
-                    className={classNames(
-                      "p-1 nav:px-2 text-gray-700 dark:text-gray-200 transition duration-300",
-                      isActive("/courthouse") && "font-semibold",
-                    )}
-                  >
-                    {t("courthouse")}
-                  </a>
+                <Link
+                  role="listitem"
+                  href="/courthouse"
+                  className={classNames(
+                    "p-1 nav:px-2 text-gray-700 dark:text-gray-200 transition duration-300",
+                    isActive("/courthouse") && "font-semibold",
+                  )}
+                >
+                  {t("courthouse")}
                 </Link>
               ) : null}
 
               {hasPermissions(
-                defaultPermissions.allDefaultAdminPermissions,
+                [
+                  ...defaultPermissions.allDefaultAdminPermissions,
+                  Permissions.ManageAwardsAndQualifications,
+                ],
                 user?.rank !== Rank.USER,
               ) ? (
-                <Link href="/admin">
-                  <a
-                    role="listitem"
-                    href="/admin"
-                    className={classNames(
-                      "p-1 nav:px-2 text-gray-700 dark:text-gray-200 transition duration-300",
-                      isActive("/admin") && "font-semibold",
-                    )}
-                  >
-                    {t("admin")}
-                  </a>
+                <Link
+                  role="listitem"
+                  href="/admin"
+                  className={classNames(
+                    "p-1 nav:px-2 text-gray-700 dark:text-gray-200 transition duration-300",
+                    isActive("/admin") && "font-semibold",
+                  )}
+                >
+                  {t("admin")}
                 </Link>
               ) : null}
             </div>

@@ -1,4 +1,3 @@
-import * as React from "react";
 import type { Unit } from "src/pages/admin/manage/units";
 import useFetch from "lib/useFetch";
 import { formatUnitDivisions, makeUnitName, formatOfficerDepartment } from "lib/utils";
@@ -70,13 +69,11 @@ export function DepartmentWhitelistingTab({ search, pendingOfficers }: Props) {
             department: formatOfficerDepartment(officer) ?? common("none"),
             division: formatUnitDivisions(officer),
             user: hasViewUsersPermissions ? (
-              <Link href={`/admin/manage/users/${officer.userId}`}>
-                <a
-                  href={`/admin/manage/users/${officer.userId}`}
-                  className={`rounded-md transition-all p-1 px-1.5 ${buttonVariants.default}`}
-                >
-                  {officer.user.username}
-                </a>
+              <Link
+                href={`/admin/manage/users/${officer.userId}`}
+                className={`rounded-md transition-all p-1 px-1.5 ${buttonVariants.default}`}
+              >
+                {officer.user.username}
               </Link>
             ) : (
               officer.user.username
