@@ -8,7 +8,7 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { CustomFieldCategory, Citizen, BoloType } from "@snailycad/types";
 import format from "date-fns/format";
-import { NameSearchTabsContainer } from "./tabs/TabsContainer";
+import { NameSearchTabsContainer } from "./tabs/tabs-container";
 import { NameSearchResult, useNameSearch } from "state/search/name-search-state";
 import { useRouter } from "next/router";
 import { ArrowLeft, PersonFill } from "react-bootstrap-icons";
@@ -37,7 +37,7 @@ const VehicleSearchModal = dynamic(
 );
 
 const WeaponSearchModal = dynamic(
-  async () => (await import("components/leo/modals/WeaponSearchModal")).WeaponSearchModal,
+  async () => (await import("components/leo/modals/weapon-search-modal")).WeaponSearchModal,
 );
 
 const CreateCitizenModal = dynamic(

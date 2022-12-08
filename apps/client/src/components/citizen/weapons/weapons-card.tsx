@@ -3,7 +3,7 @@ import { Button } from "@snailycad/ui";
 import type { Weapon } from "@snailycad/types";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
-import { RegisterWeaponModal } from "./RegisterWeaponModal";
+import { RegisterWeaponModal } from "./register-weapon-modal";
 import { useTranslations } from "use-intl";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
@@ -15,6 +15,7 @@ import { useCitizen } from "context/CitizenContext";
 import type { DeleteCitizenWeaponData, GetCitizenWeaponsData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { SearchArea } from "components/shared/search/search-area";
+import { Status } from "components/shared/Status";
 
 export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
   const [search, setSearch] = React.useState("");
@@ -23,7 +24,7 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Weapons");
-  const { WEAPON_REGISTRATION } = useFeatureEnabled();
+  const { WEAPON_REGISTRATION, BUREAU_OF_FIREARMS } = useFeatureEnabled();
   const { citizen } = useCitizen(false);
 
   const asyncTable = useAsyncTable({
@@ -100,6 +101,9 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
                 model: weapon.model.value.value,
                 registrationStatus: weapon.registrationStatus.value,
                 serialNumber: weapon.serialNumber,
+                bofStatus: (
+                  <Status state={weapon.bofStatus}>{weapon.bofStatus?.toLowerCase()}</Status>
+                ),
                 createdAt: <FullDate>{weapon.createdAt}</FullDate>,
                 actions: (
                   <>
@@ -121,6 +125,7 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
                 { header: t("model"), accessorKey: "model" },
                 { header: t("registrationStatus"), accessorKey: "registrationStatus" },
                 { header: t("serialNumber"), accessorKey: "serialNumber" },
+                BUREAU_OF_FIREARMS ? { header: t("bofStatus"), accessorKey: "bofStatus" } : null,
                 { header: common("createdAt"), accessorKey: "createdAt" },
                 { header: common("actions"), accessorKey: "actions" },
               ]}

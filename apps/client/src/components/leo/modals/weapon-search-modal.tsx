@@ -12,6 +12,8 @@ import { CustomFieldsArea } from "./CustomFieldsArea";
 import { useRouter } from "next/router";
 import { ManageCustomFieldsModal } from "./NameSearchModal/ManageCustomFieldsModal";
 import { CustomFieldCategory } from "@snailycad/types";
+import { Status } from "components/shared/Status";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
   id?: ModalIds.WeaponSearch | ModalIds.WeaponSearchWithinName;
@@ -26,6 +28,7 @@ export function WeaponSearchModal({ id = ModalIds.WeaponSearch }: Props) {
   const { currentResult, setCurrentResult } = useWeaponSearch();
   const router = useRouter();
   const isLeo = router.pathname === "/officer";
+  const { BUREAU_OF_FIREARMS } = useFeatureEnabled();
 
   React.useEffect(() => {
     if (!isOpen(id)) {
@@ -125,8 +128,17 @@ export function WeaponSearchModal({ id = ModalIds.WeaponSearch }: Props) {
                   <li>
                     <Infofield label={wT("serialNumber")}>{currentResult.serialNumber}</Infofield>
                   </li>
+                  {BUREAU_OF_FIREARMS ? (
+                    <li>
+                      <Infofield label={wT("bofStatus")}>
+                        <Status state={currentResult.bofStatus}>
+                          {currentResult.bofStatus?.toLowerCase()}
+                        </Status>
+                      </Infofield>
+                    </li>
+                  ) : null}
                   <li>
-                    <Infofield className="capitalize" label={t("owner")}>
+                    <Infofield className="capitalize mt-2" label={t("owner")}>
                       <Button
                         title={common("openInSearch")}
                         size="xs"

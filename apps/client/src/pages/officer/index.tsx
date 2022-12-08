@@ -42,31 +42,56 @@ import { usePermission } from "hooks/usePermission";
 import shallow from "zustand/shallow";
 
 const Modals = {
-  CreateWarrantModal: dynamic(async () => {
-    return (await import("components/leo/modals/CreateWarrantModal")).CreateWarrantModal;
-  }),
-  CustomFieldSearch: dynamic(async () => {
-    return (await import("components/leo/modals/CustomFieldSearch/CustomFieldSearch"))
-      .CustomFieldSearch;
-  }),
-  NameSearchModal: dynamic(async () => {
-    return (await import("components/leo/modals/NameSearchModal/NameSearchModal")).NameSearchModal;
-  }),
-  VehicleSearchModal: dynamic(async () => {
-    return (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal;
-  }),
-  WeaponSearchModal: dynamic(async () => {
-    return (await import("components/leo/modals/WeaponSearchModal")).WeaponSearchModal;
-  }),
-  NotepadModal: dynamic(async () => {
-    return (await import("components/shared/NotepadModal")).NotepadModal;
-  }),
-  SelectOfficerModal: dynamic(async () => {
-    return (await import("components/leo/modals/select-officer-modal")).SelectOfficerModal;
-  }),
-  ManageRecordModal: dynamic(async () => {
-    return (await import("components/leo/modals/ManageRecordModal")).ManageRecordModal;
-  }),
+  CreateWarrantModal: dynamic(
+    async () => {
+      return (await import("components/leo/modals/CreateWarrantModal")).CreateWarrantModal;
+    },
+    { ssr: false },
+  ),
+  CustomFieldSearch: dynamic(
+    async () => {
+      return (await import("components/leo/modals/CustomFieldSearch/CustomFieldSearch"))
+        .CustomFieldSearch;
+    },
+    { ssr: false },
+  ),
+  NameSearchModal: dynamic(
+    async () => {
+      return (await import("components/leo/modals/NameSearchModal/NameSearchModal"))
+        .NameSearchModal;
+    },
+    { ssr: false },
+  ),
+  VehicleSearchModal: dynamic(
+    async () => {
+      return (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal;
+    },
+    { ssr: false },
+  ),
+  WeaponSearchModal: dynamic(
+    async () => {
+      return (await import("components/leo/modals/weapon-search-modal")).WeaponSearchModal;
+    },
+    { ssr: false },
+  ),
+  NotepadModal: dynamic(
+    async () => {
+      return (await import("components/shared/NotepadModal")).NotepadModal;
+    },
+    { ssr: false },
+  ),
+  SelectOfficerModal: dynamic(
+    async () => {
+      return (await import("components/leo/modals/select-officer-modal")).SelectOfficerModal;
+    },
+    { ssr: false },
+  ),
+  ManageRecordModal: dynamic(
+    async () => {
+      return (await import("components/leo/modals/ManageRecordModal")).ManageRecordModal;
+    },
+    { ssr: false },
+  ),
   SwitchDivisionCallsignModal: dynamic(async () => {
     return (await import("components/leo/modals/SwitchDivisionCallsignModal"))
       .SwitchDivisionCallsignModal;

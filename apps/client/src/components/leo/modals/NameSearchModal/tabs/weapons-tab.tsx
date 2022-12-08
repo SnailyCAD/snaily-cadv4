@@ -8,6 +8,8 @@ import { ModalIds } from "types/ModalIds";
 import { TabsContent } from "components/shared/TabList";
 import type { Weapon } from "@snailycad/types";
 import { useWeaponSearch } from "state/search/weapon-search-state";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { Status } from "components/shared/Status";
 
 export function NameSearchWeaponsTab() {
   const t = useTranslations();
@@ -16,6 +18,7 @@ export function NameSearchWeaponsTab() {
   const { openModal } = useModal();
   const setWeaponResult = useWeaponSearch((state) => state.setCurrentResult);
   const tableState = useTableState();
+  const { BUREAU_OF_FIREARMS } = useFeatureEnabled();
 
   function handleWeaponPress(weapon: Weapon) {
     if (!currentResult || currentResult.isConfidential) return;
@@ -53,20 +56,15 @@ export function NameSearchWeaponsTab() {
             ),
             registrationStatus: weapon.registrationStatus.value,
             serialNumber: weapon.serialNumber,
+            bofStatus: <Status state={weapon.bofStatus}>{weapon.bofStatus?.toLowerCase()}</Status>,
           }))}
           columns={[
-            {
-              header: t("Weapons.model"),
-              accessorKey: "model",
-            },
-            {
-              header: t("Weapons.registrationStatus"),
-              accessorKey: "registrationStatus",
-            },
-            {
-              header: t("Weapons.serialNumber"),
-              accessorKey: "serialNumber",
-            },
+            { header: t("Weapons.model"), accessorKey: "model" },
+            { header: t("Weapons.registrationStatus"), accessorKey: "registrationStatus" },
+            { header: t("Weapons.serialNumber"), accessorKey: "serialNumber" },
+            BUREAU_OF_FIREARMS
+              ? { header: t("Weapons.bofStatus"), accessorKey: "bofStatus" }
+              : null,
           ]}
         />
       )}
