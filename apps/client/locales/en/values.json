@@ -10,8 +10,6 @@
     "file": "file",
     "importValues": "Import via file",
     "exportValues": "Export Values",
-    "addPenalCodeGroup": "Add Group",
-    "deleteGroup": "Delete Group",
     "ungrouped": "Ungrouped",
     "licenseType": "License Type",
     "whitelisted": "Whitelisted",
@@ -28,9 +26,17 @@
     "county": "County",
     "deletedSelectedValues": "Deleted {deleted} items. Failed to delete {failed} items.",
     "failedDeleteValue": "Failed to delete <span>{value}</span>.",
-    "alert_deletePenalCodeGroup": "Are you sure you want to delete <span>{group}</span>? This action cannot be undone.",
     "alert_deleteValue": "Are you sure you want to delete <span>{value}</span>? This action cannot be undone!",
     "alert_deleteSelectedValues": "Are you sure you want to delete {length} items? This action cannot be undone"
+  },
+  "PENAL_CODE_GROUP": {
+    "MANAGE": "Manage Penal Code Groups",
+    "ADD": "Add Penal Code Group",
+    "DELETE": "Delete Penal Code Group",
+    "EDIT": "Edit Penal Code Group",
+    "ungrouped": "Ungrouped",
+    "alert_deletePenalCodeGroup": "Are you sure you want to delete <span>{group}</span>? This action cannot be undone.",
+    "deleteGroup": "Delete Group"
   },
   "GENDER": {
     "MANAGE": "Manage Genders",

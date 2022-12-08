@@ -6,10 +6,9 @@ import { Form, Formik, useFormikContext } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
-import { PenalCode, PenalCodeGroup, ValueType, PenalCodeType } from "@snailycad/types";
+import { PenalCode, ValueType, PenalCodeType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { FormRow } from "components/form/FormRow";
-import { Select } from "components/form/Select";
 import { dataToSlate, Editor } from "components/editor/editor";
 import { ModalIds } from "types/ModalIds";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
@@ -19,12 +18,13 @@ import type { PatchValueByIdData, PostValuesData } from "@snailycad/types/api";
 interface Props {
   type: ValueType;
   penalCode: PenalCode | null;
-  groups: PenalCodeGroup[];
+  groupId: string;
   onCreate(newValue: PenalCode): void;
   onUpdate(oldValue: PenalCode, newValue: PenalCode): void;
+  onClose(): void;
 }
 
-export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }: Props) {
+export function ManagePenalCode({ onCreate, onUpdate, onClose, groupId, type, penalCode }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const t = useTranslations(type);
@@ -73,13 +73,18 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
     }
   }
 
+  function handleClose() {
+    closeModal(ModalIds.ManageValue);
+    onClose();
+  }
+
   const INITIAL_VALUES = {
     title: penalCode?.title ?? "",
     type: penalCode?.type ?? null,
     isPrimary: penalCode?.isPrimary ?? true,
     description: penalCode?.description ?? "",
     descriptionData: dataToSlate(penalCode),
-    group: penalCode?.groupId ?? "",
+    group: penalCode?.groupId ?? groupId,
     warningApplicable: !!penalCode?.warningApplicableId,
     warningNotApplicable: !!penalCode?.warningNotApplicableId,
     fines1: {
@@ -106,11 +111,11 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
     <Modal
       className="w-[1000px] min-h-[600px]"
       title={title}
-      onClose={() => closeModal(ModalIds.ManageValue)}
+      onClose={handleClose}
       isOpen={isOpen(ModalIds.ManageValue)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setFieldValue, values, errors }) => (
+        {({ setFieldValue, values, errors }) => (
           <Form>
             <TextField
               errorMessage={errors.title}
@@ -150,18 +155,6 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
               />
             </FormField>
 
-            <FormField optional errorMessage={errors.group} label="Group">
-              <Select
-                name="group"
-                onChange={handleChange}
-                value={values.group}
-                values={groups.map((group) => ({
-                  value: group.id,
-                  label: group.name,
-                }))}
-              />
-            </FormField>
-
             <FormRow>
               <div className="flex flex-col mr-2.5">
                 <FormField checkbox label="Warning applicable">
@@ -195,11 +188,7 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
             </FormRow>
 
             <footer className="flex justify-end mt-5">
-              <Button
-                type="reset"
-                onPress={() => closeModal(ModalIds.ManageValue)}
-                variant="cancel"
-              >
+              <Button type="reset" onPress={handleClose} variant="cancel">
                 Cancel
               </Button>
               <Button className="flex items-center" disabled={state === "loading"} type="submit">

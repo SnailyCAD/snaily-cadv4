@@ -12,7 +12,7 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { RecordType, type PenalCode, type Record, PaymentStatus } from "@snailycad/types";
 import { PenalCodesTable } from "./ManageRecord/PenalCodesTable";
-import { SelectPenalCode } from "./ManageRecord/SelectPenalCode";
+import { SelectPenalCode } from "./ManageRecord/select-penal-code";
 import { SeizedItemsTable } from "./ManageRecord/seized-items/SeizedItemsTable";
 import { toastMessage } from "lib/toastMessage";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
