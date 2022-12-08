@@ -393,7 +393,6 @@ export class ValuesController {
         OR: [
           { title: { contains: query, mode: "insensitive" } },
           { description: { contains: query, mode: "insensitive" } },
-          { descriptionData: { string_contains: query } },
           { group: { name: { contains: query, mode: "insensitive" } } },
         ],
       };
