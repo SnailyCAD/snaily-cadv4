@@ -23,7 +23,8 @@ import { hasTableDataChanged } from "lib/admin/values/utils";
 
 const ManagePenalCodeGroup = dynamic(
   async () =>
-    (await import("components/admin/values/penal-codes/manage-penal-code-group-modal")).ManagePenalCodeGroup,
+    (await import("components/admin/values/penal-codes/manage-penal-code-group-modal"))
+      .ManagePenalCodeGroup,
   { ssr: false },
 );
 
