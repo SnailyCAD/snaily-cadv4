@@ -121,10 +121,14 @@ export class ValuesController {
         }
 
         if (type === "PENAL_CODE") {
-          return {
-            type,
-            groups: await prisma.penalCodeGroup.findMany({ orderBy: { position: "asc" } }),
-            values: await prisma.penalCode.findMany({
+          const [totalCount, penalCodes] = await prisma.$transaction([
+            prisma.penalCode.count({
+              where,
+              orderBy: { title: "asc" },
+            }),
+            prisma.penalCode.findMany({
+              take: includeAll ? undefined : 35,
+              skip: includeAll ? undefined : skip,
               where,
               orderBy: { title: "asc" },
               include: {
@@ -133,6 +137,12 @@ export class ValuesController {
                 group: true,
               },
             }),
+          ]);
+
+          return {
+            type,
+            values: penalCodes,
+            totalCount,
           };
         }
 
@@ -389,12 +399,18 @@ export class ValuesController {
     const data = GET_VALUES[type];
 
     if (type === "PENAL_CODE") {
+      const groupId = queryParams.groupId as string | undefined;
       const where: Prisma.PenalCodeWhereInput = {
         OR: [
           { title: { contains: query, mode: "insensitive" } },
           { description: { contains: query, mode: "insensitive" } },
           { group: { name: { contains: query, mode: "insensitive" } } },
         ],
+        AND: groupId
+          ? groupId === "ungrouped"
+            ? [{ groupId: { equals: null } }]
+            : [{ groupId }]
+          : [],
       };
 
       return where;

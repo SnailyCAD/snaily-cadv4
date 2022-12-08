@@ -26,6 +26,9 @@ export function createListActions<T>(dispatch: React.Dispatch<React.SetStateActi
     insert(index: number, ...values: T[]) {
       dispatch((items) => insert(items, index, ...values));
     },
+    prepend(...values: T[]) {
+      dispatch((items) => insert(items, 0, ...values));
+    },
     append(...values: T[]) {
       dispatch((items) => insert(items, items.length, ...values));
     },

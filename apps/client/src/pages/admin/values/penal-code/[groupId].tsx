@@ -25,7 +25,7 @@ import { ArrowLeft } from "react-bootstrap-icons";
 import { toastMessage } from "lib/toastMessage";
 
 const ManagePenalCode = dynamic(
-  async () => (await import("components/admin/values/penal-codes/ManagePenalCode")).ManagePenalCode,
+  async () => (await import("components/admin/values/penal-codes/manage-penal-code-modal")).ManagePenalCode,
   { ssr: false },
 );
 
@@ -54,11 +54,11 @@ export default function PenalCodeGroupsPage(props: Props) {
         data: json[0]?.values ?? [],
         totalCount: json[0]?.totalCount ?? 0,
       }),
-      path: `/admin/values/penal_code?groupId=${groupId}`,
+      path: `/admin/values/penal_code?groupId=${groupId}&includeAll=false`,
       requireFilterText: true,
     },
     initialData: props.penalCodes.values,
-    totalCount: 0,
+    totalCount: props.penalCodes.totalCount,
     search,
   });
 
@@ -167,15 +167,18 @@ export default function PenalCodeGroupsPage(props: Props) {
       />
 
       <ManagePenalCode
-        groups={[]}
-        onCreate={(value) => {
-          asyncTable.append(value);
+        groupId={groupId}
+        onCreate={(value: any) => {
+          asyncTable.prepend(value);
         }}
-        onUpdate={(previousPenalCode, newPenalCode) => {
+        onUpdate={(previousPenalCode, newPenalCode: any) => {
           asyncTable.update(previousPenalCode.id, newPenalCode);
         }}
         penalCode={tempPenalCode}
         type={ValueType.PENAL_CODE}
+        onClose={() => {
+          penalCodeState.setTempId(null);
+        }}
       />
 
       <AlertModal
@@ -198,7 +201,7 @@ export default function PenalCodeGroupsPage(props: Props) {
 export const getServerSideProps: GetServerSideProps = async ({ locale, req, query }) => {
   const user = await getSessionUser(req);
   const [penalCodes] = await requestAll(req, [
-    [`/admin/values/penal_code?groupId=${query.groupId}`, []],
+    [`/admin/values/penal_code?groupId=${query.groupId}&includeAll=false`, []],
   ]);
 
   console.log({ penalCodes });
