@@ -1,4 +1,4 @@
-import { BodyParams, Controller, PathParams, UseBeforeEach } from "@tsed/common";
+import { BodyParams, Controller, PathParams, QueryParams, UseBeforeEach } from "@tsed/common";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { NotFound } from "@tsed/exceptions";
@@ -14,10 +14,21 @@ import type * as APITypes from "@snailycad/types/api";
 @ContentType("application/json")
 export class PenalCodeGroupController {
   @Get("/")
-  async getPenalCodeGroups() {
+  async getPenalCodeGroups(
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("includeAll", Boolean) includeAll = false,
+    @QueryParams("query", String) query = "",
+  ) {
+    const where = query ? ({ name: { contains: query, mode: "insensitive" } } as const) : undefined;
+
     const [totalCount, groups] = await prisma.$transaction([
-      prisma.penalCodeGroup.count({ orderBy: { position: "asc" } }),
-      prisma.penalCodeGroup.findMany({ orderBy: { position: "asc" } }),
+      prisma.penalCodeGroup.count({ where, orderBy: { position: "asc" } }),
+      prisma.penalCodeGroup.findMany({
+        where,
+        take: includeAll ? undefined : 35,
+        skip: includeAll ? undefined : skip,
+        orderBy: { position: "asc" },
+      }),
     ]);
 
     return { totalCount, groups };

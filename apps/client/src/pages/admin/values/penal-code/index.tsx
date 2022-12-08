@@ -17,8 +17,9 @@ import Link from "next/link";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useModal } from "state/modalState";
 import { classNames } from "lib/classNames";
-import type { DeletePenalCodeGroupsData } from "@snailycad/types/api";
+import type { DeletePenalCodeGroupsData, PutValuePositionsData } from "@snailycad/types/api";
 import useFetch from "lib/useFetch";
+import { hasTableDataChanged } from "lib/admin/values/utils";
 
 const ManagePenalCodeGroup = dynamic(
   async () =>
@@ -45,31 +46,53 @@ export default function PenalCodeGroupsPage(props: Props) {
     name: t("ungrouped"),
   } as PenalCodeGroup;
 
+  const initialGroups = React.useMemo(() => {
+    return [ungroupedGroup, ...props.groups.groups];
+  }, [props.groups.groups]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const [search, setSearch] = React.useState("");
 
   const asyncTable = useAsyncTable({
     fetchOptions: {
       onResponse: (json: Props["groups"]) => ({
-        data: json.groups,
+        data: [ungroupedGroup, ...json.groups],
         totalCount: json.totalCount,
       }),
       path: "/admin/penal-code-group",
       requireFilterText: true,
     },
-    initialData: props.groups.groups,
+    initialData: initialGroups,
     totalCount: props.groups.totalCount,
     search,
   });
 
   const tableState = useTableState({
-    search: { value: search },
-    // dragDrop: {
-    //   // onListChange: setList,
-    //   // disabledIndices: [groups.findIndex((v) => v.id === "ungrouped")],
-    // },
+    dragDrop: {
+      onListChange,
+      disabledIndices: [asyncTable.items.findIndex((v) => v.id === "ungrouped")],
+    },
     pagination: asyncTable.pagination,
   });
   const [tempGroup, groupState] = useTemporaryItem(asyncTable.items);
+
+  async function onListChange(list: PenalCodeGroup[]) {
+    if (!hasTableDataChanged(asyncTable.items, list)) return;
+
+    for (const [index, value] of list.entries()) {
+      value.position = index;
+
+      asyncTable.move(value.id, index);
+      asyncTable.update(value.id, value);
+    }
+
+    await execute<PutValuePositionsData>({
+      path: "/admin/values/penal_code_group/positions",
+      method: "PUT",
+      data: {
+        ids: list.filter((v) => v.id !== "ungrouped").map((v) => v.id),
+      },
+    });
+  }
 
   function handleEditGroup(groupId: string) {
     groupState.setTempId(groupId);
@@ -118,8 +141,9 @@ export default function PenalCodeGroupsPage(props: Props) {
       />
 
       <Table
+        features={{ dragAndDrop: true }}
         tableState={tableState}
-        data={[ungroupedGroup, ...asyncTable.items].map((group) => ({
+        data={asyncTable.items.map((group) => ({
           id: group.id,
           rowProps: { value: group },
           value: group.name,

@@ -125,6 +125,7 @@ export class ValuesController {
             type,
             groups: await prisma.penalCodeGroup.findMany({ orderBy: { position: "asc" } }),
             values: await prisma.penalCode.findMany({
+              where,
               orderBy: { title: "asc" },
               include: {
                 warningApplicable: true,
@@ -392,7 +393,7 @@ export class ValuesController {
         OR: [
           { title: { contains: query, mode: "insensitive" } },
           { description: { contains: query, mode: "insensitive" } },
-          { descriptionData: { array_contains: query } },
+          { descriptionData: { string_contains: query } },
           { group: { name: { contains: query, mode: "insensitive" } } },
         ],
       };
