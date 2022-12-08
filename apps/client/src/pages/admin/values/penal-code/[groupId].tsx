@@ -25,7 +25,8 @@ import { ArrowLeft } from "react-bootstrap-icons";
 import { toastMessage } from "lib/toastMessage";
 
 const ManagePenalCode = dynamic(
-  async () => (await import("components/admin/values/penal-codes/manage-penal-code-modal")).ManagePenalCode,
+  async () =>
+    (await import("components/admin/values/penal-codes/manage-penal-code-modal")).ManagePenalCode,
   { ssr: false },
 );
 
@@ -203,8 +204,6 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
   const [penalCodes] = await requestAll(req, [
     [`/admin/values/penal_code?groupId=${query.groupId}&includeAll=false`, []],
   ]);
-
-  console.log({ penalCodes });
 
   return {
     props: {
