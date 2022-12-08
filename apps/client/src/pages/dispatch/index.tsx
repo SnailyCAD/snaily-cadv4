@@ -42,7 +42,7 @@ const Modals = {
     return (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal;
   }),
   WeaponSearchModal: dynamic(async () => {
-    return (await import("components/leo/modals/WeaponSearchModal")).WeaponSearchModal;
+    return (await import("components/leo/modals/weapon-search-modal")).WeaponSearchModal;
   }),
   NotepadModal: dynamic(async () => {
     return (await import("components/shared/NotepadModal")).NotepadModal;

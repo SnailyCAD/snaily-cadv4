@@ -10,7 +10,7 @@ import useFetch from "lib/useFetch";
 import { useValues } from "src/context/ValuesContext";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import { ValueLicenseType, Weapon, WeaponValue } from "@snailycad/types";
+import { ValueLicenseType, Weapon, WeaponValue, WhitelistStatus } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import { useCitizen } from "context/CitizenContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
@@ -18,6 +18,7 @@ import { filterLicenseTypes } from "lib/utils";
 import { toastMessage } from "lib/toastMessage";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import type { PostCitizenWeaponData, PutCitizenWeaponData } from "@snailycad/types/api";
+import { Toggle } from "components/form/Toggle";
 
 interface Props {
   weapon: Omit<Weapon, "citizen"> | null;
@@ -88,6 +89,7 @@ export function RegisterWeaponModal({ weapon, onClose, onCreate, onUpdate }: Pro
     registrationStatus: weapon?.registrationStatusId ?? "",
     citizenId: isDisabled ? citizen.id : weapon?.citizenId ?? "",
     serialNumber: weapon?.serialNumber ?? "",
+    reApplyForDmv: weapon?.bofStatus === WhitelistStatus.DECLINED ? false : undefined,
     name: isDisabled
       ? `${citizen.name} ${citizen.surname}`
       : weapon
@@ -174,6 +176,17 @@ export function RegisterWeaponModal({ weapon, onClose, onCreate, onUpdate }: Pro
             <FormField optional errorMessage={errors.serialNumber} label={tWeapon("serialNumber")}>
               <Input value={values.serialNumber} name="serialNumber" onChange={handleChange} />
             </FormField>
+
+            {weapon ? (
+              <FormField errorMessage={errors.reApplyForDmv} label={tVehicle("reApplyForDmv")}>
+                <Toggle
+                  disabled={weapon.bofStatus !== WhitelistStatus.DECLINED}
+                  onCheckedChange={handleChange}
+                  name="reApplyForDmv"
+                  value={values.reApplyForDmv ?? false}
+                />
+              </FormField>
+            ) : null}
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onPress={handleClose} variant="cancel">

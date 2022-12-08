@@ -75,11 +75,11 @@ model MiscCadSettings {
   inactivityTimeout         Int?
   jailTimeScale             JailTimeScale?
 
-  call911InactivityTimeout          Int?
-  incidentInactivityTimeout         Int?
-  unitInactivityTimeout             Int?
-  boloInactivityTimeout             Int?
-  activeWarrantsInactivityTimeout   Int?
+  call911InactivityTimeout           Int?
+  incidentInactivityTimeout          Int?
+  unitInactivityTimeout              Int?
+  boloInactivityTimeout              Int?
+  activeWarrantsInactivityTimeout    Int?
   activeDispatchersInactivityTimeout Int?
 
   driversLicenseNumberLength Int? @default(8)
@@ -448,6 +448,7 @@ model Weapon {
   serialNumber         String             @unique @db.VarChar(255)
   registrationStatus   Value              @relation("weaponRegistrationStatusToValue", fields: [registrationStatusId], references: [id])
   registrationStatusId String
+  bofStatus            WhitelistStatus?
   model                WeaponValue        @relation("weaponModelToValue", fields: [modelId], references: [id])
   modelId              String
   customFields         CustomFieldValue[]
@@ -1629,4 +1630,5 @@ enum Feature {
   TONES
   LICENSE_EXAMS
   CITIZEN_CREATION_RECORDS // See #1188
+  BUREAU_OF_FIREARMS // See #1298
 }
