@@ -104,7 +104,7 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
                 bofStatus: (
                   <Status state={weapon.bofStatus}>{weapon.bofStatus?.toLowerCase()}</Status>
                 ),
-                createdAt: <FullDate>{weapon.createdAt}</FullDate>,
+                createdAt: <FullDate onlyDate>{weapon.createdAt}</FullDate>,
                 actions: (
                   <>
                     <Button onPress={() => handleEditClick(weapon)} size="xs" variant="success">

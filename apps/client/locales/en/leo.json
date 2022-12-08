@@ -275,5 +275,9 @@
     "categories": "Categories",
     "deleteExam": "Delete license exam",
     "alert_deleteExam": "Are you sure you want to delete this license exam? This action cannot be undone."
+  },
+  "Bof": {
+    "bureauOfFirearms": "Bureau of Firearms",
+    "noWeaponsPendingBof": "There are no weapons pending approval."
   }
 }
