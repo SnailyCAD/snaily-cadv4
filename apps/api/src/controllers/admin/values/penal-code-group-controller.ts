@@ -1,5 +1,5 @@
 import { BodyParams, Controller, PathParams, UseBeforeEach } from "@tsed/common";
-import { ContentType, Delete, Description, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/IsAuth";
@@ -13,6 +13,16 @@ import type * as APITypes from "@snailycad/types/api";
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
 export class PenalCodeGroupController {
+  @Get("/")
+  async getPenalCodeGroups() {
+    const [totalCount, groups] = await prisma.$transaction([
+      prisma.penalCodeGroup.count({ orderBy: { position: "asc" } }),
+      prisma.penalCodeGroup.findMany({ orderBy: { position: "asc" } }),
+    ]);
+
+    return { totalCount, groups };
+  }
+
   @Post("/")
   @Description("Create a new penal-code group")
   @UsePermissions({

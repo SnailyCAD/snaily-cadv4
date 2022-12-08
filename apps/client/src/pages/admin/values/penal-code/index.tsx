@@ -1,0 +1,202 @@
+import * as React from "react";
+import { PenalCodeGroup, Rank } from "@snailycad/types";
+import { Table, useAsyncTable, useTableState } from "components/shared/Table";
+import { getSessionUser } from "lib/auth";
+import { getTranslations } from "lib/getTranslation";
+import { requestAll } from "lib/utils";
+import type { GetServerSideProps } from "next";
+import { SearchArea } from "components/shared/search/search-area";
+import { Title } from "components/shared/Title";
+import { AdminLayout } from "components/admin/AdminLayout";
+import { Permissions } from "@snailycad/permissions";
+import { Button, buttonSizes, buttonVariants } from "@snailycad/ui";
+import { useTranslations } from "use-intl";
+import dynamic from "next/dynamic";
+import { ModalIds } from "types/ModalIds";
+import Link from "next/link";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import { useModal } from "state/modalState";
+import { classNames } from "lib/classNames";
+import type { DeletePenalCodeGroupsData } from "@snailycad/types/api";
+import useFetch from "lib/useFetch";
+
+const ManagePenalCodeGroup = dynamic(
+  async () =>
+    (await import("components/admin/values/penal-codes/ManagePenalCodeGroup")).ManagePenalCodeGroup,
+  { ssr: false },
+);
+
+const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal, {
+  ssr: false,
+});
+
+interface Props {
+  groups: { groups: PenalCodeGroup[]; totalCount: number };
+}
+
+export default function PenalCodeGroupsPage(props: Props) {
+  const t = useTranslations("PENAL_CODE_GROUP");
+  const common = useTranslations("Common");
+  const { openModal, closeModal } = useModal();
+  const { execute, state } = useFetch();
+
+  const ungroupedGroup = {
+    id: "ungrouped",
+    name: t("ungrouped"),
+  } as PenalCodeGroup;
+
+  const [search, setSearch] = React.useState("");
+
+  const asyncTable = useAsyncTable({
+    fetchOptions: {
+      onResponse: (json: Props["groups"]) => ({
+        data: json.groups,
+        totalCount: json.totalCount,
+      }),
+      path: "/admin/penal-code-group",
+      requireFilterText: true,
+    },
+    initialData: props.groups.groups,
+    totalCount: props.groups.totalCount,
+    search,
+  });
+
+  const tableState = useTableState({
+    search: { value: search },
+    // dragDrop: {
+    //   // onListChange: setList,
+    //   // disabledIndices: [groups.findIndex((v) => v.id === "ungrouped")],
+    // },
+    pagination: asyncTable.pagination,
+  });
+  const [tempGroup, groupState] = useTemporaryItem(asyncTable.items);
+
+  function handleEditGroup(groupId: string) {
+    groupState.setTempId(groupId);
+    openModal(ModalIds.ManagePenalCodeGroup);
+  }
+
+  function handleDeleteGroupClick(groupId: string) {
+    groupState.setTempId(groupId);
+    openModal(ModalIds.AlertDeleteGroup);
+  }
+
+  async function handleDeleteGroup() {
+    if (!tempGroup) return;
+
+    const { json } = await execute<DeletePenalCodeGroupsData>({
+      path: `/admin/penal-code-group/${tempGroup.id}`,
+      method: "DELETE",
+    });
+
+    if (json) {
+      asyncTable.remove(tempGroup.id);
+      groupState.setTempId(null);
+      closeModal(ModalIds.AlertDeleteGroup);
+    }
+  }
+
+  return (
+    <AdminLayout
+      permissions={{
+        fallback: (u) => u.rank !== Rank.USER,
+        permissions: [Permissions.ManageValuePenalCode],
+      }}
+    >
+      <header className="flex items-center justify-between">
+        <Title className="!mb-0">{t("MANAGE")}</Title>
+
+        <div className="flex gap-2">
+          <Button onPress={() => openModal(ModalIds.ManagePenalCodeGroup)}>{t("ADD")}</Button>
+        </div>
+      </header>
+
+      <SearchArea
+        search={{ search, setSearch }}
+        asyncTable={asyncTable}
+        totalCount={props.groups.totalCount}
+      />
+
+      <Table
+        tableState={tableState}
+        data={[ungroupedGroup, ...asyncTable.items].map((group) => ({
+          id: group.id,
+          rowProps: { value: group },
+          value: group.name,
+          actions: (
+            <>
+              <Link
+                className={classNames("rounded-md", buttonSizes.xs, buttonVariants.default)}
+                href={`/admin/values/penal-code/${group.id}`}
+              >
+                {common("view")}
+              </Link>
+              {group.id !== "ungrouped" ? (
+                <>
+                  <Button
+                    className="ml-2"
+                    onPress={() => handleEditGroup(group.id)}
+                    size="xs"
+                    variant="success"
+                    disabled={group.id === "ungrouped"}
+                  >
+                    {common("edit")}
+                  </Button>
+                  <Button
+                    className="ml-2"
+                    onPress={() => handleDeleteGroupClick(group.id)}
+                    size="xs"
+                    variant="danger"
+                    disabled={group.id === "ungrouped"}
+                  >
+                    {common("delete")}
+                  </Button>
+                </>
+              ) : null}
+            </>
+          ),
+        }))}
+        columns={[
+          { header: common("name"), accessorKey: "value" },
+          { header: common("actions"), accessorKey: "actions" },
+        ]}
+      />
+
+      <ManagePenalCodeGroup
+        onUpdate={(previousGroup, newGroup) => {
+          asyncTable.update(previousGroup.id, newGroup);
+          groupState.setTempId(null);
+        }}
+        onCreate={(group) => asyncTable.append(group)}
+        onClose={() => groupState.setTempId(null)}
+        group={tempGroup}
+      />
+
+      <AlertModal
+        id={ModalIds.AlertDeleteGroup}
+        description={t.rich("alert_deletePenalCodeGroup", {
+          span: (children) => <span className="font-bold">{children}</span>,
+          group: tempGroup?.name ?? "",
+        })}
+        onDeleteClick={handleDeleteGroup}
+        title={t("deleteGroup")}
+        state={state}
+      />
+    </AdminLayout>
+  );
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+  const user = await getSessionUser(req);
+  const [groups] = await requestAll(req, [["/admin/penal-code-group", []]]);
+
+  return {
+    props: {
+      messages: {
+        ...(await getTranslations(["admin", "values", "common"], user?.locale ?? locale)),
+      },
+      session: user,
+      groups,
+    },
+  };
+};
