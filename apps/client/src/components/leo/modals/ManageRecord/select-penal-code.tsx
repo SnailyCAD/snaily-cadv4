@@ -2,6 +2,7 @@ import * as React from "react";
 import { Select, SelectValue } from "components/form/Select";
 import type { PenalCode, PenalCodeGroup } from "@snailycad/types";
 import { FormRow } from "components/form/FormRow";
+import { usePenalCodeGroups } from "hooks/values/use-penal-code-groups";
 
 interface Props {
   value: SelectValue<PenalCode>[];
@@ -22,9 +23,9 @@ const allPenalCodesGroup = {
 
 export function SelectPenalCode({ value, handleChange, penalCodes, isReadOnly }: Props) {
   const [currentGroup, setCurrentGroup] = React.useState<string | null>("all");
+  const { groups: penalCodeGroups } = usePenalCodeGroups();
 
-  // todo: add back groups
-  const groups = [allPenalCodesGroup, ungroupedGroup, ...[]];
+  const groups = [allPenalCodesGroup, ungroupedGroup, ...penalCodeGroups];
   const [codes, setCodes] = React.useState<PenalCode[]>(penalCodes);
 
   function onGroupChange(e: { target: { value: string } }) {
