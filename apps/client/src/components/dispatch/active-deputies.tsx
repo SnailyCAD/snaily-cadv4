@@ -29,6 +29,7 @@ import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useMounted } from "@casper124578/useful";
 import { useCall911State } from "state/dispatch/call-911-state";
 import shallow from "zustand/shallow";
+import { generateContrastColor } from "lib/table/get-contrasting-text-color";
 
 interface Props {
   initialDeputies: EmsFdDeputy[];
@@ -118,7 +119,12 @@ function ActiveDeputies({ initialDeputies }: Props) {
 
                 return {
                   id: deputy.id,
-                  rowProps: { style: { background: !useDot ? color ?? undefined : undefined } },
+                  rowProps: {
+                    style: {
+                      background: !useDot && color ? color : undefined,
+                      color: !useDot && color ? generateContrastColor(color) : undefined,
+                    },
+                  },
                   name: nameAndCallsign,
                   deputy: (
                     <DeputyColumn
