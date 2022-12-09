@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
@@ -15,6 +14,11 @@ import { classNames } from "lib/classNames";
 import { useAsyncTable } from "hooks/shared/table/use-async-table";
 import type { DeleteManageCitizenByIdData, GetManageCitizensData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import dynamic from "next/dynamic";
+
+const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal, {
+  ssr: false,
+});
 
 type CitizenWithUser = GetManageCitizensData["citizens"][number];
 
@@ -42,15 +46,11 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
   const tableState = useTableState({ pagination: asyncTable.pagination });
 
   const [tempValue, valueState] = useTemporaryItem(asyncTable.items);
-  const [reason, setReason] = React.useState("");
-  const [userFilter, setUserFilter] = React.useState<string | null>(null);
   const users = React.useMemo(() => makeUsersList(asyncTable.items), [asyncTable.items]);
   const { hasPermissions } = usePermission();
 
-  const reasonRef = React.useRef<HTMLInputElement>(null);
-
   const { state, execute } = useFetch();
-  const { isOpen, openModal, closeModal } = useModal();
+  const { openModal, closeModal } = useModal();
 
   const tCitizen = useTranslations("Citizen");
   const t = useTranslations("Management");
@@ -64,14 +64,9 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
   async function handleDelete() {
     if (!tempValue) return;
 
-    if (!reason.trim() && reasonRef.current) {
-      return reasonRef.current.focus();
-    }
-
     const { json } = await execute<DeleteManageCitizenByIdData>({
       path: `/admin/manage/citizens/${tempValue.id}`,
       method: "DELETE",
-      data: { reason },
     });
 
     if (json) {
@@ -106,8 +101,13 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
             <FormField className="w-40" label="Filter">
               <Select
                 isClearable
-                value={userFilter}
-                onChange={(e) => setUserFilter(e.target.value)}
+                value={asyncTable.filters?.userId ?? null}
+                onChange={(e) =>
+                  asyncTable.setFilters((prevFilters) => ({
+                    ...prevFilters,
+                    userId: e?.target.value,
+                  }))
+                }
                 values={users.map((u) => ({
                   label: u.username,
                   value: u.id,
@@ -126,46 +126,44 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
 
           <Table
             tableState={tableState}
-            data={asyncTable.items
-              .filter((v) => (userFilter ? String(v.userId) === userFilter : true))
-              .map((citizen) => ({
-                id: citizen.id,
-                name: `${citizen.name} ${citizen.surname}`,
-                dateOfBirth: (
-                  <FullDate isDateOfBirth onlyDate>
-                    {citizen.dateOfBirth}
-                  </FullDate>
-                ),
-                gender: citizen.gender.value,
-                ethnicity: citizen.ethnicity.value,
-                hairColor: citizen.hairColor,
-                eyeColor: citizen.eyeColor,
-                weight: citizen.weight,
-                height: citizen.height,
-                user: citizen.user?.username ?? "No user",
-                actions: (
-                  <>
-                    {hasPermissions([Permissions.ManageCitizens], true) ? (
-                      <Link
-                        href={`/admin/manage/citizens/${citizen.id}`}
-                        className={classNames(buttonVariants.success, "p-0.5 px-2 rounded-md")}
-                      >
-                        {common("edit")}
-                      </Link>
-                    ) : null}
-                    {hasPermissions([Permissions.DeleteCitizens], true) ? (
-                      <Button
-                        className="ml-2"
-                        size="xs"
-                        variant="danger"
-                        onPress={() => handleDeleteClick(citizen)}
-                      >
-                        {common("delete")}
-                      </Button>
-                    ) : null}
-                  </>
-                ),
-              }))}
+            data={asyncTable.items.map((citizen) => ({
+              id: citizen.id,
+              name: `${citizen.name} ${citizen.surname}`,
+              dateOfBirth: (
+                <FullDate isDateOfBirth onlyDate>
+                  {citizen.dateOfBirth}
+                </FullDate>
+              ),
+              gender: citizen.gender.value,
+              ethnicity: citizen.ethnicity.value,
+              hairColor: citizen.hairColor,
+              eyeColor: citizen.eyeColor,
+              weight: citizen.weight,
+              height: citizen.height,
+              user: citizen.user?.username ?? "No user",
+              actions: (
+                <>
+                  {hasPermissions([Permissions.ManageCitizens], true) ? (
+                    <Link
+                      href={`/admin/manage/citizens/${citizen.id}`}
+                      className={classNames(buttonVariants.success, "p-0.5 px-2 rounded-md")}
+                    >
+                      {common("edit")}
+                    </Link>
+                  ) : null}
+                  {hasPermissions([Permissions.DeleteCitizens], true) ? (
+                    <Button
+                      className="ml-2"
+                      size="xs"
+                      variant="danger"
+                      onPress={() => handleDeleteClick(citizen)}
+                    >
+                      {common("delete")}
+                    </Button>
+                  ) : null}
+                </>
+              ),
+            }))}
             columns={[
               { header: tCitizen("fullName"), accessorKey: "name" },
               { header: tCitizen("dateOfBirth"), accessorKey: "dateOfBirth" },
@@ -184,40 +182,15 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
         </ul>
       )}
 
-      <Modal
+      <AlertModal
+        id={ModalIds.AlertDeleteCitizen}
         title={tCitizen("deleteCitizen")}
-        onClose={() => closeModal(ModalIds.AlertDeleteCitizen)}
-        isOpen={isOpen(ModalIds.AlertDeleteCitizen)}
-      >
-        <div>
-          <p className="my-3">
-            {tCitizen.rich("alert_deleteCitizen", {
-              citizen: tempValue && `${tempValue.name} ${tempValue.surname}`,
-            })}
-          </p>
-
-          <TextField label="Reason" inputRef={reasonRef} value={reason} onChange={setReason} />
-        </div>
-
-        <div className="flex items-center justify-end gap-2 mt-2">
-          <Button
-            variant="cancel"
-            disabled={state === "loading"}
-            onPress={() => closeModal(ModalIds.AlertDeleteCitizen)}
-          >
-            {common("cancel")}
-          </Button>
-          <Button
-            disabled={state === "loading"}
-            className="flex items-center"
-            variant="danger"
-            onPress={handleDelete}
-          >
-            {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}{" "}
-            {common("delete")}
-          </Button>
-        </div>
-      </Modal>
+        description={tCitizen.rich("alert_deleteCitizen", {
+          citizen: tempValue && `${tempValue.name} ${tempValue.surname}`,
+        })}
+        onDeleteClick={handleDelete}
+        state={state}
+      />
     </>
   );
 }

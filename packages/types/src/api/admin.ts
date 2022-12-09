@@ -119,18 +119,9 @@ export type DeleteManageBusinessesData = boolean;
 export interface GetManageCitizensData {
   totalCount: number;
   citizens: (Prisma.Citizen & {
-    flags: Prisma.Value[];
-    vehicles: Omit<GetImportVehiclesData["vehicles"][number], "citizen">[];
-    weapons: Omit<GetImportWeaponsData["weapons"][number], "citizen">[];
+    gender: Types.Value;
+    ethnicity: Types.Value;
     user: Types.User | null;
-    ethnicity: Prisma.Value;
-    gender: Prisma.Value;
-    weaponLicense: Prisma.Value | null;
-    driversLicense: Prisma.Value | null;
-    pilotLicense: Prisma.Value | null;
-    waterLicense: Prisma.Value | null;
-    dlCategory: (Prisma.DriversLicenseCategoryValue & { value: Prisma.Value })[];
-    Record: (Prisma.Record & {})[];
   })[];
 }
 
@@ -152,7 +143,20 @@ export type GetManageRecordLogsData = (Prisma.RecordLog & {
  * @method GET
  * @route /admin/manage/citizens/:id
  */
-export type GetManageCitizenByIdData = GetManageCitizensData["citizens"][number];
+export type GetManageCitizenByIdData = Prisma.Citizen & {
+  flags: Prisma.Value[];
+  vehicles: Omit<GetImportVehiclesData["vehicles"][number], "citizen">[];
+  weapons: Omit<GetImportWeaponsData["weapons"][number], "citizen">[];
+  user: Types.User | null;
+  ethnicity: Prisma.Value;
+  gender: Prisma.Value;
+  weaponLicense: Prisma.Value | null;
+  driversLicense: Prisma.Value | null;
+  pilotLicense: Prisma.Value | null;
+  waterLicense: Prisma.Value | null;
+  dlCategory: (Prisma.DriversLicenseCategoryValue & { value: Prisma.Value })[];
+  Record: (Prisma.Record & {})[];
+};
 
 /**
  * @method POST

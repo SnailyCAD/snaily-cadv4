@@ -57,6 +57,8 @@ export function useAsyncTable<T>(options: Options<T>) {
     filters.query = search;
     filters.skip = skip;
 
+    console.log({ filters });
+
     for (const filterKey in filters) {
       const filterValue = filters[filterKey];
 

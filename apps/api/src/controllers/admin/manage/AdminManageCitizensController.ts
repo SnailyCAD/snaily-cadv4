@@ -1,7 +1,7 @@
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
+import { QueryParams, BodyParams, PathParams } from "@tsed/platform-params";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/getSessionUser";
 import { leoProperties } from "lib/leo/activeOfficer";
@@ -12,7 +12,7 @@ import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateImgurURL } from "utils/image";
-import { Prisma, Rank, User, WhitelistStatus } from "@prisma/client";
+import { Prisma, Rank, WhitelistStatus } from "@prisma/client";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import {
   ACCEPT_DECLINE_TYPES,
@@ -46,29 +46,36 @@ export class AdminManageCitizensController {
     @QueryParams("includeAll", Boolean) includeAll = false,
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query = "",
+    @QueryParams("userId", String) userId?: string,
   ): Promise<APITypes.GetManageCitizensData> {
     const [name, surname] = query.toString().toLowerCase().split(/ +/g);
 
-    const where = query
-      ? {
-          OR: [
-            {
-              name: { contains: name, mode: Prisma.QueryMode.insensitive },
-              surname: { contains: surname, mode: Prisma.QueryMode.insensitive },
-            },
-            {
-              name: { equals: surname, mode: Prisma.QueryMode.insensitive },
-              surname: { equals: name, mode: Prisma.QueryMode.insensitive },
-            },
-          ],
-        }
-      : undefined;
+    const where =
+      query || userId
+        ? {
+            userId,
+            OR: [
+              {
+                name: { contains: name, mode: Prisma.QueryMode.insensitive },
+                surname: { contains: surname, mode: Prisma.QueryMode.insensitive },
+              },
+              {
+                name: { equals: surname, mode: Prisma.QueryMode.insensitive },
+                surname: { equals: name, mode: Prisma.QueryMode.insensitive },
+              },
+            ],
+          }
+        : undefined;
 
     const [totalCount, citizens] = await prisma.$transaction([
       prisma.citizen.count({ where }),
       prisma.citizen.findMany({
         where,
-        include: citizenInclude,
+        include: {
+          gender: true,
+          ethnicity: true,
+          user: citizenInclude.user,
+        },
         take: includeAll ? undefined : 35,
         skip: includeAll ? undefined : Number(skip),
       }),
@@ -115,12 +122,16 @@ export class AdminManageCitizensController {
     const isCitizenId = isCuid(id);
     const functionName = isCitizenId ? "findFirst" : "findMany";
 
+    const OR: Prisma.CitizenWhereInput["OR"] = [{ id }];
+
+    if (!isCitizenId) {
+      OR.push({ user: { discordId: id } }, { user: { steamId: id } });
+    }
+
     // @ts-expect-error same properties
     const citizen = await prisma.citizen[functionName]({
       include: citizenInclude,
-      where: {
-        OR: [{ user: { discordId: id } }, { user: { steamId: id } }, { id }],
-      },
+      where: { OR },
     });
 
     return citizen;
@@ -225,8 +236,6 @@ export class AdminManageCitizensController {
     permissions: [Permissions.DeleteCitizens],
   })
   async deleteCitizen(
-    @Context("user") user: User,
-    @BodyParams("reason") reason: string,
     @PathParams("id") citizenId: string,
   ): Promise<APITypes.DeleteManageCitizenByIdData> {
     const citizen = await prisma.citizen.findUnique({
@@ -239,22 +248,7 @@ export class AdminManageCitizensController {
       throw new NotFound("notFound");
     }
 
-    if (citizen.userId) {
-      await prisma.notification.create({
-        data: {
-          userId: citizen.userId,
-          executorId: user.id,
-          description: reason,
-          title: "CITIZEN_DELETED",
-        },
-      });
-    }
-
-    await prisma.citizen.delete({
-      where: {
-        id: citizenId,
-      },
-    });
+    await prisma.citizen.delete({ where: { id: citizenId } });
 
     return true;
   }

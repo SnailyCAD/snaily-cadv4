@@ -2,7 +2,7 @@ import { useTranslations } from "use-intl";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { Rank } from "@snailycad/types";
+import { Rank, ValueType } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
@@ -17,6 +17,7 @@ import type {
   PutManageCitizenByIdData,
 } from "@snailycad/types/api";
 import { BreadcrumbItem, Breadcrumbs } from "@snailycad/ui";
+import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 
 interface Props {
   citizen: GetManageCitizenByIdData;
@@ -26,6 +27,9 @@ export default function ManageCitizens({ citizen }: Props) {
   const t = useTranslations();
   const { state, execute } = useFetch();
   const router = useRouter();
+  useLoadValuesClientSide({
+    valueTypes: [ValueType.GENDER, ValueType.ETHNICITY, ValueType.LICENSE],
+  });
 
   async function handleSubmit({
     data,
@@ -116,10 +120,7 @@ export default function ManageCitizens({ citizen }: Props) {
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, query, req }) => {
   const user = await getSessionUser(req);
-  const [citizen, values] = await requestAll(req, [
-    [`/admin/manage/citizens/${query.id}`, null],
-    ["/admin/values/gender?paths=ethnicity,license", []],
-  ]);
+  const [citizen] = await requestAll(req, [[`/admin/manage/citizens/${query.id}`, null]]);
 
   if (!citizen) {
     return {
@@ -130,7 +131,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, qu
   return {
     props: {
       citizen,
-      values,
       session: user,
       messages: {
         ...(await getTranslations(
