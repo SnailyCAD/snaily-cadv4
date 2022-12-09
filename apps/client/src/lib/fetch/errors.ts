@@ -71,6 +71,16 @@ export function isErrorKey(
 export function getErrorObj(error: unknown) {
   let errorObj = {};
 
+  if (error instanceof Error) {
+    errorObj = {
+      message: error.message,
+      status: error.name,
+      name: error.name,
+      cause: error.cause,
+      stack: error.stack,
+    };
+  }
+
   if (isAxiosError(error)) {
     errorObj = {
       message: error.message,
