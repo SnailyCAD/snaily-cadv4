@@ -90,7 +90,7 @@ export default function PenalCodeGroupsPage(props: Props) {
       toastMessage({
         title: "Delete Value",
         icon: "info",
-        message: t.rich("failedDeleteValue", {
+        message: valuesT.rich("failedDeleteValue", {
           value: tempPenalCode.title,
         }),
       });
