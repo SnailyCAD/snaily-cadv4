@@ -20,7 +20,7 @@ import { BreadcrumbItem, Breadcrumbs } from "@snailycad/ui";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 
 interface Props {
-  citizen: GetManageCitizenByIdData;
+  citizen: NonNullable<GetManageCitizenByIdData>;
 }
 
 export default function ManageCitizens({ citizen }: Props) {

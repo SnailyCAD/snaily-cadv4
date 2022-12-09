@@ -134,6 +134,10 @@ export class AdminManageCitizensController {
       where: { OR },
     });
 
+    if (Array.isArray(citizen) && citizen.length <= 0) {
+      return null;
+    }
+
     return citizen;
   }
 
