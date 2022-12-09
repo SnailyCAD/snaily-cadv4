@@ -21,7 +21,7 @@ import { rankItem } from "@tanstack/match-sorter-utils";
 import type { useTableState } from "hooks/shared/table/use-table-state";
 import { ReactSortable } from "react-sortablejs";
 import { useMounted } from "@casper124578/useful";
-import { createTableDragDropColumn } from "lib/table/dndArrowHook";
+import { createTableDragDropColumn } from "lib/table/create-table-dnd-column";
 import { createTableCheckboxColumn } from "./IndeterminateCheckbox";
 
 export const DRAGGABLE_TABLE_HANDLE = "__TABLE_HANDLE__";

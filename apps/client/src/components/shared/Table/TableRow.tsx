@@ -37,6 +37,7 @@ function TableCell<TData extends RowData>(
     rowProps: Partial<Record<string, any>> | undefined;
   },
 ) {
+  const isMove = props.cell.column.id === "drag-drop";
   const isActions = props.cell.column.id === "actions";
   const cellValue = ["drag-drop", "select"].includes(props.cell.column.id)
     ? props.cell.column.columnDef.cell
@@ -55,7 +56,12 @@ function TableCell<TData extends RowData>(
 
   return (
     <td
-      className={classNames("m-0 text-left p-3 px-3", isActions && `w-36 sticky ${dir}`, bgColor)}
+      className={classNames(
+        "m-0 text-left p-3 px-3",
+        isActions && `w-36 sticky ${dir}`,
+        isMove && "w-5",
+        bgColor,
+      )}
     >
       {flexRender(cellValue, props.cell.getContext())}
     </td>

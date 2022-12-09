@@ -9,6 +9,7 @@ export function createTableDragDropColumn<TData extends RowData>(
   return {
     id: "drag-drop",
     header: () => <ArrowDownUp />,
+    maxSize: 50,
     cell: ({ row }) => {
       const isDisabled = tableState?.disabledIndices?.includes(row.index);
 
