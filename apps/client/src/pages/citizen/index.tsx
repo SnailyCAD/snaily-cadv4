@@ -127,6 +127,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, re
   const user = await getSessionUser(req);
   const [data] = await requestAll(req, [["/citizen", { citizens: [], totalCount: 0 }]]);
 
+  console.log({ data });
+
   return {
     props: {
       citizens: data,
