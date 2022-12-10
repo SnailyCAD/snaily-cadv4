@@ -20,7 +20,7 @@ function getClientAppPath() {
 }
 
 async function loadNextConfigI18n() {
-  const path = pathToFileURL(join(getClientAppPath(), "next.config.js"));
+  const path = pathToFileURL(join(getClientAppPath(), "next.config.mjs"));
   const nextConfig = (await import(path)).default.i18n;
 
   return nextConfig;

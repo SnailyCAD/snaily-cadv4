@@ -17,7 +17,7 @@ function getNextConfigPath() {
     dir = process.cwd();
   }
 
-  const configFilePath = join(dir, "next.config.js");
+  const configFilePath = join(dir, "next.config.mjs");
   return pathToFileURL(configFilePath);
 }
 
@@ -79,4 +79,4 @@ const config = stringArray.join("\n");
 
 writeNextConfig(config);
 
-console.log("Image domain added to next.config.js");
+console.log("Image domain added to next.config.mjs");
