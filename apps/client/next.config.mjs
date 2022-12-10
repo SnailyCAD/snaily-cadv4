@@ -1,10 +1,7 @@
 // const analyze = require("@next/bundle-analyzer");
-// import * as Sentry from "@sentry/nextjs";
-// const { withSentryConfig } = await import("@sentry/nextjs");
-import * as Config from "@sentry/nextjs";
-import { i18n } from "./i18n.config.mjs";
 
-console.log({ Config });
+import { withSentryConfig } from "@sentry/nextjs";
+import { i18n } from "./i18n.config.mjs";
 
 /**
  * @template {import("next").NextConfig} T
@@ -19,7 +16,7 @@ const nextConfig = {
   // prettier-ignore
   images: { // start images
     formats: ["image/avif", "image/webp"],
-    domains: ["i.imgur.com", "cdn.discordapp.com", "localhost", "localhost", "localhost", "localhost", "localhost", "localhost", "localhost", "localhost", "localhost"]
+    domains: ["i.imgur.com", "cdn.discordapp.com", "localhost"]
   }, // end images
   // prettier-enable
   webpack(config, { webpack }) {
@@ -40,7 +37,7 @@ export default (phase, defaultConfig) => {
   const plugins = [
     // presume I have other plugins
     (config) =>
-      Config.withSentryConfig(config, {
+      withSentryConfig(config, {
         org: "snailycad",
         setCommits: true,
         project: "snailycad-client",

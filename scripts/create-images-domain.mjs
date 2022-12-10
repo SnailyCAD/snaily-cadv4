@@ -31,7 +31,7 @@ async function loadNextConfig() {
 }
 
 function writeNextConfig(data) {
-  // if (process.env.NODE_ENV === "development") return;
+  if (process.env.NODE_ENV === "development") return;
 
   const configFilePath = getNextConfigPath();
   return writeFile(

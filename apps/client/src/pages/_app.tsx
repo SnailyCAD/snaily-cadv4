@@ -22,12 +22,6 @@ const ReauthorizeSessionModal = dynamic(
 );
 
 const Toaster = dynamic(async () => (await import("react-hot-toast")).Toaster, { ssr: false });
-// const ReactQueryDevtools = dynamic(
-//   async () => (await import("@tanstack/react-query-devtools")).ReactQueryDevtools,
-//   {
-//     ssr: false,
-//   },
-// );
 
 const queryClient = new QueryClient();
 
