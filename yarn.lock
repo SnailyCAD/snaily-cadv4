@@ -2857,7 +2857,7 @@ __metadata:
     "@types/sortablejs": ^1.15.0
     "@types/uuid": ^9.0.0
     autoprefixer: ^10.4.13
-    axios: ^1.1.3
+    axios: ^1.2.1
     bignumber.js: ^9.1.1
     color: ^4.2.3
     date-fns: ^2.29.3
@@ -2868,7 +2868,7 @@ __metadata:
     leaflet: ^1.9.3
     mdast-util-find-and-replace: ^2.2.1
     next: ^13.0.6
-    next-intl: 2.9.1
+    next-intl: 2.10.2
     nookies: ^2.5.2
     postcss: ^8.4.19
     pretty-bytes: ^6.0.0
@@ -4354,6 +4354,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"accept-language-parser@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "accept-language-parser@npm:1.5.0"
+  checksum: e32124e500f67d30da7dd15462b3ff7a718df327ff8bd1c97ae02d8ee5cf0917a3f600bf3b171965b1f95fef480b96d36752f674eff2cb0069c276d9783d32f6
+  languageName: node
+  linkType: hard
+
 "accepts@npm:~1.3.4, accepts@npm:~1.3.5, accepts@npm:~1.3.8":
   version: 1.3.8
   resolution: "accepts@npm:1.3.8"
@@ -4768,14 +4775,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.1.3":
-  version: 1.1.3
-  resolution: "axios@npm:1.1.3"
+"axios@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "axios@npm:1.2.1"
   dependencies:
     follow-redirects: ^1.15.0
     form-data: ^4.0.0
     proxy-from-env: ^1.1.0
-  checksum: cab3b17bf6092c9387f7023d699db093cfa23650b56c4422cd474d124b78b2e3b5a520f932c330664a58ab85b867b1c25a95cace475ef72d236888c852b84e6d
+  checksum: c4dc4e119064c9aed09a3de309bedb797a139a6fb372223aafe3e0c10a7d4a14e4d3e9c9d309467fadb9d2b490b891ee3df96ef5b55716bb971910466ff9f0c5
   languageName: node
   linkType: hard
 
@@ -10181,15 +10188,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next-intl@npm:2.9.1":
-  version: 2.9.1
-  resolution: "next-intl@npm:2.9.1"
+"next-intl@npm:2.10.2":
+  version: 2.10.2
+  resolution: "next-intl@npm:2.10.2"
   dependencies:
-    use-intl: ^2.9.1
+    accept-language-parser: ^1.5.0
+    use-intl: ^2.10.2
   peerDependencies:
     next: ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: 108a14155e5e81f4a4ac9b2c72a56bb56e5f6bafd6a50ff79df30808d8e10216447d4fceb510e05940cab767ed1ac3c164cdbd370eca7fbddd5f1d64f64128d7
+  checksum: a8873e652220bf731c8fdee66b646910bd902cb4dd5ac8d5557e0e83b97f6abc561924046fc5312449d6913544bc207307f10f89aa7981e05d6d70fdcef7eb92
   languageName: node
   linkType: hard
 
@@ -13901,7 +13909,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-intl@npm:^2.10.2, use-intl@npm:^2.9.1":
+"use-intl@npm:^2.10.2":
   version: 2.10.2
   resolution: "use-intl@npm:2.10.2"
   dependencies:
