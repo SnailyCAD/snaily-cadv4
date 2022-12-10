@@ -2915,9 +2915,9 @@ __metadata:
   resolution: "@snailycad/config@workspace:packages/config"
   dependencies:
     tsup: ^6.5.0
-    typescript: ^4.9.3
-    vite: ^3.2.4
-    vitest: ^0.25.3
+    typescript: ^4.9.4
+    vite: ^4.0.0
+    vitest: ^0.25.6
   languageName: unknown
   linkType: soft
 
@@ -2926,9 +2926,9 @@ __metadata:
   resolution: "@snailycad/permissions@workspace:packages/permissions"
   dependencies:
     tsup: ^6.5.0
-    typescript: ^4.9.3
-    vite: ^3.2.4
-    vitest: ^0.25.3
+    typescript: ^4.9.4
+    vite: ^4.0.0
+    vitest: ^0.25.6
     zod: ^3.19.1
   languageName: unknown
   linkType: soft
@@ -2939,7 +2939,7 @@ __metadata:
   dependencies:
     tslib: ^2.4.1
     tsup: ^6.5.0
-    typescript: ^4.9.3
+    typescript: ^4.9.4
     zod: ^3.19.1
   languageName: unknown
   linkType: soft
@@ -2949,9 +2949,9 @@ __metadata:
   resolution: "@snailycad/types@workspace:packages/types"
   dependencies:
     "@snailycad/permissions": 1.36.0
-    discord-api-types: 0.37.20
+    discord-api-types: 0.37.21
     tsup: ^6.5.0
-    typescript: ^4.9.3
+    typescript: ^4.9.4
   languageName: unknown
   linkType: soft
 
@@ -2998,8 +2998,8 @@ __metadata:
     tailwindcss: ^3.2.4
     tslib: ^2.4.1
     tsup: ^6.5.0
-    typescript: ^4.9.3
-    vite: ^3.2.4
+    typescript: ^4.9.4
+    vite: ^4.0.0
   peerDependencies:
     date-fns: ">=2.29.3"
     next-intl: ">=2.9.1"
@@ -3016,9 +3016,9 @@ __metadata:
     c8: ^7.12.0
     tslib: ^2.4.1
     tsup: ^6.5.0
-    typescript: ^4.9.3
-    vite: ^3.2.4
-    vitest: ^0.25.3
+    typescript: ^4.9.4
+    vite: ^4.0.0
+    vitest: ^0.25.6
   languageName: unknown
   linkType: soft
 
@@ -6035,13 +6035,6 @@ __metadata:
   bin:
     direction: cli.js
   checksum: 572ac399093d7c9f2181c96828d252922e2a962b8f31a7fc118e3f7619592c566cc2ed313baf7703f17b2be00cd3c1402550140d0c3f4f70362976376a08b095
-  languageName: node
-  linkType: hard
-
-"discord-api-types@npm:0.37.20":
-  version: 0.37.20
-  resolution: "discord-api-types@npm:0.37.20"
-  checksum: 88ebed85aada3483e83ac46a1b4574c0d59948060ac72f451d658fa646b20d62bd6f21792043621dcc5a9e9353d95c25de70646b8d2a93f0022154345800b26c
   languageName: node
   linkType: hard
 
@@ -11971,20 +11964,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup@npm:^2.79.1":
-  version: 2.79.1
-  resolution: "rollup@npm:2.79.1"
-  dependencies:
-    fsevents: ~2.3.2
-  dependenciesMeta:
-    fsevents:
-      optional: true
-  bin:
-    rollup: dist/bin/rollup
-  checksum: 6a2bf167b3587d4df709b37d149ad0300692cc5deb510f89ac7bdc77c8738c9546ae3de9322b0968e1ed2b0e984571f5f55aae28fa7de4cfcb1bc5402a4e2be6
-  languageName: node
-  linkType: hard
-
 "rollup@npm:^3.2.5":
   version: 3.2.5
   resolution: "rollup@npm:3.2.5"
@@ -12886,15 +12865,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"strip-literal@npm:^0.4.2":
-  version: 0.4.2
-  resolution: "strip-literal@npm:0.4.2"
-  dependencies:
-    acorn: ^8.8.0
-  checksum: 831cdcaba61bc82c14ef5ca423a64bb8044b3b128abd15dff454d3fd05b0dbc7b4403760a7a636923d3c2e71a8e65174cef28ee9aef61f9a66819f865da4fdda
-  languageName: node
-  linkType: hard
-
 "strip-literal@npm:^1.0.0":
   version: 1.0.0
   resolution: "strip-literal@npm:1.0.0"
@@ -13653,16 +13623,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.9.3":
-  version: 4.9.3
-  resolution: "typescript@npm:4.9.3"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 17b8f816050b412403e38d48eef0e893deb6be522d6dc7caf105e54a72e34daf6835c447735fd2b28b66784e72bfbf87f627abb4818a8e43d1fa8106396128dc
-  languageName: node
-  linkType: hard
-
 "typescript@npm:^4.9.4":
   version: 4.9.4
   resolution: "typescript@npm:4.9.4"
@@ -13670,16 +13630,6 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: e782fb9e0031cb258a80000f6c13530288c6d63f1177ed43f770533fdc15740d271554cdae86701c1dd2c83b082cea808b07e97fd68b38a172a83dbf9e0d0ef9
-  languageName: node
-  linkType: hard
-
-"typescript@patch:typescript@^4.9.3#~builtin<compat/typescript>":
-  version: 4.9.3
-  resolution: "typescript@patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=a1c5e5"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: ef65c22622d864497d0a0c5db693523329b3284c15fe632e93ad9aa059e8dc38ef3bd767d6f26b1e5ecf9446f49bd0f6c4e5714a2eeaf352805dc002479843d1
   languageName: node
   linkType: hard
 
@@ -14104,44 +14054,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^3.2.4":
-  version: 3.2.4
-  resolution: "vite@npm:3.2.4"
-  dependencies:
-    esbuild: ^0.15.9
-    fsevents: ~2.3.2
-    postcss: ^8.4.18
-    resolve: ^1.22.1
-    rollup: ^2.79.1
-  peerDependencies:
-    "@types/node": ">= 14"
-    less: "*"
-    sass: "*"
-    stylus: "*"
-    sugarss: "*"
-    terser: ^5.4.0
-  dependenciesMeta:
-    fsevents:
-      optional: true
-  peerDependenciesMeta:
-    "@types/node":
-      optional: true
-    less:
-      optional: true
-    sass:
-      optional: true
-    stylus:
-      optional: true
-    sugarss:
-      optional: true
-    terser:
-      optional: true
-  bin:
-    vite: bin/vite.js
-  checksum: 0f3e8f89c15809bd6bd8dec54b04b7c9b87374314d00928035f9d70190b4b220e8206b5d77a1e4097a5019cebf7862df4fbc11fbbb35c4f75f359999123d2c25
-  languageName: node
-  linkType: hard
-
 "vite@npm:^4.0.0":
   version: 4.0.0
   resolution: "vite@npm:4.0.0"
@@ -14177,47 +14089,6 @@ __metadata:
   bin:
     vite: bin/vite.js
   checksum: 83099d5033fa5580714641df3cda16579ec104b9f3d447c2cf3208105ef2e6f8573267fbe3bdc93c0e51a70830d4d30bc166767c9f8805b1075a405625471930
-  languageName: node
-  linkType: hard
-
-"vitest@npm:^0.25.3":
-  version: 0.25.3
-  resolution: "vitest@npm:0.25.3"
-  dependencies:
-    "@types/chai": ^4.3.3
-    "@types/chai-subset": ^1.3.3
-    "@types/node": "*"
-    acorn: ^8.8.0
-    acorn-walk: ^8.2.0
-    chai: ^4.3.6
-    debug: ^4.3.4
-    local-pkg: ^0.4.2
-    source-map: ^0.6.1
-    strip-literal: ^0.4.2
-    tinybench: ^2.3.1
-    tinypool: ^0.3.0
-    tinyspy: ^1.0.2
-    vite: ^3.0.0
-  peerDependencies:
-    "@edge-runtime/vm": "*"
-    "@vitest/browser": "*"
-    "@vitest/ui": "*"
-    happy-dom: "*"
-    jsdom: "*"
-  peerDependenciesMeta:
-    "@edge-runtime/vm":
-      optional: true
-    "@vitest/browser":
-      optional: true
-    "@vitest/ui":
-      optional: true
-    happy-dom:
-      optional: true
-    jsdom:
-      optional: true
-  bin:
-    vitest: vitest.mjs
-  checksum: cd54de758f41295ef8a5304318b0de37f3182ec9b179d983cb0199dac89d51b80ee30124754703ef77ce4a1b675f3b02094ef96790889d5c9212dbab7490b4d0
   languageName: node
   linkType: hard
 
