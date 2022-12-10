@@ -159,7 +159,7 @@ function _ActiveCalls({ initialData }: Props) {
                 id: call.id,
                 rowProps: {
                   className: classNames(
-                    isUnitAssigned && "bg-gray-200 dark:bg-quinary",
+                    isUnitAssigned && "bg-gray-200 dark:bg-amber-900",
                     call.isSignal100 && "bg-red-500 dark:bg-red-700",
                   ),
                 },
