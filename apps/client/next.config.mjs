@@ -1,15 +1,17 @@
 // const analyze = require("@next/bundle-analyzer");
-import { withSentryConfig } from "@sentry/nextjs";
+// import * as Sentry from "@sentry/nextjs";
+// const { withSentryConfig } = await import("@sentry/nextjs");
+import * as Config from "@sentry/nextjs";
+import { i18n } from "./i18n.config.mjs";
+
+console.log({ Config });
 
 /**
  * @template {import("next").NextConfig} T
  * @typedef {T}
  */
 const nextConfig = {
-  i18n: {
-    locales: ["en", "en-gb", "ru", "cn", "tc", "fr-FR", "de-DE", "pt-BR", "cs-CZ"],
-    defaultLocale: "en",
-  },
+  i18n,
   cleanDistDir: true,
   eslint: {
     ignoreDuringBuilds: true,
@@ -17,7 +19,7 @@ const nextConfig = {
   // prettier-ignore
   images: { // start images
     formats: ["image/avif", "image/webp"],
-    domains: ["i.imgur.com", "cdn.discordapp.com", "localhost"]
+    domains: ["i.imgur.com", "cdn.discordapp.com", "localhost", "localhost", "localhost", "localhost", "localhost", "localhost", "localhost", "localhost", "localhost"]
   }, // end images
   // prettier-enable
   webpack(config, { webpack }) {
@@ -33,14 +35,12 @@ const nextConfig = {
   },
 }; // end config
 
-export const i18n = nextConfig.i18n;
-
 /** @type {typeof nextConfig} */
 export default (phase, defaultConfig) => {
   const plugins = [
     // presume I have other plugins
     (config) =>
-      withSentryConfig(config, {
+      Config.withSentryConfig(config, {
         org: "snailycad",
         setCommits: true,
         project: "snailycad-client",

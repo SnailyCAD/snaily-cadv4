@@ -10,7 +10,7 @@ import { useTranslations } from "use-intl";
 import { StatusViewMode, TableActionsAlignment } from "@snailycad/types";
 import { Select } from "components/form/Select";
 import { Button, Loader, SelectField } from "@snailycad/ui";
-import { i18n } from "../../../next.config.mjs";
+import { i18n } from "../../../i18n.config.mjs";
 import type { Sounds } from "lib/server/getAvailableSounds.server";
 import { soundCamelCaseToKebabCase } from "lib/utils";
 import { CaretDownFill } from "react-bootstrap-icons";
