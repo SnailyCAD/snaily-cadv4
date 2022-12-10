@@ -22,12 +22,6 @@ const ReauthorizeSessionModal = dynamic(
 );
 
 const Toaster = dynamic(async () => (await import("react-hot-toast")).Toaster, { ssr: false });
-// const ReactQueryDevtools = dynamic(
-//   async () => (await import("@tanstack/react-query-devtools")).ReactQueryDevtools,
-//   {
-//     ssr: false,
-//   },
-// );
 
 const queryClient = new QueryClient();
 
@@ -50,7 +44,6 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* {process.env.NODE_ENV === "development" ? <ReactQueryDevtools /> : null} */}
       <SSRProvider>
         <SocketProvider uri={url} options={{ reconnectionDelay: 10_000 }}>
           <AuthProvider initialData={pageProps}>

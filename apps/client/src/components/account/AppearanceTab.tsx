@@ -10,7 +10,7 @@ import { useTranslations } from "use-intl";
 import { StatusViewMode, TableActionsAlignment } from "@snailycad/types";
 import { Select } from "components/form/Select";
 import { Button, Loader, SelectField } from "@snailycad/ui";
-import nextConfig from "../../../next.config";
+import { i18n } from "../../../i18n.config.mjs";
 import type { Sounds } from "lib/server/getAvailableSounds.server";
 import { soundCamelCaseToKebabCase } from "lib/utils";
 import { CaretDownFill } from "react-bootstrap-icons";
@@ -27,7 +27,7 @@ export function AppearanceTab({ availableSounds }: Props) {
   const t = useTranslations("Account");
   const { execute, state } = useFetch();
   const common = useTranslations("Common");
-  const availableLanguages = nextConfig.i18n?.locales;
+  const availableLanguages = i18n.locales;
   const router = useRouter();
   const [currentSrc, setCurrentSrc] = React.useState("");
 
@@ -56,7 +56,7 @@ export function AppearanceTab({ availableSounds }: Props) {
     isDarkTheme: user.isDarkTheme ?? true,
     statusViewMode: user.statusViewMode ?? StatusViewMode.DOT_COLOR,
     tableActionsAlignment: user.tableActionsAlignment,
-    locale: user?.locale ?? nextConfig.i18n?.defaultLocale,
+    locale: user?.locale ?? i18n.defaultLocale,
     soundSettings: {
       panicButton: user.soundSettings?.panicButton ?? true,
       signal100: user.soundSettings?.signal100 ?? true,
