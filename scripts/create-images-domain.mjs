@@ -24,14 +24,14 @@ function getNextConfigPath() {
 async function loadNextConfig() {
   const configFilePath = getNextConfigPath();
 
-  const data = (await import(configFilePath)).default;
+  const data = await import(configFilePath);
   const text = await readFile(configFilePath, "utf8");
 
   return { data, text };
 }
 
 function writeNextConfig(data) {
-  if (process.env.NODE_ENV === "development") return;
+  // if (process.env.NODE_ENV === "development") return;
 
   const configFilePath = getNextConfigPath();
   return writeFile(
