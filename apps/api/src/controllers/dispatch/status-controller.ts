@@ -279,18 +279,18 @@ export class StatusController {
       }
     }
 
+    if (["leo", "combined"].includes(type)) {
+      await this.socket.emitUpdateOfficerStatus();
+    } else {
+      await this.socket.emitUpdateDeputyStatus();
+    }
+
     try {
       // @ts-expect-error type mismatch. the types are correct.
       const data = createWebhookData(cad, updatedUnit);
       await sendDiscordWebhook({ type: DiscordWebhookType.UNIT_STATUS, data });
     } catch (error) {
       console.error("Could not send Discord webhook.", error);
-    }
-
-    if (["leo", "combined"].includes(type)) {
-      await this.socket.emitUpdateOfficerStatus();
-    } else {
-      await this.socket.emitUpdateDeputyStatus();
     }
 
     // @ts-expect-error type mismatch. the types are correct.
