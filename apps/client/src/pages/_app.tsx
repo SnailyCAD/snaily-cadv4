@@ -44,7 +44,6 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* {process.env.NODE_ENV === "development" ? <ReactQueryDevtools /> : null} */}
       <SSRProvider>
         <SocketProvider uri={url} options={{ reconnectionDelay: 10_000 }}>
           <AuthProvider initialData={pageProps}>
