@@ -95,19 +95,61 @@ export class AdminManageCitizensController {
       Permissions.ViewCitizenLogs,
     ],
   })
-  async getRecordLogsForCitizen(): Promise<APITypes.GetManageRecordLogsData> {
-    const citizens = await prisma.recordLog.findMany({
-      orderBy: { createdAt: "desc" },
-      include: {
-        warrant: { include: { officer: { include: leoProperties } } },
-        records: { include: recordsInclude },
-        citizen: {
-          include: { user: { select: userProperties }, gender: true, ethnicity: true },
-        },
-      },
-    });
+  async getRecordLogsForCitizen(
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("includeAll", Boolean) includeAll = false,
+    @QueryParams("query", String) query = "",
+  ): Promise<APITypes.GetManageRecordLogsData> {
+    const [name, surname] = query.toString().toLowerCase().split(/ +/g);
 
-    return citizens;
+    const where = {
+      OR: [
+        {
+          name: { contains: name, mode: Prisma.QueryMode.insensitive },
+          surname: { contains: surname, mode: Prisma.QueryMode.insensitive },
+        },
+        {
+          name: { equals: surname, mode: Prisma.QueryMode.insensitive },
+          surname: { equals: name, mode: Prisma.QueryMode.insensitive },
+        },
+      ],
+    };
+
+    const [totalCount, citizens] = await prisma.$transaction([
+      prisma.citizen.count({
+        where: { RecordLog: { some: {} }, ...where },
+      }),
+      prisma.citizen.findMany({
+        orderBy: { createdAt: "desc" },
+        where: { RecordLog: { some: {} }, ...where },
+        take: includeAll ? undefined : 35,
+        skip: includeAll ? undefined : skip,
+      }),
+    ]);
+
+    return { citizens, totalCount };
+  }
+
+  @Get("/records-logs/:citizenId")
+  async getCitizenRecordsLogs(
+    @PathParams("citizenId") citizenId: string,
+  ): Promise<APITypes.GetManageRecordsLogsCitizenData> {
+    const [totalCount, recordsLogs] = await prisma.$transaction([
+      prisma.recordLog.count({ where: { citizenId } }),
+      prisma.recordLog.findMany({
+        where: { citizenId },
+        orderBy: { createdAt: "desc" },
+        include: {
+          warrant: { include: { officer: { include: leoProperties } } },
+          records: { include: recordsInclude },
+          citizen: {
+            include: { user: { select: userProperties }, gender: true, ethnicity: true },
+          },
+        },
+      }),
+    ]);
+
+    return { recordsLogs, totalCount };
   }
 
   @Get("/:id")
