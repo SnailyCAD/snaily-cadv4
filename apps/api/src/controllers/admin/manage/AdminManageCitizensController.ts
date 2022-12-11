@@ -1,10 +1,8 @@
 import { Controller } from "@tsed/di";
-import { BadRequest, NotFound } from "@tsed/exceptions";
+import { NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { QueryParams, BodyParams, PathParams } from "@tsed/platform-params";
-import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
-import { userProperties } from "lib/auth/getSessionUser";
-import { leoProperties } from "lib/leo/activeOfficer";
+import { ContentType, Delete, Description, Get, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
@@ -12,25 +10,11 @@ import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateImgurURL } from "utils/image";
-import { Prisma, Rank, WhitelistStatus } from "@prisma/client";
+import { Prisma, Rank } from "@prisma/client";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
-import {
-  ACCEPT_DECLINE_TYPES,
-  type AcceptDeclineType,
-} from "controllers/admin/manage/AdminManageUnitsController";
 import { isCuid } from "cuid";
 import type * as APITypes from "@snailycad/types/api";
 import { validateSocialSecurityNumber } from "lib/citizen/validateSSN";
-
-const recordsInclude = {
-  officer: { include: leoProperties },
-  violations: {
-    include: {
-      penalCode: { include: { warningApplicable: true, warningNotApplicable: true } },
-    },
-  },
-  seizedItems: true,
-};
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/citizens")
@@ -84,74 +68,6 @@ export class AdminManageCitizensController {
     return { totalCount, citizens };
   }
 
-  @Get("/records-logs")
-  @Description("Get all the record logs within the CAD")
-  @UsePermissions({
-    fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
-    permissions: [
-      Permissions.ViewCitizens,
-      Permissions.ManageCitizens,
-      Permissions.DeleteCitizens,
-      Permissions.ViewCitizenLogs,
-    ],
-  })
-  async getRecordLogsForCitizen(
-    @QueryParams("skip", Number) skip = 0,
-    @QueryParams("includeAll", Boolean) includeAll = false,
-    @QueryParams("query", String) query = "",
-  ): Promise<APITypes.GetManageRecordLogsData> {
-    const [name, surname] = query.toString().toLowerCase().split(/ +/g);
-
-    const where = {
-      OR: [
-        {
-          name: { contains: name, mode: Prisma.QueryMode.insensitive },
-          surname: { contains: surname, mode: Prisma.QueryMode.insensitive },
-        },
-        {
-          name: { equals: surname, mode: Prisma.QueryMode.insensitive },
-          surname: { equals: name, mode: Prisma.QueryMode.insensitive },
-        },
-      ],
-    };
-
-    const [totalCount, citizens] = await prisma.$transaction([
-      prisma.citizen.count({
-        where: { RecordLog: { some: {} }, ...where },
-      }),
-      prisma.citizen.findMany({
-        orderBy: { createdAt: "desc" },
-        where: { RecordLog: { some: {} }, ...where },
-        take: includeAll ? undefined : 35,
-        skip: includeAll ? undefined : skip,
-      }),
-    ]);
-
-    return { citizens, totalCount };
-  }
-
-  @Get("/records-logs/:citizenId")
-  async getCitizenRecordsLogs(
-    @PathParams("citizenId") citizenId: string,
-  ): Promise<APITypes.GetManageRecordsLogsCitizenData> {
-    const [totalCount, recordsLogs] = await prisma.$transaction([
-      prisma.recordLog.count({ where: { citizenId } }),
-      prisma.recordLog.findMany({
-        where: { citizenId },
-        orderBy: { createdAt: "desc" },
-        include: {
-          warrant: { include: { officer: { include: leoProperties } } },
-          records: { include: recordsInclude },
-          citizen: {
-            include: { user: { select: userProperties }, gender: true, ethnicity: true },
-          },
-        },
-      }),
-    ]);
-
-    return { recordsLogs, totalCount };
-  }
-
   @Get("/:id")
   @Description(
     "Get a citizen by the `id`. Or get all citizens from a user by the `discordId` or `steamId`",
@@ -181,39 +97,6 @@ export class AdminManageCitizensController {
     }
 
     return citizen;
-  }
-
-  @Post("/records-logs/:id")
-  @Description("Accept or decline a record by it's id")
-  @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
-    permissions: [Permissions.ManageCitizens, Permissions.ViewCitizenLogs],
-  })
-  async acceptOrDeclineArrestReport(
-    @PathParams("id") id: string,
-    @BodyParams("type") type: AcceptDeclineType | null,
-  ): Promise<APITypes.PostCitizenRecordLogsData> {
-    if (!type || !ACCEPT_DECLINE_TYPES.includes(type)) {
-      throw new BadRequest("invalidType");
-    }
-
-    const record = await prisma.record.findUnique({
-      where: { id },
-    });
-
-    if (!record) {
-      throw new NotFound("recordNotFound");
-    }
-
-    const updated = await prisma.record.update({
-      where: { id: record.id },
-      data: {
-        status: type === "ACCEPT" ? WhitelistStatus.ACCEPTED : WhitelistStatus.DECLINED,
-      },
-      include: recordsInclude,
-    });
-
-    return updated;
   }
 
   @Put("/:id")

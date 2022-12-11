@@ -30,7 +30,7 @@ const TYPE_LABELS = {
   [RecordType.WRITTEN_WARNING]: "Written Warning",
 };
 
-export default function CitizenLogs({ recordLogs }: Props) {
+export default function CitizenLogs(props: Props) {
   const { query } = useRouter();
 
   const t = useTranslations("Leo");
@@ -38,10 +38,10 @@ export default function CitizenLogs({ recordLogs }: Props) {
   const { generateCallsign } = useGenerateCallsign();
 
   const asyncTable = useAsyncTable({
-    totalCount: recordLogs.totalCount,
-    initialData: recordLogs.recordsLogs,
+    totalCount: props.recordLogs.totalCount,
+    initialData: props.recordLogs.recordsLogs,
     fetchOptions: {
-      path: `/admin/manage/citizens/records-logs/${query.citizenId}`,
+      path: `/admin/manage/records-logs/${query.citizenId}`,
       onResponse: (data: GetManageRecordsLogsCitizenData) => ({
         data: data.recordsLogs,
         totalCount: data.totalCount,
@@ -85,7 +85,9 @@ export default function CitizenLogs({ recordLogs }: Props) {
           const extra = item.records
             ? {
                 caseNumber: `#${item.records?.caseNumber}`,
-                status: "—",
+                status: (
+                  <Status state={item.records.status}>{item.records.status?.toLowerCase()}</Status>
+                ),
                 postal: item.records.postal || common("none"),
                 notes: item.records.notes || common("none"),
                 violations: <ViolationsColumn violations={item.records.violations} />,
@@ -135,7 +137,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
   const user = await getSessionUser(req);
   const citizenId = query.citizenId as string;
   const [recordLogs] = await requestAll(req, [
-    [`/admin/manage/citizens/records-logs/${citizenId}`, { recordLogs: [], totalCount: 0 }],
+    [`/admin/manage/records-logs/${citizenId}`, { recordLogs: [], totalCount: 0 }],
   ]);
 
   return {

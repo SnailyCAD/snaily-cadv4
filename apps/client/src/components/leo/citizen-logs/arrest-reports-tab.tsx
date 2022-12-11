@@ -1,26 +1,26 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { Button } from "@snailycad/ui";
-import { Record, RecordType, WhitelistStatus } from "@snailycad/types";
-import { Table, useTableState } from "components/shared/Table";
+import { Button, Loader } from "@snailycad/ui";
+import { Record, RecordType } from "@snailycad/types";
+import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { FullDate } from "components/shared/FullDate";
 import { TabsContent } from "components/shared/TabList";
-import type { CitizenLog } from "src/pages/officer/supervisor/citizen-logs";
 import { makeUnitName } from "lib/utils";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { ManageRecordModal } from "../modals/ManageRecordModal";
 import useFetch from "lib/useFetch";
 import { Status } from "components/shared/Status";
-import { useRouter } from "next/router";
 import { HoverCard } from "components/shared/HoverCard";
 import { ViolationsColumn } from "../ViolationsColumn";
-import type { PostCitizenRecordLogsData } from "@snailycad/types/api";
+import type {
+  GetManagePendingArrestReports,
+  PostCitizenRecordLogsData,
+} from "@snailycad/types/api";
 
 interface Props {
-  search: string;
-  logs: CitizenLog[];
+  arrestReports: GetManagePendingArrestReports;
 }
 
 const TYPE_LABELS = {
@@ -29,19 +29,30 @@ const TYPE_LABELS = {
   [RecordType.WRITTEN_WARNING]: "Written Warning",
 };
 
-export function ArrestReportsTab({ search, logs: data }: Props) {
-  const logs = React.useMemo(() => uniqueList(data), [data]);
+export function ArrestReportsTab({ arrestReports }: Props) {
   const [tempRecord, setTempRecord] = React.useState<Record | null>(null);
+
+  const asyncTable = useAsyncTable({
+    getKey: (item) => item.recordId ?? item.warrantId ?? item.id,
+    fetchOptions: {
+      onResponse: (data: GetManagePendingArrestReports) => ({
+        data: data.arrestReports,
+        totalCount: data.totalCount,
+      }),
+      path: "/admin/manage/pending-arrest-reports",
+    },
+    totalCount: arrestReports.totalCount,
+    initialData: arrestReports.arrestReports,
+  });
 
   const { openModal } = useModal();
   const { generateCallsign } = useGenerateCallsign();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
-  const router = useRouter();
-  const tableState = useTableState({ search: { value: search } });
+  const tableState = useTableState();
 
-  function handleViewClick(item: CitizenLog) {
+  function handleViewClick(item: GetManagePendingArrestReports["arrestReports"][number]) {
     setTempRecord(item.records!);
     openModal(ModalIds.ManageRecord, {
       citizenName: `${item.citizen.name} ${item.citizen.surname}`,
@@ -50,28 +61,27 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
 
   async function handleAcceptDeclineClick(item: Record, type: "ACCEPT" | "DECLINE") {
     const { json } = await execute<PostCitizenRecordLogsData>({
-      path: `/admin/manage/citizens/records-logs/${item.id}`,
+      path: `/admin/manage/records-logs/${item.id}`,
       method: "POST",
       data: { type },
     });
 
-    if (json.id) {
+    if (json) {
       setTempRecord(null);
-      router.replace({
-        pathname: router.pathname,
-        query: router.query,
-      });
+      asyncTable.remove(item.id);
     }
   }
 
   return (
     <TabsContent value="arrest-reports-tab">
-      {logs.length <= 0 ? (
+      {asyncTable.isLoading && asyncTable.items.length >= 0 ? (
+        <Loader />
+      ) : asyncTable.items.length <= 0 ? (
         <p className="mt-5">{t("noCitizenLogs")}</p>
       ) : (
         <Table
           tableState={tableState}
-          data={logs.map((item) => {
+          data={asyncTable.items.map((item) => {
             const record = item.records!;
             const type = TYPE_LABELS[record.type];
             const createdAt = record.createdAt;
@@ -152,27 +162,4 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
       ) : null}
     </TabsContent>
   );
-}
-
-function uniqueList(logs: CitizenLog[]) {
-  const arrestReports: CitizenLog[] = [];
-
-  for (let i = 0; i < logs.length; i++) {
-    const log = logs[i]!;
-
-    const citizenId = log.citizenId;
-    const isArrestReport = log.records?.type === RecordType.ARREST_REPORT;
-
-    if (
-      arrestReports.some((v) => v.citizenId === citizenId) ||
-      !isArrestReport ||
-      log.records?.status !== WhitelistStatus.PENDING
-    ) {
-      continue;
-    }
-
-    arrestReports.push(logs[i]!);
-  }
-
-  return arrestReports;
 }

@@ -22,7 +22,7 @@ export function CitizenLogsTab({ citizens }: Props) {
         data: data.citizens,
         totalCount: data.totalCount,
       }),
-      path: "/admin/manage/citizens/records-logs",
+      path: "/admin/manage/records-logs",
     },
     totalCount: citizens.totalCount,
     initialData: citizens.citizens,

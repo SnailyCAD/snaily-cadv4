@@ -136,6 +136,15 @@ export interface GetManageRecordLogsData {
 
 /**
  * @method GET
+ * @route /admin/manage/citizens/pending-arrest-reports
+ */
+export interface GetManagePendingArrestReports {
+  totalCount: number;
+  arrestReports: GetManageRecordsLogsCitizenData["recordsLogs"];
+}
+
+/**
+ * @method GET
  * @route /admin/manage/citizens/record-logs/:citizenId
  */
 export interface GetManageRecordsLogsCitizenData {
