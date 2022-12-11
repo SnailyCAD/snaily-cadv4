@@ -158,10 +158,10 @@ export function ManageRecordModal(props: Props) {
           value: {
             key: v.penalCodeId,
             ...penalCode,
-            fine: { enabled: !!v.fine, value: v.fine },
-            counts: { enabled: true, value: v.counts },
-            jailTime: { enabled: !!v.jailTime, value: v.jailTime },
-            bail: { enabled: LEO_BAIL ? !!v.jailTime : false, value: v.bail },
+            fine: { enabled: !!v.fine, value: v.fine ?? undefined },
+            counts: { enabled: true, value: v.counts ?? undefined },
+            jailTime: { enabled: !!v.jailTime, value: v.jailTime ?? undefined },
+            bail: { enabled: LEO_BAIL ? !!v.jailTime : false, value: v.bail ?? undefined },
           },
         };
       }) ?? ([] as SelectValue<PenalCode>[]),
@@ -192,7 +192,7 @@ export function ManageRecordModal(props: Props) {
               />
             )}
 
-            <AddressPostalSelect postalOptional={false} postalOnly />
+            <AddressPostalSelect isDisabled={props.isReadOnly} postalOptional={false} postalOnly />
 
             <FormField label={t("violations")}>
               <SelectPenalCode
@@ -238,14 +238,16 @@ export function ManageRecordModal(props: Props) {
               <Button type="reset" onPress={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
-              <Button
-                className="flex items-center"
-                disabled={props.isReadOnly || !isValid || state === "loading"}
-                type="submit"
-              >
-                {state === "loading" ? <Loader className="mr-2" /> : null}
-                {props.record ? common("save") : common("create")}
-              </Button>
+              {props.isReadOnly ? null : (
+                <Button
+                  className="flex items-center"
+                  disabled={!isValid || state === "loading"}
+                  type="submit"
+                >
+                  {state === "loading" ? <Loader className="mr-2" /> : null}
+                  {props.record ? common("save") : common("create")}
+                </Button>
+              )}
             </footer>
           </Form>
         )}
