@@ -35,8 +35,8 @@ interface DispatchState {
   activeIncidents: LeoIncident[];
   setActiveIncidents(incidents: LeoIncident[]): void;
 
-  draggingUnit: "incident" | "call" | null;
-  setDraggingUnit(v: "incident" | "call" | null): void;
+  draggingUnit: "incident" | "call" | "move" | null;
+  setDraggingUnit(v: "incident" | "call" | "move" | null): void;
 }
 
 export const useDispatchState = create<DispatchState>()((set) => ({
