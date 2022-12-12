@@ -78,10 +78,10 @@
     "EDIT": "Edit License"
   },
   "BUSINESS_ROLE": {
-    "MANAGE": "Manage Business Roles",
-    "ADD": "Add Business Role",
-    "DELETE": "Delete Business Role",
-    "EDIT": "Edit Business Role"
+    "MANAGE": "Manage Organisation Roles",
+    "ADD": "Add Organisation Role",
+    "DELETE": "Delete Organisation Role",
+    "EDIT": "Edit Organisation Role"
   },
   "DEPARTMENT": {
     "MANAGE": "Manage Forces",
