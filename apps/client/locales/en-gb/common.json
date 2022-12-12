@@ -67,7 +67,7 @@
     "citizens": "Civilians",
     "bleeter": "Bleeter",
     "taxi": "Taxi",
-    "business": "Business",
+    "business": "Organisation",
     "truckLogs": "Truck Logs",
     "admin": "Admin",
     "dispatch": "Control",
@@ -97,7 +97,8 @@
     "weaponExams": "Weapon Exams",
     "myDeputyLogs": "My member logs",
     "whatsNew": "What's New",
-    "licenseExams": "License Exams"
+    "licenseExams": "License Exams",
+    "bureauOfFirearms": "Firearms Licensing Unit"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",

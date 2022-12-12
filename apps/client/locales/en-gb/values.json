@@ -26,9 +26,20 @@
     "priority": "Priority",
     "isDisabled": "Disabled",
     "county": "County",
+    "deletedSelectedValues": "Deleted {deleted} items. Failed to delete {failed} items.",
+    "failedDeleteValue": "Failed to delete <span>{value}</span>.",
     "alert_deletePenalCodeGroup": "Are you sure you want to delete <span>{group}</span>? This action cannot be undone.",
     "alert_deleteValue": "Are you sure you want to delete <span>{value}</span>? This action cannot be undone!",
     "alert_deleteSelectedValues": "Are you sure you want to delete {length} items? This action cannot be undone"
+  },
+  "PENAL_CODE_GROUP": {
+    "MANAGE": "Manage Charge Groups",
+    "ADD": "Add Charge Group",
+    "DELETE": "Delete Charge Group",
+    "EDIT": "Edit Charge Group",
+    "ungrouped": "Ungrouped",
+    "alert_deletePenalCodeGroup": "Are you sure you want to delete <span>{group}</span>? This action cannot be undone.",
+    "deleteGroup": "Delete Group"
   },
   "GENDER": {
     "MANAGE": "Manage Genders",
@@ -67,10 +78,10 @@
     "EDIT": "Edit License"
   },
   "BUSINESS_ROLE": {
-    "MANAGE": "Manage Business Roles",
-    "ADD": "Add Business Role",
-    "DELETE": "Delete Business Role",
-    "EDIT": "Edit Business Role"
+    "MANAGE": "Manage Organisation Roles",
+    "ADD": "Add Organisation Role",
+    "DELETE": "Delete Organisation Role",
+    "EDIT": "Edit Organisation Role"
   },
   "DEPARTMENT": {
     "MANAGE": "Manage Forces",
