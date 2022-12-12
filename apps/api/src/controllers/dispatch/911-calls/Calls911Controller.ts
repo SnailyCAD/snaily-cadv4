@@ -340,7 +340,10 @@ export class Calls911Controller {
     });
 
     const normalizedCall = officerOrDeputyToUnit(updated);
-    this.socket.emitUpdate911Call(normalizedCall);
+    this.socket.emitUpdate911Call({
+      ...normalizedCall,
+      notifyAssignedUnits: data.notifyAssignedUnits,
+    });
 
     return normalizedCall;
   }
