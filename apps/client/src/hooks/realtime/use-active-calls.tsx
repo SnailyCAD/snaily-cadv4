@@ -183,11 +183,6 @@ export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
     (call: (Full911Call & { notifyAssignedUnits: boolean }) | undefined) => {
       if (!call) return;
 
-      const isAssignedToCall = call.assignedUnits.some((v) => v.unit?.id === unit?.id);
-      if (isAssignedToCall && call.notifyAssignedUnits) {
-        handleNotifyAssignedUnits(call);
-      }
-
       const prevCall = calls.find((v) => v.id === call.id);
       if (prevCall) {
         const wasAssignedToCall =
@@ -220,6 +215,33 @@ export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
           return v;
         }),
       );
+
+      const isAssignedToCall = call.assignedUnits.some((v) => v.unit?.id === unit?.id);
+
+      if (isAssignedToCall && call.notifyAssignedUnits) {
+        handleNotifyAssignedUnits(call);
+
+        setTimeout(() => {
+          call911State.setCalls(
+            calls.map((v) => {
+              if (v.id === call.id) {
+                if (call911State.currentlySelectedCall?.id === call.id) {
+                  call911State.setCurrentlySelectedCall({
+                    ...v,
+                    ...call,
+                    // @ts-expect-error this is a socket extra type, it doesn't exist on the actual call
+                    notifyAssignedUnits: false,
+                  });
+                }
+
+                return { ...v, ...call, notifyAssignedUnits: false };
+              }
+
+              return v;
+            }),
+          );
+        }, 6_000 /* 6 seconds */);
+      }
     },
     [calls, unit?.id, addedToCallControls, shouldPlayAddedToCallSound],
   );
