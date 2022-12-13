@@ -17,7 +17,7 @@ import { usePermission } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
 import { Droppable } from "components/shared/dnd/Droppable";
 import { DndActions } from "types/DndActions";
-import { AssignedUnitsColumn } from "./AssignedUnitsColumn";
+import { AssignedUnitsColumn } from "./assigned-units-column";
 import type { Get911CallsData, Post911CallAssignUnAssign } from "@snailycad/types/api";
 import { useMounted } from "@casper124578/useful";
 import { CallDescription } from "./CallDescription";

@@ -10,6 +10,7 @@ import { useTranslations } from "next-intl";
 import { Full911Call, useDispatchState } from "state/dispatch/dispatch-state";
 import { DndActions } from "types/DndActions";
 import shallow from "zustand/shallow";
+import { classNames } from "lib/classNames";
 
 interface Props {
   call: Full911Call;
@@ -55,7 +56,7 @@ export function AssignedUnitsColumn({ handleAssignToCall, isDispatch, call }: Pr
       }
       canDrop={(item) => isDispatch && !call.assignedUnits.some((v) => v.unit?.id === item.id)}
     >
-      <div ref={scrollRef} className="flex gap-2">
+      <div ref={scrollRef} className="flex">
         {call.assignedUnits.length <= 0
           ? common("none")
           : call.assignedUnits.map((unit, idx) => (
@@ -71,7 +72,13 @@ export function AssignedUnitsColumn({ handleAssignToCall, isDispatch, call }: Pr
                 {() => {
                   const comma = idx + 1 === call.assignedUnits.length ? "" : ", ";
                   return (
-                    <span className={canDrag ? "!cursor-move" : "cursor-default"}>
+                    <span
+                      className={classNames(
+                        canDrag
+                          ? "!cursor-move hover:bg-secondary px-1.5 py-0.5 rounded-md"
+                          : "cursor-default",
+                      )}
+                    >
                       {makeAssignedUnit(unit)}
                       {comma}
                     </span>
