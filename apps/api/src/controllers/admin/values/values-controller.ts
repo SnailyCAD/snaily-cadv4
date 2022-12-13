@@ -114,7 +114,6 @@ export class ValuesController {
           ]);
 
           return {
-            groups: [],
             type,
             values,
             totalCount,
@@ -164,7 +163,6 @@ export class ValuesController {
         ]);
 
         return {
-          groups: [],
           type,
           values,
           totalCount,

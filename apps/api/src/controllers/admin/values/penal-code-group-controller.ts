@@ -21,7 +21,7 @@ export class PenalCodeGroupController {
   ) {
     const where = query ? ({ name: { contains: query, mode: "insensitive" } } as const) : undefined;
 
-    const [totalCount, groups] = await prisma.$transaction([
+    const [totalCount, penalCodeGroups] = await prisma.$transaction([
       prisma.penalCodeGroup.count({ where, orderBy: { position: "asc" } }),
       prisma.penalCodeGroup.findMany({
         where,
@@ -31,7 +31,7 @@ export class PenalCodeGroupController {
       }),
     ]);
 
-    return { totalCount, groups };
+    return { totalCount, groups: penalCodeGroups };
   }
 
   @Post("/")

@@ -202,7 +202,10 @@ export default function PenalCodeGroupsPage(props: Props) {
 export const getServerSideProps: GetServerSideProps = async ({ locale, req, query }) => {
   const user = await getSessionUser(req);
   const [penalCodes] = await requestAll(req, [
-    [`/admin/values/penal_code?groupId=${query.groupId}&includeAll=false`, []],
+    [
+      `/admin/values/penal_code?groupId=${query.groupId}&includeAll=false`,
+      { totalCount: 0, values: [], type: "PENAL_CODE" },
+    ],
   ]);
 
   return {
