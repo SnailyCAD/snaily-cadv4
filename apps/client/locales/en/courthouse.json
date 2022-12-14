@@ -32,8 +32,10 @@
     "addCourthousePost": "Add courthouse post",
     "noCourthousePosts": "There are no courthouse posts yet.",
     "createdBy": "Created By",
+    "cancelRequest": "Cancel Request",
     "alert_deleteCourthousePost": "Are you sure you want to delete this post? This action cannot be undone.",
     "alert_deleteCourtEntry": "Are you sure you want to delete this entry? This action cannot be undone.",
+    "alert_cancelRequest": "Are you sure you want to cancel this expungement request? This action cannot be undone.",
     "alert_deleteCourtDate": "Are you sure you want to delete this court date? This action cannot be undone."
   }
 }

@@ -11,10 +11,17 @@ import { useModal } from "state/modalState";
 import { Button } from "@snailycad/ui";
 import { ModalIds } from "types/ModalIds";
 import type { GetExpungementRequestsData } from "@snailycad/types/api";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import useFetch from "lib/useFetch";
 
 const RequestExpungement = dynamic(
   async () => (await import("./RequestExpungement")).RequestExpungement,
+  { ssr: false },
 );
+
+const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal, {
+  ssr: false,
+});
 
 interface Props {
   requests: GetExpungementRequestsData;
@@ -22,11 +29,32 @@ interface Props {
 
 export function ExpungementRequestsTab(props: Props) {
   const [requests, setRequests] = React.useState(props.requests);
+  const [tempRequest, requestState] = useTemporaryItem(requests);
   const common = useTranslations("Common");
   const t = useTranslations("Courthouse");
   const leo = useTranslations("Leo");
-  const { openModal } = useModal();
+  const { closeModal, openModal } = useModal();
   const tableState = useTableState();
+  const { execute, state } = useFetch();
+
+  function handleCancelClick(request: GetExpungementRequestsData[number]) {
+    openModal(ModalIds.AlertCancelExpungementRequest);
+    requestState.setTempId(request.id);
+  }
+
+  async function handleCancelRequest() {
+    if (!tempRequest) return;
+
+    const { json } = await execute({
+      path: `/expungement-requests/${tempRequest.citizenId}/${tempRequest.id}`,
+      method: "DELETE",
+    });
+
+    if (json) {
+      closeModal(ModalIds.AlertCancelExpungementRequest);
+      setRequests((p) => p.filter((v) => v.id !== tempRequest.id));
+    }
+  }
 
   return (
     <TabsContent value="expungementRequestsTab">
@@ -46,6 +74,7 @@ export function ExpungementRequestsTab(props: Props) {
           data={requests.map((request) => {
             // accept requests delete the db entity, this results in show "NONE" for the type
             // therefore it shows "ACCEPTED"
+            const isDisabled = request.status !== ExpungementRequestStatus.PENDING;
             const warrants =
               request.status === ExpungementRequestStatus.ACCEPTED
                 ? "accepted"
@@ -70,10 +99,7 @@ export function ExpungementRequestsTab(props: Props) {
             return {
               id: request.id,
               rowProps: {
-                className:
-                  request.status !== ExpungementRequestStatus.PENDING
-                    ? "opacity-50 cursor-not-allowed"
-                    : "",
+                className: isDisabled ? "opacity-50 cursor-not-allowed" : "",
               },
               citizen: `${request.citizen.name} ${request.citizen.surname}`,
               warrants,
@@ -81,6 +107,16 @@ export function ExpungementRequestsTab(props: Props) {
               tickets,
               status: <Status state={request.status}>{request.status.toLowerCase()}</Status>,
               createdAt: <FullDate>{request.createdAt}</FullDate>,
+              actions: (
+                <Button
+                  disabled={isDisabled}
+                  size="xs"
+                  onClick={() => handleCancelClick(request)}
+                  variant="danger"
+                >
+                  {t("cancelRequest")}
+                </Button>
+              ),
             };
           })}
           columns={[
@@ -90,11 +126,22 @@ export function ExpungementRequestsTab(props: Props) {
             { header: leo("tickets"), accessorKey: "tickets" },
             { header: leo("status"), accessorKey: "status" },
             { header: common("createdAt"), accessorKey: "createdAt" },
+            { header: common("actions"), accessorKey: "actions" },
           ]}
         />
       )}
 
       <RequestExpungement onSuccess={(json) => setRequests((p) => [json, ...p])} />
+
+      <AlertModal
+        title={t("cancelRequest")}
+        description={t("alert_cancelRequest")}
+        onDeleteClick={handleCancelRequest}
+        id={ModalIds.AlertCancelExpungementRequest}
+        deleteText={t("cancelRequest")}
+        onClose={() => requestState.setTempId(null)}
+        state={state}
+      />
     </TabsContent>
   );
 }
