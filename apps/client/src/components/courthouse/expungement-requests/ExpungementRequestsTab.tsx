@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Table, useTableState } from "components/shared/Table";
 import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "next-intl";
@@ -13,6 +12,7 @@ import { ModalIds } from "types/ModalIds";
 import type { GetExpungementRequestsData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import useFetch from "lib/useFetch";
+import { useList } from "hooks/shared/table/use-list";
 
 const RequestExpungement = dynamic(
   async () => (await import("./RequestExpungement")).RequestExpungement,
@@ -28,8 +28,9 @@ interface Props {
 }
 
 export function ExpungementRequestsTab(props: Props) {
-  const [requests, setRequests] = React.useState(props.requests);
-  const [tempRequest, requestState] = useTemporaryItem(requests);
+  const list = useList({ initialData: props.requests });
+  const [tempRequest, requestState] = useTemporaryItem(list.items);
+
   const common = useTranslations("Common");
   const t = useTranslations("Courthouse");
   const leo = useTranslations("Leo");
@@ -52,7 +53,7 @@ export function ExpungementRequestsTab(props: Props) {
 
     if (json) {
       closeModal(ModalIds.AlertCancelExpungementRequest);
-      setRequests((p) => p.filter((v) => v.id !== tempRequest.id));
+      list.update(tempRequest.id, { ...tempRequest, status: ExpungementRequestStatus.CANCELED });
     }
   }
 
@@ -66,12 +67,12 @@ export function ExpungementRequestsTab(props: Props) {
         </Button>
       </header>
 
-      {requests.length <= 0 ? (
+      {list.items.length <= 0 ? (
         <p className="mt-5">{t("noExpungementRequests")}</p>
       ) : (
         <Table
           tableState={tableState}
-          data={requests.map((request) => {
+          data={list.items.map((request) => {
             // accept requests delete the db entity, this results in show "NONE" for the type
             // therefore it shows "ACCEPTED"
             const isDisabled = request.status !== ExpungementRequestStatus.PENDING;
@@ -131,7 +132,7 @@ export function ExpungementRequestsTab(props: Props) {
         />
       )}
 
-      <RequestExpungement onSuccess={(json) => setRequests((p) => [json, ...p])} />
+      <RequestExpungement onSuccess={(json) => list.prepend(json)} />
 
       <AlertModal
         title={t("cancelRequest")}
