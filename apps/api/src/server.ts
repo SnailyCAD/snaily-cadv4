@@ -61,6 +61,7 @@ const processEnvPort = process.env.PORT || process.env.PORT_API;
   ],
   swagger: [{ path: "/api-docs", specVersion: "3.0.3" }],
   socketIO: {
+    maxHttpBufferSize: 1e6, // 1 mb
     cors: {
       credentials: true,
       origin: process.env.CORS_ORIGIN_URL ?? "http://localhost:3000",

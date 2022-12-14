@@ -9,7 +9,7 @@ import { useValues } from "context/ValuesContext";
 import { toastMessage } from "lib/toastMessage";
 import { ModalIds } from "types/ModalIds";
 import { Form, Formik } from "formik";
-import { Button, Loader, TextField } from "@snailycad/ui";
+import { Button, Input, Loader, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
 import type { Full911Call } from "state/dispatch/dispatch-state";
@@ -107,6 +107,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
     situationCode: call?.situationCodeId ?? null,
     type: call?.typeId ?? null,
     assignedUnits: undefined,
+    notifyAssignedUnits: true,
   };
 
   return (
@@ -126,9 +127,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
             errorMessage={errors.name}
             isDisabled={isDisabled}
           />
-
           <AddressPostalSelect addressLabel="location" />
-
           {router.pathname.includes("/citizen") ? (
             <FormField errorMessage={errors.description} label={common("description")}>
               <Editor
@@ -240,6 +239,24 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
             ) : null}
 
             <div className="flex">
+              {call ? (
+                <FormField
+                  className="mb-0"
+                  labelClassName="min-w-fit"
+                  label="Notify assigned units"
+                  checkbox
+                >
+                  <Input
+                    defaultChecked
+                    value={values.notifyAssignedUnits.toString()}
+                    onChange={() =>
+                      setFieldValue("notifyAssignedUnits", !values.notifyAssignedUnits)
+                    }
+                    type="checkbox"
+                  />
+                </FormField>
+              ) : null}
+
               <Button onPress={handleClose} type="button" variant="cancel">
                 {common("cancel")}
               </Button>

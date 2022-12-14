@@ -21,6 +21,7 @@ const DEFAULTS: Partial<Record<Feature, { isEnabled: boolean }>> = {
   WARRANT_STATUS_APPROVAL: { isEnabled: false },
   LICENSE_EXAMS: { isEnabled: false },
   CITIZEN_CREATION_RECORDS: { isEnabled: false },
+  BUREAU_OF_FIREARMS: { isEnabled: false },
 };
 
 export async function disabledFeatureToCadFeature() {

@@ -7,7 +7,7 @@ import { Button } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { useFormikContext } from "formik";
-import { RecordsTable } from "components/leo/modals/NameSearchModal/tabs/RecordsTab";
+import { RecordsTable } from "components/leo/modals/NameSearchModal/tabs/records-tab";
 import { v4 } from "uuid";
 
 let valuesFetched = false;

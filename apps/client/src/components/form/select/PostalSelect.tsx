@@ -22,6 +22,7 @@ interface Props {
   postalOptional?: boolean;
   addressLabel?: "address" | "location";
   postalOnly?: boolean;
+  isDisabled?: boolean;
 }
 
 export function AddressPostalSelect(props: Props) {
@@ -80,6 +81,7 @@ export function AddressPostalSelect(props: Props) {
     <FormRow disabled={props.postalOnly} flexLike>
       {props.postalOnly ? null : (
         <AsyncListSearchField<AddressValue>
+          isDisabled={props.isDisabled}
           selectedKey={selectedAddress}
           allowsCustomValue
           defaultItems={address.values}
@@ -112,6 +114,7 @@ export function AddressPostalSelect(props: Props) {
       )}
 
       <AsyncListSearchField<AddressValue>
+        isDisabled={props.isDisabled}
         selectedKey={selectedPostal}
         allowsCustomValue
         defaultItems={address.values}

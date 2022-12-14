@@ -58,6 +58,7 @@ export function getTypeFromPath(path: string & {}) {
 
 export function getPermissionsForValuesRequest(request: Req) {
   const path = request.params.path;
+
   if (!path) {
     throw new BadRequest("Must specify `params.path`");
   }

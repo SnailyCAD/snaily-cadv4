@@ -1,4 +1,4 @@
-import { User, CadFeature, Feature, cad, Prisma } from "@prisma/client";
+import { User, CadFeature, Feature, cad, Prisma, WhitelistStatus } from "@prisma/client";
 import { WEAPON_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
@@ -97,6 +97,12 @@ export class WeaponController {
       defaultReturn: false,
     });
 
+    const isBOFEnabled = isFeatureEnabled({
+      features: cad.features,
+      feature: Feature.BUREAU_OF_FIREARMS,
+      defaultReturn: false,
+    });
+
     let modelId = data.model;
 
     if (isCustomEnabled) {
@@ -131,6 +137,7 @@ export class WeaponController {
         registrationStatusId: data.registrationStatus as string,
         serialNumber: await this.generateOrValidateSerialNumber(data.serialNumber || null),
         userId: user.id || undefined,
+        bofStatus: isBOFEnabled ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED,
         modelId,
       },
       include: citizenInclude.weapons.include,
@@ -192,6 +199,18 @@ export class WeaponController {
       modelId = newModel.id;
     }
 
+    const isBOFEnabled = isFeatureEnabled({
+      features: cad.features,
+      feature: Feature.BUREAU_OF_FIREARMS,
+      defaultReturn: false,
+    });
+
+    const bofStatus = isBOFEnabled
+      ? data.reApplyForDmv && weapon.bofStatus === WhitelistStatus.DECLINED
+        ? WhitelistStatus.PENDING
+        : undefined // undefined = will not update the database entry
+      : null;
+
     const updated = await prisma.weapon.update({
       where: {
         id: weapon.id,
@@ -202,6 +221,7 @@ export class WeaponController {
         serialNumber: data.serialNumber
           ? await this.generateOrValidateSerialNumber(data.serialNumber, weapon)
           : undefined,
+        bofStatus,
       },
       include: citizenInclude.weapons.include,
     });

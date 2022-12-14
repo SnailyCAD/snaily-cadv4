@@ -18,15 +18,16 @@ import { IsAuth } from "middlewares/IsAuth";
 import { typeHandlers } from "./Import";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { ValuesSelect, getTypeFromPath, getPermissionsForValuesRequest } from "lib/values/utils";
-import { Prisma, ValueType } from "@prisma/client";
+import { ValueType } from "@prisma/client";
 import { UsePermissions } from "middlewares/UsePermissions";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import type * as APITypes from "@snailycad/types/api";
 import { getImageWebPPath } from "utils/image";
 import { BULK_DELETE_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
+import { createSearchWhereObject } from "lib/values/create-where-object";
 
-const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
+export const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
   QUALIFICATION: {
     name: "qualificationValue",
     include: { departments: { include: { value: true } } },
@@ -86,7 +87,7 @@ export class ValuesController {
           );
         }
 
-        const where = this.createSearchWhereObject({
+        const where = createSearchWhereObject({
           path,
           query,
           queryParams,
@@ -113,7 +114,6 @@ export class ValuesController {
           ]);
 
           return {
-            groups: [],
             type,
             values,
             totalCount,
@@ -121,10 +121,15 @@ export class ValuesController {
         }
 
         if (type === "PENAL_CODE") {
-          return {
-            type,
-            groups: await prisma.penalCodeGroup.findMany({ orderBy: { position: "asc" } }),
-            values: await prisma.penalCode.findMany({
+          const [totalCount, penalCodes] = await prisma.$transaction([
+            prisma.penalCode.count({
+              where,
+              orderBy: { title: "asc" },
+            }),
+            prisma.penalCode.findMany({
+              take: includeAll ? undefined : 35,
+              skip: includeAll ? undefined : skip,
+              where,
               orderBy: { title: "asc" },
               include: {
                 warningApplicable: true,
@@ -132,6 +137,12 @@ export class ValuesController {
                 group: true,
               },
             }),
+          ]);
+
+          return {
+            type,
+            values: penalCodes,
+            totalCount,
           };
         }
 
@@ -152,7 +163,6 @@ export class ValuesController {
         ]);
 
         return {
-          groups: [],
           type,
           values,
           totalCount,
@@ -177,7 +187,7 @@ export class ValuesController {
       const values = await prisma[data.name].findMany({
         include: { ...(data.include ?? {}), value: true },
         orderBy: { value: { position: "asc" } },
-        where: this.createSearchWhereObject({
+        where: createSearchWhereObject({
           path,
           query,
           queryParams,
@@ -301,7 +311,10 @@ export class ValuesController {
 
     const arr = await Promise.all(data.map(async (id) => this.deleteById(type, id)));
 
-    return arr.every((v) => v);
+    const successfullyDeleted = arr.filter((v) => v === true).length;
+    const failedToDeleteIds = arr.filter((v) => typeof v === "string").map((v) => v as string);
+
+    return { success: successfullyDeleted, failedIds: failedToDeleteIds };
   }
 
   @Delete("/:id")
@@ -370,119 +383,28 @@ export class ValuesController {
     return true;
   }
 
-  private createSearchWhereObject({
-    path,
-    query,
-    showDisabled = true,
-    queryParams,
-  }: {
-    path: string;
-    query: string;
-    showDisabled?: boolean;
-    queryParams: any;
-  }) {
-    const type = getTypeFromPath(path);
-    const data = GET_VALUES[type];
-
-    if (type === "PENAL_CODE") {
-      const where: Prisma.PenalCodeWhereInput = {
-        OR: [
-          { title: { contains: query, mode: "insensitive" } },
-          { description: { contains: query, mode: "insensitive" } },
-          { descriptionData: { array_contains: query } },
-          { group: { name: { contains: query, mode: "insensitive" } } },
-        ],
-      };
-
-      return where;
-    }
-
-    if (data) {
-      let where: any = {
-        value: {
-          isDisabled: showDisabled ? undefined : false,
-          value: { contains: query, mode: "insensitive" },
-        },
-      };
-
-      if (ValueType.EMERGENCY_VEHICLE === type) {
-        const divisionIds = String(queryParams.divisions).split(",");
-
-        const whereAND = [
-          { value: { isDisabled: showDisabled ? undefined : false } },
-          { value: { value: { contains: query, mode: "insensitive" } } },
-        ] as any[];
-
-        if (queryParams.department) {
-          whereAND.push({ departments: { some: { id: queryParams.department } } });
-        }
-
-        if (queryParams.divisions) {
-          whereAND.push(...divisionIds.map((id) => ({ divisions: { some: { id } } })));
-        }
-
-        where = {
-          AND: whereAND,
-        };
-      }
-
-      if (ValueType.ADDRESS === type) {
-        where = {
-          OR: [
-            { value: { value: { contains: query, mode: "insensitive" } } },
-            { county: { contains: query, mode: "insensitive" } },
-            { postal: { contains: query, mode: "insensitive" } },
-          ],
-          AND: [{ value: { isDisabled: showDisabled ? undefined : false } }],
-        };
-      }
-
-      return where;
-    }
-
-    return {
-      type,
-      isDisabled: showDisabled ? undefined : false,
-      value: { contains: query, mode: "insensitive" },
-    };
-  }
-
   private async deleteById(type: ValueType, id: string) {
-    const data = GET_VALUES[type];
+    try {
+      const data = GET_VALUES[type];
 
-    if (data) {
-      // @ts-expect-error ignore
-      const deleted = await prisma[data.name].delete({
-        where: {
-          id,
-        },
-      });
+      if (data) {
+        // @ts-expect-error ignore
+        const deleted = await prisma[data.name].delete({ where: { id } });
+        await prisma.value.delete({ where: { id: deleted.valueId } });
 
-      await prisma.value.delete({
-        where: {
-          id: deleted.valueId,
-        },
-      });
+        return true;
+      }
 
-      return true;
-    }
+      if (type === "PENAL_CODE") {
+        await prisma.penalCode.delete({ where: { id } });
+        return true;
+      }
 
-    if (type === "PENAL_CODE") {
-      await prisma.penalCode.delete({
-        where: {
-          id,
-        },
-      });
+      await prisma.value.delete({ where: { id } });
 
       return true;
+    } catch {
+      return id;
     }
-
-    await prisma.value.delete({
-      where: {
-        id,
-      },
-    });
-
-    return true;
   }
 }

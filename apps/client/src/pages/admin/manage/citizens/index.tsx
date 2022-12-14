@@ -7,7 +7,7 @@ import { Rank } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
-import { AllCitizensTab } from "components/admin/manage/citizens/AllCitizensTab";
+import { AllCitizensTab } from "components/admin/manage/citizens/all-citizens-tab";
 import { Permissions } from "@snailycad/permissions";
 import type { GetManageCitizensData } from "@snailycad/types/api";
 
@@ -39,15 +39,13 @@ export default function ManageCitizens({ citizens: data }: Props) {
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, req }) => {
   const user = await getSessionUser(req);
-  const [citizens, values] = await requestAll(req, [
+  const [citizens] = await requestAll(req, [
     ["/admin/manage/citizens", { citizens: [], totalCount: 0 }],
-    ["/admin/values/gender?paths=ethnicity", []],
   ]);
 
   return {
     props: {
       citizens,
-      values,
       session: user,
       messages: {
         ...(await getTranslations(

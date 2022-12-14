@@ -2,22 +2,30 @@ import * as React from "react";
 
 interface Options<T> {
   initialData: T[];
+  getKey?(item: T): React.Key;
 }
 
 export function useList<T>(options: Options<T>) {
   const [items, setItems] = React.useState<T[]>(options.initialData);
+  const getKey = options.getKey || _getKey;
 
   return {
     items,
-    ...createListActions(setItems),
+    ...createListActions({ dispatch: setItems, getKey }),
   };
 }
 
-function getKey<T>(item: T): string {
+function _getKey<T>(item: T): string {
   return (item as any).id || (item as any).key;
 }
 
-export function createListActions<T>(dispatch: React.Dispatch<React.SetStateAction<T[]>>) {
+export function createListActions<T>({
+  dispatch,
+  getKey,
+}: {
+  dispatch: React.Dispatch<React.SetStateAction<T[]>>;
+  getKey(item: T): React.Key;
+}) {
   return {
     setItems(items: T[]) {
       dispatch(items);
@@ -25,6 +33,9 @@ export function createListActions<T>(dispatch: React.Dispatch<React.SetStateActi
     },
     insert(index: number, ...values: T[]) {
       dispatch((items) => insert(items, index, ...values));
+    },
+    prepend(...values: T[]) {
+      dispatch((items) => insert(items, 0, ...values));
     },
     append(...values: T[]) {
       dispatch((items) => insert(items, items.length, ...values));

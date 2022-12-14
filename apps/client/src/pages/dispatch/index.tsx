@@ -42,7 +42,7 @@ const Modals = {
     return (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal;
   }),
   WeaponSearchModal: dynamic(async () => {
-    return (await import("components/leo/modals/WeaponSearchModal")).WeaponSearchModal;
+    return (await import("components/leo/modals/weapon-search-modal")).WeaponSearchModal;
   }),
   NotepadModal: dynamic(async () => {
     return (await import("components/shared/NotepadModal")).NotepadModal;
@@ -82,7 +82,7 @@ export default function DispatchDashboard(props: DispatchPageProps) {
   const signal100 = useSignal100();
   const panic = usePanicButton();
 
-  const { ACTIVE_INCIDENTS } = useFeatureEnabled();
+  const { CALLS_911, ACTIVE_INCIDENTS } = useFeatureEnabled();
   const { isOpen } = useModal();
 
   const activeOfficers = React.useMemo(
@@ -133,7 +133,7 @@ export default function DispatchDashboard(props: DispatchPageProps) {
             </div>
           </div>
           <div className="mt-3">
-            <ActiveCalls initialData={props.calls} />
+            {CALLS_911 ? <ActiveCalls initialData={props.calls} /> : null}
             {ACTIVE_INCIDENTS ? <ActiveIncidents /> : null}
             <ActiveBolos initialBolos={props.bolos} />
           </div>

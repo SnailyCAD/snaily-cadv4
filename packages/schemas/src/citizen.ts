@@ -71,6 +71,7 @@ export const WEAPON_SCHEMA = z.object({
   registrationStatus: z.string().min(2).max(255),
   citizenId: z.string().min(2).max(255),
   serialNumber: z.string().max(255).optional(),
+  reApplyForDmv: z.boolean().nullable().optional(),
 });
 
 const END_TIME = z

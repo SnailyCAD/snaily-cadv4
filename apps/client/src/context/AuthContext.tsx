@@ -66,7 +66,7 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
     }
 
     if (initialData.cad ?? initialData.session?.cad) {
-      setCad(initialData.cad ?? initialData.session?.cad ?? null);
+      setCad(initialData.session?.cad ?? initialData.cad ?? null);
     }
   }, [initialData]);
 

@@ -15,4 +15,4 @@ Thanks for opening a PR! Your contribution is much appreciated!
 
 - [ ] `.json` files are formatted: `yarn format`
 - [ ] Translations are correct
-- [ ] New translation? It's been added to `next.config.js`
+- [ ] New translation? It's been added to `i18n.config.mjs`

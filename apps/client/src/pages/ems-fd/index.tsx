@@ -30,6 +30,7 @@ import type {
 import { useCall911State } from "state/dispatch/call-911-state";
 import { DndProvider } from "components/shared/dnd/DndProvider";
 import { usePermission } from "hooks/usePermission";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
   activeDeputy: GetEmsFdActiveDeputy | null;
@@ -70,6 +71,7 @@ export default function EmsFDDashboard({
     ],
   });
 
+  const { CALLS_911 } = useFeatureEnabled();
   const signal100 = useSignal100();
   const tones = useTones("ems-fd");
   const panic = usePanicButton();
@@ -120,9 +122,7 @@ export default function EmsFDDashboard({
       <div id="ems-fd">
         <DndProvider id="ems-fd">
           <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
-            <div className="w-full">
-              <ActiveCalls initialData={calls} />
-            </div>
+            <div className="w-full">{CALLS_911 ? <ActiveCalls initialData={calls} /> : null}</div>
           </div>
           <div className="mt-3">
             <ActiveOfficers initialOfficers={[]} />

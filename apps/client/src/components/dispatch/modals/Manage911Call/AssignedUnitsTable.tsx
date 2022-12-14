@@ -14,6 +14,7 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { AddUnitToCallModal } from "./AddUnitToCallModal";
 import { FullDate } from "components/shared/FullDate";
+import { generateContrastColor } from "lib/table/get-contrasting-text-color";
 
 interface Props {
   isDisabled: boolean;
@@ -92,7 +93,12 @@ export function AssignedUnitsTable({ isDisabled }: Props) {
               const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
 
               return {
-                rowProps: { style: { background: !useDot ? color ?? undefined : undefined } },
+                rowProps: {
+                  style: {
+                    background: !useDot && color ? color : undefined,
+                    color: !useDot && color ? generateContrastColor(color) : undefined,
+                  },
+                },
                 id: unit.id,
                 unit: callsignAndName,
                 status: (

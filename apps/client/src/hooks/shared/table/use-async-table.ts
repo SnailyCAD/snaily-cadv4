@@ -20,12 +20,13 @@ interface Options<T> {
   initialData?: T[];
   scrollToTopOnDataChange?: boolean;
   fetchOptions: FetchOptions;
+  getKey?(item: T): React.Key;
 }
 
 export function useAsyncTable<T>(options: Options<T>) {
   const scrollToTopOnDataChange = options.scrollToTopOnDataChange ?? true;
 
-  const list = useList<T>({ initialData: options.initialData ?? [] });
+  const list = useList<T>({ getKey: options.getKey, initialData: options.initialData ?? [] });
   const { state: loadingState, execute } = useFetch();
 
   const [debouncedSearch, setDebouncedSearch] = React.useState(options.search);

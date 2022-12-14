@@ -19,13 +19,12 @@ interface Props {
 }
 
 export function ExpungementRequestsTab({ requests: data }: Props) {
-  const [requests, setRequests] = React.useState(data);
+  const [pendingRequests, setPendingRequests] = React.useState(data);
 
   const t = useTranslations();
   const common = useTranslations("Common");
   const tableState = useTableState();
   const { state, execute } = useFetch();
-  const pendingRequests = requests.filter((v) => v.status === ExpungementRequestStatus.PENDING);
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageExpungementRequests], true);
 
@@ -37,7 +36,7 @@ export function ExpungementRequestsTab({ requests: data }: Props) {
     });
 
     if (json) {
-      setRequests((p) => p.filter((v) => v.id !== json.id));
+      setPendingRequests((p) => p.filter((v) => v.id !== json.id));
     }
   }
 

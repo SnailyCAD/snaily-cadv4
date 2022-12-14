@@ -99,6 +99,7 @@
     "deleteWeapon": "Delete Weapon",
     "registeredWeapons": "Registered Weapons",
     "successWeaponRegistered": "Successfully registered a weapon",
+    "bofStatus": "Firearms Certificate Status",
     "alert_deleteWeapon": "Are you sure you want to delete this weapon? This action cannot be undone."
   },
   "MedicalRecords": {

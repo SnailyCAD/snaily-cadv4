@@ -17,14 +17,14 @@ import { usePermission } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
 import { Droppable } from "components/shared/dnd/Droppable";
 import { DndActions } from "types/DndActions";
-import { AssignedUnitsColumn } from "./AssignedUnitsColumn";
+import { AssignedUnitsColumn } from "./assigned-units-column";
 import type { Get911CallsData, Post911CallAssignUnAssign } from "@snailycad/types/api";
 import { useMounted } from "@casper124578/useful";
 import { CallDescription } from "./CallDescription";
 import { ActiveCallsHeader } from "./active-calls-header";
 import { ActiveCallsActionsColumn } from "./actions-column";
 import { useCall911State } from "state/dispatch/call-911-state";
-import { useActiveCalls } from "hooks/realtime/useActiveCalls";
+import { useActiveCalls } from "hooks/realtime/use-active-calls";
 import shallow from "zustand/shallow";
 
 interface Props {
@@ -159,8 +159,10 @@ function _ActiveCalls({ initialData }: Props) {
                 id: call.id,
                 rowProps: {
                   className: classNames(
-                    isUnitAssigned && "bg-gray-200 dark:bg-quinary",
+                    isUnitAssigned && "bg-gray-200 dark:bg-amber-900",
                     call.isSignal100 && "bg-red-500 dark:bg-red-700",
+                    // @ts-expect-error this is a socket extra type, it doesn't exist on the actual call
+                    call.notifyAssignedUnits && "animate-call-updated",
                   ),
                 },
                 caseNumber: `#${call.caseNumber}`,

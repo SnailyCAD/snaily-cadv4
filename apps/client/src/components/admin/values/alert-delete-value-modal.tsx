@@ -8,6 +8,8 @@ import { useModal } from "state/modalState";
 import type { AnyValue, ValueType } from "@snailycad/types";
 import type { useAsyncTable } from "components/shared/Table";
 import type { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import { toastMessage } from "lib/toastMessage";
+import { getValueStrFromValue } from "lib/admin/values/utils";
 
 interface AlertDeleteValueModalProps<T extends AnyValue> {
   asyncTable: ReturnType<typeof useAsyncTable<T>>;
@@ -30,11 +32,25 @@ export function AlertDeleteValueModal<T extends AnyValue>(props: AlertDeleteValu
       method: "DELETE",
     });
 
-    if (json) {
-      props.asyncTable.remove(tempValue.id);
-      valueState.setTempId(null);
+    if (typeof json === "string") {
+      const _value = props.asyncTable.items.find((v) => v.id === tempValue.id)!;
+      toastMessage({
+        title: "Delete Value",
+        icon: "info",
+        message: t.rich("failedDeleteValue", {
+          value: getValueStrFromValue(_value),
+        }),
+      });
 
+      valueState.setTempId(null);
       closeModal(ModalIds.AlertDeleteValue);
+    } else {
+      if (json) {
+        props.asyncTable.remove(tempValue.id);
+        valueState.setTempId(null);
+
+        closeModal(ModalIds.AlertDeleteValue);
+      }
     }
   }
 

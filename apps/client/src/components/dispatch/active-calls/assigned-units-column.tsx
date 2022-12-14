@@ -1,3 +1,4 @@
+import * as React from "react";
 import type { AssignedUnit, CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 import { isUnitCombined } from "@snailycad/utils";
 import { Draggable } from "components/shared/dnd/Draggable";
@@ -8,6 +9,8 @@ import { makeUnitName } from "lib/utils";
 import { useTranslations } from "next-intl";
 import { Full911Call, useDispatchState } from "state/dispatch/dispatch-state";
 import { DndActions } from "types/DndActions";
+import shallow from "zustand/shallow";
+import { classNames } from "lib/classNames";
 
 interface Props {
   call: Full911Call;
@@ -18,9 +21,24 @@ interface Props {
 export function AssignedUnitsColumn({ handleAssignToCall, isDispatch, call }: Props) {
   const common = useTranslations("Common");
   const { generateCallsign } = useGenerateCallsign();
-  const setDraggingUnit = useDispatchState((state) => state.setDraggingUnit);
+  const { setDraggingUnit, draggingUnit } = useDispatchState(
+    (state) => ({
+      draggingUnit: state.draggingUnit,
+      setDraggingUnit: state.setDraggingUnit,
+    }),
+    shallow,
+  );
   const { hasActiveDispatchers } = useActiveDispatchers();
   const canDrag = hasActiveDispatchers && isDispatch;
+  const scrollRef = React.useRef<HTMLDivElement | null>(null);
+
+  React.useEffect(() => {
+    if (draggingUnit === "move" && scrollRef.current) {
+      // horizontally scroll into the assigned units column view.
+      // makes it easier to move the unit to the correct column
+      scrollRef.current.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    }
+  }, [draggingUnit]);
 
   function makeAssignedUnit(unit: AssignedUnit) {
     if (!unit.unit) return "UNKNOWN";
@@ -38,7 +56,7 @@ export function AssignedUnitsColumn({ handleAssignToCall, isDispatch, call }: Pr
       }
       canDrop={(item) => isDispatch && !call.assignedUnits.some((v) => v.unit?.id === item.id)}
     >
-      <div className="flex gap-2">
+      <div ref={scrollRef} className="flex">
         {call.assignedUnits.length <= 0
           ? common("none")
           : call.assignedUnits.map((unit, idx) => (
@@ -54,7 +72,13 @@ export function AssignedUnitsColumn({ handleAssignToCall, isDispatch, call }: Pr
                 {() => {
                   const comma = idx + 1 === call.assignedUnits.length ? "" : ", ";
                   return (
-                    <span className={canDrag ? "!cursor-move" : "cursor-default"}>
+                    <span
+                      className={classNames(
+                        canDrag
+                          ? "!cursor-move hover:bg-secondary px-1.5 py-0.5 rounded-md"
+                          : "cursor-default",
+                      )}
+                    >
                       {makeAssignedUnit(unit)}
                       {comma}
                     </span>

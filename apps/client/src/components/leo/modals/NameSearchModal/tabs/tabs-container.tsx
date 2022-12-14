@@ -1,18 +1,18 @@
 import { TabList } from "components/shared/TabList";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { NameSearchVehiclesTab } from "./VehiclesTab";
+import { NameSearchVehiclesTab } from "./vehicles-tab";
 import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
-import { NameSearchWarrantsTab } from "./WarrantsTab";
-import { RecordsTab } from "./RecordsTab";
+import { NameSearchWarrantsTab } from "./warrants-tab";
+import { RecordsTab } from "./records-tab";
 import { useNameSearch } from "state/search/name-search-state";
 import { RecordType } from "@snailycad/types";
 import shallow from "zustand/shallow";
 
 const NameSearchWeaponsTab = dynamic(
-  async () => (await import("./WeaponsTab")).NameSearchWeaponsTab,
+  async () => (await import("./weapons-tab")).NameSearchWeaponsTab,
 );
-const NameSearchNotesTabs = dynamic(async () => (await import("./NotesTab")).NotesTab);
+const NameSearchNotesTabs = dynamic(async () => (await import("./notes-tab")).NotesTab);
 
 export function NameSearchTabsContainer() {
   const { WEAPON_REGISTRATION } = useFeatureEnabled();

@@ -207,6 +207,7 @@ export const typeHandlers = {
             isDefaultDepartment: item.isDefaultDepartment ?? false,
             isConfidential: item.isConfidential ?? false,
             whitelisted: item.whitelisted ?? false,
+            extraFields: item.extraFields || undefined,
             defaultOfficerRank: item.defaultOfficerRankId
               ? { connect: { id: item.defaultOfficerRankId } }
               : undefined,
