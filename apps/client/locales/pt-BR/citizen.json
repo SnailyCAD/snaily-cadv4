@@ -49,6 +49,8 @@
     "citizenDead": "AVISO: este cidadão morreu em {date}",
     "basicInformation": "Informações Básicas",
     "optionalInformation": "Informações Opcionais",
+    "additionalInfo": "Informações Adicionais",
+    "licenseInformation": "Informações de Licenças",
     "officer": "Policial",
     "createWithOfficer": "Criado pelo Oficial",
     "previousRecords": "Registros Anteriores",
