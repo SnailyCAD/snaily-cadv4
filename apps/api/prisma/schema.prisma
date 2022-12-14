@@ -1542,6 +1542,7 @@ enum ExpungementRequestStatus {
   ACCEPTED
   DENIED
   PENDING
+  CANCELED
 }
 
 enum VehicleInspectionStatus {

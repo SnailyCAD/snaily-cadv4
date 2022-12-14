@@ -35,6 +35,7 @@ export function Status({ state, children }: Props) {
     [ExpungementRequestStatus.DENIED]: Colors.RED,
     [LicenseExamStatus.FAILED]: Colors.RED,
     [PaymentStatus.UNPAID]: Colors.RED,
+    [ExpungementRequestStatus.CANCELED]: Colors.RED,
   };
 
   const text = !children ? "" : children.toLowerCase().replace(/_/g, " ");
