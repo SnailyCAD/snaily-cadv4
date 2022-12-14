@@ -238,6 +238,7 @@ export const ExpungementRequestStatus = {
   ACCEPTED: "ACCEPTED",
   DENIED: "DENIED",
   PENDING: "PENDING",
+  CANCELED: "CANCELED",
 } as const;
 
 export type ExpungementRequestStatus =

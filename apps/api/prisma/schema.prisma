@@ -629,6 +629,7 @@ model DepartmentValue {
   defaultOfficerRank    Value?                  @relation("departmentValueToOfficerRank", fields: [defaultOfficerRankId], references: [id])
   defaultOfficerRankId  String?
   isConfidential        Boolean                 @default(false)
+  extraFields           Json?
   Qualification         QualificationValue[]
   CombinedLeoUnit       CombinedLeoUnit[]
   Value                 Value[]                 @relation("officerRankDepartments")
@@ -1541,6 +1542,7 @@ enum ExpungementRequestStatus {
   ACCEPTED
   DENIED
   PENDING
+  CANCELED
 }
 
 enum VehicleInspectionStatus {

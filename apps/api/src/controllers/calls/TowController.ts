@@ -171,7 +171,7 @@ export class TowController {
 
     const call = await prisma.towCall.create({
       data: {
-        creatorId: data.creatorId,
+        creatorId: data.creatorId || null,
         description: data.description,
         descriptionData: data.descriptionData ?? null,
         location: data.location,
