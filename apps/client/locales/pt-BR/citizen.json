@@ -47,6 +47,12 @@
     "unmarkAsStolen": "Desmarcar como Roubado",
     "markCitizenDeceased": "Marcar Cidadão como Falecido",
     "citizenDead": "AVISO: este cidadão morreu em {date}",
+    "basicInformation": "Informações Básicas",
+    "optionalInformation": "Informações Opcionais",
+    "officer": "Policial",
+    "createWithOfficer": "Criado pelo Oficial",
+    "previousRecords": "Registros Anteriores",
+    "createPreviousRecordsStepDescription": "Aqui você pode opcionalmente adicionar registros anteriores que este cidadão teve. Isso é útil para quando um cidadão já foi preso antes.",
     "alert_markCitizenDeceased": "Tem certeza de que deseja excluir <span>{citizen}</span>? Somente o Médico/Bombeiro pode marcá-lo vivo novamente.",
     "alert_deleteCitizen": "Tem certeza de que deseja excluir <span>{citizen}</span>? Esta ação não pode ser desfeita."
   },
