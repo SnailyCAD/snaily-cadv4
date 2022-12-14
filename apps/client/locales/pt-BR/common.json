@@ -57,6 +57,10 @@
     "item": "item",
     "address": "Endereço",
     "location": "Localização"
+    "startTyping": "Começe a digitar...",
+    "searching": "Searching...",
+    "information": "Informação",
+    "showingXResults": "Mostrando <span>{amount}</span> resultado(s)"
   },
   "Nav": {
     "citizen": "Cidadão",
@@ -161,5 +165,7 @@
     "noActiveOfficer": "Você não tem nenhum oficial ativo neste momento, por favor, volte ao serviço primeiro.",
     "socialSecurityNumberTaken": "Este número de seguro social já está em uso.",
     "citizenNotAllowedToEditLicenses": "Você, como cidadão, não tem permissão para editar suas próprias licenças. Entre em contato com um oficial para gerenciar suas licenças."
+    "vehicleIsImpounded": "Este veículo está apreendido, você não pode editar ou excluir até que seja liberado do lote apreendido.",
+    "featureNotEnabled": "Este recurso não está habilitado. ({feature})"
   }
 }
