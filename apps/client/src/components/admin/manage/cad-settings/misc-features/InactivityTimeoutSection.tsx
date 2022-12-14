@@ -60,6 +60,22 @@ export function InactivityTimeoutSection() {
       <SettingsFormField
         optional
         action="short-input"
+        label="Active Dispatcher Inactivity Timeout"
+        description="Active Dispatchers that have not been updated after this timeout will be automatically set off-duty. The format must be in minutes. (Default: none)"
+        errorMessage={errors.activeDispatchersInactivityTimeout}
+      >
+        <Input
+          type="number"
+          name="activeDispatchersInactivityTimeout"
+          value={values.activeDispatchersInactivityTimeout}
+          onChange={handleChange}
+          placeholder="120"
+        />
+      </SettingsFormField>
+
+      <SettingsFormField
+        optional
+        action="short-input"
         label="BOLO Inactivity Timeout"
         description="BOLOs that have not been updated after this timeout will be automatically ended. The format must be in minutes. (Default: none)"
         errorMessage={errors.boloInactivityTimeout}

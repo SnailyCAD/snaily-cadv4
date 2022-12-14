@@ -1,73 +1,81 @@
-import { InputSuggestions } from "components/form/inputs/InputSuggestions";
+import { AsyncListSearchField, Item } from "@snailycad/ui";
 import { useFormikContext } from "formik";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useImageUrl } from "hooks/useImageUrl";
 import Image from "next/image";
-import type { NameSearchResult } from "state/search/nameSearchState";
+import type { NameSearchResult } from "state/search/name-search-state";
 
 interface Props {
+  label: string;
+  autoFocus?: boolean;
   valueFieldName: string;
   labelFieldName: string;
   fromAuthUserOnly: boolean;
   /** @default `false` */
-  allowUnknown?: boolean;
+  allowsCustomValue?: boolean;
   isDisabled?: boolean;
+  isOptional?: boolean;
+  makeKey?(item: NameSearchResult): string;
 }
 
-export function CitizenSuggestionsField<Suggestion extends NameSearchResult>({
-  labelFieldName,
-  valueFieldName,
-  fromAuthUserOnly,
-  allowUnknown = false,
-  isDisabled = false,
-}: Props) {
-  const { setValues, handleChange, errors, values } = useFormikContext<any>();
+export function CitizenSuggestionsField<Suggestion extends NameSearchResult>(props: Props) {
+  const { setValues, errors, values } = useFormikContext<any>();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
   const { makeImageUrl } = useImageUrl();
 
   return (
-    <InputSuggestions<Suggestion>
-      onSuggestionPress={(suggestion) => {
-        setValues({
-          ...values,
-          [valueFieldName]: suggestion.id,
-          [labelFieldName]: `${suggestion.name} ${suggestion.surname}`,
-        });
+    <AsyncListSearchField<Suggestion>
+      autoFocus={props.autoFocus}
+      className="w-full"
+      isDisabled={props.isDisabled}
+      isOptional={props.isOptional}
+      allowsCustomValue={props.allowsCustomValue}
+      setValues={({ localValue, node }) => {
+        const labelValue =
+          typeof localValue !== "undefined" ? { [props.labelFieldName]: localValue } : {};
+        const valueField = node ? { [props.valueFieldName]: node.key as string } : {};
+
+        setValues({ ...values, ...labelValue, ...valueField });
       }}
-      Component={({ suggestion }) => (
-        <div className="flex items-center">
-          {suggestion.imageId ? (
-            <Image
-              className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-              draggable={false}
-              src={makeImageUrl("citizens", suggestion.imageId)!}
-              loading="lazy"
-              width={30}
-              height={30}
-              alt={`${suggestion.name} ${suggestion.surname}`}
-            />
-          ) : null}
-          <p>
-            {suggestion.name} {suggestion.surname}{" "}
-            {SOCIAL_SECURITY_NUMBERS && suggestion.socialSecurityNumber ? (
-              <>(SSN: {suggestion.socialSecurityNumber})</>
-            ) : null}
-          </p>
-        </div>
-      )}
-      options={{
-        apiPath: `/search/name${fromAuthUserOnly ? "?fromAuthUserOnly=true" : ""}`,
+      localValue={values[props.labelFieldName]}
+      errorMessage={errors[props.valueFieldName] as string}
+      label={props.label}
+      selectedKey={values[props.valueFieldName]}
+      fetchOptions={{
+        apiPath: `/search/name${props.fromAuthUserOnly ? "?fromAuthUserOnly=true" : ""}`,
         method: "POST",
-        dataKey: "name",
-        allowUnknown,
+        bodyKey: "name",
+        filterTextRequired: true,
       }}
-      inputProps={{
-        value: values[labelFieldName],
-        name: labelFieldName,
-        onChange: handleChange,
-        errorMessage: errors[valueFieldName] as string,
-        disabled: isDisabled,
+    >
+      {(item) => {
+        const name = `${item.name} ${item.surname}`;
+        const key = props.makeKey ? props.makeKey(item) : item.id;
+
+        return (
+          <Item key={key} textValue={name}>
+            <div className="flex items-center">
+              {item.imageId ? (
+                <Image
+                  alt={`${item.name} ${item.surname}`}
+                  className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                  draggable={false}
+                  src={makeImageUrl("citizens", item.imageId)!}
+                  loading="lazy"
+                  width={30}
+                  height={30}
+                />
+              ) : null}
+              <p>
+                {name}{" "}
+                {SOCIAL_SECURITY_NUMBERS && item.socialSecurityNumber ? (
+                  <>(SSN: {item.socialSecurityNumber})</>
+                ) : null}
+              </p>
+            </div>
+          </Item>
+        );
       }}
-    />
+    </AsyncListSearchField>
   );
 }

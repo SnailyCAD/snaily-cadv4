@@ -1,8 +1,15 @@
-import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Form, Formik, FormikHelpers } from "formik";
 import { VEHICLE_SCHEMA } from "@snailycad/schemas";
-import { Button, Input, Loader, SelectField, TextField } from "@snailycad/ui";
+import {
+  Item,
+  AsyncListSearchField,
+  Button,
+  Input,
+  Loader,
+  SelectField,
+  TextField,
+} from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
@@ -22,14 +29,14 @@ import { useRouter } from "next/router";
 import { useAuth } from "context/AuthContext";
 import { Toggle } from "components/form/Toggle";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { useBusinessState } from "state/businessState";
+import { useBusinessState } from "state/business-state";
 import { filterLicenseTypes } from "lib/utils";
 import { FormRow } from "components/form/FormRow";
 import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";
 import { toastMessage } from "lib/toastMessage";
-import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import type { PostCitizenVehicleData, PutCitizenVehicleData } from "@snailycad/types/api";
+import shallow from "zustand/shallow";
 
 interface Props {
   vehicle: RegisteredVehicle | null;
@@ -48,7 +55,14 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
   const router = useRouter();
   const { cad } = useAuth();
   const { CUSTOM_TEXTFIELD_VALUES } = useFeatureEnabled();
-  const { currentBusiness, currentEmployee } = useBusinessState();
+  const { currentBusiness, currentEmployee } = useBusinessState(
+    (state) => ({
+      currentBusiness: state.currentBusiness,
+      currentEmployee: state.currentEmployee,
+    }),
+    shallow,
+  );
+
   const { INSPECTION_STATUS, TAX_STATUS } = useVehicleLicenses();
 
   const { vehicle: vehicles, license } = useValues();
@@ -161,41 +175,37 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
                 </datalist>
               </FormField>
             ) : (
-              <FormField errorMessage={errors.model} label={tVehicle("model")}>
-                <InputSuggestions<VehicleValue>
-                  onSuggestionPress={(suggestion) => {
-                    setValues({
-                      ...values,
-                      modelName: suggestion.value.value,
-                      model: suggestion.id,
-                    });
-                  }}
-                  Component={({ suggestion }) => (
-                    <p className="w-full text-left">{suggestion.value.value}</p>
-                  )}
-                  options={{
-                    apiPath: (value) => `/admin/values/vehicle/search?query=${value}`,
-                    method: "GET",
-                  }}
-                  inputProps={{
-                    value: values.modelName,
-                    name: "modelName",
-                    onChange: handleChange,
-                    errorMessage: errors.model,
-                  }}
-                />
-              </FormField>
+              <AsyncListSearchField<VehicleValue>
+                localValue={values.modelName}
+                setValues={({ localValue, node }) => {
+                  const modelName =
+                    typeof localValue !== "undefined" ? { modelName: localValue } : {};
+                  const model = node ? { model: node.key as string } : {};
+
+                  setValues({ ...values, ...modelName, ...model });
+                }}
+                errorMessage={errors.model}
+                label={tVehicle("model")}
+                selectedKey={values.model}
+                fetchOptions={{
+                  apiPath: (value) => `/admin/values/vehicle/search?query=${value}`,
+                  method: "GET",
+                }}
+              >
+                {(item) => {
+                  return <Item textValue={item.value.value}>{item.value.value}</Item>;
+                }}
+              </AsyncListSearchField>
             )}
 
-            <FormField errorMessage={errors.citizenId} label={tVehicle("owner")}>
-              <CitizenSuggestionsField
-                fromAuthUserOnly={!isLeo}
-                allowUnknown={isLeo}
-                labelFieldName="name"
-                valueFieldName="citizenId"
-                isDisabled={isDisabled}
-              />
-            </FormField>
+            <CitizenSuggestionsField
+              allowsCustomValue
+              label={tVehicle("owner")}
+              fromAuthUserOnly={!isLeo}
+              labelFieldName="name"
+              valueFieldName="citizenId"
+              isDisabled={isDisabled}
+            />
 
             <TextField
               errorMessage={errors.color}
@@ -257,8 +267,8 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
                 name="inspectionStatus"
                 options={INSPECTION_STATUS}
                 onSelectionChange={(key) => setFieldValue("inspectionStatus", key)}
-                isClearable
                 selectedKey={values.inspectionStatus}
+                isClearable
               />
 
               <SelectField

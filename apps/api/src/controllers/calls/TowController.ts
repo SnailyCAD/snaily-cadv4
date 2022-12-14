@@ -18,6 +18,7 @@ import {
   cad,
   Citizen,
   DiscordWebhookType,
+  Feature,
   RegisteredVehicle,
   User,
   Value,
@@ -30,6 +31,7 @@ import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import type * as APITypes from "@snailycad/types/api";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
+import { IsFeatureEnabled } from "middlewares/is-enabled";
 
 const CITIZEN_SELECTS = {
   name: true,
@@ -45,6 +47,7 @@ export const towIncludes = {
 @Controller("/tow")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
+@IsFeatureEnabled({ feature: Feature.TAXI })
 export class TowController {
   private socket: Socket;
   constructor(socket: Socket) {
@@ -170,7 +173,7 @@ export class TowController {
       data: {
         creatorId: data.creatorId,
         description: data.description,
-        descriptionData: data.descriptionData,
+        descriptionData: data.descriptionData ?? null,
         location: data.location,
         postal: data.postal,
         deliveryAddressId: data.deliveryAddressId,

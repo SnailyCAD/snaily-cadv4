@@ -1,0 +1,14 @@
+{
+  "Bleeter": {
+    "bleeter": "Twitter",
+    "noPosts": "Zatím zde nejsou žádné příspěvky.",
+    "createBleet": "Vytvořit Tweet",
+    "editBleet": "Uprav Tweet",
+    "deleteBleet": "Smaž Tweet",
+    "viewBleet": "Koukni se Tweet",
+    "headerImage": "Uvodni obrazek",
+    "bleetTitle": "Tweet titulek",
+    "bleetBody": "Tweet obsah",
+    "alert_deleteBleet": "Opravdu to chces smazat \"<span>{title}</span>\"? Tato akce nelze vzít zpět."
+  }
+}

@@ -8,16 +8,23 @@ import { useValues } from "context/ValuesContext";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
-import { useNameSearch } from "state/search/nameSearchState";
+import { useNameSearch } from "state/search/name-search-state";
 import { ModalIds } from "types/ModalIds";
 import type { PutSearchActionsCitizenFlagsData } from "@snailycad/types/api";
+import shallow from "zustand/shallow";
 
 export function ManageCitizenFlagsModal() {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const veh = useTranslations("Vehicles");
-  const { currentResult, setCurrentResult } = useNameSearch();
+  const { currentResult, setCurrentResult } = useNameSearch(
+    (state) => ({
+      currentResult: state.currentResult,
+      setCurrentResult: state.setCurrentResult,
+    }),
+    shallow,
+  );
   const { citizenFlag } = useValues();
   const { state, execute } = useFetch();
 

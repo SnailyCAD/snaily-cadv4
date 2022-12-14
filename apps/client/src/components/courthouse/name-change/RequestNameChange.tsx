@@ -57,13 +57,14 @@ export function RequestNameChangeModal({ onCreate }: Props) {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ values, errors, isValid, handleChange }) => (
           <Form>
-            <FormField label={common("citizen")} errorMessage={errors.citizenId}>
-              <CitizenSuggestionsField
-                fromAuthUserOnly
-                labelFieldName="citizenName"
-                valueFieldName="citizenId"
-              />
-            </FormField>
+            <CitizenSuggestionsField
+              allowsCustomValue
+              autoFocus
+              label={common("citizen")}
+              fromAuthUserOnly
+              labelFieldName="citizenName"
+              valueFieldName="citizenId"
+            />
 
             <FormRow>
               <FormField label={t("newName")} errorMessage={errors.newName}>

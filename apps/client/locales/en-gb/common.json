@@ -52,14 +52,22 @@
     "left": "Left",
     "right": "Right",
     "user": "User",
-    "savedSettingsSuccess": "Settings successfully saved."
+    "savedSettingsSuccess": "Settings successfully saved.",
+    "select": "Select...",
+    "item": "Item",
+    "address": "Address",
+    "location": "Location",
+    "startTyping": "Start typing...",
+    "searching": "Searching...",
+    "information": "Information",
+    "showingXResults": "Showing <span>{amount}</span> result(s)"
   },
   "Nav": {
     "citizen": "Civilian",
     "citizens": "Civilians",
     "bleeter": "Bleeter",
     "taxi": "Taxi",
-    "business": "Business",
+    "business": "Organisation",
     "truckLogs": "Truck Logs",
     "admin": "Admin",
     "dispatch": "Control",
@@ -87,7 +95,10 @@
     "dmv": "Driver and Vehicle Licensing Agency",
     "penalCodes": "Charges",
     "weaponExams": "Weapon Exams",
-    "myDeputyLogs": "My member logs"
+    "myDeputyLogs": "My member logs",
+    "whatsNew": "What's New",
+    "licenseExams": "License Exams",
+    "bureauOfFirearms": "Firearms Licensing Unit"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",
@@ -153,6 +164,11 @@
     "updateAvailableInfo": "A new update is available. Please update your SnailyCAD to take advantage of the latest features and bug fixes. Click for more information.",
     "serialNumberInUse": "Serial Number is already in use.",
     "vinNumberInUse": "VIN Number is already in use.",
-    "alreadyHasPrimaryUnit": "This call already has a primary unit."
+    "alreadyHasPrimaryUnit": "This call already has a primary unit.",
+    "noActiveOfficer": "You don't have any active officer at this moment, please get back on-duty first.",
+    "socialSecurityNumberTaken": "This national insurance number is already in use.",
+    "citizenNotAllowedToEditLicenses": "You as a civilian are not allowed to edit your own licenses. Please contact an officer to manage your licenses.",
+    "vehicleIsImpounded": "This vehicle is impounded, you cannot edit or delete until it's released from the impound lot.",
+    "featureNotEnabled": "This feature is not enabled. ({feature})"
   }
 }

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Discord, Steam } from "react-bootstrap-icons";
 import { Button, Loader, TextField } from "@snailycad/ui";
 import { TwoFactorAuthScreen } from "components/auth/TwoFactorAuthScreen";
-import { getAPIUrl } from "lib/fetch/getAPIUrl";
+import { getAPIUrl } from "@snailycad/utils/api-url";
 import { useRouter } from "next/router";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
@@ -131,9 +131,12 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
               </header>
 
               {errorMessage ? (
-                <p className="bg-red-500/80 text-black w-full py-1.5 px-3 my-3 rounded-md">
+                <div
+                  role="alert"
+                  className="bg-red-500/80 text-black w-full py-1.5 px-3 my-3 rounded-md"
+                >
                   {errorMessage}
-                </p>
+                </div>
               ) : null}
 
               {ALLOW_REGULAR_LOGIN ? (
@@ -176,7 +179,7 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
 
               {user && !isWithinModal ? (
                 <Button type="button" onPress={handleContinueAs} className="w-full mb-2">
-                  {t.rich("continueAs", { username: user.username })}
+                  {t("continueAs", { username: user.username })}
                 </Button>
               ) : null}
 

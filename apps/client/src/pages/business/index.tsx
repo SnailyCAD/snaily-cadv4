@@ -2,7 +2,7 @@ import * as React from "react";
 import type { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { useBusinessState } from "state/businessState";
+import { useBusinessState } from "state/business-state";
 import { Layout } from "components/Layout";
 import { Button } from "@snailycad/ui";
 import { useTranslations } from "use-intl";

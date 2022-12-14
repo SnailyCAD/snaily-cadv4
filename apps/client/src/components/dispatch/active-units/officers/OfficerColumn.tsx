@@ -7,7 +7,7 @@ import useFetch from "lib/useFetch";
 import { useUnitStatusChange } from "hooks/shared/useUnitsStatusChange";
 import { isUnitCombined, isUnitOfficer } from "@snailycad/utils";
 import { useActiveOfficers } from "hooks/realtime/useActiveOfficers";
-import { ActiveOfficer, useLeoState } from "state/leoState";
+import { ActiveOfficer, useLeoState } from "state/leo-state";
 import { ArrowRight } from "react-bootstrap-icons";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
@@ -22,6 +22,7 @@ import { classNames } from "lib/classNames";
 import { ActiveUnitsQualificationsCard } from "components/leo/qualifications/ActiveUnitsQualificationsCard";
 import type { PostDispatchStatusUnmergeUnitById } from "@snailycad/types/api";
 import Image from "next/image";
+import { useDispatchState } from "state/dispatch/dispatch-state";
 
 interface Props {
   officer: Officer | CombinedLeoUnit;
@@ -34,12 +35,13 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
 
   const { openModal } = useModal();
   const { setStatus } = useUnitStatusChange({ units: activeOfficers, setUnits: setActiveOfficers });
-  const { activeOfficer } = useLeoState();
+  const activeOfficer = useLeoState((state) => state.activeOfficer);
   const { makeImageUrl } = useImageUrl();
   const { codes10 } = useValues();
   const { execute } = useFetch();
   const { generateCallsign } = useGenerateCallsign();
   const { hasActiveDispatchers } = useActiveDispatchers();
+  const setDraggingUnit = useDispatchState((state) => state.setDraggingUnit);
 
   const t = useTranslations("Leo");
 
@@ -107,7 +109,12 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
       ]}
     >
       <span>
-        <Draggable canDrag={canDrag} type={DndActions.MoveUnitTo911CallOrIncident} item={officer}>
+        <Draggable
+          onDrag={(isDragging) => setDraggingUnit(isDragging ? "move" : null)}
+          canDrag={canDrag}
+          type={DndActions.MoveUnitTo911CallOrIncident}
+          item={officer}
+        >
           {({ isDragging }) => (
             <ActiveUnitsQualificationsCard canBeOpened={!isDragging} unit={officer}>
               <span

@@ -43,6 +43,7 @@ import {
   isCallTypeValue,
   isOfficerRankValue,
   isAddressValue,
+  isEmergencyVehicleValue,
 } from "@snailycad/utils/typeguards";
 import { QualificationFields } from "./manage-modal/QualificationFields";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
@@ -55,6 +56,7 @@ import {
 } from "lib/admin/values/utils";
 import { DivisionFields } from "./manage-modal/DivisionFields";
 import { AddressFields } from "./manage-modal/AddressFields";
+import { EmergencyVehicleFields, useDefaultDivisions } from "./manage-modal/EmergencyVehicleFields";
 
 interface Props {
   type: ValueType;
@@ -97,6 +99,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
   const t = useTranslations(type);
   const common = useTranslations("Common");
   const defaultDepartments = useDefaultDepartments();
+  const defaultDivisions = useDefaultDivisions();
 
   const title = !value ? t("ADD") : t("EDIT");
   const footerTitle = !value ? t("ADD") : common("save");
@@ -111,6 +114,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
       type: dlType ? dlType : values.type,
       whatPages: values.whatPages,
       departments: values.departments?.map((v) => v.value),
+      divisions: values.divisions?.map((v) => v.value),
       officerRankDepartments: values.officerRankDepartments?.map((v) => v.value),
     };
 
@@ -152,7 +156,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     const validatedImage = validateFile(image, helpers);
 
     if (validatedImage) {
-      if (typeof validatedImage === "object") {
+      if (typeof validatedImage !== "string") {
         fd.set("image", validatedImage, validatedImage.name);
       }
     }
@@ -163,6 +167,9 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
         method: "POST",
         data: fd,
         helpers,
+        headers: {
+          "content-type": "multipart/form-data",
+        },
       });
     }
   }
@@ -184,7 +191,8 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     color: value && isStatusValue(value) ? value.color ?? "" : "",
     type: value && (isStatusValue(value) || isDepartmentValue(value)) ? value.type : "STATUS_CODE",
     departments:
-      value && (isStatusValue(value) || isUnitQualification(value))
+      value &&
+      (isStatusValue(value) || isUnitQualification(value) || isEmergencyVehicleValue(value))
         ? defaultDepartments(value)
         : undefined,
     whatPages: value && isStatusValue(value) ? makeDefaultWhatPages(value) : [],
@@ -211,6 +219,8 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
 
     postal: value && isAddressValue(value) ? value.postal ?? "" : "",
     county: value && isAddressValue(value) ? value.county ?? "" : "",
+
+    divisions: value && isEmergencyVehicleValue(value) ? defaultDivisions(value) : undefined,
 
     showPicker: false,
     image: "",
@@ -256,6 +266,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
               />
             )}
 
+            {type === ValueType.EMERGENCY_VEHICLE ? <EmergencyVehicleFields /> : null}
             {type === ValueType.LICENSE ? <LicenseFields /> : null}
 
             {type === ValueType.DIVISION ? <DivisionFields /> : null}

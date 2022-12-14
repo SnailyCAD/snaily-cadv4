@@ -1,5 +1,5 @@
 import { TOW_SCHEMA } from "@snailycad/schemas";
-import { Loader, Input, Button, TextField } from "@snailycad/ui";
+import { Loader, Input, Button, TextField, AsyncListSearchField, Item } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
@@ -10,16 +10,16 @@ import { handleValidate } from "lib/handleValidate";
 import { toastMessage } from "lib/toastMessage";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
-import type { Full911Call } from "state/dispatch/dispatchState";
-import { useEmsFdState } from "state/emsFdState";
-import { useLeoState } from "state/leoState";
+import type { Full911Call } from "state/dispatch/dispatch-state";
+import { useEmsFdState } from "state/ems-fd-state";
+import { useLeoState } from "state/leo-state";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { InputSuggestions } from "components/form/inputs/InputSuggestions";
-import type { VehicleSearchResult } from "state/search/vehicleSearchState";
+import type { VehicleSearchResult } from "state/search/vehicle-search-state";
 import { Checkbox } from "components/form/inputs/Checkbox";
 import type { PostTowCallsData } from "@snailycad/types/api";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
+import shallow from "zustand/shallow";
 
 interface Props {
   call: Full911Call | null;
@@ -30,8 +30,20 @@ export function DispatchCallTowModal({ call }: Props) {
   const t = useTranslations();
   const { isOpen, closeModal, getPayload } = useModal();
   const { state, execute } = useFetch();
-  const { activeOfficer, userOfficers } = useLeoState();
-  const { activeDeputy, deputies } = useEmsFdState();
+  const { activeOfficer, userOfficers } = useLeoState(
+    (state) => ({
+      activeOfficer: state.activeOfficer,
+      userOfficers: state.userOfficers,
+    }),
+    shallow,
+  );
+  const { activeDeputy, deputies } = useEmsFdState(
+    (state) => ({
+      activeDeputy: state.activeDeputy,
+      deputies: state.deputies,
+    }),
+    shallow,
+  );
   const router = useRouter();
   const { impoundLot } = useValues();
 
@@ -67,9 +79,11 @@ export function DispatchCallTowModal({ call }: Props) {
     // @ts-expect-error TS should allow this tbh!
     creatorId: unit?.citizenId ?? null,
     description: call?.description ?? "",
+    descriptionData: call?.descriptionData ?? null,
     callCountyService: false,
     deliveryAddressId: "",
     model: "",
+    plateSearch: "",
     plate: "",
     plateOrVin: "",
   };
@@ -82,7 +96,7 @@ export function DispatchCallTowModal({ call }: Props) {
       className="w-[700px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, setFieldValue, values, isValid, errors }) => (
+        {({ handleChange, setValues, setFieldValue, values, isValid, errors }) => (
           <Form>
             {unit ? (
               <FormField errorMessage={errors.creatorId as string} label={t("Calls.citizen")}>
@@ -120,34 +134,36 @@ export function DispatchCallTowModal({ call }: Props) {
                   />
                 </FormField>
 
-                <FormField optional errorMessage={errors.plate} label={t("Vehicles.plate")}>
-                  <InputSuggestions<VehicleSearchResult>
-                    onSuggestionPress={(suggestion) => {
-                      setFieldValue("plate", suggestion.plate);
-                      setFieldValue("model", suggestion.model.value.value);
-                    }}
-                    Component={({ suggestion }) => (
-                      <div className="flex items-center">
-                        <p>
-                          {suggestion.plate.toUpperCase()} ({suggestion.vinNumber})
-                        </p>
-                      </div>
-                    )}
-                    options={{
-                      apiPath: "/search/vehicle?includeMany=true",
-                      method: "POST",
-                      dataKey: "plateOrVin",
-                    }}
-                    inputProps={{
-                      value: values.plate,
-                      name: "plate",
-                      onChange: (e) => {
-                        handleChange(e);
-                        setFieldValue("plateOrVin", e.target.value);
-                      },
-                    }}
-                  />
-                </FormField>
+                <AsyncListSearchField<VehicleSearchResult>
+                  label={t("Vehicles.plate")}
+                  errorMessage={errors.plate}
+                  isOptional
+                  fetchOptions={{
+                    apiPath: "/search/vehicle?includeMany=true",
+                    method: "POST",
+                    bodyKey: "plateOrVin",
+                    filterTextRequired: true,
+                  }}
+                  allowsCustomValue
+                  localValue={values.plateSearch}
+                  setValues={({ node, localValue }) => {
+                    const vehicle = node
+                      ? { plate: node.value.plate, model: node.value.model.value.value }
+                      : {};
+
+                    setValues({
+                      ...values,
+                      ...vehicle,
+                      plateSearch: localValue ?? node?.value.plate ?? "",
+                    });
+                  }}
+                >
+                  {(item) => (
+                    <Item textValue={item.plate} key={item.plate}>
+                      {item.plate.toUpperCase()} ({item.model.value.value.toUpperCase()})
+                    </Item>
+                  )}
+                </AsyncListSearchField>
 
                 <FormField optional errorMessage={errors.model} label={t("Vehicles.model")}>
                   <Input onChange={handleChange} name="model" value={values.model} />

@@ -26,13 +26,13 @@ type Props =
 export function OfficerLogsTable({ unit, asyncTable }: Props) {
   const { makeImageUrl } = useImageUrl();
   const { generateCallsign } = useGenerateCallsign();
-  const tableState = useTableState({ pagination: { ...asyncTable.pagination, pageSize: 25 } });
+  const tableState = useTableState({ pagination: asyncTable.pagination });
   const t = useTranslations("Leo");
 
   return (
     <Table
       tableState={tableState}
-      data={(asyncTable.data as OfficerLogData[]).map((log) => {
+      data={(asyncTable.items as OfficerLogData[]).map((log) => {
         const startedAt = <FullDate>{log.startedAt}</FullDate>;
         const endedAt = log.endedAt ? <FullDate>{log.endedAt}</FullDate> : t("notEndedYet");
         const logUnit = getUnitFromLog(log) ?? unit;

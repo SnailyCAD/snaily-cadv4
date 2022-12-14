@@ -2,7 +2,7 @@ import * as React from "react";
 import type { LeoIncident } from "@snailycad/types";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
-import { ManageIncidentModal } from "components/leo/incidents/ManageIncidentModal";
+import { ManageIncidentModal } from "components/leo/incidents/manage-incident-modal";
 import { useModal } from "state/modalState";
 import { Button } from "@snailycad/ui";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";

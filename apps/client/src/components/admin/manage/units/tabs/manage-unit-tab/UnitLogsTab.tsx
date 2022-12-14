@@ -22,6 +22,7 @@ export function UnitLogsTab({ unit }: Props) {
     initialData: unit.logs,
     totalCount: unit.logs.length,
     fetchOptions: {
+      pageSize: 25,
       path: `${isUnitOfficer(unit) ? "/leo/logs" : "/ems-fd/logs"}?${extraPath}`,
       onResponse: (json: GetMyDeputiesLogsData | GetMyOfficersLogsData) => ({
         totalCount: json.totalCount,

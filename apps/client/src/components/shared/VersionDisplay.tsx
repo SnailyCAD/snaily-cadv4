@@ -1,3 +1,4 @@
+import { useMounted } from "@casper124578/useful";
 import type { cad } from "@snailycad/types";
 
 interface Props {
@@ -5,17 +6,18 @@ interface Props {
 }
 
 export function VersionDisplay({ cad }: Props) {
-  if (!cad?.version) {
+  const isMounted = useMounted();
+  if (!cad?.version || !isMounted) {
     return null;
   }
 
   const releaseURL = `https://github.com/SnailyCAD/snaily-cadv4/releases/tag/${cad.version.currentVersion}`;
   const commitURL = `https://github.com/SnailyCAD/snaily-cadv4/commit/${cad.version.currentCommitHash}`;
   return (
-    <p className="text-gray-900 dark:text-gray-200 block mt-3 text-base z-50">
+    <div className="text-gray-900 dark:text-gray-200 block mt-3 text-base z-50">
       <Link href={releaseURL}>v{cad.version.currentVersion}</Link> {"—"}{" "}
       <Link href={commitURL}>{cad.version.currentCommitHash}</Link>
-    </p>
+    </div>
   );
 }
 

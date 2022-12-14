@@ -1,8 +1,8 @@
 import axios, { type Method, type AxiosRequestConfig, type AxiosResponse } from "axios";
 import type { IncomingMessage } from "connect";
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";
-import { getAPIUrl } from "./fetch/getAPIUrl";
-import { getErrorObj } from "./useFetch";
+import { getAPIUrl } from "@snailycad/utils/api-url";
+import { getErrorObj } from "./fetch/errors";
 
 export type RequestData = Record<string, unknown>;
 
@@ -12,7 +12,6 @@ interface Options extends Omit<AxiosRequestConfig, "headers"> {
   method?: Method | string;
   data?: RequestData;
   isSsr?: boolean;
-  throwBadRequest?: boolean;
 }
 
 export async function handleRequest<T = any>(
@@ -28,11 +27,11 @@ export async function handleRequest<T = any>(
   );
   const parsedCookie = req?.headers.cookie;
 
-  let contentType = "application/json";
+  let contentType = options?.headers?.["content-type"] ?? "application/json";
   const formData = data as unknown as FormData | undefined;
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (formData?.get?.("file") || formData?.get?.("image")) {
+  if ((formData?.get?.("file") || formData?.get?.("image")) && contentType === "application/json") {
     contentType = "multipart/form-data";
   }
 
@@ -52,10 +51,6 @@ export async function handleRequest<T = any>(
 
     return makeReturn(res);
   } catch (e) {
-    if (options?.throwBadRequest) {
-      throw e;
-    }
-
     return makeReturn(e);
   }
 }

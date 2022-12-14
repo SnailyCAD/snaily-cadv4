@@ -2,7 +2,7 @@ import { Table, useTableState } from "components/shared/Table";
 import { compareDesc } from "date-fns";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useTranslations } from "next-intl";
-import type { VehicleSearchResult } from "state/search/vehicleSearchState";
+import type { VehicleSearchResult } from "state/search/vehicle-search-state";
 
 interface Props {
   result: VehicleSearchResult;
@@ -24,6 +24,7 @@ export function TruckLogsTable({ result }: Props) {
       <h4 className="text-xl font-semibold">{t("truckLogs")}</h4>
 
       <Table
+        features={{ isWithinCardOrModal: true }}
         tableState={tableState}
         data={truckLogs
           .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))

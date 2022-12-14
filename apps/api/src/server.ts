@@ -1,3 +1,4 @@
+import "dotenv/config";
 import "@tsed/swagger";
 import "@tsed/socketio";
 import "@tsed/platform-express";
@@ -18,7 +19,6 @@ import { json } from "express";
 import compress from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { IsEnabled } from "middlewares/IsEnabled";
 import { checkForUpdates } from "utils/checkForUpdates";
 import { getCADVersion } from "@snailycad/utils/version";
 import * as Sentry from "@sentry/node";
@@ -53,13 +53,15 @@ const processEnvPort = process.env.PORT || process.env.PORT_API;
     compress(),
     json({ limit: "500kb" }),
     cors({ origin: process.env.CORS_ORIGIN_URL ?? "http://localhost:3000", credentials: true }),
-    IsEnabled,
     Sentry.Handlers.requestHandler({
       request: true,
+      serverName: true,
     }),
+    Sentry.Handlers.tracingHandler(),
   ],
   swagger: [{ path: "/api-docs", specVersion: "3.0.3" }],
   socketIO: {
+    maxHttpBufferSize: 1e6, // 1 mb
     cors: {
       credentials: true,
       origin: process.env.CORS_ORIGIN_URL ?? "http://localhost:3000",

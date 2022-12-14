@@ -2,14 +2,14 @@ import * as React from "react";
 import { Star } from "react-bootstrap-icons";
 import Link from "next/link";
 import type { GetServerSideProps } from "next";
-import { dataToSlate, Editor } from "components/editor/Editor";
+import { dataToSlate, Editor } from "components/editor/editor";
 import { BreadcrumbItem, Breadcrumbs, Button, buttonVariants } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import { useBusinessState } from "state/businessState";
+import { useBusinessState } from "state/business-state";
 import { useTranslations } from "use-intl";
 import { BusinessPost, WhitelistStatus } from "@snailycad/types";
 import useFetch from "lib/useFetch";
@@ -19,6 +19,7 @@ import { Title } from "components/shared/Title";
 import { classNames } from "lib/classNames";
 import type { DeleteBusinessPostsData, GetBusinessByIdData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import shallow from "zustand/shallow";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageBusinessPostModal = dynamic(
@@ -33,7 +34,22 @@ interface Props {
 export default function BusinessId(props: Props) {
   const { state: fetchState, execute } = useFetch();
   const { openModal, closeModal } = useModal();
-  const { currentBusiness, currentEmployee, posts, ...state } = useBusinessState();
+
+  const businessActions = useBusinessState((state) => ({
+    setCurrentBusiness: state.setCurrentBusiness,
+    setCurrentEmployee: state.setCurrentEmployee,
+    setPosts: state.setPosts,
+  }));
+
+  const { currentBusiness, currentEmployee, posts } = useBusinessState(
+    (state) => ({
+      currentBusiness: state.currentBusiness,
+      currentEmployee: state.currentEmployee,
+      posts: state.posts,
+    }),
+    shallow,
+  );
+
   const common = useTranslations("Common");
   const t = useTranslations("Business");
   const [tempPost, postState] = useTemporaryItem(posts);
@@ -48,7 +64,7 @@ export default function BusinessId(props: Props) {
     });
 
     if (json) {
-      state.setPosts(posts.filter((p) => p.id !== tempPost.id));
+      businessActions.setPosts(posts.filter((p) => p.id !== tempPost.id));
       postState.setTempId(null);
       closeModal(ModalIds.AlertDeleteBusinessPost);
     }
@@ -67,11 +83,11 @@ export default function BusinessId(props: Props) {
   React.useEffect(() => {
     const { employee, business } = props;
 
-    state.setCurrentBusiness(business);
-    state.setCurrentEmployee(employee);
-    state.setPosts(business.businessPosts);
+    businessActions.setCurrentBusiness(business);
+    businessActions.setCurrentEmployee(employee);
+    businessActions.setPosts(business.businessPosts);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props, state.setCurrentEmployee, state.setCurrentBusiness, state.setPosts]);
+  }, [props]);
 
   const owner = currentBusiness?.employees?.find((v) => v.citizenId === currentBusiness.citizenId);
 
@@ -202,8 +218,10 @@ export default function BusinessId(props: Props) {
       {currentEmployee.canCreatePosts ? (
         <ManageBusinessPostModal
           post={tempPost}
-          onUpdate={() => void 0}
-          onCreate={(post) => state.setPosts([post, ...posts])}
+          onUpdate={(oldPost, newPost) => {
+            businessActions.setPosts(posts.map((p) => (p.id === oldPost.id ? newPost : p)));
+          }}
+          onCreate={(post) => businessActions.setPosts([post, ...posts])}
           onClose={() => setTimeout(() => postState.setTempId(null), 100)}
         />
       ) : null}

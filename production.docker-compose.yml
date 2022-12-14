@@ -23,9 +23,9 @@ services:
       args:
         - BUILD_CONTEXT=api
     ports:
-      - "8080:8080"
+      - "${PORT_API}:${PORT_API}"
     expose:
-      - 8080
+      - ${PORT_API}
     depends_on:
       - postgres
     networks:
@@ -42,9 +42,9 @@ services:
         - BUILD_CONTEXT=client
 
     ports:
-      - "3000:3000"
+      - "${PORT_CLIENT}:${PORT_CLIENT}"
     expose:
-      - 3000
+      - ${PORT_CLIENT}
     env_file:
       - .env
     depends_on:

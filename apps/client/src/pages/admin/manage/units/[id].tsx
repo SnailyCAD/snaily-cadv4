@@ -1,4 +1,3 @@
-import * as React from "react";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -15,6 +14,7 @@ import { ManageUnitTab } from "components/admin/manage/units/tabs/manage-unit-ta
 import { UnitLogsTab } from "components/admin/manage/units/tabs/manage-unit-tab/UnitLogsTab";
 import { BreadcrumbItem, Breadcrumbs } from "@snailycad/ui";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
+import { usePermission } from "hooks/usePermission";
 
 interface Props {
   unit: GetManageUnitByIdData;
@@ -23,14 +23,34 @@ interface Props {
 export default function SupervisorPanelPage({ unit: data }: Props) {
   useLoadValuesClientSide({ valueTypes: [ValueType.QUALIFICATION] });
 
+  const { hasPermissions } = usePermission();
+
+  const hasManagePermissions = hasPermissions([Permissions.ManageUnits], true);
+  const hasManageCallsignPermissions = hasPermissions([Permissions.ManageUnitCallsigns], true);
+  const hasManageAwardsPermissions = hasPermissions(
+    [Permissions.ManageAwardsAndQualifications],
+    true,
+  );
+
   const { generateCallsign } = useGenerateCallsign();
   const tAdmin = useTranslations("Management");
+
+  const TABS = [];
+
+  if (hasManageAwardsPermissions || hasManagePermissions) {
+    TABS[0] = { name: "Manage Unit", value: "manage-unit" };
+  }
+
+  if (hasManageCallsignPermissions) {
+    const idx = hasManageAwardsPermissions || hasManagePermissions ? 1 : 0;
+    TABS[idx] = { name: "Unit Logs", value: "unit-logs" };
+  }
 
   return (
     <AdminLayout
       permissions={{
         fallback: (u) => u.rank !== Rank.USER,
-        permissions: [Permissions.ManageUnits],
+        permissions: [Permissions.ManageUnits, Permissions.ManageAwardsAndQualifications],
       }}
     >
       <Breadcrumbs>
@@ -45,12 +65,7 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
         {tAdmin("editUnit")}
       </Title>
 
-      <TabList
-        tabs={[
-          { name: "Manage Unit", value: "manage-unit" },
-          { name: "Unit Logs", value: "unit-logs" },
-        ]}
-      >
+      <TabList tabs={TABS}>
         <ManageUnitTab unit={data} />
         <UnitLogsTab unit={data} />
       </TabList>

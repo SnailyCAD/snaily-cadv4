@@ -52,7 +52,15 @@
     "left": "Gauche",
     "right": "Droite",
     "user": "Utilisateur",
-    "savedSettingsSuccess": "Paramètres sauvegardés avec succès."
+    "savedSettingsSuccess": "Paramètres sauvegardés avec succès.",
+    "select": "Sélectionner...",
+    "item": "Élément",
+    "address": "Adresse",
+    "location": "Localisation",
+    "startTyping": "Commencez à écrire...",
+    "searching": "Recherche...",
+    "information": "Information",
+    "showingXResults": "Affichage de <span>{amount}</span> résultat(s)"
   },
   "Nav": {
     "citizen": "Citoyen",
@@ -83,11 +91,11 @@
     "callHistory": "Historique des Appels",
     "citizenLogs": "Logs des citoyens",
     "courthouse": "Tribunal",
-    "dlExams": "Examens du permis de conduire",
+    "licenseExams": "Examens de permis",
     "dmv": "Service du Permis de Conduire et des Papiers du Véhicule",
     "penalCodes": "Code Pénal",
-    "weaponExams": "Examens pour le PPA",
-    "myDeputyLogs": "Mes Logs (EMS/FD)"
+    "myDeputyLogs": "Mes Logs (EMS/FD)",
+    "whatsNew": "Nouveautés"
   },
   "Errors": {
     "unknown": "Une erreur inattendue s'est produite",
@@ -154,6 +162,10 @@
     "serialNumberInUse": "Le numéro de série est déjà utilisé.",
     "vinNumberInUse": "Le numéro NIV est déjà utilisé.",
     "alreadyHasPrimaryUnit": "Cet appel a déjà une unité primaire",
-    "noActiveOfficer": "Vous n'avez pas d'officer actif pour le moment, veuillez retournez en service."
+    "noActiveOfficer": "Vous n'avez pas d'officer actif pour le moment, veuillez retournez en service.",
+    "socialSecurityNumberTaken": "Ce numéro de sécurité social est déjà utilisé.",
+    "citizenNotAllowedToEditLicenses": "Vous n'avez pas la permission pour éditer vos licences. Veuillez contacter un officier.",
+    "vehicleIsImpounded": "Ce véhicule est saisi, vous ne pouvez l'éditer ou le supprimer tant qu'il n'est pas libéré.",
+    "featureNotEnabled": "Cette fonctionnalité n'est pas activée. {{feature}}"
   }
 }

@@ -2,13 +2,12 @@ import { useTranslations } from "use-intl";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { Rank } from "@snailycad/types";
+import { Rank, ValueType } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { ManageCitizenForm } from "components/citizen/ManageCitizenForm";
 import useFetch from "lib/useFetch";
-import type { FormikHelpers } from "formik";
 import { useRouter } from "next/router";
 import { Permissions } from "@snailycad/permissions";
 import type { SelectValue } from "components/form/Select";
@@ -18,15 +17,19 @@ import type {
   PutManageCitizenByIdData,
 } from "@snailycad/types/api";
 import { BreadcrumbItem, Breadcrumbs } from "@snailycad/ui";
+import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 
 interface Props {
-  citizen: GetManageCitizenByIdData;
+  citizen: NonNullable<GetManageCitizenByIdData>;
 }
 
 export default function ManageCitizens({ citizen }: Props) {
   const t = useTranslations();
   const { state, execute } = useFetch();
   const router = useRouter();
+  useLoadValuesClientSide({
+    valueTypes: [ValueType.GENDER, ValueType.ETHNICITY, ValueType.LICENSE],
+  });
 
   async function handleSubmit({
     data,
@@ -35,9 +38,9 @@ export default function ManageCitizens({ citizen }: Props) {
   }: {
     data: any;
     formData?: FormData;
-    helpers: FormikHelpers<any>;
+    helpers: any;
   }) {
-    const { json } = await execute<PutManageCitizenByIdData>({
+    const { json, error } = await execute<PutManageCitizenByIdData>({
       path: `/admin/manage/citizens/${citizen.id}`,
       method: "PUT",
       helpers,
@@ -57,6 +60,11 @@ export default function ManageCitizens({ citizen }: Props) {
           : data.firearmLicenseCategory,
       },
     });
+
+    const errors = ["dateLargerThanNow", "nameAlreadyTaken", "invalidImageType"];
+    if (errors.includes(error as string)) {
+      helpers.setCurrentStep(0);
+    }
 
     if (formData) {
       await execute<PostCitizenImageByIdData>({
@@ -95,9 +103,11 @@ export default function ManageCitizens({ citizen }: Props) {
 
       <div className="mt-5">
         <ManageCitizenForm
-          allowEditingName
-          allowEditingUser
-          showLicenseFields
+          formFeatures={{
+            "edit-name": true,
+            "edit-user": true,
+            "license-fields": true,
+          }}
           citizen={citizen}
           onSubmit={handleSubmit}
           state={state}
@@ -110,10 +120,7 @@ export default function ManageCitizens({ citizen }: Props) {
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, query, req }) => {
   const user = await getSessionUser(req);
-  const [citizen, values] = await requestAll(req, [
-    [`/admin/manage/citizens/${query.id}`, null],
-    ["/admin/values/gender?paths=ethnicity,license", []],
-  ]);
+  const [citizen] = await requestAll(req, [[`/admin/manage/citizens/${query.id}`, null]]);
 
   if (!citizen) {
     return {
@@ -124,7 +131,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, qu
   return {
     props: {
       citizen,
-      values,
       session: user,
       messages: {
         ...(await getTranslations(

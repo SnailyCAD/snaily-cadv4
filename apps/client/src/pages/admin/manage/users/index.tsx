@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useTranslations } from "use-intl";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -9,9 +8,12 @@ import { requestAll } from "lib/utils";
 import { TabList } from "components/shared/TabList";
 import { PendingUsersTab } from "components/admin/manage/users/tabs/PendingUsersTab";
 import { Title } from "components/shared/Title";
-import { Permissions } from "hooks/usePermission";
+import { Permissions, usePermission } from "hooks/usePermission";
 import { AllUsersTab } from "components/admin/manage/users/tabs/AllUsersTab";
 import type { GetManageUsersData } from "@snailycad/types/api";
+import { Button } from "@snailycad/ui";
+import { ModalIds } from "types/ModalIds";
+import { useModal } from "state/modalState";
 
 interface Props {
   data: GetManageUsersData;
@@ -20,6 +22,13 @@ interface Props {
 export default function ManageUsers({ data }: Props) {
   const t = useTranslations("Management");
   const pending = data.users.filter((v) => v.whitelistStatus === WhitelistStatus.PENDING);
+  const { openModal } = useModal();
+  const { hasPermissions } = usePermission();
+
+  const hasManagePermissions = hasPermissions(
+    [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
+    true,
+  );
 
   const tabs = [
     { name: `${t("allUsers")} (${data.totalCount})`, value: "allUsers" },
@@ -38,7 +47,15 @@ export default function ManageUsers({ data }: Props) {
         ],
       }}
     >
-      <Title>{t("MANAGE_USERS")}</Title>
+      <header className="flex items-center justify-between">
+        <Title>{t("MANAGE_USERS")}</Title>
+
+        {hasManagePermissions ? (
+          <div>
+            <Button onClick={() => openModal(ModalIds.PruneUsers)}>Prune Users</Button>
+          </div>
+        ) : null}
+      </header>
 
       <TabList tabs={tabs}>
         <AllUsersTab {...data} />

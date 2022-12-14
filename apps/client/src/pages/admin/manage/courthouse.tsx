@@ -73,7 +73,7 @@ export default function ManageCourthouse({
       <header className="mb-5">
         <Title>{t("MANAGE_COURTHOUSE")}</Title>
         <p className="text-neutral-700 dark:text-gray-400 my-2">
-          Here you can manage expungement requests, name change requests and pending warrants.
+          {t("manageCourthouseDescription")}
         </p>
       </header>
 

@@ -3,18 +3,25 @@ import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
-import { useDispatchState } from "state/dispatch/dispatchState";
-import { useEmsFdState } from "state/emsFdState";
+import { useDispatchState } from "state/dispatch/dispatch-state";
+import { useEmsFdState } from "state/ems-fd-state";
 import type { EmsFdDeputy } from "@snailycad/types";
 import type { GetEmsFdActiveDeputies } from "@snailycad/types/api";
-import { useCall911State } from "state/dispatch/call911State";
+import { useCall911State } from "state/dispatch/call-911-state";
+import shallow from "zustand/shallow";
 
 export function useActiveDeputies() {
   const { user } = useAuth();
   const { activeDeputies, setActiveDeputies } = useDispatchState();
   const { state, execute } = useFetch();
-  const { setActiveDeputy } = useEmsFdState();
-  const call911State = useCall911State();
+  const setActiveDeputy = useEmsFdState((state) => state.setActiveDeputy);
+  const call911State = useCall911State(
+    (state) => ({
+      calls: state.calls,
+      setCalls: state.setCalls,
+    }),
+    shallow,
+  );
 
   const handleCallsState = React.useCallback(
     (data: EmsFdDeputy[]) => {

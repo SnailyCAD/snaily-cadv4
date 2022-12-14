@@ -360,7 +360,7 @@ export class SearchActionsController {
       });
 
       if (existing) {
-        throw new ExtendedBadRequest({ name: "nameAlreadyTaken" });
+        throw new ExtendedBadRequest({ name: "nameAlreadyTaken" }, "nameAlreadyTaken");
       }
     }
 

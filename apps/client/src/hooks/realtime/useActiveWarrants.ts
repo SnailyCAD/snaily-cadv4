@@ -1,16 +1,23 @@
 import * as React from "react";
 import useFetch from "lib/useFetch";
 import { useAuth } from "context/AuthContext";
-import { ActiveWarrant, useLeoState } from "state/leoState";
+import { ActiveWarrant, useLeoState } from "state/leo-state";
 import type { GetActiveWarrantsData } from "@snailycad/types/api";
 import { SocketEvents } from "@snailycad/config";
 import { useListener } from "@casper124578/use-socket.io";
+import shallow from "zustand/shallow";
 
 let ran = false;
 export function useActiveWarrants() {
   const { user } = useAuth();
   const { state, execute } = useFetch();
-  const { activeWarrants, setActiveWarrants } = useLeoState();
+  const { activeWarrants, setActiveWarrants } = useLeoState(
+    (state) => ({
+      activeWarrants: state.activeWarrants,
+      setActiveWarrants: state.setActiveWarrants,
+    }),
+    shallow,
+  );
 
   const handleState = React.useCallback(
     (data: ActiveWarrant[]) => {

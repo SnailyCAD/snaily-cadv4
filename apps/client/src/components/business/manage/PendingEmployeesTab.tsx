@@ -1,19 +1,26 @@
 import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "use-intl";
 import { Button } from "@snailycad/ui";
-import { useBusinessState } from "state/businessState";
+import { useBusinessState } from "state/business-state";
 import { Employee, WhitelistStatus } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { Table, useTableState } from "components/shared/Table";
 import type { PutBusinessEmployeesData } from "@snailycad/types/api";
+import shallow from "zustand/shallow";
 
 export function PendingEmployeesTab() {
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Business");
   const tableState = useTableState();
-
-  const { currentBusiness, currentEmployee, setCurrentBusiness } = useBusinessState();
+  const { currentBusiness, currentEmployee, setCurrentBusiness } = useBusinessState(
+    (state) => ({
+      currentBusiness: state.currentBusiness,
+      currentEmployee: state.currentEmployee,
+      setCurrentBusiness: state.setCurrentBusiness,
+    }),
+    shallow,
+  );
 
   const employees =
     currentBusiness?.employees.filter((v) => v.whitelistStatus === WhitelistStatus.PENDING) ?? [];

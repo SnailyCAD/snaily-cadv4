@@ -1,7 +1,6 @@
 import { Form, Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
 import { Loader, Button } from "@snailycad/ui";
-import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import useFetch from "lib/useFetch";
@@ -71,15 +70,16 @@ export function AssignToCallModal({ call, onClose, onSuccess }: Props) {
       className="w-[500px]"
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ errors, isValid }) => (
+        {({ isValid }) => (
           <Form>
-            <FormField errorMessage={errors.assignedUnitId} label={t("selectCitizen")}>
-              <CitizenSuggestionsField
-                labelFieldName="assignedUnitName"
-                valueFieldName="assignedUnitId"
-                fromAuthUserOnly
-              />
-            </FormField>
+            <CitizenSuggestionsField
+              autoFocus
+              allowsCustomValue
+              label={t("selectCitizen")}
+              fromAuthUserOnly
+              labelFieldName="assignedUnitName"
+              valueFieldName="assignedUnitId"
+            />
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onPress={handleClose} variant="cancel">

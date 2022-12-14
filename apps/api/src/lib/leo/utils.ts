@@ -57,7 +57,9 @@ export function getInactivityFilter<Prop extends string = "updatedAt">(
     | "call911InactivityTimeout"
     | "unitInactivityTimeout"
     | "activeWarrantsInactivityTimeout"
-    | "boloInactivityTimeout",
+    | "boloInactivityTimeout"
+    | "activeDispatchersInactivityTimeout",
+
   property?: Prop,
 ): InactivityReturn<Prop> | null {
   const inactivityTimeout = cad.miscCadSettings?.[type] ?? null;

@@ -4,22 +4,23 @@ import { StatusValueType } from "@snailycad/types";
 import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
 import { CALL_911_SCHEMA } from "@snailycad/schemas";
-import { dataToSlate, Editor } from "components/editor/Editor";
+import { dataToSlate, Editor } from "components/editor/editor";
 import { useValues } from "context/ValuesContext";
 import { toastMessage } from "lib/toastMessage";
 import { ModalIds } from "types/ModalIds";
 import { Form, Formik } from "formik";
-import { Button, Loader, TextField } from "@snailycad/ui";
+import { Button, Input, Loader, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
-import type { Full911Call } from "state/dispatch/dispatchState";
+import type { Full911Call } from "state/dispatch/dispatch-state";
 import { Select } from "components/form/Select";
 import { useTranslations } from "next-intl";
-import { useCall911State } from "state/dispatch/call911State";
+import { useCall911State } from "state/dispatch/call-911-state";
 import { useModal } from "state/modalState";
 import { AssignedUnitsTable } from "./AssignedUnitsTable";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
+import shallow from "zustand/shallow";
 
 interface Props {
   call: Full911Call | null;
@@ -34,7 +35,13 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
   const { execute, state } = useFetch();
-  const { setCalls, calls } = useCall911State();
+  const { setCalls, calls } = useCall911State(
+    (state) => ({
+      setCalls: state.setCalls,
+      calls: state.calls,
+    }),
+    shallow,
+  );
   const { closeModal } = useModal();
   const { DIVISIONS } = useFeatureEnabled();
 
@@ -100,10 +107,16 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
     situationCode: call?.situationCodeId ?? null,
     type: call?.typeId ?? null,
     assignedUnits: undefined,
+    notifyAssignedUnits: true,
   };
 
   return (
-    <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
+    <Formik
+      enableReinitialize
+      validate={validate}
+      onSubmit={onSubmit}
+      initialValues={INITIAL_VALUES}
+    >
       {({ handleChange, setFieldValue, values, errors }) => (
         <Form className="w-full h-full">
           <TextField
@@ -114,15 +127,9 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
             errorMessage={errors.name}
             isDisabled={isDisabled}
           />
-
           <AddressPostalSelect addressLabel="location" />
-
           {router.pathname.includes("/citizen") ? (
-            <FormField
-              className="max-w-[750px]"
-              errorMessage={errors.description}
-              label={common("description")}
-            >
+            <FormField errorMessage={errors.description} label={common("description")}>
               <Editor
                 value={values.descriptionData}
                 onChange={(v) => setFieldValue("descriptionData", v)}
@@ -212,11 +219,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
                 </FormField>
               </FormRow>
 
-              <FormField
-                className="max-w-[750px]"
-                errorMessage={errors.description}
-                label={common("description")}
-              >
+              <FormField errorMessage={errors.description} label={common("description")}>
                 <Editor
                   value={values.descriptionData}
                   onChange={(v) => setFieldValue("descriptionData", v)}
@@ -236,6 +239,24 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
             ) : null}
 
             <div className="flex">
+              {call ? (
+                <FormField
+                  className="mb-0"
+                  labelClassName="min-w-fit"
+                  label="Notify assigned units"
+                  checkbox
+                >
+                  <Input
+                    defaultChecked
+                    value={values.notifyAssignedUnits.toString()}
+                    onChange={() =>
+                      setFieldValue("notifyAssignedUnits", !values.notifyAssignedUnits)
+                    }
+                    type="checkbox"
+                  />
+                </FormField>
+              ) : null}
+
               <Button onPress={handleClose} type="button" variant="cancel">
                 {common("cancel")}
               </Button>

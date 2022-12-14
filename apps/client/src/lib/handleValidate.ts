@@ -13,12 +13,27 @@ export function handleValidate<Schema extends ZodSchema, Values = any>(schema: S
       const zodError: z.ZodError | null = "flatten" in error ? error : null;
 
       if (zodError) {
-        const { fieldErrors } = zodError.flatten();
+        const fieldErrors = zodError.issues;
 
-        for (const fieldError in fieldErrors) {
-          const [errorMessage] = fieldErrors[fieldError] ?? [];
-          if (errorMessage) {
-            errors[fieldError] = errorMessage;
+        for (const fieldError of fieldErrors) {
+          const path = fieldError.path;
+
+          // a nested field
+          if (path.length > 1) {
+            const [rootFieldName, nestedField] = path as [string, string];
+            const rootField = errors[rootFieldName] ?? {};
+
+            Object.assign(errors, {
+              [rootFieldName]: {
+                ...rootField,
+                [nestedField]: fieldError.message,
+              },
+            });
+
+            // errors[rootField][nestedField] = fieldError.message;
+          } else {
+            const [field] = path as [string];
+            errors[field] = fieldError.message;
           }
         }
       }

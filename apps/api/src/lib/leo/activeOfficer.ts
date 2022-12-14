@@ -15,6 +15,7 @@ export const unitProperties = {
   IncidentInvolvedUnit: { where: { incident: { isActive: true } }, select: { id: true } },
   whitelistStatus: { include: { department: { include: { value: true } } } },
   rank: true,
+  activeVehicle: { include: { value: true } },
 };
 
 export const _leoProperties = {
@@ -29,6 +30,7 @@ export const _leoProperties = {
   rank: true,
   callsigns: true,
   activeDivisionCallsign: true,
+  activeVehicle: { include: { value: true } },
 };
 
 export const leoProperties = {

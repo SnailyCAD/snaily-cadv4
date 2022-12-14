@@ -27,7 +27,7 @@ export function UnitDepartmentStatus({ unit }: Props) {
           }
         >
           <p className="max-w-[400px]">
-            {t.rich(
+            {t(
               unit.department?.isDefaultDepartment
                 ? "pendingAccessDepartment"
                 : "pendingAccessDepartmentNoDefault",

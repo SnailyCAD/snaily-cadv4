@@ -3,15 +3,15 @@ import type { AccessorKeyColumnDef, ColumnDef, RowData } from "@tanstack/react-t
 
 export function orderColumnsByTableActionsAlignment<TData extends RowData>(
   tableActionsAlignment: TableActionsAlignment,
-  columns: (AccessorKeyColumnDef<TData> | null)[],
-): ColumnDef<TData>[] {
+  columns: (AccessorKeyColumnDef<TData, keyof TData> | null)[],
+): ColumnDef<TData, keyof TData>[] {
   const idxOfActions = columns.findIndex((v) => v?.accessorKey === "actions");
   const isLeft = tableActionsAlignment === TableActionsAlignment.LEFT;
 
   const arr = [];
 
   if (idxOfActions === -1 || !isLeft) {
-    const cols: ColumnDef<TData>[] = [];
+    const cols: ColumnDef<TData, keyof TData>[] = [];
 
     for (const column of columns) {
       if (!column) continue;

@@ -17,6 +17,10 @@ export function FullDate({ children, onlyDate, isDateOfBirth, ...rest }: Props) 
     return <span>Invalid Date</span>;
   }
 
+  if (!isMounted) {
+    return null;
+  }
+
   let date = new Date(children).getTime();
   if (isDateOfBirth) {
     date = date + 5 * 60 * 60 * 1000;
@@ -27,12 +31,10 @@ export function FullDate({ children, onlyDate, isDateOfBirth, ...rest }: Props) 
       openDelay={100}
       trigger={
         <span className="z-30">
-          {isMounted
-            ? formatDateTime(date, {
-                dateStyle: "medium",
-                timeStyle: onlyDate ? undefined : "medium",
-              })
-            : null}
+          {formatDateTime(date, {
+            dateStyle: "medium",
+            timeStyle: onlyDate ? undefined : "medium",
+          })}
         </span>
       }
       {...rest}
