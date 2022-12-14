@@ -25,18 +25,18 @@
     "isDisabled": "Desativado",
     "county": "Condado",
     "deletedSelectedValues": "Itens {deleted} excluídos. Falha ao excluir {failed} itens.",
-    "failedDeleteValue": "Failed to delete <span>{value}</span>.",
+    "failedDeleteValue": "Falha ao Excluir <span>{value}</span>.",
     "alert_deleteValue": "Tem certeza de que deseja excluir <span>{value}</span>? Esta ação não pode ser desfeita!",
     "alert_deleteSelectedValues": "Tem certeza de que deseja excluir {length} itens? Esta ação não pode ser desfeita" 
   },
   "PENAL_CODE_GROUP": {
-    "MANAGE": "Manage Penal Code Groups",
-    "ADD": "Add Penal Code Group",
-    "DELETE": "Delete Penal Code Group",
-    "EDIT": "Edit Penal Code Group",
-    "ungrouped": "Ungrouped",
-    "alert_deletePenalCodeGroup": "Are you sure you want to delete <span>{group}</span>? This action cannot be undone.",
-    "deleteGroup": "Delete Group"
+    "MANAGE": "Gerenciar Grupos de Código Penal",
+    "ADD": "Adicionar Grupo do Código Penal",
+    "DELETE": "Deletar Grupo do Código Penal",
+    "EDIT": "Editar Grupo do Código Penal",
+    "ungrouped": "Não Agrupado",
+    "alert_deletePenalCodeGroup": "Tem certeza de que deseja excluir <span>{group}</span>?  Essa ação não pode ser desfeita.",
+    "deleteGroup": "Deletar Grupo"
   },
   "GENDER": {
     "MANAGE": "Gerenciar Gêneros",
