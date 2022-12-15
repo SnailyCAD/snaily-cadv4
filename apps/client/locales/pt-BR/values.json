@@ -27,7 +27,7 @@
     "deletedSelectedValues": "Itens {deleted} excluídos. Falha ao excluir {failed} itens.",
     "failedDeleteValue": "Falha ao Excluir <span>{value}</span>.",
     "alert_deleteValue": "Tem certeza de que deseja excluir <span>{value}</span>? Esta ação não pode ser desfeita!",
-    "alert_deleteSelectedValues": "Tem certeza de que deseja excluir {length} itens? Esta ação não pode ser desfeita" 
+    "alert_deleteSelectedValues": "Tem certeza de que deseja excluir {length} itens? Esta ação não pode ser desfeita"
   },
   "PENAL_CODE_GROUP": {
     "MANAGE": "Gerenciar Grupos de Código Penal",
