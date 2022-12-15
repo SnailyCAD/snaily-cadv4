@@ -14,6 +14,12 @@ export type GetValuesData<Value extends AnyValue = AnyValue> = {
 
 /**
  * @method GET
+ * @route /admin/values/:path/export
+ */
+export type GetValuesExportData<Value extends AnyValue = AnyValue> = Value[];
+
+/**
+ * @method GET
  * @route /admin/values/penal_code
  */
 export type GetValuesPenalCodesData = {

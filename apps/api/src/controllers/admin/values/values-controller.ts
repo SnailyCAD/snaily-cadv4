@@ -173,6 +173,47 @@ export class ValuesController {
     return values as APITypes.GetValuesData;
   }
 
+  @Get("/export")
+  async exportValues(@PathParams("path") path: string): Promise<APITypes.GetValuesExportData> {
+    const type = getTypeFromPath(path) as ValueType;
+
+    // @ts-expect-error ignore this is safe.
+    if (type === "PENAL_CODE_GROUP") {
+      throw new BadRequest(
+        "`penal_code_group` must use the `/v1/admin/penal-code-group` API route (POST, PUT, DELETE).",
+      );
+    }
+
+    const data = GET_VALUES[type];
+    if (data) {
+      // @ts-expect-error ignore
+      const values = await prisma[data.name].findMany({
+        include: {
+          ...(data.include ?? {}),
+          value: true,
+        },
+        orderBy: { value: { position: "asc" } },
+      });
+
+      return values;
+    }
+
+    if (type === "PENAL_CODE") {
+      const penalCodes = await prisma.penalCode.findMany({
+        orderBy: { title: "asc" },
+        include: { warningApplicable: true, warningNotApplicable: true, group: true },
+      });
+
+      return penalCodes;
+    }
+
+    const values = prisma.value.findMany({
+      orderBy: { position: "asc" },
+    });
+
+    return values;
+  }
+
   @Get("/search")
   async searchValues(
     @PathParams("path") path: string,

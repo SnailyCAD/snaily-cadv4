@@ -14,7 +14,7 @@ import { getObjLength, isEmpty, requestAll, yesOrNoText } from "lib/utils";
 import dynamic from "next/dynamic";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { useTableDataOfType, useTableHeadersOfType } from "lib/admin/values/values";
-import { OptionsDropdown } from "components/admin/values/import/OptionsDropdown";
+import { OptionsDropdown } from "components/admin/values/import/options-dropdown";
 import { Title } from "components/shared/Title";
 import { AlertModal } from "components/modal/AlertModal";
 import { ModalIds } from "types/ModalIds";
@@ -37,17 +37,25 @@ import {
 import type { AccessorKeyColumnDef } from "@tanstack/react-table";
 import { getSelectedTableRows } from "hooks/shared/table/use-table-state";
 import { SearchArea } from "components/shared/search/search-area";
-import { AlertDeleteValueModal } from "components/admin/values/alert-delete-value-modal";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import { toastMessage } from "lib/toastMessage";
 
-const ManageValueModal = dynamic(async () => {
-  return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
-});
+const ManageValueModal = dynamic(
+  async () => (await import("components/admin/values/ManageValueModal")).ManageValueModal,
+  { ssr: false },
+);
 
-const ImportValuesModal = dynamic(async () => {
-  return (await import("components/admin/values/import/ImportValuesModal")).ImportValuesModal;
-});
+const AlertDeleteValueModal = dynamic(
+  async () =>
+    (await import("components/admin/values/alert-delete-value-modal")).AlertDeleteValueModal,
+  { ssr: false },
+);
+
+const ImportValuesModal = dynamic(
+  async () =>
+    (await import("components/admin/values/import/import-values-modal")).ImportValuesModal,
+  { ssr: false },
+);
 
 interface Props {
   pathValues: GetValuesData[number];

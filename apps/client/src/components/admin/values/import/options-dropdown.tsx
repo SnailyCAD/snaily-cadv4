@@ -9,6 +9,8 @@ import type { PenalCode, ValueType, AnyValue } from "@snailycad/types";
 import { isPenalCodeValue, isDivisionValue, isStatusValue } from "@snailycad/utils";
 import format from "date-fns/format";
 import { omit } from "lib/utils";
+import useFetch from "lib/useFetch";
+import type { GetValuesExportData } from "@snailycad/types/api";
 
 interface Props {
   type: ValueType;
@@ -19,12 +21,17 @@ export function OptionsDropdown({ type, values }: Props) {
   const t = useTranslations("Values");
   const { openModal } = useModal();
   const download = useDownload();
+  const { execute } = useFetch();
 
-  function handleExport() {
+  async function handleExport() {
+    const { json } = await execute<GetValuesExportData>({
+      path: `/admin/values/${type.toLowerCase()}/export`,
+    });
+
     const date = format(Date.now(), "yyyy-MM-dd-hh-ss-mm");
     download({
       filename: `${type.toLowerCase()}_${date}.json`,
-      data: JSON.stringify(omitUnnecessaryProperties([...values]), null, 4),
+      data: JSON.stringify(omitUnnecessaryProperties([...json]), null, 4),
     });
   }
 

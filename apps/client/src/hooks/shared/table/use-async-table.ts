@@ -44,6 +44,11 @@ export function useAsyncTable<T>(options: Options<T>) {
   });
 
   React.useEffect(() => {
+    setTotalCount(options.totalCount);
+    setPagination({
+      pageSize: options.fetchOptions.pageSize ?? 35,
+      pageIndex: options.fetchOptions.pageIndex ?? 0,
+    });
     list.setItems(options.initialData ?? []);
   }, [options.initialData]); // eslint-disable-line react-hooks/exhaustive-deps
 
