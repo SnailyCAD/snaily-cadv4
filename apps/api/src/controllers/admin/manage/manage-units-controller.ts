@@ -407,19 +407,19 @@ export class AdminManageUnitsController {
         return { ...updated, deleted: true };
       }
       case "SET_DEPARTMENT_NULL": {
-        // @ts-expect-error function has the same properties
-        const updated = await prisma[prismaName].update({
-          where: { id: unit.id },
-          data: { departmentId: null },
-          include: unitType === "leo" ? leoProperties : unitProperties,
-        });
-
         if (unit.whitelistStatusId) {
           await prisma.leoWhitelistStatus.update({
             where: { id: unit.whitelistStatusId },
             data: { status: WhitelistStatus.DECLINED },
           });
         }
+
+        // @ts-expect-error function has the same properties
+        const updated = await prisma[prismaName].update({
+          where: { id: unit.id },
+          data: { departmentId: null },
+          include: unitType === "leo" ? leoProperties : unitProperties,
+        });
 
         return updated;
       }

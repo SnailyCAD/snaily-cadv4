@@ -15,8 +15,9 @@ import { CallsignsTab } from "components/admin/manage/units/tabs/callsigns-tab/c
 
 const DepartmentWhitelistingTab = dynamic(
   async () =>
-    (await import("components/admin/manage/units/DepartmentWhitelistingTab"))
+    (await import("components/admin/manage/units/tabs/department-whitelisting-tab"))
       .DepartmentWhitelistingTab,
+  { ssr: false },
 );
 
 export type Unit = GetManageUnitsData["units"][number];
@@ -55,7 +56,7 @@ export default function SupervisorPanelPage(props: Props) {
     });
   }
 
-  if (hasManagePermissions) {
+  if (hasManagePermissions && props.pendingUnits.totalCount > 0) {
     TABS.push({
       name: t
         .rich("Management.departmentWhitelisting", { length: props.pendingUnits.totalCount })
@@ -82,7 +83,9 @@ export default function SupervisorPanelPage(props: Props) {
       <TabList tabs={TABS}>
         <AllUnitsTab units={props.units} />
         {hasManageCallsignPermissions ? <CallsignsTab units={props.units} /> : null}
-        <DepartmentWhitelistingTab pendingUnits={props.pendingUnits} />
+        {props.pendingUnits.totalCount > 0 && hasManagePermissions ? (
+          <DepartmentWhitelistingTab pendingUnits={props.pendingUnits} />
+        ) : null}
       </TabList>
     </AdminLayout>
   );
