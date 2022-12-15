@@ -113,7 +113,15 @@ export class CitizenController {
       prisma.citizen.findMany({
         where,
         orderBy: { updatedAt: "desc" },
-        include: { user: { select: userProperties } },
+        select: {
+          name: true,
+          surname: true,
+          imageId: true,
+          id: true,
+          userId: true,
+          socialSecurityNumber: true,
+          user: { select: userProperties },
+        },
         skip,
         take: 35,
       }),

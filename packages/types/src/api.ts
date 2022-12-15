@@ -236,12 +236,14 @@ export type DeleteBolosData = boolean;
 export type PostMarkStolenData = Prisma.Bolo | true;
 
 /** citizens */
+type CitizenProperties = "id" | "name" | "surname" | "userId" | "socialSecurityNumber" | "imageId";
+
 /**
  * @method GET
  * @route /citizen
  */
 export interface GetCitizensData {
-  citizens: (Prisma.Citizen & { user: Types.User | null })[];
+  citizens: (Pick<Prisma.Citizen, CitizenProperties> & { user: Types.User | null })[];
   totalCount: number;
 }
 
