@@ -236,11 +236,10 @@ export type DeleteManageCustomFieldsData = boolean;
  * @method Get
  * @route /admin/manage/units
  */
-export type GetManageUnitsData = (
-  | (Types.Officer & { type: "OFFICER" })
-  | (Types.EmsFdDeputy & { type: "DEPUTY" })
-)[];
-
+export interface GetManageUnitsData {
+  totalCount: number;
+  units: ((Types.Officer & { type: "OFFICER" }) | (Types.EmsFdDeputy & { type: "DEPUTY" }))[];
+}
 /**
  * @method Get
  * @route /admin/manage/units/:id

@@ -1,6 +1,6 @@
 import { Feature, Rank, WhitelistStatus, cad, CadFeature, MiscCadSettings } from "@prisma/client";
 import { UPDATE_UNIT_SCHEMA, UPDATE_UNIT_CALLSIGN_SCHEMA } from "@snailycad/schemas";
-import { PathParams, BodyParams, Context } from "@tsed/common";
+import { PathParams, BodyParams, Context, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
@@ -51,17 +51,39 @@ export class AdminManageUnitsController {
       Permissions.ManageAwardsAndQualifications,
     ],
   })
-  async getUnits(): Promise<APITypes.GetManageUnitsData> {
-    const units = await Promise.all([
-      (
-        await prisma.officer.findMany({ include: leoProperties })
-      ).map((v) => ({ ...v, type: "OFFICER" as const })),
-      (
-        await prisma.emsFdDeputy.findMany({ include: unitProperties })
-      ).map((v) => ({ ...v, type: "DEPUTY" as const })),
+  async getUnits(
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("includeAll", Boolean) includeAll = false,
+    @QueryParams("query", String) query = "",
+    @QueryParams("pendingOnly", Boolean) pendingOnly = false,
+  ): Promise<APITypes.GetManageUnitsData> {
+    const [officerCount, _officers] = await prisma.$transaction([
+      prisma.officer.count({ where: this.createWhere({ query, pendingOnly }, "OFFICER") }),
+      prisma.officer.findMany({
+        take: includeAll ? undefined : 35,
+        skip: includeAll ? undefined : skip,
+        include: leoProperties,
+        where: this.createWhere({ query, pendingOnly }, "OFFICER"),
+      }),
     ]);
 
-    return units.flat(1);
+    const [emsFdDeputiesCount, _emsFdDeputies] = await prisma.$transaction([
+      prisma.emsFdDeputy.count({ where: this.createWhere({ query, pendingOnly }, "DEPUTY") }),
+      prisma.emsFdDeputy.findMany({
+        take: includeAll ? undefined : 35,
+        skip: includeAll ? undefined : skip,
+        include: unitProperties,
+        where: this.createWhere({ query, pendingOnly }, "DEPUTY"),
+      }),
+    ]);
+
+    const officers = _officers.map((o) => ({ ...o, type: "OFFICER" as const }));
+    const emsFdDeputies = _emsFdDeputies.map((o) => ({ ...o, type: "DEPUTY" as const }));
+
+    return {
+      units: [...officers, ...emsFdDeputies],
+      totalCount: officerCount + emsFdDeputiesCount,
+    };
   }
 
   @Get("/:id")
@@ -385,19 +407,19 @@ export class AdminManageUnitsController {
         return { ...updated, deleted: true };
       }
       case "SET_DEPARTMENT_NULL": {
-        // @ts-expect-error function has the same properties
-        const updated = await prisma[prismaName].update({
-          where: { id: unit.id },
-          data: { departmentId: null },
-          include: unitType === "leo" ? leoProperties : unitProperties,
-        });
-
         if (unit.whitelistStatusId) {
           await prisma.leoWhitelistStatus.update({
             where: { id: unit.whitelistStatusId },
             data: { status: WhitelistStatus.DECLINED },
           });
         }
+
+        // @ts-expect-error function has the same properties
+        const updated = await prisma[prismaName].update({
+          where: { id: unit.id },
+          data: { departmentId: null },
+          include: unitType === "leo" ? leoProperties : unitProperties,
+        });
 
         return updated;
       }
@@ -578,5 +600,52 @@ export class AdminManageUnitsController {
     });
 
     return true;
+  }
+
+  private createWhere(
+    { query, pendingOnly }: { query: string; pendingOnly: boolean },
+    type: "OFFICER" | "DEPUTY" = "OFFICER",
+  ) {
+    const [name, surname] = query.toString().toLowerCase().split(/ +/g);
+
+    if (!query) {
+      return pendingOnly
+        ? {
+            whitelistStatus: { status: WhitelistStatus.PENDING },
+          }
+        : {};
+    }
+
+    const where: any = {
+      ...(pendingOnly ? { whitelistStatus: { status: WhitelistStatus.PENDING } } : {}),
+      OR: [
+        { callsign: query },
+        { callsign2: query },
+        { department: { value: { value: { contains: query, mode: "insensitive" } } } },
+        { status: { value: { value: { contains: query, mode: "insensitive" } } } },
+        {
+          citizen: {
+            OR: [
+              {
+                name: { contains: name, mode: "insensitive" },
+                surname: { contains: surname, mode: "insensitive" },
+              },
+              {
+                name: { contains: name, mode: "insensitive" },
+                surname: { contains: surname, mode: "insensitive" },
+              },
+            ],
+          },
+        },
+      ],
+    };
+
+    if (type === "OFFICER") {
+      where.OR.push({
+        divisions: { some: { value: { value: { contains: query, mode: "insensitive" } } } },
+      });
+    }
+
+    return where;
   }
 }
