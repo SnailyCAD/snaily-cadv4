@@ -10,8 +10,6 @@
     "file": "Arquivo",
     "importValues": "Importar via Arquivo",
     "exportValues": "Exportar Valores",
-    "addPenalCodeGroup": "ADD Grupo",
-    "deleteGroup": "Excluir Grupo",
     "ungrouped": "Desagrupado",
     "licenseType": "Tipo de Licença",
     "whitelisted": "Whitelisted",
@@ -26,9 +24,19 @@
     "priority": "Prioridade",
     "isDisabled": "Desativado",
     "county": "Condado",
-    "alert_deletePenalCodeGroup": "Tem certeza de que deseja excluir <span>{group}</span>? Esta ação não pode ser desfeita.",
+    "deletedSelectedValues": "Itens {deleted} excluídos. Falha ao excluir {failed} itens.",
+    "failedDeleteValue": "Falha ao Excluir <span>{value}</span>.",
     "alert_deleteValue": "Tem certeza de que deseja excluir <span>{value}</span>? Esta ação não pode ser desfeita!",
-    "alert_deleteSelectedValues": "Tem certeza de que deseja excluir {length} itens? Esta ação não pode ser desfeita"
+    "alert_deleteSelectedValues": "Tem certeza de que deseja excluir {length} itens? Esta ação não pode ser desfeita" 
+  },
+  "PENAL_CODE_GROUP": {
+    "MANAGE": "Gerenciar Grupos de Código Penal",
+    "ADD": "Adicionar Grupo do Código Penal",
+    "DELETE": "Deletar Grupo do Código Penal",
+    "EDIT": "Editar Grupo do Código Penal",
+    "ungrouped": "Não Agrupado",
+    "alert_deletePenalCodeGroup": "Tem certeza de que deseja excluir <span>{group}</span>?  Essa ação não pode ser desfeita.",
+    "deleteGroup": "Deletar Grupo"
   },
   "GENDER": {
     "MANAGE": "Gerenciar Gêneros",
@@ -143,5 +151,11 @@
     "ADD": "Adicionar Endereço",
     "DELETE": "Excluir Endereço",
     "EDIT": "Editar Endereço"
+  },
+  "EMERGENCY_VEHICLE": {
+    "MANAGE": "Gerenciar Veículos de Emergência",
+    "ADD": "Adicionar Veículo de Emergência",
+    "DELETE": "Excluir Veículo de Emergência",
+    "EDIT": "Editar Veículo de Emergência"
   }
 }

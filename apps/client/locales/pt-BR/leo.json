@@ -233,12 +233,19 @@
     "endsOn": "Termina em",
     "assignedToCall#": "Você foi designado para um chamado #{caseNumber}.",
     "assignedToCall#WithType": "Você foi designado para o chamado #{caseNumber}. Tipo de chamado: {callType}",
-    "warrantCreatedButApprovalRequired": "O mandado foi criado com sucesso, porém este CAD requer aprovação para que os mandados estejam ativos. O warrant estará disponível assim que for aprovado.",
+    "warrantCreatedButApprovalRequired": "O mandado foi criado com sucesso, porém este CAD requer aprovação para que os mandados estejam ativos. O mandado estará disponível assim que for aprovado.",
+    "suspendDriversLicense": "Carteira de Motorista Suspensa",
+    "suspendPilotLicense": "Carteira de Piloto Suspensa",
+    "suspendWaterLicense": "Carteira de Barco Suspensa",
+    "suspendFirearmsLicense": "Licença de Arma de Fogo Suspensa",
+    "endDate": "Data Final",
+    "patrolVehicle": "Veículo de Patrulha",
+    "callUpdated": "Sua chamada #{caseNumber} foi atualizada",
     "alert_deleteNote": "Tem certeza de que deseja excluir esta nota? Esta ação não pode ser desfeita.",
-    "alert_deleteQualification": "Tem certeza de que deseja excluir esta qualificação? Esta ação não pode ser desfeita.",
-    "vehicleImpoundLocation": "O veículo fornecido ({plate}) será apreendido em {impoundLocation}. Você poderá visualizar este veículo na página do lote de apreensão.",
+    "alert_deleteQualification": "Tem certeza que deseja excluir esta qualificação? Esta ação não pode ser desfeita.",
+    "vehicleImpoundLocation": "O veículo fornecido ({plate}) será apreendido em {impoundLocation}. Você poderá visualizar este veículo na página do lote apreendido.",
     "alert_endIncident": "Tem certeza de que deseja encerrar este incidente. Ele ainda pode ser visto pelos oficiais.",
-    "alert_deleteRecord": "Tem certeza de que deseja excluir este registro? Esta ação não pode ser desfeita.",
+    "alert_deleteRecord": "Tem certeza que deseja excluir este registro? Esta ação não pode ser desfeita.",
     "alert_deleteOfficer": "Tem certeza de que deseja excluir <span>{officer}</span>? Esta ação não pode ser desfeita.",
     "alert_allowCheckout": "Tem certeza de que deseja retirar este veículo do lote apreendido?",
     "alert_deleteIncident": "Tem certeza de que deseja excluir este incidente? Esta ação não pode ser desfeita.",
@@ -269,5 +276,9 @@
     "categories": "Categorias",
     "deleteExam": "Excluir exame de licença",
     "alert_deleteExam": "Tem certeza de que deseja excluir este exame de licença? Esta ação não pode ser desfeita."
+  },
+  "Bof": {
+    "bureauOfFirearms": "Departamento de Armas de Fogo",
+    "noWeaponsPendingBof": "Não há armas pendentes de aprovação."
   }
 }
