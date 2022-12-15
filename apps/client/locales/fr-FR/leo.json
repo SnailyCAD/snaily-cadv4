@@ -240,6 +240,7 @@
     "suspendFirearmsLicense": "Suspendre permis d'armes à feu",
     "endDate": "Date de fin",
     "patrolVehicle": "Véhicule de patrouille",
+    "callUpdated": "L'appel #{caseNumber} a été mis à jour",
     "alert_deleteNote": "Êtes-vous sûr de vouloir supprimer cette note ? Cette action ne peut être annulée.",
     "alert_deleteQualification": "Êtes-vous sur de vouloir supprimer cette qualification ? Cette action ne peut être annulée.",
     "vehicleImpoundLocation": "La plaque d'immatriculation fournie ({plate}) sera mis en fourrière à {impoundLocation}. Vous pourrez visualiser ce véhicule sur la page de la fourrière.",
@@ -275,5 +276,9 @@
     "categories": "Catégories",
     "deleteExam": "Supprimer examen",
     "alert_deleteExam": "Êtes-vous sûr de vouloir supprimer cet examen ? Cette action ne peut être annulée."
+  },
+  "Bof": {
+    "bureauOfFirearms": "Bureau des armes à feu",
+    "noWeaponsPendingBof": "Il n'y a pas d'arme en attente d'approbation."
   }
 }

@@ -99,6 +99,7 @@
     "deleteWeapon": "Supprimer Arme",
     "registeredWeapons": "Armes Enregistrées",
     "successWeaponRegistered": "Enregistrement réussi de l'arme",
+    "bofStatus": "Statut BAF",
     "alert_deleteWeapon": "Êtes-vous sûr de vouloir supprimer cette arme ? Cette action ne peut être annulée."
   },
   "MedicalRecords": {

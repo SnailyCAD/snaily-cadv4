@@ -95,7 +95,8 @@
     "dmv": "Service du Permis de Conduire et des Papiers du Véhicule",
     "penalCodes": "Code Pénal",
     "myDeputyLogs": "Mes Logs (EMS/FD)",
-    "whatsNew": "Nouveautés"
+    "whatsNew": "Nouveautés",
+    "bureauOfFirearms": "Bureau des Armes à Feu"
   },
   "Errors": {
     "unknown": "Une erreur inattendue s'est produite",
