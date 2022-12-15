@@ -11,20 +11,19 @@ import { Form, Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/router";
 import type { Unit } from "src/pages/admin/manage/units";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 
 interface Props {
   unit: Unit;
+  onUpdate?(unit: PutManageUnitCallsignData): void;
 }
 
-export function ManageUnitCallsignModal({ unit }: Props) {
+export function ManageUnitCallsignModal({ onUpdate, unit }: Props) {
   const t = useTranslations();
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
-  const router = useRouter();
 
   async function handleSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute<PutManageUnitCallsignData>({
@@ -35,10 +34,7 @@ export function ManageUnitCallsignModal({ unit }: Props) {
 
     if (json.id) {
       closeModal(ModalIds.ManageUnitCallsign);
-      router.replace({
-        pathname: router.pathname,
-        query: router.query,
-      });
+      onUpdate?.(json);
     }
   }
 

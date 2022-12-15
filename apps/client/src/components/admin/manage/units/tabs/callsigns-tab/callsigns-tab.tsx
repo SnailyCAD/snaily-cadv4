@@ -1,24 +1,46 @@
+import * as React from "react";
 import type { Unit } from "src/pages/admin/manage/units";
 import Link from "next/link";
 import { formatOfficerDepartment, makeUnitName } from "lib/utils";
 import { useTranslations } from "use-intl";
 import { Button, buttonVariants } from "@snailycad/ui";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { Table, useTableState } from "components/shared/Table";
+import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { TabsContent } from "components/shared/TabList";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import { ManageUnitCallsignModal } from "./ManageUnitCallsignModal";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { Permissions, usePermission } from "hooks/usePermission";
+import type { GetManageUnitsData } from "@snailycad/types/api";
+import { SearchArea } from "components/shared/search/search-area";
+import dynamic from "next/dynamic";
+
+const ManageUnitCallsignModal = dynamic(
+  async () => (await import("./manage-unit-callsign-modal")).ManageUnitCallsignModal,
+  { ssr: false },
+);
 
 interface Props {
-  units: Unit[];
-  search: string;
+  units: GetManageUnitsData;
 }
 
-export function CallsignsTab({ search, units }: Props) {
-  const [tempUnit, unitState] = useTemporaryItem(units);
+export function CallsignsTab({ units }: Props) {
+  const [search, setSearch] = React.useState("");
+
+  const asyncTable = useAsyncTable({
+    search,
+    totalCount: units.totalCount,
+    initialData: units.units,
+    fetchOptions: {
+      path: "/admin/manage/units",
+      onResponse: (data: GetManageUnitsData) => ({
+        data: data.units,
+        totalCount: data.totalCount,
+      }),
+    },
+  });
+
+  const [tempUnit, unitState] = useTemporaryItem(asyncTable.items);
 
   const { hasPermissions } = usePermission();
   const t = useTranslations();
@@ -40,12 +62,18 @@ export function CallsignsTab({ search, units }: Props) {
 
   return (
     <TabsContent value="callsignManagement">
-      {units.length <= 0 ? (
+      <SearchArea
+        search={{ search, setSearch }}
+        asyncTable={asyncTable}
+        totalCount={units.totalCount}
+      />
+
+      {asyncTable.items.length <= 0 ? (
         <p>{t("Management.noUnits")}</p>
       ) : (
         <Table
           tableState={tableState}
-          data={units.map((unit) => {
+          data={asyncTable.items.map((unit) => {
             return {
               id: unit.id,
               unit: LABELS[unit.type],
@@ -84,7 +112,15 @@ export function CallsignsTab({ search, units }: Props) {
         />
       )}
 
-      {tempUnit ? <ManageUnitCallsignModal unit={tempUnit} /> : null}
+      {tempUnit ? (
+        <ManageUnitCallsignModal
+          onUpdate={(unit) => {
+            asyncTable.update(tempUnit.id, { ...tempUnit, ...unit });
+            unitState.setTempId(null);
+          }}
+          unit={tempUnit}
+        />
+      ) : null}
     </TabsContent>
   );
 }

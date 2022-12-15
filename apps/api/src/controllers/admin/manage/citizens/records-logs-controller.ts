@@ -10,7 +10,7 @@ import { Prisma, Rank, RecordType, WhitelistStatus } from "@prisma/client";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 import type * as APITypes from "@snailycad/types/api";
-import { AcceptDeclineType, ACCEPT_DECLINE_TYPES } from "../AdminManageUnitsController";
+import { AcceptDeclineType, ACCEPT_DECLINE_TYPES } from "../manage-units-controller";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 
 const recordsInclude = {

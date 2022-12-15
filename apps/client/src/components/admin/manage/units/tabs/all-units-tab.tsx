@@ -1,3 +1,4 @@
+import * as React from "react";
 import type { Unit } from "src/pages/admin/manage/units";
 import Link from "next/link";
 import {
@@ -12,7 +13,7 @@ import { Button, buttonVariants } from "@snailycad/ui";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
-import { Table, useTableState } from "components/shared/Table";
+import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { TabsContent } from "components/shared/TabList";
 import { Status } from "components/shared/Status";
 import { usePermission, Permissions } from "hooks/usePermission";
@@ -29,16 +30,30 @@ import type {
 } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { getSelectedTableRows } from "hooks/shared/table/use-table-state";
+import { SearchArea } from "components/shared/search/search-area";
 
 interface Props {
   units: GetManageUnitsData;
-  search: string;
 }
 
-export function AllUnitsTab({ search, units }: Props) {
-  const [tempUnit, unitState] = useTemporaryItem(units);
+export function AllUnitsTab({ units }: Props) {
+  const [search, setSearch] = React.useState("");
 
-  const tableState = useTableState({ search: { value: search } });
+  const asyncTable = useAsyncTable({
+    search,
+    totalCount: units.totalCount,
+    initialData: units.units,
+    fetchOptions: {
+      path: "/admin/manage/units",
+      onResponse: (data: GetManageUnitsData) => ({
+        data: data.units,
+        totalCount: data.totalCount,
+      }),
+    },
+  });
+
+  const [tempUnit, unitState] = useTemporaryItem(asyncTable.items);
+  const tableState = useTableState({ pagination: asyncTable.pagination });
 
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageUnits], true);
@@ -84,7 +99,7 @@ export function AllUnitsTab({ search, units }: Props) {
 
   async function setSelectedUnitsOffDuty() {
     const selectedRows = getSelectedTableRows(
-      units,
+      asyncTable.items,
       tableState.rowSelection,
       (unit) => `${unit.id}-${unit.type}`,
     );
@@ -98,11 +113,14 @@ export function AllUnitsTab({ search, units }: Props) {
     });
 
     if (Array.isArray(json)) {
+      for (const key of Object.keys(tableState.rowSelection)) {
+        const idx = parseInt(key, 10);
+        const unit = asyncTable.items[idx];
+        if (!unit) continue;
+
+        asyncTable.update(unit.id, { ...unit, status: null, statusId: null });
+      }
       tableState.setRowSelection({});
-      router.replace({
-        pathname: router.pathname,
-        query: router.query,
-      });
     }
   }
 
@@ -113,7 +131,7 @@ export function AllUnitsTab({ search, units }: Props) {
 
   return (
     <TabsContent value="allUnits">
-      {hasManagePermissions && units.length >= 1 ? (
+      {hasManagePermissions && asyncTable.items.length >= 1 ? (
         <Button
           disabled={isEmpty(tableState.rowSelection)}
           onPress={setSelectedUnitsOffDuty}
@@ -123,13 +141,19 @@ export function AllUnitsTab({ search, units }: Props) {
         </Button>
       ) : null}
 
-      {units.length <= 0 ? (
-        <p>{t("Management.noUnits")}</p>
+      <SearchArea
+        search={{ search, setSearch }}
+        asyncTable={asyncTable}
+        totalCount={units.totalCount}
+      />
+
+      {asyncTable.items.length <= 0 ? (
+        <p className="mt-2">{t("Management.noUnits")}</p>
       ) : (
         <Table
           tableState={tableState}
           features={{ rowSelection: hasManagePermissions }}
-          data={units.map((unit) => {
+          data={asyncTable.items.map((unit) => {
             const departmentStatus = unit.whitelistStatus?.status;
             const departmentStatusFormatted = departmentStatus
               ? departmentStatus.toLowerCase()

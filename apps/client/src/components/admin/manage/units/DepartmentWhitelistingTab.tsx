@@ -1,27 +1,43 @@
+import * as React from "react";
 import type { Unit } from "src/pages/admin/manage/units";
 import useFetch from "lib/useFetch";
 import { formatUnitDivisions, makeUnitName, formatOfficerDepartment } from "lib/utils";
 import { useTranslations } from "use-intl";
 import { Button, buttonVariants } from "@snailycad/ui";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { Table, useTableState } from "components/shared/Table";
+import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { TabsContent } from "components/shared/TabList";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { AlertDeclineOfficerModal } from "./AlertDeclineOfficerModal";
-import { useRouter } from "next/router";
 import Link from "next/link";
-import type { PostManageUnitAcceptDeclineDepartmentData } from "@snailycad/types/api";
+import type {
+  GetManageUnitsData,
+  PostManageUnitAcceptDeclineDepartmentData,
+} from "@snailycad/types/api";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Permissions, usePermission } from "hooks/usePermission";
+import { SearchArea } from "components/shared/search/search-area";
 
 interface Props {
-  pendingOfficers: Unit[];
-  search: string;
+  pendingUnits: GetManageUnitsData;
 }
 
-export function DepartmentWhitelistingTab({ search, pendingOfficers }: Props) {
-  const router = useRouter();
+export function DepartmentWhitelistingTab({ pendingUnits }: Props) {
+  const [search, setSearch] = React.useState("");
+
+  const asyncTable = useAsyncTable({
+    search,
+    totalCount: pendingUnits.totalCount,
+    initialData: pendingUnits.units,
+    fetchOptions: {
+      path: "/admin/manage/units?pendingOnly=true",
+      onResponse: (data: GetManageUnitsData) => ({
+        data: data.units,
+        totalCount: data.totalCount,
+      }),
+    },
+  });
 
   const { hasPermissions } = usePermission();
   const { openModal, closeModal } = useModal();
@@ -50,18 +66,28 @@ export function DepartmentWhitelistingTab({ search, pendingOfficers }: Props) {
 
     if (json?.id) {
       closeModal(ModalIds.AlertDeclineOfficer);
-      router.replace({ pathname: router.pathname, query: router.query });
+      if (json.deleted) {
+        asyncTable.remove(unit.id);
+      } else {
+        asyncTable.update(unit.id, { ...unit, ...json });
+      }
     }
   }
 
   return (
     <TabsContent value="departmentWhitelisting">
-      {pendingOfficers.length <= 0 ? (
-        <p>{t("Management.noPendingOfficers")}</p>
+      <SearchArea
+        search={{ search, setSearch }}
+        asyncTable={asyncTable}
+        totalCount={pendingUnits.totalCount}
+      />
+
+      {asyncTable.items.length <= 0 ? (
+        <p className="mt-2">{t("Management.noPendingOfficers")}</p>
       ) : (
         <Table
           tableState={tableState}
-          data={pendingOfficers.map((officer) => ({
+          data={asyncTable.items.map((officer) => ({
             id: officer.id,
             name: makeUnitName(officer),
             callsign: generateCallsign(officer),
