@@ -67,10 +67,6 @@ const processEnvPort = process.env.PORT || process.env.PORT_API;
       origin: process.env.CORS_ORIGIN_URL ?? "http://localhost:3000",
     },
   },
-  cache: {
-    ttl: 300, // default TTL
-    store: "memory",
-  },
 })
 export class Server {
   @Inject()
