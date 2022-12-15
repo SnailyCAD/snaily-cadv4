@@ -21,7 +21,6 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { classNames } from "lib/classNames";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import { AlertModal } from "components/modal/AlertModal";
 import { OfficerRank } from "components/leo/OfficerRank";
 import type {
   DeleteManageUnitByIdData,
@@ -31,6 +30,11 @@ import type {
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { getSelectedTableRows } from "hooks/shared/table/use-table-state";
 import { SearchArea } from "components/shared/search/search-area";
+import dynamic from "next/dynamic";
+
+const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal, {
+  ssr: false,
+});
 
 interface Props {
   units: GetManageUnitsData;

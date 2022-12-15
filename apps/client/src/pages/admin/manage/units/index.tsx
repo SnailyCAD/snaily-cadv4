@@ -11,12 +11,17 @@ import { Rank } from "@snailycad/types";
 import { usePermission, Permissions } from "hooks/usePermission";
 import type { GetManageUnitsData } from "@snailycad/types/api";
 import { AllUnitsTab } from "components/admin/manage/units/tabs/all-units-tab";
-import { CallsignsTab } from "components/admin/manage/units/tabs/callsigns-tab/callsigns-tab";
 
 const DepartmentWhitelistingTab = dynamic(
   async () =>
     (await import("components/admin/manage/units/tabs/department-whitelisting-tab"))
       .DepartmentWhitelistingTab,
+  { ssr: false },
+);
+
+const CallsignsTab = dynamic(
+  async () =>
+    (await import("components/admin/manage/units/tabs/callsigns-tab/callsigns-tab")).CallsignsTab,
   { ssr: false },
 );
 
