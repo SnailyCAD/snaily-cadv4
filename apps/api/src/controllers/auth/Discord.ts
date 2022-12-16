@@ -42,7 +42,7 @@ export class DiscordAuth {
     url.searchParams.append("redirect_uri", callbackUrl);
     url.searchParams.append("prompt", "consent");
     url.searchParams.append("response_type", "code");
-    url.searchParams.append("scope", encodeURIComponent("identify"));
+    url.searchParams.append("scope", "identify role_connections.write");
 
     return res.redirect(url.toString());
   }
@@ -235,6 +235,20 @@ async function getDiscordData(code: string): Promise<APIUser | null> {
 
   const data = (await response.body.json()) as RESTPostOAuth2AccessTokenResult;
   const accessToken = data.access_token;
+
+  const roleConnectionURL = `https://discord.com/api/v10/users/@me/applications/${DISCORD_CLIENT_ID}/role-connection`;
+  await request(roleConnectionURL, {
+    method: "PUT",
+    body: JSON.stringify({
+      platform_name: "SnailyCAD",
+      metadata: { cad_connected: 1 },
+    }),
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+  }).catch(() => null);
+
   const meData = await request(`${DISCORD_API_URL}/users/@me`, {
     method: "GET",
     headers: {
