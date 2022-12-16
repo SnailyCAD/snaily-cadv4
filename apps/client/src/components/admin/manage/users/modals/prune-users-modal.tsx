@@ -10,14 +10,19 @@ import type { GetManageUsersInactiveUsers } from "@snailycad/types/api";
 import useFetch from "lib/useFetch";
 import { toastMessage } from "lib/toastMessage";
 
+const initialData = {
+  totalCount: 0,
+  data: [] as GetManageUsersInactiveUsers["users"],
+};
+
 export function PruneUsersModal() {
   const [days, setDays] = React.useState("30");
   const { state, execute } = useFetch();
 
   const { isOpen, closeModal } = useModal();
   const asyncTable = useAsyncTable({
-    totalCount: 0,
-    initialData: [] as GetManageUsersInactiveUsers["users"],
+    totalCount: initialData.totalCount,
+    initialData: initialData.data,
     fetchOptions: {
       path: "/admin/manage/users/prune",
       onResponse: (json: GetManageUsersInactiveUsers) => ({

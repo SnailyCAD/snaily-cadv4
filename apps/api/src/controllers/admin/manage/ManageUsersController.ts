@@ -297,6 +297,7 @@ export class ManageUsersController {
         id: user.id,
       },
       data: {
+        username: data.username,
         isLeo: data.isLeo,
         isSupervisor: data.isSupervisor,
         isDispatch: data.isDispatch,
