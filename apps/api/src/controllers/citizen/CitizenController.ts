@@ -372,10 +372,10 @@ export class CitizenController {
         id: citizen.id,
       },
       data: {
-        ...citizenObjectFromData({
+        ...(await citizenObjectFromData({
           data,
           cad,
-        }),
+        })),
         socialSecurityNumber:
           data.socialSecurityNumber ??
           (!citizen.socialSecurityNumber ? generateString(9, { numbersOnly: true }) : undefined),
