@@ -6,6 +6,7 @@ import * as Sentry from "@sentry/node";
 import * as Tracing from "@sentry/tracing";
 import { prisma } from "lib/prisma";
 import { importProviders } from "@tsed/components-scan";
+import { registerDiscordRolesMetadata } from "lib/discord/register-metadata";
 
 Sentry.init({
   dsn: "https://308dd96b826c4e38a814fc9bae681687@o518232.ingest.sentry.io/6553288",
@@ -23,6 +24,12 @@ Sentry.init({
 });
 
 const rootDir = __dirname;
+
+try {
+  registerDiscordRolesMetadata();
+} catch {
+  // empty
+}
 
 async function bootstrap() {
   try {
