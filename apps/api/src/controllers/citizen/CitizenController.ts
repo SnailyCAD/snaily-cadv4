@@ -19,11 +19,12 @@ import { isFeatureEnabled } from "lib/cad";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { citizenObjectFromData } from "lib/citizen";
 import type * as APITypes from "@snailycad/types/api";
-import { getImageWebPPath } from "utils/image";
+import { getImageWebPPath } from "utils/images/image";
 import { validateSocialSecurityNumber } from "lib/citizen/validateSSN";
 import { setEndedSuspendedLicenses } from "lib/citizen/setEndedSuspendedLicenses";
 import { createOfficer } from "controllers/leo/my-officers/create-officer";
 import { createCitizenViolations } from "lib/records/create-citizen-violations";
+import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
 
 export const citizenInclude = {
   user: { select: userProperties },
@@ -117,6 +118,7 @@ export class CitizenController {
           name: true,
           surname: true,
           imageId: true,
+          imageBlurData: true,
           id: true,
           userId: true,
           socialSecurityNumber: true,
@@ -294,11 +296,11 @@ export class CitizenController {
     const citizen = await prisma.citizen.create({
       data: {
         userId: user.id || undefined,
-        ...citizenObjectFromData({
+        ...(await citizenObjectFromData({
           data,
           defaultLicenseValueId,
           cad,
-        }),
+        })),
       },
       include: { suspendedLicenses: true },
     });
@@ -427,7 +429,7 @@ export class CitizenController {
     const [data] = await Promise.all([
       prisma.citizen.update({
         where: { id: citizen.id },
-        data: { imageId: image.fileName },
+        data: { imageId: image.fileName, imageBlurData: await generateBlurPlaceholder(image) },
         select: { imageId: true },
       }),
       fs.writeFile(image.path, image.buffer),

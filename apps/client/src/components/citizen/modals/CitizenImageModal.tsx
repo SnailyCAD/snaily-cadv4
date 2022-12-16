@@ -21,6 +21,8 @@ export function CitizenImageModal({ citizen }: Props) {
     >
       <div className="flex items-center justify-center mt-10">
         <Image
+          placeholder={citizen.imageBlurData ? "blur" : "empty"}
+          blurDataURL={citizen.imageBlurData ?? undefined}
           draggable={false}
           className="rounded-md w-[40em] h-[40em] object-cover"
           src={makeImageUrl("citizens", citizen.imageId!)!}

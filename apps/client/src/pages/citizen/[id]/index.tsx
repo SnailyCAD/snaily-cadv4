@@ -122,6 +122,8 @@ export default function CitizenId() {
               aria-label="View citizen image"
             >
               <Image
+                placeholder={citizen.imageBlurData ? "blur" : "empty"}
+                blurDataURL={citizen.imageBlurData ?? undefined}
                 alt={`${citizen.name} ${citizen.surname}`}
                 className="rounded-md w-[150px] h-[150px] object-cover"
                 draggable={false}

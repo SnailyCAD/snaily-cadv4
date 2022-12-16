@@ -22,10 +22,11 @@ import { ValueType } from "@prisma/client";
 import { UsePermissions } from "middlewares/UsePermissions";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import type * as APITypes from "@snailycad/types/api";
-import { getImageWebPPath } from "utils/image";
+import { getImageWebPPath } from "utils/images/image";
 import { BULK_DELETE_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
 import { createSearchWhereObject } from "lib/values/create-where-object";
+import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
 
 export const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
   QUALIFICATION: {
@@ -289,20 +290,22 @@ export class ValuesController {
     }
 
     const image = await getImageWebPPath({ buffer: file.buffer, pathType: "values", id });
+    const blurData = await generateBlurPlaceholder(image);
 
     await fs.writeFile(image.path, image.buffer);
 
     let data;
+
     if (type === ValueType.QUALIFICATION) {
       data = await prisma.qualificationValue.update({
         where: { id },
-        data: { imageId: image.fileName },
+        data: { imageId: image.fileName, imageBlurData: blurData },
         select: { imageId: true },
       });
     } else if (type === ValueType.OFFICER_RANK) {
       data = await prisma.value.update({
         where: { id },
-        data: { officerRankImageId: image.fileName },
+        data: { officerRankImageId: image.fileName, officerRankImageBlurData: blurData },
         select: { officerRankImageId: true },
       });
     }

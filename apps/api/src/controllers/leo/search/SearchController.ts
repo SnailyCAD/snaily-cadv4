@@ -99,6 +99,7 @@ export const citizenSearchIncludeOrSelect = (
       name: true,
       surname: true,
       imageId: true,
+      imageBlurData: true,
       officers: { select: { department: { select: { isConfidential: true } } } },
       id: true,
       socialSecurityNumber: true,

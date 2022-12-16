@@ -9,12 +9,13 @@ import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
 import { citizenInclude } from "controllers/citizen/CitizenController";
-import { validateImgurURL } from "utils/image";
+import { validateImgurURL } from "utils/images/image";
 import { Prisma, Rank } from "@prisma/client";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { isCuid } from "cuid";
 import type * as APITypes from "@snailycad/types/api";
 import { validateSocialSecurityNumber } from "lib/citizen/validateSSN";
+import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/citizens")
@@ -125,6 +126,8 @@ export class AdminManageCitizensController {
       });
     }
 
+    const validatedImageURL = validateImgurURL(data.image);
+
     const updatedCitizen = await prisma.citizen.update({
       where: { id },
       data: {
@@ -148,7 +151,8 @@ export class AdminManageCitizensController {
           (!citizen.socialSecurityNumber ? generateString(9, { numbersOnly: true }) : undefined),
         occupation: data.occupation,
         additionalInfo: data.additionalInfo,
-        imageId: validateImgurURL(data.image),
+        imageId: validatedImageURL,
+        imageBlurData: await generateBlurPlaceholder(validatedImageURL),
         userId: data.userId || undefined,
         appearance: data.appearance,
       },

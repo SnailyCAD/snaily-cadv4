@@ -25,6 +25,7 @@ model cad {
   maxPlateLength          Int                    @default(8)
   liveMapSocketURl        String?                @db.VarChar(255)
   logoId                  String?
+  logoBlurData            String?
   registrationCode        String?
   features                CadFeature[]
   disabledFeatures        Feature[]
@@ -340,6 +341,7 @@ model Citizen {
   ccw                  Value?                        @relation("ccwToValue", fields: [ccwId], references: [id])
   ccwId                String?
   imageId              String?                       @db.Text
+  imageBlurData        String?                       @db.Text
   note                 String?                       @db.Text
   dead                 Boolean?                      @default(false)
   arrested             Boolean?                      @default(false)
@@ -486,8 +488,9 @@ model Value {
   licenseType ValueLicenseType?
 
   /// OFFICER_RANK only
-  officerRankImageId     String?
-  officerRankDepartments DepartmentValue[] @relation("officerRankDepartments")
+  officerRankImageId       String?
+  officerRankImageBlurData String?
+  officerRankDepartments   DepartmentValue[] @relation("officerRankDepartments")
 
   // how to clean this up?!
   ethnicityToValue                Citizen[]                     @relation("ethnicityToValue")
@@ -700,13 +703,15 @@ model Notification {
 
 // bleeter
 model BleeterPost {
-  id        String   @id @default(uuid())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  title     String   @db.VarChar(255)
-  body      String?  @db.Text
-  bodyData  Json?
-  imageId   String?  @db.VarChar(255)
+  id            String  @id @default(uuid())
+  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  title         String  @db.VarChar(255)
+  body          String? @db.Text
+  bodyData      Json?
+  imageId       String? @db.VarChar(255)
+  imageBlurData String? @db.Text
+
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 }
@@ -834,6 +839,7 @@ model Officer {
   suspended                   Boolean                      @default(false)
   badgeNumber                 Int?
   imageId                     String?                      @db.VarChar(255)
+  imageBlurData               String?                      @db.Text
   citizen                     Citizen                      @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId                   String
   user                        User                         @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -896,6 +902,7 @@ model UnitQualification {
 model QualificationValue {
   id                String                 @id @default(uuid())
   imageId           String?
+  imageBlurData     String?                @db.Text
   /// name of the qualification
   valueId           String
   value             Value                  @relation(fields: [valueId], references: [id], onDelete: Cascade)
@@ -1266,6 +1273,7 @@ model EmsFdDeputy {
   suspended                 Boolean                @default(false)
   badgeNumber               Int?
   imageId                   String?                @db.VarChar(255)
+  imageBlurData             String?                @db.Text
   citizen                   Citizen                @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId                 String
   user                      User                   @relation(fields: [userId], references: [id], onDelete: Cascade)

@@ -11,7 +11,7 @@ import { cad, Rank } from "@prisma/client";
 import { Permissions } from "@snailycad/permissions";
 import { UsePermissions } from "middlewares/UsePermissions";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import { getImageWebPPath } from "utils/image";
+import { getImageWebPPath } from "utils/images/image";
 
 @Controller("/admin/manage/cad-settings/image")
 @ContentType("application/json")
