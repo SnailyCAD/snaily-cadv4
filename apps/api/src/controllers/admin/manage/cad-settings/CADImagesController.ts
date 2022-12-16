@@ -34,7 +34,16 @@ export class ManageCitizensController {
       throw new BadRequest("invalidImageType");
     }
 
-    const image = await getImageWebPPath({ buffer: file.buffer, pathType: "cad", id: cad.id });
+    const image = await getImageWebPPath({
+      buffer: file.buffer,
+      pathType: "cad",
+      id: `${cad.id}-${file.originalname.split(".")[0]}`,
+    });
+
+    const previousImage = cad.logoId ? `${process.cwd()}/public/cad/${cad.logoId}` : undefined;
+    if (previousImage) {
+      await fs.rm(previousImage, { force: true });
+    }
 
     const [data] = await Promise.all([
       prisma.cad.update({

@@ -423,8 +423,16 @@ export class CitizenController {
     const image = await getImageWebPPath({
       buffer: file.buffer,
       pathType: "citizens",
-      id: citizen.id,
+      id: `${citizen.id}-${file.originalname.split(".")[0]}`,
     });
+
+    const previousImage = citizen.imageId
+      ? `${process.cwd()}/public/citizens/${citizen.imageId}`
+      : undefined;
+
+    if (previousImage) {
+      await fs.rm(previousImage, { force: true });
+    }
 
     const [data] = await Promise.all([
       prisma.citizen.update({

@@ -573,8 +573,16 @@ export class EmsFdController {
     const image = await getImageWebPPath({
       buffer: file.buffer,
       pathType: "units",
-      id: deputy.id,
+      id: `${deputy.id}-${file.originalname.split(".")[0]}`,
     });
+
+    const previousImage = deputy.imageId
+      ? `${process.cwd()}/public/units/${deputy.imageId}`
+      : undefined;
+
+    if (previousImage) {
+      await fs.rm(previousImage, { force: true });
+    }
 
     const [data] = await Promise.all([
       prisma.emsFdDeputy.update({

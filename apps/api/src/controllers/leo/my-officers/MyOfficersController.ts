@@ -281,8 +281,16 @@ export class MyOfficersController {
     const image = await getImageWebPPath({
       buffer: file.buffer,
       pathType: "units",
-      id: officer.id,
+      id: `${officer.id}-${file.originalname.split(".")[0]}`,
     });
+
+    const previousImage = officer.imageId
+      ? `${process.cwd()}/public/units/${officer.imageId}`
+      : undefined;
+
+    if (previousImage) {
+      await fs.rm(previousImage, { force: true });
+    }
 
     const [data] = await Promise.all([
       prisma.officer.update({

@@ -137,7 +137,11 @@ export class BleeterController {
       throw new ExtendedBadRequest({ image: "invalidImageType" });
     }
 
-    const image = await getImageWebPPath({ buffer: file.buffer, pathType: "bleeter", id: post.id });
+    const image = await getImageWebPPath({
+      buffer: file.buffer,
+      pathType: "bleeter",
+      id: `${post.id}-${file.originalname.split(".")[0]}`,
+    });
 
     const [data] = await Promise.all([
       prisma.bleeterPost.update({

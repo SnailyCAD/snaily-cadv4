@@ -289,7 +289,12 @@ export class ValuesController {
       }
     }
 
-    const image = await getImageWebPPath({ buffer: file.buffer, pathType: "values", id });
+    const image = await getImageWebPPath({
+      buffer: file.buffer,
+      pathType: "values",
+      id: `${id}-${file.originalname.split(".")[0]}`,
+    });
+
     const blurData = await generateBlurPlaceholder(image);
 
     await fs.writeFile(image.path, image.buffer);
