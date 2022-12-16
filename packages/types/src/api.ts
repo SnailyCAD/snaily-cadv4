@@ -236,7 +236,14 @@ export type DeleteBolosData = boolean;
 export type PostMarkStolenData = Prisma.Bolo | true;
 
 /** citizens */
-type CitizenProperties = "id" | "name" | "surname" | "userId" | "socialSecurityNumber" | "imageId";
+type CitizenProperties =
+  | "id"
+  | "name"
+  | "surname"
+  | "userId"
+  | "socialSecurityNumber"
+  | "imageId"
+  | "imageBlurData";
 
 /**
  * @method GET

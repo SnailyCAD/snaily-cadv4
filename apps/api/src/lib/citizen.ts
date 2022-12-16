@@ -1,7 +1,8 @@
 import type { Prisma, cad, CadFeature, MiscCadSettings } from "@prisma/client";
 import type { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { generateString } from "utils/generateString";
-import { validateImgurURL } from "utils/image";
+import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
+import { validateImgurURL } from "utils/images/image";
 
 interface Options {
   data: Partial<Zod.infer<typeof CREATE_CITIZEN_SCHEMA>>;
@@ -9,8 +10,9 @@ interface Options {
   cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings | null };
 }
 
-export function citizenObjectFromData(options: Options) {
+export async function citizenObjectFromData(options: Options) {
   const miscCadSettings = options.cad.miscCadSettings;
+  const validatedImageURL = validateImgurURL(options.data.image);
 
   let obj: Prisma.CitizenUncheckedCreateInput | Prisma.CitizenUncheckedUpdateInput = {
     address: options.data.address,
@@ -25,7 +27,8 @@ export function citizenObjectFromData(options: Options) {
     genderId: options.data.gender,
     eyeColor: options.data.eyeColor,
     phoneNumber: options.data.phoneNumber || null,
-    imageId: validateImgurURL(options.data.image),
+    imageId: validatedImageURL,
+    imageBlurData: await generateBlurPlaceholder(validatedImageURL),
     socialSecurityNumber:
       options.data.socialSecurityNumber || generateString(9, { numbersOnly: true }),
     occupation: options.data.occupation || null,

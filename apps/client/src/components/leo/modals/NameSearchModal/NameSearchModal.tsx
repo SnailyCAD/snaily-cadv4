@@ -250,6 +250,8 @@ export function NameSearchModal() {
                       <div className="mr-2 min-w-[50px]">
                         {result.imageId ? (
                           <Image
+                            placeholder={result.imageBlurData ? "blur" : "empty"}
+                            blurDataURL={result.imageBlurData ?? undefined}
                             className="rounded-md w-[50px] h-[50px] object-cover"
                             draggable={false}
                             src={makeImageUrl("citizens", result.imageId)!}
@@ -327,6 +329,8 @@ export function NameSearchModal() {
                           className="cursor-pointer"
                         >
                           <Image
+                            placeholder={currentResult.imageBlurData ? "blur" : "empty"}
+                            blurDataURL={currentResult.imageBlurData ?? undefined}
                             className="rounded-md w-[100px] h-[100px] object-cover"
                             draggable={false}
                             src={makeImageUrl("citizens", currentResult.imageId)!}

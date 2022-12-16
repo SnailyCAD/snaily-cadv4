@@ -18,7 +18,7 @@ import { IsAuth } from "middlewares/IsAuth";
 import { ActiveDeputy } from "middlewares/ActiveDeputy";
 import fs from "node:fs/promises";
 import { unitProperties } from "lib/leo/activeOfficer";
-import { getImageWebPPath, validateImgurURL } from "utils/image";
+import { getImageWebPPath, validateImgurURL } from "utils/images/image";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
@@ -33,6 +33,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { isFeatureEnabled } from "lib/cad";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { handlePanicButtonPressed } from "lib/leo/send-panic-button-webhook";
+import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
@@ -158,6 +159,8 @@ export class EmsFdController {
     );
 
     const incremental = await findNextAvailableIncremental({ type: "ems-fd" });
+    const validatedImageURL = validateImgurURL(data.image);
+
     const deputy = await prisma.emsFdDeputy.create({
       data: {
         callsign: data.callsign,
@@ -171,7 +174,8 @@ export class EmsFdController {
         divisionId: data.division || null,
         badgeNumber: data.badgeNumber,
         citizenId: citizen.id,
-        imageId: validateImgurURL(data.image),
+        imageId: validatedImageURL,
+        imageBlurData: await generateBlurPlaceholder(validatedImageURL),
         incremental,
         whitelistStatusId,
       },
@@ -575,7 +579,10 @@ export class EmsFdController {
     const [data] = await Promise.all([
       prisma.emsFdDeputy.update({
         where: { id: deputy.id },
-        data: { imageId: image.fileName },
+        data: {
+          imageId: image.fileName,
+          imageBlurData: await generateBlurPlaceholder(image),
+        },
         select: { imageId: true },
       }),
       fs.writeFile(image.path, image.buffer),

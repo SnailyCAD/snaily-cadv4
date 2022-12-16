@@ -1,4 +1,3 @@
-import * as React from "react";
 import { BreadcrumbItem, Breadcrumbs, Button } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { useAuth } from "context/AuthContext";
@@ -16,12 +15,16 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { Title } from "components/shared/Title";
 import { dataToSlate, Editor } from "components/editor/editor";
 import type { DeleteBleeterByIdData, GetBleeterByIdData } from "@snailycad/types/api";
+import Image from "next/image";
 
 const ManageBleetModal = dynamic(
   async () => (await import("components/bleeter/ManageBleetModal")).ManageBleetModal,
+  { ssr: false },
 );
 
-const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
+const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal, {
+  ssr: false,
+});
 
 interface Props {
   post: GetBleeterByIdData;
@@ -77,10 +80,15 @@ export default function BleetPost({ post }: Props) {
 
       <main className="mt-2 bleet-reset">
         {post.imageId ? (
-          <img
+          <Image
+            width={1600}
+            height={320}
+            alt={post.title}
+            placeholder={post.imageBlurData ? "blur" : "empty"}
+            blurDataURL={post.imageBlurData ?? undefined}
             draggable={false}
-            className="h-[20rem] mb-5 w-full object-cover"
-            src={makeImageUrl("bleeter", post.imageId)}
+            className="max-h-[20rem] mb-5 w-full object-cover"
+            src={makeImageUrl("bleeter", post.imageId)!}
             loading="lazy"
           />
         ) : null}
@@ -113,7 +121,6 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale, re
   }
 
   return {
-    notFound: !data,
     props: {
       post: data,
       session: user,

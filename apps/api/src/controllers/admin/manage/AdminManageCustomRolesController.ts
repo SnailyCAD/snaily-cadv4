@@ -16,7 +16,7 @@ import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import { validateImgurURL } from "utils/image";
+import { validateImgurURL } from "utils/images/image";
 import fs from "node:fs/promises";
 import process from "node:process";
 import type * as APITypes from "@snailycad/types/api";
