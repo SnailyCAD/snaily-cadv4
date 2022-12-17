@@ -8,7 +8,7 @@ import { Title } from "components/shared/Title";
 import { TabList } from "components/shared/TabList";
 import { ExpungementRequestsTab } from "components/courthouse/expungement-requests/ExpungementRequestsTab";
 import { NameChangeRequestTab } from "components/courthouse/name-change/NameChangeRequestTab";
-import { CourtEntriesTab } from "components/courthouse/court-entries/CourtEntriesTab";
+import { CourtEntriesTab } from "components/courthouse/court-entries/court-entries-tab";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { CourthousePostsTab } from "components/courthouse/courthouse-posts/CourthousePostsTab";

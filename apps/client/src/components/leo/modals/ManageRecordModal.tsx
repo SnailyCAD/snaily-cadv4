@@ -20,6 +20,8 @@ import type { PostRecordsData, PutRecordsByIdData } from "@snailycad/types/api";
 import { Toggle } from "components/form/Toggle";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
+import { ManageCourtEntry } from "components/courthouse/court-entries/manage-court-entry-modal";
+import { FullDate } from "components/shared/FullDate";
 
 interface Props {
   hideCitizenField?: boolean;
@@ -39,9 +41,10 @@ interface Props {
 }
 
 export function ManageRecordModal(props: Props) {
-  const { isOpen, closeModal, getPayload } = useModal();
+  const { isOpen, closeModal, openModal, getPayload } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
+  const tCourt = useTranslations("Courthouse");
   const { LEO_BAIL } = useFeatureEnabled();
 
   const data = {
@@ -169,6 +172,7 @@ export function ManageRecordModal(props: Props) {
     notes: props.record?.notes ?? "",
     seizedItems: props.record?.seizedItems ?? [],
     paymentStatus: props.record?.paymentStatus ?? null,
+    courtEntry: props.record?.courtEntry ?? null,
   };
 
   return (
@@ -208,6 +212,25 @@ export function ManageRecordModal(props: Props) {
               penalCodes={values.violations.map((v) => v.value)}
             />
             <SeizedItemsTable isReadOnly={props.isReadOnly} />
+
+            {/* todo: custom component for this */}
+            <FormField className="relative mt-3 mb-2" label={tCourt("courtEntries")}>
+              <Button
+                className="absolute right-0 top-0"
+                type="button"
+                onPress={() => openModal(ModalIds.ManageCourtEntry)}
+              >
+                {tCourt("manageCourtEntry")}
+              </Button>
+
+              {values.courtEntry?.dates
+                ? values.courtEntry.dates.map((date, idx) => (
+                    <FullDate onlyDate key={idx}>
+                      {date.date}
+                    </FullDate>
+                  ))
+                : "None"}
+            </FormField>
 
             <TextField
               isTextarea
@@ -249,6 +272,14 @@ export function ManageRecordModal(props: Props) {
                 </Button>
               )}
             </footer>
+
+            <ManageCourtEntry
+              submitHandler={(values) => {
+                closeModal(ModalIds.ManageCourtEntry);
+                setFieldValue("courtEntry", values);
+              }}
+              courtEntry={values.courtEntry}
+            />
           </Form>
         )}
       </Formik>

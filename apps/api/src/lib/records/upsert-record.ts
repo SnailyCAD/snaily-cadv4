@@ -1,4 +1,4 @@
-import type { Officer, SeizedItem, Violation } from "@prisma/client";
+import type { CourtDate, CourtEntry, Officer, SeizedItem, Violation } from "@prisma/client";
 import type { CREATE_TICKET_SCHEMA } from "@snailycad/schemas";
 import { cad, Feature, PaymentStatus, RecordType, WhitelistStatus } from "@snailycad/types";
 import { NotFound } from "@tsed/exceptions";
@@ -68,6 +68,32 @@ export async function upsertRecord(options: UpsertRecordOptions) {
     },
   });
 
+  let courtEntry: CourtEntry & { dates?: CourtDate[] } = null!;
+  if (ticket.type !== "WRITTEN_WARNING" && options.data.courtEntry) {
+    courtEntry = await prisma.courtEntry.create({
+      data: {
+        caseNumber: options.data.courtEntry.caseNumber ?? ticket.caseNumber,
+        title: options.data.courtEntry.title,
+        descriptionData: options.data.courtEntry.descriptionData,
+      },
+    });
+
+    const dates = await prisma.$transaction(
+      options.data.courtEntry.dates.map((date) =>
+        prisma.courtDate.create({
+          data: { date: new Date(date.date), note: date.note, courtEntryId: courtEntry.id },
+        }),
+      ),
+    );
+
+    await prisma.record.update({
+      where: { id: ticket.id },
+      data: { CourtEntryId: courtEntry.id },
+    });
+
+    courtEntry = { ...courtEntry, dates };
+  }
+
   if (ticket.type === "ARREST_REPORT" && !options.recordId) {
     await prisma.citizen.update({
       where: { id: citizen.id },
@@ -112,7 +138,7 @@ export async function upsertRecord(options: UpsertRecordOptions) {
     }),
   );
 
-  return { ...ticket, violations, seizedItems };
+  return { ...ticket, violations, seizedItems, courtEntry };
 }
 
 async function unlinkViolations(violations: Pick<Violation, "id">[]) {

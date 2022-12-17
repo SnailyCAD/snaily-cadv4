@@ -1165,6 +1165,8 @@ model Record {
   notes                String?             @db.Text
   release              RecordRelease?      @relation(fields: [releaseId], references: [id])
   releaseId            String?
+  courtEntry           CourtEntry?         @relation(fields: [CourtEntryId], references: [id])
+  CourtEntryId         String?
   RecordLog            RecordLog[]
   ExpungementRequest   ExpungementRequest? @relation(fields: [expungementRequestId], references: [id])
   expungementRequestId String?
@@ -1245,6 +1247,7 @@ model CourtEntry {
   dates           CourtDate[]
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @default(now()) @updatedAt
+  records         Record[]
 }
 
 model CourtDate {

@@ -7,7 +7,7 @@ import { ModalIds } from "types/ModalIds";
 import { Table, useTableState } from "components/shared/Table";
 import type { CourtEntry } from "@snailycad/types";
 import { FullDate } from "components/shared/FullDate";
-import { ManageCourtEntry } from "./ManageCourtEntry";
+import { ManageCourtEntry } from "./manage-court-entry-modal";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import type { DeleteCourtEntriesData, GetCourtEntriesData } from "@snailycad/types/api";

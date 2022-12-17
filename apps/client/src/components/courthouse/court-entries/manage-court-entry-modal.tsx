@@ -10,17 +10,25 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { DEFAULT_EDITOR_DATA, Editor } from "components/editor/editor";
-import { CourtEntryDates } from "./CourtEntryDates";
+import { CourtEntryDates } from "./court-entry-dates";
 import type { PostCourtEntriesData, PutCourtEntriesData } from "@snailycad/types/api";
+import type { z } from "zod";
 
 interface Props {
   courtEntry: CourtEntry | null;
   onClose?(): void;
   onCreate?(entry: CourtEntry): void;
   onUpdate?(entry: CourtEntry): void;
+  submitHandler?(values: z.infer<typeof COURT_ENTRY_SCHEMA>): void;
 }
 
-export function ManageCourtEntry({ courtEntry, onClose, onCreate, onUpdate }: Props) {
+export function ManageCourtEntry({
+  courtEntry,
+  submitHandler,
+  onClose,
+  onCreate,
+  onUpdate,
+}: Props) {
   const { closeModal, isOpen } = useModal();
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
@@ -43,6 +51,10 @@ export function ManageCourtEntry({ courtEntry, onClose, onCreate, onUpdate }: Pr
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
+    if (submitHandler) {
+      return submitHandler(values);
+    }
+
     if (courtEntry) {
       const { json } = await execute<PutCourtEntriesData, typeof INITIAL_VALUES>({
         path: `/court-entries/${courtEntry.id}`,

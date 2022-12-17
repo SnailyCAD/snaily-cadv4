@@ -274,7 +274,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ req, local
       values,
       messages: {
         ...(await getTranslations(
-          ["citizen", "leo", "truck-logs", "ems-fd", "calls", "common"],
+          ["citizen", "leo", "truck-logs", "ems-fd", "calls", "common", "courthouse"],
           user?.locale ?? locale,
         )),
       },

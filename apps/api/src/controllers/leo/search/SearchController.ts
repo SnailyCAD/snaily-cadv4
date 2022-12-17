@@ -77,6 +77,7 @@ export const citizenSearchIncludeOrSelect = (
               include: leoProperties,
             },
             seizedItems: true,
+            courtEntry: { include: { dates: true } },
             violations: {
               include: {
                 penalCode: {
