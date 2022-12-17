@@ -88,7 +88,8 @@ const Modals = {
   ),
   ManageRecordModal: dynamic(
     async () => {
-      return (await import("components/leo/modals/ManageRecordModal")).ManageRecordModal;
+      return (await import("components/leo/modals/manage-record/manage-record-modal"))
+        .ManageRecordModal;
     },
     { ssr: false },
   ),
@@ -274,7 +275,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ req, local
       values,
       messages: {
         ...(await getTranslations(
-          ["citizen", "leo", "truck-logs", "ems-fd", "calls", "common"],
+          ["citizen", "leo", "truck-logs", "ems-fd", "calls", "common", "courthouse"],
           user?.locale ?? locale,
         )),
       },

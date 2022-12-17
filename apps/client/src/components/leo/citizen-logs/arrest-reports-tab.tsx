@@ -9,7 +9,7 @@ import { TabsContent } from "components/shared/TabList";
 import { makeUnitName } from "lib/utils";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import { ManageRecordModal } from "../modals/ManageRecordModal";
+import { ManageRecordModal } from "../modals/manage-record/manage-record-modal";
 import useFetch from "lib/useFetch";
 import { Status } from "components/shared/Status";
 import { HoverCard } from "components/shared/HoverCard";

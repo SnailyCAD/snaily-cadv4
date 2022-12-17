@@ -12,7 +12,7 @@ import { useNameSearch } from "state/search/name-search-state";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Table, useTableState } from "components/shared/Table";
-import { ManageRecordModal } from "../../ManageRecordModal";
+import { ManageRecordModal } from "../../manage-record/manage-record-modal";
 import { FullDate } from "components/shared/FullDate";
 import { TabsContent } from "components/shared/TabList";
 import { Permissions, usePermission } from "hooks/usePermission";

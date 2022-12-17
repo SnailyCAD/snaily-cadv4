@@ -347,6 +347,7 @@ export type Record = Prisma.Record & {
   officer?: Officer | null;
   violations: Violation[];
   seizedItems?: Prisma.SeizedItem[];
+  courtEntry?: CourtEntry | null;
 };
 
 export type RecordRelease = Prisma.RecordRelease & {

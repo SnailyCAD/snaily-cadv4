@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { COURT_ENTRY_SCHEMA } from "./court";
 
 const VIOLATION = z.object({
   fine: z.number().nullable().optional(),
@@ -28,6 +29,7 @@ export const CREATE_TICKET_SCHEMA = z.object({
     .regex(/PAID|UNPAID/)
     .optional()
     .nullable(),
+  courtEntry: COURT_ENTRY_SCHEMA.nullable().optional(),
 });
 
 export const CREATE_WARRANT_SCHEMA = z.object({

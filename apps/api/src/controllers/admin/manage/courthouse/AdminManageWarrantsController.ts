@@ -8,7 +8,7 @@ import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import type * as APITypes from "@snailycad/types/api";
-import { assignedOfficersInclude } from "controllers/record/RecordsController";
+import { assignedOfficersInclude } from "controllers/record/records-controller";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 

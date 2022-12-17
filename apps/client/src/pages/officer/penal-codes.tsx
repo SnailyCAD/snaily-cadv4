@@ -14,7 +14,7 @@ import { Infofield } from "components/shared/Infofield";
 import {
   getPenalCodeMaxFines,
   getPenalCodeMinFines,
-} from "components/leo/modals/ManageRecord/TableItemForm";
+} from "components/leo/modals/manage-record/table-item-form";
 
 export default function PenalCodesPage() {
   const t = useTranslations("Leo");
