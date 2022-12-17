@@ -21,6 +21,7 @@ const recordsInclude = {
     },
   },
   seizedItems: true,
+  courtEntry: { include: { dates: true } },
 };
 
 @UseBeforeEach(IsAuth)
