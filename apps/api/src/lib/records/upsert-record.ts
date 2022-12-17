@@ -72,7 +72,7 @@ export async function upsertRecord(options: UpsertRecordOptions) {
   if (ticket.type !== "WRITTEN_WARNING" && options.data.courtEntry) {
     courtEntry = await prisma.courtEntry.create({
       data: {
-        caseNumber: options.data.courtEntry.caseNumber ?? ticket.caseNumber,
+        caseNumber: String(options.data.courtEntry.caseNumber || ticket.caseNumber),
         title: options.data.courtEntry.title,
         descriptionData: options.data.courtEntry.descriptionData,
       },
