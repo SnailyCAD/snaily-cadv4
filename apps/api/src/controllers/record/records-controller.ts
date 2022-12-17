@@ -226,8 +226,6 @@ export class RecordsController {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
     const officer = getFirstOfficerFromActiveOfficer({ activeOfficer, allowDispatch: true });
 
-    console.log({ data });
-
     const recordItem = await upsertRecord({
       data,
       cad,
