@@ -88,7 +88,8 @@ const Modals = {
   ),
   ManageRecordModal: dynamic(
     async () => {
-      return (await import("components/leo/modals/ManageRecordModal")).ManageRecordModal;
+      return (await import("components/leo/modals/manage-record/manage-record-modal"))
+        .ManageRecordModal;
     },
     { ssr: false },
   ),

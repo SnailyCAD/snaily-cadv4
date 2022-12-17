@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Record, RecordType, ValueType } from "@snailycad/types";
-import { ManageRecordModal } from "components/leo/modals/ManageRecordModal";
+import { ManageRecordModal } from "components/leo/modals/manage-record/manage-record-modal";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import { useTranslations } from "use-intl";
 import { Button } from "@snailycad/ui";
