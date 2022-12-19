@@ -42,6 +42,19 @@
     "manageOccupation": "Uprav povolání",
     "manageLicenses": "Uprav průkazy",
     "licenses": "Průkazy",
+    "licenseSuspendedInfo": "License is suspended. Please contact an officer to revoke the suspension.",
+    "licenseNumber": "License Number",
+    "unmarkAsStolen": "Odebrat označení kradeného",
+    "markCitizenDeceased": "Označit za mrtvého",
+    "citizenDead": "POZOR: Tato osoba zemřela k {date}",
+    "basicInformation": "Základní informace",
+    "optionalInformation": "Vedlejší informace",
+    "licenseInformation": "Informace k průkazům",
+    "officer": "Policista",
+    "createWithOfficer": "Vytvořit policistou",
+    "previousRecords": "Záznamy",
+    "createPreviousRecordsStepDescription": "Here you can optionally add previous records this citizen has had. This is useful for when a citizen has been arrested before.",
+    "alert_markCitizenDeceased": "Jsi si jistý, že chceš označit <span>{citizen}</span> za mrtvého? 'Oživit' vás může pouze příslušník HZS/ZZS.",
     "alert_deleteCitizen": "Jsi si jistý, že chceš smazat <span>{citizen}</span>? Toto nelze vrátit zpět."
   },
   "Vehicles": {
@@ -86,6 +99,7 @@
     "deleteWeapon": "Odebrat zbraň",
     "registeredWeapons": "Registrované zbraně",
     "successWeaponRegistered": "Úspěšně jsi registroval zbraň",
+    "bofStatus": "BOF Status",
     "alert_deleteWeapon": "Jsi si jistý, že chceš tuto zbraň odebrat? Toto nelze vrátit zpět."
   },
   "MedicalRecords": {

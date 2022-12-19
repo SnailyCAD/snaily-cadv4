@@ -46,7 +46,13 @@
     "disconnectSteamText": "Toto odebere možnost připojení steamu.",
     "connectSteamText": "Toto přidá možnost připojení steamu.",
     "locale": "Jazyk",
-    "viewMyPermissions": "Moje práva"
+    "viewMyPermissions": "Moje práva",
+    "speech": "Hlas",
+    "speechVoice": "Vyběr hlasu",
+    "otherSounds": "Ostatní zvuky",
+    "unavailableSounds": "Nedostupné zvuky",
+    "unavailableSoundsMessage": "Tyto zvuky jsou nedostupné, musí je přidat admin.",
+    "userApiTokenDescription": "Tento token může být použit ke komunikaci s SnailyAPI."
   },
   "Notifications": {
     "CITIZEN_DELETED": "<span>{citizen}</span> byl vymazán. Důvod: {reason}"
