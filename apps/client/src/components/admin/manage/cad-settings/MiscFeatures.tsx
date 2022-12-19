@@ -178,7 +178,7 @@ export function MiscFeatures() {
                   name="liveMapURL"
                   value={values.liveMapURL}
                   onChange={handleChange}
-                  placeholder="ws://my-host:my-port"
+                  placeholder="http://my-host:my-port"
                 />
               </SettingsFormField>
             </section>

@@ -9,6 +9,8 @@ import { useTranslations } from "next-intl";
 import { MapItem, useDispatchMapState } from "state/mapState";
 import { useAuth } from "context/AuthContext";
 import { generateMarkerTypes } from "../RenderMapBlips";
+import { makeUnitName } from "lib/utils";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 
 interface Props {
   player: MapPlayer | PlayerDataEventPayload;
@@ -28,6 +30,7 @@ export function PlayerMarker({ player, handleToggle }: Props) {
   const { user } = useAuth();
   const { hiddenItems } = useDispatchMapState();
   const markerTypes = React.useMemo(generateMarkerTypes, []);
+  const { generateCallsign } = useGenerateCallsign();
 
   const playerIcon = React.useMemo(() => {
     const playerIcon = markerTypes[parseInt(player.icon, 10)];
@@ -68,21 +71,31 @@ export function PlayerMarker({ player, handleToggle }: Props) {
 
   const showUnitsOnly = hiddenItems[MapItem.UNITS_ONLY];
   const playerSteamId = "convertedSteamId" in player ? player.convertedSteamId : null;
+  const playerDiscordId = "discordId" in player ? player.discordId : null;
+  const isUser = user?.steamId
+    ? playerSteamId === user?.steamId
+    : user?.discordId
+    ? playerDiscordId === user?.discordId
+    : false;
 
   if (showUnitsOnly) {
-    if (!hasUnit || playerSteamId !== user?.steamId) {
+    if (!hasUnit || !isUser) {
       return null;
     }
   }
+
+  const unitName = hasUnit && player.unit ? makeUnitName(player.unit) : player.name;
+  const unitCallsign = hasUnit && player.unit ? generateCallsign(player.unit) : null;
+  const unitNameAndCallsign = unitName && unitCallsign ? `${unitCallsign} ${unitName}` : unitName;
 
   return (
     <Marker
       ref={(ref) => (player.ref = ref)}
       icon={playerIcon}
-      key={player.identifier}
+      key={player.playerId}
       position={pos}
     >
-      <Tooltip direction="top">{player.name}</Tooltip>
+      <Tooltip direction="top">{unitNameAndCallsign}</Tooltip>
 
       <Popup minWidth={500}>
         <p style={{ margin: 2 }}>
@@ -103,24 +116,27 @@ export function PlayerMarker({ player, handleToggle }: Props) {
           </>
         ) : null}
 
-        {player.Weapon ? (
+        {player.weapon ? (
           <p style={{ margin: 2 }}>
-            <strong>{t("weapon")}: </strong> {player.Weapon}
+            <strong>{t("weapon")}: </strong> {player.weapon}
           </p>
         ) : null}
         <p style={{ margin: 2 }}>
-          <strong>{t("location")}: </strong> {player.Location}
+          <strong>{t("location")}: </strong> {player.location}
         </p>
         <p style={{ margin: 2 }}>
-          <strong>{t("vehicle")}: </strong> {player.Vehicle || t("onFoot")}
+          <strong>{t("vehicle")}: </strong> {player.vehicle || t("onFoot")}
         </p>
-        {player["License Plate"] ? (
+        {player.licensePlate ? (
           <p style={{ margin: 2 }}>
-            <strong>{t("licensePlate")}: </strong> {player["License Plate"]}
+            <strong>{t("licensePlate")}: </strong> {player.licensePlate}
           </p>
         ) : null}
         <p style={{ margin: 2 }}>
-          <strong>{t("identifier")}: </strong> {player.identifier}
+          <strong>{t("steamId")}: </strong> {player.convertedSteamId ?? "-"}
+        </p>
+        <p style={{ margin: 2 }}>
+          <strong>{t("discordId")}: </strong> {player.discordId ?? "-"}
         </p>
 
         {"id" in player && player.unit?.id ? (

@@ -1,6 +1,6 @@
 import { Controller } from "@tsed/di";
 import { ContentType, Description, Get, Post, Put } from "@tsed/schema";
-import { QueryParams, BodyParams, PathParams, Context } from "@tsed/platform-params";
+import { BodyParams, PathParams, Context } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { Socket } from "services/SocketService";
@@ -26,6 +26,7 @@ import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiv
 import { getActiveDeputy } from "lib/ems-fd";
 import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
+import { z } from "zod";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -267,20 +268,21 @@ export class DispatchController {
     return updated;
   }
 
-  @Get("/players")
+  @Post("/players")
   @UsePermissions({
     fallback: (u) => u.isDispatch,
     permissions: [Permissions.Dispatch, Permissions.LiveMap],
   })
-  async getCADUsersBySteamIds(
-    @QueryParams("steamIds", String) steamIds: string,
-    @Context() ctx: Context,
-  ) {
+  async getCADUsersByDiscordOrSteamId(@BodyParams() body: unknown, @Context() ctx: Context) {
+    const schema = z.array(
+      z.object({ discordId: z.string().optional(), steamId: z.string().optional() }),
+    );
+    const ids = validateSchema(schema, body);
     const users = [];
 
-    for (const steamId of steamIds.split(",")) {
+    for (const { steamId, discordId } of ids) {
       const user = await prisma.user.findFirst({
-        where: { steamId },
+        where: { OR: [{ steamId }, { discordId }] },
         select: {
           username: true,
           id: true,
@@ -291,6 +293,7 @@ export class DispatchController {
           rank: true,
           steamId: true,
           roles: true,
+          discordId: true,
         },
       });
 

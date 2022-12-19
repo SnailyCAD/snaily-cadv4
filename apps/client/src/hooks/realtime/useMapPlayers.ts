@@ -14,12 +14,20 @@ import { toastMessage } from "lib/toastMessage";
 import type { cad } from "@snailycad/types";
 import { omit } from "lib/utils";
 import type { GetDispatchPlayerBySteamIdData } from "@snailycad/types/api";
+import { io, Socket } from "socket.io-client";
+import create from "zustand";
+
+export const useMapPlayersStore = create<{
+  players: Map<number, MapPlayer | PlayerDataEventPayload>;
+  setPlayers(players: Map<number, MapPlayer | PlayerDataEventPayload>): void;
+}>((set) => ({
+  players: new Map<number, MapPlayer | PlayerDataEventPayload>(),
+  setPlayers: (players: Map<number, MapPlayer | PlayerDataEventPayload>) => set({ players }),
+}));
 
 export function useMapPlayers() {
-  const [players, setPlayers] = React.useState<Map<string, MapPlayer | PlayerDataEventPayload>>(
-    new Map<string, MapPlayer | PlayerDataEventPayload>(),
-  );
-  const [socket, setSocket] = React.useState<WebSocket | null>(null);
+  const { players, setPlayers } = useMapPlayersStore();
+  const [socket, setSocket] = React.useState<Socket | null>(null);
   const [prevPlayerData, setPrevPlayerData] = React.useState<GetDispatchPlayerBySteamIdData[]>([]);
 
   const { cad } = useAuth();
@@ -28,23 +36,25 @@ export function useMapPlayers() {
 
   const getCADUsers = React.useCallback(
     async (
-      steamIds: (Player & { convertedSteamId?: string | null })[],
+      playersToFetch: (Player & { discordId?: string | null; convertedSteamId?: string | null })[],
       payload: PlayerDataEventPayload[],
     ) => {
       let _prevPlayerData = prevPlayerData;
 
       const { json } =
-        steamIds.length <= 0
+        playersToFetch.length <= 0
           ? { json: prevPlayerData }
           : await execute<GetDispatchPlayerBySteamIdData[]>({
               path: "/dispatch/players",
-              params: {
-                steamIds: steamIds.map((s) => s.convertedSteamId).join(","),
-              },
+              data: playersToFetch.map((s) => ({
+                steamId: s.convertedSteamId,
+                discordId: s.discordId,
+              })),
               noToast: true,
+              method: "POST",
             });
 
-      if (steamIds.length >= 1) {
+      if (playersToFetch.length >= 1) {
         _prevPlayerData = json;
         setPrevPlayerData(json);
       }
@@ -52,21 +62,31 @@ export function useMapPlayers() {
       const newMap = new Map();
 
       for (const player of payload) {
-        const steamId = steamIds.find((v) => v.identifier === player.identifier)?.convertedSteamId;
-        const user = _prevPlayerData.find((v) => v.steamId === steamId);
-        const existing = players.get(player.identifier);
+        const currentPlayer = playersToFetch.find(
+          (v) =>
+            v.identifiers.steamId === player.identifiers.steamId ||
+            v.identifiers.discordId === player.identifiers.discordId,
+        );
+
+        const steamId = currentPlayer?.convertedSteamId;
+        const discordId = currentPlayer?.discordId;
+
+        const user = _prevPlayerData.find(
+          (v) => v.steamId === steamId || v.discordId === discordId,
+        );
+        const existing = players.get(player.playerId);
 
         if (existing) {
           const omittedExisting = omit(existing, [
-            "License Plate",
-            "Vehicle",
-            "Location",
-            "Weapon",
+            "licensePlate",
+            "vehicle",
+            "location",
+            "weapon",
             "icon",
             "pos",
           ]);
 
-          newMap.set(String(player.identifier), {
+          newMap.set(player.playerId, {
             ...omittedExisting,
             ...existing,
             ...player,
@@ -75,8 +95,12 @@ export function useMapPlayers() {
           continue;
         }
 
-        if (!player.identifier) continue;
-        newMap.set(player.identifier, { convertedSteamId: steamId, ...player, ...user });
+        if (!player.playerId) continue;
+        newMap.set(player.playerId, {
+          convertedSteamId: currentPlayer?.convertedSteamId,
+          ...player,
+          ...user,
+        });
       }
 
       setPlayers(newMap);
@@ -88,32 +112,39 @@ export function useMapPlayers() {
     async (data: PlayerDataEvent) => {
       const usersToFetch = data.payload
         .map((player) => {
-          const steamId = player.identifier?.replace("steam:", "");
-          const convertedSteamId = new BN(steamId, 16).toString();
-          return { ...player, convertedSteamId };
+          const steamId = player.identifiers.steamId?.replace("steam:", "");
+          const discordId = player.identifiers.discordId?.replace("discord:", "");
+
+          const convertedSteamId = steamId && new BN(steamId, 16).toString();
+          return {
+            ...player,
+            id: (convertedSteamId || discordId)!,
+            discordId,
+            convertedSteamId,
+          };
         })
-        .filter((player) => {
-          if (players.has(player.identifier)) return false;
-          if (player.identifier?.startsWith("steam:")) return true;
-          return false;
-        });
+        .filter(
+          (player) =>
+            (player.convertedSteamId || player.discordId) && !players.get(player.playerId),
+        );
 
       await getCADUsers(usersToFetch, data.payload);
     },
     [getCADUsers, players],
   );
 
-  const onPlayerLeft = React.useCallback((data: PlayerLeftEvent) => {
-    setPlayers((map) => {
-      map.delete(data.payload);
-      return map;
-    });
-  }, []);
+  const onPlayerLeft = React.useCallback(
+    (data: PlayerLeftEvent) => {
+      const newPlayers = players;
+      players.delete(data.payload);
+
+      setPlayers(newPlayers);
+    },
+    [players], // eslint-disable-line react-hooks/exhaustive-deps
+  );
 
   const onMessage = React.useCallback(
-    (e: MessageEvent) => {
-      const data = JSON.parse(e.data) as DataActions;
-
+    (_name: string, data: DataActions) => {
       switch (data.type) {
         case "playerData": {
           onPlayerData(data);
@@ -150,15 +181,14 @@ export function useMapPlayers() {
 
   React.useEffect(() => {
     const s = socket;
-
     if (s) {
-      socket.addEventListener("message", onMessage);
-      socket.addEventListener("error", onError);
+      s.onAny(onMessage);
+      s.on("disconnect", console.log);
     }
 
     return () => {
-      s?.removeEventListener("message", onMessage);
-      s?.removeEventListener("error", onError);
+      s?.offAny(onMessage);
+      s?.off("disconnect", console.log);
     };
   }, [socket, onError, onMessage]);
 
@@ -177,20 +207,10 @@ function getCADURL(cad: cad | null) {
     !warned &&
       toastMessage({
         duration: Infinity,
-        message: "There was no live_map_url provided from the CAD-Settings.",
+        // eslint-disable-next-line quotes
+        message: 'There was no "Live Map URL" provided from the CAD-Settings.',
       });
     warned = true;
-    return null;
-  }
-
-  if (!liveMapURL.startsWith("ws")) {
-    !warned &&
-      toastMessage({
-        duration: Infinity,
-        message: "The live_map_url did not start with ws. Make sure it is a WebSocket protocol",
-      });
-    warned = true;
-
     return null;
   }
 
@@ -199,7 +219,8 @@ function getCADURL(cad: cad | null) {
 
 function makeSocketConnection(url: string) {
   try {
-    return new WebSocket(url);
+    const _url = url.replace(/ws:\/\//, "http://").replace(/wss:\/\//, "https://");
+    return io(_url);
   } catch (error) {
     const isSecurityError = error instanceof Error && error.name === "SecurityError";
 

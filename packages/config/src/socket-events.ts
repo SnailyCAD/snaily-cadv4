@@ -19,6 +19,7 @@ export enum SocketEvents {
   UpdateOfficerStatus = "UpdateOfficerStatus",
   UpdateEmsFdStatus = "UpdateEmsFdStatus",
   UpdateDispatchersState = "UpdateDispatchersState",
+  SetUnitOffDuty = "SetUnitOffDuty",
 
   UserBanned = "UserBanned",
   UserDeleted = "UserDeleted",

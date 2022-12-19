@@ -6,10 +6,11 @@ import { useDispatchState } from "state/dispatch/dispatch-state";
 import { useAuth } from "context/AuthContext";
 import { useLeoState } from "state/leo-state";
 import type { CombinedLeoUnit, Officer } from "@snailycad/types";
-import { isUnitCombined } from "@snailycad/utils";
+import { isUnitCombined, isUnitOfficer } from "@snailycad/utils";
 import type { GetActiveOfficersData } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call-911-state";
 import shallow from "zustand/shallow";
+import { useMapPlayersStore } from "./useMapPlayers";
 
 let ran = false;
 export function useActiveOfficers() {
@@ -17,12 +18,29 @@ export function useActiveOfficers() {
   const { activeOfficers, setActiveOfficers } = useDispatchState();
   const { state, execute } = useFetch();
   const setActiveOfficer = useLeoState((state) => state.setActiveOfficer);
+  const playerState = useMapPlayersStore();
+
   const call911State = useCall911State(
     (state) => ({
       calls: state.calls,
       setCalls: state.setCalls,
     }),
     shallow,
+  );
+
+  // remove the unit property from the player state
+  const handleMapPlayersState = React.useCallback(
+    (unitId: string) => {
+      const players = Array.from(playerState.players.values());
+      const player = players.find((player) => "unit" in player && player.unit?.id === unitId);
+
+      if (player) {
+        const newPlayers = playerState.players;
+        newPlayers.set(player.playerId, { ...player, unit: null });
+        playerState.setPlayers(newPlayers);
+      }
+    },
+    [playerState],
   );
 
   const handleCallsState = React.useCallback(
@@ -67,9 +85,27 @@ export function useActiveOfficers() {
       if (activeOfficer) {
         setActiveOfficer(activeOfficer);
       }
+
+      // update the player state with the unit
+      const players = Array.from(playerState.players.values());
+      const newPlayers = playerState.players;
+
+      for (const player of players) {
+        const officer = data.find(
+          (officer) =>
+            (isUnitOfficer(officer) && officer.user.steamId === player.convertedSteamId) ||
+            (isUnitOfficer(officer) && officer.user.discordId === player.discordId),
+        );
+
+        if (officer && isUnitOfficer(officer)) {
+          newPlayers.set(player.playerId, { ...player, unit: officer });
+        }
+      }
+
+      playerState.setPlayers(newPlayers);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [user?.id],
+    [user?.id, playerState.players],
   );
 
   const getActiveOfficers = React.useCallback(async () => {
@@ -90,6 +126,10 @@ export function useActiveOfficers() {
       ran = true;
     }
   }, [getActiveOfficers]);
+
+  useListener(SocketEvents.SetUnitOffDuty, (unitId: string) => {
+    handleMapPlayersState(unitId);
+  });
 
   useListener(SocketEvents.UpdateOfficerStatus, (data: (Officer | CombinedLeoUnit)[] | null) => {
     if (data && Array.isArray(data)) {

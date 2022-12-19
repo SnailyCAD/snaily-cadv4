@@ -25,7 +25,7 @@ export function RenderMapPlayers() {
   return (
     <>
       {[...players.values()].map((player) => (
-        <PlayerMarker key={player.identifier} handleToggle={handleToggle} player={player} />
+        <PlayerMarker key={player.playerId} handleToggle={handleToggle} player={player} />
       ))}
 
       <ActiveMapUnits setOpenItems={setOpenItems} openItems={openItems} players={playerValues} />
