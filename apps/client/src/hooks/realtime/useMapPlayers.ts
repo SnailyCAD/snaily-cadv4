@@ -33,7 +33,6 @@ export function useMapPlayers() {
       payload: PlayerDataEventPayload[],
     ) => {
       let _prevPlayerData = prevPlayerData;
-      console.log({ players });
 
       const { json } =
         playersToFetch.length <= 0
