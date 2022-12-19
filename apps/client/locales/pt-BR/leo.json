@@ -244,6 +244,8 @@
     "alert_deleteNote": "Tem certeza de que deseja excluir esta nota? Esta ação não pode ser desfeita.",
     "alert_deleteQualification": "Tem certeza que deseja excluir esta qualificação? Esta ação não pode ser desfeita.",
     "vehicleImpoundLocation": "O veículo fornecido ({plate}) será apreendido em {impoundLocation}. Você poderá visualizar este veículo na página do lote apreendido.",
+    "steamId": "Steam ID",
+    "discordId": "Discord ID",
     "alert_endIncident": "Tem certeza de que deseja encerrar este incidente. Ele ainda pode ser visto pelos oficiais.",
     "alert_deleteRecord": "Tem certeza que deseja excluir este registro? Esta ação não pode ser desfeita.",
     "alert_deleteOfficer": "Tem certeza de que deseja excluir <span>{officer}</span>? Esta ação não pode ser desfeita.",
