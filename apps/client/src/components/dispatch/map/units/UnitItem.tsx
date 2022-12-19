@@ -59,11 +59,11 @@ export function UnitItem({ setTempUnit, player }: CallItemProps) {
         </Accordion.Trigger>
         <Accordion.Content className="pt-2 text-base text-neutral-800 dark:text-white">
           <div className="map-column">
-            <Infofield label={t("status")}>{player.unit?.status?.value.value}</Infofield>
+            <Infofield label={t("status")}>{unit.status?.value?.value}</Infofield>
             <Infofield label={common("user")}>{player.username}</Infofield>
             {RADIO_CHANNEL_MANAGEMENT ? (
               <Infofield className="flex !flex-row gap-2 mt-1" label={t("radioChannel")}>
-                <UnitRadioChannelModal unit={player.unit!} />
+                <UnitRadioChannelModal unit={unit} />
               </Infofield>
             ) : null}
 
