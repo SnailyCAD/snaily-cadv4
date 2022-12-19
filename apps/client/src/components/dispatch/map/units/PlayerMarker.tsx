@@ -70,13 +70,11 @@ export function PlayerMarker({ player, handleToggle }: Props) {
   const hasUnit = isCADUser && player.unit != null;
 
   const showUnitsOnly = hiddenItems[MapItem.UNITS_ONLY];
-  const playerSteamId = "convertedSteamId" in player ? player.convertedSteamId : null;
-  const playerDiscordId = "discordId" in player ? player.discordId : null;
-  const isUser = user?.steamId
-    ? playerSteamId === user?.steamId
-    : user?.discordId
-    ? playerDiscordId === user?.discordId
-    : false;
+  const playerSteamId = player.convertedSteamId;
+  const playerDiscordId = player.discordId;
+  const isSteamUser = playerSteamId && user?.steamId === playerSteamId;
+  const isDiscordUser = playerDiscordId && user?.discordId === playerDiscordId;
+  const isUser = isSteamUser || isDiscordUser;
 
   if (showUnitsOnly) {
     if (!hasUnit || !isUser) {

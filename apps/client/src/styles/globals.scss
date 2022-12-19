@@ -164,3 +164,27 @@ strong {
 .grecaptcha-badge {
   display: none !important;
 }
+
+.leaflet-popup-content-wrapper {
+  background-color: theme("colors.primary");
+  border: theme("borderWidth.DEFAULT") solid theme("colors.secondary");
+  color: white;
+  box-shadow: theme("boxShadow.lg");
+  border-radius: theme("borderRadius.lg");
+}
+
+.leaflet-popup-tip {
+  background-color: theme("colors.primary");
+  border: theme("borderWidth.DEFAULT") solid theme("colors.secondary");
+}
+
+.leaflet-popup-content {
+  background-color: theme("colors.primary");
+  color: white;
+}
+
+.leaflet-popup-close-button {
+  top: 1em !important;
+  right: 1em !important;
+  font-size: 1.5em !important;
+}
