@@ -15,11 +15,18 @@ import type { cad } from "@snailycad/types";
 import { omit } from "lib/utils";
 import type { GetDispatchPlayerBySteamIdData } from "@snailycad/types/api";
 import { io, Socket } from "socket.io-client";
+import create from "zustand";
+
+export const useMapPlayersStore = create<{
+  players: Map<number, MapPlayer | PlayerDataEventPayload>;
+  setPlayers(players: Map<number, MapPlayer | PlayerDataEventPayload>): void;
+}>((set) => ({
+  players: new Map<number, MapPlayer | PlayerDataEventPayload>(),
+  setPlayers: (players: Map<number, MapPlayer | PlayerDataEventPayload>) => set({ players }),
+}));
 
 export function useMapPlayers() {
-  const [players, setPlayers] = React.useState<Map<number, MapPlayer | PlayerDataEventPayload>>(
-    new Map<number, MapPlayer | PlayerDataEventPayload>(),
-  );
+  const { players, setPlayers } = useMapPlayersStore();
   const [socket, setSocket] = React.useState<Socket | null>(null);
   const [prevPlayerData, setPrevPlayerData] = React.useState<GetDispatchPlayerBySteamIdData[]>([]);
 
@@ -126,12 +133,15 @@ export function useMapPlayers() {
     [getCADUsers, players],
   );
 
-  const onPlayerLeft = React.useCallback((data: PlayerLeftEvent) => {
-    setPlayers((map) => {
-      map.delete(data.payload);
-      return map;
-    });
-  }, []);
+  const onPlayerLeft = React.useCallback(
+    (data: PlayerLeftEvent) => {
+      const newPlayers = players;
+      players.delete(data.payload);
+
+      setPlayers(newPlayers);
+    },
+    [players], // eslint-disable-line react-hooks/exhaustive-deps
+  );
 
   const onMessage = React.useCallback(
     (_name: string, data: DataActions) => {
@@ -197,20 +207,10 @@ function getCADURL(cad: cad | null) {
     !warned &&
       toastMessage({
         duration: Infinity,
-        message: "There was no live_map_url provided from the CAD-Settings.",
+        // eslint-disable-next-line quotes
+        message: 'There was no "Live Map URL" provided from the CAD-Settings.',
       });
     warned = true;
-    return null;
-  }
-
-  if (!liveMapURL.startsWith("ws")) {
-    !warned &&
-      toastMessage({
-        duration: Infinity,
-        message: "The live_map_url did not start with ws. Make sure it is a WebSocket protocol",
-      });
-    warned = true;
-
     return null;
   }
 

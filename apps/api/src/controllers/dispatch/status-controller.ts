@@ -279,6 +279,10 @@ export class StatusController {
       }
     }
 
+    if (code.shouldDo === ShouldDoType.SET_OFF_DUTY) {
+      this.socket.emitSetUnitOffDuty(unit.id);
+    }
+
     if (["leo", "combined"].includes(type)) {
       await this.socket.emitUpdateOfficerStatus();
     } else {

@@ -9,6 +9,8 @@ import { useTranslations } from "next-intl";
 import { MapItem, useDispatchMapState } from "state/mapState";
 import { useAuth } from "context/AuthContext";
 import { generateMarkerTypes } from "../RenderMapBlips";
+import { makeUnitName } from "lib/utils";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 
 interface Props {
   player: MapPlayer | PlayerDataEventPayload;
@@ -28,6 +30,7 @@ export function PlayerMarker({ player, handleToggle }: Props) {
   const { user } = useAuth();
   const { hiddenItems } = useDispatchMapState();
   const markerTypes = React.useMemo(generateMarkerTypes, []);
+  const { generateCallsign } = useGenerateCallsign();
 
   const playerIcon = React.useMemo(() => {
     const playerIcon = markerTypes[parseInt(player.icon, 10)];
@@ -75,11 +78,17 @@ export function PlayerMarker({ player, handleToggle }: Props) {
     ? playerDiscordId === user?.discordId
     : false;
 
+  console.log({ player });
+
   if (showUnitsOnly) {
     if (!hasUnit || !isUser) {
       return null;
     }
   }
+
+  const unitName = hasUnit && player.unit ? makeUnitName(player.unit) : player.name;
+  const unitCallsign = hasUnit && player.unit ? generateCallsign(player.unit) : null;
+  const unitNameAndCallsign = unitName && unitCallsign ? `${unitCallsign} ${unitName}` : unitName;
 
   return (
     <Marker
@@ -88,7 +97,7 @@ export function PlayerMarker({ player, handleToggle }: Props) {
       key={player.playerId}
       position={pos}
     >
-      <Tooltip direction="top">{player.name}</Tooltip>
+      <Tooltip direction="top">{unitNameAndCallsign}</Tooltip>
 
       <Popup minWidth={500}>
         <p style={{ margin: 2 }}>

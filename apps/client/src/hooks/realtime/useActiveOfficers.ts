@@ -10,6 +10,7 @@ import { isUnitCombined } from "@snailycad/utils";
 import type { GetActiveOfficersData } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call-911-state";
 import shallow from "zustand/shallow";
+import { useMapPlayersStore } from "./useMapPlayers";
 
 let ran = false;
 export function useActiveOfficers() {
@@ -17,12 +18,29 @@ export function useActiveOfficers() {
   const { activeOfficers, setActiveOfficers } = useDispatchState();
   const { state, execute } = useFetch();
   const setActiveOfficer = useLeoState((state) => state.setActiveOfficer);
+  const playerState = useMapPlayersStore();
+
   const call911State = useCall911State(
     (state) => ({
       calls: state.calls,
       setCalls: state.setCalls,
     }),
     shallow,
+  );
+
+  // remove the unit property from the player state
+  const handleMapPlayersState = React.useCallback(
+    (unitId: string) => {
+      const players = Array.from(playerState.players.values());
+      const player = players.find((player) => "unit" in player && player.unit?.id === unitId);
+
+      if (player) {
+        const newPlayers = playerState.players;
+        newPlayers.set(player.playerId, { ...player, unit: null });
+        playerState.setPlayers(newPlayers);
+      }
+    },
+    [playerState],
   );
 
   const handleCallsState = React.useCallback(
@@ -90,6 +108,10 @@ export function useActiveOfficers() {
       ran = true;
     }
   }, [getActiveOfficers]);
+
+  useListener(SocketEvents.SetUnitOffDuty, (unitId: string) => {
+    handleMapPlayersState(unitId);
+  });
 
   useListener(SocketEvents.UpdateOfficerStatus, (data: (Officer | CombinedLeoUnit)[] | null) => {
     if (data && Array.isArray(data)) {

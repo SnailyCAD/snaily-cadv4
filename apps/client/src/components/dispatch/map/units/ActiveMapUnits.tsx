@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
+import { CombinedLeoUnit, EmsFdDeputy, Officer, ShouldDoType } from "@snailycad/types";
 import { isUnitCombined } from "@snailycad/utils";
 import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
 import { useActiveOfficers } from "hooks/realtime/useActiveOfficers";
@@ -10,6 +10,7 @@ import { usePortal } from "@casper124578/useful";
 import { useTranslations } from "next-intl";
 import { UnitItem } from "./UnitItem";
 import { ManageUnitModal } from "components/dispatch/modals/ManageUnit";
+import { useMapPlayersStore } from "hooks/realtime/useMapPlayers";
 
 interface Props {
   players: (MapPlayer | PlayerDataEventPayload)[];
@@ -17,8 +18,9 @@ interface Props {
   setOpenItems: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-export function ActiveMapUnits({ players, openItems, setOpenItems }: Props) {
+export function ActiveMapUnits({ openItems, setOpenItems }: Props) {
   const [tempUnit, setTempUnit] = React.useState<null | Officer | EmsFdDeputy>(null);
+  const { players } = useMapPlayersStore();
 
   const portalRef = usePortal("ActiveMapCalls");
   const t = useTranslations("Leo");
@@ -26,7 +28,7 @@ export function ActiveMapUnits({ players, openItems, setOpenItems }: Props) {
   const { activeOfficers } = useActiveOfficers();
   const { activeDeputies } = useActiveDeputies();
   const units = makeActiveUnits({
-    players,
+    players: Array.from(players.values()),
     activeOfficers,
     activeDeputies,
   });
@@ -70,6 +72,8 @@ function makeActiveUnits({ players, activeOfficers, activeDeputies }: ActiveUnit
   });
 
   for (const activeUnit of [..._activeOfficers, ...activeDeputies]) {
+    if (!activeUnit.status || activeUnit.status.shouldDo === ShouldDoType.SET_OFF_DUTY) continue;
+
     const steamId = activeUnit.user.steamId;
     const player = players.find(
       (v) =>

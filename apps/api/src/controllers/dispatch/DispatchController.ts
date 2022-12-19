@@ -278,9 +278,6 @@ export class DispatchController {
       z.object({ discordId: z.string().optional(), steamId: z.string().optional() }),
     );
     const ids = validateSchema(schema, body);
-
-    console.log({ ids });
-
     const users = [];
 
     for (const { steamId, discordId } of ids) {

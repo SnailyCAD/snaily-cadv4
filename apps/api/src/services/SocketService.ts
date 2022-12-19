@@ -91,6 +91,10 @@ export class Socket {
     this.io.sockets.emit(SocketEvents.RoleplayStopped, value);
   }
 
+  emitSetUnitOffDuty(unitId: string) {
+    this.io.sockets.emit(SocketEvents.SetUnitOffDuty, unitId);
+  }
+
   async emitUpdateOfficerStatus() {
     const [officers, units] = await prisma.$transaction([
       prisma.officer.findMany({
