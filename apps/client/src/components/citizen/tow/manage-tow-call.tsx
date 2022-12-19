@@ -124,7 +124,12 @@ export function ManageCallModal(props: Props) {
       isOpen={isOpen(ModalIds.ManageTowCall)}
       className="w-[700px]"
     >
-      <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
+      <Formik
+        enableReinitialize
+        validate={validate}
+        initialValues={INITIAL_VALUES}
+        onSubmit={onSubmit}
+      >
         {({ setFieldValue, values, isValid, errors }) => (
           <Form>
             <CitizenSuggestionsField

@@ -19,11 +19,12 @@ import { isFeatureEnabled } from "lib/cad";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { citizenObjectFromData } from "lib/citizen";
 import type * as APITypes from "@snailycad/types/api";
-import { getImageWebPPath } from "utils/image";
+import { getImageWebPPath } from "utils/images/image";
 import { validateSocialSecurityNumber } from "lib/citizen/validateSSN";
 import { setEndedSuspendedLicenses } from "lib/citizen/setEndedSuspendedLicenses";
 import { createOfficer } from "controllers/leo/my-officers/create-officer";
 import { createCitizenViolations } from "lib/records/create-citizen-violations";
+import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
 
 export const citizenInclude = {
   user: { select: userProperties },
@@ -113,7 +114,16 @@ export class CitizenController {
       prisma.citizen.findMany({
         where,
         orderBy: { updatedAt: "desc" },
-        include: { user: { select: userProperties } },
+        select: {
+          name: true,
+          surname: true,
+          imageId: true,
+          imageBlurData: true,
+          id: true,
+          userId: true,
+          socialSecurityNumber: true,
+          user: { select: userProperties },
+        },
         skip,
         take: 35,
       }),
@@ -286,11 +296,11 @@ export class CitizenController {
     const citizen = await prisma.citizen.create({
       data: {
         userId: user.id || undefined,
-        ...citizenObjectFromData({
+        ...(await citizenObjectFromData({
           data,
           defaultLicenseValueId,
           cad,
-        }),
+        })),
       },
       include: { suspendedLicenses: true },
     });
@@ -362,10 +372,10 @@ export class CitizenController {
         id: citizen.id,
       },
       data: {
-        ...citizenObjectFromData({
+        ...(await citizenObjectFromData({
           data,
           cad,
-        }),
+        })),
         socialSecurityNumber:
           data.socialSecurityNumber ??
           (!citizen.socialSecurityNumber ? generateString(9, { numbersOnly: true }) : undefined),
@@ -413,13 +423,21 @@ export class CitizenController {
     const image = await getImageWebPPath({
       buffer: file.buffer,
       pathType: "citizens",
-      id: citizen.id,
+      id: `${citizen.id}-${file.originalname.split(".")[0]}`,
     });
+
+    const previousImage = citizen.imageId
+      ? `${process.cwd()}/public/citizens/${citizen.imageId}`
+      : undefined;
+
+    if (previousImage) {
+      await fs.rm(previousImage, { force: true });
+    }
 
     const [data] = await Promise.all([
       prisma.citizen.update({
         where: { id: citizen.id },
-        data: { imageId: image.fileName },
+        data: { imageId: image.fileName, imageBlurData: await generateBlurPlaceholder(image) },
         select: { imageId: true },
       }),
       fs.writeFile(image.path, image.buffer),

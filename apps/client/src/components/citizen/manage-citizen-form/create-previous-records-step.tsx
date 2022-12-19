@@ -1,13 +1,13 @@
 import * as React from "react";
 import { Record, RecordType, ValueType } from "@snailycad/types";
-import { ManageRecordModal } from "components/leo/modals/ManageRecordModal";
+import { ManageRecordModal } from "components/leo/modals/manage-record/manage-record-modal";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import { useTranslations } from "use-intl";
 import { Button } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { useFormikContext } from "formik";
-import { RecordsTable } from "components/leo/modals/NameSearchModal/tabs/RecordsTab";
+import { RecordsTable } from "components/leo/modals/NameSearchModal/tabs/records-tab";
 import { v4 } from "uuid";
 
 let valuesFetched = false;

@@ -6,7 +6,7 @@ import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-par
 import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
-import { getImageWebPPath, validateImgurURL } from "utils/image";
+import { getImageWebPPath, validateImgurURL } from "utils/images/image";
 import { cad, User, MiscCadSettings, Feature, CadFeature } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
@@ -22,6 +22,7 @@ import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import type * as APITypes from "@snailycad/types/api";
 import { createOfficer } from "./create-officer";
+import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -165,6 +166,7 @@ export class MyOfficersController {
     const incremental = officer.incremental
       ? undefined
       : await findNextAvailableIncremental({ type: "leo" });
+    const validatedImageURL = validateImgurURL(data.image);
 
     const updatedOfficer = await prisma.officer.update({
       where: {
@@ -175,7 +177,8 @@ export class MyOfficersController {
         callsign2: data.callsign2,
         badgeNumber: isBadgeNumbersEnabled ? data.badgeNumber : undefined,
         citizenId: citizen.id,
-        imageId: validateImgurURL(data.image),
+        imageId: validatedImageURL,
+        imageBlurData: await generateBlurPlaceholder(validatedImageURL),
         departmentId: defaultDepartment ? defaultDepartment.id : data.department,
         rankId: rank,
         whitelistStatusId,
@@ -278,13 +281,24 @@ export class MyOfficersController {
     const image = await getImageWebPPath({
       buffer: file.buffer,
       pathType: "units",
-      id: officer.id,
+      id: `${officer.id}-${file.originalname.split(".")[0]}`,
     });
+
+    const previousImage = officer.imageId
+      ? `${process.cwd()}/public/units/${officer.imageId}`
+      : undefined;
+
+    if (previousImage) {
+      await fs.rm(previousImage, { force: true });
+    }
 
     const [data] = await Promise.all([
       prisma.officer.update({
         where: { id: officer.id },
-        data: { imageId: image.fileName },
+        data: {
+          imageId: image.fileName,
+          imageBlurData: await generateBlurPlaceholder(image),
+        },
         select: { imageId: true },
       }),
       fs.writeFile(image.path, image.buffer),

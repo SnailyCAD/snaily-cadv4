@@ -32,8 +32,10 @@
     "addCourthousePost": "Adicionar Postagem no Tribunal",
     "noCourthousePosts": "Ainda não há Postagens no Tribunal.",
     "createdBy": "Criado por",
+    "cancelRequest": "Cancelar Pedido",
     "alert_deleteCourthousePost": "Tem certeza de que deseja excluir esta postagem? Esta ação não pode ser desfeita.",
     "alert_deleteCourtEntry": "Tem certeza de que deseja excluir esta inscrição? Esta ação não pode ser desfeita.",
+    "alert_cancelRequest": "Tem certeza de que deseja cancelar esta solicitação de exclusão? Essa ação não pode ser desfeita.",
     "alert_deleteCourtDate": "Tem certeza de que deseja excluir esta data de julgamento? Esta ação não pode ser desfeita."
   }
 }

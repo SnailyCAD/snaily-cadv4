@@ -1,7 +1,7 @@
 import { Controller } from "@tsed/di";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { CREATE_BOLO_SCHEMA } from "@snailycad/schemas";
-import { BodyParams, Context, PathParams } from "@tsed/platform-params";
+import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
 import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { Use, UseBeforeEach } from "@tsed/platform-middlewares";
@@ -10,7 +10,14 @@ import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Socket } from "services/SocketService";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/validateSchema";
-import { Bolo, BoloType, CombinedLeoUnit, DiscordWebhookType, Officer } from "@prisma/client";
+import {
+  Bolo,
+  BoloType,
+  CombinedLeoUnit,
+  DiscordWebhookType,
+  Officer,
+  Prisma,
+} from "@prisma/client";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import type { APIEmbed } from "discord-api-types/v10";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
@@ -33,14 +40,21 @@ export class BoloController {
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   @Description("Get all the bolos")
-  async getBolos(@Context("cad") cad: cad): Promise<APITypes.GetBolosData> {
+  async getBolos(
+    @Context("cad") cad: cad,
+    @QueryParams("query", String) query: string,
+  ): Promise<APITypes.GetBolosData> {
     const inactivityFilter = getInactivityFilter(cad, "boloInactivityTimeout");
     if (inactivityFilter) {
       this.endInactiveBolos(inactivityFilter.updatedAt);
     }
 
+    const where: Prisma.BoloWhereInput = {
+      OR: [{ plate: { contains: query, mode: "insensitive" } }],
+    };
+
     const bolos = await prisma.bolo.findMany({
-      where: inactivityFilter?.filter,
+      where: { ...inactivityFilter?.filter, ...where },
       include: {
         officer: {
           include: leoProperties,

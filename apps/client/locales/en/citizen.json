@@ -54,7 +54,7 @@
     "createWithOfficer": "Create with Officer",
     "previousRecords": "Previous Records",
     "createPreviousRecordsStepDescription": "Here you can optionally add previous records this citizen has had. This is useful for when a citizen has been arrested before.",
-    "alert_markCitizenDeceased": "Are you sure you want to delete <span>{citizen}</span>? Only EMS/FD can mark you alive again.",
+    "alert_markCitizenDeceased": "Are you sure you want mark <span>{citizen}</span> as deceased? Only EMS/FD can mark you alive again.",
     "alert_deleteCitizen": "Are you sure you want to delete <span>{citizen}</span>? This action cannot be undone."
   },
   "Vehicles": {
@@ -99,6 +99,7 @@
     "deleteWeapon": "Delete Weapon",
     "registeredWeapons": "Registered Weapons",
     "successWeaponRegistered": "Successfully registered a weapon",
+    "bofStatus": "BOF Status",
     "alert_deleteWeapon": "Are you sure you want to delete this weapon? This action cannot be undone."
   },
   "MedicalRecords": {

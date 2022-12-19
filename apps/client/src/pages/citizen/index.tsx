@@ -21,15 +21,20 @@ import { ValueType } from "@snailycad/types";
 const RegisterVehicleModal = dynamic(
   async () =>
     (await import("components/citizen/vehicles/modals/RegisterVehicleModal")).RegisterVehicleModal,
+  { ssr: false },
 );
 const RegisterWeaponModal = dynamic(
-  async () => (await import("components/citizen/weapons/RegisterWeaponModal")).RegisterWeaponModal,
+  async () =>
+    (await import("components/citizen/weapons/register-weapon-modal")).RegisterWeaponModal,
+  { ssr: false },
 );
 const ManageCallModal = dynamic(
   async () => (await import("components/citizen/tow/manage-tow-call")).ManageCallModal,
+  { ssr: false },
 );
 const Manage911CallModal = dynamic(
   async () => (await import("components/dispatch/modals/Manage911CallModal")).Manage911CallModal,
+  { ssr: false },
 );
 
 interface Props {
@@ -115,9 +120,11 @@ export default function CitizenPage({ citizens }: Props) {
       <CitizenList citizens={citizens} />
 
       <RegisterVehicleModal onCreate={() => closeModal(ModalIds.RegisterVehicle)} vehicle={null} />
-      <RegisterWeaponModal onCreate={() => closeModal(ModalIds.RegisterWeapon)} weapon={null} />
-      <Manage911CallModal call={null} />
-      <ManageCallModal isTow={modal === "tow"} call={null} />
+      {WEAPON_REGISTRATION ? (
+        <RegisterWeaponModal onCreate={() => closeModal(ModalIds.RegisterWeapon)} weapon={null} />
+      ) : null}
+      {CALLS_911 ? <Manage911CallModal call={null} /> : null}
+      {TOW || TAXI ? <ManageCallModal isTow={modal === "tow"} call={null} /> : null}
     </Layout>
   );
 }

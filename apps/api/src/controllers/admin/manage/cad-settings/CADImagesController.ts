@@ -11,7 +11,7 @@ import { cad, Rank } from "@prisma/client";
 import { Permissions } from "@snailycad/permissions";
 import { UsePermissions } from "middlewares/UsePermissions";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import { getImageWebPPath } from "utils/image";
+import { getImageWebPPath } from "utils/images/image";
 
 @Controller("/admin/manage/cad-settings/image")
 @ContentType("application/json")
@@ -34,7 +34,16 @@ export class ManageCitizensController {
       throw new BadRequest("invalidImageType");
     }
 
-    const image = await getImageWebPPath({ buffer: file.buffer, pathType: "cad", id: cad.id });
+    const image = await getImageWebPPath({
+      buffer: file.buffer,
+      pathType: "cad",
+      id: `${cad.id}-${file.originalname.split(".")[0]}`,
+    });
+
+    const previousImage = cad.logoId ? `${process.cwd()}/public/cad/${cad.logoId}` : undefined;
+    if (previousImage) {
+      await fs.rm(previousImage, { force: true });
+    }
 
     const [data] = await Promise.all([
       prisma.cad.update({

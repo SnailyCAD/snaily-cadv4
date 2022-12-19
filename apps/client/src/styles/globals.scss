@@ -138,6 +138,19 @@ strong {
   }
 }
 
+.animate-call-updated {
+  animation: animate-call-updated 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes animate-call-updated {
+  from {
+    background-color: theme("colors.amber.900");
+  }
+  to {
+    background-color: theme("colors.amber.700");
+  }
+}
+
 .admin-dashboard-responsive {
   width: calc(100vw - 55px);
 }

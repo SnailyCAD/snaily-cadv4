@@ -95,7 +95,8 @@
     "dmv": "Department of Motor Vehicles",
     "penalCodes": "Penal Codes",
     "myDeputyLogs": "My deputy logs",
-    "whatsNew": "What's New"
+    "whatsNew": "What's New",
+    "bureauOfFirearms": "Bureau of Firearms"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",

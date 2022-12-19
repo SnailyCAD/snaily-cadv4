@@ -32,6 +32,8 @@
     "noCourthousePosts": "There are no magistrates posts yet.",
     "alert_deleteCourthousePost": "Are you sure you want to delete this post? This action cannot be undone.",
     "alert_deleteCourtEntry": "Are you sure you want to delete this entry? This action cannot be undone.",
-    "alert_deleteCourtDate": "Are you sure you want to delete this court date? This action cannot be undone."
+    "alert_deleteCourtDate": "Are you sure you want to delete this court date? This action cannot be undone.",
+    "description": "Description",
+    "createdBy": "Created By"
   }
 }

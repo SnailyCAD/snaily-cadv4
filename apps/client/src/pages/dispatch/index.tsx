@@ -6,7 +6,7 @@ import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { ActiveCalls } from "components/dispatch/active-calls/active-calls";
 import { useDispatchState } from "state/dispatch/dispatch-state";
-import { ActiveBolos } from "components/active-bolos/ActiveBolos";
+import { ActiveBolos } from "components/active-bolos/active-bolos";
 import { DispatchModalButtons } from "components/dispatch/ModalButtons";
 import { useTranslations } from "use-intl";
 import { ActiveOfficers } from "components/dispatch/active-officers";
@@ -27,7 +27,7 @@ import { useCall911State } from "state/dispatch/call-911-state";
 import { DndProvider } from "components/shared/dnd/DndProvider";
 
 const ActiveIncidents = dynamic(async () => {
-  return (await import("components/dispatch/ActiveIncidents")).ActiveIncidents;
+  return (await import("components/dispatch/active-incidents")).ActiveIncidents;
 });
 
 const Modals = {
@@ -42,7 +42,7 @@ const Modals = {
     return (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal;
   }),
   WeaponSearchModal: dynamic(async () => {
-    return (await import("components/leo/modals/WeaponSearchModal")).WeaponSearchModal;
+    return (await import("components/leo/modals/weapon-search-modal")).WeaponSearchModal;
   }),
   NotepadModal: dynamic(async () => {
     return (await import("components/shared/NotepadModal")).NotepadModal;
@@ -82,7 +82,7 @@ export default function DispatchDashboard(props: DispatchPageProps) {
   const signal100 = useSignal100();
   const panic = usePanicButton();
 
-  const { ACTIVE_INCIDENTS } = useFeatureEnabled();
+  const { CALLS_911, ACTIVE_INCIDENTS } = useFeatureEnabled();
   const { isOpen } = useModal();
 
   const activeOfficers = React.useMemo(
@@ -133,7 +133,7 @@ export default function DispatchDashboard(props: DispatchPageProps) {
             </div>
           </div>
           <div className="mt-3">
-            <ActiveCalls initialData={props.calls} />
+            {CALLS_911 ? <ActiveCalls initialData={props.calls} /> : null}
             {ACTIVE_INCIDENTS ? <ActiveIncidents /> : null}
             <ActiveBolos initialBolos={props.bolos} />
           </div>

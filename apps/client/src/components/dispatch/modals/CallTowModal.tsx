@@ -79,6 +79,7 @@ export function DispatchCallTowModal({ call }: Props) {
     // @ts-expect-error TS should allow this tbh!
     creatorId: unit?.citizenId ?? null,
     description: call?.description ?? "",
+    descriptionData: call?.descriptionData ?? null,
     callCountyService: false,
     deliveryAddressId: "",
     model: "",

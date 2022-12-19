@@ -1,11 +1,5 @@
 import compareAsc from "date-fns/compareAsc";
-import {
-  type AnyValue,
-  type PenalCode,
-  type PenalCodeGroup,
-  type StatusValue,
-  WhatPages,
-} from "@snailycad/types";
+import { type AnyValue, type PenalCodeGroup, type StatusValue, WhatPages } from "@snailycad/types";
 import { hasValueObj, isBaseValue } from "@snailycad/utils";
 
 export function sortValues<T extends AnyValue>(values: T[]): T[] {
@@ -70,8 +64,8 @@ export function getDisabledFromValue(value: AnyValue) {
  * only update db if the list was actually moved.
  */
 export function hasTableDataChanged(
-  prevList: (AnyValue | PenalCode | PenalCodeGroup)[],
-  newList: (AnyValue | PenalCode | PenalCodeGroup)[],
+  prevList: (AnyValue | PenalCodeGroup)[],
+  newList: (AnyValue | PenalCodeGroup)[],
 ) {
   let wasMoved = false;
 

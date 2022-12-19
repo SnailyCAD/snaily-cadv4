@@ -14,6 +14,12 @@ import { useAsyncTable } from "hooks/shared/table/use-async-table";
 import { buttonVariants } from "@snailycad/ui";
 import type { GetManageUsersData } from "@snailycad/types/api";
 import { SearchArea } from "components/shared/search/search-area";
+import dynamic from "next/dynamic";
+
+const PruneUsersModal = dynamic(
+  async () => (await import("../modals/prune-users-modal")).PruneUsersModal,
+  { ssr: false },
+);
 
 export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
   const [search, setSearch] = React.useState("");
@@ -23,6 +29,11 @@ export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
 
   const t = useTranslations("Management");
   const common = useTranslations("Common");
+
+  const hasManagePermissions = hasPermissions(
+    [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
+    true,
+  );
 
   const asyncTable = useAsyncTable({
     search,
@@ -95,14 +106,12 @@ export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
           { header: "EMS/FD Permissions", accessorKey: "isEmsFd" },
           { header: "Dispatch Permissions", accessorKey: "isDispatch" },
           cad?.whitelisted ? { header: "Whitelist Status", accessorKey: "whitelistStatus" } : null,
-          hasPermissions(
-            [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
-            true,
-          )
-            ? { header: common("actions"), accessorKey: "actions" }
-            : null,
+
+          hasManagePermissions ? { header: common("actions"), accessorKey: "actions" } : null,
         ]}
       />
+
+      {hasManagePermissions ? <PruneUsersModal /> : null}
     </TabsContent>
   );
 }

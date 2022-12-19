@@ -6,7 +6,6 @@ import {
   Officer,
   CombinedLeoUnit,
   EmsFdDeputy,
-  StatusValue,
   WhitelistStatus,
   CadFeature,
   DiscordWebhookType,
@@ -31,15 +30,12 @@ import { findUnit } from "lib/leo/findUnit";
 import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 import type * as APITypes from "@snailycad/types/api";
-import {
-  createPanicButtonEmbed,
-  createWebhookData,
-  HandlePanicButtonPressedOptions,
-} from "lib/dispatch/webhooks";
+import { createWebhookData } from "lib/dispatch/webhooks";
 import { createCallEventOnStatusChange } from "lib/dispatch/createCallEventOnStatusChange";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import { isUnitOfficer } from "@snailycad/utils";
 import { isFeatureEnabled } from "lib/cad";
+import { handlePanicButtonPressed } from "lib/leo/send-panic-button-webhook";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -163,7 +159,8 @@ export class StatusController {
         throw new BadRequest("cannotUseThisOfficer");
       }
 
-      await this.handlePanicButtonPressed({
+      await handlePanicButtonPressed({
+        socket: this.socket,
         cad,
         status: code,
         unit: officer!,
@@ -171,7 +168,8 @@ export class StatusController {
     }
 
     if (type === "combined") {
-      await this.handlePanicButtonPressed({
+      await handlePanicButtonPressed({
+        socket: this.socket,
         cad,
         status: code,
         unit,
@@ -182,7 +180,8 @@ export class StatusController {
         include: unitProperties,
       });
 
-      await this.handlePanicButtonPressed({
+      await handlePanicButtonPressed({
+        socket: this.socket,
         cad,
         status: code,
         unit: fullDeputy!,
@@ -280,6 +279,12 @@ export class StatusController {
       }
     }
 
+    if (["leo", "combined"].includes(type)) {
+      await this.socket.emitUpdateOfficerStatus();
+    } else {
+      await this.socket.emitUpdateDeputyStatus();
+    }
+
     try {
       // @ts-expect-error type mismatch. the types are correct.
       const data = createWebhookData(cad, updatedUnit);
@@ -288,41 +293,7 @@ export class StatusController {
       console.error("Could not send Discord webhook.", error);
     }
 
-    if (["leo", "combined"].includes(type)) {
-      await this.socket.emitUpdateOfficerStatus();
-    } else {
-      await this.socket.emitUpdateDeputyStatus();
-    }
-
     // @ts-expect-error type mismatch. the types are correct.
     return updatedUnit;
-  }
-
-  private isUnitCurrentlyInPanicMode(unit: HandlePanicButtonPressedOptions["unit"]) {
-    return unit.status?.shouldDo === ShouldDoType.PANIC_BUTTON;
-  }
-
-  private isStatusPanicButton(status: StatusValue) {
-    return status.shouldDo === ShouldDoType.PANIC_BUTTON;
-  }
-
-  private async handlePanicButtonPressed(options: HandlePanicButtonPressedOptions) {
-    const isCurrentlyPanicMode = this.isUnitCurrentlyInPanicMode(options.unit);
-    const isPanicButton = this.isStatusPanicButton(options.status);
-
-    const shouldEnablePanicMode = !isCurrentlyPanicMode && isPanicButton;
-
-    if (shouldEnablePanicMode) {
-      this.socket.emitPanicButtonLeo(options.unit, "ON");
-
-      try {
-        const embed = createPanicButtonEmbed(options.cad, options.unit);
-        await sendDiscordWebhook({ type: DiscordWebhookType.PANIC_BUTTON, data: embed });
-      } catch (error) {
-        console.error("[cad_panicButton]: Could not send Discord webhook.", error);
-      }
-    } else {
-      this.socket.emitPanicButtonLeo(options.unit, "OFF");
-    }
   }
 }

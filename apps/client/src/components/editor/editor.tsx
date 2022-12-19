@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BaseEditor, Descendant, createEditor } from "slate";
+import { BaseEditor, Editor as _Editor, Node as SlateNode, Descendant, createEditor } from "slate";
 import {
   Editable,
   ReactEditor,
@@ -12,7 +12,7 @@ import { type HistoryEditor, withHistory } from "slate-history";
 import { Toolbar } from "./toolbar";
 import { toggleMark } from "lib/editor/utils";
 import isHotkey from "is-hotkey";
-import { withShortcuts } from "lib/editor/withShortcuts";
+import { SHORTCUTS, withShortcuts } from "lib/editor/withShortcuts";
 import { withChecklists } from "lib/editor/withChecklists";
 import type { SlateElements, Text } from "./types";
 import { classNames } from "lib/classNames";
@@ -73,6 +73,39 @@ export function Editor(props: EditorProps) {
     props.onChange?.(value);
   }
 
+  const handleDOMBeforeInput = React.useCallback(() => {
+    queueMicrotask(() => {
+      const pendingDiffs = ReactEditor.androidPendingDiffs(editor);
+
+      const scheduleFlush = pendingDiffs?.some(({ diff, path }) => {
+        if (!diff.text.endsWith(" ")) {
+          return false;
+        }
+
+        const { text } = SlateNode.leaf(editor, path);
+        const beforeText = text.slice(0, diff.start) + diff.text.slice(0, -1);
+        if (!(beforeText in SHORTCUTS)) {
+          return;
+        }
+
+        const blockEntry = _Editor.above(editor, {
+          at: path,
+          match: (n) => _Editor.isBlock(editor, n),
+        });
+        if (!blockEntry) {
+          return false;
+        }
+
+        const [, blockPath] = blockEntry;
+        return _Editor.isStart(editor, _Editor.start(editor, path), blockPath);
+      });
+
+      if (scheduleFlush) {
+        ReactEditor.androidScheduleFlush(editor);
+      }
+    });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   // handle state changes
   React.useEffect(() => {
     editor.children = props.value;
@@ -102,6 +135,7 @@ export function Editor(props: EditorProps) {
       >
         {props.isReadonly ? null : <Toolbar />}
         <Editable
+          onDOMBeforeInput={handleDOMBeforeInput}
           spellCheck="false"
           autoComplete="off"
           readOnly={props.isReadonly}

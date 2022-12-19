@@ -25,6 +25,7 @@ model cad {
   maxPlateLength          Int                    @default(8)
   liveMapSocketURl        String?                @db.VarChar(255)
   logoId                  String?
+  logoBlurData            String?
   registrationCode        String?
   features                CadFeature[]
   disabledFeatures        Feature[]
@@ -75,11 +76,12 @@ model MiscCadSettings {
   inactivityTimeout         Int?
   jailTimeScale             JailTimeScale?
 
-  call911InactivityTimeout        Int?
-  incidentInactivityTimeout       Int?
-  unitInactivityTimeout           Int?
-  boloInactivityTimeout           Int?
-  activeWarrantsInactivityTimeout Int?
+  call911InactivityTimeout           Int?
+  incidentInactivityTimeout          Int?
+  unitInactivityTimeout              Int?
+  boloInactivityTimeout              Int?
+  activeWarrantsInactivityTimeout    Int?
+  activeDispatchersInactivityTimeout Int?
 
   driversLicenseNumberLength Int? @default(8)
   pilotLicenseNumberLength   Int? @default(6)
@@ -339,6 +341,7 @@ model Citizen {
   ccw                  Value?                        @relation("ccwToValue", fields: [ccwId], references: [id])
   ccwId                String?
   imageId              String?                       @db.Text
+  imageBlurData        String?                       @db.Text
   note                 String?                       @db.Text
   dead                 Boolean?                      @default(false)
   arrested             Boolean?                      @default(false)
@@ -447,6 +450,7 @@ model Weapon {
   serialNumber         String             @unique @db.VarChar(255)
   registrationStatus   Value              @relation("weaponRegistrationStatusToValue", fields: [registrationStatusId], references: [id])
   registrationStatusId String
+  bofStatus            WhitelistStatus?
   model                WeaponValue        @relation("weaponModelToValue", fields: [modelId], references: [id])
   modelId              String
   customFields         CustomFieldValue[]
@@ -484,8 +488,9 @@ model Value {
   licenseType ValueLicenseType?
 
   /// OFFICER_RANK only
-  officerRankImageId     String?
-  officerRankDepartments DepartmentValue[] @relation("officerRankDepartments")
+  officerRankImageId       String?
+  officerRankImageBlurData String?
+  officerRankDepartments   DepartmentValue[] @relation("officerRankDepartments")
 
   // how to clean this up?!
   ethnicityToValue                Citizen[]                     @relation("ethnicityToValue")
@@ -627,6 +632,7 @@ model DepartmentValue {
   defaultOfficerRank    Value?                  @relation("departmentValueToOfficerRank", fields: [defaultOfficerRankId], references: [id])
   defaultOfficerRankId  String?
   isConfidential        Boolean                 @default(false)
+  extraFields           Json?
   Qualification         QualificationValue[]
   CombinedLeoUnit       CombinedLeoUnit[]
   Value                 Value[]                 @relation("officerRankDepartments")
@@ -697,13 +703,15 @@ model Notification {
 
 // bleeter
 model BleeterPost {
-  id        String   @id @default(uuid())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  title     String   @db.VarChar(255)
-  body      String?  @db.Text
-  bodyData  Json?
-  imageId   String?  @db.VarChar(255)
+  id            String  @id @default(uuid())
+  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  title         String  @db.VarChar(255)
+  body          String? @db.Text
+  bodyData      Json?
+  imageId       String? @db.VarChar(255)
+  imageBlurData String? @db.Text
+
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 }
@@ -831,6 +839,7 @@ model Officer {
   suspended                   Boolean                      @default(false)
   badgeNumber                 Int?
   imageId                     String?                      @db.VarChar(255)
+  imageBlurData               String?                      @db.Text
   citizen                     Citizen                      @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId                   String
   user                        User                         @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -893,6 +902,7 @@ model UnitQualification {
 model QualificationValue {
   id                String                 @id @default(uuid())
   imageId           String?
+  imageBlurData     String?                @db.Text
   /// name of the qualification
   valueId           String
   value             Value                  @relation(fields: [valueId], references: [id], onDelete: Cascade)
@@ -1155,6 +1165,8 @@ model Record {
   notes                String?             @db.Text
   release              RecordRelease?      @relation(fields: [releaseId], references: [id])
   releaseId            String?
+  courtEntry           CourtEntry?         @relation(fields: [CourtEntryId], references: [id])
+  CourtEntryId         String?
   RecordLog            RecordLog[]
   ExpungementRequest   ExpungementRequest? @relation(fields: [expungementRequestId], references: [id])
   expungementRequestId String?
@@ -1235,6 +1247,7 @@ model CourtEntry {
   dates           CourtDate[]
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @default(now()) @updatedAt
+  records         Record[]
 }
 
 model CourtDate {
@@ -1263,6 +1276,7 @@ model EmsFdDeputy {
   suspended                 Boolean                @default(false)
   badgeNumber               Int?
   imageId                   String?                @db.VarChar(255)
+  imageBlurData             String?                @db.Text
   citizen                   Citizen                @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId                 String
   user                      User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -1539,6 +1553,7 @@ enum ExpungementRequestStatus {
   ACCEPTED
   DENIED
   PENDING
+  CANCELED
 }
 
 enum VehicleInspectionStatus {
@@ -1628,4 +1643,5 @@ enum Feature {
   TONES
   LICENSE_EXAMS
   CITIZEN_CREATION_RECORDS // See #1188
+  BUREAU_OF_FIREARMS // See #1298
 }

@@ -24,15 +24,14 @@ function makeRoleValues(roles?: DiscordRole[]) {
 }
 
 export function DiscordRolesTab() {
-  const [roles, setRoles] = React.useState<Omit<DiscordRole, "discordRolesId">[]>([]);
+  const { cad } = useAuth();
+  const discordRoles = cad?.discordRoles ?? ({} as DiscordRoles);
+
+  const [roles, setRoles] = React.useState<Omit<DiscordRole, "discordRolesId">[]>(
+    discordRoles.roles ?? [],
+  );
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
-  const { cad } = useAuth();
-
-  const discordRoles = React.useMemo(
-    () => cad?.discordRoles ?? ({} as DiscordRoles),
-    [cad?.discordRoles],
-  );
 
   const INITIAL_VALUES = {
     leoRoles: makeRoleValues(discordRoles.leoRoles),
@@ -102,12 +101,6 @@ export function DiscordRolesTab() {
       setRoles(json);
     }
   }
-
-  React.useEffect(() => {
-    if (discordRoles.roles) {
-      setRoles(discordRoles.roles);
-    }
-  }, [discordRoles]);
 
   return (
     <TabsContent value={SettingsTabs.DiscordRoles}>

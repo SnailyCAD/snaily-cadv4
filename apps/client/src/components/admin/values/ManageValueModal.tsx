@@ -167,6 +167,9 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
         method: "POST",
         data: fd,
         helpers,
+        headers: {
+          "content-type": "multipart/form-data",
+        },
       });
     }
   }

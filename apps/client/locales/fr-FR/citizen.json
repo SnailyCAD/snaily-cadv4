@@ -52,6 +52,8 @@
     "licenseInformation": "Informations sur la licence",
     "officer": "Officier",
     "createWithOfficer": "Créer avec Officier",
+    "previousRecords": "Registres Précédents",
+    "createPreviousRecordsStepDescription": "Ici, vous pouvez éventuellement ajouter les registres antérieurs de ce citoyen. Ceci est utile lorsqu'un citoyen a déjà été arrêté.",
     "alert_markCitizenDeceased": "Êtes-vous sûr de vouloir tuer <span>{citizen}</span> ? Seuls les EMS/FD pourront le faire revivre.",
     "alert_deleteCitizen": "Êtes-vous sûr de vouloir supprimer <span>{citizen}</span> ? Cette action ne peut être annulée."
   },
@@ -97,6 +99,7 @@
     "deleteWeapon": "Supprimer Arme",
     "registeredWeapons": "Armes Enregistrées",
     "successWeaponRegistered": "Enregistrement réussi de l'arme",
+    "bofStatus": "Statut BAF",
     "alert_deleteWeapon": "Êtes-vous sûr de vouloir supprimer cette arme ? Cette action ne peut être annulée."
   },
   "MedicalRecords": {

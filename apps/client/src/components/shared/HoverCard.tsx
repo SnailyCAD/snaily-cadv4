@@ -29,21 +29,23 @@ export function HoverCard({
   return (
     <RHoverCard.Root closeDelay={10} openDelay={0} {...rest}>
       <RHoverCard.Trigger asChild>{trigger}</RHoverCard.Trigger>
-      <RHoverCard.Content
-        side={side}
-        sideOffset={5}
-        {...contentProps}
-        className={classNames(
-          pointerEvents ? "pointer-events-auto" : "pointer-events-none",
-          "bg-gray-200 dark:border dark:border-secondary dark:bg-tertiary shadow-lg w-full max-w-2xl p-3 rounded-md dark:text-white hover-card dropdown-fade !z-10",
-          contentProps?.className,
-        )}
-      >
-        {children}
-        {rest.showArrow ?? true ? (
-          <RHoverCard.Arrow className="fill-current text-white dark:text-tertiary" />
-        ) : null}
-      </RHoverCard.Content>
+      <RHoverCard.Portal className="z-50">
+        <RHoverCard.Content
+          side={side}
+          sideOffset={5}
+          {...contentProps}
+          className={classNames(
+            pointerEvents ? "pointer-events-auto" : "pointer-events-none",
+            "bg-gray-200 dark:border dark:border-secondary dark:bg-tertiary shadow-lg w-full max-w-2xl p-3 rounded-md dark:text-white hover-card dropdown-fade !z-10",
+            contentProps?.className,
+          )}
+        >
+          {children}
+          {rest.showArrow ?? true ? (
+            <RHoverCard.Arrow className="fill-current text-white dark:text-tertiary" />
+          ) : null}
+        </RHoverCard.Content>
+      </RHoverCard.Portal>
     </RHoverCard.Root>
   );
 }

@@ -22,6 +22,7 @@ import { classNames } from "lib/classNames";
 import { ActiveUnitsQualificationsCard } from "components/leo/qualifications/ActiveUnitsQualificationsCard";
 import type { PostDispatchStatusUnmergeUnitById } from "@snailycad/types/api";
 import Image from "next/image";
+import { useDispatchState } from "state/dispatch/dispatch-state";
 
 interface Props {
   officer: Officer | CombinedLeoUnit;
@@ -40,6 +41,7 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
   const { execute } = useFetch();
   const { generateCallsign } = useGenerateCallsign();
   const { hasActiveDispatchers } = useActiveDispatchers();
+  const setDraggingUnit = useDispatchState((state) => state.setDraggingUnit);
 
   const t = useTranslations("Leo");
 
@@ -107,7 +109,12 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
       ]}
     >
       <span>
-        <Draggable canDrag={canDrag} type={DndActions.MoveUnitTo911CallOrIncident} item={officer}>
+        <Draggable
+          onDrag={(isDragging) => setDraggingUnit(isDragging ? "move" : null)}
+          canDrag={canDrag}
+          type={DndActions.MoveUnitTo911CallOrIncident}
+          item={officer}
+        >
           {({ isDragging }) => (
             <ActiveUnitsQualificationsCard canBeOpened={!isDragging} unit={officer}>
               <span

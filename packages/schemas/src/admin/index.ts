@@ -41,6 +41,7 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
   call911InactivityTimeout: z.number().gt(1).optional().nullable(),
   incidentInactivityTimeout: z.number().gt(1).optional().nullable(),
   unitInactivityTimeout: z.number().gt(1).optional().nullable(),
+  activeDispatchersInactivityTimeout: z.number().gt(1).optional().nullable(),
   boloInactivityTimeout: z.number().gt(1).optional().nullable(),
   activeWarrantsInactivityTimeout: z.number().gt(1).optional().nullable(),
   jailTimeScaling: z
@@ -106,6 +107,11 @@ export const BAN_SCHEMA = z.object({
 });
 
 export const UPDATE_USER_SCHEMA = z.object({
+  username: z
+    .string()
+    .min(3)
+    .max(255)
+    .regex(/^([a-z_.\d]+)*[a-z\d]+$/i),
   rank: z.string().min(2).max(255).regex(RANK_REGEX),
   isLeo: z.boolean(),
   isEmsFd: z.boolean(),

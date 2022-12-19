@@ -88,8 +88,7 @@ export default function ImportWeaponsPage({ data }: Props) {
         </div>
 
         <p className="my-2 mt-5 text-neutral-700 dark:text-gray-400 max-w-2xl">
-          Here you can mass-import weapons that are registered to a citizen. In the table below you
-          can also view all registered weapons.
+          {t("importWeaponsDescription")}
         </p>
       </header>
 

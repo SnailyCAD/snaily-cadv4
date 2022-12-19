@@ -124,10 +124,12 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                 const name = `${item.name} ${item.surname}`;
 
                 return (
-                  <Item key={name} textValue={name}>
+                  <Item key={item.id} textValue={name}>
                     <div className="flex items-center">
                       {item.imageId ? (
                         <Image
+                          placeholder={item.imageBlurData ? "blur" : "empty"}
+                          blurDataURL={item.imageBlurData ?? undefined}
                           alt={`${item.name} ${item.surname}`}
                           className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                           draggable={false}
@@ -172,6 +174,8 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                         className="cursor-pointer"
                       >
                         <Image
+                          placeholder={results.imageBlurData ? "blur" : "empty"}
+                          blurDataURL={results.imageBlurData ?? undefined}
                           className="rounded-md w-[100px] h-[100px] object-cover"
                           draggable={false}
                           src={makeImageUrl("citizens", results.imageId)!}

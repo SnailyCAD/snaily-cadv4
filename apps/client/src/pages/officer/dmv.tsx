@@ -75,6 +75,9 @@ export default function Dmv({ data }: Props) {
                   {vehicle.citizen.name} {vehicle.citizen.surname}
                 </span>
               ),
+              dmvStatus: (
+                <Status state={vehicle.dmvStatus}>{vehicle.dmvStatus?.toLowerCase()}</Status>
+              ),
               createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
               plate: vehicle.plate,
               model: vehicle.model.value.value,
@@ -82,9 +85,6 @@ export default function Dmv({ data }: Props) {
               registrationStatus: vehicle.registrationStatus.value,
               insuranceStatus: vehicle.insuranceStatus?.value ?? common("none"),
               vinNumber: vehicle.vinNumber,
-              dmvStatus: (
-                <Status state={vehicle.dmvStatus}>{vehicle.dmvStatus?.toLowerCase()}</Status>
-              ),
               actions: (
                 <>
                   <Button
@@ -113,12 +113,12 @@ export default function Dmv({ data }: Props) {
           columns={[
             { header: vT("plate"), accessorKey: "plate" },
             { header: vT("owner"), accessorKey: "citizen" },
+            { header: vT("dmvStatus"), accessorKey: "dmvStatus" },
             { header: vT("model"), accessorKey: "model" },
             { header: vT("color"), accessorKey: "color" },
             { header: vT("registrationStatus"), accessorKey: "registrationStatus" },
             { header: vT("insuranceStatus"), accessorKey: "insuranceStatus" },
             { header: vT("vinNumber"), accessorKey: "vinNumber" },
-            { header: vT("dmvStatus"), accessorKey: "dmvStatus" },
             { header: common("createdAt"), accessorKey: "createdAt" },
             { header: common("actions"), accessorKey: "actions" },
           ]}

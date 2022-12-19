@@ -23,7 +23,7 @@ import { Infofield } from "components/shared/Infofield";
 import { Title } from "components/shared/Title";
 import { ModalIds } from "types/ModalIds";
 import { FullDate } from "components/shared/FullDate";
-import { RecordsTab } from "components/leo/modals/NameSearchModal/tabs/RecordsTab";
+import { RecordsTab } from "components/leo/modals/NameSearchModal/tabs/records-tab";
 import { classNames } from "lib/classNames";
 import type { DeleteCitizenByIdData } from "@snailycad/types/api";
 import Image from "next/image";
@@ -33,7 +33,7 @@ const CitizenImageModal = dynamic(
   async () => (await import("components/citizen/modals/CitizenImageModal")).CitizenImageModal,
 );
 const WeaponsCard = dynamic(
-  async () => (await import("components/citizen/weapons/WeaponsCard")).WeaponsCard,
+  async () => (await import("components/citizen/weapons/weapons-card")).WeaponsCard,
 );
 
 export default function CitizenId() {
@@ -122,6 +122,8 @@ export default function CitizenId() {
               aria-label="View citizen image"
             >
               <Image
+                placeholder={citizen.imageBlurData ? "blur" : "empty"}
+                blurDataURL={citizen.imageBlurData ?? undefined}
                 alt={`${citizen.name} ${citizen.surname}`}
                 className="rounded-md w-[150px] h-[150px] object-cover"
                 draggable={false}

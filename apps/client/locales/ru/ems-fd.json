@@ -18,6 +18,7 @@
     "declareDead": "Объявить мёртвым",
     "declareAlive": "Объявить живым",
     "myDeputyLogs": "Журнал сотрудников",
+    "emergencyVehicle": "Транспорт экстренной службы",
     "alert_deleteDeputy": "Вы уверены, что хотите удалить <span>{deputy}</span>? Это действие необратимо."
   }
 }

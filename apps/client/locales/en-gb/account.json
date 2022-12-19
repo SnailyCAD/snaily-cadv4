@@ -46,7 +46,13 @@
     "disconnectSteamText": "This will remove the ability to login via Steam.",
     "connectSteamText": "This will add the ability to login via Steam.",
     "locale": "Locale",
-    "viewMyPermissions": "View my permissions"
+    "viewMyPermissions": "View my permissions",
+    "speech": "Speech",
+    "speechVoice": "Speech Voice",
+    "otherSounds": "Other Sounds",
+    "unavailableSounds": "Unavailable Sounds",
+    "unavailableSoundsMessage": "These sounds are unavailable. They must be added by an admin.",
+    "userApiTokenDescription": "This token can be used to communicate with SnailyCAD's API."
   },
   "Notifications": {
     "CITIZEN_DELETED": "<span>{citizen}</span> was deleted. Reason: {reason}"

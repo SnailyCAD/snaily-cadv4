@@ -340,7 +340,10 @@ export class Calls911Controller {
     });
 
     const normalizedCall = officerOrDeputyToUnit(updated);
-    this.socket.emitUpdate911Call(normalizedCall);
+    this.socket.emitUpdate911Call({
+      ...normalizedCall,
+      notifyAssignedUnits: data.notifyAssignedUnits,
+    });
 
     return normalizedCall;
   }
@@ -627,7 +630,7 @@ export class Calls911Controller {
 
   // creates the webhook structure that will get sent to Discord.
   private createWebhookData(call: Call911): { embeds: APIEmbed[] } {
-    const caller = call.name;
+    const caller = call.name || "Unknown";
     const location = `${call.location} ${call.postal ? call.postal : ""}`;
     const description = call.description || "Could not render description via Discord";
 

@@ -14,7 +14,7 @@ import { getObjLength, isEmpty, requestAll, yesOrNoText } from "lib/utils";
 import dynamic from "next/dynamic";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { useTableDataOfType, useTableHeadersOfType } from "lib/admin/values/values";
-import { OptionsDropdown } from "components/admin/values/import/OptionsDropdown";
+import { OptionsDropdown } from "components/admin/values/import/options-dropdown";
 import { Title } from "components/shared/Title";
 import { AlertModal } from "components/modal/AlertModal";
 import { ModalIds } from "types/ModalIds";
@@ -37,15 +37,25 @@ import {
 import type { AccessorKeyColumnDef } from "@tanstack/react-table";
 import { getSelectedTableRows } from "hooks/shared/table/use-table-state";
 import { SearchArea } from "components/shared/search/search-area";
-import { AlertDeleteValueModal } from "components/admin/values/alert-delete-value-modal";
+import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
+import { toastMessage } from "lib/toastMessage";
 
-const ManageValueModal = dynamic(async () => {
-  return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
-});
+const ManageValueModal = dynamic(
+  async () => (await import("components/admin/values/ManageValueModal")).ManageValueModal,
+  { ssr: false },
+);
 
-const ImportValuesModal = dynamic(async () => {
-  return (await import("components/admin/values/import/ImportValuesModal")).ImportValuesModal;
-});
+const AlertDeleteValueModal = dynamic(
+  async () =>
+    (await import("components/admin/values/alert-delete-value-modal")).AlertDeleteValueModal,
+  { ssr: false },
+);
+
+const ImportValuesModal = dynamic(
+  async () =>
+    (await import("components/admin/values/import/import-values-modal")).ImportValuesModal,
+  { ssr: false },
+);
 
 interface Props {
   pathValues: GetValuesData[number];
@@ -55,6 +65,20 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
   const router = useRouter();
   const path = (router.query.path as string).toUpperCase().replace("-", "_");
   const routeData = valueRoutes.find((v) => v.type === type);
+
+  const pathsRecord: Partial<Record<ValueType, ValueType[]>> = {
+    [ValueType.DEPARTMENT]: [ValueType.OFFICER_RANK],
+    [ValueType.DIVISION]: [ValueType.DEPARTMENT],
+    [ValueType.QUALIFICATION]: [ValueType.DEPARTMENT],
+    [ValueType.CODES_10]: [ValueType.DEPARTMENT],
+    [ValueType.OFFICER_RANK]: [ValueType.DEPARTMENT],
+    [ValueType.EMERGENCY_VEHICLE]: [ValueType.DEPARTMENT, ValueType.DIVISION],
+  };
+
+  useLoadValuesClientSide({
+    // @ts-expect-error - this is fine
+    valueTypes: pathsRecord[type] ? pathsRecord[type] : [],
+  });
 
   const [search, setSearch] = React.useState("");
   const asyncTable = useAsyncTable({
@@ -140,11 +164,20 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
       data: selectedRows,
     });
 
-    if (json && typeof json === "boolean") {
-      asyncTable.remove(...selectedRows);
+    if (json) {
+      asyncTable.remove(...selectedRows.filter((id) => !json.failedIds.includes(id)));
 
       tableState.setRowSelection({});
       closeModal(ModalIds.AlertDeleteSelectedValues);
+
+      toastMessage({
+        title: "Delete Values",
+        icon: "info",
+        message: t("deletedSelectedValues", {
+          failed: json.failedIds.length,
+          deleted: json.success,
+        }),
+      });
     }
   }
 
@@ -287,25 +320,21 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
 export const getServerSideProps: GetServerSideProps = async ({ locale, req, query }) => {
   const path = (query.path as string).replace("-", "_") as Lowercase<ValueType>;
 
-  const pathsRecord: Partial<Record<Lowercase<ValueType>, string>> = {
-    department: "officer_rank",
-    division: "department",
-    qualification: "department",
-    codes_10: "department",
-    officer_rank: "department",
-    emergency_vehicle: "department,division",
-  };
-
-  const paths = pathsRecord[path];
-  const pathsStr = paths ? `?paths=${paths}&includeAll=false` : "?includeAll=false";
-
   const user = await getSessionUser(req);
-  const [values] = await requestAll(req, [[`/admin/values/${path}${pathsStr}`, []]]);
+  const [pathValues] = await requestAll(req, [
+    [
+      `/admin/values/${path}?includeAll=false`,
+      {
+        totalCount: 0,
+        values: [],
+        type: path.toUpperCase(),
+      },
+    ],
+  ]);
 
   return {
     props: {
-      values,
-      pathValues: values?.[0] ?? { type: path, values: [] },
+      pathValues: pathValues?.[0] ?? { type: path, values: [] },
       session: user,
       messages: {
         ...(await getTranslations(["admin", "values", "common"], user?.locale ?? locale)),

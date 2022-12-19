@@ -4,14 +4,21 @@ import { EMS_FD_DEPUTY_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas"
 import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
-import { type MiscCadSettings, ShouldDoType, type User, CadFeature, Feature } from "@prisma/client";
+import {
+  type cad as DBCad,
+  type MiscCadSettings,
+  ShouldDoType,
+  type User,
+  CadFeature,
+  Feature,
+} from "@prisma/client";
 import type { cad, EmsFdDeputy } from "@snailycad/types";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { IsAuth } from "middlewares/IsAuth";
 import { ActiveDeputy } from "middlewares/ActiveDeputy";
 import fs from "node:fs/promises";
 import { unitProperties } from "lib/leo/activeOfficer";
-import { getImageWebPPath, validateImgurURL } from "utils/image";
+import { getImageWebPPath, validateImgurURL } from "utils/images/image";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
@@ -25,11 +32,12 @@ import { Socket } from "services/SocketService";
 import type * as APITypes from "@snailycad/types/api";
 import { isFeatureEnabled } from "lib/cad";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
+import { handlePanicButtonPressed } from "lib/leo/send-panic-button-webhook";
+import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
-@IsFeatureEnabled({ feature: Feature.PANIC_BUTTON })
 export class EmsFdController {
   private socket: Socket;
   constructor(socket: Socket) {
@@ -151,6 +159,8 @@ export class EmsFdController {
     );
 
     const incremental = await findNextAvailableIncremental({ type: "ems-fd" });
+    const validatedImageURL = validateImgurURL(data.image);
+
     const deputy = await prisma.emsFdDeputy.create({
       data: {
         callsign: data.callsign,
@@ -164,7 +174,8 @@ export class EmsFdController {
         divisionId: data.division || null,
         badgeNumber: data.badgeNumber,
         citizenId: citizen.id,
-        imageId: validateImgurURL(data.image),
+        imageId: validatedImageURL,
+        imageBlurData: await generateBlurPlaceholder(validatedImageURL),
         incremental,
         whitelistStatusId,
       },
@@ -454,6 +465,7 @@ export class EmsFdController {
   }
 
   @Post("/panic-button")
+  @IsFeatureEnabled({ feature: Feature.PANIC_BUTTON })
   @Description("Set the panic button for an ems-fd deputy by their id")
   @UsePermissions({
     fallback: (u) => u.isEmsFd,
@@ -461,6 +473,7 @@ export class EmsFdController {
   })
   async panicButton(
     @Context("user") user: User,
+    @Context("cad") cad: DBCad & { miscCadSettings: MiscCadSettings },
     @BodyParams("deputyId") deputyId: string,
   ): Promise<APITypes.PostEmsFdTogglePanicButtonData> {
     let deputy = await prisma.emsFdDeputy.findFirst({
@@ -517,7 +530,13 @@ export class EmsFdController {
     }
 
     await this.socket.emitUpdateDeputyStatus();
-    this.socket.emitPanicButtonLeo(deputy, panicType);
+    handlePanicButtonPressed({
+      force: panicType === "ON",
+      cad,
+      socket: this.socket,
+      status: deputy.status,
+      unit: deputy,
+    });
 
     return deputy;
   }
@@ -554,13 +573,24 @@ export class EmsFdController {
     const image = await getImageWebPPath({
       buffer: file.buffer,
       pathType: "units",
-      id: deputy.id,
+      id: `${deputy.id}-${file.originalname.split(".")[0]}`,
     });
+
+    const previousImage = deputy.imageId
+      ? `${process.cwd()}/public/units/${deputy.imageId}`
+      : undefined;
+
+    if (previousImage) {
+      await fs.rm(previousImage, { force: true });
+    }
 
     const [data] = await Promise.all([
       prisma.emsFdDeputy.update({
         where: { id: deputy.id },
-        data: { imageId: image.fileName },
+        data: {
+          imageId: image.fileName,
+          imageBlurData: await generateBlurPlaceholder(image),
+        },
         select: { imageId: true },
       }),
       fs.writeFile(image.path, image.buffer),

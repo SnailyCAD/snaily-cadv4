@@ -4,9 +4,9 @@ import { Server } from "./server";
 import { getCADVersion } from "@snailycad/utils/version";
 import * as Sentry from "@sentry/node";
 import * as Tracing from "@sentry/tracing";
-import { ProfilingIntegration } from "@sentry/profiling-node";
 import { prisma } from "lib/prisma";
 import { importProviders } from "@tsed/components-scan";
+import { registerDiscordRolesMetadata } from "lib/discord/register-metadata";
 
 Sentry.init({
   dsn: "https://308dd96b826c4e38a814fc9bae681687@o518232.ingest.sentry.io/6553288",
@@ -19,12 +19,17 @@ Sentry.init({
   integrations: [
     new Sentry.Integrations.Http({ tracing: true }),
     new Tracing.Integrations.Prisma({ client: prisma }),
-    new ProfilingIntegration(),
   ],
   tracesSampleRate: 1.0,
 });
 
 const rootDir = __dirname;
+
+try {
+  registerDiscordRolesMetadata();
+} catch {
+  // empty
+}
 
 async function bootstrap() {
   try {

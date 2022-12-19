@@ -1,8 +1,8 @@
-import * as React from "react";
 import type { ValueType } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { useValues } from "context/ValuesContext";
 import type { GetValuesData } from "@snailycad/types/api";
+import { useQuery } from "@tanstack/react-query";
 
 interface Options {
   valueTypes: ValueType[];
@@ -13,11 +13,15 @@ interface Options {
  * **note:** can only be used in a `pages/` file
  */
 export function useLoadValuesClientSide(options: Options) {
-  const fetched = React.useRef<boolean>(false);
   const { state, execute } = useFetch();
   const { setValues } = useValues();
+  const isEnabled = options.enabled ?? true;
 
-  const enabled = options.enabled ?? true;
+  useQuery({
+    queryKey: ["valueTypes", options.valueTypes],
+    queryFn: fetchValues,
+    enabled: isEnabled,
+  });
 
   function transformValueTypesToString() {
     return options.valueTypes
@@ -26,11 +30,9 @@ export function useLoadValuesClientSide(options: Options) {
       .join(",");
   }
 
-  const fetchValues = React.useCallback(async () => {
-    if (!enabled) return;
-
+  async function fetchValues() {
     if (options.valueTypes.length <= 0) {
-      throw new Error("Must provide at least 1 value type");
+      return [];
     }
 
     const [first, ...rest] = options.valueTypes;
@@ -49,15 +51,11 @@ export function useLoadValuesClientSide(options: Options) {
 
     if (Array.isArray(json)) {
       setValues((prev) => [...prev, ...json]);
+      return json;
     }
-  }, [options.valueTypes, enabled]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  React.useEffect(() => {
-    if (!fetched.current) {
-      fetchValues();
-      fetched.current = true;
-    }
-  }, [fetchValues]);
+    return [];
+  }
 
   return { isLoading: state === "loading" };
 }

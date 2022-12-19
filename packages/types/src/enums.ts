@@ -39,6 +39,7 @@ export const Feature = {
   TONES: "TONES",
   LICENSE_EXAMS: "LICENSE_EXAMS",
   CITIZEN_CREATION_RECORDS: "CITIZEN_CREATION_RECORDS",
+  BUREAU_OF_FIREARMS: "BUREAU_OF_FIREARMS",
 } as const;
 
 export type Feature = typeof Feature[keyof typeof Feature];
@@ -237,6 +238,7 @@ export const ExpungementRequestStatus = {
   ACCEPTED: "ACCEPTED",
   DENIED: "DENIED",
   PENDING: "PENDING",
+  CANCELED: "CANCELED",
 } as const;
 
 export type ExpungementRequestStatus =

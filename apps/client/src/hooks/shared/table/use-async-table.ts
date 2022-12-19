@@ -1,12 +1,12 @@
 import * as React from "react";
 import useFetch from "lib/useFetch";
 import { useDebounce } from "react-use";
-import { useMounted } from "@casper124578/useful";
-import { AsyncListData, useAsyncList } from "@react-stately/data";
+import { useQuery, QueryFunctionContext } from "@tanstack/react-query";
+import { useList } from "./use-list";
 
 interface FetchOptions {
-  pageSize: number;
-  pageIndex: number;
+  pageSize?: number;
+  pageIndex?: number;
   path: string;
   requireFilterText?: boolean;
   onResponse(json: unknown): { data: any; totalCount: number };
@@ -19,89 +19,93 @@ interface Options<T> {
   totalCount: number;
   initialData?: T[];
   scrollToTopOnDataChange?: boolean;
-  fetchOptions: Pick<FetchOptions, "onResponse" | "path" | "requireFilterText">;
+  fetchOptions: FetchOptions;
+  getKey?(item: T): React.Key;
 }
 
 export function useAsyncTable<T>(options: Options<T>) {
-  const [totalDataCount, setTotalCount] = React.useState(options.totalCount);
-  const { state: loadingState, execute } = useFetch();
-  const isMounted = useMounted();
   const scrollToTopOnDataChange = options.scrollToTopOnDataChange ?? true;
 
-  const asyncList = useAsyncList<T>({
-    initialFilterText: options.search,
-    async load(state) {
-      const sortDescriptor = state.sortDescriptor as Record<string, any>;
-      const skip = Number(sortDescriptor.pageIndex * sortDescriptor.pageSize) || 0;
+  const list = useList<T>({ getKey: options.getKey, initialData: options.initialData ?? [] });
+  const { state: loadingState, execute } = useFetch();
 
-      if (options.fetchOptions.requireFilterText && !sortDescriptor.query) {
-        return { items: options.initialData ?? [] };
-      }
+  const [debouncedSearch, setDebouncedSearch] = React.useState(options.search);
+  const [filters, setFilters] = React.useState<Record<string, string> | null>(null);
+  const [totalDataCount, setTotalCount] = React.useState(options.totalCount);
+  const [paginationOptions, setPagination] = React.useState({
+    pageSize: options.fetchOptions.pageSize ?? 35,
+    pageIndex: options.fetchOptions.pageIndex ?? 0,
+  });
 
-      if (!isMounted) {
-        return { items: options.initialData ?? [] };
-      }
-
-      // page size is not supported on any of the API endpoints
-      delete sortDescriptor.pageSize;
-
-      const response = await execute({
-        path: options.fetchOptions.path,
-        params: {
-          ...sortDescriptor,
-          query: sortDescriptor.query,
-          skip,
-        },
-      });
-
-      const json = options.fetchOptions.onResponse(response.json);
-      setTotalCount(json.totalCount);
-
-      if (scrollToTopOnDataChange) {
-        window.scrollTo({ behavior: "smooth", top: 0 });
-      }
-
-      return {
-        items: json.data ?? [],
-      };
-    },
-  }) as AsyncListData<T> & { sortDescriptor?: any; sort(descriptor: any): void };
+  useQuery({
+    initialData: options.initialData ?? [],
+    queryFn: fetchData,
+    queryKey: [paginationOptions.pageIndex, debouncedSearch, filters],
+  });
 
   React.useEffect(() => {
-    // when the initial data changes, we need to update the async list data
-    asyncList.reload();
-  }, [options.initialData]); // eslint-disable-line
+    setTotalCount(options.totalCount);
+    setPagination({
+      pageSize: options.fetchOptions.pageSize ?? 35,
+      pageIndex: options.fetchOptions.pageIndex ?? 0,
+    });
+    list.setItems(options.initialData ?? []);
+  }, [options.initialData]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  useDebounce(
-    () => {
-      if (typeof options.search !== "undefined") {
-        asyncList.sort({ ...asyncList.sortDescriptor, pageIndex: 0, query: options.search } as any);
+  async function fetchData(context: QueryFunctionContext<any>) {
+    const [pageIndex, search, _filters] = context.queryKey;
+    const path = options.fetchOptions.path;
+    const skip = Number(pageIndex * paginationOptions.pageSize) || 0;
+    const filters = _filters || {};
+
+    const searchParams = new URLSearchParams();
+
+    filters.query = search;
+    filters.skip = skip;
+
+    for (const filterKey in filters) {
+      const filterValue = filters[filterKey];
+
+      if (typeof filterValue !== "undefined" && filterValue !== null) {
+        searchParams.append(filterKey, filterValue);
       }
-    },
-    200,
-    [options.search],
-  );
+    }
 
-  const handlePageChange = React.useCallback(
-    async (fetchOptions: Omit<FetchOptions, "path" | "onResponse">) => {
-      if (options.disabled) return;
+    const { json } = await execute({ path, params: Object.fromEntries(searchParams) });
+    const toReturnData = options.fetchOptions.onResponse(json);
+    setTotalCount(toReturnData.totalCount);
 
-      asyncList.sort({ ...asyncList.sortDescriptor, ...fetchOptions });
-    },
-    [isMounted, asyncList.sortDescriptor, options.disabled, options.fetchOptions], // eslint-disable-line
-  );
+    if (scrollToTopOnDataChange) {
+      window.scrollTo({ behavior: "smooth", top: 0 });
+    }
+
+    if (scrollToTopOnDataChange) {
+      window.scrollTo({ behavior: "smooth", top: 0 });
+    }
+
+    if (Array.isArray(toReturnData.data)) {
+      return list.setItems(toReturnData.data);
+    }
+
+    return list.setItems([]);
+  }
+
+  useDebounce(() => setDebouncedSearch(options.search), 200, [options.search]);
 
   const pagination = {
     /** indicates whether data comes from the useAsyncTable hook. */
     __ASYNC_TABLE__: true,
-    onPageChange: handlePageChange,
     totalDataCount,
     isLoading: loadingState === "loading",
-  };
+    setPagination,
+    ...paginationOptions,
+  } as const;
 
   return {
-    ...asyncList,
+    ...list,
+    filters,
+    setFilters,
+    isLoading: loadingState === "loading",
     pagination,
-    items: isMounted ? asyncList.items : options.initialData ?? [],
   };
 }

@@ -44,6 +44,7 @@ function useGetUserOfficers() {
 export default function MyOfficersLogs({ logs: data }: Props) {
   const asyncTable = useAsyncTable({
     fetchOptions: {
+      pageSize: 25,
       onResponse: (json: GetMyOfficersLogsData) => ({
         data: json.logs,
         totalCount: json.totalCount,
@@ -81,12 +82,12 @@ export default function MyOfficersLogs({ logs: data }: Props) {
               <Select
                 isClearable
                 onChange={(e) => {
-                  asyncTable.sort({
-                    ...asyncTable.sortDescriptor,
+                  asyncTable.setFilters((prev) => ({
+                    ...prev,
                     officerId: e.target.value,
-                  });
+                  }));
                 }}
-                value={asyncTable.sortDescriptor?.officerId}
+                value={asyncTable.filters?.officerId ?? null}
                 values={Object.entries(officerNames).map(([id, name]) => ({
                   label: name,
                   value: id,

@@ -72,6 +72,7 @@ export default function ManageCitizens(props: Props) {
   }
 
   const INITIAL_VALUES = {
+    username: user.username,
     rank: user.rank,
     isDispatch: user.isDispatch,
     isLeo: user.isLeo,
@@ -108,6 +109,14 @@ export default function ManageCitizens(props: Props) {
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ setFieldValue, isValid, values, errors }) => (
             <Form className="p-4 rounded-md dark:border card">
+              <TextField
+                label="Username"
+                name="username"
+                onChange={(value) => setFieldValue("username", value)}
+                value={values.username}
+                errorMessage={errors.username}
+              />
+
               <SelectField
                 isDisabled={isRankDisabled}
                 errorMessage={errors.rank}

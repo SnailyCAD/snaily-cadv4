@@ -76,8 +76,7 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
           <Title className="!mb-0">{t("MANAGE_CUSTOM_ROLES")}</Title>
 
           <p className="max-w-2xl mt-2 text-neutral-700 dark:text-gray-400">
-            A list of custom roles, these roles can be given to users instead of giving a user
-            permissions one by one.
+            {t("manageCustomRolesDescription")}
           </p>
         </div>
 
@@ -157,14 +156,15 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+  const user = await getSessionUser(req);
   const [customRoles] = await requestAll(req, [["/admin/manage/custom-roles", []]]);
 
   return {
     props: {
       customRoles,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["admin", "values", "common"], locale)),
+        ...(await getTranslations(["admin", "values", "common"], user?.locale ?? locale)),
       },
     },
   };

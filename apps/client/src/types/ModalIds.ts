@@ -24,6 +24,7 @@ export const enum ModalIds {
   ManageUnitCallsign = "ManageUnitCallsignModal",
   ManageCustomRole = "ManageCustomRoleModal",
   ManageRoles = "ManageRolesModal",
+  PruneUsers = "PruneUsersModal",
 
   ManageTowCall = "ManageTowCallModal",
   AssignToTowCall = "AssignToTowCallModal",
@@ -132,4 +133,5 @@ export const enum ModalIds {
   AlertDeleteCustomRole = "AlertDeleteCustomRoleModal",
   AlertDeleteCourthousePost = "AlertDeleteCourthousePostModal",
   AlertDisableUser2FA = "AlertDisableUser2FAModal",
+  AlertCancelExpungementRequest = "AlertCancelExpungementRequest",
 }

@@ -24,27 +24,27 @@ export function useCitizensList(options: UseCitizensListOptions) {
 
   const PAGE_COUNT = Math.round(asyncTable.pagination.totalDataCount / MAX_CITIZENS_PER_PAGE);
 
-  async function nextPage() {
+  function nextPage() {
     const newPageIndex = currentPage + 1;
-    await asyncTable.pagination.onPageChange({
+    asyncTable.pagination.setPagination({
       pageSize: MAX_CITIZENS_PER_PAGE,
       pageIndex: newPageIndex,
     });
     setCurrentPage(newPageIndex);
   }
 
-  async function previousPage() {
+  function previousPage() {
     const newPageIndex = currentPage - 1;
-    await asyncTable.pagination.onPageChange({
+    asyncTable.pagination.setPagination({
       pageSize: MAX_CITIZENS_PER_PAGE,
       pageIndex: newPageIndex,
     });
     setCurrentPage(newPageIndex);
   }
 
-  async function gotoPage(pageIndex: number) {
+  function gotoPage(pageIndex: number) {
     const newPageIndex = pageIndex;
-    await asyncTable.pagination.onPageChange({
+    asyncTable.pagination.setPagination({
       pageSize: MAX_CITIZENS_PER_PAGE,
       pageIndex: newPageIndex,
     });
@@ -53,14 +53,14 @@ export function useCitizensList(options: UseCitizensListOptions) {
 
   return {
     getState() {
-      return { pagination: { pageIndex: currentPage } as any };
+      return { pagination: { pageIndex: currentPage } };
     },
     getCanNextPage: () => currentPage < PAGE_COUNT - 1,
     getCanPreviousPage: () => currentPage >= 1,
-    setPageIndex: gotoPage as any,
+    setPageIndex: gotoPage,
     getPageCount: () => PAGE_COUNT,
-    nextPage: nextPage as any,
-    previousPage: previousPage as any,
+    nextPage,
+    previousPage,
 
     pageCount: PAGE_COUNT,
     pageOptions: !PAGE_COUNT ? new Array(1) : new Array(PAGE_COUNT),

@@ -99,6 +99,9 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
         method: "POST",
         data: fd,
         helpers,
+        headers: {
+          "content-type": "multipart/form-data",
+        },
       });
     }
 

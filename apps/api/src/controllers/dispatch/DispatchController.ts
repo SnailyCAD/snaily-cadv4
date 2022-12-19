@@ -49,6 +49,11 @@ export class DispatchController {
       "unitInactivityTimeout",
       "lastStatusChangeTimestamp",
     );
+    const dispatcherInactivityTimeout = getInactivityFilter(
+      cad,
+      "activeDispatchersInactivityTimeout",
+      "updatedAt",
+    );
 
     if (unitsInactivityFilter) {
       setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp);
@@ -64,6 +69,7 @@ export class DispatchController {
     });
 
     const activeDispatchers = await prisma.activeDispatchers.findMany({
+      where: dispatcherInactivityTimeout?.filter,
       include: {
         user: {
           select: { id: true, username: true, rank: true, isLeo: true, isEmsFd: true },
@@ -74,6 +80,10 @@ export class DispatchController {
     const incidentInactivityFilter = getInactivityFilter(cad, "incidentInactivityTimeout");
     if (incidentInactivityFilter) {
       this.endInactiveIncidents(incidentInactivityFilter.updatedAt);
+    }
+
+    if (dispatcherInactivityTimeout) {
+      this.endInactiveDispatchers(dispatcherInactivityTimeout.updatedAt);
     }
 
     const activeIncidents = await prisma.leoIncident.findMany({
@@ -374,6 +384,18 @@ export class DispatchController {
             }),
           ),
         );
+      }),
+    );
+  }
+
+  private async endInactiveDispatchers(updatedAt: Date) {
+    const activeDispatchers = await prisma.activeDispatchers.findMany({
+      where: { updatedAt: { not: { gte: updatedAt } } },
+    });
+
+    await Promise.all(
+      activeDispatchers.map(async (dispatcher) => {
+        await prisma.activeDispatchers.delete({ where: { id: dispatcher.id } });
       }),
     );
   }

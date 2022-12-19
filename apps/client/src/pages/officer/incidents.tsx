@@ -37,7 +37,7 @@ interface Props extends GetDispatchData {
 }
 
 const ManageIncidentModal = dynamic(async () => {
-  return (await import("components/leo/incidents/ManageIncidentModal")).ManageIncidentModal;
+  return (await import("components/leo/incidents/manage-incident-modal")).ManageIncidentModal;
 });
 
 const AlertModal = dynamic(async () => {

@@ -51,6 +51,9 @@ export default function EditCitizen() {
         method: "POST",
         data: formData,
         helpers,
+        headers: {
+          "content-type": "multipart/form-data",
+        },
       });
     }
 

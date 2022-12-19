@@ -15,6 +15,7 @@ export function withChecklists(editor: SlateEditor) {
 
       if (match) {
         const [, path] = match;
+
         const start = Editor.start(editor, path);
 
         if (Point.equals(selection.anchor, start)) {

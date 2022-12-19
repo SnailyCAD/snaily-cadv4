@@ -6,7 +6,7 @@ import { Cookie } from "@snailycad/config";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { setCookie } from "utils/setCookie";
-import { cad, ShouldDoType, StatusViewMode, TableActionsAlignment } from "@prisma/client";
+import { cad, Rank, ShouldDoType, StatusViewMode, TableActionsAlignment } from "@prisma/client";
 import { NotFound } from "@tsed/exceptions";
 import { CHANGE_PASSWORD_SCHEMA, CHANGE_USER_SCHEMA } from "@snailycad/schemas";
 import { compareSync, genSaltSync, hashSync } from "bcrypt";
@@ -103,6 +103,10 @@ export class UserController {
   @Delete("/")
   @Description("Delete the authenticated user's account")
   async deleteAuthUser(@Context("user") user: User) {
+    if (user.rank === Rank.OWNER) {
+      throw new ExtendedBadRequest({ rank: "cannotDeleteOwner" });
+    }
+
     await prisma.user.delete({
       where: {
         id: user.id,

@@ -59,7 +59,8 @@
     "location": "Localisation",
     "startTyping": "Commencez à écrire...",
     "searching": "Recherche...",
-    "information": "Information"
+    "information": "Information",
+    "showingXResults": "Affichage de <span>{amount}</span> résultat(s)"
   },
   "Nav": {
     "citizen": "Citoyen",
@@ -90,11 +91,12 @@
     "callHistory": "Historique des Appels",
     "citizenLogs": "Logs des citoyens",
     "courthouse": "Tribunal",
-    "dlExams": "Examens du permis de conduire",
+    "licenseExams": "Examens de permis",
     "dmv": "Service du Permis de Conduire et des Papiers du Véhicule",
     "penalCodes": "Code Pénal",
     "myDeputyLogs": "Mes Logs (EMS/FD)",
-    "whatsNew": "Nouveautés"
+    "whatsNew": "Nouveautés",
+    "bureauOfFirearms": "Bureau des Armes à Feu"
   },
   "Errors": {
     "unknown": "Une erreur inattendue s'est produite",
@@ -164,6 +166,7 @@
     "noActiveOfficer": "Vous n'avez pas d'officer actif pour le moment, veuillez retournez en service.",
     "socialSecurityNumberTaken": "Ce numéro de sécurité social est déjà utilisé.",
     "citizenNotAllowedToEditLicenses": "Vous n'avez pas la permission pour éditer vos licences. Veuillez contacter un officier.",
-    "vehicleIsImpounded": "Ce véhicule est saisi, vous ne pouvez l'éditer ou le supprimer tant qu'il n'est pas libéré."
+    "vehicleIsImpounded": "Ce véhicule est saisi, vous ne pouvez l'éditer ou le supprimer tant qu'il n'est pas libéré.",
+    "featureNotEnabled": "Cette fonctionnalité n'est pas activée. {{feature}}"
   }
 }
