@@ -60,5 +60,15 @@
     "alert_deleteCallEvent": "Jste si jisti, že chcete smazat tuto událost? Toto nelze vrátit zpět.",
     "alert_end911Call": "Jste si jisti, že chcete ukončit hovor?",
     "alert_endTowCall": "Jste si jisti, že chcete ukončit hovor?"
+  },
+  "Events": {
+    "unitAssignedToCall": "<span>{unit}</span> byl přidán k události.",
+    "unitUnassignedToCall": "<span>{unit}</span> byl odebrán z události.",
+    "unitsAssignedToCall": "<span>{unit}</span> byl přidán k události.",
+    "unitsUnassignedToCall": "<span>{unit}</span> byl odebrán z události.",
+    "unitArrivedOnScene": "<span>{unit}</span> dorazil na událost.",
+    "unitPressedPanicButton": "<span>{unit}</span> použil tlačítko nouze!",
+    "unitEnRoute": "<span>{unit}</span> jede na místo události.",
+    "unitOnScene": "<span>{unit}</span> je na místě události."
   }
 }

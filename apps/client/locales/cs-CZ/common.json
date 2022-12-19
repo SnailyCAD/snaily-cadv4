@@ -153,6 +153,11 @@
     "updateAvailableInfo": "K dispozici je nová aktualizace. Aktualizujte prosím svůj SnailyCAD, abyste mohli využívat nejnovější funkce a opravy chyb. Kliknutím získáte další informace.",
     "serialNumberInUse": "Sériové číslo se již používá.",
     "vinNumberInUse": "VIN se již používá",
-    "alreadyHasPrimaryUnit": "Tato událost již má primární hlídku."
+    "alreadyHasPrimaryUnit": "Tato událost již má primární hlídku.",
+    "noActiveOfficer": "Nemáš žádného policistu ve službě, jdi nejdříve do služby.",
+    "socialSecurityNumberTaken": "Toto číslo je již používáno.",
+    "citizenNotAllowedToEditLicenses": "Nemůžeš si upravovat svoje průkazy. Toto může upravovat pouze PČR",
+    "vehicleIsImpounded": "Toto vozidlo bylo odtaženo, nemůžeš s ním nic dělat dokud ho nedostaneš zpět.",
+    "featureNotEnabled": "Tato funkce je vypnutá. ({feature})"
   }
 }
