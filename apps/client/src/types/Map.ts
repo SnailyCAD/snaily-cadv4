@@ -7,9 +7,10 @@ export interface Player {
   "License Plate"?: string;
   Location: string;
   pos: XYZ | null;
-  identifier: string;
+  identifiers: { steamId: string | null; discordId: string | null };
   icon: string;
   name: string;
+  playerId: number;
 }
 
 export interface PlayerDataEvent {

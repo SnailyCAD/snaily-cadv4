@@ -154,7 +154,15 @@ export type PostDispatchStatusUnmergeUnitById = boolean;
  */
 export type GetDispatchPlayerBySteamIdData = Pick<
   Types.User,
-  "username" | "id" | "isEmsFd" | "isLeo" | "isDispatch" | "permissions" | "rank" | "steamId"
+  | "username"
+  | "id"
+  | "isEmsFd"
+  | "isLeo"
+  | "isDispatch"
+  | "permissions"
+  | "rank"
+  | "steamId"
+  | "discordId"
 > & {
   unit: Types.Officer | Types.CombinedLeoUnit | Types.EmsFdDeputy | null;
 };
