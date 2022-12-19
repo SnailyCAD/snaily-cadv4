@@ -71,10 +71,10 @@ export function useMapPlayers() {
 
         if (existing) {
           const omittedExisting = omit(existing, [
-            "License Plate",
-            "Vehicle",
-            "Location",
-            "Weapon",
+            "licensePlate",
+            "vehicle",
+            "location",
+            "weapon",
             "icon",
             "pos",
           ]);
@@ -219,7 +219,7 @@ function getCADURL(cad: cad | null) {
 
 function makeSocketConnection(url: string) {
   try {
-    const _url = url.replace(/wss?:\/\//, "http://");
+    const _url = url.replace(/ws:\/\//, "http://").replace(/wss:\/\//, "https://");
     return io(_url);
   } catch (error) {
     const isSecurityError = error instanceof Error && error.name === "SecurityError";
