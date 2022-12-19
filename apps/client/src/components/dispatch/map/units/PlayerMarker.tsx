@@ -78,7 +78,6 @@ export function PlayerMarker({ player, handleToggle }: Props) {
     ? playerDiscordId === user?.discordId
     : false;
 
-  console.log({ player });
 
   if (showUnitsOnly) {
     if (!hasUnit || !isUser) {
