@@ -137,8 +137,10 @@ export function useMapPlayers() {
   const onPlayerLeft = React.useCallback(
     (data: PlayerLeftEvent) => {
       const newPlayers = players;
-      players.delete(data.payload);
+      const player = Array.from(players.values()).find((player) => player.name === data.payload);
+      if (!player) return;
 
+      players.delete(player?.playerId);
       setPlayers(newPlayers);
     },
     [players], // eslint-disable-line react-hooks/exhaustive-deps
@@ -166,7 +168,7 @@ export function useMapPlayers() {
     toastMessage({
       message: (
         <>
-          Unable to make a Websocket connection to ${url}.{" "}
+          Unable to make a Websocket connection to {url}.{" "}
           <a
             target="_blank"
             rel="noreferrer"

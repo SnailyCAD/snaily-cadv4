@@ -130,12 +130,16 @@ export function PlayerMarker({ player, handleToggle }: Props) {
             <strong>{t("licensePlate")}: </strong> {player.licensePlate}
           </p>
         ) : null}
-        <p style={{ margin: 2 }}>
-          <strong>{t("steamId")}: </strong> {player.convertedSteamId ?? "-"}
-        </p>
-        <p style={{ margin: 2 }}>
-          <strong>{t("discordId")}: </strong> {player.discordId ?? "-"}
-        </p>
+        {player.convertedSteamId ? (
+          <p style={{ margin: 2 }}>
+            <strong>{t("steamId")}: </strong> {player.convertedSteamId}
+          </p>
+        ) : null}
+        {player.discordId ? (
+          <p style={{ margin: 2 }}>
+            <strong>{t("discordId")}: </strong> {player.discordId}
+          </p>
+        ) : null}
 
         {"id" in player && player.unit?.id ? (
           <div className="mt-3">
