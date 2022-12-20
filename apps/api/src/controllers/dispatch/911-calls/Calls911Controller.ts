@@ -172,11 +172,11 @@ export class Calls911Controller {
 
     const call = await prisma.call911.create({
       data: {
-        location: data.location,
-        postal: data.postal,
-        description: data.description,
+        location: data.location ?? undefined,
+        postal: data.postal ?? undefined,
+        description: data.description ?? undefined,
         descriptionData: data.descriptionData ?? undefined,
-        name: data.name,
+        name: data.name ?? undefined,
         userId: user.id || undefined,
         situationCodeId: data.situationCode ?? null,
         viaDispatch: isFromDispatch,
@@ -283,7 +283,7 @@ export class Calls911Controller {
       },
       data: {
         location: data.location,
-        postal: String(data.postal),
+        postal: data.postal,
         description: data.description,
         name: data.name,
         userId: user.id,
