@@ -32,13 +32,14 @@ export function useMapPlayers() {
 
   const { cad } = useAuth();
   const url = getCADURL(cad);
-  const { execute } = useFetch();
+  const { state, execute } = useFetch();
 
   const getCADUsers = React.useCallback(
     async (
       playersToFetch: (Player & { discordId?: string | null; convertedSteamId?: string | null })[],
       payload: PlayerDataEventPayload[],
     ) => {
+      if (state === "loading") return;
       let _prevPlayerData = prevPlayerData;
 
       const { json } =
@@ -105,7 +106,7 @@ export function useMapPlayers() {
 
       setPlayers(newMap);
     },
-    [players, prevPlayerData], // eslint-disable-line react-hooks/exhaustive-deps
+    [players, state, prevPlayerData], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   const onPlayerData = React.useCallback(
@@ -163,7 +164,19 @@ export function useMapPlayers() {
 
   const onError = React.useCallback(() => {
     toastMessage({
-      message: `Unable to make a Websocket connection to ${url}`,
+      message: (
+        <>
+          Unable to make a Websocket connection to ${url}.{" "}
+          <a
+            target="_blank"
+            rel="noreferrer"
+            className="underline text-blue-200"
+            href="https://cad-docs.caspertheghost.me/docs/fivem-integrations/live-map#connecting-to-snailycadv4"
+          >
+            See documentation.
+          </a>
+        </>
+      ),
       title: "Connection Error",
       duration: 10_000,
     });
@@ -184,11 +197,13 @@ export function useMapPlayers() {
     if (s) {
       s.onAny(onMessage);
       s.on("disconnect", console.log);
+      s.once("connect_error", onError);
     }
 
     return () => {
       s?.offAny(onMessage);
       s?.off("disconnect", console.log);
+      s?.off("connect_error", onError);
     };
   }, [socket, onError, onMessage]);
 
@@ -219,8 +234,12 @@ function getCADURL(cad: cad | null) {
 
 function makeSocketConnection(url: string) {
   try {
-    const _url = url.replace(/ws:\/\//, "http://").replace(/wss:\/\//, "https://");
-    return io(_url);
+    if (url.startsWith("ws")) {
+      const _url = url.replace(/ws:\/\//, "http://").replace(/wss:\/\//, "https://");
+      return io(_url);
+    }
+
+    return io(url);
   } catch (error) {
     const isSecurityError = error instanceof Error && error.name === "SecurityError";
 
@@ -230,6 +249,7 @@ function makeSocketConnection(url: string) {
         title: "Security Error",
         duration: Infinity,
       });
+      return;
     }
 
     toastMessage({

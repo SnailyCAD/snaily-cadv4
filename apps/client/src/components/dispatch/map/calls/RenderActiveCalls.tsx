@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { LeafletEvent } from "leaflet";
 import useFetch from "lib/useFetch";
-import { Marker, Popup, useMap } from "react-leaflet";
+import { Marker, Popup, Tooltip, useMap } from "react-leaflet";
 import type { Full911Call } from "state/dispatch/dispatch-state";
 import { ActiveMapCalls } from "./ActiveMapCalls";
 import { convertToMap } from "lib/map/utils";
@@ -52,11 +52,7 @@ export function RenderActiveCalls() {
       path: `/911-calls/${call.id}`,
       method: "PUT",
       data: {
-        ...data,
-        situationCode: call.situationCodeId,
-        divisions: undefined,
-        departments: undefined,
-        assignedUnits: undefined,
+        position: data.position,
       },
     });
 
@@ -78,11 +74,7 @@ export function RenderActiveCalls() {
       path: `/911-calls/${call.id}`,
       method: "PUT",
       data: {
-        ...callData,
-        situationCode: call.situationCodeId,
-        divisions: undefined,
-        departments: undefined,
-        assignedUnits: undefined,
+        position: callData.position,
       },
     });
 
@@ -114,6 +106,8 @@ export function RenderActiveCalls() {
               key={call.id}
               position={position}
             >
+              <Tooltip direction="top">{t("dragToMoveCallBlip")}</Tooltip>
+
               <Popup minWidth={300}>
                 <p style={{ margin: 2, fontSize: 18 }}>
                   <strong>{t("location")}: </strong> {call.location}
