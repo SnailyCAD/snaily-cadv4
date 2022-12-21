@@ -14,5 +14,5 @@ export const UPDATE_RADIO_CHANNEL_SCHEMA = z.object({
 export const TONES_SCHEMA = z.object({
   leoTone: z.boolean(),
   emsFdTone: z.boolean(),
-  description: z.string().max(355).nullable().optional(),
+  description: z.string().max(355).nullish(),
 });

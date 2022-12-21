@@ -2,18 +2,18 @@ import { z } from "zod";
 import { COURT_ENTRY_SCHEMA } from "./court";
 
 const VIOLATION = z.object({
-  fine: z.number().nullable().optional(),
-  jailTime: z.number().nullable().optional(),
-  bail: z.number().nullable().optional(),
-  counts: z.number().nullable().optional(),
+  fine: z.number().nullish(),
+  jailTime: z.number().nullish(),
+  bail: z.number().nullish(),
+  counts: z.number().nullish(),
   // optional on client, required on server
   penalCodeId: z.string().optional(),
 });
 
 export const SEIZED_ITEM_SCHEMA = z.object({
-  illegal: z.boolean().nullable().optional(),
+  illegal: z.boolean().nullish(),
   item: z.string().min(1),
-  quantity: z.number().nullable().optional(),
+  quantity: z.number().nullish(),
 });
 
 const recordTypeRegex = /ARREST_REPORT|TICKET|WRITTEN_WARNING/;
@@ -23,13 +23,13 @@ export const CREATE_TICKET_SCHEMA = z.object({
   violations: z.array(VIOLATION).min(1),
   seizedItems: z.array(SEIZED_ITEM_SCHEMA).optional(),
   postal: z.string().min(1).max(255),
-  notes: z.string().nullable().optional(),
+  notes: z.string().nullish(),
   paymentStatus: z
     .string()
     .regex(/PAID|UNPAID/)
     .optional()
     .nullable(),
-  courtEntry: COURT_ENTRY_SCHEMA.nullable().optional(),
+  courtEntry: COURT_ENTRY_SCHEMA.nullish(),
 });
 
 export const CREATE_WARRANT_SCHEMA = z.object({
@@ -40,13 +40,13 @@ export const CREATE_WARRANT_SCHEMA = z.object({
     .max(255)
     .regex(/ACTIVE|INACTIVE/),
   description: z.string(),
-  assignedOfficers: z.array(z.any()).nullable().optional(),
+  assignedOfficers: z.array(z.any()).nullish(),
 });
 
 export const UPDATE_WARRANT_SCHEMA = CREATE_WARRANT_SCHEMA.pick({
   status: true,
   assignedOfficers: true,
 }).extend({
-  citizenId: z.string().min(2).max(255).nullable().optional(),
-  description: z.string().nullable().optional(),
+  citizenId: z.string().min(2).max(255).nullish(),
+  description: z.string().nullish(),
 });

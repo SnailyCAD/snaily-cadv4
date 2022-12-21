@@ -3,11 +3,11 @@ import { z } from "zod";
 const LICENSE_TYPE_REGEX = /LICENSE|INSURANCE_STATUS|REGISTRATION_STATUS/;
 export const BASE_VALUE_SCHEMA = z.object({
   value: z.string().min(1).max(255),
-  licenseType: z.string().regex(LICENSE_TYPE_REGEX).nullable().optional(),
-  isDefault: z.boolean().nullable().optional(),
-  officerRankImageId: z.any().nullable().optional(),
-  officerRankDepartments: z.array(z.any()).nullable().optional(),
-  isDisabled: z.boolean().nullable().optional(),
+  licenseType: z.string().regex(LICENSE_TYPE_REGEX).nullish(),
+  isDefault: z.boolean().nullish(),
+  officerRankImageId: z.any().nullish(),
+  officerRankDepartments: z.array(z.any()).nullish(),
+  isDisabled: z.boolean().nullish(),
 });
 export const BASE_ARR = z.array(BASE_VALUE_SCHEMA).min(1);
 
@@ -19,8 +19,8 @@ export const HASH_SCHEMA_ARR = z.array(HASH_SCHEMA).min(1);
 
 /** address */
 export const ADDRESS_SCHEMA = BASE_VALUE_SCHEMA.extend({
-  postal: z.string().optional().nullable(),
-  county: z.string().optional().nullable(),
+  postal: z.string().nullish(),
+  county: z.string().nullish(),
 });
 
 export const ADDRESS_SCHEMA_ARR = z.array(ADDRESS_SCHEMA);
@@ -34,10 +34,10 @@ const TYPE_REGEX = /STATUS_CODE|SITUATION_CODE/;
 
 export const CODES_10_SCHEMA = BASE_VALUE_SCHEMA.extend({
   shouldDo: z.string().regex(SHOULD_DO_REGEX),
-  color: z.string().max(255).nullable().optional(),
+  color: z.string().max(255).nullish(),
   type: z.string().regex(TYPE_REGEX).max(255),
-  whatPages: z.array(z.any()).max(3).nullable().optional(),
-  departments: z.array(z.any()).nullable().optional(),
+  whatPages: z.array(z.any()).max(3).nullish(),
+  departments: z.array(z.any()).nullish(),
 });
 
 export const CODES_10_ARR = z.array(CODES_10_SCHEMA).min(1);
@@ -60,7 +60,7 @@ const DLC_TYPE_REGEX = /AUTOMOTIVE|AVIATION|WATER|FIREARM/;
 
 export const DLC_SCHEMA = BASE_VALUE_SCHEMA.extend({
   type: z.string().regex(DLC_TYPE_REGEX).max(255),
-  description: z.string().nullable().optional(),
+  description: z.string().nullish(),
 });
 
 export const DLC_ARR = z.array(DLC_SCHEMA).min(1);
@@ -75,9 +75,9 @@ export const DEPARTMENT_SCHEMA = BASE_VALUE_SCHEMA.extend({
   type: z.string().regex(DEPARTMENT_TYPE_REGEX).max(255),
   isDefaultDepartment: z.boolean().optional(),
   whitelisted: z.boolean().optional(),
-  defaultOfficerRankId: z.string().nullable().optional(),
-  isConfidential: z.boolean().nullable().optional(),
-  extraFields: z.any().nullable().optional(),
+  defaultOfficerRankId: z.string().nullish(),
+  isConfidential: z.boolean().nullish(),
+  extraFields: z.any().nullish(),
 });
 
 export const DEPARTMENT_ARR = z.array(DEPARTMENT_SCHEMA).min(1);
@@ -88,7 +88,7 @@ export const DEPARTMENT_ARR = z.array(DEPARTMENT_SCHEMA).min(1);
 export const DIVISION_SCHEMA = BASE_VALUE_SCHEMA.extend({
   callsign: z.string().max(255).optional(),
   departmentId: z.string().min(2),
-  pairedUnitTemplate: z.string().nullable().optional(),
+  pairedUnitTemplate: z.string().nullish(),
 });
 
 export const DIVISION_ARR = z.array(DIVISION_SCHEMA).min(1);
@@ -101,25 +101,25 @@ const PENAL_CODE_TYPE_REGEX = /FELONY|MISDEMEANOR|INFRACTION/;
 
 export const PENAL_CODE_SCHEMA = z.object({
   title: z.string().min(2).max(255),
-  descriptionData: z.array(z.any()).optional().nullable(),
-  description: z.string().nullable().optional(),
-  groupId: z.string().nullable().optional(),
+  descriptionData: z.array(z.any()).nullish(),
+  description: z.string().nullish(),
+  groupId: z.string().nullish(),
   warningApplicable: z.boolean().optional(),
   warningNotApplicable: z.boolean().optional(),
-  warningFines: z.any().nullable().optional(),
-  warningNotFines: z.any().nullable().optional(),
-  bail: z.any().nullable().optional(),
-  prisonTerm: z.any().nullable().optional(),
-  type: z.string().regex(PENAL_CODE_TYPE_REGEX).optional().nullable(),
-  isPrimary: z.boolean().optional().nullable(),
+  warningFines: z.any().nullish(),
+  warningNotFines: z.any().nullish(),
+  bail: z.any().nullish(),
+  prisonTerm: z.any().nullish(),
+  type: z.string().regex(PENAL_CODE_TYPE_REGEX).nullish(),
+  isPrimary: z.boolean().nullish(),
 });
 
 export const PENAL_CODE_ARR = z.array(PENAL_CODE_SCHEMA).min(1);
 
 export const QUALIFICATION_SCHEMA = BASE_VALUE_SCHEMA.extend({
   departments: z.array(z.string()).min(1),
-  image: z.any().nullable().optional(),
-  description: z.string().nullable().optional(),
+  image: z.any().nullish(),
+  description: z.string().nullish(),
   qualificationType: z.string().min(2),
 });
 
@@ -129,7 +129,7 @@ export const QUALIFICATION_ARR = z.array(QUALIFICATION_SCHEMA).min(1);
  * call types
  */
 export const CALL_TYPE_SCHEMA = BASE_VALUE_SCHEMA.extend({
-  priority: z.string().optional().nullable(),
+  priority: z.string().nullish(),
 });
 
 export const CALL_TYPE_ARR = z.array(CALL_TYPE_SCHEMA).min(1);

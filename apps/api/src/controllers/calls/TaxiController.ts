@@ -65,7 +65,7 @@ export class TaxiController {
       data: {
         creatorId: data.creatorId || null,
         description: data.description,
-        descriptionData: data.descriptionData,
+        descriptionData: data.descriptionData || undefined,
         location: data.location,
         postal: data.postal ? String(data.postal) : null,
         name: data.name ?? null,
@@ -113,7 +113,7 @@ export class TaxiController {
       },
       data: {
         description: data.description,
-        descriptionData: data.descriptionData,
+        descriptionData: data.descriptionData || undefined,
         location: data.location,
         postal: data.postal ? String(data.postal) : null,
         assignedUnit: assignedUnitId,

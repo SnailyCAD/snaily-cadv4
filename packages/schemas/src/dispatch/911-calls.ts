@@ -16,16 +16,16 @@ export const ASSIGNED_UNIT = z.object({
 export const CALL_911_SCHEMA = z.object({
   location: z.string().min(2),
   description: z.string().optional(),
-  descriptionData: z.any().nullable().optional(),
+  descriptionData: z.any().nullish(),
   name: z.string().min(2).max(255),
-  postal: z.string().nullable().optional(),
+  postal: z.string().nullish(),
   assignedUnits: z.array(ASSIGNED_UNIT.or(SELECT_VALUE)).optional(),
   position: z.any().optional(),
   departments: z.array(z.string().or(SELECT_VALUE)).optional(),
   divisions: z.array(z.string().or(SELECT_VALUE)).optional(),
-  situationCode: z.string().max(255).nullable().optional(),
-  type: z.string().nullable().optional(),
-  gtaMapPosition: CALL_GTA_MAP_POSITION_SCHEMA.nullable().optional(),
+  situationCode: z.string().max(255).nullish(),
+  type: z.string().nullish(),
+  gtaMapPosition: CALL_GTA_MAP_POSITION_SCHEMA.nullish(),
   notifyAssignedUnits: z.boolean().optional(),
 });
 

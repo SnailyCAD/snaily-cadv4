@@ -173,7 +173,7 @@ export class TowController {
       data: {
         creatorId: data.creatorId || null,
         description: data.description,
-        descriptionData: data.descriptionData ?? null,
+        descriptionData: data.descriptionData || undefined,
         location: data.location,
         postal: data.postal,
         deliveryAddressId: data.deliveryAddressId,
@@ -228,7 +228,7 @@ export class TowController {
       where: { id: callId },
       data: {
         description: data.description,
-        descriptionData: data.descriptionData,
+        descriptionData: data.descriptionData || undefined,
         location: data.location,
         postal: data.postal ? String(data.postal) : null,
         assignedUnit: assignedUnitId,
