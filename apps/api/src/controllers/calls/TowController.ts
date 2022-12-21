@@ -176,7 +176,7 @@ export class TowController {
         descriptionData: data.descriptionData || undefined,
         location: data.location,
         postal: data.postal,
-        deliveryAddressId: data.deliveryAddressId,
+        deliveryAddressId: data.deliveryAddressId || undefined,
         plate: vehicle?.plate.toUpperCase() ?? null,
         model: vehicle?.model.value.value ?? null,
         ended: data.callCountyService ?? false,
