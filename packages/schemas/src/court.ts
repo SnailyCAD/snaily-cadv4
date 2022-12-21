@@ -13,18 +13,18 @@ export const NAME_CHANGE_REQUEST_SCHEMA = z.object({
 });
 
 export const COURT_DATE_SCHEMA = z.object({
-  note: z.string().nullable().optional(),
+  note: z.string().nullish(),
   date: z.any(),
 });
 
 export const COURT_ENTRY_SCHEMA = z.object({
   title: z.string().min(2),
   caseNumber: z.string(),
-  descriptionData: z.any().nullable().optional(),
+  descriptionData: z.any().nullish(),
   dates: z.array(COURT_DATE_SCHEMA),
 });
 
 export const COURTHOUSE_POST_SCHEMA = z.object({
   title: z.string().min(2),
-  descriptionData: z.any().nullable().optional(),
+  descriptionData: z.any().nullish(),
 });

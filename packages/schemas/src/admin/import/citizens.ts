@@ -3,7 +3,7 @@ import { VEHICLE_SCHEMA } from "./vehicles";
 import { WEAPON_SCHEMA } from "./weapons";
 
 export const IMPORT_CITIZENS_SCHEMA = z.object({
-  userId: z.string().max(255).nullable().optional(),
+  userId: z.string().max(255).nullish(),
   name: z.string().min(1).max(255),
   surname: z.string().min(1).max(255),
   gender: z.string().min(1).max(255),
@@ -14,21 +14,21 @@ export const IMPORT_CITIZENS_SCHEMA = z.object({
     .max(new Date())
     .describe("ISO format")
     .or(z.string().min(2)),
-  address: z.string().max(255).nullable().optional(),
-  eyeColor: z.string().max(255).nullable().optional(),
-  hairColor: z.string().max(255).nullable().optional(),
-  height: z.string().max(255).nullable().optional(),
-  weight: z.string().max(255).nullable().optional(),
-  driversLicenseId: z.string().max(255).nullable().optional(),
-  weaponLicenseId: z.string().max(255).nullable().optional(),
-  pilotLicenseId: z.string().max(255).nullable().optional(),
-  driversLicenseCategoryIds: z.array(z.string()).nullable().optional(),
-  pilotLicenseCategoryIds: z.array(z.string()).nullable().optional(),
-  waterLicenseCategoryIds: z.array(z.string()).nullable().optional(),
-  firearmLicenseCategoryIds: z.array(z.string()).nullable().optional(),
-  flags: z.array(z.string()).nullable().optional(),
-  postal: z.string().nullable().optional(),
-  phoneNumber: z.string().nullable().optional(),
+  address: z.string().max(255).nullish(),
+  eyeColor: z.string().max(255).nullish(),
+  hairColor: z.string().max(255).nullish(),
+  height: z.string().max(255).nullish(),
+  weight: z.string().max(255).nullish(),
+  driversLicenseId: z.string().max(255).nullish(),
+  weaponLicenseId: z.string().max(255).nullish(),
+  pilotLicenseId: z.string().max(255).nullish(),
+  driversLicenseCategoryIds: z.array(z.string()).nullish(),
+  pilotLicenseCategoryIds: z.array(z.string()).nullish(),
+  waterLicenseCategoryIds: z.array(z.string()).nullish(),
+  firearmLicenseCategoryIds: z.array(z.string()).nullish(),
+  flags: z.array(z.string()).nullish(),
+  postal: z.string().nullish(),
+  phoneNumber: z.string().nullish(),
   vehicles: z
     .array(VEHICLE_SCHEMA.omit({ ownerId: true }))
     .optional()

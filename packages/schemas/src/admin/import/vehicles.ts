@@ -6,12 +6,12 @@ export const VEHICLE_SCHEMA = z.object({
   modelId: z.string().min(2).max(255),
   ownerId: z.string().min(2).max(255),
   registrationStatusId: z.string().min(2).max(255),
-  insuranceStatus: z.string().max(255).nullable().optional(),
+  insuranceStatus: z.string().max(255).nullish(),
   color: z.string().min(2).max(255),
-  reportedStolen: z.boolean().nullable().optional(),
-  taxStatus: z.string().regex(TAX_STATUS_REGEX).nullable().optional(),
-  inspectionStatus: z.string().regex(INSPECTION_STATUS_REGEX).nullable().optional(),
-  flags: z.array(z.string()).nullable().optional(),
+  reportedStolen: z.boolean().nullish(),
+  taxStatus: z.string().regex(TAX_STATUS_REGEX).nullish(),
+  inspectionStatus: z.string().regex(INSPECTION_STATUS_REGEX).nullish(),
+  flags: z.array(z.string()).nullish(),
 });
 
 export const VEHICLE_SCHEMA_ARR = z.array(VEHICLE_SCHEMA).min(1);
