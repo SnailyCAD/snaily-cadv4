@@ -165,6 +165,14 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                   </div>
                 ) : null}
 
+                {results.missing && results.dateOfMissing ? (
+                  <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
+                    {t("Leo.citizenMissing", {
+                      date: format(new Date(results.dateOfMissing), "MMMM do yyyy"),
+                    })}
+                  </div>
+                ) : null}
+
                 <div className="flex w-full">
                   <div className="mr-2 min-w-[100px]">
                     {results.imageId ? (

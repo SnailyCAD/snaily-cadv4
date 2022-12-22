@@ -100,6 +100,17 @@ export function NameSearchFooterActions(props: Props) {
             >
               {currentResult.dead ? t("Ems.declareAlive") : t("Ems.declareDead")}
             </Dropdown.Item>
+
+            <Dropdown.Item
+              size="xs"
+              type="button"
+              onPress={handleDeclare}
+              disabled={state === "loading"}
+              variant="cancel"
+              className="px-1.5"
+            >
+              {currentResult.dead ? t("Leo.declareFound") : t("Leo.declareMissing")}
+            </Dropdown.Item>
           </>
         ) : null}
       </Dropdown>

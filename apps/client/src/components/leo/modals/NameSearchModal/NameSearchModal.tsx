@@ -308,6 +308,14 @@ export function NameSearchModal() {
                     </div>
                   ) : null}
 
+                  {currentResult.missing && currentResult.dateOfMissing ? (
+                    <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
+                      {t("citizenMissing", {
+                        date: format(new Date(currentResult.dateOfMissing), "MMMM do yyyy"),
+                      })}
+                    </div>
+                  ) : null}
+
                   {bolo ? (
                     <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
                       {t("citizenBoloPlaced")}

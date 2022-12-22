@@ -344,9 +344,11 @@ model Citizen {
   imageBlurData        String?                       @db.Text
   note                 String?                       @db.Text
   dead                 Boolean?                      @default(false)
+  dateOfDead           DateTime?
+  missing              Boolean?                      @default(false)
+  dateOfMissing        DateTime?
   arrested             Boolean?                      @default(false)
   phoneNumber          String?
-  dateOfDead           DateTime?
   occupation           String?                       @db.Text
   additionalInfo       String?                       @db.Text
   flags                Value[]                       @relation("citizenFlags")

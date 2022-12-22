@@ -519,4 +519,33 @@ export class SearchActionsController {
 
     return appendCustomFields(vehicle, CustomFieldCategory.VEHICLE);
   }
+
+  @Post("/missing/:citizenId")
+  @UsePermissions({
+    fallback: (u) => u.isEmsFd || u.isLeo || u.isDispatch,
+    permissions: [Permissions.EmsFd, Permissions.Leo, Permissions.Dispatch],
+  })
+  async declareCitizenMissing(
+    @PathParams("citizenId") citizenId: string,
+  ): Promise<APITypes.PostLEODeclareCitizenMissing> {
+    const citizen = await prisma.citizen.findUnique({
+      where: { id: citizenId },
+    });
+
+    if (!citizen) {
+      throw new NotFound("notFound");
+    }
+
+    const updated = await prisma.citizen.update({
+      where: {
+        id: citizen.id,
+      },
+      data: {
+        missing: !citizen.missing,
+        dateOfMissing: citizen.missing ? null : new Date(),
+      },
+    });
+
+    return updated;
+  }
 }
