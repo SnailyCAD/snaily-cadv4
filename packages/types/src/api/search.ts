@@ -155,3 +155,9 @@ export type PostSearchActionsCreateCitizen = PostLeoSearchCitizenData[number];
  * @route /search/actions/vehicle
  */
 export type PostSearchActionsCreateVehicle = PostLeoSearchVehicleData;
+
+/**
+ * @method POST
+ * @route /search/actions/vehicle
+ */
+export type PostLEODeclareCitizenMissing = Prisma.Citizen;
