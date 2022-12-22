@@ -56,6 +56,7 @@
     "addUnit": "Adicionar unidade",
     "unit": "Unidade",
     "unassign": "Desatribuir",
+    "dragToMoveCallBlip": "Arraste este blip para definir a posição do blip.",
     "alert_purgeSelectedCalls": "Tem certeza de que deseja limpar {length} item(ns)? Isso excluirá {length} item(ns) do banco de dados. Esta ação não pode ser desfeita.",
     "alert_deleteCallEvent": "Tem certeza de que deseja excluir este evento? Esta ação não pode ser desfeita.",
     "alert_end911Call": "Tem certeza de que deseja encerrar esta Chamada?",
