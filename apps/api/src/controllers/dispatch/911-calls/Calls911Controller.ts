@@ -41,6 +41,7 @@ import {
 import type { z } from "zod";
 import { getNextActiveCallId } from "lib/calls/getNextActiveCall";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
+import { getTranslator } from "utils/get-translator";
 
 export const callInclude = {
   position: true,
@@ -219,7 +220,7 @@ export class Calls911Controller {
     const normalizedCall = officerOrDeputyToUnit(updated);
 
     try {
-      const data = this.createWebhookData(normalizedCall);
+      const data = await this.createWebhookData(normalizedCall, user.locale);
       await sendDiscordWebhook({ type: DiscordWebhookType.CALL_911, data });
     } catch (error) {
       console.error("Could not send Discord webhook.", error);
@@ -629,28 +630,28 @@ export class Calls911Controller {
   }
 
   // creates the webhook structure that will get sent to Discord.
-  private createWebhookData(call: Call911): { embeds: APIEmbed[] } {
-    const caller = call.name || "Unknown";
+  private async createWebhookData(
+    call: Call911,
+    locale?: string | null,
+  ): Promise<{ embeds: APIEmbed[] }> {
+    const t = await getTranslator({
+      locale,
+      namespace: "Calls",
+    });
+
+    const caller = call.name || t("unknown");
     const location = `${call.location} ${call.postal ? call.postal : ""}`;
-    const description = call.description || "Could not render description via Discord";
+    const description = call.description || t("couldNotRenderDescription");
 
     return {
       embeds: [
         {
-          title: "911 Call Created",
+          title: t("callCreated"),
           description,
-          footer: { text: "View more information on the CAD" },
+          footer: { text: t("viewMoreInfo") },
           fields: [
-            {
-              name: "Location",
-              value: location,
-              inline: true,
-            },
-            {
-              name: "Caller",
-              value: caller,
-              inline: true,
-            },
+            { name: t("location"), value: location, inline: true },
+            { name: t("caller"), value: caller, inline: true },
           ],
         },
       ],

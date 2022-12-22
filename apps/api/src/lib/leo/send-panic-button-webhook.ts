@@ -14,6 +14,7 @@ import { createPanicButtonEmbed } from "lib/dispatch/webhooks";
 import type { Socket } from "services/SocketService";
 
 export interface HandlePanicButtonPressedOptions {
+  locale?: string | null;
   force?: boolean;
   socket: Socket;
   status?: StatusValue | null;
@@ -45,7 +46,7 @@ export async function handlePanicButtonPressed(options: HandlePanicButtonPressed
     options.socket.emitPanicButtonLeo(options.unit, "ON");
 
     try {
-      const embed = createPanicButtonEmbed(options.cad, options.unit);
+      const embed = await createPanicButtonEmbed(options);
       await sendDiscordWebhook({ type: DiscordWebhookType.PANIC_BUTTON, data: embed });
     } catch (error) {
       console.error("[cad_panicButton]: Could not send Discord webhook.", error);

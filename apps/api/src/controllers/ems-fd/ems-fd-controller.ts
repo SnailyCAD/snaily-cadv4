@@ -531,6 +531,7 @@ export class EmsFdController {
 
     await this.socket.emitUpdateDeputyStatus();
     handlePanicButtonPressed({
+      locale: user.locale,
       force: panicType === "ON",
       cad,
       socket: this.socket,

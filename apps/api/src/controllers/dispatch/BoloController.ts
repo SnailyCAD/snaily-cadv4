@@ -24,6 +24,7 @@ import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { getFirstOfficerFromActiveOfficer, getInactivityFilter } from "lib/leo/utils";
 import type * as APITypes from "@snailycad/types/api";
 import type { cad } from "@snailycad/types";
+import { getTranslator } from "utils/get-translator";
 
 @Controller("/bolos")
 @UseBeforeEach(IsAuth)
@@ -97,7 +98,7 @@ export class BoloController {
     });
 
     try {
-      const embed = createBoloEmbed(bolo);
+      const embed = await createBoloEmbed(bolo);
       await sendDiscordWebhook({ type: DiscordWebhookType.BOLO, data: embed });
     } catch (error) {
       console.error("[cad_bolo]: Could not send Discord webhook.", error);
@@ -249,7 +250,9 @@ export class BoloController {
   }
 }
 
-function createBoloEmbed(bolo: Bolo): { embeds: APIEmbed[] } {
+async function createBoloEmbed(bolo: Bolo): Promise<{ embeds: APIEmbed[] }> {
+  const translator = await getTranslator({ namespace: "Bolos", locale: "en" });
+
   const type = bolo.type.toLowerCase();
   const name = bolo.name || "—";
   const plate = bolo.plate?.toUpperCase() || "—";
@@ -260,15 +263,15 @@ function createBoloEmbed(bolo: Bolo): { embeds: APIEmbed[] } {
   return {
     embeds: [
       {
-        title: "Bolo Created",
+        title: translator("boloCreated"),
         description,
-        footer: { text: "View more information on the CAD" },
+        footer: { text: translator("viewMoreInfo") },
         fields: [
-          { name: "Type", value: type, inline: true },
-          { name: "Name", value: name, inline: true },
-          { name: "Plate", value: plate, inline: true },
-          { name: "Model", value: model, inline: true },
-          { name: "Color", value: color, inline: true },
+          { name: translator("type"), value: type, inline: true },
+          { name: translator("name"), value: name, inline: true },
+          { name: translator("plate"), value: plate, inline: true },
+          { name: translator("model"), value: model, inline: true },
+          { name: translator("color"), value: color, inline: true },
         ],
       },
     ],

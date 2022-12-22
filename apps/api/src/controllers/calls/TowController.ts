@@ -32,6 +32,7 @@ import { sendDiscordWebhook } from "lib/discord/webhooks";
 import type * as APITypes from "@snailycad/types/api";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
+import { getTranslator } from "utils/get-translator";
 
 const CITIZEN_SELECTS = {
   name: true,
@@ -139,7 +140,7 @@ export class TowController {
       });
 
       try {
-        const data = createVehicleImpoundedWebhookData(impoundedVehicle);
+        const data = await createVehicleImpoundedWebhookData(impoundedVehicle, user.locale);
         await sendDiscordWebhook({ type: DiscordWebhookType.VEHICLE_IMPOUNDED, data });
       } catch (error) {
         console.error("Could not send Discord webhook.", error);
@@ -270,22 +271,25 @@ export class TowController {
   }
 }
 
-export function createVehicleImpoundedWebhookData(
+export async function createVehicleImpoundedWebhookData(
   vehicle: RegisteredVehicle & {
     model: VehicleValue & { value: Value };
     registrationStatus: Value;
     citizen: Pick<Citizen, "name" | "surname">;
   },
+  locale?: string | null,
 ) {
+  const t = await getTranslator({ locale, namespace: "Tow" });
+
   return {
     embeds: [
       {
-        title: "Vehicle Impounded",
+        title: t("vehicleImpounded"),
         fields: [
-          { name: "Registration Status", value: vehicle.registrationStatus.value, inline: true },
-          { name: "Model", value: vehicle.model.value.value, inline: true },
+          { name: t("registrationStatus"), value: vehicle.registrationStatus.value, inline: true },
+          { name: t("model"), value: vehicle.model.value.value, inline: true },
           {
-            name: "Owner",
+            name: t("owner"),
             value: `${vehicle.citizen.name} ${vehicle.citizen.surname}`,
             inline: true,
           },
