@@ -36,6 +36,7 @@ async function loadTranslationFile(locale: string) {
   }
 }
 
+// the i18n config is a mjs file, so we need to parse it to get the default locale
 async function loadDefaultLocale() {
   try {
     const path = resolve(__dirname, "../../../client/i18n.config.mjs");
