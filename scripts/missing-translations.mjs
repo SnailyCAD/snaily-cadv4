@@ -33,15 +33,12 @@ async function getLocaleFilesFromLocale(locale) {
 
 async function getInitialTranslations() {
   const localeFiles = await getLocaleFilesFromLocale(localeToCheck);
-  let mergedLocaleTranslations = {};
+  const mergedLocaleTranslations = {};
 
   for (const file of localeFiles) {
     const translations = await readLocaleFile(localeToCheck, file);
 
-    mergedLocaleTranslations = {
-      ...mergedLocaleTranslations,
-      ...translations,
-    };
+    mergedLocaleTranslations[file] = translations;
   }
 
   checkMissingKeys(localeToCheck, mergedLocaleTranslations);
@@ -64,15 +61,12 @@ function getLocalesPath() {
 
 async function getDefaultLocaleTranslations() {
   const localeFiles = await getLocaleFilesFromLocale(DEFAULT_LOCALE);
-  let mergedLocaleTranslations = {};
+  const mergedLocaleTranslations = {};
 
   for (const file of localeFiles) {
     const translations = await readLocaleFile(DEFAULT_LOCALE, file);
 
-    mergedLocaleTranslations = {
-      ...mergedLocaleTranslations,
-      ...translations,
-    };
+    mergedLocaleTranslations[file] = translations;
   }
 
   return mergedLocaleTranslations;
@@ -81,16 +75,18 @@ async function getDefaultLocaleTranslations() {
 function checkMissingKeys(locale, translations = {}) {
   const missingKeys = [];
 
-  for (const key in defaultLocaleTranslations) {
-    if (typeof translations[key] === "undefined") {
-      missingKeys.push(key);
-      continue;
-    }
+  for (const file in defaultLocaleTranslations) {
+    for (const key in defaultLocaleTranslations[file]) {
+      if (typeof translations[file]?.[key] === "undefined") {
+        missingKeys.push(`${key} (${file})`);
+        continue;
+      }
 
-    if (typeof translations[key] === "object") {
-      for (const subKey in defaultLocaleTranslations[key]) {
-        if (typeof translations[key][subKey] === "undefined") {
-          missingKeys.push(`${key}.${subKey}`);
+      if (typeof translations[file]?.[key] === "object") {
+        for (const subKey in defaultLocaleTranslations[file][key]) {
+          if (typeof translations[file][key][subKey] === "undefined") {
+            missingKeys.push(`${key}.${subKey} (${file})`);
+          }
         }
       }
     }
