@@ -38,6 +38,7 @@ import type { cad } from "@snailycad/types";
 import { userProperties } from "lib/auth/getSessionUser";
 import { upsertRecord } from "lib/records/upsert-record";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
+import { getTranslator } from "utils/translate";
 
 export const assignedOfficersInclude = {
   combinedUnit: { include: combinedUnitProperties },
@@ -83,6 +84,7 @@ export class RecordsController {
   })
   async createWarrant(
     @Context("cad") cad: cad,
+    @Context("user") user: User,
     @BodyParams() body: unknown,
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
   ): Promise<APITypes.PostCreateWarrantData> {
@@ -135,7 +137,7 @@ export class RecordsController {
       },
     });
 
-    await this.handleDiscordWebhook(updatedWarrant, DiscordWebhookType.WARRANTS);
+    await this.handleDiscordWebhook(updatedWarrant, DiscordWebhookType.WARRANTS, user.locale);
 
     await prisma.recordLog.create({
       data: {
@@ -317,9 +319,10 @@ export class RecordsController {
       citizen: Citizen & { user?: Pick<User, "discordId"> | null };
     },
     type: DiscordWebhookType = DiscordWebhookType.CITIZEN_RECORD,
+    locale?: string | null,
   ) {
     try {
-      const data = createWebhookData(ticket);
+      const data = await createWebhookData(ticket, locale);
       await sendDiscordWebhook({
         type,
         data,
@@ -331,9 +334,12 @@ export class RecordsController {
   }
 }
 
-function createWebhookData(
+async function createWebhookData(
   data: ((Record & { violations: Violation[] }) | Warrant) & { citizen: Citizen },
+  locale?: string | null,
 ) {
+  const t = await getTranslator({ locale, namespace: "Records" });
+
   const isWarrant = !("notes" in data);
   const citizen = `${data.citizen.name} ${data.citizen.surname}`;
   const description = !isWarrant ? data.notes : "";
@@ -344,28 +350,28 @@ function createWebhookData(
 
   const fields = [
     {
-      name: "citizen",
+      name: t("citizen"),
       value: citizen,
       inline: true,
     },
   ];
 
   if (isWarrant) {
-    fields.push({ name: "Status", value: data.status.toLowerCase(), inline: true });
+    fields.push({ name: t("status"), value: t(data.status), inline: true });
   } else {
     fields.push(
-      { name: "Postal", value: data.postal || "-", inline: true },
-      { name: "Record Type", value: data.type.toLowerCase(), inline: true },
-      { name: "Total Bail", value: totalBail, inline: true },
-      { name: "Total Fine amount", value: totalFines, inline: true },
-      { name: "Total Jail Time", value: totalJailTime, inline: true },
+      { name: t("postal"), value: data.postal || "-", inline: true },
+      { name: t("recordType"), value: t(data.type), inline: true },
+      { name: t("totalBail"), value: totalBail, inline: true },
+      { name: t("totalFineAmount"), value: totalFines, inline: true },
+      { name: t("totalJailTime"), value: totalJailTime, inline: true },
     );
   }
 
   return {
     embeds: [
       {
-        title: isWarrant ? "New warrant created" : "New record created",
+        title: isWarrant ? t("newWarrantCreated") : t("newRecordCreated"),
         description: description || undefined,
         fields,
       },

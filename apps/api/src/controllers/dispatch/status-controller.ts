@@ -160,6 +160,7 @@ export class StatusController {
       }
 
       await handlePanicButtonPressed({
+        locale: user.locale,
         socket: this.socket,
         cad,
         status: code,
@@ -169,6 +170,7 @@ export class StatusController {
 
     if (type === "combined") {
       await handlePanicButtonPressed({
+        locale: user.locale,
         socket: this.socket,
         cad,
         status: code,
@@ -181,6 +183,7 @@ export class StatusController {
       });
 
       await handlePanicButtonPressed({
+        locale: user.locale,
         socket: this.socket,
         cad,
         status: code,
@@ -290,8 +293,12 @@ export class StatusController {
     }
 
     try {
-      // @ts-expect-error type mismatch. the types are correct.
-      const data = createWebhookData(cad, updatedUnit);
+      const data = await createWebhookData({
+        cad,
+        // @ts-expect-error type mismatch. the types are correct.
+        unit: updatedUnit,
+        locale: user.locale,
+      });
       await sendDiscordWebhook({ type: DiscordWebhookType.UNIT_STATUS, data });
     } catch (error) {
       console.error("Could not send Discord webhook.", error);

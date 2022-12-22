@@ -38,6 +38,8 @@ interface Return<Data> {
   error: null | ErrorMessage | (string & {});
 }
 
+let config: Awaited<ReturnType<typeof getNextI18nConfig>> | undefined;
+
 export default function useFetch({ overwriteState }: UseFetchOptions = { overwriteState: null }) {
   const [state, setState] = React.useState<State | null>(null);
   const { openModal } = useModal();
@@ -53,7 +55,13 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
   async function execute<Data, Helpers extends object = object>(
     options: Options<Helpers>,
   ): Promise<Return<Data>> {
+    if (!config) {
+      config = await getNextI18nConfig();
+    }
+
     setState("loading");
+    const locale = user?.locale ?? config.defaultLocale;
+
     abortControllerRef.current = new AbortController();
     const { path, ...restOptions } = options;
 
@@ -70,7 +78,6 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
       const errors = parseErrors(response);
       const errorTitle = parseErrorTitle(response);
 
-      const locale = user?.locale ?? (await getNextI18nConfig()).defaultLocale;
       const errorMessages = (await import(`../../locales/${locale}/common.json`)).Errors;
 
       const hasKey = isErrorKey(error, errorMessages);

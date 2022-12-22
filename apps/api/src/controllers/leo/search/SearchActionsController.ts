@@ -395,6 +395,7 @@ export class SearchActionsController {
     @BodyParams() body: unknown,
     @PathParams("vehicleId") vehicleId: string,
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
+    @Context("user") user: User,
   ): Promise<APITypes.PostSearchActionsCreateVehicle> {
     const data = validateSchema(IMPOUND_VEHICLE_SCHEMA, body);
     const officer = getFirstOfficerFromActiveOfficer({ allowDispatch: true, activeOfficer });
@@ -426,7 +427,7 @@ export class SearchActionsController {
     });
 
     try {
-      const data = createVehicleImpoundedWebhookData(impoundedVehicle);
+      const data = await createVehicleImpoundedWebhookData(impoundedVehicle, user.locale);
       await sendDiscordWebhook({ type: DiscordWebhookType.VEHICLE_IMPOUNDED, data });
     } catch (error) {
       console.error("Could not send Discord webhook.", error);

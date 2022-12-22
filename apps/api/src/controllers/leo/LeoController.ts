@@ -164,6 +164,7 @@ export class LeoController {
 
     await this.socket.emitUpdateOfficerStatus();
     handlePanicButtonPressed({
+      locale: user.locale,
       force: panicType === "ON",
       cad,
       socket: this.socket,
