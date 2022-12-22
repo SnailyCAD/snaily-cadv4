@@ -131,7 +131,7 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
 
   return (
     <div className={classNames("text-field flex flex-col mb-3", props.className)}>
-      <Label element="span" {...props} labelProps={labelProps} />
+      <Label {...props} labelProps={labelProps} />
 
       <div className={classNames("relative", includeMenu && "flex")}>
         <Input

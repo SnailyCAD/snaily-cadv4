@@ -28,10 +28,7 @@ export function useMultiSelect<T>(
     ref,
   );
 
-  const { labelProps, errorMessageProps, fieldProps } = useField({
-    ...props,
-    labelElementType: "span",
-  });
+  const { labelProps, errorMessageProps, fieldProps } = useField(props);
 
   const domProps = filterDOMProps(props, { labelable: true });
   const triggerProps = mergeProps(menuTriggerProps, fieldProps);

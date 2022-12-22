@@ -5,7 +5,7 @@ import { ModalProvider } from "@react-aria/overlays";
 import { classNames } from "../../utils/classNames";
 import { Popover } from "../overlays/popover";
 import { ListBox } from "../list/select/list-box";
-import { Button, buttonSizes, buttonVariants } from "../button";
+import { buttonSizes, buttonVariants } from "../button";
 import { useMultiSelectState } from "../../hooks/select/useMultiSelectState";
 import { useMultiSelect } from "../../hooks/select/useMultiSelect";
 import { getSelectedKeyOrKeys } from "../../utils/select/getSelectedKeyOrKeys";
@@ -13,6 +13,7 @@ import { SelectedItems } from "../inputs/select/selected-items";
 import { SelectActions } from "../inputs/select/select-actions";
 import { ErrorMessage } from "../error-message";
 import { Label } from "../label";
+import { useButton } from "@react-aria/button";
 
 export interface SelectValue {
   value: string;
@@ -66,12 +67,14 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
     selectionMode,
   });
 
-  const ref = React.useRef<null>(null);
+  const ref = React.useRef<HTMLDivElement | null>(null);
   const { labelProps, triggerProps, errorMessageProps, valueProps, menuProps } = useMultiSelect(
     { ...props, selectedKey: undefined, disallowEmptySelection, children, disabledKeys },
     state,
     ref,
   );
+
+  const { buttonProps } = useButton(triggerProps, ref);
 
   const selectedItems = selectionMode === "multiple" ? state.selectedItems : null;
   const selectedItem = selectionMode === "single" ? state.selectedItems?.[0] : null;
@@ -81,8 +84,9 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
       <div className={classNames("flex flex-col mb-3", props.className)}>
         <Label {...props} labelProps={labelProps} />
         <div className="relative">
-          <Button
-            {...triggerProps}
+          <div
+            role="button"
+            {...buttonProps}
             className={classNames(
               buttonVariants.default,
               buttonSizes.sm,
@@ -111,7 +115,7 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
               state={state}
               isClearable={props.isClearable}
             />
-          </Button>
+          </div>
           {state.isOpen && (
             <Popover isOpen={state.isOpen} onClose={state.close}>
               <ListBox {...menuProps} state={state} />

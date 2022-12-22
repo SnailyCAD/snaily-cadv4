@@ -19,7 +19,7 @@ export function RadioGroupField(props: Props) {
 
   return (
     <div {...radioGroupProps}>
-      <Label element="span" {...props} labelProps={labelProps} />
+      <Label {...props} labelProps={labelProps} />
 
       <div className="mt-0.5">
         <RadioContext.Provider value={state}>{props.children}</RadioContext.Provider>
