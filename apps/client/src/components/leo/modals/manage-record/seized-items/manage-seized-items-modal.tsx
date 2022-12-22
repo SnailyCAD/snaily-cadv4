@@ -7,6 +7,7 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import type { SeizedItem } from "@snailycad/types";
 import { Toggle } from "components/form/Toggle";
+import { v4 } from "uuid";
 
 interface Props {
   item?: SeizedItem | null;
@@ -35,7 +36,7 @@ export function ManageSeizedItemsModal({ item, onClose }: Props) {
       setFieldValue("seizedItems", seizedItems);
       handleClose();
     } else {
-      setFieldValue("seizedItems", [...values.seizedItems, data]);
+      setFieldValue("seizedItems", [...values.seizedItems, { ...data, id: v4() }]);
       handleClose();
     }
   }
@@ -62,6 +63,7 @@ export function ManageSeizedItemsModal({ item, onClose }: Props) {
         {({ handleChange, setFieldValue, values, errors, isValid }) => (
           <Form autoComplete="off">
             <TextField
+              autoFocus
               label={common("item")}
               className="w-full relative"
               name="item"

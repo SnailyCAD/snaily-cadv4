@@ -20,17 +20,16 @@ export function SeizedItemsTable({ isReadOnly }: { isReadOnly?: boolean }) {
   const t = useTranslations("Leo");
 
   function handleEditClick(item: SeizedItem) {
-    openModal(ModalIds.ManageSeizedItems);
     itemState.setTempId(item.id);
+    openModal(ModalIds.ManageSeizedItems);
   }
 
-  function handleDeleteClick(item: any) {
+  function handleDeleteClick(item: SeizedItem) {
     const seizedItems = values.seizedItems;
-    const idxOf = seizedItems.indexOf(item);
 
     setFieldValue(
       "seizedItems",
-      seizedItems.filter((_, idx) => idx !== idxOf),
+      seizedItems.filter((_item) => _item.id !== item.id),
     );
   }
 
