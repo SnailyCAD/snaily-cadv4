@@ -1,11 +1,12 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "target": "esnext",
+    "target": "ES2022",
     "module": "commonjs",
     "esModuleInterop": true,
     "moduleResolution": "node",
     "importHelpers": true,
+    "resolveJsonModule": true,
 
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
@@ -16,7 +17,7 @@
 
     "outDir": "dist",
     "strict": true,
-    "lib": ["esnext"],
+    "lib": ["esnext", "ES2022"],
     "baseUrl": ".",
     "paths": {
       "utils/*": ["./src/utils/*"],

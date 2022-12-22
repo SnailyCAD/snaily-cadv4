@@ -24,7 +24,7 @@ import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { getFirstOfficerFromActiveOfficer, getInactivityFilter } from "lib/leo/utils";
 import type * as APITypes from "@snailycad/types/api";
 import type { cad } from "@snailycad/types";
-import { getTranslator } from "utils/translate";
+import { getTranslator } from "utils/get-translator";
 
 @Controller("/bolos")
 @UseBeforeEach(IsAuth)

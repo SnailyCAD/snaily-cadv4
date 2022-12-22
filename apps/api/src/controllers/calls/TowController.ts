@@ -32,7 +32,7 @@ import { sendDiscordWebhook } from "lib/discord/webhooks";
 import type * as APITypes from "@snailycad/types/api";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
-import { getTranslator } from "utils/translate";
+import { getTranslator } from "utils/get-translator";
 
 const CITIZEN_SELECTS = {
   name: true,

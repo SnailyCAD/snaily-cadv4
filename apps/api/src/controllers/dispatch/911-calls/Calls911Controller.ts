@@ -41,7 +41,7 @@ import {
 import type { z } from "zod";
 import { getNextActiveCallId } from "lib/calls/getNextActiveCall";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
-import { getTranslator } from "utils/translate";
+import { getTranslator } from "utils/get-translator";
 
 export const callInclude = {
   position: true,

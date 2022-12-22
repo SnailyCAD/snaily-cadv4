@@ -38,7 +38,7 @@ import type { cad } from "@snailycad/types";
 import { userProperties } from "lib/auth/getSessionUser";
 import { upsertRecord } from "lib/records/upsert-record";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
-import { getTranslator } from "utils/translate";
+import { getTranslator } from "utils/get-translator";
 
 export const assignedOfficersInclude = {
   combinedUnit: { include: combinedUnitProperties },

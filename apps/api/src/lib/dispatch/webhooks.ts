@@ -12,7 +12,7 @@ import { Feature } from "@snailycad/types";
 import { generateCallsign } from "@snailycad/utils";
 import { isFeatureEnabled } from "lib/cad";
 import type { HandlePanicButtonPressedOptions } from "lib/leo/send-panic-button-webhook";
-import { getTranslator } from "utils/translate";
+import { getTranslator } from "utils/get-translator";
 
 type V<T> = T & { value: Value };
 
