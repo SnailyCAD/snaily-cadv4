@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "esnext",
     "module": "commonjs",
     "esModuleInterop": true,
     "moduleResolution": "node",
@@ -17,7 +17,7 @@
 
     "outDir": "dist",
     "strict": true,
-    "lib": ["esnext", "ES2022"],
+    "lib": ["esnext"],
     "baseUrl": ".",
     "paths": {
       "utils/*": ["./src/utils/*"],

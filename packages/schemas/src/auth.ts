@@ -8,6 +8,12 @@ export const AUTH_SCHEMA = z.object({
   totpCode: z.string().optional(),
 });
 
+export const REGISTER_SCHEMA = AUTH_SCHEMA.omit({ password: true }).extend({
+  discordId: z.string().nullish(),
+  steamId: z.string().nullish(),
+  password: z.string().min(8).max(255).nullish(),
+});
+
 export const CHANGE_USER_SCHEMA = z.object({
   soundSettings: z.any(),
   isDarkTheme: z.boolean(),

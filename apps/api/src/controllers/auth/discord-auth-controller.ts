@@ -9,7 +9,7 @@ import { encode } from "utils/discord";
 import { prisma } from "lib/prisma";
 import { getSessionUser } from "lib/auth/getSessionUser";
 import { cad, CadFeature, Feature, Rank, WhitelistStatus, type User } from "@prisma/client";
-import { getDefaultPermissionsForNewUser } from "./Auth";
+import { getDefaultPermissionsForNewUser } from "./auth-controller";
 import { IsAuth } from "middlewares/IsAuth";
 import { DISCORD_API_URL } from "lib/discord/config";
 import { updateMemberRolesLogin } from "lib/discord/auth";
