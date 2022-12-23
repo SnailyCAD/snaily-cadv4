@@ -3,7 +3,7 @@ import * as React from "react";
 import { Marker, Popup, Tooltip, useMap } from "react-leaflet";
 import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { Button } from "@snailycad/ui";
-import { BLIP_SIZES, MapPlayer, PlayerDataEventPayload } from "types/Map";
+import type { MapPlayer, PlayerDataEventPayload } from "types/Map";
 import { icon as leafletIcon } from "leaflet";
 import { useTranslations } from "next-intl";
 import { MapItem, useDispatchMapState } from "state/mapState";
@@ -34,10 +34,12 @@ export function PlayerMarker({ player, handleToggle }: Props) {
 
   const playerIcon = React.useMemo(() => {
     if (parseInt(player.icon, 10) === 56 && player.hasSirenEnabled) {
+      const blipSize = 35;
+
       return leafletIcon({
         iconUrl: "/map/siren.gif",
-        iconSize: [BLIP_SIZES.width, BLIP_SIZES.height],
-        iconAnchor: [BLIP_SIZES.width / 2, 0],
+        iconSize: [blipSize, blipSize],
+        iconAnchor: [blipSize / 2, 0],
         popupAnchor: [0, 0],
       });
     }
