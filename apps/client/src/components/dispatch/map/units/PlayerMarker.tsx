@@ -33,6 +33,17 @@ export function PlayerMarker({ player, handleToggle }: Props) {
   const { generateCallsign } = useGenerateCallsign();
 
   const playerIcon = React.useMemo(() => {
+    if (parseInt(player.icon, 10) === 56 && player.hasSirenEnabled) {
+      const blipSize = 35;
+
+      return leafletIcon({
+        iconUrl: "/map/siren.gif",
+        iconSize: [blipSize, blipSize],
+        iconAnchor: [blipSize / 2, 0],
+        popupAnchor: [0, 0],
+      });
+    }
+
     const playerIcon = markerTypes[parseInt(player.icon, 10)];
 
     if (playerIcon) {
@@ -40,7 +51,7 @@ export function PlayerMarker({ player, handleToggle }: Props) {
     }
 
     return PLAYER_ICON;
-  }, [player.icon, markerTypes]);
+  }, [player.icon, player.hasSirenEnabled, markerTypes]);
 
   const pos = React.useMemo(
     () => player.pos?.x && player.pos.y && convertToMap(player.pos.x, player.pos.y, map),

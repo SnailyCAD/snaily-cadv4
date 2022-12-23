@@ -43,9 +43,9 @@ export function Map() {
         minNativeZoom={0}
       />
 
+      <RenderMapPlayers />
       <RenderMapBlips />
       <RenderActiveCalls />
-      <RenderMapPlayers />
       <MapActions />
     </MapContainer>
   );
