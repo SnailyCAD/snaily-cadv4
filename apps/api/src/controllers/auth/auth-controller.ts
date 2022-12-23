@@ -15,6 +15,7 @@ import { setUserPreferencesCookies } from "lib/auth/setUserPreferencesCookies";
 import type * as APITypes from "@snailycad/types/api";
 import { setUserTokenCookies } from "lib/auth/setUserTokenCookies";
 import { validateGoogleCaptcha } from "lib/auth/validate-google-captcha";
+import { validateDiscordAndSteamId } from "lib/auth/validate-discord-steam-id";
 
 @Controller("/auth")
 @ContentType("application/json")
@@ -107,35 +108,7 @@ export class AuthController {
     const data = validateSchema(REGISTER_SCHEMA, body);
 
     await validateGoogleCaptcha(data);
-
-    const hasDiscordOrSteamId = Boolean(data.discordId) || Boolean(data.steamId);
-
-    // todo: custom function
-    if (!data.password) {
-      if (!hasDiscordOrSteamId) {
-        throw new ExtendedBadRequest({
-          password: "Required",
-          error: "Must specify `discordId` or `steamId` when no password is present.",
-        });
-      }
-
-      const _OR = [];
-      if (data.discordId) {
-        _OR.push({ discordId: data.discordId });
-      }
-
-      if (data.steamId) {
-        _OR.push({ steamId: data.steamId });
-      }
-
-      const user = await prisma.user.findFirst({
-        where: { OR: _OR },
-      });
-
-      if (user) {
-        throw new ExtendedBadRequest({ username: "userAlreadyExistsWithDiscordOrSteamId" });
-      }
-    }
+    await validateDiscordAndSteamId(data);
 
     const nonDiscordUserUsernameRegex = /^([a-z_.\d]+)*[a-z\d]+$/i;
     if (!nonDiscordUserUsernameRegex.test(data.username)) {
