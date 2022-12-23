@@ -108,19 +108,28 @@ export class AuthController {
 
     await validateGoogleCaptcha(data);
 
-    // todo: custom function
-    if (!data.password && (!data.discordId || !data.steamId)) {
-      throw new ExtendedBadRequest({
-        password: "Required",
-        error: "Must specify `discordId` or `steamId` when no password is present.",
-      });
-    }
+    const hasDiscordOrSteamId = Boolean(data.discordId) || Boolean(data.steamId);
 
-    if (!data.password && (data.discordId || data.steamId)) {
+    // todo: custom function
+    if (!data.password) {
+      if (!hasDiscordOrSteamId) {
+        throw new ExtendedBadRequest({
+          password: "Required",
+          error: "Must specify `discordId` or `steamId` when no password is present.",
+        });
+      }
+
+      const _OR = [];
+      if (data.discordId) {
+        _OR.push({ discordId: data.discordId });
+      }
+
+      if (data.steamId) {
+        _OR.push({ steamId: data.steamId });
+      }
+
       const user = await prisma.user.findFirst({
-        where: {
-          OR: [{ discordId: data.discordId }, { steamId: data.steamId }],
-        },
+        where: { OR: _OR },
       });
 
       if (user) {
