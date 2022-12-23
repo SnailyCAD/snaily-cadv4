@@ -11,6 +11,7 @@ export interface Player {
   icon: string;
   name: string;
   playerId: number;
+  hasSirenEnabled: boolean;
 }
 
 export interface PlayerDataEvent {
