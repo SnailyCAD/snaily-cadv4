@@ -42,6 +42,19 @@ export function NameSearchFooterActions(props: Props) {
     }
   }
 
+  async function handleDeclareMissing() {
+    if (!currentResult) return;
+
+    const { json } = await execute<PostEmsFdDeclareCitizenById>({
+      path: `/search/actions/missing/${currentResult.id}`,
+      method: "POST",
+    });
+
+    if (json.id) {
+      setCurrentResult({ ...currentResult, ...json });
+    }
+  }
+
   function handleOpenCreateRecord(type: RecordType) {
     if (!currentResult) return;
 
@@ -104,12 +117,12 @@ export function NameSearchFooterActions(props: Props) {
             <Dropdown.Item
               size="xs"
               type="button"
-              onPress={handleDeclare}
+              onPress={handleDeclareMissing}
               disabled={state === "loading"}
               variant="cancel"
               className="px-1.5"
             >
-              {currentResult.dead ? t("Leo.declareFound") : t("Leo.declareMissing")}
+              {currentResult.missing ? t("Leo.declareFound") : t("Leo.declareMissing")}
             </Dropdown.Item>
           </>
         ) : null}

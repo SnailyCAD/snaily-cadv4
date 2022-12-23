@@ -106,7 +106,7 @@ export default function CitizenId() {
       {citizen.dead && citizen.dateOfDead ? (
         <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
           {t.rich("citizenDead", {
-            // @ts-expect-error this is a valid element type
+            // @ts-expect-error ignore
             date: <FullDate>{citizen.dateOfDead}</FullDate>,
           })}
         </div>
