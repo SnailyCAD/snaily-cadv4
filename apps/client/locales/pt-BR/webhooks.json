@@ -1,0 +1,50 @@
+{
+  "Tow": {
+    "vehicleImpounded": "Veículo Apreendido",
+    "registrationStatus": "Status do Registro",
+    "model": "Modelo",
+    "owner": "Proprietário"
+  },
+  "Bolos": {
+    "boloCreated": "BOLO Criado",
+    "viewMoreInfo": "Veja mais informações sobre o CAD.",
+    "type": "Tipo",
+    "name": "Nome",
+    "plate": "Placa",
+    "model": "Modelo",
+    "color": "Cor"
+  },
+  "Statuses": {
+    "statusChange": "Mudança de Status",
+    "status": "Status",
+    "statusChangeDescription": "A unidade {unit} mudou seu status para {status}."
+  },
+  "PanicButton": {
+    "panicButton": "Botão do Pânico",
+    "panicButtonDescription": "A unidade {unit} pressionou o botão do pânico."
+  },
+  "Calls": {
+    "callCreated": "Chamada 911 Criada",
+    "viewMoreInfo": "Veja mais informações sobre o CAD.",
+    "location": "Localização",
+    "caller": "Chamador",
+    "unknown": "Desconhecido",
+    "couldNotRenderDescription": "Não foi possível renderizar a descrição."
+  },
+  "Records": {
+    "citizen": "Cidadão",
+    "status": "Status",
+    "postal": "postal",
+    "recordType": "Tipo do Registro",
+    "ARREST_REPORT": "Relatório de Prisão",
+    "WRITTEN_WARNING": "Aviso por Escrito",
+    "TICKET": "Multa",
+    "totalBail": "Fiança Total",
+    "totalFineAmount": "Valor Total da Multa",
+    "totalJailTime": "Tempo Total de Prisão",
+    "newWarrantCreated": "Novo Mandado Criado",
+    "newRecordCreated": "Novo Registro Criado",
+    "ACTIVE": "Ativo",
+    "INACTIVE": "Inativo"
+  }
+}
