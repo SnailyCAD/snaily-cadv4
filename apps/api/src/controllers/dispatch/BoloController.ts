@@ -50,9 +50,11 @@ export class BoloController {
       this.endInactiveBolos(inactivityFilter.updatedAt);
     }
 
-    const where: Prisma.BoloWhereInput = {
-      OR: [{ plate: { contains: query, mode: "insensitive" } }],
-    };
+    const where: Prisma.BoloWhereInput = query
+      ? {
+          OR: [{ plate: { contains: query, mode: "insensitive" } }],
+        }
+      : {};
 
     const bolos = await prisma.bolo.findMany({
       where: { ...inactivityFilter?.filter, ...where },
