@@ -22,6 +22,7 @@ const recordsInclude = {
   },
   seizedItems: true,
   courtEntry: { include: { dates: true } },
+  vehicle: { include: { model: { include: { value: true } } } },
 };
 
 @UseBeforeEach(IsAuth)

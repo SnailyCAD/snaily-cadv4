@@ -91,7 +91,7 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
 
   function handleSelectionChange(key?: React.Key, value?: string) {
     if (!key) {
-      props.setValues({ localValue: value ?? "" });
+      props.setValues({ localValue: value });
       return;
     }
 

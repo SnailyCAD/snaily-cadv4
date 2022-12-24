@@ -48,8 +48,6 @@ async function loadDefaultLocale() {
     const defaultLocaleMatch = defaultLocaleMatcher.exec(rawJSON);
     const defaultLocale = defaultLocaleMatch?.groups?.defaultLocale;
 
-    console.log({ defaultLocale });
-
     return defaultLocale ?? "en";
   } catch (err) {
     return "en";

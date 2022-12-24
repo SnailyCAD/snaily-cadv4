@@ -439,6 +439,7 @@ model RegisteredVehicle {
   TruckLog         TruckLog[]
   ImpoundedVehicle ImpoundedVehicle[]
   Business         Business[]         @relation("registeredBusinessVehicles")
+  Record           Record[]
 }
 
 model Weapon {
@@ -1164,6 +1165,7 @@ model Record {
   createdAt            DateTime            @default(now())
   updatedAt            DateTime            @default(now()) @updatedAt
   postal               String              @db.VarChar(255)
+  address              String?             @db.Text
   notes                String?             @db.Text
   release              RecordRelease?      @relation(fields: [releaseId], references: [id])
   releaseId            String?
@@ -1175,6 +1177,11 @@ model Record {
   seizedItems          SeizedItem[]
   status               WhitelistStatus?    @default(ACCEPTED)
   paymentStatus        PaymentStatus?
+  vehicle              RegisteredVehicle?  @relation(fields: [vehicleId], references: [id])
+  vehicleId            String?
+  vehiclePlate         String?
+  vehicleModel         String?
+  vehicleColor         String?
 }
 
 model RecordRelease {
