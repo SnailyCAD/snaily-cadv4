@@ -3,6 +3,7 @@ import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
 import { useFormikContext } from "formik";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 export function useDefaultDivisions() {
   const { division } = useValues();
@@ -30,6 +31,7 @@ export function useDefaultDivisions() {
 export function EmergencyVehicleFields() {
   const { values, handleChange } = useFormikContext<any>();
   const { division, department } = useValues();
+  const { DIVISIONS } = useFeatureEnabled();
 
   return (
     <>
@@ -47,19 +49,21 @@ export function EmergencyVehicleFields() {
         />
       </FormField>
 
-      <FormField label="Divisions">
-        <Select
-          closeMenuOnSelect={false}
-          isMulti
-          values={division.values.map((v) => ({
-            value: v.id,
-            label: v.value.value,
-          }))}
-          name="divisions"
-          onChange={handleChange}
-          value={values.divisions}
-        />
-      </FormField>
+      {DIVISIONS ? (
+        <FormField optional label="Divisions">
+          <Select
+            closeMenuOnSelect={false}
+            isMulti
+            values={division.values.map((v) => ({
+              value: v.id,
+              label: v.value.value,
+            }))}
+            name="divisions"
+            onChange={handleChange}
+            value={values.divisions}
+          />
+        </FormField>
+      ) : null}
     </>
   );
 }
