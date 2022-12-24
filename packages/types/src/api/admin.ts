@@ -157,9 +157,6 @@ export interface GetManageRecordsLogsCitizenData {
     };
     warrant: Types.Warrant | null;
     records: Types.Record | null;
-    vehicle:
-      | (Prisma.RegisteredVehicle & { model: Prisma.VehicleValue & { value: Prisma.Value } })
-      | null;
   })[];
 }
 
