@@ -19,7 +19,7 @@ import { UtilityPanel } from "components/shared/UtilityPanel";
 import { ActiveToneType, Rank, ValueType } from "@snailycad/types";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import { usePanicButton } from "hooks/shared/usePanicButton";
-import { useTones } from "hooks/global/useTones";
+import { useTones } from "hooks/global/use-tones";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import type {
   Get911CallsData,
