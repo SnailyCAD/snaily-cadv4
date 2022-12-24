@@ -147,8 +147,6 @@ export function ManageRecordModal(props: Props) {
   const payload = getPayload<{ citizenId: string; citizenName: string }>(data[props.type].id);
   const validate = handleValidate(CREATE_TICKET_SCHEMA);
 
-  console.log({ props: props.record });
-
   const INITIAL_VALUES = {
     type: props.type,
     citizenId: props.record?.citizenId ?? payload?.citizenId ?? "",
