@@ -9,7 +9,7 @@ import { makeUnitName } from "lib/utils";
 import useFetch from "lib/useFetch";
 import type { PostEmsFdTogglePanicButtonData } from "@snailycad/types/api";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
-import { TonesModal } from "components/dispatch/modals/TonesModal";
+import { TonesModal } from "components/dispatch/modals/tones-modal";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useMounted } from "@casper124578/useful";
 import { usePermission } from "hooks/usePermission";

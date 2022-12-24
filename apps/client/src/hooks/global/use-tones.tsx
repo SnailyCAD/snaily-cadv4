@@ -12,20 +12,21 @@ import useFetch from "lib/useFetch";
 const LEO_TONE_SRC = "/sounds/leo-tone.mp3";
 const EMS_FD_TONE_SRC = "/sounds/ems-fd-tone.mp3";
 
-function useGetActiveTone(type: ActiveToneType) {
+export function useGetActiveTone(type?: ActiveToneType) {
   const { execute } = useFetch();
 
-  const { data = [] } = useQuery({
+  const { data } = useQuery({
     queryKey: ["active-tones", type],
     queryFn: async () =>
       (await execute<GETDispatchTonesData>({ path: "/dispatch/tones", method: "GET" })).json,
   });
 
-  const activeTone =
-    // first find the shared tone, if not found, find the tone based on the type
-    data?.find((v) => v.type === ActiveToneType.SHARED) ?? data?.find((v) => v.type === type);
+  const activeTone = React.useMemo(() => {
+    if (!data) return null;
+    return data.find((v) => v.type === ActiveToneType.SHARED) ?? data.find((v) => v.type === type);
+  }, [data, type]);
 
-  return activeTone ?? null;
+  return { activeTone: activeTone ?? null, activeTones: data ?? [] };
 }
 
 export function useTones(type: ActiveToneType) {
@@ -34,16 +35,16 @@ export function useTones(type: ActiveToneType) {
   const [leoAudio, , leoControls] = useAudio({ autoPlay: false, src: LEO_TONE_SRC });
   const [emsFdAudio, , emsFdControls] = useAudio({ autoPlay: false, src: EMS_FD_TONE_SRC });
   const [user, setUser] = React.useState<{ username: string } | null>(
-    initialActiveTone?.createdBy ?? null,
+    initialActiveTone.activeTone?.createdBy ?? null,
   );
   const [description, setDescription] = React.useState<{
     type: ActiveToneType;
     description: string | null;
-  } | null>(initialActiveTone);
+  } | null>(initialActiveTone.activeTone);
 
   React.useEffect(() => {
-    setDescription(initialActiveTone);
-    setUser(initialActiveTone?.createdBy ?? null);
+    setDescription(initialActiveTone.activeTone);
+    setUser(initialActiveTone.activeTone?.createdBy ?? null);
   }, [initialActiveTone]);
 
   useListener(

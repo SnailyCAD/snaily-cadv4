@@ -137,6 +137,12 @@ export type GETDispatchTonesData = Types.ActiveTone[];
 export type PostDispatchTonesData = boolean;
 
 /**
+ * @method DELETE
+ * @route /dispatch/tones/:id
+ */
+export type DeleteDispatchTonesData = boolean;
+
+/**
  * @method PUT
  * @route /dispatch/status/:unitId
  */

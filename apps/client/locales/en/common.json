@@ -60,7 +60,8 @@
     "startTyping": "Start typing...",
     "searching": "Searching...",
     "information": "Information",
-    "showingXResults": "Showing <span>{amount}</span> result(s)"
+    "showingXResults": "Showing <span>{amount}</span> result(s)",
+    "revoke": "Revoke"
   },
   "Nav": {
     "citizen": "Citizen",

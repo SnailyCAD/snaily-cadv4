@@ -9,7 +9,7 @@ import * as modalButtons from "components/modal-buttons/buttons";
 import { ModalButton } from "components/modal-buttons/ModalButton";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
-import { TonesModal } from "./modals/TonesModal";
+import { TonesModal } from "./modals/tones-modal";
 import type {
   PostDispatchDispatchersStateData,
   PostDispatchSignal100Data,

@@ -1,5 +1,5 @@
 import { Controller } from "@tsed/di";
-import { ContentType, Description, Get, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { BodyParams, PathParams, Context } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -412,6 +412,19 @@ export class DispatchController {
 
     this.socket.emitTones(created);
 
+    return true;
+  }
+
+  @Delete("/tones/:id")
+  @IsFeatureEnabled({ feature: Feature.TONES })
+  @UsePermissions({
+    permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
+    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
+  })
+  async deleteToneById(@PathParams("id") id: string): Promise<APITypes.DeleteDispatchTonesData> {
+    await prisma.activeTone.delete({
+      where: { id },
+    });
     return true;
   }
 
