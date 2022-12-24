@@ -76,6 +76,11 @@ export async function upsertRecord(options: UpsertRecordOptions) {
       notes: options.data.notes,
       postal: options.data.postal,
       paymentStatus: (options.data.paymentStatus ?? null) as PaymentStatus | null,
+      address: options.data.address,
+      vehicleId: options.data.vehicleId || null,
+      vehicleColor: options.data.vehicleColor || null,
+      vehicleModel: options.data.vehicleModel || null,
+      vehiclePlate: options.data.plateOrVin || null,
     },
     include: {
       officer: { include: leoProperties },
