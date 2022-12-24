@@ -6,6 +6,7 @@ interface SearchAreaProps<T> {
   search: { search: string; setSearch(search: string): void };
   asyncTable: ReturnType<typeof useAsyncTable<T>>;
   totalCount: number;
+  children?: React.ReactNode;
 }
 
 export function SearchArea<T>(props: SearchAreaProps<T>) {
@@ -13,19 +14,23 @@ export function SearchArea<T>(props: SearchAreaProps<T>) {
 
   return (
     <>
-      <TextField
-        label={common("search")}
-        className="my-2 w-full relative"
-        name="search"
-        onChange={props.search.setSearch}
-        value={props.search.search}
-      >
-        {props.asyncTable.isLoading ? (
-          <span className="absolute top-[2.4rem] right-2.5">
-            <Loader />
-          </span>
-        ) : null}
-      </TextField>
+      <div className="flex items-baseline gap-2">
+        <TextField
+          label={common("search")}
+          className="my-2 w-full relative"
+          name="search"
+          onChange={props.search.setSearch}
+          value={props.search.search}
+        >
+          {props.asyncTable.isLoading ? (
+            <span className="absolute top-[2.4rem] right-2.5">
+              <Loader />
+            </span>
+          ) : null}
+        </TextField>
+
+        {props.children}
+      </div>
 
       {props.search.search && props.asyncTable.pagination.totalDataCount !== props.totalCount ? (
         <p className="italic text-base font-semibold">

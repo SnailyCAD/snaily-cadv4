@@ -31,6 +31,9 @@ import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { getSelectedTableRows } from "hooks/shared/table/use-table-state";
 import { SearchArea } from "components/shared/search/search-area";
 import dynamic from "next/dynamic";
+import { FormField } from "components/form/FormField";
+import { Select } from "components/form/Select";
+import { useValues } from "context/ValuesContext";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal, {
   ssr: false,
@@ -76,6 +79,7 @@ export function AllUnitsTab({ units }: Props) {
   const router = useRouter();
   const { DIVISIONS, BADGE_NUMBERS } = useFeatureEnabled();
   const { openModal, closeModal } = useModal();
+  const { department } = useValues();
 
   function handleDeleteClick(unit: Unit) {
     unitState.setTempId(unit.id);
@@ -149,7 +153,21 @@ export function AllUnitsTab({ units }: Props) {
         search={{ search, setSearch }}
         asyncTable={asyncTable}
         totalCount={units.totalCount}
-      />
+      >
+        <FormField className="w-full max-w-[15rem]" label={t("Leo.department")}>
+          <Select
+            isClearable
+            value={asyncTable.filters?.departmentId ?? null}
+            onChange={(event) =>
+              asyncTable.setFilters((prev) => ({ ...prev, departmentId: event.target.value }))
+            }
+            values={department.values.map((v) => ({
+              label: v.value.value,
+              value: v.id,
+            }))}
+          />
+        </FormField>
+      </SearchArea>
 
       {asyncTable.items.length <= 0 ? (
         <p className="mt-2">{t("Management.noUnits")}</p>

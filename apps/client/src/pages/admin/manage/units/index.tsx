@@ -7,10 +7,11 @@ import type { GetServerSideProps } from "next";
 import { useTranslations } from "use-intl";
 import { Title } from "components/shared/Title";
 import { TabList } from "components/shared/TabList";
-import { Rank } from "@snailycad/types";
+import { Rank, ValueType } from "@snailycad/types";
 import { usePermission, Permissions } from "hooks/usePermission";
 import type { GetManageUnitsData } from "@snailycad/types/api";
 import { AllUnitsTab } from "components/admin/manage/units/tabs/all-units-tab";
+import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 
 const DepartmentWhitelistingTab = dynamic(
   async () =>
@@ -35,6 +36,9 @@ interface Props {
 export default function SupervisorPanelPage(props: Props) {
   const t = useTranslations();
   const { hasPermissions } = usePermission();
+  useLoadValuesClientSide({
+    valueTypes: [ValueType.DEPARTMENT],
+  });
 
   const hasViewPermissions = hasPermissions(
     [

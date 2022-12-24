@@ -56,24 +56,29 @@ export class AdminManageUnitsController {
     @QueryParams("includeAll", Boolean) includeAll = false,
     @QueryParams("query", String) query = "",
     @QueryParams("pendingOnly", Boolean) pendingOnly = false,
+    @QueryParams("departmentId", String) departmentId?: string,
   ): Promise<APITypes.GetManageUnitsData> {
     const [officerCount, _officers] = await prisma.$transaction([
-      prisma.officer.count({ where: this.createWhere({ query, pendingOnly }, "OFFICER") }),
+      prisma.officer.count({
+        where: this.createWhere({ departmentId, query, pendingOnly }, "OFFICER"),
+      }),
       prisma.officer.findMany({
         take: includeAll ? undefined : 35,
         skip: includeAll ? undefined : skip,
         include: leoProperties,
-        where: this.createWhere({ query, pendingOnly }, "OFFICER"),
+        where: this.createWhere({ departmentId, query, pendingOnly }, "OFFICER"),
       }),
     ]);
 
     const [emsFdDeputiesCount, _emsFdDeputies] = await prisma.$transaction([
-      prisma.emsFdDeputy.count({ where: this.createWhere({ query, pendingOnly }, "DEPUTY") }),
+      prisma.emsFdDeputy.count({
+        where: this.createWhere({ departmentId, query, pendingOnly }, "DEPUTY"),
+      }),
       prisma.emsFdDeputy.findMany({
         take: includeAll ? undefined : 35,
         skip: includeAll ? undefined : skip,
         include: unitProperties,
-        where: this.createWhere({ query, pendingOnly }, "DEPUTY"),
+        where: this.createWhere({ departmentId, query, pendingOnly }, "DEPUTY"),
       }),
     ]);
 
@@ -603,22 +608,30 @@ export class AdminManageUnitsController {
   }
 
   private createWhere(
-    { query, pendingOnly }: { query: string; pendingOnly: boolean },
+    {
+      query,
+      pendingOnly,
+      departmentId,
+    }: { departmentId?: string; query: string; pendingOnly: boolean },
     type: "OFFICER" | "DEPUTY" = "OFFICER",
   ) {
     const [name, surname] = query.toString().toLowerCase().split(/ +/g);
+
+    const departmentIdWhere = departmentId ? { departmentId } : {};
 
     if (!query) {
       return pendingOnly
         ? {
             whitelistStatus: { status: WhitelistStatus.PENDING },
+            ...departmentIdWhere,
           }
-        : {};
+        : departmentIdWhere;
     }
 
     const where: any = {
       ...(pendingOnly ? { whitelistStatus: { status: WhitelistStatus.PENDING } } : {}),
       OR: [
+        departmentIdWhere,
         { callsign: query },
         { callsign2: query },
         { department: { value: { value: { contains: query, mode: "insensitive" } } } },
