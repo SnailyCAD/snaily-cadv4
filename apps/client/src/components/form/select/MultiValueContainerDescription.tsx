@@ -17,7 +17,7 @@ export function MultiValueContainerDescription(props: MultiValueGenericProps<any
   }
 
   return (
-    <HoverCard pointerEvents trigger={trigger}>
+    <HoverCard portal={false} pointerEvents trigger={trigger}>
       <div className="dark:text-gray-200 mt-2 text-base min-w-[300px]">
         <Editor isReadonly value={dataToSlate(value)} />
       </div>
