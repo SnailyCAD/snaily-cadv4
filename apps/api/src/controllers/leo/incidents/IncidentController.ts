@@ -9,7 +9,7 @@ import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Officer, ShouldDoType, MiscCadSettings, CombinedLeoUnit } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
-import { Socket } from "services/SocketService";
+import { Socket } from "services/socket-service";
 import type { z } from "zod";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";

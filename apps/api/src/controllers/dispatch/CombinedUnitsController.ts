@@ -4,7 +4,7 @@ import { ContentType, Description, Post } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { ShouldDoType } from "@prisma/client";
-import { Socket } from "services/SocketService";
+import { Socket } from "services/socket-service";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { combinedUnitProperties } from "lib/leo/activeOfficer";

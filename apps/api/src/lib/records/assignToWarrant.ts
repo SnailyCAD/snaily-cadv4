@@ -1,7 +1,7 @@
 import { ShouldDoType } from "@prisma/client";
 import { findUnit } from "lib/leo/findUnit";
 import { prisma } from "lib/prisma";
-import type { Socket } from "services/SocketService";
+import type { Socket } from "services/socket-service";
 
 interface Options {
   warrantId: string;

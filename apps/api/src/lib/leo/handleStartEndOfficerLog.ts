@@ -2,7 +2,7 @@ import { EmsFdDeputy, Officer, ShouldDoType } from "@prisma/client";
 import { callInclude } from "controllers/dispatch/911-calls/Calls911Controller";
 import { incidentInclude } from "controllers/leo/incidents/IncidentController";
 import { prisma } from "lib/prisma";
-import type { Socket } from "services/SocketService";
+import type { Socket } from "services/socket-service";
 
 interface Options<Type extends "leo" | "ems-fd"> {
   shouldDo: ShouldDoType;

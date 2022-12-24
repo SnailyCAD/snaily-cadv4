@@ -11,7 +11,7 @@ import {
 } from "@prisma/client";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { createPanicButtonEmbed } from "lib/dispatch/webhooks";
-import type { Socket } from "services/SocketService";
+import type { Socket } from "services/socket-service";
 
 export interface HandlePanicButtonPressedOptions {
   locale?: string | null;

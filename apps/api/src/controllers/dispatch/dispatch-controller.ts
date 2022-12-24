@@ -3,7 +3,7 @@ import { ContentType, Description, Get, Post, Put } from "@tsed/schema";
 import { BodyParams, PathParams, Context } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
-import { Socket } from "services/SocketService";
+import { Socket } from "services/socket-service";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
 import { cad, Feature, MiscCadSettings, User } from "@snailycad/types";

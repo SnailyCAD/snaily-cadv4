@@ -3,7 +3,7 @@ import { ShouldDoType } from "@snailycad/types";
 import { callInclude } from "controllers/dispatch/911-calls/Calls911Controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { prisma } from "lib/prisma";
-import type { Socket } from "services/SocketService";
+import type { Socket } from "services/socket-service";
 
 interface Options {
   socket: Socket;

@@ -12,7 +12,7 @@ import { prisma } from "lib/prisma";
 import { CAD_SELECT, IsAuth, setDiscordAuth } from "middlewares/IsAuth";
 import { BadRequest } from "@tsed/exceptions";
 import { Req, Res, UseBefore } from "@tsed/common";
-import { Socket } from "services/SocketService";
+import { Socket } from "services/socket-service";
 import { nanoid } from "nanoid";
 import { validateSchema } from "lib/validateSchema";
 import { cad, Feature, JailTimeScale, Rank } from "@prisma/client";

@@ -28,7 +28,7 @@ import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncrement
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
 import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
-import { Socket } from "services/SocketService";
+import { Socket } from "services/socket-service";
 import type * as APITypes from "@snailycad/types/api";
 import { isFeatureEnabled } from "lib/cad";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
