@@ -11,9 +11,6 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { RecordType, type PenalCode, type Record, PaymentStatus } from "@snailycad/types";
-import { PenalCodesTable } from "./penal-codes-table";
-import { SelectPenalCode } from "./select-penal-code";
-import { SeizedItemsTable } from "./seized-items/seized-items-table";
 import { toastMessage } from "lib/toastMessage";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { PostRecordsData, PutRecordsByIdData } from "@snailycad/types/api";
@@ -22,6 +19,9 @@ import { AddressPostalSelect } from "components/form/select/PostalSelect";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import { ManageCourtEntry } from "components/courthouse/court-entries/manage-court-entry-modal";
 import { FullDate } from "components/shared/FullDate";
+import { TabList, TabsContent } from "components/shared/TabList";
+import { SeizedItemsTab } from "./tabs/seized-items-tab/seized-items-tab";
+import { ViolationsTab } from "./tabs/violations-tab/violations-tab";
 
 interface Props {
   hideCitizenField?: boolean;
@@ -183,79 +183,81 @@ export function ManageRecordModal(props: Props) {
       className="w-[800px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, setFieldValue, errors, values, isValid }) => (
+        {({ setFieldValue, errors, values, isValid }) => (
           <Form autoComplete="off">
-            {props.hideCitizenField ? null : (
-              <CitizenSuggestionsField
-                autoFocus
-                fromAuthUserOnly={false}
-                label={t("citizen")}
-                isDisabled={props.isReadOnly || !!props.record}
-                labelFieldName="citizenName"
-                valueFieldName="citizenId"
-              />
-            )}
+            <TabList
+              tabs={[
+                { name: "General Information", value: "general-information-tab" },
+                { name: "Violations", value: "violations-tab" },
+                { name: "Seized Items", value: "seized-items-tab" },
+              ]}
+            >
+              <TabsContent value="general-information-tab">
+                {props.hideCitizenField ? null : (
+                  <CitizenSuggestionsField
+                    autoFocus
+                    fromAuthUserOnly={false}
+                    label={t("citizen")}
+                    isDisabled={props.isReadOnly || !!props.record}
+                    labelFieldName="citizenName"
+                    valueFieldName="citizenId"
+                  />
+                )}
 
-            <AddressPostalSelect isDisabled={props.isReadOnly} postalOptional={false} postalOnly />
+                <AddressPostalSelect
+                  isDisabled={props.isReadOnly}
+                  postalOptional={false}
+                  postalOnly
+                />
 
-            <FormField label={t("violations")}>
-              <SelectPenalCode
-                isReadOnly={props.isReadOnly}
-                penalCodes={penalCodes}
-                value={values.violations}
-                handleChange={handleChange}
-              />
-            </FormField>
+                {/* todo: custom component for this */}
+                <FormField className="relative mt-3 mb-2" label={tCourt("courtEntries")}>
+                  <Button
+                    className="absolute right-0 top-0"
+                    type="button"
+                    onPress={() => openModal(ModalIds.ManageCourtEntry)}
+                  >
+                    {tCourt("manageCourtEntry")}
+                  </Button>
 
-            <PenalCodesTable
-              isReadOnly={props.isReadOnly}
-              penalCodes={values.violations.map((v) => v.value)}
-            />
-            <SeizedItemsTable isReadOnly={props.isReadOnly} />
+                  {values.courtEntry?.dates
+                    ? values.courtEntry.dates.map((date, idx) => (
+                        <FullDate onlyDate key={idx}>
+                          {date.date}
+                        </FullDate>
+                      ))
+                    : "None"}
+                </FormField>
 
-            {/* todo: custom component for this */}
-            <FormField className="relative mt-3 mb-2" label={tCourt("courtEntries")}>
-              <Button
-                className="absolute right-0 top-0"
-                type="button"
-                onPress={() => openModal(ModalIds.ManageCourtEntry)}
-              >
-                {tCourt("manageCourtEntry")}
-              </Button>
+                <TextField
+                  isTextarea
+                  isOptional
+                  isDisabled={props.isReadOnly}
+                  errorMessage={errors.notes}
+                  label={t("notes")}
+                  value={values.notes}
+                  name="notes"
+                  onChange={(value) => setFieldValue("notes", value)}
+                />
 
-              {values.courtEntry?.dates
-                ? values.courtEntry.dates.map((date, idx) => (
-                    <FullDate onlyDate key={idx}>
-                      {date.date}
-                    </FullDate>
-                  ))
-                : "None"}
-            </FormField>
+                <FormField optional errorMessage={errors.paymentStatus} label={t("recordPaid")}>
+                  <Toggle
+                    disabled={props.isReadOnly}
+                    value={values.paymentStatus === PaymentStatus.PAID}
+                    name="paymentStatus"
+                    onCheckedChange={(event) => {
+                      setFieldValue(
+                        "paymentStatus",
+                        event.target.value ? PaymentStatus.PAID : PaymentStatus.UNPAID,
+                      );
+                    }}
+                  />
+                </FormField>
+              </TabsContent>
 
-            <TextField
-              isTextarea
-              isOptional
-              isDisabled={props.isReadOnly}
-              errorMessage={errors.notes}
-              label={t("notes")}
-              value={values.notes}
-              name="notes"
-              onChange={(value) => setFieldValue("notes", value)}
-            />
-
-            <FormField optional errorMessage={errors.paymentStatus} label={t("recordPaid")}>
-              <Toggle
-                disabled={props.isReadOnly}
-                value={values.paymentStatus === PaymentStatus.PAID}
-                name="paymentStatus"
-                onCheckedChange={(event) => {
-                  setFieldValue(
-                    "paymentStatus",
-                    event.target.value ? PaymentStatus.PAID : PaymentStatus.UNPAID,
-                  );
-                }}
-              />
-            </FormField>
+              <SeizedItemsTab isReadOnly={props.isReadOnly} />
+              <ViolationsTab penalCodes={penalCodes} isReadOnly={props.isReadOnly} />
+            </TabList>
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onPress={handleClose} variant="cancel">
