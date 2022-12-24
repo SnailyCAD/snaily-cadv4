@@ -5,18 +5,46 @@ import { useTranslations } from "use-intl";
 import { useAudio } from "react-use";
 import { useRouter } from "next/router";
 import { ActiveTone, ActiveToneType } from "@snailycad/types";
+import { useQuery } from "@tanstack/react-query";
+import type { GETDispatchTonesData } from "@snailycad/types/api";
+import useFetch from "lib/useFetch";
 
 const LEO_TONE_SRC = "/sounds/leo-tone.mp3";
 const EMS_FD_TONE_SRC = "/sounds/ems-fd-tone.mp3";
 
-export function useTones(type: "leo" | "ems-fd") {
+function useGetActiveTone(type: ActiveToneType) {
+  const { execute } = useFetch();
+
+  const { data = [] } = useQuery({
+    queryKey: ["active-tones", type],
+    queryFn: async () =>
+      (await execute<GETDispatchTonesData>({ path: "/dispatch/tones", method: "GET" })).json,
+  });
+
+  const activeTone =
+    // first find the shared tone, if not found, find the tone based on the type
+    data?.find((v) => v.type === ActiveToneType.SHARED) ?? data?.find((v) => v.type === type);
+
+  return activeTone ?? null;
+}
+
+export function useTones(type: ActiveToneType) {
+  const initialActiveTone = useGetActiveTone(type);
+
   const [leoAudio, , leoControls] = useAudio({ autoPlay: false, src: LEO_TONE_SRC });
   const [emsFdAudio, , emsFdControls] = useAudio({ autoPlay: false, src: EMS_FD_TONE_SRC });
-  const [user, setUser] = React.useState<{ username: string } | null>(null);
+  const [user, setUser] = React.useState<{ username: string } | null>(
+    initialActiveTone?.createdBy ?? null,
+  );
   const [description, setDescription] = React.useState<{
     type: ActiveToneType;
     description: string | null;
-  } | null>(null);
+  } | null>(initialActiveTone);
+
+  React.useEffect(() => {
+    setDescription(initialActiveTone);
+    setUser(initialActiveTone?.createdBy ?? null);
+  }, [initialActiveTone]);
 
   useListener(
     SocketEvents.Tones,
@@ -34,7 +62,7 @@ export function useTones(type: "leo" | "ems-fd") {
         emsFdControls.pause();
       }
 
-      if (isShared || (tonesData.type === ActiveToneType.LEO && type === "leo")) {
+      if (isShared || (tonesData.type === ActiveToneType.LEO && type === ActiveToneType.LEO)) {
         leoControls.play();
         setDescription({ description: tonesData.description, type: tonesData.type });
         setUser(tonesData.createdBy);
@@ -42,7 +70,10 @@ export function useTones(type: "leo" | "ems-fd") {
         leoControls.pause();
       }
 
-      if (isShared || (tonesData.type === ActiveToneType.EMS_FD && type === "ems-fd")) {
+      if (
+        isShared ||
+        (tonesData.type === ActiveToneType.EMS_FD && type === ActiveToneType.EMS_FD)
+      ) {
         emsFdControls.play();
         setUser(tonesData.createdBy);
         setDescription({ description: tonesData.description, type: tonesData.type });
@@ -62,7 +93,7 @@ function Component({
   user,
 }: {
   audio: React.ReactElement[];
-  description: { description: string; type: ActiveToneType } | null;
+  description: { description: string | null; type: ActiveToneType } | null;
   user: { username: string } | null;
 }) {
   const t = useTranslations();
@@ -76,7 +107,7 @@ function Component({
   const isShared = description?.type === ActiveToneType.SHARED;
   const showToneMessage = isShared ? true : description?.type === type;
 
-  if (!description) {
+  if (!description?.description) {
     return null;
   }
 

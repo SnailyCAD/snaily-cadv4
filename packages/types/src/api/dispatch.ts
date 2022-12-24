@@ -125,8 +125,14 @@ export interface PostDispatchDispatchersStateData {
 export type PutDispatchRadioChannelData = Types.Officer | Types.EmsFdDeputy | Types.CombinedLeoUnit;
 
 /**
+ * @method GET
+ * @route /dispatch/tones
+ */
+export type GETDispatchTonesData = Types.ActiveTone[];
+
+/**
  * @method POST
- * @route /dispatch/radio-channel
+ * @route /dispatch/tones
  */
 export type PostDispatchTonesData = boolean;
 

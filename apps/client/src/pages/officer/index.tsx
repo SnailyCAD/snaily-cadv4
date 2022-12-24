@@ -7,7 +7,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { useLeoState } from "state/leo-state";
-import { Rank, Record, RecordType, ValueType } from "@snailycad/types";
+import { ActiveToneType, Rank, Record, RecordType, ValueType } from "@snailycad/types";
 import { ActiveCalls } from "components/dispatch/active-calls/active-calls";
 import { useDispatchState } from "state/dispatch/dispatch-state";
 import { ModalButtons } from "components/leo/ModalButtons";
@@ -135,7 +135,7 @@ export default function OfficerDashboard({
   const set911Calls = useCall911State((state) => state.setCalls);
   const t = useTranslations("Leo");
   const signal100 = useSignal100();
-  const tones = useTones("leo");
+  const tones = useTones(ActiveToneType.LEO);
   const panic = usePanicButton();
   const { isOpen } = useModal();
   const { LEO_TICKETS, ACTIVE_WARRANTS, CALLS_911 } = useFeatureEnabled();

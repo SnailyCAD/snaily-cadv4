@@ -349,6 +349,19 @@ export class DispatchController {
     return { ...user, unit };
   }
 
+  @Get("/tones")
+  @IsFeatureEnabled({ feature: Feature.TONES })
+  @UsePermissions({
+    permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
+    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
+  })
+  async getTones(): Promise<APITypes.GETDispatchTonesData> {
+    const activeTones = await prisma.activeTone.findMany({
+      include: { createdBy: { select: { username: true } } },
+    });
+    return activeTones;
+  }
+
   @Post("/tones")
   @IsFeatureEnabled({ feature: Feature.TONES })
   @UsePermissions({
