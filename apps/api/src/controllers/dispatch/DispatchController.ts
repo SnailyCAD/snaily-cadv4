@@ -27,6 +27,7 @@ import { getActiveDeputy } from "lib/ems-fd";
 import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { z } from "zod";
+import { ActiveToneType } from "@prisma/client";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -359,7 +360,44 @@ export class DispatchController {
     @Context("user") user: User,
   ): Promise<APITypes.PostDispatchTonesData> {
     const data = validateSchema(TONES_SCHEMA, body);
-    this.socket.emitTones({ ...data, user });
+
+    let type: ActiveToneType = ActiveToneType.SHARED;
+
+    if (data.leoTone && data.emsFdTone) {
+      type = ActiveToneType.SHARED;
+    } else if (data.leoTone) {
+      type = ActiveToneType.LEO;
+    } else if (data.emsFdTone) {
+      type = ActiveToneType.EMS_FD;
+    }
+
+    const activeTone = await prisma.activeTone.findUnique({ where: { type } });
+
+    if (activeTone) {
+      const updated = await prisma.activeTone.update({
+        where: { id: activeTone.id },
+        data: {
+          createdById: user.id,
+          description: data.description,
+          type,
+        },
+        include: { createdBy: { select: { username: true } } },
+      });
+
+      this.socket.emitTones(updated);
+      return true;
+    }
+
+    const created = await prisma.activeTone.create({
+      data: {
+        createdById: user.id,
+        description: data.description,
+        type,
+      },
+      include: { createdBy: { select: { username: true } } },
+    });
+
+    this.socket.emitTones(created);
 
     return true;
   }

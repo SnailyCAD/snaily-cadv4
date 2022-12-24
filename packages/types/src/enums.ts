@@ -290,3 +290,11 @@ export const PenalCodeType = {
 } as const;
 
 export type PenalCodeType = typeof PenalCodeType[keyof typeof PenalCodeType];
+
+export const ActiveToneType = {
+  LEO: "LEO",
+  EMS_FD: "EMS_FD",
+  SHARED: "SHARED",
+} as const;
+
+export type ActiveToneType = typeof ActiveToneType[keyof typeof ActiveToneType];

@@ -427,3 +427,7 @@ export type ValueWithValueObj = (
 };
 
 export type AnyValue = Value | PenalCode | ValueWithValueObj;
+
+export type ActiveTone = Prisma.ActiveTone & {
+  createdBy: { username: string };
+};

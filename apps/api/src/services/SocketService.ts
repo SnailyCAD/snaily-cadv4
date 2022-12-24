@@ -13,12 +13,10 @@ import {
   IncidentEvent,
   EmsFdDeputy,
   Warrant,
+  ActiveTone,
 } from "@prisma/client";
 import { prisma } from "lib/prisma";
 import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/activeOfficer";
-import type { z } from "zod";
-import type { TONES_SCHEMA } from "@snailycad/schemas";
-import type { User } from "@snailycad/types";
 
 type FullIncident = LeoIncident & { unitsInvolved: any[]; events?: IncidentEvent[] };
 
@@ -158,7 +156,10 @@ export class Socket {
     this.io.sockets.emit(SocketEvents.UpdateDispatchersState);
   }
 
-  emitTones(data: z.infer<typeof TONES_SCHEMA> & { user: User }) {
-    this.io.sockets.emit(SocketEvents.Tones, { ...data, user: { username: data.user.username } });
+  emitTones(data: ActiveTone & { createdBy: { username: string } }) {
+    this.io.sockets.emit(SocketEvents.Tones, {
+      ...data,
+      user: { username: data.createdBy.username },
+    });
   }
 }
