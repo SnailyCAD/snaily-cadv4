@@ -21,10 +21,8 @@ export function useGetActiveTone(type?: ActiveToneType) {
       (await execute<GETDispatchTonesData>({ path: "/dispatch/tones", method: "GET" })).json,
   });
 
-  const activeTone = React.useMemo(() => {
-    if (!data) return null;
-    return data.find((v) => v.type === ActiveToneType.SHARED) ?? data.find((v) => v.type === type);
-  }, [data, type]);
+  const activeTone =
+    data?.find((v) => v.type === ActiveToneType.SHARED) ?? data?.find((v) => v.type === type);
 
   return { activeTone: activeTone ?? null, activeTones: data ?? [] };
 }
@@ -45,7 +43,7 @@ export function useTones(type: ActiveToneType) {
   React.useEffect(() => {
     setDescription(initialActiveTone.activeTone);
     setUser(initialActiveTone.activeTone?.createdBy ?? null);
-  }, [initialActiveTone]);
+  }, [initialActiveTone.activeTone]);
 
   useListener(
     SocketEvents.Tones,
