@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useRouter } from "next/router";
-import type { cad as CAD, User } from "@snailycad/types";
+import { cad as CAD, User, WhitelistStatus } from "@snailycad/types";
 import { useIsRouteFeatureEnabled } from "../hooks/auth/useIsRouteFeatureEnabled";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
@@ -24,7 +24,7 @@ interface ProviderProps {
   };
 }
 
-const NO_LOADING_ROUTES = ["/403", "/404", "/auth/login", "/auth/register"];
+const NO_LOADING_ROUTES = ["/403", "/404", "/auth/login", "/auth/register", "/auth/pending"];
 
 export function AuthProvider({ initialData, children }: ProviderProps) {
   const [user, setUser] = React.useState<User | null>(initialData.session ?? null);
@@ -38,6 +38,16 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
   const handleGetUser = React.useCallback(async () => {
     const { getSessionUser } = await import("lib/auth");
     const user = await getSessionUser();
+
+    if (
+      user?.whitelistStatus === WhitelistStatus.PENDING &&
+      !NO_LOADING_ROUTES.includes(router.pathname)
+    ) {
+      router.push("/auth/pending");
+
+      setUser(user);
+      return;
+    }
 
     if (!user && !NO_LOADING_ROUTES.includes(router.pathname)) {
       const from = router.asPath;

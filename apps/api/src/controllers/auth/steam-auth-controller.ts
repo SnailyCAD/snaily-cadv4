@@ -75,10 +75,10 @@ export class SteamOAuthController {
      * -> log the user in and set the cookie
      */
     if (!authUser && user) {
-      validateUser(user);
-
       // authenticate user with cookie
       await setUserTokenCookies({ user, res });
+
+      validateUser(user);
 
       return res.redirect(`${redirectURL}/citizen`);
     }
@@ -107,10 +107,10 @@ export class SteamOAuthController {
         },
       });
 
-      validateUser(user);
-
       // authenticate user with cookie
       await setUserTokenCookies({ user, res });
+
+      validateUser(user);
 
       return res.redirect(`${redirectURL}/citizen`);
     }
@@ -150,7 +150,7 @@ export class SteamOAuthController {
         }
 
         if (user.whitelistStatus === WhitelistStatus.PENDING) {
-          return res.redirect(`${redirectURL}/auth/login?error=whitelistPending`);
+          return res.redirect(`${redirectURL}/auth/pending?success=steam`);
         }
 
         if (user.whitelistStatus === WhitelistStatus.DECLINED) {

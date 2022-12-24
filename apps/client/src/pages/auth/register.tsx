@@ -10,7 +10,7 @@ import { handleValidate } from "lib/handleValidate";
 import type { GetServerSideProps } from "next";
 import { getTranslations } from "lib/getTranslation";
 import { Button, Loader, TextField } from "@snailycad/ui";
-import type { cad } from "@snailycad/types";
+import { cad, WhitelistStatus } from "@snailycad/types";
 import { handleRequest } from "lib/fetch";
 import { Title } from "components/shared/Title";
 import { AuthScreenImages } from "components/auth/AuthScreenImages";
@@ -63,7 +63,7 @@ function Register({ cad }: Props) {
     }
 
     const captchaResult = await executeRecaptcha?.("registerUserAccount");
-    const { json, error } = await execute<PostRegisterUserData, typeof INITIAL_VALUES>({
+    const { json } = await execute<PostRegisterUserData, typeof INITIAL_VALUES>({
       path: "/auth/register",
       data: { ...values, captchaResult },
       method: "POST",
@@ -71,13 +71,16 @@ function Register({ cad }: Props) {
       noToast: "whitelistPending",
     });
 
-    if (error === "whitelistPending") {
+    if (json.whitelistStatus === WhitelistStatus.PENDING) {
       toastMessage({
         icon: "info",
         message: t("Errors.whitelistPending"),
         title: common("Common.information"),
         duration: Infinity,
       });
+
+      router.push("/auth/pending");
+      return;
     }
 
     if (json.isOwner) {
