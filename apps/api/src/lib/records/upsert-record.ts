@@ -65,6 +65,7 @@ export async function upsertRecord(options: UpsertRecordOptions) {
       notes: options.data.notes,
       postal: String(options.data.postal),
       status: recordStatus,
+      address: options.data.address,
       paymentStatus: (options.data.paymentStatus ?? null) as PaymentStatus | null,
       vehicleId: options.data.vehicleId || null,
       vehicleColor: options.data.vehicleColor || null,

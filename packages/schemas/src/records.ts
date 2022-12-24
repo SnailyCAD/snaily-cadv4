@@ -30,7 +30,7 @@ export const CREATE_TICKET_SCHEMA = z.object({
     .optional()
     .nullable(),
   courtEntry: COURT_ENTRY_SCHEMA.nullish(),
-
+  address: z.string().nullish(),
   plateOrVin: z.string().nullish(),
   vehicleId: z.string().nullish(),
   vehicleModel: z.string().nullish(),

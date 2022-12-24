@@ -169,6 +169,7 @@ export function ManageRecordModal(props: Props) {
           },
         };
       }) ?? ([] as SelectValue<PenalCode>[]),
+    address: props.record?.address ?? "",
     postal: props.record?.postal ?? "",
     notes: props.record?.notes ?? "",
     seizedItems: props.record?.seizedItems ?? [],
@@ -212,11 +213,7 @@ export function ManageRecordModal(props: Props) {
                   />
                 )}
 
-                <AddressPostalSelect
-                  isDisabled={props.isReadOnly}
-                  postalOptional={false}
-                  postalOnly
-                />
+                <AddressPostalSelect isDisabled={props.isReadOnly} postalOptional={false} />
 
                 {/* todo: custom component for this */}
                 <FormField className="relative mt-3 mb-2" label={tCourt("courtEntries")}>
