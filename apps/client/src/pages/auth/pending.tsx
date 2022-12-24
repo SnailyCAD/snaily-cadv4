@@ -50,20 +50,20 @@ export default function AccountPendingPage() {
     window.location.href = fullUrl;
   }
 
-  console.log({ successMessage });
-
   return (
     <>
       <Title renderLayoutTitle={false}>{t("accountPending")}</Title>
 
       <main className="flex flex-col items-center justify-center pt-20">
         <div className="w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-primary dark:border dark:border-secondary">
-          <div
-            role="alert"
-            className="bg-green-500/80 text-black w-full py-1.5 px-3 my-3 rounded-md"
-          >
-            {successMessage}
-          </div>
+          {successMessage ? (
+            <div
+              role="alert"
+              className="bg-green-500/80 text-black w-full py-1.5 px-3 my-3 rounded-md"
+            >
+              {successMessage}
+            </div>
+          ) : null}
 
           <h1 className="text-2xl font-semibold text-gray-800 dark:text-white">
             {t("accountPending")}

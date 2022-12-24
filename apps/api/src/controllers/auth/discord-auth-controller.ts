@@ -88,10 +88,11 @@ export class DiscordAuth {
      */
     if (!authUser && user) {
       const updatedWithRoles = await updateMemberRolesLogin(user, discordRolesId);
-      validateUser(updatedWithRoles ?? user);
 
       // authenticate user with cookie
       await setUserTokenCookies({ user, res });
+
+      validateUser(updatedWithRoles ?? user);
 
       return res.redirect(`${redirectURL}/citizen`);
     }
@@ -121,10 +122,10 @@ export class DiscordAuth {
       });
 
       const updatedWithRoles = await updateMemberRolesLogin(user, discordRolesId);
-      validateUser(updatedWithRoles ?? user);
-
       // authenticate user with cookie
       await setUserTokenCookies({ user, res });
+
+      validateUser(updatedWithRoles ?? user);
 
       return res.redirect(`${redirectURL}/citizen`);
     }
