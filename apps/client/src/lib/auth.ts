@@ -14,8 +14,9 @@ export async function getSessionUser(req?: IncomingMessage): Promise<GetUserData
       return response.data ?? null;
     }
 
+    // @ts-expect-error `response` only exists on the object if an error occurred.
     if (response.response?.data?.message === "whitelistPending") {
-      return { whitelistStatus: WhitelistStatus.PENDING };
+      return { whitelistStatus: WhitelistStatus.PENDING } as GetUserData;
     }
 
     return null;
