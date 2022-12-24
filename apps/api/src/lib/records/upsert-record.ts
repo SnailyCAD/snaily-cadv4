@@ -70,7 +70,7 @@ export async function upsertRecord(options: UpsertRecordOptions) {
       vehicleId: options.data.vehicleId || null,
       vehicleColor: options.data.vehicleColor || null,
       vehicleModel: options.data.vehicleModel || null,
-      vehiclePlate: options.data.plateOrVin || null,
+      vehiclePlate: options.data.plateOrVin || options.data.plateOrVinSearch,
     },
     update: {
       notes: options.data.notes,
@@ -80,7 +80,7 @@ export async function upsertRecord(options: UpsertRecordOptions) {
       vehicleId: options.data.vehicleId || null,
       vehicleColor: options.data.vehicleColor || null,
       vehicleModel: options.data.vehicleModel || null,
-      vehiclePlate: options.data.plateOrVin || null,
+      vehiclePlate: options.data.plateOrVin || options.data.plateOrVinSearch,
     },
     include: {
       officer: { include: leoProperties },
