@@ -22,6 +22,7 @@ import { FullDate } from "components/shared/FullDate";
 import { TabList, TabsContent } from "components/shared/TabList";
 import { SeizedItemsTab } from "./tabs/seized-items-tab/seized-items-tab";
 import { ViolationsTab } from "./tabs/violations-tab/violations-tab";
+import { VehicleTab } from "./tabs/vehicle-tab/vehicle-tab";
 
 interface Props {
   hideCitizenField?: boolean;
@@ -173,6 +174,12 @@ export function ManageRecordModal(props: Props) {
     seizedItems: props.record?.seizedItems ?? [],
     paymentStatus: props.record?.paymentStatus ?? null,
     courtEntry: props.record?.courtEntry ?? null,
+
+    plateOrVin: props.record?.vehicle?.plate ?? props.record?.vehiclePlate ?? "",
+    plateOrVinSearch: props.record?.vehicle?.plate ?? props.record?.vehiclePlate ?? "",
+    vehicleId: props.record?.vehicleId ?? null,
+    vehicleModel: props.record?.vehicle?.model.value.value ?? props.record?.vehicleModel ?? null,
+    vehicleColor: props.record?.vehicle?.color ?? props.record?.vehicleColor ?? null,
   };
 
   return (
@@ -190,6 +197,7 @@ export function ManageRecordModal(props: Props) {
                 { name: "General Information", value: "general-information-tab" },
                 { name: "Violations", value: "violations-tab" },
                 { name: "Seized Items", value: "seized-items-tab" },
+                { name: "Vehicle Tab", value: "vehicle-tab" },
               ]}
             >
               <TabsContent value="general-information-tab">
@@ -257,6 +265,7 @@ export function ManageRecordModal(props: Props) {
 
               <SeizedItemsTab isReadOnly={props.isReadOnly} />
               <ViolationsTab penalCodes={penalCodes} isReadOnly={props.isReadOnly} />
+              <VehicleTab isReadOnly={props.isReadOnly} />
             </TabList>
 
             <footer className="flex justify-end mt-5">

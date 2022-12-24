@@ -39,6 +39,16 @@ export async function upsertRecord(options: UpsertRecordOptions) {
     throw new ExtendedNotFound({ citizenId: "citizenNotFound" });
   }
 
+  if (options.data.vehicleId) {
+    const vehicle = await prisma.registeredVehicle.findUnique({
+      where: { id: options.data.vehicleId },
+    });
+
+    if (!vehicle) {
+      throw new ExtendedNotFound({ plateOrVin: "vehicleNotFound" });
+    }
+  }
+
   const isApprovalEnabled = isFeatureEnabled({
     defaultReturn: false,
     feature: Feature.CITIZEN_RECORD_APPROVAL,
@@ -56,6 +66,10 @@ export async function upsertRecord(options: UpsertRecordOptions) {
       postal: String(options.data.postal),
       status: recordStatus,
       paymentStatus: (options.data.paymentStatus ?? null) as PaymentStatus | null,
+      vehicleId: options.data.vehicleId || null,
+      vehicleColor: options.data.vehicleColor || null,
+      vehicleModel: options.data.vehicleModel || null,
+      vehiclePlate: options.data.plateOrVin || null,
     },
     update: {
       notes: options.data.notes,
