@@ -1,13 +1,15 @@
 import { Rank, WhitelistStatus, User } from "@snailycad/types";
 import type { GetUserData } from "@snailycad/types/api";
+import type { Req } from "@tsed/common";
 import { NotFound, Unauthorized } from "@tsed/exceptions";
 import { GetSessionUserErrors } from "./getSessionUser";
 
 export function validateUserData(
   user: User | null,
+  req: Req,
   returnNullOnError?: false,
 ): asserts user is GetUserData;
-export function validateUserData(user: User | null, returnNullOnError?: boolean) {
+export function validateUserData(user: User | null, req: Req, returnNullOnError?: boolean) {
   if (!user) {
     if (returnNullOnError) return null;
     throw new Unauthorized(GetSessionUserErrors.NotFound);
@@ -19,7 +21,10 @@ export function validateUserData(user: User | null, returnNullOnError?: boolean)
       throw new NotFound(GetSessionUserErrors.UserBanned);
     }
 
-    if (user.whitelistStatus === WhitelistStatus.PENDING) {
+    // if the user is still awaiting access, return the user but with a whitelistStatus of pending
+    // this is so we can show the user a message saying they are awaiting access
+    const isUserURL = req.url === "/v1/user" && req.method === "POST";
+    if (!isUserURL && user.whitelistStatus === WhitelistStatus.PENDING) {
       if (returnNullOnError) return null;
       throw new NotFound(GetSessionUserErrors.WhitelistPending);
     }

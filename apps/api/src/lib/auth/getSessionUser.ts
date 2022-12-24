@@ -98,7 +98,7 @@ export async function getSessionUser(
    */
   if (userApiTokenHeader && isUserAPITokensEnabled) {
     const { apiToken, user } = await getUserFromUserAPIToken(userApiTokenHeader);
-    validateUserData(user);
+    validateUserData(user, options.req, options.returnNullOnError);
 
     await prisma.apiToken.update({
       where: { id: apiToken.id },
@@ -127,7 +127,7 @@ export async function getSessionUser(
       select: userProperties,
     });
 
-    validateUserData(user);
+    validateUserData(user, options.req, options.returnNullOnError);
 
     return createUserData(user);
   }
@@ -152,7 +152,7 @@ export async function getSessionUser(
       },
     });
 
-    validateUserData(user);
+    validateUserData(user, options.req, options.returnNullOnError);
 
     const newAccessToken = signJWT({ userId: user.id }, ACCESS_TOKEN_EXPIRES_S);
 

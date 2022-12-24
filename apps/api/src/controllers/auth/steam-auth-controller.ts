@@ -150,7 +150,7 @@ export class SteamOAuthController {
         }
 
         if (user.whitelistStatus === WhitelistStatus.PENDING) {
-          return res.redirect(`${redirectURL}/auth/login?error=whitelistPending`);
+          return res.redirect(`${redirectURL}/auth/pending?success=discord`);
         }
 
         if (user.whitelistStatus === WhitelistStatus.DECLINED) {

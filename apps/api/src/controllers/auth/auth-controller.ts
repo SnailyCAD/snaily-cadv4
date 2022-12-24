@@ -190,10 +190,6 @@ export class AuthController {
       data: extraUserData,
     });
 
-    if (extraUserData.rank === Rank.USER && cad.whitelisted) {
-      throw new BadRequest("whitelistPending");
-    }
-
     await setUserTokenCookies({ user, res });
     setUserPreferencesCookies({
       isDarkTheme: user.isDarkTheme,
@@ -201,7 +197,11 @@ export class AuthController {
       res,
     });
 
-    return { userId: user.id, isOwner: extraUserData.rank === Rank.OWNER };
+    return {
+      userId: user.id,
+      isOwner: extraUserData.rank === Rank.OWNER,
+      whitelistStatus: extraUserData.whitelistStatus,
+    };
   }
 }
 

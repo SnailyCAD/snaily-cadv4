@@ -1,6 +1,7 @@
 import { handleRequest } from "lib/fetch";
 import type { IncomingMessage } from "node:http";
 import type { GetUserData, PostUserLogoutData } from "@snailycad/types/api";
+import { WhitelistStatus } from "@snailycad/types";
 
 export async function getSessionUser(req?: IncomingMessage): Promise<GetUserData | null> {
   try {
@@ -13,8 +14,12 @@ export async function getSessionUser(req?: IncomingMessage): Promise<GetUserData
       return response.data ?? null;
     }
 
+    if (response.response?.data?.message === "whitelistPending") {
+      return { whitelistStatus: WhitelistStatus.PENDING };
+    }
+
     return null;
-  } catch {
+  } catch (e) {
     return null;
   }
 }
