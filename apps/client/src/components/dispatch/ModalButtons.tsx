@@ -18,6 +18,7 @@ import type {
 import dynamic from "next/dynamic";
 import { useCall911State } from "state/dispatch/call-911-state";
 import shallow from "zustand/shallow";
+import { ActiveToneType } from "@snailycad/types";
 const EnableSignal100Modal = dynamic(
   async () => (await import("./modals/EnableSignal100Modal")).EnableSignal100Modal,
 );
@@ -104,7 +105,7 @@ export function DispatchModalButtons() {
         </Button>
       ) : null}
 
-      {TONES ? <TonesModal types={["leo", "ems-fd"]} /> : null}
+      {TONES ? <TonesModal types={[ActiveToneType.LEO, ActiveToneType.EMS_FD]} /> : null}
       {signal100Enabled ? null : <EnableSignal100Modal />}
     </div>
   );

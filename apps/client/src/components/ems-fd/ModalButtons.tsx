@@ -1,6 +1,6 @@
 import { Button } from "@snailycad/ui";
 import { ModalIds } from "types/ModalIds";
-import { Rank, ShouldDoType } from "@snailycad/types";
+import { ActiveToneType, Rank, ShouldDoType } from "@snailycad/types";
 import { useModal } from "state/modalState";
 import { useTranslations } from "use-intl";
 import { ActiveDeputy, useEmsFdState } from "state/ems-fd-state";
@@ -122,7 +122,7 @@ export function ModalButtons({
               {t("Leo.tones")}
             </Button>
 
-            <TonesModal types={["ems-fd"]} />
+            <TonesModal types={[ActiveToneType.EMS_FD]} />
           </>
         ) : null}
       </div>

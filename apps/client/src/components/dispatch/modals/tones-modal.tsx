@@ -19,7 +19,7 @@ import { ActiveTone, ActiveToneType } from "@snailycad/types";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
-  types: ("leo" | "ems-fd")[];
+  types: ActiveToneType[];
 }
 
 export function TonesModal({ types }: Props) {
@@ -83,8 +83,8 @@ export function TonesModal({ types }: Props) {
 
   const validate = handleValidate(TONES_SCHEMA);
   const INITIAL_VALUES = {
-    emsFdTone: !!types.every((v) => v === "ems-fd"),
-    leoTone: !!types.every((v) => v === "leo"),
+    emsFdTone: !!types.every((v) => v === ActiveToneType.EMS_FD),
+    leoTone: !!types.every((v) => v === ActiveToneType.LEO),
     description: "",
     types,
   };
@@ -102,7 +102,7 @@ export function TonesModal({ types }: Props) {
             <p className="my-3 text-neutral-700 dark:text-gray-400">{t("notesInfo")}</p>
 
             <FormRow>
-              {types.includes("ems-fd") ? (
+              {types.includes(ActiveToneType.EMS_FD) ? (
                 <FormField errorMessage={errors.emsFdTone} label={t("emsFdTone")}>
                   <Toggle
                     name="emsFdTone"
@@ -112,7 +112,7 @@ export function TonesModal({ types }: Props) {
                 </FormField>
               ) : null}
 
-              {types.includes("leo") ? (
+              {types.includes(ActiveToneType.LEO) ? (
                 <FormField errorMessage={errors.leoTone} label={t("leoTone")}>
                   <Toggle name="leoTone" onCheckedChange={handleChange} value={values.leoTone} />
                 </FormField>

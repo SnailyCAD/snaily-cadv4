@@ -1,6 +1,6 @@
 import { Button } from "@snailycad/ui";
 import { ActiveOfficer, useLeoState } from "state/leo-state";
-import { Rank, ShouldDoType } from "@snailycad/types";
+import { ActiveToneType, Rank, ShouldDoType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import useFetch from "lib/useFetch";
@@ -133,7 +133,7 @@ export function ModalButtons({ initialActiveOfficer }: { initialActiveOfficer: A
             <Button disabled={isButtonDisabled} onPress={() => openModal(ModalIds.Tones)}>
               {t("Leo.tones")}
             </Button>
-            <TonesModal types={["leo"]} />
+            <TonesModal types={[ActiveToneType.LEO]} />
           </>
         ) : null}
       </div>
