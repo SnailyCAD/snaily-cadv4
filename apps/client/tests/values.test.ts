@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { normalizeValue } from "../src/context/ValuesContext";
 import { ValueType } from "@snailycad/types";
-import { normalizeValue } from "../src/lib/values/normalize-value-key";
 
 const types = {
   license: ValueType.LICENSE,
