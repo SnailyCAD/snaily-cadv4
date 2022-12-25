@@ -1,7 +1,7 @@
 import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 
 type P = "callsign" | "callsign2" | "department" | "citizenId" | "incremental";
-type Unit =
+export type Unit =
   | Pick<Officer, P | "divisions" | "callsigns">
   | Pick<EmsFdDeputy, P | "division">
   | CombinedLeoUnit;

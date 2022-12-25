@@ -17,8 +17,18 @@ export function useGetActiveTone(type?: ActiveToneType) {
 
   const { data } = useQuery({
     queryKey: ["active-tones", type],
-    queryFn: async () =>
-      (await execute<GETDispatchTonesData>({ path: "/dispatch/tones", method: "GET" })).json,
+    queryFn: async () => {
+      const { json } = await execute<GETDispatchTonesData>({
+        path: "/dispatch/tones",
+        method: "GET",
+      });
+
+      if (Array.isArray(json)) {
+        return json;
+      }
+
+      return [];
+    },
   });
 
   const activeTone =
