@@ -266,6 +266,7 @@ model User {
   User2FA              User2FA[]
   NameChangeRequest    NameChangeRequest[]
   CourthousePost       CourthousePost[]
+  ActiveTone           ActiveTone[]
 }
 
 model UserSession {
@@ -1409,6 +1410,21 @@ model CourthousePost {
   descriptionData Json?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @default(now()) @updatedAt
+}
+
+model ActiveTone {
+  id          String         @id @default(uuid())
+  type        ActiveToneType @unique
+  description String?
+  createdAt   DateTime       @default(now())
+  createdBy   User           @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdById String
+}
+
+enum ActiveToneType {
+  LEO
+  EMS_FD
+  SHARED
 }
 
 enum LicenseExamType {

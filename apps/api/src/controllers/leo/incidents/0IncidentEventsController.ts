@@ -6,7 +6,7 @@ import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { CALL_911_EVENT_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
-import { Socket } from "services/SocketService";
+import { Socket } from "services/socket-service";
 import { incidentInclude } from "./IncidentController";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";

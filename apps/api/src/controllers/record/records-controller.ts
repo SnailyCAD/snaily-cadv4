@@ -32,7 +32,7 @@ import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { getFirstOfficerFromActiveOfficer, getInactivityFilter } from "lib/leo/utils";
 import type * as APITypes from "@snailycad/types/api";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
-import { Socket } from "services/SocketService";
+import { Socket } from "services/socket-service";
 import { assignUnitsToWarrant } from "lib/records/assignToWarrant";
 import type { cad } from "@snailycad/types";
 import { userProperties } from "lib/auth/getSessionUser";

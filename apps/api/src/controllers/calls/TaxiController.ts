@@ -11,7 +11,7 @@ import { prisma } from "lib/prisma";
 import { TOW_SCHEMA, UPDATE_TOW_SCHEMA } from "@snailycad/schemas";
 import { NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/IsAuth";
-import { Socket } from "services/SocketService";
+import { Socket } from "services/socket-service";
 import { validateSchema } from "lib/validateSchema";
 import { Feature, User } from "@prisma/client";
 import { canManageInvariant } from "lib/auth/getSessionUser";

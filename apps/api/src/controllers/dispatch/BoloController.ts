@@ -7,7 +7,7 @@ import { prisma } from "lib/prisma";
 import { Use, UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
-import { Socket } from "services/SocketService";
+import { Socket } from "services/socket-service";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/validateSchema";
 import {

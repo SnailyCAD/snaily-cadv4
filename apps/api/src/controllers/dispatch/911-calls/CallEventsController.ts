@@ -4,7 +4,7 @@ import { CALL_911_EVENT_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
-import { Socket } from "services/SocketService";
+import { Socket } from "services/socket-service";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
 import { validateSchema } from "lib/validateSchema";

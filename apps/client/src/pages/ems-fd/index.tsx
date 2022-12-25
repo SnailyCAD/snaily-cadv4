@@ -16,10 +16,10 @@ import { ActiveOfficers } from "components/dispatch/active-officers";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { Title } from "components/shared/Title";
 import { UtilityPanel } from "components/shared/UtilityPanel";
-import { Rank, ValueType } from "@snailycad/types";
+import { ActiveToneType, Rank, ValueType } from "@snailycad/types";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import { usePanicButton } from "hooks/shared/usePanicButton";
-import { useTones } from "hooks/global/useTones";
+import { useTones } from "hooks/global/use-tones";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import type {
   Get911CallsData,
@@ -73,7 +73,7 @@ export default function EmsFDDashboard({
 
   const { CALLS_911 } = useFeatureEnabled();
   const signal100 = useSignal100();
-  const tones = useTones("ems-fd");
+  const tones = useTones(ActiveToneType.EMS_FD);
   const panic = usePanicButton();
   const state = useEmsFdState();
   const dispatchState = useDispatchState();

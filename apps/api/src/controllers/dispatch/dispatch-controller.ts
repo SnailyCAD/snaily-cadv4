@@ -1,9 +1,9 @@
 import { Controller } from "@tsed/di";
-import { ContentType, Description, Get, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { BodyParams, PathParams, Context } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
-import { Socket } from "services/SocketService";
+import { Socket } from "services/socket-service";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
 import { cad, Feature, MiscCadSettings, User } from "@snailycad/types";
@@ -27,6 +27,7 @@ import { getActiveDeputy } from "lib/ems-fd";
 import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { z } from "zod";
+import { ActiveToneType } from "@prisma/client";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -348,6 +349,19 @@ export class DispatchController {
     return { ...user, unit };
   }
 
+  @Get("/tones")
+  @IsFeatureEnabled({ feature: Feature.TONES })
+  @UsePermissions({
+    permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
+    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
+  })
+  async getTones(): Promise<APITypes.GETDispatchTonesData> {
+    const activeTones = await prisma.activeTone.findMany({
+      include: { createdBy: { select: { username: true } } },
+    });
+    return activeTones;
+  }
+
   @Post("/tones")
   @IsFeatureEnabled({ feature: Feature.TONES })
   @UsePermissions({
@@ -359,8 +373,58 @@ export class DispatchController {
     @Context("user") user: User,
   ): Promise<APITypes.PostDispatchTonesData> {
     const data = validateSchema(TONES_SCHEMA, body);
-    this.socket.emitTones({ ...data, user });
 
+    let type: ActiveToneType = ActiveToneType.SHARED;
+
+    if (data.leoTone && data.emsFdTone) {
+      type = ActiveToneType.SHARED;
+    } else if (data.leoTone) {
+      type = ActiveToneType.LEO;
+    } else if (data.emsFdTone) {
+      type = ActiveToneType.EMS_FD;
+    }
+
+    const activeTone = await prisma.activeTone.findUnique({ where: { type } });
+
+    if (activeTone) {
+      const updated = await prisma.activeTone.update({
+        where: { id: activeTone.id },
+        data: {
+          createdById: user.id,
+          description: data.description,
+          type,
+        },
+        include: { createdBy: { select: { username: true } } },
+      });
+
+      this.socket.emitTones(updated);
+      return true;
+    }
+
+    const created = await prisma.activeTone.create({
+      data: {
+        createdById: user.id,
+        description: data.description,
+        type,
+      },
+      include: { createdBy: { select: { username: true } } },
+    });
+
+    this.socket.emitTones(created);
+
+    return true;
+  }
+
+  @Delete("/tones/:id")
+  @IsFeatureEnabled({ feature: Feature.TONES })
+  @UsePermissions({
+    permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
+    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
+  })
+  async deleteToneById(@PathParams("id") id: string): Promise<APITypes.DeleteDispatchTonesData> {
+    await prisma.activeTone.delete({
+      where: { id },
+    });
     return true;
   }
 

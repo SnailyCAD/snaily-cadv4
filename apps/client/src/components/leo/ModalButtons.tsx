@@ -1,6 +1,6 @@
 import { Button } from "@snailycad/ui";
 import { ActiveOfficer, useLeoState } from "state/leo-state";
-import { Rank, ShouldDoType } from "@snailycad/types";
+import { ActiveToneType, Rank, ShouldDoType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import useFetch from "lib/useFetch";
@@ -12,7 +12,7 @@ import type { PostLeoTogglePanicButtonData } from "@snailycad/types/api";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
-import { TonesModal } from "components/dispatch/modals/TonesModal";
+import { TonesModal } from "components/dispatch/modals/tones-modal";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useImageUrl } from "hooks/useImageUrl";
 import Image from "next/image";
@@ -133,7 +133,7 @@ export function ModalButtons({ initialActiveOfficer }: { initialActiveOfficer: A
             <Button disabled={isButtonDisabled} onPress={() => openModal(ModalIds.Tones)}>
               {t("Leo.tones")}
             </Button>
-            <TonesModal types={["leo"]} />
+            <TonesModal types={[ActiveToneType.LEO]} />
           </>
         ) : null}
       </div>

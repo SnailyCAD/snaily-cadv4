@@ -21,7 +21,7 @@ import { ContentType, Description, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/activeOfficer";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
-import { Socket } from "services/SocketService";
+import { Socket } from "services/socket-service";
 import { IsAuth } from "middlewares/IsAuth";
 import { validateSchema } from "lib/validateSchema";
 import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";

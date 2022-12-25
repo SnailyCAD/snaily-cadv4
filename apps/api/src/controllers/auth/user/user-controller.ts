@@ -13,7 +13,7 @@ import { compareSync, genSaltSync, hashSync } from "bcrypt";
 import { userProperties } from "lib/auth/getSessionUser";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import { Socket } from "services/SocketService";
+import { Socket } from "services/socket-service";
 import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
 import { setUserPreferencesCookies } from "lib/auth/setUserPreferencesCookies";
 import type * as APITypes from "@snailycad/types/api";
