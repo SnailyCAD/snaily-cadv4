@@ -1,13 +1,12 @@
 import * as React from "react";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import { useTranslations } from "use-intl";
-import { PersonFill } from "react-bootstrap-icons";
+import { PersonFill, ThreeDots } from "react-bootstrap-icons";
 import type { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { Layout } from "components/Layout";
 import { useModal } from "state/modalState";
-import { BreadcrumbItem, Breadcrumbs, Button, buttonVariants } from "@snailycad/ui";
+import { BreadcrumbItem, Breadcrumbs, Button } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import { getTranslations } from "lib/getTranslation";
 import { VehiclesCard } from "components/citizen/vehicles/VehiclesCard";
@@ -24,9 +23,9 @@ import { Title } from "components/shared/Title";
 import { ModalIds } from "types/ModalIds";
 import { FullDate } from "components/shared/FullDate";
 import { RecordsTab } from "components/leo/modals/NameSearchModal/tabs/records-tab";
-import { classNames } from "lib/classNames";
 import type { DeleteCitizenByIdData } from "@snailycad/types/api";
 import Image from "next/image";
+import { Dropdown } from "components/Dropdown";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const CitizenImageModal = dynamic(
@@ -107,7 +106,7 @@ export default function CitizenId() {
         <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
           {t.rich("citizenDead", {
             // @ts-expect-error ignore
-            date: <FullDate>{citizen.dateOfDead}</FullDate>,
+            date: <FullDate key={citizen.id}>{citizen.dateOfDead}</FullDate>,
           })}
         </div>
       ) : null}
@@ -182,26 +181,46 @@ export default function CitizenId() {
           </div>
         </div>
 
-        <div className="flex gap-2">
-          <Link
-            className={classNames(buttonVariants.default, "p-1 px-4 rounded-md")}
-            href={`/citizen/${citizen.id}/edit`}
-          >
-            {t("editCitizen")}
-          </Link>
-          {ALLOW_CITIZEN_DELETION_BY_NON_ADMIN ? (
-            <>
-              <Button onPress={() => openModal(ModalIds.AlertDeleteCitizen)} variant="danger">
-                {t("deleteCitizen")}
+        <div>
+          <Dropdown
+            alignOffset={0}
+            align="end"
+            className="dropdown-right"
+            trigger={
+              <Button className="flex items-center justify-center w-9 h-9">
+                <ThreeDots
+                  aria-label="Options"
+                  width={17}
+                  height={17}
+                  className="text-neutral-800 dark:text-gray-300"
+                />
               </Button>
+            }
+          >
+            <Dropdown.LinkItem href={`/citizen/${citizen.id}/edit`}>
+              {t("editCitizen")}
+            </Dropdown.LinkItem>
 
-              {!citizen.dead ? (
-                <Button onPress={() => openModal(ModalIds.AlertMarkDeceased)} variant="danger">
-                  {t("markCitizenDeceased")}
-                </Button>
-              ) : null}
-            </>
-          ) : null}
+            {ALLOW_CITIZEN_DELETION_BY_NON_ADMIN ? (
+              <>
+                <Dropdown.Item
+                  onPress={() => openModal(ModalIds.AlertDeleteCitizen)}
+                  variant="danger"
+                >
+                  {t("deleteCitizen")}
+                </Dropdown.Item>
+
+                {!citizen.dead ? (
+                  <Dropdown.Item
+                    onPress={() => openModal(ModalIds.AlertMarkDeceased)}
+                    variant="danger"
+                  >
+                    {t("markCitizenDeceased")}
+                  </Dropdown.Item>
+                ) : null}
+              </>
+            ) : null}
+          </Dropdown>
         </div>
       </div>
 
