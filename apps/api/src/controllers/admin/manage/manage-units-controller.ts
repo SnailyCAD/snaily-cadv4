@@ -108,41 +108,61 @@ export class AdminManageUnitsController {
     const extraInclude = {
       qualifications: { include: { qualification: { include: { value: true } } } },
       logs: { take: 25, orderBy: { createdAt: "desc" } },
-    };
+    } as const;
 
     const isUnitId = isCuid(id);
-    const functionName = isUnitId ? "findFirst" : "findMany";
 
-    // @ts-expect-error same function properties
-    let unit: any = await prisma.officer[functionName]({
-      where: {
-        OR: [{ id }, { user: { discordId: id } }, { user: { steamId: id } }],
-      },
-      include: { ...leoProperties, ...extraInclude },
-    });
-
-    if (Array.isArray(unit) ? !unit.length : !unit) {
-      // @ts-expect-error same function properties
-      unit = await prisma.emsFdDeputy[functionName]({
-        where: {
-          OR: [{ id }, { user: { discordId: id } }, { user: { steamId: id } }],
-        },
-        include: { ...unitProperties, ...extraInclude },
-      });
-    }
-
-    if (Array.isArray(unit) ? !unit.length : !unit) {
-      unit = await prisma.combinedLeoUnit.findUnique({
+    if (isUnitId) {
+      let unit: any = await prisma.officer.findUnique({
         where: { id },
-        include: combinedUnitProperties,
+        include: { ...leoProperties, ...extraInclude },
       });
+
+      if (!unit) {
+        unit = await prisma.emsFdDeputy.findUnique({
+          where: { id },
+          include: { ...unitProperties, ...extraInclude },
+        });
+      }
+
+      if (!unit) {
+        unit = await prisma.combinedLeoUnit.findUnique({
+          where: { id },
+          include: combinedUnitProperties,
+        });
+      }
+
+      if (!unit) {
+        throw new NotFound("unitNotFound");
+      }
+
+      return unit;
     }
 
-    if (!unit) {
-      throw new NotFound("unitNotFound");
-    }
+    const where = {
+      OR: [{ user: { discordId: id } }, { user: { steamId: id } }],
+    };
 
-    return unit;
+    const [userOfficers, userDeputies, userCombinedUnits] = await prisma.$transaction([
+      prisma.officer.findMany({
+        where,
+        include: { ...unitProperties, ...extraInclude },
+      }),
+      prisma.officer.findMany({
+        where,
+        include: { ...unitProperties, ...extraInclude },
+      }),
+      prisma.combinedLeoUnit.findMany({
+        where: { officers: { some: where } },
+        include: { ...unitProperties },
+      }),
+    ]);
+
+    return {
+      userOfficers,
+      userDeputies,
+      userCombinedUnits,
+    } as any;
   }
 
   @Put("/off-duty")
