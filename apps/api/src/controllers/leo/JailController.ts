@@ -85,7 +85,7 @@ export class JailController {
         });
       });
 
-      Promise.all(
+      await Promise.all(
         Object.entries(citizenIdsToUpdate).map(async ([citizenId, recordIds]) => {
           await Promise.all(
             recordIds.map(async (recordId) => {
@@ -93,6 +93,7 @@ export class JailController {
                 recordId,
                 releasedById: "",
                 type: ReleaseType.TIME_OUT,
+                force: true,
               });
             }),
           );
@@ -120,7 +121,7 @@ export class JailController {
 
   private async handleReleaseCitizen(
     citizenId: string,
-    data: Zod.infer<typeof RELEASE_CITIZEN_SCHEMA>,
+    data: Zod.infer<typeof RELEASE_CITIZEN_SCHEMA> & { force?: true },
   ) {
     const citizen = await prisma.citizen.findUnique({
       where: { id: citizenId },
@@ -130,7 +131,7 @@ export class JailController {
       throw new NotFound("citizenNotFound");
     }
 
-    if (!citizen.arrested) {
+    if (!data.force && !citizen.arrested) {
       throw new ExtendedBadRequest({ releasedById: "citizenNotArrested" });
     }
 
