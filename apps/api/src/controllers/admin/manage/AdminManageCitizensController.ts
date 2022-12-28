@@ -16,6 +16,7 @@ import { isCuid } from "cuid";
 import type * as APITypes from "@snailycad/types/api";
 import { validateSocialSecurityNumber } from "lib/citizen/validateSSN";
 import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
+import { leoProperties, unitProperties } from "lib/leo/activeOfficer";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/citizens")
@@ -32,6 +33,8 @@ export class AdminManageCitizensController {
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query = "",
     @QueryParams("userId", String) userId?: string,
+    @QueryParams("includeOfficers", Boolean) includeOfficers = false,
+    @QueryParams("includeDeputies", Boolean) includeDeputies = false,
   ): Promise<APITypes.GetManageCitizensData> {
     const [name, surname] = query.toString().toLowerCase().split(/ +/g);
 
@@ -60,6 +63,8 @@ export class AdminManageCitizensController {
           gender: true,
           ethnicity: true,
           user: citizenInclude.user,
+          officers: includeOfficers ? { include: leoProperties } : undefined,
+          emsFdDeputies: includeDeputies ? { include: unitProperties } : undefined,
         },
         take: includeAll ? undefined : 35,
         skip: includeAll ? undefined : Number(skip),
