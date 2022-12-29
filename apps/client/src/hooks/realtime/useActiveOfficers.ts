@@ -10,7 +10,7 @@ import { isUnitCombined, isUnitOfficer } from "@snailycad/utils";
 import type { GetActiveOfficersData } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call-911-state";
 import shallow from "zustand/shallow";
-import { useMapPlayersStore } from "./useMapPlayers";
+import { useMapPlayersStore } from "./use-map-players";
 
 let ran = false;
 export function useActiveOfficers() {

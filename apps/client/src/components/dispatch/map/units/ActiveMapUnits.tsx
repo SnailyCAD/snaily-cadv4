@@ -10,7 +10,7 @@ import { usePortal } from "@casper124578/useful";
 import { useTranslations } from "next-intl";
 import { UnitItem } from "./UnitItem";
 import { ManageUnitModal } from "components/dispatch/modals/ManageUnit";
-import { useMapPlayersStore } from "hooks/realtime/useMapPlayers";
+import { useMapPlayersStore } from "hooks/realtime/use-map-players";
 
 interface Props {
   players: (MapPlayer | PlayerDataEventPayload)[];

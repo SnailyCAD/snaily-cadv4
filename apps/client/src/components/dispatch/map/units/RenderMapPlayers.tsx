@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ActiveMapUnits } from "./ActiveMapUnits";
 import { PlayerMarker } from "./PlayerMarker";
-import { useMapPlayers } from "hooks/realtime/useMapPlayers";
+import { useMapPlayers } from "hooks/realtime/use-map-players";
 
 export function RenderMapPlayers() {
   const [openItems, setOpenItems] = React.useState<string[]>([]);
