@@ -69,6 +69,15 @@ export type PutValuePositionsData = boolean;
 export type ImportValuesData<Value extends AnyValue = AnyValue> = Value[];
 
 /**
+ * @method Get
+ * @route /admin/penal-code-group
+ */
+export interface GetPenalCodeGroupsData {
+  groups: Types.PenalCodeGroup[];
+  totalCount: number;
+}
+
+/**
  * @method POST
  * @route /admin/penal-code-group
  */
