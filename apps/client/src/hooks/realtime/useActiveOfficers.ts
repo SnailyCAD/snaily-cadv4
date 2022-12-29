@@ -36,7 +36,7 @@ export function useActiveOfficers() {
 
       if (player) {
         const newPlayers = playerState.players;
-        newPlayers.set(player.playerId, { ...player, unit: null });
+        newPlayers.set(player.name, { ...player, unit: null });
         playerState.setPlayers(newPlayers);
       }
     },
@@ -98,7 +98,7 @@ export function useActiveOfficers() {
         );
 
         if (officer && isUnitOfficer(officer)) {
-          newPlayers.set(player.playerId, { ...player, unit: officer });
+          newPlayers.set(player.name, { ...player, unit: officer });
         }
       }
 

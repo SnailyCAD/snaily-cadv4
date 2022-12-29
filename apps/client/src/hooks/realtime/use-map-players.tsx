@@ -87,7 +87,7 @@ export function useMapPlayers() {
             "pos",
           ]);
 
-          newMap.set(player.playerId, {
+          newMap.set(player.name, {
             ...omittedExisting,
             ...existing,
             ...player,
@@ -96,8 +96,8 @@ export function useMapPlayers() {
           continue;
         }
 
-        if (!player.playerId) continue;
-        newMap.set(player.playerId, {
+        if (!player.name) continue;
+        newMap.set(player.name, {
           convertedSteamId: currentPlayer?.convertedSteamId,
           ...player,
           ...user,

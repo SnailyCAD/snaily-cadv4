@@ -46,7 +46,7 @@ export function ActiveMapUnits({ openItems, setOpenItems }: Props) {
         ) : (
           <AccordionRoot value={openItems} onValueChange={setOpenItems} type="multiple">
             {units.map((player) => {
-              return <UnitItem setTempUnit={setTempUnit} key={player.playerId} player={player} />;
+              return <UnitItem setTempUnit={setTempUnit} key={player.name} player={player} />;
             })}
           </AccordionRoot>
         )}

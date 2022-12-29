@@ -14,7 +14,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 
 interface Props {
   player: MapPlayer | PlayerDataEventPayload;
-  handleToggle(playerId: string): void;
+  handleToggle(name: string): void;
 }
 
 const PLAYER_ICON = leafletIcon({
@@ -98,12 +98,7 @@ export function PlayerMarker({ player, handleToggle }: Props) {
   const unitNameAndCallsign = unitName && unitCallsign ? `${unitCallsign} ${unitName}` : unitName;
 
   return (
-    <Marker
-      ref={(ref) => (player.ref = ref)}
-      icon={playerIcon}
-      key={player.playerId}
-      position={pos}
-    >
+    <Marker ref={(ref) => (player.ref = ref)} icon={playerIcon} key={player.name} position={pos}>
       <Tooltip direction="top">{unitNameAndCallsign}</Tooltip>
 
       <Popup minWidth={500}>
