@@ -68,7 +68,10 @@ export class AdminController {
       ],
     );
 
-    res.setHeader("Cache-Control", `public, max-age=${ONE_DAY}`);
+    res.setHeader(
+      "Cache-Control",
+      `private, max-age=${ONE_DAY} stale-while-revalidate=${ONE_DAY / 2}`,
+    );
 
     const imageData = await this.imageData().catch(() => null);
 
@@ -110,7 +113,10 @@ export class AdminController {
         headers: { accept: "application/vnd.github+json" },
       });
 
-      res.setHeader("Cache-Control", `public, max-age=${ONE_DAY}`);
+      res.setHeader(
+        "Cache-Control",
+        `private, max-age=${ONE_DAY} stale-while-revalidate=${ONE_DAY / 2}`,
+      );
 
       const json = response.data as { body: string };
       return json;
