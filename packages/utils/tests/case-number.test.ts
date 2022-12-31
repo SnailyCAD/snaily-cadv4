@@ -49,4 +49,16 @@ describe("prefixNumber", () => {
   test("should prefix caseNumber id with 0's - depth 6", () => {
     expect(prefixNumber(1, 6)).toMatchInlineSnapshot('"000001"');
   });
+
+  test("should prefix caseNumber id with same length", () => {
+    expect(prefixNumber(99_999, 5)).toMatchInlineSnapshot('"99999"');
+  });
+
+  test("should prefix caseNumber id with same longer length", () => {
+    expect(prefixNumber(999_999, 5)).toMatchInlineSnapshot('"999999"');
+  });
+
+  test("should prefix caseNumber id with same less than 0", () => {
+    expect(prefixNumber(999_999, 0)).toMatchInlineSnapshot('"999999"');
+  });
 });

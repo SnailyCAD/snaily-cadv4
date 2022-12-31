@@ -1,4 +1,6 @@
 export function prefixNumber(id: number, depth: number) {
+  if (depth <= 0) return id.toString();
+
   const stringifiedId = id.toString();
   const newId = [stringifiedId];
 

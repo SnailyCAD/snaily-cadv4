@@ -146,6 +146,7 @@ export class CADSettingsController {
         maxDivisionsPerOfficer: data.maxDivisionsPerOfficer,
         pairedUnitTemplate: data.pairedUnitTemplate,
         callsignTemplate: data.callsignTemplate,
+        caseNumberTemplate: data.caseNumberTemplate,
         liveMapURL: data.liveMapURL,
         authScreenBgImageId: data.authScreenBgImageId,
         authScreenHeaderImageId: data.authScreenHeaderImageId,
