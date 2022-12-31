@@ -108,11 +108,14 @@ export function RenderActiveCalls() {
               eventHandlers={{
                 moveend: (e) => handleMoveEnd(e, call),
               }}
-              draggable
+              // must be managed by in-game updates
+              draggable={!call.gtaMapPosition}
               key={call.id}
               position={position}
             >
-              <Tooltip direction="top">{t("dragToMoveCallBlip")}</Tooltip>
+              {!call.gtaMapPosition ? (
+                <Tooltip direction="top">{t("dragToMoveCallBlip")}</Tooltip>
+              ) : null}
 
               <Popup minWidth={300}>
                 <p style={{ margin: 2, fontSize: 18 }}>
