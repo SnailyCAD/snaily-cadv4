@@ -21,6 +21,7 @@ import { NameSearchModal } from "components/leo/modals/NameSearchModal/NameSearc
 import { useAsyncTable } from "hooks/shared/table/use-async-table";
 import type { GetJailedCitizensData } from "@snailycad/types/api";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
+import { RecordsCaseNumberColumn } from "components/leo/records-case-number-column";
 
 interface Props {
   data: GetJailedCitizensData;
@@ -114,7 +115,7 @@ export default function Jail({ data }: Props) {
             return {
               rowProps: { style: released ? { opacity: "0.5" } : undefined },
               id: item.id,
-              caseNumber: `#${record.caseNumber}`,
+              caseNumber: <RecordsCaseNumberColumn record={record} />,
               citizen: (
                 <Button onPress={() => handleNameClick(item)}>
                   {item.name} {item.surname}{" "}

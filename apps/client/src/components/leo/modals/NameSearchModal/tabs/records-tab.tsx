@@ -20,6 +20,7 @@ import { ViolationsColumn } from "components/leo/ViolationsColumn";
 import type { DeleteRecordsByIdData } from "@snailycad/types/api";
 import { Status } from "components/shared/Status";
 import shallow from "zustand/shallow";
+import { RecordsCaseNumberColumn } from "components/leo/records-case-number-column";
 
 export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitizen?: boolean }) {
   const t = useTranslations();
@@ -217,7 +218,7 @@ export function RecordsTable({
                 <span className="capitalize">{record.type.toLowerCase().replace("_", " ")}</span>
               ),
               id: record.id,
-              caseNumber: record.caseNumber ? `#${record.caseNumber}` : "-",
+              caseNumber: <RecordsCaseNumberColumn record={record} />,
               violations: <ViolationsColumn violations={record.violations} />,
               postal: record.postal,
               officer: record.officer

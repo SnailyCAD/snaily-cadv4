@@ -18,6 +18,7 @@ import Link from "next/link";
 import { buttonSizes, buttonVariants } from "@snailycad/ui";
 import { classNames } from "lib/classNames";
 import { ArrowLeft } from "react-bootstrap-icons";
+import { RecordsCaseNumberColumn } from "components/leo/records-case-number-column";
 
 export type CitizenLog = RecordLog & { citizen: Citizen };
 interface Props {
@@ -84,7 +85,7 @@ export default function CitizenLogs(props: Props) {
 
           const extra = item.records
             ? {
-                caseNumber: `#${item.records?.caseNumber}`,
+                caseNumber: <RecordsCaseNumberColumn record={item.records} />,
                 status: (
                   <Status state={item.records.status}>{item.records.status?.toLowerCase()}</Status>
                 ),

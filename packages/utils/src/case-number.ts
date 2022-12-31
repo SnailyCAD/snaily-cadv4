@@ -5,7 +5,7 @@ import { replaceTemplateVariables } from "./utils/replace-template-variables";
 
 type RecordPick = "caseNumber" | "createdAt" | "officer";
 
-type _Record = Pick<Record, RecordPick>;
+export type _Record = Pick<Record, RecordPick>;
 
 /**
  * given a record and a template, format a case number for it

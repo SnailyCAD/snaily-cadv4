@@ -115,6 +115,7 @@ export function MiscFeatures() {
     maxAssignmentsToCalls: miscSettings.maxAssignmentsToCalls ?? Infinity,
     maxOfficersPerUser: miscSettings.maxOfficersPerUser ?? Infinity,
     callsignTemplate: miscSettings.callsignTemplate ?? "",
+    caseNumberTemplate: miscSettings.caseNumberTemplate ?? "",
     pairedUnitTemplate: miscSettings.pairedUnitTemplate ?? "",
     liveMapURL: miscSettings.liveMapURL ?? "",
     jailTimeScaling: miscSettings.jailTimeScale ?? null,
@@ -338,6 +339,23 @@ export function MiscFeatures() {
                 <Input
                   name="callsignTemplate"
                   value={values.callsignTemplate}
+                  onChange={handleChange}
+                />
+              </SettingsFormField>
+
+              <SettingsFormField
+                description={
+                  <>
+                    Supported variables: <code>{"{id}"}</code>, <code>{"{department}"}</code>,{" "}
+                    <code>{"{year}"}</code>, <code>{"{month}"}</code>, <code>{"{day}"}</code>
+                  </>
+                }
+                errorMessage={errors.caseNumberTemplate}
+                label="Case Number template"
+              >
+                <Input
+                  name="caseNumberTemplate"
+                  value={values.caseNumberTemplate}
                   onChange={handleChange}
                 />
               </SettingsFormField>
