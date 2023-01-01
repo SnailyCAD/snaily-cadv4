@@ -148,7 +148,7 @@ export class AdminManageUnitsController {
         where,
         include: { ...unitProperties, ...extraInclude },
       }),
-      prisma.officer.findMany({
+      prisma.emsFdDeputy.findMany({
         where,
         include: { ...unitProperties, ...extraInclude },
       }),

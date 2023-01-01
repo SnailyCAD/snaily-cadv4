@@ -1,4 +1,3 @@
-// const analyze = require("@next/bundle-analyzer");
 
 import { withSentryConfig } from "@sentry/nextjs";
 import { i18n } from "./i18n.config.mjs";
