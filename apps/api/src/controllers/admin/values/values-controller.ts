@@ -256,66 +256,70 @@ export class ValuesController {
     @PathParams("id") id: string,
     @MultipartFile("image") file?: PlatformMulterFile,
   ) {
-    const type = getTypeFromPath(_path);
-    const supportedValueTypes = [ValueType.QUALIFICATION, ValueType.OFFICER_RANK] as string[];
+    try {
+      const type = getTypeFromPath(_path);
+      const supportedValueTypes = [ValueType.QUALIFICATION, ValueType.OFFICER_RANK] as string[];
 
-    if (!supportedValueTypes.includes(type)) {
-      return new BadRequest("invalidType");
-    }
-
-    if (!file) {
-      throw new ExtendedBadRequest({ file: "No file provided." });
-    }
-
-    if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
-      throw new ExtendedBadRequest({ image: "invalidImageType" });
-    }
-
-    if (type === ValueType.QUALIFICATION) {
-      const value = await prisma.qualificationValue.findUnique({
-        where: { id },
-      });
-
-      if (!value) {
-        throw new NotFound("valueNotFound");
+      if (!supportedValueTypes.includes(type)) {
+        return new BadRequest("invalidType");
       }
-    } else if (type === ValueType.OFFICER_RANK) {
-      const value = await prisma.value.findFirst({
-        where: { id, type: ValueType.OFFICER_RANK },
-      });
 
-      if (!value) {
-        throw new NotFound("valueNotFound");
+      if (!file) {
+        throw new ExtendedBadRequest({ file: "No file provided." });
       }
-    }
 
-    const image = await getImageWebPPath({
-      buffer: file.buffer,
-      pathType: "values",
-      id: `${id}-${file.originalname.split(".")[0]}`,
-    });
+      if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
+        throw new ExtendedBadRequest({ image: "invalidImageType" });
+      }
 
-    const blurData = await generateBlurPlaceholder(image);
+      if (type === ValueType.QUALIFICATION) {
+        const value = await prisma.qualificationValue.findUnique({
+          where: { id },
+        });
 
-    await fs.writeFile(image.path, image.buffer);
+        if (!value) {
+          throw new NotFound("valueNotFound");
+        }
+      } else if (type === ValueType.OFFICER_RANK) {
+        const value = await prisma.value.findFirst({
+          where: { id, type: ValueType.OFFICER_RANK },
+        });
 
-    let data;
+        if (!value) {
+          throw new NotFound("valueNotFound");
+        }
+      }
 
-    if (type === ValueType.QUALIFICATION) {
-      data = await prisma.qualificationValue.update({
-        where: { id },
-        data: { imageId: image.fileName, imageBlurData: blurData },
-        select: { imageId: true },
+      const image = await getImageWebPPath({
+        buffer: file.buffer,
+        pathType: "values",
+        id: `${id}-${file.originalname.split(".")[0]}`,
       });
-    } else if (type === ValueType.OFFICER_RANK) {
-      data = await prisma.value.update({
-        where: { id },
-        data: { officerRankImageId: image.fileName, officerRankImageBlurData: blurData },
-        select: { officerRankImageId: true },
-      });
-    }
 
-    return data;
+      const blurData = await generateBlurPlaceholder(image);
+
+      await fs.writeFile(image.path, image.buffer);
+
+      let data;
+
+      if (type === ValueType.QUALIFICATION) {
+        data = await prisma.qualificationValue.update({
+          where: { id },
+          data: { imageId: image.fileName, imageBlurData: blurData },
+          select: { imageId: true },
+        });
+      } else if (type === ValueType.OFFICER_RANK) {
+        data = await prisma.value.update({
+          where: { id },
+          data: { officerRankImageId: image.fileName, officerRankImageBlurData: blurData },
+          select: { officerRankImageId: true },
+        });
+      }
+
+      return data;
+    } catch {
+      throw new BadRequest("errorUploadingImage");
+    }
   }
 
   @Post("/")

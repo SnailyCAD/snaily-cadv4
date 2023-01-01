@@ -12,7 +12,7 @@ import {
   PlatformMulterFile,
   MultipartFile,
 } from "@tsed/common";
-import { NotFound } from "@tsed/exceptions";
+import { BadRequest, NotFound } from "@tsed/exceptions";
 import { ContentType, Delete, Description, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
@@ -119,40 +119,44 @@ export class BleeterController {
     @PathParams("id") postId: string,
     @MultipartFile("image") file?: PlatformMulterFile,
   ): Promise<APITypes.PostBleeterByIdImageData> {
-    const post = await prisma.bleeterPost.findUnique({
-      where: {
-        id: postId,
-      },
-    });
+    try {
+      const post = await prisma.bleeterPost.findUnique({
+        where: {
+          id: postId,
+        },
+      });
 
-    if (!file) {
-      throw new ExtendedBadRequest({ file: "No file provided." });
+      if (!file) {
+        throw new ExtendedBadRequest({ file: "No file provided." });
+      }
+
+      if (!post || post.userId !== user.id) {
+        throw new NotFound("notFound");
+      }
+
+      if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
+        throw new ExtendedBadRequest({ image: "invalidImageType" });
+      }
+
+      const image = await getImageWebPPath({
+        buffer: file.buffer,
+        pathType: "bleeter",
+        id: `${post.id}-${file.originalname.split(".")[0]}`,
+      });
+
+      const [data] = await Promise.all([
+        prisma.bleeterPost.update({
+          where: { id: post.id },
+          data: { imageId: image.fileName, imageBlurData: await generateBlurPlaceholder(image) },
+          select: { imageId: true },
+        }),
+        fs.writeFile(image.path, image.buffer),
+      ]);
+
+      return data;
+    } catch {
+      throw new BadRequest("errorUploadingImage");
     }
-
-    if (!post || post.userId !== user.id) {
-      throw new NotFound("notFound");
-    }
-
-    if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
-      throw new ExtendedBadRequest({ image: "invalidImageType" });
-    }
-
-    const image = await getImageWebPPath({
-      buffer: file.buffer,
-      pathType: "bleeter",
-      id: `${post.id}-${file.originalname.split(".")[0]}`,
-    });
-
-    const [data] = await Promise.all([
-      prisma.bleeterPost.update({
-        where: { id: post.id },
-        data: { imageId: image.fileName, imageBlurData: await generateBlurPlaceholder(image) },
-        select: { imageId: true },
-      }),
-      fs.writeFile(image.path, image.buffer),
-    ]);
-
-    return data;
   }
 
   @Delete("/:id")

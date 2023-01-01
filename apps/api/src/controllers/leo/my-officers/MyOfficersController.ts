@@ -3,7 +3,7 @@ import { Controller, UseBeforeEach, PlatformMulterFile, MultipartFile } from "@t
 import { ContentType, Delete, Get, Post, Put } from "@tsed/schema";
 import { CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
 import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { NotFound } from "@tsed/exceptions";
+import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { getImageWebPPath, validateImgurURL } from "utils/images/image";
@@ -259,52 +259,56 @@ export class MyOfficersController {
     @PathParams("id") officerId: string,
     @MultipartFile("image") file?: PlatformMulterFile,
   ): Promise<APITypes.PostMyOfficerByIdData> {
-    const officer = await prisma.officer.findFirst({
-      where: {
-        userId: user.id,
-        id: officerId,
-      },
-    });
-
-    if (!officer) {
-      throw new NotFound("Not Found");
-    }
-
-    if (!file) {
-      throw new ExtendedBadRequest({ file: "No file provided." });
-    }
-
-    if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
-      throw new ExtendedBadRequest({ image: "invalidImageType" });
-    }
-
-    const image = await getImageWebPPath({
-      buffer: file.buffer,
-      pathType: "units",
-      id: `${officer.id}-${file.originalname.split(".")[0]}`,
-    });
-
-    const previousImage = officer.imageId
-      ? `${process.cwd()}/public/units/${officer.imageId}`
-      : undefined;
-
-    if (previousImage) {
-      await fs.rm(previousImage, { force: true });
-    }
-
-    const [data] = await Promise.all([
-      prisma.officer.update({
-        where: { id: officer.id },
-        data: {
-          imageId: image.fileName,
-          imageBlurData: await generateBlurPlaceholder(image),
+    try {
+      const officer = await prisma.officer.findFirst({
+        where: {
+          userId: user.id,
+          id: officerId,
         },
-        select: { imageId: true },
-      }),
-      fs.writeFile(image.path, image.buffer),
-    ]);
+      });
 
-    return data;
+      if (!officer) {
+        throw new NotFound("Not Found");
+      }
+
+      if (!file) {
+        throw new ExtendedBadRequest({ file: "No file provided." });
+      }
+
+      if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
+        throw new ExtendedBadRequest({ image: "invalidImageType" });
+      }
+
+      const image = await getImageWebPPath({
+        buffer: file.buffer,
+        pathType: "units",
+        id: `${officer.id}-${file.originalname.split(".")[0]}`,
+      });
+
+      const previousImage = officer.imageId
+        ? `${process.cwd()}/public/units/${officer.imageId}`
+        : undefined;
+
+      if (previousImage) {
+        await fs.rm(previousImage, { force: true });
+      }
+
+      const [data] = await Promise.all([
+        prisma.officer.update({
+          where: { id: officer.id },
+          data: {
+            imageId: image.fileName,
+            imageBlurData: await generateBlurPlaceholder(image),
+          },
+          select: { imageId: true },
+        }),
+        fs.writeFile(image.path, image.buffer),
+      ]);
+
+      return data;
+    } catch {
+      throw new BadRequest("errorUploadingImage");
+    }
   }
 }
 

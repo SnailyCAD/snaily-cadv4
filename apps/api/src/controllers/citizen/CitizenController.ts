@@ -393,56 +393,60 @@ export class CitizenController {
     @PathParams("id") citizenId: string,
     @MultipartFile("image") file?: PlatformMulterFile,
   ): Promise<APITypes.PostCitizenImageByIdData> {
-    const citizen = await prisma.citizen.findUnique({
-      where: {
-        id: citizenId,
-      },
-    });
+    try {
+      const citizen = await prisma.citizen.findUnique({
+        where: {
+          id: citizenId,
+        },
+      });
 
-    const isCreateCitizenEnabled = isFeatureEnabled({
-      defaultReturn: false,
-      feature: Feature.CREATE_USER_CITIZEN_LEO,
-      features: cad.features,
-    });
+      const isCreateCitizenEnabled = isFeatureEnabled({
+        defaultReturn: false,
+        feature: Feature.CREATE_USER_CITIZEN_LEO,
+        features: cad.features,
+      });
 
-    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
-    if (checkCitizenUserId && !isCreateCitizenEnabled) {
-      canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
-    } else if (!citizen) {
-      throw new NotFound("citizenNotFound");
+      const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
+      if (checkCitizenUserId && !isCreateCitizenEnabled) {
+        canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
+      } else if (!citizen) {
+        throw new NotFound("citizenNotFound");
+      }
+
+      if (!file) {
+        throw new ExtendedBadRequest({ file: "No file provided." }, "invalidImageType");
+      }
+
+      if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
+        throw new ExtendedBadRequest({ image: "invalidImageType" }, "invalidImageType");
+      }
+
+      const image = await getImageWebPPath({
+        buffer: file.buffer,
+        pathType: "citizens",
+        id: `${citizen.id}-${file.originalname.split(".")[0]}`,
+      });
+
+      const previousImage = citizen.imageId
+        ? `${process.cwd()}/public/citizens/${citizen.imageId}`
+        : undefined;
+
+      if (previousImage) {
+        await fs.rm(previousImage, { force: true });
+      }
+
+      const [data] = await Promise.all([
+        prisma.citizen.update({
+          where: { id: citizen.id },
+          data: { imageId: image.fileName, imageBlurData: await generateBlurPlaceholder(image) },
+          select: { imageId: true },
+        }),
+        fs.writeFile(image.path, image.buffer),
+      ]);
+
+      return data;
+    } catch {
+      throw new BadRequest("errorUploadingImage");
     }
-
-    if (!file) {
-      throw new ExtendedBadRequest({ file: "No file provided." }, "invalidImageType");
-    }
-
-    if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
-      throw new ExtendedBadRequest({ image: "invalidImageType" }, "invalidImageType");
-    }
-
-    const image = await getImageWebPPath({
-      buffer: file.buffer,
-      pathType: "citizens",
-      id: `${citizen.id}-${file.originalname.split(".")[0]}`,
-    });
-
-    const previousImage = citizen.imageId
-      ? `${process.cwd()}/public/citizens/${citizen.imageId}`
-      : undefined;
-
-    if (previousImage) {
-      await fs.rm(previousImage, { force: true });
-    }
-
-    const [data] = await Promise.all([
-      prisma.citizen.update({
-        where: { id: citizen.id },
-        data: { imageId: image.fileName, imageBlurData: await generateBlurPlaceholder(image) },
-        select: { imageId: true },
-      }),
-      fs.writeFile(image.path, image.buffer),
-    ]);
-
-    return data;
   }
 }
