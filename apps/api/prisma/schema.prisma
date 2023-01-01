@@ -66,6 +66,7 @@ model MiscCadSettings {
   maxAssignmentsToIncidents Int?
   maxAssignmentsToCalls     Int?
   callsignTemplate          String         @default("{department}{callsign1} - {callsign2}{division}") @db.Text
+  caseNumberTemplate        String?
   pairedUnitTemplate        String?        @default("1A-{callsign1}") @db.Text
   pairedUnitSymbol          String?        @default("A") @db.VarChar(255)
   signal100Enabled          Boolean        @default(false)

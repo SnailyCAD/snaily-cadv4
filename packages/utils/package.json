@@ -25,6 +25,10 @@
       "require": "./dist/api-url.js",
       "import": "./dist/api-url.mjs"
     },
+    "./case-number": {
+      "require": "./dist/case-number.js",
+      "import": "./dist/case-number.mjs"
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -43,6 +47,9 @@
       ],
       "api-url": [
         "dist/api-url.d.ts"
+      ],
+      "case-number": [
+        "dist/case-number.d.ts"
       ]
     }
   },

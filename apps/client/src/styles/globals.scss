@@ -39,7 +39,14 @@ html {
 
 p,
 li {
-  @apply text-lg;
+  font-size: theme("fontSize.lg");
+}
+
+code {
+  font-size: theme("fontSize.sm");
+  background-color: theme("colors.secondary");
+  padding: theme("padding.1") theme("padding[1.5]");
+  border-radius: theme("borderRadius.md");
 }
 
 strong {
