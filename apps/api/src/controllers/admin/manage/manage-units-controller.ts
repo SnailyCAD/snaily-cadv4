@@ -154,7 +154,7 @@ export class AdminManageUnitsController {
       }),
       prisma.combinedLeoUnit.findMany({
         where: { officers: { some: where } },
-        include: { ...unitProperties },
+        include: combinedUnitProperties,
       }),
     ]);
 
