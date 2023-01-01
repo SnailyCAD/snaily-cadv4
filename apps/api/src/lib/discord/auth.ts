@@ -123,15 +123,18 @@ export async function updateMemberRolesLogin<
   }
 }
 
-function doesDiscordMemberHaveRole(roles: DiscordRole[] | string | null, roleIds: string[]) {
-  if (!roles) return undefined;
+function doesDiscordMemberHaveRole(
+  cadRoles: DiscordRole[] | string | null,
+  discordMemberRoleIds: string[],
+) {
+  if (!cadRoles) return undefined;
 
-  if (Array.isArray(roles)) {
-    if (roles.length <= 0) return undefined;
-    return roles.some((role) => roleIds.includes(role.id));
+  if (Array.isArray(cadRoles)) {
+    if (cadRoles.length <= 0) return undefined;
+    return cadRoles.some((role) => discordMemberRoleIds.includes(role.id));
   }
 
-  return roleIds.includes(roles);
+  return discordMemberRoleIds.includes(cadRoles);
 }
 
 function makeWhitelistStatus(cadWhitelisted: boolean, hasRole: boolean | undefined) {

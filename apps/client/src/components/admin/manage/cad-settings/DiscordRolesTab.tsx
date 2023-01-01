@@ -15,7 +15,7 @@ import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { toastMessage } from "lib/toastMessage";
 import type { GetCADDiscordRolesData, PostCADDiscordRolesData } from "@snailycad/types/api";
 
-function makeRoleValues(roles?: DiscordRole[]) {
+function makeRoleValues(roles: DiscordRole[] | undefined) {
   if (!roles) return [];
   return roles.map((v) => ({
     label: v.name,
@@ -32,6 +32,10 @@ export function DiscordRolesTab() {
   );
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
+
+  React.useEffect(() => {
+    refreshRoles();
+  }, []); // eslint-disable-line
 
   const INITIAL_VALUES = {
     leoRoles: makeRoleValues(discordRoles.leoRoles),

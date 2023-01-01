@@ -8,6 +8,7 @@ import { getCADVersion } from "@snailycad/utils/version";
 import { handleDiscordSync } from "./auth/utils";
 import { setGlobalUserFromCADAPIToken, getUserFromSession } from "./auth/getUser";
 import type { cad } from "@snailycad/types";
+import { hasPermission, Permissions } from "@snailycad/permissions";
 
 @Middleware()
 export class IsAuth implements MiddlewareMethods {
@@ -31,12 +32,20 @@ export class IsAuth implements MiddlewareMethods {
       throw new Unauthorized("Unauthorized");
     }
 
-    let cad = await prisma.cad.findFirst({ select: CAD_SELECT(user) });
+    const hasManageCadSettingsPermissions = hasPermission({
+      permissionsToCheck: [Permissions.ManageCADSettings],
+      userToCheck: user ?? null,
+      fallback: (user) => user.rank === Rank.OWNER,
+    });
+
+    let cad = await prisma.cad.findFirst({
+      select: CAD_SELECT(user, hasManageCadSettingsPermissions),
+    });
 
     if (cad) {
       if (!cad.miscCadSettings) {
         cad = await prisma.cad.update({
-          select: CAD_SELECT(user),
+          select: CAD_SELECT(user, hasManageCadSettingsPermissions),
           where: { id: cad.id },
           data: { miscCadSettings: { create: {} } },
         });
