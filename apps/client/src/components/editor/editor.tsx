@@ -152,7 +152,7 @@ export function Editor(props: EditorProps) {
               if (isHotkey(hotkey)(event)) {
                 event.preventDefault();
                 const mark = HOTKEYS[hotkey as keyof typeof HOTKEYS];
-                toggleMark(editor, mark);
+                toggleMark(editor, mark, true);
               }
             }
           }}
