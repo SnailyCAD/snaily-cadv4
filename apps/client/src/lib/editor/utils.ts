@@ -4,11 +4,15 @@ import { Editor, Transforms, Element as SlateElement } from "slate";
 
 const LIST_TYPES = ["numbered-list", "bulleted-list"];
 
-export function isMarkActive(editor: SlateEditor, format: keyof Omit<Text, "text">) {
+export function isMarkActive(
+  editor: SlateEditor,
+  format: keyof Omit<Text, "text">,
+  value: unknown = true,
+) {
   try {
     const marks = Editor.marks(editor);
-    return marks ? marks[format] === true : false;
-  } catch (error) {
+    return marks ? marks[format] === value : false;
+  } catch {
     return false;
   }
 }
@@ -33,13 +37,13 @@ export function toggleBlock(editor: SlateEditor, format: SlateElement["type"]) {
   }
 }
 
-export function toggleMark(editor: SlateEditor, format: keyof Omit<Text, "text">) {
+export function toggleMark(editor: SlateEditor, format: keyof Omit<Text, "text">, value: unknown) {
   const isActive = isMarkActive(editor, format);
 
   if (isActive) {
     Editor.removeMark(editor, format);
   } else {
-    Editor.addMark(editor, format, true);
+    Editor.addMark(editor, format, value);
   }
 }
 

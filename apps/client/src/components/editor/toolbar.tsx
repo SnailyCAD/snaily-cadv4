@@ -2,6 +2,7 @@ import * as RToolbar from "@radix-ui/react-toolbar";
 import {
   ListCheck,
   ListUl,
+  PaintBucket,
   Quote,
   TypeBold,
   TypeH1,
@@ -15,6 +16,7 @@ import { Button } from "@snailycad/ui";
 import { classNames } from "lib/classNames";
 import { isBlockActive, toggleMark, toggleBlock, isMarkActive } from "lib/editor/utils";
 import type { SlateElements, Text } from "./types";
+import { SelectColorPopover } from "./toolbar/select-color-popover";
 
 /**
  * mostly example code from: https://github.com/ianstormtaylor/slate/blob/main/site/examples/richtext.tsx
@@ -35,6 +37,7 @@ export function Toolbar() {
           format="strikethrough"
           icon={<TypeStrikethrough aria-label="strikethrough" />}
         />
+        <SelectColorPopover format="color" icon={<PaintBucket />} />
       </RToolbar.ToolbarToggleGroup>
       <RToolbar.Separator className="w-[1px] bg-neutral-400 dark:bg-secondary mx-1" />
       <RToolbar.ToolbarToggleGroup
@@ -79,9 +82,10 @@ function BlockButton({ format, icon }: BlockButtonProps) {
 interface MarkButtonProps {
   format: keyof Omit<Text, "text">;
   icon: React.ReactNode;
+  value?: unknown;
 }
 
-function MarkButton({ format, icon }: MarkButtonProps) {
+function MarkButton({ format, icon, value = true }: MarkButtonProps) {
   const editor = useSlate();
   const isActive = isMarkActive(editor, format);
 
@@ -92,7 +96,7 @@ function MarkButton({ format, icon }: MarkButtonProps) {
         type="button"
         variant={isActive ? null : "default"}
         className={classNames(isActive && "text-white bg-neutral-700")}
-        onPress={() => toggleMark(editor, format)}
+        onPress={() => toggleMark(editor, format, value)}
       >
         {icon}
       </Button>
