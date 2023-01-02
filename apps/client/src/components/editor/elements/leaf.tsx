@@ -6,41 +6,26 @@ export function EditorLeaf({ attributes, children, leaf }: RenderLeafProps) {
     backgroundColor: leaf["background-color"],
   };
 
+  const elementProps = {
+    ...attributes,
+    style,
+  };
+
   if (leaf.bold) {
-    children = (
-      <strong {...attributes} style={style}>
-        {children}
-      </strong>
-    );
+    children = <strong {...elementProps}>{children}</strong>;
   }
 
   if (leaf.italic) {
-    children = (
-      <em {...attributes} style={style}>
-        {children}
-      </em>
-    );
+    children = <em {...elementProps}>{children}</em>;
   }
 
   if (leaf.underline) {
-    children = (
-      <u {...attributes} style={style}>
-        {children}
-      </u>
-    );
+    children = <u {...elementProps}>{children}</u>;
   }
 
   if (leaf.strikethrough) {
-    children = (
-      <s {...attributes} style={style}>
-        {children}
-      </s>
-    );
+    children = <s {...elementProps}>{children}</s>;
   }
 
-  return (
-    <span {...attributes} style={style}>
-      {children}
-    </span>
-  );
+  return <span {...elementProps}>{children}</span>;
 }
