@@ -1,5 +1,6 @@
 import * as RToolbar from "@radix-ui/react-toolbar";
 import {
+  Fonts,
   ListCheck,
   ListUl,
   PaintBucket,
@@ -37,7 +38,8 @@ export function Toolbar() {
           format="strikethrough"
           icon={<TypeStrikethrough aria-label="strikethrough" />}
         />
-        <SelectColorPopover format="color" icon={<PaintBucket />} />
+        <SelectColorPopover format="background-color" icon={<PaintBucket />} />
+        <SelectColorPopover format="text-color" icon={<Fonts />} />
       </RToolbar.ToolbarToggleGroup>
       <RToolbar.Separator className="w-[1px] bg-neutral-400 dark:bg-secondary mx-1" />
       <RToolbar.ToolbarToggleGroup

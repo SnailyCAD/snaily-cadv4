@@ -2,8 +2,8 @@ import type { RenderLeafProps } from "slate-react";
 
 export function EditorLeaf({ attributes, children, leaf }: RenderLeafProps) {
   const style = {
-    color: leaf.color,
-    backgroundColor: leaf.backgroundColor,
+    color: leaf["text-color"],
+    backgroundColor: leaf["background-color"],
   };
 
   if (leaf.bold) {

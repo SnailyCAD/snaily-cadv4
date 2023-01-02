@@ -63,8 +63,8 @@
     "showingXResults": "Showing <span>{amount}</span> result(s)",
     "revoke": "Revoke",
     "ok": "OK",
-    "color": "Text Color",
-    "backgroundColor": "Background Color"
+    "text-color": "Text Color",
+    "background-color": "Background Color"
   },
   "Nav": {
     "citizen": "Citizen",

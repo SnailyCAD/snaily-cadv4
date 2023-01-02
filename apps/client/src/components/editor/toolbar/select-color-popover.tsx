@@ -10,7 +10,7 @@ import { HexColorPicker } from "react-colorful";
 import { useTranslations } from "use-intl";
 
 interface SelectColorPopoverProps {
-  format: keyof Pick<Text, "color" | "backgroundColor">;
+  format: keyof Pick<Text, "text-color" | "background-color">;
   icon: any;
 }
 
