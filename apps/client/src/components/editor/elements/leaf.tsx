@@ -1,21 +1,31 @@
 import type { RenderLeafProps } from "slate-react";
 
 export function EditorLeaf({ attributes, children, leaf }: RenderLeafProps) {
+  const style = {
+    color: leaf["text-color"],
+    backgroundColor: leaf["background-color"],
+  };
+
+  const elementProps = {
+    ...attributes,
+    style,
+  };
+
   if (leaf.bold) {
-    children = <strong {...attributes}>{children}</strong>;
+    children = <strong {...elementProps}>{children}</strong>;
   }
 
   if (leaf.italic) {
-    children = <em {...attributes}>{children}</em>;
+    children = <em {...elementProps}>{children}</em>;
   }
 
   if (leaf.underline) {
-    children = <u {...attributes}>{children}</u>;
+    children = <u {...elementProps}>{children}</u>;
   }
 
   if (leaf.strikethrough) {
-    children = <s {...attributes}>{children}</s>;
+    children = <s {...elementProps}>{children}</s>;
   }
 
-  return <span {...attributes}>{children}</span>;
+  return <span {...elementProps}>{children}</span>;
 }

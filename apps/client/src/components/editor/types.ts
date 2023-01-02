@@ -4,6 +4,8 @@ export interface Text {
   underline?: boolean;
   strikethrough?: boolean;
   italic?: boolean;
+  "text-color"?: string;
+  "background-color"?: string;
 }
 
 export interface ParagraphElement {

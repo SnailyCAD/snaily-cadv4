@@ -61,7 +61,10 @@
     "searching": "Searching...",
     "information": "Information",
     "showingXResults": "Showing <span>{amount}</span> result(s)",
-    "revoke": "Revoke"
+    "revoke": "Revoke",
+    "ok": "OK",
+    "text-color": "Text Color",
+    "background-color": "Background Color"
   },
   "Nav": {
     "citizen": "Citizen",
