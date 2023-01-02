@@ -821,15 +821,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@headlessui/react@npm:^1.7.5":
-  version: 1.7.5
-  resolution: "@headlessui/react@npm:1.7.5"
+"@headlessui/react@npm:^1.7.7":
+  version: 1.7.7
+  resolution: "@headlessui/react@npm:1.7.7"
   dependencies:
     client-only: ^0.0.1
   peerDependencies:
     react: ^16 || ^17 || ^18
     react-dom: ^16 || ^17 || ^18
-  checksum: 0658251a38a23cb6e41bc4edb15184fa8a5470f57f8c9d948a1aa5ce4da5b1d6ec24ac488ce5d5dbf0ed49c0ad1f147a03db4d6661262eb60a1eed299527a0f0
+  checksum: 049d7ee46056fe96067f7b2f4f962672dfc824e68044ae38561a457278c8e38c0fd17592ab648ba5648e7e82bef9890eddbf329c9a00d11acf85700c7072a0bf
   languageName: node
   linkType: hard
 
@@ -1297,9 +1297,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@radix-ui/react-context-menu@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "@radix-ui/react-context-menu@npm:2.0.1"
+"@radix-ui/react-context-menu@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "@radix-ui/react-context-menu@npm:2.1.0"
   dependencies:
     "@babel/runtime": ^7.13.10
     "@radix-ui/primitive": 1.0.0
@@ -1311,7 +1311,7 @@ __metadata:
   peerDependencies:
     react: ^16.8 || ^17.0 || ^18.0
     react-dom: ^16.8 || ^17.0 || ^18.0
-  checksum: 7184ad661bd73f63707b616793be14bce7ee8762f6b6263f93ab64e1d4715eb684ef1482a8a688126ebd64cafc73c720adbec2e53c50b0161d3b58ff3fc5bac0
+  checksum: a702d3d577e513ca262c60162d0774b4644f8badb1703ea941ffe08b480a38687f4bcf20c26fd67ba8f187453c4ba7e28b27834cf5d49da6b05fbc53ec6b6052
   languageName: node
   linkType: hard
 
@@ -2988,9 +2988,9 @@ __metadata:
   dependencies:
     "@casper124578/use-socket.io": 4.1.3
     "@casper124578/useful": ^2.0.6
-    "@headlessui/react": ^1.7.5
+    "@headlessui/react": ^1.7.7
     "@radix-ui/react-accordion": ^1.0.1
-    "@radix-ui/react-context-menu": ^2.0.1
+    "@radix-ui/react-context-menu": ^2.1.0
     "@radix-ui/react-dropdown-menu": ^2.0.1
     "@radix-ui/react-hover-card": ^1.0.2
     "@radix-ui/react-popover": ^1.0.2
@@ -3009,10 +3009,9 @@ __metadata:
     "@snailycad/ui": 1.41.1
     "@snailycad/utils": 1.41.1
     "@tailwindcss/typography": ^0.5.8
-    "@tanstack/match-sorter-utils": ^8.7.0
-    "@tanstack/react-query": ^4.19.1
-    "@tanstack/react-query-devtools": ^4.19.1
-    "@tanstack/react-table": ^8.7.0
+    "@tanstack/match-sorter-utils": ^8.7.2
+    "@tanstack/react-query": ^4.20.4
+    "@tanstack/react-table": ^8.7.4
     "@tanstack/react-virtual": ^3.0.0-alpha.0
     "@tanstack/virtual-core": ^3.0.0-alpha.1
     "@types/color": ^3.0.3
@@ -3328,42 +3327,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/match-sorter-utils@npm:^8.7.0":
-  version: 8.7.0
-  resolution: "@tanstack/match-sorter-utils@npm:8.7.0"
+"@tanstack/match-sorter-utils@npm:^8.7.2":
+  version: 8.7.2
+  resolution: "@tanstack/match-sorter-utils@npm:8.7.2"
   dependencies:
     remove-accents: 0.4.2
-  checksum: 7ec97963b44016acb324b1c6009efd87e724aa7d8caac360be7aa75c60cbbd707dffbadcbe4aad565764b591fe8d3ce725ce95f4f90b61c7e5df431e5946b3e5
+  checksum: 0821430d7de76911481b5300f4812f7cfefb804bf2f23fb1bab45e66c273379f0c919785ca1aecd8614b72d9e5e0e0edf9f449cbbb87dd91166d77ca285351f6
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:4.19.1":
-  version: 4.19.1
-  resolution: "@tanstack/query-core@npm:4.19.1"
-  checksum: a54a613d5b7abe2bba352fa26228bee0589eb8116bf482760dbe39474202b08cfc3899100e478f0bd1ae1a7bd60dcda0634c04bec56a98346763d32bc7720b54
+"@tanstack/query-core@npm:4.20.4":
+  version: 4.20.4
+  resolution: "@tanstack/query-core@npm:4.20.4"
+  checksum: bdb652296e4093d8cb042a67b9c035bc0a756e09a3b12aeb070068b07adc1c71174c2e6108f2a8c3322a26cb73ba57f431326aa0b813c81621674b9cc208cd93
   languageName: node
   linkType: hard
 
-"@tanstack/react-query-devtools@npm:^4.19.1":
-  version: 4.19.1
-  resolution: "@tanstack/react-query-devtools@npm:4.19.1"
+"@tanstack/react-query@npm:^4.20.4":
+  version: 4.20.4
+  resolution: "@tanstack/react-query@npm:4.20.4"
   dependencies:
-    "@tanstack/match-sorter-utils": ^8.7.0
-    superjson: ^1.10.0
-    use-sync-external-store: ^1.2.0
-  peerDependencies:
-    "@tanstack/react-query": 4.19.1
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: 0c40e7b55d06600ff8a2448f8679e52657f22f05ae397ccee83842ee9ce6dcd681f41bd33606adc6590535bb868561dce3da631233c339701fffa602ec1e381c
-  languageName: node
-  linkType: hard
-
-"@tanstack/react-query@npm:^4.19.1":
-  version: 4.19.1
-  resolution: "@tanstack/react-query@npm:4.19.1"
-  dependencies:
-    "@tanstack/query-core": 4.19.1
+    "@tanstack/query-core": 4.20.4
     use-sync-external-store: ^1.2.0
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -3374,19 +3358,19 @@ __metadata:
       optional: true
     react-native:
       optional: true
-  checksum: cce8b51c5cbaff007efb2fc54c5e03a2191e363626226903c345ae9baf0d48a36fc322383e24aff4f12250e672da67d3ceaa9819bbb16ace98a5c7bdff098a61
+  checksum: ba9e2f175c58bde592c0ad14285f289585474763f8d68072d651fa75263a3a7f75eead5b62aa3140db133b95468498bc58817d07513f6f857be2bd8031b491da
   languageName: node
   linkType: hard
 
-"@tanstack/react-table@npm:^8.7.0":
-  version: 8.7.0
-  resolution: "@tanstack/react-table@npm:8.7.0"
+"@tanstack/react-table@npm:^8.7.4":
+  version: 8.7.4
+  resolution: "@tanstack/react-table@npm:8.7.4"
   dependencies:
-    "@tanstack/table-core": 8.7.0
+    "@tanstack/table-core": 8.7.4
   peerDependencies:
     react: ">=16"
     react-dom: ">=16"
-  checksum: 5f739f619dacfd134449bc8cff819d7e1b9549b8c8b20c293f2c786098a53d20fe5755727d8abb6fa56a64583792bbc89d8b1c7cd24ac3497495d2c20bac9e77
+  checksum: d850aa51f4b7f5e01a02d3645e7b54e3e4726b90eedca757ceecd7c8bd0029e06401b5b38a43c6c5a796bfce29b3070a66f18caa9073d98406b8676f1d6d28fe
   languageName: node
   linkType: hard
 
@@ -3401,10 +3385,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/table-core@npm:8.7.0":
-  version: 8.7.0
-  resolution: "@tanstack/table-core@npm:8.7.0"
-  checksum: 835511727ab5651066a4cbc98916fbc2463ec6d6ddc5c74c1fec5713eeba8e26641653c1a35b69b303f0c58f574416a09e26da44cf7e9a884cb954fc26b12afd
+"@tanstack/table-core@npm:8.7.4":
+  version: 8.7.4
+  resolution: "@tanstack/table-core@npm:8.7.4"
+  checksum: 39e2b38ce6a08f3bdc0fea8d16eb92696283de33e17c756b5fec3d875a7f84512edc94edaf90a64e378a08c5681ed4843814f56841933a95ba7d60253c614e2d
   languageName: node
   linkType: hard
 
@@ -5797,15 +5781,6 @@ __metadata:
   version: 0.4.2
   resolution: "cookie@npm:0.4.2"
   checksum: a00833c998bedf8e787b4c342defe5fa419abd96b32f4464f718b91022586b8f1bafbddd499288e75c037642493c83083da426c6a9080d309e3bd90fd11baa9b
-  languageName: node
-  linkType: hard
-
-"copy-anything@npm:^3.0.2":
-  version: 3.0.3
-  resolution: "copy-anything@npm:3.0.3"
-  dependencies:
-    is-what: ^4.1.8
-  checksum: d456dc5ec98dee7c7cf87d809eac30dc2ac942acd4cf970fab394e280ceb6dd7a8a7a5a44fcbcc50e0206658de3cc20b92863562f5797930bb2619f164f4c182
   languageName: node
   linkType: hard
 
@@ -8966,13 +8941,6 @@ __metadata:
   dependencies:
     call-bind: ^1.0.2
   checksum: 95bd9a57cdcb58c63b1c401c60a474b0f45b94719c30f548c891860f051bc2231575c290a6b420c6bc6e7ed99459d424c652bd5bf9a1d5259505dc35b4bf83de
-  languageName: node
-  linkType: hard
-
-"is-what@npm:^4.1.8":
-  version: 4.1.8
-  resolution: "is-what@npm:4.1.8"
-  checksum: b9bec3acff102d14ad467f4c74c9886af310fa160e07a63292c8c181e6768c7c4c1054644e13d67185b963644e4a513bce8c6b8ce3d3ca6f9488a69fccad5f97
   languageName: node
   linkType: hard
 
@@ -13147,15 +13115,6 @@ __metadata:
     sucrase: bin/sucrase
     sucrase-node: bin/sucrase-node
   checksum: 6a2369c140cee674988ebcf83538f38b11270e47ebaffc811baabe1db3fc586f1a357d4bbc66388a6b99054ba06a08f31b44b764e777abbd457b9e29332b12d0
-  languageName: node
-  linkType: hard
-
-"superjson@npm:^1.10.0":
-  version: 1.11.0
-  resolution: "superjson@npm:1.11.0"
-  dependencies:
-    copy-anything: ^3.0.2
-  checksum: 943c2ffd67422a601fae0b2b9df176f421cebcee710cc2c379b0c01bca6aca98d0941bb0e91856dc785ede1c3353c524f8215a67916a48e3a59a45539a2c2bc4
   languageName: node
   linkType: hard
 
