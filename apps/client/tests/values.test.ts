@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { normalizeValue } from "../src/context/ValuesContext";
+import { normalizeValue } from "../src/lib/values/normalize-value";
 import { ValueType } from "@snailycad/types";
 
 const types = {
