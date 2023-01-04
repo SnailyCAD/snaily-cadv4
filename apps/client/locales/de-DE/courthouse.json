@@ -31,6 +31,8 @@
     "deleteCourthousePost": "Gerichtsposten löschen",
     "addCourthousePost": "Gerichtsposten hinzufügen",
     "noCourthousePosts": "Es gibt noch keine Gerichtsposten.",
+    "createdBy": "Created By",
+    "cancelRequest": "Cancel Request",
     "alert_deleteCourthousePost": "Sind Sie sicher, dass Sie diesen Beitrag löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
     "alert_deleteCourtEntry": "Sind Sie sicher, dass Sie diesen Eintrag löschen wollen? Diese Aktion kann nicht rückgängig gemacht werden.",
     "alert_cancelRequest": "Are you sure you want to cancel this expungement request? This action cannot be undone.",
