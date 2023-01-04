@@ -18,6 +18,7 @@
     "declareDead": "Für tot erklären",
     "declareAlive": "Für lebendig erklären",
     "myDeputyLogs": "Mein Stellvertreter protokolliert",
+    "emergencyVehicle": "Emergency Vehicle",
     "alert_deleteDeputy": "Sind Sie sicher, dass Sie <span>{deputy}</span> löschen wollen? Diese Aktion kann nicht rückgängig gemacht werden."
   }
 }
