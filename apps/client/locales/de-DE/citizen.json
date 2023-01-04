@@ -43,6 +43,18 @@
     "manageLicenses": "Lizenzen verwalten",
     "licenses": "Lizenzen",
     "licenseSuspendedInfo": "License is suspended. Please contact an officer to revoke the suspension.",
+    "licenseNumber": "License Number",
+    "unmarkAsStolen": "Unmark as Stolen",
+    "markCitizenDeceased": "Mark Citizen Deceased",
+    "citizenDead": "WARNING: This citizen died on {date}",
+    "basicInformation": "Basic Information",
+    "optionalInformation": "Optional Information",
+    "licenseInformation": "License Information",
+    "officer": "Officer",
+    "createWithOfficer": "Create with Officer",
+    "previousRecords": "Previous Records",
+    "createPreviousRecordsStepDescription": "Here you can optionally add previous records this citizen has had. This is useful for when a citizen has been arrested before.",
+    "alert_markCitizenDeceased": "Are you sure you want mark <span>{citizen}</span> as deceased? Only EMS/FD can mark you alive again.",
     "alert_deleteCitizen": "Sind Sie sicher, dass Sie <span>{citizen}</span> löschen wollen? Diese Aktion kann nicht rückgängig gemacht werden."
   },
   "Vehicles": {
