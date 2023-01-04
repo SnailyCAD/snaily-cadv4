@@ -42,6 +42,7 @@
     "manageOccupation": "Berufe verwalten",
     "manageLicenses": "Lizenzen verwalten",
     "licenses": "Lizenzen",
+    "licenseSuspendedInfo": "License is suspended. Please contact an officer to revoke the suspension.",
     "alert_deleteCitizen": "Sind Sie sicher, dass Sie <span>{citizen}</span> löschen wollen? Diese Aktion kann nicht rückgängig gemacht werden."
   },
   "Vehicles": {
