@@ -29,6 +29,15 @@
     "alert_deleteValue": "Sind Sie sicher, dass Sie <span>{value}</span> löschen wollen? Diese Aktion kann nicht rückgängig gemacht werden!",
     "alert_deleteSelectedValues": "Sind Sie sicher, dass Sie {length} Elemente löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden"
   },
+  "PENAL_CODE_GROUP": {
+    "MANAGE": "Manage Penal Code Groups",
+    "ADD": "Add Penal Code Group",
+    "DELETE": "Delete Penal Code Group",
+    "EDIT": "Edit Penal Code Group",
+    "ungrouped": "Ungrouped",
+    "alert_deletePenalCodeGroup": "Are you sure you want to delete <span>{group}</span>? This action cannot be undone.",
+    "deleteGroup": "Delete Group"
+  },
   "GENDER": {
     "MANAGE": "Geschlechter verwalten",
     "ADD": "Geschlechter hinzufügen",
@@ -136,5 +145,17 @@
     "ADD": "Ruf-Typ hinzufügen",
     "DELETE": "Ruf-Typ löschen",
     "EDIT": "Ruf-Typ bearbeiten"
+  },
+  "ADDRESS": {
+    "MANAGE": "Adressen verwalten",
+    "ADD": "Adressen hinzufügen",
+    "DELETE": "Adresse löschen",
+    "EDIT": "Adressen bearbeiten"
+  },
+  "EMERGENCY_VEHICLE": {
+    "MANAGE": "Einsatzfahrzeuge verwalten",
+    "ADD": "Einsatzfahrzeuge hinzufügen",
+    "DELETE": "Lösche Einsatzfahrzeuge",
+    "EDIT": "Einsatzfahrzeuge bearbeiten"
   }
 }
