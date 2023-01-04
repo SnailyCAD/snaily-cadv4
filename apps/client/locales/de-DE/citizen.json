@@ -99,6 +99,7 @@
     "deleteWeapon": "Waffe löschen",
     "registeredWeapons": "Registrierte Waffen",
     "successWeaponRegistered": "Erfolgreich eine Waffe registriert",
+     "bofStatus": "BOF Status",
     "alert_deleteWeapon": "Sind Sie sicher, dass Sie diese Waffe löschen wollen? Diese Aktion kann nicht rückgängig gemacht werden."
   },
   "MedicalRecords": {
