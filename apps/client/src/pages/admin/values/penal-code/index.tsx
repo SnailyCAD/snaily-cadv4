@@ -33,6 +33,12 @@ const AlertModal = dynamic(async () => (await import("components/modal/AlertModa
   ssr: false,
 });
 
+const ImportValuesModal = dynamic(
+  async () =>
+    (await import("components/admin/values/import/import-values-modal")).ImportValuesModal,
+  { ssr: false },
+);
+
 interface Props {
   groups: { groups: PenalCodeGroup[]; totalCount: number };
 }
@@ -209,6 +215,11 @@ export default function PenalCodeGroupsPage(props: Props) {
         onDeleteClick={handleDeleteGroup}
         title={t("deleteGroup")}
         state={state}
+      />
+
+      <ImportValuesModal
+        onImport={(data) => asyncTable.append(...data)}
+        type={ValueType.PENAL_CODE}
       />
     </AdminLayout>
   );
