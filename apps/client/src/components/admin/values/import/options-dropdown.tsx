@@ -80,7 +80,6 @@ function omitUnnecessaryProperties(values: readonly any[]) {
     if (isDivisionValue(v)) {
       delete (v as any).department;
     }
-    console.log({ v });
 
     if (isPenalCodeValue(v)) {
       return {
