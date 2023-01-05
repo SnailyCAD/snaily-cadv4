@@ -314,6 +314,15 @@ export const typeHandlers = {
         },
       };
 
+      if (item.group) {
+        // todo
+        await prisma.penalCodeGroup.upsert({
+          where: { id: item.group.id },
+          create: { name: item.group.name, position: item.group.position },
+          update: { name: item.group.name, position: item.group.position },
+        });
+      }
+
       return prisma.penalCode.upsert({
         where: { id: String(id) },
         ...data,

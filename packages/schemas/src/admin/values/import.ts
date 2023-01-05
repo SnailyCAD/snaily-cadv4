@@ -99,6 +99,12 @@ export const DIVISION_ARR = z.array(DIVISION_SCHEMA).min(1);
 
 const PENAL_CODE_TYPE_REGEX = /FELONY|MISDEMEANOR|INFRACTION/;
 
+const PENAL_CODE_GROUP = z.object({
+  name: z.string(),
+  id: z.string(),
+  position: z.number().nullable(),
+});
+
 export const PENAL_CODE_SCHEMA = z.object({
   title: z.string().min(2).max(255),
   descriptionData: z.array(z.any()).nullish(),
@@ -112,6 +118,7 @@ export const PENAL_CODE_SCHEMA = z.object({
   prisonTerm: z.any().nullish(),
   type: z.string().regex(PENAL_CODE_TYPE_REGEX).nullish(),
   isPrimary: z.boolean().nullish(),
+  group: PENAL_CODE_GROUP.nullish(),
 });
 
 export const PENAL_CODE_ARR = z.array(PENAL_CODE_SCHEMA).min(1);
