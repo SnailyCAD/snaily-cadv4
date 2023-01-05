@@ -21,6 +21,7 @@ import type { DeletePenalCodeGroupsData, PutValuePositionsData } from "@snailyca
 import useFetch from "lib/useFetch";
 import { hasTableDataChanged } from "lib/admin/values/utils";
 import { OptionsDropdown } from "components/admin/values/import/options-dropdown";
+import { useRouter } from "next/router";
 
 const ManagePenalCodeGroup = dynamic(
   async () =>
@@ -48,6 +49,7 @@ export default function PenalCodeGroupsPage(props: Props) {
   const common = useTranslations("Common");
   const { openModal, closeModal } = useModal();
   const { execute, state } = useFetch();
+  const router = useRouter();
 
   const ungroupedGroup = {
     id: "ungrouped",
@@ -64,13 +66,13 @@ export default function PenalCodeGroupsPage(props: Props) {
     fetchOptions: {
       onResponse: (json: Props["groups"]) => ({
         data: [ungroupedGroup, ...json.groups],
-        totalCount: json.totalCount,
+        totalCount: json.totalCount + 1,
       }),
       path: "/admin/penal-code-group",
       requireFilterText: true,
     },
     initialData: initialGroups,
-    totalCount: props.groups.totalCount,
+    totalCount: props.groups.totalCount + 1,
     search,
   });
 
@@ -218,7 +220,7 @@ export default function PenalCodeGroupsPage(props: Props) {
       />
 
       <ImportValuesModal
-        onImport={(data) => asyncTable.append(...data)}
+        onImport={() => router.replace("/admin/values/penal-code", undefined, { shallow: true })}
         type={ValueType.PENAL_CODE}
       />
     </AdminLayout>
