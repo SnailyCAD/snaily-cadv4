@@ -231,6 +231,7 @@ export const typeHandlers = {
             value: item.value,
             isDisabled: item.isDisabled,
             pairedUnitTemplate: item.pairedUnitTemplate || null,
+            extraFields: item.extraFields || undefined,
           }),
           include: { value: true, department: { include: { value: true } } },
         });
