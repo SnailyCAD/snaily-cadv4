@@ -614,6 +614,7 @@ model DivisionValue {
   officerDivisionsToDivision Officer[]                    @relation("officerDivisionsToDivision")
   deputies                   EmsFdDeputy[]                @relation("emsFdDivisionToDivision")
   pairedUnitTemplate         String?
+  extraFields                Json?
   Call911                    Call911[]
   IndividualDivisionCallsign IndividualDivisionCallsign[]
   EmergencyVehicleValue      EmergencyVehicleValue[]
