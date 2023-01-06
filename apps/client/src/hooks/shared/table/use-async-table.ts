@@ -30,7 +30,7 @@ export function useAsyncTable<T>(options: Options<T>) {
   const { state: loadingState, execute } = useFetch();
 
   const [debouncedSearch, setDebouncedSearch] = React.useState(options.search);
-  const [filters, setFilters] = React.useState<Record<string, string | boolean> | null>(null);
+  const [filters, setFilters] = React.useState<Record<string, any> | null>(null);
   const [totalDataCount, setTotalCount] = React.useState(options.totalCount);
   const [paginationOptions, setPagination] = React.useState({
     pageSize: options.fetchOptions.pageSize ?? 35,
