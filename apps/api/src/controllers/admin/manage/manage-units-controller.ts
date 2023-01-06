@@ -276,7 +276,7 @@ export class AdminManageUnitsController {
     @BodyParams() body: unknown,
     @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings; features?: CadFeature[] },
   ): Promise<APITypes.PutManageUnitData> {
-    const data = validateSchema(UPDATE_UNIT_SCHEMA, body);
+    const data = validateSchema(UPDATE_UNIT_SCHEMA.partial(), body);
 
     let type: "officer" | "emsFdDeputy" = "officer";
     let unit: any = await prisma.officer.findUnique({
@@ -302,7 +302,7 @@ export class AdminManageUnitsController {
       features: cad.features,
     });
 
-    if (isBadgeNumbersEnabled && !data.badgeNumber) {
+    if (isBadgeNumbersEnabled && typeof data.badgeNumber !== "undefined" && !data.badgeNumber) {
       throw new ExtendedBadRequest({ badgeNumber: "Required" });
     }
 
@@ -313,7 +313,7 @@ export class AdminManageUnitsController {
         features: cad.features,
       });
 
-      if (divisionsEnabled) {
+      if (divisionsEnabled && typeof data.divisions !== "undefined") {
         if (!data.divisions || data.divisions.length <= 0) {
           throw new ExtendedBadRequest({ divisions: "Must have at least 1 item" });
         }
@@ -340,9 +340,9 @@ export class AdminManageUnitsController {
         statusId: data.status,
         departmentId: data.department,
         divisionId: data.division,
-        rankId: data.rank || null,
-        position: data.position || null,
-        suspended: data.suspended ?? false,
+        rankId: data.rank,
+        position: data.position,
+        suspended: data.suspended,
         callsign2: data.callsign2,
         callsign: data.callsign,
         badgeNumber: data.badgeNumber,
