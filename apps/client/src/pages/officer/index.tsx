@@ -184,7 +184,7 @@ export default function OfficerDashboard({
 
       <signal100.Component enabled={signal100.enabled} audio={signal100.audio} />
       <panic.Component audio={panic.audio} unit={panic.unit} />
-      <tones.Component {...tones} />
+      <tones.Component audio={tones.audio} description={tones.description} user={tones.user} />
 
       <UtilityPanel>
         <div className="px-4">
