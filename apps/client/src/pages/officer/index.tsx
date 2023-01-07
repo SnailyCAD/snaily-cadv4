@@ -166,7 +166,7 @@ export default function OfficerDashboard({
     leoState.setActiveOfficer(activeOfficer);
 
     set911Calls(calls.calls);
-    dispatchState.setBolos(bolos);
+    dispatchState.setBolos(bolos.bolos);
 
     dispatchState.setActiveDeputies(activeDeputies);
     dispatchState.setActiveOfficers(activeOfficers);
@@ -258,7 +258,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ req, local
     ["/leo", { officers: [] }],
     ["/admin/values/codes_10", []],
     ["/911-calls", { calls: [], totalCount: 0 }],
-    ["/bolos", []],
+    ["/bolos", { bolos: [], totalCount: 0 }],
     ["/leo/active-officers", []],
     ["/ems-fd/active-deputies", []],
   ]);
