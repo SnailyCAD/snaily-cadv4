@@ -50,7 +50,9 @@
     "speech": "Fala",
     "speechVoice": "Voz de fala",
     "otherSounds": "Outros sons",
-    "unavailableSounds": "Sons indisponíveis"
+    "unavailableSounds": "Sons indisponíveis",
+    "unavailableSoundsMessage": "Esses sons não estão disponíveis. Eles devem ser adicionados por um administrador.",
+    "userApiTokenDescription": "Este token pode ser usado para se comunicar com a API do SnailyCAD."
   },
   "Notifications": {
     "CITIZEN_DELETED": "<span>{citizen}</span> foi excluído. Motivo: {motivo}"

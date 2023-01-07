@@ -18,6 +18,7 @@
     "declareDead": "Declarar Morto",
     "declareAlive": "Declarar Vivo",
     "myDeputyLogs": "Meus logs de Médico/Bombeiro",
+    "emergencyVehicle": "Veículo de Emergência",
     "alert_deleteDeputy": "Tem certeza de que deseja excluir <span>{deputy}</span>? Esta ação não pode ser desfeita."
   }
 }
