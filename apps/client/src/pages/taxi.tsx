@@ -28,7 +28,7 @@ export default function Taxi(props: Props) {
     const isAlreadyInCalls = calls.some((v) => v.id === data.id);
 
     if (!isAlreadyInCalls) {
-      setCalls((p) => [...p, data]);
+      setCalls((p) => [data, ...p]);
     }
   });
 
