@@ -1,4 +1,4 @@
-import { SelectField, TextField } from "@snailycad/ui";
+import { Loader, SelectField, TextField } from "@snailycad/ui";
 import { Bolo, BoloType } from "@snailycad/types";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useTranslations } from "next-intl";
@@ -16,15 +16,25 @@ const BOLO_TYPES = Object.keys(BoloType).map((type) => ({
 }));
 
 export function BoloFilters({ asyncTable, search }: Props) {
+  const common = useTranslations("Common");
+
   return (
-    <div className="mt-3 px-4 grid grid-cols-1 md:grid-cols-4 gap-3">
-      <TextField
-        className="md:col-span-3"
-        label="Search"
-        name="search"
-        value={search.search}
-        onChange={(value) => search.setSearch(value)}
-      />
+    <div className="mt-3 px-4 items-end grid grid-cols-1 md:grid-cols-4 gap-3">
+      <div className="flex items-baseline gap-2 md:col-span-3">
+        <TextField
+          label={common("search")}
+          className="w-full relative "
+          name="search"
+          onChange={search.setSearch}
+          value={search.search}
+        >
+          {asyncTable.isLoading ? (
+            <span className="absolute top-[2.4rem] right-2.5">
+              <Loader />
+            </span>
+          ) : null}
+        </TextField>
+      </div>
 
       <SelectField
         isClearable
