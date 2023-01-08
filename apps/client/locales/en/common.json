@@ -64,7 +64,9 @@
     "revoke": "Revoke",
     "ok": "OK",
     "text-color": "Text Color",
-    "background-color": "Background Color"
+    "background-color": "Background Color",
+    "url": "URL",
+    "supportedImages": "See supported image types and URLs"
   },
   "Nav": {
     "citizen": "Citizen",

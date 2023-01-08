@@ -7,6 +7,8 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { CropImageModal } from "components/modal/CropImageModal";
 import { AllowedFileExtension, allowedFileExtensions, IMAGES_REGEX } from "@snailycad/config";
+import Link from "next/link";
+import { BoxArrowUpRight } from "react-bootstrap-icons";
 
 interface Props {
   setImage: React.Dispatch<React.SetStateAction<(File | string) | null>>;
@@ -55,6 +57,15 @@ export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, 
           {common("image")}
         </Button>
       </div>
+
+      <Link
+        className="mt-1 underline flex items-center gap-1"
+        target="_blank"
+        href="https://cad-docs.caspertheghost.me"
+      >
+        {common("supportedImages")}
+        <BoxArrowUpRight className="inline-block" />
+      </Link>
     </FormField>
   ) : (
     <>
@@ -84,7 +95,7 @@ export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, 
             {common("crop")}
           </Button>
           <Button className="mr-2 min-w-fit" type="button" onPress={() => handleSetURL(true)}>
-            {common("imgur")}
+            {common("url")}
           </Button>
           <Button
             type="button"
@@ -97,6 +108,15 @@ export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, 
             {common("delete")}
           </Button>
         </div>
+
+        <Link
+          className="mt-1 underline flex items-center gap-1"
+          target="_blank"
+          href="https://cad-docs.caspertheghost.me/docs/features/general/supported-images"
+        >
+          {common("supportedImages")}
+          <BoxArrowUpRight className="inline-block" />
+        </Link>
       </FormField>
 
       {typeof image !== "string" ? (
