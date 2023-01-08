@@ -26,6 +26,7 @@ function makeRoleValues(roles: DiscordRole[] | undefined) {
 export function DiscordRolesTab() {
   const { cad } = useAuth();
   const discordRoles = cad?.discordRoles ?? ({} as DiscordRoles);
+  const t = useTranslations("DiscordRolesTab");
 
   const [roles, setRoles] = React.useState<Omit<DiscordRole, "discordRolesId">[]>(
     discordRoles.roles ?? [],
@@ -110,16 +111,15 @@ export function DiscordRolesTab() {
     <TabsContent value={SettingsTabs.DiscordRoles}>
       <header>
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold">Discord Roles</h2>
+          <h2 className="text-2xl font-semibold">{t("discordRoles")}</h2>
 
           <Button onPress={refreshRoles} className="h-fit min-w-fit">
-            Refresh Roles
+            {t("refreshRoles")}
           </Button>
         </div>
 
         <p className="my-3 text-neutral-700 dark:text-gray-400 max-w-2xl">
-          When a user authenticates via Discord, the respective permissions will be granted to that
-          user from their Discord roles.
+          {t("discordRolesInfo")}
         </p>
       </header>
 
@@ -128,10 +128,9 @@ export function DiscordRolesTab() {
           <Form className="mt-5 space-y-5">
             <SettingsFormField
               action="input"
-              // eslint-disable-next-line quotes
-              description={'The Discord role that represents the "ADMIN" rank'}
+              description={t("adminRoleInfo")}
               errorMessage={errors.adminRoleId}
-              label="Admin Role"
+              label={t("adminRole")}
             >
               <Select
                 isClearable
@@ -151,9 +150,9 @@ export function DiscordRolesTab() {
             </SettingsFormField>
 
             <SettingsFormField
-              description="The Discord role that represents the LEO permission"
+              description={t("leoRoleInfo")}
               errorMessage={errors.leoRoles as string}
-              label="LEO Role"
+              label={t("leoRole")}
             >
               <Select
                 isClearable
@@ -174,9 +173,9 @@ export function DiscordRolesTab() {
             </SettingsFormField>
 
             <SettingsFormField
-              description="The Discord role that represents the LEO Supervisor permission"
+              description={t("leoSupervisorRoleInfo")}
               errorMessage={errors.leoSupervisorRoles as string}
-              label="LEO Supervisor Role"
+              label={t("leoSupervisorRole")}
             >
               <Select
                 isClearable
@@ -197,9 +196,9 @@ export function DiscordRolesTab() {
             </SettingsFormField>
 
             <SettingsFormField
-              description="The Discord role that represents the EMS/FD permission"
+              description={t("emsFdRoleInfo")}
               errorMessage={errors.emsFdRoles as string}
-              label="EMS/FD Role"
+              label={t("emsFdRole")}
             >
               <Select
                 isClearable
@@ -220,9 +219,9 @@ export function DiscordRolesTab() {
             </SettingsFormField>
 
             <SettingsFormField
-              description="The Discord role that represents the Dispatch permission"
+              description={t("dispatchRoleInfo")}
               errorMessage={errors.dispatchRoles as string}
-              label="Dispatch Role"
+              label={t("dispatchRole")}
             >
               <Select
                 isClearable
@@ -243,9 +242,9 @@ export function DiscordRolesTab() {
             </SettingsFormField>
 
             <SettingsFormField
-              description="The Discord role that represents the Tow permission"
+              description={t("towRoleInfo")}
               errorMessage={errors.towRoles as string}
-              label="Tow Role"
+              label={t("towRole")}
             >
               <Select
                 isClearable
@@ -266,9 +265,9 @@ export function DiscordRolesTab() {
             </SettingsFormField>
 
             <SettingsFormField
-              description="The Discord role that represents the Taxi permission"
+              description={t("taxiRoleInfo")}
               errorMessage={errors.taxiRoles as string}
-              label="Taxi Role"
+              label={t("taxiRole")}
             >
               <Select
                 isClearable
@@ -289,9 +288,9 @@ export function DiscordRolesTab() {
             </SettingsFormField>
 
             <SettingsFormField
-              description="The Discord role that represents the Courthouse permission"
+              description={t("courthouseRoleInfo")}
               errorMessage={errors.courthouseRoles as string}
-              label="Courthouse Role"
+              label={t("courthouseRole")}
             >
               <Select
                 isClearable
@@ -312,9 +311,9 @@ export function DiscordRolesTab() {
             </SettingsFormField>
 
             <SettingsFormField
-              description="The Discord role that represents whitelisted access"
+              description={t("whitelistedRoleInfo")}
               errorMessage={errors.whitelistedRoleId}
-              label="Whitelisted Role"
+              label={t("whitelistedRole")}
             >
               <Select
                 isClearable
@@ -352,9 +351,10 @@ function SelectPermissionsField({
   permissions: Permissions[];
 }) {
   const { values, errors, handleChange } = useFormikContext<any>();
+  const t = useTranslations("DiscordRolesTab");
 
   return (
-    <FormField errorMessage={errors[name] as string} className="mt-2" label="Permissions">
+    <FormField errorMessage={errors[name] as string} className="mt-2" label={t("permissions")}>
       <Select
         closeMenuOnSelect={false}
         name={name}

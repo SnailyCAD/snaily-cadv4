@@ -101,5 +101,29 @@
     "caseNumberTemplateInfo": "This is the template for record case numbers. You can use the following variables: {variables}",
     "pairedUnitTemplate": "Paired Unit Template",
     "pairedUnitTemplateInfo": "This is the template for paired units. You can use the following variables: {variables}"
+  },
+  "DiscordRolesTab": {
+    "discordRoles": "Discord Roles",
+    "permissions": "Permissions",
+    "refreshRoles": "Refresh Roles",
+    "discordRolesInfo": "When a CAD user authenticates via Discord, the respective CAD permissions will be granted to that CAD user from their Discord roles.",
+    "adminRole": "Admin Role",
+    "adminRoleInfo": "The Discord Role that will represent set admin permissions in the CAD.",
+    "leoRole": "LEO Role",
+    "leoRoleInfo": "The Discord Role that will represent set LEO permissions in the CAD.",
+    "leoSupervisorRole": "LEO Supervisor Role",
+    "leoSupervisorRoleInfo": "The Discord Role that will represent set LEO Supervisor permissions in the CAD.",
+    "emsFdRole": "EMS/FD Role",
+    "emsFdRoleInfo": "The Discord Role that will represent set EMS/FD permissions in the CAD.",
+    "dispatchRole": "Dispatch Role",
+    "dispatchRoleInfo": "The Discord Role that will represent set dispatch permissions in the CAD.",
+    "towRole": "Tow Role",
+    "towRoleInfo": "The Discord Role that will represent set tow permissions in the CAD.",
+    "taxiRole": "Taxi Role",
+    "taxiRoleInfo": "The Discord Role that will represent set taxi permissions in the CAD.",
+    "courthouseRole": "Courthouse Role",
+    "courthouseRoleInfo": "The Discord Role that will represent set courthouse permissions in the CAD.",
+    "whitelistedRole": "Whitelisted Role",
+    "whitelistedRoleInfo": "The Discord Role that will represent whitelisted access."
   }
 }
