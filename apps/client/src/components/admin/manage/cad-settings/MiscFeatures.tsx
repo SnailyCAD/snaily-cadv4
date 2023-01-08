@@ -14,8 +14,9 @@ import { Select } from "components/form/Select";
 import { toastMessage } from "lib/toastMessage";
 import type { PutCADMiscSettingsData } from "@snailycad/types/api";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { InactivityTimeoutSection } from "./misc-features/InactivityTimeoutSection";
-import { LicenseNumbersSection } from "./misc-features/LicenseNumbersSection";
+import { InactivityTimeoutSection } from "./misc-features/inactivity-timeout-section";
+import { LicenseNumbersSection } from "./misc-features/license-number-section";
+import { TemplateSection } from "./misc-features/template-section";
 
 export function MiscFeatures() {
   const [headerId, setHeaderId] = React.useState<(File | string) | null>(null);
@@ -186,6 +187,7 @@ export function MiscFeatures() {
 
             <InactivityTimeoutSection />
             <LicenseNumbersSection />
+            <TemplateSection />
 
             <section>
               <h3 className="font-semibold text-xl mb-3">Other</h3>
@@ -327,48 +329,6 @@ export function MiscFeatures() {
                   value={values.maxPlateLength}
                   onChange={handleChange}
                   min={1}
-                />
-              </SettingsFormField>
-
-              <SettingsFormField
-                // todo: add template information for allowed properties
-                description={null}
-                errorMessage={errors.callsignTemplate}
-                label="Callsign Template"
-              >
-                <Input
-                  name="callsignTemplate"
-                  value={values.callsignTemplate}
-                  onChange={handleChange}
-                />
-              </SettingsFormField>
-
-              <SettingsFormField
-                description={
-                  <>
-                    Supported variables: <code>{"{id}"}</code>, <code>{"{department}"}</code>,{" "}
-                    <code>{"{year}"}</code>, <code>{"{month}"}</code>, <code>{"{day}"}</code>
-                  </>
-                }
-                errorMessage={errors.caseNumberTemplate}
-                label="Case Number template"
-              >
-                <Input
-                  name="caseNumberTemplate"
-                  value={values.caseNumberTemplate}
-                  onChange={handleChange}
-                />
-              </SettingsFormField>
-
-              <SettingsFormField
-                description="This template will be used to generate a callsign for paired/merged officers."
-                errorMessage={errors.pairedUnitTemplate}
-                label="Paired Unit Template"
-              >
-                <Input
-                  name="pairedUnitTemplate"
-                  value={values.pairedUnitTemplate}
-                  onChange={handleChange}
                 />
               </SettingsFormField>
 

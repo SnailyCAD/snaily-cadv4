@@ -92,5 +92,14 @@
     "alert_deleteCustomField": "Are you sure you want to delete this custom field? This action cannot be undone. All values created with this field will also be deleted.",
     "info_pendingBusinesses": "These are created businesses that are awaiting approval to be used. Accept or decline them.",
     "alert_deleteBusiness": "Are you sure you want to delete this <span>{name}</span>? All it's data will be lost. This action cannot be undone."
+  },
+  "CadSettings": {
+    "templateSection": "Templates",
+    "callsignTemplate": "Callsign Template",
+    "callsignTemplateInfo": "This is the template for unit callsigns. You can use the following variables: {variables}",
+    "caseNumberTemplate": "Case Number Template",
+    "caseNumberTemplateInfo": "This is the template for record case numbers. You can use the following variables: {variables}",
+    "pairedUnitTemplate": "Paired Unit Template",
+    "pairedUnitTemplateInfo": "This is the template for paired units. You can use the following variables: {variables}"
   }
 }

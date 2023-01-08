@@ -18,6 +18,7 @@ import { usePermission } from "hooks/usePermission";
 import { FullDate } from "components/shared/FullDate";
 import type { DeleteCustomRoleByIdData, GetCustomRolesData } from "@snailycad/types/api";
 import dynamic from "next/dynamic";
+import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
 const ManageCustomRolesModal = dynamic(
   async () =>
@@ -104,7 +105,9 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
           data={customRoles.map((field) => ({
             id: field.id,
             name: field.name,
-            permissions: field.permissions.join(", "),
+            permissions: (
+              <CallDescription nonCard data={{ description: field.permissions.join(", ") }} />
+            ),
             discordRole: field.discordRole?.name ?? common("none"),
             createdAt: <FullDate>{field.createdAt}</FullDate>,
             actions: (
