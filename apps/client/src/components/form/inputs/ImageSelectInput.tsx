@@ -59,7 +59,7 @@ export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, 
       </div>
 
       <Link
-        className="mt-1 underline flex items-center gap-1"
+        className="mt-1 underline flex items-center gap-1 text-neutral-700 dark:text-gray-400"
         target="_blank"
         href="https://cad-docs.caspertheghost.me"
       >
@@ -110,7 +110,7 @@ export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, 
         </div>
 
         <Link
-          className="mt-1 underline flex items-center gap-1"
+          className="mt-1 underline flex items-center gap-1 text-neutral-700 dark:text-gray-400"
           target="_blank"
           href="https://cad-docs.caspertheghost.me/docs/features/general/supported-images"
         >
@@ -136,7 +136,10 @@ export function validateFile(image: File | string | null, helpers: FormikHelpers
     if (image.trim() === "") return null;
 
     if (!image.match(IMAGES_REGEX)) {
-      throw helpers.setFieldError("image", "Image URL must match https://i.imgur.com/xxxxxx");
+      throw helpers.setFieldError(
+        "image",
+        "Image URL must match https://i.imgur.com/xxxxxx or https://cdn.discordapp.com/attachments/xxxxxx/xxxxxx",
+      );
     }
 
     return image;
