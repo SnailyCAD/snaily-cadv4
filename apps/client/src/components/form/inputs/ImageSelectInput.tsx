@@ -9,6 +9,7 @@ import { CropImageModal } from "components/modal/CropImageModal";
 import { AllowedFileExtension, allowedFileExtensions, IMAGES_REGEX } from "@snailycad/config";
 import Link from "next/link";
 import { BoxArrowUpRight } from "react-bootstrap-icons";
+import { useDebounce } from "react-use";
 
 interface Props {
   setImage: React.Dispatch<React.SetStateAction<(File | string) | null>>;
@@ -20,6 +21,8 @@ interface Props {
 
 export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, setImage }: Props) {
   const [useURL, setUseURL] = React.useState(false);
+  const [urlImageData, setURLImageData] = React.useState<File | null>(null);
+
   const { errors, values, setFieldValue, handleChange } = useFormikContext<any>();
   const common = useTranslations("Common");
   const { openModal, closeModal, isOpen } = useModal();
@@ -33,6 +36,19 @@ export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, 
     setUseURL(v);
     setImage(null);
     setFieldValue(valueKey, "");
+  }
+
+  useDebounce(fetchImageData, 500, [values[valueKey]]);
+  async function fetchImageData() {
+    const url = values[valueKey];
+
+    if (!url) return;
+    if (!IMAGES_REGEX.test(url)) return;
+
+    const res = await fetch(url);
+    const blob = await res.blob();
+
+    setURLImageData(new File([blob], "image", { type: blob.type }));
   }
 
   return useURL ? (
@@ -53,6 +69,15 @@ export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, 
           value={values[valueKey]}
         />
 
+        <Button
+          disabled={!urlImageData}
+          type="button"
+          onPress={() => {
+            openModal(ModalIds.CropImageModal);
+          }}
+        >
+          {common("crop")}
+        </Button>
         <Button type="button" onPress={() => handleSetURL(false)}>
           {common("image")}
         </Button>
@@ -66,6 +91,13 @@ export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, 
         {common("supportedImages")}
         <BoxArrowUpRight className="inline-block" />
       </Link>
+
+      <CropImageModal
+        isOpen={isOpen(ModalIds.CropImageModal)}
+        onClose={() => closeModal(ModalIds.CropImageModal)}
+        image={urlImageData}
+        onSuccess={onCropSuccess}
+      />
     </FormField>
   ) : (
     <>
