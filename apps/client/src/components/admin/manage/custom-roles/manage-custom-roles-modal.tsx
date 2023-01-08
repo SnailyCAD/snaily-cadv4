@@ -159,7 +159,7 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
               />
             </FormField>
 
-            <FormField errorMessage={errors.discordRoleId as string} label="Discord Role">
+            <FormField optional errorMessage={errors.discordRoleId as string} label="Discord Role">
               <Select
                 values={discordRoles.map((role) => ({
                   value: role.id,

@@ -15,9 +15,16 @@ import { ModalIds } from "types/ModalIds";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { usePermission } from "hooks/usePermission";
-import { ManageCustomRolesModal } from "components/admin/manage/custom-roles/ManageCustomRolesModal";
 import { FullDate } from "components/shared/FullDate";
 import type { DeleteCustomRoleByIdData, GetCustomRolesData } from "@snailycad/types/api";
+import dynamic from "next/dynamic";
+
+const ManageCustomRolesModal = dynamic(
+  async () =>
+    (await import("components/admin/manage/custom-roles/manage-custom-roles-modal"))
+      .ManageCustomRolesModal,
+  { ssr: false },
+);
 
 interface Props {
   customRoles: GetCustomRolesData;
@@ -144,7 +151,7 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
       <AlertModal
         id={ModalIds.AlertDeleteCustomRole}
         title={t("deleteCustomRole")}
-        description={t("alert_deleteCustomRole", {
+        description={t.rich("alert_deleteCustomRole", {
           role: tempRole?.name,
         })}
         onDeleteClick={handleDelete}
