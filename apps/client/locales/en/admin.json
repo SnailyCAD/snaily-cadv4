@@ -125,5 +125,25 @@
     "courthouseRoleInfo": "The Discord Role that will represent set courthouse permissions in the CAD.",
     "whitelistedRole": "Whitelisted Role",
     "whitelistedRoleInfo": "The Discord Role that will represent whitelisted access."
+  },
+  "DiscordWebhooksTab": {
+    "discordWebhooks": "Discord Webhooks",
+    "refreshChannels": "Refresh Channels",
+    "discordWebhooksInfo": "Select a channel for each webhook type. This will create a new Discord webhook and send webhooks on the respective event type.",
+    "extraMessage": "Extra Message",
+    "calls911Channel": "911 Calls channel",
+    "calls911ChannelInfo": "The Discord channel where 911 calls will be sent to.",
+    "statusUpdatesChannel": "Status Updates channel",
+    "statusUpdatesChannelInfo": "The Discord channel where status updates will be sent to.",
+    "panicButtonChannel": "Panic Button channel",
+    "panicButtonChannelInfo": "The Discord channel where panic button triggers will be sent to.",
+    "bolosChannel": "BOLOs channel",
+    "bolosChannelInfo": "The Discord channel where new BOLOs will be sent to.",
+    "impoundedVehicleChannel": "Impounded Vehicles channel",
+    "impoundedVehicleChannelInfo": "The Discord channel where impounded vehicle notifications will be sent to.",
+    "citizenRecordsChannel": "Citizen Records channel",
+    "citizenRecordsChannelInfo": "The Discord channel where new arrest reports, tickets, warrants and written warnings will be sent to.",
+    "warrantsChannel": "Warrants channel",
+    "warrantsChannelInfo": "The Discord channel where new warrants will be sent to."
   }
 }

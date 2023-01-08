@@ -8,7 +8,7 @@ import { TabList } from "components/shared/TabList";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import dynamic from "next/dynamic";
-import { GeneralSettingsTab } from "components/admin/manage/cad-settings/GeneralSettingsTab";
+import { GeneralSettingsTab } from "components/admin/manage/cad-settings/general-settings-tab";
 
 const Tabs = {
   CADFeaturesTab: dynamic(
@@ -28,11 +28,11 @@ const Tabs = {
   ),
   DiscordRolesTab: dynamic(
     async () =>
-      (await import("components/admin/manage/cad-settings/DiscordRolesTab")).DiscordRolesTab,
+      (await import("components/admin/manage/cad-settings/discord-roles-tab")).DiscordRolesTab,
   ),
   DiscordWebhooksTab: dynamic(
     async () =>
-      (await import("components/admin/manage/cad-settings/webhooks/DiscordWebhooksTab"))
+      (await import("components/admin/manage/cad-settings/webhooks/discord-webhooks-tab"))
         .DiscordWebhooksTab,
   ),
 };
