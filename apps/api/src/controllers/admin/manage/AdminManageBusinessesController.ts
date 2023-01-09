@@ -1,8 +1,8 @@
-import { Rank, User } from "@prisma/client";
+import { Prisma, Rank, User } from "@prisma/client";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { BodyParams, Context, PathParams } from "@tsed/platform-params";
+import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
 import { ContentType, Delete, Description, Get, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/getSessionUser";
 import { prisma } from "lib/prisma";
@@ -41,6 +41,49 @@ export class AdminManageBusinessesController {
     const businesses = await prisma.business.findMany({ include: businessInclude });
 
     return businesses;
+  }
+
+  @Get("/:id/employees")
+  @Description("Get the employees of a business")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [
+      Permissions.ViewBusinesses,
+      Permissions.DeleteBusinesses,
+      Permissions.ManageBusinesses,
+    ],
+  })
+  async getBusinessEmployees(
+    @PathParams("businessId") businessId: string,
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("includeAll", Boolean) includeAll = false,
+    @QueryParams("query", String) query = "",
+  ): Promise<APITypes.GetManageBusinessByIdEmployeesData> {
+    let where: Prisma.EmployeeFindManyArgs["where"] = {
+      businessId,
+    };
+
+    if (query) {
+      where = {
+        ...where,
+        // todo: filter by name, rank
+      };
+    }
+
+    const [totalCount, employees] = await prisma.$transaction([
+      prisma.employee.count({ where }),
+      prisma.employee.findMany({
+        where,
+        take: includeAll ? undefined : 35,
+        skip: includeAll ? undefined : skip,
+        include: {
+          citizen: true,
+          role: { include: { value: true } },
+        },
+      }),
+    ]);
+
+    return { totalCount, employees };
   }
 
   @Put("/:id")

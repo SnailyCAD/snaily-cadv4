@@ -101,6 +101,15 @@ export type GetManageBusinessesData = (Prisma.Business & {
 })[];
 
 /**
+ * @method GET
+ * @route /admin/manage/businesses/:id
+ */
+export interface GetManageBusinessByIdEmployeesData {
+  totalCount: number;
+  employees: (Prisma.Employee & { citizen: Types.BaseCitizen; role: Types.EmployeeValue | null })[];
+}
+
+/**
  * @method PUT
  * @route /admin/manage/businesses
  */
