@@ -9,6 +9,8 @@ import { CaretDownFill } from "react-bootstrap-icons";
 import type { GetManageUsersInactiveUsers } from "@snailycad/types/api";
 import useFetch from "lib/useFetch";
 import { toastMessage } from "lib/toastMessage";
+import { FullDate } from "components/shared/FullDate";
+import { useTranslations } from "use-intl";
 
 const initialData = {
   totalCount: 0,
@@ -18,6 +20,7 @@ const initialData = {
 export function PruneUsersModal() {
   const [days, setDays] = React.useState("30");
   const { state, execute } = useFetch();
+  const t = useTranslations("Management");
 
   const { isOpen, closeModal } = useModal();
   const asyncTable = useAsyncTable({
@@ -68,7 +71,7 @@ export function PruneUsersModal() {
           asyncTable.setFilters((prevFilters) => ({ ...prevFilters, days: value as string }));
         }}
         selectedKey={days}
-        label="Last Seen"
+        label={t("lastSeen")}
         options={[
           { label: "30 Days", value: "30" },
           { label: "3 Months", value: "90" },
@@ -83,7 +86,7 @@ export function PruneUsersModal() {
             title="Click to expand"
             className="accordion-state gap-2 flex items-center justify-between pt-1 text-lg font-semibold text-left"
           >
-            <h3 className="text-xl font-semibold leading-none">Inactive Users</h3>
+            <h3 className="text-xl font-semibold leading-none">{t("inactiveUsers")}</h3>
 
             <CaretDownFill
               width={16}
@@ -95,7 +98,13 @@ export function PruneUsersModal() {
           <Accordion.Content className="mt-3">
             {asyncTable.items.map((user) => (
               <div key={user.id} className="flex items-center justify-between">
-                <span className="font-semibold">{user.username}</span>
+                <div>
+                  <p className="font-semibold">{user.username}</p>
+                  <p className="text-base">
+                    <span className="font-semibold">{t("lastSeen")}:</span>{" "}
+                    <FullDate onlyDate>{user.lastSeen}</FullDate>
+                  </p>
+                </div>
                 <Button type="button" size="xs" onPress={() => asyncTable.remove(user.id)}>
                   Keep
                 </Button>
@@ -112,7 +121,7 @@ export function PruneUsersModal() {
           onPress={() => handleSubmit()}
           isDisabled={asyncTable.isLoading || state === "loading"}
         >
-          Prune Users
+          {t("pruneUsers")}
         </Button>
       </footer>
     </Modal>
