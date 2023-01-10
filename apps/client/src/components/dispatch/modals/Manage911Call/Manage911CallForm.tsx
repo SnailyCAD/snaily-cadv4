@@ -35,14 +35,15 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
   const { execute, state } = useFetch();
-  const { setCalls, calls } = useCall911State(
+  const { setCalls, calls, setCurrentlySelectedCall } = useCall911State(
     (state) => ({
       setCalls: state.setCalls,
       calls: state.calls,
+      setCurrentlySelectedCall: state.setCurrentlySelectedCall,
     }),
     shallow,
   );
-  const { closeModal } = useModal();
+  const { closeModal, openModal } = useModal();
   const { DIVISIONS } = useFeatureEnabled();
 
   const validate = handleValidate(CALL_911_SCHEMA);
@@ -91,7 +92,13 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
         }
 
         setCalls([json, ...calls]);
-        closeModal(ModalIds.Manage911Call);
+
+        if (values.openCallModalAfterCreation) {
+          setCurrentlySelectedCall(json);
+          openModal(ModalIds.Manage911Call, json);
+        } else {
+          closeModal(ModalIds.Manage911Call);
+        }
       }
     }
   }
@@ -108,6 +115,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
     type: call?.typeId ?? null,
     assignedUnits: undefined,
     notifyAssignedUnits: true,
+    openCallModalAfterCreation: true,
   };
 
   return (
@@ -126,7 +134,9 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
             value={values.name}
             errorMessage={errors.name}
             isDisabled={isDisabled}
+            autoFocus
           />
+
           <AddressPostalSelect addressLabel="location" />
           {router.pathname.includes("/citizen") ? (
             <FormField errorMessage={errors.description} label={common("description")}>
@@ -238,7 +248,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
               </Button>
             ) : null}
 
-            <div className="flex">
+            <div className="flex items-center">
               {call ? (
                 <FormField
                   className="mb-0"
@@ -255,7 +265,26 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
                     type="checkbox"
                   />
                 </FormField>
-              ) : null}
+              ) : (
+                <FormField
+                  className="!mb-0"
+                  labelClassName="min-w-fit"
+                  label="Open Manage 911 call modal after call creation?"
+                  checkbox
+                >
+                  <Input
+                    checked={values.openCallModalAfterCreation}
+                    defaultChecked
+                    onChange={() =>
+                      setFieldValue(
+                        "openCallModalAfterCreation",
+                        !values.openCallModalAfterCreation,
+                      )
+                    }
+                    type="checkbox"
+                  />
+                </FormField>
+              )}
 
               <Button onPress={handleClose} type="button" variant="cancel">
                 {common("cancel")}
