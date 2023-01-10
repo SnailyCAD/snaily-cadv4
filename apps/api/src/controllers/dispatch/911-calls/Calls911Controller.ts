@@ -116,8 +116,13 @@ export class Calls911Controller {
       where.OR = [...Array.from(where.OR), { divisions: { some: { id: division } } }];
     }
     if (assignedUnit && where.OR) {
-      // @ts-expect-error this can be ignored.
-      where.OR = [...Array.from(where.OR), { assignedUnits: { some: { id: assignedUnit } } }];
+      where.OR = [
+        ...Array.from(where.OR as any[]),
+        { assignedUnits: { some: { id: assignedUnit } } },
+        { assignedUnits: { some: { officerId: assignedUnit } } },
+        { assignedUnits: { some: { emsFdDeputyId: assignedUnit } } },
+        { assignedUnits: { some: { combinedLeoId: assignedUnit } } },
+      ];
     }
 
     // todo
