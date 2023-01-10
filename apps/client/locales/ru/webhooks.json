@@ -1,0 +1,50 @@
+{
+  "Tow": {
+    "vehicleImpounded": "Транспорт эвакутрован",
+    "registrationStatus": "Статус регистрации",
+    "model": "Модель",
+    "owner": "Владелец"
+  },
+  "Bolos": {
+    "boloCreated": "BOLO создан",
+    "viewMoreInfo": "Просмотр дополнительной информации в CAD.",
+    "type": "Тип",
+    "name": "Название",
+    "plate": "Номер",
+    "model": "Модель",
+    "color": "Цвет"
+  },
+  "Statuses": {
+    "statusChange": "Изменение статуса",
+    "status": "Статус",
+    "statusChangeDescription": "Юнит {unit} изменил свой статус на {status}."
+  },
+  "PanicButton": {
+    "panicButton": "Кнопка паники",
+    "panicButtonDescription": "Юнит {unit} нажал кнопку паники."
+  },
+  "Calls": {
+    "callCreated": "Вызов 911 создан",
+    "viewMoreInfo": "Просмотр дополнительной информации в CAD.",
+    "location": "Местоположение",
+    "caller": "Вызывающий",
+    "unknown": "Неизвестно",
+    "couldNotRenderDescription": "Не удалось отобразить описание."
+  },
+  "Records": {
+    "citizen": "Гражданин",
+    "status": "Статус",
+    "postal": "почтовый код",
+    "recordType": "Тип записи",
+    "ARREST_REPORT": "Отчет об аресте",
+    "WRITTEN_WARNING": "Письменное предупреждение",
+    "TICKET": "Штраф",
+    "totalBail": "Общий залог",
+    "totalFineAmount": "Общая сумма штрафа",
+    "totalJailTime": "Общее время в тюрьме",
+    "newWarrantCreated": "Новый ордер создан",
+    "newRecordCreated": "Новая запись создана",
+    "ACTIVE": "Активный",
+    "INACTIVE": "Неактивный"
+  }
+}
