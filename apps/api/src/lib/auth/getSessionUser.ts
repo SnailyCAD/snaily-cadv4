@@ -52,6 +52,7 @@ export const userProperties = {
   locale: true,
   createdAt: true,
   updatedAt: true,
+  lastSeen: true,
 };
 
 interface GetSessionUserOptions<ReturnNullOnError extends boolean> {

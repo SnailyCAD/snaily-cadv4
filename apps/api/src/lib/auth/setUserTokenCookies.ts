@@ -5,6 +5,7 @@ import cuid from "cuid";
 import { prisma } from "lib/prisma";
 import { signJWT } from "utils/jwt";
 import { setCookie } from "utils/setCookie";
+import { postLoginFlowHandler } from "./post-auth";
 
 // expire after 1 hour
 export const ACCESS_TOKEN_EXPIRES_MS = 60 * 60 * 1000;
@@ -44,4 +45,6 @@ export async function setUserTokenCookies(options: SetUserPreferencesCookiesOpti
     expires: REFRESH_TOKEN_EXPIRES_MS,
     value: session.refreshToken,
   });
+
+  await postLoginFlowHandler({ userId: options.user.id });
 }

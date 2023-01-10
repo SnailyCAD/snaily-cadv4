@@ -246,6 +246,7 @@ model User {
   locale                   String?
   sessions                 UserSession[]
   toAddDefaultPermissions  ToAddDefaultPermissions[]
+  lastSeen                 DateTime                  @default(now())
 
   // relational data
   citizens             Citizen[]
