@@ -24,8 +24,6 @@ interface Props {
 }
 
 export default function ManageBusinesses({ business, businessId }: Props) {
-  console.log({ business });
-
   const { cad } = useAuth();
 
   const { state, execute } = useFetch();

@@ -305,7 +305,6 @@ export const typeHandlers = {
 
     return handlePromiseAll(data, async (item) => {
       const groupId = item.group?.id ?? item.groupId;
-      console.log({ groupId });
 
       const data = {
         update: {
