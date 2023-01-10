@@ -60,7 +60,13 @@
     "startTyping": "Печатает...",
     "searching": "Поиск...",
     "information": "Информация",
-    "showingXResults": "Результат(ы): <span>{amount}</span>"
+    "showingXResults": "Результат(ы): <span>{amount}</span>",
+    "revoke": "Отозвать",
+    "ok": "OK",
+    "text-color": "Цвет текста",
+    "background-color": "Цвет фона",
+    "url": "URL",
+    "supportedImages": "Поддерживаемые типы изображений и URL"
   },
   "Nav": {
     "citizen": "Гражданин",
@@ -167,6 +173,7 @@
     "socialSecurityNumberTaken": "Этот номер социального страхования уже используется",
     "citizenNotAllowedToEditLicenses": "Граждане не могут редактировать свои лицензии. Обратитесь к офицеру полиции, чтобы изменить лицензии",
     "vehicleIsImpounded": "Этот транспорт эвакуирован, нельзя редактировать или удалить запись, пока транспорт находится на штрафстоянке",
-    "featureNotEnabled": "Эта функция не включена. ({feature})"
+    "featureNotEnabled": "Эта функция не включена. ({feature})",
+    "errorUploadingImage": "В данный момент невозможно загрузить изображение. Повторите попытку позже. Если это повторяется, обратитесь к владельцу CAD."
   }
 }
