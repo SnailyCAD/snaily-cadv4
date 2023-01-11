@@ -61,19 +61,29 @@ export class IncidentController {
     @QueryParams("activeType", String) activeType: ActiveTypes = "inactive",
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("includeAll", Boolean) includeAll = false,
+    @QueryParams("assignedUnit", String) assignedUnit?: string,
   ): Promise<APITypes.GetIncidentsData> {
-    const where =
+    const isActiveObj =
       activeType === "active"
         ? { isActive: true }
         : activeType === "inactive"
-        ? { NOT: { isActive: true } }
+        ? { isActive: false }
         : {};
 
+    const assignedUnitsObj = assignedUnit
+      ? {
+          OR: [
+            { unitsInvolved: { some: { id: assignedUnit } } },
+            { unitsInvolved: { some: { officerId: assignedUnit } } },
+            { unitsInvolved: { some: { emsFdDeputyId: assignedUnit } } },
+            { unitsInvolved: { some: { combinedLeoId: assignedUnit } } },
+          ],
+        }
+      : {};
+    const where = { ...isActiveObj, ...assignedUnitsObj };
+
     const [totalCount, incidents] = await Promise.all([
-      prisma.leoIncident.count({
-        where,
-        orderBy: { caseNumber: "desc" },
-      }),
+      prisma.leoIncident.count({ where, orderBy: { caseNumber: "desc" } }),
       prisma.leoIncident.findMany({
         where,
         include: incidentInclude,
