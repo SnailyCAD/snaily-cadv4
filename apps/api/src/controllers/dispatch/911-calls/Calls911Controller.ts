@@ -145,16 +145,20 @@ export class Calls911Controller {
   }
 
   @Get("/:id")
-  @Description("Get an incident by its id")
+  @Description("Get a call by its id")
   @UsePermissions({
-    permissions: [Permissions.ViewIncidents, Permissions.ManageIncidents],
+    permissions: [Permissions.Dispatch],
     fallback: (u) => u.isDispatch || u.isLeo,
   })
-  async getIncidentById(@PathParams("id") id: string): Promise<APITypes.Get911CallByIdData> {
+  async getCallById(@PathParams("id") id: string): Promise<APITypes.Get911CallByIdData> {
     const call = await prisma.call911.findUnique({
       where: { id },
       include: callInclude,
     });
+
+    if (!call) {
+      throw new NotFound("callNotFound");
+    }
 
     return officerOrDeputyToUnit(call);
   }
