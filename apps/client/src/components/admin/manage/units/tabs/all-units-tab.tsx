@@ -34,6 +34,8 @@ import dynamic from "next/dynamic";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
+import Image from "next/image";
+import { useImageUrl } from "hooks/useImageUrl";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal, {
   ssr: false,
@@ -80,6 +82,7 @@ export function AllUnitsTab({ units }: Props) {
   const { DIVISIONS, BADGE_NUMBERS } = useFeatureEnabled();
   const { openModal, closeModal } = useModal();
   const { department } = useValues();
+  const { makeImageUrl } = useImageUrl();
 
   function handleDeleteClick(unit: Unit) {
     unitState.setTempId(unit.id);
@@ -184,7 +187,22 @@ export function AllUnitsTab({ units }: Props) {
             return {
               id: unit.id,
               unit: LABELS[unit.type],
-              name: makeUnitName(unit),
+              name: (
+                <div className="min-w-[144px]">
+                  {unit.imageId ? (
+                    <Image
+                      className="rounded-md w-[30px] h-[30px] object-cover mr-2 inline-block"
+                      draggable={false}
+                      src={makeImageUrl("units", unit.imageId)!}
+                      loading="lazy"
+                      width={30}
+                      height={30}
+                      alt={makeUnitName(unit)}
+                    />
+                  ) : null}
+                  <p className="inline-block">{makeUnitName(unit)}</p>
+                </div>
+              ),
               user: hasViewUsersPermissions ? (
                 <Link
                   href={`/admin/manage/users/${unit.userId}`}
