@@ -1,7 +1,7 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
 import { TabsContent, TabList } from "components/shared/TabList";
-import { Loader, Button, TextField } from "@snailycad/ui";
+import { Loader, Button, TextField, buttonVariants, buttonSizes } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -20,6 +20,8 @@ import { Status } from "components/shared/Status";
 import { usePermission, Permissions } from "hooks/usePermission";
 import type { DeleteBusinessByIdData, GetManageBusinessesData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import Link from "next/link";
+import { classNames } from "lib/classNames";
 
 interface Props {
   businesses: GetManageBusinessesData;
@@ -115,14 +117,27 @@ export default function ManageBusinesses({ businesses: data }: Props) {
                 status: <Status state={business.status}>{business.status?.toLowerCase()}</Status>,
                 whitelisted: common(yesOrNoText(business.whitelisted)),
                 actions: (
-                  <Button
-                    className="ml-2"
-                    onPress={() => handleDeleteClick(business)}
-                    size="xs"
-                    variant="danger"
-                  >
-                    {common("delete")}
-                  </Button>
+                  <>
+                    <Button
+                      className="ml-2"
+                      onPress={() => handleDeleteClick(business)}
+                      size="xs"
+                      variant="danger"
+                    >
+                      {common("delete")}
+                    </Button>
+
+                    <Link
+                      className={classNames(
+                        buttonVariants.default,
+                        buttonSizes.xs,
+                        "border rounded-md ml-2",
+                      )}
+                      href={`/admin/manage/businesses/${business.id}`}
+                    >
+                      {common("manage")}
+                    </Link>
+                  </>
                 ),
               }))}
               columns={[
@@ -149,7 +164,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
       >
         <div>
           <p className="my-3">
-            {t("alert_deleteBusiness", {
+            {t.rich("alert_deleteBusiness", {
               name: tempValue?.name ?? "",
             })}
           </p>

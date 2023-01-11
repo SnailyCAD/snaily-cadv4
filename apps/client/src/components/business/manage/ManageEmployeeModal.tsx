@@ -18,12 +18,13 @@ import type { PutBusinessEmployeesData } from "@snailycad/types/api";
 import shallow from "zustand/shallow";
 
 interface Props {
+  isAdmin?: boolean;
+  employee: Employee | null;
   onUpdate(old: Employee, newPost: Employee): void;
   onClose?(): void;
-  employee: Employee | null;
 }
 
-export function ManageEmployeeModal({ onClose, onUpdate, employee }: Props) {
+export function ManageEmployeeModal({ onClose, onUpdate, employee, isAdmin }: Props) {
   const { currentBusiness, currentEmployee } = useBusinessState(
     (state) => ({
       currentBusiness: state.currentBusiness,
@@ -39,7 +40,7 @@ export function ManageEmployeeModal({ onClose, onUpdate, employee }: Props) {
 
   const { businessRole } = useValues();
 
-  if (!currentBusiness || !currentEmployee) {
+  if (!isAdmin && (!currentBusiness || !currentEmployee)) {
     return null;
   }
 
@@ -52,13 +53,20 @@ export function ManageEmployeeModal({ onClose, onUpdate, employee }: Props) {
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
-    if (!currentEmployee || !currentBusiness) return;
+    if (!isAdmin && (!currentEmployee || !currentBusiness)) return;
     if (!employee) return;
 
+    const businessId = isAdmin ? employee.businessId : currentBusiness?.id;
+    const employeeId = isAdmin ? employee.id : currentEmployee?.id;
+
+    const adminPath = `/admin/manage/businesses/employees/${employee.id}`;
+    const regularPath = `/businesses/employees/${businessId}/${employee.id}`;
+    const updatePath = isAdmin ? adminPath : regularPath;
+
     const { json } = await execute<PutBusinessEmployeesData, typeof INITIAL_VALUES>({
-      path: `/businesses/employees/${currentBusiness.id}/${employee.id}`,
+      path: updatePath,
       method: "PUT",
-      data: { ...values, employeeId: currentEmployee.id },
+      data: { ...values, employeeId },
       helpers,
     });
 
