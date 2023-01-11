@@ -200,6 +200,10 @@ function Register({ cad }: Props) {
 }
 
 export default function RegisterPage(props: Props) {
+  if (!hasGoogleCaptchaSiteKey) {
+    return <Register {...props} />;
+  }
+
   return (
     <GoogleReCaptchaProvider
       reCaptchaKey={process.env.NEXT_PUBLIC_GOOGLE_CAPTCHA_SITE_KEY ?? ""}
