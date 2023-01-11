@@ -1,5 +1,4 @@
 import type { Officer, EmsFdDeputy, CombinedLeoUnit } from "@prisma/client";
-
 import { prisma } from "lib/prisma";
 
 export async function setInactiveUnitsOffDuty(lastStatusChangeTimestamp: Date) {

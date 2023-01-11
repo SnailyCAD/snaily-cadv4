@@ -21,7 +21,7 @@ export async function registerDiscordRolesMetadata() {
     const body: RESTPutAPIApplicationRoleConnectionMetadataJSONBody = [
       {
         key: "cad_connected",
-        name: "SnailyCAD Connected",
+        name: process.env.DISCORD_METADATA_CAD_CONNECTED_NAME || "SnailyCAD Connected",
         description: "Whether the user has connected their SnailyCAD account to Discord.",
         type: ApplicationRoleConnectionMetadataType.BooleanEqual,
       },
