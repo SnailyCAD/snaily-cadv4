@@ -9,6 +9,10 @@ import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import type * as APITypes from "@snailycad/types/api";
+import { validateSchema } from "lib/validateSchema";
+import { UPDATE_EMPLOYEE_SCHEMA } from "@snailycad/schemas";
+import { EmployeeAsEnum } from "@snailycad/types";
+import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
 const businessInclude = {
   citizen: {
@@ -84,6 +88,46 @@ export class AdminManageBusinessesController {
     ]);
 
     return { totalCount, employees };
+  }
+
+  @Put("/employees/:id")
+  async updateBusinessEmployee(@PathParams("id") employeeId: string, @BodyParams() body: unknown) {
+    const data = validateSchema(UPDATE_EMPLOYEE_SCHEMA, body);
+    const employee = await prisma.employee.findFirst({
+      where: {
+        id: employeeId,
+        NOT: { role: { as: EmployeeAsEnum.OWNER } },
+      },
+    });
+
+    if (!employee) {
+      throw new NotFound("employeeNotFound");
+    }
+
+    const role = await prisma.employeeValue.findUnique({
+      where: {
+        id: data.roleId,
+      },
+    });
+
+    if (!role || role.as === EmployeeAsEnum.OWNER) {
+      throw new ExtendedBadRequest({ roleId: "cannotSetRoleToOwner" });
+    }
+
+    const updated = await prisma.employee.update({
+      where: { id: employeeId },
+      data: {
+        employeeOfTheMonth: data.employeeOfTheMonth,
+        canCreatePosts: data.canCreatePosts,
+        roleId: role.id,
+      },
+      include: {
+        citizen: true,
+        role: { include: { value: true } },
+      },
+    });
+
+    return updated;
   }
 
   @Put("/:id")

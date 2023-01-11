@@ -4,19 +4,33 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { useModal } from "state/modalState";
-import { WhitelistStatus, Rank, EmployeeAsEnum } from "@snailycad/types";
+import { Rank, EmployeeAsEnum, ValueType } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll, yesOrNoText } from "lib/utils";
-import { useAuth } from "context/AuthContext";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { Status } from "components/shared/Status";
 import { usePermission, Permissions } from "hooks/usePermission";
-import type { GetManageBusinessByIdEmployeesData } from "@snailycad/types/api";
-import { ManageEmployeeModal } from "components/business/manage/ManageEmployeeModal";
+import type {
+  DeleteBusinessFireEmployeeData,
+  GetManageBusinessByIdEmployeesData,
+} from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { ModalIds } from "types/ModalIds";
+import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
+import dynamic from "next/dynamic";
+
+const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal, {
+  ssr: false,
+});
+
+const ManageEmployeeModal = dynamic(
+  async () => (await import("components/business/manage/ManageEmployeeModal")).ManageEmployeeModal,
+  {
+    ssr: false,
+  },
+);
 
 interface Props {
   business: GetManageBusinessByIdEmployeesData;
@@ -24,11 +38,17 @@ interface Props {
 }
 
 export default function ManageBusinesses({ business, businessId }: Props) {
-  const { cad } = useAuth();
-
   const { state, execute } = useFetch();
-  const { isOpen, openModal, closeModal } = useModal();
+  const { openModal, closeModal } = useModal();
   const { hasPermissions } = usePermission();
+  const hasManagePermissions = hasPermissions(
+    [Permissions.ManageBusinesses, Permissions.DeleteBusinesses],
+    (u) => u.rank !== Rank.USER,
+  );
+
+  useLoadValuesClientSide({
+    valueTypes: [ValueType.BUSINESS_ROLE],
+  });
   const tableState = useTableState();
 
   const asyncTable = useAsyncTable({
@@ -46,6 +66,22 @@ export default function ManageBusinesses({ business, businessId }: Props) {
   const [tempEmployee, employeeState] = useTemporaryItem(asyncTable.items);
   const t = useTranslations();
   const common = useTranslations("Common");
+
+  async function handleFireEmployee() {
+    if (!hasManagePermissions || !tempEmployee) return;
+
+    const { json } = await execute<DeleteBusinessFireEmployeeData>({
+      path: `/admin/manage/businesses/employees/${tempEmployee.id}`,
+      data: { employeeId: tempEmployee.id },
+      method: "DELETE",
+    });
+
+    if (json) {
+      asyncTable.remove(tempEmployee.id);
+      employeeState.setTempId(null);
+      closeModal(ModalIds.AlertFireEmployee);
+    }
+  }
 
   return (
     <AdminLayout
@@ -81,20 +117,18 @@ export default function ManageBusinesses({ business, businessId }: Props) {
                   openModal(ModalIds.ManageEmployee);
                 }}
                 size="xs"
-                // disabled={
-                //   employee.role?.as === EmployeeAsEnum.OWNER ||
-                //   employee.whitelistStatus === WhitelistStatus.PENDING
-                // }
+                disabled={employee.role?.as === EmployeeAsEnum.OWNER}
                 variant="success"
               >
                 {common("manage")}
               </Button>
               <Button
+                onPress={() => {
+                  employeeState.setTempId(employee.id);
+                  openModal(ModalIds.AlertFireEmployee);
+                }}
                 size="xs"
-                // disabled={
-                //   employee.role?.as === EmployeeAsEnum.OWNER ||
-                //   employee.whitelistStatus === WhitelistStatus.PENDING
-                // }
+                disabled={employee.role?.as === EmployeeAsEnum.OWNER}
                 className="ml-2"
                 variant="danger"
               >
@@ -113,24 +147,28 @@ export default function ManageBusinesses({ business, businessId }: Props) {
         ]}
       />
 
-      {/* <AlertModal
-        id={ModalIds.AlertFireEmployee}
-        title={t("Management.fireEmployee")}
-        description={t("Management.alert_fireEmployee", {
-          employee: tempEmployee && `${tempEmployee.citizen.name} ${tempEmployee.citizen.surname}`,
-        })}
-        onDeleteClick={handleFireEmployee}
-        deleteText={t("Management.fire")}
-        state={state}
-        onClose={() => employeeState.setTempId(null)}
-      />
-*/}
+      {hasManagePermissions ? (
+        <>
+          <AlertModal
+            onDeleteClick={handleFireEmployee}
+            id={ModalIds.AlertFireEmployee}
+            title={t("Business.fireEmployee")}
+            description={t.rich("Business.alert_fireEmployee", {
+              employee:
+                tempEmployee && `${tempEmployee.citizen.name} ${tempEmployee.citizen.surname}`,
+            })}
+            deleteText={t("Business.fire")}
+            state={state}
+            onClose={() => employeeState.setTempId(null)}
+          />
 
-      <ManageEmployeeModal
-        isAdmin
-        // onUpdate={handleUpdate}
-        employee={tempEmployee}
-      />
+          <ManageEmployeeModal
+            isAdmin
+            onUpdate={(_oldEmployee, employee) => asyncTable.update(employee.id, employee)}
+            employee={tempEmployee}
+          />
+        </>
+      ) : null}
     </AdminLayout>
   );
 }

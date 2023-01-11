@@ -164,7 +164,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
       >
         <div>
           <p className="my-3">
-            {t("alert_deleteBusiness", {
+            {t.rich("alert_deleteBusiness", {
               name: tempValue?.name ?? "",
             })}
           </p>

@@ -57,9 +57,9 @@ export function ManageEmployeeModal({ onClose, onUpdate, employee, isAdmin }: Pr
     if (!employee) return;
 
     const businessId = isAdmin ? employee.businessId : currentBusiness?.id;
-    const employeeId = isAdmin ? null : currentEmployee?.id;
+    const employeeId = isAdmin ? employee.id : currentEmployee?.id;
 
-    const adminPath = `/admin/manage/businesses/${businessId}/employees/${employee.id}}`;
+    const adminPath = `/admin/manage/businesses/employees/${employee.id}`;
     const regularPath = `/businesses/employees/${businessId}/${employee.id}`;
     const updatePath = isAdmin ? adminPath : regularPath;
 

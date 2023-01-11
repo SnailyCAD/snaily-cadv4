@@ -106,7 +106,10 @@ export type GetManageBusinessesData = (Prisma.Business & {
  */
 export interface GetManageBusinessByIdEmployeesData {
   totalCount: number;
-  employees: (Prisma.Employee & { citizen: Types.BaseCitizen; role: Types.EmployeeValue | null })[];
+  employees: (Prisma.Employee & {
+    citizen: Pick<Types.BaseCitizen, "id" | "name" | "surname">;
+    role: Types.EmployeeValue | null;
+  })[];
 }
 
 /**
