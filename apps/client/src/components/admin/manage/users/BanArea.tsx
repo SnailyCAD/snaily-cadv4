@@ -66,7 +66,6 @@ export function BanArea({ user, setUser }: Props) {
               <TextField
                 errorMessage={errors.reason}
                 label={common("reason")}
-                autoFocus
                 name="reason"
                 onChange={(value) => setFieldValue("reason", value)}
                 value={values.reason}
