@@ -22,6 +22,7 @@ import {
   DiscordWebhookType,
   ShouldDoType,
   Prisma,
+  AssignedUnit,
 } from "@prisma/client";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import type { APIEmbed } from "discord-api-types/v10";
@@ -394,34 +395,7 @@ export class Calls911Controller {
       throw new NotFound("callNotFound");
     }
 
-    const unitPromises = call.assignedUnits.map(async (unit) => {
-      const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
-      if (!prismaName || !unitId) return;
-
-      // @ts-expect-error method has the same properties
-      return prisma[prismaName].update({
-        where: { id: unitId },
-        data: {
-          activeCallId: await getNextActiveCallId({
-            callId: call.id,
-            type: "unassign",
-            unit: { ...unit, id: unitId },
-          }),
-        },
-      });
-    });
-
-    await Promise.all([
-      ...unitPromises,
-      prisma.assignedUnit.deleteMany({
-        where: { call911Id: call.id },
-      }),
-      prisma.call911.update({
-        where: { id: call.id },
-        data: { ended: true },
-      }),
-    ]);
-
+    await this.handleEndCall(call);
     await Promise.all([
       this.socket.emit911CallDelete(call),
       this.socket.emitUpdateOfficerStatus(),
@@ -629,13 +603,38 @@ export class Calls911Controller {
     return normalizedCall;
   }
 
-  private async endInactiveCalls(updatedAt: Date) {
-    await prisma.call911.updateMany({
-      where: { updatedAt: { not: { gte: updatedAt } } },
-      data: {
-        ended: true,
-      },
+  private async handleEndCall(call: Pick<Call911, "id"> & { assignedUnits: AssignedUnit[] }) {
+    const unitPromises = call.assignedUnits.map(async (unit) => {
+      const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
+      if (!prismaName || !unitId) return;
+
+      // @ts-expect-error method has the same properties
+      return prisma[prismaName].update({
+        where: { id: unitId },
+        data: {
+          activeCallId: await getNextActiveCallId({
+            callId: call.id,
+            type: "unassign",
+            unit: { ...unit, id: unitId },
+          }),
+        },
+      });
     });
+
+    await Promise.all([
+      ...unitPromises,
+      prisma.assignedUnit.deleteMany({ where: { call911Id: call.id } }),
+      prisma.call911.update({ where: { id: call.id }, data: { ended: true } }),
+    ]);
+  }
+
+  private async endInactiveCalls(updatedAt: Date) {
+    const calls = await prisma.call911.findMany({
+      where: { updatedAt: { not: { gte: updatedAt } } },
+      select: { assignedUnits: true, id: true },
+    });
+
+    await Promise.all(calls.map((call) => this.handleEndCall(call)));
   }
 
   // creates the webhook structure that will get sent to Discord.
