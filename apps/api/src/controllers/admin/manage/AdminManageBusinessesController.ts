@@ -130,6 +130,35 @@ export class AdminManageBusinessesController {
     return updated;
   }
 
+  @Delete("/employees/:id")
+  async fireEmployee(
+    @PathParams("id") employeeId: string,
+  ): Promise<APITypes.DeleteBusinessFireEmployeeData> {
+    const employeeToDelete = await prisma.employee.findFirst({
+      where: {
+        id: employeeId,
+        // not allowed to delete the owner
+        NOT: {
+          role: {
+            as: EmployeeAsEnum.OWNER,
+          },
+        },
+      },
+    });
+
+    if (!employeeToDelete) {
+      throw new NotFound("employeeNotFound");
+    }
+
+    await prisma.employee.delete({
+      where: {
+        id: employeeToDelete.id,
+      },
+    });
+
+    return true;
+  }
+
   @Put("/:id")
   @Description("Update a business by its id")
   @UsePermissions({
