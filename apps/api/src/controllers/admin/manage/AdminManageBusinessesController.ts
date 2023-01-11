@@ -91,6 +91,10 @@ export class AdminManageBusinessesController {
   }
 
   @Put("/employees/:id")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.DeleteBusinesses, Permissions.ManageBusinesses],
+  })
   async updateBusinessEmployee(@PathParams("id") employeeId: string, @BodyParams() body: unknown) {
     const data = validateSchema(UPDATE_EMPLOYEE_SCHEMA, body);
     const employee = await prisma.employee.findFirst({
@@ -131,6 +135,10 @@ export class AdminManageBusinessesController {
   }
 
   @Delete("/employees/:id")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.DeleteBusinesses, Permissions.ManageBusinesses],
+  })
   async fireEmployee(
     @PathParams("id") employeeId: string,
   ): Promise<APITypes.DeleteBusinessFireEmployeeData> {
