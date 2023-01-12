@@ -15,7 +15,7 @@ import type { cad } from "@snailycad/types";
 import { omit } from "lib/utils";
 import type { GetDispatchPlayerBySteamIdData } from "@snailycad/types/api";
 import { io, Socket } from "socket.io-client";
-import create from "zustand";
+import { create } from "zustand";
 
 export const useMapPlayersStore = create<{
   players: Map<string, MapPlayer | PlayerDataEventPayload>;

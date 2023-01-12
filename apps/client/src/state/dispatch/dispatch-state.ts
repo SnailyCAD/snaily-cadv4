@@ -9,7 +9,7 @@ import type {
   EmsFdDeputy,
   LeoIncident,
 } from "@snailycad/types";
-import create from "zustand";
+import { create } from "zustand";
 
 export type Full911Call = Call911 & { assignedUnits: AssignedUnit[]; events: Call911Event[] };
 

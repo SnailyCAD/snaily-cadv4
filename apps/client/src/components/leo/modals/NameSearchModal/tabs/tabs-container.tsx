@@ -7,7 +7,7 @@ import { NameSearchWarrantsTab } from "./warrants-tab";
 import { RecordsTab } from "./records-tab";
 import { useNameSearch } from "state/search/name-search-state";
 import { RecordType } from "@snailycad/types";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 const NameSearchWeaponsTab = dynamic(
   async () => (await import("./weapons-tab")).NameSearchWeaponsTab,

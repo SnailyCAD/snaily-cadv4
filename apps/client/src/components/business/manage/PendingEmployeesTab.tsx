@@ -6,7 +6,7 @@ import { Employee, WhitelistStatus } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { Table, useTableState } from "components/shared/Table";
 import type { PutBusinessEmployeesData } from "@snailycad/types/api";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 export function PendingEmployeesTab() {
   const { state, execute } = useFetch();

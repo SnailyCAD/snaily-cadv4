@@ -20,7 +20,7 @@ import { Infofield } from "components/shared/Infofield";
 import { FullDate } from "components/shared/FullDate";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 interface Props {
   call: Full911Call | null;

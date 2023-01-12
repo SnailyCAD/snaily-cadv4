@@ -10,7 +10,7 @@ import { useModal } from "state/modalState";
 import { useNameSearch } from "state/search/name-search-state";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 interface Props {
   isLeo?: boolean;

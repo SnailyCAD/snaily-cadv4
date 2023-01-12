@@ -15,7 +15,7 @@ import { EmergencyVehicleValue, Officer, ShouldDoType } from "@snailycad/types";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { isUnitDisabled, makeUnitName } from "lib/utils";
 import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 import { useDispatchState } from "state/dispatch/dispatch-state";
 
 export function SelectOfficerModal() {

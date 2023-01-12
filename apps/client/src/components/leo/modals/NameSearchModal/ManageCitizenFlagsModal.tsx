@@ -11,7 +11,7 @@ import { useTranslations } from "next-intl";
 import { useNameSearch } from "state/search/name-search-state";
 import { ModalIds } from "types/ModalIds";
 import type { PutSearchActionsCitizenFlagsData } from "@snailycad/types/api";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 export function ManageCitizenFlagsModal() {
   const { isOpen, closeModal } = useModal();

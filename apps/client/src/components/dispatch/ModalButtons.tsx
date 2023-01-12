@@ -17,7 +17,7 @@ import type {
 
 import dynamic from "next/dynamic";
 import { useCall911State } from "state/dispatch/call-911-state";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 import { ActiveToneType } from "@snailycad/types";
 const EnableSignal100Modal = dynamic(
   async () => (await import("./modals/EnableSignal100Modal")).EnableSignal100Modal,

@@ -1,5 +1,5 @@
 import type { PostLeoSearchWeaponData } from "@snailycad/types/api";
-import create from "zustand";
+import { create } from "zustand";
 
 export type WeaponSearchResult = PostLeoSearchWeaponData;
 
