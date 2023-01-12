@@ -28,6 +28,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { z } from "zod";
 import { ActiveToneType, IncidentInvolvedUnit } from "@prisma/client";
+import { getNextIncidentId } from "lib/incidents/get-next-incident-id";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -433,10 +434,16 @@ export class DispatchController {
       const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
       if (!prismaName || !unitId) return;
 
+      const nextActiveIncidentId = await getNextIncidentId({
+        incidentId: incident.id,
+        type: "unassign",
+        unit: { ...unit, id: unitId },
+      });
+
       // @ts-expect-error method has the same properties
       return prisma[prismaName].update({
         where: { id: unitId },
-        data: { activeCallId: null },
+        data: { activeIncidentId: nextActiveIncidentId },
       });
     });
 

@@ -112,8 +112,8 @@ async function handleUnassignFromActiveIncident<Type extends "leo" | "ems-fd">(
     where: { id: options.unit.id },
     select: { id: true, activeIncidentId: true },
   });
-
   if (!unit?.activeIncidentId) return;
+
   const incident = await prisma.leoIncident.findUnique({
     where: { id: unit.activeIncidentId },
     include: incidentInclude,
