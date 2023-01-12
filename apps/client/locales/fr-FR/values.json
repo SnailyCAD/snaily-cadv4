@@ -25,7 +25,7 @@
     "isDisabled": "Désactivé",
     "county": "Comté",
     "deletedSelectedValues": "{deleted} éléments supprimés. {failed} échoués.",
-    "failedDeleteValues": "Échec de la suppression de <span>{value}</span>",
+    "failedDeleteValue": "Échec de la suppression de <span>{value}</span>",
     "alert_deleteValue": "Êtes-vous sûr de vouloir supprimer <span>{value}</span> ? Cette action ne peut être annulée.",
     "alert_deleteSelectedValues": "Êtes-vous sûr de vouloir supprimer {length} élément(s) ? Cette action ne peut être annulée."
   },
