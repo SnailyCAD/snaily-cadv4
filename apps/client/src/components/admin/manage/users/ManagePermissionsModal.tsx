@@ -88,7 +88,7 @@ export function ManagePermissionsModal({ user, onUpdate, isReadOnly }: Props) {
   }
 
   function handleToggleAll(
-    group: typeof groups[number],
+    group: (typeof groups)[number],
     values: Record<Permissions, boolean>,
     setValues: any,
   ) {

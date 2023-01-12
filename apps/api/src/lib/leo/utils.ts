@@ -151,7 +151,7 @@ export function getPrismaNameActiveCallIncident(options: GetPrismaNameActiveCall
     emsFdDeputyId: "emsFdDeputy",
   } as const;
 
-  let prismaName: typeof prismaNames[keyof typeof prismaNames] | null = null;
+  let prismaName: (typeof prismaNames)[keyof typeof prismaNames] | null = null;
   let unitId = null;
   for (const name in prismaNames) {
     const _unitId = options.unit[name as keyof typeof prismaNames];
