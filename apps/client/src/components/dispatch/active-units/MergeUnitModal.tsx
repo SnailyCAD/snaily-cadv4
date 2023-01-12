@@ -14,7 +14,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 import { useLeoState } from "state/leo-state";
 import type { PostDispatchStatusMergeOfficers } from "@snailycad/types/api";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 interface Props {
   isDispatch: boolean;

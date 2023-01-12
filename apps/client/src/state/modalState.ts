@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { ModalIds } from "types/ModalIds";
-import create from "zustand";
+import { create } from "zustand";
 
 type Payloads = Record<string, unknown>;
 

@@ -16,7 +16,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { isUnitDisabled, makeUnitName } from "lib/utils";
 import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
 import type { EmergencyVehicleValue } from "@snailycad/types";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 export function SelectDeputyModal() {
   const { setActiveDeputy, deputies } = useEmsFdState(

@@ -12,7 +12,7 @@ import { FullDate } from "components/shared/FullDate";
 import { Table, useTableState } from "components/shared/Table";
 import type { DeleteCitizenVehicleData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 export function VehiclesTab() {
   const { state, execute } = useFetch();

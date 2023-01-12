@@ -14,7 +14,7 @@ import type {
   PostCitizenImageByIdData,
   PostSearchActionsCreateCitizen,
 } from "@snailycad/types/api";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 export function CreateCitizenModal() {
   const { isOpen, closeModal } = useModal();

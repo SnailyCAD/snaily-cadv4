@@ -12,7 +12,7 @@ import { handleValidate } from "lib/handleValidate";
 import type { BusinessPost } from "@snailycad/types";
 import { dataToSlate, Editor } from "components/editor/editor";
 import type { PostBusinessPostsData, PutBusinessPostsData } from "@snailycad/types/api";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 interface Props {
   onCreate(post: BusinessPost): void;

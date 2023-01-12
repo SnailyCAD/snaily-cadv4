@@ -14,7 +14,7 @@ import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { EmployeesTab } from "components/business/manage/EmployeesTab";
 import { BreadcrumbItem, Breadcrumbs } from "@snailycad/ui";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 interface Props {
   employee: FullEmployee | null;

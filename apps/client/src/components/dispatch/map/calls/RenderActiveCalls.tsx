@@ -11,7 +11,7 @@ import type { Put911CallByIdData } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 import { MapItem, useDispatchMapState } from "state/mapState";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 export function RenderActiveCalls() {
   const map = useMap();

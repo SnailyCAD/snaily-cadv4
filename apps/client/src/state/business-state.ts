@@ -6,7 +6,7 @@ import type {
   EmployeeValue,
   RegisteredVehicle,
 } from "@snailycad/types";
-import create from "zustand";
+import { create } from "zustand";
 
 export type FullEmployee = Employee & {
   citizen: Pick<Citizen, "id" | "name" | "surname">;

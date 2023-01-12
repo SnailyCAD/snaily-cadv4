@@ -1,4 +1,4 @@
-import create from "zustand";
+import { create } from "zustand";
 import type { Record, Citizen, MedicalRecord, RegisteredVehicle, Weapon } from "@snailycad/types";
 import type { SelectValue } from "components/form/Select";
 

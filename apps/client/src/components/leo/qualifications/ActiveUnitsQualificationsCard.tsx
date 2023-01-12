@@ -4,7 +4,7 @@ import { useDebounce, useHoverDirty } from "react-use";
 import { isUnitCombined } from "@snailycad/utils";
 import { HoverCard } from "components/shared/HoverCard";
 import useFetch from "lib/useFetch";
-import create from "zustand";
+import { create } from "zustand";
 import { Loader } from "@snailycad/ui";
 import { UnitQualificationsTable } from "./UnitQualificationsTable";
 import type { GetUnitQualificationsByUnitIdData } from "@snailycad/types/api";

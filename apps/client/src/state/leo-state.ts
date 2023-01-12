@@ -1,6 +1,6 @@
 import type { AssignedWarrantOfficer, BaseCitizen, Officer, Warrant } from "@snailycad/types";
 import type { GetActiveOfficerData } from "@snailycad/types/api";
-import create from "zustand";
+import { create } from "zustand";
 
 export type ActiveOfficer = GetActiveOfficerData;
 

@@ -13,7 +13,7 @@ import type { ActiveOfficer } from "state/leo-state";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 interface UseActiveCallsOptions {
   calls: Full911Call[];

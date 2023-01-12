@@ -25,7 +25,7 @@ import { ActiveCallsHeader } from "./active-calls-header";
 import { ActiveCallsActionsColumn } from "./actions-column";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { useActiveCalls } from "hooks/realtime/use-active-calls";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 interface Props {
   initialData: Get911CallsData;

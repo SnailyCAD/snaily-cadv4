@@ -39,7 +39,7 @@ import { CreateWarrantModal } from "components/leo/modals/CreateWarrantModal";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { DndProvider } from "components/shared/dnd/DndProvider";
 import { usePermission } from "hooks/usePermission";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 const Modals = {
   CreateWarrantModal: dynamic(

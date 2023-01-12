@@ -1,7 +1,7 @@
 import { TextField } from "@snailycad/ui";
 import { useTranslations } from "next-intl";
 import { useActiveUnitsState } from "state/active-unit-state";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 interface Props {
   type: "leo" | "ems-fd";
