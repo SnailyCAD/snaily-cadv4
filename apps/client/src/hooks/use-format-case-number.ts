@@ -5,7 +5,7 @@ export function useFormatCaseNumber() {
   const { cad } = useAuth();
   const miscCadSettings = cad?.miscCadSettings;
 
-  function _formatCaseNumber(record: _Record) {
+  function _formatCaseNumber(record: _Record | null) {
     if (!record) return "";
     return formatCaseNumber(record, miscCadSettings?.caseNumberTemplate ?? null);
   }
