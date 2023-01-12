@@ -1,9 +1,44 @@
 import type { Officer, EmsFdDeputy, CombinedLeoUnit } from "@prisma/client";
+import { ShouldDoType } from "@snailycad/types";
 import { prisma } from "lib/prisma";
+import type { Socket } from "services/socket-service";
+import { handleStartEndOfficerLog } from "./handleStartEndOfficerLog";
 
-export async function setInactiveUnitsOffDuty(lastStatusChangeTimestamp: Date) {
+export async function setInactiveUnitsOffDuty(lastStatusChangeTimestamp: Date, socket: Socket) {
   try {
-    await prisma.$transaction([
+    const [officers, deputies] = await prisma.$transaction([
+      prisma.officer.findMany({
+        where: { lastStatusChangeTimestamp: { lte: lastStatusChangeTimestamp } },
+      }),
+      prisma.emsFdDeputy.findMany({
+        where: {
+          lastStatusChangeTimestamp: { lte: lastStatusChangeTimestamp },
+        },
+      }),
+      prisma.combinedLeoUnit.deleteMany({
+        where: { lastStatusChangeTimestamp: { lte: lastStatusChangeTimestamp } },
+      }),
+    ]);
+
+    await Promise.all([
+      ...officers.map(async (officer) =>
+        handleStartEndOfficerLog({
+          shouldDo: ShouldDoType.SET_OFF_DUTY,
+          socket,
+          type: "leo",
+          unit: officer,
+          userId: officer.userId,
+        }),
+      ),
+      ...deputies.map((deputy) =>
+        handleStartEndOfficerLog({
+          shouldDo: ShouldDoType.SET_OFF_DUTY,
+          socket,
+          type: "ems-fd",
+          unit: deputy,
+          userId: deputy.userId,
+        }),
+      ),
       prisma.officer.updateMany({
         where: { lastStatusChangeTimestamp: { lte: lastStatusChangeTimestamp } },
         data: { statusId: null, activeCallId: null, activeIncidentId: null },
@@ -13,9 +48,6 @@ export async function setInactiveUnitsOffDuty(lastStatusChangeTimestamp: Date) {
           lastStatusChangeTimestamp: { lte: lastStatusChangeTimestamp },
         },
         data: { statusId: null, activeCallId: null },
-      }),
-      prisma.combinedLeoUnit.deleteMany({
-        where: { lastStatusChangeTimestamp: { lte: lastStatusChangeTimestamp } },
       }),
     ]);
   } catch {

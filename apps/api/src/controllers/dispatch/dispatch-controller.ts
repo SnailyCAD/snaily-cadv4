@@ -59,7 +59,7 @@ export class DispatchController {
     );
 
     if (unitsInactivityFilter) {
-      setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp);
+      setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp, this.socket);
     }
 
     const [officers, units] = await prisma.$transaction([

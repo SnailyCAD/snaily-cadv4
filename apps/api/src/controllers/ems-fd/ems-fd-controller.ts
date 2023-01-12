@@ -374,7 +374,7 @@ export class EmsFdController {
     );
 
     if (unitsInactivityFilter) {
-      setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp);
+      setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp, this.socket);
     }
 
     const deputies = await prisma.emsFdDeputy.findMany({
