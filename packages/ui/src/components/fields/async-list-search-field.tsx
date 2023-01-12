@@ -33,6 +33,7 @@ export interface AsyncListFieldProps<T extends object>
   errorMessage?: string | null;
   className?: string;
   includeMenu?: boolean;
+  menuClassName?: string;
 
   fetchOptions: AsyncListFieldFetchOptions;
 
@@ -169,7 +170,12 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
           </Button>
         ) : null}
         {includeMenu && state.isOpen ? (
-          <Popover isOpen={state.isOpen} onClose={state.close} popoverRef={popoverRef}>
+          <Popover
+            menuClassName={props.menuClassName}
+            isOpen={state.isOpen}
+            onClose={state.close}
+            popoverRef={popoverRef}
+          >
             {state.collection.size > 0 ? (
               <AsyncListFieldListBox {...listBoxProps} listBoxRef={listBoxRef} state={state} />
             ) : (
