@@ -623,8 +623,17 @@ export class Calls911Controller {
 
     await Promise.all([
       ...unitPromises,
-      prisma.assignedUnit.deleteMany({ where: { call911Id: call.id } }),
-      prisma.call911.update({ where: { id: call.id }, data: { ended: true } }),
+      prisma.call911.update({
+        where: { id: call.id },
+        data: {
+          ended: true,
+          assignedUnits: {
+            deleteMany: {
+              call911Id: call.id,
+            },
+          },
+        },
+      }),
     ]);
   }
 
