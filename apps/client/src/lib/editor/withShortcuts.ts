@@ -1,7 +1,7 @@
 import { Editor, Transforms, Range, Point, Element as SlateElement } from "slate";
 import type { SlateEditor } from "components/editor/editor";
 
-type SHORTCUTS = (typeof SHORTCUTS)[keyof typeof SHORTCUTS];
+type SHORTCUTS = typeof SHORTCUTS[keyof typeof SHORTCUTS];
 export const SHORTCUTS = {
   "*": "list-item",
   "-": "list-item",
