@@ -264,7 +264,16 @@
     "suspendWaterLicense": "Suspended Water license",
     "suspendFirearmsLicense": "Suspended Firearms license",
     "endDate": "End Date",
-    "patrolVehicle": "Patrol Vehicle"
+    "patrolVehicle": "Patrol Vehicle",
+    "steamId": "Steam ID",
+    "discordId": "Discord ID",
+    "citizenMissing": "WARNING: This citizen went missing on {date}",
+    "declareFound": "Declare Found",
+    "declareMissing": "Declare Missing",
+    "manageTones": "Manage Tones",
+    "noExistingTones": "There are no existing tones.",
+    "toneRevoked": "Tone Revoked",
+    "toneRevokedText": "Tone has successfully been revoked."
   },
   "Bolos": {
     "activeBolos": "Active Remarks",
