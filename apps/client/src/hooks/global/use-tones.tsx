@@ -116,17 +116,13 @@ function Component({
   const isShared = description?.type === ActiveToneType.SHARED;
   const showToneMessage = isShared ? true : description?.type === type;
 
-  if (!description?.description) {
-    return null;
-  }
-
   return (
     <>
       {audio.map((v, idx) => (
         <React.Fragment key={idx}>{v}</React.Fragment>
       ))}
 
-      {showToneMessage ? (
+      {showToneMessage && description?.description ? (
         <div role="alert" className="p-2 px-4 my-2 mb-5 text-black rounded-md shadow bg-amber-400">
           <h1 className="text-xl font-bold">{t("Leo.toneNotification")}</h1>
           <p className="mt-1 text-lg">{description.description}</p>

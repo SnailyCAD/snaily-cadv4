@@ -7,6 +7,9 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { CropImageModal } from "components/modal/CropImageModal";
 import { AllowedFileExtension, allowedFileExtensions, IMAGES_REGEX } from "@snailycad/config";
+import Link from "next/link";
+import { BoxArrowUpRight } from "react-bootstrap-icons";
+import { useDebounce } from "react-use";
 
 interface Props {
   setImage: React.Dispatch<React.SetStateAction<(File | string) | null>>;
@@ -18,6 +21,8 @@ interface Props {
 
 export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, setImage }: Props) {
   const [useURL, setUseURL] = React.useState(false);
+  const [urlImageData, setURLImageData] = React.useState<File | null>(null);
+
   const { errors, values, setFieldValue, handleChange } = useFormikContext<any>();
   const common = useTranslations("Common");
   const { openModal, closeModal, isOpen } = useModal();
@@ -31,6 +36,19 @@ export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, 
     setUseURL(v);
     setImage(null);
     setFieldValue(valueKey, "");
+  }
+
+  useDebounce(fetchImageData, 500, [values[valueKey]]);
+  async function fetchImageData() {
+    const url = values[valueKey];
+
+    if (!url) return;
+    if (!IMAGES_REGEX.test(url)) return;
+
+    const res = await fetch(url);
+    const blob = await res.blob();
+
+    setURLImageData(new File([blob], "image", { type: blob.type }));
   }
 
   return useURL ? (
@@ -51,10 +69,35 @@ export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, 
           value={values[valueKey]}
         />
 
+        <Button
+          disabled={!urlImageData}
+          type="button"
+          onPress={() => {
+            openModal(ModalIds.CropImageModal);
+          }}
+        >
+          {common("crop")}
+        </Button>
         <Button type="button" onPress={() => handleSetURL(false)}>
           {common("image")}
         </Button>
       </div>
+
+      <Link
+        className="mt-1 underline flex items-center gap-1 text-neutral-700 dark:text-gray-400"
+        target="_blank"
+        href="https://cad-docs.caspertheghost.me/docs/features/general/supported-images"
+      >
+        {common("supportedImages")}
+        <BoxArrowUpRight className="inline-block" />
+      </Link>
+
+      <CropImageModal
+        isOpen={isOpen(ModalIds.CropImageModal)}
+        onClose={() => closeModal(ModalIds.CropImageModal)}
+        image={urlImageData}
+        onSuccess={onCropSuccess}
+      />
     </FormField>
   ) : (
     <>
@@ -84,7 +127,7 @@ export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, 
             {common("crop")}
           </Button>
           <Button className="mr-2 min-w-fit" type="button" onPress={() => handleSetURL(true)}>
-            {common("imgur")}
+            {common("url")}
           </Button>
           <Button
             type="button"
@@ -97,6 +140,15 @@ export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, 
             {common("delete")}
           </Button>
         </div>
+
+        <Link
+          className="mt-1 underline flex items-center gap-1 text-neutral-700 dark:text-gray-400"
+          target="_blank"
+          href="https://cad-docs.caspertheghost.me/docs/features/general/supported-images"
+        >
+          {common("supportedImages")}
+          <BoxArrowUpRight className="inline-block" />
+        </Link>
       </FormField>
 
       {typeof image !== "string" ? (
@@ -116,7 +168,10 @@ export function validateFile(image: File | string | null, helpers: FormikHelpers
     if (image.trim() === "") return null;
 
     if (!image.match(IMAGES_REGEX)) {
-      throw helpers.setFieldError("image", "Image URL must match https://i.imgur.com/xxxxxx");
+      throw helpers.setFieldError(
+        "image",
+        "Image URL must match https://i.imgur.com/xxxxxx or https://cdn.discordapp.com/attachments/xxxxxx/xxxxxx",
+      );
     }
 
     return image;

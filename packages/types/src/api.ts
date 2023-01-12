@@ -213,7 +213,10 @@ export type DeleteTruckLogsData = boolean;
  * @method GET
  * @route /bolos
  */
-export type GetBolosData = Types.Bolo[];
+export interface GetBolosData {
+  bolos: Types.Bolo[];
+  totalCount: number;
+}
 
 /**
  * @method POST

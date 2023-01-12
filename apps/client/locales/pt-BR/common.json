@@ -60,7 +60,11 @@
     "startTyping": "Começe a digitar...",
     "searching": "Searching...",
     "information": "Informação",
-    "showingXResults": "Mostrando <span>{amount}</span> resultado(s)"
+    "showingXResults": "Mostrando <span>{amount}</span> resultado(s)",
+    "revoke": "Revogar",
+    "ok": "OK",
+    "text-color": "Cor do Texto",
+    "background-color": "Cor do Fundo"
   },
   "Nav": {
     "citizen": "Cidadão",
@@ -167,6 +171,7 @@
     "socialSecurityNumberTaken": "Este número de seguro social já está em uso.",
     "citizenNotAllowedToEditLicenses": "Você, como cidadão, não tem permissão para editar suas próprias licenças. Entre em contato com um oficial para gerenciar suas licenças.",
     "vehicleIsImpounded": "Este veículo está apreendido, você não pode editar ou excluir até que seja liberado do lote apreendido.",
-    "featureNotEnabled": "Este recurso não está habilitado. ({feature})"
+    "featureNotEnabled": "Este recurso não está habilitado. ({feature})",
+    "errorUploadingImage": "Não é possível carregar sua imagem neste momento. Por favor, tente novamente mais tarde. Se isso continuar ocorrendo, entre em contato com o proprietário do CAD."
   }
 }

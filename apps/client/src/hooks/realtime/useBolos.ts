@@ -11,7 +11,7 @@ export function useBolos() {
     { eventName: SocketEvents.CreateBolo, checkHasListeners: true },
     (data) => {
       if (!isBoloInArr(data)) {
-        setBolos([...[...bolos], data]);
+        setBolos([data, ...[...bolos]]);
       }
     },
     [setBolos, bolos],

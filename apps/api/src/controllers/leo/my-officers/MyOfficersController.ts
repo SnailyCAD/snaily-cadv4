@@ -7,7 +7,7 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { getImageWebPPath, validateImgurURL } from "utils/images/image";
-import { cad, User, MiscCadSettings, Feature, CadFeature } from "@prisma/client";
+import { cad, User, MiscCadSettings, Feature, CadFeature, Rank } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
 import { manyToManyHelper } from "utils/manyToMany";
@@ -23,6 +23,7 @@ import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import type * as APITypes from "@snailycad/types/api";
 import { createOfficer } from "./create-officer";
 import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
+import { hasPermission } from "@snailycad/permissions";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -225,7 +226,12 @@ export class MyOfficersController {
   @Get("/logs")
   @UsePermissions({
     fallback: (u) => u.isLeo,
-    permissions: [Permissions.Leo, Permissions.ViewUnits, Permissions.ManageUnits],
+    permissions: [
+      Permissions.Leo,
+      Permissions.ManageUnits,
+      Permissions.ViewUnits,
+      Permissions.DeleteUnits,
+    ],
   })
   async getOfficerLogs(
     @Context("user") user: User,
@@ -233,7 +239,14 @@ export class MyOfficersController {
     @QueryParams("includeAll", Boolean) includeAll = false,
     @QueryParams("officerId", String) officerId?: string,
   ): Promise<APITypes.GetMyOfficersLogsData> {
-    const where = { userId: user.id, emsFdDeputyId: null, officerId: officerId || undefined };
+    const hasManageUnitsPermissions = hasPermission({
+      permissionsToCheck: [Permissions.ManageUnits, Permissions.ViewUnits, Permissions.DeleteUnits],
+      userToCheck: user,
+      fallback: (u) => u.rank !== Rank.USER,
+    });
+    const userIdObj = hasManageUnitsPermissions ? {} : { userId: user.id };
+
+    const where = { ...userIdObj, emsFdDeputyId: null, officerId: officerId || undefined };
 
     const [totalCount, logs] = await prisma.$transaction([
       prisma.officerLog.count({ where }),

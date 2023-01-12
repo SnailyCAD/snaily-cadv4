@@ -102,7 +102,8 @@ export class ManageUsersController {
     const [users, total] = await prisma.$transaction([
       prisma.user.findMany({
         where: {
-          updatedAt: {
+          NOT: { rank: Rank.OWNER },
+          lastSeen: {
             lte: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * days),
           },
         },
@@ -110,7 +111,8 @@ export class ManageUsersController {
       }),
       prisma.user.count({
         where: {
-          updatedAt: {
+          NOT: { rank: Rank.OWNER },
+          lastSeen: {
             lte: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * days),
           },
         },

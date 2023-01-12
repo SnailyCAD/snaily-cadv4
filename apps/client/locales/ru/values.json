@@ -10,8 +10,6 @@
     "file": "файл",
     "importValues": "Импорт из файла",
     "exportValues": "Экспорт значений",
-    "addPenalCodeGroup": "Добавить группу",
-    "deleteGroup": "Удалить группу",
     "ungrouped": "Без группы",
     "licenseType": "Тип лицензии",
     "whitelisted": "В списке доступа",
@@ -26,9 +24,19 @@
     "priority": "Приоритет",
     "isDisabled": "Отключено",
     "county": "Округ",
-    "alert_deletePenalCodeGroup": "Вы уверены, что хотите удалить <span>{group}</span>? Это действие необратимо.",
+    "deletedSelectedValues": "Удалить {deleted} элемент (-ов). Не удалось удалить {failed} элемент (-ов).",
+    "failedDeleteValue": "Не удалось удалить <span>{value}</span>.",
     "alert_deleteValue": "Вы уверены, что хотите удалить <span>{value}</span>? Это действие необратимо.",
     "alert_deleteSelectedValues": "Вы уверены, что хотите удалить {length} элемент (ов)? Это действие необратимо."
+  },
+  "PENAL_CODE_GROUP": {
+    "MANAGE": "Управлять группами кодекса",
+    "ADD": "Добавить группу кодекса",
+    "DELETE": "Удалить группу кодекса",
+    "EDIT": "Редактировать группу кодекса",
+    "ungrouped": "Разгруппировано",
+    "alert_deletePenalCodeGroup": "Вы уверены, что хотите удалить <span>{group}</span>? Это действие необратимо.",
+    "deleteGroup": "Удалить группу"
   },
   "GENDER": {
     "MANAGE": "Пол человека",

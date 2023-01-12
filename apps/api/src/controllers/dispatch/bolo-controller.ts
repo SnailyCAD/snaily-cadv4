@@ -2,7 +2,7 @@ import { Controller } from "@tsed/di";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { CREATE_BOLO_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
-import { NotFound } from "@tsed/exceptions";
+import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { Use, UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
@@ -43,7 +43,10 @@ export class BoloController {
   @Description("Get all the bolos")
   async getBolos(
     @Context("cad") cad: cad,
-    @QueryParams("query", String) query: string,
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("includeAll", Boolean) includeAll = false,
+    @QueryParams("query", String) query = "",
+    @QueryParams("type", String) boloType?: BoloType,
   ): Promise<APITypes.GetBolosData> {
     const inactivityFilter = getInactivityFilter(cad, "boloInactivityTimeout");
     if (inactivityFilter) {
@@ -52,20 +55,43 @@ export class BoloController {
 
     const where: Prisma.BoloWhereInput = query
       ? {
-          OR: [{ plate: { contains: query, mode: "insensitive" } }],
+          OR: [
+            { plate: { contains: query, mode: "insensitive" } },
+            { name: { contains: query, mode: "insensitive" } },
+            { color: { contains: query, mode: "insensitive" } },
+            { plate: { contains: query, mode: "insensitive" } },
+            { model: { contains: query, mode: "insensitive" } },
+            { description: { contains: query, mode: "insensitive" } },
+          ],
         }
       : {};
 
-    const bolos = await prisma.bolo.findMany({
-      where: { ...inactivityFilter?.filter, ...where },
-      include: {
-        officer: {
-          include: leoProperties,
-        },
-      },
-    });
+    if (boloType) {
+      if (!(boloType in BoloType)) {
+        throw new BadRequest(
+          `invalid boloType provided. Must be one of: ${Object.values(BoloType)}`,
+        );
+      }
 
-    return bolos;
+      where.type = boloType;
+    }
+
+    const [boloCount, bolos] = await prisma.$transaction([
+      prisma.bolo.count({ where: { ...inactivityFilter?.filter, ...where } }),
+      prisma.bolo.findMany({
+        orderBy: { updatedAt: "desc" },
+        take: includeAll ? undefined : 12,
+        skip: includeAll ? undefined : skip,
+        where: { ...inactivityFilter?.filter, ...where },
+        include: {
+          officer: {
+            include: leoProperties,
+          },
+        },
+      }),
+    ]);
+
+    return { bolos, totalCount: boloCount };
   }
 
   @Use(ActiveOfficer)

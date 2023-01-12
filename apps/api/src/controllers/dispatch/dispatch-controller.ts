@@ -21,13 +21,13 @@ import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { userProperties } from "lib/auth/getSessionUser";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
-import { getInactivityFilter } from "lib/leo/utils";
+import { getInactivityFilter, getPrismaNameActiveCallIncident } from "lib/leo/utils";
 import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
 import { getActiveDeputy } from "lib/ems-fd";
 import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { z } from "zod";
-import { ActiveToneType } from "@prisma/client";
+import { ActiveToneType, IncidentInvolvedUnit } from "@prisma/client";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -428,31 +428,32 @@ export class DispatchController {
     return true;
   }
 
+  private async endIncident(incident: { id: string; unitsInvolved: IncidentInvolvedUnit[] }) {
+    const unitPromises = incident.unitsInvolved.map(async (unit) => {
+      const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
+      if (!prismaName || !unitId) return;
+
+      // @ts-expect-error method has the same properties
+      return prisma[prismaName].update({
+        where: { id: unitId },
+        data: { activeCallId: null },
+      });
+    });
+
+    await Promise.all([
+      ...unitPromises,
+      prisma.incidentInvolvedUnit.deleteMany({ where: { incidentId: incident.id } }),
+      prisma.leoIncident.update({ where: { id: incident.id }, data: { isActive: false } }),
+    ]);
+  }
+
   private async endInactiveIncidents(updatedAt: Date) {
     const incidents = await prisma.leoIncident.findMany({
       where: { isActive: true, updatedAt: { not: { gte: updatedAt } } },
-      include: { unitsInvolved: true },
+      select: { id: true, unitsInvolved: true },
     });
 
-    await Promise.all(
-      incidents.map(async (incident) => {
-        const officers = incident.unitsInvolved.filter((v) => v.officerId);
-
-        await prisma.leoIncident.update({
-          where: { id: incident.id },
-          data: { isActive: false },
-        });
-
-        await prisma.$transaction(
-          officers.map((unit) =>
-            prisma.officer.update({
-              where: { id: unit.officerId! },
-              data: { activeIncidentId: null },
-            }),
-          ),
-        );
-      }),
-    );
+    await Promise.all(incidents.map((incident) => this.endIncident(incident)));
   }
 
   private async endInactiveDispatchers(updatedAt: Date) {

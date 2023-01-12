@@ -112,6 +112,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
 
   const tableHeaders = React.useMemo(() => {
     return [
+      { header: "ID", accessorKey: "id" },
       { header: "Value", accessorKey: "value" },
       ...extraTableHeaders,
       { header: t("isDisabled"), accessorKey: "isDisabled" },

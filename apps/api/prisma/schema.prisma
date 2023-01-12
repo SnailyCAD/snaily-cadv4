@@ -246,6 +246,7 @@ model User {
   locale                   String?
   sessions                 UserSession[]
   toAddDefaultPermissions  ToAddDefaultPermissions[]
+  lastSeen                 DateTime                  @default(now())
 
   // relational data
   citizens             Citizen[]
@@ -614,6 +615,7 @@ model DivisionValue {
   officerDivisionsToDivision Officer[]                    @relation("officerDivisionsToDivision")
   deputies                   EmsFdDeputy[]                @relation("emsFdDivisionToDivision")
   pairedUnitTemplate         String?
+  extraFields                Json?
   Call911                    Call911[]
   IndividualDivisionCallsign IndividualDivisionCallsign[]
   EmergencyVehicleValue      EmergencyVehicleValue[]

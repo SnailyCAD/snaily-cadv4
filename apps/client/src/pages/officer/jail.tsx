@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { Button } from "@snailycad/ui";
+import { Button, Input } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -22,6 +22,7 @@ import { useAsyncTable } from "hooks/shared/table/use-async-table";
 import type { GetJailedCitizensData } from "@snailycad/types/api";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import { RecordsCaseNumberColumn } from "components/leo/records-case-number-column";
+import { FormField } from "components/form/FormField";
 
 interface Props {
   data: GetJailedCitizensData;
@@ -83,7 +84,22 @@ export default function Jail({ data }: Props) {
       }}
       className="dark:text-white"
     >
-      <Title>{t("jail")}</Title>
+      <header className="flex flex-col flex-start">
+        <Title>{t("jail")}</Title>
+
+        <FormField className="w-full" label="Show active only" checkbox>
+          <Input
+            checked={Boolean(asyncTable.filters?.activeOnly)}
+            onChange={() => {
+              asyncTable.setFilters((prev) => ({
+                ...prev,
+                activeOnly: !prev?.activeOnly,
+              }));
+            }}
+            type="checkbox"
+          />
+        </FormField>
+      </header>
 
       {data.jailedCitizens.length <= 0 ? (
         <p className="mt-5">{t("noImprisonedCitizens")}</p>

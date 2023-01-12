@@ -70,7 +70,7 @@ export class BusinessEmployeeController {
     });
 
     if (!role || role.as === EmployeeAsEnum.OWNER) {
-      throw new ExtendedBadRequest({ role: "cannotSetRoleToOwner" });
+      throw new ExtendedBadRequest({ roleId: "cannotSetRoleToOwner" });
     }
 
     const updated = await prisma.employee.update({

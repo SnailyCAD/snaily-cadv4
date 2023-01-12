@@ -163,25 +163,30 @@ export function useMapPlayers() {
     [onPlayerData, onPlayerLeft],
   );
 
-  const onError = React.useCallback(() => {
-    toastMessage({
-      message: (
-        <>
-          Unable to make a Websocket connection to {url}.{" "}
-          <a
-            target="_blank"
-            rel="noreferrer"
-            className="underline text-blue-200"
-            href="https://cad-docs.caspertheghost.me/docs/fivem-integrations/live-map#connecting-to-snailycadv4"
-          >
-            See documentation.
-          </a>
-        </>
-      ),
-      title: "Connection Error",
-      duration: 10_000,
-    });
-  }, [url]);
+  const onError = React.useCallback(
+    (reason: Error) => {
+      console.log({ reason });
+
+      toastMessage({
+        message: (
+          <>
+            Unable to make a Websocket connection to {url}.{" "}
+            <a
+              target="_blank"
+              rel="noreferrer"
+              className="underline text-blue-200"
+              href="https://cad-docs.caspertheghost.me/docs/fivem-integrations/live-map#connecting-to-snailycadv4"
+            >
+              See documentation.
+            </a>
+          </>
+        ),
+        title: "Connection Error",
+        duration: 10_000,
+      });
+    },
+    [url],
+  );
 
   React.useEffect(() => {
     if (!socket && url) {
@@ -243,6 +248,8 @@ function makeSocketConnection(url: string) {
     return io(url);
   } catch (error) {
     const isSecurityError = error instanceof Error && error.name === "SecurityError";
+
+    console.log({ error });
 
     if (isSecurityError) {
       toastMessage({

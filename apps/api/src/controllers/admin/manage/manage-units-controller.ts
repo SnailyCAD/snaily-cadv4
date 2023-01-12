@@ -1,6 +1,13 @@
 import { Feature, Rank, WhitelistStatus, cad, CadFeature, MiscCadSettings } from "@prisma/client";
 import { UPDATE_UNIT_SCHEMA, UPDATE_UNIT_CALLSIGN_SCHEMA } from "@snailycad/schemas";
-import { PathParams, BodyParams, Context, QueryParams } from "@tsed/common";
+import {
+  PathParams,
+  BodyParams,
+  Context,
+  QueryParams,
+  MultipartFile,
+  PlatformMulterFile,
+} from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
@@ -20,6 +27,10 @@ import { manyToManyHelper } from "utils/manyToMany";
 import { isCuid } from "cuid";
 import type * as APITypes from "@snailycad/types/api";
 import { isFeatureEnabled } from "lib/cad";
+import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
+import { getImageWebPPath, validateImgurURL } from "utils/images/image";
+import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
+import fs from "node:fs/promises";
 
 const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_UNIT"] as const;
 type Action = typeof ACTIONS[number];
@@ -276,7 +287,7 @@ export class AdminManageUnitsController {
     @BodyParams() body: unknown,
     @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings; features?: CadFeature[] },
   ): Promise<APITypes.PutManageUnitData> {
-    const data = validateSchema(UPDATE_UNIT_SCHEMA, body);
+    const data = validateSchema(UPDATE_UNIT_SCHEMA.partial(), body);
 
     let type: "officer" | "emsFdDeputy" = "officer";
     let unit: any = await prisma.officer.findUnique({
@@ -302,7 +313,7 @@ export class AdminManageUnitsController {
       features: cad.features,
     });
 
-    if (isBadgeNumbersEnabled && !data.badgeNumber) {
+    if (isBadgeNumbersEnabled && typeof data.badgeNumber !== "undefined" && !data.badgeNumber) {
       throw new ExtendedBadRequest({ badgeNumber: "Required" });
     }
 
@@ -313,7 +324,7 @@ export class AdminManageUnitsController {
         features: cad.features,
       });
 
-      if (divisionsEnabled) {
+      if (divisionsEnabled && typeof data.divisions !== "undefined") {
         if (!data.divisions || data.divisions.length <= 0) {
           throw new ExtendedBadRequest({ divisions: "Must have at least 1 item" });
         }
@@ -333,6 +344,8 @@ export class AdminManageUnitsController {
       }
     }
 
+    const validatedImageURL = validateImgurURL(data.image);
+
     // @ts-expect-error ignore
     const updated = await prisma[type].update({
       where: { id: unit.id },
@@ -340,17 +353,77 @@ export class AdminManageUnitsController {
         statusId: data.status,
         departmentId: data.department,
         divisionId: data.division,
-        rankId: data.rank || null,
-        position: data.position || null,
-        suspended: data.suspended ?? false,
+        rankId: data.rank,
+        position: data.position,
+        suspended: data.suspended,
         callsign2: data.callsign2,
         callsign: data.callsign,
         badgeNumber: data.badgeNumber,
+        imageId: validatedImageURL,
+        imageBlurData: await generateBlurPlaceholder(validatedImageURL),
       },
       include: type === "officer" ? leoProperties : unitProperties,
     });
 
     return updated;
+  }
+
+  @Post("/:id/image")
+  @Description("Update an image of an officer or EMS/FD deputy")
+  async updateUnitImage(
+    @PathParams("id") unitId: string,
+    @MultipartFile("image") file?: PlatformMulterFile,
+  ): Promise<APITypes.PostCitizenImageByIdData> {
+    try {
+      const { unit, type } = await findUnit(unitId);
+      const prismaName = type === "leo" ? "officer" : "emsFdDeputy";
+
+      if (!unit) {
+        throw new NotFound("unitNotFound");
+      }
+
+      if ("pairedUnitTemplate" in unit) {
+        throw new ExtendedBadRequest({ unit: "unitIsCombined" });
+      }
+
+      if (!file) {
+        throw new ExtendedBadRequest({ file: "No file provided." }, "invalidImageType");
+      }
+
+      if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
+        throw new ExtendedBadRequest({ image: "invalidImageType" }, "invalidImageType");
+      }
+
+      const image = await getImageWebPPath({
+        buffer: file.buffer,
+        pathType: "units",
+        id: `${unit.id}-${file.originalname.split(".")[0]}`,
+      });
+
+      const previousImage = unit.imageId
+        ? `${process.cwd()}/public/units/${unit.imageId}`
+        : undefined;
+
+      if (previousImage) {
+        await fs.rm(previousImage, { force: true });
+      }
+
+      const [data] = await Promise.all([
+        // @ts-expect-error the method properties are the same
+        prisma[prismaName].update({
+          where: { id: unit.id },
+          data: { imageId: image.fileName, imageBlurData: await generateBlurPlaceholder(image) },
+          select: { imageId: true },
+        }),
+        fs.writeFile(image.path, image.buffer),
+      ]);
+
+      console.log({ data });
+
+      return data;
+    } catch {
+      throw new BadRequest("errorUploadingImage");
+    }
   }
 
   @Post("/departments/:unitId")

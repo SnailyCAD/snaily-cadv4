@@ -53,6 +53,7 @@ export async function handleStartEndOfficerLog<Type extends "leo" | "ems-fd">(
     await Promise.all([
       handleUnassignFromCalls(options),
       handleUnassignFromActiveIncident(options),
+      handleSetUnitOffDuty(options),
     ]);
 
     /**
@@ -106,7 +107,7 @@ async function handleUnassignFromActiveIncident<Type extends "leo" | "ems-fd">(
 ) {
   const prismaName = getPrismaName(options.type).replace("Id", "") as "officer" | "emsFdDeputy";
 
-  // @ts-expect-error method has same
+  // @ts-expect-error method has same properties
   const unit = await prisma[prismaName].findUnique({
     where: { id: options.unit.id },
     select: { id: true, activeIncidentId: true },
@@ -124,4 +125,16 @@ async function handleUnassignFromActiveIncident<Type extends "leo" | "ems-fd">(
    */
   const unitsInvolved = incident.unitsInvolved.filter((v) => v.id !== options.unit.id);
   options.socket.emitUpdateActiveIncident({ ...incident, unitsInvolved });
+}
+
+async function handleSetUnitOffDuty<Type extends "leo" | "ems-fd">(
+  options: Pick<Options<Type>, "type" | "unit" | "socket">,
+) {
+  const prismaName = getPrismaName(options.type).replace("Id", "") as "officer" | "emsFdDeputy";
+
+  // @ts-expect-error method has same properties
+  await prisma[prismaName].update({
+    where: { id: options.unit.id },
+    data: { statusId: null },
+  });
 }

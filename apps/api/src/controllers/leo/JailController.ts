@@ -47,9 +47,12 @@ export class JailController {
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("includeAll", Boolean) includeAll = false,
+    @QueryParams("activeOnly", Boolean) activeOnly = false,
   ): Promise<APITypes.GetJailedCitizensData> {
+    const name = activeOnly ? "AND" : "OR";
+
     const where = {
-      OR: [{ arrested: true }, { Record: { some: { release: { isNot: null } } } }],
+      [name]: [{ arrested: true }, { Record: { some: { release: { is: null } } } }],
     };
 
     const [totalCount, citizens] = await prisma.$transaction([

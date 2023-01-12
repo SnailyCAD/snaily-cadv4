@@ -231,6 +231,7 @@ export const typeHandlers = {
             value: item.value,
             isDisabled: item.isDisabled,
             pairedUnitTemplate: item.pairedUnitTemplate || null,
+            extraFields: item.extraFields || undefined,
           }),
           include: { value: true, department: { include: { value: true } } },
         });
@@ -285,14 +286,33 @@ export const typeHandlers = {
     const penalCode = id && (await prisma.penalCode.findUnique({ where: { id: String(id) } }));
     const cad = context.get("cad") as cad & { features?: CadFeature[] };
 
+    const groups = new Map<string, { name: string; id: string; position: number | null }>();
+
+    for (const item of data) {
+      if (!item.group) continue;
+      groups.set(item.group.id, item.group);
+    }
+
+    await Promise.all(
+      Array.from(groups.values()).map(async (group) => {
+        await prisma.penalCodeGroup.upsert({
+          where: { id: group.id },
+          update: { id: group.id, name: group.name, position: group.position },
+          create: { id: group.id, name: group.name, position: group.position },
+        });
+      }),
+    );
+
     return handlePromiseAll(data, async (item) => {
+      const groupId = item.group?.id ?? item.groupId;
+
       const data = {
         update: {
           title: item.title,
           description: item.description,
           descriptionData: item.descriptionData ?? [],
           type: (item.type ?? null) as PenalCodeType | null,
-          groupId: item.groupId,
+          groupId,
           isPrimary: item.isPrimary ?? true,
           ...(await upsertWarningApplicable({
             body: item,
@@ -304,7 +324,7 @@ export const typeHandlers = {
           title: item.title,
           description: item.description,
           descriptionData: item.descriptionData ?? [],
-          groupId: item.groupId,
+          groupId,
           isPrimary: item.isPrimary ?? true,
           type: (item.type ?? null) as PenalCodeType | null,
           ...(await upsertWarningApplicable({

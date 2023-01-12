@@ -19,12 +19,14 @@ import { TabsContent } from "@radix-ui/react-tabs";
 import { QualificationsTable } from "../../QualificationsTable";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { usePermission, Permissions } from "hooks/usePermission";
+import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 
 interface Props {
   unit: GetManageUnitByIdData;
 }
 
 export function ManageUnitTab({ unit: data }: Props) {
+  const [image, setImage] = React.useState<null | File | string>(null);
   const [unit, setUnit] = React.useState(data);
 
   const t = useTranslations("Leo");
@@ -50,6 +52,15 @@ export function ManageUnitTab({ unit: data }: Props) {
       divisions: values.divisions.map((v) => v.value),
     };
 
+    const validatedImage = validateFile(image, helpers);
+    const formData = new FormData();
+
+    if (validatedImage) {
+      if (typeof validatedImage !== "string") {
+        formData.set("image", validatedImage, validatedImage.name);
+      }
+    }
+
     const { json } = await execute<PutManageUnitData, typeof INITIAL_VALUES>({
       path: `/admin/manage/units/${unit.id}`,
       method: "PUT",
@@ -58,6 +69,14 @@ export function ManageUnitTab({ unit: data }: Props) {
     });
 
     if (json.id) {
+      if (formData.has("image")) {
+        await execute({
+          path: `/admin/manage/units/${unit.id}/image`,
+          method: "POST",
+          data: formData,
+        });
+      }
+
       toast.success("Updated.");
       router.push("/admin/manage/units");
     }
@@ -83,6 +102,8 @@ export function ManageUnitTab({ unit: data }: Props) {
         <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ setFieldValue, handleChange, values, errors }) => (
             <Form>
+              <ImageSelectInput setImage={setImage} image={image} />
+
               <FormField label={t("status")}>
                 <Select
                   isClearable

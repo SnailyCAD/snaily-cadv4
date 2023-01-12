@@ -19,6 +19,7 @@ import {
   parseErrors,
   parseErrorTitle,
 } from "./fetch/errors";
+import { getAPIUrl } from "@snailycad/utils/api-url";
 
 interface UseFetchOptions {
   overwriteState: State | null;
@@ -116,7 +117,17 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
       const featureNotEnabledOptions = getFeatureNotEnabledError(response);
       const translationOptions = featureNotEnabledOptions?.data ?? undefined;
       const translationKey = featureNotEnabledOptions?.message ?? key;
-      const message = isErrorKey(key, errorMessages) ? t(translationKey, translationOptions) : key;
+      const apiUrl = getAPIUrl();
+
+      const message = isErrorKey(key, errorMessages)
+        ? t.rich(translationKey, {
+            ...translationOptions,
+            span: (children) => <span className="font-medium">{children}</span>,
+            p: (children) => <p className="first:mt-2">{children}</p>,
+            clientURL: process.env.NEXT_PUBLIC_CLIENT_URL,
+            apiURL: apiUrl,
+          })
+        : key;
 
       if (
         typeof restOptions.noToast === "string" &&

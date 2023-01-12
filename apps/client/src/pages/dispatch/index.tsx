@@ -97,7 +97,7 @@ export default function DispatchDashboard(props: DispatchPageProps) {
 
   React.useEffect(() => {
     set911Calls(props.calls.calls);
-    state.setBolos(props.bolos);
+    state.setBolos(props.bolos.bolos);
     state.setAllOfficers(props.officers);
 
     state.setAllDeputies(props.deputies);
@@ -161,7 +161,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
     await requestAll(req, [
       ["/admin/values/codes_10", []],
       ["/911-calls", { calls: [], totalCount: 0 }],
-      ["/bolos", []],
+      ["/bolos", { bolos: [], totalCount: 0 }],
       ["/dispatch", { deputies: [], officers: [], activeDispatchers: [], activeIncidents: [] }],
     ]);
 
