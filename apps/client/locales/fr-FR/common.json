@@ -60,7 +60,13 @@
     "startTyping": "Commencez à écrire...",
     "searching": "Recherche...",
     "information": "Information",
-    "showingXResults": "Affichage de <span>{amount}</span> résultat(s)"
+    "showingXResults": "Affichage de <span>{amount}</span> résultat(s)",
+    "revoke": "Révoquer",
+    "ok": "OK",
+    "text-color": "Couleur du texte",
+    "background-color": "Couleur de fond",
+    "url": "URL",
+    "supportedImages": "Voir les types d'images et les URLs supportées"
   },
   "Nav": {
     "citizen": "Citoyen",
@@ -167,6 +173,7 @@
     "socialSecurityNumberTaken": "Ce numéro de sécurité social est déjà utilisé.",
     "citizenNotAllowedToEditLicenses": "Vous n'avez pas la permission pour éditer vos licences. Veuillez contacter un officier.",
     "vehicleIsImpounded": "Ce véhicule est saisi, vous ne pouvez l'éditer ou le supprimer tant qu'il n'est pas libéré.",
-    "featureNotEnabled": "Cette fonctionnalité n'est pas activée. {{feature}}"
+    "featureNotEnabled": "Cette fonctionnalité n'est pas activée. {{feature}}",
+    "errorUploadingImage": "Impossible d'importer votre image pour le moment. Veuillez réessayer plus tard. Si le problème persiste, contacter le propriétaire du CAD"
   }
 }
