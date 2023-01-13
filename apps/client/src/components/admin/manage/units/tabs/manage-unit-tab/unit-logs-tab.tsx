@@ -5,6 +5,7 @@ import type {
 } from "@snailycad/types/api";
 import { isUnitOfficer } from "@snailycad/utils";
 import { OfficerLogsTable } from "components/leo/logs/OfficerLogsTable";
+import { Infofield } from "components/shared/Infofield";
 import { useAsyncTable } from "components/shared/Table";
 import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "next-intl";
@@ -35,6 +36,14 @@ export function UnitLogsTab({ unit }: Props) {
     <TabsContent value="unit-logs">
       <div className="mt-3">
         <h1 className="text-xl font-semibold">{t("officerLogs")}</h1>
+
+        <div className="mt-3 mb-5 card shadow-md rounded-md px-4 p-2">
+          <h4 className="mb-3 text-xl font-semibold">Statistics</h4>
+
+          <Infofield label="Total Hours">108</Infofield>
+          <Infofield label="Fist log">108</Infofield>
+          <Infofield label="Latest log">108</Infofield>
+        </div>
 
         <OfficerLogsTable unit={unit} asyncTable={asyncTable} />
       </div>

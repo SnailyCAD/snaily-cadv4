@@ -31,24 +31,24 @@ export default function Admin({ counts }: Props) {
       <Title>{t("adminDashboard")}</Title>
 
       <Group name={t("users")}>
-        <Item count={counts.activeUsers} name={t("active")} />
-        <Item count={counts.pendingUsers} name={t("pending")} />
-        <Item count={counts.bannedUsers} name={t("banned")} />
+        <GroupItem count={counts.activeUsers} name={t("active")} />
+        <GroupItem count={counts.pendingUsers} name={t("pending")} />
+        <GroupItem count={counts.bannedUsers} name={t("banned")} />
       </Group>
 
       <Group name={t("citizens")}>
-        <Item count={counts.createdCitizens} name={t("created")} />
-        <Item
+        <GroupItem count={counts.createdCitizens} name={t("created")} />
+        <GroupItem
           count={counts.citizensInBolo}
           name={t("inBolo")}
           percentage={(100 / counts.createdCitizens) * counts.citizensInBolo}
         />
-        <Item
+        <GroupItem
           count={counts.arrestCitizens}
           name={t("arrested")}
           percentage={(100 / counts.createdCitizens) * counts.arrestCitizens}
         />
-        <Item
+        <GroupItem
           count={counts.deadCitizens}
           name={t("dead")}
           percentage={(100 / counts.createdCitizens) * counts.deadCitizens}
@@ -56,13 +56,13 @@ export default function Admin({ counts }: Props) {
       </Group>
 
       <Group name={t("vehicles")}>
-        <Item count={counts.vehicles} name={t("registered")} />
-        <Item
+        <GroupItem count={counts.vehicles} name={t("registered")} />
+        <GroupItem
           count={counts.vehiclesInBOLO}
           name={t("inBolo")}
           percentage={(100 / counts.vehicles) * counts.vehiclesInBOLO}
         />
-        <Item
+        <GroupItem
           count={counts.impoundedVehicles}
           name="impounded"
           percentage={(100 / counts.vehicles) * counts.impoundedVehicles}
@@ -70,13 +70,13 @@ export default function Admin({ counts }: Props) {
       </Group>
 
       <Group name={t("leo")}>
-        <Item count={counts.officerCount} name="total" />
-        <Item
+        <GroupItem count={counts.officerCount} name="total" />
+        <GroupItem
           count={counts.onDutyOfficers}
           name={t("onDuty")}
           percentage={(100 / counts.officerCount) * counts.onDutyOfficers}
         />
-        <Item
+        <GroupItem
           count={counts.suspendedOfficers}
           name={t("suspended")}
           percentage={(100 / counts.officerCount) * counts.suspendedOfficers}
@@ -84,13 +84,13 @@ export default function Admin({ counts }: Props) {
       </Group>
 
       <Group name={t("emsFd")}>
-        <Item count={counts.emsDeputiesCount} name="total" />
-        <Item
+        <GroupItem count={counts.emsDeputiesCount} name="total" />
+        <GroupItem
           count={counts.onDutyEmsDeputies}
           name={t("onDuty")}
           percentage={(100 / counts.emsDeputiesCount) * counts.onDutyEmsDeputies}
         />
-        <Item
+        <GroupItem
           count={counts.suspendedEmsFDDeputies}
           name={t("suspended")}
           percentage={(100 / counts.emsDeputiesCount) * counts.suspendedEmsFDDeputies}
@@ -98,14 +98,14 @@ export default function Admin({ counts }: Props) {
       </Group>
 
       <Group name={t("images")}>
-        <Item count={counts.imageData.count} name="total" />
-        <Item count={prettyBytes(counts.imageData.totalSize, { binary: true })} name="" />
+        <GroupItem count={counts.imageData.count} name="total" />
+        <GroupItem count={prettyBytes(counts.imageData.totalSize, { binary: true })} name="" />
       </Group>
     </AdminLayout>
   );
 }
 
-function Group({ name, children }: { name: string; children: React.ReactNode }) {
+export function Group({ name, children }: { name: string; children: React.ReactNode }) {
   return (
     <section className="max-w-2xl my-2 mb-7 select-none">
       <h4 className="text-lg">{name}</h4>
@@ -115,7 +115,7 @@ function Group({ name, children }: { name: string; children: React.ReactNode }) 
   );
 }
 
-function Item({
+export function GroupItem({
   count,
   name,
   percentage,
