@@ -604,46 +604,53 @@ export class Calls911Controller {
   }
 
   private async handleEndCall(call: Pick<Call911, "id"> & { assignedUnits: AssignedUnit[] }) {
-    const unitPromises = call.assignedUnits.map(async (unit) => {
-      const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
-      if (!prismaName || !unitId) return;
+    try {
+      const unitPromises = call.assignedUnits.map(async (unit) => {
+        const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
+        if (!prismaName || !unitId) return;
 
-      // @ts-expect-error method has the same properties
-      return prisma[prismaName].update({
-        where: { id: unitId },
-        data: {
-          activeCallId: await getNextActiveCallId({
-            callId: call.id,
-            type: "unassign",
-            unit: { ...unit, id: unitId },
-          }),
-        },
+        // @ts-expect-error method has the same properties
+        return prisma[prismaName].update({
+          where: { id: unitId },
+          data: {
+            activeCallId: await getNextActiveCallId({
+              callId: call.id,
+              type: "unassign",
+              unit: { ...unit, id: unitId },
+            }),
+          },
+        });
       });
-    });
 
-    await Promise.all([
-      ...unitPromises,
-      prisma.call911.update({
-        where: { id: call.id },
-        data: {
-          ended: true,
-          assignedUnits: {
-            deleteMany: {
-              call911Id: call.id,
-            },
+      await Promise.all(unitPromises);
+    } catch {
+      console.log("Failed to set next call id. Skipping...");
+    }
+
+    await prisma.call911.update({
+      where: { id: call.id },
+      data: {
+        ended: true,
+        assignedUnits: {
+          deleteMany: {
+            call911Id: call.id,
           },
         },
-      }),
-    ]);
+      },
+    });
   }
 
   private async endInactiveCalls(updatedAt: Date) {
-    const calls = await prisma.call911.findMany({
-      where: { updatedAt: { not: { gte: updatedAt } } },
-      select: { assignedUnits: true, id: true },
-    });
+    try {
+      const calls = await prisma.call911.findMany({
+        where: { updatedAt: { not: { gte: updatedAt } } },
+        select: { assignedUnits: true, id: true },
+      });
 
-    await Promise.all(calls.map((call) => this.handleEndCall(call)));
+      await Promise.all(calls.map((call) => this.handleEndCall(call)));
+    } catch {
+      console.log("Failed to end inactive calls. Skipping...");
+    }
   }
 
   // creates the webhook structure that will get sent to Discord.
