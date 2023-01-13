@@ -22,7 +22,7 @@ async function xToXArr(type: Type) {
     where: { [type]: { not: null } },
   });
 
-  if (!discordRoles || !discordRoles[type]) return;
+  if (!discordRoles?.[type]) return;
 
   await prisma.discordRoles.update({
     where: {

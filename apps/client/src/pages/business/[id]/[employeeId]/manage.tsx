@@ -119,8 +119,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale, re
     ["/admin/values/business_role?paths=license", []],
   ]);
 
-  const notFound =
-    !business || !business?.employee || business.employee.citizenId !== business.citizenId;
+  const notFound = !business?.employee || business.employee.citizenId !== business.citizenId;
 
   return {
     notFound,

@@ -38,7 +38,7 @@ export class IncidentEventsController {
       include: incidentInclude,
     });
 
-    if (!incident || !incident.isActive) {
+    if (!incident?.isActive) {
       throw new NotFound("incidentNotFound");
     }
 
@@ -77,7 +77,7 @@ export class IncidentEventsController {
       include: incidentInclude,
     });
 
-    if (!incident || !incident.isActive) {
+    if (!incident?.isActive) {
       throw new NotFound("incidentNotFound");
     }
 
@@ -132,7 +132,7 @@ export class IncidentEventsController {
       include: incidentInclude,
     });
 
-    if (!incident || !incident.isActive) {
+    if (!incident?.isActive) {
       throw new NotFound("incidentNotFound");
     }
 

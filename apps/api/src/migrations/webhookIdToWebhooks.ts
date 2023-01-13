@@ -8,7 +8,7 @@ export async function webhookIdToWebhooks() {
     },
   });
 
-  if (!cad || !cad.miscCadSettings || !cad.miscCadSettingsId) return;
+  if (!cad?.miscCadSettings || !cad.miscCadSettingsId) return;
 
   const { call911WebhookId, statusesWebhookId, panicButtonWebhookId, boloWebhookId } =
     cad.miscCadSettings;

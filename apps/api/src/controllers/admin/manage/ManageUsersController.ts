@@ -492,7 +492,7 @@ export class ManageUsersController {
       },
     });
 
-    if (!user || !user.apiTokenId) {
+    if (!user?.apiTokenId) {
       throw new NotFound("notFound");
     }
 

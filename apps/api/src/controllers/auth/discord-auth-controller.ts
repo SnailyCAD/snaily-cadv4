@@ -65,7 +65,7 @@ export class DiscordAuth {
       getSessionUser({ req, res, returnNullOnError: true }),
     ]);
 
-    if (!data || !data.id) {
+    if (!data?.id) {
       return res.redirect(`${redirectURL}/auth/login?error=could not fetch discord data`);
     }
 

@@ -245,7 +245,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale, re
   ]);
 
   return {
-    notFound: !business || !business?.employee,
+    notFound: !business?.employee,
     props: {
       business,
       employee: business?.employee ?? null,
