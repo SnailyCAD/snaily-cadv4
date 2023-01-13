@@ -126,6 +126,7 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
             p: (children) => <p className="first:mt-2">{children}</p>,
             clientURL: process.env.NEXT_PUBLIC_CLIENT_URL,
             apiURL: apiUrl,
+            currentURL: window.location.href,
           })
         : key;
 
