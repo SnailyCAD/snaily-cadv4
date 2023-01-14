@@ -25,7 +25,9 @@ export type AuditLogActions =
   | CustomRoleDelete
   | CustomRoleUpdate
   | CadSettingsUpdate
-  | MiscCadSettingsUpdate;
+  | MiscCadSettingsUpdate
+  | UserApiTokenDelete
+  | User2FADelete;
 
 type BaseAuditLogAction<ActionType extends AuditLogActionType, Previous, New> = {
   type: ActionType;
@@ -69,6 +71,16 @@ export type UserDelete = BaseAuditLogAction<
 >;
 export type UserTempPassword = BaseAuditLogAction<
   AuditLogActionType.UserTempPassword,
+  undefined,
+  User | Types.User
+>;
+export type UserApiTokenDelete = BaseAuditLogAction<
+  AuditLogActionType.UserApiTokenDelete,
+  undefined,
+  User | Types.User
+>;
+export type User2FADelete = BaseAuditLogAction<
+  AuditLogActionType.User2FADelete,
   undefined,
   User | Types.User
 >;

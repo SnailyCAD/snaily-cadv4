@@ -7,6 +7,8 @@ export enum AuditLogActionType {
   UsersPruned = "UsersPruned",
   UserPermissionsUpdate = "UserPermissionsUpdate",
   UserRolesUpdate = "UserRolesUpdate",
+  UserApiTokenDelete = "UserApiTokenDelete",
+  User2FADelete = "User2FADelete",
 
   CitizenUpdate = "CitizenUpdate",
   CitizenDelete = "CitizenDelete",

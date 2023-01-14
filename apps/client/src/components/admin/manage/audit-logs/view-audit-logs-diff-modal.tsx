@@ -38,10 +38,7 @@ export function ViewAuditLogsDiffModal() {
       ) : translationKey ? (
         <p>
           {tAuditLogs.rich(translationKey, {
-            value:
-              auditLog.action.new && "id" in auditLog.action.new && auditLog.action.new.id
-                ? auditLog.action.new.id
-                : "UNKNOWN",
+            value: parseAuditLogData(auditLog),
           })}
         </p>
       ) : (
@@ -49,4 +46,22 @@ export function ViewAuditLogsDiffModal() {
       )}
     </Modal>
   );
+}
+
+function parseAuditLogData(auditLog: any) {
+  try {
+    if (auditLog.action.new && "id" in auditLog.action.new && auditLog.action.new.id) {
+      return auditLog.action.new.id;
+    }
+
+    if (typeof auditLog.action.new === "string") {
+      return auditLog.action.new;
+    }
+
+    if (Array.isArray(auditLog.action.new)) {
+      return auditLog.action.new.join(", ");
+    }
+  } catch (e) {
+    return "UNKNOWN";
+  }
 }

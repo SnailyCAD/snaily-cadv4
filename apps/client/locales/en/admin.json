@@ -159,6 +159,9 @@
     "userUnbanned": "User: <span>{value}</span> has been unbanned.",
     "deletedEntry": "Item deleted with id: <span>{value}</span>.",
     "createdEntry": "Item created with id: <span>{value}</span>.",
-    "tempPasswordGiven": "User: <span>{value}</span> has been given a temporary password."
+    "deleteUserApiToken": "User: <span>{value}</span>'s personal API token has been deleted.",
+    "deleteUser2FA": "User: <span>{value}</span>'s 2FA has been deleted.",
+    "tempPasswordGiven": "User: <span>{value}</span> has been given a temporary password.",
+    "unitsSetOffDuty": "Selected units have been set off-duty: <span>{value}</span>"
   }
 }

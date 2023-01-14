@@ -539,6 +539,7 @@ export class ManageUsersController {
     permissions: [Permissions.ManageUsers],
   })
   async revokeApiToken(
+    @Context("sessionUserId") sessionUserId: string,
     @PathParams("userId") userId: string,
     @Context("cad") cad: cad & { features?: CadFeature[] },
   ): Promise<APITypes.DeleteManageUserRevokeApiTokenData> {
@@ -566,6 +567,13 @@ export class ManageUsersController {
       where: { id: user.apiTokenId },
     });
 
+    await createAuditLogEntry({
+      translationKey: "deleteUserApiToken",
+      action: { type: AuditLogActionType.UserApiTokenDelete, new: user },
+      prisma,
+      executorId: sessionUserId,
+    });
+
     return true;
   }
 
@@ -575,6 +583,7 @@ export class ManageUsersController {
     permissions: [Permissions.ManageUsers],
   })
   async disableUser2FA(
+    @Context("sessionUserId") sessionUserId: string,
     @PathParams("userId") userId: string,
   ): Promise<APITypes.DeleteManageUserRevokeApiTokenData> {
     const user = await prisma.user.findUnique({
@@ -587,6 +596,13 @@ export class ManageUsersController {
 
     await prisma.user2FA.deleteMany({
       where: { userId: user.id },
+    });
+
+    await createAuditLogEntry({
+      translationKey: "deleteUser2FA",
+      action: { type: AuditLogActionType.User2FADelete, new: user },
+      prisma,
+      executorId: sessionUserId,
     });
 
     return true;
