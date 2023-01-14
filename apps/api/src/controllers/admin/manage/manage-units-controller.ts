@@ -31,6 +31,7 @@ import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { getImageWebPPath, validateImgurURL } from "utils/images/image";
 import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
 import fs from "node:fs/promises";
+import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 
 const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_UNIT"] as const;
 type Action = typeof ACTIONS[number];
@@ -283,6 +284,7 @@ export class AdminManageUnitsController {
   })
   @Description("Update a unit by its id")
   async updateUnit(
+    @Context("sessionUserId") sessionUserId: string,
     @PathParams("id") id: string,
     @BodyParams() body: unknown,
     @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings; features?: CadFeature[] },
@@ -363,6 +365,12 @@ export class AdminManageUnitsController {
         imageBlurData: await generateBlurPlaceholder(validatedImageURL),
       },
       include: type === "officer" ? leoProperties : unitProperties,
+    });
+
+    await createAuditLogEntry({
+      action: { type: AuditLogActionType.UnitUpdate, new: updated, previous: unit },
+      prisma,
+      executorId: sessionUserId,
     });
 
     return updated;
@@ -674,6 +682,7 @@ export class AdminManageUnitsController {
     permissions: [Permissions.DeleteUnits],
   })
   async deleteUnit(
+    @Context("sessionUserId") sessionUserId: string,
     @PathParams("unitId") unitId: string,
   ): Promise<APITypes.DeleteManageUnitByIdData> {
     const unit = await findUnit(unitId);
@@ -695,6 +704,13 @@ export class AdminManageUnitsController {
     // @ts-expect-error properties are the same for this method.
     await prisma[t].delete({
       where: { id: unit.unit.id },
+    });
+
+    await createAuditLogEntry({
+      translationKey: "deletedEntry",
+      action: { type: AuditLogActionType.UnitDelete, new: unit.unit, previous: undefined },
+      prisma,
+      executorId: sessionUserId,
     });
 
     return true;

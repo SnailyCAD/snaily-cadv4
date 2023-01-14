@@ -432,3 +432,8 @@ export type AnyValue = Value | PenalCode | ValueWithValueObj;
 export type ActiveTone = Prisma.ActiveTone & {
   createdBy: { username: string };
 };
+
+export type AuditLog = Prisma.AuditLog & {
+  executor: User;
+  action: { previous: any; new: any; type: any };
+};

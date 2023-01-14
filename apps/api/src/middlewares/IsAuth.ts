@@ -22,10 +22,12 @@ export class IsAuth implements MiddlewareMethods {
         req,
         apiTokenHeader: globalCADApiToken,
       });
+
       ctx.set("user", fakeUser);
     } else {
       user = await getUserFromSession({ res, req });
       ctx.set("user", user);
+      ctx.set("sessionUserId", user.id);
     }
 
     if (!globalCADApiToken && !user) {

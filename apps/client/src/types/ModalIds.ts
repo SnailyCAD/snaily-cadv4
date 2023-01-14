@@ -25,6 +25,7 @@ export const enum ModalIds {
   ManageCustomRole = "ManageCustomRoleModal",
   ManageRoles = "ManageRolesModal",
   PruneUsers = "PruneUsersModal",
+  ViewAuditLogData = "ViewAuditLogDataModal",
 
   ManageTowCall = "ManageTowCallModal",
   AssignToTowCall = "AssignToTowCallModal",

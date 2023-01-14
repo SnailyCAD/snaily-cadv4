@@ -6,10 +6,7 @@
     "module": "CommonJS",
     "moduleResolution": "node",
     "declaration": true,
-    "skipLibCheck": true,
-    "importHelpers": true,
-    "esModuleInterop": true,
-    "jsx": "react-jsx"
+    "resolveJsonModule": true
   },
   "exclude": ["dist", "node_modules"]
 }

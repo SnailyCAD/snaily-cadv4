@@ -1,7 +1,7 @@
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { QueryParams, BodyParams, PathParams } from "@tsed/platform-params";
+import { QueryParams, BodyParams, PathParams, Context } from "@tsed/platform-params";
 import { ContentType, Delete, Description, Get, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
@@ -17,6 +17,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { validateSocialSecurityNumber } from "lib/citizen/validateSSN";
 import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
 import { leoProperties, unitProperties } from "lib/leo/activeOfficer";
+import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/citizens")
@@ -114,10 +115,17 @@ export class AdminManageCitizensController {
   async updateCitizen(
     @PathParams("id") id: string,
     @BodyParams() body: unknown,
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.PutManageCitizenByIdData> {
+    const include = {
+      gender: true,
+      ethnicity: true,
+    };
+
     const data = validateSchema(CREATE_CITIZEN_SCHEMA.partial(), body);
     const citizen = await prisma.citizen.findUnique({
       where: { id },
+      include,
     });
 
     if (!citizen) {
@@ -161,7 +169,13 @@ export class AdminManageCitizensController {
         userId: data.userId || undefined,
         appearance: data.appearance,
       },
-      include: citizenInclude,
+      include,
+    });
+
+    await createAuditLogEntry({
+      action: { type: AuditLogActionType.CitizenUpdate, new: updatedCitizen, previous: citizen },
+      prisma,
+      executorId: sessionUserId,
     });
 
     return updatedCitizen;
@@ -175,6 +189,7 @@ export class AdminManageCitizensController {
   })
   async deleteCitizen(
     @PathParams("id") citizenId: string,
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.DeleteManageCitizenByIdData> {
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -187,6 +202,13 @@ export class AdminManageCitizensController {
     }
 
     await prisma.citizen.delete({ where: { id: citizenId } });
+
+    await createAuditLogEntry({
+      translationKey: "deletedEntry",
+      action: { type: AuditLogActionType.CitizenDelete, new: citizen, previous: undefined },
+      prisma,
+      executorId: sessionUserId,
+    });
 
     return true;
   }

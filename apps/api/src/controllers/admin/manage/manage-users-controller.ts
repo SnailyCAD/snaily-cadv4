@@ -33,6 +33,7 @@ import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { isFeatureEnabled } from "lib/cad";
 import { manyToManyHelper } from "utils/manyToMany";
 import type * as APITypes from "@snailycad/types/api";
+import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 
 const manageUsersSelect = (selectCitizens: boolean) =>
   ({
@@ -128,6 +129,7 @@ export class ManageUsersController {
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
   async pruneInactiveUsers(
+    @Context("sessionUserId") sessionUserId: string,
     @BodyParams("userIds", String) userIds: string[],
     @BodyParams("days", Number) days = 30,
   ) {
@@ -142,6 +144,12 @@ export class ManageUsersController {
         }),
       ),
     );
+
+    await createAuditLogEntry({
+      action: { type: AuditLogActionType.UsersPruned },
+      prisma,
+      executorId: sessionUserId,
+    });
 
     return { count: arr.length };
   }
@@ -201,6 +209,7 @@ export class ManageUsersController {
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
   async updateUserPermissionsById(
+    @Context("sessionUserId") sessionUserId: string,
     @PathParams("id") userId: string,
     @BodyParams() body: unknown,
   ): Promise<APITypes.PutManageUserPermissionsByIdData> {
@@ -228,6 +237,12 @@ export class ManageUsersController {
       select: manageUsersSelect(false),
     });
 
+    await createAuditLogEntry({
+      action: { type: AuditLogActionType.UserPermissionsUpdate, new: updated, previous: user },
+      prisma,
+      executorId: sessionUserId,
+    });
+
     return updated;
   }
 
@@ -237,6 +252,7 @@ export class ManageUsersController {
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
   async updateUserRolesById(
+    @Context("sessionUserId") sessionUserId: string,
     @PathParams("id") userId: string,
     @BodyParams() body: unknown,
   ): Promise<APITypes.PutManageUserByIdRolesData> {
@@ -267,6 +283,12 @@ export class ManageUsersController {
       select: manageUsersSelect(false),
     });
 
+    await createAuditLogEntry({
+      action: { type: AuditLogActionType.UserRolesUpdate, new: updated, previous: user },
+      prisma,
+      executorId: sessionUserId,
+    });
+
     return updated;
   }
 
@@ -276,6 +298,7 @@ export class ManageUsersController {
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
   async updateUserById(
+    @Context("sessionUserId") sessionUserId: string,
     @PathParams("id") userId: string,
     @BodyParams() body: unknown,
   ): Promise<APITypes.PutManageUserByIdData> {
@@ -313,6 +336,12 @@ export class ManageUsersController {
       select: manageUsersSelect(false),
     });
 
+    await createAuditLogEntry({
+      action: { type: AuditLogActionType.UserUpdate, new: updated, previous: user },
+      prisma,
+      executorId: sessionUserId,
+    });
+
     return updated;
   }
 
@@ -322,6 +351,7 @@ export class ManageUsersController {
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
   async giveUserTempPassword(
+    @Context("sessionUserId") sessionUserId: string,
     @PathParams("id") userId: string,
   ): Promise<APITypes.PostManageUsersGiveTempPasswordData> {
     const user = await prisma.user.findFirst({
@@ -355,6 +385,13 @@ export class ManageUsersController {
         where: { id: user2FA.id },
       });
     }
+
+    await createAuditLogEntry({
+      translationKey: "tempPasswordGiven",
+      action: { type: AuditLogActionType.UserTempPassword, new: user, previous: undefined },
+      prisma,
+      executorId: sessionUserId,
+    });
 
     return password;
   }
@@ -400,6 +437,13 @@ export class ManageUsersController {
       this.socket.emitUserBanned(userToManage.id);
     }
 
+    await createAuditLogEntry({
+      translationKey: "userBanned",
+      action: { type: AuditLogActionType.UserBan, new: updated, previous: undefined },
+      prisma,
+      executorId: authUser.id,
+    });
+
     return updated;
   }
 
@@ -409,6 +453,7 @@ export class ManageUsersController {
     permissions: [Permissions.DeleteUsers],
   })
   async deleteUserAccount(
+    @Context("sessionUserId") sessionUserId: string,
     @PathParams("id") userId: string,
   ): Promise<APITypes.DeleteManageUsersData> {
     const user = await prisma.user.findFirst({
@@ -426,6 +471,13 @@ export class ManageUsersController {
       where: {
         id: user.id,
       },
+    });
+
+    await createAuditLogEntry({
+      translationKey: "deletedEntry",
+      action: { type: AuditLogActionType.UserDelete, new: user, previous: undefined },
+      prisma,
+      executorId: sessionUserId,
     });
 
     this.socket.emitUserDeleted(user.id);

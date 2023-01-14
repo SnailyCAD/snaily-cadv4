@@ -212,7 +212,7 @@ export type PostCitizenRecordLogsData = Prisma.Record & {
  * @method PUT
  * @route /admin/manage/citizens/:id
  */
-export type PutManageCitizenByIdData = GetManageCitizensData["citizens"][number];
+export type PutManageCitizenByIdData = Types.BaseCitizen;
 
 /**
  * @method DELETE
@@ -473,3 +473,12 @@ export interface PostCustomRoleByIdData {
  * @route /admin/manage/users/roles/:id
  */
 export type PutManageUserByIdRolesData = GetManageUserByIdData;
+
+/**
+ * @method GET
+ * @route /admin/manage/cad-settings/audit-logs
+ */
+export interface GetAuditLogsData {
+  totalCount: number;
+  logs: Types.AuditLog[];
+}
