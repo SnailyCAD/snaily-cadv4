@@ -25,4 +25,7 @@ export enum AuditLogActionType {
   CustomRoleCreate = "CustomRoleCreate",
   CustomRoleUpdate = "CustomRoleUpdate",
   CustomRoleDelete = "CustomRoleDelete",
+
+  CadSettingsUpdate = "CadSettingsUpdate",
+  MiscCadSettingsUpdate = "MiscCadSettingsUpdate",
 }

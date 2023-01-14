@@ -20,7 +20,12 @@ import { getCADVersion } from "@snailycad/utils/version";
 import { getSessionUser, userProperties } from "lib/auth/getSessionUser";
 import type * as APITypes from "@snailycad/types/api";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
-import { AuditLogActionType, parseAuditLogs } from "@snailycad/audit-logger/server";
+import {
+  AuditLogActionType,
+  createAuditLogEntry,
+  parseAuditLogs,
+} from "@snailycad/audit-logger/server";
+import type { MiscCadSettings } from "@snailycad/types";
 
 @Controller("/admin/manage/cad-settings")
 @ContentType("application/json")
@@ -92,10 +97,17 @@ export class CADSettingsController {
     permissions: [Permissions.ManageCADSettings],
   })
   async updateCadSettings(
+    @Context("sessionUserId") sessionUserId: string,
     @Context("cad") cad: cad,
     @BodyParams() body: unknown,
   ): Promise<APITypes.PutCADSettingsData> {
     const data = validateSchema(CAD_SETTINGS_SCHEMA, body);
+
+    // this is fetched to get correct diff results
+    const _cad = await prisma.cad.findUnique({
+      where: { id: cad.id },
+      include: { features: true, miscCadSettings: true, apiToken: true },
+    });
 
     const updated = await prisma.cad.update({
       where: { id: cad.id },
@@ -116,6 +128,12 @@ export class CADSettingsController {
 
     this.socket.emitUpdateAop(updated.areaOfPlay);
     this.socket.emitUpdateRoleplayStopped(data.roleplayEnabled);
+
+    await createAuditLogEntry({
+      action: { type: AuditLogActionType.CadSettingsUpdate, new: updated, previous: _cad! },
+      prisma,
+      executorId: sessionUserId,
+    });
 
     return updated;
   }
@@ -161,7 +179,8 @@ export class CADSettingsController {
     permissions: [Permissions.ManageCADSettings],
   })
   async updateMiscSettings(
-    @Context("cad") cad: cad,
+    @Context("sessionUserId") sessionUserId: string,
+    @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings },
     @BodyParams() body: unknown,
   ): Promise<APITypes.PutCADMiscSettingsData> {
     const data = validateSchema(CAD_MISC_SETTINGS_SCHEMA, body);
@@ -194,6 +213,17 @@ export class CADSettingsController {
         activeDispatchersInactivityTimeout: data.activeDispatchersInactivityTimeout || null,
         jailTimeScale: (data.jailTimeScaling || null) as JailTimeScale | null,
       },
+      include: { webhooks: true },
+    });
+
+    await createAuditLogEntry({
+      action: {
+        type: AuditLogActionType.MiscCadSettingsUpdate,
+        new: updated,
+        previous: cad.miscCadSettings,
+      },
+      prisma,
+      executorId: sessionUserId,
     });
 
     return updated;

@@ -23,7 +23,9 @@ export type AuditLogActions =
   | CustomFieldUpdate
   | CustomRoleCreate
   | CustomRoleDelete
-  | CustomRoleUpdate;
+  | CustomRoleUpdate
+  | CadSettingsUpdate
+  | MiscCadSettingsUpdate;
 
 type BaseAuditLogAction<ActionType extends AuditLogActionType, Previous, New> = {
   type: ActionType;
@@ -137,4 +139,14 @@ export type CustomRoleDelete = BaseAuditLogAction<
   AuditLogActionType.CustomRoleDelete,
   undefined,
   Types.CustomRole
+>;
+export type CadSettingsUpdate = BaseAuditLogAction<
+  AuditLogActionType.CadSettingsUpdate,
+  Types.cad,
+  Types.cad
+>;
+export type MiscCadSettingsUpdate = BaseAuditLogAction<
+  AuditLogActionType.MiscCadSettingsUpdate,
+  Types.MiscCadSettings,
+  Types.MiscCadSettings
 >;
