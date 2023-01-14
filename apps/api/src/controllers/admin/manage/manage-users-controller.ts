@@ -437,6 +437,13 @@ export class ManageUsersController {
       this.socket.emitUserBanned(userToManage.id);
     }
 
+    await createAuditLogEntry({
+      translationKey: "userBanned",
+      action: { type: AuditLogActionType.UserBan, new: updated, previous: undefined },
+      prisma,
+      executorId: authUser.id,
+    });
+
     return updated;
   }
 
@@ -446,6 +453,7 @@ export class ManageUsersController {
     permissions: [Permissions.DeleteUsers],
   })
   async deleteUserAccount(
+    @Context("sessionUserId") sessionUserId: string,
     @PathParams("id") userId: string,
   ): Promise<APITypes.DeleteManageUsersData> {
     const user = await prisma.user.findFirst({
@@ -463,6 +471,13 @@ export class ManageUsersController {
       where: {
         id: user.id,
       },
+    });
+
+    await createAuditLogEntry({
+      translationKey: "deletedEntry",
+      action: { type: AuditLogActionType.UserDelete, new: user, previous: undefined },
+      prisma,
+      executorId: sessionUserId,
     });
 
     this.socket.emitUserDeleted(user.id);
