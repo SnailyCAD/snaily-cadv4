@@ -6,7 +6,7 @@ import {
   API_TOKEN_SCHEMA,
 } from "@snailycad/schemas";
 import { Controller } from "@tsed/di";
-import { BodyParams, Context } from "@tsed/platform-params";
+import { BodyParams, Context, QueryParams } from "@tsed/platform-params";
 import { ContentType, Delete, Get, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { CAD_SELECT, IsAuth, setDiscordAuth } from "middlewares/IsAuth";
@@ -17,9 +17,10 @@ import { nanoid } from "nanoid";
 import { validateSchema } from "lib/validateSchema";
 import { cad, Feature, JailTimeScale, Rank } from "@prisma/client";
 import { getCADVersion } from "@snailycad/utils/version";
-import { getSessionUser } from "lib/auth/getSessionUser";
+import { getSessionUser, userProperties } from "lib/auth/getSessionUser";
 import type * as APITypes from "@snailycad/types/api";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
+import { parseAuditLogs } from "@snailycad/audit-logger/server";
 
 @Controller("/admin/manage/cad-settings")
 @ContentType("application/json")
@@ -49,6 +50,25 @@ export class CADSettingsController {
       registrationCode,
       version,
     } as APITypes.GetCADSettingsData;
+  }
+
+  @Get("/audit-logs")
+  async getAuditLogs(
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("query", String) type?: string,
+  ): Promise<any> {
+    const [totalCount, auditLogs] = await prisma.$transaction([
+      prisma.auditLog.count(),
+      prisma.auditLog.findMany({
+        take: 35,
+        skip,
+        orderBy: { createdAt: "desc" },
+        include: { executor: { select: userProperties } },
+        where: type && type !== "null" ? { action: { string_contains: type } } : undefined,
+      }),
+    ]);
+
+    return { totalCount, logs: parseAuditLogs(auditLogs) as any };
   }
 
   @Put("/")

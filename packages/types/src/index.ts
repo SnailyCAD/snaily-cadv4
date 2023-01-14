@@ -1,6 +1,7 @@
 import type { Permissions } from "@snailycad/permissions";
 import type * as Prisma from "@prisma/client";
 import type * as Enums from "./enums";
+import type { AuditLogActions } from "@snailycad/audit-logger";
 
 export * from "./enums";
 
@@ -431,4 +432,9 @@ export type AnyValue = Value | PenalCode | ValueWithValueObj;
 
 export type ActiveTone = Prisma.ActiveTone & {
   createdBy: { username: string };
+};
+
+export type AuditLog = Prisma.AuditLog & {
+  executor: User;
+  action: AuditLogActions;
 };

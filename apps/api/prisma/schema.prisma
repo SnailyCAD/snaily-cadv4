@@ -213,6 +213,23 @@ model DiscordRole {
   CustomRole            CustomRole[]
 }
 
+// audit logs
+model AuditLog {
+  id             String        @id @default(uuid())
+  executor       User          @relation(fields: [executorId], references: [id])
+  executorId     String
+  action         Json
+  createdAt      DateTime      @default(now())
+  type           AuditLogType?
+  translationKey String?
+}
+
+enum AuditLogType {
+  CREATE
+  UPDATE
+  DELETE
+}
+
 model User {
   id                       String                    @id @default(cuid())
   username                 String                    @unique @db.VarChar(255)
@@ -269,6 +286,7 @@ model User {
   NameChangeRequest    NameChangeRequest[]
   CourthousePost       CourthousePost[]
   ActiveTone           ActiveTone[]
+  AuditLog             AuditLog[]
 }
 
 model UserSession {

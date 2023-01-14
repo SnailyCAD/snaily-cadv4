@@ -33,6 +33,7 @@ import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { isFeatureEnabled } from "lib/cad";
 import { manyToManyHelper } from "utils/manyToMany";
 import type * as APITypes from "@snailycad/types/api";
+import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 
 const manageUsersSelect = (selectCitizens: boolean) =>
   ({
@@ -128,6 +129,7 @@ export class ManageUsersController {
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
   async pruneInactiveUsers(
+    @Context("sessionUserId") sessionUserId: string,
     @BodyParams("userIds", String) userIds: string[],
     @BodyParams("days", Number) days = 30,
   ) {
@@ -142,6 +144,12 @@ export class ManageUsersController {
         }),
       ),
     );
+
+    await createAuditLogEntry({
+      action: { type: AuditLogActionType.UsersPruned },
+      prisma,
+      executorId: sessionUserId,
+    });
 
     return { count: arr.length };
   }
@@ -201,6 +209,7 @@ export class ManageUsersController {
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
   async updateUserPermissionsById(
+    @Context("sessionUserId") sessionUserId: string,
     @PathParams("id") userId: string,
     @BodyParams() body: unknown,
   ): Promise<APITypes.PutManageUserPermissionsByIdData> {
@@ -226,6 +235,12 @@ export class ManageUsersController {
       },
       data: { permissions },
       select: manageUsersSelect(false),
+    });
+
+    await createAuditLogEntry({
+      action: { type: AuditLogActionType.UserPermissionsUpdate, new: updated, previous: user },
+      prisma,
+      executorId: sessionUserId,
     });
 
     return updated;
