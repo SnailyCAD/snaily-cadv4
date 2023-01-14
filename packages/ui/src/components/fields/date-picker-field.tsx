@@ -18,6 +18,7 @@ const Calendar = dynamic(
   async () => (await import("../inputs/date-picker/calendar/calendar")).Calendar,
   {
     loading: () => <Loader />,
+    ssr: false,
   },
 );
 
@@ -87,7 +88,12 @@ export function DatePickerField({ value: _value, ...rest }: Props) {
           </Button>
         </div>
         {state.isOpen && (
-          <Popover {...dialogProps} isOpen={state.isOpen} onClose={() => state.setOpen(false)}>
+          <Popover
+            className="right-0"
+            {...dialogProps}
+            isOpen={state.isOpen}
+            onClose={() => state.setOpen(false)}
+          >
             <Calendar {...calendarProps} />
           </Popover>
         )}
