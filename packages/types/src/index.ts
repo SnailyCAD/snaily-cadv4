@@ -1,7 +1,6 @@
 import type { Permissions } from "@snailycad/permissions";
 import type * as Prisma from "@prisma/client";
 import type * as Enums from "./enums";
-import type { AuditLogActions } from "@snailycad/audit-logger/server";
 
 export * from "./enums";
 
@@ -436,5 +435,5 @@ export type ActiveTone = Prisma.ActiveTone & {
 
 export type AuditLog = Prisma.AuditLog & {
   executor: User;
-  action: AuditLogActions;
+  action: { previous: any; new: any; type: any };
 };

@@ -19,5 +19,6 @@
     "noFallthroughCasesInSwitch": true /* Report errors for fallthrough cases in switch statement. */,
     "noUncheckedIndexedAccess": true /* Include 'undefined' in index signature results */,
     "allowUnreachableCode": false
-  }
+  },
+  "exclude": ["dist", "node_modules"]
 }
