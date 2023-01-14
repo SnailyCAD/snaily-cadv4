@@ -19,7 +19,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "yarn tsup",
+    "build": "yarn workspace @snailycad/api generate && yarn tsup",
     "watch": "yarn tsup --watch --silent=false",
     "typecheck": "yarn tsc --noEmit"
   },

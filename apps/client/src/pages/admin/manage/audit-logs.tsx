@@ -7,7 +7,6 @@ import { Rank } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
-import { Permissions } from "hooks/usePermission";
 import type { GetAuditLogsData } from "@snailycad/types/api";
 import { useModal } from "state/modalState";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
@@ -19,6 +18,7 @@ import dynamic from "next/dynamic";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { AuditLogActionType } from "@snailycad/audit-logger";
+import { defaultPermissions } from "@snailycad/permissions";
 
 const ViewAuditLogsDiffModal = dynamic(
   async () =>
@@ -59,13 +59,7 @@ export default function ManageAuditLogs({ data }: Props) {
     <AdminLayout
       permissions={{
         fallback: (u) => u.rank !== Rank.USER,
-        permissions: [
-          // todo: permissions
-          Permissions.BanUsers,
-          Permissions.ViewUsers,
-          Permissions.ManageUsers,
-          Permissions.DeleteUsers,
-        ],
+        permissions: defaultPermissions.allDefaultAdminPermissions,
       }}
     >
       <Title>{t("MANAGE_AUDIT_LOGS")}</Title>
