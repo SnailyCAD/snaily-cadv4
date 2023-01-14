@@ -29,8 +29,8 @@ export type AuditLogActions =
 
 type BaseAuditLogAction<ActionType extends AuditLogActionType, Previous, New> = {
   type: ActionType;
-} & (Previous extends undefined ? { previous?: undefined } : { previous: Previous }) &
-  (New extends undefined ? { new?: undefined } : { new: New });
+} & (Previous extends undefined ? {} : { previous: Previous }) &
+  (New extends undefined ? {} : { new: New });
 
 export type UsersPrunedAction = BaseAuditLogAction<
   AuditLogActionType.UsersPruned,

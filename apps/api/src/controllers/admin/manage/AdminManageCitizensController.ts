@@ -206,7 +206,7 @@ export class AdminManageCitizensController {
 
     await createAuditLogEntry({
       translationKey: "deletedEntry",
-      action: { type: AuditLogActionType.CitizenDelete, new: citizen, previous: undefined },
+      action: { type: AuditLogActionType.CitizenDelete, new: citizen },
       prisma,
       executorId: sessionUserId,
     });

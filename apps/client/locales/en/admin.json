@@ -156,6 +156,7 @@
   },
   "AuditLogs": {
     "userBanned": "User: <span>{value}</span> has been banned.",
+    "userUnbanned": "User: <span>{value}</span> has been unbanned.",
     "deletedEntry": "Item deleted with id: <span>{value}</span>.",
     "createdEntry": "Item created with id: <span>{value}</span>.",
     "tempPasswordGiven": "User: <span>{value}</span> has been given a temporary password."

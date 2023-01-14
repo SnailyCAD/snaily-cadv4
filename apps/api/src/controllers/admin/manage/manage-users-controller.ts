@@ -395,7 +395,7 @@ export class ManageUsersController {
 
     await createAuditLogEntry({
       translationKey: "tempPasswordGiven",
-      action: { type: AuditLogActionType.UserTempPassword, new: user, previous: undefined },
+      action: { type: AuditLogActionType.UserTempPassword, new: user },
       prisma,
       executorId: sessionUserId,
     });
@@ -442,14 +442,21 @@ export class ManageUsersController {
 
     if (banType === "ban") {
       this.socket.emitUserBanned(userToManage.id);
-    }
 
-    await createAuditLogEntry({
-      translationKey: "userBanned",
-      action: { type: AuditLogActionType.UserBan, new: updated, previous: undefined },
-      prisma,
-      executorId: authUser.id,
-    });
+      await createAuditLogEntry({
+        translationKey: "userBanned",
+        action: { type: AuditLogActionType.UserBan, new: updated },
+        prisma,
+        executorId: authUser.id,
+      });
+    } else {
+      await createAuditLogEntry({
+        translationKey: "userUnbanned",
+        action: { type: AuditLogActionType.UserUnban, new: updated },
+        prisma,
+        executorId: authUser.id,
+      });
+    }
 
     return updated;
   }
@@ -482,7 +489,7 @@ export class ManageUsersController {
 
     await createAuditLogEntry({
       translationKey: "deletedEntry",
-      action: { type: AuditLogActionType.UserDelete, new: user, previous: undefined },
+      action: { type: AuditLogActionType.UserDelete, new: user },
       prisma,
       executorId: sessionUserId,
     });
