@@ -6,6 +6,7 @@ import { userProperties } from "lib/auth/getSessionUser";
 import { isFeatureEnabled } from "lib/cad";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { prisma } from "lib/prisma";
+import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import type { z } from "zod";
 import { validateRecordData } from "./validateRecordData";
@@ -126,6 +127,16 @@ export async function upsertRecord(options: UpsertRecordOptions) {
       validateRecordData({ ...v, ticketId: ticket.id, cad: options.cad }),
     ),
   );
+
+  const errors = validatedViolations.reduce(
+    (prev, current) => ({ ...prev, ...current.errors }),
+    {},
+  );
+
+  if (Object.keys(errors).length >= 1) {
+    await prisma.record.delete({ where: { id: ticket.id } });
+    throw new ExtendedBadRequest(errors);
+  }
 
   const violations = await prisma.$transaction(
     validatedViolations.map((item) => {

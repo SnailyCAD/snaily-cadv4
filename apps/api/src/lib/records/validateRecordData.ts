@@ -5,10 +5,8 @@ import {
   WarningApplicable,
   WarningNotApplicable,
 } from "@prisma/client";
-import { BadRequest, NotFound } from "@tsed/exceptions";
 import { isFeatureEnabled } from "lib/cad";
 import { prisma } from "lib/prisma";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
 interface Options {
   penalCodeId?: string;
@@ -21,6 +19,7 @@ interface Options {
 }
 
 type Return = Options & {
+  errors: Record<string, { message: string; data: any }>;
   penalCode: PenalCode & {
     warningApplicable: WarningApplicable | null;
     warningNotApplicable: WarningNotApplicable | null;
@@ -28,8 +27,12 @@ type Return = Options & {
 };
 
 export async function validateRecordData(options: Options): Promise<Return> {
+  const errors: Record<string, { message: string; data: any }> = {};
+
   if (!options.penalCodeId) {
-    return handleBadRequest(new BadRequest("no penalCodeId provided"), options.ticketId);
+    errors["violations"] = { message: "No penalCodeId provided", data: {} };
+    // @ts-expect-error - we're immediately returning the errors here
+    return { errors, ...options };
   }
 
   const isBailEnabled = isFeatureEnabled({
@@ -45,7 +48,13 @@ export async function validateRecordData(options: Options): Promise<Return> {
   });
 
   if (!penalCode) {
-    return handleBadRequest(new NotFound("penalCodeNotFound"), options.ticketId);
+    errors["violations"] = {
+      message: "Penal code not found with provided id",
+      data: { id: options.penalCodeId },
+    };
+
+    // @ts-expect-error - we're immediately returning the errors here
+    return { errors, ...options };
   }
 
   const minFinesArr = [
@@ -68,30 +77,20 @@ export async function validateRecordData(options: Options): Promise<Return> {
   if (options.counts && exists(minMaxCounts) && !isCorrect(minMaxCounts, options.counts)) {
     const name = `violations.${options.penalCodeId}.counts`;
 
-    return handleBadRequest(
-      new ExtendedBadRequest({
-        [name]: {
-          message: "counts_invalidDataReceived",
-          data: { min: minMaxPrisonTerm[0] || 0, max: minMaxPrisonTerm[1] || 0 },
-        },
-      }),
-      options.ticketId,
-    );
+    errors[name] = {
+      message: "counts_invalidDataReceived",
+      data: { min: minMaxPrisonTerm[0] || 0, max: minMaxPrisonTerm[1] || 0 },
+    };
   }
 
   // these if statements could be cleaned up?..
   if (options.fine && exists(minMaxFines) && !isCorrect(minMaxFines, options.fine)) {
     const name = `violations.${options.penalCodeId}.fine`;
 
-    return handleBadRequest(
-      new ExtendedBadRequest({
-        [name]: {
-          message: "fine_invalidDataReceived",
-          data: { min: minMaxFines[0] || 0, max: minMaxFines[1] || 0 },
-        },
-      }),
-      options.ticketId,
-    );
+    errors[name] = {
+      message: "fine_invalidDataReceived",
+      data: { min: minMaxFines[0] || 0, max: minMaxFines[1] || 0 },
+    };
   }
 
   if (
@@ -101,32 +100,22 @@ export async function validateRecordData(options: Options): Promise<Return> {
   ) {
     const name = `violations.${options.penalCodeId}.jailTime`;
 
-    return handleBadRequest(
-      new ExtendedBadRequest({
-        [name]: {
-          message: "jailTime_invalidDataReceived",
-          data: { min: minMaxPrisonTerm[0] || 0, max: minMaxPrisonTerm[1] || 0 },
-        },
-      }),
-      options.ticketId,
-    );
+    errors[name] = {
+      message: "jailTime_invalidDataReceived",
+      data: { min: minMaxPrisonTerm[0] || 0, max: minMaxPrisonTerm[1] || 0 },
+    };
   }
 
   if (isBailEnabled && options.bail && exists(minMaxBail) && !isCorrect(minMaxBail, options.bail)) {
     const name = `violations.${options.penalCodeId}.bail`;
 
-    return handleBadRequest(
-      new ExtendedBadRequest({
-        [name]: {
-          message: "bail_invalidDataReceived",
-          data: { min: minMaxBail[0] || 0, max: minMaxBail[1] || 0 },
-        },
-      }),
-      options.ticketId,
-    );
+    errors[name] = {
+      message: "bail_invalidDataReceived",
+      data: { min: minMaxBail[0] || 0, max: minMaxBail[1] || 0 },
+    };
   }
 
-  return { ...options, penalCode };
+  return { ...options, errors, penalCode };
 }
 
 function isCorrect(minMax: [number, number], value: number) {
@@ -144,15 +133,4 @@ function isCorrect(minMax: [number, number], value: number) {
 
 function exists(values: (number | undefined)[]): values is [number, number] {
   return values.every((v) => typeof v !== "undefined");
-}
-
-/**
- * remove the created ticket when there's an error with linking the penal codes.
- */
-async function handleBadRequest(error: Error, recordId: string): Promise<Return> {
-  await prisma.record.delete({
-    where: { id: recordId },
-  });
-
-  throw error;
 }

@@ -34,6 +34,7 @@ export async function createAuditLogEntry<Action extends AuditLogActions>(
       action: options.action,
     };
   } catch (error) {
+    console.log(error);
     captureException(error);
     return null;
   }
