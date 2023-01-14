@@ -5,11 +5,13 @@ import type { AuditLogActions } from "./index";
 export * from "./types/action-types";
 export * from "./types/actions";
 
+export type AuditLogMessages =
+  keyof typeof import("../../../apps/client/locales/en/admin.json")["AuditLogs"];
+
 interface Options<Action extends AuditLogActions> {
   prisma: PrismaClient;
 
-  // todo: fix typo
-  translationKey?: any | null;
+  translationKey?: AuditLogMessages | null;
   executorId: string;
   action: Action;
 }

@@ -5,6 +5,7 @@
     "target": "ESNext",
     "module": "CommonJS",
     "moduleResolution": "node",
-    "declaration": true
+    "declaration": true,
+    "resolveJsonModule": true
   }
 }

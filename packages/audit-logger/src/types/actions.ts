@@ -2,6 +2,29 @@ import type * as Types from "@snailycad/types";
 import type { AuditLogActionType } from "./action-types";
 import type { Citizen, User, Officer, EmsFdDeputy } from "@prisma/client";
 
+export type AuditLogActions =
+  | UserBanAction
+  | UserUnBanAction
+  | UserUpdate
+  | UserDelete
+  | UserPermissionsUpdateAction
+  | UserRolesUpdateAction
+  | UsersPrunedAction
+  | UserTempPassword
+  | CitizenUpdate
+  | CitizenDelete
+  | UnitUpdate
+  | UnitDelete
+  | UnitsSetOffDuty
+  | BusinessUpdate
+  | BusinessDelete
+  | CustomFieldCreate
+  | CustomFieldDelete
+  | CustomFieldUpdate
+  | CustomRoleCreate
+  | CustomRoleDelete
+  | CustomRoleUpdate;
+
 type BaseAuditLogAction<ActionType extends AuditLogActionType, Previous, New> = {
   type: ActionType;
 } & (Previous extends undefined ? { previous?: undefined } : { previous: Previous }) &
@@ -14,8 +37,13 @@ export type UsersPrunedAction = BaseAuditLogAction<
 >;
 export type UserPermissionsUpdateAction = BaseAuditLogAction<
   AuditLogActionType.UserPermissionsUpdate,
-  User,
-  User
+  User | Types.User,
+  User | Types.User
+>;
+export type UserRolesUpdateAction = BaseAuditLogAction<
+  AuditLogActionType.UserRolesUpdate,
+  User | Types.User,
+  User | Types.User
 >;
 export type UserBanAction = BaseAuditLogAction<
   AuditLogActionType.UserBan,

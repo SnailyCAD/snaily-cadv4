@@ -252,6 +252,7 @@ export class ManageUsersController {
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
   async updateUserRolesById(
+    @Context("sessionUserId") sessionUserId: string,
     @PathParams("id") userId: string,
     @BodyParams() body: unknown,
   ): Promise<APITypes.PutManageUserByIdRolesData> {
@@ -282,6 +283,12 @@ export class ManageUsersController {
       select: manageUsersSelect(false),
     });
 
+    await createAuditLogEntry({
+      action: { type: AuditLogActionType.UserRolesUpdate, new: updated, previous: user },
+      prisma,
+      executorId: sessionUserId,
+    });
+
     return updated;
   }
 
@@ -291,6 +298,7 @@ export class ManageUsersController {
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
   async updateUserById(
+    @Context("sessionUserId") sessionUserId: string,
     @PathParams("id") userId: string,
     @BodyParams() body: unknown,
   ): Promise<APITypes.PutManageUserByIdData> {
@@ -328,6 +336,12 @@ export class ManageUsersController {
       select: manageUsersSelect(false),
     });
 
+    await createAuditLogEntry({
+      action: { type: AuditLogActionType.UserUpdate, new: updated, previous: user },
+      prisma,
+      executorId: sessionUserId,
+    });
+
     return updated;
   }
 
@@ -337,6 +351,7 @@ export class ManageUsersController {
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
   async giveUserTempPassword(
+    @Context("sessionUserId") sessionUserId: string,
     @PathParams("id") userId: string,
   ): Promise<APITypes.PostManageUsersGiveTempPasswordData> {
     const user = await prisma.user.findFirst({
@@ -370,6 +385,13 @@ export class ManageUsersController {
         where: { id: user2FA.id },
       });
     }
+
+    await createAuditLogEntry({
+      translationKey: "tempPasswordGiven",
+      action: { type: AuditLogActionType.UserTempPassword, new: user, previous: undefined },
+      prisma,
+      executorId: sessionUserId,
+    });
 
     return password;
   }

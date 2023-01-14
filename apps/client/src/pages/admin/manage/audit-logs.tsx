@@ -15,14 +15,23 @@ import { SearchArea } from "components/shared/search/search-area";
 import { FullDate } from "components/shared/FullDate";
 import { Button } from "@snailycad/ui";
 import { ModalIds } from "types/ModalIds";
-import { compareDifferences } from "@snailycad/audit-logger/client";
-import { ArrowRight } from "react-bootstrap-icons";
-import { CallDescription } from "components/dispatch/active-calls/CallDescription";
-import { ViewAuditLogDataModal } from "components/admin/manage/audit-logs/view-audit-logs-diff-modal";
+import dynamic from "next/dynamic";
+import { FormField } from "components/form/FormField";
+import { Select } from "components/form/Select";
+import { AuditLogActionType } from "@snailycad/audit-logger";
+
+const ViewAuditLogsDiffModal = dynamic(
+  async () =>
+    (await import("components/admin/manage/audit-logs/view-audit-logs-diff-modal"))
+      .ViewAuditLogsDiffModal,
+  { ssr: false },
+);
 
 interface Props {
   data: GetAuditLogsData;
 }
+
+const ActionTypes = Object.keys(AuditLogActionType);
 
 export default function ManageAuditLogs({ data }: Props) {
   const [search, setSearch] = React.useState("");
@@ -65,51 +74,46 @@ export default function ManageAuditLogs({ data }: Props) {
         totalCount={data.totalCount}
         asyncTable={asyncTable}
         search={{ search, setSearch }}
-      />
+      >
+        <FormField className="w-full max-w-[15rem]" label={common("type")}>
+          <Select
+            isClearable
+            value={asyncTable.filters?.type ?? null}
+            onChange={(event) =>
+              asyncTable.setFilters((prev) => ({ ...prev, type: event.target.value }))
+            }
+            values={ActionTypes.map((type) => ({
+              label: type,
+              value: type,
+            }))}
+          />
+        </FormField>
+      </SearchArea>
 
       <Table
         tableState={tableState}
         data={asyncTable.items.map((auditLog) => {
-          const differences = compareDifferences(auditLog.action);
-
           return {
             id: auditLog.id,
             type: auditLog.action.type,
             executor: auditLog.executor.username,
             createdAt: <FullDate>{auditLog.createdAt}</FullDate>,
-            // changes: auditLog.translationKey
-            //   ? t.rich(auditLog.translationKey, {
-            //       span: (children) => <span className="font-semibold">{children}</span>,
-            //       value:
-            //         auditLog.action.new && "id" in auditLog.action.new && auditLog.action.new.id
-            //           ? auditLog.action.new.id
-            //           : "UNKNOWN",
-            //     })
-            //   : differences?.map((difference) => (
-            //       <p className="flex items-center gap-2" key={difference.key}>
-            //         <span>{difference.key}: </span>
-            //         <span>{difference.previous}</span>
-            //         <ArrowRight />
-            //         <span>{difference.new}</span>
-            //       </p>
-            //     )),
-            data: (
+            actions: (
               <Button onPress={() => openModal(ModalIds.ViewAuditLogData, auditLog)} size="xs">
-                {t("data")}
+                {t("viewDiff")}
               </Button>
             ),
           };
         })}
         columns={[
           { header: common("type"), accessorKey: "type" },
-          { header: common("user"), accessorKey: "executor" },
-          { header: t("changes"), accessorKey: "changes" },
-          { header: t("data"), accessorKey: "data" },
+          { header: t("executor"), accessorKey: "executor" },
           { header: common("createdAt"), accessorKey: "createdAt" },
+          { header: common("actions"), accessorKey: "actions" },
         ]}
       />
 
-      <ViewAuditLogDataModal />
+      <ViewAuditLogsDiffModal />
     </AdminLayout>
   );
 }

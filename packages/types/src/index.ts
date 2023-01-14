@@ -1,7 +1,7 @@
 import type { Permissions } from "@snailycad/permissions";
 import type * as Prisma from "@prisma/client";
 import type * as Enums from "./enums";
-import type { AuditLogActions } from "@snailycad/audit-logger";
+import type { AuditLogActions } from "@snailycad/audit-logger/server";
 
 export * from "./enums";
 

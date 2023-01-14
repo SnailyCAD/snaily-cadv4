@@ -85,8 +85,10 @@
     "pruneUsers": "Prune Users",
     "inactiveUsers": "Inactive Users",
     "lastSeen": "Last Seen",
-    "changes": "Changes",
-    "data": "Raw Data",
+    "viewDiff": "View Diff",
+    "executor": "Executor",
+    "auditLogDiff": "Audit Log Diff",
+    "noAuditLogDiff": "There is no diff for this action.",
     "manageCourthouseDescription": " Here you can manage expungement requests, name change requests and pending warrants.",
     "manageCustomFieldsDescription": "Here you can manage custom fields. These are fields can be added by any officers to citizens in name-search.",
     "manageCustomRolesDescription": "Here you can manage custom roles. These roles can be assigned to users instead of giving permissions one by one.",
@@ -151,5 +153,11 @@
     "citizenRecordsChannelInfo": "The Discord channel where new arrest reports, tickets, warrants and written warnings will be sent to.",
     "warrantsChannel": "Warrants channel",
     "warrantsChannelInfo": "The Discord channel where new warrants will be sent to."
+  },
+  "AuditLogs": {
+    "userBanned": "User: <span>{value}</span> has been banned.",
+    "deletedEntry": "Item deleted with id: <span>{value}</span>.",
+    "createdEntry": "Item created with id: <span>{value}</span>.",
+    "tempPasswordGiven": "User: <span>{value}</span> has been given a temporary password."
   }
 }

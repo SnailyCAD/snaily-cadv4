@@ -1,7 +1,7 @@
 import type { User } from "@snailycad/types";
-import type * as _ACTIONS from "./types/actions";
+import type { AuditLogActions } from "./types/actions";
 
-export type AuditLogActions = typeof _ACTIONS;
+export type { AuditLogActions };
 export type AuditLogMessages = any;
 
 export interface AuditLog {

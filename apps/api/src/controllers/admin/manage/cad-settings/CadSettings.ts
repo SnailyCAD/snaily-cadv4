@@ -15,12 +15,12 @@ import { Req, Res, UseBefore } from "@tsed/common";
 import { Socket } from "services/socket-service";
 import { nanoid } from "nanoid";
 import { validateSchema } from "lib/validateSchema";
-import { cad, Feature, JailTimeScale, Rank } from "@prisma/client";
+import { cad, Feature, JailTimeScale, Prisma, Rank } from "@prisma/client";
 import { getCADVersion } from "@snailycad/utils/version";
 import { getSessionUser, userProperties } from "lib/auth/getSessionUser";
 import type * as APITypes from "@snailycad/types/api";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
-import { parseAuditLogs } from "@snailycad/audit-logger/server";
+import { AuditLogActionType, parseAuditLogs } from "@snailycad/audit-logger/server";
 
 @Controller("/admin/manage/cad-settings")
 @ContentType("application/json")
@@ -55,16 +55,30 @@ export class CADSettingsController {
   @Get("/audit-logs")
   async getAuditLogs(
     @QueryParams("skip", Number) skip = 0,
-    @QueryParams("query", String) type?: string,
+    @QueryParams("query", String) query?: string,
+    @QueryParams("type", String) type?: string,
   ): Promise<any> {
+    const OR: Prisma.Enumerable<Prisma.AuditLogWhereInput> = [];
+    const _typeWhere =
+      type && Object.hasOwn(AuditLogActionType, type)
+        ? { action: { string_contains: type } }
+        : undefined;
+
+    if (query) {
+      OR.push({ action: { string_contains: query } });
+      OR.push({ executor: { username: { contains: query, mode: "insensitive" } } });
+    }
+
+    const where = { OR: query ? OR : undefined, ..._typeWhere };
+
     const [totalCount, auditLogs] = await prisma.$transaction([
-      prisma.auditLog.count(),
+      prisma.auditLog.count({ where }),
       prisma.auditLog.findMany({
         take: 35,
         skip,
         orderBy: { createdAt: "desc" },
         include: { executor: { select: userProperties } },
-        where: type && type !== "null" ? { action: { string_contains: type } } : undefined,
+        where,
       }),
     ]);
 
