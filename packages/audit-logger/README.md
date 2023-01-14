@@ -1,3 +1,3 @@
-# @snailycad/config
+# @snailycad/audit-logger
 
-This is a module that holds some common used configs used in the code, such as `SocketEvents`, `Cookie`, and other constants.
+This module is responsible for creating audit logs correctly and storing them in the database.
