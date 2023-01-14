@@ -44,6 +44,7 @@ export class AdminManageCitizensController {
         ? {
             userId,
             OR: [
+              { id: query },
               {
                 name: { contains: name, mode: Prisma.QueryMode.insensitive },
                 surname: { contains: surname, mode: Prisma.QueryMode.insensitive },

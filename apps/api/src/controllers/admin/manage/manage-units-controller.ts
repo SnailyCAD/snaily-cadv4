@@ -741,6 +741,7 @@ export class AdminManageUnitsController {
       ...(pendingOnly ? { whitelistStatus: { status: WhitelistStatus.PENDING } } : {}),
       OR: [
         departmentIdWhere,
+        { id: query },
         { callsign: query },
         { callsign2: query },
         { department: { value: { value: { contains: query, mode: "insensitive" } } } },

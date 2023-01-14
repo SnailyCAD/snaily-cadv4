@@ -73,7 +73,14 @@ export class ManageUsersController {
     const where =
       query || pendingOnly
         ? {
-            ...(query ? { username: { contains: query, mode: Prisma.QueryMode.insensitive } } : {}),
+            ...(query
+              ? {
+                  OR: [
+                    { username: { contains: query, mode: Prisma.QueryMode.insensitive } },
+                    { id: query },
+                  ],
+                }
+              : {}),
             ...(pendingOnly ? { whitelistStatus: WhitelistStatus.PENDING } : {}),
           }
         : undefined;
