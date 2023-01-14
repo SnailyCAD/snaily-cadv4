@@ -215,19 +215,12 @@ model DiscordRole {
 
 // audit logs
 model AuditLog {
-  id             String        @id @default(uuid())
-  executor       User          @relation(fields: [executorId], references: [id])
+  id             String   @id @default(uuid())
+  executor       User     @relation(fields: [executorId], references: [id])
   executorId     String
   action         Json
-  createdAt      DateTime      @default(now())
-  type           AuditLogType?
+  createdAt      DateTime @default(now())
   translationKey String?
-}
-
-enum AuditLogType {
-  CREATE
-  UPDATE
-  DELETE
 }
 
 model User {
