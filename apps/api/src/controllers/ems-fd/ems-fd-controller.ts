@@ -27,7 +27,7 @@ import { getInactivityFilter, validateMaxDepartmentsEachPerUser } from "lib/leo/
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
-import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
+import { setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { Socket } from "services/socket-service";
 import type * as APITypes from "@snailycad/types/api";
@@ -380,20 +380,13 @@ export class EmsFdController {
 
     const deputies = await prisma.emsFdDeputy.findMany({
       where: {
-        status: {
-          NOT: {
-            shouldDo: ShouldDoType.SET_OFF_DUTY,
-          },
-        },
+        status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
+        ...(unitsInactivityFilter?.filter ?? {}),
       },
       include: unitProperties,
     });
 
-    const deputiesWithUpdatedStatus = deputies.map((u) =>
-      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
-    );
-
-    return deputiesWithUpdatedStatus;
+    return deputies;
   }
   @Use(ActiveDeputy)
   @Post("/medical-record")

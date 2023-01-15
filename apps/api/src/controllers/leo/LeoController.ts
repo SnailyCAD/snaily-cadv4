@@ -13,7 +13,7 @@ import { validateSchema } from "lib/data/validate-schema";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { getInactivityFilter } from "lib/leo/utils";
 import { findUnit } from "lib/leo/findUnit";
-import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
+import { setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
 import { CombinedLeoUnit, Officer, MiscCadSettings, Feature } from "@snailycad/types";
 import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
@@ -59,24 +59,21 @@ export class LeoController {
       setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp, this.socket);
     }
 
-    const [officers, units] = await prisma.$transaction([
+    const [officers, combinedUnits] = await prisma.$transaction([
       prisma.officer.findMany({
-        where: { status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } } },
+        where: {
+          status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
+          ...(unitsInactivityFilter?.filter ?? {}),
+        },
         include: leoProperties,
       }),
       prisma.combinedLeoUnit.findMany({
         include: combinedUnitProperties,
+        where: unitsInactivityFilter?.filter,
       }),
     ]);
 
-    const officersWithUpdatedStatus = officers.map((u) =>
-      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
-    );
-    const combinedUnitsWithUpdatedStatus = units.map((u) =>
-      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
-    );
-
-    return [...officersWithUpdatedStatus, ...combinedUnitsWithUpdatedStatus];
+    return [...officers, ...combinedUnits];
   }
 
   @Post("/panic-button")
