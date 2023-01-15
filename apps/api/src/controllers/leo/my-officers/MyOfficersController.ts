@@ -6,7 +6,7 @@ import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-par
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/IsAuth";
-import { getImageWebPPath, validateImageURL } from "lib/images/validate-image-url";
+import { validateImageURL } from "lib/images/validate-image-url";
 import { cad, User, MiscCadSettings, Feature, CadFeature, Rank } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
@@ -24,6 +24,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { createOfficer } from "./create-officer";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { hasPermission } from "@snailycad/permissions";
+import { getImageWebPPath } from "lib/images/get-image-webp-path";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)

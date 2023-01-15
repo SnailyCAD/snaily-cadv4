@@ -28,10 +28,11 @@ import { isCuid } from "cuid";
 import type * as APITypes from "@snailycad/types/api";
 import { isFeatureEnabled } from "lib/cad";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
-import { getImageWebPPath, validateImageURL } from "lib/images/validate-image-url";
+import { validateImageURL } from "lib/images/validate-image-url";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import fs from "node:fs/promises";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
+import { getImageWebPPath } from "lib/images/get-image-webp-path";
 
 const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_UNIT"] as const;
 type Action = typeof ACTIONS[number];

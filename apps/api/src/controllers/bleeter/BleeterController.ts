@@ -20,7 +20,7 @@ import { validateSchema } from "lib/data/validate-schema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import type { User } from "@prisma/client";
 import type * as APITypes from "@snailycad/types/api";
-import { getImageWebPPath } from "lib/images/validate-image-url";
+import { getImageWebPPath } from "lib/images/get-image-webp-path";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 
