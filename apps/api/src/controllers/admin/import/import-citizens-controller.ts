@@ -2,7 +2,7 @@ import { Controller } from "@tsed/di";
 import { Post, Description, AcceptMime, ContentType } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
 import { BodyParams, MultipartFile, PlatformMulterFile, UseBeforeEach } from "@tsed/common";
-import { IsAuth } from "middlewares/IsAuth";
+import { IsAuth } from "middlewares/is-auth";
 import { parseImportFile } from "utils/file";
 import { validateSchema } from "lib/data/validate-schema";
 import { generateString } from "utils/generate-string";

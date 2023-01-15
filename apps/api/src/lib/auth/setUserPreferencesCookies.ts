@@ -1,5 +1,5 @@
 import type { Res } from "@tsed/common";
-import { setCookie } from "utils/setCookie";
+import { setCookie } from "utils/set-cookie";
 
 interface Options {
   res: Res;

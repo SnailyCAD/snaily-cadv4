@@ -19,7 +19,7 @@ import { updateOfficerDivisionsCallsigns } from "lib/leo/utils";
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
 import { prisma } from "lib/data/prisma";
 import { validateSchema } from "lib/data/validate-schema";
-import { IsAuth } from "middlewares/IsAuth";
+import { IsAuth } from "middlewares/is-auth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { Socket } from "services/socket-service";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";

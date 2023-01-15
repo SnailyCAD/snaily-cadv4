@@ -3,7 +3,7 @@ import { BodyParams, Context, Controller, PathParams, UseBeforeEach } from "@tse
 import { ContentType, Delete, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
 import { validateSchema } from "lib/data/validate-schema";
-import { IsAuth } from "middlewares/IsAuth";
+import { IsAuth } from "middlewares/is-auth";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 import { COURTHOUSE_POST_SCHEMA } from "@snailycad/schemas";
 import { userProperties } from "lib/auth/getSessionUser";

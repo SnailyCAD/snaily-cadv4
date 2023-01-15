@@ -4,7 +4,7 @@ import type { Res } from "@tsed/common";
 import cuid from "cuid";
 import { prisma } from "lib/data/prisma";
 import { signJWT } from "utils/jwt";
-import { setCookie } from "utils/setCookie";
+import { setCookie } from "utils/set-cookie";
 import { postLoginFlowHandler } from "./post-auth";
 
 // expire after 1 hour

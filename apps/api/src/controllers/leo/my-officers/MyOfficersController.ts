@@ -5,7 +5,7 @@ import { CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
 import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
-import { IsAuth } from "middlewares/IsAuth";
+import { IsAuth } from "middlewares/is-auth";
 import { validateImageURL } from "lib/images/validate-image-url";
 import { cad, User, MiscCadSettings, Feature, CadFeature, Rank } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";

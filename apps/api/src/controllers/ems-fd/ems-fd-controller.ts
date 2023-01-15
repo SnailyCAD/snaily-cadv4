@@ -15,8 +15,8 @@ import {
 } from "@prisma/client";
 import type { cad, EmsFdDeputy } from "@snailycad/types";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
-import { IsAuth } from "middlewares/IsAuth";
-import { ActiveDeputy } from "middlewares/ActiveDeputy";
+import { IsAuth } from "middlewares/is-auth";
+import { ActiveDeputy } from "middlewares/active-deputy";
 import fs from "node:fs/promises";
 import { unitProperties } from "lib/leo/activeOfficer";
 import { validateImageURL } from "lib/images/validate-image-url";

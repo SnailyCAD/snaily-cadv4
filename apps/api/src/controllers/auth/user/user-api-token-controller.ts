@@ -6,7 +6,7 @@ import { UseBefore } from "@tsed/platform-middlewares";
 import { ContentType, Delete, Description, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/getSessionUser";
 import { prisma } from "lib/data/prisma";
-import { IsAuth } from "middlewares/IsAuth";
+import { IsAuth } from "middlewares/is-auth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { nanoid } from "nanoid";
 import type * as APITypes from "@snailycad/types/api";

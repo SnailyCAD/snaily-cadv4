@@ -3,7 +3,7 @@ import { ContentType, Delete, Description, Get } from "@tsed/schema";
 import { QueryParams, BodyParams, PathParams } from "@tsed/platform-params";
 import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
-import { IsAuth } from "middlewares/IsAuth";
+import { IsAuth } from "middlewares/is-auth";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { MiscCadSettings, ReleaseType } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";

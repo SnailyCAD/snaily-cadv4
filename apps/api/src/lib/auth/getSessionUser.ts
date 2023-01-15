@@ -7,7 +7,7 @@ import { prisma } from "lib/data/prisma";
 import { Feature, type User } from "@snailycad/types";
 import { isFeatureEnabled } from "lib/cad";
 import type { GetUserData } from "@snailycad/types/api";
-import { setCookie } from "utils/setCookie";
+import { setCookie } from "utils/set-cookie";
 import { ACCESS_TOKEN_EXPIRES_MS, ACCESS_TOKEN_EXPIRES_S } from "./setUserTokenCookies";
 import { getUserFromUserAPIToken } from "./getUserFromUserAPIToken";
 import { validateUserData } from "./validateUser";

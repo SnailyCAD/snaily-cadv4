@@ -5,8 +5,8 @@ import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-par
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 import { Use, UseBeforeEach } from "@tsed/platform-middlewares";
-import { IsAuth } from "middlewares/IsAuth";
-import { ActiveOfficer } from "middlewares/ActiveOfficer";
+import { IsAuth } from "middlewares/is-auth";
+import { ActiveOfficer } from "middlewares/active-officer";
 import { Socket } from "services/socket-service";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/data/validate-schema";

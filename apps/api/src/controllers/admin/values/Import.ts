@@ -8,9 +8,9 @@ import {
 } from "@tsed/common";
 import { ContentType, Post } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
-import { IsValidPath } from "middlewares/ValidPath";
+import { IsValidPath } from "middlewares/valid-path";
 import { BadRequest } from "@tsed/exceptions";
-import { IsAuth } from "middlewares/IsAuth";
+import { IsAuth } from "middlewares/is-auth";
 
 import {
   HASH_SCHEMA_ARR,
