@@ -1,6 +1,6 @@
 import { Controller } from "@tsed/di";
 import { Get, Post, Description, Delete, ContentType } from "@tsed/schema";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { VEHICLE_SCHEMA_ARR } from "@snailycad/schemas/dist/admin/import/vehicles";
 import {
   BodyParams,
@@ -10,13 +10,13 @@ import {
   QueryParams,
   UseBeforeEach,
 } from "@tsed/common";
-import { IsAuth } from "middlewares/IsAuth";
+import { IsAuth } from "middlewares/is-auth";
 import { parseImportFile } from "utils/file";
-import { validateSchema } from "lib/validateSchema";
-import { generateString } from "utils/generateString";
+import { validateSchema } from "lib/data/validate-schema";
+import { generateString } from "utils/generate-string";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import type { Prisma, VehicleInspectionStatus, VehicleTaxStatus } from "@prisma/client";
-import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
+import { getLastOfArray, manyToManyHelper } from "lib/data/many-to-many";
 import type * as APITypes from "@snailycad/types/api";
 
 const vehiclesInclude = { ...citizenInclude.vehicles.include, citizen: true };

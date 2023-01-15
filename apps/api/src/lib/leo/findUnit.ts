@@ -1,6 +1,6 @@
 import { combinedUnitProperties } from "lib/leo/activeOfficer";
 import type { CombinedLeoUnit, Officer, EmsFdDeputy, StatusValue } from "@prisma/client";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 
 export async function findUnit(
   id: string,

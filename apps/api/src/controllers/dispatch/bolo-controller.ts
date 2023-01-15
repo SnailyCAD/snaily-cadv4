@@ -3,13 +3,13 @@ import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { CREATE_BOLO_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { Use, UseBeforeEach } from "@tsed/platform-middlewares";
-import { IsAuth } from "middlewares/IsAuth";
-import { ActiveOfficer } from "middlewares/ActiveOfficer";
+import { IsAuth } from "middlewares/is-auth";
+import { ActiveOfficer } from "middlewares/active-officer";
 import { Socket } from "services/socket-service";
 import { leoProperties } from "lib/leo/activeOfficer";
-import { validateSchema } from "lib/validateSchema";
+import { validateSchema } from "lib/data/validate-schema";
 import {
   Bolo,
   BoloType,
@@ -18,7 +18,7 @@ import {
   Officer,
   Prisma,
 } from "@prisma/client";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type { APIEmbed } from "discord-api-types/v10";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { getFirstOfficerFromActiveOfficer, getInactivityFilter } from "lib/leo/utils";

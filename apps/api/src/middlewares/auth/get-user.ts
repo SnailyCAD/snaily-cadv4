@@ -3,7 +3,7 @@ import { allPermissions } from "@snailycad/permissions";
 import type { Req, Res } from "@tsed/common";
 import { BadRequest, Unauthorized } from "@tsed/exceptions";
 import { getSessionUser } from "lib/auth/getSessionUser";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { isRouteDisabled } from "./utils";
 
 interface SetGlobalUserFromCADAPITokenOptions {

@@ -1,13 +1,13 @@
 import { Controller } from "@tsed/di";
 import { Get, Description, ContentType } from "@tsed/schema";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import glob from "glob";
 import { join } from "node:path";
 import { stat } from "node:fs/promises";
 import { Res, UseBefore } from "@tsed/common";
-import { IsAuth } from "middlewares/IsAuth";
+import { IsAuth } from "middlewares/is-auth";
 import { Prisma, Rank, WhitelistStatus } from "@prisma/client";
-import { UsePermissions } from "middlewares/UsePermissions";
+import { UsePermissions } from "middlewares/use-permissions";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import type { GetAdminDashboardData } from "@snailycad/types/api";
 import axios from "axios";

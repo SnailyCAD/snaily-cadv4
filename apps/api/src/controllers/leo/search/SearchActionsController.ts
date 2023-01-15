@@ -8,8 +8,8 @@ import {
 } from "@snailycad/schemas";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { prisma } from "lib/prisma";
-import { IsAuth } from "middlewares/IsAuth";
+import { prisma } from "lib/data/prisma";
+import { IsAuth } from "middlewares/is-auth";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
 import {
@@ -30,24 +30,24 @@ import {
 } from "@prisma/client";
 import { UseBeforeEach, Context, UseBefore } from "@tsed/common";
 import { ContentType, Description, Post, Put } from "@tsed/schema";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
-import { validateSchema } from "lib/validateSchema";
-import { manyToManyHelper } from "utils/manyToMany";
-import { validateCustomFields } from "lib/custom-fields";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
+import { validateSchema } from "lib/data/validate-schema";
+import { manyToManyHelper } from "lib/data/many-to-many";
+import { validateCustomFields } from "lib/validate-custom-fields";
 import { isFeatureEnabled } from "lib/cad";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import {
   appendCustomFields,
   citizenSearchIncludeOrSelect,
   vehicleSearchInclude,
 } from "./SearchController";
 import { citizenObjectFromData } from "lib/citizen";
-import { generateString } from "utils/generateString";
+import { generateString } from "utils/generate-string";
 import type * as APITypes from "@snailycad/types/api";
 import { createVehicleImpoundedWebhookData } from "controllers/calls/TowController";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
-import { ActiveOfficer } from "middlewares/ActiveOfficer";
+import { ActiveOfficer } from "middlewares/active-officer";
 
 @Controller("/search/actions")
 @UseBeforeEach(IsAuth)

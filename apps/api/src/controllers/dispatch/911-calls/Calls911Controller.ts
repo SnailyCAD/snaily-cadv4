@@ -8,12 +8,12 @@ import {
 } from "@snailycad/schemas";
 import { HeaderParams, BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { Socket } from "services/socket-service";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { IsAuth } from "middlewares/IsAuth";
+import { IsAuth } from "middlewares/is-auth";
 import { _leoProperties } from "lib/leo/activeOfficer";
-import { validateSchema } from "lib/validateSchema";
+import { validateSchema } from "lib/data/validate-schema";
 import {
   type cad,
   User,
@@ -26,8 +26,8 @@ import {
 } from "@prisma/client";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import type { APIEmbed } from "discord-api-types/v10";
-import { manyToManyHelper } from "utils/manyToMany";
-import { Permissions, UsePermissions } from "middlewares/UsePermissions";
+import { manyToManyHelper } from "lib/data/many-to-many";
+import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
 import { getInactivityFilter, getPrismaNameActiveCallIncident } from "lib/leo/utils";

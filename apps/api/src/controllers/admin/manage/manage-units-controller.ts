@@ -17,21 +17,22 @@ import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/a
 import { findUnit } from "lib/leo/findUnit";
 import { updateOfficerDivisionsCallsigns } from "lib/leo/utils";
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
-import { prisma } from "lib/prisma";
-import { validateSchema } from "lib/validateSchema";
-import { IsAuth } from "middlewares/IsAuth";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { prisma } from "lib/data/prisma";
+import { validateSchema } from "lib/data/validate-schema";
+import { IsAuth } from "middlewares/is-auth";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { Socket } from "services/socket-service";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import { manyToManyHelper } from "utils/manyToMany";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { manyToManyHelper } from "lib/data/many-to-many";
 import { isCuid } from "cuid";
 import type * as APITypes from "@snailycad/types/api";
 import { isFeatureEnabled } from "lib/cad";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
-import { getImageWebPPath, validateImgurURL } from "utils/images/image";
-import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
+import { validateImageURL } from "lib/images/validate-image-url";
+import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import fs from "node:fs/promises";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
+import { getImageWebPPath } from "lib/images/get-image-webp-path";
 
 const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_UNIT"] as const;
 type Action = typeof ACTIONS[number];
@@ -354,7 +355,7 @@ export class AdminManageUnitsController {
       }
     }
 
-    const validatedImageURL = validateImgurURL(data.image);
+    const validatedImageURL = validateImageURL(data.image);
 
     // @ts-expect-error ignore
     const updated = await prisma[type].update({

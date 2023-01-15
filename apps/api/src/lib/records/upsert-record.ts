@@ -5,11 +5,11 @@ import { NotFound } from "@tsed/exceptions";
 import { userProperties } from "lib/auth/getSessionUser";
 import { isFeatureEnabled } from "lib/cad";
 import { leoProperties } from "lib/leo/activeOfficer";
-import { prisma } from "lib/prisma";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
+import { prisma } from "lib/data/prisma";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { ExtendedNotFound } from "src/exceptions/extended-not-found";
 import type { z } from "zod";
-import { validateRecordData } from "./validateRecordData";
+import { validateRecordData } from "./validate-record-data";
 
 interface UpsertRecordOptions {
   data: z.infer<typeof CREATE_TICKET_SCHEMA>;

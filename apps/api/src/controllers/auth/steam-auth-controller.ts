@@ -3,9 +3,9 @@ import { Context, Delete, Get, QueryParams, Req, Res, UseBefore } from "@tsed/co
 import { BadRequest } from "@tsed/exceptions";
 import { Controller } from "@tsed/di";
 import { URL } from "node:url";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { Rank, User, WhitelistStatus } from "@prisma/client";
-import { IsAuth } from "middlewares/IsAuth";
+import { IsAuth } from "middlewares/is-auth";
 import { ContentType, Description } from "@tsed/schema";
 import { request } from "undici";
 import { findRedirectURL } from "./discord-auth-controller";

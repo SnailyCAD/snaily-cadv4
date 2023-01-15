@@ -4,10 +4,10 @@ import { QueryParams, PathParams, BodyParams } from "@tsed/platform-params";
 import { ContentType, Description, Get, Post } from "@tsed/schema";
 import { userProperties } from "lib/auth/getSessionUser";
 import { leoProperties } from "lib/leo/activeOfficer";
-import { prisma } from "lib/prisma";
-import { IsAuth } from "middlewares/IsAuth";
+import { prisma } from "lib/data/prisma";
+import { IsAuth } from "middlewares/is-auth";
 import { Prisma, Rank, RecordType, WhitelistStatus } from "@prisma/client";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 
 import type * as APITypes from "@snailycad/types/api";
 import { AcceptDeclineType, ACCEPT_DECLINE_TYPES } from "../manage-units-controller";

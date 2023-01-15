@@ -8,18 +8,18 @@ import {
 import { Controller } from "@tsed/di";
 import { BodyParams, Context, QueryParams } from "@tsed/platform-params";
 import { ContentType, Delete, Get, Put } from "@tsed/schema";
-import { prisma } from "lib/prisma";
-import { CAD_SELECT, IsAuth, setDiscordAuth } from "middlewares/IsAuth";
+import { prisma } from "lib/data/prisma";
+import { CAD_SELECT, IsAuth, setDiscordAuth } from "middlewares/is-auth";
 import { BadRequest } from "@tsed/exceptions";
 import { Req, Res, UseBefore } from "@tsed/common";
 import { Socket } from "services/socket-service";
 import { nanoid } from "nanoid";
-import { validateSchema } from "lib/validateSchema";
+import { validateSchema } from "lib/data/validate-schema";
 import { cad, Feature, JailTimeScale, Prisma, Rank } from "@prisma/client";
 import { getCADVersion } from "@snailycad/utils/version";
 import { getSessionUser, userProperties } from "lib/auth/getSessionUser";
 import type * as APITypes from "@snailycad/types/api";
-import { Permissions, UsePermissions } from "middlewares/UsePermissions";
+import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import {
   AuditLogActionType,
   createAuditLogEntry,

@@ -4,14 +4,14 @@ import { ContentType, Delete, Get, Post, Put } from "@tsed/schema";
 import { CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
 import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { prisma } from "lib/prisma";
-import { IsAuth } from "middlewares/IsAuth";
-import { getImageWebPPath, validateImgurURL } from "utils/images/image";
+import { prisma } from "lib/data/prisma";
+import { IsAuth } from "middlewares/is-auth";
+import { validateImageURL } from "lib/images/validate-image-url";
 import { cad, User, MiscCadSettings, Feature, CadFeature, Rank } from "@prisma/client";
-import { validateSchema } from "lib/validateSchema";
+import { validateSchema } from "lib/data/validate-schema";
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
-import { manyToManyHelper } from "utils/manyToMany";
-import { Permissions, UsePermissions } from "middlewares/UsePermissions";
+import { manyToManyHelper } from "lib/data/many-to-many";
+import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { updateOfficerDivisionsCallsigns, validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
 import { isFeatureEnabled } from "lib/cad";
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
@@ -19,11 +19,12 @@ import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncrement
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import type * as APITypes from "@snailycad/types/api";
 import { createOfficer } from "./create-officer";
-import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
+import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { hasPermission } from "@snailycad/permissions";
+import { getImageWebPPath } from "lib/images/get-image-webp-path";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -167,7 +168,7 @@ export class MyOfficersController {
     const incremental = officer.incremental
       ? undefined
       : await findNextAvailableIncremental({ type: "leo" });
-    const validatedImageURL = validateImgurURL(data.image);
+    const validatedImageURL = validateImageURL(data.image);
 
     const updatedOfficer = await prisma.officer.update({
       where: {

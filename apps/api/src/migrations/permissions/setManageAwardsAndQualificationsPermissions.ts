@@ -1,6 +1,6 @@
 import { ToAddDefaultPermissionsKey } from "@prisma/client";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 
 export async function setManageAwardsAndQualificationsPermissions() {
   const users = await prisma.user.findMany({

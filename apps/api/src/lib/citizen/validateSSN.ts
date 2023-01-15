@@ -1,5 +1,5 @@
-import { prisma } from "lib/prisma";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { prisma } from "lib/data/prisma";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 
 interface ValidateSocialSecurityNumber {
   socialSecurityNumber: string;

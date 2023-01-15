@@ -8,9 +8,9 @@ import {
 } from "@prisma/client";
 import type { INDIVIDUAL_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import type { cad } from "@snailycad/types";
-import { prisma } from "lib/prisma";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import type { DisconnectOrConnect } from "utils/manyToMany";
+import { prisma } from "lib/data/prisma";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import type { DisconnectOrConnect } from "lib/data/many-to-many";
 
 interface MaxDepartmentOptions {
   type: "emsFdDeputy" | "officer";

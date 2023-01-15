@@ -2,9 +2,9 @@ import { Controller, UseBeforeEach } from "@tsed/common";
 import { ContentType, Description, Post } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { BodyParams } from "@tsed/platform-params";
-import { prisma } from "lib/prisma";
-import { IsAuth } from "middlewares/IsAuth";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { prisma } from "lib/data/prisma";
+import { IsAuth } from "middlewares/is-auth";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { appendConfidential } from "controllers/leo/search/SearchController";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 

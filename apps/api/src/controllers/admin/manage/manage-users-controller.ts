@@ -14,8 +14,8 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/getSessionUser";
-import { prisma } from "lib/prisma";
-import { IsAuth } from "middlewares/IsAuth";
+import { prisma } from "lib/data/prisma";
+import { IsAuth } from "middlewares/is-auth";
 import {
   BAN_SCHEMA,
   UPDATE_USER_SCHEMA,
@@ -26,14 +26,14 @@ import { Socket } from "services/socket-service";
 import { nanoid } from "nanoid";
 import { genSaltSync, hashSync } from "bcrypt";
 import { citizenInclude } from "controllers/citizen/CitizenController";
-import { validateSchema } from "lib/validateSchema";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import { isDiscordIdInUse } from "utils/discord";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { validateSchema } from "lib/data/validate-schema";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { isFeatureEnabled } from "lib/cad";
-import { manyToManyHelper } from "utils/manyToMany";
+import { manyToManyHelper } from "lib/data/many-to-many";
 import type * as APITypes from "@snailycad/types/api";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
+import { isDiscordIdInUse } from "lib/discord/utils";
 
 const manageUsersSelect = (selectCitizens: boolean) =>
   ({

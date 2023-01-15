@@ -1,22 +1,22 @@
 import { CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
 import { cad, CadFeature, Citizen, Feature, MiscCadSettings, User } from "@prisma/client";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
-import { prisma } from "lib/prisma";
-import { validateSchema } from "lib/validateSchema";
+import { prisma } from "lib/data/prisma";
+import { validateSchema } from "lib/data/validate-schema";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { isFeatureEnabled } from "lib/cad";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { updateOfficerDivisionsCallsigns, validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
 import { validateMaxDivisionsPerUnit } from "./MyOfficersController";
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
-import { validateImgurURL } from "utils/images/image";
-import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
+import { validateImageURL } from "lib/images/validate-image-url";
+import { getLastOfArray, manyToManyHelper } from "lib/data/many-to-many";
 import { leoProperties } from "lib/leo/activeOfficer";
 import type * as APITypes from "@snailycad/types/api";
 import type { ZodSchema } from "zod";
-import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
+import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 
 interface CreateOfficerOptions {
   schema?: ZodSchema;
@@ -104,7 +104,7 @@ export async function createOfficer({
   });
 
   const incremental = await findNextAvailableIncremental({ type: "leo" });
-  const validatedImageURL = validateImgurURL(data.image);
+  const validatedImageURL = validateImageURL(data.image);
 
   let officer: any = await prisma.officer.create({
     data: {

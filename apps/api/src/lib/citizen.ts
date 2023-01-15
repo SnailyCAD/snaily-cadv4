@@ -1,8 +1,8 @@
 import type { Prisma, cad, CadFeature, MiscCadSettings } from "@prisma/client";
 import type { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
-import { generateString } from "utils/generateString";
-import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
-import { validateImgurURL } from "utils/images/image";
+import { generateString } from "utils/generate-string";
+import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
+import { validateImageURL } from "lib/images/validate-image-url";
 
 interface Options {
   data: Partial<Zod.infer<typeof CREATE_CITIZEN_SCHEMA>>;
@@ -12,7 +12,7 @@ interface Options {
 
 export async function citizenObjectFromData(options: Options) {
   const miscCadSettings = options.cad.miscCadSettings;
-  const validatedImageURL = validateImgurURL(options.data.image);
+  const validatedImageURL = validateImageURL(options.data.image);
 
   let obj: Prisma.CitizenUncheckedCreateInput | Prisma.CitizenUncheckedUpdateInput = {
     address: options.data.address,

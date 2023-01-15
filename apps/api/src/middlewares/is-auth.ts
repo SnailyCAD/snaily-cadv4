@@ -3,10 +3,10 @@ import { Rank, User, CadFeature, Feature } from "@prisma/client";
 import { API_TOKEN_HEADER } from "@snailycad/config";
 import { Context, Middleware, Req, MiddlewareMethods, Res } from "@tsed/common";
 import { Unauthorized } from "@tsed/exceptions";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { getCADVersion } from "@snailycad/utils/version";
 import { handleDiscordSync } from "./auth/utils";
-import { setGlobalUserFromCADAPIToken, getUserFromSession } from "./auth/getUser";
+import { setGlobalUserFromCADAPIToken, getUserFromSession } from "./auth/get-user";
 import type { cad } from "@snailycad/types";
 import { hasPermission, Permissions } from "@snailycad/permissions";
 

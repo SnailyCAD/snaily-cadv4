@@ -1,5 +1,5 @@
 import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@prisma/client";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 
 interface Options {
   incidentId: string;

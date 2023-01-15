@@ -1,16 +1,16 @@
 import { Controller } from "@tsed/di";
 import { Post, Description, AcceptMime, ContentType } from "@tsed/schema";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { BodyParams, MultipartFile, PlatformMulterFile, UseBeforeEach } from "@tsed/common";
-import { IsAuth } from "middlewares/IsAuth";
+import { IsAuth } from "middlewares/is-auth";
 import { parseImportFile } from "utils/file";
-import { validateSchema } from "lib/validateSchema";
-import { generateString } from "utils/generateString";
+import { validateSchema } from "lib/data/validate-schema";
+import { generateString } from "utils/generate-string";
 import { IMPORT_CITIZENS_ARR } from "@snailycad/schemas/dist/admin/import/citizens";
 import { importVehiclesHandler } from "./import-vehicles-controller";
 import { importWeaponsHandler } from "./import-weapons-controller";
 import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
-import { manyToManyHelper } from "utils/manyToMany";
+import { manyToManyHelper } from "lib/data/many-to-many";
 import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/admin/import/citizens")

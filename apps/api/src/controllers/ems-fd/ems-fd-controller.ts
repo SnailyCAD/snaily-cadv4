@@ -3,7 +3,7 @@ import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { EMS_FD_DEPUTY_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
 import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import {
   type cad as DBCad,
   type MiscCadSettings,
@@ -15,14 +15,14 @@ import {
 } from "@prisma/client";
 import type { cad, EmsFdDeputy } from "@snailycad/types";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
-import { IsAuth } from "middlewares/IsAuth";
-import { ActiveDeputy } from "middlewares/ActiveDeputy";
+import { IsAuth } from "middlewares/is-auth";
+import { ActiveDeputy } from "middlewares/active-deputy";
 import fs from "node:fs/promises";
 import { unitProperties } from "lib/leo/activeOfficer";
-import { getImageWebPPath, validateImgurURL } from "utils/images/image";
-import { validateSchema } from "lib/validateSchema";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { validateImageURL } from "lib/images/validate-image-url";
+import { validateSchema } from "lib/data/validate-schema";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { getInactivityFilter, validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
@@ -34,8 +34,9 @@ import type * as APITypes from "@snailycad/types/api";
 import { isFeatureEnabled } from "lib/cad";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { handlePanicButtonPressed } from "lib/leo/send-panic-button-webhook";
-import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
+import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { hasPermission } from "@snailycad/permissions";
+import { getImageWebPPath } from "lib/images/get-image-webp-path";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
@@ -168,7 +169,7 @@ export class EmsFdController {
     );
 
     const incremental = await findNextAvailableIncremental({ type: "ems-fd" });
-    const validatedImageURL = validateImgurURL(data.image);
+    const validatedImageURL = validateImageURL(data.image);
 
     const deputy = await prisma.emsFdDeputy.create({
       data: {
@@ -303,7 +304,7 @@ export class EmsFdController {
         divisionId: data.division!,
         badgeNumber: data.badgeNumber,
         citizenId: citizen.id,
-        imageId: validateImgurURL(data.image),
+        imageId: validateImageURL(data.image),
         incremental,
         whitelistStatusId,
         rankId: rank,
