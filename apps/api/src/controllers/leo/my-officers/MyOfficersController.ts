@@ -239,13 +239,14 @@ export class MyOfficersController {
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("includeAll", Boolean) includeAll = false,
     @QueryParams("officerId", String) officerId?: string,
+    @QueryParams("isAdmin", Boolean) isAdmin = false,
   ): Promise<APITypes.GetMyOfficersLogsData> {
     const hasManageUnitsPermissions = hasPermission({
       permissionsToCheck: [Permissions.ManageUnits, Permissions.ViewUnits, Permissions.DeleteUnits],
       userToCheck: user,
       fallback: (u) => u.rank !== Rank.USER,
     });
-    const userIdObj = hasManageUnitsPermissions ? {} : { userId: user.id };
+    const userIdObj = hasManageUnitsPermissions && isAdmin ? {} : { userId: user.id };
 
     const where = { ...userIdObj, emsFdDeputyId: null, officerId: officerId || undefined };
 
