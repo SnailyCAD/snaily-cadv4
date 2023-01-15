@@ -9,7 +9,7 @@ import { prisma } from "lib/prisma";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import type { z } from "zod";
-import { validateRecordData } from "./validateRecordData";
+import { validateRecordData } from "./validate-record-data";
 
 interface UpsertRecordOptions {
   data: z.infer<typeof CREATE_TICKET_SCHEMA>;

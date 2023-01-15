@@ -13,7 +13,7 @@ import {
 import { IsAuth } from "middlewares/IsAuth";
 import { parseImportFile } from "utils/file";
 import { validateSchema } from "lib/validateSchema";
-import { generateString } from "utils/generateString";
+import { generateString } from "utils/generate-string";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import type { Prisma, VehicleInspectionStatus, VehicleTaxStatus } from "@prisma/client";
 import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";

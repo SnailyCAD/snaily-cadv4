@@ -9,7 +9,7 @@ import { CREATE_CITIZEN_SCHEMA, CREATE_OFFICER_SCHEMA } from "@snailycad/schemas
 import fs from "node:fs/promises";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { leoProperties } from "lib/leo/activeOfficer";
-import { generateString } from "utils/generateString";
+import { generateString } from "utils/generate-string";
 import { CadFeature, User, ValueType, Feature, cad, MiscCadSettings, Prisma } from "@prisma/client";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { canManageInvariant, userProperties } from "lib/auth/getSessionUser";
@@ -19,12 +19,12 @@ import { isFeatureEnabled } from "lib/cad";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { citizenObjectFromData } from "lib/citizen";
 import type * as APITypes from "@snailycad/types/api";
-import { getImageWebPPath } from "utils/images/image";
+import { getImageWebPPath } from "lib/images/validate-image-url";
 import { validateSocialSecurityNumber } from "lib/citizen/validateSSN";
 import { setEndedSuspendedLicenses } from "lib/citizen/setEndedSuspendedLicenses";
 import { createOfficer } from "controllers/leo/my-officers/create-officer";
 import { createCitizenViolations } from "lib/records/create-citizen-violations";
-import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
+import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 
 export const citizenInclude = {
   user: { select: userProperties },

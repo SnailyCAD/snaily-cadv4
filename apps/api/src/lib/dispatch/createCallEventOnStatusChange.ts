@@ -12,12 +12,12 @@ interface Options {
 }
 
 export async function createCallEventOnStatusChange(options: Options) {
-  const keys = {
+  const translationKeys = {
     [ShouldDoType.PANIC_BUTTON]: "unitPressedPanicButton",
     [ShouldDoType.ON_SCENE]: "unitOnScene",
     [ShouldDoType.EN_ROUTE]: "unitEnRoute",
   } as Record<ShouldDoType, string>;
-  const key = keys[options.status.shouldDo];
+  const key = translationKeys[options.status.shouldDo];
 
   if (key) {
     const call = await prisma.call911.update({

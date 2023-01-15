@@ -5,7 +5,7 @@ import { BodyParams, MultipartFile, PlatformMulterFile, UseBeforeEach } from "@t
 import { IsAuth } from "middlewares/IsAuth";
 import { parseImportFile } from "utils/file";
 import { validateSchema } from "lib/validateSchema";
-import { generateString } from "utils/generateString";
+import { generateString } from "utils/generate-string";
 import { IMPORT_CITIZENS_ARR } from "@snailycad/schemas/dist/admin/import/citizens";
 import { importVehiclesHandler } from "./import-vehicles-controller";
 import { importWeaponsHandler } from "./import-weapons-controller";

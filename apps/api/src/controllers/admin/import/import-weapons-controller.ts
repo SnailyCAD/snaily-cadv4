@@ -13,7 +13,7 @@ import {
 import { IsAuth } from "middlewares/IsAuth";
 import { parseImportFile } from "utils/file";
 import { validateSchema } from "lib/validateSchema";
-import { generateString } from "utils/generateString";
+import { generateString } from "utils/generate-string";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import type { Prisma } from "@prisma/client";
 import type * as APITypes from "@snailycad/types/api";

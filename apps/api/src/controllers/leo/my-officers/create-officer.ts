@@ -11,12 +11,12 @@ import { validateMaxDivisionsPerUnit } from "./MyOfficersController";
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
-import { validateImgurURL } from "utils/images/image";
+import { validateImageURL } from "lib/images/validate-image-url";
 import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
 import { leoProperties } from "lib/leo/activeOfficer";
 import type * as APITypes from "@snailycad/types/api";
 import type { ZodSchema } from "zod";
-import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
+import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 
 interface CreateOfficerOptions {
   schema?: ZodSchema;
@@ -104,7 +104,7 @@ export async function createOfficer({
   });
 
   const incremental = await findNextAvailableIncremental({ type: "leo" });
-  const validatedImageURL = validateImgurURL(data.image);
+  const validatedImageURL = validateImageURL(data.image);
 
   let officer: any = await prisma.officer.create({
     data: {

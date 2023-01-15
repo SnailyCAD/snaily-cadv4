@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { generateString } from "../src/utils/generateString";
+import { generateString } from "../src/utils/generate-string";
 
 test("Should generate a random string, with numbers", () => {
   const LENGTH = 17;

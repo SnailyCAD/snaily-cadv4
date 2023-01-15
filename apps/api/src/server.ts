@@ -19,7 +19,7 @@ import { json } from "express";
 import compress from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { checkForUpdates } from "utils/checkForUpdates";
+import { checkForUpdates } from "utils/check-for-updates";
 import { getCADVersion } from "@snailycad/utils/version";
 import * as Sentry from "@sentry/node";
 

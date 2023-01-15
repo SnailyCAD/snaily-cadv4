@@ -28,8 +28,8 @@ import { isCuid } from "cuid";
 import type * as APITypes from "@snailycad/types/api";
 import { isFeatureEnabled } from "lib/cad";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
-import { getImageWebPPath, validateImgurURL } from "utils/images/image";
-import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
+import { getImageWebPPath, validateImageURL } from "lib/images/validate-image-url";
+import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import fs from "node:fs/promises";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 
@@ -354,7 +354,7 @@ export class AdminManageUnitsController {
       }
     }
 
-    const validatedImageURL = validateImgurURL(data.image);
+    const validatedImageURL = validateImageURL(data.image);
 
     // @ts-expect-error ignore
     const updated = await prisma[type].update({

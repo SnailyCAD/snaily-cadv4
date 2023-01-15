@@ -16,7 +16,7 @@ import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import { validateImgurURL } from "utils/images/image";
+import { validateImageURL } from "lib/images/validate-image-url";
 import fs from "node:fs/promises";
 import process from "node:process";
 import type * as APITypes from "@snailycad/types/api";
@@ -51,7 +51,7 @@ export class AdminManageCustomRolesController {
       data: {
         name: data.name,
         permissions: data.permissions,
-        iconId: validateImgurURL(data.icon),
+        iconId: validateImageURL(data.icon),
         discordRoleId: data.discordRoleId,
       },
       include: { discordRole: true },
@@ -84,7 +84,7 @@ export class AdminManageCustomRolesController {
       data: {
         name: data.name,
         permissions: data.permissions,
-        iconId: validateImgurURL(data.icon),
+        iconId: validateImageURL(data.icon),
         discordRoleId: data.discordRoleId,
       },
       include: { discordRole: true },

@@ -6,7 +6,7 @@ import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-par
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
-import { getImageWebPPath, validateImgurURL } from "utils/images/image";
+import { getImageWebPPath, validateImageURL } from "lib/images/validate-image-url";
 import { cad, User, MiscCadSettings, Feature, CadFeature, Rank } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
@@ -22,7 +22,7 @@ import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import type * as APITypes from "@snailycad/types/api";
 import { createOfficer } from "./create-officer";
-import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
+import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { hasPermission } from "@snailycad/permissions";
 
 @Controller("/leo")
@@ -167,7 +167,7 @@ export class MyOfficersController {
     const incremental = officer.incremental
       ? undefined
       : await findNextAvailableIncremental({ type: "leo" });
-    const validatedImageURL = validateImgurURL(data.image);
+    const validatedImageURL = validateImageURL(data.image);
 
     const updatedOfficer = await prisma.officer.update({
       where: {

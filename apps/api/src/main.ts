@@ -10,17 +10,12 @@ import { registerDiscordRolesMetadata } from "lib/discord/register-metadata";
 
 Sentry.init({
   dsn: "https://308dd96b826c4e38a814fc9bae681687@o518232.ingest.sentry.io/6553288",
-  tracesSampleRate: 1.0,
-  attachStacktrace: true,
-});
-
-Sentry.init({
-  dsn: "https://308dd96b826c4e38a814fc9bae681687@o518232.ingest.sentry.io/6553288",
   integrations: [
     new Sentry.Integrations.Http({ tracing: true }),
     new Tracing.Integrations.Prisma({ client: prisma }),
   ],
   tracesSampleRate: 1.0,
+  attachStacktrace: true,
 });
 
 const rootDir = __dirname;

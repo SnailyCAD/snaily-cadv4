@@ -19,7 +19,7 @@ import { IsAuth } from "middlewares/IsAuth";
 import { ActiveDeputy } from "middlewares/ActiveDeputy";
 import fs from "node:fs/promises";
 import { unitProperties } from "lib/leo/activeOfficer";
-import { getImageWebPPath, validateImgurURL } from "utils/images/image";
+import { getImageWebPPath, validateImageURL } from "lib/images/validate-image-url";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
@@ -34,7 +34,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { isFeatureEnabled } from "lib/cad";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { handlePanicButtonPressed } from "lib/leo/send-panic-button-webhook";
-import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
+import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { hasPermission } from "@snailycad/permissions";
 
 @Controller("/ems-fd")
@@ -168,7 +168,7 @@ export class EmsFdController {
     );
 
     const incremental = await findNextAvailableIncremental({ type: "ems-fd" });
-    const validatedImageURL = validateImgurURL(data.image);
+    const validatedImageURL = validateImageURL(data.image);
 
     const deputy = await prisma.emsFdDeputy.create({
       data: {
@@ -303,7 +303,7 @@ export class EmsFdController {
         divisionId: data.division!,
         badgeNumber: data.badgeNumber,
         citizenId: citizen.id,
-        imageId: validateImgurURL(data.image),
+        imageId: validateImageURL(data.image),
         incremental,
         whitelistStatusId,
         rankId: rank,

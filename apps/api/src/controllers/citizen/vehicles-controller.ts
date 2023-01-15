@@ -22,7 +22,7 @@ import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import { generateString } from "utils/generateString";
+import { generateString } from "utils/generate-string";
 import { citizenInclude } from "./CitizenController";
 import type * as APITypes from "@snailycad/types/api";
 import type { RegisteredVehicle } from "@snailycad/types";

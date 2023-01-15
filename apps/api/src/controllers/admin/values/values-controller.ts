@@ -22,11 +22,11 @@ import { ValueType } from "@prisma/client";
 import { UsePermissions } from "middlewares/UsePermissions";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import type * as APITypes from "@snailycad/types/api";
-import { getImageWebPPath } from "utils/images/image";
+import { getImageWebPPath } from "lib/images/validate-image-url";
 import { BULK_DELETE_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
 import { createSearchWhereObject } from "lib/values/create-where-object";
-import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
+import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 
 export const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
   QUALIFICATION: {

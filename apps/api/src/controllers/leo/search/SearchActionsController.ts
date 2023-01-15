@@ -42,7 +42,7 @@ import {
   vehicleSearchInclude,
 } from "./SearchController";
 import { citizenObjectFromData } from "lib/citizen";
-import { generateString } from "utils/generateString";
+import { generateString } from "utils/generate-string";
 import type * as APITypes from "@snailycad/types/api";
 import { createVehicleImpoundedWebhookData } from "controllers/calls/TowController";
 import { sendDiscordWebhook } from "lib/discord/webhooks";

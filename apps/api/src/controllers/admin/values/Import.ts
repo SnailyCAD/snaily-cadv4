@@ -46,10 +46,10 @@ import { upsertWarningApplicable } from "lib/records/penal-code";
 import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
 import { getPermissionsForValuesRequest } from "lib/values/utils";
 import { UsePermissions } from "middlewares/UsePermissions";
-import { validateImgurURL } from "utils/images/image";
+import { validateImageURL } from "lib/images/validate-image-url";
 import type * as APITypes from "@snailycad/types/api";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
+import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 
 @Controller("/admin/values/import/:path")
 @UseBeforeEach(IsAuth, IsValidPath)
@@ -345,7 +345,7 @@ export const typeHandlers = {
     const data = validateSchema(QUALIFICATION_ARR, body);
 
     return handlePromiseAll(data, async (item) => {
-      const validatedImageURL = validateImgurURL(item.image);
+      const validatedImageURL = validateImageURL(item.image);
       const updatedValue = await prisma.qualificationValue.upsert({
         where: { id: String(id) },
         ...makePrismaData(ValueType.QUALIFICATION, {
@@ -387,7 +387,7 @@ export const typeHandlers = {
     const data = validateSchema(BASE_ARR, body);
 
     return handlePromiseAll(data, async (item) => {
-      const validatedImageURL = validateImgurURL(item.officerRankImageId);
+      const validatedImageURL = validateImageURL(item.officerRankImageId);
       const createUpdateData = {
         officerRankImageId: validatedImageURL,
         officerRankImageBlurData: await generateBlurPlaceholder(validatedImageURL),
