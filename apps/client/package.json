@@ -33,6 +33,7 @@
     "@react-aria/ssr": "^3.4.1",
     "@sentry/nextjs": "^7.30.0",
     "@sentry/tracing": "^7.30.0",
+    "@snailycad/audit-logger": "1.43.0",
     "@snailycad/config": "1.43.0",
     "@snailycad/permissions": "1.43.0",
     "@snailycad/schemas": "1.43.0",

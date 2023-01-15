@@ -44,6 +44,7 @@
     "@sentry/node": "^7.30.0",
     "@sentry/tracing": "^7.30.0",
     "@snaily-cad/image-data-uri": "^3.1.0",
+    "@snailycad/audit-logger": "1.43.0",
     "@snailycad/config": "1.43.0",
     "@snailycad/permissions": "1.43.0",
     "@snailycad/schemas": "1.43.0",

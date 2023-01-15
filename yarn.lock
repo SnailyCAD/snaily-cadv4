@@ -2876,6 +2876,7 @@ __metadata:
     "@sentry/node": ^7.30.0
     "@sentry/tracing": ^7.30.0
     "@snaily-cad/image-data-uri": ^3.1.0
+    "@snailycad/audit-logger": 1.43.0
     "@snailycad/config": 1.43.0
     "@snailycad/permissions": 1.43.0
     "@snailycad/schemas": 1.43.0
@@ -2938,7 +2939,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/audit-logger@workspace:packages/audit-logger":
+"@snailycad/audit-logger@1.43.0, @snailycad/audit-logger@workspace:packages/audit-logger":
   version: 0.0.0-use.local
   resolution: "@snailycad/audit-logger@workspace:packages/audit-logger"
   dependencies:
@@ -2971,6 +2972,7 @@ __metadata:
     "@react-aria/ssr": ^3.4.1
     "@sentry/nextjs": ^7.30.0
     "@sentry/tracing": ^7.30.0
+    "@snailycad/audit-logger": 1.43.0
     "@snailycad/config": 1.43.0
     "@snailycad/permissions": 1.43.0
     "@snailycad/schemas": 1.43.0
