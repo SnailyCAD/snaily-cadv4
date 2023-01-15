@@ -10,7 +10,7 @@ import fs from "node:fs/promises";
 import { cad, Rank } from "@prisma/client";
 import { Permissions } from "@snailycad/permissions";
 import { UsePermissions } from "middlewares/use-permissions";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { getImageWebPPath } from "lib/images/get-image-webp-path";
 
 @Controller("/admin/manage/cad-settings/image")

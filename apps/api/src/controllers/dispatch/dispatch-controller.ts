@@ -15,7 +15,7 @@ import {
   combinedUnitProperties,
   getActiveOfficer,
 } from "lib/leo/activeOfficer";
-import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
+import { ExtendedNotFound } from "src/exceptions/extended-not-found";
 import { incidentInclude } from "controllers/leo/incidents/IncidentController";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { userProperties } from "lib/auth/getSessionUser";

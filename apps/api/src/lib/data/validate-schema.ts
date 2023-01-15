@@ -1,4 +1,4 @@
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { z } from "zod";
 
 export function validateSchema<Schema extends z.ZodType<any, any, any>>(

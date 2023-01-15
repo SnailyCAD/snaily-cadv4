@@ -21,7 +21,7 @@ import fs from "node:fs/promises";
 import { unitProperties } from "lib/leo/activeOfficer";
 import { validateImageURL } from "lib/images/validate-image-url";
 import { validateSchema } from "lib/data/validate-schema";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { getInactivityFilter, validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";

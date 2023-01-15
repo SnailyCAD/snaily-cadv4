@@ -19,7 +19,7 @@ import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncrement
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import type * as APITypes from "@snailycad/types/api";
 import { createOfficer } from "./create-officer";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";

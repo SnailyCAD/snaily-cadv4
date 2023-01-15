@@ -6,7 +6,7 @@ import { Unauthorized } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 import { getCADVersion } from "@snailycad/utils/version";
 import { handleDiscordSync } from "./auth/utils";
-import { setGlobalUserFromCADAPIToken, getUserFromSession } from "./auth/getUser";
+import { setGlobalUserFromCADAPIToken, getUserFromSession } from "./auth/get-user";
 import type { cad } from "@snailycad/types";
 import { hasPermission, Permissions } from "@snailycad/permissions";
 

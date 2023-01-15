@@ -5,7 +5,7 @@ import { prisma } from "lib/data/prisma";
 import { validateSchema } from "lib/data/validate-schema";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { isFeatureEnabled } from "lib/cad";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { updateOfficerDivisionsCallsigns, validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
 import { validateMaxDivisionsPerUnit } from "./MyOfficersController";
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";

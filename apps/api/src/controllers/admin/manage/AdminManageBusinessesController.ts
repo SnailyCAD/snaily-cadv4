@@ -12,7 +12,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { validateSchema } from "lib/data/validate-schema";
 import { UPDATE_EMPLOYEE_SCHEMA } from "@snailycad/schemas";
 import { EmployeeAsEnum } from "@snailycad/types";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 
 const businessInclude = {
   citizen: {

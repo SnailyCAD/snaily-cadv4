@@ -22,7 +22,7 @@ import { validateSchema } from "lib/data/validate-schema";
 import { IsAuth } from "middlewares/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { Socket } from "services/socket-service";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { manyToManyHelper } from "lib/data/many-to-many";
 import { isCuid } from "cuid";
 import type * as APITypes from "@snailycad/types/api";
