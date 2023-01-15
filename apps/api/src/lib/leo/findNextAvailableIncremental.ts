@@ -1,4 +1,4 @@
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { findFirstSmallestInArray } from "utils/findFirstSmallestInArray";
 
 interface Options {

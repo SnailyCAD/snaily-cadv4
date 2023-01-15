@@ -1,6 +1,6 @@
 import { cad, WhitelistStatus } from "@prisma/client";
 import { BadRequest } from "@tsed/exceptions";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 
 export async function validateBusinessAcceptance(cad: cad, businessId: string) {
   if (cad.businessWhitelisted) {

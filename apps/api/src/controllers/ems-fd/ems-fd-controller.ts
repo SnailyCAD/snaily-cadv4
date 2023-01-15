@@ -3,7 +3,7 @@ import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { EMS_FD_DEPUTY_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
 import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import {
   type cad as DBCad,
   type MiscCadSettings,
@@ -20,7 +20,7 @@ import { ActiveDeputy } from "middlewares/ActiveDeputy";
 import fs from "node:fs/promises";
 import { unitProperties } from "lib/leo/activeOfficer";
 import { getImageWebPPath, validateImageURL } from "lib/images/validate-image-url";
-import { validateSchema } from "lib/validateSchema";
+import { validateSchema } from "lib/data/validate-schema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { getInactivityFilter, validateMaxDepartmentsEachPerUser } from "lib/leo/utils";

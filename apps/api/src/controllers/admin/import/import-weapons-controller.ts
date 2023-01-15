@@ -1,6 +1,6 @@
 import { Controller } from "@tsed/di";
 import { Get, Post, Description, Delete, ContentType } from "@tsed/schema";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { WEAPON_SCHEMA_ARR } from "@snailycad/schemas/dist/admin/import/weapons";
 import {
   BodyParams,
@@ -12,7 +12,7 @@ import {
 } from "@tsed/common";
 import { IsAuth } from "middlewares/IsAuth";
 import { parseImportFile } from "utils/file";
-import { validateSchema } from "lib/validateSchema";
+import { validateSchema } from "lib/data/validate-schema";
 import { generateString } from "utils/generate-string";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import type { Prisma } from "@prisma/client";

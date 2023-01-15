@@ -1,6 +1,6 @@
 import { Controller } from "@tsed/di";
 import { Get, Description, ContentType } from "@tsed/schema";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import glob from "glob";
 import { join } from "node:path";
 import { stat } from "node:fs/promises";

@@ -1,8 +1,8 @@
 import { Feature, Rank, User } from "@prisma/client";
 import { BodyParams, Context, Controller, PathParams, UseBeforeEach } from "@tsed/common";
 import { ContentType, Delete, Get, Post, Put } from "@tsed/schema";
-import { prisma } from "lib/prisma";
-import { validateSchema } from "lib/validateSchema";
+import { prisma } from "lib/data/prisma";
+import { validateSchema } from "lib/data/validate-schema";
 import { IsAuth } from "middlewares/IsAuth";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 import { COURTHOUSE_POST_SCHEMA } from "@snailycad/schemas";

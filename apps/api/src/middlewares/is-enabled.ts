@@ -4,7 +4,7 @@ import { StoreSet, useDecorators } from "@tsed/core";
 import type { Feature as DatabaseFeature } from "@prisma/client";
 import { Feature as TypesFeature } from "@snailycad/types";
 import { setDiscordAuth } from "./IsAuth";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { FeatureNotEnabled } from "src/exceptions/feature-not-enabled";
 
 export interface IsFeatureEnabledOptions {

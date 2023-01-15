@@ -2,7 +2,7 @@ import { Cookie } from "@snailycad/config";
 import type { User } from "@prisma/client";
 import type { Res } from "@tsed/common";
 import cuid from "cuid";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { signJWT } from "utils/jwt";
 import { setCookie } from "utils/setCookie";
 import { postLoginFlowHandler } from "./post-auth";

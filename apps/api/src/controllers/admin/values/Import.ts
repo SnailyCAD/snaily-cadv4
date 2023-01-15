@@ -7,7 +7,7 @@ import {
   Context,
 } from "@tsed/common";
 import { ContentType, Post } from "@tsed/schema";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { IsValidPath } from "middlewares/ValidPath";
 import { BadRequest } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/IsAuth";
@@ -41,9 +41,9 @@ import {
   cad,
   PenalCodeType,
 } from "@prisma/client";
-import { validateSchema } from "lib/validateSchema";
+import { validateSchema } from "lib/data/validate-schema";
 import { upsertWarningApplicable } from "lib/records/penal-code";
-import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
+import { getLastOfArray, manyToManyHelper } from "lib/data/many-to-many";
 import { getPermissionsForValuesRequest } from "lib/values/utils";
 import { UsePermissions } from "middlewares/UsePermissions";
 import { validateImageURL } from "lib/images/validate-image-url";

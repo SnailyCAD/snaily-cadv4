@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { getLastOfArray, merge, manyToManyHelper } from "../src/utils/manyToMany";
+import { getLastOfArray, merge, manyToManyHelper } from "../src/lib/data/many-to-many";
 
 test("Should return correct many-to-many array ({id: Number}) for Prisma -> addition ", () => {
   const currentArr = [{ id: 1 }, { id: 2 }, { id: 3 }];

@@ -15,7 +15,7 @@ import {
   Warrant,
   ActiveTone,
 } from "@prisma/client";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/activeOfficer";
 
 type FullIncident = LeoIncident & { unitsInvolved: any[]; events?: IncidentEvent[] };

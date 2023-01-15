@@ -8,7 +8,7 @@ import {
 } from "@snailycad/schemas";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
@@ -31,9 +31,9 @@ import {
 import { UseBeforeEach, Context, UseBefore } from "@tsed/common";
 import { ContentType, Description, Post, Put } from "@tsed/schema";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
-import { validateSchema } from "lib/validateSchema";
-import { manyToManyHelper } from "utils/manyToMany";
-import { validateCustomFields } from "lib/custom-fields";
+import { validateSchema } from "lib/data/validate-schema";
+import { manyToManyHelper } from "lib/data/many-to-many";
+import { validateCustomFields } from "lib/validate-custom-fields";
 import { isFeatureEnabled } from "lib/cad";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import {

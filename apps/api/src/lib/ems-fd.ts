@@ -5,7 +5,7 @@ import type { Req, Context } from "@tsed/common";
 import { BadRequest, Forbidden } from "@tsed/exceptions";
 import { unitProperties } from "lib/leo/activeOfficer";
 import { getInactivityFilter } from "./leo/utils";
-import { prisma } from "./prisma";
+import { prisma } from "./data/prisma";
 
 interface GetActiveDeputyOptions {
   ctx: Context;

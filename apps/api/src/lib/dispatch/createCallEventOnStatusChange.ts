@@ -2,7 +2,7 @@ import type { StatusValue } from "@prisma/client";
 import { ShouldDoType } from "@snailycad/types";
 import { callInclude } from "controllers/dispatch/911-calls/Calls911Controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import type { Socket } from "services/socket-service";
 
 interface Options {

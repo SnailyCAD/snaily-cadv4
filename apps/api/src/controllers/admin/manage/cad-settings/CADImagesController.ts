@@ -1,7 +1,7 @@
 import { Controller } from "@tsed/di";
 import { Context } from "@tsed/platform-params";
 import { ContentType, Post } from "@tsed/schema";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { BadRequest } from "@tsed/exceptions";
 import { MultipartFile, PlatformMulterFile, UseBefore } from "@tsed/common";

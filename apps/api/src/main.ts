@@ -4,7 +4,7 @@ import { Server } from "./server";
 import { getCADVersion } from "@snailycad/utils/version";
 import * as Sentry from "@sentry/node";
 import * as Tracing from "@sentry/tracing";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { importProviders } from "@tsed/components-scan";
 import { registerDiscordRolesMetadata } from "lib/discord/register-metadata";
 

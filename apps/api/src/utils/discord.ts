@@ -1,4 +1,4 @@
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 
 export function encode(obj: Record<string, unknown>) {
   let string = "";

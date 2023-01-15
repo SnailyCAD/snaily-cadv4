@@ -5,7 +5,7 @@ import { BadRequest } from "@tsed/exceptions";
 import { UseBefore } from "@tsed/platform-middlewares";
 import { ContentType, Delete, Description, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/getSessionUser";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { nanoid } from "nanoid";

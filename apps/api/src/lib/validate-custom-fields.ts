@@ -1,6 +1,6 @@
 import { LEO_CUSTOM_FIELDS_SCHEMA } from "@snailycad/schemas";
-import { prisma } from "./prisma";
-import { validateSchema } from "./validateSchema";
+import { prisma } from "./data/prisma";
+import { validateSchema } from "./data/validate-schema";
 
 export async function validateCustomFields(body: unknown) {
   const data = validateSchema(LEO_CUSTOM_FIELDS_SCHEMA, body);

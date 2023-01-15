@@ -1,4 +1,4 @@
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { Feature } from "@prisma/client";
 
 const FEATURES: Feature[] = Object.values(Feature);

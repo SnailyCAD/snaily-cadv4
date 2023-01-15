@@ -1,6 +1,6 @@
 import type { Officer, EmsFdDeputy, CombinedLeoUnit } from "@prisma/client";
 import { ShouldDoType } from "@snailycad/types";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import type { Socket } from "services/socket-service";
 import { handleStartEndOfficerLog } from "./handleStartEndOfficerLog";
 

@@ -17,13 +17,13 @@ import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/a
 import { findUnit } from "lib/leo/findUnit";
 import { updateOfficerDivisionsCallsigns } from "lib/leo/utils";
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
-import { prisma } from "lib/prisma";
-import { validateSchema } from "lib/validateSchema";
+import { prisma } from "lib/data/prisma";
+import { validateSchema } from "lib/data/validate-schema";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { Socket } from "services/socket-service";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import { manyToManyHelper } from "utils/manyToMany";
+import { manyToManyHelper } from "lib/data/many-to-many";
 import { isCuid } from "cuid";
 import type * as APITypes from "@snailycad/types/api";
 import { isFeatureEnabled } from "lib/cad";

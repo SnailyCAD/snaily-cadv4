@@ -1,5 +1,5 @@
 import type { REGISTER_SCHEMA } from "@snailycad/schemas";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import type { z } from "zod";
 

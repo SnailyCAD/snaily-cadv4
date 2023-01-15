@@ -6,7 +6,7 @@ import {
   WarningNotApplicable,
 } from "@prisma/client";
 import { isFeatureEnabled } from "lib/cad";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 
 interface Options {
   penalCodeId?: string;

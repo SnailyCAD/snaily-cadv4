@@ -1,8 +1,8 @@
 import { IncidentInvolvedUnit, LeoIncident, ShouldDoType } from "@prisma/client";
 import { findUnit } from "lib/leo/findUnit";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import type { Socket } from "services/socket-service";
-import { manyToManyHelper } from "utils/manyToMany";
+import { manyToManyHelper } from "lib/data/many-to-many";
 import { getNextIncidentId } from "./get-next-incident-id";
 
 interface Options {

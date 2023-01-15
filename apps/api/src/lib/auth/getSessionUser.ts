@@ -3,7 +3,7 @@ import { Unauthorized } from "@tsed/exceptions";
 import { parse } from "cookie";
 import { Cookie, USER_API_TOKEN_HEADER } from "@snailycad/config";
 import { signJWT, verifyJWT } from "utils/jwt";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { Feature, type User } from "@snailycad/types";
 import { isFeatureEnabled } from "lib/cad";
 import type { GetUserData } from "@snailycad/types/api";

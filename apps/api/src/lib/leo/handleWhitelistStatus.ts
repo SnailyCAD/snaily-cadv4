@@ -5,7 +5,7 @@ import {
   WhitelistStatus,
   DepartmentValue,
 } from "@prisma/client";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 
 /**

@@ -6,7 +6,7 @@ import { URL } from "node:url";
 import { request } from "undici";
 import type { RESTPostOAuth2AccessTokenResult, APIUser } from "discord-api-types/v10";
 import { encode } from "utils/discord";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { getSessionUser } from "lib/auth/getSessionUser";
 import { cad, CadFeature, Feature, Rank, WhitelistStatus, type User } from "@prisma/client";
 import { getDefaultPermissionsForNewUser } from "./auth-controller";

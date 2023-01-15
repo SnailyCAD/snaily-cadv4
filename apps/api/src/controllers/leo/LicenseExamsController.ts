@@ -10,11 +10,11 @@ import { LICENSE_EXAM_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Controller, BodyParams, PathParams, QueryParams } from "@tsed/common";
 import { NotFound } from "@tsed/exceptions";
 import { ContentType, Delete, Get, Post, Put } from "@tsed/schema";
-import { prisma } from "lib/prisma";
-import { validateSchema } from "lib/validateSchema";
+import { prisma } from "lib/data/prisma";
+import { validateSchema } from "lib/data/validate-schema";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
-import { manyToManyHelper } from "utils/manyToMany";
+import { manyToManyHelper } from "lib/data/many-to-many";
 import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 

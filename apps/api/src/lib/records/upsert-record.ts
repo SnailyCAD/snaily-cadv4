@@ -5,7 +5,7 @@ import { NotFound } from "@tsed/exceptions";
 import { userProperties } from "lib/auth/getSessionUser";
 import { isFeatureEnabled } from "lib/cad";
 import { leoProperties } from "lib/leo/activeOfficer";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import type { z } from "zod";

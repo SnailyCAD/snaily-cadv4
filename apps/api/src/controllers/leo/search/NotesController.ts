@@ -1,9 +1,9 @@
 import { BodyParams, Controller, PathParams, UseBeforeEach } from "@tsed/common";
 import { IsAuth } from "middlewares/IsAuth";
 import { ContentType, Delete, Post, Put } from "@tsed/schema";
-import { validateSchema } from "lib/validateSchema";
+import { validateSchema } from "lib/data/validate-schema";
 import { NOTE_SCHEMA } from "@snailycad/schemas";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { NotFound } from "@tsed/exceptions";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import type { Citizen, RegisteredVehicle } from "@prisma/client";

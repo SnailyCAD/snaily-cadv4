@@ -1,6 +1,6 @@
 import process from "node:process";
 import { BadRequest } from "@tsed/exceptions";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { authenticator } from "otplib";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { decryptValue } from "./crypto";
