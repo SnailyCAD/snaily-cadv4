@@ -18,6 +18,8 @@ import { citizenInclude } from "controllers/citizen/CitizenController";
 import type { Prisma, VehicleInspectionStatus, VehicleTaxStatus } from "@prisma/client";
 import { getLastOfArray, manyToManyHelper } from "lib/data/many-to-many";
 import type * as APITypes from "@snailycad/types/api";
+import { Permissions, UsePermissions } from "middlewares/use-permissions";
+import { Rank } from "@snailycad/types";
 
 const vehiclesInclude = { ...citizenInclude.vehicles.include, citizen: true };
 
@@ -27,6 +29,10 @@ const vehiclesInclude = { ...citizenInclude.vehicles.include, citizen: true };
 export class ImportVehiclesController {
   @Get("/")
   @Description("Get all the vehicles in the CAD (paginated)")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ImportRegisteredVehicles, Permissions.ManageCitizens],
+  })
   async getVehicles(
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("includeAll", Boolean) includeAll = false,
@@ -58,6 +64,10 @@ export class ImportVehiclesController {
 
   @Get("/plates")
   @Description("Get all the vehicle plates in the CAD")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ImportRegisteredVehicles, Permissions.ManageCitizens],
+  })
   async getVehiclePlates(
     @QueryParams("query", String) query = "",
     @QueryParams("userRegisteredOnly", Boolean) userRegisteredOnly?: boolean,
@@ -82,12 +92,20 @@ export class ImportVehiclesController {
 
   @Post("/")
   @Description("Import vehicles in the CAD via body data")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ImportRegisteredVehicles],
+  })
   async importVehicles(@BodyParams() body: any): Promise<APITypes.PostImportVehiclesData> {
     return importVehiclesHandler(body);
   }
 
   @Post("/file")
   @Description("Import vehicles in the CAD via file upload")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ImportRegisteredVehicles],
+  })
   async importVehiclesViaFile(
     @MultipartFile("file") file: PlatformMulterFile,
   ): Promise<APITypes.PostImportVehiclesData> {
@@ -97,6 +115,10 @@ export class ImportVehiclesController {
 
   @Delete("/:id")
   @Description("Delete a registered vehicle by its id")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.DeleteRegisteredVehicles],
+  })
   async deleteVehicle(@PathParams("id") id: string): Promise<APITypes.DeleteImportVehiclesData> {
     await prisma.registeredVehicle.delete({ where: { id } });
 
