@@ -25,7 +25,7 @@ import {
   VehicleValue,
 } from "@prisma/client";
 import { canManageInvariant } from "lib/auth/getSessionUser";
-import { Permissions, UsePermissions } from "middlewares/UsePermissions";
+import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { callInclude } from "controllers/dispatch/911-calls/Calls911Controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { sendDiscordWebhook } from "lib/discord/webhooks";

@@ -9,7 +9,7 @@ import {
 } from "controllers/admin/manage/manage-units-controller";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/is-auth";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled, Feature } from "middlewares/is-enabled";
 

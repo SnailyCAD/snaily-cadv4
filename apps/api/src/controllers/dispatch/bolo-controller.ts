@@ -18,7 +18,7 @@ import {
   Officer,
   Prisma,
 } from "@prisma/client";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type { APIEmbed } from "discord-api-types/v10";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { getFirstOfficerFromActiveOfficer, getInactivityFilter } from "lib/leo/utils";

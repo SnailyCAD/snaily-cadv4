@@ -7,7 +7,7 @@ import { leoProperties } from "lib/leo/activeOfficer";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/is-auth";
 import { Prisma, Rank, RecordType, WhitelistStatus } from "@prisma/client";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 
 import type * as APITypes from "@snailycad/types/api";
 import { AcceptDeclineType, ACCEPT_DECLINE_TYPES } from "../manage-units-controller";

@@ -11,7 +11,7 @@ import { validateSchema } from "lib/data/validate-schema";
 import { manyToManyHelper } from "lib/data/many-to-many";
 import type * as APITypes from "@snailycad/types/api";
 import { Permissions } from "@snailycad/permissions";
-import { UsePermissions } from "middlewares/UsePermissions";
+import { UsePermissions } from "middlewares/use-permissions";
 import { performDiscordRequest } from "lib/discord/performDiscordRequest";
 
 const guildId = process.env.DISCORD_SERVER_ID;

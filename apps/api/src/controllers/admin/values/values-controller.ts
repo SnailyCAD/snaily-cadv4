@@ -19,7 +19,7 @@ import { typeHandlers } from "./Import";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { ValuesSelect, getTypeFromPath, getPermissionsForValuesRequest } from "lib/values/utils";
 import { ValueType } from "@prisma/client";
-import { UsePermissions } from "middlewares/UsePermissions";
+import { UsePermissions } from "middlewares/use-permissions";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import type * as APITypes from "@snailycad/types/api";
 import { getImageWebPPath } from "lib/images/get-image-webp-path";

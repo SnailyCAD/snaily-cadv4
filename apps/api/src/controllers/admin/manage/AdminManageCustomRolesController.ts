@@ -14,7 +14,7 @@ import { ContentType, Delete, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
 import { validateSchema } from "lib/data/validate-schema";
 import { IsAuth } from "middlewares/is-auth";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { validateImageURL } from "lib/images/validate-image-url";
 import fs from "node:fs/promises";

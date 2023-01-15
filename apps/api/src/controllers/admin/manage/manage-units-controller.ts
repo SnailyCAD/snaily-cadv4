@@ -20,7 +20,7 @@ import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
 import { prisma } from "lib/data/prisma";
 import { validateSchema } from "lib/data/validate-schema";
 import { IsAuth } from "middlewares/is-auth";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { Socket } from "services/socket-service";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { manyToManyHelper } from "lib/data/many-to-many";

@@ -10,7 +10,7 @@ import { ActiveOfficer } from "middlewares/active-officer";
 import type { Officer, MiscCadSettings, CombinedLeoUnit } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { Socket } from "services/socket-service";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
 import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";

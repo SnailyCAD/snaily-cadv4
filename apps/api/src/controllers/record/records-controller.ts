@@ -26,7 +26,7 @@ import {
 } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { combinedUnitProperties, leoProperties } from "lib/leo/activeOfficer";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { isFeatureEnabled } from "lib/cad";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { getFirstOfficerFromActiveOfficer, getInactivityFilter } from "lib/leo/utils";

@@ -7,7 +7,7 @@ import { ContentType, Get, Put } from "@tsed/schema";
 import { expungementRequestInclude } from "controllers/court/ExpungementRequestsController";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/is-auth";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type * as APITypes from "@snailycad/types/api";
 
 @UseBeforeEach(IsAuth)

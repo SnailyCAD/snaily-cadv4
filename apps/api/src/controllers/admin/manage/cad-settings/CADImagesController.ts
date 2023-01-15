@@ -9,7 +9,7 @@ import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import fs from "node:fs/promises";
 import { cad, Rank } from "@prisma/client";
 import { Permissions } from "@snailycad/permissions";
-import { UsePermissions } from "middlewares/UsePermissions";
+import { UsePermissions } from "middlewares/use-permissions";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { getImageWebPPath } from "lib/images/get-image-webp-path";
 

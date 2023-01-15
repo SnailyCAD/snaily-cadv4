@@ -9,7 +9,7 @@ import { MiscCadSettings, ReleaseType } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { RELEASE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import { Permissions, UsePermissions } from "middlewares/UsePermissions";
+import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { convertToJailTimeScale } from "lib/leo/utils";
 import type * as APITypes from "@snailycad/types/api";
 

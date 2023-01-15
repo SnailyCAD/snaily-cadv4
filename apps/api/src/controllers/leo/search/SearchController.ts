@@ -6,7 +6,7 @@ import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/is-auth";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { citizenInclude } from "controllers/citizen/CitizenController";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import {
   cad,
   CadFeature,

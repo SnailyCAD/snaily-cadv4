@@ -25,7 +25,7 @@ import { Socket } from "services/socket-service";
 import { IsAuth } from "middlewares/is-auth";
 import { validateSchema } from "lib/data/validate-schema";
 import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { findUnit } from "lib/leo/findUnit";
 import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";

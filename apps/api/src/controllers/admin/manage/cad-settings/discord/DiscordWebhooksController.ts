@@ -17,7 +17,7 @@ import { validateSchema } from "lib/data/validate-schema";
 import type * as APITypes from "@snailycad/types/api";
 import { resolve } from "node:path";
 import { encodeFromFile } from "@snaily-cad/image-data-uri";
-import { Permissions, UsePermissions } from "middlewares/UsePermissions";
+import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { performDiscordRequest } from "lib/discord/performDiscordRequest";
 
 const guildId = process.env.DISCORD_SERVER_ID;

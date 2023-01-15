@@ -11,7 +11,7 @@ import { cad, User, MiscCadSettings, Feature, CadFeature, Rank } from "@prisma/c
 import { validateSchema } from "lib/data/validate-schema";
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
 import { manyToManyHelper } from "lib/data/many-to-many";
-import { Permissions, UsePermissions } from "middlewares/UsePermissions";
+import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { updateOfficerDivisionsCallsigns, validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
 import { isFeatureEnabled } from "lib/cad";
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";

@@ -8,7 +8,7 @@ import { CALL_911_EVENT_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/data/validate-schema";
 import { Socket } from "services/socket-service";
 import { incidentInclude } from "./IncidentController";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import type * as APITypes from "@snailycad/types/api";
 

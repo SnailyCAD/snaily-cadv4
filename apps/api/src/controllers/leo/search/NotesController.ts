@@ -5,7 +5,7 @@ import { validateSchema } from "lib/data/validate-schema";
 import { NOTE_SCHEMA } from "@snailycad/schemas";
 import { prisma } from "lib/data/prisma";
 import { NotFound } from "@tsed/exceptions";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type { Citizen, RegisteredVehicle } from "@prisma/client";
 import type * as APITypes from "@snailycad/types/api";
 

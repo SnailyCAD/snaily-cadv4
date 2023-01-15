@@ -30,7 +30,7 @@ import {
 } from "@prisma/client";
 import { UseBeforeEach, Context, UseBefore } from "@tsed/common";
 import { ContentType, Description, Post, Put } from "@tsed/schema";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { validateSchema } from "lib/data/validate-schema";
 import { manyToManyHelper } from "lib/data/many-to-many";
 import { validateCustomFields } from "lib/validate-custom-fields";

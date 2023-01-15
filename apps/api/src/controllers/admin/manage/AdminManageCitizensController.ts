@@ -11,7 +11,7 @@ import { generateString } from "utils/generate-string";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateImageURL } from "lib/images/validate-image-url";
 import { Prisma, Rank } from "@prisma/client";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { isCuid } from "cuid";
 import type * as APITypes from "@snailycad/types/api";
 import { validateSocialSecurityNumber } from "lib/citizen/validateSSN";

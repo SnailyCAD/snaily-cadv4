@@ -45,7 +45,7 @@ import { validateSchema } from "lib/data/validate-schema";
 import { upsertWarningApplicable } from "lib/records/penal-code";
 import { getLastOfArray, manyToManyHelper } from "lib/data/many-to-many";
 import { getPermissionsForValuesRequest } from "lib/values/utils";
-import { UsePermissions } from "middlewares/UsePermissions";
+import { UsePermissions } from "middlewares/use-permissions";
 import { validateImageURL } from "lib/images/validate-image-url";
 import type * as APITypes from "@snailycad/types/api";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";

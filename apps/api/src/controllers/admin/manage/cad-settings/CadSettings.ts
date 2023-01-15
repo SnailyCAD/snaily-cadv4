@@ -19,7 +19,7 @@ import { cad, Feature, JailTimeScale, Prisma, Rank } from "@prisma/client";
 import { getCADVersion } from "@snailycad/utils/version";
 import { getSessionUser, userProperties } from "lib/auth/getSessionUser";
 import type * as APITypes from "@snailycad/types/api";
-import { Permissions, UsePermissions } from "middlewares/UsePermissions";
+import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import {
   AuditLogActionType,
   createAuditLogEntry,

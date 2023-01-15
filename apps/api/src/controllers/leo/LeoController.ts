@@ -10,7 +10,7 @@ import { Socket } from "services/socket-service";
 import { combinedUnitProperties, leoProperties } from "lib/leo/activeOfficer";
 import { cad, ShouldDoType, User } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
-import { Permissions, UsePermissions } from "middlewares/UsePermissions";
+import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { getInactivityFilter } from "lib/leo/utils";
 import { findUnit } from "lib/leo/findUnit";
 import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";

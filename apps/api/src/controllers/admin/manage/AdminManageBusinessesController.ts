@@ -7,7 +7,7 @@ import { ContentType, Delete, Description, Get, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/getSessionUser";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/is-auth";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type * as APITypes from "@snailycad/types/api";
 import { validateSchema } from "lib/data/validate-schema";
 import { UPDATE_EMPLOYEE_SCHEMA } from "@snailycad/schemas";

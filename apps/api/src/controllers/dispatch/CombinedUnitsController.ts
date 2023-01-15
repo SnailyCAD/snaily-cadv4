@@ -6,7 +6,7 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { ShouldDoType } from "@prisma/client";
 import { Socket } from "services/socket-service";
 import { IsAuth } from "middlewares/is-auth";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { combinedUnitProperties } from "lib/leo/activeOfficer";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 import type * as APITypes from "@snailycad/types/api";

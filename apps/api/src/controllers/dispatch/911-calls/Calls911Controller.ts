@@ -27,7 +27,7 @@ import {
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import type { APIEmbed } from "discord-api-types/v10";
 import { manyToManyHelper } from "lib/data/many-to-many";
-import { Permissions, UsePermissions } from "middlewares/UsePermissions";
+import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
 import { getInactivityFilter, getPrismaNameActiveCallIncident } from "lib/leo/utils";

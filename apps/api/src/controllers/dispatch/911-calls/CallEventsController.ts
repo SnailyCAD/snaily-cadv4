@@ -8,7 +8,7 @@ import { Socket } from "services/socket-service";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/is-auth";
 import { validateSchema } from "lib/data/validate-schema";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { callInclude } from "./Calls911Controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import type * as APITypes from "@snailycad/types/api";
