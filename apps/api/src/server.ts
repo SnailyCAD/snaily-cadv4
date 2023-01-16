@@ -59,7 +59,22 @@ const processEnvPort = process.env.PORT || process.env.PORT_API;
     }),
     Sentry.Handlers.tracingHandler(),
   ],
-  swagger: [{ path: "/api-docs", specVersion: "3.0.3" }],
+  swagger: [
+    {
+      path: "/api-docs",
+      specVersion: "3.0.3",
+      spec: {
+        info: {
+          title: "SnailyCAD API Documentation",
+          version: "0.0.0",
+          contact: {
+            name: "SnailyCAD Community Discord",
+            url: "https://discord.gg/eGnrPqEH7U",
+          },
+        },
+      },
+    },
+  ],
   socketIO: {
     maxHttpBufferSize: 1e6, // 1 mb
     cors: {

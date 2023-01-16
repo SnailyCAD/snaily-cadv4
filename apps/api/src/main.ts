@@ -1,11 +1,15 @@
+import "reflect-metadata";
+
+import { Server } from "./server";
 import { $log } from "@tsed/logger";
 import { PlatformExpress } from "@tsed/platform-express";
-import { Server } from "./server";
+import { importProviders } from "@tsed/components-scan";
+
 import { getCADVersion } from "@snailycad/utils/version";
 import * as Sentry from "@sentry/node";
 import * as Tracing from "@sentry/tracing";
+
 import { prisma } from "lib/data/prisma";
-import { importProviders } from "@tsed/components-scan";
 import { registerDiscordRolesMetadata } from "lib/discord/register-metadata";
 
 Sentry.init({

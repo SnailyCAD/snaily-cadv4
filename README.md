@@ -12,7 +12,7 @@
 💻 An open source Computer Aided Dispatch (CAD) for FiveM,
 this is a web based integration for communities who love police roleplaying and dispatching. Optional Discord and FiveM integrations included.
 
-<a href="https://discord.gg/eGnrPqEH7U ">
+<a href="https://discord.gg/eGnrPqEH7U">
   <img src="http://invidget.switchblade.xyz/eGnrPqEH7U" />
 </a>
 
