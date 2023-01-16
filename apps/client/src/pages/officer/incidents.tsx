@@ -10,7 +10,6 @@ import { Button } from "@snailycad/ui";
 import { ModalIds } from "types/ModalIds";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import type { IncidentInvolvedUnit, LeoIncident } from "@snailycad/types";
-import { useDispatchState } from "state/dispatch/dispatch-state";
 import { useLeoState } from "state/leo-state";
 import dynamic from "next/dynamic";
 import { useImageUrl } from "hooks/useImageUrl";
@@ -44,12 +43,7 @@ const AlertModal = dynamic(async () => {
   return (await import("components/modal/AlertModal")).AlertModal;
 });
 
-export default function LeoIncidents({
-  officers,
-  deputies,
-  activeOfficer,
-  incidents: initialData,
-}: Props) {
+export default function LeoIncidents({ activeOfficer, incidents: initialData }: Props) {
   const asyncTable = useAsyncTable({
     initialData: initialData.incidents,
     totalCount: initialData.totalCount,
@@ -67,7 +61,6 @@ export default function LeoIncidents({
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { openModal, closeModal } = useModal();
-  const dispatchState = useDispatchState();
   const setActiveOfficer = useLeoState((state) => state.setActiveOfficer);
   const { generateCallsign } = useGenerateCallsign();
   const { makeImageUrl } = useImageUrl();
@@ -112,11 +105,8 @@ export default function LeoIncidents({
   }
 
   React.useEffect(() => {
-    dispatchState.setAllOfficers(officers);
-    dispatchState.setAllDeputies(deputies);
     setActiveOfficer(activeOfficer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setActiveOfficer, activeOfficer, deputies, officers]);
+  }, [setActiveOfficer, activeOfficer]);
 
   return (
     <Layout
@@ -247,9 +237,8 @@ export default function LeoIncidents({
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const user = await getSessionUser(req);
-  const [incidents, { officers, deputies }, activeOfficer, values] = await requestAll(req, [
+  const [incidents, activeOfficer, values] = await requestAll(req, [
     ["/incidents", { incidents: [], totalCount: 0 }],
-    ["/dispatch", { deputies: [], officers: [] }],
     ["/leo/active-officer", null],
     ["/admin/values/codes_10", []],
   ]);
@@ -259,8 +248,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       session: user,
       incidents,
       activeOfficer,
-      officers,
-      deputies,
       values,
       messages: {
         ...(await getTranslations(["leo", "calls", "common"], user?.locale ?? locale)),

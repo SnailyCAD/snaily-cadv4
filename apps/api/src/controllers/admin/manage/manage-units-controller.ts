@@ -33,6 +33,7 @@ import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import fs from "node:fs/promises";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { getImageWebPPath } from "lib/images/get-image-webp-path";
+import { createWhere } from "controllers/leo/create-where-obj";
 
 const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_UNIT"] as const;
 type Action = typeof ACTIONS[number];
@@ -73,25 +74,25 @@ export class AdminManageUnitsController {
   ): Promise<APITypes.GetManageUnitsData> {
     const [officerCount, _officers] = await prisma.$transaction([
       prisma.officer.count({
-        where: this.createWhere({ departmentId, query, pendingOnly }, "OFFICER"),
+        where: createWhere({ departmentId, query, pendingOnly, type: "OFFICER" }),
       }),
       prisma.officer.findMany({
         take: includeAll ? undefined : 35,
         skip: includeAll ? undefined : skip,
         include: leoProperties,
-        where: this.createWhere({ departmentId, query, pendingOnly }, "OFFICER"),
+        where: createWhere({ departmentId, query, pendingOnly, type: "OFFICER" }),
       }),
     ]);
 
     const [emsFdDeputiesCount, _emsFdDeputies] = await prisma.$transaction([
       prisma.emsFdDeputy.count({
-        where: this.createWhere({ departmentId, query, pendingOnly }, "DEPUTY"),
+        where: createWhere({ departmentId, query, pendingOnly, type: "DEPUTY" }),
       }),
       prisma.emsFdDeputy.findMany({
         take: includeAll ? undefined : 35,
         skip: includeAll ? undefined : skip,
         include: unitProperties,
-        where: this.createWhere({ departmentId, query, pendingOnly }, "DEPUTY"),
+        where: createWhere({ departmentId, query, pendingOnly, type: "DEPUTY" }),
       }),
     ]);
 
@@ -435,8 +436,6 @@ export class AdminManageUnitsController {
         fs.writeFile(image.path, image.buffer),
       ]);
 
-      console.log({ data });
-
       return data;
     } catch {
       throw new BadRequest("errorUploadingImage");
@@ -723,61 +722,5 @@ export class AdminManageUnitsController {
     });
 
     return true;
-  }
-
-  private createWhere(
-    {
-      query,
-      pendingOnly,
-      departmentId,
-    }: { departmentId?: string; query: string; pendingOnly: boolean },
-    type: "OFFICER" | "DEPUTY" = "OFFICER",
-  ) {
-    const [name, surname] = query.toString().toLowerCase().split(/ +/g);
-
-    const departmentIdWhere = departmentId ? { departmentId } : {};
-
-    if (!query) {
-      return pendingOnly
-        ? {
-            whitelistStatus: { status: WhitelistStatus.PENDING },
-            ...departmentIdWhere,
-          }
-        : departmentIdWhere;
-    }
-
-    const where: any = {
-      ...(pendingOnly ? { whitelistStatus: { status: WhitelistStatus.PENDING } } : {}),
-      OR: [
-        departmentIdWhere,
-        { id: query },
-        { callsign: query },
-        { callsign2: query },
-        { department: { value: { value: { contains: query, mode: "insensitive" } } } },
-        { status: { value: { value: { contains: query, mode: "insensitive" } } } },
-        {
-          citizen: {
-            OR: [
-              {
-                name: { contains: name, mode: "insensitive" },
-                surname: { contains: surname, mode: "insensitive" },
-              },
-              {
-                name: { contains: name, mode: "insensitive" },
-                surname: { contains: surname, mode: "insensitive" },
-              },
-            ],
-          },
-        },
-      ],
-    };
-
-    if (type === "OFFICER") {
-      where.OR.push({
-        divisions: { some: { value: { value: { contains: query, mode: "insensitive" } } } },
-      });
-    }
-
-    return where;
   }
 }

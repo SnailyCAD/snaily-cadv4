@@ -26,8 +26,6 @@ export function useActiveDispatchers() {
     if (json.activeDispatchers) {
       dispatchState.setActiveDispatchers(json.activeDispatchers);
       dispatchState.setActiveIncidents(json.activeIncidents);
-      dispatchState.setAllOfficers(json.officers);
-      dispatchState.setAllDeputies(json.deputies);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

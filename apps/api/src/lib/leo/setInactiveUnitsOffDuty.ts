@@ -25,8 +25,6 @@ export async function setInactiveUnitsOffDuty(lastStatusChangeTimestamp: Date, s
       }),
     ]);
 
-    console.log({ officers });
-
     await Promise.allSettled([
       ...officers.map(async (officer) =>
         handleStartEndOfficerLog({
