@@ -99,7 +99,6 @@ export default function DispatchDashboard(props: DispatchPageProps) {
     set911Calls(props.calls.calls);
     state.setBolos(props.bolos.bolos);
 
-    state.setAllDeputies(props.deputies);
     state.setActiveDispatchers(props.activeDispatchers);
     state.setActiveIncidents(props.activeIncidents);
 

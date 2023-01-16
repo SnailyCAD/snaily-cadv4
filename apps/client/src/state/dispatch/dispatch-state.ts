@@ -23,12 +23,6 @@ interface DispatchState {
   activeDeputies: EmsFdDeputy[];
   setActiveDeputies(deputies: EmsFdDeputy[]): void;
 
-  allOfficers: (Officer | CombinedLeoUnit)[];
-  setAllOfficers(officers: (Officer | CombinedLeoUnit)[]): void;
-
-  allDeputies: EmsFdDeputy[];
-  setAllDeputies(deputies: EmsFdDeputy[]): void;
-
   activeDispatchers: ActiveDispatchers[];
   setActiveDispatchers(dispatchers: ActiveDispatchers[]): void;
 
@@ -48,12 +42,6 @@ export const useDispatchState = create<DispatchState>()((set) => ({
 
   activeDeputies: [],
   setActiveDeputies: (deputies) => set({ activeDeputies: deputies }),
-
-  allOfficers: [],
-  setAllOfficers: (officers) => set({ allOfficers: officers }),
-
-  allDeputies: [],
-  setAllDeputies: (deputies) => set({ allDeputies: deputies }),
 
   activeDispatchers: [],
   setActiveDispatchers: (dispatchers) => set({ activeDispatchers: dispatchers }),

@@ -54,8 +54,6 @@ export default function MapPage(props: Props) {
     set911Calls(props.calls.calls);
     state.setBolos(props.bolos.bolos);
 
-    state.setAllDeputies(props.deputies);
-
     state.setActiveDeputies(activeDeputies);
     state.setActiveOfficers(activeOfficers);
 
