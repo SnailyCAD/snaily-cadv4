@@ -29,6 +29,7 @@ import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { z } from "zod";
 import { ActiveToneType } from "@prisma/client";
 import { HandleInactivity } from "middlewares/handle-inactivity";
+import { createWhere } from "controllers/leo/create-where-obj";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -101,6 +102,49 @@ export class DispatchController {
       activeIncidents: correctedIncidents,
       activeDispatchers,
     };
+  }
+
+  @Post("/units/search")
+  async searchUnits(
+    @BodyParams("query") query: string,
+  ): Promise<APITypes.PostDispatchUnitsSearchData> {
+    const officers = await prisma.officer.findMany({
+      where: createWhere(
+        {
+          pendingOnly: false,
+          query,
+        },
+        "OFFICER",
+      ),
+      include: leoProperties,
+      take: 25,
+    });
+
+    const deputies = await prisma.emsFdDeputy.findMany({
+      where: createWhere(
+        {
+          pendingOnly: false,
+          query,
+        },
+        "DEPUTY",
+      ),
+      include: unitProperties,
+      take: 25,
+    });
+
+    const combinedUnits = await prisma.combinedLeoUnit.findMany({
+      where: createWhere(
+        {
+          pendingOnly: false,
+          query,
+        },
+        "COMBINED_UNIT",
+      ),
+      include: combinedUnitProperties,
+      take: 25,
+    });
+
+    return [...officers, ...deputies, ...combinedUnits];
   }
 
   @Post("/aop")

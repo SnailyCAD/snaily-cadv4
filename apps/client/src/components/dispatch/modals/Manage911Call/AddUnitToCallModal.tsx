@@ -1,15 +1,13 @@
 import { useTranslations } from "use-intl";
-import { Loader, Button } from "@snailycad/ui";
+import { Loader, Button, AsyncListSearchField, Item } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { Form, Formik } from "formik";
 import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
-import { Select } from "components/form/Select";
-import { useDispatchState } from "state/dispatch/dispatch-state";
 import { makeUnitName } from "lib/utils";
-import type { CombinedLeoUnit, EmsFdDeputy } from "@snailycad/types";
+import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 import { isUnitCombined } from "@snailycad/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Toggle } from "components/form/Toggle";
@@ -24,16 +22,9 @@ export function AddUnitToCallModal({ onClose }: Props) {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
-  const { allOfficers, allDeputies, activeDeputies, activeOfficers } = useDispatchState();
   const { generateCallsign } = useGenerateCallsign();
   const call911State = useCall911State();
   const call = call911State.currentlySelectedCall!;
-
-  const allUnits = [...allOfficers, ...allDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
-  const units = [...activeOfficers, ...activeDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
-  const filteredUnits = units.filter((unit) => {
-    return call.assignedUnits?.every((assignedUnit) => assignedUnit.unit?.id !== unit.id) ?? true;
-  });
 
   const t = useTranslations("Calls");
 
@@ -79,18 +70,9 @@ export function AddUnitToCallModal({ onClose }: Props) {
     }
   }
 
-  function makeLabel(value: string | undefined) {
-    const unit = allUnits.find((v) => v.id === value) ?? units.find((v) => v.id === value);
-
-    if (unit && isUnitCombined(unit)) {
-      return generateCallsign(unit, "pairedUnitTemplate");
-    }
-
-    return unit ? `${generateCallsign(unit)} ${makeUnitName(unit)}` : "";
-  }
-
   const INITIAL_VALUES = {
     unit: null as string | null,
+    unitQuery: "",
     isPrimary: false,
   };
 
@@ -102,19 +84,41 @@ export function AddUnitToCallModal({ onClose }: Props) {
       className="w-[600px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, values, errors }) => (
+        {({ handleChange, setValues, values, errors }) => (
           <Form>
-            <FormField errorMessage={errors.unit as string} label={t("unit")}>
-              <Select
-                name="unit"
-                value={values.unit}
-                onChange={handleChange}
-                values={filteredUnits.map((unit) => ({
-                  label: makeLabel(unit.id),
-                  value: unit.id,
-                }))}
-              />
-            </FormField>
+            <AsyncListSearchField<Officer | EmsFdDeputy | CombinedLeoUnit>
+              autoFocus
+              setValues={({ localValue, node }) => {
+                const unitQuery =
+                  typeof localValue !== "undefined" ? { unitQuery: localValue } : {};
+                const unitId = node
+                  ? { unit: node.key as string, unitQuery: localValue || values.unitQuery }
+                  : {};
+
+                setValues({ ...values, ...unitQuery, ...unitId });
+              }}
+              localValue={values.unitQuery}
+              errorMessage={errors.unit}
+              selectedKey={values.unit}
+              fetchOptions={{
+                apiPath: "/dispatch/units/search",
+                bodyKey: "query",
+                filterTextRequired: false,
+                method: "POST",
+              }}
+              label={t("unit")}
+            >
+              {(item) => {
+                const template = isUnitCombined(item) ? "pairedUnitTemplate" : "callsignTemplate";
+                const nameAndCallsign = `${generateCallsign(item, template)} ${makeUnitName(item)}`;
+
+                return (
+                  <Item key={item.id} textValue={nameAndCallsign}>
+                    {nameAndCallsign}
+                  </Item>
+                );
+              }}
+            </AsyncListSearchField>
 
             <FormField className="mt-3" checkbox label={t("primaryUnit")}>
               <Toggle onCheckedChange={handleChange} value={values.isPrimary} name="isPrimary" />
