@@ -24,7 +24,8 @@ export async function createAuditLogEntry<Action extends AuditLogActions>(
     const auditLog = await options.prisma.auditLog.create({
       data: {
         translationKey: options.translationKey,
-        action: superjson.stringify(options.action),
+        // @ts-expect-error ignore
+        action: superjson.serialize(options.action).json ?? null,
         executorId: options.executorId,
       },
     });
@@ -42,7 +43,11 @@ export async function createAuditLogEntry<Action extends AuditLogActions>(
 
 export function parseAuditLogs<T extends AuditLog | AuditLog[]>(log: T) {
   function _parser(log: AuditLog) {
-    return { ...log, action: superjson.parse(log.action as string) };
+    if (typeof log.action === "string") {
+      return { ...log, action: superjson.parse(log.action as string) };
+    }
+
+    return log;
   }
 
   if (Array.isArray(log)) {
