@@ -74,25 +74,25 @@ export class AdminManageUnitsController {
   ): Promise<APITypes.GetManageUnitsData> {
     const [officerCount, _officers] = await prisma.$transaction([
       prisma.officer.count({
-        where: createWhere({ departmentId, query, pendingOnly }, "OFFICER"),
+        where: createWhere({ departmentId, query, pendingOnly, type: "OFFICER" }),
       }),
       prisma.officer.findMany({
         take: includeAll ? undefined : 35,
         skip: includeAll ? undefined : skip,
         include: leoProperties,
-        where: createWhere({ departmentId, query, pendingOnly }, "OFFICER"),
+        where: createWhere({ departmentId, query, pendingOnly, type: "OFFICER" }),
       }),
     ]);
 
     const [emsFdDeputiesCount, _emsFdDeputies] = await prisma.$transaction([
       prisma.emsFdDeputy.count({
-        where: createWhere({ departmentId, query, pendingOnly }, "DEPUTY"),
+        where: createWhere({ departmentId, query, pendingOnly, type: "DEPUTY" }),
       }),
       prisma.emsFdDeputy.findMany({
         take: includeAll ? undefined : 35,
         skip: includeAll ? undefined : skip,
         include: unitProperties,
-        where: createWhere({ departmentId, query, pendingOnly }, "DEPUTY"),
+        where: createWhere({ departmentId, query, pendingOnly, type: "DEPUTY" }),
       }),
     ]);
 
