@@ -104,6 +104,10 @@ export class DispatchController {
     };
   }
 
+  @UsePermissions({
+    fallback: (u) => u.isDispatch || u.isEmsFd || u.isLeo,
+    permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
+  })
   @Post("/units/search")
   async searchUnits(
     @BodyParams("query") query: string,
