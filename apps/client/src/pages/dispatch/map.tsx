@@ -75,7 +75,7 @@ export default function MapPage(props: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const user = await getSessionUser(req);
-  const [values, calls, bolos] = await requestAll(req, [
+  const [values, calls, bolos, activeOfficers, activeDeputies] = await requestAll(req, [
     ["/admin/values/codes_10", []],
     ["/911-calls", { calls: [], totalCount: 0 }],
     ["/bolos", { bolos: [], totalCount: 0 }],
@@ -89,6 +89,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       calls,
       bolos,
       values,
+      activeOfficers,
+      activeDeputies,
       messages: {
         ...(await getTranslations(
           ["citizen", "ems-fd", "leo", "calls", "common"],
