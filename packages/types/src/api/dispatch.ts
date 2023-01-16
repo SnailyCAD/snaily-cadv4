@@ -88,8 +88,6 @@ export type Delete911CallEventByIdData = Get911CallsData["calls"][number];
  * @route /dispatch
  */
 export interface GetDispatchData {
-  deputies: Types.EmsFdDeputy[];
-  officers: (Types.Officer | Types.CombinedLeoUnit)[];
   activeIncidents: Types.LeoIncident[];
   activeDispatchers: (Prisma.ActiveDispatchers & {
     user: Pick<Types.User, "id" | "rank" | "username" | "isLeo" | "isEmsFd">;

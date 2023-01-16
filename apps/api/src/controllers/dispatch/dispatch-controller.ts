@@ -22,7 +22,6 @@ import { userProperties } from "lib/auth/getSessionUser";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
 import { getInactivityFilter } from "lib/leo/utils";
-import { filterInactiveUnits } from "lib/leo/setInactiveUnitsOffDuty";
 import { getActiveDeputy } from "lib/ems-fd";
 import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
@@ -49,25 +48,11 @@ export class DispatchController {
   async getDispatchData(
     @Context("cad") cad: { miscCadSettings: MiscCadSettings | null },
   ): Promise<APITypes.GetDispatchData> {
-    const unitsInactivityFilter = getInactivityFilter(
-      cad,
-      "unitInactivityTimeout",
-      "lastStatusChangeTimestamp",
-    );
     const dispatcherInactivityTimeout = getInactivityFilter(
       cad,
       "activeDispatchersInactivityTimeout",
       "updatedAt",
     );
-
-    const [officers, units] = await prisma.$transaction([
-      prisma.officer.findMany({ include: leoProperties }),
-      prisma.combinedLeoUnit.findMany({ include: combinedUnitProperties }),
-    ]);
-
-    const deputies = await prisma.emsFdDeputy.findMany({
-      include: unitProperties,
-    });
 
     const activeDispatchers = await prisma.activeDispatchers.findMany({
       where: dispatcherInactivityTimeout?.filter,
@@ -86,19 +71,8 @@ export class DispatchController {
     });
 
     const correctedIncidents = activeIncidents.map(officerOrDeputyToUnit);
-    const officersWithUpdatedStatus = officers.map((u) =>
-      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
-    );
-    const deputiesWithUpdatedStatus = deputies.map((u) =>
-      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
-    );
-    const combinedUnitsWithUpdatedStatus = units.map((u) =>
-      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
-    );
 
     return {
-      deputies: deputiesWithUpdatedStatus,
-      officers: [...officersWithUpdatedStatus, ...combinedUnitsWithUpdatedStatus],
       activeIncidents: correctedIncidents,
       activeDispatchers,
     };
