@@ -10,6 +10,8 @@ import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { combinedUnitProperties } from "lib/leo/activeOfficer";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 import type * as APITypes from "@snailycad/types/api";
+import { getNextActiveCallId } from "lib/calls/getNextActiveCall";
+import { getNextIncidentId } from "lib/incidents/get-next-incident-id";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -139,19 +141,33 @@ export class CombinedUnitsController {
 
     const statusId = onDutyStatusCode?.id ?? unit.statusId ?? undefined;
 
+    const [nextCallId, nextIncidentId] = await Promise.all([
+      getNextActiveCallId({
+        callId: "null",
+        type: "assign",
+        unit,
+      }),
+      getNextIncidentId({
+        incidentId: "null",
+        type: "assign",
+        unit,
+      }),
+    ]);
+
     await prisma.$transaction(
       unit.officers.map(({ id }) => {
         return prisma.officer.update({
           where: { id },
-          data: {
-            statusId,
-          },
+          data: { statusId, activeCallId: nextCallId, activeIncidentId: nextIncidentId },
         });
       }),
     );
 
     await prisma.$transaction([
       prisma.assignedUnit.deleteMany({
+        where: { combinedLeoId: unitId },
+      }),
+      prisma.incidentInvolvedUnit.deleteMany({
         where: { combinedLeoId: unitId },
       }),
       prisma.combinedLeoUnit.delete({
