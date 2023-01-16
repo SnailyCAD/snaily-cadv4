@@ -109,7 +109,7 @@ export function ManageIncidentModal({
       title={incident ? t("manageIncident") : t("createIncident")}
       onClose={handleClose}
       isOpen={isOpen(ModalIds.ManageIncident)}
-      className={incident ? "w-[1200px] " : "w-[600px]"}
+      className={incident ? "w-[1200px] " : "w-[750px]"}
     >
       <div className={classNames(incident && "flex flex-col md:flex-row min-h-[450px] gap-3")}>
         <Formik
@@ -121,6 +121,36 @@ export function ManageIncidentModal({
           {({ handleChange, setFieldValue, errors, values, isValid }) => (
             <Form className="w-full flex flex-col justify-between">
               <div>
+                <FormRow>
+                  <FormField errorMessage={errors.firearmsInvolved} label={t("firearmsInvolved")}>
+                    <Toggle
+                      disabled={areFieldsDisabled}
+                      value={values.firearmsInvolved}
+                      name="firearmsInvolved"
+                      onCheckedChange={handleChange}
+                    />
+                  </FormField>
+                  <FormField
+                    errorMessage={errors.injuriesOrFatalities}
+                    label={t("injuriesOrFatalities")}
+                  >
+                    <Toggle
+                      disabled={areFieldsDisabled}
+                      value={values.injuriesOrFatalities}
+                      name="injuriesOrFatalities"
+                      onCheckedChange={handleChange}
+                    />
+                  </FormField>
+                  <FormField errorMessage={errors.arrestsMade} label={t("arrestsMade")}>
+                    <Toggle
+                      disabled={areFieldsDisabled}
+                      value={values.arrestsMade}
+                      name="arrestsMade"
+                      onCheckedChange={handleChange}
+                    />
+                  </FormField>
+                </FormRow>
+
                 <FormField errorMessage={errors.description} label={common("description")}>
                   <Editor
                     isReadonly={areFieldsDisabled}
@@ -151,36 +181,6 @@ export function ManageIncidentModal({
                     />
                   </FormField>
                   <AddressPostalSelect postalOnly addressLabel="location" />
-                </FormRow>
-
-                <FormRow>
-                  <FormField errorMessage={errors.firearmsInvolved} label={t("firearmsInvolved")}>
-                    <Toggle
-                      disabled={areFieldsDisabled}
-                      value={values.firearmsInvolved}
-                      name="firearmsInvolved"
-                      onCheckedChange={handleChange}
-                    />
-                  </FormField>
-                  <FormField
-                    errorMessage={errors.injuriesOrFatalities}
-                    label={t("injuriesOrFatalities")}
-                  >
-                    <Toggle
-                      disabled={areFieldsDisabled}
-                      value={values.injuriesOrFatalities}
-                      name="injuriesOrFatalities"
-                      onCheckedChange={handleChange}
-                    />
-                  </FormField>
-                  <FormField errorMessage={errors.arrestsMade} label={t("arrestsMade")}>
-                    <Toggle
-                      disabled={areFieldsDisabled}
-                      value={values.arrestsMade}
-                      name="arrestsMade"
-                      onCheckedChange={handleChange}
-                    />
-                  </FormField>
                 </FormRow>
 
                 {incident ? (
