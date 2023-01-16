@@ -4,7 +4,7 @@ import { BodyParams, PathParams, Context } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 import { Socket } from "services/socket-service";
-import { UseBeforeEach } from "@tsed/platform-middlewares";
+import { UseAfter, UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/is-auth";
 import { cad, Feature, MiscCadSettings, User } from "@snailycad/types";
 import { validateSchema } from "lib/data/validate-schema";
@@ -21,14 +21,14 @@ import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { userProperties } from "lib/auth/getSessionUser";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
-import { getInactivityFilter, getPrismaNameActiveCallIncident } from "lib/leo/utils";
-import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
+import { getInactivityFilter } from "lib/leo/utils";
+import { filterInactiveUnits } from "lib/leo/setInactiveUnitsOffDuty";
 import { getActiveDeputy } from "lib/ems-fd";
 import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { z } from "zod";
-import { ActiveToneType, IncidentInvolvedUnit } from "@prisma/client";
-import { getNextIncidentId } from "lib/incidents/get-next-incident-id";
+import { ActiveToneType } from "@prisma/client";
+import { HandleInactivity } from "middlewares/handle-inactivity";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -44,6 +44,7 @@ export class DispatchController {
     fallback: (u) => u.isDispatch || u.isEmsFd || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
+  @UseAfter(HandleInactivity)
   async getDispatchData(
     @Context("cad") cad: { miscCadSettings: MiscCadSettings | null },
   ): Promise<APITypes.GetDispatchData> {
@@ -57,10 +58,6 @@ export class DispatchController {
       "activeDispatchersInactivityTimeout",
       "updatedAt",
     );
-
-    if (unitsInactivityFilter) {
-      setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp, this.socket);
-    }
 
     const [officers, units] = await prisma.$transaction([
       prisma.officer.findMany({ include: leoProperties }),
@@ -81,13 +78,6 @@ export class DispatchController {
     });
 
     const incidentInactivityFilter = getInactivityFilter(cad, "incidentInactivityTimeout");
-    if (incidentInactivityFilter) {
-      this.endInactiveIncidents(incidentInactivityFilter.updatedAt);
-    }
-
-    if (dispatcherInactivityTimeout) {
-      this.endInactiveDispatchers(dispatcherInactivityTimeout.updatedAt);
-    }
 
     const activeIncidents = await prisma.leoIncident.findMany({
       where: { isActive: true, ...(incidentInactivityFilter?.filter ?? {}) },
@@ -427,51 +417,5 @@ export class DispatchController {
       where: { id },
     });
     return true;
-  }
-
-  private async endIncident(incident: { id: string; unitsInvolved: IncidentInvolvedUnit[] }) {
-    const unitPromises = incident.unitsInvolved.map(async (unit) => {
-      const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
-      if (!prismaName || !unitId) return;
-
-      const nextActiveIncidentId = await getNextIncidentId({
-        incidentId: incident.id,
-        type: "unassign",
-        unit: { ...unit, id: unitId },
-      });
-
-      // @ts-expect-error method has the same properties
-      return prisma[prismaName].update({
-        where: { id: unitId },
-        data: { activeIncidentId: nextActiveIncidentId },
-      });
-    });
-
-    await Promise.all([
-      ...unitPromises,
-      prisma.incidentInvolvedUnit.deleteMany({ where: { incidentId: incident.id } }),
-      prisma.leoIncident.update({ where: { id: incident.id }, data: { isActive: false } }),
-    ]);
-  }
-
-  private async endInactiveIncidents(updatedAt: Date) {
-    const incidents = await prisma.leoIncident.findMany({
-      where: { isActive: true, updatedAt: { not: { gte: updatedAt } } },
-      select: { id: true, unitsInvolved: true },
-    });
-
-    await Promise.all(incidents.map((incident) => this.endIncident(incident)));
-  }
-
-  private async endInactiveDispatchers(updatedAt: Date) {
-    const activeDispatchers = await prisma.activeDispatchers.findMany({
-      where: { updatedAt: { not: { gte: updatedAt } } },
-    });
-
-    await Promise.all(
-      activeDispatchers.map(async (dispatcher) => {
-        await prisma.activeDispatchers.delete({ where: { id: dispatcher.id } });
-      }),
-    );
   }
 }

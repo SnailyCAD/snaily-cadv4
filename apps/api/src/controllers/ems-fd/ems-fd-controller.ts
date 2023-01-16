@@ -1,4 +1,11 @@
-import { Controller, UseBeforeEach, Use, MultipartFile, PlatformMulterFile } from "@tsed/common";
+import {
+  Controller,
+  UseBeforeEach,
+  Use,
+  MultipartFile,
+  PlatformMulterFile,
+  UseAfter,
+} from "@tsed/common";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { EMS_FD_DEPUTY_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
 import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
@@ -27,7 +34,6 @@ import { getInactivityFilter, validateMaxDepartmentsEachPerUser } from "lib/leo/
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
-import { setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { Socket } from "services/socket-service";
 import type * as APITypes from "@snailycad/types/api";
@@ -37,6 +43,7 @@ import { handlePanicButtonPressed } from "lib/leo/send-panic-button-webhook";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { hasPermission } from "@snailycad/permissions";
 import { getImageWebPPath } from "lib/images/get-image-webp-path";
+import { HandleInactivity } from "middlewares/handle-inactivity";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
@@ -365,6 +372,7 @@ export class EmsFdController {
     fallback: (u) => u.isEmsFd || u.isLeo || u.isDispatch,
     permissions: [Permissions.EmsFd, Permissions.Leo, Permissions.Dispatch],
   })
+  @UseAfter(HandleInactivity)
   async getActiveDeputies(
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
   ): Promise<APITypes.GetEmsFdActiveDeputies> {
@@ -373,10 +381,6 @@ export class EmsFdController {
       "unitInactivityTimeout",
       "lastStatusChangeTimestamp",
     );
-
-    if (unitsInactivityFilter) {
-      setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp, this.socket);
-    }
 
     const deputies = await prisma.emsFdDeputy.findMany({
       where: {

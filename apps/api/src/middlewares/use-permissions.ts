@@ -1,4 +1,4 @@
-import { Middleware, MiddlewareMethods, Context, Req } from "@tsed/common";
+import { Middleware, MiddlewareMethods, Context, Req, Next } from "@tsed/common";
 import { UseBefore } from "@tsed/platform-middlewares";
 import { StoreSet, useDecorators } from "@tsed/core";
 import type { User } from "@prisma/client";
@@ -12,7 +12,7 @@ interface RouteData {
 
 @Middleware()
 export class UsePermissionsMiddleware implements MiddlewareMethods {
-  use(@Context() ctx: Context, @Req() req: Req) {
+  use(@Context() ctx: Context, @Req() req: Req, @Next() next: Next) {
     const routeDataOrFunc = ctx.endpoint.get<RouteData | UsePermissionsFunc>(
       UsePermissionsMiddleware,
     );
@@ -37,6 +37,8 @@ export class UsePermissionsMiddleware implements MiddlewareMethods {
     if (!hasPerm) {
       throw new Forbidden("Invalid permissions (UsePermissions)");
     }
+
+    next();
   }
 }
 

@@ -17,10 +17,12 @@ import {
 } from "@prisma/client";
 import { prisma } from "lib/data/prisma";
 import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/activeOfficer";
+import { Injectable } from "@tsed/di";
 
 type FullIncident = LeoIncident & { unitsInvolved: any[]; events?: IncidentEvent[] };
 
 @SocketService("/")
+@Injectable()
 export class Socket {
   @Nsp nsp!: SocketIO.Namespace;
   private io: SocketIO.Server;

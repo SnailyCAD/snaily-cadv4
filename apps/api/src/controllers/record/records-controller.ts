@@ -59,9 +59,6 @@ export class RecordsController {
   @IsFeatureEnabled({ feature: Feature.ACTIVE_WARRANTS })
   async getActiveWarrants(@Context("cad") cad: cad) {
     const inactivityFilter = getInactivityFilter(cad, "activeWarrantsInactivityTimeout");
-    if (inactivityFilter) {
-      this.endInactiveWarrants(inactivityFilter.updatedAt);
-    }
 
     const activeWarrants = await prisma.warrant.findMany({
       orderBy: { updatedAt: "desc" },
@@ -305,13 +302,6 @@ export class RecordsController {
     });
 
     return true;
-  }
-
-  private async endInactiveWarrants(updatedAt: Date) {
-    await prisma.warrant.updateMany({
-      where: { updatedAt: { not: { gte: updatedAt } } },
-      data: { status: "INACTIVE" },
-    });
   }
 
   private async handleDiscordWebhook(

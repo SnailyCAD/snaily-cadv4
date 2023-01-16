@@ -1,4 +1,4 @@
-import { PathParams, QueryParams, Middleware, MiddlewareMethods } from "@tsed/common";
+import { PathParams, QueryParams, Middleware, MiddlewareMethods, Next } from "@tsed/common";
 import { BadRequest } from "@tsed/exceptions";
 
 // penal_code_group is only allowed for /position
@@ -28,12 +28,16 @@ export const validValuePaths = [
 
 @Middleware()
 export class IsValidPath implements MiddlewareMethods {
-  use(@PathParams("path") path: string, @QueryParams("paths") rawPaths: string) {
+  use(
+    @PathParams("path") path: string,
+    @QueryParams("paths") rawPaths: string,
+    @Next() next: Next,
+  ) {
     const paths =
       typeof rawPaths === "string" ? [...new Set([path, ...rawPaths.split(",")])] : [path];
 
     if (path === "all") {
-      return;
+      return next();
     }
 
     for (const path of paths) {
@@ -41,5 +45,7 @@ export class IsValidPath implements MiddlewareMethods {
         throw new BadRequest(`Invalid Path: ${path}. Valid paths: ${validValuePaths.join(", ")}`);
       }
     }
+
+    next();
   }
 }

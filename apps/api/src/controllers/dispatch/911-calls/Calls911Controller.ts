@@ -10,7 +10,7 @@ import { HeaderParams, BodyParams, Context, PathParams, QueryParams } from "@tse
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 import { Socket } from "services/socket-service";
-import { UseBeforeEach } from "@tsed/platform-middlewares";
+import { UseAfter, UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/is-auth";
 import { _leoProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/data/validate-schema";
@@ -22,7 +22,6 @@ import {
   DiscordWebhookType,
   ShouldDoType,
   Prisma,
-  AssignedUnit,
 } from "@prisma/client";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import type { APIEmbed } from "discord-api-types/v10";
@@ -30,7 +29,7 @@ import { manyToManyHelper } from "lib/data/many-to-many";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
-import { getInactivityFilter, getPrismaNameActiveCallIncident } from "lib/leo/utils";
+import { getInactivityFilter } from "lib/leo/utils";
 import { assignUnitsToCall } from "lib/calls/assignUnitsToCall";
 import { linkOrUnlinkCallDepartmentsAndDivisions } from "lib/calls/linkOrUnlinkCallDepartmentsAndDivisions";
 import { hasPermission } from "@snailycad/permissions";
@@ -43,6 +42,8 @@ import type { z } from "zod";
 import { getNextActiveCallId } from "lib/calls/getNextActiveCall";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 import { getTranslator } from "utils/get-translator";
+import { HandleInactivity } from "middlewares/handle-inactivity";
+import { handleEndCall } from "lib/calls/handle-end-call";
 
 export const callInclude = {
   position: true,
@@ -68,6 +69,7 @@ export class Calls911Controller {
 
   @Get("/")
   @Description("Get all 911 calls")
+  @UseAfter(HandleInactivity)
   async get911Calls(
     @Context("cad") cad: { miscCadSettings: MiscCadSettings | null },
     @QueryParams("includeEnded", Boolean) includeEnded?: boolean,
@@ -80,9 +82,7 @@ export class Calls911Controller {
     @QueryParams("assignedUnit", String) assignedUnit?: string,
   ): Promise<APITypes.Get911CallsData> {
     const inactivityFilter = getInactivityFilter(cad, "call911InactivityTimeout");
-    if (inactivityFilter) {
-      this.endInactiveCalls(inactivityFilter.updatedAt);
-    }
+
     const where: Prisma.Call911WhereInput = {
       ended: includeEnded ? undefined : false,
       ...(inactivityFilter?.filter ?? {}),
@@ -395,7 +395,7 @@ export class Calls911Controller {
       throw new NotFound("callNotFound");
     }
 
-    await this.handleEndCall(call);
+    await handleEndCall(call);
     await Promise.all([
       this.socket.emit911CallDelete(call),
       this.socket.emitUpdateOfficerStatus(),
@@ -601,56 +601,6 @@ export class Calls911Controller {
     this.socket.emitUpdate911Call(normalizedCall);
 
     return normalizedCall;
-  }
-
-  private async handleEndCall(call: Pick<Call911, "id"> & { assignedUnits: AssignedUnit[] }) {
-    try {
-      const unitPromises = call.assignedUnits.map(async (unit) => {
-        const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
-        if (!prismaName || !unitId) return;
-
-        // @ts-expect-error method has the same properties
-        return prisma[prismaName].update({
-          where: { id: unitId },
-          data: {
-            activeCallId: await getNextActiveCallId({
-              callId: call.id,
-              type: "unassign",
-              unit: { ...unit, id: unitId },
-            }),
-          },
-        });
-      });
-
-      await Promise.all(unitPromises);
-    } catch {
-      console.log("Failed to set next call id. Skipping...");
-    }
-
-    await prisma.call911.update({
-      where: { id: call.id },
-      data: {
-        ended: true,
-        assignedUnits: {
-          deleteMany: {
-            call911Id: call.id,
-          },
-        },
-      },
-    });
-  }
-
-  private async endInactiveCalls(updatedAt: Date) {
-    try {
-      const calls = await prisma.call911.findMany({
-        where: { updatedAt: { not: { gte: updatedAt } } },
-        select: { assignedUnits: true, id: true },
-      });
-
-      await Promise.all(calls.map((call) => this.handleEndCall(call)));
-    } catch {
-      console.log("Failed to end inactive calls. Skipping...");
-    }
   }
 
   // creates the webhook structure that will get sent to Discord.
