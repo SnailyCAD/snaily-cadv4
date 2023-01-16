@@ -1,4 +1,4 @@
-import { Controller, UseBeforeEach, UseBefore } from "@tsed/common";
+import { Controller, UseBeforeEach, UseBefore, UseAfter } from "@tsed/common";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { SWITCH_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
@@ -13,11 +13,11 @@ import { validateSchema } from "lib/data/validate-schema";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { getInactivityFilter } from "lib/leo/utils";
 import { findUnit } from "lib/leo/findUnit";
-import { setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
 import { CombinedLeoUnit, Officer, MiscCadSettings, Feature } from "@snailycad/types";
 import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { handlePanicButtonPressed } from "lib/leo/send-panic-button-webhook";
+import { HandleInactivity } from "middlewares/handle-inactivity";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -42,6 +42,7 @@ export class LeoController {
 
   @Get("/active-officers")
   @Description("Get all the active officers")
+  @UseAfter(HandleInactivity)
   @UsePermissions({
     fallback: (u) => u.isLeo || u.isDispatch || u.isEmsFd,
     permissions: [Permissions.Leo, Permissions.Dispatch, Permissions.EmsFd],
@@ -54,10 +55,6 @@ export class LeoController {
       "unitInactivityTimeout",
       "lastStatusChangeTimestamp",
     );
-
-    if (unitsInactivityFilter) {
-      setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp, this.socket);
-    }
 
     const [officers, combinedUnits] = await prisma.$transaction([
       prisma.officer.findMany({

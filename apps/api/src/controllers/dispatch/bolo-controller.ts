@@ -4,7 +4,7 @@ import { CREATE_BOLO_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
-import { Use, UseBeforeEach } from "@tsed/platform-middlewares";
+import { Use, UseAfter, UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/is-auth";
 import { ActiveOfficer } from "middlewares/active-officer";
 import { Socket } from "services/socket-service";
@@ -25,6 +25,7 @@ import { getFirstOfficerFromActiveOfficer, getInactivityFilter } from "lib/leo/u
 import type * as APITypes from "@snailycad/types/api";
 import type { cad } from "@snailycad/types";
 import { getTranslator } from "utils/get-translator";
+import { HandleInactivity } from "middlewares/handle-inactivity";
 
 @Controller("/bolos")
 @UseBeforeEach(IsAuth)
@@ -40,6 +41,7 @@ export class BoloController {
     fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
+  @UseAfter(HandleInactivity)
   @Description("Get all the bolos")
   async getBolos(
     @Context("cad") cad: cad,
@@ -49,9 +51,6 @@ export class BoloController {
     @QueryParams("type", String) boloType?: BoloType,
   ): Promise<APITypes.GetBolosData> {
     const inactivityFilter = getInactivityFilter(cad, "boloInactivityTimeout");
-    if (inactivityFilter) {
-      this.endInactiveBolos(inactivityFilter.updatedAt);
-    }
 
     const where: Prisma.BoloWhereInput = query
       ? {
@@ -269,12 +268,6 @@ export class BoloController {
     }
 
     return bolo ?? true;
-  }
-
-  private async endInactiveBolos(updatedAt: Date) {
-    await prisma.bolo.deleteMany({
-      where: { updatedAt: { not: { gte: updatedAt } } },
-    });
   }
 }
 

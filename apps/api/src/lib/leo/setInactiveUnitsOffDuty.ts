@@ -6,6 +6,11 @@ import { handleStartEndOfficerLog } from "./handleStartEndOfficerLog";
 
 export async function setInactiveUnitsOffDuty(lastStatusChangeTimestamp: Date, socket: Socket) {
   try {
+    // use setTimeout to create a delay for 10 seconds
+    await new Promise((resolve) => {
+      setTimeout(resolve, 10_000);
+    });
+
     const [officers, deputies] = await prisma.$transaction([
       prisma.officer.findMany({
         where: { lastStatusChangeTimestamp: { lte: lastStatusChangeTimestamp } },
@@ -20,7 +25,9 @@ export async function setInactiveUnitsOffDuty(lastStatusChangeTimestamp: Date, s
       }),
     ]);
 
-    await Promise.all([
+    console.log({ officers });
+
+    await Promise.allSettled([
       ...officers.map(async (officer) =>
         handleStartEndOfficerLog({
           shouldDo: ShouldDoType.SET_OFF_DUTY,
