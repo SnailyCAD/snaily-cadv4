@@ -25,7 +25,11 @@ export async function validateGoogleCaptcha(data: z.infer<typeof REGISTER_SCHEMA
         secret: GOOGLE_CAPTCHA_SECRET,
         response: data.captchaResult,
       },
-    });
+    }).catch(() => null);
+
+    if (!googleCaptchaAPIResponse) {
+      throw new ExtendedBadRequest({ username: "invalidCaptcha" });
+    }
 
     const googleCaptchaJSON =
       (await googleCaptchaAPIResponse.body.json()) as PartialGoogleCaptchaResponse;

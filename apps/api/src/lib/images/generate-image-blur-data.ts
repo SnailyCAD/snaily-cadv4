@@ -17,7 +17,8 @@ export default async function generateBlurPlaceholder(
       return placeholderBlur;
     }
 
-    const response = await request(image);
+    const response = await request(image).catch(() => null);
+    if (!response) return null;
     const buffer = await response.body.arrayBuffer();
     const base64 = Buffer.from(buffer).toString("base64");
 
