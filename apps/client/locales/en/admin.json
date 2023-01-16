@@ -163,5 +163,14 @@
     "deleteUser2FA": "User: <span>{value}</span>'s 2FA has been deleted.",
     "tempPasswordGiven": "User: <span>{value}</span> has been given a temporary password.",
     "unitsSetOffDuty": "Selected units have been set off-duty: <span>{value}</span>"
+  },
+  "ApiTokenTab": {
+    "apiToken": "API Token",
+    "publicAPIAccess": "Public API Access",
+    "token": "Token",
+    "tokenDescription": "This is the token used to communicate with the API. This token is unique and should not be shared with anyone. <a>Read More</a>",
+    "discordBotCommand": "Discord bot integration command",
+    "discordBotCommandDescription": "This command can be used with the <a>Discord bot integration</a>.",
+    "readMorePublicAPI": "Read more about the <a>Public API here.</a>"
   }
 }
