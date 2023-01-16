@@ -100,8 +100,6 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
 
     if (item) {
       props.setValues({ localValue: item.textValue, node: item });
-    } else {
-      props.setValues({ localValue: value ?? "", node: null });
     }
   }
 
