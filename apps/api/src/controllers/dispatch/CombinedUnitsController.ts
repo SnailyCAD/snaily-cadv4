@@ -130,22 +130,34 @@ export class CombinedUnitsController {
       throw new NotFound("notFound");
     }
 
+    console.log({ unit });
+    const onDutyStatusCode = await prisma.statusValue.findFirst({
+      where: {
+        shouldDo: ShouldDoType.SET_ON_DUTY,
+      },
+    });
+
+    const statusId = onDutyStatusCode?.id ?? unit.statusId ?? undefined;
+
     await prisma.$transaction(
       unit.officers.map(({ id }) => {
         return prisma.officer.update({
           where: { id },
-          data: { statusId: unit.statusId },
+          data: {
+            statusId,
+          },
         });
       }),
     );
 
-    await prisma.assignedUnit.deleteMany({
-      where: { combinedLeoId: unitId },
-    });
-
-    await prisma.combinedLeoUnit.delete({
-      where: { id: unitId },
-    });
+    await prisma.$transaction([
+      prisma.assignedUnit.deleteMany({
+        where: { combinedLeoId: unitId },
+      }),
+      prisma.combinedLeoUnit.delete({
+        where: { id: unitId },
+      }),
+    ]);
 
     await this.socket.emitUpdateOfficerStatus();
 
