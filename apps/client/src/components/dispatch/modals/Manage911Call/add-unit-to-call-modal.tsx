@@ -7,12 +7,12 @@ import { Form, Formik } from "formik";
 import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
 import { makeUnitName } from "lib/utils";
-import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 import { isUnitCombined } from "@snailycad/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Toggle } from "components/form/Toggle";
 import type { Put911CallByIdData } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call-911-state";
+import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 
 interface Props {
   onClose?(): void;

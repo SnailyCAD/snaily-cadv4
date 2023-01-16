@@ -6,7 +6,7 @@ import { prisma } from "lib/data/prisma";
 import { Socket } from "services/socket-service";
 import { UseAfter, UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/is-auth";
-import { cad, Feature, MiscCadSettings, User } from "@snailycad/types";
+import { cad, Feature, MiscCadSettings, ShouldDoType, User } from "@snailycad/types";
 import { validateSchema } from "lib/data/validate-schema";
 import { TONES_SCHEMA, UPDATE_AOP_SCHEMA, UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
 import {
@@ -29,7 +29,7 @@ import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { z } from "zod";
 import { ActiveToneType } from "@prisma/client";
 import { HandleInactivity } from "middlewares/handle-inactivity";
-import { createWhere } from "controllers/leo/create-where-obj";
+import { createWhere, createWhereCombinedUnit } from "controllers/leo/create-where-obj";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -109,39 +109,42 @@ export class DispatchController {
     @BodyParams("query") query: string,
   ): Promise<APITypes.PostDispatchUnitsSearchData> {
     const officers = await prisma.officer.findMany({
-      where: createWhere(
-        {
-          pendingOnly: false,
-          query,
+      where: createWhere({
+        pendingOnly: false,
+        query,
+        type: "OFFICER",
+        extraWhere: {
+          combinedLeoUnitId: null,
+          status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
         },
-        "OFFICER",
-      ),
+      }),
       include: leoProperties,
       take: 25,
+      orderBy: { updatedAt: "desc" },
     });
 
     const deputies = await prisma.emsFdDeputy.findMany({
-      where: createWhere(
-        {
-          pendingOnly: false,
-          query,
+      where: createWhere({
+        pendingOnly: false,
+        query,
+        type: "DEPUTY",
+        extraWhere: {
+          status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
         },
-        "DEPUTY",
-      ),
+      }),
       include: unitProperties,
       take: 25,
+      orderBy: { updatedAt: "desc" },
     });
 
     const combinedUnits = await prisma.combinedLeoUnit.findMany({
-      where: createWhere(
-        {
-          pendingOnly: false,
-          query,
-        },
-        "COMBINED_UNIT",
-      ),
+      where: createWhereCombinedUnit({
+        pendingOnly: false,
+        query,
+      }),
       include: combinedUnitProperties,
       take: 25,
+      orderBy: { lastStatusChangeTimestamp: "desc" },
     });
 
     return [...officers, ...deputies, ...combinedUnits];

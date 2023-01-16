@@ -1,41 +1,50 @@
 import type { Prisma } from "@prisma/client";
 import { WhitelistStatus } from "@snailycad/types";
 
-export function createWhere(
-  {
-    query,
-    pendingOnly,
-    departmentId,
-  }: { departmentId?: string; query: string; pendingOnly: boolean },
-  type: "OFFICER" | "DEPUTY" | "COMBINED_UNIT" = "OFFICER",
-) {
-  const [name, surname] = query.toString().toLowerCase().split(/ +/g);
+interface CreateWhereObjOptions {
+  departmentId?: string;
+  query: string;
+  pendingOnly: boolean;
+  type: "OFFICER" | "DEPUTY";
+  extraWhere?: any;
+}
+
+export function createWhereCombinedUnit(options: Omit<CreateWhereObjOptions, "type">) {
+  return {
+    OR: [
+      {
+        officers: {
+          some: createWhere({ ...options, type: "OFFICER" }),
+        },
+      },
+    ],
+  } as Prisma.CombinedLeoUnitWhereInput;
+}
+
+export function createWhere({
+  query,
+  pendingOnly,
+  departmentId,
+  type = "OFFICER",
+  extraWhere = {},
+}: CreateWhereObjOptions) {
+  const [name, surname] = getName(query);
 
   const departmentIdWhere = departmentId ? { departmentId } : {};
-
-  if (type === "COMBINED_UNIT") {
-    return {
-      OR: [
-        {
-          officers: {
-            some: createWhere({ query, pendingOnly, departmentId }, "OFFICER"),
-          },
-        },
-      ],
-    } as Prisma.CombinedLeoUnitWhereInput;
-  }
 
   if (!query) {
     return pendingOnly
       ? {
+          ...extraWhere,
           whitelistStatus: { status: WhitelistStatus.PENDING },
           ...departmentIdWhere,
         }
-      : departmentIdWhere;
+      : { ...extraWhere, ...departmentIdWhere };
   }
 
   const where: any = {
     ...(pendingOnly ? { whitelistStatus: { status: WhitelistStatus.PENDING } } : {}),
+    ...extraWhere,
     OR: [
       departmentIdWhere,
       { id: query },
@@ -67,4 +76,12 @@ export function createWhere(
   }
 
   return where;
+}
+
+function getName(query: string) {
+  try {
+    return query.toString().toLowerCase().split(/ +/g);
+  } catch {
+    return [];
+  }
 }

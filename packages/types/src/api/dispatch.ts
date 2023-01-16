@@ -178,3 +178,9 @@ export type GetDispatchPlayerBySteamIdData = Pick<
 > & {
   unit: Types.Officer | Types.CombinedLeoUnit | Types.EmsFdDeputy | null;
 };
+
+export type PostDispatchUnitsSearchData = (
+  | Types.Officer
+  | Types.CombinedLeoUnit
+  | Types.EmsFdDeputy
+)[];

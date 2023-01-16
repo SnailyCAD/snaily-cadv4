@@ -51,7 +51,7 @@ export function ManageIncidentModal({
   const { codes10 } = useValues();
   const router = useRouter();
   const { state, execute } = useFetch();
-  const { allOfficers, allDeputies, activeDeputies, activeOfficers } = useDispatchState();
+  const { allOfficers = [], allDeputies = [], activeDeputies, activeOfficers } = useDispatchState();
 
   const isDispatch = router.pathname.includes("/dispatch");
   const isLeoIncidents = router.pathname === "/officer/incidents";

@@ -97,7 +97,7 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
     const unit = call?.assignedUnits.find((v) => v.isPrimary);
     if (!unit?.unit) return null;
 
-    return `${generateCallsign(unit.unit)} - ${makeUnitName(unit.unit)}`;
+    return `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
   }, [call, generateCallsign]);
 
   return (
