@@ -8,8 +8,10 @@ import useFetch from "lib/useFetch";
 import { makeUnitName } from "lib/utils";
 import { isUnitCombined } from "@snailycad/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import type { Put911CallByIdData } from "@snailycad/types/api";
+import type { PutIncidentByIdData } from "@snailycad/types/api";
 import type { CombinedLeoUnit, EmsFdDeputy, LeoIncident, Officer } from "@snailycad/types";
+import { shallow } from "zustand/shallow";
+import { useDispatchState } from "state/dispatch/dispatch-state";
 
 interface Props {
   onClose?(): void;
@@ -21,6 +23,13 @@ export function AddInvolvedUnitToIncidentModal({ onClose, incident }: Props) {
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
   const { generateCallsign } = useGenerateCallsign();
+  const { activeIncidents, setActiveIncidents } = useDispatchState(
+    (state) => ({
+      setActiveIncidents: state.setActiveIncidents,
+      activeIncidents: state.activeIncidents,
+    }),
+    shallow,
+  );
 
   const t = useTranslations("Calls");
 
@@ -36,7 +45,7 @@ export function AddInvolvedUnitToIncidentModal({ onClose, incident }: Props) {
       (v) => v.officerId || v.emsFdDeputyId || v.combinedLeoId,
     );
 
-    const { json } = await execute<Put911CallByIdData>({
+    const { json } = await execute<PutIncidentByIdData>({
       path: `/incidents/${incident.id}`,
       method: "PUT",
       data: {
@@ -47,7 +56,16 @@ export function AddInvolvedUnitToIncidentModal({ onClose, incident }: Props) {
 
     if (json.id) {
       handleClose();
-      // todo: update state
+
+      setActiveIncidents(
+        activeIncidents.map((_incident) => {
+          if (_incident.id === incident.id) {
+            return { ..._incident, ...json };
+          }
+
+          return _incident;
+        }),
+      );
     }
   }
 

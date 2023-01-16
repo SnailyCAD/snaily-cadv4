@@ -2,7 +2,7 @@ import { Table, useTableState } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 import useFetch from "lib/useFetch";
-import type { PUT911CallAssignedUnit } from "@snailycad/types/api";
+import type { PutIncidentByIdData } from "@snailycad/types/api";
 import { useAuth } from "context/AuthContext";
 import { IncidentInvolvedUnit, LeoIncident, StatusViewMode } from "@snailycad/types";
 import { useTranslations } from "next-intl";
@@ -12,6 +12,8 @@ import { ModalIds } from "types/ModalIds";
 import { FullDate } from "components/shared/FullDate";
 import { generateContrastColor } from "lib/table/get-contrasting-text-color";
 import dynamic from "next/dynamic";
+import { useDispatchState } from "state/dispatch/dispatch-state";
+import { shallow } from "zustand/shallow";
 
 const AddInvolvedUnitToIncidentModal = dynamic(
   async () => (await import("./add-involved-unit")).AddInvolvedUnitToIncidentModal,
@@ -31,13 +33,20 @@ export function InvolvedUnitsTable({ isDisabled, incident }: Props) {
   const t = useTranslations("Leo");
   const { openModal } = useModal();
   const { state, execute } = useFetch();
+  const { activeIncidents, setActiveIncidents } = useDispatchState(
+    (state) => ({
+      setActiveIncidents: state.setActiveIncidents,
+      activeIncidents: state.activeIncidents,
+    }),
+    shallow,
+  );
 
   async function handleUnassignFromCall(unit: IncidentInvolvedUnit) {
     const newAssignedUnits = [...incident.unitsInvolved]
       .filter((v) => v.id !== unit.id)
       .map((v) => v.officerId || v.emsFdDeputyId || v.combinedLeoId);
 
-    const { json } = await execute<PUT911CallAssignedUnit>({
+    const { json } = await execute<PutIncidentByIdData>({
       path: `/incidents/${incident.id}`,
       method: "PUT",
       data: {
@@ -46,20 +55,17 @@ export function InvolvedUnitsTable({ isDisabled, incident }: Props) {
       },
     });
 
-    console.log({ json });
+    if (json.id) {
+      setActiveIncidents(
+        activeIncidents.map((_incident) => {
+          if (_incident.id === incident.id) {
+            return { ..._incident, ...json };
+          }
 
-    // if (json.id) {
-    //   call911State.setCurrentlySelectedCall({ ...incident, ...json });
-    //   call911State.setCalls(
-    //     call911State.calls.map((_call) => {
-    //       if (_call.id === call.id) {
-    //         return { ..._call, ...json };
-    //       }
-
-    //       return _call;
-    //     }),
-    //   );
-    // }
+          return _incident;
+        }),
+      );
+    }
   }
 
   return (
