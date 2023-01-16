@@ -214,7 +214,7 @@ export class IncidentController {
 
     if (assignType === "assign") {
       if (existing) {
-        throw new BadRequest("alreadyAssignedToCall");
+        throw new BadRequest("alreadyAssignedToIncident");
       }
 
       await prisma.incidentInvolvedUnit.create({
@@ -225,7 +225,7 @@ export class IncidentController {
       });
     } else {
       if (!existing) {
-        throw new BadRequest("notAssignedToCall");
+        throw new BadRequest("notAssignedToIncident");
       }
 
       await prisma.incidentInvolvedUnit.delete({
@@ -265,7 +265,7 @@ export class IncidentController {
     });
 
     const normalizedIncident = officerOrDeputyToUnit(updated);
-    this.socket.emitUpdate911Call(normalizedIncident);
+    this.socket.emitUpdateActiveIncident(normalizedIncident);
 
     return normalizedIncident;
   }
