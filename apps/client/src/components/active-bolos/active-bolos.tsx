@@ -161,7 +161,7 @@ export function ActiveBolos({ initialBolos }: Props) {
                 model: bolo.model || "—",
                 plate: bolo.plate || "—",
                 color: bolo.color || "—",
-                description: <CallDescription data={descriptionData}  />,
+                description: <CallDescription data={descriptionData} />,
                 officer: bolo.officer
                   ? `${generateCallsign(bolo.officer)} ${makeUnitName(bolo.officer)}`
                   : t("Leo.dispatch"),
