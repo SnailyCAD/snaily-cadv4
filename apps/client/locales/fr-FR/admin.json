@@ -13,6 +13,7 @@
     "MANAGE_CUSTOM_ROLES": "Gérer les rôles personnalisés",
     "MANAGE_COURTHOUSE": "Gérer le tribunal",
     "MANAGE_PENDING_WARRANTS": "Gérer les mandats en attente",
+    "MANAGE_AUDIT_LOGS": "Gérer les journaux d'audit",
     "import": "Importer",
     "IMPORT_CITIZENS": "Importer Citoyens",
     "IMPORT_VEHICLES": "Importer Véhicules",
@@ -84,6 +85,10 @@
     "pruneUsers": "Purger les utilisateurs",
     "inactiveUsers": "Utilisateurs inactifs",
     "lastSeen": "Dernière connexion",
+    "viewDiff": "Voir les différences",
+    "executor": "Exécutant",
+    "auditLogDiff": "Différences du journal d'audit",
+    "noAuditLogDiff": "Il n'y a aucune différence dans le journal d'audit pour cette action.",
     "manageCourthouseDescription": "Vous pouvez y gérer les demandes de radiation, les demandes de changement de nom et les mandats en cours.",
     "manageCustomFieldsDescription": "Ici, vous pouvez gérer les champs personnalisés. Ces champs peuvent être ajoutés par n'importe quel agent aux citoyens dans la recherche de noms.",
     "manageCustomRolesDescription": "Ici, vous pouvez gérer des rôles personnalisés. Ces rôles peuvent être attribués aux utilisateurs au lieu de donner des permissions une par une.",
@@ -148,5 +153,24 @@
     "citizenRecordsChannelInfo": "Le canal où les nouveaux rapports d'arrestations, de mandats, de contraventions et d'avertissements écrits seront envoyés.",
     "warrantsChannel": "Canal des mandats",
     "warrantsChannelInfo": "Le canal où les nouveaux mandats seront envoyés."
+  },
+  "AuditLogs": {
+    "userBanned": "L'utilisateur <span>{value}</span> a été banni.",
+    "userUnbanned": "L'utilisateur <span>{value}</span> a été débanni.",
+    "deletedEntry": "Entrée supprimée avec ID : <span>{value}</span>.",
+    "createdEntry": "Entrée créée avec ID : <span>{value}</span>.",
+    "deleteUserApiToken": "Le jeton API de l'utilisateur <span>{value}</span> a été supprimé.",
+    "deleteUser2FA": "L'authenficiation à deux facteurs de l'utilisateur <span>{value}</span> a été supprimé.",
+    "tempPasswordGiven": "Un mot de passe temporaire a été donné à l'utilisateur <span>{value}</span>.",
+    "unitsSetOffDuty": "Les unités suivantes ont été mises hors service : <span>{value}</span>."
+  },
+  "ApiTokenTab": {
+    "apiToken": "Jeton API",
+    "publicAPIAccess": "Accès public à l'API",
+    "token": "Jeton",
+    "tokenDescription": "Ceci est le jeton utilisé pour communiquer avec l'API. Ce jeton est unique et ne doit pas être partagé avec quique ce soit. <a>Read More</a>",
+    "discordBotCommand": "Commande d'intégration de bot Discord",
+    "discordBotCommandDescription": "Cette commmande peut être utilisée avec <a>l'intégration de bot Discord</a>",
+    "readMorePublicAPI": "En savoir plus sur <a>l'API publique ici</a>."
   }
 }
