@@ -89,6 +89,7 @@ export function DatePickerField({ value: _value, ...rest }: Props) {
         </div>
         {state.isOpen && (
           <Popover
+            isCalendar
             className="right-0"
             {...dialogProps}
             isOpen={state.isOpen}
