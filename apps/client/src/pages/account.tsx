@@ -18,21 +18,25 @@ import { usePermission, Permissions } from "hooks/usePermission";
 import { getAvailableSounds, Sounds } from "lib/server/getAvailableSounds.server";
 import { AccountInfoTab } from "components/account/AccountInfoTab";
 
-const AccountSettingsTab = dynamic(async () => {
-  return (await import("components/account/AccountSettingsTab")).AccountSettingsTab;
-});
+const AccountSettingsTab = dynamic(
+  async () => (await import("components/account/AccountSettingsTab")).AccountSettingsTab,
+  { ssr: false },
+);
 
-const AppearanceTab = dynamic(async () => {
-  return (await import("components/account/AppearanceTab")).AppearanceTab;
-});
+const AppearanceTab = dynamic(
+  async () => (await import("components/account/AppearanceTab")).AppearanceTab,
+  { ssr: false },
+);
 
-const ConnectionsTab = dynamic(async () => {
-  return (await import("components/account/ConnectionsTab")).ConnectionsTab;
-});
+const ConnectionsTab = dynamic(
+  async () => (await import("components/account/ConnectionsTab")).ConnectionsTab,
+  { ssr: false },
+);
 
-const UserApiTokenTab = dynamic(async () => {
-  return (await import("components/account/UserApiToken")).UserApiTokenTab;
-});
+const UserApiTokenTab = dynamic(
+  async () => (await import("components/account/UserApiToken")).UserApiTokenTab,
+  { ssr: false },
+);
 
 interface Props {
   availableSounds: Record<Sounds, boolean>;
