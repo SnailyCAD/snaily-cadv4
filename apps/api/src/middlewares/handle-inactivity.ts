@@ -1,6 +1,8 @@
-import type { IncidentInvolvedUnit } from "@prisma/client";
+import { Feature, IncidentInvolvedUnit } from "@prisma/client";
+import { captureException } from "@sentry/node";
 import type { cad } from "@snailycad/types";
 import { Context, Inject, Injectable, Middleware, MiddlewareMethods, Next } from "@tsed/common";
+import { isFeatureEnabled } from "lib/cad";
 import { handleEndCall } from "lib/calls/handle-end-call";
 import { prisma } from "lib/data/prisma";
 import { getNextIncidentId } from "lib/incidents/get-next-incident-id";
@@ -11,14 +13,35 @@ import { Socket } from "services/socket-service";
 @Middleware()
 @Injectable()
 export class HandleInactivity implements MiddlewareMethods {
+  FIVE_MINUTES_IN_MILLISECONDS = 1000 * 60 * 60 * 5;
+
   @Inject(Socket)
   protected socket: Socket;
   constructor(socket: Socket) {
     this.socket = socket;
   }
 
+  protected isCalls911Enabled(cad: cad) {
+    return isFeatureEnabled({
+      defaultReturn: true,
+      feature: Feature.CALLS_911,
+      features: cad.features,
+    });
+  }
+
   public async use(@Context("cad") cad: cad, @Next() next: Next) {
     next();
+
+    const lastInactivitySyncTimestamp = cad.miscCadSettings?.lastInactivitySyncTimestamp;
+    const isCalls911Enabled = this.isCalls911Enabled(cad);
+
+    // only sync every 5 minutes per request
+    // this is to prevent the server from being overloaded with requests
+    const hasFiveMinTimeoutEnded =
+      !lastInactivitySyncTimestamp ||
+      this.FIVE_MINUTES_IN_MILLISECONDS - (Date.now() - lastInactivitySyncTimestamp.getTime()) < 0;
+
+    if (!hasFiveMinTimeoutEnded) return;
 
     const unitsInactivityFilter = getInactivityFilter(
       cad,
@@ -35,6 +58,11 @@ export class HandleInactivity implements MiddlewareMethods {
     const incidentInactivityFilter = getInactivityFilter(cad, "incidentInactivityTimeout");
     if (incidentInactivityFilter) {
       await this.endInactiveIncidents(incidentInactivityFilter.updatedAt);
+    }
+
+    const callsInactivityFilter = getInactivityFilter(cad, "call911InactivityTimeout");
+    if (callsInactivityFilter && isCalls911Enabled) {
+      await this.endInactiveCalls(callsInactivityFilter.updatedAt);
     }
 
     if (dispatcherInactivityTimeout) {
@@ -54,8 +82,18 @@ export class HandleInactivity implements MiddlewareMethods {
       cad,
       "activeWarrantsInactivityTimeout",
     );
+
     if (activeWarrantsInactivityTimeout) {
       await this.endInactiveWarrants(activeWarrantsInactivityTimeout.updatedAt);
+    }
+
+    if (cad.miscCadSettingsId) {
+      await prisma.miscCadSettings.update({
+        where: { id: cad.miscCadSettingsId },
+        data: {
+          lastInactivitySyncTimestamp: new Date(),
+        },
+      });
     }
   }
 
@@ -81,28 +119,32 @@ export class HandleInactivity implements MiddlewareMethods {
   }
 
   protected async endIncident(incident: { id: string; unitsInvolved: IncidentInvolvedUnit[] }) {
-    const unitPromises = incident.unitsInvolved.map(async (unit) => {
-      const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
-      if (!prismaName || !unitId) return;
+    try {
+      const unitPromises = incident.unitsInvolved.map(async (unit) => {
+        const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
+        if (!prismaName || !unitId) return;
 
-      const nextActiveIncidentId = await getNextIncidentId({
-        incidentId: incident.id,
-        type: "unassign",
-        unit: { ...unit, id: unitId },
+        const nextActiveIncidentId = await getNextIncidentId({
+          incidentId: incident.id,
+          type: "unassign",
+          unit: { ...unit, id: unitId },
+        });
+
+        // @ts-expect-error method has the same properties
+        return prisma[prismaName].update({
+          where: { id: unitId },
+          data: { activeIncidentId: nextActiveIncidentId },
+        });
       });
 
-      // @ts-expect-error method has the same properties
-      return prisma[prismaName].update({
-        where: { id: unitId },
-        data: { activeIncidentId: nextActiveIncidentId },
-      });
-    });
-
-    await Promise.all([
-      ...unitPromises,
-      prisma.incidentInvolvedUnit.deleteMany({ where: { incidentId: incident.id } }),
-      prisma.leoIncident.update({ where: { id: incident.id }, data: { isActive: false } }),
-    ]);
+      await Promise.allSettled([
+        ...unitPromises,
+        prisma.incidentInvolvedUnit.deleteMany({ where: { incidentId: incident.id } }),
+        prisma.leoIncident.update({ where: { id: incident.id }, data: { isActive: false } }),
+      ]);
+    } catch (error) {
+      captureException(error);
+    }
   }
 
   protected async endInactiveBolos(updatedAt: Date) {
@@ -118,9 +160,10 @@ export class HandleInactivity implements MiddlewareMethods {
         select: { assignedUnits: true, id: true },
       });
 
-      await Promise.all(calls.map((call) => handleEndCall(call)));
-    } catch {
+      await Promise.allSettled(calls.map((call) => handleEndCall(call)));
+    } catch (error) {
       console.log("Failed to end inactive calls. Skipping...");
+      captureException(error);
     }
   }
 

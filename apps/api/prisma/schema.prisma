@@ -89,6 +89,8 @@ model MiscCadSettings {
   weaponLicenseNumberLength  Int? @default(8)
   waterLicenseNumberLength   Int? @default(8)
 
+  lastInactivitySyncTimestamp DateTime?
+
   /// deprecated, use `webhooks` instead
   call911WebhookId     String?
   statusesWebhookId    String?
