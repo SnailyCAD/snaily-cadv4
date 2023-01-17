@@ -27,13 +27,17 @@ export function QualificationsTable({ hasManagePermissions, setUnit, unit }: Pro
   const t = useTranslations("Leo");
   const { openModal } = useModal();
 
-  const awards = unit.qualifications.filter(
-    (v) => v.qualification.qualificationType === QualificationValueType.AWARD,
-  );
+  const awards =
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    unit.qualifications?.filter(
+      (v) => v.qualification.qualificationType === QualificationValueType.AWARD,
+    ) ?? [];
 
-  const qualifications = unit.qualifications.filter(
-    (v) => v.qualification.qualificationType === QualificationValueType.QUALIFICATION,
-  );
+  const qualifications =
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    unit.qualifications?.filter(
+      (v) => v.qualification.qualificationType === QualificationValueType.QUALIFICATION,
+    ) ?? [];
 
   return (
     <div className={hasManagePermissions ? "mt-10" : undefined}>

@@ -154,6 +154,7 @@ function SidebarItem({ route, href, text, isActive, onRouteClick }: ItemProps) {
   return (
     <li className="px-2">
       <Link
+        prefetch={false}
         onClick={onRouteClick}
         className={classNames(
           "transition-colors rounded-md block px-4 py-1 dark:text-white hover:bg-gray-200 dark:hover:bg-secondary",

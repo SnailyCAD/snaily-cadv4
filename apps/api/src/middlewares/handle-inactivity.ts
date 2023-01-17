@@ -156,7 +156,7 @@ export class HandleInactivity implements MiddlewareMethods {
   protected async endInactiveCalls(updatedAt: Date) {
     try {
       const calls = await prisma.call911.findMany({
-        where: { updatedAt: { not: { gte: updatedAt } } },
+        where: { ended: false, updatedAt: { not: { gte: updatedAt } } },
         select: { assignedUnits: true, id: true },
       });
 

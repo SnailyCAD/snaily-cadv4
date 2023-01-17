@@ -11,18 +11,15 @@ export async function setInactiveUnitsOffDuty(lastStatusChangeTimestamp: Date, s
       setTimeout(resolve, 10_000);
     });
 
+    const where = {
+      status: { shouldDo: { not: ShouldDoType.SET_OFF_DUTY } },
+      lastStatusChangeTimestamp: { lte: lastStatusChangeTimestamp },
+    };
+
     const [officers, deputies] = await prisma.$transaction([
-      prisma.officer.findMany({
-        where: { lastStatusChangeTimestamp: { lte: lastStatusChangeTimestamp } },
-      }),
-      prisma.emsFdDeputy.findMany({
-        where: {
-          lastStatusChangeTimestamp: { lte: lastStatusChangeTimestamp },
-        },
-      }),
-      prisma.combinedLeoUnit.deleteMany({
-        where: { lastStatusChangeTimestamp: { lte: lastStatusChangeTimestamp } },
-      }),
+      prisma.officer.findMany({ where }),
+      prisma.emsFdDeputy.findMany({ where }),
+      prisma.combinedLeoUnit.deleteMany({ where }),
     ]);
 
     await Promise.allSettled([
@@ -45,13 +42,11 @@ export async function setInactiveUnitsOffDuty(lastStatusChangeTimestamp: Date, s
         }),
       ),
       prisma.officer.updateMany({
-        where: { lastStatusChangeTimestamp: { lte: lastStatusChangeTimestamp } },
+        where,
         data: { statusId: null, activeCallId: null, activeIncidentId: null },
       }),
       prisma.emsFdDeputy.updateMany({
-        where: {
-          lastStatusChangeTimestamp: { lte: lastStatusChangeTimestamp },
-        },
+        where,
         data: { statusId: null, activeCallId: null },
       }),
     ]);
