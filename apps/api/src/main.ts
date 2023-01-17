@@ -53,6 +53,10 @@ async function bootstrap() {
       "snailycad.commitHash": versions?.currentCommitHash,
     });
 
+    process.on("SIGINT", () => {
+      platform.stop();
+    });
+
     const nodeVersion = process.versions.node;
 
     console.log(`SnailyCADv4 is running ${versionStr}. Node version: ${nodeVersion}`);
@@ -62,3 +66,13 @@ async function bootstrap() {
 }
 
 void bootstrap();
+
+process
+  .on("unhandledRejection", (error) => {
+    console.error(`uncaughtException captured: ${error}`);
+    Sentry.captureException(error);
+  })
+  .on("uncaughtException", (error) => {
+    console.error(`uncaughtException captured: ${error}`);
+    Sentry.captureException(error);
+  });
