@@ -32,8 +32,8 @@
     "@radix-ui/react-tooltip": "^1.0.2",
     "@react-aria/label": "^3.4.4",
     "@react-aria/ssr": "^3.4.1",
-    "@sentry/nextjs": "^7.30.0",
-    "@sentry/tracing": "^7.30.0",
+    "@sentry/nextjs": "^7.31.0",
+    "@sentry/tracing": "^7.31.0",
     "@snailycad/audit-logger": "1.44.1",
     "@snailycad/config": "1.44.1",
     "@snailycad/permissions": "1.44.1",
@@ -84,14 +84,14 @@
     "remark-github": "^11.2.4",
     "slate": "^0.88.1",
     "slate-history": "^0.86.0",
-    "slate-react": "^0.88.0",
+    "slate-react": "^0.88.2",
     "socket.io-client": "^4.5.4",
     "sortablejs": "^1.15.0",
     "storage-factory": "^0.2.1",
     "use-intl": "^2.10.2",
     "uuid": "^9.0.0",
     "zod": "^3.20.2",
-    "zustand": "^4.3.1"
+    "zustand": "^4.3.2"
   },
   "devDependencies": {
     "@types/color": "^3.0.3",
