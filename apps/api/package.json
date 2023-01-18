@@ -41,8 +41,8 @@
   "dependencies": {
     "@discordjs/rest": "^1.5.0",
     "@prisma/client": "^4.8.1",
-    "@sentry/node": "^7.31.0",
-    "@sentry/tracing": "^7.31.0",
+    "@sentry/node": "^7.30.0",
+    "@sentry/tracing": "^7.30.0",
     "@snaily-cad/image-data-uri": "^3.1.0",
     "@snailycad/audit-logger": "1.44.1",
     "@snailycad/config": "1.44.1",
