@@ -83,10 +83,11 @@ export class Calls911Controller {
     @QueryParams("assignedUnit", String) assignedUnit?: string,
   ): Promise<APITypes.Get911CallsData> {
     const inactivityFilter = getInactivityFilter(cad, "call911InactivityTimeout");
+    const inactivityFilterWhere = includeEnded ? {} : inactivityFilter?.filter;
 
     const where: Prisma.Call911WhereInput = {
+      ...(inactivityFilterWhere ?? {}),
       ended: includeEnded ? undefined : false,
-      ...(inactivityFilter?.filter ?? {}),
       OR: query
         ? [
             { descriptionData: { array_contains: query } },
