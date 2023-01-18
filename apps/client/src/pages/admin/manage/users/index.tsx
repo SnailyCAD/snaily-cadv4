@@ -64,7 +64,7 @@ export default function ManageUsers({ data }: Props) {
 
       <TabList tabs={tabs}>
         <AllUsersTab {...data} />
-        {pending.length >= 0 ? <PendingUsersTab {...data} users={pending} /> : null}
+        <PendingUsersTab {...data} users={pending} />
       </TabList>
     </AdminLayout>
   );
