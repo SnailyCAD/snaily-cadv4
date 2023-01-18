@@ -265,7 +265,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
                     type="checkbox"
                   />
                 </FormField>
-              ) : (
+              ) : !isCitizen ? (
                 <FormField
                   className="!mb-0"
                   labelClassName="min-w-fit"
@@ -284,7 +284,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
                     type="checkbox"
                   />
                 </FormField>
-              )}
+              ) : null}
 
               <Button onPress={handleClose} type="button" variant="cancel">
                 {common("cancel")}
