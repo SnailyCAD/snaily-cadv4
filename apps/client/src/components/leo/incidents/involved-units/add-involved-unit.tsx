@@ -12,6 +12,8 @@ import type { PutIncidentByIdData } from "@snailycad/types/api";
 import type { CombinedLeoUnit, EmsFdDeputy, LeoIncident, Officer } from "@snailycad/types";
 import { shallow } from "zustand/shallow";
 import { useDispatchState } from "state/dispatch/dispatch-state";
+import Image from "next/image";
+import { useImageUrl } from "hooks/useImageUrl";
 
 interface Props {
   onClose?(): void;
@@ -31,6 +33,7 @@ export function AddInvolvedUnitToIncidentModal({ onClose, incident }: Props) {
     shallow,
   );
 
+  const { makeImageUrl } = useImageUrl();
   const t = useTranslations("Calls");
 
   function handleClose() {
@@ -109,10 +112,24 @@ export function AddInvolvedUnitToIncidentModal({ onClose, incident }: Props) {
               {(item) => {
                 const template = isUnitCombined(item) ? "pairedUnitTemplate" : "callsignTemplate";
                 const nameAndCallsign = `${generateCallsign(item, template)} ${makeUnitName(item)}`;
+                const imageId = isUnitCombined(item) ? null : item.imageId;
 
                 return (
                   <Item key={item.id} textValue={nameAndCallsign}>
-                    {nameAndCallsign}
+                    <div className="flex items-center">
+                      {imageId ? (
+                        <Image
+                          alt={nameAndCallsign}
+                          className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                          draggable={false}
+                          src={makeImageUrl("units", imageId)!}
+                          loading="lazy"
+                          width={30}
+                          height={30}
+                        />
+                      ) : null}
+                      <p>{nameAndCallsign}</p>
+                    </div>
                   </Item>
                 );
               }}

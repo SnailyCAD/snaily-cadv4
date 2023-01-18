@@ -13,6 +13,8 @@ import { Toggle } from "components/form/Toggle";
 import type { Put911CallByIdData } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call-911-state";
 import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
+import Image from "next/image";
+import { useImageUrl } from "hooks/useImageUrl";
 
 interface Props {
   onClose?(): void;
@@ -25,6 +27,7 @@ export function AddUnitToCallModal({ onClose }: Props) {
   const { generateCallsign } = useGenerateCallsign();
   const call911State = useCall911State();
   const call = call911State.currentlySelectedCall!;
+  const { makeImageUrl } = useImageUrl();
 
   const t = useTranslations("Calls");
 
@@ -111,10 +114,24 @@ export function AddUnitToCallModal({ onClose }: Props) {
               {(item) => {
                 const template = isUnitCombined(item) ? "pairedUnitTemplate" : "callsignTemplate";
                 const nameAndCallsign = `${generateCallsign(item, template)} ${makeUnitName(item)}`;
+                const imageId = isUnitCombined(item) ? null : item.imageId;
 
                 return (
                   <Item key={item.id} textValue={nameAndCallsign}>
-                    {nameAndCallsign}
+                    <div className="flex items-center">
+                      {imageId ? (
+                        <Image
+                          alt={nameAndCallsign}
+                          className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                          draggable={false}
+                          src={makeImageUrl("units", imageId)!}
+                          loading="lazy"
+                          width={30}
+                          height={30}
+                        />
+                      ) : null}
+                      <p>{nameAndCallsign}</p>
+                    </div>
                   </Item>
                 );
               }}
