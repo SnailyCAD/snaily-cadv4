@@ -1566,6 +1566,7 @@ enum ShouldDoType {
   PANIC_BUTTON
   EN_ROUTE
   ON_SCENE
+  UNAVAILABLE
 }
 
 enum BoloType {
