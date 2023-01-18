@@ -139,7 +139,7 @@ export function ManagePermissionsModal({ user, onUpdate, isReadOnly }: Props) {
               name="search"
               value={search}
               onChange={(value) => setSearch(value)}
-              placeholder="Find features.."
+              placeholder={common("search")}
             />
 
             <div>
