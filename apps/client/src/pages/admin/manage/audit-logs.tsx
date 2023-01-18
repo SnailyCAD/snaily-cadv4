@@ -90,7 +90,7 @@ export default function ManageAuditLogs({ data }: Props) {
           return {
             id: auditLog.id,
             type: auditLog.action.type,
-            executor: auditLog.executor.username,
+            executor: auditLog.executor?.username ?? "Public API",
             createdAt: <FullDate>{auditLog.createdAt}</FullDate>,
             actions: (
               <Button onPress={() => openModal(ModalIds.ViewAuditLogData, auditLog)} size="xs">
