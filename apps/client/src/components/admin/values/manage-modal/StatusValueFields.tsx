@@ -26,6 +26,7 @@ export const SHOULD_DO_LABELS: Record<ShouldDoType, string> = {
   [ShouldDoType.PANIC_BUTTON]: "Panic Button",
   [ShouldDoType.EN_ROUTE]: "En Route",
   [ShouldDoType.ON_SCENE]: "On Scene",
+  [ShouldDoType.UNAVAILABLE]: "Unavailable",
 };
 
 export const WHAT_PAGES_LABELS: Record<WhatPages, string> = {
