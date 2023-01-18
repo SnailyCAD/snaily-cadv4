@@ -713,8 +713,8 @@ model Notification {
   id          String   @id @default(uuid())
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
-  executor    User     @relation("executor", fields: [executorId], references: [id], onDelete: Cascade)
-  executorId  String
+  executor    User?    @relation("executor", fields: [executorId], references: [id], onDelete: Cascade)
+  executorId  String?
   title       String
   description String
   createdAt   DateTime @default(now())
