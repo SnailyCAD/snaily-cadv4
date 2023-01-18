@@ -27,7 +27,8 @@ export type AuditLogActions =
   | CadSettingsUpdate
   | MiscCadSettingsUpdate
   | UserApiTokenDelete
-  | User2FADelete;
+  | User2FADelete
+  | Calls911Purge;
 
 type BaseAuditLogAction<ActionType extends AuditLogActionType, Previous, New> = {
   type: ActionType;
@@ -161,4 +162,9 @@ export type MiscCadSettingsUpdate = BaseAuditLogAction<
   AuditLogActionType.MiscCadSettingsUpdate,
   Types.MiscCadSettings,
   Types.MiscCadSettings
+>;
+export type Calls911Purge = BaseAuditLogAction<
+  AuditLogActionType.Calls911Purge,
+  undefined,
+  string[]
 >;

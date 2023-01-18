@@ -44,6 +44,7 @@ import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 import { getTranslator } from "utils/get-translator";
 import { HandleInactivity } from "middlewares/handle-inactivity";
 import { handleEndCall } from "lib/calls/handle-end-call";
+import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 
 export const callInclude = {
   position: true,
@@ -364,7 +365,10 @@ export class Calls911Controller {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.ManageCallHistory],
   })
-  async purgeCalls(@BodyParams("ids") ids: string[]): Promise<APITypes.DeletePurge911CallsData> {
+  async purgeCalls(
+    @BodyParams("ids") ids: string[],
+    @Context("sessionUserId") sessionUserId: string,
+  ): Promise<APITypes.DeletePurge911CallsData> {
     if (!Array.isArray(ids)) return false;
 
     await Promise.all(
@@ -376,6 +380,13 @@ export class Calls911Controller {
         this.socket.emit911CallDelete(call);
       }),
     );
+
+    await createAuditLogEntry({
+      translationKey: "calls911Purged",
+      action: { type: AuditLogActionType.Calls911Purge, new: ids },
+      executorId: sessionUserId,
+      prisma,
+    });
 
     return true;
   }

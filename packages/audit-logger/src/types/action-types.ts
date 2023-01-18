@@ -30,4 +30,6 @@ export enum AuditLogActionType {
 
   CadSettingsUpdate = "CadSettingsUpdate",
   MiscCadSettingsUpdate = "MiscCadSettingsUpdate",
+
+  Calls911Purge = "Calls911Purge",
 }
