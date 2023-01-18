@@ -136,17 +136,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@casper124578/use-socket.io@npm:4.1.3":
-  version: 4.1.3
-  resolution: "@casper124578/use-socket.io@npm:4.1.3"
+"@casper124578/use-socket.io@npm:5.0.0":
+  version: 5.0.0
+  resolution: "@casper124578/use-socket.io@npm:5.0.0"
   dependencies:
-    react: ">=17"
-    socket.io-client: ">=4.5"
-    zustand: ^4.1.1
+    react: 18.2.0
+    socket.io-client: 4.5.4
+    tsup: ^6.5.0
+    zustand: ^4.3.2
   peerDependencies:
-    react: ">=17"
-    socket.io-client: ">=4.2"
-  checksum: 5cef7d592262205d74dd5cc10217e752331c43a471993492d02c4fef399728a6b271a1da45186d2c7cd392e736615c8ced6f31c0810d363d4dbf118d37e9dae3
+    react: ">=18"
+    socket.io-client: ">=4.5"
+  checksum: c997cc63f59e94dead94f2f33aa3d3f792d518a85108d0c943375c0f339945322edb702f6f216011d98f336bf786de8c1662a2e123ff6f2faccc4ba2c0399aeb
   languageName: node
   linkType: hard
 
@@ -2954,7 +2955,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snailycad/client@workspace:apps/client"
   dependencies:
-    "@casper124578/use-socket.io": 4.1.3
+    "@casper124578/use-socket.io": 5.0.0
     "@casper124578/useful": ^2.0.6
     "@headlessui/react": ^1.7.7
     "@radix-ui/react-accordion": ^1.0.1
@@ -11761,7 +11762,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:18.2.0, react@npm:>=17":
+"react@npm:18.2.0":
   version: 18.2.0
   resolution: "react@npm:18.2.0"
   dependencies:
@@ -12554,7 +12555,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"socket.io-client@npm:>=4.5, socket.io-client@npm:^4.5.4":
+"socket.io-client@npm:4.5.4, socket.io-client@npm:^4.5.4":
   version: 4.5.4
   resolution: "socket.io-client@npm:4.5.4"
   dependencies:
@@ -14555,23 +14556,6 @@ __metadata:
   version: 3.20.2
   resolution: "zod@npm:3.20.2"
   checksum: 04172f7e9350372684ccd298d4716908edc9113751295b6c4e1b3ea84e2af8997e504b33ba36f4741417bb2a5dc90bfd40501f6b0e7389df10e42a63d6d8366c
-  languageName: node
-  linkType: hard
-
-"zustand@npm:^4.1.1":
-  version: 4.3.1
-  resolution: "zustand@npm:4.3.1"
-  dependencies:
-    use-sync-external-store: 1.2.0
-  peerDependencies:
-    immer: ">=9.0"
-    react: ">=16.8"
-  peerDependenciesMeta:
-    immer:
-      optional: true
-    react:
-      optional: true
-  checksum: bc35ebdfb2028e33d112ec113d77c95bdc3b693b3c2d78eacdc40017cf8f7f32934a49213aab3ee5e3767b44869bd306da171e6438b89fbc78417b419725e895
   languageName: node
   linkType: hard
 
