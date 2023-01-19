@@ -1,6 +1,6 @@
 import { Loader } from "@snailycad/ui";
 import { getAPIUrl } from "@snailycad/utils/api-url";
-import type { GetServerSideProps } from "next";
+import type { GetStaticProps } from "next";
 
 export default function ApiDocs() {
   return (
@@ -12,7 +12,7 @@ export default function ApiDocs() {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const apiURL = getAPIUrl();
   const destination = apiURL.replace("/v1", "/api-docs");
 
