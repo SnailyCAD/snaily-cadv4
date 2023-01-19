@@ -63,11 +63,25 @@ export function useMapPlayers() {
       const newMap = new Map();
 
       for (const player of payload) {
-        const currentPlayer = playersToFetch.find(
-          (v) =>
-            v.identifiers.steamId === player.identifiers.steamId ||
-            v.identifiers.discordId === player.identifiers.discordId,
-        );
+        const currentPlayer = playersToFetch.find((v) => {
+          if (
+            v.identifiers.steamId &&
+            v.identifiers.steamId === player.identifiers.steamId &&
+            player.identifiers.steamId
+          ) {
+            return true;
+          }
+
+          if (
+            v.identifiers.discordId &&
+            v.identifiers.discordId === player.identifiers.discordId &&
+            player.identifiers.discordId
+          ) {
+            return true;
+          }
+
+          return false;
+        });
 
         const steamId = currentPlayer?.convertedSteamId;
         const discordId = currentPlayer?.discordId;
@@ -75,6 +89,7 @@ export function useMapPlayers() {
         const user = _prevPlayerData.find(
           (v) => v.steamId === steamId || v.discordId === discordId,
         );
+
         const existing = players.get(player.name);
 
         if (existing) {
@@ -91,6 +106,7 @@ export function useMapPlayers() {
             ...omittedExisting,
             ...existing,
             ...player,
+            ...(user ?? {}),
           });
 
           continue;
@@ -100,7 +116,7 @@ export function useMapPlayers() {
         newMap.set(player.name, {
           convertedSteamId: currentPlayer?.convertedSteamId,
           ...player,
-          ...user,
+          ...(user ?? {}),
         });
       }
 
