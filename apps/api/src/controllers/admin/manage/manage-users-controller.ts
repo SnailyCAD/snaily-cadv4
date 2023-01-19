@@ -264,7 +264,10 @@ export class ManageUsersController {
     @BodyParams() body: unknown,
   ): Promise<APITypes.PutManageUserByIdRolesData> {
     const data = validateSchema(ROLES_SCHEMA, body);
-    const user = await prisma.user.findUnique({ where: { id: userId }, include: { roles: true } });
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: manageUsersSelect(false),
+    });
 
     if (!user) {
       throw new NotFound("notFound");
@@ -310,7 +313,10 @@ export class ManageUsersController {
     @BodyParams() body: unknown,
   ): Promise<APITypes.PutManageUserByIdData> {
     const data = validateSchema(UPDATE_USER_SCHEMA, body);
-    const user = await prisma.user.findUnique({ where: { id: userId } });
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: manageUsersSelect(false),
+    });
 
     if (!user) {
       throw new NotFound("notFound");
