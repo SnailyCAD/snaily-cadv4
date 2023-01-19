@@ -1,8 +1,8 @@
-import { Prisma, Rank, User } from "@prisma/client";
+import { Prisma, Rank } from "@prisma/client";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
+import { BodyParams, PathParams, QueryParams } from "@tsed/platform-params";
 import { ContentType, Delete, Description, Get, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/getSessionUser";
 import { prisma } from "lib/data/prisma";
@@ -203,12 +203,8 @@ export class AdminManageBusinessesController {
     permissions: [Permissions.DeleteBusinesses],
   })
   async deleteBusiness(
-    @Context("user") user: User,
-    @BodyParams() body: any,
     @PathParams("id") businessId: string,
   ): Promise<APITypes.DeleteManageBusinessesData> {
-    const reason = body.reason;
-
     const business = await prisma.business.findUnique({
       where: {
         id: businessId,
@@ -218,15 +214,6 @@ export class AdminManageBusinessesController {
     if (!business) {
       throw new NotFound("notFound");
     }
-
-    await prisma.notification.create({
-      data: {
-        userId: business.userId,
-        executorId: user.id,
-        description: reason,
-        title: "BUSINESS_DELETED",
-      },
-    });
 
     await prisma.business.delete({
       where: {

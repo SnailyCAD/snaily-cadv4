@@ -224,8 +224,6 @@ export type VehicleValue = Prisma.VehicleValue & { value: Value };
 
 export type WeaponValue = Prisma.WeaponValue & { value: Value };
 
-export type Notification = Prisma.Notification;
-
 export type BleeterPost = Prisma.BleeterPost;
 
 export type TowCall = Prisma.TowCall & {
