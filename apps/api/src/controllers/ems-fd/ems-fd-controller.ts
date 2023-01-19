@@ -308,7 +308,7 @@ export class EmsFdController {
         callsign: data.callsign,
         callsign2: data.callsign2,
         departmentId: defaultDepartment ? defaultDepartment.id : data.department,
-        divisionId: data.division!,
+        divisionId: data.division || null,
         badgeNumber: data.badgeNumber,
         citizenId: citizen.id,
         imageId: validateImageURL(data.image),
