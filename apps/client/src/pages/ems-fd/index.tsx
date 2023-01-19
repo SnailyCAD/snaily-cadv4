@@ -144,7 +144,7 @@ export default function EmsFDDashboard({
   );
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({ req, res, locale }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ req, locale }) => {
   const user = await getSessionUser(req);
   const [values, calls, { deputies }, activeDeputies, activeDeputy] = await requestAll(req, [
     ["/admin/values/codes_10", []],
@@ -153,9 +153,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ req, res, 
     ["/ems-fd/active-deputies", []],
     ["/ems-fd/active-deputy", null],
   ]);
-
-  // https://nextjs.org/docs/going-to-production#caching
-  res.setHeader("Cache-Control", "public, s-maxage=10, stale-while-revalidate=59");
 
   return {
     props: {

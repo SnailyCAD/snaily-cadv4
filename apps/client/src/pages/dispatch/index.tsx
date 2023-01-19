@@ -147,7 +147,7 @@ export default function DispatchDashboard(props: DispatchPageProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res, locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const user = await getSessionUser(req);
   const [
     values,
@@ -164,9 +164,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res, locale 
     ["/leo/active-officers", []],
     ["/ems-fd/active-deputies", []],
   ]);
-
-  // https://nextjs.org/docs/going-to-production#caching
-  res.setHeader("Cache-Control", "public, s-maxage=10, stale-while-revalidate=59");
 
   return {
     props: {

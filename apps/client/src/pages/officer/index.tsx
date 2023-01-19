@@ -243,7 +243,7 @@ export default function OfficerDashboard({
   );
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({ req, res, locale }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ req, locale }) => {
   const user = await getSessionUser(req);
   const [
     activeOfficer,
@@ -262,9 +262,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ req, res, 
     ["/leo/active-officers", []],
     ["/ems-fd/active-deputies", []],
   ]);
-
-  // https://nextjs.org/docs/going-to-production#caching
-  res.setHeader("Cache-Control", "public, s-maxage=10, stale-while-revalidate=59");
 
   return {
     props: {
