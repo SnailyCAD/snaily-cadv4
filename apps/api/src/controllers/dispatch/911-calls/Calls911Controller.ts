@@ -409,7 +409,7 @@ export class Calls911Controller {
       throw new NotFound("callNotFound");
     }
 
-    await handleEndCall(call);
+    await handleEndCall({ call, socket: this.socket });
     await Promise.all([
       this.socket.emit911CallDelete(call),
       this.socket.emitUpdateOfficerStatus(),
