@@ -43,6 +43,7 @@ export interface ValueContext {
   qualification: ContextValue<QualificationValue>;
   callType: ContextValue<CallTypeValue>;
   address: ContextValue<AddressValue>;
+  addressFlag: ContextValue;
   setValues: React.Dispatch<React.SetStateAction<GetValuesData>>;
 }
 

@@ -157,5 +157,11 @@
     "ADD": "Add Emergency Vehicle",
     "DELETE": "Delete Emergency Vehicle",
     "EDIT": "Edit Emergency Vehicle"
+  },
+  "ADDRESS_FLAG": {
+    "MANAGE": "Manage Address flags",
+    "ADD": "Add address flag",
+    "DELETE": "Delete address flag",
+    "EDIT": "Edit address flag"
   }
 }

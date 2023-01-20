@@ -368,6 +368,7 @@ model Citizen {
   occupation           String?                       @db.Text
   additionalInfo       String?                       @db.Text
   flags                Value[]                       @relation("citizenFlags")
+  addressFlags         Value[]                       @relation("citizenAddressFlags")
   customFields         CustomFieldValue[]
   vehicles             RegisteredVehicle[]
   weapons              Weapon[]
@@ -544,6 +545,7 @@ model Value {
   LicenseExam                     LicenseExam[]                 @relation("examToLicense")
   AddressValue                    AddressValue[]                @relation("addressValueToValue")
   EmergencyVehicleValue           EmergencyVehicleValue[]       @relation("emergencyVehicleToValue")
+  CitizenAddressFlags             Citizen[]                     @relation("citizenAddressFlags")
 }
 
 model AddressValue {
@@ -1528,6 +1530,7 @@ enum ValueType {
   CALL_TYPE
   ADDRESS
   EMERGENCY_VEHICLE
+  ADDRESS_FLAG
 }
 
 enum DriversLicenseCategoryType {

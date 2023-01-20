@@ -510,6 +510,8 @@ export const typeHandlers = {
   LICENSE: async (options: HandlerOptions) => typeHandlers.GENERIC({ ...options, type: "LICENSE" }),
   VEHICLE_FLAG: async (options: HandlerOptions) =>
     typeHandlers.GENERIC({ ...options, type: "VEHICLE_FLAG" }),
+  ADDRESS_FLAG: async (options: HandlerOptions) =>
+    typeHandlers.GENERIC({ ...options, type: "ADDRESS_FLAG" }),
   CITIZEN_FLAG: async (options: HandlerOptions) =>
     typeHandlers.GENERIC({ ...options, type: "CITIZEN_FLAG" }),
 

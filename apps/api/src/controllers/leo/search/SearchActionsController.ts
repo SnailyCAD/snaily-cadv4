@@ -230,6 +230,44 @@ export class SearchActionsController {
     return updated;
   }
 
+  @Put("/citizen-address-flags/:citizenId")
+  @Description("Update the citizen's address flags by their id")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch,
+    permissions: [Permissions.Dispatch],
+  })
+  async updateCitizenAddressFlags(
+    @BodyParams("addressFlags") addressFlags: string[],
+    @PathParams("citizenId") citizenId: string,
+  ): Promise<APITypes.PutSearchActionsCitizenFlagsData> {
+    const citizen = await prisma.citizen.findUnique({
+      where: { id: citizenId },
+      select: { id: true, addressFlags: true },
+    });
+
+    if (!citizen) {
+      throw new NotFound("notFound");
+    }
+
+    const disconnectConnectArr = manyToManyHelper(
+      citizen.addressFlags.map((v) => v.id),
+      addressFlags,
+    );
+
+    await prisma.$transaction(
+      disconnectConnectArr.map((v) =>
+        prisma.citizen.update({ where: { id: citizen.id }, data: { addressFlags: v } }),
+      ),
+    );
+
+    const updated = await prisma.citizen.findUniqueOrThrow({
+      where: { id: citizen.id },
+      select: { id: true, addressFlags: true },
+    });
+
+    return updated;
+  }
+
   @Put("/custom-fields/citizen/:citizenId")
   @UsePermissions({
     fallback: (u) => u.isLeo,
