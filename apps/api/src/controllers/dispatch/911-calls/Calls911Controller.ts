@@ -194,6 +194,7 @@ export class Calls911Controller {
         situationCodeId: data.situationCode ?? null,
         viaDispatch: isFromDispatch,
         typeId: data.type,
+        extraFields: data.extraFields || undefined,
       },
       include: callInclude,
     });
@@ -304,6 +305,7 @@ export class Calls911Controller {
         descriptionData: data.descriptionData ?? undefined,
         situationCodeId: data.situationCode === null ? null : data.situationCode,
         typeId: data.type,
+        extraFields: data.extraFields || undefined,
       },
     });
 

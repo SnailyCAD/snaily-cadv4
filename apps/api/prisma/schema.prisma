@@ -1085,6 +1085,7 @@ model Call911 {
   gtaMapPosition   GTAMapPosition?   @relation(fields: [gtaMapPositionId], references: [id])
   gtaMapPositionId String?
   isSignal100      Boolean?          @default(false)
+  extraFields      Json?
 }
 
 model GTAMapPosition {
