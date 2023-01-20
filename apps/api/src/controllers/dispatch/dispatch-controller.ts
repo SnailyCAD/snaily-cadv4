@@ -18,7 +18,6 @@ import {
 import { ExtendedNotFound } from "src/exceptions/extended-not-found";
 import { incidentInclude } from "controllers/leo/incidents/IncidentController";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
-import { userProperties } from "lib/auth/getSessionUser";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
 import { getInactivityFilter } from "lib/leo/utils";
@@ -47,34 +46,39 @@ export class DispatchController {
   @UseAfter(HandleInactivity)
   async getDispatchData(
     @Context("cad") cad: { miscCadSettings: MiscCadSettings | null },
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.GetDispatchData> {
     const dispatcherInactivityTimeout = getInactivityFilter(
       cad,
       "activeDispatchersInactivityTimeout",
       "updatedAt",
     );
-
-    const activeDispatchers = await prisma.activeDispatchers.findMany({
-      where: dispatcherInactivityTimeout?.filter,
-      include: {
-        user: {
-          select: { id: true, username: true, rank: true, isLeo: true, isEmsFd: true },
-        },
-      },
-    });
-
     const incidentInactivityFilter = getInactivityFilter(cad, "incidentInactivityTimeout");
 
-    const activeIncidents = await prisma.leoIncident.findMany({
-      where: { isActive: true, ...(incidentInactivityFilter?.filter ?? {}) },
-      include: incidentInclude,
-    });
+    const [activeDispatchersCount, userActiveDispatcher, activeIncidents] =
+      await prisma.$transaction([
+        prisma.activeDispatchers.count({
+          where: dispatcherInactivityTimeout?.filter,
+        }),
+        prisma.activeDispatchers.findFirst({
+          where: {
+            userId: sessionUserId,
+            ...(dispatcherInactivityTimeout?.filter ?? {}),
+          },
+          include: { user: { select: { username: true, id: true } } },
+        }),
+        prisma.leoIncident.findMany({
+          where: { isActive: true, ...(incidentInactivityFilter?.filter ?? {}) },
+          include: incidentInclude,
+        }),
+      ]);
 
     const correctedIncidents = activeIncidents.map(officerOrDeputyToUnit);
 
     return {
       activeIncidents: correctedIncidents,
-      activeDispatchers,
+      activeDispatchersCount,
+      userActiveDispatcher,
     };
   }
 
@@ -212,11 +216,12 @@ export class DispatchController {
   })
   async setActiveDispatchersState(
     @Context("user") user: User,
+    @Context("cad") cad: cad,
     @BodyParams("value") value: boolean,
   ): Promise<APITypes.PostDispatchDispatchersStateData> {
     let dispatcher = await prisma.activeDispatchers.findFirst({
       where: { userId: user.id },
-      include: { user: { select: userProperties } },
+      include: { user: { select: { username: true, id: true } } },
     });
 
     if (value) {
@@ -224,21 +229,30 @@ export class DispatchController {
         dispatcher ??
         (await prisma.activeDispatchers.create({
           data: { userId: user.id },
-          include: { user: { select: userProperties } },
+          include: { user: { select: { username: true, id: true } } },
         }));
     } else {
       if (dispatcher) {
         await prisma.activeDispatchers.delete({
           where: { id: dispatcher.id },
         });
-
-        dispatcher = null;
       }
+
+      dispatcher = null;
     }
+
+    const dispatcherInactivityTimeout = getInactivityFilter(
+      cad,
+      "activeDispatchersInactivityTimeout",
+      "updatedAt",
+    );
+    const activeDispatchersCount = await prisma.activeDispatchers.count({
+      where: dispatcherInactivityTimeout?.filter,
+    });
 
     this.socket.emitActiveDispatchers();
 
-    return { dispatcher };
+    return { dispatcher, activeDispatchersCount };
   }
 
   @Put("/radio-channel/:unitId")

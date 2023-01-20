@@ -31,6 +31,7 @@ import type {
 import { UtilityPanel } from "components/shared/UtilityPanel";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { DndProvider } from "components/shared/dnd/DndProvider";
+import { useActiveDispatcherState } from "state/dispatch/active-dispatcher-state";
 
 const ActiveIncidents = dynamic(async () => {
   return (await import("components/dispatch/active-incidents")).ActiveIncidents;
@@ -80,6 +81,7 @@ export default function DispatchDashboard(props: DispatchPageProps) {
     ],
   });
 
+  const setUserActiveDispatcher = useActiveDispatcherState((s) => s.setUserActiveDispatcher);
   const state = useDispatchState();
   const set911Calls = useCall911State((state) => state.setCalls);
   const t = useTranslations("Leo");
@@ -93,7 +95,7 @@ export default function DispatchDashboard(props: DispatchPageProps) {
     set911Calls(props.calls.calls);
     state.setBolos(props.bolos.bolos);
 
-    state.setActiveDispatchers(props.activeDispatchers);
+    setUserActiveDispatcher(props.userActiveDispatcher, props.activeDispatchersCount);
     state.setActiveIncidents(props.activeIncidents);
 
     state.setActiveDeputies(props.activeDeputies);
@@ -149,21 +151,15 @@ export default function DispatchDashboard(props: DispatchPageProps) {
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const user = await getSessionUser(req);
-  const [
-    values,
-    calls,
-    bolos,
-    { activeDispatchers, activeIncidents },
-    activeOfficers,
-    activeDeputies,
-  ] = await requestAll(req, [
-    ["/admin/values/codes_10", []],
-    ["/911-calls", { calls: [], totalCount: 0 }],
-    ["/bolos", { bolos: [], totalCount: 0 }],
-    ["/dispatch", { activeDispatchers: [], activeIncidents: [] }],
-    ["/leo/active-officers", []],
-    ["/ems-fd/active-deputies", []],
-  ]);
+  const [values, calls, bolos, activeDispatcherData, activeOfficers, activeDeputies] =
+    await requestAll(req, [
+      ["/admin/values/codes_10", []],
+      ["/911-calls", { calls: [], totalCount: 0 }],
+      ["/bolos", { bolos: [], totalCount: 0 }],
+      ["/dispatch", { activeDispatchersCount: 0, userActiveDispatcher: null, activeIncidents: [] }],
+      ["/leo/active-officers", []],
+      ["/ems-fd/active-deputies", []],
+    ]);
 
   return {
     props: {
@@ -173,8 +169,11 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       values,
       activeOfficers,
       activeDeputies,
-      activeDispatchers,
-      activeIncidents,
+
+      activeIncidents: activeDispatcherData.activeIncidents ?? [],
+      userActiveDispatcher: activeDispatcherData.userActiveDispatcher ?? null,
+      activeDispatchersCount: activeDispatcherData.activeDispatchersCount ?? 0,
+
       messages: {
         ...(await getTranslations(
           ["citizen", "truck-logs", "ems-fd", "leo", "calls", "common"],
