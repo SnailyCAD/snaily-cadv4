@@ -10,7 +10,7 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useNameSearch } from "state/search/name-search-state";
 import { ModalIds } from "types/ModalIds";
-import type { PutSearchActionsCitizenFlagsData } from "@snailycad/types/api";
+import type { PutSearchActionsCitizenAddressFlagsData } from "@snailycad/types/api";
 import { shallow } from "zustand/shallow";
 
 export function ManageCitizenAddressFlagsModal() {
@@ -31,13 +31,13 @@ export function ManageCitizenAddressFlagsModal() {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!currentResult) return;
 
-    const { json } = await execute<PutSearchActionsCitizenFlagsData>({
+    const { json } = await execute<PutSearchActionsCitizenAddressFlagsData>({
       path: `/search/actions/citizen-address-flags/${currentResult.id}`,
       method: "PUT",
-      data: { flags: values.addressFlags.map((v) => v.value) },
+      data: { addressFlags: values.addressFlags.map((v) => v.value) },
     });
 
-    if (json.flags) {
+    if (json.addressFlags) {
       setCurrentResult({ ...currentResult, ...json });
       closeModal(ModalIds.ManageAddressFlags);
     }

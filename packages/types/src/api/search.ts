@@ -120,6 +120,14 @@ export type PutSearchActionsCitizenFlagsData = Pick<Types.Citizen, "id" | "flags
 
 /**
  * @method PUT
+ * @route /search/actions/citizen-flags/:citizenId
+ */
+export type PutSearchActionsCitizenAddressFlagsData = Pick<Types.Citizen, "id"> & {
+  addressFlags: Types.Value[];
+};
+
+/**
+ * @method PUT
  * @route /search/actions/custom-fields/citizen/:citizenId
  */
 export interface PutSearchActionsUpdateCitizenCustomFields {
