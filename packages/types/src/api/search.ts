@@ -44,6 +44,7 @@ export type PostLeoSearchCitizenData = (
       weapons: Types.Weapon[];
       notes: Types.Note[];
       Record: Types.Record[];
+      addressFlags: Types.Value[];
     })
   | (Pick<
       Types.Citizen,

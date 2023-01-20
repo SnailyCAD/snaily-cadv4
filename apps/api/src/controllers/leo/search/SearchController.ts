@@ -65,6 +65,7 @@ export const citizenSearchIncludeOrSelect = (
         officers: { select: { department: { select: { isConfidential: true } } } },
         ...citizenInclude,
         vehicles: { include: vehicleSearchInclude },
+        addressFlags: true,
         businesses: true,
         medicalRecords: true,
         customFields: { include: { field: true } },

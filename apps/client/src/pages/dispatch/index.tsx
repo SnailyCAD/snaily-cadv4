@@ -78,6 +78,7 @@ export default function DispatchDashboard(props: DispatchPageProps) {
       ValueType.VEHICLE_FLAG,
       ValueType.DEPARTMENT,
       ValueType.DIVISION,
+      ValueType.ADDRESS_FLAG,
     ],
   });
 
