@@ -103,6 +103,17 @@ export function DepartmentFields() {
           </p>
         </div>
       ) : null}
+
+      <TextField
+        isTextarea
+        isOptional
+        errorMessage={errors.extraFields as string}
+        label="Extra Fields - JSON"
+        name="extraFields"
+        onChange={(value) => setFieldValue("extraFields", value)}
+        value={values.extraFields}
+        placeholder="JSON"
+      />
     </>
   );
 }
