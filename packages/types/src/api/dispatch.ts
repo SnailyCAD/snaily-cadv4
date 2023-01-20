@@ -88,10 +88,11 @@ export type Delete911CallEventByIdData = Get911CallsData["calls"][number];
  * @route /dispatch
  */
 export interface GetDispatchData {
+  activeDispatchersCount: number;
+  userActiveDispatcher:
+    | (Prisma.ActiveDispatchers & { user: Pick<Types.User, "id" | "username"> })
+    | null;
   activeIncidents: Types.LeoIncident[];
-  activeDispatchers: (Prisma.ActiveDispatchers & {
-    user: Pick<Types.User, "id" | "rank" | "username" | "isLeo" | "isEmsFd">;
-  })[];
 }
 
 /**
@@ -113,7 +114,8 @@ export interface PostDispatchSignal100Data {
  * @route /dispatch/dispatchers-state
  */
 export interface PostDispatchDispatchersStateData {
-  dispatcher: GetDispatchData["activeDispatchers"][number] | null;
+  activeDispatchersCount: number;
+  dispatcher: (Prisma.ActiveDispatchers & { user: Pick<Types.User, "id" | "username"> }) | null;
 }
 
 /**

@@ -2,7 +2,6 @@ import type {
   Bolo,
   Call911,
   Call911Event,
-  ActiveDispatchers,
   AssignedUnit,
   CombinedLeoUnit,
   Officer,
@@ -23,9 +22,6 @@ interface DispatchState {
   activeDeputies: EmsFdDeputy[];
   setActiveDeputies(deputies: EmsFdDeputy[]): void;
 
-  activeDispatchers: ActiveDispatchers[];
-  setActiveDispatchers(dispatchers: ActiveDispatchers[]): void;
-
   activeIncidents: LeoIncident[];
   setActiveIncidents(incidents: LeoIncident[]): void;
 
@@ -42,9 +38,6 @@ export const useDispatchState = create<DispatchState>()((set) => ({
 
   activeDeputies: [],
   setActiveDeputies: (deputies) => set({ activeDeputies: deputies }),
-
-  activeDispatchers: [],
-  setActiveDispatchers: (dispatchers) => set({ activeDispatchers: dispatchers }),
 
   activeIncidents: [],
   setActiveIncidents: (incidents) => set({ activeIncidents: incidents }),

@@ -6,6 +6,7 @@ import { useDispatchState } from "state/dispatch/dispatch-state";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useRouter } from "next/router";
 import type { GetDispatchData } from "@snailycad/types/api";
+import { useActiveDispatcherState } from "state/dispatch/active-dispatcher-state";
 
 let ran = false;
 export function useActiveDispatchers() {
@@ -14,6 +15,7 @@ export function useActiveDispatchers() {
 
   const { state, execute } = useFetch();
   const dispatchState = useDispatchState();
+  const activeDispatcherState = useActiveDispatcherState();
 
   const { ACTIVE_DISPATCHERS } = useFeatureEnabled();
 
@@ -23,10 +25,21 @@ export function useActiveDispatchers() {
       noToast: true,
     });
 
-    if (json.activeDispatchers) {
-      dispatchState.setActiveDispatchers(json.activeDispatchers);
+    if (Array.isArray(json.activeIncidents)) {
       dispatchState.setActiveIncidents(json.activeIncidents);
     }
+
+    if (typeof json.activeDispatchersCount === "number") {
+      activeDispatcherState.setActiveDispatchersCount(json.activeDispatchersCount);
+    }
+
+    if (json.userActiveDispatcher) {
+      activeDispatcherState.setUserActiveDispatcher(
+        json.userActiveDispatcher,
+        json.activeDispatchersCount,
+      );
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -42,9 +55,11 @@ export function useActiveDispatchers() {
   });
 
   return {
-    activeDispatchers: dispatchState.activeDispatchers,
     state,
-    hasActiveDispatchers: ACTIVE_DISPATCHERS ? dispatchState.activeDispatchers.length >= 1 : true,
-    setActiveDispatchers: dispatchState.setActiveDispatchers,
+    activeDispatchersCount: activeDispatcherState.activeDispatchersCount,
+    userActiveDispatcher: activeDispatcherState.userActiveDispatcher,
+    hasActiveDispatchers: ACTIVE_DISPATCHERS
+      ? activeDispatcherState.activeDispatchersCount > 0
+      : true,
   };
 }
