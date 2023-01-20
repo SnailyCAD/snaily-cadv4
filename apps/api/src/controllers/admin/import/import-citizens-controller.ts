@@ -21,6 +21,7 @@ import { manyToManyHelper } from "lib/data/many-to-many";
 import type * as APITypes from "@snailycad/types/api";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { Rank } from "@snailycad/types";
+import { citizenInclude } from "controllers/citizen/CitizenController";
 
 @Controller("/admin/import/citizens")
 @UseBeforeEach(IsAuth)
@@ -49,6 +50,31 @@ export class ImportCitizensController {
     @BodyParams() body: any,
   ): Promise<APITypes.PostImportCitizensData> {
     return this.importCitizensHandler(body);
+  }
+
+  @Get("/random")
+  @Description("Get a random citizen")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ImportCitizens, Permissions.ManageCitizens],
+  })
+  async getRandomCitizen(@QueryParams("userRegisteredOnly", Boolean) userRegisteredOnly?: boolean) {
+    const where: Prisma.CitizenWhereInput = {};
+    if (typeof userRegisteredOnly === "boolean") {
+      where.userId = userRegisteredOnly ? { not: { equals: null } } : { equals: null };
+    }
+
+    const citizenCount = await prisma.citizen.count({ where });
+    const randomSkip = Math.floor(Math.random() * citizenCount) + 0;
+
+    const [citizen] = await prisma.citizen.findMany({
+      where,
+      skip: randomSkip,
+      take: 1,
+      include: citizenInclude,
+    });
+
+    return citizen ?? null;
   }
 
   @Get("/citizen-ids")

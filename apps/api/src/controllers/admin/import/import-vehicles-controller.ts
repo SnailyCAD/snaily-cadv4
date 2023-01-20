@@ -90,6 +90,31 @@ export class ImportVehiclesController {
     return vehicles;
   }
 
+  @Get("/random")
+  @Description("Get a random vehicle")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ImportRegisteredVehicles, Permissions.ManageCitizens],
+  })
+  async getRandomVehicle(@QueryParams("userRegisteredOnly", Boolean) userRegisteredOnly?: boolean) {
+    const where: Prisma.CitizenWhereInput = {};
+    if (typeof userRegisteredOnly === "boolean") {
+      where.userId = userRegisteredOnly ? { not: { equals: null } } : { equals: null };
+    }
+
+    const vehicleCount = await prisma.registeredVehicle.count({ where });
+    const randomSkip = Math.floor(Math.random() * vehicleCount) + 0;
+
+    const [vehicle] = await prisma.registeredVehicle.findMany({
+      where,
+      skip: randomSkip,
+      take: 1,
+      include: vehiclesInclude,
+    });
+
+    return vehicle ?? null;
+  }
+
   @Post("/")
   @Description("Import vehicles in the CAD via body data")
   @UsePermissions({

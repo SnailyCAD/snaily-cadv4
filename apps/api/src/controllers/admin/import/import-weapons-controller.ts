@@ -69,6 +69,31 @@ export class ImportWeaponsController {
     return importWeaponsHandler(body);
   }
 
+  @Get("/random")
+  @Description("Get a random weapon")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ImportRegisteredWeapons, Permissions.ManageCitizens],
+  })
+  async getRandomWeapon(@QueryParams("userRegisteredOnly", Boolean) userRegisteredOnly?: boolean) {
+    const where: Prisma.CitizenWhereInput = {};
+    if (typeof userRegisteredOnly === "boolean") {
+      where.userId = userRegisteredOnly ? { not: { equals: null } } : { equals: null };
+    }
+
+    const weaponCount = await prisma.weapon.count({ where });
+    const randomSkip = Math.floor(Math.random() * weaponCount) + 0;
+
+    const [weapon] = await prisma.weapon.findMany({
+      where,
+      skip: randomSkip,
+      take: 1,
+      include: weaponsInclude,
+    });
+
+    return weapon ?? null;
+  }
+
   @Post("/file")
   @Description("Import weapons in the CAD via file upload")
   @UsePermissions({
