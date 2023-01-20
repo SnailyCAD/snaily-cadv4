@@ -1,4 +1,5 @@
 import type { AssignedUnit, Call911 } from "@prisma/client";
+import { captureException } from "@sentry/node";
 import { prisma } from "lib/data/prisma";
 import { getPrismaNameActiveCallIncident } from "lib/leo/utils";
 import type { Socket } from "services/socket-service";
@@ -23,7 +24,7 @@ export async function handleEndCall(options: HandleEndCallOptions) {
   });
 
   try {
-    await Promise.all(
+    await Promise.allSettled(
       options.call.assignedUnits.map(async (unit) => {
         const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
         console.log({ prismaName, unitId });
@@ -44,7 +45,8 @@ export async function handleEndCall(options: HandleEndCallOptions) {
     );
 
     options.socket.emit911CallDelete(call);
-  } catch {
+  } catch (error) {
+    captureException(error);
     console.log("Failed to set next call id. Skipping...");
   }
 }
