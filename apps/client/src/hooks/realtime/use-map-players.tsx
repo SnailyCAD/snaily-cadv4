@@ -55,7 +55,7 @@ export function useMapPlayers() {
               method: "POST",
             });
 
-      if (playersToFetch.length >= 1) {
+      if (playersToFetch.length >= 1 && Array.isArray(json)) {
         _prevPlayerData = json;
         setPrevPlayerData(json);
       }
