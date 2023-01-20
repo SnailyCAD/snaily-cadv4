@@ -142,7 +142,7 @@ export default function PenalCodeGroupsPage(props: Props) {
         <div className="flex gap-2">
           <Button onPress={() => openModal(ModalIds.ManagePenalCodeGroup)}>{t("ADD")}</Button>
           {/* values is set to non-empty array */}
-          <OptionsDropdown type={ValueType.PENAL_CODE} values={[{}] as any} />
+          <OptionsDropdown type={ValueType.PENAL_CODE} valueLength={asyncTable.items.length} />
         </div>
       </header>
 

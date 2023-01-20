@@ -222,8 +222,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
             </Button>
           )}
           <Button onPress={() => openModal(ModalIds.ManageValue)}>{typeT("ADD")}</Button>
-          {/* todo: this will not properly work */}
-          <OptionsDropdown type={type} values={asyncTable.items} />
+          <OptionsDropdown type={type} valueLength={asyncTable.items.length} />
         </div>
       </header>
 
