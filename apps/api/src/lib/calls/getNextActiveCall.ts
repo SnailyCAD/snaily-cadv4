@@ -25,7 +25,7 @@ export async function getNextActiveCallId(options: Options) {
       // asc = assign to the call assigned to after the ended call
       orderBy: { createdAt: "asc" },
       where: {
-        NOT: { call911Id: options.callId },
+        NOT: { call911: { id: options.callId, ended: false } },
         OR: [
           { officerId: options.unit.id },
           { combinedLeoId: options.unit.id },

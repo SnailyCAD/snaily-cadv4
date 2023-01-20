@@ -120,6 +120,11 @@ export class HandleInactivity implements MiddlewareMethods {
 
   protected async endIncident(incident: { id: string; unitsInvolved: IncidentInvolvedUnit[] }) {
     try {
+      await Promise.allSettled([
+        prisma.leoIncident.update({ where: { id: incident.id }, data: { isActive: false } }),
+        prisma.incidentInvolvedUnit.deleteMany({ where: { incidentId: incident.id } }),
+      ]);
+
       const unitPromises = incident.unitsInvolved.map(async (unit) => {
         const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
         if (!prismaName || !unitId) return;
@@ -137,11 +142,12 @@ export class HandleInactivity implements MiddlewareMethods {
         });
       });
 
-      await Promise.allSettled([
-        ...unitPromises,
-        prisma.incidentInvolvedUnit.deleteMany({ where: { incidentId: incident.id } }),
-        prisma.leoIncident.update({ where: { id: incident.id }, data: { isActive: false } }),
-      ]);
+      await Promise.allSettled(unitPromises);
+
+      this.socket.emitUpdateActiveIncident({
+        ...incident,
+        isActive: false,
+      });
     } catch (error) {
       captureException(error);
     }
@@ -160,7 +166,7 @@ export class HandleInactivity implements MiddlewareMethods {
         select: { assignedUnits: true, id: true },
       });
 
-      await Promise.allSettled(calls.map((call) => handleEndCall(call)));
+      await Promise.allSettled(calls.map((call) => handleEndCall({ call, socket: this.socket })));
     } catch (error) {
       console.log("Failed to end inactive calls. Skipping...");
       captureException(error);

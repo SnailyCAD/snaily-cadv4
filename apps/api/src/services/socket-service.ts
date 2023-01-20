@@ -35,7 +35,7 @@ export class Socket {
     this.io.sockets.emit(SocketEvents.Create911Call, call);
   }
 
-  emitUpdateActiveIncident(incident: FullIncident) {
+  emitUpdateActiveIncident(incident: Partial<FullIncident>) {
     this.io.sockets.emit(SocketEvents.UpdateActiveIncident, incident);
   }
 
@@ -55,7 +55,7 @@ export class Socket {
     this.io.sockets.emit(SocketEvents.Update911Call, call);
   }
 
-  emit911CallDelete(call: Call911) {
+  emit911CallDelete(call: Partial<Call911>) {
     this.io.sockets.emit(SocketEvents.End911Call, call);
   }
 

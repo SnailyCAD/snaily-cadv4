@@ -171,7 +171,7 @@ export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
 
   useListener(
     SocketEvents.End911Call,
-    (data: Full911Call | undefined) => {
+    (data: Pick<Full911Call, "id"> | undefined) => {
       if (!data) return;
       call911State.setCalls(calls.filter((v) => v.id !== data.id));
     },

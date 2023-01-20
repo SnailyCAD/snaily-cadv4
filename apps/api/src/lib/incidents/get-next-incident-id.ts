@@ -29,7 +29,7 @@ export async function getNextIncidentId(options: Options) {
       // asc = assign to the incident assigned to after the ended incident
       orderBy: { createdAt: "asc" },
       where: {
-        NOT: { incidentId: options.incidentId },
+        NOT: { incident: { id: options.incidentId, isActive: true } },
         OR: [
           { officerId: options.unit.id },
           { combinedLeoId: options.unit.id },
