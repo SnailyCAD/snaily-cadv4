@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import { Controller, UseBeforeEach, PlatformMulterFile, MultipartFile } from "@tsed/common";
-import { ContentType, Delete, Get, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
 import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -35,16 +35,20 @@ export class MyOfficersController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
+  @Description("Get all the current user's officers.")
   async getUserOfficers(@Context("user") user: User): Promise<APITypes.GetMyOfficersData> {
-    const officers = await prisma.officer.findMany({
-      where: { userId: user.id },
-      include: {
-        ...leoProperties,
-        qualifications: { include: { qualification: { include: { value: true } } } },
-      },
-    });
+    const [totalCount, officers] = await prisma.$transaction([
+      prisma.officer.count({ where: { userId: user.id } }),
+      prisma.officer.findMany({
+        where: { userId: user.id },
+        include: {
+          ...leoProperties,
+          qualifications: { include: { qualification: { include: { value: true } } } },
+        },
+      }),
+    ]);
 
-    return { officers };
+    return { officers, totalCount };
   }
 
   @Post("/")
