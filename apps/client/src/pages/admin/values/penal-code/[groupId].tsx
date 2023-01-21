@@ -170,10 +170,7 @@ export default function PenalCodeGroupsPage(props: Props) {
       <div role="alert" className="px-4 py-2 card my-3 !bg-slate-900 !border-slate-500 border-2">
         <h3 className="font-bold text-xl mb-2">Tip</h3>
 
-        <p>
-          Values are cached for 24 hours. This means that updated, added or deleted values may not
-          immediately change. It could take up to 24 hours for the changes to take effect.
-        </p>
+        <p>{valuesT("cacheTip")}</p>
       </div>
 
       <SearchArea search={{ search, setSearch }} asyncTable={asyncTable} totalCount={0} />
