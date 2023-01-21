@@ -9,10 +9,9 @@ import { isUnitCombined, isUnitOfficer } from "@snailycad/utils";
 import * as modalButtons from "components/modal-buttons/buttons";
 import { ModalButton } from "components/modal-buttons/ModalButton";
 import type { PostLeoTogglePanicButtonData } from "@snailycad/types/api";
-import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
-import { TonesModal } from "components/dispatch/modals/tones-modal";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useImageUrl } from "hooks/useImageUrl";
 import Image from "next/image";
@@ -20,6 +19,12 @@ import { useMounted } from "@casper124578/useful";
 import { usePermission } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
 import { useValues } from "context/ValuesContext";
+import dynamic from "next/dynamic";
+
+const TonesModal = dynamic(
+  async () => (await import("components/dispatch/modals/tones-modal")).TonesModal,
+  { ssr: false },
+);
 
 const buttons: modalButtons.ModalButton[] = [
   modalButtons.switchDivision,
@@ -128,7 +133,7 @@ export function ModalButtons({ initialActiveOfficer }: { initialActiveOfficer: A
           </Button>
         ) : null}
 
-        {activeDispatchersState !== "loading" && !hasActiveDispatchers && TONES ? (
+        {activeDispatchersState === "loading" ? null : !hasActiveDispatchers && TONES ? (
           <>
             <Button disabled={isButtonDisabled} onPress={() => openModal(ModalIds.Tones)}>
               {t("Leo.tones")}

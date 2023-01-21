@@ -6,7 +6,7 @@ import { Draggable } from "components/shared/dnd/Draggable";
 import { DndActions } from "types/DndActions";
 import { ActiveUnitsQualificationsCard } from "components/leo/qualifications/ActiveUnitsQualificationsCard";
 import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
-import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import type { EmsFdDeputy } from "@snailycad/types";
 import Image from "next/image";
 import { useDispatchState } from "state/dispatch/dispatch-state";

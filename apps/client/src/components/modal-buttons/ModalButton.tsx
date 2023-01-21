@@ -3,7 +3,7 @@ import { useTranslations } from "next-intl";
 import type { ModalButton, Args } from "./buttons";
 import { Button } from "@snailycad/ui";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { useModal } from "state/modalState";
 import { useRouter } from "next/router";
 import type { EmsFdDeputy } from "@snailycad/types";

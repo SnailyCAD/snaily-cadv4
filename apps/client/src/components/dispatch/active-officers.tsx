@@ -12,7 +12,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useAuth } from "context/AuthContext";
 import { CombinedLeoUnit, StatusViewMode, Officer } from "@snailycad/types";
 import { Filter } from "react-bootstrap-icons";
-import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { useTableState, Table } from "components/shared/Table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { UnitRadioChannelModal } from "./active-units/UnitRadioChannelModal";

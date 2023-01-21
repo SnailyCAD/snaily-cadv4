@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import useFetch from "lib/useFetch";
@@ -7,19 +6,27 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useRouter } from "next/router";
 import type { GetDispatchData } from "@snailycad/types/api";
 import { useActiveDispatcherState } from "state/dispatch/active-dispatcher-state";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-let ran = false;
 export function useActiveDispatchers() {
+  const { ACTIVE_DISPATCHERS } = useFeatureEnabled();
+
+  const { state, execute } = useFetch();
+  const queryClient = useQueryClient();
+
   const router = useRouter();
   const isCitizen = router.pathname.includes("/citizen");
 
-  const { state, execute } = useFetch();
   const dispatchState = useDispatchState();
   const activeDispatcherState = useActiveDispatcherState();
 
-  const { ACTIVE_DISPATCHERS } = useFeatureEnabled();
+  useQuery({
+    queryKey: ["/dispatch"],
+    enabled: !isCitizen,
+    queryFn: getActiveDispatchers,
+  });
 
-  const getActiveDispatchers = React.useCallback(async () => {
+  async function getActiveDispatchers() {
     const { json } = await execute<GetDispatchData>({
       path: "/dispatch",
       noToast: true,
@@ -40,19 +47,15 @@ export function useActiveDispatchers() {
       );
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    return json;
+  }
 
-  React.useEffect(() => {
-    if (!ran && !isCitizen) {
-      getActiveDispatchers();
-      ran = true;
-    }
-  }, [isCitizen, getActiveDispatchers]);
-
-  useListener({ eventName: SocketEvents.UpdateDispatchersState, checkHasListeners: true }, () => {
-    getActiveDispatchers();
-  });
+  useListener(
+    { eventName: SocketEvents.UpdateDispatchersState, checkHasListeners: true },
+    async () => {
+      await queryClient.resetQueries(["/dispatch"]);
+    },
+  );
 
   return {
     state,

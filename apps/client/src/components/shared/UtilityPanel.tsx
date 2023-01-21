@@ -1,5 +1,5 @@
 import { useAreaOfPlay } from "hooks/global/useAreaOfPlay";
-import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { useTime } from "hooks/shared/useTime";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { classNames } from "lib/classNames";

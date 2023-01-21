@@ -5,7 +5,7 @@ import { ModalIds } from "types/ModalIds";
 import { ManageIncidentModal } from "components/leo/incidents/manage-incident-modal";
 import { useModal } from "state/modalState";
 import { Button } from "@snailycad/ui";
-import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 
 interface Props {
   incident: LeoIncident | null;

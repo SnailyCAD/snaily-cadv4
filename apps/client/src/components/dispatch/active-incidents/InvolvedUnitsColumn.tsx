@@ -8,7 +8,7 @@ import type {
 import { isUnitCombined } from "@snailycad/utils";
 import { Draggable } from "components/shared/dnd/Draggable";
 import { Droppable } from "components/shared/dnd/Droppable";
-import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { classNames } from "lib/classNames";
 import { makeUnitName } from "lib/utils";

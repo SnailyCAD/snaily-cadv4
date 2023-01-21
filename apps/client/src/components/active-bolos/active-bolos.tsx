@@ -17,7 +17,7 @@ import { CallDescription } from "components/dispatch/active-calls/CallDescriptio
 import { useLeoState } from "state/leo-state";
 import { useRouter } from "next/router";
 import { usePermission } from "hooks/usePermission";
-import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { defaultPermissions } from "@snailycad/permissions";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";

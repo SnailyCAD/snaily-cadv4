@@ -13,7 +13,7 @@ import { EmsFdDeputy, StatusViewMode } from "@snailycad/types";
 import { useAuth } from "context/AuthContext";
 
 import { Table, useTableState } from "components/shared/Table";
-import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { UnitRadioChannelModal } from "./active-units/UnitRadioChannelModal";
 import { useActiveUnitsState } from "state/active-unit-state";
