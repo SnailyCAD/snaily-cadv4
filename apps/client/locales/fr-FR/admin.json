@@ -162,7 +162,9 @@
     "deleteUserApiToken": "Le jeton API de l'utilisateur <span>{value}</span> a été supprimé.",
     "deleteUser2FA": "L'authenficiation à deux facteurs de l'utilisateur <span>{value}</span> a été supprimé.",
     "tempPasswordGiven": "Un mot de passe temporaire a été donné à l'utilisateur <span>{value}</span>.",
-    "unitsSetOffDuty": "Les unités suivantes ont été mises hors service : <span>{value}</span>."
+    "unitsSetOffDuty": "Les unités suivantes ont été mises hors service : <span>{value}</span>.",
+    "calls911Purged": "Les appels sélectionnés ont été purgés. Ces appels ne peuvent être restaurés et seront supprimés définitivement : <span>{value}</span>.",
+    "cadAPITokenRegenerated": "Le jeton API de l'API CAD a été régénéré."
   },
   "ApiTokenTab": {
     "apiToken": "Jeton API",
