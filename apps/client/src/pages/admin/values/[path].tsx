@@ -89,7 +89,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
         if (!forType) return { data, totalCount };
         return { data: forType.values, totalCount: forType.totalCount };
       },
-      path: `/admin/values/${type.toLowerCase()}?includeAll=false`,
+      path: `/admin/values/${type.toLowerCase()}?includeAll=false&cache=false`,
     },
     initialData: data,
     totalCount,
@@ -226,6 +226,15 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
         </div>
       </header>
 
+      <div role="alert" className="px-4 py-2 card my-3 !bg-slate-900 !border-slate-500 border-2">
+        <h3 className="font-bold text-xl mb-2">Tip</h3>
+
+        <p>
+          Values are cached for 24 hours. This means that updated, added or deleted values may not
+          immediately change. It could take up to 24 hours for the changes to take effect.
+        </p>
+      </div>
+
       <SearchArea search={{ search, setSearch }} asyncTable={asyncTable} totalCount={totalCount} />
 
       {asyncTable.items.length <= 0 ? (
@@ -323,7 +332,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
   const user = await getSessionUser(req);
   const [pathValues] = await requestAll(req, [
     [
-      `/admin/values/${path}?includeAll=false`,
+      `/admin/values/${path}?includeAll=false&cache=false`,
       {
         totalCount: 0,
         values: [],

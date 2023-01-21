@@ -59,7 +59,7 @@ export default function PenalCodeGroupsPage(props: Props) {
         data: json[0]?.values ?? [],
         totalCount: json[0]?.totalCount ?? 0,
       }),
-      path: `/admin/values/penal_code?groupId=${groupId}&includeAll=false`,
+      path: `/admin/values/penal_code?groupId=${groupId}&includeAll=false&cache=false`,
       requireFilterText: true,
     },
     initialData: props.penalCodes.values,
@@ -167,6 +167,15 @@ export default function PenalCodeGroupsPage(props: Props) {
         </div>
       </header>
 
+      <div role="alert" className="px-4 py-2 card my-3 !bg-slate-900 !border-slate-500 border-2">
+        <h3 className="font-bold text-xl mb-2">Tip</h3>
+
+        <p>
+          Values are cached for 24 hours. This means that updated, added or deleted values may not
+          immediately change. It could take up to 24 hours for the changes to take effect.
+        </p>
+      </div>
+
       <SearchArea search={{ search, setSearch }} asyncTable={asyncTable} totalCount={0} />
 
       <Table
@@ -250,7 +259,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
   const user = await getSessionUser(req);
   const [penalCodes] = await requestAll(req, [
     [
-      `/admin/values/penal_code?groupId=${query.groupId}&includeAll=false`,
+      `/admin/values/penal_code?groupId=${query.groupId}&includeAll=false&cache=false`,
       { totalCount: 0, values: [], type: "PENAL_CODE" },
     ],
   ]);
