@@ -13,9 +13,9 @@ class CustomDocument extends Document {
     const userSavedLocale = this.props.__NEXT_DATA__.props.pageProps?.userSavedLocale as
       | string
       | null;
-    const userSavedIsDarkTheme = this.props.__NEXT_DATA__.props.pageProps?.userSavedIsDarkTheme as
-      | boolean
-      | null;
+    const userSavedIsDarkTheme = parseIsDarkTheme(
+      this.props.__NEXT_DATA__.props.pageProps?.userSavedIsDarkTheme,
+    );
 
     const darkMode = session?.isDarkTheme ?? userSavedIsDarkTheme ?? true;
     const lang = session?.locale || userSavedLocale || "en";
@@ -37,3 +37,9 @@ class CustomDocument extends Document {
 }
 
 export default CustomDocument;
+
+function parseIsDarkTheme(value: string) {
+  if (value === "true") return true;
+  if (value === "false") return false;
+  return null;
+}
