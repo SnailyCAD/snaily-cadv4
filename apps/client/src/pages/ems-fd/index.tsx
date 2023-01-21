@@ -25,7 +25,6 @@ import type {
   Get911CallsData,
   GetEmsFdActiveDeputies,
   GetEmsFdActiveDeputy,
-  GetMyDeputiesData,
 } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { DndProvider } from "components/shared/dnd/DndProvider";
@@ -35,32 +34,32 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 interface Props {
   activeDeputy: GetEmsFdActiveDeputy | null;
   activeDeputies: GetEmsFdActiveDeputies;
-  userDeputies: GetMyDeputiesData["deputies"];
   calls: Get911CallsData;
 }
 
-const NotepadModal = dynamic(async () => {
-  return (await import("components/shared/NotepadModal")).NotepadModal;
-});
+const NotepadModal = dynamic(
+  async () => (await import("components/shared/NotepadModal")).NotepadModal,
+  { ssr: false },
+);
 
-const SelectDeputyModal = dynamic(async () => {
-  return (await import("components/ems-fd/modals/select-deputy-modal")).SelectDeputyModal;
-});
+const SelectDeputyModal = dynamic(
+  async () => (await import("components/ems-fd/modals/select-deputy-modal")).SelectDeputyModal,
+  { ssr: false },
+);
 
-const CreateMedicalRecordModal = dynamic(async () => {
-  return (await import("components/ems-fd/modals/CreateMedicalRecord")).CreateMedicalRecordModal;
-});
+const CreateMedicalRecordModal = dynamic(
+  async () =>
+    (await import("components/ems-fd/modals/CreateMedicalRecord")).CreateMedicalRecordModal,
+  { ssr: false },
+);
 
-const SearchMedicalRecordModal = dynamic(async () => {
-  return (await import("components/ems-fd/modals/SearchMedicalRecords")).SearchMedicalRecordModal;
-});
+const SearchMedicalRecordModal = dynamic(
+  async () =>
+    (await import("components/ems-fd/modals/SearchMedicalRecords")).SearchMedicalRecordModal,
+  { ssr: false },
+);
 
-export default function EmsFDDashboard({
-  activeDeputy,
-  calls,
-  userDeputies,
-  activeDeputies,
-}: Props) {
+export default function EmsFDDashboard({ activeDeputy, calls, activeDeputies }: Props) {
   useLoadValuesClientSide({
     valueTypes: [
       ValueType.BLOOD_GROUP,
@@ -86,7 +85,6 @@ export default function EmsFDDashboard({
 
   React.useEffect(() => {
     state.setActiveDeputy(activeDeputy);
-    state.setDeputies(userDeputies);
     set911Calls(calls.calls);
     dispatchState.setActiveDeputies(activeDeputies);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -146,10 +144,9 @@ export default function EmsFDDashboard({
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ req, locale }) => {
   const user = await getSessionUser(req);
-  const [values, calls, { deputies }, activeDeputies, activeDeputy] = await requestAll(req, [
+  const [values, calls, activeDeputies, activeDeputy] = await requestAll(req, [
     ["/admin/values/codes_10", []],
     ["/911-calls", { calls: [], totalCount: 0 }],
-    ["/ems-fd", { deputies: [] }],
     ["/ems-fd/active-deputies", []],
     ["/ems-fd/active-deputy", null],
   ]);
@@ -159,7 +156,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ req, local
       session: user,
       activeDeputy,
       activeDeputies,
-      userDeputies: deputies,
       calls,
       values,
       messages: {
