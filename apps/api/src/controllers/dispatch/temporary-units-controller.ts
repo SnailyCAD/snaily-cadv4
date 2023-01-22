@@ -14,6 +14,7 @@ import { validateSchema } from "lib/data/validate-schema";
 import { prisma } from "lib/data/prisma";
 import { upsertEmsFdDeputy } from "lib/ems-fd/upsert-ems-fd-deputy";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
+import { leoProperties, unitProperties } from "lib/leo/activeOfficer";
 
 @Controller("/temporary-units")
 @UseBeforeEach(IsAuth)
@@ -35,6 +36,7 @@ export class TemporaryUnitsController {
   async createTemporaryOfficer(
     @Context("cad") cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings },
     @BodyParams() body: unknown,
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<any> {
     const data = validateSchema(CREATE_TEMPORARY_OFFICER_SCHEMA, body);
 
@@ -43,7 +45,7 @@ export class TemporaryUnitsController {
           where: {
             identifiers: { hasSome: data.identifiers },
           },
-          include: { whitelistStatus: true, divisions: true },
+          include: leoProperties,
         })
       : null;
 
@@ -63,10 +65,12 @@ export class TemporaryUnitsController {
     await createAuditLogEntry({
       action: {
         type,
-        previous: existingOfficer,
+        previous: existingOfficer as any,
         new: officer,
       },
-    } as any);
+      prisma,
+      executorId: sessionUserId,
+    });
 
     return officer;
   }
@@ -82,6 +86,7 @@ export class TemporaryUnitsController {
   async createTemporaryEmsFdDeputy(
     @Context("cad") cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings },
     @BodyParams() body: unknown,
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<any> {
     const data = validateSchema(CREATE_TEMPORARY_EMS_FD_DEPUTY_SCHEMA, body);
 
@@ -90,7 +95,7 @@ export class TemporaryUnitsController {
           where: {
             identifiers: { hasSome: data.identifiers },
           },
-          include: { whitelistStatus: true },
+          include: unitProperties,
         })
       : null;
 
@@ -108,12 +113,16 @@ export class TemporaryUnitsController {
       : AuditLogActionType.TemporaryUnitCreate;
 
     await createAuditLogEntry({
+      translationKey:
+        type === AuditLogActionType.TemporaryUnitCreate ? "temporaryUnitCreate" : undefined,
       action: {
         type,
         previous: existingDeputy,
         new: deputy,
-      },
-    } as any);
+      } as any,
+      prisma,
+      executorId: sessionUserId,
+    });
 
     return deputy;
   }

@@ -165,7 +165,8 @@
     "tempPasswordGiven": "User: <span>{value}</span> has been given a temporary password.",
     "unitsSetOffDuty": "Selected units have been set off-duty: <span>{value}</span>",
     "calls911Purged": "Selected calls have been purged. These calls cannot be recovered and were deleted permanently: <span>{value}</span>. ",
-    "cadAPITokenRegenerated": "The CAD API token has been regenerated."
+    "cadAPITokenRegenerated": "The CAD API token has been regenerated.",
+    "temporaryUnitCreate": "A temporary unit has been created with id: <span>{value}</span>."
   },
   "ApiTokenTab": {
     "apiToken": "API Token",
