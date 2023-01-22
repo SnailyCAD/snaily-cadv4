@@ -76,11 +76,22 @@ function ActiveDeputies({ initialDeputies }: Props) {
       <header className="p-2 px-4 bg-gray-200 dark:bg-secondary flex items-center justify-between">
         <h1 className="text-xl font-semibold">{t("Ems.activeDeputies")}</h1>
 
-        <div>
+        <div className="flex items-center gap-2">
           <Button
             variant="cancel"
             className={classNames(
               "px-1.5 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
+              showEmsFilters && "dark:!bg-secondary !bg-gray-500",
+            )}
+            onPress={() => openModal(ModalIds.CreateTemporaryUnit, "ems-fd")}
+          >
+            {t("Leo.createTemporaryUnit")}
+          </Button>
+
+          <Button
+            variant="cancel"
+            className={classNames(
+              "px-1.5 py-2  dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
               showEmsFilters && "dark:!bg-secondary !bg-gray-500",
             )}
             onPress={() => setShowFilters("ems-fd", !showEmsFilters)}

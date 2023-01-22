@@ -15,6 +15,7 @@ export const EMS_FD_DEPUTY_SCHEMA = CREATE_OFFICER_SCHEMA.omit({
 export const CREATE_TEMPORARY_EMS_FD_DEPUTY_SCHEMA = EMS_FD_DEPUTY_SCHEMA.omit({
   citizenId: true,
   image: true,
+  rank: true,
 }).extend({
   name: z.string().min(2).max(255),
   surname: z.string().min(2).max(255),

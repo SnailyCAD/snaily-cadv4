@@ -32,6 +32,13 @@ import { useMounted } from "@casper124578/useful";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { shallow } from "zustand/shallow";
 import { generateContrastColor } from "lib/table/get-contrasting-text-color";
+import dynamic from "next/dynamic";
+
+const CreateTemporaryUnitModal = dynamic(
+  async () =>
+    (await import("./modals/temporary-units/create-temporary-unit-modal")).CreateTemporaryUnitModal,
+  { ssr: false },
+);
 
 interface Props {
   initialOfficers: ActiveOfficer[];
@@ -82,11 +89,22 @@ function ActiveOfficers({ initialOfficers }: Props) {
       <header className="p-2 px-4 bg-gray-200 dark:bg-secondary flex items-center justify-between">
         <h1 className="text-xl font-semibold">{t("activeOfficers")}</h1>
 
-        <div>
+        <div className="flex items-center gap-2">
           <Button
             variant="cancel"
             className={classNames(
               "px-1.5 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
+              showLeoFilters && "dark:!bg-secondary !bg-gray-500",
+            )}
+            onPress={() => openModal(ModalIds.CreateTemporaryUnit, "officer")}
+          >
+            {t("createTemporaryUnit")}
+          </Button>
+
+          <Button
+            variant="cancel"
+            className={classNames(
+              "px-1.5 py-2 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
               showLeoFilters && "dark:!bg-secondary !bg-gray-500",
             )}
             onPress={() => setShowFilters("leo", !showLeoFilters)}
@@ -214,6 +232,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
           onClose={() => officerState.setTempId(null)}
         />
       ) : null}
+      {isDispatch ? <CreateTemporaryUnitModal /> : null}
     </div>
   );
 }

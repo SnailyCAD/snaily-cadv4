@@ -27,6 +27,7 @@ export const CREATE_OFFICER_SCHEMA = z.object({
 export const CREATE_TEMPORARY_OFFICER_SCHEMA = CREATE_OFFICER_SCHEMA.omit({
   citizenId: true,
   image: true,
+  rank: true,
 }).extend({
   name: z.string().min(2).max(255),
   surname: z.string().min(2).max(255),
