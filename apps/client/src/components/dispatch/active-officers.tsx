@@ -33,6 +33,8 @@ import { useCall911State } from "state/dispatch/call-911-state";
 import { shallow } from "zustand/shallow";
 import { generateContrastColor } from "lib/table/get-contrasting-text-color";
 import dynamic from "next/dynamic";
+import { Permissions } from "@snailycad/permissions";
+import { usePermission } from "hooks/usePermission";
 
 const CreateTemporaryUnitModal = dynamic(
   async () =>
@@ -60,6 +62,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
   const { openModal } = useModal();
   const { generateCallsign } = useGenerateCallsign();
   const { user } = useAuth();
+  const { hasPermissions } = usePermission();
 
   const { hasActiveDispatchers } = useActiveDispatchers();
   const { BADGE_NUMBERS, ACTIVE_INCIDENTS, RADIO_CHANNEL_MANAGEMENT, DIVISIONS } =
@@ -77,6 +80,9 @@ function ActiveOfficers({ initialOfficers }: Props) {
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
 
+  const hasDispatchPerms = hasPermissions([Permissions.Dispatch], (u) => u.isDispatch);
+  const showCreateTemporaryUnitButton = isDispatch && hasDispatchPerms;
+
   const [tempOfficer, officerState] = useTemporaryItem(activeOfficers);
 
   function handleEditClick(officer: ActiveOfficer | CombinedLeoUnit) {
@@ -90,15 +96,17 @@ function ActiveOfficers({ initialOfficers }: Props) {
         <h1 className="text-xl font-semibold">{t("activeOfficers")}</h1>
 
         <div className="flex items-center gap-2">
-          <Button
-            variant="cancel"
-            className={classNames(
-              "px-1.5 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
-            )}
-            onPress={() => openModal(ModalIds.CreateTemporaryUnit, "officer")}
-          >
-            {t("createTemporaryUnit")}
-          </Button>
+          {showCreateTemporaryUnitButton ? (
+            <Button
+              variant="cancel"
+              className={classNames(
+                "px-1.5 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
+              )}
+              onPress={() => openModal(ModalIds.CreateTemporaryUnit, "officer")}
+            >
+              {t("createTemporaryUnit")}
+            </Button>
+          ) : null}
 
           <Button
             variant="cancel"
