@@ -81,7 +81,6 @@ function ActiveDeputies({ initialDeputies }: Props) {
             variant="cancel"
             className={classNames(
               "px-1.5 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
-              showEmsFilters && "dark:!bg-secondary !bg-gray-500",
             )}
             onPress={() => openModal(ModalIds.CreateTemporaryUnit, "ems-fd")}
           >
