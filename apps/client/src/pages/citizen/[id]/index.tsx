@@ -153,8 +153,10 @@ export default function CitizenId() {
               </FullDate>{" "}
               ({t("age")}: {calculateAge(citizen.dateOfBirth)})
             </Infofield>
-            <Infofield label={t("gender")}>{citizen.gender.value}</Infofield>
-            <Infofield label={t("ethnicity")}>{citizen.ethnicity.value}</Infofield>
+            <Infofield label={t("gender")}>{citizen.gender?.value ?? common("none")}</Infofield>
+            <Infofield label={t("ethnicity")}>
+              {citizen.ethnicity?.value ?? common("none")}
+            </Infofield>
             <Infofield label={t("hairColor")}>{citizen.hairColor}</Infofield>
             <Infofield label={t("eyeColor")}>{citizen.eyeColor}</Infofield>
           </div>

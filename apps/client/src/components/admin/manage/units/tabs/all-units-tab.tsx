@@ -213,7 +213,7 @@ export function AllUnitsTab({ units }: Props) {
                   </Link>
                 ) : (
                   // todo: add information about temporary unit here
-                  unit.user?.username ?? common("none")
+                  unit.user?.username ?? t("Leo.temporaryUnit")
                 ),
               callsign: generateCallsign(unit),
               badgeNumber: unit.badgeNumber,

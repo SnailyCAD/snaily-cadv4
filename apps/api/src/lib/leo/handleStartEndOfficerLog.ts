@@ -8,7 +8,7 @@ interface Options<Type extends "leo" | "ems-fd"> {
   shouldDo: ShouldDoType;
   unit: Type extends "leo" ? Omit<Officer, "divisionId"> : EmsFdDeputy;
   socket: Socket;
-  userId: string;
+  userId?: string | null;
   type: Type;
 }
 
@@ -24,6 +24,10 @@ function getPrismaName(type: "leo" | "ems-fd") {
 export async function handleStartEndOfficerLog<Type extends "leo" | "ems-fd">(
   options: Options<Type>,
 ) {
+  // if the unit is not assigned to a user, we can't save the officer-log.
+  // limitation of temporary units.
+  if (!options.userId) return;
+
   const idPropertyName = getPrismaName(options.type);
 
   /**

@@ -93,8 +93,10 @@ export function useActiveOfficers() {
       for (const player of players) {
         const officer = data.find(
           (officer) =>
-            (isUnitOfficer(officer) && officer.user.steamId === player.convertedSteamId) ||
-            (isUnitOfficer(officer) && officer.user.discordId === player.discordId),
+            (isUnitOfficer(officer) &&
+              officer.user &&
+              officer.user.steamId === player.convertedSteamId) ||
+            (isUnitOfficer(officer) && officer.user && officer.user.discordId === player.discordId),
         );
 
         if (officer && isUnitOfficer(officer)) {

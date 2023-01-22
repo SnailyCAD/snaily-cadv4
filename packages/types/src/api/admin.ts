@@ -164,8 +164,8 @@ export interface GetManageRecordsLogsCitizenData {
   recordsLogs: (Prisma.RecordLog & {
     citizen: Prisma.Citizen & {
       user: Types.User | null;
-      ethnicity: Prisma.Value;
-      gender: Prisma.Value;
+      ethnicity?: Prisma.Value | null;
+      gender?: Prisma.Value | null;
     };
     warrant: Types.Warrant | null;
     records: Types.Record | null;
@@ -182,8 +182,8 @@ export type GetManageCitizenByIdData =
       vehicles: Omit<GetImportVehiclesData["vehicles"][number], "citizen">[];
       weapons: Omit<GetImportWeaponsData["weapons"][number], "citizen">[];
       user: Types.User | null;
-      ethnicity: Prisma.Value;
-      gender: Prisma.Value;
+      ethnicity?: Prisma.Value | null;
+      gender?: Prisma.Value | null;
       weaponLicense: Prisma.Value | null;
       driversLicense: Prisma.Value | null;
       pilotLicense: Prisma.Value | null;

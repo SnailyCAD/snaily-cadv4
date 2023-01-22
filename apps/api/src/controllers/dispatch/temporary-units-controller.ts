@@ -32,7 +32,6 @@ export class TemporaryUnitsController {
     @Context("cad") cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings },
     @BodyParams() body: unknown,
   ): Promise<any> {
-    // todo: find existing officer with possible identifiers
     const data = validateSchema(CREATE_TEMPORARY_UNIT_SCHEMA.pick({ identifiers: true }), body);
 
     if (data.identifiers) {
