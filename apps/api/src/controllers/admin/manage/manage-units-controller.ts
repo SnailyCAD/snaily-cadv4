@@ -373,6 +373,8 @@ export class AdminManageUnitsController {
         badgeNumber: data.badgeNumber,
         imageId: validatedImageURL,
         imageBlurData: await generateBlurPlaceholder(validatedImageURL),
+        userId: data.userId,
+        isTemporary: !!data.userId,
       },
       include: type === "officer" ? leoProperties : unitProperties,
     });

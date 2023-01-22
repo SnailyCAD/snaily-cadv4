@@ -156,6 +156,7 @@ export async function upsertOfficer({
     incremental,
     statusId,
     identifiers: data.identifiers,
+    isTemporary: !user,
   };
 
   let officer: any = await prisma.officer.upsert({

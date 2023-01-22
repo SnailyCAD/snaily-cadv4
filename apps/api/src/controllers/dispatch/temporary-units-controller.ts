@@ -4,7 +4,6 @@ import { ContentType, Description, Post } from "@tsed/schema";
 import { Socket } from "services/socket-service";
 import { IsAuth } from "middlewares/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
-import type * as APITypes from "@snailycad/types/api";
 import { upsertOfficer } from "controllers/leo/my-officers/upsert-officer";
 import type { cad, CadFeature, MiscCadSettings } from "@prisma/client";
 import {

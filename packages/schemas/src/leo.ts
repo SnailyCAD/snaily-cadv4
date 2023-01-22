@@ -51,6 +51,7 @@ export const UPDATE_UNIT_SCHEMA = z.object({
   badgeNumber: z.number().min(1).optional(),
   callsigns: z.record(INDIVIDUAL_CALLSIGN_SCHEMA).nullish(),
   image: z.any().or(z.string()).optional(),
+  userId: z.string().nullish(),
 });
 
 export const UPDATE_UNIT_CALLSIGN_SCHEMA = z.object({

@@ -119,6 +119,7 @@ export async function upsertEmsFdDeputy(options: UpsertEmsFdDeputyOptions) {
     incremental,
     whitelistStatusId,
     identifiers: data.identifiers,
+    isTemporary: !options.user,
   };
 
   const emsFdDeputy = await prisma.emsFdDeputy.upsert({
