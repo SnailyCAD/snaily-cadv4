@@ -84,6 +84,7 @@ export async function upsertOfficer({
       userId: user.id,
       cad,
       type: "officer",
+      unitId: existingOfficer?.id,
     });
   }
 
@@ -122,11 +123,12 @@ export async function upsertOfficer({
     existingOfficer ?? null,
   );
 
-  const incremental = await findNextAvailableIncremental({ type: "leo" });
+  const incremental = existingOfficer
+    ? undefined
+    : await findNextAvailableIncremental({ type: "leo" });
   const validatedImageURL = validateImageURL(data.image);
 
   let statusId: string | undefined;
-
   if (!user) {
     const onDutyStatus = await prisma.statusValue.findFirst({
       where: { shouldDo: ShouldDoType.SET_ON_DUTY },
@@ -135,15 +137,17 @@ export async function upsertOfficer({
     statusId = onDutyStatus?.id;
   }
 
+  const rank =
+    (defaultDepartment
+      ? defaultDepartment.defaultOfficerRankId
+      : department.defaultOfficerRankId) || undefined;
+
   const createUpdateFields = {
     callsign: data.callsign,
     callsign2: data.callsign2,
     userId: user?.id,
     departmentId: defaultDepartment ? defaultDepartment.id : data.department,
-    rankId:
-      (defaultDepartment
-        ? defaultDepartment.defaultOfficerRankId
-        : department.defaultOfficerRankId) || undefined,
+    rankId: rank,
     badgeNumber: isBadgeNumbersEnabled ? data.badgeNumber : undefined,
     citizenId: citizen.id,
     imageId: validatedImageURL,

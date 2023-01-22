@@ -7,9 +7,13 @@ import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type * as APITypes from "@snailycad/types/api";
 import { upsertOfficer } from "controllers/leo/my-officers/upsert-officer";
 import type { cad, CadFeature, MiscCadSettings } from "@prisma/client";
-import { CREATE_TEMPORARY_UNIT_SCHEMA } from "@snailycad/schemas";
+import {
+  CREATE_TEMPORARY_OFFICER_SCHEMA,
+  CREATE_TEMPORARY_EMS_FD_DEPUTY_SCHEMA,
+} from "@snailycad/schemas";
 import { validateSchema } from "lib/data/validate-schema";
 import { prisma } from "lib/data/prisma";
+import { upsertEmsFdDeputy } from "lib/ems-fd/upsert-ems-fd-deputy";
 
 @Controller("/temporary-units")
 @UseBeforeEach(IsAuth)
@@ -28,33 +32,69 @@ export class TemporaryUnitsController {
     fallback: (u) => u.isDispatch,
     permissions: [Permissions.Dispatch],
   })
-  async createTemporaryUnit(
+  async createTemporaryOfficer(
     @Context("cad") cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings },
     @BodyParams() body: unknown,
   ): Promise<any> {
-    const data = validateSchema(CREATE_TEMPORARY_UNIT_SCHEMA, body);
+    const data = validateSchema(CREATE_TEMPORARY_OFFICER_SCHEMA, body);
 
     const existingOfficer = data.identifiers
       ? await prisma.officer.findFirst({
           where: {
             identifiers: { hasSome: data.identifiers },
           },
-          include: {
-            whitelistStatus: true,
-            divisions: true,
-          },
+          include: { whitelistStatus: true, divisions: true },
         })
       : null;
 
     const officer = await upsertOfficer({
       body,
       cad,
-      schema: CREATE_TEMPORARY_UNIT_SCHEMA,
+      schema: CREATE_TEMPORARY_OFFICER_SCHEMA,
       existingOfficer,
     });
 
     this.socket.emitUpdateOfficerStatus();
 
+    // todo: create audit log here
+
     return officer;
+  }
+
+  @Post("/ems-fd")
+  @Description(
+    "Create a temporary EMS/FD deputy. It will update an existing deputy if the identifiers match.",
+  )
+  @UsePermissions({
+    fallback: (u) => u.isDispatch,
+    permissions: [Permissions.Dispatch],
+  })
+  async createTemporaryEmsFdDeputy(
+    @Context("cad") cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings },
+    @BodyParams() body: unknown,
+  ): Promise<any> {
+    const data = validateSchema(CREATE_TEMPORARY_EMS_FD_DEPUTY_SCHEMA, body);
+
+    const existingDeputy = data.identifiers
+      ? await prisma.emsFdDeputy.findFirst({
+          where: {
+            identifiers: { hasSome: data.identifiers },
+          },
+          include: { whitelistStatus: true },
+        })
+      : null;
+
+    const deputy = await upsertEmsFdDeputy({
+      body,
+      cad,
+      schema: CREATE_TEMPORARY_EMS_FD_DEPUTY_SCHEMA,
+      existingDeputy,
+    });
+
+    this.socket.emitUpdateDeputyStatus();
+
+    // todo: create audit log here
+
+    return deputy;
   }
 }
