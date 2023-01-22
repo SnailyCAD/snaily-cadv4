@@ -180,26 +180,31 @@ export async function upsertOfficer({
 
     officer = getLastOfArray(
       await prisma.$transaction(
-        disconnectConnectArr.map((v, idx) =>
-          prisma.officer.update({
+        disconnectConnectArr.map((v, idx) => {
+          const isAtEnd = idx + 1 === disconnectConnectArr.length;
+
+          return prisma.officer.update({
             where: { id: officer.id },
             data: { divisions: v },
-            include:
-              idx + 1 === disconnectConnectArr.length
-                ? includeProperties
-                  ? {
-                      ...leoProperties,
-                      qualifications: { include: { qualification: { include: { value: true } } } },
-                    }
-                  : undefined
-                : undefined,
-          }),
-        ),
+            include: isAtEnd ? getIncludes(includeProperties) : undefined,
+          });
+        }),
       ),
     );
   }
 
   return officer as APITypes.PostMyOfficersData;
+}
+
+function getIncludes(includeProperties: boolean) {
+  if (includeProperties) {
+    return {
+      ...leoProperties,
+      qualifications: { include: { qualification: { include: { value: true } } } },
+    };
+  }
+
+  return undefined;
 }
 
 function toIdString(array: (string | { value: string })[]) {

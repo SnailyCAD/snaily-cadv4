@@ -22,6 +22,8 @@ import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncrement
 import { unitProperties } from "lib/leo/activeOfficer";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { NotFound } from "@tsed/exceptions";
+import { validateImageURL } from "lib/images/validate-image-url";
+import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 
 interface UpsertEmsFdDeputyOptions {
   existingDeputy: (EmsFdDeputy & { whitelistStatus?: LeoWhitelistStatus | null }) | null;
@@ -96,6 +98,7 @@ export async function upsertEmsFdDeputy(options: UpsertEmsFdDeputyOptions) {
     (defaultDepartment
       ? defaultDepartment.defaultOfficerRankId
       : department.defaultOfficerRankId) || undefined;
+  const validatedImageURL = validateImageURL(data.image);
 
   let statusId: string | undefined;
   if (!options.user) {
@@ -120,13 +123,18 @@ export async function upsertEmsFdDeputy(options: UpsertEmsFdDeputyOptions) {
     whitelistStatusId,
     identifiers: data.identifiers,
     isTemporary: !options.user,
+    imageId: validatedImageURL,
+    imageBlurData: await generateBlurPlaceholder(validatedImageURL),
   };
 
   const emsFdDeputy = await prisma.emsFdDeputy.upsert({
     where: { id: options.existingDeputy?.id || "undefined" },
     create: createUpdateData,
     update: createUpdateData,
-    include: unitProperties,
+    include: {
+      ...unitProperties,
+      qualifications: { include: { qualification: { include: { value: true } } } },
+    },
   });
 
   return emsFdDeputy;
