@@ -42,7 +42,6 @@ export function CreateTemporaryUnitModal({ onClose }: Props) {
     });
 
     if (json.id) {
-      // todo: update active units state
       handleClose();
     }
   }

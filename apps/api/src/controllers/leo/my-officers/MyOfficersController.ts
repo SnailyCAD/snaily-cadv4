@@ -75,8 +75,6 @@ export class MyOfficersController {
 
     const updatedOfficer = await upsertOfficer({ body, user, cad, existingOfficer });
 
-    console.log({ updatedOfficer });
-
     return updatedOfficer;
   }
 
