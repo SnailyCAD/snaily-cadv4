@@ -22,7 +22,7 @@ interface CreateOfficerOptions {
   schema?: ZodSchema;
   body: unknown;
   citizen?: Citizen | null;
-  user: User;
+  user?: User;
   cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings };
   includeProperties?: boolean;
 }
@@ -37,15 +37,22 @@ export async function createOfficer({
 }: CreateOfficerOptions) {
   const data = validateSchema(schema, body);
 
-  const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
-  const citizen =
-    _citizen ??
-    (await prisma.citizen.findFirst({
-      where: {
-        id: data.citizenId,
-        userId: checkCitizenUserId ? user.id : undefined,
-      },
-    }));
+  // mean,s the officer that is being created is a temporary unit
+  let citizen;
+
+  if (!user) {
+    citizen
+  } else {
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
+    citizen =
+      _citizen ??
+      (await prisma.citizen.findFirst({
+        where: {
+          id: data.citizenId,
+          userId: checkCitizenUserId ? user.id : undefined,
+        },
+      }));
+  }
 
   if (!citizen) {
     throw new NotFound("citizenNotFound");

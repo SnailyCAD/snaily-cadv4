@@ -864,8 +864,8 @@ model Officer {
   imageBlurData               String?                      @db.Text
   citizen                     Citizen                      @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId                   String
-  user                        User                         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                      String
+  user                        User?                        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                      String?
   createdAt                   DateTime                     @default(now())
   updatedAt                   DateTime                     @default(now()) @updatedAt
   whitelistStatus             LeoWhitelistStatus?          @relation(fields: [whitelistStatusId], references: [id])
@@ -893,6 +893,8 @@ model Officer {
   ImpoundedVehicle            ImpoundedVehicle[]
   activeVehicle               EmergencyVehicleValue?       @relation("activeEmergencyVehicle_leo", fields: [activeVehicleId], references: [id], onDelete: SetNull)
   activeVehicleId             String?
+  isTemporary                 Boolean                      @default(false)
+  identifiers                 String[]
 }
 
 model IndividualDivisionCallsign {
@@ -1308,8 +1310,8 @@ model EmsFdDeputy {
   imageBlurData             String?                @db.Text
   citizen                   Citizen                @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId                 String
-  user                      User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                    String
+  user                      User?                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                    String?
   createdAt                 DateTime               @default(now())
   updatedAt                 DateTime               @default(now()) @updatedAt
   radioChannelId            String?
@@ -1326,6 +1328,8 @@ model EmsFdDeputy {
   IncidentInvolvedUnit      IncidentInvolvedUnit[]
   activeVehicle             EmergencyVehicleValue? @relation("activeEmergencyVehicle_emsfd", fields: [activeVehicleId], references: [id], onDelete: SetNull)
   activeVehicleId           String?
+  isTemporary               Boolean                @default(false)
+  identifiers               String[]
 }
 
 // truck logs
