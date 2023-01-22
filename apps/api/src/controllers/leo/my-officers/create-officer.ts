@@ -1,5 +1,13 @@
 import { CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
-import { cad, CadFeature, Citizen, Feature, MiscCadSettings, User } from "@prisma/client";
+import {
+  cad,
+  CadFeature,
+  Citizen,
+  Feature,
+  MiscCadSettings,
+  ShouldDoType,
+  User,
+} from "@prisma/client";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { prisma } from "lib/data/prisma";
 import { validateSchema } from "lib/data/validate-schema";
@@ -38,10 +46,22 @@ export async function createOfficer({
   const data = validateSchema(schema, body);
 
   // mean,s the officer that is being created is a temporary unit
-  let citizen;
+  let citizen: { id: string; userId: string | null } | null;
 
   if (!user) {
-    citizen
+    citizen = await prisma.citizen.create({
+      data: {
+        address: "",
+        dateOfBirth: new Date(),
+        eyeColor: "",
+        hairColor: "",
+        height: "",
+        weight: "",
+        name: data.name,
+        surname: data.surname,
+      },
+      select: { userId: true, id: true },
+    });
   } else {
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     citizen =
@@ -51,6 +71,7 @@ export async function createOfficer({
           id: data.citizenId,
           userId: checkCitizenUserId ? user.id : undefined,
         },
+        select: { userId: true, id: true },
       }));
   }
 
@@ -70,23 +91,28 @@ export async function createOfficer({
     }
 
     await validateMaxDivisionsPerUnit(data.divisions, cad);
-    await validateMaxDepartmentsEachPerUser({
-      departmentId: data.department,
-      userId: user.id,
-      cad,
-      type: "officer",
-    });
+
+    if (user) {
+      await validateMaxDepartmentsEachPerUser({
+        departmentId: data.department,
+        userId: user.id,
+        cad,
+        type: "officer",
+      });
+    }
   }
 
-  const officerCount = await prisma.officer.count({
-    where: { userId: user.id },
-  });
+  if (user) {
+    const officerCount = await prisma.officer.count({
+      where: { userId: user.id },
+    });
 
-  if (
-    cad.miscCadSettings.maxOfficersPerUser &&
-    officerCount >= cad.miscCadSettings.maxOfficersPerUser
-  ) {
-    throw new BadRequest("maxLimitOfficersPerUserReached");
+    if (
+      cad.miscCadSettings.maxOfficersPerUser &&
+      officerCount >= cad.miscCadSettings.maxOfficersPerUser
+    ) {
+      throw new BadRequest("maxLimitOfficersPerUserReached");
+    }
   }
 
   const isBadgeNumbersEnabled = isFeatureEnabled({
@@ -113,11 +139,21 @@ export async function createOfficer({
   const incremental = await findNextAvailableIncremental({ type: "leo" });
   const validatedImageURL = validateImageURL(data.image);
 
+  let statusId: string | undefined;
+
+  if (!user) {
+    const onDutyStatus = await prisma.statusValue.findFirst({
+      where: { shouldDo: ShouldDoType.SET_ON_DUTY },
+    });
+
+    statusId = onDutyStatus?.id;
+  }
+
   let officer: any = await prisma.officer.create({
     data: {
       callsign: data.callsign,
       callsign2: data.callsign2,
-      userId: user.id,
+      userId: user?.id,
       departmentId: defaultDepartment ? defaultDepartment.id : data.department,
       rankId:
         (defaultDepartment
@@ -129,6 +165,8 @@ export async function createOfficer({
       imageBlurData: await generateBlurPlaceholder(validatedImageURL),
       whitelistStatusId,
       incremental,
+      statusId,
+      identifiers: data.identifiers,
     },
     include: leoProperties,
   });

@@ -131,8 +131,8 @@ export type DeleteManageBusinessesData = boolean;
 export interface GetManageCitizensData {
   totalCount: number;
   citizens: (Prisma.Citizen & {
-    gender: Types.Value;
-    ethnicity: Types.Value;
+    gender?: Types.Value | null;
+    ethnicity?: Types.Value | null;
     user: Types.User | null;
   })[];
 }

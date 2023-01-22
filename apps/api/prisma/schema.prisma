@@ -331,10 +331,10 @@ model Citizen {
   name                 String                        @db.VarChar(255)
   surname              String                        @db.VarChar(255)
   dateOfBirth          DateTime
-  gender               Value                         @relation("genderToValue", fields: [genderId], references: [id])
-  genderId             String
-  ethnicity            Value                         @relation("ethnicityToValue", fields: [ethnicityId], references: [id])
-  ethnicityId          String
+  gender               Value?                        @relation("genderToValue", fields: [genderId], references: [id])
+  genderId             String?
+  ethnicity            Value?                        @relation("ethnicityToValue", fields: [ethnicityId], references: [id])
+  ethnicityId          String?
   hairColor            String                        @db.VarChar(255)
   eyeColor             String                        @db.VarChar(255)
   address              String                        @db.VarChar(255)
@@ -397,6 +397,8 @@ model Citizen {
   suspendedLicenses    SuspendedCitizenLicenses?     @relation(fields: [suspendedLicensesId], references: [id])
   suspendedLicensesId  String?
   LicenseExam          LicenseExam[]
+
+  @@index([name, surname], name: "fullname")
 }
 
 model SuspendedCitizenLicenses {

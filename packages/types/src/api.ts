@@ -283,7 +283,10 @@ export type PostCitizensData = Prisma.Citizen;
  * @method PUT
  * @route /citizen/:id
  */
-export type PutCitizenByIdData = Prisma.Citizen & { ethnicity: Prisma.Value; gender: Prisma.Value };
+export type PutCitizenByIdData = Prisma.Citizen & {
+  ethnicity?: Prisma.Value | null;
+  gender?: Prisma.Value | null;
+};
 
 /**
  * @method POST
