@@ -13,6 +13,7 @@ import {
 import { validateSchema } from "lib/data/validate-schema";
 import { prisma } from "lib/data/prisma";
 import { upsertEmsFdDeputy } from "lib/ems-fd/upsert-ems-fd-deputy";
+import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 
 @Controller("/temporary-units")
 @UseBeforeEach(IsAuth)
@@ -55,7 +56,17 @@ export class TemporaryUnitsController {
 
     this.socket.emitUpdateOfficerStatus();
 
-    // todo: create audit log here
+    const type = existingOfficer
+      ? AuditLogActionType.TemporaryUnitUpdate
+      : AuditLogActionType.TemporaryUnitCreate;
+
+    await createAuditLogEntry({
+      action: {
+        type,
+        previous: existingOfficer,
+        new: officer,
+      },
+    } as any);
 
     return officer;
   }
@@ -92,7 +103,17 @@ export class TemporaryUnitsController {
 
     this.socket.emitUpdateDeputyStatus();
 
-    // todo: create audit log here
+    const type = existingDeputy
+      ? AuditLogActionType.TemporaryUnitUpdate
+      : AuditLogActionType.TemporaryUnitCreate;
+
+    await createAuditLogEntry({
+      action: {
+        type,
+        previous: existingDeputy,
+        new: deputy,
+      },
+    } as any);
 
     return deputy;
   }

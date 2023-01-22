@@ -30,7 +30,9 @@ export type AuditLogActions =
   | User2FADelete
   | Calls911Purge
   | CadAPITokenRegenerated
-  | CADFeaturesUpdate;
+  | CADFeaturesUpdate
+  | TemporaryUnitCreate
+  | TemporaryUnitUpdate;
 
 type BaseAuditLogAction<ActionType extends AuditLogActionType, Previous, New> = {
   type: ActionType;
@@ -179,4 +181,14 @@ export type CADFeaturesUpdate = BaseAuditLogAction<
   AuditLogActionType.CADFeaturesUpdate,
   (Types.Feature | Feature)[],
   (Types.Feature | Feature)[]
+>;
+export type TemporaryUnitCreate = BaseAuditLogAction<
+  AuditLogActionType.TemporaryUnitCreate,
+  undefined,
+  Types.Officer | Officer | Types.EmsFdDeputy | EmsFdDeputy
+>;
+export type TemporaryUnitUpdate = BaseAuditLogAction<
+  AuditLogActionType.TemporaryUnitUpdate,
+  Types.Officer | Officer | Types.EmsFdDeputy | EmsFdDeputy,
+  Types.Officer | Officer | Types.EmsFdDeputy | EmsFdDeputy
 >;
