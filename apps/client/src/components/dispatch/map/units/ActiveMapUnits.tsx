@@ -73,6 +73,7 @@ function makeActiveUnits({ players, activeOfficers, activeDeputies }: ActiveUnit
 
   for (const activeUnit of [..._activeOfficers, ...activeDeputies]) {
     if (!activeUnit.status || activeUnit.status.shouldDo === ShouldDoType.SET_OFF_DUTY) continue;
+    if (!activeUnit.user) continue;
 
     const steamId = activeUnit.user.steamId;
     const player = players.find(

@@ -27,7 +27,6 @@ export async function handleEndCall(options: HandleEndCallOptions) {
     await Promise.allSettled(
       options.call.assignedUnits.map(async (unit) => {
         const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
-        console.log({ prismaName, unitId });
         if (!prismaName || !unitId) return;
 
         // @ts-expect-error method has the same properties

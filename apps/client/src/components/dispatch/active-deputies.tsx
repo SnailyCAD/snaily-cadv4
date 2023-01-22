@@ -30,6 +30,7 @@ import { useMounted } from "@casper124578/useful";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { shallow } from "zustand/shallow";
 import { generateContrastColor } from "lib/table/get-contrasting-text-color";
+import { Permissions, usePermission } from "hooks/usePermission";
 
 interface Props {
   initialDeputies: EmsFdDeputy[];
@@ -40,6 +41,8 @@ function ActiveDeputies({ initialDeputies }: Props) {
   const { activeIncidents } = useActiveIncidents();
   const isMounted = useMounted();
   const activeDeputies = isMounted ? _activeDeputies : initialDeputies;
+
+  const { hasPermissions } = usePermission();
 
   const t = useTranslations();
   const common = useTranslations("Common");
@@ -64,6 +67,9 @@ function ActiveDeputies({ initialDeputies }: Props) {
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
 
+  const hasDispatchPerms = hasPermissions([Permissions.Dispatch], (u) => u.isDispatch);
+  const showCreateTemporaryUnitButton = isDispatch && hasDispatchPerms;
+
   const [tempDeputy, deputyState] = useTemporaryItem(activeDeputies);
 
   function handleEditClick(deputy: ActiveDeputy) {
@@ -76,11 +82,22 @@ function ActiveDeputies({ initialDeputies }: Props) {
       <header className="p-2 px-4 bg-gray-200 dark:bg-secondary flex items-center justify-between">
         <h1 className="text-xl font-semibold">{t("Ems.activeDeputies")}</h1>
 
-        <div>
+        <div className="flex items-center gap-2">
+          {showCreateTemporaryUnitButton ? (
+            <Button
+              variant="cancel"
+              className={classNames(
+                "px-1.5 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
+              )}
+              onPress={() => openModal(ModalIds.CreateTemporaryUnit, "ems-fd")}
+            >
+              {t("Leo.createTemporaryUnit")}
+            </Button>
+          ) : null}
           <Button
             variant="cancel"
             className={classNames(
-              "px-1.5 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
+              "px-1.5 py-2  dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
               showEmsFilters && "dark:!bg-secondary !bg-gray-500",
             )}
             onPress={() => setShowFilters("ems-fd", !showEmsFilters)}

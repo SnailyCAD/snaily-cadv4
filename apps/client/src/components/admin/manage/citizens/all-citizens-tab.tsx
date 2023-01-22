@@ -134,8 +134,8 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
                   {citizen.dateOfBirth}
                 </FullDate>
               ),
-              gender: citizen.gender.value,
-              ethnicity: citizen.ethnicity.value,
+              gender: citizen.gender?.value ?? common("none"),
+              ethnicity: citizen.ethnicity?.value ?? common("none"),
               hairColor: citizen.hairColor,
               eyeColor: citizen.eyeColor,
               weight: citizen.weight,

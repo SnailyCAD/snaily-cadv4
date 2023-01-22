@@ -36,8 +36,12 @@ export function NameSearchBasicInformation() {
           ({t("Citizen.age")}: {calculateAge(currentResult.dateOfBirth)})
         </Infofield>
 
-        <Infofield label={t("Citizen.gender")}>{currentResult.gender.value}</Infofield>
-        <Infofield label={t("Citizen.ethnicity")}>{currentResult.ethnicity.value}</Infofield>
+        <Infofield label={t("Citizen.gender")}>
+          {currentResult.gender?.value ?? t("Common.none")}
+        </Infofield>
+        <Infofield label={t("Citizen.ethnicity")}>
+          {currentResult.ethnicity?.value ?? t("Common.none")}
+        </Infofield>
         <Infofield label={t("Citizen.hairColor")}>{currentResult.hairColor}</Infofield>
         <Infofield label={t("Citizen.eyeColor")}>{currentResult.eyeColor}</Infofield>
       </div>

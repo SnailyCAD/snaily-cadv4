@@ -7,7 +7,7 @@ import {
   UseAfter,
 } from "@tsed/common";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
-import { EMS_FD_DEPUTY_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
+import { MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
 import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
@@ -26,15 +26,10 @@ import { IsAuth } from "middlewares/is-auth";
 import { ActiveDeputy } from "middlewares/active-deputy";
 import fs from "node:fs/promises";
 import { unitProperties } from "lib/leo/activeOfficer";
-import { validateImageURL } from "lib/images/validate-image-url";
 import { validateSchema } from "lib/data/validate-schema";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
-import { getInactivityFilter, validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
-import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
-import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
-import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
-import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
+import { getInactivityFilter } from "lib/leo/utils";
 import { Socket } from "services/socket-service";
 import type * as APITypes from "@snailycad/types/api";
 import { isFeatureEnabled } from "lib/cad";
@@ -44,6 +39,7 @@ import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { hasPermission } from "@snailycad/permissions";
 import { getImageWebPPath } from "lib/images/get-image-webp-path";
 import { HandleInactivity } from "middlewares/handle-inactivity";
+import { upsertEmsFdDeputy } from "lib/ems-fd/upsert-ems-fd-deputy";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
@@ -113,93 +109,13 @@ export class EmsFdController {
   async createEmsFdDeputy(
     @BodyParams() body: unknown,
     @Context("user") user: User,
-    @Context("cad") cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
+    @Context("cad") cad: DBCad & { features: CadFeature[]; miscCadSettings: MiscCadSettings },
   ): Promise<APITypes.PostMyDeputiesData> {
-    const data = validateSchema(EMS_FD_DEPUTY_SCHEMA, body);
-
-    const divisionsEnabled = isFeatureEnabled({
-      feature: Feature.DIVISIONS,
-      defaultReturn: true,
-      features: cad.features,
-    });
-
-    const isBadgeNumbersEnabled = isFeatureEnabled({
-      feature: Feature.BADGE_NUMBERS,
-      defaultReturn: true,
-      features: cad.features,
-    });
-
-    if (isBadgeNumbersEnabled && !data.badgeNumber) {
-      throw new ExtendedBadRequest({ badgeNumber: "Required" });
-    }
-
-    if (divisionsEnabled) {
-      const division = await prisma.divisionValue.findFirst({
-        where: {
-          id: data.division,
-          departmentId: data.department,
-        },
-      });
-
-      if (!division) {
-        throw new ExtendedBadRequest({ division: "divisionNotInDepartment" });
-      }
-    }
-
-    await validateMaxDepartmentsEachPerUser({
-      departmentId: data.department,
-      userId: user.id,
+    const deputy = await upsertEmsFdDeputy({
+      body,
+      user,
       cad,
-      type: "emsFdDeputy",
-    });
-    await validateDuplicateCallsigns({
-      callsign1: data.callsign,
-      callsign2: data.callsign2,
-      type: "ems-fd",
-    });
-
-    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
-    const citizen = await prisma.citizen.findFirst({
-      where: {
-        id: data.citizenId,
-        userId: checkCitizenUserId ? user.id : undefined,
-      },
-    });
-
-    if (!citizen) {
-      throw new NotFound("citizenNotFound");
-    }
-
-    const { defaultDepartment, department, whitelistStatusId } = await handleWhitelistStatus(
-      data.department,
-      null,
-    );
-
-    const incremental = await findNextAvailableIncremental({ type: "ems-fd" });
-    const validatedImageURL = validateImageURL(data.image);
-
-    const deputy = await prisma.emsFdDeputy.create({
-      data: {
-        callsign: data.callsign,
-        callsign2: data.callsign2,
-        userId: user.id,
-        departmentId: defaultDepartment ? defaultDepartment.id : data.department,
-        rankId:
-          (defaultDepartment
-            ? defaultDepartment.defaultOfficerRankId
-            : department.defaultOfficerRankId) || undefined,
-        divisionId: data.division || null,
-        badgeNumber: data.badgeNumber,
-        citizenId: citizen.id,
-        imageId: validatedImageURL,
-        imageBlurData: await generateBlurPlaceholder(validatedImageURL),
-        incremental,
-        whitelistStatusId,
-      },
-      include: {
-        ...unitProperties,
-        qualifications: { include: { qualification: { include: { value: true } } } },
-      },
+      existingDeputy: null,
     });
 
     return deputy;
@@ -214,115 +130,20 @@ export class EmsFdController {
     @PathParams("id") deputyId: string,
     @BodyParams() body: unknown,
     @Context("user") user: User,
-    @Context("cad") cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
+    @Context("cad") cad: DBCad & { features: CadFeature[]; miscCadSettings: MiscCadSettings },
   ): Promise<APITypes.PutMyDeputyByIdData> {
-    const data = validateSchema(EMS_FD_DEPUTY_SCHEMA, body);
-
-    const deputy = await prisma.emsFdDeputy.findFirst({
-      where: {
-        id: deputyId,
-        userId: user.id,
-      },
-      include: { whitelistStatus: true },
+    const existingDeputy = await prisma.emsFdDeputy.findFirst({
+      where: { id: deputyId, userId: user.id },
     });
 
-    if (!deputy) {
-      throw new NotFound("deputyNotFound");
-    }
-
-    const divisionsEnabled = isFeatureEnabled({
-      feature: Feature.DIVISIONS,
-      defaultReturn: true,
-      features: cad.features,
-    });
-
-    const isBadgeNumbersEnabled = isFeatureEnabled({
-      feature: Feature.BADGE_NUMBERS,
-      defaultReturn: true,
-      features: cad.features,
-    });
-
-    if (isBadgeNumbersEnabled && !data.badgeNumber) {
-      throw new ExtendedBadRequest({ badgeNumber: "Required" });
-    }
-
-    if (divisionsEnabled) {
-      const division = await prisma.divisionValue.findFirst({
-        where: {
-          id: data.division,
-          departmentId: data.department,
-        },
-      });
-
-      if (!division) {
-        throw new ExtendedBadRequest({ division: "divisionNotInDepartment" });
-      }
-    }
-
-    await validateMaxDepartmentsEachPerUser({
-      departmentId: data.department,
-      userId: user.id,
+    const updatedDeputy = await upsertEmsFdDeputy({
+      body,
+      user,
       cad,
-      type: "emsFdDeputy",
-      unitId: deputy.id,
-    });
-    await validateDuplicateCallsigns({
-      callsign1: data.callsign,
-      callsign2: data.callsign2,
-      type: "ems-fd",
-      unitId: deputy.id,
+      existingDeputy,
     });
 
-    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
-    const citizen = await prisma.citizen.findFirst({
-      where: {
-        id: data.citizenId,
-        userId: checkCitizenUserId ? user.id : undefined,
-      },
-    });
-
-    if (!citizen) {
-      throw new NotFound("citizenNotFound");
-    }
-
-    const incremental = deputy.incremental
-      ? undefined
-      : await findNextAvailableIncremental({ type: "ems-fd" });
-
-    const { defaultDepartment, department, whitelistStatusId } = await handleWhitelistStatus(
-      data.department,
-      deputy,
-    );
-
-    const rank = deputy.rankId
-      ? undefined
-      : (defaultDepartment
-          ? defaultDepartment.defaultOfficerRankId
-          : department.defaultOfficerRankId) || undefined;
-
-    const updated = await prisma.emsFdDeputy.update({
-      where: {
-        id: deputy.id,
-      },
-      data: {
-        callsign: data.callsign,
-        callsign2: data.callsign2,
-        departmentId: defaultDepartment ? defaultDepartment.id : data.department,
-        divisionId: data.division || null,
-        badgeNumber: data.badgeNumber,
-        citizenId: citizen.id,
-        imageId: validateImageURL(data.image),
-        incremental,
-        whitelistStatusId,
-        rankId: rank,
-      },
-      include: {
-        ...unitProperties,
-        qualifications: { include: { qualification: { include: { value: true } } } },
-      },
-    });
-
-    return updated;
+    return updatedDeputy;
   }
 
   @Delete("/:id")

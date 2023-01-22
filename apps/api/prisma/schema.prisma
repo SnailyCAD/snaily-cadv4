@@ -331,10 +331,10 @@ model Citizen {
   name                 String                        @db.VarChar(255)
   surname              String                        @db.VarChar(255)
   dateOfBirth          DateTime
-  gender               Value                         @relation("genderToValue", fields: [genderId], references: [id])
-  genderId             String
-  ethnicity            Value                         @relation("ethnicityToValue", fields: [ethnicityId], references: [id])
-  ethnicityId          String
+  gender               Value?                        @relation("genderToValue", fields: [genderId], references: [id])
+  genderId             String?
+  ethnicity            Value?                        @relation("ethnicityToValue", fields: [ethnicityId], references: [id])
+  ethnicityId          String?
   hairColor            String                        @db.VarChar(255)
   eyeColor             String                        @db.VarChar(255)
   address              String                        @db.VarChar(255)
@@ -397,6 +397,8 @@ model Citizen {
   suspendedLicenses    SuspendedCitizenLicenses?     @relation(fields: [suspendedLicensesId], references: [id])
   suspendedLicensesId  String?
   LicenseExam          LicenseExam[]
+
+  @@index([name, surname], name: "fullname")
 }
 
 model SuspendedCitizenLicenses {
@@ -864,8 +866,8 @@ model Officer {
   imageBlurData               String?                      @db.Text
   citizen                     Citizen                      @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId                   String
-  user                        User                         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                      String
+  user                        User?                        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                      String?
   createdAt                   DateTime                     @default(now())
   updatedAt                   DateTime                     @default(now()) @updatedAt
   whitelistStatus             LeoWhitelistStatus?          @relation(fields: [whitelistStatusId], references: [id])
@@ -893,6 +895,8 @@ model Officer {
   ImpoundedVehicle            ImpoundedVehicle[]
   activeVehicle               EmergencyVehicleValue?       @relation("activeEmergencyVehicle_leo", fields: [activeVehicleId], references: [id], onDelete: SetNull)
   activeVehicleId             String?
+  isTemporary                 Boolean                      @default(false)
+  identifiers                 String[]
 }
 
 model IndividualDivisionCallsign {
@@ -1308,8 +1312,8 @@ model EmsFdDeputy {
   imageBlurData             String?                @db.Text
   citizen                   Citizen                @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId                 String
-  user                      User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                    String
+  user                      User?                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                    String?
   createdAt                 DateTime               @default(now())
   updatedAt                 DateTime               @default(now()) @updatedAt
   radioChannelId            String?
@@ -1326,6 +1330,8 @@ model EmsFdDeputy {
   IncidentInvolvedUnit      IncidentInvolvedUnit[]
   activeVehicle             EmergencyVehicleValue? @relation("activeEmergencyVehicle_emsfd", fields: [activeVehicleId], references: [id], onDelete: SetNull)
   activeVehicleId           String?
+  isTemporary               Boolean                @default(false)
+  identifiers               String[]
 }
 
 // truck logs
