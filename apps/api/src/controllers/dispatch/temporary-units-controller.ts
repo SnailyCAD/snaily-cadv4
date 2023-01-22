@@ -39,6 +39,10 @@ export class TemporaryUnitsController {
           where: {
             identifiers: { hasSome: data.identifiers },
           },
+          include: {
+            whitelistStatus: true,
+            divisions: true,
+          },
         })
       : null;
 
@@ -49,10 +53,8 @@ export class TemporaryUnitsController {
       existingOfficer,
     });
 
-    console.log({ officer });
-
     this.socket.emitUpdateOfficerStatus();
 
-    return { officer };
+    return officer;
   }
 }

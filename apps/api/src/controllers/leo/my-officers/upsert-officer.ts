@@ -3,7 +3,9 @@ import {
   cad,
   CadFeature,
   Citizen,
+  DivisionValue,
   Feature,
+  LeoWhitelistStatus,
   MiscCadSettings,
   Officer,
   ShouldDoType,
@@ -34,7 +36,12 @@ interface CreateOfficerOptions {
   user?: User;
   cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings };
   includeProperties?: boolean;
-  existingOfficer?: Officer | null;
+  existingOfficer?:
+    | (Officer & {
+        divisions: DivisionValue[];
+        whitelistStatus?: LeoWhitelistStatus | null;
+      })
+    | null;
 }
 
 export async function upsertOfficer({
@@ -69,16 +76,23 @@ export async function upsertOfficer({
     }
 
     await validateMaxDivisionsPerUnit(data.divisions, cad);
-
-    if (user) {
-      await validateMaxDepartmentsEachPerUser({
-        departmentId: data.department,
-        userId: user.id,
-        cad,
-        type: "officer",
-      });
-    }
   }
+
+  if (user) {
+    await validateMaxDepartmentsEachPerUser({
+      departmentId: data.department,
+      userId: user.id,
+      cad,
+      type: "officer",
+    });
+  }
+
+  await validateDuplicateCallsigns({
+    callsign1: data.callsign,
+    callsign2: data.callsign2,
+    type: "leo",
+    unitId: existingOfficer?.id,
+  });
 
   if (user && !existingOfficer) {
     const officerCount = await prisma.officer.count({
@@ -105,15 +119,8 @@ export async function upsertOfficer({
 
   const { defaultDepartment, department, whitelistStatusId } = await handleWhitelistStatus(
     data.department,
-    null,
+    existingOfficer ?? null,
   );
-
-  await validateDuplicateCallsigns({
-    callsign1: data.callsign,
-    callsign2: data.callsign2,
-    type: "leo",
-    unitId: existingOfficer?.id,
-  });
 
   const incremental = await findNextAvailableIncremental({ type: "leo" });
   const validatedImageURL = validateImageURL(data.image);
@@ -155,7 +162,10 @@ export async function upsertOfficer({
   });
 
   if (divisionsEnabled) {
-    const disconnectConnectArr = manyToManyHelper([], toIdString(data.divisions));
+    const disconnectConnectArr = manyToManyHelper(
+      existingOfficer?.divisions.map((v) => v.id) ?? [],
+      toIdString(data.divisions),
+    );
 
     await updateOfficerDivisionsCallsigns({
       officerId: officer.id,
