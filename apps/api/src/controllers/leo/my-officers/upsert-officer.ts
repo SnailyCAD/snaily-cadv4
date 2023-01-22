@@ -5,6 +5,7 @@ import {
   Citizen,
   Feature,
   MiscCadSettings,
+  Officer,
   ShouldDoType,
   User,
 } from "@prisma/client";
@@ -33,51 +34,28 @@ interface CreateOfficerOptions {
   user?: User;
   cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings };
   includeProperties?: boolean;
+  existingOfficer?: Officer | null;
 }
 
-export async function createOfficer({
+export async function upsertOfficer({
   body,
   schema = CREATE_OFFICER_SCHEMA,
   user,
   cad,
   citizen: _citizen,
   includeProperties = true,
+  existingOfficer,
 }: CreateOfficerOptions) {
   const data = validateSchema(schema, body);
 
-  // mean,s the officer that is being created is a temporary unit
-  let citizen: { id: string; userId: string | null } | null;
-
-  if (!user) {
-    citizen = await prisma.citizen.create({
-      data: {
-        address: "",
-        dateOfBirth: new Date(),
-        eyeColor: "",
-        hairColor: "",
-        height: "",
-        weight: "",
-        name: data.name,
-        surname: data.surname,
-      },
-      select: { userId: true, id: true },
-    });
-  } else {
-    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
-    citizen =
-      _citizen ??
-      (await prisma.citizen.findFirst({
-        where: {
-          id: data.citizenId,
-          userId: checkCitizenUserId ? user.id : undefined,
-        },
-        select: { userId: true, id: true },
-      }));
-  }
-
-  if (!citizen) {
-    throw new NotFound("citizenNotFound");
-  }
+  const citizen = await upsertOfficerCitizen({
+    user,
+    cad,
+    citizen: _citizen,
+    includeProperties,
+    existingOfficer,
+    data,
+  });
 
   const divisionsEnabled = isFeatureEnabled({
     feature: Feature.DIVISIONS,
@@ -102,7 +80,7 @@ export async function createOfficer({
     }
   }
 
-  if (user) {
+  if (user && !existingOfficer) {
     const officerCount = await prisma.officer.count({
       where: { userId: user.id },
     });
@@ -134,6 +112,7 @@ export async function createOfficer({
     callsign1: data.callsign,
     callsign2: data.callsign2,
     type: "leo",
+    unitId: existingOfficer?.id,
   });
 
   const incremental = await findNextAvailableIncremental({ type: "leo" });
@@ -149,25 +128,29 @@ export async function createOfficer({
     statusId = onDutyStatus?.id;
   }
 
-  let officer: any = await prisma.officer.create({
-    data: {
-      callsign: data.callsign,
-      callsign2: data.callsign2,
-      userId: user?.id,
-      departmentId: defaultDepartment ? defaultDepartment.id : data.department,
-      rankId:
-        (defaultDepartment
-          ? defaultDepartment.defaultOfficerRankId
-          : department.defaultOfficerRankId) || undefined,
-      badgeNumber: isBadgeNumbersEnabled ? data.badgeNumber : undefined,
-      citizenId: citizen.id,
-      imageId: validatedImageURL,
-      imageBlurData: await generateBlurPlaceholder(validatedImageURL),
-      whitelistStatusId,
-      incremental,
-      statusId,
-      identifiers: data.identifiers,
-    },
+  const createUpdateFields = {
+    callsign: data.callsign,
+    callsign2: data.callsign2,
+    userId: user?.id,
+    departmentId: defaultDepartment ? defaultDepartment.id : data.department,
+    rankId:
+      (defaultDepartment
+        ? defaultDepartment.defaultOfficerRankId
+        : department.defaultOfficerRankId) || undefined,
+    badgeNumber: isBadgeNumbersEnabled ? data.badgeNumber : undefined,
+    citizenId: citizen.id,
+    imageId: validatedImageURL,
+    imageBlurData: await generateBlurPlaceholder(validatedImageURL),
+    whitelistStatusId,
+    incremental,
+    statusId,
+    identifiers: data.identifiers,
+  };
+
+  let officer: any = await prisma.officer.upsert({
+    where: { id: existingOfficer?.id || "undefined" },
+    create: createUpdateFields,
+    update: createUpdateFields,
     include: leoProperties,
   });
 
@@ -206,4 +189,54 @@ export async function createOfficer({
 
 function toIdString(array: (string | { value: string })[]) {
   return array.map((v) => (typeof v === "string" ? v : v.value));
+}
+
+/**
+ * find or create the citizen for the officer with the given data
+ */
+async function upsertOfficerCitizen(
+  options: Omit<CreateOfficerOptions, "body" | "schema"> & { data: any },
+) {
+  // means the officer that is being created is a temporary unit
+  let citizen: { id: string; userId: string | null } | null = options.existingOfficer?.citizenId
+    ? { id: options.existingOfficer.citizenId, userId: options.existingOfficer.userId }
+    : null;
+
+  if (!citizen) {
+    if (!options.user) {
+      citizen = await prisma.citizen.create({
+        data: {
+          address: "",
+          dateOfBirth: new Date(),
+          eyeColor: "",
+          hairColor: "",
+          height: "",
+          weight: "",
+          name: options.data.name,
+          surname: options.data.surname,
+        },
+        select: { userId: true, id: true },
+      });
+    } else {
+      const checkCitizenUserId = shouldCheckCitizenUserId({
+        cad: options.cad,
+        user: options.user,
+      });
+      citizen =
+        options.citizen ??
+        (await prisma.citizen.findFirst({
+          where: {
+            id: options.data.citizenId,
+            userId: checkCitizenUserId ? options.user.id : undefined,
+          },
+          select: { userId: true, id: true },
+        }));
+    }
+  }
+
+  if (!citizen) {
+    throw new NotFound("citizenNotFound");
+  }
+
+  return citizen;
 }

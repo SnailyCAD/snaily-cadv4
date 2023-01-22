@@ -5,7 +5,7 @@ import { Socket } from "services/socket-service";
 import { IsAuth } from "middlewares/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type * as APITypes from "@snailycad/types/api";
-import { createOfficer } from "controllers/leo/my-officers/create-officer";
+import { upsertOfficer } from "controllers/leo/my-officers/upsert-officer";
 import type { cad, CadFeature, MiscCadSettings } from "@prisma/client";
 import { CREATE_TEMPORARY_UNIT_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/data/validate-schema";
@@ -32,25 +32,21 @@ export class TemporaryUnitsController {
     @Context("cad") cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings },
     @BodyParams() body: unknown,
   ): Promise<any> {
-    const data = validateSchema(CREATE_TEMPORARY_UNIT_SCHEMA.pick({ identifiers: true }), body);
+    const data = validateSchema(CREATE_TEMPORARY_UNIT_SCHEMA, body);
 
-    if (data.identifiers) {
-      const existingOfficer = await prisma.officer.findFirst({
-        where: {
-          identifiers: { hasSome: data.identifiers },
-        },
-      });
+    const existingOfficer = data.identifiers
+      ? await prisma.officer.findFirst({
+          where: {
+            identifiers: { hasSome: data.identifiers },
+          },
+        })
+      : null;
 
-      if (existingOfficer) {
-        // todo: update officer
-        return existingOfficer;
-      }
-    }
-
-    const officer = await createOfficer({
+    const officer = await upsertOfficer({
       body,
       cad,
       schema: CREATE_TEMPORARY_UNIT_SCHEMA,
+      existingOfficer,
     });
 
     console.log({ officer });

@@ -21,7 +21,7 @@ import { leoProperties } from "lib/leo/activeOfficer";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import type * as APITypes from "@snailycad/types/api";
-import { createOfficer } from "./create-officer";
+import { upsertOfficer } from "./upsert-officer";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { hasPermission } from "@snailycad/permissions";
 import { getImageWebPPath } from "lib/images/get-image-webp-path";
@@ -61,7 +61,7 @@ export class MyOfficersController {
     @Context("user") user: User,
     @Context("cad") cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings },
   ): Promise<APITypes.PostMyOfficersData> {
-    return createOfficer({ body, user, cad });
+    return upsertOfficer({ body, user, cad });
   }
 
   @Put("/:id")

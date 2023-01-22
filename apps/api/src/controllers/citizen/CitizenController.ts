@@ -22,7 +22,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { getImageWebPPath } from "lib/images/get-image-webp-path";
 import { validateSocialSecurityNumber } from "lib/citizen/validateSSN";
 import { setEndedSuspendedLicenses } from "lib/citizen/setEndedSuspendedLicenses";
-import { createOfficer } from "controllers/leo/my-officers/create-officer";
+import { upsertOfficer } from "controllers/leo/my-officers/upsert-officer";
 import { createCitizenViolations } from "lib/records/create-citizen-violations";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 
@@ -316,7 +316,7 @@ export class CitizenController {
     }
 
     if ((data as any).callsign2) {
-      await createOfficer({
+      await upsertOfficer({
         body,
         citizen,
         cad,
