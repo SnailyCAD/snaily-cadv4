@@ -17,10 +17,11 @@ export default async function generateBlurPlaceholder(
       return placeholderBlur;
     }
 
-    const response = await request(image).catch(() => null);
-    if (!response) return null;
-    const buffer = await response.body.arrayBuffer();
-    const base64 = Buffer.from(buffer).toString("base64");
+    const base64 = await fetchImageURLData(image);
+    if (!base64) {
+      // return undefined to not update the image blur data
+      return undefined;
+    }
 
     placeholderBlur = `data:image/jpeg;base64,${base64}`;
     cache.set(image, placeholderBlur);
@@ -38,4 +39,17 @@ export default async function generateBlurPlaceholder(
   cache.set(image.fileName, placeholderBlur);
 
   return placeholderBlur;
+}
+
+async function fetchImageURLData(image: string) {
+  try {
+    const response = await request(image);
+    const buffer = await response.body.arrayBuffer();
+    const base64 = Buffer.from(buffer).toString("base64");
+
+    return base64;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
 }
