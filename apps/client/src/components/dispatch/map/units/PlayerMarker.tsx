@@ -7,7 +7,6 @@ import type { MapPlayer, PlayerDataEventPayload } from "types/Map";
 import { icon as leafletIcon } from "leaflet";
 import { useTranslations } from "next-intl";
 import { MapItem, useDispatchMapState } from "state/mapState";
-import { useAuth } from "context/AuthContext";
 import { generateMarkerTypes } from "../RenderMapBlips";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
@@ -27,7 +26,6 @@ const PLAYER_ICON = leafletIcon({
 export function PlayerMarker({ player, handleToggle }: Props) {
   const map = useMap();
   const t = useTranslations("Leo");
-  const { user } = useAuth();
   const { hiddenItems } = useDispatchMapState();
   const markerTypes = React.useMemo(generateMarkerTypes, []);
   const { generateCallsign } = useGenerateCallsign();
@@ -81,21 +79,6 @@ export function PlayerMarker({ player, handleToggle }: Props) {
   const hasUnit = isCADUser && player.unit != null;
 
   const showUnitsOnly = hiddenItems[MapItem.UNITS_ONLY];
-  const playerSteamId = player.convertedSteamId;
-  const playerDiscordId = player.discordId;
-
-  const isSteamUser = playerSteamId && user?.steamId === playerSteamId;
-  const isDiscordUser = playerDiscordId && user?.discordId === playerDiscordId;
-  const isUser = isSteamUser || isDiscordUser;
-
-  console.log({
-    player: player.name,
-    user,
-    hasUnit,
-    isUser,
-    isSteamUser,
-    isDiscordUser,
-  });
 
   if (showUnitsOnly) {
     if (!hasUnit) {

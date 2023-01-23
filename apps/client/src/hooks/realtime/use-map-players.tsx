@@ -32,37 +32,41 @@ export function useMapPlayers() {
   const { state, execute } = useFetch();
 
   const getCADUsers = React.useCallback(
-    async (playersMap: Map<string, MapPlayer | PlayerDataEventPayload>) => {
+    async (options: {
+      map: Map<string, MapPlayer | PlayerDataEventPayload>;
+      fetchMore?: boolean;
+    }) => {
       if (state === "loading") return;
 
-      const availablePlayersArray = Array.from(playersMap.values());
+      const availablePlayersArray = Array.from(options.map.values());
+      const newPlayers = options.map;
 
-      const { json } = await execute<GetDispatchPlayerBySteamIdData[]>({
-        path: "/dispatch/players",
-        data: availablePlayersArray.map((s) => ({
-          steamId: s.convertedSteamId,
-          discordId: s.discordId,
-        })),
-        noToast: true,
-        method: "POST",
-      });
+      if (options.fetchMore) {
+        const { json } = await execute<GetDispatchPlayerBySteamIdData[]>({
+          path: "/dispatch/players",
+          data: availablePlayersArray.map((s) => ({
+            steamId: s.convertedSteamId,
+            discordId: s.discordId,
+          })),
+          noToast: true,
+          method: "POST",
+        });
 
-      const newPlayers = structuredClone(playersMap);
+        for (const user of json) {
+          const player = availablePlayersArray.find(
+            (player) =>
+              player.discordId === user.discordId || player.convertedSteamId === user.steamId,
+          );
 
-      for (const user of json) {
-        const player = availablePlayersArray.find(
-          (player) =>
-            player.discordId === user.discordId || player.convertedSteamId === user.steamId,
-        );
-
-        if (player) {
-          newPlayers.set(player.identifier, { ...player, ...user });
+          if (player) {
+            newPlayers.set(player.identifier, { ...player, ...user });
+          }
         }
       }
 
       setPlayers(newPlayers);
     },
-    [state, players], // eslint-disable-line react-hooks/exhaustive-deps
+    [state], // eslint-disable-line
   );
 
   const onPlayerData = React.useCallback(
@@ -76,14 +80,29 @@ export function useMapPlayers() {
         const convertedSteamId = steamId && new BN(steamId, 16).toString();
         const identifier = discordId || steamId || String(player.playerId);
 
-        newMap.set(identifier, { ...player, identifier, discordId, convertedSteamId });
+        const existingPlayer = newMap.get(identifier);
+
+        if (existingPlayer) {
+          const clone = {
+            ...existingPlayer,
+            ...player,
+          };
+
+          newMap.set(identifier, clone);
+          continue;
+        }
+
+        newMap.set(identifier, {
+          ...player,
+          identifier,
+          discordId,
+          convertedSteamId,
+        });
       }
 
-      if (data.payload.length !== players.size) {
-        await getCADUsers(newMap);
-      }
+      await getCADUsers({ map: newMap, fetchMore: data.payload.length !== players.size });
     },
-    [players], // eslint-disable-line react-hooks/exhaustive-deps
+    [players, getCADUsers],
   );
 
   const onPlayerLeft = React.useCallback(
