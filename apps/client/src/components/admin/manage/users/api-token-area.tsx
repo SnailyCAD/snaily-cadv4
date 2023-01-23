@@ -23,6 +23,7 @@ export function ApiTokenArea({ user }: Props) {
 
           {!user.apiToken.logs.length ? null : (
             <Table
+              features={{ isWithinCardOrModal: true }}
               tableState={tableState}
               data={user.apiToken.logs.map((log) => ({
                 id: log.id,
