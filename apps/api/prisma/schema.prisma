@@ -1092,6 +1092,7 @@ model Call911 {
   gtaMapPositionId String?
   isSignal100      Boolean?          @default(false)
   extraFields      Json?
+  status           WhitelistStatus?
 }
 
 model GTAMapPosition {
@@ -1696,4 +1697,5 @@ enum Feature {
   LICENSE_EXAMS
   CITIZEN_CREATION_RECORDS // See #1188
   BUREAU_OF_FIREARMS // See #1298
+  CALL_911_APPROVAL // See #1459
 }

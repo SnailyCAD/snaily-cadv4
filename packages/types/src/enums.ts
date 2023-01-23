@@ -40,6 +40,7 @@ export const Feature = {
   LICENSE_EXAMS: "LICENSE_EXAMS",
   CITIZEN_CREATION_RECORDS: "CITIZEN_CREATION_RECORDS",
   BUREAU_OF_FIREARMS: "BUREAU_OF_FIREARMS",
+  CALL_911_APPROVAL: "CALL_911_APPROVAL",
 } as const;
 
 export type Feature = typeof Feature[keyof typeof Feature];
