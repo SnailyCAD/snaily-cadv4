@@ -70,7 +70,7 @@ export class LeoController {
       }),
     ]);
 
-    return [...officers, ...combinedUnits];
+    return [...combinedUnits, ...officers];
   }
 
   @Post("/panic-button")

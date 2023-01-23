@@ -29,16 +29,16 @@ export async function handleEndCall(options: HandleEndCallOptions) {
         const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
         if (!prismaName || !unitId) return;
 
+        const nextActiveIncidentId = await getNextActiveCallId({
+          callId: options.call.id,
+          type: "unassign",
+          unit: { ...unit, id: unitId },
+        });
+
         // @ts-expect-error method has the same properties
         await prisma[prismaName].update({
           where: { id: unitId },
-          data: {
-            activeCallId: await getNextActiveCallId({
-              callId: options.call.id,
-              type: "unassign",
-              unit: { ...unit, id: unitId },
-            }),
-          },
+          data: { activeCallId: nextActiveIncidentId },
         });
       }),
     );

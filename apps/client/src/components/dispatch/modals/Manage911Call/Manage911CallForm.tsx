@@ -113,7 +113,6 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
     divisions: call?.divisions?.map((dep) => ({ value: dep.id, label: dep.value.value })) ?? [],
     situationCode: call?.situationCodeId ?? null,
     type: call?.typeId ?? null,
-    assignedUnits: undefined,
     notifyAssignedUnits: true,
     openCallModalAfterCreation: true,
   };
@@ -257,8 +256,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
                   checkbox
                 >
                   <Input
-                    defaultChecked
-                    value={values.notifyAssignedUnits.toString()}
+                    checked={values.notifyAssignedUnits}
                     onChange={() =>
                       setFieldValue("notifyAssignedUnits", !values.notifyAssignedUnits)
                     }
@@ -274,7 +272,6 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
                 >
                   <Input
                     checked={values.openCallModalAfterCreation}
-                    defaultChecked
                     onChange={() =>
                       setFieldValue(
                         "openCallModalAfterCreation",

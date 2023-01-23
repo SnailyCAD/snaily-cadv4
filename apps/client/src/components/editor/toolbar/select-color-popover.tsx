@@ -29,18 +29,20 @@ export function SelectColorPopover({ icon, format }: SelectColorPopoverProps) {
 
   return (
     <Popover.Root onOpenChange={handleSave} open={isPopover}>
-      <Popover.Trigger>
-        <ToolbarToggleItem asChild value={format}>
-          <Button
-            title={format}
-            type="button"
-            variant={isActive ? null : "default"}
-            className={classNames(isActive && "text-white bg-neutral-700")}
-            onPress={() => setIsPopoverOpen((v) => !v)}
-          >
-            {icon}
-          </Button>
-        </ToolbarToggleItem>
+      <Popover.Trigger asChild>
+        <span>
+          <ToolbarToggleItem asChild value={format}>
+            <Button
+              title={format}
+              type="button"
+              variant={isActive ? null : "default"}
+              className={classNames(isActive && "text-white bg-neutral-700")}
+              onPress={() => setIsPopoverOpen((v) => !v)}
+            >
+              {icon}
+            </Button>
+          </ToolbarToggleItem>
+        </span>
       </Popover.Trigger>
 
       <Popover.Content

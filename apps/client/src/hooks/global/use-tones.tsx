@@ -18,6 +18,8 @@ export function useGetActiveTone(type?: ActiveToneType) {
   const { execute } = useFetch();
 
   const { data } = useQuery({
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     enabled: !!TONES,
     queryKey: ["active-tones", type],
     queryFn: async () => {
