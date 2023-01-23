@@ -83,12 +83,22 @@ export function PlayerMarker({ player, handleToggle }: Props) {
   const showUnitsOnly = hiddenItems[MapItem.UNITS_ONLY];
   const playerSteamId = player.convertedSteamId;
   const playerDiscordId = player.discordId;
+
   const isSteamUser = playerSteamId && user?.steamId === playerSteamId;
   const isDiscordUser = playerDiscordId && user?.discordId === playerDiscordId;
   const isUser = isSteamUser || isDiscordUser;
 
+  console.log({
+    player: player.name,
+    user,
+    hasUnit,
+    isUser,
+    isSteamUser,
+    isDiscordUser,
+  });
+
   if (showUnitsOnly) {
-    if (!hasUnit || !isUser) {
+    if (!hasUnit) {
       return null;
     }
   }
