@@ -17,10 +17,11 @@ interface Props {
 }
 
 const PLAYER_ICON = leafletIcon({
-  iconUrl: "https://unpkg.com/leaflet@1.7.0/dist/images/marker-icon-2x.png",
-  iconSize: [25, 40],
-  popupAnchor: [0, 0],
-  iconAnchor: [9, 8],
+  iconUrl: "/map/ped.png",
+  iconSize: [40, 40],
+  popupAnchor: [0, -20],
+  iconAnchor: [20, 20],
+  tooltipAnchor: [0, -20],
 });
 
 export function PlayerMarker({ player, handleToggle }: Props) {
@@ -37,19 +38,28 @@ export function PlayerMarker({ player, handleToggle }: Props) {
       return leafletIcon({
         iconUrl: "/map/siren.gif",
         iconSize: [blipSize, blipSize],
-        iconAnchor: [blipSize / 2, 0],
+        iconAnchor: [blipSize / 2, blipSize / 2],
         popupAnchor: [0, 0],
       });
     }
 
     const playerIcon = markerTypes[parseInt(player.icon, 10)];
-
     if (playerIcon) {
       return leafletIcon(playerIcon);
     }
 
+    // player is on-foot and is a unit
+    if ("unit" in player && player.unit) {
+      return leafletIcon({
+        iconUrl: "/map/unit_ped.png",
+        iconSize: [20, 43],
+        iconAnchor: [20 / 2, 43 / 2],
+        popupAnchor: [0, 0],
+      });
+    }
+
     return PLAYER_ICON;
-  }, [player.icon, player.hasSirenEnabled, markerTypes]);
+  }, [player, markerTypes]);
 
   const pos = React.useMemo(
     () => player.pos?.x && player.pos.y && convertToMap(player.pos.x, player.pos.y, map),
@@ -97,7 +107,7 @@ export function PlayerMarker({ player, handleToggle }: Props) {
       key={player.identifier}
       position={pos}
     >
-      <Tooltip direction="top">{unitNameAndCallsign}</Tooltip>
+      {unitNameAndCallsign.trim() ? <Tooltip direction="top">{unitNameAndCallsign}</Tooltip> : null}
 
       <Popup minWidth={500}>
         <p style={{ margin: 2 }}>
