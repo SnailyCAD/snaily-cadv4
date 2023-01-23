@@ -61,10 +61,12 @@ export type PlayerDataEventPayload = PlayerDataEvent["payload"][number] & {
   ref?: Marker | null;
   convertedSteamId?: string | null;
   discordId?: string | null;
+  identifier: string;
 };
 export interface MapPlayer extends User, PlayerDataEventPayload {
   unit: EmsFdDeputy | Officer | null;
   convertedSteamId: string | null;
   discordId: string | null;
   ref: Marker | null;
+  identifier: string;
 }

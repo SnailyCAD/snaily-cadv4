@@ -6,13 +6,11 @@ import type {
   PlayerLeftEvent,
   MapPlayer,
   PlayerDataEventPayload,
-  Player,
 } from "types/Map";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { toastMessage } from "lib/toastMessage";
 import type { cad } from "@snailycad/types";
-import { omit } from "lib/utils";
 import type { GetDispatchPlayerBySteamIdData } from "@snailycad/types/api";
 import { io, Socket } from "socket.io-client";
 import { create } from "zustand";
@@ -28,125 +26,64 @@ export const useMapPlayersStore = create<{
 export function useMapPlayers() {
   const { players, setPlayers } = useMapPlayersStore();
   const [socket, setSocket] = React.useState<Socket | null>(null);
-  const [prevPlayerData, setPrevPlayerData] = React.useState<GetDispatchPlayerBySteamIdData[]>([]);
 
   const { cad } = useAuth();
   const url = getCADURL(cad);
   const { state, execute } = useFetch();
 
   const getCADUsers = React.useCallback(
-    async (
-      playersToFetch: (Player & { discordId?: string | null; convertedSteamId?: string | null })[],
-      payload: PlayerDataEventPayload[],
-    ) => {
+    async (playersMap: Map<string, MapPlayer | PlayerDataEventPayload>) => {
       if (state === "loading") return;
-      let _prevPlayerData = prevPlayerData;
 
-      const { json } =
-        playersToFetch.length <= 0
-          ? { json: prevPlayerData }
-          : await execute<GetDispatchPlayerBySteamIdData[]>({
-              path: "/dispatch/players",
-              data: playersToFetch.map((s) => ({
-                steamId: s.convertedSteamId,
-                discordId: s.discordId,
-              })),
-              noToast: true,
-              method: "POST",
-            });
+      const availablePlayersArray = Array.from(playersMap.values());
 
-      if (playersToFetch.length >= 1 && Array.isArray(json)) {
-        _prevPlayerData = json;
-        setPrevPlayerData(json);
-      }
+      const { json } = await execute<GetDispatchPlayerBySteamIdData[]>({
+        path: "/dispatch/players",
+        data: availablePlayersArray.map((s) => ({
+          steamId: s.convertedSteamId,
+          discordId: s.discordId,
+        })),
+        noToast: true,
+        method: "POST",
+      });
 
-      const newMap = new Map();
+      const newPlayers = structuredClone(playersMap);
 
-      for (const player of payload) {
-        const currentPlayer = playersToFetch.find((v) => {
-          if (
-            v.identifiers.steamId &&
-            v.identifiers.steamId === player.identifiers.steamId &&
-            player.identifiers.steamId
-          ) {
-            return true;
-          }
-
-          if (
-            v.identifiers.discordId &&
-            v.identifiers.discordId === player.identifiers.discordId &&
-            player.identifiers.discordId
-          ) {
-            return true;
-          }
-
-          return false;
-        });
-
-        const steamId = currentPlayer?.convertedSteamId;
-        const discordId = currentPlayer?.discordId;
-
-        const user = _prevPlayerData.find(
-          (v) => v.steamId === steamId || v.discordId === discordId,
+      for (const user of json) {
+        const player = availablePlayersArray.find(
+          (player) =>
+            player.discordId === user.discordId || player.convertedSteamId === user.steamId,
         );
 
-        const existing = players.get(player.name);
-
-        if (existing) {
-          const omittedExisting = omit(existing, [
-            "licensePlate",
-            "vehicle",
-            "location",
-            "weapon",
-            "icon",
-            "pos",
-          ]);
-
-          newMap.set(player.name, {
-            ...omittedExisting,
-            ...existing,
-            ...player,
-            ...(user ?? {}),
-          });
-
-          continue;
+        if (player) {
+          newPlayers.set(player.identifier, { ...player, ...user });
         }
-
-        if (!player.name) continue;
-        newMap.set(player.name, {
-          convertedSteamId: currentPlayer?.convertedSteamId,
-          ...player,
-          ...(user ?? {}),
-        });
       }
 
-      setPlayers(newMap);
+      setPlayers(newPlayers);
     },
-    [players, state, prevPlayerData], // eslint-disable-line react-hooks/exhaustive-deps
+    [state, players], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   const onPlayerData = React.useCallback(
     async (data: PlayerDataEvent) => {
-      const usersToFetch = data.payload
-        .map((player) => {
-          const steamId = player.identifiers.steamId?.replace("steam:", "");
-          const discordId = player.identifiers.discordId?.replace("discord:", "");
+      const newMap = new Map(players);
 
-          const convertedSteamId = steamId && new BN(steamId, 16).toString();
-          return {
-            ...player,
-            id: (convertedSteamId || discordId)!,
-            discordId,
-            convertedSteamId,
-          };
-        })
-        .filter(
-          (player) => (player.convertedSteamId || player.discordId) && !players.get(player.name),
-        );
+      for (const player of data.payload) {
+        const steamId = player.identifiers.steamId?.replace("steam:", "");
+        const discordId = player.identifiers.discordId?.replace("discord:", "");
 
-      await getCADUsers(usersToFetch, data.payload);
+        const convertedSteamId = steamId && new BN(steamId, 16).toString();
+        const identifier = discordId || steamId || String(player.playerId);
+
+        newMap.set(identifier, { ...player, identifier, discordId, convertedSteamId });
+      }
+
+      if (data.payload.length !== players.size) {
+        await getCADUsers(newMap);
+      }
     },
-    [getCADUsers, players],
+    [players], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   const onPlayerLeft = React.useCallback(
@@ -155,7 +92,7 @@ export function useMapPlayers() {
       const player = Array.from(players.values()).find((player) => player.name === data.payload);
       if (!player) return;
 
-      players.delete(player?.name);
+      players.delete(player.identifier);
       setPlayers(newPlayers);
     },
     [players], // eslint-disable-line react-hooks/exhaustive-deps
