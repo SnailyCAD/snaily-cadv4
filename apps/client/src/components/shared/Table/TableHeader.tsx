@@ -67,6 +67,7 @@ export function TableHeader<TData extends RowData>({
 
             return (
               <Dropdown.Item
+                closeOnClick={false}
                 key={leaf.id}
                 className={classNames(
                   "flex items-center justify-between",

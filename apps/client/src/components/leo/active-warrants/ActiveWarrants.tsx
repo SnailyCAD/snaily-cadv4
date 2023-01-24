@@ -25,6 +25,7 @@ export function ActiveWarrants() {
   const [tempWarrant, warrantState] = useTemporaryItem(activeWarrants);
   const t = useTranslations("Leo");
   const tableState = useTableState({
+    tableId: "active-warrants",
     pagination: { pageSize: 12, totalDataCount: activeWarrants.length },
   });
 

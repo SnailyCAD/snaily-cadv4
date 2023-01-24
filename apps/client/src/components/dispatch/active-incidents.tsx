@@ -34,7 +34,7 @@ export function ActiveIncidents() {
   const { activeIncidents, setActiveIncidents } = useActiveIncidents();
   const { state, execute } = useFetch();
   const draggingUnit = useDispatchState((state) => state.draggingUnit);
-  const tableState = useTableState();
+  const tableState = useTableState({ tableId: "active-incidents" });
 
   async function handleAssignUnassignToIncident(
     incident: LeoIncident,

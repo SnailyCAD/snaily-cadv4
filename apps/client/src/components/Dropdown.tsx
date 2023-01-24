@@ -39,11 +39,25 @@ export function Dropdown({ trigger, children, extra, open, modal, onOpenChange, 
   );
 }
 
-Dropdown.Item = function DropdownItem({ children, ...rest }: Omit<ButtonProps, "ref">) {
+Dropdown.Item = function DropdownItem({
+  children,
+  closeOnClick = true,
+  ...rest
+}: Omit<ButtonProps, "ref"> & { closeOnClick?: boolean }) {
+  function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
+    if (!closeOnClick) {
+      e.preventDefault();
+      rest.onClick?.(e);
+    } else {
+      rest.onClick?.(e);
+    }
+  }
+
   return (
     <DropdownMenu.Item asChild>
       <Button
         {...rest}
+        onClick={handleClick}
         variant="transparent"
         className={classNames(
           "my-0.5 rounded-md transition-colors w-full text-left bg-transparent",
