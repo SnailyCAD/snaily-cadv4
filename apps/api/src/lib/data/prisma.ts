@@ -7,7 +7,6 @@ import { officersToUnitsInvolved } from "migrations/officersToUnitsInvolved";
 import { webhookIdToWebhooks } from "migrations/webhookIdToWebhooks";
 import { inactivityFilter } from "migrations/inactivityFilter";
 import { migrateLocales } from "migrations/migrateLocales";
-import { setManageWarrantsPermissions } from "migrations/permissions/setManageWarrantsPermissions";
 import { examsToLicenseExams } from "migrations/examsToLicenseExams";
 
 export const prisma = new PrismaClient({
@@ -26,7 +25,6 @@ async function handleMigrations() {
     disabledFeatureToCadFeature(),
     officersToUnitsInvolved(),
     inactivityFilter(),
-    setManageWarrantsPermissions(),
   ]);
 }
 
