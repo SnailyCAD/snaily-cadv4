@@ -122,7 +122,7 @@
       "releaseCitizen": "Du bist im Begriff, diesen Bürger freizulassen. Bitte wähle den Grund für die Entlassung aus.",
       "reportedStolen": "Als gestohlen gemeldet",
       "pendingAccessDepartment": "Du wartest noch auf den Zugang für diese Abteilung. Dieses CAD hat eine Standardabteilung ({defaultDepartment}) festgelegt, in der Du dich befindest, bis Du akzeptiert wirst",
-      "pendingAccessDepartmentNoDefault": "Du wartest noch auf den Zugang für diese Abteilung. Es ist keine Standardabteilung eingestellt, daher ist dieses Gerät deaktiviert, bis Sie zugelassen werden.",
+      "pendingAccessDepartmentNoDefault": "Du wartest noch auf den Zugang für diese Abteilung. Es ist keine Standardabteilung eingestellt, daher ist dieses Gerät deaktiviert, bis Du zugelassen wurdest.",
       "editTicket": "Ticket bearbeiten",
       "editArrestReport": "Verhaftungsbericht bearbeiten",
       "editWrittenWarning": "Schriftliche Warnung bearbeiten",
