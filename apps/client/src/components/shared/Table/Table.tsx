@@ -142,6 +142,7 @@ export function Table<TData extends _RowData>({
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHeader<TData>
+                    tableId={tableState.tableId}
                     tableLeafs={tableLeafs}
                     key={header.id}
                     header={header as Header<TData, any>}

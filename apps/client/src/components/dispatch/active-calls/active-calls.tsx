@@ -88,6 +88,8 @@ function _ActiveCalls({ initialData }: Props) {
   }, [asyncTable.items]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const tableState = useTableState({
+    defaultHiddenColumns: ["type", "priority"],
+    tableId: "active-calls",
     pagination: asyncTable.pagination,
     search: { value: search, setValue: setSearch },
   });
@@ -171,6 +173,8 @@ function _ActiveCalls({ initialData }: Props) {
                     call.notifyAssignedUnits && "animate-call-updated",
                   ),
                 },
+                type: call.type?.value.value ?? common("none"),
+                priority: call.type?.priority ?? common("none"),
                 status: <Status state={call.status}>{call.status?.toLowerCase()}</Status>,
                 caseNumber: `#${call.caseNumber}`,
                 name: `${call.name} ${call.viaDispatch ? `(${leo("dispatch")})` : ""}`,
@@ -201,6 +205,8 @@ function _ActiveCalls({ initialData }: Props) {
               { header: "#", accessorKey: "caseNumber" },
               isDispatch ? { header: t("status"), accessorKey: "status" } : null,
               { header: t("caller"), accessorKey: "name" },
+              { header: common("type"), accessorKey: "type" },
+              { header: t("priority"), accessorKey: "priority" },
               { header: t("location"), accessorKey: "location" },
               { header: common("description"), accessorKey: "description" },
               { header: t("situationCode"), accessorKey: "situationCode" },

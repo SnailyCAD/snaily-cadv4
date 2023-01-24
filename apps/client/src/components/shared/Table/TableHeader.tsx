@@ -9,12 +9,14 @@ interface Props<TData extends RowData> {
   header: Header<TData, unknown>;
   tableActionsAlignment: TableActionsAlignment | null;
   tableLeafs: Column<TData>[];
+  tableId?: string;
 }
 
 export function TableHeader<TData extends RowData>({
   header,
   tableActionsAlignment,
   tableLeafs,
+  tableId,
 }: Props<TData>) {
   const isActions = header.id === "actions";
   const canSort = isActions ? false : header.column.getCanSort();
@@ -53,7 +55,7 @@ export function TableHeader<TData extends RowData>({
           />
         </span>
       ) : null}
-      {isActions ? (
+      {isActions && tableId ? (
         <Dropdown
           alignOffset={0}
           modal
@@ -70,9 +72,7 @@ export function TableHeader<TData extends RowData>({
                   "flex items-center justify-between",
                   leaf.getIsVisible() && "dark:bg-secondary bg-gray-400",
                 )}
-                onPress={(e) => {
-                  leaf.getToggleVisibilityHandler()(e);
-                }}
+                onPress={() => leaf.toggleVisibility()}
               >
                 {columnName}
 
