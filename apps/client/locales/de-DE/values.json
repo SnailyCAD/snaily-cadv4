@@ -26,6 +26,7 @@
     "priority": "Priorität",
     "isDisabled": "Behinderte",
     "alert_deletePenalCodeGroup": "Bist Du sicher, dass Du <span>{group}</span> löschen willst? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "cacheTip": " Die Werte werden für 24 Stunden zwischengespeichert. Das bedeutet, dass sich aktualisierte, hinzugefügte oder gelöschte Werte möglicherweise nicht sofort ändern. Es kann bis zu 24 Stunden dauern, bis die Änderungen wirksam werden.",
     "alert_deleteValue": "Bist Du, dass Du <span>{value}</span> löschen willst? Diese Aktion kann nicht rückgängig gemacht werden!",
     "alert_deleteSelectedValues": "Bist Du sicher, dass Du {length} Elemente löschen willst? Diese Aktion kann nicht rückgängig gemacht werden"
   },
