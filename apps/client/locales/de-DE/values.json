@@ -25,18 +25,18 @@
     "isConfidential": "Ist vertraulich",
     "priority": "Priorität",
     "isDisabled": "Behinderte",
-    "alert_deletePenalCodeGroup": "Sind Sie sicher, dass Sie <span>{group}</span> löschen wollen? Diese Aktion kann nicht rückgängig gemacht werden.",
-    "alert_deleteValue": "Sind Sie sicher, dass Sie <span>{value}</span> löschen wollen? Diese Aktion kann nicht rückgängig gemacht werden!",
-    "alert_deleteSelectedValues": "Sind Sie sicher, dass Sie {length} Elemente löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden"
+    "alert_deletePenalCodeGroup": "Bist Du sicher, dass Du <span>{group}</span> löschen willst? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "alert_deleteValue": "Bist Du, dass Du <span>{value}</span> löschen willst? Diese Aktion kann nicht rückgängig gemacht werden!",
+    "alert_deleteSelectedValues": "Bist Du sicher, dass Du {length} Elemente löschen willst? Diese Aktion kann nicht rückgängig gemacht werden"
   },
   "PENAL_CODE_GROUP": {
-    "MANAGE": "Manage Penal Code Groups",
-    "ADD": "Add Penal Code Group",
-    "DELETE": "Delete Penal Code Group",
-    "EDIT": "Edit Penal Code Group",
-    "ungrouped": "Ungrouped",
-    "alert_deletePenalCodeGroup": "Are you sure you want to delete <span>{group}</span>? This action cannot be undone.",
-    "deleteGroup": "Delete Group"
+    "MANAGE": "Verwalten von Strafrechtsgruppen",
+    "ADD": "Strafgesetzbuch-Gruppe hinzufügen",
+    "DELETE": "Strafgesetzbuch-Gruppe löschen",
+    "EDIT": "Strafgesetzbuch-Gruppe bearbeiten",
+    "ungrouped": "Ungruppiert",
+    "alert_deletePenalCodeGroup": "Bist Du sicher, dass Du <span>{group}</span> löschen willst? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "deleteGroup": "Gruppe löschen"
   },
   "GENDER": {
     "MANAGE": "Geschlechter verwalten",
