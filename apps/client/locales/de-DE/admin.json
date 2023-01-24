@@ -90,6 +90,7 @@
     "alert_deleteCustomRole": "Bist Du sicher, dass Du die Rolle <span>{role}</span>? löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden!",
     "alert_deleteUnit": "Bist du sicher, dass Du die Einheite <span>{unit}</span> löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden",
     "alert_deleteCustomField": "Bist Du sicher, dass Sie dieses benutzerdefinierte Feld löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden. Alle Werte, die mit diesem Feld erstellt wurden, werden ebenfalls gelöscht.",
+    "connectToUser": "Mit dem Benutzer verbinden",
     "info_pendingBusinesses": "Es handelt sich um erstellte Unternehmen, die auf eine Genehmigung zur Nutzung warten. Akzeptiere oder lehne sie ab.",
     "alert_deleteBusiness": "Bist Du sicher dass Du <span>{name}</span> löschen möchtest? Alle Daten gehen dabei verloren.. Diese Aktion kann nicht rückgängig gemacht werde"
   }
