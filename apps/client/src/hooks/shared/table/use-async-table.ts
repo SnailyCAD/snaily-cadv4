@@ -38,6 +38,7 @@ export function useAsyncTable<T>(options: Options<T>) {
   });
 
   useQuery({
+    enabled: !options.disabled,
     initialData: options.initialData ?? [],
     queryFn: fetchData,
     queryKey: [paginationOptions.pageIndex, debouncedSearch, filters],

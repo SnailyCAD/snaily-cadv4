@@ -1,4 +1,4 @@
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 
 export async function inactivityFilter() {
   const cad = await prisma.cad.findFirst({

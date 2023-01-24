@@ -13,7 +13,7 @@ import { useNameSearch } from "state/search/name-search-state";
 import type { PostSearchActionsCreateVehicle } from "@snailycad/types/api";
 import { handleValidate } from "lib/handleValidate";
 import { IMPOUND_VEHICLE_SCHEMA } from "@snailycad/schemas";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 export function ImpoundVehicleModal() {
   const common = useTranslations("Common");

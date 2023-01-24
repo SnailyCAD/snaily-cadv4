@@ -1,5 +1,5 @@
 import type { PostLeoSearchCitizenData } from "@snailycad/types/api";
-import create from "zustand";
+import { create } from "zustand";
 
 export type NameSearchResult = PostLeoSearchCitizenData[number];
 

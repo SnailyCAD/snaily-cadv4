@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
@@ -12,33 +11,14 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Title } from "components/shared/Title";
 import { OfficerLogsTable } from "components/leo/logs/OfficerLogsTable";
 import { Permissions } from "@snailycad/permissions";
-import type { GetMyOfficersData, GetMyOfficersLogsData } from "@snailycad/types/api";
-import useFetch from "lib/useFetch";
+import type { GetMyOfficersLogsData } from "@snailycad/types/api";
 import { useAsyncTable } from "components/shared/Table";
+import { useUserOfficers } from "hooks/leo/use-get-user-officers";
 
 export type OfficerLogWithOfficer = OfficerLog & { officer: Officer };
 
 interface Props {
   logs: GetMyOfficersLogsData;
-}
-
-function useGetUserOfficers() {
-  const [officers, setOfficers] = React.useState<Officer[]>([]);
-  const { execute } = useFetch();
-
-  const getOfficers = React.useCallback(async () => {
-    const { json } = await execute<GetMyOfficersData>({ path: "/leo", method: "GET" });
-
-    if (Array.isArray(json.officers)) {
-      setOfficers(json.officers);
-    }
-  }, []); // eslint-disable-line
-
-  React.useEffect(() => {
-    getOfficers();
-  }, [getOfficers]);
-
-  return officers;
 }
 
 export default function MyOfficersLogs({ logs: data }: Props) {
@@ -55,12 +35,12 @@ export default function MyOfficersLogs({ logs: data }: Props) {
     initialData: data.logs,
   });
 
-  const officers = useGetUserOfficers();
+  const { userOfficers, isLoading } = useUserOfficers();
 
   const t = useTranslations("Leo");
   const { generateCallsign } = useGenerateCallsign();
 
-  const officerNames = officers.reduce(
+  const officerNames = userOfficers.reduce(
     (ac, cv) => ({
       ...ac,
       [cv.id]: `${generateCallsign(cv)} ${makeUnitName(cv)}`,
@@ -80,6 +60,7 @@ export default function MyOfficersLogs({ logs: data }: Props) {
           <div className="ml-3 w-52">
             <FormField label="Group By Officer">
               <Select
+                isLoading={isLoading}
                 isClearable
                 onChange={(e) => {
                   asyncTable.setFilters((prev) => ({

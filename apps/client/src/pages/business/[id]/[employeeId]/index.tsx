@@ -19,7 +19,7 @@ import { Title } from "components/shared/Title";
 import { classNames } from "lib/classNames";
 import type { DeleteBusinessPostsData, GetBusinessByIdData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageBusinessPostModal = dynamic(
@@ -245,7 +245,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale, re
   ]);
 
   return {
-    notFound: !business || !business?.employee,
+    notFound: !business?.employee,
     props: {
       business,
       employee: business?.employee ?? null,

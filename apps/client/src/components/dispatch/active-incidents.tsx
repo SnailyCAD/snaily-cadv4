@@ -2,7 +2,7 @@ import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "@snailycad/ui";
 import compareDesc from "date-fns/compareDesc";
-import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { Table, useTableState } from "components/shared/Table";
 import { yesOrNoText } from "lib/utils";
 import { FullDate } from "components/shared/FullDate";
@@ -34,7 +34,7 @@ export function ActiveIncidents() {
   const { activeIncidents, setActiveIncidents } = useActiveIncidents();
   const { state, execute } = useFetch();
   const draggingUnit = useDispatchState((state) => state.draggingUnit);
-  const tableState = useTableState();
+  const tableState = useTableState({ tableId: "active-incidents" });
 
   async function handleAssignUnassignToIncident(
     incident: LeoIncident,

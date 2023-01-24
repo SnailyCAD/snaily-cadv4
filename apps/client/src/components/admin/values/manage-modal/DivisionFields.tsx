@@ -48,6 +48,17 @@ export function DivisionFields() {
         onChange={(value) => setFieldValue("pairedUnitTemplate", value)}
         value={values.pairedUnitTemplate}
       />
+
+      <TextField
+        isTextarea
+        isOptional
+        errorMessage={errors.extraFields as string}
+        label="Extra Fields - JSON"
+        name="extraFields"
+        onChange={(value) => setFieldValue("extraFields", value)}
+        value={values.extraFields}
+        placeholder="JSON"
+      />
     </>
   );
 }

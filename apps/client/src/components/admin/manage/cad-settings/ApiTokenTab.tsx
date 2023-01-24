@@ -17,7 +17,8 @@ export function ApiTokenTab() {
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
   const { cad, setCad } = useAuth();
-  const t = useTranslations("Management");
+  const tAdmin = useTranslations("Management");
+  const t = useTranslations("ApiTokenTab");
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
@@ -70,54 +71,62 @@ export function ApiTokenTab() {
   const discordCommand = `/config set api-url: ${apiURL} api-token: ${cad?.apiToken?.token ?? ""}`;
 
   return (
-    <TabsContent aria-label="API Token" value={SettingsTabs.APIToken}>
-      <h2 className="mt-2 text-2xl font-semibold">Public API access</h2>
+    <TabsContent aria-label={t("apiToken")} value={SettingsTabs.APIToken}>
+      <h2 className="mt-2 text-2xl font-semibold">{t("publicAPIAccess")}</h2>
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, setFieldValue, values }) => (
           <Form className="mt-3 space-y-5">
             <SettingsFormField
-              description="This is the token used to communicate to SnailyCAD via the API."
+              description={t.rich("tokenDescription", {
+                a: (children) => (
+                  <a
+                    rel="noreferrer"
+                    target="_blank"
+                    className="text-blue-600 underline"
+                    href="https://cad-docs.caspertheghost.me/docs/developer/public-api"
+                  >
+                    {children}
+                  </a>
+                ),
+              })}
               label="Token"
             >
               <PasswordInput onClick={handleClick} readOnly value={values.token} />
             </SettingsFormField>
 
             <SettingsFormField
-              description={
-                <>
-                  This command can be used when using the{" "}
+              description={t.rich("discordBotCommandDescription", {
+                a: (children) => (
                   <a
                     rel="noreferrer"
                     target="_blank"
+                    className="text-blue-600 underline"
                     href="https://cad-docs.caspertheghost.me/docs/discord-integration/discord-bot"
-                    className="underline"
                   >
-                    Discord bot integration
+                    {children}
                   </a>
-                  . Simply paste it into Discord.
-                </>
-              }
-              label={"Discord bot integration command"}
+                ),
+              })}
+              label={t("discordBotCommand")}
             >
               <PasswordInput onClick={handleClick} readOnly value={discordCommand} />
             </SettingsFormField>
 
             <SettingsFormField
               action="checkbox"
-              description={
-                <>
-                  Read more info about{" "}
+              description={t.rich("readMorePublicAPI", {
+                a: (children) => (
                   <a
+                    rel="noreferrer"
                     target="_blank"
-                    rel="noreferrer noopener"
                     className="text-blue-600 underline"
                     href="https://cad-docs.caspertheghost.me/docs/developer/public-api"
                   >
-                    Public API Access here
+                    {children}
                   </a>
-                </>
-              }
+                ),
+              })}
               label={common("enabled")}
             >
               <Toggle value={values.enabled} onCheckedChange={handleChange} name="enabled" />
@@ -133,7 +142,7 @@ export function ApiTokenTab() {
                   disabled={state === "loading"}
                 >
                   {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}
-                  {t("reGenerateToken")}
+                  {tAdmin("reGenerateToken")}
                 </Button>
               ) : null}
               <Button className="flex items-center" type="submit" disabled={state === "loading"}>

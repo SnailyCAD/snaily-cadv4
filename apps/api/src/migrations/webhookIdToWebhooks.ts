@@ -1,5 +1,5 @@
 import { DiscordWebhookType } from "@prisma/client";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 
 export async function webhookIdToWebhooks() {
   const cad = await prisma.cad.findFirst({
@@ -8,7 +8,7 @@ export async function webhookIdToWebhooks() {
     },
   });
 
-  if (!cad || !cad.miscCadSettings || !cad.miscCadSettingsId) return;
+  if (!cad?.miscCadSettings || !cad.miscCadSettingsId) return;
 
   const { call911WebhookId, statusesWebhookId, panicButtonWebhookId, boloWebhookId } =
     cad.miscCadSettings;

@@ -8,8 +8,8 @@ import {
 } from "@snailycad/schemas";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { prisma } from "lib/prisma";
-import { IsAuth } from "middlewares/IsAuth";
+import { prisma } from "lib/data/prisma";
+import { IsAuth } from "middlewares/is-auth";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
 import {
@@ -30,24 +30,24 @@ import {
 } from "@prisma/client";
 import { UseBeforeEach, Context, UseBefore } from "@tsed/common";
 import { ContentType, Description, Post, Put } from "@tsed/schema";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
-import { validateSchema } from "lib/validateSchema";
-import { manyToManyHelper } from "utils/manyToMany";
-import { validateCustomFields } from "lib/custom-fields";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
+import { validateSchema } from "lib/data/validate-schema";
+import { manyToManyHelper } from "lib/data/many-to-many";
+import { validateCustomFields } from "lib/validate-custom-fields";
 import { isFeatureEnabled } from "lib/cad";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import {
   appendCustomFields,
   citizenSearchIncludeOrSelect,
   vehicleSearchInclude,
 } from "./SearchController";
 import { citizenObjectFromData } from "lib/citizen";
-import { generateString } from "utils/generateString";
+import { generateString } from "utils/generate-string";
 import type * as APITypes from "@snailycad/types/api";
 import { createVehicleImpoundedWebhookData } from "controllers/calls/TowController";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
-import { ActiveOfficer } from "middlewares/ActiveOfficer";
+import { ActiveOfficer } from "middlewares/active-officer";
 
 @Controller("/search/actions")
 @UseBeforeEach(IsAuth)
@@ -225,6 +225,44 @@ export class SearchActionsController {
     const updated = await prisma.citizen.findUniqueOrThrow({
       where: { id: citizen.id },
       select: { id: true, flags: true },
+    });
+
+    return updated;
+  }
+
+  @Put("/citizen-address-flags/:citizenId")
+  @Description("Update the citizen's address flags by their id")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch,
+    permissions: [Permissions.Dispatch],
+  })
+  async updateCitizenAddressFlags(
+    @BodyParams("addressFlags") addressFlags: string[],
+    @PathParams("citizenId") citizenId: string,
+  ): Promise<APITypes.PutSearchActionsCitizenFlagsData> {
+    const citizen = await prisma.citizen.findUnique({
+      where: { id: citizenId },
+      select: { id: true, addressFlags: true },
+    });
+
+    if (!citizen) {
+      throw new NotFound("notFound");
+    }
+
+    const disconnectConnectArr = manyToManyHelper(
+      citizen.addressFlags.map((v) => v.id),
+      addressFlags,
+    );
+
+    await prisma.$transaction(
+      disconnectConnectArr.map((v) =>
+        prisma.citizen.update({ where: { id: citizen.id }, data: { addressFlags: v } }),
+      ),
+    );
+
+    const updated = await prisma.citizen.findUniqueOrThrow({
+      where: { id: citizen.id },
+      select: { id: true, addressFlags: true },
     });
 
     return updated;

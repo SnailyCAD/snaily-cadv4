@@ -4,7 +4,7 @@ import {
   type RESTPostAPIWebhookWithTokenJSONBody,
   Routes,
 } from "discord-api-types/v10";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { performDiscordRequest } from "./performDiscordRequest";
 
 interface SendDiscordWebhookOptions {

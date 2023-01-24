@@ -1,18 +1,16 @@
+import "reflect-metadata";
+
+import { Server } from "./server";
 import { $log } from "@tsed/logger";
 import { PlatformExpress } from "@tsed/platform-express";
-import { Server } from "./server";
+import { importProviders } from "@tsed/components-scan";
+
 import { getCADVersion } from "@snailycad/utils/version";
 import * as Sentry from "@sentry/node";
 import * as Tracing from "@sentry/tracing";
-import { prisma } from "lib/prisma";
-import { importProviders } from "@tsed/components-scan";
-import { registerDiscordRolesMetadata } from "lib/discord/register-metadata";
 
-Sentry.init({
-  dsn: "https://308dd96b826c4e38a814fc9bae681687@o518232.ingest.sentry.io/6553288",
-  tracesSampleRate: 1.0,
-  attachStacktrace: true,
-});
+import { prisma } from "lib/data/prisma";
+import { registerDiscordRolesMetadata } from "lib/discord/register-metadata";
 
 Sentry.init({
   dsn: "https://308dd96b826c4e38a814fc9bae681687@o518232.ingest.sentry.io/6553288",
@@ -21,6 +19,7 @@ Sentry.init({
     new Tracing.Integrations.Prisma({ client: prisma }),
   ],
   tracesSampleRate: 1.0,
+  attachStacktrace: true,
 });
 
 const rootDir = __dirname;
@@ -54,6 +53,10 @@ async function bootstrap() {
       "snailycad.commitHash": versions?.currentCommitHash,
     });
 
+    process.on("SIGINT", () => {
+      platform.stop();
+    });
+
     const nodeVersion = process.versions.node;
 
     console.log(`SnailyCADv4 is running ${versionStr}. Node version: ${nodeVersion}`);
@@ -63,3 +66,13 @@ async function bootstrap() {
 }
 
 void bootstrap();
+
+process
+  .on("unhandledRejection", (error) => {
+    console.error(`uncaughtException captured: ${error}`);
+    Sentry.captureException(error);
+  })
+  .on("uncaughtException", (error) => {
+    console.error(`uncaughtException captured: ${error}`);
+    Sentry.captureException(error);
+  });

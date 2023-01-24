@@ -1,4 +1,4 @@
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 
 export interface PostLoginFlowOptions {
   userId: string;

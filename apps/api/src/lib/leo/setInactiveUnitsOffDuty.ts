@@ -1,21 +1,53 @@
 import type { Officer, EmsFdDeputy, CombinedLeoUnit } from "@prisma/client";
-import { prisma } from "lib/prisma";
+import { ShouldDoType } from "@snailycad/types";
+import { prisma } from "lib/data/prisma";
+import type { Socket } from "services/socket-service";
+import { handleStartEndOfficerLog } from "./handleStartEndOfficerLog";
 
-export async function setInactiveUnitsOffDuty(lastStatusChangeTimestamp: Date) {
+export async function setInactiveUnitsOffDuty(lastStatusChangeTimestamp: Date, socket: Socket) {
   try {
-    await prisma.$transaction([
+    // use setTimeout to create a delay for 10 seconds
+    await new Promise((resolve) => {
+      setTimeout(resolve, 10_000);
+    });
+
+    const where = {
+      status: { shouldDo: { not: ShouldDoType.SET_OFF_DUTY } },
+      lastStatusChangeTimestamp: { lte: lastStatusChangeTimestamp },
+    };
+
+    const [officers, deputies] = await prisma.$transaction([
+      prisma.officer.findMany({ where }),
+      prisma.emsFdDeputy.findMany({ where }),
+      prisma.combinedLeoUnit.deleteMany({ where }),
+    ]);
+
+    await Promise.allSettled([
+      ...officers.map(async (officer) =>
+        handleStartEndOfficerLog({
+          shouldDo: ShouldDoType.SET_OFF_DUTY,
+          socket,
+          type: "leo",
+          unit: officer,
+          userId: officer.userId,
+        }),
+      ),
+      ...deputies.map((deputy) =>
+        handleStartEndOfficerLog({
+          shouldDo: ShouldDoType.SET_OFF_DUTY,
+          socket,
+          type: "ems-fd",
+          unit: deputy,
+          userId: deputy.userId,
+        }),
+      ),
       prisma.officer.updateMany({
-        where: { lastStatusChangeTimestamp: { lte: lastStatusChangeTimestamp } },
+        where,
         data: { statusId: null, activeCallId: null, activeIncidentId: null },
       }),
       prisma.emsFdDeputy.updateMany({
-        where: {
-          lastStatusChangeTimestamp: { lte: lastStatusChangeTimestamp },
-        },
+        where,
         data: { statusId: null, activeCallId: null },
-      }),
-      prisma.combinedLeoUnit.deleteMany({
-        where: { lastStatusChangeTimestamp: { lte: lastStatusChangeTimestamp } },
       }),
     ]);
   } catch {

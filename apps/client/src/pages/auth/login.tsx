@@ -55,6 +55,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
   return {
     props: {
       cad: data ?? {},
+      userSavedLocale,
       userSavedIsDarkTheme,
       messages: await getTranslations(["auth"], userSavedLocale ?? locale),
     },

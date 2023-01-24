@@ -26,6 +26,7 @@
     "county": "County",
     "deletedSelectedValues": "Deleted {deleted} items. Failed to delete {failed} items.",
     "failedDeleteValue": "Failed to delete <span>{value}</span>.",
+    "cacheTip": " Values are cached for 24 hours. This means that updated, added or deleted values may not immediately change. It could take up to 24 hours for the changes to take effect.",
     "alert_deleteValue": "Are you sure you want to delete <span>{value}</span>? This action cannot be undone!",
     "alert_deleteSelectedValues": "Are you sure you want to delete {length} items? This action cannot be undone"
   },
@@ -157,5 +158,11 @@
     "ADD": "Add Emergency Vehicle",
     "DELETE": "Delete Emergency Vehicle",
     "EDIT": "Edit Emergency Vehicle"
+  },
+  "ADDRESS_FLAG": {
+    "MANAGE": "Manage Address flags",
+    "ADD": "Add address flag",
+    "DELETE": "Delete address flag",
+    "EDIT": "Edit address flag"
   }
 }

@@ -5,8 +5,8 @@ import {
   WhitelistStatus,
   DepartmentValue,
 } from "@prisma/client";
-import { prisma } from "lib/prisma";
-import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
+import { prisma } from "lib/data/prisma";
+import { ExtendedNotFound } from "src/exceptions/extended-not-found";
 
 /**
  * this function handles the addition of the `whitelistStatus` to an officer
@@ -19,7 +19,7 @@ import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
  */
 export async function handleWhitelistStatus(
   departmentId: string,
-  unit: ((Officer | EmsFdDeputy) & { whitelistStatus: LeoWhitelistStatus | null }) | null,
+  unit: ((Officer | EmsFdDeputy) & { whitelistStatus?: LeoWhitelistStatus | null }) | null,
 ) {
   const department = await prisma.departmentValue.findUnique({
     where: { id: departmentId },

@@ -29,18 +29,20 @@ export function SelectColorPopover({ icon, format }: SelectColorPopoverProps) {
 
   return (
     <Popover.Root onOpenChange={handleSave} open={isPopover}>
-      <Popover.Trigger>
-        <ToolbarToggleItem asChild value={format}>
-          <Button
-            title={format}
-            type="button"
-            variant={isActive ? null : "default"}
-            className={classNames(isActive && "text-white bg-neutral-700")}
-            onPress={() => setIsPopoverOpen((v) => !v)}
-          >
-            {icon}
-          </Button>
-        </ToolbarToggleItem>
+      <Popover.Trigger asChild>
+        <span>
+          <ToolbarToggleItem asChild value={format}>
+            <Button
+              title={format}
+              type="button"
+              variant={isActive ? null : "default"}
+              className={classNames(isActive && "text-white bg-neutral-700")}
+              onPress={() => setIsPopoverOpen((v) => !v)}
+            >
+              {icon}
+            </Button>
+          </ToolbarToggleItem>
+        </span>
       </Popover.Trigger>
 
       <Popover.Content
@@ -48,14 +50,12 @@ export function SelectColorPopover({ icon, format }: SelectColorPopoverProps) {
           "z-50 p-4 bg-gray-200 rounded-md shadow-md dark:shadow-primary dropdown-fade w-70 dark:bg-primary dark:border dark:border-secondary",
         )}
       >
-        <header className="flex items-center justify-between mb-5">
-          <h3 className="text-xl font-semibold">{common(format)}</h3>
-          <Button className="" onPress={() => handleSave(false)}>
-            {common("ok")}
-          </Button>
-        </header>
+        <h3 className="text-xl font-semibold mb-5">{common(format)}</h3>
 
         <HexColorPicker onChange={setColor} color={color} />
+        <Button className="w-full mt-5" onPress={() => handleSave(false)}>
+          {common("ok")}
+        </Button>
 
         <Popover.Arrow className="fill-primary" />
       </Popover.Content>

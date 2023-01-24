@@ -6,14 +6,19 @@ import { Rank, WhitelistStatus } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { TabList } from "components/shared/TabList";
-import { PendingUsersTab } from "components/admin/manage/users/tabs/PendingUsersTab";
 import { Title } from "components/shared/Title";
 import { Permissions, usePermission } from "hooks/usePermission";
-import { AllUsersTab } from "components/admin/manage/users/tabs/AllUsersTab";
+import { AllUsersTab } from "components/admin/manage/users/tabs/all-users-tab";
 import type { GetManageUsersData } from "@snailycad/types/api";
 import { Button } from "@snailycad/ui";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
+import dynamic from "next/dynamic";
+
+const PendingUsersTab = dynamic(
+  async () =>
+    (await import("components/admin/manage/users/tabs/pending-users-tab")).PendingUsersTab,
+);
 
 interface Props {
   data: GetManageUsersData;

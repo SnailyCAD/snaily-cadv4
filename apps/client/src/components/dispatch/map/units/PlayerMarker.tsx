@@ -7,7 +7,6 @@ import type { MapPlayer, PlayerDataEventPayload } from "types/Map";
 import { icon as leafletIcon } from "leaflet";
 import { useTranslations } from "next-intl";
 import { MapItem, useDispatchMapState } from "state/mapState";
-import { useAuth } from "context/AuthContext";
 import { generateMarkerTypes } from "../RenderMapBlips";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
@@ -18,16 +17,16 @@ interface Props {
 }
 
 const PLAYER_ICON = leafletIcon({
-  iconUrl: "https://unpkg.com/leaflet@1.7.0/dist/images/marker-icon-2x.png",
-  iconSize: [25, 40],
-  popupAnchor: [0, 0],
-  iconAnchor: [9, 8],
+  iconUrl: "/map/ped.png",
+  iconSize: [40, 40],
+  popupAnchor: [0, -20],
+  iconAnchor: [20, 20],
+  tooltipAnchor: [0, -20],
 });
 
 export function PlayerMarker({ player, handleToggle }: Props) {
   const map = useMap();
   const t = useTranslations("Leo");
-  const { user } = useAuth();
   const { hiddenItems } = useDispatchMapState();
   const markerTypes = React.useMemo(generateMarkerTypes, []);
   const { generateCallsign } = useGenerateCallsign();
@@ -39,19 +38,28 @@ export function PlayerMarker({ player, handleToggle }: Props) {
       return leafletIcon({
         iconUrl: "/map/siren.gif",
         iconSize: [blipSize, blipSize],
-        iconAnchor: [blipSize / 2, 0],
+        iconAnchor: [blipSize / 2, blipSize / 2],
         popupAnchor: [0, 0],
       });
     }
 
     const playerIcon = markerTypes[parseInt(player.icon, 10)];
-
     if (playerIcon) {
       return leafletIcon(playerIcon);
     }
 
+    // player is on-foot and is a unit
+    if ("unit" in player && player.unit) {
+      return leafletIcon({
+        iconUrl: "/map/unit_ped.png",
+        iconSize: [20, 43],
+        iconAnchor: [20 / 2, 43 / 2],
+        popupAnchor: [0, 0],
+      });
+    }
+
     return PLAYER_ICON;
-  }, [player.icon, player.hasSirenEnabled, markerTypes]);
+  }, [player, markerTypes]);
 
   const pos = React.useMemo(
     () => player.pos?.x && player.pos.y && convertToMap(player.pos.x, player.pos.y, map),
@@ -81,14 +89,9 @@ export function PlayerMarker({ player, handleToggle }: Props) {
   const hasUnit = isCADUser && player.unit != null;
 
   const showUnitsOnly = hiddenItems[MapItem.UNITS_ONLY];
-  const playerSteamId = player.convertedSteamId;
-  const playerDiscordId = player.discordId;
-  const isSteamUser = playerSteamId && user?.steamId === playerSteamId;
-  const isDiscordUser = playerDiscordId && user?.discordId === playerDiscordId;
-  const isUser = isSteamUser || isDiscordUser;
 
   if (showUnitsOnly) {
-    if (!hasUnit || !isUser) {
+    if (!hasUnit) {
       return null;
     }
   }
@@ -98,8 +101,13 @@ export function PlayerMarker({ player, handleToggle }: Props) {
   const unitNameAndCallsign = unitName && unitCallsign ? `${unitCallsign} ${unitName}` : unitName;
 
   return (
-    <Marker ref={(ref) => (player.ref = ref)} icon={playerIcon} key={player.name} position={pos}>
-      <Tooltip direction="top">{unitNameAndCallsign}</Tooltip>
+    <Marker
+      ref={(ref) => (player.ref = ref)}
+      icon={playerIcon}
+      key={player.identifier}
+      position={pos}
+    >
+      {unitNameAndCallsign.trim() ? <Tooltip direction="top">{unitNameAndCallsign}</Tooltip> : null}
 
       <Popup minWidth={500}>
         <p style={{ margin: 2 }}>

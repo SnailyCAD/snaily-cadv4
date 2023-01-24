@@ -44,7 +44,7 @@ export function ManagePenalCode({ onCreate, onUpdate, onClose, groupId, type, pe
       warningNotFines: values.warningNotApplicable ? values.fines2.values : null,
       prisonTerm: values.warningNotApplicable ? values.prisonTerm.values : null,
       bail: LEO_BAIL && values.warningNotApplicable ? values.bail.values : null,
-      groupId: values.group === "ungrouped" || !values.group ? null : values.group,
+      groupId: values.groupId === "ungrouped" || !values.groupId ? null : values.groupId,
       type: values.type,
     };
 
@@ -84,7 +84,7 @@ export function ManagePenalCode({ onCreate, onUpdate, onClose, groupId, type, pe
     isPrimary: penalCode?.isPrimary ?? true,
     description: penalCode?.description ?? "",
     descriptionData: dataToSlate(penalCode),
-    group: penalCode?.groupId ?? groupId,
+    groupId: penalCode?.groupId ?? groupId,
     warningApplicable: !!penalCode?.warningApplicableId,
     warningNotApplicable: !!penalCode?.warningNotApplicableId,
     fines1: {

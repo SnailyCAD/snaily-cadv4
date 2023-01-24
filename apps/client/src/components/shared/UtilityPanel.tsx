@@ -1,5 +1,5 @@
 import { useAreaOfPlay } from "hooks/global/useAreaOfPlay";
-import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { useTime } from "hooks/shared/useTime";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { classNames } from "lib/classNames";
@@ -20,7 +20,7 @@ export function UtilityPanel({ children, isDispatch }: Props) {
   const { showAop, areaOfPlay } = useAreaOfPlay();
   const timeRef = useTime();
   const t = useTranslations("Leo");
-  const { activeDispatchers, hasActiveDispatchers } = useActiveDispatchers();
+  const { activeDispatchersCount, hasActiveDispatchers } = useActiveDispatchers();
   const { ACTIVE_DISPATCHERS } = useFeatureEnabled();
 
   return (
@@ -35,9 +35,7 @@ export function UtilityPanel({ children, isDispatch }: Props) {
           {ACTIVE_DISPATCHERS ? (
             <span
               title={
-                hasActiveDispatchers
-                  ? `${activeDispatchers.length} Active Dispatcher(s)`
-                  : undefined
+                hasActiveDispatchers ? `${activeDispatchersCount} Active Dispatcher(s)` : undefined
               }
             >
               <Wifi

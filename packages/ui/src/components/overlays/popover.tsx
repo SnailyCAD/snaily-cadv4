@@ -15,12 +15,16 @@ interface Props extends AriaDialogProps {
   onClose(): void;
   isOpen: boolean;
   popoverRef?: any;
+  className?: string;
+  isCalendar?: boolean;
 }
+
+const MENU_WIDTH = 300;
 
 export function Popover(props: Props) {
   const ref = React.useRef<HTMLDivElement>(null);
   const outerRef = React.useRef<HTMLDivElement>(null);
-  const { popoverRef = ref, isOpen, onClose, children, ...otherProps } = props;
+  const { popoverRef = ref, isOpen, onClose, children, isCalendar, ...otherProps } = props;
 
   const { overlayProps } = useOverlay({ isOpen, onClose, isDismissable: true }, popoverRef);
   const { modalProps } = useModal();
@@ -43,9 +47,15 @@ export function Popover(props: Props) {
     }
   }, [isOpen, updatePosition]);
 
+  const inputWidth = outerRef.current?.clientWidth ?? 0;
+  const leftStyle = parseInt(positionProps.style?.left?.toString() || "0", 10);
+  const width = isCalendar ? MENU_WIDTH : inputWidth;
+  const left = isCalendar ? inputWidth - MENU_WIDTH + leftStyle : leftStyle;
+
   const style = {
     ...positionProps.style,
-    "--select-width": outerRef.current ? `${outerRef.current.offsetWidth}px` : undefined,
+    left,
+    width,
   };
 
   return (
@@ -58,7 +68,6 @@ export function Popover(props: Props) {
             className="w-full absolute top-full bg-gray-200 dark:bg-primary dark:border dark:border-secondary rounded-md shadow-lg mt-2 p-2 z-10"
             style={{
               zIndex: 999,
-              width: outerRef.current?.clientWidth,
               ...style,
             }}
           >

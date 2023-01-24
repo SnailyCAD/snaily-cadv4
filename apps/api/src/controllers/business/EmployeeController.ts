@@ -2,14 +2,14 @@ import { Controller } from "@tsed/di";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { ContentType, Delete, Hidden, Put } from "@tsed/schema";
-import { IsAuth } from "middlewares/IsAuth";
+import { IsAuth } from "middlewares/is-auth";
 import { UPDATE_EMPLOYEE_SCHEMA, FIRE_EMPLOYEE_SCHEMA } from "@snailycad/schemas";
 import { NotFound } from "@tsed/exceptions";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { cad, EmployeeAsEnum, User, WhitelistStatus } from "@prisma/client";
 import { validateBusinessAcceptance } from "utils/businesses";
-import { validateSchema } from "lib/validateSchema";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { validateSchema } from "lib/data/validate-schema";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import type * as APITypes from "@snailycad/types/api";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 

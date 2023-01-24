@@ -8,7 +8,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { ModalIds } from "types/ModalIds";
-import type { Officer } from "@snailycad/types";
+import { Officer, ValueType } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { formatOfficerDepartment, formatUnitDivisions, makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
@@ -22,6 +22,7 @@ import { UnitDepartmentStatus } from "components/leo/UnitDepartmentStatus";
 import type { DeleteMyOfficerByIdData, GetMyOfficersData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import Image from "next/image";
+import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageOfficerModal = dynamic(
@@ -33,6 +34,10 @@ interface Props {
 }
 
 export default function MyOfficers({ officers: data }: Props) {
+  useLoadValuesClientSide({
+    valueTypes: [ValueType.DEPARTMENT, ValueType.DIVISION],
+  });
+
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const { openModal, closeModal } = useModal();
@@ -173,16 +178,12 @@ export default function MyOfficers({ officers: data }: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const user = await getSessionUser(req);
-  const [{ officers }, values] = await requestAll(req, [
-    ["/leo", { officers: [] }],
-    ["/admin/values/department?paths=division", []],
-  ]);
+  const [{ officers }] = await requestAll(req, [["/leo", { officers: [] }]]);
 
   return {
     props: {
       session: user,
       officers,
-      values,
       messages: {
         ...(await getTranslations(["leo", "common"], user?.locale ?? locale)),
       },

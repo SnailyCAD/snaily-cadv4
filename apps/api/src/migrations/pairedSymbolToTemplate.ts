@@ -1,4 +1,4 @@
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 
 const DEFAULT_SYMBOL = "A" as const;
 const DEFAULT_TEMPLATE = "1A-{callsign1}";

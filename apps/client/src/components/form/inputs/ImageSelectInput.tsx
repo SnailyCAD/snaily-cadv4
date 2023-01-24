@@ -45,7 +45,8 @@ export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, 
     if (!url) return;
     if (!IMAGES_REGEX.test(url)) return;
 
-    const res = await fetch(url);
+    const res = await fetch(url).catch(() => null);
+    if (!res?.ok) return;
     const blob = await res.blob();
 
     setURLImageData(new File([blob], "image", { type: blob.type }));

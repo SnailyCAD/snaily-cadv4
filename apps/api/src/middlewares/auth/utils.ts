@@ -4,7 +4,7 @@ import type { GetUserData } from "@snailycad/types/api";
 import type { Req } from "@tsed/common";
 import { userProperties } from "lib/auth/getSessionUser";
 import { updateMemberRolesLogin } from "lib/discord/auth";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 
 interface Options {
   req: Req;

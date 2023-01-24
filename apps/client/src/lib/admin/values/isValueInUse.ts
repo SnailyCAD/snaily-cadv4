@@ -26,6 +26,7 @@ const USED_COUNT_NAMES_PER_TYPE: Partial<Record<ValueType, string[]>> = {
   WEAPON: ["weapon", "weaponModelToValue"],
 
   VEHICLE_FLAG: ["vehicleFlags"],
+  ADDRESS_FLAG: ["addressFlags"],
 };
 
 export function isValueInUse(value: AnyValue) {

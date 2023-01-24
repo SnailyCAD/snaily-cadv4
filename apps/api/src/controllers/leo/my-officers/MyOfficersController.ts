@@ -1,29 +1,20 @@
 import fs from "node:fs/promises";
 import { Controller, UseBeforeEach, PlatformMulterFile, MultipartFile } from "@tsed/common";
-import { ContentType, Delete, Get, Post, Put } from "@tsed/schema";
-import { CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
+import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { prisma } from "lib/prisma";
-import { IsAuth } from "middlewares/IsAuth";
-import { getImageWebPPath, validateImgurURL } from "utils/images/image";
-import { cad, User, MiscCadSettings, Feature, CadFeature, Rank } from "@prisma/client";
-import { validateSchema } from "lib/validateSchema";
-import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
-import { manyToManyHelper } from "utils/manyToMany";
-import { Permissions, UsePermissions } from "middlewares/UsePermissions";
-import { updateOfficerDivisionsCallsigns, validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
-import { isFeatureEnabled } from "lib/cad";
-import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
-import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
-import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
+import { prisma } from "lib/data/prisma";
+import { IsAuth } from "middlewares/is-auth";
+import { cad, User, MiscCadSettings, CadFeature, Rank } from "@prisma/client";
+import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import type * as APITypes from "@snailycad/types/api";
-import { createOfficer } from "./create-officer";
-import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
+import { upsertOfficer } from "./upsert-officer";
+import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { hasPermission } from "@snailycad/permissions";
+import { getImageWebPPath } from "lib/images/get-image-webp-path";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -34,16 +25,20 @@ export class MyOfficersController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
+  @Description("Get all the current user's officers.")
   async getUserOfficers(@Context("user") user: User): Promise<APITypes.GetMyOfficersData> {
-    const officers = await prisma.officer.findMany({
-      where: { userId: user.id },
-      include: {
-        ...leoProperties,
-        qualifications: { include: { qualification: { include: { value: true } } } },
-      },
-    });
+    const [totalCount, officers] = await prisma.$transaction([
+      prisma.officer.count({ where: { userId: user.id } }),
+      prisma.officer.findMany({
+        where: { userId: user.id },
+        include: {
+          ...leoProperties,
+          qualifications: { include: { qualification: { include: { value: true } } } },
+        },
+      }),
+    ]);
 
-    return { officers };
+    return { officers, totalCount };
   }
 
   @Post("/")
@@ -56,7 +51,7 @@ export class MyOfficersController {
     @Context("user") user: User,
     @Context("cad") cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings },
   ): Promise<APITypes.PostMyOfficersData> {
-    return createOfficer({ body, user, cad });
+    return upsertOfficer({ body, user, cad });
   }
 
   @Put("/:id")
@@ -70,15 +65,7 @@ export class MyOfficersController {
     @Context("user") user: User,
     @Context("cad") cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings },
   ): Promise<APITypes.PutMyOfficerByIdData> {
-    const data = validateSchema(CREATE_OFFICER_SCHEMA, body);
-
-    const divisionsEnabled = isFeatureEnabled({
-      feature: Feature.DIVISIONS,
-      defaultReturn: true,
-      features: cad.features,
-    });
-
-    const officer = await prisma.officer.findFirst({
+    const existingOfficer = await prisma.officer.findFirst({
       where: {
         id: officerId,
         userId: user.id,
@@ -86,110 +73,7 @@ export class MyOfficersController {
       include: leoProperties,
     });
 
-    if (!officer) {
-      throw new NotFound("officerNotFound");
-    }
-
-    if (divisionsEnabled) {
-      if (!data.divisions || data.divisions.length <= 0) {
-        throw new ExtendedBadRequest({ divisions: "Must have at least 1 item" });
-      }
-
-      await validateMaxDivisionsPerUnit(data.divisions as string[], cad);
-    }
-
-    await validateDuplicateCallsigns({
-      callsign1: data.callsign,
-      callsign2: data.callsign2,
-      type: "leo",
-      unitId: officer.id,
-    });
-    await validateMaxDepartmentsEachPerUser({
-      departmentId: data.department,
-      userId: user.id,
-      cad,
-      type: "officer",
-      unitId: officer.id,
-    });
-
-    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
-    const citizen = await prisma.citizen.findFirst({
-      where: {
-        id: data.citizenId,
-        userId: checkCitizenUserId ? user.id : undefined,
-      },
-    });
-
-    if (!citizen) {
-      throw new NotFound("citizenNotFound");
-    }
-
-    const { defaultDepartment, department, whitelistStatusId } = await handleWhitelistStatus(
-      data.department,
-      officer,
-    );
-
-    if (divisionsEnabled) {
-      const disconnectConnectArr = manyToManyHelper(
-        officer.divisions.map((v) => v.id),
-        data.divisions as string[],
-      );
-
-      await prisma.$transaction(
-        disconnectConnectArr.map((v) =>
-          prisma.officer.update({ where: { id: officer.id }, data: { divisions: v } }),
-        ),
-      );
-
-      await updateOfficerDivisionsCallsigns({
-        officerId: officer.id,
-        disconnectConnectArr,
-        callsigns: data.callsigns,
-      });
-    }
-
-    const isBadgeNumbersEnabled = isFeatureEnabled({
-      feature: Feature.BADGE_NUMBERS,
-      defaultReturn: true,
-      features: cad.features,
-    });
-
-    if (isBadgeNumbersEnabled && !data.badgeNumber) {
-      throw new ExtendedBadRequest({ badgeNumber: "Required" });
-    }
-
-    const rank = officer.rankId
-      ? undefined
-      : (defaultDepartment
-          ? defaultDepartment.defaultOfficerRankId
-          : department.defaultOfficerRankId) || undefined;
-
-    const incremental = officer.incremental
-      ? undefined
-      : await findNextAvailableIncremental({ type: "leo" });
-    const validatedImageURL = validateImgurURL(data.image);
-
-    const updatedOfficer = await prisma.officer.update({
-      where: {
-        id: officer.id,
-      },
-      data: {
-        callsign: data.callsign,
-        callsign2: data.callsign2,
-        badgeNumber: isBadgeNumbersEnabled ? data.badgeNumber : undefined,
-        citizenId: citizen.id,
-        imageId: validatedImageURL,
-        imageBlurData: await generateBlurPlaceholder(validatedImageURL),
-        departmentId: defaultDepartment ? defaultDepartment.id : data.department,
-        rankId: rank,
-        whitelistStatusId,
-        incremental,
-      },
-      include: {
-        ...leoProperties,
-        qualifications: { include: { qualification: { include: { value: true } } } },
-      },
-    });
+    const updatedOfficer = await upsertOfficer({ body, user, cad, existingOfficer });
 
     return updatedOfficer;
   }
@@ -238,13 +122,14 @@ export class MyOfficersController {
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("includeAll", Boolean) includeAll = false,
     @QueryParams("officerId", String) officerId?: string,
+    @QueryParams("isAdmin", Boolean) isAdmin = false,
   ): Promise<APITypes.GetMyOfficersLogsData> {
     const hasManageUnitsPermissions = hasPermission({
       permissionsToCheck: [Permissions.ManageUnits, Permissions.ViewUnits, Permissions.DeleteUnits],
       userToCheck: user,
       fallback: (u) => u.rank !== Rank.USER,
     });
-    const userIdObj = hasManageUnitsPermissions ? {} : { userId: user.id };
+    const userIdObj = hasManageUnitsPermissions && isAdmin ? {} : { userId: user.id };
 
     const where = { ...userIdObj, emsFdDeputyId: null, officerId: officerId || undefined };
 

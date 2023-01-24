@@ -1,0 +1,59 @@
+{
+  "name": "@snailycad/audit-logger",
+  "version": "1.44.7",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./server": {
+      "require": "./dist/server.js",
+      "import": "./dist/server.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npx rimraf ./dist && yarn workspace @snailycad/api generate && yarn tsup",
+    "watch": "yarn tsup --watch --silent=false",
+    "typecheck": "yarn tsc --noEmit"
+  },
+  "devDependencies": {
+    "@snailycad/types": "1.44.7",
+    "tsup": "^6.5.0",
+    "typescript": "^4.9.4",
+    "vite": "^4.0.4",
+    "vitest": "^0.27.1"
+  },
+  "tsup": {
+    "entry": [
+      "src/**/*.ts"
+    ],
+    "dts": true,
+    "bundle": false,
+    "platform": "node",
+    "treeshake": true,
+    "target": "node16",
+    "silent": true,
+    "format": [
+      "cjs",
+      "esm"
+    ]
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "superjson": "^1.12.1"
+  },
+  "typesVersions": {
+    "*": {
+      "server": [
+        "dist/server.d.ts"
+      ]
+    }
+  }
+}

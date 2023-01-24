@@ -6,9 +6,9 @@ import { NotFound } from "@tsed/exceptions";
 import { ContentType, Delete, Description, Post, Put } from "@tsed/schema";
 import { canManageInvariant } from "lib/auth/getSessionUser";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
-import { prisma } from "lib/prisma";
-import { validateSchema } from "lib/validateSchema";
-import { IsAuth } from "middlewares/IsAuth";
+import { prisma } from "lib/data/prisma";
+import { validateSchema } from "lib/data/validate-schema";
+import { IsAuth } from "middlewares/is-auth";
 import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/medical-records")

@@ -2,12 +2,12 @@ import { Controller } from "@tsed/di";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { BodyParams, PathParams, Context } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { Socket } from "services/socket-service";
-import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { IsAuth } from "middlewares/IsAuth";
-import { cad, Feature, MiscCadSettings, User } from "@snailycad/types";
-import { validateSchema } from "lib/validateSchema";
+import { UseAfter, UseBeforeEach } from "@tsed/platform-middlewares";
+import { IsAuth } from "middlewares/is-auth";
+import { cad, Feature, MiscCadSettings, ShouldDoType, User } from "@snailycad/types";
+import { validateSchema } from "lib/data/validate-schema";
 import { TONES_SCHEMA, UPDATE_AOP_SCHEMA, UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
 import {
   leoProperties,
@@ -15,19 +15,19 @@ import {
   combinedUnitProperties,
   getActiveOfficer,
 } from "lib/leo/activeOfficer";
-import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
+import { ExtendedNotFound } from "src/exceptions/extended-not-found";
 import { incidentInclude } from "controllers/leo/incidents/IncidentController";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
-import { userProperties } from "lib/auth/getSessionUser";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
-import { getInactivityFilter, getPrismaNameActiveCallIncident } from "lib/leo/utils";
-import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
+import { getInactivityFilter } from "lib/leo/utils";
 import { getActiveDeputy } from "lib/ems-fd";
 import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { z } from "zod";
-import { ActiveToneType, IncidentInvolvedUnit } from "@prisma/client";
+import { ActiveToneType } from "@prisma/client";
+import { HandleInactivity } from "middlewares/handle-inactivity";
+import { createWhere, createWhereCombinedUnit } from "controllers/leo/create-where-obj";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -43,73 +43,93 @@ export class DispatchController {
     fallback: (u) => u.isDispatch || u.isEmsFd || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
+  @UseAfter(HandleInactivity)
   async getDispatchData(
     @Context("cad") cad: { miscCadSettings: MiscCadSettings | null },
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.GetDispatchData> {
-    const unitsInactivityFilter = getInactivityFilter(
-      cad,
-      "unitInactivityTimeout",
-      "lastStatusChangeTimestamp",
-    );
     const dispatcherInactivityTimeout = getInactivityFilter(
       cad,
       "activeDispatchersInactivityTimeout",
       "updatedAt",
     );
-
-    if (unitsInactivityFilter) {
-      setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp);
-    }
-
-    const [officers, units] = await prisma.$transaction([
-      prisma.officer.findMany({ include: leoProperties }),
-      prisma.combinedLeoUnit.findMany({ include: combinedUnitProperties }),
-    ]);
-
-    const deputies = await prisma.emsFdDeputy.findMany({
-      include: unitProperties,
-    });
-
-    const activeDispatchers = await prisma.activeDispatchers.findMany({
-      where: dispatcherInactivityTimeout?.filter,
-      include: {
-        user: {
-          select: { id: true, username: true, rank: true, isLeo: true, isEmsFd: true },
-        },
-      },
-    });
-
     const incidentInactivityFilter = getInactivityFilter(cad, "incidentInactivityTimeout");
-    if (incidentInactivityFilter) {
-      this.endInactiveIncidents(incidentInactivityFilter.updatedAt);
-    }
 
-    if (dispatcherInactivityTimeout) {
-      this.endInactiveDispatchers(dispatcherInactivityTimeout.updatedAt);
-    }
-
-    const activeIncidents = await prisma.leoIncident.findMany({
-      where: { isActive: true, ...(incidentInactivityFilter?.filter ?? {}) },
-      include: incidentInclude,
-    });
+    const [activeDispatchersCount, userActiveDispatcher, activeIncidents] =
+      await prisma.$transaction([
+        prisma.activeDispatchers.count({
+          where: dispatcherInactivityTimeout?.filter,
+        }),
+        prisma.activeDispatchers.findFirst({
+          where: {
+            userId: sessionUserId,
+            ...(dispatcherInactivityTimeout?.filter ?? {}),
+          },
+          include: { user: { select: { username: true, id: true } } },
+        }),
+        prisma.leoIncident.findMany({
+          where: { isActive: true, ...(incidentInactivityFilter?.filter ?? {}) },
+          include: incidentInclude,
+        }),
+      ]);
 
     const correctedIncidents = activeIncidents.map(officerOrDeputyToUnit);
-    const officersWithUpdatedStatus = officers.map((u) =>
-      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
-    );
-    const deputiesWithUpdatedStatus = deputies.map((u) =>
-      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
-    );
-    const combinedUnitsWithUpdatedStatus = units.map((u) =>
-      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
-    );
 
     return {
-      deputies: deputiesWithUpdatedStatus,
-      officers: [...officersWithUpdatedStatus, ...combinedUnitsWithUpdatedStatus],
       activeIncidents: correctedIncidents,
-      activeDispatchers,
+      activeDispatchersCount,
+      userActiveDispatcher,
     };
+  }
+
+  @UsePermissions({
+    fallback: (u) => u.isDispatch || u.isEmsFd || u.isLeo,
+    permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
+  })
+  @Post("/units/search")
+  async searchUnits(
+    @BodyParams("query") query: string,
+  ): Promise<APITypes.PostDispatchUnitsSearchData> {
+    const officers = await prisma.officer.findMany({
+      where: createWhere({
+        pendingOnly: false,
+        query,
+        type: "OFFICER",
+        extraWhere: {
+          combinedLeoUnitId: null,
+          status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
+        },
+      }),
+      include: leoProperties,
+      take: 25,
+      orderBy: { updatedAt: "desc" },
+    });
+
+    const deputies = await prisma.emsFdDeputy.findMany({
+      where: createWhere({
+        pendingOnly: false,
+        query,
+        type: "DEPUTY",
+        extraWhere: {
+          status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
+        },
+      }),
+      include: unitProperties,
+      take: 25,
+      orderBy: { updatedAt: "desc" },
+    });
+
+    const combinedUnits = await prisma.combinedLeoUnit.findMany({
+      where: createWhereCombinedUnit({
+        pendingOnly: false,
+        query,
+      }),
+      include: combinedUnitProperties,
+      take: 25,
+      orderBy: { lastStatusChangeTimestamp: "desc" },
+    });
+
+    return [...officers, ...deputies, ...combinedUnits];
   }
 
   @Post("/aop")
@@ -196,11 +216,12 @@ export class DispatchController {
   })
   async setActiveDispatchersState(
     @Context("user") user: User,
+    @Context("cad") cad: cad,
     @BodyParams("value") value: boolean,
   ): Promise<APITypes.PostDispatchDispatchersStateData> {
     let dispatcher = await prisma.activeDispatchers.findFirst({
       where: { userId: user.id },
-      include: { user: { select: userProperties } },
+      include: { user: { select: { username: true, id: true } } },
     });
 
     if (value) {
@@ -208,21 +229,30 @@ export class DispatchController {
         dispatcher ??
         (await prisma.activeDispatchers.create({
           data: { userId: user.id },
-          include: { user: { select: userProperties } },
+          include: { user: { select: { username: true, id: true } } },
         }));
     } else {
       if (dispatcher) {
         await prisma.activeDispatchers.delete({
           where: { id: dispatcher.id },
         });
-
-        dispatcher = null;
       }
+
+      dispatcher = null;
     }
+
+    const dispatcherInactivityTimeout = getInactivityFilter(
+      cad,
+      "activeDispatchersInactivityTimeout",
+      "updatedAt",
+    );
+    const activeDispatchersCount = await prisma.activeDispatchers.count({
+      where: dispatcherInactivityTimeout?.filter,
+    });
 
     this.socket.emitActiveDispatchers();
 
-    return { dispatcher };
+    return { dispatcher, activeDispatchersCount };
   }
 
   @Put("/radio-channel/:unitId")
@@ -426,45 +456,5 @@ export class DispatchController {
       where: { id },
     });
     return true;
-  }
-
-  private async endIncident(incident: { id: string; unitsInvolved: IncidentInvolvedUnit[] }) {
-    const unitPromises = incident.unitsInvolved.map(async (unit) => {
-      const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
-      if (!prismaName || !unitId) return;
-
-      // @ts-expect-error method has the same properties
-      return prisma[prismaName].update({
-        where: { id: unitId },
-        data: { activeCallId: null },
-      });
-    });
-
-    await Promise.all([
-      ...unitPromises,
-      prisma.incidentInvolvedUnit.deleteMany({ where: { incidentId: incident.id } }),
-      prisma.leoIncident.update({ where: { id: incident.id }, data: { isActive: false } }),
-    ]);
-  }
-
-  private async endInactiveIncidents(updatedAt: Date) {
-    const incidents = await prisma.leoIncident.findMany({
-      where: { isActive: true, updatedAt: { not: { gte: updatedAt } } },
-      select: { id: true, unitsInvolved: true },
-    });
-
-    await Promise.all(incidents.map((incident) => this.endIncident(incident)));
-  }
-
-  private async endInactiveDispatchers(updatedAt: Date) {
-    const activeDispatchers = await prisma.activeDispatchers.findMany({
-      where: { updatedAt: { not: { gte: updatedAt } } },
-    });
-
-    await Promise.all(
-      activeDispatchers.map(async (dispatcher) => {
-        await prisma.activeDispatchers.delete({ where: { id: dispatcher.id } });
-      }),
-    );
   }
 }

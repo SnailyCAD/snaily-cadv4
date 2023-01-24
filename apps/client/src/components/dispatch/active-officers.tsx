@@ -12,7 +12,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useAuth } from "context/AuthContext";
 import { CombinedLeoUnit, StatusViewMode, Officer } from "@snailycad/types";
 import { Filter } from "react-bootstrap-icons";
-import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { useTableState, Table } from "components/shared/Table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { UnitRadioChannelModal } from "./active-units/UnitRadioChannelModal";
@@ -30,8 +30,17 @@ import { HoverCard } from "components/shared/HoverCard";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useMounted } from "@casper124578/useful";
 import { useCall911State } from "state/dispatch/call-911-state";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 import { generateContrastColor } from "lib/table/get-contrasting-text-color";
+import dynamic from "next/dynamic";
+import { Permissions } from "@snailycad/permissions";
+import { usePermission } from "hooks/usePermission";
+
+const CreateTemporaryUnitModal = dynamic(
+  async () =>
+    (await import("./modals/temporary-units/create-temporary-unit-modal")).CreateTemporaryUnitModal,
+  { ssr: false },
+);
 
 interface Props {
   initialOfficers: ActiveOfficer[];
@@ -39,6 +48,7 @@ interface Props {
 
 function ActiveOfficers({ initialOfficers }: Props) {
   const tableState = useTableState({
+    tableId: "active-officers",
     pagination: { pageSize: 12, totalDataCount: initialOfficers.length },
   });
 
@@ -53,6 +63,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
   const { openModal } = useModal();
   const { generateCallsign } = useGenerateCallsign();
   const { user } = useAuth();
+  const { hasPermissions } = usePermission();
 
   const { hasActiveDispatchers } = useActiveDispatchers();
   const { BADGE_NUMBERS, ACTIVE_INCIDENTS, RADIO_CHANNEL_MANAGEMENT, DIVISIONS } =
@@ -70,6 +81,9 @@ function ActiveOfficers({ initialOfficers }: Props) {
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
 
+  const hasDispatchPerms = hasPermissions([Permissions.Dispatch], (u) => u.isDispatch);
+  const showCreateTemporaryUnitButton = isDispatch && hasDispatchPerms;
+
   const [tempOfficer, officerState] = useTemporaryItem(activeOfficers);
 
   function handleEditClick(officer: ActiveOfficer | CombinedLeoUnit) {
@@ -82,11 +96,23 @@ function ActiveOfficers({ initialOfficers }: Props) {
       <header className="p-2 px-4 bg-gray-200 dark:bg-secondary flex items-center justify-between">
         <h1 className="text-xl font-semibold">{t("activeOfficers")}</h1>
 
-        <div>
+        <div className="flex items-center gap-2">
+          {showCreateTemporaryUnitButton ? (
+            <Button
+              variant="cancel"
+              className={classNames(
+                "px-1.5 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
+              )}
+              onPress={() => openModal(ModalIds.CreateTemporaryUnit, "officer")}
+            >
+              {t("createTemporaryUnit")}
+            </Button>
+          ) : null}
+
           <Button
             variant="cancel"
             className={classNames(
-              "px-1.5 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
+              "px-1.5 py-2 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
               showLeoFilters && "dark:!bg-secondary !bg-gray-500",
             )}
             onPress={() => setShowFilters("leo", !showLeoFilters)}
@@ -214,6 +240,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
           onClose={() => officerState.setTempId(null)}
         />
       ) : null}
+      {isDispatch ? <CreateTemporaryUnitModal /> : null}
     </div>
   );
 }

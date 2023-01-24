@@ -8,7 +8,7 @@ import { useEmsFdState } from "state/ems-fd-state";
 import type { EmsFdDeputy } from "@snailycad/types";
 import type { GetEmsFdActiveDeputies } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call-911-state";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 export function useActiveDeputies() {
   const { user } = useAuth();

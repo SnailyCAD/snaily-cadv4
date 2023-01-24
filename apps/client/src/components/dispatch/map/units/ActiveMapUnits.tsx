@@ -45,8 +45,14 @@ export function ActiveMapUnits({ openItems, setOpenItems }: Props) {
           <p className="text-base mt-2 text-neutral-700 dark:text-gray-300">{t("noActiveUnits")}</p>
         ) : (
           <AccordionRoot value={openItems} onValueChange={setOpenItems} type="multiple">
-            {units.map((player) => {
-              return <UnitItem setTempUnit={setTempUnit} key={player.name} player={player} />;
+            {units.map((player, idx) => {
+              return (
+                <UnitItem
+                  setTempUnit={setTempUnit}
+                  key={`${player.identifier}-${idx}`}
+                  player={player}
+                />
+              );
             })}
           </AccordionRoot>
         )}
@@ -73,17 +79,20 @@ function makeActiveUnits({ players, activeOfficers, activeDeputies }: ActiveUnit
 
   for (const activeUnit of [..._activeOfficers, ...activeDeputies]) {
     if (!activeUnit.status || activeUnit.status.shouldDo === ShouldDoType.SET_OFF_DUTY) continue;
+    if (!activeUnit.user) continue;
 
     const steamId = activeUnit.user.steamId;
-    const player = players.find(
-      (v) =>
-        ("steamId" in v && v.steamId === steamId) ||
-        ("convertedSteamId" in v && v.convertedSteamId === steamId),
-    );
+    const discordId = activeUnit.user.discordId;
 
-    if (!player || !("steamId" in player)) continue;
+    const player = players.find((player) => {
+      return player.discordId === discordId || player.convertedSteamId === steamId;
+    });
 
-    const existing = activeUnits.some((v) => v.steamId === player.convertedSteamId);
+    if (!player || !("steamId" in player) || !("discordId" in player)) continue;
+
+    const existing = activeUnits.some((unit) => {
+      return unit.discordId === discordId || unit.convertedSteamId === steamId;
+    });
 
     if (player && !existing) {
       activeUnits.push({ ...player, unit: activeUnit });

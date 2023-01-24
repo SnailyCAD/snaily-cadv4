@@ -36,7 +36,7 @@ import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";
 import { toastMessage } from "lib/toastMessage";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import type { PostCitizenVehicleData, PutCitizenVehicleData } from "@snailycad/types/api";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 interface Props {
   vehicle: RegisteredVehicle | null;

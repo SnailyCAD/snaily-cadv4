@@ -12,7 +12,7 @@ import { useTranslations } from "next-intl";
 import { Button, Loader, SelectField } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import { AddUnitToCallModal } from "./AddUnitToCallModal";
+import { AddUnitToCallModal } from "./add-unit-to-call-modal";
 import { FullDate } from "components/shared/FullDate";
 import { generateContrastColor } from "lib/table/get-contrasting-text-color";
 

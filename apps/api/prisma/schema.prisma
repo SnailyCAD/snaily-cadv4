@@ -89,6 +89,8 @@ model MiscCadSettings {
   weaponLicenseNumberLength  Int? @default(8)
   waterLicenseNumberLength   Int? @default(8)
 
+  lastInactivitySyncTimestamp DateTime?
+
   /// deprecated, use `webhooks` instead
   call911WebhookId     String?
   statusesWebhookId    String?
@@ -213,6 +215,16 @@ model DiscordRole {
   CustomRole            CustomRole[]
 }
 
+// audit logs
+model AuditLog {
+  id             String   @id @default(uuid())
+  executor       User?    @relation(fields: [executorId], references: [id])
+  executorId     String?
+  action         Json
+  createdAt      DateTime @default(now())
+  translationKey String?
+}
+
 model User {
   id                       String                    @id @default(cuid())
   username                 String                    @unique @db.VarChar(255)
@@ -269,6 +281,7 @@ model User {
   NameChangeRequest    NameChangeRequest[]
   CourthousePost       CourthousePost[]
   ActiveTone           ActiveTone[]
+  AuditLog             AuditLog[]
 }
 
 model UserSession {
@@ -318,10 +331,10 @@ model Citizen {
   name                 String                        @db.VarChar(255)
   surname              String                        @db.VarChar(255)
   dateOfBirth          DateTime
-  gender               Value                         @relation("genderToValue", fields: [genderId], references: [id])
-  genderId             String
-  ethnicity            Value                         @relation("ethnicityToValue", fields: [ethnicityId], references: [id])
-  ethnicityId          String
+  gender               Value?                        @relation("genderToValue", fields: [genderId], references: [id])
+  genderId             String?
+  ethnicity            Value?                        @relation("ethnicityToValue", fields: [ethnicityId], references: [id])
+  ethnicityId          String?
   hairColor            String                        @db.VarChar(255)
   eyeColor             String                        @db.VarChar(255)
   address              String                        @db.VarChar(255)
@@ -355,6 +368,7 @@ model Citizen {
   occupation           String?                       @db.Text
   additionalInfo       String?                       @db.Text
   flags                Value[]                       @relation("citizenFlags")
+  addressFlags         Value[]                       @relation("citizenAddressFlags")
   customFields         CustomFieldValue[]
   vehicles             RegisteredVehicle[]
   weapons              Weapon[]
@@ -383,6 +397,8 @@ model Citizen {
   suspendedLicenses    SuspendedCitizenLicenses?     @relation(fields: [suspendedLicensesId], references: [id])
   suspendedLicensesId  String?
   LicenseExam          LicenseExam[]
+
+  @@index([name, surname], name: "fullname")
 }
 
 model SuspendedCitizenLicenses {
@@ -531,6 +547,7 @@ model Value {
   LicenseExam                     LicenseExam[]                 @relation("examToLicense")
   AddressValue                    AddressValue[]                @relation("addressValueToValue")
   EmergencyVehicleValue           EmergencyVehicleValue[]       @relation("emergencyVehicleToValue")
+  CitizenAddressFlags             Citizen[]                     @relation("citizenAddressFlags")
 }
 
 model AddressValue {
@@ -700,8 +717,8 @@ model Notification {
   id          String   @id @default(uuid())
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
-  executor    User     @relation("executor", fields: [executorId], references: [id], onDelete: Cascade)
-  executorId  String
+  executor    User?    @relation("executor", fields: [executorId], references: [id], onDelete: Cascade)
+  executorId  String?
   title       String
   description String
   createdAt   DateTime @default(now())
@@ -849,8 +866,8 @@ model Officer {
   imageBlurData               String?                      @db.Text
   citizen                     Citizen                      @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId                   String
-  user                        User                         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                      String
+  user                        User?                        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                      String?
   createdAt                   DateTime                     @default(now())
   updatedAt                   DateTime                     @default(now()) @updatedAt
   whitelistStatus             LeoWhitelistStatus?          @relation(fields: [whitelistStatusId], references: [id])
@@ -878,6 +895,8 @@ model Officer {
   ImpoundedVehicle            ImpoundedVehicle[]
   activeVehicle               EmergencyVehicleValue?       @relation("activeEmergencyVehicle_leo", fields: [activeVehicleId], references: [id], onDelete: SetNull)
   activeVehicleId             String?
+  isTemporary                 Boolean                      @default(false)
+  identifiers                 String[]
 }
 
 model IndividualDivisionCallsign {
@@ -1072,6 +1091,8 @@ model Call911 {
   gtaMapPosition   GTAMapPosition?   @relation(fields: [gtaMapPositionId], references: [id])
   gtaMapPositionId String?
   isSignal100      Boolean?          @default(false)
+  extraFields      Json?
+  status           WhitelistStatus?
 }
 
 model GTAMapPosition {
@@ -1292,8 +1313,8 @@ model EmsFdDeputy {
   imageBlurData             String?                @db.Text
   citizen                   Citizen                @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId                 String
-  user                      User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                    String
+  user                      User?                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                    String?
   createdAt                 DateTime               @default(now())
   updatedAt                 DateTime               @default(now()) @updatedAt
   radioChannelId            String?
@@ -1310,6 +1331,8 @@ model EmsFdDeputy {
   IncidentInvolvedUnit      IncidentInvolvedUnit[]
   activeVehicle             EmergencyVehicleValue? @relation("activeEmergencyVehicle_emsfd", fields: [activeVehicleId], references: [id], onDelete: SetNull)
   activeVehicleId           String?
+  isTemporary               Boolean                @default(false)
+  identifiers               String[]
 }
 
 // truck logs
@@ -1514,6 +1537,7 @@ enum ValueType {
   CALL_TYPE
   ADDRESS
   EMERGENCY_VEHICLE
+  ADDRESS_FLAG
 }
 
 enum DriversLicenseCategoryType {
@@ -1553,6 +1577,7 @@ enum ShouldDoType {
   PANIC_BUTTON
   EN_ROUTE
   ON_SCENE
+  UNAVAILABLE
 }
 
 enum BoloType {
@@ -1672,4 +1697,5 @@ enum Feature {
   LICENSE_EXAMS
   CITIZEN_CREATION_RECORDS // See #1188
   BUREAU_OF_FIREARMS // See #1298
+  CALL_911_APPROVAL // See #1459
 }

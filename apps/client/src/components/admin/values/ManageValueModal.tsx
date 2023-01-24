@@ -118,6 +118,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
       departments: values.departments?.map((v) => v.value),
       divisions: values.divisions?.map((v) => v.value),
       officerRankDepartments: values.officerRankDepartments?.map((v) => v.value),
+      extraFields: JSON.parse(values.extraFields),
     };
 
     if (value) {
@@ -227,6 +228,11 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
 
     showPicker: false,
     image: "",
+
+    extraFields:
+      value && (isDivisionValue(value) || isDepartmentValue(value))
+        ? JSON.stringify(value.extraFields)
+        : "null",
   };
 
   function validate(values: typeof INITIAL_VALUES) {

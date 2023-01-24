@@ -223,6 +223,11 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     description:
       "When enabled, weapons must first be approved by the Bureau of Firearms within the CAD.",
   },
+  CALL_911_APPROVAL: {
+    name: "Calls 911 Approval",
+    description:
+      "When a citizen creates a 911 call and there are active dispatchers, this will require dispatch to approve the call before active units can view the call.",
+  },
 };
 
 export function CADFeaturesTab() {

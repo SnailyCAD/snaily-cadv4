@@ -4,10 +4,10 @@ import { BodyParams, PathParams, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
-import { prisma } from "lib/prisma";
-import { validateSchema } from "lib/validateSchema";
-import { IsAuth } from "middlewares/IsAuth";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { prisma } from "lib/data/prisma";
+import { validateSchema } from "lib/data/validate-schema";
+import { IsAuth } from "middlewares/is-auth";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 
 @Controller("/admin/manage/custom-fields")
 @UseBeforeEach(IsAuth)

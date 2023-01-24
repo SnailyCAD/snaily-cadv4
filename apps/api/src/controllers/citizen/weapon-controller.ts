@@ -7,13 +7,13 @@ import { Post, Delete, Put, Description, Get, ContentType } from "@tsed/schema";
 import { canManageInvariant } from "lib/auth/getSessionUser";
 import { isFeatureEnabled } from "lib/cad";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
-import { prisma } from "lib/prisma";
-import { validateSchema } from "lib/validateSchema";
-import { IsAuth } from "middlewares/IsAuth";
-import { generateString } from "utils/generateString";
+import { prisma } from "lib/data/prisma";
+import { validateSchema } from "lib/data/validate-schema";
+import { IsAuth } from "middlewares/is-auth";
+import { generateString } from "utils/generate-string";
 import { citizenInclude } from "./CitizenController";
 import type * as APITypes from "@snailycad/types/api";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import type { Weapon } from "@snailycad/types";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 

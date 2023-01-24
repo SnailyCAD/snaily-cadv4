@@ -2,12 +2,12 @@ import type { User } from "@prisma/client";
 import { ContentType, Get, Post } from "@tsed/schema";
 import { BodyParams, Context, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
-import { IsAuth } from "middlewares/IsAuth";
-import { prisma } from "lib/prisma";
-import { validateSchema } from "lib/validateSchema";
+import { IsAuth } from "middlewares/is-auth";
+import { prisma } from "lib/data/prisma";
+import { validateSchema } from "lib/data/validate-schema";
 import { NAME_CHANGE_REQUEST_SCHEMA } from "@snailycad/schemas";
 import { NotFound } from "@tsed/exceptions";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import type * as APITypes from "@snailycad/types/api";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 

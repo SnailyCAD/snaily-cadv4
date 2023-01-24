@@ -8,7 +8,7 @@ import type { GetServerSideProps } from "next";
 import type { AssignedUnit } from "@snailycad/types";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { Full911Call, useDispatchState } from "state/dispatch/dispatch-state";
+import type { Full911Call } from "state/dispatch/dispatch-state";
 import { Input, Loader, Button } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
@@ -37,10 +37,9 @@ interface Props extends GetDispatchData {
   incidents: GetIncidentsData["incidents"];
 }
 
-export default function CallHistory({ data, incidents, officers, deputies }: Props) {
+export default function CallHistory({ data, incidents }: Props) {
   const [search, setSearch] = React.useState("");
 
-  const dispatchState = useDispatchState();
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageCallHistory], true);
   const setCurrentlySelectedCall = useCall911State((state) => state.setCurrentlySelectedCall);
@@ -103,12 +102,6 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
       ? generateCallsign(unit.unit, "pairedUnitTemplate")
       : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
   }
-
-  React.useEffect(() => {
-    dispatchState.setAllOfficers(officers);
-    dispatchState.setAllDeputies(deputies);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [officers, deputies]);
 
   return (
     <Layout
@@ -218,10 +211,9 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const user = await getSessionUser(req);
-  const [calls, { incidents }, { deputies, officers }] = await requestAll(req, [
+  const [calls, { incidents }] = await requestAll(req, [
     ["/911-calls?includeEnded=true&take=35", { calls: [], totalCount: 0 }],
     ["/incidents", { incidents: [] }],
-    ["/dispatch", { deputies: [], officers: [] }],
   ]);
 
   return {
@@ -229,8 +221,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       session: user,
       data: calls,
       incidents,
-      deputies,
-      officers,
       messages: {
         ...(await getTranslations(["leo", "calls", "common"], user?.locale ?? locale)),
       },

@@ -31,6 +31,7 @@ export type ValuesSelect =
 
 export const permissionsForRouteType: Record<ValueType, Permissions[]> = {
   ADDRESS: [Permissions.ManageValueAddress],
+  ADDRESS_FLAG: [Permissions.ManageValueAddressFlag],
   BLOOD_GROUP: [Permissions.ManageValueBloodGroup],
   BUSINESS_ROLE: [Permissions.ManageValueBusinessRole],
   CITIZEN_FLAG: [Permissions.ManageValueCitizenFlag],

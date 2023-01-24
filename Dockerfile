@@ -7,6 +7,8 @@ WORKDIR /app
 
 ENV NODE_ENV "production"
 
+ENV BUILD_CONTEXT ${BUILD_CONTEXT}
+
 COPY package.json .
 
 COPY yarn.lock .

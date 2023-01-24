@@ -1,9 +1,9 @@
 import { AssignedUnit, ShouldDoType } from "@prisma/client";
 import type { Call911 } from "@prisma/client";
 import { findUnit } from "lib/leo/findUnit";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import type { Socket } from "services/socket-service";
-import { manyToManyHelper } from "utils/manyToMany";
+import { manyToManyHelper } from "lib/data/many-to-many";
 import type { z } from "zod";
 import type { ASSIGNED_UNIT } from "@snailycad/schemas";
 import { assignedUnitsInclude } from "controllers/leo/incidents/IncidentController";

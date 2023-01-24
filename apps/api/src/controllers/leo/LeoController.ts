@@ -1,23 +1,23 @@
-import { Controller, UseBeforeEach, UseBefore } from "@tsed/common";
+import { Controller, UseBeforeEach, UseBefore, UseAfter } from "@tsed/common";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { SWITCH_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { prisma } from "lib/prisma";
-import { IsAuth } from "middlewares/IsAuth";
-import { ActiveOfficer } from "middlewares/ActiveOfficer";
+import { prisma } from "lib/data/prisma";
+import { IsAuth } from "middlewares/is-auth";
+import { ActiveOfficer } from "middlewares/active-officer";
 import { Socket } from "services/socket-service";
 import { combinedUnitProperties, leoProperties } from "lib/leo/activeOfficer";
 import { cad, ShouldDoType, User } from "@prisma/client";
-import { validateSchema } from "lib/validateSchema";
-import { Permissions, UsePermissions } from "middlewares/UsePermissions";
+import { validateSchema } from "lib/data/validate-schema";
+import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { getInactivityFilter } from "lib/leo/utils";
 import { findUnit } from "lib/leo/findUnit";
-import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
 import { CombinedLeoUnit, Officer, MiscCadSettings, Feature } from "@snailycad/types";
 import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { handlePanicButtonPressed } from "lib/leo/send-panic-button-webhook";
+import { HandleInactivity } from "middlewares/handle-inactivity";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -42,6 +42,7 @@ export class LeoController {
 
   @Get("/active-officers")
   @Description("Get all the active officers")
+  @UseAfter(HandleInactivity)
   @UsePermissions({
     fallback: (u) => u.isLeo || u.isDispatch || u.isEmsFd,
     permissions: [Permissions.Leo, Permissions.Dispatch, Permissions.EmsFd],
@@ -55,28 +56,21 @@ export class LeoController {
       "lastStatusChangeTimestamp",
     );
 
-    if (unitsInactivityFilter) {
-      setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp);
-    }
-
-    const [officers, units] = await prisma.$transaction([
+    const [officers, combinedUnits] = await prisma.$transaction([
       prisma.officer.findMany({
-        where: { status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } } },
+        where: {
+          status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
+          ...(unitsInactivityFilter?.filter ?? {}),
+        },
         include: leoProperties,
       }),
       prisma.combinedLeoUnit.findMany({
         include: combinedUnitProperties,
+        where: unitsInactivityFilter?.filter,
       }),
     ]);
 
-    const officersWithUpdatedStatus = officers.map((u) =>
-      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
-    );
-    const combinedUnitsWithUpdatedStatus = units.map((u) =>
-      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
-    );
-
-    return [...officersWithUpdatedStatus, ...combinedUnitsWithUpdatedStatus];
+    return [...combinedUnits, ...officers];
   }
 
   @Post("/panic-button")

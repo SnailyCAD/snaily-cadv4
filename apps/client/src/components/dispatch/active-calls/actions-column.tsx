@@ -1,5 +1,5 @@
 import { Button } from "@snailycad/ui";
-import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { Full911Call } from "state/dispatch/dispatch-state";
 import { useModal } from "state/modalState";

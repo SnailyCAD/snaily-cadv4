@@ -10,7 +10,7 @@ import type { DiscordRole, DiscordRoles } from "@snailycad/types";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { FormField } from "components/form/FormField";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
-import { formatPermissionName } from "../users/ManagePermissionsModal";
+import { formatPermissionName } from "../users/modals/manage-permissions-modal";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { toastMessage } from "lib/toastMessage";
 import type { GetCADDiscordRolesData, PostCADDiscordRolesData } from "@snailycad/types/api";

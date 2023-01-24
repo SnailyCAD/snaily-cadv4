@@ -8,7 +8,7 @@ export function useActiveIncidents() {
 
   useListener(
     { eventName: SocketEvents.UpdateActiveIncident, checkHasListeners: true },
-    (incident: LeoIncident) => {
+    (incident: Partial<LeoIncident>) => {
       if (incident.isActive) {
         setActiveIncidents(
           activeIncidents.map((inc) => {

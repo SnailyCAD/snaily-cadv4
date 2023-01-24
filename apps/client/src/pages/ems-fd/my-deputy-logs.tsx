@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
@@ -12,9 +11,9 @@ import { Title } from "components/shared/Title";
 import { OfficerLogsTable } from "components/leo/logs/OfficerLogsTable";
 import { Permissions } from "@snailycad/permissions";
 import type { EmsFdDeputy, OfficerLog } from "@snailycad/types";
-import type { GetMyDeputiesData, GetMyDeputiesLogsData } from "@snailycad/types/api";
+import type { GetMyDeputiesLogsData } from "@snailycad/types/api";
 import { useAsyncTable } from "components/shared/Table";
-import useFetch from "lib/useFetch";
+import { useGetUserDeputies } from "hooks/ems-fd/use-get-user-deputies";
 
 export type OfficerLogWithDeputy = OfficerLog & { emsFdDeputy: EmsFdDeputy };
 
@@ -22,27 +21,8 @@ interface Props {
   logs: GetMyDeputiesLogsData;
 }
 
-function useGetUserDeputies() {
-  const [officers, setDeputies] = React.useState<EmsFdDeputy[]>([]);
-  const { execute } = useFetch();
-
-  const getDeputies = React.useCallback(async () => {
-    const { json } = await execute<GetMyDeputiesData>({ path: "/ems-fd", method: "GET" });
-
-    if (Array.isArray(json.deputies)) {
-      setDeputies(json.deputies);
-    }
-  }, []); // eslint-disable-line
-
-  React.useEffect(() => {
-    getDeputies();
-  }, [getDeputies]);
-
-  return officers;
-}
-
 export default function MyDeputyLogs({ logs: data }: Props) {
-  const deputies = useGetUserDeputies();
+  const { userDeputies, isLoading } = useGetUserDeputies();
 
   const asyncTable = useAsyncTable({
     fetchOptions: {
@@ -60,7 +40,7 @@ export default function MyDeputyLogs({ logs: data }: Props) {
   const t = useTranslations();
   const { generateCallsign } = useGenerateCallsign();
 
-  const deputyNames = deputies.reduce(
+  const deputyNames = userDeputies.reduce(
     (ac, cv) => ({
       ...ac,
       [cv.id]: `${generateCallsign(cv)} ${makeUnitName(cv)}`,
@@ -80,6 +60,7 @@ export default function MyDeputyLogs({ logs: data }: Props) {
           <div className="ml-3 w-52">
             <FormField label="Group By Deputy">
               <Select
+                isLoading={isLoading}
                 isClearable
                 onChange={(e) => {
                   asyncTable.setFilters((prev) => ({

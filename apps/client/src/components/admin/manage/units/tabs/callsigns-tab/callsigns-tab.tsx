@@ -14,6 +14,9 @@ import { Permissions, usePermission } from "hooks/usePermission";
 import type { GetManageUnitsData } from "@snailycad/types/api";
 import { SearchArea } from "components/shared/search/search-area";
 import dynamic from "next/dynamic";
+import { FormField } from "components/form/FormField";
+import { Select } from "components/form/Select";
+import { useValues } from "context/ValuesContext";
 
 const ManageUnitCallsignModal = dynamic(
   async () => (await import("./manage-unit-callsign-modal")).ManageUnitCallsignModal,
@@ -49,6 +52,7 @@ export function CallsignsTab({ units }: Props) {
   const { openModal } = useModal();
   const tableState = useTableState({ search: { value: search } });
   const hasViewUsersPermissions = hasPermissions([Permissions.ViewUsers], true);
+  const { department } = useValues();
 
   function handleManageClick(unit: Unit) {
     unitState.setTempId(unit.id);
@@ -66,7 +70,21 @@ export function CallsignsTab({ units }: Props) {
         search={{ search, setSearch }}
         asyncTable={asyncTable}
         totalCount={units.totalCount}
-      />
+      >
+        <FormField className="w-full max-w-[15rem]" label={t("Leo.department")}>
+          <Select
+            isClearable
+            value={asyncTable.filters?.departmentId ?? null}
+            onChange={(event) =>
+              asyncTable.setFilters((prev) => ({ ...prev, departmentId: event.target.value }))
+            }
+            values={department.values.map((v) => ({
+              label: v.value.value,
+              value: v.id,
+            }))}
+          />
+        </FormField>
+      </SearchArea>
 
       {asyncTable.items.length <= 0 ? (
         <p>{t("Management.noUnits")}</p>
@@ -78,16 +96,17 @@ export function CallsignsTab({ units }: Props) {
               id: unit.id,
               unit: LABELS[unit.type],
               name: makeUnitName(unit),
-              user: hasViewUsersPermissions ? (
-                <Link
-                  href={`/admin/manage/users/${unit.userId}`}
-                  className={`rounded-md transition-all p-1 px-1.5 ${buttonVariants.default}`}
-                >
-                  {unit.user.username}
-                </Link>
-              ) : (
-                unit.user.username
-              ),
+              user:
+                hasViewUsersPermissions && unit.user ? (
+                  <Link
+                    href={`/admin/manage/users/${unit.userId}`}
+                    className={`rounded-md transition-all p-1 px-1.5 ${buttonVariants.default}`}
+                  >
+                    {unit.user.username}
+                  </Link>
+                ) : (
+                  unit.user?.username ?? t("Leo.temporaryUnit")
+                ),
               callsign1: unit.callsign,
               callsign2: unit.callsign2,
               callsign: generateCallsign(unit),

@@ -8,16 +8,16 @@ import {
   RESTGetAPIWebhookResult,
   Routes,
 } from "discord-api-types/v10";
-import { IsAuth } from "middlewares/IsAuth";
-import { prisma } from "lib/prisma";
+import { IsAuth } from "middlewares/is-auth";
+import { prisma } from "lib/data/prisma";
 import { cad, DiscordWebhook, DiscordWebhookType, MiscCadSettings, Rank } from "@prisma/client";
 import { BadRequest } from "@tsed/exceptions";
 import { DISCORD_WEBHOOKS_SCHEMA } from "@snailycad/schemas";
-import { validateSchema } from "lib/validateSchema";
+import { validateSchema } from "lib/data/validate-schema";
 import type * as APITypes from "@snailycad/types/api";
 import { resolve } from "node:path";
 import { encodeFromFile } from "@snaily-cad/image-data-uri";
-import { Permissions, UsePermissions } from "middlewares/UsePermissions";
+import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { performDiscordRequest } from "lib/discord/performDiscordRequest";
 
 const guildId = process.env.DISCORD_SERVER_ID;

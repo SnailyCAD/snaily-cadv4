@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { LeafletEvent } from "leaflet";
+import { icon as leafletIcon, LeafletEvent } from "leaflet";
 import useFetch from "lib/useFetch";
 import { Marker, Popup, Tooltip, useMap } from "react-leaflet";
 import type { Full911Call } from "state/dispatch/dispatch-state";
@@ -11,7 +11,17 @@ import type { Put911CallByIdData } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 import { MapItem, useDispatchMapState } from "state/mapState";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
+
+const CALL_ICON_SIZE = 30;
+
+const CALL_ICON = leafletIcon({
+  iconUrl: "/map/call.png",
+  iconSize: [CALL_ICON_SIZE, CALL_ICON_SIZE],
+  popupAnchor: [0, -CALL_ICON_SIZE / 2],
+  iconAnchor: [CALL_ICON_SIZE / 2, CALL_ICON_SIZE / 2],
+  tooltipAnchor: [0, -CALL_ICON_SIZE / 2],
+});
 
 export function RenderActiveCalls() {
   const map = useMap();
@@ -112,6 +122,7 @@ export function RenderActiveCalls() {
               draggable={!call.gtaMapPosition}
               key={call.id}
               position={position}
+              icon={CALL_ICON}
             >
               {!call.gtaMapPosition ? (
                 <Tooltip direction="top">{t("dragToMoveCallBlip")}</Tooltip>

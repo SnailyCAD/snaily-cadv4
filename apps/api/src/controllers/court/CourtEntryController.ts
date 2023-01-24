@@ -1,12 +1,12 @@
 import { ContentType, Delete, Get, Post, Put } from "@tsed/schema";
 import { BodyParams, PathParams, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
-import { IsAuth } from "middlewares/IsAuth";
-import { prisma } from "lib/prisma";
-import { validateSchema } from "lib/validateSchema";
+import { IsAuth } from "middlewares/is-auth";
+import { prisma } from "lib/data/prisma";
+import { validateSchema } from "lib/data/validate-schema";
 import { COURT_ENTRY_SCHEMA } from "@snailycad/schemas";
 import { NotFound } from "@tsed/exceptions";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type * as APITypes from "@snailycad/types/api";
 import { Feature } from "@snailycad/types";
 import { IsFeatureEnabled } from "middlewares/is-enabled";

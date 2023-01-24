@@ -8,25 +8,27 @@ import {
   MultipartFile,
   PlatformMulterFile,
   Context,
+  Res,
 } from "@tsed/common";
 import fs from "node:fs/promises";
 import { ContentType, Delete, Description, Patch, Post, Put } from "@tsed/schema";
-import { prisma } from "lib/prisma";
-import { IsValidPath, validValuePaths } from "middlewares/ValidPath";
+import { prisma } from "lib/data/prisma";
+import { IsValidPath, validValuePaths } from "middlewares/valid-path";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { IsAuth } from "middlewares/IsAuth";
+import { IsAuth } from "middlewares/is-auth";
 import { typeHandlers } from "./Import";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { ValuesSelect, getTypeFromPath, getPermissionsForValuesRequest } from "lib/values/utils";
 import { ValueType } from "@prisma/client";
-import { UsePermissions } from "middlewares/UsePermissions";
+import { UsePermissions } from "middlewares/use-permissions";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import type * as APITypes from "@snailycad/types/api";
-import { getImageWebPPath } from "utils/images/image";
+import { getImageWebPPath } from "lib/images/get-image-webp-path";
 import { BULK_DELETE_SCHEMA } from "@snailycad/schemas";
-import { validateSchema } from "lib/validateSchema";
+import { validateSchema } from "lib/data/validate-schema";
 import { createSearchWhereObject } from "lib/values/create-where-object";
-import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
+import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
+import { ONE_DAY } from "../AdminController";
 
 export const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
   QUALIFICATION: {
@@ -62,12 +64,14 @@ export class ValuesController {
   @Get("/")
   @Description("Get all the values by the specified types")
   async getValueByPath(
+    @Res() res: Res,
     @PathParams("path") path: (string & {}) | "all",
     @QueryParams() queryParams: any,
     @QueryParams("paths") rawPaths: string,
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query = "",
     @QueryParams("includeAll", Boolean) includeAll = true,
+    @QueryParams("cache", Boolean) cache = true,
   ): Promise<APITypes.GetValuesData | APITypes.GetValuesPenalCodesData> {
     // allow more paths in one request
     let paths =
@@ -170,6 +174,13 @@ export class ValuesController {
         };
       }),
     );
+
+    if (cache) {
+      res.setHeader(
+        "Cache-Control",
+        `public, s-max-age=${ONE_DAY}, stale-while-revalidate=${ONE_DAY / 2}`,
+      );
+    }
 
     return values as APITypes.GetValuesData;
   }

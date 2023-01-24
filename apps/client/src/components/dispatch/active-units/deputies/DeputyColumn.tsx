@@ -6,7 +6,7 @@ import { Draggable } from "components/shared/dnd/Draggable";
 import { DndActions } from "types/DndActions";
 import { ActiveUnitsQualificationsCard } from "components/leo/qualifications/ActiveUnitsQualificationsCard";
 import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
-import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import type { EmsFdDeputy } from "@snailycad/types";
 import Image from "next/image";
 import { useDispatchState } from "state/dispatch/dispatch-state";
@@ -30,7 +30,7 @@ export function DeputyColumn({ deputy, isDispatch, nameAndCallsign }: Props) {
     .filter((v) => v.type === "STATUS_CODE")
     .map((v) => ({
       name: v.value.value,
-      onPress: () => setStatus(deputy.id, v),
+      onClick: () => setStatus(deputy.id, v),
       "aria-label": `Set status to ${v.value.value}`,
       title: `Set status to ${v.value.value}`,
     }));

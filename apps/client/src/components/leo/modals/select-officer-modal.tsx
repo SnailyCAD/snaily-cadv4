@@ -15,17 +15,14 @@ import { EmergencyVehicleValue, Officer, ShouldDoType } from "@snailycad/types";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { isUnitDisabled, makeUnitName } from "lib/utils";
 import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 import { useDispatchState } from "state/dispatch/dispatch-state";
+import { useUserOfficers } from "hooks/leo/use-get-user-officers";
 
 export function SelectOfficerModal() {
-  const { userOfficers, setActiveOfficer } = useLeoState(
-    (state) => ({
-      userOfficers: state.userOfficers,
-      setActiveOfficer: state.setActiveOfficer,
-    }),
-    shallow,
-  );
+  const setActiveOfficer = useLeoState((state) => state.setActiveOfficer);
+  const { userOfficers, isLoading } = useUserOfficers();
+
   const { activeOfficers, setActiveOfficers } = useDispatchState(
     (state) => ({
       activeOfficers: state.activeOfficers,
@@ -101,6 +98,7 @@ export function SelectOfficerModal() {
 
             <FormField errorMessage={errors.officer} label={t("officer")}>
               <Select
+                isLoading={isLoading}
                 value={
                   values.officer
                     ? `${generateCallsign(values.officer)} ${makeUnitName(values.officer)}`

@@ -1,5 +1,5 @@
 import type { EmsFdDeputy } from "@snailycad/types";
-import create from "zustand";
+import { create } from "zustand";
 
 export type ActiveDeputy = EmsFdDeputy;
 

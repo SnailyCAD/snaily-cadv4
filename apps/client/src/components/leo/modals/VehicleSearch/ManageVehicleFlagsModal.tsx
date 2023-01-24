@@ -12,7 +12,7 @@ import { useVehicleSearch } from "state/search/vehicle-search-state";
 import { ModalIds } from "types/ModalIds";
 import { useNameSearch } from "state/search/name-search-state";
 import type { PutSearchActionsVehicleFlagsData } from "@snailycad/types/api";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 export function ManageVehicleFlagsModal() {
   const { isOpen, closeModal } = useModal();

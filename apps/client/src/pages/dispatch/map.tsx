@@ -11,7 +11,7 @@ import { useDispatchState } from "state/dispatch/dispatch-state";
 import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
 import type { DispatchPageProps } from ".";
-import { CombinedLeoUnit, EmsFdDeputy, Officer, ShouldDoType, ValueType } from "@snailycad/types";
+import { ValueType } from "@snailycad/types";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import { useCall911State } from "state/dispatch/call-911-state";
 
@@ -20,11 +20,7 @@ const Map = dynamic(async () => (await import("components/dispatch/map/Map")).Ma
   loading: () => <p>loading map..</p>,
 });
 
-type Props = Pick<DispatchPageProps, "bolos" | "calls" | "deputies" | "officers">;
-
-function activeFilter(v: EmsFdDeputy | Officer | CombinedLeoUnit) {
-  return Boolean(v.statusId && v.status?.shouldDo !== ShouldDoType.SET_OFF_DUTY);
-}
+type Props = Pick<DispatchPageProps, "bolos" | "calls" | "activeDeputies" | "activeOfficers">;
 
 export default function MapPage(props: Props) {
   useLoadValuesClientSide({
@@ -40,28 +36,15 @@ export default function MapPage(props: Props) {
   const state = useDispatchState();
   const set911Calls = useCall911State((state) => state.setCalls);
 
-  const activeOfficers = React.useMemo(
-    () => [...props.officers].filter(activeFilter),
-    [props.officers],
-  );
-
-  const activeDeputies = React.useMemo(
-    () => [...props.deputies].filter(activeFilter),
-    [props.deputies],
-  );
-
   React.useEffect(() => {
     set911Calls(props.calls.calls);
     state.setBolos(props.bolos.bolos);
 
-    state.setAllOfficers(props.officers);
-    state.setAllDeputies(props.deputies);
-
-    state.setActiveDeputies(activeDeputies);
-    state.setActiveOfficers(activeOfficers);
+    state.setActiveDeputies(props.activeDeputies);
+    state.setActiveOfficers(props.activeOfficers);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props, activeDeputies, activeOfficers]);
+  }, [props]);
 
   if (!user || !cad) {
     return null;
@@ -92,11 +75,12 @@ export default function MapPage(props: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const user = await getSessionUser(req);
-  const [values, calls, bolos, { officers, deputies }] = await requestAll(req, [
+  const [values, calls, bolos, activeOfficers, activeDeputies] = await requestAll(req, [
     ["/admin/values/codes_10", []],
     ["/911-calls", { calls: [], totalCount: 0 }],
     ["/bolos", { bolos: [], totalCount: 0 }],
-    ["/dispatch", { deputies: [], officers: [] }],
+    ["/leo/active-officers", []],
+    ["/ems-fd/active-deputies", []],
   ]);
 
   return {
@@ -105,8 +89,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       calls,
       bolos,
       values,
-      officers,
-      deputies,
+      activeOfficers,
+      activeDeputies,
       messages: {
         ...(await getTranslations(
           ["citizen", "ems-fd", "leo", "calls", "common"],

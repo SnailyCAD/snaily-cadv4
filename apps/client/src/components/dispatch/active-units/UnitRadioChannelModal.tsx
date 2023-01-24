@@ -11,7 +11,7 @@ import { useDispatchState } from "state/dispatch/dispatch-state";
 import { handleValidate } from "lib/handleValidate";
 import { UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
 import { isUnitCombined, isUnitOfficer } from "@snailycad/utils";
-import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import type { PutDispatchRadioChannelData } from "@snailycad/types/api";
 
 interface Props {

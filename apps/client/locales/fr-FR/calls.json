@@ -56,6 +56,7 @@
     "addUnit": "Ajouter Unité",
     "unit": "Unité",
     "unassign": "Désassigner",
+    "dragToMoveCallBlip": "Glisser ce repère pour lui donner une position.",
     "alert_purgeSelectedCalls": "Êtes-vous sûr de vous vouloir purger {length} élément(s) ? Cela supprimera {length} élément(s) de la base de données. Cette action ne peut être annulée.",
     "alert_deleteCallEvent": "Êtes-vous sûr de vouloir supprimer cet événement ? Cette action ne peut être annulée.",
     "alert_end911Call": "Êtes-vous sûr de vouloir terminer cet appel ?",

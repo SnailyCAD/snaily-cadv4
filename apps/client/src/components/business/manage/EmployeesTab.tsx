@@ -13,7 +13,7 @@ import { yesOrNoText } from "lib/utils";
 import { Status } from "components/shared/Status";
 import type { DeleteBusinessFireEmployeeData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 export function EmployeesTab() {
   const { state, execute } = useFetch();

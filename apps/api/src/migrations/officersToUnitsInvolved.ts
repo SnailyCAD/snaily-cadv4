@@ -1,4 +1,4 @@
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 
 export async function officersToUnitsInvolved() {
   const leoIncidents = await prisma.leoIncident.findMany({

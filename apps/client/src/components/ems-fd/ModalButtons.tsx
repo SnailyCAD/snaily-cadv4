@@ -8,7 +8,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 import useFetch from "lib/useFetch";
 import type { PostEmsFdTogglePanicButtonData } from "@snailycad/types/api";
-import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { TonesModal } from "components/dispatch/modals/tones-modal";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useMounted } from "@casper124578/useful";

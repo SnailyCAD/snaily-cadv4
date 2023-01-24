@@ -8,12 +8,12 @@ import {
   UseBeforeEach,
 } from "@tsed/common";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { TOW_SCHEMA, UPDATE_TOW_SCHEMA } from "@snailycad/schemas";
 import { NotFound } from "@tsed/exceptions";
-import { IsAuth } from "middlewares/IsAuth";
+import { IsAuth } from "middlewares/is-auth";
 import { Socket } from "services/socket-service";
-import { validateSchema } from "lib/validateSchema";
+import { validateSchema } from "lib/data/validate-schema";
 import {
   cad,
   Citizen,
@@ -25,7 +25,7 @@ import {
   VehicleValue,
 } from "@prisma/client";
 import { canManageInvariant } from "lib/auth/getSessionUser";
-import { Permissions, UsePermissions } from "middlewares/UsePermissions";
+import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { callInclude } from "controllers/dispatch/911-calls/Calls911Controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { sendDiscordWebhook } from "lib/discord/webhooks";

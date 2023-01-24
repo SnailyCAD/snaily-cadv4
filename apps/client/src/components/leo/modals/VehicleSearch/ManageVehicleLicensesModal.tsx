@@ -14,7 +14,7 @@ import { useVehicleSearch } from "state/search/vehicle-search-state";
 import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";
 import { useNameSearch } from "state/search/name-search-state";
 import type { PutSearchActionsVehicleLicensesData } from "@snailycad/types/api";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 export function ManageVehicleLicensesModal() {
   const common = useTranslations("Common");

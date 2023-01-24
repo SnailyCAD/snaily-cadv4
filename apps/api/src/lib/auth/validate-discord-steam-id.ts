@@ -1,6 +1,6 @@
 import type { REGISTER_SCHEMA } from "@snailycad/schemas";
-import { prisma } from "lib/prisma";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { prisma } from "lib/data/prisma";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import type { z } from "zod";
 
 export async function validateDiscordAndSteamId(data: z.infer<typeof REGISTER_SCHEMA>) {

@@ -1,0 +1,50 @@
+{
+  "Tow": {
+    "vehicleImpounded": "Vehicle Impounded",
+    "registrationStatus": "Registration Status",
+    "model": "Model",
+    "owner": "Owner"
+  },
+  "Bolos": {
+    "boloCreated": "Remark Created",
+    "viewMoreInfo": "View more information on the CAD.",
+    "type": "Type",
+    "name": "Name",
+    "plate": "Registration",
+    "model": "Model",
+    "color": "Color"
+  },
+  "Statuses": {
+    "statusChange": "Status Change",
+    "status": "Status",
+    "statusChangeDescription": "Unit {unit} has changed their status to {status}."
+  },
+  "PanicButton": {
+    "panicButton": "Panic Button",
+    "panicButtonDescription": "Unit {unit} has pressed the panic button."
+  },
+  "Calls": {
+    "callCreated": "999 Call Created",
+    "viewMoreInfo": "View more information on the CAD.",
+    "location": "Location",
+    "caller": "Caller",
+    "unknown": "Unknown",
+    "couldNotRenderDescription": "Could not render description."
+  },
+  "Records": {
+    "citizen": "Civilian",
+    "status": "Status",
+    "postal": "postal",
+    "recordType": "Record Type",
+    "ARREST_REPORT": "Arrest Report",
+    "WRITTEN_WARNING": "Caution",
+    "TICKET": "Fixed Penalty Notice",
+    "totalBail": "Total Bail",
+    "totalFineAmount": "Total Fine Amount",
+    "totalJailTime": "Total Sentence",
+    "newWarrantCreated": "New Warrant Created",
+    "newRecordCreated": "New Record Created",
+    "ACTIVE": "Active",
+    "INACTIVE": "Inactive"
+  }
+}

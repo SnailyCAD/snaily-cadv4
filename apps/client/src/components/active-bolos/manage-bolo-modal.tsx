@@ -16,7 +16,7 @@ import { classNames } from "lib/classNames";
 import { useSSRSafeId } from "@react-aria/ssr";
 import type { PostBolosData, PutBolosData } from "@snailycad/types/api";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 interface Props {
   onClose?(): void;

@@ -25,6 +25,7 @@ export const enum ModalIds {
   ManageCustomRole = "ManageCustomRoleModal",
   ManageRoles = "ManageRolesModal",
   PruneUsers = "PruneUsersModal",
+  ViewAuditLogData = "ViewAuditLogDataModal",
 
   ManageTowCall = "ManageTowCallModal",
   AssignToTowCall = "AssignToTowCallModal",
@@ -49,6 +50,7 @@ export const enum ModalIds {
 
   ManageVehicleFlags = "ManageVehicleFlagsModal",
   ManageCitizenFlags = "ManageCitizenFlagsModal",
+  ManageAddressFlags = "ManageAddressFlagsModal",
   ManageVehicleLicenses = "ManageVehicleLicensesModal",
   AddressSearch = "AddressSearchModal",
 
@@ -75,6 +77,8 @@ export const enum ModalIds {
   CustomFieldSearch = "CustomFieldSearchModal",
   AddAssignedUnit = "AddAssignedUnitModal",
   ImpoundVehicle = "ImpoundVehicleModal",
+  AddInvolvedUnit = "AddInvolvedUnitModal",
+  CreateTemporaryUnit = "CreateTemporaryUnit",
 
   SearchMedicalRecord = "SearchMedicalRecordModal",
   CreateMedicalRecord = "CreateMedicalRecordModal",

@@ -5,7 +5,14 @@ import { Form, Formik, FormikHelpers } from "formik";
 import { FormField } from "components/form/FormField";
 import { useValues } from "context/ValuesContext";
 import { Select } from "components/form/Select";
-import { Loader, Button, buttonVariants, TextField } from "@snailycad/ui";
+import {
+  Loader,
+  Button,
+  buttonVariants,
+  TextField,
+  AsyncListSearchField,
+  Item,
+} from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import Link from "next/link";
 import toast from "react-hot-toast";
@@ -20,6 +27,7 @@ import { QualificationsTable } from "../../QualificationsTable";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
+import type { User } from "@snailycad/types";
 
 interface Props {
   unit: GetManageUnitByIdData;
@@ -84,6 +92,9 @@ export function ManageUnitTab({ unit: data }: Props) {
 
   const divisions = isUnitOfficer(unit) ? unit.divisions : [];
   const INITIAL_VALUES = {
+    userId: unit.userId ?? "",
+    username: unit.user?.username ?? "",
+
     status: unit.statusId,
     department: getUnitDepartment(unit)?.id ?? "",
     division: "divisionId" in unit ? unit.divisionId : "",
@@ -100,8 +111,36 @@ export function ManageUnitTab({ unit: data }: Props) {
     <TabsContent value="manage-unit">
       {hasManagePermissions ? (
         <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-          {({ setFieldValue, handleChange, values, errors }) => (
+          {({ setFieldValue, handleChange, setValues, values, errors }) => (
             <Form>
+              {unit.isTemporary && !unit.user ? (
+                <AsyncListSearchField<User>
+                  autoFocus
+                  setValues={({ localValue, node }) => {
+                    setValues({
+                      ...values,
+                      userId: node?.value.id ?? values.userId,
+                      username: localValue ?? values.username,
+                    });
+                  }}
+                  localValue={values.username}
+                  errorMessage={errors.username}
+                  label="User"
+                  selectedKey={values.userId}
+                  fetchOptions={{
+                    apiPath: "/admin/manage/users/search",
+                    method: "POST",
+                    bodyKey: "username",
+                  }}
+                >
+                  {(item) => (
+                    <Item key={item.id} textValue={item.username}>
+                      <p>{item.username}</p>
+                    </Item>
+                  )}
+                </AsyncListSearchField>
+              ) : null}
+
               <ImageSelectInput setImage={setImage} image={image} />
 
               <FormField label={t("status")}>

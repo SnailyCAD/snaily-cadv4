@@ -131,8 +131,8 @@ export type DeleteManageBusinessesData = boolean;
 export interface GetManageCitizensData {
   totalCount: number;
   citizens: (Prisma.Citizen & {
-    gender: Types.Value;
-    ethnicity: Types.Value;
+    gender?: Types.Value | null;
+    ethnicity?: Types.Value | null;
     user: Types.User | null;
   })[];
 }
@@ -164,8 +164,8 @@ export interface GetManageRecordsLogsCitizenData {
   recordsLogs: (Prisma.RecordLog & {
     citizen: Prisma.Citizen & {
       user: Types.User | null;
-      ethnicity: Prisma.Value;
-      gender: Prisma.Value;
+      ethnicity?: Prisma.Value | null;
+      gender?: Prisma.Value | null;
     };
     warrant: Types.Warrant | null;
     records: Types.Record | null;
@@ -182,8 +182,8 @@ export type GetManageCitizenByIdData =
       vehicles: Omit<GetImportVehiclesData["vehicles"][number], "citizen">[];
       weapons: Omit<GetImportWeaponsData["weapons"][number], "citizen">[];
       user: Types.User | null;
-      ethnicity: Prisma.Value;
-      gender: Prisma.Value;
+      ethnicity?: Prisma.Value | null;
+      gender?: Prisma.Value | null;
       weaponLicense: Prisma.Value | null;
       driversLicense: Prisma.Value | null;
       pilotLicense: Prisma.Value | null;
@@ -212,7 +212,7 @@ export type PostCitizenRecordLogsData = Prisma.Record & {
  * @method PUT
  * @route /admin/manage/citizens/:id
  */
-export type PutManageCitizenByIdData = GetManageCitizensData["citizens"][number];
+export type PutManageCitizenByIdData = Types.BaseCitizen;
 
 /**
  * @method DELETE
@@ -473,3 +473,12 @@ export interface PostCustomRoleByIdData {
  * @route /admin/manage/users/roles/:id
  */
 export type PutManageUserByIdRolesData = GetManageUserByIdData;
+
+/**
+ * @method GET
+ * @route /admin/manage/cad-settings/audit-logs
+ */
+export interface GetAuditLogsData {
+  totalCount: number;
+  logs: Types.AuditLog[];
+}

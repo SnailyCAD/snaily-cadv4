@@ -203,16 +203,18 @@ export function AllUnitsTab({ units }: Props) {
                   <p className="inline-block">{makeUnitName(unit)}</p>
                 </div>
               ),
-              user: hasViewUsersPermissions ? (
-                <Link
-                  href={`/admin/manage/users/${unit.userId}`}
-                  className={`rounded-md transition-all p-1 px-1.5 ${buttonVariants.default}`}
-                >
-                  {unit.user.username}
-                </Link>
-              ) : (
-                unit.user.username
-              ),
+              user:
+                hasViewUsersPermissions && unit.user ? (
+                  <Link
+                    href={`/admin/manage/users/${unit.userId}`}
+                    className={`rounded-md transition-all p-1 px-1.5 ${buttonVariants.default}`}
+                  >
+                    {unit.user.username}
+                  </Link>
+                ) : (
+                  // todo: add information about temporary unit here
+                  unit.user?.username ?? t("Leo.temporaryUnit")
+                ),
               callsign: generateCallsign(unit),
               badgeNumber: unit.badgeNumber,
               department: formatOfficerDepartment(unit) ?? common("none"),

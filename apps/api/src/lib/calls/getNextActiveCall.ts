@@ -1,10 +1,11 @@
 import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@prisma/client";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 
 interface Options {
   callId: string;
   type: "assign" | "unassign";
   unit: Pick<EmsFdDeputy | Officer | CombinedLeoUnit, "id"> & { activeCallId?: string | null };
+  force?: boolean;
 }
 
 /**
@@ -12,6 +13,10 @@ interface Options {
  * once the call is ended, the new activeCall will be the latest call in the stack.
  */
 export async function getNextActiveCallId(options: Options) {
+  if (options.force) {
+    return options.callId;
+  }
+
   let nextActiveCallId =
     options.type === "assign" ? (options.unit.activeCallId ? undefined : options.callId) : null;
 
@@ -20,7 +25,8 @@ export async function getNextActiveCallId(options: Options) {
       // asc = assign to the call assigned to after the ended call
       orderBy: { createdAt: "asc" },
       where: {
-        NOT: { call911Id: options.callId },
+        // find the next call that is not the ended call
+        NOT: { call911: { id: options.callId, ended: true } },
         OR: [
           { officerId: options.unit.id },
           { combinedLeoId: options.unit.id },

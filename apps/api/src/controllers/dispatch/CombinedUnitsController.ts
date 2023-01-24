@@ -1,15 +1,17 @@
 import { Controller } from "@tsed/di";
 import { BodyParams, PathParams, UseBeforeEach } from "@tsed/common";
 import { ContentType, Description, Post } from "@tsed/schema";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { ShouldDoType } from "@prisma/client";
 import { Socket } from "services/socket-service";
-import { IsAuth } from "middlewares/IsAuth";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { IsAuth } from "middlewares/is-auth";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { combinedUnitProperties } from "lib/leo/activeOfficer";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 import type * as APITypes from "@snailycad/types/api";
+import { getNextActiveCallId } from "lib/calls/getNextActiveCall";
+import { getNextIncidentId } from "lib/incidents/get-next-incident-id";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -130,22 +132,47 @@ export class CombinedUnitsController {
       throw new NotFound("notFound");
     }
 
+    const onDutyStatusCode = await prisma.statusValue.findFirst({
+      where: {
+        shouldDo: ShouldDoType.SET_ON_DUTY,
+      },
+    });
+
+    const statusId = onDutyStatusCode?.id ?? unit.statusId ?? undefined;
+
+    const [nextCallId, nextIncidentId] = await Promise.all([
+      getNextActiveCallId({
+        callId: "null",
+        type: "unassign",
+        unit,
+      }),
+      getNextIncidentId({
+        incidentId: "null",
+        type: "unassign",
+        unit,
+      }),
+    ]);
+
     await prisma.$transaction(
       unit.officers.map(({ id }) => {
         return prisma.officer.update({
           where: { id },
-          data: { statusId: unit.statusId },
+          data: { statusId, activeCallId: nextCallId, activeIncidentId: nextIncidentId },
         });
       }),
     );
 
-    await prisma.assignedUnit.deleteMany({
-      where: { combinedLeoId: unitId },
-    });
-
-    await prisma.combinedLeoUnit.delete({
-      where: { id: unitId },
-    });
+    await prisma.$transaction([
+      prisma.assignedUnit.deleteMany({
+        where: { combinedLeoId: unitId },
+      }),
+      prisma.incidentInvolvedUnit.deleteMany({
+        where: { combinedLeoId: unitId },
+      }),
+      prisma.combinedLeoUnit.delete({
+        where: { id: unitId },
+      }),
+    ]);
 
     await this.socket.emitUpdateOfficerStatus();
 

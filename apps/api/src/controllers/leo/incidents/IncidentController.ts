@@ -2,20 +2,21 @@ import { Controller, UseBefore, UseBeforeEach } from "@tsed/common";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { NotFound, InternalServerError, BadRequest } from "@tsed/exceptions";
 import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { prisma } from "lib/prisma";
-import { IsAuth } from "middlewares/IsAuth";
+import { prisma } from "lib/data/prisma";
+import { IsAuth } from "middlewares/is-auth";
 import { leoProperties, unitProperties, _leoProperties } from "lib/leo/activeOfficer";
 import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
-import { ActiveOfficer } from "middlewares/ActiveOfficer";
-import { Officer, ShouldDoType, MiscCadSettings, CombinedLeoUnit } from "@prisma/client";
-import { validateSchema } from "lib/validateSchema";
+import { ActiveOfficer } from "middlewares/active-officer";
+import type { Officer, MiscCadSettings, CombinedLeoUnit } from "@prisma/client";
+import { validateSchema } from "lib/data/validate-schema";
 import { Socket } from "services/socket-service";
-import type { z } from "zod";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
-import { getFirstOfficerFromActiveOfficer, getPrismaNameActiveCallIncident } from "lib/leo/utils";
+import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
 import type * as APITypes from "@snailycad/types/api";
+import { getNextIncidentId } from "lib/incidents/get-next-incident-id";
+import { assignUnitsInvolvedToIncident } from "lib/incidents/handle-involved-units";
 
 export const assignedUnitsInclude = {
   include: {
@@ -138,9 +139,19 @@ export class IncidentController {
         situationCodeId: data.situationCodeId ?? null,
         postal: data.postal ?? null,
       },
+      include: {
+        unitsInvolved: true,
+      },
     });
 
-    await this.connectUnitsInvolved(incident.id, data, maxAssignmentsToIncidents);
+    const unitIds = (data.unitsInvolved ?? []) as string[];
+    if (data.unitsInvolved) {
+      await assignUnitsInvolvedToIncident({
+        incident,
+        maxAssignmentsToIncidents,
+        unitIds,
+      });
+    }
 
     const updated = await prisma.leoIncident.findUnique({
       where: { id: incident.id },
@@ -170,6 +181,7 @@ export class IncidentController {
     @PathParams("type") assignType: "assign" | "unassign",
     @PathParams("incidentId") incidentId: string,
     @BodyParams("unit") rawUnitId: string | null,
+    @QueryParams("force", Boolean) force = false,
   ): Promise<APITypes.PutAssignUnassignIncidentsData> {
     if (!rawUnitId) {
       throw new BadRequest("unitIsRequired");
@@ -203,7 +215,7 @@ export class IncidentController {
 
     if (assignType === "assign") {
       if (existing) {
-        throw new BadRequest("alreadyAssignedToCall");
+        throw new BadRequest("alreadyAssignedToIncident");
       }
 
       await prisma.incidentInvolvedUnit.create({
@@ -214,7 +226,7 @@ export class IncidentController {
       });
     } else {
       if (!existing) {
-        throw new BadRequest("notAssignedToCall");
+        throw new BadRequest("notAssignedToIncident");
       }
 
       await prisma.incidentInvolvedUnit.delete({
@@ -232,7 +244,14 @@ export class IncidentController {
     // @ts-expect-error method has same properties
     await prisma[prismaName].update({
       where: { id: unit.id },
-      data: { activeIncidentId: assignType === "assign" ? incidentId : null },
+      data: {
+        activeIncidentId: await getNextIncidentId({
+          incidentId: incident.id,
+          type: assignType,
+          unit,
+          force,
+        }),
+      },
     });
 
     await Promise.all([
@@ -248,7 +267,7 @@ export class IncidentController {
     });
 
     const normalizedIncident = officerOrDeputyToUnit(updated);
-    this.socket.emitUpdate911Call(normalizedIncident);
+    this.socket.emitUpdateActiveIncident(normalizedIncident);
 
     return normalizedIncident;
   }
@@ -276,23 +295,6 @@ export class IncidentController {
       throw new NotFound("notFound");
     }
 
-    await Promise.all([
-      ...incident.unitsInvolved.map(({ id }) =>
-        prisma.incidentInvolvedUnit.delete({ where: { id } }),
-      ),
-      ...incident.unitsInvolved.map(async (unit) => {
-        const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
-
-        if (!prismaName) return;
-
-        // @ts-expect-error method has the same properties
-        await prisma[prismaName].update({
-          where: { id: unitId },
-          data: { activeIncidentId: null },
-        });
-      }),
-    ]);
-
     await prisma.leoIncident.update({
       where: { id: incidentId },
       data: {
@@ -307,7 +309,14 @@ export class IncidentController {
       },
     });
 
-    await this.connectUnitsInvolved(incident.id, data, maxAssignmentsToIncidents);
+    const unitIds = (data.unitsInvolved ?? []) as string[];
+    if (data.unitsInvolved) {
+      await assignUnitsInvolvedToIncident({
+        incident,
+        maxAssignmentsToIncidents,
+        unitIds,
+      });
+    }
 
     const updated = await prisma.leoIncident.findUniqueOrThrow({
       where: { id: incident.id },
@@ -345,79 +354,5 @@ export class IncidentController {
     });
 
     return true;
-  }
-
-  private async connectUnitsInvolved(
-    incidentId: string,
-    data: Pick<z.infer<typeof LEO_INCIDENT_SCHEMA>, "unitsInvolved" | "isActive">,
-    maxAssignmentsToIncidents: number,
-  ) {
-    if (!data.unitsInvolved) return;
-
-    for (const unitId of data.unitsInvolved) {
-      if (typeof unitId !== "string") continue;
-
-      const { unit, type } = await findUnit(unitId, {
-        NOT: { status: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
-      });
-
-      if (!unit) {
-        continue;
-      }
-
-      const types = {
-        combined: "combinedLeoId",
-        leo: "officerId",
-        "ems-fd": "emsFdDeputyId",
-      } as const;
-
-      const assignmentCount = await prisma.incidentInvolvedUnit.count({
-        where: {
-          [types[type]]: unit.id,
-          incident: { isActive: true },
-        },
-      });
-
-      if (assignmentCount >= maxAssignmentsToIncidents) {
-        // skip this officer
-        continue;
-      }
-
-      const existing = await prisma.incidentInvolvedUnit.count({
-        where: {
-          [types[type]]: unit.id,
-          incidentId,
-        },
-      });
-
-      if (existing >= 1) {
-        continue;
-      }
-
-      const involvedUnit = await prisma.incidentInvolvedUnit.create({
-        data: {
-          incidentId,
-          [types[type]]: unit.id,
-        },
-      });
-
-      const prismaName =
-        type === "combined"
-          ? "combinedLeoUnit"
-          : (types[type].replace("Id", "") as "officer" | "emsFdDeputy");
-
-      // @ts-expect-error method has the same properties
-      await prisma[prismaName].update({
-        where: { id: unit.id },
-        data: { activeIncidentId: incidentId },
-      });
-
-      await prisma.leoIncident.update({
-        where: { id: incidentId },
-        data: {
-          unitsInvolved: { connect: { id: involvedUnit.id } },
-        },
-      });
-    }
   }
 }

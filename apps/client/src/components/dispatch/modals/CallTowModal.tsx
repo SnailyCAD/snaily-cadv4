@@ -19,39 +19,38 @@ import type { VehicleSearchResult } from "state/search/vehicle-search-state";
 import { Checkbox } from "components/form/inputs/Checkbox";
 import type { PostTowCallsData } from "@snailycad/types/api";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
-import shallow from "zustand/shallow";
+import { useUserOfficers } from "hooks/leo/use-get-user-officers";
+import { useGetUserDeputies } from "hooks/ems-fd/use-get-user-deputies";
+import { isUnitCombined } from "@snailycad/utils";
 
 interface Props {
   call: Full911Call | null;
 }
 
 export function DispatchCallTowModal({ call }: Props) {
-  const common = useTranslations("Common");
-  const t = useTranslations();
-  const { isOpen, closeModal, getPayload } = useModal();
-  const { state, execute } = useFetch();
-  const { activeOfficer, userOfficers } = useLeoState(
-    (state) => ({
-      activeOfficer: state.activeOfficer,
-      userOfficers: state.userOfficers,
-    }),
-    shallow,
-  );
-  const { activeDeputy, deputies } = useEmsFdState(
-    (state) => ({
-      activeDeputy: state.activeDeputy,
-      deputies: state.deputies,
-    }),
-    shallow,
-  );
   const router = useRouter();
-  const { impoundLot } = useValues();
 
   const isLeo = router.pathname === "/officer";
   const isDispatch = router.pathname === "/dispatch";
-  const citizensFrom = isLeo ? userOfficers : router.pathname === "/ems-fd" ? deputies : [];
+  const isEmsFd = router.pathname === "/ems-fd";
+
+  const common = useTranslations("Common");
+  const t = useTranslations();
+  const { isOpen, closeModal, getPayload } = useModal();
+  const { impoundLot } = useValues();
+  const { state, execute } = useFetch();
+
+  const { userOfficers, isLoading: officersLoading } = useUserOfficers({ enabled: isLeo });
+  const { userDeputies, isLoading: deputiesLoading } = useGetUserDeputies({ enabled: isEmsFd });
+  const isLoading = isLeo ? officersLoading : isEmsFd ? deputiesLoading : false;
+
+  const activeDeputy = useEmsFdState((state) => state.activeDeputy);
+  const activeOfficer = useLeoState((state) => state.activeOfficer);
+
+  const activeUnit = isLeo ? activeOfficer : isEmsFd ? activeDeputy : null;
+
+  const citizensFrom = isLeo ? userOfficers : isEmsFd ? userDeputies : [];
   const citizens = [...citizensFrom].map((v) => v.citizen);
-  const unit = isLeo ? activeOfficer : router.pathname === "/ems-fd" ? activeDeputy : null;
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const payload = getPayload<{ call911Id: string }>(ModalIds.ManageTowCall);
@@ -76,8 +75,7 @@ export function DispatchCallTowModal({ call }: Props) {
   const INITIAL_VALUES = {
     location: call?.location ?? "",
     postal: call?.postal ?? "",
-    // @ts-expect-error TS should allow this tbh!
-    creatorId: unit?.citizenId ?? null,
+    creatorId: activeUnit && isUnitCombined(activeUnit) ? null : activeUnit?.citizenId ?? null,
     description: call?.description ?? "",
     descriptionData: call?.descriptionData ?? null,
     callCountyService: false,
@@ -98,9 +96,10 @@ export function DispatchCallTowModal({ call }: Props) {
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, setValues, setFieldValue, values, isValid, errors }) => (
           <Form>
-            {unit ? (
+            {activeUnit ? (
               <FormField errorMessage={errors.creatorId as string} label={t("Calls.citizen")}>
                 <Select
+                  isLoading={isLoading}
                   disabled
                   name="creatorId"
                   onChange={handleChange}

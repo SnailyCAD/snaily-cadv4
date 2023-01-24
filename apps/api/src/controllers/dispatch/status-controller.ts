@@ -18,21 +18,21 @@ import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { ContentType, Description, Put } from "@tsed/schema";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/activeOfficer";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { Socket } from "services/socket-service";
-import { IsAuth } from "middlewares/IsAuth";
-import { validateSchema } from "lib/validateSchema";
+import { IsAuth } from "middlewares/is-auth";
+import { validateSchema } from "lib/data/validate-schema";
 import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { findUnit } from "lib/leo/findUnit";
 import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 import type * as APITypes from "@snailycad/types/api";
 import { createWebhookData } from "lib/dispatch/webhooks";
 import { createCallEventOnStatusChange } from "lib/dispatch/createCallEventOnStatusChange";
-import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
+import { ExtendedNotFound } from "src/exceptions/extended-not-found";
 import { isUnitOfficer } from "@snailycad/utils";
 import { isFeatureEnabled } from "lib/cad";
 import { handlePanicButtonPressed } from "lib/leo/send-panic-button-webhook";
@@ -196,12 +196,12 @@ export class StatusController {
       if (type === "leo") {
         await prisma.officer.updateMany({
           where: { userId: user.id },
-          data: { activeCallId: null, statusId: null },
+          data: { activeCallId: null, activeIncidentId: null, statusId: null },
         });
       } else if (type === "ems-fd") {
         await prisma.emsFdDeputy.updateMany({
           where: { userId: user.id },
-          data: { statusId: null, activeCallId: null },
+          data: { statusId: null, activeCallId: null, activeIncidentId: null },
         });
       }
     }

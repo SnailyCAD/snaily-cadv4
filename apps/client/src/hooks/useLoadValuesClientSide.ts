@@ -21,6 +21,8 @@ export function useLoadValuesClientSide(options: Options) {
     queryKey: ["valueTypes", options.valueTypes],
     queryFn: fetchValues,
     enabled: isEnabled,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   function transformValueTypesToString() {

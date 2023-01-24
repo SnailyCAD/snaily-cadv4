@@ -24,6 +24,16 @@ export const CREATE_OFFICER_SCHEMA = z.object({
   callsigns: z.record(INDIVIDUAL_CALLSIGN_SCHEMA).nullish(),
 });
 
+export const CREATE_TEMPORARY_OFFICER_SCHEMA = CREATE_OFFICER_SCHEMA.omit({
+  citizenId: true,
+  image: true,
+  rank: true,
+}).extend({
+  name: z.string().min(2).max(255),
+  surname: z.string().min(2).max(255),
+  identifiers: z.array(z.string()).nullish(),
+});
+
 export const CREATE_CITIZEN_WITH_OFFICER_SCHEMA = CREATE_OFFICER_SCHEMA.omit({
   citizenId: true,
   image: true,
@@ -42,6 +52,7 @@ export const UPDATE_UNIT_SCHEMA = z.object({
   badgeNumber: z.number().min(1).optional(),
   callsigns: z.record(INDIVIDUAL_CALLSIGN_SCHEMA).nullish(),
   image: z.any().or(z.string()).optional(),
+  userId: z.string().nullish(),
 });
 
 export const UPDATE_UNIT_CALLSIGN_SCHEMA = z.object({

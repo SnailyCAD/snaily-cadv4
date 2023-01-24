@@ -22,7 +22,7 @@ import { RegisterVehicleModal } from "components/citizen/vehicles/modals/Registe
 import type { PostMarkStolenData } from "@snailycad/types/api";
 import { ImpoundVehicleModal } from "./VehicleSearch/ImpoundVehicleModal";
 import { AllowImpoundedVehicleCheckoutModal } from "./AllowImpoundedVehicleCheckoutModal";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 interface Props {
   id?: ModalIds.VehicleSearch | ModalIds.VehicleSearchWithinName;

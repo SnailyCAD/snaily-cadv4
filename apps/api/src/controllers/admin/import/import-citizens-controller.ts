@@ -1,17 +1,27 @@
 import { Controller } from "@tsed/di";
-import { Post, Description, AcceptMime, ContentType } from "@tsed/schema";
-import { prisma } from "lib/prisma";
-import { BodyParams, MultipartFile, PlatformMulterFile, UseBeforeEach } from "@tsed/common";
-import { IsAuth } from "middlewares/IsAuth";
+import { Get, Post, Description, ContentType } from "@tsed/schema";
+import { Prisma } from "@prisma/client";
+import { prisma } from "lib/data/prisma";
+import {
+  QueryParams,
+  BodyParams,
+  MultipartFile,
+  PlatformMulterFile,
+  UseBeforeEach,
+} from "@tsed/common";
+import { IsAuth } from "middlewares/is-auth";
 import { parseImportFile } from "utils/file";
-import { validateSchema } from "lib/validateSchema";
-import { generateString } from "utils/generateString";
+import { validateSchema } from "lib/data/validate-schema";
+import { generateString } from "utils/generate-string";
 import { IMPORT_CITIZENS_ARR } from "@snailycad/schemas/dist/admin/import/citizens";
 import { importVehiclesHandler } from "./import-vehicles-controller";
 import { importWeaponsHandler } from "./import-weapons-controller";
 import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
-import { manyToManyHelper } from "utils/manyToMany";
+import { manyToManyHelper } from "lib/data/many-to-many";
 import type * as APITypes from "@snailycad/types/api";
+import { Permissions, UsePermissions } from "middlewares/use-permissions";
+import { Rank } from "@snailycad/types";
+import { citizenInclude } from "controllers/citizen/CitizenController";
 
 @Controller("/admin/import/citizens")
 @UseBeforeEach(IsAuth)
@@ -19,7 +29,10 @@ import type * as APITypes from "@snailycad/types/api";
 export class ImportCitizensController {
   @Post("/file")
   @Description("Import citizens in the CAD via file upload")
-  @AcceptMime("")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ImportCitizens, Permissions.ManageCitizens],
+  })
   async importCitizens(
     @MultipartFile("file") file: PlatformMulterFile,
   ): Promise<APITypes.PostImportCitizensData> {
@@ -29,10 +42,79 @@ export class ImportCitizensController {
 
   @Post("/")
   @Description("Import citizens in the CAD via body data")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ImportCitizens, Permissions.ManageCitizens],
+  })
   async importCitizensViaBodyData(
     @BodyParams() body: any,
   ): Promise<APITypes.PostImportCitizensData> {
     return this.importCitizensHandler(body);
+  }
+
+  @Get("/random")
+  @Description("Get a random citizen")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ImportCitizens, Permissions.ManageCitizens],
+  })
+  async getRandomCitizen(@QueryParams("userRegisteredOnly", Boolean) userRegisteredOnly?: boolean) {
+    const where: Prisma.CitizenWhereInput = {};
+    if (typeof userRegisteredOnly === "boolean") {
+      where.userId = userRegisteredOnly ? { not: { equals: null } } : { equals: null };
+    }
+
+    const citizenCount = await prisma.citizen.count({ where });
+    const randomSkip = Math.floor(Math.random() * citizenCount) + 0;
+
+    const [citizen] = await prisma.citizen.findMany({
+      where,
+      skip: randomSkip,
+      take: 1,
+      include: citizenInclude,
+    });
+
+    return citizen ?? null;
+  }
+
+  @Get("/citizen-ids")
+  @Description("Get all citizen IDs in the CAD")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ImportCitizens, Permissions.ManageCitizens],
+  })
+  async getCitizenIds(
+    @QueryParams("query", String) query = "",
+    @QueryParams("userRegisteredOnly", Boolean) userRegisteredOnly?: boolean,
+  ) {
+    const where: Prisma.CitizenWhereInput | undefined = {};
+
+    if (query) {
+      const [name, surname] = query.toString().toLowerCase().split(/ +/g);
+
+      where.OR = [
+        { id: query },
+        {
+          name: { contains: name, mode: Prisma.QueryMode.insensitive },
+          surname: { contains: surname, mode: Prisma.QueryMode.insensitive },
+        },
+        {
+          name: { equals: surname, mode: Prisma.QueryMode.insensitive },
+          surname: { equals: name, mode: Prisma.QueryMode.insensitive },
+        },
+      ];
+    }
+
+    if (typeof userRegisteredOnly === "boolean") {
+      where.userId = userRegisteredOnly ? { not: { equals: null } } : { equals: null };
+    }
+
+    const ids = await prisma.citizen.findMany({
+      where,
+      select: { id: true },
+    });
+
+    return ids;
   }
 
   async importCitizensHandler(body: unknown) {

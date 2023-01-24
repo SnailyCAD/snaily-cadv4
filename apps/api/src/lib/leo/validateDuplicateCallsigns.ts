@@ -1,5 +1,5 @@
 import { BadRequest } from "@tsed/exceptions";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 
 interface Options {
   unitId?: string;

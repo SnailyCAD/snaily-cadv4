@@ -5,10 +5,12 @@ import { NotFound } from "@tsed/exceptions";
 import { userProperties } from "lib/auth/getSessionUser";
 import { isFeatureEnabled } from "lib/cad";
 import { leoProperties } from "lib/leo/activeOfficer";
-import { prisma } from "lib/prisma";
-import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
+import { prisma } from "lib/data/prisma";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { ExtendedNotFound } from "src/exceptions/extended-not-found";
 import type { z } from "zod";
-import { validateRecordData } from "./validateRecordData";
+import { validateRecordData } from "./validate-record-data";
+import { captureException } from "@sentry/node";
 
 interface UpsertRecordOptions {
   data: z.infer<typeof CREATE_TICKET_SCHEMA>;
@@ -121,14 +123,40 @@ export async function upsertRecord(options: UpsertRecordOptions) {
     });
   }
 
-  const validatedViolations = await Promise.all(
+  const validatedViolationsResults = await Promise.allSettled(
     options.data.violations.map((v) =>
       validateRecordData({ ...v, ticketId: ticket.id, cad: options.cad }),
     ),
   );
+  const fullFilledValidatedViolations = validatedViolationsResults
+    .filter((v) => v.status === "fulfilled")
+    // @ts-expect-error - we know it's fulfilled
+    .map((v) => v.value) as Awaited<ReturnType<typeof validateRecordData>>[];
+
+  const failedValidatedViolations = validatedViolationsResults
+    .filter((v) => v.status === "rejected")
+    // @ts-expect-error - we know it's rejected
+    .map((v) => v.reason);
+
+  if (failedValidatedViolations.length >= 1) {
+    captureException({
+      message: "Unable to validate violations",
+      violations: JSON.stringify(failedValidatedViolations),
+    });
+  }
+
+  const errors = fullFilledValidatedViolations.reduce(
+    (prev, current) => ({ ...prev, ...current.errors }),
+    {},
+  );
+
+  if (Object.keys(errors).length >= 1) {
+    await prisma.record.delete({ where: { id: ticket.id } });
+    throw new ExtendedBadRequest(errors);
+  }
 
   const violations = await prisma.$transaction(
-    validatedViolations.map((item) => {
+    fullFilledValidatedViolations.map((item) => {
       return prisma.violation.create({
         data: {
           counts: item.counts,

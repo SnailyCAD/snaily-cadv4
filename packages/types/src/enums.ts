@@ -40,6 +40,7 @@ export const Feature = {
   LICENSE_EXAMS: "LICENSE_EXAMS",
   CITIZEN_CREATION_RECORDS: "CITIZEN_CREATION_RECORDS",
   BUREAU_OF_FIREARMS: "BUREAU_OF_FIREARMS",
+  CALL_911_APPROVAL: "CALL_911_APPROVAL",
 } as const;
 
 export type Feature = typeof Feature[keyof typeof Feature];
@@ -132,6 +133,7 @@ export const ValueType = {
   CALL_TYPE: "CALL_TYPE",
   ADDRESS: "ADDRESS",
   EMERGENCY_VEHICLE: "EMERGENCY_VEHICLE",
+  ADDRESS_FLAG: "ADDRESS_FLAG",
 } as const;
 
 export type ValueType = typeof ValueType[keyof typeof ValueType];
@@ -185,6 +187,7 @@ export const ShouldDoType = {
   PANIC_BUTTON: "PANIC_BUTTON",
   EN_ROUTE: "EN_ROUTE",
   ON_SCENE: "ON_SCENE",
+  UNAVAILABLE: "UNAVAILABLE",
 } as const;
 
 export type ShouldDoType = typeof ShouldDoType[keyof typeof ShouldDoType];

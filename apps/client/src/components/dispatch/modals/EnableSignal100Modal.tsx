@@ -9,7 +9,7 @@ import { useCall911State } from "state/dispatch/call-911-state";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 export function EnableSignal100Modal() {
   const { isOpen, closeModal } = useModal();

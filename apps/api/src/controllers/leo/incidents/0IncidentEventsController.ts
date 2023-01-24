@@ -2,13 +2,13 @@ import { Controller, UseBeforeEach } from "@tsed/common";
 import { ContentType, Delete, Description, Post, Put } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { BodyParams, PathParams } from "@tsed/platform-params";
-import { prisma } from "lib/prisma";
-import { IsAuth } from "middlewares/IsAuth";
+import { prisma } from "lib/data/prisma";
+import { IsAuth } from "middlewares/is-auth";
 import { CALL_911_EVENT_SCHEMA } from "@snailycad/schemas";
-import { validateSchema } from "lib/validateSchema";
+import { validateSchema } from "lib/data/validate-schema";
 import { Socket } from "services/socket-service";
 import { incidentInclude } from "./IncidentController";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import type * as APITypes from "@snailycad/types/api";
 
@@ -38,7 +38,7 @@ export class IncidentEventsController {
       include: incidentInclude,
     });
 
-    if (!incident || !incident.isActive) {
+    if (!incident?.isActive) {
       throw new NotFound("incidentNotFound");
     }
 
@@ -77,7 +77,7 @@ export class IncidentEventsController {
       include: incidentInclude,
     });
 
-    if (!incident || !incident.isActive) {
+    if (!incident?.isActive) {
       throw new NotFound("incidentNotFound");
     }
 
@@ -132,7 +132,7 @@ export class IncidentEventsController {
       include: incidentInclude,
     });
 
-    if (!incident || !incident.isActive) {
+    if (!incident?.isActive) {
       throw new NotFound("incidentNotFound");
     }
 

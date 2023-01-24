@@ -17,7 +17,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 import { Draggable } from "components/shared/dnd/Draggable";
 import { DndActions } from "types/DndActions";
-import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { classNames } from "lib/classNames";
 import { ActiveUnitsQualificationsCard } from "components/leo/qualifications/ActiveUnitsQualificationsCard";
 import type { PostDispatchStatusUnmergeUnitById } from "@snailycad/types/api";
@@ -54,7 +54,7 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
     .filter((v) => v.type === "STATUS_CODE")
     .map((v) => ({
       name: v.value.value,
-      onPress: () => setStatus(officer.id, v),
+      onClick: () => setStatus(officer.id, v),
       "aria-label": `Set status to ${v.value.value}`,
       title: `Set status to ${v.value.value}`,
     }));

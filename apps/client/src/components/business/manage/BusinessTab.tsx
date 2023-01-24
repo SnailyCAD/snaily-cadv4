@@ -14,7 +14,7 @@ import { useRouter } from "next/router";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import type { DeleteBusinessByIdData, PutBusinessByIdData } from "@snailycad/types/api";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 export function ManageBusinessTab() {
   const { state, execute } = useFetch();

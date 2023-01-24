@@ -53,6 +53,7 @@
     "officer": "Officier",
     "createWithOfficer": "Créer avec Officier",
     "previousRecords": "Registres Précédents",
+    "addressFlags": "Signalements d'adresse",
     "createPreviousRecordsStepDescription": "Ici, vous pouvez éventuellement ajouter les registres antérieurs de ce citoyen. Ceci est utile lorsqu'un citoyen a déjà été arrêté.",
     "alert_markCitizenDeceased": "Êtes-vous sûr de vouloir tuer <span>{citizen}</span> ? Seuls les EMS/FD pourront le faire revivre.",
     "alert_deleteCitizen": "Êtes-vous sûr de vouloir supprimer <span>{citizen}</span> ? Cette action ne peut être annulée."

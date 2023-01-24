@@ -15,7 +15,7 @@ import { TabsContent } from "components/shared/TabList";
 import type { DeleteRecordsByIdData, PutWarrantsData } from "@snailycad/types/api";
 import { Permissions, usePermission } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 const values = [
   { label: "Inactive", value: WarrantStatus.INACTIVE },

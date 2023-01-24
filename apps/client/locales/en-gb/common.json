@@ -60,7 +60,13 @@
     "startTyping": "Start typing...",
     "searching": "Searching...",
     "information": "Information",
-    "showingXResults": "Showing <span>{amount}</span> result(s)"
+    "showingXResults": "Showing <span>{amount}</span> result(s)",
+    "revoke": "Revoke",
+    "ok": "OK",
+    "text-color": "Text Colour",
+    "background-color": "Background Colour",
+    "url": "URL",
+    "supportedImages": "See supported image types and URLs"
   },
   "Nav": {
     "citizen": "Civilian",
@@ -169,6 +175,7 @@
     "socialSecurityNumberTaken": "This national insurance number is already in use.",
     "citizenNotAllowedToEditLicenses": "You as a civilian are not allowed to edit your own licenses. Please contact an officer to manage your licenses.",
     "vehicleIsImpounded": "This vehicle is impounded, you cannot edit or delete until it's released from the impound lot.",
-    "featureNotEnabled": "This feature is not enabled. ({feature})"
+    "featureNotEnabled": "This feature is not enabled. ({feature})",
+    "errorUploadingImage": "Unable to upload your image at this moment. Please try again later. If this keeps reoccurring, contact support."
   }
 }

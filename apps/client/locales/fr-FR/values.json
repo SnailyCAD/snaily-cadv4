@@ -25,7 +25,8 @@
     "isDisabled": "Désactivé",
     "county": "Comté",
     "deletedSelectedValues": "{deleted} éléments supprimés. {failed} échoués.",
-    "failedDeleteValues": "Échec de la suppression de <span>{value}</span>",
+    "failedDeleteValue": "Échec de la suppression de <span>{value}</span>",
+    "cacheTip": "Les valeurs sont mises en cache pendant 24 heures. Cela signifie que les valeurs mises à jours, ajoutées ou supprimées ne seront pas visibles immédiatement. Cela peut prendre jusqu'à 24 heures pour que les changements soient effectifs.",
     "alert_deleteValue": "Êtes-vous sûr de vouloir supprimer <span>{value}</span> ? Cette action ne peut être annulée.",
     "alert_deleteSelectedValues": "Êtes-vous sûr de vouloir supprimer {length} élément(s) ? Cette action ne peut être annulée."
   },
@@ -157,5 +158,11 @@
     "ADD": "Ajouter Véhicule d'Urgence",
     "DELETE": "Supprimer Véhicule d'Urgence",
     "EDIT": "Modifier Véhicule d'Urgence"
+  },
+  "ADDRESS_FLAG": {
+    "MANAGE": "Gérer Signalements Adresses",
+    "ADD": "Ajouter Signalement",
+    "DELETE": "Supprimer Signalement",
+    "EDIT": "Modifier Signalement"
   }
 }

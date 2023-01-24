@@ -5,7 +5,7 @@ import type { Req, Context } from "@tsed/common";
 import { BadRequest, Forbidden } from "@tsed/exceptions";
 import { unitProperties } from "lib/leo/activeOfficer";
 import { getInactivityFilter } from "./leo/utils";
-import { prisma } from "./prisma";
+import { prisma } from "./data/prisma";
 
 interface GetActiveDeputyOptions {
   ctx: Context;
@@ -22,16 +22,16 @@ export async function getActiveDeputy(options: GetActiveDeputyOptions) {
     fallback: (u) => u.rank !== Rank.USER,
   });
 
-  if (isAdmin) {
-    return null;
-  }
-
   if (options.req?.headers["is-from-dispatch"]?.toString() === "true") {
     const hasDispatchPermissions = hasPermission({
       userToCheck: options.user,
       permissionsToCheck: defaultPermissions.defaultDispatchPermissions,
       fallback: (user) => user.isDispatch,
     });
+
+    if (isAdmin && !hasDispatchPermissions) {
+      isDispatch = true;
+    }
 
     if (!hasDispatchPermissions) {
       throw new Forbidden("Must be dispatch to use this header.");
@@ -45,8 +45,12 @@ export async function getActiveDeputy(options: GetActiveDeputyOptions) {
       fallback: (user) => user.isEmsFd,
     });
 
+    if (isAdmin && !hasEmsFdPermissions) {
+      isDispatch = true;
+    }
+
     if (!hasEmsFdPermissions) {
-      throw new Forbidden("Invalid EMS-FD Permissions");
+      throw new Forbidden("Invalid Permissions");
     }
   }
 

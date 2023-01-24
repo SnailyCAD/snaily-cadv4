@@ -1,6 +1,6 @@
 import { cad, CadFeature, Feature, PenalCode } from "@prisma/client";
 import type { PENAL_CODE_SCHEMA } from "@snailycad/schemas";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import type { z } from "zod";
 import { isFeatureEnabled } from "lib/cad";
 

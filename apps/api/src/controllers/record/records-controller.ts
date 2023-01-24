@@ -6,11 +6,11 @@ import {
 } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { UseBeforeEach, UseBefore } from "@tsed/platform-middlewares";
-import { ActiveOfficer } from "middlewares/ActiveOfficer";
+import { ActiveOfficer } from "middlewares/active-officer";
 import { Controller } from "@tsed/di";
-import { IsAuth } from "middlewares/IsAuth";
+import { IsAuth } from "middlewares/is-auth";
 import {
   Citizen,
   Feature,
@@ -24,16 +24,16 @@ import {
   Officer,
   User,
 } from "@prisma/client";
-import { validateSchema } from "lib/validateSchema";
+import { validateSchema } from "lib/data/validate-schema";
 import { combinedUnitProperties, leoProperties } from "lib/leo/activeOfficer";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { isFeatureEnabled } from "lib/cad";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { getFirstOfficerFromActiveOfficer, getInactivityFilter } from "lib/leo/utils";
 import type * as APITypes from "@snailycad/types/api";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { Socket } from "services/socket-service";
-import { assignUnitsToWarrant } from "lib/records/assignToWarrant";
+import { assignUnitsToWarrant } from "lib/records/assign-units-to-warrant";
 import type { cad } from "@snailycad/types";
 import { userProperties } from "lib/auth/getSessionUser";
 import { upsertRecord } from "lib/records/upsert-record";
@@ -59,9 +59,6 @@ export class RecordsController {
   @IsFeatureEnabled({ feature: Feature.ACTIVE_WARRANTS })
   async getActiveWarrants(@Context("cad") cad: cad) {
     const inactivityFilter = getInactivityFilter(cad, "activeWarrantsInactivityTimeout");
-    if (inactivityFilter) {
-      this.endInactiveWarrants(inactivityFilter.updatedAt);
-    }
 
     const activeWarrants = await prisma.warrant.findMany({
       orderBy: { updatedAt: "desc" },
@@ -305,13 +302,6 @@ export class RecordsController {
     });
 
     return true;
-  }
-
-  private async endInactiveWarrants(updatedAt: Date) {
-    await prisma.warrant.updateMany({
-      where: { updatedAt: { not: { gte: updatedAt } } },
-      data: { status: "INACTIVE" },
-    });
   }
 
   private async handleDiscordWebhook(

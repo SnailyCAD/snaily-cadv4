@@ -3,13 +3,13 @@ import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { CREATE_BOLO_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { prisma } from "lib/prisma";
-import { Use, UseBeforeEach } from "@tsed/platform-middlewares";
-import { IsAuth } from "middlewares/IsAuth";
-import { ActiveOfficer } from "middlewares/ActiveOfficer";
+import { prisma } from "lib/data/prisma";
+import { Use, UseAfter, UseBeforeEach } from "@tsed/platform-middlewares";
+import { IsAuth } from "middlewares/is-auth";
+import { ActiveOfficer } from "middlewares/active-officer";
 import { Socket } from "services/socket-service";
 import { leoProperties } from "lib/leo/activeOfficer";
-import { validateSchema } from "lib/validateSchema";
+import { validateSchema } from "lib/data/validate-schema";
 import {
   Bolo,
   BoloType,
@@ -18,13 +18,14 @@ import {
   Officer,
   Prisma,
 } from "@prisma/client";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type { APIEmbed } from "discord-api-types/v10";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { getFirstOfficerFromActiveOfficer, getInactivityFilter } from "lib/leo/utils";
 import type * as APITypes from "@snailycad/types/api";
 import type { cad } from "@snailycad/types";
 import { getTranslator } from "utils/get-translator";
+import { HandleInactivity } from "middlewares/handle-inactivity";
 
 @Controller("/bolos")
 @UseBeforeEach(IsAuth)
@@ -40,6 +41,7 @@ export class BoloController {
     fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
+  @UseAfter(HandleInactivity)
   @Description("Get all the bolos")
   async getBolos(
     @Context("cad") cad: cad,
@@ -49,9 +51,6 @@ export class BoloController {
     @QueryParams("type", String) boloType?: BoloType,
   ): Promise<APITypes.GetBolosData> {
     const inactivityFilter = getInactivityFilter(cad, "boloInactivityTimeout");
-    if (inactivityFilter) {
-      this.endInactiveBolos(inactivityFilter.updatedAt);
-    }
 
     const where: Prisma.BoloWhereInput = query
       ? {
@@ -269,12 +268,6 @@ export class BoloController {
     }
 
     return bolo ?? true;
-  }
-
-  private async endInactiveBolos(updatedAt: Date) {
-    await prisma.bolo.deleteMany({
-      where: { updatedAt: { not: { gte: updatedAt } } },
-    });
   }
 }
 

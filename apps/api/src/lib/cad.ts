@@ -1,5 +1,5 @@
 import type { AutoSetUserProperties, cad, CadFeature, Feature } from "@prisma/client";
-import { prisma } from "./prisma";
+import { prisma } from "./data/prisma";
 
 interface Options {
   ownerId: string | null;

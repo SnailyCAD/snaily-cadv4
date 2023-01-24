@@ -114,6 +114,7 @@ export function AddressPostalSelect(props: Props) {
       )}
 
       <AsyncListSearchField<AddressValue>
+        menuClassName="min-w-[350px] right-0"
         isDisabled={props.isDisabled}
         selectedKey={selectedPostal}
         allowsCustomValue

@@ -19,7 +19,7 @@ import { Permissions, usePermission } from "hooks/usePermission";
 import { ViolationsColumn } from "components/leo/ViolationsColumn";
 import type { DeleteRecordsByIdData } from "@snailycad/types/api";
 import { Status } from "components/shared/Status";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 import { RecordsCaseNumberColumn } from "components/leo/records-case-number-column";
 
 export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitizen?: boolean }) {

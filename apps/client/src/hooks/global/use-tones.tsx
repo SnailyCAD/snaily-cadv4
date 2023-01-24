@@ -8,14 +8,19 @@ import { ActiveTone, ActiveToneType } from "@snailycad/types";
 import { useQuery } from "@tanstack/react-query";
 import type { GETDispatchTonesData } from "@snailycad/types/api";
 import useFetch from "lib/useFetch";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 const LEO_TONE_SRC = "/sounds/leo-tone.mp3";
 const EMS_FD_TONE_SRC = "/sounds/ems-fd-tone.mp3";
 
 export function useGetActiveTone(type?: ActiveToneType) {
+  const { TONES } = useFeatureEnabled();
   const { execute } = useFetch();
 
   const { data } = useQuery({
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    enabled: !!TONES,
     queryKey: ["active-tones", type],
     queryFn: async () => {
       const { json } = await execute<GETDispatchTonesData>({

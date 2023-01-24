@@ -1,3 +1,4 @@
+import * as React from "react";
 import type { AppProps } from "next/app";
 import { SSRProvider } from "@react-aria/ssr";
 import { NextIntlProvider } from "next-intl";
@@ -6,6 +7,7 @@ import { ValuesProvider } from "context/ValuesContext";
 import { CitizenProvider } from "context/CitizenContext";
 import "styles/globals.scss";
 import "styles/fonts.scss";
+import "styles/nprogress.scss";
 import { SocketProvider } from "@casper124578/use-socket.io";
 import { getAPIUrl } from "@snailycad/utils/api-url";
 import { setTag, setTags } from "@sentry/nextjs";
@@ -14,6 +16,7 @@ import { useMounted } from "@casper124578/useful/hooks/useMounted";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import NProgress from "nprogress";
 
 const ReauthorizeSessionModal = dynamic(
   async () =>
@@ -31,7 +34,23 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
   const url = `${protocol}//${host}`;
   const user = pageProps.session as User | null;
   const locale = user?.locale ?? router.locale ?? "en";
+
   trySetUserTimezone();
+
+  React.useEffect(() => {
+    const handleRouteStart = () => NProgress.start();
+    const handleRouteDone = () => NProgress.done();
+
+    router.events.on("routeChangeStart", handleRouteStart);
+    router.events.on("routeChangeComplete", handleRouteDone);
+    router.events.on("routeChangeError", handleRouteDone);
+
+    return () => {
+      router.events.off("routeChangeStart", handleRouteStart);
+      router.events.off("routeChangeComplete", handleRouteDone);
+      router.events.off("routeChangeError", handleRouteDone);
+    };
+  }, [router.events]);
 
   const cad = pageProps?.cad as cad | null;
   if (cad?.version) {
@@ -42,10 +61,12 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
     });
   }
 
+  const isServer = typeof window === "undefined";
+
   return (
     <QueryClientProvider client={queryClient}>
       <SSRProvider>
-        <SocketProvider uri={url} options={{ reconnectionDelay: 10_000 }}>
+        <SocketProvider uri={url} options={{ reconnectionDelay: 10_000, autoConnect: !isServer }}>
           <AuthProvider initialData={pageProps}>
             <NextIntlProvider
               defaultTranslationValues={{

@@ -1,17 +1,17 @@
 import { Controller } from "@tsed/di";
 import { Context } from "@tsed/platform-params";
 import { ContentType, Post } from "@tsed/schema";
-import { prisma } from "lib/prisma";
-import { IsAuth } from "middlewares/IsAuth";
+import { prisma } from "lib/data/prisma";
+import { IsAuth } from "middlewares/is-auth";
 import { BadRequest } from "@tsed/exceptions";
 import { MultipartFile, PlatformMulterFile, UseBefore } from "@tsed/common";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import fs from "node:fs/promises";
 import { cad, Rank } from "@prisma/client";
 import { Permissions } from "@snailycad/permissions";
-import { UsePermissions } from "middlewares/UsePermissions";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import { getImageWebPPath } from "utils/images/image";
+import { UsePermissions } from "middlewares/use-permissions";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { getImageWebPPath } from "lib/images/get-image-webp-path";
 
 @Controller("/admin/manage/cad-settings/image")
 @ContentType("application/json")

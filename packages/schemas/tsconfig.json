@@ -8,5 +8,6 @@
     "declaration": true,
     "skipLibCheck": true,
     "importHelpers": true
-  }
+  },
+  "exclude": ["dist", "node_modules"]
 }

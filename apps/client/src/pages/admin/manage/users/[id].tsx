@@ -23,25 +23,36 @@ import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
-import { ManagePermissionsModal } from "components/admin/manage/users/ManagePermissionsModal";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { usePermission, Permissions } from "hooks/usePermission";
 import dynamic from "next/dynamic";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { AlertModal } from "components/modal/AlertModal";
-import { ApiTokenArea } from "components/admin/manage/users/ApiTokenArea";
+import { ApiTokenArea } from "components/admin/manage/users/api-token-area";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { classNames } from "lib/classNames";
-import { ManageRolesModal } from "components/admin/manage/users/ManageRolesModal";
 import type { GetManageUserByIdData, PutManageUserByIdData } from "@snailycad/types/api";
 
 const DangerZone = dynamic(
-  async () => (await import("components/admin/manage/users/DangerZone")).DangerZone,
+  async () => (await import("components/admin/manage/users/danger-zone")).DangerZone,
 );
 
 const BanArea = dynamic(
-  async () => (await import("components/admin/manage/users/BanArea")).BanArea,
+  async () => (await import("components/admin/manage/users/ban-area")).BanArea,
+);
+
+const ManageRolesModal = dynamic(
+  async () =>
+    (await import("components/admin/manage/users/modals/manage-roles-modal")).ManageRolesModal,
+  { ssr: false },
+);
+
+const ManagePermissionsModal = dynamic(
+  async () =>
+    (await import("components/admin/manage/users/modals/manage-permissions-modal"))
+      .ManagePermissionsModal,
+  { ssr: false },
 );
 
 interface Props {
@@ -234,8 +245,12 @@ export default function ManageCitizens(props: Props) {
         ) : null}
       </div>
 
-      <ManagePermissionsModal onUpdate={(user) => setUser(user)} user={user} />
-      <ManageRolesModal onUpdate={(user) => setUser(user)} roles={props.roles} user={user} />
+      {user.rank !== Rank.OWNER ? (
+        <>
+          <ManagePermissionsModal onUpdate={(user) => setUser(user)} user={user} />
+          <ManageRolesModal onUpdate={(user) => setUser(user)} roles={props.roles} user={user} />
+        </>
+      ) : null}
     </AdminLayout>
   );
 }

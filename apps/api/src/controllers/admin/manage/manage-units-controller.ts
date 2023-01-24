@@ -17,20 +17,23 @@ import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/a
 import { findUnit } from "lib/leo/findUnit";
 import { updateOfficerDivisionsCallsigns } from "lib/leo/utils";
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
-import { prisma } from "lib/prisma";
-import { validateSchema } from "lib/validateSchema";
-import { IsAuth } from "middlewares/IsAuth";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { prisma } from "lib/data/prisma";
+import { validateSchema } from "lib/data/validate-schema";
+import { IsAuth } from "middlewares/is-auth";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { Socket } from "services/socket-service";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import { manyToManyHelper } from "utils/manyToMany";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { manyToManyHelper } from "lib/data/many-to-many";
 import { isCuid } from "cuid";
 import type * as APITypes from "@snailycad/types/api";
 import { isFeatureEnabled } from "lib/cad";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
-import { getImageWebPPath, validateImgurURL } from "utils/images/image";
-import generateBlurPlaceholder from "utils/images/generate-image-blur-data";
+import { validateImageURL } from "lib/images/validate-image-url";
+import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import fs from "node:fs/promises";
+import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
+import { getImageWebPPath } from "lib/images/get-image-webp-path";
+import { createWhere } from "controllers/leo/create-where-obj";
 
 const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_UNIT"] as const;
 type Action = typeof ACTIONS[number];
@@ -71,25 +74,25 @@ export class AdminManageUnitsController {
   ): Promise<APITypes.GetManageUnitsData> {
     const [officerCount, _officers] = await prisma.$transaction([
       prisma.officer.count({
-        where: this.createWhere({ departmentId, query, pendingOnly }, "OFFICER"),
+        where: createWhere({ departmentId, query, pendingOnly, type: "OFFICER" }),
       }),
       prisma.officer.findMany({
         take: includeAll ? undefined : 35,
         skip: includeAll ? undefined : skip,
         include: leoProperties,
-        where: this.createWhere({ departmentId, query, pendingOnly }, "OFFICER"),
+        where: createWhere({ departmentId, query, pendingOnly, type: "OFFICER" }),
       }),
     ]);
 
     const [emsFdDeputiesCount, _emsFdDeputies] = await prisma.$transaction([
       prisma.emsFdDeputy.count({
-        where: this.createWhere({ departmentId, query, pendingOnly }, "DEPUTY"),
+        where: createWhere({ departmentId, query, pendingOnly, type: "DEPUTY" }),
       }),
       prisma.emsFdDeputy.findMany({
         take: includeAll ? undefined : 35,
         skip: includeAll ? undefined : skip,
         include: unitProperties,
-        where: this.createWhere({ departmentId, query, pendingOnly }, "DEPUTY"),
+        where: createWhere({ departmentId, query, pendingOnly, type: "DEPUTY" }),
       }),
     ]);
 
@@ -183,6 +186,7 @@ export class AdminManageUnitsController {
     permissions: [Permissions.ManageUnits],
   })
   async setSelectedOffDuty(
+    @Context("sessionUserId") sessionUserId: string,
     @BodyParams("ids") ids: string[],
   ): Promise<APITypes.PutManageUnitsOffDutyData> {
     const updated = await Promise.all(
@@ -218,6 +222,13 @@ export class AdminManageUnitsController {
       this.socket.emitUpdateOfficerStatus(),
       this.socket.emitUpdateDeputyStatus(),
     ]);
+
+    await createAuditLogEntry({
+      translationKey: "unitsSetOffDuty",
+      action: { type: AuditLogActionType.UnitsSetOffDuty, new: ids },
+      prisma,
+      executorId: sessionUserId,
+    });
 
     return updated;
   }
@@ -283,6 +294,7 @@ export class AdminManageUnitsController {
   })
   @Description("Update a unit by its id")
   async updateUnit(
+    @Context("sessionUserId") sessionUserId: string,
     @PathParams("id") id: string,
     @BodyParams() body: unknown,
     @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings; features?: CadFeature[] },
@@ -344,7 +356,7 @@ export class AdminManageUnitsController {
       }
     }
 
-    const validatedImageURL = validateImgurURL(data.image);
+    const validatedImageURL = validateImageURL(data.image);
 
     // @ts-expect-error ignore
     const updated = await prisma[type].update({
@@ -361,8 +373,16 @@ export class AdminManageUnitsController {
         badgeNumber: data.badgeNumber,
         imageId: validatedImageURL,
         imageBlurData: await generateBlurPlaceholder(validatedImageURL),
+        userId: data.userId,
+        isTemporary: !!data.userId,
       },
       include: type === "officer" ? leoProperties : unitProperties,
+    });
+
+    await createAuditLogEntry({
+      action: { type: AuditLogActionType.UnitUpdate, new: updated, previous: unit },
+      prisma,
+      executorId: sessionUserId,
     });
 
     return updated;
@@ -417,8 +437,6 @@ export class AdminManageUnitsController {
         }),
         fs.writeFile(image.path, image.buffer),
       ]);
-
-      console.log({ data });
 
       return data;
     } catch {
@@ -674,6 +692,7 @@ export class AdminManageUnitsController {
     permissions: [Permissions.DeleteUnits],
   })
   async deleteUnit(
+    @Context("sessionUserId") sessionUserId: string,
     @PathParams("unitId") unitId: string,
   ): Promise<APITypes.DeleteManageUnitByIdData> {
     const unit = await findUnit(unitId);
@@ -697,61 +716,13 @@ export class AdminManageUnitsController {
       where: { id: unit.unit.id },
     });
 
+    await createAuditLogEntry({
+      translationKey: "deletedEntry",
+      action: { type: AuditLogActionType.UnitDelete, new: unit.unit },
+      prisma,
+      executorId: sessionUserId,
+    });
+
     return true;
-  }
-
-  private createWhere(
-    {
-      query,
-      pendingOnly,
-      departmentId,
-    }: { departmentId?: string; query: string; pendingOnly: boolean },
-    type: "OFFICER" | "DEPUTY" = "OFFICER",
-  ) {
-    const [name, surname] = query.toString().toLowerCase().split(/ +/g);
-
-    const departmentIdWhere = departmentId ? { departmentId } : {};
-
-    if (!query) {
-      return pendingOnly
-        ? {
-            whitelistStatus: { status: WhitelistStatus.PENDING },
-            ...departmentIdWhere,
-          }
-        : departmentIdWhere;
-    }
-
-    const where: any = {
-      ...(pendingOnly ? { whitelistStatus: { status: WhitelistStatus.PENDING } } : {}),
-      OR: [
-        departmentIdWhere,
-        { callsign: query },
-        { callsign2: query },
-        { department: { value: { value: { contains: query, mode: "insensitive" } } } },
-        { status: { value: { value: { contains: query, mode: "insensitive" } } } },
-        {
-          citizen: {
-            OR: [
-              {
-                name: { contains: name, mode: "insensitive" },
-                surname: { contains: surname, mode: "insensitive" },
-              },
-              {
-                name: { contains: name, mode: "insensitive" },
-                surname: { contains: surname, mode: "insensitive" },
-              },
-            ],
-          },
-        },
-      ],
-    };
-
-    if (type === "OFFICER") {
-      where.OR.push({
-        divisions: { some: { value: { value: { contains: query, mode: "insensitive" } } } },
-      });
-    }
-
-    return where;
   }
 }

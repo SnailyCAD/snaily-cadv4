@@ -5,7 +5,7 @@ import { ActiveWarrant, useLeoState } from "state/leo-state";
 import type { GetActiveWarrantsData } from "@snailycad/types/api";
 import { SocketEvents } from "@snailycad/config";
 import { useListener } from "@casper124578/use-socket.io";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 let ran = false;
 export function useActiveWarrants() {

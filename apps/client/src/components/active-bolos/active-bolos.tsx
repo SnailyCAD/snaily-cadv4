@@ -17,7 +17,7 @@ import { CallDescription } from "components/dispatch/active-calls/CallDescriptio
 import { useLeoState } from "state/leo-state";
 import { useRouter } from "next/router";
 import { usePermission } from "hooks/usePermission";
-import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { defaultPermissions } from "@snailycad/permissions";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
@@ -82,7 +82,7 @@ export function ActiveBolos({ initialBolos }: Props) {
     totalCount: initialBolos.totalCount,
     initialData: initialBolos.bolos,
   });
-  const tableState = useTableState({ pagination: asyncTable.pagination });
+  const tableState = useTableState({ tableId: "active-bolos", pagination: asyncTable.pagination });
   const [tempBolo, boloState] = useTemporaryItem(asyncTable.items);
 
   React.useEffect(() => {
@@ -118,7 +118,7 @@ export function ActiveBolos({ initialBolos }: Props) {
   return (
     <div className="mt-3 card">
       <header className="flex items-center justify-between p-2 px-4 bg-gray-200 dark:bg-secondary">
-        <h1 className="text-xl font-semibold">{t("Bolos.activeBolos")}</h1>
+        <h3 className="text-xl font-semibold">{t("Bolos.activeBolos")}</h3>
 
         <div>
           <Button
@@ -161,7 +161,7 @@ export function ActiveBolos({ initialBolos }: Props) {
                 model: bolo.model || "—",
                 plate: bolo.plate || "—",
                 color: bolo.color || "—",
-                description: <CallDescription data={descriptionData} nonCard />,
+                description: <CallDescription data={descriptionData} />,
                 officer: bolo.officer
                   ? `${generateCallsign(bolo.officer)} ${makeUnitName(bolo.officer)}`
                   : t("Leo.dispatch"),

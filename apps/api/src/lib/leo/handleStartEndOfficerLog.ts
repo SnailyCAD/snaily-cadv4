@@ -1,14 +1,14 @@
 import { EmsFdDeputy, Officer, ShouldDoType } from "@prisma/client";
 import { callInclude } from "controllers/dispatch/911-calls/Calls911Controller";
 import { incidentInclude } from "controllers/leo/incidents/IncidentController";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import type { Socket } from "services/socket-service";
 
 interface Options<Type extends "leo" | "ems-fd"> {
   shouldDo: ShouldDoType;
   unit: Type extends "leo" ? Omit<Officer, "divisionId"> : EmsFdDeputy;
   socket: Socket;
-  userId: string;
+  userId?: string | null;
   type: Type;
 }
 
@@ -24,6 +24,10 @@ function getPrismaName(type: "leo" | "ems-fd") {
 export async function handleStartEndOfficerLog<Type extends "leo" | "ems-fd">(
   options: Options<Type>,
 ) {
+  // if the unit is not assigned to a user, we can't save the officer-log.
+  // limitation of temporary units.
+  if (!options.userId) return;
+
   const idPropertyName = getPrismaName(options.type);
 
   /**
@@ -112,8 +116,8 @@ async function handleUnassignFromActiveIncident<Type extends "leo" | "ems-fd">(
     where: { id: options.unit.id },
     select: { id: true, activeIncidentId: true },
   });
-
   if (!unit?.activeIncidentId) return;
+
   const incident = await prisma.leoIncident.findUnique({
     where: { id: unit.activeIncidentId },
     include: incidentInclude,

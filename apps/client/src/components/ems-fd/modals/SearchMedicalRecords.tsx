@@ -214,9 +214,11 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                           </FullDate>{" "}
                           ({t("Citizen.age")}: {calculateAge(results.dateOfBirth)})
                         </Infofield>
-                        <Infofield label={t("Citizen.gender")}>{results.gender.value}</Infofield>
+                        <Infofield label={t("Citizen.gender")}>
+                          {results.gender?.value ?? t("Common.none")}
+                        </Infofield>
                         <Infofield label={t("Citizen.ethnicity")}>
-                          {results.ethnicity.value}
+                          {results.ethnicity?.value ?? t("Common.none")}
                         </Infofield>
                         <Infofield label={t("Citizen.hairColor")}>{results.hairColor}</Infofield>
                         <Infofield label={t("Citizen.eyeColor")}>{results.eyeColor}</Infofield>

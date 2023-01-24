@@ -1,12 +1,12 @@
 import { Controller, BodyParams, Post, Res, Response } from "@tsed/common";
 import { hashSync, genSaltSync, compareSync } from "bcrypt";
 import { BadRequest } from "@tsed/exceptions";
-import { prisma } from "lib/prisma";
+import { prisma } from "lib/data/prisma";
 import { findOrCreateCAD, isFeatureEnabled } from "lib/cad";
 import { REGISTER_SCHEMA, AUTH_SCHEMA } from "@snailycad/schemas";
-import { validateSchema } from "lib/validateSchema";
-import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { validateSchema } from "lib/data/validate-schema";
+import { ExtendedNotFound } from "src/exceptions/extended-not-found";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { validateUser2FA } from "lib/auth/2fa";
 import { ContentType, Description, Returns } from "@tsed/schema";
 import { User, WhitelistStatus, Rank, AutoSetUserProperties, cad, Feature } from "@prisma/client";

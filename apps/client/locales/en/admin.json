@@ -13,6 +13,7 @@
     "MANAGE_CUSTOM_ROLES": "Manage Custom Roles",
     "MANAGE_COURTHOUSE": "Manage Courthouse",
     "MANAGE_PENDING_WARRANTS": "Manage Pending Warrants",
+    "MANAGE_AUDIT_LOGS": "Manage Audit Logs",
     "import": "Import",
     "IMPORT_CITIZENS": "Import Citizens",
     "IMPORT_VEHICLES": "Import Vehicles",
@@ -84,6 +85,11 @@
     "pruneUsers": "Prune Users",
     "inactiveUsers": "Inactive Users",
     "lastSeen": "Last Seen",
+    "viewDiff": "View Diff",
+    "executor": "Executor",
+    "auditLogDiff": "Audit Log Diff",
+    "noAuditLogDiff": "There is no diff for this action.",
+    "connectToUser": "Connect To User",
     "manageCourthouseDescription": " Here you can manage expungement requests, name change requests and pending warrants.",
     "manageCustomFieldsDescription": "Here you can manage custom fields. These are fields can be added by any officers to citizens in name-search.",
     "manageCustomRolesDescription": "Here you can manage custom roles. These roles can be assigned to users instead of giving permissions one by one.",
@@ -148,5 +154,27 @@
     "citizenRecordsChannelInfo": "The Discord channel where new arrest reports, tickets, warrants and written warnings will be sent to.",
     "warrantsChannel": "Warrants channel",
     "warrantsChannelInfo": "The Discord channel where new warrants will be sent to."
+  },
+  "AuditLogs": {
+    "userBanned": "User: <span>{value}</span> has been banned.",
+    "userUnbanned": "User: <span>{value}</span> has been unbanned.",
+    "deletedEntry": "Item deleted with id: <span>{value}</span>.",
+    "createdEntry": "Item created with id: <span>{value}</span>.",
+    "deleteUserApiToken": "User: <span>{value}</span>'s personal API token has been deleted.",
+    "deleteUser2FA": "User: <span>{value}</span>'s 2FA has been deleted.",
+    "tempPasswordGiven": "User: <span>{value}</span> has been given a temporary password.",
+    "unitsSetOffDuty": "Selected units have been set off-duty: <span>{value}</span>",
+    "calls911Purged": "Selected calls have been purged. These calls cannot be recovered and were deleted permanently: <span>{value}</span>. ",
+    "cadAPITokenRegenerated": "The CAD API token has been regenerated.",
+    "temporaryUnitCreate": "A temporary unit has been created with id: <span>{value}</span>."
+  },
+  "ApiTokenTab": {
+    "apiToken": "API Token",
+    "publicAPIAccess": "Public API Access",
+    "token": "Token",
+    "tokenDescription": "This is the token used to communicate with the API. This token is unique and should not be shared with anyone. <a>Read More</a>",
+    "discordBotCommand": "Discord bot integration command",
+    "discordBotCommandDescription": "This command can be used with the <a>Discord bot integration</a>.",
+    "readMorePublicAPI": "Read more about the <a>Public API here.</a>"
   }
 }

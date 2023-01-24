@@ -30,7 +30,7 @@ import Image from "next/image";
 import { NameSearchBasicInformation } from "./sections/basic-information";
 import { NameSearchLicensesSection } from "./sections/licenses-section";
 import { NameSearchFooter } from "./sections/footer";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 const VehicleSearchModal = dynamic(
   async () => (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal,
@@ -42,6 +42,10 @@ const WeaponSearchModal = dynamic(
 
 const CreateCitizenModal = dynamic(
   async () => (await import("./CreateCitizenModal")).CreateCitizenModal,
+);
+
+const ManageCitizenAddressFlagsModal = dynamic(
+  async () => (await import("./manage-citizen-address-flags-modal")).ManageCitizenAddressFlagsModal,
 );
 
 function AutoSubmit() {
@@ -73,6 +77,8 @@ export function NameSearchModal() {
 
   const { openModal } = useModal();
   const isLeo = router.pathname === "/officer";
+  const isDispatch = router.pathname === "/dispatch";
+
   const { results, currentResult, setCurrentResult, setResults } = useNameSearch(
     (state) => ({
       results: state.results,
@@ -375,6 +381,24 @@ export function NameSearchModal() {
                         ) : null}
                       </div>
 
+                      <div className="mt-4">
+                        <Infofield label={cT("addressFlags")}>
+                          {currentResult.addressFlags?.map((v) => v.value).join(", ") ||
+                            common("none")}
+                        </Infofield>
+
+                        {isDispatch ? (
+                          <Button
+                            size="xs"
+                            type="button"
+                            className="mt-2"
+                            onPress={() => openModal(ModalIds.ManageAddressFlags)}
+                          >
+                            {t("manageAddressFlags")}
+                          </Button>
+                        ) : null}
+                      </div>
+
                       <CustomFieldsArea currentResult={currentResult} isLeo={isLeo} />
                     </div>
                   </div>
@@ -395,6 +419,7 @@ export function NameSearchModal() {
             {currentResult && !currentResult.isConfidential ? (
               <>
                 <ManageCitizenFlagsModal />
+                <ManageCitizenAddressFlagsModal />
                 <ManageCustomFieldsModal
                   category={CustomFieldCategory.CITIZEN}
                   url={`/search/actions/custom-fields/citizen/${currentResult.id}`}

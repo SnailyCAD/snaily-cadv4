@@ -136,8 +136,8 @@ export type UserSoundSettings = Prisma.UserSoundSettings;
 
 export type BaseCitizen = Prisma.Citizen;
 export type Citizen = Prisma.Citizen & {
-  gender: Prisma.Value;
-  ethnicity: Prisma.Value;
+  gender?: Prisma.Value | null;
+  ethnicity?: Prisma.Value | null;
   driversLicense: Prisma.Value | null;
   weaponLicense: Prisma.Value | null;
   pilotLicense: Prisma.Value | null;
@@ -224,8 +224,6 @@ export type VehicleValue = Prisma.VehicleValue & { value: Value };
 
 export type WeaponValue = Prisma.WeaponValue & { value: Value };
 
-export type Notification = Prisma.Notification;
-
 export type BleeterPost = Prisma.BleeterPost;
 
 export type TowCall = Prisma.TowCall & {
@@ -259,7 +257,7 @@ export type Officer = Prisma.Officer & {
   status: StatusValue | null;
   citizen: Pick<Prisma.Citizen, "name" | "surname" | "id">;
   whitelistStatus?: (Prisma.LeoWhitelistStatus & { department: Officer["department"] }) | null;
-  user: User;
+  user?: User | null;
   rank: Prisma.Value | null;
   activeIncident?: Prisma.LeoIncident | null;
   callsigns?: IndividualDivisionCallsign[];
@@ -383,7 +381,7 @@ export type EmsFdDeputy = Prisma.EmsFdDeputy & {
   rank: Officer["rank"];
   status: Officer["status"];
   citizen: Officer["citizen"];
-  user: Officer["user"];
+  user?: Officer["user"] | null;
   whitelistStatus?: Officer["whitelistStatus"];
   activeVehicle: EmergencyVehicleValue | null;
 };
@@ -431,4 +429,9 @@ export type AnyValue = Value | PenalCode | ValueWithValueObj;
 
 export type ActiveTone = Prisma.ActiveTone & {
   createdBy: { username: string };
+};
+
+export type AuditLog = Prisma.AuditLog & {
+  executor?: User | null;
+  action: { previous: any; new: any; type: any };
 };

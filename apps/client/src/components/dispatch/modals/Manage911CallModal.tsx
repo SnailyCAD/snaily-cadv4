@@ -20,7 +20,8 @@ import { Infofield } from "components/shared/Infofield";
 import { FullDate } from "components/shared/FullDate";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
+import { isUnitCombined } from "@snailycad/utils";
 
 interface Props {
   call: Full911Call | null;
@@ -96,8 +97,9 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
   const primaryUnit = React.useMemo(() => {
     const unit = call?.assignedUnits.find((v) => v.isPrimary);
     if (!unit?.unit) return null;
+    const template = isUnitCombined(unit as any) ? "pairedUnitTemplate" : "callsignTemplate";
 
-    return `${generateCallsign(unit.unit)} - ${makeUnitName(unit.unit)}`;
+    return `${generateCallsign(unit.unit, template)} ${makeUnitName(unit.unit)}`;
   }, [call, generateCallsign]);
 
   return (

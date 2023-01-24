@@ -5,7 +5,7 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { useDownload } from "@casper124578/useful";
 import { Dropdown } from "components/Dropdown";
-import type { PenalCode, ValueType, AnyValue } from "@snailycad/types";
+import type { ValueType } from "@snailycad/types";
 import { isPenalCodeValue, isDivisionValue, isStatusValue } from "@snailycad/utils";
 import format from "date-fns/format";
 import { omit } from "lib/utils";
@@ -14,10 +14,10 @@ import type { GetValuesExportData } from "@snailycad/types/api";
 
 interface Props {
   type: ValueType;
-  values: (AnyValue | PenalCode)[];
+  valueLength: number;
 }
 
-export function OptionsDropdown({ type, values }: Props) {
+export function OptionsDropdown({ type, valueLength }: Props) {
   const t = useTranslations("Values");
   const { openModal } = useModal();
   const download = useDownload();
@@ -54,7 +54,7 @@ export function OptionsDropdown({ type, values }: Props) {
       <Dropdown.Item onPress={() => openModal(ModalIds.ImportValues)}>
         {t("importValues")}
       </Dropdown.Item>
-      <Dropdown.Item disabled={values.length <= 0} onPress={handleExport}>
+      <Dropdown.Item disabled={valueLength <= 0} onPress={handleExport}>
         {t("exportValues")}
       </Dropdown.Item>
     </Dropdown>

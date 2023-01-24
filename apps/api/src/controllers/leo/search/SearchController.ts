@@ -2,11 +2,11 @@ import { Controller, UseBeforeEach, Context } from "@tsed/common";
 import { ContentType, Description, Post } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { BodyParams, QueryParams } from "@tsed/platform-params";
-import { prisma } from "lib/prisma";
-import { IsAuth } from "middlewares/IsAuth";
+import { prisma } from "lib/data/prisma";
+import { IsAuth } from "middlewares/is-auth";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { citizenInclude } from "controllers/citizen/CitizenController";
-import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import {
   cad,
   CadFeature,
@@ -18,13 +18,13 @@ import {
   WhitelistStatus,
   User,
 } from "@prisma/client";
-import { validateSchema } from "lib/validateSchema";
+import { validateSchema } from "lib/data/validate-schema";
 import { CUSTOM_FIELD_SEARCH_SCHEMA } from "@snailycad/schemas";
 import { isFeatureEnabled } from "lib/cad";
 import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import type * as APITypes from "@snailycad/types/api";
-import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { setEndedSuspendedLicenses } from "lib/citizen/setEndedSuspendedLicenses";
 
 export const vehicleSearchInclude = {
@@ -65,6 +65,7 @@ export const citizenSearchIncludeOrSelect = (
         officers: { select: { department: { select: { isConfidential: true } } } },
         ...citizenInclude,
         vehicles: { include: vehicleSearchInclude },
+        addressFlags: true,
         businesses: true,
         medicalRecords: true,
         customFields: { include: { field: true } },

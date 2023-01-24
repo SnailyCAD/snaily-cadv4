@@ -16,16 +16,12 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { isUnitDisabled, makeUnitName } from "lib/utils";
 import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
 import type { EmergencyVehicleValue } from "@snailycad/types";
-import shallow from "zustand/shallow";
+import { useGetUserDeputies } from "hooks/ems-fd/use-get-user-deputies";
 
 export function SelectDeputyModal() {
-  const { setActiveDeputy, deputies } = useEmsFdState(
-    (state) => ({
-      setActiveDeputy: state.setActiveDeputy,
-      deputies: state.deputies,
-    }),
-    shallow,
-  );
+  const { userDeputies, isLoading } = useGetUserDeputies();
+  const setActiveDeputy = useEmsFdState((state) => state.setActiveDeputy);
+
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Ems");
@@ -77,11 +73,12 @@ export function SelectDeputyModal() {
           <Form>
             <FormField errorMessage={errors.deputy} label={t("deputy")}>
               <Select
+                isLoading={isLoading}
                 value={values.deputy}
                 name="deputy"
                 onChange={handleChange}
                 isClearable
-                values={deputies.map((deputy) => ({
+                values={userDeputies.map((deputy) => ({
                   label: `${generateCallsign(deputy)} ${makeUnitName(deputy)}`,
                   value: deputy.id,
                   isDisabled: isUnitDisabled(deputy),

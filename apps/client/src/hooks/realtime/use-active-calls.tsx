@@ -13,7 +13,7 @@ import type { ActiveOfficer } from "state/leo-state";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 interface UseActiveCallsOptions {
   calls: Full911Call[];
@@ -171,7 +171,7 @@ export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
 
   useListener(
     SocketEvents.End911Call,
-    (data: Full911Call | undefined) => {
+    (data: Pick<Full911Call, "id"> | undefined) => {
       if (!data) return;
       call911State.setCalls(calls.filter((v) => v.id !== data.id));
     },
