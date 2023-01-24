@@ -34,7 +34,7 @@ import { findUnit } from "lib/leo/findUnit";
 import { getInactivityFilter } from "lib/leo/utils";
 import { assignUnitsToCall } from "lib/calls/assignUnitsToCall";
 import { linkOrUnlinkCallDepartmentsAndDivisions } from "lib/calls/linkOrUnlinkCallDepartmentsAndDivisions";
-import { defaultPermissions, hasPermission } from "@snailycad/permissions";
+import { hasPermission } from "@snailycad/permissions";
 import type * as APITypes from "@snailycad/types/api";
 import {
   assignedUnitsInclude,
@@ -174,7 +174,7 @@ export class Calls911Controller {
     @BodyParams() body: unknown,
     @Context("user") user: User,
     @Context("cad") cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings },
-    @HeaderParams("is-from-dispatch", Boolean) isFromDispatchHeader?: boolean,
+    @HeaderParams("is-from-dispatch") isFromDispatchHeader?: string | undefined,
   ): Promise<APITypes.Post911CallsData> {
     const data = validateSchema(CALL_911_SCHEMA, body);
     const hasDispatchPermissions = hasPermission({
@@ -183,7 +183,7 @@ export class Calls911Controller {
       fallback: (user) => user.isDispatch,
     });
 
-    const isFromDispatch = isFromDispatchHeader && hasDispatchPermissions;
+    const isFromDispatch = isFromDispatchHeader === "true" && hasDispatchPermissions;
     const maxAssignmentsToCalls = cad.miscCadSettings.maxAssignmentsToCalls ?? Infinity;
 
     const isCallApprovalEnabled = isFeatureEnabled({
@@ -321,6 +321,7 @@ export class Calls911Controller {
         situationCodeId: data.situationCode === null ? null : data.situationCode,
         typeId: data.type,
         extraFields: data.extraFields || undefined,
+        status: (data.status as WhitelistStatus | null) || undefined,
       },
     });
 
