@@ -159,7 +159,7 @@
     "steamAccountAlreadyLinked": "Dieser Steam-Account ist bereits mit einem anderen Benutzer verknüpft.",
     "cannotRegisterFirstWithSteam": "Du kannst nicht mit Steam registrieren, wenn du noch keinen Benutzer hast.",
     "Unauthorized": "Du wurdest abgemeldet. Bitte logge dich wieder ein, um fortzufahren.",
-    "captchaRequired": "Bitte bestätigen, dass Du kein Roboter bist
+    "captchaRequired": "Bitte bestätigen, dass Du kein Roboter bist",
     "invalidCaptcha": "Wir konnten nicht überprüfen, ob Du ein Mensch sind. Bitte kontaktiere einen Administrator, wenn Du glauben, dass dies ein Fehler ist.",
     "updateAvailable": "Eine neue Version von CAD ist verfügbar.",
     "updateAvailableInfo": "Eine neue Version von CAD ist verfügbar. Bitte lade dir die neue Version herunter: https://github.com/SnailyCAD/snaily-cadv4",
