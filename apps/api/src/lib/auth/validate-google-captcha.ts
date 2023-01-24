@@ -31,9 +31,11 @@ export async function validateGoogleCaptcha(data: z.infer<typeof REGISTER_SCHEMA
       throw new ExtendedBadRequest({ username: "invalidCaptcha" });
     }
 
-    const googleCaptchaJSON =
-      (await googleCaptchaAPIResponse.body.json()) as PartialGoogleCaptchaResponse;
-    if (googleCaptchaJSON.score <= 0 || !googleCaptchaJSON.success) {
+    const googleCaptchaJSON = (await googleCaptchaAPIResponse.body
+      .json()
+      .catch(() => null)) as PartialGoogleCaptchaResponse | null;
+
+    if (!googleCaptchaJSON || googleCaptchaJSON.score <= 0 || !googleCaptchaJSON.success) {
       throw new ExtendedBadRequest({ username: "invalidCaptcha" });
     }
   }
