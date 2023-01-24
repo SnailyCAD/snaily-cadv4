@@ -210,7 +210,7 @@
       "unit": "Einheit",
       "createVehicle": "Fahrzeug erstellen",
       "tones": "Töne",
-      "notesInfo": "Senden Sie einen Benachrichtigungston mit einer optionalen Nachricht, um PD oder EMS/FD zu alarmieren",
+      "notesInfo": "Sende einen Benachrichtigungston mit einer optionalen Nachricht, um PD oder EMS/FD zu alarmieren",
       "emsFdTone": "EMS/FD Töne",
       "leoTone": "PD Töne",
       "sendTone": "Ton senden",
