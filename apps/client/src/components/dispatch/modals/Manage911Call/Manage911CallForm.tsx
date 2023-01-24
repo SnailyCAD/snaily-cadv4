@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import type { Post911CallsData, Put911CallByIdData } from "@snailycad/types/api";
-import { StatusValueType } from "@snailycad/types";
+import { StatusValueType, WhitelistStatus } from "@snailycad/types";
 import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
 import { CALL_911_SCHEMA } from "@snailycad/schemas";
@@ -115,6 +115,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
     type: call?.typeId ?? null,
     notifyAssignedUnits: true,
     openCallModalAfterCreation: true,
+    status: undefined,
   };
 
   return (
@@ -124,8 +125,20 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
       onSubmit={onSubmit}
       initialValues={INITIAL_VALUES}
     >
-      {({ handleChange, setFieldValue, values, errors }) => (
+      {({ handleChange, setFieldValue, handleSubmit, values, errors }) => (
         <Form className="w-full h-full">
+          {call?.status === WhitelistStatus.PENDING ? (
+            <div
+              role="alert"
+              className="card px-4 py-2 w-full flex items-start justify-between my-3 text-white !bg-amber-900 border !border-amber-700"
+            >
+              <div className="w-[70%]">
+                <h3 className="text-xl font-semibold mb-2">{t("pendingApproval")}</h3>
+                <p className="text-base">{t("approvalMessage")}</p>
+              </div>
+            </div>
+          ) : null}
+
           <TextField
             label={common("name")}
             name="name"
@@ -283,10 +296,11 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
                 </FormField>
               ) : null}
 
-              <Button onPress={handleClose} type="button" variant="cancel">
+              <Button className="ml-2" onPress={handleClose} type="button" variant="cancel">
                 {common("cancel")}
               </Button>
               <Button
+                variant={call?.status === WhitelistStatus.PENDING ? "cancel" : "default"}
                 disabled={isDisabled || state === "loading"}
                 className="flex items-center ml-2"
                 type="submit"
@@ -295,6 +309,22 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
 
                 {call ? common("save") : common("create")}
               </Button>
+
+              {call?.status === WhitelistStatus.PENDING ? (
+                <Button
+                  disabled={isDisabled || state === "loading"}
+                  className="flex items-center ml-2"
+                  type="button"
+                  onClick={() => {
+                    setFieldValue("status", WhitelistStatus.ACCEPTED);
+                    handleSubmit();
+                  }}
+                >
+                  {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}
+
+                  {t("saveAndAccept")}
+                </Button>
+              ) : null}
             </div>
           </footer>
         </Form>

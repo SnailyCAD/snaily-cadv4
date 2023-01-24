@@ -26,6 +26,7 @@ export const DEFAULT_DISABLED_FEATURES: Partial<
   CITIZEN_DELETE_ON_DEAD: { isEnabled: false },
   WARRANT_STATUS_APPROVAL: { isEnabled: false },
   LICENSE_EXAMS: { isEnabled: false },
+  CALL_911_APPROVAL: { isEnabled: false },
 };
 
 @Middleware()

@@ -22,6 +22,8 @@ import {
   DiscordWebhookType,
   ShouldDoType,
   Prisma,
+  WhitelistStatus,
+  CadFeature,
 } from "@prisma/client";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import type { APIEmbed } from "discord-api-types/v10";
@@ -45,6 +47,7 @@ import { getTranslator } from "utils/get-translator";
 import { HandleInactivity } from "middlewares/handle-inactivity";
 import { handleEndCall } from "lib/calls/handle-end-call";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
+import { isFeatureEnabled } from "lib/cad";
 
 export const callInclude = {
   position: true,
@@ -170,8 +173,8 @@ export class Calls911Controller {
   async create911Call(
     @BodyParams() body: unknown,
     @Context("user") user: User,
-    @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings },
-    @HeaderParams("is-from-dispatch") isFromDispatchHeader: string | undefined,
+    @Context("cad") cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings },
+    @HeaderParams("is-from-dispatch") isFromDispatchHeader?: string | undefined,
   ): Promise<APITypes.Post911CallsData> {
     const data = validateSchema(CALL_911_SCHEMA, body);
     const hasDispatchPermissions = hasPermission({
@@ -182,6 +185,17 @@ export class Calls911Controller {
 
     const isFromDispatch = isFromDispatchHeader === "true" && hasDispatchPermissions;
     const maxAssignmentsToCalls = cad.miscCadSettings.maxAssignmentsToCalls ?? Infinity;
+
+    const isCallApprovalEnabled = isFeatureEnabled({
+      defaultReturn: false,
+      feature: Feature.CALL_911_APPROVAL,
+      features: cad.features,
+    });
+    const activeDispatchers = await prisma.activeDispatchers.count();
+    const hasActiveDispatchers = activeDispatchers > 0;
+    const shouldCallBePending = isCallApprovalEnabled && hasActiveDispatchers && !isFromDispatch;
+
+    const callStatus = shouldCallBePending ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED;
 
     const call = await prisma.call911.create({
       data: {
@@ -195,6 +209,7 @@ export class Calls911Controller {
         viaDispatch: isFromDispatch,
         typeId: data.type,
         extraFields: data.extraFields || undefined,
+        status: callStatus,
       },
       include: callInclude,
     });
@@ -306,6 +321,7 @@ export class Calls911Controller {
         situationCodeId: data.situationCode === null ? null : data.situationCode,
         typeId: data.type,
         extraFields: data.extraFields || undefined,
+        status: (data.status as WhitelistStatus | null) || undefined,
       },
     });
 
