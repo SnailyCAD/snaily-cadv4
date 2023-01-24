@@ -48,6 +48,7 @@ interface Props {
 
 function ActiveOfficers({ initialOfficers }: Props) {
   const tableState = useTableState({
+    tableId: "active-officers",
     pagination: { pageSize: 12, totalDataCount: initialOfficers.length },
   });
 

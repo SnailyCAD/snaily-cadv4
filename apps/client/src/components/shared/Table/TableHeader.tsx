@@ -1,16 +1,22 @@
 import { TableActionsAlignment } from "@snailycad/types";
-import { flexRender, Header, RowData } from "@tanstack/react-table";
+import { Button } from "@snailycad/ui";
+import { Column, flexRender, Header, RowData } from "@tanstack/react-table";
+import { Dropdown } from "components/Dropdown";
 import { classNames } from "lib/classNames";
-import { ArrowDownSquareFill } from "react-bootstrap-icons";
+import { ArrowDownSquareFill, Check, ThreeDots } from "react-bootstrap-icons";
 
 interface Props<TData extends RowData> {
   header: Header<TData, unknown>;
   tableActionsAlignment: TableActionsAlignment | null;
+  tableLeafs: Column<TData>[];
+  tableId?: string;
 }
 
 export function TableHeader<TData extends RowData>({
   header,
   tableActionsAlignment,
+  tableLeafs,
+  tableId,
 }: Props<TData>) {
   const isActions = header.id === "actions";
   const canSort = isActions ? false : header.column.getCanSort();
@@ -48,6 +54,38 @@ export function TableHeader<TData extends RowData>({
             height={15}
           />
         </span>
+      ) : null}
+      {isActions && tableId ? (
+        <Dropdown
+          alignOffset={0}
+          modal
+          side="left"
+          trigger={<Button className="inline-block ml-2">{<ThreeDots />}</Button>}
+        >
+          {tableLeafs.map((leaf) => {
+            const columnName = (leaf.columnDef.header ?? leaf.id).toString();
+
+            return (
+              <Dropdown.Item
+                closeOnClick={false}
+                key={leaf.id}
+                className={classNames(
+                  "flex items-center justify-between",
+                  leaf.getIsVisible() && "dark:bg-secondary bg-gray-400",
+                )}
+                onPress={() => leaf.toggleVisibility()}
+              >
+                {columnName}
+
+                {leaf.getIsVisible() ? (
+                  <span className="ml-2 text-green-500">
+                    <Check aria-label={`Selected ${leaf.id}`} className="dark:text-gray-400" />
+                  </span>
+                ) : null}
+              </Dropdown.Item>
+            );
+          })}
+        </Dropdown>
       ) : null}
     </th>
   );

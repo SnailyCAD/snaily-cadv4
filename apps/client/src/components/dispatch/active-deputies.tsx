@@ -62,7 +62,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
   );
   const { handleFilter } = useActiveUnitsFilter();
   const active911Calls = useCall911State((state) => state.calls);
-  const tableState = useTableState();
+  const tableState = useTableState({ tableId: "active-deputies" });
 
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
