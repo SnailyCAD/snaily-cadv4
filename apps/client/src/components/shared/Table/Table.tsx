@@ -91,12 +91,14 @@ export function Table<TData extends _RowData>({
     onRowSelectionChange: tableState.setRowSelection,
     onPaginationChange: tableState.setPagination,
     onGlobalFilterChange: tableState.setGlobalFilter,
+    onColumnVisibilityChange: tableState.setColumnVisibility,
 
     state: {
       sorting: tableState.sorting,
       rowSelection: tableState.rowSelection,
       pagination: tableState.pagination,
       globalFilter: tableState.globalFilter,
+      columnVisibility: tableState.columnVisibility,
     },
   });
 
@@ -124,6 +126,8 @@ export function Table<TData extends _RowData>({
     tableState.dragDrop?.onListChange(originals);
   }
 
+  const tableLeafs = table.getAllLeafColumns().filter((v) => v.id !== "actions");
+
   return (
     <div
       className={classNames(
@@ -138,6 +142,7 @@ export function Table<TData extends _RowData>({
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHeader<TData>
+                    tableLeafs={tableLeafs}
                     key={header.id}
                     header={header as Header<TData, any>}
                     tableActionsAlignment={tableActionsAlignment}

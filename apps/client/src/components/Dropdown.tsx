@@ -1,4 +1,4 @@
-import type * as React from "react";
+import * as React from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { classNames } from "lib/classNames";
 import { Button, ButtonProps, buttonSizes, buttonVariants } from "@snailycad/ui";
@@ -12,6 +12,7 @@ interface Props extends DropdownMenu.MenuContentProps, DropdownMenu.DropdownMenu
 
 export function Dropdown({ trigger, children, extra, open, modal, onOpenChange, ...rest }: Props) {
   const maxWidth = extra?.maxWidth ?? 175;
+  const Portal = modal ? DropdownMenu.Portal : React.Fragment;
 
   return (
     <DropdownMenu.Root modal={modal} open={open} onOpenChange={onOpenChange}>
@@ -19,19 +20,21 @@ export function Dropdown({ trigger, children, extra, open, modal, onOpenChange, 
         {trigger}
       </DropdownMenu.Trigger>
 
-      <DropdownMenu.Content
-        sideOffset={7}
-        alignOffset={10}
-        style={{ width: maxWidth, maxWidth }}
-        align="start"
-        {...rest}
-        className={classNames(
-          rest.className ?? "dropdown-left",
-          "z-50 p-2 bg-gray-200 rounded-md shadow-md dark:shadow-primary dropdown-fade w-40 dark:bg-primary dark:border dark:border-secondary",
-        )}
-      >
-        {children}
-      </DropdownMenu.Content>
+      <Portal>
+        <DropdownMenu.Content
+          sideOffset={7}
+          alignOffset={10}
+          style={{ width: maxWidth, maxWidth }}
+          align="start"
+          {...rest}
+          className={classNames(
+            rest.className ?? "dropdown-left",
+            "flex flex-col z-50 p-2 bg-gray-200 rounded-md shadow-md dark:shadow-primary dropdown-fade w-40 dark:bg-primary dark:border dark:border-secondary",
+          )}
+        >
+          {children}
+        </DropdownMenu.Content>
+      </Portal>
     </DropdownMenu.Root>
   );
 }

@@ -17,6 +17,7 @@ interface TableStateOptions {
 export function useTableState({ pagination, search, dragDrop }: TableStateOptions = {}) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
+  const [columnVisibility, setColumnVisibility] = React.useState({});
 
   const _pagination = {
     pageSize: pagination?.pageSize ?? 35,
@@ -36,6 +37,8 @@ export function useTableState({ pagination, search, dragDrop }: TableStateOption
     globalFilter: search?.value,
     setGlobalFilter: search?.setValue,
     dragDrop,
+    columnVisibility,
+    setColumnVisibility,
   };
 }
 
