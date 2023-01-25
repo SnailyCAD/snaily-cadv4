@@ -56,7 +56,6 @@ export default function CallHistory({ data, incidents }: Props) {
 
   const tableState = useTableState({
     pagination: asyncTable.pagination,
-    search: { value: search, setValue: setSearch },
   });
   const { state, execute } = useFetch();
   const [tempCall, callState] = useTemporaryItem(asyncTable.items);

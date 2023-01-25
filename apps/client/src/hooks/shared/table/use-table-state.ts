@@ -4,10 +4,6 @@ import type { useAsyncTable } from "./use-async-table";
 import { useMounted } from "@casper124578/useful";
 
 interface TableStateOptions {
-  search?: {
-    value: string;
-    setValue?(value: string): void;
-  };
   dragDrop?: {
     onListChange(list: any[]): void;
     disabledIndices?: number[];
@@ -19,7 +15,6 @@ interface TableStateOptions {
 
 export function useTableState({
   pagination,
-  search,
   dragDrop,
   tableId,
   defaultHiddenColumns,
@@ -75,8 +70,6 @@ export function useTableState({
     setRowSelection,
     pagination: _pagination,
     setPagination: pagination?.setPagination,
-    globalFilter: search?.value,
-    setGlobalFilter: search?.setValue,
     dragDrop,
     columnVisibility: isMounted ? columnVisibility : _defaultHiddenColumns,
     setColumnVisibility,

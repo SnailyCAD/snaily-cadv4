@@ -50,7 +50,7 @@ export function CallsignsTab({ units }: Props) {
   const common = useTranslations("Common");
   const { generateCallsign } = useGenerateCallsign();
   const { openModal } = useModal();
-  const tableState = useTableState({ search: { value: search } });
+  const tableState = useTableState();
   const hasViewUsersPermissions = hasPermissions([Permissions.ViewUsers], true);
   const { department } = useValues();
 

@@ -33,6 +33,7 @@ export class AdminManageUnitsController {
   async getTimeGroupedByUnit() {
     const officerLogs = await prisma.officerLog.findMany({
       include: { officer: { include: _leoProperties }, emsFdDeputy: { include: unitProperties } },
+      orderBy: { createdAt: "desc" },
     });
 
     const groupedByUnit = new Map<string, { hours: number; unit: any }>();
@@ -63,7 +64,7 @@ export class AdminManageUnitsController {
     return Array.from(groupedByUnit.values());
   }
 
-  @Get("/department")
+  @Get("/departments")
   @Description("Get all unit hours logged grouped by department.")
   @UsePermissions({
     fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
@@ -85,6 +86,7 @@ export class AdminManageUnitsController {
         officer: { include: departmentInclude },
         emsFdDeputy: { include: departmentInclude },
       },
+      orderBy: { createdAt: "desc" },
     });
 
     const groupedByDepartment = new Map<

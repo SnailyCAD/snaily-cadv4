@@ -6,7 +6,6 @@ import {
   useReactTable,
   Header,
   getFilteredRowModel,
-  FilterFn,
   Row,
   AccessorKeyColumnDef,
 } from "@tanstack/react-table";
@@ -17,7 +16,6 @@ import { TableHeader } from "./TableHeader";
 import { useAuth } from "context/AuthContext";
 import { TableActionsAlignment } from "@snailycad/types";
 import { orderColumnsByTableActionsAlignment } from "lib/table/orderColumnsByTableActionsAlignment";
-import { rankItem } from "@tanstack/match-sorter-utils";
 import type { useTableState } from "hooks/shared/table/use-table-state";
 import { ReactSortable } from "react-sortablejs";
 import { useMounted } from "@casper124578/useful";
@@ -81,7 +79,6 @@ export function Table<TData extends _RowData>({
     enableRowSelection: true,
     enableSorting: true,
     manualPagination: true,
-    globalFilterFn: fuzzyFilter,
 
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -90,14 +87,12 @@ export function Table<TData extends _RowData>({
     onSortingChange: tableState.setSorting,
     onRowSelectionChange: tableState.setRowSelection,
     onPaginationChange: tableState.setPagination,
-    onGlobalFilterChange: tableState.setGlobalFilter,
     onColumnVisibilityChange: tableState.setColumnVisibility,
 
     state: {
       sorting: tableState.sorting,
       rowSelection: tableState.rowSelection,
       pagination: tableState.pagination,
-      globalFilter: tableState.globalFilter,
       columnVisibility: tableState.columnVisibility,
     },
   });
@@ -180,13 +175,3 @@ export function Table<TData extends _RowData>({
     </div>
   );
 }
-
-const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
-  const itemRank = rankItem(row.getValue(columnId), value);
-
-  addMeta({
-    itemRank,
-  });
-
-  return itemRank.passed;
-};
