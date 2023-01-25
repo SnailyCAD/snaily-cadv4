@@ -7,6 +7,7 @@ import { Table, useTableState } from "components/shared/Table";
 import { TabsContent } from "components/shared/TabList";
 import { useQuery } from "@tanstack/react-query";
 import useFetch from "lib/useFetch";
+import { FullDate } from "components/shared/FullDate";
 
 export function DepartmentTimeLogsTab() {
   const [groupedBy, setGroupedBy] = React.useState<"departments" | "units">("departments");
@@ -61,6 +62,8 @@ export function DepartmentTimeLogsTab() {
                 : {
                     unit: `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`,
                     department: getUnitDepartment(unit.unit)?.value.value,
+                    firstSeen: <FullDate>{unit.firstSeen}</FullDate>,
+                    lastSeen: <FullDate>{unit.lastSeen}</FullDate>,
                   };
 
             return {
@@ -73,6 +76,8 @@ export function DepartmentTimeLogsTab() {
             groupedBy === "units" ? { header: t("Leo.unit"), accessorKey: "unit" } : null,
             { header: t("Leo.department"), accessorKey: "department" },
             { header: t("Leo.hours"), accessorKey: "hours" },
+            groupedBy === "units" ? { header: t("Leo.firstSeen"), accessorKey: "firstSeen" } : null,
+            groupedBy === "units" ? { header: t("Leo.lastSeen"), accessorKey: "lastSeen" } : null,
           ]}
         />
       )}

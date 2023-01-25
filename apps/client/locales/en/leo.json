@@ -262,6 +262,8 @@
     "identifiers": "Identifiers",
     "identifiersInfo": "Identifiers can be used to identify the temporary unit for future use, such as steamId, discordId, etc. You can add multiple identifiers by separating them with a comma.",
     "hours": "Hours",
+    "firstSeen": "First Seen",
+    "lastSeen": "Last Seen",
     "alert_endIncident": "Are you sure you want to end this incident. It can still be viewed by officers.",
     "alert_deleteRecord": "Are you sure you want to delete this record? This action cannot be undone.",
     "alert_deleteOfficer": "Are you sure you want to delete <span>{officer}</span>? This action cannot be undone.",

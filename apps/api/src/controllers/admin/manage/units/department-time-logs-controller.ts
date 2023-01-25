@@ -37,6 +37,8 @@ export class AdminManageUnitsController {
     });
 
     const groupedByUnit = new Map<string, { hours: number; unit: any }>();
+    const lastSeenMap = new Map<string, Date>();
+    const firstSeenMap = new Map<string, Date>();
 
     for (const log of officerLogs) {
       if (log.endedAt === null) continue;
@@ -48,16 +50,49 @@ export class AdminManageUnitsController {
       const hours = differenceInHours(new Date(log.endedAt), new Date(log.createdAt));
 
       if (unit) {
+        let lastSeen = lastSeenMap.get(unitId);
+
+        if (lastSeen) {
+          if (log.endedAt.getTime() > lastSeen.getTime()) {
+            lastSeen = log.endedAt;
+            lastSeenMap.set(unitId, lastSeen);
+          }
+        }
+
+        let firstSeen = firstSeenMap.get(unitId);
+
+        if (firstSeen) {
+          if (log.createdAt.getTime() < firstSeen.getTime()) {
+            firstSeen = log.createdAt;
+            firstSeenMap.set(unitId, firstSeen);
+          }
+        }
+
         const newUnit = {
+          firstSeen,
+          lastSeen,
           unitId,
           unit: log.officer || log.emsFdDeputy || null,
           hours: unit.hours + hours,
         };
+
         groupedByUnit.set(unitId, newUnit);
         continue;
       }
 
-      const newUnit = { unitId, unit: log.officer || log.emsFdDeputy || null, hours };
+      const lastSeen = new Date(log.endedAt);
+      const firstSeen = new Date(log.createdAt);
+
+      lastSeenMap.set(unitId, lastSeen);
+      firstSeenMap.set(unitId, firstSeen);
+
+      const newUnit = {
+        unitId,
+        lastSeen,
+        firstSeen,
+        unit: log.officer || log.emsFdDeputy || null,
+        hours,
+      };
       groupedByUnit.set(unitId, newUnit);
     }
 
