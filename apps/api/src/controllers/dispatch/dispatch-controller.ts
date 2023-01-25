@@ -275,7 +275,13 @@ export class DispatchController {
     const includesData = {
       leo: { name: "officer", include: leoProperties },
       "ems-fd": { name: "emsFdDeputy", include: unitProperties },
-      combined: { name: "combinedLeoUnit", include: combinedUnitProperties },
+      "combined-leo": { name: "combinedLeoUnit", include: combinedUnitProperties },
+      "combined-ems-fd": {
+        name: "combinedEmsFdUnit",
+        include: {
+          /* todo */
+        },
+      },
     };
 
     const name = includesData[type].name;

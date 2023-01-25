@@ -355,7 +355,7 @@ export class AdminManageUnitsController {
 
     const { type, unit } = await findUnit(unitId);
 
-    if (!unit || type === "combined") {
+    if (!unit || type === "combined-ems-fd" || type === "combined-leo") {
       throw new NotFound("unitNotFound");
     }
 
@@ -688,7 +688,7 @@ export class AdminManageUnitsController {
   ): Promise<APITypes.PostManageUnitAddQualificationData> {
     const unit = await findUnit(unitId);
 
-    if (unit.type === "combined") {
+    if (unit.type === "combined-ems-fd" || unit.type === "combined-leo") {
       throw new BadRequest("Cannot add qualifications to combined units");
     }
 
@@ -734,7 +734,7 @@ export class AdminManageUnitsController {
   ): Promise<APITypes.DeleteManageUnitQualificationData> {
     const unit = await findUnit(unitId);
 
-    if (unit.type === "combined") {
+    if (unit.type === "combined-ems-fd" || unit.type === "combined-leo") {
       throw new BadRequest("Cannot add qualifications to combined units");
     }
 
@@ -765,7 +765,7 @@ export class AdminManageUnitsController {
 
     const unit = await findUnit(unitId);
 
-    if (unit.type === "combined") {
+    if (unit.type === "combined-ems-fd" || unit.type === "combined-leo") {
       throw new BadRequest("Cannot add qualifications to combined units");
     }
 
@@ -805,7 +805,7 @@ export class AdminManageUnitsController {
   ): Promise<APITypes.DeleteManageUnitByIdData> {
     const unit = await findUnit(unitId);
 
-    if (unit.type === "combined") {
+    if (unit.type === "combined-ems-fd" || unit.type === "combined-leo") {
       throw new BadRequest("Cannot delete combined units");
     }
 

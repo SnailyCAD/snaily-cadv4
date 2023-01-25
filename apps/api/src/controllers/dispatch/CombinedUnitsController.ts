@@ -22,7 +22,7 @@ export class CombinedUnitsController {
     this.socket = socket;
   }
 
-  @Post("/merge")
+  @Post("/merge/officers")
   @Description(
     "Merge officers into a combined/merged unit via their ids. `entry: true` means it that officer will be the main unit.",
   )
@@ -73,7 +73,7 @@ export class CombinedUnitsController {
 
     const [division] = entryOfficer.divisions;
 
-    const nextInt = await findNextAvailableIncremental({ type: "combined" });
+    const nextInt = await findNextAvailableIncremental({ type: "combined-leo" });
     const combinedUnit = await prisma.combinedLeoUnit.create({
       data: {
         statusId: status?.id ?? null,

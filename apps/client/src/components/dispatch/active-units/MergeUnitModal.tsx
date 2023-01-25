@@ -52,7 +52,8 @@ export function MergeUnitModal({ unit, isDispatch, onClose }: Props) {
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute<PostDispatchStatusMergeOfficers>({
-      path: "/dispatch/status/merge",
+      // todo: type: "officers"|"ems-fd"
+      path: "/dispatch/status/merge/officers",
       method: "POST",
       data: values.ids.map((v) => ({
         entry: isDispatch ? v.isFixed : v.value === activeOfficer?.id && v.isFixed,

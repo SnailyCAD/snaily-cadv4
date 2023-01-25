@@ -168,7 +168,7 @@ export class StatusController {
       });
     }
 
-    if (type === "combined") {
+    if (type === "combined-leo" || type === "combined-ems-fd") {
       await handlePanicButtonPressed({
         locale: user.locale,
         socket: this.socket,
