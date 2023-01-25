@@ -1,0 +1,24 @@
+{
+  "Ems": {
+    "emsFd": "Brandweer / Ambulance",
+    "createMedicalRecord": "Maak Medisch verslag",
+    "searchMedicalRecord": "Zoek Medisch verslag",
+    "activeDeputies": "Actieve hulpverlener",
+    "selectDeputy": "Selecteer hulpverlener",
+    "deputy": "Hulpverlener",
+    "myDeputies": "Mijn Hulpverlener",
+    "createDeputy": "Maak Hulpverlener",
+    "editDeputy": "Pas hulpverlener aan",
+    "deputyName": "Hulpverlener naam",
+    "deleteDeputy": "Verwijder hulpverlener",
+    "noDeputies": "U heeft geen hulpverleners",
+    "noActiveDeputies": "Er zijn geen actieve hulpverleners",
+    "citizenNoMedicalRecords": "Deze burger heeft geen medische verslagen",
+    "activeDeputy": "Actieve Hulpverlener",
+    "declareDead": "Verklaar overleden",
+    "declareAlive": "Verklaar leven",
+    "myDeputyLogs": "Mijn hulpverlener logs",
+    "emergencyVehicle": "Hulpverleningsvoertuig",
+    "alert_deleteDeputy": "Weet je zeker dat je <span>{deputy}</span> wilt verwijderen ? Dit kan niet ongedaan worden."
+  }
+}
