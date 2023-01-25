@@ -31,6 +31,7 @@ import { NameSearchBasicInformation } from "./sections/basic-information";
 import { NameSearchLicensesSection } from "./sections/licenses-section";
 import { NameSearchFooter } from "./sections/footer";
 import { shallow } from "zustand/shallow";
+import { SpeechAlert } from "./speech-alert";
 
 const VehicleSearchModal = dynamic(
   async () => (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal,
@@ -323,15 +324,19 @@ export function NameSearchModal() {
                   ) : null}
 
                   {bolo ? (
-                    <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
-                      {t("citizenBoloPlaced")}
-                    </div>
+                    <SpeechAlert text={t("citizenBoloPlaced")}>
+                      <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
+                        {t("citizenBoloPlaced")}
+                      </div>
+                    </SpeechAlert>
                   ) : null}
 
                   {hasActiveWarrants ? (
-                    <div className="p-2 my-2 font-semibold bg-red-700 rounded-md">
-                      {t("hasWarrants")}
-                    </div>
+                    <SpeechAlert text={t("hasWarrants")}>
+                      <div className="p-2 my-2 font-semibold bg-red-700 rounded-md">
+                        {t("hasWarrants")}
+                      </div>
+                    </SpeechAlert>
                   ) : null}
 
                   <div className="flex flex-col md:flex-row">
