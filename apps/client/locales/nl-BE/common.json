@@ -160,7 +160,7 @@
     "unitCallsignInUse": "Deze volledige roepnaam is al in gebruik door een andere eenheid. Geef een andere roepnaam op.",
     "steamNameInUse": "Could not create a new account with Steam since the username is already in use.",
     "steamAccountAlreadyLinked": "Dit Steam-account is al gekoppeld aan een ander account.",
-    "cannotRegisterFirstWithSteam": "Het eerste account moet worden geregistreerd zonder Steam. U kunt Steam koppelen zodra het account is aangemaakt.", 
+    "cannotRegisterFirstWithSteam": "Het eerste account moet worden geregistreerd zonder Steam. U kunt Steam koppelen zodra het account is aangemaakt.",
     "Unauthorized": "U bent uitgelogd. Log opnieuw in om door te gaan.",
     "captchaRequired": "Er is een fout opgetreden bij het valideren van uw CAPTCHA. Probeer het later nog eens",
     "invalidCaptcha": "We konden niet verifiëren of u een mens bent. Neem contact op met een beheerder als u denkt dat dit een fout is.",

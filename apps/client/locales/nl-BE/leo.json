@@ -293,9 +293,9 @@
     "categories": "Categorieën",
     "deleteExam": "Licentie-examen verwijderen",
     "alert_deleteExam": "Weet je zeker dat je dit licentie-examen wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt."
-},
-"Bof": {
-  "bureauOfFirearms": "Bureau van Vuurwapens",
-  "noWeaponsPendingBof": "Er zijn geen wapens in afwachting van goedkeuring."
-}
+  },
+  "Bof": {
+    "bureauOfFirearms": "Bureau van Vuurwapens",
+    "noWeaponsPendingBof": "Er zijn geen wapens in afwachting van goedkeuring."
+  }
 }

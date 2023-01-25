@@ -147,22 +147,22 @@
     "DELETE": "Verwijder oproeptype",
     "EDIT": "Pas oproeptype aan"
   },
-    "ADDRESS": {
-      "MANAGE": "Adressen beheren",
-      "ADD": "Adres toevoegen",
-      "DELETE": "Adres verwijderen",
-      "EDIT": "Adres bewerken"
-    },
-    "EMERGENCY_VEHICLE": {
-      "MANAGE": "Beheer noodvoertuigen",
-      "ADD": "Voeg noodvoertuig toe",
-      "DELETE": "Verwijder noodvoertuig",
-      "EDIT": "Bewerk noodvoertuig"
-    },
-    "ADDRESS_FLAG": {
-      "MANAGE": "Beheer adresopmerkingen",
-      "ADD": "Voeg een adresopmerking toe",
-      "DELETE": "Verwijder een adresopmerking",
-      "EDIT": "Bewerk een adresopmerking"
-    }
+  "ADDRESS": {
+    "MANAGE": "Adressen beheren",
+    "ADD": "Adres toevoegen",
+    "DELETE": "Adres verwijderen",
+    "EDIT": "Adres bewerken"
+  },
+  "EMERGENCY_VEHICLE": {
+    "MANAGE": "Beheer noodvoertuigen",
+    "ADD": "Voeg noodvoertuig toe",
+    "DELETE": "Verwijder noodvoertuig",
+    "EDIT": "Bewerk noodvoertuig"
+  },
+  "ADDRESS_FLAG": {
+    "MANAGE": "Beheer adresopmerkingen",
+    "ADD": "Voeg een adresopmerking toe",
+    "DELETE": "Verwijder een adresopmerking",
+    "EDIT": "Bewerk een adresopmerking"
+  }
 }
