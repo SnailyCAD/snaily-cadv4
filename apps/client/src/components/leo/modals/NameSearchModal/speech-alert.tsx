@@ -35,8 +35,6 @@ export function SpeechAlert(props: SpeechAlertProps) {
   }
 
   React.useEffect(() => {
-    console.log({ props, isSpeechEnabled });
-
     if (speaked.current || props.isDisabled || !isSpeechEnabled) {
       return;
     }
