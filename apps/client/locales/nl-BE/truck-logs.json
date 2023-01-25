@@ -1,0 +1,15 @@
+{
+  "TruckLogs": {
+    "truckLogs": "Vrachtwagen logs",
+    "createTruckLog": "Creër vrachtwagen log",
+    "editTruckLog": "Pas vrachtwagen log aan",
+    "deleteTruckLog": "Verwijder vrachtwagen log",
+    "driver": "Bestuurder",
+    "vehicle": "Voertuig",
+    "startedAt": "Begonnen op",
+    "endedAt": "Gestopt op",
+    "noTruckLogs": "U heeft nog geen vrachtwagen logs.",
+    "notes": "Notities",
+    "alert_deleteTruckLog": "Weet je zeker dat je deze vrachtwagen log wilt verwijderen ? Dit kan niet ongedaan worden."
+  }
+}
