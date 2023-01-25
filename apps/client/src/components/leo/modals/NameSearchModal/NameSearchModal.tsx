@@ -308,19 +308,31 @@ export function NameSearchModal() {
                   </header>
 
                   {currentResult.dead && currentResult.dateOfDead ? (
-                    <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
-                      {t("citizenDead", {
+                    <SpeechAlert
+                      text={t("citizenDead", {
                         date: format(new Date(currentResult.dateOfDead), "MMMM do yyyy"),
                       })}
-                    </div>
+                    >
+                      <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
+                        {t("citizenDead", {
+                          date: format(new Date(currentResult.dateOfDead), "MMMM do yyyy"),
+                        })}
+                      </div>
+                    </SpeechAlert>
                   ) : null}
 
                   {currentResult.missing && currentResult.dateOfMissing ? (
-                    <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
-                      {t("citizenMissing", {
+                    <SpeechAlert
+                      text={t("citizenMissing", {
                         date: format(new Date(currentResult.dateOfMissing), "MMMM do yyyy"),
                       })}
-                    </div>
+                    >
+                      <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
+                        {t("citizenMissing", {
+                          date: format(new Date(currentResult.dateOfMissing), "MMMM do yyyy"),
+                        })}
+                      </div>
+                    </SpeechAlert>
                   ) : null}
 
                   {bolo ? (
