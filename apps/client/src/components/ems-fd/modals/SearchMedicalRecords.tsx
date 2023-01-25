@@ -22,6 +22,7 @@ import { classNames } from "lib/classNames";
 import Image from "next/image";
 import format from "date-fns/format";
 import { useImageUrl } from "hooks/useImageUrl";
+import { SpeechAlert } from "components/leo/modals/NameSearchModal/speech-alert";
 
 interface Props {
   onClose?(): void;
@@ -158,19 +159,31 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
             ) : (
               <>
                 {results.dead && results.dateOfDead ? (
-                  <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
-                    {t("Leo.citizenDead", {
+                  <SpeechAlert
+                    text={t("citizenDead", {
                       date: format(new Date(results.dateOfDead), "MMMM do yyyy"),
                     })}
-                  </div>
+                  >
+                    <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
+                      {t("citizenDead", {
+                        date: format(new Date(results.dateOfDead), "MMMM do yyyy"),
+                      })}
+                    </div>
+                  </SpeechAlert>
                 ) : null}
 
                 {results.missing && results.dateOfMissing ? (
-                  <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
-                    {t("Leo.citizenMissing", {
+                  <SpeechAlert
+                    text={t("citizenMissing", {
                       date: format(new Date(results.dateOfMissing), "MMMM do yyyy"),
                     })}
-                  </div>
+                  >
+                    <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
+                      {t("citizenMissing", {
+                        date: format(new Date(results.dateOfMissing), "MMMM do yyyy"),
+                      })}
+                    </div>
+                  </SpeechAlert>
                 ) : null}
 
                 <div className="flex w-full">

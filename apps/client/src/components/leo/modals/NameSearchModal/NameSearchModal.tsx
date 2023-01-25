@@ -31,6 +31,7 @@ import { NameSearchBasicInformation } from "./sections/basic-information";
 import { NameSearchLicensesSection } from "./sections/licenses-section";
 import { NameSearchFooter } from "./sections/footer";
 import { shallow } from "zustand/shallow";
+import { SpeechAlert } from "./speech-alert";
 
 const VehicleSearchModal = dynamic(
   async () => (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal,
@@ -307,31 +308,47 @@ export function NameSearchModal() {
                   </header>
 
                   {currentResult.dead && currentResult.dateOfDead ? (
-                    <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
-                      {t("citizenDead", {
+                    <SpeechAlert
+                      text={t("citizenDead", {
                         date: format(new Date(currentResult.dateOfDead), "MMMM do yyyy"),
                       })}
-                    </div>
+                    >
+                      <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
+                        {t("citizenDead", {
+                          date: format(new Date(currentResult.dateOfDead), "MMMM do yyyy"),
+                        })}
+                      </div>
+                    </SpeechAlert>
                   ) : null}
 
                   {currentResult.missing && currentResult.dateOfMissing ? (
-                    <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
-                      {t("citizenMissing", {
+                    <SpeechAlert
+                      text={t("citizenMissing", {
                         date: format(new Date(currentResult.dateOfMissing), "MMMM do yyyy"),
                       })}
-                    </div>
+                    >
+                      <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
+                        {t("citizenMissing", {
+                          date: format(new Date(currentResult.dateOfMissing), "MMMM do yyyy"),
+                        })}
+                      </div>
+                    </SpeechAlert>
                   ) : null}
 
                   {bolo ? (
-                    <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
-                      {t("citizenBoloPlaced")}
-                    </div>
+                    <SpeechAlert text={t("citizenBoloPlaced")}>
+                      <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
+                        {t("citizenBoloPlaced")}
+                      </div>
+                    </SpeechAlert>
                   ) : null}
 
                   {hasActiveWarrants ? (
-                    <div className="p-2 my-2 font-semibold bg-red-700 rounded-md">
-                      {t("hasWarrants")}
-                    </div>
+                    <SpeechAlert text={t("hasWarrants")}>
+                      <div className="p-2 my-2 font-semibold bg-red-700 rounded-md">
+                        {t("hasWarrants")}
+                      </div>
+                    </SpeechAlert>
                   ) : null}
 
                   <div className="flex flex-col md:flex-row">
