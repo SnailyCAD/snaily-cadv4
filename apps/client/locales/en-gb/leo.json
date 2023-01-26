@@ -273,7 +273,15 @@
     "manageTones": "Manage Tones",
     "noExistingTones": "There are no existing tones.",
     "toneRevoked": "Tone Revoked",
-    "toneRevokedText": "Tone has successfully been revoked."
+    "toneRevokedText": "Tone has successfully been revoked.",
+    "involvedUnits": "Involved Units",
+    "addUnit": "Add unit",
+    "unassign": "Unassign",
+    "manageAddressFlags": "Manage Address Flags",
+    "temporaryUnit": "Temporary Unit",
+    "createTemporaryUnit": "Create Temporary Unit",
+    "identifiers": "Identifiers",
+    "identifiersInfo": "Identifiers can be used to identify the temporary unit for future use, such as steamId, discordId, etc. You can add multiple identifiers by separating them with a comma."
   },
   "Bolos": {
     "activeBolos": "Active Remarks",

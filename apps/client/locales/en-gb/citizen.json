@@ -53,6 +53,7 @@
     "officer": "Officer",
     "createWithOfficer": "Create with Officer",
     "previousRecords": "Previous Records",
+    "addressFlags": "Address Flags",
     "createPreviousRecordsStepDescription": "Here you can optionally add previous records this civilian has had. This is useful for when a civilian has been arrested before.",
     "alert_markCitizenDeceased": "Are you sure you want to delete <span>{citizen}</span>? Only the ambulance service can mark you alive again.",
     "alert_deleteCitizen": "Are you sure you want to delete <span>{citizen}</span>? This action cannot be undone."
