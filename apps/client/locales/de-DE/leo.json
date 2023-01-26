@@ -253,6 +253,14 @@
       "noExistingTones": "Es sind keine Töne vorhanden.",
       "toneRevoked": "Ton widerrufen",
       "toneRevokedText": "Tone wurde erfolgreich widerrufen.",
+	  "involvedUnits": "Beteiligte Einheiten",
+      "addUnit": "Einheit hinzufügen",
+      "unassign": "Aufheben der Zuweisung",
+	  "manageAddressFlags": "Verwalten von Adresskennzeichen",
+	  "temporaryUnit": "Temporäre Einheit",
+	  "createTemporaryUnit": "Temporäre Einheit erstellen",
+      "identifiers": "Identifikatoren",
+      "identifiersInfo": "Identifikatoren können verwendet werden, um die temporäre Einheit für die künftige Verwendung zu identifizieren, z. B. steamId, discordId usw. Sie können mehrere Identifikatoren hinzufügen, indem Sie sie durch ein Komma trennen.",
       "alert_endIncident": "Bist Du sicher, dass Du diesen Vorfall beenden willst. Er kann immer noch von Beamten eingesehen werden.",
       "alert_deleteRecord": "Bist Du sicher, dass Du diesen Datensatz löschen willst? Diese Aktion kann nicht rückgängig gemacht werden.",
       "alert_deleteOfficer": "Bist Du sicher, dass Du <span>{officer}</span> löschen willst? Diese Aktion kann nicht rückgängig gemacht werden.",
@@ -291,4 +299,4 @@
       "noWeaponsPendingBof": "Es stehen keine Waffen zur zulassung zu."
     }
   }
-  
+ 
