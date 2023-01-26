@@ -19,6 +19,6 @@
     "declareAlive": "Für lebendig erklären",
     "myDeputyLogs": "Mein Stellvertreter protokolliert",
     "emergencyVehicle": "Einsatzfahrzeug",
-    "alert_deleteDeputy": "Bist Du sicher, dass Du <span>{deputy}</span> löschen willst? Diese Aktion kann nicht rückgängig gemacht werden!"
+    "alert_deleteDeputy": "Bist du sicher, dass Du <span>{deputy}</span> löschen willst? Diese Aktion kann nicht rückgängig gemacht werden!"
   }
 }
