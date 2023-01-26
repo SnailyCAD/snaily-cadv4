@@ -13,11 +13,12 @@
     "deleteDeputy": "Stellvertreter löschen",
     "noDeputies": "Sie haben keine Stellvertreter",
     "noActiveDeputies": "Es gibt keine aktiven Stellvertreter",
-    "citizenNoMedicalRecords": "Dieser Bürger hat keine Krankenakte.",
+    "citizenNoMedicalRecords": "Dieser Bürger hat keine Krankenakte!",
     "activeDeputy": "Aktiver Stellvertreter",
     "declareDead": "Für tot erklären",
     "declareAlive": "Für lebendig erklären",
     "myDeputyLogs": "Mein Stellvertreter protokolliert",
-    "alert_deleteDeputy": "Sind Sie sicher, dass Sie <span>{deputy}</span> löschen wollen? Diese Aktion kann nicht rückgängig gemacht werden."
+    "emergencyVehicle": "Einsatzfahrzeug",
+    "alert_deleteDeputy": "Bist du sicher, dass Du <span>{deputy}</span> löschen willst? Diese Aktion kann nicht rückgängig gemacht werden!"
   }
 }

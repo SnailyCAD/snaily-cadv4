@@ -25,9 +25,19 @@
     "isConfidential": "Ist vertraulich",
     "priority": "Priorität",
     "isDisabled": "Behinderte",
-    "alert_deletePenalCodeGroup": "Sind Sie sicher, dass Sie <span>{group}</span> löschen wollen? Diese Aktion kann nicht rückgängig gemacht werden.",
-    "alert_deleteValue": "Sind Sie sicher, dass Sie <span>{value}</span> löschen wollen? Diese Aktion kann nicht rückgängig gemacht werden!",
-    "alert_deleteSelectedValues": "Sind Sie sicher, dass Sie {length} Elemente löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden"
+    "alert_deletePenalCodeGroup": "Bist Du sicher, dass Du <span>{group}</span> löschen willst? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "cacheTip": " Die Werte werden für 24 Stunden zwischengespeichert. Das bedeutet, dass sich aktualisierte, hinzugefügte oder gelöschte Werte möglicherweise nicht sofort ändern. Es kann bis zu 24 Stunden dauern, bis die Änderungen wirksam werden.",
+    "alert_deleteValue": "Bist Du, dass Du <span>{value}</span> löschen willst? Diese Aktion kann nicht rückgängig gemacht werden!",
+    "alert_deleteSelectedValues": "Bist Du sicher, dass Du {length} Elemente löschen willst? Diese Aktion kann nicht rückgängig gemacht werden"
+  },
+  "PENAL_CODE_GROUP": {
+    "MANAGE": "Verwalten von Strafrechtsgruppen",
+    "ADD": "Strafgesetzbuch-Gruppe hinzufügen",
+    "DELETE": "Strafgesetzbuch-Gruppe löschen",
+    "EDIT": "Strafgesetzbuch-Gruppe bearbeiten",
+    "ungrouped": "Ungruppiert",
+    "alert_deletePenalCodeGroup": "Bist Du sicher, dass Du <span>{group}</span> löschen willst? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "deleteGroup": "Gruppe löschen"
   },
   "GENDER": {
     "MANAGE": "Geschlechter verwalten",
@@ -114,16 +124,16 @@
     "EDIT": "Beschlagnahmte Grundstück bearbeiten"
   },
   "VEHICLE_FLAG": {
-    "MANAGE": "Fahrzeug-Flaggen verwalten",
-    "ADD": "Fahrzeug-Flagge hinzufügen",
-    "DELETE": "Fahrzeug-Flagge löschen",
-    "EDIT": "Fahrzeug-Flagge bearbeiten"
+    "MANAGE": "Fahrzeug-Kennungen verwalten",
+    "ADD": "Fahrzeug-Kennung hinzufügen",
+    "DELETE": "Fahrzeug-Kennung löschen",
+    "EDIT": "Fahrzeug-Kennung bearbeiten"
   },
   "CITIZEN_FLAG": {
-    "MANAGE": "Bürger-Flaggen verwalten",
-    "ADD": "Bürger-Flagge hinzufügen",
-    "DELETE": "Bürger-Flagge löschen",
-    "EDIT": "Bürger-Flagge bearbeiten"
+    "MANAGE": "Bürger-Kennungen verwalten",
+    "ADD": "Bürger-Kennung hinzufügen",
+    "DELETE": "Bürger-Kennung löschen",
+    "EDIT": "Bürger-Kennung bearbeiten"
   },
   "QUALIFICATION": {
     "MANAGE": "Qualifikationen der Einheit verwalten",
@@ -136,5 +146,23 @@
     "ADD": "Ruf-Typ hinzufügen",
     "DELETE": "Ruf-Typ löschen",
     "EDIT": "Ruf-Typ bearbeiten"
+  },
+  "ADDRESS": {
+    "MANAGE": "Adressen verwalten",
+    "ADD": "Adressen hinzufügen",
+    "DELETE": "Adresse löschen",
+    "EDIT": "Adressen bearbeiten"
+  },
+  "EMERGENCY_VEHICLE": {
+    "MANAGE": "Einsatzfahrzeuge verwalten",
+    "ADD": "Einsatzfahrzeuge hinzufügen",
+    "DELETE": "Lösche Einsatzfahrzeuge",
+    "EDIT": "Einsatzfahrzeuge bearbeiten"
+  },
+  "ADDRESS_FLAG": {
+    "MANAGE": "Adresskennzeichen verwalten",
+    "ADD": "Adresskennzeichen hinzufügen",
+    "DELETE": "Adresskennzeichen löschen",
+    "EDIT": "Adresskennzeichen bearbeiten"
   }
 }

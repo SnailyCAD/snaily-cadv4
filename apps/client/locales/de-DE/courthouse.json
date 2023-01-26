@@ -1,8 +1,8 @@
 {
   "Courthouse": {
-    "courthouse": "San Andreas Gericht",
+    "courthouse": "Gericht",
     "requestExpungement": "Antrag auf Löschung",
-    "noExpungementRequests": "Sie haben keine Anträge auf Löschung",
+    "noExpungementRequests": "Du hast keine Anträge auf Löschung",
     "request": "Anfrage",
     "noPendingRequests": "Es sind keine Anträge auf Löschung anhängig",
     "expungementRequests": "Anträge auf Löschung",
@@ -12,7 +12,7 @@
     "newName": "Neuer Name",
     "newSurname": "Neuer Nachname",
     "status": "Status",
-    "courtEntries": "Einträge am Hof",
+    "courtEntries": "Einträge",
     "noCourtEntries": "Es gibt keine Gerichtseinträge.",
     "addCourtEntry": "Gerichtseintrag hinzufügen",
     "deleteCourtEntry": "Gerichtseintrag löschen",
@@ -31,8 +31,11 @@
     "deleteCourthousePost": "Gerichtsposten löschen",
     "addCourthousePost": "Gerichtsposten hinzufügen",
     "noCourthousePosts": "Es gibt noch keine Gerichtsposten.",
-    "alert_deleteCourthousePost": "Sind Sie sicher, dass Sie diesen Beitrag löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
-    "alert_deleteCourtEntry": "Sind Sie sicher, dass Sie diesen Eintrag löschen wollen? Diese Aktion kann nicht rückgängig gemacht werden.",
-    "alert_deleteCourtDate": "Sind Sie sicher, dass Sie diesen Gerichtstermin löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
+    "createdBy": "Erstellt von",
+    "cancelRequest": "Anfrage stornieren",
+    "alert_deleteCourthousePost": "Bist du sicher, dass Du diesen Beitrag löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "alert_deleteCourtEntry": "Bist du sicher, dass Du diesen Eintrag löschen willst? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "alert_cancelRequest": "Bist du sicher, dass Du diesen Antrag auf Löschung Abbrechen willst? Dieser Vorgang kann nicht rückgängig gemacht werden.",
+    "alert_deleteCourtDate": "Bist du sicher, dass Du diesen Gerichtstermin löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden."
   }
 }

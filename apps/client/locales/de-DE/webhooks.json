@@ -1,0 +1,50 @@
+{
+  "Tow": {
+    "vehicleImpounded": "Abgeschleppte Fahrzeuge",
+    "registrationStatus": "Registrierungs Status",
+    "model": "Model",
+    "owner": "Eingentümer"
+  },
+  "Bolos": {
+    "boloCreated": "BOLO Erstelle",
+    "viewMoreInfo": "Hier findest Du weitere Informationen zum CAD.",
+    "type": "Typ",
+    "name": "Name",
+    "plate": "Kennzeichen",
+    "model": "Model",
+    "color": "Farbe"
+  },
+  "Statuses": {
+    "statusChange": "Status änderung",
+    "status": "Status",
+    "statusChangeDescription": "Einhiet {unit} hat den Status zu {status} geändert."
+  },
+  "PanicButton": {
+    "panicButton": "Panic Button",
+    "panicButtonDescription": "Die Einheit {unit} hat den Panik Knopf gedrückt."
+  },
+  "Calls": {
+    "callCreated": "Notruf erstellt",
+    "viewMoreInfo": "Hier findest Du weitere Informationen zum CAD.",
+    "location": "Location",
+    "caller": "Caller",
+    "unknown": "Unknown",
+    "couldNotRenderDescription": "Could not render description."
+  },
+  "Records": {
+    "citizen": "Bürger",
+    "status": "Status",
+    "postal": "Postleitzahl",
+    "recordType": "Datensatztyp",
+    "ARREST_REPORT": "Verhaftungsbericht",
+    "WRITTEN_WARNING": "Schriftliche Warnungg",
+    "TICKET": "Ticket",
+    "totalBail": "Gesamt Kaution",
+    "totalFineAmount": "Gesamtbetrag der Geldstrafen",
+    "totalJailTime": "Gesamtdauer der Haftstrafe",
+    "newWarrantCreated": "Neuer Haftbefehl erstellt",
+    "newRecordCreated": "Neuer Datensatz erstellt",
+    "ACTIVE": "Aktiv",
+    "INACTIVE": "Inaktiv"
+  }
+}

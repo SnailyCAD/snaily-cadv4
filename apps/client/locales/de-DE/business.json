@@ -3,10 +3,10 @@
     "businesses": "Unternehmen",
     "owned": "Eigene",
     "joined": "Beitritt",
-    "noOwned": "Sie besitzen keine Unternehmen",
+    "noOwned": "Du besitzt keine Unternehmen",
     "role": "Rolle",
     "citizen": "Bürger",
-    "notEmployee": "Sie sind nicht in einem anderen Unternehmen angestellt",
+    "notEmployee": "Du bist nicht in einem anderen Unternehmen angestellt",
     "business": "Unternehmen",
     "createBusiness": "Unternehmen erstellen",
     "joinBusiness": "Unternehmen beitreten",
@@ -32,15 +32,15 @@
     "businessVehicles": "Unternehmen-Fahrzeuge",
     "noPendingEmployees": "Es gibt keine Mitarbeiter, die auf Zugang warten.",
     "noVehicles": "Dieses Unternehmen hat keine Fahrzeuge zugelassen.",
-    "businessIsWhitelisted": "Dieses Unternehmen ist auf der Whitelist. Sie können es sehen, sobald Sie akzeptiert wurden.",
+    "businessIsWhitelisted": "Dieses Unternehmen ist auf der Whitelist. Du kannst es sehen, sobald Dein Antrag akzeptiert wurde",
     "businessWhitelistedCAD": "Dieses Unternehmen wartet noch auf die Zulassung eines Verwalters.",
     "postTitle": "Beitrag Titel",
     "postBody": "Beitrag Körper",
     "nameDescription": "Der Name Ihres Unternehmens.",
     "addressDescription": "Die Adresse Ihres Unternehmens.",
-    "whitelistDescription": "Bürger, die sich Ihrem Unternehmen anschließen wollen, müssen geprüft werden. Sie können angenommen oder abgelehnt werden.",
-    "alert_fireEmployee": "Sind Sie sicher, dass Sie <span>{employee}</span> entlassen wollen? Diese Aktion kann nicht rückgängig gemacht werden.",
-    "alert_deletePost": "Sind Sie sicher, dass Sie diesen Beitrag löschen wollen? Diese Aktion kann nicht rückgängig gemacht werden.",
-    "alert_deleteBusiness": "Sind Sie sicher, dass Sie \"<span>{business}</span>\" löschen wollen? Diese Aktion kann nicht rückgängig gemacht werden."
+    "whitelistDescription": "Bürger, die sich Ihrem Unternehmen anschließen wollen, müssen geprüft werden. Du kannst angenommen oder abgelehnt werden.",
+    "alert_fireEmployee": "Bist Du sicher, dass Du <span>{employee}</span> entlassen willst? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "alert_deletePost": "Bist Du sicher, dass Du diesen Beitrag löschen willst? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "alert_deleteBusiness": "Bist Du sicher, dass Du \"<span>{business}</span>\" löschen willst? Diese Aktion kann nicht rückgängig gemacht werden."
   }
 }
