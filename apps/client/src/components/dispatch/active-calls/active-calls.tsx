@@ -58,13 +58,7 @@ function _ActiveCalls({ initialData }: Props) {
   const { execute } = useFetch();
   const activeOfficer = useLeoState((state) => state.activeOfficer);
   const activeDeputy = useEmsFdState((state) => state.activeDeputy);
-  const { search, setSearch } = useCallsFilters(
-    (state) => ({
-      search: state.search,
-      setSearch: state.setSearch,
-    }),
-    shallow,
-  );
+  const search = useCallsFilters((state) => state.search);
 
   const asyncTable = useAsyncTable({
     search,
@@ -91,7 +85,6 @@ function _ActiveCalls({ initialData }: Props) {
     defaultHiddenColumns: ["type", "priority"],
     tableId: "active-calls",
     pagination: asyncTable.pagination,
-    search: { value: search, setValue: setSearch },
   });
 
   const hasDispatchPermissions = hasPermissions(

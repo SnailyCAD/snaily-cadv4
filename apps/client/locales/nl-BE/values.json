@@ -1,0 +1,168 @@
+{
+  "Values": {
+    "totalItems": "Totaal spullen",
+    "values": "Waarden",
+    "shouldDo": "Moet doen",
+    "color": "Kleur",
+    "callsign": "Roepnummer",
+    "department": "Zone",
+    "gameHash": "Game Hash",
+    "file": "Bestand",
+    "importValues": "Import via bestand",
+    "exportValues": "Exporteer waardes",
+    "ungrouped": "Ontgroept",
+    "licenseType": "Type vergunning",
+    "whitelisted": "Whitelisted",
+    "whatPages": "What Pages",
+    "departments": "Zones",
+    "isDefaultDepartment": "Standaard zone",
+    "deleteSelectedValues": "Verwijder geselecteerde waarde",
+    "isDefault": "Is standaard",
+    "defaultOfficerRank": "Standaard rang",
+    "pairedUnitTemplate": "Sjabloon voor gekoppelde eenheden",
+    "isConfidential": "Is geheim",
+    "priority": "Voorrang",
+    "isDisabled": "Uitgeschakeld",
+    "county": "Gemeente",
+    "deletedSelectedValues": "Verwijderde {deleted} items. Gefaald om {failed} items te verwijderen",
+    "failedDeleteValue": "<span>{waarde}</span> is niet verwijderd.",
+    "cacheTip": " Waarden worden 24 uur in de cache geplaatst. Dit betekent dat bijgewerkte, toegevoegde of verwijderde waarden mogelijk niet onmiddellijk veranderen. Het kan tot 24 uur duren voordat de wijzigingen van kracht worden.",
+    "alert_deleteValue": "Weet je zeker dat je <span>{value}</span> wilt verwijderen? Dit kan niet ongedaan worden.",
+    "alert_deleteSelectedValues": "Weet je zeker dat je{length} wilt verwijderen? items? Dit kan niet ongedaan worden."
+  },
+  "PENAL_CODE_GROUP": {
+    "MANAGE": "Beheer Strafrechtgroepen",
+    "ADD": "Strafrechtgroep toevoegen",
+    "DELETE": "Strafrechtgroep verwijderen",
+    "EDIT": "Strafrechtgroep bewerken",
+    "ungrouped": "Ongegroepeerd",
+    "alert_deletePenalCodeGroup": "Weet je zeker dat je <span>{group}</span> wilt verwijderen? Dit kan niet ongedaan worden.",
+    "deleteGroup": "Groep verwijderen"
+  },
+  "GENDER": {
+    "MANAGE": "Beheer genders",
+    "ADD": "Voeg gender toe",
+    "DELETE": "Verwijder gender",
+    "EDIT": "Pas Gender aan"
+  },
+  "WEAPON": {
+    "MANAGE": "Beheer Wapens",
+    "ADD": "Voeg wapen toe",
+    "DELETE": "Verwijder wapen",
+    "EDIT": "Pas wapen aan"
+  },
+  "VEHICLE": {
+    "MANAGE": "Beheer voertuigen",
+    "ADD": "Voeg voertuigen toe",
+    "DELETE": "Verwijder Voertuig",
+    "EDIT": "Pas voertuig aan"
+  },
+  "ETHNICITY": {
+    "MANAGE": "Beheer etniciteiten",
+    "ADD": "Voeg etniciteit toe",
+    "DELETE": "Verwijder etniciteit",
+    "EDIT": "Pas etniciteit aan"
+  },
+  "BLOOD_GROUP": {
+    "MANAGE": "Beheer bloedgroepen",
+    "ADD": "Voeg bloedgroep toe",
+    "DELETE": "Verwijder bloedgroep",
+    "EDIT": "Pas bloedgroep aan"
+  },
+  "LICENSE": {
+    "MANAGE": "Beheer bewijzen",
+    "ADD": "Voeg bewijs toe",
+    "DELETE": "Verwijder bewijs",
+    "EDIT": "Pas bewijs aan"
+  },
+  "BUSINESS_ROLE": {
+    "MANAGE": "Beheer bedrijfs rollen",
+    "ADD": "Voeg bedrijfs rol toe",
+    "DELETE": "Verwijder bedrijfsrol",
+    "EDIT": "Pas bedrijfsrol aan"
+  },
+  "DEPARTMENT": {
+    "MANAGE": "Beheer zones",
+    "ADD": "Voeg zone toe",
+    "DELETE": "Verwijder zone",
+    "EDIT": "Pas zone aan"
+  },
+  "CODES_10": {
+    "MANAGE": "Beheer 10code",
+    "ADD": "Voeg 10code toe",
+    "DELETE": "Verwijder 10code",
+    "EDIT": "Pas 10code aan"
+  },
+  "OFFICER_RANK": {
+    "MANAGE": "Beheer rangen",
+    "ADD": "Voeg rang toe",
+    "DELETE": "Verwijder rang",
+    "EDIT": "Pas rang aan"
+  },
+  "PENAL_CODE": {
+    "MANAGE": "Beheer penalcode",
+    "ADD": "Voeg penalcode toe",
+    "DELETE": "Verwijder penalcode",
+    "EDIT": "Pas penalcode aan"
+  },
+  "DIVISION": {
+    "MANAGE": "Beheer basis functionaliteiten",
+    "ADD": "Voeg basis functionaliteit toe",
+    "DELETE": "Verwijder basis functionaliteit",
+    "EDIT": "Pas basis functionaliteit aan"
+  },
+  "DRIVERSLICENSE_CATEGORY": {
+    "MANAGE": "Beheer rijbewijs types",
+    "ADD": "Voeg rijbewijs type toe",
+    "DELETE": "Verwijder rijbewijs type",
+    "EDIT": "Pas rijbewijs type aan"
+  },
+  "IMPOUND_LOT": {
+    "MANAGE": "Beheer inbeslagname ",
+    "ADD": "Voeg inbeslagname toe",
+    "DELETE": "Verwijder inbeslagname",
+    "EDIT": "Pas inbeslagname aan"
+  },
+  "VEHICLE_FLAG": {
+    "MANAGE": "Beheer voertuig aandachtspunten ",
+    "ADD": "Voeg voertuig aandachtspunt toe",
+    "DELETE": "Verwijder voertuig aandachtspunt",
+    "EDIT": "Pas voertuig aandachtspunt aan"
+  },
+  "CITIZEN_FLAG": {
+    "MANAGE": "Beheer burger aandachtspunten ",
+    "ADD": "Voeg burger aandachtspunt toe",
+    "DELETE": "Verwijder burger aandachtspunt",
+    "EDIT": "Pas burger aandachtspunt aan"
+  },
+  "QUALIFICATION": {
+    "MANAGE": "Beheer qualificaties ",
+    "ADD": "Voeg qualificatie toe",
+    "DELETE": "Verwijder qualificatie",
+    "EDIT": "Pas qualificatie aan"
+  },
+  "CALL_TYPE": {
+    "MANAGE": "Beheer oproeptype ",
+    "ADD": "Voeg oproeptype toe",
+    "DELETE": "Verwijder oproeptype",
+    "EDIT": "Pas oproeptype aan"
+  },
+  "ADDRESS": {
+    "MANAGE": "Adressen beheren",
+    "ADD": "Adres toevoegen",
+    "DELETE": "Adres verwijderen",
+    "EDIT": "Adres bewerken"
+  },
+  "EMERGENCY_VEHICLE": {
+    "MANAGE": "Beheer noodvoertuigen",
+    "ADD": "Voeg noodvoertuig toe",
+    "DELETE": "Verwijder noodvoertuig",
+    "EDIT": "Bewerk noodvoertuig"
+  },
+  "ADDRESS_FLAG": {
+    "MANAGE": "Beheer adresopmerkingen",
+    "ADD": "Voeg een adresopmerking toe",
+    "DELETE": "Verwijder een adresopmerking",
+    "EDIT": "Bewerk een adresopmerking"
+  }
+}

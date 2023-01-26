@@ -149,7 +149,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
             autoFocus
           />
 
-          <AddressPostalSelect addressLabel="location" />
+          <AddressPostalSelect isDisabled={isDisabled} addressLabel="location" />
           {router.pathname.includes("/citizen") ? (
             <FormField errorMessage={errors.description} label={common("description")}>
               <Editor

@@ -6,7 +6,7 @@ import { ContentType, Description, Get, Post } from "@tsed/schema";
 import {
   AcceptDeclineType,
   ACCEPT_DECLINE_TYPES,
-} from "controllers/admin/manage/manage-units-controller";
+} from "controllers/admin/manage/units/manage-units-controller";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";

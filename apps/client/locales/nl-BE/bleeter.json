@@ -1,0 +1,14 @@
+{
+  "Bleeter": {
+    "bleeter": "Bleeter",
+    "noPosts": "Er zijn nog geen posts.",
+    "createBleet": "Maak Bleet ",
+    "editBleet": "Pas Bleet aan",
+    "deleteBleet": "Bleet verwijderen",
+    "viewBleet": "Bleet bekijken",
+    "headerImage": "Header foto",
+    "bleetTitle": "Bleet titel",
+    "bleetBody": "Bleet Body",
+    "alert_deleteBleet": "Zeker dat je \"<span>{title}</span>\" wilt verwijderen? Deze actie kan niet ongedaan gemaakt worden."
+  }
+}

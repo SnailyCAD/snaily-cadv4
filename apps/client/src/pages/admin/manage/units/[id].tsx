@@ -36,14 +36,16 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
   const tAdmin = useTranslations("Management");
 
   const TABS = [];
+  let index = 0;
 
   if (hasManageAwardsPermissions || hasManagePermissions) {
-    TABS[0] = { name: "Manage Unit", value: "manage-unit" };
+    TABS[index] = { name: "Manage Unit", value: "manage-unit" };
+    index += 1;
   }
 
   if (hasManageCallsignPermissions) {
-    const idx = hasManageAwardsPermissions || hasManagePermissions ? 1 : 0;
-    TABS[idx] = { name: "Unit Logs", value: "unit-logs" };
+    TABS[index] = { name: "Unit Logs", value: "unit-logs" };
+    index += 1;
   }
 
   return (

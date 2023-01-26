@@ -41,7 +41,7 @@ export function useAsyncTable<T>(options: Options<T>) {
     enabled: !options.disabled,
     initialData: options.initialData ?? [],
     queryFn: fetchData,
-    queryKey: [paginationOptions.pageIndex, debouncedSearch, filters],
+    queryKey: [paginationOptions.pageIndex, debouncedSearch, filters, options.fetchOptions.path],
   });
 
   React.useEffect(() => {

@@ -22,6 +22,7 @@ import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { shallow } from "zustand/shallow";
 import { isUnitCombined } from "@snailycad/utils";
+import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 
 interface Props {
   call: Full911Call | null;
@@ -50,6 +51,7 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
 
   const activeOfficer = useLeoState((state) => state.activeOfficer);
   const activeDeputy = useEmsFdState((state) => state.activeDeputy);
+  const { hasActiveDispatchers } = useActiveDispatchers();
 
   const hasDispatchPermissions = hasPermissions(
     defaultPermissions.defaultDispatchPermissions,
@@ -58,10 +60,11 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
 
   const activeUnit = router.pathname.includes("/officer") ? activeOfficer : activeDeputy;
   const isDispatch = router.pathname.includes("/dispatch") && hasDispatchPermissions;
+
   const isDisabled = isDispatch
     ? false
     : call
-    ? !call?.assignedUnits.some((u) => u.unit?.id === activeUnit?.id)
+    ? !call?.assignedUnits.some((u) => u.unit?.id === activeUnit?.id) && hasActiveDispatchers
     : false;
 
   const handleCallStateUpdate = React.useCallback(
