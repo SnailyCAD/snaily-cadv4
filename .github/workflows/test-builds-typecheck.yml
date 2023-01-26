@@ -9,14 +9,11 @@ jobs:
   build:
     name: Build & Typecheck
     runs-on: ${{ matrix.os }}
-    # env:
-    #   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-    #   TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        node-version: [16.x]
+        node-version: [16.x, 18.x]
 
     steps:
       - name: Check out code
@@ -29,15 +26,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: yarn
-
-      - name: Next.js Cache
-        id: nextjs-cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ github.workspace }}/apps/client/.next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
-          restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}-
 
       - name: Install dependencies
         run: yarn
