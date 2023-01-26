@@ -482,3 +482,27 @@ export interface GetAuditLogsData {
   totalCount: number;
   logs: Types.AuditLog[];
 }
+
+/**
+ * @method Get
+ * @route /admin/manage/units/department-time-logs/departments
+ */
+export interface GetDepartmentTimeLogsDepartmentsData {
+  totalCount: number;
+  logs: { hours: number; department: Types.DepartmentValue; departmentId: string }[];
+}
+
+/**
+ * @method Get
+ * @route /admin/manage/units/department-time-logs/units
+ */
+export interface GetDepartmentTimeLogsUnitsData {
+  totalCount: number;
+  logs: {
+    hours: number;
+    unit: Types.Officer | Types.EmsFdDeputy;
+    unitId: string;
+    firstSeen: Date;
+    lastSeen: Date;
+  }[];
+}
