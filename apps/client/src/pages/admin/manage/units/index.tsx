@@ -26,6 +26,16 @@ const CallsignsTab = dynamic(
   { ssr: false },
 );
 
+const DepartmentTimeLogsTab = dynamic(
+  async () =>
+    (
+      await import(
+        "components/admin/manage/units/tabs/department-time-logs/department-time-logs-table"
+      )
+    ).DepartmentTimeLogsTab,
+  { ssr: false },
+);
+
 export type Unit = GetManageUnitsData["units"][number];
 
 interface Props {
@@ -74,6 +84,11 @@ export default function SupervisorPanelPage(props: Props) {
     });
   }
 
+  TABS.push({
+    name: "Department Time Logs",
+    value: "departmentTimeLogs",
+  });
+
   return (
     <AdminLayout
       permissions={{
@@ -95,6 +110,7 @@ export default function SupervisorPanelPage(props: Props) {
         {props.pendingUnits.totalCount > 0 && hasManagePermissions ? (
           <DepartmentWhitelistingTab pendingUnits={props.pendingUnits} />
         ) : null}
+        <DepartmentTimeLogsTab />
       </TabList>
     </AdminLayout>
   );

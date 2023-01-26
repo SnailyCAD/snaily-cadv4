@@ -46,7 +46,7 @@ export function DepartmentWhitelistingTab({ pendingUnits }: Props) {
   const common = useTranslations("Common");
   const { generateCallsign } = useGenerateCallsign();
   const { state, execute } = useFetch();
-  const tableState = useTableState({ search: { value: search } });
+  const tableState = useTableState();
   const { DIVISIONS } = useFeatureEnabled();
   const hasViewUsersPermissions = hasPermissions([Permissions.ViewUsers], true);
 
