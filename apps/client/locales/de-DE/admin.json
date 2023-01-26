@@ -42,7 +42,7 @@
     "action": "Aktion",
     "noPendingOfficers": "Es gibt keine Beamten, die auf den Zugang zu einer Abteilung warten.",
     "allUnits": "Alle Einheiten",
-    "departmentWhitelisting": "Abteilung Whitelisting ({Länge})",
+    "departmentWhitelisting": "Abteilung Whitelisting ({length})",
     "importViaFile": "Importieren über Datei",
     "managePermissions": "Berechtigungen verwalten",
     "detailedPermissions": "Detaillierte Berechtigungen",
