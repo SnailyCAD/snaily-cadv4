@@ -175,6 +175,6 @@
     "tokenDescription": "Dies ist das Token, das für die Kommunikation mit der API verwendet wird. Dieses Token ist einzigartig und darf nicht weitergegeben werden. <a>Mehr lesen</a>",
     "discordBotCommand": "Befehl zur Integration des Discord-Bots",
     "discordBotCommandDescription": "Dieser Befehl kann mit der <a>Discord-Bot-Integration</a> verwendet werden.",
-    "readMorePublicAPI": "Lesen Sie mehr über die <a>Öffentliche API hier.</a>"
+    "readMorePublicAPI": "Lese mehr über die <a>Öffentliche API hier.</a>"
   }
 }
