@@ -1,7 +1,7 @@
 {
   "Calls": {
-    "tow": "Tow",
-    "towLogs": "Tow Logs",
+    "tow": "Abschleppdienst",
+    "towLogs": "Abschlepp Logs",
     "taxi": "Taxi",
     "active911Calls": "Aktive 911-Anrufe",
     "noTowCalls": "Es liegen noch keine Abschleppdienst Dispatches vor.",
