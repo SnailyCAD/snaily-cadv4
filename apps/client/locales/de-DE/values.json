@@ -124,16 +124,16 @@
     "EDIT": "Beschlagnahmte Grundstück bearbeiten"
   },
   "VEHICLE_FLAG": {
-    "MANAGE": "Fahrzeug-Flaggen verwalten",
-    "ADD": "Fahrzeug-Flagge hinzufügen",
-    "DELETE": "Fahrzeug-Flagge löschen",
-    "EDIT": "Fahrzeug-Flagge bearbeiten"
+    "MANAGE": "Fahrzeug-Kennungen verwalten",
+    "ADD": "Fahrzeug-Kennung hinzufügen",
+    "DELETE": "Fahrzeug-Kennung löschen",
+    "EDIT": "Fahrzeug-Kennung bearbeiten"
   },
   "CITIZEN_FLAG": {
-    "MANAGE": "Bürger-Flaggen verwalten",
-    "ADD": "Bürger-Flagge hinzufügen",
-    "DELETE": "Bürger-Flagge löschen",
-    "EDIT": "Bürger-Flagge bearbeiten"
+    "MANAGE": "Bürger-Kennungen verwalten",
+    "ADD": "Bürger-Kennung hinzufügen",
+    "DELETE": "Bürger-Kennung löschen",
+    "EDIT": "Bürger-Kennung bearbeiten"
   },
   "QUALIFICATION": {
     "MANAGE": "Qualifikationen der Einheit verwalten",
@@ -158,5 +158,11 @@
     "ADD": "Einsatzfahrzeuge hinzufügen",
     "DELETE": "Lösche Einsatzfahrzeuge",
     "EDIT": "Einsatzfahrzeuge bearbeiten"
+  },
+  "ADDRESS_FLAG": {
+    "MANAGE": "Adresskennzeichen verwalten",
+    "ADD": "Adresskennzeichen hinzufügen",
+    "DELETE": "Adresskennzeichen löschen",
+    "EDIT": "Adresskennzeichen bearbeiten"
   }
 }
