@@ -110,7 +110,7 @@ export default function SupervisorPanelPage(props: Props) {
         {props.pendingUnits.totalCount > 0 && hasManagePermissions ? (
           <DepartmentWhitelistingTab pendingUnits={props.pendingUnits} />
         ) : null}
-        <DepartmentTimeLogsTab units={props.units} />
+        <DepartmentTimeLogsTab />
       </TabList>
     </AdminLayout>
   );
