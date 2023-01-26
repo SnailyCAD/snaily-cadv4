@@ -113,7 +113,9 @@ function ActiveDeputies({ initialDeputies }: Props) {
       </header>
 
       {activeDeputies.length <= 0 ? (
-        <p className="px-4 py-2">{t("Ems.noActiveDeputies")}</p>
+        <p className="px-4 py-2  text-neutral-700 dark:text-gray-300">
+          {t("Ems.noActiveDeputies")}
+        </p>
       ) : (
         <>
           <ActiveUnitsSearch type="ems-fd" />
