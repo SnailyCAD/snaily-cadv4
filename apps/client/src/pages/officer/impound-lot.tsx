@@ -59,7 +59,9 @@ export default function ImpoundLot({ vehicles: data }: Props) {
             id: item.id,
             plate: item.vehicle.plate,
             model: item.vehicle.model.value.value,
-            owner: `${item.vehicle.citizen.name} ${item.vehicle.citizen.surname}`,
+            owner: item.vehicle.citizen
+              ? `${item.vehicle.citizen.name} ${item.vehicle.citizen.surname}`
+              : common("unknown"),
             location: item.location.value,
             impoundedBy: item.officer
               ? `${generateCallsign(item.officer)} ${makeUnitName(item.officer)}`

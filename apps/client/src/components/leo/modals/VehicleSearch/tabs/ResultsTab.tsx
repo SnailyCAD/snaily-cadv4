@@ -36,7 +36,7 @@ export function ResultsTab() {
   }
 
   function handleNameClick() {
-    if (!currentResult) return;
+    if (!currentResult?.citizen) return;
 
     openModal(ModalIds.NameSearch, {
       ...currentResult.citizen,
@@ -62,7 +62,9 @@ export function ResultsTab() {
               type="button"
               onPress={handleNameClick}
             >
-              {currentResult.citizen.name} {currentResult.citizen.surname}
+              {currentResult.citizen
+                ? `${currentResult.citizen.name} ${currentResult.citizen.surname}`
+                : common("unknown")}
             </Button>
           </Infofield>
         </li>

@@ -106,7 +106,9 @@ export default function ImportVehiclesPage({ data }: Props) {
           color: vehicle.color,
           registrationStatus: vehicle.registrationStatus.value,
           vinNumber: vehicle.vinNumber,
-          citizen: `${vehicle.citizen.name} ${vehicle.citizen.surname}`,
+          citizen: vehicle.citizen
+            ? `${vehicle.citizen.name} ${vehicle.citizen.surname}`
+            : common("unknown"),
           createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
           actions: (
             <Button size="xs" variant="danger" onPress={() => handleDeleteClick(vehicle)}>

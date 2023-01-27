@@ -387,7 +387,7 @@ export class VehiclesController {
 
     const newOwner = await prisma.citizen.findFirst({
       where: {
-        AND: [{ id: data.ownerId }, { NOT: { id: vehicle.citizenId } }],
+        AND: [{ id: data.ownerId }, { NOT: { id: String(vehicle.citizenId) } }],
       },
     });
 
@@ -446,19 +446,22 @@ export class VehiclesController {
         throw new NotFound("employeeNotFoundOrInvalidPermissions");
       }
     } else {
-      const owner = await prisma.citizen.findUnique({
-        where: { id: vehicle.citizenId },
-      });
+      if (vehicle.citizenId) {
+        const owner = await prisma.citizen.findUnique({
+          where: { id: vehicle.citizenId },
+        });
 
-      // registered vehicles may not have `userId`
-      // therefore we should use `citizen`
-      const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
-      if (checkCitizenUserId) {
-        canManageInvariant(owner?.userId, user, new NotFound("notFound"));
-      } else if (!owner) {
-        throw new NotFound("NotFound");
+        // registered vehicles may not have `userId`
+        // therefore we should use `citizen`
+        const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
+        if (checkCitizenUserId) {
+          canManageInvariant(owner?.userId, user, new NotFound("notFound"));
+        } else if (!owner) {
+          throw new NotFound("NotFound");
+        }
       }
     }
+
     await prisma.registeredVehicle.delete({
       where: {
         id: vehicle.id,

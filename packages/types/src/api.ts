@@ -340,7 +340,7 @@ export interface GetCitizenVehiclesData {
 export type PostCitizenVehicleData = Prisma.RegisteredVehicle & {
   model: Types.VehicleValue;
   registrationStatus: Prisma.Value;
-  citizen: Prisma.Citizen;
+  citizen?: Prisma.Citizen | null;
 };
 
 /**

@@ -142,7 +142,9 @@ function VehicleResults({ results }: any) {
           </Button>
         ),
         vinNumber: `${result.vinNumber}`,
-        owner: `${result.citizen.name} ${result.citizen.surname}`,
+        owner: result.citizen
+          ? `${result.citizen.name} ${result.citizen.surname}`
+          : t("Common.unknown"),
       }))}
       columns={[
         { header: t("Vehicles.model"), accessorKey: "model" },
