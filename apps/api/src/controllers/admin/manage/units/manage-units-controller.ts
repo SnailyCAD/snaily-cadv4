@@ -13,7 +13,12 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { validateMaxDivisionsPerUnit } from "controllers/leo/my-officers/MyOfficersController";
-import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/activeOfficer";
+import {
+  combinedUnitProperties,
+  leoProperties,
+  _leoProperties,
+  unitProperties,
+} from "lib/leo/activeOfficer";
 import { findUnit } from "lib/leo/findUnit";
 import { updateOfficerDivisionsCallsigns } from "lib/leo/utils";
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
@@ -103,6 +108,78 @@ export class AdminManageUnitsController {
       units: [...officers, ...emsFdDeputies],
       totalCount: officerCount + emsFdDeputiesCount,
     };
+  }
+
+  @Get("/prune")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ManageUnits, Permissions.DeleteUnits],
+  })
+  async getInactiveUnits(
+    @QueryParams("departmentId") departmentId: string | undefined = undefined,
+    @QueryParams("days", Number) days = 30,
+  ) {
+    const where = {
+      lastStatusChangeTimestamp: {
+        lte: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * days),
+      },
+      departmentId,
+    };
+
+    const [officers, deputies] = await prisma.$transaction([
+      prisma.officer.findMany({
+        where,
+        include: _leoProperties,
+        orderBy: { lastStatusChangeTimestamp: "desc" },
+      }),
+      prisma.emsFdDeputy.findMany({
+        where,
+        include: unitProperties,
+        orderBy: { lastStatusChangeTimestamp: "desc" },
+      }),
+    ]);
+
+    const units = [...officers, ...deputies];
+
+    return units;
+  }
+
+  @Delete("/prune")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ManageUnits, Permissions.DeleteUnits],
+  })
+  async pruneInactiveUnits(
+    @Context("sessionUserId") sessionUserId: string,
+    @BodyParams("unitIds", String) unitIds: `${"OFFICER" | "EMS_FD"}-${string}`[],
+    @BodyParams("days", Number) days = 30,
+  ) {
+    const arr = await prisma.$transaction(
+      unitIds.map((id) => {
+        const [type, unitId] = id.split("-");
+        const prismaName = type === "OFFICER" ? "officer" : "emsFdDeputy";
+
+        // @ts-expect-error method properties are the same
+        return prisma[prismaName].deleteMany({
+          where: {
+            id: unitId,
+            lastStatusChangeTimestamp: {
+              lte: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * days),
+            },
+          },
+        });
+      }),
+    );
+
+    console.log({ arr });
+
+    await createAuditLogEntry({
+      action: { type: AuditLogActionType.UnitsPruned },
+      prisma,
+      executorId: sessionUserId,
+    });
+
+    return { count: arr.length };
   }
 
   @Get("/:id")

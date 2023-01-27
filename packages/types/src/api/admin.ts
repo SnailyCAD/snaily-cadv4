@@ -506,3 +506,9 @@ export interface GetDepartmentTimeLogsUnitsData {
     lastSeen: Date;
   }[];
 }
+
+/**
+ * @method Get
+ * @route /admin/manage/units/prune
+ */
+export type GetManageUnitsInactiveUnits = (Types.Officer | Types.EmsFdDeputy)[];
