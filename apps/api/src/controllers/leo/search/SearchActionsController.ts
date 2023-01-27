@@ -3,8 +3,8 @@ import {
   LICENSE_SCHEMA,
   LEO_VEHICLE_LICENSE_SCHEMA,
   CREATE_CITIZEN_SCHEMA,
-  VEHICLE_SCHEMA,
   IMPOUND_VEHICLE_SCHEMA,
+  LEO_VEHICLE_SCHEMA,
 } from "@snailycad/schemas";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -481,16 +481,18 @@ export class SearchActionsController {
     @Context("cad") cad: cad & { miscCadSettings?: MiscCadSettings; features?: CadFeature[] },
     @BodyParams() body: unknown,
   ): Promise<APITypes.PostSearchActionsCreateVehicle> {
-    const data = validateSchema(VEHICLE_SCHEMA, body);
+    const data = validateSchema(LEO_VEHICLE_SCHEMA, body);
 
-    const citizen = await prisma.citizen.findUnique({
-      where: {
-        id: data.citizenId,
-      },
-    });
+    if (data.citizenId) {
+      const citizen = await prisma.citizen.findUnique({
+        where: {
+          id: data.citizenId,
+        },
+      });
 
-    if (!citizen) {
-      throw new NotFound("NotFound");
+      if (!citizen) {
+        throw new NotFound("NotFound");
+      }
     }
 
     const existing = await prisma.registeredVehicle.findUnique({
@@ -542,7 +544,7 @@ export class SearchActionsController {
       data: {
         plate: data.plate.toUpperCase(),
         color: data.color,
-        citizenId: citizen.id,
+        citizenId: data.citizenId || null,
         modelId,
         registrationStatusId: data.registrationStatus,
         vinNumber: data.vinNumber || generateString(17),

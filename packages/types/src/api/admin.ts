@@ -38,7 +38,7 @@ export type PostImportCitizensData = (Prisma.Citizen & {})[];
 export interface GetImportVehiclesData {
   totalCount: number;
   vehicles: (Prisma.RegisteredVehicle & {
-    citizen: Prisma.Citizen;
+    citizen?: Prisma.Citizen | null;
     flags: Prisma.Value[];
     model: Prisma.VehicleValue & { value: Prisma.Value };
     registrationStatus: Prisma.Value;
