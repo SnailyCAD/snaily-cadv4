@@ -115,6 +115,7 @@ export class AdminManageUnitsController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUnits, Permissions.DeleteUnits],
   })
+  @Description("Get inactive units by days and departmentId")
   async getInactiveUnits(
     @QueryParams("departmentId") departmentId: string | undefined = undefined,
     @QueryParams("days", Number) days = 2,
