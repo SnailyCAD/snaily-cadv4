@@ -13,7 +13,12 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { validateMaxDivisionsPerUnit } from "controllers/leo/my-officers/MyOfficersController";
-import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/activeOfficer";
+import {
+  combinedUnitProperties,
+  leoProperties,
+  _leoProperties,
+  unitProperties,
+} from "lib/leo/activeOfficer";
 import { findUnit } from "lib/leo/findUnit";
 import { updateOfficerDivisionsCallsigns } from "lib/leo/utils";
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
@@ -103,6 +108,109 @@ export class AdminManageUnitsController {
       units: [...officers, ...emsFdDeputies],
       totalCount: officerCount + emsFdDeputiesCount,
     };
+  }
+
+  @Get("/prune")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ManageUnits, Permissions.DeleteUnits],
+  })
+  @Description("Get inactive units by days and departmentId")
+  async getInactiveUnits(
+    @QueryParams("departmentId") departmentId: string | undefined = undefined,
+    @QueryParams("days", Number) days = 2,
+  ) {
+    const where = {
+      lastStatusChangeTimestamp: {
+        not: null,
+        lte: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * days),
+      },
+      departmentId,
+    };
+
+    const [officers, deputies] = await prisma.$transaction([
+      prisma.officer.findMany({
+        where,
+        include: _leoProperties,
+        orderBy: { lastStatusChangeTimestamp: "desc" },
+      }),
+      prisma.emsFdDeputy.findMany({
+        where,
+        include: unitProperties,
+        orderBy: { lastStatusChangeTimestamp: "desc" },
+      }),
+    ]);
+
+    const units = [...officers, ...deputies];
+
+    return units;
+  }
+
+  @Delete("/prune")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ManageUnits, Permissions.DeleteUnits],
+  })
+  async pruneInactiveUnits(
+    @Context("sessionUserId") sessionUserId: string,
+    @BodyParams("unitIds", String) unitIds: `${"OFFICER" | "EMS_FD"}-${string}`[],
+    @BodyParams("days", Number) days = 30,
+    @BodyParams("action", String) action = "SET_DEPARTMENT_DEFAULT",
+  ) {
+    const ALLOWED_ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_UNIT"];
+
+    if (!ALLOWED_ACTIONS.includes(action)) {
+      throw new ExtendedBadRequest({ action: "Invalid action" });
+    }
+
+    const defaultDepartment = await prisma.departmentValue.findFirst({
+      where: { isDefaultDepartment: true },
+    });
+
+    if (!defaultDepartment && action === "SET_DEPARTMENT_DEFAULT") {
+      throw new BadRequest("noDefaultDepartmentSet");
+    }
+
+    const arr = await prisma.$transaction(
+      unitIds.map((id) => {
+        const [type, unitId] = id.split("-");
+        const prismaName = type === "OFFICER" ? "officer" : "emsFdDeputy";
+
+        if (action === "SET_DEPARTMENT_NULL") {
+          // @ts-expect-error method properties are the same
+          return prisma[prismaName].updateMany({
+            where: { id: unitId },
+            data: { departmentId: null },
+          });
+        }
+
+        if (action === "SET_DEPARTMENT_DEFAULT") {
+          // @ts-expect-error method properties are the same
+          return prisma[prismaName].updateMany({
+            where: { id: unitId },
+            data: { departmentId: defaultDepartment?.id },
+          });
+        }
+
+        // @ts-expect-error method properties are the same
+        return prisma[prismaName].deleteMany({
+          where: {
+            id: unitId,
+            lastStatusChangeTimestamp: {
+              lte: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * days),
+            },
+          },
+        });
+      }),
+    );
+
+    await createAuditLogEntry({
+      action: { type: AuditLogActionType.UnitsPruned },
+      prisma,
+      executorId: sessionUserId,
+    });
+
+    return { count: arr.length };
   }
 
   @Get("/:id")

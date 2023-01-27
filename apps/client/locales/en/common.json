@@ -175,6 +175,7 @@
     "citizenNotAllowedToEditLicenses": "You as a citizen are not allowed to edit your own licenses. Please contact an officer to manage your licenses.",
     "vehicleIsImpounded": "This vehicle is impounded, you cannot edit or delete until it's released from the impound lot.",
     "featureNotEnabled": "This feature is not enabled. ({feature})",
-    "errorUploadingImage": "Unable to upload your image at this moment. Please try again later. If this keeps reoccurring, contact the CAD-owner."
+    "errorUploadingImage": "Unable to upload your image at this moment. Please try again later. If this keeps reoccurring, contact the CAD-owner.",
+    "noDefaultDepartmentSet": "There is no default department set. Please contact an administrator to set a default department."
   }
 }
