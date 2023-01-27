@@ -22,9 +22,11 @@ import cors from "cors";
 import { checkForUpdates } from "utils/check-for-updates";
 import { getCADVersion } from "@snailycad/utils/version";
 import * as Sentry from "@sentry/node";
+import { parseCORSOrigin } from "utils/parse-cors-origin";
 
 const rootDir = __dirname;
 const processEnvPort = process.env.PORT || process.env.PORT_API;
+const parsedCORSOrigin = parseCORSOrigin(process.env.CORS_ORIGIN_URL ?? "http://localhost:3000");
 
 @Configuration({
   rootDir,
@@ -52,7 +54,10 @@ const processEnvPort = process.env.PORT || process.env.PORT_API;
     cookieParser(),
     compress(),
     json({ limit: "500kb" }),
-    cors({ origin: process.env.CORS_ORIGIN_URL ?? "http://localhost:3000", credentials: true }),
+    cors({
+      origin: parsedCORSOrigin,
+      credentials: true,
+    }),
     Sentry.Handlers.requestHandler({
       request: true,
       serverName: true,
@@ -79,7 +84,7 @@ const processEnvPort = process.env.PORT || process.env.PORT_API;
     maxHttpBufferSize: 1e6, // 1 mb
     cors: {
       credentials: true,
-      origin: process.env.CORS_ORIGIN_URL ?? "http://localhost:3000",
+      origin: parsedCORSOrigin,
     },
   },
 })
