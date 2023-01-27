@@ -117,10 +117,11 @@ export class AdminManageUnitsController {
   })
   async getInactiveUnits(
     @QueryParams("departmentId") departmentId: string | undefined = undefined,
-    @QueryParams("days", Number) days = 30,
+    @QueryParams("days", Number) days = 2,
   ) {
     const where = {
       lastStatusChangeTimestamp: {
+        not: null,
         lte: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * days),
       },
       departmentId,
@@ -144,6 +145,10 @@ export class AdminManageUnitsController {
     return units;
   }
 
+  // { value: "SET_DEPARTMENT_DEFAULT", label: "Set department to default department" },
+  // { value: "SET_DEPARTMENT_NULL", label: "Set department to none" },
+  // { value: "DELETE_UNIT", label: "Delete Units" },
+
   @Delete("/prune")
   @UsePermissions({
     fallback: (u) => u.rank !== Rank.USER,
@@ -153,11 +158,42 @@ export class AdminManageUnitsController {
     @Context("sessionUserId") sessionUserId: string,
     @BodyParams("unitIds", String) unitIds: `${"OFFICER" | "EMS_FD"}-${string}`[],
     @BodyParams("days", Number) days = 30,
+    @BodyParams("action", String) action = "SET_DEPARTMENT_DEFAULT",
   ) {
+    const ALLOWED_ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_UNIT"];
+
+    if (!ALLOWED_ACTIONS.includes(action)) {
+      throw new ExtendedBadRequest({ action: "Invalid action" });
+    }
+
+    const defaultDepartment = await prisma.departmentValue.findFirst({
+      where: { isDefaultDepartment: true },
+    });
+
+    if (!defaultDepartment && action === "SET_DEPARTMENT_DEFAULT") {
+      throw new BadRequest("noDefaultDepartmentSet");
+    }
+
     const arr = await prisma.$transaction(
       unitIds.map((id) => {
         const [type, unitId] = id.split("-");
         const prismaName = type === "OFFICER" ? "officer" : "emsFdDeputy";
+
+        if (action === "SET_DEPARTMENT_NULL") {
+          // @ts-expect-error method properties are the same
+          return prisma[prismaName].updateMany({
+            where: { id: unitId },
+            data: { departmentId: null },
+          });
+        }
+
+        if (action === "SET_DEPARTMENT_DEFAULT") {
+          // @ts-expect-error method properties are the same
+          return prisma[prismaName].updateMany({
+            where: { id: unitId },
+            data: { departmentId: defaultDepartment?.id },
+          });
+        }
 
         // @ts-expect-error method properties are the same
         return prisma[prismaName].deleteMany({

@@ -93,6 +93,7 @@
     "pruneUnits": "Prune Units",
     "inactiveUnits": "Inactive Units",
     "findInactiveUnits": "Find inactive units",
+    "pruneUnitsDescription": "This will allow you to prune units that have not been active for a certain amount of time. You can either delete the unit or set a different department.",
     "manageCourthouseDescription": " Here you can manage expungement requests, name change requests and pending warrants.",
     "manageCustomFieldsDescription": "Here you can manage custom fields. These are fields can be added by any officers to citizens in name-search.",
     "manageCustomRolesDescription": "Here you can manage custom roles. These roles can be assigned to users instead of giving permissions one by one.",

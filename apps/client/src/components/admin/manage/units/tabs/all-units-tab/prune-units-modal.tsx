@@ -25,6 +25,7 @@ const initialData = {
 
 export function PruneUnitsModal() {
   const [days, setDays] = React.useState("30");
+  const [action, setAction] = React.useState("SET_DEPARTMENT_DEFAULT");
   const [departmentId, setDepartmentId] = React.useState(null);
 
   const { department } = useValues();
@@ -38,7 +39,7 @@ export function PruneUnitsModal() {
     initialData: initialData.data,
     fetchOptions: {
       refetchOnWindowFocus: false,
-      path: `/admin/manage/units/prune?days=${days}&departmentId=${departmentId}`,
+      path: "/admin/manage/units/prune",
       onResponse: (json: GetManageUnitsInactiveUnits) => ({
         data: json,
         totalCount: json.length,
@@ -56,17 +57,20 @@ export function PruneUnitsModal() {
       path: "/admin/manage/units/prune",
       method: "DELETE",
       data: {
+        action,
         days,
         unitIds,
       },
     });
 
-    toastMessage({
-      icon: "success",
-      title: "Units Pruned",
-      message: `Pruned ${json.count} units`,
-    });
-    closeModal(ModalIds.PruneUnits);
+    if (typeof json.count === "number") {
+      toastMessage({
+        icon: "success",
+        title: "Units Pruned",
+        message: `Pruned ${json.count} units`,
+      });
+      closeModal(ModalIds.PruneUnits);
+    }
   }
 
   return (
@@ -76,6 +80,10 @@ export function PruneUnitsModal() {
       title={t("Management.pruneUnits")}
       isOpen={isOpen(ModalIds.PruneUnits)}
     >
+      <p className="my-2 text-neutral-700 dark:text-gray-400">
+        {t("Management.pruneUnitsDescription")}
+      </p>
+
       <SelectField
         isDisabled={asyncTable.isLoading}
         onSelectionChange={(value) => {
@@ -94,7 +102,13 @@ export function PruneUnitsModal() {
       <FormField label={t("Leo.department")}>
         <Select
           name="departmentId"
-          onChange={(event) => setDepartmentId(event.target.value)}
+          onChange={(event) => {
+            setDepartmentId(event.target.value);
+            asyncTable.setFilters((prevFilters) => ({
+              ...prevFilters,
+              departmentId: event.target.value as string,
+            }));
+          }}
           value={departmentId}
           values={department.values.map((department) => ({
             label: department.value.value,
@@ -102,6 +116,20 @@ export function PruneUnitsModal() {
           }))}
         />
       </FormField>
+
+      <SelectField
+        isDisabled={asyncTable.isLoading}
+        onSelectionChange={(value) => {
+          setAction(value as string);
+        }}
+        selectedKey={action}
+        label={t("Management.action")}
+        options={[
+          { value: "SET_DEPARTMENT_DEFAULT", label: "Set department to default department" },
+          { value: "SET_DEPARTMENT_NULL", label: "Set department to none" },
+          { value: "DELETE_UNIT", label: "Delete Units" },
+        ]}
+      />
 
       <Accordion.Root disabled={asyncTable.items.length <= 0} className="mt-4" type="multiple">
         <Accordion.Item value="unavailable-sounds">
