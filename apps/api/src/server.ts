@@ -96,7 +96,16 @@ export class Server {
   settings!: Configuration;
 
   public $beforeRoutesInit() {
-    this.app.get("/", async (_: Request, res: Response) => {
+    this.app.get("/", this.versionHandler());
+    this.app.get("/v1", this.versionHandler());
+  }
+
+  public async $afterInit() {
+    await checkForUpdates();
+  }
+
+  protected versionHandler() {
+    return async (_: Request, res: Response) => {
       const versions = await getCADVersion();
 
       res.setHeader("content-type", "text/html");
@@ -105,11 +114,7 @@ export class Server {
         .send(
           `<html><head><title>SnailyCAD API</title></head><body>200 Success. Current CAD Version: ${versions?.currentVersion} - ${versions?.currentCommitHash}</body></html>`,
         );
-    });
-  }
-
-  public async $afterInit() {
-    await checkForUpdates();
+    };
   }
 }
 
