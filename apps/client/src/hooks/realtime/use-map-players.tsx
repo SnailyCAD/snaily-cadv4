@@ -42,7 +42,7 @@ export function useMapPlayers() {
       const newPlayers = options.map;
 
       if (options.fetchMore) {
-        const { json } = await execute<GetDispatchPlayerBySteamIdData[]>({
+        const { json: rawJson } = await execute<GetDispatchPlayerBySteamIdData[]>({
           path: "/dispatch/players",
           data: availablePlayersArray.map((s) => ({
             steamId: s.convertedSteamId,
@@ -51,6 +51,8 @@ export function useMapPlayers() {
           noToast: true,
           method: "POST",
         });
+
+        const json = Array.isArray(rawJson) ? rawJson : [];
 
         for (const user of json) {
           const player = availablePlayersArray.find(
