@@ -145,10 +145,6 @@ export class AdminManageUnitsController {
     return units;
   }
 
-  // { value: "SET_DEPARTMENT_DEFAULT", label: "Set department to default department" },
-  // { value: "SET_DEPARTMENT_NULL", label: "Set department to none" },
-  // { value: "DELETE_UNIT", label: "Delete Units" },
-
   @Delete("/prune")
   @UsePermissions({
     fallback: (u) => u.rank !== Rank.USER,
@@ -206,8 +202,6 @@ export class AdminManageUnitsController {
         });
       }),
     );
-
-    console.log({ arr });
 
     await createAuditLogEntry({
       action: { type: AuditLogActionType.UnitsPruned },
