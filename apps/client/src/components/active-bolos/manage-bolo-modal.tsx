@@ -41,8 +41,6 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
   const vehicleTypeId = useSSRSafeId();
   const otherTypeId = useSSRSafeId();
 
-  console.log({ bolo });
-
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const data = {
       ...values,
