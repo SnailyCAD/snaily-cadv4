@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useDatePickerState } from "@react-stately/datepicker";
 import { useDatePicker, AriaDateFieldProps } from "@react-aria/datepicker";
-import { Calendar2, ExclamationCircle } from "react-bootstrap-icons";
+import { Calendar2, ExclamationCircle, X } from "react-bootstrap-icons";
 import { Button } from "../button";
 import { useTranslations } from "next-intl";
 import { DateValue, parseDate } from "@internationalized/date";
@@ -30,6 +30,8 @@ interface Props extends AriaDateFieldProps<any> {
   labelClassnames?: string;
   onChange(value: DateValue | null): void;
   value?: Date;
+  className?: string;
+  isClearable?: boolean;
 }
 
 export function DatePickerField({ value: _value, ...rest }: Props) {
@@ -55,7 +57,12 @@ export function DatePickerField({ value: _value, ...rest }: Props) {
 
   return (
     <ModalProvider>
-      <div className="relative inline-flex flex-col text-left mb-3 w-full">
+      <div
+        className={classNames(
+          "relative inline-flex flex-col text-left mb-3 w-full",
+          rest.className,
+        )}
+      >
         <label {...labelProps} className={classNames("mb-1 dark:text-white", rest.labelClassnames)}>
           {rest.label}{" "}
           {rest.isOptional ? <span className="text-sm italic">({optionalText})</span> : null}
@@ -79,13 +86,29 @@ export function DatePickerField({ value: _value, ...rest }: Props) {
             {...buttonProps}
             type="button"
             className={classNames(
-              "rounded-l-none",
+              rest.isClearable ? "!rounded-none -mr-[1px]" : "rounded-l-none",
               rest.errorMessage &&
                 "!border-red-500 focus:!border-red-700 dark:!focus:border-red-700",
             )}
           >
             <Calendar2 className="w-5 h-5 fill-white" />
           </Button>
+          {rest.isClearable ? (
+            <Button
+              size="xs"
+              // @ts-expect-error null is allowed here to clear the date value
+              onPress={() => state.setValue(null)}
+              type="button"
+              className={classNames(
+                "rounded-l-none",
+
+                rest.errorMessage &&
+                  "!border-red-500 focus:!border-red-700 dark:!focus:border-red-700",
+              )}
+            >
+              <X className="w-5 h-5 fill-white" />
+            </Button>
+          ) : null}
         </div>
         {state.isOpen && (
           <Popover

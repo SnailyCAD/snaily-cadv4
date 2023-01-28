@@ -33,19 +33,34 @@ export class AdminManageUnitsController {
   async getTimeGroupedByUnit(
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("includeAll", Boolean) includeAll = false,
+    @QueryParams("startDate", String) startDate?: string,
+    @QueryParams("endDate", String) endDate?: string,
     @QueryParams("query", String) query?: string,
   ): Promise<APITypes.GetDepartmentTimeLogsUnitsData> {
+    const _startDate = startDate ? new Date(startDate) : undefined;
+    _startDate?.setHours(0, 0, 0, 0);
+
+    const _endDate = endDate ? new Date(endDate) : undefined;
+    _endDate?.setHours(23, 59, 59, 999);
+
+    const where = {
+      createdAt: {
+        gte: _startDate,
+        lte: _endDate,
+      },
+    } as Prisma.OfficerLogWhereInput;
+
+    if (query) {
+      where.OR = [
+        { officer: createWhere({ query, pendingOnly: false, type: "OFFICER" }) },
+        { emsFdDeputy: createWhere({ query, pendingOnly: false, type: "DEPUTY" }) },
+      ];
+    }
+
     const officerLogs = await prisma.officerLog.findMany({
       include: { officer: { include: _leoProperties }, emsFdDeputy: { include: unitProperties } },
       orderBy: { createdAt: "desc" },
-      where: query
-        ? {
-            OR: [
-              { officer: createWhere({ query, pendingOnly: false, type: "OFFICER" }) },
-              { emsFdDeputy: createWhere({ query, pendingOnly: false, type: "DEPUTY" }) },
-            ],
-          }
-        : undefined,
+      where,
     });
 
     const groupedByUnit = new Map<
