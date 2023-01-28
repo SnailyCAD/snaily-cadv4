@@ -340,7 +340,7 @@ export interface GetCitizenVehiclesData {
 export type PostCitizenVehicleData = Prisma.RegisteredVehicle & {
   model: Types.VehicleValue;
   registrationStatus: Prisma.Value;
-  citizen: Prisma.Citizen;
+  citizen?: Prisma.Citizen | null;
 };
 
 /**
@@ -411,7 +411,17 @@ export type GetBusinessByIdData = Prisma.Business & {
   employees: Omit<GetBusinessesData["businesses"][number], "business">[];
   citizen: Pick<Prisma.Citizen, "name" | "surname" | "id">;
   employee: Types.Employee | null;
+  roles: (Prisma.EmployeeValue & { value: Prisma.Value })[];
 };
+
+/**
+ * @method GET
+ * @route /businesses/:id/roles
+ */
+export interface GetBusinessRolesByBusinessIdData {
+  roles: (Prisma.EmployeeValue & { value: Prisma.Value })[];
+  totalCount: number;
+}
 
 /**
  * @method PUT

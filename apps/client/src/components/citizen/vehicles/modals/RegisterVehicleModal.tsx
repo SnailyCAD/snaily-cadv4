@@ -1,6 +1,6 @@
 import { useTranslations } from "use-intl";
 import { Form, Formik, FormikHelpers } from "formik";
-import { VEHICLE_SCHEMA } from "@snailycad/schemas";
+import { LEO_VEHICLE_SCHEMA, VEHICLE_SCHEMA } from "@snailycad/schemas";
 import {
   Item,
   AsyncListSearchField,
@@ -66,10 +66,13 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
   const { INSPECTION_STATUS, TAX_STATUS } = useVehicleLicenses();
 
   const { vehicle: vehicles, license } = useValues();
-  const validate = handleValidate(VEHICLE_SCHEMA);
+
   const isDisabled = router.pathname === "/citizen/[id]";
   const maxPlateLength = cad?.miscCadSettings?.maxPlateLength ?? 8;
   const isLeo = router.pathname.includes("/officer");
+
+  const schema = isLeo ? LEO_VEHICLE_SCHEMA : VEHICLE_SCHEMA;
+  const validate = handleValidate(schema);
 
   function handleClose() {
     closeModal(ModalIds.RegisterVehicle);
@@ -122,7 +125,7 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
     citizenId: isDisabled ? citizen.id : vehicle?.citizenId ?? "",
     name: isDisabled
       ? `${citizen.name} ${citizen.surname}`
-      : vehicle
+      : vehicle?.citizen
       ? `${vehicle.citizen.name} ${vehicle.citizen.surname}`
       : "",
     plate: vehicle?.plate ?? "",
@@ -199,6 +202,7 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
             )}
 
             <CitizenSuggestionsField
+              isOptional={isLeo}
               allowsCustomValue
               label={tVehicle("owner")}
               fromAuthUserOnly={!isLeo}

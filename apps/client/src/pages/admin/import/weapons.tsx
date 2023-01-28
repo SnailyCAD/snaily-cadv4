@@ -39,6 +39,8 @@ export default function ImportWeaponsPage({ data }: Props) {
   const asyncTable = useAsyncTable({
     search,
     fetchOptions: {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
       onResponse: (json: GetImportWeaponsData) => ({
         totalCount: json.totalCount,
         data: json.weapons,

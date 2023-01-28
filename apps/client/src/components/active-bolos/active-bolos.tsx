@@ -83,7 +83,7 @@ export function ActiveBolos({ initialBolos }: Props) {
     initialData: initialBolos.bolos,
   });
   const tableState = useTableState({ tableId: "active-bolos", pagination: asyncTable.pagination });
-  const [tempBolo, boloState] = useTemporaryItem(asyncTable.items);
+  const [tempBolo, boloState] = useTemporaryItem(bolos);
 
   React.useEffect(() => {
     bolosState.setBolos(asyncTable.items);

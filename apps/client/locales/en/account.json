@@ -39,6 +39,7 @@
     "fullRowColor": "Full row color",
     "userApiToken": "User Api Token",
     "reGenerateToken": "Re-generate token",
+    "token": "Token",
     "discord": "Discord",
     "steam": "Steam",
     "connectSteam": "Connect Steam account",

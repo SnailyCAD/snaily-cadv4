@@ -90,6 +90,10 @@ export const LEO_VEHICLE_LICENSE_SCHEMA = VEHICLE_SCHEMA.pick({
   taxStatus: true,
 });
 
+export const LEO_VEHICLE_SCHEMA = VEHICLE_SCHEMA.omit({ citizenId: true }).extend({
+  citizenId: z.string().nullish(),
+});
+
 const EXAM_TYPE_REGEX = /DRIVER|FIREARM|WATER|PILOT/;
 export const LICENSE_EXAM_SCHEMA = z.object({
   type: z.string().regex(EXAM_TYPE_REGEX),

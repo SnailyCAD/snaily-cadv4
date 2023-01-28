@@ -69,6 +69,7 @@ export class BusinessController {
         id,
       },
       include: {
+        roles: { include: { value: true } },
         businessPosts: { orderBy: { createdAt: "desc" } },
         vehicles: {
           include: {

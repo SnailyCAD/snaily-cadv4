@@ -37,7 +37,10 @@ export default function ImportVehiclesPage({ data }: Props) {
   const hasDeletePermissions = hasPermissions([Permissions.DeleteRegisteredVehicles], true);
 
   const asyncTable = useAsyncTable({
+    search,
     fetchOptions: {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
       onResponse: (json: GetImportVehiclesData) => ({
         totalCount: json.totalCount,
         data: json.vehicles,
@@ -106,7 +109,9 @@ export default function ImportVehiclesPage({ data }: Props) {
           color: vehicle.color,
           registrationStatus: vehicle.registrationStatus.value,
           vinNumber: vehicle.vinNumber,
-          citizen: `${vehicle.citizen.name} ${vehicle.citizen.surname}`,
+          citizen: vehicle.citizen
+            ? `${vehicle.citizen.name} ${vehicle.citizen.surname}`
+            : common("unknown"),
           createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
           actions: (
             <Button size="xs" variant="danger" onPress={() => handleDeleteClick(vehicle)}>

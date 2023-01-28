@@ -32,7 +32,8 @@ export type AuditLogActions =
   | CadAPITokenRegenerated
   | CADFeaturesUpdate
   | TemporaryUnitCreate
-  | TemporaryUnitUpdate;
+  | TemporaryUnitUpdate
+  | UnitsPruned;
 
 type BaseAuditLogAction<ActionType extends AuditLogActionType, Previous, New> = {
   type: ActionType;
@@ -192,3 +193,4 @@ export type TemporaryUnitUpdate = BaseAuditLogAction<
   Types.Officer | Officer | Types.EmsFdDeputy | EmsFdDeputy,
   Types.Officer | Officer | Types.EmsFdDeputy | EmsFdDeputy
 >;
+export type UnitsPruned = BaseAuditLogAction<AuditLogActionType.UnitsPruned, undefined, undefined>;

@@ -275,11 +275,12 @@ export async function createVehicleImpoundedWebhookData(
   vehicle: RegisteredVehicle & {
     model: VehicleValue & { value: Value };
     registrationStatus: Value;
-    citizen: Pick<Citizen, "name" | "surname">;
+    citizen?: Pick<Citizen, "name" | "surname"> | null;
   },
   locale?: string | null,
 ) {
   const t = await getTranslator({ locale, namespace: "Tow" });
+  const common = await getTranslator({ locale, namespace: "Common" });
 
   return {
     embeds: [
@@ -290,7 +291,9 @@ export async function createVehicleImpoundedWebhookData(
           { name: t("model"), value: vehicle.model.value.value, inline: true },
           {
             name: t("owner"),
-            value: `${vehicle.citizen.name} ${vehicle.citizen.surname}`,
+            value: vehicle.citizen
+              ? `${vehicle.citizen.name} ${vehicle.citizen.surname}`
+              : common("unknown"),
             inline: true,
           },
         ],

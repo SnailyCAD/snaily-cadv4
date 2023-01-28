@@ -10,6 +10,8 @@ interface FetchOptions {
   path: string;
   requireFilterText?: boolean;
   onResponse(json: unknown): { data: any; totalCount: number };
+  refetchOnMount?: boolean;
+  refetchOnWindowFocus?: boolean;
 }
 
 interface Options<T> {
@@ -42,6 +44,8 @@ export function useAsyncTable<T>(options: Options<T>) {
     initialData: options.initialData ?? [],
     queryFn: fetchData,
     queryKey: [paginationOptions.pageIndex, debouncedSearch, filters, options.fetchOptions.path],
+    refetchOnMount: options.fetchOptions.refetchOnMount,
+    refetchOnWindowFocus: options.fetchOptions.refetchOnWindowFocus,
   });
 
   React.useEffect(() => {

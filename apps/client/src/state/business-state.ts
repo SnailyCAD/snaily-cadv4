@@ -18,6 +18,7 @@ export type FullBusiness = Business & {
   citizen: Pick<Citizen, "id" | "name" | "surname">;
   businessPosts: BusinessPost[];
   vehicles: RegisteredVehicle[];
+  roles: EmployeeValue[];
 };
 
 interface BusinessState {

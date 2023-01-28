@@ -41,6 +41,13 @@ const AlertModal = dynamic(async () => (await import("components/modal/AlertModa
   ssr: false,
 });
 
+const PruneUnitsModal = dynamic(
+  async () => (await import("./all-units-tab/prune-units-modal")).PruneUnitsModal,
+  {
+    ssr: false,
+  },
+);
+
 interface Props {
   units: GetManageUnitsData;
 }
@@ -149,6 +156,12 @@ export function AllUnitsTab({ units }: Props) {
           className="mt-3"
         >
           {t("Management.setSelectedOffDuty")}
+        </Button>
+      ) : null}
+
+      {hasManagePermissions && asyncTable.items.length >= 1 ? (
+        <Button onPress={() => openModal(ModalIds.PruneUnits)} className="mt-3 ml-2">
+          {t("Management.pruneUnits")}
         </Button>
       ) : null}
 
@@ -283,6 +296,8 @@ export function AllUnitsTab({ units }: Props) {
           onClose={() => unitState.setTempId(null)}
         />
       ) : null}
+
+      {hasManagePermissions && asyncTable.items.length >= 1 ? <PruneUnitsModal /> : null}
     </TabsContent>
   );
 }

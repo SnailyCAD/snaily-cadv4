@@ -10,6 +10,7 @@ interface Props {
 
 export function TruckLogsTable({ result }: Props) {
   const t = useTranslations("TruckLogs");
+  const common = useTranslations("Common");
   const { TRUCK_LOGS } = useFeatureEnabled();
   const truckLogs = result.TruckLog;
   const tableState = useTableState();
@@ -30,7 +31,9 @@ export function TruckLogsTable({ result }: Props) {
           .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
           .map((log) => ({
             id: log.id,
-            driver: `${result.citizen.name} ${result.citizen.surname}`,
+            driver: result.citizen
+              ? `${result.citizen.name} ${result.citizen.surname}`
+              : common("unknown"),
             vehicle: result.model.value?.value,
             startedAt: log.startedAt,
             endedAt: log.endedAt,

@@ -432,8 +432,8 @@ model RegisteredVehicle {
   id                   String                   @id @default(cuid())
   user                 User?                    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId               String?
-  citizen              Citizen                  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
-  citizenId            String
+  citizen              Citizen?                 @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId            String?
   vinNumber            String                   @unique @db.VarChar(255)
   plate                String                   @unique @db.VarChar(255)
   model                VehicleValue             @relation(fields: [modelId], references: [id])
@@ -797,6 +797,7 @@ model Business {
   businessPosts BusinessPost[]
   employees     Employee[]
   vehicles      RegisteredVehicle[] @relation("registeredBusinessVehicles")
+  roles         EmployeeValue[]     @relation("businessValueBusinessRoles")
 }
 
 model Employee {
@@ -834,11 +835,12 @@ model BusinessPost {
 }
 
 model EmployeeValue {
-  id        String         @id @default(cuid())
-  value     Value          @relation(fields: [valueId], references: [id], onDelete: Cascade)
-  valueId   String
-  as        EmployeeAsEnum @default(EMPLOYEE)
-  employees Employee[]     @relation("employeeToValue")
+  id         String         @id @default(cuid())
+  value      Value          @relation(fields: [valueId], references: [id], onDelete: Cascade)
+  valueId    String
+  as         EmployeeAsEnum @default(EMPLOYEE)
+  employees  Employee[]     @relation("employeeToValue")
+  businesses Business[]     @relation("businessValueBusinessRoles")
 }
 
 // leo

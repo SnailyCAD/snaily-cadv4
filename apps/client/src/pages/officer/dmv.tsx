@@ -72,7 +72,9 @@ export default function Dmv({ data }: Props) {
               id: vehicle.id,
               citizen: (
                 <span className="capitalize">
-                  {vehicle.citizen.name} {vehicle.citizen.surname}
+                  {vehicle.citizen
+                    ? `${vehicle.citizen.name} ${vehicle.citizen.surname}}`
+                    : common("unknown")}
                 </span>
               ),
               dmvStatus: (

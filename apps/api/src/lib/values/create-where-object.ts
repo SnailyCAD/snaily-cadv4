@@ -40,6 +40,16 @@ export function createSearchWhereObject(options: CreateSearchWhereObjectOptions)
       },
     };
 
+    if (ValueType.BUSINESS_ROLE === type) {
+      where = {
+        ...where,
+        businesses: {
+          // hide roles created by other businesses
+          every: { id: "null" },
+        },
+      };
+    }
+
     if (ValueType.EMERGENCY_VEHICLE === type) {
       const divisionIds = String(options.queryParams.divisions).split(",");
 

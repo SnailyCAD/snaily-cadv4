@@ -42,11 +42,17 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
   const otherTypeId = useSSRSafeId();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
+    const data = {
+      ...values,
+      name: values.name.trim() || values.nameSearch || "",
+      plate: values.plate.trim() || values.plateSearch || "",
+    };
+
     if (bolo) {
       const { json } = await execute<PutBolosData>({
         path: `/bolos/${bolo.id}`,
         method: "PUT",
-        data: values,
+        data,
       });
 
       if (json.id) {
@@ -65,7 +71,7 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
       const { json } = await execute<PostBolosData>({
         path: "/bolos",
         method: "POST",
-        data: values,
+        data,
       });
 
       if (json.id) {

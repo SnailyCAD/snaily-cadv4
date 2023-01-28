@@ -86,9 +86,11 @@ export function AppearanceTab({ availableSounds }: Props) {
     }
   }
 
-  const availableSoundsArr = sounds.filter((v) => availableSounds[soundCamelCaseToKebabCase(v)]);
+  const availableSoundsArr = sounds.filter(
+    (v) => v !== "speech" && availableSounds[soundCamelCaseToKebabCase(v)],
+  );
   const unAvailableSoundsArr = sounds.filter(
-    (v) => v !== "speech" && !availableSounds[soundCamelCaseToKebabCase(v)],
+    (v) => !["speech", "speechVoice"].includes(v) && !availableSounds[soundCamelCaseToKebabCase(v)],
   );
 
   return (
