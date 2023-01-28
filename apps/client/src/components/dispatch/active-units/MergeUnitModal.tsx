@@ -8,7 +8,7 @@ import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { Select } from "components/form/Select";
-import { isUnitCombined, isUnitCombinedEmsFd, isUnitOfficer } from "@snailycad/utils/typeguards";
+import { isUnitCombined, isUnitCombinedEmsFd } from "@snailycad/utils/typeguards";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 import type { PostDispatchStatusMergeOfficers } from "@snailycad/types/api";
@@ -88,9 +88,10 @@ export function MergeUnitModal({
     }
   }
 
+  const isCombined = activeUnit && (isUnitCombined(activeUnit) || isUnitCombinedEmsFd(activeUnit));
   const INITIAL_VALUES = {
     ids:
-      activeUnit && isUnitOfficer(activeUnit) && !isDispatch
+      activeUnit && !isCombined && !isDispatch
         ? [makeValuesOption(activeUnit, true), makeValuesOption(unit, true)]
         : [makeValuesOption(unit, true)],
   };

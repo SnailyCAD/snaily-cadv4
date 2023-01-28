@@ -32,8 +32,8 @@ interface Props {
 
 export function DeputyColumn({ deputy, isDispatch, nameAndCallsign, setTempUnit }: Props) {
   const router = useRouter();
-  const isLeo = router.pathname.includes("/officer");
-  const isEligiblePage = isDispatch || isLeo;
+  const isEmsFd = router.pathname.includes("/ems-fd");
+  const isEligiblePage = isDispatch || isEmsFd;
 
   const { activeDeputies, setActiveDeputies } = useActiveDeputies();
   const { hasActiveDispatchers } = useActiveDispatchers();
@@ -63,16 +63,16 @@ export function DeputyColumn({ deputy, isDispatch, nameAndCallsign, setTempUnit 
     ? isUnitCombinedEmsFd(deputy)
     : isUnitCombinedEmsFd(deputy) && deputy.id === activeDeputy?.id;
 
-  const canBeOpened =
-    (isDispatch && hasActiveDispatchers) ||
-    shouldShowSplit ||
-    (activeDeputy &&
-      deputy.id !== activeDeputy.id &&
-      isUnitCombinedEmsFd(deputy) &&
-      isUnitCombinedEmsFd(activeDeputy));
+  const isCurrentDeputy =
+    activeDeputy &&
+    !isUnitCombinedEmsFd(activeDeputy) &&
+    !isUnitCombinedEmsFd(deputy) &&
+    activeDeputy.id === deputy.id;
 
-  function handleMerge(officer: ActiveDeputy) {
-    setTempUnit(officer.id);
+  const canBeOpened = (isDispatch && hasActiveDispatchers) || !isCurrentDeputy || shouldShowSplit;
+
+  function handleMerge(deputy: ActiveDeputy) {
+    setTempUnit(deputy.id);
     openModal(ModalIds.MergeUnit);
   }
 
