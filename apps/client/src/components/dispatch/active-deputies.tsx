@@ -9,7 +9,7 @@ import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
 import { useRouter } from "next/router";
 import { formatUnitDivisions, makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { EmsFdDeputy, StatusViewMode } from "@snailycad/types";
+import { CombinedEmsFdUnit, EmsFdDeputy, StatusViewMode } from "@snailycad/types";
 import { useAuth } from "context/AuthContext";
 
 import { Table, useTableState } from "components/shared/Table";
@@ -31,9 +31,10 @@ import { useCall911State } from "state/dispatch/call-911-state";
 import { shallow } from "zustand/shallow";
 import { generateContrastColor } from "lib/table/get-contrasting-text-color";
 import { Permissions, usePermission } from "hooks/usePermission";
+import { isUnitCombinedEmsFd } from "@snailycad/utils";
 
 interface Props {
-  initialDeputies: EmsFdDeputy[];
+  initialDeputies: (EmsFdDeputy | CombinedEmsFdUnit)[];
 }
 
 function ActiveDeputies({ initialDeputies }: Props) {
@@ -152,10 +153,12 @@ function ActiveDeputies({ initialDeputies }: Props) {
                       nameAndCallsign={nameAndCallsign}
                     />
                   ),
-                  badgeNumber: deputy.badgeNumber,
-                  department: deputy.department?.value.value ?? common("none"),
-                  division: formatUnitDivisions(deputy),
-                  rank: deputy.rank?.value ?? common("none"),
+                  badgeNumber: !isUnitCombinedEmsFd(deputy) && deputy.badgeNumber,
+                  department:
+                    (!isUnitCombinedEmsFd(deputy) && deputy.department?.value.value) ??
+                    common("none"),
+                  division: !isUnitCombinedEmsFd(deputy) && formatUnitDivisions(deputy),
+                  rank: (!isUnitCombinedEmsFd(deputy) && deputy.rank?.value) ?? common("none"),
                   status: (
                     <span className="flex items-center">
                       {useDot && color ? (

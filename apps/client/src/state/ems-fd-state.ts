@@ -1,7 +1,7 @@
-import type { EmsFdDeputy } from "@snailycad/types";
+import type { CombinedEmsFdUnit, EmsFdDeputy } from "@snailycad/types";
 import { create } from "zustand";
 
-export type ActiveDeputy = EmsFdDeputy;
+export type ActiveDeputy = EmsFdDeputy | CombinedEmsFdUnit;
 
 interface EmsFdState {
   activeDeputy: ActiveDeputy | null;

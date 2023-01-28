@@ -7,14 +7,15 @@ import { DndActions } from "types/DndActions";
 import { ActiveUnitsQualificationsCard } from "components/leo/qualifications/ActiveUnitsQualificationsCard";
 import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
 import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
-import type { EmsFdDeputy } from "@snailycad/types";
+import type { CombinedEmsFdUnit, EmsFdDeputy } from "@snailycad/types";
 import Image from "next/image";
 import { useDispatchState } from "state/dispatch/dispatch-state";
+import { isUnitCombinedEmsFd } from "@snailycad/utils";
 
 interface Props {
   isDispatch: boolean;
   nameAndCallsign: string;
-  deputy: EmsFdDeputy;
+  deputy: EmsFdDeputy | CombinedEmsFdUnit;
 }
 
 export function DeputyColumn({ deputy, isDispatch, nameAndCallsign }: Props) {
@@ -50,7 +51,7 @@ export function DeputyColumn({ deputy, isDispatch, nameAndCallsign }: Props) {
                 style={{ minWidth: nameAndCallsign.length * 9 }}
                 className="capitalize cursor-default"
               >
-                {deputy.imageId ? (
+                {!isUnitCombinedEmsFd(deputy) && deputy.imageId ? (
                   <Image
                     className="rounded-md w-[30px] h-[30px] object-cover mr-2 inline-block"
                     draggable={false}

@@ -1,12 +1,19 @@
 import { useAuth } from "context/AuthContext";
-import type { CombinedLeoUnit, EmsFdDeputy, MiscCadSettings, Officer } from "@snailycad/types";
+import type {
+  CombinedEmsFdUnit,
+  CombinedLeoUnit,
+  EmsFdDeputy,
+  MiscCadSettings,
+  Officer,
+} from "@snailycad/types";
 import { generateCallsign } from "@snailycad/utils/callsign";
 
 type P = "callsign" | "callsign2" | "department" | "citizenId" | "incremental";
 type Unit =
   | Pick<Officer, P | "divisions" | "activeDivisionCallsign">
   | Pick<EmsFdDeputy, P | "division">
-  | CombinedLeoUnit;
+  | CombinedLeoUnit
+  | CombinedEmsFdUnit;
 type TemplateId = keyof Pick<MiscCadSettings, "pairedUnitTemplate" | "callsignTemplate">;
 
 export function useGenerateCallsign() {

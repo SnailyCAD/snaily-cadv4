@@ -1,5 +1,11 @@
-import type { CombinedLeoUnit, DivisionValue, EmsFdDeputy, Officer } from "@snailycad/types";
-import { isUnitCombined } from "@snailycad/utils";
+import type {
+  CombinedEmsFdUnit,
+  CombinedLeoUnit,
+  DivisionValue,
+  EmsFdDeputy,
+  Officer,
+} from "@snailycad/types";
+import { isUnitCombined, isUnitCombinedEmsFd } from "@snailycad/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 import { useTranslations } from "next-intl";
@@ -8,16 +14,22 @@ export function useActiveUnitsFilter() {
   const { generateCallsign } = useGenerateCallsign();
   const common = useTranslations("Common");
 
-  function handleFilter(unit: Officer | CombinedLeoUnit | EmsFdDeputy, search: string) {
-    const isCombined = isUnitCombined(unit);
+  function handleFilter(
+    unit: Officer | CombinedLeoUnit | CombinedEmsFdUnit | EmsFdDeputy,
+    search: string,
+  ) {
+    const isCombined = isUnitCombined(unit) || isUnitCombinedEmsFd(unit);
 
     const nameAndCallsign = isCombined
       ? generateCallsign(unit, "pairedUnitTemplate")
       : `${generateCallsign(unit)} ${makeUnitName(unit)}`;
 
     const officers =
-      isCombined &&
+      isUnitCombined(unit) &&
       unit.officers.map((v) => `${generateCallsign(v)} ${makeUnitName(v)}`).join(", ");
+    const deputies =
+      isUnitCombinedEmsFd(unit) &&
+      unit.deputies.map((v) => `${generateCallsign(v)} ${makeUnitName(v)}`).join(", ");
 
     const department = !isCombined && (unit.department?.value.value ?? common("none"));
     const rank = !isCombined && (unit.rank?.value ?? common("none"));
@@ -40,6 +52,7 @@ export function useActiveUnitsFilter() {
       badgeNumber,
       divisionString,
       officers,
+      deputies,
     ];
 
     const searchableString = searchableArr.filter(Boolean).join(" ").toLowerCase();

@@ -77,4 +77,4 @@ export type GetEmsFdActiveDeputy = Types.EmsFdDeputy;
  * @method GET
  * @route /ems-fd/active-deputies
  */
-export type GetEmsFdActiveDeputies = Types.EmsFdDeputy[];
+export type GetEmsFdActiveDeputies = (Types.EmsFdDeputy | Types.CombinedEmsFdUnit)[];
