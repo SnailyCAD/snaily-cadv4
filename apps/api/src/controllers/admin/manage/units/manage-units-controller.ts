@@ -839,7 +839,7 @@ export class AdminManageUnitsController {
 
     await createAuditLogEntry({
       translationKey: "deletedEntry",
-      action: { type: AuditLogActionType.UnitDelete, new: unit.unit },
+      action: { type: AuditLogActionType.UnitDelete, new: unit.unit as any },
       prisma,
       executorId: sessionUserId,
     });

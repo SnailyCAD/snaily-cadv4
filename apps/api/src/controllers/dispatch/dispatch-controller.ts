@@ -112,6 +112,7 @@ export class DispatchController {
         query,
         type: "DEPUTY",
         extraWhere: {
+          combinedEmsFdUnitId: null,
           status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
         },
       }),
