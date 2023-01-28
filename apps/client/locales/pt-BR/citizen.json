@@ -99,7 +99,7 @@
     "noWeapons": "Você ainda não possui nenhuma arma registrada.",
     "deleteWeapon": "Excluir Arma",
     "registeredWeapons": "Armas Registradas",
-    "successWeaponRegistered": "Arma Registrada com Sucesso",
+    "bofStatus": "BOF Status",
     "alert_deleteWeapon": "Tem certeza de que deseja excluir esta arma? Esta ação não pode ser desfeita."
   },
   "MedicalRecords": {

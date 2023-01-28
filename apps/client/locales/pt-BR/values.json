@@ -26,6 +26,7 @@
     "county": "Condado",
     "deletedSelectedValues": "Itens {deleted} excluídos. Falha ao excluir {failed} itens.",
     "failedDeleteValue": "Falha ao Excluir <span>{value}</span>.",
+    "cacheTip": " Os valores são armazenados em cache por 24 horas. Isso significa que os valores atualizados, adicionados ou excluídos podem não mudar imediatamente. Pode levar até 24 horas para que as alterações entrem em vigor.",
     "alert_deleteValue": "Tem certeza de que deseja excluir <span>{value}</span>? Esta ação não pode ser desfeita!",
     "alert_deleteSelectedValues": "Tem certeza de que deseja excluir {length} itens? Esta ação não pode ser desfeita"
   },
@@ -157,5 +158,11 @@
     "ADD": "Adicionar Veículo de Emergência",
     "DELETE": "Excluir Veículo de Emergência",
     "EDIT": "Editar Veículo de Emergência"
+  },
+  "ADDRESS_FLAG": {
+    "MANAGE": "Gerenciar sinalizadores de endereço",
+    "ADD": "Adicionar sinalizador de endereço",
+    "DELETE": "Excluir sinalizador de endereço",
+    "EDIT": "Editar sinalizador de endereço"
   }
 }
