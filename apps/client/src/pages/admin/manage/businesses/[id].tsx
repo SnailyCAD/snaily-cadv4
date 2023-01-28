@@ -26,10 +26,10 @@ const AlertModal = dynamic(async () => (await import("components/modal/AlertModa
 });
 
 const ManageEmployeeModal = dynamic(
-  async () => (await import("components/business/manage/ManageEmployeeModal")).ManageEmployeeModal,
-  {
-    ssr: false,
-  },
+  async () =>
+    (await import("components/business/manage/tabs/employees-tab/manage-employee-modal"))
+      .ManageEmployeeModal,
+  { ssr: false },
 );
 
 interface Props {
