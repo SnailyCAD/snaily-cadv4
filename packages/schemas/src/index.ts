@@ -12,3 +12,8 @@ export * from "./records";
 export * from "./ems-fd";
 export * from "./truck-log";
 export * from "./court";
+
+// set custom error map for zod translations
+import { setErrorMap } from "zod";
+import errorMap from "./error-map";
+setErrorMap(errorMap);
