@@ -79,12 +79,6 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
   const selectedItems = selectionMode === "multiple" ? state.selectedItems : null;
   const selectedItem = selectionMode === "single" ? state.selectedItems?.[0] : null;
 
-  console.log({
-    isOpen: state.isOpen,
-    isFocused: state.isFocused,
-    true: state.isOpen || state.isFocused,
-  });
-
   return (
     <ModalProvider>
       <div className={classNames("flex flex-col mb-3", props.className)}>
