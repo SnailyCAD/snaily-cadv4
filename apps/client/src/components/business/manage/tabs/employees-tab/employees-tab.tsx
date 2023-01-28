@@ -4,7 +4,7 @@ import { Button } from "@snailycad/ui";
 import { FullEmployee, useBusinessState } from "state/business-state";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import { ManageEmployeeModal } from "./ManageEmployeeModal";
+import { ManageEmployeeModal } from "./manage-employee-tab";
 import { Employee, EmployeeAsEnum, WhitelistStatus } from "@snailycad/types";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
