@@ -1,7 +1,7 @@
 import * as React from "react";
 import { getUnitDepartment, makeUnitName } from "lib/utils";
 import { useTranslations } from "use-intl";
-import { SelectField } from "@snailycad/ui";
+import { DatePickerField, SelectField } from "@snailycad/ui";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { TabsContent } from "components/shared/TabList";
@@ -56,6 +56,29 @@ export function DepartmentTimeLogsTab() {
             { label: "Units", value: "units" },
           ]}
         />
+
+        {groupedBy === "units" ? (
+          <>
+            <DatePickerField
+              isClearable
+              className="max-w-xs w-full"
+              label="Start Date (First Seen)"
+              value={asyncTable.filters?.startDate}
+              onChange={(date) => {
+                asyncTable.setFilters((prev) => ({ ...prev, startDate: date?.toString() }));
+              }}
+            />
+            <DatePickerField
+              isClearable
+              className="max-w-xs w-full"
+              label="End Date (First Seen)"
+              value={asyncTable.filters?.endDate}
+              onChange={(date) => {
+                asyncTable.setFilters((prev) => ({ ...prev, endDate: date?.toString() }));
+              }}
+            />
+          </>
+        ) : null}
       </SearchArea>
 
       {asyncTable.items.length <= 0 ? (
