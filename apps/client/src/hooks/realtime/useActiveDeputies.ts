@@ -28,7 +28,8 @@ export function useActiveDeputies() {
     (data: EmsFdDeputy[]) => {
       const updatedCalls = [...call911State.calls].map((call) => {
         const newAssignedUnits = [...call.assignedUnits].map((assignedUnit) => {
-          const deputy = data.find((v) => v.id === assignedUnit.emsFdDeputyId);
+          const unitIds = [assignedUnit.emsFdDeputyId, assignedUnit.combinedEmsFdId];
+          const deputy = data.find((v) => unitIds.includes(v.id));
 
           if (deputy) {
             return { ...assignedUnit, unit: deputy };

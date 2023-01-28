@@ -44,7 +44,7 @@ export function InvolvedUnitsTable({ isDisabled, incident }: Props) {
   async function handleUnassignFromCall(unit: IncidentInvolvedUnit) {
     const newAssignedUnits = [...incident.unitsInvolved]
       .filter((v) => v.id !== unit.id)
-      .map((v) => v.officerId || v.emsFdDeputyId || v.combinedLeoId);
+      .map((v) => v.officerId || v.emsFdDeputyId || v.combinedLeoId || v.combinedEmsFdId);
 
     const { json } = await execute<PutIncidentByIdData>({
       path: `/incidents/${incident.id}`,

@@ -40,7 +40,7 @@ export function AddUnitToCallModal({ onClose }: Props) {
     if (!values.unit) return;
 
     const newAssignedUnits = [...call.assignedUnits].map((v) => ({
-      id: v.officerId || v.emsFdDeputyId || v.combinedLeoId,
+      id: v.officerId || v.emsFdDeputyId || v.combinedLeoId || v.combinedEmsFdId,
       isPrimary: v.isPrimary,
     }));
 
