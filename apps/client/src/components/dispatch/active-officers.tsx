@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "@snailycad/ui";
-import type { ActiveOfficer } from "state/leo-state";
+import { ActiveOfficer, useLeoState } from "state/leo-state";
 import { ManageUnitModal } from "./modals/ManageUnit";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
@@ -47,27 +47,35 @@ interface Props {
 }
 
 function ActiveOfficers({ initialOfficers }: Props) {
+  const t = useTranslations("Leo");
+  const common = useTranslations("Common");
+
   const tableState = useTableState({
     tableId: "active-officers",
     pagination: { pageSize: 12, totalDataCount: initialOfficers.length },
   });
 
-  const { activeOfficers: _activeOfficers } = useActiveOfficers();
+  const { activeOfficers: _activeOfficers, setActiveOfficers } = useActiveOfficers();
   const { activeIncidents } = useActiveIncidents();
-  const active911Calls = useCall911State((state) => state.calls);
-  const isMounted = useMounted();
-  const activeOfficers = isMounted ? _activeOfficers : initialOfficers;
-
-  const t = useTranslations("Leo");
-  const common = useTranslations("Common");
   const { openModal } = useModal();
   const { generateCallsign } = useGenerateCallsign();
   const { user } = useAuth();
   const { hasPermissions } = usePermission();
-
   const { hasActiveDispatchers } = useActiveDispatchers();
+  const { handleFilter } = useActiveUnitsFilter();
   const { BADGE_NUMBERS, ACTIVE_INCIDENTS, RADIO_CHANNEL_MANAGEMENT, DIVISIONS } =
     useFeatureEnabled();
+
+  const router = useRouter();
+  const isMounted = useMounted();
+  const active911Calls = useCall911State((state) => state.calls);
+
+  const activeOfficers = isMounted ? _activeOfficers : initialOfficers;
+  const isDispatch = router.pathname === "/dispatch";
+
+  const hasDispatchPerms = hasPermissions([Permissions.Dispatch], (u) => u.isDispatch);
+  const showCreateTemporaryUnitButton = isDispatch && hasDispatchPerms;
+
   const { leoSearch, showLeoFilters, setShowFilters } = useActiveUnitsState(
     (state) => ({
       leoSearch: state.leoSearch,
@@ -76,13 +84,14 @@ function ActiveOfficers({ initialOfficers }: Props) {
     }),
     shallow,
   );
-  const { handleFilter } = useActiveUnitsFilter();
 
-  const router = useRouter();
-  const isDispatch = router.pathname === "/dispatch";
-
-  const hasDispatchPerms = hasPermissions([Permissions.Dispatch], (u) => u.isDispatch);
-  const showCreateTemporaryUnitButton = isDispatch && hasDispatchPerms;
+  const { activeOfficer, setActiveOfficer } = useLeoState(
+    (state) => ({
+      activeOfficer: state.activeOfficer,
+      setActiveOfficer: state.setActiveOfficer,
+    }),
+    shallow,
+  );
 
   const [tempOfficer, officerState] = useTemporaryItem(activeOfficers);
 
@@ -235,9 +244,14 @@ function ActiveOfficers({ initialOfficers }: Props) {
       ) : null}
       {tempOfficer ? (
         <MergeUnitModal
+          type="leo"
           isDispatch={isDispatch}
           unit={tempOfficer as Officer}
           onClose={() => officerState.setTempId(null)}
+          activeUnit={activeOfficer}
+          activeUnits={activeOfficers}
+          setActiveUnit={setActiveOfficer}
+          setActiveUnits={setActiveOfficers}
         />
       ) : null}
       {isDispatch ? <CreateTemporaryUnitModal /> : null}

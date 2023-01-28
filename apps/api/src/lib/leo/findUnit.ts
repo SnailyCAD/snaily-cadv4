@@ -1,4 +1,4 @@
-import { combinedUnitProperties } from "lib/leo/activeOfficer";
+import { combinedEmsFdUnitProperties, combinedUnitProperties } from "lib/leo/activeOfficer";
 import type {
   CombinedLeoUnit,
   CombinedEmsFdUnit,
@@ -12,7 +12,7 @@ export async function findUnit(
   id: string,
   extraFind?: any,
 ): Promise<OfficerReturn | EmsFdReturn | CombinedLeoUnitReturn | CombinedEmsFdUnitReturn> {
-  let type: "leo" | "ems-fd" = "leo";
+  let type: "leo" | "ems-fd" | "combined-leo" | "combined-ems-fd" = "leo";
   let unit: any = await prisma.officer.findFirst({
     where: { id, ...extraFind },
   });
@@ -23,25 +23,19 @@ export async function findUnit(
   }
 
   if (!unit) {
+    type = "combined-leo";
     unit = await prisma.combinedLeoUnit.findFirst({
-      where: {
-        id,
-      },
+      where: { id },
       include: combinedUnitProperties,
     });
-
-    return { type: "combined-leo", unit: unit ?? null };
   }
 
   if (!unit) {
+    type = "combined-ems-fd";
     unit = await prisma.combinedEmsFdUnit.findFirst({
-      where: {
-        id,
-      },
-      include: combinedUnitProperties,
+      where: { id },
+      include: combinedEmsFdUnitProperties,
     });
-
-    return { type: "combined-ems-fd", unit: unit ?? null };
   }
 
   return { type, unit: unit ?? null };

@@ -88,13 +88,13 @@ export function isOfficerRankValue(value: AnyValue): value is Value & { type: "O
 export function isUnitCombined(
   unit: Officer | CombinedEmsFdUnit | CombinedLeoUnit | EmsFdDeputy,
 ): unit is CombinedLeoUnit {
-  return !("citizenId" in unit) || "officers" in unit;
+  return !("citizenId" in unit) && "officers" in unit;
 }
 
 export function isUnitCombinedEmsFd(
   unit: Officer | CombinedEmsFdUnit | CombinedLeoUnit | EmsFdDeputy,
 ): unit is CombinedEmsFdUnit {
-  return !("citizenId" in unit) || "deputies" in unit;
+  return !("citizenId" in unit) && "deputies" in unit;
 }
 
 export function isUnitOfficer(
