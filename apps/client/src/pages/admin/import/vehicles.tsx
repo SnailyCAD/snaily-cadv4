@@ -39,6 +39,8 @@ export default function ImportVehiclesPage({ data }: Props) {
   const asyncTable = useAsyncTable({
     search,
     fetchOptions: {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
       onResponse: (json: GetImportVehiclesData) => ({
         totalCount: json.totalCount,
         data: json.vehicles,
