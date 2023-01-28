@@ -153,6 +153,10 @@ export async function getSessionUser(
       },
     });
 
+    if (options.returnNullOnError && !user) {
+      return null;
+    }
+
     validateUserData(user, options.req, options.returnNullOnError as false | undefined);
 
     const newAccessToken = signJWT({ userId: user.id }, ACCESS_TOKEN_EXPIRES_S);
