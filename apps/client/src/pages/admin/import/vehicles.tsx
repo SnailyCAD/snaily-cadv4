@@ -37,6 +37,7 @@ export default function ImportVehiclesPage({ data }: Props) {
   const hasDeletePermissions = hasPermissions([Permissions.DeleteRegisteredVehicles], true);
 
   const asyncTable = useAsyncTable({
+    search,
     fetchOptions: {
       onResponse: (json: GetImportVehiclesData) => ({
         totalCount: json.totalCount,
