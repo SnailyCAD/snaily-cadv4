@@ -31,6 +31,15 @@ export const assignedUnitsInclude = {
         },
       },
     },
+    combinedEmsFdUnit: {
+      include: {
+        status: { include: { value: true } },
+        department: { include: { value: true } },
+        deputies: {
+          include: unitProperties,
+        },
+      },
+    },
   },
 };
 
@@ -78,6 +87,7 @@ export class IncidentController {
             { unitsInvolved: { some: { officerId: assignedUnit } } },
             { unitsInvolved: { some: { emsFdDeputyId: assignedUnit } } },
             { unitsInvolved: { some: { combinedLeoId: assignedUnit } } },
+            { unitsInvolved: { some: { combinedEmsFdId: assignedUnit } } },
           ],
         }
       : {};
@@ -201,7 +211,8 @@ export class IncidentController {
     }
 
     const types = {
-      combined: "combinedLeoId",
+      "combined-leo": "combinedLeoId",
+      "combined-ems-fd": "combinedEmsFdId",
       leo: "officerId",
       "ems-fd": "emsFdDeputyId",
     };
@@ -237,7 +248,8 @@ export class IncidentController {
     const prismaNames = {
       leo: "officer",
       "ems-fd": "emsFdDeputy",
-      combined: "combinedLeoUnit",
+      "combined-leo": "combinedLeoUnit",
+      "combined-ems-fd": "combinedEmsFdUnit",
     } as const;
     const prismaName = prismaNames[type];
 

@@ -5,7 +5,7 @@ import { useTranslations } from "use-intl";
 import { useGenerateCallsign } from "../useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
-import { isUnitCombined } from "@snailycad/utils";
+import { isUnitCombined, isUnitCombinedEmsFd } from "@snailycad/utils";
 import { useAudio } from "react-use";
 import { useAuth } from "context/AuthContext";
 
@@ -53,9 +53,12 @@ function Component({
 }) {
   const t = useTranslations("Leo");
   const { generateCallsign } = useGenerateCallsign();
-  const callsign =
-    unit &&
-    generateCallsign(unit, isUnitCombined(unit) ? "pairedUnitTemplate" : "callsignTemplate");
+
+  const callsignTemplate =
+    unit && (isUnitCombined(unit) || isUnitCombinedEmsFd(unit))
+      ? "pairedUnitTemplate"
+      : "callsignTemplate";
+  const callsign = unit && generateCallsign(unit, callsignTemplate);
 
   return (
     <>

@@ -150,9 +150,15 @@ export type PutDispatchStatusByUnitId = Types.Officer | Types.EmsFdDeputy | Type
 
 /**
  * @method POST
- * @route /dispatch/status/merge
+ * @route /dispatch/status/merge/leo
  */
 export type PostDispatchStatusMergeOfficers = Types.CombinedLeoUnit;
+
+/**
+ * @method POST
+ * @route /dispatch/status/merge/ems-fd
+ */
+export type PostDispatchStatusMergeDeputies = Types.CombinedEmsFdUnit;
 
 /**
  * @method POST
@@ -183,4 +189,5 @@ export type PostDispatchUnitsSearchData = (
   | Types.Officer
   | Types.CombinedLeoUnit
   | Types.EmsFdDeputy
+  | Types.CombinedEmsFdUnit
 )[];

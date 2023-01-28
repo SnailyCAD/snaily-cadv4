@@ -45,7 +45,7 @@ export function AddInvolvedUnitToIncidentModal({ onClose, incident }: Props) {
     if (!values.unit) return;
 
     const newUnitsInvolved = [...incident.unitsInvolved].map(
-      (v) => v.officerId || v.emsFdDeputyId || v.combinedLeoId,
+      (v) => v.officerId || v.emsFdDeputyId || v.combinedLeoId || v.combinedEmsFdId,
     );
 
     const { json } = await execute<PutIncidentByIdData>({

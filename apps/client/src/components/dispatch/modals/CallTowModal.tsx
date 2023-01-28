@@ -21,7 +21,7 @@ import type { PostTowCallsData } from "@snailycad/types/api";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
 import { useUserOfficers } from "hooks/leo/use-get-user-officers";
 import { useGetUserDeputies } from "hooks/ems-fd/use-get-user-deputies";
-import { isUnitCombined } from "@snailycad/utils";
+import { isUnitCombined, isUnitCombinedEmsFd } from "@snailycad/utils";
 
 interface Props {
   call: Full911Call | null;
@@ -72,10 +72,12 @@ export function DispatchCallTowModal({ call }: Props) {
   }
 
   const validate = handleValidate(TOW_SCHEMA);
+  const isCombined = activeUnit && (isUnitCombined(activeUnit) || isUnitCombinedEmsFd(activeUnit));
+
   const INITIAL_VALUES = {
     location: call?.location ?? "",
     postal: call?.postal ?? "",
-    creatorId: activeUnit && isUnitCombined(activeUnit) ? null : activeUnit?.citizenId ?? null,
+    creatorId: isCombined ? null : activeUnit?.citizenId ?? null,
     description: call?.description ?? "",
     descriptionData: call?.descriptionData ?? null,
     callCountyService: false,

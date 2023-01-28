@@ -15,6 +15,7 @@ import { useMounted } from "@casper124578/useful";
 import { usePermission } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
 import { useValues } from "context/ValuesContext";
+import { isUnitCombinedEmsFd } from "@snailycad/utils";
 
 interface MButton {
   nameKey: [string, string];
@@ -71,7 +72,9 @@ export function ModalButtons({
   const nameAndCallsign =
     activeDeputy &&
     !isButtonDisabled &&
-    `${generateCallsign(activeDeputy)} ${makeUnitName(activeDeputy)}`;
+    (isUnitCombinedEmsFd(activeDeputy)
+      ? generateCallsign(activeDeputy, "pairedUnitTemplate")
+      : `${generateCallsign(activeDeputy)} ${makeUnitName(activeDeputy)}`);
 
   async function handlePanic() {
     if (!activeDeputy) return;

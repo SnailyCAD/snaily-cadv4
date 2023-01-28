@@ -61,6 +61,7 @@ export async function handleDeleteInvolvedUnit(options: handleCreateInvolvedUnit
     officerId: "officer",
     emsFdDeputyId: "emsFdDeputy",
     combinedLeoId: "combinedLeoUnit",
+    combinedEmsFdId: "combinedEmsFdUnit",
   } as const;
 
   const involvedUnit = await prisma.incidentInvolvedUnit.findFirst({
@@ -68,8 +69,9 @@ export async function handleDeleteInvolvedUnit(options: handleCreateInvolvedUnit
       incidentId: options.incident.id,
       OR: [
         { officerId: options.unitId },
-        { combinedLeoId: options.unitId },
         { emsFdDeputyId: options.unitId },
+        { combinedLeoId: options.unitId },
+        { combinedEmsFdId: options.unitId },
       ],
     },
   });
@@ -111,9 +113,10 @@ async function handleCreateInvolvedUnit(options: handleCreateInvolvedUnitOptions
     NOT: { status: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
   });
   const types = {
-    combined: "combinedLeoId",
     leo: "officerId",
     "ems-fd": "emsFdDeputyId",
+    "combined-leo": "combinedLeoId",
+    "combined-ems-fd": "combinedEmsFdId",
   };
 
   if (!unit) {
@@ -132,8 +135,13 @@ async function handleCreateInvolvedUnit(options: handleCreateInvolvedUnitOptions
     return;
   }
 
-  const prismaModalName =
-    type === "leo" ? "officer" : type === "ems-fd" ? "emsFdDeputy" : "combinedLeoUnit";
+  const prismaNames = {
+    leo: "officer",
+    "ems-fd": "emsFdDeputy",
+    "combined-leo": "combinedLeoUnit",
+    "combined-ems-fd": "combinedEmsFdUnit",
+  } as const;
+  const prismaModelName = prismaNames[type];
 
   const nextActiveIncidentId = await getNextIncidentId({
     incidentId: options.incident.id,
@@ -142,7 +150,7 @@ async function handleCreateInvolvedUnit(options: handleCreateInvolvedUnitOptions
   });
 
   // @ts-expect-error they have the same properties for updating
-  await prisma[prismaModalName].update({
+  await prisma[prismaModelName].update({
     where: { id: unit.id },
     data: {
       activeIncidentId: nextActiveIncidentId,

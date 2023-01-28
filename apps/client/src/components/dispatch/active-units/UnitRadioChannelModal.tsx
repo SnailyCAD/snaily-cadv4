@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
+import type { CombinedEmsFdUnit, CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 import { Loader, Button, TextField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { Form, Formik } from "formik";
@@ -10,12 +10,12 @@ import { useRouter } from "next/router";
 import { useDispatchState } from "state/dispatch/dispatch-state";
 import { handleValidate } from "lib/handleValidate";
 import { UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
-import { isUnitCombined, isUnitOfficer } from "@snailycad/utils";
+import { isUnitCombined, isUnitCombinedEmsFd } from "@snailycad/utils";
 import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import type { PutDispatchRadioChannelData } from "@snailycad/types/api";
 
 interface Props {
-  unit: Officer | EmsFdDeputy | CombinedLeoUnit;
+  unit: Officer | EmsFdDeputy | CombinedLeoUnit | CombinedEmsFdUnit;
   onClose?(): void;
 }
 
@@ -41,7 +41,9 @@ export function UnitRadioChannelModal({ unit, onClose }: Props) {
   }
 
   function handleStateChange(json: any) {
-    if (isOfficer(unit)) {
+    const isCombined = isUnitCombined(unit) || isUnitCombinedEmsFd(unit);
+
+    if (!isCombined) {
       dispatchState.setActiveOfficers(
         dispatchState.activeOfficers.map((off) => {
           if (off.id === unit.id) {
@@ -140,10 +142,4 @@ export function UnitRadioChannelModal({ unit, onClose }: Props) {
       ) : null}
     </>
   );
-}
-
-function isOfficer(
-  unit: Officer | EmsFdDeputy | CombinedLeoUnit,
-): unit is Officer | CombinedLeoUnit {
-  return isUnitCombined(unit) || isUnitOfficer(unit);
 }

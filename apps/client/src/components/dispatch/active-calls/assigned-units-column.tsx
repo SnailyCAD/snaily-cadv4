@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { AssignedUnit, CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
-import { isUnitCombined } from "@snailycad/utils";
+import { isUnitCombined, isUnitCombinedEmsFd } from "@snailycad/utils";
 import { Draggable } from "components/shared/dnd/Draggable";
 import { Droppable } from "components/shared/dnd/Droppable";
 import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
@@ -43,7 +43,7 @@ export function AssignedUnitsColumn({ handleAssignToCall, isDispatch, call }: Pr
   function makeAssignedUnit(unit: AssignedUnit) {
     if (!unit.unit) return "UNKNOWN";
 
-    return isUnitCombined(unit.unit)
+    return isUnitCombined(unit.unit) || isUnitCombinedEmsFd(unit.unit)
       ? generateCallsign(unit.unit, "pairedUnitTemplate")
       : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
   }

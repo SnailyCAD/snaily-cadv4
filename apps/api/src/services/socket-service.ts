@@ -16,7 +16,12 @@ import {
   ActiveTone,
 } from "@prisma/client";
 import { prisma } from "lib/data/prisma";
-import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/activeOfficer";
+import {
+  combinedEmsFdUnitProperties,
+  combinedUnitProperties,
+  leoProperties,
+  unitProperties,
+} from "lib/leo/activeOfficer";
 import { Injectable } from "@tsed/di";
 
 type FullIncident = LeoIncident & { unitsInvolved: any[]; events?: IncidentEvent[] };
@@ -107,19 +112,25 @@ export class Socket {
       }),
     ]);
 
-    const data = [...officers, ...units];
+    const data = [...units, ...officers];
 
     this.io.sockets.emit(SocketEvents.UpdateOfficerStatus, data);
   }
 
   async emitUpdateDeputyStatus() {
-    const deputies = await prisma.emsFdDeputy.findMany({
-      orderBy: { updatedAt: "desc" },
-      where: { status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } } },
-      include: unitProperties,
-    });
+    const [deputies, combinedEmsFdDeputies] = await prisma.$transaction([
+      prisma.emsFdDeputy.findMany({
+        where: {
+          status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
+        },
+        include: unitProperties,
+      }),
+      prisma.combinedEmsFdUnit.findMany({
+        include: combinedEmsFdUnitProperties,
+      }),
+    ]);
 
-    this.io.sockets.emit(SocketEvents.UpdateEmsFdStatus, deputies);
+    this.io.sockets.emit(SocketEvents.UpdateEmsFdStatus, [...combinedEmsFdDeputies, ...deputies]);
   }
 
   emitUserBanned(userId: string) {

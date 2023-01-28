@@ -20,6 +20,7 @@ export async function setInactiveUnitsOffDuty(lastStatusChangeTimestamp: Date, s
       prisma.officer.findMany({ where }),
       prisma.emsFdDeputy.findMany({ where }),
       prisma.combinedLeoUnit.deleteMany({ where }),
+      prisma.combinedEmsFdUnit.deleteMany({ where }),
     ]);
 
     await Promise.allSettled([

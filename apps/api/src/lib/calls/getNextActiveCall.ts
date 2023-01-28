@@ -30,6 +30,7 @@ export async function getNextActiveCallId(options: Options) {
         OR: [
           { officerId: options.unit.id },
           { combinedLeoId: options.unit.id },
+          { combinedEmsFdId: options.unit.id },
           { emsFdDeputyId: options.unit.id },
         ],
       },

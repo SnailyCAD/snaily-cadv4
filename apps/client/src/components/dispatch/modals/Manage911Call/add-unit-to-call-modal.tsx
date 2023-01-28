@@ -7,12 +7,12 @@ import { Form, Formik } from "formik";
 import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
 import { makeUnitName } from "lib/utils";
-import { isUnitCombined } from "@snailycad/utils";
+import { isUnitCombined, isUnitCombinedEmsFd } from "@snailycad/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Toggle } from "components/form/Toggle";
 import type { Put911CallByIdData } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call-911-state";
-import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
+import type { CombinedEmsFdUnit, CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 import Image from "next/image";
 import { useImageUrl } from "hooks/useImageUrl";
 
@@ -40,7 +40,7 @@ export function AddUnitToCallModal({ onClose }: Props) {
     if (!values.unit) return;
 
     const newAssignedUnits = [...call.assignedUnits].map((v) => ({
-      id: v.officerId || v.emsFdDeputyId || v.combinedLeoId,
+      id: v.officerId || v.emsFdDeputyId || v.combinedLeoId || v.combinedEmsFdId,
       isPrimary: v.isPrimary,
     }));
 
@@ -89,7 +89,7 @@ export function AddUnitToCallModal({ onClose }: Props) {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, setValues, values, errors }) => (
           <Form>
-            <AsyncListSearchField<Officer | EmsFdDeputy | CombinedLeoUnit>
+            <AsyncListSearchField<Officer | EmsFdDeputy | CombinedLeoUnit | CombinedEmsFdUnit>
               autoFocus
               setValues={({ localValue, node }) => {
                 const unitQuery =
@@ -112,9 +112,13 @@ export function AddUnitToCallModal({ onClose }: Props) {
               label={t("unit")}
             >
               {(item) => {
-                const template = isUnitCombined(item) ? "pairedUnitTemplate" : "callsignTemplate";
+                const template =
+                  isUnitCombined(item) || isUnitCombinedEmsFd(item)
+                    ? "pairedUnitTemplate"
+                    : "callsignTemplate";
                 const nameAndCallsign = `${generateCallsign(item, template)} ${makeUnitName(item)}`;
-                const imageId = isUnitCombined(item) ? null : item.imageId;
+                const imageId =
+                  isUnitCombined(item) || isUnitCombinedEmsFd(item) ? null : item.imageId;
 
                 return (
                   <Item key={item.id} textValue={nameAndCallsign}>

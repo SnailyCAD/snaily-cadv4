@@ -1,6 +1,12 @@
 import * as React from "react";
-import { CombinedLeoUnit, EmsFdDeputy, Officer, ShouldDoType } from "@snailycad/types";
-import { isUnitCombined } from "@snailycad/utils";
+import {
+  CombinedEmsFdUnit,
+  CombinedLeoUnit,
+  EmsFdDeputy,
+  Officer,
+  ShouldDoType,
+} from "@snailycad/types";
+import { isUnitCombined, isUnitCombinedEmsFd } from "@snailycad/utils";
 import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
 import { useActiveOfficers } from "hooks/realtime/useActiveOfficers";
 import type { MapPlayer, PlayerDataEventPayload } from "types/Map";
@@ -67,7 +73,7 @@ export function ActiveMapUnits({ openItems, setOpenItems }: Props) {
 interface ActiveUnitsOptions {
   players: (MapPlayer | PlayerDataEventPayload)[];
   activeOfficers: (Officer | CombinedLeoUnit)[];
-  activeDeputies: EmsFdDeputy[];
+  activeDeputies: (EmsFdDeputy | CombinedEmsFdUnit)[];
 }
 
 function makeActiveUnits({ players, activeOfficers, activeDeputies }: ActiveUnitsOptions) {
@@ -76,8 +82,12 @@ function makeActiveUnits({ players, activeOfficers, activeDeputies }: ActiveUnit
     if (isUnitCombined(officer)) return officer.officers;
     return officer;
   });
+  const _activeDeputies = activeDeputies.flatMap((deputy) => {
+    if (isUnitCombinedEmsFd(deputy)) return deputy.deputies;
+    return deputy;
+  });
 
-  for (const activeUnit of [..._activeOfficers, ...activeDeputies]) {
+  for (const activeUnit of [..._activeOfficers, ..._activeDeputies]) {
     if (!activeUnit.status || activeUnit.status.shouldDo === ShouldDoType.SET_OFF_DUTY) continue;
     if (!activeUnit.user) continue;
 
