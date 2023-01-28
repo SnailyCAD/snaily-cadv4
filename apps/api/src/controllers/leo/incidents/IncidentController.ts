@@ -31,6 +31,15 @@ export const assignedUnitsInclude = {
         },
       },
     },
+    combinedEmsFdUnit: {
+      include: {
+        status: { include: { value: true } },
+        department: { include: { value: true } },
+        deputies: {
+          include: unitProperties,
+        },
+      },
+    },
   },
 };
 

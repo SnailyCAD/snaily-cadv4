@@ -61,6 +61,7 @@ export async function handleDeleteInvolvedUnit(options: handleCreateInvolvedUnit
     officerId: "officer",
     emsFdDeputyId: "emsFdDeputy",
     combinedLeoId: "combinedLeoUnit",
+    combinedEmsFdId: "combinedEmsFdUnit",
   } as const;
 
   const involvedUnit = await prisma.incidentInvolvedUnit.findFirst({
@@ -68,8 +69,9 @@ export async function handleDeleteInvolvedUnit(options: handleCreateInvolvedUnit
       incidentId: options.incident.id,
       OR: [
         { officerId: options.unitId },
-        { combinedLeoId: options.unitId },
         { emsFdDeputyId: options.unitId },
+        { combinedLeoId: options.unitId },
+        { combinedEmsFdId: options.unitId },
       ],
     },
   });

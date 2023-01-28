@@ -121,8 +121,9 @@ export class DispatchController {
       orderBy: { updatedAt: "desc" },
     });
 
-    const combinedUnits = await prisma.combinedLeoUnit.findMany({
+    const combinedOfficers = await prisma.combinedLeoUnit.findMany({
       where: createWhereCombinedUnit({
+        type: "OFFICER",
         pendingOnly: false,
         query,
       }),
@@ -131,7 +132,18 @@ export class DispatchController {
       orderBy: { lastStatusChangeTimestamp: "desc" },
     });
 
-    return [...officers, ...deputies, ...combinedUnits];
+    const combinedEmsFdDeputies = await prisma.combinedEmsFdUnit.findMany({
+      where: createWhereCombinedUnit({
+        type: "DEPUTY",
+        pendingOnly: false,
+        query,
+      }),
+      include: combinedEmsFdUnitProperties,
+      take: 25,
+      orderBy: { lastStatusChangeTimestamp: "desc" },
+    });
+
+    return [...officers, ...deputies, ...combinedOfficers, ...combinedEmsFdDeputies];
   }
 
   @Post("/aop")

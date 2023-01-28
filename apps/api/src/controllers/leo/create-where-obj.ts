@@ -1,4 +1,3 @@
-import type { Prisma } from "@prisma/client";
 import { WhitelistStatus } from "@snailycad/types";
 
 interface CreateWhereObjOptions {
@@ -9,16 +8,18 @@ interface CreateWhereObjOptions {
   extraWhere?: any;
 }
 
-export function createWhereCombinedUnit(options: Omit<CreateWhereObjOptions, "type">) {
+export function createWhereCombinedUnit(options: CreateWhereObjOptions) {
+  const fieldName = options.type === "OFFICER" ? "officers" : "deputies";
+
   return {
     OR: [
       {
-        officers: {
-          some: createWhere({ ...options, type: "OFFICER" }),
+        [fieldName]: {
+          some: createWhere({ ...options }),
         },
       },
     ],
-  } as Prisma.CombinedLeoUnitWhereInput;
+  };
 }
 
 export function createWhere({

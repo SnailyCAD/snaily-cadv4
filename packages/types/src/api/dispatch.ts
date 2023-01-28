@@ -189,4 +189,5 @@ export type PostDispatchUnitsSearchData = (
   | Types.Officer
   | Types.CombinedLeoUnit
   | Types.EmsFdDeputy
+  | Types.CombinedEmsFdUnit
 )[];
