@@ -39,6 +39,11 @@
     "nameDescription": "Der Name Ihres Unternehmens.",
     "addressDescription": "Die Adresse Ihres Unternehmens.",
     "whitelistDescription": "Bürger, die sich Ihrem Unternehmen anschließen wollen, müssen geprüft werden. Du kannst angenommen oder abgelehnt werden.",
+    "businessRoles": "Unternehmens Rollen",
+    "addBusinessRole": "Unternehmens Rolle hinzugügen",
+    "editBusinessRole": "Unternehmens Rolle bearbeiten",
+    "as": "Als",
+    "deleteBusinessRole": "Unternehmens Rolle löschen",
     "alert_fireEmployee": "Bist Du sicher, dass Du <span>{employee}</span> entlassen willst? Diese Aktion kann nicht rückgängig gemacht werden.",
     "alert_deletePost": "Bist Du sicher, dass Du diesen Beitrag löschen willst? Diese Aktion kann nicht rückgängig gemacht werden.",
     "alert_deleteBusiness": "Bist Du sicher, dass Du \"<span>{business}</span>\" löschen willst? Diese Aktion kann nicht rückgängig gemacht werden."
