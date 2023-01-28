@@ -48,12 +48,12 @@ export function DepartmentTimeLogsTab() {
       >
         <SelectField
           className="max-w-xs w-full"
-          label={"Group By"}
+          label={t("Management.groupBy")}
           selectedKey={groupedBy}
           onSelectionChange={(event) => setGroupedBy(event as "departments" | "units")}
           options={[
-            { label: "Departments", value: "departments" },
-            { label: "Units", value: "units" },
+            { label: t("Management.departments"), value: "departments" },
+            { label: t("Management.units"), value: "units" },
           ]}
         />
 
@@ -62,7 +62,7 @@ export function DepartmentTimeLogsTab() {
             <DatePickerField
               isClearable
               className="max-w-xs w-full"
-              label="Start Date (First Seen)"
+              label={t("Management.startDate")}
               value={asyncTable.filters?.startDate}
               onChange={(date) => {
                 asyncTable.setFilters((prev) => ({ ...prev, startDate: date?.toString() }));
@@ -71,7 +71,7 @@ export function DepartmentTimeLogsTab() {
             <DatePickerField
               isClearable
               className="max-w-xs w-full"
-              label="End Date (First Seen)"
+              label={t("Management.endDate")}
               value={asyncTable.filters?.endDate}
               onChange={(date) => {
                 asyncTable.setFilters((prev) => ({ ...prev, endDate: date?.toString() }));
