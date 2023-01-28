@@ -86,16 +86,12 @@ export default function CitizenLogs(props: Props) {
           const extra = item.records
             ? {
                 caseNumber: <RecordsCaseNumberColumn record={item.records} />,
-                status: (
-                  <Status state={item.records.status}>{item.records.status?.toLowerCase()}</Status>
-                ),
+                status: <Status>{item.records.status}</Status>,
                 postal: item.records.postal || common("none"),
                 notes: item.records.notes || common("none"),
                 violations: <ViolationsColumn violations={item.records.violations} />,
                 paymentStatus: item.records.paymentStatus ? (
-                  <Status state={item.records.paymentStatus}>
-                    {item.records.paymentStatus.toLowerCase()}
-                  </Status>
+                  <Status>{item.records.paymentStatus}</Status>
                 ) : (
                   "—"
                 ),

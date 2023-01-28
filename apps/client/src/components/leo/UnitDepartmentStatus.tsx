@@ -12,11 +12,10 @@ interface Props {
 export function UnitDepartmentStatus({ unit }: Props) {
   const t = useTranslations("Leo");
   const departmentStatus = unit.whitelistStatus?.status ?? null;
-  const departmentStatusFormatted = departmentStatus ? departmentStatus.toLowerCase() : "—";
 
   return (
     <span className="capitalize flex items-center gap-2">
-      <Status state={departmentStatus}>{departmentStatusFormatted}</Status>
+      <Status>{departmentStatus}</Status>
 
       {unit.whitelistStatus?.status === WhitelistStatus.PENDING ? (
         <HoverCard

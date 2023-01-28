@@ -72,9 +72,7 @@ export default function BureauOfFirearms({ data }: Props) {
               model: weapon.model.value.value,
               registrationStatus: weapon.registrationStatus.value,
               serialNumber: weapon.serialNumber,
-              bofStatus: (
-                <Status state={weapon.bofStatus}>{weapon.bofStatus?.toLowerCase()}</Status>
-              ),
+              bofStatus: <Status>{weapon.bofStatus}</Status>,
               createdAt: <FullDate onlyDate>{weapon.createdAt}</FullDate>,
               actions: (
                 <>

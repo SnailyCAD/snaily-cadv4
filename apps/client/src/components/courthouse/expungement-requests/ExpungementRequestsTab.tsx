@@ -106,7 +106,7 @@ export function ExpungementRequestsTab(props: Props) {
               warrants,
               arrestReports,
               tickets,
-              status: <Status state={request.status}>{request.status.toLowerCase()}</Status>,
+              status: <Status>{request.status}</Status>,
               createdAt: <FullDate>{request.createdAt}</FullDate>,
               actions: (
                 <Button

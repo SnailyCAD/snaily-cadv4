@@ -137,7 +137,7 @@ export default function CitizenLogs({ data }: Props) {
                     {exam.practiceExam ? PASS_FAIL_LABELS[exam.practiceExam] : "—"}
                   </span>
                 ),
-                status: <Status state={exam.status}>{PASS_FAIL_LABELS[exam.status]}</Status>,
+                status: <Status>{exam.status}</Status>,
                 categories: exam.categories?.map((v) => v.value.value).join(", ") || "—",
                 license: exam.license.value,
                 createdAt: <FullDate>{exam.createdAt}</FullDate>,

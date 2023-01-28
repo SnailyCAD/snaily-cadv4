@@ -56,7 +56,7 @@ export function NameSearchWeaponsTab() {
             ),
             registrationStatus: weapon.registrationStatus.value,
             serialNumber: weapon.serialNumber,
-            bofStatus: <Status state={weapon.bofStatus}>{weapon.bofStatus?.toLowerCase()}</Status>,
+            bofStatus: <Status>{weapon.bofStatus}</Status>,
           }))}
           columns={[
             { header: t("Weapons.model"), accessorKey: "model" },

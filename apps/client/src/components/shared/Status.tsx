@@ -4,16 +4,16 @@ import {
   PaymentStatus,
   WhitelistStatus,
 } from "@snailycad/types";
+import { useTranslations } from "use-intl";
 
 interface Props {
-  state:
+  children:
     | WhitelistStatus
     | ExpungementRequestStatus
     | LicenseExamStatus
     | PaymentStatus
     | null
     | undefined;
-  children: string | null | undefined;
 }
 
 enum Colors {
@@ -22,7 +22,7 @@ enum Colors {
   RED = "#ff7b82",
 }
 
-export function Status({ state, children }: Props) {
+export function Status({ children }: Props) {
   const colors = {
     [WhitelistStatus.ACCEPTED]: Colors.GREEN,
     [ExpungementRequestStatus.ACCEPTED]: Colors.GREEN,
@@ -38,17 +38,17 @@ export function Status({ state, children }: Props) {
     [ExpungementRequestStatus.CANCELED]: Colors.RED,
   };
 
-  const text = !children ? "" : children.toLowerCase().replace(/_/g, " ");
+  const t = useTranslations("Statuses");
 
   return (
     <span className="capitalize">
-      {state ? (
+      {children ? (
         <span
-          style={{ background: colors[state] }}
+          style={{ background: colors[children] }}
           className="inline-block w-2.5 h-2.5 mr-2 rounded-full"
         />
       ) : null}
-      {text}
+      {t(children)}
     </span>
   );
 }

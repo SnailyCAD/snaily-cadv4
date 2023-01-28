@@ -85,9 +85,7 @@ export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
             isLeo: common(yesOrNoText(hasLeoPermissions)),
             isEmsFd: common(yesOrNoText(hasEmsFdPermissions)),
             isDispatch: common(yesOrNoText(hasDispatchPermissions)),
-            whitelistStatus: (
-              <Status state={user.whitelistStatus}>{user.whitelistStatus.toLowerCase()}</Status>
-            ),
+            whitelistStatus: <Status>{user.whitelistStatus}</Status>,
             actions: (
               <Link
                 className={classNames(buttonVariants.default, "p-0.5 px-2 rounded-md")}
