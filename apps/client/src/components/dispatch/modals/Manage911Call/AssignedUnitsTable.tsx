@@ -5,7 +5,7 @@ import { makeUnitName } from "lib/utils";
 import type { Full911Call } from "state/dispatch/dispatch-state";
 import useFetch from "lib/useFetch";
 import { useCall911State } from "state/dispatch/call-911-state";
-import type { PUT911CallAssignedUnit } from "@snailycad/types/api";
+import type { Post911CallAssignUnAssign, PUT911CallAssignedUnit } from "@snailycad/types/api";
 import { useAuth } from "context/AuthContext";
 import { AssignedUnit, StatusViewMode } from "@snailycad/types";
 import { useTranslations } from "next-intl";
@@ -15,6 +15,7 @@ import { ModalIds } from "types/ModalIds";
 import { AddUnitToCallModal } from "./add-unit-to-call-modal";
 import { FullDate } from "components/shared/FullDate";
 import { generateContrastColor } from "lib/table/get-contrasting-text-color";
+import { isUnitCombined, isUnitCombinedEmsFd } from "@snailycad/utils";
 
 interface Props {
   isDisabled: boolean;
@@ -32,24 +33,11 @@ export function AssignedUnitsTable({ isDisabled }: Props) {
   const { state, execute } = useFetch();
 
   async function handleUnassignFromCall(unit: AssignedUnit) {
-    const newAssignedUnits = [...call.assignedUnits]
-      .filter((v) => v.id !== unit.id)
-      .map((v) => ({
-        id: v.officerId || v.emsFdDeputyId || v.combinedLeoId,
-        isPrimary: v.isPrimary,
-      }));
-
-    const { json } = await execute<PUT911CallAssignedUnit>({
-      path: `/911-calls/${call.id}`,
-      method: "PUT",
+    const { json } = await execute<Post911CallAssignUnAssign>({
+      path: `/911-calls/unassign/${call.id}`,
+      method: "POST",
       data: {
-        ...call,
-        situationCode: call.situationCodeId,
-        type: call.typeId,
-        events: undefined,
-        divisions: undefined,
-        departments: undefined,
-        assignedUnits: newAssignedUnits,
+        unit: unit.officerId || unit.emsFdDeputyId || unit.combinedLeoId || unit.combinedEmsFdId,
       },
     });
 
@@ -83,52 +71,54 @@ export function AssignedUnitsTable({ isDisabled }: Props) {
         <Table
           features={{ isWithinCardOrModal: true }}
           tableState={tableState}
-          data={assignedUnits
-            .sort((a) => (a.isPrimary ? -1 : 1))
-            .map((unit) => {
-              const callsignAndName =
-                unit.unit && `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
+          data={assignedUnits.map((unit) => {
+            const templateId =
+              unit.unit && (isUnitCombined(unit.unit) || isUnitCombinedEmsFd(unit.unit))
+                ? "pairedUnitTemplate"
+                : "callsignTemplate";
+            const callsignAndName =
+              unit.unit && `${generateCallsign(unit.unit, templateId)} ${makeUnitName(unit.unit)}`;
 
-              const color = unit.unit?.status?.color;
-              const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
+            const color = unit.unit?.status?.color;
+            const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
 
-              return {
-                rowProps: {
-                  style: {
-                    background: !useDot && color ? color : undefined,
-                    color: !useDot && color ? generateContrastColor(color) : undefined,
-                  },
+            return {
+              rowProps: {
+                style: {
+                  background: !useDot && color ? color : undefined,
+                  color: !useDot && color ? generateContrastColor(color) : undefined,
                 },
-                id: unit.id,
-                unit: callsignAndName,
-                status: (
-                  <span className="flex items-center">
-                    {useDot && color ? (
-                      <span
-                        style={{ background: color }}
-                        className="block w-3 h-3 mr-2 rounded-full"
-                      />
-                    ) : null}
-                    {unit.unit?.status?.value?.value}
-                  </span>
-                ),
-                role: <RoleColumn isDisabled={isDisabled} unit={unit} />,
-                updatedAt: <FullDate>{unit.updatedAt}</FullDate>,
-                actions: (
-                  <Button
-                    className="flex items-center gap-2"
-                    disabled={isDisabled || state === "loading"}
-                    onPress={() => handleUnassignFromCall(unit)}
-                    size="xs"
-                    variant="danger"
-                    type="button"
-                  >
-                    {state === "loading" ? <Loader /> : null}
-                    {t("unassign")}
-                  </Button>
-                ),
-              };
-            })}
+              },
+              id: unit.id,
+              unit: callsignAndName,
+              status: (
+                <span className="flex items-center">
+                  {useDot && color ? (
+                    <span
+                      style={{ background: color }}
+                      className="block w-3 h-3 mr-2 rounded-full"
+                    />
+                  ) : null}
+                  {unit.unit?.status?.value?.value}
+                </span>
+              ),
+              role: <RoleColumn isDisabled={isDisabled} unit={unit} />,
+              updatedAt: <FullDate>{unit.updatedAt}</FullDate>,
+              actions: (
+                <Button
+                  className="flex items-center gap-2"
+                  disabled={isDisabled || state === "loading"}
+                  onPress={() => handleUnassignFromCall(unit)}
+                  size="xs"
+                  variant="danger"
+                  type="button"
+                >
+                  {state === "loading" ? <Loader /> : null}
+                  {t("unassign")}
+                </Button>
+              ),
+            };
+          })}
           columns={[
             { header: "Unit", accessorKey: "unit" },
             { header: "Status", accessorKey: "status" },
