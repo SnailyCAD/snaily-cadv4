@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/schemas",
-  "version": "1.45.0",
+  "version": "1.46.0",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
