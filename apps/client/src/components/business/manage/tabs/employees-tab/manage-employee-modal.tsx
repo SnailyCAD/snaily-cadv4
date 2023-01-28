@@ -39,6 +39,9 @@ export function ManageEmployeeModal({ onClose, onUpdate, employee, isAdmin }: Pr
   const t = useTranslations("Business");
 
   const { businessRole } = useValues();
+  const valueRoles = businessRole.values;
+  const businessRoles = currentBusiness?.roles ?? [];
+  const rolesToSelect = [...businessRoles, ...valueRoles];
 
   if (!isAdmin && (!currentBusiness || !currentEmployee)) {
     return null;
@@ -78,8 +81,8 @@ export function ManageEmployeeModal({ onClose, onUpdate, employee, isAdmin }: Pr
 
   const filteredRoles =
     employee?.role?.as === EmployeeAsEnum.OWNER
-      ? businessRole.values
-      : businessRole.values.filter((v) => v.as !== EmployeeAsEnum.OWNER);
+      ? rolesToSelect
+      : rolesToSelect.filter((v) => v.as !== EmployeeAsEnum.OWNER);
 
   const validate = handleValidate(UPDATE_EMPLOYEE_SCHEMA);
   const INITIAL_VALUES = {

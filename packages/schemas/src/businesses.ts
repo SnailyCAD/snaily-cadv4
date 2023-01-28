@@ -35,3 +35,8 @@ export const UPDATE_EMPLOYEE_SCHEMA = z.object({
 export const FIRE_EMPLOYEE_SCHEMA = z.object({
   employeeId: z.string().min(2).max(255),
 });
+
+export const BUSINESSES_BUSINESS_ROLE_SCHEMA = z.object({
+  value: z.string().min(1).max(255),
+  as: z.string().regex(/MANAGER|EMPLOYEE/),
+});

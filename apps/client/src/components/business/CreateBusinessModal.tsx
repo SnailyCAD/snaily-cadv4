@@ -41,7 +41,7 @@ export function CreateBusinessModal({ onCreate }: Props) {
 
     if (json.id) {
       if (json.business.status === WhitelistStatus.PENDING) {
-        toastMessage({ icon: null, message: error("businessCreatedButPending") });
+        toastMessage({ icon: "info", message: error("businessCreatedButPending") });
       } else {
         router.push(`/business/${json.id}/${json.employee?.id}`);
       }
