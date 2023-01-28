@@ -14,6 +14,7 @@ import {
   unitProperties,
   combinedUnitProperties,
   getActiveOfficer,
+  combinedEmsFdUnitProperties,
 } from "lib/leo/activeOfficer";
 import { ExtendedNotFound } from "src/exceptions/extended-not-found";
 import { incidentInclude } from "controllers/leo/incidents/IncidentController";
@@ -278,9 +279,7 @@ export class DispatchController {
       "combined-leo": { name: "combinedLeoUnit", include: combinedUnitProperties },
       "combined-ems-fd": {
         name: "combinedEmsFdUnit",
-        include: {
-          /* todo */
-        },
+        include: combinedEmsFdUnitProperties,
       },
     };
 

@@ -85,6 +85,7 @@ export async function handleDeleteAssignedUnit(
     officerId: "officer",
     emsFdDeputyId: "emsFdDeputy",
     combinedLeoId: "combinedLeoUnit",
+    combinedEmsFdId: "combinedEmsFdUnit",
   } as const;
 
   const assignedUnit = await prisma.assignedUnit.findFirst({
@@ -92,8 +93,9 @@ export async function handleDeleteAssignedUnit(
       call911Id: options.call.id,
       OR: [
         { officerId: options.unitId },
-        { combinedLeoId: options.unitId },
         { emsFdDeputyId: options.unitId },
+        { combinedLeoId: options.unitId },
+        { combinedEmsFdId: options.unitId },
       ],
     },
     include: assignedUnitsInclude.include,
@@ -137,9 +139,10 @@ async function handleCreateAssignedUnit(options: HandleCreateAssignedUnitOptions
     NOT: { status: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
   });
   const types = {
-    combined: "combinedLeoId",
     leo: "officerId",
     "ems-fd": "emsFdDeputyId",
+    "combined-leo": "combinedLeoId",
+    "combined-ems-fd": "combinedEmsFdId",
   };
 
   if (!unit) {
@@ -158,8 +161,13 @@ async function handleCreateAssignedUnit(options: HandleCreateAssignedUnitOptions
     return;
   }
 
-  const prismaModalName =
-    type === "leo" ? "officer" : type === "ems-fd" ? "emsFdDeputy" : "combinedLeoUnit";
+  const prismaNames = {
+    leo: "officer",
+    "ems-fd": "emsFdDeputy",
+    "combined-leo": "combinedLeoUnit",
+    "combined-ems-fd": "combinedEmsFdUnit",
+  } as const;
+  const prismaModelName = prismaNames[type];
 
   const status = await prisma.statusValue.findFirst({
     where: { shouldDo: ShouldDoType.SET_ASSIGNED },
@@ -167,14 +175,14 @@ async function handleCreateAssignedUnit(options: HandleCreateAssignedUnitOptions
 
   if (status) {
     // @ts-expect-error ignore
-    await prisma[prismaModalName].update({
+    await prisma[prismaModelName].update({
       where: { id: unit.id },
       data: { statusId: status.id },
     });
   }
 
   // @ts-expect-error they have the same properties for updating
-  await prisma[prismaModalName].update({
+  await prisma[prismaModelName].update({
     where: { id: unit.id },
     data: {
       activeCallId: await getNextActiveCallId({

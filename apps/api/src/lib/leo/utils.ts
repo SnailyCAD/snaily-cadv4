@@ -147,8 +147,9 @@ interface GetPrismaNameActiveCallIncidentOptions {
 export function getPrismaNameActiveCallIncident(options: GetPrismaNameActiveCallIncidentOptions) {
   const prismaNames = {
     officerId: "officer",
-    combinedLeoId: "combinedLeoUnit",
-    emsFdDeputyId: "emsFdDeputy",
+    combinedLeoId: "emsFdDeputy",
+    combinedEmsFdId: "combinedLeoUnit",
+    emsFdDeputyId: "combinedEmsFdUnit",
   } as const;
 
   let prismaName: typeof prismaNames[keyof typeof prismaNames] | null = null;

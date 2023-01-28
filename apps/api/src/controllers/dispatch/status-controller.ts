@@ -19,7 +19,12 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { ContentType, Description, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
-import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/activeOfficer";
+import {
+  combinedEmsFdUnitProperties,
+  combinedUnitProperties,
+  leoProperties,
+  unitProperties,
+} from "lib/leo/activeOfficer";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { Socket } from "services/socket-service";
 import { IsAuth } from "middlewares/is-auth";
@@ -140,6 +145,18 @@ export class StatusController {
       }
     }
 
+    if (type === "ems-fd" && !isDispatch) {
+      const hasCombinedUnit = await prisma.combinedEmsFdUnit.findFirst({
+        where: {
+          deputies: { some: { id: unit.id } },
+        },
+      });
+
+      if (hasCombinedUnit) {
+        throw new BadRequest("emsFdDeputyIsCombined");
+      }
+    }
+
     if (!code) {
       throw new NotFound("statusNotFound");
     }
@@ -236,7 +253,7 @@ export class StatusController {
         },
         include: unitProperties,
       });
-    } else {
+    } else if (type === "combined-leo") {
       updatedUnit = await prisma.combinedLeoUnit.update({
         where: { id: unit.id },
         data: {
@@ -245,6 +262,16 @@ export class StatusController {
           lastStatusChangeTimestamp: new Date(),
         },
         include: combinedUnitProperties,
+      });
+    } else {
+      updatedUnit = await prisma.combinedEmsFdUnit.update({
+        where: { id: unit.id },
+        data: {
+          activeVehicleId: activeEmergencyVehicleId,
+          statusId,
+          lastStatusChangeTimestamp: new Date(),
+        },
+        include: combinedEmsFdUnitProperties,
       });
     }
 
