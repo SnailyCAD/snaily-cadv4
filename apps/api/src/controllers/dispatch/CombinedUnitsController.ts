@@ -224,8 +224,6 @@ export class CombinedUnitsController {
       throw new NotFound("notFound");
     }
 
-    console.log({ unit });
-
     const onDutyStatusCode = await prisma.statusValue.findFirst({
       where: {
         shouldDo: ShouldDoType.SET_ON_DUTY,

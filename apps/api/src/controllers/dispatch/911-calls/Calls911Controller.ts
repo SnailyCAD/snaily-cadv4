@@ -518,8 +518,6 @@ export class Calls911Controller {
       },
     });
 
-    console.log({ existing });
-
     if (callType === "assign") {
       if (existing) {
         throw new BadRequest("alreadyAssignedToCall");
