@@ -10,7 +10,7 @@ import { setGlobalUserFromCADAPIToken, getUserFromSession } from "./auth/get-use
 import type { cad } from "@snailycad/types";
 import { hasPermission, Permissions } from "@snailycad/permissions";
 import { setErrorMap } from "zod";
-import { getErrorMap } from "./error-map/zod-error-map";
+import { getErrorMap } from "../utils/zod-error-map";
 
 @Middleware()
 export class IsAuth implements MiddlewareMethods {

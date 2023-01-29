@@ -166,7 +166,7 @@ export function getErrorMap(options: GetErrorMapOptions) {
         }
         break;
       case ZodIssueCode.custom:
-        message = "Invalid input custom";
+        message = t("invalidInput");
         break;
       case ZodIssueCode.invalid_intersection_types:
         message = "Intersection results could not be merged";
