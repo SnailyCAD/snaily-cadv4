@@ -378,7 +378,7 @@ export class CitizenController {
         })),
         socialSecurityNumber:
           data.socialSecurityNumber ??
-          (!citizen.socialSecurityNumber ? generateString(9, { numbersOnly: true }) : undefined),
+          (!citizen.socialSecurityNumber ? generateString(9, { type: "numbers-only" }) : undefined),
       },
       include: { gender: true, ethnicity: true },
     });

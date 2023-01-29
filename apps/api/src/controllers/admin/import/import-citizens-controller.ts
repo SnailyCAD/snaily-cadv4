@@ -135,7 +135,7 @@ export class ImportCitizensController {
             hairColor: data.hairColor ?? "",
             height: data.height ?? "",
             weight: data.weight ?? "",
-            socialSecurityNumber: generateString(9, { numbersOnly: true }),
+            socialSecurityNumber: generateString(9, { type: "numbers-only" }),
             weaponLicenseId: data.weaponLicenseId ?? null,
             driversLicenseId: data.driversLicenseId ?? null,
             pilotLicenseId: data.pilotLicenseId ?? null,

@@ -10,8 +10,8 @@ test("Should generate a random string, with numbers", () => {
 
 test("Should generate a random string, numbers only", () => {
   const LENGTH = 9;
-  const RESULT = generateString(LENGTH, { numbersOnly: true });
+  const RESULT = generateString(LENGTH, { type: "numbers-only" });
 
   expect(RESULT).toHaveLength(LENGTH);
-  expect(isNaN(Number(RESULT))).toBe(false); // parse the string as number -> should be a valid number
+  expect(parseInt(RESULT, 10)).toBeTypeOf("number");
 });

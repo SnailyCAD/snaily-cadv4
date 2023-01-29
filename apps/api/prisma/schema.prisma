@@ -84,10 +84,14 @@ model MiscCadSettings {
   activeWarrantsInactivityTimeout    Int?
   activeDispatchersInactivityTimeout Int?
 
-  driversLicenseNumberLength Int? @default(8)
-  pilotLicenseNumberLength   Int? @default(6)
-  weaponLicenseNumberLength  Int? @default(8)
-  waterLicenseNumberLength   Int? @default(8)
+  driversLicenseNumberLength Int?    @default(8)
+  driversLicenseTemplate     String? @db.Text
+  pilotLicenseNumberLength   Int?    @default(6)
+  pilotLicenseTemplate       String? @db.Text
+  weaponLicenseNumberLength  Int?    @default(8)
+  weaponLicenseTemplate      String? @db.Text
+  waterLicenseNumberLength   Int?    @default(8)
+  waterLicenseTemplate       String? @db.Text
 
   lastInactivitySyncTimestamp DateTime?
 

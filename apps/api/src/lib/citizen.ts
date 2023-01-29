@@ -3,6 +3,7 @@ import type { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { generateString } from "utils/generate-string";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { validateImageURL } from "lib/images/validate-image-url";
+import { generateLicenseNumber } from "./generate-license-number";
 
 interface Options {
   data: Partial<Zod.infer<typeof CREATE_CITIZEN_SCHEMA>>;
@@ -30,18 +31,28 @@ export async function citizenObjectFromData(options: Options) {
     imageId: validatedImageURL,
     imageBlurData: await generateBlurPlaceholder(validatedImageURL),
     socialSecurityNumber:
-      options.data.socialSecurityNumber || generateString(9, { numbersOnly: true }),
+      options.data.socialSecurityNumber || generateString(9, { type: "numbers-only" }),
     occupation: options.data.occupation || null,
     additionalInfo: options.data.additionalInfo,
-    driversLicenseNumber: generateString(miscCadSettings?.driversLicenseNumberLength ?? 8),
-    weaponLicenseNumber: generateString(miscCadSettings?.weaponLicenseNumberLength ?? 8, {
-      numbersOnly: true,
+
+    driversLicenseNumber: generateLicenseNumber({
+      template: miscCadSettings?.driversLicenseTemplate,
+      length: miscCadSettings?.driversLicenseNumberLength ?? 8,
     }),
-    pilotLicenseNumber: generateString(miscCadSettings?.pilotLicenseNumberLength ?? 8, {
-      numbersOnly: true,
+
+    pilotLicenseNumber: generateLicenseNumber({
+      template: miscCadSettings?.pilotLicenseTemplate,
+      length: miscCadSettings?.pilotLicenseNumberLength ?? 8,
     }),
-    waterLicenseNumber: generateString(miscCadSettings?.waterLicenseNumberLength ?? 8, {
-      numbersOnly: true,
+
+    weaponLicenseNumber: generateLicenseNumber({
+      template: miscCadSettings?.weaponLicenseTemplate,
+      length: miscCadSettings?.weaponLicenseNumberLength ?? 8,
+    }),
+
+    waterLicenseNumber: generateLicenseNumber({
+      template: miscCadSettings?.waterLicenseTemplate,
+      length: miscCadSettings?.waterLicenseNumberLength ?? 8,
     }),
   };
 
