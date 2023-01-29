@@ -3,7 +3,7 @@ import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, PathParams } from "@tsed/platform-params";
-import { ContentType, Get, Put } from "@tsed/schema";
+import { ContentType, Description, Get, Put } from "@tsed/schema";
 import { expungementRequestInclude } from "controllers/court/ExpungementRequestsController";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/is-auth";
@@ -29,6 +29,7 @@ export class AdminManageExpungementRequests {
   }
 
   @Put("/:id")
+  @Description("Accept or decline an expungement request for a citizen.")
   @UsePermissions({
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageExpungementRequests],

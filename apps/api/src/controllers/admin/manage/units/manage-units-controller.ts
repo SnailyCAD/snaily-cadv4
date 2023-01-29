@@ -361,12 +361,16 @@ export class AdminManageUnitsController {
   })
   @Description("Update a unit's callsign by its id")
   async updateCallsignUnit(
+    @Context("sessionUserId") sessionUserId: string,
     @PathParams("unitId") unitId: string,
     @BodyParams() body: unknown,
   ): Promise<APITypes.PutManageUnitCallsignData> {
     const data = validateSchema(UPDATE_UNIT_CALLSIGN_SCHEMA.partial(), body);
 
-    const { type, unit } = await findUnit(unitId);
+    const { type, unit } = await findUnit(unitId, undefined, {
+      officer: leoProperties,
+      emsFdDeputy: unitProperties,
+    });
 
     if (!unit || type === "combined-ems-fd" || type === "combined-leo") {
       throw new NotFound("unitNotFound");
@@ -403,6 +407,12 @@ export class AdminManageUnitsController {
         callsign: data.callsign,
       },
       include: type === "leo" ? leoProperties : unitProperties,
+    });
+
+    await createAuditLogEntry({
+      action: { type: AuditLogActionType.UnitUpdate, new: updated, previous: unit as any },
+      prisma,
+      executorId: sessionUserId,
     });
 
     return updated;
@@ -512,6 +522,7 @@ export class AdminManageUnitsController {
   @Post("/:id/image")
   @Description("Update an image of an officer or EMS/FD deputy")
   async updateUnitImage(
+    @Context("sessionUserId") sessionUserId: string,
     @PathParams("id") unitId: string,
     @MultipartFile("image") file?: PlatformMulterFile,
   ): Promise<APITypes.PostCitizenImageByIdData> {
@@ -554,10 +565,15 @@ export class AdminManageUnitsController {
         prisma[prismaName].update({
           where: { id: unit.id },
           data: { imageId: image.fileName, imageBlurData: await generateBlurPlaceholder(image) },
-          select: { imageId: true },
         }),
         fs.writeFile(image.path, image.buffer),
       ]);
+
+      await createAuditLogEntry({
+        action: { type: AuditLogActionType.UnitUpdate, new: data, previous: unit as any },
+        prisma,
+        executorId: sessionUserId,
+      });
 
       return data;
     } catch {
@@ -763,6 +779,7 @@ export class AdminManageUnitsController {
   }
 
   @Put("/:unitId/qualifications/:qualificationId")
+  @Description("Suspend or unsuspend a unit's qualification")
   @UsePermissions({
     fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [Permissions.ManageUnits, Permissions.ManageAwardsAndQualifications],

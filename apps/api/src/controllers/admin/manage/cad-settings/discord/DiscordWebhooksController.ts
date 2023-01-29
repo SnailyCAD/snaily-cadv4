@@ -75,7 +75,7 @@ export class DiscordWebhooksController {
     fallback: (u) => u.rank === Rank.OWNER,
     permissions: [Permissions.ManageCADSettings],
   })
-  async setRoleTypes(
+  async setWebhookTypes(
     @Context("cad")
     cad: cad & { miscCadSettings: (MiscCadSettings & { webhooks?: DiscordWebhook[] }) | null },
     @BodyParams() body: unknown,
