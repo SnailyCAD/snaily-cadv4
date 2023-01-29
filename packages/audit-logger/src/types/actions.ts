@@ -36,7 +36,9 @@ export type AuditLogActions =
   | UnitsPruned
   | UserWhitelistStatusChange
   | BusinessEmployeeUpdate
-  | BusinessEmployeeFire;
+  | BusinessEmployeeFire
+  | UpdateDiscordRoles
+  | UpdateDiscordWebhooks;
 
 type BaseAuditLogAction<ActionType extends AuditLogActionType, Previous, New> = {
   type: ActionType;
@@ -211,4 +213,14 @@ export type UserWhitelistStatusChange = BaseAuditLogAction<
   AuditLogActionType.UserWhitelistStatusChange,
   Partial<Types.User>,
   Partial<Types.User>
+>;
+export type UpdateDiscordRoles = BaseAuditLogAction<
+  AuditLogActionType.UpdateDiscordRoles,
+  any,
+  any
+>;
+export type UpdateDiscordWebhooks = BaseAuditLogAction<
+  AuditLogActionType.UpdateDiscordWebhooks,
+  any[],
+  any[]
 >;

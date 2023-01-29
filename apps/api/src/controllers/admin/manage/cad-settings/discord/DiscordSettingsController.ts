@@ -13,6 +13,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { Permissions } from "@snailycad/permissions";
 import { UsePermissions } from "middlewares/use-permissions";
 import { performDiscordRequest } from "lib/discord/performDiscordRequest";
+import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 
 const guildId = process.env.DISCORD_SERVER_ID;
 
@@ -78,6 +79,7 @@ export class DiscordSettingsController {
   async setRoleTypes(
     @Context("cad") cad: cad,
     @BodyParams() body: unknown,
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.PostCADDiscordRolesData> {
     if (!guildId) {
       throw new BadRequest("mustSetBotTokenGuildId");
@@ -203,6 +205,16 @@ export class DiscordSettingsController {
           },
         },
       },
+    });
+
+    await createAuditLogEntry({
+      action: {
+        type: AuditLogActionType.UpdateDiscordRoles,
+        previous: discordRoles,
+        new: updated.discordRoles!,
+      },
+      prisma,
+      executorId: sessionUserId,
     });
 
     return updated.discordRoles!;

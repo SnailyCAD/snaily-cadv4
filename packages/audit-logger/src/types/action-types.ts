@@ -39,6 +39,8 @@ export enum AuditLogActionType {
 
   CadSettingsUpdate = "CadSettingsUpdate",
   MiscCadSettingsUpdate = "MiscCadSettingsUpdate",
+  UpdateDiscordRoles = "UpdateDiscordRoles",
+  UpdateDiscordWebhooks = "UpdateDiscordWebhooks",
 
   Calls911Purge = "Calls911Purge",
 }
