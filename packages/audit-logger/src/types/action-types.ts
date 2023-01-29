@@ -9,6 +9,8 @@ export enum AuditLogActionType {
   UserRolesUpdate = "UserRolesUpdate",
   UserApiTokenDelete = "UserApiTokenDelete",
   User2FADelete = "User2FADelete",
+  UserWhitelistStatusChange = "UserWhitelistStatusChange",
+
   CadAPITokenRegenerated = "CadAPITokenRegenerated",
   CADFeaturesUpdate = "CADFeaturesUpdate",
 
@@ -24,6 +26,8 @@ export enum AuditLogActionType {
 
   BusinessUpdate = "BusinessUpdate",
   BusinessDelete = "BusinessDelete",
+  BusinessEmployeeUpdate = "BusinessEmployeeUpdate",
+  BusinessEmployeeFire = "BusinessEmployeeFire",
 
   CustomFieldCreate = "CustomFieldCreate",
   CustomFieldUpdate = "CustomFieldUpdate",
