@@ -9,6 +9,8 @@ import { handleDiscordSync } from "./auth/utils";
 import { setGlobalUserFromCADAPIToken, getUserFromSession } from "./auth/get-user";
 import type { cad } from "@snailycad/types";
 import { hasPermission, Permissions } from "@snailycad/permissions";
+import { setErrorMap } from "zod";
+import { getErrorMap } from "../utils/zod-error-map";
 
 @Middleware()
 export class IsAuth implements MiddlewareMethods {
@@ -55,6 +57,11 @@ export class IsAuth implements MiddlewareMethods {
 
       ctx.set("cad", { ...setDiscordAuth(cad as cad), version: await getCADVersion() });
     }
+
+    // localized error messages
+    const localeHeader = req.headers.sn_locale as string | undefined;
+    const errorMap = await getErrorMap(user?.locale || localeHeader || "en");
+    setErrorMap(errorMap);
 
     if (user) {
       await handleDiscordSync({ user, cad });
