@@ -31,8 +31,9 @@ export function officerOrDeputyToUnit<T extends _Call911 | _Incident | _Warrant>
         officer: undefined,
         deputy: undefined,
         combinedUnit: undefined,
+        combinedEmsFdUnit: undefined,
 
-        unit: v.officer ?? v.deputy ?? v.combinedUnit,
+        unit: v.officer ?? v.deputy ?? v.combinedUnit ?? v.combinedEmsFdUnit,
       }))
       .filter((v: any) => v.unit?.id),
   };

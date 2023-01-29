@@ -5,10 +5,11 @@ import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { useDispatchState } from "state/dispatch/dispatch-state";
 import { useEmsFdState } from "state/ems-fd-state";
-import type { EmsFdDeputy } from "@snailycad/types";
+import type { CombinedEmsFdUnit, EmsFdDeputy } from "@snailycad/types";
 import type { GetEmsFdActiveDeputies } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { shallow } from "zustand/shallow";
+import { isUnitCombinedEmsFd } from "@snailycad/utils";
 
 export function useActiveDeputies() {
   const { user } = useAuth();
@@ -27,7 +28,8 @@ export function useActiveDeputies() {
     (data: EmsFdDeputy[]) => {
       const updatedCalls = [...call911State.calls].map((call) => {
         const newAssignedUnits = [...call.assignedUnits].map((assignedUnit) => {
-          const deputy = data.find((v) => v.id === assignedUnit.emsFdDeputyId);
+          const unitIds = [assignedUnit.emsFdDeputyId, assignedUnit.combinedEmsFdId];
+          const deputy = data.find((v) => unitIds.includes(v.id));
 
           if (deputy) {
             return { ...assignedUnit, unit: deputy };
@@ -47,10 +49,17 @@ export function useActiveDeputies() {
   );
 
   const handleState = React.useCallback(
-    (data: EmsFdDeputy[]) => {
+    (data: (EmsFdDeputy | CombinedEmsFdUnit)[]) => {
       setActiveDeputies(data);
 
-      const activeDeputy = data.find((v) => v.userId === user?.id);
+      const activeDeputy = data.find((v) => {
+        if (isUnitCombinedEmsFd(v)) {
+          return v.deputies.some((v) => v.userId === user?.id);
+        }
+
+        return v.userId === user?.id;
+      });
+
       if (activeDeputy) {
         setActiveDeputy(activeDeputy);
       }

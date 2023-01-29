@@ -66,7 +66,8 @@
     "text-color": "Tekst kleur",
     "background-color": "Achtergrond kleur",
     "url": "URL",
-    "supportedImages": "Zie ondersteunde afbeeldingstypes en URL's"
+    "supportedImages": "Zie ondersteunde afbeeldingstypes en URL's",
+    "unknown": "Onbekend"
   },
   "Nav": {
     "citizen": "Burger",
@@ -174,6 +175,19 @@
     "citizenNotAllowedToEditLicenses": "U als burger mag uw eigen vergunningen niet bewerken. Neem contact op met een ambtenaar om uw licenties te beheren.",
     "vehicleIsImpounded": "Dit voertuig is in beslag genomen, u kunt het niet bewerken of verwijderen totdat het is vrijgegeven van de inbeslagname.",
     "featureNotEnabled": "Deze functie is niet ingeschakeld. ({functie})",
-    "errorUploadingImage": "Kan uw afbeelding op dit moment niet uploaden. Probeer het later nog eens. Als dit blijft terugkomen, neem dan contact op met de CAD-eigenaar."
+    "errorUploadingImage": "Kan uw afbeelding op dit moment niet uploaden. Probeer het later nog eens. Als dit blijft terugkomen, neem dan contact op met de CAD-eigenaar.",
+    "noDefaultDepartmentSet": "Er is geen standaardafdelingingesteld, contacteer een administrator."
+  },
+  "Statuses": {
+    "ACCEPTED": "geaccepteerd",
+    "PASSED": "Passed",
+    "PAID": "Betaald",
+    "PENDING": "In afwachting",
+    "IN_PROGRESS": "In uitvoering",
+    "DECLINED": "Afgewezen",
+    "DENIED": "Geweigerd",
+    "UNPAID": "Onbetaald",
+    "FAILED": "Mislukt",
+    "CANCELED": "Geannuleerd"
   }
 }

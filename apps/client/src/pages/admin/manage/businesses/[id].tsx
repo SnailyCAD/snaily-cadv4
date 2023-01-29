@@ -104,11 +104,7 @@ export default function ManageBusinesses({ business, businessId }: Props) {
           role: employee.role?.value.value ?? common("none"),
           canCreatePosts: common(yesOrNoText(employee.canCreatePosts)),
           employeeOfTheMonth: common(yesOrNoText(employee.employeeOfTheMonth)),
-          whitelistStatus: (
-            <Status state={employee.whitelistStatus}>
-              {employee.whitelistStatus.toLowerCase()}
-            </Status>
-          ),
+          whitelistStatus: <Status>{employee.whitelistStatus}</Status>,
           actions: (
             <>
               <Button

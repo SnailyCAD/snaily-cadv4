@@ -386,6 +386,13 @@ export type EmsFdDeputy = Prisma.EmsFdDeputy & {
   activeVehicle: EmergencyVehicleValue | null;
 };
 
+export type CombinedEmsFdUnit = Prisma.CombinedEmsFdUnit & {
+  status: EmsFdDeputy["status"];
+  department: EmsFdDeputy["department"];
+  deputies: Omit<EmsFdDeputy, "activeIncident">[];
+  activeVehicle?: EmsFdDeputy["activeVehicle"];
+};
+
 export type TruckLog = Prisma.TruckLog & {
   citizen: Prisma.Citizen | null;
   vehicle: RegisteredVehicle | null;

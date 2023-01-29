@@ -140,7 +140,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
               eyeColor: citizen.eyeColor,
               weight: citizen.weight,
               height: citizen.height,
-              user: citizen.user?.username ?? "No user",
+              user: citizen.user?.username ?? common("none"),
               actions: (
                 <>
                   {hasPermissions([Permissions.ManageCitizens], true) ? (

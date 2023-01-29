@@ -14,6 +14,7 @@ import {
   unitProperties,
   combinedUnitProperties,
   getActiveOfficer,
+  combinedEmsFdUnitProperties,
 } from "lib/leo/activeOfficer";
 import { ExtendedNotFound } from "src/exceptions/extended-not-found";
 import { incidentInclude } from "controllers/leo/incidents/IncidentController";
@@ -111,6 +112,7 @@ export class DispatchController {
         query,
         type: "DEPUTY",
         extraWhere: {
+          combinedEmsFdUnitId: null,
           status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
         },
       }),
@@ -119,8 +121,9 @@ export class DispatchController {
       orderBy: { updatedAt: "desc" },
     });
 
-    const combinedUnits = await prisma.combinedLeoUnit.findMany({
+    const combinedOfficers = await prisma.combinedLeoUnit.findMany({
       where: createWhereCombinedUnit({
+        type: "OFFICER",
         pendingOnly: false,
         query,
       }),
@@ -129,7 +132,18 @@ export class DispatchController {
       orderBy: { lastStatusChangeTimestamp: "desc" },
     });
 
-    return [...officers, ...deputies, ...combinedUnits];
+    const combinedEmsFdDeputies = await prisma.combinedEmsFdUnit.findMany({
+      where: createWhereCombinedUnit({
+        type: "DEPUTY",
+        pendingOnly: false,
+        query,
+      }),
+      include: combinedEmsFdUnitProperties,
+      take: 25,
+      orderBy: { lastStatusChangeTimestamp: "desc" },
+    });
+
+    return [...officers, ...deputies, ...combinedOfficers, ...combinedEmsFdDeputies];
   }
 
   @Post("/aop")
@@ -275,7 +289,11 @@ export class DispatchController {
     const includesData = {
       leo: { name: "officer", include: leoProperties },
       "ems-fd": { name: "emsFdDeputy", include: unitProperties },
-      combined: { name: "combinedLeoUnit", include: combinedUnitProperties },
+      "combined-leo": { name: "combinedLeoUnit", include: combinedUnitProperties },
+      "combined-ems-fd": {
+        name: "combinedEmsFdUnit",
+        include: combinedEmsFdUnitProperties,
+      },
     };
 
     const name = includesData[type].name;

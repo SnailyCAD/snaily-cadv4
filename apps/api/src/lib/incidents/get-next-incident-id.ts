@@ -33,8 +33,9 @@ export async function getNextIncidentId(options: Options) {
         NOT: { incident: { id: options.incidentId, isActive: false } },
         OR: [
           { officerId: options.unit.id },
-          { combinedLeoId: options.unit.id },
           { emsFdDeputyId: options.unit.id },
+          { combinedLeoId: options.unit.id },
+          { combinedEmsFdId: options.unit.id },
         ],
       },
     });

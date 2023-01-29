@@ -38,6 +38,12 @@ export const leoProperties = {
   activeIncident: { include: { events: true } },
 };
 
+export const combinedEmsFdUnitProperties = {
+  status: { include: { value: true } },
+  department: { include: { value: true } },
+  deputies: { include: unitProperties },
+};
+
 export const combinedUnitProperties = {
   status: { include: { value: true } },
   department: { include: { value: true } },

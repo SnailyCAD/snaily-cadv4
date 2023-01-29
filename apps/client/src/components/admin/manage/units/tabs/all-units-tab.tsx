@@ -193,9 +193,6 @@ export function AllUnitsTab({ units }: Props) {
           features={{ rowSelection: hasManagePermissions }}
           data={asyncTable.items.map((unit) => {
             const departmentStatus = unit.whitelistStatus?.status;
-            const departmentStatusFormatted = departmentStatus
-              ? departmentStatus.toLowerCase()
-              : "—";
 
             return {
               id: unit.id,
@@ -231,9 +228,7 @@ export function AllUnitsTab({ units }: Props) {
               callsign: generateCallsign(unit),
               badgeNumber: unit.badgeNumber,
               department: formatOfficerDepartment(unit) ?? common("none"),
-              departmentStatus: (
-                <Status state={departmentStatus}>{departmentStatusFormatted}</Status>
-              ),
+              departmentStatus: <Status>{departmentStatus}</Status>,
               division: formatUnitDivisions(unit),
               rank: <OfficerRank unit={unit} />,
               position: unit.position ?? common("none"),

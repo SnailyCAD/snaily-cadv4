@@ -53,7 +53,7 @@
     "officer": "Polizist/in",
     "createWithOfficer": "Ertsllen mit Polizist/in",
     "previousRecords": "Vorherige Einträge",
-	"addressFlags": "Adresskennzeichen",
+    "addressFlags": "Adresskennzeichen",
     "createPreviousRecordsStepDescription": "Hier kannst Du optional frühere Einträge zu diesem Bürger hinzufügen. Dies ist nützlich, wenn ein Bürger schon einmal verhaftet wurde.",
     "alert_markCitizenDeceased": "Bist du sicher, dass Du <span>{citizen}</span> als Gestorben Markieren möchtest? Nur das EMS/FD kan diesen Status ändern!",
     "alert_deleteCitizen": "Bist du sicher, dass Du <span>{citizen}</span> löschen willst? Diese Aktion kann nicht rückgängig gemacht werden."

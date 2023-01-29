@@ -57,9 +57,7 @@ export function NameSearchVehiclesTab() {
             color: vehicle.color,
             registrationStatus: vehicle.registrationStatus.value,
             vinNumber: vehicle.vinNumber,
-            dmvStatus: (
-              <Status state={vehicle.dmvStatus}>{vehicle.dmvStatus?.toLowerCase()}</Status>
-            ),
+            dmvStatus: <Status>{vehicle.dmvStatus}</Status>,
             createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
           }))}
           columns={[

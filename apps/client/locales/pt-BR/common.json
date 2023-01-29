@@ -58,13 +58,16 @@
     "address": "Endereço",
     "location": "Localização",
     "startTyping": "Começe a digitar...",
-    "searching": "Searching...",
+    "searching": "Buscando...",
     "information": "Informação",
     "showingXResults": "Mostrando <span>{amount}</span> resultado(s)",
     "revoke": "Revogar",
     "ok": "OK",
     "text-color": "Cor do Texto",
-    "background-color": "Cor do Fundo"
+    "background-color": "Cor do Fundo",
+    "url": "URL",
+    "supportedImages": "Veja os tipos de imagem e URLs compatíveis",
+    "unknown": "Desconhecido"
   },
   "Nav": {
     "citizen": "Cidadão",

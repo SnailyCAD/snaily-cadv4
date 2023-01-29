@@ -505,7 +505,8 @@ export class Calls911Controller {
     }
 
     const types = {
-      combined: "combinedLeoId",
+      "combined-leo": "combinedLeoId",
+      "combined-ems-fd": "combinedEmsFdId",
       leo: "officerId",
       "ems-fd": "emsFdDeputyId",
     };
@@ -541,7 +542,8 @@ export class Calls911Controller {
     const prismaNames = {
       leo: "officer",
       "ems-fd": "emsFdDeputy",
-      combined: "combinedLeoUnit",
+      "combined-leo": "combinedLeoUnit",
+      "combined-ems-fd": "combinedEmsFdUnit",
     };
 
     const assignedToStatus = await prisma.statusValue.findFirst({
@@ -640,10 +642,7 @@ export class Calls911Controller {
     call: Call911,
     locale?: string | null,
   ): Promise<{ embeds: APIEmbed[] }> {
-    const t = await getTranslator({
-      locale,
-      namespace: "Calls",
-    });
+    const t = await getTranslator({ type: "webhooks", locale, namespace: "Calls" });
 
     const caller = call.name || t("unknown");
     const location = `${call.location} ${call.postal ? call.postal : ""}`;

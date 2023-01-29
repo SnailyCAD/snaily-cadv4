@@ -25,7 +25,7 @@ import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { IsAuth } from "middlewares/is-auth";
 import { ActiveDeputy } from "middlewares/active-deputy";
 import fs from "node:fs/promises";
-import { unitProperties } from "lib/leo/activeOfficer";
+import { combinedEmsFdUnitProperties, unitProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/data/validate-schema";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
@@ -203,15 +203,21 @@ export class EmsFdController {
       "lastStatusChangeTimestamp",
     );
 
-    const deputies = await prisma.emsFdDeputy.findMany({
-      where: {
-        status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
-        ...(unitsInactivityFilter?.filter ?? {}),
-      },
-      include: unitProperties,
-    });
+    const [deputies, combinedEmsFdDeputies] = await prisma.$transaction([
+      prisma.emsFdDeputy.findMany({
+        where: {
+          status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
+          ...(unitsInactivityFilter?.filter ?? {}),
+        },
+        include: unitProperties,
+      }),
+      prisma.combinedEmsFdUnit.findMany({
+        include: combinedEmsFdUnitProperties,
+        where: unitsInactivityFilter?.filter,
+      }),
+    ]);
 
-    return deputies;
+    return [...combinedEmsFdDeputies, ...deputies];
   }
   @Use(ActiveDeputy)
   @Post("/medical-record")

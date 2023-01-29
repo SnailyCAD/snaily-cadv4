@@ -132,9 +132,7 @@ export function ResultsTab() {
         {DMV ? (
           <li>
             <Infofield label={vT("dmvStatus")}>
-              <Status state={currentResult.dmvStatus}>
-                {currentResult.dmvStatus?.toLowerCase()}
-              </Status>
+              <Status>{currentResult.dmvStatus}</Status>
             </Infofield>
           </li>
         ) : null}

@@ -66,7 +66,7 @@ export class TemporaryUnitsController {
       action: {
         type,
         previous: existingOfficer as any,
-        new: officer,
+        new: officer as any,
       },
       prisma,
       executorId: sessionUserId,

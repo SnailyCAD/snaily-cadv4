@@ -39,8 +39,14 @@
     "nameDescription": "O nome da sua empresa.",
     "addressDescription": "O endereço da sua empresa.",
     "whitelistDescription": "Cidadãos que desejam ingressar em sua empresa devem ser analisados. Eles podem ser aceitos ou negados.",
-    "alert_fireEmployee": "Tem certeza de que deseja demitir <span>{employee}</span>? Esta ação não pode ser desfeita.",
-    "alert_deletePost": "Tem certeza de que deseja excluir esta postagem? Esta ação não pode ser desfeita.",
-    "alert_deleteBusiness": "Tem certeza de que deseja excluir \"<span>{business}</span>\"? Esta ação não pode ser desfeita."
+    "businessRoles": "Funções de Negócios",
+    "addBusinessRole": "Adicionar função comercial",
+    "editBusinessRole": "Editar função comercial",
+    "as": "Como",
+    "deleteBusinessRole": "Excluir função comercial",
+    "alert_fireEmployee": "Atem certeza de que deseja demitir <span>{employee}</span>? Essa ação não pode ser desfeita.",
+    "alert_deletePost": "Tem certeza de que deseja excluir esta postagem? Essa ação não pode ser desfeita.",
+    "alert_deleteBusiness": "Tem certeza de que deseja excluir \"<span>{business}</span>\"? Essa ação não pode ser desfeita.",
+    "alert_deleteBusinessRole": "Tem certeza de que deseja excluir \"<span>{role}</span>\"? Essa ação não pode ser desfeita."
   }
 }

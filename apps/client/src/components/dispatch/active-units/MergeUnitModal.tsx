@@ -1,4 +1,4 @@
-import type { Officer } from "@snailycad/types";
+import type { CombinedEmsFdUnit, CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 import { Loader, Button } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
@@ -8,30 +8,38 @@ import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { Select } from "components/form/Select";
-import { useActiveOfficers } from "hooks/realtime/useActiveOfficers";
-import { isUnitOfficer } from "@snailycad/utils/typeguards";
+import { isUnitCombined, isUnitCombinedEmsFd } from "@snailycad/utils/typeguards";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
-import { useLeoState } from "state/leo-state";
 import type { PostDispatchStatusMergeOfficers } from "@snailycad/types/api";
-import { shallow } from "zustand/shallow";
+import type { ActiveDeputy } from "state/ems-fd-state";
+import type { ActiveOfficer } from "state/leo-state";
 
 interface Props {
   isDispatch: boolean;
-  unit: Officer;
+  unit: Officer | EmsFdDeputy;
   onClose?(): void;
+
+  type: "leo" | "ems-fd";
+
+  activeUnits: (EmsFdDeputy | CombinedEmsFdUnit | Officer | CombinedLeoUnit)[];
+  setActiveUnits(units: (EmsFdDeputy | CombinedEmsFdUnit | Officer | CombinedLeoUnit)[]): void;
+
+  activeUnit: ActiveDeputy | ActiveOfficer | null;
+  setActiveUnit(unit: EmsFdDeputy | CombinedEmsFdUnit | Officer | CombinedLeoUnit | null): void;
 }
 
-export function MergeUnitModal({ unit, isDispatch, onClose }: Props) {
-  const { activeOfficer, setActiveOfficer } = useLeoState(
-    (state) => ({
-      activeOfficer: state.activeOfficer,
-      setActiveOfficer: state.setActiveOfficer,
-    }),
-    shallow,
-  );
+export function MergeUnitModal({
+  unit,
+  isDispatch,
+  activeUnits,
+  setActiveUnits,
+  activeUnit,
+  setActiveUnit,
+  onClose,
+  type,
+}: Props) {
   const { isOpen, closeModal } = useModal();
-  const { activeOfficers, setActiveOfficers } = useActiveOfficers();
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -42,20 +50,20 @@ export function MergeUnitModal({ unit, isDispatch, onClose }: Props) {
     closeModal(ModalIds.MergeUnit);
   }
 
-  function makeValuesOption(officer: Officer, fixed?: boolean) {
+  function makeValuesOption(unit: Officer | EmsFdDeputy, fixed?: boolean) {
     return {
-      label: `${generateCallsign(officer)} ${makeUnitName(officer)}`,
-      value: officer.id,
+      label: `${generateCallsign(unit)} ${makeUnitName(unit)}`,
+      value: unit.id,
       isFixed: fixed,
     };
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute<PostDispatchStatusMergeOfficers>({
-      path: "/dispatch/status/merge",
+      path: `/dispatch/status/merge/${type}`,
       method: "POST",
       data: values.ids.map((v) => ({
-        entry: isDispatch ? v.isFixed : v.value === activeOfficer?.id && v.isFixed,
+        entry: isDispatch ? v.isFixed : v.value === activeUnit?.id && v.isFixed,
         id: v.value,
       })),
     });
@@ -63,7 +71,7 @@ export function MergeUnitModal({ unit, isDispatch, onClose }: Props) {
     if (json.id) {
       const newOfficers = [];
 
-      for (const officer of activeOfficers) {
+      for (const officer of activeUnits) {
         if (values.ids.some((v) => v.value === officer.id)) {
           continue;
         }
@@ -72,35 +80,41 @@ export function MergeUnitModal({ unit, isDispatch, onClose }: Props) {
       }
 
       if (!isDispatch) {
-        setActiveOfficer(json);
+        setActiveUnit(json);
       }
 
-      setActiveOfficers([json, ...newOfficers]);
+      setActiveUnits([json, ...newOfficers]);
       handleClose();
     }
   }
 
+  const isCombined = activeUnit && (isUnitCombined(activeUnit) || isUnitCombinedEmsFd(activeUnit));
   const INITIAL_VALUES = {
     ids:
-      activeOfficer && isUnitOfficer(activeOfficer) && !isDispatch
-        ? [makeValuesOption(activeOfficer, true), makeValuesOption(unit, true)]
+      activeUnit && !isCombined && !isDispatch
+        ? [makeValuesOption(activeUnit, true), makeValuesOption(unit, true)]
         : [makeValuesOption(unit, true)],
   };
+
+  const title = type === "leo" ? t("mergeOfficers") : t("mergeDeputies");
+  const label = type === "leo" ? t("officers") : t("deputies");
 
   return (
     <Modal
       onClose={handleClose}
       isOpen={isOpen(ModalIds.MergeUnit)}
-      title={t("mergeOfficers")}
-      className="min-w-[500px]"
+      title={title}
+      className="w-[600px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ values, handleChange }) => (
           <Form>
-            <FormField label={t("officers")}>
+            <FormField label={label}>
               <Select
                 isMulti
-                values={activeOfficers.filter(isUnitOfficer).map((v) => makeValuesOption(v))}
+                values={activeUnits
+                  .filter((u) => !isUnitCombined(u) || !isUnitCombinedEmsFd(u))
+                  .map((v) => makeValuesOption(v as EmsFdDeputy | Officer))}
                 name="ids"
                 onChange={handleChange}
                 value={values.ids}

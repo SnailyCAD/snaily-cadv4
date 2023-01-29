@@ -4,12 +4,12 @@ import { Button } from "@snailycad/ui";
 import { ManageUnitModal } from "./modals/ManageUnit";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import type { ActiveDeputy } from "state/ems-fd-state";
+import { ActiveDeputy, useEmsFdState } from "state/ems-fd-state";
 import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
 import { useRouter } from "next/router";
 import { formatUnitDivisions, makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { EmsFdDeputy, StatusViewMode } from "@snailycad/types";
+import { CombinedEmsFdUnit, EmsFdDeputy, StatusViewMode } from "@snailycad/types";
 import { useAuth } from "context/AuthContext";
 
 import { Table, useTableState } from "components/shared/Table";
@@ -31,27 +31,46 @@ import { useCall911State } from "state/dispatch/call-911-state";
 import { shallow } from "zustand/shallow";
 import { generateContrastColor } from "lib/table/get-contrasting-text-color";
 import { Permissions, usePermission } from "hooks/usePermission";
+import { isUnitCombinedEmsFd } from "@snailycad/utils";
+import { MergeUnitModal } from "./active-units/MergeUnitModal";
 
 interface Props {
-  initialDeputies: EmsFdDeputy[];
+  initialDeputies: (EmsFdDeputy | CombinedEmsFdUnit)[];
 }
 
 function ActiveDeputies({ initialDeputies }: Props) {
-  const { activeDeputies: _activeDeputies } = useActiveDeputies();
-  const { activeIncidents } = useActiveIncidents();
-  const isMounted = useMounted();
-  const activeDeputies = isMounted ? _activeDeputies : initialDeputies;
-
-  const { hasPermissions } = usePermission();
-
   const t = useTranslations();
   const common = useTranslations("Common");
+
+  const { activeDeputies: _activeDeputies, setActiveDeputies } = useActiveDeputies();
+  const { activeIncidents } = useActiveIncidents();
+  const { hasPermissions } = usePermission();
   const { openModal } = useModal();
   const { generateCallsign } = useGenerateCallsign();
   const { user } = useAuth();
   const { hasActiveDispatchers } = useActiveDispatchers();
+  const { handleFilter } = useActiveUnitsFilter();
   const { DIVISIONS, BADGE_NUMBERS, RADIO_CHANNEL_MANAGEMENT, ACTIVE_INCIDENTS } =
     useFeatureEnabled();
+
+  const isMounted = useMounted();
+  const router = useRouter();
+  const tableState = useTableState({ tableId: "active-deputies", pagination: { pageSize: 12 } });
+
+  const activeDeputies = isMounted ? _activeDeputies : initialDeputies;
+  const isDispatch = router.pathname === "/dispatch";
+
+  const hasDispatchPerms = hasPermissions([Permissions.Dispatch], (u) => u.isDispatch);
+  const showCreateTemporaryUnitButton = isDispatch && hasDispatchPerms;
+
+  const active911Calls = useCall911State((state) => state.calls);
+  const { activeDeputy, setActiveDeputy } = useEmsFdState(
+    (state) => ({
+      activeDeputy: state.activeDeputy,
+      setActiveDeputy: state.setActiveDeputy,
+    }),
+    shallow,
+  );
   const { emsSearch, showEmsFilters, setShowFilters } = useActiveUnitsState(
     (state) => ({
       emsSearch: state.emsSearch,
@@ -60,15 +79,6 @@ function ActiveDeputies({ initialDeputies }: Props) {
     }),
     shallow,
   );
-  const { handleFilter } = useActiveUnitsFilter();
-  const active911Calls = useCall911State((state) => state.calls);
-  const tableState = useTableState({ tableId: "active-deputies" });
-
-  const router = useRouter();
-  const isDispatch = router.pathname === "/dispatch";
-
-  const hasDispatchPerms = hasPermissions([Permissions.Dispatch], (u) => u.isDispatch);
-  const showCreateTemporaryUnitButton = isDispatch && hasDispatchPerms;
 
   const [tempDeputy, deputyState] = useTemporaryItem(activeDeputies);
 
@@ -150,12 +160,15 @@ function ActiveDeputies({ initialDeputies }: Props) {
                       deputy={deputy}
                       isDispatch={isDispatch}
                       nameAndCallsign={nameAndCallsign}
+                      setTempUnit={deputyState.setTempId}
                     />
                   ),
-                  badgeNumber: deputy.badgeNumber,
-                  department: deputy.department?.value.value ?? common("none"),
-                  division: formatUnitDivisions(deputy),
-                  rank: deputy.rank?.value ?? common("none"),
+                  badgeNumber: !isUnitCombinedEmsFd(deputy) && deputy.badgeNumber,
+                  department:
+                    (!isUnitCombinedEmsFd(deputy) && deputy.department?.value.value) ??
+                    common("none"),
+                  division: !isUnitCombinedEmsFd(deputy) && formatUnitDivisions(deputy),
+                  rank: (!isUnitCombinedEmsFd(deputy) && deputy.rank?.value) ?? common("none"),
                   status: (
                     <span className="flex items-center">
                       {useDot && color ? (
@@ -209,6 +222,18 @@ function ActiveDeputies({ initialDeputies }: Props) {
           type="ems-fd"
           onClose={() => deputyState.setTempId(null)}
           unit={tempDeputy}
+        />
+      ) : null}
+      {tempDeputy && !isUnitCombinedEmsFd(tempDeputy) ? (
+        <MergeUnitModal
+          type="ems-fd"
+          isDispatch={isDispatch}
+          unit={tempDeputy}
+          onClose={() => deputyState.setTempId(null)}
+          activeUnit={activeDeputy}
+          activeUnits={activeDeputies}
+          setActiveUnits={setActiveDeputies}
+          setActiveUnit={setActiveDeputy}
         />
       ) : null}
     </div>

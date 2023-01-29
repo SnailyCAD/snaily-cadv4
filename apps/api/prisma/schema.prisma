@@ -84,10 +84,14 @@ model MiscCadSettings {
   activeWarrantsInactivityTimeout    Int?
   activeDispatchersInactivityTimeout Int?
 
-  driversLicenseNumberLength Int? @default(8)
-  pilotLicenseNumberLength   Int? @default(6)
-  weaponLicenseNumberLength  Int? @default(8)
-  waterLicenseNumberLength   Int? @default(8)
+  driversLicenseNumberLength Int?    @default(8)
+  driversLicenseTemplate     String? @db.Text
+  pilotLicenseNumberLength   Int?    @default(6)
+  pilotLicenseTemplate       String? @db.Text
+  weaponLicenseNumberLength  Int?    @default(8)
+  weaponLicenseTemplate      String? @db.Text
+  waterLicenseNumberLength   Int?    @default(8)
+  waterLicenseTemplate       String? @db.Text
 
   lastInactivitySyncTimestamp DateTime?
 
@@ -661,6 +665,7 @@ model DepartmentValue {
   CombinedLeoUnit       CombinedLeoUnit[]
   Value                 Value[]                 @relation("officerRankDepartments")
   EmergencyVehicleValue EmergencyVehicleValue[]
+  mCombinedEmsFdUnit    CombinedEmsFdUnit[]
 }
 
 model EmergencyVehicleValue {
@@ -670,9 +675,10 @@ model EmergencyVehicleValue {
   departments DepartmentValue[]
   divisions   DivisionValue[]
 
-  Officers        Officer[]         @relation("activeEmergencyVehicle_leo")
-  EmsFdDeputies   EmsFdDeputy[]     @relation("activeEmergencyVehicle_emsfd")
-  CombinedLeoUnit CombinedLeoUnit[] @relation("activeEmergencyVehicle_combined_unit")
+  Officers          Officer[]           @relation("activeEmergencyVehicle_leo")
+  EmsFdDeputies     EmsFdDeputy[]       @relation("activeEmergencyVehicle_emsfd")
+  CombinedLeoUnit   CombinedLeoUnit[]   @relation("activeEmergencyVehicle_combined_unit")
+  CombinedEmsFdUnit CombinedEmsFdUnit[] @relation("activeEmergencyVehicle_combined_emsfd_unit")
 }
 
 model DriversLicenseCategoryValue {
@@ -961,9 +967,10 @@ model StatusValue {
   type        StatusValueType   @default(STATUS_CODE)
   departments DepartmentValue[]
 
-  officerStatusToValue Officer[]         @relation("officerStatusToValue")
-  emsFdStatusToValue   EmsFdDeputy[]     @relation("emsFdStatusToValue")
-  CombinedLeoUnit      CombinedLeoUnit[] @relation("combinedUnitStatusToValue")
+  officerStatusToValue Officer[]           @relation("officerStatusToValue")
+  emsFdStatusToValue   EmsFdDeputy[]       @relation("emsFdStatusToValue")
+  CombinedLeoUnit      CombinedLeoUnit[]   @relation("combinedUnitStatusToValue")
+  CombinedEmsFdUnit    CombinedEmsFdUnit[] @relation("combinedEmsFdUnitStatusToValue")
   Call911              Call911[]
   LeoIncident          LeoIncident[]
 }
@@ -1018,6 +1025,7 @@ model LeoIncident {
   Officer              Officer[]              @relation("activeIncident")
   CombinedLeoUnit      CombinedLeoUnit[]      @relation("combinedActiveIncident")
   EmsFdDeputy          EmsFdDeputy[]          @relation("emsfdActiveIncident")
+  CombinedEmsFdUnit    CombinedEmsFdUnit[]    @relation("combinedEmsFdActiveIncident")
 }
 
 model IncidentEvent {
@@ -1053,6 +1061,29 @@ model CombinedLeoUnit {
   AssignedWarrantOfficer    AssignedWarrantOfficer[]
 }
 
+model CombinedEmsFdUnit {
+  id                        String                 @id @default(uuid())
+  deputies                  EmsFdDeputy[]
+  callsign                  String
+  callsign2                 String?
+  department                DepartmentValue?       @relation(fields: [departmentId], references: [id])
+  departmentId              String?
+  incremental               Int?
+  radioChannelId            String?
+  status                    StatusValue?           @relation("combinedEmsFdUnitStatusToValue", fields: [statusId], references: [id])
+  statusId                  String?
+  pairedUnitTemplate        String?
+  activeCall                Call911?               @relation("CombinedEmsFdUnitActiveCall", fields: [activeCallId], references: [id])
+  activeCallId              String?
+  activeIncident            LeoIncident?           @relation("combinedEmsFdActiveIncident", fields: [activeIncidentId], references: [id])
+  activeIncidentId          String?
+  lastStatusChangeTimestamp DateTime?
+  activeVehicle             EmergencyVehicleValue? @relation("activeEmergencyVehicle_combined_emsfd_unit", fields: [activeVehicleId], references: [id], onDelete: SetNull)
+  activeVehicleId           String?
+  AssignedUnit              AssignedUnit[]
+  IncidentInvolvedUnit      IncidentInvolvedUnit[]
+}
+
 // dispatching
 model ActiveDispatchers {
   id        String   @id @default(cuid())
@@ -1064,37 +1095,38 @@ model ActiveDispatchers {
 
 // 911 calls & bolos
 model Call911 {
-  id               String            @id @default(cuid())
-  caseNumber       Int               @default(autoincrement())
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @default(now()) @updatedAt
-  position         Position?         @relation(fields: [positionId], references: [id])
-  positionId       String?
-  userId           String?
-  assignedUnits    AssignedUnit[]
-  location         String            @db.Text
-  postal           String?           @db.Text
-  description      String?           @db.Text
-  descriptionData  Json?
-  name             String            @db.VarChar(255)
-  ended            Boolean?          @default(false)
-  situationCode    StatusValue?      @relation(fields: [situationCodeId], references: [id])
-  situationCodeId  String?
-  viaDispatch      Boolean?          @default(false)
-  divisions        DivisionValue[]
-  departments      DepartmentValue[]
-  events           Call911Event[]
-  incidents        LeoIncident[]
-  type             CallTypeValue?    @relation(fields: [typeId], references: [id])
-  typeId           String?
-  Officer          Officer[]         @relation("activeCall")
-  EmsFdDeputy      EmsFdDeputy[]     @relation("emsFdActiveCall")
-  CombinedLeoUnit  CombinedLeoUnit[] @relation("CombinedLeoUnitActiveCall")
-  gtaMapPosition   GTAMapPosition?   @relation(fields: [gtaMapPositionId], references: [id])
-  gtaMapPositionId String?
-  isSignal100      Boolean?          @default(false)
-  extraFields      Json?
-  status           WhitelistStatus?
+  id                String              @id @default(cuid())
+  caseNumber        Int                 @default(autoincrement())
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @default(now()) @updatedAt
+  position          Position?           @relation(fields: [positionId], references: [id])
+  positionId        String?
+  userId            String?
+  assignedUnits     AssignedUnit[]
+  location          String              @db.Text
+  postal            String?             @db.Text
+  description       String?             @db.Text
+  descriptionData   Json?
+  name              String              @db.VarChar(255)
+  ended             Boolean?            @default(false)
+  situationCode     StatusValue?        @relation(fields: [situationCodeId], references: [id])
+  situationCodeId   String?
+  viaDispatch       Boolean?            @default(false)
+  divisions         DivisionValue[]
+  departments       DepartmentValue[]
+  events            Call911Event[]
+  incidents         LeoIncident[]
+  type              CallTypeValue?      @relation(fields: [typeId], references: [id])
+  typeId            String?
+  Officer           Officer[]           @relation("activeCall")
+  EmsFdDeputy       EmsFdDeputy[]       @relation("emsFdActiveCall")
+  CombinedLeoUnit   CombinedLeoUnit[]   @relation("CombinedLeoUnitActiveCall")
+  gtaMapPosition    GTAMapPosition?     @relation(fields: [gtaMapPositionId], references: [id])
+  gtaMapPositionId  String?
+  isSignal100       Boolean?            @default(false)
+  extraFields       Json?
+  status            WhitelistStatus?
+  CombinedEmsFdUnit CombinedEmsFdUnit[] @relation("CombinedEmsFdUnitActiveCall")
 }
 
 model GTAMapPosition {
@@ -1115,18 +1147,20 @@ model Position {
 }
 
 model AssignedUnit {
-  id            String           @id @default(uuid())
-  isPrimary     Boolean?         @default(false)
-  officer       Officer?         @relation(fields: [officerId], references: [id])
-  officerId     String?
-  deputy        EmsFdDeputy?     @relation(fields: [emsFdDeputyId], references: [id])
-  emsFdDeputyId String?
-  combinedUnit  CombinedLeoUnit? @relation(fields: [combinedLeoId], references: [id])
-  combinedLeoId String?
-  call911       Call911?         @relation(fields: [call911Id], references: [id], onDelete: Cascade)
-  call911Id     String?
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @default(now()) @updatedAt
+  id                String             @id @default(uuid())
+  isPrimary         Boolean?           @default(false)
+  officer           Officer?           @relation(fields: [officerId], references: [id])
+  officerId         String?
+  deputy            EmsFdDeputy?       @relation(fields: [emsFdDeputyId], references: [id])
+  emsFdDeputyId     String?
+  combinedUnit      CombinedLeoUnit?   @relation(fields: [combinedLeoId], references: [id])
+  combinedLeoId     String?
+  combinedEmsFdUnit CombinedEmsFdUnit? @relation(fields: [combinedEmsFdId], references: [id])
+  combinedEmsFdId   String?
+  call911           Call911?           @relation(fields: [call911Id], references: [id], onDelete: Cascade)
+  call911Id         String?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @default(now()) @updatedAt
 }
 
 model AssignedWarrantOfficer {
@@ -1142,17 +1176,19 @@ model AssignedWarrantOfficer {
 }
 
 model IncidentInvolvedUnit {
-  id            String           @id @default(uuid())
-  officer       Officer?         @relation(fields: [officerId], references: [id])
-  officerId     String?
-  deputy        EmsFdDeputy?     @relation(fields: [emsFdDeputyId], references: [id])
-  emsFdDeputyId String?
-  combinedUnit  CombinedLeoUnit? @relation(fields: [combinedLeoId], references: [id])
-  combinedLeoId String?
-  incident      LeoIncident?     @relation("unitsInvolved", fields: [incidentId], references: [id], onDelete: Cascade)
-  incidentId    String?
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @default(now()) @updatedAt
+  id                String             @id @default(uuid())
+  officer           Officer?           @relation(fields: [officerId], references: [id])
+  officerId         String?
+  deputy            EmsFdDeputy?       @relation(fields: [emsFdDeputyId], references: [id])
+  emsFdDeputyId     String?
+  combinedUnit      CombinedLeoUnit?   @relation(fields: [combinedLeoId], references: [id])
+  combinedLeoId     String?
+  combinedEmsFdUnit CombinedEmsFdUnit? @relation(fields: [combinedEmsFdId], references: [id])
+  combinedEmsFdId   String?
+  incident          LeoIncident?       @relation("unitsInvolved", fields: [incidentId], references: [id], onDelete: Cascade)
+  incidentId        String?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @default(now()) @updatedAt
 }
 
 model Call911Event {
@@ -1335,6 +1371,8 @@ model EmsFdDeputy {
   activeVehicleId           String?
   isTemporary               Boolean                @default(false)
   identifiers               String[]
+  CombinedEmsFdUnit         CombinedEmsFdUnit?     @relation(fields: [combinedEmsFdUnitId], references: [id])
+  combinedEmsFdUnitId       String?
 }
 
 // truck logs

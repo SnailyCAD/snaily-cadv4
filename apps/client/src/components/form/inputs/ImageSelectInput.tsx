@@ -71,6 +71,7 @@ export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, 
         />
 
         <Button
+          className="min-w-fit"
           disabled={!urlImageData}
           type="button"
           onPress={() => {
@@ -119,7 +120,7 @@ export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, 
             value={typeof values[valueKey] === "string" ? undefined : values[valueKey]}
           />
           <Button
-            className="mr-2"
+            className="mr-2 min-w-fit"
             type="button"
             onPress={() => {
               openModal(ModalIds.CropImageModal);
@@ -131,6 +132,7 @@ export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, 
             {common("url")}
           </Button>
           <Button
+            className="min-w-fit"
             type="button"
             variant="danger"
             onPress={() => {

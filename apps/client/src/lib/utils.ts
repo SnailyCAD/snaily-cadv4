@@ -6,8 +6,9 @@ import {
   type ValueLicenseType,
   WhitelistStatus,
   EmsFdDeputy,
+  CombinedEmsFdUnit,
 } from "@snailycad/types";
-import { isUnitCombined, isUnitOfficer } from "@snailycad/utils/typeguards";
+import { isUnitCombined, isUnitCombinedEmsFd, isUnitOfficer } from "@snailycad/utils/typeguards";
 import { handleRequest } from "./fetch";
 import type { IncomingMessage } from "connect";
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";
@@ -37,9 +38,13 @@ export async function requestAll(
   );
 }
 
-export function makeUnitName(unit: Officer | EmsFdDeputy | CombinedLeoUnit | undefined) {
+export function makeUnitName(
+  unit: Officer | EmsFdDeputy | CombinedLeoUnit | CombinedEmsFdUnit | undefined,
+) {
   if (!unit) return "UNKNOWN";
-  if (isUnitCombined(unit)) return "";
+
+  const isCombined = isUnitCombined(unit) || isUnitCombinedEmsFd(unit);
+  if (isCombined) return "";
 
   return `${unit.citizen.name} ${unit.citizen.surname}`;
 }

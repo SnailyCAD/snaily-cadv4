@@ -177,5 +177,17 @@
     "featureNotEnabled": "This feature is not enabled. ({feature})",
     "errorUploadingImage": "Unable to upload your image at this moment. Please try again later. If this keeps reoccurring, contact the CAD-owner.",
     "noDefaultDepartmentSet": "There is no default department set. Please contact an administrator to set a default department."
+  },
+  "Statuses": {
+    "ACCEPTED": "Accepted",
+    "PASSED": "Passed",
+    "PAID": "Paid",
+    "PENDING": "Pending",
+    "IN_PROGRESS": "In Progress",
+    "DECLINED": "Declined",
+    "DENIED": "Denied",
+    "UNPAID": "Unpaid",
+    "FAILED": "Failed",
+    "CANCELED": "Canceled"
   }
 }

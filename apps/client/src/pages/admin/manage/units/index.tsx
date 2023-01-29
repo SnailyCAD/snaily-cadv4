@@ -85,7 +85,7 @@ export default function SupervisorPanelPage(props: Props) {
   }
 
   TABS.push({
-    name: "Department Time Logs",
+    name: t("Management.departmentTimeLogs"),
     value: "departmentTimeLogs",
   });
 

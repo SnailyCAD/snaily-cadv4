@@ -2,6 +2,7 @@ import type { SelectValue } from "../../fields/select-field";
 import type { MultiSelectState } from "../../../hooks/select/useMultiSelectState";
 import { ChevronDown, X } from "react-bootstrap-icons";
 import { Button } from "../../button";
+import { classNames } from "../../../utils/classNames";
 
 interface Props<T extends SelectValue> {
   state: MultiSelectState<T>;
@@ -30,7 +31,13 @@ export function SelectActions<T extends SelectValue>(props: Props<T>) {
           <div className="w-[1px] h-4 rounded-md dark:bg-gray-500/80 mx-1" />
         </>
       ) : null}
-      <span aria-hidden="true" style={{ paddingLeft: 5 }}>
+      <span
+        className={classNames(
+          "cursor-pointer transition-transform origin-center",
+          props.state.isOpen && "rotate-180",
+        )}
+        aria-hidden="true"
+      >
         <ChevronDown />
       </span>
     </div>

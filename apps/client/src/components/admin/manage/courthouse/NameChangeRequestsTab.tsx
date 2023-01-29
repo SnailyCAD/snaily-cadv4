@@ -53,7 +53,7 @@ export function NameChangeRequestsTab({ requests: data }: Props) {
             id: request.id,
             citizen: `${request.citizen.name} ${request.citizen.surname}`,
             newName: `${request.newName} ${request.newSurname}`,
-            status: <Status state={request.status}>{request.status.toLowerCase()}</Status>,
+            status: <Status>{request.status}</Status>,
             createdAt: <FullDate>{request.createdAt}</FullDate>,
             actions: (
               <>

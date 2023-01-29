@@ -7,6 +7,7 @@ import type {
   Officer,
   EmsFdDeputy,
   LeoIncident,
+  CombinedEmsFdUnit,
 } from "@snailycad/types";
 import { create } from "zustand";
 
@@ -19,8 +20,8 @@ interface DispatchState {
   activeOfficers: (Officer | CombinedLeoUnit)[];
   setActiveOfficers(officers: (Officer | CombinedLeoUnit)[]): void;
 
-  activeDeputies: EmsFdDeputy[];
-  setActiveDeputies(deputies: EmsFdDeputy[]): void;
+  activeDeputies: (EmsFdDeputy | CombinedEmsFdUnit)[];
+  setActiveDeputies(deputies: (EmsFdDeputy | CombinedEmsFdUnit)[]): void;
 
   activeIncidents: LeoIncident[];
   setActiveIncidents(incidents: LeoIncident[]): void;

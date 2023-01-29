@@ -63,7 +63,7 @@ export function ExpungementRequestsTab({ requests: data }: Props) {
                 .filter((v) => v.type === "TICKET")
                 .map((w) => getTitles(w))
                 .join(", ") || common("none"),
-            status: <Status state={request.status}>{request.status.toLowerCase()}</Status>,
+            status: <Status>{request.status}</Status>,
             createdAt: <FullDate>{request.createdAt}</FullDate>,
             actions: (
               <>

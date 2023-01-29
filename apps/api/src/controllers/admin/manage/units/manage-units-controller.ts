@@ -18,6 +18,7 @@ import {
   leoProperties,
   _leoProperties,
   unitProperties,
+  combinedEmsFdUnitProperties,
 } from "lib/leo/activeOfficer";
 import { findUnit } from "lib/leo/findUnit";
 import { updateOfficerDivisionsCallsigns } from "lib/leo/utils";
@@ -255,6 +256,13 @@ export class AdminManageUnitsController {
       }
 
       if (!unit) {
+        unit = await prisma.combinedEmsFdUnit.findUnique({
+          where: { id },
+          include: combinedEmsFdUnitProperties,
+        });
+      }
+
+      if (!unit) {
         throw new NotFound("unitNotFound");
       }
 
@@ -265,25 +273,30 @@ export class AdminManageUnitsController {
       OR: [{ user: { discordId: id } }, { user: { steamId: id } }],
     };
 
-    const [userOfficers, userDeputies, userCombinedUnits] = await prisma.$transaction([
-      prisma.officer.findMany({
-        where,
-        include: { ...unitProperties, ...extraInclude },
-      }),
-      prisma.emsFdDeputy.findMany({
-        where,
-        include: { ...unitProperties, ...extraInclude },
-      }),
-      prisma.combinedLeoUnit.findMany({
-        where: { officers: { some: where } },
-        include: combinedUnitProperties,
-      }),
-    ]);
+    const [userOfficers, userDeputies, userCombinedOfficers, userCombinedDeputies] =
+      await prisma.$transaction([
+        prisma.officer.findMany({
+          where,
+          include: { ...unitProperties, ...extraInclude },
+        }),
+        prisma.emsFdDeputy.findMany({
+          where,
+          include: { ...unitProperties, ...extraInclude },
+        }),
+        prisma.combinedLeoUnit.findMany({
+          where: { officers: { some: where } },
+          include: combinedUnitProperties,
+        }),
+        prisma.combinedEmsFdUnit.findMany({
+          where: { deputies: { some: where } },
+          include: combinedUnitProperties,
+        }),
+      ]);
 
     return {
       userOfficers,
       userDeputies,
-      userCombinedUnits,
+      userCombinedUnits: [...userCombinedOfficers, ...userCombinedDeputies],
     } as any;
   }
 
@@ -355,7 +368,7 @@ export class AdminManageUnitsController {
 
     const { type, unit } = await findUnit(unitId);
 
-    if (!unit || type === "combined") {
+    if (!unit || type === "combined-ems-fd" || type === "combined-leo") {
       throw new NotFound("unitNotFound");
     }
 
@@ -688,7 +701,7 @@ export class AdminManageUnitsController {
   ): Promise<APITypes.PostManageUnitAddQualificationData> {
     const unit = await findUnit(unitId);
 
-    if (unit.type === "combined") {
+    if (unit.type === "combined-ems-fd" || unit.type === "combined-leo") {
       throw new BadRequest("Cannot add qualifications to combined units");
     }
 
@@ -734,7 +747,7 @@ export class AdminManageUnitsController {
   ): Promise<APITypes.DeleteManageUnitQualificationData> {
     const unit = await findUnit(unitId);
 
-    if (unit.type === "combined") {
+    if (unit.type === "combined-ems-fd" || unit.type === "combined-leo") {
       throw new BadRequest("Cannot add qualifications to combined units");
     }
 
@@ -765,7 +778,7 @@ export class AdminManageUnitsController {
 
     const unit = await findUnit(unitId);
 
-    if (unit.type === "combined") {
+    if (unit.type === "combined-ems-fd" || unit.type === "combined-leo") {
       throw new BadRequest("Cannot add qualifications to combined units");
     }
 
@@ -805,7 +818,7 @@ export class AdminManageUnitsController {
   ): Promise<APITypes.DeleteManageUnitByIdData> {
     const unit = await findUnit(unitId);
 
-    if (unit.type === "combined") {
+    if (unit.type === "combined-ems-fd" || unit.type === "combined-leo") {
       throw new BadRequest("Cannot delete combined units");
     }
 
@@ -826,7 +839,7 @@ export class AdminManageUnitsController {
 
     await createAuditLogEntry({
       translationKey: "deletedEntry",
-      action: { type: AuditLogActionType.UnitDelete, new: unit.unit },
+      action: { type: AuditLogActionType.UnitDelete, new: unit.unit as any },
       prisma,
       executorId: sessionUserId,
     });

@@ -104,7 +104,7 @@
     "whatsNew": "Was gibt's Neues?",
     "bureauOfFirearms": "Feuerwaffenamt"
   },
- "Errors": {
+  "Errors": {
     "unknown": "Ein unerwarteter Fehler ist aufgetreten",
     "userNotFound": "Benutzer nicht gefunden",
     "nameAlreadyTaken": "Dieser Name ist bereits vergeben",
