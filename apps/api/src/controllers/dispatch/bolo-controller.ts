@@ -272,7 +272,7 @@ export class BoloController {
 }
 
 async function createBoloEmbed(bolo: Bolo): Promise<{ embeds: APIEmbed[] }> {
-  const translator = await getTranslator({ namespace: "Bolos", locale: "en" });
+  const translator = await getTranslator({ type: "webhooks", namespace: "Bolos", locale: "en" });
 
   const type = bolo.type.toLowerCase();
   const name = bolo.name || "—";

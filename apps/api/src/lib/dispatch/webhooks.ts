@@ -38,6 +38,7 @@ export async function createWebhookData(options: CreateWebhookDataOptions<Unit>)
     features: options.cad.features,
   });
   const translator = await getTranslator({
+    type: "webhooks",
     locale: options.locale,
     namespace: "Statuses",
   });
@@ -75,6 +76,7 @@ export async function createPanicButtonEmbed(
 ) {
   const unit = options.unit;
   const translator = await getTranslator({
+    type: "webhooks",
     locale: options.locale,
     namespace: "PanicButton",
   });

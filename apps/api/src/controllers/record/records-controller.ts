@@ -328,7 +328,7 @@ async function createWebhookData(
   data: ((Record & { violations: Violation[] }) | Warrant) & { citizen: Citizen },
   locale?: string | null,
 ) {
-  const t = await getTranslator({ locale, namespace: "Records" });
+  const t = await getTranslator({ type: "webhooks", locale, namespace: "Records" });
 
   const isWarrant = !("notes" in data);
   const citizen = `${data.citizen.name} ${data.citizen.surname}`;

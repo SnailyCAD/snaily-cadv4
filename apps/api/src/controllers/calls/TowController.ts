@@ -279,8 +279,8 @@ export async function createVehicleImpoundedWebhookData(
   },
   locale?: string | null,
 ) {
-  const t = await getTranslator({ locale, namespace: "Tow" });
-  const common = await getTranslator({ locale, namespace: "Common" });
+  const t = await getTranslator({ type: "webhooks", locale, namespace: "Tow" });
+  const common = await getTranslator({ type: "webhooks", locale, namespace: "Common" });
 
   return {
     embeds: [

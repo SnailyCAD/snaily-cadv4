@@ -642,10 +642,7 @@ export class Calls911Controller {
     call: Call911,
     locale?: string | null,
   ): Promise<{ embeds: APIEmbed[] }> {
-    const t = await getTranslator({
-      locale,
-      namespace: "Calls",
-    });
+    const t = await getTranslator({ type: "webhooks", locale, namespace: "Calls" });
 
     const caller = call.name || t("unknown");
     const location = `${call.location} ${call.postal ? call.postal : ""}`;
