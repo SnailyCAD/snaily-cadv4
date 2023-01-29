@@ -17,7 +17,7 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(({ errorMessage, 
     transition-all ${rest.className} ${
       errorMessage
         ? "border-red-500 focus:border-red-700 dark:focus:border-red-700"
-        : "border-gray-200 dark:border-gray-700 focus:border-gray-800 dark:focus:border-gray-500"
+        : "border-gray-200 dark:border-quinary focus:border-gray-800 dark:focus:border-gray-500"
     } `}
   />
 ));
