@@ -113,7 +113,15 @@
     "caseNumberTemplate": "Vorlage für Fallnummer",
     "caseNumberTemplateInfo": "Dies ist die Vorlage für die Erfassung von Fallnummern. Sie können die folgenden Variablen verwenden: {variables}",
     "pairedUnitTemplate": "Vorlage für gepaarte Einheiten",
-    "pairedUnitTemplateInfo": "Dies ist die Vorlage für gepaarte Einheiten. Sie können die folgenden Variablen verwenden: {variables}"
+    "pairedUnitTemplateInfo": "Dies ist die Vorlage für gepaarte Einheiten. Sie können die folgenden Variablen verwenden: {Variablen}. Hinweis: Dies gilt nur für neu erstellte Bürger.",
+    "driversLicenseTemplate": "Führerscheinnummer Vorlage",
+    "driversLicenseTemplateInfo": "Dies ist die Vorlage für Führerscheinnummern. Sie können die folgenden Variablen verwenden: {Variablen}. Hinweis: Dies gilt nur für neu erstellte Bürger.",
+    "pilotLicenseTemplate": "Pilot Lizenznummer Vorlage",
+    "pilotLicenseTemplateInfo": "Dies ist die Vorlage für Pilotenscheinnummern. Sie können die folgenden Variablen verwenden: {Variablen}. Hinweis: Dies gilt nur für neu erstellte Bürger.",
+    "weaponLicenseTemplate": "Vorlage für Waffennummern",
+    "weaponLicenseTemplateInfo": "Dies ist die Vorlage für Waffenscheinnummern. Sie können die folgenden Variablen verwenden: {Variablen}. Hinweis: Dies gilt nur für neu erstellte Bürger.",
+    "waterLicenseTemplate": "Vorlage für Wassernummern",
+    "waterLicenseTemplateInfo": "Dies ist die Vorlage für Wasserkennzeichen. Sie können die folgenden Variablen verwenden: {Variablen}. Hinweis: Dies gilt nur für neu erstellte Bürger..
   },
   "DiscordRolesTab": {
     "discordRoles": "Discord-Rollen",
