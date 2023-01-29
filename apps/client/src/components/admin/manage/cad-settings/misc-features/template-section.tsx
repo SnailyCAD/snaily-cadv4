@@ -17,16 +17,28 @@ const CASE_NUMBER_TEMPLATE_VARIABLES = (
   </span>
 );
 
+const LICENSE_NUMBER_TEMPLATE_VARIABLES = (
+  <span key="LICENSE_NUMBER_TEMPLATE_VARIABLES">
+    <code>{"{letter/<length>}"}</code>, <code>{"{number/<length>}"}</code>
+  </span>
+);
+
 export function TemplateSection() {
   const { errors, values, handleChange } = useFormikContext<any>();
   const t = useTranslations("CadSettings");
+
+  const licenseNumberTypes = [
+    "driversLicenseTemplate",
+    "pilotLicenseTemplate",
+    "weaponLicenseTemplate",
+    "waterLicenseTemplate",
+  ];
 
   return (
     <section>
       <h3 className="font-semibold text-xl mb-3">{t("templateSection")}</h3>
 
       <SettingsFormField
-        // todo: add template information for allowed properties
         description={t.rich("callsignTemplateInfo", {
           // @ts-expect-error this is a valid element
           variables: CALLSIGN_TEMPLATE_VARIABLES,
@@ -66,6 +78,25 @@ export function TemplateSection() {
           onChange={handleChange}
         />
       </SettingsFormField>
+
+      {licenseNumberTypes.map((type) => (
+        <SettingsFormField
+          key={type}
+          errorMessage={errors[type]}
+          description={t.rich(`${type}Info`, {
+            // @ts-expect-error this is a valid element
+            variables: LICENSE_NUMBER_TEMPLATE_VARIABLES,
+          })}
+          label={t(type)}
+        >
+          <Input
+            placeholder="L{number/3}-{number/6}"
+            name={type}
+            value={values[type]}
+            onChange={handleChange}
+          />
+        </SettingsFormField>
+      ))}
     </section>
   );
 }

@@ -131,9 +131,16 @@ export function MiscFeatures() {
     activeDispatchersInactivityTimeout: miscSettings.activeDispatchersInactivityTimeout ?? "",
 
     driversLicenseNumberLength: miscSettings.driversLicenseNumberLength ?? 8,
+    driversLicenseTemplate: miscSettings.driversLicenseTemplate ?? "",
+
     weaponLicenseNumberLength: miscSettings.weaponLicenseNumberLength ?? 8,
+    pilotLicenseTemplate: miscSettings.pilotLicenseTemplate ?? "",
+
     pilotLicenseNumberLength: miscSettings.pilotLicenseNumberLength ?? 6,
+    weaponLicenseTemplate: miscSettings.weaponLicenseTemplate ?? "",
+
     waterLicenseNumberLength: miscSettings.waterLicenseNumberLength ?? 8,
+    waterLicenseTemplate: miscSettings.waterLicenseTemplate ?? "",
   };
 
   return (

@@ -39,17 +39,21 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
   authScreenBgImageId: z.any().or(z.string()).optional(),
   authScreenHeaderImageId: z.any().or(z.string()).optional(),
   inactivityTimeout: z.number().nullish(),
-  call911InactivityTimeout: z.number().gt(1).nullish(),
-  incidentInactivityTimeout: z.number().gt(1).nullish(),
-  unitInactivityTimeout: z.number().gt(1).nullish(),
-  activeDispatchersInactivityTimeout: z.number().gt(1).nullish(),
-  boloInactivityTimeout: z.number().gt(1).nullish(),
-  activeWarrantsInactivityTimeout: z.number().gt(1).nullish(),
+  call911InactivityTimeout: z.number().gte(1).nullish(),
+  incidentInactivityTimeout: z.number().gte(1).nullish(),
+  unitInactivityTimeout: z.number().gte(1).nullish(),
+  activeDispatchersInactivityTimeout: z.number().gte(1).nullish(),
+  boloInactivityTimeout: z.number().gte(1).nullish(),
+  activeWarrantsInactivityTimeout: z.number().gte(1).nullish(),
   jailTimeScaling: z
     .string()
     .regex(/HOURS|MINUTES|SECONDS/)
     .nullable()
     .optional(),
+  driversLicenseTemplate: z.string().nullable(),
+  pilotLicenseTemplate: z.string().nullable(),
+  weaponLicenseTemplate: z.string().nullable(),
+  waterLicenseTemplate: z.string().nullable(),
 });
 
 export const DISCORD_SETTINGS_SCHEMA = z.object({

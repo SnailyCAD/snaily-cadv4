@@ -2,18 +2,22 @@ import { customAlphabet } from "nanoid";
 
 interface Options {
   extraChars?: string;
-  numbersOnly?: boolean;
+  type: "letters-only" | "numbers-only" | "all";
 }
 
 const NUMBERS = "0123456789";
 const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 export function generateString(length: number, options?: Options) {
-  const { numbersOnly, extraChars = "" } = options ?? {};
-  const alphabet = [...NUMBERS];
+  const { type = "all", extraChars = "" } = options ?? {};
+  const alphabet = [];
 
-  if (!numbersOnly) {
+  if (type === "numbers-only") {
+    alphabet.push(...NUMBERS);
+  } else if (type === "letters-only") {
     alphabet.push(...LETTERS);
+  } else {
+    alphabet.push(...NUMBERS, ...LETTERS);
   }
 
   const generate = customAlphabet([...alphabet, extraChars].join(""));

@@ -119,7 +119,15 @@
     "caseNumberTemplate": "Case Number Template",
     "caseNumberTemplateInfo": "This is the template for record case numbers. You can use the following variables: {variables}",
     "pairedUnitTemplate": "Paired Unit Template",
-    "pairedUnitTemplateInfo": "This is the template for paired units. You can use the following variables: {variables}"
+    "pairedUnitTemplateInfo": "This is the template for paired units. You can use the following variables: {variables}",
+    "driversLicenseTemplate": "Drivers license number template",
+    "driversLicenseTemplateInfo": "This is the template for drivers license numbers. You can use the following variables: {variables}",
+    "pilotLicenseTemplate": "Pilot license number template",
+    "pilotLicenseTemplateInfo": "This is the template for pilot license numbers. You can use the following variables: {variables}",
+    "weaponLicenseTemplate": "Weapon license number template",
+    "weaponLicenseTemplateInfo": "This is the template for weapon license numbers. You can use the following variables: {variables}",
+    "waterLicenseTemplate": "Water license number template",
+    "waterLicenseTemplateInfo": "This is the template for water license numbers. You can use the following variables: {variables}"
   },
   "DiscordRolesTab": {
     "discordRoles": "Discord Roles",
