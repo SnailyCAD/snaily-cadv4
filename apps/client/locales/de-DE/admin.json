@@ -121,7 +121,7 @@
     "weaponLicenseTemplate": "Vorlage für Waffennummern",
     "weaponLicenseTemplateInfo": "Dies ist die Vorlage für Waffenscheinnummern. Sie können die folgenden Variablen verwenden: {Variablen}. Hinweis: Dies gilt nur für neu erstellte Bürger.",
     "waterLicenseTemplate": "Vorlage für Wassernummern",
-    "waterLicenseTemplateInfo": "Dies ist die Vorlage für Wasserkennzeichen. Sie können die folgenden Variablen verwenden: {Variablen}. Hinweis: Dies gilt nur für neu erstellte Bürger..
+    "waterLicenseTemplateInfo": "Dies ist die Vorlage für Wasserkennzeichen. Sie können die folgenden Variablen verwenden: {Variablen}. Hinweis: Dies gilt nur für neu erstellte Bürger."
   },
   "DiscordRolesTab": {
     "discordRoles": "Discord-Rollen",
