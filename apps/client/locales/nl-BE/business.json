@@ -39,8 +39,14 @@
     "nameDescription": "De naam van uw bedrijf.",
     "addressDescription": "Het adres van uw bedrijf.",
     "whitelistDescription": "Burgers dat uw bedrijf willen toetreden moeten toestemming hebben.Ze kunnen geweigerd of geaccepteerd worden.",
+    "businessRoles": "Bedrijfsrol",
+    "addBusinessRole": "Bedrijfsrol toevoegen",
+    "editBusinessRole": "Bedrijfsrol bewerken",
+    "as": "Als",
+    "deleteBusinessRole": "Bedrijfsrol verwijderen",
     "alert_fireEmployee": "Weet je zeker dan je <span>{employee}</span> wilt ontslaan? Deze actie kan niet ongedaan worden!",
     "alert_deletePost": "Weet je zeker dat je deze post wil verwijderen ? Deze actie kan niet ongedaan worden!",
-    "alert_deleteBusiness": "Weet je zeker dat je \"<span>{business}</span>\" wil verwijderen? Deze actie kan niet ongedaan worden!"
+    "alert_deleteBusiness": "Weet je zeker dat je \"<span>{business}</span>\" wil verwijderen? Deze actie kan niet ongedaan worden!",
+    "alert_deleteBusinessRole": "Ben je zeker dat je de rol \"<span>{role}</span>\" wilt verwijderen? Deze actie kan niet ongedaan worden."
   }
 }
