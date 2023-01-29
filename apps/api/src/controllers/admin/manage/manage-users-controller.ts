@@ -511,6 +511,7 @@ export class ManageUsersController {
     permissions: [Permissions.ManageUsers],
   })
   async acceptOrDeclineUser(
+    @Context("sessionUserId") sessionUserId: string,
     @PathParams("id") userId: string,
     @PathParams("type") type: "accept" | "decline",
   ): Promise<APITypes.PostManageUserAcceptDeclineData> {
@@ -524,6 +525,7 @@ export class ManageUsersController {
         whitelistStatus: WhitelistStatus.PENDING,
         NOT: { rank: Rank.OWNER },
       },
+      select: { id: true, username: true, whitelistStatus: true },
     });
 
     if (!user) {
@@ -531,9 +533,20 @@ export class ManageUsersController {
     }
 
     const whitelistStatus = type === "accept" ? WhitelistStatus.ACCEPTED : WhitelistStatus.DECLINED;
-    await prisma.user.update({
+    const updatedUser = await prisma.user.update({
       where: { id: user.id },
       data: { whitelistStatus },
+      select: { id: true, username: true, whitelistStatus: true },
+    });
+
+    await createAuditLogEntry({
+      action: {
+        type: AuditLogActionType.UserWhitelistStatusChange,
+        previous: user,
+        new: updatedUser,
+      },
+      prisma,
+      executorId: sessionUserId,
     });
 
     return true;

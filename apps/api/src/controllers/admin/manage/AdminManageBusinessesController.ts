@@ -2,7 +2,7 @@ import { Prisma, Rank } from "@prisma/client";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { BodyParams, PathParams, QueryParams } from "@tsed/platform-params";
+import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
 import { ContentType, Delete, Description, Get, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/getSessionUser";
 import { prisma } from "lib/data/prisma";
@@ -13,6 +13,7 @@ import { validateSchema } from "lib/data/validate-schema";
 import { UPDATE_EMPLOYEE_SCHEMA } from "@snailycad/schemas";
 import { EmployeeAsEnum } from "@snailycad/types";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 
 const businessInclude = {
   citizen: {
@@ -95,12 +96,20 @@ export class AdminManageBusinessesController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.DeleteBusinesses, Permissions.ManageBusinesses],
   })
-  async updateBusinessEmployee(@PathParams("id") employeeId: string, @BodyParams() body: unknown) {
+  async updateBusinessEmployee(
+    @PathParams("id") employeeId: string,
+    @Context("sessionUserId") sessionUserId: string,
+    @BodyParams() body: unknown,
+  ) {
     const data = validateSchema(UPDATE_EMPLOYEE_SCHEMA, body);
     const employee = await prisma.employee.findFirst({
       where: {
         id: employeeId,
         NOT: { role: { as: EmployeeAsEnum.OWNER } },
+      },
+      include: {
+        citizen: true,
+        role: { include: { value: true } },
       },
     });
 
@@ -131,6 +140,16 @@ export class AdminManageBusinessesController {
       },
     });
 
+    await createAuditLogEntry({
+      action: {
+        type: AuditLogActionType.BusinessEmployeeUpdate,
+        previous: employee,
+        new: updated,
+      },
+      prisma,
+      executorId: sessionUserId,
+    });
+
     return updated;
   }
 
@@ -141,6 +160,7 @@ export class AdminManageBusinessesController {
   })
   async fireEmployee(
     @PathParams("id") employeeId: string,
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.DeleteBusinessFireEmployeeData> {
     const employeeToDelete = await prisma.employee.findFirst({
       where: {
@@ -152,6 +172,7 @@ export class AdminManageBusinessesController {
           },
         },
       },
+      include: { citizen: true },
     });
 
     if (!employeeToDelete) {
@@ -162,6 +183,15 @@ export class AdminManageBusinessesController {
       where: {
         id: employeeToDelete.id,
       },
+    });
+
+    await createAuditLogEntry({
+      action: {
+        type: AuditLogActionType.BusinessEmployeeFire,
+        new: employeeToDelete,
+      },
+      prisma,
+      executorId: sessionUserId,
     });
 
     return true;
@@ -176,11 +206,11 @@ export class AdminManageBusinessesController {
   async updateBusiness(
     @BodyParams() body: any,
     @PathParams("id") businessId: string,
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.PutManageBusinessesData> {
     const business = await prisma.business.findUnique({
-      where: {
-        id: businessId,
-      },
+      where: { id: businessId },
+      include: businessInclude,
     });
 
     if (!business) {
@@ -191,6 +221,16 @@ export class AdminManageBusinessesController {
       where: { id: businessId },
       data: { status: body.status },
       include: businessInclude,
+    });
+
+    await createAuditLogEntry({
+      action: {
+        type: AuditLogActionType.BusinessUpdate,
+        previous: business,
+        new: updated,
+      },
+      prisma,
+      executorId: sessionUserId,
     });
 
     return updated;
@@ -204,6 +244,7 @@ export class AdminManageBusinessesController {
   })
   async deleteBusiness(
     @PathParams("id") businessId: string,
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.DeleteManageBusinessesData> {
     const business = await prisma.business.findUnique({
       where: {
@@ -216,9 +257,16 @@ export class AdminManageBusinessesController {
     }
 
     await prisma.business.delete({
-      where: {
-        id: businessId,
+      where: { id: businessId },
+    });
+
+    await createAuditLogEntry({
+      action: {
+        type: AuditLogActionType.BusinessDelete,
+        new: business,
       },
+      prisma,
+      executorId: sessionUserId,
     });
 
     return true;
