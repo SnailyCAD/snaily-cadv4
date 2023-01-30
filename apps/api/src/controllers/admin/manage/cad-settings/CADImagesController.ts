@@ -52,7 +52,7 @@ export class ManageCitizensController {
       prisma.cad.update({
         where: { id: cad.id },
         data: { logoId: image.fileName },
-        include: CAD_SELECT(user, true),
+        select: CAD_SELECT(user, true),
       }),
       fs.writeFile(image.path, image.buffer),
     ]);
