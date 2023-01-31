@@ -225,6 +225,8 @@ export class CADSettingsController {
         incidentInactivityTimeout: data.incidentInactivityTimeout || null,
         unitInactivityTimeout: data.unitInactivityTimeout || null,
         activeDispatchersInactivityTimeout: data.activeDispatchersInactivityTimeout || null,
+        boloInactivityTimeout: data.boloInactivityTimeout || null,
+        activeWarrantsInactivityTimeout: data.activeWarrantsInactivityTimeout || null,
         jailTimeScale: (data.jailTimeScaling || null) as JailTimeScale | null,
       },
       include: { webhooks: true },
