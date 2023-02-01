@@ -23,6 +23,7 @@ import { ActiveUnitsQualificationsCard } from "components/leo/qualifications/Act
 import type { PostDispatchStatusUnmergeUnitById } from "@snailycad/types/api";
 import Image from "next/image";
 import { useDispatchState } from "state/dispatch/dispatch-state";
+import { generateContrastColor } from "lib/table/get-contrasting-text-color";
 
 interface Props {
   officer: Officer | CombinedLeoUnit;
@@ -94,6 +95,9 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
     }
   }
 
+  const unitStatusColor = officer.status?.color ?? undefined;
+  const textColor = unitStatusColor && generateContrastColor(unitStatusColor);
+
   return (
     <ContextMenu
       canBeOpened={isEligiblePage ? canBeOpened ?? false : false}
@@ -135,7 +139,16 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
                 ) : null}
                 {isUnitCombined(officer) ? (
                   <div className="flex items-center">
-                    {generateCallsign(officer, "pairedUnitTemplate")}
+                    <span
+                      style={{
+                        backgroundColor: unitStatusColor,
+                        color: textColor,
+                      }}
+                      className="px-1.5 py-0.5 rounded-md dark:bg-secondary"
+                    >
+                      {generateCallsign(officer, "pairedUnitTemplate")}
+                    </span>
+
                     <span className="mx-4">
                       <ArrowRight />
                     </span>
@@ -146,7 +159,15 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
                     ))}
                   </div>
                 ) : (
-                  nameAndCallsign
+                  <span
+                    style={{
+                      backgroundColor: unitStatusColor,
+                      color: textColor,
+                    }}
+                    className="px-1.5 py-0.5 rounded-md dark:bg-secondary"
+                  >
+                    {nameAndCallsign}
+                  </span>
                 )}
               </span>
             </ActiveUnitsQualificationsCard>
