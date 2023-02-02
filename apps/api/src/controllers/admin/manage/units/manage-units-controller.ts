@@ -591,6 +591,7 @@ export class AdminManageUnitsController {
     @PathParams("unitId") unitId: string,
     @BodyParams("action") action: Action | null,
     @BodyParams("type") type: AcceptDeclineType | null,
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.PostManageUnitAcceptDeclineDepartmentData> {
     if (action && !ACTIONS.includes(action)) {
       throw new ExtendedBadRequest({ action: "Invalid Action" });
@@ -646,6 +647,12 @@ export class AdminManageUnitsController {
         include: unitType === "leo" ? leoProperties : unitProperties,
       });
 
+      await createAuditLogEntry({
+        action: { type: AuditLogActionType.UnitDepartmentAccepted, new: updated },
+        prisma,
+        executorId: sessionUserId,
+      });
+
       return updated;
     }
 
@@ -655,6 +662,12 @@ export class AdminManageUnitsController {
         const updated = await prisma[prismaName].delete({
           where: { id: unit.id },
           include: unitType === "leo" ? leoProperties : unitProperties,
+        });
+
+        await createAuditLogEntry({
+          action: { type: AuditLogActionType.UnitDepartmentDeclined, new: updated },
+          prisma,
+          executorId: sessionUserId,
         });
 
         return { ...updated, deleted: true };
@@ -672,6 +685,12 @@ export class AdminManageUnitsController {
           where: { id: unit.id },
           data: { departmentId: null },
           include: unitType === "leo" ? leoProperties : unitProperties,
+        });
+
+        await createAuditLogEntry({
+          action: { type: AuditLogActionType.UnitDepartmentDeclined, new: updated },
+          prisma,
+          executorId: sessionUserId,
         });
 
         return updated;
@@ -699,6 +718,12 @@ export class AdminManageUnitsController {
           include: unitType === "leo" ? leoProperties : unitProperties,
         });
 
+        await createAuditLogEntry({
+          action: { type: AuditLogActionType.UnitDepartmentDeclined, new: updated },
+          prisma,
+          executorId: sessionUserId,
+        });
+
         return updated;
       }
       default:
@@ -707,6 +732,7 @@ export class AdminManageUnitsController {
   }
 
   @Post("/:unitId/qualifications")
+  @Description("Add a qualification to a unit")
   @UsePermissions({
     fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [Permissions.ManageUnits, Permissions.ManageAwardsAndQualifications],
@@ -714,6 +740,7 @@ export class AdminManageUnitsController {
   async addUnitQualification(
     @PathParams("unitId") unitId: string,
     @BodyParams("qualificationId") qualificationId: string,
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.PostManageUnitAddQualificationData> {
     const unit = await findUnit(unitId);
 
@@ -749,6 +776,15 @@ export class AdminManageUnitsController {
       },
     });
 
+    await createAuditLogEntry({
+      action: {
+        type: AuditLogActionType.UnitQualificationAdd,
+        new: { unitId: unit.unit.id, qualification },
+      },
+      prisma,
+      executorId: sessionUserId,
+    });
+
     return qualification;
   }
 
@@ -757,9 +793,11 @@ export class AdminManageUnitsController {
     fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [Permissions.ManageUnits, Permissions.ManageAwardsAndQualifications],
   })
+  @Description("Delete a qualification from a unit")
   async deleteUnitQualification(
     @PathParams("unitId") unitId: string,
     @PathParams("qualificationId") qualificationId: string,
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.DeleteManageUnitQualificationData> {
     const unit = await findUnit(unitId);
 
@@ -771,8 +809,20 @@ export class AdminManageUnitsController {
       throw new NotFound("unitNotFound");
     }
 
-    await prisma.unitQualification.delete({
+    const qualification = await prisma.unitQualification.delete({
       where: { id: qualificationId },
+      include: {
+        qualification: { include: { value: true, departments: { include: { value: true } } } },
+      },
+    });
+
+    await createAuditLogEntry({
+      action: {
+        type: AuditLogActionType.UnitQualificationRemove,
+        new: { unitId: unit.unit.id, qualification },
+      },
+      prisma,
+      executorId: sessionUserId,
     });
 
     return true;
@@ -787,6 +837,7 @@ export class AdminManageUnitsController {
   async suspendOrUnsuspendUnitQualification(
     @PathParams("unitId") unitId: string,
     @PathParams("qualificationId") qualificationId: string,
+    @Context("sessionUserId") sessionUserId: string,
     @BodyParams("type") suspendType: SuspendType,
   ): Promise<APITypes.PutManageUnitQualificationData> {
     if (!SUSPEND_TYPE.includes(suspendType)) {
@@ -820,6 +871,17 @@ export class AdminManageUnitsController {
         qualification: { include: { value: true, departments: { include: { value: true } } } },
       },
     });
+
+    if (suspendType === "suspend") {
+      await createAuditLogEntry({
+        action: {
+          type: AuditLogActionType.UnitQualificationSuspended,
+          new: { unitId: unit.unit.id, qualification: updated },
+        },
+        prisma,
+        executorId: sessionUserId,
+      });
+    }
 
     return updated;
   }

@@ -16,8 +16,9 @@ export function ViewAuditLogsDiffModal() {
     return null;
   }
 
-  const hasActionData = auditLog.action.previous && auditLog.action.new;
   const translationKey = auditLog.translationKey;
+  const hasActionData =
+    (auditLog.action.new && !translationKey) || (auditLog.action.previous && auditLog.action.new);
   const maxWidth = hasActionData ? "max-w-7xl" : "max-w-xl";
 
   return (

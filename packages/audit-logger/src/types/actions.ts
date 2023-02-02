@@ -55,7 +55,12 @@ export type AuditLogActions =
   | NameChangeRequestAccepted
   | NameChangeRequestDeclined
   | ActiveWarrantAccepted
-  | ActiveWarrantDeclined;
+  | ActiveWarrantDeclined
+  | UnitQualificationSuspended
+  | UnitQualificationAdd
+  | UnitQualificationRemove
+  | UnitDepartmentDeclined
+  | UnitDepartmentAccepted;
 
 type BaseAuditLogAction<ActionType extends AuditLogActionType, Previous, New> = {
   type: ActionType;
@@ -286,4 +291,30 @@ export type ActiveWarrantDeclined = BaseAuditLogAction<
   AuditLogActionType.ActiveWarrantDeclined,
   undefined,
   Warrant
+>;
+
+export type UnitQualificationSuspended = BaseAuditLogAction<
+  AuditLogActionType.UnitQualificationSuspended,
+  undefined,
+  { unitId: string; qualification: Types.UnitQualification }
+>;
+export type UnitQualificationAdd = BaseAuditLogAction<
+  AuditLogActionType.UnitQualificationAdd,
+  undefined,
+  { unitId: string; qualification: Types.UnitQualification }
+>;
+export type UnitQualificationRemove = BaseAuditLogAction<
+  AuditLogActionType.UnitQualificationRemove,
+  undefined,
+  { unitId: string; qualification: Types.UnitQualification }
+>;
+export type UnitDepartmentDeclined = BaseAuditLogAction<
+  AuditLogActionType.UnitDepartmentDeclined,
+  undefined,
+  Officer | EmsFdDeputy
+>;
+export type UnitDepartmentAccepted = BaseAuditLogAction<
+  AuditLogActionType.UnitDepartmentAccepted,
+  undefined,
+  Officer | EmsFdDeputy
 >;
