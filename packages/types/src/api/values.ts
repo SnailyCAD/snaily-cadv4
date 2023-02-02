@@ -39,7 +39,7 @@ export type PostValuesData<Value extends AnyValue = AnyValue> = Value;
  * @route /admin/values/:path/bulk-delete
  */
 export interface DeleteValuesBulkData {
-  failedIds: string[];
+  failed: number;
   success: number;
 }
 

@@ -60,7 +60,11 @@ export type AuditLogActions =
   | UnitQualificationAdd
   | UnitQualificationRemove
   | UnitDepartmentDeclined
-  | UnitDepartmentAccepted;
+  | UnitDepartmentAccepted
+  | ValueAdd
+  | ValueUpdate
+  | ValueRemove
+  | ValueBulkRemove;
 
 type BaseAuditLogAction<ActionType extends AuditLogActionType, Previous, New> = {
   type: ActionType;
@@ -317,4 +321,12 @@ export type UnitDepartmentAccepted = BaseAuditLogAction<
   AuditLogActionType.UnitDepartmentAccepted,
   undefined,
   Officer | EmsFdDeputy
+>;
+export type ValueAdd = BaseAuditLogAction<AuditLogActionType.ValueAdd, undefined, any>;
+export type ValueUpdate = BaseAuditLogAction<AuditLogActionType.ValueUpdate, any, any>;
+export type ValueRemove = BaseAuditLogAction<AuditLogActionType.ValueRemove, undefined, any>;
+export type ValueBulkRemove = BaseAuditLogAction<
+  AuditLogActionType.ValueBulkRemove,
+  undefined,
+  string[]
 >;

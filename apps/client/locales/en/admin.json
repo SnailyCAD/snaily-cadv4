@@ -192,7 +192,8 @@
     "nameChangeRequestAccepted": "a name change request has been accepted with citizen id <span>{value}</span>.",
     "nameChangeRequestDeclined": "a name change request has been declined with citizen id <span>{value}</span>.",
     "activeWarrantAccepted": "an active warrant request has been accepted with id <span>{value}</span>.",
-    "activeWarrantDeclined": "an active warrant request has been declined with id <span>{value}</span>."
+    "activeWarrantDeclined": "an active warrant request has been declined with id <span>{value}</span>.",
+    "bulkRemoveValues": "Selected values have been removed: <span>{value}</span>"
   },
   "ApiTokenTab": {
     "apiToken": "API Token",

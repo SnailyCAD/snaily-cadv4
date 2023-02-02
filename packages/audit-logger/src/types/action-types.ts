@@ -59,5 +59,10 @@ export enum AuditLogActionType {
   ActiveWarrantAccepted = "ActiveWarrantAccepted",
   ActiveWarrantDeclined = "ActiveWarrantDeclined",
 
+  ValueAdd = "ValueAdd",
+  ValueUpdate = "ValueUpdate",
+  ValueRemove = "ValueRemove",
+  ValueBulkRemove = "ValueBulkRemove",
+
   Calls911Purge = "Calls911Purge",
 }
