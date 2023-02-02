@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/permissions",
-  "version": "1.46.2",
+  "version": "1.46.3",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
