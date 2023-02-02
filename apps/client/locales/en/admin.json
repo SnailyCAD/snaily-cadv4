@@ -186,7 +186,13 @@
     "cadAPITokenRegenerated": "The CAD API token has been regenerated.",
     "temporaryUnitCreate": "A temporary unit has been created with id: <span>{value}</span>.",
     "cadAPITokenRemoved": "The CAD API token has been removed.",
-    "cadAPITokenEnabled": "The CAD API token has been enabled."
+    "cadAPITokenEnabled": "The CAD API token has been enabled.",
+    "expungementAccepted": "an expungement request has been accepted with citizen id <span>{value}</span>.",
+    "expungementDeclined": "an expungement request has been declined with citizen id <span>{value}</span>.",
+    "nameChangeRequestAccepted": "a name change request has been accepted with citizen id <span>{value}</span>.",
+    "nameChangeRequestDeclined": "a name change request has been declined with citizen id <span>{value}</span>.",
+    "activeWarrantAccepted": "an active warrant request has been accepted with id <span>{value}</span>.",
+    "activeWarrantDeclined": "an active warrant request has been declined with id <span>{value}</span>."
   },
   "ApiTokenTab": {
     "apiToken": "API Token",

@@ -2,13 +2,14 @@ import { ExpungementRequestStatus, Rank } from "@prisma/client";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { BodyParams, PathParams } from "@tsed/platform-params";
+import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { ContentType, Description, Get, Put } from "@tsed/schema";
 import { expungementRequestInclude } from "controllers/court/ExpungementRequestsController";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type * as APITypes from "@snailycad/types/api";
+import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/expungement-requests")
@@ -37,6 +38,7 @@ export class AdminManageExpungementRequests {
   async updateExpungementRequest(
     @PathParams("id") id: string,
     @BodyParams("type") type: ExpungementRequestStatus,
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.PutManageExpungementRequests> {
     const isCorrect = Object.values(ExpungementRequestStatus).includes(type);
     if (!isCorrect) {
@@ -71,6 +73,24 @@ export class AdminManageExpungementRequests {
     const updated = await prisma.expungementRequest.update({
       where: { id },
       data: { status: type },
+      include: { citizen: true },
+    });
+
+    const auditLogType =
+      type === ExpungementRequestStatus.ACCEPTED
+        ? AuditLogActionType.ExpungementRequestAccepted
+        : AuditLogActionType.ExpungementRequestDeclined;
+    const translationKey =
+      type === ExpungementRequestStatus.ACCEPTED ? "expungementAccepted" : "expungementDeclined";
+
+    await createAuditLogEntry({
+      translationKey,
+      action: {
+        type: auditLogType,
+        new: { ...updated, id: updated.citizenId },
+      },
+      prisma,
+      executorId: sessionUserId,
     });
 
     return updated;

@@ -1,6 +1,14 @@
 import type * as Types from "@snailycad/types";
 import type { AuditLogActionType } from "./action-types";
-import type { Citizen, User, Officer, EmsFdDeputy, Feature } from "@prisma/client";
+import type {
+  NameChangeRequest,
+  Citizen,
+  User,
+  Officer,
+  EmsFdDeputy,
+  Feature,
+  Warrant,
+} from "@prisma/client";
 
 export type AuditLogActions =
   | UserBanAction
@@ -41,7 +49,13 @@ export type AuditLogActions =
   | UpdateDiscordWebhooks
   | CadAPITokenRemoved
   | CadAPITokenEnabled
-  | CadAutoSetPropertiesUpdate;
+  | CadAutoSetPropertiesUpdate
+  | ExpungementRequestAccepted
+  | ExpungementRequestDeclined
+  | NameChangeRequestAccepted
+  | NameChangeRequestDeclined
+  | ActiveWarrantAccepted
+  | ActiveWarrantDeclined;
 
 type BaseAuditLogAction<ActionType extends AuditLogActionType, Previous, New> = {
   type: ActionType;
@@ -241,4 +255,35 @@ export type CadAutoSetPropertiesUpdate = BaseAuditLogAction<
   AuditLogActionType.CadAutoSetPropertiesUpdate,
   Types.AutoSetUserProperties | null,
   Types.AutoSetUserProperties
+>;
+
+export type ExpungementRequestAccepted = BaseAuditLogAction<
+  AuditLogActionType.ExpungementRequestAccepted,
+  undefined,
+  Types.ExpungementRequest
+>;
+export type ExpungementRequestDeclined = BaseAuditLogAction<
+  AuditLogActionType.ExpungementRequestDeclined,
+  undefined,
+  Types.ExpungementRequest
+>;
+export type NameChangeRequestAccepted = BaseAuditLogAction<
+  AuditLogActionType.NameChangeRequestAccepted,
+  undefined,
+  NameChangeRequest
+>;
+export type NameChangeRequestDeclined = BaseAuditLogAction<
+  AuditLogActionType.NameChangeRequestDeclined,
+  undefined,
+  NameChangeRequest
+>;
+export type ActiveWarrantAccepted = BaseAuditLogAction<
+  AuditLogActionType.ActiveWarrantAccepted,
+  undefined,
+  Warrant
+>;
+export type ActiveWarrantDeclined = BaseAuditLogAction<
+  AuditLogActionType.ActiveWarrantDeclined,
+  undefined,
+  Warrant
 >;
