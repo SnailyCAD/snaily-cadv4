@@ -289,7 +289,7 @@ export class AdminManageUnitsController {
         }),
         prisma.combinedEmsFdUnit.findMany({
           where: { deputies: { some: where } },
-          include: combinedUnitProperties,
+          include: combinedEmsFdUnitProperties,
         }),
       ]);
 
