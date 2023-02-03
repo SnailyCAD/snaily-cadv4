@@ -316,6 +316,7 @@ export function CADFeaturesTab() {
                     <Toggle
                       value={
                         values.features[key]?.isEnabled ??
+                        // @ts-expect-error - this is fine
                         DEFAULT_DISABLED_FEATURES[key]?.isEnabled ??
                         true
                       }
