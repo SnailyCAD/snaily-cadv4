@@ -65,9 +65,9 @@ export class TemporaryUnitsController {
     await createAuditLogEntry({
       action: {
         type,
-        previous: existingOfficer as any,
-        new: officer as any,
-      },
+        previous: existingOfficer,
+        new: officer,
+      } as any,
       prisma,
       executorId: sessionUserId,
     });
