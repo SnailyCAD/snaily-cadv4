@@ -2,7 +2,7 @@ import * as React from "react";
 import { CadFeature, Feature } from "@snailycad/types";
 import { useAuth } from "context/AuthContext";
 
-export const DEFAULT_DISABLED_FEATURES: Partial<Record<Feature, { isEnabled: boolean }>> = {
+export const DEFAULT_DISABLED_FEATURES = {
   CUSTOM_TEXTFIELD_VALUES: { isEnabled: false },
   DISCORD_AUTH: { isEnabled: false },
   DMV: { isEnabled: false },
@@ -20,7 +20,7 @@ export const DEFAULT_DISABLED_FEATURES: Partial<Record<Feature, { isEnabled: boo
   CALL_911_APPROVAL: { isEnabled: false },
   FORCE_DISCORD_AUTH: { isEnabled: false },
   FORCE_STEAM_AUTH: { isEnabled: false },
-};
+} satisfies Partial<Record<Feature, { isEnabled: boolean }>>;
 
 export function useFeatureEnabled(features?: CadFeature[]) {
   const { cad } = useAuth();
@@ -31,8 +31,10 @@ export function useFeatureEnabled(features?: CadFeature[]) {
 
     Object.keys(Feature).map((feature) => {
       const cadFeature = _features?.find((v) => v.feature === feature);
+
       const isEnabled =
-        cadFeature?.isEnabled ?? DEFAULT_DISABLED_FEATURES[feature as Feature]?.isEnabled ?? true;
+        // @ts-expect-error - this is fine
+        cadFeature?.isEnabled ?? DEFAULT_DISABLED_FEATURES[feature]?.isEnabled ?? true;
 
       obj[feature as Feature] = isEnabled;
     });

@@ -231,12 +231,12 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
   FORCE_DISCORD_AUTH: {
     name: "Force Discord Auth",
     description:
-      "When enabled, this will require any user to have their Discord account connected to their CAD account.",
+      "When enabled, this will require any user to have their Discord account connected to their CAD account before using the CAD.",
   },
   FORCE_STEAM_AUTH: {
     name: "Force Steam Auth",
     description:
-      "When enabled, this will require any user to have their Steam account connected to their CAD account.",
+      "When enabled, this will require any user to have their Steam account connected to their CAD account before using the CAD.",
   },
 };
 
