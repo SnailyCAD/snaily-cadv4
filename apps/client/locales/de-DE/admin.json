@@ -179,15 +179,15 @@
     "calls911Purged": "Ausgewählte Anrufe wurden bereinigt. Diese Anrufe können nicht wiederhergestellt werden und wurden endgültig gelöscht: <span>{value}</span>. ",
     "cadAPITokenRegenerated": "Das CAD-API-Token wurde neu generiert.",
     "temporaryUnitCreate": "Es wurde eine temporäre Einheit mit der id: <span>{value}</span>.".
-    "cadAPITokenRemoved": "The CAD API token has been removed.",
-    "cadAPITokenEnabled": "The CAD API token has been enabled.",
-    "expungementAccepted": "an expungement request has been accepted with citizen id <span>{value}</span>.",
-    "expungementDeclined": "an expungement request has been declined with citizen id <span>{value}</span>.",
-    "nameChangeRequestAccepted": "a name change request has been accepted with citizen id <span>{value}</span>.",
-    "nameChangeRequestDeclined": "a name change request has been declined with citizen id <span>{value}</span>.",
-    "activeWarrantAccepted": "an active warrant request has been accepted with id <span>{value}</span>.",
-    "activeWarrantDeclined": "an active warrant request has been declined with id <span>{value}</span>.",
-    "bulkRemoveValues": "Selected values have been removed: <span>{value}</span>"
+    "cadAPITokenRemoved": "Das CAD-API-Token wurde entfernt.",
+    "cadAPITokenEnabled": "Das CAD-API-Token wurde aktiviert.",
+    "expungementAccepted": "ein Antrag auf Löschung wurde mit der Bürger-ID <span>{value}</span> angenommen.",
+    "expungementDeclined": "ein Antrag auf Löschung wurde mit der Bürger-ID <span>{value}</span> abgelehnt.",
+    "nameChangeRequestAccepted": "ein Antrag auf Namensänderung wurde mit der Bürger-ID <span>{value}</span> angenommen.",
+    "nameChangeRequestDeclined": "ein Antrag auf Namensänderung wurde mit der Bürger-ID <span>{value}</span> abgelehnt.",
+    "activeWarrantAccepted": "Ein aktiver Haftbefehlsantrag wurde mit der ID <span>{value}</span> angenommen .",
+    "activeWarrantDeclined": "Ei aktiver Haftbefehlsantrag wurde mit der ID <span>{value}</span> abgelehnt.",
+    "bulkRemoveValues": "Ausgewählte Werte wurden entfernt: <span>{value}</span>"
   },
   "ApiTokenTab": {
     "apiToken": "API Token",
