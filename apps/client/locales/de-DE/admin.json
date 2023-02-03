@@ -181,12 +181,12 @@
     "temporaryUnitCreate": "Es wurde eine temporäre Einheit mit der id: <span>{value}</span>.".
     "cadAPITokenRemoved": "Das CAD-API-Token wurde entfernt.",
     "cadAPITokenEnabled": "Das CAD-API-Token wurde aktiviert.",
-    "expungementAccepted": "ein Antrag auf Löschung wurde mit der Bürger-ID <span>{value}</span> angenommen.",
-    "expungementDeclined": "ein Antrag auf Löschung wurde mit der Bürger-ID <span>{value}</span> abgelehnt.",
-    "nameChangeRequestAccepted": "ein Antrag auf Namensänderung wurde mit der Bürger-ID <span>{value}</span> angenommen.",
-    "nameChangeRequestDeclined": "ein Antrag auf Namensänderung wurde mit der Bürger-ID <span>{value}</span> abgelehnt.",
+    "expungementAccepted": "Ein Antrag auf Löschung wurde mit der Bürger-ID <span>{value}</span> angenommen.",
+    "expungementDeclined": "Ein Antrag auf Löschung wurde mit der Bürger-ID <span>{value}</span> abgelehnt.",
+    "nameChangeRequestAccepted": "Ein Antrag auf Namensänderung wurde mit der Bürger-ID <span>{value}</span> angenommen.",
+    "nameChangeRequestDeclined": "Ein Antrag auf Namensänderung wurde mit der Bürger-ID <span>{value}</span> abgelehnt.",
     "activeWarrantAccepted": "Ein aktiver Haftbefehlsantrag wurde mit der ID <span>{value}</span> angenommen .",
-    "activeWarrantDeclined": "Ei aktiver Haftbefehlsantrag wurde mit der ID <span>{value}</span> abgelehnt.",
+    "activeWarrantDeclined": "Ein aktiver Haftbefehlsantrag wurde mit der ID <span>{value}</span> abgelehnt.",
     "bulkRemoveValues": "Ausgewählte Werte wurden entfernt: <span>{value}</span>"
   },
   "ApiTokenTab": {
