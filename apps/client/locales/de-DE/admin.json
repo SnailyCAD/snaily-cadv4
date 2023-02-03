@@ -178,7 +178,7 @@
     "unitsSetOffDuty": "Ausgewählte Einheiten sind vom Dienst befreit worden: <span>{value}</span>",
     "calls911Purged": "Ausgewählte Anrufe wurden bereinigt. Diese Anrufe können nicht wiederhergestellt werden und wurden endgültig gelöscht: <span>{value}</span>. ",
     "cadAPITokenRegenerated": "Das CAD-API-Token wurde neu generiert.",
-    "temporaryUnitCreate": "Es wurde eine temporäre Einheit mit der id: <span>{value}</span>.".
+    "temporaryUnitCreate": "Es wurde eine temporäre Einheit mit der id: <span>{value}</span>.",
     "cadAPITokenRemoved": "Das CAD-API-Token wurde entfernt.",
     "cadAPITokenEnabled": "Das CAD-API-Token wurde aktiviert.",
     "expungementAccepted": "Ein Antrag auf Löschung wurde mit der Bürger-ID <span>{value}</span> angenommen.",
