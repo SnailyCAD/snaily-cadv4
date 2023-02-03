@@ -228,6 +228,16 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     description:
       "When a citizen creates a 911 call and there are active dispatchers, this will require dispatch to approve the call before active units can view the call.",
   },
+  FORCE_DISCORD_AUTH: {
+    name: "Force Discord Auth",
+    description:
+      "When enabled, this will require any user to have their Discord account connected to their CAD account.",
+  },
+  FORCE_STEAM_AUTH: {
+    name: "Force Steam Auth",
+    description:
+      "When enabled, this will require any user to have their Steam account connected to their CAD account.",
+  },
 };
 
 export function CADFeaturesTab() {

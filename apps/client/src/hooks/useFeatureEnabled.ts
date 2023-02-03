@@ -18,6 +18,8 @@ export const DEFAULT_DISABLED_FEATURES: Partial<Record<Feature, { isEnabled: boo
   CITIZEN_CREATION_RECORDS: { isEnabled: false },
   BUREAU_OF_FIREARMS: { isEnabled: false },
   CALL_911_APPROVAL: { isEnabled: false },
+  FORCE_DISCORD_AUTH: { isEnabled: false },
+  FORCE_STEAM_AUTH: { isEnabled: false },
 };
 
 export function useFeatureEnabled(features?: CadFeature[]) {
