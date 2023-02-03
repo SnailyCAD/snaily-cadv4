@@ -59,8 +59,6 @@ export function ConnectionsTab() {
   const isDisabled =
     !ALLOW_REGULAR_LOGIN || FORCE_DISCORD_AUTH || FORCE_STEAM_AUTH || state === "loading";
 
-  console.log({ isDisabled });
-
   return (
     <TabsContent aria-label={t("connections")} value="connections">
       <h1 className="text-2xl font-semibold">{t("connections")}</h1>
