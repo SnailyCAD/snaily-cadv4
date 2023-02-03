@@ -29,6 +29,7 @@ import { validateSchema } from "lib/data/validate-schema";
 import { createSearchWhereObject } from "lib/values/create-where-object";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { ONE_DAY } from "../AdminController";
+import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 
 export const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
   QUALIFICATION: {
@@ -340,6 +341,7 @@ export class ValuesController {
     @Context() context: Context,
     @BodyParams() body: any,
     @PathParams("path") path: string,
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.PostValuesData> {
     const type = getTypeFromPath(path);
 
@@ -360,6 +362,13 @@ export class ValuesController {
     const handler = typeHandlers[type];
     const [value] = await handler({ body: [body], context });
 
+    await createAuditLogEntry({
+      translationKey: "createdEntry",
+      action: { type: AuditLogActionType.ValueAdd, new: value },
+      prisma,
+      executorId: sessionUserId,
+    });
+
     return value as APITypes.PostValuesData;
   }
 
@@ -368,6 +377,7 @@ export class ValuesController {
   @UsePermissions(getPermissionsForValuesRequest)
   async bulkDeleteByPathAndIds(
     @PathParams("path") path: string,
+    @Context("sessionUserId") sessionUserId: string,
     @BodyParams() body: unknown,
   ): Promise<APITypes.DeleteValuesBulkData> {
     const type = getTypeFromPath(path);
@@ -375,10 +385,19 @@ export class ValuesController {
 
     const arr = await Promise.all(data.map(async (id) => this.deleteById(type, id)));
 
-    const successfullyDeleted = arr.filter((v) => v === true).length;
-    const failedToDeleteIds = arr.filter((v) => typeof v === "string").map((v) => v as string);
+    const successfullyDeleted = arr.filter((v) => v !== false) as string[];
+    const successfullyDeletedCount = successfullyDeleted.length;
 
-    return { success: successfullyDeleted, failedIds: failedToDeleteIds };
+    const failedToDeleteCount = arr.filter((v) => v === false).length;
+
+    await createAuditLogEntry({
+      translationKey: "bulkRemoveValues",
+      action: { type: AuditLogActionType.ValueBulkRemove, new: successfullyDeleted },
+      prisma,
+      executorId: sessionUserId,
+    });
+
+    return { success: successfullyDeletedCount, failed: failedToDeleteCount };
   }
 
   @Delete("/:id")
@@ -387,9 +406,10 @@ export class ValuesController {
   async deleteValueByPathAndId(
     @PathParams("id") id: string,
     @PathParams("path") path: string,
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.DeleteValueByIdData> {
     const type = getTypeFromPath(path);
-    return this.deleteById(type, id);
+    return !!this.deleteById(type, id, sessionUserId);
   }
 
   @Patch("/:id")
@@ -447,7 +467,11 @@ export class ValuesController {
     return true;
   }
 
-  private async deleteById(type: ValueType, id: string) {
+  private async deleteById(
+    type: ValueType,
+    id: string,
+    sessionUserId?: string,
+  ): Promise<string | false> {
     try {
       const data = GET_VALUES[type];
 
@@ -456,19 +480,37 @@ export class ValuesController {
         const deleted = await prisma[data.name].delete({ where: { id } });
         await prisma.value.delete({ where: { id: deleted.valueId } });
 
-        return true;
+        if (sessionUserId) {
+          await createAuditLogEntry({
+            translationKey: "deletedEntry",
+            action: { type: AuditLogActionType.ValueAdd, new: deleted },
+            prisma,
+            executorId: sessionUserId,
+          });
+        }
+
+        return id;
       }
 
       if (type === "PENAL_CODE") {
         await prisma.penalCode.delete({ where: { id } });
-        return true;
+        return id;
       }
 
-      await prisma.value.delete({ where: { id } });
+      const value = await prisma.value.delete({ where: { id } });
 
-      return true;
-    } catch {
+      if (sessionUserId) {
+        await createAuditLogEntry({
+          translationKey: "deletedEntry",
+          action: { type: AuditLogActionType.ValueAdd, new: value },
+          prisma,
+          executorId: sessionUserId,
+        });
+      }
+
       return id;
+    } catch {
+      return false;
     }
   }
 }

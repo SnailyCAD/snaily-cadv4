@@ -48,7 +48,7 @@ export function Status({ children }: Props) {
           className="inline-block w-2.5 h-2.5 mr-2 rounded-full"
         />
       ) : null}
-      {t(children)}
+      {children ? t(children) : ""}
     </span>
   );
 }

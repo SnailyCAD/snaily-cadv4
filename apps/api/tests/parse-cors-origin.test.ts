@@ -12,5 +12,8 @@ describe("parseCORSOrigin", () => {
     expect(parseCORSOrigin("https://cad.test-cad.example.com:3000")).toBe(
       "https://cad.test-cad.example.com:3000",
     );
+
+    expect(parseCORSOrigin("*")).toBe("*");
+    expect(parseCORSOrigin("invalid url")).toBe("invalid url");
   });
 });

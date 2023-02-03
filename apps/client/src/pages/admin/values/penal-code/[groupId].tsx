@@ -92,7 +92,7 @@ export default function PenalCodeGroupsPage(props: Props) {
     });
 
     if (json) {
-      asyncTable.remove(...selectedRows.filter((id) => !json.failedIds.includes(id)));
+      asyncTable.remove(...selectedRows);
 
       tableState.setRowSelection({});
       closeModal(ModalIds.AlertDeleteSelectedValues);
@@ -101,7 +101,7 @@ export default function PenalCodeGroupsPage(props: Props) {
         title: "Delete Values",
         icon: "info",
         message: valuesT("deletedSelectedValues", {
-          failed: json.failedIds.length,
+          failed: json.failed,
           deleted: json.success,
         }),
       });

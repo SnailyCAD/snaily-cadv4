@@ -225,6 +225,8 @@ export class CADSettingsController {
         incidentInactivityTimeout: data.incidentInactivityTimeout || null,
         unitInactivityTimeout: data.unitInactivityTimeout || null,
         activeDispatchersInactivityTimeout: data.activeDispatchersInactivityTimeout || null,
+        boloInactivityTimeout: data.boloInactivityTimeout || null,
+        activeWarrantsInactivityTimeout: data.activeWarrantsInactivityTimeout || null,
         jailTimeScale: (data.jailTimeScaling || null) as JailTimeScale | null,
       },
       include: { webhooks: true },
@@ -252,8 +254,15 @@ export class CADSettingsController {
   async updateAutoSetProperties(
     @Context("cad") cad: cad,
     @BodyParams() body: unknown,
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.PutCADAutoSetPropertiesData> {
     const data = validateSchema(CAD_AUTO_SET_PROPERTIES, body);
+
+    const previous = cad.autoSetUserPropertiesId
+      ? await prisma.autoSetUserProperties.findUnique({
+          where: { id: cad.autoSetUserPropertiesId },
+        })
+      : null;
 
     const autoSetProperties = await prisma.autoSetUserProperties.upsert({
       where: {
@@ -272,6 +281,16 @@ export class CADSettingsController {
       },
     });
 
+    await createAuditLogEntry({
+      action: {
+        type: AuditLogActionType.CadAutoSetPropertiesUpdate,
+        previous,
+        new: autoSetProperties,
+      },
+      prisma,
+      executorId: sessionUserId,
+    });
+
     return autoSetProperties;
   }
 
@@ -284,6 +303,7 @@ export class CADSettingsController {
   async updateApiToken(
     @Context("cad") cad: cad,
     @BodyParams() body: unknown,
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.PutCADApiTokenData> {
     const data = validateSchema(API_TOKEN_SCHEMA, body);
 
@@ -313,6 +333,15 @@ export class CADSettingsController {
         where: { id: cad.apiTokenId },
       });
 
+      await createAuditLogEntry({
+        translationKey: "cadAPITokenRemoved",
+        action: {
+          type: AuditLogActionType.CadAPITokenRemoved,
+        },
+        prisma,
+        executorId: sessionUserId,
+      });
+
       return null;
     }
 
@@ -322,6 +351,15 @@ export class CADSettingsController {
         enabled: true,
         token: nanoid(56),
       },
+    });
+
+    await createAuditLogEntry({
+      translationKey: "cadAPITokenEnabled",
+      action: {
+        type: AuditLogActionType.CadAPITokenEnabled,
+      },
+      prisma,
+      executorId: sessionUserId,
     });
 
     return apiToken;

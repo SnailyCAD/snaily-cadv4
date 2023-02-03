@@ -166,7 +166,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
     });
 
     if (json) {
-      asyncTable.remove(...selectedRows.filter((id) => !json.failedIds.includes(id)));
+      asyncTable.remove(...selectedRows);
 
       tableState.setRowSelection({});
       closeModal(ModalIds.AlertDeleteSelectedValues);
@@ -175,7 +175,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
         title: "Delete Values",
         icon: "info",
         message: t("deletedSelectedValues", {
-          failed: json.failedIds.length,
+          failed: json.failed,
           deleted: json.success,
         }),
       });

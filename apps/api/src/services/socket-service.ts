@@ -117,6 +117,10 @@ export class Socket {
     this.io.sockets.emit(SocketEvents.UpdateOfficerStatus, data);
   }
 
+  async emitUpdateUnitStatus(unit: any) {
+    this.io.sockets.emit(SocketEvents.UpdateUnitStatus, unit);
+  }
+
   async emitUpdateDeputyStatus() {
     const [deputies, combinedEmsFdDeputies] = await prisma.$transaction([
       prisma.emsFdDeputy.findMany({

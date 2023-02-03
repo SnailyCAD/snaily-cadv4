@@ -2,16 +2,18 @@ import { Controller } from "@tsed/di";
 import { Context } from "@tsed/platform-params";
 import { ContentType, Post } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
-import { IsAuth } from "middlewares/is-auth";
+import { CAD_SELECT, IsAuth } from "middlewares/is-auth";
 import { BadRequest } from "@tsed/exceptions";
 import { MultipartFile, PlatformMulterFile, UseBefore } from "@tsed/common";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import fs from "node:fs/promises";
-import { cad, Rank } from "@prisma/client";
+import { cad, CadFeature, MiscCadSettings, Rank } from "@prisma/client";
 import { Permissions } from "@snailycad/permissions";
 import { UsePermissions } from "middlewares/use-permissions";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { getImageWebPPath } from "lib/images/get-image-webp-path";
+import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
+import type { User } from "@snailycad/types";
 
 @Controller("/admin/manage/cad-settings/image")
 @ContentType("application/json")
@@ -23,7 +25,8 @@ export class ManageCitizensController {
     permissions: [Permissions.ManageCADSettings],
   })
   async uploadLogoToCAD(
-    @Context("cad") cad: cad,
+    @Context("cad") cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings },
+    @Context("user") user: User,
     @MultipartFile("image") file?: PlatformMulterFile,
   ) {
     if (!file) {
@@ -49,10 +52,16 @@ export class ManageCitizensController {
       prisma.cad.update({
         where: { id: cad.id },
         data: { logoId: image.fileName },
-        select: { logoId: true },
+        select: CAD_SELECT(user, true),
       }),
       fs.writeFile(image.path, image.buffer),
     ]);
+
+    await createAuditLogEntry({
+      action: { type: AuditLogActionType.CadSettingsUpdate, previous: cad, new: data as any },
+      prisma,
+      executorId: user.id,
+    });
 
     return data;
   }

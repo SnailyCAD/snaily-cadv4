@@ -1,8 +1,8 @@
-import { Rank, WarrantStatus, WhitelistStatus } from "@prisma/client";
+import { Rank, Warrant, WarrantStatus, WhitelistStatus } from "@prisma/client";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { BodyParams, PathParams } from "@tsed/platform-params";
+import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { ContentType, Description, Get, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/is-auth";
@@ -11,6 +11,8 @@ import type * as APITypes from "@snailycad/types/api";
 import { assignedOfficersInclude } from "controllers/record/records-controller";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
+import { AuditLogActionType } from "@snailycad/audit-logger";
+import { createAuditLogEntry } from "@snailycad/audit-logger/server";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/pending-warrants")
@@ -44,6 +46,7 @@ export class AdminManageWarrantsController {
   async acceptOrDeclineNameChangeRequest(
     @PathParams("id") id: string,
     @BodyParams("type") type: WhitelistStatus,
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.PutManagePendingWarrants> {
     const isCorrect = Object.values(WhitelistStatus).includes(type);
     if (!isCorrect) {
@@ -58,8 +61,9 @@ export class AdminManageWarrantsController {
       throw new NotFound("warrantNotFound");
     }
 
+    let updated: Warrant;
     if (type === WhitelistStatus.ACCEPTED) {
-      await prisma.warrant.update({
+      updated = await prisma.warrant.update({
         where: { id: warrant.id },
         data: {
           status: WarrantStatus.ACTIVE,
@@ -67,7 +71,7 @@ export class AdminManageWarrantsController {
         },
       });
     } else {
-      await prisma.warrant.update({
+      updated = await prisma.warrant.update({
         where: { id: warrant.id },
         data: {
           status: WarrantStatus.INACTIVE,
@@ -75,6 +79,23 @@ export class AdminManageWarrantsController {
         },
       });
     }
+
+    const auditLogType =
+      type === WhitelistStatus.ACCEPTED
+        ? AuditLogActionType.ActiveWarrantAccepted
+        : AuditLogActionType.ActiveWarrantDeclined;
+    const translationKey =
+      type === WhitelistStatus.ACCEPTED ? "activeWarrantAccepted" : "activeWarrantDeclined";
+
+    await createAuditLogEntry({
+      translationKey,
+      action: {
+        type: auditLogType,
+        new: updated,
+      },
+      prisma,
+      executorId: sessionUserId,
+    });
 
     return true;
   }

@@ -2,12 +2,14 @@ import { Rank, WhitelistStatus } from "@prisma/client";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { BodyParams, PathParams } from "@tsed/platform-params";
+import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { ContentType, Description, Get, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type * as APITypes from "@snailycad/types/api";
+import { AuditLogActionType } from "@snailycad/audit-logger";
+import { createAuditLogEntry } from "@snailycad/audit-logger/server";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/name-change-requests")
@@ -36,6 +38,7 @@ export class AdminNameChangeController {
   async acceptOrDeclineNameChangeRequest(
     @PathParams("id") id: string,
     @BodyParams("type") type: WhitelistStatus,
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.PutManageNameChangeRequests> {
     const isCorrect = Object.values(WhitelistStatus).includes(type);
     if (!isCorrect) {
@@ -65,6 +68,24 @@ export class AdminNameChangeController {
       data: {
         status: type,
       },
+      include: { citizen: true },
+    });
+
+    const auditLogType =
+      type === WhitelistStatus.ACCEPTED
+        ? AuditLogActionType.NameChangeRequestAccepted
+        : AuditLogActionType.NameChangeRequestDeclined;
+    const translationKey =
+      type === WhitelistStatus.ACCEPTED ? "nameChangeRequestAccepted" : "nameChangeRequestDeclined";
+
+    await createAuditLogEntry({
+      translationKey,
+      action: {
+        type: auditLogType,
+        new: { ...updated, id: updated.citizenId },
+      },
+      prisma,
+      executorId: sessionUserId,
     });
 
     return updated;

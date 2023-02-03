@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/utils",
-  "version": "1.46.1",
+  "version": "1.46.3",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -61,7 +61,7 @@
     "test": "yarn vitest run"
   },
   "devDependencies": {
-    "@snailycad/types": "1.46.1",
+    "@snailycad/types": "1.46.3",
     "c8": "^7.12.0",
     "tslib": "^2.5.0",
     "tsup": "^6.5.0",

@@ -22,6 +22,8 @@ import useFetch from "lib/useFetch";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 import { ArrowRight } from "react-bootstrap-icons";
+import { generateContrastColor } from "lib/table/get-contrasting-text-color";
+import { classNames } from "lib/classNames";
 
 interface Props {
   isDispatch: boolean;
@@ -70,6 +72,9 @@ export function DeputyColumn({ deputy, isDispatch, nameAndCallsign, setTempUnit 
     activeDeputy.id === deputy.id;
 
   const canBeOpened = (isDispatch && hasActiveDispatchers) || !isCurrentDeputy || shouldShowSplit;
+  const unitStatusColor = deputy.status?.color ?? undefined;
+  const textColor = unitStatusColor && generateContrastColor(unitStatusColor);
+  const canDrag = hasActiveDispatchers && isDispatch;
 
   function handleMerge(deputy: ActiveDeputy) {
     setTempUnit(deputy.id);
@@ -108,7 +113,7 @@ export function DeputyColumn({ deputy, isDispatch, nameAndCallsign, setTempUnit 
       <span>
         <Draggable
           onDrag={(isDragging) => setDraggingUnit(isDragging ? "move" : null)}
-          canDrag={hasActiveDispatchers && isDispatch}
+          canDrag={canDrag}
           item={deputy}
           type={DndActions.MoveUnitTo911CallOrIncident}
         >
@@ -116,7 +121,7 @@ export function DeputyColumn({ deputy, isDispatch, nameAndCallsign, setTempUnit 
             <ActiveUnitsQualificationsCard canBeOpened={!isDragging} unit={deputy}>
               <span // * 9 to fix overlapping issues with next table column
                 style={{ minWidth: nameAndCallsign.length * 9 }}
-                className="capitalize cursor-default"
+                className={classNames("capitalize", canDrag ? "cursor-grab" : "cursor-default")}
               >
                 {!isUnitCombinedEmsFd(deputy) && deputy.imageId ? (
                   <Image
@@ -131,7 +136,15 @@ export function DeputyColumn({ deputy, isDispatch, nameAndCallsign, setTempUnit 
                 ) : null}
                 {isUnitCombinedEmsFd(deputy) ? (
                   <div className="flex items-center">
-                    {generateCallsign(deputy, "pairedUnitTemplate")}
+                    <span
+                      style={{
+                        backgroundColor: unitStatusColor,
+                        color: textColor,
+                      }}
+                      className="px-1.5 py-0.5 rounded-md dark:bg-secondary"
+                    >
+                      {generateCallsign(deputy, "pairedUnitTemplate")}
+                    </span>
                     <span className="mx-4">
                       <ArrowRight />
                     </span>
@@ -142,7 +155,15 @@ export function DeputyColumn({ deputy, isDispatch, nameAndCallsign, setTempUnit 
                     ))}
                   </div>
                 ) : (
-                  nameAndCallsign
+                  <span
+                    style={{
+                      backgroundColor: unitStatusColor,
+                      color: textColor,
+                    }}
+                    className="px-1.5 py-0.5 rounded-md dark:bg-secondary"
+                  >
+                    {nameAndCallsign}
+                  </span>
                 )}
               </span>
             </ActiveUnitsQualificationsCard>

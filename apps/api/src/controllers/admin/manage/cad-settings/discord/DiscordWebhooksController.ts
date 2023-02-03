@@ -19,6 +19,8 @@ import { resolve } from "node:path";
 import { encodeFromFile } from "@snaily-cad/image-data-uri";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { performDiscordRequest } from "lib/discord/performDiscordRequest";
+import { AuditLogActionType } from "@snailycad/audit-logger";
+import { createAuditLogEntry } from "@snailycad/audit-logger/server";
 
 const guildId = process.env.DISCORD_SERVER_ID;
 
@@ -75,10 +77,11 @@ export class DiscordWebhooksController {
     fallback: (u) => u.rank === Rank.OWNER,
     permissions: [Permissions.ManageCADSettings],
   })
-  async setRoleTypes(
+  async setWebhookTypes(
     @Context("cad")
     cad: cad & { miscCadSettings: (MiscCadSettings & { webhooks?: DiscordWebhook[] }) | null },
     @BodyParams() body: unknown,
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.PostCADDiscordWebhooksData> {
     const name = cad.name || "SnailyCAD";
 
@@ -137,6 +140,16 @@ export class DiscordWebhooksController {
     const updatedCadSettings = await prisma.miscCadSettings.findUnique({
       where: { id: cad.miscCadSettingsId! },
       include: { webhooks: true },
+    });
+
+    await createAuditLogEntry({
+      action: {
+        type: AuditLogActionType.UpdateDiscordWebhooks,
+        previous: cad.miscCadSettings?.webhooks ?? [],
+        new: updatedCadSettings?.webhooks ?? [],
+      },
+      prisma,
+      executorId: sessionUserId,
     });
 
     return updatedCadSettings!;

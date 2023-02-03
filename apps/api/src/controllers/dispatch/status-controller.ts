@@ -313,11 +313,13 @@ export class StatusController {
       this.socket.emitSetUnitOffDuty(unit.id);
     }
 
-    if (["leo", "combined"].includes(type)) {
+    if (type === "leo" || type === "combined-leo") {
       await this.socket.emitUpdateOfficerStatus();
     } else {
       await this.socket.emitUpdateDeputyStatus();
     }
+
+    this.socket.emitUpdateUnitStatus(updatedUnit);
 
     try {
       const data = await createWebhookData({

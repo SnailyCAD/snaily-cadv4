@@ -106,6 +106,7 @@ export function CAD_SELECT(user?: Pick<User, "rank"> | null, includeDiscordRoles
     miscCadSettingsId: true,
     logoId: true,
     discordRolesId: true,
+    autoSetUserPropertiesId: true,
     discordRoles: includeDiscordRoles
       ? {
           include: {

@@ -3,6 +3,7 @@ import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { CUSTOM_ROLE_SCHEMA } from "@snailycad/schemas";
 import {
   BodyParams,
+  Context,
   MultipartFile,
   PathParams,
   PlatformMulterFile,
@@ -20,6 +21,7 @@ import { validateImageURL } from "lib/images/validate-image-url";
 import fs from "node:fs/promises";
 import process from "node:process";
 import type * as APITypes from "@snailycad/types/api";
+import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 
 @Controller("/admin/manage/custom-roles")
 @UseBeforeEach(IsAuth)
@@ -36,7 +38,10 @@ export class AdminManageCustomRolesController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCustomRoles],
   })
-  async createCustomRole(@BodyParams() body: unknown): Promise<APITypes.PostCustomRolesData> {
+  async createCustomRole(
+    @BodyParams() body: unknown,
+    @Context("sessionUserId") sessionUserId: string,
+  ): Promise<APITypes.PostCustomRolesData> {
     const data = validateSchema(CUSTOM_ROLE_SCHEMA, body);
 
     const existing = await prisma.customRole.findFirst({
@@ -57,6 +62,12 @@ export class AdminManageCustomRolesController {
       include: { discordRole: true },
     });
 
+    await createAuditLogEntry({
+      action: { type: AuditLogActionType.CustomRoleCreate, new: customRole },
+      prisma,
+      executorId: sessionUserId,
+    });
+
     return customRole;
   }
 
@@ -68,11 +79,13 @@ export class AdminManageCustomRolesController {
   async updateCustomRole(
     @BodyParams() body: unknown,
     @PathParams("id") id: string,
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.PutCustomRoleByIdData> {
     const data = validateSchema(CUSTOM_ROLE_SCHEMA, body);
 
     const customRole = await prisma.customRole.findUnique({
       where: { id },
+      include: { discordRole: true },
     });
 
     if (!customRole) {
@@ -90,6 +103,12 @@ export class AdminManageCustomRolesController {
       include: { discordRole: true },
     });
 
+    await createAuditLogEntry({
+      action: { type: AuditLogActionType.CustomRoleUpdate, previous: customRole, new: updated },
+      prisma,
+      executorId: sessionUserId,
+    });
+
     return updated;
   }
 
@@ -98,7 +117,10 @@ export class AdminManageCustomRolesController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCustomRoles],
   })
-  async deleteCustomRole(@PathParams("id") id: string): Promise<APITypes.DeleteCustomRoleByIdData> {
+  async deleteCustomRole(
+    @PathParams("id") id: string,
+    @Context("sessionUserId") sessionUserId: string,
+  ): Promise<APITypes.DeleteCustomRoleByIdData> {
     const customRole = await prisma.customRole.findUnique({
       where: { id },
     });
@@ -111,12 +133,19 @@ export class AdminManageCustomRolesController {
       where: { id: customRole.id },
     });
 
+    await createAuditLogEntry({
+      action: { type: AuditLogActionType.CustomRoleDelete, new: customRole },
+      prisma,
+      executorId: sessionUserId,
+    });
+
     return true;
   }
 
   @Post("/:id")
   async uploadImageToCustomRole(
     @PathParams("id") customRoleId: string,
+    @Context("sessionUserId") sessionUserId: string,
     @MultipartFile("image") file?: PlatformMulterFile,
   ): Promise<APITypes.PostCustomRoleByIdData> {
     const customRole = await prisma.customRole.findUnique({
@@ -145,10 +174,15 @@ export class AdminManageCustomRolesController {
       prisma.customRole.update({
         where: { id: customRole.id },
         data: { iconId: `${customRole.id}.${extension}` },
-        select: { iconId: true },
       }),
       fs.writeFile(path, file.buffer),
     ]);
+
+    await createAuditLogEntry({
+      action: { type: AuditLogActionType.CustomRoleUpdate, previous: customRole, new: data },
+      prisma,
+      executorId: sessionUserId,
+    });
 
     return data;
   }
