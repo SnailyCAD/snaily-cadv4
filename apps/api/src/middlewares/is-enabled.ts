@@ -27,6 +27,8 @@ export const DEFAULT_DISABLED_FEATURES: Partial<
   WARRANT_STATUS_APPROVAL: { isEnabled: false },
   LICENSE_EXAMS: { isEnabled: false },
   CALL_911_APPROVAL: { isEnabled: false },
+  FORCE_DISCORD_AUTH: { isEnabled: false },
+  FORCE_STEAM_AUTH: { isEnabled: false },
 };
 
 @Middleware()

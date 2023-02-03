@@ -4,6 +4,7 @@ import { cad as CAD, User, WhitelistStatus } from "@snailycad/types";
 import { useIsRouteFeatureEnabled } from "../hooks/auth/useIsRouteFeatureEnabled";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
+import { doesUserHaveAllRequiredConnections } from "lib/validation/does-user-have-required-connections";
 
 interface Context {
   user: User | null;
@@ -24,7 +25,14 @@ interface ProviderProps {
   };
 }
 
-const NO_LOADING_ROUTES = ["/403", "/404", "/auth/login", "/auth/register", "/auth/pending"];
+const NO_LOADING_ROUTES = [
+  "/403",
+  "/404",
+  "/auth/login",
+  "/auth/register",
+  "/auth/pending",
+  "/auth/connections",
+];
 
 export function AuthProvider({ initialData, children }: ProviderProps) {
   const [user, setUser] = React.useState<User | null>(initialData.session ?? null);
@@ -54,8 +62,17 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
       router.push(`/auth/login?from=${from}`);
     }
 
+    if (
+      user &&
+      !NO_LOADING_ROUTES.includes(router.pathname) &&
+      !doesUserHaveAllRequiredConnections({ user, features: cad?.features })
+    ) {
+      const from = router.asPath;
+      router.push(`/auth/connections?from=${from}`);
+    }
+
     setUser(user);
-  }, [router]);
+  }, [router, cad]);
 
   React.useEffect(() => {
     const savedDarkTheme = initialData.userSavedIsDarkTheme
