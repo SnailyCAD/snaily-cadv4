@@ -160,12 +160,12 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
               <>
                 {results.dead && results.dateOfDead ? (
                   <SpeechAlert
-                    text={t("citizenDead", {
+                    text={t("Leo.citizenDead", {
                       date: format(new Date(results.dateOfDead), "MMMM do yyyy"),
                     })}
                   >
                     <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
-                      {t("citizenDead", {
+                      {t("Leo.citizenDead", {
                         date: format(new Date(results.dateOfDead), "MMMM do yyyy"),
                       })}
                     </div>
