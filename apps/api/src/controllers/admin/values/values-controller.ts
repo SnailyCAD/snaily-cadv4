@@ -8,7 +8,6 @@ import {
   MultipartFile,
   PlatformMulterFile,
   Context,
-  Res,
 } from "@tsed/common";
 import fs from "node:fs/promises";
 import { ContentType, Delete, Description, Patch, Post, Put } from "@tsed/schema";
@@ -28,7 +27,6 @@ import { BULK_DELETE_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/data/validate-schema";
 import { createSearchWhereObject } from "lib/values/create-where-object";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
-import { ONE_DAY } from "../AdminController";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 
 export const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
@@ -65,14 +63,12 @@ export class ValuesController {
   @Get("/")
   @Description("Get all the values by the specified types")
   async getValueByPath(
-    @Res() res: Res,
     @PathParams("path") path: (string & {}) | "all",
     @QueryParams() queryParams: any,
     @QueryParams("paths") rawPaths: string,
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query = "",
     @QueryParams("includeAll", Boolean) includeAll = true,
-    @QueryParams("cache", Boolean) cache = true,
   ): Promise<APITypes.GetValuesData | APITypes.GetValuesPenalCodesData> {
     // allow more paths in one request
     let paths =
@@ -175,13 +171,6 @@ export class ValuesController {
         };
       }),
     );
-
-    if (cache) {
-      res.setHeader(
-        "Cache-Control",
-        `public, s-max-age=${ONE_DAY}, stale-while-revalidate=${ONE_DAY / 2}`,
-      );
-    }
 
     return values as APITypes.GetValuesData;
   }
