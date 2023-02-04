@@ -29,15 +29,15 @@ export function ImportModal<T extends ImportData>({ onImport, id, url }: Props<T
 
   const data = {
     [ModalIds.ImportCitizens]: {
-      docsUrl: "https://cad-docs.caspertheghost.me/docs/developer/importing-values#citizens",
+      docsUrl: "https://docs.snailycad.org/docs/developer/importing-values#citizens",
       title: "Import Citizen",
     },
     [ModalIds.ImportVehicles]: {
-      docsUrl: "https://cad-docs.caspertheghost.me/docs/developer/importing-values#vehicles",
+      docsUrl: "https://docs.snailycad.org/docs/developer/importing-values#vehicles",
       title: "Import Vehicles",
     },
     [ModalIds.ImportWeapons]: {
-      docsUrl: "https://cad-docs.caspertheghost.me/docs/developer/importing-values#weapons",
+      docsUrl: "https://docs.snailycad.org/docs/developer/importing-values#weapons",
       title: "Import Weapons",
     },
   };

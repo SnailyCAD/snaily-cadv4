@@ -145,7 +145,7 @@
     "Error": "Ocorreu um erro inesperado. Informe este problema a um administrador ou tente novamente mais tarde.",
     "NOT_FOUND": "O item ou a página solicitada não foi encontrada. Tente atualizar a página ou tente novamente mais tarde.",
     "Network Error": "Não foi possível acessar a API devido a um erro de rede. Verifique se a API está online e se você está conectado à Internet.",
-    "mustSetBotTokenGuildId": "Este recurso não pode ser usado porque não havia `BOT_TOKEN` ou `GUILD_ID` presente. Por favor, leia como habilitar as funções do Discord: https://cad-docs.caspertheghost.me/docs/discord-integration/discord -papéis",
+    "mustSetBotTokenGuildId": "Este recurso não pode ser usado porque não havia `BOT_TOKEN` ou `GUILD_ID` presente. Por favor, leia como habilitar as funções do Discord: https://docs.snailycad.org/docs/discord-integration/discord -papéis",
     "maxDepartmentsReachedPerUser": "Você atingiu o conjunto máximo de unidades com este departamento. Escolha um departamento diferente ou tente novamente mais tarde.",
     "allowRegularLoginIsDisabled": "O login normal está desabilitado. Por favor, use o Discord OAuth",
     "Invalid Permissions": "Você não tem permissões para acessar esta rota de API.",

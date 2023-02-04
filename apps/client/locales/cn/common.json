@@ -126,7 +126,7 @@
     "Error": "发生意外错误,请向管理员报告此问题或稍后再试",
     "NOT_FOUND": "找不到请求的项目或页面,请尝试刷新页面或稍后再试",
     "Network Error": "由于网络错误,无法访问 API,确保API处于联机状态,并且您已连接到互联网",
-    "mustSetBotTokenGuildId": "此功能无法使用,因为没有 `BOT_TOKEN` or `GUILD_ID` present. Please read how to enable Discord Roles: https://cad-docs.caspertheghost.me/docs/discord-integration/discord-roles",
+    "mustSetBotTokenGuildId": "此功能无法使用,因为没有 `BOT_TOKEN` or `GUILD_ID` present. Please read how to enable Discord Roles: https://docs.snailycad.org/docs/discord-integration/discord-roles",
     "maxDepartmentsReachedPerUser": "你已经达到了这个部门的最大单位集,请选择其他部门或稍后再试",
     "allowRegularLoginIsDisabled": "常规登录已禁用,请使用Discord OAuth代替",
     "Invalid Permissions": "您没有访问此 API 路由的权限",

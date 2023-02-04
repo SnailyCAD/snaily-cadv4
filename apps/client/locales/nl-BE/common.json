@@ -145,7 +145,7 @@
     "Error": "Er is een onverwachte fout opgetreden. Meld dit probleem aan een beheerder of probeer het later nog eens.",
     "NOT_FOUND": "Het gevraagde item of de gevraagde pagina is niet gevonden. Probeer de pagina te verversen of probeer het later nog eens.",
     "Network Error": "Could not reach the API due to a network error. Make sure that the API is online and that you are connected to the internet.",
-    "mustSetBotTokenGuildId": "Deze functie kan niet worden gebruikt omdat er geen `BOT_TOKEN` of `GUILD_ID` aanwezig was. Lees hoe Discord Rollen in te schakelen: https://cad-docs.caspertheghost.me/docs/discord-integration/discord-roles",
+    "mustSetBotTokenGuildId": "Deze functie kan niet worden gebruikt omdat er geen `BOT_TOKEN` of `GUILD_ID` aanwezig was. Lees hoe Discord Rollen in te schakelen: https://docs.snailycad.org/docs/discord-integration/discord-roles",
     "maxDepartmentsReachedPerUser": "Je hebt het maximum aantal eenheden van deze afdeling bereikt. Kies een andere afdeling of probeer het later nog eens.",
     "allowRegularLoginIsDisabled": "Normaal inloggen is uitgeschakeld. Gebruik in plaats daarvan Discord OAuth",
     "Invalid Permissions": "Je hebt geen toegang tot deze API Route.",

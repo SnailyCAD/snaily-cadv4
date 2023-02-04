@@ -32,7 +32,7 @@ export async function checkForUpdates() {
 ${green(bold("Update available!"))} ${underline(versions.currentVersion)} -> ${underline(
         latestVersion,
       )}.
-Documentation: https://cad-docs.caspertheghost.me/docs/installations/updating
+Documentation: https://docs.snailycad.org/docs/installations/updating
       `;
 
       console.info(message);

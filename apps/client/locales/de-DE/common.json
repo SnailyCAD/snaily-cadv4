@@ -144,7 +144,7 @@
     "Error": "Ein unerwarteter Fehler ist aufgetreten. Melde dich mit dieses Problem einem Administrator.",
     "NOT_FOUND": "Das angeforderte Element oder die Seite wurde nicht gefunden. Bitte versuche, die Seite zu aktualisieren oder versuche es später noch einmal.",
     "Network Error": "Aufgrund eines Netzwerkfehlers konnte die API nicht erreicht werden. Stelle sicher, dass die API online ist und dass Du mit dem Internet verbunden sind.",
-    "mustSetBotTokenGuildId": "Diese Funktion kann nicht verwendet werden, da kein `BOT_TOKEN` oder `GUILD_ID` vorhanden war. Schaue dir bitte die Docs seite an, um Discord-Rollen richtig zu aktivieren: https://cad-docs.caspertheghost.me/docs/discord-integration/discord-roles",
+    "mustSetBotTokenGuildId": "Diese Funktion kann nicht verwendet werden, da kein `BOT_TOKEN` oder `GUILD_ID` vorhanden war. Schaue dir bitte die Docs seite an, um Discord-Rollen richtig zu aktivieren: https://docs.snailycad.org/docs/discord-integration/discord-roles",
     "maxDepartmentsReachedPerUser": "Du hast die maximale Anzahl von Abteilungen pro Benutzer erreicht.",
     "allowRegularLoginIsDisabled": "Die Funktion `allowRegularLogin` ist deaktiviert. Bitte logge dich stattdessen über Discord ein.",
     "Invalid Permissions": "Du hast keine Berechtigung für den Zugriff auf diese API-Route.",

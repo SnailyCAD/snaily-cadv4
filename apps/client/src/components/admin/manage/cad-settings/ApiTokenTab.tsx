@@ -84,7 +84,7 @@ export function ApiTokenTab() {
                     rel="noreferrer"
                     target="_blank"
                     className="text-blue-600 underline"
-                    href="https://cad-docs.caspertheghost.me/docs/developer/public-api"
+                    href="https://docs.snailycad.org/docs/developer/public-api"
                   >
                     {children}
                   </a>
@@ -102,7 +102,7 @@ export function ApiTokenTab() {
                     rel="noreferrer"
                     target="_blank"
                     className="text-blue-600 underline"
-                    href="https://cad-docs.caspertheghost.me/docs/discord-integration/discord-bot"
+                    href="https://docs.snailycad.org/docs/discord-integration/discord-bot"
                   >
                     {children}
                   </a>
@@ -121,7 +121,7 @@ export function ApiTokenTab() {
                     rel="noreferrer"
                     target="_blank"
                     className="text-blue-600 underline"
-                    href="https://cad-docs.caspertheghost.me/docs/developer/public-api"
+                    href="https://docs.snailycad.org/docs/developer/public-api"
                   >
                     {children}
                   </a>

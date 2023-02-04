@@ -28,7 +28,7 @@ export class SteamOAuthController {
   async handleRedirectToSteamOAuthAPI(@Res() res: Res) {
     if (!STEAM_API_KEY) {
       throw new BadRequest(
-        "No `STEAM_API_KEY` was specified in the .env file. Please refer to the documentation: https://cad-docs.caspertheghost.me/docs/steam-integration/steam-authentication",
+        "No `STEAM_API_KEY` was specified in the .env file. Please refer to the documentation: https://docs.snailycad.org/docs/steam-integration/steam-authentication",
       );
     }
 

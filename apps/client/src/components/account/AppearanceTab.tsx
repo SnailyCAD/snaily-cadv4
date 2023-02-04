@@ -234,7 +234,7 @@ export function AppearanceTab({ availableSounds }: Props) {
                             className="mt-2 ml-1 underline"
                             rel="noreferrer"
                             target="_blank"
-                            href="https://cad-docs.caspertheghost.me/docs/guides/how-set-custom-sounds"
+                            href="https://docs.snailycad.org/docs/guides/how-set-custom-sounds"
                           >
                             {t("unavailableSoundsMessage")}
                           </a>

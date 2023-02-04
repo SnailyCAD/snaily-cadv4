@@ -150,7 +150,7 @@ export function useMapPlayers() {
               target="_blank"
               rel="noreferrer"
               className="underline text-blue-200"
-              href="https://cad-docs.caspertheghost.me/docs/fivem-integrations/live-map#connecting-to-snailycadv4"
+              href="https://docs.snailycad.org/docs/fivem-integrations/live-map#connecting-to-snailycadv4"
             >
               See documentation.
             </a>

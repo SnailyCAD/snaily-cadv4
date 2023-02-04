@@ -11,7 +11,7 @@ const versionText = bold(underline("v16.6 or higher"));
 
 if (!isSupportedVersion) {
   throw warn(
-    `Unsupported Node.js version detected (${process.version}). SnailyCADv4 requires version ${versionText}. See https://cad-docs.caspertheghost.me/docs/errors/invalid-node-version`,
+    `Unsupported Node.js version detected (${process.version}). SnailyCADv4 requires version ${versionText}. See https://docs.snailycad.org/docs/errors/invalid-node-version`,
   );
 }
 
