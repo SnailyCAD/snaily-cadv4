@@ -74,6 +74,7 @@
     "unitArrivedOnScene": "<span>{unit}</span> has arrived on scene.",
     "unitPressedPanicButton": "<span>{unit}</span> has pressed the panic button.",
     "unitEnRoute": "<span>{unit}</span> is en-route.",
-    "unitOnScene": "<span>{unit}</span> is on scene."
+    "unitOnScene": "<span>{unit}</span> is on scene.",
+    "unitSituationCodeChange": "<span>{unit}</span> has changed their situation code to <span>{situationCode}</span>."
   }
 }

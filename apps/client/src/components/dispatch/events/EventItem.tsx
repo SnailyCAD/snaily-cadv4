@@ -1,5 +1,11 @@
 import * as React from "react";
-import type { AssignedUnit, Call911Event, IncidentEvent, LeoIncident } from "@snailycad/types";
+import type {
+  AssignedUnit,
+  Call911Event,
+  IncidentEvent,
+  LeoIncident,
+  StatusValue,
+} from "@snailycad/types";
 import { useModal } from "state/modalState";
 import { useHoverDirty } from "react-use";
 import useFetch from "lib/useFetch";
@@ -76,6 +82,7 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
 
   const eventDescription = React.useMemo(() => {
     const translationData = "translationData" in event && (event.translationData as any);
+
     if (translationData && event.description && translationData?.units) {
       const units = translationData.units as AssignedUnit[];
 
@@ -87,6 +94,18 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
             unit.unit ? `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}` : "A unit",
           )
           .join(", "),
+      });
+    }
+
+    if (translationData && event.description && translationData?.unit) {
+      const unit = translationData.unit as NonNullable<AssignedUnit["unit"]>;
+      const situationCode = translationData.status as StatusValue;
+
+      setIsEditable(false);
+
+      return tEvent.rich(event.description, {
+        unit: `${generateCallsign(unit)} ${makeUnitName(unit)}`,
+        situationCode: situationCode.value.value,
       });
     }
 
