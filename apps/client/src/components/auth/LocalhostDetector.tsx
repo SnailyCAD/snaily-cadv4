@@ -25,7 +25,7 @@ export function LocalhostDetector() {
         the usage of localhost with SnailyCADv4 will not work.{" "}
         <a
           className="underline"
-          href="https://cad-docs.caspertheghost.me/docs/errors/localhost-usage"
+          href="https://docs.snailycad.org/docs/errors/localhost-usage"
         >
           Please read more here
         </a>

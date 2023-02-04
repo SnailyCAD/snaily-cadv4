@@ -186,7 +186,7 @@ export function MiscFeatures() {
                     <Link
                       className="mt-1 underline inline-flex items-center gap-1 text-neutral-700 dark:text-gray-200"
                       target="_blank"
-                      href="https://cad-docs.caspertheghost.me/docs/fivem-integrations/live-map"
+                      href="https://docs.snailycad.org/docs/fivem-integrations/live-map"
                     >
                       Learn more
                       <BoxArrowUpRight className="inline-block" />

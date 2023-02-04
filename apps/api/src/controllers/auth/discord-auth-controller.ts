@@ -34,7 +34,7 @@ export class DiscordAuth {
 
     if (!DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET) {
       throw new BadRequest(
-        "No `DISCORD_CLIENT_ID` was specified in the .env file. Please refer to the documentation: https://cad-docs.caspertheghost.me/docs/discord-integration/discord-authentication",
+        "No `DISCORD_CLIENT_ID` was specified in the .env file. Please refer to the documentation: https://docs.snailycad.org/docs/discord-integration/discord-authentication",
       );
     }
 

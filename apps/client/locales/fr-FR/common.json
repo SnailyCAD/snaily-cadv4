@@ -144,7 +144,7 @@
     "Error": "Une erreur inattendue s'est produite. Veuillez signaler ce problème à un administrateur ou réessayer plus tard.",
     "NOT_FOUND": "L'élément ou la page demandée n'a pas été trouvé(e). Veuillez essayer de rafraîchir la page ou réessayer plus tard.",
     "Network Error": "Impossible d'atteindre l'API en raison d'une erreur de réseau. Assurez-vous que l'API est en ligne et que vous êtes connecté à internet.",
-    "mustSetBotTokenGuildId": "Cette fonctionnalité ne peut être utilisée car il n'y a pas 'BOT_TOKEN' ou 'GUILD_ID' dans le fichier de configuration. Lire la documentation pour savoir comment activer les rôles Discord (https://cad-docs.caspertheghost.me/docs/discord-integration/discord-roles)",
+    "mustSetBotTokenGuildId": "Cette fonctionnalité ne peut être utilisée car il n'y a pas 'BOT_TOKEN' ou 'GUILD_ID' dans le fichier de configuration. Lire la documentation pour savoir comment activer les rôles Discord (https://docs.snailycad.org/docs/discord-integration/discord-roles)",
     "maxDepartmentsReachedPerUser": "Vous avez atteint le nombre maximum d'unités dans ce département. Veuillez choisir un autre département ou réessayer plus tard.",
     "allowRegularLoginIsDisabled": "La connexion normale est désactivée. Veuillez utiliser la connexion via Discord à la place.",
     "Invalid Permissions": "Vous n'avez pas les autorisations nécessaires pour accéder à cette route API.",

@@ -88,7 +88,7 @@ export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, 
       <Link
         className="mt-1 underline flex items-center gap-1 text-neutral-700 dark:text-gray-400"
         target="_blank"
-        href="https://cad-docs.caspertheghost.me/docs/features/general/supported-images"
+        href="https://docs.snailycad.org/docs/features/general/supported-images"
       >
         {common("supportedImages")}
         <BoxArrowUpRight className="inline-block" />
@@ -147,7 +147,7 @@ export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, 
         <Link
           className="mt-1 underline flex items-center gap-1 text-neutral-700 dark:text-gray-400"
           target="_blank"
-          href="https://cad-docs.caspertheghost.me/docs/features/general/supported-images"
+          href="https://docs.snailycad.org/docs/features/general/supported-images"
         >
           {common("supportedImages")}
           <BoxArrowUpRight className="inline-block" />

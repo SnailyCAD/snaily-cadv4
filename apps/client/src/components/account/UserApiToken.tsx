@@ -84,7 +84,7 @@ export function UserApiTokenTab() {
                     target="_blank"
                     rel="noreferrer noopener"
                     className="text-blue-600 underline"
-                    href="https://cad-docs.caspertheghost.me/docs/developer/public-api"
+                    href="https://docs.snailycad.org/docs/developer/public-api"
                   >
                     Public API Access here
                   </a>
