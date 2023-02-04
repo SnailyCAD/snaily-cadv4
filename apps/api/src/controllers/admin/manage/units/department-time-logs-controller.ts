@@ -12,7 +12,7 @@ import { IsAuth } from "middlewares/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 
 export const ACCEPT_DECLINE_TYPES = ["ACCEPT", "DECLINE"] as const;
-export type AcceptDeclineType = (typeof ACCEPT_DECLINE_TYPES)[number];
+export type AcceptDeclineType = typeof ACCEPT_DECLINE_TYPES[number];
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/units/department-time-logs")

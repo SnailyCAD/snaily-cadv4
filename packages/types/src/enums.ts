@@ -45,7 +45,7 @@ export const Feature = {
   FORCE_STEAM_AUTH: "FORCE_STEAM_AUTH",
 } as const;
 
-export type Feature = (typeof Feature)[keyof typeof Feature];
+export type Feature = typeof Feature[keyof typeof Feature];
 
 export const JailTimeScale = {
   HOURS: "HOURS",
@@ -53,7 +53,7 @@ export const JailTimeScale = {
   SECONDS: "SECONDS",
 } as const;
 
-export type JailTimeScale = (typeof JailTimeScale)[keyof typeof JailTimeScale];
+export type JailTimeScale = typeof JailTimeScale[keyof typeof JailTimeScale];
 
 export const DiscordWebhookType = {
   CALL_911: "CALL_911",
@@ -65,7 +65,7 @@ export const DiscordWebhookType = {
   WARRANTS: "WARRANTS",
 } as const;
 
-export type DiscordWebhookType = (typeof DiscordWebhookType)[keyof typeof DiscordWebhookType];
+export type DiscordWebhookType = typeof DiscordWebhookType[keyof typeof DiscordWebhookType];
 
 export const Rank = {
   OWNER: "OWNER",
@@ -73,7 +73,7 @@ export const Rank = {
   USER: "USER",
 } as const;
 
-export type Rank = (typeof Rank)[keyof typeof Rank];
+export type Rank = typeof Rank[keyof typeof Rank];
 
 export const WhitelistStatus = {
   ACCEPTED: "ACCEPTED",
@@ -81,14 +81,14 @@ export const WhitelistStatus = {
   DECLINED: "DECLINED",
 } as const;
 
-export type WhitelistStatus = (typeof WhitelistStatus)[keyof typeof WhitelistStatus];
+export type WhitelistStatus = typeof WhitelistStatus[keyof typeof WhitelistStatus];
 
 export const StatusViewMode = {
   FULL_ROW_COLOR: "FULL_ROW_COLOR",
   DOT_COLOR: "DOT_COLOR",
 } as const;
 
-export type StatusViewMode = (typeof StatusViewMode)[keyof typeof StatusViewMode];
+export type StatusViewMode = typeof StatusViewMode[keyof typeof StatusViewMode];
 
 export const TableActionsAlignment = {
   NONE: "NONE",
@@ -97,7 +97,7 @@ export const TableActionsAlignment = {
 } as const;
 
 export type TableActionsAlignment =
-  (typeof TableActionsAlignment)[keyof typeof TableActionsAlignment];
+  typeof TableActionsAlignment[keyof typeof TableActionsAlignment];
 
 export const VehicleInspectionStatus = {
   PASSED: "PASSED",
@@ -105,14 +105,14 @@ export const VehicleInspectionStatus = {
 } as const;
 
 export type VehicleInspectionStatus =
-  (typeof VehicleInspectionStatus)[keyof typeof VehicleInspectionStatus];
+  typeof VehicleInspectionStatus[keyof typeof VehicleInspectionStatus];
 
 export const VehicleTaxStatus = {
   TAXED: "TAXED",
   UNTAXED: "UNTAXED",
 } as const;
 
-export type VehicleTaxStatus = (typeof VehicleTaxStatus)[keyof typeof VehicleTaxStatus];
+export type VehicleTaxStatus = typeof VehicleTaxStatus[keyof typeof VehicleTaxStatus];
 
 export const ValueType = {
   LICENSE: "LICENSE",
@@ -138,7 +138,7 @@ export const ValueType = {
   ADDRESS_FLAG: "ADDRESS_FLAG",
 } as const;
 
-export type ValueType = (typeof ValueType)[keyof typeof ValueType];
+export type ValueType = typeof ValueType[keyof typeof ValueType];
 
 export const ValueLicenseType = {
   LICENSE: "LICENSE",
@@ -146,14 +146,14 @@ export const ValueLicenseType = {
   INSURANCE_STATUS: "INSURANCE_STATUS",
 } as const;
 
-export type ValueLicenseType = (typeof ValueLicenseType)[keyof typeof ValueLicenseType];
+export type ValueLicenseType = typeof ValueLicenseType[keyof typeof ValueLicenseType];
 
 export const DepartmentType = {
   LEO: "LEO",
   EMS_FD: "EMS_FD",
 } as const;
 
-export type DepartmentType = (typeof DepartmentType)[keyof typeof DepartmentType];
+export type DepartmentType = typeof DepartmentType[keyof typeof DepartmentType];
 
 export const DriversLicenseCategoryType = {
   AUTOMOTIVE: "AUTOMOTIVE",
@@ -163,7 +163,7 @@ export const DriversLicenseCategoryType = {
 } as const;
 
 export type DriversLicenseCategoryType =
-  (typeof DriversLicenseCategoryType)[keyof typeof DriversLicenseCategoryType];
+  typeof DriversLicenseCategoryType[keyof typeof DriversLicenseCategoryType];
 
 export const EmployeeAsEnum = {
   OWNER: "OWNER",
@@ -171,7 +171,7 @@ export const EmployeeAsEnum = {
   EMPLOYEE: "EMPLOYEE",
 } as const;
 
-export type EmployeeAsEnum = (typeof EmployeeAsEnum)[keyof typeof EmployeeAsEnum];
+export type EmployeeAsEnum = typeof EmployeeAsEnum[keyof typeof EmployeeAsEnum];
 
 export const QualificationValueType = {
   QUALIFICATION: "QUALIFICATION",
@@ -179,7 +179,7 @@ export const QualificationValueType = {
 } as const;
 
 export type QualificationValueType =
-  (typeof QualificationValueType)[keyof typeof QualificationValueType];
+  typeof QualificationValueType[keyof typeof QualificationValueType];
 
 export const ShouldDoType = {
   SET_OFF_DUTY: "SET_OFF_DUTY",
@@ -192,14 +192,14 @@ export const ShouldDoType = {
   UNAVAILABLE: "UNAVAILABLE",
 } as const;
 
-export type ShouldDoType = (typeof ShouldDoType)[keyof typeof ShouldDoType];
+export type ShouldDoType = typeof ShouldDoType[keyof typeof ShouldDoType];
 
 export const StatusValueType = {
   STATUS_CODE: "STATUS_CODE",
   SITUATION_CODE: "SITUATION_CODE",
 } as const;
 
-export type StatusValueType = (typeof StatusValueType)[keyof typeof StatusValueType];
+export type StatusValueType = typeof StatusValueType[keyof typeof StatusValueType];
 
 export const WhatPages = {
   DISPATCH: "DISPATCH",
@@ -207,7 +207,7 @@ export const WhatPages = {
   LEO: "LEO",
 } as const;
 
-export type WhatPages = (typeof WhatPages)[keyof typeof WhatPages];
+export type WhatPages = typeof WhatPages[keyof typeof WhatPages];
 
 export const BoloType = {
   VEHICLE: "VEHICLE",
@@ -215,7 +215,7 @@ export const BoloType = {
   OTHER: "OTHER",
 } as const;
 
-export type BoloType = (typeof BoloType)[keyof typeof BoloType];
+export type BoloType = typeof BoloType[keyof typeof BoloType];
 
 export const RecordType = {
   ARREST_REPORT: "ARREST_REPORT",
@@ -223,21 +223,21 @@ export const RecordType = {
   WRITTEN_WARNING: "WRITTEN_WARNING",
 } as const;
 
-export type RecordType = (typeof RecordType)[keyof typeof RecordType];
+export type RecordType = typeof RecordType[keyof typeof RecordType];
 
 export const ReleaseType = {
   TIME_OUT: "TIME_OUT",
   BAIL_POSTED: "BAIL_POSTED",
 } as const;
 
-export type ReleaseType = (typeof ReleaseType)[keyof typeof ReleaseType];
+export type ReleaseType = typeof ReleaseType[keyof typeof ReleaseType];
 
 export const WarrantStatus = {
   ACTIVE: "ACTIVE",
   INACTIVE: "INACTIVE",
 } as const;
 
-export type WarrantStatus = (typeof WarrantStatus)[keyof typeof WarrantStatus];
+export type WarrantStatus = typeof WarrantStatus[keyof typeof WarrantStatus];
 
 export const ExpungementRequestStatus = {
   ACCEPTED: "ACCEPTED",
@@ -247,14 +247,14 @@ export const ExpungementRequestStatus = {
 } as const;
 
 export type ExpungementRequestStatus =
-  (typeof ExpungementRequestStatus)[keyof typeof ExpungementRequestStatus];
+  typeof ExpungementRequestStatus[keyof typeof ExpungementRequestStatus];
 
 export const LicenseExamPassType = {
   PASSED: "PASSED",
   FAILED: "FAILED",
 } as const;
 
-export type LicenseExamPassType = (typeof LicenseExamPassType)[keyof typeof LicenseExamPassType];
+export type LicenseExamPassType = typeof LicenseExamPassType[keyof typeof LicenseExamPassType];
 
 export const LicenseExamStatus = {
   IN_PROGRESS: "IN_PROGRESS",
@@ -262,7 +262,7 @@ export const LicenseExamStatus = {
   FAILED: "FAILED",
 } as const;
 
-export type LicenseExamStatus = (typeof LicenseExamStatus)[keyof typeof LicenseExamStatus];
+export type LicenseExamStatus = typeof LicenseExamStatus[keyof typeof LicenseExamStatus];
 
 export const LicenseExamType = {
   DRIVER: "DRIVER",
@@ -271,7 +271,7 @@ export const LicenseExamType = {
   PILOT: "PILOT",
 } as const;
 
-export type LicenseExamType = (typeof LicenseExamType)[keyof typeof LicenseExamType];
+export type LicenseExamType = typeof LicenseExamType[keyof typeof LicenseExamType];
 
 export const CustomFieldCategory = {
   CITIZEN: "CITIZEN",
@@ -279,14 +279,14 @@ export const CustomFieldCategory = {
   VEHICLE: "VEHICLE",
 } as const;
 
-export type CustomFieldCategory = (typeof CustomFieldCategory)[keyof typeof CustomFieldCategory];
+export type CustomFieldCategory = typeof CustomFieldCategory[keyof typeof CustomFieldCategory];
 
 export const PaymentStatus = {
   PAID: "PAID",
   UNPAID: "UNPAID",
 } as const;
 
-export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus];
+export type PaymentStatus = typeof PaymentStatus[keyof typeof PaymentStatus];
 
 export const PenalCodeType = {
   INFRACTION: "INFRACTION",
@@ -294,7 +294,7 @@ export const PenalCodeType = {
   FELONY: "FELONY",
 } as const;
 
-export type PenalCodeType = (typeof PenalCodeType)[keyof typeof PenalCodeType];
+export type PenalCodeType = typeof PenalCodeType[keyof typeof PenalCodeType];
 
 export const ActiveToneType = {
   LEO: "LEO",
@@ -302,4 +302,4 @@ export const ActiveToneType = {
   SHARED: "SHARED",
 } as const;
 
-export type ActiveToneType = (typeof ActiveToneType)[keyof typeof ActiveToneType];
+export type ActiveToneType = typeof ActiveToneType[keyof typeof ActiveToneType];
