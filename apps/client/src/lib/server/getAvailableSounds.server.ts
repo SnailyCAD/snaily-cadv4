@@ -1,7 +1,7 @@
 import { resolve } from "node:path";
 import { readdir } from "node:fs/promises";
 
-export type Sounds = typeof SOUND_NAMES[number];
+export type Sounds = (typeof SOUND_NAMES)[number];
 export const SOUND_NAMES = [
   "panic-button",
   "signal100",
