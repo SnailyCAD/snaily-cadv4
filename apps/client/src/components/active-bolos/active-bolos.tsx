@@ -21,6 +21,7 @@ import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { defaultPermissions } from "@snailycad/permissions";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
+import { FullDate } from "components/shared/FullDate";
 
 const BoloFilters = dynamic(async () => (await import("./bolo-filters")).BoloFilters, {
   ssr: false,
@@ -162,6 +163,7 @@ export function ActiveBolos({ initialBolos }: Props) {
                 plate: bolo.plate || "—",
                 color: bolo.color || "—",
                 description: <CallDescription data={descriptionData} />,
+                createdAt: <FullDate>{bolo.createdAt}</FullDate>,
                 officer: bolo.officer
                   ? `${generateCallsign(bolo.officer)} ${makeUnitName(bolo.officer)}`
                   : t("Leo.dispatch"),
@@ -196,6 +198,7 @@ export function ActiveBolos({ initialBolos }: Props) {
               { header: t("Leo.color"), accessorKey: "color" },
               { header: t("Leo.officer"), accessorKey: "officer" },
               { header: common("description"), accessorKey: "description" },
+              { header: common("createdAt"), accessorKey: "createdAt" },
               { header: common("actions"), accessorKey: "actions" },
             ]}
           />
