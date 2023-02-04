@@ -16,6 +16,7 @@ import { AddUnitToCallModal } from "./add-unit-to-call-modal";
 import { FullDate } from "components/shared/FullDate";
 import { generateContrastColor } from "lib/table/get-contrasting-text-color";
 import { isUnitCombined, isUnitCombinedEmsFd } from "@snailycad/utils";
+import { SituationChangeColumn } from "./situation-change-column";
 
 interface Props {
   isDisabled: boolean;
@@ -90,7 +91,11 @@ export function AssignedUnitsTable({ isDisabled }: Props) {
                 },
               },
               id: unit.id,
-              unit: callsignAndName,
+              unit: (
+                <SituationChangeColumn isDisabled={isDisabled} unit={unit}>
+                  {callsignAndName}
+                </SituationChangeColumn>
+              ),
               status: (
                 <span className="flex items-center">
                   {useDot && color ? (

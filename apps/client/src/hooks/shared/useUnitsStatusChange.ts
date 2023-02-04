@@ -8,24 +8,26 @@ interface UnitStatusChangeArgs {
   setUnits(units: any[]): void;
 }
 
-export function useUnitStatusChange({ units, setUnits }: UnitStatusChangeArgs) {
+export function useUnitStatusChange(options?: UnitStatusChangeArgs) {
   const { state, execute } = useFetch();
 
   const setStatus = React.useCallback(
     async (unitId: string, status: StatusValue) => {
       if (status.type === StatusValueType.SITUATION_CODE) return null;
 
-      if (status.shouldDo === ShouldDoType.SET_OFF_DUTY) {
-        setUnits(units.filter((v) => v.id !== unitId));
-      } else {
-        setUnits(
-          units.map((unit) => {
-            if (unit.id === unitId) {
-              return { ...unit, statusId: status.id, status };
-            }
-            return unit;
-          }),
-        );
+      if (options) {
+        if (status.shouldDo === ShouldDoType.SET_OFF_DUTY) {
+          options.setUnits(options.units.filter((v) => v.id !== unitId));
+        } else {
+          options.setUnits(
+            options.units.map((unit) => {
+              if (unit.id === unitId) {
+                return { ...unit, statusId: status.id, status };
+              }
+              return unit;
+            }),
+          );
+        }
       }
 
       const { json } = await execute<PutDispatchStatusByUnitId>({
@@ -37,7 +39,7 @@ export function useUnitStatusChange({ units, setUnits }: UnitStatusChangeArgs) {
       return json;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [units],
+    [options],
   );
 
   return {

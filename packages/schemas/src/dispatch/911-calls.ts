@@ -40,6 +40,7 @@ export const LINK_INCIDENT_TO_CALL_SCHEMA = z.object({
 
 export const CALL_911_EVENT_SCHEMA = z.object({
   description: z.string().min(1),
+  translationData: z.any().nullish(),
 });
 
 export const UPDATE_ASSIGNED_UNIT_SCHEMA = z.object({
