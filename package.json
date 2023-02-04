@@ -20,9 +20,9 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@casper124578/eslint-config": "6.0.0-alpha.1",
-    "@casper124578/eslint-config-next": "5.0.0",
-    "@casper124578/eslint-config-react": "6.0.0-alpha.2",
+    "@casper124578/eslint-config": "6.0.0",
+    "@casper124578/eslint-config-next": "6.0.0",
+    "@casper124578/eslint-config-react": "6.0.0",
     "@typescript-eslint/eslint-plugin": "latest",
     "colorette": "2.0.19",
     "concurrently": "^7.6.0",
