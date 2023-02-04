@@ -1,4 +1,4 @@
-# [SnailyCADv4](https://snailycad.caspertheghost.me)
+# [SnailyCADv4](https://snailycad.org)
 
 <!-- [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/lqLdjV?referralCode=zxxB_p) -->
 
@@ -18,8 +18,8 @@ this is a web based integration for communities who love police roleplaying and 
 
 ## Links
 
-- [Documentation](https://cad-docs.caspertheghost.me/docs/intro)
-- [Features List](https://cad-docs.caspertheghost.me/docs/features)
+- [Documentation](https://docs.snailycad.org/docs/getting-started)
+- [Features List](https://docs.snailycad.org/docs/features)
 - [Bugs reports & Feature requests](https://github.com/SnailyCAD/snaily-cadv4/issues)
 - [Contributing](./.github/CONTRIBUTING.md)
 
