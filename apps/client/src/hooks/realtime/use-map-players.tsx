@@ -130,8 +130,9 @@ export function useMapPlayers() {
           onPlayerLeft(data);
           break;
         }
-        default:
+        default: {
           break;
+        }
       }
     },
     [onPlayerData, onPlayerLeft],

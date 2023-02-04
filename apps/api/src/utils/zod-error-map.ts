@@ -12,44 +12,53 @@ export async function getErrorMap(locale?: string) {
     let message: string;
 
     switch (issue.code) {
-      case ZodIssueCode.invalid_type:
+      case ZodIssueCode.invalid_type: {
         if (issue.received === ZodParsedType.undefined) {
           message = t("required");
         } else {
           message = t("expectedReceived", { expected: issue.expected, received: issue.received });
         }
         break;
-      case ZodIssueCode.invalid_literal:
+      }
+      case ZodIssueCode.invalid_literal: {
         message = `Invalid literal value, expected ${JSON.stringify(
           issue.expected,
           util.jsonStringifyReplacer,
         )}`;
         break;
-      case ZodIssueCode.unrecognized_keys:
+      }
+      case ZodIssueCode.unrecognized_keys: {
         message = `Unrecognized key(s) in object: ${util.joinValues(issue.keys, ", ")}`;
         break;
-      case ZodIssueCode.invalid_union:
+      }
+      case ZodIssueCode.invalid_union: {
         message = t("invalidInput");
         break;
-      case ZodIssueCode.invalid_union_discriminator:
+      }
+      case ZodIssueCode.invalid_union_discriminator: {
         message = `Invalid discriminator value. Expected ${util.joinValues(issue.options)}`;
         break;
-      case ZodIssueCode.invalid_enum_value:
+      }
+      case ZodIssueCode.invalid_enum_value: {
         message = t("invalidEnumValue", {
           expected: util.joinValues(issue.options),
           received: issue.received,
         });
         break;
-      case ZodIssueCode.invalid_arguments:
+      }
+      case ZodIssueCode.invalid_arguments: {
         message = "Invalid function arguments";
         break;
-      case ZodIssueCode.invalid_return_type:
+      }
+      case ZodIssueCode.invalid_return_type: {
         message = "Invalid function return type";
         break;
-      case ZodIssueCode.invalid_date:
+      }
+      case ZodIssueCode.invalid_date: {
         message = t("invalidDate");
         break;
-      case ZodIssueCode.invalid_string:
+      }
+      case ZodIssueCode.invalid_string: {
         if (typeof issue.validation === "object") {
           if ("startsWith" in issue.validation) {
             message = t("invalidStringStartWith", {
@@ -70,7 +79,8 @@ export async function getErrorMap(locale?: string) {
           message = t("invalid");
         }
         break;
-      case ZodIssueCode.too_small:
+      }
+      case ZodIssueCode.too_small: {
         if (issue.type === "array") {
           const errorMessage = issue.exact
             ? "arrayExactly"
@@ -115,7 +125,8 @@ export async function getErrorMap(locale?: string) {
           message = t("invalidDate");
         }
         break;
-      case ZodIssueCode.too_big:
+      }
+      case ZodIssueCode.too_big: {
         if (issue.type === "array") {
           const errorMessage = issue.exact
             ? "arrayExactly"
@@ -160,21 +171,27 @@ export async function getErrorMap(locale?: string) {
           message = t("invalidDate");
         }
         break;
-      case ZodIssueCode.custom:
+      }
+      case ZodIssueCode.custom: {
         message = t("invalidInput");
         break;
-      case ZodIssueCode.invalid_intersection_types:
+      }
+      case ZodIssueCode.invalid_intersection_types: {
         message = "Intersection results could not be merged";
         break;
-      case ZodIssueCode.not_multiple_of:
+      }
+      case ZodIssueCode.not_multiple_of: {
         message = `Number must be a multiple of ${issue.multipleOf}`;
         break;
-      case ZodIssueCode.not_finite:
+      }
+      case ZodIssueCode.not_finite: {
         message = t("finiteNumber");
         break;
-      default:
+      }
+      default: {
         message = _ctx.defaultError;
         util.assertNever(issue);
+      }
     }
 
     return { message };
