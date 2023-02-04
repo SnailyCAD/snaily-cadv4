@@ -3,7 +3,7 @@ import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { Rank } from "@snailycad/types";
 import type { Req, Context } from "@tsed/common";
 import { BadRequest, Forbidden } from "@tsed/exceptions";
-import { unitProperties } from "lib/leo/activeOfficer";
+import { combinedEmsFdUnitProperties, unitProperties } from "lib/leo/activeOfficer";
 import { getInactivityFilter } from "./leo/utils";
 import { prisma } from "./data/prisma";
 
@@ -58,6 +58,14 @@ export async function getActiveDeputy(options: GetActiveDeputyOptions) {
     return null;
   }
 
+  const combinedUnit = await prisma.combinedEmsFdUnit.findFirst({
+    where: {
+      NOT: { status: { shouldDo: "SET_OFF_DUTY" } },
+      deputies: { some: { userId: options.user.id } },
+    },
+    include: combinedEmsFdUnitProperties,
+  });
+
   const cad = await prisma.cad.findFirst({ include: { miscCadSettings: true } });
   const unitsInactivityFilter = getInactivityFilter(
     cad!,
@@ -84,10 +92,12 @@ export async function getActiveDeputy(options: GetActiveDeputyOptions) {
     include: unitProperties,
   });
 
-  if (!deputy) {
+  const activeDeputyOrCombinedUnit = combinedUnit ?? deputy;
+
+  if (!activeDeputyOrCombinedUnit) {
     options.ctx.delete("activeDeputy");
     throw new BadRequest("noActiveDeputy");
   }
 
-  return deputy;
+  return activeDeputyOrCombinedUnit;
 }

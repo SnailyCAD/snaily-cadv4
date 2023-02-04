@@ -1,6 +1,6 @@
 import { Context, Middleware, Req, MiddlewareMethods, Res, Next } from "@tsed/common";
 import { getSessionUser } from "lib/auth/getSessionUser";
-import { getActiveDeputy } from "lib/ems-fd";
+import { getActiveDeputy } from "lib/get-active-ems-fd-deputy";
 
 @Middleware()
 export class ActiveDeputy implements MiddlewareMethods {

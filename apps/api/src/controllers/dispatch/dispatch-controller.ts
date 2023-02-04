@@ -22,7 +22,7 @@ import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
 import { getInactivityFilter } from "lib/leo/utils";
-import { getActiveDeputy } from "lib/ems-fd";
+import { getActiveDeputy } from "lib/get-active-ems-fd-deputy";
 import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { z } from "zod";
