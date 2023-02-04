@@ -42,13 +42,13 @@ import { getImageWebPPath } from "lib/images/get-image-webp-path";
 import { createWhere } from "controllers/leo/create-where-obj";
 
 const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_UNIT"] as const;
-type Action = typeof ACTIONS[number];
+type Action = (typeof ACTIONS)[number];
 
 const SUSPEND_TYPE = ["suspend", "unsuspend"] as const;
 type SuspendType = "suspend" | "unsuspend";
 
 export const ACCEPT_DECLINE_TYPES = ["ACCEPT", "DECLINE"] as const;
-export type AcceptDeclineType = typeof ACCEPT_DECLINE_TYPES[number];
+export type AcceptDeclineType = (typeof ACCEPT_DECLINE_TYPES)[number];
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/units")
@@ -726,8 +726,9 @@ export class AdminManageUnitsController {
 
         return updated;
       }
-      default:
+      default: {
         return null;
+      }
     }
   }
 
