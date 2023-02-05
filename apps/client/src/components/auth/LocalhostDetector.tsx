@@ -23,10 +23,7 @@ export function LocalhostDetector() {
       <span className="text-bold mr-1">WARNING:</span>
       <span>
         the usage of localhost with SnailyCADv4 will not work.{" "}
-        <a
-          className="underline"
-          href="https://docs.snailycad.org/docs/errors/localhost-usage"
-        >
+        <a className="underline" href="https://docs.snailycad.org/docs/errors/localhost-usage">
           Please read more here
         </a>
       </span>
