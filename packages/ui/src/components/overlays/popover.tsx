@@ -65,7 +65,7 @@ export function Popover(props: Props) {
           <div
             {...mergeProps(overlayProps, modalProps, dialogProps)}
             ref={popoverRef}
-            className="w-full absolute top-full bg-gray-200 dark:bg-primary dark:border dark:border-secondary rounded-md shadow-lg mt-2 p-2 z-10"
+            className="w-full absolute top-full bg-gray-200 dark:bg-primary border border-gray-400 dark:border-secondary rounded-md shadow-lg mt-2 p-2 z-10"
             style={{
               zIndex: 999,
               ...style,

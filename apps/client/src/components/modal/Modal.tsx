@@ -74,7 +74,7 @@ export function Modal({
             <Dialog.Panel
               style={modalStyles}
               className={classNames(
-                "max-w-[100%] inline-block p-4 px-6 my-8 text-left align-middle transition-all transform bg-white dark:border dark:border-secondary dark:bg-tertiary dark:text-white shadow-xl rounded-lg",
+                "max-w-[100%] inline-block p-4 px-6 my-8 text-left align-middle transition-all transform bg-white border border-secondary dark:bg-tertiary dark:text-white shadow-xl rounded-lg",
                 isAlert ? "z-[998]" : "z-30",
                 className,
               )}

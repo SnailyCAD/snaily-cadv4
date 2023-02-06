@@ -82,7 +82,7 @@ export function ManageRolesModal({ roles, user, onUpdate }: Props) {
                   <div className="mt-3 flex flex-wrap gap-1">
                     {allRolePermissions.map((permission) => (
                       <span
-                        className="bg-gray-300 dark:bg-tertiary dark:border dark:border-secondary px-1.5 p-0.5 rounded-md"
+                        className="bg-gray-300 dark:bg-tertiary border border-gray-400 dark:border-secondary px-1.5 p-0.5 rounded-md"
                         key={permission}
                       >
                         {permission}

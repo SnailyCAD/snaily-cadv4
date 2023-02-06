@@ -24,10 +24,10 @@ export function Option(props: OptionProps) {
       {...optionProps}
       ref={ref}
       className={classNames(
-        buttonSizes.sm,
+        buttonSizes.md,
         "flex items-center justify-between",
-        "rounded-md my-1 dark:text-white dark:hover:bg-secondary hover:bg-gray-400 focus:bg-gray-400 dark:focus:bg-secondary  cursor-pointer",
-        (isSelected || isFocused) && "dark:bg-secondary bg-gray-400",
+        "rounded-md my-1 dark:text-white dark:hover:bg-secondary hover:bg-gray-300 focus:bg-gray-300 dark:focus:bg-secondary cursor-pointer",
+        (isSelected || isFocused) && "dark:bg-secondary bg-gray-300",
         isDisabled && "cursor-not-allowed opacity-70",
       )}
     >

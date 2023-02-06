@@ -29,7 +29,7 @@ export function BusinessCard({ employee }: Props) {
     : t("businessWhitelistedCAD");
 
   return (
-    <li className="flex items-baseline justify-between p-4 rounded-md card shadow-sm">
+    <li className="flex items-baseline justify-between p-4 rounded-md card shadow-sm dark:shadow-md border border-gray-400 dark:border-quinary dark:bg-tertiary">
       <div>
         <p>
           <span className="font-semibold">{t("business")}: </span> {employee.business.name}

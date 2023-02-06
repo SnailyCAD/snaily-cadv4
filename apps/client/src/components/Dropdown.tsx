@@ -29,7 +29,7 @@ export function Dropdown({ trigger, children, extra, open, modal, onOpenChange, 
           {...rest}
           className={classNames(
             rest.className ?? "dropdown-left",
-            "flex flex-col z-50 p-2 bg-gray-200 rounded-md shadow-md dark:shadow-primary dropdown-fade w-40 dark:bg-primary dark:border dark:border-secondary",
+            "flex flex-col z-50 p-2 bg-gray-100 rounded-md shadow-md dark:shadow-primary dropdown-fade w-40 dark:bg-primary border border-secondary",
           )}
         >
           {children}
