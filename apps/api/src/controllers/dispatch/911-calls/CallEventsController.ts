@@ -46,7 +46,7 @@ export class Calls911EventsController {
       data: {
         call911Id: call.id,
         description: data.description,
-        translationData: data.translationData || null,
+        translationData: data.translationData || undefined,
       },
     });
 
