@@ -19,7 +19,7 @@ import {
 import { handleValidate } from "lib/handleValidate";
 import { useCitizen } from "context/CitizenContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { filterLicenseTypes } from "lib/utils";
+import { filterLicenseType, filterLicenseTypes } from "lib/utils";
 import { toastMessage } from "lib/toastMessage";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import type { PostCitizenWeaponData, PutCitizenWeaponData } from "@snailycad/types/api";
@@ -166,6 +166,7 @@ export function RegisterWeaponModal({ weapon, onClose, onCreate, onUpdate }: Pro
               valueType={ValueType.LICENSE}
               values={filterLicenseTypes(license.values, ValueLicenseType.REGISTRATION_STATUS)}
               label={tVehicle("registrationStatus")}
+              filterFn={(v) => filterLicenseType(v, ValueLicenseType.REGISTRATION_STATUS)}
             />
 
             <FormField optional errorMessage={errors.serialNumber} label={tWeapon("serialNumber")}>

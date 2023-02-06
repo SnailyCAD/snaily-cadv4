@@ -73,10 +73,12 @@ export function formatDate(date: string | Date | number, options?: { onlyDate: b
 }
 
 export function filterLicenseTypes(licenses: Value[], type: ValueLicenseType) {
-  return licenses.filter((item) => {
-    if (item.licenseType === null) return true;
-    return item.licenseType === type;
-  });
+  return licenses.filter((item) => filterLicenseType(item, type));
+}
+
+export function filterLicenseType(value: Value, type: ValueLicenseType) {
+  if (value.licenseType === null) return true;
+  return value.licenseType === type;
 }
 
 export function getUnitDepartment(unit: Officer | EmsFdDeputy | null) {

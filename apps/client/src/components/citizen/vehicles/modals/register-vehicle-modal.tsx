@@ -30,7 +30,7 @@ import { useAuth } from "context/AuthContext";
 import { Toggle } from "components/form/Toggle";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useBusinessState } from "state/business-state";
-import { filterLicenseTypes } from "lib/utils";
+import { filterLicenseType, filterLicenseTypes } from "lib/utils";
 import { FormRow } from "components/form/FormRow";
 import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";
 import { toastMessage } from "lib/toastMessage";
@@ -235,6 +235,7 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
                 valueType={ValueType.LICENSE}
                 values={filterLicenseTypes(license.values, ValueLicenseType.REGISTRATION_STATUS)}
                 label={tVehicle("registrationStatus")}
+                filterFn={(v) => filterLicenseType(v, ValueLicenseType.REGISTRATION_STATUS)}
               />
 
               <ValueSelectField
@@ -242,6 +243,7 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
                 valueType={ValueType.LICENSE}
                 values={filterLicenseTypes(license.values, ValueLicenseType.INSURANCE_STATUS)}
                 label={tVehicle("insuranceStatus")}
+                filterFn={(v) => filterLicenseType(v, ValueLicenseType.INSURANCE_STATUS)}
               />
             </FormRow>
 

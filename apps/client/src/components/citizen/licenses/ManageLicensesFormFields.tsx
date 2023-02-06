@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
-import { filterLicenseTypes } from "lib/utils";
+import { filterLicenseType, filterLicenseTypes } from "lib/utils";
 import { classNames } from "lib/classNames";
 import { Toggle } from "components/form/Toggle";
 import type { LicenseInitialValues } from "./manage-licenses-modal";
@@ -123,6 +123,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
               valueType={ValueType.LICENSE}
               values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE)}
               label={t("Citizen.driversLicense")}
+              filterFn={(v) => filterLicenseType(v, ValueLicenseType.LICENSE)}
             />
 
             <FormField
@@ -196,6 +197,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
             valueType={ValueType.LICENSE}
             values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE)}
             label={t("Citizen.pilotLicense")}
+            filterFn={(v) => filterLicenseType(v, ValueLicenseType.LICENSE)}
           />
 
           <FormField
@@ -265,6 +267,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
             fieldName="waterLicense"
             valueType={ValueType.LICENSE}
             values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE)}
+            filterFn={(v) => filterLicenseType(v, ValueLicenseType.LICENSE)}
             label={t("Citizen.waterLicense")}
           />
 
@@ -336,6 +339,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
               fieldName="weaponLicense"
               valueType={ValueType.LICENSE}
               values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE)}
+              filterFn={(v) => filterLicenseType(v, ValueLicenseType.LICENSE)}
               label={t("Citizen.weaponLicense")}
             />
 
