@@ -9,7 +9,7 @@ import { useModal } from "state/modalState";
 import { BreadcrumbItem, Breadcrumbs, Button } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import { getTranslations } from "lib/getTranslation";
-import { VehiclesCard } from "components/citizen/vehicles/VehiclesCard";
+import { VehiclesCard } from "components/citizen/vehicles/vehicles-card";
 import { LicensesCard } from "components/citizen/licenses/LicensesCard";
 import { MedicalRecords } from "components/citizen/medical-records/MedicalRecords";
 import { calculateAge, formatCitizenAddress, requestAll } from "lib/utils";

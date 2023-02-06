@@ -3,14 +3,19 @@ import { Form, Formik, FormikHelpers } from "formik";
 import { useRouter } from "next/router";
 import { WEAPON_SCHEMA } from "@snailycad/schemas";
 import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
 import { Loader, Input, Button, Item, AsyncListSearchField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useValues } from "src/context/ValuesContext";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import { ValueLicenseType, Weapon, WeaponValue, WhitelistStatus } from "@snailycad/types";
+import {
+  ValueLicenseType,
+  ValueType,
+  Weapon,
+  WeaponValue,
+  WhitelistStatus,
+} from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import { useCitizen } from "context/CitizenContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
@@ -19,6 +24,7 @@ import { toastMessage } from "lib/toastMessage";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import type { PostCitizenWeaponData, PutCitizenWeaponData } from "@snailycad/types/api";
 import { Toggle } from "components/form/Toggle";
+import { ValueSelectField } from "components/form/inputs/value-select-field";
 
 interface Props {
   weapon: Omit<Weapon, "citizen"> | null;
@@ -155,23 +161,12 @@ export function RegisterWeaponModal({ weapon, onClose, onCreate, onUpdate }: Pro
               isDisabled={isDisabled}
             />
 
-            <FormField
-              errorMessage={errors.registrationStatus}
+            <ValueSelectField
+              fieldName="registrationStatus"
+              valueType={ValueType.LICENSE}
+              values={filterLicenseTypes(license.values, ValueLicenseType.REGISTRATION_STATUS)}
               label={tVehicle("registrationStatus")}
-            >
-              <Select
-                values={filterLicenseTypes(
-                  license.values,
-                  ValueLicenseType.REGISTRATION_STATUS,
-                ).map((license) => ({
-                  label: license.value,
-                  value: license.id,
-                }))}
-                value={values.registrationStatus}
-                name="registrationStatus"
-                onChange={handleChange}
-              />
-            </FormField>
+            />
 
             <FormField optional errorMessage={errors.serialNumber} label={tWeapon("serialNumber")}>
               <Input value={values.serialNumber} name="serialNumber" onChange={handleChange} />

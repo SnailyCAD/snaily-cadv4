@@ -11,7 +11,6 @@ import {
   TextField,
 } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useValues } from "src/context/ValuesContext";
@@ -20,6 +19,7 @@ import { ModalIds } from "types/ModalIds";
 import {
   RegisteredVehicle,
   ValueLicenseType,
+  ValueType,
   VehicleValue,
   WhitelistStatus,
 } from "@snailycad/types";
@@ -37,6 +37,7 @@ import { toastMessage } from "lib/toastMessage";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import type { PostCitizenVehicleData, PutCitizenVehicleData } from "@snailycad/types/api";
 import { shallow } from "zustand/shallow";
+import { ValueSelectField } from "components/form/inputs/value-select-field";
 
 interface Props {
   vehicle: RegisteredVehicle | null;
@@ -229,38 +230,19 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
             />
 
             <FormRow>
-              <FormField
-                errorMessage={errors.registrationStatus}
+              <ValueSelectField
+                fieldName="registrationStatus"
+                valueType={ValueType.LICENSE}
+                values={filterLicenseTypes(license.values, ValueLicenseType.REGISTRATION_STATUS)}
                 label={tVehicle("registrationStatus")}
-              >
-                <Select
-                  values={filterLicenseTypes(
-                    license.values,
-                    ValueLicenseType.REGISTRATION_STATUS,
-                  ).map((license) => ({
-                    label: license.value,
-                    value: license.id,
-                  }))}
-                  value={values.registrationStatus}
-                  name="registrationStatus"
-                  onChange={handleChange}
-                />
-              </FormField>
+              />
 
-              <FormField errorMessage={errors.insuranceStatus} label={tVehicle("insuranceStatus")}>
-                <Select
-                  isClearable
-                  values={filterLicenseTypes(license.values, ValueLicenseType.INSURANCE_STATUS).map(
-                    (license) => ({
-                      label: license.value,
-                      value: license.id,
-                    }),
-                  )}
-                  value={values.insuranceStatus}
-                  name="insuranceStatus"
-                  onChange={handleChange}
-                />
-              </FormField>
+              <ValueSelectField
+                fieldName="insuranceStatus"
+                valueType={ValueType.LICENSE}
+                values={filterLicenseTypes(license.values, ValueLicenseType.INSURANCE_STATUS)}
+                label={tVehicle("insuranceStatus")}
+              />
             </FormRow>
 
             <FormRow>

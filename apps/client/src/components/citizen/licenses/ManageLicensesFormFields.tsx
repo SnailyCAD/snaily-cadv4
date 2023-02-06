@@ -1,4 +1,4 @@
-import { Citizen, DriversLicenseCategoryType, ValueLicenseType } from "@snailycad/types";
+import { Citizen, DriversLicenseCategoryType, ValueLicenseType, ValueType } from "@snailycad/types";
 import { useValues } from "context/ValuesContext";
 import { useFormikContext } from "formik";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
@@ -9,9 +9,10 @@ import { Select } from "components/form/Select";
 import { filterLicenseTypes } from "lib/utils";
 import { classNames } from "lib/classNames";
 import { Toggle } from "components/form/Toggle";
-import type { LicenseInitialValues } from "./ManageLicensesModal";
+import type { LicenseInitialValues } from "./manage-licenses-modal";
 import { FormRow } from "components/form/FormRow";
 import { DatePickerField } from "@snailycad/ui";
+import { ValueSelectField } from "components/form/inputs/value-select-field";
 
 export function createDefaultLicensesValues(citizen: Citizen | null): LicenseInitialValues {
   return {
@@ -116,21 +117,14 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
           ) : null}
 
           <div className={formRowClassName}>
-            <FormField errorMessage={errors.driversLicense} label={t("Citizen.driversLicense")}>
-              <Select
-                disabled={values.suspended.driverLicense}
-                isClearable={allowRemoval}
-                values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
-                  (license) => ({
-                    label: license.value,
-                    value: license.id,
-                  }),
-                )}
-                value={values.driversLicense}
-                name="driversLicense"
-                onChange={handleChange}
-              />
-            </FormField>
+            <ValueSelectField
+              isClearable={allowRemoval}
+              fieldName="driversLicense"
+              valueType={ValueType.LICENSE}
+              values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE)}
+              label={t("Citizen.driversLicense")}
+            />
+
             <FormField
               errorMessage={errors.driversLicenseCategory as string}
               label={t("Citizen.driversLicenseCategory")}
@@ -196,21 +190,14 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
         ) : null}
 
         <div className={formRowClassName}>
-          <FormField errorMessage={errors.pilotLicense} label={t("Citizen.pilotLicense")}>
-            <Select
-              disabled={values.suspended.pilotLicense}
-              isClearable={allowRemoval}
-              values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
-                (license) => ({
-                  label: license.value,
-                  value: license.id,
-                }),
-              )}
-              value={values.pilotLicense}
-              name="pilotLicense"
-              onChange={handleChange}
-            />
-          </FormField>
+          <ValueSelectField
+            isClearable={allowRemoval}
+            fieldName="pilotLicense"
+            valueType={ValueType.LICENSE}
+            values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE)}
+            label={t("Citizen.pilotLicense")}
+          />
+
           <FormField
             errorMessage={errors.pilotLicenseCategory as string}
             label={t("Citizen.pilotLicenseCategory")}
@@ -273,21 +260,14 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
         ) : null}
 
         <div className={formRowClassName}>
-          <FormField errorMessage={errors.waterLicense} label={t("Citizen.waterLicense")}>
-            <Select
-              disabled={values.suspended.waterLicense}
-              isClearable={allowRemoval}
-              values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
-                (license) => ({
-                  label: license.value,
-                  value: license.id,
-                }),
-              )}
-              value={values.waterLicense}
-              name="waterLicense"
-              onChange={handleChange}
-            />
-          </FormField>
+          <ValueSelectField
+            isClearable={allowRemoval}
+            fieldName="waterLicense"
+            valueType={ValueType.LICENSE}
+            values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE)}
+            label={t("Citizen.waterLicense")}
+          />
+
           <FormField
             errorMessage={errors.waterLicenseCategory as string}
             label={t("Citizen.waterLicenseCategory")}
@@ -351,19 +331,14 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
           ) : null}
 
           <div className={formRowClassName}>
-            <FormField errorMessage={errors.weaponLicense} label={t("Citizen.weaponLicense")}>
-              <Select
-                disabled={values.suspended.firearmsLicense}
-                values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map((v) => ({
-                  label: v.value,
-                  value: v.id,
-                }))}
-                value={values.weaponLicense}
-                onChange={handleChange}
-                name="weaponLicense"
-                isClearable
-              />
-            </FormField>
+            <ValueSelectField
+              isClearable={allowRemoval}
+              fieldName="weaponLicense"
+              valueType={ValueType.LICENSE}
+              values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE)}
+              label={t("Citizen.weaponLicense")}
+            />
+
             <FormField
               errorMessage={errors.firearmLicenseCategory as string}
               label={t("Citizen.firearmLicenseCategory")}

@@ -6,7 +6,7 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import type { RegisteredVehicle } from "@snailycad/types";
 import useFetch from "lib/useFetch";
-import { RegisterVehicleModal } from "components/citizen/vehicles/modals/RegisterVehicleModal";
+import { RegisterVehicleModal } from "components/citizen/vehicles/modals/register-vehicle-modal";
 import { AlertModal } from "components/modal/AlertModal";
 import { FullDate } from "components/shared/FullDate";
 import { Table, useTableState } from "components/shared/Table";

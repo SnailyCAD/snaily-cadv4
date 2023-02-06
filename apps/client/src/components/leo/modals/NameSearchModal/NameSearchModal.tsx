@@ -19,7 +19,7 @@ import dynamic from "next/dynamic";
 import {
   LicenseInitialValues,
   ManageLicensesModal,
-} from "components/citizen/licenses/ManageLicensesModal";
+} from "components/citizen/licenses/manage-licenses-modal";
 import { ManageCitizenFlagsModal } from "./ManageCitizenFlagsModal";
 import { CitizenImageModal } from "components/citizen/modals/CitizenImageModal";
 import { ManageCustomFieldsModal } from "./ManageCustomFieldsModal";

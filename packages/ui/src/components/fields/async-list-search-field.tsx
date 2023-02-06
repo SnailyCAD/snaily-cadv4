@@ -11,7 +11,7 @@ import { Popover } from "../overlays/async-list/popover";
 import { AsyncListFieldListBox } from "../list/async-list/async-list-list-box";
 import { useAsyncList } from "@react-stately/data";
 import { Button } from "../button";
-import { ChevronDown } from "react-bootstrap-icons";
+import { ChevronDown, X } from "react-bootstrap-icons";
 import { useDebounce } from "react-use";
 import type { Node } from "@react-types/shared";
 import { useTranslations } from "next-intl";
@@ -29,6 +29,7 @@ export interface AsyncListFieldProps<T extends object>
   extends Omit<ComboBoxProps<T>, "onSelectionChange"> {
   label: React.ReactNode;
   isOptional?: boolean;
+  isClearable?: boolean;
 
   errorMessage?: string | null;
   className?: string;
@@ -84,7 +85,7 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
 
   useDebounce(
     () => {
-      list.setFilterText(props.localValue);
+      list.setFilterText(state.inputValue);
     },
     200,
     [props.localValue],
@@ -92,6 +93,11 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
 
   function handleSelectionChange(key?: React.Key, value?: string) {
     if (!key) {
+      if (props.isClearable) {
+        props.setValues({ localValue: "", node: null });
+        return;
+      }
+
       props.setValues({ localValue: value });
       return;
     }
@@ -128,6 +134,8 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
     state,
   );
 
+  const showClearableButton = props.isClearable && state.selectedKey;
+
   return (
     <div className={classNames("text-field flex flex-col mb-3", props.className)}>
       <Label {...props} labelProps={labelProps} />
@@ -137,32 +145,49 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
           {...inputProps}
           ref={ref}
           errorMessage={props.errorMessage}
-          className={classNames(inputProps.className, includeMenu && "rounded-r-none")}
+          className={classNames(inputProps.className, "-mr-[1px]", includeMenu && "rounded-r-none")}
         />
         {list.isLoading ? (
           <div
             className={classNames(
               "absolute top-0 bottom-0 flex items-center justify-center",
-              includeMenu ? "right-11" : "right-2",
+              includeMenu ? (showClearableButton ? "right-20" : "right-11") : "right-2",
             )}
           >
             <Loader />
           </div>
+        ) : null}
+        {showClearableButton ? (
+          <Button
+            // @ts-expect-error null is allowed here to clear the value
+            onPress={() => state.setSelectedKey(null)}
+            className={classNames(
+              "px-2 !rounded-none -mx-[1px]",
+              state.isFocused
+                ? "border-gray-800 dark:border-gray-500"
+                : "border-gray-200 dark:border-quinary",
+              props.errorMessage &&
+                "!border-red-500 focus:!border-red-700 dark:!focus:border-red-700",
+            )}
+            type="button"
+          >
+            <X className="w-5 h-5 fill-white" />
+          </Button>
         ) : null}
         {includeMenu ? (
           <Button
             disabled={inputProps.disabled}
             ref={buttonRef}
             onPress={() => state.open()}
+            size="xs"
+            type="button"
             className={classNames(
-              "!rounded-l-none !border-l-0 px-2",
-              state.isFocused
-                ? "border-gray-800 dark:border-gray-500"
-                : "border-gray-200 dark:border-gray-700",
+              "rounded-l-none border-gray-200 dark:border-quinary",
+              showClearableButton ? "-ml-[1px]" : "-ml-[1.5px]",
+              state.isFocused && "border-gray-800 dark:border-gray-500",
               props.errorMessage &&
                 "!border-red-500 focus:!border-red-700 dark:!focus:border-red-700",
             )}
-            type="button"
           >
             <ChevronDown />
           </Button>

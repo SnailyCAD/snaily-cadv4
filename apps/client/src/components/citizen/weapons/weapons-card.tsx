@@ -28,6 +28,7 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
   const { citizen } = useCitizen(false);
 
   const asyncTable = useAsyncTable({
+    search,
     fetchOptions: {
       pageSize: 12,
       onResponse: (json: GetCitizenWeaponsData) => ({
@@ -83,52 +84,50 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
           </Button>
         </header>
 
-        {asyncTable.items.length <= 0 ? (
+        <SearchArea
+          asyncTable={asyncTable}
+          search={{ search, setSearch }}
+          totalCount={props.weapons.length}
+        />
+
+        {!search && asyncTable.items.length <= 0 ? (
           <p className="text-neutral-700 dark:text-gray-400">{t("noWeapons")}</p>
         ) : (
-          <>
-            <SearchArea
-              asyncTable={asyncTable}
-              search={{ search, setSearch }}
-              totalCount={props.weapons.length}
-            />
-
-            <Table
-              tableState={tableState}
-              features={{ isWithinCardOrModal: true }}
-              data={asyncTable.items.map((weapon) => ({
-                id: weapon.id,
-                model: weapon.model.value.value,
-                registrationStatus: weapon.registrationStatus.value,
-                serialNumber: weapon.serialNumber,
-                bofStatus: <Status>{weapon.bofStatus}</Status>,
-                createdAt: <FullDate onlyDate>{weapon.createdAt}</FullDate>,
-                actions: (
-                  <>
-                    <Button onPress={() => handleEditClick(weapon)} size="xs" variant="success">
-                      {common("edit")}
-                    </Button>
-                    <Button
-                      className="ml-2"
-                      onPress={() => handleDeleteClick(weapon)}
-                      size="xs"
-                      variant="danger"
-                    >
-                      {common("delete")}
-                    </Button>
-                  </>
-                ),
-              }))}
-              columns={[
-                { header: t("model"), accessorKey: "model" },
-                { header: t("registrationStatus"), accessorKey: "registrationStatus" },
-                { header: t("serialNumber"), accessorKey: "serialNumber" },
-                BUREAU_OF_FIREARMS ? { header: t("bofStatus"), accessorKey: "bofStatus" } : null,
-                { header: common("createdAt"), accessorKey: "createdAt" },
-                { header: common("actions"), accessorKey: "actions" },
-              ]}
-            />
-          </>
+          <Table
+            tableState={tableState}
+            features={{ isWithinCardOrModal: true }}
+            data={asyncTable.items.map((weapon) => ({
+              id: weapon.id,
+              model: weapon.model.value.value,
+              registrationStatus: weapon.registrationStatus.value,
+              serialNumber: weapon.serialNumber,
+              bofStatus: <Status>{weapon.bofStatus}</Status>,
+              createdAt: <FullDate onlyDate>{weapon.createdAt}</FullDate>,
+              actions: (
+                <>
+                  <Button onPress={() => handleEditClick(weapon)} size="xs" variant="success">
+                    {common("edit")}
+                  </Button>
+                  <Button
+                    className="ml-2"
+                    onPress={() => handleDeleteClick(weapon)}
+                    size="xs"
+                    variant="danger"
+                  >
+                    {common("delete")}
+                  </Button>
+                </>
+              ),
+            }))}
+            columns={[
+              { header: t("model"), accessorKey: "model" },
+              { header: t("registrationStatus"), accessorKey: "registrationStatus" },
+              { header: t("serialNumber"), accessorKey: "serialNumber" },
+              BUREAU_OF_FIREARMS ? { header: t("bofStatus"), accessorKey: "bofStatus" } : null,
+              { header: common("createdAt"), accessorKey: "createdAt" },
+              { header: common("actions"), accessorKey: "actions" },
+            ]}
+          />
         )}
       </div>
 
