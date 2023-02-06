@@ -13,14 +13,14 @@ import {
 } from "@snailycad/ui";
 import { FormRow } from "components/form/FormRow";
 import { FormField } from "components/form/FormField";
-import { Select, SelectValue } from "components/form/Select";
+import type { SelectValue } from "components/form/Select";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { CREATE_CITIZEN_SCHEMA, CREATE_CITIZEN_WITH_OFFICER_SCHEMA } from "@snailycad/schemas";
 import { useAuth } from "context/AuthContext";
 import { useValues } from "context/ValuesContext";
 import { handleValidate } from "lib/handleValidate";
 import type { FormikHelpers } from "formik";
-import type { User, Citizen, PenalCode } from "@snailycad/types";
+import { User, Citizen, PenalCode, ValueType } from "@snailycad/types";
 import { useTranslations } from "next-intl";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import {
@@ -33,6 +33,7 @@ import { getManageOfficerFieldsDefaults } from "components/leo/manage-officer/ma
 import { CreateOfficerStep } from "./manage-citizen-form/create-officer-step";
 import { CreatePreviousRecordsStep } from "./manage-citizen-form/create-previous-records-step";
 import { Permissions, usePermission } from "hooks/usePermission";
+import { ValueSelectField } from "components/form/inputs/value-select-field";
 
 type FormFeatures =
   | "officer-creation"
@@ -255,29 +256,19 @@ export function ManageCitizenForm({
             </FormRow>
 
             <FormRow>
-              <FormField errorMessage={errors.gender} label={t("gender")}>
-                <Select
-                  name="gender"
-                  value={values.gender}
-                  onChange={handleChange}
-                  values={gender.values.map((gender) => ({
-                    label: gender.value,
-                    value: gender.id,
-                  }))}
-                />
-              </FormField>
+              <ValueSelectField
+                fieldName="gender"
+                valueType={ValueType.GENDER}
+                values={gender.values}
+                label={t("gender")}
+              />
 
-              <FormField errorMessage={errors.ethnicity} label={t("ethnicity")}>
-                <Select
-                  name="ethnicity"
-                  value={values.ethnicity}
-                  onChange={handleChange}
-                  values={ethnicity.values.map((ethnicity) => ({
-                    label: ethnicity.value,
-                    value: ethnicity.id,
-                  }))}
-                />
-              </FormField>
+              <ValueSelectField
+                fieldName="ethnicity"
+                valueType={ValueType.ETHNICITY}
+                values={ethnicity.values}
+                label={t("ethnicity")}
+              />
             </FormRow>
 
             <FormRow>

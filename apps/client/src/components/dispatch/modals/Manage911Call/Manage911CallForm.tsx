@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import type { Post911CallsData, Put911CallByIdData } from "@snailycad/types/api";
-import { StatusValueType, WhitelistStatus } from "@snailycad/types";
+import { StatusValueType, ValueType, WhitelistStatus } from "@snailycad/types";
 import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
 import { CALL_911_SCHEMA } from "@snailycad/schemas";
@@ -21,6 +21,7 @@ import { AssignedUnitsTable } from "./AssignedUnitsTable";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
 import { shallow } from "zustand/shallow";
+import { ValueSelectField } from "components/form/inputs/value-select-field";
 
 interface Props {
   call: Full911Call | null;
@@ -210,35 +211,24 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
               </FormRow>
 
               <FormRow>
-                <FormField errorMessage={errors.situationCode} label={t("situationCode")}>
-                  <Select
-                    isClearable
-                    name="situationCode"
-                    value={values.situationCode}
-                    values={codes10.values
-                      .filter((v) => v.type === StatusValueType.SITUATION_CODE)
-                      .map((division) => ({
-                        label: division.value.value,
-                        value: division.id,
-                      }))}
-                    onChange={handleChange}
-                    disabled={isDisabled}
-                  />
-                </FormField>
+                <ValueSelectField
+                  isDisabled={isDisabled}
+                  isClearable
+                  label={t("situationCode")}
+                  fieldName="situationCode"
+                  values={codes10.values}
+                  valueType={ValueType.CODES_10}
+                  filterFn={(value) => value.type === StatusValueType.SITUATION_CODE}
+                />
 
-                <FormField errorMessage={errors.type} label={t("type")}>
-                  <Select
-                    isClearable
-                    name="type"
-                    value={values.type}
-                    values={callType.values.map((callType) => ({
-                      label: callType.value.value,
-                      value: callType.id,
-                    }))}
-                    onChange={handleChange}
-                    disabled={isDisabled}
-                  />
-                </FormField>
+                <ValueSelectField
+                  isDisabled={isDisabled}
+                  isClearable
+                  label={t("type")}
+                  fieldName="type"
+                  values={callType.values}
+                  valueType={ValueType.CALL_TYPE}
+                />
               </FormRow>
 
               <FormField errorMessage={errors.description} label={common("description")}>

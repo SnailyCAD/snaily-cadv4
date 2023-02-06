@@ -18,7 +18,7 @@ import { TabList } from "components/shared/TabList";
 import { ResultsTab } from "./VehicleSearch/tabs/ResultsTab";
 import { NotesTab } from "./NameSearchModal/tabs/notes-tab";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { RegisterVehicleModal } from "components/citizen/vehicles/modals/RegisterVehicleModal";
+import { RegisterVehicleModal } from "components/citizen/vehicles/modals/register-vehicle-modal";
 import type { PostMarkStolenData } from "@snailycad/types/api";
 import { ImpoundVehicleModal } from "./VehicleSearch/ImpoundVehicleModal";
 import { AllowImpoundedVehicleCheckoutModal } from "./AllowImpoundedVehicleCheckoutModal";

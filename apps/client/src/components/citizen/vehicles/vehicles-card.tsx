@@ -2,7 +2,6 @@ import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "@snailycad/ui";
 import type { RegisteredVehicle } from "@snailycad/types";
-import { RegisterVehicleModal } from "./modals/RegisterVehicleModal";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
@@ -11,12 +10,21 @@ import { Table, useTableState } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { Status } from "components/shared/Status";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { TransferVehicleModal } from "./modals/TransferVehicleModal";
 import { useAsyncTable } from "hooks/shared/table/use-async-table";
 import { useCitizen } from "context/CitizenContext";
 import type { DeleteCitizenVehicleData, GetCitizenVehiclesData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { SearchArea } from "components/shared/search/search-area";
+import dynamic from "next/dynamic";
+
+const RegisterVehicleModal = dynamic(
+  async () => (await import("./modals/register-vehicle-modal")).RegisterVehicleModal,
+  { ssr: false },
+);
+const TransferVehicleModal = dynamic(
+  async () => (await import("./modals/transfer-vehicle-modal")).TransferVehicleModal,
+  { ssr: false },
+);
 
 export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
   const [search, setSearch] = React.useState("");

@@ -20,7 +20,8 @@ import { ValueType } from "@snailycad/types";
 
 const RegisterVehicleModal = dynamic(
   async () =>
-    (await import("components/citizen/vehicles/modals/RegisterVehicleModal")).RegisterVehicleModal,
+    (await import("components/citizen/vehicles/modals/register-vehicle-modal"))
+      .RegisterVehicleModal,
   { ssr: false },
 );
 const RegisterWeaponModal = dynamic(
