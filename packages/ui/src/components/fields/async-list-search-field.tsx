@@ -30,6 +30,7 @@ export interface AsyncListFieldProps<T extends object>
   label: React.ReactNode;
   isOptional?: boolean;
   isClearable?: boolean;
+  filterFn?: any;
 
   errorMessage?: string | null;
   className?: string;
@@ -92,12 +93,12 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
   );
 
   function handleSelectionChange(key?: React.Key, value?: string) {
-    if (!key) {
-      if (props.isClearable) {
-        props.setValues({ localValue: "", node: null });
-        return;
-      }
+    if (props.isClearable && key === "cleared") {
+      props.setValues({ localValue: "", node: null });
+      return;
+    }
 
+    if (!key) {
       props.setValues({ localValue: value });
       return;
     }
@@ -110,7 +111,7 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
   }
 
   const listOptions = {
-    items: list.items,
+    items: props.filterFn ? list.items.filter(props.filterFn) : list.items,
     inputValue: props.localValue,
     onInputChange: (value: string) => handleSelectionChange(undefined, value),
   };
@@ -118,6 +119,7 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
   const state = useComboBoxState({
     ...props,
     ...listOptions,
+    shouldCloseOnBlur: true,
     allowsEmptyCollection: true,
     onSelectionChange: handleSelectionChange,
   });
@@ -159,8 +161,7 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
         ) : null}
         {showClearableButton ? (
           <Button
-            // @ts-expect-error null is allowed here to clear the value
-            onPress={() => state.setSelectedKey(null)}
+            onPress={() => state.setSelectedKey("cleared")}
             className={classNames(
               "px-2 !rounded-none -mx-[1px]",
               state.isFocused

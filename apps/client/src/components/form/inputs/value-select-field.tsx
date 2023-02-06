@@ -8,18 +8,19 @@ import { getValueStrFromValue } from "lib/admin/values/utils";
 
 let hasFetched = false;
 
-interface Props {
+interface Props<T extends AnyValue> {
   fieldName: string;
   valueType: ValueType;
-  values: AnyValue[];
+  values: T[];
   label: string;
+  filterFn?(value: T): boolean;
 
   isClearable?: boolean;
   isOptional?: boolean;
   isDisabled?: boolean;
 }
 
-export function ValueSelectField(props: Props) {
+export function ValueSelectField<T extends AnyValue>(props: Props<T>) {
   const { values, errors, setValues } = useFormikContext<any>();
 
   const defaultSearchValue = React.useMemo(() => {
@@ -60,6 +61,8 @@ export function ValueSelectField(props: Props) {
 
   return (
     <AsyncListSearchField<AnyValue>
+      filterFn={props.filterFn}
+      placeholder="Select..."
       isClearable={props.isClearable}
       menuClassName="min-w-[350px] right-0"
       isDisabled={props.isDisabled}
