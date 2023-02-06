@@ -32,9 +32,9 @@
   },
   "devDependencies": {
     "@snailycad/permissions": "1.46.4",
-    "discord-api-types": "0.37.30",
+    "discord-api-types": "0.37.31",
     "tsup": "^6.5.0",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.5"
   },
   "tsup": {
     "entry": [

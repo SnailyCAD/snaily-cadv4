@@ -2938,9 +2938,9 @@ __metadata:
     "@snailycad/types": 1.46.4
     superjson: ^1.12.2
     tsup: ^6.5.0
-    typescript: ^4.9.4
-    vite: ^4.0.4
-    vitest: ^0.28.3
+    typescript: ^4.9.5
+    vite: ^4.1.1
+    vitest: ^0.28.4
   languageName: unknown
   linkType: soft
 
@@ -3044,9 +3044,9 @@ __metadata:
   resolution: "@snailycad/config@workspace:packages/config"
   dependencies:
     tsup: ^6.5.0
-    typescript: ^4.9.4
-    vite: ^4.0.4
-    vitest: ^0.28.3
+    typescript: ^4.9.5
+    vite: ^4.1.1
+    vitest: ^0.28.4
   languageName: unknown
   linkType: soft
 
@@ -3055,9 +3055,9 @@ __metadata:
   resolution: "@snailycad/permissions@workspace:packages/permissions"
   dependencies:
     tsup: ^6.5.0
-    typescript: ^4.9.4
-    vite: ^4.0.4
-    vitest: ^0.28.3
+    typescript: ^4.9.5
+    vite: ^4.1.1
+    vitest: ^0.28.4
     zod: ^3.20.2
   languageName: unknown
   linkType: soft
@@ -3068,7 +3068,7 @@ __metadata:
   dependencies:
     tslib: ^2.5.0
     tsup: ^6.5.0
-    typescript: ^4.9.4
+    typescript: ^4.9.5
     zod: ^3.20.2
   languageName: unknown
   linkType: soft
@@ -3078,9 +3078,9 @@ __metadata:
   resolution: "@snailycad/types@workspace:packages/types"
   dependencies:
     "@snailycad/permissions": 1.46.4
-    discord-api-types: 0.37.30
+    discord-api-types: 0.37.31
     tsup: ^6.5.0
-    typescript: ^4.9.4
+    typescript: ^4.9.5
   languageName: unknown
   linkType: soft
 
@@ -3123,12 +3123,12 @@ __metadata:
     "@snailycad/utils": 1.46.4
     react-bootstrap-icons: ^1.10.2
     rimraf: ^4.1.2
-    tailwind-merge: ^1.8.1
+    tailwind-merge: ^1.9.1
     tailwindcss: ^3.2.4
     tslib: ^2.5.0
     tsup: ^6.5.0
-    typescript: ^4.9.4
-    vite: ^4.0.4
+    typescript: ^4.9.5
+    vite: ^4.1.1
   peerDependencies:
     date-fns: ">=2.29.3"
     next-intl: ">=2.10.2"
@@ -3145,9 +3145,9 @@ __metadata:
     c8: ^7.12.0
     tslib: ^2.5.0
     tsup: ^6.5.0
-    typescript: ^4.9.4
-    vite: ^4.0.4
-    vitest: ^0.28.3
+    typescript: ^4.9.5
+    vite: ^4.1.1
+    vitest: ^0.28.4
   languageName: unknown
   linkType: soft
 
@@ -6398,17 +6398,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"discord-api-types@npm:0.37.30, discord-api-types@npm:^0.37.23":
-  version: 0.37.30
-  resolution: "discord-api-types@npm:0.37.30"
-  checksum: 0e257dd0df6a56d44e8f7b71cfae99b5b5d6c9841a08b477eb6bd69f6dd3bbdb3cefb2b82c899d726db2b2f11b90e2ea99ec94441cb074d07651a8e169be3244
-  languageName: node
-  linkType: hard
-
 "discord-api-types@npm:0.37.31":
   version: 0.37.31
   resolution: "discord-api-types@npm:0.37.31"
   checksum: 8886a4c320b2abd1fd32cb573d688a9b677b6d82107efe9ea70c6d571dc5eb04d27741320d5e2ae46b316282248176a82c2212de2d11fc32d1f5a869b6519f03
+  languageName: node
+  linkType: hard
+
+"discord-api-types@npm:^0.37.23":
+  version: 0.37.30
+  resolution: "discord-api-types@npm:0.37.30"
+  checksum: 0e257dd0df6a56d44e8f7b71cfae99b5b5d6c9841a08b477eb6bd69f6dd3bbdb3cefb2b82c899d726db2b2f11b90e2ea99ec94441cb074d07651a8e169be3244
   languageName: node
   linkType: hard
 
@@ -13413,10 +13413,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tailwind-merge@npm:^1.8.1":
-  version: 1.8.1
-  resolution: "tailwind-merge@npm:1.8.1"
-  checksum: ec1320c07aab3803845b9e4df6e3e96c86ddeeb6ed00c13f6040e6612655c74c98f9275d7ae13c8110cc2c9f9a591d5e3d3225794aea465b6b8434c3bf654641
+"tailwind-merge@npm:^1.9.1":
+  version: 1.9.1
+  resolution: "tailwind-merge@npm:1.9.1"
+  checksum: 351d740d17c8d503d554adff6e53539761af10742bcdf032d2e40032c7be5b36a866df4d87f7ba5fd1d6e8ae01d55b89cf70e491b2f093c49f8a56380c45fa45
   languageName: node
   linkType: hard
 
