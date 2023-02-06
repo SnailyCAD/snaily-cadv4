@@ -84,34 +84,37 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
       <div className={classNames("flex flex-col mb-3", props.className)}>
         <Label {...props} labelProps={labelProps} />
         <div className="relative">
-          <div
-            role="button"
-            {...buttonProps}
-            className={classNames(
-              buttonVariants.default,
-              buttonSizes.sm,
-              "cursor-default rounded-md w-full h-10 flex items-center justify-between border !bg-white dark:!bg-secondary hover:dark:!bg-secondary hover:dark:!brightness-100 hover:dark:!border-gray-500 hover:!border-gray-500",
-              props.errorMessage &&
-                "!border-red-500 focus:!border-red-700 dark:focus:!border-red-700",
-
-              (state.isOpen || state.isFocused) && "dark:!border-gray-500 !border-gray-500",
-              props.isDisabled && "!cursor-not-allowed opacity-80",
-            )}
-            ref={ref}
-          >
+          <div className="flex">
             <div
-              {...valueProps}
+              role="button"
+              {...buttonProps}
               className={classNames(
-                "flex items-center gap-2",
-                !(selectedItems || selectedItem) && "text-neutral-700 dark:text-gray-400",
+                buttonVariants.default,
+                buttonSizes.sm,
+                "cursor-default rounded-md -mr-1 !rounded-r-none w-full h-10 flex items-center justify-between border !bg-white dark:!bg-secondary hover:dark:!bg-secondary hover:dark:!brightness-100 hover:dark:!border-gray-500 hover:!border-gray-500",
+                props.errorMessage &&
+                  "!border-red-500 focus:!border-red-700 dark:focus:!border-red-700",
+
+                state.isOpen && "dark:!border-gray-500 !border-gray-500",
+                props.isDisabled && "!cursor-not-allowed opacity-80",
               )}
+              ref={ref}
             >
-              <SelectedItems selectionMode={selectionMode} state={state} />
+              <div
+                {...valueProps}
+                className={classNames(
+                  "flex items-center gap-2",
+                  !(selectedItems || selectedItem) && "text-neutral-700 dark:text-gray-400",
+                )}
+              >
+                <SelectedItems selectionMode={selectionMode} state={state} />
+              </div>
             </div>
             <SelectActions
               selectionMode={selectionMode}
               state={state}
               isClearable={props.isClearable}
+              errorMessage={props.errorMessage}
             />
           </div>
           {state.isOpen && (

@@ -3,10 +3,12 @@ import type { MultiSelectState } from "../../../hooks/select/useMultiSelectState
 import { ChevronDown, X } from "react-bootstrap-icons";
 import { Button } from "../../button";
 import { classNames } from "../../../utils/classNames";
+import type { ReactNode } from "react";
 
 interface Props<T extends SelectValue> {
   state: MultiSelectState<T>;
   selectionMode: "single" | "multiple";
+  errorMessage?: string | ReactNode;
   isClearable: boolean | undefined;
 }
 
@@ -15,31 +17,36 @@ export function SelectActions<T extends SelectValue>(props: Props<T>) {
   const selectedItem = props.selectionMode === "single" ? props.state.selectedItems?.[0] : null;
 
   return (
-    <div className="flex items-center">
+    <>
       {props.isClearable && (selectedItems || selectedItem) ? (
-        <>
-          <Button
-            variant="transparent"
-            className="dark:text-gray-400 hover:!text-white !px-0"
-            aria-label="Clear"
-            onPress={() => {
-              props.state.setSelectedKeys([]);
-            }}
-          >
-            <X className="h-6 w-6" />
-          </Button>
-          <div className="w-[1px] h-4 rounded-md dark:bg-gray-500/80 mx-1" />
-        </>
+        <Button
+          onPress={() => {
+            props.state.setSelectedKeys([]);
+          }}
+          className={classNames(
+            "px-2 !rounded-none -mx-[1px]",
+            props.state.isOpen && "!border-gray-800 dark:!border-gray-500",
+            props.errorMessage &&
+              "!border-red-500 focus:!border-red-700 dark:!focus:border-red-700",
+          )}
+          type="button"
+        >
+          <X className="w-5 h-5 fill-white" />
+        </Button>
       ) : null}
-      <span
+
+      <Button
+        onPress={() => props.state.open()}
+        size="xs"
+        type="button"
         className={classNames(
-          "cursor-pointer transition-transform origin-center",
-          props.state.isOpen && "rotate-180",
+          "rounded-l-none border-gray-200 dark:border-quinary",
+          props.state.isOpen && "!border-gray-800 dark:!border-gray-500",
+          props.errorMessage && "!border-red-500 focus:!border-red-700 dark:!focus:border-red-700",
         )}
-        aria-hidden="true"
       >
         <ChevronDown />
-      </span>
-    </div>
+      </Button>
+    </>
   );
 }
