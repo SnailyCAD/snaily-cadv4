@@ -4,20 +4,19 @@ import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { Form, Formik } from "formik";
-import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
-import { Select } from "components/form/Select";
 import type { ActiveOfficer } from "state/leo-state";
 import { useValues } from "context/ValuesContext";
 import { useDispatchState } from "state/dispatch/dispatch-state";
 import type { ActiveDeputy } from "state/ems-fd-state";
 import { makeUnitName } from "lib/utils";
-import { CombinedLeoUnit, StatusValueType, StatusValue } from "@snailycad/types";
+import { CombinedLeoUnit, StatusValueType, StatusValue, ValueType } from "@snailycad/types";
 import { classNames } from "lib/classNames";
 import { useUnitStatusChange } from "hooks/shared/useUnitsStatusChange";
 import { isUnitCombined } from "@snailycad/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import type { PostDispatchStatusUnmergeUnitById } from "@snailycad/types/api";
+import { ValueSelectField } from "components/form/inputs/value-select-field";
 
 interface Props {
   type?: "ems-fd" | "leo";
@@ -91,21 +90,18 @@ export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {
       className="w-[600px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, values, errors }) => (
+        {() => (
           <Form>
-            <FormField errorMessage={errors.status} label={t("status")}>
-              <Select
-                name="status"
-                value={values.status}
-                values={codes10.values
-                  .filter((v) => handleFilter(v, "departmentId" in unit ? unit.departmentId : null))
-                  .map((v) => ({
-                    label: v.value.value,
-                    value: v.id,
-                  }))}
-                onChange={handleChange}
-              />
-            </FormField>
+            <ValueSelectField
+              isClearable
+              values={codes10.values}
+              fieldName="status"
+              label={t("status")}
+              valueType={ValueType.CODES_10}
+              filterFn={(item) =>
+                handleFilter(item, "departmentId" in unit ? unit.departmentId : null)
+              }
+            />
 
             <footer
               className={classNames(

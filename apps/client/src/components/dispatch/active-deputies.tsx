@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "@snailycad/ui";
-import { ManageUnitModal } from "./modals/ManageUnit";
+import { ManageUnitModal } from "./modals/manage-unit-modal";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { ActiveDeputy, useEmsFdState } from "state/ems-fd-state";
