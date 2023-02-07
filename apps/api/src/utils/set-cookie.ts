@@ -1,6 +1,9 @@
-import process from "node:process";
 import type { Response } from "@tsed/common";
 import type { CookieSerializeOptions } from "cookie";
+import {
+  canSecureCookiesBeEnabled,
+  getEnvironmentVariableDOMAIN,
+} from "./validate-environment-variables";
 
 interface SetCookieOptions {
   name: string;
@@ -13,19 +16,16 @@ interface SetCookieOptions {
 export function setCookie(options: SetCookieOptions) {
   let extraOptions: CookieSerializeOptions = {};
 
-  if (process.env.SECURE_COOKIES_FOR_IFRAME === "true") {
+  if (canSecureCookiesBeEnabled()) {
     extraOptions = {
       secure: true,
       sameSite: "none",
     };
   }
 
-  /**
-   * dotenv parses "" (empty string) weirdly.
-   */
-  // eslint-disable-next-line quotes
-  if (process.env.DOMAIN?.replace('""', "")?.trim()) {
-    extraOptions.domain = process.env.DOMAIN;
+  const domain = getEnvironmentVariableDOMAIN();
+  if (domain) {
+    extraOptions.domain = domain;
   }
 
   options.res.cookie(options.name, options.value, {

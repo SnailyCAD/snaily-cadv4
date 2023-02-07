@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { parseCORSOrigin } from "../src/utils/parse-cors-origin";
+import { parseCORSOrigin } from "../src/utils/validate-environment-variables";
 
 describe("parseCORSOrigin", () => {
   test("Should remove last / from the CORS origin", () => {

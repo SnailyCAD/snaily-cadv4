@@ -11,6 +11,7 @@ import * as Tracing from "@sentry/tracing";
 
 import { prisma } from "lib/data/prisma";
 import { registerDiscordRolesMetadata } from "lib/discord/register-metadata";
+import { canSecureCookiesBeEnabled } from "utils/validate-environment-variables";
 
 Sentry.init({
   dsn: "https://308dd96b826c4e38a814fc9bae681687@o518232.ingest.sentry.io/6553288",
@@ -60,6 +61,12 @@ async function bootstrap() {
     const nodeVersion = process.versions.node;
 
     console.log(`SnailyCADv4 is running ${versionStr}. Node version: ${nodeVersion}`);
+
+    if (canSecureCookiesBeEnabled() === false) {
+      $log.error(
+        "Secure cookies (SECURE_COOKIES_FOR_IFRAME) could not be enabled because this SnailyCAD instance is not using HTTPS. https://docs.snailycad.org/docs/errors/secure-cookies-for-iframe",
+      );
+    }
   } catch (er) {
     $log.error(er);
   }

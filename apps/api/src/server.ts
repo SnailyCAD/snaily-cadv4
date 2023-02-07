@@ -22,7 +22,7 @@ import cors from "cors";
 import { checkForUpdates } from "utils/check-for-updates";
 import { getCADVersion } from "@snailycad/utils/version";
 import * as Sentry from "@sentry/node";
-import { parseCORSOrigin } from "utils/parse-cors-origin";
+import { parseCORSOrigin } from "utils/validate-environment-variables";
 
 const rootDir = __dirname;
 const processEnvPort = process.env.PORT || process.env.PORT_API;
