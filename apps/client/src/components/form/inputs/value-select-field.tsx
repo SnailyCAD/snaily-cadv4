@@ -23,12 +23,12 @@ interface Props<T extends AnyValue> {
 export function ValueSelectField<T extends AnyValue>(props: Props<T>) {
   const { values, errors, setValues } = useFormikContext<any>();
 
-  const defaultSearchValue = React.useMemo(() => {
+  function getDefaultSearchValue() {
     const value = props.values.find((v) => v.id === values[props.fieldName]);
     return value ? getValueStrFromValue(value) : "";
-  }, [props.values]); // eslint-disable-line react-hooks/exhaustive-deps
+  }
 
-  const [search, setSearch] = React.useState(defaultSearchValue);
+  const [search, setSearch] = React.useState<string>(getDefaultSearchValue());
 
   useLoadValuesClientSide({
     enabled: !hasFetched,
