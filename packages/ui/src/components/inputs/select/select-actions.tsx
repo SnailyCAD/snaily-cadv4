@@ -16,15 +16,18 @@ export function SelectActions<T extends SelectValue>(props: Props<T>) {
   const selectedItems = props.selectionMode === "multiple" ? props.state.selectedItems : null;
   const selectedItem = props.selectionMode === "single" ? props.state.selectedItems?.[0] : null;
 
+  const showClearableButton = props.isClearable && (selectedItems || selectedItem);
+
   return (
     <>
-      {props.isClearable && (selectedItems || selectedItem) ? (
+      {showClearableButton ? (
         <Button
           onPress={() => {
             props.state.setSelectedKeys([]);
           }}
           className={classNames(
             "px-2 !rounded-none -mx-[1px]",
+            "group-hover:dark:!border-gray-500 group-hover:!border-gray-500",
             props.state.isOpen && "!border-gray-800 dark:!border-gray-500",
             props.errorMessage &&
               "!border-red-500 focus:!border-red-700 dark:!focus:border-red-700",
@@ -41,6 +44,8 @@ export function SelectActions<T extends SelectValue>(props: Props<T>) {
         type="button"
         className={classNames(
           "rounded-l-none border-gray-200 dark:border-quinary",
+          "group-hover:dark:!border-gray-500 group-hover:!border-gray-500",
+          showClearableButton ? "-ml-[1px]" : "-ml-[1.5px]",
           props.state.isOpen && "!border-gray-800 dark:!border-gray-500",
           props.errorMessage && "!border-red-500 focus:!border-red-700 dark:!focus:border-red-700",
         )}

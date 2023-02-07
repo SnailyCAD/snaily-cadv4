@@ -142,12 +142,17 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
     <div className={classNames("text-field flex flex-col mb-3", props.className)}>
       <Label {...props} labelProps={labelProps} />
 
-      <div className={classNames("relative", includeMenu && "flex")}>
+      <div className={classNames("relative group", includeMenu && "flex")}>
         <Input
           {...inputProps}
           ref={ref}
           errorMessage={props.errorMessage}
-          className={classNames(inputProps.className, "-mr-[1px]", includeMenu && "rounded-r-none")}
+          className={classNames(
+            inputProps.className,
+            "-mr-[1px]",
+            includeMenu && "rounded-r-none",
+            "group-hover:dark:!border-gray-500 group-hover:!border-gray-500",
+          )}
         />
         {list.isLoading ? (
           <div
@@ -164,6 +169,7 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
             onPress={() => state.setSelectedKey("cleared")}
             className={classNames(
               "px-2 !rounded-none -mx-[1px]",
+              "group-hover:dark:!border-gray-500 group-hover:!border-gray-500",
               state.isFocused
                 ? "border-gray-800 dark:border-gray-500"
                 : "border-gray-200 dark:border-quinary",
@@ -184,6 +190,7 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
             type="button"
             className={classNames(
               "rounded-l-none border-gray-200 dark:border-quinary",
+              "group-hover:dark:!border-gray-500 group-hover:!border-gray-500",
               showClearableButton ? "-ml-[1px]" : "-ml-[1.5px]",
               state.isFocused && "border-gray-800 dark:border-gray-500",
               props.errorMessage &&
