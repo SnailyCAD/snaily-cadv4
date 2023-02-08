@@ -88,6 +88,7 @@ export type Delete911CallEventByIdData = Get911CallsData["calls"][number];
  * @route /dispatch
  */
 export interface GetDispatchData {
+  areaOfPlay: string | null;
   activeDispatchersCount: number;
   userActiveDispatcher:
     | (Prisma.ActiveDispatchers & { user: Pick<Types.User, "id" | "username"> })

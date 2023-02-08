@@ -46,7 +46,7 @@ export class DispatchController {
   })
   @UseAfter(HandleInactivity)
   async getDispatchData(
-    @Context("cad") cad: { miscCadSettings: MiscCadSettings | null },
+    @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings | null },
     @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.GetDispatchData> {
     const dispatcherInactivityTimeout = getInactivityFilter(
@@ -77,6 +77,7 @@ export class DispatchController {
     const correctedIncidents = activeIncidents.map(officerOrDeputyToUnit);
 
     return {
+      areaOfPlay: cad.areaOfPlay || null,
       activeIncidents: correctedIncidents,
       activeDispatchersCount,
       userActiveDispatcher,
