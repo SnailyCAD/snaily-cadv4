@@ -8,5 +8,9 @@ export function getAPIUrl(): string {
     return "http://localhost:8080/v1";
   }
 
-  return envUrl;
+  if (envUrl.endsWith("/v1")) {
+    return envUrl;
+  }
+
+  return `${envUrl}/v1`;
 }
