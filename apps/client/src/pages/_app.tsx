@@ -16,7 +16,6 @@ import { useMounted } from "@casper124578/useful/hooks/useMounted";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import NProgress from "nprogress";
 
 import type { GetErrorMapOptions } from "lib/validation/zod-error-map";
 
@@ -40,8 +39,14 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
   trySetUserTimezone();
 
   React.useEffect(() => {
-    const handleRouteStart = () => NProgress.start();
-    const handleRouteDone = () => NProgress.done();
+    const handleRouteStart = async () => {
+      const NProgress = await import("nprogress");
+      NProgress.start();
+    };
+    const handleRouteDone = async () => {
+      const NProgress = await import("nprogress");
+      NProgress.done();
+    };
 
     router.events.on("routeChangeStart", handleRouteStart);
     router.events.on("routeChangeComplete", handleRouteDone);
