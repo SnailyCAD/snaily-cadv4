@@ -40,7 +40,7 @@ function tryAndMakeURL(url: string | undefined) {
 export function getEnvironmentVariableDOMAIN() {
   let domain;
 
-  if (!canSecureCookiesBeEnabled()) {
+  if (canSecureCookiesBeEnabled() === false) {
     return undefined;
   }
 

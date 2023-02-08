@@ -16,7 +16,7 @@ interface SetCookieOptions {
 export function setCookie(options: SetCookieOptions) {
   let extraOptions: CookieSerializeOptions = {};
 
-  if (canSecureCookiesBeEnabled()) {
+  if (canSecureCookiesBeEnabled() === true) {
     extraOptions = {
       secure: true,
       sameSite: "none",
