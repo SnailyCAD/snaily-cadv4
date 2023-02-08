@@ -11,7 +11,7 @@ export function parseCORSOrigin(origin: string) {
 
 const SECURE_COOKIES_FOR_IFRAME = process.env.SECURE_COOKIES_FOR_IFRAME === "true";
 const NEXT_PUBLIC_PROD_ORIGIN = process.env.NEXT_PUBLIC_PROD_ORIGIN;
-const NEXT_PUBLIC_CLIENT_URL = process.env.NEXT_PUBLIC_CLIENT_URL;
+const NEXT_PUBLIC_CLIENT_URL = process.env.NEXT_PUBLIC_CLIENT_URL || process.env.CORS_ORIGIN_URL;
 
 export function canSecureCookiesBeEnabled() {
   if (!SECURE_COOKIES_FOR_IFRAME) return undefined;
