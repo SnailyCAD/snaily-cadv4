@@ -134,9 +134,10 @@ export class UserController {
       value: "",
     });
 
-    await prisma.activeDispatchers.deleteMany({
-      where: { userId },
-    });
+    await Promise.all([
+      prisma.activeDispatchers.deleteMany({ where: { userId } }),
+      prisma.userSession.deleteMany({ where: { userId } }),
+    ]);
 
     const officer = await prisma.officer.findFirst({
       where: {
