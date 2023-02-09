@@ -28,23 +28,31 @@ function canSecureContextBeEnabled() {
 export function setCookie(options: SetCookieOptions) {
   let extraOptions: CookieSerializeOptions = {};
 
-  const enableSecureContext = canSecureContextBeEnabled();
-  if (enableSecureContext) {
-    extraOptions = {
-      secure: true,
-      sameSite: "lax",
-    };
-  }
-
-  if (process.env.SECURE_COOKIES_FOR_IFRAME === "true") {
-    extraOptions = {
-      secure: true,
-      sameSite: "none",
-    };
-  }
-
   if (process.env.DOMAIN?.trim()) {
     extraOptions.domain = process.env.DOMAIN;
+
+    /**
+     * set the secure context to true if the client and API are using https.
+     */
+    const enableSecureContext = canSecureContextBeEnabled();
+    if (enableSecureContext) {
+      extraOptions = {
+        secure: true,
+        sameSite: "lax",
+      };
+    }
+
+    /**
+     * if the client and API are using https, we can enable the secure context
+     * and set the sameSite to none. This will allow the cookie to be sent to the api from the
+     * client when the client is loaded in an iframe.
+     */
+    if (process.env.SECURE_COOKIES_FOR_IFRAME === "true" && canSecureContextBeEnabled()) {
+      extraOptions = {
+        secure: true,
+        sameSite: "none",
+      };
+    }
   }
 
   options.res.cookie(options.name, options.value, {
