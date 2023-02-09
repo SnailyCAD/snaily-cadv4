@@ -108,13 +108,7 @@ export class DiscordSettingsController {
     }
 
     const data = validateSchema(DISCORD_SETTINGS_SCHEMA, body);
-    const roles = await performDiscordRequest<RESTGetAPIGuildRolesResult>({
-      handler(rest) {
-        return rest.get(Routes.guildRoles(guildId));
-      },
-    });
-
-    const rolesBody = Array.isArray(roles) ? roles : [];
+    const roles = await this.getDiscordRoles(parseDiscordGuildIds(guildId));
 
     const rolesToCheck = {
       leoRoles: data.leoRoles,
@@ -131,7 +125,7 @@ export class DiscordSettingsController {
     Object.values(rolesToCheck).map((roleId) => {
       if (Array.isArray(roleId) && roleId.length <= 0) return;
 
-      if (roleId && !this.doesRoleExist(rolesBody, roleId)) {
+      if (roleId && !this.doesRoleExist(roles, roleId)) {
         throw new BadRequest("invalidRoleId");
       }
     });

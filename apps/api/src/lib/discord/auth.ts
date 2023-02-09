@@ -10,6 +10,8 @@ async function findDiscordMember(discordId: string | null) {
   if (!GUILD_ID) return null;
 
   const guildIds = parseDiscordGuildIds(GUILD_ID);
+  const memberRoles: string[] = [];
+  let _member = null;
 
   for (const guildId of guildIds) {
     try {
@@ -20,13 +22,16 @@ async function findDiscordMember(discordId: string | null) {
         },
       });
 
-      if (member) return { ...member, guildId };
+      if (member) {
+        memberRoles.push(...member.roles);
+        _member = member;
+      }
     } catch {
-      return null;
+      continue;
     }
   }
 
-  return null;
+  return { ..._member, roles: memberRoles };
 }
 
 /**
@@ -63,7 +68,6 @@ export async function updateMemberRolesLogin<
     if (!discordMember?.user?.id || discordMember.pending) return;
 
     const memberObj = {
-      guildId: discordMember.guildId,
       roles: discordMember.roles,
     };
 
@@ -120,10 +124,7 @@ export async function updateMemberRolesLogin<
       whitelistStatus: makeWhitelistStatus(cad?.whitelisted ?? false, hasWhitelistAccess),
       rank:
         user.rank !== Rank.OWNER
-          ? doesDiscordMemberHaveRole(discordRoles.adminRoleId, {
-              guildId: discordMember.guildId,
-              roles: discordMember.roles,
-            })
+          ? doesDiscordMemberHaveRole(discordRoles.adminRoleId, { roles: discordMember.roles })
             ? Rank.ADMIN
             : Rank.USER
           : undefined,
@@ -142,15 +143,13 @@ export async function updateMemberRolesLogin<
 
 function doesDiscordMemberHaveRole(
   cadRoles: DiscordRole[] | string | null,
-  member: { guildId: string; roles: string[] },
+  member: { roles: string[] },
 ) {
   if (!cadRoles) return undefined;
 
   if (Array.isArray(cadRoles)) {
     if (cadRoles.length <= 0) return undefined;
-    return cadRoles
-      .filter((v) => v.guildId === member.guildId)
-      .some((role) => member.roles.includes(role.id));
+    return cadRoles.some((role) => member.roles.includes(role.id));
   }
 
   return member.roles.includes(cadRoles);
@@ -164,7 +163,9 @@ function makeWhitelistStatus(cadWhitelisted: boolean, hasRole: boolean | undefin
   return hasRole ? WhitelistStatus.ACCEPTED : WhitelistStatus.PENDING;
 }
 
-async function getCustomRoleDiscordRolesByDiscordMember(discordMember: APIGuildMember) {
+async function getCustomRoleDiscordRolesByDiscordMember(
+  discordMember: Pick<APIGuildMember, "roles">,
+) {
   const orClause = discordMember.roles.map((id) => ({ discordRoleId: id }));
 
   const customRoles = await prisma.customRole.findMany({
