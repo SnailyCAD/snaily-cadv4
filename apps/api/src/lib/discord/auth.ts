@@ -20,7 +20,7 @@ async function findDiscordMember(discordId: string | null) {
         },
       });
 
-      if (member) return member;
+      if (member) return { ...member, guildId };
     } catch {
       return null;
     }
@@ -62,24 +62,20 @@ export async function updateMemberRolesLogin<
     const discordMember = await findDiscordMember(user.discordId);
     if (!discordMember?.user?.id || discordMember.pending) return;
 
-    const isLeo = doesDiscordMemberHaveRole(discordRoles.leoRoles, discordMember.roles);
-    const isEmsFd = doesDiscordMemberHaveRole(discordRoles.emsFdRoles, discordMember.roles);
-    const isDispatch = doesDiscordMemberHaveRole(discordRoles.dispatchRoles, discordMember.roles);
-    const isTow = doesDiscordMemberHaveRole(discordRoles.towRoles, discordMember.roles);
-    const isTaxi = doesDiscordMemberHaveRole(discordRoles.taxiRoles, discordMember.roles);
-    const isSupervisor = doesDiscordMemberHaveRole(
-      discordRoles.leoSupervisorRoles,
-      discordMember.roles,
-    );
-    const isCourthouse = doesDiscordMemberHaveRole(
-      discordRoles.courthouseRoles,
-      discordMember.roles,
-    );
-    const isAdmin = doesDiscordMemberHaveRole(discordRoles.adminRoleId, discordMember.roles);
-    const hasWhitelistAccess = doesDiscordMemberHaveRole(
-      discordRoles.whitelistedRoleId,
-      discordMember.roles,
-    );
+    const memberObj = {
+      guildId: discordMember.guildId,
+      roles: discordMember.roles,
+    };
+
+    const isLeo = doesDiscordMemberHaveRole(discordRoles.leoRoles, memberObj);
+    const isEmsFd = doesDiscordMemberHaveRole(discordRoles.emsFdRoles, memberObj);
+    const isDispatch = doesDiscordMemberHaveRole(discordRoles.dispatchRoles, memberObj);
+    const isTow = doesDiscordMemberHaveRole(discordRoles.towRoles, memberObj);
+    const isTaxi = doesDiscordMemberHaveRole(discordRoles.taxiRoles, memberObj);
+    const isSupervisor = doesDiscordMemberHaveRole(discordRoles.leoSupervisorRoles, memberObj);
+    const isCourthouse = doesDiscordMemberHaveRole(discordRoles.courthouseRoles, memberObj);
+    const isAdmin = doesDiscordMemberHaveRole(discordRoles.adminRoleId, memberObj);
+    const hasWhitelistAccess = doesDiscordMemberHaveRole(discordRoles.whitelistedRoleId, memberObj);
 
     const grantablePermissions = {
       leo: { permissions: discordRoles.leoRolePermissions, value: isLeo },
@@ -124,7 +120,10 @@ export async function updateMemberRolesLogin<
       whitelistStatus: makeWhitelistStatus(cad?.whitelisted ?? false, hasWhitelistAccess),
       rank:
         user.rank !== Rank.OWNER
-          ? doesDiscordMemberHaveRole(discordRoles.adminRoleId, discordMember.roles)
+          ? doesDiscordMemberHaveRole(discordRoles.adminRoleId, {
+              guildId: discordMember.guildId,
+              roles: discordMember.roles,
+            })
             ? Rank.ADMIN
             : Rank.USER
           : undefined,
@@ -141,19 +140,20 @@ export async function updateMemberRolesLogin<
   }
 }
 
-// TODO: check if user guildId matches requested role guildId
 function doesDiscordMemberHaveRole(
   cadRoles: DiscordRole[] | string | null,
-  discordMemberRoleIds: string[],
+  member: { guildId: string; roles: string[] },
 ) {
   if (!cadRoles) return undefined;
 
   if (Array.isArray(cadRoles)) {
     if (cadRoles.length <= 0) return undefined;
-    return cadRoles.some((role) => discordMemberRoleIds.includes(role.id));
+    return cadRoles
+      .filter((v) => v.guildId === member.guildId)
+      .some((role) => member.roles.includes(role.id));
   }
 
-  return discordMemberRoleIds.includes(cadRoles);
+  return member.roles.includes(cadRoles);
 }
 
 function makeWhitelistStatus(cadWhitelisted: boolean, hasRole: boolean | undefined) {
