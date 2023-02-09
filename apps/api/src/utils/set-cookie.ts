@@ -1,5 +1,6 @@
 import type { Response } from "@tsed/common";
 import type { CookieSerializeOptions } from "cookie";
+import { isIP } from "is-ip";
 
 interface SetCookieOptions {
   name: string;
@@ -27,8 +28,12 @@ function canSecureContextBeEnabled() {
 
 export function setCookie(options: SetCookieOptions) {
   let extraOptions: CookieSerializeOptions = {};
+  const domain = process.env.DOMAIN?.trim();
+  const url = getURL(domain);
 
-  if (process.env.DOMAIN?.trim()) {
+  const isAnIP = url && isIP(url.hostname);
+
+  if (url && !isAnIP) {
     extraOptions.domain = process.env.DOMAIN;
 
     /**
