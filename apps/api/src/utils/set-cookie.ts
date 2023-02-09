@@ -53,7 +53,9 @@ export function setCookie(options: SetCookieOptions) {
 
     if (enableSecureContext) {
       extraOptions = {
+        ...extraOptions,
         secure: true,
+        sameSite: "lax",
       };
     }
 
