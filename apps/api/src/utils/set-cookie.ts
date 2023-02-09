@@ -10,8 +10,8 @@ interface SetCookieOptions {
   httpOnly?: boolean;
 }
 
-function getURL(url: string | undefined, returnNull: false): URL | null;
-function getURL(url: string | undefined, returnNull: true): string | URL | null;
+function getURL(url: string | undefined, returnNull: false): string | URL | null;
+function getURL(url: string | undefined, returnNull: true): URL | null;
 function getURL(url: string | undefined, returnNull: boolean) {
   try {
     if (!url) {
@@ -26,11 +26,8 @@ function getURL(url: string | undefined, returnNull: boolean) {
 }
 
 function canSecureContextBeEnabled() {
-  const clientURL = getURL(
-    process.env.NEXT_PUBLIC_CLIENT_URL || process.env.CORS_ORIGIN_URL,
-    false,
-  );
-  const apiURL = getURL(process.env.NEXT_PUBLIC_PROD_ORIGIN, false);
+  const clientURL = getURL(process.env.NEXT_PUBLIC_CLIENT_URL || process.env.CORS_ORIGIN_URL, true);
+  const apiURL = getURL(process.env.NEXT_PUBLIC_PROD_ORIGIN, true);
 
   return clientURL?.protocol === "https:" && apiURL?.protocol === "https:";
 }
@@ -38,14 +35,14 @@ function canSecureContextBeEnabled() {
 export function setCookie(options: SetCookieOptions) {
   let extraOptions: CookieSerializeOptions = {};
   const domain = process.env.DOMAIN?.trim();
-  const url = getURL(domain, true);
+  const url = getURL(domain, false);
   const hostname = typeof url === "string" ? url : url?.hostname;
 
   const isAnIP = hostname && isIP(hostname);
 
   console.log({ isAnIP, domain, url });
 
-  if (url && !isAnIP) {
+  if (!isAnIP) {
     extraOptions.domain = domain;
 
     /**
