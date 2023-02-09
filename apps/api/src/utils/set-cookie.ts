@@ -1,6 +1,8 @@
 import type { Response } from "@tsed/common";
 import type { CookieSerializeOptions } from "cookie";
-import { isIP } from "is-ip";
+import pkg from "is-ip";
+
+const { isIP } = pkg;
 
 interface SetCookieOptions {
   name: string;
