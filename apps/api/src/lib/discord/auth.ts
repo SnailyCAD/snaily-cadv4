@@ -4,6 +4,30 @@ import { GUILD_ID } from "lib/discord/config";
 import { prisma } from "lib/data/prisma";
 import { manyToManyHelper } from "lib/data/many-to-many";
 import { performDiscordRequest } from "./performDiscordRequest";
+import { parseDiscordGuildIds } from "./utils";
+
+async function findDiscordMember(discordId: string | null) {
+  if (!GUILD_ID) return null;
+
+  const guildIds = parseDiscordGuildIds(GUILD_ID);
+
+  for (const guildId of guildIds) {
+    try {
+      const member = await performDiscordRequest<RESTGetAPIGuildMemberResult>({
+        async handler(rest) {
+          if (!discordId) return null;
+          return rest.get(Routes.guildMember(guildId, discordId));
+        },
+      });
+
+      if (member) return member;
+    } catch {
+      return null;
+    }
+  }
+
+  return null;
+}
 
 /**
  * fetch the roles from the wanting to authenticate user and append the respective permissions to the user
@@ -35,13 +59,7 @@ export async function updateMemberRolesLogin<
 
     const cad = await prisma.cad.findFirst();
 
-    const discordMember = await performDiscordRequest<RESTGetAPIGuildMemberResult>({
-      async handler(rest) {
-        if (!GUILD_ID || !user.discordId) return null;
-        return rest.get(Routes.guildMember(GUILD_ID, user.discordId));
-      },
-    });
-
+    const discordMember = await findDiscordMember(user.discordId);
     if (!discordMember?.user?.id || discordMember.pending) return;
 
     const isLeo = doesDiscordMemberHaveRole(discordRoles.leoRoles, discordMember.roles);
@@ -123,6 +141,7 @@ export async function updateMemberRolesLogin<
   }
 }
 
+// TODO: check if user guildId matches requested role guildId
 function doesDiscordMemberHaveRole(
   cadRoles: DiscordRole[] | string | null,
   discordMemberRoleIds: string[],
