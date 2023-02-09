@@ -22,6 +22,11 @@ interface SetUserPreferencesCookiesOptions {
 
 export async function setUserTokenCookies(options: SetUserPreferencesCookiesOptions) {
   const sessionId = cuid();
+  /**
+   * create a new user session. This session is connected to the `sessions` array in the user model.
+   * to find the user connected to this session, we try to find the user via `sessions` array
+   * in `getSessionUser.ts`
+   */
   const session = await prisma.userSession.create({
     data: {
       id: sessionId,
