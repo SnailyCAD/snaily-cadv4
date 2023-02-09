@@ -33,13 +33,17 @@ export function setCookie(options: SetCookieOptions) {
 
   const isAnIP = url && isIP(url.hostname);
 
+  console.log({ isAnIP, domain, url });
+
   if (url && !isAnIP) {
-    extraOptions.domain = process.env.DOMAIN;
+    extraOptions.domain = domain;
 
     /**
      * set the secure context to true if the client and API are using https.
      */
     const enableSecureContext = canSecureContextBeEnabled();
+    console.log({ enableSecureContext });
+
     if (enableSecureContext) {
       extraOptions = {
         secure: true,
@@ -59,6 +63,8 @@ export function setCookie(options: SetCookieOptions) {
       };
     }
   }
+
+  console.log({ extraOptions });
 
   options.res.cookie(options.name, options.value, {
     httpOnly: options.httpOnly ?? true,
