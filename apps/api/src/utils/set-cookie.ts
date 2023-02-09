@@ -9,8 +9,32 @@ interface SetCookieOptions {
   httpOnly?: boolean;
 }
 
+function getURL(url: string | undefined) {
+  try {
+    if (!url) return null;
+    return new URL(url);
+  } catch {
+    return null;
+  }
+}
+
+function canSecureContextBeEnabled() {
+  const clientURL = getURL(process.env.NEXT_PUBLIC_CLIENT_URL || process.env.CORS_ORIGIN_URL);
+  const apiURL = getURL(process.env.NEXT_PUBLIC_PROD_ORIGIN);
+
+  return clientURL?.protocol === "https:" && apiURL?.protocol === "https:";
+}
+
 export function setCookie(options: SetCookieOptions) {
   let extraOptions: CookieSerializeOptions = {};
+
+  const enableSecureContext = canSecureContextBeEnabled();
+  if (enableSecureContext) {
+    extraOptions = {
+      secure: true,
+      sameSite: "lax",
+    };
+  }
 
   if (process.env.SECURE_COOKIES_FOR_IFRAME === "true") {
     extraOptions = {
@@ -19,11 +43,7 @@ export function setCookie(options: SetCookieOptions) {
     };
   }
 
-  /**
-   * dotenv parses "" (empty string) weirdly.
-   */
-  // eslint-disable-next-line quotes
-  if (process.env.DOMAIN?.replace('""', "")?.trim()) {
+  if (process.env.DOMAIN?.trim()) {
     extraOptions.domain = process.env.DOMAIN;
   }
 
