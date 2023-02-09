@@ -66,6 +66,7 @@ export function setCookie(options: SetCookieOptions) {
      */
     if (process.env.SECURE_COOKIES_FOR_IFRAME === "true" && canSecureContextBeEnabled()) {
       extraOptions = {
+        ...extraOptions,
         secure: true,
         sameSite: "none",
       };
