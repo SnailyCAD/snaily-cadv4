@@ -1,4 +1,4 @@
-import { User, CadFeature, Feature, cad, Prisma, WhitelistStatus } from "@prisma/client";
+import { User, Feature, cad, Prisma, WhitelistStatus } from "@prisma/client";
 import { WEAPON_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
@@ -29,7 +29,7 @@ export class WeaponController {
   async getCitizenWeapons(
     @PathParams("citizenId") citizenId: string,
     @Context("user") user: User,
-    @Context("cad") cad: cad,
+    @Context("cad") cad: { features?: Record<Feature, boolean> },
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query?: string,
   ): Promise<APITypes.GetCitizenWeaponsData> {
@@ -73,7 +73,7 @@ export class WeaponController {
   @Description("Register a new weapon")
   async registerWeapon(
     @Context("user") user: User,
-    @Context("cad") cad: cad & { features?: CadFeature[] },
+    @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
     @BodyParams() body: unknown,
   ): Promise<APITypes.PostCitizenWeaponData> {
     const data = validateSchema(WEAPON_SCHEMA, body);
@@ -150,7 +150,7 @@ export class WeaponController {
   @Description("Update a registered weapon")
   async updateWeapon(
     @Context("user") user: User,
-    @Context("cad") cad: cad & { features?: CadFeature[] },
+    @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
     @PathParams("id") weaponId: string,
     @BodyParams() body: unknown,
   ): Promise<APITypes.PutCitizenWeaponData> {
@@ -233,7 +233,7 @@ export class WeaponController {
   @Description("Delete a registered weapon")
   async deleteWeapon(
     @Context("user") user: User,
-    @Context("cad") cad: cad,
+    @Context("cad") cad: { features?: Record<Feature, boolean> },
     @PathParams("id") weaponId: string,
   ): Promise<APITypes.DeleteCitizenWeaponData> {
     const weapon = await prisma.weapon.findUnique({

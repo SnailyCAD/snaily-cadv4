@@ -1,4 +1,4 @@
-import type { Prisma, cad, CadFeature, MiscCadSettings } from "@prisma/client";
+import type { Prisma, cad, Feature, MiscCadSettings } from "@prisma/client";
 import type { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { generateString } from "utils/generate-string";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
@@ -8,7 +8,7 @@ import { generateLicenseNumber } from "./generate-license-number";
 interface Options {
   data: Partial<Zod.infer<typeof CREATE_CITIZEN_SCHEMA>>;
   defaultLicenseValueId?: string | null;
-  cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings | null };
+  cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings | null };
 }
 
 export async function citizenObjectFromData(options: Options) {

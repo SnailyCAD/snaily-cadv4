@@ -1,13 +1,4 @@
-import {
-  Rank,
-  type cad,
-  WhitelistStatus,
-  Feature,
-  CadFeature,
-  User,
-  Prisma,
-  CustomRole,
-} from "@prisma/client";
+import { Rank, type cad, WhitelistStatus, Feature, User, Prisma, CustomRole } from "@prisma/client";
 import { PathParams, BodyParams, Context, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -560,7 +551,7 @@ export class ManageUsersController {
   async revokeApiToken(
     @Context("sessionUserId") sessionUserId: string,
     @PathParams("userId") userId: string,
-    @Context("cad") cad: cad & { features?: CadFeature[] },
+    @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
   ): Promise<APITypes.DeleteManageUserRevokeApiTokenData> {
     const isUserAPITokensEnabled = isFeatureEnabled({
       feature: Feature.USER_API_TOKENS,

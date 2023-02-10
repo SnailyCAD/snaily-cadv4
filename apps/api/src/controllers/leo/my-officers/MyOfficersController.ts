@@ -5,7 +5,7 @@ import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-par
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/is-auth";
-import { cad, User, MiscCadSettings, CadFeature, Rank } from "@prisma/client";
+import { Feature, cad, User, MiscCadSettings, Rank } from "@prisma/client";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
@@ -49,7 +49,8 @@ export class MyOfficersController {
   async createOfficer(
     @BodyParams() body: unknown,
     @Context("user") user: User,
-    @Context("cad") cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings },
+    @Context("cad")
+    cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings },
   ): Promise<APITypes.PostMyOfficersData> {
     return upsertOfficer({ body, user, cad });
   }
@@ -63,7 +64,8 @@ export class MyOfficersController {
     @PathParams("id") officerId: string,
     @BodyParams() body: unknown,
     @Context("user") user: User,
-    @Context("cad") cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings },
+    @Context("cad")
+    cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings },
   ): Promise<APITypes.PutMyOfficerByIdData> {
     const existingOfficer = await prisma.officer.findFirst({
       where: {

@@ -16,6 +16,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { setUserTokenCookies } from "lib/auth/setUserTokenCookies";
 import { validateGoogleCaptcha } from "lib/auth/validate-google-captcha";
 import { validateDiscordAndSteamId } from "lib/auth/validate-discord-steam-id";
+import { createFeaturesObject } from "middlewares/is-enabled";
 
 @Controller("/auth")
 @ContentType("application/json")
@@ -61,7 +62,7 @@ export class AuthController {
     // only allow Discord auth (if enabled)
     const cad = await prisma.cad.findFirst({ include: { features: true } });
     const regularAuthEnabled = isFeatureEnabled({
-      features: cad?.features,
+      features: createFeaturesObject(cad?.features),
       feature: Feature.ALLOW_REGULAR_LOGIN,
       defaultReturn: true,
     });
@@ -138,7 +139,7 @@ export class AuthController {
 
     // only allow Discord auth
     const regularAuthEnabled = isFeatureEnabled({
-      features: preCad?.features,
+      features: createFeaturesObject(preCad?.features),
       feature: Feature.ALLOW_REGULAR_LOGIN,
       defaultReturn: true,
     });

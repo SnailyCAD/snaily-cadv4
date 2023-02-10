@@ -14,7 +14,7 @@ import { IsAuth } from "middlewares/is-auth";
 import {
   Citizen,
   Feature,
-  Record,
+  Record as CADRecord,
   Violation,
   Warrant,
   WarrantStatus,
@@ -80,7 +80,7 @@ export class RecordsController {
     permissions: [Permissions.ManageWarrants, Permissions.DeleteCitizenRecords],
   })
   async createWarrant(
-    @Context("cad") cad: cad,
+    @Context("cad") cad: { features?: Record<Feature, boolean> },
     @Context("user") user: User,
     @BodyParams() body: unknown,
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
@@ -219,7 +219,7 @@ export class RecordsController {
   })
   async createTicket(
     @BodyParams() body: unknown,
-    @Context("cad") cad: cad,
+    @Context("cad") cad: { features?: Record<Feature, boolean> },
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
   ): Promise<APITypes.PostRecordsData> {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
@@ -249,7 +249,7 @@ export class RecordsController {
     permissions: [Permissions.Leo],
   })
   async updateRecordById(
-    @Context("cad") cad: cad,
+    @Context("cad") cad: { features?: Record<Feature, boolean> },
     @BodyParams() body: unknown,
     @PathParams("id") recordId: string,
   ): Promise<APITypes.PutRecordsByIdData> {
@@ -305,7 +305,7 @@ export class RecordsController {
   }
 
   private async handleDiscordWebhook(
-    ticket: ((Record & { violations: Violation[] }) | Warrant) & {
+    ticket: ((CADRecord & { violations: Violation[] }) | Warrant) & {
       citizen: Citizen & { user?: Pick<User, "discordId"> | null };
     },
     type: DiscordWebhookType = DiscordWebhookType.CITIZEN_RECORD,
@@ -325,7 +325,7 @@ export class RecordsController {
 }
 
 async function createWebhookData(
-  data: ((Record & { violations: Violation[] }) | Warrant) & { citizen: Citizen },
+  data: ((CADRecord & { violations: Violation[] }) | Warrant) & { citizen: Citizen },
   locale?: string | null,
 ) {
   const t = await getTranslator({ type: "webhooks", locale, namespace: "Records" });

@@ -14,7 +14,6 @@ import { citizenInclude } from "controllers/citizen/CitizenController";
 import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
 import {
   cad,
-  CadFeature,
   Feature,
   MiscCadSettings,
   ValueType,
@@ -367,7 +366,8 @@ export class SearchActionsController {
     permissions: [Permissions.Leo],
   })
   async createCitizen(
-    @Context("cad") cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings | null },
+    @Context("cad")
+    cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings | null },
     @Context("user") user: User,
     @BodyParams() body: unknown,
   ): Promise<APITypes.PostSearchActionsCreateCitizen> {
@@ -478,7 +478,8 @@ export class SearchActionsController {
   @Description("Register a new vehicle to a citizen as LEO")
   async registerVehicle(
     @Context("user") user: User,
-    @Context("cad") cad: cad & { miscCadSettings?: MiscCadSettings; features?: CadFeature[] },
+    @Context("cad")
+    cad: cad & { miscCadSettings?: MiscCadSettings; features?: Record<Feature, boolean> },
     @BodyParams() body: unknown,
   ): Promise<APITypes.PostSearchActionsCreateVehicle> {
     const data = validateSchema(LEO_VEHICLE_SCHEMA, body);

@@ -5,7 +5,7 @@ import { Socket } from "services/socket-service";
 import { IsAuth } from "middlewares/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { upsertOfficer } from "controllers/leo/my-officers/upsert-officer";
-import type { cad, CadFeature, MiscCadSettings } from "@prisma/client";
+import type { cad, Feature, MiscCadSettings } from "@prisma/client";
 import {
   CREATE_TEMPORARY_OFFICER_SCHEMA,
   CREATE_TEMPORARY_EMS_FD_DEPUTY_SCHEMA,
@@ -34,7 +34,8 @@ export class TemporaryUnitsController {
     permissions: [Permissions.Dispatch],
   })
   async createTemporaryOfficer(
-    @Context("cad") cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings },
+    @Context("cad")
+    cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings },
     @BodyParams() body: unknown,
     @Context("sessionUserId") sessionUserId: string,
   ): Promise<any> {
@@ -84,7 +85,8 @@ export class TemporaryUnitsController {
     permissions: [Permissions.Dispatch],
   })
   async createTemporaryEmsFdDeputy(
-    @Context("cad") cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings },
+    @Context("cad")
+    cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings },
     @BodyParams() body: unknown,
     @Context("sessionUserId") sessionUserId: string,
   ): Promise<any> {

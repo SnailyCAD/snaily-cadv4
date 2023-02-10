@@ -30,7 +30,7 @@ type CADPick =
 
 export type cad = Pick<
   Omit<Prisma.cad, "registrationCode"> & {
-    features: CadFeature[];
+    features: Record<Enums.Feature, boolean>;
     miscCadSettings: MiscCadSettings | null;
     apiToken?: ApiToken | null;
     autoSetUserProperties?: AutoSetUserProperties | null;
@@ -342,13 +342,14 @@ export type Bolo = Prisma.Bolo & {
   officer: Officer | null;
 };
 
-export type Record = Prisma.Record & {
+type _Record = Prisma.Record & {
   officer?: Officer | null;
   violations: Violation[];
   seizedItems?: Prisma.SeizedItem[];
   courtEntry?: CourtEntry | null;
   vehicle?: (Prisma.RegisteredVehicle & { model: VehicleValue }) | null;
 };
+export { _Record as Record };
 
 export type RecordRelease = Prisma.RecordRelease & {
   releasedBy: Citizen | null;
@@ -359,7 +360,7 @@ export type Warrant = Prisma.Warrant & {
 };
 
 export type RecordLog = Prisma.RecordLog & {
-  records: Record | null;
+  records: _Record | null;
   warrant: Warrant | null;
 };
 

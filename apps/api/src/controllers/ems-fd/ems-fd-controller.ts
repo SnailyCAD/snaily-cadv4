@@ -16,11 +16,10 @@ import {
   type MiscCadSettings,
   ShouldDoType,
   type User,
-  CadFeature,
   Feature,
   Rank,
 } from "@prisma/client";
-import type { cad, EmsFdDeputy } from "@snailycad/types";
+import type { EmsFdDeputy } from "@snailycad/types";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { IsAuth } from "middlewares/is-auth";
 import { ActiveDeputy } from "middlewares/active-deputy";
@@ -109,7 +108,8 @@ export class EmsFdController {
   async createEmsFdDeputy(
     @BodyParams() body: unknown,
     @Context("user") user: User,
-    @Context("cad") cad: DBCad & { features: CadFeature[]; miscCadSettings: MiscCadSettings },
+    @Context("cad")
+    cad: DBCad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings },
   ): Promise<APITypes.PostMyDeputiesData> {
     const deputy = await upsertEmsFdDeputy({
       body,
@@ -130,7 +130,8 @@ export class EmsFdController {
     @PathParams("id") deputyId: string,
     @BodyParams() body: unknown,
     @Context("user") user: User,
-    @Context("cad") cad: DBCad & { features: CadFeature[]; miscCadSettings: MiscCadSettings },
+    @Context("cad")
+    cad: DBCad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings },
   ): Promise<APITypes.PutMyDeputyByIdData> {
     const existingDeputy = await prisma.emsFdDeputy.findFirst({
       where: { id: deputyId, userId: user.id },
@@ -259,7 +260,7 @@ export class EmsFdController {
   })
   async declareCitizenDeadOrAlive(
     @PathParams("citizenId") citizenId: string,
-    @Context("cad") cad: cad,
+    @Context("cad") cad: { features?: Record<Feature, boolean> },
   ): Promise<APITypes.PostEmsFdDeclareCitizenById> {
     const citizen = await prisma.citizen.findUnique({
       where: {

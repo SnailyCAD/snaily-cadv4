@@ -9,7 +9,6 @@ import { citizenInclude } from "controllers/citizen/CitizenController";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import {
   cad,
-  CadFeature,
   Citizen,
   CustomFieldCategory,
   DepartmentValue,
@@ -41,7 +40,7 @@ export const vehicleSearchInclude = {
 
 export const citizenSearchIncludeOrSelect = (
   user: User,
-  cad: cad & { features?: CadFeature[] },
+  cad: cad & { features?: Record<Feature, boolean> },
 ) => {
   const isEnabled = isFeatureEnabled({
     feature: Feature.CITIZEN_RECORD_APPROVAL,
@@ -125,7 +124,7 @@ export class LeoSearchController {
   @Description("Search citizens by their name, surname or fullname. Returns the first 35 results.")
   async searchName(
     @BodyParams("name") fullName: string,
-    @Context("cad") cad: cad & { features?: CadFeature[] },
+    @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
     @Context("user") user: User,
     @BodyParams("id") citizenId?: string,
     @QueryParams("fromAuthUserOnly", Boolean) fromAuthUserOnly = false,
@@ -266,7 +265,7 @@ export class LeoSearchController {
   })
   async customFieldSearch(
     @BodyParams() body: unknown,
-    @Context("cad") cad: cad & { features?: CadFeature[] },
+    @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
     @Context("user") user: User,
   ): Promise<APITypes.PostSearchCustomFieldData<true>> {
     const data = validateSchema(CUSTOM_FIELD_SEARCH_SCHEMA, body);
