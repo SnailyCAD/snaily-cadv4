@@ -5,9 +5,10 @@ import {
   Officer,
   AssignedUnit,
   IncidentInvolvedUnit,
+  Feature,
+  cad,
 } from "@prisma/client";
 import type { INDIVIDUAL_CALLSIGN_SCHEMA } from "@snailycad/schemas";
-import type { cad } from "@snailycad/types";
 import { prisma } from "lib/data/prisma";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import type { DisconnectOrConnect } from "lib/data/many-to-many";
@@ -15,7 +16,7 @@ import type { DisconnectOrConnect } from "lib/data/many-to-many";
 interface MaxDepartmentOptions {
   type: "emsFdDeputy" | "officer";
   userId: string;
-  cad: cad & { miscCadSettings: MiscCadSettings };
+  cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings };
   departmentId: string;
   unitId?: string;
 }

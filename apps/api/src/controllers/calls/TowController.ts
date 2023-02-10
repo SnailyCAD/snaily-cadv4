@@ -15,7 +15,6 @@ import { IsAuth } from "middlewares/is-auth";
 import { Socket } from "services/socket-service";
 import { validateSchema } from "lib/data/validate-schema";
 import {
-  cad,
   Citizen,
   DiscordWebhookType,
   Feature,
@@ -79,7 +78,7 @@ export class TowController {
   async createTowCall(
     @BodyParams() body: unknown,
     @Context("user") user: User,
-    @Context("cad") cad: cad,
+    @Context("cad") cad: { features?: Record<Feature, boolean> },
   ): Promise<APITypes.PostTowCallsData> {
     const data = validateSchema(TOW_SCHEMA, body);
 

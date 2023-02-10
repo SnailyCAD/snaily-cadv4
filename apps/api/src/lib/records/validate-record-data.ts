@@ -1,10 +1,4 @@
-import {
-  CadFeature,
-  Feature,
-  PenalCode,
-  WarningApplicable,
-  WarningNotApplicable,
-} from "@prisma/client";
+import { Feature, PenalCode, WarningApplicable, WarningNotApplicable } from "@prisma/client";
 import { isFeatureEnabled } from "lib/cad";
 import { prisma } from "lib/data/prisma";
 
@@ -15,7 +9,7 @@ interface Options {
   bail?: number | null;
   counts?: number | null;
   ticketId: string;
-  cad: { features?: CadFeature[] };
+  cad: { features?: Record<Feature, boolean> };
 }
 
 type Return = Options & {

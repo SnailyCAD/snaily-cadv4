@@ -11,6 +11,7 @@ import { setCookie } from "utils/set-cookie";
 import { ACCESS_TOKEN_EXPIRES_MS, ACCESS_TOKEN_EXPIRES_S } from "./setUserTokenCookies";
 import { getUserFromUserAPIToken } from "./getUserFromUserAPIToken";
 import { validateUserData } from "./validateUser";
+import { createFeaturesObject } from "middlewares/is-enabled";
 
 export enum GetSessionUserErrors {
   InvalidAPIToken = "invalid user API token",
@@ -83,7 +84,7 @@ export async function getSessionUser(
   const cad = await prisma.cad.findFirst({ select: { features: true } });
   const isUserAPITokensEnabled = isFeatureEnabled({
     feature: Feature.USER_API_TOKENS,
-    features: cad?.features,
+    features: createFeaturesObject(cad?.features),
     defaultReturn: false,
   });
 

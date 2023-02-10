@@ -1,5 +1,5 @@
 import * as React from "react";
-import { CadFeature, Feature } from "@snailycad/types";
+import { Feature } from "@snailycad/types";
 import { useAuth } from "context/AuthContext";
 
 export const DEFAULT_DISABLED_FEATURES = {
@@ -22,7 +22,7 @@ export const DEFAULT_DISABLED_FEATURES = {
   FORCE_STEAM_AUTH: { isEnabled: false },
 } satisfies Partial<Record<Feature, { isEnabled: boolean }>>;
 
-export function useFeatureEnabled(features?: CadFeature[]) {
+export function useFeatureEnabled(features?: Record<Feature, boolean>) {
   const { cad } = useAuth();
   const _features = features ?? cad?.features;
 
@@ -30,11 +30,10 @@ export function useFeatureEnabled(features?: CadFeature[]) {
     const obj: Record<Feature, boolean> = {} as Record<Feature, boolean>;
 
     Object.keys(Feature).map((feature) => {
-      const cadFeature = _features?.find((v) => v.feature === feature);
+      const cadFeature = _features?.[feature as Feature];
 
-      const isEnabled =
-        // @ts-expect-error - this is fine
-        cadFeature?.isEnabled ?? DEFAULT_DISABLED_FEATURES[feature]?.isEnabled ?? true;
+      // @ts-expect-error - this is fine
+      const isEnabled = cadFeature ?? DEFAULT_DISABLED_FEATURES[feature]?.isEnabled ?? true;
 
       obj[feature as Feature] = isEnabled;
     });

@@ -1,7 +1,6 @@
 import {
   MiscCadSettings,
   User,
-  CadFeature,
   Feature,
   VehicleInspectionStatus,
   VehicleTaxStatus,
@@ -69,7 +68,7 @@ export class VehiclesController {
   async getCitizenVehicles(
     @PathParams("citizenId") citizenId: string,
     @Context("user") user: User,
-    @Context("cad") cad: cad,
+    @Context("cad") cad: { features: Record<Feature, boolean> },
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query?: string,
   ): Promise<APITypes.GetCitizenVehiclesData> {
@@ -115,7 +114,8 @@ export class VehiclesController {
   @Description("Register a new vehicle")
   async registerVehicle(
     @Context("user") user: User,
-    @Context("cad") cad: cad & { miscCadSettings?: MiscCadSettings; features?: CadFeature[] },
+    @Context("cad")
+    cad: cad & { miscCadSettings?: MiscCadSettings; features?: Record<Feature, boolean> },
     @BodyParams() body: unknown,
   ): Promise<APITypes.PostCitizenVehicleData> {
     const data = validateSchema(VEHICLE_SCHEMA, body);
@@ -239,7 +239,7 @@ export class VehiclesController {
   @Description("Update a registered vehicle")
   async updateVehicle(
     @Context("user") user: User,
-    @Context("cad") cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
+    @Context("cad") cad: { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings },
     @PathParams("id") vehicleId: string,
     @BodyParams() body: unknown,
   ): Promise<APITypes.PutCitizenVehicleData> {
@@ -410,7 +410,7 @@ export class VehiclesController {
   @Description("Delete a registered vehicle")
   async deleteVehicle(
     @Context("user") user: User,
-    @Context("cad") cad: { features?: CadFeature[] },
+    @Context("cad") cad: { features?: Record<Feature, boolean> },
     @PathParams("id") vehicleId: string,
     @BodyParams() body: unknown,
   ): Promise<APITypes.DeleteCitizenVehicleData> {

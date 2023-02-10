@@ -1,4 +1,4 @@
-import { Feature, Rank, WhitelistStatus, cad, CadFeature, MiscCadSettings } from "@prisma/client";
+import { Feature, Rank, WhitelistStatus, cad, MiscCadSettings } from "@prisma/client";
 import { UPDATE_UNIT_SCHEMA, UPDATE_UNIT_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import {
   PathParams,
@@ -428,7 +428,8 @@ export class AdminManageUnitsController {
     @Context("sessionUserId") sessionUserId: string,
     @PathParams("id") id: string,
     @BodyParams() body: unknown,
-    @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings; features?: CadFeature[] },
+    @Context("cad")
+    cad: cad & { miscCadSettings: MiscCadSettings; features?: Record<Feature, boolean> },
   ): Promise<APITypes.PutManageUnitData> {
     const data = validateSchema(UPDATE_UNIT_SCHEMA.partial(), body);
 

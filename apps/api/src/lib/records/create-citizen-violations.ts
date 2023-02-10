@@ -1,10 +1,10 @@
-import type { cad } from "@snailycad/types";
+import type { Feature } from "@prisma/client";
 import { upsertRecord } from "./upsert-record";
 import type { z } from "zod";
 import type { CREATE_TICKET_SCHEMA } from "@snailycad/schemas";
 
 interface Options {
-  cad: cad;
+  cad: { features?: Record<Feature, boolean> };
   data: z.infer<typeof CREATE_TICKET_SCHEMA>[];
   citizenId: string;
 }

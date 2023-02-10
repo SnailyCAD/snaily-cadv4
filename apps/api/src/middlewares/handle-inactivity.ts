@@ -1,6 +1,6 @@
-import { Feature, IncidentInvolvedUnit } from "@prisma/client";
+import { Feature, IncidentInvolvedUnit, MiscCadSettings } from "@prisma/client";
 import { captureException } from "@sentry/node";
-import type { cad } from "@snailycad/types";
+import type { cad } from "@prisma/client";
 import { Context, Inject, Injectable, Middleware, MiddlewareMethods, Next } from "@tsed/common";
 import { isFeatureEnabled } from "lib/cad";
 import { handleEndCall } from "lib/calls/handle-end-call";
@@ -21,7 +21,9 @@ export class HandleInactivity implements MiddlewareMethods {
     this.socket = socket;
   }
 
-  protected isCalls911Enabled(cad: cad) {
+  protected isCalls911Enabled(
+    cad: cad & { miscCadSettings: MiscCadSettings | null; features?: Record<Feature, boolean> },
+  ) {
     return isFeatureEnabled({
       defaultReturn: true,
       feature: Feature.CALLS_911,
@@ -29,7 +31,11 @@ export class HandleInactivity implements MiddlewareMethods {
     });
   }
 
-  public async use(@Context("cad") cad: cad, @Next() next: Next) {
+  public async use(
+    @Context("cad")
+    cad: cad & { miscCadSettings: MiscCadSettings | null; features?: Record<Feature, boolean> },
+    @Next() next: Next,
+  ) {
     next();
 
     const lastInactivitySyncTimestamp = cad.miscCadSettings?.lastInactivitySyncTimestamp;

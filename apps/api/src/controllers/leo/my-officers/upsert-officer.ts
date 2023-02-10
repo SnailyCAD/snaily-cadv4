@@ -1,7 +1,6 @@
 import { CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
 import {
   cad,
-  CadFeature,
   Citizen,
   DivisionValue,
   Feature,
@@ -34,7 +33,7 @@ interface CreateOfficerOptions {
   body: unknown;
   citizen?: Citizen | null;
   user?: User;
-  cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings };
+  cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings };
   includeProperties?: boolean;
   existingOfficer?:
     | (Officer & {

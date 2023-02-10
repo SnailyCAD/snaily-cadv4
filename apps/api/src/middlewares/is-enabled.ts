@@ -1,8 +1,8 @@
 import { Middleware, MiddlewareMethods, Context, Next } from "@tsed/common";
 import { UseBefore } from "@tsed/platform-middlewares";
 import { StoreSet, useDecorators } from "@tsed/core";
-import type { Feature as DatabaseFeature } from "@prisma/client";
-import { Feature as TypesFeature } from "@snailycad/types";
+import { CadFeature, Feature as DatabaseFeature, Feature } from "@prisma/client";
+import type { Feature as TypesFeature } from "@snailycad/types";
 import { setDiscordAuth } from "./is-auth";
 import { prisma } from "lib/data/prisma";
 import { FeatureNotEnabled } from "src/exceptions/feature-not-enabled";
@@ -31,6 +31,36 @@ export const DEFAULT_DISABLED_FEATURES: Partial<
   FORCE_STEAM_AUTH: { isEnabled: false },
 };
 
+export function createFeaturesObject(features?: CadFeature[] | undefined) {
+  const obj: Record<TypesFeature | DatabaseFeature, boolean> = {} as Record<
+    TypesFeature | DatabaseFeature,
+    boolean
+  >;
+
+  Object.keys(Feature).map((feature) => {
+    const cadFeature = features?.find((v) => v.feature === feature);
+
+    const isEnabled =
+      // @ts-expect-error - this is fine
+      cadFeature?.isEnabled ?? DEFAULT_DISABLED_FEATURES[feature]?.isEnabled ?? true;
+
+    obj[feature as TypesFeature | DatabaseFeature] = isEnabled;
+  });
+
+  return obj;
+}
+
+export function overwriteFeatures(options: {
+  features: ReturnType<typeof createFeaturesObject>;
+  feature: Feature;
+  isEnabled: boolean;
+}) {
+  return {
+    ...options.features,
+    [options.feature]: options.isEnabled,
+  };
+}
+
 @Middleware()
 class IsFeatureEnabledMiddleware implements MiddlewareMethods {
   async use(@Context() ctx: Context, @Next() next: Next) {
@@ -45,12 +75,7 @@ class IsFeatureEnabledMiddleware implements MiddlewareMethods {
       }),
     );
 
-    const cadFeature = cad?.features?.find((v) => v.feature === options.feature);
-
-    const isEnabled =
-      cadFeature?.isEnabled ??
-      DEFAULT_DISABLED_FEATURES[options.feature as IsFeatureEnabledOptions["feature"]]?.isEnabled ??
-      true;
+    const isEnabled = cad.features[options.feature as TypesFeature];
 
     if (!isEnabled) {
       throw new FeatureNotEnabled(options);
@@ -67,4 +92,4 @@ export function IsFeatureEnabled(data: IsFeatureEnabledOptions) {
   );
 }
 
-export { TypesFeature as Feature };
+export { DatabaseFeature as Feature };

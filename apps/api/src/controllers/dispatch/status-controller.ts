@@ -7,7 +7,6 @@ import {
   CombinedLeoUnit,
   EmsFdDeputy,
   WhitelistStatus,
-  CadFeature,
   DiscordWebhookType,
   Rank,
   Feature,
@@ -62,7 +61,8 @@ export class StatusController {
     @Context("user") user: User,
     @BodyParams() body: unknown,
     @Req() req: Req,
-    @Context("cad") cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
+    @Context("cad")
+    cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings },
   ): Promise<APITypes.PutDispatchStatusByUnitId> {
     const data = validateSchema(UPDATE_OFFICER_STATUS_SCHEMA, body);
     const bodyStatusId = data.status;
@@ -85,7 +85,7 @@ export class StatusController {
     const isDivisionsEnabled = isFeatureEnabled({
       defaultReturn: true,
       feature: Feature.DIVISIONS,
-      features: cad.features ?? [],
+      features: cad.features,
     });
 
     const { type, unit } = await findUnit(unitId, { userId: isDispatch ? undefined : user.id });

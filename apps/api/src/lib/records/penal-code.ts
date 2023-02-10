@@ -1,4 +1,4 @@
-import { cad, CadFeature, Feature, PenalCode } from "@prisma/client";
+import { cad, Feature, PenalCode } from "@prisma/client";
 import type { PENAL_CODE_SCHEMA } from "@snailycad/schemas";
 import { prisma } from "lib/data/prisma";
 import type { z } from "zod";
@@ -9,7 +9,7 @@ type PickWarningPenalCode = Pick<PenalCode, "warningApplicableId" | "warningNotA
 interface UpsertWarningApplicableOptions {
   body: z.infer<typeof PENAL_CODE_SCHEMA>;
   penalCode?: PickWarningPenalCode;
-  cad: cad & { features?: CadFeature[] };
+  cad: cad & { features?: Record<Feature, boolean> };
 }
 
 export async function upsertWarningApplicable(

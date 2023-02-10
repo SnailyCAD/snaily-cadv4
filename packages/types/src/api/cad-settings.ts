@@ -13,7 +13,7 @@ export type GetCADSettingsData = Types.cad;
  * @route /admin/manage/cad-settings
  */
 export type PutCADSettingsData = Prisma.cad & {
-  features: Types.CadFeature[];
+  features: Record<Types.Feature, boolean>;
   miscCadSettings: Types.MiscCadSettings | null;
   apiToken: Types.ApiToken | null;
 };

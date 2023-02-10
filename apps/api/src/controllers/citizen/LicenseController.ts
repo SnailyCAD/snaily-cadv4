@@ -1,4 +1,4 @@
-import { cad, CadFeature, Feature, User } from "@prisma/client";
+import { cad, Feature, User } from "@prisma/client";
 import { LICENSE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
@@ -25,7 +25,7 @@ export class LicensesController {
   async updateCitizenLicenses(
     @PathParams("id") citizenId: string,
     @Context("user") user: User,
-    @Context("cad") cad: cad & { features?: CadFeature[] },
+    @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
     @BodyParams() body: unknown,
   ): Promise<APITypes.PutCitizenLicensesByIdData> {
     const data = validateSchema(LICENSE_SCHEMA, body);

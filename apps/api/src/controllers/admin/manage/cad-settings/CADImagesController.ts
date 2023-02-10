@@ -7,7 +7,7 @@ import { BadRequest } from "@tsed/exceptions";
 import { MultipartFile, PlatformMulterFile, UseBefore } from "@tsed/common";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import fs from "node:fs/promises";
-import { cad, CadFeature, MiscCadSettings, Rank } from "@prisma/client";
+import { cad, Feature, MiscCadSettings, Rank } from "@prisma/client";
 import { Permissions } from "@snailycad/permissions";
 import { UsePermissions } from "middlewares/use-permissions";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
@@ -25,7 +25,8 @@ export class ManageCitizensController {
     permissions: [Permissions.ManageCADSettings],
   })
   async uploadLogoToCAD(
-    @Context("cad") cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings },
+    @Context("cad")
+    cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings },
     @Context("user") user: User,
     @MultipartFile("image") file?: PlatformMulterFile,
   ) {
@@ -58,7 +59,11 @@ export class ManageCitizensController {
     ]);
 
     await createAuditLogEntry({
-      action: { type: AuditLogActionType.CadSettingsUpdate, previous: cad, new: data as any },
+      action: {
+        type: AuditLogActionType.CadSettingsUpdate,
+        previous: cad as any,
+        new: data as any,
+      },
       prisma,
       executorId: user.id,
     });

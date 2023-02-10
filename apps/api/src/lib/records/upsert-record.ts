@@ -1,6 +1,6 @@
-import type { CourtDate, CourtEntry, Officer, SeizedItem, Violation } from "@prisma/client";
+import { Feature, CourtDate, CourtEntry, Officer, SeizedItem, Violation } from "@prisma/client";
 import type { CREATE_TICKET_SCHEMA } from "@snailycad/schemas";
-import { cad, Feature, PaymentStatus, RecordType, WhitelistStatus } from "@snailycad/types";
+import { PaymentStatus, RecordType, WhitelistStatus } from "@snailycad/types";
 import { NotFound } from "@tsed/exceptions";
 import { userProperties } from "lib/auth/getSessionUser";
 import { isFeatureEnabled } from "lib/cad";
@@ -15,7 +15,7 @@ import { captureException } from "@sentry/node";
 interface UpsertRecordOptions {
   data: z.infer<typeof CREATE_TICKET_SCHEMA>;
   recordId: string | null;
-  cad: cad;
+  cad: { features?: Record<Feature, boolean> };
   officer: Officer | null;
 }
 

@@ -23,7 +23,6 @@ import {
   ShouldDoType,
   Prisma,
   WhitelistStatus,
-  CadFeature,
 } from "@prisma/client";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import type { APIEmbed } from "discord-api-types/v10";
@@ -173,7 +172,8 @@ export class Calls911Controller {
   async create911Call(
     @BodyParams() body: unknown,
     @Context("user") user: User,
-    @Context("cad") cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings },
+    @Context("cad")
+    cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings },
     @HeaderParams("is-from-dispatch") isFromDispatchHeader?: string | undefined,
   ): Promise<APITypes.Post911CallsData> {
     const data = validateSchema(CALL_911_SCHEMA, body);

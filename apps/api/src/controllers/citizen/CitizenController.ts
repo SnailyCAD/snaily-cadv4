@@ -10,7 +10,7 @@ import fs from "node:fs/promises";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { generateString } from "utils/generate-string";
-import { CadFeature, User, ValueType, Feature, cad, MiscCadSettings, Prisma } from "@prisma/client";
+import { User, ValueType, Feature, cad, MiscCadSettings, Prisma } from "@prisma/client";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { canManageInvariant, userProperties } from "lib/auth/getSessionUser";
 import { validateSchema } from "lib/data/validate-schema";
@@ -85,7 +85,7 @@ export class CitizenController {
   @Get("/")
   @Description("Get all the citizens of the authenticated user")
   async getCitizens(
-    @Context("cad") cad: { features?: CadFeature[] },
+    @Context("cad") cad: { features?: Record<Feature, boolean> },
     @Context("user") user: User,
     @QueryParams("query", String) query = "",
     @QueryParams("skip", Number) skip = 0,
@@ -134,7 +134,7 @@ export class CitizenController {
 
   @Get("/:id")
   async getCitizen(
-    @Context("cad") cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
+    @Context("cad") cad: { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings },
     @Context("user") user: User,
     @PathParams("id") citizenId: string,
   ): Promise<APITypes.GetCitizenByIdData> {
@@ -163,7 +163,7 @@ export class CitizenController {
   @Delete("/:id")
   async deleteCitizen(
     @Context("user") user: User,
-    @Context("cad") cad: cad & { features?: CadFeature[] },
+    @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
     @PathParams("id") citizenId: string,
   ): Promise<APITypes.DeleteCitizenByIdData> {
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
@@ -201,7 +201,7 @@ export class CitizenController {
   @Post("/:id/deceased")
   async markCitizenDeceased(
     @Context("user") user: User,
-    @Context("cad") cad: cad & { features?: CadFeature[] },
+    @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
     @PathParams("id") citizenId: string,
   ): Promise<APITypes.DeleteCitizenByIdData> {
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
@@ -237,7 +237,8 @@ export class CitizenController {
 
   @Post("/")
   async createCitizen(
-    @Context("cad") cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings },
+    @Context("cad")
+    cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings },
     @Context("user") user: User,
     @BodyParams() body: unknown,
   ): Promise<APITypes.PostCitizensData> {
@@ -333,7 +334,8 @@ export class CitizenController {
   async updateCitizen(
     @PathParams("id") citizenId: string,
     @Context("user") user: User,
-    @Context("cad") cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings | null },
+    @Context("cad")
+    cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings | null },
     @BodyParams() body: unknown,
   ): Promise<APITypes.PutCitizenByIdData> {
     const data = validateSchema(CREATE_CITIZEN_SCHEMA.partial(), body);
@@ -389,7 +391,7 @@ export class CitizenController {
   @Post("/:id")
   async uploadImageToCitizen(
     @Context("user") user: User,
-    @Context("cad") cad: cad & { features?: CadFeature[] },
+    @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
     @PathParams("id") citizenId: string,
     @MultipartFile("image") file?: PlatformMulterFile,
   ): Promise<APITypes.PostCitizenImageByIdData> {

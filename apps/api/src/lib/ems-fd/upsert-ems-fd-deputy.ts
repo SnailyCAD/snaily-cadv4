@@ -1,7 +1,6 @@
 import type { ZodSchema } from "zod";
 import {
   cad,
-  CadFeature,
   Citizen,
   EmsFdDeputy,
   Feature,
@@ -31,7 +30,7 @@ interface UpsertEmsFdDeputyOptions {
   body: unknown;
   citizen?: Citizen | null;
   user?: User;
-  cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings };
+  cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings };
 }
 
 export async function upsertEmsFdDeputy(options: UpsertEmsFdDeputyOptions) {

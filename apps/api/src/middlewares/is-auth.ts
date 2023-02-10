@@ -1,5 +1,5 @@
 import process from "node:process";
-import { Rank, User, CadFeature, Feature } from "@prisma/client";
+import { Rank, User, Feature, CadFeature, cad } from "@prisma/client";
 import { API_TOKEN_HEADER } from "@snailycad/config";
 import { Context, Middleware, Req, MiddlewareMethods, Res } from "@tsed/common";
 import { Unauthorized } from "@tsed/exceptions";
@@ -7,10 +7,10 @@ import { prisma } from "lib/data/prisma";
 import { getCADVersion } from "@snailycad/utils/version";
 import { handleDiscordSync } from "./auth/utils";
 import { setGlobalUserFromCADAPIToken, getUserFromSession } from "./auth/get-user";
-import type { cad } from "@snailycad/types";
 import { hasPermission, Permissions } from "@snailycad/permissions";
 import { setErrorMap } from "zod";
 import { getErrorMap } from "../utils/zod-error-map";
+import { createFeaturesObject, overwriteFeatures } from "./is-enabled";
 
 @Middleware()
 export class IsAuth implements MiddlewareMethods {
@@ -55,7 +55,7 @@ export class IsAuth implements MiddlewareMethods {
         });
       }
 
-      ctx.set("cad", { ...setDiscordAuth(cad as cad), version: await getCADVersion() });
+      ctx.set("cad", { ...setDiscordAuth(cad), version: await getCADVersion() });
     }
 
     // localized error messages
@@ -69,21 +69,23 @@ export class IsAuth implements MiddlewareMethods {
   }
 }
 
-export function setDiscordAuth<T extends Partial<cad>>(cad: T | null) {
-  const features = cad?.features as CadFeature[] | undefined;
+export function setDiscordAuth<T extends Partial<cad & { features?: CadFeature[] }> | null>(
+  cad: T,
+): Omit<T, "features"> & { features: Record<Feature, boolean> } {
+  const features = createFeaturesObject(cad?.features);
+
   const hasDiscordTokens =
     Boolean(process.env["DISCORD_CLIENT_ID"]) && Boolean(process.env["DISCORD_CLIENT_SECRET"]);
 
-  const isEnabled = !features?.some((v) => v.isEnabled && v.feature === Feature.DISCORD_AUTH);
+  const isEnabled = features[Feature.DISCORD_AUTH];
 
-  const notEnabled = { isEnabled: false, feature: Feature.DISCORD_AUTH } as CadFeature;
-  const filtered = features?.filter((v) => v.feature !== Feature.DISCORD_AUTH) ?? [];
+  const filtered = overwriteFeatures({ features, feature: Feature.DISCORD_AUTH, isEnabled: false });
 
   if (isEnabled && !hasDiscordTokens) {
-    return { ...(cad as cad), features: [...filtered, notEnabled] };
+    return { ...cad, features: filtered };
   }
 
-  return cad;
+  return { ...cad, features };
 }
 
 export function CAD_SELECT(user?: Pick<User, "rank"> | null, includeDiscordRoles?: boolean) {

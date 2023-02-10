@@ -37,9 +37,9 @@ import {
   WhatPages,
   ValueType,
   Value,
-  CadFeature,
   cad,
   PenalCodeType,
+  Feature,
 } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { upsertWarningApplicable } from "lib/records/penal-code";
@@ -284,7 +284,7 @@ export const typeHandlers = {
   PENAL_CODE: async ({ body, id, context }: HandlerOptions) => {
     const data = validateSchema(PENAL_CODE_ARR, body);
     const penalCode = id && (await prisma.penalCode.findUnique({ where: { id: String(id) } }));
-    const cad = context.get("cad") as cad & { features?: CadFeature[] };
+    const cad = context.get("cad") as cad & { features?: Record<Feature, boolean> };
 
     const groups = new Map<string, { name: string; id: string; position: number | null }>();
 
