@@ -90,7 +90,7 @@ export function Editor(props: EditorProps) {
 
         const blockEntry = _Editor.above(editor, {
           at: path,
-          match: (n) => _Editor.isBlock(editor, n),
+          match: (n) => _Editor.isBlock(editor, n as any),
         });
         if (!blockEntry) {
           return false;
