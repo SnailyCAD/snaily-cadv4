@@ -248,11 +248,16 @@ export function CADFeaturesTab() {
   const { cad, setCad } = useAuth();
 
   function createInitialValues() {
-    const obj = {} as Partial<Record<Feature, CadFeature>>;
+    const obj = {} as Partial<Record<Feature, Pick<CadFeature, "feature" | "isEnabled">>>;
 
-    const cadFeatures = cad?.features ?? [];
-    for (const feature of cadFeatures) {
-      obj[feature.feature as Feature] = feature;
+    const cadFeatures = cad?.features;
+    for (const key in cadFeatures) {
+      const feature = cadFeatures[key as keyof typeof cadFeatures];
+
+      obj[key as Feature] = {
+        feature: key as Feature,
+        isEnabled: feature,
+      };
     }
 
     return obj;

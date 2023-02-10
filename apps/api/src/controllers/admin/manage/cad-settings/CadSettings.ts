@@ -139,7 +139,7 @@ export class CADSettingsController {
       executorId: sessionUserId,
     });
 
-    return updated;
+    return setDiscordAuth(updated);
   }
 
   @Put("/features")
@@ -189,7 +189,7 @@ export class CADSettingsController {
       executorId: sessionUserId,
     });
 
-    return updated;
+    return setDiscordAuth(updated);
   }
 
   @Put("/misc")

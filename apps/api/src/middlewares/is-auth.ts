@@ -69,9 +69,9 @@ export class IsAuth implements MiddlewareMethods {
   }
 }
 
-export function setDiscordAuth<T extends Partial<cad & { features?: CadFeature[] }>>(
-  cad: T | null,
-) {
+export function setDiscordAuth<T extends Partial<cad & { features?: CadFeature[] }> | null>(
+  cad: T,
+): Omit<T, "features"> & { features: Record<Feature, boolean> } {
   const features = createFeaturesObject(cad?.features);
 
   const hasDiscordTokens =
@@ -82,7 +82,7 @@ export function setDiscordAuth<T extends Partial<cad & { features?: CadFeature[]
   const filtered = overwriteFeatures({ features, feature: Feature.DISCORD_AUTH, isEnabled: false });
 
   if (isEnabled && !hasDiscordTokens) {
-    return { ...(cad as cad), features: filtered };
+    return { ...cad, features: filtered };
   }
 
   return { ...cad, features };

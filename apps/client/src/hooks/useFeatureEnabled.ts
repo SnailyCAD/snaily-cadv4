@@ -1,4 +1,5 @@
-import type { Feature } from "@snailycad/types";
+import * as React from "react";
+import { Feature } from "@snailycad/types";
 import { useAuth } from "context/AuthContext";
 
 export const DEFAULT_DISABLED_FEATURES = {
@@ -25,5 +26,20 @@ export function useFeatureEnabled(features?: Record<Feature, boolean>) {
   const { cad } = useAuth();
   const _features = features ?? cad?.features;
 
-  return _features;
+  const featuresObj = React.useMemo(() => {
+    const obj: Record<Feature, boolean> = {} as Record<Feature, boolean>;
+
+    Object.keys(Feature).map((feature) => {
+      const cadFeature = _features?.[feature as Feature];
+
+      // @ts-expect-error - this is fine
+      const isEnabled = cadFeature ?? DEFAULT_DISABLED_FEATURES[feature]?.isEnabled ?? true;
+
+      obj[feature as Feature] = isEnabled;
+    });
+
+    return obj;
+  }, [_features]);
+
+  return featuresObj;
 }
