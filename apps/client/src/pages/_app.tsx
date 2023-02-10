@@ -10,14 +10,14 @@ import "styles/fonts.scss";
 import "styles/nprogress.scss";
 import { SocketProvider } from "@casper124578/use-socket.io";
 import { getAPIUrl } from "@snailycad/utils/api-url";
-import { setTag, setTags } from "@sentry/nextjs";
-import type { cad, User } from "@snailycad/types";
+import type { User } from "@snailycad/types";
 import { useMounted } from "@casper124578/useful/hooks/useMounted";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import type { GetErrorMapOptions } from "lib/validation/zod-error-map";
+import type { SetSentryTagsOptions } from "lib/set-sentry-tags";
 
 const ReauthorizeSessionModal = dynamic(
   async () =>
@@ -39,8 +39,6 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
   const url = `${protocol}//${host}`;
   const user = pageProps.session as User | null;
   const locale = user?.locale ?? router.locale ?? "en";
-
-  trySetUserTimezone();
 
   React.useEffect(() => {
     const handleRouteStart = async () => {
@@ -68,14 +66,13 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
     setErrorMap({ messages: pageProps.messages, locale });
   }, [locale, pageProps.messages]);
 
-  const cad = pageProps?.cad as cad | null;
-  if (cad?.version) {
-    setTags({
-      "snailycad.locale": locale,
-      "snailycad.version": cad.version.currentVersion,
-      "snailycad.commitHash": cad.version.currentCommitHash,
+  React.useEffect(() => {
+    _setSentryTags({
+      cad: pageProps.cad,
+      locale,
+      isMounted,
     });
-  }
+  }, [isMounted, pageProps.cad, locale]);
 
   const isServer = typeof window === "undefined";
 
@@ -127,12 +124,6 @@ async function setErrorMap(options: GetErrorMapOptions) {
   setZodErrorMap(getErrorMap(options));
 }
 
-function trySetUserTimezone() {
-  try {
-    if (typeof window !== "undefined") {
-      setTag("snailycad.timezone", Intl.DateTimeFormat().resolvedOptions().timeZone);
-    }
-  } catch {
-    // ignore
-  }
+async function _setSentryTags(options: SetSentryTagsOptions) {
+  (await import("lib/set-sentry-tags")).setSentryTags(options);
 }
