@@ -10,14 +10,14 @@ import "styles/fonts.scss";
 import "styles/nprogress.scss";
 import { SocketProvider } from "@casper124578/use-socket.io";
 import { getAPIUrl } from "@snailycad/utils/api-url";
-import { setTag, setTags } from "@sentry/nextjs";
-import type { cad, User } from "@snailycad/types";
+import type { User } from "@snailycad/types";
 import { useMounted } from "@casper124578/useful/hooks/useMounted";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import type { GetErrorMapOptions } from "lib/validation/zod-error-map";
+import type { SetSentryTagsOptions } from "lib/set-sentry-tags";
 
 const ReauthorizeSessionModal = dynamic(
   async () =>
@@ -25,8 +25,12 @@ const ReauthorizeSessionModal = dynamic(
   { ssr: false },
 );
 
+const DndProvider = dynamic(
+  async () => (await import("components/shared/dnd/DndProvider")).DndProvider,
+);
 const Toaster = dynamic(async () => (await import("react-hot-toast")).Toaster, { ssr: false });
 
+const DRAG_AND_DROP_PAGES = ["/dispatch", "/officer", "/ems-fd"];
 const queryClient = new QueryClient();
 
 export default function App({ Component, router, pageProps, ...rest }: AppProps) {
@@ -35,8 +39,6 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
   const url = `${protocol}//${host}`;
   const user = pageProps.session as User | null;
   const locale = user?.locale ?? router.locale ?? "en";
-
-  trySetUserTimezone();
 
   React.useEffect(() => {
     const handleRouteStart = async () => {
@@ -64,16 +66,18 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
     setErrorMap({ messages: pageProps.messages, locale });
   }, [locale, pageProps.messages]);
 
-  const cad = pageProps?.cad as cad | null;
-  if (cad?.version) {
-    setTags({
-      "snailycad.locale": locale,
-      "snailycad.version": cad.version.currentVersion,
-      "snailycad.commitHash": cad.version.currentCommitHash,
+  React.useEffect(() => {
+    _setSentryTags({
+      cad: pageProps.cad,
+      locale,
+      isMounted,
     });
-  }
+  }, [isMounted, pageProps.cad, locale]);
 
   const isServer = typeof window === "undefined";
+
+  const requiresDnd = DRAG_AND_DROP_PAGES.includes(router.pathname);
+  const DndProviderWrapper = requiresDnd ? DndProvider : React.Fragment;
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -89,20 +93,22 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
               messages={pageProps.messages}
               now={new Date()}
             >
-              <ValuesProvider router={router} initialData={pageProps}>
-                <CitizenProvider initialData={pageProps}>
-                  <Head>
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                  </Head>
-                  {isMounted ? (
-                    <>
-                      <ReauthorizeSessionModal />
-                      <Toaster position="top-right" />
-                    </>
-                  ) : null}
-                  <Component {...pageProps} err={(rest as any).err} />
-                </CitizenProvider>
-              </ValuesProvider>
+              <DndProviderWrapper>
+                <ValuesProvider router={router} initialData={pageProps}>
+                  <CitizenProvider initialData={pageProps}>
+                    <Head>
+                      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                    </Head>
+                    {isMounted ? (
+                      <>
+                        <ReauthorizeSessionModal />
+                        <Toaster position="top-right" />
+                      </>
+                    ) : null}
+                    <Component {...pageProps} err={(rest as any).err} />
+                  </CitizenProvider>
+                </ValuesProvider>
+              </DndProviderWrapper>
             </NextIntlProvider>
           </AuthProvider>
         </SocketProvider>
@@ -118,12 +124,6 @@ async function setErrorMap(options: GetErrorMapOptions) {
   setZodErrorMap(getErrorMap(options));
 }
 
-function trySetUserTimezone() {
-  try {
-    if (typeof window !== "undefined") {
-      setTag("snailycad.timezone", Intl.DateTimeFormat().resolvedOptions().timeZone);
-    }
-  } catch {
-    // ignore
-  }
+async function _setSentryTags(options: SetSentryTagsOptions) {
+  (await import("lib/set-sentry-tags")).setSentryTags(options);
 }

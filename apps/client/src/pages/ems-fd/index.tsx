@@ -27,7 +27,6 @@ import type {
   GetEmsFdActiveDeputy,
 } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call-911-state";
-import { DndProvider } from "components/shared/dnd/DndProvider";
 import { usePermission } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
@@ -117,16 +116,12 @@ export default function EmsFDDashboard({ activeDeputy, calls, activeDeputies }: 
         />
       </UtilityPanel>
 
-      <div id="ems-fd">
-        <DndProvider id="ems-fd">
-          <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
-            <div className="w-full">{CALLS_911 ? <ActiveCalls initialData={calls} /> : null}</div>
-          </div>
-          <div className="mt-3">
-            <ActiveOfficers initialOfficers={[]} />
-            <ActiveDeputies initialDeputies={activeDeputies} />
-          </div>
-        </DndProvider>
+      <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
+        <div className="w-full">{CALLS_911 ? <ActiveCalls initialData={calls} /> : null}</div>
+      </div>
+      <div className="mt-3">
+        <ActiveOfficers initialOfficers={[]} />
+        <ActiveDeputies initialDeputies={activeDeputies} />
       </div>
 
       <SelectDeputyModal />
