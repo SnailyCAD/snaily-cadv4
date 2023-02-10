@@ -56,7 +56,7 @@
     "is-hotkey": "^0.2.0",
     "leaflet": "^1.9.3",
     "mdast-util-find-and-replace": "^2.2.2",
-    "next": "13.0.6",
+    "next": "canary",
     "next-intl": "2.10.2",
     "nookies": "^2.5.2",
     "nprogress": "^0.2.0",
