@@ -71,11 +71,13 @@ export async function getSessionUser(
 ): Promise<GetUserData | null> {
   const accessToken: string | undefined =
     options.req.cookies[Cookie.AccessToken] ||
-    parse(String(options.req.headers.session))[Cookie.AccessToken];
+    parse(String(options.req.headers.session))[Cookie.AccessToken] ||
+    parse(String(options.req.headers.cookie))[Cookie.AccessToken];
 
   const refreshToken: string | undefined =
     options.req.cookies[Cookie.RefreshToken] ||
-    parse(String(options.req.headers.session))[Cookie.RefreshToken];
+    parse(String(options.req.headers.session))[Cookie.RefreshToken] ||
+    parse(String(options.req.headers.cookie))[Cookie.RefreshToken];
 
   const userApiTokenHeader = options.req.headers[USER_API_TOKEN_HEADER]
     ? String(options.req.headers[USER_API_TOKEN_HEADER])
