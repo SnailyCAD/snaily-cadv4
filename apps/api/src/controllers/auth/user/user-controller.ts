@@ -34,7 +34,9 @@ export class UserController {
     @Context("cad") cad: cad,
     @Context("user") user: User,
   ): Promise<APITypes.GetUserData> {
-    return { ...user, cad };
+    const cadWithoutDiscordRoles = { ...cad, discordRoles: undefined };
+
+    return { ...user, cad: cadWithoutDiscordRoles };
   }
 
   @Patch("/")

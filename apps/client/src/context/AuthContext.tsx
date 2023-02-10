@@ -37,7 +37,7 @@ const NO_LOADING_ROUTES = [
 export function AuthProvider({ initialData, children }: ProviderProps) {
   const [user, setUser] = React.useState<User | null>(initialData.session ?? null);
   const [cad, setCad] = React.useState<CAD | null>(
-    initialData.session?.cad ?? initialData.cad ?? null,
+    initialData.cad ?? initialData.session?.cad ?? null,
   );
 
   const router = useRouter();
@@ -92,8 +92,8 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
       setUser(initialData.session);
     }
 
-    if (initialData.cad ?? initialData.session?.cad) {
-      setCad(initialData.session?.cad ?? initialData.cad ?? null);
+    if (initialData.cad || initialData.session?.cad) {
+      setCad(initialData.cad ?? initialData.session?.cad ?? null);
     }
   }, [initialData]);
 

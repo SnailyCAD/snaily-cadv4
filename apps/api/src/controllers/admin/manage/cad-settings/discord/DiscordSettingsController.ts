@@ -56,9 +56,7 @@ export class DiscordSettingsController {
     const discordRoles = await prisma.discordRoles.upsert({
       where: { id: String(cad.discordRolesId) },
       update: { guildId },
-      create: {
-        guildId,
-      },
+      create: { guildId },
     });
 
     await prisma.cad.update({

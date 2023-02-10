@@ -123,7 +123,7 @@ export function DiscordRolesTab() {
         </p>
       </header>
 
-      <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
+      <Formik enableReinitialize onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, errors, values }) => (
           <Form className="mt-5 space-y-5">
             <SettingsFormField
