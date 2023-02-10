@@ -116,14 +116,12 @@ export default function EmsFDDashboard({ activeDeputy, calls, activeDeputies }: 
         />
       </UtilityPanel>
 
-      <div id="ems-fd">
-        <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
-          <div className="w-full">{CALLS_911 ? <ActiveCalls initialData={calls} /> : null}</div>
-        </div>
-        <div className="mt-3">
-          <ActiveOfficers initialOfficers={[]} />
-          <ActiveDeputies initialDeputies={activeDeputies} />
-        </div>
+      <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
+        <div className="w-full">{CALLS_911 ? <ActiveCalls initialData={calls} /> : null}</div>
+      </div>
+      <div className="mt-3">
+        <ActiveOfficers initialOfficers={[]} />
+        <ActiveDeputies initialDeputies={activeDeputies} />
       </div>
 
       <SelectDeputyModal />

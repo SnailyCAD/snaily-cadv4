@@ -118,18 +118,16 @@ export default function DispatchDashboard(props: DispatchPageProps) {
         <DispatchModalButtons />
       </UtilityPanel>
 
-      <div id="dispatch">
-        <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
-          <div className="w-full">
-            <ActiveOfficers initialOfficers={props.activeOfficers} />
-            <ActiveDeputies initialDeputies={props.activeDeputies} />
-          </div>
+      <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
+        <div className="w-full">
+          <ActiveOfficers initialOfficers={props.activeOfficers} />
+          <ActiveDeputies initialDeputies={props.activeDeputies} />
         </div>
-        <div className="mt-3">
-          {CALLS_911 ? <ActiveCalls initialData={props.calls} /> : null}
-          {ACTIVE_INCIDENTS ? <ActiveIncidents /> : null}
-          <ActiveBolos initialBolos={props.bolos} />
-        </div>
+      </div>
+      <div className="mt-3">
+        {CALLS_911 ? <ActiveCalls initialData={props.calls} /> : null}
+        {ACTIVE_INCIDENTS ? <ActiveIncidents /> : null}
+        <ActiveBolos initialBolos={props.bolos} />
       </div>
 
       <Modals.NotepadModal />
