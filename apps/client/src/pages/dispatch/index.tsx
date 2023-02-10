@@ -30,7 +30,6 @@ import type {
 } from "@snailycad/types/api";
 import { UtilityPanel } from "components/shared/UtilityPanel";
 import { useCall911State } from "state/dispatch/call-911-state";
-import { DndProvider } from "components/shared/dnd/DndProvider";
 import { useActiveDispatcherState } from "state/dispatch/active-dispatcher-state";
 
 const ActiveIncidents = dynamic(async () => {
@@ -120,19 +119,17 @@ export default function DispatchDashboard(props: DispatchPageProps) {
       </UtilityPanel>
 
       <div id="dispatch">
-        <DndProvider id="dispatch">
-          <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
-            <div className="w-full">
-              <ActiveOfficers initialOfficers={props.activeOfficers} />
-              <ActiveDeputies initialDeputies={props.activeDeputies} />
-            </div>
+        <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
+          <div className="w-full">
+            <ActiveOfficers initialOfficers={props.activeOfficers} />
+            <ActiveDeputies initialDeputies={props.activeDeputies} />
           </div>
-          <div className="mt-3">
-            {CALLS_911 ? <ActiveCalls initialData={props.calls} /> : null}
-            {ACTIVE_INCIDENTS ? <ActiveIncidents /> : null}
-            <ActiveBolos initialBolos={props.bolos} />
-          </div>
-        </DndProvider>
+        </div>
+        <div className="mt-3">
+          {CALLS_911 ? <ActiveCalls initialData={props.calls} /> : null}
+          {ACTIVE_INCIDENTS ? <ActiveIncidents /> : null}
+          <ActiveBolos initialBolos={props.bolos} />
+        </div>
       </div>
 
       <Modals.NotepadModal />

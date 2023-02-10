@@ -25,8 +25,12 @@ const ReauthorizeSessionModal = dynamic(
   { ssr: false },
 );
 
+const DndProvider = dynamic(
+  async () => (await import("components/shared/dnd/DndProvider")).DndProvider,
+);
 const Toaster = dynamic(async () => (await import("react-hot-toast")).Toaster, { ssr: false });
 
+const DRAG_AND_DROP_PAGES = ["/dispatch", "/leo", "/ems-fd"];
 const queryClient = new QueryClient();
 
 export default function App({ Component, router, pageProps, ...rest }: AppProps) {
@@ -75,6 +79,9 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
 
   const isServer = typeof window === "undefined";
 
+  const requiresDnd = DRAG_AND_DROP_PAGES.includes(router.pathname);
+  const DndProviderWrapper = requiresDnd ? DndProvider : React.Fragment;
+
   return (
     <QueryClientProvider client={queryClient}>
       <SSRProvider>
@@ -89,20 +96,22 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
               messages={pageProps.messages}
               now={new Date()}
             >
-              <ValuesProvider router={router} initialData={pageProps}>
-                <CitizenProvider initialData={pageProps}>
-                  <Head>
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                  </Head>
-                  {isMounted ? (
-                    <>
-                      <ReauthorizeSessionModal />
-                      <Toaster position="top-right" />
-                    </>
-                  ) : null}
-                  <Component {...pageProps} err={(rest as any).err} />
-                </CitizenProvider>
-              </ValuesProvider>
+              <DndProviderWrapper>
+                <ValuesProvider router={router} initialData={pageProps}>
+                  <CitizenProvider initialData={pageProps}>
+                    <Head>
+                      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                    </Head>
+                    {isMounted ? (
+                      <>
+                        <ReauthorizeSessionModal />
+                        <Toaster position="top-right" />
+                      </>
+                    ) : null}
+                    <Component {...pageProps} err={(rest as any).err} />
+                  </CitizenProvider>
+                </ValuesProvider>
+              </DndProviderWrapper>
             </NextIntlProvider>
           </AuthProvider>
         </SocketProvider>

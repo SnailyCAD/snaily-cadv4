@@ -36,7 +36,6 @@ import type {
 } from "@snailycad/types/api";
 import { CreateWarrantModal } from "components/leo/modals/CreateWarrantModal";
 import { useCall911State } from "state/dispatch/call-911-state";
-import { DndProvider } from "components/shared/dnd/DndProvider";
 import { usePermission } from "hooks/usePermission";
 import { shallow } from "zustand/shallow";
 
@@ -197,15 +196,13 @@ export default function OfficerDashboard({
       </UtilityPanel>
 
       <div id="officer">
-        <DndProvider id="officer">
-          {CALLS_911 ? <ActiveCalls initialData={calls} /> : null}
-          <ActiveBolos initialBolos={bolos} />
-          {ACTIVE_WARRANTS ? <ActiveWarrants /> : null}
-          <div className="mt-3">
-            <ActiveOfficers initialOfficers={activeOfficers} />
-            <ActiveDeputies initialDeputies={activeDeputies} />
-          </div>
-        </DndProvider>
+        {CALLS_911 ? <ActiveCalls initialData={calls} /> : null}
+        <ActiveBolos initialBolos={bolos} />
+        {ACTIVE_WARRANTS ? <ActiveWarrants /> : null}
+        <div className="mt-3">
+          <ActiveOfficers initialOfficers={activeOfficers} />
+          <ActiveDeputies initialDeputies={activeDeputies} />
+        </div>
       </div>
 
       <Modals.SelectOfficerModal />
