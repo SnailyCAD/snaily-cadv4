@@ -30,7 +30,7 @@ const DndProvider = dynamic(
 );
 const Toaster = dynamic(async () => (await import("react-hot-toast")).Toaster, { ssr: false });
 
-const DRAG_AND_DROP_PAGES = ["/dispatch", "/leo", "/ems-fd"];
+const DRAG_AND_DROP_PAGES = ["/dispatch", "/officer", "/ems-fd"];
 const queryClient = new QueryClient();
 
 export default function App({ Component, router, pageProps, ...rest }: AppProps) {
