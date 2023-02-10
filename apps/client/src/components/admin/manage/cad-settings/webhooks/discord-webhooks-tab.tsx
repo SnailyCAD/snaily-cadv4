@@ -11,9 +11,12 @@ import { WebhookSettingsField } from "./WebhookSettingsField";
 import { toastMessage } from "lib/toastMessage";
 import type { GetCADDiscordWebhooksData, PostCADDiscordWebhooksData } from "@snailycad/types/api";
 
-export function DiscordWebhooksTab({ canWarn }: { canWarn: boolean }) {
+export function DiscordWebhooksTab() {
   const [channels, setChannels] = React.useState<GetCADDiscordWebhooksData>([]);
+  const [fetchError, setFetchError] = React.useState<string | null>(null);
+
   const { state, execute } = useFetch();
+  const tErrors = useTranslations("Errors");
   const common = useTranslations("Common");
   const { cad, setCad } = useAuth();
   const t = useTranslations("DiscordWebhooksTab");
@@ -34,11 +37,15 @@ export function DiscordWebhooksTab({ canWarn }: { canWarn: boolean }) {
   }, []);
 
   async function refreshChannels() {
-    const { json } = await execute<GetCADDiscordWebhooksData>({
+    const { json, error } = await execute<GetCADDiscordWebhooksData>({
       path: "/admin/manage/cad-settings/discord/webhooks",
       method: "GET",
-      noToast: !canWarn,
+      noToast: true,
     });
+
+    if (error) {
+      setFetchError(error);
+    }
 
     if (Array.isArray(json)) {
       setChannels(json);
@@ -77,6 +84,12 @@ export function DiscordWebhooksTab({ canWarn }: { canWarn: boolean }) {
           {t("discordWebhooksInfo")}
         </p>
       </header>
+
+      {fetchError ? (
+        <div role="alert" className="p-2 px-4 my-2 mb-5 text-black rounded-md shadow bg-red-400">
+          <p>{tErrors(fetchError)}</p>
+        </div>
+      ) : null}
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {() => (

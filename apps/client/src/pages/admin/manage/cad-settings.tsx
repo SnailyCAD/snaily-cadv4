@@ -1,4 +1,3 @@
-import * as React from "react";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { useTranslations } from "use-intl";
 import type { GetServerSideProps } from "next";
@@ -14,26 +13,32 @@ const Tabs = {
   CADFeaturesTab: dynamic(
     async () =>
       (await import("components/admin/manage/cad-settings/CADFeaturesTab")).CADFeaturesTab,
+    { ssr: false },
   ),
   MiscFeatures: dynamic(
     async () => (await import("components/admin/manage/cad-settings/MiscFeatures")).MiscFeatures,
+    { ssr: false },
   ),
   AutoSetUserPropertiesTab: dynamic(
     async () =>
       (await import("components/admin/manage/cad-settings/AutoSetUserPropertiesTab"))
         .AutoSetUserPropertiesTab,
+    { ssr: false },
   ),
   ApiTokenTab: dynamic(
     async () => (await import("components/admin/manage/cad-settings/ApiTokenTab")).ApiTokenTab,
+    { ssr: false },
   ),
   DiscordRolesTab: dynamic(
     async () =>
       (await import("components/admin/manage/cad-settings/discord-roles-tab")).DiscordRolesTab,
+    { ssr: false },
   ),
   DiscordWebhooksTab: dynamic(
     async () =>
       (await import("components/admin/manage/cad-settings/webhooks/discord-webhooks-tab"))
         .DiscordWebhooksTab,
+    { ssr: false },
   ),
 };
 
@@ -49,7 +54,6 @@ export enum SettingsTabs {
 
 export default function CadSettings() {
   const t = useTranslations("Management");
-  const [activeTab, setActiveTab] = React.useState<string>(SettingsTabs.GeneralSettings);
 
   const SETTINGS_TABS = [
     { name: t("GENERAL_SETTINGS"), value: SettingsTabs.GeneralSettings },
@@ -65,7 +69,7 @@ export default function CadSettings() {
     <AdminLayout>
       <Title>{t("MANAGE_CAD_SETTINGS")}</Title>
 
-      <TabList onValueChange={setActiveTab} tabs={SETTINGS_TABS}>
+      <TabList tabs={SETTINGS_TABS}>
         <GeneralSettingsTab />
 
         <Tabs.CADFeaturesTab />
@@ -73,7 +77,7 @@ export default function CadSettings() {
         <Tabs.AutoSetUserPropertiesTab />
         <Tabs.ApiTokenTab />
         <Tabs.DiscordRolesTab />
-        <Tabs.DiscordWebhooksTab canWarn={activeTab === SettingsTabs.DiscordWebhooks} />
+        <Tabs.DiscordWebhooksTab />
       </TabList>
     </AdminLayout>
   );
