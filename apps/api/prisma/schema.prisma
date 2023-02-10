@@ -199,6 +199,7 @@ model DiscordRoles {
 model DiscordRole {
   id                    String         @id @unique
   name                  String
+  guildId               String?
   discordRoles          DiscordRoles   @relation(fields: [discordRolesId], references: [id])
   discordRolesId        String
   leoRoles              DiscordRoles[] @relation("leoRole")

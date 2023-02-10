@@ -20,3 +20,8 @@ export async function isDiscordIdInUse(discordId: string, userId: string) {
 
   return existing && userId !== existing.id;
 }
+
+export function parseDiscordGuildIds(guildId: string) {
+  const guildIds = guildId.split(",");
+  return guildIds;
+}

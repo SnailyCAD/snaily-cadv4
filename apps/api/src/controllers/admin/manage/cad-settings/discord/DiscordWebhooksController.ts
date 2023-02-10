@@ -21,6 +21,7 @@ import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { performDiscordRequest } from "lib/discord/performDiscordRequest";
 import { AuditLogActionType } from "@snailycad/audit-logger";
 import { createAuditLogEntry } from "@snailycad/audit-logger/server";
+import { parseDiscordGuildIds } from "lib/discord/utils";
 
 const guildId = process.env.DISCORD_SERVER_ID;
 
@@ -28,6 +29,28 @@ const guildId = process.env.DISCORD_SERVER_ID;
 @Controller("/admin/manage/cad-settings/discord/webhooks")
 @ContentType("application/json")
 export class DiscordWebhooksController {
+  private async getDiscordChannels(guildIds: string[]) {
+    const _channels: (RESTGetAPIGuildChannelsResult[number] & { guildId: string })[] = [];
+
+    for (const guildId of guildIds) {
+      try {
+        const channels = await performDiscordRequest<RESTGetAPIGuildChannelsResult>({
+          handler(rest) {
+            return rest.get(Routes.guildChannels(guildId));
+          },
+        });
+
+        const channelsWithGuildId = channels?.map((role) => ({ ...role, guildId })) ?? [];
+
+        _channels.push(...channelsWithGuildId);
+      } catch {
+        continue;
+      }
+    }
+
+    return _channels;
+  }
+
   @Get("/")
   @UsePermissions({
     fallback: (u) => u.rank === Rank.OWNER,
@@ -38,13 +61,10 @@ export class DiscordWebhooksController {
       throw new BadRequest("mustSetBotTokenGuildId");
     }
 
+    const guildIds = parseDiscordGuildIds(guildId);
     const [channels, miscCadSettings] = await Promise.all([
-      await performDiscordRequest<RESTGetAPIGuildChannelsResult>({
-        handler(rest) {
-          return rest.get(Routes.guildChannels(guildId));
-        },
-      }),
-      await prisma.miscCadSettings.upsert({
+      this.getDiscordChannels(guildIds),
+      prisma.miscCadSettings.upsert({
         where: { id: String(cad.miscCadSettingsId) },
         update: {},
         create: {},
@@ -90,20 +110,15 @@ export class DiscordWebhooksController {
     }
 
     const data = validateSchema(DISCORD_WEBHOOKS_SCHEMA, body);
-    const channels = await performDiscordRequest<RESTGetAPIGuildChannelsResult>({
-      handler(rest) {
-        return rest.get(Routes.guildChannels(guildId));
-      },
-    });
+    const channels = await this.getDiscordChannels(parseDiscordGuildIds(guildId));
 
-    const channelsBody = Array.isArray(channels) ? channels : [];
     const entries = Object.entries(data);
 
     await Promise.all(
       entries.map(async ([, webhookData]) => {
         const prevWebhook = cad.miscCadSettings?.webhooks?.find((v) => v.type === webhookData.type);
 
-        if (webhookData.id && !this.doesChannelExist(channelsBody, webhookData.id)) {
+        if (webhookData.id && !this.doesChannelExist(channels, webhookData.id)) {
           throw new BadRequest("invalidChannelId");
         }
 

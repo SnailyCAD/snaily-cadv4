@@ -14,6 +14,7 @@ import { Permissions } from "@snailycad/permissions";
 import { UsePermissions } from "middlewares/use-permissions";
 import { performDiscordRequest } from "lib/discord/performDiscordRequest";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
+import { parseDiscordGuildIds } from "lib/discord/utils";
 
 const guildId = process.env.DISCORD_SERVER_ID;
 
@@ -21,17 +22,36 @@ const guildId = process.env.DISCORD_SERVER_ID;
 @Controller("/admin/manage/cad-settings/discord/roles")
 @ContentType("application/json")
 export class DiscordSettingsController {
+  private async getDiscordRoles(guildIds: string[]) {
+    const _roles: (RESTGetAPIGuildRolesResult[number] & { guildId: string })[] = [];
+
+    for (const guildId of guildIds) {
+      try {
+        const roles = await performDiscordRequest<RESTGetAPIGuildRolesResult>({
+          handler(rest) {
+            return rest.get(Routes.guildRoles(guildId));
+          },
+        });
+
+        const rolesWithGuildId = roles?.map((role) => ({ ...role, guildId })) ?? [];
+
+        _roles.push(...rolesWithGuildId);
+      } catch {
+        continue;
+      }
+    }
+
+    return _roles;
+  }
+
   @Get("/")
   async getGuildRoles(@Context("cad") cad: cad): Promise<APITypes.GetCADDiscordRolesData> {
     if (!guildId) {
       throw new BadRequest("mustSetBotTokenGuildId");
     }
 
-    const roles = await performDiscordRequest<RESTGetAPIGuildRolesResult>({
-      handler(rest) {
-        return rest.get(Routes.guildRoles(guildId));
-      },
-    });
+    const guildIds = parseDiscordGuildIds(guildId);
+    const roles = await this.getDiscordRoles(guildIds);
 
     const discordRoles = await prisma.discordRoles.upsert({
       where: { id: String(cad.discordRolesId) },
@@ -58,10 +78,12 @@ export class DiscordSettingsController {
           name: role.name,
           id: role.id,
           discordRolesId: discordRoles.id,
+          guildId: role.guildId,
         },
         update: {
           name: role.name,
           discordRolesId: discordRoles.id,
+          guildId: role.guildId,
         },
       });
 
@@ -86,13 +108,7 @@ export class DiscordSettingsController {
     }
 
     const data = validateSchema(DISCORD_SETTINGS_SCHEMA, body);
-    const roles = await performDiscordRequest<RESTGetAPIGuildRolesResult>({
-      handler(rest) {
-        return rest.get(Routes.guildRoles(guildId));
-      },
-    });
-
-    const rolesBody = Array.isArray(roles) ? roles : [];
+    const roles = await this.getDiscordRoles(parseDiscordGuildIds(guildId));
 
     const rolesToCheck = {
       leoRoles: data.leoRoles,
@@ -109,7 +125,7 @@ export class DiscordSettingsController {
     Object.values(rolesToCheck).map((roleId) => {
       if (Array.isArray(roleId) && roleId.length <= 0) return;
 
-      if (roleId && !this.doesRoleExist(rolesBody, roleId)) {
+      if (roleId && !this.doesRoleExist(roles, roleId)) {
         throw new BadRequest("invalidRoleId");
       }
     });
