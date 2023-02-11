@@ -106,59 +106,6 @@
     "info_pendingBusinesses": "Estes são negócios criados que estão aguardando aprovação para serem usados. Aceite ou recuse.",
     "alert_deleteBusiness": "Tem certeza de que deseja excluir este <span>{name}</span>? Todos os seus dados serão perdidos. Esta ação não pode ser desfeita."
   },
-  "CadSettings": {
-    "templateSection": "Modelos",
-    "callsignTemplate": "Modelo de Indicativo",
-    "callsignTemplateInfo": "Este é o modelo para indicativos de unidade. Você pode usar as seguintes variáveis: {variables}",
-    "caseNumberTemplate": "Modelo de Número de Caso",
-    "caseNumberTemplateInfo": "Este é o modelo para números de casos de registro. Você pode usar as seguintes variáveis: {variables}",
-    "pairedUnitTemplate": "Modelo de Unidade Emparelhada",
-    "pairedUnitTemplateInfo": "Este é o modelo para unidades emparelhadas. Você pode usar as seguintes variáveis: {variables}"
-  },
-  "DiscordRolesTab": {
-    "discordRoles": "Cargos do Discord",
-    "permissions": "Permissões",
-    "refreshRoles": "Atualizar Cargos",
-    "discordRolesInfo": "Quando um usuário CAD se autentica via Discord, as respectivas permissões CAD serão concedidas a esse usuário CAD de suas funções no Discord.",
-    "adminRole": "Cargo de Admin",
-    "adminRoleInfo": "O Cargo do Discord que representará as permissões de administrador definidas no CAD.",
-    "leoRole": "Cargo de Policial",
-    "leoRoleInfo": "O Cargo do Discord que representará as permissões policiais definidas no CAD.",
-    "leoSupervisorRole": "Cargo de Supervisor Policial",
-    "leoSupervisorRoleInfo": "O Cargo do Discord que representará as permissões do Supervisor policial definidas no CAD.",
-    "emsFdRole": "Cargo Médico/Bombeiro",
-    "emsFdRoleInfo": "O Cargo do Discord que representará o conjunto de permissões Médico/Bombeiro no CAD.",
-    "dispatchRole": "Cargo da Central",
-    "dispatchRoleInfo": "O Cargo do Discord que representará as permissões de Central definidas no CAD.",
-    "towRole": "Cargo de Reboque",
-    "towRoleInfo": "O cargo do do Discord que representará o conjunto de permissões no CAD.",
-    "taxiRole": "Cargo de Táxista",
-    "taxiRoleInfo": "O cargo do Discord que representará as permissões de táxi definidas no CAD.",
-    "courthouseRole": "Cargo de Tribunal",
-    "courthouseRoleInfo": "O cargo do Discord que representará as permissões de tribunal definidas no CAD",
-    "whitelistedRole": "Cargo de Whitelisted",
-    "whitelistedRoleInfo": "O cargo do Discord que representará o acesso à lista de permissões."
-  },
-  "DiscordWebhooksTab": {
-    "discordWebhooks": "Discord Webhooks",
-    "refreshChannels": "Atualizar Canais",
-    "discordWebhooksInfo": "Selecione um canal para cada tipo de webhook. Isso criará um novo webhook Discord e enviará webhooks no respectivo tipo de evento.",
-    "extraMessage": "Mensagem extra",
-    "calls911Channel": "Canal de chamadas 911",
-    "calls911ChannelInfo": "O canal Discord para onde as chamadas 911 serão enviadas.",
-    "statusUpdatesChannel": "Canal de atualizações de status",
-    "statusUpdatesChannelInfo": "O canal Discord para onde as atualizações de status serão enviadas.",
-    "panicButtonChannel": "Canal do botão de pânico",
-    "panicButtonChannelInfo": "O canal do Discord para o qual os acionadores do botão de pânico serão enviados.",
-    "bolosChannel": "Canal BOLOs",
-    "bolosChannelInfo": "O canal do Discord para onde os novos BOLOs serão enviados.",
-    "impoundedVehicleChannel": "Canal de veículos apreendidos",
-    "impoundedVehicleChannelInfo": "O canal Discord para onde as notificações de veículos apreendidos serão enviadas.",
-    "citizenRecordsChannel": "Canal de registros do cidadão",
-    "citizenRecordsChannelInfo": "O canal Discord para onde serão enviados novos relatórios de prisão, multas, mandados e advertências por escrito.",
-    "warrantsChannel": "Canal de Warrants",
-    "warrantsChannelInfo": "O canal do Discord para onde os novos warrants serão enviados."
-  },
   "AuditLogs": {
     "userBanned": "Usuário: <span>{value}</span> foi banido.",
     "userUnbanned": "Usuário: <span>{value}</span> foi banido.",
@@ -171,14 +118,5 @@
     "calls911Purged": "Chamadas selecionadas foram eliminadas. Essas chamadas não podem ser recuperadas e foram excluídas permanentemente: <span>{value}</span>. ",
     "cadAPITokenRegenerated": "O token da API CAD foi regenerado.",
     "temporaryUnitCreate": "Uma unidade temporária foi criada com id: <span>{value}</span>."
-  },
-  "ApiTokenTab": {
-    "apiToken": "API Token",
-    "publicAPIAccess": "API de  Accesso Público",
-    "token": "Token",
-    "tokenDescription": "Este é o token usado para se comunicar com a API. Este token é único e não deve ser compartilhado com ninguém. <a>Leia mais</a>",
-    "discordBotCommand": "Comando de integração de bot do Discord",
-    "discordBotCommandDescription": "Este comando pode ser usado com a <a>integração do bot do Discord</a>.",
-    "readMorePublicAPI": "Leia mais sobre a <a>API Pública aqui.</a>"
   }
 }
