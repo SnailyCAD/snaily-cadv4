@@ -1,4 +1,11 @@
-import * as Menu from "@radix-ui/react-context-menu";
+import {
+  Root as ContextMenuRoot,
+  ContextMenuTrigger,
+  ContextMenuContent,
+  ContextMenuSeparator,
+  ContextMenuItem,
+  ContextMenuLabel,
+} from "@radix-ui/react-context-menu";
 import type * as React from "react";
 import { v4 } from "uuid";
 import { classNames } from "lib/classNames";
@@ -34,7 +41,7 @@ export function ContextMenu({ items, canBeOpened = true, asChild, children }: Pr
   }
 
   return (
-    <Menu.Root
+    <ContextMenuRoot
       modal={!canBeClosed}
       onOpenChange={(open) => {
         if (open) {
@@ -44,9 +51,9 @@ export function ContextMenu({ items, canBeOpened = true, asChild, children }: Pr
         }
       }}
     >
-      <Menu.Trigger asChild={asChild}>{children}</Menu.Trigger>
+      <ContextMenuTrigger asChild={asChild}>{children}</ContextMenuTrigger>
 
-      <Menu.Content
+      <ContextMenuContent
         alignOffset={5}
         className={classNames(
           "flex flex-col z-50",
@@ -61,7 +68,7 @@ export function ContextMenu({ items, canBeOpened = true, asChild, children }: Pr
           const Component = components[component];
 
           return typeof item === "boolean" ? (
-            <Menu.Separator key={v4()} />
+            <ContextMenuSeparator key={v4()} />
           ) : (
             <Component
               key={v4()}
@@ -72,14 +79,14 @@ export function ContextMenu({ items, canBeOpened = true, asChild, children }: Pr
             </Component>
           );
         })}
-      </Menu.Content>
-    </Menu.Root>
+      </ContextMenuContent>
+    </ContextMenuRoot>
   );
 }
 
 const components = {
   Item: ({ children, ...rest }: any) => (
-    <Menu.Item
+    <ContextMenuItem
       {...rest}
       className={classNames(
         "block",
@@ -93,10 +100,10 @@ const components = {
       )}
     >
       {children}
-    </Menu.Item>
+    </ContextMenuItem>
   ),
   Label: ({ children, ...rest }: any) => (
-    <Menu.Label
+    <ContextMenuLabel
       className={classNames(
         "block",
         "rounded-sm px-3 py-1 my-0.5",
@@ -107,6 +114,6 @@ const components = {
       {...rest}
     >
       {children}
-    </Menu.Label>
+    </ContextMenuLabel>
   ),
 };

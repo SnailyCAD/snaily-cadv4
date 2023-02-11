@@ -2,7 +2,6 @@ import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "@snailycad/ui";
 import { ActiveOfficer, useLeoState } from "state/leo-state";
-import { ManageUnitModal } from "./modals/manage-unit-modal";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { useActiveOfficers } from "hooks/realtime/useActiveOfficers";
@@ -20,7 +19,6 @@ import { ActiveUnitsSearch } from "./active-units/ActiveUnitsSearch";
 import { classNames } from "lib/classNames";
 import { useActiveUnitsState } from "state/active-unit-state";
 import { useActiveUnitsFilter } from "hooks/shared/useActiveUnitsFilter";
-import { MergeUnitModal } from "./active-units/MergeUnitModal";
 import { OfficerColumn } from "./active-units/officers/OfficerColumn";
 import { isUnitOfficer } from "@snailycad/utils/typeguards";
 import { ActiveIncidentColumn } from "./active-units/officers/ActiveIncidentColumn";
@@ -39,6 +37,16 @@ import { usePermission } from "hooks/usePermission";
 const CreateTemporaryUnitModal = dynamic(
   async () =>
     (await import("./modals/temporary-units/create-temporary-unit-modal")).CreateTemporaryUnitModal,
+  { ssr: false },
+);
+
+const ManageUnitModal = dynamic(
+  async () => (await import("./modals/manage-unit-modal")).ManageUnitModal,
+  { ssr: false },
+);
+
+const MergeUnitModal = dynamic(
+  async () => (await import("./active-units/MergeUnitModal")).MergeUnitModal,
   { ssr: false },
 );
 
@@ -254,7 +262,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
           setActiveUnits={setActiveOfficers}
         />
       ) : null}
-      {isDispatch ? <CreateTemporaryUnitModal /> : null}
+      {isDispatch && showCreateTemporaryUnitButton ? <CreateTemporaryUnitModal /> : null}
     </div>
   );
 }

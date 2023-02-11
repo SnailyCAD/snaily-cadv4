@@ -1,6 +1,5 @@
 import * as React from "react";
 import type { AxiosRequestConfig } from "axios";
-import { handleRequest } from "./fetch";
 import { useTranslations } from "use-intl";
 import type { FormikHelpers } from "formik";
 import { toastMessage } from "./toastMessage";
@@ -40,6 +39,7 @@ interface Return<Data> {
 }
 
 let config: Awaited<ReturnType<typeof getNextI18nConfig>> | undefined;
+let handleRequest: typeof import("./fetch").handleRequest | undefined;
 
 export default function useFetch({ overwriteState }: UseFetchOptions = { overwriteState: null }) {
   const [state, setState] = React.useState<State | null>(null);
@@ -58,6 +58,10 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
   ): Promise<Return<Data>> {
     if (!config) {
       config = await getNextI18nConfig();
+    }
+
+    if (!handleRequest) {
+      handleRequest = (await import("./fetch")).handleRequest;
     }
 
     setState("loading");

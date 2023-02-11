@@ -6,6 +6,13 @@ import { useHasPermissionForLayout } from "hooks/auth/useHasPermissionForLayout"
 import { useSocketError } from "hooks/global/useSocketError";
 import { useSocket } from "@casper124578/use-socket.io";
 
+import dynamic from "next/dynamic";
+
+const SocketErrorComponent = dynamic(
+  async () => (await import("hooks/global/components/socket-error-component")).SocketErrorComponent,
+  { ssr: false },
+);
+
 export interface LayoutProps {
   children: React.ReactNode;
   permissions?: { fallback: PermissionsFallback; permissions: Permissions[] };
@@ -24,7 +31,7 @@ export function Layout({
   permissions,
 }: LayoutProps) {
   const { Component, audio, roleplayStopped } = useRoleplayStopped();
-  const { SocketErrorComponent, showError } = useSocketError();
+  const { showError } = useSocketError();
   const { forbidden, Loader } = useHasPermissionForLayout(permissions);
   const socket = useSocket();
 

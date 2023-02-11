@@ -3,8 +3,13 @@ import { useModal } from "state/modalState";
 import { useAreaOfPlay } from "hooks/global/useAreaOfPlay";
 import { Pencil } from "react-bootstrap-icons";
 import { ModalIds } from "types/ModalIds";
-import { ManageAOPModal } from "./modals/ManageAOPModal";
 import { useTranslations } from "next-intl";
+import dynamic from "next/dynamic";
+
+const ManageAOPModal = dynamic(
+  async () => (await import("./modals/ManageAOPModal")).ManageAOPModal,
+  { ssr: false },
+);
 
 export function DispatchAOP() {
   const { areaOfPlay } = useAreaOfPlay();

@@ -1,10 +1,9 @@
 import * as React from "react";
 import { useRouter } from "next/router";
-import { cad as CAD, User, WhitelistStatus } from "@snailycad/types";
+import { type cad as CAD, type User, WhitelistStatus } from "@snailycad/types";
 import { useIsRouteFeatureEnabled } from "../hooks/auth/useIsRouteFeatureEnabled";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
-import { doesUserHaveAllRequiredConnections } from "lib/validation/does-user-have-required-connections";
 
 interface Context {
   user: User | null;
@@ -46,6 +45,10 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
 
   const handleGetUser = React.useCallback(async () => {
     const { getSessionUser } = await import("lib/auth");
+    const { doesUserHaveAllRequiredConnections } = await import(
+      "lib/validation/does-user-have-required-connections"
+    );
+
     const user = await getSessionUser();
 
     if (

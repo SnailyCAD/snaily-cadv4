@@ -1,13 +1,8 @@
 import type { User } from "@snailycad/types";
 import { classNames } from "lib/classNames";
-import Document, { Html, Head, Main, NextScript, DocumentContext } from "next/document";
+import Document, { Html, Head, Main, NextScript } from "next/document";
 
 class CustomDocument extends Document {
-  static async getInitialProps(ctx: DocumentContext) {
-    const initialProps = await Document.getInitialProps(ctx);
-    return { ...initialProps };
-  }
-
   render() {
     const session = this.props.__NEXT_DATA__.props.pageProps?.session as User | null;
     const userSavedLocale = this.props.__NEXT_DATA__.props.pageProps?.userSavedLocale as

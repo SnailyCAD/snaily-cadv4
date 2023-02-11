@@ -8,7 +8,6 @@ import * as modalButtons from "components/modal-buttons/buttons";
 import { ModalButton } from "components/modal-buttons/ModalButton";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
-import { TonesModal } from "./modals/tones-modal";
 import type {
   PostDispatchDispatchersStateData,
   PostDispatchSignal100Data,
@@ -19,9 +18,15 @@ import { useCall911State } from "state/dispatch/call-911-state";
 import { shallow } from "zustand/shallow";
 import { ActiveToneType } from "@snailycad/types";
 import { useActiveDispatcherState } from "state/dispatch/active-dispatcher-state";
+
 const EnableSignal100Modal = dynamic(
   async () => (await import("./modals/EnableSignal100Modal")).EnableSignal100Modal,
+  { ssr: false },
 );
+
+const TonesModal = dynamic(async () => (await import("./modals/tones-modal")).TonesModal, {
+  ssr: false,
+});
 
 const buttons: modalButtons.ModalButton[] = [
   modalButtons.nameSearchBtn,

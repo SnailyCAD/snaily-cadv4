@@ -9,6 +9,13 @@ import { useSocketError } from "hooks/global/useSocketError";
 import { useAuth } from "context/AuthContext";
 import { useTranslations } from "next-intl";
 
+import dynamic from "next/dynamic";
+
+const SocketErrorComponent = dynamic(
+  async () => (await import("hooks/global/components/socket-error-component")).SocketErrorComponent,
+  { ssr: false },
+);
+
 interface Props {
   children: React.ReactNode;
   className?: string;
@@ -17,7 +24,7 @@ interface Props {
 
 export function AdminLayout({ children, className, permissions }: Props) {
   const { Component, audio, roleplayStopped } = useRoleplayStopped();
-  const { SocketErrorComponent, showError } = useSocketError();
+  const { showError } = useSocketError();
   const { forbidden, Loader } = useHasPermissionForLayout(permissions);
   const { cad } = useAuth();
   const t = useTranslations("Errors");

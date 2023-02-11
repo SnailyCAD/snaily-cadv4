@@ -14,9 +14,12 @@ import { Title } from "components/shared/Title";
 import type { DeleteTruckLogsData, GetTruckLogsData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
-const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
+const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal, {
+  ssr: false,
+});
 const ManageTruckLogModal = dynamic(
   async () => (await import("components/truck-logs/manage-truck-log-modal")).ManageTruckLogModal,
+  { ssr: false },
 );
 
 export default function TruckLogs({ logs: initialLogs, totalCount }: GetTruckLogsData) {
