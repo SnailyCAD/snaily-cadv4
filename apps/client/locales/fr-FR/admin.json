@@ -101,59 +101,6 @@
     "info_pendingBusinesses": "Ce sont des entreprises créées qui attendent l'approbation pour être utilisées. Acceptez-les ou refusez-les.",
     "alert_deleteBusiness": "Êtes-vous sûr de vouloir supprimer ce <span>{name}</span> ? Toutes les données qu'il contient seront perdues. Cette action ne peut être annulée."
   },
-  "CadSettings": {
-    "templateSection": "Modèles",
-    "callsignTemplate": "Modèle de callsign",
-    "callsignTemplateInfo": "Ceci est le modèle pour les callsigns des unités. Vous pouvez utiliser les variables suivantes : {variables}",
-    "caseNumberTemplate": "Modèle de numéro de cas",
-    "caseNumberTemplateInfo": "Ceci est le modèle pour les numéros de cas. Vous pouvez utiliser les variables suivantes : {variables}",
-    "pairedUnitTemplate": "Modèle d'unité jumelée",
-    "pairedUnitTemplateInfo": "Ceci est le modèle pour les unités jumelées. Vous pouvez utiliser les variables suivantes : {variables}"
-  },
-  "DiscordRolesTab": {
-    "discordRoles": "Rôles Discord",
-    "permissions": "Permissions",
-    "refreshRoles": "Rafraîchir les rôles",
-    "discordRolesInfo": "Lorsqu'un utilisateur s'authentifie via Discord, les permissions respectives seront attribuées à son compte.",
-    "adminRole": "Rôle d'administrateur",
-    "adminRoleInfo": "Le rôle Discord qui donnera les permissions d'administrateur à l'utilisateur.",
-    "leoRole": "Rôle LEO",
-    "leoRoleInfo": "Le rôle Discord qui donnera les permissions LEO à l'utilisateur.",
-    "leoSupervisorRole": "Rôle LEO superviseur",
-    "leoSupervisorRoleInfo": "Le rôle Discord qui donnera les permissions LEO superviseur à l'utilisateur.",
-    "emsFdRole": "Rôle EMS/FD",
-    "emsFdRoleInfo": "Le rôle Discord qui donnera les permissions EMS/FD à l'utilisateur.",
-    "dispatchRole": "Rôle de dispatch",
-    "dispatchRoleInfo": "Le rôle Discord qui donnera les permissions de dispatch à l'utilisateur.",
-    "towRole": "Rôle de dépanneur",
-    "towRoleInfo": "Le rôle Discord qui donnera les permissions de dépanneur à l'utilisateur.",
-    "taxiRole": "Rôle de taxi",
-    "taxiRoleInfo": "Le rôle Discord qui donnera les permissions de taxi à l'utilisateur.",
-    "courthouseRole": "Rôle de tribunal",
-    "courthouseRoleInfo": "Le rôle Discord qui donnera les permissions de tribunal à l'utilisateur.",
-    "whitelistedRole": "Rôle de whitelist",
-    "whitelistedRoleInfo": "Le rôle Discord qui correspond à la whitelist du serveur."
-  },
-  "DiscordWebhooksTab": {
-    "discordWebhooks": "Webhooks Discord",
-    "refreshChannels": "Rafraîchir les canaux",
-    "discordWebhooksInfo": "Sélectionnez un canal pour chaque type de webhook. Ceci crééra un webhook Discord et enverra les notifications à ce canal pour le type d'événement respectif.",
-    "extraMessage": "Message supplémentaire",
-    "calls911Channel": "Canal des appels 911",
-    "calls911ChannelInfo": "Le canal où les appels 911 seront envoyés.",
-    "statusUpdatesChannel": "Canal des mises à jour de statut",
-    "statusUpdatesChannelInfo": "Le canal où les mises à jour de statut seront envoyées.",
-    "panicButtonChannel": "Canal du bouton de panique",
-    "panicButtonChannelInfo": "Le canal où les appels du bouton de panique seront envoyés.",
-    "bolosChannel": "Canal des BOLOs",
-    "bolosChannelInfo": "Le canal où les BOLOs seront envoyés.",
-    "impoundedVehicleChannel": "Canal des véhicules saisis",
-    "impoundedVehicleChannelInfo": "Le canal où les notifications de véhicules saisis seront envoyés.",
-    "citizenRecordsChannel": "Canal des dossiers des citoyens",
-    "citizenRecordsChannelInfo": "Le canal où les nouveaux rapports d'arrestations, de mandats, de contraventions et d'avertissements écrits seront envoyés.",
-    "warrantsChannel": "Canal des mandats",
-    "warrantsChannelInfo": "Le canal où les nouveaux mandats seront envoyés."
-  },
   "AuditLogs": {
     "userBanned": "L'utilisateur <span>{value}</span> a été banni.",
     "userUnbanned": "L'utilisateur <span>{value}</span> a été débanni.",
@@ -165,14 +112,5 @@
     "unitsSetOffDuty": "Les unités suivantes ont été mises hors service : <span>{value}</span>.",
     "calls911Purged": "Les appels sélectionnés ont été purgés. Ces appels ne peuvent être restaurés et seront supprimés définitivement : <span>{value}</span>.",
     "cadAPITokenRegenerated": "Le jeton API de l'API CAD a été régénéré."
-  },
-  "ApiTokenTab": {
-    "apiToken": "Jeton API",
-    "publicAPIAccess": "Accès public à l'API",
-    "token": "Jeton",
-    "tokenDescription": "Ceci est le jeton utilisé pour communiquer avec l'API. Ce jeton est unique et ne doit pas être partagé avec quique ce soit. <a>Read More</a>",
-    "discordBotCommand": "Commande d'intégration de bot Discord",
-    "discordBotCommandDescription": "Cette commmande peut être utilisée avec <a>l'intégration de bot Discord</a>",
-    "readMorePublicAPI": "En savoir plus sur <a>l'API publique ici</a>."
   }
 }

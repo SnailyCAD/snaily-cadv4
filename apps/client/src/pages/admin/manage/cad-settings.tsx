@@ -56,13 +56,13 @@ export default function CadSettings() {
   const t = useTranslations("Management");
 
   const SETTINGS_TABS = [
-    { name: t("GENERAL_SETTINGS"), value: SettingsTabs.GeneralSettings },
-    { name: t("FEATURES"), value: SettingsTabs.Features },
-    { name: t("MISC_SETTINGS"), value: SettingsTabs.MiscSettings },
-    { name: "Auto set user properties", value: SettingsTabs.AutoSetProperties },
-    { name: "API Token", value: SettingsTabs.APIToken },
-    { name: "Discord Roles", value: SettingsTabs.DiscordRoles },
-    { name: "Discord Webhooks", value: SettingsTabs.DiscordWebhooks },
+    { name: t(SettingsTabs.GeneralSettings), value: SettingsTabs.GeneralSettings },
+    { name: t(SettingsTabs.Features), value: SettingsTabs.Features },
+    { name: t(SettingsTabs.MiscSettings), value: SettingsTabs.MiscSettings },
+    { name: t(SettingsTabs.AutoSetProperties), value: SettingsTabs.AutoSetProperties },
+    { name: t(SettingsTabs.APIToken), value: SettingsTabs.APIToken },
+    { name: t(SettingsTabs.DiscordRoles), value: SettingsTabs.DiscordRoles },
+    { name: t(SettingsTabs.DiscordWebhooks), value: SettingsTabs.DiscordWebhooks },
   ];
 
   return (
