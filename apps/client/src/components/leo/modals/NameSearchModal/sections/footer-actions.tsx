@@ -70,8 +70,10 @@ export function NameSearchFooterActions(props: Props) {
     });
   }
 
+  const showExtraActions = currentResult && !currentResult.isConfidential && props.isLeo;
+
   return (
-    <div>
+    <div className="flex items-center">
       <Dropdown
         extra={{ maxWidth: 200 }}
         sideOffset={3}
@@ -89,20 +91,8 @@ export function NameSearchFooterActions(props: Props) {
           </Dropdown.Item>
         ) : null}
 
-        {currentResult && !currentResult.isConfidential && props.isLeo ? (
+        {showExtraActions ? (
           <>
-            {Object.values(RecordType).map((type) => (
-              <Dropdown.Item
-                key={type}
-                type="button"
-                onPress={() => handleOpenCreateRecord(type)}
-                variant="cancel"
-                className="px-1.5"
-              >
-                {t(`Leo.${normalizeValue(`CREATE_${type}`)}`)}
-              </Dropdown.Item>
-            ))}
-
             <Dropdown.Item
               size="xs"
               type="button"
@@ -127,6 +117,22 @@ export function NameSearchFooterActions(props: Props) {
           </>
         ) : null}
       </Dropdown>
+
+      {showExtraActions ? (
+        <div className="ml-2">
+          {Object.values(RecordType).map((type) => (
+            <Button
+              key={type}
+              type="button"
+              onPress={() => handleOpenCreateRecord(type)}
+              variant="cancel"
+              className="px-1.5"
+            >
+              {t(`Leo.${normalizeValue(`CREATE_${type}`)}`)}
+            </Button>
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }
