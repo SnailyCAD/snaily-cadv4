@@ -31,6 +31,7 @@ const NO_LOADING_ROUTES = [
   "/auth/login",
   "/auth/register",
   "/auth/pending",
+  "/auth/temp-password",
   "/auth/connections",
 ];
 
