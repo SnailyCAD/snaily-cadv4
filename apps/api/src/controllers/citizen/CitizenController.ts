@@ -25,6 +25,7 @@ import { setEndedSuspendedLicenses } from "lib/citizen/setEndedSuspendedLicenses
 import { upsertOfficer } from "controllers/leo/my-officers/upsert-officer";
 import { createCitizenViolations } from "lib/records/create-citizen-violations";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
+import { z } from "zod";
 
 export const citizenInclude = {
   user: { select: userProperties },
@@ -242,7 +243,12 @@ export class CitizenController {
     @Context("user") user: User,
     @BodyParams() body: unknown,
   ): Promise<APITypes.PostCitizensData> {
-    const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
+    const data = validateSchema(
+      CREATE_CITIZEN_SCHEMA.extend({
+        department: z.string().nullish(),
+      }),
+      body,
+    );
 
     const miscSettings = cad.miscCadSettings;
     if (miscSettings.maxCitizensPerUser) {
@@ -316,7 +322,7 @@ export class CitizenController {
       });
     }
 
-    if ((data as any).callsign2) {
+    if (data.department) {
       await upsertOfficer({
         body,
         citizen,
