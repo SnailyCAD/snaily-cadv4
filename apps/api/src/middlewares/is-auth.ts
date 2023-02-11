@@ -55,7 +55,7 @@ export class IsAuth implements MiddlewareMethods {
         });
       }
 
-      ctx.set("cad", { ...setDiscordAuth(cad), version: await getCADVersion() });
+      ctx.set("cad", { ...setCADFeatures(cad), version: await getCADVersion() });
     }
 
     // localized error messages
@@ -69,23 +69,35 @@ export class IsAuth implements MiddlewareMethods {
   }
 }
 
-export function setDiscordAuth<T extends Partial<cad & { features?: CadFeature[] }> | null>(
+/**
+ * overwrite features that cannot be enabled if the required tokens are not set
+ */
+export function setCADFeatures<T extends Partial<cad & { features?: CadFeature[] }> | null>(
   cad: T,
 ): Omit<T, "features"> & { features: Record<Feature, boolean> } {
   const features = createFeaturesObject(cad?.features);
 
   const hasDiscordTokens =
     Boolean(process.env["DISCORD_CLIENT_ID"]) && Boolean(process.env["DISCORD_CLIENT_SECRET"]);
+  const hasSteamTokens = Boolean(process.env["STEAM_API_KEY"]);
 
-  const isEnabled = features[Feature.DISCORD_AUTH];
+  const isSteamOAuthEnabled = features.STEAM_OAUTH;
+  const isDiscordOauthEnabled = features.DISCORD_AUTH;
 
-  const filtered = overwriteFeatures({ features, feature: Feature.DISCORD_AUTH, isEnabled: false });
+  const isForceDiscordAuthEnabled = features.FORCE_DISCORD_AUTH;
+  const isForceSteamAuthEnabled = features.FORCE_STEAM_AUTH;
 
-  if (isEnabled && !hasDiscordTokens) {
-    return { ...cad, features: filtered };
-  }
+  const filtered = overwriteFeatures({
+    features,
+    featuresToOverwrite: {
+      DISCORD_AUTH: isDiscordOauthEnabled && hasDiscordTokens,
+      FORCE_DISCORD_AUTH: isForceDiscordAuthEnabled && hasDiscordTokens,
+      STEAM_OAUTH: isSteamOAuthEnabled && hasSteamTokens,
+      FORCE_STEAM_AUTH: isForceSteamAuthEnabled && hasSteamTokens,
+    },
+  });
 
-  return { ...cad, features };
+  return { ...cad, features: filtered };
 }
 
 export function CAD_SELECT(user?: Pick<User, "rank"> | null, includeDiscordRoles?: boolean) {

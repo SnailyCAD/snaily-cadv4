@@ -9,7 +9,7 @@ import { Controller } from "@tsed/di";
 import { BodyParams, Context, QueryParams } from "@tsed/platform-params";
 import { ContentType, Delete, Get, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
-import { CAD_SELECT, IsAuth, setDiscordAuth } from "middlewares/is-auth";
+import { CAD_SELECT, IsAuth, setCADFeatures } from "middlewares/is-auth";
 import { BadRequest } from "@tsed/exceptions";
 import { Req, Res, UseBefore } from "@tsed/common";
 import { Socket } from "services/socket-service";
@@ -51,7 +51,7 @@ export class CADSettingsController {
       user?.rank === Rank.OWNER ? cad?.registrationCode : !!cad?.registrationCode;
 
     return {
-      ...setDiscordAuth(cad),
+      ...setCADFeatures(cad),
       registrationCode,
       version,
     } as APITypes.GetCADSettingsData;
@@ -139,7 +139,7 @@ export class CADSettingsController {
       executorId: sessionUserId,
     });
 
-    return setDiscordAuth(updated);
+    return setCADFeatures(updated);
   }
 
   @Put("/features")
@@ -189,7 +189,7 @@ export class CADSettingsController {
       executorId: sessionUserId,
     });
 
-    return setDiscordAuth(updated);
+    return setCADFeatures(updated);
   }
 
   @Put("/misc")

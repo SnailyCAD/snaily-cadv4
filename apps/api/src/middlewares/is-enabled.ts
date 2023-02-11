@@ -3,7 +3,7 @@ import { UseBefore } from "@tsed/platform-middlewares";
 import { StoreSet, useDecorators } from "@tsed/core";
 import { CadFeature, Feature as DatabaseFeature, Feature } from "@prisma/client";
 import type { Feature as TypesFeature } from "@snailycad/types";
-import { setDiscordAuth } from "./is-auth";
+import { setCADFeatures } from "./is-auth";
 import { prisma } from "lib/data/prisma";
 import { FeatureNotEnabled } from "src/exceptions/feature-not-enabled";
 
@@ -52,12 +52,11 @@ export function createFeaturesObject(features?: CadFeature[] | undefined) {
 
 export function overwriteFeatures(options: {
   features: ReturnType<typeof createFeaturesObject>;
-  feature: Feature;
-  isEnabled: boolean;
+  featuresToOverwrite: Partial<Record<Feature, boolean>>;
 }) {
   return {
     ...options.features,
-    [options.feature]: options.isEnabled,
+    ...options.featuresToOverwrite,
   };
 }
 
@@ -66,7 +65,7 @@ class IsFeatureEnabledMiddleware implements MiddlewareMethods {
   async use(@Context() ctx: Context, @Next() next: Next) {
     const options = ctx.endpoint.get<IsFeatureEnabledOptions>(IsFeatureEnabledMiddleware);
 
-    const cad = setDiscordAuth(
+    const cad = setCADFeatures(
       await prisma.cad.findFirst({
         select: {
           id: true,
