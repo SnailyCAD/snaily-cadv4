@@ -134,7 +134,7 @@ export class CADSettingsController {
       action: {
         type: AuditLogActionType.CadSettingsUpdate,
         new: setCADFeatures(updated),
-        previous: setCADFeatures(_cad),
+        previous: setCADFeatures(_cad) as any,
       },
       prisma,
       executorId: sessionUserId,
