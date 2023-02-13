@@ -25,6 +25,7 @@ export class AdminController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [
       ...defaultPermissions.allDefaultAdminPermissions,
+      ...defaultPermissions.defaultCourthousePermissions,
       Permissions.ManageAwardsAndQualifications,
     ],
   })

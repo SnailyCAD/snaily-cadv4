@@ -1,3 +1,4 @@
+import { defaultPermissions } from "@snailycad/permissions";
 import { Rank } from "@snailycad/types";
 import type {
   GetManageExpungementRequests,
@@ -61,13 +62,7 @@ export default function ManageCourthouse({
     <AdminLayout
       permissions={{
         fallback: (u) => u.rank !== Rank.USER,
-        permissions: [
-          Permissions.ViewNameChangeRequests,
-          Permissions.ManageNameChangeRequests,
-          Permissions.ViewExpungementRequests,
-          Permissions.ManageExpungementRequests,
-          Permissions.ManagePendingWarrants,
-        ],
+        permissions: defaultPermissions.defaultCourthousePermissions,
       }}
     >
       <header className="mb-5">

@@ -56,6 +56,7 @@ export function AdminSidebar() {
             permissions={[
               ...defaultPermissions.defaultManagementPermissions,
               ...defaultPermissions.defaultOwnerPermissions,
+              ...defaultPermissions.defaultCourthousePermissions,
             ]}
             title={man("management")}
           >

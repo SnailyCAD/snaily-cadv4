@@ -29,10 +29,18 @@ const DEPRECATED_PERMISSIONS = [
   Permissions.ManageWeaponExams,
 ];
 
+const filteredAdminPermissions = defaultPermissions.allDefaultAdminPermissions.filter(
+  (p) => !defaultPermissions.defaultCourthousePermissions.includes(p),
+);
+
 const groups = [
   {
     name: "Admin",
-    permissions: defaultPermissions.allDefaultAdminPermissions,
+    permissions: filteredAdminPermissions,
+  },
+  {
+    name: "Courthouse (Admin)",
+    permissions: defaultPermissions.defaultCourthousePermissions,
   },
   {
     name: "LEO",

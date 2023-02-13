@@ -24,7 +24,10 @@ export default function Admin({ counts }: Props) {
   return (
     <AdminLayout
       permissions={{
-        permissions: defaultPermissions.allDefaultAdminPermissions,
+        permissions: [
+          ...defaultPermissions.allDefaultAdminPermissions,
+          ...defaultPermissions.defaultCourthousePermissions,
+        ],
         fallback: (u) => u.rank !== Rank.USER,
       }}
     >

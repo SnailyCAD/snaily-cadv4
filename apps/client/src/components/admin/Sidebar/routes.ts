@@ -42,13 +42,7 @@ export const managementRoutes: SidebarRoute[] = [
   },
   {
     type: "COURTHOUSE",
-    permissions: [
-      Permissions.ViewNameChangeRequests,
-      Permissions.ManageNameChangeRequests,
-      Permissions.ViewExpungementRequests,
-      Permissions.ManageExpungementRequests,
-      Permissions.ManagePendingWarrants,
-    ],
+    permissions: defaultPermissions.defaultCourthousePermissions,
     hidden: ({ COURTHOUSE }) => !COURTHOUSE,
   },
   {
