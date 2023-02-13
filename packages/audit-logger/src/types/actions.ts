@@ -221,8 +221,8 @@ export type CadAPITokenRegenerated = BaseAuditLogAction<
 >;
 export type CADFeaturesUpdate = BaseAuditLogAction<
   AuditLogActionType.CADFeaturesUpdate,
-  (Types.Feature | Feature)[],
-  (Types.Feature | Feature)[]
+  Record<Types.Feature | Feature, boolean>,
+  Record<Types.Feature | Feature, boolean>
 >;
 export type TemporaryUnitCreate = BaseAuditLogAction<
   AuditLogActionType.TemporaryUnitCreate,

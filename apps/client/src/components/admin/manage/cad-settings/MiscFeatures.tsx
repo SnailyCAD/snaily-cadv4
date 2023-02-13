@@ -37,6 +37,10 @@ export function MiscFeatures() {
     for (const key in values) {
       const value = values[key as keyof typeof INITIAL_VALUES];
 
+      if (typeof value === "string" && value.includes("fakepath")) {
+        newValues[key] = undefined;
+      }
+
       if (excluded.includes(key)) {
         newValues[key] = value;
         continue;

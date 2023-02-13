@@ -26,6 +26,7 @@ import {
   parseAuditLogs,
 } from "@snailycad/audit-logger/server";
 import type { MiscCadSettings } from "@snailycad/types";
+import { createFeaturesObject } from "middlewares/is-enabled";
 
 @Controller("/admin/manage/cad-settings")
 @ContentType("application/json")
@@ -132,8 +133,8 @@ export class CADSettingsController {
     await createAuditLogEntry({
       action: {
         type: AuditLogActionType.CadSettingsUpdate,
-        new: updated as any,
-        previous: _cad as any,
+        new: setCADFeatures(updated),
+        previous: setCADFeatures(_cad),
       },
       prisma,
       executorId: sessionUserId,
@@ -174,16 +175,14 @@ export class CADSettingsController {
       include: { features: true, miscCadSettings: true, apiToken: true },
     });
 
-    const previousEnabledFeatures = Object.entries(cad.features ?? {})
-      .filter(([, isEnabled]) => isEnabled)
-      .map(([feature]) => feature);
-    const newEnabledFeatures = updated.features.filter((f) => f.isEnabled);
+    const previousEnabledFeatures = cad.features;
+    const newEnabledFeatures = createFeaturesObject(updated.features);
 
     await createAuditLogEntry({
       action: {
         type: AuditLogActionType.CADFeaturesUpdate,
-        new: newEnabledFeatures.map((feature) => feature.feature),
-        previous: previousEnabledFeatures as Feature[],
+        new: newEnabledFeatures,
+        previous: previousEnabledFeatures!,
       },
       prisma,
       executorId: sessionUserId,
