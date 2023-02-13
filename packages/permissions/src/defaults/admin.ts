@@ -61,6 +61,7 @@ export const defaultCourthousePermissions = [
   Permissions.ManageExpungementRequests,
   Permissions.ViewNameChangeRequests,
   Permissions.ManageNameChangeRequests,
+  Permissions.ManagePendingWarrants,
 ];
 
 export const defaultOwnerPermissions = [Permissions.ManageCADSettings];
