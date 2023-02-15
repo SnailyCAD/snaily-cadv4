@@ -11,6 +11,7 @@ import { useTranslations } from "use-intl";
 
 import dynamic from "next/dynamic";
 import { shallow } from "zustand/shallow";
+import type { Record } from "@snailycad/types";
 
 const ManageIncidentModal = dynamic(
   async () => (await import("components/leo/incidents/manage-incident-modal")).ManageIncidentModal,
@@ -25,9 +26,17 @@ interface _FormikContext {
   incidentId: string | null;
 }
 
-export function ConnectionsTab({ isReadOnly }: { isReadOnly?: boolean }) {
+export function ConnectionsTab({
+  isReadOnly,
+  record,
+}: {
+  record?: Record | null;
+  isReadOnly?: boolean;
+}) {
   const t = useTranslations("Leo");
   const { handleChange, errors, values } = useFormikContext<_FormikContext>();
+
+  console.log({ record });
 
   const { calls, setCurrentlySelectedCall } = useCall911State(
     (state) => ({
@@ -39,8 +48,13 @@ export function ConnectionsTab({ isReadOnly }: { isReadOnly?: boolean }) {
   const { activeIncidents } = useActiveIncidents();
   const { openModal } = useModal();
 
-  const incident = activeIncidents.find((incident) => incident.id === values.incidentId) ?? null;
-  const call = calls.find((call) => call.id === values.call911Id) ?? null;
+  const incident =
+    (record as any)?.incident ??
+    activeIncidents.find((incident) => incident.id === values.incidentId) ??
+    null;
+
+  const call =
+    (record as any)?.call911 ?? calls.find((call) => call.id === values.call911Id) ?? null;
 
   return (
     <TabsContent value="connections-tab">
@@ -57,7 +71,7 @@ export function ConnectionsTab({ isReadOnly }: { isReadOnly?: boolean }) {
               value: incident.id,
               label: `#${incident.caseNumber}`,
             }))}
-            value={values.incidentId}
+            value={incident?.id || values.incidentId}
             onChange={handleChange}
             name="incidentId"
             isClearable
@@ -88,7 +102,7 @@ export function ConnectionsTab({ isReadOnly }: { isReadOnly?: boolean }) {
               value: call.id,
               label: `#${call.caseNumber}`,
             }))}
-            value={values.call911Id}
+            value={call?.id || values.call911Id}
             onChange={handleChange}
             name="call911Id"
             isClearable

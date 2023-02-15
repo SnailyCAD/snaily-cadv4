@@ -291,7 +291,7 @@ export function ManageRecordModal(props: Props) {
               <SeizedItemsTab isReadOnly={props.isReadOnly} />
               <ViolationsTab penalCodes={penalCodes} isReadOnly={props.isReadOnly} />
               <VehicleTab isReadOnly={props.isReadOnly} />
-              <ConnectionsTab isReadOnly={props.isReadOnly} />
+              <ConnectionsTab record={props.record} isReadOnly={props.isReadOnly} />
             </TabList>
 
             <footer className="flex justify-end mt-5">
