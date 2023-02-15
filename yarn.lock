@@ -886,7 +886,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@headlessui/react@npm:^1.7.10":
+"@headlessui/react@npm:^1.7.8":
   version: 1.7.10
   resolution: "@headlessui/react@npm:1.7.10"
   dependencies:
@@ -3112,7 +3112,7 @@ __metadata:
   dependencies:
     "@casper124578/use-socket.io": 5.0.1
     "@casper124578/useful": ^2.0.6
-    "@headlessui/react": ^1.7.10
+    "@headlessui/react": ^1.7.8
     "@radix-ui/react-accordion": ^1.1.0
     "@radix-ui/react-context-menu": ^2.1.1
     "@radix-ui/react-dropdown-menu": ^2.0.2

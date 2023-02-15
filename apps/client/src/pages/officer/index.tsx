@@ -214,20 +214,23 @@ export default function OfficerDashboard({
             <>
               <Modals.WeaponSearchModal />
               <Modals.VehicleSearchModal id={ModalIds.VehicleSearch} />
+
+              {LEO_TICKETS ? (
+                <Modals.ManageRecordModal onCreate={handleRecordCreate} type={RecordType.TICKET} />
+              ) : null}
+              <Modals.ManageRecordModal
+                onCreate={handleRecordCreate}
+                type={RecordType.ARREST_REPORT}
+              />
+              <Modals.ManageRecordModal
+                onCreate={handleRecordCreate}
+                type={RecordType.WRITTEN_WARNING}
+              />
             </>
           )}
           <Modals.NameSearchModal />
           {!ACTIVE_WARRANTS ? <CreateWarrantModal warrant={null} /> : null}
           <Modals.CustomFieldSearch />
-
-          {LEO_TICKETS ? (
-            <Modals.ManageRecordModal onCreate={handleRecordCreate} type={RecordType.TICKET} />
-          ) : null}
-          <Modals.ManageRecordModal onCreate={handleRecordCreate} type={RecordType.ARREST_REPORT} />
-          <Modals.ManageRecordModal
-            onCreate={handleRecordCreate}
-            type={RecordType.WRITTEN_WARNING}
-          />
         </>
       ) : null}
     </Layout>

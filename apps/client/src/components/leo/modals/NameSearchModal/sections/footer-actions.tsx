@@ -1,3 +1,4 @@
+import * as React from "react";
 import { RecordType } from "@snailycad/types";
 import type { PostEmsFdDeclareCitizenById } from "@snailycad/types/api";
 import { Button } from "@snailycad/ui";
@@ -11,12 +12,15 @@ import { useNameSearch } from "state/search/name-search-state";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { shallow } from "zustand/shallow";
+import { ManageRecordModal } from "../../manage-record/manage-record-modal";
 
 interface Props {
   isLeo?: boolean;
 }
 
 export function NameSearchFooterActions(props: Props) {
+  const [type, setType] = React.useState<RecordType | null>(null);
+
   const { CREATE_USER_CITIZEN_LEO } = useFeatureEnabled();
   const { openModal } = useModal();
   const t = useTranslations();
@@ -64,6 +68,7 @@ export function NameSearchFooterActions(props: Props) {
       [RecordType.WRITTEN_WARNING]: ModalIds.CreateWrittenWarning,
     };
 
+    setType(type);
     openModal(modalId[type], {
       citizenName: `${currentResult.name} ${currentResult.surname}`,
       citizenId: currentResult.id,
@@ -133,6 +138,8 @@ export function NameSearchFooterActions(props: Props) {
           ))}
         </div>
       ) : null}
+
+      {type ? <ManageRecordModal onClose={() => setType(null)} type={type} /> : null}
     </div>
   );
 }
