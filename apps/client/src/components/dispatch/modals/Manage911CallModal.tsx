@@ -27,11 +27,12 @@ import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 interface Props {
   call: Full911Call | null;
   forceOpen?: boolean;
+  forceDisabled?: boolean;
   setCall?(call: Full911Call | null): void;
   onClose?(): void;
 }
 
-export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props) {
+export function Manage911CallModal({ setCall, forceDisabled, forceOpen, call, onClose }: Props) {
   const [showAlert, setShowAlert] = React.useState(false);
 
   const { isOpen, closeModal } = useModal();
@@ -61,7 +62,9 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
   const activeUnit = router.pathname.includes("/officer") ? activeOfficer : activeDeputy;
   const isDispatch = router.pathname.includes("/dispatch") && hasDispatchPermissions;
 
-  const isDisabled = isDispatch
+  const isDisabled = forceDisabled
+    ? true
+    : isDispatch
     ? false
     : call
     ? !call?.assignedUnits.some((u) => u.unit?.id === activeUnit?.id) && hasActiveDispatchers

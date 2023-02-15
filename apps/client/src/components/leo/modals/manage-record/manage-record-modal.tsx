@@ -17,12 +17,36 @@ import type { PostRecordsData, PutRecordsByIdData } from "@snailycad/types/api";
 import { Toggle } from "components/form/Toggle";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
-import { ManageCourtEntry } from "components/courthouse/court-entries/manage-court-entry-modal";
 import { FullDate } from "components/shared/FullDate";
 import { TabList, TabsContent } from "components/shared/TabList";
-import { SeizedItemsTab } from "./tabs/seized-items-tab/seized-items-tab";
-import { ViolationsTab } from "./tabs/violations-tab/violations-tab";
-import { VehicleTab } from "./tabs/vehicle-tab/vehicle-tab";
+
+import dynamic from "next/dynamic";
+
+const ManageCourtEntryModal = dynamic(
+  async () =>
+    (await import("components/courthouse/court-entries/manage-court-entry-modal")).ManageCourtEntry,
+  { ssr: false },
+);
+
+const VehicleTab = dynamic(
+  async () => (await import("./tabs/vehicle-tab/vehicle-tab")).VehicleTab,
+  { ssr: false },
+);
+
+const SeizedItemsTab = dynamic(
+  async () => (await import("./tabs/seized-items-tab/seized-items-tab")).SeizedItemsTab,
+  { ssr: false, loading: () => <Loader /> },
+);
+
+const ViolationsTab = dynamic(
+  async () => (await import("./tabs/violations-tab/violations-tab")).ViolationsTab,
+  { loading: () => <Loader /> },
+);
+
+const ConnectionsTab = dynamic(
+  async () => (await import("./tabs/connections-tab/connections-tab")).ConnectionsTab,
+  { ssr: false, loading: () => <Loader /> },
+);
 
 interface Props {
   hideCitizenField?: boolean;
@@ -181,6 +205,9 @@ export function ManageRecordModal(props: Props) {
     vehicleId: props.record?.vehicleId ?? null,
     vehicleModel: props.record?.vehicle?.model.value.value ?? props.record?.vehicleModel ?? null,
     vehicleColor: props.record?.vehicle?.color ?? props.record?.vehicleColor ?? null,
+
+    callId: props.record?.callId ?? null,
+    incidentId: props.record?.incidentId ?? null,
   };
 
   return (
@@ -198,7 +225,8 @@ export function ManageRecordModal(props: Props) {
                 { name: "General Information", value: "general-information-tab" },
                 { name: "Violations", value: "violations-tab" },
                 { name: "Seized Items", value: "seized-items-tab" },
-                { name: "Vehicle Tab", value: "vehicle-tab" },
+                { name: "Vehicle Information", value: "vehicle-tab" },
+                { name: "Connections", value: "connections-tab" },
               ]}
             >
               <TabsContent value="general-information-tab">
@@ -263,6 +291,7 @@ export function ManageRecordModal(props: Props) {
               <SeizedItemsTab isReadOnly={props.isReadOnly} />
               <ViolationsTab penalCodes={penalCodes} isReadOnly={props.isReadOnly} />
               <VehicleTab isReadOnly={props.isReadOnly} />
+              <ConnectionsTab isReadOnly={props.isReadOnly} />
             </TabList>
 
             <footer className="flex justify-end mt-5">
@@ -281,7 +310,7 @@ export function ManageRecordModal(props: Props) {
               )}
             </footer>
 
-            <ManageCourtEntry
+            <ManageCourtEntryModal
               submitHandler={(values) => {
                 closeModal(ModalIds.ManageCourtEntry);
                 setFieldValue("courtEntry", values);
