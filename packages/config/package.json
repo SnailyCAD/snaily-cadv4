@@ -22,10 +22,10 @@
     "test": "yarn vitest run"
   },
   "devDependencies": {
-    "tsup": "^6.6.0",
+    "tsup": "^6.6.3",
     "typescript": "^4.9.5",
     "vite": "^4.1.1",
-    "vitest": "^0.28.4"
+    "vitest": "^0.28.5"
   },
   "tsup": {
     "entry": [
