@@ -206,7 +206,7 @@ export function ManageRecordModal(props: Props) {
     vehicleModel: props.record?.vehicle?.model.value.value ?? props.record?.vehicleModel ?? null,
     vehicleColor: props.record?.vehicle?.color ?? props.record?.vehicleColor ?? null,
 
-    callId: props.record?.callId ?? null,
+    call911Id: props.record?.call911Id ?? null,
     incidentId: props.record?.incidentId ?? null,
   };
 

@@ -21,7 +21,7 @@ const Manage911CallModal = dynamic(
 );
 
 interface _FormikContext {
-  callId: string | null;
+  call911Id: string | null;
   incidentId: string | null;
 }
 
@@ -40,7 +40,7 @@ export function ConnectionsTab({ isReadOnly }: { isReadOnly?: boolean }) {
   const { openModal } = useModal();
 
   const incident = activeIncidents.find((incident) => incident.id === values.incidentId) ?? null;
-  const call = calls.find((call) => call.id === values.callId) ?? null;
+  const call = calls.find((call) => call.id === values.call911Id) ?? null;
 
   return (
     <TabsContent value="connections-tab">
@@ -48,7 +48,7 @@ export function ConnectionsTab({ isReadOnly }: { isReadOnly?: boolean }) {
         <h3 className="text-xl font-semibold">{t("connections")}</h3>
       </header>
 
-      <FormField errorMessage={errors.incidentId as string} label={t("incident")}>
+      <FormField optional errorMessage={errors.incidentId as string} label={t("incident")}>
         <div className="flex gap-2">
           <Select
             className="w-full"
@@ -79,7 +79,7 @@ export function ConnectionsTab({ isReadOnly }: { isReadOnly?: boolean }) {
         </div>
       </FormField>
 
-      <FormField errorMessage={errors.callId as string} label={t("call")}>
+      <FormField optional errorMessage={errors.call911Id as string} label={t("call")}>
         <div className="flex gap-2">
           <Select
             className="w-full"
@@ -88,12 +88,12 @@ export function ConnectionsTab({ isReadOnly }: { isReadOnly?: boolean }) {
               value: call.id,
               label: `#${call.caseNumber}`,
             }))}
-            value={values.callId}
+            value={values.call911Id}
             onChange={handleChange}
-            name="callId"
+            name="call911Id"
             isClearable
           />
-          {values.callId ? (
+          {values.call911Id ? (
             <>
               <Button
                 onClick={() => {
