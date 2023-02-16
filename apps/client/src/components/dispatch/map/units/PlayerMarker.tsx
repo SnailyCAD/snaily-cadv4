@@ -10,6 +10,7 @@ import { MapItem, useDispatchMapState } from "state/mapState";
 import { generateMarkerTypes } from "../RenderMapBlips";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
+import { Rank } from "@snailycad/types";
 
 interface Props {
   player: MapPlayer | PlayerDataEventPayload;
@@ -69,6 +70,14 @@ export function PlayerMarker({ player, handleToggle }: Props) {
 
   const isCADUser = "steamId" in player;
 
+  const hasAdminPermissions =
+    isCADUser &&
+    hasPermission({
+      userToCheck: player,
+      permissionsToCheck: defaultPermissions.allDefaultAdminPermissions,
+      fallback: player.rank !== Rank.USER,
+    });
+
   const hasLeoPermissions =
     isCADUser &&
     hasPermission({
@@ -99,6 +108,7 @@ export function PlayerMarker({ player, handleToggle }: Props) {
   const unitName = hasUnit && player.unit ? makeUnitName(player.unit) : player.name;
   const unitCallsign = hasUnit && player.unit ? generateCallsign(player.unit) : null;
   const unitNameAndCallsign = unitName && unitCallsign ? `${unitCallsign} ${unitName}` : unitName;
+  const unitStatus = hasUnit && player.unit ? player.unit.status : null;
 
   return (
     <Marker
@@ -125,6 +135,9 @@ export function PlayerMarker({ player, handleToggle }: Props) {
             <p style={{ margin: 2 }}>
               <strong>{t("leo")}: </strong> {String(hasLeoPermissions)}
             </p>
+            <p style={{ margin: 2 }}>
+              <strong>{t("status")}: </strong> {unitStatus?.value.value}
+            </p>
           </>
         ) : null}
 
@@ -144,12 +157,12 @@ export function PlayerMarker({ player, handleToggle }: Props) {
             <strong>{t("licensePlate")}: </strong> {player.licensePlate}
           </p>
         ) : null}
-        {player.convertedSteamId ? (
+        {player.convertedSteamId && hasAdminPermissions ? (
           <p style={{ margin: 2 }}>
             <strong>{t("steamId")}: </strong> {player.convertedSteamId}
           </p>
         ) : null}
-        {player.discordId ? (
+        {player.discordId && hasAdminPermissions ? (
           <p style={{ margin: 2 }}>
             <strong>{t("discordId")}: </strong> {player.discordId}
           </p>
