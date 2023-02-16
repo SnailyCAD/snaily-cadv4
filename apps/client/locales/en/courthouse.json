@@ -33,6 +33,7 @@
     "noCourthousePosts": "There are no courthouse posts yet.",
     "createdBy": "Created By",
     "cancelRequest": "Cancel Request",
+    "courthouseManagement": "Courthouse Management",
     "alert_deleteCourthousePost": "Are you sure you want to delete this post? This action cannot be undone.",
     "alert_deleteCourtEntry": "Are you sure you want to delete this entry? This action cannot be undone.",
     "alert_cancelRequest": "Are you sure you want to cancel this expungement request? This action cannot be undone.",

@@ -18,6 +18,9 @@ import type {
   GetExpungementRequestsData,
   GetNameChangeRequestsData,
 } from "@snailycad/types/api";
+import Link from "next/link";
+import { BoxArrowUpRight } from "react-bootstrap-icons";
+import { defaultPermissions } from "@snailycad/permissions";
 
 interface Props {
   requests: GetExpungementRequestsData;
@@ -31,6 +34,11 @@ export default function Courthouse(props: Props) {
   const { COURTHOUSE_POSTS } = useFeatureEnabled();
   const { hasPermissions } = usePermission();
   const hasEntriesPerms = hasPermissions([Permissions.Leo], (u) => u.isLeo);
+
+  const hasCourthouseAdminPerms = hasPermissions(
+    defaultPermissions.defaultCourthousePermissions,
+    (u) => u.isSupervisor,
+  );
 
   const TABS = [
     { name: t("expungementRequests"), value: "expungementRequestsTab" },
@@ -48,7 +56,16 @@ export default function Courthouse(props: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Title className="mb-3">{t("courthouse")}</Title>
+      <header className="flex items-center justify-between">
+        <Title className="mb-3">{t("courthouse")}</Title>
+
+        {hasCourthouseAdminPerms ? (
+          <Link className="underline flex items-center gap-2" href="/admin/manage/courthouse">
+            {t("courthouseManagement")}
+            <BoxArrowUpRight />
+          </Link>
+        ) : null}
+      </header>
 
       <TabList tabs={TABS}>
         <ExpungementRequestsTab requests={props.requests} />
