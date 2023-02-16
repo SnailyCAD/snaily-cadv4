@@ -9,6 +9,8 @@ init({
   ignoreErrors: [
     /loading chunk [\w+]+ failed/i,
     /hydration failed because the initial UI does not match what was rendered on the server/i,
+    /There was an error while hydrating/i,
+    /text content does not match server-rendered html/,
   ],
   integrations(integrations) {
     return [...integrations, new BrowserTracing()];
