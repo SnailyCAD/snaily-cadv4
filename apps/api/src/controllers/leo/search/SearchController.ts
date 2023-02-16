@@ -352,7 +352,9 @@ export async function appendCustomFields(item: any, category: CustomFieldCategor
 
 function appendAssignedUnitData(citizens: any[]) {
   return citizens.map((citizen) => {
-    const newRecords = citizen.Record.map((record: any) => {
+    const _records = citizen?.Record ?? [];
+
+    const newRecords = _records.map((record: any) => {
       if (record.call911) {
         return { ...record, call911: officerOrDeputyToUnit(record.call911) };
       }
