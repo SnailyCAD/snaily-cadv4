@@ -136,17 +136,22 @@ export async function upsertOfficer({
     statusId = onDutyStatus?.id;
   }
 
-  const rank =
-    (defaultDepartment
-      ? defaultDepartment.defaultOfficerRankId
-      : department.defaultOfficerRankId) || undefined;
+  let newRankId;
+  if (existingOfficer && existingOfficer.departmentId === data.department) {
+    newRankId = existingOfficer.rankId;
+  } else {
+    newRankId =
+      (defaultDepartment
+        ? defaultDepartment.defaultOfficerRankId
+        : department.defaultOfficerRankId) || undefined;
+  }
 
   const createUpdateFields = {
     callsign: data.callsign,
     callsign2: data.callsign2,
     userId: user?.id,
     departmentId: defaultDepartment ? defaultDepartment.id : data.department,
-    rankId: rank,
+    rankId: newRankId,
     badgeNumber: isBadgeNumbersEnabled ? data.badgeNumber : undefined,
     citizenId: citizen.id,
     imageId: validatedImageURL,
