@@ -354,8 +354,6 @@ function appendAssignedUnitData(citizens: any[]) {
   return citizens.map((citizen) => {
     const newRecords = citizen.Record.map((record: any) => {
       if (record.call911) {
-        console.log({ record });
-
         return { ...record, call911: officerOrDeputyToUnit(record.call911) };
       }
 
