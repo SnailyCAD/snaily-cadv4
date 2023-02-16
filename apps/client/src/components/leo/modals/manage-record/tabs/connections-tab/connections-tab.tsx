@@ -49,12 +49,20 @@ export function ConnectionsTab({
   const { openModal } = useModal();
 
   const incident =
-    (record as any)?.incident ??
+    (values.incidentId && (record as any)?.incident) ??
     activeIncidents.find((incident) => incident.id === values.incidentId) ??
     null;
 
+  const _incidents = incident
+    ? [incident, ...activeIncidents.filter((v) => v.id !== incident.id)]
+    : activeIncidents;
+
   const call =
-    (record as any)?.call911 ?? calls.find((call) => call.id === values.call911Id) ?? null;
+    (values.call911Id && (record as any)?.call911) ??
+    calls.find((call) => call.id === values.call911Id) ??
+    null;
+
+  const _calls = call ? [call, ...calls.filter((v) => v.id !== call.id)] : calls;
 
   return (
     <TabsContent value="connections-tab">
@@ -67,7 +75,7 @@ export function ConnectionsTab({
           <Select
             className="w-full"
             disabled={isReadOnly}
-            values={activeIncidents.map((incident) => ({
+            values={_incidents.map((incident) => ({
               value: incident.id,
               label: `#${incident.caseNumber}`,
             }))}
@@ -98,7 +106,7 @@ export function ConnectionsTab({
           <Select
             className="w-full"
             disabled={isReadOnly}
-            values={calls.map((call) => ({
+            values={_calls.map((call) => ({
               value: call.id,
               label: `#${call.caseNumber}`,
             }))}
