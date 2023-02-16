@@ -73,6 +73,8 @@ export async function upsertRecord(options: UpsertRecordOptions) {
       vehicleColor: options.data.vehicleColor || null,
       vehicleModel: options.data.vehicleModel || null,
       vehiclePlate: options.data.plateOrVin || options.data.plateOrVinSearch,
+      call911Id: options.data.call911Id || null,
+      incidentId: options.data.incidentId || null,
     },
     update: {
       notes: options.data.notes,
@@ -83,6 +85,8 @@ export async function upsertRecord(options: UpsertRecordOptions) {
       vehicleColor: options.data.vehicleColor || null,
       vehicleModel: options.data.vehicleModel || null,
       vehiclePlate: options.data.plateOrVin || options.data.plateOrVinSearch,
+      call911Id: options.data.call911Id || null,
+      incidentId: options.data.incidentId || null,
     },
     include: {
       officer: { include: leoProperties },

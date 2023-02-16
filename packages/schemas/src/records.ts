@@ -36,6 +36,8 @@ export const CREATE_TICKET_SCHEMA = z.object({
   vehicleId: z.string().nullish(),
   vehicleModel: z.string().nullish(),
   vehicleColor: z.string().nullish(),
+  call911Id: z.string().nullish(),
+  incidentId: z.string().nullish(),
 });
 
 export const CREATE_WARRANT_SCHEMA = z.object({

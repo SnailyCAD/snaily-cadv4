@@ -25,6 +25,9 @@ import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import type * as APITypes from "@snailycad/types/api";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { setEndedSuspendedLicenses } from "lib/citizen/setEndedSuspendedLicenses";
+import { incidentInclude } from "../incidents/IncidentController";
+import { callInclude } from "controllers/dispatch/911-calls/Calls911Controller";
+import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 
 export const vehicleSearchInclude = {
   model: { include: { value: true } },
@@ -79,6 +82,8 @@ export const citizenSearchIncludeOrSelect = (
             seizedItems: true,
             courtEntry: { include: { dates: true } },
             vehicle: { include: { model: { include: { value: true } } } },
+            incident: { include: incidentInclude },
+            call911: { include: callInclude },
             violations: {
               include: {
                 penalCode: {
@@ -175,8 +180,10 @@ export class LeoSearchController {
       ...citizenSearchIncludeOrSelect(user, cad),
     });
 
-    return appendConfidential(
-      await appendCustomFields(setEndedSuspendedLicenses(citizens), CustomFieldCategory.CITIZEN),
+    return appendAssignedUnitData(
+      appendConfidential(
+        await appendCustomFields(setEndedSuspendedLicenses(citizens), CustomFieldCategory.CITIZEN),
+      ),
     ) as APITypes.PostLeoSearchCitizenData;
   }
 
@@ -341,4 +348,22 @@ export async function appendCustomFields(item: any, category: CustomFieldCategor
   }
 
   return item;
+}
+
+function appendAssignedUnitData(citizens: any[]) {
+  return citizens.map((citizen) => {
+    const newRecords = citizen.Record.map((record: any) => {
+      if (record.call911) {
+        return { ...record, call911: officerOrDeputyToUnit(record.call911) };
+      }
+
+      if (record.incident) {
+        return { ...record, incident: officerOrDeputyToUnit(record.incident) };
+      }
+
+      return record;
+    });
+
+    return { ...citizen, Record: newRecords };
+  });
 }

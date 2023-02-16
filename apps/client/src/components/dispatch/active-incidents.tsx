@@ -8,7 +8,6 @@ import { yesOrNoText } from "lib/utils";
 import { FullDate } from "components/shared/FullDate";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
-import { ManageIncidentModal } from "components/leo/incidents/manage-incident-modal";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
@@ -20,6 +19,13 @@ import { Droppable } from "components/shared/dnd/Droppable";
 import { useDispatchState } from "state/dispatch/dispatch-state";
 import type { PostIncidentsData, PutIncidentByIdData } from "@snailycad/types/api";
 import { CallDescription } from "./active-calls/CallDescription";
+
+import dynamic from "next/dynamic";
+
+const ManageIncidentModal = dynamic(
+  async () => (await import("components/leo/incidents/manage-incident-modal")).ManageIncidentModal,
+  { ssr: false },
+);
 
 export function ActiveIncidents() {
   /**

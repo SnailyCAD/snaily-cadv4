@@ -1027,6 +1027,7 @@ model LeoIncident {
   CombinedLeoUnit      CombinedLeoUnit[]      @relation("combinedActiveIncident")
   EmsFdDeputy          EmsFdDeputy[]          @relation("emsfdActiveIncident")
   CombinedEmsFdUnit    CombinedEmsFdUnit[]    @relation("combinedEmsFdActiveIncident")
+  Record               Record[]
 }
 
 model IncidentEvent {
@@ -1128,6 +1129,7 @@ model Call911 {
   extraFields       Json?
   status            WhitelistStatus?
   CombinedEmsFdUnit CombinedEmsFdUnit[] @relation("CombinedEmsFdUnitActiveCall")
+  Record            Record[]
 }
 
 model GTAMapPosition {
@@ -1246,6 +1248,10 @@ model Record {
   vehiclePlate         String?
   vehicleModel         String?
   vehicleColor         String?
+  call911              Call911?            @relation(fields: [call911Id], references: [id], onDelete: Cascade)
+  call911Id            String?
+  incident             LeoIncident?        @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  incidentId           String?
 }
 
 model RecordRelease {
