@@ -5,7 +5,7 @@ import { useImageUrl } from "hooks/useImageUrl";
 import Image from "next/image";
 import type { NameSearchResult } from "state/search/name-search-state";
 
-interface Props {
+interface Props<Suggestion extends NameSearchResult> {
   label: string;
   autoFocus?: boolean;
   valueFieldName: string;
@@ -16,9 +16,12 @@ interface Props {
   isDisabled?: boolean;
   isOptional?: boolean;
   makeKey?(item: NameSearchResult): string;
+  onNodeChange?(node: { value: Suggestion } | null | undefined): void;
 }
 
-export function CitizenSuggestionsField<Suggestion extends NameSearchResult>(props: Props) {
+export function CitizenSuggestionsField<Suggestion extends NameSearchResult>(
+  props: Props<Suggestion>,
+) {
   const { setValues, errors, values } = useFormikContext<any>();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
   const { makeImageUrl } = useImageUrl();
@@ -35,6 +38,7 @@ export function CitizenSuggestionsField<Suggestion extends NameSearchResult>(pro
           typeof localValue !== "undefined" ? { [props.labelFieldName]: localValue } : {};
         const valueField = node ? { [props.valueFieldName]: node.key as string } : {};
 
+        props.onNodeChange?.(node);
         setValues({ ...values, ...labelValue, ...valueField });
       }}
       localValue={values[props.labelFieldName]}
