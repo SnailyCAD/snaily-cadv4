@@ -21,6 +21,7 @@ Sentry.init({
   ],
   tracesSampleRate: 1.0,
   attachStacktrace: true,
+  ignoreErrors: [/can't reach database server at/],
 });
 
 const rootDir = __dirname;
