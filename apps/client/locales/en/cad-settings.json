@@ -85,7 +85,7 @@
     "ALLOW_DUPLICATE_CITIZEN_NAMES": "Allow Duplicate Citizen Names",
     "ALLOW_DUPLICATE_CITIZEN_NAMES-description": "When enabled, this will allow users to create citizens with the same name (name and surname)",
     "BLEETER": "Bleeter",
-    "BLEETER-url": "https://gta.fandom.com/wiki/Bleeter",
+    "BLEETER-url": "https://docs.snailycad.org/docs/features/settings/bleeter",
     "BLEETER-description": "When enabled, this will allow citizens to create bleets.",
     "COURTHOUSE": "Courthouse",
     "COURTHOUSE-description": "When enabled, this will allow citizens to create expungement requests, name change requests. Users with the required permissions can create court entries and posts.",
@@ -111,6 +111,7 @@
     "ALLOW_CITIZEN_DELETION_BY_NON_ADMIN-description": "When enabled, this will allow citizens to delete their own citizen.",
     "DMV": "Department of Motor Vehicles (DMV)",
     "DMV-description": "When enabled, vehicles must first be approved by the Department of Motor Vehicles within the CAD.",
+    "DMV-url": "docs/features/settings/department-of-motor-vehicles",
     "BADGE_NUMBERS": "Badge Numbers",
     "BADGE_NUMBERS-description": "When enabled, this will allow officers to use badge numbers.",
     "USER_API_TOKENS": "User API Tokens",
@@ -143,6 +144,7 @@
     "CITIZEN_CREATION_RECORDS-description": "When enabled, this allow citizens to add charges and flags to their citizen.",
     "BUREAU_OF_FIREARMS": "Bureau of Firearms",
     "BUREAU_OF_FIREARMS-description": "When enabled, weapons must first be approved by the Bureau of Firearms within the CAD.",
+    "BUREAU_OF_FIREARMS-url": "https://docs.snailycad.org/docs/features/settings/bureau-of-firearms",
     "CALL_911_APPROVAL": "911 Call Approval",
     "CALL_911_APPROVAL-description": "When a citizen creates a 911 call and there are active dispatchers, this will require dispatch to approve the call before active units can view the call.",
     "DISCORD_AUTH": "Discord Authentication",
@@ -153,7 +155,9 @@
     "STEAM_OAUTH-description": "When enabled, this will allow users to authenticate with Steam.",
     "FORCE_DISCORD_AUTH": "Forced Discord Authentication",
     "FORCE_DISCORD_AUTH-description": "When enabled, this will force users to sync with Discord <b>after registration</b>.",
+    "FORCE_DISCORD_AUTH-url": "https://docs.snailycad.org/docs/features/settings/forced-connections",
     "FORCE_STEAM_AUTH": "Forced Steam Authentication",
-    "FORCE_STEAM_AUTH-description": "When enabled, this will force users to sync with Steam <b>after registration</b>."
+    "FORCE_STEAM_AUTH-description": "When enabled, this will force users to sync with Steam <b>after registration</b>.",
+    "FORCE_STEAM_AUTH-url": "https://docs.snailycad.org/docs/features/settings/forced-connections"
   }
 }

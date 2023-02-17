@@ -52,7 +52,7 @@ export function CallDescription({ data, nonCard }: Props) {
       {data.description ? (
         <p className="w-full whitespace-pre-wrap">{data.description}</p>
       ) : (
-        <Editor value={data.descriptionData ?? DEFAULT_EDITOR_DATA} isReadonly />
+        <Editor hideBorder value={data.descriptionData ?? DEFAULT_EDITOR_DATA} isReadonly />
       )}
     </HoverCard>
   );

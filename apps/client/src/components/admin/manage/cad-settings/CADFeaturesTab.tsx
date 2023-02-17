@@ -15,7 +15,15 @@ import type { PutCADFeaturesData } from "@snailycad/types/api";
 import Link from "next/link";
 import { BoxArrowUpRight } from "react-bootstrap-icons";
 
-const featuresWithURL: string[] = [Feature.BLEETER, Feature.DISCORD_AUTH, Feature.STEAM_OAUTH];
+const featuresWithURL: string[] = [
+  Feature.BLEETER,
+  Feature.DISCORD_AUTH,
+  Feature.STEAM_OAUTH,
+  Feature.FORCE_DISCORD_AUTH,
+  Feature.FORCE_STEAM_AUTH,
+  Feature.DMV,
+  Feature.BUREAU_OF_FIREARMS,
+];
 
 export function CADFeaturesTab() {
   const [search, setSearch] = React.useState("");
