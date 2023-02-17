@@ -17,6 +17,7 @@ import type {
   PostBleeterByIdImageData,
   PutBleeterByIdData,
 } from "@snailycad/types/api";
+import { useRouter } from "next/router";
 
 interface Props {
   post: GetBleeterByIdData | null;
@@ -30,6 +31,8 @@ export function ManageBleetModal({ post, onCreate, onUpdate }: Props) {
   const { openModal, isOpen, closeModal } = useModal();
   const t = useTranslations("Bleeter");
   const common = useTranslations("Common");
+  const router = useRouter();
+  const shouldReplaceRoute = router.pathname === "/bleeter/[id]";
 
   function onCropSuccess(url: Blob, filename: string, setImage: any) {
     setImage(new File([url], filename, { type: url.type }));
@@ -91,6 +94,10 @@ export function ManageBleetModal({ post, onCreate, onUpdate }: Props) {
 
     if (json.id) {
       handleClose();
+
+      if (shouldReplaceRoute) {
+        router.push(`/bleeter/${json.id}`);
+      }
     }
   }
 

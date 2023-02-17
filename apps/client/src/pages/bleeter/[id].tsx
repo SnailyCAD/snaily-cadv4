@@ -18,7 +18,7 @@ import type { DeleteBleeterByIdData, GetBleeterByIdData } from "@snailycad/types
 import { ImageWrapper } from "components/shared/image-wrapper";
 
 const ManageBleetModal = dynamic(
-  async () => (await import("components/bleeter/ManageBleetModal")).ManageBleetModal,
+  async () => (await import("components/bleeter/manage-bleet-modal")).ManageBleetModal,
   { ssr: false },
 );
 

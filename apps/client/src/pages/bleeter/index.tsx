@@ -19,7 +19,7 @@ import Link from "next/link";
 import { useList } from "hooks/shared/table/use-list";
 
 const ManageBleetModal = dynamic(
-  async () => (await import("components/bleeter/ManageBleetModal")).ManageBleetModal,
+  async () => (await import("components/bleeter/manage-bleet-modal")).ManageBleetModal,
   { ssr: false },
 );
 
