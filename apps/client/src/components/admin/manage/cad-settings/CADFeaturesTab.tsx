@@ -23,6 +23,8 @@ const featuresWithURL: string[] = [
   Feature.FORCE_STEAM_AUTH,
   Feature.DMV,
   Feature.BUREAU_OF_FIREARMS,
+  Feature.COURTHOUSE,
+  Feature.COURTHOUSE_POSTS,
 ];
 
 export function CADFeaturesTab() {
