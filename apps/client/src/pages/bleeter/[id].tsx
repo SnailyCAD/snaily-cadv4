@@ -92,7 +92,7 @@ export default function BleetPost({ post }: Props) {
             loading="lazy"
           />
         ) : null}
-        <Editor isReadonly value={dataToSlate(post)} />
+        <Editor hideBorder isReadonly value={dataToSlate(post)} />
       </main>
 
       <ManageBleetModal post={post} />

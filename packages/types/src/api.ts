@@ -28,13 +28,13 @@ export type GetBleeterByIdData = GetBleeterData[number];
  * @method Post
  * @route /bleeter/:id
  */
-export type PostBleeterByIdData = Prisma.BleeterPost;
+export type PostBleeterByIdData = GetBleeterByIdData;
 
 /**
  * @method Put
  * @route /bleeter/:id
  */
-export type PutBleeterByIdData = Prisma.BleeterPost;
+export type PutBleeterByIdData = GetBleeterByIdData;
 
 /**
  * @method Post

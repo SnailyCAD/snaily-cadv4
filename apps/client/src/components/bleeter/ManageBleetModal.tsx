@@ -1,6 +1,5 @@
 import { Form, Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
-import { useRouter } from "next/router";
 
 import { Loader, Input, Button, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
@@ -21,14 +20,16 @@ import type {
 
 interface Props {
   post: GetBleeterByIdData | null;
+
+  onCreate?(bleet: PostBleeterByIdData & { isNew?: boolean }): void;
+  onUpdate?(bleet: PutBleeterByIdData): void;
 }
 
-export function ManageBleetModal({ post }: Props) {
+export function ManageBleetModal({ post, onCreate, onUpdate }: Props) {
   const { state, execute } = useFetch();
   const { openModal, isOpen, closeModal } = useModal();
   const t = useTranslations("Bleeter");
   const common = useTranslations("Common");
-  const router = useRouter();
 
   function onCropSuccess(url: Blob, filename: string, setImage: any) {
     setImage(new File([url], filename, { type: url.type }));
@@ -50,6 +51,10 @@ export function ManageBleetModal({ post }: Props) {
       });
 
       json = data.json;
+
+      if (json.id) {
+        onUpdate?.(json);
+      }
     } else {
       const data = await execute<PostBleeterByIdData, typeof INITIAL_VALUES>({
         path: "/bleeter",
@@ -59,6 +64,10 @@ export function ManageBleetModal({ post }: Props) {
       });
 
       json = data.json;
+
+      if (json.id) {
+        onCreate?.({ ...json, isNew: true });
+      }
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -82,7 +91,6 @@ export function ManageBleetModal({ post }: Props) {
 
     if (json.id) {
       handleClose();
-      router.push(`/bleeter/${json.id}`);
     }
   }
 
