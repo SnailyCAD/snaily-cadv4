@@ -3163,14 +3163,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@snaily-cad/image-data-uri@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "@snaily-cad/image-data-uri@npm:3.1.0"
+"@snaily-cad/image-data-uri@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "@snaily-cad/image-data-uri@npm:3.1.1"
   dependencies:
     fs-extra: ^10.1.0
     mime-types: ^2.1.35
-    undici: ^5.7.0
-  checksum: 3e7078afabae4bec049d6cbc7d2f75089e3a6794618055052a1e0617df6c5419f5cb3885f29baacf8c10dffe2a8afa9300957313bd33771f56156c4ceaf3d97d
+    undici: ^5.19.1
+  checksum: c349ef3363026379dc4b571a1907c636b36e36bf3e24a3fadadf320cff8f2b3183e0a016ac48404f2e607e34dc2e1a106375ce10f8a6a8c4109c516dbc6a02cb
   languageName: node
   linkType: hard
 
@@ -3182,7 +3182,7 @@ __metadata:
     "@prisma/client": ^4.10.1
     "@sentry/node": ^7.37.2
     "@sentry/tracing": ^7.37.2
-    "@snaily-cad/image-data-uri": ^3.1.0
+    "@snaily-cad/image-data-uri": ^3.1.1
     "@snailycad/audit-logger": 1.47.2
     "@snailycad/config": 1.47.2
     "@snailycad/permissions": 1.47.2
@@ -3220,7 +3220,7 @@ __metadata:
     cookie-parser: 1.4.6
     cors: 2.8.5
     cuid: ^2.1.8
-    discord-api-types: 0.37.33
+    discord-api-types: 0.37.34
     dotenv: ^16.0.3
     esbuild: ^0.17.8
     esbuild-register: ^3.4.2
@@ -3242,7 +3242,7 @@ __metadata:
     typescript: ^4.9.5
     undici: ^5.19.1
     use-intl: ^2.10.2
-    vite: ^4.1.1
+    vite: ^4.1.2
     vitest: ^0.28.5
   languageName: unknown
   linkType: soft
@@ -6695,6 +6695,13 @@ __metadata:
   version: 0.37.33
   resolution: "discord-api-types@npm:0.37.33"
   checksum: d1e31106081ef79d3ea721b8991c5de155879e6d01c47a025b2c41e0496b551608e72e383caf23680938219099b6c3bd43cbacf48edeb7fc9a3c1730c1811ba8
+  languageName: node
+  linkType: hard
+
+"discord-api-types@npm:0.37.34":
+  version: 0.37.34
+  resolution: "discord-api-types@npm:0.37.34"
+  checksum: eaaa6fafcb6679de296e68ef0923656d63a51523202075e8f6436da2b87a19ad17f1fc0a805720cd9e833b87a97a22a3194958f034558d5a182c8f0ebc2626da
   languageName: node
   linkType: hard
 
@@ -14604,7 +14611,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici@npm:^5.13.0, undici@npm:^5.7.0":
+"undici@npm:^5.13.0":
   version: 5.16.0
   resolution: "undici@npm:5.16.0"
   dependencies:
@@ -15048,6 +15055,44 @@ __metadata:
   bin:
     vite: bin/vite.js
   checksum: aad14b660b69068f6596ab7e760dd71642862996328e404a4d265e090ae0d06c7064cf8415ffb135cd8b79d5157dc1dcb48b56386caaa96a474fb53bdd8cac3d
+  languageName: node
+  linkType: hard
+
+"vite@npm:^4.1.2":
+  version: 4.1.2
+  resolution: "vite@npm:4.1.2"
+  dependencies:
+    esbuild: ^0.16.14
+    fsevents: ~2.3.2
+    postcss: ^8.4.21
+    resolve: ^1.22.1
+    rollup: ^3.10.0
+  peerDependencies:
+    "@types/node": ">= 14"
+    less: "*"
+    sass: "*"
+    stylus: "*"
+    sugarss: "*"
+    terser: ^5.4.0
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  peerDependenciesMeta:
+    "@types/node":
+      optional: true
+    less:
+      optional: true
+    sass:
+      optional: true
+    stylus:
+      optional: true
+    sugarss:
+      optional: true
+    terser:
+      optional: true
+  bin:
+    vite: bin/vite.js
+  checksum: c3d92b7ab59095498e80e70a7847c7a4c4fd7f16f859c57dc93c0dc09ec57584819a929924e8d8858bdde157f0386ec37322bdb064da7f8f4854c8aa22d0beec
   languageName: node
   linkType: hard
 
