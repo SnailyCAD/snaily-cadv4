@@ -85,10 +85,11 @@
     "ALLOW_DUPLICATE_CITIZEN_NAMES": "Allow Duplicate Citizen Names",
     "ALLOW_DUPLICATE_CITIZEN_NAMES-description": "When enabled, this will allow users to create citizens with the same name (name and surname)",
     "BLEETER": "Bleeter",
-    "BLEETER-url": "https://gta.fandom.com/wiki/Bleeter",
+    "BLEETER-url": "https://docs.snailycad.org/docs/features/settings/bleeter",
     "BLEETER-description": "When enabled, this will allow citizens to create bleets.",
     "COURTHOUSE": "Courthouse",
     "COURTHOUSE-description": "When enabled, this will allow citizens to create expungement requests, name change requests. Users with the required permissions can create court entries and posts.",
+    "COURTHOUSE-url": "https://docs.snailycad.org/docs/features/settings/courthouse",
     "WEAPON_REGISTRATION": "Weapon Registration",
     "WEAPON_REGISTRATION-description": "When enabled, this will allow citizens to register weapons.",
     "CALLS_911": "911 Calls",
@@ -111,6 +112,7 @@
     "ALLOW_CITIZEN_DELETION_BY_NON_ADMIN-description": "When enabled, this will allow citizens to delete their own citizen.",
     "DMV": "Department of Motor Vehicles (DMV)",
     "DMV-description": "When enabled, vehicles must first be approved by the Department of Motor Vehicles within the CAD.",
+    "DMV-url": "docs/features/settings/department-of-motor-vehicles",
     "BADGE_NUMBERS": "Badge Numbers",
     "BADGE_NUMBERS-description": "When enabled, this will allow officers to use badge numbers.",
     "USER_API_TOKENS": "User API Tokens",
@@ -127,6 +129,7 @@
     "LEO_BAIL-description": "When enabled, this will allow officers to add bails to arrest reports.",
     "COURTHOUSE_POSTS": "Courthouse Posts",
     "COURTHOUSE_POSTS-description": "When enabled, this will allow users with the correct permissions to create posts in the courthouse. These posts will be visible to anyone.",
+    "COURTHOUSE_POSTS-url": "https://docs.snailycad.org/docs/features/settings/courthouse-posts",
     "ACTIVE_WARRANTS": "Active Warrants",
     "ACTIVE_WARRANTS-description": "When enabled, this will display active warrants on the LEO Dashboard.",
     "CITIZEN_DELETE_ON_DEAD": "Delete citizen when marked as dead",
@@ -143,6 +146,7 @@
     "CITIZEN_CREATION_RECORDS-description": "When enabled, this allow citizens to add charges and flags to their citizen.",
     "BUREAU_OF_FIREARMS": "Bureau of Firearms",
     "BUREAU_OF_FIREARMS-description": "When enabled, weapons must first be approved by the Bureau of Firearms within the CAD.",
+    "BUREAU_OF_FIREARMS-url": "https://docs.snailycad.org/docs/features/settings/bureau-of-firearms",
     "CALL_911_APPROVAL": "911 Call Approval",
     "CALL_911_APPROVAL-description": "When a citizen creates a 911 call and there are active dispatchers, this will require dispatch to approve the call before active units can view the call.",
     "DISCORD_AUTH": "Discord Authentication",
@@ -153,7 +157,9 @@
     "STEAM_OAUTH-description": "When enabled, this will allow users to authenticate with Steam.",
     "FORCE_DISCORD_AUTH": "Forced Discord Authentication",
     "FORCE_DISCORD_AUTH-description": "When enabled, this will force users to sync with Discord <b>after registration</b>.",
+    "FORCE_DISCORD_AUTH-url": "https://docs.snailycad.org/docs/features/settings/forced-connections",
     "FORCE_STEAM_AUTH": "Forced Steam Authentication",
-    "FORCE_STEAM_AUTH-description": "When enabled, this will force users to sync with Steam <b>after registration</b>."
+    "FORCE_STEAM_AUTH-description": "When enabled, this will force users to sync with Steam <b>after registration</b>.",
+    "FORCE_STEAM_AUTH-url": "https://docs.snailycad.org/docs/features/settings/forced-connections"
   }
 }
