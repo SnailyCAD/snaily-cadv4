@@ -112,7 +112,7 @@
     "ALLOW_CITIZEN_DELETION_BY_NON_ADMIN-description": "When enabled, this will allow citizens to delete their own citizen.",
     "DMV": "Department of Motor Vehicles (DMV)",
     "DMV-description": "When enabled, vehicles must first be approved by the Department of Motor Vehicles within the CAD.",
-    "DMV-url": "docs/features/settings/department-of-motor-vehicles",
+    "DMV-url": "https://docs.snailycad.org/docs/features/settings/department-of-motor-vehicles",
     "BADGE_NUMBERS": "Badge Numbers",
     "BADGE_NUMBERS-description": "When enabled, this will allow officers to use badge numbers.",
     "USER_API_TOKENS": "User API Tokens",
