@@ -20,7 +20,7 @@ import { OfficerRank } from "components/leo/OfficerRank";
 import { UnitDepartmentStatus } from "components/leo/UnitDepartmentStatus";
 import type { DeleteMyDeputyByIdData, GetMyDeputiesData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
-import Image from "next/image";
+import { ImageWrapper } from "components/shared/image-wrapper";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageDeputyModal = dynamic(
@@ -89,7 +89,7 @@ export default function MyDeputies({ deputies: data }: Props) {
             deputy: (
               <span className="flex items-center">
                 {deputy.imageId ? (
-                  <Image
+                  <ImageWrapper
                     className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                     draggable={false}
                     src={makeImageUrl("units", deputy.imageId)!}

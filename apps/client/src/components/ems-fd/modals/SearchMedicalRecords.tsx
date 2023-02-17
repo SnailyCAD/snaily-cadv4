@@ -19,10 +19,10 @@ import type {
   PostEmsFdMedicalRecordsSearchData,
 } from "@snailycad/types/api";
 import { classNames } from "lib/classNames";
-import Image from "next/image";
 import format from "date-fns/format";
 import { useImageUrl } from "hooks/useImageUrl";
 import { SpeechAlert } from "components/leo/modals/NameSearchModal/speech-alert";
+import { ImageWrapper } from "components/shared/image-wrapper";
 
 interface Props {
   onClose?(): void;
@@ -128,7 +128,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                   <Item key={item.id} textValue={name}>
                     <div className="flex items-center">
                       {item.imageId ? (
-                        <Image
+                        <ImageWrapper
                           placeholder={item.imageBlurData ? "blur" : "empty"}
                           blurDataURL={item.imageBlurData ?? undefined}
                           alt={`${item.name} ${item.surname}`}
@@ -194,7 +194,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                         onClick={() => openModal(ModalIds.CitizenImage)}
                         className="cursor-pointer"
                       >
-                        <Image
+                        <ImageWrapper
                           placeholder={results.imageBlurData ? "blur" : "empty"}
                           blurDataURL={results.imageBlurData ?? undefined}
                           className="rounded-md w-[100px] h-[100px] object-cover"

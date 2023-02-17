@@ -8,8 +8,8 @@ import type { OfficerLogWithOfficer } from "src/pages/officer/my-officer-logs";
 import type { EmsFdDeputy, Officer, OfficerLog } from "@snailycad/types";
 import type { OfficerLogWithDeputy } from "src/pages/ems-fd/my-deputy-logs";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import Image from "next/image";
 import type { GetMyDeputiesLogsData, GetMyOfficersLogsData } from "@snailycad/types/api";
+import { ImageWrapper } from "components/shared/image-wrapper";
 
 type OfficerLogData = GetMyOfficersLogsData["logs"][number] | GetMyDeputiesLogsData["logs"][number];
 
@@ -51,7 +51,7 @@ export function OfficerLogsTable({ unit, asyncTable }: Props) {
           unit: (
             <span className="flex items-center capitalize">
               {logUnit.imageId ? (
-                <Image
+                <ImageWrapper
                   className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                   draggable={false}
                   src={makeImageUrl("citizens", logUnit.imageId)!}

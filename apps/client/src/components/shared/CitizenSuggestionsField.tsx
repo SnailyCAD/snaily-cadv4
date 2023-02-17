@@ -2,8 +2,9 @@ import { AsyncListSearchField, Item } from "@snailycad/ui";
 import { useFormikContext } from "formik";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useImageUrl } from "hooks/useImageUrl";
-import Image from "next/image";
+import { PersonFill } from "react-bootstrap-icons";
 import type { NameSearchResult } from "state/search/name-search-state";
+import { ImageWrapper } from "./image-wrapper";
 
 interface Props<Suggestion extends NameSearchResult> {
   label: string;
@@ -60,7 +61,7 @@ export function CitizenSuggestionsField<Suggestion extends NameSearchResult>(
           <Item key={key} textValue={name}>
             <div className="flex items-center">
               {item.imageId ? (
-                <Image
+                <ImageWrapper
                   alt={`${item.name} ${item.surname}`}
                   className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                   draggable={false}
@@ -68,6 +69,7 @@ export function CitizenSuggestionsField<Suggestion extends NameSearchResult>(
                   loading="lazy"
                   width={30}
                   height={30}
+                  fallback={<PersonFill className="w-12 h-12 text-gray-500/60" />}
                 />
               ) : null}
               <p>

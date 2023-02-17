@@ -1,8 +1,8 @@
 import type { EmsFdDeputy, Officer } from "@snailycad/types";
 import { isUnitOfficer } from "@snailycad/utils";
+import { ImageWrapper } from "components/shared/image-wrapper";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useTranslations } from "next-intl";
-import Image from "next/image";
 
 export function OfficerRank({ unit }: { unit: Officer | EmsFdDeputy }) {
   const common = useTranslations("Common");
@@ -18,7 +18,7 @@ export function OfficerRank({ unit }: { unit: Officer | EmsFdDeputy }) {
   return (
     <span className="flex flex-row gap-2 pr-4">
       {imgUrl ? (
-        <Image
+        <ImageWrapper
           alt={rank}
           loading="lazy"
           src={imgUrl}

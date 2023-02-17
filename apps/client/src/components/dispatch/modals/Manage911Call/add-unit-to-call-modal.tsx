@@ -13,8 +13,8 @@ import { Toggle } from "components/form/Toggle";
 import type { Put911CallByIdData } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call-911-state";
 import type { CombinedEmsFdUnit, CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
-import Image from "next/image";
 import { useImageUrl } from "hooks/useImageUrl";
+import { ImageWrapper } from "components/shared/image-wrapper";
 
 interface Props {
   onClose?(): void;
@@ -124,7 +124,7 @@ export function AddUnitToCallModal({ onClose }: Props) {
                   <Item key={item.id} textValue={nameAndCallsign}>
                     <div className="flex items-center">
                       {imageId ? (
-                        <Image
+                        <ImageWrapper
                           alt={nameAndCallsign}
                           className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                           draggable={false}

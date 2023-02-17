@@ -34,8 +34,8 @@ import dynamic from "next/dynamic";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
-import Image from "next/image";
 import { useImageUrl } from "hooks/useImageUrl";
+import { ImageWrapper } from "components/shared/image-wrapper";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal, {
   ssr: false,
@@ -200,7 +200,7 @@ export function AllUnitsTab({ units }: Props) {
               name: (
                 <div className="min-w-[144px]">
                   {unit.imageId ? (
-                    <Image
+                    <ImageWrapper
                       className="rounded-md w-[30px] h-[30px] object-cover mr-2 inline-block"
                       draggable={false}
                       src={makeImageUrl("units", unit.imageId)!}

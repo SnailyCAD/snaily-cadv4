@@ -28,7 +28,7 @@ import type {
 } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
-import Image from "next/image";
+import { ImageWrapper } from "components/shared/image-wrapper";
 
 interface Props extends GetDispatchData {
   incidents: GetIncidentsData;
@@ -149,7 +149,7 @@ export default function LeoIncidents({ activeOfficer, incidents: initialData }: 
                   className="flex items-center"
                 >
                   {incident.creator?.imageId ? (
-                    <Image
+                    <ImageWrapper
                       className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                       draggable={false}
                       src={makeImageUrl("units", incident.creator.imageId)!}

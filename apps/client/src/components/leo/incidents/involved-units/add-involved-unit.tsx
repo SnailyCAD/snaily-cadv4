@@ -12,8 +12,8 @@ import type { PutIncidentByIdData } from "@snailycad/types/api";
 import type { CombinedLeoUnit, EmsFdDeputy, LeoIncident, Officer } from "@snailycad/types";
 import { shallow } from "zustand/shallow";
 import { useDispatchState } from "state/dispatch/dispatch-state";
-import Image from "next/image";
 import { useImageUrl } from "hooks/useImageUrl";
+import { ImageWrapper } from "components/shared/image-wrapper";
 
 interface Props {
   onClose?(): void;
@@ -118,7 +118,7 @@ export function AddInvolvedUnitToIncidentModal({ onClose, incident }: Props) {
                   <Item key={item.id} textValue={nameAndCallsign}>
                     <div className="flex items-center">
                       {imageId ? (
-                        <Image
+                        <ImageWrapper
                           alt={nameAndCallsign}
                           className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                           draggable={false}

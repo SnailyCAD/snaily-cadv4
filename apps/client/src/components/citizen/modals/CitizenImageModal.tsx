@@ -3,7 +3,7 @@ import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { useImageUrl } from "hooks/useImageUrl";
 import { ModalIds } from "types/ModalIds";
-import Image from "next/image";
+import { ImageWrapper } from "components/shared/image-wrapper";
 
 interface Props {
   citizen: Citizen;
@@ -20,7 +20,7 @@ export function CitizenImageModal({ citizen }: Props) {
       isOpen={isOpen(ModalIds.CitizenImage)}
     >
       <div className="flex items-center justify-center mt-10">
-        <Image
+        <ImageWrapper
           placeholder={citizen.imageBlurData ? "blur" : "empty"}
           blurDataURL={citizen.imageBlurData ?? undefined}
           draggable={false}
@@ -29,6 +29,7 @@ export function CitizenImageModal({ citizen }: Props) {
           width={640}
           height={640}
           alt={`${citizen.name} ${citizen.surname}`}
+          fallback={<p>Failed to load image.</p>}
         />
       </div>
     </Modal>

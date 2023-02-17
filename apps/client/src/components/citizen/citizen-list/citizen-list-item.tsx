@@ -1,11 +1,11 @@
 import { defaultPermissions } from "@snailycad/permissions";
 import type { GetCitizensData } from "@snailycad/types/api";
 import { buttonVariants } from "@snailycad/ui";
+import { ImageWrapper } from "components/shared/image-wrapper";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useImageUrl } from "hooks/useImageUrl";
 import { usePermission } from "hooks/usePermission";
 import { useTranslations } from "next-intl";
-import Image from "next/image";
 import Link from "next/link";
 import { PersonFill } from "react-bootstrap-icons";
 
@@ -28,7 +28,7 @@ export function CitizenListItem({ citizen }: Props) {
     <li className="flex items-center justify-between bg-gray-200 p-3 dark:shadow-md rounded-md border border-gray-400 dark:border-quinary dark:bg-tertiary">
       <div className="flex items-center space-x-3">
         {citizen.imageId ? (
-          <Image
+          <ImageWrapper
             placeholder={citizen.imageBlurData ? "blur" : "empty"}
             blurDataURL={citizen.imageBlurData ?? undefined}
             alt={`${citizen.name} ${citizen.surname}`}
@@ -38,6 +38,7 @@ export function CitizenListItem({ citizen }: Props) {
             loading="lazy"
             width={56}
             height={56}
+            fallback={<PersonFill className="w-12 h-12 text-gray-500/60" />}
           />
         ) : (
           <PersonFill className="w-12 h-12 text-gray-500/60" />
