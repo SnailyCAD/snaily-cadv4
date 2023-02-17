@@ -1,21 +1,26 @@
 import { useTranslations } from "use-intl";
-import Link from "next/link";
 
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { Button, buttonVariants } from "@snailycad/ui";
+import { Button } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import dynamic from "next/dynamic";
 import { Title } from "components/shared/Title";
-import { classNames } from "lib/classNames";
 import type { GetBleeterData } from "@snailycad/types/api";
 import { requestAll } from "lib/utils";
+import { FullDate } from "components/shared/FullDate";
+import { Editor } from "components/editor/editor";
+import { ImageWrapper } from "components/shared/image-wrapper";
+import { useImageUrl } from "hooks/useImageUrl";
+import Link from "next/link";
+import { useList } from "hooks/shared/table/use-list";
 
 const ManageBleetModal = dynamic(
-  async () => (await import("components/bleeter/ManageBleetModal")).ManageBleetModal,
+  async () => (await import("components/bleeter/manage-bleet-modal")).ManageBleetModal,
+  { ssr: false },
 );
 
 interface Props {
@@ -25,6 +30,11 @@ interface Props {
 export default function Bleeter({ posts }: Props) {
   const t = useTranslations("Bleeter");
   const { openModal } = useModal();
+  const { makeImageUrl } = useImageUrl();
+
+  const list = useList({
+    initialData: posts,
+  });
 
   return (
     <Layout className="dark:text-white">
@@ -34,34 +44,54 @@ export default function Bleeter({ posts }: Props) {
         <Button onPress={() => openModal(ModalIds.ManageBleetModal)}>{t("createBleet")}</Button>
       </header>
 
-      {posts.length <= 0 ? (
+      {list.items.length <= 0 ? (
         <p className="mt-2">{t("noPosts")}</p>
       ) : (
         <ul className="mt-5 space-y-3">
-          {posts.map((post) => (
-            <li
-              className="flex items-start justify-between p-4 rounded-md shadow-sm card"
-              key={post.id}
-            >
-              <div>
-                <h1 className="text-2xl font-semibold">{post.title}</h1>
-                <h3>{post.user.username}</h3>
-              </div>
+          {list.items.map((post) => (
+            <li className="rounded-md shadow-sm" key={post.id}>
+              <Link
+                className="block p-4 card dark:hover:bg-secondary transition-colors"
+                href={`/bleeter/${post.id}`}
+              >
+                <header className="flex gap-1 items-baseline">
+                  <h3 className="text-lg font-semibold">{post.user.username}</h3>
+                  <span className="font-bold text-base">∙</span>
+                  <h4 className="text-base">
+                    <FullDate relative>{post.createdAt}</FullDate>
+                  </h4>
+                </header>
 
-              <div>
-                <Link
-                  className={classNames(buttonVariants.default, "p-1 px-4 rounded-md")}
-                  href={`/bleeter/${post.id}`}
-                >
-                  {t("viewBleet")}
-                </Link>
-              </div>
+                <div className="mx-1 mb-2">
+                  <Editor hideBorder isReadonly value={post.bodyData} />
+                </div>
+
+                <div>
+                  {post.imageId ? (
+                    <ImageWrapper
+                      width={1600}
+                      height={320}
+                      alt={post.title}
+                      placeholder={post.imageBlurData ? "blur" : "empty"}
+                      blurDataURL={post.imageBlurData ?? undefined}
+                      draggable={false}
+                      className="max-h-[20rem] mb-5 w-full object-cover rounded-lg shadow-md"
+                      src={makeImageUrl("bleeter", post.imageId)!}
+                      loading="lazy"
+                    />
+                  ) : null}
+                </div>
+              </Link>
             </li>
           ))}
         </ul>
       )}
 
-      <ManageBleetModal post={null} />
+      <ManageBleetModal
+        onUpdate={(bleet) => list.update(bleet.id, bleet)}
+        onCreate={(bleet) => list.prepend(bleet)}
+        post={null}
+      />
     </Layout>
   );
 }

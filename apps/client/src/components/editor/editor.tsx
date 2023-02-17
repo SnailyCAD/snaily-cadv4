@@ -32,6 +32,7 @@ declare module "slate" {
 }
 
 interface EditorProps {
+  hideBorder?: boolean;
   isReadonly?: boolean;
   value: any;
   onChange?(value: Descendant[]): void;
@@ -116,7 +117,8 @@ export function Editor(props: EditorProps) {
     <div
       className={classNames(
         "mt-1 rounded-md border w-full shadow-sm",
-        !props.isReadonly ? "bg-secondary text-white overflow-hidden" : "px-3",
+        props.hideBorder ? "border-none" : "border",
+        !props.isReadonly ? "bg-secondary text-white overflow-hidden" : !props.hideBorder && "px-3",
         props.errorMessage ? "border-red-500 focus:border-red-700" : "border-gray-700",
       )}
     >

@@ -6,11 +6,12 @@ interface Props extends Omit<HoverCardProps, "trigger" | "children"> {
   children: Date | string | number;
   onlyDate?: boolean;
   isDateOfBirth?: boolean;
+  relative?: boolean;
 }
 
-export function FullDate({ children, onlyDate, isDateOfBirth, ...rest }: Props) {
+export function FullDate({ children, onlyDate, relative, isDateOfBirth, ...rest }: Props) {
   const isMounted = useMounted();
-  const { formatDateTime } = useIntl();
+  const { formatDateTime, formatRelativeTime } = useIntl();
 
   const isCorrectDate = isValidDate(children);
   if (!isCorrectDate) {
@@ -26,17 +27,17 @@ export function FullDate({ children, onlyDate, isDateOfBirth, ...rest }: Props) 
     date = date + 5 * 60 * 60 * 1000;
   }
 
+  const relativeFormattedTime = formatRelativeTime(date, new Date());
+  const formattedTime = formatDateTime(date, {
+    dateStyle: "medium",
+    timeStyle: onlyDate ? undefined : "medium",
+  });
+  const triggerFormattedTime = relative ? relativeFormattedTime : formattedTime;
+
   return (
     <HoverCard
       openDelay={100}
-      trigger={
-        <span className="z-30">
-          {formatDateTime(date, {
-            dateStyle: "medium",
-            timeStyle: onlyDate ? undefined : "medium",
-          })}
-        </span>
-      }
+      trigger={<span className="z-30">{triggerFormattedTime}</span>}
       {...rest}
     >
       <span className="font-semibold">

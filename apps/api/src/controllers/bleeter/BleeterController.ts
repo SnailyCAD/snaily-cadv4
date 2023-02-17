@@ -74,6 +74,7 @@ export class BleeterController {
         bodyData: data.bodyData,
         userId: user.id,
       },
+      include: { user: { select: { username: true } } },
     });
 
     return post;
@@ -107,6 +108,7 @@ export class BleeterController {
         body: data.body,
         bodyData: data.bodyData,
       },
+      include: { user: { select: { username: true } } },
     });
 
     return updated;
