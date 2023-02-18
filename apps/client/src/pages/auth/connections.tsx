@@ -19,7 +19,7 @@ export default function RequiredConnectionsPage() {
 
   const router = useRouter();
   const t = useTranslations();
-  const { DISCORD_AUTH, STEAM_OAUTH } = useFeatureEnabled();
+  const { FORCE_DISCORD_AUTH, FORCE_STEAM_AUTH } = useFeatureEnabled();
 
   const _doesUserHaveAllRequiredConnections =
     user && doesUserHaveAllRequiredConnections({ user, features: cad?.features });
@@ -49,9 +49,10 @@ export default function RequiredConnectionsPage() {
 
   const useThirdPartyConnectionsAbility = canUseThirdPartyConnections();
 
-  const showSteamOAuth = STEAM_OAUTH && useThirdPartyConnectionsAbility && !user?.steamId?.trim();
+  const showSteamOAuth =
+    FORCE_STEAM_AUTH && useThirdPartyConnectionsAbility && !user?.steamId?.trim();
   const showDiscordOAuth =
-    DISCORD_AUTH && useThirdPartyConnectionsAbility && !user?.discordId?.trim();
+    FORCE_DISCORD_AUTH && useThirdPartyConnectionsAbility && !user?.discordId?.trim();
 
   function handleDiscordLogin() {
     const url = getAPIUrl();

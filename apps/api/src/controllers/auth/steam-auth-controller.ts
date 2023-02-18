@@ -21,7 +21,7 @@ export const STEAM_API_URL = "https://api.steampowered.com";
 
 @Controller("/auth/steam")
 @ContentType("application/json")
-@IsFeatureEnabled({ feature: Feature.STEAM_OAUTH })
+@IsFeatureEnabled({ feature: [Feature.STEAM_OAUTH, Feature.FORCE_STEAM_AUTH] })
 export class SteamOAuthController {
   @Get("/")
   @Description("Redirect to Steam's OAuth2 URL")

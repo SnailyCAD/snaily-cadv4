@@ -8,11 +8,11 @@ import { prisma } from "lib/data/prisma";
 import { FeatureNotEnabled } from "src/exceptions/feature-not-enabled";
 
 export interface IsFeatureEnabledOptions {
-  feature: TypesFeature | DatabaseFeature;
+  feature: TypesFeature | DatabaseFeature | (TypesFeature | DatabaseFeature)[];
 }
 
 export const DEFAULT_DISABLED_FEATURES: Partial<
-  Record<IsFeatureEnabledOptions["feature"], { isEnabled: boolean }>
+  Record<TypesFeature | DatabaseFeature, { isEnabled: boolean }>
 > = {
   CUSTOM_TEXTFIELD_VALUES: { isEnabled: false },
   DISCORD_AUTH: { isEnabled: false },
@@ -74,7 +74,18 @@ class IsFeatureEnabledMiddleware implements MiddlewareMethods {
       }),
     );
 
-    const isEnabled = cad.features[options.feature as TypesFeature];
+    let isEnabled = Array.isArray(options.feature)
+      ? false
+      : cad.features[options.feature as TypesFeature];
+
+    if (Array.isArray(options.feature)) {
+      for (const feature of options.feature) {
+        if (cad.features[feature as TypesFeature] === true) {
+          isEnabled = true;
+          break;
+        }
+      }
+    }
 
     if (!isEnabled) {
       throw new FeatureNotEnabled(options);
