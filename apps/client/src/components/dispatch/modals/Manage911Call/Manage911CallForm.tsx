@@ -212,6 +212,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
 
               <FormRow>
                 <ValueSelectField
+                  isOptional
                   isDisabled={isDisabled}
                   isClearable
                   label={t("situationCode")}
@@ -222,6 +223,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
                 />
 
                 <ValueSelectField
+                  isOptional
                   isDisabled={isDisabled}
                   isClearable
                   label={t("type")}
@@ -253,7 +255,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
             <div className="flex items-center">
               {call ? (
                 <FormField
-                  className="mb-0"
+                  className="!mb-0"
                   labelClassName="min-w-fit"
                   label="Notify assigned units"
                   checkbox

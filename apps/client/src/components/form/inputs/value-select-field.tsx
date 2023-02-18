@@ -14,6 +14,7 @@ interface Props<T extends AnyValue> {
   values: T[];
   label: string;
   filterFn?(value: T): boolean;
+  className?: string;
 
   isClearable?: boolean;
   isOptional?: boolean;
@@ -61,6 +62,7 @@ export function ValueSelectField<T extends AnyValue>(props: Props<T>) {
 
   return (
     <AsyncListSearchField<AnyValue>
+      className={props.className}
       filterFn={props.filterFn}
       placeholder="Select..."
       isClearable={props.isClearable}
