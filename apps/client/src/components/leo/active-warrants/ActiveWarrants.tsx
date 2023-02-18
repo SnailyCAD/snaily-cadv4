@@ -4,7 +4,6 @@ import { Table, useTableState } from "components/shared/Table";
 import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import { CreateWarrantModal } from "../modals/CreateWarrantModal";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useActiveWarrants } from "hooks/realtime/useActiveWarrants";
 import { makeUnitName } from "lib/utils";
@@ -12,6 +11,12 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { isUnitCombined } from "@snailycad/utils";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 import { Permissions, usePermission } from "hooks/usePermission";
+import dynamic from "next/dynamic";
+
+const CreateWarrantModal = dynamic(
+  async () => (await import("../modals/CreateWarrantModal")).CreateWarrantModal,
+  { ssr: false },
+);
 
 export function ActiveWarrants() {
   const { hasPermissions } = usePermission();
