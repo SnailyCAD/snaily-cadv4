@@ -104,7 +104,7 @@ export class JailController {
       ).catch(console.error);
     }
 
-    return { totalCount, jailedCitizens: citizens };
+    return { totalCount, jailedCitizens: citizens as any };
   }
 
   @Delete("/:id")
@@ -119,7 +119,7 @@ export class JailController {
   ): Promise<APITypes.DeleteReleaseJailedCitizenData> {
     const data = validateSchema(RELEASE_CITIZEN_SCHEMA, body);
 
-    return this.handleReleaseCitizen(id, data);
+    return this.handleReleaseCitizen(id, data) as any;
   }
 
   private async handleReleaseCitizen(
