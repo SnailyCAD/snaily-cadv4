@@ -69,7 +69,7 @@ export function CitizenSuggestionsField<Suggestion extends NameSearchResult>(
                   loading="lazy"
                   width={30}
                   height={30}
-                  fallback={<PersonFill className="w-12 h-12 text-gray-500/60" />}
+                  fallback={<PersonFill className="w-6 h-6 mr-2 inline-block text-gray-500/60" />}
                 />
               ) : null}
               <p>
