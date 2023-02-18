@@ -28,6 +28,8 @@ const featuresWithURL: string[] = [
   Feature.TONES,
   Feature.ACTIVE_WARRANTS,
   Feature.WARRANT_STATUS_APPROVAL,
+  Feature.ACTIVE_INCIDENTS,
+  Feature.LICENSE_EXAMS,
 ];
 
 export function CADFeaturesTab() {
