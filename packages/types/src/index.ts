@@ -348,6 +348,7 @@ type _Record = Prisma.Record & {
   seizedItems?: Prisma.SeizedItem[];
   courtEntry?: CourtEntry | null;
   vehicle?: (Prisma.RegisteredVehicle & { model: VehicleValue }) | null;
+  release?: RecordRelease | null;
 };
 export { _Record as Record };
 

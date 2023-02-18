@@ -90,8 +90,8 @@ export function setCADFeatures<T extends Partial<cad & { features?: CadFeature[]
   const filtered = overwriteFeatures({
     features,
     featuresToOverwrite: {
-      DISCORD_AUTH: isDiscordOauthEnabled && hasDiscordTokens,
-      FORCE_DISCORD_AUTH: isForceDiscordAuthEnabled && hasDiscordTokens,
+      DISCORD_AUTH: hasDiscordTokens && isDiscordOauthEnabled,
+      FORCE_DISCORD_AUTH: hasDiscordTokens && isForceDiscordAuthEnabled,
       STEAM_OAUTH: isSteamOAuthEnabled && hasSteamTokens,
       FORCE_STEAM_AUTH: isForceSteamAuthEnabled && hasSteamTokens,
     },

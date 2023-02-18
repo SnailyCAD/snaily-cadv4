@@ -60,21 +60,31 @@ export default function Jail({ data }: Props) {
     null,
   );
 
-  function handleSuccess(releasedCitizenData: BaseCitizen & { Record: Record[] }) {
+  function handleSuccess(releasedCitizenData: BaseCitizen & { Record: Record[]; record: Record }) {
     asyncTable.update(releasedCitizenData.id, releasedCitizenData);
 
     setTempCitizen(null);
     closeModal(ModalIds.AlertReleaseCitizen);
   }
 
-  function handleCheckoutClick(item: BaseCitizen & { Record: Record[] }, recordId: string) {
+  function handleCheckoutClick(item: BaseCitizen & { record: Record }, recordId: string) {
     setTempCitizen({ ...item, recordId });
     openModal(ModalIds.AlertReleaseCitizen);
   }
 
-  function handleNameClick(item: BaseCitizen & { Record: Record[] }) {
+  function handleNameClick(item: BaseCitizen & { Record: Record[]; record: Record }) {
     openModal(ModalIds.NameSearch, { ...item, name: `${item.name} ${item.surname}` });
   }
+
+  const itemsWithArrestReportSortedByCreatedAt = asyncTable.items
+    .map((item) => {
+      const [record] = item.Record.sort((a, b) =>
+        compareDesc(new Date(a.createdAt), new Date(b.createdAt)),
+      ).filter((v) => v.type === "ARREST_REPORT");
+
+      return { ...item, record };
+    })
+    .filter((v) => !!v) as (BaseCitizen & { Record: Record[]; record: Record })[];
 
   return (
     <Layout
@@ -101,37 +111,27 @@ export default function Jail({ data }: Props) {
         </FormField>
       </header>
 
-      {data.jailedCitizens.length <= 0 ? (
+      {itemsWithArrestReportSortedByCreatedAt.length <= 0 ? (
         <p className="mt-5">{t("noImprisonedCitizens")}</p>
       ) : (
         <Table
           tableState={tableState}
-          data={asyncTable.items.map((item) => {
-            const [record] = item.Record.sort((a, b) =>
-              compareDesc(new Date(a.createdAt), new Date(b.createdAt)),
-            ).filter((v) => v.type === "ARREST_REPORT");
-
-            if (!record) {
-              return {
-                id: item.id,
-              };
-            }
-
-            const jailTime = record.violations.reduce((ac, cv) => ac + (cv.jailTime || 0), 0);
-            const released = isReleased(record);
-            const type = released && record.release.type;
-            const citizen = released ? record.release.releasedBy : null;
+          data={itemsWithArrestReportSortedByCreatedAt.map((item) => {
+            const jailTime = item.record.violations.reduce((ac, cv) => ac + (cv.jailTime || 0), 0);
+            const released = isReleased(item.record);
+            const type = released && item.record.release?.type;
+            const citizen = released ? item.record.release?.releasedBy : null;
 
             const status = !released
               ? t("arrested")
-              : type === ReleaseType.TIME_OUT
-              ? t("timeOut")
-              : `Bail Posted (${citizen?.name} ${citizen?.surname})`;
+              : type === ReleaseType.BAIL_POSTED
+              ? `Bail Posted (${citizen?.name} ${citizen?.surname})`
+              : t("timeOut");
 
             return {
               rowProps: { style: released ? { opacity: "0.5" } : undefined },
               id: item.id,
-              caseNumber: <RecordsCaseNumberColumn record={record} />,
+              caseNumber: <RecordsCaseNumberColumn record={item.record} />,
               citizen: (
                 <Button onPress={() => handleNameClick(item)}>
                   {item.name} {item.surname}{" "}
@@ -140,16 +140,16 @@ export default function Jail({ data }: Props) {
                     : null}
                 </Button>
               ),
-              officer: record.officer
-                ? `${generateCallsign(record.officer)} ${makeUnitName(record.officer)}`
+              officer: item.record.officer
+                ? `${generateCallsign(item.record.officer)} ${makeUnitName(item.record.officer)}`
                 : common("none"),
               jailTime,
               status,
-              createdAt: <FullDate>{record.createdAt}</FullDate>,
+              createdAt: <FullDate>{item.record.createdAt}</FullDate>,
               actions: (
                 <Button
                   disabled={released}
-                  onPress={() => handleCheckoutClick(item, record.id)}
+                  onPress={() => handleCheckoutClick(item, item.record.id)}
                   className="ml-2"
                   size="xs"
                 >
