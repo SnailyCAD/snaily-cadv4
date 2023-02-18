@@ -77,7 +77,7 @@ export default function Dmv({ data }: Props) {
                     : common("unknown")}
                 </span>
               ),
-              dmvStatus: <Status>{vehicle.dmvStatus}</Status>,
+              dmvStatus: <Status fallback="—">{vehicle.dmvStatus}</Status>,
               createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
               plate: vehicle.plate,
               model: vehicle.model.value.value,

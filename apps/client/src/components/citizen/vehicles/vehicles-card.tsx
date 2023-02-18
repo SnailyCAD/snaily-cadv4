@@ -118,7 +118,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
                 registrationStatus: vehicle.registrationStatus.value,
                 insuranceStatus: vehicle.insuranceStatus?.value ?? common("none"),
                 vinNumber: vehicle.vinNumber,
-                dmvStatus: <Status>{vehicle.dmvStatus}</Status>,
+                dmvStatus: <Status fallback="—">{vehicle.dmvStatus}</Status>,
                 createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
                 actions: (
                   <>

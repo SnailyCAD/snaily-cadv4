@@ -228,7 +228,7 @@ export function AllUnitsTab({ units }: Props) {
               callsign: generateCallsign(unit),
               badgeNumber: unit.badgeNumber,
               department: formatOfficerDepartment(unit) ?? common("none"),
-              departmentStatus: <Status>{departmentStatus}</Status>,
+              departmentStatus: <Status fallback="—">{departmentStatus}</Status>,
               division: formatUnitDivisions(unit),
               rank: <OfficerRank unit={unit} />,
               position: unit.position ?? common("none"),

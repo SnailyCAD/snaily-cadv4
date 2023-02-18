@@ -224,7 +224,7 @@ export function RecordsTable({
               officer: record.officer
                 ? `${generateCallsign(record.officer)} ${makeUnitName(record.officer)}`
                 : common("none"),
-              paymentStatus: record.paymentStatus ? <Status>{record.paymentStatus}</Status> : "—",
+              paymentStatus: <Status fallback="—">{record.paymentStatus}</Status>,
               totalCost: `${currency}${formatSum(totalCost())}`,
               notes: record.notes || common("none"),
               // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

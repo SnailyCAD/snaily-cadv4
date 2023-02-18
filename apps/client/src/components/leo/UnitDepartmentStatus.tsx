@@ -15,7 +15,7 @@ export function UnitDepartmentStatus({ unit }: Props) {
 
   return (
     <span className="capitalize flex items-center gap-2">
-      <Status>{departmentStatus}</Status>
+      <Status fallback="—">{departmentStatus}</Status>
 
       {unit.whitelistStatus?.status === WhitelistStatus.PENDING ? (
         <HoverCard

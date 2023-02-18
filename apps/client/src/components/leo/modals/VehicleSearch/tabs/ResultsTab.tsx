@@ -132,7 +132,7 @@ export function ResultsTab() {
         {DMV ? (
           <li>
             <Infofield label={vT("dmvStatus")}>
-              <Status>{currentResult.dmvStatus}</Status>
+              <Status fallback="—">{currentResult.dmvStatus}</Status>
             </Infofield>
           </li>
         ) : null}

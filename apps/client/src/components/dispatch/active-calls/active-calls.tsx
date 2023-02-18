@@ -169,7 +169,7 @@ function _ActiveCalls({ initialData }: Props) {
                 caseNumber: `#${call.caseNumber}`,
                 type: call.type?.value.value ?? common("none"),
                 priority: call.type?.priority ?? common("none"),
-                status: <Status>{call.status}</Status>,
+                status: <Status fallback="—">{call.status}</Status>,
                 name: `${call.name} ${call.viaDispatch ? `(${leo("dispatch")})` : ""}`,
                 location: `${call.location} ${call.postal ? `(${call.postal})` : ""}`,
                 description: <CallDescription data={call} />,

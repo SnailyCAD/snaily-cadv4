@@ -131,7 +131,7 @@ export function WeaponSearchModal({ id = ModalIds.WeaponSearch }: Props) {
                   {BUREAU_OF_FIREARMS ? (
                     <li>
                       <Infofield label={wT("bofStatus")}>
-                        <Status>{currentResult.bofStatus}</Status>
+                        <Status fallback="—">{currentResult.bofStatus}</Status>
                       </Infofield>
                     </li>
                   ) : null}

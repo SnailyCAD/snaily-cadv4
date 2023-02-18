@@ -14,6 +14,7 @@ interface Props {
     | PaymentStatus
     | null
     | undefined;
+  fallback?: string;
 }
 
 enum Colors {
@@ -22,7 +23,7 @@ enum Colors {
   RED = "#ff7b82",
 }
 
-export function Status({ children }: Props) {
+export function Status({ children, fallback }: Props) {
   const colors = {
     [WhitelistStatus.ACCEPTED]: Colors.GREEN,
     [ExpungementRequestStatus.ACCEPTED]: Colors.GREEN,
@@ -39,16 +40,17 @@ export function Status({ children }: Props) {
   };
 
   const t = useTranslations("Statuses");
+  const backgroundColor = children && colors[children];
 
   return (
     <span className="capitalize">
-      {children ? (
+      {backgroundColor ? (
         <span
           style={{ background: colors[children] }}
           className="inline-block w-2.5 h-2.5 mr-2 rounded-full"
         />
       ) : null}
-      {children ? t(children) : ""}
+      {children ? t(children) : fallback ?? ""}
     </span>
   );
 }

@@ -114,7 +114,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
                 name: business.name,
                 owner: `${business.citizen.name} ${business.citizen.surname}`,
                 user: business.user.username,
-                status: <Status>{business.status}</Status>,
+                status: <Status fallback="—">{business.status}</Status>,
                 whitelisted: common(yesOrNoText(business.whitelisted)),
                 actions: (
                   <>

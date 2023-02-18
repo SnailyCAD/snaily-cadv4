@@ -109,7 +109,7 @@ export function ArrestReportsTab({ arrestReports }: Props) {
               ),
               violations: <ViolationsColumn violations={record.violations} />,
               createdAt: createdAt ? <FullDate>{createdAt}</FullDate> : "—",
-              status: <Status>{record.status}</Status>,
+              status: <Status fallback="—">{record.status}</Status>,
               actions: (
                 <>
                   <Button size="xs" className="mr-2" onPress={() => handleViewClick(item)}>
