@@ -202,7 +202,13 @@ export function ActiveIncidents() {
         <ManageIncidentModal
           onCreate={(incident) => {
             setActiveIncidents([incident, ...activeIncidents]);
-            setTempIncident(undefined);
+
+            if (incident.openModalAfterCreation) {
+              setTempIncident(incident);
+              openModal(ModalIds.ManageIncident);
+            } else {
+              setTempIncident(undefined);
+            }
           }}
           onUpdate={(old, incident) => {
             if (incident.isActive) {
