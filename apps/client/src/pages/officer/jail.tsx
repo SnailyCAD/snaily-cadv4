@@ -76,15 +76,21 @@ export default function Jail({ data }: Props) {
     openModal(ModalIds.NameSearch, { ...item, name: `${item.name} ${item.surname}` });
   }
 
-  const itemsWithArrestReportSortedByCreatedAt = asyncTable.items
-    .map((item) => {
-      const [record] = item.Record.sort((a, b) =>
+  const _itemsWithArrestReportSortedByCreatedAt = React.useMemo(() => {
+    const records = [];
+
+    for (const citizen of asyncTable.items) {
+      const [record] = citizen.Record.sort((a, b) =>
         compareDesc(new Date(a.createdAt), new Date(b.createdAt)),
       ).filter((v) => v.type === "ARREST_REPORT");
 
-      return { ...item, record };
-    })
-    .filter((v) => !!v) as (BaseCitizen & { Record: Record[]; record: Record })[];
+      if (record) {
+        records.push({ ...citizen, record });
+      }
+    }
+
+    return records;
+  }, [asyncTable.items]);
 
   return (
     <Layout
@@ -111,13 +117,13 @@ export default function Jail({ data }: Props) {
         </FormField>
       </header>
 
-      {itemsWithArrestReportSortedByCreatedAt.length <= 0 ? (
+      {_itemsWithArrestReportSortedByCreatedAt.length <= 0 ? (
         <p className="mt-5">{t("noImprisonedCitizens")}</p>
       ) : (
         <Table
           tableState={tableState}
-          data={itemsWithArrestReportSortedByCreatedAt.map((item) => {
-            const jailTime = item.record.violations.reduce((ac, cv) => ac + (cv.jailTime || 0), 0);
+          data={_itemsWithArrestReportSortedByCreatedAt.map((item) => {
+            const jailTime = item.record?.violations.reduce((ac, cv) => ac + (cv.jailTime || 0), 0);
             const released = isReleased(item.record);
             const type = released && item.record.release?.type;
             const citizen = released ? item.record.release?.releasedBy : null;
