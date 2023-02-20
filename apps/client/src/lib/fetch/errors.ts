@@ -1,4 +1,4 @@
-import type { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import type { TranslationValues } from "use-intl";
 
 export type ErrorMessages = typeof import("../../../locales/en/common.json")["Errors"];
@@ -57,7 +57,11 @@ export function getFeatureNotEnabledError(
 
 export function isAxiosError<T>(error: unknown): error is AxiosError<T, T> {
   if (!error) return false;
-  return error instanceof Error || (typeof error === "object" && "response" in error);
+  return (
+    error instanceof Error ||
+    error instanceof AxiosError ||
+    (typeof error === "object" && "response" in error)
+  );
 }
 
 export function isErrorKey(
