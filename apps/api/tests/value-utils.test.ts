@@ -34,6 +34,39 @@ test(`Should return permissions for type ${testPath1}`, () => {
   `);
 });
 
+test("Should return correct permissions for all types", () => {
+  const req = { params: { path: "all" } } as any;
+
+  expect(getPermissionsForValuesRequest(req)).toMatchInlineSnapshot(`
+    {
+      "fallback": [Function],
+      "permissions": [
+        "ManageValueAddress",
+        "ManageValueAddressFlag",
+        "ManageValueBloodGroup",
+        "ManageValueBusinessRole",
+        "ManageValueCitizenFlag",
+        "ManageValueCodes10",
+        "ManageValueDepartment",
+        "ManageValueDivision",
+        "ManageValueDLCategory",
+        "ManageValueEmergencyVehicle",
+        "ManageValueEthnicity",
+        "ManageValueGender",
+        "ManageValueImpoundLot",
+        "ManageValueLicense",
+        "ManageValueOfficerRank",
+        "ManageValuePenalCode",
+        "ManageValueVehicle",
+        "ManageValueVehicleFlag",
+        "ManageValueWeapon",
+        "ManageValueQualification",
+        "ManageValueCallType",
+      ],
+    }
+  `);
+});
+
 test("Should throw error if no params provided", () => {
   const req = { params: { path: null } } as any;
   expect(() => getPermissionsForValuesRequest(req)).toThrow(BadRequest);

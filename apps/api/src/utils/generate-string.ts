@@ -5,8 +5,8 @@ interface Options {
   type: "letters-only" | "numbers-only" | "all";
 }
 
-const NUMBERS = "0123456789";
-const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+export const NUMBERS = "0123456789";
+export const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 export function generateString(length: number, options?: Options) {
   const { type = "all", extraChars = "" } = options ?? {};

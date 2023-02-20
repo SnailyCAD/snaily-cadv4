@@ -24,11 +24,12 @@
     "@types/glob": "^8.0.1",
     "@types/jsonwebtoken": "9.0.1",
     "@types/multer": "^1.4.7",
-    "@types/node": "^18.13.0",
+    "@types/node": "^18.14.0",
     "@types/qrcode": "^1.5.0",
     "@types/sharp": "^0.31.1",
+    "@vitest/coverage-c8": "^0.28.5",
     "dotenv": "^16.0.3",
-    "esbuild": "^0.17.8",
+    "esbuild": "^0.17.9",
     "esbuild-register": "^3.4.2",
     "multer": "^1.4.5-lts.1",
     "regenerator-runtime": "^0.13.11",
@@ -41,8 +42,8 @@
   "dependencies": {
     "@discordjs/rest": "^1.5.0",
     "@prisma/client": "^4.10.1",
-    "@sentry/node": "^7.37.2",
-    "@sentry/tracing": "^7.37.2",
+    "@sentry/node": "^7.38.0",
+    "@sentry/tracing": "^7.38.0",
     "@snaily-cad/image-data-uri": "^3.1.1",
     "@snailycad/audit-logger": "1.48.1",
     "@snailycad/config": "1.48.1",
@@ -67,7 +68,7 @@
     "cookie-parser": "1.4.6",
     "cors": "2.8.5",
     "cuid": "^2.1.8",
-    "discord-api-types": "0.37.34",
+    "discord-api-types": "0.37.35",
     "express": "4.18.2",
     "glob": "^8.1.0",
     "is-ip": "3.1.0",
@@ -79,7 +80,7 @@
     "qrcode": "^1.5.1",
     "sharp": "^0.31.3",
     "socket.io": "^4.6.0",
-    "undici": "^5.19.1",
-    "use-intl": "^2.10.2"
+    "undici": "^5.20.0",
+    "use-intl": "^2.10.3"
   }
 }

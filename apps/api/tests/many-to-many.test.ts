@@ -67,6 +67,36 @@ test("Should return correct many-to-many array (id: String) for Prisma -> additi
   `);
 });
 
+test("Should return correct many-to-many array (id: String) for Prisma -> addition & disconnect & `showExisting`", () => {
+  const currentArr = ["a", "b", "c"];
+  const newArr = ["a", "b", "d"];
+
+  expect(manyToManyHelper(currentArr, newArr, { showExisting: true })).toMatchInlineSnapshot(`
+    [
+      {
+        "existing": {
+          "id": "a",
+        },
+      },
+      {
+        "existing": {
+          "id": "b",
+        },
+      },
+      {
+        "disconnect": {
+          "id": "c",
+        },
+      },
+      {
+        "connect": {
+          "id": "d",
+        },
+      },
+    ]
+  `);
+});
+
 test("Should merge 2 arrays -> 1 unique array without accessor", () => {
   const arr1 = ["A", "B", "C", "F"];
   const arr2 = ["A", "C", "D", "E"];

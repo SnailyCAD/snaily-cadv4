@@ -64,8 +64,8 @@ export function getPermissionsForValuesRequest(request: Req) {
     throw new BadRequest("Must specify `params.path`");
   }
 
-  const type = getTypeFromPath(path) as ValueType | "all";
-  if (type === "all") {
+  const type = getTypeFromPath(path) as ValueType | "ALL";
+  if (type === "ALL") {
     return {
       permissions: Object.values(permissionsForRouteType).flat(1),
       fallback: (u: User) => u.rank !== Rank.USER,
