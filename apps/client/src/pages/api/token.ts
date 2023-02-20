@@ -12,7 +12,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const body = typeof req.body === "string" ? req.body : String(req.body);
 
   if (method !== "POST") {
-    throw new Error("method must be POST");
+    return res.status(405).send("Method not allowed");
   }
 
   if (!body) {
