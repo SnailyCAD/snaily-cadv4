@@ -803,6 +803,7 @@ model Business {
   status        WhitelistStatus?
   businessPosts BusinessPost[]
   employees     Employee[]
+  Record        Record[]
   vehicles      RegisteredVehicle[] @relation("registeredBusinessVehicles")
   roles         EmployeeValue[]     @relation("businessValueBusinessRoles")
 }
@@ -1223,8 +1224,8 @@ model Record {
   id                   String              @id @default(uuid())
   caseNumber           Int                 @default(autoincrement())
   type                 RecordType
-  citizen              Citizen             @relation(fields: [citizenId], references: [id], onDelete: Cascade)
-  citizenId            String
+  citizen              Citizen?            @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId            String?
   officer              Officer?            @relation(fields: [officerId], references: [id], onDelete: Cascade)
   officerId            String?
   violations           Violation[]
@@ -1252,6 +1253,8 @@ model Record {
   call911Id            String?
   incident             LeoIncident?        @relation(fields: [incidentId], references: [id], onDelete: Cascade)
   incidentId           String?
+  business             Business?           @relation(fields: [businessId], references: [id])
+  businessId           String?
 }
 
 model RecordRelease {

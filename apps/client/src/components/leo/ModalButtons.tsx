@@ -31,6 +31,7 @@ const buttons: modalButtons.ModalButton[] = [
   modalButtons.nameSearchBtn,
   modalButtons.plateSearchBtn,
   modalButtons.weaponSearchBtn,
+  modalButtons.businessSearchBtn,
   modalButtons.customFieldSearchBtn,
   modalButtons.create911CallBtn,
   modalButtons.createWrittenWarningBtn,

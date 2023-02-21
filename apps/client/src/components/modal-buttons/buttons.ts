@@ -37,6 +37,12 @@ export const plateSearchBtn: ModalButton = () => ({
   nameKey: ["Leo", "plateSearch"],
 });
 
+export const businessSearchBtn: ModalButton = ({ BUSINESS }) => ({
+  modalId: ModalIds.BusinessSearch,
+  nameKey: ["Leo", "businessSearch"],
+  isEnabled: BUSINESS,
+});
+
 export const weaponSearchBtn: ModalButton = ({ WEAPON_REGISTRATION }) => ({
   modalId: ModalIds.WeaponSearch,
   nameKey: ["Leo", "weaponSearch"],

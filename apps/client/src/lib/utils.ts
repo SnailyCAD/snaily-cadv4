@@ -7,6 +7,7 @@ import {
   WhitelistStatus,
   EmsFdDeputy,
   CombinedEmsFdUnit,
+  Business,
 } from "@snailycad/types";
 import { isUnitCombined, isUnitCombinedEmsFd, isUnitOfficer } from "@snailycad/utils/typeguards";
 import { handleRequest } from "./fetch";
@@ -61,8 +62,8 @@ export function formatUnitDivisions(unit: Officer | EmsFdDeputy) {
   return division ?? divisions;
 }
 
-export function formatCitizenAddress(citizen: Pick<Citizen, "address" | "postal">) {
-  const { address, postal } = citizen;
+export function formatCitizenAddress(data: Pick<Citizen | Business, "address" | "postal">) {
+  const { address, postal } = data;
   return `${address}${postal ? ` (${postal})` : ""}`;
 }
 

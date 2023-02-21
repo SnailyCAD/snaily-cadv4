@@ -72,6 +72,13 @@ const Modals = {
     },
     { ssr: false },
   ),
+  BusinessSearchModal: dynamic(
+    async () => {
+      return (await import("components/leo/modals/business-search-modal/business-search-modal"))
+        .BusinessSearchModal;
+    },
+    { ssr: false },
+  ),
   NotepadModal: dynamic(
     async () => {
       return (await import("components/shared/NotepadModal")).NotepadModal;
@@ -209,11 +216,13 @@ export default function OfficerDashboard({
         <>
           <Modals.SwitchDivisionCallsignModal />
           <Modals.NotepadModal />
+
           {/* name search have their own vehicle/weapon search modal */}
           {isOpen(ModalIds.NameSearch) ? null : (
             <>
               <Modals.WeaponSearchModal />
               <Modals.VehicleSearchModal id={ModalIds.VehicleSearch} />
+              <Modals.BusinessSearchModal />
 
               {LEO_TICKETS ? (
                 <Modals.ManageRecordModal onCreate={handleRecordCreate} type={RecordType.TICKET} />
