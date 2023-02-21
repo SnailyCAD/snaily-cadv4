@@ -36,8 +36,6 @@ export function ConnectionsTab({
   const t = useTranslations("Leo");
   const { handleChange, errors, values } = useFormikContext<_FormikContext>();
 
-  console.log({ record });
-
   const { calls, setCurrentlySelectedCall } = useCall911State(
     (state) => ({
       calls: state.calls,

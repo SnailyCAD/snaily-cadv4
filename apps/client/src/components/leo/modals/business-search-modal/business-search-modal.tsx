@@ -12,6 +12,12 @@ import type { PostLeoSearchBusinessData } from "@snailycad/types/api";
 import type { BaseCitizen } from "@snailycad/types";
 import { BusinessSearchResult, useBusinessSearch } from "state/search/business-search-state";
 import { Infofield } from "components/shared/Infofield";
+import dynamic from "next/dynamic";
+
+const BusinessSearchTabsContainer = dynamic(
+  async () => (await import("./tabs/tabs-container")).BusinessSearchTabsContainer,
+  { ssr: false },
+);
 
 export function BusinessSearchModal() {
   const { isOpen, closeModal, openModal, getPayload } = useModal();
@@ -71,8 +77,6 @@ export function BusinessSearchModal() {
     searchValue: "",
     name: "",
   };
-
-  console.log({ results, currentResult });
 
   return (
     <Modal
@@ -172,6 +176,8 @@ export function BusinessSearchModal() {
                   {currentResult.address}{" "}
                   {currentResult.citizen.postal ? `(${currentResult.citizen.postal})` : null}
                 </Infofield>
+
+                <BusinessSearchTabsContainer />
               </div>
             ) : null}
 
