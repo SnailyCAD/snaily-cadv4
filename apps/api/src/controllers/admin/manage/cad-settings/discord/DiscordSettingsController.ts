@@ -147,6 +147,7 @@ export class DiscordSettingsController {
       update: createUpdateData,
       create: createUpdateData,
       include: {
+        adminRoles: true,
         leoRoles: true,
         emsFdRoles: true,
         leoSupervisorRoles: true,
@@ -158,6 +159,12 @@ export class DiscordSettingsController {
     });
 
     await Promise.all([
+      this.updateRoles({
+        discordRoleId: discordRoles.id,
+        discordRoles: discordRoles.adminRoles,
+        newRoles: (data.adminRoles as string[] | null) ?? [],
+        type: "adminRoles",
+      }),
       this.updateRoles({
         discordRoleId: discordRoles.id,
         discordRoles: discordRoles.leoRoles,
@@ -209,6 +216,7 @@ export class DiscordSettingsController {
         discordRoles: {
           include: {
             roles: true,
+            adminRoles: true,
             leoRoles: true,
             emsFdRoles: true,
             leoSupervisorRoles: true,
@@ -268,5 +276,6 @@ interface UpdateRolesOptions {
     | "dispatchRoles"
     | "towRoles"
     | "taxiRoles"
-    | "courthouseRoles";
+    | "courthouseRoles"
+    | "adminRoles";
 }

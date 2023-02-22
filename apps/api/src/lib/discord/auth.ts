@@ -50,6 +50,7 @@ export async function updateMemberRolesLogin<
       where: { id: String(discordRolesId) },
       include: {
         roles: true,
+        adminRoles: true,
         leoRoles: true,
         emsFdRoles: true,
         dispatchRoles: true,
@@ -78,7 +79,7 @@ export async function updateMemberRolesLogin<
     const isTaxi = doesDiscordMemberHaveRole(discordRoles.taxiRoles, memberObj);
     const isSupervisor = doesDiscordMemberHaveRole(discordRoles.leoSupervisorRoles, memberObj);
     const isCourthouse = doesDiscordMemberHaveRole(discordRoles.courthouseRoles, memberObj);
-    const isAdmin = doesDiscordMemberHaveRole(discordRoles.adminRoleId, memberObj);
+    const isAdmin = doesDiscordMemberHaveRole(discordRoles.adminRoles, memberObj);
     const hasWhitelistAccess = doesDiscordMemberHaveRole(discordRoles.whitelistedRoleId, memberObj);
 
     const grantablePermissions = {

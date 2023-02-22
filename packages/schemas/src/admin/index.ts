@@ -57,6 +57,7 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
 });
 
 export const DISCORD_SETTINGS_SCHEMA = z.object({
+  adminRoles: z.array(z.any()).nullish(),
   leoRoles: z.array(z.any()).nullish(),
   emsFdRoles: z.array(z.any()).nullish(),
   leoSupervisorRoles: z.array(z.any()).nullish(),

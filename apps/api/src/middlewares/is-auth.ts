@@ -125,6 +125,7 @@ export function CAD_SELECT(user?: Pick<User, "rank"> | null, includeDiscordRoles
       ? {
           include: {
             roles: true,
+            adminRoles: true,
             leoRoles: true,
             emsFdRoles: true,
             leoSupervisorRoles: true,

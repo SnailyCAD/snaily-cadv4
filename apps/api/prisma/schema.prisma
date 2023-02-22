@@ -179,6 +179,7 @@ model DiscordRoles {
   taxiRoles           DiscordRole[] @relation("taxiRoles")
   adminRole           DiscordRole?  @relation("adminRole", fields: [adminRoleId], references: [id])
   adminRoleId         String?
+  adminRoles          DiscordRole[] @relation("adminRoles")
   whitelistedRoleId   String?
   whitelistedRole     DiscordRole?  @relation("whitelistedRole", fields: [whitelistedRoleId], references: [id])
   courthouseRoles     DiscordRole[] @relation("courthouseRoles")
@@ -218,6 +219,7 @@ model DiscordRole {
   towRolesArr           DiscordRoles[] @relation("towRoles")
   courthouseRoles       DiscordRoles[] @relation("courthouseRoles")
   CustomRole            CustomRole[]
+  adminRolesArr         DiscordRoles[] @relation("adminRoles")
 }
 
 // audit logs

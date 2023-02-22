@@ -64,6 +64,7 @@ export type ApiToken = Prisma.ApiToken & {
 export type ApiTokenLog = Prisma.ApiTokenLog;
 
 export type DiscordRoles = Prisma.DiscordRoles & {
+  adminRoles?: DiscordRole[];
   leoRoles?: DiscordRole[];
   emsFdRoles?: DiscordRole[];
   dispatchRoles?: DiscordRole[];

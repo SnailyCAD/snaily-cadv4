@@ -60,6 +60,7 @@ export type GetCADDiscordRolesData = Prisma.DiscordRole[];
  * @route /admin/manage/cad-settings/discord/roles
  */
 export type PostCADDiscordRolesData = Prisma.DiscordRoles & {
+  adminRoles?: Prisma.DiscordRole[];
   leoRoles?: Prisma.DiscordRole[];
   leoSupervisorRoles?: Prisma.DiscordRole[];
   emsFdRoles?: Prisma.DiscordRole[];

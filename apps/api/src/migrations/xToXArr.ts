@@ -7,6 +7,7 @@ const types = {
   towRoleId: "towRoles",
   taxiRoleId: "taxiRoles",
   leoSupervisorRoleId: "leoSupervisorRoles",
+  adminRoleId: "adminRoles",
 } as const;
 
 type Type =
@@ -15,7 +16,8 @@ type Type =
   | "dispatchRoleId"
   | "towRoleId"
   | "taxiRoleId"
-  | "leoSupervisorRoleId";
+  | "leoSupervisorRoleId"
+  | "adminRoleId";
 
 async function xToXArr(type: Type) {
   const discordRoles = await prisma.discordRoles.findFirst({
