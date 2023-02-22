@@ -219,7 +219,7 @@ model DiscordRole {
   towRolesArr           DiscordRoles[] @relation("towRoles")
   courthouseRoles       DiscordRoles[] @relation("courthouseRoles")
   CustomRole            CustomRole[]
-  DiscordRoles          DiscordRoles[] @relation("adminRoles")
+  adminRolesArr         DiscordRoles[] @relation("adminRoles")
 }
 
 // audit logs

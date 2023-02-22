@@ -26,8 +26,6 @@ async function xToXArr(type: Type) {
 
   if (!discordRoles?.[type]) return;
 
-  console.log({ type });
-
   await prisma.discordRoles.update({
     where: {
       id: discordRoles.id,
