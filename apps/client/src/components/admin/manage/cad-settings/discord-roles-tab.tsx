@@ -42,6 +42,7 @@ export function DiscordRolesTab() {
   }, []); // eslint-disable-line
 
   const INITIAL_VALUES = {
+    adminRoles: makeRoleValues(discordRoles.adminRoles),
     leoRoles: makeRoleValues(discordRoles.leoRoles),
     emsFdRoles: makeRoleValues(discordRoles.emsFdRoles),
     dispatchRoles: makeRoleValues(discordRoles.dispatchRoles),
@@ -87,6 +88,7 @@ export function DiscordRolesTab() {
       method: "POST",
       data: {
         ...values,
+        adminRoles: toValue(values.adminRoles),
         leoRoles: toValue(values.leoRoles),
         emsFdRoles: toValue(values.emsFdRoles),
         dispatchRoles: toValue(values.dispatchRoles),
@@ -143,17 +145,18 @@ export function DiscordRolesTab() {
             <SettingsFormField
               action="input"
               description={t("adminRoleInfo")}
-              errorMessage={errors.adminRoleId}
+              errorMessage={errors.adminRoles}
               label={t("adminRole")}
             >
               <Select
                 isClearable
+                isMulti
                 values={roles.map((role) => ({
                   value: role.id,
                   label: role.name,
                 }))}
-                value={values.adminRoleId}
-                name="adminRoleId"
+                value={values.adminRoles}
+                name="adminRoles"
                 onChange={handleChange}
               />
 
