@@ -19,7 +19,6 @@ export function BusinessSearchVehiclesTab() {
   }
 
   function handleOpenInVehicleSearch(vehicle: RegisteredVehicle) {
-
     closeModal(ModalIds.BusinessSearch);
     openModal(ModalIds.VehicleSearch, vehicle);
   }
