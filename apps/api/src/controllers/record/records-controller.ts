@@ -232,11 +232,14 @@ export class RecordsController {
       recordId: null,
     });
 
-    await prisma.recordLog.create({
-      data: { citizenId: recordItem.citizenId, recordId: recordItem.id },
-    });
+    // todo: allow tickets for business in the very near future
+    if (recordItem.citizenId && recordItem.citizen) {
+      await prisma.recordLog.create({
+        data: { citizenId: recordItem.citizenId, recordId: recordItem.id },
+      });
 
-    await this.handleDiscordWebhook(recordItem);
+      await this.handleDiscordWebhook(recordItem as any);
+    }
 
     return recordItem;
   }

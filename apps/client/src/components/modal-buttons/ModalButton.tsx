@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useTranslations } from "next-intl";
 import type { ModalButton, Args } from "./buttons";
 import { Button } from "@snailycad/ui";

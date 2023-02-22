@@ -80,14 +80,15 @@ export const enum ModalIds {
   AddAssignedUnit = "AddAssignedUnitModal",
   ImpoundVehicle = "ImpoundVehicleModal",
   AddInvolvedUnit = "AddInvolvedUnitModal",
-  CreateTemporaryUnit = "CreateTemporaryUnit",
+  CreateTemporaryUnit = "CreateTemporaryUnitModal",
+  BusinessSearch = "BusinessSearchModal",
 
   SearchMedicalRecord = "SearchMedicalRecordModal",
   CreateMedicalRecord = "CreateMedicalRecordModal",
   SelectDeputy = "SelectDeputyModal",
   ManageDeputy = "ManageDeputyModal",
   ManageAOP = "ManageAOPModal",
-  EnableSignal100 = "EnableSignal100",
+  EnableSignal100 = "EnableSignal100Modal",
 
   ManageTruckLog = "ManageTruckLogModal",
 

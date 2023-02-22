@@ -187,6 +187,43 @@ export class LeoSearchController {
     ) as APITypes.PostLeoSearchCitizenData;
   }
 
+  @Post("/business")
+  @Description("Search businesses by their name")
+  @UsePermissions({
+    fallback: (u) => u.isLeo || u.isDispatch,
+    permissions: [Permissions.Leo, Permissions.Dispatch],
+  })
+  async searchBusinessByName(
+    @BodyParams("name") name: string,
+  ): Promise<APITypes.PostLeoSearchBusinessData> {
+    if (!name || name.length < 3) {
+      return [];
+    }
+
+    const businesses = await prisma.business.findMany({
+      where: {
+        name: {
+          contains: name,
+          mode: "insensitive",
+        },
+      },
+      include: {
+        citizen: true,
+        vehicles: {
+          include: vehicleSearchInclude,
+        },
+        employees: {
+          include: {
+            citizen: true,
+            role: { include: { value: true } },
+          },
+        },
+      },
+    });
+
+    return businesses;
+  }
+
   @Post("/weapon")
   @Description("Search weapons by their serialNumber")
   @UsePermissions({
