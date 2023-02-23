@@ -368,7 +368,13 @@ export class CitizenController {
       }
     }
 
-    if (data.socialSecurityNumber) {
+    const isEditableSSNEnabled = isFeatureEnabled({
+      features: cad.features,
+      feature: Feature.EDITABLE_SSN,
+      defaultReturn: true,
+    });
+
+    if (data.socialSecurityNumber && isEditableSSNEnabled) {
       await validateSocialSecurityNumber({
         socialSecurityNumber: data.socialSecurityNumber,
         citizenId: citizen.id,
@@ -385,8 +391,11 @@ export class CitizenController {
           cad,
         })),
         socialSecurityNumber:
-          data.socialSecurityNumber ??
-          (!citizen.socialSecurityNumber ? generateString(9, { type: "numbers-only" }) : undefined),
+          data.socialSecurityNumber && isEditableSSNEnabled
+            ? data.socialSecurityNumber
+            : !citizen.socialSecurityNumber
+            ? generateString(9, { type: "numbers-only" })
+            : undefined,
       },
       include: { gender: true, ethnicity: true },
     });

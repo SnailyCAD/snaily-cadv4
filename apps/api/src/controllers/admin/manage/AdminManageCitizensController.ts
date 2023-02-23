@@ -10,7 +10,7 @@ import { validateSchema } from "lib/data/validate-schema";
 import { generateString } from "utils/generate-string";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateImageURL } from "lib/images/validate-image-url";
-import { Prisma, Rank } from "@prisma/client";
+import { Feature, Prisma, Rank } from "@prisma/client";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { isCuid } from "cuid";
 import type * as APITypes from "@snailycad/types/api";
@@ -18,6 +18,7 @@ import { validateSocialSecurityNumber } from "lib/citizen/validateSSN";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { leoProperties, unitProperties } from "lib/leo/activeOfficer";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
+import { isFeatureEnabled } from "lib/cad";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/citizens")
@@ -117,6 +118,7 @@ export class AdminManageCitizensController {
     @PathParams("id") id: string,
     @BodyParams() body: unknown,
     @Context("sessionUserId") sessionUserId: string,
+    @Context("cad") cad: { features: Record<Feature, boolean> },
   ): Promise<APITypes.PutManageCitizenByIdData> {
     const include = {
       gender: true,
@@ -133,7 +135,13 @@ export class AdminManageCitizensController {
       throw new NotFound("citizenNotFound");
     }
 
-    if (data.socialSecurityNumber) {
+    const isEditableSSNEnabled = isFeatureEnabled({
+      features: cad.features,
+      feature: Feature.EDITABLE_SSN,
+      defaultReturn: true,
+    });
+
+    if (data.socialSecurityNumber && isEditableSSNEnabled) {
       await validateSocialSecurityNumber({
         socialSecurityNumber: data.socialSecurityNumber,
         citizenId: citizen.id,
@@ -161,8 +169,11 @@ export class AdminManageCitizensController {
         pilotLicenseId: data.pilotLicense,
         phoneNumber: data.phoneNumber,
         socialSecurityNumber:
-          data.socialSecurityNumber ||
-          (!citizen.socialSecurityNumber ? generateString(9, { type: "numbers-only" }) : undefined),
+          data.socialSecurityNumber && isEditableSSNEnabled
+            ? data.socialSecurityNumber
+            : !citizen.socialSecurityNumber
+            ? generateString(9, { type: "numbers-only" })
+            : undefined,
         occupation: data.occupation,
         additionalInfo: data.additionalInfo,
         imageId: validatedImageURL,
