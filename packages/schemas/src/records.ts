@@ -40,6 +40,15 @@ export const CREATE_TICKET_SCHEMA = z.object({
   incidentId: z.string().nullish(),
 });
 
+export const CREATE_TICKET_SCHEMA_BUSINESS = CREATE_TICKET_SCHEMA.omit({ citizenId: true }).extend({
+  businessId: z.string().min(2).max(255),
+  type: z
+    .string()
+    .min(2)
+    .max(255)
+    .regex(/TICKET|WRITTEN_WARNING/),
+});
+
 export const CREATE_WARRANT_SCHEMA = z.object({
   citizenId: z.string().min(2).max(255),
   status: z

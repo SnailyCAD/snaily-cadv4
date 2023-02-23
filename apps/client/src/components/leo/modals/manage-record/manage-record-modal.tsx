@@ -21,6 +21,7 @@ import { FullDate } from "components/shared/FullDate";
 import { TabList, TabsContent } from "components/shared/TabList";
 
 import dynamic from "next/dynamic";
+import { FormRow } from "components/form/FormRow";
 
 const ManageCourtEntryModal = dynamic(
   async () =>
@@ -173,6 +174,10 @@ export function ManageRecordModal(props: Props) {
     type: props.type,
     citizenId: props.record?.citizenId ?? payload?.citizenId ?? "",
     citizenName: payload?.citizenName ?? "",
+
+    businessId: "",
+    businessName: "",
+
     violations:
       props.record?.violations.map((v) => {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
