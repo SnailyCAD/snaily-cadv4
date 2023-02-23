@@ -1,9 +1,10 @@
-import type { Prisma, cad, Feature, MiscCadSettings } from "@prisma/client";
+import { Prisma, cad, Feature, MiscCadSettings } from "@prisma/client";
 import type { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { generateString } from "utils/generate-string";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { validateImageURL } from "lib/images/validate-image-url";
 import { generateLicenseNumber } from "./generate-license-number";
+import { isFeatureEnabled } from "./cad";
 
 interface Options {
   data: Partial<Zod.infer<typeof CREATE_CITIZEN_SCHEMA>>;
@@ -14,6 +15,12 @@ interface Options {
 export async function citizenObjectFromData(options: Options) {
   const miscCadSettings = options.cad.miscCadSettings;
   const validatedImageURL = validateImageURL(options.data.image);
+
+  const isEditableSSNEnabled = isFeatureEnabled({
+    features: options.cad.features,
+    feature: Feature.EDITABLE_SSN,
+    defaultReturn: true,
+  });
 
   let obj: Prisma.CitizenUncheckedCreateInput | Prisma.CitizenUncheckedUpdateInput = {
     address: options.data.address,
@@ -31,7 +38,9 @@ export async function citizenObjectFromData(options: Options) {
     imageId: validatedImageURL,
     imageBlurData: await generateBlurPlaceholder(validatedImageURL),
     socialSecurityNumber:
-      options.data.socialSecurityNumber || generateString(9, { type: "numbers-only" }),
+      options.data.socialSecurityNumber && isEditableSSNEnabled
+        ? options.data.socialSecurityNumber
+        : generateString(9, { type: "numbers-only" }),
     occupation: options.data.occupation || null,
     additionalInfo: options.data.additionalInfo,
 

@@ -43,6 +43,8 @@ export const Feature = {
   CALL_911_APPROVAL: "CALL_911_APPROVAL",
   FORCE_DISCORD_AUTH: "FORCE_DISCORD_AUTH",
   FORCE_STEAM_AUTH: "FORCE_STEAM_AUTH",
+  EDITABLE_SSN: "EDITABLE_SSN",
+  EDITABLE_VIN: "EDITABLE_VIN",
 } as const;
 
 export type Feature = (typeof Feature)[keyof typeof Feature];

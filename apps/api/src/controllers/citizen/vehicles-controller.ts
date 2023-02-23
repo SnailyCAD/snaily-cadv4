@@ -188,6 +188,17 @@ export class VehiclesController {
       defaultReturn: false,
     });
 
+    const isEditableVINEnabled = isFeatureEnabled({
+      features: cad.features,
+      feature: Feature.EDITABLE_VIN,
+      defaultReturn: true,
+    });
+
+    const vinNumber = await this.generateOrValidateVINNumber({
+      vinNumber: data.vinNumber || null,
+      isEditableVINEnabled,
+    });
+
     const vehicle = await prisma.registeredVehicle.create({
       data: {
         plate: data.plate.toUpperCase(),
@@ -195,7 +206,7 @@ export class VehiclesController {
         citizenId: citizen.id,
         modelId,
         registrationStatusId: data.registrationStatus,
-        vinNumber: await this.generateOrValidateVINNumber(data.vinNumber || null),
+        vinNumber,
         userId: user.id || undefined,
         insuranceStatusId: data.insuranceStatus,
         taxStatus: data.taxStatus as VehicleTaxStatus | null,
@@ -341,6 +352,17 @@ export class VehiclesController {
       }
     }
 
+    const isEditableVINEnabled = isFeatureEnabled({
+      features: cad.features,
+      feature: Feature.EDITABLE_VIN,
+      defaultReturn: true,
+    });
+
+    const vinNumber = await this.generateOrValidateVINNumber({
+      vinNumber: data.vinNumber,
+      isEditableVINEnabled,
+    });
+
     const updatedVehicle = await prisma.registeredVehicle.update({
       where: {
         id: vehicle.id,
@@ -350,9 +372,7 @@ export class VehiclesController {
         modelId: isCustomEnabled ? valueModel?.id : data.model,
         color: data.color,
         registrationStatusId: data.registrationStatus,
-        vinNumber: data.vinNumber
-          ? await this.generateOrValidateVINNumber(data.vinNumber, vehicle)
-          : undefined,
+        vinNumber,
         reportedStolen: data.reportedStolen ?? false,
         insuranceStatusId: data.insuranceStatus,
         taxStatus: data.taxStatus as VehicleTaxStatus | null,
@@ -471,27 +491,32 @@ export class VehiclesController {
     return true;
   }
 
-  private async generateOrValidateVINNumber(
-    _vinNumber?: string | null,
-    vehicle?: Pick<RegisteredVehicle, "id">,
-  ): Promise<string> {
-    const vinNumber = _vinNumber ?? generateString(this.VIN_NUMBER_LENGTH);
+  private async generateOrValidateVINNumber(options: {
+    isEditableVINEnabled: boolean;
+    vinNumber?: string | null;
+    vehicle?: Pick<RegisteredVehicle, "id">;
+  }): Promise<string> {
+    const vinNumber = options.vinNumber
+      ? options.isEditableVINEnabled
+        ? options.vinNumber
+        : undefined
+      : generateString(this.VIN_NUMBER_LENGTH);
 
     const existing = await prisma.registeredVehicle.findFirst({
       where: {
         vinNumber: { mode: "insensitive", equals: vinNumber },
-        NOT: vehicle ? { id: vehicle.id } : undefined,
+        NOT: options.vehicle ? { id: options.vehicle.id } : undefined,
       },
     });
 
     if (!existing) {
-      return vinNumber;
+      return vinNumber as string;
     }
 
-    if (_vinNumber) {
+    if (options.vinNumber) {
       throw new ExtendedBadRequest({ vinNumber: "vinNumberInUse" });
     }
 
-    return this.generateOrValidateVINNumber(_vinNumber, vehicle);
+    return this.generateOrValidateVINNumber(options);
   }
 }

@@ -165,6 +165,10 @@
     "FORCE_DISCORD_AUTH-url": "https://docs.snailycad.org/docs/features/settings/forced-connections",
     "FORCE_STEAM_AUTH": "Forced Steam Authentication",
     "FORCE_STEAM_AUTH-description": "When enabled, this will force users to sync with Steam <b>after registration</b>.",
-    "FORCE_STEAM_AUTH-url": "https://docs.snailycad.org/docs/features/settings/forced-connections"
+    "FORCE_STEAM_AUTH-url": "https://docs.snailycad.org/docs/features/settings/forced-connections",
+    "EDITABLE_SSN": "Editable SSN",
+    "EDITABLE_SSN-description": "When enabled, this will allow citizens to edit their SSN.",
+    "EDITABLE_VIN": "Editable VIN",
+    "EDITABLE_VIN-description": "When enabled, this will allow citizens to edit their vehicle's VIN."
   }
 }

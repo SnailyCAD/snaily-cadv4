@@ -51,7 +51,7 @@ export async function findOrCreateCAD({ ownerId }: Options) {
 }
 
 interface EnabledOptions {
-  features?: ReturnType<typeof createFeaturesObject>;
+  features?: ReturnType<typeof createFeaturesObject> | Record<Feature, boolean>;
   feature: Feature;
   defaultReturn: boolean;
 }
