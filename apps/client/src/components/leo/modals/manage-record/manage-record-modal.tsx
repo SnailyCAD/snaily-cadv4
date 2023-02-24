@@ -97,9 +97,7 @@ export function ManageRecordModal(props: Props) {
   const { penalCode } = useValues();
   const penalCodes =
     props.type === "WRITTEN_WARNING"
-      ? penalCode.values.filter(
-          (v) => v.warningApplicableId !== null && v.warningNotApplicableId === null,
-        )
+      ? penalCode.values.filter((v) => v.warningApplicableId !== null)
       : penalCode.values;
 
   function handleClose() {
