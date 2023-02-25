@@ -41,6 +41,30 @@ export const vehicleSearchInclude = {
   notes: true,
 };
 
+const RecordsInclude = (isRecordApprovalEnabled: boolean) => ({
+  where: isRecordApprovalEnabled ? { status: WhitelistStatus.ACCEPTED } : undefined,
+  include: {
+    officer: {
+      include: leoProperties,
+    },
+    seizedItems: true,
+    courtEntry: { include: { dates: true } },
+    vehicle: { include: { model: { include: { value: true } } } },
+    incident: { include: incidentInclude },
+    call911: { include: callInclude },
+    violations: {
+      include: {
+        penalCode: {
+          include: {
+            warningApplicable: true,
+            warningNotApplicable: true,
+          },
+        },
+      },
+    },
+  },
+});
+
 export const citizenSearchIncludeOrSelect = (
   user: User,
   cad: cad & { features?: Record<Feature, boolean> },
@@ -73,29 +97,7 @@ export const citizenSearchIncludeOrSelect = (
         customFields: { include: { field: true } },
         warrants: { include: { officer: { include: leoProperties } } },
         notes: true,
-        Record: {
-          where: isEnabled ? { status: WhitelistStatus.ACCEPTED } : undefined,
-          include: {
-            officer: {
-              include: leoProperties,
-            },
-            seizedItems: true,
-            courtEntry: { include: { dates: true } },
-            vehicle: { include: { model: { include: { value: true } } } },
-            incident: { include: incidentInclude },
-            call911: { include: callInclude },
-            violations: {
-              include: {
-                penalCode: {
-                  include: {
-                    warningApplicable: true,
-                    warningNotApplicable: true,
-                  },
-                },
-              },
-            },
-          },
-        },
+        Record: RecordsInclude(isEnabled),
         dlCategory: { include: { value: true } },
       },
     } as any;
@@ -195,10 +197,17 @@ export class LeoSearchController {
   })
   async searchBusinessByName(
     @BodyParams("name") name: string,
+    @Context("cad") cad: { features?: Record<Feature, boolean> },
   ): Promise<APITypes.PostLeoSearchBusinessData> {
     if (!name || name.length < 3) {
       return [];
     }
+
+    const isEnabled = isFeatureEnabled({
+      feature: Feature.CITIZEN_RECORD_APPROVAL,
+      features: cad.features,
+      defaultReturn: false,
+    });
 
     const businesses = await prisma.business.findMany({
       where: {
@@ -208,6 +217,7 @@ export class LeoSearchController {
         },
       },
       include: {
+        Record: RecordsInclude(isEnabled),
         citizen: true,
         vehicles: {
           include: vehicleSearchInclude,
