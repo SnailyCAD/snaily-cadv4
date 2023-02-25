@@ -3,7 +3,7 @@ import { useTranslations } from "use-intl";
 import type { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { TabList } from "components/shared/TabList";
+import { TabList } from "@snailycad/ui";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import dynamic from "next/dynamic";

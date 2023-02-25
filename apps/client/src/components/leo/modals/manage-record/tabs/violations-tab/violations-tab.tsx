@@ -1,8 +1,7 @@
 import type { PenalCode } from "@snailycad/types";
-import { Button } from "@snailycad/ui";
+import { Button, TabsContent } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import type { SelectValue } from "components/form/Select";
-import { TabsContent } from "components/shared/TabList";
 import { useFormikContext } from "formik";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";

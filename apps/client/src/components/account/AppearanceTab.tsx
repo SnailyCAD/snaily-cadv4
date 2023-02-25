@@ -1,5 +1,4 @@
 import * as React from "react";
-import { TabsContent } from "components/shared/TabList";
 import * as Accordion from "@radix-ui/react-accordion";
 import { FormField } from "components/form/FormField";
 import { Toggle } from "components/form/Toggle";
@@ -9,7 +8,7 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
 import { StatusViewMode, TableActionsAlignment } from "@snailycad/types";
 import { Select } from "components/form/Select";
-import { Button, Loader, SelectField } from "@snailycad/ui";
+import { Button, Loader, SelectField, TabsContent } from "@snailycad/ui";
 import { i18n } from "../../../i18n.config.mjs";
 import type { Sounds } from "lib/server/getAvailableSounds.server";
 import { soundCamelCaseToKebabCase } from "lib/utils";

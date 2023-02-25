@@ -1,6 +1,5 @@
 import type * as React from "react";
 import * as Tabs from "@radix-ui/react-tabs";
-import { classNames } from "lib/classNames";
 
 interface Tab {
   value: string;
@@ -31,9 +30,9 @@ export function TabList<Tabs extends Tab[]>({
           <Tabs.Trigger
             value={tab.value}
             key={tab.value}
-            className={classNames(
-              "z-20 tabs-list py-1.5 pb-2 border-b-2 border-transparent text-gray-800 dark:text-gray-200 transition-border duration-100 min-w-fit",
-            )}
+            className={
+              "z-20 tabs-list py-1.5 pb-2 border-b-2 border-transparent text-gray-800 dark:text-gray-200 transition-border duration-100 min-w-fit"
+            }
           >
             {tab.name}
           </Tabs.Trigger>

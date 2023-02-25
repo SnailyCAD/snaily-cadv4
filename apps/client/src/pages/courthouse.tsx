@@ -5,7 +5,7 @@ import type { GetServerSideProps } from "next";
 import { useTranslations } from "use-intl";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
-import { TabList } from "components/shared/TabList";
+import { TabList } from "@snailycad/ui";
 import { ExpungementRequestsTab } from "components/courthouse/expungement-requests/ExpungementRequestsTab";
 import { NameChangeRequestTab } from "components/courthouse/name-change/NameChangeRequestTab";
 import { CourtEntriesTab } from "components/courthouse/court-entries/court-entries-tab";

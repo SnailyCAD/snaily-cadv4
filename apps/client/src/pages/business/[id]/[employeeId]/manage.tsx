@@ -7,13 +7,12 @@ import { getTranslations } from "lib/getTranslation";
 
 import { FullBusiness, FullEmployee, useBusinessState } from "state/business-state";
 import { useTranslations } from "use-intl";
-import { TabList } from "components/shared/TabList";
 import { EmployeeAsEnum } from "@snailycad/types";
 import dynamic from "next/dynamic";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { EmployeesTab } from "components/business/manage/tabs/employees-tab/employees-tab";
-import { BreadcrumbItem, Breadcrumbs } from "@snailycad/ui";
+import { TabList, BreadcrumbItem, Breadcrumbs } from "@snailycad/ui";
 import { shallow } from "zustand/shallow";
 
 interface Props {

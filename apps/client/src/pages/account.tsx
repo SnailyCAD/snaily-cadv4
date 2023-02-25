@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Layout } from "components/Layout";
-import { TabList } from "components/shared/TabList";
+import { TabList } from "@snailycad/ui";
 import type { GetServerSideProps } from "next";
 import { useTranslations } from "next-intl";
 

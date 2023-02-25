@@ -71,6 +71,7 @@
   },
   "dependencies": {
     "@internationalized/date": "^3.0.2",
+    "@radix-ui/react-tabs": "^1.0.2",
     "@react-aria/breadcrumbs": "^3.4.1",
     "@react-aria/button": "^3.6.4",
     "@react-aria/calendar": "^3.0.5",

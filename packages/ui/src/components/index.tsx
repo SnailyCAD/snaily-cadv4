@@ -12,3 +12,4 @@ export * from "./fields/date-picker-field";
 export * from "./fields/async-list-search-field";
 export * from "./multi-form/multi-form";
 export * from "./dnd/index";
+export * from "./tab-list";

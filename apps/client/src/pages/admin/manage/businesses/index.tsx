@@ -1,7 +1,14 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
-import { TabsContent, TabList } from "components/shared/TabList";
-import { Loader, Button, TextField, buttonVariants, buttonSizes } from "@snailycad/ui";
+import {
+  TabsContent,
+  TabList,
+  Loader,
+  Button,
+  TextField,
+  buttonVariants,
+  buttonSizes,
+} from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";

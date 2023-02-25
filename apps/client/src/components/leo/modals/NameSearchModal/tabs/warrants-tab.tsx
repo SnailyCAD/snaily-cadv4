@@ -1,6 +1,6 @@
 import compareDesc from "date-fns/compareDesc";
 import { useTranslations } from "use-intl";
-import { SelectField, Button } from "@snailycad/ui";
+import { SelectField, Button, TabsContent } from "@snailycad/ui";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
@@ -11,7 +11,6 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Table, useTableState } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { Warrant, WarrantStatus } from "@snailycad/types";
-import { TabsContent } from "components/shared/TabList";
 import type { DeleteRecordsByIdData, PutWarrantsData } from "@snailycad/types/api";
 import { Permissions, usePermission } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";

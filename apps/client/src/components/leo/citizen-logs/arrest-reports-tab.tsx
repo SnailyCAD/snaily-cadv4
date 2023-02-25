@@ -1,11 +1,10 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { Button, Loader } from "@snailycad/ui";
+import { Button, Loader, TabsContent } from "@snailycad/ui";
 import { Record, RecordType } from "@snailycad/types";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { FullDate } from "components/shared/FullDate";
-import { TabsContent } from "components/shared/TabList";
 import { makeUnitName } from "lib/utils";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";

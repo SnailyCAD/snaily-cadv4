@@ -1,5 +1,4 @@
-import { Button } from "@snailycad/ui";
-import { TabsContent } from "components/shared/TabList";
+import { Button, TabsContent } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";

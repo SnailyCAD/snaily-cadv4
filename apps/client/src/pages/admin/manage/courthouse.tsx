@@ -9,7 +9,7 @@ import { AdminLayout } from "components/admin/AdminLayout";
 import { ExpungementRequestsTab } from "components/admin/manage/courthouse/ExpungementRequestsTab";
 import { NameChangeRequestsTab } from "components/admin/manage/courthouse/NameChangeRequestsTab";
 import { PendingWarrantsTab } from "components/admin/manage/courthouse/PendingWarrantsTab";
-import { TabList } from "components/shared/TabList";
+import { TabList } from "@snailycad/ui";
 import { Title } from "components/shared/Title";
 import { Permissions, usePermission } from "hooks/usePermission";
 import { getSessionUser } from "lib/auth";

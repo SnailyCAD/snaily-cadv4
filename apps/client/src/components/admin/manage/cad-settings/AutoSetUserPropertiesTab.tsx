@@ -2,14 +2,13 @@ import { Form, Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
 
 import { FormField } from "components/form/FormField";
-import { Button, Loader } from "@snailycad/ui";
+import { Button, Loader, TabsContent } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { FormRow } from "components/form/FormRow";
 import type { AutoSetUserProperties } from "@snailycad/types";
 import { Toggle } from "components/form/Toggle";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
-import { TabsContent } from "components/shared/TabList";
 import { toastMessage } from "lib/toastMessage";
 import type { PutCADAutoSetPropertiesData } from "@snailycad/types/api";
 

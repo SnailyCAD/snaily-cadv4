@@ -1,7 +1,6 @@
 import type { BaseCitizen } from "@snailycad/types";
-import { Button } from "@snailycad/ui";
+import { Button, TabsContent } from "@snailycad/ui";
 import { Table, useTableState } from "components/shared/Table";
-import { TabsContent } from "components/shared/TabList";
 import { yesOrNoText } from "lib/utils";
 import { useModal } from "state/modalState";
 import { useBusinessSearch } from "state/search/business-search-state";

@@ -1,6 +1,5 @@
-import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "use-intl";
-import { Button } from "@snailycad/ui";
+import { Button, TabsContent } from "@snailycad/ui";
 import { useBusinessState } from "state/business-state";
 import { Employee, WhitelistStatus } from "@snailycad/types";
 import useFetch from "lib/useFetch";

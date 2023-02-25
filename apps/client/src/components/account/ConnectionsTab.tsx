@@ -1,6 +1,5 @@
 import { useTranslations } from "use-intl";
-import { TabsContent } from "components/shared/TabList";
-import { Button } from "@snailycad/ui";
+import { Button, TabsContent } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
 import { getAPIUrl } from "@snailycad/utils/api-url";
 import useFetch from "lib/useFetch";

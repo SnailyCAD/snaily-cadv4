@@ -1,10 +1,9 @@
-import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "use-intl";
 import { Form, Formik, FormikHelpers } from "formik";
 import { CHANGE_USER_SCHEMA } from "@snailycad/schemas";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
-import { Loader, Button, TextField } from "@snailycad/ui";
+import { Loader, Button, TextField, TabsContent } from "@snailycad/ui";
 import { ChangePasswordArea } from "components/account/ChangePasswordArea";
 import { Manage2FAModal } from "./2fa/Manage2FAModal";
 import { TwoFactorAuthArea } from "./2fa/TwoFactorAuthArea";

@@ -1,4 +1,3 @@
-import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "use-intl";
 import { useBusinessState } from "state/business-state";
 import { useModal } from "state/modalState";
@@ -7,7 +6,7 @@ import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { Form, Formik } from "formik";
 import { CREATE_COMPANY_SCHEMA } from "@snailycad/schemas";
-import { Button, Loader, Input } from "@snailycad/ui";
+import { Button, Loader, Input, TabsContent } from "@snailycad/ui";
 import { handleValidate } from "lib/handleValidate";
 import { Toggle } from "components/form/Toggle";
 import { useRouter } from "next/router";

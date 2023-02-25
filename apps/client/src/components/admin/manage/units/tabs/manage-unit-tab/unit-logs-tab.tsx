@@ -6,7 +6,7 @@ import type {
 import { isUnitOfficer } from "@snailycad/utils";
 import { OfficerLogsTable } from "components/leo/logs/OfficerLogsTable";
 import { useAsyncTable } from "components/shared/Table";
-import { TabsContent } from "components/shared/TabList";
+import { TabsContent } from "@snailycad/ui";
 import { useTranslations } from "next-intl";
 
 interface Props {

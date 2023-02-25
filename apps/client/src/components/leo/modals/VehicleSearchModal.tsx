@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Loader, Button, Item, AsyncListSearchField } from "@snailycad/ui";
+import { Loader, Button, Item, AsyncListSearchField, TabList } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik, useFormikContext } from "formik";
@@ -14,7 +14,6 @@ import { ManageVehicleLicensesModal } from "./VehicleSearch/ManageVehicleLicense
 import { ManageCustomFieldsModal } from "./NameSearchModal/ManageCustomFieldsModal";
 import { useNameSearch } from "state/search/name-search-state";
 import { useBolos } from "hooks/realtime/useBolos";
-import { TabList } from "components/shared/TabList";
 import { ResultsTab } from "./VehicleSearch/tabs/ResultsTab";
 import { NotesTab } from "./NameSearchModal/tabs/notes-tab";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";

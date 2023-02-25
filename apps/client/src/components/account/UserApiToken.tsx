@@ -1,10 +1,9 @@
-import { TabsContent } from "components/shared/TabList";
 import { Toggle } from "components/form/Toggle";
 import { useAuth } from "context/AuthContext";
 import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
-import { Button, Loader } from "@snailycad/ui";
+import { Button, Loader, TabsContent } from "@snailycad/ui";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { PasswordInput } from "components/form/inputs/Input";
 import type {

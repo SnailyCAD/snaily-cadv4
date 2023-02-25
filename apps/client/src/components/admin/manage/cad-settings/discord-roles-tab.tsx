@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Select, SelectValue } from "components/form/Select";
-import { Button, Loader } from "@snailycad/ui";
-import { TabsContent } from "components/shared/TabList";
+import { Button, Loader, TabsContent } from "@snailycad/ui";
 import { Form, Formik, useFormikContext } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";

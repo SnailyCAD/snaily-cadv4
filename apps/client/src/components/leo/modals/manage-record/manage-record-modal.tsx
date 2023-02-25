@@ -1,6 +1,14 @@
 import * as React from "react";
 import { CREATE_TICKET_SCHEMA, CREATE_TICKET_SCHEMA_BUSINESS } from "@snailycad/schemas";
-import { Loader, Button, TextField, AsyncListSearchField, Item } from "@snailycad/ui";
+import {
+  Loader,
+  Button,
+  TextField,
+  AsyncListSearchField,
+  Item,
+  TabList,
+  TabsContent,
+} from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import type { SelectValue } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
@@ -19,7 +27,6 @@ import { Toggle } from "components/form/Toggle";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import { FullDate } from "components/shared/FullDate";
-import { TabList, TabsContent } from "components/shared/TabList";
 
 import dynamic from "next/dynamic";
 import { FormRow } from "components/form/FormRow";

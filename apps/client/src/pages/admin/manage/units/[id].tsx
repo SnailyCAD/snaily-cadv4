@@ -9,10 +9,9 @@ import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import type { GetManageUnitByIdData } from "@snailycad/types/api";
-import { TabList } from "components/shared/TabList";
 import { ManageUnitTab } from "components/admin/manage/units/tabs/manage-unit-tab/manage-unit-tab";
 import { UnitLogsTab } from "components/admin/manage/units/tabs/manage-unit-tab/unit-logs-tab";
-import { BreadcrumbItem, Breadcrumbs } from "@snailycad/ui";
+import { TabList, BreadcrumbItem, Breadcrumbs } from "@snailycad/ui";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { usePermission } from "hooks/usePermission";
 

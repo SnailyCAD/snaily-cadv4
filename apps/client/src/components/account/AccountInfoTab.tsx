@@ -1,9 +1,8 @@
-import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "use-intl";
 import { Form, Formik } from "formik";
 import { useAuth } from "context/AuthContext";
 import { FormRow } from "components/form/FormRow";
-import { Button, TextField } from "@snailycad/ui";
+import { Button, TextField, TabsContent } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import dynamic from "next/dynamic";

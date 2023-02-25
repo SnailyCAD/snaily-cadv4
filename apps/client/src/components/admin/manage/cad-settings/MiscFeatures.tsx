@@ -2,13 +2,12 @@ import * as React from "react";
 import { Form, Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
 
-import { Textarea, Loader, Input, Button } from "@snailycad/ui";
+import { Textarea, Loader, Input, Button, TabsContent } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { JailTimeScale, MiscCadSettings } from "@snailycad/types";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { SettingsFormField } from "components/form/SettingsFormField";
-import { TabsContent } from "components/shared/TabList";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { Select } from "components/form/Select";
 import { toastMessage } from "lib/toastMessage";

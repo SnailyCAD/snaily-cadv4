@@ -1,5 +1,5 @@
 import { RecordType } from "@snailycad/types";
-import { TabList } from "components/shared/TabList";
+import { TabList } from "@snailycad/ui";
 import { useBusinessSearch } from "state/search/business-search-state";
 import { useTranslations } from "use-intl";
 import { shallow } from "zustand/shallow";

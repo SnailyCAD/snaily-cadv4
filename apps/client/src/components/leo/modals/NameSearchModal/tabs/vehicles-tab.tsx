@@ -3,13 +3,11 @@ import { Table, useTableState } from "components/shared/Table";
 import { Status } from "components/shared/Status";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useTranslations } from "use-intl";
-import { Button } from "@snailycad/ui";
+import { Button, TabsContent } from "@snailycad/ui";
 import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicle-search-state";
 import { useModal } from "state/modalState";
 import { useNameSearch } from "state/search/name-search-state";
 import { ModalIds } from "types/ModalIds";
-
-import { TabsContent } from "components/shared/TabList";
 
 export function NameSearchVehiclesTab() {
   const t = useTranslations();

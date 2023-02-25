@@ -1,8 +1,7 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { buttonSizes, buttonVariants } from "@snailycad/ui";
+import { buttonSizes, buttonVariants, TabsContent } from "@snailycad/ui";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
-import { TabsContent } from "components/shared/TabList";
 import Link from "next/link";
 import { classNames } from "lib/classNames";
 import { SearchArea } from "components/shared/search/search-area";

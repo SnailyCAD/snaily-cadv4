@@ -1,4 +1,4 @@
-import { TabList } from "components/shared/TabList";
+import { TabList } from "@snailycad/ui";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { NameSearchVehiclesTab } from "./vehicles-tab";
 import { useTranslations } from "next-intl";

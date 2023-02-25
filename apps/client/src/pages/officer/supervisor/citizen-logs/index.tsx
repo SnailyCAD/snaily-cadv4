@@ -7,7 +7,7 @@ import type { GetServerSideProps } from "next";
 import type { Citizen, RecordLog } from "@snailycad/types";
 import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
-import { TabList } from "components/shared/TabList";
+import { TabList } from "@snailycad/ui";
 import { CitizenLogsTab } from "components/leo/citizen-logs/citizen-logs-tab";
 import { ArrestReportsTab } from "components/leo/citizen-logs/arrest-reports-tab";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";

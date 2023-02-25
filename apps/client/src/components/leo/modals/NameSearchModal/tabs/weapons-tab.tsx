@@ -1,11 +1,10 @@
 import { Table, useTableState } from "components/shared/Table";
 import { useTranslations } from "use-intl";
-import { Button } from "@snailycad/ui";
+import { Button, TabsContent } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { useNameSearch } from "state/search/name-search-state";
 import { ModalIds } from "types/ModalIds";
 
-import { TabsContent } from "components/shared/TabList";
 import type { Weapon } from "@snailycad/types";
 import { useWeaponSearch } from "state/search/weapon-search-state";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";

@@ -1,5 +1,4 @@
-import { AsyncListSearchField, Item, TextField } from "@snailycad/ui";
-import { TabsContent } from "components/shared/TabList";
+import { AsyncListSearchField, Item, TextField, TabsContent } from "@snailycad/ui";
 import { useFormikContext } from "formik";
 import type { VehicleSearchResult } from "state/search/vehicle-search-state";
 import { useTranslations } from "use-intl";

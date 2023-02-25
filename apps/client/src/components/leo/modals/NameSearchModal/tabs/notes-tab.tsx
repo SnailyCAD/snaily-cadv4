@@ -1,9 +1,8 @@
 import * as React from "react";
 import type { Note } from "@snailycad/types";
-import { Button } from "@snailycad/ui";
+import { Button, TabsContent } from "@snailycad/ui";
 import { FullDate } from "components/shared/FullDate";
 import { Table, useTableState } from "components/shared/Table";
-import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
 import type { NameSearchResult } from "state/search/name-search-state";
