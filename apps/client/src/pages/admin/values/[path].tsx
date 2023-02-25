@@ -39,6 +39,8 @@ import { getSelectedTableRows } from "hooks/shared/table/use-table-state";
 import { SearchArea } from "components/shared/search/search-area";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import { toastMessage } from "lib/toastMessage";
+import Link from "next/link";
+import { BoxArrowUpRight } from "react-bootstrap-icons";
 
 const ManageValueModal = dynamic(
   async () => (await import("components/admin/values/ManageValueModal")).ManageValueModal,
@@ -61,19 +63,31 @@ interface Props {
   pathValues: GetValuesData[number];
 }
 
+const pathsRecord: Partial<Record<ValueType, ValueType[]>> = {
+  [ValueType.DEPARTMENT]: [ValueType.OFFICER_RANK],
+  [ValueType.DIVISION]: [ValueType.DEPARTMENT],
+  [ValueType.QUALIFICATION]: [ValueType.DEPARTMENT],
+  [ValueType.CODES_10]: [ValueType.DEPARTMENT],
+  [ValueType.OFFICER_RANK]: [ValueType.DEPARTMENT],
+  [ValueType.EMERGENCY_VEHICLE]: [ValueType.DEPARTMENT, ValueType.DIVISION],
+};
+
+const valuesWithDocumentation: ValueType[] = [
+  ValueType.ADDRESS,
+  ValueType.ADDRESS_FLAG,
+  ValueType.BLOOD_GROUP,
+  ValueType.BUSINESS_ROLE,
+  ValueType.CITIZEN_FLAG,
+  ValueType.CODES_10,
+  ValueType.EMERGENCY_VEHICLE,
+  ValueType.DRIVERSLICENSE_CATEGORY,
+  ValueType.QUALIFICATION,
+];
+
 export default function ValuePath({ pathValues: { totalCount, type, values: data } }: Props) {
   const router = useRouter();
   const path = (router.query.path as string).toUpperCase().replace("-", "_");
   const routeData = valueRoutes.find((v) => v.type === type);
-
-  const pathsRecord: Partial<Record<ValueType, ValueType[]>> = {
-    [ValueType.DEPARTMENT]: [ValueType.OFFICER_RANK],
-    [ValueType.DIVISION]: [ValueType.DEPARTMENT],
-    [ValueType.QUALIFICATION]: [ValueType.DEPARTMENT],
-    [ValueType.CODES_10]: [ValueType.DEPARTMENT],
-    [ValueType.OFFICER_RANK]: [ValueType.DEPARTMENT],
-    [ValueType.EMERGENCY_VEHICLE]: [ValueType.DEPARTMENT, ValueType.DIVISION],
-  };
 
   useLoadValuesClientSide({
     // @ts-expect-error - this is fine
@@ -199,6 +213,9 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
     );
   }
 
+  const hasDocumentationURL = valuesWithDocumentation.includes(type);
+  const documentationUrl = hasDocumentationURL && createValueDocumentationURL(type);
+
   return (
     <AdminLayout
       permissions={{
@@ -213,6 +230,16 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
             {t("totalItems")}:{" "}
             <span className="font-normal">{asyncTable.pagination.totalDataCount}</span>
           </h2>
+          {hasDocumentationURL && documentationUrl ? (
+            <Link
+              className="mt-1 underline flex items-center gap-1 text-blue-500"
+              target="_blank"
+              href={documentationUrl}
+            >
+              {common("learnMore")}
+              <BoxArrowUpRight className="inline-block" />
+            </Link>
+          ) : null}
         </div>
 
         <div className="flex gap-2">
@@ -225,12 +252,6 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
           <OptionsDropdown type={type} valueLength={asyncTable.items.length} />
         </div>
       </header>
-
-      <div role="alert" className="px-4 py-2 card my-3 !bg-slate-900 !border-slate-500 border-2">
-        <h3 className="font-bold text-xl mb-2">Tip</h3>
-
-        <p>{t("cacheTip")}</p>
-      </div>
 
       <SearchArea search={{ search, setSearch }} asyncTable={asyncTable} totalCount={totalCount} />
 
@@ -348,3 +369,13 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
     },
   };
 };
+
+export function createValueDocumentationURL(type: ValueType) {
+  const transformedPaths: Partial<Record<ValueType, string>> = {
+    [ValueType.DRIVERSLICENSE_CATEGORY]: "license-category",
+    [ValueType.BLOOD_GROUP]: "bloodgroup",
+  };
+
+  const path = transformedPaths[type] ?? type.replace("_", "-").toLowerCase();
+  return `https://docs.snailycad.org/docs/features/general/values/${path}`;
+}

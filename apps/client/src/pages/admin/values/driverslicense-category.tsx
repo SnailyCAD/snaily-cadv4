@@ -8,8 +8,8 @@ import { useModal } from "state/modalState";
 import {
   DriversLicenseCategoryType,
   Rank,
+  ValueType,
   type DriversLicenseCategoryValue,
-  type ValueType,
 } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
@@ -29,6 +29,9 @@ import {
 } from "lib/admin/values/utils";
 import { Table, useTableState } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
+import { createValueDocumentationURL } from "./[path]";
+import { BoxArrowUpRight } from "react-bootstrap-icons";
+import Link from "next/link";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -101,6 +104,14 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
         <h2 className="text-lg font-semibold">
           {t("totalItems")}: <span className="font-normal">{values.length}</span>
         </h2>
+        <Link
+          className="mt-1 underline flex items-center gap-1 text-blue-500"
+          target="_blank"
+          href={createValueDocumentationURL(ValueType.DRIVERSLICENSE_CATEGORY)}
+        >
+          {common("learnMore")}
+          <BoxArrowUpRight className="inline-block" />
+        </Link>
       </header>
 
       <TextField
