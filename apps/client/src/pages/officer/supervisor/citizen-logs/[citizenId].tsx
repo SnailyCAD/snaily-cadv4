@@ -103,7 +103,7 @@ export default function CitizenLogs(props: Props) {
           return {
             id: item.id,
             type,
-            citizen: `${item.citizen.name} ${item.citizen.surname}`,
+            citizen: `${item.citizen?.name} ${item.citizen?.surname}`,
             officer: callsign && officerName ? `${callsign} ${officerName}` : "—",
             ...extra,
             createdAt: createdAt ? <FullDate>{createdAt}</FullDate> : "—",
