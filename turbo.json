@@ -7,8 +7,7 @@
       ],
       "outputs": [
         ".env"
-      ],
-      "cache": false
+      ]
     },
     "create-images-domain": {
       "dependsOn": [
@@ -16,14 +15,12 @@
       ],
       "outputs": [
         "next.config.mjs"
-      ],
-      "cache": false
+      ]
     },
     "validate-locales": {
       "dependsOn": [
         "^validate-locales"
-      ],
-      "cache": false
+      ]
     },
     "build": {
       "dependsOn": [
