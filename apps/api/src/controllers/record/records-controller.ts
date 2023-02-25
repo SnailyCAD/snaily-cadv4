@@ -223,41 +223,7 @@ export class RecordsController {
     @Context("cad") cad: { features?: Record<Feature, boolean> },
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
   ): Promise<APITypes.PostRecordsData> {
-    const data = validateSchema(CREATE_TICKET_SCHEMA, body);
-    const officer = getFirstOfficerFromActiveOfficer({ activeOfficer, allowDispatch: true });
-
-    const recordItem = await upsertRecord({
-      data,
-      cad,
-      officer,
-      recordId: null,
-    });
-
-    // todo: allow tickets for business in the very near future
-    if (recordItem.citizenId && recordItem.citizen) {
-      await prisma.recordLog.create({
-        data: { citizenId: recordItem.citizenId, recordId: recordItem.id },
-      });
-
-      await this.handleDiscordWebhook(recordItem as any);
-    }
-
-    return recordItem;
-  }
-
-  @UseBefore(ActiveOfficer)
-  @Post("/business")
-  @Description("Create a new ticket or a written warning for a **business**")
-  @UsePermissions({
-    fallback: (u) => u.isLeo,
-    permissions: [Permissions.Leo],
-  })
-  async createTicketForABusiness(
-    @BodyParams() body: unknown,
-    @Context("cad") cad: { features?: Record<Feature, boolean> },
-    @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
-  ): Promise<APITypes.PostRecordsData> {
-    const data = validateSchema(CREATE_TICKET_SCHEMA_BUSINESS, body);
+    const data = validateSchema(CREATE_TICKET_SCHEMA.or(CREATE_TICKET_SCHEMA_BUSINESS), body);
     const officer = getFirstOfficerFromActiveOfficer({ activeOfficer, allowDispatch: true });
 
     const recordItem = await upsertRecord({

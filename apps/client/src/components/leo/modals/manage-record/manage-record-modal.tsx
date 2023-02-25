@@ -154,18 +154,19 @@ export function ManageRecordModal(props: Props) {
         handleClose();
       }
     } else {
-      const path = isBusinessRecord ? "/records/business" : "/records";
       const { json } = await execute<PostRecordsData, typeof INITIAL_VALUES>({
-        path,
+        path: "/records",
         method: "POST",
         data: requestData,
         helpers,
       });
 
       if (json.id) {
+        const name = isBusinessRecord ? values.businessName : values.citizenName;
+
         toastMessage({
           title: common("success"),
-          message: t(data[props.type].success, { citizen: values.citizenName }),
+          message: t(data[props.type].success, { citizen: name }),
           icon: "success",
         });
 
