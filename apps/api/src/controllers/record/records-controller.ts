@@ -24,6 +24,7 @@ import {
   CombinedLeoUnit,
   Officer,
   User,
+  Business,
 } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { combinedUnitProperties, leoProperties } from "lib/leo/activeOfficer";
@@ -233,14 +234,15 @@ export class RecordsController {
       recordId: null,
     });
 
-    // todo: allow tickets for business in the very near future
-    if (recordItem.citizenId && recordItem.citizen) {
-      await prisma.recordLog.create({
-        data: { citizenId: recordItem.citizenId, recordId: recordItem.id },
-      });
+    await prisma.recordLog.create({
+      data: {
+        citizenId: recordItem.citizenId ?? undefined,
+        businessId: recordItem.businessId ?? undefined,
+        recordId: recordItem.id,
+      },
+    });
 
-      await this.handleDiscordWebhook(recordItem as any);
-    }
+    await this.handleDiscordWebhook(recordItem as any);
 
     return recordItem;
   }
@@ -310,7 +312,8 @@ export class RecordsController {
 
   private async handleDiscordWebhook(
     ticket: ((CADRecord & { violations: Violation[] }) | Warrant) & {
-      citizen: Citizen & { user?: Pick<User, "discordId"> | null };
+      citizen?: Citizen & { user?: Pick<User, "discordId"> | null };
+      business?: Business;
     },
     type: DiscordWebhookType = DiscordWebhookType.CITIZEN_RECORD,
     locale?: string | null,
@@ -320,7 +323,7 @@ export class RecordsController {
       await sendDiscordWebhook({
         type,
         data,
-        extraMessageData: { userDiscordId: ticket.citizen.user?.discordId },
+        extraMessageData: { userDiscordId: ticket.citizen?.user?.discordId },
       });
     } catch (error) {
       console.error("Could not send Discord webhook.", error);
@@ -329,13 +332,21 @@ export class RecordsController {
 }
 
 async function createWebhookData(
-  data: ((CADRecord & { violations: Violation[] }) | Warrant) & { citizen: Citizen },
+  data: ((CADRecord & { violations: Violation[] }) | Warrant) & {
+    citizen?: Citizen & { user?: Pick<User, "discordId"> | null };
+    business?: Business;
+  },
   locale?: string | null,
 ) {
   const t = await getTranslator({ type: "webhooks", locale, namespace: "Records" });
 
   const isWarrant = !("notes" in data);
-  const citizen = `${data.citizen.name} ${data.citizen.surname}`;
+  const citizen = data.citizen
+    ? `${data.citizen.name} ${data.citizen.surname}`
+    : data.business
+    ? data.business.name
+    : "Unknown";
+
   const description = !isWarrant ? data.notes : "";
 
   const totalJailTime = getTotal("jailTime");

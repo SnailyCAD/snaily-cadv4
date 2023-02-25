@@ -54,8 +54,11 @@ export function ArrestReportsTab({ arrestReports }: Props) {
 
   function handleViewClick(item: GetManagePendingArrestReports["arrestReports"][number]) {
     setTempRecord(item.records!);
+
     openModal(ModalIds.ManageRecord, {
-      citizenName: `${item.citizen.name} ${item.citizen.surname}`,
+      citizenName: `${item.citizen?.name} ${item.citizen?.surname}`,
+      businessId: item.business?.id,
+      businessName: item.business?.name,
     });
   }
 
@@ -93,7 +96,8 @@ export function ArrestReportsTab({ arrestReports }: Props) {
               id: item.id,
               caseNumber: `#${record.caseNumber}`,
               type,
-              citizen: `${item.citizen.name} ${item.citizen.surname}`,
+              citizen: item.citizen ? `${item.citizen.name} ${item.citizen.surname}` : "—",
+              business: item.business ? `${item.business.name}` : "—",
               officer: officer ? `${callsign} ${officerName}` : common("none"),
               postal: record.postal || common("none"),
               notes: (
@@ -140,6 +144,7 @@ export function ArrestReportsTab({ arrestReports }: Props) {
             { header: common("type"), accessorKey: "type" },
             { header: t("caseNumber"), accessorKey: "caseNumber" },
             { header: t("citizen"), accessorKey: "citizen" },
+            { header: t("business"), accessorKey: "business" },
             { header: t("officer"), accessorKey: "officer" },
             { header: t("postal"), accessorKey: "postal" },
             { header: t("status"), accessorKey: "status" },
