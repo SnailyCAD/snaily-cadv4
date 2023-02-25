@@ -69,12 +69,16 @@ interface Props {
 }
 
 export function ManageRecordModal(props: Props) {
-  const [isBusinessRecord, setIsBusinessRecord] = React.useState(false);
+  const [isBusinessRecord, setIsBusinessRecord] = React.useState(!!props.record?.businessId);
   const { isOpen, closeModal, openModal, getPayload } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const tCourt = useTranslations("Courthouse");
   const { LEO_BAIL } = useFeatureEnabled();
+
+  React.useEffect(() => {
+    setIsBusinessRecord(!!props.record?.businessId);
+  }, [props.record?.businessId]);
 
   const data = {
     [RecordType.TICKET]: {
@@ -171,7 +175,12 @@ export function ManageRecordModal(props: Props) {
     }
   }
 
-  const payload = getPayload<{ citizenId: string; citizenName: string }>(data[props.type].id);
+  const payload = getPayload<{
+    citizenId?: string;
+    citizenName?: string;
+    businessId?: string;
+    businessName?: string;
+  }>(data[props.type].id);
   const schema = isBusinessRecord ? CREATE_TICKET_SCHEMA_BUSINESS : CREATE_TICKET_SCHEMA;
   const validate = handleValidate(schema);
 
@@ -180,8 +189,8 @@ export function ManageRecordModal(props: Props) {
     citizenId: props.record?.citizenId ?? payload?.citizenId ?? "",
     citizenName: payload?.citizenName ?? "",
 
-    businessId: "",
-    businessName: "",
+    businessId: props.record?.businessId ?? payload?.businessId ?? "",
+    businessName: payload?.businessName ?? "",
 
     violations:
       props.record?.violations.map((v) => {
@@ -225,7 +234,12 @@ export function ManageRecordModal(props: Props) {
       isOpen={isOpen(data[props.type].id)}
       className="w-[800px]"
     >
-      <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
+      <Formik
+        enableReinitialize
+        validate={validate}
+        initialValues={INITIAL_VALUES}
+        onSubmit={onSubmit}
+      >
         {({ setFieldValue, setValues, errors, values, isValid }) => (
           <Form autoComplete="off">
             <TabList
@@ -244,6 +258,7 @@ export function ManageRecordModal(props: Props) {
                       <AsyncListSearchField<BusinessSearchResult>
                         className="w-full"
                         autoFocus
+                        isDisabled={props.isReadOnly || !!props.record}
                         setValues={({ localValue, node }) => {
                           const labelValue =
                             typeof localValue !== "undefined" ? { businessName: localValue } : {};
@@ -279,6 +294,7 @@ export function ManageRecordModal(props: Props) {
                       />
                     )}
                     <Button
+                      isDisabled={props.isReadOnly || !!props.record}
                       onPress={() => setIsBusinessRecord((prev) => !prev)}
                       className="min-w-fit h-[39px] mt-7"
                     >

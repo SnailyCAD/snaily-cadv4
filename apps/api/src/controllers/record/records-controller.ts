@@ -291,7 +291,7 @@ export class RecordsController {
     @BodyParams() body: unknown,
     @PathParams("id") recordId: string,
   ): Promise<APITypes.PutRecordsByIdData> {
-    const data = validateSchema(CREATE_TICKET_SCHEMA, body);
+    const data = validateSchema(CREATE_TICKET_SCHEMA.or(CREATE_TICKET_SCHEMA_BUSINESS), body);
 
     const recordItem = await upsertRecord({
       data,

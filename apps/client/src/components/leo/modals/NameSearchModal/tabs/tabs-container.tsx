@@ -56,7 +56,11 @@ export function NameSearchTabsContainer() {
     <TabList defaultValue="" tabs={TABS}>
       <NameSearchVehiclesTab />
       {WEAPON_REGISTRATION ? <NameSearchWeaponsTab /> : null}
-      <RecordsTab records={currentResult.Record} />
+      <RecordsTab
+        setCurrentResult={setCurrentResult as any}
+        currentResult={currentResult}
+        records={currentResult.Record}
+      />
       <NameSearchWarrantsTab />
       <NameSearchNotesTabs
         type="CITIZEN"

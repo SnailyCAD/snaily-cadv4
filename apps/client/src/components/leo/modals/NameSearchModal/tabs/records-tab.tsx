@@ -8,7 +8,6 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
-import { useNameSearch } from "state/search/name-search-state";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Table, useTableState } from "components/shared/Table";
@@ -19,20 +18,24 @@ import { Permissions, usePermission } from "hooks/usePermission";
 import { ViolationsColumn } from "components/leo/ViolationsColumn";
 import type { DeleteRecordsByIdData } from "@snailycad/types/api";
 import { Status } from "components/shared/Status";
-import { shallow } from "zustand/shallow";
 import { RecordsCaseNumberColumn } from "components/leo/records-case-number-column";
 
-export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitizen?: boolean }) {
+interface RecordsTabProps {
+  records: Record[];
+  isCitizen?: boolean;
+  currentResult?: { Record: Record[]; isConfidential?: boolean; [key: string]: any };
+  setCurrentResult?(data: { Record: Record[]; isConfidential?: boolean; [key: string]: any }): void;
+}
+
+export function RecordsTab({
+  records,
+  isCitizen,
+  currentResult,
+  setCurrentResult,
+}: RecordsTabProps) {
   const t = useTranslations();
   const { state, execute } = useFetch();
   const { getPayload, closeModal } = useModal();
-  const { currentResult, setCurrentResult } = useNameSearch(
-    (state) => ({
-      currentResult: state.currentResult,
-      setCurrentResult: state.setCurrentResult,
-    }),
-    shallow,
-  );
 
   const tempItem = getPayload<Record>(ModalIds.AlertDeleteRecord);
   const tempEditRecord = getPayload<Record>(ModalIds.ManageRecord);
@@ -54,7 +57,7 @@ export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitize
   function handleRecordUpdate(data: Record) {
     if (!currentResult || currentResult.isConfidential) return;
 
-    setCurrentResult({
+    setCurrentResult?.({
       ...currentResult,
       Record: currentResult.Record.map((v) => {
         if (v.id === data.id) return data;
@@ -72,7 +75,7 @@ export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitize
     });
 
     if (json) {
-      setCurrentResult({
+      setCurrentResult?.({
         ...currentResult,
         Record: currentResult.Record.filter((v) => v.id !== tempItem.id),
       });
@@ -93,7 +96,7 @@ export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitize
             {data.length <= 0 ? (
               <p className="text-neutral-700 dark:text-gray-400 my-2">{noValuesText}</p>
             ) : (
-              <RecordsTable data={data} />
+              <RecordsTable currentResult={currentResult} data={data} />
             )}
           </React.Fragment>
         ) : (
@@ -103,7 +106,7 @@ export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitize
             {data.length <= 0 ? (
               <p className="text-neutral-700 dark:text-gray-400 my-2">{noValuesText}</p>
             ) : (
-              <RecordsTable data={data} />
+              <RecordsTable currentResult={currentResult} data={data} />
             )}
           </TabsContent>
         ),
@@ -133,9 +136,11 @@ export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitize
 export function RecordsTable({
   data,
   hasDeletePermissions,
+  currentResult,
   onDelete,
   onEdit,
 }: {
+  currentResult?: { Record: Record[]; isConfidential?: boolean; [key: string]: any };
   onEdit?(record: Record): void;
   onDelete?(record: Record): void;
   hasDeletePermissions?: boolean;
@@ -150,7 +155,6 @@ export function RecordsTable({
   const isCitizen = router.pathname.startsWith("/citizen") && !isCitizenCreation;
 
   const { generateCallsign } = useGenerateCallsign();
-  const currentResult = useNameSearch((state) => state.currentResult);
   const tableState = useTableState();
   const currency = common("currency");
 
@@ -185,6 +189,8 @@ export function RecordsTable({
     openModal(ModalIds.ManageRecord, {
       ...record,
       citizenName: `${currentResult?.name} ${currentResult?.surname}`,
+      businessId: currentResult?.id,
+      businessName: currentResult?.name,
     });
   }
 
