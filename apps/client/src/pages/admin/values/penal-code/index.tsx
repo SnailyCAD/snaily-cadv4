@@ -22,6 +22,8 @@ import useFetch from "lib/useFetch";
 import { hasTableDataChanged } from "lib/admin/values/utils";
 import { OptionsDropdown } from "components/admin/values/import/options-dropdown";
 import { useRouter } from "next/router";
+import { createValueDocumentationURL } from "../[path]";
+import { BoxArrowUpRight } from "react-bootstrap-icons";
 
 const ManagePenalCodeGroup = dynamic(
   async () =>
@@ -137,7 +139,17 @@ export default function PenalCodeGroupsPage(props: Props) {
       }}
     >
       <header className="flex items-center justify-between">
-        <Title className="!mb-0">{t("MANAGE")}</Title>
+        <div>
+          <Title className="!mb-0">{t("MANAGE")}</Title>
+          <Link
+            className="mt-1 underline flex items-center gap-1 text-blue-500"
+            target="_blank"
+            href={createValueDocumentationURL(ValueType.PENAL_CODE)}
+          >
+            {common("learnMore")}
+            <BoxArrowUpRight className="inline-block" />
+          </Link>
+        </div>
 
         <div className="flex gap-2">
           <Button onPress={() => openModal(ModalIds.ManagePenalCodeGroup)}>{t("ADD")}</Button>

@@ -25,8 +25,9 @@ import type {
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
-import { ArrowLeft } from "react-bootstrap-icons";
+import { ArrowLeft, BoxArrowUpRight } from "react-bootstrap-icons";
 import { toastMessage } from "lib/toastMessage";
+import { createValueDocumentationURL } from "../[path]";
 
 const ManagePenalCode = dynamic(
   async () =>
@@ -144,7 +145,17 @@ export default function PenalCodeGroupsPage(props: Props) {
       }}
     >
       <header className="flex items-center justify-between">
-        <Title className="!mb-0">{t("MANAGE")}</Title>
+        <div>
+          <Title className="!mb-0">{t("MANAGE")}</Title>
+          <Link
+            className="mt-1 underline flex items-center gap-1 text-blue-500"
+            target="_blank"
+            href={createValueDocumentationURL(ValueType.PENAL_CODE)}
+          >
+            {common("learnMore")}
+            <BoxArrowUpRight className="inline-block" />
+          </Link>
+        </div>
 
         <div className="flex gap-2">
           {isEmpty(tableState.rowSelection) ? null : (
@@ -166,12 +177,6 @@ export default function PenalCodeGroupsPage(props: Props) {
           <Button onPress={() => openModal(ModalIds.ManageValue)}>{t("ADD")}</Button>
         </div>
       </header>
-
-      <div role="alert" className="px-4 py-2 card my-3 !bg-slate-900 !border-slate-500 border-2">
-        <h3 className="font-bold text-xl mb-2">Tip</h3>
-
-        <p>{valuesT("cacheTip")}</p>
-      </div>
 
       <SearchArea search={{ search, setSearch }} asyncTable={asyncTable} totalCount={0} />
 

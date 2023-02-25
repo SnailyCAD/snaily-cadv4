@@ -72,18 +72,6 @@ const pathsRecord: Partial<Record<ValueType, ValueType[]>> = {
   [ValueType.EMERGENCY_VEHICLE]: [ValueType.DEPARTMENT, ValueType.DIVISION],
 };
 
-const valuesWithDocumentation: ValueType[] = [
-  ValueType.ADDRESS,
-  ValueType.ADDRESS_FLAG,
-  ValueType.BLOOD_GROUP,
-  ValueType.BUSINESS_ROLE,
-  ValueType.CITIZEN_FLAG,
-  ValueType.CODES_10,
-  ValueType.EMERGENCY_VEHICLE,
-  ValueType.DRIVERSLICENSE_CATEGORY,
-  ValueType.QUALIFICATION,
-];
-
 export default function ValuePath({ pathValues: { totalCount, type, values: data } }: Props) {
   const router = useRouter();
   const path = (router.query.path as string).toUpperCase().replace("-", "_");
@@ -221,8 +209,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
     );
   }
 
-  const hasDocumentationURL = valuesWithDocumentation.includes(type);
-  const documentationUrl = hasDocumentationURL && createValueDocumentationURL(type);
+  const documentationUrl = createValueDocumentationURL(type);
 
   return (
     <AdminLayout
@@ -238,16 +225,14 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
             {t("totalItems")}:{" "}
             <span className="font-normal">{asyncTable.pagination.totalDataCount}</span>
           </h2>
-          {hasDocumentationURL && documentationUrl ? (
-            <Link
-              className="mt-1 underline flex items-center gap-1 text-blue-500"
-              target="_blank"
-              href={documentationUrl}
-            >
-              {common("learnMore")}
-              <BoxArrowUpRight className="inline-block" />
-            </Link>
-          ) : null}
+          <Link
+            className="mt-1 underline flex items-center gap-1 text-blue-500"
+            target="_blank"
+            href={documentationUrl}
+          >
+            {common("learnMore")}
+            <BoxArrowUpRight className="inline-block" />
+          </Link>
         </div>
 
         <div className="flex gap-2">
