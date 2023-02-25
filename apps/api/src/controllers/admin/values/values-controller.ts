@@ -211,6 +211,7 @@ export class ValuesController {
 
     const values = prisma.value.findMany({
       orderBy: { position: "asc" },
+      where: { type },
     });
 
     return values;
