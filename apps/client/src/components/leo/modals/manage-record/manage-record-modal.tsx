@@ -1,5 +1,6 @@
-import { CREATE_TICKET_SCHEMA } from "@snailycad/schemas";
-import { Loader, Button, TextField } from "@snailycad/ui";
+import * as React from "react";
+import { CREATE_TICKET_SCHEMA, CREATE_TICKET_SCHEMA_BUSINESS } from "@snailycad/schemas";
+import { Loader, Button, TextField, AsyncListSearchField, Item } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import type { SelectValue } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
@@ -22,6 +23,7 @@ import { TabList, TabsContent } from "components/shared/TabList";
 
 import dynamic from "next/dynamic";
 import { FormRow } from "components/form/FormRow";
+import type { BusinessSearchResult } from "state/search/business-search-state";
 
 const ManageCourtEntryModal = dynamic(
   async () =>
@@ -67,6 +69,7 @@ interface Props {
 }
 
 export function ManageRecordModal(props: Props) {
+  const [isBusinessRecord, setIsBusinessRecord] = React.useState(false);
   const { isOpen, closeModal, openModal, getPayload } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -147,8 +150,9 @@ export function ManageRecordModal(props: Props) {
         handleClose();
       }
     } else {
+      const path = isBusinessRecord ? "/records/business" : "/records";
       const { json } = await execute<PostRecordsData, typeof INITIAL_VALUES>({
-        path: "/records",
+        path,
         method: "POST",
         data: requestData,
         helpers,
@@ -168,7 +172,8 @@ export function ManageRecordModal(props: Props) {
   }
 
   const payload = getPayload<{ citizenId: string; citizenName: string }>(data[props.type].id);
-  const validate = handleValidate(CREATE_TICKET_SCHEMA);
+  const schema = isBusinessRecord ? CREATE_TICKET_SCHEMA_BUSINESS : CREATE_TICKET_SCHEMA;
+  const validate = handleValidate(schema);
 
   const INITIAL_VALUES = {
     type: props.type,
@@ -221,7 +226,7 @@ export function ManageRecordModal(props: Props) {
       className="w-[800px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ setFieldValue, errors, values, isValid }) => (
+        {({ setFieldValue, setValues, errors, values, isValid }) => (
           <Form autoComplete="off">
             <TabList
               tabs={[
@@ -234,14 +239,52 @@ export function ManageRecordModal(props: Props) {
             >
               <TabsContent value="general-information-tab">
                 {props.hideCitizenField ? null : (
-                  <CitizenSuggestionsField
-                    autoFocus
-                    fromAuthUserOnly={false}
-                    label={t("citizen")}
-                    isDisabled={props.isReadOnly || !!props.record}
-                    labelFieldName="citizenName"
-                    valueFieldName="citizenId"
-                  />
+                  <FormRow flexLike>
+                    {isBusinessRecord ? (
+                      <AsyncListSearchField<BusinessSearchResult>
+                        className="w-full"
+                        autoFocus
+                        setValues={({ localValue, node }) => {
+                          const labelValue =
+                            typeof localValue !== "undefined" ? { businessName: localValue } : {};
+                          const valueField = node ? { businessId: node.key as string } : {};
+
+                          setValues({ ...values, ...labelValue, ...valueField });
+                        }}
+                        localValue={values.businessName}
+                        errorMessage={errors.businessId}
+                        label={t("business")}
+                        selectedKey={values.businessId}
+                        fetchOptions={{
+                          apiPath: "/search/business",
+                          method: "POST",
+                          bodyKey: "name",
+                          filterTextRequired: true,
+                        }}
+                      >
+                        {(item) => (
+                          <Item key={item.id} textValue={item.name}>
+                            {item.name}
+                          </Item>
+                        )}
+                      </AsyncListSearchField>
+                    ) : (
+                      <CitizenSuggestionsField
+                        autoFocus
+                        fromAuthUserOnly={false}
+                        label={t("citizen")}
+                        isDisabled={props.isReadOnly || !!props.record}
+                        labelFieldName="citizenName"
+                        valueFieldName="citizenId"
+                      />
+                    )}
+                    <Button
+                      onPress={() => setIsBusinessRecord((prev) => !prev)}
+                      className="min-w-fit h-[39px] mt-7"
+                    >
+                      {isBusinessRecord ? t("citizenRecord") : t("businessRecord")}
+                    </Button>
+                  </FormRow>
                 )}
 
                 <AddressPostalSelect isDisabled={props.isReadOnly} postalOptional={false} />

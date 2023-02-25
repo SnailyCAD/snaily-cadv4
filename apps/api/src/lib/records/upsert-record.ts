@@ -35,7 +35,7 @@ export async function upsertRecord(options: UpsertRecordOptions) {
 
   let citizen;
   let business;
-  if ("citizenId" in options.data) {
+  if ("citizenId" in options.data && options.data.citizenId) {
     citizen = await prisma.citizen.findUnique({
       where: { id: options.data.citizenId },
     });
@@ -43,7 +43,7 @@ export async function upsertRecord(options: UpsertRecordOptions) {
     if (!citizen) {
       throw new ExtendedNotFound({ citizenId: "citizenNotFound" });
     }
-  } else if ("businessId" in options.data) {
+  } else if ("businessId" in options.data && options.data.businessId) {
     business = await prisma.business.findUnique({
       where: { id: options.data.businessId },
     });
@@ -63,8 +63,8 @@ export async function upsertRecord(options: UpsertRecordOptions) {
     }
   }
 
-  if (!business || !citizen) {
-    throw new ExtendedBadRequest({ citizenId: "citizenNotFound" });
+  if (!business && !citizen) {
+    throw new ExtendedBadRequest({ citizenId: "citizenOrBusinessNotFound" });
   }
 
   const isApprovalEnabled = isFeatureEnabled({
