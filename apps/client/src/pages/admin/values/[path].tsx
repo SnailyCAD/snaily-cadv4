@@ -264,7 +264,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
       <SearchArea search={{ search, setSearch }} asyncTable={asyncTable} totalCount={totalCount} />
 
       {!allSelected &&
-      getObjLength(tableState.rowSelection) > 0 &&
+      getObjLength(tableState.rowSelection) === tableState.pagination.pageSize &&
       totalCount > tableState.pagination.pageSize ? (
         <div className="flex items-center gap-2 px-4 py-2 card my-3 !bg-slate-900 !border-slate-500 border-2">
           <InfoCircle />
