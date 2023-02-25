@@ -137,7 +137,7 @@ export async function upsertRecord(options: UpsertRecordOptions) {
     courtEntry = { ...courtEntry, dates };
   }
 
-  if (ticket.type === "ARREST_REPORT" && !options.recordId) {
+  if (ticket.type === "ARREST_REPORT" && !options.recordId && citizen) {
     await prisma.citizen.update({
       where: { id: citizen.id },
       data: { arrested: true },
