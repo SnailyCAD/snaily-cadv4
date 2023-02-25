@@ -40,7 +40,7 @@ import { SearchArea } from "components/shared/search/search-area";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import { toastMessage } from "lib/toastMessage";
 import Link from "next/link";
-import { BoxArrowUpRight } from "react-bootstrap-icons";
+import { BoxArrowUpRight, InfoCircle } from "react-bootstrap-icons";
 
 const ManageValueModal = dynamic(
   async () => (await import("components/admin/values/ManageValueModal")).ManageValueModal,
@@ -109,6 +109,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
     totalCount,
   });
 
+  const [allSelected, setAllSelected] = React.useState(false);
   const [tempValue, valueState] = useTemporaryItem(asyncTable.items);
   const { state, execute } = useFetch();
 
@@ -171,7 +172,9 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
   }
 
   async function handleDeleteSelected() {
-    const selectedRows = getSelectedTableRows(data, tableState.rowSelection);
+    const selectedRows = allSelected
+      ? { all: true }
+      : getSelectedTableRows(data, tableState.rowSelection);
 
     const { json } = await execute<DeleteValuesBulkData>({
       path: `/admin/values/${type.toLowerCase()}/bulk-delete`,
@@ -180,8 +183,13 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
     });
 
     if (json) {
-      asyncTable.remove(...selectedRows);
+      if (Array.isArray(selectedRows)) {
+        asyncTable.remove(...selectedRows);
+      } else {
+        asyncTable.setItems([]);
+      }
 
+      setAllSelected(false);
       tableState.setRowSelection({});
       closeModal(ModalIds.AlertDeleteSelectedValues);
 
@@ -255,6 +263,32 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
 
       <SearchArea search={{ search, setSearch }} asyncTable={asyncTable} totalCount={totalCount} />
 
+      {!allSelected &&
+      getObjLength(tableState.rowSelection) > 0 &&
+      totalCount > tableState.pagination.pageSize ? (
+        <div className="flex items-center gap-2 px-4 py-2 card my-3 !bg-slate-900 !border-slate-500 border-2">
+          <InfoCircle />
+          <span>
+            {getObjLength(tableState.rowSelection)} items selected.{" "}
+            <Button
+              onClick={() => setAllSelected(true)}
+              variant="transparent"
+              className="underline"
+              size="xs"
+            >
+              Select all {totalCount}?
+            </Button>
+          </span>
+        </div>
+      ) : null}
+
+      {allSelected ? (
+        <div className="flex items-center gap-2 px-4 py-2 card my-3 !bg-slate-900 !border-slate-500 border-2">
+          <InfoCircle />
+          <span>{totalCount} items selected. </span>
+        </div>
+      ) : null}
+
       {asyncTable.items.length <= 0 ? (
         <p className="mt-5">There are no values yet for this type.</p>
       ) : (
@@ -322,7 +356,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
       <AlertModal
         id={ModalIds.AlertDeleteSelectedValues}
         description={t("alert_deleteSelectedValues", {
-          length: getObjLength(tableState.rowSelection),
+          length: allSelected ? totalCount : getObjLength(tableState.rowSelection),
         })}
         onDeleteClick={handleDeleteSelected}
         title={typeT("DELETE")}

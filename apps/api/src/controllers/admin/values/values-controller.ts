@@ -373,7 +373,19 @@ export class ValuesController {
     const type = getTypeFromPath(path);
     const data = validateSchema(BULK_DELETE_SCHEMA, body);
 
-    const arr = await Promise.all(data.map(async (id) => this.deleteById(type, id)));
+    let arr = [];
+
+    if (typeof data === "object" && "all" in data) {
+      const data = GET_VALUES[type];
+      const values: { id: string }[] = data
+        ? // @ts-expect-error ignore
+          await prisma[data.name].findMany({ select: { id: true } })
+        : await prisma.value.findMany({ where: { type }, select: { id: true } });
+
+      arr = await Promise.all(values.map(async (item) => this.deleteById(type, item.id)));
+    } else {
+      arr = await Promise.all(data.map(async (id) => this.deleteById(type, id)));
+    }
 
     const successfullyDeleted = arr.filter((v) => v !== false) as string[];
     const successfullyDeletedCount = successfullyDeleted.length;
