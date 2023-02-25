@@ -162,11 +162,14 @@ export interface GetManagePendingArrestReports {
 export interface GetManageRecordsLogsCitizenData {
   totalCount: number;
   recordsLogs: (Prisma.RecordLog & {
-    citizen: Prisma.Citizen & {
-      user: Types.User | null;
-      ethnicity?: Prisma.Value | null;
-      gender?: Prisma.Value | null;
-    };
+    business?: Prisma.Business | null;
+    citizen?:
+      | (Prisma.Citizen & {
+          user: Types.User | null;
+          ethnicity?: Prisma.Value | null;
+          gender?: Prisma.Value | null;
+        })
+      | null;
     warrant: Types.Warrant | null;
     records: Types.Record | null;
   })[];

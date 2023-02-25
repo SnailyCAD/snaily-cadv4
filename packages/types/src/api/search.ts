@@ -84,6 +84,7 @@ export type PostLeoSearchBusinessData = (Types.Business & {
   citizen: Types.BaseCitizen;
   vehicles: Types.RegisteredVehicle[];
   employees: Types.Employee[];
+  Record: Types.Record[];
 })[];
 
 /**

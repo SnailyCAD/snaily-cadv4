@@ -1,5 +1,5 @@
 import { Feature, CourtDate, CourtEntry, Officer, SeizedItem, Violation } from "@prisma/client";
-import type { CREATE_TICKET_SCHEMA } from "@snailycad/schemas";
+import type { CREATE_TICKET_SCHEMA, CREATE_TICKET_SCHEMA_BUSINESS } from "@snailycad/schemas";
 import { PaymentStatus, RecordType, WhitelistStatus } from "@snailycad/types";
 import { NotFound } from "@tsed/exceptions";
 import { userProperties } from "lib/auth/getSessionUser";
@@ -13,7 +13,7 @@ import { validateRecordData } from "./validate-record-data";
 import { captureException } from "@sentry/node";
 
 interface UpsertRecordOptions {
-  data: z.infer<typeof CREATE_TICKET_SCHEMA>;
+  data: z.infer<typeof CREATE_TICKET_SCHEMA | typeof CREATE_TICKET_SCHEMA_BUSINESS>;
   recordId: string | null;
   cad: { features?: Record<Feature, boolean> };
   officer: Officer | null;
@@ -33,12 +33,24 @@ export async function upsertRecord(options: UpsertRecordOptions) {
     await Promise.all([unlinkViolations(record.violations), unlinkSeizedItems(record.seizedItems)]);
   }
 
-  const citizen = await prisma.citizen.findUnique({
-    where: { id: options.data.citizenId },
-  });
+  let citizen;
+  let business;
+  if ("citizenId" in options.data && options.data.citizenId) {
+    citizen = await prisma.citizen.findUnique({
+      where: { id: options.data.citizenId },
+    });
 
-  if (!citizen) {
-    throw new ExtendedNotFound({ citizenId: "citizenNotFound" });
+    if (!citizen) {
+      throw new ExtendedNotFound({ citizenId: "citizenNotFound" });
+    }
+  } else if ("businessId" in options.data && options.data.businessId) {
+    business = await prisma.business.findUnique({
+      where: { id: options.data.businessId },
+    });
+
+    if (!business) {
+      throw new ExtendedNotFound({ businessId: "businessNotFound" });
+    }
   }
 
   if (options.data.vehicleId) {
@@ -49,6 +61,10 @@ export async function upsertRecord(options: UpsertRecordOptions) {
     if (!vehicle) {
       throw new ExtendedNotFound({ plateOrVin: "vehicleNotFound" });
     }
+  }
+
+  if (!business && !citizen) {
+    throw new ExtendedBadRequest({ citizenId: "citizenOrBusinessNotFound" });
   }
 
   const isApprovalEnabled = isFeatureEnabled({
@@ -62,7 +78,8 @@ export async function upsertRecord(options: UpsertRecordOptions) {
     where: { id: String(options.recordId) },
     create: {
       type: options.data.type as RecordType,
-      citizenId: citizen.id,
+      citizenId: citizen?.id,
+      businessId: business?.id,
       officerId: options.officer?.id ?? null,
       notes: options.data.notes,
       postal: String(options.data.postal),
@@ -120,7 +137,7 @@ export async function upsertRecord(options: UpsertRecordOptions) {
     courtEntry = { ...courtEntry, dates };
   }
 
-  if (ticket.type === "ARREST_REPORT" && !options.recordId) {
+  if (ticket.type === "ARREST_REPORT" && !options.recordId && citizen) {
     await prisma.citizen.update({
       where: { id: citizen.id },
       data: { arrested: true },

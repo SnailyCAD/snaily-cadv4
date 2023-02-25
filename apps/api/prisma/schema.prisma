@@ -808,6 +808,7 @@ model Business {
   Record        Record[]
   vehicles      RegisteredVehicle[] @relation("registeredBusinessVehicles")
   roles         EmployeeValue[]     @relation("businessValueBusinessRoles")
+  RecordLog     RecordLog[]
 }
 
 model Employee {
@@ -1285,15 +1286,17 @@ model Warrant {
 }
 
 model RecordLog {
-  id        String   @id @default(uuid())
-  citizen   Citizen  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
-  citizenId String
-  records   Record?  @relation(fields: [recordId], references: [id])
-  recordId  String?
-  warrant   Warrant? @relation(fields: [warrantId], references: [id])
-  warrantId String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  id         String    @id @default(uuid())
+  citizen    Citizen?  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId  String?
+  business   Business? @relation(fields: [businessId], references: [id])
+  businessId String?
+  records    Record?   @relation(fields: [recordId], references: [id])
+  recordId   String?
+  warrant    Warrant?  @relation(fields: [warrantId], references: [id])
+  warrantId  String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now()) @updatedAt
 }
 
 // Expungement requests
