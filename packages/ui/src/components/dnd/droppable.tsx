@@ -1,6 +1,6 @@
-import { classNames } from "lib/classNames";
 import * as React from "react";
 import { useDrop } from "react-dnd";
+import { classNames } from "../../utils/classNames";
 
 interface Props {
   onDrop(item: any): void;
@@ -9,11 +9,11 @@ interface Props {
   children: React.ReactNode;
 }
 
-export function _Droppable({ accepts, children, canDrop, onDrop }: Props) {
+function _Droppable(props: Props) {
   const [{ isOver, canDrop: _canDrop }, drop] = useDrop({
-    accept: accepts,
-    canDrop,
-    drop: onDrop,
+    accept: props.accepts,
+    canDrop: props.canDrop,
+    drop: props.onDrop,
     collect: (monitor) => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
@@ -27,7 +27,7 @@ export function _Droppable({ accepts, children, canDrop, onDrop }: Props) {
       className={classNames(isActive && "outline outline-2 outline-offset-[5px] rounded-sm")}
       ref={drop}
     >
-      {children}
+      {props.children}
     </div>
   );
 }

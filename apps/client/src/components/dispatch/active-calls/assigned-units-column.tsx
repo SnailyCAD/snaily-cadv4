@@ -1,8 +1,7 @@
 import * as React from "react";
 import type { AssignedUnit, CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 import { isUnitCombined, isUnitCombinedEmsFd } from "@snailycad/utils";
-import { Draggable } from "components/shared/dnd/Draggable";
-import { Droppable } from "components/shared/dnd/Droppable";
+import { Droppable, Draggable } from "@snailycad/ui";
 import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";

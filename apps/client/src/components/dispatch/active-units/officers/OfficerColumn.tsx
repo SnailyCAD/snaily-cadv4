@@ -15,7 +15,7 @@ import { useRouter } from "next/router";
 import { useTranslations } from "next-intl";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
-import { Draggable } from "components/shared/dnd/Draggable";
+import { Draggable } from "@snailycad/ui";
 import { DndActions } from "types/DndActions";
 import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { classNames } from "lib/classNames";

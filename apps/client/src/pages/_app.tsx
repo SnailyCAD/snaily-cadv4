@@ -25,9 +25,7 @@ const ReauthorizeSessionModal = dynamic(
   { ssr: false },
 );
 
-const DndProvider = dynamic(
-  async () => (await import("components/shared/dnd/DndProvider")).DndProvider,
-);
+const DndProvider = dynamic(async () => (await import("@snailycad/ui")).DndProvider);
 const Toaster = dynamic(async () => (await import("react-hot-toast")).Toaster, { ssr: false });
 
 const DRAG_AND_DROP_PAGES = ["/dispatch", "/officer", "/ems-fd"];

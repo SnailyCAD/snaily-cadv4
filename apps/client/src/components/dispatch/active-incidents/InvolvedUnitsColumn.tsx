@@ -6,8 +6,7 @@ import type {
   Officer,
 } from "@snailycad/types";
 import { isUnitCombined } from "@snailycad/utils";
-import { Draggable } from "components/shared/dnd/Draggable";
-import { Droppable } from "components/shared/dnd/Droppable";
+import { Droppable, Draggable } from "@snailycad/ui";
 import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { classNames } from "lib/classNames";

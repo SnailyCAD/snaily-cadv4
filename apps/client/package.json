@@ -68,8 +68,6 @@
     "react-cropper": "^2.1.8",
     "react-diff-viewer-continued": "^3.2.5",
     "react-digit-input": "^2.1.0",
-    "react-dnd": "16.0.1",
-    "react-dnd-html5-backend": "16.0.1",
     "react-dom": "18.2.0",
     "react-google-recaptcha-v3": "^1.10.1",
     "react-hot-toast": "^2.4.0",

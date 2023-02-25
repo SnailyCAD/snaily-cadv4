@@ -38,6 +38,7 @@
     ],
     "external": [
       "react",
+      "react-dnd",
       "react-bootstrap-icons",
       "next-intl",
       "next/link",
@@ -102,6 +103,8 @@
     "@react-types/shared": "^3.16.0",
     "@snailycad/utils": "1.48.4",
     "react-bootstrap-icons": "^1.10.2",
+    "react-dnd": "16.0.1",
+    "react-dnd-html5-backend": "16.0.1",
     "tailwind-merge": "^1.10.0"
   },
   "peerDependencies": {

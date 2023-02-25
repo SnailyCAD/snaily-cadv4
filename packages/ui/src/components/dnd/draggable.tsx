@@ -2,35 +2,34 @@ import * as React from "react";
 import { useDrag } from "react-dnd";
 
 interface Props {
-  children({ isDragging }: { isDragging: boolean }): React.ReactElement;
   canDrag?: boolean;
   type: string;
   item: unknown;
+  children({ isDragging }: { isDragging: boolean }): React.ReactElement;
   onDrag?(isDragging: boolean): void;
 }
 
-export function Draggable({ canDrag, type, item, onDrag, children }: Props) {
+export function Draggable(props: Props) {
   const [{ opacity, isDragging }, drag] = useDrag(
     () => ({
-      type,
-      item,
-      canDrag,
+      type: props.type,
+      item: props.item,
       collect: (monitor) => ({
+        canDrag: props.canDrag,
         opacity: monitor.isDragging() ? 0.4 : 1,
         isDragging: monitor.isDragging(),
       }),
     }),
-    [item, canDrag, type],
+    [props.item, props.canDrag, props.type],
   );
 
   React.useEffect(() => {
-    onDrag?.(isDragging);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isDragging]);
+    props.onDrag?.(isDragging);
+  }, [isDragging]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div ref={drag} style={{ opacity }}>
-      {children({ isDragging })}
+      {props.children({ isDragging })}
     </div>
   );
 }

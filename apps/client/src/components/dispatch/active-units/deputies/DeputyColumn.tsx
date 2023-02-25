@@ -3,7 +3,7 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { ContextMenu } from "components/shared/ContextMenu";
 import { useValues } from "context/ValuesContext";
 import { useUnitStatusChange } from "hooks/shared/useUnitsStatusChange";
-import { Draggable } from "components/shared/dnd/Draggable";
+import { Draggable } from "@snailycad/ui";
 import { DndActions } from "types/DndActions";
 import { ActiveUnitsQualificationsCard } from "components/leo/qualifications/ActiveUnitsQualificationsCard";
 import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";

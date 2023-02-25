@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { Button } from "@snailycad/ui";
+import { Button, Droppable } from "@snailycad/ui";
 import compareDesc from "date-fns/compareDesc";
 import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { Table, useTableState } from "components/shared/Table";
@@ -15,7 +15,6 @@ import type { LeoIncident } from "@snailycad/types";
 import { InvolvedUnitsColumn } from "./active-incidents/InvolvedUnitsColumn";
 import { DndActions } from "types/DndActions";
 import { classNames } from "lib/classNames";
-import { Droppable } from "components/shared/dnd/Droppable";
 import { useDispatchState } from "state/dispatch/dispatch-state";
 import type { PostIncidentsData, PutIncidentByIdData } from "@snailycad/types/api";
 import { CallDescription } from "./active-calls/CallDescription";

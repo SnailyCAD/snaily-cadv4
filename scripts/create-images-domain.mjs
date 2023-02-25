@@ -71,7 +71,7 @@ const imagesIndex = stringArray.findIndex((line) => line.includes("images: { // 
 const imagesEndIndex = stringArray.findIndex((line) => line.includes("}, // end images"));
 
 let imagesData = stringArray.slice(imagesIndex, imagesEndIndex).join("\n");
-imagesData = imagesData.replace(/localhost"\]/, `localhost", "${domain}"]`);
+imagesData = imagesData.replace(/, "localhost"/, `, "localhost", "${domain}"`);
 
 stringArray.splice(imagesIndex, imagesEndIndex - imagesIndex, imagesData);
 
