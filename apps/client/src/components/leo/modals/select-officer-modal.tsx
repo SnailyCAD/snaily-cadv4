@@ -116,6 +116,7 @@ export function SelectOfficerModal() {
             </FormField>
 
             <AsyncListSearchField<EmergencyVehicleValue>
+              isClearable
               errorMessage={errors.vehicleId}
               isOptional
               label={t("patrolVehicle")}
@@ -128,7 +129,8 @@ export function SelectOfficerModal() {
                 setValues({ ...values, ...vehicleId, ...searchValue });
               }}
               fetchOptions={{
-                apiPath: (query) => `/admin/values/emergency_vehicle/search?query=${query}`,
+                apiPath: (query) =>
+                  `/admin/values/emergency_vehicle/search?query=${query}&department=${values.officer?.departmentId}`,
                 filterTextRequired: true,
               }}
             >

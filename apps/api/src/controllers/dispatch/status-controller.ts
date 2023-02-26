@@ -10,6 +10,7 @@ import {
   DiscordWebhookType,
   Rank,
   Feature,
+  DivisionValue,
 } from "@prisma/client";
 import { UPDATE_OFFICER_STATUS_SCHEMA } from "@snailycad/schemas";
 import { Req, UseBeforeEach } from "@tsed/common";
@@ -37,7 +38,6 @@ import type * as APITypes from "@snailycad/types/api";
 import { createWebhookData } from "lib/dispatch/webhooks";
 import { createCallEventOnStatusChange } from "lib/dispatch/createCallEventOnStatusChange";
 import { ExtendedNotFound } from "src/exceptions/extended-not-found";
-import { isUnitOfficer } from "@snailycad/utils";
 import { isFeatureEnabled } from "lib/cad";
 import { handlePanicButtonPressed } from "lib/leo/send-panic-button-webhook";
 
@@ -88,7 +88,11 @@ export class StatusController {
       features: cad.features,
     });
 
-    const { type, unit } = await findUnit(unitId, { userId: isDispatch ? undefined : user.id });
+    const { type, unit } = await findUnit(
+      unitId,
+      { userId: isDispatch ? undefined : user.id },
+      { officer: { divisions: true } },
+    );
 
     if (!unit) {
       throw new NotFound("unitNotFound");
@@ -106,24 +110,23 @@ export class StatusController {
     let activeEmergencyVehicleId: string | undefined;
     if (data.vehicleId && code?.shouldDo === ShouldDoType.SET_ON_DUTY) {
       const divisionIds = isDivisionsEnabled
-        ? // @ts-expect-error type mismatch
-          isUnitOfficer(unit)
-          ? unit.divisions.map((v) => v.id)
+        ? type === "leo"
+          ? (unit as any).divisions.map((v: DivisionValue) => v.id)
           : [(unit as EmsFdDeputy).divisionId ?? undefined]
         : [];
 
       const _emergencyVehicle = await prisma.emergencyVehicleValue.findFirst({
         where: {
           id: data.vehicleId,
-          AND: [
-            ...divisionIds.map((id) => ({ divisions: { some: { id } } })),
+          OR: [
+            ...divisionIds.map((id: string) => ({ divisions: { some: { id } } })),
             unit.departmentId ? { departments: { some: { id: unit.departmentId } } } : {},
           ],
         },
       });
 
       if (!_emergencyVehicle) {
-        throw new ExtendedNotFound({ vehicleId: "vehicleNotFound" });
+        throw new ExtendedNotFound({ vehicleId: "vehicleNotPartOfYourDepartment" });
       }
 
       activeEmergencyVehicleId = _emergencyVehicle.id;

@@ -56,7 +56,8 @@ export function SelectDeputyModal() {
 
   const validate = handleValidate(SELECT_DEPUTY_SCHEMA);
   const INITIAL_VALUES = {
-    deputy: "",
+    deputyId: "",
+    deputy: null as EmsFdDeputy | null,
     vehicleId: null as string | null,
     vehicleSearch: "",
   };
@@ -74,13 +75,17 @@ export function SelectDeputyModal() {
             <FormField errorMessage={errors.deputy} label={t("deputy")}>
               <Select
                 isLoading={isLoading}
-                value={values.deputy}
+                value={
+                  values.deputy
+                    ? `${generateCallsign(values.deputy)} ${makeUnitName(values.deputy)}`
+                    : null
+                }
                 name="deputy"
                 onChange={handleChange}
                 isClearable
                 values={userDeputies.map((deputy) => ({
                   label: `${generateCallsign(deputy)} ${makeUnitName(deputy)}`,
-                  value: deputy.id,
+                  value: deputy,
                   isDisabled: isUnitDisabled(deputy),
                 }))}
               />
@@ -99,7 +104,8 @@ export function SelectDeputyModal() {
                 setValues({ ...values, ...vehicleId, ...searchValue });
               }}
               fetchOptions={{
-                apiPath: (query) => `/admin/values/emergency_vehicle/search?query=${query}`,
+                apiPath: (query) =>
+                  `/admin/values/emergency_vehicle/search?query=${query}&department=${values.deputy?.departmentId}`,
                 filterTextRequired: true,
               }}
             >
