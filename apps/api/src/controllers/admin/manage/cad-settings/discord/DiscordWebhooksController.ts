@@ -112,10 +112,10 @@ export class DiscordWebhooksController {
     const data = validateSchema(DISCORD_WEBHOOKS_SCHEMA, body);
     const channels = await this.getDiscordChannels(parseDiscordGuildIds(guildId));
 
-    const entries = Object.entries(data);
+    const values = Object.values(data);
 
     await Promise.all(
-      entries.map(async ([, webhookData]) => {
+      values.map(async (webhookData) => {
         const prevWebhook = cad.miscCadSettings?.webhooks?.find((v) => v.type === webhookData.type);
 
         if (webhookData.id && !this.doesChannelExist(channels, webhookData.id)) {

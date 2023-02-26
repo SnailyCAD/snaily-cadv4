@@ -20,7 +20,7 @@ export function WebhookSettingsField({
   fieldName,
   isRawWebhook,
 }: FieldProps) {
-  const { errors, values, handleChange } = useFormikContext<any>();
+  const { errors, values, setFieldValue, handleChange } = useFormikContext<any>();
 
   return (
     <SettingsFormField
@@ -29,7 +29,12 @@ export function WebhookSettingsField({
       label={label}
     >
       {isRawWebhook ? (
-        <TextField type="url" label={label} value={values[fieldName].url} />
+        <TextField
+          type="url"
+          label={label}
+          onChange={(value) => setFieldValue(fieldName, { ...values[fieldName], url: value })}
+          value={values[fieldName].url}
+        />
       ) : (
         <>
           <Select

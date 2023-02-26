@@ -31,6 +31,7 @@ export function RawWebhooksTab() {
 
       if (error) {
         setFetchError(error);
+        return [];
       }
 
       return json;
