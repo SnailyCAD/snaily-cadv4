@@ -60,6 +60,17 @@
     "warrantsChannel": "Warrants channel",
     "warrantsChannelInfo": "The Discord channel where new warrants will be sent to."
   },
+  "RawWebhooksTab": {
+    "rawWebhooks": "Raw Webhooks",
+    "rawWebhooksInfo": "Set custom URLs for each webhook type. This will send webhooks on the respective event type with raw CAD data.",
+    "calls911WebhookURL": "Calls 911 Webhook URL",
+    "statusUpdateWebhookURL": "Status Update Webhook URL",
+    "panicButtonWebhookURL": "Panic Button Webhook URL",
+    "bolosWebhookURL": "BOLOs Webhook URL",
+    "impoundedVehicleWebhookURL": "Impounded Vehicle Webhook URL",
+    "citizenRecordsWebhookURL": "Citizen Records Webhook URL",
+    "warrantsWebhookURL": "Warrants Webhook URL"
+  },
   "ApiTokenTab": {
     "apiToken": "API Token",
     "publicAPIAccess": "Public API Access",

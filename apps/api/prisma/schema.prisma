@@ -101,9 +101,19 @@ model MiscCadSettings {
   panicButtonWebhookId String?
   boloWebhookId        String?
 
-  webhooks DiscordWebhook[]
+  webhooks    DiscordWebhook[]
+  rawWebhooks RawWebhook[]
 
   cad cad[]
+}
+
+model RawWebhook {
+  id   String             @id @default(cuid())
+  type DiscordWebhookType @unique
+  url  String
+
+  MiscCadSettings   MiscCadSettings? @relation(fields: [miscCadSettingsId], references: [id], onDelete: Cascade)
+  miscCadSettingsId String?
 }
 
 model DiscordWebhook {
