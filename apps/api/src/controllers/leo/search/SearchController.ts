@@ -279,18 +279,20 @@ export class LeoSearchController {
     permissions: [Permissions.Leo, Permissions.Dispatch],
   })
   async searchVehicle(
-    @BodyParams("plateOrVin", String) plateOrVin: string,
+    @BodyParams("plateOrVin", String) _plateOrVin: string,
     @QueryParams("includeMany", Boolean) includeMany: boolean,
   ): Promise<APITypes.PostLeoSearchVehicleData> {
-    if (!plateOrVin || plateOrVin.length < 3) {
+    const trimmedPlateOrVin = _plateOrVin.trim();
+
+    if (!trimmedPlateOrVin || trimmedPlateOrVin.length < 3) {
       return null;
     }
 
     const data = {
       where: {
         OR: [
-          { plate: { startsWith: plateOrVin.toUpperCase() } },
-          { vinNumber: { startsWith: plateOrVin.toUpperCase() } },
+          { plate: { startsWith: trimmedPlateOrVin.toUpperCase() } },
+          { vinNumber: { startsWith: trimmedPlateOrVin.toUpperCase() } },
         ],
       },
       include: vehicleSearchInclude,
