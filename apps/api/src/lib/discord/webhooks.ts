@@ -6,6 +6,7 @@ import {
 } from "discord-api-types/v10";
 import { prisma } from "lib/data/prisma";
 import { performDiscordRequest } from "./performDiscordRequest";
+import { request } from "undici";
 
 interface SendDiscordWebhookOptions {
   type: DiscordWebhookType;
@@ -17,6 +18,7 @@ export async function sendDiscordWebhook(options: SendDiscordWebhookOptions) {
   const webhook = await prisma.discordWebhook.findUnique({
     where: { type: options.type },
   });
+
   if (!webhook) return;
 
   const webhookData = await performDiscordRequest<RESTGetAPIWebhookResult>({
@@ -40,6 +42,30 @@ export async function sendDiscordWebhook(options: SendDiscordWebhookOptions) {
       });
     },
   });
+}
+
+interface SendRawWebhookOptions {
+  type: DiscordWebhookType;
+  data: unknown;
+}
+
+export async function sendRawWebhook(options: SendRawWebhookOptions) {
+  const webhook = await prisma.rawWebhook.findUnique({
+    where: { type: options.type },
+  });
+  if (!webhook) return;
+
+  try {
+    await request(webhook.url, {
+      method: "POST",
+      body: JSON.stringify(options.data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (error) {
+    console.error("Could not send Raw webhook.", error);
+  }
 }
 
 function formatExtraMessage(

@@ -44,7 +44,7 @@ import { citizenObjectFromData } from "lib/citizen";
 import { generateString } from "utils/generate-string";
 import type * as APITypes from "@snailycad/types/api";
 import { createVehicleImpoundedWebhookData } from "controllers/calls/TowController";
-import { sendDiscordWebhook } from "lib/discord/webhooks";
+import { sendDiscordWebhook, sendRawWebhook } from "lib/discord/webhooks";
 import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
 import { ActiveOfficer } from "middlewares/active-officer";
 
@@ -467,6 +467,7 @@ export class SearchActionsController {
     try {
       const data = await createVehicleImpoundedWebhookData(impoundedVehicle, user.locale);
       await sendDiscordWebhook({ type: DiscordWebhookType.VEHICLE_IMPOUNDED, data });
+      await sendRawWebhook({ type: DiscordWebhookType.VEHICLE_IMPOUNDED, data: impoundedVehicle });
     } catch (error) {
       console.error("Could not send Discord webhook.", error);
     }

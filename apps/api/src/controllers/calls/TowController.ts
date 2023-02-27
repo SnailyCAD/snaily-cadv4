@@ -27,7 +27,7 @@ import { canManageInvariant } from "lib/auth/getSessionUser";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { callInclude } from "controllers/dispatch/911-calls/Calls911Controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
-import { sendDiscordWebhook } from "lib/discord/webhooks";
+import { sendDiscordWebhook, sendRawWebhook } from "lib/discord/webhooks";
 import type * as APITypes from "@snailycad/types/api";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
@@ -141,6 +141,10 @@ export class TowController {
       try {
         const data = await createVehicleImpoundedWebhookData(impoundedVehicle, user.locale);
         await sendDiscordWebhook({ type: DiscordWebhookType.VEHICLE_IMPOUNDED, data });
+        await sendRawWebhook({
+          type: DiscordWebhookType.VEHICLE_IMPOUNDED,
+          data: impoundedVehicle,
+        });
       } catch (error) {
         console.error("Could not send Discord webhook.", error);
       }
@@ -279,7 +283,7 @@ export async function createVehicleImpoundedWebhookData(
   locale?: string | null,
 ) {
   const t = await getTranslator({ type: "webhooks", locale, namespace: "Tow" });
-  const common = await getTranslator({ type: "webhooks", locale, namespace: "Common" });
+  const common = await getTranslator({ type: "common", locale, namespace: "Common" });
 
   return {
     embeds: [

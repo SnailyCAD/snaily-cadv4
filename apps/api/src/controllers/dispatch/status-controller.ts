@@ -25,7 +25,7 @@ import {
   leoProperties,
   unitProperties,
 } from "lib/leo/activeOfficer";
-import { sendDiscordWebhook } from "lib/discord/webhooks";
+import { sendDiscordWebhook, sendRawWebhook } from "lib/discord/webhooks";
 import { Socket } from "services/socket-service";
 import { IsAuth } from "middlewares/is-auth";
 import { validateSchema } from "lib/data/validate-schema";
@@ -332,6 +332,7 @@ export class StatusController {
         locale: user.locale,
       });
       await sendDiscordWebhook({ type: DiscordWebhookType.UNIT_STATUS, data });
+      await sendRawWebhook({ type: DiscordWebhookType.UNIT_STATUS, data: updatedUnit });
     } catch (error) {
       console.error("Could not send Discord webhook.", error);
     }

@@ -30,7 +30,7 @@ import { validateSchema } from "lib/data/validate-schema";
 import { combinedUnitProperties, leoProperties } from "lib/leo/activeOfficer";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { isFeatureEnabled } from "lib/cad";
-import { sendDiscordWebhook } from "lib/discord/webhooks";
+import { sendDiscordWebhook, sendRawWebhook } from "lib/discord/webhooks";
 import { getFirstOfficerFromActiveOfficer, getInactivityFilter } from "lib/leo/utils";
 import type * as APITypes from "@snailycad/types/api";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
@@ -324,6 +324,10 @@ export class RecordsController {
         type,
         data,
         extraMessageData: { userDiscordId: ticket.citizen?.user?.discordId },
+      });
+      await sendRawWebhook({
+        type: DiscordWebhookType.CITIZEN_RECORD,
+        data: ticket,
       });
     } catch (error) {
       console.error("Could not send Discord webhook.", error);

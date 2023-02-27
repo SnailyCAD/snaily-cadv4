@@ -20,7 +20,7 @@ import {
 } from "@prisma/client";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type { APIEmbed } from "discord-api-types/v10";
-import { sendDiscordWebhook } from "lib/discord/webhooks";
+import { sendDiscordWebhook, sendRawWebhook } from "lib/discord/webhooks";
 import { getFirstOfficerFromActiveOfficer, getInactivityFilter } from "lib/leo/utils";
 import type * as APITypes from "@snailycad/types/api";
 import type { cad } from "@snailycad/types";
@@ -127,6 +127,7 @@ export class BoloController {
     try {
       const embed = await createBoloEmbed(bolo);
       await sendDiscordWebhook({ type: DiscordWebhookType.BOLO, data: embed });
+      await sendRawWebhook({ type: DiscordWebhookType.BOLO, data: bolo });
     } catch (error) {
       console.error("[cad_bolo]: Could not send Discord webhook.", error);
     }

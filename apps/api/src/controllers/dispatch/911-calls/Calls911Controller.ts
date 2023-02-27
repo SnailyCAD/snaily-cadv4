@@ -24,7 +24,7 @@ import {
   Prisma,
   WhitelistStatus,
 } from "@prisma/client";
-import { sendDiscordWebhook } from "lib/discord/webhooks";
+import { sendDiscordWebhook, sendRawWebhook } from "lib/discord/webhooks";
 import type { APIEmbed } from "discord-api-types/v10";
 import { manyToManyHelper } from "lib/data/many-to-many";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";
@@ -250,6 +250,7 @@ export class Calls911Controller {
     try {
       const data = await this.createWebhookData(normalizedCall, user.locale);
       await sendDiscordWebhook({ type: DiscordWebhookType.CALL_911, data });
+      await sendRawWebhook({ type: DiscordWebhookType.CALL_911, data: normalizedCall });
     } catch (error) {
       console.error("Could not send Discord webhook.", error);
     }

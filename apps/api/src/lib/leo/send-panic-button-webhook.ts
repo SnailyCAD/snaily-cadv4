@@ -9,7 +9,7 @@ import {
   cad,
   DiscordWebhookType,
 } from "@prisma/client";
-import { sendDiscordWebhook } from "lib/discord/webhooks";
+import { sendDiscordWebhook, sendRawWebhook } from "lib/discord/webhooks";
 import { createPanicButtonEmbed } from "lib/dispatch/webhooks";
 import type { Socket } from "services/socket-service";
 
@@ -48,6 +48,7 @@ export async function handlePanicButtonPressed(options: HandlePanicButtonPressed
     try {
       const embed = await createPanicButtonEmbed(options);
       await sendDiscordWebhook({ type: DiscordWebhookType.PANIC_BUTTON, data: embed });
+      await sendRawWebhook({ type: DiscordWebhookType.PANIC_BUTTON, data: options.unit });
     } catch (error) {
       console.error("[cad_panicButton]: Could not send Discord webhook.", error);
     }

@@ -5,7 +5,7 @@ import { createTranslator } from "use-intl";
 interface TranslateOptions {
   locale?: string | null;
   namespace?: string;
-  type: "webhooks" | "error-messages";
+  type: "webhooks" | "error-messages" | "common";
 }
 
 let defaultLocale: string | undefined;
@@ -28,7 +28,7 @@ export async function getTranslator(options: TranslateOptions) {
   return translator;
 }
 
-async function loadTranslationFile(locale: string, type: "webhooks" | "error-messages") {
+async function loadTranslationFile(locale: string, type: "webhooks" | "error-messages" | "common") {
   try {
     const translationFile = await import(`../../../client/locales/${locale}/${type}.json`);
     return translationFile;
