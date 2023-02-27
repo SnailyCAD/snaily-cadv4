@@ -1,15 +1,3 @@
-/*
-  Warnings:
-
-  - You are about to drop the `RawWebhok` table. If the table is not empty, all the data it contains will be lost.
-
-*/
--- DropForeignKey
-ALTER TABLE "RawWebhok" DROP CONSTRAINT "RawWebhok_miscCadSettingsId_fkey";
-
--- DropTable
-DROP TABLE "RawWebhok";
-
 -- CreateTable
 CREATE TABLE "RawWebhook" (
     "id" TEXT NOT NULL,
