@@ -13,6 +13,8 @@ import { formatPermissionName } from "../users/modals/manage-permissions-modal";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { toastMessage } from "lib/toastMessage";
 import type { GetCADDiscordRolesData, PostCADDiscordRolesData } from "@snailycad/types/api";
+import Link from "next/link";
+import { BoxArrowUpRight } from "react-bootstrap-icons";
 
 function makeRoleValues(roles: DiscordRole[] | undefined) {
   if (!roles) return [];
@@ -130,6 +132,15 @@ export function DiscordRolesTab() {
         <p className="my-3 text-neutral-700 dark:text-gray-400 max-w-2xl">
           {t("discordRolesInfo")}
         </p>
+
+        <Link
+          className="mt-1 underline flex items-center gap-1 text-blue-500"
+          target="_blank"
+          href="https://docs.snailycad.org/docs/discord-integration/discord-roles"
+        >
+          {common("learnMore")}
+          <BoxArrowUpRight className="inline-block" />
+        </Link>
       </header>
 
       {fetchError ? (
