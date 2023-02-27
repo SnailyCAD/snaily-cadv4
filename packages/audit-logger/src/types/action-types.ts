@@ -49,6 +49,7 @@ export enum AuditLogActionType {
   CadAPITokenRemoved = "CadAPITokenRemoved",
   CadAPITokenEnabled = "CadAPITokenEnabled",
   CadAutoSetPropertiesUpdate = "CadAutoSetPropertiesUpdate",
+  UpdateRawWebhooks = "UpdateRawWebhooks",
 
   ExpungementRequestAccepted = "ExpungementRequestAccepted",
   ExpungementRequestDeclined = "ExpungementRequestDeclined",

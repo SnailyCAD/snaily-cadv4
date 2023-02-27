@@ -88,6 +88,10 @@ export const DISCORD_WEBHOOK = z.object({
   type: z.string().regex(DISCORD_WEBHOOK_TYPE),
 });
 
+export const RAW_WEBHOOK = DISCORD_WEBHOOK.omit({ extraMessage: true }).extend({
+  url: z.string().nullish(),
+});
+
 export const DISCORD_WEBHOOKS_SCHEMA = z.object({
   call911Webhook: DISCORD_WEBHOOK,
   statusesWebhook: DISCORD_WEBHOOK,
@@ -96,6 +100,16 @@ export const DISCORD_WEBHOOKS_SCHEMA = z.object({
   vehicleImpoundedWebhook: DISCORD_WEBHOOK,
   citizenRecordsWebhook: DISCORD_WEBHOOK,
   warrantsWebhook: DISCORD_WEBHOOK,
+});
+
+export const RAW_WEBHOOKS_SCHEMA = z.object({
+  call911Webhook: RAW_WEBHOOK,
+  statusesWebhook: RAW_WEBHOOK,
+  panicButtonWebhook: RAW_WEBHOOK,
+  boloWebhook: RAW_WEBHOOK,
+  vehicleImpoundedWebhook: RAW_WEBHOOK,
+  citizenRecordsWebhook: RAW_WEBHOOK,
+  warrantsWebhook: RAW_WEBHOOK,
 });
 
 export const CAD_AUTO_SET_PROPERTIES = z.object({

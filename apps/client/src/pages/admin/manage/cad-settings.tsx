@@ -36,8 +36,14 @@ const Tabs = {
   ),
   DiscordWebhooksTab: dynamic(
     async () =>
-      (await import("components/admin/manage/cad-settings/webhooks/discord-webhooks-tab"))
+      (await import("components/admin/manage/cad-settings/discord-webhooks/discord-webhooks-tab"))
         .DiscordWebhooksTab,
+    { ssr: false },
+  ),
+  RawWebhooksTab: dynamic(
+    async () =>
+      (await import("components/admin/manage/cad-settings/webhooks/raw-webhooks-tab"))
+        .RawWebhooksTab,
     { ssr: false },
   ),
 };
@@ -50,6 +56,7 @@ export enum SettingsTabs {
   APIToken = "API_TOKEN",
   DiscordRoles = "DISCORD_ROLES",
   DiscordWebhooks = "DISCORD_WEBHOOKS",
+  RawWebhooks = "RAW_WEBHOOKS",
 }
 
 export default function CadSettings() {
@@ -63,6 +70,7 @@ export default function CadSettings() {
     { name: t(SettingsTabs.APIToken), value: SettingsTabs.APIToken },
     { name: t(SettingsTabs.DiscordRoles), value: SettingsTabs.DiscordRoles },
     { name: t(SettingsTabs.DiscordWebhooks), value: SettingsTabs.DiscordWebhooks },
+    { name: t(SettingsTabs.RawWebhooks), value: SettingsTabs.RawWebhooks },
   ];
 
   return (
@@ -78,6 +86,7 @@ export default function CadSettings() {
         <Tabs.ApiTokenTab />
         <Tabs.DiscordRolesTab />
         <Tabs.DiscordWebhooksTab />
+        <Tabs.RawWebhooksTab />
       </TabList>
     </AdminLayout>
   );
