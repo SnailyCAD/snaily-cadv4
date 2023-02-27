@@ -11,6 +11,7 @@ interface FieldProps {
   fieldName: string;
   channels?: GetCADDiscordWebhooksData;
   isRawWebhook?: boolean;
+  disabled?: boolean;
 }
 
 export function WebhookSettingsField({
@@ -19,6 +20,7 @@ export function WebhookSettingsField({
   channels,
   fieldName,
   isRawWebhook,
+  disabled,
 }: FieldProps) {
   const { errors, values, setFieldValue, handleChange } = useFormikContext<any>();
 
@@ -38,6 +40,7 @@ export function WebhookSettingsField({
       ) : (
         <>
           <Select
+            disabled={disabled}
             isClearable
             values={(channels ?? []).map((role) => ({
               value: role.id,
@@ -50,6 +53,7 @@ export function WebhookSettingsField({
 
           <FormField optional className="mt-2" label="Extra message">
             <Textarea
+              disabled={disabled}
               value={values[fieldName]?.extraMessage}
               name={`${fieldName}.extraMessage`}
               onChange={handleChange}
