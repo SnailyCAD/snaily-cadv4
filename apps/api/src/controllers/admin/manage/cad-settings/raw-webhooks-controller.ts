@@ -1,4 +1,5 @@
-import type { DiscordWebhookType } from "@prisma/client";
+import type { DiscordWebhookType, RawWebhook } from "@prisma/client";
+import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { RAW_WEBHOOKS_SCHEMA } from "@snailycad/schemas";
 import { cad, Rank } from "@snailycad/types";
 import { BodyParams, Context, UseBeforeEach } from "@tsed/common";
@@ -29,44 +30,50 @@ export class WebhooksController {
     permissions: [Permissions.ManageCADSettings],
     fallback: (u) => u.rank === Rank.OWNER,
   })
-  async saveWebhooks(@BodyParams() body: unknown, @Context("cad") cad: cad) {
+  async saveWebhooks(
+    @BodyParams() body: unknown,
+    @Context("cad") cad: cad,
+    @Context("sessionUserId") sessionUserId: string,
+  ) {
     const data = validateSchema(RAW_WEBHOOKS_SCHEMA, body);
+    const rawWebhooks = await prisma.rawWebhook.findMany();
 
     const values = Object.values(data);
 
-    await Promise.all(
-      values.map(async (webhookData) => {
-        if (!webhookData.url) return;
+    const updatedWebhooks = (
+      await Promise.all(
+        values.map(async (webhookData) => {
+          if (!webhookData.url) return;
 
-        const createUpdateData = {
-          type: webhookData.type as DiscordWebhookType,
-          miscCadSettingsId: cad.miscCadSettingsId!,
-          url: webhookData.url,
-        };
+          const createUpdateData = {
+            type: webhookData.type as DiscordWebhookType,
+            miscCadSettingsId: cad.miscCadSettingsId!,
+            url: webhookData.url,
+          };
 
-        await prisma.rawWebhook.upsert({
-          where: { type: webhookData.type as DiscordWebhookType },
-          create: createUpdateData,
-          update: createUpdateData,
-        });
-      }),
-    );
+          return prisma.rawWebhook.upsert({
+            where: { type: webhookData.type as DiscordWebhookType },
+            create: createUpdateData,
+            update: createUpdateData,
+          });
+        }),
+      )
+    ).filter(Boolean) as RawWebhook[];
 
     const updatedCadSettings = await prisma.miscCadSettings.findUnique({
       where: { id: cad.miscCadSettingsId! },
       include: { webhooks: true },
     });
 
-    // todo: audit log
-    // await createAuditLogEntry({
-    //   action: {
-    //     type: AuditLogActionType.UpdateDiscordWebhooks,
-    //     previous: cad.miscCadSettings?.webhooks ?? [],
-    //     new: updatedCadSettings?.webhooks ?? [],
-    //   },
-    //   prisma,
-    //   executorId: sessionUserId,
-    // });
+    await createAuditLogEntry({
+      action: {
+        type: AuditLogActionType.UpdateRawWebhooks,
+        previous: rawWebhooks,
+        new: updatedWebhooks,
+      },
+      prisma,
+      executorId: sessionUserId,
+    });
 
     return updatedCadSettings!;
   }

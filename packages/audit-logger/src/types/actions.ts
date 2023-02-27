@@ -47,6 +47,7 @@ export type AuditLogActions =
   | BusinessEmployeeFire
   | UpdateDiscordRoles
   | UpdateDiscordWebhooks
+  | UpdateRawWebhooks
   | CadAPITokenRemoved
   | CadAPITokenEnabled
   | CadAutoSetPropertiesUpdate
@@ -247,6 +248,11 @@ export type UpdateDiscordRoles = BaseAuditLogAction<
 >;
 export type UpdateDiscordWebhooks = BaseAuditLogAction<
   AuditLogActionType.UpdateDiscordWebhooks,
+  any[],
+  any[]
+>;
+export type UpdateRawWebhooks = BaseAuditLogAction<
+  AuditLogActionType.UpdateRawWebhooks,
   any[],
   any[]
 >;
