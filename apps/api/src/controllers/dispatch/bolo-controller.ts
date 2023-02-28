@@ -55,7 +55,7 @@ export class BoloController {
     const where: Prisma.BoloWhereInput = query
       ? {
           OR: [
-            { plate: { contains: query, mode: "insensitive" } },
+            { plate: { contains: query.trim(), mode: "insensitive" } },
             { name: { contains: query, mode: "insensitive" } },
             { color: { contains: query, mode: "insensitive" } },
             { plate: { contains: query, mode: "insensitive" } },
