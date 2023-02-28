@@ -39,10 +39,12 @@ export function SelectDeputyModal() {
     if (!onDutyCode) return;
 
     const { json } = await execute<PutDispatchStatusByUnitId, typeof INITIAL_VALUES>({
-      path: `/dispatch/status/${values.deputy}`,
+      path: `/dispatch/status/${values.deputy?.id}`,
       method: "PUT",
       data: {
         ...values,
+        deputyId: values.deputy?.id,
+        deputy: values.deputy?.id,
         status: onDutyCode.id,
       },
       helpers,

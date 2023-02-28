@@ -2,7 +2,7 @@ import { z } from "zod";
 import { CREATE_OFFICER_SCHEMA } from "./leo";
 
 export const SELECT_DEPUTY_SCHEMA = z.object({
-  deputy: z.string().min(2).max(255),
+  deputy: z.object({ id: z.string().min(2).max(255) }),
   vehicleId: z.string().nullish(),
 });
 
