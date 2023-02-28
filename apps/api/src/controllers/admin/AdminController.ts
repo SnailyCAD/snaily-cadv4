@@ -1,7 +1,7 @@
 import { Controller } from "@tsed/di";
 import { Get, Description, ContentType } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
-import glob from "glob";
+import { glob } from "glob";
 import { join } from "node:path";
 import { stat } from "node:fs/promises";
 import { Res, UseBefore } from "@tsed/common";
@@ -129,7 +129,7 @@ export class AdminController {
   private async imageData() {
     try {
       const path = join(__dirname, "../../../", "public");
-      const items = glob.sync(`${path}/**/*.*`);
+      const items = await glob(`${path}/**/*.*`);
       let totalSize = 0;
 
       await Promise.all(

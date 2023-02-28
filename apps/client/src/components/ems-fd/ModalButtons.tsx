@@ -94,7 +94,7 @@ export function ModalButtons({
 
   return (
     <div className="py-2">
-      {!isButtonDisabled ? (
+      {nameAndCallsign && activeDeputy ? (
         <p className="text-lg">
           <span className="font-semibold">{t("Ems.activeDeputy")}: </span>
           {nameAndCallsign}
