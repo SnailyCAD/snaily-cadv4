@@ -15,33 +15,37 @@ interface SendDiscordWebhookOptions {
 }
 
 export async function sendDiscordWebhook(options: SendDiscordWebhookOptions) {
-  const webhook = await prisma.discordWebhook.findUnique({
-    where: { type: options.type },
-  });
+  try {
+    const webhook = await prisma.discordWebhook.findUnique({
+      where: { type: options.type },
+    });
 
-  if (!webhook) return;
+    if (!webhook) return;
 
-  const webhookData = await performDiscordRequest<RESTGetAPIWebhookResult>({
-    async handler(rest) {
-      if (!webhook.webhookId) return null;
-      return rest.get(Routes.webhook(webhook.webhookId));
-    },
-  });
+    const webhookData = await performDiscordRequest<RESTGetAPIWebhookResult>({
+      async handler(rest) {
+        if (!webhook.webhookId) return null;
+        return rest.get(Routes.webhook(webhook.webhookId));
+      },
+    });
 
-  if (!webhookData) return;
+    if (!webhookData) return;
 
-  const normalizedData: Partial<RESTPostAPIWebhookWithTokenJSONBody> = {
-    ...options.data,
-    content: formatExtraMessage({ ...options, ...webhook }) ?? undefined,
-  };
+    const normalizedData: Partial<RESTPostAPIWebhookWithTokenJSONBody> = {
+      ...options.data,
+      content: formatExtraMessage({ ...options, ...webhook }) ?? undefined,
+    };
 
-  await performDiscordRequest({
-    async handler(rest) {
-      rest.post(Routes.webhook(webhookData.id, webhookData.token), {
-        body: normalizedData,
-      });
-    },
-  });
+    await performDiscordRequest({
+      async handler(rest) {
+        return rest.post(Routes.webhook(webhookData.id, webhookData.token), {
+          body: normalizedData,
+        });
+      },
+    });
+  } catch (err) {
+    console.error("Could not send Discord webhook.", err);
+  }
 }
 
 interface SendRawWebhookOptions {
