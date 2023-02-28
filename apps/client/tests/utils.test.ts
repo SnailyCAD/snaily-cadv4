@@ -17,6 +17,7 @@ import {
   omit,
   isEmpty,
   getObjLength,
+  soundCamelCaseToKebabCase,
 } from "../src/lib/utils";
 
 const DOB_1 = "1999-03-02";
@@ -336,5 +337,13 @@ describe("getObjLength", () => {
 
   test("Object keys length should be 0", () => {
     expect(getObjLength({})).toBe(0);
+  });
+});
+
+describe("soundCamelCaseToKebabCase", () => {
+  test("it should correctly convert a camel case string to kebab case", () => {
+    expect(soundCamelCaseToKebabCase("panicButton")).toBe("panic-button");
+    expect(soundCamelCaseToKebabCase("signal100")).toBe("signal100");
+    expect(soundCamelCaseToKebabCase("addedToCall")).toBe("added-to-call");
   });
 });
