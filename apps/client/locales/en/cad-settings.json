@@ -130,6 +130,7 @@
     "BADGE_NUMBERS-description": "When enabled, this will allow officers to use badge numbers.",
     "USER_API_TOKENS": "User API Tokens",
     "USER_API_TOKENS-description": "When enabled, this will allow users to generate their own API token to perform actions with via their account.",
+    "USER_API_TOKENS-url": "https://docs.snailycad.org/docs/features/settings/user-api-tokens",
     "CITIZEN_RECORD_APPROVAL": "Citizen Record Approvals",
     "CITIZEN_RECORD_APPROVAL-description": "When enabled, this will require supervisors to accept or decline arrest reports before they can be used.",
     "COMMON_CITIZEN_CARDS": "Common Citizen Cards",
