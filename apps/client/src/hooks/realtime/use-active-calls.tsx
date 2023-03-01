@@ -1,9 +1,12 @@
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { Button } from "@snailycad/ui";
+import { isUnitOfficer } from "@snailycad/utils";
 import { getSynthesisVoices } from "components/account/AppearanceTab";
 import { useAuth } from "context/AuthContext";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { toastMessage } from "lib/toastMessage";
+import { makeUnitName } from "lib/utils";
 import toast from "react-hot-toast";
 import { useAudio } from "react-use";
 import { useCall911State } from "state/dispatch/call-911-state";
@@ -35,6 +38,7 @@ export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
   const { user } = useAuth();
   const { openModal } = useModal();
   const t = useTranslations();
+  const { generateCallsign } = useGenerateCallsign();
 
   const availableVoices = getSynthesisVoices() ?? [];
   const shouldPlayAddedToCallSound = user?.soundSettings?.addedToCall ?? false;
@@ -54,10 +58,18 @@ export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
 
   function handleAssignedToCallSpeech(call: Full911Call) {
     try {
-      const text = t(call.type?.value ? "Leo.assignedToCall#WithType" : "Leo.assignedToCall#", {
-        callType: call.type?.value.value,
-        caseNumber: call.caseNumber,
-      });
+      const namespace = unit && isUnitOfficer(unit) ? "Leo" : "Ems";
+      const unitCallsignAndName = unit && `${generateCallsign(unit)} ${makeUnitName(unit)}`;
+
+      const text = t(
+        call.type?.value ? `${namespace}.assignedToCall#WithType` : `${namespace}.assignedToCall#`,
+        {
+          activeVehicle: unit?.activeVehicle?.value.value ?? unitCallsignAndName,
+          location: call.location || "no location",
+          callType: call.type?.value.value,
+          caseNumber: call.caseNumber,
+        },
+      );
       const utterThis = new SpeechSynthesisUtterance(text);
 
       const availableVoice = availableVoices.find((voice) => voice.voiceURI === voiceURI);
@@ -101,6 +113,9 @@ export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
       handleAssignedToCallSpeech(call);
     }
 
+    const namespace = unit && isUnitOfficer(unit) ? "Leo" : "Ems";
+    const unitCallsignAndName = unit && `${generateCallsign(unit)} ${makeUnitName(unit)}`;
+
     const messageId = toastMessage({
       duration: Infinity,
       title: "Assigned to call",
@@ -108,10 +123,17 @@ export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
       message: (
         <div>
           <p>
-            {t(call.type?.value ? "Leo.assignedToCall#WithType" : "Leo.assignedToCall#", {
-              callType: call.type?.value.value,
-              caseNumber: call.caseNumber,
-            })}
+            {t(
+              call.type?.value
+                ? `${namespace}.assignedToCall#WithType`
+                : `${namespace}.assignedToCall#`,
+              {
+                activeVehicle: unit?.activeVehicle?.value.value ?? unitCallsignAndName,
+                location: call.location || "no location",
+                callType: call.type?.value.value,
+                caseNumber: call.caseNumber,
+              },
+            )}
           </p>
 
           <Button
