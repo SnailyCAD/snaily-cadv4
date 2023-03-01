@@ -70,6 +70,7 @@ const pathsRecord: Partial<Record<ValueType, ValueType[]>> = {
   [ValueType.CODES_10]: [ValueType.DEPARTMENT],
   [ValueType.OFFICER_RANK]: [ValueType.DEPARTMENT],
   [ValueType.EMERGENCY_VEHICLE]: [ValueType.DEPARTMENT, ValueType.DIVISION],
+  [ValueType.VEHICLE]: [ValueType.VEHICLE_TRIM_LEVEL],
 };
 
 export default function ValuePath({ pathValues: { totalCount, type, values: data } }: Props) {

@@ -54,6 +54,7 @@ export const defaultValuePermissions = [
   Permissions.ManageValueAddress,
   Permissions.ManageValueEmergencyVehicle,
   Permissions.ManageValueAddressFlag,
+  Permissions.ManageValueVehicleTrimLevel,
 ];
 
 export const defaultCourthousePermissions = [
