@@ -59,21 +59,15 @@ export class AdminManageBusinessesController {
     ],
   })
   async getBusinessEmployees(
-    @PathParams("businessId") businessId: string,
+    @PathParams("id") businessId: string,
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("includeAll", Boolean) includeAll = false,
-    @QueryParams("query", String) query = "",
   ): Promise<APITypes.GetManageBusinessByIdEmployeesData> {
-    let where: Prisma.EmployeeFindManyArgs["where"] = {
+    const where: Prisma.EmployeeFindManyArgs["where"] = {
       businessId,
     };
 
-    if (query) {
-      where = {
-        ...where,
-        // todo: filter by name, rank
-      };
-    }
+    console.log({ businessId });
 
     const [totalCount, employees] = await prisma.$transaction([
       prisma.employee.count({ where }),
