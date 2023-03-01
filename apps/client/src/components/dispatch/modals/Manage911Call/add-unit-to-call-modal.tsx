@@ -6,7 +6,7 @@ import { ModalIds } from "types/ModalIds";
 import { Form, Formik } from "formik";
 import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
-import { makeUnitName } from "lib/utils";
+import { makeUnitName, yesOrNoText } from "lib/utils";
 import { isUnitCombined, isUnitCombinedEmsFd } from "@snailycad/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Toggle } from "components/form/Toggle";
@@ -15,6 +15,10 @@ import { useCall911State } from "state/dispatch/call-911-state";
 import type { CombinedEmsFdUnit, CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 import { useImageUrl } from "hooks/useImageUrl";
 import { ImageWrapper } from "components/shared/image-wrapper";
+import { FormRow } from "components/form/FormRow";
+import type { ActiveDeputy } from "state/ems-fd-state";
+import type { ActiveOfficer } from "state/leo-state";
+import { Infofield } from "components/shared/Infofield";
 
 interface Props {
   onClose?(): void;
@@ -37,11 +41,14 @@ export function AddUnitToCallModal({ onClose }: Props) {
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    if (!values.unit) return;
-
-    const newAssignedUnits = [...call.assignedUnits].map((v) => ({
+    const assignedUnitsById = [...call.assignedUnits].map((v) => ({
       id: v.officerId || v.emsFdDeputyId || v.combinedLeoId || v.combinedEmsFdId,
       isPrimary: v.isPrimary,
+    }));
+
+    const newAssignedUnits = [...values.units].map((unit) => ({
+      id: unit.id,
+      isPrimary: unit.isPrimary,
     }));
 
     const { json } = await execute<Put911CallByIdData>({
@@ -54,7 +61,7 @@ export function AddUnitToCallModal({ onClose }: Props) {
         events: undefined,
         divisions: undefined,
         departments: undefined,
-        assignedUnits: [...newAssignedUnits, { id: values.unit, isPrimary: values.isPrimary }],
+        assignedUnits: [...assignedUnitsById, ...newAssignedUnits],
       },
     });
 
@@ -73,8 +80,37 @@ export function AddUnitToCallModal({ onClose }: Props) {
     }
   }
 
+  function handleAddUnit(values: typeof INITIAL_VALUES, setValues: any) {
+    if (values.unit) {
+      if (values.units.some((v) => v.id === values.unit?.id)) {
+        setValues({
+          ...values,
+          unit: null,
+          unitQuery: "",
+          isPrimary: false,
+        });
+        return;
+      }
+
+      setValues({
+        ...values,
+        units: [...values.units, { ...values.unit, isPrimary: values.isPrimary }],
+        unit: null,
+        unitQuery: "",
+        isPrimary: false,
+      });
+    }
+  }
+
   const INITIAL_VALUES = {
-    unit: null as string | null,
+    units: [] as (
+      | (ActiveDeputy & { isPrimary?: boolean })
+      | (ActiveOfficer & { isPrimary?: boolean })
+    )[],
+
+    unit: null as
+      | ((ActiveDeputy & { isPrimary?: boolean }) | (ActiveOfficer & { isPrimary?: boolean }))
+      | null,
     unitQuery: "",
     isPrimary: false,
   };
@@ -89,61 +125,102 @@ export function AddUnitToCallModal({ onClose }: Props) {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, setValues, values, errors }) => (
           <Form>
-            <AsyncListSearchField<Officer | EmsFdDeputy | CombinedLeoUnit | CombinedEmsFdUnit>
-              autoFocus
-              setValues={({ localValue, node }) => {
-                const unitQuery =
-                  typeof localValue !== "undefined" ? { unitQuery: localValue } : {};
-                const unitId = node
-                  ? { unit: node.key as string, unitQuery: localValue || values.unitQuery }
-                  : {};
+            <div className="border border-secondary rounded-md p-4 mt-5">
+              <AsyncListSearchField<Officer | EmsFdDeputy | CombinedLeoUnit | CombinedEmsFdUnit>
+                autoFocus
+                setValues={({ localValue, node }) => {
+                  const unitQuery =
+                    typeof localValue !== "undefined" ? { unitQuery: localValue } : {};
+                  const unitId = node
+                    ? { unit: node.value, unitQuery: localValue || values.unitQuery }
+                    : {};
 
-                setValues({ ...values, ...unitQuery, ...unitId });
-              }}
-              localValue={values.unitQuery}
-              errorMessage={errors.unit}
-              selectedKey={values.unit}
-              fetchOptions={{
-                apiPath: "/dispatch/units/search",
-                bodyKey: "query",
-                filterTextRequired: false,
-                method: "POST",
-              }}
-              label={t("unit")}
-            >
-              {(item) => {
-                const template =
-                  isUnitCombined(item) || isUnitCombinedEmsFd(item)
-                    ? "pairedUnitTemplate"
-                    : "callsignTemplate";
-                const nameAndCallsign = `${generateCallsign(item, template)} ${makeUnitName(item)}`;
-                const imageId =
-                  isUnitCombined(item) || isUnitCombinedEmsFd(item) ? null : item.imageId;
+                  setValues({ ...values, ...unitQuery, ...unitId });
+                }}
+                localValue={values.unitQuery}
+                errorMessage={errors.unit}
+                selectedKey={values.unit?.id}
+                fetchOptions={{
+                  apiPath: "/dispatch/units/search",
+                  bodyKey: "query",
+                  filterTextRequired: false,
+                  method: "POST",
+                }}
+                label={t("unit")}
+              >
+                {(item) => {
+                  const template =
+                    isUnitCombined(item) || isUnitCombinedEmsFd(item)
+                      ? "pairedUnitTemplate"
+                      : "callsignTemplate";
+                  const nameAndCallsign = `${generateCallsign(item, template)} ${makeUnitName(
+                    item,
+                  )}`;
+                  const imageId =
+                    isUnitCombined(item) || isUnitCombinedEmsFd(item) ? null : item.imageId;
 
-                return (
-                  <Item key={item.id} textValue={nameAndCallsign}>
-                    <div className="flex items-center">
-                      {imageId ? (
-                        <ImageWrapper
-                          alt={nameAndCallsign}
-                          className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-                          draggable={false}
-                          src={makeImageUrl("units", imageId)!}
-                          loading="lazy"
-                          width={30}
-                          height={30}
-                        />
-                      ) : null}
-                      <p>{nameAndCallsign}</p>
-                    </div>
-                  </Item>
-                );
-              }}
-            </AsyncListSearchField>
+                  return (
+                    <Item key={item.id} textValue={nameAndCallsign}>
+                      <div className="flex items-center">
+                        {imageId ? (
+                          <ImageWrapper
+                            alt={nameAndCallsign}
+                            className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                            draggable={false}
+                            src={makeImageUrl("units", imageId)!}
+                            loading="lazy"
+                            width={30}
+                            height={30}
+                          />
+                        ) : null}
+                        <p>{nameAndCallsign}</p>
+                      </div>
+                    </Item>
+                  );
+                }}
+              </AsyncListSearchField>
 
-            <FormField className="mt-3" checkbox label={t("primaryUnit")}>
-              <Toggle onCheckedChange={handleChange} value={values.isPrimary} name="isPrimary" />
-            </FormField>
+              <FormRow flexLike className="items-center">
+                <FormField className="mt-3" checkbox label={t("primaryUnit")}>
+                  <Toggle
+                    onCheckedChange={handleChange}
+                    value={values.isPrimary}
+                    name="isPrimary"
+                  />
+                </FormField>
+
+                <Button
+                  type="button"
+                  onPress={() => handleAddUnit(values, setValues)}
+                  className="max-h-9 max-w-fit"
+                >
+                  {t("addUnit")}
+                </Button>
+              </FormRow>
+            </div>
+
+            <ul className="border border-secondary rounded-md p-4 mt-5">
+              {values.units.length <= 0
+                ? t("noUnitsAdded")
+                : values.units.map((unit) => {
+                    const templateId =
+                      isUnitCombined(unit) || isUnitCombinedEmsFd(unit)
+                        ? "pairedUnitTemplate"
+                        : "callsignTemplate";
+                    const callsignAndName = `${generateCallsign(unit, templateId)} ${makeUnitName(
+                      unit,
+                    )}`;
+
+                    return (
+                      <li key={unit.id} className="mb-3">
+                        <p className="font-semibold">{callsignAndName}</p>
+                        <Infofield label={t("primaryUnit")}>
+                          {common(yesOrNoText(unit.isPrimary ?? false))}
+                        </Infofield>
+                      </li>
+                    );
+                  })}
+            </ul>
 
             <footer className="flex mt-5 justify-end">
               <div className="flex">
