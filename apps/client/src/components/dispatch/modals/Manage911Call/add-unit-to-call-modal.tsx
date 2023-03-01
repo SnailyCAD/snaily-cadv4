@@ -19,6 +19,7 @@ import { FormRow } from "components/form/FormRow";
 import type { ActiveDeputy } from "state/ems-fd-state";
 import type { ActiveOfficer } from "state/leo-state";
 import { Infofield } from "components/shared/Infofield";
+import { TrashFill } from "react-bootstrap-icons";
 
 interface Props {
   onClose?(): void;
@@ -78,6 +79,17 @@ export function AddUnitToCallModal({ onClose }: Props) {
         }),
       );
     }
+  }
+
+  function handleRemoveUnit(
+    unit: (typeof values.units)[number],
+    values: typeof INITIAL_VALUES,
+    setValues: any,
+  ) {
+    setValues({
+      ...values,
+      units: values.units.filter((v) => v.id !== unit.id),
+    });
   }
 
   function handleAddUnit(values: typeof INITIAL_VALUES, setValues: any) {
@@ -212,11 +224,22 @@ export function AddUnitToCallModal({ onClose }: Props) {
                     )}`;
 
                     return (
-                      <li key={unit.id} className="mb-3">
-                        <p className="font-semibold">{callsignAndName}</p>
-                        <Infofield label={t("primaryUnit")}>
-                          {common(yesOrNoText(unit.isPrimary ?? false))}
-                        </Infofield>
+                      <li key={unit.id} className="mb-3 flex items-center justify-between">
+                        <div>
+                          <p className="font-semibold">{callsignAndName}</p>
+                          <Infofield label={t("primaryUnit")}>
+                            {common(yesOrNoText(unit.isPrimary ?? false))}
+                          </Infofield>
+                        </div>
+
+                        <Button
+                          className="p-2"
+                          size="xs"
+                          type="button"
+                          onClick={() => handleRemoveUnit(unit, values, setValues)}
+                        >
+                          <TrashFill />
+                        </Button>
                       </li>
                     );
                   })}
