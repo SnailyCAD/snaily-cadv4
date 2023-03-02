@@ -51,10 +51,11 @@ export const permissionsForRouteType: Record<ValueType, Permissions[]> = {
   WEAPON: [Permissions.ManageValueWeapon],
   QUALIFICATION: [Permissions.ManageValueQualification],
   CALL_TYPE: [Permissions.ManageValueCallType],
+  VEHICLE_TRIM_LEVEL: [Permissions.ManageValueVehicleTrimLevel],
 };
 
 export function getTypeFromPath(path: string & {}) {
-  return path.replace("-", "_").toUpperCase() as ValueType;
+  return path.replace(/-/g, "_").toUpperCase() as ValueType;
 }
 
 export function getPermissionsForValuesRequest(request: Req) {

@@ -38,6 +38,7 @@ import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsFie
 import type { PostCitizenVehicleData, PutCitizenVehicleData } from "@snailycad/types/api";
 import { shallow } from "zustand/shallow";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
+import { Select } from "components/form/Select";
 
 interface Props {
   vehicle: RegisteredVehicle | null;
@@ -84,11 +85,17 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
+    const data = {
+      ...values,
+      modelValue: undefined,
+      trimLevels: values.trimLevels.map((v) => v.value),
+    };
+
     if (vehicle && !isLeo) {
       const { json } = await execute<PutCitizenVehicleData, typeof INITIAL_VALUES>({
         path: `/vehicles/${vehicle.id}`,
         method: "PUT",
-        data: values,
+        data,
         helpers,
       });
 
@@ -100,7 +107,7 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
       const { json } = await execute<PostCitizenVehicleData, typeof INITIAL_VALUES>({
         path,
         method: "POST",
-        data: values,
+        data,
         helpers,
       });
 
@@ -118,6 +125,9 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
   const INITIAL_VALUES = {
     model: vehicle ? (CUSTOM_TEXTFIELD_VALUES ? vehicle.model.value.value : vehicle.modelId) : "",
     modelName: vehicle?.model.value.value ?? "",
+    modelValue: vehicle?.model ?? null,
+    trimLevels: vehicle?.trimLevels?.map((v) => ({ label: v.value, value: v.id })) ?? [],
+
     color: vehicle?.color ?? "",
     insuranceStatus: vehicle?.insuranceStatusId ?? null,
     inspectionStatus: vehicle?.inspectionStatus ?? null,
@@ -184,7 +194,7 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
                 setValues={({ localValue, node }) => {
                   const modelName =
                     typeof localValue !== "undefined" ? { modelName: localValue } : {};
-                  const model = node ? { model: node.key as string } : {};
+                  const model = node ? { model: node.key as string, modelValue: node.value } : {};
 
                   setValues({ ...values, ...modelName, ...model });
                 }}
@@ -219,6 +229,22 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
               name="color"
               value={values.color}
             />
+
+            <FormField label={tVehicle("trimLevels")}>
+              <Select
+                name="trimLevels"
+                value={values.trimLevels}
+                isMulti
+                closeMenuOnSelect={false}
+                onChange={handleChange}
+                values={
+                  values.modelValue?.trimLevels?.map((value) => ({
+                    label: value.value,
+                    value: value.id,
+                  })) ?? []
+                }
+              />
+            </FormField>
 
             <TextField
               errorMessage={errors.vinNumber}

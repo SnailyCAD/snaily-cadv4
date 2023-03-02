@@ -8,6 +8,7 @@ import {
   ValueType,
   cad,
   Prisma,
+  Value,
 } from "@prisma/client";
 import { VEHICLE_SCHEMA, DELETE_VEHICLE_SCHEMA, TRANSFER_VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams, QueryParams } from "@tsed/common";
@@ -25,6 +26,7 @@ import { generateString } from "utils/generate-string";
 import { citizenInclude } from "./CitizenController";
 import type * as APITypes from "@snailycad/types/api";
 import type { RegisteredVehicle } from "@snailycad/types";
+import { getLastOfArray, manyToManyHelper } from "lib/data/many-to-many";
 
 @Controller("/vehicles")
 @UseBeforeEach(IsAuth)
@@ -218,8 +220,27 @@ export class VehiclesController {
         model: { include: { value: true } },
         registrationStatus: true,
         citizen: Boolean(data.businessId && data.employeeId),
+        trimLevels: true,
       },
     });
+
+    const updatedVehicle = getLastOfArray(
+      await prisma.$transaction(
+        data.trimLevels?.map((trimLevel, idx) => {
+          const includes = idx === 0 ? { trimLevels: true } : undefined;
+
+          return prisma.registeredVehicle.update({
+            where: { id: vehicle.id },
+            data: {
+              trimLevels: {
+                connect: { id: trimLevel },
+              },
+            },
+            include: includes,
+          });
+        }) ?? [],
+      ),
+    );
 
     if (data.businessId && data.employeeId) {
       const employee = await prisma.employee.findFirst({
@@ -243,7 +264,10 @@ export class VehiclesController {
       });
     }
 
-    return vehicle;
+    return {
+      ...vehicle,
+      trimLevels: (updatedVehicle as unknown as { trimLevels?: Value[] } | null)?.trimLevels ?? [],
+    };
   }
 
   @Put("/:id")
@@ -259,6 +283,9 @@ export class VehiclesController {
     const vehicle = await prisma.registeredVehicle.findUnique({
       where: {
         id: vehicleId,
+      },
+      include: {
+        trimLevels: true,
       },
     });
 
@@ -350,6 +377,22 @@ export class VehiclesController {
           },
         });
       }
+    }
+
+    if (data.trimLevels) {
+      const connectDisconnectArr = manyToManyHelper(
+        vehicle.trimLevels.map((v) => v.id),
+        data.trimLevels,
+      );
+
+      await prisma.$transaction(
+        connectDisconnectArr.map((item) =>
+          prisma.registeredVehicle.update({
+            where: { id: vehicle.id },
+            data: { trimLevels: item },
+          }),
+        ),
+      );
     }
 
     const isEditableVINEnabled = isFeatureEnabled({

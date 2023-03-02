@@ -34,8 +34,9 @@ export const citizenInclude = {
   vehicles: {
     orderBy: { createdAt: "desc" },
     include: {
+      trimLevels: true,
       flags: true,
-      model: { include: { value: true } },
+      model: { include: { trimLevels: true, value: true } },
       registrationStatus: true,
       insuranceStatus: true,
       TruckLog: true,

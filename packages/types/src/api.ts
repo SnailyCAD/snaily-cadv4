@@ -341,6 +341,7 @@ export type PostCitizenVehicleData = Prisma.RegisteredVehicle & {
   model: Types.VehicleValue;
   registrationStatus: Prisma.Value;
   citizen?: Prisma.Citizen | null;
+  trimLevels?: Prisma.Value[];
 };
 
 /**
@@ -350,6 +351,7 @@ export type PostCitizenVehicleData = Prisma.RegisteredVehicle & {
 export type PutCitizenVehicleData = Prisma.RegisteredVehicle & {
   model: Types.VehicleValue;
   registrationStatus: Prisma.Value;
+  trimLevels?: Prisma.Value[];
 };
 
 /**

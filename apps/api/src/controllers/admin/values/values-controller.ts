@@ -34,7 +34,7 @@ export const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
     name: "qualificationValue",
     include: { departments: { include: { value: true } } },
   },
-  VEHICLE: { name: "vehicleValue" },
+  VEHICLE: { name: "vehicleValue", include: { trimLevels: true } },
   WEAPON: { name: "weaponValue" },
   BUSINESS_ROLE: { name: "employeeValue" },
   CODES_10: { name: "statusValue", include: { departments: { include: { value: true } } } },

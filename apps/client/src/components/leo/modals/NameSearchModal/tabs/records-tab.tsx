@@ -220,7 +220,7 @@ export function RecordsTable({
 
             return {
               type: (
-                <span className="capitalize">{record.type.toLowerCase().replace("_", " ")}</span>
+                <span className="capitalize">{record.type.toLowerCase().replace(/_/g, " ")}</span>
               ),
               id: record.id,
               caseNumber: <RecordsCaseNumberColumn record={record} />,

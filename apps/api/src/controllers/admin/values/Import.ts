@@ -95,7 +95,7 @@ export class ImportValuesViaFileController {
   }
 
   private getTypeFromPath(path: string): ValueType {
-    return path.replace("-", "_").toUpperCase() as ValueType;
+    return path.replace(/-/g, "_").toUpperCase() as ValueType;
   }
 }
 
@@ -127,19 +127,39 @@ export const typeHandlers = {
   VEHICLE: async ({ body, id }: HandlerOptions) => {
     const data = validateSchema(HASH_SCHEMA_ARR, body);
 
-    return prisma.$transaction(
-      data.map((item) => {
-        return prisma.vehicleValue.upsert({
-          where: { id: String(id) },
-          ...makePrismaData(ValueType.VEHICLE, {
-            hash: item.hash,
-            value: item.value,
-            isDisabled: item.isDisabled,
-          }),
-          include: { value: true },
-        });
-      }),
-    );
+    return handlePromiseAll(data, async (item) => {
+      const updatedValue = await prisma.vehicleValue.upsert({
+        where: { id: String(id) },
+        ...makePrismaData(ValueType.VEHICLE, {
+          hash: item.hash,
+          value: item.value,
+          isDisabled: item.isDisabled,
+        }),
+        include: { value: true, trimLevels: true },
+      });
+
+      const disconnectConnectArr = manyToManyHelper(
+        updatedValue.trimLevels.map((v) => v.id),
+        item.trimLevels ?? [],
+      );
+
+      const updated = getLastOfArray(
+        await prisma.$transaction(
+          disconnectConnectArr.map((v, idx) =>
+            prisma.vehicleValue.update({
+              where: { id: updatedValue.id },
+              data: { trimLevels: v },
+              include:
+                idx + 1 === disconnectConnectArr.length
+                  ? { value: true, trimLevels: true }
+                  : undefined,
+            }),
+          ),
+        ),
+      );
+
+      return updated || updatedValue;
+    });
   },
   WEAPON: async ({ body, id }: HandlerOptions) => {
     const data = validateSchema(HASH_SCHEMA_ARR, body);
@@ -514,6 +534,8 @@ export const typeHandlers = {
     typeHandlers.GENERIC({ ...options, type: "ADDRESS_FLAG" }),
   CITIZEN_FLAG: async (options: HandlerOptions) =>
     typeHandlers.GENERIC({ ...options, type: "CITIZEN_FLAG" }),
+  VEHICLE_TRIM_LEVEL: async (options: HandlerOptions) =>
+    typeHandlers.GENERIC({ ...options, type: "VEHICLE_TRIM_LEVEL" }),
 
   GENERIC: async ({ body, type, id }: HandlerOptions & { type: ValueType }): Promise<Value[]> => {
     const data = validateSchema(BASE_ARR, body);

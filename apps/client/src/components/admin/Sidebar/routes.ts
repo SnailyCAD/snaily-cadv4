@@ -144,6 +144,10 @@ export const valueRoutes: SidebarRoute[] = [
     permissions: [Permissions.ManageValueVehicleFlag],
   },
   {
+    type: ValueType.VEHICLE_TRIM_LEVEL,
+    permissions: [Permissions.ManageValueVehicleTrimLevel],
+  },
+  {
     type: ValueType.WEAPON,
     permissions: [Permissions.ManageValueWeapon],
     hidden: ({ WEAPON_REGISTRATION }) => !WEAPON_REGISTRATION,

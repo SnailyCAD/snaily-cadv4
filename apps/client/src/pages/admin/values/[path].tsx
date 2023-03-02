@@ -70,11 +70,12 @@ const pathsRecord: Partial<Record<ValueType, ValueType[]>> = {
   [ValueType.CODES_10]: [ValueType.DEPARTMENT],
   [ValueType.OFFICER_RANK]: [ValueType.DEPARTMENT],
   [ValueType.EMERGENCY_VEHICLE]: [ValueType.DEPARTMENT, ValueType.DIVISION],
+  [ValueType.VEHICLE]: [ValueType.VEHICLE_TRIM_LEVEL],
 };
 
 export default function ValuePath({ pathValues: { totalCount, type, values: data } }: Props) {
   const router = useRouter();
-  const path = (router.query.path as string).toUpperCase().replace("-", "_");
+  const path = (router.query.path as string).toUpperCase().replace(/-/g, "_");
   const routeData = valueRoutes.find((v) => v.type === type);
 
   useLoadValuesClientSide({
@@ -364,7 +365,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req, query }) => {
-  const path = (query.path as string).replace("-", "_") as Lowercase<ValueType>;
+  const path = (query.path as string).replace(/-/g, "_") as Lowercase<ValueType>;
 
   const user = await getSessionUser(req);
   const [pathValues] = await requestAll(req, [
@@ -395,6 +396,6 @@ export function createValueDocumentationURL(type: ValueType) {
     [ValueType.BLOOD_GROUP]: "bloodgroup",
   };
 
-  const path = transformedPaths[type] ?? type.replace("_", "-").toLowerCase();
+  const path = transformedPaths[type] ?? type.replace(/_/g, "-").toLowerCase();
   return `https://docs.snailycad.org/docs/features/general/values/${path}`;
 }

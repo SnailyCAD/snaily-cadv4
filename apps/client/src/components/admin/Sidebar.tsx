@@ -113,7 +113,7 @@ export function AdminSidebar() {
                   key={route.type}
                   isActive={isValueActive(makeType(route.type))}
                   href={`/admin/values/${makeType(route.type).toLowerCase()}`}
-                  text={t(`${route.type.replace("-", "_")}.MANAGE`)}
+                  text={t(`${route.type.replace(/-/g, "_")}.MANAGE`)}
                   onRouteClick={() => setMenuOpen(false)}
                 />
               );

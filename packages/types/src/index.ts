@@ -164,6 +164,7 @@ export type RegisteredVehicle = Prisma.RegisteredVehicle & {
   notes?: Prisma.Note[];
   TruckLogs?: TruckLog[];
   Business?: Business[];
+  trimLevels?: Value[];
 };
 
 export type Weapon = Prisma.Weapon & {
@@ -221,7 +222,7 @@ export type DriversLicenseCategoryValue = Prisma.DriversLicenseCategoryValue & {
   value: Value;
 };
 
-export type VehicleValue = Prisma.VehicleValue & { value: Value };
+export type VehicleValue = Prisma.VehicleValue & { trimLevels?: Value[]; value: Value };
 
 export type WeaponValue = Prisma.WeaponValue & { value: Value };
 
