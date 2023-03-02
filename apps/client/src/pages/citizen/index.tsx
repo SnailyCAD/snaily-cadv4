@@ -17,6 +17,7 @@ import { CitizenList } from "components/citizen/citizen-list/citizen-list";
 import type { GetCitizensData } from "@snailycad/types/api";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import { ValueType } from "@snailycad/types";
+import { useSignal100 } from "hooks/shared/useSignal100";
 
 const RegisterVehicleModal = dynamic(
   async () =>
@@ -48,15 +49,20 @@ export default function CitizenPage({ citizens }: Props) {
   });
 
   const t = useTranslations("Citizen");
-  const { TOW, TAXI, WEAPON_REGISTRATION, CALLS_911 } = useFeatureEnabled();
+  const { SIGNAL_100_CITIZEN, TOW, TAXI, WEAPON_REGISTRATION, CALLS_911 } = useFeatureEnabled();
 
   const { openModal, closeModal } = useModal();
   const [modal, setModal] = React.useState<string | null>(null);
   const { showAop, areaOfPlay } = useAreaOfPlay();
+  const signal100 = useSignal100();
 
   return (
     <Layout className="dark:text-white">
-      <header className="mb-3">
+      {SIGNAL_100_CITIZEN ? (
+        <signal100.Component enabled={signal100.enabled} audio={signal100.audio} />
+      ) : null}
+
+      <header className="my-3">
         <Title className="mb-2">{t("citizens")}</Title>
         {showAop ? <h2 className="font-semibold text-xl">AOP: {areaOfPlay}</h2> : null}
       </header>
@@ -139,7 +145,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, re
       citizens: data,
       session: user,
       messages: {
-        ...(await getTranslations(["citizen", "calls", "common"], user?.locale ?? locale)),
+        ...(await getTranslations(["citizen", "leo", "calls", "common"], user?.locale ?? locale)),
       },
     },
   };

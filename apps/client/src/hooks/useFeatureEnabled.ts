@@ -20,6 +20,7 @@ export const DEFAULT_DISABLED_FEATURES = {
   CALL_911_APPROVAL: { isEnabled: false },
   FORCE_DISCORD_AUTH: { isEnabled: false },
   FORCE_STEAM_AUTH: { isEnabled: false },
+  SIGNAL_100_CITIZEN: { isEnabled: false },
 } satisfies Partial<Record<Feature, { isEnabled: boolean }>>;
 
 export function useFeatureEnabled(features?: Record<Feature, boolean>) {

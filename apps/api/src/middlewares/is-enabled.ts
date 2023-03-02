@@ -29,6 +29,7 @@ export const DEFAULT_DISABLED_FEATURES: Partial<
   CALL_911_APPROVAL: { isEnabled: false },
   FORCE_DISCORD_AUTH: { isEnabled: false },
   FORCE_STEAM_AUTH: { isEnabled: false },
+  SIGNAL_100_CITIZEN: { isEnabled: false },
 };
 
 export function createFeaturesObject(features?: CadFeature[] | undefined) {
