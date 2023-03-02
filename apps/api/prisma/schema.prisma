@@ -471,6 +471,7 @@ model RegisteredVehicle {
   dmvStatus            WhitelistStatus?
   notes                Note[]
   appearance           String?
+  trimLevels           Value[]                  @relation("registeredVehicleTrimLevels")
 
   TruckLog         TruckLog[]
   ImpoundedVehicle ImpoundedVehicle[]
@@ -566,6 +567,7 @@ model Value {
   EmergencyVehicleValue           EmergencyVehicleValue[]       @relation("emergencyVehicleToValue")
   CitizenAddressFlags             Citizen[]                     @relation("citizenAddressFlags")
   VehicleTrimLevels               VehicleValue[]                @relation("vehicleTrimLevels")
+  RegisteredVehicle               RegisteredVehicle[]           @relation("registeredVehicleTrimLevels")
 }
 
 model AddressValue {

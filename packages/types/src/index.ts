@@ -164,6 +164,7 @@ export type RegisteredVehicle = Prisma.RegisteredVehicle & {
   notes?: Prisma.Note[];
   TruckLogs?: TruckLog[];
   Business?: Business[];
+  trimLevels?: Value[];
 };
 
 export type Weapon = Prisma.Weapon & {
