@@ -84,17 +84,15 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
       });
 
       if (json.id) {
-        if (isCitizen) {
-          toastMessage({
-            title: common("success"),
-            message: t("911CallCreated"),
-            icon: "success",
-          });
-        }
+        toastMessage({
+          title: common("success"),
+          message: t("911CallCreated"),
+          icon: "success",
+        });
 
         setCalls([json, ...calls]);
 
-        if (values.openCallModalAfterCreation) {
+        if (values.openCallModalAfterCreation && !isCitizen) {
           setCurrentlySelectedCall(json);
           openModal(ModalIds.Manage911Call, json);
         } else {
