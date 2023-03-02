@@ -13,6 +13,7 @@ export const BASE_ARR = z.array(BASE_VALUE_SCHEMA).min(1);
 
 export const HASH_SCHEMA = BASE_VALUE_SCHEMA.extend({
   hash: z.string().max(255).optional(),
+  trimLevels: z.array(z.any()).nullish(),
 });
 
 export const HASH_SCHEMA_ARR = z.array(HASH_SCHEMA).min(1);

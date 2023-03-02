@@ -104,7 +104,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
 
   const title = !value ? t("ADD") : t("EDIT");
   const footerTitle = !value ? t("ADD") : common("save");
-  const { department } = useValues();
+  const { vehicleTrimLevel, department } = useValues();
   const { DIVISIONS } = useFeatureEnabled();
 
   async function onSubmit(
@@ -118,6 +118,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
       departments: values.departments?.map((v) => v.value),
       divisions: values.divisions?.map((v) => v.value),
       officerRankDepartments: values.officerRankDepartments?.map((v) => v.value),
+      trimLevels: values.trimLevels?.map((v) => v.value),
       extraFields: JSON.parse(values.extraFields),
     };
 
@@ -211,6 +212,13 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
 
     as: value && isEmployeeValue(value) ? value.as : "",
     hash: value && (isVehicleValue(value) || isWeaponValue(value)) ? value.hash ?? "" : undefined,
+    trimLevels:
+      value && isVehicleValue(value)
+        ? value.trimLevels?.map((value) => ({
+            value: value.id,
+            label: value.value,
+          })) ?? []
+        : [],
 
     licenseType: value && isBaseValue(value) ? value.licenseType : null,
     isDefault: value && isBaseValue(value) ? value.isDefault : undefined,
@@ -306,6 +314,22 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
                 onChange={(value) => setFieldValue("hash", value)}
                 value={values.hash}
               />
+            ) : null}
+
+            {ValueType.VEHICLE === type ? (
+              <FormField label="Trim Levels">
+                <Select
+                  isMulti
+                  closeMenuOnSelect={false}
+                  name="trimLevels"
+                  onChange={handleChange}
+                  value={values.trimLevels ?? []}
+                  values={vehicleTrimLevel.values.map((trimLevel) => ({
+                    value: trimLevel.id,
+                    label: trimLevel.value,
+                  }))}
+                />
+              </FormField>
             ) : null}
 
             {type === ValueType.CALL_TYPE ? (

@@ -396,6 +396,6 @@ export function createValueDocumentationURL(type: ValueType) {
     [ValueType.BLOOD_GROUP]: "bloodgroup",
   };
 
-  const path = transformedPaths[type] ?? type.replace("_", "-").toLowerCase();
+  const path = transformedPaths[type] ?? type.replace(/_/g, "-").toLowerCase();
   return `https://docs.snailycad.org/docs/features/general/values/${path}`;
 }
