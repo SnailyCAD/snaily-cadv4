@@ -62,7 +62,7 @@ export default function CitizenPage({ citizens }: Props) {
         <signal100.Component enabled={signal100.enabled} audio={signal100.audio} />
       ) : null}
 
-      <header className="mb-3">
+      <header className="my-3">
         <Title className="mb-2">{t("citizens")}</Title>
         {showAop ? <h2 className="font-semibold text-xl">AOP: {areaOfPlay}</h2> : null}
       </header>
