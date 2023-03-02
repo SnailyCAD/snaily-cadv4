@@ -75,7 +75,7 @@ const pathsRecord: Partial<Record<ValueType, ValueType[]>> = {
 
 export default function ValuePath({ pathValues: { totalCount, type, values: data } }: Props) {
   const router = useRouter();
-  const path = (router.query.path as string).toUpperCase().replace("-", "_");
+  const path = (router.query.path as string).toUpperCase().replace(/-/g, "_");
   const routeData = valueRoutes.find((v) => v.type === type);
 
   useLoadValuesClientSide({
@@ -365,7 +365,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req, query }) => {
-  const path = (query.path as string).replace("-", "_") as Lowercase<ValueType>;
+  const path = (query.path as string).replace(/-/g, "_") as Lowercase<ValueType>;
 
   const user = await getSessionUser(req);
   const [pathValues] = await requestAll(req, [

@@ -54,7 +54,7 @@ export const permissionsForRouteType: Record<ValueType, Permissions[]> = {
 };
 
 export function getTypeFromPath(path: string & {}) {
-  return path.replace("-", "_").toUpperCase() as ValueType;
+  return path.replace(/-/g, "_").toUpperCase() as ValueType;
 }
 
 export function getPermissionsForValuesRequest(request: Req) {

@@ -52,7 +52,7 @@ export function CitizenDropdown() {
       <Dropdown.LinkItem href="/citizen">{t("citizens")}</Dropdown.LinkItem>
 
       {items.map((item) => {
-        const upperCase = item.href.replace("-", "_").replace("/", "").toUpperCase() as Feature;
+        const upperCase = item.href.replace(/-/g, "_").replace("/", "").toUpperCase() as Feature;
         const show = "show" in item ? item.show?.(user) : true;
 
         if (!enabled[upperCase] || !show) {

@@ -95,7 +95,7 @@ export class ImportValuesViaFileController {
   }
 
   private getTypeFromPath(path: string): ValueType {
-    return path.replace("-", "_").toUpperCase() as ValueType;
+    return path.replace(/-/g, "_").toUpperCase() as ValueType;
   }
 }
 
