@@ -181,6 +181,8 @@
     "EDITABLE_SSN": "Editable SSN",
     "EDITABLE_SSN-description": "When enabled, this will allow citizens to edit their SSN.",
     "EDITABLE_VIN": "Editable VIN",
-    "EDITABLE_VIN-description": "When enabled, this will allow citizens to edit their vehicle's VIN."
+    "EDITABLE_VIN-description": "When enabled, this will allow citizens to edit their vehicle's VIN.",
+    "SIGNAL_100_CITIZEN": "Signal 100 display for citizens",
+    "SIGNAL_100_CITIZEN-description": "When enabled, this will allow citizens to view Signal 100's."
   }
 }

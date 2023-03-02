@@ -1772,4 +1772,5 @@ enum Feature {
   FORCE_STEAM_AUTH // See #1502
   EDITABLE_SSN // See #1544
   EDITABLE_VIN // See #1544
+  SIGNAL_100_CITIZEN // See #1562
 }
