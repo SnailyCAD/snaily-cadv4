@@ -402,6 +402,7 @@ export class VehiclesController {
     });
 
     const vinNumber = await this.generateOrValidateVINNumber({
+      vehicle,
       vinNumber: data.vinNumber,
       isEditableVINEnabled,
     });
