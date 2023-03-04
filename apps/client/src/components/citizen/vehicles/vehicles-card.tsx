@@ -37,6 +37,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
   const { citizen } = useCitizen(false);
 
   const asyncTable = useAsyncTable({
+    search,
     fetchOptions: {
       pageSize: 12,
       onResponse: (json: GetCitizenVehiclesData) => ({
@@ -93,77 +94,75 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
           </Button>
         </header>
 
+        <SearchArea
+          asyncTable={asyncTable}
+          search={{ search, setSearch }}
+          totalCount={props.vehicles.length}
+        />
+
         {asyncTable.items.length <= 0 ? (
           <p className="text-neutral-700 dark:text-gray-400">{t("noVehicles")}</p>
         ) : (
-          <>
-            <SearchArea
-              asyncTable={asyncTable}
-              search={{ search, setSearch }}
-              totalCount={props.vehicles.length}
-            />
+          <Table
+            tableState={tableState}
+            features={{ isWithinCardOrModal: true }}
+            data={asyncTable.items.map((vehicle) => ({
+              id: vehicle.id,
+              rowProps: {
+                title: vehicle.impounded ? t("vehicleImpounded") : undefined,
+                className: vehicle.impounded ? "opacity-50" : undefined,
+              },
+              plate: vehicle.plate,
+              model: vehicle.model.value.value,
+              color: vehicle.color,
+              registrationStatus: vehicle.registrationStatus.value,
+              insuranceStatus: vehicle.insuranceStatus?.value ?? common("none"),
+              vinNumber: vehicle.vinNumber,
+              dmvStatus: <Status fallback="—">{vehicle.dmvStatus}</Status>,
+              createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
+              actions: (
+                <>
+                  <Button
+                    disabled={vehicle.impounded}
+                    onPress={() => handleTransferClick(vehicle)}
+                    size="xs"
+                  >
+                    {t("transfer")}
+                  </Button>
 
-            <Table
-              tableState={tableState}
-              features={{ isWithinCardOrModal: true }}
-              data={asyncTable.items.map((vehicle) => ({
-                id: vehicle.id,
-                rowProps: {
-                  title: vehicle.impounded ? t("vehicleImpounded") : undefined,
-                  className: vehicle.impounded ? "opacity-50" : undefined,
-                },
-                plate: vehicle.plate,
-                model: vehicle.model.value.value,
-                color: vehicle.color,
-                registrationStatus: vehicle.registrationStatus.value,
-                insuranceStatus: vehicle.insuranceStatus?.value ?? common("none"),
-                vinNumber: vehicle.vinNumber,
-                dmvStatus: <Status fallback="—">{vehicle.dmvStatus}</Status>,
-                createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
-                actions: (
-                  <>
-                    <Button
-                      disabled={vehicle.impounded}
-                      onPress={() => handleTransferClick(vehicle)}
-                      size="xs"
-                    >
-                      {t("transfer")}
-                    </Button>
+                  <Button
+                    disabled={vehicle.impounded}
+                    onPress={() => handleEditClick(vehicle)}
+                    size="xs"
+                    className="ml-2"
+                  >
+                    {common("edit")}
+                  </Button>
 
-                    <Button
-                      disabled={vehicle.impounded}
-                      onPress={() => handleEditClick(vehicle)}
-                      size="xs"
-                      className="ml-2"
-                    >
-                      {common("edit")}
-                    </Button>
-
-                    <Button
-                      disabled={vehicle.impounded}
-                      className="ml-2"
-                      onPress={() => handleDeleteClick(vehicle)}
-                      size="xs"
-                      variant="danger"
-                    >
-                      {common("delete")}
-                    </Button>
-                  </>
-                ),
-              }))}
-              columns={[
-                { header: t("plate"), accessorKey: "plate" },
-                { header: t("model"), accessorKey: "model" },
-                { header: t("color"), accessorKey: "color" },
-                { header: t("registrationStatus"), accessorKey: "registrationStatus" },
-                { header: t("insuranceStatus"), accessorKey: "insuranceStatus" },
-                { header: t("vinNumber"), accessorKey: "vinNumber" },
-                DMV ? { header: t("dmvStatus"), accessorKey: "dmvStatus" } : null,
-                { header: common("createdAt"), accessorKey: "createdAt" },
-                { header: common("actions"), accessorKey: "actions" },
-              ]}
-            />
-          </>
+                  <Button
+                    disabled={vehicle.impounded}
+                    className="ml-2"
+                    onPress={() => handleDeleteClick(vehicle)}
+                    size="xs"
+                    variant="danger"
+                  >
+                    {common("delete")}
+                  </Button>
+                </>
+              ),
+            }))}
+            columns={[
+              { header: t("plate"), accessorKey: "plate" },
+              { header: t("model"), accessorKey: "model" },
+              { header: t("color"), accessorKey: "color" },
+              { header: t("registrationStatus"), accessorKey: "registrationStatus" },
+              { header: t("insuranceStatus"), accessorKey: "insuranceStatus" },
+              { header: t("vinNumber"), accessorKey: "vinNumber" },
+              DMV ? { header: t("dmvStatus"), accessorKey: "dmvStatus" } : null,
+              { header: common("createdAt"), accessorKey: "createdAt" },
+              { header: common("actions"), accessorKey: "actions" },
+            ]}
+          />
         )}
       </div>
 
