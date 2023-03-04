@@ -193,7 +193,7 @@ interface StatusColumnProps extends RoleColumnProps {
 }
 
 function StatusColumn({ unit, isDisabled, color, useDot }: StatusColumnProps) {
-  const { currentlySelectedCall, calls, setCalls, setCurrentlySelectedCall } = useCall911State();
+  const { currentlySelectedCall } = useCall911State();
   const [selectedKey, setSelectedKey] = React.useState(unit.unit?.statusId ?? null);
   const { execute } = useFetch();
   const t = useTranslations("Calls");
@@ -203,26 +203,16 @@ function StatusColumn({ unit, isDisabled, color, useDot }: StatusColumnProps) {
     setSelectedKey(unit.unit?.statusId ?? null);
   }, [unit]);
 
-  async function handleUpdatePrimary(value: string) {
-    if (!currentlySelectedCall) return;
+  async function handleUpdateStatus(value: string) {
+    if (!currentlySelectedCall || !unit.unit?.id) return;
 
     const { json, error } = await execute<PUT911CallAssignedUnit>({
-      path: `/911-calls/${currentlySelectedCall.id}/assigned-units/${unit.id}`,
+      path: `/dispatch/status/${unit.unit.id}`,
       method: "PUT",
-      data: { isPrimary: value === "true" },
+      data: { status: value },
     });
 
     if (!error && json.id) {
-      setCurrentlySelectedCall(json);
-      setCalls(
-        calls.map((call) => {
-          if (call.id === currentlySelectedCall.id) {
-            return { ...call, ...json };
-          }
-
-          return call;
-        }),
-      );
       setSelectedKey(value);
     }
   }
@@ -243,11 +233,13 @@ function StatusColumn({ unit, isDisabled, color, useDot }: StatusColumnProps) {
       label={t("primaryUnit")}
       hiddenLabel
       selectedKey={selectedKey}
-      onSelectionChange={(key) => handleUpdatePrimary(key as string)}
-      options={codes10.values.map((value) => ({
-        label: value.value.value,
-        value: value.id,
-      }))}
+      onSelectionChange={(key) => handleUpdateStatus(key as string)}
+      options={codes10.values
+        .filter((v) => v.type === "STATUS_CODE")
+        .map((value) => ({
+          label: value.value.value,
+          value: value.id,
+        }))}
     />
   );
 }
