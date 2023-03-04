@@ -17,6 +17,7 @@ import { FullDate } from "components/shared/FullDate";
 import { generateContrastColor } from "lib/table/get-contrasting-text-color";
 import { isUnitCombined, isUnitCombinedEmsFd } from "@snailycad/utils";
 import { SituationChangeColumn } from "./situation-change-column";
+import { useValues } from "context/ValuesContext";
 
 interface Props {
   isDisabled: boolean;
@@ -96,17 +97,7 @@ export function AssignedUnitsTable({ isDisabled }: Props) {
                   {callsignAndName}
                 </SituationChangeColumn>
               ),
-              status: (
-                <span className="flex items-center">
-                  {useDot && color ? (
-                    <span
-                      style={{ background: color }}
-                      className="block w-3 h-3 mr-2 rounded-full"
-                    />
-                  ) : null}
-                  {unit.unit?.status?.value?.value}
-                </span>
-              ),
+              status: <StatusColumn isDisabled={isDisabled} unit={unit} />,
               role: <RoleColumn isDisabled={isDisabled} unit={unit} />,
               updatedAt: <FullDate>{unit.updatedAt}</FullDate>,
               actions: (
@@ -192,6 +183,63 @@ function RoleColumn({ unit, isDisabled }: RoleColumnProps) {
         { label: "Primary", value: "true" },
         { label: "None", value: "false" },
       ]}
+    />
+  );
+}
+
+interface StatusColumnProps extends RoleColumnProps {
+  color?: string;
+  useDot?: boolean;
+}
+
+function StatusColumn({ unit, isDisabled, color, useDot }: StatusColumnProps) {
+  const { currentlySelectedCall } = useCall911State();
+  const [selectedKey, setSelectedKey] = React.useState(unit.unit?.statusId ?? null);
+  const { execute } = useFetch();
+  const t = useTranslations("Calls");
+  const { codes10 } = useValues();
+
+  React.useEffect(() => {
+    setSelectedKey(unit.unit?.statusId ?? null);
+  }, [unit]);
+
+  async function handleUpdateStatus(value: string) {
+    if (!currentlySelectedCall || !unit.unit?.id) return;
+
+    const { json, error } = await execute<PUT911CallAssignedUnit>({
+      path: `/dispatch/status/${unit.unit.id}`,
+      method: "PUT",
+      data: { status: value },
+    });
+
+    if (!error && json.id) {
+      setSelectedKey(value);
+    }
+  }
+
+  if (isDisabled) {
+    return (
+      <span className="flex items-center">
+        {useDot && color ? (
+          <span style={{ background: color }} className="block w-3 h-3 mr-2 rounded-full" />
+        ) : null}
+        {unit.unit?.status?.value?.value}
+      </span>
+    );
+  }
+
+  return (
+    <SelectField
+      label={t("primaryUnit")}
+      hiddenLabel
+      selectedKey={selectedKey}
+      onSelectionChange={(key) => handleUpdateStatus(key as string)}
+      options={codes10.values
+        .filter((v) => v.type === "STATUS_CODE")
+        .map((value) => ({
+          label: value.value.value,
+          value: value.id,
+        }))}
     />
   );
 }
