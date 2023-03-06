@@ -228,9 +228,9 @@ async function getDiscordData(code: string): Promise<APIUser | null> {
         scope: "identify guilds",
       }),
     },
-  );
+  ).catch(() => null);
 
-  if (response.statusCode !== 200) {
+  if (response?.statusCode !== 200) {
     return null;
   }
 

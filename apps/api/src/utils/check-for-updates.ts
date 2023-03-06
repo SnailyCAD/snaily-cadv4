@@ -4,7 +4,7 @@ import { underline, bold, green } from "colorette";
 
 async function fetchLatestVersion(): Promise<string | null> {
   try {
-    const { body } = await request(
+    const response = await request(
       "https://raw.githubusercontent.com/SnailyCAD/snaily-cadv4/main/package.json",
       {
         headers: {
@@ -12,9 +12,9 @@ async function fetchLatestVersion(): Promise<string | null> {
           accept: "application/json",
         },
       },
-    );
+    ).catch(() => null);
 
-    const json = await body.json().catch(() => null);
+    const json = await response?.body.json().catch(() => null);
     return json?.version ?? null;
   } catch (error) {
     console.error(error);
