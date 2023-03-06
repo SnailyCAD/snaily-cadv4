@@ -197,6 +197,7 @@ export class EmsFdController {
   @UseAfter(HandleInactivity)
   async getActiveDeputies(
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
+    @Context("user") user: User,
   ): Promise<APITypes.GetEmsFdActiveDeputies> {
     const unitsInactivityFilter = getInactivityFilter(
       cad,
@@ -204,17 +205,26 @@ export class EmsFdController {
       "lastStatusChangeTimestamp",
     );
 
+    const activeDispatcher = await prisma.activeDispatchers.findFirst({
+      where: { userId: user.id },
+      select: { departmentId: true },
+    });
+
     const [deputies, combinedEmsFdDeputies] = await prisma.$transaction([
       prisma.emsFdDeputy.findMany({
         where: {
           status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
+          departmentId: activeDispatcher?.departmentId || undefined,
           ...(unitsInactivityFilter?.filter ?? {}),
         },
         include: unitProperties,
       }),
       prisma.combinedEmsFdUnit.findMany({
         include: combinedEmsFdUnitProperties,
-        where: unitsInactivityFilter?.filter,
+        where: {
+          ...unitsInactivityFilter?.filter,
+          departmentId: activeDispatcher?.departmentId || undefined,
+        },
       }),
     ]);
 

@@ -66,7 +66,10 @@ export class DispatchController {
             userId: sessionUserId,
             ...(dispatcherInactivityTimeout?.filter ?? {}),
           },
-          include: { user: { select: { username: true, id: true } } },
+          include: {
+            department: { include: { value: true } },
+            user: { select: { username: true, id: true } },
+          },
         }),
         prisma.leoIncident.findMany({
           where: { isActive: true, ...(incidentInactivityFilter?.filter ?? {}) },
@@ -236,7 +239,10 @@ export class DispatchController {
   ): Promise<APITypes.PostDispatchDispatchersStateData> {
     let dispatcher = await prisma.activeDispatchers.findFirst({
       where: { userId: user.id },
-      include: { user: { select: { username: true, id: true } } },
+      include: {
+        user: { select: { username: true, id: true } },
+        department: { include: { value: true } },
+      },
     });
 
     if (value) {
@@ -244,7 +250,10 @@ export class DispatchController {
         dispatcher ??
         (await prisma.activeDispatchers.create({
           data: { userId: user.id },
-          include: { user: { select: { username: true, id: true } } },
+          include: {
+            user: { select: { username: true, id: true } },
+            department: { include: { value: true } },
+          },
         }));
     } else {
       if (dispatcher) {
@@ -268,6 +277,40 @@ export class DispatchController {
     this.socket.emitActiveDispatchers();
 
     return { dispatcher, activeDispatchersCount };
+  }
+
+  @Put("/active-dispatcher")
+  @Description("Update the user's active dispatcher")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch,
+    permissions: [Permissions.Dispatch],
+  })
+  async updateActiveDispatcher(
+    @Context("user") user: User,
+    @BodyParams("activeDepartment") activeDepartment: string | null,
+  ) {
+    const dispatcher = await prisma.activeDispatchers.findFirst({
+      where: { userId: user.id },
+      include: {
+        user: { select: { username: true, id: true } },
+        department: { include: { value: true } },
+      },
+    });
+
+    if (!dispatcher) {
+      throw new NotFound("activeDispatcherNotFound");
+    }
+
+    const updated = await prisma.activeDispatchers.update({
+      where: { id: dispatcher.id },
+      data: { departmentId: activeDepartment },
+      include: {
+        user: { select: { username: true, id: true } },
+        department: { include: { value: true } },
+      },
+    });
+
+    return updated;
   }
 
   @Put("/radio-channel/:unitId")

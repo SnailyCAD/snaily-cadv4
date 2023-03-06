@@ -311,7 +311,9 @@ export type CombinedLeoUnit = Prisma.CombinedLeoUnit & {
   activeVehicle?: Officer["activeVehicle"];
 };
 
-export type ActiveDispatchers = Prisma.ActiveDispatchers;
+export type ActiveDispatchers = Prisma.ActiveDispatchers & {
+  department?: DepartmentValue | null;
+};
 
 export type Call911 = Prisma.Call911 & {
   position: Position | null;
