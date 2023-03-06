@@ -31,6 +31,8 @@ import type {
 import { UtilityPanel } from "components/shared/UtilityPanel";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { useActiveDispatcherState } from "state/dispatch/active-dispatcher-state";
+import { Infofield } from "components/shared/Infofield";
+import { shallow } from "zustand/shallow";
 
 const ActiveIncidents = dynamic(async () => {
   return (await import("components/dispatch/active-incidents")).ActiveIncidents;
@@ -81,7 +83,13 @@ export default function DispatchDashboard(props: DispatchPageProps) {
     ],
   });
 
-  const setUserActiveDispatcher = useActiveDispatcherState((s) => s.setUserActiveDispatcher);
+  const { userActiveDispatcher, setUserActiveDispatcher } = useActiveDispatcherState(
+    (state) => ({
+      setUserActiveDispatcher: state.setUserActiveDispatcher,
+      userActiveDispatcher: state.userActiveDispatcher,
+    }),
+    shallow,
+  );
   const state = useDispatchState();
   const set911Calls = useCall911State((state) => state.setCalls);
   const t = useTranslations("Leo");
@@ -104,6 +112,9 @@ export default function DispatchDashboard(props: DispatchPageProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props]);
 
+  const activeDepartment =
+    userActiveDispatcher?.department ?? props.userActiveDispatcher?.department;
+
   return (
     <Layout
       permissions={{ fallback: (u) => u.isDispatch, permissions: [Permissions.Dispatch] }}
@@ -115,6 +126,12 @@ export default function DispatchDashboard(props: DispatchPageProps) {
       <panic.Component audio={panic.audio} unit={panic.unit} />
 
       <UtilityPanel isDispatch>
+        {activeDepartment ? (
+          <Infofield className="px-4 py-2" label={t("activeDepartment")}>
+            {activeDepartment.value.value}
+          </Infofield>
+        ) : null}
+
         <DispatchModalButtons />
       </UtilityPanel>
 

@@ -27,6 +27,11 @@ export const switchDivision: ModalButton = ({ DIVISIONS, unit }) => {
   };
 };
 
+export const selectDepartmentBtn: ModalButton = () => ({
+  modalId: ModalIds.SelectDepartment,
+  nameKey: ["Leo", "selectDepartment"],
+});
+
 export const nameSearchBtn: ModalButton = () => ({
   modalId: ModalIds.NameSearch,
   nameKey: ["Leo", "nameSearch"],

@@ -8,7 +8,7 @@ interface ActiveDispatcherState {
   setActiveDispatchersCount(count: number): void;
 
   userActiveDispatcher: ActiveDispatchers | null;
-  setUserActiveDispatcher(dispatcher: ActiveDispatchers | null, count: number): void;
+  setUserActiveDispatcher(dispatcher: ActiveDispatchers | null, count?: number): void;
 }
 
 export const useActiveDispatcherState = create<ActiveDispatcherState>()((set) => ({

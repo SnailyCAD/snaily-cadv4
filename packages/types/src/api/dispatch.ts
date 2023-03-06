@@ -91,7 +91,10 @@ export interface GetDispatchData {
   areaOfPlay: string | null;
   activeDispatchersCount: number;
   userActiveDispatcher:
-    | (Prisma.ActiveDispatchers & { user: Pick<Types.User, "id" | "username"> })
+    | (Prisma.ActiveDispatchers & {
+        department?: Types.DepartmentValue | null;
+        user: Pick<Types.User, "id" | "username">;
+      })
     | null;
   activeIncidents: Types.LeoIncident[];
 }

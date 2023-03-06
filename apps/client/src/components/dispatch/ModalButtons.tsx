@@ -28,6 +28,11 @@ const TonesModal = dynamic(async () => (await import("./modals/tones-modal")).To
   ssr: false,
 });
 
+const SelectDepartmentModal = dynamic(
+  async () => (await import("./modals/select-department-modal")).SelectDepartmentModal,
+  { ssr: false },
+);
+
 const buttons: modalButtons.ModalButton[] = [
   modalButtons.nameSearchBtn,
   modalButtons.plateSearchBtn,
@@ -37,6 +42,7 @@ const buttons: modalButtons.ModalButton[] = [
   modalButtons.createBoloBtn,
   modalButtons.create911CallBtn,
   modalButtons.notepadBtn,
+  modalButtons.selectDepartmentBtn,
 ];
 
 export function DispatchModalButtons() {
@@ -110,6 +116,7 @@ export function DispatchModalButtons() {
 
       {TONES ? <TonesModal types={[ActiveToneType.LEO, ActiveToneType.EMS_FD]} /> : null}
       {signal100Enabled ? null : <EnableSignal100Modal />}
+      <SelectDepartmentModal />
     </div>
   );
 }
