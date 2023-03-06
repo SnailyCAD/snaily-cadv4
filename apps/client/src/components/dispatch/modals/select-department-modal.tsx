@@ -10,6 +10,7 @@ import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
 import { useActiveDispatcherState } from "state/dispatch/active-dispatcher-state";
 import type { GetDispatchData } from "@snailycad/types/api";
+import { useRouter } from "next/router";
 
 export function SelectDepartmentModal() {
   const { closeModal, isOpen } = useModal();
@@ -24,6 +25,7 @@ export function SelectDepartmentModal() {
 
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
+  const router = useRouter();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!userActiveDispatcher) return;
@@ -35,6 +37,7 @@ export function SelectDepartmentModal() {
     });
 
     if (json) {
+      router.reload();
       setUserActiveDispatcher(json);
       closeModal(ModalIds.SelectDepartment);
     }
