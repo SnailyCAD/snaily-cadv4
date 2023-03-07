@@ -74,7 +74,7 @@ export function getErrorMap(options: GetErrorMapOptions) {
               expected: issue.validation.endsWith,
             });
           } else {
-            util.assertNever(issue.validation);
+            util.assertNever(issue.validation as never);
           }
         } else if (issue.validation !== "regex") {
           message = t("invalidRegex", {
@@ -94,7 +94,7 @@ export function getErrorMap(options: GetErrorMapOptions) {
             : "arrayMoreThan";
 
           message = t(errorMessage, {
-            expected: issue.minimum,
+            expected: issue.minimum as number,
           });
         } else if (issue.type === "string") {
           const errorMessage = issue.exact
@@ -104,7 +104,7 @@ export function getErrorMap(options: GetErrorMapOptions) {
             : "stringOverCharacters";
 
           message = t(errorMessage, {
-            expected: issue.minimum,
+            expected: issue.minimum as number,
           });
         } else if (issue.type === "number") {
           const errorMessage = issue.exact
@@ -114,7 +114,7 @@ export function getErrorMap(options: GetErrorMapOptions) {
             : "numberGreaterThan";
 
           message = t(errorMessage, {
-            expected: issue.minimum,
+            expected: issue.minimum as number,
           });
         } else if (issue.type === "date") {
           const errorMessage = issue.exact
@@ -124,7 +124,7 @@ export function getErrorMap(options: GetErrorMapOptions) {
             : "dateGreaterThan";
 
           message = t(errorMessage, {
-            expected: new Date(issue.minimum).toDateString(),
+            expected: new Date(issue.minimum as number).toDateString(),
           });
         } else {
           message = t("invalidDate");
@@ -140,7 +140,7 @@ export function getErrorMap(options: GetErrorMapOptions) {
             : "arrayUnder";
 
           message = t(errorMessage, {
-            expected: issue.maximum,
+            expected: issue.maximum as number,
           });
         } else if (issue.type === "string") {
           const errorMessage = issue.exact
@@ -150,7 +150,7 @@ export function getErrorMap(options: GetErrorMapOptions) {
             : "stringUnderCharacters";
 
           message = t(errorMessage, {
-            expected: issue.maximum,
+            expected: issue.maximum as number,
           });
         } else if (issue.type === "number") {
           const errorMessage = issue.exact
@@ -160,7 +160,7 @@ export function getErrorMap(options: GetErrorMapOptions) {
             : "numberSmallerThan";
 
           message = t(errorMessage, {
-            expected: issue.maximum,
+            expected: issue.maximum as number,
           });
         } else if (issue.type === "date") {
           const errorMessage = issue.exact
@@ -170,7 +170,7 @@ export function getErrorMap(options: GetErrorMapOptions) {
             : "dateSmallerThan";
 
           message = t(errorMessage, {
-            expected: new Date(issue.maximum).toLocaleString(),
+            expected: new Date(issue.maximum as number).toLocaleString(),
           });
         } else {
           message = t("invalidDate");

@@ -69,7 +69,7 @@ export async function getErrorMap(locale?: string) {
               expected: issue.validation.endsWith,
             });
           } else {
-            util.assertNever(issue.validation);
+            util.assertNever({} as never);
           }
         } else if (issue.validation !== "regex") {
           message = t("invalidRegex", {
@@ -89,7 +89,7 @@ export async function getErrorMap(locale?: string) {
             : "arrayMoreThan";
 
           message = t(errorMessage, {
-            expected: issue.minimum,
+            expected: issue.minimum as number,
           });
         } else if (issue.type === "string") {
           const errorMessage = issue.exact
@@ -99,7 +99,7 @@ export async function getErrorMap(locale?: string) {
             : "stringOverCharacters";
 
           message = t(errorMessage, {
-            expected: issue.minimum,
+            expected: issue.minimum as number,
           });
         } else if (issue.type === "number") {
           const errorMessage = issue.exact
@@ -109,7 +109,7 @@ export async function getErrorMap(locale?: string) {
             : "numberGreaterThan";
 
           message = t(errorMessage, {
-            expected: issue.minimum,
+            expected: issue.minimum as number,
           });
         } else if (issue.type === "date") {
           const errorMessage = issue.exact
@@ -119,7 +119,7 @@ export async function getErrorMap(locale?: string) {
             : "dateGreaterThan";
 
           message = t(errorMessage, {
-            expected: new Date(issue.minimum).toDateString(),
+            expected: new Date(issue.minimum as number).toDateString(),
           });
         } else {
           message = t("invalidDate");
@@ -135,7 +135,7 @@ export async function getErrorMap(locale?: string) {
             : "arrayUnder";
 
           message = t(errorMessage, {
-            expected: issue.maximum,
+            expected: issue.maximum as number,
           });
         } else if (issue.type === "string") {
           const errorMessage = issue.exact
@@ -145,7 +145,7 @@ export async function getErrorMap(locale?: string) {
             : "stringUnderCharacters";
 
           message = t(errorMessage, {
-            expected: issue.maximum,
+            expected: issue.maximum as number,
           });
         } else if (issue.type === "number") {
           const errorMessage = issue.exact
@@ -155,7 +155,7 @@ export async function getErrorMap(locale?: string) {
             : "numberSmallerThan";
 
           message = t(errorMessage, {
-            expected: issue.maximum,
+            expected: issue.maximum as number,
           });
         } else if (issue.type === "date") {
           const errorMessage = issue.exact
@@ -165,7 +165,7 @@ export async function getErrorMap(locale?: string) {
             : "dateSmallerThan";
 
           message = t(errorMessage, {
-            expected: new Date(issue.maximum).toLocaleString(),
+            expected: new Date(issue.maximum as number).toLocaleString(),
           });
         } else {
           message = t("invalidDate");
