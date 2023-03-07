@@ -31,9 +31,6 @@
     "vite": "^4.1.4",
     "vitest": "^0.29.2"
   },
-  "dependencies": {
-    "zod": "^3.20.6"
-  },
   "tsup": {
     "entry": [
       "src/**/*.ts"
