@@ -73,7 +73,8 @@
   },
   "LiveMapTab": {
     "liveMapSettings": "Live Map Settings",
-    "liveMapSettingsInfo": "Configure the live map URL and map tiles."
+    "liveMapSettingsInfo": "Configure the live map URL and map tiles.",
+    "mapTiles": "Map Tiles"
   },
   "ApiTokenTab": {
     "apiToken": "API Token",

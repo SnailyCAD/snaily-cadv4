@@ -10,6 +10,15 @@ import type { PutCADApiTokenData } from "@snailycad/types/api";
 import Link from "next/link";
 import { BoxArrowUpRight } from "react-bootstrap-icons";
 
+const TILE_NAMES = [
+  "minimap_sea_0_0",
+  "minimap_sea_0_1",
+  "minimap_sea_1_0",
+  "minimap_sea_1_1",
+  "minimap_sea_2_0",
+  "minimap_sea_2_1",
+];
+
 export function LiveMapTab() {
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
@@ -42,6 +51,7 @@ export function LiveMapTab() {
 
   const INITIAL_VALUES = {
     liveMapURL: cad?.miscCadSettings?.liveMapURL ?? "",
+    tiles: undefined,
   };
 
   return (
@@ -78,6 +88,31 @@ export function LiveMapTab() {
                 value={values.liveMapURL}
                 onChange={handleChange}
                 placeholder="http://my-host:my-port"
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              description={
+                <span>
+                  These are the map tiles that will be shown in the live map. These must be named in
+                  the following format:{" "}
+                  {TILE_NAMES.map((name, idx) => (
+                    <>
+                      <code key={name}>{name}</code>
+                      {idx === TILE_NAMES.length - 1 ? "" : ", "}
+                    </>
+                  ))}
+                </span>
+              }
+              errorMessage={errors.tiles}
+              label={t("mapTiles")}
+            >
+              <Input
+                multiple
+                type="file"
+                name="tiles"
+                value={values.tiles}
+                onChange={handleChange}
               />
             </SettingsFormField>
 
