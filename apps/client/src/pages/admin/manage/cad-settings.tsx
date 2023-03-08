@@ -46,6 +46,10 @@ const Tabs = {
         .RawWebhooksTab,
     { ssr: false },
   ),
+  LiveMapTab: dynamic(
+    async () => (await import("components/admin/manage/cad-settings/live-map-tab")).LiveMapTab,
+    { ssr: false },
+  ),
 };
 
 export enum SettingsTabs {
@@ -53,6 +57,7 @@ export enum SettingsTabs {
   Features = "FEATURES",
   MiscSettings = "MISC_SETTINGS",
   AutoSetProperties = "AUTO_SET_PROPERTIES",
+  LiveMap = "LIVE_MAP",
   APIToken = "API_TOKEN",
   DiscordRoles = "DISCORD_ROLES",
   DiscordWebhooks = "DISCORD_WEBHOOKS",
@@ -67,6 +72,7 @@ export default function CadSettings() {
     { name: t(SettingsTabs.Features), value: SettingsTabs.Features },
     { name: t(SettingsTabs.MiscSettings), value: SettingsTabs.MiscSettings },
     { name: t(SettingsTabs.AutoSetProperties), value: SettingsTabs.AutoSetProperties },
+    { name: t(SettingsTabs.LiveMap), value: SettingsTabs.LiveMap },
     { name: t(SettingsTabs.APIToken), value: SettingsTabs.APIToken },
     { name: t(SettingsTabs.DiscordRoles), value: SettingsTabs.DiscordRoles },
     { name: t(SettingsTabs.DiscordWebhooks), value: SettingsTabs.DiscordWebhooks },
@@ -83,6 +89,7 @@ export default function CadSettings() {
         <Tabs.CADFeaturesTab />
         <Tabs.MiscFeatures />
         <Tabs.AutoSetUserPropertiesTab />
+        <Tabs.LiveMapTab />
         <Tabs.ApiTokenTab />
         <Tabs.DiscordRolesTab />
         <Tabs.DiscordWebhooksTab />

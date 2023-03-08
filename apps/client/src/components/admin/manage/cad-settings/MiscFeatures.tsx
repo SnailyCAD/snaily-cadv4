@@ -16,8 +16,6 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { InactivityTimeoutSection } from "./misc-features/inactivity-timeout-section";
 import { LicenseNumbersSection } from "./misc-features/license-number-section";
 import { TemplateSection } from "./misc-features/template-section";
-import Link from "next/link";
-import { BoxArrowUpRight } from "react-bootstrap-icons";
 
 export function MiscFeatures() {
   const [headerId, setHeaderId] = React.useState<(File | string) | null>(null);
@@ -181,32 +179,6 @@ export function MiscFeatures() {
                   name="cadOGDescription"
                   value={values.cadOGDescription}
                   onChange={handleChange}
-                />
-              </SettingsFormField>
-
-              <SettingsFormField
-                description={
-                  <span>
-                    This URL will communicate to the live_map resource in your FiveM server.{" "}
-                    <Link
-                      className="mt-1 underline inline-flex items-center gap-1 text-neutral-700 dark:text-gray-200"
-                      target="_blank"
-                      href="https://docs.snailycad.org/docs/fivem-integrations/live-map"
-                    >
-                      Learn more
-                      <BoxArrowUpRight className="inline-block" />
-                    </Link>
-                  </span>
-                }
-                errorMessage={errors.liveMapURL}
-                label="Live Map URL"
-              >
-                <Input
-                  type="url"
-                  name="liveMapURL"
-                  value={values.liveMapURL}
-                  onChange={handleChange}
-                  placeholder="http://my-host:my-port"
                 />
               </SettingsFormField>
             </section>
