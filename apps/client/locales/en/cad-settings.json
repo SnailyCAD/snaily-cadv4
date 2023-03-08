@@ -71,6 +71,10 @@
     "citizenRecordsWebhookURL": "Citizen Records Webhook URL",
     "warrantsWebhookURL": "Warrants Webhook URL"
   },
+  "LiveMapTab": {
+    "liveMapSettings": "Live Map Settings",
+    "liveMapSettingsInfo": "Configure the live map URL and map tiles."
+  },
   "ApiTokenTab": {
     "apiToken": "API Token",
     "publicAPIAccess": "Public API Access",
