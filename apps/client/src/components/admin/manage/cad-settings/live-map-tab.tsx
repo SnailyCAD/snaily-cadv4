@@ -136,6 +136,14 @@ export function LiveMapTab() {
                       {idx === TILE_NAMES.length - 1 ? "" : ", "}
                     </>
                   ))}
+                  <Link
+                    className="flex mt-3 underline items-center gap-1 text-neutral-700 dark:text-gray-200"
+                    target="_blank"
+                    href="https://docs.snailycad.org/docs/fivem-integrations/live-map/how-to-set-custom-map-files"
+                  >
+                    Learn more
+                    <BoxArrowUpRight className="inline-block" />
+                  </Link>
                 </span>
               }
               errorMessage={errors.tiles}
