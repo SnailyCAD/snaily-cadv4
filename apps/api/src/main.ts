@@ -78,10 +78,12 @@ void bootstrap();
 
 process
   .on("unhandledRejection", (error) => {
+    console.error(error);
     console.error(`uncaughtException captured: ${error}`);
     Sentry.captureException(error);
   })
   .on("uncaughtException", (error) => {
+    console.error(error);
     console.error(`uncaughtException captured: ${error}`);
     Sentry.captureException(error);
   });
