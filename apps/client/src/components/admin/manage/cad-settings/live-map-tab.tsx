@@ -6,9 +6,11 @@ import { useTranslations } from "use-intl";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { toastMessage } from "lib/toastMessage";
-import type { PutCADApiTokenData } from "@snailycad/types/api";
+import type { PutCADMiscSettingsData } from "@snailycad/types/api";
 import Link from "next/link";
 import { BoxArrowUpRight } from "react-bootstrap-icons";
+import { handleValidate } from "lib/handleValidate";
+import { LIVE_MAP_SETTINGS } from "@snailycad/schemas";
 
 const TILE_NAMES = [
   "minimap_sea_0_0",
@@ -31,39 +33,71 @@ export function LiveMapTab() {
   ) {
     if (!cad) return;
 
-    const { json } = await execute<PutCADApiTokenData>({
-      path: "/admin/manage/cad-settings/api-token",
+    if (values.tiles) {
+      const fileNames = Array.from(values.tiles).map((file) => file.name.split(".")[0]);
+      const missing = TILE_NAMES.filter((name) => !fileNames.includes(name));
+
+      if (missing.length > 0) {
+        helpers.setErrors({
+          tiles: `Missing files: ${missing.join(", ")}`,
+        });
+      }
+
+      const formData = new FormData();
+      const tiles = Array.from(values.tiles);
+
+      for (const tile of tiles) {
+        const [name] = tile.name.split(".") as [string, string];
+        formData.append("tiles", tile, name);
+      }
+
+      toastMessage({
+        message:
+          "Uploading and processing map tiles. This may take a few minutes. Do not close this page.",
+        title: "Processing Tiles",
+        icon: "info",
+      });
+
+      await execute<PutCADMiscSettingsData>({
+        path: "/admin/manage/cad-settings/live-map/tiles",
+        method: "PUT",
+        data: formData,
+        headers: { "content-type": "multipart/form-data" },
+      });
+    }
+
+    const { json } = await execute<PutCADMiscSettingsData>({
+      path: "/admin/manage/cad-settings/live-map",
       method: "PUT",
       data: values,
     });
 
-    setCad({ ...cad, apiTokenId: json?.id ?? null, apiToken: json });
-    toastMessage({
-      icon: "success",
-      title: common("success"),
-      message: common("savedSettingsSuccess"),
-    });
+    if (json?.id) {
+      setCad({ ...cad, miscCadSettings: { ...cad.miscCadSettings, ...json } });
 
-    if (json) {
-      helpers.setFieldValue("token", json.token);
+      toastMessage({
+        icon: "success",
+        message: "Successfully updated live map settings.",
+      });
     }
   }
 
+  const validate = handleValidate(LIVE_MAP_SETTINGS);
   const INITIAL_VALUES = {
     liveMapURL: cad?.miscCadSettings?.liveMapURL ?? "",
-    tiles: undefined,
+    tiles: undefined as FileList | undefined,
   };
 
   return (
-    <TabsContent aria-label={t("liveMap")} value={SettingsTabs.LiveMap}>
+    <TabsContent aria-label={t("liveMapSettings")} value={SettingsTabs.LiveMap}>
       <h2 className="mt-2 text-2xl font-semibold">{t("liveMapSettings")}</h2>
 
       <p className="my-3 text-neutral-700 dark:text-gray-400 max-w-2xl">
         {t("liveMapSettingsInfo")}
       </p>
 
-      <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, errors, values }) => (
+      <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
+        {({ handleChange, setFieldValue, errors, values }) => (
           <Form className="mt-3 space-y-5">
             <SettingsFormField
               description={
@@ -105,14 +139,13 @@ export function LiveMapTab() {
                 </span>
               }
               errorMessage={errors.tiles}
-              label={t("mapTiles")}
+              label="Map Tiles"
             >
               <Input
                 multiple
                 type="file"
                 name="tiles"
-                value={values.tiles}
-                onChange={handleChange}
+                onChange={(e) => setFieldValue("tiles", e.target.files ?? [])}
               />
             </SettingsFormField>
 

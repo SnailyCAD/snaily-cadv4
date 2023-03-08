@@ -15,6 +15,10 @@ export const CAD_SETTINGS_SCHEMA = z.object({
   image: z.any().nullish(),
 });
 
+export const LIVE_MAP_SETTINGS = z.object({
+  liveMapURL: z.string().nullable(),
+});
+
 export const API_TOKEN_SCHEMA = z.object({
   enabled: z.boolean(),
   token: z.string().nullish(),
@@ -34,7 +38,6 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
   pairedUnitTemplate: z.string().max(255).nullable(),
   callsignTemplate: z.string(),
   caseNumberTemplate: z.string().nullish(),
-  liveMapURL: z.string().nullable(),
   maxOfficersPerUser: z.number().nullable(),
   authScreenBgImageId: z.any().or(z.string()).optional(),
   authScreenHeaderImageId: z.any().or(z.string()).optional(),
