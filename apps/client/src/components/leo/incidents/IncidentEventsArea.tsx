@@ -1,4 +1,4 @@
-import type { LeoIncident } from "@snailycad/types";
+import type { EmsFdIncident, LeoIncident } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import compareDesc from "date-fns/compareDesc";
@@ -10,10 +10,10 @@ import type { PostIncidentEventsData, PutIncidentEventByIdData } from "@snailyca
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 interface Props {
-  incident: LeoIncident;
+  incident: LeoIncident | EmsFdIncident;
   disabled?: boolean;
 
-  handleStateUpdate?(incident: LeoIncident): void;
+  handleStateUpdate?(incident: LeoIncident | EmsFdIncident): void;
 }
 
 export function IncidentEventsArea({ disabled, incident, handleStateUpdate }: Props) {

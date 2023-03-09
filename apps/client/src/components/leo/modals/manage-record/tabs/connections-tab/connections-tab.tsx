@@ -92,7 +92,7 @@ export function ConnectionsTab({
                 {t("viewIncident")}
               </Button>
 
-              {incident ? <ManageIncidentModal incident={incident} /> : null}
+              {incident ? <ManageIncidentModal type="leo" incident={incident} /> : null}
             </>
           ) : null}
         </div>

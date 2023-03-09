@@ -25,7 +25,11 @@ export enum Permissions {
   ManageAwardsAndQualifications = "ManageAwardsAndQualifications",
 
   Dispatch = "Dispatch",
+
+  // ems-fd
   EmsFd = "EmsFd",
+  ViewEmsFdIncidents = "ViewEmsFdIncidents",
+  ManageEmsFdIncidents = "ManageEmsFdIncidents",
 
   //  citizen related
   ViewTaxiCalls = "ViewTaxiCalls",

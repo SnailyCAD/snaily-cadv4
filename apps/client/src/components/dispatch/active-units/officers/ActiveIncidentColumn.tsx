@@ -52,7 +52,11 @@ export function ActiveIncidentColumn({ incident, isDispatch }: Props) {
       </Button>
 
       {tempIncident ? (
-        <ManageIncidentModal incident={tempIncident} onClose={() => setTempIncident(null)} />
+        <ManageIncidentModal
+          type="leo"
+          incident={tempIncident}
+          onClose={() => setTempIncident(null)}
+        />
       ) : null}
     </>
   );

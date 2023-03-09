@@ -302,6 +302,13 @@ export type LeoIncident = Prisma.LeoIncident & {
   unitsInvolved: IncidentInvolvedUnit[];
 };
 
+export type EmsFdIncident = Prisma.EmsFdIncident & {
+  creator?: EmsFdDeputy | null;
+  situationCode: StatusValue | null;
+  events?: IncidentEvent[];
+  unitsInvolved: IncidentInvolvedUnit[];
+};
+
 export type IncidentEvent = Prisma.IncidentEvent;
 
 export type CombinedLeoUnit = Prisma.CombinedLeoUnit & {

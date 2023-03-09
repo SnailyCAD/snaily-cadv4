@@ -8,29 +8,31 @@ import { useTranslations } from "use-intl";
 import { useModal } from "state/modalState";
 import { Button } from "@snailycad/ui";
 import { ModalIds } from "types/ModalIds";
-import { useLeoState } from "state/leo-state";
 import { Title } from "components/shared/Title";
 import { usePermission, Permissions } from "hooks/usePermission";
-import type { GetActiveOfficerData, GetDispatchData, GetIncidentsData } from "@snailycad/types/api";
+import type { GetDispatchData, GetEmsFdActiveDeputy, GetIncidentsData } from "@snailycad/types/api";
+
+import { useEmsFdState } from "state/ems-fd-state";
 import { IncidentsTable } from "components/leo/incidents/incidents-table";
 
 interface Props extends GetDispatchData {
-  incidents: GetIncidentsData<"leo">;
-  activeOfficer: GetActiveOfficerData | null;
+  incidents: GetIncidentsData<"ems-fd">;
+  activeDeputy: GetEmsFdActiveDeputy | null;
 }
 
-export default function LeoIncidents({ activeOfficer, incidents: initialData }: Props) {
+export default function EmsFdIncidents({ activeDeputy, incidents: initialData }: Props) {
   const t = useTranslations("Leo");
   const { openModal } = useModal();
-  const setActiveOfficer = useLeoState((state) => state.setActiveOfficer);
+  const setActiveDeputy = useEmsFdState((state) => state.setActiveDeputy);
+
   const { hasPermissions } = usePermission();
 
-  const isOfficerOnDuty =
-    (activeOfficer && activeOfficer.status?.shouldDo !== "SET_OFF_DUTY") ?? false;
+  const isDeputyOnDuty =
+    (activeDeputy && activeDeputy.status?.shouldDo !== "SET_OFF_DUTY") ?? false;
 
   React.useEffect(() => {
-    setActiveOfficer(activeOfficer);
-  }, [setActiveOfficer, activeOfficer]);
+    setActiveDeputy(activeDeputy);
+  }, [setActiveDeputy, activeDeputy]);
 
   return (
     <Layout
@@ -45,8 +47,8 @@ export default function LeoIncidents({ activeOfficer, incidents: initialData }: 
 
         {hasPermissions([Permissions.ManageIncidents], true) ? (
           <Button
-            title={!isOfficerOnDuty ? "You must have an active officer." : ""}
-            disabled={!isOfficerOnDuty}
+            title={!isDeputyOnDuty ? "You must have an active ems/fd deputy." : ""}
+            disabled={!isDeputyOnDuty}
             onPress={() => openModal(ModalIds.ManageIncident)}
           >
             {t("createIncident")}
@@ -54,16 +56,16 @@ export default function LeoIncidents({ activeOfficer, incidents: initialData }: 
         ) : null}
       </header>
 
-      <IncidentsTable initialData={initialData} isUnitOnDuty={isOfficerOnDuty} type="leo" />
+      <IncidentsTable initialData={initialData} isUnitOnDuty={isDeputyOnDuty} type="ems-fd" />
     </Layout>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const user = await getSessionUser(req);
-  const [incidents, activeOfficer, values] = await requestAll(req, [
-    ["/incidents", { incidents: [], totalCount: 0 }],
-    ["/leo/active-officer", null],
+  const [incidents, activeDeputy, values] = await requestAll(req, [
+    ["/ems-fd/incidents", { incidents: [], totalCount: 0 }],
+    ["/ems-fd/active-deputy", null],
     ["/admin/values/codes_10", []],
   ]);
 
@@ -71,7 +73,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
     props: {
       session: user,
       incidents,
-      activeOfficer,
+      activeDeputy,
       values,
       messages: {
         ...(await getTranslations(["leo", "calls", "common"], user?.locale ?? locale)),
