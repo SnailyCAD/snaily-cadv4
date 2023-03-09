@@ -15,26 +15,26 @@ import { dataToSlate, Editor } from "components/editor/editor";
 import { IncidentEventsArea } from "./IncidentEventsArea";
 import { classNames } from "lib/classNames";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
-import { LeoIncident, StatusValueType, ValueType } from "@snailycad/types";
+import { EmsFdIncident, LeoIncident, StatusValueType, ValueType } from "@snailycad/types";
 import { useValues } from "context/ValuesContext";
 import type { PostIncidentsData, PutIncidentByIdData } from "@snailycad/types/api";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
 import { InvolvedUnitsTable } from "./involved-units/involved-units-table";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
 
-interface Props {
-  incident?: LeoIncident | null;
+interface Props<T extends LeoIncident | EmsFdIncident> {
+  incident?: T | null;
   onClose?(): void;
-  onCreate?(incident: LeoIncident & { openModalAfterCreation?: boolean }): void;
-  onUpdate?(oldIncident: LeoIncident, incident: LeoIncident): void;
+  onCreate?(incident: T & { openModalAfterCreation?: boolean }): void;
+  onUpdate?(oldIncident: T, incident: T): void;
 }
 
-export function ManageIncidentModal({
+export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
   onClose,
   onCreate,
   onUpdate,
   incident: tempIncident,
-}: Props) {
+}: Props<T>) {
   const { activeIncidents, setActiveIncidents } = useActiveIncidents();
   const foundIncident = activeIncidents.find((v) => v.id === tempIncident?.id);
   const incident = foundIncident ?? tempIncident ?? null;
@@ -47,9 +47,12 @@ export function ManageIncidentModal({
   const { state, execute } = useFetch();
 
   const isDispatch = router.pathname.includes("/dispatch");
+  const isEmsFdIncidents = router.pathname === "/ems-fd/incidents";
   const isLeoIncidents = router.pathname === "/officer/incidents";
-  const areEventsReadonly = !isDispatch || isLeoIncidents;
-  const areFieldsDisabled = !isDispatch && !isLeoIncidents;
+  const areIncidentsNonDispatch = isEmsFdIncidents || isLeoIncidents;
+
+  const areEventsReadonly = !isDispatch || areIncidentsNonDispatch;
+  const areFieldsDisabled = !isDispatch && !areIncidentsNonDispatch;
 
   function handleAddUpdateCallEvent(incident: LeoIncident) {
     setActiveIncidents(activeIncidents.map((inc) => (inc.id === incident.id ? incident : inc)));
@@ -64,30 +67,36 @@ export function ManageIncidentModal({
     let id = "";
 
     if (incident) {
-      const { json, error } = await execute<PutIncidentByIdData>({
-        path: `/incidents/${incident.id}`,
+      const { json, error } = await execute<
+        PutIncidentByIdData<T extends EmsFdIncident ? "ems-fd" : "leo">
+      >({
+        path: isLeoIncidents ? `/incidents/${incident.id}` : `/ems-fd/incidents/${incident.id}`,
         method: "PUT",
         data: values,
       });
 
       if (json && !error) {
         id = json.id;
-        onUpdate?.(incident, json);
+        onUpdate?.(incident as T, json as T);
       }
     } else {
-      const { json, error } = await execute<PostIncidentsData>({
-        path: "/incidents",
+      const { json, error } = await execute<
+        PostIncidentsData<T extends EmsFdIncident ? "ems-fd" : "leo">
+      >({
+        path: isLeoIncidents ? "/incidents" : "/ems-fd/incidents",
         method: "POST",
         data: values,
       });
 
       if (json && !error) {
         id = json.id;
-        onCreate?.({ ...json, openModalAfterCreation: values.openModalAfterCreation });
+        onCreate?.({ ...(json as T), openModalAfterCreation: values.openModalAfterCreation });
       }
     }
 
-    if (id && !values.openModalAfterCreation) {
+    if (id && values.openModalAfterCreation && isDispatch) {
+      closeModal(ModalIds.ManageIncident);
+    } else if (id) {
       closeModal(ModalIds.ManageIncident);
     }
   }

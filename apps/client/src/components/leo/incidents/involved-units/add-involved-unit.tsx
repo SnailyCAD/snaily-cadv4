@@ -9,18 +9,27 @@ import { makeUnitName } from "lib/utils";
 import { isUnitCombined } from "@snailycad/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import type { PutIncidentByIdData } from "@snailycad/types/api";
-import type { CombinedLeoUnit, EmsFdDeputy, LeoIncident, Officer } from "@snailycad/types";
+import type {
+  CombinedLeoUnit,
+  EmsFdDeputy,
+  EmsFdIncident,
+  LeoIncident,
+  Officer,
+} from "@snailycad/types";
 import { shallow } from "zustand/shallow";
 import { useDispatchState } from "state/dispatch/dispatch-state";
 import { useImageUrl } from "hooks/useImageUrl";
 import { ImageWrapper } from "components/shared/image-wrapper";
 
-interface Props {
+interface Props<T extends LeoIncident | EmsFdIncident> {
   onClose?(): void;
-  incident: LeoIncident;
+  incident: T;
 }
 
-export function AddInvolvedUnitToIncidentModal({ onClose, incident }: Props) {
+export function AddInvolvedUnitToIncidentModal<T extends LeoIncident | EmsFdIncident>({
+  onClose,
+  incident,
+}: Props<T>) {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
@@ -48,14 +57,16 @@ export function AddInvolvedUnitToIncidentModal({ onClose, incident }: Props) {
       (v) => v.officerId || v.emsFdDeputyId || v.combinedLeoId || v.combinedEmsFdId,
     );
 
-    const { json } = await execute<PutIncidentByIdData>({
-      path: `/incidents/${incident.id}`,
-      method: "PUT",
-      data: {
-        ...incident,
-        unitsInvolved: [...newUnitsInvolved, values.unit],
+    const { json } = await execute<PutIncidentByIdData<T extends EmsFdIncident ? "ems-fd" : "leo">>(
+      {
+        path: `/incidents/${incident.id}`,
+        method: "PUT",
+        data: {
+          ...incident,
+          unitsInvolved: [...newUnitsInvolved, values.unit],
+        },
       },
-    });
+    );
 
     if (json.id) {
       handleClose();

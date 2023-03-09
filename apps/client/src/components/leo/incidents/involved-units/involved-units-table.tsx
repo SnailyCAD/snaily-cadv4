@@ -4,7 +4,7 @@ import { makeUnitName } from "lib/utils";
 import useFetch from "lib/useFetch";
 import type { PutIncidentByIdData } from "@snailycad/types/api";
 import { useAuth } from "context/AuthContext";
-import { IncidentInvolvedUnit, LeoIncident, StatusViewMode } from "@snailycad/types";
+import { EmsFdIncident, IncidentInvolvedUnit, LeoIncident, StatusViewMode } from "@snailycad/types";
 import { useTranslations } from "next-intl";
 import { Button, Loader } from "@snailycad/ui";
 import { useModal } from "state/modalState";
@@ -20,12 +20,15 @@ const AddInvolvedUnitToIncidentModal = dynamic(
   { ssr: false },
 );
 
-interface Props {
+interface Props<T extends LeoIncident | EmsFdIncident> {
   isDisabled: boolean;
-  incident: LeoIncident;
+  incident: T;
 }
 
-export function InvolvedUnitsTable({ isDisabled, incident }: Props) {
+export function InvolvedUnitsTable<T extends LeoIncident | EmsFdIncident>({
+  isDisabled,
+  incident,
+}: Props<T>) {
   const unitsInvolved = incident.unitsInvolved;
   const { generateCallsign } = useGenerateCallsign();
   const tableState = useTableState();
@@ -46,14 +49,16 @@ export function InvolvedUnitsTable({ isDisabled, incident }: Props) {
       .filter((v) => v.id !== unit.id)
       .map((v) => v.officerId || v.emsFdDeputyId || v.combinedLeoId || v.combinedEmsFdId);
 
-    const { json } = await execute<PutIncidentByIdData>({
-      path: `/incidents/${incident.id}`,
-      method: "PUT",
-      data: {
-        ...incident,
-        unitsInvolved: newAssignedUnits,
+    const { json } = await execute<PutIncidentByIdData<T extends EmsFdIncident ? "ems-fd" : "leo">>(
+      {
+        path: `/incidents/${incident.id}`,
+        method: "PUT",
+        data: {
+          ...incident,
+          unitsInvolved: newAssignedUnits,
+        },
       },
-    });
+    );
 
     if (json.id) {
       setActiveIncidents(
