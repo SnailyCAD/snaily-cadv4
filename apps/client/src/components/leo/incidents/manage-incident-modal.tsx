@@ -27,6 +27,7 @@ interface Props<T extends LeoIncident | EmsFdIncident> {
   onClose?(): void;
   onCreate?(incident: T & { openModalAfterCreation?: boolean }): void;
   onUpdate?(oldIncident: T, incident: T): void;
+  type: "ems-fd" | "leo";
 }
 
 export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
@@ -34,6 +35,7 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
   onCreate,
   onUpdate,
   incident: tempIncident,
+  type,
 }: Props<T>) {
   const { activeIncidents, setActiveIncidents } = useActiveIncidents();
   const foundIncident = activeIncidents.find((v) => v.id === tempIncident?.id);
@@ -186,7 +188,11 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
                 </FormRow>
 
                 {incident ? (
-                  <InvolvedUnitsTable isDisabled={areFieldsDisabled} incident={incident} />
+                  <InvolvedUnitsTable
+                    type={type}
+                    isDisabled={areFieldsDisabled}
+                    incident={incident}
+                  />
                 ) : null}
               </div>
 

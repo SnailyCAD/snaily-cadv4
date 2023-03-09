@@ -72,7 +72,7 @@ export class IncidentController {
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("includeAll", Boolean) includeAll = false,
     @QueryParams("assignedUnit", String) assignedUnit?: string,
-  ): Promise<APITypes.GetIncidentsData> {
+  ): Promise<APITypes.GetIncidentsData<"leo">> {
     const isActiveObj =
       activeType === "active"
         ? { isActive: true }
@@ -113,7 +113,9 @@ export class IncidentController {
     permissions: [Permissions.Dispatch, Permissions.ViewIncidents, Permissions.ManageIncidents],
     fallback: (u) => u.isDispatch || u.isLeo,
   })
-  async getIncidentById(@PathParams("id") id: string): Promise<APITypes.GetIncidentByIdData> {
+  async getIncidentById(
+    @PathParams("id") id: string,
+  ): Promise<APITypes.GetIncidentByIdData<"leo">> {
     const incident = await prisma.leoIncident.findUnique({
       where: { id },
       include: incidentInclude,
@@ -132,7 +134,7 @@ export class IncidentController {
     @BodyParams() body: unknown,
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
-  ): Promise<APITypes.PostIncidentsData> {
+  ): Promise<APITypes.PostIncidentsData<"leo">> {
     const data = validateSchema(LEO_INCIDENT_SCHEMA, body);
     const officer = getFirstOfficerFromActiveOfficer({ allowDispatch: true, activeOfficer });
     const maxAssignmentsToIncidents = cad.miscCadSettings.maxAssignmentsToIncidents ?? Infinity;
@@ -160,6 +162,7 @@ export class IncidentController {
         incident,
         maxAssignmentsToIncidents,
         unitIds,
+        type: "leo",
       });
     }
 
@@ -192,7 +195,7 @@ export class IncidentController {
     @PathParams("incidentId") incidentId: string,
     @BodyParams("unit") rawUnitId: string | null,
     @QueryParams("force", Boolean) force = false,
-  ): Promise<APITypes.PutAssignUnassignIncidentsData> {
+  ): Promise<APITypes.PutAssignUnassignIncidentsData<"leo">> {
     if (!rawUnitId) {
       throw new BadRequest("unitIsRequired");
     }
@@ -294,7 +297,7 @@ export class IncidentController {
     @BodyParams() body: unknown,
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
     @PathParams("id") incidentId: string,
-  ): Promise<APITypes.PutIncidentByIdData> {
+  ): Promise<APITypes.PutIncidentByIdData<"leo">> {
     const data = validateSchema(LEO_INCIDENT_SCHEMA, body);
     const maxAssignmentsToIncidents = cad.miscCadSettings.maxAssignmentsToIncidents ?? Infinity;
 
@@ -327,6 +330,7 @@ export class IncidentController {
         incident,
         maxAssignmentsToIncidents,
         unitIds,
+        type: "leo",
       });
     }
 

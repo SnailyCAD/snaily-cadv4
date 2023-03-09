@@ -98,6 +98,8 @@ export function IncidentsTable<T extends EmsFdIncident | LeoIncident>(
       : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
   }
 
+  console.log({ type: props.type });
+
   return (
     <>
       {asyncTable.items.length <= 0 ? (
@@ -181,11 +183,12 @@ export function IncidentsTable<T extends EmsFdIncident | LeoIncident>(
       {props.isUnitOnDuty &&
       hasPermissions([Permissions.ManageIncidents, Permissions.ManageEmsFdIncidents], true) ? (
         <ManageIncidentModal
+          type={props.type}
           onCreate={(incident) => {
-            asyncTable.append(incident);
+            asyncTable.append(incident as T);
           }}
           onUpdate={(oldIncident, incident) => {
-            asyncTable.update(oldIncident.id, { ...oldIncident, ...incident });
+            asyncTable.update(oldIncident.id, { ...oldIncident, ...(incident as T) });
           }}
           onClose={() => incidentState.setTempId(null)}
           incident={tempIncident}

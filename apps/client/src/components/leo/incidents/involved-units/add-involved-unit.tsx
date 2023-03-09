@@ -24,10 +24,12 @@ import { ImageWrapper } from "components/shared/image-wrapper";
 interface Props<T extends LeoIncident | EmsFdIncident> {
   onClose?(): void;
   incident: T;
+  type: "ems-fd" | "leo";
 }
 
 export function AddInvolvedUnitToIncidentModal<T extends LeoIncident | EmsFdIncident>({
   onClose,
+  type,
   incident,
 }: Props<T>) {
   const { isOpen, closeModal } = useModal();
@@ -59,7 +61,7 @@ export function AddInvolvedUnitToIncidentModal<T extends LeoIncident | EmsFdInci
 
     const { json } = await execute<PutIncidentByIdData<T extends EmsFdIncident ? "ems-fd" : "leo">>(
       {
-        path: `/incidents/${incident.id}`,
+        path: type === "leo" ? `/incidents/${incident.id}` : `/ems-fd/incidents/${incident.id}`,
         method: "PUT",
         data: {
           ...incident,

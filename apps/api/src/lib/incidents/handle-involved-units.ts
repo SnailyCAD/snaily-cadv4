@@ -1,4 +1,4 @@
-import { IncidentInvolvedUnit, LeoIncident, ShouldDoType } from "@prisma/client";
+import { EmsFdIncident, IncidentInvolvedUnit, LeoIncident, ShouldDoType } from "@prisma/client";
 import { findUnit } from "lib/leo/findUnit";
 import { prisma } from "lib/data/prisma";
 import type { Socket } from "services/socket-service";
@@ -6,7 +6,8 @@ import { manyToManyHelper } from "lib/data/many-to-many";
 import { getNextIncidentId } from "./get-next-incident-id";
 
 interface Options {
-  incident: LeoIncident & { unitsInvolved: IncidentInvolvedUnit[] };
+  type: "ems-fd" | "leo";
+  incident: (LeoIncident | EmsFdIncident) & { unitsInvolved: IncidentInvolvedUnit[] };
   unitIds: string[];
   socket?: Socket;
   maxAssignmentsToIncidents: number;
@@ -29,6 +30,7 @@ export async function assignUnitsInvolvedToIncident(options: Options) {
           unitId: deletionId,
           incident: options.incident,
           maxAssignmentsToIncidents: options.maxAssignmentsToIncidents,
+          type: options.type,
         });
 
         if (!incidentData) return;
@@ -40,6 +42,7 @@ export async function assignUnitsInvolvedToIncident(options: Options) {
           unitId: creationId,
           incident: options.incident,
           maxAssignmentsToIncidents: options.maxAssignmentsToIncidents,
+          type: options.type,
         });
 
         if (!incidentData) return;
@@ -104,11 +107,14 @@ export async function handleDeleteInvolvedUnit(options: handleCreateInvolvedUnit
 
 interface handleCreateInvolvedUnitOptions {
   unitId: string;
-  incident: LeoIncident;
+  incident: LeoIncident | EmsFdIncident;
   maxAssignmentsToIncidents: number;
+  type: "ems-fd" | "leo";
 }
 
 async function handleCreateInvolvedUnit(options: handleCreateInvolvedUnitOptions) {
+  const prismaName = options.type === "leo" ? "leoIncident" : "emsFdIncident";
+
   const { unit, type } = await findUnit(options.unitId, {
     NOT: { status: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
   });
@@ -165,7 +171,8 @@ async function handleCreateInvolvedUnit(options: handleCreateInvolvedUnitOptions
   });
 
   return {
-    incident: prisma.leoIncident.update({
+    // @ts-expect-error they have the same properties for updating
+    incident: prisma[prismaName].update({
       where: { id: options.incident.id },
       data: { unitsInvolved: { connect: { id: involvedUnit.id } } },
     }),

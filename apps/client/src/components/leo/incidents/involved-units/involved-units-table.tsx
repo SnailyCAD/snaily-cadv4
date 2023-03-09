@@ -23,11 +23,13 @@ const AddInvolvedUnitToIncidentModal = dynamic(
 interface Props<T extends LeoIncident | EmsFdIncident> {
   isDisabled: boolean;
   incident: T;
+  type: "ems-fd" | "leo";
 }
 
 export function InvolvedUnitsTable<T extends LeoIncident | EmsFdIncident>({
   isDisabled,
   incident,
+  type,
 }: Props<T>) {
   const unitsInvolved = incident.unitsInvolved;
   const { generateCallsign } = useGenerateCallsign();
@@ -51,7 +53,7 @@ export function InvolvedUnitsTable<T extends LeoIncident | EmsFdIncident>({
 
     const { json } = await execute<PutIncidentByIdData<T extends EmsFdIncident ? "ems-fd" : "leo">>(
       {
-        path: `/incidents/${incident.id}`,
+        path: type === "leo" ? `/incidents/${incident.id}` : `/ems-fd/incidents/${incident.id}`,
         method: "PUT",
         data: {
           ...incident,
@@ -141,7 +143,7 @@ export function InvolvedUnitsTable<T extends LeoIncident | EmsFdIncident>({
         />
       </div>
 
-      {isDisabled ? null : <AddInvolvedUnitToIncidentModal incident={incident} />}
+      {isDisabled ? null : <AddInvolvedUnitToIncidentModal type={type} incident={incident} />}
     </div>
   );
 }
