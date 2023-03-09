@@ -34,7 +34,7 @@ import { useCall911State } from "state/dispatch/call-911-state";
 
 interface Props extends GetDispatchData {
   data: Get911CallsData;
-  incidents: GetIncidentsData["incidents"];
+  incidents: GetIncidentsData<"leo">["incidents"];
 }
 
 export default function CallHistory({ data, incidents }: Props) {

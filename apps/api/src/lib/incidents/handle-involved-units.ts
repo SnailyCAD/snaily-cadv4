@@ -67,9 +67,10 @@ export async function handleDeleteInvolvedUnit(options: handleCreateInvolvedUnit
     combinedEmsFdId: "combinedEmsFdUnit",
   } as const;
 
+  const incidentKey = options.type === "leo" ? "incidentId" : "emsFdIncidentId";
   const involvedUnit = await prisma.incidentInvolvedUnit.findFirst({
     where: {
-      incidentId: options.incident.id,
+      [incidentKey]: options.incident.id,
       OR: [
         { officerId: options.unitId },
         { emsFdDeputyId: options.unitId },
@@ -92,11 +93,14 @@ export async function handleDeleteInvolvedUnit(options: handleCreateInvolvedUnit
       await prisma[prismaName].update({
         where: { id: unitId },
         data: {
-          activeIncidentId: await getNextIncidentId({
-            incidentId: options.incident.id,
-            type: "unassign",
-            unit: { id: options.unitId },
-          }),
+          activeIncidentId:
+            options.type === "leo"
+              ? await getNextIncidentId({
+                  incidentId: options.incident.id,
+                  type: "unassign",
+                  unit: { id: options.unitId },
+                })
+              : undefined,
         },
       });
     }
@@ -149,11 +153,14 @@ async function handleCreateInvolvedUnit(options: handleCreateInvolvedUnitOptions
   } as const;
   const prismaModelName = prismaNames[type];
 
-  const nextActiveIncidentId = await getNextIncidentId({
-    incidentId: options.incident.id,
-    type: "assign",
-    unit,
-  });
+  const nextActiveIncidentId =
+    options.type === "leo"
+      ? await getNextIncidentId({
+          incidentId: options.incident.id,
+          type: "assign",
+          unit,
+        })
+      : undefined;
 
   // @ts-expect-error they have the same properties for updating
   await prisma[prismaModelName].update({
@@ -163,9 +170,10 @@ async function handleCreateInvolvedUnit(options: handleCreateInvolvedUnitOptions
     },
   });
 
+  const incidentKey = options.type === "leo" ? "incidentId" : "emsFdIncidentId";
   const involvedUnit = await prisma.incidentInvolvedUnit.create({
     data: {
-      incidentId: options.incident.id,
+      [incidentKey]: options.incident.id,
       [types[type]]: unit.id,
     },
   });

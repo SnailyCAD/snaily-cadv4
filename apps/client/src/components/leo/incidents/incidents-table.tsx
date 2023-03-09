@@ -47,7 +47,7 @@ export function IncidentsTable<T extends EmsFdIncident | LeoIncident>(
         data: json.incidents,
         totalCount: json.totalCount,
       }),
-      path: "/ems-fd/incidents",
+      path: props.type === "ems-fd" ? "/ems-fd/incidents" : "/incidents",
     },
   });
   const [tempIncident, incidentState] = useTemporaryItem(asyncTable.items);

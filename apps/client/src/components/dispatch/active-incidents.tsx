@@ -46,7 +46,7 @@ export function ActiveIncidents() {
     unitId: string,
     type: "assign" | "unassign",
   ) {
-    const { json } = await execute<PostIncidentsData>({
+    const { json } = await execute<PostIncidentsData<"leo">>({
       path: `/incidents/${type}/${incident.id}`,
       method: "POST",
       data: { unit: unitId },
@@ -66,7 +66,7 @@ export function ActiveIncidents() {
   async function handleDismissIncident() {
     if (!tempIncident) return;
 
-    const { json } = await execute<PutIncidentByIdData>({
+    const { json } = await execute<PutIncidentByIdData<"leo">>({
       path: `/incidents/${tempIncident.id}`,
       method: "PUT",
       data: {
@@ -199,11 +199,12 @@ export function ActiveIncidents() {
 
       {typeof tempIncident === "undefined" ? null : (
         <ManageIncidentModal
+          type="leo"
           onCreate={(incident) => {
-            setActiveIncidents([incident, ...activeIncidents]);
+            setActiveIncidents([incident as LeoIncident, ...activeIncidents]);
 
             if (incident.openModalAfterCreation) {
-              setTempIncident(incident);
+              setTempIncident(incident as LeoIncident);
               openModal(ModalIds.ManageIncident);
             } else {
               setTempIncident(undefined);
@@ -214,9 +215,9 @@ export function ActiveIncidents() {
               setActiveIncidents(
                 activeIncidents.map((v) => {
                   if (v.id === old.id) {
-                    return { ...v, ...incident };
+                    return { ...(v as LeoIncident), ...(incident as LeoIncident) };
                   }
-                  return v;
+                  return v as LeoIncident;
                 }),
               );
             } else {
