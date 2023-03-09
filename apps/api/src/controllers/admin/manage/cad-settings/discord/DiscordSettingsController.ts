@@ -46,7 +46,6 @@ export class DiscordSettingsController {
 
   @Get("/")
   async getGuildRoles(@Context("cad") cad: cad): Promise<APITypes.GetCADDiscordRolesData> {
-    console.log({ guildId });
 
     if (!guildId) {
       throw new BadRequest("mustSetBotTokenGuildId");

@@ -98,8 +98,6 @@ export function IncidentsTable<T extends EmsFdIncident | LeoIncident>(
       : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
   }
 
-  console.log({ type: props.type });
-
   return (
     <>
       {asyncTable.items.length <= 0 ? (
