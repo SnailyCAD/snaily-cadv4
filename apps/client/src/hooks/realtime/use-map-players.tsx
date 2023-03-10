@@ -40,14 +40,17 @@ export function useMapPlayers() {
 
       const availablePlayersArray = Array.from(options.map.values());
       const newPlayers = options.map;
+      const filteredPlayers = availablePlayersArray
+        .filter((v) => v.convertedSteamId || v.discordId)
+        .map((s) => ({
+          steamId: s.convertedSteamId,
+          discordId: s.discordId,
+        }));
 
       if (options.fetchMore) {
         const { json: rawJson } = await execute<GetDispatchPlayerBySteamIdData[]>({
           path: "/dispatch/players",
-          data: availablePlayersArray.map((s) => ({
-            steamId: s.convertedSteamId,
-            discordId: s.discordId,
-          })),
+          data: filteredPlayers,
           noToast: true,
           method: "POST",
         });

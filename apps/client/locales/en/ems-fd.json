@@ -21,6 +21,7 @@
     "emergencyVehicle": "Emergency Vehicle",
     "alert_deleteDeputy": "Are you sure you want to delete <span>{deputy}</span>? This action cannot be undone.",
     "assignedToCall#": "{activeVehicle}, respond to {location}",
-    "assignedToCall#WithType": "{activeVehicle}, respond to {location}, {callType}"
+    "assignedToCall#WithType": "{activeVehicle}, respond to {location}, {callType}",
+    "emsFdIncidents": "EMS/FD Incidents"
   }
 }

@@ -67,8 +67,6 @@ export class AdminManageBusinessesController {
       businessId,
     };
 
-    console.log({ businessId });
-
     const [totalCount, employees] = await prisma.$transaction([
       prisma.employee.count({ where }),
       prisma.employee.findMany({

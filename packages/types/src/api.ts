@@ -494,34 +494,42 @@ export type DeleteBusinessPostsData = boolean;
  * @method GET
  * @route /incidents
  */
-export interface GetIncidentsData {
+export interface GetIncidentsData<Type extends "ems-fd" | "leo"> {
   totalCount: number;
-  incidents: Types.LeoIncident[];
+  incidents: Type extends "ems-fd" ? Types.EmsFdIncident[] : Types.LeoIncident[];
 }
 
 /**
  * @method GET
  * @route /incidents/:id
  */
-export type GetIncidentByIdData = Types.LeoIncident[];
+export type GetIncidentByIdData<Type extends "ems-fd" | "leo"> = Type extends "ems-fd"
+  ? Types.EmsFdIncident[]
+  : Types.LeoIncident[];
 
 /**
  * @method POST
  * @route /incidents
  */
-export type PostIncidentsData = Types.LeoIncident;
+export type PostIncidentsData<Type extends "ems-fd" | "leo"> = Type extends "ems-fd"
+  ? Types.EmsFdIncident
+  : Types.LeoIncident;
 
 /**
  * @method PUT
  * @route /incidents/:type/:incidentId
  */
-export type PutAssignUnassignIncidentsData = Types.LeoIncident;
+export type PutAssignUnassignIncidentsData<Type extends "ems-fd" | "leo"> = Type extends "ems-fd"
+  ? Types.EmsFdIncident
+  : Types.LeoIncident;
 
 /**
  * @method PUT
  * @route /incidents/:id
  */
-export type PutIncidentByIdData = Types.LeoIncident;
+export type PutIncidentByIdData<Type extends "ems-fd" | "leo"> = Type extends "ems-fd"
+  ? Types.EmsFdIncident
+  : Types.LeoIncident;
 
 /**
  * @method DELETE

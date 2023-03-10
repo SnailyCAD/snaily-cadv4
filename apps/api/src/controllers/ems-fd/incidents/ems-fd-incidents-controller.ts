@@ -4,9 +4,8 @@ import { NotFound, InternalServerError, BadRequest } from "@tsed/exceptions";
 import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/is-auth";
-import { leoProperties, unitProperties, _leoProperties } from "lib/leo/activeOfficer";
+import { unitProperties, _leoProperties } from "lib/leo/activeOfficer";
 import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
-import { ActiveOfficer } from "middlewares/active-officer";
 import type { Officer, MiscCadSettings, CombinedLeoUnit } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { Socket } from "services/socket-service";
@@ -17,6 +16,7 @@ import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
 import type * as APITypes from "@snailycad/types/api";
 import { getNextIncidentId } from "lib/incidents/get-next-incident-id";
 import { assignUnitsInvolvedToIncident } from "lib/incidents/handle-involved-units";
+import { ActiveDeputy } from "middlewares/active-deputy";
 
 export const assignedUnitsInclude = {
   include: {
@@ -44,7 +44,7 @@ export const assignedUnitsInclude = {
 };
 
 export const incidentInclude = {
-  creator: { include: leoProperties },
+  creator: { include: unitProperties },
   events: true,
   situationCode: { include: { value: true } },
   unitsInvolved: assignedUnitsInclude,
@@ -52,7 +52,7 @@ export const incidentInclude = {
 
 type ActiveTypes = "active" | "inactive" | "all";
 
-@Controller("/incidents")
+@Controller("/ems-fd/incidents")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
 export class IncidentController {
@@ -62,9 +62,13 @@ export class IncidentController {
   }
 
   @Get("/")
-  @Description("Get all the created incidents")
+  @Description("Get all the created EMS/FD incidents")
   @UsePermissions({
-    permissions: [Permissions.Dispatch, Permissions.ViewIncidents, Permissions.ManageIncidents],
+    permissions: [
+      Permissions.Dispatch,
+      Permissions.ViewEmsFdIncidents,
+      Permissions.ManageEmsFdIncidents,
+    ],
     fallback: (u) => u.isDispatch || u.isLeo,
   })
   async getAllIncidents(
@@ -72,7 +76,7 @@ export class IncidentController {
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("includeAll", Boolean) includeAll = false,
     @QueryParams("assignedUnit", String) assignedUnit?: string,
-  ): Promise<APITypes.GetIncidentsData<"leo">> {
+  ): Promise<APITypes.GetIncidentsData<"ems-fd">> {
     const isActiveObj =
       activeType === "active"
         ? { isActive: true }
@@ -94,8 +98,8 @@ export class IncidentController {
     const where = { ...isActiveObj, ...assignedUnitsObj };
 
     const [totalCount, incidents] = await Promise.all([
-      prisma.leoIncident.count({ where, orderBy: { caseNumber: "desc" } }),
-      prisma.leoIncident.findMany({
+      prisma.emsFdIncident.count({ where, orderBy: { caseNumber: "desc" } }),
+      prisma.emsFdIncident.findMany({
         where,
         include: incidentInclude,
         orderBy: { caseNumber: "desc" },
@@ -108,15 +112,19 @@ export class IncidentController {
   }
 
   @Get("/:id")
-  @Description("Get an incident by its id")
+  @Description("Get an EMS/FD incident by its id")
   @UsePermissions({
-    permissions: [Permissions.Dispatch, Permissions.ViewIncidents, Permissions.ManageIncidents],
+    permissions: [
+      Permissions.Dispatch,
+      Permissions.ViewEmsFdIncidents,
+      Permissions.ManageEmsFdIncidents,
+    ],
     fallback: (u) => u.isDispatch || u.isLeo,
   })
   async getIncidentById(
     @PathParams("id") id: string,
-  ): Promise<APITypes.GetIncidentByIdData<"leo">> {
-    const incident = await prisma.leoIncident.findUnique({
+  ): Promise<APITypes.GetIncidentByIdData<"ems-fd">> {
+    const incident = await prisma.emsFdIncident.findUnique({
       where: { id },
       include: incidentInclude,
     });
@@ -124,22 +132,22 @@ export class IncidentController {
     return officerOrDeputyToUnit(incident);
   }
 
-  @UseBefore(ActiveOfficer)
+  @UseBefore(ActiveDeputy)
   @Post("/")
   @UsePermissions({
-    permissions: [Permissions.Dispatch, Permissions.ManageIncidents],
+    permissions: [Permissions.Dispatch, Permissions.ManageEmsFdIncidents],
     fallback: (u) => u.isDispatch || u.isLeo,
   })
   async createIncident(
     @BodyParams() body: unknown,
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
-  ): Promise<APITypes.PostIncidentsData<"leo">> {
+  ): Promise<APITypes.PostIncidentsData<"ems-fd">> {
     const data = validateSchema(LEO_INCIDENT_SCHEMA, body);
     const officer = getFirstOfficerFromActiveOfficer({ allowDispatch: true, activeOfficer });
     const maxAssignmentsToIncidents = cad.miscCadSettings.maxAssignmentsToIncidents ?? Infinity;
 
-    const incident = await prisma.leoIncident.create({
+    const incident = await prisma.emsFdIncident.create({
       data: {
         creatorId: officer?.id ?? null,
         description: data.description,
@@ -162,11 +170,11 @@ export class IncidentController {
         incident,
         maxAssignmentsToIncidents,
         unitIds,
-        type: "leo",
+        type: "ems-fd",
       });
     }
 
-    const updated = await prisma.leoIncident.findUnique({
+    const updated = await prisma.emsFdIncident.findUnique({
       where: { id: incident.id },
       include: incidentInclude,
     });
@@ -195,7 +203,7 @@ export class IncidentController {
     @PathParams("incidentId") incidentId: string,
     @BodyParams("unit") rawUnitId: string | null,
     @QueryParams("force", Boolean) force = false,
-  ): Promise<APITypes.PutAssignUnassignIncidentsData<"leo">> {
+  ): Promise<APITypes.PutAssignUnassignIncidentsData<"ems-fd">> {
     if (!rawUnitId) {
       throw new BadRequest("unitIsRequired");
     }
@@ -205,7 +213,7 @@ export class IncidentController {
       throw new NotFound("unitNotFound");
     }
 
-    const incident = await prisma.leoIncident.findUnique({
+    const incident = await prisma.emsFdIncident.findUnique({
       where: { id: incidentId },
     });
 
@@ -274,7 +282,7 @@ export class IncidentController {
       this.socket.emitUpdateDeputyStatus(),
     ]);
 
-    const updated = await prisma.leoIncident.findUniqueOrThrow({
+    const updated = await prisma.emsFdIncident.findUniqueOrThrow({
       where: {
         id: incident.id,
       },
@@ -287,21 +295,21 @@ export class IncidentController {
     return normalizedIncident;
   }
 
-  @UseBefore(ActiveOfficer)
+  @UseBefore(ActiveDeputy)
   @Put("/:id")
   @UsePermissions({
-    permissions: [Permissions.Dispatch, Permissions.ManageIncidents],
+    permissions: [Permissions.Dispatch, Permissions.ManageEmsFdIncidents],
     fallback: (u) => u.isDispatch || u.isLeo,
   })
   async updateIncident(
     @BodyParams() body: unknown,
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
     @PathParams("id") incidentId: string,
-  ): Promise<APITypes.PutIncidentByIdData<"leo">> {
+  ): Promise<APITypes.PutIncidentByIdData<"ems-fd">> {
     const data = validateSchema(LEO_INCIDENT_SCHEMA, body);
     const maxAssignmentsToIncidents = cad.miscCadSettings.maxAssignmentsToIncidents ?? Infinity;
 
-    const incident = await prisma.leoIncident.findUnique({
+    const incident = await prisma.emsFdIncident.findUnique({
       where: { id: incidentId },
       include: { unitsInvolved: true },
     });
@@ -310,7 +318,7 @@ export class IncidentController {
       throw new NotFound("notFound");
     }
 
-    await prisma.leoIncident.update({
+    await prisma.emsFdIncident.update({
       where: { id: incidentId },
       data: {
         description: data.description,
@@ -330,11 +338,11 @@ export class IncidentController {
         incident,
         maxAssignmentsToIncidents,
         unitIds,
-        type: "leo",
+        type: "ems-fd",
       });
     }
 
-    const updated = await prisma.leoIncident.findUniqueOrThrow({
+    const updated = await prisma.emsFdIncident.findUniqueOrThrow({
       where: { id: incident.id },
       include: incidentInclude,
     });
@@ -351,13 +359,13 @@ export class IncidentController {
   @Delete("/:id")
   @Description("Delete an incident by its id")
   @UsePermissions({
-    permissions: [Permissions.Dispatch, Permissions.ManageIncidents],
+    permissions: [Permissions.Dispatch, Permissions.ManageEmsFdIncidents],
     fallback: (u) => u.isSupervisor,
   })
   async deleteIncident(
     @PathParams("id") incidentId: string,
   ): Promise<APITypes.DeleteIncidentByIdData> {
-    const incident = await prisma.leoIncident.findUnique({
+    const incident = await prisma.emsFdIncident.findUnique({
       where: { id: incidentId },
     });
 
@@ -365,7 +373,7 @@ export class IncidentController {
       throw new NotFound("incidentNotFound");
     }
 
-    await prisma.leoIncident.delete({
+    await prisma.emsFdIncident.delete({
       where: { id: incidentId },
     });
 
