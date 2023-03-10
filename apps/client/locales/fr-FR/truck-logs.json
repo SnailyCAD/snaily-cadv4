@@ -1,15 +1,15 @@
 {
   "TruckLogs": {
-    "truckLogs": "Logs Camion",
-    "createTruckLog": "Créer Log",
-    "editTruckLog": "Modifier Log",
-    "deleteTruckLog": "Supprimer Log",
+    "truckLogs": "Journaux de camions",
+    "createTruckLog": "Créer un journal de camion",
+    "editTruckLog": "Modifier le journal du camion",
+    "deleteTruckLog": "Supprimer le journal du camion",
     "driver": "Conducteur",
     "vehicle": "Véhicule",
-    "startedAt": "Commencé À",
-    "endedAt": "Terminé À",
-    "noTruckLogs": "Vous n'avez aucun log pour le moment.",
-    "notes": "Notes",
-    "alert_deleteTruckLog": "Êtes-vous sûr de vouloir supprimer ce log ? Cette action ne peut être annulée."
+    "startedAt": "Commencé à",
+    "endedAt": "Terminé à",
+    "noTruckLogs": "Vous n'avez pas encore de logs de camion.",
+    "notes": "Remarques",
+    "alert_deleteTruckLog": "Voulez-vous vraiment supprimer ce journal de camion ? "
   }
 }

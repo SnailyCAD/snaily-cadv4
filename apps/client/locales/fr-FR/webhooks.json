@@ -1,47 +1,47 @@
 {
   "Tow": {
-    "vehicleImpounded": "Véhicule saisi",
+    "vehicleImpounded": "Véhicule mis en fourrière",
     "registrationStatus": "Statut d'enregistrement",
     "model": "Modèle",
     "owner": "Propriétaire"
   },
   "Bolos": {
-    "boloCreated": "BOLO Créé",
+    "boloCreated": "BOLO créé",
     "viewMoreInfo": "Voir plus d'informations sur le CAD.",
-    "type": "Type",
+    "type": "Taper",
     "name": "Nom",
-    "plate": "Plaque d'immatriculation",
+    "plate": "Plaque",
     "model": "Modèle",
     "color": "Couleur"
   },
   "Statuses": {
-    "statusChange": "Changement de status",
-    "status": "Status",
-    "statusChangeDescription": "L'unité {unit} a changé son status à {status}."
+    "statusChange": "Changement de statut",
+    "status": "Statut",
+    "statusChangeDescription": "L'unité {unit} a changé son statut en {status}."
   },
   "PanicButton": {
-    "panicButton": "Bouton de panique",
-    "panicButtonDescription": "L'unité {unit} a appuyé sur le bouton de panique."
+    "panicButton": "Bouton de secours",
+    "panicButtonDescription": "L'unité {unit} a appuyé sur le bouton panique."
   },
   "Calls": {
-    "callCreated": "Appel 911 Créé",
+    "callCreated": "Appel 911 créé",
     "viewMoreInfo": "Voir plus d'informations sur le CAD.",
-    "location": "Localisation",
-    "caller": "Appelant",
+    "location": "Emplacement",
+    "caller": "Votre interlocuteur",
     "unknown": "Inconnu",
     "couldNotRenderDescription": "Impossible d'afficher la description."
   },
   "Records": {
     "citizen": "Citoyen",
-    "status": "Status",
-    "postal": "Code postal",
+    "status": "Statut",
+    "postal": "postal",
     "recordType": "Type d'enregistrement",
     "ARREST_REPORT": "Rapport d'arrestation",
     "WRITTEN_WARNING": "Avertissement écrit",
-    "TICKET": "Contravention",
-    "totalBail": "Total de la caution",
-    "totalFineAmount": "Total des amendes",
-    "totalJailTime": "Total du temps de prison",
+    "TICKET": "Billet",
+    "totalBail": "Caution totale",
+    "totalFineAmount": "Montant total de l'amende",
+    "totalJailTime": "Durée totale de la prison",
     "newWarrantCreated": "Nouveau mandat créé",
     "newRecordCreated": "Nouvel enregistrement créé",
     "ACTIVE": "Actif",
