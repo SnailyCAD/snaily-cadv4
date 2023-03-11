@@ -129,7 +129,7 @@ export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
                 : `${namespace}.assignedToCall#`,
               {
                 activeVehicle: unit?.activeVehicle?.value.value ?? unitCallsignAndName,
-                location: call.location || "no location",
+                location: `${call.location} ${call.postal || ""}` || "no location",
                 callType: call.type?.value.value,
                 caseNumber: call.caseNumber,
               },
