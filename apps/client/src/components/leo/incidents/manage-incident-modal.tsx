@@ -49,8 +49,8 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
   const { state, execute } = useFetch();
 
   const isDispatch = router.pathname.includes("/dispatch");
-  const isEmsFdIncidents = router.pathname === "/ems-fd/incidents";
-  const isLeoIncidents = router.pathname === "/officer/incidents";
+  const isEmsFdIncidents = type === "ems-fd" || router.pathname === "/ems-fd/incidents";
+  const isLeoIncidents = type === "leo" || router.pathname === "/officer/incidents";
   const areIncidentsNonDispatch = isEmsFdIncidents || isLeoIncidents;
 
   const areEventsReadonly = !isDispatch || areIncidentsNonDispatch;
