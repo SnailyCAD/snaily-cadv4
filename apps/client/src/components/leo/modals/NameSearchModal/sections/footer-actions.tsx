@@ -139,7 +139,20 @@ export function NameSearchFooterActions(props: Props) {
         </div>
       ) : null}
 
-      {type ? <ManageRecordModal onClose={() => setType(null)} type={type} /> : null}
+      {type ? (
+        <ManageRecordModal
+          onCreate={(record) => {
+            if (!currentResult || currentResult.isConfidential) return;
+
+            setCurrentResult({
+              ...currentResult,
+              Record: [...currentResult.Record, record],
+            });
+          }}
+          onClose={() => setType(null)}
+          type={type}
+        />
+      ) : null}
     </div>
   );
 }
