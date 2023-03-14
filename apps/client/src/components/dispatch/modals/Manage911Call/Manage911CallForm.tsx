@@ -22,6 +22,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
 import { shallow } from "zustand/shallow";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
+import { useInvalidateQuery } from "hooks/use-invalidate-query";
 
 interface Props {
   call: Full911Call | null;
@@ -46,6 +47,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
   );
   const { closeModal, openModal } = useModal();
   const { DIVISIONS } = useFeatureEnabled();
+  const { invalidateQuery } = useInvalidateQuery(["/911-calls"]);
 
   const validate = handleValidate(CALL_911_SCHEMA);
   const isCitizen = router.pathname.includes("/citizen");
@@ -73,6 +75,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
       });
 
       if (json.id) {
+        await invalidateQuery();
         setCalls(calls.map((c) => (c.id === json.id ? { ...c, ...json } : c)));
         closeModal(ModalIds.Manage911Call);
       }
@@ -91,6 +94,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
         });
 
         setCalls([json, ...calls]);
+        await invalidateQuery();
 
         if (values.openCallModalAfterCreation && !isCitizen) {
           setCurrentlySelectedCall(json);

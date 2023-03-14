@@ -23,6 +23,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { shallow } from "zustand/shallow";
 import { isUnitCombined } from "@snailycad/utils";
 import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
+import { useInvalidateQuery } from "hooks/use-invalidate-query";
 
 interface Props {
   call: Full911Call | null;
@@ -53,6 +54,7 @@ export function Manage911CallModal({ setCall, forceDisabled, forceOpen, call, on
   const activeOfficer = useLeoState((state) => state.activeOfficer);
   const activeDeputy = useEmsFdState((state) => state.activeDeputy);
   const { hasActiveDispatchers } = useActiveDispatchers();
+  const { invalidateQuery } = useInvalidateQuery(["/911-calls"]);
 
   const hasDispatchPermissions = hasPermissions(
     defaultPermissions.defaultDispatchPermissions,
@@ -97,6 +99,7 @@ export function Manage911CallModal({ setCall, forceDisabled, forceOpen, call, on
     if (json) {
       handleClose();
       setCalls(calls.filter((c) => c.id !== call.id));
+      await invalidateQuery();
     }
   }
 
