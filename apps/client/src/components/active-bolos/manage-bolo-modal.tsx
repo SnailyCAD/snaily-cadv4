@@ -17,6 +17,7 @@ import { useSSRSafeId } from "@react-aria/ssr";
 import type { PostBolosData, PutBolosData } from "@snailycad/types/api";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import { shallow } from "zustand/shallow";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   onClose?(): void;
@@ -24,6 +25,8 @@ interface Props {
 }
 
 export function ManageBoloModal({ onClose, bolo }: Props) {
+  const queryClient = useQueryClient();
+
   const common = useTranslations("Common");
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
@@ -44,6 +47,8 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const updatedPlate = values.vehicleId ? values.plate : values.plateSearch;
     const updatedName = values.citizenId ? values.name : values.nameSearch;
+    const queries = queryClient.getQueryCache().findAll();
+    const boloQuery = queries.find((q) => q.queryKey.includes("/bolos"));
 
     const data = {
       ...values,
@@ -69,6 +74,8 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
           }),
         );
         closeModal(ModalIds.ManageBolo);
+
+        await queryClient.invalidateQueries(boloQuery?.queryKey);
       }
     } else {
       const { json } = await execute<PostBolosData>({
@@ -78,6 +85,8 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
       });
 
       if (json.id) {
+        await queryClient.invalidateQueries(boloQuery?.queryKey);
+
         setBolos([json, ...bolos]);
         closeModal(ModalIds.ManageBolo);
       }
