@@ -540,6 +540,10 @@ export class VehiclesController {
     vinNumber?: string | null;
     vehicle?: Pick<RegisteredVehicle, "id">;
   }): Promise<string> {
+    if (options.vehicle && !options.isEditableVINEnabled) {
+      return undefined as unknown as string;
+    }
+
     const vinNumber = options.vinNumber
       ? options.isEditableVINEnabled
         ? options.vinNumber
