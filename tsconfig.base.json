@@ -9,7 +9,7 @@
     "noImplicitThis": true /* Raise error on 'this' expressions with an implied 'any' type. */,
     "alwaysStrict": true /* Parse in strict mode and emit "use strict" for each source file. */,
     "skipLibCheck": true,
-    "importsNotUsedAsValues": "error",
+    "verbatimModuleSyntax": false,
     "pretty": true,
 
     /* Additional Checks */

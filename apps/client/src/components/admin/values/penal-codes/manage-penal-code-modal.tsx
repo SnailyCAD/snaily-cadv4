@@ -100,7 +100,7 @@ export function ManagePenalCode({ onCreate, onUpdate, onClose, groupId, type, pe
       values: penalCode?.warningNotApplicable?.prisonTerm ?? [],
     },
     bail: {
-      enabled: ((LEO_BAIL && penalCode?.warningNotApplicable?.bail.length) ?? 0) > 0,
+      enabled: ((LEO_BAIL && penalCode?.warningNotApplicable?.bail.length) || 0) > 0,
       values: (LEO_BAIL && penalCode?.warningNotApplicable?.bail) ?? [],
     },
   };
