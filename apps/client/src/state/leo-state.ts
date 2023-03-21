@@ -14,15 +14,9 @@ export type ActiveWarrant = Warrant & {
 interface LeoState {
   activeOfficer: ActiveOfficer | null;
   setActiveOfficer(officer: ActiveOfficer | null): void;
-
-  activeWarrants: ActiveWarrant[];
-  setActiveWarrants(warrants: ActiveWarrant[]): void;
 }
 
 export const useLeoState = create<LeoState>()((set) => ({
   activeOfficer: null,
   setActiveOfficer: (officer) => set({ activeOfficer: officer }),
-
-  activeWarrants: [],
-  setActiveWarrants: (warrants) => set({ activeWarrants: warrants }),
 }));

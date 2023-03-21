@@ -1,14 +1,13 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button, Droppable } from "@snailycad/ui";
-import compareDesc from "date-fns/compareDesc";
 import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { Table, useTableState } from "components/shared/Table";
 import { yesOrNoText } from "lib/utils";
 import { FullDate } from "components/shared/FullDate";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
-import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
+import { useActiveIncidents } from "hooks/realtime/use-active-incidents";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import type { LeoIncident } from "@snailycad/types";
@@ -36,10 +35,15 @@ export function ActiveIncidents() {
   const common = useTranslations("Common");
   const { hasActiveDispatchers } = useActiveDispatchers();
   const { openModal, closeModal } = useModal();
-  const { activeIncidents, setActiveIncidents } = useActiveIncidents();
   const { state, execute } = useFetch();
   const draggingUnit = useDispatchState((state) => state.draggingUnit);
-  const tableState = useTableState({ tableId: "active-incidents" });
+
+  const asyncTable = useActiveIncidents();
+
+  const tableState = useTableState({
+    tableId: "active-incidents",
+    pagination: asyncTable.pagination,
+  });
 
   async function handleAssignUnassignToIncident(
     incident: LeoIncident,
@@ -53,13 +57,7 @@ export function ActiveIncidents() {
     });
 
     if (json.id) {
-      const callsMapped = activeIncidents.map((incident) => {
-        if (incident.id === json.id) {
-          return { ...incident, ...json };
-        }
-        return incident;
-      });
-      setActiveIncidents(callsMapped);
+      asyncTable.update(json.id, json);
     }
   }
 
@@ -77,7 +75,8 @@ export function ActiveIncidents() {
     });
 
     if (json.id) {
-      setActiveIncidents(activeIncidents.filter((v) => v.id !== tempIncident.id));
+      asyncTable.remove(json.id);
+
       closeModal(ModalIds.AlertDeleteIncident);
       setTempIncident(undefined);
     }
@@ -115,56 +114,54 @@ export function ActiveIncidents() {
         </div>
       </header>
 
-      {activeIncidents.length <= 0 ? (
+      {!asyncTable.isInitialLoading && asyncTable.items.length <= 0 ? (
         <p className="px-4 py-2 text-neutral-700 dark:text-gray-300">{t("noActiveIncidents")}</p>
       ) : (
         <Table
+          isLoading={asyncTable.isInitialLoading}
           tableState={tableState}
           features={{ isWithinCardOrModal: true }}
           containerProps={{ className: "mb-3 mx-4" }}
-          data={activeIncidents
-            .sort((a, b) => compareDesc(new Date(a.updatedAt), new Date(b.updatedAt)))
-            .map((incident) => {
-              return {
-                id: incident.id,
-                caseNumber: `#${incident.caseNumber}`,
-                unitsInvolved: (
-                  <InvolvedUnitsColumn
-                    handleAssignUnassignToIncident={handleAssignUnassignToIncident}
-                    incident={incident}
-                  />
-                ),
-                createdAt: <FullDate>{incident.createdAt}</FullDate>,
-                firearmsInvolved: common(yesOrNoText(incident.firearmsInvolved)),
-                injuriesOrFatalities: common(yesOrNoText(incident.injuriesOrFatalities)),
-                arrestsMade: common(yesOrNoText(incident.arrestsMade)),
-                situationCode: incident.situationCode?.value.value ?? common("none"),
-                description: <CallDescription data={incident} />,
+          data={asyncTable.items.map((incident) => {
+            return {
+              id: incident.id,
+              caseNumber: `#${incident.caseNumber}`,
+              unitsInvolved: (
+                <InvolvedUnitsColumn
+                  handleAssignUnassignToIncident={handleAssignUnassignToIncident}
+                  incident={incident}
+                />
+              ),
+              createdAt: <FullDate>{incident.createdAt}</FullDate>,
+              firearmsInvolved: common(yesOrNoText(incident.firearmsInvolved)),
+              injuriesOrFatalities: common(yesOrNoText(incident.injuriesOrFatalities)),
+              arrestsMade: common(yesOrNoText(incident.arrestsMade)),
+              situationCode: incident.situationCode?.value.value ?? common("none"),
+              description: <CallDescription data={incident} />,
+              actions: (
+                <>
+                  <Button
+                    onPress={() => onEditClick(incident)}
+                    disabled={!hasActiveDispatchers}
+                    size="xs"
+                    variant="success"
+                  >
+                    {common("manage")}
+                  </Button>
 
-                actions: (
-                  <>
-                    <Button
-                      onPress={() => onEditClick(incident)}
-                      disabled={!hasActiveDispatchers}
-                      size="xs"
-                      variant="success"
-                    >
-                      {common("manage")}
-                    </Button>
-
-                    <Button
-                      onPress={() => onEndClick(incident)}
-                      disabled={!hasActiveDispatchers}
-                      size="xs"
-                      variant="danger"
-                      className="ml-2"
-                    >
-                      {t("end")}
-                    </Button>
-                  </>
-                ),
-              };
-            })}
+                  <Button
+                    onPress={() => onEndClick(incident)}
+                    disabled={!hasActiveDispatchers}
+                    size="xs"
+                    variant="danger"
+                    className="ml-2"
+                  >
+                    {t("end")}
+                  </Button>
+                </>
+              ),
+            };
+          })}
           columns={[
             { header: t("caseNumber"), accessorKey: "caseNumber" },
             { header: t("unitsInvolved"), accessorKey: "unitsInvolved" },
@@ -201,7 +198,7 @@ export function ActiveIncidents() {
         <ManageIncidentModal
           type="leo"
           onCreate={(incident) => {
-            setActiveIncidents([incident as LeoIncident, ...activeIncidents]);
+            asyncTable.prepend(incident as LeoIncident);
 
             if (incident.openModalAfterCreation) {
               setTempIncident(incident as LeoIncident);
@@ -212,16 +209,9 @@ export function ActiveIncidents() {
           }}
           onUpdate={(old, incident) => {
             if (incident.isActive) {
-              setActiveIncidents(
-                activeIncidents.map((v) => {
-                  if (v.id === old.id) {
-                    return { ...(v as LeoIncident), ...(incident as LeoIncident) };
-                  }
-                  return v as LeoIncident;
-                }),
-              );
+              asyncTable.update(old.id, incident as LeoIncident);
             } else {
-              setActiveIncidents(activeIncidents.filter((v) => v.id !== incident.id));
+              asyncTable.remove(incident.id);
             }
           }}
           onClose={() => setTempIncident(undefined)}

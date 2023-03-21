@@ -72,6 +72,7 @@ export function ActiveBolos({ initialBolos }: Props) {
 
   const asyncTable = useAsyncTable({
     search,
+    scrollToTopOnDataChange: false,
     fetchOptions: {
       onResponse: (data: GetBolosData) => ({
         data: data.bolos,

@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
-import { useActiveWarrants } from "hooks/realtime/useActiveWarrants";
+import { useActiveWarrants } from "hooks/realtime/use-active-warrants";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { isUnitCombined } from "@snailycad/utils";
