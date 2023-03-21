@@ -72,10 +72,6 @@ export class RecordsController {
       ...(inactivityFilter?.filter ?? {}),
     } as const;
 
-    await new Promise((resolve) => {
-      setTimeout(resolve, 10000);
-    });
-
     const [totalCount, activeWarrants] = await prisma.$transaction([
       prisma.warrant.count({ where }),
       prisma.warrant.findMany({
