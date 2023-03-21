@@ -39,9 +39,9 @@ export function useAsyncTable<T>(options: Options<T>) {
     pageIndex: options.fetchOptions.pageIndex ?? 0,
   });
 
-  useQuery({
+  const { isInitialLoading } = useQuery({
     enabled: !options.disabled,
-    initialData: options.initialData ?? [],
+    initialData: options.initialData ?? undefined,
     queryFn: fetchData,
     queryKey: [paginationOptions.pageIndex, debouncedSearch, filters, options.fetchOptions.path],
     refetchOnMount: options.fetchOptions.refetchOnMount,
@@ -108,6 +108,7 @@ export function useAsyncTable<T>(options: Options<T>) {
 
   return {
     ...list,
+    isInitialLoading,
     filters,
     setFilters,
     isLoading: loadingState === "loading",

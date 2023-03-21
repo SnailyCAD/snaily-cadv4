@@ -6,11 +6,25 @@ import type { GetActiveWarrantsData } from "@snailycad/types/api";
 import { SocketEvents } from "@snailycad/config";
 import { useListener } from "@casper124578/use-socket.io";
 import { shallow } from "zustand/shallow";
+import { useAsyncTable } from "components/shared/Table";
 
 let ran = false;
 export function useActiveWarrants() {
   const { user } = useAuth();
   const { state, execute } = useFetch();
+
+  const asyncTable = useAsyncTable<ActiveWarrant>({
+    scrollToTopOnDataChange: false,
+    totalCount: 0,
+    fetchOptions: {
+      path: "/records/active-warrants",
+      onResponse: (json: GetActiveWarrantsData) => ({
+        data: json.activeWarrants,
+        totalCount: json.totalCount,
+      }),
+    },
+  });
+
   const { activeWarrants, setActiveWarrants } = useLeoState(
     (state) => ({
       activeWarrants: state.activeWarrants,
@@ -21,7 +35,7 @@ export function useActiveWarrants() {
 
   const handleState = React.useCallback(
     (data: ActiveWarrant[]) => {
-      setActiveWarrants(data);
+      asyncTable.setItems(data);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
@@ -57,7 +71,7 @@ export function useActiveWarrants() {
     { eventName: SocketEvents.CreateActiveWarrant, checkHasListeners: true },
     (data: ActiveWarrant) => {
       if (!isWarrantInArr(data)) {
-        setActiveWarrants([...activeWarrants, data]);
+        asyncTable.append(data);
       }
     },
     [setActiveWarrants, activeWarrants],
@@ -66,18 +80,10 @@ export function useActiveWarrants() {
   useListener(
     { eventName: SocketEvents.UpdateActiveWarrant, checkHasListeners: true },
     (activeWarrant: ActiveWarrant) => {
-      setActiveWarrants(
-        activeWarrants.map((v) => {
-          if (v.id === activeWarrant.id) {
-            return activeWarrant;
-          }
-
-          return v;
-        }),
-      );
+      asyncTable.update(activeWarrant.id, activeWarrant);
     },
     [setActiveWarrants, activeWarrants],
   );
 
-  return { activeWarrants, setActiveWarrants, state };
+  return { asyncTable, state };
 }

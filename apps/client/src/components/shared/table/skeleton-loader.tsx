@@ -4,6 +4,7 @@ import { _RowData } from "./table";
 
 interface TableSkeletonLoaderProps<TData extends _RowData> {
   table: Table<TData>;
+  isWithinCardOrModal?: boolean;
 }
 
 export function TableSkeletonLoader<TData extends _RowData>(
@@ -17,16 +18,17 @@ export function TableSkeletonLoader<TData extends _RowData>(
         {props.table.getHeaderGroups().map((headerGroup) =>
           headerGroup.headers.map((header) => (
             <div
+              style={{ width: `${header.id.length * 6}%` }}
               className={classNames(
-                "m-0 top-0 sticky p-2 px-3 font-semibold bg-gray-200 dark:bg-secondary text-left select-none",
-                "uppercase text-sm text-neutral-700 dark:text-gray-400 first:rounded-tl-md last:rounded-tr-md w-full",
+                "m-0 top-0 sticky p-2 px-1 font-semibold bg-gray-200 dark:bg-secondary text-left select-none",
+                "uppercase text-sm text-neutral-700 dark:text-gray-400 first:rounded-tl-md last:rounded-tr-md",
               )}
               key={header.id}
             >
               <div
                 aria-hidden
                 key={header.id}
-                className="dark:bg-tertiary animate-pulse w-full h-4 rounded-md"
+                className="dark:bg-tertiary animate-pulse h-4 rounded-md max-w-[6em]"
               />
             </div>
           )),
@@ -36,13 +38,19 @@ export function TableSkeletonLoader<TData extends _RowData>(
       <div className="mt-2">
         {fakeTableRows.map((_, idx) => (
           <div key={idx} className="flex gap-2">
-            {props.table.getFlatHeaders().map((header) => (
-              <div
-                aria-hidden
-                key={header.id}
-                className="dark:bg-tertiary animate-pulse w-full h-6 mb-2 rounded-md"
-              />
-            ))}
+            {props.table.getFlatHeaders().map((header) => {
+              return (
+                <div
+                  style={{ width: `${header.id.length * 6}%` }}
+                  aria-hidden
+                  key={header.id}
+                  className={classNames(
+                    "animate-pulse w-full h-6 mb-2 rounded-md",
+                    props.isWithinCardOrModal ? "dark:bg-secondary" : "dark:bg-tertiary",
+                  )}
+                />
+              );
+            })}
           </div>
         ))}
       </div>

@@ -55,7 +55,6 @@ export function Table<TData extends _RowData>({
   const { user } = useAuth();
   const dataLength = tableState.pagination.totalDataCount ?? data.length;
   const pageCount = Math.ceil(dataLength / tableState.pagination.pageSize);
-  const _isLoading = isLoading;
 
   const tableActionsAlignment = user?.tableActionsAlignment ?? TableActionsAlignment.LEFT;
   const stickyBgColor = features?.isWithinCardOrModal
@@ -134,8 +133,8 @@ export function Table<TData extends _RowData>({
         containerProps?.className,
       )}
     >
-      {_isLoading ? (
-        <TableSkeletonLoader table={table} />
+      {isLoading ? (
+        <TableSkeletonLoader isWithinCardOrModal={features?.isWithinCardOrModal} table={table} />
       ) : (
         <table className="w-full whitespace-nowrap max-h-64">
           <thead>
