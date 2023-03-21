@@ -5,7 +5,7 @@ import { useTranslations } from "use-intl";
 interface SearchAreaProps<T> {
   search: { search: string; setSearch(search: string): void };
   asyncTable: Pick<ReturnType<typeof useAsyncTable<T>>, "isLoading" | "pagination">;
-  totalCount: number;
+  totalCount?: number;
   children?: React.ReactNode;
 }
 
