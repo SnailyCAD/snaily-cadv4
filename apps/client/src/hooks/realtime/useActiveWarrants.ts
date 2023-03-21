@@ -15,8 +15,8 @@ export function useActiveWarrants() {
 
   const asyncTable = useAsyncTable<ActiveWarrant>({
     scrollToTopOnDataChange: false,
-    totalCount: 0,
     fetchOptions: {
+      pageSize: 12,
       path: "/records/active-warrants",
       onResponse: (json: GetActiveWarrantsData) => ({
         data: json.activeWarrants,

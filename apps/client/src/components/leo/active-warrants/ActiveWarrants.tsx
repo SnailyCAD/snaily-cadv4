@@ -33,7 +33,7 @@ export function ActiveWarrants() {
 
   const tableState = useTableState({
     tableId: "active-warrants",
-    pagination: { ...asyncTable.pagination, pageSize: 12 },
+    pagination: asyncTable.pagination,
   });
 
   const { openModal } = useModal();

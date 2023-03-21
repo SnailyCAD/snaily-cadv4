@@ -18,7 +18,7 @@ interface Options<T> {
   search?: string;
 
   disabled?: boolean;
-  totalCount: number;
+  totalCount?: number;
   initialData?: T[];
   scrollToTopOnDataChange?: boolean;
   fetchOptions: FetchOptions;
