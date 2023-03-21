@@ -1,6 +1,6 @@
 import * as React from "react";
 import { CitizenListItem } from "components/citizen/citizen-list/citizen-list-item";
-import { TablePagination } from "components/shared/Table/TablePagination";
+import { TablePagination } from "components/shared/table/table-pagination";
 import { useTranslations } from "next-intl";
 import type { GetCitizensData } from "@snailycad/types/api";
 import { SearchArea } from "components/shared/search/search-area";
