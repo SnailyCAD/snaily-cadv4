@@ -26,7 +26,7 @@ export function ActiveWarrants() {
     (u) => u.isLeo || u.isSupervisor,
   );
 
-  const { asyncTable } = useActiveWarrants();
+  const asyncTable = useActiveWarrants();
   const { generateCallsign } = useGenerateCallsign();
   const [tempWarrant, warrantState] = useTemporaryItem(asyncTable.items);
   const t = useTranslations("Leo");

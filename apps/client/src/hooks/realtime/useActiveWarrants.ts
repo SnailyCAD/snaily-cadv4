@@ -11,7 +11,7 @@ import { useAsyncTable } from "components/shared/Table";
 let ran = false;
 export function useActiveWarrants() {
   const { user } = useAuth();
-  const { state, execute } = useFetch();
+  const { execute } = useFetch();
 
   const asyncTable = useAsyncTable<ActiveWarrant>({
     scrollToTopOnDataChange: false,
@@ -85,5 +85,5 @@ export function useActiveWarrants() {
     [setActiveWarrants, activeWarrants],
   );
 
-  return { asyncTable, state };
+  return asyncTable;
 }

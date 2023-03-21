@@ -84,10 +84,6 @@ export function useAsyncTable<T>(options: Options<T>) {
       window.scrollTo({ behavior: "smooth", top: 0 });
     }
 
-    if (scrollToTopOnDataChange) {
-      window.scrollTo({ behavior: "smooth", top: 0 });
-    }
-
     if (Array.isArray(toReturnData.data)) {
       return list.setItems(toReturnData.data);
     }
