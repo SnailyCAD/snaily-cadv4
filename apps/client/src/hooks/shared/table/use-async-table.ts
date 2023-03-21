@@ -18,7 +18,7 @@ interface Options<T> {
   search?: string;
 
   disabled?: boolean;
-  totalCount: number;
+  totalCount?: number;
   initialData?: T[];
   scrollToTopOnDataChange?: boolean;
   fetchOptions: FetchOptions;
@@ -39,9 +39,9 @@ export function useAsyncTable<T>(options: Options<T>) {
     pageIndex: options.fetchOptions.pageIndex ?? 0,
   });
 
-  useQuery({
+  const { isInitialLoading } = useQuery({
     enabled: !options.disabled,
-    initialData: options.initialData ?? [],
+    initialData: options.initialData ?? undefined,
     queryFn: fetchData,
     queryKey: [paginationOptions.pageIndex, debouncedSearch, filters, options.fetchOptions.path],
     refetchOnMount: options.fetchOptions.refetchOnMount,
@@ -84,10 +84,6 @@ export function useAsyncTable<T>(options: Options<T>) {
       window.scrollTo({ behavior: "smooth", top: 0 });
     }
 
-    if (scrollToTopOnDataChange) {
-      window.scrollTo({ behavior: "smooth", top: 0 });
-    }
-
     if (Array.isArray(toReturnData.data)) {
       return list.setItems(toReturnData.data);
     }
@@ -108,6 +104,7 @@ export function useAsyncTable<T>(options: Options<T>) {
 
   return {
     ...list,
+    isInitialLoading,
     filters,
     setFilters,
     isLoading: loadingState === "loading",

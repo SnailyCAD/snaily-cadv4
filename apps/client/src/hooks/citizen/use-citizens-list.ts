@@ -22,7 +22,7 @@ export function useCitizensList(options: UseCitizensListOptions) {
     initialData: options.initialData.citizens,
   });
 
-  const PAGE_COUNT = Math.round(asyncTable.pagination.totalDataCount / MAX_CITIZENS_PER_PAGE);
+  const PAGE_COUNT = Math.round(asyncTable.pagination.totalDataCount! / MAX_CITIZENS_PER_PAGE);
 
   function nextPage() {
     const newPageIndex = currentPage + 1;

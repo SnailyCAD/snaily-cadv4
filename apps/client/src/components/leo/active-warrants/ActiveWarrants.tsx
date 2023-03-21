@@ -12,6 +12,7 @@ import { isUnitCombined } from "@snailycad/utils";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 import { Permissions, usePermission } from "hooks/usePermission";
 import dynamic from "next/dynamic";
+import { GetActiveWarrantsData } from "@snailycad/types/api";
 
 const CreateWarrantModal = dynamic(
   async () => (await import("../modals/CreateWarrantModal")).CreateWarrantModal,
@@ -25,13 +26,14 @@ export function ActiveWarrants() {
     (u) => u.isLeo || u.isSupervisor,
   );
 
-  const { activeWarrants, setActiveWarrants } = useActiveWarrants();
+  const asyncTable = useActiveWarrants();
   const { generateCallsign } = useGenerateCallsign();
-  const [tempWarrant, warrantState] = useTemporaryItem(activeWarrants);
+  const [tempWarrant, warrantState] = useTemporaryItem(asyncTable.items);
   const t = useTranslations("Leo");
+
   const tableState = useTableState({
     tableId: "active-warrants",
-    pagination: { pageSize: 12, totalDataCount: activeWarrants.length },
+    pagination: asyncTable.pagination,
   });
 
   const { openModal } = useModal();
@@ -69,13 +71,14 @@ export function ActiveWarrants() {
       </header>
 
       <div className="px-4">
-        {activeWarrants.length <= 0 ? (
+        {!asyncTable.isInitialLoading && asyncTable.items.length <= 0 ? (
           <p className="py-2 text-neutral-700 dark:text-gray-300">{t("noActiveWarrants")}</p>
         ) : (
           <Table
+            isLoading={asyncTable.isInitialLoading}
             tableState={tableState}
             features={{ isWithinCardOrModal: true }}
-            data={activeWarrants.filter(isActiveWarrant).map((warrant) => ({
+            data={asyncTable.items.filter(isActiveWarrant).map((warrant) => ({
               id: warrant.id,
               citizen: `${warrant.citizen.name} ${warrant.citizen.surname}`,
               description: <CallDescription data={{ description: warrant.description }} />,
@@ -106,14 +109,10 @@ export function ActiveWarrants() {
           onClose={() => warrantState.setTempId(null)}
           warrant={tempWarrant}
           onCreate={(warrant) => {
-            setActiveWarrants([...activeWarrants, warrant]);
+            asyncTable.append(warrant);
           }}
-          onUpdate={(previous, warrant) => {
-            const copied = [...activeWarrants];
-            const idx = copied.indexOf(previous);
-
-            copied[idx] = warrant;
-            setActiveWarrants(copied);
+          onUpdate={(warrant) => {
+            asyncTable.update(warrant.id, warrant);
             warrantState.setTempId(null);
           }}
         />
@@ -122,6 +121,8 @@ export function ActiveWarrants() {
   );
 }
 
-function isActiveWarrant(warrant: Warrant): warrant is Warrant & { status: "ACTIVE" } {
+function isActiveWarrant(
+  warrant: GetActiveWarrantsData["activeWarrants"][number],
+): warrant is GetActiveWarrantsData["activeWarrants"][number] & { status: "ACTIVE" } {
   return warrant.status === "ACTIVE";
 }

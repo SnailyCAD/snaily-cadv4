@@ -22,7 +22,7 @@ interface Props {
   warrant: ActiveWarrant | null;
   readOnly?: boolean;
 
-  onUpdate?(previous: ActiveWarrant, newWarrant: PutWarrantsData): void;
+  onUpdate?(newWarrant: PutWarrantsData): void;
   onCreate?(warrant: PostCreateWarrantData): void;
 }
 
@@ -61,7 +61,7 @@ export function CreateWarrantModal({ warrant, readOnly, onClose, onCreate, onUpd
 
       if (json.id) {
         closeModal(ModalIds.CreateWarrant);
-        onUpdate?.(warrant, json);
+        onUpdate?.(json);
       }
     } else {
       const { json, error } = await execute<PostCreateWarrantData, typeof INITIAL_VALUES>({
@@ -101,15 +101,14 @@ export function CreateWarrantModal({ warrant, readOnly, onClose, onCreate, onUpd
     citizenName: warrant?.citizen ? `${warrant.citizen.name} ${warrant.citizen.surname}` : "",
     status: warrant?.status ?? "",
     description: warrant?.description ?? "",
-    assignedOfficers:
-      warrant?.assignedOfficers && isActive
-        ? warrant.assignedOfficers.map((unit) => ({
-            label: isUnitCombined(unit.unit)
-              ? generateCallsign(unit.unit, "pairedUnitTemplate")
-              : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`,
-            value: unit.id,
-          }))
-        : [],
+    assignedOfficers: warrant?.assignedOfficers
+      ? warrant.assignedOfficers.map((unit) => ({
+          label: isUnitCombined(unit.unit)
+            ? generateCallsign(unit.unit, "pairedUnitTemplate")
+            : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`,
+          value: unit.unit.id,
+        }))
+      : [],
   };
 
   return (

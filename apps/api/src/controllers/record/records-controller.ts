@@ -5,7 +5,7 @@ import {
   UPDATE_WARRANT_SCHEMA,
   CREATE_TICKET_SCHEMA_BUSINESS,
 } from "@snailycad/schemas";
-import { BodyParams, Context, PathParams } from "@tsed/platform-params";
+import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 import { UseBeforeEach, UseBefore } from "@tsed/platform-middlewares";
@@ -59,19 +59,37 @@ export class RecordsController {
   @Get("/active-warrants")
   @Description("Get all active warrants (ACTIVE_WARRANTS must be enabled)")
   @IsFeatureEnabled({ feature: Feature.ACTIVE_WARRANTS })
-  async getActiveWarrants(@Context("cad") cad: cad) {
+  async getActiveWarrants(
+    @Context("cad") cad: cad,
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("includeAll", Boolean) includeAll = false,
+  ): Promise<APITypes.GetActiveWarrantsData> {
     const inactivityFilter = getInactivityFilter(cad, "activeWarrantsInactivityTimeout");
 
-    const activeWarrants = await prisma.warrant.findMany({
-      orderBy: { updatedAt: "desc" },
-      where: { status: "ACTIVE", approvalStatus: "ACCEPTED", ...(inactivityFilter?.filter ?? {}) },
-      include: {
-        citizen: true,
-        assignedOfficers: { include: assignedOfficersInclude },
-      },
-    });
+    const where = {
+      status: "ACTIVE",
+      approvalStatus: "ACCEPTED",
+      ...(inactivityFilter?.filter ?? {}),
+    } as const;
 
-    return activeWarrants.map((warrant) => officerOrDeputyToUnit(warrant));
+    const [totalCount, activeWarrants] = await prisma.$transaction([
+      prisma.warrant.count({ where }),
+      prisma.warrant.findMany({
+        orderBy: { updatedAt: "desc" },
+        where,
+        take: includeAll ? undefined : 12,
+        skip: includeAll ? undefined : skip,
+        include: {
+          citizen: true,
+          assignedOfficers: { include: assignedOfficersInclude },
+        },
+      }),
+    ]);
+
+    return {
+      totalCount,
+      activeWarrants: activeWarrants.map((warrant) => officerOrDeputyToUnit(warrant)),
+    };
   }
 
   @UseBefore(ActiveOfficer)
