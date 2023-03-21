@@ -69,6 +69,7 @@ export default function BureauOfFirearms({ data }: Props) {
                 className: weapon.bofStatus === "PENDING" ? "opacity-100" : "opacity-50",
               },
               id: weapon.id,
+              owner: `${weapon.citizen.name} ${weapon.citizen.surname}`,
               model: weapon.model.value.value,
               registrationStatus: weapon.registrationStatus.value,
               serialNumber: weapon.serialNumber,
@@ -100,6 +101,7 @@ export default function BureauOfFirearms({ data }: Props) {
             };
           })}
           columns={[
+            { header: t("Vehicles.owner"), accessorKey: "owner" },
             { header: t("Weapons.model"), accessorKey: "model" },
             { header: t("Weapons.registrationStatus"), accessorKey: "registrationStatus" },
             { header: t("Weapons.serialNumber"), accessorKey: "serialNumber" },
