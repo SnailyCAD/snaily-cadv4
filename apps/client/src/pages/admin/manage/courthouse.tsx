@@ -6,9 +6,9 @@ import type {
   GetManagePendingWarrants,
 } from "@snailycad/types/api";
 import { AdminLayout } from "components/admin/AdminLayout";
-import { ExpungementRequestsTab } from "components/admin/manage/courthouse/ExpungementRequestsTab";
-import { NameChangeRequestsTab } from "components/admin/manage/courthouse/NameChangeRequestsTab";
-import { PendingWarrantsTab } from "components/admin/manage/courthouse/PendingWarrantsTab";
+import { ExpungementRequestsTab } from "components/admin/manage/courthouse/expungement-requests-tab";
+import { NameChangeRequestsTab } from "components/admin/manage/courthouse/name-change-requests-tab";
+import { PendingWarrantsTab } from "components/admin/manage/courthouse/pending-warrants-tab";
 import { TabList } from "@snailycad/ui";
 import { Title } from "components/shared/Title";
 import { Permissions, usePermission } from "hooks/usePermission";

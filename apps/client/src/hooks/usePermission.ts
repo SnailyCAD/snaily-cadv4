@@ -9,7 +9,7 @@ export function usePermission() {
 
   function _hasPermission(
     permissionsToCheck: Permissions[],
-    fallback: PermissionsFallback | boolean,
+    fallback?: PermissionsFallback | boolean,
     userToCheck: User | null = user,
   ) {
     if (!userToCheck) return false;

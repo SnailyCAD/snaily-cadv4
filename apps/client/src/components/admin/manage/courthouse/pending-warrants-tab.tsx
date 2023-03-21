@@ -64,7 +64,7 @@ export function PendingWarrantsTab({ warrants: data }: Props) {
 
             return {
               id: warrant.id,
-              description: <CallDescription data={warrant} />,
+              description: <CallDescription nonCard data={warrant} />,
               officer: nameAndCallsign,
               createdAt: <FullDate>{warrant.createdAt}</FullDate>,
               actions: (
