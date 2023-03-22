@@ -1,22 +1,31 @@
 import { Button, TabsContent } from "@snailycad/ui";
-import { Table, useTableState } from "components/shared/Table";
+import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { WhitelistStatus } from "@snailycad/types";
 import type { GetManageBusinessesData, PutManageBusinessesData } from "@snailycad/types/api";
+import { useInvalidateQuery } from "hooks/use-invalidate-query";
 
-interface Props {
-  businesses: GetManageBusinessesData;
-  setBusinesses: React.Dispatch<React.SetStateAction<GetManageBusinessesData>>;
-}
+type Business = GetManageBusinessesData["businesses"][number];
 
-export function PendingBusinessesTab({ setBusinesses, businesses }: Props) {
+export function PendingBusinessesTab() {
   const t = useTranslations("Management");
   const common = useTranslations("Common");
   const tableState = useTableState();
   const { state, execute } = useFetch();
+  const { invalidateQuery } = useInvalidateQuery(["/admin/manage/businesses"]);
 
-  async function acceptOrDecline(business: GetManageBusinessesData[number], type: WhitelistStatus) {
+  const asyncTable = useAsyncTable<Business>({
+    fetchOptions: {
+      path: "/admin/manage/businesses?pendingOnly=true",
+      onResponse: (json: GetManageBusinessesData) => ({
+        data: json.businesses,
+        totalCount: json.totalCount,
+      }),
+    },
+  });
+
+  async function acceptOrDecline(business: Business, type: WhitelistStatus) {
     const { json } = await execute<PutManageBusinessesData>({
       path: `/admin/manage/businesses/${business.id}`,
       method: "PUT",
@@ -24,21 +33,26 @@ export function PendingBusinessesTab({ setBusinesses, businesses }: Props) {
     });
 
     if (json) {
-      setBusinesses((p) => {
-        const idx = p.filter((v) => v.id !== business.id);
-        return [json, ...idx];
-      });
+      await invalidateQuery();
+      asyncTable.remove(business.id);
     }
   }
 
   return (
-    <TabsContent aria-label={t("pendingBusinesses")} value="pendingBusinesses">
+    <TabsContent
+      tabName={`${t("pendingBusinesses")} ${
+        asyncTable.isInitialLoading ? "" : ` (${asyncTable.pagination.totalDataCount})`
+      }`}
+      aria-label={t("pendingBusinesses")}
+      value="pendingBusinesses"
+    >
       <h2 className="text-2xl font-semibold mb-2">{t("pendingBusinesses")}</h2>
       <p className="text-neutral-700 dark:text-gray-400">{t("info_pendingBusinesses")}</p>
 
       <Table
+        isLoading={asyncTable.isInitialLoading}
         tableState={tableState}
-        data={businesses.map((business) => ({
+        data={asyncTable.items.map((business) => ({
           id: business.id,
           name: business.name,
           owner: `${business.citizen.name} ${business.citizen.surname}`,

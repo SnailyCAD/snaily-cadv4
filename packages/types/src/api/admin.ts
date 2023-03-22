@@ -95,10 +95,13 @@ export type DeleteImportWeaponsData = boolean;
  * @method GET
  * @route /admin/manage/businesses
  */
-export type GetManageBusinessesData = (Prisma.Business & {
-  citizen: { id: string; name: string; surname: string };
-  user: Types.User;
-})[];
+export interface GetManageBusinessesData {
+  totalCount: number;
+  businesses: (Prisma.Business & {
+    citizen: { id: string; name: string; surname: string };
+    user: Types.User;
+  })[];
+}
 
 /**
  * @method GET
@@ -116,7 +119,7 @@ export interface GetManageBusinessByIdEmployeesData {
  * @method PUT
  * @route /admin/manage/businesses
  */
-export type PutManageBusinessesData = GetManageBusinessesData[number];
+export type PutManageBusinessesData = GetManageBusinessesData["businesses"][number];
 
 /**
  * @method DELETE

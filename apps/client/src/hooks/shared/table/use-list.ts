@@ -2,16 +2,24 @@ import * as React from "react";
 
 interface Options<T> {
   initialData: T[];
+  totalCount: number;
   getKey?(item: T): React.Key;
 }
 
 export function useList<T>(options: Options<T>) {
   const [items, setItems] = React.useState<T[]>(options.initialData);
+  const [totalCount, setTotalCount] = React.useState(options.totalCount);
+
+  React.useEffect(() => {
+    setTotalCount(options.totalCount);
+  }, [options.totalCount]);
+
   const getKey = options.getKey || _getKey;
 
   return {
     items,
-    ...createListActions({ dispatch: setItems, getKey }),
+    totalCount,
+    ...createListActions({ dispatch: setItems, setTotalCount, getKey }),
   };
 }
 
@@ -22,23 +30,31 @@ function _getKey<T>(item: T): string {
 export function createListActions<T>({
   dispatch,
   getKey,
+  setTotalCount,
 }: {
   dispatch: React.Dispatch<React.SetStateAction<T[]>>;
+  setTotalCount: React.Dispatch<React.SetStateAction<number>>;
   getKey(item: T): React.Key;
 }) {
   return {
-    setItems(items: T[]) {
+    setItems(items: T[], totalCount?: number) {
       dispatch(items);
+      if (typeof totalCount === "number") {
+        setTotalCount(totalCount);
+      }
       return items;
     },
     insert(index: number, ...values: T[]) {
       dispatch((items) => insert(items, index, ...values));
+      setTotalCount((count) => count + values.length);
     },
     prepend(...values: T[]) {
       dispatch((items) => insert(items, 0, ...values));
+      setTotalCount((count) => count + values.length);
     },
     append(...values: T[]) {
       dispatch((items) => insert(items, items.length, ...values));
+      setTotalCount((count) => count + values.length);
     },
     remove(...keys: React.Key[]) {
       dispatch((items) => {
@@ -47,6 +63,7 @@ export function createListActions<T>({
 
         return filteredItems;
       });
+      setTotalCount((count) => count - keys.length);
     },
     move(key: React.Key, toIndex: number) {
       dispatch((items) => {

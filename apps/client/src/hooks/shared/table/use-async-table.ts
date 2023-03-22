@@ -28,12 +28,15 @@ interface Options<T> {
 export function useAsyncTable<T>(options: Options<T>) {
   const scrollToTopOnDataChange = options.scrollToTopOnDataChange ?? true;
 
-  const list = useList<T>({ getKey: options.getKey, initialData: options.initialData ?? [] });
+  const list = useList<T>({
+    getKey: options.getKey,
+    initialData: options.initialData ?? [],
+    totalCount: options.totalCount ?? 0,
+  });
   const { state: loadingState, execute } = useFetch();
 
   const [debouncedSearch, setDebouncedSearch] = React.useState(options.search);
   const [filters, setFilters] = React.useState<Record<string, any> | null>(null);
-  const [totalDataCount, setTotalCount] = React.useState(options.totalCount);
   const [paginationOptions, setPagination] = React.useState({
     pageSize: options.fetchOptions.pageSize ?? 35,
     pageIndex: options.fetchOptions.pageIndex ?? 0,
@@ -49,7 +52,6 @@ export function useAsyncTable<T>(options: Options<T>) {
   });
 
   React.useEffect(() => {
-    setTotalCount(options.totalCount);
     setPagination({
       pageSize: options.fetchOptions.pageSize ?? 35,
       pageIndex: options.fetchOptions.pageIndex ?? 0,
@@ -82,14 +84,13 @@ export function useAsyncTable<T>(options: Options<T>) {
       params: Object.fromEntries(searchParams),
     });
     const toReturnData = options.fetchOptions.onResponse(json);
-    setTotalCount(toReturnData.totalCount);
 
     if (scrollToTopOnDataChange) {
       window.scrollTo({ behavior: "smooth", top: 0 });
     }
 
     if (Array.isArray(toReturnData.data)) {
-      return list.setItems(toReturnData.data);
+      return list.setItems(toReturnData.data, toReturnData.totalCount);
     }
 
     return list.setItems([]);
@@ -100,7 +101,7 @@ export function useAsyncTable<T>(options: Options<T>) {
   const pagination = {
     /** indicates whether data comes from the useAsyncTable hook. */
     __ASYNC_TABLE__: true,
-    totalDataCount,
+    totalDataCount: list.totalCount,
     isLoading: loadingState === "loading",
     setPagination,
     ...paginationOptions,

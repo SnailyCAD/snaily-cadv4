@@ -1,4 +1,4 @@
-import { Prisma, Rank } from "@prisma/client";
+import { Prisma, Rank, WhitelistStatus } from "@prisma/client";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
@@ -42,10 +42,21 @@ export class AdminManageBusinessesController {
       Permissions.ManageBusinesses,
     ],
   })
-  async getBusinesses(): Promise<APITypes.GetManageBusinessesData> {
-    const businesses = await prisma.business.findMany({ include: businessInclude });
+  async getBusinesses(
+    @QueryParams("pendingOnly", Boolean) pendingOnly = false,
+  ): Promise<APITypes.GetManageBusinessesData> {
+    const where = pendingOnly
+      ? {
+          status: WhitelistStatus.PENDING,
+        }
+      : undefined;
 
-    return businesses;
+    const [totalCount, businesses] = await prisma.$transaction([
+      prisma.business.count({ where }),
+      prisma.business.findMany({ where, include: businessInclude }),
+    ]);
+
+    return { businesses, totalCount };
   }
 
   @Get("/:id/employees")
