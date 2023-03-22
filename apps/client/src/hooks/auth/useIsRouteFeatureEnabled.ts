@@ -25,7 +25,7 @@ export function useIsRouteFeatureEnabled(cad: Partial<Pick<CAD, "features">>) {
 
       const route = key in featuresRoute && featuresRoute[key as keyof typeof featuresRoute];
 
-      if (route && feature === false && router.pathname.includes(route)) {
+      if (route && !feature && router.pathname.includes(route)) {
         isEnabled = false;
         break;
       } else {

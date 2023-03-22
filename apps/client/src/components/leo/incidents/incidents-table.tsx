@@ -47,6 +47,7 @@ export function IncidentsTable<T extends EmsFdIncident | LeoIncident>(
         data: json.incidents,
         totalCount: json.totalCount,
       }),
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       path: props.type === "ems-fd" ? "/ems-fd/incidents" : "/incidents",
     },
   });
@@ -66,6 +67,7 @@ export function IncidentsTable<T extends EmsFdIncident | LeoIncident>(
 
     const { json } = await execute<DeleteIncidentByIdData>({
       path:
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         props.type === "ems-fd"
           ? `/ems-fd/incidents/${tempIncident.id}`
           : `/incidents/${tempIncident.id}`,

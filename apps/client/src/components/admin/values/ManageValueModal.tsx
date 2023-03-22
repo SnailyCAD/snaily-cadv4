@@ -118,7 +118,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
       departments: values.departments?.map((v) => v.value),
       divisions: values.divisions?.map((v) => v.value),
       officerRankDepartments: values.officerRankDepartments?.map((v) => v.value),
-      trimLevels: values.trimLevels?.map((v) => v.value),
+      trimLevels: values.trimLevels.map((v) => v.value),
       extraFields: JSON.parse(values.extraFields),
     };
 
@@ -323,7 +323,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
                   closeMenuOnSelect={false}
                   name="trimLevels"
                   onChange={handleChange}
-                  value={values.trimLevels ?? []}
+                  value={values.trimLevels}
                   values={vehicleTrimLevel.values.map((trimLevel) => ({
                     value: trimLevel.id,
                     label: trimLevel.value,

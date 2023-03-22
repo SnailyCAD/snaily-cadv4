@@ -81,7 +81,7 @@ class IsFeatureEnabledMiddleware implements MiddlewareMethods {
 
     if (Array.isArray(options.feature)) {
       for (const feature of options.feature) {
-        if (cad.features[feature as TypesFeature] === true) {
+        if (cad.features[feature as TypesFeature]) {
           isEnabled = true;
           break;
         }
