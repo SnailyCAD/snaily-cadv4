@@ -134,7 +134,10 @@ export function Table<TData extends _RowData>({
       )}
     >
       {isLoading ? (
-        <TableSkeletonLoader isWithinCardOrModal={features?.isWithinCardOrModal} table={table} />
+        <TableSkeletonLoader
+          isWithinCardOrModal={features?.isWithinCardOrModal}
+          tableHeaders={table.getFlatHeaders()}
+        />
       ) : (
         <table className="w-full whitespace-nowrap max-h-64">
           <thead>
