@@ -11,6 +11,7 @@ import type { GetActiveOfficersData } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { shallow } from "zustand/shallow";
 import { useMapPlayersStore } from "./use-map-players";
+import { useActiveIncidents } from "./useActiveIncidents";
 
 let ran = false;
 export function useActiveOfficers() {
@@ -19,6 +20,7 @@ export function useActiveOfficers() {
   const { state, execute } = useFetch();
   const setActiveOfficer = useLeoState((state) => state.setActiveOfficer);
   const playerState = useMapPlayersStore();
+  const incidentsState = useActiveIncidents();
 
   const call911State = useCall911State(
     (state) => ({
@@ -42,6 +44,33 @@ export function useActiveOfficers() {
       }
     },
     [playerState],
+  );
+
+  const handleIncidentsState = React.useCallback(
+    (data: (Officer | CombinedLeoUnit)[]) => {
+      const updatedIncidents = [...incidentsState.activeIncidents].map((incident) => {
+        const newUnitsInvolved = [...incident.unitsInvolved].map((assignedUnit) => {
+          const unitIds = [assignedUnit.officerId, assignedUnit.combinedLeoId];
+          const officer = data.find((v) => unitIds.includes(v.id));
+
+          if (officer) {
+            return {
+              ...assignedUnit,
+              unit: officer,
+            };
+          }
+
+          return assignedUnit;
+        });
+
+        incident.unitsInvolved = newUnitsInvolved;
+
+        return incident;
+      });
+
+      incidentsState.setActiveIncidents(updatedIncidents);
+    },
+    [incidentsState.activeIncidents], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   const handleCallsState = React.useCallback(
@@ -138,6 +167,7 @@ export function useActiveOfficers() {
     if (data && Array.isArray(data)) {
       handleState(data);
       handleCallsState(data);
+      handleIncidentsState(data);
       return;
     }
 
