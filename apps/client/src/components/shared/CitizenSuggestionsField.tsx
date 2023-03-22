@@ -62,6 +62,7 @@ export function CitizenSuggestionsField<Suggestion extends NameSearchResult>(
             <div className="flex items-center">
               {item.imageId ? (
                 <ImageWrapper
+                  quality={70}
                   alt={`${item.name} ${item.surname}`}
                   className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                   draggable={false}

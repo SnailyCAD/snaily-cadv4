@@ -29,6 +29,7 @@ export function CitizenListItem({ citizen }: Props) {
       <div className="flex items-center space-x-3">
         {citizen.imageId ? (
           <ImageWrapper
+            quality={80}
             placeholder={citizen.imageBlurData ? "blur" : "empty"}
             blurDataURL={citizen.imageBlurData ?? undefined}
             alt={`${citizen.name} ${citizen.surname}`}

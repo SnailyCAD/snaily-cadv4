@@ -75,6 +75,7 @@ export function Nav({ maxWidth }: Props) {
                       <meta name="og:image" content={url} />
                     </Head>
                     <ImageWrapper
+                      quality={80}
                       alt={cad?.name || "SnailyCAD"}
                       width={30}
                       height={30}

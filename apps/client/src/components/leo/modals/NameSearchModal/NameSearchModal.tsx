@@ -222,6 +222,7 @@ export function NameSearchModal() {
                     <div className="flex items-center">
                       {item.imageId ? (
                         <ImageWrapper
+                          quality={70}
                           alt={`${item.name} ${item.surname}`}
                           className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                           draggable={false}
@@ -257,6 +258,7 @@ export function NameSearchModal() {
                       <div className="mr-2 min-w-[50px]">
                         {result.imageId ? (
                           <ImageWrapper
+                            quality={80}
                             placeholder={result.imageBlurData ? "blur" : "empty"}
                             blurDataURL={result.imageBlurData ?? undefined}
                             className="rounded-md w-[50px] h-[50px] object-cover"
@@ -360,6 +362,7 @@ export function NameSearchModal() {
                           className="cursor-pointer"
                         >
                           <ImageWrapper
+                            quality={100}
                             placeholder={currentResult.imageBlurData ? "blur" : "empty"}
                             blurDataURL={currentResult.imageBlurData ?? undefined}
                             className="rounded-md w-[100px] h-[100px] object-cover"

@@ -125,6 +125,7 @@ export function DeputyColumn({ deputy, isDispatch, nameAndCallsign, setTempUnit 
               >
                 {!isUnitCombinedEmsFd(deputy) && deputy.imageId ? (
                   <ImageWrapper
+                    quality={70}
                     className="rounded-md w-[30px] h-[30px] object-cover mr-2 inline-block"
                     draggable={false}
                     src={makeImageUrl("units", deputy.imageId)!}

@@ -81,6 +81,7 @@ export default function BleetPost({ post }: Props) {
       <main className="mt-2 bleet-reset">
         {post.imageId ? (
           <ImageWrapper
+            quality={100}
             width={1600}
             height={320}
             alt={post.title}

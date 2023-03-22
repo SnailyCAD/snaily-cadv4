@@ -126,6 +126,7 @@ export function useTableDataOfType(type: ValueType) {
         return {
           image: imgUrl ? (
             <ImageWrapper
+              quality={70}
               alt={v.value.value}
               loading="lazy"
               src={imgUrl}
@@ -148,6 +149,7 @@ export function useTableDataOfType(type: ValueType) {
         return {
           image: imgUrl ? (
             <ImageWrapper
+              quality={70}
               alt={v.value}
               loading="lazy"
               src={imgUrl}

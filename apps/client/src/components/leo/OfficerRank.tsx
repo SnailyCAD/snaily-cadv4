@@ -19,6 +19,7 @@ export function OfficerRank({ unit }: { unit: Officer | EmsFdDeputy }) {
     <span className="flex flex-row gap-2 pr-4">
       {imgUrl ? (
         <ImageWrapper
+          quality={70}
           alt={rank}
           loading="lazy"
           src={imgUrl}

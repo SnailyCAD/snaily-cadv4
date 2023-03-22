@@ -10,7 +10,7 @@ export interface RawImageToWebPOptions {
 }
 
 export async function getImageWebPPath(options: RawImageToWebPOptions) {
-  const sharpImage = sharp(options.buffer).webp({ quality: 80 });
+  const sharpImage = sharp(options.buffer).webp();
   const buffer = await sharpImage.toBuffer();
 
   const id = options.id ?? randomUUID();

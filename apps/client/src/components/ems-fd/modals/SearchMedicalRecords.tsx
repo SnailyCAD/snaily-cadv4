@@ -129,6 +129,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                     <div className="flex items-center">
                       {item.imageId ? (
                         <ImageWrapper
+                          quality={70}
                           placeholder={item.imageBlurData ? "blur" : "empty"}
                           blurDataURL={item.imageBlurData ?? undefined}
                           alt={`${item.name} ${item.surname}`}
@@ -195,6 +196,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                         className="cursor-pointer"
                       >
                         <ImageWrapper
+                          quality={70}
                           placeholder={results.imageBlurData ? "blur" : "empty"}
                           blurDataURL={results.imageBlurData ?? undefined}
                           className="rounded-md w-[100px] h-[100px] object-cover"

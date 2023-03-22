@@ -97,6 +97,7 @@ export function ModalButtons({ initialActiveOfficer }: { initialActiveOfficer: A
 
           {isUnitOfficer(activeOfficer) && activeOfficer.imageId ? (
             <ImageWrapper
+              quality={70}
               className="rounded-md w-[30px] h-[30px] object-cover mx-2 inline"
               draggable={false}
               src={makeImageUrl("units", activeOfficer.imageId)!}

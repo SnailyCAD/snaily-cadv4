@@ -200,6 +200,7 @@ export function AllUnitsTab({ units }: Props) {
                 <div className="min-w-[144px]">
                   {unit.imageId ? (
                     <ImageWrapper
+                      quality={70}
                       className="rounded-md w-[30px] h-[30px] object-cover mr-2 inline-block"
                       draggable={false}
                       src={makeImageUrl("units", unit.imageId)!}

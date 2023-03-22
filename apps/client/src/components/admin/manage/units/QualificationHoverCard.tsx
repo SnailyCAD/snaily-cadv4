@@ -20,6 +20,7 @@ export function QualificationsHoverCard({ qualification }: Props) {
       height={50}
       className="object-cover"
       fallback={<span className="cursor-default">—</span>}
+      quality={70}
     />
   ) : (
     <span className="cursor-default">—</span>
@@ -41,6 +42,7 @@ export function QualificationsHoverCard({ qualification }: Props) {
               height={70}
               className="object-cover rounded-sm"
               alt={qualification.qualification.value.value}
+              quality={70}
             />
           </div>
         ) : null}

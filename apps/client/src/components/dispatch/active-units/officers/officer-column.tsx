@@ -128,6 +128,7 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
               >
                 {isUnitOfficer(officer) && officer.imageId ? (
                   <ImageWrapper
+                    quality={70}
                     className="rounded-md w-[30px] h-[30px] object-cover mr-2 inline-block"
                     draggable={false}
                     src={makeImageUrl("units", officer.imageId)!}

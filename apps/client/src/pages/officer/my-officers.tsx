@@ -98,6 +98,7 @@ export default function MyOfficers({ officers: data }: Props) {
                 <span className="flex items-center">
                   {officer.imageId ? (
                     <ImageWrapper
+                      quality={70}
                       className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                       draggable={false}
                       src={makeImageUrl("units", officer.imageId)!}

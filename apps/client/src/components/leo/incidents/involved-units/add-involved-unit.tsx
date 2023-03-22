@@ -132,6 +132,7 @@ export function AddInvolvedUnitToIncidentModal<T extends LeoIncident | EmsFdInci
                     <div className="flex items-center">
                       {imageId ? (
                         <ImageWrapper
+                          quality={70}
                           alt={nameAndCallsign}
                           className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                           draggable={false}
