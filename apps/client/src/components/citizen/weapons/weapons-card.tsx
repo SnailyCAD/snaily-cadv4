@@ -29,6 +29,7 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
 
   const asyncTable = useAsyncTable({
     search,
+    scrollToTopOnDataChange: false,
     fetchOptions: {
       pageSize: 12,
       onResponse: (json: GetCitizenWeaponsData) => ({

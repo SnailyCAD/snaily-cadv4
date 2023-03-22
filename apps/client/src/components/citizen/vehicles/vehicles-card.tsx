@@ -38,6 +38,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
 
   const asyncTable = useAsyncTable({
     search,
+    scrollToTopOnDataChange: false,
     fetchOptions: {
       pageSize: 12,
       onResponse: (json: GetCitizenVehiclesData) => ({

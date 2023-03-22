@@ -11,7 +11,7 @@ import useFetch from "lib/useFetch";
 import { getTranslations } from "lib/getTranslation";
 import { VehiclesCard } from "components/citizen/vehicles/vehicles-card";
 import { LicensesCard } from "components/citizen/licenses/LicensesCard";
-import { MedicalRecords } from "components/citizen/medical-records/MedicalRecords";
+import { MedicalRecords } from "components/citizen/medical-records/medical-records";
 import { calculateAge, formatCitizenAddress, requestAll } from "lib/utils";
 import { useCitizen } from "context/CitizenContext";
 import dynamic from "next/dynamic";
@@ -22,10 +22,12 @@ import { Infofield } from "components/shared/Infofield";
 import { Title } from "components/shared/Title";
 import { ModalIds } from "types/ModalIds";
 import { FullDate } from "components/shared/FullDate";
-import { RecordsTab } from "components/leo/modals/NameSearchModal/tabs/records-tab";
 import type { DeleteCitizenByIdData } from "@snailycad/types/api";
 import { Dropdown } from "components/Dropdown";
 import { ImageWrapper } from "components/shared/image-wrapper";
+import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
+import { ValueType } from "@snailycad/types";
+import { CitizenRecordsCard } from "components/citizen/records/citizen-records-card";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const CitizenImageModal = dynamic(
@@ -36,6 +38,10 @@ const WeaponsCard = dynamic(
 );
 
 export default function CitizenId() {
+  useLoadValuesClientSide({
+    valueTypes: [ValueType.LICENSE, ValueType.DRIVERSLICENSE_CATEGORY, ValueType.BLOOD_GROUP],
+  });
+
   const { execute, state } = useFetch();
   const { openModal, closeModal } = useModal();
   const t = useTranslations("Citizen");
@@ -236,7 +242,7 @@ export default function CitizenId() {
         <VehiclesCard vehicles={citizen.vehicles} />
         {WEAPON_REGISTRATION ? <WeaponsCard weapons={citizen.weapons} /> : null}
 
-        <RecordsTab records={citizen.Record} isCitizen />
+        <CitizenRecordsCard />
       </div>
 
       <CitizenImageModal citizen={citizen} />
@@ -273,16 +279,12 @@ export default function CitizenId() {
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, query, req }) => {
   const user = await getSessionUser(req);
-  const [data, values] = await requestAll(req, [
-    [`/citizen/${query.id}`, null],
-    ["/admin/values/license?paths=driverslicense_category,blood_group", []],
-  ]);
+  const [data] = await requestAll(req, [[`/citizen/${query.id}`, null]]);
 
   return {
     props: {
       session: user,
       citizen: data,
-      values,
       messages: {
         ...(await getTranslations(["citizen", "leo", "common"], user?.locale ?? locale)),
       },

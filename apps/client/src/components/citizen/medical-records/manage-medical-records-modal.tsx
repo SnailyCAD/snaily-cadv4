@@ -5,7 +5,7 @@ import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import type { MedicalRecord } from "@snailycad/types";
+import { MedicalRecord, ValueType } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import { useCitizen } from "context/CitizenContext";
 import { useValues } from "context/ValuesContext";
@@ -13,7 +13,8 @@ import type {
   PostCitizenMedicalRecordsData,
   PutCitizenMedicalRecordsData,
 } from "@snailycad/types/api";
-import { Button, TextField, SelectField, Loader } from "@snailycad/ui";
+import { Button, TextField, Loader } from "@snailycad/ui";
+import { ValueSelectField } from "components/form/inputs/value-select-field";
 
 interface Props {
   medicalRecord: MedicalRecord | null;
@@ -87,21 +88,16 @@ export function ManageMedicalRecordsModal({ medicalRecord, onClose, onCreate, on
               errorMessage={errors.type}
             />
 
-            <SelectField
-              errorMessage={errors.bloodGroup}
+            <ValueSelectField
+              isClearable
+              fieldName="bloodGroup"
+              valueType={ValueType.BLOOD_GROUP}
+              values={bloodGroup.values}
               label={t("bloodGroup")}
-              selectedKey={values.bloodGroup}
-              onSelectionChange={(value) => setFieldValue("bloodGroup", value)}
-              name="type"
-              options={bloodGroup.values.map((v) => ({
-                value: v.id,
-                label: v.value,
-              }))}
-            >
-              {bloodGroupId && bloodGroupId !== values.bloodGroup ? (
-                <small className="mt-2 text-base">{t("info_bloodgroup")}</small>
-              ) : null}
-            </SelectField>
+            />
+            {bloodGroupId && bloodGroupId !== values.bloodGroup ? (
+              <small className="inline-block mb-3 text-base">{t("info_bloodgroup")}</small>
+            ) : null}
 
             <TextField
               label={common("description")}

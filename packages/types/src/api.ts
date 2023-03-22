@@ -268,6 +268,12 @@ export interface GetCitizensData {
 export type GetCitizenByIdData = Types.Citizen;
 
 /**
+ * @method GET
+ * @route /citizen/:id/records
+ */
+export type GetCitizenByIdRecordsData = Types.Record[];
+
+/**
  * @method DELETE
  * @route /citizen/:id
  */

@@ -3,7 +3,6 @@ import { Button } from "@snailycad/ui";
 import type { MedicalRecord, Value } from "@snailycad/types";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
-import { ManageMedicalRecordsModal } from "./ManageMedicalRecordsModal";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { Table, useTableState } from "components/shared/Table";
@@ -11,6 +10,11 @@ import { useCitizen } from "context/CitizenContext";
 import type { DeleteCitizenMedicalRecordsData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { FullDate } from "components/shared/FullDate";
+import dynamic from "next/dynamic";
+
+const ManageMedicalRecordsModal = dynamic(
+  async () => (await import("./manage-medical-records-modal")).ManageMedicalRecordsModal,
+);
 
 export function MedicalRecords() {
   const { state, execute } = useFetch();

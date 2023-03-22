@@ -8,7 +8,6 @@ import { BadRequest, Forbidden, NotFound } from "@tsed/exceptions";
 import { CREATE_CITIZEN_SCHEMA, CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
 import fs from "node:fs/promises";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
-import { leoProperties } from "lib/leo/activeOfficer";
 import { generateString } from "utils/generate-string";
 import { User, ValueType, Feature, cad, MiscCadSettings, Prisma } from "@prisma/client";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
@@ -26,6 +25,7 @@ import { upsertOfficer } from "controllers/leo/my-officers/upsert-officer";
 import { createCitizenViolations } from "lib/records/create-citizen-violations";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { z } from "zod";
+import { RecordsInclude } from "controllers/leo/search/SearchController";
 
 export const citizenInclude = {
   user: { select: userProperties },
@@ -66,18 +66,6 @@ export const citizenInclude = {
   pilotLicense: true,
   waterLicense: true,
   dlCategory: { include: { value: true } },
-  Record: {
-    include: {
-      officer: {
-        include: leoProperties,
-      },
-      violations: {
-        include: {
-          penalCode: true,
-        },
-      },
-    },
-  },
 } as const;
 
 @Controller("/citizen")
@@ -160,6 +148,36 @@ export class CitizenController {
     }
 
     return _citizen;
+  }
+
+  @Get("/:id/records")
+  async getCitizenRecords(
+    @Context("cad") cad: { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings },
+    @Context("user") user: User,
+    @PathParams("id") citizenId: string,
+  ): Promise<APITypes.GetCitizenByIdRecordsData> {
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
+
+    const citizen = await prisma.citizen.findFirst({
+      where: {
+        id: citizenId,
+        userId: checkCitizenUserId ? user.id : undefined,
+      },
+      include: citizenInclude,
+    });
+
+    if (!citizen) {
+      throw new NotFound("notFound");
+    }
+
+    const isEnabled = isFeatureEnabled({
+      feature: Feature.CITIZEN_RECORD_APPROVAL,
+      features: cad.features,
+      defaultReturn: false,
+    });
+
+    const records = await prisma.record.findMany(RecordsInclude(isEnabled));
+    return records;
   }
 
   @Delete("/:id")
