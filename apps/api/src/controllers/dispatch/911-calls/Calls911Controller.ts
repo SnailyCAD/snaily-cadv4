@@ -152,7 +152,7 @@ export class Calls911Controller {
   @Get("/:id")
   @Description("Get a call by its id")
   @UsePermissions({
-    permissions: [Permissions.Dispatch],
+    permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
     fallback: (u) => u.isDispatch || u.isLeo,
   })
   async getCallById(@PathParams("id") id: string): Promise<APITypes.Get911CallByIdData> {

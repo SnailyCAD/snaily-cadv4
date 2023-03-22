@@ -19,15 +19,13 @@ import { ActiveUnitsSearch } from "./active-units/ActiveUnitsSearch";
 import { classNames } from "lib/classNames";
 import { useActiveUnitsState } from "state/active-unit-state";
 import { useActiveUnitsFilter } from "hooks/shared/useActiveUnitsFilter";
-import { OfficerColumn } from "./active-units/officers/OfficerColumn";
+import { OfficerColumn } from "./active-units/officers/officer-column";
 import { isUnitOfficer } from "@snailycad/utils/typeguards";
-import { ActiveIncidentColumn } from "./active-units/officers/ActiveIncidentColumn";
-import { ActiveCallColumn } from "./active-units/officers/ActiveCallColumn";
-import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
+import { ActiveIncidentColumn } from "./active-units/officers/active-incident-column";
+import { ActiveCallColumn } from "./active-units/officers/active-call-column";
 import { HoverCard } from "components/shared/HoverCard";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useMounted } from "@casper124578/useful";
-import { useCall911State } from "state/dispatch/call-911-state";
 import { shallow } from "zustand/shallow";
 import { generateContrastColor } from "lib/table/get-contrasting-text-color";
 import dynamic from "next/dynamic";
@@ -64,7 +62,6 @@ function ActiveOfficers({ initialOfficers }: Props) {
   });
 
   const { activeOfficers: _activeOfficers, setActiveOfficers } = useActiveOfficers();
-  const { activeIncidents } = useActiveIncidents();
   const { openModal } = useModal();
   const { generateCallsign } = useGenerateCallsign();
   const { user } = useAuth();
@@ -76,7 +73,6 @@ function ActiveOfficers({ initialOfficers }: Props) {
 
   const router = useRouter();
   const isMounted = useMounted();
-  const active911Calls = useCall911State((state) => state.calls);
 
   const activeOfficers = isMounted ? _activeOfficers : initialOfficers;
   const isDispatch = router.pathname === "/dispatch";
@@ -159,11 +155,6 @@ function ActiveOfficers({ initialOfficers }: Props) {
               .map((officer) => {
                 const color = officer.status?.color;
 
-                const activeIncident =
-                  activeIncidents.find((v) => v.id === officer.activeIncidentId) ?? null;
-                const activeCall =
-                  active911Calls.find((v) => v.id === officer.activeCallId) ?? null;
-
                 const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
                 const nameAndCallsign = `${generateCallsign(officer)} ${makeUnitName(officer)}`;
 
@@ -212,9 +203,19 @@ function ActiveOfficers({ initialOfficers }: Props) {
                   ),
                   vehicle: officer.activeVehicle?.value.value ?? common("none"),
                   incident: (
-                    <ActiveIncidentColumn isDispatch={isDispatch} incident={activeIncident} />
+                    <ActiveIncidentColumn
+                      unitId={officer.id}
+                      isDispatch={isDispatch}
+                      incidentId={officer.activeIncidentId}
+                    />
                   ),
-                  activeCall: <ActiveCallColumn isDispatch={isDispatch} call={activeCall} />,
+                  activeCall: (
+                    <ActiveCallColumn
+                      unitId={officer.id}
+                      isDispatch={isDispatch}
+                      callId={officer.activeCallId}
+                    />
+                  ),
                   radioChannel: <UnitRadioChannelModal unit={officer} />,
                   actions: isDispatch ? (
                     <Button

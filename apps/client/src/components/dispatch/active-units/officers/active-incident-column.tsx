@@ -6,6 +6,9 @@ import { useModal } from "state/modalState";
 import { Button } from "@snailycad/ui";
 import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import dynamic from "next/dynamic";
+import { useQuery } from "@tanstack/react-query";
+import useFetch from "lib/useFetch";
+import { GetIncidentByIdData } from "@snailycad/types/api";
 
 const ManageIncidentModal = dynamic(
   async () => (await import("components/leo/incidents/manage-incident-modal")).ManageIncidentModal,
@@ -13,12 +16,26 @@ const ManageIncidentModal = dynamic(
 );
 
 interface Props {
-  incident: LeoIncident | null;
+  unitId: string;
+  incidentId: string | null;
   isDispatch: boolean;
 }
 
-export function ActiveIncidentColumn({ incident, isDispatch }: Props) {
+export function ActiveIncidentColumn({ unitId, incidentId, isDispatch }: Props) {
   const [tempIncident, setTempIncident] = React.useState<LeoIncident | null>(null);
+  const { execute } = useFetch();
+
+  const { data, isLoading } = useQuery({
+    enabled: !!incidentId,
+    queryKey: [unitId, incidentId],
+    queryFn: async () => {
+      const { json } = await execute<GetIncidentByIdData<"leo">>({
+        path: `/incidents/${incidentId}`,
+        noToast: true,
+      });
+      return json;
+    },
+  });
 
   const common = useTranslations("Common");
   const { openModal } = useModal();
@@ -33,8 +50,12 @@ export function ActiveIncidentColumn({ incident, isDispatch }: Props) {
     openModal(ModalIds.ManageIncident);
   }
 
-  if (!incident) {
+  if (!incidentId) {
     return <>{common("none")}</>;
+  }
+
+  if (!data || isLoading) {
+    return <Button disabled className="animate-pulse w-full h-9 rounded-md" />;
   }
 
   return (
@@ -43,12 +64,12 @@ export function ActiveIncidentColumn({ incident, isDispatch }: Props) {
         disabled={isBtnDisabled}
         onPress={() =>
           handleIncidentOpen({
-            ...incident,
+            ...data,
             isActive: true,
           } as LeoIncident)
         }
       >
-        #{incident.caseNumber}
+        #{data.caseNumber}
       </Button>
 
       {tempIncident ? (

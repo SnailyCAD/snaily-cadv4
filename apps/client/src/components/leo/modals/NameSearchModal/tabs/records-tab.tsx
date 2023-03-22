@@ -54,12 +54,8 @@ export function RecordsTab({
   ];
 
   function handleRecordUpdate(data: Record) {
-    console.log({ currentResult });
-
     if (!currentResult || currentResult.isConfidential) return;
     const isNewRecord = !currentResult.Record.some((v) => v.id === data.id);
-
-    console.log({ isNewRecord });
 
     setCurrentResult?.({
       ...currentResult,

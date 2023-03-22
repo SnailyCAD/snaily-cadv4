@@ -504,8 +504,8 @@ export interface GetIncidentsData<Type extends "ems-fd" | "leo"> {
  * @route /incidents/:id
  */
 export type GetIncidentByIdData<Type extends "ems-fd" | "leo"> = Type extends "ems-fd"
-  ? Types.EmsFdIncident[]
-  : Types.LeoIncident[];
+  ? Types.EmsFdIncident
+  : Types.LeoIncident;
 
 /**
  * @method POST

@@ -21,13 +21,11 @@ import { classNames } from "lib/classNames";
 import { Filter } from "react-bootstrap-icons";
 import { ActiveUnitsSearch } from "./active-units/ActiveUnitsSearch";
 import { useActiveUnitsFilter } from "hooks/shared/useActiveUnitsFilter";
-import { ActiveCallColumn } from "./active-units/officers/ActiveCallColumn";
-import { ActiveIncidentColumn } from "./active-units/officers/ActiveIncidentColumn";
-import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
+import { ActiveCallColumn } from "./active-units/officers/active-call-column";
+import { ActiveIncidentColumn } from "./active-units/officers/active-incident-column";
 import { DeputyColumn } from "./active-units/deputies/DeputyColumn";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useMounted } from "@casper124578/useful";
-import { useCall911State } from "state/dispatch/call-911-state";
 import { shallow } from "zustand/shallow";
 import { generateContrastColor } from "lib/table/get-contrasting-text-color";
 import { Permissions, usePermission } from "hooks/usePermission";
@@ -43,7 +41,6 @@ function ActiveDeputies({ initialDeputies }: Props) {
   const common = useTranslations("Common");
 
   const { activeDeputies: _activeDeputies, setActiveDeputies } = useActiveDeputies();
-  const { activeIncidents } = useActiveIncidents();
   const { hasPermissions } = usePermission();
   const { openModal } = useModal();
   const { generateCallsign } = useGenerateCallsign();
@@ -63,7 +60,6 @@ function ActiveDeputies({ initialDeputies }: Props) {
   const hasDispatchPerms = hasPermissions([Permissions.Dispatch], (u) => u.isDispatch);
   const showCreateTemporaryUnitButton = isDispatch && hasDispatchPerms;
 
-  const active911Calls = useCall911State((state) => state.calls);
   const { activeDeputy, setActiveDeputy } = useEmsFdState(
     (state) => ({
       activeDeputy: state.activeDeputy,
@@ -140,10 +136,6 @@ function ActiveDeputies({ initialDeputies }: Props) {
                 const color = deputy.status?.color;
                 const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
 
-                const activeIncident =
-                  activeIncidents.find((v) => v.id === deputy.activeIncidentId) ?? null;
-                const activeCall = active911Calls.find((v) => v.id === deputy.activeCallId) ?? null;
-
                 const nameAndCallsign = `${generateCallsign(deputy)} ${makeUnitName(deputy)}`;
 
                 return {
@@ -182,9 +174,19 @@ function ActiveDeputies({ initialDeputies }: Props) {
                   ),
                   vehicle: deputy.activeVehicle?.value.value ?? common("none"),
                   incident: (
-                    <ActiveIncidentColumn isDispatch={isDispatch} incident={activeIncident} />
+                    <ActiveIncidentColumn
+                      unitId={deputy.id}
+                      isDispatch={isDispatch}
+                      incidentId={deputy.activeIncidentId}
+                    />
                   ),
-                  activeCall: <ActiveCallColumn isDispatch={isDispatch} call={activeCall} />,
+                  activeCall: (
+                    <ActiveCallColumn
+                      unitId={deputy.id}
+                      isDispatch={isDispatch}
+                      callId={deputy.activeCallId}
+                    />
+                  ),
                   radioChannel: <UnitRadioChannelModal unit={deputy} />,
                   actions: isDispatch ? (
                     <Button

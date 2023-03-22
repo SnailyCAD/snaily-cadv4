@@ -7,7 +7,7 @@ import { yesOrNoText } from "lib/utils";
 import { FullDate } from "components/shared/FullDate";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
-import { useActiveIncidents } from "hooks/realtime/use-active-incidents";
+import { useActiveIncidentsTable } from "hooks/realtime/use-active-incidents-table";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import type { LeoIncident } from "@snailycad/types";
@@ -19,6 +19,8 @@ import type { PostIncidentsData, PutIncidentByIdData } from "@snailycad/types/ap
 import { CallDescription } from "./active-calls/CallDescription";
 
 import dynamic from "next/dynamic";
+import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
+import compareDesc from "date-fns/compareDesc";
 
 const ManageIncidentModal = dynamic(
   async () => (await import("components/leo/incidents/manage-incident-modal")).ManageIncidentModal,
@@ -38,7 +40,8 @@ export function ActiveIncidents() {
   const { state, execute } = useFetch();
   const draggingUnit = useDispatchState((state) => state.draggingUnit);
 
-  const asyncTable = useActiveIncidents();
+  const asyncTable = useActiveIncidentsTable();
+  const { activeIncidents } = useActiveIncidents();
 
   const tableState = useTableState({
     tableId: "active-incidents",
@@ -122,46 +125,48 @@ export function ActiveIncidents() {
           tableState={tableState}
           features={{ isWithinCardOrModal: true }}
           containerProps={{ className: "mb-3 mx-4" }}
-          data={asyncTable.items.map((incident) => {
-            return {
-              id: incident.id,
-              caseNumber: `#${incident.caseNumber}`,
-              unitsInvolved: (
-                <InvolvedUnitsColumn
-                  handleAssignUnassignToIncident={handleAssignUnassignToIncident}
-                  incident={incident}
-                />
-              ),
-              createdAt: <FullDate>{incident.createdAt}</FullDate>,
-              firearmsInvolved: common(yesOrNoText(incident.firearmsInvolved)),
-              injuriesOrFatalities: common(yesOrNoText(incident.injuriesOrFatalities)),
-              arrestsMade: common(yesOrNoText(incident.arrestsMade)),
-              situationCode: incident.situationCode?.value.value ?? common("none"),
-              description: <CallDescription data={incident} />,
-              actions: (
-                <>
-                  <Button
-                    onPress={() => onEditClick(incident)}
-                    disabled={!hasActiveDispatchers}
-                    size="xs"
-                    variant="success"
-                  >
-                    {common("manage")}
-                  </Button>
+          data={activeIncidents
+            .sort((a, b) => compareDesc(new Date(a.updatedAt), new Date(b.updatedAt)))
+            .map((incident) => {
+              return {
+                id: incident.id,
+                caseNumber: `#${incident.caseNumber}`,
+                unitsInvolved: (
+                  <InvolvedUnitsColumn
+                    handleAssignUnassignToIncident={handleAssignUnassignToIncident}
+                    incident={incident}
+                  />
+                ),
+                createdAt: <FullDate>{incident.createdAt}</FullDate>,
+                firearmsInvolved: common(yesOrNoText(incident.firearmsInvolved)),
+                injuriesOrFatalities: common(yesOrNoText(incident.injuriesOrFatalities)),
+                arrestsMade: common(yesOrNoText(incident.arrestsMade)),
+                situationCode: incident.situationCode?.value.value ?? common("none"),
+                description: <CallDescription data={incident} />,
+                actions: (
+                  <>
+                    <Button
+                      onPress={() => onEditClick(incident)}
+                      disabled={!hasActiveDispatchers}
+                      size="xs"
+                      variant="success"
+                    >
+                      {common("manage")}
+                    </Button>
 
-                  <Button
-                    onPress={() => onEndClick(incident)}
-                    disabled={!hasActiveDispatchers}
-                    size="xs"
-                    variant="danger"
-                    className="ml-2"
-                  >
-                    {t("end")}
-                  </Button>
-                </>
-              ),
-            };
-          })}
+                    <Button
+                      onPress={() => onEndClick(incident)}
+                      disabled={!hasActiveDispatchers}
+                      size="xs"
+                      variant="danger"
+                      className="ml-2"
+                    >
+                      {t("end")}
+                    </Button>
+                  </>
+                ),
+              };
+            })}
           columns={[
             { header: t("caseNumber"), accessorKey: "caseNumber" },
             { header: t("unitsInvolved"), accessorKey: "unitsInvolved" },

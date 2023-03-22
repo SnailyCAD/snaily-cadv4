@@ -13,10 +13,11 @@ import { Socket } from "services/socket-service";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
-import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
+import { getFirstOfficerFromActiveOfficer, getInactivityFilter } from "lib/leo/utils";
 import type * as APITypes from "@snailycad/types/api";
 import { getNextIncidentId } from "lib/incidents/get-next-incident-id";
 import { assignUnitsInvolvedToIncident } from "lib/incidents/handle-involved-units";
+import { cad } from "@snailycad/types";
 
 export const assignedUnitsInclude = {
   include: {
@@ -68,14 +69,17 @@ export class IncidentController {
     fallback: (u) => u.isDispatch || u.isLeo,
   })
   async getAllIncidents(
+    @Context("cad") cad: cad,
     @QueryParams("activeType", String) activeType: ActiveTypes = "inactive",
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("includeAll", Boolean) includeAll = false,
     @QueryParams("assignedUnit", String) assignedUnit?: string,
   ): Promise<APITypes.GetIncidentsData<"leo">> {
+    const incidentInactivityFilter = getInactivityFilter(cad, "incidentInactivityTimeout");
+
     const isActiveObj =
       activeType === "active"
-        ? { isActive: true }
+        ? { isActive: true, ...incidentInactivityFilter?.filter }
         : activeType === "inactive"
         ? { isActive: false }
         : {};
@@ -98,7 +102,7 @@ export class IncidentController {
       prisma.leoIncident.findMany({
         where,
         include: incidentInclude,
-        orderBy: { caseNumber: "desc" },
+        orderBy: activeType === "active" ? { updatedAt: "desc" } : { caseNumber: "desc" },
         take: includeAll ? undefined : 25,
         skip: includeAll ? undefined : skip,
       }),
