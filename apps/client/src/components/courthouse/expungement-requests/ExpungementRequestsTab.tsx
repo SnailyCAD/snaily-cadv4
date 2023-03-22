@@ -27,7 +27,7 @@ interface Props {
 }
 
 export function ExpungementRequestsTab(props: Props) {
-  const list = useList({ initialData: props.requests });
+  const list = useList({ initialData: props.requests, totalCount: props.requests.length });
   const [tempRequest, requestState] = useTemporaryItem(list.items);
 
   const common = useTranslations("Common");
