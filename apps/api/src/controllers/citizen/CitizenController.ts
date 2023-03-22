@@ -26,6 +26,7 @@ import { createCitizenViolations } from "lib/records/create-citizen-violations";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { z } from "zod";
 import { RecordsInclude } from "controllers/leo/search/SearchController";
+import { leoProperties } from "lib/leo/activeOfficer";
 
 export const citizenInclude = {
   user: { select: userProperties },
@@ -67,6 +68,22 @@ export const citizenInclude = {
   waterLicense: true,
   dlCategory: { include: { value: true } },
 } as const;
+
+export const citizenIncludeWithRecords = {
+  ...citizenInclude,
+  Record: {
+    include: {
+      officer: {
+        include: leoProperties,
+      },
+      violations: {
+        include: {
+          penalCode: true,
+        },
+      },
+    },
+  },
+};
 
 @Controller("/citizen")
 @UseBeforeEach(IsAuth)
@@ -163,7 +180,7 @@ export class CitizenController {
         id: citizenId,
         userId: checkCitizenUserId ? user.id : undefined,
       },
-      include: citizenInclude,
+      include: citizenIncludeWithRecords,
     });
 
     if (!citizen) {

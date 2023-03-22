@@ -3,7 +3,7 @@ import { BodyParams, Context, PathParams, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { ContentType, Delete, Get, Post } from "@tsed/schema";
-import { citizenInclude } from "controllers/citizen/CitizenController";
+import { citizenIncludeWithRecords } from "controllers/citizen/CitizenController";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/is-auth";
 import type * as APITypes from "@snailycad/types/api";
@@ -41,7 +41,7 @@ export class ExpungementRequestsController {
   ): Promise<APITypes.GetExpungementRequestByCitizenIdData> {
     const citizen = await prisma.citizen.findFirst({
       where: { id: citizenId, userId: user.id },
-      include: { ...citizenInclude, warrants: true },
+      include: { ...citizenIncludeWithRecords, warrants: true },
     });
 
     if (!citizen) {
