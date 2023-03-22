@@ -10,18 +10,48 @@ import type { GetEmsFdActiveDeputies } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { shallow } from "zustand/shallow";
 import { isUnitCombinedEmsFd } from "@snailycad/utils";
+import { useActiveIncidents } from "./useActiveIncidents";
 
 export function useActiveDeputies() {
   const { user } = useAuth();
   const { activeDeputies, setActiveDeputies } = useDispatchState();
   const { state, execute } = useFetch();
   const setActiveDeputy = useEmsFdState((state) => state.setActiveDeputy);
+
+  const incidentsState = useActiveIncidents();
   const call911State = useCall911State(
     (state) => ({
       calls: state.calls,
       setCalls: state.setCalls,
     }),
     shallow,
+  );
+
+  const handleIncidentsState = React.useCallback(
+    (data: EmsFdDeputy[]) => {
+      const updatedIncidents = [...incidentsState.activeIncidents].map((incident) => {
+        const newUnitsInvolved = [...incident.unitsInvolved].map((assignedUnit) => {
+          const unitIds = [assignedUnit.officerId, assignedUnit.combinedLeoId];
+          const officer = data.find((v) => unitIds.includes(v.id));
+
+          if (officer) {
+            return {
+              ...assignedUnit,
+              unit: officer,
+            };
+          }
+
+          return assignedUnit;
+        });
+
+        incident.unitsInvolved = newUnitsInvolved;
+
+        return incident;
+      });
+
+      incidentsState.setActiveIncidents(updatedIncidents);
+    },
+    [incidentsState.activeIncidents], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   const handleCallsState = React.useCallback(
@@ -88,6 +118,7 @@ export function useActiveDeputies() {
     if (data && Array.isArray(data)) {
       handleState(data);
       handleCallsState(data);
+      handleIncidentsState(data);
       return;
     }
 
