@@ -34,6 +34,7 @@ export default function Bleeter({ posts }: Props) {
 
   const list = useList({
     initialData: posts,
+    totalCount: posts.length,
   });
 
   return (

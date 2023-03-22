@@ -19,7 +19,7 @@ import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { ModalIds } from "types/ModalIds";
 import { requestAll, yesOrNoText } from "lib/utils";
-import { PendingBusinessesTab } from "components/admin/manage/business/PendingBusinessesTab";
+import { PendingBusinessesTab } from "components/admin/manage/business/pending-businesses-tab";
 import { useAuth } from "context/AuthContext";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { Title } from "components/shared/Title";
