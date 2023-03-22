@@ -1,14 +1,5 @@
 import { useTranslations } from "use-intl";
-import * as React from "react";
-import {
-  TabsContent,
-  TabList,
-  Loader,
-  Button,
-  TextField,
-  buttonVariants,
-  buttonSizes,
-} from "@snailycad/ui";
+import { TabsContent, TabList, Loader, Button, buttonVariants, buttonSizes } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -35,8 +26,6 @@ interface Props {
 }
 
 export default function ManageBusinesses({ businesses: data }: Props) {
-  const [reason, setReason] = React.useState("");
-  const reasonRef = React.useRef<HTMLInputElement>(null);
   const { cad } = useAuth();
 
   const { state, execute } = useFetch();
@@ -83,14 +72,9 @@ export default function ManageBusinesses({ businesses: data }: Props) {
   async function handleDelete() {
     if (!tempValue) return;
 
-    if (!reason.trim() && reasonRef.current) {
-      return reasonRef.current.focus();
-    }
-
     const { json } = await execute<DeleteBusinessByIdData>({
       path: `/admin/manage/businesses/${tempValue.id}`,
       method: "DELETE",
-      data: { reason },
     });
 
     if (json) {
@@ -180,15 +164,6 @@ export default function ManageBusinesses({ businesses: data }: Props) {
         isOpen={isOpen(ModalIds.AlertDeleteBusiness)}
         className="max-w-2xl"
       >
-        <div>
-          <p className="my-3">
-            {t.rich("alert_deleteBusiness", {
-              name: tempValue?.name ?? "",
-            })}
-          </p>
-          <TextField label="Reason" inputRef={reasonRef} value={reason} onChange={setReason} />
-        </div>
-
         <div className="flex items-center justify-end gap-2 mt-2">
           <Button
             variant="cancel"

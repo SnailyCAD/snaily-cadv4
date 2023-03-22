@@ -44,16 +44,45 @@ export class AdminManageBusinessesController {
   })
   async getBusinesses(
     @QueryParams("pendingOnly", Boolean) pendingOnly = false,
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("includeAll", Boolean) includeAll = false,
+    @QueryParams("query", String) query = "",
   ): Promise<APITypes.GetManageBusinessesData> {
-    const where = pendingOnly
-      ? {
-          status: WhitelistStatus.PENDING,
-        }
-      : undefined;
+    const where = {} as Prisma.BusinessWhereInput;
+
+    const [name, surname] = query.toString().toLowerCase().split(/ +/g);
+
+    if (query) {
+      where.OR = [
+        { address: { contains: query } },
+        { name: { contains: query } },
+        {
+          citizen: {
+            name: { contains: name, mode: "insensitive" },
+            surname: { contains: surname, mode: "insensitive" },
+          },
+        },
+        {
+          citizen: {
+            name: { contains: surname, mode: "insensitive" },
+            surname: { contains: name, mode: "insensitive" },
+          },
+        },
+      ];
+    }
+
+    if (pendingOnly) {
+      where.status = WhitelistStatus.PENDING;
+    }
 
     const [totalCount, businesses] = await prisma.$transaction([
       prisma.business.count({ where }),
-      prisma.business.findMany({ where, include: businessInclude }),
+      prisma.business.findMany({
+        take: includeAll ? undefined : 35,
+        skip: includeAll ? undefined : skip,
+        where,
+        include: businessInclude,
+      }),
     ]);
 
     return { businesses, totalCount };
