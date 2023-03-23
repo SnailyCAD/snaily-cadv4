@@ -193,7 +193,10 @@ export class CitizenController {
       defaultReturn: false,
     });
 
-    const records = await prisma.record.findMany(RecordsInclude(isEnabled));
+    const records = await prisma.record.findMany({
+      ...RecordsInclude(isEnabled),
+      where: { ...RecordsInclude(isEnabled).where, citizenId: citizen.id },
+    });
     return records;
   }
 
