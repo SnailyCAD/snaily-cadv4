@@ -50,7 +50,6 @@ export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
       <SearchArea totalCount={totalCount} asyncTable={asyncTable} search={{ search, setSearch }} />
 
       <Table
-        isLoading
         tableState={tableState}
         data={asyncTable.items.map((user) => {
           const hasAdminPermissions = hasPermissions(
