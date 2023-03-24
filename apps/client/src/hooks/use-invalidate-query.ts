@@ -8,7 +8,7 @@ export function useInvalidateQuery<T extends unknown[]>(queryKeyParts: T) {
   const queryClient = useQueryClient();
 
   const queries = queryClient.getQueryCache().findAll();
-  const query = queries.find((q) => q.queryKey.some((k) => queryKeyParts.includes(k)));
+  const query = queries.find((q) => queryKeyParts.every((k) => q.queryKey.includes(k)));
 
   async function invalidateQuery() {
     await queryClient.invalidateQueries(query?.queryKey);

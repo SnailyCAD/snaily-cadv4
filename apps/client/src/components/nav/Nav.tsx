@@ -18,6 +18,7 @@ import { usePermission } from "hooks/usePermission";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import { Rank } from "@snailycad/types";
 import { ImageWrapper } from "components/shared/image-wrapper";
+import { AdminLink } from "./dropdowns/admin-link";
 
 interface Props {
   maxWidth?: string;
@@ -143,16 +144,7 @@ export function Nav({ maxWidth }: Props) {
                 ],
                 user?.rank !== Rank.USER,
               ) ? (
-                <Link
-                  role="listitem"
-                  href="/admin"
-                  className={classNames(
-                    "p-1 nav:px-2 text-gray-700 dark:text-gray-200 transition duration-300",
-                    isActive("/admin") && "font-semibold",
-                  )}
-                >
-                  {t("admin")}
-                </Link>
+                <AdminLink />
               ) : null}
             </div>
           </div>

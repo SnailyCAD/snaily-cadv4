@@ -14,6 +14,7 @@ import { CreateWarrantModal } from "components/leo/modals/CreateWarrantModal";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
+import { useInvalidateQuery } from "hooks/use-invalidate-query";
 
 interface Props {
   warrants: GetManagePendingWarrants;
@@ -29,6 +30,7 @@ export function PendingWarrantsTab({ warrants: data }: Props) {
   const tableState = useTableState();
   const { state, execute } = useFetch();
   const { generateCallsign } = useGenerateCallsign();
+  const { invalidateQuery } = useInvalidateQuery(["admin", "notifications"]);
 
   function handleViewWarrant(warrant: Warrant) {
     warrantState.setTempId(warrant.id);
@@ -43,6 +45,7 @@ export function PendingWarrantsTab({ warrants: data }: Props) {
     });
 
     if (typeof json === "boolean" && json) {
+      invalidateQuery();
       setWarrants((p) => p.filter((v) => v.id !== id));
       warrantState.setTempId(null);
     }
