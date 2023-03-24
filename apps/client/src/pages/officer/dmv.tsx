@@ -13,6 +13,7 @@ import { Permissions } from "hooks/usePermission";
 import useFetch from "lib/useFetch";
 import { Status } from "components/shared/Status";
 import type { GetDMVPendingVehiclesData, PostDMVVehiclesData } from "@snailycad/types/api";
+import { useInvalidateQuery } from "hooks/use-invalidate-query";
 
 interface Props {
   data: GetDMVPendingVehiclesData;
@@ -23,6 +24,7 @@ export default function Dmv({ data }: Props) {
   const vT = useTranslations("Vehicles");
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
+  const { invalidateQuery } = useInvalidateQuery(["officer", "notifications"]);
 
   const asyncTable = useAsyncTable({
     fetchOptions: {
@@ -45,6 +47,7 @@ export default function Dmv({ data }: Props) {
     });
 
     if (json) {
+      await invalidateQuery();
       asyncTable.update(id, json);
     }
   }

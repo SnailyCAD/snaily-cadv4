@@ -6,6 +6,8 @@ import { Button } from "@snailycad/ui";
 import { classNames } from "lib/classNames";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { useQuery } from "@tanstack/react-query";
+import useFetch from "lib/useFetch";
 
 export function OfficerDropdown() {
   const router = useRouter();
@@ -13,6 +15,18 @@ export function OfficerDropdown() {
   const isActive = (route: string) => router.pathname.startsWith(route);
   const { hasPermissions } = usePermission();
   const { LICENSE_EXAMS, CALLS_911, DMV, BUREAU_OF_FIREARMS } = useFeatureEnabled();
+  const { execute } = useFetch();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["officer", "notifications"],
+    queryFn: async () => {
+      const { json } = await execute({ path: "/notifications/officer", noToast: true });
+      return json as { pendingVehicles: number; pendingWeapons: number };
+    },
+  });
+
+  const totalNotificationsCount =
+    isLoading || !data ? 0 : data.pendingVehicles + data.pendingWeapons;
 
   const items = [
     {
@@ -87,18 +101,26 @@ export function OfficerDropdown() {
       href: "/admin/manage/units",
       show: hasPermissions([Permissions.ManageUnits, Permissions.ViewUnits], (u) => u.isSupervisor),
     },
-  ];
+  ] as const;
 
   return (
     <Dropdown
-      className="min-w-[180px]"
+      className="min-w-[200px]"
       trigger={
         <Button
           role="listitem"
           className={classNames(isActive("/officer") && "font-semibold")}
           variant="transparent"
         >
-          {t("officer")}
+          <span className="relative">
+            {t("officer")}
+            {totalNotificationsCount > 0 ? (
+              <span className="absolute bg-quinary shadow-md h-4 w-6 grid place-content-center -right-5 -top-1 rounded-full font-sm">
+                {totalNotificationsCount}
+              </span>
+            ) : null}
+          </span>
+
           <span className="mt-1 ml-1">
             <ChevronDown width={15} height={15} className="text-gray-700 dark:text-gray-300" />
           </span>
@@ -113,9 +135,28 @@ export function OfficerDropdown() {
           return null;
         }
 
+        const notifications = {
+          "/officer/dmv": data?.pendingVehicles,
+          "/officer/bureau-of-firearms": data?.pendingWeapons,
+        } as Record<string, number | undefined>;
+        const notificationCount = notifications[path];
+
         return (
-          <Dropdown.LinkItem key={path} href={path}>
+          <Dropdown.LinkItem
+            className="flex justify-between items-center gap-2"
+            key={path}
+            href={path}
+          >
             {item.name}
+
+            {notificationCount ? (
+              <span
+                aria-label={notificationCount.toString()}
+                className=" bg-tertiary h-6 min-w-[24px] grid place-content-center rounded-full font-sm"
+              >
+                {notificationCount}
+              </span>
+            ) : null}
           </Dropdown.LinkItem>
         );
       })}

@@ -13,6 +13,7 @@ import { Permissions } from "hooks/usePermission";
 import useFetch from "lib/useFetch";
 import { Status } from "components/shared/Status";
 import type { PostBOFData, GetPendingBOFWeapons } from "@snailycad/types/api";
+import { useInvalidateQuery } from "hooks/use-invalidate-query";
 
 interface Props {
   data: GetPendingBOFWeapons;
@@ -22,6 +23,7 @@ export default function BureauOfFirearms({ data }: Props) {
   const t = useTranslations();
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
+  const { invalidateQuery } = useInvalidateQuery(["officer", "notifications"]);
 
   const asyncTable = useAsyncTable({
     fetchOptions: {
@@ -44,6 +46,7 @@ export default function BureauOfFirearms({ data }: Props) {
     });
 
     if (json) {
+      await invalidateQuery();
       asyncTable.update(id, json);
     }
   }
