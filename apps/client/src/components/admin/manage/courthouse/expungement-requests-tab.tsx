@@ -13,6 +13,7 @@ import type {
   GetManageExpungementRequests,
   PutManageExpungementRequests,
 } from "@snailycad/types/api";
+import { useInvalidateQuery } from "hooks/use-invalidate-query";
 
 interface Props {
   requests: GetManageExpungementRequests;
@@ -27,6 +28,7 @@ export function ExpungementRequestsTab({ requests: data }: Props) {
   const { state, execute } = useFetch();
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageExpungementRequests], true);
+  const { invalidateQuery } = useInvalidateQuery(["admin", "notifications"]);
 
   async function handleUpdate(id: string, type: ExpungementRequestStatus) {
     const { json } = await execute<PutManageExpungementRequests>({
@@ -37,6 +39,7 @@ export function ExpungementRequestsTab({ requests: data }: Props) {
 
     if (json) {
       setPendingRequests((p) => p.filter((v) => v.id !== json.id));
+      await invalidateQuery();
     }
   }
 

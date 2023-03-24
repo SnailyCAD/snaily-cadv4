@@ -9,10 +9,37 @@ import { importRoutes, managementRoutes, SidebarRoute, valueRoutes } from "./Sid
 import { usePermission } from "hooks/usePermission";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import { SidebarSection } from "./Sidebar/SidebarSection";
+import useFetch from "lib/useFetch";
+import { useQuery } from "@tanstack/react-query";
+
+type AdminNotificationKeys =
+  | "pendingUnitsForDepartments"
+  | "pendingBusinesses"
+  | "pendingNameChangeRequests"
+  | "pendingExpungementRequests"
+  | "pendingWarrants";
 
 export function AdminSidebar() {
   const [menuOpen, setMenuOpen] = React.useState(false);
   const viewport = useViewport();
+
+  const { execute } = useFetch();
+  const { data } = useQuery({
+    queryKey: ["admin", "notifications"],
+    queryFn: async () => {
+      const { json } = await execute({ path: "/notifications/admin", noToast: true });
+      return json as Record<AdminNotificationKeys, number>;
+    },
+  });
+
+  const notificationsForPath = data
+    ? ({
+        "/admin/manage/units": data.pendingUnitsForDepartments,
+        "/admin/manage/businesses": data.pendingBusinesses,
+        "/admin/manage/courthouse":
+          data.pendingWarrants + data.pendingNameChangeRequests + data.pendingExpungementRequests,
+      } as Partial<Record<string, number | undefined>>)
+    : {};
 
   const t = useTranslations();
   const man = useTranslations("Management");
@@ -70,6 +97,9 @@ export function AdminSidebar() {
                     href={`/admin/manage/${makeType(route.type)}`}
                     text={man(`MANAGE_${route.type}`)}
                     onRouteClick={() => setMenuOpen(false)}
+                    notificationCount={
+                      notificationsForPath[`/admin/manage/${makeType(route.type)}`]
+                    }
                   />
                 );
               })}
@@ -142,9 +172,10 @@ interface ItemProps {
   href: string;
   onRouteClick(): void;
   route: SidebarRoute | null;
+  notificationCount?: number;
 }
 
-function SidebarItem({ route, href, text, isActive, onRouteClick }: ItemProps) {
+function SidebarItem({ route, href, text, isActive, notificationCount, onRouteClick }: ItemProps) {
   const features = useFeatureEnabled();
   const { hasPermissions } = usePermission();
 
@@ -158,12 +189,17 @@ function SidebarItem({ route, href, text, isActive, onRouteClick }: ItemProps) {
         prefetch={false}
         onClick={onRouteClick}
         className={classNames(
-          "transition-colors rounded-md block px-4 py-1 dark:text-white hover:bg-gray-200 dark:hover:bg-secondary",
+          "flex items-center justify-between transition-colors rounded-md px-4 py-1 dark:text-white hover:bg-gray-200 dark:hover:bg-secondary",
           isActive && "bg-gray-300 dark:bg-secondary dark:text-white",
         )}
         href={href}
       >
         {text}
+        {notificationCount ? (
+          <span className="bg-primary h-6 min-w-[24px] grid place-content-center rounded-full text-sm">
+            {notificationCount}
+          </span>
+        ) : null}
       </Link>
     </li>
   );

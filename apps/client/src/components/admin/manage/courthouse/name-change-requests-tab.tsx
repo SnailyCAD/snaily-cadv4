@@ -12,6 +12,7 @@ import type {
   GetManageNameChangeRequests,
   PutManageNameChangeRequests,
 } from "@snailycad/types/api";
+import { useInvalidateQuery } from "hooks/use-invalidate-query";
 
 interface Props {
   requests: GetManageNameChangeRequests;
@@ -27,6 +28,7 @@ export function NameChangeRequestsTab({ requests: data }: Props) {
   const pendingRequests = requests.filter((v) => v.status === WhitelistStatus.PENDING);
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageNameChangeRequests], true);
+  const { invalidateQuery } = useInvalidateQuery(["admin", "notifications"]);
 
   async function handleUpdate(id: string, type: WhitelistStatus) {
     const { json } = await execute<PutManageNameChangeRequests>({
@@ -37,6 +39,7 @@ export function NameChangeRequestsTab({ requests: data }: Props) {
 
     if (json) {
       setRequests((p) => p.filter((v) => v.id !== json.id));
+      await invalidateQuery();
     }
   }
 
