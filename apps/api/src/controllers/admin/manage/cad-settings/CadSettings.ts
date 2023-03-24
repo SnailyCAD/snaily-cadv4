@@ -2,7 +2,7 @@ import {
   CAD_MISC_SETTINGS_SCHEMA,
   CAD_SETTINGS_SCHEMA,
   DISABLED_FEATURES_SCHEMA,
-  CAD_AUTO_SET_PROPERTIES,
+  UPDATE_DEFAULT_PERMISSIONS_SCHEMA,
   API_TOKEN_SCHEMA,
 } from "@snailycad/schemas";
 import { Controller } from "@tsed/di";
@@ -249,18 +249,18 @@ export class CADSettingsController {
     return updated;
   }
 
-  @Put("/auto-set-properties")
+  @Put("/default-permissions")
   @UseBefore(IsAuth)
   @UsePermissions({
     fallback: (u) => u.rank === Rank.OWNER,
     permissions: [Permissions.ManageCADSettings],
   })
-  async updateAutoSetProperties(
+  async updateDefaultPermissions(
     @Context("cad") cad: cad,
     @BodyParams() body: unknown,
     @Context("sessionUserId") sessionUserId: string,
-  ): Promise<APITypes.PutCADAutoSetPropertiesData> {
-    const data = validateSchema(CAD_AUTO_SET_PROPERTIES, body);
+  ): Promise<APITypes.PutCADDefaultPermissionsData> {
+    const data = validateSchema(UPDATE_DEFAULT_PERMISSIONS_SCHEMA, body);
 
     const previous = cad.autoSetUserPropertiesId
       ? await prisma.autoSetUserProperties.findUnique({
@@ -274,14 +274,16 @@ export class CADSettingsController {
       },
       create: {
         cad: { connect: { id: cad.id } },
-        dispatch: data.dispatch,
-        emsFd: data.emsFd,
-        leo: data.leo,
+        dispatch: false,
+        emsFd: false,
+        leo: false,
+        defaultPermissions: data.defaultPermissions,
       },
       update: {
-        dispatch: data.dispatch,
-        emsFd: data.emsFd,
-        leo: data.leo,
+        dispatch: false,
+        emsFd: false,
+        leo: false,
+        defaultPermissions: data.defaultPermissions,
       },
     });
 

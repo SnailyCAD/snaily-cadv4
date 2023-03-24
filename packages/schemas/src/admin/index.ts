@@ -115,10 +115,8 @@ export const RAW_WEBHOOKS_SCHEMA = z.object({
   warrantsWebhook: RAW_WEBHOOK,
 });
 
-export const CAD_AUTO_SET_PROPERTIES = z.object({
-  leo: z.boolean().nullable(),
-  dispatch: z.boolean().nullable(),
-  emsFd: z.boolean().nullable(),
+export const UPDATE_DEFAULT_PERMISSIONS_SCHEMA = z.object({
+  defaultPermissions: z.array(z.string()),
 });
 
 export const DISABLED_FEATURES_SCHEMA = z.object({

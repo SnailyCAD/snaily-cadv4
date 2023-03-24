@@ -29,7 +29,7 @@
     "GENERAL_SETTINGS": "General Settings",
     "FEATURES": "Features",
     "MISC_SETTINGS": "Misc Settings",
-    "AUTO_SET_PROPERTIES": "Auto Set User Properties",
+    "DEFAULT_PERMISSIONS": "Default Permissions",
     "API_TOKEN": "API Token",
     "DISCORD_ROLES": "Discord Roles",
     "DISCORD_WEBHOOKS": "Discord Webhooks",
