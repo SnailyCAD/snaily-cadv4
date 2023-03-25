@@ -118,7 +118,7 @@ export function useAsyncTable<T>(options: Options<T>) {
 
   return {
     ...list,
-    noItemsAvailable: list.items.length > 0 && !isInitialLoading && !error,
+    noItemsAvailable: !isInitialLoading && !error && list.items.length <= 0,
     isInitialLoading,
     filters,
     setFilters,
