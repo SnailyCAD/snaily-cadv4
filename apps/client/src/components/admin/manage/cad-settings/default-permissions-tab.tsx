@@ -2,7 +2,7 @@ import { Form, Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
 
 import { FormField } from "components/form/FormField";
-import { Button, Loader, TabsContent } from "@snailycad/ui";
+import { Button, Loader, TabsContent, TextField } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import type { cad } from "@snailycad/types";
@@ -45,10 +45,8 @@ export function DefaultPermissionsTab() {
     }
   }
 
-  // todo: working search
-  const search = "";
-
   const INITIAL_VALUES = {
+    search: "",
     ...getPermissions({
       permissions: createDefaultPermissionsFromDeprecatedAutoSetProperties(cad),
       rank: "USER",
@@ -74,54 +72,70 @@ export function DefaultPermissionsTab() {
       </p>
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, values, setValues }) => (
+        {({ handleChange, values, setFieldValue, setValues }) => (
           <Form className="mt-5 space-y-5">
+            <TextField
+              label={common("search")}
+              className="my-2"
+              name="search"
+              value={values.search}
+              onChange={(value) => setFieldValue("search", value)}
+              placeholder={common("search")}
+            />
+
             <div>
-              {groups.map((group) => {
-                const filtered = group.permissions.filter((v) =>
-                  v.toLowerCase().includes(search.toLowerCase()),
-                );
+              {groups
+                .filter((v) => v.name !== "Owner")
+                .map((group) => {
+                  const filtered = group.permissions.filter((v) => {
+                    const isIncludedInValue = v.toLowerCase().includes(values.search.toLowerCase());
+                    const isIncludedInName = formatPermissionName(v)
+                      .toLowerCase()
+                      .includes(values.search.toLowerCase());
 
-                if (filtered.length <= 0) {
-                  return null;
-                }
+                    return isIncludedInName || isIncludedInValue;
+                  });
 
-                return (
-                  <div className="mb-5" key={group.name}>
-                    <header className="flex items-center gap-3 mb-2">
-                      <h3 className="text-xl font-semibold">{group.name}</h3>
+                  if (filtered.length <= 0) {
+                    return null;
+                  }
 
-                      <Button
-                        type="button"
-                        size="xs"
-                        onPress={() => handleToggleAll(group, values, setValues)}
-                      >
-                        Toggle all
-                      </Button>
-                    </header>
+                  return (
+                    <div className="mb-5" key={group.name}>
+                      <header className="flex items-center gap-3 mb-2">
+                        <h3 className="text-xl font-semibold">{group.name}</h3>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3">
-                      {filtered.map((permission) => {
-                        const formattedName = formatPermissionName(permission);
+                        <Button
+                          type="button"
+                          size="xs"
+                          onPress={() => handleToggleAll(group, values, setValues)}
+                        >
+                          Toggle all
+                        </Button>
+                      </header>
 
-                        if (DEPRECATED_PERMISSIONS.includes(permission)) {
-                          return null;
-                        }
+                      <div className="grid grid-cols-1 md:grid-cols-3">
+                        {filtered.map((permission) => {
+                          const formattedName = formatPermissionName(permission);
 
-                        return (
-                          <FormField key={permission} className="my-1" label={formattedName}>
-                            <Toggle
-                              onCheckedChange={handleChange}
-                              value={values[permission as PermissionNames]}
-                              name={permission}
-                            />
-                          </FormField>
-                        );
-                      })}
+                          if (DEPRECATED_PERMISSIONS.includes(permission)) {
+                            return null;
+                          }
+
+                          return (
+                            <FormField key={permission} className="my-1" label={formattedName}>
+                              <Toggle
+                                onCheckedChange={handleChange}
+                                value={values[permission as PermissionNames]}
+                                name={permission}
+                              />
+                            </FormField>
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
 
             <Button className="flex items-center" type="submit" disabled={state === "loading"}>
@@ -140,7 +154,7 @@ function createDefaultPermissionsFromDeprecatedAutoSetProperties(cad?: cad | nul
 
   const hasNoNewDefaultPermissionsSet =
     (cad.autoSetUserProperties?.defaultPermissions.length ?? 0) <= 0;
-  const _defaultPermissions = [];
+  const _defaultPermissions = cad.autoSetUserProperties?.defaultPermissions ?? [];
 
   if (cad.autoSetUserProperties?.leo && hasNoNewDefaultPermissionsSet) {
     _defaultPermissions.push(...defaultPermissions.defaultLeoPermissions);
