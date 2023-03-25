@@ -1,7 +1,6 @@
-import * as React from "react";
 import { TabsContent } from "@radix-ui/react-tabs";
 import { WhitelistStatus } from "@snailycad/types";
-import { Table, useTableState } from "components/shared/Table";
+import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useTranslations } from "next-intl";
 import { Button } from "@snailycad/ui";
@@ -19,16 +18,25 @@ interface Props {
 }
 
 export function NameChangeRequestsTab({ requests: data }: Props) {
-  const [requests, setRequests] = React.useState(data);
-
   const t = useTranslations();
   const common = useTranslations("Common");
   const tableState = useTableState();
   const { state, execute } = useFetch();
-  const pendingRequests = requests.filter((v) => v.status === WhitelistStatus.PENDING);
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageNameChangeRequests], true);
   const { invalidateQuery } = useInvalidateQuery(["admin", "notifications"]);
+
+  const asyncTable = useAsyncTable({
+    fetchOptions: {
+      onResponse: (data: GetManageNameChangeRequests) => ({
+        data: data.pendingNameChangeRequests,
+        totalCount: data.totalCount,
+      }),
+      path: "/admin/manage/name-change-requests",
+    },
+    initialData: data.pendingNameChangeRequests,
+    totalCount: data.totalCount,
+  });
 
   async function handleUpdate(id: string, type: WhitelistStatus) {
     const { json } = await execute<PutManageNameChangeRequests>({
@@ -38,7 +46,7 @@ export function NameChangeRequestsTab({ requests: data }: Props) {
     });
 
     if (json) {
-      setRequests((p) => p.filter((v) => v.id !== json.id));
+      asyncTable.remove(id);
       await invalidateQuery();
     }
   }
@@ -47,12 +55,12 @@ export function NameChangeRequestsTab({ requests: data }: Props) {
     <TabsContent value="name-change-requests">
       <h3 className="font-semibold text-xl">{t("Management.MANAGE_NAME_CHANGE_REQUESTS")}</h3>
 
-      {pendingRequests.length <= 0 ? (
+      {asyncTable.items.length <= 0 ? (
         <p className="my-2">{t("Courthouse.noNameChangeRequests")}</p>
       ) : (
         <Table
           tableState={tableState}
-          data={pendingRequests.map((request) => ({
+          data={asyncTable.items.map((request) => ({
             id: request.id,
             citizen: `${request.citizen.name} ${request.citizen.surname}`,
             newName: `${request.newName} ${request.newSurname}`,

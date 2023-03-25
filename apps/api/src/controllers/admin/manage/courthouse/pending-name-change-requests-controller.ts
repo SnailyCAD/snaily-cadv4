@@ -22,11 +22,15 @@ export class AdminNameChangeController {
     permissions: [Permissions.ViewNameChangeRequests, Permissions.ManageNameChangeRequests],
   })
   async getRequests(): Promise<APITypes.GetManageNameChangeRequests> {
-    const requests = await prisma.nameChangeRequest.findMany({
-      include: { citizen: true },
-    });
+    const [totalCount, pendingNameChangeRequests] = await prisma.$transaction([
+      prisma.nameChangeRequest.count({ where: { status: WhitelistStatus.PENDING } }),
+      prisma.nameChangeRequest.findMany({
+        where: { status: WhitelistStatus.PENDING },
+        include: { citizen: true },
+      }),
+    ]);
 
-    return requests;
+    return { pendingNameChangeRequests, totalCount };
   }
 
   @Put("/:id")

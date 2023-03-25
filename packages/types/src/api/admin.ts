@@ -401,13 +401,16 @@ export type DeleteManageUserRevokeApiTokenData = boolean;
  * @method Get
  * @route /admin/manage/expungement-requests
  */
-export type GetManageExpungementRequests = (Prisma.ExpungementRequest & {
-  citizen: Prisma.Citizen;
-  warrants: Prisma.Warrant[];
-  records: (Prisma.Record & {
-    violations: (Prisma.Violation & { penalCode: Prisma.PenalCode })[];
+export interface GetManageExpungementRequests {
+  pendingExpungementRequests: (Prisma.ExpungementRequest & {
+    citizen: Prisma.Citizen;
+    warrants: Prisma.Warrant[];
+    records: (Prisma.Record & {
+      violations: (Prisma.Violation & { penalCode: Prisma.PenalCode })[];
+    })[];
   })[];
-})[];
+  totalCount: number;
+}
 
 /**
  * @method Put
@@ -419,9 +422,12 @@ export type PutManageExpungementRequests = Prisma.ExpungementRequest;
  * @method Get
  * @route /admin/manage/name-change-requests
  */
-export type GetManageNameChangeRequests = (Prisma.NameChangeRequest & {
-  citizen: Prisma.Citizen;
-})[];
+export interface GetManageNameChangeRequests {
+  pendingNameChangeRequests: (Prisma.NameChangeRequest & {
+    citizen: Prisma.Citizen;
+  })[];
+  totalCount: number;
+}
 
 /**
  * @method Put
@@ -433,11 +439,14 @@ export type PutManageNameChangeRequests = Prisma.NameChangeRequest;
  * @method Get
  * @route /admin/manage/pending-warrants
  */
-export type GetManagePendingWarrants = (Prisma.Warrant & {
-  citizen: Prisma.Citizen;
-  assignedOfficers: Types.AssignedWarrantOfficer[];
-  officer: Types.Officer;
-})[];
+export interface GetManagePendingWarrants {
+  pendingWarrants: (Prisma.Warrant & {
+    citizen: Prisma.Citizen;
+    assignedOfficers: Types.AssignedWarrantOfficer[];
+    officer: Types.Officer;
+  })[];
+  totalCount: number;
+}
 
 /**
  * @method Put

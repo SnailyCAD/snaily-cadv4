@@ -3,7 +3,6 @@ import { Rank } from "@snailycad/types";
 import type {
   GetManageExpungementRequests,
   GetManageNameChangeRequests,
-  GetManagePendingWarrants,
 } from "@snailycad/types/api";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { ExpungementRequestsTab } from "components/admin/manage/courthouse/expungement-requests-tab";
@@ -21,14 +20,9 @@ import { useTranslations } from "next-intl";
 interface Props {
   expungementRequests: GetManageExpungementRequests;
   nameChangeRequests: GetManageNameChangeRequests;
-  pendingWarrants: GetManagePendingWarrants;
 }
 
-export default function ManageCourthouse({
-  expungementRequests,
-  nameChangeRequests,
-  pendingWarrants,
-}: Props) {
+export default function ManageCourthouse({ expungementRequests, nameChangeRequests }: Props) {
   const { hasPermissions } = usePermission();
   const t = useTranslations("Management");
 
@@ -75,7 +69,7 @@ export default function ManageCourthouse({
       <TabList tabs={TABS}>
         {hasExpungementPerms ? <ExpungementRequestsTab requests={expungementRequests} /> : null}
         {hasNameChangePerms ? <NameChangeRequestsTab requests={nameChangeRequests} /> : null}
-        {hasManageWarrantPerms ? <PendingWarrantsTab warrants={pendingWarrants} /> : null}
+        {hasManageWarrantPerms ? <PendingWarrantsTab /> : null}
       </TabList>
     </AdminLayout>
   );
@@ -83,17 +77,15 @@ export default function ManageCourthouse({
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const user = await getSessionUser(req);
-  const [nameChangeRequests, expungementRequests, pendingWarrants] = await requestAll(req, [
-    ["/admin/manage/name-change-requests", []],
-    ["/admin/manage/expungement-requests", []],
-    ["/admin/manage/pending-warrants", []],
+  const [nameChangeRequests, expungementRequests] = await requestAll(req, [
+    ["/admin/manage/name-change-requests", { totalCount: 0, pendingNameChangeRequests: [] }],
+    ["/admin/manage/expungement-requests", { totalCount: 0, pendingExpungementRequests: [] }],
   ]);
 
   return {
     props: {
       nameChangeRequests,
       expungementRequests,
-      pendingWarrants,
       session: user,
       messages: {
         ...(await getTranslations(
