@@ -71,7 +71,7 @@ export function ActiveWarrants() {
       </header>
 
       <div className="px-4">
-        {!asyncTable.isInitialLoading && asyncTable.items.length <= 0 ? (
+        {asyncTable.noItemsAvailable ? (
           <p className="py-2 text-neutral-700 dark:text-gray-300">{t("noActiveWarrants")}</p>
         ) : (
           <Table

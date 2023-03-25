@@ -83,7 +83,7 @@ export function DepartmentWhitelistingTab({ pendingUnits }: Props) {
         totalCount={pendingUnits.totalCount}
       />
 
-      {asyncTable.items.length <= 0 ? (
+      {asyncTable.noItemsAvailable ? (
         <p className="mt-2">{t("Management.noPendingOfficers")}</p>
       ) : (
         <Table

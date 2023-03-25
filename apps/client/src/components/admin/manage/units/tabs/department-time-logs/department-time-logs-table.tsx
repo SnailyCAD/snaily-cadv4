@@ -80,7 +80,7 @@ export function DepartmentTimeLogsTab() {
         ) : null}
       </SearchArea>
 
-      {asyncTable.items.length <= 0 ? (
+      {asyncTable.noItemsAvailable ? (
         <p>{t("Management.noUnits")}</p>
       ) : (
         <Table

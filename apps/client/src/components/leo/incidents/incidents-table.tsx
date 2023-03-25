@@ -102,7 +102,7 @@ export function IncidentsTable<T extends EmsFdIncident | LeoIncident>(
 
   return (
     <>
-      {asyncTable.items.length <= 0 ? (
+      {asyncTable.noItemsAvailable ? (
         <p className="mt-5">{t("noIncidents")}</p>
       ) : (
         <Table

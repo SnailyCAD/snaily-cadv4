@@ -70,7 +70,10 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
     abortControllerRef.current = new AbortController();
     const { path, ...restOptions } = options;
 
-    const mergedOptions = { ...restOptions, signal: abortControllerRef.current.signal };
+    const mergedOptions = {
+      ...restOptions,
+      signal: restOptions.signal ?? abortControllerRef.current.signal,
+    };
 
     const response = await handleRequest(path, { ...mergedOptions }).catch((e) => {
       setState("error");

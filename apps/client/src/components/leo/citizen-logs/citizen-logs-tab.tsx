@@ -33,7 +33,7 @@ export function CitizenLogsTab({ citizens }: Props) {
 
   return (
     <TabsContent value="citizen-logs-tab">
-      {asyncTable.items.length <= 0 ? (
+      {asyncTable.noItemsAvailable ? (
         <p className="mt-5">{t("noCitizenLogs")}</p>
       ) : (
         <>

@@ -55,7 +55,7 @@ export function NameChangeRequestsTab({ requests: data }: Props) {
     <TabsContent value="name-change-requests">
       <h3 className="font-semibold text-xl">{t("Management.MANAGE_NAME_CHANGE_REQUESTS")}</h3>
 
-      {asyncTable.items.length <= 0 ? (
+      {asyncTable.noItemsAvailable ? (
         <p className="my-2">{t("Courthouse.noNameChangeRequests")}</p>
       ) : (
         <Table
