@@ -185,7 +185,7 @@ export function AllUnitsTab({ units }: Props) {
       </SearchArea>
 
       {asyncTable.items.length <= 0 ? (
-        <p className="mt-2">{t("Management.noUnits")}</p>
+        <p>{t("Management.noUnits")}</p>
       ) : (
         <Table
           tableState={tableState}
