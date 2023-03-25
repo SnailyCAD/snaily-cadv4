@@ -25,16 +25,22 @@ export class AdminManageWarrantsController {
     permissions: [Permissions.ManagePendingWarrants],
   })
   async getPendingWarrants(): Promise<APITypes.GetManagePendingWarrants> {
-    const pendingWarrants = await prisma.warrant.findMany({
-      where: { approvalStatus: WhitelistStatus.PENDING },
-      include: {
-        citizen: true,
-        assignedOfficers: { include: assignedOfficersInclude },
-        officer: { include: leoProperties },
-      },
-    });
+    const [totalCount, pendingWarrants] = await prisma.$transaction([
+      prisma.warrant.count({ where: { approvalStatus: WhitelistStatus.PENDING } }),
+      prisma.warrant.findMany({
+        where: { approvalStatus: WhitelistStatus.PENDING },
+        include: {
+          citizen: true,
+          assignedOfficers: { include: assignedOfficersInclude },
+          officer: { include: leoProperties },
+        },
+      }),
+    ]);
 
-    return pendingWarrants.map((v) => officerOrDeputyToUnit(v));
+    return {
+      pendingWarrants: pendingWarrants.map((v) => officerOrDeputyToUnit(v)),
+      totalCount,
+    };
   }
 
   @Put("/:id")

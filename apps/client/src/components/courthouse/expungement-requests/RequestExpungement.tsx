@@ -225,7 +225,9 @@ function ResultsForm({ result, onSuccess, handleClose }: ResultProps) {
   );
 }
 
-export function getTitles(record: GetManageExpungementRequests[number]["records"][number]) {
+export function getTitles(
+  record: GetManageExpungementRequests["pendingExpungementRequests"][number]["records"][number],
+) {
   const titles = record.violations.map((v) => v.penalCode.title);
   return titles.join(", ");
 }

@@ -21,12 +21,15 @@ export class AdminManageExpungementRequests {
     permissions: [Permissions.ViewExpungementRequests, Permissions.ManageExpungementRequests],
   })
   async getRequests(): Promise<APITypes.GetManageExpungementRequests> {
-    const requests = await prisma.expungementRequest.findMany({
-      where: { status: ExpungementRequestStatus.PENDING },
-      include: expungementRequestInclude,
-    });
+    const [totalCount, pendingExpungementRequests] = await prisma.$transaction([
+      prisma.expungementRequest.count({ where: { status: ExpungementRequestStatus.PENDING } }),
+      prisma.expungementRequest.findMany({
+        where: { status: ExpungementRequestStatus.PENDING },
+        include: expungementRequestInclude,
+      }),
+    ]);
 
-    return requests;
+    return { pendingExpungementRequests, totalCount };
   }
 
   @Put("/:id")
