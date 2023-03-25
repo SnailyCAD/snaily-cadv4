@@ -1,5 +1,12 @@
 import { Feature, Rank, User } from "@prisma/client";
-import { BodyParams, Context, Controller, PathParams, UseBeforeEach } from "@tsed/common";
+import {
+  BodyParams,
+  Context,
+  Controller,
+  PathParams,
+  QueryParams,
+  UseBeforeEach,
+} from "@tsed/common";
 import { ContentType, Delete, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
 import { validateSchema } from "lib/data/validate-schema";
@@ -17,12 +24,21 @@ import { IsFeatureEnabled } from "middlewares/is-enabled";
 @IsFeatureEnabled({ feature: Feature.COURTHOUSE_POSTS })
 export class CourthousePostsController {
   @Get("/")
-  async getPosts(): Promise<APITypes.GetCourthousePostsData> {
-    const posts = await prisma.courthousePost.findMany({
-      orderBy: { createdAt: "desc" },
-      include: { user: { select: userProperties } },
-    });
-    return posts;
+  async getCourthousePosts(
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("includeAll", Boolean) includeAll = false,
+  ): Promise<APITypes.GetCourthousePostsData> {
+    const [totalCount, courthousePosts] = await prisma.$transaction([
+      prisma.courthousePost.count(),
+      prisma.courthousePost.findMany({
+        orderBy: { createdAt: "desc" },
+        include: { user: { select: userProperties } },
+        take: includeAll ? undefined : 35,
+        skip: includeAll ? undefined : skip,
+      }),
+    ]);
+
+    return { totalCount, courthousePosts };
   }
 
   @UsePermissions({

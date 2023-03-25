@@ -12,12 +12,7 @@ import { CourtEntriesTab } from "components/courthouse/court-entries/court-entri
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { CourthousePostsTab } from "components/courthouse/courthouse-posts/CourthousePostsTab";
-import type {
-  GetCourtEntriesData,
-  GetCourthousePostsData,
-  GetExpungementRequestsData,
-  GetNameChangeRequestsData,
-} from "@snailycad/types/api";
+import type { GetExpungementRequestsData, GetNameChangeRequestsData } from "@snailycad/types/api";
 import Link from "next/link";
 import { BoxArrowUpRight } from "react-bootstrap-icons";
 import { defaultPermissions } from "@snailycad/permissions";
@@ -25,8 +20,6 @@ import { defaultPermissions } from "@snailycad/permissions";
 interface Props {
   requests: GetExpungementRequestsData;
   nameChangeRequests: GetNameChangeRequestsData;
-  courtEntries: GetCourtEntriesData;
-  courthousePosts: GetCourthousePostsData;
 }
 
 export default function Courthouse(props: Props) {
@@ -70,8 +63,8 @@ export default function Courthouse(props: Props) {
       <TabList tabs={TABS}>
         <ExpungementRequestsTab requests={props.requests} />
         <NameChangeRequestTab requests={props.nameChangeRequests} />
-        {hasEntriesPerms ? <CourtEntriesTab entries={props.courtEntries} /> : null}
-        {COURTHOUSE_POSTS ? <CourthousePostsTab posts={props.courthousePosts} /> : null}
+        {hasEntriesPerms ? <CourtEntriesTab /> : null}
+        {COURTHOUSE_POSTS ? <CourthousePostsTab /> : null}
       </TabList>
     </Layout>
   );
@@ -79,19 +72,15 @@ export default function Courthouse(props: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const user = await getSessionUser(req);
-  const [data, nameChangeRequests, courtEntries, courthousePosts] = await requestAll(req, [
+  const [data, nameChangeRequests] = await requestAll(req, [
     ["/expungement-requests", []],
     ["/name-change", []],
-    ["/court-entries", []],
-    ["/courthouse-posts", []],
   ]);
 
   return {
     props: {
       requests: data,
       nameChangeRequests,
-      courtEntries,
-      courthousePosts,
       session: user,
       messages: {
         ...(await getTranslations(["courthouse", "leo", "common"], user?.locale ?? locale)),

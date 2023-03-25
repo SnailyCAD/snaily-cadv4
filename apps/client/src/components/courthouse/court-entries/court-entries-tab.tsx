@@ -1,9 +1,8 @@
-import * as React from "react";
 import { Button, TabsContent } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
-import { Table, useTableState } from "components/shared/Table";
+import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import type { CourtEntry } from "@snailycad/types";
 import { FullDate } from "components/shared/FullDate";
 import { ManageCourtEntry } from "./manage-court-entry-modal";
@@ -13,13 +12,17 @@ import type { DeleteCourtEntriesData, GetCourtEntriesData } from "@snailycad/typ
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
-interface Props {
-  entries: GetCourtEntriesData;
-}
-
-export function CourtEntriesTab(props: Props) {
-  const [entries, setEntries] = React.useState(props.entries);
-  const [tempEntry, entryState] = useTemporaryItem(entries);
+export function CourtEntriesTab() {
+  const asyncTable = useAsyncTable<CourtEntry>({
+    fetchOptions: {
+      path: "/court-entries",
+      onResponse: (json: GetCourtEntriesData) => ({
+        data: json.courtEntries,
+        totalCount: json.totalCount,
+      }),
+    },
+  });
+  const [tempEntry, entryState] = useTemporaryItem(asyncTable.items);
 
   const t = useTranslations("Courthouse");
   const common = useTranslations("Common");
@@ -36,7 +39,7 @@ export function CourtEntriesTab(props: Props) {
     });
 
     if (typeof json === "boolean") {
-      setEntries((p) => p.filter((v) => v.id !== tempEntry.id));
+      asyncTable.remove(tempEntry.id);
       entryState.setTempId(null);
       closeModal(ModalIds.AlertDeleteCourtEntry);
     }
@@ -60,12 +63,13 @@ export function CourtEntriesTab(props: Props) {
         <Button onPress={() => openModal(ModalIds.ManageCourtEntry)}>{t("addCourtEntry")}</Button>
       </header>
 
-      {entries.length <= 0 ? (
+      {!asyncTable.isInitialLoading && asyncTable.items.length <= 0 ? (
         <p className="mt-5">{t("noCourtEntries")}</p>
       ) : (
         <Table
+          isLoading={asyncTable.isInitialLoading}
           tableState={tableState}
-          data={entries.map((entry) => ({
+          data={asyncTable.items.map((entry) => ({
             id: entry.id,
             title: entry.title,
             caseNumber: entry.caseNumber,
@@ -108,15 +112,11 @@ export function CourtEntriesTab(props: Props) {
 
       <ManageCourtEntry
         courtEntry={tempEntry}
-        onCreate={(entry) => setEntries((p) => [entry, ...p])}
-        onUpdate={(entry) =>
-          tempEntry &&
-          setEntries((p) => {
-            const idx = p.indexOf(tempEntry);
-            p[idx] = entry;
-            return p;
-          })
-        }
+        onCreate={(entry) => asyncTable.prepend(entry)}
+        onUpdate={(entry) => {
+          asyncTable.update(entry.id, entry);
+          entryState.setTempId(null);
+        }}
         onClose={() => entryState.setTempId(null)}
       />
     </TabsContent>

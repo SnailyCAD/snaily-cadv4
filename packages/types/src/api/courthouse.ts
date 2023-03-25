@@ -6,7 +6,10 @@ import type * as Types from "../index.js";
  * @method GET
  * @route /court-entries
  */
-export type GetCourtEntriesData = Types.CourtEntry[];
+export interface GetCourtEntriesData {
+  courtEntries: Types.CourtEntry[];
+  totalCount: number;
+}
 
 /**
  * @method POST
@@ -30,7 +33,10 @@ export type DeleteCourtEntriesData = boolean;
  * @method GET
  * @route /courthouse-posts
  */
-export type GetCourthousePostsData = Types.CourthousePost[];
+export interface GetCourthousePostsData {
+  courthousePosts: Types.CourthousePost[];
+  totalCount: number;
+}
 
 /**
  * @method POST

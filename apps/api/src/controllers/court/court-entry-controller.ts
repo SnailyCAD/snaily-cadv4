@@ -1,5 +1,5 @@
 import { ContentType, Delete, Get, Post, Put } from "@tsed/schema";
-import { BodyParams, PathParams, UseBeforeEach } from "@tsed/common";
+import { BodyParams, PathParams, QueryParams, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { IsAuth } from "middlewares/is-auth";
 import { prisma } from "lib/data/prisma";
@@ -21,13 +21,21 @@ export class CourtEntryController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
-  async getCourtEntries(): Promise<APITypes.GetCourtEntriesData> {
-    const entries = await prisma.courtEntry.findMany({
-      include: { dates: true },
-      orderBy: { createdAt: "desc" },
-    });
+  async getCourtEntries(
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("includeAll", Boolean) includeAll = false,
+  ): Promise<APITypes.GetCourtEntriesData> {
+    const [totalCount, courtEntries] = await prisma.$transaction([
+      prisma.courtEntry.count(),
+      prisma.courtEntry.findMany({
+        include: { dates: true },
+        orderBy: { createdAt: "desc" },
+        take: includeAll ? undefined : 35,
+        skip: includeAll ? undefined : skip,
+      }),
+    ]);
 
-    return entries;
+    return { totalCount, courtEntries };
   }
 
   @Post("/")

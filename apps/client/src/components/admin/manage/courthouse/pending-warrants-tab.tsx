@@ -61,7 +61,7 @@ export function PendingWarrantsTab() {
     <TabsContent value="pending-warrants">
       <h3 className="font-semibold text-xl">{t("Management.MANAGE_PENDING_WARRANTS")}</h3>
 
-      {asyncTable.items.length <= 0 ? (
+      {!asyncTable.isInitialLoading && asyncTable.items.length <= 0 ? (
         <p className="my-2">{t("Courthouse.noNameChangeRequests")}</p>
       ) : (
         <Table

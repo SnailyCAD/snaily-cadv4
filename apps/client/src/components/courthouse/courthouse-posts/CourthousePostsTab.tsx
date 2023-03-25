@@ -1,9 +1,8 @@
-import * as React from "react";
 import { Button, TabsContent } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
-import { Table, useTableState } from "components/shared/Table";
+import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import type { CourthousePost } from "@snailycad/types";
 import { FullDate } from "components/shared/FullDate";
 import { ManageCourtPostModal } from "./ManageCourtPostModal";
@@ -14,13 +13,18 @@ import type { DeleteCourthousePostsData, GetCourthousePostsData } from "@snailyc
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
-interface Props {
-  posts: GetCourthousePostsData;
-}
-
-export function CourthousePostsTab(props: Props) {
-  const [posts, setPosts] = React.useState(props.posts);
-  const [tempPost, postState] = useTemporaryItem(posts);
+export function CourthousePostsTab() {
+  const asyncTable = useAsyncTable<CourthousePost>({
+    fetchOptions: {
+      path: "/courthouse-posts",
+      onResponse: (json: GetCourthousePostsData) => ({
+        data: json.courthousePosts,
+        totalCount: json.totalCount,
+      }),
+    },
+  });
+  const [tempPost, postState] = useTemporaryItem(asyncTable.items);
+  const tableState = useTableState({ pagination: asyncTable.pagination });
 
   const t = useTranslations("Courthouse");
   const common = useTranslations("Common");
@@ -28,7 +32,6 @@ export function CourthousePostsTab(props: Props) {
   const { state, execute } = useFetch();
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageCourthousePosts], true);
-  const tableState = useTableState();
 
   async function deleteCourthousePost() {
     if (!tempPost) return;
@@ -39,7 +42,7 @@ export function CourthousePostsTab(props: Props) {
     });
 
     if (typeof json === "boolean") {
-      setPosts((p) => p.filter((v) => v.id !== tempPost.id));
+      asyncTable.remove(tempPost.id);
       postState.setTempId(null);
       closeModal(ModalIds.AlertDeleteCourthousePost);
     }
@@ -67,12 +70,13 @@ export function CourthousePostsTab(props: Props) {
         ) : null}
       </header>
 
-      {posts.length <= 0 ? (
+      {!asyncTable.isInitialLoading && asyncTable.items.length <= 0 ? (
         <p className="mt-5">{t("noCourthousePosts")}</p>
       ) : (
         <Table
+          isLoading={asyncTable.isInitialLoading}
           tableState={tableState}
-          data={posts.map((post) => ({
+          data={asyncTable.items.map((post) => ({
             id: post.id,
             title: post.title,
             createdAt: <FullDate>{post.createdAt}</FullDate>,
@@ -119,15 +123,11 @@ export function CourthousePostsTab(props: Props) {
           />
           <ManageCourtPostModal
             post={tempPost}
-            onCreate={(post) => setPosts((p) => [post, ...p])}
-            onUpdate={(post) =>
-              tempPost &&
-              setPosts((p) => {
-                const idx = p.indexOf(tempPost);
-                p[idx] = post;
-                return p;
-              })
-            }
+            onCreate={(post) => asyncTable.prepend(post)}
+            onUpdate={(post) => {
+              postState.setTempId(null);
+              asyncTable.update(post.id, post);
+            }}
             onClose={() => postState.setTempId(null)}
           />
         </>
