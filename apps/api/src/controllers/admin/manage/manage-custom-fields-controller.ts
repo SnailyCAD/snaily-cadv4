@@ -1,7 +1,7 @@
-import { CustomFieldCategory, Rank } from "@prisma/client";
+import { CustomFieldCategory, Prisma, Rank } from "@prisma/client";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { CUSTOM_FIELDS_SCHEMA } from "@snailycad/schemas";
-import { BodyParams, Context, PathParams, UseBeforeEach } from "@tsed/common";
+import { BodyParams, Context, PathParams, QueryParams, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
@@ -9,6 +9,7 @@ import { prisma } from "lib/data/prisma";
 import { validateSchema } from "lib/data/validate-schema";
 import { IsAuth } from "middlewares/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/admin/manage/custom-fields")
 @UseBeforeEach(IsAuth)
@@ -16,9 +17,27 @@ import { UsePermissions, Permissions } from "middlewares/use-permissions";
 export class AdminManageCustomFieldsController {
   @Get("/")
   @Description("Get all the custom fields within the CAD")
-  async getCustomFields() {
-    const fields = await prisma.customField.findMany();
-    return fields;
+  async getCustomFields(
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("includeAll", Boolean) includeAll = false,
+    @QueryParams("query", String) query = "",
+  ): Promise<APITypes.GetManageCustomFieldsData> {
+    const where = query
+      ? ({
+          OR: [{ name: { contains: query, mode: "insensitive" } }],
+        } satisfies Prisma.CustomFieldWhereInput)
+      : undefined;
+
+    const [totalCount, customFields] = await prisma.$transaction([
+      prisma.customField.count({ where }),
+      prisma.customField.findMany({
+        take: includeAll ? undefined : 35,
+        skip: includeAll ? undefined : skip,
+        where,
+      }),
+    ]);
+
+    return { customFields, totalCount };
   }
 
   @Post("/")
@@ -30,7 +49,7 @@ export class AdminManageCustomFieldsController {
   async createCustomField(
     @BodyParams() body: unknown,
     @Context("sessionUserId") sessionUserId: string,
-  ) {
+  ): Promise<APITypes.PostManageCustomFieldsData> {
     const data = validateSchema(CUSTOM_FIELDS_SCHEMA, body);
 
     const customField = await prisma.customField.create({
@@ -60,7 +79,7 @@ export class AdminManageCustomFieldsController {
     @BodyParams() body: unknown,
     @PathParams("id") id: string,
     @Context("sessionUserId") sessionUserId: string,
-  ) {
+  ): Promise<APITypes.PutManageCustomFieldsData> {
     const data = validateSchema(CUSTOM_FIELDS_SCHEMA, body);
 
     const customField = await prisma.customField.findUnique({
@@ -98,7 +117,7 @@ export class AdminManageCustomFieldsController {
   async deleteCustomField(
     @PathParams("id") id: string,
     @Context("sessionUserId") sessionUserId: string,
-  ) {
+  ): Promise<APITypes.DeleteManageCustomFieldsData> {
     const customField = await prisma.customField.findUnique({
       where: { id },
     });

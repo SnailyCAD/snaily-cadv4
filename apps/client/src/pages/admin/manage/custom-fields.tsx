@@ -10,30 +10,46 @@ import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
 import { Button } from "@snailycad/ui";
 import { useModal } from "state/modalState";
-import { Table, useTableState } from "components/shared/Table";
+import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { ModalIds } from "types/ModalIds";
 import { ManageCustomFieldModal } from "components/admin/manage/custom-fields/ManageCustomFieldModal";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { usePermission } from "hooks/usePermission";
-import type { DeleteManageCustomFieldsData } from "@snailycad/types/api";
+import type { DeleteManageCustomFieldsData, GetManageCustomFieldsData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import { SearchArea } from "components/shared/search/search-area";
 
 interface Props {
-  customFields: CustomField[];
+  customFields: GetManageCustomFieldsData;
 }
 
 export default function ManageCustomFields({ customFields: data }: Props) {
-  const [customFields, setCustomFields] = React.useState(data);
-  const [tempField, fieldState] = useTemporaryItem(customFields);
-  const tableState = useTableState();
-
   const { state, execute } = useFetch();
   const { hasPermissions } = usePermission();
   const { openModal, closeModal } = useModal();
   const t = useTranslations("Management");
   const common = useTranslations("Common");
   const hasManagePermissions = hasPermissions([Permissions.ManageCustomFields], true);
+
+  const [search, setSearch] = React.useState("");
+
+  const asyncTable = useAsyncTable({
+    fetchOptions: {
+      onResponse: (data: GetManageCustomFieldsData) => ({
+        data: data.customFields,
+        totalCount: data.totalCount,
+      }),
+      path: "/admin/manage/custom-fields",
+    },
+    search,
+    totalCount: data.totalCount,
+    initialData: data.customFields,
+  });
+  const [tempField, tempFieldState] = useTemporaryItem(asyncTable.items);
+  const tableState = useTableState({
+    pagination: asyncTable.pagination,
+  });
 
   async function handleDelete() {
     if (!tempField) return;
@@ -44,25 +60,21 @@ export default function ManageCustomFields({ customFields: data }: Props) {
     });
 
     if (typeof json === "boolean" && json) {
-      setCustomFields((p) => p.filter((v) => v.id !== tempField.id));
-      fieldState.setTempId(null);
+      asyncTable.remove(tempField.id);
+      tempFieldState.setTempId(null);
       closeModal(ModalIds.AlertDeleteCustomField);
     }
   }
 
   function handleEditClick(field: CustomField) {
-    fieldState.setTempId(field.id);
+    tempFieldState.setTempId(field.id);
     openModal(ModalIds.ManageCustomField);
   }
 
   function handleDeleteClick(field: CustomField) {
-    fieldState.setTempId(field.id);
+    tempFieldState.setTempId(field.id);
     openModal(ModalIds.AlertDeleteCustomField);
   }
-
-  React.useEffect(() => {
-    setCustomFields(data);
-  }, [data]);
 
   return (
     <AdminLayout
@@ -89,12 +101,18 @@ export default function ManageCustomFields({ customFields: data }: Props) {
         ) : null}
       </header>
 
-      {customFields.length <= 0 ? (
-        <p>{t("noCustomFields")}</p>
+      <SearchArea
+        asyncTable={asyncTable}
+        search={{ search, setSearch }}
+        totalCount={data.totalCount}
+      />
+
+      {asyncTable.items.length <= 0 ? (
+        <p className="text-neutral-700 dark:text-gray-400 mt-3">{t("noCustomFields")}</p>
       ) : (
         <Table
           tableState={tableState}
-          data={customFields.map((field) => ({
+          data={asyncTable.items.map((field) => ({
             id: field.id,
             name: field.name,
             category: field.category,
@@ -123,16 +141,12 @@ export default function ManageCustomFields({ customFields: data }: Props) {
       )}
 
       <ManageCustomFieldModal
-        onUpdate={(oldField, newField) => {
-          setCustomFields((prev) => {
-            const idx = prev.indexOf(oldField);
-            prev[idx] = newField;
-            return prev;
-          });
-          fieldState.setTempId(null);
+        onUpdate={(newField) => {
+          asyncTable.update(newField.id, newField);
+          tempFieldState.setTempId(null);
         }}
-        onCreate={(newField) => setCustomFields((p) => [newField, ...p])}
-        onClose={() => fieldState.setTempId(null)}
+        onCreate={(newField) => asyncTable.prepend(newField)}
+        onClose={() => tempFieldState.setTempId(null)}
         field={tempField}
       />
       <AlertModal
@@ -140,7 +154,7 @@ export default function ManageCustomFields({ customFields: data }: Props) {
         title={t("deleteCustomField")}
         description={t("alert_deleteCustomField")}
         onDeleteClick={handleDelete}
-        onClose={() => fieldState.setTempId(null)}
+        onClose={() => tempFieldState.setTempId(null)}
         state={state}
       />
     </AdminLayout>
@@ -149,7 +163,9 @@ export default function ManageCustomFields({ customFields: data }: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const user = await getSessionUser(req);
-  const [customFields] = await requestAll(req, [["/admin/manage/custom-fields", []]]);
+  const [customFields] = await requestAll(req, [
+    ["/admin/manage/custom-fields", { customFields: [], totalCount: 0 }],
+  ]);
 
   return {
     props: {

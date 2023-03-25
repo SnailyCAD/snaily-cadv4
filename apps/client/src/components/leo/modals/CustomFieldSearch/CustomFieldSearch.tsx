@@ -26,9 +26,10 @@ export function CustomFieldSearch() {
   const [results, setResults] = React.useState<CustomFieldResults | null>(null);
   const [customFields, setCustomFields] = React.useState(cache);
 
+  // todo: react-query
   const fetchOnOpen = React.useCallback(async () => {
     const { json } = await execute<GetManageCustomFieldsData>({
-      path: "/admin/manage/custom-fields",
+      path: "/admin/manage/custom-fields?includeAll=true",
       method: "GET",
     });
 

@@ -8,12 +8,12 @@ import { CustomField, CustomFieldCategory } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { ModalIds } from "types/ModalIds";
 import { CUSTOM_FIELDS_SCHEMA } from "@snailycad/schemas";
-import type { POstManageCustomFieldsData, PutManageCustomFieldsData } from "@snailycad/types/api";
+import type { PostManageCustomFieldsData, PutManageCustomFieldsData } from "@snailycad/types/api";
 
 interface Props {
   field: CustomField | null;
   onClose?(): void;
-  onUpdate?(old: CustomField, newField: CustomField): void;
+  onUpdate?(newField: CustomField): void;
   onCreate?(newField: CustomField): void;
 }
 
@@ -47,10 +47,10 @@ export function ManageCustomFieldModal({ field, onClose, onCreate, onUpdate }: P
 
       if (json?.id) {
         closeModal(ModalIds.ManageCustomField);
-        onUpdate?.(field, json);
+        onUpdate?.(json);
       }
     } else {
-      const { json } = await execute<POstManageCustomFieldsData, typeof INITIAL_VALUES>({
+      const { json } = await execute<PostManageCustomFieldsData, typeof INITIAL_VALUES>({
         path: "/admin/manage/custom-fields",
         method: "POST",
         data: values,

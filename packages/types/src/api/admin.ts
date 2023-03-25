@@ -230,13 +230,16 @@ export type DeleteManageCitizenByIdData = boolean;
  * @method GET
  * @route /admin/manage/custom-fields
  */
-export type GetManageCustomFieldsData = Prisma.CustomField[];
+export interface GetManageCustomFieldsData {
+  customFields: Prisma.CustomField[];
+  totalCount: number;
+}
 
 /**
  * @method POST
  * @route /admin/manage/custom-fields
  */
-export type POstManageCustomFieldsData = Prisma.CustomField;
+export type PostManageCustomFieldsData = Prisma.CustomField;
 
 /**
  * @method PUT
