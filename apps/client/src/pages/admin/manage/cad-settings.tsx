@@ -19,10 +19,10 @@ const Tabs = {
     async () => (await import("components/admin/manage/cad-settings/MiscFeatures")).MiscFeatures,
     { ssr: false },
   ),
-  AutoSetUserPropertiesTab: dynamic(
+  DefaultPermissionsTab: dynamic(
     async () =>
-      (await import("components/admin/manage/cad-settings/AutoSetUserPropertiesTab"))
-        .AutoSetUserPropertiesTab,
+      (await import("components/admin/manage/cad-settings/default-permissions-tab"))
+        .DefaultPermissionsTab,
     { ssr: false },
   ),
   ApiTokenTab: dynamic(
@@ -56,7 +56,7 @@ export enum SettingsTabs {
   GeneralSettings = "GENERAL_SETTINGS",
   Features = "FEATURES",
   MiscSettings = "MISC_SETTINGS",
-  AutoSetProperties = "AUTO_SET_PROPERTIES",
+  DefaultPermissions = "DEFAULT_PERMISSIONS",
   LiveMap = "LIVE_MAP",
   APIToken = "API_TOKEN",
   DiscordRoles = "DISCORD_ROLES",
@@ -71,7 +71,7 @@ export default function CadSettings() {
     { name: t(SettingsTabs.GeneralSettings), value: SettingsTabs.GeneralSettings },
     { name: t(SettingsTabs.Features), value: SettingsTabs.Features },
     { name: t(SettingsTabs.MiscSettings), value: SettingsTabs.MiscSettings },
-    { name: t(SettingsTabs.AutoSetProperties), value: SettingsTabs.AutoSetProperties },
+    { name: t(SettingsTabs.DefaultPermissions), value: SettingsTabs.DefaultPermissions },
     { name: t(SettingsTabs.LiveMap), value: SettingsTabs.LiveMap },
     { name: t(SettingsTabs.APIToken), value: SettingsTabs.APIToken },
     { name: t(SettingsTabs.DiscordRoles), value: SettingsTabs.DiscordRoles },
@@ -88,7 +88,7 @@ export default function CadSettings() {
 
         <Tabs.CADFeaturesTab />
         <Tabs.MiscFeatures />
-        <Tabs.AutoSetUserPropertiesTab />
+        <Tabs.DefaultPermissionsTab />
         <Tabs.LiveMapTab />
         <Tabs.ApiTokenTab />
         <Tabs.DiscordRolesTab />

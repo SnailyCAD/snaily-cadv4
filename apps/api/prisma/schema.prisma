@@ -129,9 +129,10 @@ model DiscordWebhook {
 model AutoSetUserProperties {
   id String @id @default(cuid())
 
-  leo      Boolean? @default(false)
-  dispatch Boolean? @default(false)
-  emsFd    Boolean? @default(false)
+  leo                Boolean? @default(false)
+  dispatch           Boolean? @default(false)
+  emsFd              Boolean? @default(false)
+  defaultPermissions String[]
 
   cad cad[]
 

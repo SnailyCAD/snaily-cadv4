@@ -231,5 +231,9 @@ export function getDefaultPermissionsForNewUser(
     permissions.push(...defaultPermissions.defaultLeoPermissions);
   }
 
+  if (cad?.autoSetUserProperties?.defaultPermissions) {
+    permissions.push(...(cad.autoSetUserProperties.defaultPermissions as Permissions[]));
+  }
+
   return permissions;
 }

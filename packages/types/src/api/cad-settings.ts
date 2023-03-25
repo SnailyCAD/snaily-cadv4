@@ -32,9 +32,9 @@ export type PutCADMiscSettingsData = Types.MiscCadSettings;
 
 /**
  * @method PUT
- * @route /admin/manage/cad-settings/auto-set-properties
+ * @route /admin/manage/cad-settings/default-permissions
  */
-export type PutCADAutoSetPropertiesData = Types.AutoSetUserProperties;
+export type PutCADDefaultPermissionsData = Types.AutoSetUserProperties;
 
 /**
  * @method PUT
