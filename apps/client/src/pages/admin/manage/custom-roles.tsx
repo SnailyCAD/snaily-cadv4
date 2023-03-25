@@ -10,7 +10,7 @@ import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
 import { Button } from "@snailycad/ui";
 import { useModal } from "state/modalState";
-import { Table, useTableState } from "components/shared/Table";
+import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { ModalIds } from "types/ModalIds";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
@@ -19,6 +19,8 @@ import { FullDate } from "components/shared/FullDate";
 import type { DeleteCustomRoleByIdData, GetCustomRolesData } from "@snailycad/types/api";
 import dynamic from "next/dynamic";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
+import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import { SearchArea } from "components/shared/search/search-area";
 
 const ManageCustomRolesModal = dynamic(
   async () =>
@@ -32,16 +34,31 @@ interface Props {
 }
 
 export default function ManageCustomRoles({ customRoles: data }: Props) {
-  const [customRoles, setCustomRoles] = React.useState(data);
-  const [tempRole, setTempRole] = React.useState<CustomRole | null>(null);
-  const tableState = useTableState();
-
   const { state, execute } = useFetch();
   const { hasPermissions } = usePermission();
   const { openModal, closeModal } = useModal();
   const t = useTranslations("Management");
   const common = useTranslations("Common");
   const hasManagePermissions = hasPermissions([Permissions.ManageCustomRoles], true);
+
+  const [search, setSearch] = React.useState("");
+
+  const asyncTable = useAsyncTable({
+    fetchOptions: {
+      onResponse: (data: GetCustomRolesData) => ({
+        data: data.customRoles,
+        totalCount: data.totalCount,
+      }),
+      path: "/admin/manage/custom-roles",
+    },
+    search,
+    totalCount: data.totalCount,
+    initialData: data.customRoles,
+  });
+  const [tempRole, tempRoleState] = useTemporaryItem(asyncTable.items);
+  const tableState = useTableState({
+    pagination: asyncTable.pagination,
+  });
 
   async function handleDelete() {
     if (!tempRole) return;
@@ -52,25 +69,21 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
     });
 
     if (typeof json === "boolean" && json) {
-      setCustomRoles((p) => p.filter((v) => v.id !== tempRole.id));
-      setTempRole(null);
+      asyncTable.remove(tempRole.id);
+      tempRoleState.setTempId(null);
       closeModal(ModalIds.AlertDeleteCustomRole);
     }
   }
 
   function handleEditClick(field: CustomRole) {
-    setTempRole(field);
+    tempRoleState.setTempId(field.id);
     openModal(ModalIds.ManageCustomRole);
   }
 
   function handleDeleteClick(field: CustomRole) {
-    setTempRole(field);
+    tempRoleState.setTempId(field.id);
     openModal(ModalIds.AlertDeleteCustomRole);
   }
-
-  React.useEffect(() => {
-    setCustomRoles(data);
-  }, [data]);
 
   return (
     <AdminLayout
@@ -79,7 +92,7 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
         permissions: [Permissions.ManageCustomRoles, Permissions.ViewCustomRoles],
       }}
     >
-      <header className="flex items-start justify-between mb-5">
+      <header className="flex items-start justify-between mb-3">
         <div className="flex flex-col">
           <Title className="!mb-0">{t("MANAGE_CUSTOM_ROLES")}</Title>
 
@@ -97,12 +110,18 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
         </div>
       </header>
 
-      {customRoles.length <= 0 ? (
-        <p>{t("noCustomRoles")}</p>
+      <SearchArea
+        asyncTable={asyncTable}
+        search={{ search, setSearch }}
+        totalCount={data.totalCount}
+      />
+
+      {asyncTable.items.length <= 0 ? (
+        <p className="text-neutral-700 dark:text-gray-400 mt-3">{t("noCustomRoles")}</p>
       ) : (
         <Table
           tableState={tableState}
-          data={customRoles.map((field) => ({
+          data={asyncTable.items.map((field) => ({
             id: field.id,
             name: field.name,
             permissions: (
@@ -138,17 +157,13 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
 
       <ManageCustomRolesModal
         onCreate={(role) => {
-          setCustomRoles((p) => [role, ...p]);
+          asyncTable.prepend(role);
         }}
-        onUpdate={(oldRole, newRole) => {
-          const copied = [...customRoles];
-          const idx = copied.indexOf(oldRole);
-          copied[idx] = newRole;
-
-          setCustomRoles(copied);
+        onUpdate={(newRole) => {
+          asyncTable.update(newRole.id, newRole);
         }}
         role={tempRole}
-        onClose={() => setTempRole(null)}
+        onClose={() => tempRoleState.setTempId(null)}
       />
 
       <AlertModal
@@ -158,7 +173,7 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
           role: tempRole?.name,
         })}
         onDeleteClick={handleDelete}
-        onClose={() => setTempRole(null)}
+        onClose={() => tempRoleState.setTempId(null)}
         state={state}
       />
     </AdminLayout>
@@ -167,7 +182,9 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const user = await getSessionUser(req);
-  const [customRoles] = await requestAll(req, [["/admin/manage/custom-roles", []]]);
+  const [customRoles] = await requestAll(req, [
+    ["/admin/manage/custom-roles", { totalCount: 0, customRoles: [] }],
+  ]);
 
   return {
     props: {

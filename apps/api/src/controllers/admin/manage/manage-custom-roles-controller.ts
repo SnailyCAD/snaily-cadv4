@@ -1,4 +1,4 @@
-import { Rank } from "@prisma/client";
+import { Prisma, Rank } from "@prisma/client";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { CUSTOM_ROLE_SCHEMA } from "@snailycad/schemas";
 import {
@@ -7,11 +7,12 @@ import {
   MultipartFile,
   PathParams,
   PlatformMulterFile,
+  QueryParams,
   UseBeforeEach,
 } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
-import { ContentType, Delete, Get, Post, Put } from "@tsed/schema";
+import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
 import { validateSchema } from "lib/data/validate-schema";
 import { IsAuth } from "middlewares/is-auth";
@@ -22,15 +23,41 @@ import fs from "node:fs/promises";
 import process from "node:process";
 import type * as APITypes from "@snailycad/types/api";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
+import { defaultPermissions } from "@snailycad/permissions";
 
 @Controller("/admin/manage/custom-roles")
 @UseBeforeEach(IsAuth)
 @ContentType("application/json")
 export class AdminManageCustomRolesController {
+  @UsePermissions({ permissions: defaultPermissions.allDefaultAdminPermissions })
   @Get("/")
-  async getCustomRoles(): Promise<APITypes.GetCustomRolesData> {
-    const roles = await prisma.customRole.findMany({ include: { discordRole: true } });
-    return roles;
+  @Description("Get all custom roles (paginated)")
+  async getCustomRoles(
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("includeAll", Boolean) includeAll = false,
+    @QueryParams("query", String) query = "",
+  ): Promise<APITypes.GetCustomRolesData> {
+    const where = query
+      ? ({
+          OR: [
+            { name: { contains: query, mode: "insensitive" } },
+            { discordRole: { name: { contains: query, mode: "insensitive" } } },
+          ],
+        } satisfies Prisma.CustomRoleWhereInput)
+      : undefined;
+
+    const [totalCount, customRoles] = await prisma.$transaction([
+      prisma.customRole.count({ where }),
+      prisma.customRole.findMany({
+        include: { discordRole: true },
+        take: includeAll ? undefined : 35,
+        skip: includeAll ? undefined : skip,
+        where,
+        orderBy: { updatedAt: "desc" },
+      }),
+    ]);
+
+    return { customRoles, totalCount };
   }
 
   @Post("/")
@@ -38,6 +65,7 @@ export class AdminManageCustomRolesController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCustomRoles],
   })
+  @Description("Create a new custom role.")
   async createCustomRole(
     @BodyParams() body: unknown,
     @Context("sessionUserId") sessionUserId: string,
@@ -76,6 +104,7 @@ export class AdminManageCustomRolesController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCustomRoles],
   })
+  @Description("Update a custom role by its ID.")
   async updateCustomRole(
     @BodyParams() body: unknown,
     @PathParams("id") id: string,
@@ -117,6 +146,7 @@ export class AdminManageCustomRolesController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCustomRoles],
   })
+  @Description("Delete a custom role by its ID.")
   async deleteCustomRole(
     @PathParams("id") id: string,
     @Context("sessionUserId") sessionUserId: string,
@@ -143,6 +173,7 @@ export class AdminManageCustomRolesController {
   }
 
   @Post("/:id")
+  @Description("Upload an image to a custom role.")
   async uploadImageToCustomRole(
     @PathParams("id") customRoleId: string,
     @Context("sessionUserId") sessionUserId: string,

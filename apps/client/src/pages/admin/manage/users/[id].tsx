@@ -6,7 +6,7 @@ import { UPDATE_USER_SCHEMA } from "@snailycad/schemas";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { CustomRole, Rank } from "@snailycad/types";
+import { Rank } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { useAuth } from "context/AuthContext";
 import {
@@ -32,7 +32,11 @@ import { AlertModal } from "components/modal/AlertModal";
 import { ApiTokenArea } from "components/admin/manage/users/api-token-area";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { classNames } from "lib/classNames";
-import type { GetManageUserByIdData, PutManageUserByIdData } from "@snailycad/types/api";
+import type {
+  GetCustomRolesData,
+  GetManageUserByIdData,
+  PutManageUserByIdData,
+} from "@snailycad/types/api";
 
 const DangerZone = dynamic(
   async () => (await import("components/admin/manage/users/danger-zone")).DangerZone,
@@ -56,7 +60,7 @@ const ManagePermissionsModal = dynamic(
 );
 
 interface Props {
-  roles: CustomRole[];
+  roles: GetCustomRolesData;
   user: GetManageUserByIdData;
 }
 
@@ -259,7 +263,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query, loc
   const sessionUser = await getSessionUser(req);
   const [user, roles] = await requestAll(req, [
     [`/admin/manage/users/${query.id}`, null],
-    ["/admin/manage/custom-roles", []],
+    ["/admin/manage/custom-roles?includeAll=true", { totalCount: 0, customRoles: [] }],
   ]);
 
   if (!user) {

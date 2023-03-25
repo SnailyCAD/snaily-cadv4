@@ -446,7 +446,10 @@ export type PutManagePendingWarrants = boolean;
  * @method GET
  * @route /admin/manage/custom-roles
  */
-export type GetCustomRolesData = (Prisma.CustomRole & { discordRole?: Types.DiscordRole | null })[];
+export interface GetCustomRolesData {
+  totalCount: number;
+  customRoles: (Prisma.CustomRole & { discordRole?: Types.DiscordRole | null })[];
+}
 
 /**
  * @method POST

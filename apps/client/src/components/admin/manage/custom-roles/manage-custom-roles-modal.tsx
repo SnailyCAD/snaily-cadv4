@@ -23,7 +23,7 @@ import type {
 interface Props {
   role: CustomRole | null;
   onClose?(): void;
-  onUpdate?(old: CustomRole, newRole: CustomRole): void;
+  onUpdate?(newRole: CustomRole): void;
   onCreate?(role: CustomRole): void;
 }
 
@@ -78,7 +78,7 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
       if (json?.id) {
         jsonId = json.id;
         closeModal(ModalIds.ManageCustomRole);
-        onUpdate?.(role, json);
+        onUpdate?.(json);
       }
     } else {
       const { json } = await execute<PostCustomRolesData, typeof INITIAL_VALUES>({

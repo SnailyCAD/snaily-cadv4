@@ -1,4 +1,4 @@
-import type { CustomRole, User } from "@snailycad/types";
+import type { User } from "@snailycad/types";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
@@ -8,11 +8,11 @@ import { Form, Formik } from "formik";
 import { Loader, Button } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import { Select } from "components/form/Select";
-import type { PutManageUserByIdRolesData } from "@snailycad/types/api";
+import type { GetCustomRolesData, PutManageUserByIdRolesData } from "@snailycad/types/api";
 
 interface Props {
   user: User;
-  roles: CustomRole[];
+  roles: GetCustomRolesData;
   onUpdate?(user: PutManageUserByIdRolesData): void;
 }
 
@@ -51,7 +51,7 @@ export function ManageRolesModal({ roles, user, onUpdate }: Props) {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values }) => {
           const _roles = values.roles.map((v) => {
-            const role = roles.find((r) => r.id === v.value);
+            const role = roles.customRoles.find((r) => r.id === v.value);
             return role!;
           });
 
@@ -61,7 +61,7 @@ export function ManageRolesModal({ roles, user, onUpdate }: Props) {
             <Form>
               <FormField label={t("roles")} className="my-2">
                 <Select
-                  values={roles.map((role) => ({
+                  values={roles.customRoles.map((role) => ({
                     label: role.name,
                     value: role.id,
                   }))}
