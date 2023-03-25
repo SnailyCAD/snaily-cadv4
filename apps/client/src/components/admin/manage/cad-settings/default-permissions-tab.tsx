@@ -62,13 +62,12 @@ export function DefaultPermissionsTab() {
       <h2 className="text-2xl font-semibold">Default Permissions</h2>
 
       <p className="my-3 text-neutral-700 dark:text-gray-200">
-        This will automatically set these properties to what value is set below when a user creates
-        an account.
+        These permissions will be automatically granted to every user that creates a new account.
       </p>
 
       <p className="text-neutral-700 dark:text-gray-200">
         <b>Warning:</b> It is recommended to only change this if you are sure every user that
-        creates an account should get instant access to the set property.
+        creates an account should be granted with the selected permissions.
       </p>
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
