@@ -1,4 +1,3 @@
-import { useMounted } from "@casper124578/useful";
 import { useFormatter } from "use-intl";
 import { HoverCardProps, HoverCard } from "./HoverCard";
 
@@ -10,16 +9,11 @@ interface Props extends Omit<HoverCardProps, "trigger" | "children"> {
 }
 
 export function FullDate({ children, onlyDate, relative, isDateOfBirth, ...rest }: Props) {
-  const isMounted = useMounted();
   const { dateTime, relativeTime } = useFormatter();
 
   const isCorrectDate = isValidDate(children);
   if (!isCorrectDate) {
     return <span>Invalid Date</span>;
-  }
-
-  if (!isMounted) {
-    return null;
   }
 
   let date = new Date(children).getTime();
@@ -37,7 +31,11 @@ export function FullDate({ children, onlyDate, relative, isDateOfBirth, ...rest 
   return (
     <HoverCard
       openDelay={100}
-      trigger={<span className="z-30">{triggerFormattedTime}</span>}
+      trigger={
+        <span suppressHydrationWarning className="z-30">
+          {triggerFormattedTime}
+        </span>
+      }
       {...rest}
     >
       <span className="font-semibold">
