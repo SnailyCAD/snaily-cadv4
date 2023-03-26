@@ -42,7 +42,8 @@ export function useAsyncTable<T>(options: Options<T>) {
     pageIndex: options.fetchOptions.pageIndex ?? 0,
   });
 
-  const { isInitialLoading } = useQuery({
+  const { isInitialLoading, error } = useQuery({
+    retry: false,
     enabled: !options.disabled,
     initialData: options.initialData ?? undefined,
     queryFn: fetchData,
@@ -78,11 +79,18 @@ export function useAsyncTable<T>(options: Options<T>) {
       }
     }
 
-    const { json } = await execute({
+    const { json, error } = await execute({
       noToast: true,
       path,
       params: Object.fromEntries(searchParams),
+      signal: context.signal,
     });
+
+    if (error) {
+      if (error === "Request aborted") return list.items;
+      throw new Error(error);
+    }
+
     const toReturnData = options.fetchOptions.onResponse(json);
 
     if (scrollToTopOnDataChange) {
@@ -104,11 +112,13 @@ export function useAsyncTable<T>(options: Options<T>) {
     totalDataCount: list.totalCount,
     isLoading: loadingState === "loading",
     setPagination,
+    error: error as Error,
     ...paginationOptions,
   } as const;
 
   return {
     ...list,
+    noItemsAvailable: !isInitialLoading && !error && list.items.length <= 0,
     isInitialLoading,
     filters,
     setFilters,

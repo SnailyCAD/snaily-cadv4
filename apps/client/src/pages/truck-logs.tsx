@@ -74,7 +74,7 @@ export default function TruckLogs({ logs: initialLogs, totalCount }: GetTruckLog
         <Button onPress={() => openModal(ModalIds.ManageTruckLog)}>{t("createTruckLog")}</Button>
       </header>
 
-      {asyncTable.items.length <= 0 ? (
+      {asyncTable.noItemsAvailable ? (
         <p className="mt-3">{t("noTruckLogs")}</p>
       ) : (
         <Table

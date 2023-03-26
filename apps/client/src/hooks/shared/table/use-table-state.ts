@@ -60,6 +60,7 @@ export function useTableState({
     isLoading: pagination?.isLoading ?? false,
     totalDataCount: pagination?.totalDataCount,
     __ASYNC_TABLE__: pagination?.__ASYNC_TABLE__,
+    error: pagination?.error,
   };
 
   return {

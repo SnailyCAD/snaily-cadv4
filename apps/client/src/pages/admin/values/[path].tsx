@@ -275,7 +275,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
         </div>
       ) : null}
 
-      {asyncTable.items.length <= 0 ? (
+      {asyncTable.noItemsAvailable ? (
         <p className="mt-5">There are no values yet for this type.</p>
       ) : (
         <Table

@@ -101,7 +101,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
           totalCount={props.vehicles.length}
         />
 
-        {asyncTable.items.length <= 0 ? (
+        {asyncTable.noItemsAvailable ? (
           <p className="text-neutral-700 dark:text-gray-400">{t("noVehicles")}</p>
         ) : (
           <Table

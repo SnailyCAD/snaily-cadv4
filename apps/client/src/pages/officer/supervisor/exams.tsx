@@ -105,7 +105,7 @@ export default function CitizenLogs({ data }: Props) {
         ) : null}
       </header>
 
-      {asyncTable.items.length <= 0 ? (
+      {asyncTable.noItemsAvailable ? (
         <p className="mt-5">{t("licenseExams.noExams")}</p>
       ) : (
         <>

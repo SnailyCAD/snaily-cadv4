@@ -70,7 +70,7 @@ export function CourthousePostsTab() {
         ) : null}
       </header>
 
-      {!asyncTable.isInitialLoading && asyncTable.items.length <= 0 ? (
+      {asyncTable.noItemsAvailable ? (
         <p className="mt-5">{t("noCourthousePosts")}</p>
       ) : (
         <Table

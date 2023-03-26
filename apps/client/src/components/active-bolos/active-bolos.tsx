@@ -131,7 +131,7 @@ export function ActiveBolos({ initialBolos }: Props) {
             )}
             onPress={() => setShowFilters(!showFilters)}
             title={t("Bolos.filters")}
-            disabled={asyncTable.items.length <= 0}
+            disabled={asyncTable.noItemsAvailable}
           >
             <Filter
               className={classNames("group-hover:fill-white", showFilters && "text-white")}
@@ -144,7 +144,7 @@ export function ActiveBolos({ initialBolos }: Props) {
       {showFilters ? <BoloFilters asyncTable={asyncTable} search={{ search, setSearch }} /> : null}
 
       <div className="px-4">
-        {asyncTable.items.length <= 0 ? (
+        {asyncTable.noItemsAvailable ? (
           <p className="py-2 text-neutral-700 dark:text-gray-300">{t("Bolos.noActiveBolos")}</p>
         ) : (
           <Table

@@ -131,7 +131,7 @@ export function PruneUnitsModal() {
         ]}
       />
 
-      <Accordion.Root disabled={asyncTable.items.length <= 0} className="mt-4" type="multiple">
+      <Accordion.Root disabled={asyncTable.noItemsAvailable} className="mt-4" type="multiple">
         <Accordion.Item value="unavailable-sounds">
           <Accordion.Trigger
             type="button"

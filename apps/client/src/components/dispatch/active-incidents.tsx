@@ -117,7 +117,7 @@ export function ActiveIncidents() {
         </div>
       </header>
 
-      {!asyncTable.isInitialLoading && asyncTable.items.length <= 0 ? (
+      {asyncTable.noItemsAvailable ? (
         <p className="px-4 py-2 text-neutral-700 dark:text-gray-300">{t("noActiveIncidents")}</p>
       ) : (
         <Table

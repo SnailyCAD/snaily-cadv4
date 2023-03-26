@@ -61,7 +61,7 @@ export default function BureauOfFirearms({ data }: Props) {
     >
       <Title>{t("Bof.bureauOfFirearms")}</Title>
 
-      {asyncTable.items.length <= 0 ? (
+      {asyncTable.noItemsAvailable ? (
         <p className="mt-5">{t("Bof.noWeaponsPendingBof")}</p>
       ) : (
         <Table

@@ -63,7 +63,7 @@ export function CourtEntriesTab() {
         <Button onPress={() => openModal(ModalIds.ManageCourtEntry)}>{t("addCourtEntry")}</Button>
       </header>
 
-      {!asyncTable.isInitialLoading && asyncTable.items.length <= 0 ? (
+      {asyncTable.noItemsAvailable ? (
         <p className="mt-5">{t("noCourtEntries")}</p>
       ) : (
         <Table

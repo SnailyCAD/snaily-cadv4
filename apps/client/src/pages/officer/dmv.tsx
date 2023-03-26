@@ -62,7 +62,7 @@ export default function Dmv({ data }: Props) {
     >
       <Title>{t("dmv")}</Title>
 
-      {asyncTable.items.length <= 0 ? (
+      {asyncTable.noItemsAvailable ? (
         <p className="mt-5">{t("noVehiclesPendingApprovalInDmv")}</p>
       ) : (
         <Table

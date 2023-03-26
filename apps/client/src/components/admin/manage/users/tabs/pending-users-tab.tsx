@@ -49,7 +49,7 @@ export function PendingUsersTab(props: GetManageUsersData) {
         search={{ search, setSearch }}
       />
 
-      {asyncTable.items.length <= 0 ? (
+      {asyncTable.noItemsAvailable ? (
         <p>There are no users pending access.</p>
       ) : (
         <Table

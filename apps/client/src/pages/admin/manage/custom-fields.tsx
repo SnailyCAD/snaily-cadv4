@@ -107,7 +107,7 @@ export default function ManageCustomFields({ customFields: data }: Props) {
         totalCount={data.totalCount}
       />
 
-      {asyncTable.items.length <= 0 ? (
+      {asyncTable.noItemsAvailable ? (
         <p className="text-neutral-700 dark:text-gray-400 mt-3">{t("noCustomFields")}</p>
       ) : (
         <Table

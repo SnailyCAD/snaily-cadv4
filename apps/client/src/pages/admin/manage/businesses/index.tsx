@@ -106,7 +106,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
         >
           <h2 className="text-2xl font-semibold mb-2">{t("allBusinesses")}</h2>
 
-          {asyncTable.items.length <= 0 ? (
+          {asyncTable.noItemsAvailable ? (
             <p className="mt-5">{t("noBusinesses")}</p>
           ) : (
             <Table

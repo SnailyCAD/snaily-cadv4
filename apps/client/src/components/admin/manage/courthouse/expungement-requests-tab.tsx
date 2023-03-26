@@ -56,7 +56,7 @@ export function ExpungementRequestsTab({ requests: data }: Props) {
     <TabsContent value="expungement-requests">
       <h3 className="font-semibold text-xl">{t("Management.MANAGE_EXPUNGEMENT_REQUESTS")}</h3>
 
-      {asyncTable.items.length <= 0 ? (
+      {asyncTable.noItemsAvailable ? (
         <p className="my-2">{t("Courthouse.noPendingRequests")}</p>
       ) : (
         <Table
