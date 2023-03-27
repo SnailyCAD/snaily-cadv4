@@ -65,17 +65,21 @@ export class CADSettingsController {
     @QueryParams("type", String) type?: string,
   ): Promise<any> {
     const OR: Prisma.Enumerable<Prisma.AuditLogWhereInput> = [];
-    const _typeWhere =
+    const _typeWhere: Prisma.Enumerable<Prisma.AuditLogWhereInput> | undefined =
       type && Object.hasOwn(AuditLogActionType, type)
-        ? { action: { string_contains: type } }
+        ? { action: { string_contains: type, path: ["type"] } }
         : undefined;
+
+    if (_typeWhere) {
+      OR.push(_typeWhere);
+    }
 
     if (query) {
       OR.push({ action: { string_contains: query } });
       OR.push({ executor: { username: { contains: query, mode: "insensitive" } } });
     }
 
-    const where = { OR: query ? OR : undefined, ..._typeWhere };
+    const where = { OR: OR.length > 0 ? OR : undefined };
 
     const [totalCount, auditLogs] = await prisma.$transaction([
       prisma.auditLog.count({ where }),
