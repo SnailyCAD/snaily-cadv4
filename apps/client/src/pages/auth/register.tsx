@@ -22,6 +22,7 @@ import type { PostRegisterUserData } from "@snailycad/types/api";
 
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toastMessage } from "lib/toastMessage";
+import { ApiVerification } from "components/auth/api-verification";
 
 const INITIAL_VALUES = {
   username: "",
@@ -45,7 +46,6 @@ function Register({ cad }: Props) {
   const { ALLOW_REGULAR_LOGIN } = useFeatureEnabled();
   const validate = handleValidate(AUTH_SCHEMA);
   const common = useTranslations();
-
   const { executeRecaptcha } = useGoogleReCaptcha();
 
   React.useEffect(() => {
@@ -113,6 +113,7 @@ function Register({ cad }: Props) {
       <main className="flex flex-col items-center justify-center pt-20">
         <AuthScreenImages />
         <LocalhostDetector />
+        <ApiVerification />
 
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ setFieldValue, errors, isValid }) => (

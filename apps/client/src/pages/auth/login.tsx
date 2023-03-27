@@ -10,6 +10,7 @@ import { useTranslations } from "next-intl";
 import { LoginForm } from "components/auth/login/LoginForm";
 import { useRouter } from "next/router";
 import { requestAll } from "lib/utils";
+import { ApiVerification } from "components/auth/api-verification";
 
 export default function Login() {
   const { cad } = useAuth();
@@ -27,6 +28,7 @@ export default function Login() {
       <main className="flex flex-col items-center justify-center pt-20">
         <AuthScreenImages />
         <LocalhostDetector />
+        <ApiVerification />
 
         <LoginForm onFormSubmitted={handleSubmit} />
 
@@ -50,11 +52,11 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
   const userSavedLocale = cookies.sn_locale ?? null;
   const userSavedIsDarkTheme = cookies.sn_isDarkTheme ?? null;
 
-  const [data] = await requestAll(req, [["/admin/manage/cad-settings", {}]]);
+  const [data] = await requestAll(req, [["/admin/manage/cad-settings", null]]);
 
   return {
     props: {
-      cad: data ?? {},
+      cad: data,
       userSavedLocale,
       userSavedIsDarkTheme,
       messages: await getTranslations(["auth"], userSavedLocale ?? locale),
