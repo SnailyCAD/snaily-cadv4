@@ -38,10 +38,9 @@ export default function AccountPassword() {
       return helpers.setFieldError("confirmPassword", "Passwords do not match");
     }
 
-    const tempPassword = String(router.query.tp);
     const { json } = await execute<PostUserPasswordData>({
-      path: "/user/account-password",
-      data: { ...values, currentPassword: tempPassword },
+      path: "/user/password",
+      data: values,
       method: "POST",
     });
 
