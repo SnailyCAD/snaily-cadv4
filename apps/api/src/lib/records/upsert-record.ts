@@ -35,6 +35,7 @@ export async function upsertRecord(options: UpsertRecordOptions) {
 
   let citizen;
   let business;
+
   if ("citizenId" in options.data && options.data.citizenId) {
     citizen = await prisma.citizen.findUnique({
       where: { id: options.data.citizenId },

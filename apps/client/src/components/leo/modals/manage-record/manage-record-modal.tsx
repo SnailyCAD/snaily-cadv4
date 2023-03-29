@@ -76,7 +76,9 @@ interface Props {
 }
 
 export function ManageRecordModal(props: Props) {
-  const [isBusinessRecord, setIsBusinessRecord] = React.useState(!!props.record?.businessId);
+  const [isBusinessRecord, setIsBusinessRecord] = React.useState(
+    Boolean(props.record?.businessId && !props.record.citizenId),
+  );
   const { isOpen, closeModal, openModal, getPayload } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -84,8 +86,8 @@ export function ManageRecordModal(props: Props) {
   const { LEO_BAIL } = useFeatureEnabled();
 
   React.useEffect(() => {
-    setIsBusinessRecord(!!props.record?.businessId);
-  }, [props.record?.businessId]);
+    setIsBusinessRecord(Boolean(props.record?.businessId && !props.record.citizenId));
+  }, [props.record?.businessId, props.record?.citizenId]);
 
   const data = {
     [RecordType.TICKET]: {
