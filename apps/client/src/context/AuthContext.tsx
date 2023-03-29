@@ -66,6 +66,12 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
       router.push(`/auth/login?from=${from}`);
     }
 
+    const isForceAccountPassword = cad?.features.FORCE_ACCOUNT_PASSWORD ?? false;
+    if (user && !NO_LOADING_ROUTES.includes(router.pathname) && isForceAccountPassword) {
+      const from = router.asPath;
+      router.push(`/auth/account-password?from=${from}`);
+    }
+
     if (
       user &&
       !NO_LOADING_ROUTES.includes(router.pathname) &&

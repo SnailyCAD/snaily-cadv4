@@ -4,7 +4,10 @@ import { Forbidden } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 import { GetSessionUserErrors, userProperties } from "./getSessionUser";
 
-export async function getUserFromUserAPIToken(userApiTokenHeader: string) {
+export async function getUserFromUserAPIToken(
+  userApiTokenHeader: string,
+  includePassword?: boolean,
+) {
   const apiToken = await prisma.apiToken.findFirst({
     where: { token: userApiTokenHeader },
   });
@@ -13,9 +16,9 @@ export async function getUserFromUserAPIToken(userApiTokenHeader: string) {
     throw new Forbidden(GetSessionUserErrors.InvalidAPIToken);
   }
 
-  const user: User | null = await prisma.user.findFirst({
+  const user = await prisma.user.findFirst({
     where: { apiToken: { token: userApiTokenHeader } },
-    select: userProperties,
+    select: { ...userProperties, password: includePassword },
   });
 
   if (user) {
@@ -29,5 +32,8 @@ export async function getUserFromUserAPIToken(userApiTokenHeader: string) {
     }
   }
 
-  return { apiToken, user };
+  return {
+    apiToken,
+    user: { ...user } as User & { password: string },
+  };
 }
