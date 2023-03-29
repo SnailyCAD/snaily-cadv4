@@ -46,6 +46,7 @@ export const Feature = {
   EDITABLE_SSN: "EDITABLE_SSN",
   EDITABLE_VIN: "EDITABLE_VIN",
   SIGNAL_100_CITIZEN: "SIGNAL_100_CITIZEN",
+  FORCE_ACCOUNT_PASSWORD: "FORCE_ACCOUNT_PASSWORD",
 } as const;
 
 export type Feature = (typeof Feature)[keyof typeof Feature];

@@ -128,7 +128,7 @@ export async function getSessionUser(
   if (accessTokenPayload) {
     const user = await prisma.user.findUnique({
       where: { id: accessTokenPayload.userId },
-      select: userProperties,
+      select: { ...userProperties, password: true },
     });
 
     validateUserData(user, options.req, options.returnNullOnError as false | undefined);
@@ -144,7 +144,7 @@ export async function getSessionUser(
   const refreshTokenPayload = verifyJWT(refreshToken);
   if (refreshTokenPayload) {
     const user = await prisma.user.findFirst({
-      select: userProperties,
+      select: { ...userProperties, password: true },
       where: {
         sessions: {
           some: {
@@ -180,12 +180,17 @@ export async function getSessionUser(
   throw new Unauthorized(GetSessionUserErrors.Unauthorized);
 }
 
-function createUserData(user: User) {
+function createUserData(user: User & { password: string; hasPassword?: boolean }) {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!user) return user as GetUserData;
 
-  const { tempPassword, ...rest } = user;
-  return { ...rest, tempPassword: null, hasTempPassword: !!tempPassword } as GetUserData;
+  const { tempPassword, password, ...rest } = user;
+  return {
+    ...rest,
+    hasPassword: !!password.trim(),
+    tempPassword: null,
+    hasTempPassword: !!tempPassword,
+  } as GetUserData;
 }
 
 export function canManageInvariant<T extends Error>(

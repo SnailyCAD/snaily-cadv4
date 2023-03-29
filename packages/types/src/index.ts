@@ -118,7 +118,8 @@ type UserPicks =
   | "twoFactorEnabled"
   | "hasTempPassword"
   | "roles"
-  | "lastSeen";
+  | "lastSeen"
+  | "hasPassword";
 
 export type User = Pick<
   Prisma.User & {
@@ -126,6 +127,7 @@ export type User = Pick<
     soundSettings: Prisma.UserSoundSettings | null;
     twoFactorEnabled?: boolean;
     hasTempPassword?: boolean;
+    hasPassword?: boolean;
     roles?: CustomRole[];
   },
   UserPicks
