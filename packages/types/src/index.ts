@@ -118,7 +118,8 @@ type UserPicks =
   | "twoFactorEnabled"
   | "hasTempPassword"
   | "roles"
-  | "lastSeen";
+  | "lastSeen"
+  | "hasPassword";
 
 export type User = Pick<
   Prisma.User & {
