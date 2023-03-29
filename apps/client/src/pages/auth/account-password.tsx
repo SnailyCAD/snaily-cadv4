@@ -18,6 +18,7 @@ import { VersionDisplay } from "components/shared/VersionDisplay";
 const INITIAL_VALUES = {
   newPassword: "",
   confirmPassword: "",
+  currentPassword: null,
 };
 
 export default function AccountPassword() {
@@ -66,7 +67,7 @@ export default function AccountPassword() {
               </h1>
 
               <p className="my-3 text-base text-gray-800 dark:text-white italic">
-                {t("savePasswordInfo")}
+                {t("forceAccountPassword")}
               </p>
 
               <TextField
