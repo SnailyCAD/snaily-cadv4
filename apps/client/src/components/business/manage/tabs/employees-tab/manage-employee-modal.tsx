@@ -88,6 +88,8 @@ export function ManageEmployeeModal({ onClose, onUpdate, employee, isAdmin }: Pr
     employeeId: employee?.id ?? "",
     canCreatePosts: employee?.canCreatePosts ?? true,
     employeeOfTheMonth: employee?.employeeOfTheMonth ?? false,
+    canManageEmployees: employee?.canManageEmployees ?? false,
+    canManageVehicles: employee?.canManageVehicles ?? false,
     roleId: employee?.roleId ?? null,
   };
 
@@ -112,6 +114,24 @@ export function ManageEmployeeModal({ onClose, onUpdate, employee, isAdmin }: Pr
                 }))}
               />
             </FormField>
+
+            <FormRow>
+              <FormField errorMessage={errors.canManageEmployees} label={t("canManageEmployees")}>
+                <Toggle
+                  name="canManageEmployees"
+                  onCheckedChange={handleChange}
+                  value={values.canManageEmployees}
+                />
+              </FormField>
+
+              <FormField errorMessage={errors.canManageVehicles} label={t("canManageVehicles")}>
+                <Toggle
+                  name="canManageVehicles"
+                  onCheckedChange={handleChange}
+                  value={values.canManageVehicles}
+                />
+              </FormField>
+            </FormRow>
 
             <FormRow>
               <FormField errorMessage={errors.canCreatePosts} label={t("canCreatePosts")}>

@@ -80,6 +80,8 @@ export class BusinessEmployeeController {
       data: {
         employeeOfTheMonth: data.employeeOfTheMonth,
         canCreatePosts: data.canCreatePosts,
+        canManageEmployees: data.canManageEmployees,
+        canManageVehicles: data.canManageVehicles,
         roleId: data.roleId,
       },
       include: {
