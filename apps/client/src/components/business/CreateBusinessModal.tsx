@@ -17,7 +17,7 @@ import type { GetBusinessesData, PostCreateBusinessData } from "@snailycad/types
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
 
 interface Props {
-  onCreate?(employee: GetBusinessesData["businesses"][number]): void;
+  onCreate?(employee: GetBusinessesData["ownedBusinesses"][number]): void;
 }
 
 export function CreateBusinessModal({ onCreate }: Props) {

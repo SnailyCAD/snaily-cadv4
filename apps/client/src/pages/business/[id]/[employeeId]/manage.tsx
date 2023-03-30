@@ -14,6 +14,7 @@ import { Title } from "components/shared/Title";
 import { EmployeesTab } from "components/business/manage/tabs/employees-tab/employees-tab";
 import { TabList, BreadcrumbItem, Breadcrumbs } from "@snailycad/ui";
 import { shallow } from "zustand/shallow";
+import { GetBusinessByIdData } from "@snailycad/types/api";
 
 interface Props {
   employee: FullEmployee | null;
@@ -127,15 +128,17 @@ export default function BusinessId(props: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ query, locale, req }) => {
   const user = await getSessionUser(req);
-  const [business, values] = await requestAll(req, [
+  const [business, values] = (await requestAll(req, [
     [`/businesses/business/${query.id}?employeeId=${query.employeeId}`, null],
     ["/admin/values/business_role?paths=license", []],
-  ]);
+  ])) as [GetBusinessByIdData | null, any[]];
 
-  const notFound = !business?.employee || business.employee.citizenId !== business.citizenId;
+  const isCurrentEmployeeOwner = business?.employees.some(
+    (v) => v.role?.as === "OWNER" && v.citizenId === business.employee?.citizenId,
+  );
 
   return {
-    notFound,
+    notFound: !isCurrentEmployeeOwner,
     props: {
       business,
       values,

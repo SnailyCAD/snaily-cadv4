@@ -92,7 +92,6 @@ export const citizenSearchIncludeOrSelect = (
         ...citizenInclude,
         vehicles: { include: vehicleSearchInclude },
         addressFlags: true,
-        businesses: true,
         medicalRecords: true,
         customFields: { include: { field: true } },
         warrants: { include: { officer: { include: leoProperties } } },
@@ -218,7 +217,6 @@ export class LeoSearchController {
       },
       include: {
         Record: RecordsInclude(isEnabled),
-        citizen: true,
         vehicles: {
           include: vehicleSearchInclude,
         },

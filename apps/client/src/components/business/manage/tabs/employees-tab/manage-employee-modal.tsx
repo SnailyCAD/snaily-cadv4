@@ -79,10 +79,9 @@ export function ManageEmployeeModal({ onClose, onUpdate, employee, isAdmin }: Pr
     }
   }
 
-  const filteredRoles =
-    employee?.role?.as === EmployeeAsEnum.OWNER
-      ? rolesToSelect
-      : rolesToSelect.filter((v) => v.as !== EmployeeAsEnum.OWNER);
+  const filteredRoles = isAdmin
+    ? rolesToSelect
+    : rolesToSelect.filter((v) => v.as !== EmployeeAsEnum.OWNER);
 
   const validate = handleValidate(UPDATE_EMPLOYEE_SCHEMA);
   const INITIAL_VALUES = {

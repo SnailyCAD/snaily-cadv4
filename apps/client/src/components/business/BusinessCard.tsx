@@ -6,7 +6,7 @@ import { useTranslations } from "use-intl";
 import type { GetBusinessesData } from "@snailycad/types/api";
 
 interface Props {
-  employee: GetBusinessesData["businesses"][number];
+  employee: GetBusinessesData["ownedBusinesses"][number];
 }
 
 export function BusinessCard({ employee }: Props) {

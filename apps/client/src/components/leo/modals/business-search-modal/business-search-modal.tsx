@@ -37,7 +37,7 @@ export function BusinessSearchModal() {
     }
   }, [isOpen, setCurrentResult, setResults]);
 
-  function handleOpenInNameSearch(citizen: BaseCitizen) {
+  function handleOpenInNameSearch(citizen: Pick<BaseCitizen, "surname" | "name" | "id">) {
     closeModal(ModalIds.BusinessSearch);
     openModal(ModalIds.NameSearch, {
       ...citizen,
@@ -132,15 +132,18 @@ export function BusinessSearchModal() {
                   data={results.map((result) => ({
                     id: result.id,
                     name: result.name,
-                    owner: (
-                      <Button
-                        type="button"
-                        onPress={() => handleOpenInNameSearch(result.citizen)}
-                        size="xs"
-                      >
-                        {result.citizen.name} {result.citizen.surname}
-                      </Button>
-                    ),
+                    owners: result.employees
+                      .filter((v) => v.role?.as === "OWNER")
+                      .map((owner) => (
+                        <Button
+                          key={owner.id}
+                          type="button"
+                          onPress={() => handleOpenInNameSearch(owner.citizen)}
+                          size="xs"
+                        >
+                          {owner.citizen.name} {owner.citizen.surname}
+                        </Button>
+                      )),
                     fullAddress: formatCitizenAddress(result),
                     actions: (
                       <Button size="sm" type="button" onPress={() => setCurrentResult(result)}>
@@ -150,7 +153,7 @@ export function BusinessSearchModal() {
                   }))}
                   columns={[
                     { header: common("name"), accessorKey: "name" },
-                    { header: t("owner"), accessorKey: "owner" },
+                    { header: t("owners"), accessorKey: "owners" },
                     { header: t("fullAddress"), accessorKey: "fullAddress" },
                     { header: common("actions"), accessorKey: "actions" },
                   ]}
@@ -163,18 +166,23 @@ export function BusinessSearchModal() {
                 <h3 className="text-2xl font-semibold mb-3">{t("results")}</h3>
 
                 <Infofield label={common("name")}>{currentResult.name}</Infofield>
-                <Infofield label={t("owner")}>
-                  <Button
-                    size="xs"
-                    type="button"
-                    onPress={() => handleOpenInNameSearch(currentResult.citizen)}
-                  >
-                    {currentResult.citizen.name} {currentResult.citizen.surname}
-                  </Button>
+                <Infofield label={t("owners")}>
+                  {currentResult.employees
+                    .filter((v) => v.role?.as === "OWNER")
+                    .map((owner) => (
+                      <Button
+                        key={owner.id}
+                        size="xs"
+                        type="button"
+                        onPress={() => handleOpenInNameSearch(owner.citizen)}
+                      >
+                        {owner.citizen.name} {owner.citizen.surname}
+                      </Button>
+                    ))}
                 </Infofield>
                 <Infofield label={common("address")}>
                   {currentResult.address}{" "}
-                  {currentResult.citizen.postal ? `(${currentResult.citizen.postal})` : null}
+                  {currentResult.postal ? `(${currentResult.postal})` : null}
                 </Infofield>
 
                 <BusinessSearchTabsContainer />

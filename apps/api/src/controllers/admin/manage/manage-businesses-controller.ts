@@ -50,25 +50,8 @@ export class AdminManageBusinessesController {
   ): Promise<APITypes.GetManageBusinessesData> {
     const where = {} as Prisma.BusinessWhereInput;
 
-    const [name, surname] = query.toString().toLowerCase().split(/ +/g);
-
     if (query) {
-      where.OR = [
-        { address: { contains: query } },
-        { name: { contains: query } },
-        {
-          citizen: {
-            name: { contains: name, mode: "insensitive" },
-            surname: { contains: surname, mode: "insensitive" },
-          },
-        },
-        {
-          citizen: {
-            name: { contains: surname, mode: "insensitive" },
-            surname: { contains: name, mode: "insensitive" },
-          },
-        },
-      ];
+      where.OR = [{ address: { contains: query } }, { name: { contains: query } }];
     }
 
     if (pendingOnly) {
@@ -135,14 +118,8 @@ export class AdminManageBusinessesController {
   ) {
     const data = validateSchema(UPDATE_EMPLOYEE_SCHEMA, body);
     const employee = await prisma.employee.findFirst({
-      where: {
-        id: employeeId,
-        NOT: { role: { as: EmployeeAsEnum.OWNER } },
-      },
-      include: {
-        citizen: true,
-        role: { include: { value: true } },
-      },
+      where: { id: employeeId },
+      include: { citizen: true, role: { include: { value: true } } },
     });
 
     if (!employee) {
@@ -155,8 +132,8 @@ export class AdminManageBusinessesController {
       },
     });
 
-    if (!role || role.as === EmployeeAsEnum.OWNER) {
-      throw new ExtendedBadRequest({ roleId: "cannotSetRoleToOwner" });
+    if (!role) {
+      throw new ExtendedBadRequest({ roleId: "roleNotFound" });
     }
 
     const updated = await prisma.employee.update({

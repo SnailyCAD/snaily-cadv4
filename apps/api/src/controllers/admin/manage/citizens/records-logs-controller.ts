@@ -102,7 +102,7 @@ export class AdminManageCitizensController {
         include: {
           warrant: { include: { officer: { include: leoProperties } } },
           records: { include: recordsInclude },
-          business: { include: { citizen: true } },
+          business: { include: { employees: { where: { role: { as: "OWNER" } } } } },
           citizen: {
             include: { user: { select: userProperties }, gender: true, ethnicity: true },
           },
