@@ -167,16 +167,18 @@ export function BusinessSearchModal() {
 
                 <Infofield label={common("name")}>{currentResult.name}</Infofield>
                 <Infofield label={t("owners")}>
-                  {currentResult.employees.map((owner) => (
-                    <Button
-                      key={owner.id}
-                      size="xs"
-                      type="button"
-                      onPress={() => handleOpenInNameSearch(owner.citizen)}
-                    >
-                      {owner.citizen.name} {owner.citizen.surname}
-                    </Button>
-                  ))}
+                  {currentResult.employees
+                    .filter((v) => v.role?.as === "OWNER")
+                    .map((owner) => (
+                      <Button
+                        key={owner.id}
+                        size="xs"
+                        type="button"
+                        onPress={() => handleOpenInNameSearch(owner.citizen)}
+                      >
+                        {owner.citizen.name} {owner.citizen.surname}
+                      </Button>
+                    ))}
                 </Infofield>
                 <Infofield label={common("address")}>
                   {currentResult.address}{" "}
