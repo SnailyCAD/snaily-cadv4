@@ -67,15 +67,17 @@ export default function BusinessId(props: Props) {
     return null;
   }
 
-  if (!currentEmployee.role || currentEmployee.role?.as === "EMPLOYEE") {
+  const isBusinessOwner = currentEmployee.role?.as === EmployeeAsEnum.OWNER;
+  const hasManagePermissions =
+    currentEmployee.canManageEmployees || currentEmployee.canManageVehicles || !isBusinessOwner;
+
+  if (!hasManagePermissions) {
     return (
       <Layout className="dark:text-white">
         <p>{common("insufficientPermissions")}</p>
       </Layout>
     );
   }
-
-  const isBusinessOwner = currentEmployee.role.as === EmployeeAsEnum.OWNER;
 
   const tabsObj = [
     {

@@ -33,7 +33,8 @@ export class BusinessController {
       include: { role: true },
     });
 
-    if (!employee || employee.role?.as === "EMPLOYEE") {
+    const isOwner = employee?.role?.as === "OWNER";
+    if (!employee || !isOwner) {
       throw new NotFound("employeeNotFoundOrInvalidPermissions");
     }
 
@@ -71,7 +72,8 @@ export class BusinessController {
       include: { role: true },
     });
 
-    if (!employee || employee.role?.as === "EMPLOYEE") {
+    const isOwner = employee?.role?.as === "OWNER";
+    if (!employee || !isOwner) {
       throw new NotFound("employeeNotFoundOrInvalidPermissions");
     }
 
@@ -112,7 +114,8 @@ export class BusinessController {
       include: { role: true },
     });
 
-    if (!employee || employee.role?.as === "EMPLOYEE") {
+    const isOwner = employee?.role?.as === "OWNER";
+    if (!employee || !isOwner) {
       throw new NotFound("employeeNotFoundOrInvalidPermissions");
     }
 
@@ -154,7 +157,8 @@ export class BusinessController {
       include: { role: true },
     });
 
-    if (!employee || employee.role?.as === "EMPLOYEE") {
+    const isOwner = employee?.role?.as === "OWNER";
+    if (!employee || !isOwner) {
       throw new NotFound("employeeNotFoundOrInvalidPermissions");
     }
 
