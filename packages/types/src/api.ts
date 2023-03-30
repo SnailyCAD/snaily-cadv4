@@ -405,7 +405,8 @@ export type DeleteCitizenWeaponData = boolean;
  * @route /businesses
  */
 export interface GetBusinessesData {
-  businesses: (Types.Employee & { business: Prisma.Business })[];
+  ownedBusinesses: (Types.Employee & { business: Prisma.Business })[];
+  joinedBusinesses: (Types.Employee & { business: Prisma.Business })[];
   joinableBusinesses: Prisma.Business[];
 }
 
@@ -416,8 +417,7 @@ export interface GetBusinessesData {
 export type GetBusinessByIdData = Prisma.Business & {
   businessPosts: Prisma.BusinessPost[];
   vehicles: Types.RegisteredVehicle[];
-  employees: Omit<GetBusinessesData["businesses"][number], "business">[];
-  citizen: Pick<Prisma.Citizen, "name" | "surname" | "id">;
+  employees: Omit<GetBusinessesData["ownedBusinesses"][number], "business">[];
   employee: Types.Employee | null;
   roles: (Prisma.EmployeeValue & { value: Prisma.Value })[];
 };
@@ -447,7 +447,7 @@ export type DeleteBusinessByIdData = boolean;
  * @method POST
  * @route /businesses/join
  */
-export type PostJoinBusinessData = GetBusinessesData["businesses"][number];
+export type PostJoinBusinessData = GetBusinessesData["ownedBusinesses"][number];
 
 /**
  * @method POST
@@ -456,14 +456,14 @@ export type PostJoinBusinessData = GetBusinessesData["businesses"][number];
 export interface PostCreateBusinessData {
   business: Prisma.Business;
   id: Prisma.Business["id"];
-  employee: GetBusinessesData["businesses"][number];
+  employee: GetBusinessesData["ownedBusinesses"][number];
 }
 
 /**
  * @method PUT
  * @route /businesses/employees/:businessId/:id
  */
-export type PutBusinessEmployeesData = GetBusinessesData["businesses"][number];
+export type PutBusinessEmployeesData = GetBusinessesData["ownedBusinesses"][number];
 
 /**
  * @method DELETE

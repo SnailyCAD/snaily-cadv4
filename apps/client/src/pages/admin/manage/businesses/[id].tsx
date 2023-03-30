@@ -113,7 +113,6 @@ export default function ManageBusinesses({ business, businessId }: Props) {
                   openModal(ModalIds.ManageEmployee);
                 }}
                 size="xs"
-                disabled={employee.role?.as === EmployeeAsEnum.OWNER}
                 variant="success"
               >
                 {common("manage")}

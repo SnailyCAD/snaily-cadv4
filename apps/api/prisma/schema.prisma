@@ -393,7 +393,6 @@ model Citizen {
   medicalRecords       MedicalRecord[]
   towCalls             TowCall[]
   createdTowCalls      TowCall[]                     @relation("towCallCreator")
-  businesses           Business[]
   Employee             Employee[]
   officers             Officer[]
   warrants             Warrant[]
@@ -810,8 +809,6 @@ model Business {
   id            String              @id @default(cuid())
   user          User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String
-  citizen       Citizen             @relation(fields: [citizenId], references: [id], onDelete: Cascade)
-  citizenId     String
   createdAt     DateTime            @default(now())
   updatedAt     DateTime            @default(now()) @updatedAt
   name          String              @db.VarChar(255)

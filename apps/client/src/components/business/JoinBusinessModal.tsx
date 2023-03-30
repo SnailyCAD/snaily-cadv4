@@ -17,7 +17,7 @@ import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsFie
 import type { GetBusinessesData, PostJoinBusinessData } from "@snailycad/types/api";
 
 interface Props {
-  onCreate(business: GetBusinessesData["businesses"][number]): void;
+  onCreate?(business: GetBusinessesData["ownedBusinesses"][number]): void;
 }
 
 export function JoinBusinessModal({ onCreate }: Props) {
@@ -41,7 +41,7 @@ export function JoinBusinessModal({ onCreate }: Props) {
 
     if (json.id) {
       closeModal(ModalIds.JoinBusiness);
-      onCreate(json);
+      onCreate?.(json);
 
       if (!json.business.whitelisted) {
         router.push(`/business/${json.businessId}/${json.id}`);

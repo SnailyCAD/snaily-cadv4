@@ -15,7 +15,6 @@ export type FullEmployee = Employee & {
 
 export type FullBusiness = Business & {
   employees: Employee[];
-  citizen: Pick<Citizen, "id" | "name" | "surname">;
   businessPosts: BusinessPost[];
   vehicles: RegisteredVehicle[];
   roles: EmployeeValue[];

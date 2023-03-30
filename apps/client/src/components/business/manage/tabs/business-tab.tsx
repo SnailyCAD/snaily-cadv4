@@ -69,7 +69,6 @@ export function ManageBusinessTab() {
     name: currentBusiness.name,
     address: currentBusiness.address,
     postal: currentBusiness.postal ?? "",
-    ownerId: currentBusiness.citizenId,
     whitelisted: currentBusiness.whitelisted,
   };
 

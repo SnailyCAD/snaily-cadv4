@@ -3,7 +3,7 @@ import { Star } from "react-bootstrap-icons";
 import Link from "next/link";
 import type { GetServerSideProps } from "next";
 import { dataToSlate, Editor } from "components/editor/editor";
-import { BreadcrumbItem, Breadcrumbs, Button, buttonVariants } from "@snailycad/ui";
+import { BreadcrumbItem, Breadcrumbs, Button, buttonSizes, buttonVariants } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -89,7 +89,9 @@ export default function BusinessId(props: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props]);
 
-  const owner = currentBusiness?.employees?.find((v) => v.citizenId === currentBusiness.citizenId);
+  const isCurrentEmployeeOwner = currentBusiness?.employees?.some(
+    (v) => v.role?.as === "OWNER" && v.citizenId === currentEmployee?.citizenId,
+  );
 
   if (!currentBusiness || !currentEmployee) {
     return null;
@@ -134,10 +136,10 @@ export default function BusinessId(props: Props) {
               {t("createPost")}
             </Button>
           ) : null}
-          {owner?.citizenId === currentEmployee.citizenId ? (
+          {isCurrentEmployeeOwner ? (
             <Link
               href={`/business/${currentBusiness.id}/${currentEmployee.id}/manage`}
-              className={classNames(buttonVariants.default, "p-1 px-4 rounded-md")}
+              className={classNames(buttonVariants.default, buttonSizes.md, "rounded-md")}
             >
               {common("manage")}
             </Link>
