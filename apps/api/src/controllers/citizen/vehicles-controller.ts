@@ -254,7 +254,8 @@ export class VehiclesController {
         },
       });
 
-      if (!employee || employee.role?.as === "EMPLOYEE") {
+      const isOwner = employee?.role?.as === "OWNER";
+      if (!employee || !isOwner || !employee.canManageVehicles) {
         throw new NotFound("employeeNotFoundOrInvalidPermissions");
       }
 
@@ -506,7 +507,8 @@ export class VehiclesController {
         },
       });
 
-      if (!employee || employee.role?.as === "EMPLOYEE") {
+      const isOwner = employee?.role?.as === "OWNER";
+      if (!employee || !isOwner || !employee.canManageVehicles) {
         throw new NotFound("employeeNotFoundOrInvalidPermissions");
       }
     } else {
