@@ -42,7 +42,8 @@ export class BusinessEmployeeController {
       },
     });
 
-    if (!employee || employee.role?.as === "EMPLOYEE") {
+    const isOwner = employee?.role?.as === EmployeeAsEnum.OWNER;
+    if (!employee || !isOwner || !employee.canManageEmployees) {
       throw new NotFound("employeeNotFoundOrInvalidPermissions");
     }
 
@@ -80,6 +81,8 @@ export class BusinessEmployeeController {
       data: {
         employeeOfTheMonth: data.employeeOfTheMonth,
         canCreatePosts: data.canCreatePosts,
+        canManageEmployees: data.canManageEmployees,
+        canManageVehicles: data.canManageVehicles,
         roleId: data.roleId,
       },
       include: {
@@ -119,7 +122,8 @@ export class BusinessEmployeeController {
       },
     });
 
-    if (!employee || employee.role?.as === "EMPLOYEE") {
+    const isOwner = employee?.role?.as === EmployeeAsEnum.OWNER;
+    if (!employee || !isOwner || !employee.canManageEmployees) {
       throw new NotFound("employeeNotFoundOrInvalidPermissions");
     }
 
@@ -173,7 +177,8 @@ export class BusinessEmployeeController {
       },
     });
 
-    if (!employee || employee.role?.as === "EMPLOYEE") {
+    const isOwner = employee?.role?.as === EmployeeAsEnum.OWNER;
+    if (!employee || !isOwner || !employee.canManageEmployees) {
       throw new NotFound("employeeNotFoundOrInvalidPermissions");
     }
 

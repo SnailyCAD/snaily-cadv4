@@ -92,6 +92,10 @@ export default function BusinessId(props: Props) {
   const isCurrentEmployeeOwner = currentBusiness?.employees?.some(
     (v) => v.role?.as === "OWNER" && v.citizenId === currentEmployee?.citizenId,
   );
+  const hasManagePermissions =
+    isCurrentEmployeeOwner ||
+    currentEmployee?.canManageEmployees ||
+    currentEmployee?.canManageVehicles;
 
   if (!currentBusiness || !currentEmployee) {
     return null;
@@ -136,7 +140,7 @@ export default function BusinessId(props: Props) {
               {t("createPost")}
             </Button>
           ) : null}
-          {isCurrentEmployeeOwner ? (
+          {hasManagePermissions ? (
             <Link
               href={`/business/${currentBusiness.id}/${currentEmployee.id}/manage`}
               className={classNames(buttonVariants.default, buttonSizes.md, "rounded-md")}

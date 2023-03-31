@@ -53,7 +53,7 @@ export default function BusinessPage(props: GetBusinessesData) {
         <h3 className="text-xl font-semibold mb-2">{t("owned")}</h3>
         <ul className="space-y-3">
           {props.ownedBusinesses.length <= 0 ? (
-            <p>{t("noOwned")}</p>
+            <p className="text-neutral-700 dark:text-gray-400">{t("noOwned")}</p>
           ) : (
             props.ownedBusinesses.map((employee) => (
               <BusinessCard key={employee.id} employee={employee} />
@@ -66,7 +66,7 @@ export default function BusinessPage(props: GetBusinessesData) {
         <h3 className="text-xl font-semibold mb-2">{t("joined")}</h3>
         <ul className="space-y-3">
           {props.joinedBusinesses.length <= 0 ? (
-            <p>{t("notEmployee")}</p>
+            <p className="text-neutral-700 dark:text-gray-400">{t("notEmployee")}</p>
           ) : (
             props.joinedBusinesses.map((employee) => (
               <BusinessCard key={employee.id} employee={employee} />

@@ -142,6 +142,8 @@ export class AdminManageBusinessesController {
         employeeOfTheMonth: data.employeeOfTheMonth,
         canCreatePosts: data.canCreatePosts,
         roleId: role.id,
+        canManageEmployees: data.canManageEmployees,
+        canManageVehicles: data.canManageVehicles,
       },
       include: {
         citizen: true,

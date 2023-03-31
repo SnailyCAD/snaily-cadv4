@@ -836,6 +836,8 @@ model Employee {
   roleId             String?
   employeeOfTheMonth Boolean         @default(false)
   canCreatePosts     Boolean         @default(true)
+  canManageEmployees Boolean         @default(false)
+  canManageVehicles  Boolean         @default(false)
   whitelistStatus    WhitelistStatus @default(ACCEPTED)
   businessPosts      BusinessPost[]
   createdAt          DateTime        @default(now())

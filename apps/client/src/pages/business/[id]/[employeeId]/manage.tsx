@@ -67,7 +67,11 @@ export default function BusinessId(props: Props) {
     return null;
   }
 
-  if (!currentEmployee.role || currentEmployee.role?.as === "EMPLOYEE") {
+  const isBusinessOwner = currentEmployee.role?.as === EmployeeAsEnum.OWNER;
+  const hasManagePermissions =
+    currentEmployee.canManageEmployees || currentEmployee.canManageVehicles || !isBusinessOwner;
+
+  if (!hasManagePermissions) {
     return (
       <Layout className="dark:text-white">
         <p>{common("insufficientPermissions")}</p>
@@ -75,18 +79,25 @@ export default function BusinessId(props: Props) {
     );
   }
 
-  const isBusinessOwner = currentEmployee.role.as === EmployeeAsEnum.OWNER;
-
   const tabsObj = [
-    { enabled: true, name: t("allEmployees"), value: "allEmployees" },
-    { enabled: true, name: t("businessVehicles"), value: "businessVehicles" },
+    {
+      enabled: currentEmployee.canManageEmployees || isBusinessOwner,
+      name: t("allEmployees"),
+      value: "allEmployees",
+    },
+    {
+      enabled: currentEmployee.canManageVehicles || isBusinessOwner,
+      name: t("businessVehicles"),
+      value: "businessVehicles",
+    },
     {
       enabled: isBusinessOwner,
       name: t("business"),
       value: "business",
     },
     {
-      enabled: currentBusiness.whitelisted,
+      enabled:
+        currentBusiness.whitelisted && (currentEmployee.canManageEmployees || isBusinessOwner),
       name: t("pendingEmployees"),
       value: "pendingEmployees",
     },
@@ -133,9 +144,12 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale, re
     ["/admin/values/business_role?paths=license", []],
   ])) as [GetBusinessByIdData | null, any[]];
 
-  const isCurrentEmployeeOwner = business?.employees.some(
-    (v) => v.role?.as === "OWNER" && v.citizenId === business.employee?.citizenId,
-  );
+  const isCurrentEmployeeOwner = business?.employees.some((v) => {
+    const hasManagePermissions =
+      v.role?.as === "OWNER" || v.canManageEmployees || v.canManageVehicles;
+
+    return hasManagePermissions && v.citizenId === business.employee?.citizenId;
+  });
 
   return {
     notFound: !isCurrentEmployeeOwner,
