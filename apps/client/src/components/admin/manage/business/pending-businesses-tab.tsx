@@ -52,36 +52,42 @@ export function PendingBusinessesTab() {
       <Table
         isLoading={asyncTable.isInitialLoading}
         tableState={tableState}
-        data={asyncTable.items.map((business) => ({
-          id: business.id,
-          name: business.name,
-          owner: `${business.citizen.name} ${business.citizen.surname}`,
-          user: business.user.username,
-          actions: (
-            <>
-              <Button
-                onPress={() => acceptOrDecline(business, WhitelistStatus.ACCEPTED)}
-                disabled={state === "loading"}
-                size="xs"
-                variant="success"
-              >
-                {common("accept")}
-              </Button>
-              <Button
-                className="ml-2"
-                onPress={() => acceptOrDecline(business, WhitelistStatus.DECLINED)}
-                disabled={state === "loading"}
-                size="xs"
-                variant="danger"
-              >
-                {common("decline")}
-              </Button>
-            </>
-          ),
-        }))}
+        data={asyncTable.items.map((business) => {
+          const owners = business.employees;
+
+          return {
+            id: business.id,
+            name: business.name,
+            owners: owners
+              .map((owner) => `${owner.citizen.name} ${owner.citizen.surname}`)
+              .join(", "),
+            user: business.user.username,
+            actions: (
+              <>
+                <Button
+                  onPress={() => acceptOrDecline(business, WhitelistStatus.ACCEPTED)}
+                  disabled={state === "loading"}
+                  size="xs"
+                  variant="success"
+                >
+                  {common("accept")}
+                </Button>
+                <Button
+                  className="ml-2"
+                  onPress={() => acceptOrDecline(business, WhitelistStatus.DECLINED)}
+                  disabled={state === "loading"}
+                  size="xs"
+                  variant="danger"
+                >
+                  {common("decline")}
+                </Button>
+              </>
+            ),
+          };
+        })}
         columns={[
           { header: common("name"), accessorKey: "name" },
-          { header: t("owner"), accessorKey: "owner" },
+          { header: t("owners"), accessorKey: "owners" },
           { header: t("user"), accessorKey: "user" },
           { header: common("actions"), accessorKey: "actions" },
         ]}

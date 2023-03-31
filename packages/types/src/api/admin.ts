@@ -98,7 +98,8 @@ export type DeleteImportWeaponsData = boolean;
 export interface GetManageBusinessesData {
   totalCount: number;
   businesses: (Prisma.Business & {
-    citizen: { id: string; name: string; surname: string };
+    /** owners */
+    employees: (Prisma.Employee & { citizen: Types.BaseCitizen })[];
     user: Types.User;
   })[];
 }

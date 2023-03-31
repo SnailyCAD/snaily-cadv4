@@ -16,17 +16,11 @@ import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 
 const businessInclude = {
-  citizen: {
-    select: {
-      name: true,
-      surname: true,
-      id: true,
-    },
-  },
   user: {
     select: userProperties,
   },
-};
+  employees: { include: { citizen: true }, where: { role: { as: "OWNER" } } },
+} as const;
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/businesses")
