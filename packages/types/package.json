@@ -34,7 +34,7 @@
     "@snailycad/permissions": "1.53.0",
     "discord-api-types": "0.37.37",
     "tsup": "^6.7.0",
-    "typescript": "^5.0.2"
+    "typescript": "^5.0.3"
   },
   "tsup": {
     "entry": [

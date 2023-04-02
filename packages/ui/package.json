@@ -16,10 +16,10 @@
   "devDependencies": {
     "@snailycad/types": "1.53.0",
     "rimraf": "^4.4.1",
-    "tailwindcss": "^3.3.0",
+    "tailwindcss": "^3.3.1",
     "tslib": "^2.5.0",
     "tsup": "^6.7.0",
-    "typescript": "^5.0.2",
+    "typescript": "^5.0.3",
     "vite": "^4.2.1"
   },
   "tsup": {
@@ -106,7 +106,7 @@
     "react-bootstrap-icons": "^1.10.2",
     "react-dnd": "16.0.1",
     "react-dnd-html5-backend": "16.0.1",
-    "tailwind-merge": "^1.10.0"
+    "tailwind-merge": "^1.11.0"
   },
   "peerDependencies": {
     "date-fns": ">=2.29.3",
