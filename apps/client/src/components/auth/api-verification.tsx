@@ -60,7 +60,7 @@ export function ApiVerification() {
         <a
           target="_blank"
           className="font-semibold underline"
-          href="https://snailycad.com/docs/troubleshooting"
+          href="https://docs.snailycad.org/docs/guides/troubleshooting"
           rel="noreferrer"
         >
           troubleshooting guide
