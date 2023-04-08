@@ -69,6 +69,8 @@ export class ManageUsersController {
                   OR: [
                     { username: { contains: query, mode: Prisma.QueryMode.insensitive } },
                     { id: query },
+                    { steamId: query },
+                    { discordId: query },
                   ],
                 }
               : {}),
