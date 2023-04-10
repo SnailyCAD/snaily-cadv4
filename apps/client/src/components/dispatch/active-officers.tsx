@@ -44,7 +44,7 @@ const ManageUnitModal = dynamic(
 );
 
 const MergeUnitModal = dynamic(
-  async () => (await import("./active-units/MergeUnitModal")).MergeUnitModal,
+  async () => (await import("./active-units/merge-unit-modal")).MergeUnitModal,
   { ssr: false },
 );
 
