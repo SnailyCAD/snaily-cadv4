@@ -81,8 +81,6 @@ export class CombinedUnitsController {
       ? await prisma.emergencyVehicleValue.findUnique({ where: { id: data.vehicleId } })
       : null;
 
-    console.log({ emergencyVehicle, data: data.vehicleId });
-
     const nextInt = await findNextAvailableIncremental({ type: "combined-leo" });
     const combinedUnit = await prisma.combinedLeoUnit.create({
       data: {
