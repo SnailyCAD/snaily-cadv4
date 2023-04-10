@@ -266,7 +266,7 @@ export class EmsFdController {
   @Post("/declare/:citizenId")
   @UsePermissions({
     fallback: (u) => u.isEmsFd || u.isLeo || u.isDispatch,
-    permissions: [Permissions.EmsFd, Permissions.Leo, Permissions.Dispatch],
+    permissions: [Permissions.DeclareCitizenDead],
   })
   async declareCitizenDeadOrAlive(
     @PathParams("citizenId") citizenId: string,

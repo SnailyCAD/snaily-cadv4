@@ -13,6 +13,7 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { shallow } from "zustand/shallow";
 import { ManageRecordModal } from "../../manage-record/manage-record-modal";
+import { Permissions, usePermission } from "hooks/usePermission";
 
 interface Props {
   isLeo?: boolean;
@@ -25,6 +26,9 @@ export function NameSearchFooterActions(props: Props) {
   const { openModal } = useModal();
   const t = useTranslations();
   const { state, execute } = useFetch();
+  const { hasPermissions } = usePermission();
+  const hasDeclarePermissions = hasPermissions([Permissions.DeclareCitizenDead]);
+
   const { currentResult, setCurrentResult } = useNameSearch(
     (state) => ({
       currentResult: state.currentResult,
@@ -34,7 +38,7 @@ export function NameSearchFooterActions(props: Props) {
   );
 
   async function handleDeclare() {
-    if (!currentResult) return;
+    if (!currentResult || !hasDeclarePermissions) return;
 
     const { json } = await execute<PostEmsFdDeclareCitizenById>({
       path: `/ems-fd/declare/${currentResult.id}`,
@@ -98,16 +102,18 @@ export function NameSearchFooterActions(props: Props) {
 
         {showExtraActions ? (
           <>
-            <Dropdown.Item
-              size="xs"
-              type="button"
-              onPress={handleDeclare}
-              disabled={state === "loading"}
-              variant="cancel"
-              className="px-1.5"
-            >
-              {currentResult.dead ? t("Ems.declareAlive") : t("Ems.declareDead")}
-            </Dropdown.Item>
+            {hasDeclarePermissions ? (
+              <Dropdown.Item
+                size="xs"
+                type="button"
+                onPress={handleDeclare}
+                disabled={state === "loading"}
+                variant="cancel"
+                className="px-1.5"
+              >
+                {currentResult.dead ? t("Ems.declareAlive") : t("Ems.declareDead")}
+              </Dropdown.Item>
+            ) : null}
 
             <Dropdown.Item
               size="xs"
