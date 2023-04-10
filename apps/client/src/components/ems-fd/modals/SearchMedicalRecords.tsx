@@ -23,6 +23,7 @@ import format from "date-fns/format";
 import { useImageUrl } from "hooks/useImageUrl";
 import { SpeechAlert } from "components/leo/modals/NameSearchModal/speech-alert";
 import { ImageWrapper } from "components/shared/image-wrapper";
+import { Permissions, usePermission } from "hooks/usePermission";
 
 interface Props {
   onClose?(): void;
@@ -36,6 +37,8 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
   const { cad } = useAuth();
   const tableState = useTableState();
+  const { hasPermissions } = usePermission();
+  const hasDeclarePermissions = hasPermissions([Permissions.DeclareCitizenDead]);
 
   const [results, setResults] = React.useState<SearchResult | null | undefined>(undefined);
 
@@ -45,7 +48,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
   }
 
   async function handleDeclare() {
-    if (!results || typeof results === "boolean") return;
+    if (!results || typeof results === "boolean" || !hasDeclarePermissions) return;
 
     const { json } = await execute<PostEmsFdDeclareCitizenById>({
       path: `/ems-fd/declare/${results.id}`,
@@ -277,7 +280,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                                 variant={results.dead ? "success" : "danger"}
                                 type="button"
                                 onPress={handleDeclare}
-                                disabled={state === "loading"}
+                                disabled={!hasDeclarePermissions || state === "loading"}
                               >
                                 {results.dead ? t("Ems.declareAlive") : t("Ems.declareDead")}
                               </Button>
@@ -287,7 +290,9 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                             { header: t("MedicalRecords.diseases"), accessorKey: "type" },
                             { header: t("MedicalRecords.bloodGroup"), accessorKey: "bloodGroup" },
                             { header: t("Common.description"), accessorKey: "description" },
-                            { header: t("Common.actions"), accessorKey: "actions" },
+                            hasDeclarePermissions
+                              ? { header: t("Common.actions"), accessorKey: "actions" }
+                              : null,
                           ]}
                         />
                       )}
@@ -304,7 +309,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                 results && !results.isConfidential && "justify-between",
               )}
             >
-              {results && !results.isConfidential ? (
+              {results && !results.isConfidential && hasDeclarePermissions ? (
                 <Button
                   size="xs"
                   type="button"

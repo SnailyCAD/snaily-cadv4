@@ -26,4 +26,9 @@ export const defaultLeoPermissions = [
 
 export const defaultDispatchPermissions = [Permissions.Dispatch, Permissions.LiveMap];
 
-export const defaultEmsFdPermissions = [Permissions.EmsFd];
+export const defaultEmsFdPermissions = [
+  Permissions.EmsFd,
+  Permissions.DeclareCitizenDead,
+  Permissions.ViewEmsFdIncidents,
+  Permissions.ManageEmsFdIncidents,
+];
