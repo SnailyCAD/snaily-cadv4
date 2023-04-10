@@ -63,6 +63,7 @@ export function IncidentsTable<T extends EmsFdIncident | LeoIncident>(
   const { state, execute } = useFetch();
 
   const permissionToUse =
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     props.type === "ems-fd" ? Permissions.PurgeEmsFdIncidents : Permissions.PurgeLeoIncidents;
   const hasPurgePermissions = hasPermissions([permissionToUse]);
 
