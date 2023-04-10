@@ -139,6 +139,8 @@
     "nameChangeRequestDeclined": "a name change request has been declined with citizen id <span>{value}</span>.",
     "activeWarrantAccepted": "an active warrant request has been accepted with id <span>{value}</span>.",
     "activeWarrantDeclined": "an active warrant request has been declined with id <span>{value}</span>.",
-    "bulkRemoveValues": "Selected values have been removed: <span>{value}</span>"
+    "bulkRemoveValues": "Selected values have been removed: <span>{value}</span>",
+    "leoIncidentsPurged": "Selected LEO incidents have been purged. These incidents cannot be recovered and were deleted permanently: <span>{value}</span>. ",
+    "emsFdIncidentsPurged": "Selected EMS/FD incidents have been purged. These incidents cannot be recovered and were deleted permanently: <span>{value}</span>. "
   }
 }

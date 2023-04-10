@@ -65,7 +65,9 @@ export type AuditLogActions =
   | ValueAdd
   | ValueUpdate
   | ValueRemove
-  | ValueBulkRemove;
+  | ValueBulkRemove
+  | LeoIncidentsPurged
+  | EmsIncidentsPurged;
 
 type BaseAuditLogAction<ActionType extends AuditLogActionType, Previous, New> = {
   type: ActionType;
@@ -333,6 +335,16 @@ export type ValueUpdate = BaseAuditLogAction<AuditLogActionType.ValueUpdate, any
 export type ValueRemove = BaseAuditLogAction<AuditLogActionType.ValueRemove, undefined, any>;
 export type ValueBulkRemove = BaseAuditLogAction<
   AuditLogActionType.ValueBulkRemove,
+  undefined,
+  string[]
+>;
+export type LeoIncidentsPurged = BaseAuditLogAction<
+  AuditLogActionType.LeoIncidentsPurged,
+  undefined,
+  string[]
+>;
+export type EmsIncidentsPurged = BaseAuditLogAction<
+  AuditLogActionType.EmsIncidentsPurged,
   undefined,
   string[]
 >;
