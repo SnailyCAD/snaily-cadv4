@@ -53,8 +53,8 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
   const isLeoIncidents = type === "leo" || router.pathname === "/officer/incidents";
   const areIncidentsNonDispatch = isEmsFdIncidents || isLeoIncidents;
 
-  const areEventsReadonly = !isDispatch || areIncidentsNonDispatch;
-  const areFieldsDisabled = !isDispatch && !areIncidentsNonDispatch;
+  const areEventsReadonly = isDispatch ? false : areIncidentsNonDispatch;
+  const areFieldsDisabled = isDispatch ? false : !areIncidentsNonDispatch;
 
   function handleAddUpdateCallEvent(incident: LeoIncident) {
     setActiveIncidents(activeIncidents.map((inc) => (inc.id === incident.id ? incident : inc)));
