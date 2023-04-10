@@ -367,15 +367,7 @@ export class IncidentController {
   ) {
     if (!Array.isArray(ids)) return false;
 
-    await Promise.all(
-      ids.map(async (id) => {
-        const event = await prisma.leoIncident.delete({
-          where: { id },
-        });
-
-        this.socket.emitUpdateActiveIncident({ ...event, isActive: false });
-      }),
-    );
+    await prisma.$transaction(ids.map((id) => prisma.emsFdIncident.delete({ where: { id } })));
 
     await createAuditLogEntry({
       translationKey: "emsFdIncidentsPurged",
