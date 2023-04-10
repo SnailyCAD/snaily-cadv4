@@ -130,3 +130,8 @@ export const SWITCH_CALLSIGN_SCHEMA = z.object({
 export const IMPOUND_VEHICLE_SCHEMA = z.object({
   impoundLot: z.string().min(2),
 });
+
+export const MERGE_UNIT_SCHEMA = z.object({
+  ids: z.array(z.object({ entry: z.boolean(), id: z.string() })),
+  vehicleId: z.string().nullish(),
+});

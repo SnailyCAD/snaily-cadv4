@@ -12,6 +12,8 @@ import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncrement
 import type * as APITypes from "@snailycad/types/api";
 import { getNextActiveCallId } from "lib/calls/getNextActiveCall";
 import { getNextIncidentId } from "lib/incidents/get-next-incident-id";
+import { validateSchema } from "lib/data/validate-schema";
+import { MERGE_UNIT_SCHEMA } from "@snailycad/schemas";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -31,10 +33,12 @@ export class CombinedUnitsController {
     permissions: [Permissions.Dispatch, Permissions.Leo],
   })
   async mergeOfficers(
-    @BodyParams() ids: { entry: boolean; id: string }[],
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PostDispatchStatusMergeOfficers> {
+    const data = validateSchema(MERGE_UNIT_SCHEMA, body);
+
     const officers = await prisma.$transaction(
-      ids.map((officer) => {
+      data.ids.map((officer) => {
         return prisma.officer.findFirst({
           where: {
             id: officer.id,
@@ -52,7 +56,7 @@ export class CombinedUnitsController {
       throw new BadRequest("officerAlreadyMerged");
     }
 
-    const entryOfficerId = ids.find((v) => v.entry)?.id;
+    const entryOfficerId = data.ids.find((v) => v.entry)?.id;
     if (!entryOfficerId) {
       throw new BadRequest("noEntryOfficer");
     }
@@ -73,6 +77,12 @@ export class CombinedUnitsController {
 
     const [division] = entryOfficer.divisions;
 
+    const emergencyVehicle = data.vehicleId
+      ? await prisma.emergencyVehicleValue.findUnique({ where: { id: data.vehicleId } })
+      : null;
+
+    console.log({ emergencyVehicle, data: data.vehicleId });
+
     const nextInt = await findNextAvailableIncremental({ type: "combined-leo" });
     const combinedUnit = await prisma.combinedLeoUnit.create({
       data: {
@@ -82,11 +92,12 @@ export class CombinedUnitsController {
         departmentId: entryOfficer.departmentId,
         incremental: nextInt,
         pairedUnitTemplate: division?.pairedUnitTemplate ?? null,
+        activeVehicleId: emergencyVehicle?.id ?? null,
       },
     });
 
-    const data = await Promise.all(
-      ids.map(async ({ id: officerId }, idx) => {
+    const combinedUnits = await Promise.all(
+      data.ids.map(async ({ id: officerId }, idx) => {
         await prisma.officer.update({
           where: { id: officerId },
           data: { statusId: null },
@@ -99,12 +110,12 @@ export class CombinedUnitsController {
           data: {
             officers: { connect: { id: officerId } },
           },
-          include: idx === ids.length - 1 ? combinedUnitProperties : undefined,
+          include: idx === data.ids.length - 1 ? combinedUnitProperties : undefined,
         });
       }),
     );
 
-    const last = data[data.length - 1];
+    const last = combinedUnits[combinedUnits.length - 1];
     await this.socket.emitUpdateOfficerStatus();
 
     return last as APITypes.PostDispatchStatusMergeOfficers;
