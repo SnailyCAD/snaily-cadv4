@@ -17,6 +17,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { getNextIncidentId } from "lib/incidents/get-next-incident-id";
 import { assignUnitsInvolvedToIncident } from "lib/incidents/handle-involved-units";
 import { ActiveDeputy } from "middlewares/active-deputy";
+import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 
 export const assignedUnitsInclude = {
   include: {
@@ -354,6 +355,28 @@ export class IncidentController {
     await this.socket.emitUpdateDeputyStatus();
 
     return normalizedIncident;
+  }
+
+  @Delete("/purge")
+  @UsePermissions({
+    permissions: [Permissions.PurgeLeoIncidents],
+  })
+  async purgeIncidents(
+    @BodyParams("ids") ids: string[],
+    @Context("sessionUserId") sessionUserId: string,
+  ) {
+    if (!Array.isArray(ids)) return false;
+
+    await prisma.$transaction(ids.map((id) => prisma.emsFdIncident.delete({ where: { id } })));
+
+    await createAuditLogEntry({
+      translationKey: "emsFdIncidentsPurged",
+      action: { type: AuditLogActionType.EmsIncidentsPurged, new: ids },
+      executorId: sessionUserId,
+      prisma,
+    });
+
+    return true;
   }
 
   @Delete("/:id")

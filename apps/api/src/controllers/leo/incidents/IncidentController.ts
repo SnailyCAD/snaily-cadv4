@@ -18,6 +18,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { getNextIncidentId } from "lib/incidents/get-next-incident-id";
 import { assignUnitsInvolvedToIncident } from "lib/incidents/handle-involved-units";
 import { cad } from "@snailycad/types";
+import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 
 export const assignedUnitsInclude = {
   include: {
@@ -289,6 +290,36 @@ export class IncidentController {
     this.socket.emitUpdateActiveIncident(normalizedIncident);
 
     return normalizedIncident;
+  }
+
+  @Delete("/purge")
+  @UsePermissions({
+    permissions: [Permissions.PurgeLeoIncidents],
+  })
+  async purgeIncidents(
+    @BodyParams("ids") ids: string[],
+    @Context("sessionUserId") sessionUserId: string,
+  ) {
+    if (!Array.isArray(ids)) return false;
+
+    await Promise.all(
+      ids.map(async (id) => {
+        const event = await prisma.leoIncident.delete({
+          where: { id },
+        });
+
+        this.socket.emitUpdateActiveIncident({ ...event, isActive: false });
+      }),
+    );
+
+    await createAuditLogEntry({
+      translationKey: "leoIncidentsPurged",
+      action: { type: AuditLogActionType.LeoIncidentsPurged, new: ids },
+      executorId: sessionUserId,
+      prisma,
+    });
+
+    return true;
   }
 
   @UseBefore(ActiveOfficer)
