@@ -134,4 +134,8 @@ export const IMPOUND_VEHICLE_SCHEMA = z.object({
 export const MERGE_UNIT_SCHEMA = z.object({
   ids: z.array(z.object({ entry: z.boolean(), id: z.string() })),
   vehicleId: z.string().nullish(),
+  userDefinedCallsign: z
+    .string()
+    .nullish()
+    .transform((value) => (value && value.length <= 0 ? null : value)),
 });

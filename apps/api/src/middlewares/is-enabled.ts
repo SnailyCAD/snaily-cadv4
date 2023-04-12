@@ -31,6 +31,7 @@ export const DEFAULT_DISABLED_FEATURES: Partial<
   FORCE_STEAM_AUTH: { isEnabled: false },
   SIGNAL_100_CITIZEN: { isEnabled: false },
   FORCE_ACCOUNT_PASSWORD: { isEnabled: false },
+  USER_DEFINED_CALLSIGN_COMBINED_UNIT: { isEnabled: false },
 };
 
 export function createFeaturesObject(features?: CadFeature[] | undefined) {

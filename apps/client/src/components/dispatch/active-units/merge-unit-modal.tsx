@@ -5,7 +5,7 @@ import type {
   EmsFdDeputy,
   Officer,
 } from "@snailycad/types";
-import { Loader, Button, AsyncListSearchField, Item } from "@snailycad/ui";
+import { Loader, Button, AsyncListSearchField, Item, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
 import { Form, Formik } from "formik";
@@ -20,6 +20,7 @@ import { makeUnitName } from "lib/utils";
 import type { PostDispatchStatusMergeOfficers } from "@snailycad/types/api";
 import type { ActiveDeputy } from "state/ems-fd-state";
 import type { ActiveOfficer } from "state/leo-state";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
   isDispatch: boolean;
@@ -50,6 +51,7 @@ export function MergeUnitModal({
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const { generateCallsign } = useGenerateCallsign();
+  const { USER_DEFINED_CALLSIGN_COMBINED_UNIT } = useFeatureEnabled();
 
   function handleClose() {
     onClose?.();
@@ -69,7 +71,7 @@ export function MergeUnitModal({
       path: `/dispatch/status/merge/${type}`,
       method: "POST",
       data: {
-        vehicleId: values.vehicleId,
+        ...values,
         ids: values.ids.map((v) => ({
           entry: isDispatch ? v.isFixed : v.value === activeUnit?.id && v.isFixed,
           id: v.value,
@@ -102,6 +104,7 @@ export function MergeUnitModal({
   const INITIAL_VALUES = {
     vehicleId: null as string | null,
     vehicleSearch: "",
+    userDefinedCallsign: "",
     ids:
       activeUnit && !isCombined && !isDispatch
         ? [makeValuesOption(activeUnit, true), makeValuesOption(unit, true)]
@@ -119,7 +122,7 @@ export function MergeUnitModal({
       className="w-[600px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ values, errors, setValues, handleChange }) => (
+        {({ values, errors, setValues, setFieldValue, handleChange }) => (
           <Form>
             <FormField label={label}>
               <Select
@@ -156,6 +159,16 @@ export function MergeUnitModal({
             >
               {(item) => <Item key={item.id}>{item.value.value}</Item>}
             </AsyncListSearchField>
+
+            {USER_DEFINED_CALLSIGN_COMBINED_UNIT ? (
+              <TextField
+                label="Custom Unit Callsign"
+                description="This will override the default callsign for this unit."
+                onChange={(value) => setFieldValue("userDefinedCallsign", value)}
+                errorMessage={errors.userDefinedCallsign}
+                isOptional
+              />
+            ) : null}
 
             <footer className="flex mt-5 justify-end">
               <Button onPress={handleClose} type="button" variant="cancel">

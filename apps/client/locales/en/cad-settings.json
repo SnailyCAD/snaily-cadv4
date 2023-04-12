@@ -190,6 +190,8 @@
     "SIGNAL_100_CITIZEN": "Signal 100 display for citizens",
     "SIGNAL_100_CITIZEN-description": "When enabled, this will allow citizens to view Signal 100's.",
     "FORCE_ACCOUNT_PASSWORD": "Force Account Password",
-    "FORCE_ACCOUNT_PASSWORD-description": "When enabled, this will force users to set a password for their account when logging in via Discord or Steam."
+    "FORCE_ACCOUNT_PASSWORD-description": "When enabled, this will force users to set a password for their account when logging in via Discord or Steam.",
+    "USER_DEFINED_CALLSIGN_COMBINED_UNIT": "User Defined Callsign  for Combined Units",
+    "USER_DEFINED_CALLSIGN_COMBINED_UNIT-description": "When enabled, this will allow users to define their own callsign for when creating a combined unit."
   }
 }

@@ -1064,6 +1064,7 @@ model IncidentEvent {
 model CombinedLeoUnit {
   id                        String                   @id @default(uuid())
   officers                  Officer[]
+  userDefinedCallsign       String?
   callsign                  String
   callsign2                 String?
   department                DepartmentValue?         @relation(fields: [departmentId], references: [id])
@@ -1091,6 +1092,7 @@ model CombinedEmsFdUnit {
   id                        String                 @id @default(uuid())
   deputies                  EmsFdDeputy[]
   callsign                  String
+  userDefinedCallsign       String?
   callsign2                 String?
   department                DepartmentValue?       @relation(fields: [departmentId], references: [id])
   departmentId              String?
@@ -1816,4 +1818,5 @@ enum Feature {
   EDITABLE_VIN // See #1544
   SIGNAL_100_CITIZEN // See #1562
   FORCE_ACCOUNT_PASSWORD // See #1498
+  USER_DEFINED_CALLSIGN_COMBINED_UNIT // see #1607
 }
