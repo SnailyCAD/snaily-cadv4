@@ -7,32 +7,6 @@ services:
     env_file:
       - .env
     ports:
-      - "5433:5432"
-    networks:
-      - cad_web
+      - "5432:5432"
     volumes:
       - ./.dev-data:/var/lib/postgresql/data
-
-  api:
-    container_name: "snaily-cad-api"
-
-    user: node
-    image: node:16
-    command: "yarn workspace @snailycad/api dev"
-    ports:
-      - "${PORT_API}:${PORT_API}"
-    expose:
-      - ${PORT_API}
-    volumes:
-      - .:/srv/api
-    env_file:
-      - .env
-    working_dir: /srv/api
-    depends_on:
-      - postgres
-    networks:
-      - cad_web
-
-networks:
-  cad_web:
-    external: true
