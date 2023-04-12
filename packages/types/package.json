@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/types",
-  "version": "1.53.0",
+  "version": "1.54.0",
   "exports": {
     ".": {
       "require": "./dist/index.js",
@@ -31,7 +31,7 @@
     "typecheck": "yarn workspace @snailycad/api generate && yarn tsc --noEmit"
   },
   "devDependencies": {
-    "@snailycad/permissions": "1.53.0",
+    "@snailycad/permissions": "1.54.0",
     "discord-api-types": "0.37.37",
     "tsup": "^6.7.0",
     "typescript": "^5.0.3"
