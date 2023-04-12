@@ -128,10 +128,12 @@ export class CombinedUnitsController {
     permissions: [Permissions.Dispatch, Permissions.Leo],
   })
   async mergeDeputies(
-    @BodyParams() ids: { entry: boolean; id: string }[],
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PostDispatchStatusMergeDeputies> {
+    const data = validateSchema(MERGE_UNIT_SCHEMA, body);
+
     const deputies = await prisma.$transaction(
-      ids.map((deputy) => {
+      data.ids.map((deputy) => {
         return prisma.emsFdDeputy.findFirst({
           where: {
             id: deputy.id,
@@ -149,7 +151,7 @@ export class CombinedUnitsController {
       throw new BadRequest("deputyAlreadyMerged");
     }
 
-    const entryDeputyId = ids.find((v) => v.entry)?.id;
+    const entryDeputyId = data.ids.find((v) => v.entry)?.id;
     if (!entryDeputyId) {
       throw new BadRequest("noEntryDeputy");
     }
@@ -168,6 +170,10 @@ export class CombinedUnitsController {
       select: { id: true },
     });
 
+    const emergencyVehicle = data.vehicleId
+      ? await prisma.emergencyVehicleValue.findUnique({ where: { id: data.vehicleId } })
+      : null;
+
     const nextInt = await findNextAvailableIncremental({ type: "combined-ems-fd" });
     const combinedUnit = await prisma.combinedEmsFdUnit.create({
       data: {
@@ -177,11 +183,12 @@ export class CombinedUnitsController {
         departmentId: entryDeputy.departmentId,
         incremental: nextInt,
         pairedUnitTemplate: entryDeputy.division?.pairedUnitTemplate ?? null,
+        activeVehicleId: emergencyVehicle?.id ?? null,
       },
     });
 
-    const data = await Promise.all(
-      ids.map(async ({ id: deputyId }, idx) => {
+    const combinedUnits = await Promise.all(
+      data.ids.map(async ({ id: deputyId }, idx) => {
         await prisma.emsFdDeputy.update({
           where: { id: deputyId },
           data: { statusId: null },
@@ -194,12 +201,12 @@ export class CombinedUnitsController {
           data: {
             deputies: { connect: { id: deputyId } },
           },
-          include: idx === ids.length - 1 ? combinedEmsFdUnitProperties : undefined,
+          include: idx === data.ids.length - 1 ? combinedEmsFdUnitProperties : undefined,
         });
       }),
     );
 
-    const last = data[data.length - 1];
+    const last = combinedUnits[combinedUnits.length - 1];
     await this.socket.emitUpdateDeputyStatus();
 
     return last as APITypes.PostDispatchStatusMergeDeputies;

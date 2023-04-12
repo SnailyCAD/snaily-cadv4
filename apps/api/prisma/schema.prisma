@@ -1064,6 +1064,7 @@ model IncidentEvent {
 model CombinedLeoUnit {
   id                        String                   @id @default(uuid())
   officers                  Officer[]
+  userDefinedCallsign       String?
   callsign                  String
   callsign2                 String?
   department                DepartmentValue?         @relation(fields: [departmentId], references: [id])
@@ -1091,6 +1092,7 @@ model CombinedEmsFdUnit {
   id                        String                 @id @default(uuid())
   deputies                  EmsFdDeputy[]
   callsign                  String
+  userDefinedCallsign       String?
   callsign2                 String?
   department                DepartmentValue?       @relation(fields: [departmentId], references: [id])
   departmentId              String?
