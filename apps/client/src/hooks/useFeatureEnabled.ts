@@ -22,6 +22,7 @@ export const DEFAULT_DISABLED_FEATURES = {
   FORCE_STEAM_AUTH: { isEnabled: false },
   SIGNAL_100_CITIZEN: { isEnabled: false },
   FORCE_ACCOUNT_PASSWORD: { isEnabled: false },
+  USER_DEFINED_CALLSIGN_COMBINED_UNIT: { isEnabled: false },
 } satisfies Partial<Record<Feature, { isEnabled: boolean }>>;
 
 export function useFeatureEnabled(features?: Record<Feature, boolean>) {

@@ -27,6 +27,7 @@ const DEFAULTS: Partial<Record<Feature, { isEnabled: boolean }>> = {
   FORCE_STEAM_AUTH: { isEnabled: false },
   SIGNAL_100_CITIZEN: { isEnabled: false },
   FORCE_ACCOUNT_PASSWORD: { isEnabled: false },
+  USER_DEFINED_CALLSIGN_COMBINED_UNIT: { isEnabled: false },
 };
 
 export async function disabledFeatureToCadFeature() {

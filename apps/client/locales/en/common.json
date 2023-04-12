@@ -179,7 +179,8 @@
     "vehicleIsImpounded": "This vehicle is impounded, you cannot edit or delete until it's released from the impound lot.",
     "featureNotEnabled": "This feature is not enabled. ({feature})",
     "errorUploadingImage": "Unable to upload your image at this moment. Please try again later. If this keeps reoccurring, contact the CAD-owner.",
-    "noDefaultDepartmentSet": "There is no default department set. Please contact an administrator to set a default department."
+    "noDefaultDepartmentSet": "There is no default department set. Please contact an administrator to set a default department.",
+    "userDefinedCallsignAlreadyExists": "A combined unit with that callsign is already present. Please use a different callsign."
   },
   "Statuses": {
     "ACCEPTED": "Accepted",

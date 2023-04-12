@@ -18,6 +18,10 @@ export function generateCallsign(unit: Unit, template: string | null) {
   const isCombined = !("citizenId" in unit) || "officers" in unit || "deputies" in unit;
   const _template = isCombined && unit.pairedUnitTemplate ? unit.pairedUnitTemplate : template;
 
+  if (isCombined && unit.userDefinedCallsign) {
+    return unit.userDefinedCallsign;
+  }
+
   const unitDivision =
     "divisions" in unit ? unit.divisions : "division" in unit ? unit.division : [];
   const [division] = Array.isArray(unitDivision) ? unitDivision : [unitDivision];

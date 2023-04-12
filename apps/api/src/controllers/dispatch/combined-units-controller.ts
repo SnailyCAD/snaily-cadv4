@@ -1,9 +1,9 @@
 import { Controller } from "@tsed/di";
-import { BodyParams, PathParams, UseBeforeEach } from "@tsed/common";
+import { BodyParams, Context, PathParams, UseBeforeEach } from "@tsed/common";
 import { ContentType, Description, Post } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { CombinedEmsFdUnit, CombinedLeoUnit, ShouldDoType } from "@prisma/client";
+import { CombinedEmsFdUnit, CombinedLeoUnit, Feature, ShouldDoType } from "@prisma/client";
 import { Socket } from "services/socket-service";
 import { IsAuth } from "middlewares/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
@@ -14,6 +14,7 @@ import { getNextActiveCallId } from "lib/calls/getNextActiveCall";
 import { getNextIncidentId } from "lib/incidents/get-next-incident-id";
 import { validateSchema } from "lib/data/validate-schema";
 import { MERGE_UNIT_SCHEMA } from "@snailycad/schemas";
+import { isFeatureEnabled } from "lib/cad";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -34,6 +35,7 @@ export class CombinedUnitsController {
   })
   async mergeOfficers(
     @BodyParams() body: unknown,
+    @Context("cad") cad: { features?: Record<Feature, boolean> },
   ): Promise<APITypes.PostDispatchStatusMergeOfficers> {
     const data = validateSchema(MERGE_UNIT_SCHEMA, body);
 
@@ -81,6 +83,22 @@ export class CombinedUnitsController {
       ? await prisma.emergencyVehicleValue.findUnique({ where: { id: data.vehicleId } })
       : null;
 
+    const isUserDefinedCallsignEnabled = isFeatureEnabled({
+      defaultReturn: false,
+      feature: Feature.USER_DEFINED_CALLSIGN_COMBINED_UNIT,
+      features: cad.features,
+    });
+
+    if (isUserDefinedCallsignEnabled) {
+      const existing = await prisma.combinedLeoUnit.findFirst({
+        where: { userDefinedCallsign: { equals: data.userDefinedCallsign, mode: "insensitive" } },
+      });
+
+      if (existing) {
+        throw new BadRequest("userDefinedCallsignAlreadyExists");
+      }
+    }
+
     const nextInt = await findNextAvailableIncremental({ type: "combined-leo" });
     const combinedUnit = await prisma.combinedLeoUnit.create({
       data: {
@@ -91,6 +109,7 @@ export class CombinedUnitsController {
         incremental: nextInt,
         pairedUnitTemplate: division?.pairedUnitTemplate ?? null,
         activeVehicleId: emergencyVehicle?.id ?? null,
+        userDefinedCallsign: isUserDefinedCallsignEnabled ? data.userDefinedCallsign || null : null,
       },
     });
 
@@ -129,6 +148,7 @@ export class CombinedUnitsController {
   })
   async mergeDeputies(
     @BodyParams() body: unknown,
+    @Context("cad") cad: { features?: Record<Feature, boolean> },
   ): Promise<APITypes.PostDispatchStatusMergeDeputies> {
     const data = validateSchema(MERGE_UNIT_SCHEMA, body);
 
@@ -174,6 +194,22 @@ export class CombinedUnitsController {
       ? await prisma.emergencyVehicleValue.findUnique({ where: { id: data.vehicleId } })
       : null;
 
+    const isUserDefinedCallsignEnabled = isFeatureEnabled({
+      defaultReturn: false,
+      feature: Feature.USER_DEFINED_CALLSIGN_COMBINED_UNIT,
+      features: cad.features,
+    });
+
+    if (isUserDefinedCallsignEnabled) {
+      const existing = await prisma.combinedEmsFdUnit.findFirst({
+        where: { userDefinedCallsign: { equals: data.userDefinedCallsign, mode: "insensitive" } },
+      });
+
+      if (existing) {
+        throw new BadRequest("userDefinedCallsignAlreadyExists");
+      }
+    }
+
     const nextInt = await findNextAvailableIncremental({ type: "combined-ems-fd" });
     const combinedUnit = await prisma.combinedEmsFdUnit.create({
       data: {
@@ -184,6 +220,7 @@ export class CombinedUnitsController {
         incremental: nextInt,
         pairedUnitTemplate: entryDeputy.division?.pairedUnitTemplate ?? null,
         activeVehicleId: emergencyVehicle?.id ?? null,
+        userDefinedCallsign: isUserDefinedCallsignEnabled ? data.userDefinedCallsign || null : null,
       },
     });
 
