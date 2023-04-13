@@ -39,6 +39,7 @@ import { hasPermission } from "@snailycad/permissions";
 import { getImageWebPPath } from "lib/images/get-image-webp-path";
 import { HandleInactivity } from "middlewares/handle-inactivity";
 import { upsertEmsFdDeputy } from "lib/ems-fd/upsert-ems-fd-deputy";
+import { citizenInclude } from "controllers/citizen/CitizenController";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
@@ -266,7 +267,7 @@ export class EmsFdController {
   @Post("/declare/:citizenId")
   @UsePermissions({
     fallback: (u) => u.isEmsFd || u.isLeo || u.isDispatch,
-    permissions: [Permissions.DeclareCitizenDead],
+    permissions: [Permissions.DeclareCitizenDead, Permissions.ManageDeadCitizens],
   })
   async declareCitizenDeadOrAlive(
     @PathParams("citizenId") citizenId: string,
@@ -385,6 +386,25 @@ export class EmsFdController {
     });
 
     return deputy;
+  }
+
+  @Get("/dead-citizens")
+  @Description("Get all the marked dead citizens")
+  @UsePermissions({
+    permissions: [Permissions.ViewDeadCitizens, Permissions.ManageDeadCitizens],
+  })
+  async getDeadCitizens(): Promise<APITypes.GetDeadCitizensData> {
+    const [totalCount, citizens] = await prisma.$transaction([
+      prisma.citizen.count({ where: { dead: true } }),
+      prisma.citizen.findMany({
+        where: {
+          dead: true,
+        },
+        include: citizenInclude,
+      }),
+    ]);
+
+    return { totalCount, citizens };
   }
 
   @Post("/image/:id")

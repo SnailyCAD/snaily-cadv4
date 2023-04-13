@@ -144,4 +144,5 @@ export const enum ModalIds {
   AlertDisableUser2FA = "AlertDisableUser2FAModal",
   AlertCancelExpungementRequest = "AlertCancelExpungementRequestModal",
   AlertDeleteBusinessRole = "AlertDeleteBusinessRoleModal",
+  AlertDeclareCitizenAlive = "AlertDeclareCitizenAliveModal",
 }

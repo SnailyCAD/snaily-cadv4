@@ -31,4 +31,6 @@ export const defaultEmsFdPermissions = [
   Permissions.DeclareCitizenDead,
   Permissions.ViewEmsFdIncidents,
   Permissions.ManageEmsFdIncidents,
+  Permissions.ViewDeadCitizens,
+  Permissions.ManageDeadCitizens,
 ];

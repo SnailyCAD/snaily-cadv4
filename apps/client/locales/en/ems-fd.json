@@ -23,5 +23,13 @@
     "assignedToCall#": "{activeVehicle}, respond to {location}",
     "assignedToCall#WithType": "{activeVehicle}, respond to {location}, {callType}",
     "emsFdIncidents": "EMS/FD Incidents"
+  },
+  "HospitalServices": {
+    "hospitalServices": "Hospital Services",
+    "declareAlive": "Declare alive",
+    "noDeadCitizens": "There are no citizens marked dead.",
+    "alert_declareAlive": "Are you sure you want to declare <span>{citizen}</span> alive? Only users with the 'Declare Citizen Dead' permissions can mark this citizen as dead.",
+    "citizenDeclaredAlive": "Citizen Declared Alive",
+    "citizenDeclaredAliveMessage": "Successfully declared this citizen as alive."
   }
 }
