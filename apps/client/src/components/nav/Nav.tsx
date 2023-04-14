@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { classNames } from "lib/classNames";
 import { CitizenDropdown } from "./dropdowns/CitizenDropdown";
 import { OfficerDropdown } from "./dropdowns/OfficerDropdown";
-import { EmsFdDropdown } from "./dropdowns/EmsFdDropdown";
+import { EmsFdDropdown } from "./dropdowns/ems-fd-dropdown";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { TowDropdown } from "./dropdowns/TowDropdown";
 import { DispatchDropdown } from "./dropdowns/DispatchDropdown";

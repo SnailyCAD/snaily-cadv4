@@ -16,6 +16,10 @@ export function EmsFdDropdown() {
     [Permissions.ManageEmsFdIncidents, Permissions.ViewEmsFdIncidents],
     true,
   );
+  const hasHospitalServicePermissions = hasPermissions(
+    [Permissions.ViewDeadCitizens, Permissions.ManageDeadCitizens],
+    true,
+  );
 
   return (
     <Dropdown
@@ -37,6 +41,11 @@ export function EmsFdDropdown() {
       <Dropdown.LinkItem href="/ems-fd/my-deputy-logs">{t("myDeputyLogs")}</Dropdown.LinkItem>
       {hasIncidentPermissions ? (
         <Dropdown.LinkItem href="/ems-fd/incidents">{t("emsFdIncidents")}</Dropdown.LinkItem>
+      ) : null}
+      {hasHospitalServicePermissions ? (
+        <Dropdown.LinkItem href="/ems-fd/hospital-services">
+          {t("hospitalServices")}
+        </Dropdown.LinkItem>
       ) : null}
     </Dropdown>
   );

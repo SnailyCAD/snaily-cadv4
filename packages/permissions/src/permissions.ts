@@ -33,6 +33,8 @@ export enum Permissions {
   ManageEmsFdIncidents = "ManageEmsFdIncidents",
   DeclareCitizenDead = "DeclareCitizenDead",
   PurgeEmsFdIncidents = "PurgeEmsFdIncidents",
+  ViewDeadCitizens = "ViewDeadCitizens",
+  ManageDeadCitizens = "ManageDeadCitizens",
 
   //  citizen related
   ViewTaxiCalls = "ViewTaxiCalls",

@@ -78,3 +78,12 @@ export type GetEmsFdActiveDeputy = Types.EmsFdDeputy;
  * @route /ems-fd/active-deputies
  */
 export type GetEmsFdActiveDeputies = (Types.EmsFdDeputy | Types.CombinedEmsFdUnit)[];
+
+/**
+ * @method GET
+ * @route /ems-fd/dead-citizens
+ */
+export interface GetDeadCitizensData {
+  citizens: Types.Citizen[];
+  totalCount: number;
+}

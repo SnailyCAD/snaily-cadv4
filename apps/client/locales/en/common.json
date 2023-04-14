@@ -106,7 +106,8 @@
     "myDeputyLogs": "My deputy logs",
     "whatsNew": "What's New",
     "bureauOfFirearms": "Bureau of Firearms",
-    "emsFdIncidents": "EMS/FD Incidents"
+    "emsFdIncidents": "EMS/FD Incidents",
+    "hospitalServices": "Hospital Services"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",
