@@ -188,7 +188,7 @@ export function ManageCitizenForm({
                 setValues={({ localValue, node }) => {
                   setValues({
                     ...values,
-                    userId: node?.value.id ?? values.userId,
+                    userId: node?.value?.id ?? values.userId,
                     username: localValue ?? values.username,
                   });
                 }}

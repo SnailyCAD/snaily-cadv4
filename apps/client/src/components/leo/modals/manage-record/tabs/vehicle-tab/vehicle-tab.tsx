@@ -30,7 +30,7 @@ export function VehicleTab(props: VehicleTabProps) {
         setValues={({ localValue, node }) => {
           const plateOrVinSearch =
             typeof localValue !== "undefined" ? { plateOrVinSearch: localValue } : {};
-          const plateOrVin = node
+          const plateOrVin = node?.value
             ? {
                 plateOrVin: node.key as string,
                 vehicleModel: node.value.model.value.value,

@@ -25,11 +25,10 @@ export function useMultiSelectListState<T extends {}>(
 
   const selectedItems =
     selectedKeys.size !== 0
-      ? Array.from(selectedKeys)
+      ? (Array.from(selectedKeys)
           .map((key) => {
             const item = collection.getItem(key);
 
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             if (!item) {
               missingKeys.push(key);
             }
@@ -37,7 +36,7 @@ export function useMultiSelectListState<T extends {}>(
             return item;
           })
           // remove undefined values when some keys are not present in the collection
-          .filter(Boolean)
+          .filter(Boolean) as Node<T>[])
       : null;
 
   if (missingKeys.length) {
