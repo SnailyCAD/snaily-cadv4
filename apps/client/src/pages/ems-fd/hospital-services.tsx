@@ -15,7 +15,7 @@ import type {
   PostEmsFdDeclareCitizenById,
 } from "@snailycad/types/api";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
-import { BaseCitizen } from "@snailycad/types";
+import { Citizen } from "@snailycad/types";
 import { FullDate } from "components/shared/FullDate";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
@@ -60,7 +60,7 @@ export default function EmsFdIncidents({ deadCitizens }: Props) {
     openModal(ModalIds.AlertDeclareCitizenAlive);
   }
 
-  const asyncTable = useAsyncTable<BaseCitizen>({
+  const asyncTable = useAsyncTable<Citizen>({
     fetchOptions: {
       onResponse: (data: GetDeadCitizensData) => ({
         data: data.citizens,
