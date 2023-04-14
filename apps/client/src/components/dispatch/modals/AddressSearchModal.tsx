@@ -71,7 +71,7 @@ export function AddressSearchModal() {
                   typeof localValue !== "undefined" ? { searchValue: localValue } : {};
                 const address = node ? { address: node.key as string } : {};
 
-                if (node) {
+                if (node?.value) {
                   setResults([node.value]);
                 }
 

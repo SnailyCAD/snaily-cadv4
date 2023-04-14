@@ -17,7 +17,7 @@ interface Props<Suggestion extends NameSearchResult> {
   isDisabled?: boolean;
   isOptional?: boolean;
   makeKey?(item: NameSearchResult): string;
-  onNodeChange?(node: { value: Suggestion } | null | undefined): void;
+  onNodeChange?(node: { value?: Suggestion | null } | null | undefined): void;
 }
 
 export function CitizenSuggestionsField<Suggestion extends NameSearchResult>(
@@ -37,7 +37,7 @@ export function CitizenSuggestionsField<Suggestion extends NameSearchResult>(
       setValues={({ localValue, node }) => {
         const labelValue =
           typeof localValue !== "undefined" ? { [props.labelFieldName]: localValue } : {};
-        const valueField = node ? { [props.valueFieldName]: node.key as string } : {};
+        const valueField = node?.value ? { [props.valueFieldName]: node.key as string } : {};
 
         props.onNodeChange?.(node);
         setValues({ ...values, ...labelValue, ...valueField });

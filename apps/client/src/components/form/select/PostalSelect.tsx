@@ -56,7 +56,7 @@ export function AddressPostalSelect(props: Props) {
       setValues({
         ...values,
         [addressLabel]: _values.localValue ?? values[addressLabel],
-        postal: _values.node?.value.postal ?? values.postal,
+        postal: _values.node?.value?.postal ?? values.postal,
       });
 
       if (_values.node) {
@@ -67,7 +67,7 @@ export function AddressPostalSelect(props: Props) {
       setValues({
         ...values,
         postal: _values.localValue ?? values.postal,
-        [addressLabel]: _values.node?.value.value.value ?? values[addressLabel],
+        [addressLabel]: _values.node?.value?.value.value ?? values[addressLabel],
       });
 
       if (_values.node) {

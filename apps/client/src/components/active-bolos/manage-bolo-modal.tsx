@@ -188,7 +188,7 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                   allowsCustomValue
                   localValue={values.plateSearch}
                   setValues={({ node, localValue }) => {
-                    const vehicle = node
+                    const vehicle = node?.value
                       ? {
                           plate: node.value.plate,
                           color: node.value.color,
@@ -200,7 +200,7 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                     setValues({
                       ...values,
                       ...vehicle,
-                      plateSearch: localValue ?? node?.value.plate ?? "",
+                      plateSearch: localValue ?? node?.value?.plate ?? "",
                     });
                   }}
                 >
