@@ -2,7 +2,7 @@ import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { Button } from "@snailycad/ui";
 import { isUnitOfficer } from "@snailycad/utils";
-import { getSynthesisVoices } from "components/account/AppearanceTab";
+import { getSynthesisVoices } from "components/account/appearance-tab";
 import { useAuth } from "context/AuthContext";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { toastMessage } from "lib/toastMessage";

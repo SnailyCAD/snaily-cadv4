@@ -56,6 +56,7 @@ export function AppearanceTab({ availableSounds }: Props) {
     statusViewMode: user.statusViewMode ?? StatusViewMode.DOT_COLOR,
     tableActionsAlignment: user.tableActionsAlignment,
     locale: user?.locale ?? i18n.defaultLocale,
+    developerMode: user?.developerMode ?? false,
     soundSettings: {
       panicButton: user.soundSettings?.panicButton ?? true,
       signal100: user.soundSettings?.signal100 ?? true,

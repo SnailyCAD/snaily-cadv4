@@ -89,6 +89,7 @@ export class UserController {
         tableActionsAlignment: data.tableActionsAlignment as TableActionsAlignment,
         soundSettingsId,
         locale: data.locale || null,
+        developerMode: data.developerMode ?? false,
       },
       select: userProperties,
     });

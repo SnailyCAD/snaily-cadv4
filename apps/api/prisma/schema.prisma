@@ -277,6 +277,7 @@ model User {
   sessions                 UserSession[]
   toAddDefaultPermissions  ToAddDefaultPermissions[]
   lastSeen                 DateTime                  @default(now())
+  developerMode            Boolean                   @default(false)
 
   // relational data
   citizens             Citizen[]
