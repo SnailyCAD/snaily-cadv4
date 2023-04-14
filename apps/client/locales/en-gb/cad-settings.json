@@ -60,6 +60,22 @@
     "warrantsChannel": "Warrants channel",
     "warrantsChannelInfo": "The Discord channel where new warrants will be sent to."
   },
+  "RawWebhooksTab": {
+    "rawWebhooks": "Raw Webhooks",
+    "rawWebhooksInfo": "Set custom URLs for each webhook type. This will send webhooks on the respective event type with raw CAD data.",
+    "calls911WebhookURL": "Calls Webhook URL",
+    "statusUpdateWebhookURL": "Status Update Webhook URL",
+    "panicButtonWebhookURL": "Panic Button Webhook URL",
+    "bolosWebhookURL": "Remarks Webhook URL",
+    "impoundedVehicleWebhookURL": "Impounded Vehicle Webhook URL",
+    "citizenRecordsWebhookURL": "Civilian Records Webhook URL",
+    "warrantsWebhookURL": "Warrants Webhook URL"
+  },
+  "LiveMapTab": {
+    "liveMapSettings": "Live Map Settings",
+    "liveMapSettingsInfo": "Configure the live map URL and map tiles.",
+    "mapTiles": "Map Tiles"
+  },
   "ApiTokenTab": {
     "apiToken": "API Token",
     "publicAPIAccess": "Public API Access",
@@ -78,6 +94,7 @@
     "TRUCK_LOGS-description": "When enabled, this will allow citizens to create truck logs.",
     "LICENSE_EXAMS": "License Exams",
     "LICENSE_EXAMS-description": "When enabled, this will require citizens to pass a license exam before they can obtain a license.",
+    "LICENSE_EXAMS-url": "https://docs.snailycad.org/docs/features/settings/license-exams",
     "AOP": "Area of Play",
     "AOP-description": "When disabled, this will hide the AOP from the CAD.",
     "BUSINESS": "Business",
@@ -106,6 +123,7 @@
     "ALLOW_REGULAR_LOGIN-description": "When disabled, this will only allow users to login with Discord/Steam.",
     "ACTIVE_INCIDENTS": "Active Incidents",
     "ACTIVE_INCIDENTS-description": "When enabled, this will allow Dispatch to create active incidents.",
+    "ACTIVE_INCIDENTS-url": "https://docs.snailycad.org/docs/features/settings/active-incidents",
     "RADIO_CHANNEL_MANAGEMENT": "Radio Channel Management",
     "RADIO_CHANNEL_MANAGEMENT-description": "When enabled, This will allow dispatch to manage the radio channel a unit is in. This can then be used to enhance the experience via the CAD's Public API.",
     "ALLOW_CITIZEN_DELETION_BY_NON_ADMIN": "Allow citizens to delete their own citizen",
@@ -117,6 +135,7 @@
     "BADGE_NUMBERS-description": "When enabled, this will allow officers to use badge numbers.",
     "USER_API_TOKENS": "User API Tokens",
     "USER_API_TOKENS-description": "When enabled, this will allow users to generate their own API token to perform actions with via their account.",
+    "USER_API_TOKENS-url": "https://docs.snailycad.org/docs/features/settings/user-api-tokens",
     "CITIZEN_RECORD_APPROVAL": "Citizen Record Approvals",
     "CITIZEN_RECORD_APPROVAL-description": "When enabled, this will require supervisors to accept or decline arrest reports before they can be used.",
     "COMMON_CITIZEN_CARDS": "Common Citizen Cards",
@@ -163,6 +182,18 @@
     "FORCE_DISCORD_AUTH-url": "https://docs.snailycad.org/docs/features/settings/forced-connections",
     "FORCE_STEAM_AUTH": "Forced Steam Authentication",
     "FORCE_STEAM_AUTH-description": "When enabled, this will force users to sync with Steam <b>after registration</b>.",
-    "FORCE_STEAM_AUTH-url": "https://docs.snailycad.org/docs/features/settings/forced-connections"
+    "FORCE_STEAM_AUTH-url": "https://docs.snailycad.org/docs/features/settings/forced-connections",
+    "EDITABLE_SSN": "Editable National Insurance Number",
+    "EDITABLE_SSN-description": "When enabled, this will allow citizens to edit their NI number.",
+    "EDITABLE_VIN": "Editable VIN",
+    "EDITABLE_VIN-description": "When enabled, this will allow citizens to edit their vehicle's VIN.",
+    "SIGNAL_100_CITIZEN": "Met control display for citizens",
+    "SIGNAL_100_CITIZEN-description": "When enabled, this will allow citizens to view when met control is enabled.",
+    "FORCE_ACCOUNT_PASSWORD": "Force Account Password",
+    "FORCE_ACCOUNT_PASSWORD-description": "When enabled, this will force users to set a password for their account when logging in via Discord or Steam.",
+    "USER_DEFINED_CALLSIGN_COMBINED_UNIT": "User Defined Callsign for Combined Units",
+    "USER_DEFINED_CALLSIGN_COMBINED_UNIT-description": "When enabled, this will allow users to define their own callsign for when creating a combined unit.",
+    "HOSPITAL_SERVICES": "Hospital Services",
+    "HOSPITAL_SERVICES-description": "When enabled, this will allow users with the correct permissions to manage deceased civilians."
   }
 }
