@@ -39,8 +39,15 @@
     "nameDescription": "The name of your organisation.",
     "addressDescription": "The address of your organisation.",
     "whitelistDescription": "Civilians that want to join your organisation must be reviewed. They can be accepted or denied.",
+    "businessRoles": "Business Roles",
+    "addBusinessRole": "Add business role",
+    "editBusinessRole": "Edit business role",
+    "as": "As",
+    "deleteBusinessRole": "Delete business role",
+    "canManageVehicles": "Can manage vehicles",
     "alert_fireEmployee": "Are you sure you want to remove <span>{employee}</span>? This action cannot be undone.",
     "alert_deletePost": "Are you sure you want to delete this post? This action cannot be undone.",
-    "alert_deleteBusiness": "Are you sure you want to delete \"<span>{business}</span>\"? This action cannot be undone."
+    "alert_deleteBusiness": "Are you sure you want to delete \"<span>{business}</span>\"? This action cannot be undone.",
+    "alert_deleteBusinessRole": "Are you sure you want to delete \"<span>{role}</span>\"? This action cannot be undone."
   }
 }
