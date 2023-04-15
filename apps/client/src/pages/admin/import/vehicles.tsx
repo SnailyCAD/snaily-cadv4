@@ -6,7 +6,7 @@ import type { GetServerSideProps } from "next";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
-import { Rank, RegisteredVehicle } from "@snailycad/types";
+import { RegisteredVehicle } from "@snailycad/types";
 import { Table, useTableState } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { Button } from "@snailycad/ui";
@@ -34,7 +34,7 @@ export default function ImportVehiclesPage({ data }: Props) {
   const { closeModal, openModal } = useModal();
   const { state, execute } = useFetch();
   const { hasPermissions } = usePermission();
-  const hasDeletePermissions = hasPermissions([Permissions.DeleteRegisteredVehicles], true);
+  const hasDeletePermissions = hasPermissions([Permissions.DeleteRegisteredVehicles]);
 
   const asyncTable = useAsyncTable({
     search,
@@ -76,7 +76,6 @@ export default function ImportVehiclesPage({ data }: Props) {
   return (
     <AdminLayout
       permissions={{
-        fallback: (u) => u.rank !== Rank.USER,
         permissions: [Permissions.ImportRegisteredVehicles],
       }}
     >

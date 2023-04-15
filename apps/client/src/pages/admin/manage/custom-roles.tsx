@@ -3,7 +3,7 @@ import * as React from "react";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { type CustomRole, Rank } from "@snailycad/types";
+import { type CustomRole } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
@@ -39,7 +39,7 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
   const { openModal, closeModal } = useModal();
   const t = useTranslations("Management");
   const common = useTranslations("Common");
-  const hasManagePermissions = hasPermissions([Permissions.ManageCustomRoles], true);
+  const hasManagePermissions = hasPermissions([Permissions.ManageCustomRoles]);
 
   const [search, setSearch] = React.useState("");
 
@@ -88,7 +88,6 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
   return (
     <AdminLayout
       permissions={{
-        fallback: (u) => u.rank !== Rank.USER,
         permissions: [Permissions.ManageCustomRoles, Permissions.ViewCustomRoles],
       }}
     >

@@ -7,7 +7,6 @@ import { CallDescription } from "components/dispatch/active-calls/CallDescriptio
 import { FullDate } from "components/shared/FullDate";
 import { ImageWrapper } from "components/shared/image-wrapper";
 import { getSelectedTableRows, Table, useAsyncTable, useTableState } from "components/shared/Table";
-import { useAuth } from "context/AuthContext";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useImageUrl } from "hooks/useImageUrl";
@@ -55,7 +54,6 @@ export function IncidentsTable<T extends EmsFdIncident | LeoIncident>(
 
   const tableState = useTableState({ pagination: asyncTable.pagination });
 
-  const { user } = useAuth();
   const { hasPermissions } = usePermission();
   const { openModal, closeModal } = useModal();
   const { generateCallsign } = useGenerateCallsign();
@@ -180,7 +178,7 @@ export function IncidentsTable<T extends EmsFdIncident | LeoIncident>(
                 createdAt: <FullDate>{incident.createdAt}</FullDate>,
                 actions: (
                   <>
-                    {hasPermissions([Permissions.ManageIncidents], true) ? (
+                    {hasPermissions([Permissions.ManageIncidents]) ? (
                       <Button
                         size="xs"
                         variant="success"
@@ -192,7 +190,7 @@ export function IncidentsTable<T extends EmsFdIncident | LeoIncident>(
                       </Button>
                     ) : null}
 
-                    {hasPermissions([Permissions.ManageIncidents], user?.isSupervisor ?? false) ? (
+                    {hasPermissions([Permissions.ManageIncidents]) ? (
                       <Button size="xs" variant="danger" onPress={() => onDeleteClick(incident)}>
                         {common("delete")}
                       </Button>
@@ -231,7 +229,7 @@ export function IncidentsTable<T extends EmsFdIncident | LeoIncident>(
       ) : null}
 
       {props.isUnitOnDuty &&
-      hasPermissions([Permissions.ManageIncidents, Permissions.ManageEmsFdIncidents], true) ? (
+      hasPermissions([Permissions.ManageIncidents, Permissions.ManageEmsFdIncidents]) ? (
         <ManageIncidentModal
           type={props.type}
           onCreate={(incident) => {
@@ -245,10 +243,7 @@ export function IncidentsTable<T extends EmsFdIncident | LeoIncident>(
         />
       ) : null}
 
-      {hasPermissions(
-        [Permissions.ManageIncidents, Permissions.ManageEmsFdIncidents],
-        user?.isSupervisor ?? false,
-      ) ? (
+      {hasPermissions([Permissions.ManageIncidents, Permissions.ManageEmsFdIncidents]) ? (
         <AlertModal
           id={ModalIds.AlertDeleteIncident}
           title={t("deleteIncident")}

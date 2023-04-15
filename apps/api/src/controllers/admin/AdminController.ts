@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { stat } from "node:fs/promises";
 import { Res, UseBefore } from "@tsed/common";
 import { IsAuth } from "middlewares/is-auth";
-import { Prisma, Rank, WhitelistStatus } from "@prisma/client";
+import { Prisma, WhitelistStatus } from "@prisma/client";
 import { UsePermissions } from "middlewares/use-permissions";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import type { GetAdminDashboardData } from "@snailycad/types/api";
@@ -22,7 +22,6 @@ export class AdminController {
   @UseBefore(IsAuth)
   @Description("Get simple CAD stats")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [
       ...defaultPermissions.allDefaultAdminPermissions,
       ...defaultPermissions.defaultCourthousePermissions,

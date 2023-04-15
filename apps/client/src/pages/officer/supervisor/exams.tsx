@@ -49,10 +49,7 @@ export default function CitizenLogs({ data }: Props) {
   });
   const tableState = useTableState({ pagination: asyncTable.pagination });
   const [tempExam, examState] = useTemporaryItem(asyncTable.items);
-  const hasManagePermissions = hasPermissions(
-    [Permissions.ManageLicenseExams],
-    (u) => u.isSupervisor,
-  );
+  const hasManagePermissions = hasPermissions([Permissions.ManageLicenseExams]);
 
   const PASS_FAIL_LABELS = {
     PASSED: t("Vehicles.passed"),
@@ -88,7 +85,6 @@ export default function CitizenLogs({ data }: Props) {
   return (
     <Layout
       permissions={{
-        fallback: (u) => u.isLeo,
         permissions: [Permissions.ViewLicenseExams, Permissions.ManageLicenseExams],
       }}
       className="dark:text-white"

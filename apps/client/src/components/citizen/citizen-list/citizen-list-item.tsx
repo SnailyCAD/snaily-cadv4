@@ -19,10 +19,7 @@ export function CitizenListItem({ citizen }: Props) {
   const { SOCIAL_SECURITY_NUMBERS, COMMON_CITIZEN_CARDS } = useFeatureEnabled();
   const { makeImageUrl } = useImageUrl();
   const { hasPermissions } = usePermission();
-  const hasLeoPermissions = hasPermissions(
-    defaultPermissions.defaultLeoPermissions,
-    (u) => u.isLeo,
-  );
+  const hasLeoPermissions = hasPermissions(defaultPermissions.defaultLeoPermissions);
 
   return (
     <li className="flex items-center justify-between bg-gray-200 p-3 dark:shadow-md rounded-md border border-gray-400 dark:border-quinary dark:bg-tertiary">

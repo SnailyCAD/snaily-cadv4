@@ -34,7 +34,6 @@ export class TaxiController {
   @Description("Get all the taxi calls")
   @UsePermissions({
     permissions: [Permissions.ManageTaxiCalls, Permissions.ViewTaxiCalls],
-    fallback: (u) => u.isTaxi,
   })
   async getTaxiCalls(): Promise<APITypes.GetTaxiCallsData> {
     const calls = await prisma.taxiCall.findMany({
@@ -83,7 +82,6 @@ export class TaxiController {
   @Description("Update a taxi call by its id")
   @UsePermissions({
     permissions: [Permissions.ManageTaxiCalls],
-    fallback: (u) => u.isTaxi,
   })
   async updateTaxiCall(
     @PathParams("id") callId: string,
@@ -132,7 +130,6 @@ export class TaxiController {
   @Description("Delete a taxi call by its id")
   @UsePermissions({
     permissions: [Permissions.ManageTaxiCalls],
-    fallback: (u) => u.isTaxi,
   })
   async endTaxiCall(@PathParams("id") callId: string): Promise<APITypes.DeleteTaxiCallsData> {
     const call = await prisma.taxiCall.findUnique({

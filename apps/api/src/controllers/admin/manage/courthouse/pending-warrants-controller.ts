@@ -1,4 +1,4 @@
-import { Rank, Warrant, WarrantStatus, WhitelistStatus } from "@prisma/client";
+import { Warrant, WarrantStatus, WhitelistStatus } from "@prisma/client";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
@@ -21,7 +21,6 @@ export class AdminManageWarrantsController {
   @Get("/")
   @Description("Get all pending warrants")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManagePendingWarrants],
   })
   async getPendingWarrants(): Promise<APITypes.GetManagePendingWarrants> {
@@ -46,7 +45,6 @@ export class AdminManageWarrantsController {
   @Put("/:id")
   @Description("Sign a warrant as active.")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManagePendingWarrants],
   })
   async acceptOrDeclineNameChangeRequest(

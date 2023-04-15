@@ -160,14 +160,11 @@ export function RecordsTable({
   const { hasPermissions } = usePermission();
   const _hasDeletePermissions =
     hasDeletePermissions ??
-    hasPermissions(
-      [
-        Permissions.ManageExpungementRequests,
-        Permissions.ManageNameChangeRequests,
-        Permissions.DeleteCitizenRecords,
-      ],
-      (u) => u.isSupervisor,
-    );
+    hasPermissions([
+      Permissions.ManageExpungementRequests,
+      Permissions.ManageNameChangeRequests,
+      Permissions.DeleteCitizenRecords,
+    ]);
 
   function handleDeleteClick(record: Record) {
     if (onDelete) {

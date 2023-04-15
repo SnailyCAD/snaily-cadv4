@@ -57,7 +57,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
   const activeDeputies = isMounted ? _activeDeputies : initialDeputies;
   const isDispatch = router.pathname === "/dispatch";
 
-  const hasDispatchPerms = hasPermissions([Permissions.Dispatch], (u) => u.isDispatch);
+  const hasDispatchPerms = hasPermissions([Permissions.Dispatch]);
   const showCreateTemporaryUnitButton = isDispatch && hasDispatchPerms;
 
   const { activeDeputy, setActiveDeputy } = useEmsFdState(

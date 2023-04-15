@@ -4,7 +4,7 @@ import { getTranslations } from "lib/getTranslation";
 import { makeUnitName, requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import { useTranslations } from "use-intl";
-import { Rank, ValueType } from "@snailycad/types";
+import { ValueType } from "@snailycad/types";
 import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
@@ -24,12 +24,9 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
 
   const { hasPermissions } = usePermission();
 
-  const hasManagePermissions = hasPermissions([Permissions.ManageUnits], true);
-  const hasManageCallsignPermissions = hasPermissions([Permissions.ManageUnitCallsigns], true);
-  const hasManageAwardsPermissions = hasPermissions(
-    [Permissions.ManageAwardsAndQualifications],
-    true,
-  );
+  const hasManagePermissions = hasPermissions([Permissions.ManageUnits]);
+  const hasManageCallsignPermissions = hasPermissions([Permissions.ManageUnitCallsigns]);
+  const hasManageAwardsPermissions = hasPermissions([Permissions.ManageAwardsAndQualifications]);
 
   const { generateCallsign } = useGenerateCallsign();
   const tAdmin = useTranslations("Management");
@@ -50,7 +47,6 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
   return (
     <AdminLayout
       permissions={{
-        fallback: (u) => u.rank !== Rank.USER,
         permissions: [Permissions.ManageUnits, Permissions.ManageAwardsAndQualifications],
       }}
     >

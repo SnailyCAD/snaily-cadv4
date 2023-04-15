@@ -70,7 +70,6 @@ export class IncidentController {
       Permissions.ViewEmsFdIncidents,
       Permissions.ManageEmsFdIncidents,
     ],
-    fallback: (u) => u.isDispatch || u.isLeo,
   })
   async getAllIncidents(
     @QueryParams("activeType", String) activeType: ActiveTypes = "inactive",
@@ -120,7 +119,6 @@ export class IncidentController {
       Permissions.ViewEmsFdIncidents,
       Permissions.ManageEmsFdIncidents,
     ],
-    fallback: (u) => u.isDispatch || u.isLeo,
   })
   async getIncidentById(
     @PathParams("id") id: string,
@@ -137,7 +135,6 @@ export class IncidentController {
   @Post("/")
   @UsePermissions({
     permissions: [Permissions.Dispatch, Permissions.ManageEmsFdIncidents],
-    fallback: (u) => u.isDispatch || u.isLeo,
   })
   async createIncident(
     @BodyParams() body: unknown,
@@ -196,7 +193,6 @@ export class IncidentController {
 
   @Post("/:type/:incidentId")
   @UsePermissions({
-    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   async assignToIncident(
@@ -300,7 +296,6 @@ export class IncidentController {
   @Put("/:id")
   @UsePermissions({
     permissions: [Permissions.Dispatch, Permissions.ManageEmsFdIncidents],
-    fallback: (u) => u.isDispatch || u.isLeo,
   })
   async updateIncident(
     @BodyParams() body: unknown,
@@ -383,7 +378,6 @@ export class IncidentController {
   @Description("Delete an incident by its id")
   @UsePermissions({
     permissions: [Permissions.Dispatch, Permissions.ManageEmsFdIncidents],
-    fallback: (u) => u.isSupervisor,
   })
   async deleteIncident(
     @PathParams("id") incidentId: string,

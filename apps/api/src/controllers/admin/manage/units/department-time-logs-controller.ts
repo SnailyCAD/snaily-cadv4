@@ -1,4 +1,4 @@
-import { Prisma, Rank } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
@@ -21,7 +21,6 @@ export class AdminManageUnitsController {
   @Get("/units")
   @Description("Get all unit hours logged grouped by unit.")
   @UsePermissions({
-    fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [
       Permissions.ViewUnits,
       Permissions.DeleteUnits,
@@ -143,7 +142,6 @@ export class AdminManageUnitsController {
   @Get("/departments")
   @Description("Get all unit hours logged grouped by department.")
   @UsePermissions({
-    fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [
       Permissions.ViewUnits,
       Permissions.DeleteUnits,

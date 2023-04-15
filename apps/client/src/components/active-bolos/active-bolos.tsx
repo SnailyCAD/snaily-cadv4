@@ -3,7 +3,7 @@ import { useModal } from "state/modalState";
 import { useBolos } from "hooks/realtime/useBolos";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
-import { type Bolo, Rank, ShouldDoType } from "@snailycad/types";
+import { type Bolo, ShouldDoType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import type { DeleteBolosData, GetBolosData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
@@ -58,10 +58,7 @@ export function ActiveBolos({ initialBolos }: Props) {
   const { pathname } = useRouter();
   const { hasActiveDispatchers } = useActiveDispatchers();
   const { hasPermissions } = usePermission();
-  const isAdmin = hasPermissions(
-    defaultPermissions.allDefaultAdminPermissions,
-    (u) => u.rank !== Rank.USER,
-  );
+  const isAdmin = hasPermissions(defaultPermissions.allDefaultAdminPermissions);
 
   const isDispatchRoute = pathname === "/dispatch";
   const isDisabled = isAdmin

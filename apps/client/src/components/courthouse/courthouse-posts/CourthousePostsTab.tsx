@@ -31,7 +31,7 @@ export function CourthousePostsTab() {
   const { openModal, closeModal } = useModal();
   const { state, execute } = useFetch();
   const { hasPermissions } = usePermission();
-  const hasManagePermissions = hasPermissions([Permissions.ManageCourthousePosts], true);
+  const hasManagePermissions = hasPermissions([Permissions.ManageCourthousePosts]);
 
   async function deleteCourthousePost() {
     if (!tempPost) return;

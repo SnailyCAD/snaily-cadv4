@@ -35,7 +35,6 @@ export default function LeoIncidents({ activeOfficer, incidents: initialData }: 
   return (
     <Layout
       permissions={{
-        fallback: (u) => u.isLeo,
         permissions: [Permissions.ViewIncidents, Permissions.ManageIncidents],
       }}
       className="dark:text-white"
@@ -43,7 +42,7 @@ export default function LeoIncidents({ activeOfficer, incidents: initialData }: 
       <header className="flex items-center justify-between">
         <Title className="!mb-0">{t("incidents")}</Title>
 
-        {hasPermissions([Permissions.ManageIncidents], true) ? (
+        {hasPermissions([Permissions.ManageIncidents]) ? (
           <Button
             title={!isOfficerOnDuty ? "You must have an active officer." : ""}
             disabled={!isOfficerOnDuty}

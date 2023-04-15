@@ -6,7 +6,6 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { MapItem, useDispatchMapState } from "state/mapState";
 import { Permissions, usePermission } from "hooks/usePermission";
-import { Rank } from "@snailycad/types";
 
 export function MapActions() {
   const t = useTranslations();
@@ -15,10 +14,7 @@ export function MapActions() {
   const mapState = useDispatchMapState();
 
   const { hasPermissions } = usePermission();
-  const hasManageUsersPermissions = hasPermissions(
-    [Permissions.ManageUsers],
-    (u) => u.rank !== Rank.USER,
-  );
+  const hasManageUsersPermissions = hasPermissions([Permissions.ManageUsers]);
 
   return (
     portalRef &&

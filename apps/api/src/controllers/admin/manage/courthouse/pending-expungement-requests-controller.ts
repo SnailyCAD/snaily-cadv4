@@ -1,4 +1,4 @@
-import { ExpungementRequestStatus, Rank } from "@prisma/client";
+import { ExpungementRequestStatus } from "@prisma/client";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
@@ -17,7 +17,6 @@ import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger
 export class AdminManageExpungementRequests {
   @Get("/")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ViewExpungementRequests, Permissions.ManageExpungementRequests],
   })
   async getRequests(): Promise<APITypes.GetManageExpungementRequests> {
@@ -35,7 +34,6 @@ export class AdminManageExpungementRequests {
   @Put("/:id")
   @Description("Accept or decline an expungement request for a citizen.")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageExpungementRequests],
   })
   async updateExpungementRequest(

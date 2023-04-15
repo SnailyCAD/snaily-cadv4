@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import Link from "next/link";
-import { Rank } from "@snailycad/types";
 import { yesOrNoText } from "lib/utils";
 import { Table, useTableState } from "components/shared/Table";
 import { Status } from "components/shared/Status";
@@ -29,10 +28,11 @@ export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
   const t = useTranslations("Management");
   const common = useTranslations("Common");
 
-  const hasManagePermissions = hasPermissions(
-    [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
-    true,
-  );
+  const hasManagePermissions = hasPermissions([
+    Permissions.ManageUsers,
+    Permissions.BanUsers,
+    Permissions.DeleteUsers,
+  ]);
 
   const asyncTable = useAsyncTable({
     search,
@@ -55,25 +55,18 @@ export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
         data={asyncTable.items.map((user) => {
           const hasAdminPermissions = hasPermissions(
             defaultPermissions.allDefaultAdminPermissions,
-            user.rank !== Rank.USER,
             user,
           );
 
-          const hasLeoPermissions = hasPermissions(
-            defaultPermissions.defaultLeoPermissions,
-            user.isLeo,
-            user,
-          );
+          const hasLeoPermissions = hasPermissions(defaultPermissions.defaultLeoPermissions, user);
 
           const hasDispatchPermissions = hasPermissions(
             defaultPermissions.defaultDispatchPermissions,
-            user.isLeo,
             user,
           );
 
           const hasEmsFdPermissions = hasPermissions(
             defaultPermissions.defaultEmsFdPermissions,
-            user.isLeo,
             user,
           );
 

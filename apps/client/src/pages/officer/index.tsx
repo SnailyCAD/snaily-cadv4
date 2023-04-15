@@ -7,7 +7,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { useLeoState } from "state/leo-state";
-import { ActiveToneType, Rank, Record, RecordType, ValueType } from "@snailycad/types";
+import { ActiveToneType, Record, RecordType, ValueType } from "@snailycad/types";
 import { ActiveCalls } from "components/dispatch/active-calls/active-calls";
 import { useDispatchState } from "state/dispatch/dispatch-state";
 import { ModalButtons } from "components/leo/ModalButtons";
@@ -143,10 +143,7 @@ export default function OfficerDashboard({
   const { isOpen } = useModal();
   const { LEO_TICKETS, ACTIVE_WARRANTS, CALLS_911 } = useFeatureEnabled();
   const { hasPermissions } = usePermission();
-  const isAdmin = hasPermissions(
-    defaultPermissions.allDefaultAdminPermissions,
-    (u) => u.rank !== Rank.USER,
-  );
+  const isAdmin = hasPermissions(defaultPermissions.allDefaultAdminPermissions);
 
   const { currentResult, setCurrentResult } = useNameSearch(
     (state) => ({
@@ -178,10 +175,7 @@ export default function OfficerDashboard({
   }, [bolos, calls, activeOfficers, activeDeputies, activeOfficer]);
 
   return (
-    <Layout
-      permissions={{ fallback: (u) => u.isLeo, permissions: [Permissions.Leo] }}
-      className="dark:text-white"
-    >
+    <Layout permissions={{ permissions: [Permissions.Leo] }} className="dark:text-white">
       <Title renderLayoutTitle={false}>{t("officer")}</Title>
 
       <signal100.Component enabled={signal100.enabled} audio={signal100.audio} />

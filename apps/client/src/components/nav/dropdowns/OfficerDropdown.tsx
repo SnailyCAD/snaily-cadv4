@@ -32,74 +32,70 @@ export function OfficerDropdown() {
     {
       name: t("dashboard"),
       href: "/officer",
-      show: hasPermissions([Permissions.Leo], true),
+      show: hasPermissions([Permissions.Leo]),
     },
     {
       name: t("myOfficers"),
       href: "/officer/my-officers",
-      show: hasPermissions([Permissions.Leo], true),
+      show: hasPermissions([Permissions.Leo]),
     },
     {
       name: t("myOfficerLogs"),
       href: "/officer/my-officer-logs",
-      show: hasPermissions([Permissions.Leo], true),
+      show: hasPermissions([Permissions.Leo]),
     },
     {
       name: t("penalCodes"),
       href: "/officer/penal-codes",
-      show: hasPermissions([Permissions.Leo], true),
+      show: hasPermissions([Permissions.Leo]),
     },
     {
       name: t("incidents"),
       href: "/officer/incidents",
-      show: hasPermissions([Permissions.ManageIncidents, Permissions.ViewIncidents], true),
+      show: hasPermissions([Permissions.ManageIncidents, Permissions.ViewIncidents]),
     },
     {
       name: t("impoundLot"),
       href: "/officer/impound-lot",
-      show: hasPermissions([Permissions.ManageImpoundLot, Permissions.ViewImpoundLot], true),
+      show: hasPermissions([Permissions.ManageImpoundLot, Permissions.ViewImpoundLot]),
     },
     {
       name: t("jail"),
       href: "/officer/jail",
-      show: hasPermissions([Permissions.ManageJail, Permissions.ViewJail], true),
+      show: hasPermissions([Permissions.ManageJail, Permissions.ViewJail]),
     },
     {
       name: t("callHistory"),
       href: "/officer/call-history",
       show:
-        CALLS_911 &&
-        hasPermissions([Permissions.ViewCallHistory, Permissions.ManageCallHistory], true),
+        CALLS_911 && hasPermissions([Permissions.ViewCallHistory, Permissions.ManageCallHistory]),
     },
     {
       name: t("dmv"),
       href: "/officer/dmv",
-      show: DMV && hasPermissions([Permissions.ManageDMV], true),
+      show: DMV && hasPermissions([Permissions.ManageDMV]),
     },
     {
       name: t("bureauOfFirearms"),
       href: "/officer/bureau-of-firearms",
-      show: BUREAU_OF_FIREARMS && hasPermissions([Permissions.ManageBureauOfFirearms], true),
+      show: BUREAU_OF_FIREARMS && hasPermissions([Permissions.ManageBureauOfFirearms]),
     },
     {
       name: t("citizenLogs"),
       href: "/officer/supervisor/citizen-logs",
-      show: hasPermissions([Permissions.ViewCitizenLogs], (u) => u.isSupervisor),
+      show: hasPermissions([Permissions.ViewCitizenLogs]),
     },
     {
       name: t("licenseExams"),
       href: "/officer/supervisor/exams",
       show:
         LICENSE_EXAMS &&
-        hasPermissions(
-          [Permissions.ViewLicenseExams, Permissions.ManageLicenseExams],
-          (u) => u.isSupervisor,
-        ),
+        hasPermissions([Permissions.ViewLicenseExams, Permissions.ManageLicenseExams]),
     },
     {
       name: t("manageUnits"),
       href: "/admin/manage/units",
-      show: hasPermissions([Permissions.ManageUnits, Permissions.ViewUnits], (u) => u.isSupervisor),
+      show: hasPermissions([Permissions.ManageUnits, Permissions.ViewUnits]),
     },
   ] as const;
 

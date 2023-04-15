@@ -6,7 +6,6 @@ import { IsAuth } from "middlewares/is-auth";
 import { CREATE_PENAL_CODE_GROUP_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/data/validate-schema";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
-import { Rank } from "@prisma/client";
 import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/admin/penal-code-group")
@@ -37,7 +36,6 @@ export class PenalCodeGroupController {
   @Post("/")
   @Description("Create a new penal-code group")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageValuePenalCode],
   })
   async createPenalCodeGroup(
@@ -57,7 +55,6 @@ export class PenalCodeGroupController {
   @Put("/:id")
   @Description("Edit a penal-code group by its id")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageValuePenalCode],
   })
   async editPenalCodeGroup(
@@ -85,7 +82,6 @@ export class PenalCodeGroupController {
   @Delete("/:id")
   @Description("Delete a penal-code group by its id")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageValuePenalCode],
   })
   async deletePenalCodeGroup(

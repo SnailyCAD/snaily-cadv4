@@ -95,7 +95,6 @@ export default function Jail({ data }: Props) {
   return (
     <Layout
       permissions={{
-        fallback: (u) => u.isLeo,
         permissions: [Permissions.ViewJail, Permissions.ManageJail],
       }}
       className="dark:text-white"
@@ -171,7 +170,7 @@ export default function Jail({ data }: Props) {
             { header: t("jailTime"), accessorKey: "jailTime" },
             { header: t("status"), accessorKey: "status" },
             { header: common("createdAt"), accessorKey: "createdAt" },
-            hasPermissions([Permissions.ManageJail], true)
+            hasPermissions([Permissions.ManageJail])
               ? { header: common("actions"), accessorKey: "actions" }
               : null,
           ]}

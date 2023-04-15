@@ -20,7 +20,6 @@ export class AccountController {
   @Put("/")
   @Description("Enable or disable the authenticated user's API Token.")
   @UsePermissions({
-    fallback: false,
     permissions: [Permissions.UsePersonalApiToken],
   })
   async enableDisableUserAPIToken(
@@ -62,7 +61,6 @@ export class AccountController {
   @Delete("/")
   @Description("Re-generate a token")
   @UsePermissions({
-    fallback: false,
     permissions: [Permissions.UsePersonalApiToken],
   })
   async generateNewApiToken(

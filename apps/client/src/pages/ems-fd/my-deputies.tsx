@@ -69,10 +69,7 @@ export default function MyDeputies({ deputies: data }: Props) {
   }
 
   return (
-    <Layout
-      permissions={{ fallback: (u) => u.isEmsFd, permissions: [Permissions.EmsFd] }}
-      className="dark:text-white"
-    >
+    <Layout permissions={{ permissions: [Permissions.EmsFd] }} className="dark:text-white">
       <header className="flex items-center justify-between">
         <Title className="!mb-0">{t("Ems.myDeputies")}</Title>
 

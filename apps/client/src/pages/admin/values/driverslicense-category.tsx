@@ -7,7 +7,6 @@ import type { GetServerSideProps } from "next";
 import { useModal } from "state/modalState";
 import {
   DriversLicenseCategoryType,
-  Rank,
   ValueType,
   type DriversLicenseCategoryValue,
 } from "@snailycad/types";
@@ -95,7 +94,6 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
   return (
     <AdminLayout
       permissions={{
-        fallback: (u) => u.rank !== Rank.USER,
         permissions: [Permissions.ManageValueDLCategory],
       }}
     >

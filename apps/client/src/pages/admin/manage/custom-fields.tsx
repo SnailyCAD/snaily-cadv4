@@ -3,7 +3,7 @@ import * as React from "react";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { type CustomField, Rank } from "@snailycad/types";
+import { type CustomField } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
@@ -30,7 +30,7 @@ export default function ManageCustomFields({ customFields: data }: Props) {
   const { openModal, closeModal } = useModal();
   const t = useTranslations("Management");
   const common = useTranslations("Common");
-  const hasManagePermissions = hasPermissions([Permissions.ManageCustomFields], true);
+  const hasManagePermissions = hasPermissions([Permissions.ManageCustomFields]);
 
   const [search, setSearch] = React.useState("");
 
@@ -79,7 +79,6 @@ export default function ManageCustomFields({ customFields: data }: Props) {
   return (
     <AdminLayout
       permissions={{
-        fallback: (u) => u.rank !== Rank.USER,
         permissions: [Permissions.ManageCustomFields, Permissions.ViewCustomFields],
       }}
     >

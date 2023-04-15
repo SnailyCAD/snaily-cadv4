@@ -47,7 +47,7 @@ export function DepartmentWhitelistingTab({ pendingUnits }: Props) {
   const { state, execute } = useFetch();
   const tableState = useTableState();
   const { DIVISIONS } = useFeatureEnabled();
-  const hasViewUsersPermissions = hasPermissions([Permissions.ViewUsers], true);
+  const hasViewUsersPermissions = hasPermissions([Permissions.ViewUsers]);
 
   async function handleAcceptOrDecline(data: {
     unit: Unit;

@@ -25,13 +25,10 @@ interface Props {
 export default function Courthouse(props: Props) {
   const t = useTranslations("Courthouse");
   const { COURTHOUSE_POSTS } = useFeatureEnabled();
-  const { hasPermissions } = usePermission();
-  const hasEntriesPerms = hasPermissions([Permissions.Leo], (u) => u.isLeo);
 
-  const hasCourthouseAdminPerms = hasPermissions(
-    defaultPermissions.defaultCourthousePermissions,
-    (u) => u.isSupervisor,
-  );
+  const { hasPermissions } = usePermission();
+  const hasEntriesPerms = hasPermissions([Permissions.Leo]);
+  const hasCourthouseAdminPerms = hasPermissions(defaultPermissions.defaultCourthousePermissions);
 
   const TABS = [
     { name: t("expungementRequests"), value: "expungementRequestsTab" },

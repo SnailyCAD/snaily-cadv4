@@ -248,12 +248,6 @@ model User {
   username                 String                    @unique @db.VarChar(255)
   password                 String                    @db.Text
   rank                     Rank                      @default(USER)
-  isLeo                    Boolean                   @default(false)
-  isSupervisor             Boolean                   @default(false)
-  isEmsFd                  Boolean                   @default(false)
-  isDispatch               Boolean                   @default(false)
-  isTow                    Boolean                   @default(false)
-  isTaxi                   Boolean                   @default(true)
   banned                   Boolean                   @default(false)
   banReason                String?
   avatarUrl                String?                   @db.Text

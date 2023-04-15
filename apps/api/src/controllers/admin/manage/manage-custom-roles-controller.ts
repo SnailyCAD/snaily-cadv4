@@ -1,4 +1,4 @@
-import { Prisma, Rank } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { CUSTOM_ROLE_SCHEMA } from "@snailycad/schemas";
 import {
@@ -62,7 +62,6 @@ export class AdminManageCustomRolesController {
 
   @Post("/")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCustomRoles],
   })
   @Description("Create a new custom role.")
@@ -101,7 +100,6 @@ export class AdminManageCustomRolesController {
 
   @Put("/:id")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCustomRoles],
   })
   @Description("Update a custom role by its ID.")
@@ -143,7 +141,6 @@ export class AdminManageCustomRolesController {
 
   @Delete("/:id")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCustomRoles],
   })
   @Description("Delete a custom role by its ID.")

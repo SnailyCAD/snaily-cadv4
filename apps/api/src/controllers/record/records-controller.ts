@@ -96,7 +96,6 @@ export class RecordsController {
   @Post("/create-warrant")
   @Description("Create a new warrant")
   @UsePermissions({
-    fallback: (u) => u.isLeo || u.isSupervisor,
     permissions: [Permissions.ManageWarrants, Permissions.DeleteCitizenRecords],
   })
   async createWarrant(
@@ -177,7 +176,6 @@ export class RecordsController {
   @Put("/warrant/:id")
   @Description("Update a warrant by its id")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
   async updateWarrant(
@@ -234,7 +232,6 @@ export class RecordsController {
   @Post("/")
   @Description("Create a new ticket, written warning or arrest report to a citizen")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
   async createTicket(
@@ -269,7 +266,6 @@ export class RecordsController {
   @Put("/record/:id")
   @Description("Update a ticket, written warning or arrest report by its id")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
   async updateRecordById(
@@ -293,7 +289,6 @@ export class RecordsController {
   @Delete("/:id")
   @Description("Delete a ticket, written warning or arrest report by its id")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
   async deleteRecord(

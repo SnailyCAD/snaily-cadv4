@@ -1,4 +1,4 @@
-import { Feature, Rank, WhitelistStatus, cad, MiscCadSettings } from "@prisma/client";
+import { Feature, WhitelistStatus, cad, MiscCadSettings } from "@prisma/client";
 import { UPDATE_UNIT_SCHEMA, UPDATE_UNIT_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import {
   PathParams,
@@ -62,7 +62,6 @@ export class AdminManageUnitsController {
   @Get("/")
   @Description("Get all the units in the CAD")
   @UsePermissions({
-    fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [
       Permissions.ViewUnits,
       Permissions.DeleteUnits,
@@ -113,7 +112,6 @@ export class AdminManageUnitsController {
 
   @Get("/prune")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUnits, Permissions.DeleteUnits],
   })
   @Description("Get inactive units by days and departmentId")
@@ -149,7 +147,6 @@ export class AdminManageUnitsController {
 
   @Delete("/prune")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUnits, Permissions.DeleteUnits],
   })
   async pruneInactiveUnits(
@@ -219,7 +216,6 @@ export class AdminManageUnitsController {
     "Get a unit by the `id` or get all units from a user by the `discordId` or `steamId`",
   )
   @UsePermissions({
-    fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [
       Permissions.ViewUnits,
       Permissions.DeleteUnits,
@@ -303,7 +299,6 @@ export class AdminManageUnitsController {
   @Put("/off-duty")
   @Description("Set specified units off-duty")
   @UsePermissions({
-    fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [Permissions.ManageUnits],
   })
   async setSelectedOffDuty(
@@ -356,7 +351,6 @@ export class AdminManageUnitsController {
 
   @Put("/callsign/:unitId")
   @UsePermissions({
-    fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [Permissions.ManageUnitCallsigns, Permissions.ManageUnits],
   })
   @Description("Update a unit's callsign by its id")
@@ -420,7 +414,6 @@ export class AdminManageUnitsController {
 
   @Put("/:id")
   @UsePermissions({
-    fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [Permissions.ManageUnits],
   })
   @Description("Update a unit by its id")
@@ -585,7 +578,6 @@ export class AdminManageUnitsController {
   @Post("/departments/:unitId")
   @Description("Accept or decline a unit into a department")
   @UsePermissions({
-    fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [Permissions.ManageUnits],
   })
   async acceptOrDeclineUnit(
@@ -736,7 +728,6 @@ export class AdminManageUnitsController {
   @Post("/:unitId/qualifications")
   @Description("Add a qualification to a unit")
   @UsePermissions({
-    fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [Permissions.ManageUnits, Permissions.ManageAwardsAndQualifications],
   })
   async addUnitQualification(
@@ -792,7 +783,6 @@ export class AdminManageUnitsController {
 
   @Delete("/:unitId/qualifications/:qualificationId")
   @UsePermissions({
-    fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [Permissions.ManageUnits, Permissions.ManageAwardsAndQualifications],
   })
   @Description("Delete a qualification from a unit")
@@ -833,7 +823,6 @@ export class AdminManageUnitsController {
   @Put("/:unitId/qualifications/:qualificationId")
   @Description("Suspend or unsuspend a unit's qualification")
   @UsePermissions({
-    fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [Permissions.ManageUnits, Permissions.ManageAwardsAndQualifications],
   })
   async suspendOrUnsuspendUnitQualification(
@@ -890,7 +879,6 @@ export class AdminManageUnitsController {
 
   @Delete("/:unitId")
   @UsePermissions({
-    fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [Permissions.DeleteUnits],
   })
   async deleteUnit(

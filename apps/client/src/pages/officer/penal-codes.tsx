@@ -35,10 +35,7 @@ export default function PenalCodesPage() {
   }, [search, penalCode.values]);
 
   return (
-    <Layout
-      permissions={{ fallback: (u) => u.isLeo, permissions: [Permissions.Leo] }}
-      className="dark:text-white"
-    >
+    <Layout permissions={{ permissions: [Permissions.Leo] }} className="dark:text-white">
       <Title>{t("penalCodes")}</Title>
 
       {penalCode.values.length <= 0 ? (

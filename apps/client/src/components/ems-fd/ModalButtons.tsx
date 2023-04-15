@@ -1,6 +1,6 @@
 import { Button } from "@snailycad/ui";
 import { ModalIds } from "types/ModalIds";
-import { ActiveToneType, Rank, ShouldDoType } from "@snailycad/types";
+import { ActiveToneType, ShouldDoType } from "@snailycad/types";
 import { useModal } from "state/modalState";
 import { useTranslations } from "use-intl";
 import { ActiveDeputy, useEmsFdState } from "state/ems-fd-state";
@@ -64,10 +64,7 @@ export function ModalButtons({
   );
 
   const { hasPermissions } = usePermission();
-  const isAdmin = hasPermissions(
-    defaultPermissions.allDefaultAdminPermissions,
-    (u) => u.rank !== Rank.USER,
-  );
+  const isAdmin = hasPermissions(defaultPermissions.allDefaultAdminPermissions);
 
   const isButtonDisabled = isAdmin
     ? false

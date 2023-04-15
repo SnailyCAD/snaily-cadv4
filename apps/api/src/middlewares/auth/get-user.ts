@@ -29,13 +29,7 @@ export async function setGlobalUserFromCADAPIToken(options: SetGlobalUserFromCAD
   }
 
   const globalUser = {
-    isDispatch: true,
-    isLeo: true,
-    isEmsFd: true,
     rank: "API_TOKEN",
-    isTow: true,
-    isTaxi: true,
-    isSupervisor: true,
     username: "Dispatch",
     whitelistStatus: WhitelistStatus.ACCEPTED,
     permissions: allPermissions,

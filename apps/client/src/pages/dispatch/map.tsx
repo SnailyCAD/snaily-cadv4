@@ -63,7 +63,7 @@ export default function MapPage(props: Props) {
       <Title renderLayoutTitle={false}>Dispatch Live Map</Title>
 
       <Layout
-        permissions={{ fallback: (u) => u.isDispatch, permissions: [Permissions.LiveMap] }}
+        permissions={{ permissions: [Permissions.LiveMap] }}
         navMaxWidth="none"
         className="relative !px-0 !pb-0 !mt-0 !max-w-none"
       >

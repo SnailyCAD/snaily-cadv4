@@ -24,7 +24,7 @@ export function TowDropdown() {
       }
     >
       <Dropdown.LinkItem href="/tow">{t("dashboard")}</Dropdown.LinkItem>
-      {hasPermissions([Permissions.ViewTowLogs], true) ? (
+      {hasPermissions([Permissions.ViewTowLogs]) ? (
         <Dropdown.LinkItem href="/tow/logs">{t("towLogs")}</Dropdown.LinkItem>
       ) : null}
     </Dropdown>

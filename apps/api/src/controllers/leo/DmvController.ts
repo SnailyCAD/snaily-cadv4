@@ -28,7 +28,6 @@ export class DmvController {
   @Get("/")
   @Description("Get pending vehicles for the dmv")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
     permissions: [Permissions.ManageDMV],
   })
   async getPendingVehicles(

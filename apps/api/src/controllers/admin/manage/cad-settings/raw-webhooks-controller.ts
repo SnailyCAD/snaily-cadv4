@@ -1,7 +1,7 @@
 import type { DiscordWebhookType, RawWebhook } from "@prisma/client";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { RAW_WEBHOOKS_SCHEMA } from "@snailycad/schemas";
-import { cad, Rank } from "@snailycad/types";
+import { cad } from "@snailycad/types";
 import { BodyParams, Context, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { ContentType, Get, Post } from "@tsed/schema";
@@ -17,7 +17,6 @@ export class WebhooksController {
   @Get("/")
   @UsePermissions({
     permissions: [Permissions.ManageCADSettings],
-    fallback: (u) => u.rank === Rank.OWNER,
   })
   async getWebhooks() {
     const webhooks = await prisma.rawWebhook.findMany({});
@@ -28,7 +27,6 @@ export class WebhooksController {
   @Post("/")
   @UsePermissions({
     permissions: [Permissions.ManageCADSettings],
-    fallback: (u) => u.rank === Rank.OWNER,
   })
   async saveWebhooks(
     @BodyParams() body: unknown,

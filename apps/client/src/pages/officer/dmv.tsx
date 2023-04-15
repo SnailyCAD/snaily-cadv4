@@ -55,7 +55,6 @@ export default function Dmv({ data }: Props) {
   return (
     <Layout
       permissions={{
-        fallback: (u) => u.isLeo,
         permissions: [Permissions.ManageDMV],
       }}
       className="dark:text-white"

@@ -13,7 +13,7 @@ export function useHasPermissionForLayout(permissions: LayoutProps["permissions"
   React.useEffect(() => {
     if (!permissions) return;
 
-    if (!hasPermissions(permissions.permissions, permissions.fallback)) {
+    if (!hasPermissions(permissions.permissions)) {
       router.push("/403");
       setForbidden(true);
     }

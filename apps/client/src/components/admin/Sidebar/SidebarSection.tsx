@@ -10,7 +10,7 @@ interface Props {
 export function SidebarSection({ title, permissions, children }: Props) {
   const { hasPermissions } = usePermission();
 
-  if (permissions && !hasPermissions(permissions, true)) {
+  if (permissions && !hasPermissions(permissions)) {
     return null;
   }
 

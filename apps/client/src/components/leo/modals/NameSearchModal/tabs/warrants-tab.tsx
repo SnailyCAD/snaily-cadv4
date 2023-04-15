@@ -38,15 +38,8 @@ export function NameSearchWarrantsTab() {
   const { WARRANT_STATUS_APPROVAL } = useFeatureEnabled();
 
   const { hasPermissions } = usePermission();
-  const hasManageWarrantsPermissions = hasPermissions(
-    [Permissions.ManageWarrants],
-    (u) => u.isLeo || u.isSupervisor,
-  );
-
-  const hasManagePendingWarrantsPermissions = hasPermissions(
-    [Permissions.ManagePendingWarrants],
-    (u) => u.isSupervisor,
-  );
+  const hasManageWarrantsPermissions = hasPermissions([Permissions.ManageWarrants]);
+  const hasManagePendingWarrantsPermissions = hasPermissions([Permissions.ManagePendingWarrants]);
 
   const hasManagePermissions = WARRANT_STATUS_APPROVAL
     ? hasManagePendingWarrantsPermissions

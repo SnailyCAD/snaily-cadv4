@@ -7,7 +7,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { useModal } from "state/modalState";
-import { type AnyValue, ValueType, Rank } from "@snailycad/types";
+import { type AnyValue, ValueType } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { getObjLength, isEmpty, requestAll, yesOrNoText } from "lib/utils";
@@ -217,7 +217,6 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
   return (
     <AdminLayout
       permissions={{
-        fallback: (u) => u.rank !== Rank.USER,
         permissions: routeData?.permissions ?? [],
       }}
     >

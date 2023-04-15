@@ -7,7 +7,7 @@ import { BadRequest } from "@tsed/exceptions";
 import { MultipartFile, PlatformMulterFile, UseBefore } from "@tsed/common";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import fs from "node:fs/promises";
-import { cad, Feature, MiscCadSettings, Rank } from "@prisma/client";
+import { cad, Feature, MiscCadSettings } from "@prisma/client";
 import { Permissions } from "@snailycad/permissions";
 import { UsePermissions } from "middlewares/use-permissions";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
@@ -21,7 +21,6 @@ export class ManageCitizensController {
   @UseBefore(IsAuth)
   @Post("/")
   @UsePermissions({
-    fallback: (u) => u.rank === Rank.OWNER,
     permissions: [Permissions.ManageCADSettings],
   })
   async uploadLogoToCAD(
@@ -74,7 +73,6 @@ export class ManageCitizensController {
   @UseBefore(IsAuth)
   @Post("/auth")
   @UsePermissions({
-    fallback: (u) => u.rank === Rank.OWNER,
     permissions: [Permissions.ManageCADSettings],
   })
   async uploadAuthImagesToCAD(

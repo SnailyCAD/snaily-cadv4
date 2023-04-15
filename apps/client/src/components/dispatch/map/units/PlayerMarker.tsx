@@ -83,7 +83,6 @@ export function PlayerMarker({ player, handleToggle }: Props) {
     hasPermission({
       userToCheck: player,
       permissionsToCheck: defaultPermissions.defaultLeoPermissions,
-      fallback: player.isLeo,
     });
 
   const hasEmsFdPermissions =
@@ -91,7 +90,6 @@ export function PlayerMarker({ player, handleToggle }: Props) {
     hasPermission({
       userToCheck: player,
       permissionsToCheck: defaultPermissions.defaultEmsFdPermissions,
-      fallback: player.isEmsFd,
     });
 
   // eslint-disable-next-line eqeqeq

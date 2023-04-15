@@ -7,7 +7,7 @@ import { Forbidden, Unauthorized } from "@tsed/exceptions";
 
 interface RouteData {
   permissions: Permissions[];
-  fallback?: ((user: User) => boolean) | boolean;
+  // fallback?: ((user: User) => boolean) | boolean;
 }
 
 @Middleware()
@@ -25,13 +25,9 @@ export class UsePermissionsMiddleware implements MiddlewareMethods {
     const routeData =
       typeof routeDataOrFunc === "function" ? routeDataOrFunc(req) : routeDataOrFunc;
 
-    const fallback =
-      typeof routeData.fallback === "function" ? routeData.fallback(user) : routeData.fallback;
-
     const hasPerm = hasPermission({
       userToCheck: user,
       permissionsToCheck: routeData.permissions,
-      fallback,
     });
 
     if (!hasPerm) {

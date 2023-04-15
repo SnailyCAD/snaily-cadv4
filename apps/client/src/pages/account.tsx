@@ -52,7 +52,7 @@ export default function Account({ availableSounds }: Props) {
   const showConnectionsTab = (DISCORD_AUTH || STEAM_OAUTH) && canUseThirdPartyConnections();
 
   const { hasPermissions } = usePermission();
-  const hasApiTokenPermissions = hasPermissions([Permissions.UsePersonalApiToken], false);
+  const hasApiTokenPermissions = hasPermissions([Permissions.UsePersonalApiToken]);
 
   const errors = {
     discordAccountAlreadyLinked: errorT("discordAccountAlreadyLinked"),

@@ -3,7 +3,6 @@ import { useTranslations } from "use-intl";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { Rank } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
@@ -58,7 +57,6 @@ export default function ManageAuditLogs({ data }: Props) {
   return (
     <AdminLayout
       permissions={{
-        fallback: (u) => u.rank !== Rank.USER,
         permissions: defaultPermissions.allDefaultAdminPermissions,
       }}
     >

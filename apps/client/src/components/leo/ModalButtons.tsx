@@ -1,6 +1,6 @@
 import { Button } from "@snailycad/ui";
 import { ActiveOfficer, useLeoState } from "state/leo-state";
-import { ActiveToneType, Rank, ShouldDoType } from "@snailycad/types";
+import { ActiveToneType, ShouldDoType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import useFetch from "lib/useFetch";
@@ -48,10 +48,7 @@ export function ModalButtons({ initialActiveOfficer }: { initialActiveOfficer: A
   const activeOfficer = isMounted ? _activeOfficer : initialActiveOfficer;
   const { hasPermissions } = usePermission();
 
-  const isAdmin = hasPermissions(
-    defaultPermissions.allDefaultAdminPermissions,
-    (u) => u.rank !== Rank.USER,
-  );
+  const isAdmin = hasPermissions(defaultPermissions.allDefaultAdminPermissions);
 
   const t = useTranslations();
   const { generateCallsign } = useGenerateCallsign();

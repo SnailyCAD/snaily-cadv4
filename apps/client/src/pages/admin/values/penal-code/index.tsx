@@ -1,5 +1,5 @@
 import * as React from "react";
-import { PenalCodeGroup, Rank, ValueType } from "@snailycad/types";
+import { PenalCodeGroup, ValueType } from "@snailycad/types";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -134,7 +134,6 @@ export default function PenalCodeGroupsPage(props: Props) {
   return (
     <AdminLayout
       permissions={{
-        fallback: (u) => u.rank !== Rank.USER,
         permissions: [Permissions.ManageValuePenalCode],
       }}
     >

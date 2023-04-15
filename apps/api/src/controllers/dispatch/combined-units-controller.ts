@@ -30,7 +30,6 @@ export class CombinedUnitsController {
     "Merge officers into a combined/merged unit via their ids. `entry: true` means it that officer will be the main unit.",
   )
   @UsePermissions({
-    fallback: (u) => u.isDispatch || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.Leo],
   })
   async mergeOfficers(
@@ -143,7 +142,6 @@ export class CombinedUnitsController {
     "Merge ems-fd deputies into a combined/merged unit via their ids. `entry: true` means it that deputy will be the main unit.",
   )
   @UsePermissions({
-    fallback: (u) => u.isDispatch || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.Leo],
   })
   async mergeDeputies(
@@ -252,7 +250,6 @@ export class CombinedUnitsController {
   @Post("/unmerge/:id")
   @Description("Unmerge officers by the combinedUnitId")
   @UsePermissions({
-    fallback: (u) => u.isDispatch || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.Leo],
   })
   async unmergeOfficers(

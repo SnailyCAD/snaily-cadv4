@@ -71,14 +71,11 @@ export function AllUnitsTab({ units }: Props) {
   const tableState = useTableState({ pagination: asyncTable.pagination });
 
   const { hasPermissions } = usePermission();
-  const hasManagePermissions = hasPermissions([Permissions.ManageUnits], true);
-  const hasManageAwardsPermissions = hasPermissions(
-    [Permissions.ManageAwardsAndQualifications],
-    true,
-  );
+  const hasManagePermissions = hasPermissions([Permissions.ManageUnits]);
+  const hasManageAwardsPermissions = hasPermissions([Permissions.ManageAwardsAndQualifications]);
 
-  const hasDeletePermissions = hasPermissions([Permissions.DeleteUnits], true);
-  const hasViewUsersPermissions = hasPermissions([Permissions.ViewUsers], true);
+  const hasDeletePermissions = hasPermissions([Permissions.DeleteUnits]);
+  const hasViewUsersPermissions = hasPermissions([Permissions.ViewUsers]);
   const { state, execute } = useFetch();
 
   const t = useTranslations();

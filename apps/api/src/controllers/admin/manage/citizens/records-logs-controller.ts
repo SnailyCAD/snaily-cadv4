@@ -6,7 +6,7 @@ import { userProperties } from "lib/auth/getSessionUser";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/is-auth";
-import { Prisma, Rank, WhitelistStatus } from "@prisma/client";
+import { Prisma, WhitelistStatus } from "@prisma/client";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 
 import type * as APITypes from "@snailycad/types/api";
@@ -32,7 +32,6 @@ export class AdminManageCitizensController {
   @Get("/records-logs")
   @Description("Get all the record logs within the CAD")
   @UsePermissions({
-    fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [
       Permissions.ViewCitizens,
       Permissions.ManageCitizens,
@@ -78,7 +77,6 @@ export class AdminManageCitizensController {
   @Get("/pending-arrest-reports")
   @Description("Get all the record logs within the CAD")
   @UsePermissions({
-    fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [
       Permissions.ViewCitizens,
       Permissions.ManageCitizens,
@@ -142,7 +140,6 @@ export class AdminManageCitizensController {
   @Post("/records-logs/:id")
   @Description("Accept or decline a record by it's id")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCitizens, Permissions.ViewCitizenLogs],
   })
   async acceptOrDeclineArrestReport(

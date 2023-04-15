@@ -363,7 +363,7 @@ export function ManageCitizenForm({
         </MultiFormStep>
       ) : null}
 
-      {formFeatures?.["officer-creation"] && hasPermissions([Permissions.Leo], (u) => u.isLeo) ? (
+      {formFeatures?.["officer-creation"] && hasPermissions([Permissions.Leo]) ? (
         <MultiFormStep id="officer" title={t("officer")}>
           {() => <CreateOfficerStep />}
         </MultiFormStep>

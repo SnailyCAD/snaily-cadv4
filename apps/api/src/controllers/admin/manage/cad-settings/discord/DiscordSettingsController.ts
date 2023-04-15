@@ -4,7 +4,7 @@ import { ContentType, Get, Post } from "@tsed/schema";
 import { RESTGetAPIGuildRolesResult, Routes } from "discord-api-types/v10";
 import { IsAuth } from "middlewares/is-auth";
 import { prisma } from "lib/data/prisma";
-import { Rank, cad, DiscordRole } from "@prisma/client";
+import { cad, DiscordRole } from "@prisma/client";
 import { BadRequest } from "@tsed/exceptions";
 import { DISCORD_SETTINGS_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/data/validate-schema";
@@ -93,7 +93,6 @@ export class DiscordSettingsController {
 
   @Post("/")
   @UsePermissions({
-    fallback: (u) => u.rank === Rank.OWNER,
     permissions: [Permissions.ManageCADSettings],
   })
   async setRoleTypes(

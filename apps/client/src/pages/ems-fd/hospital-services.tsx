@@ -77,7 +77,6 @@ export default function EmsFdIncidents({ deadCitizens }: Props) {
   return (
     <Layout
       permissions={{
-        fallback: (u) => u.isLeo,
         permissions: [Permissions.ViewDeadCitizens, Permissions.ManageDeadCitizens],
       }}
       className="dark:text-white"

@@ -10,7 +10,7 @@ import { validateSchema } from "lib/data/validate-schema";
 import { generateString } from "utils/generate-string";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateImageURL } from "lib/images/validate-image-url";
-import { Feature, Prisma, Rank } from "@prisma/client";
+import { Feature, Prisma } from "@prisma/client";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { isCuid } from "cuid";
 import type * as APITypes from "@snailycad/types/api";
@@ -27,7 +27,6 @@ export class AdminManageCitizensController {
   @Get("/")
   @Description("Get all the citizens within the CAD")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ViewCitizens, Permissions.ManageCitizens, Permissions.DeleteCitizens],
   })
   async getCitizens(
@@ -82,7 +81,6 @@ export class AdminManageCitizensController {
     "Get a citizen by the `id`. Or get all citizens from a user by the `discordId` or `steamId`",
   )
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ViewCitizens, Permissions.ManageCitizens, Permissions.DeleteCitizens],
   })
   async getCitizen(@PathParams("id") id: string): Promise<APITypes.GetManageCitizenByIdData> {
@@ -111,7 +109,6 @@ export class AdminManageCitizensController {
   @Put("/:id")
   @Description("Update a citizen by its id")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCitizens],
   })
   async updateCitizen(
@@ -196,7 +193,6 @@ export class AdminManageCitizensController {
   @Delete("/:id")
   @Description("Delete a citizen by its id")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.DeleteCitizens],
   })
   async deleteCitizen(

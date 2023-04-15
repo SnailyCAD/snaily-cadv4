@@ -98,7 +98,6 @@ export class CADSettingsController {
   @Put("/")
   @UseBefore(IsAuth)
   @UsePermissions({
-    fallback: (u) => u.rank === Rank.OWNER,
     permissions: [Permissions.ManageCADSettings],
   })
   async updateCadSettings(
@@ -150,7 +149,6 @@ export class CADSettingsController {
   @Put("/features")
   @UseBefore(IsAuth)
   @UsePermissions({
-    fallback: (u) => u.rank === Rank.OWNER,
     permissions: [Permissions.ManageCADSettings],
   })
   async updateCadFeatures(
@@ -198,7 +196,6 @@ export class CADSettingsController {
   @Put("/misc")
   @UseBefore(IsAuth)
   @UsePermissions({
-    fallback: (u) => u.rank === Rank.OWNER,
     permissions: [Permissions.ManageCADSettings],
   })
   async updateMiscSettings(
@@ -256,7 +253,6 @@ export class CADSettingsController {
   @Put("/default-permissions")
   @UseBefore(IsAuth)
   @UsePermissions({
-    fallback: (u) => u.rank === Rank.OWNER,
     permissions: [Permissions.ManageCADSettings],
   })
   async updateDefaultPermissions(
@@ -307,7 +303,6 @@ export class CADSettingsController {
   @Put("/api-token")
   @UseBefore(IsAuth)
   @UsePermissions({
-    fallback: (u) => u.rank === Rank.OWNER,
     permissions: [Permissions.ManageCADSettings],
   })
   async updateApiToken(
@@ -378,7 +373,6 @@ export class CADSettingsController {
   @Delete("/api-token")
   @UseBefore(IsAuth)
   @UsePermissions({
-    fallback: (u) => u.rank === Rank.OWNER,
     permissions: [Permissions.ManageCADSettings],
   })
   async regenerateApiToken(

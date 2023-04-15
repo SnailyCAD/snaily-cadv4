@@ -45,11 +45,8 @@ export function ManageUnitTab({ unit: data }: Props) {
   const { BADGE_NUMBERS, DIVISIONS } = useFeatureEnabled();
 
   const { hasPermissions } = usePermission();
-  const hasManagePermissions = hasPermissions([Permissions.ManageUnits], true);
-  const hasManageAwardsPermissions = hasPermissions(
-    [Permissions.ManageAwardsAndQualifications],
-    true,
-  );
+  const hasManagePermissions = hasPermissions([Permissions.ManageUnits]);
+  const hasManageAwardsPermissions = hasPermissions([Permissions.ManageAwardsAndQualifications]);
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,

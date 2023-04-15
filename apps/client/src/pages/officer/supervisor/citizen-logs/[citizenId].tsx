@@ -54,7 +54,6 @@ export default function CitizenLogs(props: Props) {
   return (
     <Layout
       permissions={{
-        fallback: (u) => u.isLeo,
         permissions: [Permissions.ViewCitizenLogs, Permissions.DeleteCitizenRecords],
       }}
       className="dark:text-white"

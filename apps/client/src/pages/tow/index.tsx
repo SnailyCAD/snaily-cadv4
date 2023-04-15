@@ -62,7 +62,6 @@ export default function Tow(props: Props) {
   return (
     <Layout
       permissions={{
-        fallback: (u) => u.isTow,
         permissions: [
           Permissions.ViewTowCalls,
           Permissions.ViewTowLogs,

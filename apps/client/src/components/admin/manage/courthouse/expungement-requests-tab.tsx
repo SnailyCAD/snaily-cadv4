@@ -23,7 +23,7 @@ export function ExpungementRequestsTab({ requests: data }: Props) {
   const tableState = useTableState();
   const { state, execute } = useFetch();
   const { hasPermissions } = usePermission();
-  const hasManagePermissions = hasPermissions([Permissions.ManageExpungementRequests], true);
+  const hasManagePermissions = hasPermissions([Permissions.ManageExpungementRequests]);
   const { invalidateQuery } = useInvalidateQuery(["admin", "notifications"]);
 
   const asyncTable = useAsyncTable({
