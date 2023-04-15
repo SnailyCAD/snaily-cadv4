@@ -172,12 +172,6 @@ export class AuthController {
       userCount <= 0
         ? {
             rank: Rank.OWNER,
-            isDispatch: true,
-            isLeo: true,
-            isEmsFd: true,
-            isSupervisor: true,
-            isTow: true,
-            isTaxi: true,
             whitelistStatus: WhitelistStatus.ACCEPTED,
           }
         : {
