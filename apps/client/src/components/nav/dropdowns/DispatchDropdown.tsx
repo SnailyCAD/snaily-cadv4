@@ -27,11 +27,11 @@ export function DispatchDropdown() {
         </Button>
       }
     >
-      {hasPermissions([Permissions.Dispatch], false) ? (
+      {hasPermissions([Permissions.Dispatch]) ? (
         <Dropdown.LinkItem href="/dispatch">{t("dashboard")}</Dropdown.LinkItem>
       ) : null}
 
-      {hasPermissions([Permissions.LiveMap], true) ? (
+      {hasPermissions([Permissions.LiveMap]) ? (
         <Dropdown.LinkItem href="/dispatch/map">{t("liveMap")}</Dropdown.LinkItem>
       ) : null}
     </Dropdown>

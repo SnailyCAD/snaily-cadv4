@@ -12,14 +12,14 @@ export function EmsFdDropdown() {
   const isActive = (route: string) => router.pathname.startsWith(route);
 
   const { hasPermissions } = usePermission();
-  const hasIncidentPermissions = hasPermissions(
-    [Permissions.ManageEmsFdIncidents, Permissions.ViewEmsFdIncidents],
-    true,
-  );
-  const hasHospitalServicePermissions = hasPermissions(
-    [Permissions.ViewDeadCitizens, Permissions.ManageDeadCitizens],
-    true,
-  );
+  const hasIncidentPermissions = hasPermissions([
+    Permissions.ManageEmsFdIncidents,
+    Permissions.ViewEmsFdIncidents,
+  ]);
+  const hasHospitalServicePermissions = hasPermissions([
+    Permissions.ViewDeadCitizens,
+    Permissions.ManageDeadCitizens,
+  ]);
 
   return (
     <Dropdown

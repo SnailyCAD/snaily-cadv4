@@ -34,7 +34,7 @@ export default function ImportWeaponsPage({ data }: Props) {
   const { closeModal, openModal } = useModal();
   const { state, execute } = useFetch();
   const { hasPermissions } = usePermission();
-  const hasDeletePermissions = hasPermissions([Permissions.DeleteRegisteredWeapons], true);
+  const hasDeletePermissions = hasPermissions([Permissions.DeleteRegisteredWeapons]);
 
   const asyncTable = useAsyncTable({
     search,

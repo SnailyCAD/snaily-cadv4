@@ -50,17 +50,14 @@ export default function SupervisorPanelPage(props: Props) {
     valueTypes: [ValueType.DEPARTMENT],
   });
 
-  const hasViewPermissions = hasPermissions(
-    [
-      Permissions.ManageUnits,
-      Permissions.ViewUnits,
-      Permissions.DeleteUnits,
-      Permissions.ManageAwardsAndQualifications,
-    ],
-    true,
-  );
-  const hasManagePermissions = hasPermissions([Permissions.ManageUnits], true);
-  const hasManageCallsignPermissions = hasPermissions([Permissions.ManageUnitCallsigns], true);
+  const hasViewPermissions = hasPermissions([
+    Permissions.ManageUnits,
+    Permissions.ViewUnits,
+    Permissions.DeleteUnits,
+    Permissions.ManageAwardsAndQualifications,
+  ]);
+  const hasManagePermissions = hasPermissions([Permissions.ManageUnits]);
+  const hasManageCallsignPermissions = hasPermissions([Permissions.ManageUnitCallsigns]);
 
   const TABS = [];
 

@@ -58,10 +58,7 @@ export function Manage911CallModal({ setCall, forceDisabled, forceOpen, call, on
   const { invalidateQuery } = useInvalidateQuery(["/911-calls"]);
   const { user } = useAuth();
 
-  const hasDispatchPermissions = hasPermissions(
-    defaultPermissions.defaultDispatchPermissions,
-    (u: { isDispatch: any; }) => u.isDispatch,
-  );
+  const hasDispatchPermissions = hasPermissions(defaultPermissions.defaultDispatchPermissions);
 
   const activeUnit = router.pathname.includes("/officer") ? activeOfficer : activeDeputy;
   const isDispatch = router.pathname.includes("/dispatch") && hasDispatchPermissions;

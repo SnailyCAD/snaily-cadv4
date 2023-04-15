@@ -28,7 +28,7 @@ export default function ImpoundLot({ vehicles: data }: Props) {
   const { openModal } = useModal();
 
   const { hasPermissions } = usePermission();
-  const hasManagePermissions = hasPermissions([Permissions.ManageImpoundLot], true);
+  const hasManagePermissions = hasPermissions([Permissions.ManageImpoundLot]);
   const tableState = useTableState();
   const { generateCallsign } = useGenerateCallsign();
 

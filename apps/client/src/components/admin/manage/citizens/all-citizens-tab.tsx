@@ -143,7 +143,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
               user: citizen.user?.username ?? common("none"),
               actions: (
                 <>
-                  {hasPermissions([Permissions.ManageCitizens], true) ? (
+                  {hasPermissions([Permissions.ManageCitizens]) ? (
                     <Link
                       href={`/admin/manage/citizens/${citizen.id}`}
                       className={classNames(buttonVariants.success, "p-0.5 px-2 rounded-md")}
@@ -151,7 +151,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
                       {common("edit")}
                     </Link>
                   ) : null}
-                  {hasPermissions([Permissions.DeleteCitizens], true) ? (
+                  {hasPermissions([Permissions.DeleteCitizens]) ? (
                     <Button
                       className="ml-2"
                       size="xs"
@@ -174,7 +174,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
               { header: tCitizen("weight"), accessorKey: "weight" },
               { header: tCitizen("height"), accessorKey: "height" },
               { header: "User", accessorKey: "user" },
-              hasPermissions([Permissions.ManageCitizens, Permissions.DeleteCitizens], true)
+              hasPermissions([Permissions.ManageCitizens, Permissions.DeleteCitizens])
                 ? { header: common("actions"), accessorKey: "actions" }
                 : null,
             ]}

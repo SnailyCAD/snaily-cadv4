@@ -87,10 +87,7 @@ function _ActiveCalls({ initialData }: Props) {
     pagination: asyncTable.pagination,
   });
 
-  const hasDispatchPermissions = hasPermissions(
-    defaultPermissions.defaultDispatchPermissions,
-    (u: { isDispatch: any; }) => u.isDispatch,
-  );
+  const hasDispatchPermissions = hasPermissions(defaultPermissions.defaultDispatchPermissions);
   const isDispatch = router.pathname === "/dispatch" && hasDispatchPermissions;
   const unit =
     router.pathname === "/officer"

@@ -39,7 +39,7 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
   const { openModal, closeModal } = useModal();
   const t = useTranslations("Management");
   const common = useTranslations("Common");
-  const hasManagePermissions = hasPermissions([Permissions.ManageCustomRoles], true);
+  const hasManagePermissions = hasPermissions([Permissions.ManageCustomRoles]);
 
   const [search, setSearch] = React.useState("");
 

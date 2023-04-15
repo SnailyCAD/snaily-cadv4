@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { ChevronDown } from "react-bootstrap-icons";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import type { Feature, User } from "@snailycad/types";
+import type { Feature } from "@snailycad/types";
 import { useTranslations } from "next-intl";
 import { Dropdown } from "components/Dropdown";
 import { Button } from "@snailycad/ui";
@@ -22,8 +22,7 @@ export function CitizenDropdown() {
     {
       name: t("taxi"),
       href: "/taxi",
-      show: (u: User) =>
-        hasPermissions([Permissions.ViewTaxiCalls, Permissions.ManageTaxiCalls], u.isTaxi),
+      show: hasPermissions([Permissions.ViewTaxiCalls, Permissions.ManageTaxiCalls]),
     },
     { name: t("bleeter"), href: "/bleeter" },
     { name: t("truckLogs"), href: "/truck-logs" },
@@ -53,9 +52,8 @@ export function CitizenDropdown() {
 
       {items.map((item) => {
         const upperCase = item.href.replace(/-/g, "_").replace("/", "").toUpperCase() as Feature;
-        const show = "show" in item ? item.show?.(user) : true;
 
-        if (!enabled[upperCase] || !show) {
+        if (!enabled[upperCase]) {
           return null;
         }
 

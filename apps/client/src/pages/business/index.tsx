@@ -28,7 +28,7 @@ export default function BusinessPage(props: GetBusinessesData) {
   const t = useTranslations("Business");
   const setJoinableBusinesses = useBusinessState((s) => s.setJoinableBusinesses);
   const { hasPermissions } = usePermission();
-  const hasCreateBusinessesPerms = hasPermissions([Permissions.CreateBusinesses], true);
+  const hasCreateBusinessesPerms = hasPermissions([Permissions.CreateBusinesses]);
 
   React.useEffect(() => {
     setJoinableBusinesses(props.joinableBusinesses);

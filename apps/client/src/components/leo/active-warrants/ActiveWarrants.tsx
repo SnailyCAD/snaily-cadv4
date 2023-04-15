@@ -21,10 +21,7 @@ const CreateWarrantModal = dynamic(
 
 export function ActiveWarrants() {
   const { hasPermissions } = usePermission();
-  const hasManageWarrantsPermissions = hasPermissions(
-    [Permissions.ManageWarrants],
-    (u: { isLeo: any; isSupervisor: any; }) => u.isLeo || u.isSupervisor,
-  );
+  const hasManageWarrantsPermissions = hasPermissions([Permissions.ManageWarrants]);
 
   const asyncTable = useActiveWarrants();
   const { generateCallsign } = useGenerateCallsign();

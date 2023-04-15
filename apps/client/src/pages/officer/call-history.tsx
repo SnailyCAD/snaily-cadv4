@@ -41,7 +41,7 @@ export default function CallHistory({ data, incidents }: Props) {
   const [search, setSearch] = React.useState("");
 
   const { hasPermissions } = usePermission();
-  const hasManagePermissions = hasPermissions([Permissions.ManageCallHistory], true);
+  const hasManagePermissions = hasPermissions([Permissions.ManageCallHistory]);
   const setCurrentlySelectedCall = useCall911State((state) => state.setCurrentlySelectedCall);
 
   const asyncTable = useAsyncTable({

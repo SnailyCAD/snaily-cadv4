@@ -4,7 +4,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { useModal } from "state/modalState";
-import { Rank, EmployeeAsEnum, ValueType } from "@snailycad/types";
+import { EmployeeAsEnum, ValueType } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll, yesOrNoText } from "lib/utils";
@@ -41,10 +41,10 @@ export default function ManageBusinesses({ business, businessId }: Props) {
   const { state, execute } = useFetch();
   const { openModal, closeModal } = useModal();
   const { hasPermissions } = usePermission();
-  const hasManagePermissions = hasPermissions(
-    [Permissions.ManageBusinesses, Permissions.DeleteBusinesses],
-    (u: { rank: string; }) => u.rank !== Rank.USER,
-  );
+  const hasManagePermissions = hasPermissions([
+    Permissions.ManageBusinesses,
+    Permissions.DeleteBusinesses,
+  ]);
 
   useLoadValuesClientSide({
     valueTypes: [ValueType.BUSINESS_ROLE],

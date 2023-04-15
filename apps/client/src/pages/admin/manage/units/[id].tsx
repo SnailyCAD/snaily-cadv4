@@ -24,12 +24,9 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
 
   const { hasPermissions } = usePermission();
 
-  const hasManagePermissions = hasPermissions([Permissions.ManageUnits], true);
-  const hasManageCallsignPermissions = hasPermissions([Permissions.ManageUnitCallsigns], true);
-  const hasManageAwardsPermissions = hasPermissions(
-    [Permissions.ManageAwardsAndQualifications],
-    true,
-  );
+  const hasManagePermissions = hasPermissions([Permissions.ManageUnits]);
+  const hasManageCallsignPermissions = hasPermissions([Permissions.ManageUnitCallsigns]);
+  const hasManageAwardsPermissions = hasPermissions([Permissions.ManageAwardsAndQualifications]);
 
   const { generateCallsign } = useGenerateCallsign();
   const tAdmin = useTranslations("Management");

@@ -34,7 +34,7 @@ export default function ImportVehiclesPage({ data }: Props) {
   const { closeModal, openModal } = useModal();
   const { state, execute } = useFetch();
   const { hasPermissions } = usePermission();
-  const hasDeletePermissions = hasPermissions([Permissions.DeleteRegisteredVehicles], true);
+  const hasDeletePermissions = hasPermissions([Permissions.DeleteRegisteredVehicles]);
 
   const asyncTable = useAsyncTable({
     search,

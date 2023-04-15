@@ -30,7 +30,7 @@ export default function ManageCustomFields({ customFields: data }: Props) {
   const { openModal, closeModal } = useModal();
   const t = useTranslations("Management");
   const common = useTranslations("Common");
-  const hasManagePermissions = hasPermissions([Permissions.ManageCustomFields], true);
+  const hasManagePermissions = hasPermissions([Permissions.ManageCustomFields]);
 
   const [search, setSearch] = React.useState("");
 

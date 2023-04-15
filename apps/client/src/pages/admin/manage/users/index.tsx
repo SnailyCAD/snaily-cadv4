@@ -29,10 +29,11 @@ export default function ManageUsers({ data }: Props) {
   const { openModal } = useModal();
   const { hasPermissions } = usePermission();
 
-  const hasManagePermissions = hasPermissions(
-    [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
-    true,
-  );
+  const hasManagePermissions = hasPermissions([
+    Permissions.ManageUsers,
+    Permissions.BanUsers,
+    Permissions.DeleteUsers,
+  ]);
 
   const tabs = [
     { name: `${t("allUsers")} (${data.totalCount})`, value: "allUsers" },

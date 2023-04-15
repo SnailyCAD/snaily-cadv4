@@ -22,7 +22,7 @@ export function NameChangeRequestsTab({ requests: data }: Props) {
   const tableState = useTableState();
   const { state, execute } = useFetch();
   const { hasPermissions } = usePermission();
-  const hasManagePermissions = hasPermissions([Permissions.ManageNameChangeRequests], true);
+  const hasManagePermissions = hasPermissions([Permissions.ManageNameChangeRequests]);
   const { invalidateQuery } = useInvalidateQuery(["admin", "notifications"]);
 
   const asyncTable = useAsyncTable({

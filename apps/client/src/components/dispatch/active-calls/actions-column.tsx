@@ -39,10 +39,7 @@ export function ActiveCallsActionsColumn({
   const t = useTranslations("Calls");
   const common = useTranslations("Common");
 
-  const hasDispatchPermissions = hasPermissions(
-    defaultPermissions.defaultDispatchPermissions,
-    (u: { isDispatch: any; }) => u.isDispatch,
-  );
+  const hasDispatchPermissions = hasPermissions(defaultPermissions.defaultDispatchPermissions);
   const isDispatch = router.pathname === "/dispatch" && hasDispatchPermissions;
 
   const isUnitActive = unit?.status && unit.status.shouldDo !== ShouldDoType.SET_OFF_DUTY;

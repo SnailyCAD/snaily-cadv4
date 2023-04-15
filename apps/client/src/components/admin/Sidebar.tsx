@@ -179,7 +179,7 @@ function SidebarItem({ route, href, text, isActive, notificationCount, onRouteCl
   const features = useFeatureEnabled();
   const { hasPermissions } = usePermission();
 
-  if (route && (route.hidden?.(features) || !hasPermissions(route.permissions, true))) {
+  if (route && (route.hidden?.(features) || !hasPermissions(route.permissions))) {
     return null;
   }
 
