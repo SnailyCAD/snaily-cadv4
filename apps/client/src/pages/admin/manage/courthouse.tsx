@@ -1,5 +1,4 @@
 import { defaultPermissions } from "@snailycad/permissions";
-import { Rank } from "@snailycad/types";
 import type {
   GetManageExpungementRequests,
   GetManageNameChangeRequests,
@@ -26,17 +25,17 @@ export default function ManageCourthouse({ expungementRequests, nameChangeReques
   const { hasPermissions } = usePermission();
   const t = useTranslations("Management");
 
-  const hasNameChangePerms = hasPermissions(
-    [Permissions.ViewNameChangeRequests, Permissions.ManageNameChangeRequests],
-    true,
-  );
+  const hasNameChangePerms = hasPermissions([
+    Permissions.ViewNameChangeRequests,
+    Permissions.ManageNameChangeRequests,
+  ]);
 
-  const hasExpungementPerms = hasPermissions(
-    [Permissions.ViewExpungementRequests, Permissions.ManageExpungementRequests],
-    true,
-  );
+  const hasExpungementPerms = hasPermissions([
+    Permissions.ViewExpungementRequests,
+    Permissions.ManageExpungementRequests,
+  ]);
 
-  const hasManageWarrantPerms = hasPermissions([Permissions.ManagePendingWarrants], true);
+  const hasManageWarrantPerms = hasPermissions([Permissions.ManagePendingWarrants]);
 
   const TABS = [];
 

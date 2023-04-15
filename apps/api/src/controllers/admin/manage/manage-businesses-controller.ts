@@ -1,4 +1,4 @@
-import { Prisma, Rank, WhitelistStatus } from "@prisma/client";
+import { Prisma, WhitelistStatus } from "@prisma/client";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";

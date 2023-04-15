@@ -1,4 +1,4 @@
-import { Rank, Warrant, WarrantStatus, WhitelistStatus } from "@prisma/client";
+import { Warrant, WarrantStatus, WhitelistStatus } from "@prisma/client";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";

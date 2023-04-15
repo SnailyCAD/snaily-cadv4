@@ -18,7 +18,6 @@ import { citizenInclude } from "controllers/citizen/CitizenController";
 import type { Prisma } from "@prisma/client";
 import type * as APITypes from "@snailycad/types/api";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";
-import { Rank } from "@snailycad/types";
 
 const weaponsInclude = { ...citizenInclude.weapons.include, citizen: true };
 

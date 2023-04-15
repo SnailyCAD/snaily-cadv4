@@ -6,7 +6,7 @@ import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/is-auth";
 import { MultipartFile, PlatformMulterFile, UseBefore } from "@tsed/common";
 import { validateSchema } from "lib/data/validate-schema";
-import { cad, Rank } from "@prisma/client";
+import { cad } from "@prisma/client";
 import type * as APITypes from "@snailycad/types/api";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
@@ -19,7 +19,6 @@ export class CADSettingsLiveMapController {
   @Put("/")
   @UseBefore(IsAuth)
   @UsePermissions({
-    fallback: (u) => u.rank === Rank.OWNER,
     permissions: [Permissions.ManageCADSettings],
   })
   async updateMiscSettings(
@@ -53,7 +52,6 @@ export class CADSettingsLiveMapController {
   @Put("/tiles")
   @UseBefore(IsAuth)
   @UsePermissions({
-    fallback: (u) => u.rank === Rank.OWNER,
     permissions: [Permissions.ManageCADSettings],
   })
   async updateLiveMapTiles(@MultipartFile("tiles") files: PlatformMulterFile[]) {

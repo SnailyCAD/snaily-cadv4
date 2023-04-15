@@ -5,7 +5,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { useModal } from "state/modalState";
-import { Rank } from "@snailycad/types";
+
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { ModalIds } from "types/ModalIds";
@@ -57,7 +57,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
     },
   ];
 
-  if (hasPermissions([Permissions.ManageBusinesses], true) && businessWhitelisted) {
+  if (hasPermissions([Permissions.ManageBusinesses]) && businessWhitelisted) {
     TABS[1] = {
       name: `${t("pendingBusinesses")}`,
       value: "pendingBusinesses",
@@ -153,7 +153,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
                 { header: t("user"), accessorKey: "user" },
                 businessWhitelisted ? { header: t("status"), accessorKey: "status" } : null,
                 { header: t("whitelisted"), accessorKey: "whitelisted" },
-                hasPermissions([Permissions.DeleteBusinesses], true)
+                hasPermissions([Permissions.DeleteBusinesses])
                   ? { header: common("actions"), accessorKey: "actions" }
                   : null,
               ]}

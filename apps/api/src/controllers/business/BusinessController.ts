@@ -305,7 +305,6 @@ export class BusinessController {
 
   @Post("/create")
   @UsePermissions({
-    fallback: true,
     permissions: [Permissions.CreateBusinesses],
   })
   async createBusiness(

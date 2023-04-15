@@ -7,7 +7,6 @@ import prettyBytes from "pretty-bytes";
 import { useTranslations } from "next-intl";
 import { Title } from "components/shared/Title";
 import { defaultPermissions } from "@snailycad/permissions";
-import { Rank } from "@snailycad/types";
 import type { GetAdminDashboardData } from "@snailycad/types/api";
 
 interface Props {

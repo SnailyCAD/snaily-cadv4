@@ -371,9 +371,6 @@ export class DispatchController {
         select: {
           username: true,
           id: true,
-          isEmsFd: true,
-          isLeo: true,
-          isDispatch: true,
           permissions: true,
           rank: true,
           steamId: true,
@@ -409,9 +406,6 @@ export class DispatchController {
       select: {
         username: true,
         id: true,
-        isEmsFd: true,
-        isLeo: true,
-        isDispatch: true,
         permissions: true,
         rank: true,
         steamId: true,

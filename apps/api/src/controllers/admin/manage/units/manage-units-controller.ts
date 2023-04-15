@@ -1,4 +1,4 @@
-import { Feature, Rank, WhitelistStatus, cad, MiscCadSettings } from "@prisma/client";
+import { Feature, WhitelistStatus, cad, MiscCadSettings } from "@prisma/client";
 import { UPDATE_UNIT_SCHEMA, UPDATE_UNIT_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import {
   PathParams,

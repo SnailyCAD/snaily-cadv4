@@ -1,4 +1,4 @@
-import { Prisma, Rank } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { CUSTOM_ROLE_SCHEMA } from "@snailycad/schemas";
 import {

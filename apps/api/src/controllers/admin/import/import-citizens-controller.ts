@@ -20,7 +20,6 @@ import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
 import { manyToManyHelper } from "lib/data/many-to-many";
 import type * as APITypes from "@snailycad/types/api";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";
-import { Rank } from "@snailycad/types";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 
 @Controller("/admin/import/citizens")

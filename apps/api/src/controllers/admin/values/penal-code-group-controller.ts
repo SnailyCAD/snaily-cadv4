@@ -6,7 +6,6 @@ import { IsAuth } from "middlewares/is-auth";
 import { CREATE_PENAL_CODE_GROUP_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/data/validate-schema";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
-import { Rank } from "@prisma/client";
 import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/admin/penal-code-group")

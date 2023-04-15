@@ -8,7 +8,6 @@ import {
   EmsFdDeputy,
   WhitelistStatus,
   DiscordWebhookType,
-  Rank,
   Feature,
   DivisionValue,
 } from "@prisma/client";
@@ -70,7 +69,6 @@ export class StatusController {
     const isAdmin = hasPermission({
       userToCheck: user,
       permissionsToCheck: defaultPermissions.allDefaultAdminPermissions,
-      fallback: (user) => user.rank !== Rank.USER,
     });
     const isDispatch =
       isAdmin ||

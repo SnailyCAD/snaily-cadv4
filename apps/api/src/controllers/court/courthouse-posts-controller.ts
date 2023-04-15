@@ -1,4 +1,4 @@
-import { Feature, Rank, User } from "@prisma/client";
+import { Feature, User } from "@prisma/client";
 import {
   BodyParams,
   Context,
@@ -42,7 +42,6 @@ export class CourthousePostsController {
   }
 
   @UsePermissions({
-    fallback: (user) => user.rank !== Rank.USER,
     permissions: [Permissions.ManageCourthousePosts],
   })
   @Post("/")
@@ -65,7 +64,6 @@ export class CourthousePostsController {
   }
 
   @UsePermissions({
-    fallback: (user) => user.rank !== Rank.USER,
     permissions: [Permissions.ManageCourthousePosts],
   })
   @Put("/:id")
@@ -96,7 +94,6 @@ export class CourthousePostsController {
   }
 
   @UsePermissions({
-    fallback: (user) => user.rank !== Rank.USER,
     permissions: [Permissions.ManageCourthousePosts],
   })
   @Delete("/:id")

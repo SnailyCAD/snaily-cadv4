@@ -5,7 +5,7 @@ import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-par
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/is-auth";
-import { Feature, cad, User, MiscCadSettings, Rank } from "@prisma/client";
+import { Feature, cad, User, MiscCadSettings } from "@prisma/client";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";

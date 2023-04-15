@@ -7,7 +7,6 @@ import { CallDescription } from "components/dispatch/active-calls/CallDescriptio
 import { FullDate } from "components/shared/FullDate";
 import { ImageWrapper } from "components/shared/image-wrapper";
 import { getSelectedTableRows, Table, useAsyncTable, useTableState } from "components/shared/Table";
-import { useAuth } from "context/AuthContext";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useImageUrl } from "hooks/useImageUrl";
@@ -55,7 +54,6 @@ export function IncidentsTable<T extends EmsFdIncident | LeoIncident>(
 
   const tableState = useTableState({ pagination: asyncTable.pagination });
 
-  const { user } = useAuth();
   const { hasPermissions } = usePermission();
   const { openModal, closeModal } = useModal();
   const { generateCallsign } = useGenerateCallsign();

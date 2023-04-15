@@ -19,7 +19,6 @@ import type { Prisma, VehicleInspectionStatus, VehicleTaxStatus } from "@prisma/
 import { getLastOfArray, manyToManyHelper } from "lib/data/many-to-many";
 import type * as APITypes from "@snailycad/types/api";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";
-import { Rank } from "@snailycad/types";
 
 const vehiclesInclude = { ...citizenInclude.vehicles.include, citizen: true };
 

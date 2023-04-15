@@ -10,7 +10,7 @@ import {
 } from "discord-api-types/v10";
 import { IsAuth } from "middlewares/is-auth";
 import { prisma } from "lib/data/prisma";
-import { cad, DiscordWebhook, DiscordWebhookType, MiscCadSettings, Rank } from "@prisma/client";
+import { cad, DiscordWebhook, DiscordWebhookType, MiscCadSettings } from "@prisma/client";
 import { BadRequest } from "@tsed/exceptions";
 import { DISCORD_WEBHOOKS_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/data/validate-schema";
@@ -53,7 +53,6 @@ export class DiscordWebhooksController {
 
   @Get("/")
   @UsePermissions({
-    fallback: (u) => u.rank === Rank.OWNER,
     permissions: [Permissions.ManageCADSettings],
   })
   async getGuildChannels(@Context("cad") cad: cad): Promise<APITypes.GetCADDiscordWebhooksData> {
@@ -94,7 +93,6 @@ export class DiscordWebhooksController {
 
   @Post("/")
   @UsePermissions({
-    fallback: (u) => u.rank === Rank.OWNER,
     permissions: [Permissions.ManageCADSettings],
   })
   async setWebhookTypes(

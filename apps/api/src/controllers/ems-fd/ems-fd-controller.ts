@@ -17,7 +17,6 @@ import {
   ShouldDoType,
   type User,
   Feature,
-  Rank,
 } from "@prisma/client";
 import type { EmsFdDeputy } from "@snailycad/types";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
