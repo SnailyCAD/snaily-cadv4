@@ -288,7 +288,9 @@
     "alert_deleteOfficer": "Are you sure you want to delete <span>{officer}</span>? This action cannot be undone.",
     "alert_allowCheckout": "Are you sure you want to checkout this vehicle from the impound lot?",
     "alert_deleteIncident": "Are you sure you want to delete this incident? This action cannot be undone.",
-    "alert_revokeWarrant": "Are you sure you want to revoke this warrant? This action cannot be undone."
+    "alert_revokeWarrant": "Are you sure you want to revoke this warrant? This action cannot be undone.",
+    "id": "id",
+    "lastUpdatedAt": "Last Updated At"
   },
   "Bolos": {
     "activeBolos": "Active Bolos",

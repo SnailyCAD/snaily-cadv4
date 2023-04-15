@@ -54,6 +54,7 @@ export const userProperties = {
   createdAt: true,
   updatedAt: true,
   lastSeen: true,
+  developerMode: true,
 };
 
 interface GetSessionUserOptions<ReturnNullOnError extends boolean> {

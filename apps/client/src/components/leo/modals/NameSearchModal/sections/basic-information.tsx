@@ -10,7 +10,7 @@ export function NameSearchBasicInformation() {
   const currentResult = useNameSearch((state) => state.currentResult);
   const t = useTranslations();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
-  const { cad } = useAuth();
+  const { cad, user } = useAuth();
 
   if (!currentResult || currentResult.isConfidential) {
     return null;
@@ -19,6 +19,10 @@ export function NameSearchBasicInformation() {
   return (
     <div className="w-full">
       <div className="flex flex-col">
+        {user?.developerMode ? (
+          <Infofield label={t("Citizen.id")}>{currentResult.id}</Infofield>
+        ) : null}
+
         <Infofield label={t("Citizen.fullName")}>
           {currentResult.name} {currentResult.surname}
         </Infofield>

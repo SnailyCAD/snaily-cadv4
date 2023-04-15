@@ -21,6 +21,9 @@ import type { PostIncidentsData, PutIncidentByIdData } from "@snailycad/types/ap
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
 import { InvolvedUnitsTable } from "./involved-units/involved-units-table";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
+import { Infofield } from "components/shared/Infofield";
+import { useAuth } from "context/AuthContext";
+import { FullDate } from "components/shared/FullDate";
 
 interface Props<T extends LeoIncident | EmsFdIncident> {
   incident?: T | null;
@@ -47,6 +50,7 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
   const { codes10 } = useValues();
   const router = useRouter();
   const { state, execute } = useFetch();
+  const { user } = useAuth();
 
   const isDispatch = router.pathname.includes("/dispatch");
   const isEmsFdIncidents = type === "ems-fd" || router.pathname === "/ems-fd/incidents";
@@ -132,6 +136,22 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
         >
           {({ handleChange, setFieldValue, errors, values, isValid }) => (
             <Form className="w-full flex flex-col justify-between">
+              {incident ? (
+                <header className="mb-4 flex flex-wrap flex-row max-w-[1050px]">
+                  <Infofield className="mr-4" label={t("incident")}>
+                    #{incident.caseNumber}
+                  </Infofield>
+                  <Infofield className="mr-4" label={t("lastUpdatedAt")}>
+                    <FullDate>{incident.updatedAt}</FullDate>
+                  </Infofield>
+                  {user?.developerMode ? (
+                    <Infofield className="mt-2" label={t("id")}>
+                      {incident.id}
+                    </Infofield>
+                  ) : null}
+                </header>
+              ) : null}
+
               <div>
                 <FormRow>
                   <FormField errorMessage={errors.firearmsInvolved} label={t("firearmsInvolved")}>
