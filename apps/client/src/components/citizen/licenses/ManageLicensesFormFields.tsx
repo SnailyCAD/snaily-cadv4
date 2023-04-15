@@ -8,10 +8,9 @@ import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { filterLicenseType, filterLicenseTypes } from "lib/utils";
 import { classNames } from "lib/classNames";
-import { Toggle } from "components/form/Toggle";
 import type { LicenseInitialValues } from "./manage-licenses-modal";
 import { FormRow } from "components/form/FormRow";
-import { DatePickerField } from "@snailycad/ui";
+import { DatePickerField, SwitchField } from "@snailycad/ui";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
 
 export function createDefaultLicensesValues(citizen: Citizen | null): LicenseInitialValues {
@@ -89,14 +88,12 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
         <section className="w-full">
           {isLeo ? (
             <FormRow>
-              <FormField label={t("Leo.suspendDriversLicense")}>
-                <Toggle
-                  onCheckedChange={handleChange}
-                  name="suspended.driverLicense"
-                  value={values.suspended.driverLicense}
-                  onChange={handleChange}
-                />
-              </FormField>
+              <SwitchField
+                isSelected={values.suspended.driverLicense}
+                onChange={(isSelected) => setFieldValue("suspended.driverLicense", isSelected)}
+              >
+                {t("Leo.suspendDriversLicense")}
+              </SwitchField>
 
               {values.suspended.driverLicense ? (
                 <DatePickerField
@@ -163,14 +160,12 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
       <section className="w-full">
         {isLeo ? (
           <FormRow>
-            <FormField label={t("Leo.suspendPilotLicense")} checkbox>
-              <Toggle
-                onCheckedChange={handleChange}
-                name="suspended.pilotLicense"
-                value={values.suspended.pilotLicense}
-                onChange={handleChange}
-              />
-            </FormField>
+            <SwitchField
+              isSelected={values.suspended.pilotLicense}
+              onChange={(isSelected) => setFieldValue("suspended.pilotLicense", isSelected)}
+            >
+              {t("Leo.suspendPilotLicense")}
+            </SwitchField>
 
             {values.suspended.pilotLicense ? (
               <DatePickerField
@@ -234,14 +229,12 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
       <section className="w-full">
         {isLeo ? (
           <FormRow>
-            <FormField label={t("Leo.suspendWaterLicense")} checkbox>
-              <Toggle
-                onCheckedChange={handleChange}
-                name="suspended.waterLicense"
-                value={values.suspended.waterLicense}
-                onChange={handleChange}
-              />
-            </FormField>
+            <SwitchField
+              isSelected={values.suspended.waterLicense}
+              onChange={(isSelected) => setFieldValue("suspended.waterLicense", isSelected)}
+            >
+              {t("Leo.suspendWaterLicense")}
+            </SwitchField>
 
             {values.suspended.waterLicense ? (
               <DatePickerField
@@ -306,14 +299,12 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
         <section className="w-full">
           {isLeo ? (
             <FormRow>
-              <FormField label={t("Leo.suspendFirearmsLicense")} checkbox>
-                <Toggle
-                  onCheckedChange={handleChange}
-                  name="suspended.firearmsLicense"
-                  value={values.suspended.firearmsLicense}
-                  onChange={handleChange}
-                />
-              </FormField>
+              <SwitchField
+                isSelected={values.suspended.firearmsLicense}
+                onChange={(isSelected) => setFieldValue("suspended.firearmsLicense", isSelected)}
+              >
+                {t("Leo.suspendFirearmsLicense")}
+              </SwitchField>
 
               {values.suspended.firearmsLicense ? (
                 <DatePickerField

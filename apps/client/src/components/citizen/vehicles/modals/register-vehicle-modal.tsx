@@ -9,6 +9,7 @@ import {
   Loader,
   SelectField,
   TextField,
+  SwitchField,
 } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
@@ -27,7 +28,6 @@ import { handleValidate } from "lib/handleValidate";
 import { useCitizen } from "context/CitizenContext";
 import { useRouter } from "next/router";
 import { useAuth } from "context/AuthContext";
-import { Toggle } from "components/form/Toggle";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useBusinessState } from "state/business-state";
 import { filterLicenseType, filterLicenseTypes } from "lib/utils";
@@ -301,22 +301,20 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
 
             {vehicle ? (
               <FormRow>
-                <FormField errorMessage={errors.reportedStolen} label={tVehicle("reportAsStolen")}>
-                  <Toggle
-                    onCheckedChange={handleChange}
-                    name="reportedStolen"
-                    value={values.reportedStolen}
-                  />
-                </FormField>
+                <SwitchField
+                  isSelected={values.reportedStolen}
+                  onChange={(isSelected) => setFieldValue("reportedStolen", isSelected)}
+                >
+                  {tVehicle("reportAsStolen")}
+                </SwitchField>
 
-                <FormField errorMessage={errors.reApplyForDmv} label={tVehicle("reApplyForDmv")}>
-                  <Toggle
-                    disabled={vehicle.dmvStatus !== WhitelistStatus.DECLINED}
-                    onCheckedChange={handleChange}
-                    name="reApplyForDmv"
-                    value={values.reApplyForDmv ?? false}
-                  />
-                </FormField>
+                <SwitchField
+                  isSelected={values.reApplyForDmv}
+                  onChange={(isSelected) => setFieldValue("reApplyForDmv", isSelected)}
+                  isDisabled={vehicle.dmvStatus !== WhitelistStatus.DECLINED}
+                >
+                  {tVehicle("reApplyForDmv")}
+                </SwitchField>
               </FormRow>
             ) : null}
 
