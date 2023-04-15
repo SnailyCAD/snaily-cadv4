@@ -41,6 +41,7 @@ import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import { toastMessage } from "lib/toastMessage";
 import Link from "next/link";
 import { BoxArrowUpRight, InfoCircle } from "react-bootstrap-icons";
+import { useAuth } from "context/AuthContext";
 
 const ManageValueModal = dynamic(
   async () => (await import("components/admin/values/ManageValueModal")).ManageValueModal,
@@ -77,6 +78,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
   const router = useRouter();
   const path = (router.query.path as string).toUpperCase().replace(/-/g, "_");
   const routeData = valueRoutes.find((v) => v.type === type);
+  const { user } = useAuth();
 
   useLoadValuesClientSide({
     // @ts-expect-error - this is fine
@@ -116,14 +118,14 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
 
   const tableHeaders = React.useMemo(() => {
     return [
-      { header: "ID", accessorKey: "id" },
+      user?.developerMode ? { header: "ID", accessorKey: "id" } : null,
       { header: "Value", accessorKey: "value" },
       ...extraTableHeaders,
       { header: t("isDisabled"), accessorKey: "isDisabled" },
       { header: common("createdAt"), accessorKey: "createdAt" },
       { header: common("actions"), accessorKey: "actions" },
     ] as AccessorKeyColumnDef<{ id: string }, "id">[];
-  }, [extraTableHeaders, t, common]);
+  }, [extraTableHeaders, t, common, user?.developerMode]);
 
   async function setList(list: AnyValue[]) {
     if (!hasTableDataChanged(asyncTable.items, list)) return;

@@ -65,7 +65,8 @@
     "alert_purgeSelectedCalls": "Are you sure you want to purge {length} item(s)? This will delete {length} item(s) from the database. This action cannot be undone.",
     "alert_deleteCallEvent": "Are you sure you want to delete this event? This action cannot be undone.",
     "alert_end911Call": "Are you sure you want to end this call?",
-    "alert_endTowCall": "Are you sure you want to end this call?"
+    "alert_endTowCall": "Are you sure you want to end this call?",
+    "id": "id"
   },
   "Events": {
     "unitAssignedToCall": "<span>{unit}</span> has been assigned to this call.",

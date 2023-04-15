@@ -119,7 +119,8 @@ type UserPicks =
   | "hasTempPassword"
   | "roles"
   | "lastSeen"
-  | "hasPassword";
+  | "hasPassword"
+  | "developerMode";
 
 export type User = Pick<
   Prisma.User & {

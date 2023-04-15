@@ -20,6 +20,7 @@ export const CHANGE_USER_SCHEMA = z.object({
   statusViewMode: z.string(),
   tableActionsAlignment: z.string(),
   locale: z.string().nullish(),
+  developerMode: z.boolean().nullish(),
   username: z
     .string()
     .min(3)

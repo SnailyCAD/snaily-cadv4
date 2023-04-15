@@ -56,6 +56,7 @@ export function AppearanceTab({ availableSounds }: Props) {
     statusViewMode: user.statusViewMode ?? StatusViewMode.DOT_COLOR,
     tableActionsAlignment: user.tableActionsAlignment,
     locale: user?.locale ?? i18n.defaultLocale,
+    developerMode: user?.developerMode ?? false,
     soundSettings: {
       panicButton: user.soundSettings?.panicButton ?? true,
       signal100: user.soundSettings?.signal100 ?? true,
@@ -108,14 +109,21 @@ export function AppearanceTab({ availableSounds }: Props) {
                 />
               </FormField>
 
-              <FormField errorMessage={errors.locale} label={t("locale")}>
-                <Select
-                  values={availableLanguages.map((v) => ({ value: v, label: v }))}
-                  value={values.locale}
-                  onChange={handleChange}
-                  name="locale"
+              <FormField checkbox errorMessage={errors.developerMode} label={t("developerMode")}>
+                <Toggle
+                  value={values.developerMode}
+                  onCheckedChange={handleChange}
+                  name="developerMode"
                 />
               </FormField>
+
+              <SelectField
+                errorMessage={errors.locale}
+                selectedKey={values.locale}
+                onSelectionChange={(value) => setFieldValue("locale", value)}
+                label={t("locale")}
+                options={availableLanguages.map((v) => ({ value: v, label: v }))}
+              />
 
               <SelectField
                 errorMessage={errors.statusViewMode}

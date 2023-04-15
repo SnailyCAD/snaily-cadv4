@@ -1,5 +1,5 @@
 import * as React from "react";
-import { getSynthesisVoices } from "components/account/AppearanceTab";
+import { getSynthesisVoices } from "components/account/appearance-tab";
 import { useAuth } from "context/AuthContext";
 
 interface SpeechAlertProps {

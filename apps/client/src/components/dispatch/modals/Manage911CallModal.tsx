@@ -24,6 +24,7 @@ import { shallow } from "zustand/shallow";
 import { isUnitCombined } from "@snailycad/utils";
 import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { useInvalidateQuery } from "hooks/use-invalidate-query";
+import { useAuth } from "context/AuthContext";
 
 interface Props {
   call: Full911Call | null;
@@ -55,6 +56,7 @@ export function Manage911CallModal({ setCall, forceDisabled, forceOpen, call, on
   const activeDeputy = useEmsFdState((state) => state.activeDeputy);
   const { hasActiveDispatchers } = useActiveDispatchers();
   const { invalidateQuery } = useInvalidateQuery(["/911-calls"]);
+  const { user } = useAuth();
 
   const hasDispatchPermissions = hasPermissions(
     defaultPermissions.defaultDispatchPermissions,
@@ -121,6 +123,7 @@ export function Manage911CallModal({ setCall, forceDisabled, forceOpen, call, on
       {/* todo: custom component for expanded view */}
       {call ? (
         <div className="mb-4 flex flex-wrap flex-row gap-4 max-w-[1050px]">
+          {user?.developerMode ? <Infofield label={t("id")}>{call?.id}</Infofield> : null}
           <Infofield label={t("call")}>#{call?.caseNumber}</Infofield>
           <Infofield label={t("lastUpdatedAt")}>
             <FullDate>{call?.updatedAt}</FullDate>
