@@ -20,7 +20,6 @@ export function shouldCheckCitizenUserId({ cad, user }: Options) {
       ...defaultPermissions.defaultLeoPermissions,
       ...defaultPermissions.defaultEmsFdPermissions,
     ],
-    fallback: (user) => user.isLeo || user.isEmsFd,
   });
 
   if (isCommonCardsEnabled && hasLeoPermissions) return false;

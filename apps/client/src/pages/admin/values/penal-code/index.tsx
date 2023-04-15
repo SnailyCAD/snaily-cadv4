@@ -134,7 +134,6 @@ export default function PenalCodeGroupsPage(props: Props) {
   return (
     <AdminLayout
       permissions={{
-        fallback: (u) => u.rank !== Rank.USER,
         permissions: [Permissions.ManageValuePenalCode],
       }}
     >

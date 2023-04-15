@@ -26,7 +26,6 @@ import { useModal } from "state/modalState";
 import { usePermission, Permissions } from "hooks/usePermission";
 import dynamic from "next/dynamic";
 import { SettingsFormField } from "components/form/SettingsFormField";
-import { AlertModal } from "components/modal/AlertModal";
 import { ApiTokenArea } from "components/admin/manage/users/api-token-area";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { classNames } from "lib/classNames";
@@ -67,7 +66,7 @@ export default function ManageCitizens(props: Props) {
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Management");
-  const { openModal, closeModal } = useModal();
+  const { openModal } = useModal();
   const { hasPermissions } = usePermission();
   const { USER_API_TOKENS } = useFeatureEnabled();
 
@@ -85,10 +84,8 @@ export default function ManageCitizens(props: Props) {
 
   const INITIAL_VALUES = {
     username: user.username,
-    isDispatch: user.isDispatch,
     steamId: user.steamId ?? "",
     discordId: user.discordId ?? "",
-    useOldPerms: false,
   };
 
   const validate = handleValidate(UPDATE_USER_SCHEMA);
@@ -96,7 +93,6 @@ export default function ManageCitizens(props: Props) {
   return (
     <AdminLayout
       permissions={{
-        fallback: (u) => u.rank !== Rank.USER,
         permissions: [Permissions.BanUsers, Permissions.ManageUsers, Permissions.DeleteUsers],
       }}
     >
@@ -181,24 +177,6 @@ export default function ManageCitizens(props: Props) {
                   {common("save")}
                 </Button>
               </div>
-
-              <AlertModal
-                title={t("useOldPermissions")}
-                description={
-                  <>
-                    Are you sure you want to use the old permissions system.{" "}
-                    <span className="font-semibold">
-                      You cannot mix the old permissions with new permissions.
-                    </span>
-                  </>
-                }
-                id={ModalIds.AlertUseOldPermissions}
-                deleteText={t("useOldPermissions")}
-                onDeleteClick={() => {
-                  closeModal(ModalIds.AlertUseOldPermissions);
-                  setFieldValue("useOldPerms", true);
-                }}
-              />
             </Form>
           )}
         </Formik>
@@ -207,10 +185,10 @@ export default function ManageCitizens(props: Props) {
 
         {user.rank !== Rank.OWNER ? (
           <>
-            {hasPermissions([Permissions.BanUsers], true) ? (
+            {hasPermissions([Permissions.BanUsers]) ? (
               <BanArea setUser={setUser} user={user} />
             ) : null}
-            {hasPermissions([Permissions.DeleteUsers], true) ? (
+            {hasPermissions([Permissions.DeleteUsers]) ? (
               <DangerZone setUser={setUser} user={user} />
             ) : null}
           </>

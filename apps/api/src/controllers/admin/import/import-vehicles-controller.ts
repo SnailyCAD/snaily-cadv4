@@ -30,7 +30,6 @@ export class ImportVehiclesController {
   @Get("/")
   @Description("Get all the vehicles in the CAD (paginated)")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ImportRegisteredVehicles, Permissions.ManageCitizens],
   })
   async getVehicles(
@@ -65,7 +64,6 @@ export class ImportVehiclesController {
   @Get("/plates")
   @Description("Get all the vehicle plates in the CAD")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ImportRegisteredVehicles, Permissions.ManageCitizens],
   })
   async getVehiclePlates(
@@ -93,7 +91,6 @@ export class ImportVehiclesController {
   @Get("/random")
   @Description("Get a random vehicle")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ImportRegisteredVehicles, Permissions.ManageCitizens],
   })
   async getRandomVehicle(@QueryParams("userRegisteredOnly", Boolean) userRegisteredOnly?: boolean) {
@@ -118,7 +115,6 @@ export class ImportVehiclesController {
   @Post("/")
   @Description("Import vehicles in the CAD via body data")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ImportRegisteredVehicles],
   })
   async importVehicles(@BodyParams() body: any): Promise<APITypes.PostImportVehiclesData> {
@@ -128,7 +124,6 @@ export class ImportVehiclesController {
   @Post("/file")
   @Description("Import vehicles in the CAD via file upload")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ImportRegisteredVehicles],
   })
   async importVehiclesViaFile(
@@ -141,7 +136,6 @@ export class ImportVehiclesController {
   @Delete("/:id")
   @Description("Delete a registered vehicle by its id")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.DeleteRegisteredVehicles],
   })
   async deleteVehicle(@PathParams("id") id: string): Promise<APITypes.DeleteImportVehiclesData> {

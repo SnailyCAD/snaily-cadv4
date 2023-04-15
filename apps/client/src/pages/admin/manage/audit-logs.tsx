@@ -58,7 +58,6 @@ export default function ManageAuditLogs({ data }: Props) {
   return (
     <AdminLayout
       permissions={{
-        fallback: (u) => u.rank !== Rank.USER,
         permissions: defaultPermissions.allDefaultAdminPermissions,
       }}
     >

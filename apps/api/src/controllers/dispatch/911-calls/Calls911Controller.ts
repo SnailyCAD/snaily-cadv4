@@ -153,7 +153,6 @@ export class Calls911Controller {
   @Description("Get a call by its id")
   @UsePermissions({
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
-    fallback: (u) => u.isDispatch || u.isLeo,
   })
   async getCallById(@PathParams("id") id: string): Promise<APITypes.Get911CallByIdData> {
     const call = await prisma.call911.findUnique({
@@ -180,7 +179,6 @@ export class Calls911Controller {
     const hasDispatchPermissions = hasPermission({
       userToCheck: user,
       permissionsToCheck: [Permissions.Dispatch],
-      fallback: (user) => user.isDispatch,
     });
 
     const isFromDispatch = isFromDispatchHeader === "true" && hasDispatchPermissions;
@@ -261,7 +259,6 @@ export class Calls911Controller {
 
   @Put("/:id")
   @UsePermissions({
-    fallback: (u) => u.isDispatch || u.isEmsFd || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.EmsFd, Permissions.Leo],
   })
   async update911Call(
@@ -382,7 +379,6 @@ export class Calls911Controller {
 
   @Delete("/purge")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
     permissions: [Permissions.ManageCallHistory],
   })
   async purgeCalls(
@@ -413,7 +409,6 @@ export class Calls911Controller {
 
   @Delete("/:id")
   @UsePermissions({
-    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   async end911Call(@PathParams("id") id: string): Promise<APITypes.Delete911CallByIdData> {
@@ -438,7 +433,6 @@ export class Calls911Controller {
 
   @Post("/link-incident/:callId")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
     permissions: [Permissions.ManageCallHistory],
   })
   async linkCallToIncident(
@@ -479,7 +473,6 @@ export class Calls911Controller {
 
   @Post("/:type/:callId")
   @UsePermissions({
-    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   async assignToCall(
@@ -586,7 +579,6 @@ export class Calls911Controller {
 
   @Put("/:callId/assigned-units/:assignedUnitId")
   @UsePermissions({
-    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   async updateAssignedUnit(

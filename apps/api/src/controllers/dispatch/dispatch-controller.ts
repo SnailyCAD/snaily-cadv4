@@ -41,7 +41,6 @@ export class DispatchController {
 
   @Get("/")
   @UsePermissions({
-    fallback: (u) => u.isDispatch || u.isEmsFd || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   @UseAfter(HandleInactivity)
@@ -88,7 +87,6 @@ export class DispatchController {
   }
 
   @UsePermissions({
-    fallback: (u) => u.isDispatch || u.isEmsFd || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   @Post("/units/search")
@@ -153,7 +151,6 @@ export class DispatchController {
   @Post("/aop")
   @Description("Update the AOP in the CAD")
   @UsePermissions({
-    fallback: (u) => u.isDispatch,
     permissions: [Permissions.Dispatch],
   })
   async updateAreaOfPlay(
@@ -180,7 +177,6 @@ export class DispatchController {
   @Post("/signal-100")
   @Description("Enable or disable signal 100")
   @UsePermissions({
-    fallback: (u) => u.isDispatch,
     permissions: [Permissions.Dispatch],
   })
   async setSignal100(
@@ -229,7 +225,6 @@ export class DispatchController {
   @Post("/dispatchers-state")
   @Description("Set a dispatcher active or inactive")
   @UsePermissions({
-    fallback: (u) => u.isDispatch,
     permissions: [Permissions.Dispatch],
   })
   async setActiveDispatchersState(
@@ -282,7 +277,6 @@ export class DispatchController {
   @Put("/active-dispatcher")
   @Description("Update the user's active dispatcher")
   @UsePermissions({
-    fallback: (u) => u.isDispatch,
     permissions: [Permissions.Dispatch],
   })
   async updateActiveDispatcher(
@@ -316,7 +310,6 @@ export class DispatchController {
   @Put("/radio-channel/:unitId")
   @IsFeatureEnabled({ feature: Feature.RADIO_CHANNEL_MANAGEMENT })
   @UsePermissions({
-    fallback: (u) => u.isDispatch,
     permissions: [Permissions.Dispatch],
   })
   async updateRadioChannel(
@@ -363,7 +356,6 @@ export class DispatchController {
 
   @Post("/players")
   @UsePermissions({
-    fallback: (u) => u.isDispatch,
     permissions: [Permissions.Dispatch, Permissions.LiveMap],
   })
   async getCADUsersByDiscordOrSteamId(@BodyParams() body: unknown, @Context() ctx: Context) {
@@ -409,7 +401,6 @@ export class DispatchController {
 
   @Get("/players/:steamId")
   @UsePermissions({
-    fallback: (u) => u.isDispatch,
     permissions: [Permissions.Dispatch, Permissions.LiveMap],
   })
   async findUserBySteamId(@PathParams("steamId") steamId: string, @Context() ctx: Context) {
@@ -445,7 +436,6 @@ export class DispatchController {
   @IsFeatureEnabled({ feature: Feature.TONES })
   @UsePermissions({
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
-    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
   })
   async getTones(): Promise<APITypes.GETDispatchTonesData> {
     const activeTones = await prisma.activeTone.findMany({
@@ -458,7 +448,6 @@ export class DispatchController {
   @IsFeatureEnabled({ feature: Feature.TONES })
   @UsePermissions({
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
-    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
   })
   async handleTones(
     @BodyParams() body: unknown,
@@ -511,7 +500,6 @@ export class DispatchController {
   @IsFeatureEnabled({ feature: Feature.TONES })
   @UsePermissions({
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
-    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
   })
   async deleteToneById(@PathParams("id") id: string): Promise<APITypes.DeleteDispatchTonesData> {
     await prisma.activeTone.delete({

@@ -43,7 +43,6 @@ export default function ImpoundLot({ vehicles: data }: Props) {
   return (
     <Layout
       permissions={{
-        fallback: (u) => u.isLeo,
         permissions: [Permissions.ViewImpoundLot, Permissions.ManageImpoundLot],
       }}
       className="dark:text-white"

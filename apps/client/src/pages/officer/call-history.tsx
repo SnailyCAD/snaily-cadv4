@@ -105,7 +105,6 @@ export default function CallHistory({ data, incidents }: Props) {
   return (
     <Layout
       permissions={{
-        fallback: (u) => u.isLeo,
         permissions: [Permissions.ViewCallHistory, Permissions.ManageCallHistory],
       }}
       className="dark:text-white"

@@ -21,7 +21,6 @@ export class AdminManageWarrantsController {
   @Get("/")
   @Description("Get all pending warrants")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManagePendingWarrants],
   })
   async getPendingWarrants(): Promise<APITypes.GetManagePendingWarrants> {
@@ -46,7 +45,6 @@ export class AdminManageWarrantsController {
   @Put("/:id")
   @Description("Sign a warrant as active.")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManagePendingWarrants],
   })
   async acceptOrDeclineNameChangeRequest(

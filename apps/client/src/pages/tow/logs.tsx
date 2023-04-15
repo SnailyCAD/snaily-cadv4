@@ -46,10 +46,7 @@ export default function TowLogs(props: Props) {
   }, [props.calls]);
 
   return (
-    <Layout
-      permissions={{ fallback: (u) => u.isTow, permissions: [Permissions.ViewTowLogs] }}
-      className="dark:text-white"
-    >
+    <Layout permissions={{ permissions: [Permissions.ViewTowLogs] }} className="dark:text-white">
       <Title>{t("towLogs")}</Title>
 
       {calls.length <= 0 ? (

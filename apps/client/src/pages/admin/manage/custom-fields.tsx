@@ -79,7 +79,6 @@ export default function ManageCustomFields({ customFields: data }: Props) {
   return (
     <AdminLayout
       permissions={{
-        fallback: (u) => u.rank !== Rank.USER,
         permissions: [Permissions.ManageCustomFields, Permissions.ViewCustomFields],
       }}
     >

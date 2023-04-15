@@ -76,10 +76,7 @@ export default function MyOfficers({ officers: data }: Props) {
   }
 
   return (
-    <Layout
-      permissions={{ fallback: (u) => u.isLeo, permissions: [Permissions.Leo] }}
-      className="dark:text-white"
-    >
+    <Layout permissions={{ permissions: [Permissions.Leo] }} className="dark:text-white">
       <header className="flex items-center justify-between">
         <Title className="!mb-0">{t("myOfficers")}</Title>
 

@@ -30,7 +30,6 @@ export class TemporaryUnitsController {
     "Create a temporary officer. It will update an existing officer if the identifiers match.",
   )
   @UsePermissions({
-    fallback: (u) => u.isDispatch,
     permissions: [Permissions.Dispatch],
   })
   async createTemporaryOfficer(
@@ -81,7 +80,6 @@ export class TemporaryUnitsController {
     "Create a temporary EMS/FD deputy. It will update an existing deputy if the identifiers match.",
   )
   @UsePermissions({
-    fallback: (u) => u.isDispatch,
     permissions: [Permissions.Dispatch],
   })
   async createTemporaryEmsFdDeputy(

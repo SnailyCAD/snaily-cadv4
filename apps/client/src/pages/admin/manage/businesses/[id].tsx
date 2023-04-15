@@ -86,7 +86,6 @@ export default function ManageBusinesses({ business, businessId }: Props) {
   return (
     <AdminLayout
       permissions={{
-        fallback: (u) => u.rank !== Rank.USER,
         permissions: [
           Permissions.ViewBusinesses,
           Permissions.DeleteBusinesses,

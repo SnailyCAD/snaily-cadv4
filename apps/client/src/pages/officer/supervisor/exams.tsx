@@ -88,7 +88,6 @@ export default function CitizenLogs({ data }: Props) {
   return (
     <Layout
       permissions={{
-        fallback: (u) => u.isLeo,
         permissions: [Permissions.ViewLicenseExams, Permissions.ManageLicenseExams],
       }}
       className="dark:text-white"

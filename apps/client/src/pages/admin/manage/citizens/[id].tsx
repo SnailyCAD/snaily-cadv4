@@ -83,7 +83,6 @@ export default function ManageCitizens({ citizen }: Props) {
   return (
     <AdminLayout
       permissions={{
-        fallback: (u) => u.rank !== Rank.USER,
         permissions: [Permissions.ManageCitizens],
       }}
     >

@@ -58,7 +58,6 @@ export class TowController {
   @Description("Get all the tow calls")
   @UsePermissions({
     permissions: [Permissions.ManageTowCalls, Permissions.ViewTowCalls, Permissions.ViewTowLogs],
-    fallback: (u) => u.isTow,
   })
   async getTowCalls(
     @QueryParams("ended", Boolean) includingEnded = false,
@@ -204,7 +203,6 @@ export class TowController {
   @Description("Update a tow call by its id")
   @UsePermissions({
     permissions: [Permissions.ManageTowCalls],
-    fallback: (u) => u.isTow,
   })
   async updateCall(
     @PathParams("id") callId: string,
@@ -251,7 +249,6 @@ export class TowController {
   @Description("Delete a tow call by its id")
   @UsePermissions({
     permissions: [Permissions.ManageTowCalls],
-    fallback: (u) => u.isTow,
   })
   async endTowCall(@PathParams("id") callId: string): Promise<APITypes.DeleteTowCallsData> {
     const call = await prisma.towCall.findUnique({

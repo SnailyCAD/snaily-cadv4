@@ -116,10 +116,7 @@ export default function DispatchDashboard(props: DispatchPageProps) {
     userActiveDispatcher?.department ?? props.userActiveDispatcher?.department;
 
   return (
-    <Layout
-      permissions={{ fallback: (u) => u.isDispatch, permissions: [Permissions.Dispatch] }}
-      className="dark:text-white"
-    >
+    <Layout permissions={{ permissions: [Permissions.Dispatch] }} className="dark:text-white">
       <Title renderLayoutTitle={false}>{t("dispatch")}</Title>
 
       <signal100.Component enabled={signal100.enabled} audio={signal100.audio} />

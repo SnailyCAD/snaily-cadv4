@@ -7,17 +7,12 @@ export { Permissions };
 export function usePermission() {
   const { user } = useAuth();
 
-  function _hasPermission(
-    permissionsToCheck: Permissions[],
-    fallback?: PermissionsFallback | boolean,
-    userToCheck: User | null = user,
-  ) {
+  function _hasPermission(permissionsToCheck: Permissions[], userToCheck: User | null = user) {
     if (!userToCheck) return false;
 
     return hasPermission({
       permissionsToCheck,
       userToCheck,
-      fallback,
     });
   }
 

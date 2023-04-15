@@ -29,7 +29,6 @@ export class AdminManageBusinessesController {
   @Get("/")
   @Description("Get all the businesses within the CAD")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [
       Permissions.ViewBusinesses,
       Permissions.DeleteBusinesses,
@@ -68,7 +67,6 @@ export class AdminManageBusinessesController {
   @Get("/:id/employees")
   @Description("Get the employees of a business")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [
       Permissions.ViewBusinesses,
       Permissions.DeleteBusinesses,
@@ -102,7 +100,6 @@ export class AdminManageBusinessesController {
 
   @Put("/employees/:id")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.DeleteBusinesses, Permissions.ManageBusinesses],
   })
   async updateBusinessEmployee(
@@ -160,7 +157,6 @@ export class AdminManageBusinessesController {
 
   @Delete("/employees/:id")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.DeleteBusinesses, Permissions.ManageBusinesses],
   })
   async fireEmployee(
@@ -205,7 +201,6 @@ export class AdminManageBusinessesController {
   @Put("/:id")
   @Description("Update a business by its id")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageBusinesses],
   })
   async updateBusiness(
@@ -244,7 +239,6 @@ export class AdminManageBusinessesController {
   @Delete("/:id")
   @Description("Delete a business by its id")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.DeleteBusinesses],
   })
   async deleteBusiness(

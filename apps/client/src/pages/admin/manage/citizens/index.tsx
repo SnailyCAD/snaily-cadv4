@@ -22,7 +22,6 @@ export default function ManageCitizens({ citizens: data }: Props) {
   return (
     <AdminLayout
       permissions={{
-        fallback: (u) => u.rank !== Rank.USER,
         permissions: [
           Permissions.ViewCitizens,
           Permissions.DeleteCitizens,

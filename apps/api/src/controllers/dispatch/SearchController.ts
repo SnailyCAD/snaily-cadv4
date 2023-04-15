@@ -13,7 +13,6 @@ export class SearchController {
   @Post("/address")
   @Description("Search citizens by their address")
   @UsePermissions({
-    fallback: (u) => u.isDispatch,
     permissions: [Permissions.Dispatch],
   })
   async searchAddress(@BodyParams("address") address: string) {

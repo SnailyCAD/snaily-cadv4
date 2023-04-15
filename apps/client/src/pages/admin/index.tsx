@@ -28,7 +28,6 @@ export default function Admin({ counts }: Props) {
           ...defaultPermissions.allDefaultAdminPermissions,
           ...defaultPermissions.defaultCourthousePermissions,
         ],
-        fallback: (u) => u.rank !== Rank.USER,
       }}
     >
       <Title>{t("adminDashboard")}</Title>

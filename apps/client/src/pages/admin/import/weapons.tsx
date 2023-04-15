@@ -76,7 +76,6 @@ export default function ImportWeaponsPage({ data }: Props) {
   return (
     <AdminLayout
       permissions={{
-        fallback: (u) => u.rank !== Rank.USER,
         permissions: [Permissions.ImportRegisteredWeapons],
       }}
     >

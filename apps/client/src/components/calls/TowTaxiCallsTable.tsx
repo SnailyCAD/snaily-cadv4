@@ -8,7 +8,6 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import dynamic from "next/dynamic";
 import { usePermission, Permissions } from "hooks/usePermission";
-import { useAuth } from "context/AuthContext";
 import type { GetTaxiCallsData, GetTowCallsData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
@@ -34,14 +33,12 @@ export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props)
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
   const leo = useTranslations("Leo");
-  const { user } = useAuth();
   const tableState = useTableState();
 
   const { hasPermissions } = usePermission();
-  const fallback = type === "tow" ? user?.isTow : user?.isTaxi;
   const toCheckPerms =
     type === "tow" ? [Permissions.ManageTowCalls] : [Permissions.ManageTaxiCalls];
-  const hasManagePermissions = hasPermissions(toCheckPerms, fallback ?? false);
+  const hasManagePermissions = hasPermissions(toCheckPerms);
 
   function assignClick(call: TowCall | TaxiCall) {
     openModal(ModalIds.AssignToTowCall);

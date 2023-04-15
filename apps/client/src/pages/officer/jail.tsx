@@ -95,7 +95,6 @@ export default function Jail({ data }: Props) {
   return (
     <Layout
       permissions={{
-        fallback: (u) => u.isLeo,
         permissions: [Permissions.ViewJail, Permissions.ManageJail],
       }}
       className="dark:text-white"

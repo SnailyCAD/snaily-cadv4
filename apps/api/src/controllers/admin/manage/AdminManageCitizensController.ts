@@ -27,7 +27,6 @@ export class AdminManageCitizensController {
   @Get("/")
   @Description("Get all the citizens within the CAD")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ViewCitizens, Permissions.ManageCitizens, Permissions.DeleteCitizens],
   })
   async getCitizens(
@@ -82,7 +81,6 @@ export class AdminManageCitizensController {
     "Get a citizen by the `id`. Or get all citizens from a user by the `discordId` or `steamId`",
   )
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ViewCitizens, Permissions.ManageCitizens, Permissions.DeleteCitizens],
   })
   async getCitizen(@PathParams("id") id: string): Promise<APITypes.GetManageCitizenByIdData> {
@@ -111,7 +109,6 @@ export class AdminManageCitizensController {
   @Put("/:id")
   @Description("Update a citizen by its id")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCitizens],
   })
   async updateCitizen(
@@ -196,7 +193,6 @@ export class AdminManageCitizensController {
   @Delete("/:id")
   @Description("Delete a citizen by its id")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.DeleteCitizens],
   })
   async deleteCitizen(

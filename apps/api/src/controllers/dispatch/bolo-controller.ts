@@ -38,7 +38,6 @@ export class BoloController {
 
   @Get("/")
   @UsePermissions({
-    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   @UseAfter(HandleInactivity)
@@ -97,7 +96,6 @@ export class BoloController {
   @Post("/")
   @Description("Create a new BOLO")
   @UsePermissions({
-    fallback: (u) => u.isDispatch || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.Leo],
   })
   async createBolo(
@@ -141,7 +139,6 @@ export class BoloController {
   @Put("/:id")
   @Description("Update a BOLO by its id")
   @UsePermissions({
-    fallback: (u) => u.isDispatch || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.Leo],
   })
   async updateBolo(
@@ -186,7 +183,6 @@ export class BoloController {
   @Delete("/:id")
   @Description("Delete a BOLO by its id")
   @UsePermissions({
-    fallback: (u) => u.isDispatch || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.Leo],
   })
   async deleteBolo(@PathParams("id") id: string): Promise<APITypes.DeleteBolosData> {
@@ -213,7 +209,6 @@ export class BoloController {
   @Post("/mark-stolen/:id")
   @Description("Mark a vehicle as stolen by its id")
   @UsePermissions({
-    fallback: (u) => u.isDispatch || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.Leo],
   })
   async reportVehicleStolen(@BodyParams() body: any): Promise<APITypes.PostMarkStolenData> {

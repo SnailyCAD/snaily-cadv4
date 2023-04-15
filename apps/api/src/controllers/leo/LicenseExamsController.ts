@@ -31,7 +31,6 @@ const licenseExamIncludes = {
 export class LicenseExamsController {
   @Get("/")
   @UsePermissions({
-    fallback: (u) => u.isSupervisor,
     permissions: [Permissions.ViewLicenseExams, Permissions.ManageLicenseExams],
   })
   async getAlllicenseExams(
@@ -64,7 +63,6 @@ export class LicenseExamsController {
 
   @Post("/")
   @UsePermissions({
-    fallback: (u) => u.isSupervisor,
     permissions: [Permissions.ManageLicenseExams],
   })
   async createlicenseExam(@BodyParams() body: unknown): Promise<APITypes.PostLicenseExamsData> {
@@ -107,7 +105,6 @@ export class LicenseExamsController {
 
   @Put("/:id")
   @UsePermissions({
-    fallback: (u) => u.isSupervisor,
     permissions: [Permissions.ManageLicenseExams],
   })
   async updatelicenseExam(
@@ -159,7 +156,6 @@ export class LicenseExamsController {
 
   @Delete("/:id")
   @UsePermissions({
-    fallback: (u) => u.isSupervisor,
     permissions: [Permissions.ManageLicenseExams],
   })
   async deletelicenseExam(

@@ -21,7 +21,6 @@ export class EMSFDSearchController {
   @Post("/medical-records")
   @Description("Search medical records by citizen name")
   @UsePermissions({
-    fallback: (u) => u.isEmsFd,
     permissions: [Permissions.EmsFd],
   })
   async getMedicalRecords(@BodyParams("name") name: string) {

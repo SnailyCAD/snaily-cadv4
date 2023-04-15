@@ -22,7 +22,6 @@ import { getImageWebPPath } from "lib/images/get-image-webp-path";
 export class MyOfficersController {
   @Get("/")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
   @Description("Get all the current user's officers.")
@@ -43,7 +42,6 @@ export class MyOfficersController {
 
   @Post("/")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
   async createOfficer(
@@ -57,7 +55,6 @@ export class MyOfficersController {
 
   @Put("/:id")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
   async updateOfficer(
@@ -82,7 +79,6 @@ export class MyOfficersController {
 
   @Delete("/:id")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
   async deleteOfficer(
@@ -111,7 +107,6 @@ export class MyOfficersController {
 
   @Get("/logs")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
     permissions: [
       Permissions.Leo,
       Permissions.ManageUnits,
@@ -129,7 +124,6 @@ export class MyOfficersController {
     const hasManageUnitsPermissions = hasPermission({
       permissionsToCheck: [Permissions.ManageUnits, Permissions.ViewUnits, Permissions.DeleteUnits],
       userToCheck: user,
-      fallback: (u) => u.rank !== Rank.USER,
     });
     const userIdObj = hasManageUnitsPermissions && isAdmin ? {} : { userId: user.id };
 
@@ -151,7 +145,6 @@ export class MyOfficersController {
 
   @Post("/image/:id")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
   async uploadImageToOfficer(

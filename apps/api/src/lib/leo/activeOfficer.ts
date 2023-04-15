@@ -1,4 +1,4 @@
-import { User, Prisma, Rank } from "@prisma/client";
+import { User, Prisma } from "@prisma/client";
 import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import type { Req, Context } from "@tsed/common";
 import { BadRequest, Forbidden } from "@tsed/exceptions";
@@ -63,14 +63,12 @@ export async function getActiveOfficer(options: GetActiveOfficerOptions) {
   const isAdmin = hasPermission({
     userToCheck: options.user,
     permissionsToCheck: defaultPermissions.allDefaultAdminPermissions,
-    fallback: (u) => u.rank !== Rank.USER,
   });
 
   if (options.req?.headers["is-from-dispatch"]?.toString() === "true") {
     const hasDispatchPermissions = hasPermission({
       userToCheck: options.user,
       permissionsToCheck: defaultPermissions.defaultDispatchPermissions,
-      fallback: (user) => user.isDispatch,
     });
 
     if (isAdmin && !hasDispatchPermissions) {
@@ -86,7 +84,6 @@ export async function getActiveOfficer(options: GetActiveOfficerOptions) {
     const hasLeoPermissions = hasPermission({
       userToCheck: options.user,
       permissionsToCheck: defaultPermissions.defaultLeoPermissions,
-      fallback: (user) => user.isLeo,
     });
 
     if (isAdmin && !hasLeoPermissions) {

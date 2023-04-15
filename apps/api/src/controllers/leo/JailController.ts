@@ -41,7 +41,6 @@ export class JailController {
   @Description("Get all the citizens who are jailed")
   @UsePermissions({
     permissions: [Permissions.ViewJail, Permissions.ManageJail],
-    fallback: (u) => u.isLeo,
   })
   async getImprisonedCitizens(
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
@@ -111,7 +110,6 @@ export class JailController {
   @Description("Release a citizen by its id and type (time out / released by)")
   @UsePermissions({
     permissions: [Permissions.ManageJail],
-    fallback: (u) => u.isLeo,
   })
   async releaseCitizen(
     @PathParams("id") id: string,

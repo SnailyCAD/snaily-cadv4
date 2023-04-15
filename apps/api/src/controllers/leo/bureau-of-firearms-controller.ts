@@ -22,7 +22,6 @@ export class BureauOfFirearmsController {
   @Get("/")
   @Description("Get pending weapons for the BOF")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
     permissions: [Permissions.ManageBureauOfFirearms],
   })
   async getPendingWeapons(

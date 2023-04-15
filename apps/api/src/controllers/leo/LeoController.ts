@@ -31,7 +31,6 @@ export class LeoController {
   @UseBefore(ActiveOfficer)
   @Get("/active-officer")
   @UsePermissions({
-    fallback: (u) => u.isLeo || u.isDispatch || u.isEmsFd,
     permissions: [Permissions.Leo, Permissions.Dispatch, Permissions.EmsFd],
   })
   async getActiveOfficer(
@@ -44,7 +43,6 @@ export class LeoController {
   @Description("Get all the active officers")
   @UseAfter(HandleInactivity)
   @UsePermissions({
-    fallback: (u) => u.isLeo || u.isDispatch || u.isEmsFd,
     permissions: [Permissions.Leo, Permissions.Dispatch, Permissions.EmsFd],
   })
   async getActiveOfficers(
@@ -87,7 +85,6 @@ export class LeoController {
   @Description("Set the panic button for an officer by their id")
   @IsFeatureEnabled({ feature: Feature.PANIC_BUTTON })
   @UsePermissions({
-    fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
   async panicButton(
@@ -182,7 +179,6 @@ export class LeoController {
   @Get("/impounded-vehicles")
   @Description("Get all the impounded vehicles")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
     permissions: [Permissions.ViewImpoundLot, Permissions.ManageImpoundLot],
   })
   async getImpoundedVehicles(): Promise<APITypes.GetLeoImpoundedVehiclesData> {
@@ -202,7 +198,6 @@ export class LeoController {
   @Delete("/impounded-vehicles/:id")
   @Description("Remove a vehicle from the impound lot")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
     permissions: [Permissions.ManageImpoundLot],
   })
   async checkoutImpoundedVehicle(
@@ -233,7 +228,6 @@ export class LeoController {
   @Get("/qualifications/:unitId")
   @Description("Get a unit's awards and qualifications")
   @UsePermissions({
-    fallback: (u) => u.isLeo || u.isDispatch || u.isEmsFd,
     permissions: [Permissions.Leo, Permissions.Dispatch, Permissions.EmsFd],
   })
   async getUnitQualifications(
@@ -265,7 +259,6 @@ export class LeoController {
   @Put("/callsign/:officerId")
   @Description("Update the officer's activeDivisionCallsign")
   @UsePermissions({
-    fallback: (u) => u.isLeo || u.rank !== "USER",
     permissions: [Permissions.Leo, Permissions.ManageUnitCallsigns],
   })
   async updateOfficerDivisionCallsign(

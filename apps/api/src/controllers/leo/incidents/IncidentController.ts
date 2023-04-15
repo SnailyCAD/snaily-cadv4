@@ -67,7 +67,6 @@ export class IncidentController {
   @Description("Get all the created incidents")
   @UsePermissions({
     permissions: [Permissions.Dispatch, Permissions.ViewIncidents, Permissions.ManageIncidents],
-    fallback: (u) => u.isDispatch || u.isLeo,
   })
   async getAllIncidents(
     @Context("cad") cad: cad,
@@ -116,7 +115,6 @@ export class IncidentController {
   @Description("Get an incident by its id")
   @UsePermissions({
     permissions: [Permissions.Dispatch, Permissions.ViewIncidents, Permissions.ManageIncidents],
-    fallback: (u) => u.isDispatch || u.isLeo,
   })
   async getIncidentById(
     @PathParams("id") id: string,
@@ -133,7 +131,6 @@ export class IncidentController {
   @Post("/")
   @UsePermissions({
     permissions: [Permissions.Dispatch, Permissions.ManageIncidents],
-    fallback: (u) => u.isDispatch || u.isLeo,
   })
   async createIncident(
     @BodyParams() body: unknown,
@@ -192,7 +189,6 @@ export class IncidentController {
 
   @Post("/:type/:incidentId")
   @UsePermissions({
-    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   async assignToIncident(
@@ -326,7 +322,6 @@ export class IncidentController {
   @Put("/:id")
   @UsePermissions({
     permissions: [Permissions.Dispatch, Permissions.ManageIncidents],
-    fallback: (u) => u.isDispatch || u.isLeo,
   })
   async updateIncident(
     @BodyParams() body: unknown,
@@ -387,7 +382,6 @@ export class IncidentController {
   @Description("Delete an incident by its id")
   @UsePermissions({
     permissions: [Permissions.Dispatch, Permissions.ManageIncidents],
-    fallback: (u) => u.isSupervisor,
   })
   async deleteIncident(
     @PathParams("id") incidentId: string,

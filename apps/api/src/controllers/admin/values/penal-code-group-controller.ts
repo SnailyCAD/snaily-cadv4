@@ -37,7 +37,6 @@ export class PenalCodeGroupController {
   @Post("/")
   @Description("Create a new penal-code group")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageValuePenalCode],
   })
   async createPenalCodeGroup(
@@ -57,7 +56,6 @@ export class PenalCodeGroupController {
   @Put("/:id")
   @Description("Edit a penal-code group by its id")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageValuePenalCode],
   })
   async editPenalCodeGroup(
@@ -85,7 +83,6 @@ export class PenalCodeGroupController {
   @Delete("/:id")
   @Description("Delete a penal-code group by its id")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageValuePenalCode],
   })
   async deletePenalCodeGroup(

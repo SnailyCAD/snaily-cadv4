@@ -178,10 +178,7 @@ export default function OfficerDashboard({
   }, [bolos, calls, activeOfficers, activeDeputies, activeOfficer]);
 
   return (
-    <Layout
-      permissions={{ fallback: (u) => u.isLeo, permissions: [Permissions.Leo] }}
-      className="dark:text-white"
-    >
+    <Layout permissions={{ permissions: [Permissions.Leo] }} className="dark:text-white">
       <Title renderLayoutTitle={false}>{t("officer")}</Title>
 
       <signal100.Component enabled={signal100.enabled} audio={signal100.audio} />

@@ -35,7 +35,6 @@ export default function LeoIncidents({ activeOfficer, incidents: initialData }: 
   return (
     <Layout
       permissions={{
-        fallback: (u) => u.isLeo,
         permissions: [Permissions.ViewIncidents, Permissions.ManageIncidents],
       }}
       className="dark:text-white"

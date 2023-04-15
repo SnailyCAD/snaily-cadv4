@@ -53,7 +53,6 @@ export class StatusController {
   @Put("/:unitId")
   @Description("Update the status of a unit by its id.")
   @UsePermissions({
-    fallback: (u) => u.isLeo || u.isSupervisor || u.isDispatch || u.isEmsFd,
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   async updateUnitStatus(
@@ -79,7 +78,6 @@ export class StatusController {
         hasPermission({
           userToCheck: user,
           permissionsToCheck: [Permissions.Dispatch],
-          fallback: (user) => user.isDispatch,
         }));
 
     const isDivisionsEnabled = isFeatureEnabled({

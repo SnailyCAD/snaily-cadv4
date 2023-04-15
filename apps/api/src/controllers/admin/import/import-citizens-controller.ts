@@ -30,7 +30,6 @@ export class ImportCitizensController {
   @Post("/file")
   @Description("Import citizens in the CAD via file upload")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ImportCitizens, Permissions.ManageCitizens],
   })
   async importCitizens(
@@ -43,7 +42,6 @@ export class ImportCitizensController {
   @Post("/")
   @Description("Import citizens in the CAD via body data")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ImportCitizens, Permissions.ManageCitizens],
   })
   async importCitizensViaBodyData(
@@ -55,7 +53,6 @@ export class ImportCitizensController {
   @Get("/random")
   @Description("Get a random citizen")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ImportCitizens, Permissions.ManageCitizens],
   })
   async getRandomCitizen(@QueryParams("userRegisteredOnly", Boolean) userRegisteredOnly?: boolean) {
@@ -80,7 +77,6 @@ export class ImportCitizensController {
   @Get("/citizen-ids")
   @Description("Get all citizen IDs in the CAD")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ImportCitizens, Permissions.ManageCitizens],
   })
   async getCitizenIds(

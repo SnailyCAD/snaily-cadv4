@@ -19,7 +19,6 @@ export default function ImportCitizensPage() {
   return (
     <AdminLayout
       permissions={{
-        fallback: (u) => u.rank !== Rank.USER,
         permissions: [Permissions.ImportCitizens],
       }}
     >

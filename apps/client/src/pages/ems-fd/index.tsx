@@ -16,7 +16,7 @@ import { ActiveOfficers } from "components/dispatch/active-officers";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { Title } from "components/shared/Title";
 import { UtilityPanel } from "components/shared/UtilityPanel";
-import { ActiveToneType, Rank, ValueType } from "@snailycad/types";
+import { ActiveToneType, ValueType } from "@snailycad/types";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import { usePanicButton } from "hooks/shared/usePanicButton";
 import { useTones } from "hooks/global/use-tones";
@@ -77,10 +77,7 @@ export default function EmsFDDashboard({ activeDeputy, calls, activeDeputies }: 
   const dispatchState = useDispatchState();
   const set911Calls = useCall911State((state) => state.setCalls);
   const { hasPermissions } = usePermission();
-  const isAdmin = hasPermissions(
-    defaultPermissions.allDefaultAdminPermissions,
-    (u) => u.rank !== Rank.USER,
-  );
+  const isAdmin = hasPermissions(defaultPermissions.allDefaultAdminPermissions);
 
   React.useEffect(() => {
     state.setActiveDeputy(activeDeputy);
@@ -92,10 +89,7 @@ export default function EmsFDDashboard({ activeDeputy, calls, activeDeputies }: 
   const t = useTranslations();
 
   return (
-    <Layout
-      permissions={{ fallback: (u) => u.isEmsFd, permissions: [Permissions.EmsFd] }}
-      className="dark:text-white"
-    >
+    <Layout permissions={{ permissions: [Permissions.EmsFd] }} className="dark:text-white">
       <Title renderLayoutTitle={false}>{t("Ems.emsFd")}</Title>
 
       <signal100.Component enabled={signal100.enabled} audio={signal100.audio} />

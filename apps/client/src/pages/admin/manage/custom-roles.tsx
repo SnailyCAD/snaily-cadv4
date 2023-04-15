@@ -88,7 +88,6 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
   return (
     <AdminLayout
       permissions={{
-        fallback: (u) => u.rank !== Rank.USER,
         permissions: [Permissions.ManageCustomRoles, Permissions.ViewCustomRoles],
       }}
     >

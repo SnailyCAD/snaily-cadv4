@@ -29,7 +29,6 @@ export class ImportWeaponsController {
   @Get("/")
   @Description("Get all the Weapons in the CAD (paginated)")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ImportRegisteredWeapons, Permissions.ManageCitizens],
   })
   async getWeapons(
@@ -62,7 +61,6 @@ export class ImportWeaponsController {
   @Post("/")
   @Description("Import weapons in the CAD via body data")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ImportRegisteredWeapons],
   })
   async importWeaponsViaBodyData(@BodyParams() body: any): Promise<APITypes.PostImportWeaponsData> {
@@ -72,7 +70,6 @@ export class ImportWeaponsController {
   @Get("/random")
   @Description("Get a random weapon")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ImportRegisteredWeapons, Permissions.ManageCitizens],
   })
   async getRandomWeapon(@QueryParams("userRegisteredOnly", Boolean) userRegisteredOnly?: boolean) {
@@ -97,7 +94,6 @@ export class ImportWeaponsController {
   @Post("/file")
   @Description("Import weapons in the CAD via file upload")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ImportRegisteredWeapons],
   })
   async importWeaponsViaFile(
@@ -110,7 +106,6 @@ export class ImportWeaponsController {
   @Delete("/:id")
   @Description("Delete a registered weapon by its id")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.DeleteRegisteredWeapons],
   })
   async deleteWeapon(@PathParams("id") id: string): Promise<APITypes.DeleteImportWeaponsData> {

@@ -16,7 +16,6 @@ import { AccountDropdown } from "./dropdowns/AccountDropdown";
 import Head from "next/head";
 import { usePermission } from "hooks/usePermission";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
-import { Rank } from "@snailycad/types";
 import { ImageWrapper } from "components/shared/image-wrapper";
 import { AdminLink } from "./dropdowns/admin-link";
 
@@ -101,25 +100,17 @@ export function Nav({ maxWidth }: Props) {
             >
               <CitizenDropdown />
 
-              {hasPermissions(
-                [Permissions.ViewTowCalls, Permissions.ManageTowCalls],
-                user?.isTow ?? false,
-              ) && TOW ? (
+              {hasPermissions([Permissions.ViewTowCalls, Permissions.ManageTowCalls]) && TOW ? (
                 <TowDropdown />
               ) : null}
 
-              {hasPermissions(defaultPermissions.defaultLeoPermissions, user?.isLeo ?? false) ? (
+              {hasPermissions(defaultPermissions.defaultLeoPermissions) ? (
                 <OfficerDropdown />
               ) : null}
 
-              {hasPermissions([Permissions.EmsFd], user?.isEmsFd ?? false) ? (
-                <EmsFdDropdown />
-              ) : null}
+              {hasPermissions([Permissions.EmsFd]) ? <EmsFdDropdown /> : null}
 
-              {hasPermissions(
-                [Permissions.LiveMap, Permissions.Dispatch],
-                user?.isDispatch ?? false,
-              ) ? (
+              {hasPermissions([Permissions.LiveMap, Permissions.Dispatch]) ? (
                 <DispatchDropdown />
               ) : null}
 
@@ -136,14 +127,11 @@ export function Nav({ maxWidth }: Props) {
                 </Link>
               ) : null}
 
-              {hasPermissions(
-                [
-                  ...defaultPermissions.allDefaultAdminPermissions,
-                  ...defaultPermissions.defaultCourthousePermissions,
-                  Permissions.ManageAwardsAndQualifications,
-                ],
-                user?.rank !== Rank.USER,
-              ) ? (
+              {hasPermissions([
+                ...defaultPermissions.allDefaultAdminPermissions,
+                ...defaultPermissions.defaultCourthousePermissions,
+                Permissions.ManageAwardsAndQualifications,
+              ]) ? (
                 <AdminLink />
               ) : null}
             </div>

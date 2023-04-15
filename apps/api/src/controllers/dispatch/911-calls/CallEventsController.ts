@@ -24,7 +24,6 @@ export class Calls911EventsController {
 
   @Post("/:callId")
   @UsePermissions({
-    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   async createCallEvent(
@@ -62,7 +61,6 @@ export class Calls911EventsController {
 
   @Put("/:callId/:eventId")
   @UsePermissions({
-    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   async updateCallEvent(
@@ -120,7 +118,6 @@ export class Calls911EventsController {
 
   @Delete("/:callId/:eventId")
   @UsePermissions({
-    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   async deleteCallEvent(

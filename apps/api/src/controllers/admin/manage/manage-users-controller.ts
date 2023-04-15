@@ -46,7 +46,6 @@ export class ManageUsersController {
 
   @Get("/")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [
       Permissions.ViewUsers,
       Permissions.ManageUsers,
@@ -96,7 +95,6 @@ export class ManageUsersController {
 
   @Get("/prune")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
   async getInactiveUsers(@QueryParams("days", Number) days = 30) {
@@ -125,7 +123,6 @@ export class ManageUsersController {
 
   @Delete("/prune")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
   async pruneInactiveUsers(
@@ -156,7 +153,6 @@ export class ManageUsersController {
 
   @Get("/:id")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [
       Permissions.ViewUsers,
       Permissions.ManageUsers,
@@ -188,7 +184,6 @@ export class ManageUsersController {
 
   @Post("/search")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
   async searchUsers(
@@ -205,7 +200,6 @@ export class ManageUsersController {
 
   @Put("/permissions/:id")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
   async updateUserPermissionsById(
@@ -248,7 +242,6 @@ export class ManageUsersController {
 
   @Put("/roles/:id")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
   async updateUserRolesById(
@@ -297,7 +290,6 @@ export class ManageUsersController {
 
   @Put("/:id")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
   async updateUserById(
@@ -353,7 +345,6 @@ export class ManageUsersController {
 
   @Post("/temp-password/:id")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
   async giveUserTempPassword(
@@ -404,7 +395,6 @@ export class ManageUsersController {
 
   @Post("/:id/:type")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.BanUsers],
   })
   async banUserById(
@@ -462,7 +452,6 @@ export class ManageUsersController {
 
   @Delete("/:id")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.DeleteUsers],
   })
   async deleteUserAccount(
@@ -500,7 +489,6 @@ export class ManageUsersController {
 
   @Post("/pending/:id/:type")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUsers],
   })
   async acceptOrDeclineUser(
@@ -547,7 +535,6 @@ export class ManageUsersController {
 
   @Delete("/:userId/api-token")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUsers],
   })
   async revokeApiToken(
@@ -591,7 +578,6 @@ export class ManageUsersController {
 
   @Delete("/:userId/2fa")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUsers],
   })
   async disableUser2FA(

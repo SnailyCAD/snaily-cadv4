@@ -16,7 +16,6 @@ export class NotesController {
   @Post("/")
   @UsePermissions({
     permissions: [Permissions.Leo, Permissions.EmsFd, Permissions.Dispatch],
-    fallback: (u) => u.isLeo || u.isEmsFd || u.isDispatch,
   })
   async addNoteToItem(@BodyParams() body: unknown): Promise<APITypes.PostNotesData> {
     const data = validateSchema(NOTE_SCHEMA, body);
@@ -35,7 +34,6 @@ export class NotesController {
   @Put("/:id")
   @UsePermissions({
     permissions: [Permissions.Leo, Permissions.EmsFd, Permissions.Dispatch],
-    fallback: (u) => u.isLeo || u.isEmsFd || u.isDispatch,
   })
   async editNoteFromItem(
     @PathParams("id") noteId: string,
@@ -56,7 +54,6 @@ export class NotesController {
   @Delete("/:id")
   @UsePermissions({
     permissions: [Permissions.Leo, Permissions.EmsFd, Permissions.Dispatch],
-    fallback: (u) => u.isLeo || u.isEmsFd || u.isDispatch,
   })
   async deleteNoteFromItem(
     @PathParams("id") noteId: string,

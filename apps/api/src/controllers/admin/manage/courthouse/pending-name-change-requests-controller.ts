@@ -18,7 +18,6 @@ export class AdminNameChangeController {
   @Get("/")
   @Description("Get all the name change requests")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ViewNameChangeRequests, Permissions.ManageNameChangeRequests],
   })
   async getRequests(): Promise<APITypes.GetManageNameChangeRequests> {
@@ -36,7 +35,6 @@ export class AdminNameChangeController {
   @Put("/:id")
   @Description("Accept or decline a name change request.")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageNameChangeRequests],
   })
   async acceptOrDeclineNameChangeRequest(

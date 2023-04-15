@@ -55,7 +55,6 @@ export default function ManageCourthouse({ expungementRequests, nameChangeReques
   return (
     <AdminLayout
       permissions={{
-        fallback: (u) => u.rank !== Rank.USER,
         permissions: defaultPermissions.defaultCourthousePermissions,
       }}
     >

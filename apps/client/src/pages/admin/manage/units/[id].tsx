@@ -50,7 +50,6 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
   return (
     <AdminLayout
       permissions={{
-        fallback: (u) => u.rank !== Rank.USER,
         permissions: [Permissions.ManageUnits, Permissions.ManageAwardsAndQualifications],
       }}
     >

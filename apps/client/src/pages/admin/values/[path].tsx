@@ -217,7 +217,6 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
   return (
     <AdminLayout
       permissions={{
-        fallback: (u) => u.rank !== Rank.USER,
         permissions: routeData?.permissions ?? [],
       }}
     >

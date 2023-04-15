@@ -61,7 +61,6 @@ export default function Taxi(props: Props) {
   return (
     <Layout
       permissions={{
-        fallback: (u) => u.isTaxi,
         permissions: [Permissions.ViewTaxiCalls, Permissions.ManageTaxiCalls],
       }}
       className="dark:text-white"

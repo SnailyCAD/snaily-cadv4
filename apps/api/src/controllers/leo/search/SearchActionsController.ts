@@ -55,7 +55,6 @@ export class SearchActionsController {
   @Put("/licenses/:citizenId")
   @Description("Update the licenses for a citizen by their id")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
   async updateCitizenLicenses(
@@ -118,7 +117,6 @@ export class SearchActionsController {
   @Put("/vehicle-licenses/:vehicleId")
   @Description("Update the licenses of a vehicle by its id")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
   async updateVehicleLicenses(
@@ -156,7 +154,6 @@ export class SearchActionsController {
   @Put("/vehicle-flags/:vehicleId")
   @Description("Update the vehicle flags by its id")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
   async updateVehicleFlags(
@@ -194,7 +191,6 @@ export class SearchActionsController {
   @Put("/citizen-flags/:citizenId")
   @Description("Update the citizens flags by their id")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
   async updateCitizenFlags(
@@ -232,7 +228,6 @@ export class SearchActionsController {
   @Put("/citizen-address-flags/:citizenId")
   @Description("Update the citizen's address flags by their id")
   @UsePermissions({
-    fallback: (u) => u.isDispatch,
     permissions: [Permissions.Dispatch],
   })
   async updateCitizenAddressFlags(
@@ -269,7 +264,6 @@ export class SearchActionsController {
 
   @Put("/custom-fields/citizen/:citizenId")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
   async updateCitizenCustomFields(
@@ -300,7 +294,6 @@ export class SearchActionsController {
 
   @Put("/custom-fields/vehicle/:vehicleId")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
   async updateVehicleCustomFields(
@@ -331,7 +324,6 @@ export class SearchActionsController {
 
   @Put("/custom-fields/weapon/:weaponId")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
   async updateWeaponCustomFields(
@@ -362,7 +354,6 @@ export class SearchActionsController {
 
   @Post("/citizen")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
   async createCitizen(
@@ -564,7 +555,6 @@ export class SearchActionsController {
 
   @Post("/missing/:citizenId")
   @UsePermissions({
-    fallback: (u) => u.isEmsFd || u.isLeo || u.isDispatch,
     permissions: [Permissions.EmsFd, Permissions.Leo, Permissions.Dispatch],
   })
   async declareCitizenMissing(

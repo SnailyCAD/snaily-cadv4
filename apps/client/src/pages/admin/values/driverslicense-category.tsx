@@ -95,7 +95,6 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
   return (
     <AdminLayout
       permissions={{
-        fallback: (u) => u.rank !== Rank.USER,
         permissions: [Permissions.ManageValueDLCategory],
       }}
     >
