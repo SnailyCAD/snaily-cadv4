@@ -89,7 +89,7 @@ function _ActiveCalls({ initialData }: Props) {
 
   const hasDispatchPermissions = hasPermissions(
     defaultPermissions.defaultDispatchPermissions,
-    (u) => u.isDispatch,
+    (u: { isDispatch: any; }) => u.isDispatch,
   );
   const isDispatch = router.pathname === "/dispatch" && hasDispatchPermissions;
   const unit =

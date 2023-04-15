@@ -17,9 +17,11 @@ export function useHasPermissionForLayout(permissions: LayoutProps["permissions"
       router.push("/403");
       setForbidden(true);
     }
-  }, [hasPermissions, router, permissions]);
+  }, [hasPermissions, router, permi
+fallback(permissions: Permissions[],fallback: any): unknown;ssions]);
 
-  return { forbidden, Loader: _Loader };
+  return { forbid
+den, Loader: _Loader };
 }
 
 function _Loader() {

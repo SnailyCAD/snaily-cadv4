@@ -60,7 +60,7 @@ export function Manage911CallModal({ setCall, forceDisabled, forceOpen, call, on
 
   const hasDispatchPermissions = hasPermissions(
     defaultPermissions.defaultDispatchPermissions,
-    (u) => u.isDispatch,
+    (u: { isDispatch: any; }) => u.isDispatch,
   );
 
   const activeUnit = router.pathname.includes("/officer") ? activeOfficer : activeDeputy;

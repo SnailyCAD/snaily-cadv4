@@ -26,11 +26,11 @@ export default function Courthouse(props: Props) {
   const t = useTranslations("Courthouse");
   const { COURTHOUSE_POSTS } = useFeatureEnabled();
   const { hasPermissions } = usePermission();
-  const hasEntriesPerms = hasPermissions([Permissions.Leo], (u) => u.isLeo);
+  const hasEntriesPerms = hasPermissions([Permissions.Leo], (u: { isLeo: any; }) => u.isLeo);
 
   const hasCourthouseAdminPerms = hasPermissions(
     defaultPermissions.defaultCourthousePermissions,
-    (u) => u.isSupervisor,
+    (u: { isSupervisor: any; }) => u.isSupervisor,
   );
 
   const TABS = [

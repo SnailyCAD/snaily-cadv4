@@ -40,12 +40,12 @@ export function NameSearchWarrantsTab() {
   const { hasPermissions } = usePermission();
   const hasManageWarrantsPermissions = hasPermissions(
     [Permissions.ManageWarrants],
-    (u) => u.isLeo || u.isSupervisor,
+    (u: { isLeo: any; isSupervisor: any; }) => u.isLeo || u.isSupervisor,
   );
 
   const hasManagePendingWarrantsPermissions = hasPermissions(
     [Permissions.ManagePendingWarrants],
-    (u) => u.isSupervisor,
+    (u: { isSupervisor: any; }) => u.isSupervisor,
   );
 
   const hasManagePermissions = WARRANT_STATUS_APPROVAL

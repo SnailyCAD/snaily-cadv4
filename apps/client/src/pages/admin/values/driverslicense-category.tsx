@@ -7,7 +7,6 @@ import type { GetServerSideProps } from "next";
 import { useModal } from "state/modalState";
 import {
   DriversLicenseCategoryType,
-  Rank,
   ValueType,
   type DriversLicenseCategoryValue,
 } from "@snailycad/types";

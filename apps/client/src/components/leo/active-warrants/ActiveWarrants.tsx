@@ -23,7 +23,7 @@ export function ActiveWarrants() {
   const { hasPermissions } = usePermission();
   const hasManageWarrantsPermissions = hasPermissions(
     [Permissions.ManageWarrants],
-    (u) => u.isLeo || u.isSupervisor,
+    (u: { isLeo: any; isSupervisor: any; }) => u.isLeo || u.isSupervisor,
   );
 
   const asyncTable = useActiveWarrants();

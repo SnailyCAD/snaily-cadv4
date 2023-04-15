@@ -7,7 +7,7 @@ import type { GetServerSideProps } from "next";
 import { useTranslations } from "use-intl";
 import { Title } from "components/shared/Title";
 import { TabList } from "@snailycad/ui";
-import { Rank, ValueType } from "@snailycad/types";
+import { ValueType } from "@snailycad/types";
 import { usePermission, Permissions } from "hooks/usePermission";
 import type { GetManageUnitsData } from "@snailycad/types/api";
 import { AllUnitsTab } from "components/admin/manage/units/tabs/all-units-tab";

@@ -43,7 +43,7 @@ export default function ManageBusinesses({ business, businessId }: Props) {
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions(
     [Permissions.ManageBusinesses, Permissions.DeleteBusinesses],
-    (u) => u.rank !== Rank.USER,
+    (u: { rank: string; }) => u.rank !== Rank.USER,
   );
 
   useLoadValuesClientSide({

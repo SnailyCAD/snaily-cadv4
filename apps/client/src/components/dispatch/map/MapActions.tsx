@@ -17,7 +17,7 @@ export function MapActions() {
   const { hasPermissions } = usePermission();
   const hasManageUsersPermissions = hasPermissions(
     [Permissions.ManageUsers],
-    (u) => u.rank !== Rank.USER,
+    (u: { rank: string; }) => u.rank !== Rank.USER,
   );
 
   return (

@@ -84,7 +84,7 @@ export function OfficerDropdown() {
     {
       name: t("citizenLogs"),
       href: "/officer/supervisor/citizen-logs",
-      show: hasPermissions([Permissions.ViewCitizenLogs], (u) => u.isSupervisor),
+      show: hasPermissions([Permissions.ViewCitizenLogs], (u: { isSupervisor: any; }) => u.isSupervisor),
     },
     {
       name: t("licenseExams"),
@@ -93,13 +93,13 @@ export function OfficerDropdown() {
         LICENSE_EXAMS &&
         hasPermissions(
           [Permissions.ViewLicenseExams, Permissions.ManageLicenseExams],
-          (u) => u.isSupervisor,
+          (u: { isSupervisor: any; }) => u.isSupervisor,
         ),
     },
     {
       name: t("manageUnits"),
       href: "/admin/manage/units",
-      show: hasPermissions([Permissions.ManageUnits, Permissions.ViewUnits], (u) => u.isSupervisor),
+      show: hasPermissions([Permissions.ManageUnits, Permissions.ViewUnits], (u: { isSupervisor: any; }) => u.isSupervisor),
     },
   ] as const;
 

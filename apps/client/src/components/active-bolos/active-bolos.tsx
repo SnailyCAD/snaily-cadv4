@@ -60,7 +60,7 @@ export function ActiveBolos({ initialBolos }: Props) {
   const { hasPermissions } = usePermission();
   const isAdmin = hasPermissions(
     defaultPermissions.allDefaultAdminPermissions,
-    (u) => u.rank !== Rank.USER,
+    (u: { rank: string; }) => u.rank !== Rank.USER,
   );
 
   const isDispatchRoute = pathname === "/dispatch";

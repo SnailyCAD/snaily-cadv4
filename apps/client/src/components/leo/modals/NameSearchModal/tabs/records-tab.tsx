@@ -166,7 +166,7 @@ export function RecordsTable({
         Permissions.ManageNameChangeRequests,
         Permissions.DeleteCitizenRecords,
       ],
-      (u) => u.isSupervisor,
+      (u: { isSupervisor: any; }) => u.isSupervisor,
     );
 
   function handleDeleteClick(record: Record) {

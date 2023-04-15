@@ -50,7 +50,7 @@ export function ModalButtons({ initialActiveOfficer }: { initialActiveOfficer: A
 
   const isAdmin = hasPermissions(
     defaultPermissions.allDefaultAdminPermissions,
-    (u) => u.rank !== Rank.USER,
+    (u: { rank: string; }) => u.rank !== Rank.USER,
   );
 
   const t = useTranslations();

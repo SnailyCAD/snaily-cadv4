@@ -21,7 +21,7 @@ export function CitizenListItem({ citizen }: Props) {
   const { hasPermissions } = usePermission();
   const hasLeoPermissions = hasPermissions(
     defaultPermissions.defaultLeoPermissions,
-    (u) => u.isLeo,
+    (u: { isLeo: any; }) => u.isLeo,
   );
 
   return (

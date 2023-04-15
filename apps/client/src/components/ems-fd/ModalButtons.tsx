@@ -66,7 +66,7 @@ export function ModalButtons({
   const { hasPermissions } = usePermission();
   const isAdmin = hasPermissions(
     defaultPermissions.allDefaultAdminPermissions,
-    (u) => u.rank !== Rank.USER,
+    (u: { rank: string; }) => u.rank !== Rank.USER,
   );
 
   const isButtonDisabled = isAdmin

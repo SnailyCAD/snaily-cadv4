@@ -77,7 +77,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
   const activeOfficers = isMounted ? _activeOfficers : initialOfficers;
   const isDispatch = router.pathname === "/dispatch";
 
-  const hasDispatchPerms = hasPermissions([Permissions.Dispatch], (u) => u.isDispatch);
+  const hasDispatchPerms = hasPermissions([Permissions.Dispatch], (u: { isDispatch: any; }) => u.isDispatch);
   const showCreateTemporaryUnitButton = isDispatch && hasDispatchPerms;
 
   const { leoSearch, showLeoFilters, setShowFilters } = useActiveUnitsState(
