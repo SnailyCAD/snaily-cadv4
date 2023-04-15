@@ -1,12 +1,10 @@
 import { Form, Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
 
-import { FormField } from "components/form/FormField";
-import { Button, Loader, TabsContent, TextField } from "@snailycad/ui";
+import { Button, Loader, SwitchField, TabsContent, TextField } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import type { cad } from "@snailycad/types";
-import { Toggle } from "components/form/Toggle";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { toastMessage } from "lib/toastMessage";
 import type { PutCADDefaultPermissionsData } from "@snailycad/types/api";
@@ -71,7 +69,7 @@ export function DefaultPermissionsTab() {
       </p>
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, values, setFieldValue, setValues }) => (
+        {({ values, setFieldValue, setValues }) => (
           <Form className="mt-5 space-y-5">
             <TextField
               label={common("search")}
@@ -101,7 +99,7 @@ export function DefaultPermissionsTab() {
 
                   return (
                     <div className="mb-5" key={group.name}>
-                      <header className="flex items-center gap-3 mb-2">
+                      <header className="flex items-center gap-3">
                         <h3 className="text-xl font-semibold">{group.name}</h3>
 
                         <Button
@@ -113,7 +111,7 @@ export function DefaultPermissionsTab() {
                         </Button>
                       </header>
 
-                      <div className="grid grid-cols-1 md:grid-cols-3">
+                      <div className="grid grid-cols-1 md:grid-cols-3 mt-5">
                         {filtered.map((permission) => {
                           const formattedName = formatPermissionName(permission);
 
@@ -122,13 +120,13 @@ export function DefaultPermissionsTab() {
                           }
 
                           return (
-                            <FormField key={permission} className="my-1" label={formattedName}>
-                              <Toggle
-                                onCheckedChange={handleChange}
-                                value={values[permission as PermissionNames]}
-                                name={permission}
-                              />
-                            </FormField>
+                            <SwitchField
+                              key={permission}
+                              isSelected={values[permission as PermissionNames]}
+                              onChange={(isSelected) => setFieldValue(permission, isSelected)}
+                            >
+                              {formattedName}
+                            </SwitchField>
                           );
                         })}
                       </div>

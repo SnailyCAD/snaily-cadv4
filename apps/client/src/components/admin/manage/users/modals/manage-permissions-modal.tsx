@@ -4,11 +4,9 @@ import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { getPermissions, PermissionNames, Permissions } from "@snailycad/permissions";
-import { FormField } from "components/form/FormField";
-import { Toggle } from "components/form/Toggle";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
-import { Loader, Button, TextField } from "@snailycad/ui";
+import { Loader, Button, TextField, SwitchField } from "@snailycad/ui";
 import type { GetManageUserByIdData, PutManageUserPermissionsByIdData } from "@snailycad/types/api";
 import { usePermissionsModal } from "hooks/use-permissions-modal";
 
@@ -55,7 +53,7 @@ export function ManagePermissionsModal({ user, onUpdate, isReadOnly }: Props) {
       isOpen={isOpen(ModalIds.ManagePermissions)}
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setValues, values }) => (
+        {({ setFieldValue, setValues, values }) => (
           <Form>
             <TextField
               label={common("search")}
@@ -104,14 +102,15 @@ export function ManagePermissionsModal({ user, onUpdate, isReadOnly }: Props) {
                         }
 
                         return (
-                          <FormField key={permission} className="my-1" label={formattedName}>
-                            <Toggle
-                              onCheckedChange={handleChange}
-                              value={values[permission as PermissionNames]}
-                              name={permission}
-                              disabled={isReadOnly || isDisabled}
-                            />
-                          </FormField>
+                          <SwitchField
+                            key={permission}
+                            isSelected={values[permission as PermissionNames]}
+                            onChange={(isSelected) => setFieldValue(permission, isSelected)}
+                            isDisabled={isReadOnly || isDisabled}
+                            isReadOnly={isReadOnly}
+                          >
+                            {formattedName}
+                          </SwitchField>
                         );
                       })}
                     </div>

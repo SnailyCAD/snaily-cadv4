@@ -9,7 +9,7 @@ import {
   CALL_TYPE_SCHEMA,
 } from "@snailycad/schemas";
 import { FormField } from "components/form/FormField";
-import { Loader, Button, SelectField, TextField } from "@snailycad/ui";
+import { Loader, Button, SelectField, TextField, SwitchField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { Form, Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
@@ -47,7 +47,6 @@ import {
 } from "@snailycad/utils/typeguards";
 import { QualificationFields } from "./manage-modal/QualificationFields";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
-import { Toggle } from "components/form/Toggle";
 import type { PatchValueByIdData, PostValuesData } from "@snailycad/types/api";
 import {
   getDisabledFromValue,
@@ -377,9 +376,12 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
 
             {type === "CODES_10" ? <StatusValueFields /> : null}
 
-            <FormField errorMessage={errors.isDisabled} label="Disabled">
-              <Toggle name="isDisabled" onCheckedChange={handleChange} value={values.isDisabled} />
-            </FormField>
+            <SwitchField
+              isSelected={values.isDisabled}
+              onChange={(isSelected) => setFieldValue("isDisabled", isSelected)}
+            >
+              Is Disabled
+            </SwitchField>
 
             <footer className="flex justify-end mt-5">
               <Button

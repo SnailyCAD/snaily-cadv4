@@ -1,8 +1,7 @@
 import { FormField } from "components/form/FormField";
-import { SelectField, TextField } from "@snailycad/ui";
+import { SelectField, SwitchField, TextField } from "@snailycad/ui";
 import { Select } from "components/form/Select";
 import { useFormikContext } from "formik";
-import { Toggle } from "components/form/Toggle";
 import { DepartmentType } from "@snailycad/types";
 import { useValues } from "context/ValuesContext";
 
@@ -50,32 +49,26 @@ export function DepartmentFields() {
         />
       </FormField>
 
-      <FormField errorMessage={errors.whitelisted as string} checkbox label="Whitelisted">
-        <Toggle
-          name="whitelisted"
-          value={values.whitelisted}
-          onCheckedChange={(e) => {
-            e.target.value && setFieldValue("isDefaultDepartment", false);
-            handleChange(e);
-          }}
-        />
-      </FormField>
+      <SwitchField
+        isSelected={values.whitelisted}
+        onChange={(isSelected) => {
+          isSelected && setFieldValue("isDefaultDepartment", false);
+          setFieldValue("whitelisted", isSelected);
+        }}
+      >
+        Whitelisted
+      </SwitchField>
 
       <div className="flex flex-col">
-        <FormField
-          errorMessage={errors.isDefaultDepartment as string}
-          checkbox
-          label="Default Department"
+        <SwitchField
+          isSelected={values.isDefaultDepartment}
+          onChange={(isSelected) => {
+            isSelected && setFieldValue("whitelisted", false);
+            setFieldValue("isDefaultDepartment", isSelected);
+          }}
         >
-          <Toggle
-            name="isDefaultDepartment"
-            value={values.isDefaultDepartment}
-            onCheckedChange={(e) => {
-              e.target.value && setFieldValue("whitelisted", false);
-              handleChange(e);
-            }}
-          />
-        </FormField>
+          Default Department
+        </SwitchField>
 
         <p className="text-base italic">
           When a department is whitelisted, you can set 1 department as default. This department
@@ -85,17 +78,15 @@ export function DepartmentFields() {
 
       {values.type === DepartmentType.LEO ? (
         <div className="flex flex-col mt-3">
-          <FormField
-            errorMessage={errors.isConfidential as string}
-            checkbox
-            label="Is Confidential"
+          <SwitchField
+            isSelected={values.isConfidential}
+            onChange={(isSelected) => {
+              isSelected && setFieldValue("isConfidential", false);
+              setFieldValue("isConfidential", isSelected);
+            }}
           >
-            <Toggle
-              name="isConfidential"
-              value={values.isConfidential}
-              onCheckedChange={handleChange}
-            />
-          </FormField>
+            Is Confidential
+          </SwitchField>
 
           <p className="text-base italic">
             When a department is confidential, other officers will not be able to view information

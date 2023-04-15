@@ -2510,6 +2510,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-aria/switch@npm:^3.5.0":
+  version: 3.5.0
+  resolution: "@react-aria/switch@npm:3.5.0"
+  dependencies:
+    "@react-aria/toggle": ^3.6.0
+    "@react-stately/toggle": ^3.5.1
+    "@react-types/switch": ^3.3.1
+    "@swc/helpers": ^0.4.14
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: 4d2d414410a8f33e14a8a75156cafcc15b35879f655bc118f08334ec717489bbc497405d05c569cabad61adc0c8d5b7149bda4a8a9520b9e65693016caf47aaf
+  languageName: node
+  linkType: hard
+
 "@react-aria/textfield@npm:^3.9.1":
   version: 3.9.1
   resolution: "@react-aria/textfield@npm:3.9.1"
@@ -2523,6 +2537,24 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
   checksum: 4fb65eeede5baf73df019c3cf0adcc8a2446c9b322fc5f1b2a3fd46171e5bda9cc84d817e7ebb71904c85fa2956b69ee9744fb5cd1ee2eccb895de49b589f74f
+  languageName: node
+  linkType: hard
+
+"@react-aria/toggle@npm:^3.6.0":
+  version: 3.6.0
+  resolution: "@react-aria/toggle@npm:3.6.0"
+  dependencies:
+    "@react-aria/focus": ^3.12.0
+    "@react-aria/interactions": ^3.15.0
+    "@react-aria/utils": ^3.16.0
+    "@react-stately/toggle": ^3.5.1
+    "@react-types/checkbox": ^3.4.3
+    "@react-types/shared": ^3.18.0
+    "@react-types/switch": ^3.3.1
+    "@swc/helpers": ^0.4.14
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: 60deddc95eb8c7aabcfb5775712ae63d0c7ecc511645b218ac387c907df0097c850f80ebceec23fef4add984a00d2dc364a7bce8013c1da8fa6cd20f2fafeacf
   languageName: node
   linkType: hard
 
@@ -3046,6 +3078,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-types/switch@npm:^3.3.1":
+  version: 3.3.1
+  resolution: "@react-types/switch@npm:3.3.1"
+  dependencies:
+    "@react-types/checkbox": ^3.4.3
+    "@react-types/shared": ^3.18.0
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: 41ac4578d3f7f8bbb058c74a958f837b56f53467386972d57a5e4b558ac92ffd5312e2791651b35a416f90568d697606201cf0bd57f825eaec5be14e189e2525
+  languageName: node
+  linkType: hard
+
 "@react-types/table@npm:^3.6.0":
   version: 3.6.0
   resolution: "@react-types/table@npm:3.6.0"
@@ -3552,8 +3596,10 @@ __metadata:
     "@react-aria/overlays": ^3.14.0
     "@react-aria/progress": ^3.4.1
     "@react-aria/radio": ^3.6.0
+    "@react-aria/switch": ^3.5.0
     "@react-aria/textfield": ^3.9.1
     "@react-aria/utils": ^3.16.0
+    "@react-aria/visually-hidden": ^3.8.0
     "@react-stately/calendar": ^3.2.0
     "@react-stately/collections": ^3.7.0
     "@react-stately/combobox": ^3.5.0
@@ -3563,6 +3609,7 @@ __metadata:
     "@react-stately/menu": ^3.5.1
     "@react-stately/radio": ^3.8.0
     "@react-stately/select": ^3.5.0
+    "@react-stately/toggle": ^3.5.1
     "@react-types/combobox": ^3.6.1
     "@react-types/overlays": ^3.7.1
     "@react-types/select": ^3.8.0
