@@ -69,7 +69,7 @@ export default function BusinessId(props: Props) {
 
   const isBusinessOwner = currentEmployee.role?.as === EmployeeAsEnum.OWNER;
   const hasManagePermissions =
-    currentEmployee.canManageEmployees || currentEmployee.canManageVehicles || !isBusinessOwner;
+    isBusinessOwner || currentEmployee.canManageEmployees || currentEmployee.canManageVehicles;
 
   if (!hasManagePermissions) {
     return (

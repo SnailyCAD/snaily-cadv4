@@ -3,7 +3,7 @@ import { Form, Formik, FormikHelpers } from "formik";
 import { useRouter } from "next/router";
 import { WEAPON_SCHEMA } from "@snailycad/schemas";
 import { FormField } from "components/form/FormField";
-import { Loader, Input, Button, Item, AsyncListSearchField } from "@snailycad/ui";
+import { Loader, Input, Button, Item, AsyncListSearchField, SwitchField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useValues } from "src/context/ValuesContext";
@@ -23,7 +23,6 @@ import { filterLicenseType, filterLicenseTypes } from "lib/utils";
 import { toastMessage } from "lib/toastMessage";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import type { PostCitizenWeaponData, PutCitizenWeaponData } from "@snailycad/types/api";
-import { Toggle } from "components/form/Toggle";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
 
 interface Props {
@@ -111,7 +110,7 @@ export function RegisterWeaponModal({ weapon, onClose, onCreate, onUpdate }: Pro
       className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setValues, errors, values, isValid }) => (
+        {({ handleChange, setFieldValue, setValues, errors, values, isValid }) => (
           <Form>
             {CUSTOM_TEXTFIELD_VALUES ? (
               <FormField errorMessage={errors.model} label={tVehicle("model")}>
@@ -174,14 +173,14 @@ export function RegisterWeaponModal({ weapon, onClose, onCreate, onUpdate }: Pro
             </FormField>
 
             {weapon ? (
-              <FormField errorMessage={errors.reApplyForDmv} label={tVehicle("reApplyForDmv")}>
-                <Toggle
-                  disabled={weapon.bofStatus !== WhitelistStatus.DECLINED}
-                  onCheckedChange={handleChange}
-                  name="reApplyForDmv"
-                  value={values.reApplyForDmv ?? false}
-                />
-              </FormField>
+              <SwitchField
+                className="mt-3"
+                isSelected={values.reApplyForDmv ?? false}
+                onChange={(isSelected) => setFieldValue("reApplyForDmv", isSelected)}
+                isDisabled={weapon.bofStatus !== WhitelistStatus.DECLINED}
+              >
+                {tVehicle("reApplyForDmv")}
+              </SwitchField>
             ) : null}
 
             <footer className="flex justify-end mt-5">

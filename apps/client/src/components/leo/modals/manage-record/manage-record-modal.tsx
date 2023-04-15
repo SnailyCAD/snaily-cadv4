@@ -8,6 +8,7 @@ import {
   Item,
   TabList,
   TabsContent,
+  SwitchField,
 } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import type { SelectValue } from "components/form/Select";
@@ -23,7 +24,6 @@ import { RecordType, type PenalCode, type Record, PaymentStatus } from "@snailyc
 import { toastMessage } from "lib/toastMessage";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { PostRecordsData, PutRecordsByIdData } from "@snailycad/types/api";
-import { Toggle } from "components/form/Toggle";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import { FullDate } from "components/shared/FullDate";
@@ -345,19 +345,18 @@ export function ManageRecordModal(props: Props) {
                   onChange={(value) => setFieldValue("notes", value)}
                 />
 
-                <FormField optional errorMessage={errors.paymentStatus} label={t("recordPaid")}>
-                  <Toggle
-                    disabled={props.isReadOnly}
-                    value={values.paymentStatus === PaymentStatus.PAID}
-                    name="paymentStatus"
-                    onCheckedChange={(event) => {
-                      setFieldValue(
-                        "paymentStatus",
-                        event.target.value ? PaymentStatus.PAID : PaymentStatus.UNPAID,
-                      );
-                    }}
-                  />
-                </FormField>
+                <SwitchField
+                  isDisabled={props.isReadOnly}
+                  isSelected={values.paymentStatus === PaymentStatus.PAID}
+                  onChange={(isSelected) => {
+                    setFieldValue(
+                      "paymentStatus",
+                      isSelected ? PaymentStatus.PAID : PaymentStatus.UNPAID,
+                    );
+                  }}
+                >
+                  {t("recordPaid")}
+                </SwitchField>
               </TabsContent>
 
               <SeizedItemsTab isReadOnly={props.isReadOnly} />

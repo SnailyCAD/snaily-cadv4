@@ -1,15 +1,13 @@
 import { useTranslations } from "use-intl";
-import { Loader, Button, AsyncListSearchField, Item } from "@snailycad/ui";
+import { Loader, Button, AsyncListSearchField, Item, SwitchField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { Form, Formik } from "formik";
-import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
 import { makeUnitName, yesOrNoText } from "lib/utils";
 import { isUnitCombined, isUnitCombinedEmsFd } from "@snailycad/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { Toggle } from "components/form/Toggle";
 import type { Put911CallByIdData } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call-911-state";
 import type { CombinedEmsFdUnit, CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
@@ -135,7 +133,7 @@ export function AddUnitToCallModal({ onClose }: Props) {
       className="w-[600px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setValues, values, errors }) => (
+        {({ setFieldValue, setValues, values, errors }) => (
           <Form>
             <div className="border border-secondary rounded-md p-4 mt-5">
               <AsyncListSearchField<Officer | EmsFdDeputy | CombinedLeoUnit | CombinedEmsFdUnit>
@@ -194,13 +192,13 @@ export function AddUnitToCallModal({ onClose }: Props) {
               </AsyncListSearchField>
 
               <FormRow flexLike className="items-center">
-                <FormField className="mt-3" checkbox label={t("primaryUnit")}>
-                  <Toggle
-                    onCheckedChange={handleChange}
-                    value={values.isPrimary}
-                    name="isPrimary"
-                  />
-                </FormField>
+                <SwitchField
+                  className="mt-3"
+                  isSelected={values.isPrimary}
+                  onChange={(isSelected) => setFieldValue("isPrimary", isSelected)}
+                >
+                  {t("primaryUnit")}
+                </SwitchField>
 
                 <Button
                   type="button"

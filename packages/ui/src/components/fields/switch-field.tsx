@@ -4,17 +4,21 @@ import { useToggleState } from "@react-stately/toggle";
 import * as React from "react";
 import { classNames } from "../../utils/classNames";
 
-export function SwitchField(props: AriaSwitchProps) {
+interface SwitchFieldProps extends AriaSwitchProps {
+  className?: string;
+}
+
+export function SwitchField(props: SwitchFieldProps) {
   const state = useToggleState(props);
   const ref = React.useRef(null);
   const { inputProps } = useSwitch(props, state, ref);
-  // let { isFocusVisible, focusProps } = useFocusRing();
 
   return (
     <label
       className={classNames(
         "flex items-center mb-3 gap-1.5 font-medium",
         props.isDisabled || (props.isReadOnly && "opacity-50 cursor-not-allowed"),
+        props.className,
       )}
     >
       <VisuallyHidden>

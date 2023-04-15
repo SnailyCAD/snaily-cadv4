@@ -1,12 +1,10 @@
-import { Loader, Button, TextField } from "@snailycad/ui";
-import { FormField } from "components/form/FormField";
+import { Loader, Button, TextField, SwitchField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { Toggle } from "components/form/Toggle";
 import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
 import { TONES_SCHEMA } from "@snailycad/schemas";
@@ -97,25 +95,29 @@ export function TonesModal({ types }: Props) {
       className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setFieldValue, setValues, resetForm, values, errors, isValid }) => (
+        {({ setFieldValue, setValues, resetForm, values, errors, isValid }) => (
           <Form>
             <p className="my-3 text-neutral-700 dark:text-gray-400">{t("notesInfo")}</p>
 
             <FormRow>
               {types.includes(ActiveToneType.EMS_FD) ? (
-                <FormField errorMessage={errors.emsFdTone} label={t("emsFdTone")}>
-                  <Toggle
-                    name="emsFdTone"
-                    onCheckedChange={handleChange}
-                    value={values.emsFdTone}
-                  />
-                </FormField>
+                <SwitchField
+                  className="mt-3"
+                  isSelected={values.emsFdTone}
+                  onChange={(isSelected) => setFieldValue("emsFdTone", isSelected)}
+                >
+                  {t("emsFdTone")}
+                </SwitchField>
               ) : null}
 
               {types.includes(ActiveToneType.LEO) ? (
-                <FormField errorMessage={errors.leoTone} label={t("leoTone")}>
-                  <Toggle name="leoTone" onCheckedChange={handleChange} value={values.leoTone} />
-                </FormField>
+                <SwitchField
+                  className="mt-3"
+                  isSelected={values.leoTone}
+                  onChange={(isSelected) => setFieldValue("leoTone", isSelected)}
+                >
+                  {t("leoTone")}
+                </SwitchField>
               ) : null}
             </FormRow>
 

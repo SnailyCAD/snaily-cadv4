@@ -1,12 +1,10 @@
 import { Form, Formik, useFormikContext } from "formik";
 import { useTranslations } from "use-intl";
-import { Button, TextField } from "@snailycad/ui";
-import { FormField } from "components/form/FormField";
+import { Button, SwitchField, TextField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import type { SeizedItem } from "@snailycad/types";
-import { Toggle } from "components/form/Toggle";
 import { v4 } from "uuid";
 
 interface Props {
@@ -60,7 +58,7 @@ export function ManageSeizedItemsModal({ item, onClose }: Props) {
       className="w-[600px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setFieldValue, values, errors, isValid }) => (
+        {({ setFieldValue, values, isValid }) => (
           <Form autoComplete="off">
             <TextField
               autoFocus
@@ -80,9 +78,12 @@ export function ManageSeizedItemsModal({ item, onClose }: Props) {
               value={String(values.quantity)}
             />
 
-            <FormField className="mt-1" checkbox errorMessage={errors.illegal} label={t("illegal")}>
-              <Toggle name="illegal" onCheckedChange={handleChange} value={values.illegal} />
-            </FormField>
+            <SwitchField
+              isSelected={values.illegal}
+              onChange={(isSelected) => setFieldValue("illegal", isSelected)}
+            >
+              {t("illegal")}
+            </SwitchField>
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onPress={handleClose} variant="cancel">
