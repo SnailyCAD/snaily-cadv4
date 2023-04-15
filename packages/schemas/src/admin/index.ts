@@ -134,12 +134,6 @@ export const UPDATE_USER_SCHEMA = z.object({
     .max(255)
     .regex(/^([a-z_.\d]+)*[a-z\d]+$/i),
   rank: z.string().min(2).max(255).regex(RANK_REGEX),
-  isLeo: z.boolean(),
-  isEmsFd: z.boolean(),
-  isDispatch: z.boolean(),
-  isTow: z.boolean(),
-  isTaxi: z.boolean(),
-  isSupervisor: z.boolean(),
   steamId: z.string().max(255),
   discordId: z.string().max(255),
 });

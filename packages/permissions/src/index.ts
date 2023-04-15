@@ -7,13 +7,6 @@ export interface PartialUser {
   rank: "OWNER" | "ADMIN" | "USER";
   permissions: (Permissions | string)[];
   roles?: { permissions: (Permissions | string)[] }[];
-
-  isDispatch?: boolean;
-  isLeo?: boolean;
-  isEmsFd?: boolean;
-  isTaxi?: boolean;
-  isTow?: boolean;
-  isSupervisor?: boolean;
 }
 
 export interface HasPermissionOptions {
