@@ -1,10 +1,9 @@
-import { TabsContent } from "@radix-ui/react-tabs";
 import { ExpungementRequestStatus } from "@snailycad/types";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useTranslations } from "next-intl";
 import { getTitles } from "components/courthouse/expungement-requests/RequestExpungement";
-import { Button } from "@snailycad/ui";
+import { Button, TabsContent } from "@snailycad/ui";
 import { FullDate } from "components/shared/FullDate";
 import { Status } from "components/shared/Status";
 import useFetch from "lib/useFetch";
@@ -53,7 +52,12 @@ export function ExpungementRequestsTab({ requests: data }: Props) {
   }
 
   return (
-    <TabsContent value="expungement-requests">
+    <TabsContent
+      tabName={`${t("Management.MANAGE_EXPUNGEMENT_REQUESTS")} ${
+        asyncTable.isInitialLoading ? "" : ` (${asyncTable.pagination.totalDataCount})`
+      }`}
+      value="expungement-requests"
+    >
       <h3 className="font-semibold text-xl">{t("Management.MANAGE_EXPUNGEMENT_REQUESTS")}</h3>
 
       {asyncTable.noItemsAvailable ? (

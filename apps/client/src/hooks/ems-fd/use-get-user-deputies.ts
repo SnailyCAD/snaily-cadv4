@@ -6,7 +6,6 @@ export function useGetUserDeputies(options?: { enabled?: boolean }) {
   const { execute } = useFetch();
 
   const { data, isLoading } = useQuery({
-    refetchOnMount: false,
     refetchOnWindowFocus: false,
     ...(options ?? {}),
     queryKey: ["/ems-fd"],

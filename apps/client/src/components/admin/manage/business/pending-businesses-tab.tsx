@@ -41,7 +41,7 @@ export function PendingBusinessesTab() {
   return (
     <TabsContent
       tabName={`${t("pendingBusinesses")} ${
-        asyncTable.isInitialLoading ? "" : ` (${asyncTable.pagination.totalDataCount})`
+        asyncTable.isLoading ? "" : ` (${asyncTable.pagination.totalDataCount})`
       }`}
       aria-label={t("pendingBusinesses")}
       value="pendingBusinesses"
