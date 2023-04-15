@@ -1,7 +1,5 @@
 import { ValueLicenseType } from "@snailycad/types";
-import { SelectField } from "@snailycad/ui";
-import { FormField } from "components/form/FormField";
-import { Toggle } from "components/form/Toggle";
+import { SelectField, SwitchField } from "@snailycad/ui";
 import { useFormikContext } from "formik";
 
 export const LICENSE_LABELS = {
@@ -16,7 +14,7 @@ const LICENSE_TYPES = Object.values(ValueLicenseType).map((v) => ({
 }));
 
 export function LicenseFields() {
-  const { values, errors, setFieldValue, handleChange } = useFormikContext<any>();
+  const { values, errors, setFieldValue } = useFormikContext<any>();
 
   return (
     <>
@@ -54,13 +52,13 @@ export function LicenseFields() {
 
       {!values.licenseType || values.licenseType === ValueLicenseType.LICENSE ? (
         <div className="flex flex-col w-full">
-          <FormField checkbox errorMessage={errors.isDefault as string} label="Default license">
-            <Toggle
-              name="isDefault"
-              value={values.isDefault ?? false}
-              onCheckedChange={handleChange}
-            />
-          </FormField>
+          <SwitchField
+            isSelected={values.isDefault ?? false}
+            onChange={(isSelected) => setFieldValue("isDefault", isSelected)}
+          >
+            Default License
+          </SwitchField>
+
           <p className="text-base italic">
             This license will be given to a citizen when they are first created.
           </p>

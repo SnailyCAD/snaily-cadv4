@@ -1,5 +1,4 @@
-import { Loader, Button, TextField } from "@snailycad/ui";
-import { FormField } from "components/form/FormField";
+import { Loader, Button, TextField, SwitchField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
@@ -8,7 +7,6 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { CREATE_COMPANY_SCHEMA } from "@snailycad/schemas";
 import { handleValidate } from "lib/handleValidate";
-import { Toggle } from "components/form/Toggle";
 import { useRouter } from "next/router";
 import { toastMessage } from "lib/toastMessage";
 import { WhitelistStatus } from "@snailycad/types";
@@ -69,7 +67,7 @@ export function CreateBusinessModal({ onCreate }: Props) {
       onClose={handleClose}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setFieldValue, errors, values, isValid }) => (
+        {({ setFieldValue, errors, values, isValid }) => (
           <Form>
             <CitizenSuggestionsField
               autoFocus
@@ -90,13 +88,12 @@ export function CreateBusinessModal({ onCreate }: Props) {
 
             <AddressPostalSelect />
 
-            <FormField errorMessage={errors.whitelisted} label={t("whitelisted")}>
-              <Toggle
-                name="whitelisted"
-                onCheckedChange={handleChange}
-                value={values.whitelisted}
-              />
-            </FormField>
+            <SwitchField
+              isSelected={values.whitelisted}
+              onChange={(isSelected) => setFieldValue("whitelisted", isSelected)}
+            >
+              {t("whitelisted")}
+            </SwitchField>
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onPress={handleClose} variant="cancel">
