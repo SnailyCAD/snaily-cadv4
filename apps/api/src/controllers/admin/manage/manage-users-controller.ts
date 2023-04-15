@@ -307,10 +307,6 @@ export class ManageUsersController {
       throw new NotFound("notFound");
     }
 
-    if (user.rank === Rank.OWNER && data.rank !== Rank.OWNER) {
-      throw new ExtendedBadRequest({ rank: "cannotUpdateOwnerRank" });
-    }
-
     if (data.discordId && (await isDiscordIdInUse(data.discordId, user.id))) {
       throw new ExtendedBadRequest({ discordId: "discordIdInUse" });
     }
@@ -322,7 +318,6 @@ export class ManageUsersController {
       data: {
         username: data.username,
         steamId: data.steamId,
-        rank: user.rank === Rank.OWNER ? Rank.OWNER : Rank[data.rank as Rank],
         discordId: data.discordId,
       },
       select: manageUsersSelect(false),

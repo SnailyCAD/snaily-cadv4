@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-const RANK_REGEX = /OWNER|ADMIN|USER/;
-
 export const CAD_SETTINGS_SCHEMA = z.object({
   name: z.string().min(2).max(255),
   areaOfPlay: z.string().max(255),
@@ -133,7 +131,6 @@ export const UPDATE_USER_SCHEMA = z.object({
     .min(3)
     .max(255)
     .regex(/^([a-z_.\d]+)*[a-z\d]+$/i),
-  rank: z.string().min(2).max(255).regex(RANK_REGEX),
   steamId: z.string().max(255),
   discordId: z.string().max(255),
 });

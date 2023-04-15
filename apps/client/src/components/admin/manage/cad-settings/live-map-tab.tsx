@@ -132,7 +132,7 @@ export function LiveMapTab() {
                   the following format:{" "}
                   {TILE_NAMES.map((name, idx) => (
                     <>
-                      <code key={name}>{name}</code>
+                      <code key={idx}>{name}</code>
                       {idx === TILE_NAMES.length - 1 ? "" : ", "}
                     </>
                   ))}
