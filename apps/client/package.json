@@ -42,7 +42,7 @@
     "@snailycad/ui": "1.54.0",
     "@snailycad/utils": "1.54.0",
     "@tailwindcss/typography": "^0.5.9",
-    "@tanstack/react-query": "^4.29.1",
+    "@tanstack/react-query": "^4.29.3",
     "@tanstack/react-table": "8.8.5",
     "@tanstack/react-virtual": "^3.0.0-alpha.0",
     "@tanstack/virtual-core": "^3.0.0-alpha.1",
