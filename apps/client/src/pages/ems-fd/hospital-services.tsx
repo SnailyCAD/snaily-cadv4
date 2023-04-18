@@ -131,10 +131,13 @@ export default function EmsFdIncidents({ deadCitizens }: Props) {
       {hasMangeDeadCitizensPermissions ? (
         <AlertModal
           title={t("HospitalServices.declareAlive")}
-          description={t("HospitalServices.alert_declareAlive")}
+          description={t.rich("HospitalServices.alert_declareAlive", {
+            citizen: `${tempCitizen?.name} ${tempCitizen?.surname}`,
+          })}
           id={ModalIds.AlertDeclareCitizenAlive}
           state={state}
           onDeleteClick={handleDeclareCitizenAlive}
+          deleteText={t("HospitalServices.declareAlive")}
         />
       ) : null}
     </Layout>
