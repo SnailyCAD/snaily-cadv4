@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useFormikContext } from "formik";
 import { FormField } from "components/form/FormField";
 import { ImageSelectInput } from "components/form/inputs/ImageSelectInput";

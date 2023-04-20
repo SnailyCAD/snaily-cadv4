@@ -50,6 +50,7 @@ export function DivisionFields() {
       />
 
       <TextField
+        description="Allows you to set a JSON value to be used for extra fields. This can be useful when using the Public API for doing custom things."
         isTextarea
         isOptional
         errorMessage={errors.extraFields as string}

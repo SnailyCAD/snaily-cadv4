@@ -3,9 +3,12 @@ import { VisuallyHidden } from "@react-aria/visually-hidden";
 import { useToggleState } from "@react-stately/toggle";
 import * as React from "react";
 import { classNames } from "../../utils/classNames";
+import { HoverCard } from "../hover-card";
+import { InfoCircle } from "react-bootstrap-icons";
 
 interface SwitchFieldProps extends AriaSwitchProps {
   className?: string;
+  description?: string;
 }
 
 export function SwitchField(props: SwitchFieldProps) {
@@ -50,20 +53,16 @@ export function SwitchField(props: SwitchFieldProps) {
             "block w-4 h-4 transition-all rounded-full switch-component bg-white dark:bg-gray-200",
           )}
         />
-        {/* {isFocusVisible && (
-          <rect
-            x={1}
-            y={1}
-            width={38}
-            height={22}
-            rx={11}
-            fill="none"
-            stroke="orange"
-            strokeWidth={2}
-          />
-        )} */}
       </svg>
       {props.children}
+
+      {props.description ? (
+        <span className="ml-1">
+          <HoverCard portal={false} trigger={<InfoCircle width={14} height={14} />}>
+            {props.description}
+          </HoverCard>
+        </span>
+      ) : null}
     </label>
   );
 }

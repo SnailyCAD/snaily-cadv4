@@ -59,43 +59,32 @@ export function DepartmentFields() {
         Whitelisted
       </SwitchField>
 
-      <div className="flex flex-col">
-        <SwitchField
-          isSelected={values.isDefaultDepartment}
-          onChange={(isSelected) => {
-            isSelected && setFieldValue("whitelisted", false);
-            setFieldValue("isDefaultDepartment", isSelected);
-          }}
-        >
-          Default Department
-        </SwitchField>
-
-        <p className="text-base italic">
-          When a department is whitelisted, you can set 1 department as default. This department
-          will be given to the officer when they are awaiting access or when they were declined.
-        </p>
-      </div>
+      <SwitchField
+        description="When a department is whitelisted, you can set 1 department as default. This department will be given to the officer when they are awaiting access or when they were declined."
+        isSelected={values.isDefaultDepartment}
+        onChange={(isSelected) => {
+          isSelected && setFieldValue("whitelisted", false);
+          setFieldValue("isDefaultDepartment", isSelected);
+        }}
+      >
+        Default Department
+      </SwitchField>
 
       {values.type === DepartmentType.LEO ? (
-        <div className="flex flex-col mt-3">
-          <SwitchField
-            isSelected={values.isConfidential}
-            onChange={(isSelected) => {
-              isSelected && setFieldValue("isConfidential", false);
-              setFieldValue("isConfidential", isSelected);
-            }}
-          >
-            Is Confidential
-          </SwitchField>
-
-          <p className="text-base italic">
-            When a department is confidential, other officers will not be able to view information
-            of other officers within this department.
-          </p>
-        </div>
+        <SwitchField
+          description="When a department is confidential, other officers will not be able to view information of other officers within this department."
+          isSelected={values.isConfidential}
+          onChange={(isSelected) => {
+            isSelected && setFieldValue("isConfidential", false);
+            setFieldValue("isConfidential", isSelected);
+          }}
+        >
+          Is Confidential
+        </SwitchField>
       ) : null}
 
       <TextField
+        description="Allows you to set a JSON value to be used for extra fields. This can be useful when using the Public API for doing custom things."
         isTextarea
         isOptional
         errorMessage={errors.extraFields as string}

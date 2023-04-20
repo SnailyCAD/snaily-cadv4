@@ -379,6 +379,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             <SwitchField
               isSelected={values.isDisabled}
               onChange={(isSelected) => setFieldValue("isDisabled", isSelected)}
+              description="When a value is disabled, it will not be able to be selected in the dropdown."
             >
               Is Disabled
             </SwitchField>
