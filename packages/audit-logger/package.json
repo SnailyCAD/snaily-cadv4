@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/audit-logger",
-  "version": "1.55.0",
+  "version": "1.55.1",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -24,7 +24,7 @@
     "typecheck": "yarn tsc --noEmit"
   },
   "devDependencies": {
-    "@snailycad/types": "1.55.0",
+    "@snailycad/types": "1.55.1",
     "tsup": "^6.7.0",
     "typescript": "^5.0.4",
     "vite": "^4.2.1",
