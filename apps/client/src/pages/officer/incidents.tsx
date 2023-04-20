@@ -13,6 +13,8 @@ import { Title } from "components/shared/Title";
 import { usePermission, Permissions } from "hooks/usePermission";
 import type { GetActiveOfficerData, GetDispatchData, GetIncidentsData } from "@snailycad/types/api";
 import { IncidentsTable } from "components/leo/incidents/incidents-table";
+import { ExclamationCircleFill } from "react-bootstrap-icons";
+import Link from "next/link";
 
 interface Props extends GetDispatchData {
   incidents: GetIncidentsData<"leo">;
@@ -39,6 +41,25 @@ export default function LeoIncidents({ activeOfficer, incidents: initialData }: 
       }}
       className="dark:text-white"
     >
+      {!isOfficerOnDuty ? (
+        <div
+          role="alert"
+          className="mb-5 flex flex-col p-2 px-4 text-black rounded-md shadow bg-orange-400 border border-orange-500/80"
+        >
+          <header className="flex items-center gap-2 mb-2">
+            <ExclamationCircleFill />
+            <h5 className="font-semibold text-lg">Inactive Officer</h5>
+          </header>
+          <p>
+            You must have an on-duty officer before you can manage incident. Please go to the{" "}
+            <Link className="font-medium underline" href="/officer">
+              Officer Dashboard
+            </Link>{" "}
+            and set your officer to on-duty.
+          </p>
+        </div>
+      ) : null}
+
       <header className="flex items-center justify-between">
         <Title className="!mb-0">{t("incidents")}</Title>
 

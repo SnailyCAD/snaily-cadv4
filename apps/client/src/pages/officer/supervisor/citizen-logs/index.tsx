@@ -37,7 +37,12 @@ export default function CitizenLogs(props: Props) {
       }}
       className="dark:text-white"
     >
-      <Title>{t("citizenLogs")}</Title>
+      <header className="mb-5">
+        <Title>{t("citizenLogs")}</Title>
+        <p className="max-w-2xl mt-2 text-neutral-700 dark:text-gray-400">
+          {t("citizenLogsDescription")}
+        </p>
+      </header>
 
       <TabList tabs={TABS}>
         <CitizenLogsTab citizens={props.citizens} />

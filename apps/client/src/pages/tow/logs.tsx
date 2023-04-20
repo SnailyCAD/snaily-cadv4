@@ -47,10 +47,15 @@ export default function TowLogs(props: Props) {
 
   return (
     <Layout permissions={{ permissions: [Permissions.ViewTowLogs] }} className="dark:text-white">
-      <Title>{t("towLogs")}</Title>
+      <header>
+        <Title>{t("towLogs")}</Title>
+        <p className="max-w-2xl mt-2 text-neutral-700 dark:text-gray-400">
+          {t("towLogsDescription")}
+        </p>
+      </header>
 
       {calls.length <= 0 ? (
-        <p className="mt-5">{t("noTowCalls")}</p>
+        <p className="text-neutral-700 dark:text-gray-400 mt-10">{t("noTowCalls")}</p>
       ) : (
         <Table
           tableState={tableState}
