@@ -82,7 +82,11 @@ export class AdminManageBusinessesController {
       businessId,
     };
 
-    const [totalCount, employees] = await prisma.$transaction([
+    const [business, totalCount, employees] = await prisma.$transaction([
+      prisma.business.findUnique({
+        where: { id: businessId },
+        select: { status: true },
+      }),
       prisma.employee.count({ where }),
       prisma.employee.findMany({
         where,
@@ -95,7 +99,7 @@ export class AdminManageBusinessesController {
       }),
     ]);
 
-    return { totalCount, employees };
+    return { ...business, totalCount, employees };
   }
 
   @Put("/employees/:id")

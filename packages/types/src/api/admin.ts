@@ -109,6 +109,7 @@ export interface GetManageBusinessesData {
  * @route /admin/manage/businesses/:id
  */
 export interface GetManageBusinessByIdEmployeesData {
+  status?: Types.WhitelistStatus | null | undefined;
   totalCount: number;
   employees: (Prisma.Employee & {
     citizen: Pick<Types.BaseCitizen, "id" | "name" | "surname">;
