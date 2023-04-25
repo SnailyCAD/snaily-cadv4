@@ -13,6 +13,11 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Select } from "components/form/Select";
 import { FormRow } from "components/form/FormRow";
 import { CallSignPreview } from "components/leo/CallsignPreview";
+import {
+  CREATE_TEMPORARY_EMS_FD_DEPUTY_SCHEMA,
+  CREATE_TEMPORARY_OFFICER_SCHEMA,
+} from "@snailycad/schemas";
+import { handleValidate } from "lib/handleValidate";
 
 interface Props {
   onClose?(): void;
@@ -46,6 +51,9 @@ export function CreateTemporaryUnitModal({ onClose }: Props) {
     }
   }
 
+  const schema =
+    type === "ems-fd" ? CREATE_TEMPORARY_EMS_FD_DEPUTY_SCHEMA : CREATE_TEMPORARY_OFFICER_SCHEMA;
+  const validate = handleValidate(schema);
   const INITIAL_VALUES = {
     name: "",
     surname: "",
@@ -67,7 +75,7 @@ export function CreateTemporaryUnitModal({ onClose }: Props) {
       title={t("Leo.createTemporaryUnit")}
       className="w-[600px]"
     >
-      <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
+      <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, setFieldValue, values, errors }) => (
           <Form>
             <FormRow>
@@ -163,7 +171,7 @@ export function CreateTemporaryUnitModal({ onClose }: Props) {
                 label={t("Leo.badgeNumber")}
                 name="badgeNumber"
                 onChange={(value) => {
-                  isNaN(Number(value))
+                  isNaN(parseInt(value))
                     ? setFieldValue("badgeNumber", value)
                     : setFieldValue("badgeNumber", parseInt(value));
                 }}
