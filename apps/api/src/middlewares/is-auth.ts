@@ -87,6 +87,13 @@ export function setCADFeatures<T extends Partial<cad & { features?: CadFeature[]
   const isForceDiscordAuthEnabled = features.FORCE_DISCORD_AUTH;
   const isForceSteamAuthEnabled = features.FORCE_STEAM_AUTH;
 
+  let allowRegularLogin = features.ALLOW_REGULAR_LOGIN;
+  if (!allowRegularLogin) {
+    if (!isSteamOAuthEnabled || !isDiscordOauthEnabled) {
+      allowRegularLogin = true;
+    }
+  }
+
   const filtered = overwriteFeatures({
     features,
     featuresToOverwrite: {
@@ -94,6 +101,7 @@ export function setCADFeatures<T extends Partial<cad & { features?: CadFeature[]
       FORCE_DISCORD_AUTH: hasDiscordTokens && isForceDiscordAuthEnabled,
       STEAM_OAUTH: isSteamOAuthEnabled && hasSteamTokens,
       FORCE_STEAM_AUTH: isForceSteamAuthEnabled && hasSteamTokens,
+      ALLOW_REGULAR_LOGIN: allowRegularLogin,
     },
   });
 
