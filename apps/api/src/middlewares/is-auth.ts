@@ -88,10 +88,8 @@ export function setCADFeatures<T extends Partial<cad & { features?: CadFeature[]
   const isForceSteamAuthEnabled = features.FORCE_STEAM_AUTH;
 
   let allowRegularLogin = features.ALLOW_REGULAR_LOGIN;
-  if (!allowRegularLogin) {
-    if (!isSteamOAuthEnabled || !isDiscordOauthEnabled) {
-      allowRegularLogin = true;
-    }
+  if (!allowRegularLogin && !isDiscordOauthEnabled && !isSteamOAuthEnabled) {
+    allowRegularLogin = true;
   }
 
   const filtered = overwriteFeatures({
