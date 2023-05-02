@@ -264,7 +264,7 @@ export class SearchActionsController {
 
   @Put("/custom-fields/citizen/:citizenId")
   @UsePermissions({
-    permissions: [Permissions.Leo],
+    permissions: [Permissions.LeoManageCustomFields],
   })
   async updateCitizenCustomFields(
     @BodyParams("fields") fields: unknown,
@@ -294,7 +294,7 @@ export class SearchActionsController {
 
   @Put("/custom-fields/vehicle/:vehicleId")
   @UsePermissions({
-    permissions: [Permissions.Leo],
+    permissions: [Permissions.LeoManageCustomFields],
   })
   async updateVehicleCustomFields(
     @BodyParams("fields") fields: unknown,
@@ -324,7 +324,7 @@ export class SearchActionsController {
 
   @Put("/custom-fields/weapon/:weaponId")
   @UsePermissions({
-    permissions: [Permissions.Leo],
+    permissions: [Permissions.LeoManageCustomFields],
   })
   async updateWeaponCustomFields(
     @BodyParams("fields") fields: unknown,

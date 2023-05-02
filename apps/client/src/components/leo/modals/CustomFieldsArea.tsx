@@ -6,6 +6,7 @@ import type { NameSearchResult } from "state/search/name-search-state";
 import type { VehicleSearchResult } from "state/search/vehicle-search-state";
 import type { WeaponSearchResult } from "state/search/weapon-search-state";
 import { ModalIds } from "types/ModalIds";
+import { Permissions, usePermission } from "hooks/usePermission";
 
 interface Props {
   currentResult: NonNullable<NameSearchResult | VehicleSearchResult | WeaponSearchResult>;
@@ -16,6 +17,8 @@ export function CustomFieldsArea({ currentResult, isLeo }: Props) {
   const { openModal } = useModal();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
+  const { hasPermissions } = usePermission();
+  const hasManageCustomFieldsPermissions = hasPermissions([Permissions.LeoManageCustomFields]);
 
   if ("isConfidential" in currentResult && currentResult.isConfidential) {
     return null;
@@ -41,7 +44,7 @@ export function CustomFieldsArea({ currentResult, isLeo }: Props) {
         ))
       )}
 
-      {isLeo ? (
+      {isLeo && hasManageCustomFieldsPermissions ? (
         <Button
           size="xs"
           type="button"
