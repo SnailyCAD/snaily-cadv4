@@ -126,9 +126,7 @@ export default function BusinessId(props: Props) {
     <Layout className="dark:text-white">
       <Breadcrumbs>
         <BreadcrumbItem href="/business">{t("business")}</BreadcrumbItem>
-        <BreadcrumbItem href={`/citizen/${currentBusiness.id}`}>
-          {currentBusiness.name}
-        </BreadcrumbItem>
+        <BreadcrumbItem>{currentBusiness.name}</BreadcrumbItem>
       </Breadcrumbs>
 
       <header className="flex items-center justify-between">

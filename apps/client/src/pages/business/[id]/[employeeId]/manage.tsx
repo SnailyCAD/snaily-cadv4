@@ -118,7 +118,7 @@ export default function BusinessId(props: Props) {
 
       <Breadcrumbs>
         <BreadcrumbItem href="/business">{t("business")}</BreadcrumbItem>
-        <BreadcrumbItem href={`/citizen/${currentBusiness.id}`}>
+        <BreadcrumbItem href={`/business/${currentBusiness.id}/${currentEmployee.id}`}>
           {currentBusiness.name}
         </BreadcrumbItem>
         <BreadcrumbItem>{common("manage")}</BreadcrumbItem>

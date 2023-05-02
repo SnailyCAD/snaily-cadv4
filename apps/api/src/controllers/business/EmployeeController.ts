@@ -31,7 +31,8 @@ export class BusinessEmployeeController {
 
     await validateBusinessAcceptance(cad, businessId);
 
-    const employee = await prisma.employee.findFirst({
+    /** the employee who wants to manage another employee */
+    const managingEmployee = await prisma.employee.findFirst({
       where: {
         id: data.employeeId,
         businessId,
@@ -42,8 +43,10 @@ export class BusinessEmployeeController {
       },
     });
 
-    const isOwner = employee?.role?.as === EmployeeAsEnum.OWNER;
-    if (!employee || !isOwner || !employee.canManageEmployees) {
+    const isOwner = managingEmployee?.role?.as === EmployeeAsEnum.OWNER;
+    const canManageEmployees = isOwner ? true : managingEmployee?.canManageEmployees;
+
+    if (!canManageEmployees) {
       throw new NotFound("employeeNotFoundOrInvalidPermissions");
     }
 
@@ -111,7 +114,7 @@ export class BusinessEmployeeController {
 
     await validateBusinessAcceptance(cad, businessId);
 
-    const employee = await prisma.employee.findFirst({
+    const managingEmployee = await prisma.employee.findFirst({
       where: {
         id: data.employeeId,
         businessId,
@@ -122,8 +125,10 @@ export class BusinessEmployeeController {
       },
     });
 
-    const isOwner = employee?.role?.as === EmployeeAsEnum.OWNER;
-    if (!employee || !isOwner || !employee.canManageEmployees) {
+    const isOwner = managingEmployee?.role?.as === EmployeeAsEnum.OWNER;
+    const canManageEmployees = isOwner ? true : managingEmployee?.canManageEmployees;
+
+    if (!canManageEmployees) {
       throw new NotFound("employeeNotFoundOrInvalidPermissions");
     }
 
@@ -166,7 +171,7 @@ export class BusinessEmployeeController {
 
     await validateBusinessAcceptance(cad, businessId);
 
-    const employee = await prisma.employee.findFirst({
+    const managingEmployee = await prisma.employee.findFirst({
       where: {
         id: data.employeeId,
         businessId,
@@ -177,8 +182,10 @@ export class BusinessEmployeeController {
       },
     });
 
-    const isOwner = employee?.role?.as === EmployeeAsEnum.OWNER;
-    if (!employee || !isOwner || !employee.canManageEmployees) {
+    const isOwner = managingEmployee?.role?.as === EmployeeAsEnum.OWNER;
+    const canManageEmployees = isOwner ? true : managingEmployee?.canManageEmployees;
+
+    if (!canManageEmployees) {
       throw new NotFound("employeeNotFoundOrInvalidPermissions");
     }
 
