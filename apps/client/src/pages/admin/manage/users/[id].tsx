@@ -6,7 +6,7 @@ import { UPDATE_USER_SCHEMA } from "@snailycad/schemas";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { Rank } from "@snailycad/types";
+import { Rank, WhitelistStatus } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import {
   Loader,
@@ -34,6 +34,8 @@ import type {
   GetManageUserByIdData,
   PutManageUserByIdData,
 } from "@snailycad/types/api";
+import { useAuth } from "context/AuthContext";
+import { ExclamationCircleFill } from "react-bootstrap-icons";
 
 const DangerZone = dynamic(
   async () => (await import("components/admin/manage/users/danger-zone")).DangerZone,
@@ -69,6 +71,7 @@ export default function ManageCitizens(props: Props) {
   const { openModal } = useModal();
   const { hasPermissions } = usePermission();
   const { USER_API_TOKENS } = useFeatureEnabled();
+  const { cad } = useAuth();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute<PutManageUserByIdData>({
@@ -88,6 +91,8 @@ export default function ManageCitizens(props: Props) {
     discordId: user.discordId ?? "",
   };
 
+  const isUserPendingApproval =
+    cad?.whitelisted && user.whitelistStatus !== WhitelistStatus.ACCEPTED;
   const validate = handleValidate(UPDATE_USER_SCHEMA);
 
   return (
@@ -106,11 +111,31 @@ export default function ManageCitizens(props: Props) {
         {t("editUser")}
       </Title>
 
+      {isUserPendingApproval ? (
+        <div
+          role="alert"
+          className="mb-5 flex flex-col p-2 px-4 text-black rounded-md shadow bg-orange-400 border border-orange-500/80"
+        >
+          <header className="flex items-center gap-2 mb-2">
+            <ExclamationCircleFill />
+            <h5 className="font-semibold text-lg">User is pending approval</h5>
+          </header>
+          <p>
+            This user is still pending approval. It must first be approved by an administrator
+            before any changes can be done.{" "}
+            <Link className="font-medium underline" href="/admin/manage/users">
+              Go back
+            </Link>
+          </p>
+        </div>
+      ) : null}
+
       <div className="mt-5">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ setFieldValue, isValid, values, errors }) => (
             <Form className="p-4 rounded-md dark:border card">
               <TextField
+                isDisabled={isUserPendingApproval}
                 label="Username"
                 name="username"
                 onChange={(value) => setFieldValue("username", value)}
@@ -123,7 +148,7 @@ export default function ManageCitizens(props: Props) {
                 label={t("detailedPermissions")}
               >
                 <Button
-                  disabled={user.rank === Rank.OWNER}
+                  disabled={isUserPendingApproval || user.rank === Rank.OWNER}
                   type="button"
                   onPress={() => openModal(ModalIds.ManagePermissions)}
                 >
@@ -133,7 +158,7 @@ export default function ManageCitizens(props: Props) {
                 <Button
                   variant="cancel"
                   className="ml-2 text-base"
-                  disabled={user.rank === Rank.OWNER}
+                  disabled={isUserPendingApproval || user.rank === Rank.OWNER}
                   type="button"
                   onPress={() => openModal(ModalIds.ManageRoles)}
                 >
@@ -143,6 +168,7 @@ export default function ManageCitizens(props: Props) {
 
               <FormRow>
                 <TextField
+                  isDisabled={isUserPendingApproval}
                   isOptional
                   label="Steam ID"
                   name="steamId"
@@ -152,6 +178,7 @@ export default function ManageCitizens(props: Props) {
                 />
 
                 <TextField
+                  isDisabled={isUserPendingApproval}
                   isOptional
                   label="Discord ID"
                   name="discordId"
@@ -181,9 +208,9 @@ export default function ManageCitizens(props: Props) {
           )}
         </Formik>
 
-        {USER_API_TOKENS ? <ApiTokenArea user={user} /> : null}
+        {USER_API_TOKENS && !isUserPendingApproval ? <ApiTokenArea user={user} /> : null}
 
-        {user.rank !== Rank.OWNER ? (
+        {user.rank !== Rank.OWNER && !isUserPendingApproval ? (
           <>
             {hasPermissions([Permissions.BanUsers]) ? (
               <BanArea setUser={setUser} user={user} />
@@ -195,7 +222,7 @@ export default function ManageCitizens(props: Props) {
         ) : null}
       </div>
 
-      {user.rank !== Rank.OWNER ? (
+      {user.rank !== Rank.OWNER && !isUserPendingApproval ? (
         <>
           <ManagePermissionsModal onUpdate={(user) => setUser(user)} user={user} />
           <ManageRolesModal onUpdate={(user) => setUser(user)} roles={props.roles} user={user} />
