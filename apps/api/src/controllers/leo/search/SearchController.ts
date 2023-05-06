@@ -75,6 +75,12 @@ export const citizenSearchIncludeOrSelect = (
     defaultReturn: false,
   });
 
+  const isPendingWarrantsEnabled = isFeatureEnabled({
+    feature: Feature.WARRANT_STATUS_APPROVAL,
+    features: cad.features,
+    defaultReturn: false,
+  });
+
   const hasPerms = hasPermission({
     userToCheck: user,
     permissionsToCheck: [
@@ -85,6 +91,10 @@ export const citizenSearchIncludeOrSelect = (
   });
 
   if (hasPerms) {
+    const warrantWhere = isPendingWarrantsEnabled
+      ? { approvalStatus: WhitelistStatus.ACCEPTED }
+      : {};
+
     return {
       include: {
         officers: { select: { department: { select: { isConfidential: true } } } },
@@ -93,7 +103,7 @@ export const citizenSearchIncludeOrSelect = (
         addressFlags: true,
         medicalRecords: true,
         customFields: { include: { field: true } },
-        warrants: { include: { officer: { include: leoProperties } } },
+        warrants: { where: warrantWhere, include: { officer: { include: leoProperties } } },
         notes: true,
         Record: RecordsInclude(isEnabled),
         dlCategory: { include: { value: true } },
