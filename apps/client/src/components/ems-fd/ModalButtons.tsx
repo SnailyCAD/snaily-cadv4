@@ -38,6 +38,10 @@ const buttons: MButton[] = [
     modalId: ModalIds.CreateMedicalRecord,
   },
   {
+    nameKey: ["Ems", "createDoctorVisit"],
+    modalId: ModalIds.CreateDoctorVisit,
+  },
+  {
     nameKey: ["Leo", "notepad"],
     modalId: ModalIds.Notepad,
   },

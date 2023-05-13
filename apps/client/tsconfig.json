@@ -4,7 +4,6 @@
     "target": "ESNext",
     "module": "ESNext",
     "incremental": true,
-
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -25,7 +24,8 @@
       "context/*": ["./src/context/*"],
       "hooks/*": ["./src/hooks/*"],
       "state/*": ["./src/state/*"]
-    }
+    },
+    "plugins": [{ "name": "next" }]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]

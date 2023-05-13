@@ -52,9 +52,17 @@ const CreateMedicalRecordModal = dynamic(
   { ssr: false },
 );
 
+const CreateDoctorVisitModal = dynamic(
+  async () =>
+    (await import("components/ems-fd/modals/doctor-visits/create-doctor-visit-modal"))
+      .CreateDoctorVisitModal,
+  { ssr: false },
+);
+
 const SearchMedicalRecordModal = dynamic(
   async () =>
-    (await import("components/ems-fd/modals/SearchMedicalRecords")).SearchMedicalRecordModal,
+    (await import("components/ems-fd/modals/search-medical-records/search-medical-records-modal"))
+      .SearchMedicalRecordModal,
   { ssr: false },
 );
 
@@ -119,12 +127,12 @@ export default function EmsFDDashboard({ activeDeputy, calls, activeDeputies }: 
       </div>
 
       <SelectDeputyModal />
-
       {isAdmin || state.activeDeputy ? (
         <>
           <NotepadModal />
           <CreateMedicalRecordModal />
           <SearchMedicalRecordModal />
+          <CreateDoctorVisitModal />
         </>
       ) : null}
     </Layout>

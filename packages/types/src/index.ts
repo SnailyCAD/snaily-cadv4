@@ -174,6 +174,11 @@ export type MedicalRecord = Prisma.MedicalRecord & {
   bloodGroup: Value | null;
 };
 
+export type DoctorVisit = Prisma.DoctorVisit & {
+  citizen: BaseCitizen;
+  user?: User | null;
+};
+
 export type Value = Prisma.Value & {
   officerRankDepartments?: DepartmentValue[];
   _count?: ValueCounts;

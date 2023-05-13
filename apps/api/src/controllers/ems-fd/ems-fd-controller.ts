@@ -7,7 +7,7 @@ import {
   UseAfter,
 } from "@tsed/common";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
-import { MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
+import { DOCTOR_VISIT_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
 import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
@@ -222,6 +222,7 @@ export class EmsFdController {
 
     return [...combinedEmsFdDeputies, ...deputies];
   }
+
   @Use(ActiveDeputy)
   @Post("/medical-record")
   @UsePermissions({
@@ -252,6 +253,41 @@ export class EmsFdController {
     });
 
     return medicalRecord;
+  }
+
+  @Use(ActiveDeputy)
+  @Post("/doctor-visit")
+  @UsePermissions({
+    permissions: [Permissions.EmsFd],
+  })
+  async createDoctorVisit(@BodyParams() body: unknown): Promise<APITypes.PostEmsFdDoctorVisit> {
+    const data = validateSchema(DOCTOR_VISIT_SCHEMA, body);
+
+    const citizen = await prisma.citizen.findUnique({
+      where: {
+        id: data.citizenId,
+      },
+    });
+
+    if (!citizen) {
+      throw new NotFound("notFound");
+    }
+
+    const doctorVisit = await prisma.doctorVisit.create({
+      data: {
+        citizenId: citizen.id,
+        userId: citizen.userId,
+        conditions: data.conditions,
+        diagnosis: data.diagnosis,
+        medications: data.medications,
+        description: data.description,
+      },
+      include: {
+        citizen: true,
+      },
+    });
+
+    return doctorVisit;
   }
 
   @Post("/declare/:citizenId")

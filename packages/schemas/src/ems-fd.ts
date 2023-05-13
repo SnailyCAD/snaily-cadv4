@@ -21,3 +21,11 @@ export const CREATE_TEMPORARY_EMS_FD_DEPUTY_SCHEMA = EMS_FD_DEPUTY_SCHEMA.omit({
   surname: z.string().min(2).max(255),
   identifiers: z.array(z.string()).nullish(),
 });
+
+export const DOCTOR_VISIT_SCHEMA = z.object({
+  citizenId: z.string().min(2).max(255),
+  diagnosis: z.string(),
+  medications: z.string(),
+  conditions: z.string(),
+  description: z.string(),
+});
