@@ -296,6 +296,7 @@ model User {
   CourthousePost       CourthousePost[]
   ActiveTone           ActiveTone[]
   AuditLog             AuditLog[]
+  DoctorVisit          DoctorVisit[]
 }
 
 model UserSession {
@@ -410,6 +411,7 @@ model Citizen {
   suspendedLicenses    SuspendedCitizenLicenses?     @relation(fields: [suspendedLicensesId], references: [id])
   suspendedLicensesId  String?
   LicenseExam          LicenseExam[]
+  DoctorVisit          DoctorVisit[]
 
   @@index([name, surname], name: "fullname")
 }
@@ -506,6 +508,21 @@ model MedicalRecord {
   description  String? @db.Text
   bloodGroup   Value?  @relation(fields: [bloodGroupId], references: [id])
   bloodGroupId String?
+}
+
+model DoctorVisit {
+  id        String   @id @default(cuid())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String?
+  citizen   Citizen  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  diagnosis   String? @db.Text
+  description String? @db.Text
+  conditions  String? @db.Text
+  medications String? @db.Text
 }
 
 // values

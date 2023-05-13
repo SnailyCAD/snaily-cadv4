@@ -22,7 +22,12 @@
     "alert_deleteDeputy": "Are you sure you want to delete <span>{deputy}</span>? This action cannot be undone.",
     "assignedToCall#": "{activeVehicle}, respond to {location}",
     "assignedToCall#WithType": "{activeVehicle}, respond to {location}, {callType}",
-    "emsFdIncidents": "EMS/FD Incidents"
+    "emsFdIncidents": "EMS/FD Incidents",
+    "createDoctorVisit": "Create Doctor Visit",
+    "doctorVisits": "Doctor Visits",
+    "medications": "Medication",
+    "diagnosis": "Diagnosis",
+    "conditions": "Conditions"
   },
   "HospitalServices": {
     "hospitalServices": "Hospital Services",

@@ -87,3 +87,9 @@ export interface GetDeadCitizensData {
   citizens: Types.Citizen[];
   totalCount: number;
 }
+
+/**
+ * @method POST
+ * @route /ems-fd/doctor-visits
+ */
+export type PostEmsFdDoctorVisit = Types.DoctorVisit;
