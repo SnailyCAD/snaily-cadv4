@@ -90,6 +90,6 @@ export interface GetDeadCitizensData {
 
 /**
  * @method POST
- * @route /ems-fd/doctor-visits
+ * @route /ems-fd/doctor-visit
  */
 export type PostEmsFdDoctorVisit = Types.DoctorVisit;

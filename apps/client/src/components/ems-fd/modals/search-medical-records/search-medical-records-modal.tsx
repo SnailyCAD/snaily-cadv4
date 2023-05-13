@@ -1,12 +1,11 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Form, Formik } from "formik";
-import { Loader, Button, Item, AsyncListSearchField } from "@snailycad/ui";
+import { Loader, Button, Item, AsyncListSearchField, TabList } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import { Table, useTableState } from "components/shared/Table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { PersonFill } from "react-bootstrap-icons";
 import { Infofield } from "components/shared/Infofield";
@@ -24,6 +23,8 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { SpeechAlert } from "components/leo/modals/NameSearchModal/speech-alert";
 import { ImageWrapper } from "components/shared/image-wrapper";
 import { Permissions, usePermission } from "hooks/usePermission";
+import { MedicalRecordsTab } from "./tabs/medical-records-tab";
+import { DoctorVisitsTab } from "./tabs/doctor-visits-tab";
 
 interface Props {
   onClose?(): void;
@@ -36,7 +37,6 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
   const { makeImageUrl } = useImageUrl();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
   const { cad } = useAuth();
-  const tableState = useTableState();
   const { hasPermissions } = usePermission();
   const hasDeclarePermissions = hasPermissions([Permissions.DeclareCitizenDead]);
 
@@ -263,39 +263,25 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                       </div>
                     </div>
                     <div className="mt-7">
-                      {results.medicalRecords.length <= 0 ? (
-                        <p>No medical records</p>
-                      ) : (
-                        <Table
-                          features={{ isWithinCardOrModal: true }}
-                          tableState={tableState}
-                          data={results.medicalRecords.map((record) => ({
-                            id: record.id,
-                            type: record.type,
-                            bloodGroup: record.bloodGroup?.value ?? t("Common.none"),
-                            description: record.description || t("Common.none"),
-                            actions: (
-                              <Button
-                                size="xs"
-                                variant={results.dead ? "success" : "danger"}
-                                type="button"
-                                onPress={handleDeclare}
-                                disabled={!hasDeclarePermissions || state === "loading"}
-                              >
-                                {results.dead ? t("Ems.declareAlive") : t("Ems.declareDead")}
-                              </Button>
-                            ),
-                          }))}
-                          columns={[
-                            { header: t("MedicalRecords.diseases"), accessorKey: "type" },
-                            { header: t("MedicalRecords.bloodGroup"), accessorKey: "bloodGroup" },
-                            { header: t("Common.description"), accessorKey: "description" },
-                            hasDeclarePermissions
-                              ? { header: t("Common.actions"), accessorKey: "actions" }
-                              : null,
-                          ]}
+                      <TabList
+                        tabs={[
+                          {
+                            name: t("Ems.medicalRecords"),
+                            value: "medical-records",
+                          },
+                          {
+                            name: t("Ems.doctorVisits"),
+                            value: "doctor-visits",
+                          },
+                        ]}
+                      >
+                        <MedicalRecordsTab
+                          results={results}
+                          handleDeclare={handleDeclare}
+                          state={state}
                         />
-                      )}
+                        <DoctorVisitsTab results={results} />
+                      </TabList>
                     </div>
                   </div>
                   <CitizenImageModal citizen={results} />

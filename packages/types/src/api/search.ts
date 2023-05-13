@@ -10,6 +10,7 @@ export type PostEmsFdMedicalRecordsSearchData =
   | (Types.Citizen & {
       officers?: (Prisma.Officer & { department: Prisma.DepartmentValue | null })[] | undefined;
       medicalRecords: Types.MedicalRecord[];
+      DoctorVisit: Omit<Types.DoctorVisit, "citizen">[];
       isConfidential: false;
     })
   | (Pick<

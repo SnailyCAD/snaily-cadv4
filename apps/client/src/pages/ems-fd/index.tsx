@@ -61,7 +61,8 @@ const CreateDoctorVisitModal = dynamic(
 
 const SearchMedicalRecordModal = dynamic(
   async () =>
-    (await import("components/ems-fd/modals/SearchMedicalRecords")).SearchMedicalRecordModal,
+    (await import("components/ems-fd/modals/search-medical-records/search-medical-records-modal"))
+      .SearchMedicalRecordModal,
   { ssr: false },
 );
 
