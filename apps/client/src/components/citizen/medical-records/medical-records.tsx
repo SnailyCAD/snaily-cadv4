@@ -121,6 +121,7 @@ export function MedicalRecords() {
       {MEDICAL_RECORDS_CITIZEN_MANAGEABLE ? (
         <>
           <ManageMedicalRecordsModal
+            citizen={citizen}
             onCreate={(record) => {
               setCurrentCitizen({
                 ...citizen,

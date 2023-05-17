@@ -62,13 +62,15 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute<PostEmsFdMedicalRecordsSearchData>({
-      path: "/search/medical-records",
+      path: "/search/name",
       method: "POST",
-      data: values,
+      data: { id: values.name, name: values.searchValue },
       noToast: true,
     });
 
-    handleFoundName(json);
+    const [citizen] = Array.isArray(json) ? json : [json];
+
+    handleFoundName(citizen);
   }
 
   function handleFoundName(data: SearchResult | null) {
@@ -279,6 +281,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                           results={results}
                           handleDeclare={handleDeclare}
                           state={state}
+                          setResults={setResults as any}
                         />
                         <DoctorVisitsTab results={results} />
                       </TabList>
