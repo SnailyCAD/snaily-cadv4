@@ -255,6 +255,71 @@ export class EmsFdController {
     return medicalRecord;
   }
 
+  @Put("/medical-records/:id")
+  @Description("Update a medical record by its id")
+  async updateMedicalRecord(
+    @PathParams("id") recordId: string,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PutCitizenMedicalRecordsData> {
+    const data = validateSchema(MEDICAL_RECORD_SCHEMA, body);
+
+    const record = await prisma.medicalRecord.findUnique({
+      where: {
+        id: recordId,
+      },
+    });
+
+    if (!record) {
+      throw new NotFound("medicalRecordNotFound");
+    }
+
+    const updated = await prisma.medicalRecord.update({
+      where: {
+        id: record.id,
+      },
+      data: {
+        description: data.description,
+        type: data.type,
+        bloodGroupId: data.bloodGroup || null,
+      },
+      include: {
+        bloodGroup: true,
+      },
+    });
+
+    await prisma.medicalRecord.updateMany({
+      where: { citizenId: record.citizenId },
+      data: { bloodGroupId: data.bloodGroup || undefined },
+    });
+
+    return updated;
+  }
+
+  @Use(ActiveDeputy)
+  @Delete("/medical-records/:id")
+  @Description("Delete a medical record by its id")
+  async deleteMedicalRecord(
+    @PathParams("id") recordId: string,
+  ): Promise<APITypes.DeleteCitizenMedicalRecordsData> {
+    const medicalRecord = await prisma.medicalRecord.findUnique({
+      where: {
+        id: recordId,
+      },
+    });
+
+    if (!medicalRecord) {
+      throw new NotFound("medicalRecordNotFound");
+    }
+
+    await prisma.medicalRecord.delete({
+      where: {
+        id: medicalRecord.id,
+      },
+    });
+
+    return true;
+  }
+
   @Use(ActiveDeputy)
   @Post("/doctor-visit")
   @UsePermissions({

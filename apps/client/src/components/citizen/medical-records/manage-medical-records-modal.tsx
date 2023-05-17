@@ -5,9 +5,8 @@ import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import { MedicalRecord, ValueType } from "@snailycad/types";
+import { BaseCitizen, MedicalRecord, ValueType } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
-import { useCitizen } from "context/CitizenContext";
 import { useValues } from "context/ValuesContext";
 import type {
   PostCitizenMedicalRecordsData,
@@ -17,16 +16,24 @@ import { Button, TextField, Loader } from "@snailycad/ui";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
 
 interface Props {
+  isEmsFd?: boolean;
   medicalRecord: MedicalRecord | null;
+  citizen: BaseCitizen & { medicalRecords?: MedicalRecord[] };
   onCreate?(newV: MedicalRecord): void;
   onUpdate?(old: MedicalRecord, newV: MedicalRecord): void;
   onClose?(): void;
 }
 
-export function ManageMedicalRecordsModal({ medicalRecord, onClose, onCreate, onUpdate }: Props) {
+export function ManageMedicalRecordsModal({
+  isEmsFd,
+  medicalRecord,
+  onClose,
+  onCreate,
+  onUpdate,
+  citizen,
+}: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
-  const { citizen } = useCitizen(false);
   const common = useTranslations("Common");
   const t = useTranslations("MedicalRecords");
   const { bloodGroup } = useValues();
@@ -37,9 +44,11 @@ export function ManageMedicalRecordsModal({ medicalRecord, onClose, onCreate, on
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
+    const prependix = isEmsFd ? "/ems-fd" : "";
+
     if (medicalRecord) {
       const { json } = await execute<PutCitizenMedicalRecordsData>({
-        path: `/medical-records/${medicalRecord.id}`,
+        path: `${prependix}/medical-records/${medicalRecord.id}`,
         method: "PUT",
         data: values,
       });
@@ -49,7 +58,7 @@ export function ManageMedicalRecordsModal({ medicalRecord, onClose, onCreate, on
       }
     } else {
       const { json } = await execute<PostCitizenMedicalRecordsData>({
-        path: "/medical-records",
+        path: `${prependix}/medical-records`,
         method: "POST",
         data: { ...values, citizenId: citizen.id },
       });
@@ -61,7 +70,7 @@ export function ManageMedicalRecordsModal({ medicalRecord, onClose, onCreate, on
   }
 
   const validate = handleValidate(MEDICAL_RECORD_SCHEMA);
-  const bloodGroupId = citizen.medicalRecords.find((v) => v.bloodGroupId)?.bloodGroupId;
+  const bloodGroupId = citizen.medicalRecords?.find((v) => v.bloodGroupId)?.bloodGroupId;
 
   const INITIAL_VALUES = {
     type: medicalRecord?.type ?? "",

@@ -11,6 +11,7 @@ import type { DeleteCitizenMedicalRecordsData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { FullDate } from "components/shared/FullDate";
 import dynamic from "next/dynamic";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 const ManageMedicalRecordsModal = dynamic(
   async () => (await import("./manage-medical-records-modal")).ManageMedicalRecordsModal,
@@ -23,6 +24,7 @@ export function MedicalRecords() {
   const common = useTranslations("Common");
   const { citizen, setCurrentCitizen } = useCitizen(false);
   const tableState = useTableState();
+  const { MEDICAL_RECORDS_CITIZEN_MANAGEABLE } = useFeatureEnabled();
 
   const [tempRecord, recordState] = useTemporaryItem(citizen.medicalRecords);
 
@@ -49,11 +51,15 @@ export function MedicalRecords() {
   }
 
   function handleDeleteClick(record: MedicalRecord) {
+    if (!MEDICAL_RECORDS_CITIZEN_MANAGEABLE) return;
+
     recordState.setTempId(record.id);
     openModal(ModalIds.AlertDeleteMedicalRecord);
   }
 
   function handleEditClick(record: MedicalRecord) {
+    if (!MEDICAL_RECORDS_CITIZEN_MANAGEABLE) return;
+
     recordState.setTempId(record.id);
     openModal(ModalIds.ManageMedicalRecords);
   }
@@ -64,9 +70,11 @@ export function MedicalRecords() {
         <header className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold">{t("yourMedicalRecords")}</h1>
 
-          <Button onPress={() => openModal(ModalIds.ManageMedicalRecords)} size="xs">
-            {t("addMedicalRecord")}
-          </Button>
+          {MEDICAL_RECORDS_CITIZEN_MANAGEABLE ? (
+            <Button onPress={() => openModal(ModalIds.ManageMedicalRecords)} size="xs">
+              {t("addMedicalRecord")}
+            </Button>
+          ) : null}
         </header>
 
         {citizen.medicalRecords.length <= 0 ? (
@@ -102,47 +110,53 @@ export function MedicalRecords() {
               { header: t("bloodGroup"), accessorKey: "bloodGroup" },
               { header: common("description"), accessorKey: "description" },
               { header: common("createdAt"), accessorKey: "createdAt" },
-              { header: common("actions"), accessorKey: "actions" },
+              MEDICAL_RECORDS_CITIZEN_MANAGEABLE
+                ? { header: common("actions"), accessorKey: "actions" }
+                : null,
             ]}
           />
         )}
       </div>
 
-      <ManageMedicalRecordsModal
-        onCreate={(record) => {
-          setCurrentCitizen({
-            ...citizen,
-            medicalRecords: [
-              ...handleBloodgroupStateChange(citizen.medicalRecords, record.bloodGroup),
-              record,
-            ],
-          });
+      {MEDICAL_RECORDS_CITIZEN_MANAGEABLE ? (
+        <>
+          <ManageMedicalRecordsModal
+            citizen={citizen}
+            onCreate={(record) => {
+              setCurrentCitizen({
+                ...citizen,
+                medicalRecords: [
+                  ...handleBloodgroupStateChange(citizen.medicalRecords, record.bloodGroup),
+                  record,
+                ],
+              });
 
-          closeModal(ModalIds.ManageMedicalRecords);
-        }}
-        onUpdate={(old, newR) => {
-          const copy = [...citizen.medicalRecords];
-          const idx = copy.indexOf(old);
-          copy[idx] = newR;
+              closeModal(ModalIds.ManageMedicalRecords);
+            }}
+            onUpdate={(old, newR) => {
+              const copy = [...citizen.medicalRecords];
+              const idx = copy.indexOf(old);
+              copy[idx] = newR;
 
-          setCurrentCitizen({
-            ...citizen,
-            medicalRecords: handleBloodgroupStateChange(copy, newR.bloodGroup),
-          });
-          closeModal(ModalIds.ManageMedicalRecords);
-        }}
-        medicalRecord={tempRecord}
-        onClose={() => recordState.setTempId(null)}
-      />
-
-      <AlertModal
-        onDeleteClick={handleDelete}
-        description={t("alert_deleteMedicalRecord")}
-        id={ModalIds.AlertDeleteMedicalRecord}
-        title={t("deleteMedicalRecord")}
-        state={state}
-        onClose={() => recordState.setTempId(null)}
-      />
+              setCurrentCitizen({
+                ...citizen,
+                medicalRecords: handleBloodgroupStateChange(copy, newR.bloodGroup),
+              });
+              closeModal(ModalIds.ManageMedicalRecords);
+            }}
+            medicalRecord={tempRecord}
+            onClose={() => recordState.setTempId(null)}
+          />
+          <AlertModal
+            onDeleteClick={handleDelete}
+            description={t("alert_deleteMedicalRecord")}
+            id={ModalIds.AlertDeleteMedicalRecord}
+            title={t("deleteMedicalRecord")}
+            state={state}
+            onClose={() => recordState.setTempId(null)}
+          />
+        </>
+      ) : null}
     </>
   );
 }
