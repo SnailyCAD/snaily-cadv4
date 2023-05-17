@@ -76,7 +76,7 @@ export default function ManageCitizens(props: Props) {
 
   async function handleAcceptUser() {
     const { json } = await execute<PostManageUserAcceptDeclineData>({
-      path: `/admin/manage/users/pending/${user.id}/${WhitelistStatus.ACCEPTED}`,
+      path: `/admin/manage/users/pending/${user.id}/accept`,
       method: "POST",
     });
 
@@ -241,11 +241,11 @@ export default function ManageCitizens(props: Props) {
           )}
         </Formik>
 
-        {USER_API_TOKENS && (!isUserPendingApproval || isUserDenied) ? (
+        {USER_API_TOKENS && (!isUserPendingApproval || !isUserDenied) ? (
           <ApiTokenArea user={user} />
         ) : null}
 
-        {user.rank !== Rank.OWNER && (!isUserPendingApproval || isUserDenied) ? (
+        {user.rank !== Rank.OWNER && (!isUserPendingApproval || !isUserDenied) ? (
           <>
             {hasPermissions([Permissions.BanUsers]) ? (
               <BanArea setUser={setUser} user={user} />
@@ -257,7 +257,7 @@ export default function ManageCitizens(props: Props) {
         ) : null}
       </div>
 
-      {user.rank !== Rank.OWNER && (!isUserPendingApproval || isUserDenied) ? (
+      {user.rank !== Rank.OWNER && (!isUserPendingApproval || !isUserDenied) ? (
         <>
           <ManagePermissionsModal onUpdate={(user) => setUser(user)} user={user} />
           <ManageRolesModal onUpdate={(user) => setUser(user)} roles={props.roles} user={user} />

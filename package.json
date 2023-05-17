@@ -4,8 +4,8 @@
   "version": "1.55.2",
   "packageManager": "yarn@3.5.0",
   "workspaces": [
-    "apps/**",
-    "packages/**"
+    "apps/*",
+    "packages/*"
   ],
   "scripts": {
     "start": "yarn run concurrently \"yarn workspace @snailycad/client start\" \"yarn workspace @snailycad/api generate && yarn workspace @snailycad/api start\"",

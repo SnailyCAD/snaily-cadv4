@@ -492,8 +492,7 @@ export class ManageUsersController {
     const user = await prisma.user.findFirst({
       where: {
         id: userId,
-        whitelistStatus: WhitelistStatus.PENDING,
-        NOT: { rank: Rank.OWNER },
+        NOT: { rank: Rank.OWNER, whitelistStatus: WhitelistStatus.ACCEPTED },
       },
       select: { id: true, username: true, whitelistStatus: true },
     });
