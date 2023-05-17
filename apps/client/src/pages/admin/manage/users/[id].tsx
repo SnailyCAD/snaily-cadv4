@@ -32,6 +32,7 @@ import { classNames } from "lib/classNames";
 import type {
   GetCustomRolesData,
   GetManageUserByIdData,
+  PostManageUserAcceptDeclineData,
   PutManageUserByIdData,
 } from "@snailycad/types/api";
 import { useAuth } from "context/AuthContext";
@@ -73,6 +74,17 @@ export default function ManageCitizens(props: Props) {
   const { USER_API_TOKENS } = useFeatureEnabled();
   const { cad } = useAuth();
 
+  async function handleAcceptUser() {
+    const { json } = await execute<PostManageUserAcceptDeclineData>({
+      path: `/admin/manage/users/pending/${user.id}/${WhitelistStatus.ACCEPTED}`,
+      method: "POST",
+    });
+
+    if (json) {
+      setUser({ ...user, whitelistStatus: WhitelistStatus.ACCEPTED });
+    }
+  }
+
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute<PutManageUserByIdData>({
       path: `/admin/manage/users/${user.id}`,
@@ -92,7 +104,8 @@ export default function ManageCitizens(props: Props) {
   };
 
   const isUserPendingApproval =
-    cad?.whitelisted && user.whitelistStatus !== WhitelistStatus.ACCEPTED;
+    cad?.whitelisted && user.whitelistStatus === WhitelistStatus.PENDING;
+  const isUserDenied = cad?.whitelisted && user.whitelistStatus === WhitelistStatus.DECLINED;
   const validate = handleValidate(UPDATE_USER_SCHEMA);
 
   return (
@@ -130,12 +143,32 @@ export default function ManageCitizens(props: Props) {
         </div>
       ) : null}
 
+      {isUserDenied ? (
+        <div
+          role="alert"
+          className="mb-5 flex flex-col p-2 px-4 text-black rounded-md shadow bg-orange-400 border border-orange-500/80"
+        >
+          <header className="flex items-center gap-2 mb-2">
+            <ExclamationCircleFill />
+            <h5 className="font-semibold text-lg">User was denied access</h5>
+          </header>
+          <p>
+            This user was denied access. This user may first be approved by an administrator before
+            any changes can be done.
+          </p>
+
+          <Button onClick={handleAcceptUser} variant="amber" className="mt-3 max-w-fit">
+            Accept this user
+          </Button>
+        </div>
+      ) : null}
+
       <div className="mt-5">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ setFieldValue, isValid, values, errors }) => (
             <Form className="p-4 rounded-md dark:border card">
               <TextField
-                isDisabled={isUserPendingApproval}
+                isDisabled={isUserPendingApproval || isUserDenied}
                 label="Username"
                 name="username"
                 onChange={(value) => setFieldValue("username", value)}
@@ -148,7 +181,7 @@ export default function ManageCitizens(props: Props) {
                 label={t("detailedPermissions")}
               >
                 <Button
-                  disabled={isUserPendingApproval || user.rank === Rank.OWNER}
+                  disabled={isUserPendingApproval || isUserDenied || user.rank === Rank.OWNER}
                   type="button"
                   onPress={() => openModal(ModalIds.ManagePermissions)}
                 >
@@ -158,7 +191,7 @@ export default function ManageCitizens(props: Props) {
                 <Button
                   variant="cancel"
                   className="ml-2 text-base"
-                  disabled={isUserPendingApproval || user.rank === Rank.OWNER}
+                  disabled={isUserPendingApproval || isUserDenied || user.rank === Rank.OWNER}
                   type="button"
                   onPress={() => openModal(ModalIds.ManageRoles)}
                 >
@@ -168,7 +201,7 @@ export default function ManageCitizens(props: Props) {
 
               <FormRow>
                 <TextField
-                  isDisabled={isUserPendingApproval}
+                  isDisabled={isUserPendingApproval || isUserDenied}
                   isOptional
                   label="Steam ID"
                   name="steamId"
@@ -178,7 +211,7 @@ export default function ManageCitizens(props: Props) {
                 />
 
                 <TextField
-                  isDisabled={isUserPendingApproval}
+                  isDisabled={isUserPendingApproval || isUserDenied}
                   isOptional
                   label="Discord ID"
                   name="discordId"
@@ -208,9 +241,11 @@ export default function ManageCitizens(props: Props) {
           )}
         </Formik>
 
-        {USER_API_TOKENS && !isUserPendingApproval ? <ApiTokenArea user={user} /> : null}
+        {USER_API_TOKENS && (!isUserPendingApproval || isUserDenied) ? (
+          <ApiTokenArea user={user} />
+        ) : null}
 
-        {user.rank !== Rank.OWNER && !isUserPendingApproval ? (
+        {user.rank !== Rank.OWNER && (!isUserPendingApproval || isUserDenied) ? (
           <>
             {hasPermissions([Permissions.BanUsers]) ? (
               <BanArea setUser={setUser} user={user} />
@@ -222,7 +257,7 @@ export default function ManageCitizens(props: Props) {
         ) : null}
       </div>
 
-      {user.rank !== Rank.OWNER && !isUserPendingApproval ? (
+      {user.rank !== Rank.OWNER && (!isUserPendingApproval || isUserDenied) ? (
         <>
           <ManagePermissionsModal onUpdate={(user) => setUser(user)} user={user} />
           <ManageRolesModal onUpdate={(user) => setUser(user)} roles={props.roles} user={user} />
