@@ -55,7 +55,7 @@ export class CADSettingsController {
       ...setCADFeatures(cad),
       registrationCode,
       version,
-    } as APITypes.GetCADSettingsData;
+    } as unknown as APITypes.GetCADSettingsData;
   }
 
   @Get("/audit-logs")
@@ -162,6 +162,7 @@ export class CADSettingsController {
       const createUpdateData = {
         isEnabled: feature.isEnabled,
         feature: feature.feature as Feature,
+        extraFields: JSON.stringify(feature.extraFields),
         cadId: cad.id,
       };
 
@@ -176,6 +177,7 @@ export class CADSettingsController {
       where: { id: cad.id },
       include: { features: true, miscCadSettings: true, apiToken: true },
     });
+    console.log(updated);
 
     const previousEnabledFeatures = cad.features;
     const newEnabledFeatures = createFeaturesObject(updated.features);

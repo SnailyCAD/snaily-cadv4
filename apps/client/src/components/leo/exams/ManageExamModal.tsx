@@ -19,6 +19,7 @@ import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import type { PostLicenseExamsData, PutLicenseExamByIdData } from "@snailycad/types/api";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
   exam: LicenseExam | null;
@@ -33,6 +34,7 @@ export function ManageExamModal({ exam, onClose, onCreate, onUpdate }: Props) {
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
   const { driverslicenseCategory, license } = useValues();
+  const { options } = useFeatureEnabled();
 
   const PASS_FAIL_VALUES = [
     { label: t("Vehicles.passed"), value: LicenseExamPassType.PASSED },
@@ -113,7 +115,7 @@ export function ManageExamModal({ exam, onClose, onCreate, onUpdate }: Props) {
               label={common("type")}
               isDisabled={!!exam}
               name="type"
-              options={Object.values(LicenseExamType).map((v) => ({
+              options={(options.LICENSE_EXAMS as LicenseExamType[]).map((v) => ({
                 label: v.toLowerCase(),
                 value: v,
               }))}

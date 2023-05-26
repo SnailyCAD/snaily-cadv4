@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Feature } from "@snailycad/types";
+import { CadFeatureOptions, Feature, LicenseExamType } from "@snailycad/types";
 import { useAuth } from "context/AuthContext";
 
 export const DEFAULT_DISABLED_FEATURES = {
@@ -25,9 +25,31 @@ export const DEFAULT_DISABLED_FEATURES = {
   USER_DEFINED_CALLSIGN_COMBINED_UNIT: { isEnabled: false },
 } satisfies Partial<Record<Feature, { isEnabled: boolean }>>;
 
-export function useFeatureEnabled(features?: Record<Feature, boolean>) {
+export function useFeatureEnabled(
+  features?: Record<Feature, boolean> & { options?: CadFeatureOptions },
+) {
   const { cad } = useAuth();
   const _features = features ?? cad?.features;
+
+  const options = React.useMemo(() => {
+    const obj = {} as Partial<Record<Feature, any>>;
+
+    const cadFeatures = _features?.options;
+
+    for (const key in cadFeatures) {
+      let option = cadFeatures[key as keyof typeof cadFeatures];
+
+      if (key === Feature.LICENSE_EXAMS && Array.isArray(option)) {
+        if (option.length === 0) {
+          option = Object.values(LicenseExamType);
+        }
+      }
+
+      obj[key as Feature] = option;
+    }
+
+    return obj;
+  }, [_features]);
 
   const featuresObj = React.useMemo(() => {
     const obj: Record<Feature, boolean> = {} as Record<Feature, boolean>;
@@ -44,5 +66,5 @@ export function useFeatureEnabled(features?: Record<Feature, boolean>) {
     return obj;
   }, [_features]);
 
-  return featuresObj;
+  return { ...featuresObj, options };
 }

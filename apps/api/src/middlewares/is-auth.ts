@@ -10,7 +10,7 @@ import { setGlobalUserFromCADAPIToken, getUserFromSession } from "./auth/get-use
 import { hasPermission, Permissions } from "@snailycad/permissions";
 import { setErrorMap } from "zod";
 import { getErrorMap } from "../utils/zod-error-map";
-import { createFeaturesObject, overwriteFeatures } from "./is-enabled";
+import { CadFeatureOptions, createFeaturesObject, overwriteFeatures } from "./is-enabled";
 
 @Middleware()
 export class IsAuth implements MiddlewareMethods {
@@ -74,7 +74,7 @@ export class IsAuth implements MiddlewareMethods {
  */
 export function setCADFeatures<T extends Partial<cad & { features?: CadFeature[] }> | null>(
   cad: T,
-): Omit<T, "features"> & { features: Record<Feature, boolean> } {
+): Omit<T, "features"> & { features: Record<Feature, boolean> & { options?: CadFeatureOptions } } {
   const features = createFeaturesObject(cad?.features);
 
   const hasDiscordTokens =

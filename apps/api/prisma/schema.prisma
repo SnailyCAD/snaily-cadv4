@@ -43,11 +43,12 @@ model cad {
 }
 
 model CadFeature {
-  id        String  @id @default(cuid())
-  feature   Feature @unique
-  isEnabled Boolean @default(false)
-  cad       cad?    @relation(fields: [cadId], references: [id])
-  cadId     String?
+  id          String  @id @default(cuid())
+  feature     Feature @unique
+  isEnabled   Boolean @default(false)
+  cad         cad?    @relation(fields: [cadId], references: [id])
+  cadId       String?
+  extraFields Json?
 }
 
 model MiscCadSettings {
