@@ -4,8 +4,8 @@ import { useTranslations } from "use-intl";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { Toggle } from "components/form/Toggle";
-import { CadFeature, Feature } from "@snailycad/types";
-import { Button, Loader, TextField, TabsContent } from "@snailycad/ui";
+import { CadFeature, Feature, LicenseExamType } from "@snailycad/types";
+import { Button, Loader, TextField, TabsContent, SelectField } from "@snailycad/ui";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { toastMessage } from "lib/toastMessage";
@@ -56,7 +56,7 @@ export function CADFeaturesTab() {
   function createInitialValues() {
     const obj = {} as Partial<Record<Feature, Pick<CadFeature, "feature" | "isEnabled">>>;
 
-    const cadFeatures = cad?.features;
+    const { options, ...cadFeatures } = cad?.features ?? {};
     for (const key in cadFeatures) {
       const feature = cadFeatures[key as keyof typeof cadFeatures];
 
@@ -69,17 +69,38 @@ export function CADFeaturesTab() {
     return obj;
   }
 
+  function createInitialOptions() {
+    const obj = {} as Partial<Record<Feature, any>>;
+
+    const cadFeatures = cad?.features?.options;
+
+    for (const key in cadFeatures) {
+      let option = cadFeatures[key as keyof typeof cadFeatures];
+
+      if (key === Feature.LICENSE_EXAMS && Array.isArray(option)) {
+        if (option.length === 0) {
+          option = Object.values(LicenseExamType);
+        }
+      }
+
+      obj[key as Feature] = option;
+    }
+
+    return obj;
+  }
+
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!cad) return;
     const featuresArr = Object.entries(values.features).map(([key, value]) => ({
       feature: key as Feature,
       isEnabled: value.isEnabled,
+      extraFields: values.options[key as Feature],
     }));
 
     const { json } = await execute<PutCADFeaturesData>({
       path: "/admin/manage/cad-settings/features",
       method: "PUT",
-      data: { features: featuresArr },
+      data: { features: featuresArr, options: values.options },
     });
 
     if (json.id) {
@@ -94,6 +115,7 @@ export function CADFeaturesTab() {
 
   const INITIAL_VALUES = {
     features: createInitialValues(),
+    options: createInitialOptions(),
   };
 
   const filteredFeatures = featuresList.filter((feature) =>
@@ -114,7 +136,7 @@ export function CADFeaturesTab() {
       />
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, values }) => (
+        {({ handleChange, setFieldValue, values }) => (
           <Form>
             {filteredFeatures.map((feature) => {
               return (
@@ -124,9 +146,36 @@ export function CADFeaturesTab() {
                     description={
                       <>
                         {feature.description}{" "}
+                        {values.options[feature.feature] ? (
+                          <div className="mt-2">
+                            <h4 className="font-semibold text-lg mb-2">Extra Options</h4>
+
+                            {Feature.LICENSE_EXAMS === feature.feature ? (
+                              <SelectField
+                                isClearable
+                                selectedKeys={values.options[feature.feature]}
+                                onSelectionChange={(keys) =>
+                                  setFieldValue(`options.${feature.feature}`, keys)
+                                }
+                                selectionMode="multiple"
+                                label="Types"
+                                options={Object.values(LicenseExamType).map((v) => ({
+                                  label: v.toLowerCase(),
+                                  value: v.toString(),
+                                }))}
+                              />
+                            ) : null}
+                          </div>
+                        ) : null}
+                      </>
+                    }
+                    label={
+                      <span className="flex items-center justify-between w-full">
+                        {feature.name}
+
                         {feature.url ? (
                           <Link
-                            className="mt-1 underline flex items-center gap-1 text-blue-500"
+                            className="text-base mt-1 underline flex items-center gap-1 text-blue-500"
                             target="_blank"
                             href={feature.url}
                           >
@@ -134,9 +183,8 @@ export function CADFeaturesTab() {
                             <BoxArrowUpRight className="inline-block" />
                           </Link>
                         ) : null}
-                      </>
+                      </span>
                     }
-                    label={feature.name}
                   >
                     <Toggle
                       value={

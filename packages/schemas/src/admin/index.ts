@@ -118,7 +118,9 @@ export const UPDATE_DEFAULT_PERMISSIONS_SCHEMA = z.object({
 });
 
 export const DISABLED_FEATURES_SCHEMA = z.object({
-  features: z.array(z.object({ isEnabled: z.boolean(), feature: z.string() })),
+  features: z.array(
+    z.object({ isEnabled: z.boolean(), feature: z.string(), extraFields: z.any() }),
+  ),
 });
 
 export const BAN_SCHEMA = z.object({

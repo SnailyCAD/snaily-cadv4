@@ -34,14 +34,23 @@ export const DEFAULT_DISABLED_FEATURES: Partial<
   USER_DEFINED_CALLSIGN_COMBINED_UNIT: { isEnabled: false },
 };
 
+export type CadFeatures = Record<TypesFeature | DatabaseFeature, boolean> & {
+  options?: CadFeatureOptions;
+};
+export type CadFeatureOptions = Record<TypesFeature | DatabaseFeature, any>;
+
 export function createFeaturesObject(features?: CadFeature[] | undefined) {
-  const obj: Record<TypesFeature | DatabaseFeature, boolean> = {} as Record<
-    TypesFeature | DatabaseFeature,
-    boolean
-  >;
+  const obj: CadFeatures = {} as CadFeatures;
+  const featureExtraOptions: CadFeatureOptions = {} as CadFeatureOptions;
 
   Object.keys(Feature).map((feature) => {
     const cadFeature = features?.find((v) => v.feature === feature);
+
+    if (cadFeature?.extraFields) {
+      featureExtraOptions[feature as TypesFeature | DatabaseFeature] = cadFeature.extraFields
+        ? JSON.parse(cadFeature.extraFields as any)
+        : null;
+    }
 
     const isEnabled =
       // @ts-expect-error - this is fine
@@ -50,6 +59,7 @@ export function createFeaturesObject(features?: CadFeature[] | undefined) {
     obj[feature as TypesFeature | DatabaseFeature] = isEnabled;
   });
 
+  obj.options = featureExtraOptions;
   return obj;
 }
 
@@ -60,6 +70,7 @@ export function overwriteFeatures(options: {
   return {
     ...options.features,
     ...options.featuresToOverwrite,
+    options: options.features.options,
   };
 }
 

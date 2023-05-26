@@ -28,9 +28,10 @@ type CADPick =
   | "autoSetUserProperties"
   | "autoSetUserPropertiesId";
 
+export type CadFeatureOptions = Record<Enums.Feature, Record<string, any>>;
 export type cad = Pick<
   Omit<Prisma.cad, "registrationCode"> & {
-    features: Record<Enums.Feature, boolean>;
+    features: Record<Enums.Feature, boolean> & { options?: CadFeatureOptions };
     miscCadSettings: MiscCadSettings | null;
     apiToken?: ApiToken | null;
     autoSetUserProperties?: AutoSetUserProperties | null;

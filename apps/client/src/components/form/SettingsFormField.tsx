@@ -56,7 +56,7 @@ export function SettingsFormField({
             : "flex flex-col",
         )}
       >
-        <header className="py-4 px-4">
+        <header className="py-4 px-4 w-full">
           <h3 className="text-[1.275rem] font-semibold">
             <label {...labelProps}>
               {label}
@@ -68,7 +68,7 @@ export function SettingsFormField({
           </h3>
 
           {description ? (
-            <p className="mt-2 text-lg dark:text-gray-200 max-w-2/3">{description}</p>
+            <div className="mt-2 text-lg dark:text-gray-200 max-w-2/3">{description}</div>
           ) : null}
         </header>
 
