@@ -30,7 +30,7 @@ import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { Socket } from "services/socket-service";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { manyToManyHelper } from "lib/data/many-to-many";
-import { isCuid } from "cuid";
+import { isCuid } from "@paralleldrive/cuid2";
 import type * as APITypes from "@snailycad/types/api";
 import { isFeatureEnabled } from "lib/cad";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";

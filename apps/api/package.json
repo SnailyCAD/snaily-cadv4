@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "@discordjs/rest": "^1.7.1",
+    "@paralleldrive/cuid2": "^2.2.0",
     "@prisma/client": "^4.13.0",
     "@sentry/node": "^7.51.0",
     "@sentry/tracing": "^7.51.0",
@@ -65,7 +66,6 @@
     "compression": "1.7.4",
     "cookie": "^0.5.0",
     "cookie-parser": "1.4.6",
-    "cors": "2.8.5",
     "cuid": "^2.1.8",
     "discord-api-types": "0.37.41",
     "express": "4.18.2",

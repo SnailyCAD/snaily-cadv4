@@ -1,7 +1,7 @@
 import { Cookie } from "@snailycad/config";
 import type { User } from "@prisma/client";
 import type { Res } from "@tsed/common";
-import cuid from "cuid";
+import { createId } from "@paralleldrive/cuid2";
 import { prisma } from "lib/data/prisma";
 import { signJWT } from "utils/jwt";
 import { setCookie } from "utils/set-cookie";
@@ -21,7 +21,7 @@ interface SetUserPreferencesCookiesOptions {
 }
 
 export async function setUserTokenCookies(options: SetUserPreferencesCookiesOptions) {
-  const sessionId = cuid();
+  const sessionId = createId();
   /**
    * create a new user session. This session is connected to the `sessions` array in the user model.
    * to find the user connected to this session, we try to find the user via `sessions` array
