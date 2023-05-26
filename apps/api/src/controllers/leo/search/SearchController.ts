@@ -138,9 +138,6 @@ const weaponsInclude = {
 export class LeoSearchController {
   @Post("/name")
   @Description("Search citizens by their name, surname or fullname. Returns the first 35 results.")
-  @UsePermissions({
-    permissions: [Permissions.Leo, Permissions.EmsFd, Permissions.Dispatch],
-  })
   async searchName(
     @BodyParams("name") fullName: string,
     @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
