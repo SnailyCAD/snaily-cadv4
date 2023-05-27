@@ -54,6 +54,10 @@
     "createWithOfficer": "Create with Officer",
     "previousRecords": "Previous Records",
     "addressFlags": "Address Flags",
+    "driverLicensePoints": "Driver License Points",
+    "pilotLicensePoints": "Pilot License Points",
+    "firearmsLicensePoints": "Firearms License Points",
+    "waterLicensePoints": "Water License Points",
     "createPreviousRecordsStepDescription": "Here you can optionally add previous records this citizen has had. This is useful for when a citizen has been arrested before.",
     "alert_markCitizenDeceased": "Are you sure you want mark <span>{citizen}</span> as deceased? Only EMS/FD can mark you alive again.",
     "alert_deleteCitizen": "Are you sure you want to delete <span>{citizen}</span>? This action cannot be undone."

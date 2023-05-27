@@ -16,6 +16,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { InactivityTimeoutSection } from "./misc-features/inactivity-timeout-section";
 import { LicenseNumbersSection } from "./misc-features/license-number-section";
 import { TemplateSection } from "./misc-features/template-section";
+import { MaxLicensePointsSection } from "./misc-features/max-license-points";
 
 export function MiscFeatures() {
   const [headerId, setHeaderId] = React.useState<(File | string) | null>(null);
@@ -144,6 +145,11 @@ export function MiscFeatures() {
 
     waterLicenseNumberLength: miscSettings.waterLicenseNumberLength ?? 8,
     waterLicenseTemplate: miscSettings.waterLicenseTemplate ?? "",
+
+    driversLicenseMaxPoints: miscSettings.driversLicenseMaxPoints ?? 12,
+    pilotLicenseMaxPoints: miscSettings.pilotLicenseMaxPoints ?? 12,
+    weaponLicenseMaxPoints: miscSettings.weaponLicenseMaxPoints ?? 12,
+    waterLicenseMaxPoints: miscSettings.waterLicenseMaxPoints ?? 12,
   };
 
   return (
@@ -185,6 +191,7 @@ export function MiscFeatures() {
 
             <InactivityTimeoutSection />
             <LicenseNumbersSection />
+            <MaxLicensePointsSection />
             <TemplateSection />
 
             <section>

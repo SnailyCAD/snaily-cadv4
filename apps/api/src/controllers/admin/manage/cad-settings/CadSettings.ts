@@ -177,7 +177,6 @@ export class CADSettingsController {
       where: { id: cad.id },
       include: { features: true, miscCadSettings: true, apiToken: true },
     });
-    console.log(updated);
 
     const previousEnabledFeatures = cad.features;
     const newEnabledFeatures = createFeaturesObject(updated.features);
@@ -235,6 +234,18 @@ export class CADSettingsController {
         boloInactivityTimeout: data.boloInactivityTimeout || null,
         activeWarrantsInactivityTimeout: data.activeWarrantsInactivityTimeout || null,
         jailTimeScale: (data.jailTimeScaling || null) as JailTimeScale | null,
+        driversLicenseMaxPoints: data.driversLicenseMaxPoints,
+        pilotLicenseMaxPoints: data.pilotLicenseMaxPoints,
+        weaponLicenseMaxPoints: data.weaponLicenseMaxPoints,
+        waterLicenseMaxPoints: data.waterLicenseMaxPoints,
+        pilotLicenseTemplate: data.pilotLicenseTemplate,
+        driversLicenseTemplate: data.driversLicenseTemplate,
+        weaponLicenseTemplate: data.weaponLicenseTemplate,
+        waterLicenseTemplate: data.waterLicenseTemplate,
+        pilotLicenseNumberLength: data.pilotLicenseNumberLength,
+        driversLicenseNumberLength: data.driversLicenseNumberLength,
+        weaponLicenseNumberLength: data.weaponLicenseNumberLength,
+        waterLicenseNumberLength: data.waterLicenseNumberLength,
       },
       include: { webhooks: true },
     });

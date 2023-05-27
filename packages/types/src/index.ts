@@ -146,9 +146,11 @@ export type Citizen = Prisma.Citizen & {
   flags?: Prisma.Value[];
   notes?: Prisma.Note[];
   suspendedLicenses?: SuspendedCitizenLicenses | null;
+  licensePoints?: CitizenLicensePoints | null;
 };
 
 export type SuspendedCitizenLicenses = Prisma.SuspendedCitizenLicenses;
+export type CitizenLicensePoints = Prisma.CitizenLicensePoints;
 
 export type Note = Prisma.Note & {
   createdBy?: Officer | null;

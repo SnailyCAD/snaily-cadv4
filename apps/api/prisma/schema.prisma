@@ -95,6 +95,11 @@ model MiscCadSettings {
   waterLicenseNumberLength   Int?    @default(8)
   waterLicenseTemplate       String? @db.Text
 
+  driversLicenseMaxPoints Int? @default(12)
+  pilotLicenseMaxPoints   Int? @default(12)
+  weaponLicenseMaxPoints  Int? @default(12)
+  waterLicenseMaxPoints   Int? @default(12)
+
   lastInactivitySyncTimestamp DateTime?
 
   /// deprecated, use `webhooks` instead
@@ -410,11 +415,23 @@ model Citizen {
   notes                Note[]
   WeaponExam           WeaponExam[]                  @relation("weaponExams")
   suspendedLicenses    SuspendedCitizenLicenses?     @relation(fields: [suspendedLicensesId], references: [id])
+  licensePoints        CitizenLicensePoints?         @relation(fields: [licensePointsId], references: [id])
+  licensePointsId      String?
   suspendedLicensesId  String?
   LicenseExam          LicenseExam[]
   DoctorVisit          DoctorVisit[]
 
   @@index([name, surname], name: "fullname")
+}
+
+model CitizenLicensePoints {
+  id                    String    @id @default(uuid())
+  driverLicensePoints   Int       @default(0)
+  pilotLicensePoints    Int       @default(0)
+  waterLicensePoints    Int       @default(0)
+  firearmsLicensePoints Int       @default(0)
+  updatedAt             DateTime  @default(now()) @updatedAt
+  citizens              Citizen[]
 }
 
 model SuspendedCitizenLicenses {

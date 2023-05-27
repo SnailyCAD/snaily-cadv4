@@ -32,6 +32,7 @@ import { NameSearchFooter } from "./sections/footer";
 import { shallow } from "zustand/shallow";
 import { SpeechAlert } from "./speech-alert";
 import { ImageWrapper } from "components/shared/image-wrapper";
+import { ManageLicensePointsModal } from "./sections/license-points/manage-license-points-modal";
 
 const VehicleSearchModal = dynamic(
   async () => (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal,
@@ -438,6 +439,7 @@ export function NameSearchModal() {
             {CREATE_USER_CITIZEN_LEO && isLeo ? <CreateCitizenModal /> : null}
             {currentResult && !currentResult.isConfidential ? (
               <>
+                <ManageLicensePointsModal />
                 <ManageCitizenFlagsModal />
                 <ManageCitizenAddressFlagsModal />
                 <ManageCustomFieldsModal
