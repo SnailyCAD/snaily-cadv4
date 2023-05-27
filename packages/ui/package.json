@@ -14,7 +14,7 @@
     "typecheck": "yarn tsc --noEmit"
   },
   "devDependencies": {
-    "@snailycad/types": "1.57.0",
+    "@snailycad/types": "workspace:*",
     "rimraf": "^5.0.1",
     "tailwindcss": "^3.3.2",
     "tslib": "^2.5.2",
@@ -106,7 +106,7 @@
     "@react-types/overlays": "^3.7.2",
     "@react-types/select": "^3.8.1",
     "@react-types/shared": "^3.18.1",
-    "@snailycad/utils": "1.57.0",
+    "@snailycad/utils": "workspace:*",
     "react-bootstrap-icons": "^1.10.3",
     "react-dnd": "16.0.1",
     "react-dnd-html5-backend": "16.0.1",

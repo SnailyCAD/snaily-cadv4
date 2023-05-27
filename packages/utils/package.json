@@ -61,7 +61,7 @@
     "test": "yarn vitest run"
   },
   "devDependencies": {
-    "@snailycad/types": "1.57.0",
+    "@snailycad/types": "workspace:*",
     "c8": "^7.13.0",
     "tslib": "^2.5.2",
     "tsup": "^6.7.0",

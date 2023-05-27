@@ -24,7 +24,7 @@
     "typecheck": "yarn tsc --noEmit"
   },
   "devDependencies": {
-    "@snailycad/types": "1.57.0",
+    "@snailycad/types": "workspace:*",
     "tsup": "^6.7.0",
     "typescript": "^5.0.4",
     "vite": "^4.3.9",

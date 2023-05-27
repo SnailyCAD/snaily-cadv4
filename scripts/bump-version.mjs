@@ -28,9 +28,9 @@ for (const pkg of allPackages) {
     const isInDevDep = packageJsonContentJSON.devDependencies?.[`@snailycad/${utilPkg}`];
 
     if (isInDep) {
-      packageJsonContentJSON.dependencies[`@snailycad/${utilPkg}`] = version;
+      packageJsonContentJSON.dependencies[`@snailycad/${utilPkg}`] = "workspace:*";
     } else if (isInDevDep) {
-      packageJsonContentJSON.devDependencies[`@snailycad/${utilPkg}`] = version;
+      packageJsonContentJSON.devDependencies[`@snailycad/${utilPkg}`] = "workspace:*";
     }
   }
 
