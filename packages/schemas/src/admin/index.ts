@@ -52,9 +52,17 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
     .nullable()
     .optional(),
   driversLicenseTemplate: z.string().nullable(),
+  driversLicenseNumberLength: z.number().finite().nullable(),
   pilotLicenseTemplate: z.string().nullable(),
+  pilotLicenseNumberLength: z.number().finite().nullable(),
   weaponLicenseTemplate: z.string().nullable(),
+  weaponLicenseNumberLength: z.number().finite().nullable(),
   waterLicenseTemplate: z.string().nullable(),
+  waterLicenseNumberLength: z.number().finite().nullable(),
+  driversLicenseMaxPoints: z.number().finite().nullable(),
+  pilotLicenseMaxPoints: z.number().finite().nullable(),
+  weaponLicenseMaxPoints: z.number().finite().nullable(),
+  waterLicenseMaxPoints: z.number().finite().nullable(),
 });
 
 export const DISCORD_SETTINGS_SCHEMA = z.object({

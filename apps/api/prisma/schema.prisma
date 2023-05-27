@@ -427,13 +427,9 @@ model Citizen {
 model CitizenLicensePoints {
   id                    String    @id @default(uuid())
   driverLicensePoints   Int       @default(0)
-  driverLastResetAt     DateTime  @default(now())
   pilotLicensePoints    Int       @default(0)
-  pilotLastResetAt      DateTime  @default(now())
   waterLicensePoints    Int       @default(0)
-  waterLastResetAt      DateTime  @default(now())
   firearmsLicensePoints Int       @default(0)
-  firearmsLastResetAt   DateTime  @default(now())
   updatedAt             DateTime  @default(now()) @updatedAt
   citizens              Citizen[]
 }
