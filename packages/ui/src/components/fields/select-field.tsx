@@ -115,6 +115,7 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
               state={state}
               isClearable={props.isClearable}
               errorMessage={props.errorMessage}
+              isDisabled={props.isDisabled}
             />
           </div>
           {state.isOpen && (

@@ -9,7 +9,8 @@ interface Props<T extends SelectValue> {
   state: MultiSelectState<T>;
   selectionMode: "single" | "multiple";
   errorMessage?: string | ReactNode;
-  isClearable: boolean | undefined;
+  isClearable?: boolean;
+  isDisabled?: boolean;
 }
 
 export function SelectActions<T extends SelectValue>(props: Props<T>) {
@@ -22,6 +23,7 @@ export function SelectActions<T extends SelectValue>(props: Props<T>) {
     <>
       {showClearableButton ? (
         <Button
+          isDisabled={props.isDisabled}
           onPress={() => {
             props.state.setSelectedKeys([]);
           }}
@@ -39,6 +41,7 @@ export function SelectActions<T extends SelectValue>(props: Props<T>) {
       ) : null}
 
       <Button
+        isDisabled={props.isDisabled}
         onPress={() => props.state.open()}
         size="xs"
         type="button"
