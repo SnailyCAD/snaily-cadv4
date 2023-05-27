@@ -85,7 +85,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
   return (
     <>
       {LICENSE_EXAMS && !isLeo ? null : (
-        <section className="w-full">
+        <section className="w-full mt-3">
           {isLeo ? (
             <FormRow>
               <SwitchField
@@ -115,6 +115,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
 
           <div className={formRowClassName}>
             <ValueSelectField
+              isDisabled={values.suspended.driverLicense}
               isClearable={allowRemoval}
               fieldName="driversLicense"
               valueType={ValueType.LICENSE}
@@ -187,6 +188,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
 
         <div className={formRowClassName}>
           <ValueSelectField
+            isDisabled={values.suspended.pilotLicense}
             isClearable={allowRemoval}
             fieldName="pilotLicense"
             valueType={ValueType.LICENSE}
@@ -261,6 +263,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
             valueType={ValueType.LICENSE}
             values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE)}
             filterFn={(v) => filterLicenseType(v, ValueLicenseType.LICENSE)}
+            isDisabled={values.suspended.waterLicense}
             label={t("Citizen.waterLicense")}
           />
 
@@ -331,6 +334,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
               valueType={ValueType.LICENSE}
               values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE)}
               filterFn={(v) => filterLicenseType(v, ValueLicenseType.LICENSE)}
+              isDisabled={values.suspended.firearmsLicense}
               label={t("Citizen.weaponLicense")}
             />
 

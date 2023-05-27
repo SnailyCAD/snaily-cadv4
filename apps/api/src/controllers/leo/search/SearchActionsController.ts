@@ -5,6 +5,7 @@ import {
   CREATE_CITIZEN_SCHEMA,
   IMPOUND_VEHICLE_SCHEMA,
   LEO_VEHICLE_SCHEMA,
+  LICENSE_POINTS_SCHEMA,
 } from "@snailycad/schemas";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -107,6 +108,45 @@ export class SearchActionsController {
         weaponLicenseId: data.weaponLicense,
         waterLicenseId: data.waterLicense,
         suspendedLicensesId: suspendedLicenses?.id,
+      },
+      include: citizenInclude,
+    });
+
+    return updated;
+  }
+
+  @Put("/license-points/:citizenId")
+  @Description("Update the license points for a citizen by their id")
+  @UsePermissions({
+    permissions: [Permissions.Leo],
+  })
+  async updateCitizenLicensePoints(
+    @BodyParams() body: unknown,
+    @PathParams("citizenId") citizenId: string,
+  ): Promise<APITypes.PutSearchActionsLicensePointsData> {
+    const data = validateSchema(LICENSE_POINTS_SCHEMA, body);
+
+    const citizen = await prisma.citizen.findUnique({
+      where: {
+        id: citizenId,
+      },
+    });
+
+    if (!citizen) {
+      throw new NotFound("notFound");
+    }
+
+    const createUpdateData = {
+      driverLicensePoints: data.driverLicensePoints,
+      pilotLicensePoints: data.pilotLicensePoints,
+      waterLicensePoints: data.waterLicensePoints,
+      firearmsLicensePoints: data.firearmsLicensePoints,
+    };
+
+    const updated = await prisma.citizen.update({
+      where: { id: citizen.id },
+      data: {
+        licensePoints: { upsert: { create: createUpdateData, update: createUpdateData } },
       },
       include: citizenInclude,
     });

@@ -56,6 +56,7 @@ export const enum ModalIds {
   ManageVehicleLicenses = "ManageVehicleLicensesModal",
   AddressSearch = "AddressSearchModal",
   SelectDepartment = "SelectDepartmentModal",
+  ManageLicensePoints = "ManageLicensePointsModal",
 
   NameSearch = "NameSearchModal",
   VehicleSearchWithinName = "VehicleSearchWithinNameModal",

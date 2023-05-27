@@ -139,3 +139,10 @@ export const MERGE_UNIT_SCHEMA = z.object({
     .nullish()
     .transform((value) => (value && value.length <= 0 ? null : value)),
 });
+
+export const LICENSE_POINTS_SCHEMA = z.object({
+  driverLicensePoints: z.number().finite().min(0),
+  pilotLicensePoints: z.number().finite().min(0),
+  waterLicensePoints: z.number().finite().min(0),
+  firearmsLicensePoints: z.number().finite().min(0),
+});

@@ -109,6 +109,12 @@ export type PutSearchActionsLicensesData = Types.Citizen;
 
 /**
  * @method PUT
+ * @route /search/actions/license-points/:citizenId
+ */
+export type PutSearchActionsLicensePointsData = Types.Citizen;
+
+/**
+ * @method PUT
  * @route /search/actions/vehicle-licenses/:vehicleId
  */
 export type PutSearchActionsVehicleLicensesData = PostLeoSearchVehicleData;

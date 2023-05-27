@@ -32,6 +32,7 @@ export const citizenInclude = {
   user: { select: userProperties },
   flags: true,
   suspendedLicenses: true,
+  licensePoints: true,
   vehicles: {
     orderBy: { createdAt: "desc" },
     include: {
