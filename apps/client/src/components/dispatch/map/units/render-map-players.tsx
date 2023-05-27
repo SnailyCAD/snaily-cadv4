@@ -1,6 +1,6 @@
 import * as React from "react";
-import { ActiveMapUnits } from "./ActiveMapUnits";
-import { PlayerMarker } from "./PlayerMarker";
+import { ActiveMapUnits } from "./active-map-units";
+import { PlayerMarker } from "./player-marker";
 import { useMapPlayers } from "hooks/realtime/use-map-players";
 
 export function RenderMapPlayers() {

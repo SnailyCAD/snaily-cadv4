@@ -3,7 +3,7 @@ import * as Accordion from "@radix-ui/react-accordion";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { CaretDownFill } from "react-bootstrap-icons";
-import type { MapPlayer } from "types/Map";
+import type { MapPlayer } from "types/map";
 import { Button } from "@snailycad/ui";
 import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";

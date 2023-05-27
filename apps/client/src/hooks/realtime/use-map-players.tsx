@@ -6,7 +6,7 @@ import type {
   PlayerLeftEvent,
   MapPlayer,
   PlayerDataEventPayload,
-} from "types/Map";
+} from "types/map";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { toastMessage } from "lib/toastMessage";

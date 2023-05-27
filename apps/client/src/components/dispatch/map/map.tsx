@@ -2,10 +2,10 @@ import * as React from "react";
 import { CRS } from "leaflet";
 import { MapContainer, TileLayer } from "react-leaflet";
 import { getMapBounds } from "lib/map/utils";
-import { RenderMapBlips } from "./RenderMapBlips";
-import { RenderActiveCalls } from "./calls/RenderActiveCalls";
-import { MapActions } from "./MapActions";
-import { RenderMapPlayers } from "./units/RenderMapPlayers";
+import { RenderMapBlips } from "./render-map-blips";
+import { RenderActiveCalls } from "./calls/render-active-map-calls";
+import { MapActions } from "./map-actions";
+import { RenderMapPlayers } from "./units/render-map-players";
 
 const TILES_URL = "/tiles/minimap_sea_{y}_{x}.webp" as const;
 
