@@ -77,7 +77,7 @@ export function CADFeaturesTab() {
     for (const key in cadFeatures) {
       let option = cadFeatures[key as keyof typeof cadFeatures];
 
-      if (key === Feature.LICENSE_EXAMS && Array.isArray(option)) {
+      if (key === Feature.LICENSE_EXAMS) {
         if (option.length === 0) {
           option = Object.values(LicenseExamType);
         }
@@ -152,6 +152,7 @@ export function CADFeaturesTab() {
 
                             {Feature.LICENSE_EXAMS === feature.feature ? (
                               <SelectField
+                                isDisabled={!values.features[feature.feature]?.isEnabled}
                                 isClearable
                                 selectedKeys={values.options[feature.feature]}
                                 onSelectionChange={(keys) =>

@@ -1,8 +1,10 @@
 import type { Permissions } from "@snailycad/permissions";
 import type * as Prisma from "@prisma/client";
 import type * as Enums from "./enums";
+import { CadFeatureOptions } from "./lib/cad-feature";
 
 export * from "./enums";
+export * from "./lib/cad-feature";
 
 type CADPick =
   | "id"
@@ -28,7 +30,6 @@ type CADPick =
   | "autoSetUserProperties"
   | "autoSetUserPropertiesId";
 
-export type CadFeatureOptions = Record<Enums.Feature, Record<string, any>>;
 export type cad = Pick<
   Omit<Prisma.cad, "registrationCode"> & {
     features: Record<Enums.Feature, boolean> & { options?: CadFeatureOptions };
