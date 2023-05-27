@@ -58,9 +58,10 @@ export default function CitizenPage({ citizens }: Props) {
 
   return (
     <Layout className="dark:text-white">
-      {SIGNAL_100_CITIZEN ? (
-        <signal100.Component enabled={signal100.enabled} audio={signal100.audio} />
-      ) : null}
+      <signal100.Component
+        enabled={SIGNAL_100_CITIZEN && signal100.enabled}
+        audio={signal100.audio}
+      />
 
       <header className="my-3">
         <Title className="mb-2">{t("citizens")}</Title>
