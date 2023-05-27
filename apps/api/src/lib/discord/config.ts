@@ -6,7 +6,7 @@ export const DISCORD_API_URL = `https://discord.com/api/v${DISCORD_API_VERSION}`
 export const GUILD_ID = process.env.DISCORD_SERVER_ID;
 export const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 
-let cacheREST: REST;
+let cacheREST: REST | undefined;
 export function getRest(): REST {
   if (!BOT_TOKEN || BOT_TOKEN === "undefined") {
     throw new Error("mustSetBotTokenGuildId");
