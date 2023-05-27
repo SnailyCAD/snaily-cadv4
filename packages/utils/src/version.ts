@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 import process from "node:process";
 import { spawnSync } from "node:child_process";
 
-let currentVersionCached: string;
+let currentVersionCached: string | undefined;
 let currentCommitHash: string;
 let latestReleaseVersion: string | null;
 

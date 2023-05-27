@@ -31,8 +31,8 @@
     "typecheck": "yarn workspace @snailycad/api generate && yarn tsc --noEmit"
   },
   "devDependencies": {
-    "@snailycad/permissions": "1.57.0",
-    "discord-api-types": "0.37.38",
+    "@snailycad/permissions": "workspace:*",
+    "discord-api-types": "0.37.42",
     "tsup": "^6.7.0",
     "typescript": "^5.0.4"
   },
