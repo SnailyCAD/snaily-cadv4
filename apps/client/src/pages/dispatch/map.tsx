@@ -15,7 +15,7 @@ import { ValueType } from "@snailycad/types";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import { useCall911State } from "state/dispatch/call-911-state";
 
-const Map = dynamic(async () => (await import("components/dispatch/map/Map")).Map, {
+const Map = dynamic(async () => (await import("components/dispatch/map/map")).Map, {
   ssr: false,
   loading: () => <p>loading map..</p>,
 });

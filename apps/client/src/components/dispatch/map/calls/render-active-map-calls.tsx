@@ -3,7 +3,7 @@ import { icon as leafletIcon, LeafletEvent } from "leaflet";
 import useFetch from "lib/useFetch";
 import { Marker, Popup, Tooltip, useMap } from "react-leaflet";
 import type { Full911Call } from "state/dispatch/dispatch-state";
-import { ActiveMapCalls } from "./ActiveMapCalls";
+import { ActiveMapCalls } from "./active-map-calls";
 import { convertToMap } from "lib/map/utils";
 import { Button } from "@snailycad/ui";
 import { useTranslations } from "next-intl";

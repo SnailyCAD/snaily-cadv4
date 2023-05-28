@@ -3,14 +3,14 @@ import * as React from "react";
 import { Marker, Popup, Tooltip, useMap } from "react-leaflet";
 import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { Button } from "@snailycad/ui";
-import type { MapPlayer, PlayerDataEventPayload } from "types/Map";
+import type { MapPlayer, PlayerDataEventPayload } from "types/map";
 import { icon as leafletIcon } from "leaflet";
 import { useTranslations } from "next-intl";
 import { MapItem, useDispatchMapState } from "state/mapState";
-import { generateMarkerTypes } from "../RenderMapBlips";
+import { generateMarkerTypes } from "../render-map-blips";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { Rank } from "@snailycad/types";
+import { Rank, ShouldDoType } from "@snailycad/types";
 
 interface Props {
   player: MapPlayer | PlayerDataEventPayload;
@@ -33,6 +33,7 @@ export function PlayerMarker({ player, handleToggle }: Props) {
   const { generateCallsign } = useGenerateCallsign();
 
   const playerIcon = React.useMemo(() => {
+    // player has sirens enabled
     if (parseInt(player.icon, 10) === 56 && player.hasSirenEnabled) {
       const blipSize = 35;
 
@@ -51,11 +52,24 @@ export function PlayerMarker({ player, handleToggle }: Props) {
 
     // player is on-foot and is a unit
     if ("unit" in player && player.unit) {
+      if (player.unit.status?.shouldDo === ShouldDoType.PANIC_BUTTON) {
+        const blipSize = 25;
+
+        return leafletIcon({
+          iconUrl: "/map/panic.gif",
+          iconSize: [blipSize, blipSize],
+          iconAnchor: [blipSize / 2, blipSize / 2],
+          popupAnchor: [0, -10],
+          tooltipAnchor: [0, -10],
+        });
+      }
+
       return leafletIcon({
         iconUrl: "/map/unit_ped.png",
         iconSize: [20, 43],
         iconAnchor: [20 / 2, 43 / 2],
-        popupAnchor: [0, 0],
+        popupAnchor: [0, -15],
+        tooltipAnchor: [0, -15],
       });
     }
 
