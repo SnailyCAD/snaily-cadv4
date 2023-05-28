@@ -24,7 +24,7 @@ export function RenderMapPlayers() {
 
   return (
     <>
-      {playerValues.map((player, idx) => (
+      {Array.from(players.values()).map((player, idx) => (
         <PlayerMarker
           key={`${player.identifier}-${idx}`}
           handleToggle={handleToggle}

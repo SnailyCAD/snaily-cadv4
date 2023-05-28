@@ -53,11 +53,14 @@ export function PlayerMarker({ player, handleToggle }: Props) {
     // player is on-foot and is a unit
     if ("unit" in player && player.unit) {
       if (player.unit.status?.shouldDo === ShouldDoType.PANIC_BUTTON) {
+        const blipSize = 25;
+
         return leafletIcon({
-          iconUrl: "/map/unit_ped_panic.png",
-          iconSize: [20, 43],
-          iconAnchor: [20 / 2, 43 / 2],
-          popupAnchor: [0, 0],
+          iconUrl: "/map/panic.gif",
+          iconSize: [blipSize, blipSize],
+          iconAnchor: [blipSize / 2, blipSize / 2],
+          popupAnchor: [0, -10],
+          tooltipAnchor: [0, -10],
         });
       }
 
@@ -65,7 +68,8 @@ export function PlayerMarker({ player, handleToggle }: Props) {
         iconUrl: "/map/unit_ped.png",
         iconSize: [20, 43],
         iconAnchor: [20 / 2, 43 / 2],
-        popupAnchor: [0, 0],
+        popupAnchor: [0, -15],
+        tooltipAnchor: [0, -15],
       });
     }
 
