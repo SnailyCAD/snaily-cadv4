@@ -8,14 +8,17 @@ import { Button } from "@snailycad/ui";
 import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import type { EmsFdDeputy, Officer } from "@snailycad/types";
+import type { CombinedEmsFdUnit, CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 import { Infofield } from "components/shared/Infofield";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { UnitRadioChannelModal } from "components/dispatch/active-units/UnitRadioChannelModal";
+import { isUnitCombined, isUnitCombinedEmsFd } from "@snailycad/utils";
 
 interface CallItemProps {
   player: MapPlayer;
-  setTempUnit: React.Dispatch<React.SetStateAction<Officer | EmsFdDeputy | null>>;
+  setTempUnit: React.Dispatch<
+    React.SetStateAction<Officer | EmsFdDeputy | CombinedEmsFdUnit | CombinedLeoUnit | null>
+  >;
 }
 
 export function UnitItem({ setTempUnit, player }: CallItemProps) {
@@ -60,7 +63,37 @@ export function UnitItem({ setTempUnit, player }: CallItemProps) {
         <Accordion.Content className="pt-2 text-base text-neutral-800 dark:text-white">
           <div className="map-column">
             <Infofield label={t("status")}>{unit.status?.value?.value}</Infofield>
-            <Infofield label={common("user")}>{player.username}</Infofield>
+            {isUnitCombined(unit) ? (
+              <Infofield label={t("officers")}>
+                {unit.officers.map((officer, idx) => {
+                  const nameAndCallsign = `${generateCallsign(officer)} ${makeUnitName(officer)}`;
+                  const showComma = idx !== unit.officers.length - 1;
+
+                  return (
+                    <span key={officer.id}>
+                      {nameAndCallsign}
+                      {showComma ? ", " : ""}
+                    </span>
+                  );
+                })}
+              </Infofield>
+            ) : isUnitCombinedEmsFd(unit) ? (
+              <Infofield label={t("officers")}>
+                {unit.deputies.map((deputy, idx) => {
+                  const nameAndCallsign = `${generateCallsign(deputy)} ${makeUnitName(deputy)}`;
+                  const showComma = idx !== unit.deputies.length - 1;
+
+                  return (
+                    <span key={deputy.id}>
+                      {nameAndCallsign}
+                      {showComma ? ", " : ""}
+                    </span>
+                  );
+                })}
+              </Infofield>
+            ) : (
+              <Infofield label={common("user")}>{player.username}</Infofield>
+            )}
             {RADIO_CHANNEL_MANAGEMENT ? (
               <Infofield className="flex !flex-row gap-2 mt-1" label={t("radioChannel")}>
                 <UnitRadioChannelModal unit={unit} />

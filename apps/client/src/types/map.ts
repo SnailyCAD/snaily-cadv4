@@ -1,4 +1,10 @@
-import type { EmsFdDeputy, Officer, User } from "@snailycad/types";
+import type {
+  CombinedEmsFdUnit,
+  CombinedLeoUnit,
+  EmsFdDeputy,
+  Officer,
+  User,
+} from "@snailycad/types";
 import type { PointTuple, LatLngLiteral, Icon, Marker } from "leaflet";
 
 export interface Player {
@@ -64,7 +70,7 @@ export type PlayerDataEventPayload = PlayerDataEvent["payload"][number] & {
   identifier: string;
 };
 export interface MapPlayer extends User, PlayerDataEventPayload {
-  unit: EmsFdDeputy | Officer | null;
+  unit: EmsFdDeputy | Officer | CombinedLeoUnit | CombinedEmsFdUnit | null;
   convertedSteamId: string | null;
   discordId: string | null;
   ref: Marker | null;
