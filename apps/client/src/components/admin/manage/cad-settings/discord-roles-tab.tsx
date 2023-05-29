@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Select, SelectValue } from "components/form/Select";
-import { Button, Loader, TabsContent } from "@snailycad/ui";
+import { Alert, Button, Loader, TabsContent } from "@snailycad/ui";
 import { Form, Formik, useFormikContext } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
@@ -144,9 +144,12 @@ export function DiscordRolesTab() {
       </header>
 
       {fetchError ? (
-        <div role="alert" className="p-2 px-4 my-4 mb-5 text-black rounded-md shadow bg-red-400">
-          <p>{tErrors(fetchError)}</p>
-        </div>
+        <Alert
+          type="error"
+          className="my-5"
+          title={tErrors("unknown")}
+          message={tErrors(fetchError)}
+        />
       ) : null}
 
       <Formik enableReinitialize onSubmit={onSubmit} initialValues={INITIAL_VALUES}>

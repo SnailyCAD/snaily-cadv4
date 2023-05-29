@@ -1,5 +1,5 @@
 import { useTranslations } from "use-intl";
-import { Button } from "@snailycad/ui";
+import { Alert, Button } from "@snailycad/ui";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
@@ -20,7 +20,6 @@ import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { ModalIds } from "types/ModalIds";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import dynamic from "next/dynamic";
-import { ExclamationCircleFill } from "react-bootstrap-icons";
 import Link from "next/link";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal, {
@@ -99,14 +98,7 @@ export default function ManageBusinesses({ business, businessId }: Props) {
       <Title className="mb-5">{t("Business.employees")}</Title>
 
       {isBusinessPendingApproval ? (
-        <div
-          role="alert"
-          className="mb-5 flex flex-col p-2 px-4 text-black rounded-md shadow bg-orange-400 border border-orange-500/80"
-        >
-          <header className="flex items-center gap-2 mb-2">
-            <ExclamationCircleFill />
-            <h5 className="font-semibold text-lg">Business is pending approval</h5>
-          </header>
+        <Alert type="warning" title="Business is pending approval">
           <p>
             This business is still pending approval. It must first be approved by an administrator
             before any changes can be done.{" "}
@@ -114,7 +106,7 @@ export default function ManageBusinesses({ business, businessId }: Props) {
               Go back
             </Link>
           </p>
-        </div>
+        </Alert>
       ) : null}
 
       <Table

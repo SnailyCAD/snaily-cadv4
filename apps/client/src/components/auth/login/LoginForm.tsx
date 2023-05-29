@@ -1,7 +1,7 @@
 import { Form, Formik, FormikHelpers } from "formik";
 import Link from "next/link";
 import { Discord, Steam } from "react-bootstrap-icons";
-import { Button, Loader, TextField } from "@snailycad/ui";
+import { Alert, Button, Loader, TextField } from "@snailycad/ui";
 import { TwoFactorAuthScreen } from "components/auth/TwoFactorAuthScreen";
 import { getAPIUrl } from "@snailycad/utils/api-url";
 import { useRouter } from "next/router";
@@ -130,14 +130,7 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
                 ) : null}
               </header>
 
-              {errorMessage ? (
-                <div
-                  role="alert"
-                  className="bg-red-500/80 text-black w-full py-1.5 px-3 my-3 rounded-md"
-                >
-                  {errorMessage}
-                </div>
-              ) : null}
+              {errorMessage ? <Alert type="error" className="my-3" message={errorMessage} /> : null}
 
               {ALLOW_REGULAR_LOGIN ? (
                 <>

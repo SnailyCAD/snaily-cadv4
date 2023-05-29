@@ -1,8 +1,8 @@
 import { GetCADSettingsData } from "@snailycad/types/api";
+import { Alert } from "@snailycad/ui";
 import { getAPIUrl } from "@snailycad/utils/api-url";
 import { useQuery } from "@tanstack/react-query";
 import useFetch from "lib/useFetch";
-import { ExclamationCircleFill } from "react-bootstrap-icons";
 import { useTranslations } from "use-intl";
 
 export function ApiVerification() {
@@ -45,16 +45,7 @@ export function ApiVerification() {
     : t("unknown");
 
   return error ? (
-    <div
-      role="alert"
-      className="w-full max-w-md mb-5 flex flex-col p-2 px-4 text-black rounded-md shadow bg-red-400 border border-red-500/80"
-    >
-      <header className="flex items-center gap-2 mb-2">
-        <ExclamationCircleFill />
-        <h5 className="font-semibold text-lg">{title}</h5>
-      </header>
-      <div className="text-lg">{message}</div>
-
+    <Alert type="error" title={title} message={message}>
       <p className="mt-3">
         For more information, please visit our{" "}
         <a
@@ -76,6 +67,6 @@ export function ApiVerification() {
         </a>
         .
       </p>
-    </div>
+    </Alert>
   ) : null;
 }

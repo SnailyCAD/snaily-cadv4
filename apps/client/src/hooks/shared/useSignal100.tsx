@@ -5,6 +5,7 @@ import { SocketEvents } from "@snailycad/config";
 import { useTranslations } from "use-intl";
 import { useAudio } from "react-use";
 import { useCall911State } from "state/dispatch/call-911-state";
+import { Alert } from "@snailycad/ui";
 
 const SIGNAL_100_SRC = "/sounds/signal100.mp3";
 export function useSignal100() {
@@ -61,12 +62,16 @@ function Component({ audio, enabled }: { audio: any; enabled: boolean }) {
       {audio}
 
       {enabled ? (
-        <div role="alert" className="p-2 px-3 my-2 font-semibold text-white bg-red-500 rounded-md">
-          <p>
-            {t("signal100enabled")}{" "}
-            {callsWithSignal100.length > 0 ? `(${callsWithSignal100})` : null}
-          </p>
-        </div>
+        <Alert
+          className="my-2 font-semibold"
+          message={
+            <>
+              {t("signal100enabled")}{" "}
+              {callsWithSignal100.length > 0 ? `(${callsWithSignal100})` : null}
+            </>
+          }
+          type="error"
+        />
       ) : null}
     </>
   );

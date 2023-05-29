@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { GETDispatchTonesData } from "@snailycad/types/api";
 import useFetch from "lib/useFetch";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { Alert } from "@snailycad/ui";
 
 const LEO_TONE_SRC = "/sounds/leo-tone.mp3";
 const EMS_FD_TONE_SRC = "/sounds/ems-fd-tone.mp3";
@@ -128,14 +129,17 @@ function Component({
       ))}
 
       {showToneMessage && description?.description ? (
-        <div role="alert" className="p-2 px-4 my-2 mb-5 text-black rounded-md shadow bg-amber-400">
-          <h1 className="text-xl font-bold">{t("Leo.toneNotification")}</h1>
-          <p className="mt-1 text-lg">{description.description}</p>
-          <footer className="text-base mt-3">
+        <Alert
+          className="my-2 font-semibold"
+          title={t("Leo.toneNotification")}
+          message={description.description}
+          type="warning"
+        >
+          <p className="text-base mt-3">
             <strong>{t("Common.user")}: </strong>
             <span>{user?.username}</span>
-          </footer>
-        </div>
+          </p>
+        </Alert>
       ) : null}
     </>
   );

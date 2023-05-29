@@ -14,3 +14,4 @@ export * from "./multi-form/multi-form";
 export * from "./dnd/index";
 export * from "./tab-list";
 export { SwitchField } from "./fields/switch-field";
+export * from "./alert";

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, Loader, TabsContent } from "@snailycad/ui";
+import { Alert, Button, Loader, TabsContent } from "@snailycad/ui";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
@@ -74,9 +74,12 @@ export function RawWebhooksTab() {
       </header>
 
       {fetchError ? (
-        <div role="alert" className="p-2 px-4 my-2 mb-5 text-black rounded-md shadow bg-red-400">
-          <p>{tErrors(fetchError)}</p>
-        </div>
+        <Alert
+          type="error"
+          className="my-5"
+          title={tErrors("unknown")}
+          message={tErrors(fetchError)}
+        />
       ) : null}
 
       <Formik enableReinitialize onSubmit={onSubmit} initialValues={INITIAL_VALUES}>

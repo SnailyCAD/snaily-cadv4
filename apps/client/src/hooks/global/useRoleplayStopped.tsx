@@ -4,6 +4,7 @@ import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { useTranslations } from "use-intl";
 import { useAudio } from "react-use";
+import { Alert } from "@snailycad/ui";
 
 const ROLEPLAY_STOPPED_SRC = "/sounds/roleplay-stopped.mp3";
 
@@ -51,10 +52,12 @@ function Component({ audio, enabled }: { audio: React.ReactElement; enabled: boo
       {audio}
 
       {enabled ? (
-        <div role="alert" className="p-2 px-4 my-2 mb-5 text-black rounded-md shadow bg-amber-500">
-          <h1 className="text-xl font-bold">{t("stopRoleplay")}</h1>
-          <p className="mt-1 text-lg">{t("roleplayStopped")}</p>
-        </div>
+        <Alert
+          className="my-2"
+          title={t("stopRoleplay")}
+          message={t("roleplayStopped")}
+          type="warning"
+        />
       ) : null}
     </>
   );

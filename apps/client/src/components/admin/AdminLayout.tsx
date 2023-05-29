@@ -10,6 +10,7 @@ import { useAuth } from "context/AuthContext";
 import { useTranslations } from "next-intl";
 
 import dynamic from "next/dynamic";
+import { Alert } from "@snailycad/ui";
 
 const SocketErrorComponent = dynamic(
   async () => (await import("hooks/global/components/socket-error-component")).SocketErrorComponent,
@@ -48,11 +49,13 @@ export function AdminLayout({ children, className, permissions }: Props) {
             cad.version.latestReleaseVersion !== cad.version.currentVersion ? (
               <a
                 href={`https://github.com/SnailyCAD/snaily-cadv4/releases/tag/${cad.version.latestReleaseVersion}`}
-                role="alert"
-                className="block p-2 px-4 my-2 mb-5 text-black rounded-md shadow bg-amber-500"
+                className="block mb-5"
               >
-                <h1 className="text-xl font-bold">{t("updateAvailable")}</h1>
-                <p className="mt-1 text-lg">{t("updateAvailableInfo")}</p>
+                <Alert
+                  type="warning"
+                  title={t("updateAvailable")}
+                  message={t("updateAvailableInfo")}
+                />
               </a>
             ) : null}
 

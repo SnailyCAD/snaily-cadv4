@@ -2,7 +2,7 @@ import { useTranslations } from "use-intl";
 
 import type { GetServerSideProps } from "next";
 import { getTranslations } from "lib/getTranslation";
-import { Button } from "@snailycad/ui";
+import { Alert, Button } from "@snailycad/ui";
 import { getSessionUser } from "lib/auth";
 import { useAuth } from "context/AuthContext";
 import { Title } from "components/shared/Title";
@@ -57,12 +57,7 @@ export default function AccountPendingPage() {
       <main className="flex flex-col items-center justify-center pt-20">
         <div className="w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-primary dark:border dark:border-secondary">
           {successMessage ? (
-            <div
-              role="alert"
-              className="bg-green-500/80 text-black w-full py-1.5 px-3 my-3 rounded-md"
-            >
-              {successMessage}
-            </div>
+            <Alert type="success" className="my-3" message={successMessage} />
           ) : null}
 
           <h1 className="text-2xl font-semibold text-gray-800 dark:text-white">

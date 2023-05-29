@@ -15,6 +15,7 @@ import {
   TextField,
   Breadcrumbs,
   BreadcrumbItem,
+  Alert,
 } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import { FormRow } from "components/form/FormRow";
@@ -36,7 +37,6 @@ import type {
   PutManageUserByIdData,
 } from "@snailycad/types/api";
 import { useAuth } from "context/AuthContext";
-import { ExclamationCircleFill } from "react-bootstrap-icons";
 
 const DangerZone = dynamic(
   async () => (await import("components/admin/manage/users/danger-zone")).DangerZone,
@@ -125,14 +125,7 @@ export default function ManageCitizens(props: Props) {
       </Title>
 
       {isUserPendingApproval ? (
-        <div
-          role="alert"
-          className="mb-5 flex flex-col p-2 px-4 text-black rounded-md shadow bg-orange-400 border border-orange-500/80"
-        >
-          <header className="flex items-center gap-2 mb-2">
-            <ExclamationCircleFill />
-            <h5 className="font-semibold text-lg">User is pending approval</h5>
-          </header>
+        <Alert className="mb-5" type="warning" title="User is pending approval">
           <p>
             This user is still pending approval. It must first be approved by an administrator
             before any changes can be done.{" "}
@@ -140,27 +133,20 @@ export default function ManageCitizens(props: Props) {
               Go back
             </Link>
           </p>
-        </div>
+        </Alert>
       ) : null}
 
       {isUserDenied ? (
-        <div
-          role="alert"
-          className="mb-5 flex flex-col p-2 px-4 text-black rounded-md shadow bg-orange-400 border border-orange-500/80"
+        <Alert
+          className="mb-5"
+          type="warning"
+          message="This user was denied access. This user may first be approved by an administrator before any changes can be done."
+          title="User was denied access"
         >
-          <header className="flex items-center gap-2 mb-2">
-            <ExclamationCircleFill />
-            <h5 className="font-semibold text-lg">User was denied access</h5>
-          </header>
-          <p>
-            This user was denied access. This user may first be approved by an administrator before
-            any changes can be done.
-          </p>
-
           <Button onClick={handleAcceptUser} variant="amber" className="mt-3 max-w-fit">
             Accept this user
           </Button>
-        </div>
+        </Alert>
       ) : null}
 
       <div className="mt-5">

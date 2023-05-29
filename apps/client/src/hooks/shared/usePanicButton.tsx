@@ -8,6 +8,7 @@ import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 import { isUnitCombined, isUnitCombinedEmsFd } from "@snailycad/utils";
 import { useAudio } from "react-use";
 import { useAuth } from "context/AuthContext";
+import { Alert } from "@snailycad/ui";
 
 const PANIC_BUTTON_SRC = "/sounds/panic-button.mp3" as const;
 
@@ -64,13 +65,17 @@ function Component({
     <>
       {audio}
       {unit ? (
-        <div role="alert" className="p-2 px-3 my-2 font-semibold text-white bg-red-500 rounded-md">
-          <p>
-            {t("panicButtonLeo", {
-              officer: `${callsign} ${makeUnitName(unit)}`,
-            })}
-          </p>
-        </div>
+        <Alert
+          className="my-2 font-semibold"
+          message={
+            <>
+              {t("panicButtonLeo", {
+                officer: `${callsign} ${makeUnitName(unit)}`,
+              })}
+            </>
+          }
+          type="error"
+        />
       ) : null}
     </>
   );

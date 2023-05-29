@@ -22,7 +22,7 @@ import { useMounted } from "@casper124578/useful";
 import { createTableDragDropColumn } from "lib/table/create-table-dnd-column";
 import { createTableCheckboxColumn } from "./indeterminate-checkbox";
 import { TableSkeletonLoader } from "./skeleton-loader";
-import { ExclamationCircleFill } from "react-bootstrap-icons";
+import { Alert } from "@snailycad/ui";
 
 export const DRAGGABLE_TABLE_HANDLE = "__TABLE_HANDLE__";
 export type _RowData = RowData & {
@@ -140,16 +140,11 @@ export function Table<TData extends _RowData>({
           tableHeaders={table.getFlatHeaders()}
         />
       ) : tableState.pagination.error ? (
-        <div
-          role="alert"
-          className="flex flex-col p-2 px-4 text-black rounded-md shadow bg-red-400 border border-red-500/80"
-        >
-          <header className="flex items-center gap-2 mb-2">
-            <ExclamationCircleFill />
-            <h5 className="font-semibold text-lg">An unexpected error occurred</h5>
-          </header>
-          <p>{tableState.pagination.error?.message || "Unable to fetch this route"}</p>
-        </div>
+        <Alert
+          type="error"
+          title="An unexpected error occurred"
+          message={tableState.pagination.error?.message || "Unable to fetch this route"}
+        />
       ) : (
         <table className="w-full whitespace-nowrap max-h-64">
           <thead>
