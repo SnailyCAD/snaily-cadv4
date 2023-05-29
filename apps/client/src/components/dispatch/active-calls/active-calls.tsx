@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Manage911CallModal } from "components/dispatch/modals/Manage911CallModal";
+import { Manage911CallModal } from "components/dispatch/modals/manage-911-call/manage-911-call-modal";
 import { useRouter } from "next/router";
 import { Full911Call, useDispatchState } from "state/dispatch/dispatch-state";
 import { AssignedUnit, WhitelistStatus } from "@snailycad/types";

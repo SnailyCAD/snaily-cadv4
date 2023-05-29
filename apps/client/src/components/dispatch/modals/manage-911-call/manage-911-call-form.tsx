@@ -17,7 +17,7 @@ import { Select } from "components/form/Select";
 import { useTranslations } from "next-intl";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { useModal } from "state/modalState";
-import { AssignedUnitsTable } from "./AssignedUnitsTable";
+import { AssignedUnitsTable } from "./assigned-units-table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
 import { shallow } from "zustand/shallow";

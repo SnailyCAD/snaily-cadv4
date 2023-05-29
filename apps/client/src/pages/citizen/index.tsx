@@ -35,7 +35,9 @@ const ManageCallModal = dynamic(
   { ssr: false },
 );
 const Manage911CallModal = dynamic(
-  async () => (await import("components/dispatch/modals/Manage911CallModal")).Manage911CallModal,
+  async () =>
+    (await import("components/dispatch/modals/manage-911-call/manage-911-call-modal"))
+      .Manage911CallModal,
   { ssr: false },
 );
 

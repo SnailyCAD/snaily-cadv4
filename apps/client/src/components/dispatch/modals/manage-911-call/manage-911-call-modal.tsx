@@ -7,7 +7,7 @@ import useFetch from "lib/useFetch";
 import type { Full911Call } from "state/dispatch/dispatch-state";
 import { useRouter } from "next/router";
 import { AlertModal } from "components/modal/AlertModal";
-import { CallEventsArea } from "../events/EventsArea";
+import { CallEventsArea } from "../../events/EventsArea";
 
 import { usePermission } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
@@ -15,7 +15,7 @@ import { useLeoState } from "state/leo-state";
 import { useEmsFdState } from "state/ems-fd-state";
 import type { Delete911CallByIdData } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call-911-state";
-import { Manage911CallForm } from "./Manage911Call/Manage911CallForm";
+import { Manage911CallForm } from "./manage-911-call-form";
 import { Infofield } from "components/shared/Infofield";
 import { FullDate } from "components/shared/FullDate";
 import { makeUnitName } from "lib/utils";

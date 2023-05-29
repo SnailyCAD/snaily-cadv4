@@ -18,7 +18,7 @@ import useFetch from "lib/useFetch";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { AlertModal } from "components/modal/AlertModal";
-import { Manage911CallModal } from "components/dispatch/modals/Manage911CallModal";
+import { Manage911CallModal } from "components/dispatch/modals/manage-911-call/manage-911-call-modal";
 import { isUnitCombined } from "@snailycad/utils";
 import { usePermission, Permissions } from "hooks/usePermission";
 import type {
