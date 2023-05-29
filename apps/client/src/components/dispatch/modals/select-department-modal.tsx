@@ -65,7 +65,6 @@ export function SelectDepartmentModal() {
                   label: department.value.value,
                   value: department.id,
                 }))}
-                required
                 autoFocus
                 value={values.activeDepartment ?? null}
                 onChange={handleChange}

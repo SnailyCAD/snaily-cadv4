@@ -20,6 +20,8 @@ import { defaultPermissions } from "@snailycad/permissions";
 import { useValues } from "context/ValuesContext";
 import dynamic from "next/dynamic";
 import { ImageWrapper } from "components/shared/image-wrapper";
+import { ActiveCallColumn } from "components/dispatch/active-units/officers/active-call-column";
+import { ActiveIncidentColumn } from "components/dispatch/active-units/officers/active-incident-column";
 
 const TonesModal = dynamic(
   async () => (await import("components/dispatch/modals/tones-modal")).TonesModal,
@@ -89,26 +91,48 @@ export function ModalButtons({ initialActiveOfficer }: { initialActiveOfficer: A
   return (
     <div className="py-2">
       {nameAndCallsign && activeOfficer ? (
-        <p className="text-lg">
-          <span className="font-semibold">{t("Leo.activeOfficer")}: </span>
+        <div className="flex items-center gap-x-12">
+          <p className="text-lg">
+            <span className="font-semibold">{t("Leo.activeOfficer")}: </span>
 
-          {isUnitOfficer(activeOfficer) && activeOfficer.imageId ? (
-            <ImageWrapper
-              quality={70}
-              className="rounded-md w-[30px] h-[30px] object-cover mx-2 inline"
-              draggable={false}
-              src={makeImageUrl("units", activeOfficer.imageId)!}
-              loading="lazy"
-              width={30}
-              height={30}
-              alt={String(nameAndCallsign)}
+            {isUnitOfficer(activeOfficer) && activeOfficer.imageId ? (
+              <ImageWrapper
+                quality={70}
+                className="rounded-md w-[30px] h-[30px] object-cover mx-2 inline"
+                draggable={false}
+                src={makeImageUrl("units", activeOfficer.imageId)!}
+                loading="lazy"
+                width={30}
+                height={30}
+                alt={String(nameAndCallsign)}
+              />
+            ) : null}
+            {nameAndCallsign}
+          </p>
+
+          <p className="flex items-center gap-x-1">
+            <span className="font-semibold">{t("Leo.activeCall")}: </span>
+            <ActiveCallColumn
+              size="sm"
+              callId={activeOfficer.activeCallId}
+              isDispatch={false}
+              unitId={activeOfficer.id}
             />
-          ) : null}
-          {nameAndCallsign}
-        </p>
+          </p>
+
+          <p className="flex items-center gap-x-1">
+            <span className="font-semibold">{t("Leo.incident")}: </span>
+            <ActiveIncidentColumn
+              size="sm"
+              incidentId={activeOfficer.activeIncidentId}
+              isDispatch={false}
+              unitId={activeOfficer.id}
+            />
+          </p>
+        </div>
       ) : null}
 
-      <div className="mt-2 modal-buttons-grid">
+      <div className="mt-3 modal-buttons-grid">
         {buttons.map((button, idx) => {
           return (
             <ModalButton

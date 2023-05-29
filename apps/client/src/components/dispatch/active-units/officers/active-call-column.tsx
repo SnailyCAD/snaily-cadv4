@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
 import useFetch from "lib/useFetch";
 import { Get911CallByIdData } from "@snailycad/types/api";
+import { classNames } from "lib/classNames";
 
 const Manage911CallModal = dynamic(
   async () => (await import("components/dispatch/modals/Manage911CallModal")).Manage911CallModal,
@@ -17,9 +18,10 @@ interface Props {
   unitId: string;
   callId: string | null;
   isDispatch: boolean;
+  size?: "md" | "sm";
 }
 
-export function ActiveCallColumn({ unitId, callId, isDispatch }: Props) {
+export function ActiveCallColumn({ unitId, callId, isDispatch, size = "md" }: Props) {
   const [open, setOpen] = React.useState(false);
   const common = useTranslations("Common");
   const { hasActiveDispatchers } = useActiveDispatchers();
@@ -51,12 +53,26 @@ export function ActiveCallColumn({ unitId, callId, isDispatch }: Props) {
   }
 
   if (!data || isLoading) {
-    return <Button disabled className="animate-pulse w-full h-9 rounded-md" />;
+    return (
+      <Button
+        size={size}
+        disabled
+        className={classNames(
+          "animate-pulse rounded-md",
+          size === "sm" ? "w-10 h-8" : "w-full h-9",
+        )}
+      />
+    );
   }
 
   return (
     <>
-      <Button disabled={isBtnDisabled} onPress={handleOpen}>
+      <Button
+        className={classNames("grid place-content-center", size === "sm" ? "w-10 h-8" : "w-10 h-9")}
+        size={size}
+        disabled={isBtnDisabled}
+        onPress={handleOpen}
+      >
         #{data.caseNumber}
       </Button>
 

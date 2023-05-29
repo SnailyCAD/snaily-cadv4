@@ -9,6 +9,7 @@ import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
 import useFetch from "lib/useFetch";
 import { GetIncidentByIdData } from "@snailycad/types/api";
+import { classNames } from "lib/classNames";
 
 const ManageIncidentModal = dynamic(
   async () => (await import("components/leo/incidents/manage-incident-modal")).ManageIncidentModal,
@@ -19,9 +20,10 @@ interface Props {
   unitId: string;
   incidentId: string | null;
   isDispatch: boolean;
+  size?: "sm" | "md";
 }
 
-export function ActiveIncidentColumn({ unitId, incidentId, isDispatch }: Props) {
+export function ActiveIncidentColumn({ unitId, incidentId, isDispatch, size = "md" }: Props) {
   const [tempIncident, setTempIncident] = React.useState<LeoIncident | null>(null);
   const { execute } = useFetch();
 
@@ -55,12 +57,22 @@ export function ActiveIncidentColumn({ unitId, incidentId, isDispatch }: Props) 
   }
 
   if (!data || isLoading) {
-    return <Button disabled className="animate-pulse w-full h-9 rounded-md" />;
+    return (
+      <Button
+        size={size}
+        disabled
+        className={classNames(
+          "animate-pulse rounded-md",
+          size === "sm" ? "w-10 h-8" : "w-full h-9",
+        )}
+      />
+    );
   }
 
   return (
     <>
       <Button
+        className={classNames("grid place-content-center", size === "sm" ? "w-10 h-8" : "w-10 h-9")}
         disabled={isBtnDisabled}
         onPress={() =>
           handleIncidentOpen({

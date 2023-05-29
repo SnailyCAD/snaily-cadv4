@@ -26,7 +26,7 @@ interface Props {
 export function AssignedUnitsTable({ isDisabled }: Props) {
   const call911State = useCall911State();
   const call = call911State.currentlySelectedCall!;
-  const assignedUnits = call.assignedUnits ?? [];
+  const assignedUnits = call?.assignedUnits ?? [];
   const { generateCallsign } = useGenerateCallsign();
   const tableState = useTableState();
   const { user } = useAuth();
