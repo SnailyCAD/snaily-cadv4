@@ -87,29 +87,11 @@ function makeActiveUnits({ players, activeOfficers, activeDeputies }: ActiveUnit
     if (!activeUnit.status || activeUnit.status.shouldDo === ShouldDoType.SET_OFF_DUTY) continue;
 
     if (isUnitCombined(activeUnit) || isUnitCombinedEmsFd(activeUnit)) {
-      const player = players.find((player) => {
-        const steamIds = isUnitCombinedEmsFd(activeUnit)
-          ? activeUnit.deputies.map((deputy) => deputy.user?.steamId)
-          : activeUnit.officers.map((officer) => officer.user?.steamId);
-
-        const discordIds = isUnitCombinedEmsFd(activeUnit)
-          ? activeUnit.deputies.map((deputy) => deputy.user?.discordId)
-          : activeUnit.officers.map((officer) => officer.user?.discordId);
-
-        const filteredSteamIds = steamIds.filter(Boolean) as string[];
-        const filteredDiscordIds = discordIds.filter(Boolean) as string[];
-
-        return (
-          (player.convertedSteamId && filteredSteamIds.includes(player.convertedSteamId)) ||
-          (player.discordId && filteredDiscordIds.includes(player.discordId))
-        );
-      });
+      const player = players.find((player) => findPlayer(player, activeUnit));
 
       if (!player || !("steamId" in player) || !("discordId" in player)) continue;
 
-      const existing = activeUnits.some((unit) => {
-        return unit.discordId === discordId || unit.convertedSteamId === steamId;
-      });
+      const existing = activeUnits.some((player) => findPlayer(player, activeUnit));
 
       if (player && !existing) {
         activeUnits.push({ ...player, unit: activeUnit });
@@ -139,4 +121,25 @@ function makeActiveUnits({ players, activeOfficers, activeDeputies }: ActiveUnit
   }
 
   return activeUnits;
+}
+
+function findPlayer(
+  player: MapPlayer | PlayerDataEventPayload,
+  activeUnit: CombinedLeoUnit | CombinedEmsFdUnit,
+) {
+  const steamIds = isUnitCombinedEmsFd(activeUnit)
+    ? activeUnit.deputies.map((deputy) => deputy.user?.steamId)
+    : activeUnit.officers.map((officer) => officer.user?.steamId);
+
+  const discordIds = isUnitCombinedEmsFd(activeUnit)
+    ? activeUnit.deputies.map((deputy) => deputy.user?.discordId)
+    : activeUnit.officers.map((officer) => officer.user?.discordId);
+
+  const filteredSteamIds = steamIds.filter(Boolean) as string[];
+  const filteredDiscordIds = discordIds.filter(Boolean) as string[];
+
+  return (
+    (player.convertedSteamId && filteredSteamIds.includes(player.convertedSteamId)) ||
+    (player.discordId && filteredDiscordIds.includes(player.discordId))
+  );
 }
