@@ -32,7 +32,7 @@ import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { manyToManyHelper } from "lib/data/many-to-many";
 import { isCuid } from "@paralleldrive/cuid2";
 import type * as APITypes from "@snailycad/types/api";
-import { isFeatureEnabled } from "lib/cad";
+import { isFeatureEnabled } from "lib/upsert-cad";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { validateImageURL } from "lib/images/validate-image-url";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";

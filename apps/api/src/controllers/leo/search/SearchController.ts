@@ -19,7 +19,7 @@ import {
 } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { CUSTOM_FIELD_SEARCH_SCHEMA } from "@snailycad/schemas";
-import { isFeatureEnabled } from "lib/cad";
+import { isFeatureEnabled } from "lib/upsert-cad";
 import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import type * as APITypes from "@snailycad/types/api";

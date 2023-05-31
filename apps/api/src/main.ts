@@ -29,14 +29,10 @@ Sentry.init({
 
 const rootDir = __dirname;
 
-try {
-  registerDiscordRolesMetadata();
-} catch {
-  // empty
-}
-
 async function bootstrap() {
   try {
+    registerDiscordRolesMetadata();
+
     const scannedProviders = await importProviders({
       mount: {
         "/v1": [`${rootDir}/controllers/**/*.ts`],

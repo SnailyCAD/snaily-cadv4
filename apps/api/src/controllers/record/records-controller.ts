@@ -29,7 +29,7 @@ import {
 import { validateSchema } from "lib/data/validate-schema";
 import { combinedUnitProperties, leoProperties } from "lib/leo/activeOfficer";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
-import { isFeatureEnabled } from "lib/cad";
+import { isFeatureEnabled } from "lib/upsert-cad";
 import { sendDiscordWebhook, sendRawWebhook } from "lib/discord/webhooks";
 import { getFirstOfficerFromActiveOfficer, getInactivityFilter } from "lib/leo/utils";
 import type * as APITypes from "@snailycad/types/api";

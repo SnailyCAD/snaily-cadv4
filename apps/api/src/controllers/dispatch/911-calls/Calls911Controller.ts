@@ -46,7 +46,7 @@ import { getTranslator } from "utils/get-translator";
 import { HandleInactivity } from "middlewares/handle-inactivity";
 import { handleEndCall } from "lib/calls/handle-end-call";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
-import { isFeatureEnabled } from "lib/cad";
+import { isFeatureEnabled } from "lib/upsert-cad";
 
 export const callInclude = {
   position: true,

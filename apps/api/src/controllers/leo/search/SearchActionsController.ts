@@ -34,7 +34,7 @@ import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { validateSchema } from "lib/data/validate-schema";
 import { manyToManyHelper } from "lib/data/many-to-many";
 import { validateCustomFields } from "lib/validate-custom-fields";
-import { isFeatureEnabled } from "lib/cad";
+import { isFeatureEnabled } from "lib/upsert-cad";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import {
   appendCustomFields,

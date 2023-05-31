@@ -5,7 +5,7 @@ import { Cookie, USER_API_TOKEN_HEADER } from "@snailycad/config";
 import { signJWT, verifyJWT } from "utils/jwt";
 import { prisma } from "lib/data/prisma";
 import { Feature, type User } from "@snailycad/types";
-import { isFeatureEnabled } from "lib/cad";
+import { isFeatureEnabled } from "lib/upsert-cad";
 import type { GetUserData } from "@snailycad/types/api";
 import { setCookie } from "utils/set-cookie";
 import { ACCESS_TOKEN_EXPIRES_MS, ACCESS_TOKEN_EXPIRES_S } from "./setUserTokenCookies";

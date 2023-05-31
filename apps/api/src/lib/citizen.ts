@@ -4,7 +4,7 @@ import { generateString } from "utils/generate-string";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { validateImageURL } from "lib/images/validate-image-url";
 import { generateLicenseNumber } from "./generate-license-number";
-import { isFeatureEnabled } from "./cad";
+import { isFeatureEnabled } from "./upsert-cad";
 
 interface Options {
   data: Partial<Zod.infer<typeof CREATE_CITIZEN_SCHEMA>>;

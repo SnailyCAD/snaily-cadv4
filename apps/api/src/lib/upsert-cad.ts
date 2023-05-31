@@ -1,17 +1,14 @@
-import type { AutoSetUserProperties, cad, Feature } from "@prisma/client";
+import type { Feature } from "@prisma/client";
 import type { createFeaturesObject } from "middlewares/is-enabled";
 import { prisma } from "./data/prisma";
 
-interface Options {
-  ownerId: string | null;
+interface FindOrCreateCADOptions {
+  ownerId: string;
 }
 
-export async function findOrCreateCAD({ ownerId }: Options) {
+export async function findOrCreateCAD(options: FindOrCreateCADOptions) {
   let cad = await prisma.cad.findFirst({
-    include: {
-      miscCadSettings: true,
-      autoSetUserProperties: true,
-    },
+    include: { autoSetUserProperties: true },
   });
 
   if (!cad) {
@@ -19,12 +16,9 @@ export async function findOrCreateCAD({ ownerId }: Options) {
       data: {
         name: "Rename",
         areaOfPlay: "Los Santos",
-        ownerId: ownerId!,
+        owner: { connect: { id: options.ownerId } },
       },
-      include: {
-        miscCadSettings: true,
-        autoSetUserProperties: true,
-      },
+      include: { autoSetUserProperties: true },
     });
 
     const miscSettings = await prisma.miscCadSettings.upsert({
@@ -34,20 +28,13 @@ export async function findOrCreateCAD({ ownerId }: Options) {
     });
 
     cad = await prisma.cad.update({
-      where: {
-        id: cad.id,
-      },
-      data: {
-        miscCadSettings: { connect: { id: miscSettings.id } },
-      },
-      include: {
-        miscCadSettings: true,
-        autoSetUserProperties: true,
-      },
+      where: { id: cad.id },
+      data: { miscCadSettings: { connect: { id: miscSettings.id } } },
+      include: { autoSetUserProperties: true },
     });
   }
 
-  return cad as cad & { autoSetUserProperties: AutoSetUserProperties | null };
+  return cad;
 }
 
 interface EnabledOptions {

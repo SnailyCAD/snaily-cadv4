@@ -37,7 +37,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { createWebhookData } from "lib/dispatch/webhooks";
 import { createCallEventOnStatusChange } from "lib/dispatch/createCallEventOnStatusChange";
 import { ExtendedNotFound } from "src/exceptions/extended-not-found";
-import { isFeatureEnabled } from "lib/cad";
+import { isFeatureEnabled } from "lib/upsert-cad";
 import { handlePanicButtonPressed } from "lib/leo/send-panic-button-webhook";
 
 @Controller("/dispatch/status")

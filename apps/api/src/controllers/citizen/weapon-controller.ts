@@ -5,7 +5,7 @@ import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { Post, Delete, Put, Description, Get, ContentType } from "@tsed/schema";
 import { canManageInvariant } from "lib/auth/getSessionUser";
-import { isFeatureEnabled } from "lib/cad";
+import { isFeatureEnabled } from "lib/upsert-cad";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { prisma } from "lib/data/prisma";
 import { validateSchema } from "lib/data/validate-schema";

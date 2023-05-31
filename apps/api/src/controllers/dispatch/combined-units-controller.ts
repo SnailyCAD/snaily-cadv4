@@ -14,7 +14,7 @@ import { getNextActiveCallId } from "lib/calls/getNextActiveCall";
 import { getNextIncidentId } from "lib/incidents/get-next-incident-id";
 import { validateSchema } from "lib/data/validate-schema";
 import { MERGE_UNIT_SCHEMA } from "@snailycad/schemas";
-import { isFeatureEnabled } from "lib/cad";
+import { isFeatureEnabled } from "lib/upsert-cad";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)

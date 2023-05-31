@@ -30,7 +30,7 @@ import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { getInactivityFilter } from "lib/leo/utils";
 import { Socket } from "services/socket-service";
 import type * as APITypes from "@snailycad/types/api";
-import { isFeatureEnabled } from "lib/cad";
+import { isFeatureEnabled } from "lib/upsert-cad";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { handlePanicButtonPressed } from "lib/leo/send-panic-button-webhook";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";

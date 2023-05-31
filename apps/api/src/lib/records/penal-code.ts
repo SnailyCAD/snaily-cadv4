@@ -2,7 +2,7 @@ import { cad, Feature, PenalCode } from "@prisma/client";
 import type { PENAL_CODE_SCHEMA } from "@snailycad/schemas";
 import { prisma } from "lib/data/prisma";
 import type { z } from "zod";
-import { isFeatureEnabled } from "lib/cad";
+import { isFeatureEnabled } from "lib/upsert-cad";
 
 type PickWarningPenalCode = Pick<PenalCode, "warningApplicableId" | "warningNotApplicableId">;
 

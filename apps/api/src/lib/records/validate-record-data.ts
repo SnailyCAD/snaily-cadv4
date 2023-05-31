@@ -1,5 +1,5 @@
 import { Feature, PenalCode, WarningApplicable, WarningNotApplicable } from "@prisma/client";
-import { isFeatureEnabled } from "lib/cad";
+import { isFeatureEnabled } from "lib/upsert-cad";
 import { prisma } from "lib/data/prisma";
 
 interface Options {

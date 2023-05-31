@@ -18,7 +18,7 @@ import { validateSocialSecurityNumber } from "lib/citizen/validateSSN";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { leoProperties, unitProperties } from "lib/leo/activeOfficer";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
-import { isFeatureEnabled } from "lib/cad";
+import { isFeatureEnabled } from "lib/upsert-cad";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/citizens")

@@ -11,7 +11,7 @@ import {
 } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { EMS_FD_DEPUTY_SCHEMA } from "@snailycad/schemas";
-import { isFeatureEnabled } from "lib/cad";
+import { isFeatureEnabled } from "lib/upsert-cad";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { prisma } from "lib/data/prisma";
 import { validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
