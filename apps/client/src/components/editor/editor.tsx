@@ -124,7 +124,7 @@ export function Editor(props: EditorProps) {
     >
       <Slate
         editor={editor}
-        value={props.value as Descendant[]}
+        initialValue={props.value as Descendant[]}
         onChange={(value) => {
           const isAstChange = editor.operations.some(
             (operation) => operation.type !== "set_selection",
