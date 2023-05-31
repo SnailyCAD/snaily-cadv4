@@ -25,7 +25,7 @@ import { updateOfficerDivisionsCallsigns } from "lib/leo/utils";
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
 import { prisma } from "lib/data/prisma";
 import { validateSchema } from "lib/data/validate-schema";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { Socket } from "services/socket-service";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";

@@ -4,7 +4,7 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { QueryParams, BodyParams, PathParams, Context } from "@tsed/platform-params";
 import { ContentType, Delete, Description, Get, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/data/validate-schema";
 import { generateString } from "utils/generate-string";

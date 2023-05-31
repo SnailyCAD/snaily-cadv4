@@ -3,7 +3,7 @@ import { UseBefore } from "@tsed/platform-middlewares";
 import { StoreSet, useDecorators } from "@tsed/core";
 import { CadFeature, Feature as DatabaseFeature, Feature } from "@prisma/client";
 import type { Feature as TypesFeature } from "@snailycad/types";
-import { setCADFeatures } from "./is-auth";
+import { setCADFeatures } from "./auth/is-auth";
 import { prisma } from "lib/data/prisma";
 import { FeatureNotEnabled } from "src/exceptions/feature-not-enabled";
 

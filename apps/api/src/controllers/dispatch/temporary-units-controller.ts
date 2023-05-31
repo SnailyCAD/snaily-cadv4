@@ -2,7 +2,7 @@ import { Controller } from "@tsed/di";
 import { BodyParams, Context, UseBeforeEach } from "@tsed/common";
 import { ContentType, Description, Post } from "@tsed/schema";
 import { Socket } from "services/socket-service";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { upsertOfficer } from "controllers/leo/my-officers/upsert-officer";
 import type { cad, Feature, MiscCadSettings } from "@prisma/client";

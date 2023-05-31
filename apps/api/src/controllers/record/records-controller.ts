@@ -11,7 +11,7 @@ import { prisma } from "lib/data/prisma";
 import { UseBeforeEach, UseBefore } from "@tsed/platform-middlewares";
 import { ActiveOfficer } from "middlewares/active-officer";
 import { Controller } from "@tsed/di";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import {
   Citizen,
   Feature,

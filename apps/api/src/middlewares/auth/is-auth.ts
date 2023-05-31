@@ -5,12 +5,12 @@ import { Context, Middleware, Req, MiddlewareMethods, Res } from "@tsed/common";
 import { Unauthorized } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 import { getCADVersion } from "@snailycad/utils/version";
-import { handleDiscordSync } from "./auth/utils";
-import { setGlobalUserFromCADAPIToken, getUserFromSession } from "./auth/get-user";
+import { handleDiscordSync } from "./utils/utils";
 import { hasPermission, Permissions } from "@snailycad/permissions";
 import { setErrorMap } from "zod";
-import { getErrorMap } from "../utils/zod-error-map";
-import { CadFeatureOptions, createFeaturesObject, overwriteFeatures } from "./is-enabled";
+import { getErrorMap } from "../../utils/zod-error-map";
+import { CadFeatureOptions, createFeaturesObject, overwriteFeatures } from "../is-enabled";
+import { getUserFromSession, setGlobalUserFromCADAPIToken } from "./utils/get-user";
 
 @Middleware()
 export class IsAuth implements MiddlewareMethods {

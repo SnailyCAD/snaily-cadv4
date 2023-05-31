@@ -3,7 +3,7 @@ import { ContentType, Description, Post } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { BodyParams, QueryParams } from "@tsed/platform-params";
 import { prisma } from "lib/data/prisma";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";

@@ -2,7 +2,7 @@ import { BodyParams, Controller, PathParams, QueryParams, UseBeforeEach } from "
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
 import { NotFound } from "@tsed/exceptions";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { CREATE_PENAL_CODE_GROUP_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/data/validate-schema";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";

@@ -3,7 +3,7 @@ import { Controller } from "@tsed/di";
 import { BodyParams, Context } from "@tsed/platform-params";
 import { ContentType, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { MultipartFile, PlatformMulterFile, UseBefore } from "@tsed/common";
 import { validateSchema } from "lib/data/validate-schema";
 import { cad } from "@prisma/client";

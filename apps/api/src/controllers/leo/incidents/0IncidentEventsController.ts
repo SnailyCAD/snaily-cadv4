@@ -3,7 +3,7 @@ import { ContentType, Delete, Description, Post, Put } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/data/prisma";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { CALL_911_EVENT_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/data/validate-schema";
 import { Socket } from "services/socket-service";

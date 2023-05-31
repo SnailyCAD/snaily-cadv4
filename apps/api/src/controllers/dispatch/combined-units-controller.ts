@@ -5,7 +5,7 @@ import { prisma } from "lib/data/prisma";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { CombinedEmsFdUnit, CombinedLeoUnit, Feature, ShouldDoType } from "@prisma/client";
 import { Socket } from "services/socket-service";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { combinedEmsFdUnitProperties, combinedUnitProperties } from "lib/leo/activeOfficer";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";

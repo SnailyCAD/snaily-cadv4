@@ -15,7 +15,7 @@ import {
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { ContentType, Delete, Description, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { validateSchema } from "lib/data/validate-schema";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import type { User } from "@prisma/client";

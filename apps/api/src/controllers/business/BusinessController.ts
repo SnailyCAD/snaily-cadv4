@@ -2,7 +2,7 @@ import { Controller } from "@tsed/di";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
 import { ContentType, Delete, Get, Hidden, Post, Put } from "@tsed/schema";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import {
   CREATE_COMPANY_SCHEMA,
   JOIN_COMPANY_SCHEMA,

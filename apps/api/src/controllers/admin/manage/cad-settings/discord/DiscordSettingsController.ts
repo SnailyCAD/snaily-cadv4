@@ -2,7 +2,7 @@ import process from "node:process";
 import { BodyParams, Context, Controller, UseBeforeEach } from "@tsed/common";
 import { ContentType, Get, Post } from "@tsed/schema";
 import { RESTGetAPIGuildRolesResult, Routes } from "discord-api-types/v10";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { prisma } from "lib/data/prisma";
 import { cad, DiscordRole } from "@prisma/client";
 import { BadRequest } from "@tsed/exceptions";

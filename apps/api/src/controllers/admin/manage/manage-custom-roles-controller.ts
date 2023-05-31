@@ -15,7 +15,7 @@ import { NotFound } from "@tsed/exceptions";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
 import { validateSchema } from "lib/data/validate-schema";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { validateImageURL } from "lib/images/validate-image-url";

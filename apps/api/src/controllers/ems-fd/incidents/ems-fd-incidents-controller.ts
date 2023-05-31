@@ -3,7 +3,7 @@ import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { NotFound, InternalServerError, BadRequest } from "@tsed/exceptions";
 import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/data/prisma";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { unitProperties, _leoProperties } from "lib/leo/activeOfficer";
 import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
 import type { Officer, MiscCadSettings, CombinedLeoUnit } from "@prisma/client";

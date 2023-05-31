@@ -18,18 +18,13 @@ model cad {
   ownerId                 String
   areaOfPlay              String?                @db.VarChar(255)
   steamApiKey             String?                @db.VarChar(255)
-  discordWebhookURL       String?                @db.VarChar(255)
   whitelisted             Boolean                @default(false)
   towWhitelisted          Boolean                @default(false)
   taxiWhitelisted         Boolean                @default(false)
   businessWhitelisted     Boolean                @default(false)
-  maxPlateLength          Int                    @default(8)
-  liveMapSocketURl        String?                @db.VarChar(255)
   logoId                  String?
-  logoBlurData            String?
   registrationCode        String?
   features                CadFeature[]
-  disabledFeatures        Feature[]
   miscCadSettings         MiscCadSettings?       @relation(fields: [miscCadSettingsId], references: [id])
   miscCadSettingsId       String?
   apiToken                ApiToken?              @relation(fields: [apiTokenId], references: [id])
@@ -101,12 +96,6 @@ model MiscCadSettings {
   waterLicenseMaxPoints   Int? @default(12)
 
   lastInactivitySyncTimestamp DateTime?
-
-  /// deprecated, use `webhooks` instead
-  call911WebhookId     String?
-  statusesWebhookId    String?
-  panicButtonWebhookId String?
-  boloWebhookId        String?
 
   webhooks    DiscordWebhook[]
   rawWebhooks RawWebhook[]
@@ -679,7 +668,6 @@ model DivisionValue {
   department                 DepartmentValue?             @relation("divisionDepartmentToValue", fields: [departmentId], references: [id], onDelete: Cascade)
   departmentId               String?
   callsign                   String?
-  officers                   Officer[]                    @relation("officerDivisionToDivision")
   officerDivisionsToDivision Officer[]                    @relation("officerDivisionsToDivision")
   deputies                   EmsFdDeputy[]                @relation("emsFdDivisionToDivision")
   pairedUnitTemplate         String?
@@ -910,9 +898,6 @@ model Officer {
   activeDivisionCallsign      IndividualDivisionCallsign?  @relation("divisionCallsign", fields: [activeDivisionCallsignId], references: [id])
   activeDivisionCallsignId    String?
   incremental                 Int?
-  // `division` is deprecated. Use `divisions` instead.
-  division                    DivisionValue?               @relation("officerDivisionToDivision", fields: [divisionId], references: [id])
-  divisionId                  String?
   divisions                   DivisionValue[]              @relation("officerDivisionsToDivision")
   rank                        Value?                       @relation("officerRankToValue", fields: [rankId], references: [id])
   rankId                      String?

@@ -10,7 +10,7 @@ import {
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
 import {

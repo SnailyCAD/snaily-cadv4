@@ -7,7 +7,7 @@ import { ContentType, Description, Put } from "@tsed/schema";
 import { canManageInvariant } from "lib/auth/getSessionUser";
 import { prisma } from "lib/data/prisma";
 import { validateSchema } from "lib/data/validate-schema";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
 import { isFeatureEnabled } from "lib/cad";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";

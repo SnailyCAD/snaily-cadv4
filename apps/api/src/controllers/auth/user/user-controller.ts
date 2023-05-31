@@ -4,7 +4,7 @@ import { UseBefore } from "@tsed/platform-middlewares";
 import { ContentType, Delete, Description, Patch, Post } from "@tsed/schema";
 import { Cookie } from "@snailycad/config";
 import { prisma } from "lib/data/prisma";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { setCookie } from "utils/set-cookie";
 import { cad, Rank, ShouldDoType, StatusViewMode, TableActionsAlignment } from "@prisma/client";
 import { NotFound } from "@tsed/exceptions";

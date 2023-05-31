@@ -5,7 +5,7 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { ContentType, Delete, Get, Post } from "@tsed/schema";
 import { citizenIncludeWithRecords } from "controllers/citizen/CitizenController";
 import { prisma } from "lib/data/prisma";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 

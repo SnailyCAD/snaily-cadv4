@@ -5,7 +5,7 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { ContentType, Description, Get, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type * as APITypes from "@snailycad/types/api";
 import { AuditLogActionType } from "@snailycad/audit-logger";

@@ -6,7 +6,7 @@ import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { ContentType, Description, Get, Put } from "@tsed/schema";
 import { expungementRequestInclude } from "controllers/court/ExpungementRequestsController";
 import { prisma } from "lib/data/prisma";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type * as APITypes from "@snailycad/types/api";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";

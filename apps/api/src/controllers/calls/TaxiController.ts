@@ -10,7 +10,7 @@ import { Description, Delete, Get, Post, Put, ContentType } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
 import { TOW_SCHEMA, UPDATE_TOW_SCHEMA } from "@snailycad/schemas";
 import { NotFound } from "@tsed/exceptions";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { Socket } from "services/socket-service";
 import { validateSchema } from "lib/data/validate-schema";
 import { Feature, User } from "@prisma/client";

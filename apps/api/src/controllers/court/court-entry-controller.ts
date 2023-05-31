@@ -1,7 +1,7 @@
 import { ContentType, Delete, Get, Post, Put } from "@tsed/schema";
 import { BodyParams, PathParams, QueryParams, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { prisma } from "lib/data/prisma";
 import { validateSchema } from "lib/data/validate-schema";
 import { COURT_ENTRY_SCHEMA } from "@snailycad/schemas";

@@ -8,7 +8,7 @@ import {
   ACCEPT_DECLINE_TYPES,
 } from "controllers/admin/manage/units/manage-units-controller";
 import { prisma } from "lib/data/prisma";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled, Feature } from "middlewares/is-enabled";

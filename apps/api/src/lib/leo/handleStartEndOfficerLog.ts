@@ -6,7 +6,7 @@ import type { Socket } from "services/socket-service";
 
 interface Options<Type extends "leo" | "ems-fd"> {
   shouldDo: ShouldDoType;
-  unit: Type extends "leo" ? Omit<Officer, "divisionId"> : EmsFdDeputy;
+  unit: Type extends "leo" ? Officer : EmsFdDeputy;
   socket: Socket;
   userId?: string | null;
   type: Type;

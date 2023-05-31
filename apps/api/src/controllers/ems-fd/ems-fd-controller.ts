@@ -20,7 +20,7 @@ import {
 } from "@prisma/client";
 import type { EmsFdDeputy } from "@snailycad/types";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { ActiveDeputy } from "middlewares/active-deputy";
 import fs from "node:fs/promises";
 import { combinedEmsFdUnitProperties, unitProperties } from "lib/leo/activeOfficer";

@@ -11,7 +11,7 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 import { Socket } from "services/socket-service";
 import { UseAfter, UseBeforeEach } from "@tsed/platform-middlewares";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { _leoProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/data/validate-schema";
 import {

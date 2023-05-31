@@ -103,16 +103,16 @@ export async function updateOfficerDivisionsCallsigns({
 }) {
   if (!callsigns) return;
 
-  const _callsigns = Object.values(callsigns);
+  const callsignValues = Object.values(callsigns);
 
-  if (_callsigns.length <= 0) {
+  if (callsignValues.length <= 0) {
     await prisma.individualDivisionCallsign.deleteMany({
       where: { officerId },
     });
   }
 
   await Promise.all(
-    _callsigns.map(async (callsign) => {
+    callsignValues.map(async (callsign) => {
       const existing = await prisma.individualDivisionCallsign.findFirst({
         where: { officerId, divisionId: callsign.divisionId },
       });

@@ -5,6 +5,7 @@ import type {
   Officer,
   EmsFdDeputy,
   StatusValue,
+  DivisionValue,
 } from "@prisma/client";
 import { prisma } from "lib/data/prisma";
 
@@ -53,7 +54,7 @@ export async function findUnit(
 
 interface OfficerReturn {
   type: "leo";
-  unit: Officer | null;
+  unit: (Officer & { divisions: DivisionValue[] }) | null;
 }
 
 interface EmsFdReturn {

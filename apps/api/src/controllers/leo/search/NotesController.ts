@@ -1,5 +1,5 @@
 import { BodyParams, Controller, PathParams, UseBeforeEach } from "@tsed/common";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { ContentType, Delete, Post, Put } from "@tsed/schema";
 import { validateSchema } from "lib/data/validate-schema";
 import { NOTE_SCHEMA } from "@snailycad/schemas";
