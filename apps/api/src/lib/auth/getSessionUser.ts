@@ -12,6 +12,7 @@ import { ACCESS_TOKEN_EXPIRES_MS, ACCESS_TOKEN_EXPIRES_S } from "./setUserTokenC
 import { getUserFromUserAPIToken } from "./getUserFromUserAPIToken";
 import { validateUserData } from "./validateUser";
 import { createFeaturesObject } from "middlewares/is-enabled";
+import { Prisma } from "@prisma/client";
 
 export enum GetSessionUserErrors {
   InvalidAPIToken = "invalid user API token",
@@ -23,7 +24,7 @@ export enum GetSessionUserErrors {
   WhitelistDeclined = "whitelistDeclined",
 }
 
-export const userProperties = {
+export const userProperties = Prisma.validator<Prisma.UserSelect>()({
   id: true,
   username: true,
   rank: true,
@@ -49,7 +50,7 @@ export const userProperties = {
   updatedAt: true,
   lastSeen: true,
   developerMode: true,
-};
+});
 
 interface GetSessionUserOptions<ReturnNullOnError extends boolean> {
   returnNullOnError?: ReturnNullOnError;

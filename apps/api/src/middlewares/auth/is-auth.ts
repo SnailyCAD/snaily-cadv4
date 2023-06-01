@@ -1,5 +1,5 @@
 import process from "node:process";
-import { Rank, User, Feature, CadFeature, cad } from "@prisma/client";
+import { Rank, User, Feature, CadFeature, cad, Prisma } from "@prisma/client";
 import { API_TOKEN_HEADER } from "@snailycad/config";
 import { Context, Middleware, Req, MiddlewareMethods, Res } from "@tsed/common";
 import { Unauthorized } from "@tsed/exceptions";
@@ -107,11 +107,10 @@ export function setCADFeatures<T extends Partial<cad & { features?: CadFeature[]
 }
 
 export function CAD_SELECT(user?: Pick<User, "rank"> | null, includeDiscordRoles?: boolean) {
-  return {
+  return Prisma.validator<Prisma.cadSelect>()({
     id: true,
     name: true,
     areaOfPlay: true,
-    maxPlateLength: true,
     towWhitelisted: true,
     taxiWhitelisted: true,
     whitelisted: true,
@@ -142,5 +141,5 @@ export function CAD_SELECT(user?: Pick<User, "rank"> | null, includeDiscordRoles
           },
         }
       : undefined,
-  };
+  });
 }
