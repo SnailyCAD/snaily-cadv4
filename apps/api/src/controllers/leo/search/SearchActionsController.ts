@@ -44,7 +44,7 @@ import {
 import { citizenObjectFromData } from "lib/citizen";
 import { generateString } from "utils/generate-string";
 import type * as APITypes from "@snailycad/types/api";
-import { createVehicleImpoundedWebhookData } from "controllers/calls/TowController";
+import { createVehicleImpoundedWebhookData } from "controllers/calls/tow-controller";
 import { sendDiscordWebhook, sendRawWebhook } from "lib/discord/webhooks";
 import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
 import { ActiveOfficer } from "middlewares/active-officer";

@@ -1,4 +1,4 @@
-import { Middleware, MiddlewareMethods, Context, Next } from "@tsed/common";
+import { Middleware, MiddlewareMethods, Context, Req, Next } from "@tsed/common";
 import { UseBefore } from "@tsed/platform-middlewares";
 import { StoreSet, useDecorators } from "@tsed/core";
 import type { User } from "@prisma/client";
@@ -11,13 +11,18 @@ interface RouteData {
 
 @Middleware()
 export class UsePermissionsMiddleware implements MiddlewareMethods {
-  use(@Context() ctx: Context, @Next() next: Next) {
-    const routeData = ctx.endpoint.get<RouteData>(UsePermissionsMiddleware);
+  use(@Context() ctx: Context, @Req() req: Req, @Next() next: Next) {
+    const routeDataOrFunc = ctx.endpoint.get<RouteData | UsePermissionsFunc>(
+      UsePermissionsMiddleware,
+    );
 
     const user = ctx.get("user") as User | null;
     if (!user) {
       throw new Unauthorized("Unauthorized (UsePermissions)");
     }
+
+    const routeData =
+      typeof routeDataOrFunc === "function" ? routeDataOrFunc(req) : routeDataOrFunc;
 
     const hasPerm = hasPermission({
       userToCheck: user,
@@ -32,7 +37,8 @@ export class UsePermissionsMiddleware implements MiddlewareMethods {
   }
 }
 
-export function UsePermissions(data: RouteData) {
+type UsePermissionsFunc = (request: Req) => RouteData;
+export function UsePermissions(data: UsePermissionsFunc | RouteData) {
   return useDecorators(
     StoreSet(UsePermissionsMiddleware, data),
     UseBefore(UsePermissionsMiddleware),
