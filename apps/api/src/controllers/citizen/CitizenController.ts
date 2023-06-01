@@ -28,7 +28,6 @@ import { z } from "zod";
 import { RecordsInclude } from "controllers/leo/search/SearchController";
 import { leoProperties } from "utils/leo/includes";
 
-
 export const citizenInclude = {
   user: { select: userProperties },
   flags: true,
