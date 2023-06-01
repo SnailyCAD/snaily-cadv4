@@ -27,7 +27,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { setEndedSuspendedLicenses } from "lib/citizen/setEndedSuspendedLicenses";
 import { incidentInclude } from "../incidents/IncidentController";
-import { callInclude } from "controllers/dispatch/911-calls/Calls911Controller";
+import { callInclude } from "controllers/dispatch/911-calls/calls-911-controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 
 export const vehicleSearchInclude = {

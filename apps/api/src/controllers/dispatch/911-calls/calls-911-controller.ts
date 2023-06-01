@@ -48,7 +48,7 @@ import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger
 import { isFeatureEnabled } from "lib/upsert-cad";
 import { _leoProperties, unitProperties } from "utils/leo/includes";
 
-export const callInclude = {
+export const callInclude = Prisma.validator<Prisma.Call911Select>()({
   position: true,
   assignedUnits: assignedUnitsInclude,
   events: true,
@@ -58,7 +58,7 @@ export const callInclude = {
   situationCode: { include: { value: true } },
   type: { include: { value: true } },
   gtaMapPosition: true,
-};
+});
 
 @Controller("/911-calls")
 @UseBeforeEach(IsAuth)

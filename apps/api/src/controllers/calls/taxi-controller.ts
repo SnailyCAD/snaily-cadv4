@@ -16,7 +16,7 @@ import { validateSchema } from "lib/data/validate-schema";
 import { Feature, User } from "@prisma/client";
 import { canManageInvariant } from "lib/auth/getSessionUser";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
-import { towIncludes } from "./TowController";
+import { towIncludes } from "./tow-controller";
 import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 
