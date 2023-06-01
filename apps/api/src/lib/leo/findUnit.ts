@@ -1,4 +1,4 @@
-import { combinedEmsFdUnitProperties, combinedUnitProperties } from "lib/leo/activeOfficer";
+import { combinedEmsFdUnitProperties, combinedUnitProperties } from "utils/leo/includes";
 import type {
   CombinedLeoUnit,
   CombinedEmsFdUnit,

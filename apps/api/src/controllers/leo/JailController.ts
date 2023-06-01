@@ -4,7 +4,8 @@ import { QueryParams, BodyParams, PathParams } from "@tsed/platform-params";
 import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/auth/is-auth";
-import { leoProperties } from "lib/leo/activeOfficer";
+import { leoProperties } from "utils/leo/includes";
+
 import { MiscCadSettings, ReleaseType } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { RELEASE_CITIZEN_SCHEMA } from "@snailycad/schemas";

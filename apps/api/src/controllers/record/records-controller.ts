@@ -27,7 +27,7 @@ import {
   Business,
 } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
-import { combinedUnitProperties, leoProperties } from "lib/leo/activeOfficer";
+import { combinedUnitProperties, leoProperties } from "utils/leo/includes";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { isFeatureEnabled } from "lib/upsert-cad";
 import { sendDiscordWebhook, sendRawWebhook } from "lib/discord/webhooks";

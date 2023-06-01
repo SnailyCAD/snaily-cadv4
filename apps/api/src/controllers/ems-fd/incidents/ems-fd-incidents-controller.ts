@@ -4,9 +4,8 @@ import { NotFound, InternalServerError, BadRequest } from "@tsed/exceptions";
 import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/auth/is-auth";
-import { unitProperties, _leoProperties } from "lib/leo/activeOfficer";
 import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
-import type { Officer, MiscCadSettings, CombinedLeoUnit } from "@prisma/client";
+import { Officer, MiscCadSettings, CombinedLeoUnit, Prisma } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { Socket } from "services/socket-service";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
@@ -18,8 +17,9 @@ import { getNextIncidentId } from "lib/incidents/get-next-incident-id";
 import { assignUnitsInvolvedToIncident } from "lib/incidents/handle-involved-units";
 import { ActiveDeputy } from "middlewares/active-deputy";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
+import { _leoProperties, unitProperties } from "utils/leo/includes";
 
-export const assignedUnitsInclude = {
+export const assignedUnitsInclude = Prisma.validator<{ include: Prisma.AssignedUnitSelect }>()({
   include: {
     officer: { include: _leoProperties },
     deputy: { include: unitProperties },
@@ -42,7 +42,7 @@ export const assignedUnitsInclude = {
       },
     },
   },
-};
+});
 
 export const incidentInclude = {
   creator: { include: unitProperties },

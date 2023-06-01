@@ -21,7 +21,7 @@ import {
   combinedUnitProperties,
   leoProperties,
   unitProperties,
-} from "lib/leo/activeOfficer";
+} from "utils/leo/includes";
 import { Injectable } from "@tsed/di";
 
 type FullIncident = LeoIncident & { unitsInvolved: any[]; events?: IncidentEvent[] };

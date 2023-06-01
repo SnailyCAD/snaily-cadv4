@@ -18,12 +18,6 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { ContentType, Description, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
-import {
-  combinedEmsFdUnitProperties,
-  combinedUnitProperties,
-  leoProperties,
-  unitProperties,
-} from "lib/leo/activeOfficer";
 import { sendDiscordWebhook, sendRawWebhook } from "lib/discord/webhooks";
 import { Socket } from "services/socket-service";
 import { IsAuth } from "middlewares/auth/is-auth";
@@ -39,6 +33,12 @@ import { createCallEventOnStatusChange } from "lib/dispatch/createCallEventOnSta
 import { ExtendedNotFound } from "src/exceptions/extended-not-found";
 import { isFeatureEnabled } from "lib/upsert-cad";
 import { handlePanicButtonPressed } from "lib/leo/send-panic-button-webhook";
+import {
+  leoProperties,
+  unitProperties,
+  combinedUnitProperties,
+  combinedEmsFdUnitProperties,
+} from "utils/leo/includes";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)

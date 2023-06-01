@@ -14,7 +14,7 @@ import { validateSchema } from "lib/data/validate-schema";
 import { prisma } from "lib/data/prisma";
 import { upsertEmsFdDeputy } from "lib/ems-fd/upsert-ems-fd-deputy";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
-import { leoProperties, unitProperties } from "lib/leo/activeOfficer";
+import { leoProperties, unitProperties } from "utils/leo/includes";
 
 @Controller("/temporary-units")
 @UseBeforeEach(IsAuth)

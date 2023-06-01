@@ -16,9 +16,9 @@ import { isCuid } from "@paralleldrive/cuid2";
 import type * as APITypes from "@snailycad/types/api";
 import { validateSocialSecurityNumber } from "lib/citizen/validateSSN";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
-import { leoProperties, unitProperties } from "lib/leo/activeOfficer";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { isFeatureEnabled } from "lib/upsert-cad";
+import { leoProperties, unitProperties } from "utils/leo/includes";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/citizens")

@@ -8,7 +8,8 @@ import { Use, UseAfter, UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { ActiveOfficer } from "middlewares/active-officer";
 import { Socket } from "services/socket-service";
-import { leoProperties } from "lib/leo/activeOfficer";
+import { leoProperties } from "utils/leo/includes";
+
 import { validateSchema } from "lib/data/validate-schema";
 import {
   Bolo,

@@ -26,7 +26,8 @@ import { createCitizenViolations } from "lib/records/create-citizen-violations";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { z } from "zod";
 import { RecordsInclude } from "controllers/leo/search/SearchController";
-import { leoProperties } from "lib/leo/activeOfficer";
+import { leoProperties } from "utils/leo/includes";
+
 
 export const citizenInclude = {
   user: { select: userProperties },

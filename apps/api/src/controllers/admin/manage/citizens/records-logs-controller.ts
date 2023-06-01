@@ -3,7 +3,8 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { QueryParams, PathParams, BodyParams } from "@tsed/platform-params";
 import { ContentType, Description, Get, Post } from "@tsed/schema";
 import { userProperties } from "lib/auth/getSessionUser";
-import { leoProperties } from "lib/leo/activeOfficer";
+import { leoProperties } from "utils/leo/includes";
+
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { Prisma, WhitelistStatus } from "@prisma/client";

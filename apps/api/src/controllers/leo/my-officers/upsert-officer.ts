@@ -23,7 +23,8 @@ import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 import { validateImageURL } from "lib/images/validate-image-url";
 import { getLastOfArray, manyToManyHelper } from "lib/data/many-to-many";
-import { leoProperties } from "lib/leo/activeOfficer";
+import { leoProperties } from "utils/leo/includes";
+
 import type * as APITypes from "@snailycad/types/api";
 import type { ZodSchema } from "zod";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";

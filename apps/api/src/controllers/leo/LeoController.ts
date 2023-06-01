@@ -7,7 +7,7 @@ import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { ActiveOfficer } from "middlewares/active-officer";
 import { Socket } from "services/socket-service";
-import { combinedUnitProperties, leoProperties } from "lib/leo/activeOfficer";
+import { combinedUnitProperties, leoProperties } from "utils/leo/includes";
 import { cad, ShouldDoType, User } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";

@@ -7,9 +7,9 @@ import { createWhere } from "controllers/leo/create-where-obj";
 import differenceInHours from "date-fns/differenceInHours";
 import type * as APITypes from "@snailycad/types/api";
 import { prisma } from "lib/data/prisma";
-import { _leoProperties, unitProperties } from "lib/leo/activeOfficer";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
+import { _leoProperties, unitProperties } from "utils/leo/includes";
 
 export const ACCEPT_DECLINE_TYPES = ["ACCEPT", "DECLINE"] as const;
 export type AcceptDeclineType = (typeof ACCEPT_DECLINE_TYPES)[number];

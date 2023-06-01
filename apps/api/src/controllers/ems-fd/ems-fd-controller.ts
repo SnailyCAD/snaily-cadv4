@@ -23,7 +23,6 @@ import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { ActiveDeputy } from "middlewares/active-deputy";
 import fs from "node:fs/promises";
-import { combinedEmsFdUnitProperties, unitProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/data/validate-schema";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
@@ -39,6 +38,7 @@ import { getImageWebPPath } from "lib/images/get-image-webp-path";
 import { HandleInactivity } from "middlewares/handle-inactivity";
 import { upsertEmsFdDeputy } from "lib/ems-fd/upsert-ems-fd-deputy";
 import { citizenInclude } from "controllers/citizen/CitizenController";
+import { unitProperties, combinedEmsFdUnitProperties } from "utils/leo/includes";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)

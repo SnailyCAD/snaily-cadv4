@@ -13,13 +13,6 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { validateMaxDivisionsPerUnit } from "controllers/leo/my-officers/MyOfficersController";
-import {
-  combinedUnitProperties,
-  leoProperties,
-  _leoProperties,
-  unitProperties,
-  combinedEmsFdUnitProperties,
-} from "lib/leo/activeOfficer";
 import { findUnit } from "lib/leo/findUnit";
 import { updateOfficerDivisionsCallsigns } from "lib/leo/utils";
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
@@ -40,6 +33,13 @@ import fs from "node:fs/promises";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { getImageWebPPath } from "lib/images/get-image-webp-path";
 import { createWhere } from "controllers/leo/create-where-obj";
+import {
+  leoProperties,
+  unitProperties,
+  _leoProperties,
+  combinedUnitProperties,
+  combinedEmsFdUnitProperties,
+} from "utils/leo/includes";
 
 const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_UNIT"] as const;
 type Action = (typeof ACTIONS)[number];

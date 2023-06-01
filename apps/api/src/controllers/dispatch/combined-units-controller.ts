@@ -7,7 +7,6 @@ import { CombinedEmsFdUnit, CombinedLeoUnit, Feature, ShouldDoType } from "@pris
 import { Socket } from "services/socket-service";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
-import { combinedEmsFdUnitProperties, combinedUnitProperties } from "lib/leo/activeOfficer";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 import type * as APITypes from "@snailycad/types/api";
 import { getNextActiveCallId } from "lib/calls/getNextActiveCall";
@@ -15,6 +14,7 @@ import { getNextIncidentId } from "lib/incidents/get-next-incident-id";
 import { validateSchema } from "lib/data/validate-schema";
 import { MERGE_UNIT_SCHEMA } from "@snailycad/schemas";
 import { isFeatureEnabled } from "lib/upsert-cad";
+import { combinedUnitProperties, combinedEmsFdUnitProperties } from "utils/leo/includes";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
