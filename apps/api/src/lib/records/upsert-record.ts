@@ -3,8 +3,9 @@ import type { CREATE_TICKET_SCHEMA, CREATE_TICKET_SCHEMA_BUSINESS } from "@snail
 import { PaymentStatus, RecordType, WhitelistStatus } from "@snailycad/types";
 import { NotFound } from "@tsed/exceptions";
 import { userProperties } from "lib/auth/getSessionUser";
-import { isFeatureEnabled } from "lib/cad";
-import { leoProperties } from "lib/leo/activeOfficer";
+import { isFeatureEnabled } from "lib/upsert-cad";
+import { leoProperties } from "utils/leo/includes";
+
 import { prisma } from "lib/data/prisma";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { ExtendedNotFound } from "src/exceptions/extended-not-found";

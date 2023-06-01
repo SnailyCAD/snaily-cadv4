@@ -2,7 +2,7 @@ import { Controller } from "@tsed/di";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
 import { ContentType, Delete, Description, Get, Hidden, Post, Put } from "@tsed/schema";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 import { type User, WhitelistStatus } from "@prisma/client";

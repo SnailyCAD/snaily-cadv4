@@ -2,7 +2,7 @@ import { Controller, BodyParams, Post, Res, Response } from "@tsed/common";
 import { hashSync, genSaltSync, compareSync } from "bcrypt";
 import { BadRequest } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
-import { findOrCreateCAD, isFeatureEnabled } from "lib/cad";
+import { findOrCreateCAD, isFeatureEnabled } from "lib/upsert-cad";
 import { REGISTER_SCHEMA, AUTH_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/data/validate-schema";
 import { ExtendedNotFound } from "src/exceptions/extended-not-found";
@@ -201,7 +201,7 @@ export class AuthController {
 }
 
 export function getDefaultPermissionsForNewUser(
-  cad: (cad & { autoSetUserProperties?: AutoSetUserProperties | null }) | null,
+  cad: (cad & { autoSetUserProperties: AutoSetUserProperties | null }) | null,
 ) {
   const permissions: Permissions[] = [Permissions.CreateBusinesses];
 

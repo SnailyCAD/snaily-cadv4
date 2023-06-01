@@ -2,7 +2,7 @@ import { Controller } from "@tsed/di";
 import { BodyParams, Context, UseBeforeEach } from "@tsed/common";
 import { ContentType, Description, Post } from "@tsed/schema";
 import { Socket } from "services/socket-service";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { upsertOfficer } from "controllers/leo/my-officers/upsert-officer";
 import type { cad, Feature, MiscCadSettings } from "@prisma/client";
@@ -14,7 +14,7 @@ import { validateSchema } from "lib/data/validate-schema";
 import { prisma } from "lib/data/prisma";
 import { upsertEmsFdDeputy } from "lib/ems-fd/upsert-ems-fd-deputy";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
-import { leoProperties, unitProperties } from "lib/leo/activeOfficer";
+import { leoProperties, unitProperties } from "utils/leo/includes";
 
 @Controller("/temporary-units")
 @UseBeforeEach(IsAuth)

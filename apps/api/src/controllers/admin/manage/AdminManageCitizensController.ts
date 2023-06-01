@@ -4,7 +4,7 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { QueryParams, BodyParams, PathParams, Context } from "@tsed/platform-params";
 import { ContentType, Delete, Description, Get, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/data/validate-schema";
 import { generateString } from "utils/generate-string";
@@ -16,9 +16,9 @@ import { isCuid } from "@paralleldrive/cuid2";
 import type * as APITypes from "@snailycad/types/api";
 import { validateSocialSecurityNumber } from "lib/citizen/validateSSN";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
-import { leoProperties, unitProperties } from "lib/leo/activeOfficer";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
-import { isFeatureEnabled } from "lib/cad";
+import { isFeatureEnabled } from "lib/upsert-cad";
+import { leoProperties, unitProperties } from "utils/leo/includes";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/citizens")

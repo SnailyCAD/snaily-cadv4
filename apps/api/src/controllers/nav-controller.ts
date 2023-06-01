@@ -5,7 +5,7 @@ import { Context, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { Description, Get } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { UsePermissions } from "middlewares/use-permissions";
 
 @Controller("/notifications")

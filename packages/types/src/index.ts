@@ -10,7 +10,6 @@ type CADPick =
   | "id"
   | "name"
   | "areaOfPlay"
-  | "maxPlateLength"
   | "towWhitelisted"
   | "taxiWhitelisted"
   | "whitelisted"

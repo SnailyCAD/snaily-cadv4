@@ -7,7 +7,7 @@ import { Controller } from "@tsed/di";
 import { ContentType, Get, Post } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
 import { validateSchema } from "lib/data/validate-schema";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";
 
 @Controller("/admin/manage/cad-settings/webhooks")

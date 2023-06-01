@@ -14,7 +14,7 @@ import { ContentType, Delete, Description, Patch, Post, Put } from "@tsed/schema
 import { prisma } from "lib/data/prisma";
 import { IsValidPath, validValuePaths } from "middlewares/valid-path";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { typeHandlers } from "./Import";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { ValuesSelect, getTypeFromPath, getPermissionsForValuesRequest } from "lib/values/utils";

@@ -3,8 +3,9 @@ import { ContentType, Description, Post } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { BodyParams, QueryParams } from "@tsed/platform-params";
 import { prisma } from "lib/data/prisma";
-import { IsAuth } from "middlewares/is-auth";
-import { leoProperties } from "lib/leo/activeOfficer";
+import { IsAuth } from "middlewares/auth/is-auth";
+import { leoProperties } from "utils/leo/includes";
+
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import {
@@ -19,14 +20,14 @@ import {
 } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { CUSTOM_FIELD_SEARCH_SCHEMA } from "@snailycad/schemas";
-import { isFeatureEnabled } from "lib/cad";
+import { isFeatureEnabled } from "lib/upsert-cad";
 import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import type * as APITypes from "@snailycad/types/api";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { setEndedSuspendedLicenses } from "lib/citizen/setEndedSuspendedLicenses";
 import { incidentInclude } from "../incidents/IncidentController";
-import { callInclude } from "controllers/dispatch/911-calls/Calls911Controller";
+import { callInclude } from "controllers/dispatch/911-calls/calls-911-controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 
 export const vehicleSearchInclude = {

@@ -45,7 +45,7 @@ export function ApiVerification() {
     : t("unknown");
 
   return error ? (
-    <Alert type="error" title={title} message={message}>
+    <Alert className="mb-5 max-w-md z-50" type="error" title={title} message={message}>
       <p className="mt-3">
         For more information, please visit our{" "}
         <a

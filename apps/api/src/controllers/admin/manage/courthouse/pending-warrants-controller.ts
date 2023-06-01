@@ -5,11 +5,12 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { ContentType, Description, Get, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type * as APITypes from "@snailycad/types/api";
 import { assignedOfficersInclude } from "controllers/record/records-controller";
-import { leoProperties } from "lib/leo/activeOfficer";
+import { leoProperties } from "utils/leo/includes";
+
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { AuditLogActionType } from "@snailycad/audit-logger";
 import { createAuditLogEntry } from "@snailycad/audit-logger/server";

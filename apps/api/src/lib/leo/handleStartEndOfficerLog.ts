@@ -1,12 +1,12 @@
 import { EmsFdDeputy, Officer, ShouldDoType } from "@prisma/client";
-import { callInclude } from "controllers/dispatch/911-calls/Calls911Controller";
+import { callInclude } from "controllers/dispatch/911-calls/calls-911-controller";
 import { incidentInclude } from "controllers/leo/incidents/IncidentController";
 import { prisma } from "lib/data/prisma";
 import type { Socket } from "services/socket-service";
 
 interface Options<Type extends "leo" | "ems-fd"> {
   shouldDo: ShouldDoType;
-  unit: Type extends "leo" ? Omit<Officer, "divisionId"> : EmsFdDeputy;
+  unit: Type extends "leo" ? Officer : EmsFdDeputy;
   socket: Socket;
   userId?: string | null;
   type: Type;

@@ -1,10 +1,11 @@
-import { combinedEmsFdUnitProperties, combinedUnitProperties } from "lib/leo/activeOfficer";
+import { combinedEmsFdUnitProperties, combinedUnitProperties } from "utils/leo/includes";
 import type {
   CombinedLeoUnit,
   CombinedEmsFdUnit,
   Officer,
   EmsFdDeputy,
   StatusValue,
+  DivisionValue,
 } from "@prisma/client";
 import { prisma } from "lib/data/prisma";
 
@@ -53,7 +54,7 @@ export async function findUnit(
 
 interface OfficerReturn {
   type: "leo";
-  unit: Officer | null;
+  unit: (Officer & { divisions: DivisionValue[] }) | null;
 }
 
 interface EmsFdReturn {

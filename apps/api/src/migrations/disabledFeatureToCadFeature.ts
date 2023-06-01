@@ -2,11 +2,8 @@ import { prisma } from "lib/data/prisma";
 import { Feature } from "@prisma/client";
 
 const FEATURES: Feature[] = Object.values(Feature);
-const DEPRECATED_FEATURES = [
-  Feature.DL_EXAMS,
-  Feature.WEAPON_EXAMS,
-  Feature.DISALLOW_TEXTFIELD_SELECTION,
-] as Feature[];
+
+// todo: add explanation for the meaning of this file
 
 const DEFAULTS: Partial<Record<Feature, { isEnabled: boolean }>> = {
   CUSTOM_TEXTFIELD_VALUES: { isEnabled: false },
@@ -31,18 +28,11 @@ const DEFAULTS: Partial<Record<Feature, { isEnabled: boolean }>> = {
 };
 
 export async function disabledFeatureToCadFeature() {
-  const cad = await prisma.cad.findFirst({ select: { disabledFeatures: true, id: true } });
+  const cad = await prisma.cad.findFirst({ select: { id: true } });
   if (!cad) return;
 
-  const disabledFeatures = cad.disabledFeatures ?? [];
-
   for (const feature of FEATURES) {
-    if (DEPRECATED_FEATURES.includes(feature)) {
-      continue;
-    }
-
-    const isDisabled = disabledFeatures.includes(feature);
-    const isEnabled = DEFAULTS[feature]?.isEnabled ?? !isDisabled;
+    const isEnabled = DEFAULTS[feature]?.isEnabled;
 
     const existing = await prisma.cadFeature.findUnique({
       where: { feature },
@@ -58,10 +48,6 @@ export async function disabledFeatureToCadFeature() {
         feature,
         cadId: cad.id,
       },
-    });
-
-    await prisma.cad.updateMany({
-      data: { disabledFeatures: [] },
     });
   }
 }

@@ -1,16 +1,16 @@
 import process from "node:process";
-import { Rank, User, Feature, CadFeature, cad } from "@prisma/client";
+import { Rank, User, Feature, CadFeature, cad, Prisma } from "@prisma/client";
 import { API_TOKEN_HEADER } from "@snailycad/config";
 import { Context, Middleware, Req, MiddlewareMethods, Res } from "@tsed/common";
 import { Unauthorized } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 import { getCADVersion } from "@snailycad/utils/version";
-import { handleDiscordSync } from "./auth/utils";
-import { setGlobalUserFromCADAPIToken, getUserFromSession } from "./auth/get-user";
+import { handleDiscordSync } from "./utils/utils";
 import { hasPermission, Permissions } from "@snailycad/permissions";
 import { setErrorMap } from "zod";
-import { getErrorMap } from "../utils/zod-error-map";
-import { CadFeatureOptions, createFeaturesObject, overwriteFeatures } from "./is-enabled";
+import { getErrorMap } from "../../utils/zod-error-map";
+import { CadFeatureOptions, createFeaturesObject, overwriteFeatures } from "../is-enabled";
+import { getUserFromSession, setGlobalUserFromCADAPIToken } from "./utils/get-user";
 
 @Middleware()
 export class IsAuth implements MiddlewareMethods {
@@ -107,11 +107,10 @@ export function setCADFeatures<T extends Partial<cad & { features?: CadFeature[]
 }
 
 export function CAD_SELECT(user?: Pick<User, "rank"> | null, includeDiscordRoles?: boolean) {
-  return {
+  return Prisma.validator<Prisma.cadSelect>()({
     id: true,
     name: true,
     areaOfPlay: true,
-    maxPlateLength: true,
     towWhitelisted: true,
     taxiWhitelisted: true,
     whitelisted: true,
@@ -142,5 +141,5 @@ export function CAD_SELECT(user?: Pick<User, "rank"> | null, includeDiscordRoles
           },
         }
       : undefined,
-  };
+  });
 }

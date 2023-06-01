@@ -5,17 +5,11 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 import { Socket } from "services/socket-service";
 import { UseAfter, UseBeforeEach } from "@tsed/platform-middlewares";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { cad, Feature, MiscCadSettings, ShouldDoType, User } from "@snailycad/types";
 import { validateSchema } from "lib/data/validate-schema";
 import { TONES_SCHEMA, UPDATE_AOP_SCHEMA, UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
-import {
-  leoProperties,
-  unitProperties,
-  combinedUnitProperties,
-  getActiveOfficer,
-  combinedEmsFdUnitProperties,
-} from "lib/leo/activeOfficer";
+import { getActiveOfficer } from "lib/leo/activeOfficer";
 import { ExtendedNotFound } from "src/exceptions/extended-not-found";
 import { incidentInclude } from "controllers/leo/incidents/IncidentController";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
@@ -29,6 +23,12 @@ import { z } from "zod";
 import { ActiveToneType } from "@prisma/client";
 import { HandleInactivity } from "middlewares/handle-inactivity";
 import { createWhere, createWhereCombinedUnit } from "controllers/leo/create-where-obj";
+import {
+  leoProperties,
+  unitProperties,
+  combinedUnitProperties,
+  combinedEmsFdUnitProperties,
+} from "utils/leo/includes";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)

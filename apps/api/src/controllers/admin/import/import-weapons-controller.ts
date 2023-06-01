@@ -10,7 +10,7 @@ import {
   QueryParams,
   UseBeforeEach,
 } from "@tsed/common";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { parseImportFile } from "utils/file";
 import { validateSchema } from "lib/data/validate-schema";
 import { generateString } from "utils/generate-string";

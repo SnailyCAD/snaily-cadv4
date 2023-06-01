@@ -11,7 +11,7 @@ import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
 import { TOW_SCHEMA, UPDATE_TOW_SCHEMA } from "@snailycad/schemas";
 import { NotFound } from "@tsed/exceptions";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { Socket } from "services/socket-service";
 import { validateSchema } from "lib/data/validate-schema";
 import {
@@ -25,7 +25,7 @@ import {
 } from "@prisma/client";
 import { canManageInvariant } from "lib/auth/getSessionUser";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";
-import { callInclude } from "controllers/dispatch/911-calls/Calls911Controller";
+import { callInclude } from "controllers/dispatch/911-calls/calls-911-controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { sendDiscordWebhook, sendRawWebhook } from "lib/discord/webhooks";
 import type * as APITypes from "@snailycad/types/api";

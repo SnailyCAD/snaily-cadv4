@@ -2,54 +2,9 @@ import { User, Prisma } from "@prisma/client";
 import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import type { Req, Context } from "@tsed/common";
 import { BadRequest, Forbidden } from "@tsed/exceptions";
-import { userProperties } from "lib/auth/getSessionUser";
 import { prisma } from "lib/data/prisma";
 import { getInactivityFilter } from "./utils";
-
-export const unitProperties = {
-  department: { include: { value: true } },
-  division: { include: { value: true, department: true } },
-  status: { include: { value: true } },
-  citizen: { select: { name: true, surname: true, id: true } },
-  user: { select: userProperties },
-  IncidentInvolvedUnit: { where: { incident: { isActive: true } }, select: { id: true } },
-  whitelistStatus: { include: { department: { include: { value: true } } } },
-  rank: true,
-  activeVehicle: { include: { value: true } },
-};
-
-export const _leoProperties = {
-  department: { include: { value: true } },
-  division: { include: { value: true, department: true } },
-  divisions: { include: { value: true, department: true } },
-  status: { include: { value: true } },
-  citizen: { select: { name: true, surname: true, id: true } },
-  whitelistStatus: { include: { department: { include: { value: true } } } },
-  user: { select: userProperties },
-  IncidentInvolvedUnit: { where: { incident: { isActive: true } }, select: { id: true } },
-  rank: true,
-  callsigns: true,
-  activeDivisionCallsign: true,
-  activeVehicle: { include: { value: true } },
-};
-
-export const leoProperties = {
-  ..._leoProperties,
-  activeIncident: { include: { events: true } },
-};
-
-export const combinedEmsFdUnitProperties = {
-  status: { include: { value: true } },
-  department: { include: { value: true } },
-  deputies: { include: unitProperties },
-};
-
-export const combinedUnitProperties = {
-  status: { include: { value: true } },
-  department: { include: { value: true } },
-  officers: { include: _leoProperties },
-  activeVehicle: { include: { value: true } },
-};
+import { combinedUnitProperties, leoProperties } from "utils/leo/includes";
 
 interface GetActiveOfficerOptions {
   ctx: Context;

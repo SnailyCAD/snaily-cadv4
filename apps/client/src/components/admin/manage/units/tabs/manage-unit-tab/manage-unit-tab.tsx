@@ -94,7 +94,7 @@ export function ManageUnitTab({ unit: data }: Props) {
 
     status: unit.statusId,
     department: getUnitDepartment(unit)?.id ?? "",
-    division: "divisionId" in unit ? unit.divisionId : "",
+    division: !isUnitOfficer(unit) ? unit.divisionId : "",
     divisions: divisions.map((v) => ({ value: v.id, label: v.value.value })),
     callsign: unit.callsign,
     callsign2: unit.callsign2,

@@ -11,8 +11,7 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 import { Socket } from "services/socket-service";
 import { UseAfter, UseBeforeEach } from "@tsed/platform-middlewares";
-import { IsAuth } from "middlewares/is-auth";
-import { _leoProperties } from "lib/leo/activeOfficer";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { validateSchema } from "lib/data/validate-schema";
 import {
   type cad,
@@ -46,19 +45,20 @@ import { getTranslator } from "utils/get-translator";
 import { HandleInactivity } from "middlewares/handle-inactivity";
 import { handleEndCall } from "lib/calls/handle-end-call";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
-import { isFeatureEnabled } from "lib/cad";
+import { isFeatureEnabled } from "lib/upsert-cad";
+import { _leoProperties, unitProperties } from "utils/leo/includes";
 
-export const callInclude = {
+export const callInclude = Prisma.validator<Prisma.Call911Select>()({
   position: true,
   assignedUnits: assignedUnitsInclude,
   events: true,
   incidents: true,
   departments: { include: _leoProperties.department.include },
-  divisions: { include: _leoProperties.division.include },
+  divisions: { include: unitProperties.division.include },
   situationCode: { include: { value: true } },
   type: { include: { value: true } },
   gtaMapPosition: true,
-};
+});
 
 @Controller("/911-calls")
 @UseBeforeEach(IsAuth)

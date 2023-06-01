@@ -8,7 +8,7 @@ import {
   RESTGetAPIWebhookResult,
   Routes,
 } from "discord-api-types/v10";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { prisma } from "lib/data/prisma";
 import { cad, DiscordWebhook, DiscordWebhookType, MiscCadSettings } from "@prisma/client";
 import { BadRequest } from "@tsed/exceptions";

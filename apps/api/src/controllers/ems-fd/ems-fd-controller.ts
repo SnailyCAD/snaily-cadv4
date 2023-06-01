@@ -20,17 +20,16 @@ import {
 } from "@prisma/client";
 import type { EmsFdDeputy } from "@snailycad/types";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { ActiveDeputy } from "middlewares/active-deputy";
 import fs from "node:fs/promises";
-import { combinedEmsFdUnitProperties, unitProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/data/validate-schema";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { getInactivityFilter } from "lib/leo/utils";
 import { Socket } from "services/socket-service";
 import type * as APITypes from "@snailycad/types/api";
-import { isFeatureEnabled } from "lib/cad";
+import { isFeatureEnabled } from "lib/upsert-cad";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { handlePanicButtonPressed } from "lib/leo/send-panic-button-webhook";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
@@ -39,6 +38,7 @@ import { getImageWebPPath } from "lib/images/get-image-webp-path";
 import { HandleInactivity } from "middlewares/handle-inactivity";
 import { upsertEmsFdDeputy } from "lib/ems-fd/upsert-ems-fd-deputy";
 import { citizenInclude } from "controllers/citizen/CitizenController";
+import { unitProperties, combinedEmsFdUnitProperties } from "utils/leo/includes";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)

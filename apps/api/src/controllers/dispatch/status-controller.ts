@@ -18,15 +18,9 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { ContentType, Description, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
-import {
-  combinedEmsFdUnitProperties,
-  combinedUnitProperties,
-  leoProperties,
-  unitProperties,
-} from "lib/leo/activeOfficer";
 import { sendDiscordWebhook, sendRawWebhook } from "lib/discord/webhooks";
 import { Socket } from "services/socket-service";
-import { IsAuth } from "middlewares/is-auth";
+import { IsAuth } from "middlewares/auth/is-auth";
 import { validateSchema } from "lib/data/validate-schema";
 import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
@@ -37,8 +31,14 @@ import type * as APITypes from "@snailycad/types/api";
 import { createWebhookData } from "lib/dispatch/webhooks";
 import { createCallEventOnStatusChange } from "lib/dispatch/createCallEventOnStatusChange";
 import { ExtendedNotFound } from "src/exceptions/extended-not-found";
-import { isFeatureEnabled } from "lib/cad";
+import { isFeatureEnabled } from "lib/upsert-cad";
 import { handlePanicButtonPressed } from "lib/leo/send-panic-button-webhook";
+import {
+  leoProperties,
+  unitProperties,
+  combinedUnitProperties,
+  combinedEmsFdUnitProperties,
+} from "utils/leo/includes";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -84,13 +84,13 @@ export class StatusController {
       features: cad.features,
     });
 
-    const { type, unit } = await findUnit(
+    const unit = await findUnit(
       unitId,
       { userId: isDispatch ? undefined : user.id },
       { officer: { divisions: true } },
     );
 
-    if (!unit) {
+    if (!unit.unit) {
       throw new NotFound("unitNotFound");
     }
 
@@ -105,18 +105,14 @@ export class StatusController {
 
     let activeEmergencyVehicleId: string | undefined;
     if (data.vehicleId && code?.shouldDo === ShouldDoType.SET_ON_DUTY) {
-      const divisionIds = isDivisionsEnabled
-        ? type === "leo"
-          ? (unit as any).divisions.map((v: DivisionValue) => v.id)
-          : [(unit as EmsFdDeputy).divisionId ?? undefined]
-        : [];
+      const divisionIds = getDivisionsFromUnit(unit, isDivisionsEnabled);
 
       const _emergencyVehicle = await prisma.emergencyVehicleValue.findFirst({
         where: {
           id: data.vehicleId,
           OR: [
             ...divisionIds.map((id: string) => ({ divisions: { some: { id } } })),
-            unit.departmentId ? { departments: { some: { id: unit.departmentId } } } : {},
+            unit.unit.departmentId ? { departments: { some: { id: unit.unit.departmentId } } } : {},
           ],
         },
       });
@@ -132,10 +128,10 @@ export class StatusController {
      * officer's status cannot be changed when in a combined unit
      * -> the combined unit's status must be updated.
      */
-    if (type === "leo" && !isDispatch) {
+    if (unit.type === "leo" && !isDispatch) {
       const hasCombinedUnit = await prisma.combinedLeoUnit.findFirst({
         where: {
-          officers: { some: { id: unit.id } },
+          officers: { some: { id: unit.unit.id } },
         },
       });
 
@@ -144,10 +140,10 @@ export class StatusController {
       }
     }
 
-    if (type === "ems-fd" && !isDispatch) {
+    if (unit.type === "ems-fd" && !isDispatch) {
       const hasCombinedUnit = await prisma.combinedEmsFdUnit.findFirst({
         where: {
-          deputies: { some: { id: unit.id } },
+          deputies: { some: { id: unit.unit.id } },
         },
       });
 
@@ -160,9 +156,9 @@ export class StatusController {
       throw new NotFound("statusNotFound");
     }
 
-    if (type === "leo") {
+    if (unit.type === "leo") {
       const officer = await prisma.officer.findUnique({
-        where: { id: unit.id },
+        where: { id: unit.unit.id },
         include: leoProperties,
       });
 
@@ -184,17 +180,17 @@ export class StatusController {
       });
     }
 
-    if (type === "combined-leo" || type === "combined-ems-fd") {
+    if (unit.type === "combined-leo" || unit.type === "combined-ems-fd") {
       await handlePanicButtonPressed({
         locale: user.locale,
         socket: this.socket,
         cad,
         status: code,
-        unit,
+        unit: unit.unit,
       });
-    } else if (type === "ems-fd") {
+    } else if (unit.type === "ems-fd") {
       const fullDeputy = await prisma.emsFdDeputy.findUnique({
-        where: { id: unit.id },
+        where: { id: unit.unit.id },
         include: unitProperties,
       });
 
@@ -209,12 +205,12 @@ export class StatusController {
 
     // reset all units for user
     if (!isDispatch) {
-      if (type === "leo") {
+      if (unit.type === "leo") {
         await prisma.officer.updateMany({
           where: { userId: user.id },
           data: { activeCallId: null, activeIncidentId: null, statusId: null },
         });
-      } else if (type === "ems-fd") {
+      } else if (unit.type === "ems-fd") {
         await prisma.emsFdDeputy.updateMany({
           where: { userId: user.id },
           data: { statusId: null, activeCallId: null, activeIncidentId: null },
@@ -223,16 +219,17 @@ export class StatusController {
     }
 
     let updatedUnit: EmsFdDeputy | Officer | CombinedLeoUnit | null = null;
-    const shouldFindIncremental = code.shouldDo === ShouldDoType.SET_ON_DUTY && !unit.incremental;
+    const shouldFindIncremental =
+      code.shouldDo === ShouldDoType.SET_ON_DUTY && !unit.unit.incremental;
     const statusId = code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id;
 
     const incremental = shouldFindIncremental
-      ? await findNextAvailableIncremental({ type })
+      ? await findNextAvailableIncremental({ type: unit.type })
       : undefined;
 
-    if (type === "leo") {
+    if (unit.type === "leo") {
       updatedUnit = await prisma.officer.update({
-        where: { id: unit.id },
+        where: { id: unit.unit.id },
         data: {
           activeVehicleId: activeEmergencyVehicleId,
           statusId,
@@ -241,9 +238,9 @@ export class StatusController {
         },
         include: leoProperties,
       });
-    } else if (type === "ems-fd") {
+    } else if (unit.type === "ems-fd") {
       updatedUnit = await prisma.emsFdDeputy.update({
-        where: { id: unit.id },
+        where: { id: unit.unit.id },
         data: {
           activeVehicleId: activeEmergencyVehicleId,
           statusId,
@@ -252,9 +249,9 @@ export class StatusController {
         },
         include: unitProperties,
       });
-    } else if (type === "combined-leo") {
+    } else if (unit.type === "combined-leo") {
       updatedUnit = await prisma.combinedLeoUnit.update({
-        where: { id: unit.id },
+        where: { id: unit.unit.id },
         data: {
           activeVehicleId: activeEmergencyVehicleId,
           statusId,
@@ -264,7 +261,7 @@ export class StatusController {
       });
     } else {
       updatedUnit = await prisma.combinedEmsFdUnit.update({
-        where: { id: unit.id },
+        where: { id: unit.unit.id },
         data: {
           activeVehicleId: activeEmergencyVehicleId,
           statusId,
@@ -282,17 +279,17 @@ export class StatusController {
       });
     }
 
-    if (type === "leo") {
+    if (unit.type === "leo") {
       await handleStartEndOfficerLog({
-        unit: unit as Officer,
+        unit: unit.unit as Officer,
         shouldDo: code.shouldDo,
         socket: this.socket,
         userId: user.id,
         type: "leo",
       });
-    } else if (type === "ems-fd") {
+    } else if (unit.type === "ems-fd") {
       await handleStartEndOfficerLog({
-        unit,
+        unit: unit.unit,
         shouldDo: code.shouldDo,
         socket: this.socket,
         userId: user.id,
@@ -302,17 +299,17 @@ export class StatusController {
       if (code.shouldDo === ShouldDoType.SET_OFF_DUTY) {
         await prisma.combinedLeoUnit.delete({
           where: {
-            id: unit.id,
+            id: unit.unit.id,
           },
         });
       }
     }
 
     if (code.shouldDo === ShouldDoType.SET_OFF_DUTY) {
-      this.socket.emitSetUnitOffDuty(unit.id);
+      this.socket.emitSetUnitOffDuty(unit.unit.id);
     }
 
-    if (type === "leo" || type === "combined-leo") {
+    if (unit.type === "leo" || unit.type === "combined-leo") {
       await this.socket.emitUpdateOfficerStatus();
     } else {
       await this.socket.emitUpdateDeputyStatus();
@@ -323,7 +320,7 @@ export class StatusController {
     try {
       const data = await createWebhookData({
         cad,
-        // @ts-expect-error type mismatch. the types are correct.
+        // @ts-expect-error unit.type mismatch. the types are correct.
         unit: updatedUnit,
         locale: user.locale,
       });
@@ -333,7 +330,26 @@ export class StatusController {
       console.error("Could not send Discord webhook.", error);
     }
 
-    // @ts-expect-error type mismatch. the types are correct.
+    // @ts-expect-error unit.type mismatch. the types are correct.
     return updatedUnit;
   }
+}
+
+function getDivisionsFromUnit(
+  unit: Awaited<ReturnType<typeof findUnit>>,
+  isDivisionsFeatureEnabled: boolean,
+) {
+  if (!isDivisionsFeatureEnabled || !unit.unit) {
+    return [];
+  }
+
+  if (unit.type === "leo") {
+    return unit.unit.divisions.map((v: DivisionValue) => v.id);
+  }
+
+  if (unit.type === "ems-fd" && unit.unit.divisionId) {
+    return [unit.unit.divisionId];
+  }
+
+  return [];
 }
