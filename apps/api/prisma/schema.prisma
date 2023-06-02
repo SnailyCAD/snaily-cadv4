@@ -436,6 +436,18 @@ model SuspendedCitizenLicenses {
   citizens               Citizen[]
 }
 
+model Pet {
+  id          String   @id @default(cuid())
+  name        String
+  breed       String   @db.VarChar(255)
+  color       String   @db.VarChar(255)
+  weight      String   @db.VarChar(255)
+  dateOfBirth DateTime
+
+  notes          Note[]
+  medicalRecords PetMedicalRecord[]
+}
+
 model Note {
   id        String   @id @default(uuid())
   text      String
@@ -448,6 +460,8 @@ model Note {
   citizenId   String?
   vehicle     RegisteredVehicle? @relation(fields: [vehicleId], references: [id])
   vehicleId   String?
+  pet         Pet?               @relation(fields: [petId], references: [id])
+  petId       String?
 }
 
 model RegisteredVehicle {
@@ -515,6 +529,18 @@ model MedicalRecord {
   description  String? @db.Text
   bloodGroup   Value?  @relation(fields: [bloodGroupId], references: [id])
   bloodGroupId String?
+}
+
+model PetMedicalRecord {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  pet       Pet      @relation(fields: [petId], references: [id])
+  petId     String
+
+  // type = diseases
+  type        String? @db.Text
+  description String? @db.Text
 }
 
 model DoctorVisit {
@@ -1837,4 +1863,5 @@ enum Feature {
   USER_DEFINED_CALLSIGN_COMBINED_UNIT // see #1607
   HOSPITAL_SERVICES // see #1602
   MEDICAL_RECORDS_CITIZEN_MANAGEABLE
+  PETS // see #1640
 }
