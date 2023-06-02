@@ -10,6 +10,7 @@ export const enum ModalIds {
   ManageOccupation = "ManageOccupationModal",
   CitizenImage = "CitizenImageModal",
   TransferVehicle = "TransferVehicleModal",
+  CreatePet = "CreatePetModal",
 
   GiveTempPassword = "GiveTempPasswordModal",
   ManagePermissions = "ManagePermissionsModal",

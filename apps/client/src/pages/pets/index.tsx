@@ -1,24 +1,29 @@
+import { GetUserPetsData } from "@snailycad/types/api";
 import { Button } from "@snailycad/ui";
 import { Layout } from "components/Layout";
+import { CreatePetModal } from "components/citizen/pets/create-pet-modal";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import { GetServerSideProps } from "next";
+import { useModal } from "state/modalState";
+import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 
 interface PetsPageProps {
-  pets: GetPetsData;
+  pets: GetUserPetsData;
 }
 
 export default function PetsPage(props: PetsPageProps) {
   const t = useTranslations();
+  const { openModal } = useModal();
 
   const asyncTable = useAsyncTable({
     fetchOptions: {
       path: "/pets",
-      onResponse(data) {
+      onResponse(data: GetUserPetsData) {
         return { data: data.pets, totalCount: data.totalCount };
       },
     },
@@ -32,22 +37,31 @@ export default function PetsPage(props: PetsPageProps) {
       <header className="flex items-center justify-between mb-5">
         <Title>{t("Pets.pets")}</Title>
 
-        <Button>{t("Pets.createPet")}</Button>
+        <Button onPress={() => openModal(ModalIds.CreatePet)}>{t("Pets.createPet")}</Button>
       </header>
-      <Table
-        tableState={tableState}
-        data={asyncTable.items.map((pet) => ({
-          id: pet.id,
-          name: pet.name,
-          breed: pet.breed,
-          actions: <Button>{t("Pets.viewPet")}</Button>,
-        }))}
-        columns={[
-          { accessorKey: "name", header: t("Pets.name") },
-          { accessorKey: "breed", header: t("Pets.breed") },
-          { accessorKey: "actions", header: t("Common.actions") },
-        ]}
-      />
+
+      {props.pets.totalCount <= 0 ? (
+        <p>{t("Pets.noPets")}</p>
+      ) : (
+        <Table
+          tableState={tableState}
+          data={asyncTable.items.map((pet) => ({
+            id: pet.id,
+            name: pet.name,
+            breed: pet.breed,
+            citizen: `${pet.citizen.name} ${pet.citizen.surname}`,
+            actions: <Button>{t("Pets.viewPet")}</Button>,
+          }))}
+          columns={[
+            { accessorKey: "name", header: t("Pets.name") },
+            { accessorKey: "breed", header: t("Pets.breed") },
+            { accessorKey: "citizen", header: t("Pets.citizen") },
+            { accessorKey: "actions", header: t("Common.actions") },
+          ]}
+        />
+      )}
+
+      <CreatePetModal onCreate={(pet) => asyncTable.append(pet)} />
     </Layout>
   );
 }

@@ -196,6 +196,8 @@
     "HOSPITAL_SERVICES": "Hospital Services",
     "HOSPITAL_SERVICES-description": "When enabled, this will allow users with the correct permissions to manage dead citizens.",
     "MEDICAL_RECORDS_CITIZEN_MANAGEABLE": "Medical Records Citizen Manageable",
-    "MEDICAL_RECORDS_CITIZEN_MANAGEABLE-description": "When enabled, this will allow citizens to manage their own medical records. When disabled, this will only allow EMS/FD to manage citizen medical records."
+    "MEDICAL_RECORDS_CITIZEN_MANAGEABLE-description": "When enabled, this will allow citizens to manage their own medical records. When disabled, this will only allow EMS/FD to manage citizen medical records.",
+    "PETS": "Pets",
+    "PETS-description": "When enabled, this will allow citizens to create pets."
   }
 }

@@ -124,8 +124,13 @@
     "pets": "Pets",
     "createPet": "Create Pet",
     "name": "Name",
+    "color": "Color",
+    "dateOfBirth": "Date of Birth",
+    "weight": "Weight",
     "breed": "Breed",
     "medicalRecords": "Medical Records",
-    "viewPet": "View Pet"
+    "viewPet": "View Pet",
+    "citizen": "Citizen",
+    "noPets": "You do not have any pets created yet."
   }
 }

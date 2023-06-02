@@ -113,3 +113,17 @@ export const MEDICAL_RECORD_SCHEMA = z.object({
   bloodGroup: z.string().max(255).nullable(),
   citizenId: z.string().min(2).max(255),
 });
+
+export const PET_SCHEMA = z.object({
+  citizenId: z.string().min(2),
+  name: z.string().min(2).max(255),
+  breed: z.string().min(2).max(255),
+  color: z.string().min(2).max(255),
+  dateOfBirth: z
+    .date()
+    .min(new Date(1900, 0, 1))
+    .max(new Date())
+    .describe("ISO format")
+    .or(z.string().min(2)),
+  weight: z.string().min(2).max(255),
+});

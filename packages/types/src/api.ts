@@ -579,3 +579,25 @@ export type PutNotesData = Types.Note;
  * @route /notes/:id
  */
 export type DeleteNotesData = boolean;
+
+/** pets */
+/**
+ * @method GET
+ * @route /pets
+ */
+export interface GetUserPetsData {
+  totalCount: number;
+  pets: Types.Pet[];
+}
+
+/**
+ * @method GET
+ * @route /pets/:id
+ */
+export type GetPetByIdData = Types.Pet;
+
+/**
+ * @method POST
+ * @route /pets
+ */
+export type PostPetsData = Types.Pet;

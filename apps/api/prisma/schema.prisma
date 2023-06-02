@@ -409,6 +409,7 @@ model Citizen {
   suspendedLicensesId  String?
   LicenseExam          LicenseExam[]
   DoctorVisit          DoctorVisit[]
+  pets                 Pet[]
 
   @@index([name, surname], name: "fullname")
 }
@@ -443,6 +444,8 @@ model Pet {
   color       String   @db.VarChar(255)
   weight      String   @db.VarChar(255)
   dateOfBirth DateTime
+  citizen     Citizen  @relation(fields: [citizenId], references: [id])
+  citizenId   String
 
   notes          Note[]
   medicalRecords PetMedicalRecord[]

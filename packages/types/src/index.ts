@@ -149,8 +149,9 @@ export type Citizen = Prisma.Citizen & {
 };
 
 export type Pet = Prisma.Pet & {
-  notes: Note[];
-  medicalRecords: PetMedicalRecord[];
+  citizen: BaseCitizen;
+  notes?: Note[];
+  medicalRecords?: PetMedicalRecord[];
 };
 
 export type PetMedicalRecord = Prisma.PetMedicalRecord;
