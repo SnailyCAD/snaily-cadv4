@@ -8,7 +8,7 @@ import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { validateSchema } from "lib/data/validate-schema";
-import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
+import { shouldCheckCitizenUserId } from "lib/citizen/has-citizen-access";
 import type * as APITypes from "@snailycad/types/api";
 import { citizenInclude } from "./CitizenController";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";

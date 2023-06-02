@@ -41,7 +41,7 @@ import {
   citizenSearchIncludeOrSelect,
   vehicleSearchInclude,
 } from "./SearchController";
-import { citizenObjectFromData } from "lib/citizen";
+import { citizenObjectFromData } from "lib/citizen/citizen-create-data-obj";
 import { generateString } from "utils/generate-string";
 import type * as APITypes from "@snailycad/types/api";
 import { createVehicleImpoundedWebhookData } from "controllers/calls/tow-controller";

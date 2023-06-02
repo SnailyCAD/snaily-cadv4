@@ -29,7 +29,7 @@ import { callInclude } from "controllers/dispatch/911-calls/calls-911-controller
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { sendDiscordWebhook, sendRawWebhook } from "lib/discord/webhooks";
 import type * as APITypes from "@snailycad/types/api";
-import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
+import { shouldCheckCitizenUserId } from "lib/citizen/has-citizen-access";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { getTranslator } from "utils/get-translator";
 

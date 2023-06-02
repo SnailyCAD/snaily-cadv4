@@ -15,7 +15,7 @@ import { prisma } from "lib/data/prisma";
 import { IsValidPath, validValuePaths } from "middlewares/valid-path";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/auth/is-auth";
-import { typeHandlers } from "./Import";
+import { typeHandlers } from "./import-values-controller";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { ValuesSelect, getTypeFromPath, getPermissionsForValuesRequest } from "lib/values/utils";
 import { ValueType } from "@prisma/client";

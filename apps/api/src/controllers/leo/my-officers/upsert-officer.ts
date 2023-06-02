@@ -10,7 +10,7 @@ import {
   ShouldDoType,
   User,
 } from "@prisma/client";
-import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
+import { shouldCheckCitizenUserId } from "lib/citizen/has-citizen-access";
 import { prisma } from "lib/data/prisma";
 import { validateSchema } from "lib/data/validate-schema";
 import { BadRequest, NotFound } from "@tsed/exceptions";

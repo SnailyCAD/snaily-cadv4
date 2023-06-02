@@ -19,7 +19,7 @@ import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 import { unitProperties } from "utils/leo/includes";
-import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
+import { shouldCheckCitizenUserId } from "lib/citizen/has-citizen-access";
 import { NotFound } from "@tsed/exceptions";
 import { validateImageURL } from "lib/images/validate-image-url";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";

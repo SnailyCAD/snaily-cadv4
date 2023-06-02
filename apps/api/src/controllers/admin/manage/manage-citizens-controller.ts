@@ -14,7 +14,7 @@ import { Feature, Prisma } from "@prisma/client";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { isCuid } from "@paralleldrive/cuid2";
 import type * as APITypes from "@snailycad/types/api";
-import { validateSocialSecurityNumber } from "lib/citizen/validateSSN";
+import { validateSocialSecurityNumber } from "lib/citizen/validate-ssn";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { isFeatureEnabled } from "lib/upsert-cad";
