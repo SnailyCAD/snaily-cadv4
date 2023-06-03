@@ -619,3 +619,21 @@ export type PutPetByIdMedicalRecordsData = Types.PetMedicalRecord;
  * @route /pets/:petId/medical-records/:id
  */
 export type DeletePetByIdMedicalRecordsData = boolean;
+
+/**
+ * @method POST
+ * @route /pets/:petId/notes
+ */
+export type PostPetByIdNotesData = Types.Note;
+
+/**
+ * @method PUT
+ * @route /pets/:petId/notes/:id
+ */
+export type PutPetByIdNotesData = Types.Note;
+
+/**
+ * @method DELETE
+ * @route /pets/:petId/notes/:id
+ */
+export type DeletePetByIdNotesData = boolean;

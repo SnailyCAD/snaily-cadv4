@@ -132,3 +132,7 @@ export const PET_MEDICAL_RECORD_SCHEMA = z.object({
   type: z.string().max(255),
   description: z.string(),
 });
+
+export const PET_NOTE_SCHEMA = z.object({
+  text: z.string().max(255),
+});

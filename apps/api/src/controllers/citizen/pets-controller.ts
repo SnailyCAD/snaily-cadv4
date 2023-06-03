@@ -1,5 +1,5 @@
 import { Feature, User } from "@prisma/client";
-import { PET_MEDICAL_RECORD_SCHEMA, PET_SCHEMA } from "@snailycad/schemas";
+import { PET_NOTE_SCHEMA, PET_MEDICAL_RECORD_SCHEMA, PET_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
@@ -42,7 +42,7 @@ export class PetsController {
       where: {
         id,
       },
-      include: { citizen: true, medicalRecords: true },
+      include: { citizen: true, medicalRecords: true, notes: true },
     });
 
     if (!pet || pet.citizen.userId !== user.id) {
@@ -131,6 +131,58 @@ export class PetsController {
     return true;
   }
 
+  @Post("/:petId/notes")
+  @Description("Create a nte for a pet")
+  async createNote(
+    @PathParams("petId") id: string,
+    @BodyParams() body: unknown,
+    @Context("user") user: User,
+  ): Promise<APITypes.PostPetByIdNotesData> {
+    const data = validateSchema(PET_NOTE_SCHEMA, body);
+    await this.validatePetNote(id, user.id);
+
+    const petNote = await prisma.note.create({
+      data: {
+        petId: id,
+        text: data.text,
+      },
+    });
+
+    return petNote;
+  }
+
+  @Put("/:petId/notes/:noteId")
+  @Description("Update a note for a pet")
+  async updateNote(
+    @PathParams("petId") petId: string,
+    @PathParams("noteId") noteId: string,
+    @BodyParams() body: unknown,
+    @Context("user") user: User,
+  ): Promise<APITypes.PutPetByIdNotesData> {
+    const data = validateSchema(PET_NOTE_SCHEMA, body);
+    await this.validatePetNote(petId, user.id, noteId);
+
+    const updatedPetNote = await prisma.note.update({
+      where: { id: noteId },
+      data: { text: data.text },
+    });
+
+    return updatedPetNote;
+  }
+
+  @Delete("/:petId/notes/:noteId")
+  @Description("Delete a nte for a pet")
+  async deleteNote(
+    @PathParams("petId") petId: string,
+    @PathParams("noteId") noteId: string,
+    @Context("user") user: User,
+  ): Promise<APITypes.DeletePetByIdNotesData> {
+    await this.validatePetNote(petId, user.id, noteId);
+    await prisma.note.delete({ where: { id: noteId } });
+
+    return true;
+  }
+
   private async validatePetMedicalRecord(petId: string, userId: string, medicalRecordId?: string) {
     const pet = await prisma.pet.findUnique({
       where: { id: petId },
@@ -141,13 +193,35 @@ export class PetsController {
       throw new NotFound("notFound");
     }
 
-    const petMedicalRecord = await prisma.petMedicalRecord.findUnique({
-      where: { id: medicalRecordId },
-      include: { pet: true },
+    if (medicalRecordId) {
+      const petMedicalRecord = await prisma.petMedicalRecord.findUnique({
+        where: { id: medicalRecordId },
+      });
+
+      if (!petMedicalRecord || petMedicalRecord.petId !== petId) {
+        throw new NotFound("notFound");
+      }
+    }
+  }
+
+  private async validatePetNote(petId: string, userId: string, noteId?: string) {
+    const pet = await prisma.pet.findUnique({
+      where: { id: petId },
+      include: { citizen: { select: { userId: true } } },
     });
 
-    if (!petMedicalRecord || petMedicalRecord.petId !== petId) {
+    if (!pet || pet.citizen.userId !== userId) {
       throw new NotFound("notFound");
+    }
+
+    if (noteId) {
+      const petNote = await prisma.note.findUnique({
+        where: { id: noteId },
+      });
+
+      if (!petNote || petNote.petId !== petId) {
+        throw new NotFound("notFound");
+      }
     }
   }
 }

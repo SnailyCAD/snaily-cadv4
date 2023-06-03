@@ -11,6 +11,7 @@ import { GetServerSideProps } from "next";
 import { usePetsState } from "state/citizen/pets-state";
 import { useTranslations } from "use-intl";
 import { PetMedicalRecordsCard } from "components/citizen/pets/medical-records/pet-medical-records-card";
+import { PetNotesCard } from "components/citizen/pets/notes/pet-notes-card";
 
 interface PetByIdPageProps {
   pet: GetPetByIdData;
@@ -43,6 +44,7 @@ export default function PetByIdPage(props: PetByIdPageProps) {
 
       <PetInformationCard />
       <PetMedicalRecordsCard />
+      <PetNotesCard />
     </Layout>
   );
 }
