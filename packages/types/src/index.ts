@@ -148,6 +148,14 @@ export type Citizen = Prisma.Citizen & {
   licensePoints?: CitizenLicensePoints | null;
 };
 
+export type Pet = Prisma.Pet & {
+  citizen: BaseCitizen;
+  notes?: Note[];
+  medicalRecords?: PetMedicalRecord[];
+};
+
+export type PetMedicalRecord = Prisma.PetMedicalRecord;
+
 export type SuspendedCitizenLicenses = Prisma.SuspendedCitizenLicenses;
 export type CitizenLicensePoints = Prisma.CitizenLicensePoints;
 

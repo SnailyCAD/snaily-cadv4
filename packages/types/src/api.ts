@@ -579,3 +579,61 @@ export type PutNotesData = Types.Note;
  * @route /notes/:id
  */
 export type DeleteNotesData = boolean;
+
+/** pets */
+/**
+ * @method GET
+ * @route /pets
+ */
+export interface GetUserPetsData {
+  totalCount: number;
+  pets: Types.Pet[];
+}
+
+/**
+ * @method GET
+ * @route /pets/:id
+ */
+export type GetPetByIdData = Types.Pet;
+
+/**
+ * @method POST
+ * @route /pets
+ */
+export type PostPetsData = Types.Pet;
+
+/**
+ * @method POST
+ * @route /pets/:petId/medical-records
+ */
+export type PostPetByIdMedicalRecordsData = Types.PetMedicalRecord;
+
+/**
+ * @method PUT
+ * @route /pets/:petId/medical-records/:id
+ */
+export type PutPetByIdMedicalRecordsData = Types.PetMedicalRecord;
+
+/**
+ * @method DELETE
+ * @route /pets/:petId/medical-records/:id
+ */
+export type DeletePetByIdMedicalRecordsData = boolean;
+
+/**
+ * @method POST
+ * @route /pets/:petId/notes
+ */
+export type PostPetByIdNotesData = Types.Note;
+
+/**
+ * @method PUT
+ * @route /pets/:petId/notes/:id
+ */
+export type PutPetByIdNotesData = Types.Note;
+
+/**
+ * @method DELETE
+ * @route /pets/:petId/notes/:id
+ */
+export type DeletePetByIdNotesData = boolean;

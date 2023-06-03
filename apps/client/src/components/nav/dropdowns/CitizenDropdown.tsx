@@ -27,6 +27,11 @@ export function CitizenDropdown() {
     { name: t("bleeter"), href: "/bleeter" },
     { name: t("truckLogs"), href: "/truck-logs" },
     { name: t("business"), href: "/business" },
+    {
+      name: t("pets"),
+      href: "/pets",
+      show: enabled.PETS,
+    },
   ];
 
   if (!user) {
