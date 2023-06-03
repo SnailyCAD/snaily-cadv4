@@ -45,8 +45,8 @@ export default function BleeterProfilePage(props: BleeterProfilePageProps) {
 
     if (json) {
       router.replace(router.asPath);
-      invalidateFollowers();
-      invalidateFollowing();
+      await invalidateFollowing();
+      await invalidateFollowers();
     }
   }
 
