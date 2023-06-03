@@ -601,3 +601,21 @@ export type GetPetByIdData = Types.Pet;
  * @route /pets
  */
 export type PostPetsData = Types.Pet;
+
+/**
+ * @method POST
+ * @route /pets/:petId/medical-records
+ */
+export type PostPetByIdMedicalRecordsData = Types.PetMedicalRecord;
+
+/**
+ * @method PUT
+ * @route /pets/:petId/medical-records/:id
+ */
+export type PutPetByIdMedicalRecordsData = Types.PetMedicalRecord;
+
+/**
+ * @method DELETE
+ * @route /pets/:petId/medical-records/:id
+ */
+export type DeletePetByIdMedicalRecordsData = boolean;

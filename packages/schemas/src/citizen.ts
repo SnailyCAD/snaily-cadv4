@@ -127,3 +127,8 @@ export const PET_SCHEMA = z.object({
     .or(z.string().min(2)),
   weight: z.string().min(2).max(255),
 });
+
+export const PET_MEDICAL_RECORD_SCHEMA = z.object({
+  type: z.string().max(255),
+  description: z.string(),
+});

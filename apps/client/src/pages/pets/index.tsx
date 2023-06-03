@@ -1,13 +1,15 @@
 import { GetUserPetsData } from "@snailycad/types/api";
-import { Button } from "@snailycad/ui";
+import { Button, buttonSizes, buttonVariants } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { CreatePetModal } from "components/citizen/pets/create-pet-modal";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { getSessionUser } from "lib/auth";
+import { classNames } from "lib/classNames";
 import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import { GetServerSideProps } from "next";
+import Link from "next/link";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
@@ -50,7 +52,14 @@ export default function PetsPage(props: PetsPageProps) {
             name: pet.name,
             breed: pet.breed,
             citizen: `${pet.citizen.name} ${pet.citizen.surname}`,
-            actions: <Button>{t("Pets.viewPet")}</Button>,
+            actions: (
+              <Link
+                href={`/pets/${pet.id}`}
+                className={classNames("rounded-md", buttonSizes.sm, buttonVariants.default)}
+              >
+                {t("Pets.viewPet")}
+              </Link>
+            ),
           }))}
           columns={[
             { accessorKey: "name", header: t("Pets.name") },
