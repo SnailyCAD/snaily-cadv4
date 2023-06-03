@@ -39,8 +39,15 @@
     "nameDescription": "Название компании.",
     "addressDescription": "Адрес компании.",
     "whitelistDescription": "Граждане, которые хотят работать в компании должны быть проверены. Они могут быть подтверждены или отклонены.",
+    "businessRoles": "Роли Компании",
+    "addBusinessRole": "Добавить Роль",
+    "editBusinessRole": "Редактировать Роли",
+    "as": "За",
+    "deleteBusinessRole": "Удалить Роль",
+    "canManageVehicles": "Может управлять транспортом",
     "alert_fireEmployee": "Вы уверены, что хотите уволить <span>{employee}</span>? Это действие необратимо.",
     "alert_deletePost": "Вы уверены, что хотите удалить этот пост? Это действие необратимо.",
-    "alert_deleteBusiness": "Вы уверены, что хотите удалить \"<span>{business}</span>\"? Это действие необратимо."
+    "alert_deleteBusiness": "Вы уверены, что хотите удалить \"<span>{business}</span>\"? Это действие необратимо.",
+    "alert_deleteBusinessRole": "Вы уверены, что хотите удалить \"<span>{role}</span>\"? Это действие необратимо."
   }
 }

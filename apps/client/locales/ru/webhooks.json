@@ -1,50 +1,50 @@
 {
   "Tow": {
-    "vehicleImpounded": "Транспорт эвакутрован",
-    "registrationStatus": "Статус регистрации",
-    "model": "Модель",
-    "owner": "Владелец"
+    "vehicleImpounded": "РўСЂР°РЅСЃРїРѕСЂС‚ СЌРІР°РєСѓРёСЂРѕРІР°РЅ",
+    "registrationStatus": "РЎС‚Р°С‚СѓСЃ СЂРµРіРёСЃС‚СЂР°С†РёРё",
+    "model": "РњРѕРґРµР»СЊ",
+    "owner": "Р’Р»Р°РґРµР»РµС†"
   },
   "Bolos": {
-    "boloCreated": "BOLO создан",
-    "viewMoreInfo": "Просмотр дополнительной информации в CAD.",
-    "type": "Тип",
-    "name": "Название",
-    "plate": "Номер",
-    "model": "Модель",
-    "color": "Цвет"
+    "boloCreated": "BOLO РЎРѕР·РґР°РЅ",
+    "viewMoreInfo": "Р‘РѕР»СЊС€Рµ РёРЅС„РѕСЂРјР°С†РёРё РЅР° CAD.",
+    "type": "РўРёРї",
+    "name": "РќР°Р·РІР°РЅРёРµ",
+    "plate": "РќРѕРјРµСЂ",
+    "model": "РњРѕРґРµР»СЊ",
+    "color": "Р¦РІРµС‚"
   },
   "Statuses": {
-    "statusChange": "Изменение статуса",
-    "status": "Статус",
-    "statusChangeDescription": "Юнит {unit} изменил свой статус на {status}."
+    "statusChange": "РР·РјРµРЅРµРЅРёРµ СЃС‚Р°С‚СѓСЃР°",
+    "status": "РЎС‚Р°С‚СѓСЃ",
+    "statusChangeDescription": "Р®РЅРёС‚ {unit} СЃРјРµРЅРёР» СЃС‚Р°С‚СѓСЃ РЅР° {status}."
   },
   "PanicButton": {
-    "panicButton": "Кнопка паники",
-    "panicButtonDescription": "Юнит {unit} нажал кнопку паники."
+    "panicButton": "РљРЅРѕРїРєР° С‚СЂРµРІРѕРіРё",
+    "panicButtonDescription": "Р®РЅРёС‚ {unit} РЅР°Р¶Р°Р» РєРЅРѕРїРєСѓ С‚СЂРµРІРѕРіРё."
   },
   "Calls": {
-    "callCreated": "Вызов 911 создан",
-    "viewMoreInfo": "Просмотр дополнительной информации в CAD.",
-    "location": "Местоположение",
-    "caller": "Вызывающий",
-    "unknown": "Неизвестно",
-    "couldNotRenderDescription": "Не удалось отобразить описание."
+    "callCreated": "Р’С‹Р·РѕРІ 911 СЃРѕР·РґР°РЅ",
+    "viewMoreInfo": "Р‘РѕР»СЊС€Рµ РёРЅС„РѕСЂРјР°С†РёРё РЅР° CAD.",
+    "location": "РњРµСЃС‚РѕРїРѕР»РѕР¶РµРЅРёРµ",
+    "caller": "Р—РІРѕРЅСЏС‰РёР№",
+    "unknown": "РќРµРёР·РІРµСЃС‚РЅРѕ",
+    "couldNotRenderDescription": "РќРµ СѓРґР°Р»РѕСЃСЊ РѕС‚РѕР±СЂР°Р·РёС‚СЊ РѕРїРёСЃР°РЅРёРµ."
   },
   "Records": {
-    "citizen": "Гражданин",
-    "status": "Статус",
-    "postal": "почтовый код",
-    "recordType": "Тип записи",
-    "ARREST_REPORT": "Отчет об аресте",
-    "WRITTEN_WARNING": "Письменное предупреждение",
-    "TICKET": "Штраф",
-    "totalBail": "Общий залог",
-    "totalFineAmount": "Общая сумма штрафа",
-    "totalJailTime": "Общее время в тюрьме",
-    "newWarrantCreated": "Новый ордер создан",
-    "newRecordCreated": "Новая запись создана",
-    "ACTIVE": "Активный",
-    "INACTIVE": "Неактивный"
+    "citizen": "Р“СЂР°Р¶РґР°РЅРёРЅ",
+    "status": "РЎС‚Р°С‚СѓСЃ",
+    "postal": "РРЅРґРµРєСЃ",
+    "recordType": "РўРёРї Р·Р°РїРёСЃРё",
+    "ARREST_REPORT": "РћС‚С‡РµС‚ РѕР± Р°СЂРµСЃС‚Рµ",
+    "WRITTEN_WARNING": "РџСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ",
+    "TICKET": "РЁС‚СЂР°С„",
+    "totalBail": "РћР±С‰Р°СЏ СЃСѓРјРјР° Р·Р°Р»РѕРіР°",
+    "totalFineAmount": "РћР±С‰Р°СЏ СЃСѓРјРјР° С€С‚СЂР°С„Р°",
+    "totalJailTime": "РћР±С‰РµРµ РІСЂРµРјСЏ Р°СЂРµСЃС‚Р°",
+    "newWarrantCreated": "РќРѕРІС‹Р№ РѕСЂРґРµСЂ СЃРѕР·РґР°РЅ",
+    "newRecordCreated": "РќРѕРІР°СЏ Р·Р°РїРёСЃСЊ СЃРѕР·РґР°РЅР°",
+    "ACTIVE": "РђРєС‚РёРІРЅРѕ",
+    "INACTIVE": "РќРµР°РєС‚РёРІРЅРѕ"
   }
 }
