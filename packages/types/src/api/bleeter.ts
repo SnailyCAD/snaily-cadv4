@@ -60,6 +60,7 @@ export type GetBleeterProfileByHandleData = Types.BleeterProfile & {
   followersCount: number;
   followingCount: number;
   posts: Types.BleeterPost[];
+  isFollowingThisProfile: boolean;
 };
 
 /**

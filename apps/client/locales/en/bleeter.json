@@ -9,6 +9,12 @@
     "headerImage": "Header Image",
     "bleetTitle": "Bleet title",
     "bleetBody": "Bleet Body",
+    "followers": "Followers",
+    "following": "Following",
+    "follow": "Follow",
+    "unfollow": "Unfollow",
+    "editProfile": "Edit Profile",
+    "posts": "Posts",
     "alert_deleteBleet": "Are you sure want to delete \"<span>{title}</span>\"? This action cannot be undone."
   }
 }

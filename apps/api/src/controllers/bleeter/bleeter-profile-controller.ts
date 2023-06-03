@@ -16,13 +16,18 @@ export class BleeterController {
   @Description("Get a bleeter profile by its handle")
   async getBleeterProfileByHandle(
     @PathParams("handle") handle: string,
+    @Context("user") user: User,
   ): Promise<APITypes.GetBleeterProfileByHandleData> {
     const profile = await prisma.bleeterProfile.findUnique({
       where: { handle: handle.toLowerCase() },
       include: { posts: true },
     });
 
-    if (!profile) {
+    const userProfile = await prisma.bleeterProfile.findUnique({
+      where: { userId: user.id },
+    });
+
+    if (!profile || !userProfile) {
       throw new NotFound("profileNotFound");
     }
 
@@ -32,7 +37,20 @@ export class BleeterController {
       prisma.bleeterProfileFollow.count({ where: { followerProfileId: profile.id } }),
     ]);
 
-    return { ...profile, postsCount, followersCount, followingCount };
+    const isFollowingThisProfile = await prisma.bleeterProfileFollow.findFirst({
+      where: {
+        followerProfileId: profile.id,
+        followingProfileId: userProfile.id,
+      },
+    });
+
+    return {
+      ...profile,
+      postsCount,
+      followersCount,
+      followingCount,
+      isFollowingThisProfile: !!isFollowingThisProfile,
+    };
   }
 
   @Get("/:handle/followers")
@@ -83,15 +101,20 @@ export class BleeterController {
       throw new BadRequest("cannotFollowSelf");
     }
 
-    const follow = await prisma.bleeterProfileFollow.findFirst({
+    const isAlreadyFollowingThisProfile = await prisma.bleeterProfileFollow.findFirst({
       where: {
         followerProfileId: profileToFollow.id,
         followingProfileId: userProfile.id,
       },
     });
 
-    if (follow) {
-      throw new BadRequest("alreadyFollowingProfile");
+    if (isAlreadyFollowingThisProfile) {
+      // unfollow this profile
+      await prisma.bleeterProfileFollow.delete({
+        where: { id: isAlreadyFollowingThisProfile.id },
+      });
+
+      return true;
     }
 
     await prisma.bleeterProfileFollow.create({

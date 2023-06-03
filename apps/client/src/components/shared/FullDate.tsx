@@ -38,7 +38,7 @@ export function FullDate({ children, onlyDate, relative, isDateOfBirth, ...rest 
       }
       {...rest}
     >
-      <span className="font-semibold">
+      <span suppressHydrationWarning className="font-semibold">
         {dateTime(date, { dateStyle: "full", timeStyle: onlyDate ? undefined : "medium" })}
       </span>
     </HoverCard>

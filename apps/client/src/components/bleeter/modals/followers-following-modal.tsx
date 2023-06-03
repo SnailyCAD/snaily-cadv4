@@ -9,6 +9,43 @@ import useFetch from "lib/useFetch";
 import Link from "next/link";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
+import { useTranslations } from "use-intl";
+
+interface Options {
+  profileHandle: string;
+}
+
+export function useFollowers(options: Options) {
+  const { execute } = useFetch();
+  const { data, isInitialLoading } = useQuery({
+    queryKey: ["bleeter-followers", options.profileHandle],
+    queryFn: async () => {
+      const { json } = await execute<GetBleeterProfileFollowersData>({
+        path: `/bleeter/profiles/${options.profileHandle}/followers`,
+      });
+
+      return json;
+    },
+  });
+
+  return { followers: data, isInitialLoading };
+}
+
+export function useFollowing(options: Options) {
+  const { execute } = useFetch();
+  const { data, isInitialLoading } = useQuery({
+    queryKey: ["bleeter-following", options.profileHandle],
+    queryFn: async () => {
+      const { json } = await execute<GetBleeterProfileFollowingData>({
+        path: `/bleeter/profiles/${options.profileHandle}/following`,
+      });
+
+      return json;
+    },
+  });
+
+  return { following: data, isInitialLoading };
+}
 
 interface FollowersFollowingModalProps {
   type: "following" | "followers";
@@ -18,6 +55,7 @@ interface FollowersFollowingModalProps {
 export function FollowersFollowingModal(props: FollowersFollowingModalProps) {
   const { isOpen, closeModal } = useModal();
   const { execute } = useFetch();
+  const t = useTranslations("Bleeter");
   const modalId = props.type === "followers" ? ModalIds.Followers : ModalIds.Following;
 
   const { data, isLoading } = useQuery({
@@ -37,13 +75,11 @@ export function FollowersFollowingModal(props: FollowersFollowingModalProps) {
     <Modal
       className="w-[600px]"
       onClose={() => closeModal(modalId)}
-      title={props.type === "followers" ? "Followers" : "Following"}
+      title={t(props.type)}
       isOpen={isOpen(modalId)}
     >
       {isLoading || !data ? (
         <Loader />
-      ) : data.length <= 0 ? (
-        <p>This user does not have any followers</p>
       ) : (
         <ul>
           {data?.map((follower) => {
@@ -56,7 +92,11 @@ export function FollowersFollowingModal(props: FollowersFollowingModalProps) {
 
             return (
               <li key={profile?.handle}>
-                <Link href={`/bleeter/@/${profile?.handle}`}>
+                <Link
+                  className="hover:underline"
+                  onClick={() => closeModal(modalId)}
+                  href={`/bleeter/@/${profile?.handle}`}
+                >
                   <h3>{profile?.name}</h3>
                 </Link>
               </li>
