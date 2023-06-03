@@ -240,6 +240,8 @@ export type VehicleValue = Prisma.VehicleValue & { trimLevels?: Value[]; value: 
 export type WeaponValue = Prisma.WeaponValue & { value: Value };
 
 export type BleeterPost = Prisma.BleeterPost;
+export type BleeterProfile = Prisma.BleeterProfile & {};
+export type BleeterProfileFollow = Prisma.BleeterProfileFollow & {};
 
 export type TowCall = Prisma.TowCall & {
   assignedUnit: Pick<Prisma.Citizen, "name" | "surname" | "id"> | null;

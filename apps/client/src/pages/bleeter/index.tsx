@@ -11,12 +11,9 @@ import dynamic from "next/dynamic";
 import { Title } from "components/shared/Title";
 import type { GetBleeterData } from "@snailycad/types/api";
 import { requestAll } from "lib/utils";
-import { FullDate } from "components/shared/FullDate";
-import { Editor } from "components/editor/editor";
-import { ImageWrapper } from "components/shared/image-wrapper";
-import { useImageUrl } from "hooks/useImageUrl";
-import Link from "next/link";
 import { useList } from "hooks/shared/table/use-list";
+import { NewBleeterExperienceForm } from "components/bleeter/new-bleeter-experience";
+import { BleeterPostsList } from "components/bleeter/list/posts-list";
 
 const ManageBleetModal = dynamic(
   async () => (await import("components/bleeter/manage-bleet-modal")).ManageBleetModal,
@@ -24,18 +21,21 @@ const ManageBleetModal = dynamic(
 );
 
 interface Props {
-  posts: GetBleeterData;
+  data: GetBleeterData;
 }
 
-export default function Bleeter({ posts }: Props) {
+export default function Bleeter({ data }: Props) {
   const t = useTranslations("Bleeter");
   const { openModal } = useModal();
-  const { makeImageUrl } = useImageUrl();
 
   const list = useList({
-    initialData: posts,
-    totalCount: posts.length,
+    initialData: data.posts,
+    totalCount: data.totalCount,
   });
+
+  if (!data.userBleeterProfile) {
+    return <NewBleeterExperienceForm />;
+  }
 
   return (
     <Layout className="dark:text-white">
@@ -48,45 +48,7 @@ export default function Bleeter({ posts }: Props) {
       {list.items.length <= 0 ? (
         <p className="mt-2">{t("noPosts")}</p>
       ) : (
-        <ul className="mt-5 space-y-3">
-          {list.items.map((post) => (
-            <li className="rounded-md shadow-sm" key={post.id}>
-              <Link
-                className="block p-4 card dark:hover:bg-secondary transition-colors"
-                href={`/bleeter/${post.id}`}
-              >
-                <header className="flex gap-1 items-baseline">
-                  <h3 className="text-lg font-semibold">{post.user.username}</h3>
-                  <span className="font-bold text-base">∙</span>
-                  <h4 className="text-base">
-                    <FullDate relative>{post.createdAt}</FullDate>
-                  </h4>
-                </header>
-
-                <div className="mx-1 mb-2">
-                  <Editor hideBorder isReadonly value={post.bodyData} />
-                </div>
-
-                <div>
-                  {post.imageId ? (
-                    <ImageWrapper
-                      quality={80}
-                      width={1600}
-                      height={320}
-                      alt={post.title}
-                      placeholder={post.imageBlurData ? "blur" : "empty"}
-                      blurDataURL={post.imageBlurData ?? undefined}
-                      draggable={false}
-                      className="max-h-[20rem] mb-5 w-full object-cover rounded-lg shadow-md"
-                      src={makeImageUrl("bleeter", post.imageId)!}
-                      loading="lazy"
-                    />
-                  ) : null}
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <BleeterPostsList {...data} />
       )}
 
       <ManageBleetModal
@@ -100,11 +62,13 @@ export default function Bleeter({ posts }: Props) {
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, req }) => {
   const user = await getSessionUser(req);
-  const [bleeterData] = await requestAll(req, [["/bleeter", []]]);
+  const [bleeterData] = await requestAll(req, [
+    ["/bleeter", { posts: [], totalCount: 0, userBleeterProfile: null }],
+  ]);
 
   return {
     props: {
-      posts: bleeterData,
+      data: bleeterData,
       session: user,
       messages: {
         ...(await getTranslations(["bleeter", "common"], user?.locale ?? locale)),

@@ -275,7 +275,7 @@ model User {
   vehicles             RegisteredVehicle[]
   weapons              Weapon[]
   notifications        Notification[]
-  executedNotifictions Notification[]       @relation("executor")
+  executedNotifictions Notification[]         @relation("executor")
   medicalRecords       MedicalRecord[]
   bleeterPosts         BleeterPost[]
   businesses           Business[]
@@ -292,6 +292,8 @@ model User {
   ActiveTone           ActiveTone[]
   AuditLog             AuditLog[]
   DoctorVisit          DoctorVisit[]
+  BleeterProfile       BleeterProfile?
+  BleeterProfileFollow BleeterProfileFollow[]
 }
 
 model UserSession {
@@ -798,15 +800,45 @@ model Notification {
 }
 
 // bleeter
+model BleeterProfile {
+  id         String                 @id @default(cuid())
+  name       String                 @db.VarChar(255)
+  handle     String                 @unique @db.VarChar(255)
+  isVerified Boolean?               @default(false)
+  bio        String?                @db.Text
+  user       User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String                 @unique
+  createdAt  DateTime               @default(now())
+  updatedAt  DateTime               @default(now()) @updatedAt
+  followers  BleeterProfileFollow[] @relation("followers")
+  following  BleeterProfileFollow[] @relation("following")
+  posts      BleeterPost[]
+}
+
+model BleeterProfileFollow {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  followerProfile    BleeterProfile? @relation(name: "followers", fields: [followerProfileId], references: [id], onDelete: Cascade)
+  followerProfileId  String?
+  followingProfile   BleeterProfile? @relation(name: "following", fields: [followingProfileId], references: [id], onDelete: Cascade)
+  followingProfileId String?
+}
+
 model BleeterPost {
-  id            String  @id @default(uuid())
-  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id            String          @id @default(uuid())
+  creator       BleeterProfile? @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId     String?
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String
-  title         String  @db.VarChar(255)
-  body          String? @db.Text
+  title         String          @db.VarChar(255)
+  body          String?         @db.Text
   bodyData      Json?
-  imageId       String? @db.VarChar(255)
-  imageBlurData String? @db.Text
+  imageId       String?         @db.VarChar(255)
+  imageBlurData String?         @db.Text
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt

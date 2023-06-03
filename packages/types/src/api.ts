@@ -10,43 +10,7 @@ export * from "./api/leo.js";
 export * from "./api/ems-fd.js";
 export * from "./api/cad-settings.js";
 export * from "./api/values.js";
-
-/** bleeter */
-/**
- * @method Get
- * @route /bleeter
- */
-export type GetBleeterData = (Prisma.BleeterPost & { user: Pick<Types.User, "username"> })[];
-
-/**
- * @method Get
- * @route /bleeter/:id
- */
-export type GetBleeterByIdData = GetBleeterData[number];
-
-/**
- * @method Post
- * @route /bleeter/:id
- */
-export type PostBleeterByIdData = GetBleeterByIdData;
-
-/**
- * @method Put
- * @route /bleeter/:id
- */
-export type PutBleeterByIdData = GetBleeterByIdData;
-
-/**
- * @method Post
- * @route /bleeter/:id
- */
-export type PostBleeterByIdImageData = Pick<Prisma.BleeterPost, "imageId">;
-
-/**
- * @method Delete
- * @route /bleeter/:id
- */
-export type DeleteBleeterByIdData = boolean;
+export * from "./api/bleeter.js";
 
 /** taxi */
 /**
