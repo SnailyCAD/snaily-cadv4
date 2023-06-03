@@ -17,7 +17,7 @@ interface Options {
 
 export function useFollowers(options: Options) {
   const { execute } = useFetch();
-  const { data, isInitialLoading } = useQuery({
+  const { data, isLoading, isInitialLoading } = useQuery({
     queryKey: ["bleeter-followers", options.profileHandle],
     queryFn: async () => {
       const { json } = await execute<GetBleeterProfileFollowersData>({
@@ -28,12 +28,12 @@ export function useFollowers(options: Options) {
     },
   });
 
-  return { followers: data, isInitialLoading };
+  return { followers: data, isLoading, isInitialLoading };
 }
 
 export function useFollowing(options: Options) {
   const { execute } = useFetch();
-  const { data, isInitialLoading } = useQuery({
+  const { data, isLoading, isInitialLoading } = useQuery({
     queryKey: ["bleeter-following", options.profileHandle],
     queryFn: async () => {
       const { json } = await execute<GetBleeterProfileFollowingData>({
@@ -44,7 +44,7 @@ export function useFollowing(options: Options) {
     },
   });
 
-  return { following: data, isInitialLoading };
+  return { following: data, isLoading, isInitialLoading };
 }
 
 interface FollowersFollowingModalProps {
@@ -54,22 +54,13 @@ interface FollowersFollowingModalProps {
 
 export function FollowersFollowingModal(props: FollowersFollowingModalProps) {
   const { isOpen, closeModal } = useModal();
-  const { execute } = useFetch();
   const t = useTranslations("Bleeter");
   const modalId = props.type === "followers" ? ModalIds.Followers : ModalIds.Following;
 
-  const { data, isLoading } = useQuery({
-    queryKey: [props.type, props.profileHandle],
-    queryFn: async () => {
-      const { json } = await execute<
-        GetBleeterProfileFollowersData | GetBleeterProfileFollowingData
-      >({
-        path: `/bleeter/profiles/${props.profileHandle}/${props.type}`,
-      });
-
-      return json;
-    },
-  });
+  const followers = useFollowers({ profileHandle: props.profileHandle });
+  const following = useFollowing({ profileHandle: props.profileHandle });
+  const isLoading = followers.isInitialLoading || following.isInitialLoading;
+  const data = props.type === "followers" ? followers.followers : following.following;
 
   return (
     <Modal

@@ -15,6 +15,9 @@
     "unfollow": "Unfollow",
     "editProfile": "Edit Profile",
     "posts": "Posts",
+    "myProfile": "My Profile",
+    "save": "Save",
+    "getStarted": "Get Started",
     "alert_deleteBleet": "Are you sure want to delete \"<span>{title}</span>\"? This action cannot be undone."
   }
 }

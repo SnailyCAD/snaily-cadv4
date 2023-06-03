@@ -218,20 +218,18 @@ export class BleeterController {
       where: { userId: user.id },
     });
 
-    if (existingUserProfile) {
-      throw new BadRequest("alreadyHasProfile");
-    }
-
     const existingProfileWithHandle = await prisma.bleeterProfile.findUnique({
       where: { handle: data.handle.toLowerCase() },
     });
 
-    if (existingProfileWithHandle) {
+    if (existingProfileWithHandle && existingProfileWithHandle.id !== existingUserProfile?.id) {
       throw new BadRequest("handleTaken");
     }
 
-    const profile = await prisma.bleeterProfile.create({
-      data: {
+    const profile = await prisma.bleeterProfile.upsert({
+      where: { userId: user.id },
+      update: { bio: data.bio, name: data.name, handle: data.handle.toLowerCase() },
+      create: {
         handle: data.handle.toLowerCase(),
         name: data.name,
         bio: data.bio,

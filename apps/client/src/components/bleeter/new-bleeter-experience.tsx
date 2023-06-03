@@ -1,14 +1,25 @@
+import { BleeterProfile } from "@snailycad/types";
 import { Button, Loader, TextField } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { FormRow } from "components/form/FormRow";
 import { Title } from "components/shared/Title";
 import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
+import { useRouter } from "next/router";
+import { useModal } from "state/modalState";
+import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 
-export function NewBleeterExperienceForm() {
+interface Props {
+  showFormOnly?: boolean;
+  profile?: BleeterProfile | null;
+}
+
+export function NewBleeterExperienceForm(props: Props) {
   const t = useTranslations("Bleeter");
   const { state, execute } = useFetch();
+  const router = useRouter();
+  const { closeModal } = useModal();
 
   async function handleSubmit(
     values: typeof INITIAL_VALUES,
@@ -21,14 +32,64 @@ export function NewBleeterExperienceForm() {
       method: "POST",
     });
 
-    console.log({ json });
+    if (json) {
+      router.push(`/bleeter/@/${values.handle}`);
+      closeModal(ModalIds.ManageBleeterProfile);
+    }
   }
 
   const INITIAL_VALUES = {
-    name: "",
-    handle: "",
-    bio: "",
+    name: props.profile?.name ?? "",
+    handle: props.profile?.handle ?? "",
+    bio: props.profile?.bio ?? "",
   };
+
+  if (props.showFormOnly) {
+    return (
+      <Formik onSubmit={handleSubmit} initialValues={INITIAL_VALUES}>
+        {({ values, errors, setFieldValue }) => (
+          <Form className="mt-5">
+            <FormRow>
+              <TextField
+                autoFocus
+                placeholder="@"
+                label="Handle"
+                value={values.handle}
+                errorMessage={errors.handle}
+                onChange={(value) => setFieldValue("handle", value)}
+              />
+
+              <TextField
+                label="Name"
+                value={values.name}
+                errorMessage={errors.name}
+                onChange={(value) => setFieldValue("name", value)}
+              />
+            </FormRow>
+
+            <TextField
+              label="Bio"
+              value={values.bio}
+              errorMessage={errors.bio}
+              onChange={(value) => setFieldValue("bio", value)}
+              isTextarea
+            />
+
+            <footer className="flex justify-end">
+              <Button
+                className="flex gap-2 items-center"
+                disabled={state === "loading"}
+                type="submit"
+              >
+                {state === "loading" ? <Loader /> : null}
+                {props.showFormOnly ? t("save") : t("getStarted")}
+              </Button>
+            </footer>
+          </Form>
+        )}
+      </Formik>
+    );
+  }
 
   return (
     <Layout className="dark:text-white !max-w-4xl">

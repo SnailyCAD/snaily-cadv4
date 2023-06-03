@@ -4,7 +4,7 @@ import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { Button } from "@snailycad/ui";
+import { Button, buttonSizes, buttonVariants } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import dynamic from "next/dynamic";
@@ -14,6 +14,8 @@ import { requestAll } from "lib/utils";
 import { useList } from "hooks/shared/table/use-list";
 import { NewBleeterExperienceForm } from "components/bleeter/new-bleeter-experience";
 import { BleeterPostsList } from "components/bleeter/list/posts-list";
+import Link from "next/link";
+import { classNames } from "lib/classNames";
 
 const ManageBleetModal = dynamic(
   async () => (await import("components/bleeter/manage-bleet-modal")).ManageBleetModal,
@@ -42,7 +44,15 @@ export default function Bleeter({ data }: Props) {
       <header className="flex items-center justify-between">
         <Title className="!mb-0">{t("bleeter")}</Title>
 
-        <Button onPress={() => openModal(ModalIds.ManageBleetModal)}>{t("createBleet")}</Button>
+        <div className="flex gap-2">
+          <Button onPress={() => openModal(ModalIds.ManageBleetModal)}>{t("createBleet")}</Button>
+          <Link
+            className={classNames("rounded-md", buttonSizes.sm, buttonVariants.default)}
+            href={`/bleeter/@/${data.userBleeterProfile.handle}`}
+          >
+            {t("myProfile")}
+          </Link>
+        </div>
       </header>
 
       {list.items.length <= 0 ? (

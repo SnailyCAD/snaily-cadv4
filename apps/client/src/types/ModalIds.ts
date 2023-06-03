@@ -14,6 +14,7 @@ export const enum ModalIds {
   ManagePetMedicalRecord = "ManagePetMedicalRecordModal",
   Followers = "FollowersModal",
   Following = "FollowingModal",
+  ManageBleeterProfile = "ManageBleeterProfileModal",
 
   GiveTempPassword = "GiveTempPasswordModal",
   ManagePermissions = "ManagePermissionsModal",
