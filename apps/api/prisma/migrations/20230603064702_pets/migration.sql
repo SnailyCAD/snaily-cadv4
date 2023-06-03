@@ -12,6 +12,7 @@ CREATE TABLE "Pet" (
     "color" VARCHAR(255) NOT NULL,
     "weight" VARCHAR(255) NOT NULL,
     "dateOfBirth" TIMESTAMP(3) NOT NULL,
+    "citizenId" TEXT NOT NULL,
 
     CONSTRAINT "Pet_pkey" PRIMARY KEY ("id")
 );
@@ -27,6 +28,9 @@ CREATE TABLE "PetMedicalRecord" (
 
     CONSTRAINT "PetMedicalRecord_pkey" PRIMARY KEY ("id")
 );
+
+-- AddForeignKey
+ALTER TABLE "Pet" ADD CONSTRAINT "Pet_citizenId_fkey" FOREIGN KEY ("citizenId") REFERENCES "Citizen"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Note" ADD CONSTRAINT "Note_petId_fkey" FOREIGN KEY ("petId") REFERENCES "Pet"("id") ON DELETE SET NULL ON UPDATE CASCADE;
