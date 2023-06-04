@@ -115,7 +115,6 @@ export class DiscordSettingsController {
       courthouseRoles: data.courthouseRoles,
       towRoles: data.towRoles,
       taxiRoles: data.taxiRoles,
-      adminRoleId: data.adminRoleId,
       whitelistedRoleId: data.whitelistedRoleId,
     };
 
@@ -129,7 +128,6 @@ export class DiscordSettingsController {
 
     const createUpdateData = {
       guildId,
-      adminRoleId: data.adminRoleId ?? null,
       whitelistedRoleId: data.whitelistedRoleId ?? null,
       adminRolePermissions: data.adminRolePermissions ?? [],
       leoRolePermissions: data.leoRolePermissions ?? [],

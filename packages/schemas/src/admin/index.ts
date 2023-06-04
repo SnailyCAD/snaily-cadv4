@@ -73,7 +73,6 @@ export const DISCORD_SETTINGS_SCHEMA = z.object({
   dispatchRoles: z.array(z.any()).nullish(),
   towRoles: z.array(z.any()).nullish(),
   taxiRoles: z.array(z.any()).nullish(),
-  adminRoleId: z.string().nullish(),
   whitelistedRoleId: z.string().nullish(),
   courthouseRoles: z.array(z.any()).nullish(),
 
