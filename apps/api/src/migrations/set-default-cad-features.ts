@@ -3,8 +3,6 @@ import { Feature } from "@prisma/client";
 
 const FEATURES: Feature[] = Object.values(Feature);
 
-// todo: add explanation for the meaning of this file
-
 const DEFAULTS: Partial<Record<Feature, { isEnabled: boolean }>> = {
   CUSTOM_TEXTFIELD_VALUES: { isEnabled: false },
   DMV: { isEnabled: false },
@@ -27,7 +25,11 @@ const DEFAULTS: Partial<Record<Feature, { isEnabled: boolean }>> = {
   USER_DEFINED_CALLSIGN_COMBINED_UNIT: { isEnabled: false },
 };
 
-export async function disabledFeatureToCadFeature() {
+/**
+ * this migration will set the default features for the CAD.
+ * **This will only run if there are no features in the database.**
+ */
+export async function setDefaultCadFeatures() {
   const cad = await prisma.cad.findFirst({ select: { id: true } });
   if (!cad) return;
 

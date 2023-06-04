@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { disabledFeatureToCadFeature } from "migrations/disabledFeatureToCadFeature";
-import { inactivityFilter } from "migrations/inactivityFilter";
+import { setDefaultCadFeatures } from "migrations/set-default-cad-features";
+import { inactivityFilter } from "migrations/inactivity-filter";
 
 export const prisma = new PrismaClient({
   errorFormat: "colorless",
@@ -8,7 +8,7 @@ export const prisma = new PrismaClient({
 });
 
 async function handleMigrations() {
-  await Promise.all([disabledFeatureToCadFeature(), inactivityFilter()]);
+  await Promise.all([setDefaultCadFeatures(), inactivityFilter()]);
 }
 
 try {
