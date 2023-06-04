@@ -6,12 +6,13 @@ import { useDispatchState } from "state/dispatch/dispatch-state";
 import { useAuth } from "context/AuthContext";
 import { useLeoState } from "state/leo-state";
 import type { CombinedLeoUnit, Officer } from "@snailycad/types";
-import { isUnitCombined, isUnitOfficer } from "@snailycad/utils";
+import { isUnitCombined } from "@snailycad/utils";
 import type { GetActiveOfficersData } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { shallow } from "zustand/shallow";
 import { useMapPlayersStore } from "./use-map-players";
 import { useActiveIncidents } from "./useActiveIncidents";
+import { findPlayerFromUnit } from "lib/map/create-map-units-from-active-units.ts";
 
 let ran = false;
 export function useActiveOfficers() {
@@ -121,15 +122,8 @@ export function useActiveOfficers() {
       const newPlayers = playerState.players;
 
       for (const player of players) {
-        const officer = data.find(
-          (officer) =>
-            (isUnitOfficer(officer) &&
-              officer.user &&
-              officer.user.steamId === player.convertedSteamId) ||
-            (isUnitOfficer(officer) && officer.user && officer.user.discordId === player.discordId),
-        );
-
-        if (officer && isUnitOfficer(officer)) {
+        const officer = data.find((officer) => findPlayerFromUnit(player, officer));
+        if (officer) {
           newPlayers.set(player.identifier, { ...player, unit: officer });
         }
       }
