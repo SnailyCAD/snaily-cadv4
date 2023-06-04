@@ -32,7 +32,7 @@ export async function disabledFeatureToCadFeature() {
   if (!cad) return;
 
   for (const feature of FEATURES) {
-    const isEnabled = DEFAULTS[feature]?.isEnabled;
+    const isEnabled = DEFAULTS[feature]?.isEnabled ?? true;
 
     const existing = await prisma.cadFeature.findUnique({
       where: { feature },

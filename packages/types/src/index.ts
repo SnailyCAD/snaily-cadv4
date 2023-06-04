@@ -73,7 +73,6 @@ export type DiscordRoles = Prisma.DiscordRoles & {
   towRoles?: DiscordRole[];
   taxiRoles?: DiscordRole[];
   courthouseRoles?: DiscordRole[];
-  adminRole: DiscordRole | null;
   whitelistedRole: DiscordRole | null;
   roles?: DiscordRole[];
 
