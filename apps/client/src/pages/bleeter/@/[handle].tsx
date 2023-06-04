@@ -1,3 +1,4 @@
+import { defaultPermissions } from "@snailycad/permissions";
 import { GetBleeterProfileByHandleData } from "@snailycad/types/api";
 import { Button, Loader } from "@snailycad/ui";
 import { Layout } from "components/Layout";
@@ -11,6 +12,7 @@ import {
 import { Title } from "components/shared/Title";
 import { useAuth } from "context/AuthContext";
 import { useInvalidateQuery } from "hooks/use-invalidate-query";
+import { usePermission } from "hooks/usePermission";
 import { getSessionUser } from "lib/auth";
 import { classNames } from "lib/classNames";
 import { getTranslations } from "lib/getTranslation";
@@ -18,6 +20,7 @@ import useFetch from "lib/useFetch";
 import { requestAll } from "lib/utils";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
+import { PatchCheckFill } from "react-bootstrap-icons";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
@@ -36,6 +39,8 @@ export default function BleeterProfilePage(props: BleeterProfilePageProps) {
   const router = useRouter();
   const { invalidateQuery: invalidateFollowers } = useInvalidateQuery(["bleeter-followers"]);
   const { invalidateQuery: invalidateFollowing } = useInvalidateQuery(["bleeter-following"]);
+  const { hasPermissions } = usePermission();
+  const hasAdminPermissions = hasPermissions(defaultPermissions.defaultManagementPermissions);
 
   async function handleFollow() {
     const { json } = await execute({
@@ -47,6 +52,17 @@ export default function BleeterProfilePage(props: BleeterProfilePageProps) {
       router.replace(router.asPath);
       await invalidateFollowing();
       await invalidateFollowers();
+    }
+  }
+
+  async function handleProfileVerification() {
+    const { json } = await execute({
+      path: `/bleeter/profiles/${props.data.handle}/verify`,
+      method: "POST",
+    });
+
+    if (json) {
+      router.replace(router.asPath);
     }
   }
 
@@ -66,7 +82,12 @@ export default function BleeterProfilePage(props: BleeterProfilePageProps) {
             <Title renderLayoutTitle={false}>
               {props.data.name} - {t("bleeter")}
             </Title>
-            <h1 className="text-3xl font-bold">{props.data.name}</h1>
+            <h1 className="text-3xl font-bold flex gap-2 items-center">
+              {props.data.name}
+              {props.data.isVerified ? (
+                <PatchCheckFill className="inline text-blue-500 text-xl mt-1" />
+              ) : null}
+            </h1>
 
             {user?.id === props.data.userId ? (
               <Button
@@ -86,6 +107,17 @@ export default function BleeterProfilePage(props: BleeterProfilePageProps) {
                 {props.data.isFollowingThisProfile ? t("unfollow") : t("follow")}
               </Button>
             )}
+            {hasAdminPermissions ? (
+              props.data.isVerified ? (
+                <Button onClick={() => handleProfileVerification()} className="text-sm" size="xs">
+                  {t("unVerifyProfile")}
+                </Button>
+              ) : (
+                <Button onClick={() => handleProfileVerification()} className="text-sm" size="xs">
+                  {t("verifyProfile")}
+                </Button>
+              )
+            ) : null}
           </div>
           <h2 className="text-xl font-light text-neutral-800 dark:text-gray-300">
             @{props.data.handle}

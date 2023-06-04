@@ -18,6 +18,8 @@
     "myProfile": "My Profile",
     "save": "Save",
     "getStarted": "Get Started",
+    "unVerifyProfile": "Unverify Profile",
+    "verifyProfile": "Verify Profile",
     "alert_deleteBleet": "Are you sure want to delete \"<span>{title}</span>\"? This action cannot be undone."
   }
 }

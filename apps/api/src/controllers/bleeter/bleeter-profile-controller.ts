@@ -6,6 +6,8 @@ import { IsAuth } from "middlewares/auth/is-auth";
 import type { User } from "@prisma/client";
 import type * as APITypes from "@snailycad/types/api";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
+import { UsePermissions } from "middlewares/use-permissions";
+import { defaultPermissions } from "@snailycad/permissions";
 
 @UseBeforeEach(IsAuth)
 @Controller("/bleeter/profiles")
@@ -123,6 +125,28 @@ export class BleeterController {
         followingProfileId: userProfile.id,
         userId: user.id,
       },
+    });
+
+    return true;
+  }
+
+  @Post("/:handle/verify")
+  @Description("Verify a bleeter profile")
+  @UsePermissions({
+    permissions: defaultPermissions.defaultManagementPermissions,
+  })
+  async verifyBleeterProfile(@PathParams("handle") handle: string): Promise<boolean> {
+    const profileToVerify = await prisma.bleeterProfile.findUnique({
+      where: { handle: handle.toLowerCase() },
+    });
+
+    if (!profileToVerify) {
+      throw new NotFound("profileNotFound");
+    }
+
+    await prisma.bleeterProfile.update({
+      where: { id: profileToVerify.id },
+      data: { isVerified: !profileToVerify.isVerified },
     });
 
     return true;
