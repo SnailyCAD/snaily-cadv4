@@ -983,6 +983,7 @@ model Officer {
   activeVehicleId             String?
   isTemporary                 Boolean                      @default(false)
   identifiers                 String[]
+  ChatCreator                 ChatCreator[]
 }
 
 model IndividualDivisionCallsign {
@@ -1144,6 +1145,7 @@ model CombinedLeoUnit {
   AssignedWarrantOfficer    AssignedWarrantOfficer[]
   EmsFdIncident             EmsFdIncident?           @relation(fields: [emsFdIncidentId], references: [id])
   emsFdIncidentId           String?
+  ChatCreator               ChatCreator[]
 }
 
 model CombinedEmsFdUnit {
@@ -1166,10 +1168,12 @@ model CombinedEmsFdUnit {
   lastStatusChangeTimestamp DateTime?
   activeVehicle             EmergencyVehicleValue? @relation("activeEmergencyVehicle_combined_emsfd_unit", fields: [activeVehicleId], references: [id], onDelete: SetNull)
   activeVehicleId           String?
-  AssignedUnit              AssignedUnit[]
-  IncidentInvolvedUnit      IncidentInvolvedUnit[]
   EmsFdIncident             EmsFdIncident?         @relation(fields: [emsFdIncidentId], references: [id])
   emsFdIncidentId           String?
+
+  AssignedUnit         AssignedUnit[]
+  IncidentInvolvedUnit IncidentInvolvedUnit[]
+  ChatCreator          ChatCreator[]
 }
 
 // dispatching
@@ -1181,6 +1185,31 @@ model ActiveDispatchers {
   userId       String
   department   DepartmentValue? @relation(fields: [departmentId], references: [id])
   departmentId String?
+}
+
+model DispatchChat {
+  id        String       @id @default(uuid())
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @default(now()) @updatedAt
+  message   String       @db.Text
+  // creator = null ? dispatcher : unit
+  creator   ChatCreator? @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId String?
+}
+
+model ChatCreator {
+  id                String             @id @default(uuid())
+  officer           Officer?           @relation(fields: [officerId], references: [id])
+  officerId         String?
+  deputy            EmsFdDeputy?       @relation(fields: [emsFdDeputyId], references: [id])
+  emsFdDeputyId     String?
+  combinedUnit      CombinedLeoUnit?   @relation(fields: [combinedLeoId], references: [id])
+  combinedLeoId     String?
+  combinedEmsFdUnit CombinedEmsFdUnit? @relation(fields: [combinedEmsFdId], references: [id])
+  combinedEmsFdId   String?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @default(now()) @updatedAt
+  DispatchChat      DispatchChat[]
 }
 
 // 911 calls & bolos
@@ -1479,6 +1508,7 @@ model EmsFdDeputy {
   CombinedEmsFdUnit         CombinedEmsFdUnit?     @relation(fields: [combinedEmsFdUnitId], references: [id])
   combinedEmsFdUnitId       String?
   EmsFdIncident             EmsFdIncident[]        @relation("emsFdIncidentCreator")
+  ChatCreator               ChatCreator[]
 }
 
 model EmsFdIncident {

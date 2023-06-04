@@ -336,6 +336,15 @@ export type ActiveDispatchers = Prisma.ActiveDispatchers & {
   department?: DepartmentValue | null;
 };
 
+export type DispatchChat = Prisma.DispatchChat & {
+  /** null = Dispatch */
+  creator: ChatCreator | null;
+};
+
+export type ChatCreator = Prisma.ChatCreator & {
+  unit: Officer | CombinedLeoUnit | EmsFdDeputy | CombinedEmsFdUnit;
+};
+
 export type Call911 = Prisma.Call911 & {
   position: Position | null;
   situationCode: StatusValue | null;
