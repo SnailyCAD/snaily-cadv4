@@ -11,12 +11,15 @@ import { useCall911State } from "state/dispatch/call-911-state";
 import { shallow } from "zustand/shallow";
 import { isUnitCombinedEmsFd } from "@snailycad/utils";
 import { useActiveIncidents } from "./useActiveIncidents";
+import { useMapPlayersStore } from "./use-map-players";
+import { findPlayerFromUnit } from "lib/map/create-map-units-from-active-units.ts";
 
 export function useActiveDeputies() {
   const { user } = useAuth();
   const { activeDeputies, setActiveDeputies } = useDispatchState();
   const { state, execute } = useFetch();
   const setActiveDeputy = useEmsFdState((state) => state.setActiveDeputy);
+  const playerState = useMapPlayersStore();
 
   const incidentsState = useActiveIncidents();
   const call911State = useCall911State(
@@ -79,10 +82,10 @@ export function useActiveDeputies() {
   );
 
   const handleState = React.useCallback(
-    (data: (EmsFdDeputy | CombinedEmsFdUnit)[]) => {
-      setActiveDeputies(data);
+    (activeDeputiesData: (EmsFdDeputy | CombinedEmsFdUnit)[]) => {
+      setActiveDeputies(activeDeputiesData);
 
-      const activeDeputy = data.find((v) => {
+      const activeDeputy = activeDeputiesData.find((v) => {
         if (isUnitCombinedEmsFd(v)) {
           return v.deputies.some((v) => v.userId === user?.id);
         }
@@ -93,6 +96,19 @@ export function useActiveDeputies() {
       if (activeDeputy) {
         setActiveDeputy(activeDeputy);
       }
+
+      // update the player state with the unit
+      const players = Array.from(playerState.players.values());
+      const newPlayers = playerState.players;
+
+      for (const player of players) {
+        const deputy = activeDeputiesData.find((deputy) => findPlayerFromUnit(player, deputy));
+        if (deputy) {
+          newPlayers.set(player.identifier, { ...player, unit: deputy });
+        }
+      }
+
+      playerState.setPlayers(newPlayers);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [user?.id],
