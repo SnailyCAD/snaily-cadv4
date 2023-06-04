@@ -4,11 +4,11 @@ ALTER TABLE "BleeterPost" ADD COLUMN     "creatorId" TEXT;
 -- CreateTable
 CREATE TABLE "BleeterProfile" (
     "id" TEXT NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
     "handle" VARCHAR(255) NOT NULL,
     "isVerified" BOOLEAN DEFAULT false,
     "bio" TEXT,
     "userId" TEXT NOT NULL,
-    "citizenId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -35,9 +35,6 @@ CREATE UNIQUE INDEX "BleeterProfile_userId_key" ON "BleeterProfile"("userId");
 
 -- AddForeignKey
 ALTER TABLE "BleeterProfile" ADD CONSTRAINT "BleeterProfile_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "BleeterProfile" ADD CONSTRAINT "BleeterProfile_citizenId_fkey" FOREIGN KEY ("citizenId") REFERENCES "Citizen"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "BleeterProfileFollow" ADD CONSTRAINT "BleeterProfileFollow_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
