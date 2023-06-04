@@ -166,30 +166,16 @@ model DiscordRoles {
   id      String @id @default(cuid())
   guildId String
 
-  leoRole             DiscordRole?  @relation("leoRole", fields: [leoRoleId], references: [id])
-  leoRoleId           String?
-  leoRoles            DiscordRole[] @relation("leoRoles")
-  leoSupervisorRole   DiscordRole?  @relation("leoSupervisorRole", fields: [leoSupervisorRoleId], references: [id])
-  leoSupervisorRoleId String?
-  leoSupervisorRoles  DiscordRole[] @relation("leoSupervisorRoles")
-  emsFdRole           DiscordRole?  @relation("emsFdRole", fields: [emsFdRoleId], references: [id])
-  emsFdRoleId         String?
-  emsFdRoles          DiscordRole[] @relation("emsFdRoles")
-  dispatchRole        DiscordRole?  @relation("dispatchRole", fields: [dispatchRoleId], references: [id])
-  dispatchRoleId      String?
-  dispatchRoles       DiscordRole[] @relation("dispatchRoles")
-  towRole             DiscordRole?  @relation("towRole", fields: [towRoleId], references: [id])
-  towRoleId           String?
-  towRoles            DiscordRole[] @relation("towRoles")
-  taxiRole            DiscordRole?  @relation("taxiRole", fields: [taxiRoleId], references: [id])
-  taxiRoleId          String?
-  taxiRoles           DiscordRole[] @relation("taxiRoles")
-  adminRole           DiscordRole?  @relation("adminRole", fields: [adminRoleId], references: [id])
-  adminRoleId         String?
-  adminRoles          DiscordRole[] @relation("adminRoles")
-  whitelistedRoleId   String?
-  whitelistedRole     DiscordRole?  @relation("whitelistedRole", fields: [whitelistedRoleId], references: [id])
-  courthouseRoles     DiscordRole[] @relation("courthouseRoles")
+  leoRoles           DiscordRole[] @relation("leoRoles")
+  leoSupervisorRoles DiscordRole[] @relation("leoSupervisorRoles")
+  emsFdRoles         DiscordRole[] @relation("emsFdRoles")
+  dispatchRoles      DiscordRole[] @relation("dispatchRoles")
+  towRoles           DiscordRole[] @relation("towRoles")
+  taxiRoles          DiscordRole[] @relation("taxiRoles")
+  adminRoles         DiscordRole[] @relation("adminRoles")
+  whitelistedRoleId  String?
+  whitelistedRole    DiscordRole?  @relation("whitelistedRole", fields: [whitelistedRoleId], references: [id])
+  courthouseRoles    DiscordRole[] @relation("courthouseRoles")
 
   adminRolePermissions         String[]
   leoRolePermissions           String[]
@@ -205,27 +191,21 @@ model DiscordRoles {
 }
 
 model DiscordRole {
-  id                    String         @id @unique
-  name                  String
-  guildId               String?
-  discordRoles          DiscordRoles   @relation(fields: [discordRolesId], references: [id])
-  discordRolesId        String
-  leoRoles              DiscordRoles[] @relation("leoRole")
+  id             String       @id @unique
+  name           String
+  guildId        String?
+  discordRoles   DiscordRoles @relation(fields: [discordRolesId], references: [id])
+  discordRolesId String
+  CustomRole     CustomRole[]
+
   leoRolesArr           DiscordRoles[] @relation("leoRoles")
-  emsFdRoles            DiscordRoles[] @relation("emsFdRole")
   emsFdRolesArr         DiscordRoles[] @relation("emsFdRoles")
-  dispatchRoles         DiscordRoles[] @relation("dispatchRole")
-  towRoles              DiscordRoles[] @relation("towRole")
-  taxiRoles             DiscordRoles[] @relation("taxiRole")
-  leoSupervisorRoles    DiscordRoles[] @relation("leoSupervisorRole")
-  adminRoles            DiscordRoles[] @relation("adminRole")
   whitelistedRoles      DiscordRoles[] @relation("whitelistedRole")
   dispatchRolesArr      DiscordRoles[] @relation("dispatchRoles")
   leoSupervisorRolesArr DiscordRoles[] @relation("leoSupervisorRoles")
   taxiRolesArr          DiscordRoles[] @relation("taxiRoles")
   towRolesArr           DiscordRoles[] @relation("towRoles")
   courthouseRoles       DiscordRoles[] @relation("courthouseRoles")
-  CustomRole            CustomRole[]
   adminRolesArr         DiscordRoles[] @relation("adminRoles")
 }
 

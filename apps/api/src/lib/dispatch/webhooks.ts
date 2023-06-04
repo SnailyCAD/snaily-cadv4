@@ -90,7 +90,7 @@ export async function createPanicButtonEmbed(
 
   const unitName = isCombined ? null : `${unit.citizen.name} ${unit.citizen.surname}`;
   const template = isCombined
-    ? options.cad.miscCadSettings.pairedUnitSymbol
+    ? options.cad.miscCadSettings.pairedUnitTemplate
     : options.cad.miscCadSettings.callsignTemplate;
 
   const callsign = generateCallsign(unit as any, template);
