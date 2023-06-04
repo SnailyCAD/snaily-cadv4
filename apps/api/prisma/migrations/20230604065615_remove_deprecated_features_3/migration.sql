@@ -1,15 +1,3 @@
-/*
-  Warnings:
-
-  - You are about to drop the column `adminRoleId` on the `DiscordRoles` table. All the data in the column will be lost.
-  - You are about to drop the column `dispatchRoleId` on the `DiscordRoles` table. All the data in the column will be lost.
-  - You are about to drop the column `emsFdRoleId` on the `DiscordRoles` table. All the data in the column will be lost.
-  - You are about to drop the column `leoRoleId` on the `DiscordRoles` table. All the data in the column will be lost.
-  - You are about to drop the column `leoSupervisorRoleId` on the `DiscordRoles` table. All the data in the column will be lost.
-  - You are about to drop the column `taxiRoleId` on the `DiscordRoles` table. All the data in the column will be lost.
-  - You are about to drop the column `towRoleId` on the `DiscordRoles` table. All the data in the column will be lost.
-
-*/
 -- DropForeignKey
 ALTER TABLE "DiscordRoles" DROP CONSTRAINT "DiscordRoles_adminRoleId_fkey";
 

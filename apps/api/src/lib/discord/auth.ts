@@ -66,21 +66,25 @@ export async function updateMemberRolesLogin<
     const cad = await prisma.cad.findFirst();
 
     const discordMember = await findDiscordMember(user.discordId);
+    // if the user is pending, we don't want to update their roles.
     if (!discordMember?.user?.id || discordMember.pending) return;
 
     const memberObj = {
       roles: discordMember.roles,
     };
 
-    const isLeo = doesDiscordMemberHaveRole(discordRoles.leoRoles, memberObj);
-    const isEmsFd = doesDiscordMemberHaveRole(discordRoles.emsFdRoles, memberObj);
-    const isDispatch = doesDiscordMemberHaveRole(discordRoles.dispatchRoles, memberObj);
-    const isTow = doesDiscordMemberHaveRole(discordRoles.towRoles, memberObj);
-    const isTaxi = doesDiscordMemberHaveRole(discordRoles.taxiRoles, memberObj);
-    const isSupervisor = doesDiscordMemberHaveRole(discordRoles.leoSupervisorRoles, memberObj);
-    const isCourthouse = doesDiscordMemberHaveRole(discordRoles.courthouseRoles, memberObj);
-    const isAdmin = doesDiscordMemberHaveRole(discordRoles.adminRoles, memberObj);
-    const hasWhitelistAccess = doesDiscordMemberHaveRole(discordRoles.whitelistedRoleId, memberObj);
+    const isLeo = doesDiscordMemberHaveCADRole(discordRoles.leoRoles, memberObj);
+    const isEmsFd = doesDiscordMemberHaveCADRole(discordRoles.emsFdRoles, memberObj);
+    const isDispatch = doesDiscordMemberHaveCADRole(discordRoles.dispatchRoles, memberObj);
+    const isTow = doesDiscordMemberHaveCADRole(discordRoles.towRoles, memberObj);
+    const isTaxi = doesDiscordMemberHaveCADRole(discordRoles.taxiRoles, memberObj);
+    const isSupervisor = doesDiscordMemberHaveCADRole(discordRoles.leoSupervisorRoles, memberObj);
+    const isCourthouse = doesDiscordMemberHaveCADRole(discordRoles.courthouseRoles, memberObj);
+    const isAdmin = doesDiscordMemberHaveCADRole(discordRoles.adminRoles, memberObj);
+    const hasWhitelistAccess = doesDiscordMemberHaveCADRole(
+      discordRoles.whitelistedRoleId,
+      memberObj,
+    );
 
     const grantablePermissions = {
       leo: { permissions: discordRoles.leoRolePermissions, value: isLeo },
@@ -125,7 +129,7 @@ export async function updateMemberRolesLogin<
       whitelistStatus: makeWhitelistStatus(cad?.whitelisted ?? false, hasWhitelistAccess),
       rank:
         user.rank !== Rank.OWNER
-          ? doesDiscordMemberHaveRole(discordRoles.adminRoleId, { roles: discordMember.roles })
+          ? doesDiscordMemberHaveCADRole(discordRoles.adminRoles, { roles: discordMember.roles })
             ? Rank.ADMIN
             : Rank.USER
           : undefined,
@@ -142,18 +146,29 @@ export async function updateMemberRolesLogin<
   }
 }
 
-function doesDiscordMemberHaveRole(
-  cadRoles: DiscordRole[] | string | null,
+/**
+ * check if the provided Discord Member has the provided CAD Roles.
+ *
+ * @returns `undefined` if the CAD doesn't have any roles specified,
+ * otherwise `true` if the member has any of the roles specified,
+ * otherwise `false`.
+ */
+function doesDiscordMemberHaveCADRole(
+  cadRolesOrRoleId: DiscordRole[] | string | null,
   member: { roles: string[] },
 ) {
-  if (!cadRoles) return undefined;
+  // if the CAD doesn't have any roles specified,
+  // return `undefined` to not update the CAD user's permissions.
+  if (!cadRolesOrRoleId) return undefined;
 
-  if (Array.isArray(cadRoles)) {
-    if (cadRoles.length <= 0) return undefined;
-    return cadRoles.some((role) => member.roles.includes(role.id));
+  if (Array.isArray(cadRolesOrRoleId)) {
+    // if the CAD doesn't have any roles specified,
+    // return `undefined` to not update the CAD user's permissions.
+    if (cadRolesOrRoleId.length <= 0) return undefined;
+    return cadRolesOrRoleId.some((role) => member.roles.includes(role.id));
   }
 
-  return member.roles.includes(cadRoles);
+  return member.roles.includes(cadRolesOrRoleId);
 }
 
 function makeWhitelistStatus(cadWhitelisted: boolean, hasRole: boolean | undefined) {
