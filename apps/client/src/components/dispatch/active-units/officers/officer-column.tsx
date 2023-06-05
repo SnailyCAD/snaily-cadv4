@@ -109,6 +109,10 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
             shouldShowSplit ? void handleunMerge(officer.id) : handleMerge(officer);
           },
         },
+        {
+          name: t("privateMessage"),
+          onClick: () => openModal(ModalIds.PrivateMessage, officer.id),
+        },
         ...dispatchCodes,
       ]}
     >

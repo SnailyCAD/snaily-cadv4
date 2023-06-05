@@ -90,6 +90,7 @@ export const enum ModalIds {
   CreateTemporaryUnit = "CreateTemporaryUnitModal",
   BusinessSearch = "BusinessSearchModal",
   AlertPurgeIncidents = "AlertPurgeIncidents",
+  PrivateMessage = "PrivateMessage",
 
   SearchMedicalRecord = "SearchMedicalRecordModal",
   CreateMedicalRecord = "CreateMedicalRecordModal",

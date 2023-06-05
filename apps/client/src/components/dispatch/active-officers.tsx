@@ -31,6 +31,7 @@ import { generateContrastColor } from "lib/table/get-contrasting-text-color";
 import dynamic from "next/dynamic";
 import { Permissions } from "@snailycad/permissions";
 import { usePermission } from "hooks/usePermission";
+import { PrivateMessagesModal } from "./active-units/private-messages/private-messages-modal";
 
 const CreateTemporaryUnitModal = dynamic(
   async () =>
@@ -264,6 +265,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
         />
       ) : null}
       {isDispatch && showCreateTemporaryUnitButton ? <CreateTemporaryUnitModal /> : null}
+      {isDispatch ? <PrivateMessagesModal /> : null}
     </div>
   );
 }
