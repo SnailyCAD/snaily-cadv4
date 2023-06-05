@@ -84,6 +84,7 @@ export function DepartmentTimeLogsTab() {
         <p>{t("Management.noUnits")}</p>
       ) : (
         <Table
+          isLoading={asyncTable.isInitialLoading}
           tableState={tableState}
           data={asyncTable.items.map((item) => {
             const hours = item.hours < 1 ? "Less than 1" : item.hours;

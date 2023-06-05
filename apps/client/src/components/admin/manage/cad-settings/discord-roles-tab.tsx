@@ -51,7 +51,6 @@ export function DiscordRolesTab() {
     towRoles: makeRoleValues(discordRoles.towRoles),
     taxiRoles: makeRoleValues(discordRoles.taxiRoles),
     courthouseRoles: makeRoleValues(discordRoles.courthouseRoles),
-    adminRoleId: discordRoles.adminRoleId,
     whitelistedRoleId: discordRoles.whitelistedRoleId,
     adminRolePermissions: makeValue(discordRoles.adminRolePermissions),
     leoRolePermissions: makeValue(discordRoles.leoRolePermissions),

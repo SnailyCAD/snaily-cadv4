@@ -72,13 +72,13 @@ export function CADFeaturesTab() {
   function createInitialOptions() {
     const obj = {} as Partial<Record<Feature, any>>;
 
-    const cadFeatures = cad?.features?.options;
-
-    for (const key in cadFeatures) {
-      let option = cadFeatures[key as keyof typeof cadFeatures];
+    const cadFeatures = cad?.features;
+    for (const _key in cadFeatures) {
+      const key = _key as Feature;
+      let option = cadFeatures.options?.[key];
 
       if (key === Feature.LICENSE_EXAMS) {
-        if (option.length === 0) {
+        if (!option || option.length === 0) {
           option = Object.values(LicenseExamType);
         }
       }

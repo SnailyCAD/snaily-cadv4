@@ -166,30 +166,16 @@ model DiscordRoles {
   id      String @id @default(cuid())
   guildId String
 
-  leoRole             DiscordRole?  @relation("leoRole", fields: [leoRoleId], references: [id])
-  leoRoleId           String?
-  leoRoles            DiscordRole[] @relation("leoRoles")
-  leoSupervisorRole   DiscordRole?  @relation("leoSupervisorRole", fields: [leoSupervisorRoleId], references: [id])
-  leoSupervisorRoleId String?
-  leoSupervisorRoles  DiscordRole[] @relation("leoSupervisorRoles")
-  emsFdRole           DiscordRole?  @relation("emsFdRole", fields: [emsFdRoleId], references: [id])
-  emsFdRoleId         String?
-  emsFdRoles          DiscordRole[] @relation("emsFdRoles")
-  dispatchRole        DiscordRole?  @relation("dispatchRole", fields: [dispatchRoleId], references: [id])
-  dispatchRoleId      String?
-  dispatchRoles       DiscordRole[] @relation("dispatchRoles")
-  towRole             DiscordRole?  @relation("towRole", fields: [towRoleId], references: [id])
-  towRoleId           String?
-  towRoles            DiscordRole[] @relation("towRoles")
-  taxiRole            DiscordRole?  @relation("taxiRole", fields: [taxiRoleId], references: [id])
-  taxiRoleId          String?
-  taxiRoles           DiscordRole[] @relation("taxiRoles")
-  adminRole           DiscordRole?  @relation("adminRole", fields: [adminRoleId], references: [id])
-  adminRoleId         String?
-  adminRoles          DiscordRole[] @relation("adminRoles")
-  whitelistedRoleId   String?
-  whitelistedRole     DiscordRole?  @relation("whitelistedRole", fields: [whitelistedRoleId], references: [id])
-  courthouseRoles     DiscordRole[] @relation("courthouseRoles")
+  leoRoles           DiscordRole[] @relation("leoRoles")
+  leoSupervisorRoles DiscordRole[] @relation("leoSupervisorRoles")
+  emsFdRoles         DiscordRole[] @relation("emsFdRoles")
+  dispatchRoles      DiscordRole[] @relation("dispatchRoles")
+  towRoles           DiscordRole[] @relation("towRoles")
+  taxiRoles          DiscordRole[] @relation("taxiRoles")
+  adminRoles         DiscordRole[] @relation("adminRoles")
+  whitelistedRoleId  String?
+  whitelistedRole    DiscordRole?  @relation("whitelistedRole", fields: [whitelistedRoleId], references: [id])
+  courthouseRoles    DiscordRole[] @relation("courthouseRoles")
 
   adminRolePermissions         String[]
   leoRolePermissions           String[]
@@ -205,27 +191,21 @@ model DiscordRoles {
 }
 
 model DiscordRole {
-  id                    String         @id @unique
-  name                  String
-  guildId               String?
-  discordRoles          DiscordRoles   @relation(fields: [discordRolesId], references: [id])
-  discordRolesId        String
-  leoRoles              DiscordRoles[] @relation("leoRole")
+  id             String       @id @unique
+  name           String
+  guildId        String?
+  discordRoles   DiscordRoles @relation(fields: [discordRolesId], references: [id])
+  discordRolesId String
+  CustomRole     CustomRole[]
+
   leoRolesArr           DiscordRoles[] @relation("leoRoles")
-  emsFdRoles            DiscordRoles[] @relation("emsFdRole")
   emsFdRolesArr         DiscordRoles[] @relation("emsFdRoles")
-  dispatchRoles         DiscordRoles[] @relation("dispatchRole")
-  towRoles              DiscordRoles[] @relation("towRole")
-  taxiRoles             DiscordRoles[] @relation("taxiRole")
-  leoSupervisorRoles    DiscordRoles[] @relation("leoSupervisorRole")
-  adminRoles            DiscordRoles[] @relation("adminRole")
   whitelistedRoles      DiscordRoles[] @relation("whitelistedRole")
   dispatchRolesArr      DiscordRoles[] @relation("dispatchRoles")
   leoSupervisorRolesArr DiscordRoles[] @relation("leoSupervisorRoles")
   taxiRolesArr          DiscordRoles[] @relation("taxiRoles")
   towRolesArr           DiscordRoles[] @relation("towRoles")
   courthouseRoles       DiscordRoles[] @relation("courthouseRoles")
-  CustomRole            CustomRole[]
   adminRolesArr         DiscordRoles[] @relation("adminRoles")
 }
 
@@ -275,7 +255,7 @@ model User {
   vehicles             RegisteredVehicle[]
   weapons              Weapon[]
   notifications        Notification[]
-  executedNotifictions Notification[]       @relation("executor")
+  executedNotifictions Notification[]         @relation("executor")
   medicalRecords       MedicalRecord[]
   bleeterPosts         BleeterPost[]
   businesses           Business[]
@@ -292,6 +272,8 @@ model User {
   ActiveTone           ActiveTone[]
   AuditLog             AuditLog[]
   DoctorVisit          DoctorVisit[]
+  BleeterProfile       BleeterProfile?
+  BleeterProfileFollow BleeterProfileFollow[]
 }
 
 model UserSession {
@@ -798,15 +780,45 @@ model Notification {
 }
 
 // bleeter
+model BleeterProfile {
+  id         String                 @id @default(cuid())
+  name       String                 @db.VarChar(255)
+  handle     String                 @unique @db.VarChar(255)
+  isVerified Boolean?               @default(false)
+  bio        String?                @db.Text
+  user       User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String                 @unique
+  createdAt  DateTime               @default(now())
+  updatedAt  DateTime               @default(now()) @updatedAt
+  followers  BleeterProfileFollow[] @relation("followers")
+  following  BleeterProfileFollow[] @relation("following")
+  posts      BleeterPost[]
+}
+
+model BleeterProfileFollow {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  followerProfile    BleeterProfile? @relation(name: "followers", fields: [followerProfileId], references: [id], onDelete: Cascade)
+  followerProfileId  String?
+  followingProfile   BleeterProfile? @relation(name: "following", fields: [followingProfileId], references: [id], onDelete: Cascade)
+  followingProfileId String?
+}
+
 model BleeterPost {
-  id            String  @id @default(uuid())
-  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id            String          @id @default(uuid())
+  creator       BleeterProfile? @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId     String?
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String
-  title         String  @db.VarChar(255)
-  body          String? @db.Text
+  title         String          @db.VarChar(255)
+  body          String?         @db.Text
   bodyData      Json?
-  imageId       String? @db.VarChar(255)
-  imageBlurData String? @db.Text
+  imageId       String?         @db.VarChar(255)
+  imageBlurData String?         @db.Text
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt

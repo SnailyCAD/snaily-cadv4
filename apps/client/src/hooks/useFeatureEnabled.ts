@@ -34,13 +34,13 @@ export function useFeatureEnabled(
   const options = React.useMemo(() => {
     const obj = {} as Partial<Record<Feature, any>>;
 
-    const cadFeatures = _features?.options;
+    const cadFeatures = _features;
+    for (const _key in cadFeatures) {
+      const key = _key as Feature;
+      let option = cadFeatures.options?.[key];
 
-    for (const key in cadFeatures) {
-      let option = cadFeatures[key as keyof typeof cadFeatures];
-
-      if (key === Feature.LICENSE_EXAMS && Array.isArray(option)) {
-        if (option.length === 0) {
+      if (key === Feature.LICENSE_EXAMS) {
+        if (!option || option.length === 0) {
           option = Object.values(LicenseExamType);
         }
       }

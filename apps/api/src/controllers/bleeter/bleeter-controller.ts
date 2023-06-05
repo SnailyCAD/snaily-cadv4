@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
-import { BLEETER_SCHEMA } from "@snailycad/schemas";
+import { BLEETER_PROFILE_SCHEMA, BLEETER_SCHEMA } from "@snailycad/schemas";
 import {
   Controller,
   Get,
@@ -31,17 +31,23 @@ import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 export class BleeterController {
   @Get("/")
   @Description("Get **all** bleeter posts, ordered by `createdAt`")
-  async getBleeterPosts() {
-    const posts = await prisma.bleeterPost.findMany({
-      orderBy: { createdAt: "desc" },
-      include: {
-        user: {
-          select: { username: true },
+  async getBleeterPosts(@Context("user") user: User) {
+    const [posts, totalCount] = await prisma.$transaction([
+      prisma.bleeterPost.findMany({
+        orderBy: { createdAt: "desc" },
+        include: {
+          user: { select: { username: true } },
+          creator: true,
         },
-      },
+      }),
+      prisma.bleeterPost.count(),
+    ]);
+
+    const userBleeterProfile = await prisma.bleeterProfile.findUnique({
+      where: { userId: user.id },
     });
 
-    return posts;
+    return { posts, totalCount, userBleeterProfile };
   }
 
   @Get("/:id")
@@ -49,7 +55,10 @@ export class BleeterController {
   async getPostById(@PathParams("id") postId: string): Promise<APITypes.GetBleeterByIdData> {
     const post = await prisma.bleeterPost.findUnique({
       where: { id: postId },
-      include: { user: { select: { username: true } } },
+      include: {
+        user: { select: { username: true } },
+        creator: true,
+      },
     });
 
     if (!post) {
@@ -64,8 +73,12 @@ export class BleeterController {
   async createPost(
     @BodyParams() body: unknown,
     @Context("user") user: User,
-  ): Promise<APITypes.PostBleeterByIdData> {
+  ): Promise<APITypes.PostBleeterData> {
     const data = validateSchema(BLEETER_SCHEMA, body);
+
+    const userProfile = await prisma.bleeterProfile.findUnique({
+      where: { userId: user.id },
+    });
 
     const post = await prisma.bleeterPost.create({
       data: {
@@ -73,8 +86,12 @@ export class BleeterController {
         body: data.body,
         bodyData: data.bodyData,
         userId: user.id,
+        creatorId: userProfile?.id,
       },
-      include: { user: { select: { username: true } } },
+      include: {
+        user: { select: { username: true } },
+        creator: true,
+      },
     });
 
     return post;
@@ -108,7 +125,10 @@ export class BleeterController {
         body: data.body,
         bodyData: data.bodyData,
       },
-      include: { user: { select: { username: true } } },
+      include: {
+        user: { select: { username: true } },
+        creator: true,
+      },
     });
 
     return updated;
@@ -184,5 +204,46 @@ export class BleeterController {
     });
 
     return true;
+  }
+
+  @Post("/new-experience/profile")
+  @Description("Create a new bleeter profile")
+  async createBleeterProfile(
+    @Context("user") user: User,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PostNewExperienceProfileData> {
+    const data = validateSchema(BLEETER_PROFILE_SCHEMA, body);
+
+    const existingUserProfile = await prisma.bleeterProfile.findUnique({
+      where: { userId: user.id },
+    });
+
+    const existingProfileWithHandle = await prisma.bleeterProfile.findUnique({
+      where: { handle: data.handle.toLowerCase() },
+    });
+
+    if (existingProfileWithHandle && existingProfileWithHandle.id !== existingUserProfile?.id) {
+      throw new BadRequest("handleTaken");
+    }
+
+    const profile = await prisma.bleeterProfile.upsert({
+      where: { userId: user.id },
+      update: { bio: data.bio, name: data.name, handle: data.handle.toLowerCase() },
+      create: {
+        handle: data.handle.toLowerCase(),
+        name: data.name,
+        bio: data.bio,
+        userId: user.id,
+      },
+    });
+
+    await prisma.bleeterPost.updateMany({
+      where: { userId: user.id, creatorId: { equals: null } },
+      data: {
+        creatorId: profile.id,
+      },
+    });
+
+    return profile;
   }
 }
