@@ -13,7 +13,7 @@ export function SendMessageForm(props: Props) {
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute({
-      path: `/dispatch/${props.unitId}/private-message`,
+      path: `/dispatch/private-message/${props.unitId}`,
       method: "POST",
       data: values,
     });

@@ -22,7 +22,7 @@ export function PrivateMessagesModal() {
       if (!unitId) return [];
 
       const { json } = await execute<DispatchChat[]>({
-        path: `/dispatch/${unitId}/private-message`,
+        path: `/dispatch/private-message/${unitId}`,
         method: "GET",
       });
 
@@ -45,7 +45,7 @@ export function PrivateMessagesModal() {
       title={t("privateMessage")}
       className="w-[600px]"
     >
-      <ul className="overflow-auto h-[350px]">
+      <ul className="overflow-auto h-[350px] flex flex-col gap-y-4">
         {isLoading ? (
           fakeMessages.map((_, idx) => (
             <li
