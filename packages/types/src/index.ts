@@ -341,9 +341,9 @@ export type DispatchChat = Prisma.DispatchChat & {
   creator: ChatCreator | null;
 };
 
-export type ChatCreator = Prisma.ChatCreator & {
+export interface ChatCreator {
   unit: Officer | CombinedLeoUnit | EmsFdDeputy | CombinedEmsFdUnit;
-};
+}
 
 export type Call911 = Prisma.Call911 & {
   position: Position | null;
