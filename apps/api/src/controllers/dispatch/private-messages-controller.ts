@@ -142,6 +142,11 @@ export class DispatchPrivateMessagesController {
       },
     });
 
+    // only Dispatch is allowed to create the initial chat and send the first chat message
+    if (!creator && !isDispatch) {
+      throw new ExtendedBadRequest({ message: "onlyDispatchCanCreateInitialChat" });
+    }
+
     const chat = await prisma.dispatchChat.create({
       data: {
         message,
@@ -154,7 +159,6 @@ export class DispatchPrivateMessagesController {
           },
         },
       },
-      // todo: variable for this
       include: dispatchChatIncludes,
     });
 
