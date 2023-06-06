@@ -5,7 +5,7 @@
   "scripts": {
     "dev": " yarn next dev",
     "watch": "npm run dev",
-    "build": "yarn validate && yarn next-build",
+    "build": "yarn validate && yarn workspace @snailycad/ui build && yarn next-build",
     "next-build": "yarn next build",
     "start": "yarn next start",
     "start:proxy-experimental": "yarn next start --port 80",
