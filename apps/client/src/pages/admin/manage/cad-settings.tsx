@@ -16,7 +16,8 @@ const Tabs = {
     { ssr: false },
   ),
   MiscFeatures: dynamic(
-    async () => (await import("components/admin/manage/cad-settings/misc-settings-tab")).MiscFeatures,
+    async () =>
+      (await import("components/admin/manage/cad-settings/misc-settings-tab")).MiscFeatures,
     { ssr: false },
   ),
   DefaultPermissionsTab: dynamic(
