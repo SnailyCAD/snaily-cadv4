@@ -1,6 +1,7 @@
 import { Input } from "@snailycad/ui";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { useFormikContext } from "formik";
+import { useTranslations } from "use-intl";
 
 export function MaxLicensePointsSection() {
   const { errors, values, handleChange } = useFormikContext<{
@@ -9,21 +10,19 @@ export function MaxLicensePointsSection() {
     weaponLicenseMaxPoints: number;
     waterLicenseMaxPoints: number;
   }>();
+  const t = useTranslations("MiscSettingsTab");
 
   return (
     <section>
       <header className="mb-3">
-        <h3 className="font-semibold text-xl">Max License Points</h3>
-        <p className="text-neutral-700 dark:text-gray-400">
-          Define the maximum amount of license points a citizen can have before their license is
-          suspended.
-        </p>
+        <h3 className="font-semibold text-xl">{t("maxLicensePoints")}</h3>
+        <p className="text-neutral-700 dark:text-gray-400">{t("maxLicensePointsDescription")}</p>
       </header>
 
       <SettingsFormField
         errorMessage={errors.driversLicenseMaxPoints}
-        description="The maximum amount of license points a citizen can have before their drivers license is suspended (Default: 12)"
-        label="Max License Points"
+        label={t("maxDriverLicensePoints")}
+        description={t("maxDriverLicensePointsDescription")}
         action="short-input"
       >
         <Input
@@ -36,8 +35,8 @@ export function MaxLicensePointsSection() {
 
       <SettingsFormField
         errorMessage={errors.pilotLicenseMaxPoints}
-        description="The maximum amount of license points a citizen can have before their pilots license is suspended (Default: 12)"
-        label="Max License Points"
+        label={t("maxPilotLicensePoints")}
+        description={t("maxPilotLicensePointsDescription")}
         action="short-input"
       >
         <Input
@@ -50,8 +49,8 @@ export function MaxLicensePointsSection() {
 
       <SettingsFormField
         errorMessage={errors.weaponLicenseMaxPoints}
-        description="The maximum amount of license points a citizen can have before their weapon license is suspended (Default: 12)"
-        label="Max License Points"
+        label={t("maxWeaponLicensePoints")}
+        description={t("maxWeaponLicensePointsDescription")}
         action="short-input"
       >
         <Input
@@ -64,8 +63,8 @@ export function MaxLicensePointsSection() {
 
       <SettingsFormField
         errorMessage={errors.waterLicenseMaxPoints}
-        description="The maximum amount of license points a citizen can have before their water license is suspended (Default: 12)"
-        label="Max License Points"
+        label={t("maxWaterLicensePoints")}
+        description={t("maxWaterLicensePointsDescription")}
         action="short-input"
       >
         <Input

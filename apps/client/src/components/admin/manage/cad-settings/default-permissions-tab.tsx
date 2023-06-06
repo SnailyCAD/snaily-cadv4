@@ -1,7 +1,7 @@
 import { Form, Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
 
-import { Button, Loader, SwitchField, TabsContent, TextField } from "@snailycad/ui";
+import { Alert, Button, Loader, SwitchField, TabsContent, TextField } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import type { cad } from "@snailycad/types";
@@ -9,7 +9,6 @@ import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { toastMessage } from "lib/toastMessage";
 import type { PutCADDefaultPermissionsData } from "@snailycad/types/api";
 import { usePermissionsModal } from "hooks/use-permissions-modal";
-import { formatPermissionName } from "../users/modals/manage-permissions-modal";
 import { PermissionNames, getPermissions, defaultPermissions } from "@snailycad/permissions";
 
 export function DefaultPermissionsTab() {
@@ -17,6 +16,7 @@ export function DefaultPermissionsTab() {
   const { state, execute } = useFetch();
   const { cad, setCad } = useAuth();
   const { DEPRECATED_PERMISSIONS, groups, handleToggleAll } = usePermissionsModal({});
+  const t = useTranslations("Permissions");
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
@@ -57,16 +57,13 @@ export function DefaultPermissionsTab() {
       value={SettingsTabs.DefaultPermissions}
       className="mt-3"
     >
-      <h2 className="text-2xl font-semibold">Default Permissions</h2>
+      <h2 className="text-2xl font-semibold">{t("defaultPermissions")}</h2>
 
-      <p className="my-3 text-neutral-700 dark:text-gray-200">
-        These permissions will be automatically granted to every user that creates a new account.
-      </p>
+      <p className="my-3 text-neutral-700 dark:text-gray-200">{t("defaultPermissionsInfo")}</p>
 
-      <p className="text-neutral-700 dark:text-gray-200">
-        <b>Warning:</b> It is recommended to only change this if you are sure every user that
-        creates an account should be granted with the selected permissions.
-      </p>
+      <Alert type="warning" title={t("warning")}>
+        {t("defaultPermissionsWarning")}
+      </Alert>
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ values, setFieldValue, setValues }) => (
@@ -86,7 +83,7 @@ export function DefaultPermissionsTab() {
                 .map((group) => {
                   const filtered = group.permissions.filter((v) => {
                     const isIncludedInValue = v.toLowerCase().includes(values.search.toLowerCase());
-                    const isIncludedInName = formatPermissionName(v)
+                    const isIncludedInName = t(v)
                       .toLowerCase()
                       .includes(values.search.toLowerCase());
 
@@ -107,14 +104,13 @@ export function DefaultPermissionsTab() {
                           size="xs"
                           onPress={() => handleToggleAll(group, values, setValues)}
                         >
-                          Toggle all
+                          {t("toggleAll")}
                         </Button>
                       </header>
 
                       <div className="grid grid-cols-1 md:grid-cols-3 mt-5">
                         {filtered.map((permission) => {
-                          const formattedName = formatPermissionName(permission);
-
+                          const formattedName = t(permission);
                           if (DEPRECATED_PERMISSIONS.includes(permission)) {
                             return null;
                           }

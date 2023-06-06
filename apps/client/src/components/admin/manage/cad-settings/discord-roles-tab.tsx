@@ -9,7 +9,6 @@ import type { DiscordRole, DiscordRoles } from "@snailycad/types";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { FormField } from "components/form/FormField";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
-import { formatPermissionName } from "../users/modals/manage-permissions-modal";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { toastMessage } from "lib/toastMessage";
 import type { GetCADDiscordRolesData, PostCADDiscordRolesData } from "@snailycad/types/api";
@@ -28,6 +27,7 @@ export function DiscordRolesTab() {
   const { cad } = useAuth();
   const discordRoles = cad?.discordRoles ?? ({} as DiscordRoles);
   const t = useTranslations("DiscordRolesTab");
+  const tPermission = useTranslations("Permissions");
 
   const [roles, setRoles] = React.useState<Omit<DiscordRole, "discordRolesId">[]>(
     discordRoles.roles ?? [],
@@ -52,14 +52,14 @@ export function DiscordRolesTab() {
     taxiRoles: makeRoleValues(discordRoles.taxiRoles),
     courthouseRoles: makeRoleValues(discordRoles.courthouseRoles),
     whitelistedRoleId: discordRoles.whitelistedRoleId,
-    adminRolePermissions: makeValue(discordRoles.adminRolePermissions),
-    leoRolePermissions: makeValue(discordRoles.leoRolePermissions),
-    leoSupervisorRolePermissions: makeValue(discordRoles.leoSupervisorRolePermissions),
-    emsFdRolePermissions: makeValue(discordRoles.emsFdRolePermissions),
-    dispatchRolePermissions: makeValue(discordRoles.dispatchRolePermissions),
-    towRolePermissions: makeValue(discordRoles.towRolePermissions),
-    taxiRolePermissions: makeValue(discordRoles.taxiRolePermissions),
-    courthouseRolePermissions: makeValue(discordRoles.courthouseRolePermissions),
+    adminRolePermissions: makeValue(discordRoles.adminRolePermissions, tPermission),
+    leoRolePermissions: makeValue(discordRoles.leoRolePermissions, tPermission),
+    leoSupervisorRolePermissions: makeValue(discordRoles.leoSupervisorRolePermissions, tPermission),
+    emsFdRolePermissions: makeValue(discordRoles.emsFdRolePermissions, tPermission),
+    dispatchRolePermissions: makeValue(discordRoles.dispatchRolePermissions, tPermission),
+    towRolePermissions: makeValue(discordRoles.towRolePermissions, tPermission),
+    taxiRolePermissions: makeValue(discordRoles.taxiRolePermissions, tPermission),
+    courthouseRolePermissions: makeValue(discordRoles.courthouseRolePermissions, tPermission),
   };
 
   async function refreshRoles() {
@@ -388,9 +388,9 @@ export function DiscordRolesTab() {
   );
 }
 
-function makeValue(permissions: Permissions[] | undefined) {
+function makeValue(permissions: Permissions[] | undefined, t: (key: string) => string) {
   if (!permissions || !Array.isArray(permissions)) return [] as SelectValue[];
-  return permissions.map((v) => ({ value: formatPermissionName(v), label: v }));
+  return permissions.map((v) => ({ value: t(v), label: v }));
 }
 
 function SelectPermissionsField({
@@ -404,6 +404,7 @@ function SelectPermissionsField({
 }) {
   const { values, errors, handleChange } = useFormikContext<any>();
   const t = useTranslations("DiscordRolesTab");
+  const tPermission = useTranslations("Permissions");
 
   return (
     <FormField errorMessage={errors[name] as string} className="mt-2" label={t("permissions")}>
@@ -415,7 +416,7 @@ function SelectPermissionsField({
         isMulti
         value={values[name]}
         values={permissions.map((v) => ({
-          label: formatPermissionName(v),
+          label: tPermission(v),
           value: v,
         }))}
       />

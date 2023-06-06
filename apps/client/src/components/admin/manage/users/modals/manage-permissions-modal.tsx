@@ -21,6 +21,7 @@ export function ManagePermissionsModal({ user, onUpdate, isReadOnly }: Props) {
 
   const t = useTranslations("Management");
   const common = useTranslations("Common");
+  const tPermission = useTranslations("Permissions");
   const { closeModal, isOpen } = useModal();
   const userPermissions = getPermissions(user);
   const { state, execute } = useFetch();
@@ -92,7 +93,7 @@ export function ManagePermissionsModal({ user, onUpdate, isReadOnly }: Props) {
 
                     <div className="grid grid-cols-1 md:grid-cols-3">
                       {filtered.map((permission) => {
-                        const formattedName = formatPermissionName(permission);
+                        const formattedName = tPermission(permission);
                         const isDisabled = user.roles?.some((r) =>
                           r.permissions.includes(permission),
                         );
@@ -141,12 +142,4 @@ function makePermissionsData(data: Record<PermissionNames, boolean>) {
   );
 
   return Object.fromEntries(newPermissions);
-}
-
-export function formatPermissionName(permission: string) {
-  // todo: whoops
-  if (permission === Permissions.ManageDMV) return "Manage DMV";
-  if (permission === Permissions.ManageCADSettings) return "Manage CAD-Settings";
-
-  return permission.match(/[A-Z][a-z]+/g)?.join(" ") ?? permission;
 }

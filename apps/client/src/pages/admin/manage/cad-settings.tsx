@@ -12,11 +12,11 @@ import { GeneralSettingsTab } from "components/admin/manage/cad-settings/general
 const Tabs = {
   CADFeaturesTab: dynamic(
     async () =>
-      (await import("components/admin/manage/cad-settings/CADFeaturesTab")).CADFeaturesTab,
+      (await import("components/admin/manage/cad-settings/cad-features-tab")).CADFeaturesTab,
     { ssr: false },
   ),
   MiscFeatures: dynamic(
-    async () => (await import("components/admin/manage/cad-settings/MiscFeatures")).MiscFeatures,
+    async () => (await import("components/admin/manage/cad-settings/misc-settings-tab")).MiscFeatures,
     { ssr: false },
   ),
   DefaultPermissionsTab: dynamic(

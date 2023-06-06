@@ -124,7 +124,7 @@ export function CADFeaturesTab() {
 
   return (
     <TabsContent value={SettingsTabs.Features} className="mt-3">
-      <h2 className="text-2xl font-semibold">Enable or disable features</h2>
+      <h2 className="text-2xl font-semibold">{tFeature("enableOrDisableFeatures")}</h2>
 
       <TextField
         label={common("search")}
@@ -132,7 +132,7 @@ export function CADFeaturesTab() {
         name="search"
         value={search}
         onChange={(value) => setSearch(value)}
-        placeholder="Find features.."
+        placeholder={tFeature("searchFeatures")}
       />
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>

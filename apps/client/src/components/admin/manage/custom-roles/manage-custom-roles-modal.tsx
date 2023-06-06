@@ -12,7 +12,6 @@ import { Select } from "components/form/Select";
 import { ModalIds } from "types/ModalIds";
 import { CUSTOM_ROLE_SCHEMA } from "@snailycad/schemas";
 import { Permissions } from "@snailycad/permissions";
-import { formatPermissionName } from "../users/modals/manage-permissions-modal";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import type {
   GetCADDiscordRolesData,
@@ -35,6 +34,7 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Management");
+  const tPermission = useTranslations("Permissions");
 
   function handleClose() {
     onClose?.();
@@ -151,7 +151,7 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
                 closeMenuOnSelect={false}
                 values={Object.values(Permissions).map((permission) => ({
                   value: permission,
-                  label: formatPermissionName(permission),
+                  label: tPermission(permission),
                 }))}
                 value={values.permissions}
                 name="permissions"

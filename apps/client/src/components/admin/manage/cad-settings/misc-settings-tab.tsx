@@ -23,6 +23,7 @@ export function MiscFeatures() {
   const [bgId, setBgId] = React.useState<(File | string) | null>(null);
 
   const common = useTranslations("Common");
+  const t = useTranslations("MiscSettingsTab");
   const { state, execute } = useFetch();
   const { cad, setCad } = useAuth();
   const { DIVISIONS } = useFeatureEnabled();
@@ -154,32 +155,32 @@ export function MiscFeatures() {
 
   return (
     <TabsContent value={SettingsTabs.MiscSettings} className="mt-3">
-      <h2 className="text-2xl font-semibold">Misc. Settings</h2>
+      <h2 className="text-2xl font-semibold">{t("miscSettings")}</h2>
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, errors, values }) => (
           <Form className="mt-3 space-y-5">
             <section>
-              <h3 className="font-semibold text-xl mb-3">CAD Related</h3>
+              <h3 className="font-semibold text-xl mb-3">{t("cadRelated")}</h3>
 
               <ImageSelectInput
-                label="Auth screen header image"
+                label={t("authScreenHeaderImage")}
                 image={headerId}
                 setImage={setHeaderId}
                 valueKey="authScreenHeaderImageId"
               />
 
               <ImageSelectInput
-                label="Auth screen background image"
+                label={t("authScreenBackgroundImage")}
                 image={bgId}
                 setImage={setBgId}
                 valueKey="authScreenBgImageId"
               />
 
               <SettingsFormField
-                description="This will show on an embed when the CAD is shared on social media. Best to keep short and simple"
+                label={t("cadOpenGraphDescription")}
+                description={t("cadOpenGraphDescriptionInfo")}
                 errorMessage={errors.cadOGDescription}
-                label="CAD Open Graph Description"
               >
                 <Textarea
                   name="cadOGDescription"
@@ -195,31 +196,31 @@ export function MiscFeatures() {
             <TemplateSection />
 
             <section>
-              <h3 className="font-semibold text-xl mb-3">Other</h3>
+              <h3 className="font-semibold text-xl mb-3">{t("other")}</h3>
 
               <SettingsFormField
                 action="short-input"
-                description="The prefix for weights (e.g.: kg, lbs)"
+                label={t("weightPrefix")}
+                description={t("weightPrefixDescription")}
                 errorMessage={errors.weightPrefix}
-                label="Weight Prefix"
               >
                 <Input name="weightPrefix" value={values.weightPrefix} onChange={handleChange} />
               </SettingsFormField>
 
               <SettingsFormField
                 action="short-input"
-                description="The prefix for heights (e.g.: cm, inch)"
+                label={t("heightPrefix")}
+                description={t("heightPrefixDescription")}
                 errorMessage={errors.heightPrefix}
-                label="Height Prefix"
               >
                 <Input name="heightPrefix" value={values.heightPrefix} onChange={handleChange} />
               </SettingsFormField>
 
               <SettingsFormField
                 action="short-input"
-                description="The maximum amount of businesses a citizen can create. (Default: Infinity)"
+                label={t("maxBusinessesPerCitizen")}
+                description={t("maxBusinessesPerCitizenDescription")}
                 errorMessage={errors.maxBusinessesPerCitizen}
-                label="Max businesses per citizen"
               >
                 <Input
                   name="maxBusinessesPerCitizen"
@@ -232,9 +233,9 @@ export function MiscFeatures() {
 
               <SettingsFormField
                 action="short-input"
-                description="The maximum amount of citizens a user can create. (Default: Infinity)"
+                label={t("maxCitizensPerUser")}
+                description={t("maxCitizensPerUserDescription")}
                 errorMessage={errors.maxCitizensPerUser}
-                label="Max citizens per user"
               >
                 <Input
                   name="maxCitizensPerUser"
@@ -247,9 +248,9 @@ export function MiscFeatures() {
 
               <SettingsFormField
                 action="short-input"
-                description="The maximum amount of units a user can create with a certain department. (Default: Infinity)"
+                label={t("maxDepartmentsPerUnitPerUser")}
+                description={t("maxDepartmentsPerUnitPerUserDescription")}
                 errorMessage={errors.maxDepartmentsEachPerUser}
-                label="Max departments per unit per user"
               >
                 <Input
                   name="maxDepartmentsEachPerUser"
@@ -262,9 +263,9 @@ export function MiscFeatures() {
 
               {DIVISIONS ? (
                 <SettingsFormField
-                  label="Max divisions per officer"
+                  label={t("maxDivisionsPerOfficer")}
                   action="short-input"
-                  description="The maximum amount of divisions per officer. (Default: Infinity)"
+                  description={t("maxDivisionsPerOfficerDescription")}
                   errorMessage={errors.maxDivisionsPerOfficer}
                 >
                   <Input
@@ -278,9 +279,9 @@ export function MiscFeatures() {
               ) : null}
 
               <SettingsFormField
-                label="Max assignments to incidents per officer"
+                label={t("maxAssignmentsToIncidentsPerOfficer")}
                 action="short-input"
-                description="The maximum amount of how many incidents an officer can be assigned to.  (Default: Infinity)"
+                description={t("maxAssignmentsToIncidentsPerOfficerDescription")}
                 errorMessage={errors.maxAssignmentsToIncidents}
               >
                 <Input
@@ -293,9 +294,9 @@ export function MiscFeatures() {
               </SettingsFormField>
 
               <SettingsFormField
-                label="Max assignments to calls per unit"
+                label={t("maxAssignmentsToCallsPerUnit")}
                 action="short-input"
-                description="The maximum amount of how many calls a unit can be assigned to. (Default: Infinity)"
+                description={t("maxAssignmentsToCallsPerUnitDescription")}
                 errorMessage={errors.maxAssignmentsToCalls}
               >
                 <Input
@@ -308,9 +309,9 @@ export function MiscFeatures() {
               </SettingsFormField>
 
               <SettingsFormField
-                label="Max officers per user"
+                label={t("maxOfficersPerUser")}
                 action="short-input"
-                description="The maximum amount of officers per user. (Default: Infinity)"
+                description={t("maxOfficersPerUserDescription")}
                 errorMessage={errors.maxOfficersPerUser}
               >
                 <Input
@@ -324,9 +325,9 @@ export function MiscFeatures() {
 
               <SettingsFormField
                 action="short-input"
-                description="The maximum allowed plate length. (Default: 8)"
+                description={t("maxPlateLengthDescription")}
                 errorMessage={errors.maxPlateLength}
-                label="Max plate length"
+                label={t("maxPlateLength")}
               >
                 <Input
                   name="maxPlateLength"
@@ -338,9 +339,9 @@ export function MiscFeatures() {
               </SettingsFormField>
 
               <SettingsFormField
-                description="The total jail time calculated from an arrest report will be converted to the scale set below. This will automatically checkout the citizen from jail after the time has ended in realtime."
+                description={t("jailTimeScalingDescription")}
                 errorMessage={errors.jailTimeScaling}
-                label="Jail Time Scaling"
+                label={t("jailTimeScaling")}
               >
                 <Select
                   values={[
