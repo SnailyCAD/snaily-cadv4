@@ -1,4 +1,4 @@
-import { Context } from "@tsed/common";
+import { Context, Req } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { ContentType, Get, Header, Post } from "@tsed/schema";
 import { BodyParams, PathParams } from "@tsed/platform-params";
@@ -17,6 +17,9 @@ import {
 import { findUnit } from "lib/leo/findUnit";
 import { hasPermission } from "@snailycad/permissions";
 import { User } from "@snailycad/types";
+import { getActiveOfficer } from "lib/leo/activeOfficer";
+import { getActiveDeputy } from "lib/get-active-ems-fd-deputy";
+import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 
 const dispatchChatIncludes = Prisma.validator<Prisma.DispatchChatSelect>()({
   creator: {
@@ -46,6 +49,8 @@ export class DispatchPrivateMessagesController {
     @PathParams("unitId") unitId: string,
     @Context("user") user: User,
     @Header("is-from-dispatch") isFromDispatch: "true" | "false",
+    @Context() ctx: Context,
+    @Req() request: Req,
   ): Promise<DispatchChat[]> {
     const isDispatch =
       isFromDispatch === "true" &&
@@ -55,7 +60,17 @@ export class DispatchPrivateMessagesController {
       });
 
     if (!isDispatch) {
-      // todo: unit validation
+      const [activeOfficer, activeDeputy] = await Promise.all([
+        getActiveOfficer({ ctx, user, req: request }).catch(() => null),
+        getActiveDeputy({ ctx, user, req: request }).catch(() => null),
+      ]);
+
+      const activeUnit = activeOfficer ?? activeDeputy;
+      const { unit } = await findUnit(unitId);
+
+      if (unit?.id !== activeUnit?.id) {
+        throw new ExtendedBadRequest({ message: "Insufficient permissions" });
+      }
     }
 
     const unitMessages = await prisma.dispatchChat.findMany({
@@ -85,6 +100,8 @@ export class DispatchPrivateMessagesController {
     @BodyParams("message") message: string,
     @Context("user") user: User,
     @Header("is-from-dispatch") isFromDispatch: "true" | "false",
+    @Context() ctx: Context,
+    @Req() request: Req,
   ): Promise<DispatchChat & { creator: any }> {
     const isDispatch =
       isFromDispatch === "true" &&
@@ -93,7 +110,7 @@ export class DispatchPrivateMessagesController {
         permissionsToCheck: [Permissions.Dispatch],
       });
 
-    const { type } = await findUnit(unitId);
+    const { type, unit } = await findUnit(unitId);
     const types = {
       leo: "officerId",
       "ems-fd": "emsFdDeputyId",
@@ -102,7 +119,16 @@ export class DispatchPrivateMessagesController {
     } as const;
 
     if (!isDispatch) {
-      // todo: unit validation
+      const [activeOfficer, activeDeputy] = await Promise.all([
+        getActiveOfficer({ ctx, user, req: request }).catch(() => null),
+        getActiveDeputy({ ctx, user, req: request }).catch(() => null),
+      ]);
+
+      const activeUnit = activeOfficer ?? activeDeputy;
+
+      if (unit?.id !== activeUnit?.id) {
+        throw new ExtendedBadRequest({ message: "Insufficient permissions" });
+      }
     }
 
     const creator = await prisma.chatCreator.findFirst({
