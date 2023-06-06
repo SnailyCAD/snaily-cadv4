@@ -9,7 +9,6 @@ import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { toastMessage } from "lib/toastMessage";
 import type { PutCADDefaultPermissionsData } from "@snailycad/types/api";
 import { usePermissionsModal } from "hooks/use-permissions-modal";
-import { formatPermissionName } from "../users/modals/manage-permissions-modal";
 import { PermissionNames, getPermissions, defaultPermissions } from "@snailycad/permissions";
 
 export function DefaultPermissionsTab() {
@@ -17,6 +16,7 @@ export function DefaultPermissionsTab() {
   const { state, execute } = useFetch();
   const { cad, setCad } = useAuth();
   const { DEPRECATED_PERMISSIONS, groups, handleToggleAll } = usePermissionsModal({});
+  const tPermission = useTranslations("Permissions");
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
@@ -86,7 +86,7 @@ export function DefaultPermissionsTab() {
                 .map((group) => {
                   const filtered = group.permissions.filter((v) => {
                     const isIncludedInValue = v.toLowerCase().includes(values.search.toLowerCase());
-                    const isIncludedInName = formatPermissionName(v)
+                    const isIncludedInName = tPermission(v)
                       .toLowerCase()
                       .includes(values.search.toLowerCase());
 
@@ -113,8 +113,7 @@ export function DefaultPermissionsTab() {
 
                       <div className="grid grid-cols-1 md:grid-cols-3 mt-5">
                         {filtered.map((permission) => {
-                          const formattedName = formatPermissionName(permission);
-
+                          const formattedName = tPermission(permission);
                           if (DEPRECATED_PERMISSIONS.includes(permission)) {
                             return null;
                           }

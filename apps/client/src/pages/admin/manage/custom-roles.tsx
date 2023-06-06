@@ -190,7 +190,10 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
       customRoles,
       session: user,
       messages: {
-        ...(await getTranslations(["admin", "values", "common"], user?.locale ?? locale)),
+        ...(await getTranslations(
+          ["admin", "cad-settings", "values", "common"],
+          user?.locale ?? locale,
+        )),
       },
     },
   };
