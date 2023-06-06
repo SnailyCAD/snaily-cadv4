@@ -77,6 +77,7 @@
     "unitArrivedOnScene": "<span>{unit}</span> прибыл на место происшествия.",
     "unitPressedPanicButton": "<span>{unit}</span> нажал кнопку паники",
     "unitEnRoute": "<span>{unit}</span> в пути.",
-    "unitOnScene": "<span>{unit}</span> на месте происшествия."
+    "unitOnScene": "<span>{unit}</span> на месте происшествия.",
+    "unitSituationCodeChange": "<span>{unit}</span> сменил их ситуационный код на <span>{situationCode}</span>."
   }
 }

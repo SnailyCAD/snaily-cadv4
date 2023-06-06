@@ -9,6 +9,17 @@
     "headerImage": "Изображение заголовка",
     "bleetTitle": "Название поста",
     "bleetBody": "Текст поста",
+    "followers": "Подписчики",
+    "following": "Подписки",
+    "follow": "Подписаться",
+    "unfollow": "Отписаться",
+    "editProfile": "Редактировать профиль",
+    "posts": "Посты",
+    "myProfile": "Мой Профиль",
+    "save": "Сохранить",
+    "getStarted": "Введение",
+    "unVerifyProfile": "Убрать Верификацию",
+    "verifyProfile": "Верифицировать",
     "alert_deleteBleet": "Вы уверены, что хотите удалить \"<span>{title}</span>\"? Это действие необратимо."
   }
 }

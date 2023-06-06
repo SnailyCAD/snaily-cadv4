@@ -39,6 +39,7 @@
     "fullRowColor": "Строка",
     "userApiToken": "Пользовательский Api токен",
     "reGenerateToken": "Сгенерировать токен заново",
+    "token": "Токен",
     "discord": "Discord",
     "steam": "Steam",
     "connectSteam": "Подключить аккаунт Steam",
@@ -52,7 +53,8 @@
     "otherSounds": "Другие звуки",
     "unavailableSounds": "Недоступные звуки",
     "unavailableSoundsMessage": "Этот звук недоступен. Он может быть добавлен администратором",
-    "userApiTokenDescription": "Этот токен может быть использован для подключения к SnailyCAD API"
+    "userApiTokenDescription": "Этот токен может быть использован для подключения к SnailyCAD API",
+    "developerMode": "Режим Разработчика"
   },
   "Notifications": {
     "CITIZEN_DELETED": "<span>{citizen}</span> был удалён. Причина: {reason}"
