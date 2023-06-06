@@ -1,19 +1,21 @@
 import { Input } from "@snailycad/ui";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { useFormikContext } from "formik";
+import { useTranslations } from "use-intl";
 
 export function InactivityTimeoutSection() {
   const { errors, values, handleChange } = useFormikContext<any>();
+  const t = useTranslations("MiscSettingsTab");
 
   return (
     <section>
-      <h3 className="font-semibold text-xl mb-3">Inactivity Timeouts</h3>
+      <h3 className="font-semibold text-xl mb-3">{t("inactivityTimeouts")}</h3>
 
       <SettingsFormField
         optional
         action="short-input"
-        label="911-call Inactivity Timeout"
-        description="Calls that have not been updated after this timeout will be automatically ended. The format must be in minutes. (Default: none)"
+        label={t("911CallInactivityTimeout")}
+        description={t("911CallInactivityTimeoutDescription")}
         errorMessage={errors.call911InactivityTimeout}
       >
         <Input
@@ -28,8 +30,8 @@ export function InactivityTimeoutSection() {
       <SettingsFormField
         optional
         action="short-input"
-        label="Incident Inactivity Timeout"
-        description="Incidents that have not been updated after this timeout will be automatically ended. The format must be in minutes. (Default: none)"
+        label={t("incidentInactivityTimeout")}
+        description={t("incidentInactivityTimeoutDescription")}
         errorMessage={errors.incidentInactivityTimeout}
       >
         <Input
@@ -44,8 +46,8 @@ export function InactivityTimeoutSection() {
       <SettingsFormField
         optional
         action="short-input"
-        label="Unit Inactivity Timeout"
-        description="Units that have not been updated after this timeout will be automatically set off-duty. The format must be in minutes. (Default: none)"
+        label={t("unitInactivityTimeout")}
+        description={t("unitInactivityTimeoutDescription")}
         errorMessage={errors.unitInactivityTimeout}
       >
         <Input
@@ -60,8 +62,8 @@ export function InactivityTimeoutSection() {
       <SettingsFormField
         optional
         action="short-input"
-        label="Active Dispatcher Inactivity Timeout"
-        description="Active Dispatchers that have not been updated after this timeout will be automatically set off-duty. The format must be in minutes. (Default: none)"
+        label={t("activeDispatcherInactivityTimeout")}
+        description={t("activeDispatcherInactivityTimeoutDescription")}
         errorMessage={errors.activeDispatchersInactivityTimeout}
       >
         <Input
@@ -76,8 +78,8 @@ export function InactivityTimeoutSection() {
       <SettingsFormField
         optional
         action="short-input"
-        label="BOLO Inactivity Timeout"
-        description="BOLOs that have not been updated after this timeout will be automatically ended. The format must be in minutes. (Default: none)"
+        label={t("boloInactivityTimeout")}
+        description={t("boloInactivityTimeoutDescription")}
         errorMessage={errors.boloInactivityTimeout}
       >
         <Input
@@ -92,8 +94,8 @@ export function InactivityTimeoutSection() {
       <SettingsFormField
         optional
         action="short-input"
-        label="Active Warrants Inactivity Timeout"
-        description="Active Warrants that have not been updated after this timeout will be automatically set as non-active. The format must be in minutes. (Default: none)"
+        label={t("activeWarrantsInactivityTimeout")}
+        description={t("activeWarrantsInactivityTimeoutDescription")}
         errorMessage={errors.activeWarrantsInactivityTimeout}
       >
         <Input

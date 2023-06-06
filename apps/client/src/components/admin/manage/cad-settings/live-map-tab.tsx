@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Button, Input, Loader, TabsContent } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
 import { Form, Formik, FormikHelpers } from "formik";
@@ -102,19 +103,19 @@ export function LiveMapTab() {
             <SettingsFormField
               description={
                 <span>
-                  This URL will communicate to the live_map resource in your FiveM server.{" "}
+                  {t("liveMapUrlDescription")}{" "}
                   <Link
                     className="mt-1 underline inline-flex items-center gap-1 text-neutral-700 dark:text-gray-200"
                     target="_blank"
                     href="https://docs.snailycad.org/docs/fivem-integrations/live-map"
                   >
-                    Learn more
+                    {common("learnMore")}
                     <BoxArrowUpRight className="inline-block" />
                   </Link>
                 </span>
               }
               errorMessage={errors.liveMapURL}
-              label="Live Map URL"
+              label={t("liveMapUrl")}
             >
               <Input
                 type="url"
@@ -128,26 +129,25 @@ export function LiveMapTab() {
             <SettingsFormField
               description={
                 <span>
-                  These are the map tiles that will be shown in the live map. These must be named in
-                  the following format:{" "}
+                  {t("mapTilesDescription")}{" "}
                   {TILE_NAMES.map((name, idx) => (
-                    <>
+                    <React.Fragment key={idx}>
                       <code key={idx}>{name}</code>
                       {idx === TILE_NAMES.length - 1 ? "" : ", "}
-                    </>
+                    </React.Fragment>
                   ))}
                   <Link
                     className="flex mt-3 underline items-center gap-1 text-neutral-700 dark:text-gray-200"
                     target="_blank"
                     href="https://docs.snailycad.org/docs/fivem-integrations/live-map/how-to-set-custom-map-files"
                   >
-                    Learn more
+                    {common("learnMore")}
                     <BoxArrowUpRight className="inline-block" />
                   </Link>
                 </span>
               }
               errorMessage={errors.tiles}
-              label="Map Tiles"
+              label={t("mapTiles")}
             >
               <Input
                 multiple

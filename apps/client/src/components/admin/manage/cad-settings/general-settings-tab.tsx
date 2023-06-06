@@ -20,7 +20,7 @@ export function GeneralSettingsTab() {
   const { state, execute } = useFetch();
   const { cad, setCad } = useAuth();
   const { AOP } = useFeatureEnabled();
-
+  const t = useTranslations("CadSettings");
   const common = useTranslations("Common");
 
   async function onSubmit(
@@ -91,7 +91,7 @@ export function GeneralSettingsTab() {
 
   return (
     <TabsContent value={SettingsTabs.GeneralSettings}>
-      <h2 className="text-2xl font-semibold">General Settings</h2>
+      <h2 className="text-2xl font-semibold">{t("generalSettings")}</h2>
 
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, values, errors }) => (
@@ -99,8 +99,8 @@ export function GeneralSettingsTab() {
             <SettingsFormField
               errorMessage={errors.name}
               action="input"
-              label="CAD Name"
-              description="The name to the CAD. This can be the name of your community, etc."
+              label={t("cadName")}
+              description={t("cadNameDescription")}
             >
               <Input onChange={handleChange} value={values.name} name="name" />
             </SettingsFormField>
@@ -108,14 +108,14 @@ export function GeneralSettingsTab() {
             <SettingsFormField
               errorMessage={errors.name}
               action="input"
-              label="CAD Logo"
-              description={
-                <span className="text-base italic">
-                  <b>Note:</b> page reload may be required.
-                </span>
-              }
+              label={t("cadLogo")}
+              description={t.rich("cadLogoDescription", {
+                span: (children) => (
+                  <span className="text-base italic font-semibold">{children}</span>
+                ),
+              })}
             >
-              <ImageSelectInput label="CAD Logo" image={logo} setImage={setLogo} />
+              <ImageSelectInput label={t("cadLogo")} image={logo} setImage={setLogo} />
             </SettingsFormField>
 
             {AOP ? (
@@ -123,8 +123,8 @@ export function GeneralSettingsTab() {
                 optional
                 errorMessage={errors.steamApiKey}
                 action="input"
-                label="Area of Play"
-                description="The area where roleplay is currently active"
+                label={t("areaOfPlay")}
+                description={t("areaOfPlayDescription")}
               >
                 <Input onChange={handleChange} value={values.areaOfPlay} name="areaOfPlay" />
               </SettingsFormField>
@@ -134,8 +134,8 @@ export function GeneralSettingsTab() {
               optional
               errorMessage={errors.registrationCode}
               action="input"
-              label="Registration Code"
-              description="Users will need to enter this code when creating an account."
+              label={t("registrationCode")}
+              description={t("registrationCodeDescription")}
             >
               <PasswordInput
                 onChange={handleChange}
@@ -148,8 +148,8 @@ export function GeneralSettingsTab() {
             <SettingsFormField
               errorMessage={errors.roleplayEnabled}
               action="checkbox"
-              label="Roleplay Enabled"
-              description="When disabled, this will display a banner that says that roleplay must be stopped."
+              label={t("roleplayEnabled")}
+              description={t("roleplayEnabledDescription")}
             >
               <Toggle
                 name="roleplayEnabled"
@@ -159,13 +159,13 @@ export function GeneralSettingsTab() {
             </SettingsFormField>
 
             <section>
-              <h3 className="font-semibold text-xl mb-3">Whitelisting</h3>
+              <h3 className="font-semibold text-xl mb-3">{t("whitelisting")}</h3>
 
               <SettingsFormField
                 errorMessage={errors.whitelisted}
                 action="checkbox"
-                label="CAD Whitelist"
-                description="The CAD will be whitelisted. Any user that registers will need to be reviewed, they can be accepted or denied"
+                label={t("cadWhitelist")}
+                description={t("cadWhitelistDescription")}
               >
                 <Toggle
                   name="whitelisted"
@@ -177,8 +177,8 @@ export function GeneralSettingsTab() {
               <SettingsFormField
                 errorMessage={errors.towWhitelisted}
                 action="checkbox"
-                label="Tow Whitelist"
-                description="Tow will be whitelisted, the permission can be given to any user."
+                label={t("towWhitelist")}
+                description={t("towWhitelistDescription")}
               >
                 <Toggle
                   name="towWhitelisted"
@@ -190,8 +190,8 @@ export function GeneralSettingsTab() {
               <SettingsFormField
                 errorMessage={errors.taxiWhitelisted}
                 action="checkbox"
-                label="Taxi Whitelist"
-                description="Taxi will be whitelisted, the permission can be given to any user."
+                label={t("taxiWhitelist")}
+                description={t("taxiWhitelistDescription")}
               >
                 <Toggle
                   name="taxiWhitelisted"
@@ -203,8 +203,8 @@ export function GeneralSettingsTab() {
               <SettingsFormField
                 errorMessage={errors.businessWhitelisted}
                 action="checkbox"
-                label="Business Whitelist"
-                description="Businesses will be whitelisted, they will need to be reviewed, they can be accepted or denied before they can be used."
+                label={t("businessWhitelist")}
+                description={t("businessWhitelistDescription")}
               >
                 <Toggle
                   name="businessWhitelisted"
