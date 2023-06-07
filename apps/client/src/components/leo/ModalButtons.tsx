@@ -61,9 +61,6 @@ export function ModalButtons({ initialActiveOfficer }: { initialActiveOfficer: A
   const { makeImageUrl } = useImageUrl();
 
   const { codes10 } = useValues();
-  const panicButtonCode = codes10.values.find(
-    (code) => code.shouldDo === ShouldDoType.PANIC_BUTTON,
-  );
 
   async function handlePanic() {
     if (!activeOfficer) return;
@@ -145,7 +142,7 @@ export function ModalButtons({ initialActiveOfficer }: { initialActiveOfficer: A
           );
         })}
 
-        {PANIC_BUTTON && panicButtonCode ? (
+        {PANIC_BUTTON ? (
           <Button
             id="panicButton"
             disabled={state === "loading" || isButtonDisabled}
