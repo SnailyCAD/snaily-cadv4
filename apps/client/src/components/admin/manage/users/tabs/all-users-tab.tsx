@@ -90,13 +90,15 @@ export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
           };
         })}
         columns={[
-          { header: "Username", accessorKey: "username" },
-          { header: "Rank", accessorKey: "rank" },
-          { header: "Admin Permissions", accessorKey: "isAdmin" },
-          { header: "LEO Permissions", accessorKey: "isLeo" },
-          { header: "EMS/FD Permissions", accessorKey: "isEmsFd" },
-          { header: "Dispatch Permissions", accessorKey: "isDispatch" },
-          cad?.whitelisted ? { header: "Whitelist Status", accessorKey: "whitelistStatus" } : null,
+          { header: t("username"), accessorKey: "username" },
+          { header: t("rank"), accessorKey: "rank" },
+          { header: t("adminPermissions"), accessorKey: "isAdmin" },
+          { header: t("leoPermissions"), accessorKey: "isLeo" },
+          { header: t("emsFdPermissions"), accessorKey: "isEmsFd" },
+          { header: t("dispatchPermissions"), accessorKey: "isDispatch" },
+          cad?.whitelisted
+            ? { header: t("whitelistStatus"), accessorKey: "whitelistStatus" }
+            : null,
 
           hasManagePermissions ? { header: common("actions"), accessorKey: "actions" } : null,
         ]}

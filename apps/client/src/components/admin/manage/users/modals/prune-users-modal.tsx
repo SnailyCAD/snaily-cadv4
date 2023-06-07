@@ -50,8 +50,8 @@ export function PruneUsersModal() {
     if (json) {
       toastMessage({
         icon: "success",
-        title: "Users Pruned",
-        message: `Pruned ${json.count} users`,
+        title: t("usersPruned"),
+        message: t("usersPrunedMessage", { count: json.count }),
       });
       closeModal(ModalIds.PruneUsers);
     }
@@ -61,7 +61,7 @@ export function PruneUsersModal() {
     <Modal
       onClose={() => closeModal(ModalIds.PruneUsers)}
       className="w-[600px]"
-      title="Prune Users"
+      title={t("pruneUsers")}
       isOpen={isOpen(ModalIds.PruneUsers)}
     >
       <SelectField
@@ -73,9 +73,9 @@ export function PruneUsersModal() {
         selectedKey={days}
         label={t("lastSeen")}
         options={[
-          { label: "30 Days", value: "30" },
-          { label: "3 Months", value: "90" },
-          { label: "6 Months", value: "180" },
+          { label: t("30Days"), value: "30" },
+          { label: t("3Months"), value: "90" },
+          { label: t("6Months"), value: "180" },
         ]}
       />
 
@@ -83,7 +83,7 @@ export function PruneUsersModal() {
         <Accordion.Item value="unavailable-sounds">
           <Accordion.Trigger
             type="button"
-            title="Click to expand"
+            title={t("clickToExpand")}
             className="accordion-state gap-2 flex items-center justify-between pt-1 text-lg font-semibold text-left"
           >
             <h3 className="text-xl font-semibold leading-none">{t("inactiveUsers")}</h3>
@@ -106,7 +106,7 @@ export function PruneUsersModal() {
                   </p>
                 </div>
                 <Button type="button" size="xs" onPress={() => asyncTable.remove(user.id)}>
-                  Keep
+                  {t("keep")}
                 </Button>
               </div>
             ))}

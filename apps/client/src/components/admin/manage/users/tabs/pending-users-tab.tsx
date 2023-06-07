@@ -50,7 +50,7 @@ export function PendingUsersTab(props: GetManageUsersData) {
       />
 
       {asyncTable.noItemsAvailable ? (
-        <p>There are no users pending access.</p>
+        <p>{t("noUsersPending")}</p>
       ) : (
         <Table
           tableState={tableState}
@@ -80,7 +80,7 @@ export function PendingUsersTab(props: GetManageUsersData) {
             ),
           }))}
           columns={[
-            { header: "Username", accessorKey: "username" },
+            { header: t("username"), accessorKey: "username" },
             { header: common("actions"), accessorKey: "actions" },
           ]}
         />

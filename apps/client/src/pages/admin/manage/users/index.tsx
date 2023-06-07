@@ -56,7 +56,7 @@ export default function ManageUsers({ data }: Props) {
 
         {hasManagePermissions ? (
           <div>
-            <Button onClick={() => openModal(ModalIds.PruneUsers)}>Prune Users</Button>
+            <Button onClick={() => openModal(ModalIds.PruneUsers)}>{t("pruneUsers")}</Button>
           </div>
         ) : null}
       </header>

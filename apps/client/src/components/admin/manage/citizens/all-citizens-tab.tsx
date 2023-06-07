@@ -98,7 +98,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
               ) : null}
             </TextField>
 
-            <FormField className="w-40" label="Filter">
+            <FormField className="w-40" label={t("filter")}>
               <Select
                 isClearable
                 value={asyncTable.filters?.userId ?? null}
