@@ -60,7 +60,8 @@
     "waterLicensePoints": "Water License Points",
     "createPreviousRecordsStepDescription": "Here you can optionally add previous records this citizen has had. This is useful for when a citizen has been arrested before.",
     "alert_markCitizenDeceased": "Are you sure you want mark <span>{citizen}</span> as deceased? Only EMS/FD can mark you alive again.",
-    "alert_deleteCitizen": "Are you sure you want to delete <span>{citizen}</span>? This action cannot be undone."
+    "alert_deleteCitizen": "Are you sure you want to delete <span>{citizen}</span>? This action cannot be undone.",
+    "id": "Id"
   },
   "Vehicles": {
     "model": "Model",
@@ -93,8 +94,7 @@
     "transferVehicle": "Transfer Vehicle",
     "trimLevels": "Trim Levels",
     "transferVehicleInfo": "Transfer your <span>{model}</span> to a new owner. This means you will lose ownership of this vehicle and will be unable to manage it further.",
-    "alert_deleteVehicle": "Are you sure you want to delete this vehicle? This action cannot be undone.",
-    "id": "Id"
+    "alert_deleteVehicle": "Are you sure you want to delete this vehicle? This action cannot be undone."
   },
   "Weapons": {
     "model": "Model",
