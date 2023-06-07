@@ -1,6 +1,6 @@
 import { Context, Req } from "@tsed/common";
 import { Controller } from "@tsed/di";
-import { ContentType, Get, Header, Post } from "@tsed/schema";
+import { ContentType, Get, Post } from "@tsed/schema";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/data/prisma";
 import { Socket } from "services/socket-service";
@@ -48,12 +48,12 @@ export class DispatchPrivateMessagesController {
   async getPrivateMessagesForUnit(
     @PathParams("unitId") unitId: string,
     @Context("user") user: User,
-    @Header("is-from-dispatch") isFromDispatch: "true" | "false",
     @Context() ctx: Context,
     @Req() request: Req,
   ): Promise<DispatchChat[]> {
+    const isFromDispatch = request.headers["is-from-dispatch"] === "true";
     const isDispatch =
-      isFromDispatch === "true" &&
+      isFromDispatch &&
       hasPermission({
         userToCheck: user,
         permissionsToCheck: [Permissions.Dispatch],
@@ -99,12 +99,12 @@ export class DispatchPrivateMessagesController {
     @PathParams("unitId") unitId: string,
     @BodyParams("message") message: string,
     @Context("user") user: User,
-    @Header("is-from-dispatch") isFromDispatch: "true" | "false",
     @Context() ctx: Context,
     @Req() request: Req,
   ): Promise<DispatchChat & { creator: any }> {
+    const isFromDispatch = request.headers["is-from-dispatch"] === "true";
     const isDispatch =
-      isFromDispatch === "true" &&
+      isFromDispatch &&
       hasPermission({
         userToCheck: user,
         permissionsToCheck: [Permissions.Dispatch],
