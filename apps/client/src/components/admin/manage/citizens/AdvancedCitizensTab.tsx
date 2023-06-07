@@ -10,11 +10,13 @@ import { X } from "react-bootstrap-icons";
 import { ImportModal } from "components/admin/import/ImportModal";
 import { ModalIds } from "types/ModalIds";
 import type { PostImportCitizensData } from "@snailycad/types/api";
+import { useTranslations } from "use-intl";
 
 export function AdvancedCitizensTab() {
   const [citizens, setCitizens] = React.useState<Record<string, any>>(createInitialCitizen());
   const { gender, ethnicity } = useValues();
   const { state, execute } = useFetch();
+  const t = useTranslations();
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -60,8 +62,7 @@ export function AdvancedCitizensTab() {
               <div className="grid place-items-center">
                 <Button
                   type="button"
-                  className="px-1"
-                  variant="transparent"
+                  className="px-2 py-2 mt-3.5"
                   onPress={() => handleRemoveItem(id)}
                 >
                   <X width={20} height={20} aria-label="Remove item" />
@@ -70,25 +71,26 @@ export function AdvancedCitizensTab() {
 
               <TextField
                 className="w-full"
-                label="Name"
+                label={t("Citizen.name")}
                 defaultValue={value.name}
                 onBlur={(e) => handleChange("name", id, e)}
               />
 
               <TextField
                 className="w-full"
-                label="Surname"
+                label={t("Citizen.surname")}
                 defaultValue={value.surname}
                 onBlur={(e) => handleChange("surname", id, e)}
               />
 
               <TextField
                 type="date"
-                label="Date of Birth"
+                label={t("Citizen.dateOfBirth")}
                 defaultValue={value.surname}
                 onBlur={(e) => handleChange("dateOfBirth", id, e)}
               />
 
+              {/* todo: use async search field (see: manage-citizen-form) */}
               <FormField className="w-full" label="Gender">
                 <Select
                   value={value.gender}
@@ -99,7 +101,7 @@ export function AdvancedCitizensTab() {
                   }))}
                 />
               </FormField>
-              <FormField className="w-full" label="Ethnicity">
+              <FormField className="w-full" label={t("Citizen.ethnicity")}>
                 <Select
                   value={value.ethnicity}
                   onChange={(event) => handleChange("ethnicity", id, event)}
@@ -120,12 +122,12 @@ export function AdvancedCitizensTab() {
               setCitizens((p) => ({ ...p, ...createInitialCitizen() }));
             }}
           >
-            Add citizen
+            {t("Management.addCitizenEntry")}
           </Button>
 
           <Button className="flex items-center gap-2" disabled={state === "loading"} type="submit">
             {state === "loading" ? <Loader /> : null}
-            Submit
+            {t("Management.submit")}
           </Button>
         </div>
       </form>

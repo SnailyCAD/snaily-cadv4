@@ -113,6 +113,8 @@
     "importWeaponsDescription": "Here you can mass import weapons that are registered to a citizen. In the table below you can see all registered weapons.",
     "RAW_WEBHOOKS": "Raw Webhooks",
     "LIVE_MAP": "Live Map",
+    "addCitizenEntry": "Add citizen entry",
+    "submit": "Submit",
     "alert_deleteCustomRole": "Are you sure you want to delete <span>{role}</span>? This action cannot be undone",
     "alert_deleteUnit": "Are you sure you want to delete <span>{unit}</span>? This action cannot be undone!",
     "alert_deleteCustomField": "Are you sure you want to delete this custom field? This action cannot be undone. All values created with this field will also be deleted.",
