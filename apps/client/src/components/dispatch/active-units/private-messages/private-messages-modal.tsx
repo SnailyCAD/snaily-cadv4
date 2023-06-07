@@ -90,9 +90,13 @@ export function PrivateMessagesModal() {
     <Modal
       onClose={handleClose}
       isOpen={isOpen(ModalIds.PrivateMessage)}
-      title={`${t("privateMessage")} - ${unitCallsign} ${unitName}`}
+      title={t("privateMessage")}
       className="w-[600px]"
     >
+      <p className="dark:text-gray-400 text-neutral-700 mb-6 -mt-1">
+        {unitCallsign} {unitName}
+      </p>
+
       <ul className="overflow-auto h-[350px] flex flex-col gap-y-2">
         {isLoading ? (
           fakeMessages.map((_, idx) => (

@@ -125,19 +125,17 @@ export class DispatchPrivateMessagesController {
       }
     }
 
-    const creator = await prisma.chatCreator.findFirst({
+    const chatMessage = await prisma.dispatchChat.findFirst({
       where: {
-        OR: [
-          { officerId: unitId },
-          { emsFdDeputyId: unitId },
-          { combinedEmsFdId: unitId },
-          { combinedLeoId: unitId },
-        ],
+        unitId,
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
 
     // only Dispatch is allowed to create the initial chat and send the first chat message
-    if (!creator && !isDispatch) {
+    if (!chatMessage && !isDispatch) {
       throw new ExtendedBadRequest({ message: "onlyDispatchCanCreateInitialChat" });
     }
 
@@ -149,7 +147,7 @@ export class DispatchPrivateMessagesController {
           connectOrCreate: isDispatch
             ? undefined
             : {
-                where: { id: String(creator?.id) },
+                where: { id: String(chatMessage?.creatorId) },
                 create: {
                   [types[type]]: unitId,
                 },

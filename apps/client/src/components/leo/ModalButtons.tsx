@@ -21,6 +21,8 @@ import dynamic from "next/dynamic";
 import { ImageWrapper } from "components/shared/image-wrapper";
 import { ActiveCallColumn } from "components/dispatch/active-units/officers/active-call-column";
 import { ActiveIncidentColumn } from "components/dispatch/active-units/officers/active-incident-column";
+import { PrivateMessagesButton } from "./private-messages/private-messages-button";
+import { PrivateMessagesModal } from "components/dispatch/active-units/private-messages/private-messages-modal";
 
 const TonesModal = dynamic(
   async () => (await import("components/dispatch/modals/tones-modal")).TonesModal,
@@ -123,6 +125,13 @@ export function ModalButtons({ initialActiveOfficer }: { initialActiveOfficer: A
               unitId={activeOfficer.id}
             />
           </p>
+
+          <p className="flex items-center gap-x-1">
+            <span className="font-semibold">{t("Leo.privateMessages")}: </span>
+            <PrivateMessagesButton unit={activeOfficer} />
+          </p>
+
+          <PrivateMessagesModal />
         </div>
       ) : null}
 

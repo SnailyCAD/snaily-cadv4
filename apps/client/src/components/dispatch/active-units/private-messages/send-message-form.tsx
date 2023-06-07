@@ -7,7 +7,7 @@ import { useTranslations } from "use-intl";
 
 interface Props {
   unitId: string;
-  onSend?: (message: DispatchChat) => void;
+  onSend?(message: DispatchChat): void;
 }
 
 export function SendMessageForm(props: Props) {
@@ -45,7 +45,7 @@ export function SendMessageForm(props: Props) {
   return (
     <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
       {({ values, errors, setFieldValue, submitForm }) => (
-        <Form className="mt-20">
+        <Form className="mt-4">
           <TextField
             label={t("message")}
             value={values.message}

@@ -2,6 +2,7 @@ import { DispatchChat } from "@snailycad/types";
 import { isUnitOfficer } from "@snailycad/utils";
 import { FullDate } from "components/shared/FullDate";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
+import { classNames } from "lib/classNames";
 import { makeUnitName } from "lib/utils";
 
 interface Props {
@@ -16,10 +17,16 @@ export function MessageItem(props: Props) {
     : null;
 
   const unitName = props.message.creator?.unit ? makeUnitName(props.message.creator.unit) : null;
+  const isDispatch = !props.message.creator?.unit;
 
   return (
     <li className="flex flex-col rounded-md gap-y-0.5">
-      <header className="flex items-center gap-1">
+      <header
+        className={classNames(
+          "flex items-center gap-1",
+          isDispatch ? "text-blue-400" : "text-green-400",
+        )}
+      >
         <span className="font-semibold">
           {unitCallsign ?? "Dispatch"} {unitName}
         </span>
