@@ -186,6 +186,7 @@ export async function upsertRecord(options: UpsertRecordOptions) {
           fine: item.fine,
           bail: item.bail,
           jailTime: item.jailTime,
+          communityService: item.communityService,
           penalCode: { connect: { id: item.penalCodeId } },
           records: { connect: { id: ticket.id } },
         },

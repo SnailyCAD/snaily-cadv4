@@ -1,5 +1,5 @@
 import { FormField } from "components/form/FormField";
-import { Input } from "@snailycad/ui";
+import { Input, Textarea } from "@snailycad/ui";
 import type { SelectValue } from "components/form/Select";
 import { useFormikContext } from "formik";
 import { useTranslations } from "next-intl";
@@ -77,8 +77,10 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
   const { setFieldValue, values, errors } = useFormikContext<any>();
   const violationErrors = (errors.violations ?? {}) as Record<
     string,
-    { fine?: string; jailTime?: string; bail?: string; counts?: string }
+    { fine?: string; jailTime?: string; bail?: string; communityService?: string; counts?: string }
   >;
+
+  console.log({ violationErrors });
 
   const current = values.violations.find(
     (v: SelectValue<PenalCode>) => v.value?.id === penalCode.id,
@@ -88,13 +90,14 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
     fine: { enabled: false, value: "" },
     jailTime: { enabled: false, value: "" },
     bail: { value: "" },
+    communityService: { enabled: false, value: "" },
     counts: 1,
   };
 
   const handleValueChange = (
     fieldName: string,
     enabled?: boolean,
-    e?: React.ChangeEvent<HTMLInputElement>,
+    e?: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const idx = (values.violations as SelectValue<PenalCode>[]).findIndex(
       (v) => v.value?.id === penalCode.id,
@@ -102,7 +105,7 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
 
     const updatedArr = [...values.violations] as SelectValue<PenalCode>[];
 
-    const newValue = e?.target.valueAsNumber ?? (penalCode as any)[fieldName]?.value ?? "";
+    const newValue = e?.target.value ?? (penalCode as any)[fieldName]?.value ?? "";
 
     if (fieldName === "counts") {
       const int = parseInt(newValue);
@@ -189,6 +192,31 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
               disabled={isReadOnly || !currentValue.fine?.enabled}
               className="max-w-[125px] min-w-[125px] ml-5 py-0.5"
               value={!isNaN(currentValue.fine?.value) ? currentValue.fine?.value : ""}
+            />
+          </div>
+        </FieldWrapper>
+        <FieldWrapper
+          errorMessage={violationErrors[penalCode.id]?.communityService}
+          description={finesDisabled ? null : finesDescription}
+        >
+          <div className="flex items-center">
+            <FormField className="mb-0" label={t("communityService")} checkbox>
+              <Checkbox
+                disabled={finesDisabled}
+                onChange={() =>
+                  handleValueChange("communityService", !currentValue.communityService?.enabled)
+                }
+                checked={currentValue.communityService?.enabled ?? false}
+                name="communityService.enabled"
+                style={{ width: 20 }}
+              />
+            </FormField>
+            <Textarea
+              name="communityService.value"
+              onChange={handleValueChange.bind(null, "communityService", undefined)}
+              disabled={isReadOnly || !currentValue.communityService?.enabled}
+              className="max-w-[250px] min-w-[250px] ml-5 py-0.5"
+              value={currentValue.communityService?.value}
             />
           </div>
         </FieldWrapper>
