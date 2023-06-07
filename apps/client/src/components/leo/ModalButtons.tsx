@@ -17,7 +17,6 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { useMounted } from "@casper124578/useful";
 import { usePermission } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
-import { useValues } from "context/ValuesContext";
 import dynamic from "next/dynamic";
 import { ImageWrapper } from "components/shared/image-wrapper";
 import { ActiveCallColumn } from "components/dispatch/active-units/officers/active-call-column";
@@ -59,8 +58,6 @@ export function ModalButtons({ initialActiveOfficer }: { initialActiveOfficer: A
   const { openModal } = useModal();
   const { TONES, PANIC_BUTTON } = useFeatureEnabled();
   const { makeImageUrl } = useImageUrl();
-
-  const { codes10 } = useValues();
 
   async function handlePanic() {
     if (!activeOfficer) return;
