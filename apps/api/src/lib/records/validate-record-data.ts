@@ -8,6 +8,7 @@ interface Options {
   jailTime?: number | null;
   bail?: number | null;
   counts?: number | null;
+  communityService?: string | null;
   ticketId: string;
   cad: { features?: Record<Feature, boolean> };
 }
