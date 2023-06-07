@@ -28,6 +28,8 @@ export function PrivateMessagesModal() {
 
   const { execute } = useFetch();
   const { isLoading } = useQuery({
+    refetchOnMount: true,
+    refetchOnReconnect: true,
     queryKey: ["private-messages", unit?.id],
     queryFn: async () => {
       if (!unit?.id) return [];
@@ -63,10 +65,7 @@ export function PrivateMessagesModal() {
   }, [messages]);
 
   useListener(
-    {
-      eventName: SocketEvents.PrivateMessage,
-      checkHasListeners: true,
-    },
+    SocketEvents.PrivateMessage,
     (data: { chat: DispatchChat; unitId: string }) => {
       if (data.unitId === unit?.id) {
         setMessages((prev) => {

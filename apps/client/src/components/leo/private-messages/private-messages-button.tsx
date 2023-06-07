@@ -1,3 +1,5 @@
+import { useListener } from "@casper124578/use-socket.io";
+import { SocketEvents } from "@snailycad/config";
 import { DispatchChat } from "@snailycad/types";
 import { Button } from "@snailycad/ui";
 import { useQuery } from "@tanstack/react-query";
@@ -14,8 +16,8 @@ interface Props {
 export function PrivateMessagesButton(props: Props) {
   const { openModal } = useModal();
   const { execute } = useFetch();
-  const { data, isLoading } = useQuery({
-    queryKey: ["private-messages", props.unit.id],
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["private-messages-count", props.unit.id],
     queryFn: async () => {
       const { json } = await execute<DispatchChat[]>({
         path: `/dispatch/private-message/${props.unit.id}`,
@@ -26,6 +28,16 @@ export function PrivateMessagesButton(props: Props) {
     },
   });
 
+  useListener(
+    SocketEvents.PrivateMessage,
+    (data: { chat: DispatchChat; unitId: string }) => {
+      if (data.unitId === props.unit?.id) {
+        refetch();
+      }
+    },
+    [props.unit?.id],
+  );
+
   if (isLoading) {
     return <Button className="animate-pulse rounded-md w-10 h-8" size="sm" />;
   }
@@ -34,6 +46,7 @@ export function PrivateMessagesButton(props: Props) {
     <Button
       className="grid place-content-center w-fit h-8"
       onPress={() => openModal(ModalIds.PrivateMessage, props.unit)}
+      isDisabled={!data?.length}
     >
       {data?.length ?? 0} available
     </Button>
