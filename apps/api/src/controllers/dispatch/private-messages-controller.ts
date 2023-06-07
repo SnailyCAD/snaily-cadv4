@@ -74,14 +74,8 @@ export class DispatchPrivateMessagesController {
     }
 
     const unitMessages = await prisma.dispatchChat.findMany({
-      where: {
-        OR: [
-          { creator: { officerId: unitId } },
-          { creator: { emsFdDeputyId: unitId } },
-          { creator: { combinedEmsFdId: unitId } },
-          { creator: { combinedLeoId: unitId } },
-        ],
-      },
+      where: { unitId },
+      orderBy: { createdAt: "asc" },
       include: dispatchChatIncludes,
     });
 
@@ -150,25 +144,30 @@ export class DispatchPrivateMessagesController {
     const chat = await prisma.dispatchChat.create({
       data: {
         message,
+        unitId,
         creator: {
-          connectOrCreate: {
-            where: { id: String(creator?.id) },
-            create: {
-              [types[type]]: unitId,
-            },
-          },
+          connectOrCreate: isDispatch
+            ? undefined
+            : {
+                where: { id: String(creator?.id) },
+                create: {
+                  [types[type]]: unitId,
+                },
+              },
         },
       },
       include: dispatchChatIncludes,
     });
 
-    // todo: send socket event
-    this.socket;
-
-    return {
+    const normalizedChat = {
       ...chat,
       creator: { unit: createChatCreatorUnit(chat) },
     };
+
+    // todo: send socket event
+    this.socket.emitPrivateMessage(unitId, normalizedChat);
+
+    return normalizedChat;
   }
 }
 

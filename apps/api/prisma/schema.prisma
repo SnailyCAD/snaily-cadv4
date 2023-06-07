@@ -1192,6 +1192,7 @@ model DispatchChat {
   createdAt DateTime     @default(now())
   updatedAt DateTime     @default(now()) @updatedAt
   message   String       @db.Text
+  unitId    String
   // creator = null ? dispatcher : unit
   creator   ChatCreator? @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   creatorId String?

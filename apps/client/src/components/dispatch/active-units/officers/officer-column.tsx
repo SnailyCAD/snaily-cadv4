@@ -111,7 +111,7 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
         },
         {
           name: t("privateMessage"),
-          onClick: () => openModal(ModalIds.PrivateMessage, officer.id),
+          onClick: () => openModal(ModalIds.PrivateMessage, officer),
         },
         ...dispatchCodes,
       ]}
