@@ -2,10 +2,11 @@ import { z } from "zod";
 import { COURT_ENTRY_SCHEMA } from "./court";
 
 const VIOLATION = z.object({
-  fine: z.number().nullish(),
-  jailTime: z.number().nullish(),
-  bail: z.number().nullish(),
-  counts: z.number().nullish(),
+  fine: z.coerce.number().nullish(),
+  jailTime: z.coerce.number().nullish(),
+  bail: z.coerce.number().nullish(),
+  counts: z.coerce.number().nullish(),
+  communityService: z.string().nullish(),
   // optional on client, required on server
   penalCodeId: z.string().optional(),
 });
