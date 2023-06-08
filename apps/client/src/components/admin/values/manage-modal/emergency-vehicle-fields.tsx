@@ -4,6 +4,7 @@ import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
 import { useFormikContext } from "formik";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { useTranslations } from "use-intl";
 
 export function useDefaultDivisions() {
   const { division } = useValues();
@@ -32,10 +33,11 @@ export function EmergencyVehicleFields() {
   const { values, handleChange } = useFormikContext<any>();
   const { division, department } = useValues();
   const { DIVISIONS } = useFeatureEnabled();
+  const t = useTranslations("Departments");
 
   return (
     <>
-      <FormField label="Departments">
+      <FormField label={t("departments")}>
         <Select
           closeMenuOnSelect={false}
           isMulti
@@ -50,7 +52,7 @@ export function EmergencyVehicleFields() {
       </FormField>
 
       {DIVISIONS ? (
-        <FormField optional label="Divisions">
+        <FormField optional label={t("divisions")}>
           <Select
             closeMenuOnSelect={false}
             isMulti

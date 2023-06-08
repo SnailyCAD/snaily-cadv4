@@ -5,21 +5,24 @@ import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
 import { SelectField, Textarea } from "@snailycad/ui";
 import { QualificationValueType } from "@snailycad/types";
+import { useTranslations } from "use-intl";
 
 export function QualificationFields({ image, setImage }: any) {
   const { values, errors, setFieldValue, handleChange } = useFormikContext<any>();
   const { department } = useValues();
+  const t = useTranslations("Values");
+  const common = useTranslations("Common");
 
   const TYPES = [
-    { label: "Qualification", value: QualificationValueType.QUALIFICATION },
-    { label: "Award", value: QualificationValueType.AWARD },
+    { label: t("qualification"), value: QualificationValueType.QUALIFICATION },
+    { label: t("award"), value: QualificationValueType.AWARD },
   ];
 
   return (
     <>
       <SelectField
         errorMessage={errors.qualificationType as string}
-        label="Type"
+        label={common("type")}
         name="qualificationType"
         options={TYPES}
         onSelectionChange={(key) => setFieldValue("qualificationType", key)}

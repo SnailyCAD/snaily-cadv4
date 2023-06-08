@@ -3,14 +3,16 @@ import { TextField } from "@snailycad/ui";
 import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
 import { useFormikContext } from "formik";
+import { useTranslations } from "use-intl";
 
 export function DivisionFields() {
   const { values, errors, setFieldValue, handleChange } = useFormikContext<any>();
   const { department } = useValues();
+  const t = useTranslations("Values");
 
   return (
     <>
-      <FormField label="Department">
+      <FormField label={t("department")}>
         <Select
           autoFocus
           values={department.values.map((v) => ({
@@ -25,7 +27,7 @@ export function DivisionFields() {
 
       <TextField
         errorMessage={errors.value as string}
-        label="Value"
+        label={t("value")}
         name="value"
         onChange={(value) => setFieldValue("value", value)}
         value={values.value}
@@ -34,7 +36,7 @@ export function DivisionFields() {
       <TextField
         isOptional
         errorMessage={errors.callsign as string}
-        label="Callsign Symbol"
+        label={t("callsignSymbol")}
         name="callsign"
         onChange={(value) => setFieldValue("callsign", value)}
         value={values.callsign}
@@ -43,18 +45,18 @@ export function DivisionFields() {
       <TextField
         isOptional
         errorMessage={errors.pairedUnitTemplate as string}
-        label="Paired Unit Template"
+        label={t("pairedUnitTemplate")}
         name="pairedUnitTemplate"
         onChange={(value) => setFieldValue("pairedUnitTemplate", value)}
         value={values.pairedUnitTemplate}
       />
 
       <TextField
-        description="Allows you to set a JSON value to be used for extra fields. This can be useful when using the Public API for doing custom things."
+        description={t("extraFieldsDescription")}
         isTextarea
         isOptional
         errorMessage={errors.extraFields as string}
-        label="Extra Fields - JSON"
+        label={t("extraFields")}
         name="extraFields"
         onChange={(value) => setFieldValue("extraFields", value)}
         value={values.extraFields}

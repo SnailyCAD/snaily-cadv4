@@ -25,18 +25,18 @@ interface Props {
   recordLogs: GetManageRecordsLogsCitizenData;
 }
 
-const TYPE_LABELS = {
-  [RecordType.TICKET]: "Ticket",
-  [RecordType.ARREST_REPORT]: "Arrest Report",
-  [RecordType.WRITTEN_WARNING]: "Written Warning",
-};
-
 export default function CitizenLogs(props: Props) {
   const { query } = useRouter();
 
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { generateCallsign } = useGenerateCallsign();
+
+  const TYPE_LABELS = {
+    [RecordType.TICKET]: t("ticket"),
+    [RecordType.ARREST_REPORT]: t("arrestReport"),
+    [RecordType.WRITTEN_WARNING]: t("writtenWarning"),
+  };
 
   const asyncTable = useAsyncTable({
     totalCount: props.recordLogs.totalCount,
@@ -69,14 +69,14 @@ export default function CitizenLogs(props: Props) {
           )}
           href="/officer/supervisor/citizen-logs"
         >
-          <ArrowLeft /> View all record logs
+          <ArrowLeft /> {t("viewAllRecordLogs")}
         </Link>
       </div>
 
       <Table
         tableState={tableState}
         data={asyncTable.items.map((item) => {
-          const type = item.records !== null ? TYPE_LABELS[item.records.type] : "Warrant";
+          const type = item.records !== null ? TYPE_LABELS[item.records.type] : t("warrant");
           const createdAt = item.warrant?.createdAt ?? item.records?.createdAt;
           const officer = item.warrant?.officer ?? item.records?.officer;
           const officerName = officer && makeUnitName(officer);

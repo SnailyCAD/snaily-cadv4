@@ -4,6 +4,7 @@ import { Select } from "components/form/Select";
 import { useFormikContext } from "formik";
 import { DepartmentType } from "@snailycad/types";
 import { useValues } from "context/ValuesContext";
+import { useTranslations } from "use-intl";
 
 export const DEPARTMENT_LABELS = {
   [DepartmentType.LEO]: "LEO",
@@ -17,11 +18,13 @@ const DEPARTMENT_TYPES = Object.values(DepartmentType).map((v) => ({
 export function DepartmentFields() {
   const { values, errors, setFieldValue, handleChange } = useFormikContext<any>();
   const { officerRank } = useValues();
+  const common = useTranslations("Common");
+  const t = useTranslations("Values");
 
   return (
     <>
       <SelectField
-        label="Type"
+        label={common("type")}
         options={DEPARTMENT_TYPES}
         name="type"
         onSelectionChange={(key) => setFieldValue("type", key)}
@@ -29,14 +32,18 @@ export function DepartmentFields() {
       />
 
       <TextField
-        label="Callsign Symbol"
+        label={t("callsignSymbol")}
         isOptional
         name="callsign"
         onChange={(value) => setFieldValue("callsign", value)}
         value={values.callsign}
       />
 
-      <FormField optional errorMessage={errors.defaultOfficerRankId as string} label="Default Rank">
+      <FormField
+        optional
+        errorMessage={errors.defaultOfficerRankId as string}
+        label={t("defaultRank")}
+      >
         <Select
           isClearable
           onChange={handleChange}
@@ -50,45 +57,45 @@ export function DepartmentFields() {
       </FormField>
 
       <SwitchField
+        description={t("whitelistedDescription")}
         isSelected={values.whitelisted}
         onChange={(isSelected) => {
           isSelected && setFieldValue("isDefaultDepartment", false);
           setFieldValue("whitelisted", isSelected);
         }}
       >
-        Whitelisted
+        {t("whitelisted")}
       </SwitchField>
 
       <SwitchField
-        description="When a department is whitelisted, you can set 1 department as default. This department will be given to the officer when they are awaiting access or when they were declined."
         isSelected={values.isDefaultDepartment}
         onChange={(isSelected) => {
           isSelected && setFieldValue("whitelisted", false);
           setFieldValue("isDefaultDepartment", isSelected);
         }}
       >
-        Default Department
+        {t("defaultDepartment")}
       </SwitchField>
 
       {values.type === DepartmentType.LEO ? (
         <SwitchField
-          description="When a department is confidential, other officers will not be able to view information of other officers within this department."
+          description={t("isConfidentialDescription")}
           isSelected={values.isConfidential}
           onChange={(isSelected) => {
             isSelected && setFieldValue("isConfidential", false);
             setFieldValue("isConfidential", isSelected);
           }}
         >
-          Is Confidential
+          {t("isConfidential")}
         </SwitchField>
       ) : null}
 
       <TextField
-        description="Allows you to set a JSON value to be used for extra fields. This can be useful when using the Public API for doing custom things."
+        description={t("extraFieldsDescription")}
         isTextarea
         isOptional
         errorMessage={errors.extraFields as string}
-        label="Extra Fields - JSON"
+        label={t("extraFields")}
         name="extraFields"
         onChange={(value) => setFieldValue("extraFields", value)}
         value={values.extraFields}

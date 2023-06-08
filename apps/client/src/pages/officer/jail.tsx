@@ -102,7 +102,7 @@ export default function Jail({ data }: Props) {
       <header className="flex flex-col flex-start">
         <Title>{t("jail")}</Title>
 
-        <FormField className="w-full" label="Show active only" checkbox>
+        <FormField className="w-full" label={t("showActiveOnly")} checkbox>
           <Input
             checked={Boolean(asyncTable.filters?.activeOnly)}
             onChange={() => {
@@ -130,7 +130,7 @@ export default function Jail({ data }: Props) {
             const status = !released
               ? t("arrested")
               : type === ReleaseType.BAIL_POSTED
-              ? `Bail Posted (${citizen?.name} ${citizen?.surname})`
+              ? t("bailPosted", { citizen: `${citizen?.name} ${citizen?.surname}` })
               : t("timeOut");
 
             return {

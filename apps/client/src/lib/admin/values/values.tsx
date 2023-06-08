@@ -1,4 +1,4 @@
-import { LICENSE_LABELS } from "components/admin/values/manage-modal/LicenseFields";
+import { useLicenseLabels } from "components/admin/values/manage-modal/license-fields";
 import { yesOrNoText } from "lib/utils";
 import { useTranslations } from "next-intl";
 import {
@@ -19,8 +19,8 @@ import {
   SHOULD_DO_LABELS,
   useDefaultDepartments,
   WHAT_PAGES_LABELS,
-} from "components/admin/values/manage-modal/StatusValueFields";
-import { DEPARTMENT_LABELS } from "components/admin/values/manage-modal/DepartmentFields";
+} from "components/admin/values/manage-modal/status-value-fields";
+import { DEPARTMENT_LABELS } from "components/admin/values/manage-modal/department-fields";
 import { isBaseValue, hasValueObj } from "@snailycad/utils";
 import { useImageUrl } from "hooks/useImageUrl";
 import { makeDefaultWhatPages } from "./utils";
@@ -36,6 +36,7 @@ export function useTableDataOfType(type: ValueType) {
   const common = useTranslations("Common");
   const defaultDepartments = useDefaultDepartments();
   const { makeImageUrl } = useImageUrl();
+  const { LICENSE_LABELS } = useLicenseLabels();
 
   function get(value: AnyValue) {
     // state mismatch prevention
