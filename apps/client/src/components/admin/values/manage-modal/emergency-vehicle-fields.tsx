@@ -33,7 +33,7 @@ export function EmergencyVehicleFields() {
   const { values, handleChange } = useFormikContext<any>();
   const { division, department } = useValues();
   const { DIVISIONS } = useFeatureEnabled();
-  const t = useTranslations("Departments");
+  const t = useTranslations("Values");
 
   return (
     <>

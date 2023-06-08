@@ -385,7 +385,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
               onChange={(isSelected) => setFieldValue("isDisabled", isSelected)}
               description={tValues("disabledDescription")}
             >
-              {t("isDisabled")}
+              {tValues("isDisabled")}
             </SwitchField>
 
             <footer className="flex justify-end mt-5">

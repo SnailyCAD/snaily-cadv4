@@ -52,7 +52,13 @@
     "qualification": "Qualification",
     "award": "Award",
     "colorHex": "Color (#HEX)",
-    "codeType": "Code Type"
+    "codeType": "Code Type",
+    "license": "License",
+    "registrationStatus": "Registration Status",
+    "insuranceStatus": "Insurance Status",
+    "employee": "Employee",
+    "manager": "Manager",
+    "owner": "Owner"
   },
   "PENAL_CODE_GROUP": {
     "MANAGE": "Manage Penal Code Groups",
