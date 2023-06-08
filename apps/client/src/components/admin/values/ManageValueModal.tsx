@@ -27,9 +27,9 @@ import { useTranslations } from "use-intl";
 import { Select } from "components/form/Select";
 import hexColor from "hex-color-regex";
 import { ModalIds } from "types/ModalIds";
-import { DepartmentFields } from "./manage-modal/DepartmentFields";
-import { StatusValueFields, useDefaultDepartments } from "./manage-modal/StatusValueFields";
-import { LicenseFields } from "./manage-modal/LicenseFields";
+import { DepartmentFields } from "./manage-modal/department-fields";
+import { StatusValueFields, useDefaultDepartments } from "./manage-modal/status-value-fields";
+import { LicenseFields } from "./manage-modal/license-fields";
 import {
   isEmployeeValue,
   isBaseValue,
@@ -45,7 +45,7 @@ import {
   isAddressValue,
   isEmergencyVehicleValue,
 } from "@snailycad/utils/typeguards";
-import { QualificationFields } from "./manage-modal/QualificationFields";
+import { QualificationFields } from "./manage-modal/qualification-fields";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import type { PatchValueByIdData, PostValuesData } from "@snailycad/types/api";
 import {
@@ -53,9 +53,12 @@ import {
   getValueStrFromValue,
   makeDefaultWhatPages,
 } from "lib/admin/values/utils";
-import { DivisionFields } from "./manage-modal/DivisionFields";
-import { AddressFields } from "./manage-modal/AddressFields";
-import { EmergencyVehicleFields, useDefaultDivisions } from "./manage-modal/EmergencyVehicleFields";
+import { DivisionFields } from "./manage-modal/division-fields";
+import { AddressFields } from "./manage-modal/address-fields";
+import {
+  EmergencyVehicleFields,
+  useDefaultDivisions,
+} from "./manage-modal/emergency-vehicle-fields";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
@@ -65,21 +68,6 @@ interface Props {
   onCreate(newValue: AnyValue): void;
   onUpdate(oldValue: AnyValue, newValue: AnyValue): void;
 }
-
-const BUSINESS_VALUES = [
-  {
-    value: EmployeeAsEnum.OWNER,
-    label: "Owner",
-  },
-  {
-    value: EmployeeAsEnum.MANAGER,
-    label: "Manager",
-  },
-  {
-    value: EmployeeAsEnum.EMPLOYEE,
-    label: "Employee",
-  },
-];
 
 const EXTRA_SCHEMAS: Partial<Record<ValueType, Zod.ZodObject<Zod.ZodRawShape>>> = {
   CODES_10: CODES_10_SCHEMA,
@@ -98,6 +86,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
   const { isOpen, closeModal } = useModal();
   const t = useTranslations(type);
   const common = useTranslations("Common");
+  const tValues = useTranslations("Values");
   const defaultDepartments = useDefaultDepartments();
   const defaultDivisions = useDefaultDivisions();
 
@@ -105,6 +94,21 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
   const footerTitle = !value ? t("ADD") : common("save");
   const { vehicleTrimLevel, department } = useValues();
   const { DIVISIONS } = useFeatureEnabled();
+
+  const BUSINESS_VALUES = [
+    {
+      value: EmployeeAsEnum.OWNER,
+      label: tValues("owner"),
+    },
+    {
+      value: EmployeeAsEnum.MANAGER,
+      label: tValues("manager"),
+    },
+    {
+      value: EmployeeAsEnum.EMPLOYEE,
+      label: tValues("employee"),
+    },
+  ];
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
@@ -254,7 +258,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     if (values.color && !hexColor().test(values.color)) {
       return {
         ...errors,
-        color: "Must be a valid HEX color",
+        color: tValues("mustBeValidHexColor"),
       };
     }
 
@@ -296,7 +300,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             {type === ValueType.BUSINESS_ROLE ? (
               <SelectField
                 errorMessage={errors.as}
-                label="As (this is so the database knows what to use.)"
+                label={tValues("as")}
                 options={BUSINESS_VALUES}
                 name="as"
                 onSelectionChange={(key) => setFieldValue("as", key)}
@@ -308,7 +312,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
               <TextField
                 isOptional
                 errorMessage={errors.hash}
-                label="Game Hash"
+                label={t("gameHash")}
                 name="hash"
                 onChange={(value) => setFieldValue("hash", value)}
                 value={values.hash}
@@ -316,7 +320,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             ) : null}
 
             {ValueType.VEHICLE === type ? (
-              <FormField label="Trim Levels">
+              <FormField label={tValues("trimLevels")}>
                 <Select
                   isMulti
                   closeMenuOnSelect={false}
@@ -336,7 +340,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
                 type="number"
                 isOptional
                 errorMessage={errors.priority}
-                label="Priority"
+                label={tValues("priority")}
                 name="priority"
                 onChange={(value) => setFieldValue("priority", value)}
                 value={values.priority}
@@ -346,7 +350,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             {type === ValueType.OFFICER_RANK ? (
               <>
                 <ImageSelectInput valueKey="officerRankImageId" image={image} setImage={setImage} />
-                <FormField optional label="Departments">
+                <FormField optional label={tValues("departments")}>
                   <Select
                     isMulti
                     closeMenuOnSelect={false}
@@ -367,7 +371,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
                 isTextarea
                 isOptional
                 errorMessage={errors.description}
-                label="Description"
+                label={common("description")}
                 name="description"
                 onChange={(value) => setFieldValue("description", value)}
                 value={values.description}
@@ -379,9 +383,9 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             <SwitchField
               isSelected={values.isDisabled}
               onChange={(isSelected) => setFieldValue("isDisabled", isSelected)}
-              description="When a value is disabled, it will not be able to be selected in the dropdown."
+              description={tValues("disabledDescription")}
             >
-              Is Disabled
+              {tValues("isDisabled")}
             </SwitchField>
 
             <footer className="flex justify-end mt-5">
@@ -390,7 +394,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
                 onPress={() => closeModal(ModalIds.ManageValue)}
                 variant="cancel"
               >
-                Cancel
+                {common("cancel")}
               </Button>
               <Button className="flex items-center" disabled={state === "loading"} type="submit">
                 {state === "loading" ? <Loader className="mr-2" /> : null}

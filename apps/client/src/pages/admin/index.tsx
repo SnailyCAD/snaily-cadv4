@@ -71,7 +71,7 @@ export default function Admin({ counts }: Props) {
       </Group>
 
       <Group name={t("leo")}>
-        <Item count={counts.officerCount} name="total" />
+        <Item count={counts.officerCount} name={t("total")} />
         <Item
           count={counts.onDutyOfficers}
           name={t("onDuty")}
@@ -85,7 +85,7 @@ export default function Admin({ counts }: Props) {
       </Group>
 
       <Group name={t("emsFd")}>
-        <Item count={counts.emsDeputiesCount} name="total" />
+        <Item count={counts.emsDeputiesCount} name={t("total")} />
         <Item
           count={counts.onDutyEmsDeputies}
           name={t("onDuty")}
@@ -99,7 +99,7 @@ export default function Admin({ counts }: Props) {
       </Group>
 
       <Group name={t("images")}>
-        <Item count={counts.imageData.count} name="total" />
+        <Item count={counts.imageData.count} name={t("total")} />
         <Item count={prettyBytes(counts.imageData.totalSize, { binary: true })} name="" />
       </Group>
     </AdminLayout>

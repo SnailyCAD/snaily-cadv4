@@ -1,13 +1,15 @@
 import { TextField } from "@snailycad/ui";
 import { useFormikContext } from "formik";
+import { useTranslations } from "use-intl";
 
 export function AddressFields() {
   const { values, errors, setFieldValue } = useFormikContext<any>();
+  const t = useTranslations("Values");
 
   return (
     <>
       <TextField
-        label="Postal"
+        label={t("postal")}
         isOptional
         name="postal"
         onChange={(value) => setFieldValue("postal", value)}
@@ -16,7 +18,7 @@ export function AddressFields() {
       />
 
       <TextField
-        label="County"
+        label={t("county")}
         isOptional
         name="county"
         onChange={(value) => setFieldValue("county", value)}

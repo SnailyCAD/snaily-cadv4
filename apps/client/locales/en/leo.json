@@ -296,7 +296,14 @@
     "citizenLogsDescription": "Here you can view any citizen records that have been created. This includes arrest reports, tickets and written warnings. They are grouped by citizen.",
     "communityService": "Community Service",
     "groupByOfficer": "Group By Officer",
-    "groupByDeputy": "Group By Deputy"
+    "groupByDeputy": "Group By Deputy",
+    "showActiveOnly": "Show Active Only",
+    "bailPosted": "Bail Posted ({citizen})",
+    "ticket": "Ticket",
+    "arrestReport": "Arrest Report",
+    "writtenWarning": "Written Warning",
+    "warrant": "Warrant",
+    "viewAllRecordLogs": "View all record logs"
   },
   "Bolos": {
     "activeBolos": "Active Bolos",

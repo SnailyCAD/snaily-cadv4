@@ -15,6 +15,7 @@ import {
 import { Eyedropper } from "react-bootstrap-icons";
 import { Input, Button, SelectField, RadioGroupField, Radio } from "@snailycad/ui";
 import { useValues } from "context/ValuesContext";
+import { useTranslations } from "use-intl";
 
 const HexColorPicker = dynamic(async () => (await import("react-colorful")).HexColorPicker);
 
@@ -78,12 +79,13 @@ export function useDefaultDepartments() {
 export function StatusValueFields() {
   const { values, errors, setFieldValue, handleChange } = useFormikContext<any>();
   const { department } = useValues();
+  const t = useTranslations("Values");
 
   return (
     <>
       <SelectField
         errorMessage={errors.shouldDo as string}
-        label="Should Do"
+        label={t("shouldDo")}
         options={SHOULD_DO_VALUES}
         name="shouldDo"
         selectedKey={values.shouldDo}
@@ -94,7 +96,7 @@ export function StatusValueFields() {
         errorMessage={errors.whatPages as string}
         isClearable
         selectionMode="multiple"
-        label="What Pages"
+        label={t("whatPages")}
         options={WHAT_PAGES_VALUES}
         name="whatPages"
         selectedKeys={values.whatPages}
@@ -102,7 +104,7 @@ export function StatusValueFields() {
       />
 
       {values.shouldDo === ShouldDoType.SET_ON_DUTY ? null : (
-        <FormField errorMessage={errors.departments as string} label="Departments">
+        <FormField errorMessage={errors.departments as string} label={t("departments")}>
           <Select
             closeMenuOnSelect={false}
             name="departments"
@@ -117,7 +119,7 @@ export function StatusValueFields() {
         </FormField>
       )}
 
-      <FormField errorMessage={errors.color as string} label="Color (#HEX)">
+      <FormField errorMessage={errors.color as string} label={t("colorHex")}>
         <div className={`flex ${values.showPicker ? "items-start" : ""}`}>
           {values.showPicker ? (
             <HexColorPicker
@@ -145,7 +147,7 @@ export function StatusValueFields() {
       <RadioGroupField
         value={values.type}
         onChange={(value) => setFieldValue("type", value)}
-        label="Code Type"
+        label={t("codeType")}
       >
         <Radio value={StatusValueType.STATUS_CODE}>Status Code</Radio>
         <Radio value={StatusValueType.SITUATION_CODE}>Situation Code</Radio>

@@ -1,27 +1,40 @@
 import { ValueLicenseType } from "@snailycad/types";
 import { SelectField, SwitchField } from "@snailycad/ui";
 import { useFormikContext } from "formik";
+import { useTranslations } from "use-intl";
 
-export const LICENSE_LABELS = {
-  [ValueLicenseType.LICENSE]: "License",
-  [ValueLicenseType.REGISTRATION_STATUS]: "Registration Status",
-  [ValueLicenseType.INSURANCE_STATUS]: "Insurance Status",
-};
+export function useLicenseLabels() {
+  const t = useTranslations("Values");
 
-const LICENSE_TYPES = Object.values(ValueLicenseType).map((v) => ({
-  label: LICENSE_LABELS[v] as string,
-  value: v,
-}));
+  const LICENSE_LABELS = {
+    [ValueLicenseType.LICENSE]: t("license"),
+    [ValueLicenseType.REGISTRATION_STATUS]: t("registrationStatus"),
+    [ValueLicenseType.INSURANCE_STATUS]: t("insuranceStatus"),
+  };
+
+  const LICENSE_TYPES = Object.values(ValueLicenseType).map((v) => ({
+    label: LICENSE_LABELS[v] as string,
+    value: v,
+  }));
+
+  return {
+    LICENSE_LABELS,
+    LICENSE_TYPES,
+  };
+}
 
 export function LicenseFields() {
   const { values, errors, setFieldValue } = useFormikContext<any>();
+  const t = useTranslations("Values");
+  const common = useTranslations("Common");
+  const { LICENSE_TYPES } = useLicenseLabels();
 
   return (
     <>
       <SelectField
         isClearable
         errorMessage={errors.licenseType as string}
-        label="Type"
+        label={common("type")}
         options={LICENSE_TYPES}
         name="licenseType"
         onSelectionChange={(key) => setFieldValue("licenseType", key)}
@@ -51,18 +64,13 @@ export function LicenseFields() {
       </SelectField>
 
       {!values.licenseType || values.licenseType === ValueLicenseType.LICENSE ? (
-        <div className="flex flex-col w-full">
-          <SwitchField
-            isSelected={values.isDefault ?? false}
-            onChange={(isSelected) => setFieldValue("isDefault", isSelected)}
-          >
-            Default License
-          </SwitchField>
-
-          <p className="text-base italic">
-            This license will be given to a citizen when they are first created.
-          </p>
-        </div>
+        <SwitchField
+          description={t("defaultLicenseDescription")}
+          isSelected={values.isDefault ?? false}
+          onChange={(isSelected) => setFieldValue("isDefault", isSelected)}
+        >
+          {t("defaultLicense")}
+        </SwitchField>
       ) : null}
     </>
   );

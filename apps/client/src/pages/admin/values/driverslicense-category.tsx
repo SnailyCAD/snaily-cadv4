@@ -143,7 +143,7 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
             </header>
 
             {valuesForType.length <= 0 ? (
-              <p className="mt-3">There are no values yet for this type.</p>
+              <p className="mt-3">{t("noValuesForThisType")}</p>
             ) : (
               <TableList
                 handleDelete={handleDeleteClick.bind(null, type) as any}
@@ -198,6 +198,7 @@ function TableList(props: {
 }) {
   const [values, setValues] = React.useState(props.values);
   const { execute } = useFetch();
+  const t = useTranslations("Values");
   const common = useTranslations("Common");
   const tableState = useTableState({ dragDrop: { onListChange: setList } });
 
@@ -253,7 +254,6 @@ function TableList(props: {
               onPress={() => props.handleDelete(value)}
               variant="danger"
               className="ml-2"
-              // disabled={isValueInUse(value)}
             >
               {common("delete")}
             </Button>
@@ -261,11 +261,11 @@ function TableList(props: {
         ),
       }))}
       columns={[
-        { header: "Value", accessorKey: "value" },
-        { header: "Description", accessorKey: "description" },
-        { header: "Created At", accessorKey: "createdAt" },
-        { header: "Disabled", accessorKey: "isDisabled" },
-        { header: "Actions", accessorKey: "actions" },
+        { header: t("value"), accessorKey: "value" },
+        { header: common("description"), accessorKey: "description" },
+        { header: common("createdAt"), accessorKey: "createdAt" },
+        { header: common("disabled"), accessorKey: "isDisabled" },
+        { header: common("actions"), accessorKey: "actions" },
       ]}
     />
   );
