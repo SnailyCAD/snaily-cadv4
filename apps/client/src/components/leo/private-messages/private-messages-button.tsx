@@ -42,7 +42,15 @@ export function PrivateMessagesButton(props: Props) {
 
         toastMessage({
           icon: "success",
-          message: data.chat.message,
+          message: (
+            <>
+              <p className="mb-3">{data.chat.message}</p>
+
+              <Button size="sm" onClick={() => openModal(ModalIds.PrivateMessage, props.unit)}>
+                {t("privateMessages")}
+              </Button>
+            </>
+          ),
           title: t("newMessageFromDispatch"),
         });
       }
