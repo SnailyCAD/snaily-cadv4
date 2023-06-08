@@ -39,7 +39,7 @@ export function PrivateMessagesButton(props: Props) {
   );
 
   if (isLoading) {
-    return <Button className="animate-pulse rounded-md w-10 h-8" size="sm" />;
+    return <Button isDisabled className="animate-pulse rounded-md w-40 h-8 opacity-80" size="sm" />;
   }
 
   return (

@@ -152,10 +152,15 @@ export class UserController {
     });
 
     if (officer) {
-      await prisma.officer.update({
-        where: { id: officer.id },
-        data: { statusId: null, activeCallId: null },
-      });
+      await prisma.$transaction([
+        prisma.officer.update({
+          where: { id: officer.id },
+          data: { statusId: null, activeCallId: null },
+        }),
+        prisma.dispatchChat.deleteMany({
+          where: { unitId: officer.id },
+        }),
+      ]);
 
       await handleStartEndOfficerLog({
         unit: officer,
@@ -183,6 +188,17 @@ export class UserController {
         userId,
         type: "ems-fd",
       });
+
+      await prisma.$transaction([
+        prisma.emsFdDeputy.update({
+          where: { id: emsFdDeputy.id },
+          data: { statusId: null, activeCallId: null },
+        }),
+        prisma.dispatchChat.deleteMany({
+          where: { unitId: emsFdDeputy.id },
+        }),
+      ]);
+
       await this.socket.emitUpdateDeputyStatus();
     }
 
