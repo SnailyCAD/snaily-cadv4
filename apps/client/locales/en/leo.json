@@ -309,7 +309,12 @@
     "send": "Send",
     "noMessages": "No messages",
     "message": "Message",
-    "newMessageFromDispatch": "New Message from Dispatch"
+    "newMessageFromDispatch": "New Message from Dispatch",
+    "addActiveCall": "Add active call",
+    "addActiveIncident": "Add active incident",
+    "appendedActiveCall": "Appended active call: {call}",
+    "appendedActiveIncident": "Appended active incident: {incident}",
+    "activeIncident": "Active Incident"
   },
   "Bolos": {
     "activeBolos": "Active Bolos",

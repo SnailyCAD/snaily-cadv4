@@ -339,6 +339,9 @@ export type ActiveDispatchers = Prisma.ActiveDispatchers & {
 export type DispatchChat = Prisma.DispatchChat & {
   /** null = Dispatch */
   creator: ChatCreator | null;
+  call?: Call911 | null;
+  /** active incident */
+  incident?: LeoIncident | null;
 };
 
 export interface ChatCreator {

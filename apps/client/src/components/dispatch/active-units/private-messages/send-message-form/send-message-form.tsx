@@ -1,9 +1,11 @@
 import * as React from "react";
-import { DispatchChat } from "@snailycad/types";
+import { Call911, DispatchChat, LeoIncident } from "@snailycad/types";
 import { Button, Loader, TextField } from "@snailycad/ui";
 import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
+import { AddCallPopover } from "./add-call-popover";
+import { AddIncidentPopover } from "./add-incident-popover";
 
 interface Props {
   unitId: string;
@@ -32,7 +34,11 @@ export function SendMessageForm(props: Props) {
 
   const INITIAL_VALUES = {
     message: "",
-    // todo: support 911-calls, incidents and searches being sent
+    call911Id: null,
+    call911: null as Call911 | null,
+
+    incidentId: null,
+    incident: null as LeoIncident | null,
   };
 
   // allow users to press "Enter + Ctrl" or "Enter + Cmd" to send an event
@@ -55,7 +61,13 @@ export function SendMessageForm(props: Props) {
             onKeyDown={(e) => handleCtrlEnter(e, submitForm)}
           />
 
-          <footer className="flex mt-5 justify-end">
+          <footer className="flex mt-5 items-center justify-between">
+            {/* todo: translations */}
+            <div className="flex items-center gap-2">
+              <AddCallPopover />
+              <AddIncidentPopover />
+            </div>
+
             <Button disabled={state === "loading"} className="flex items-center ml-2" type="submit">
               {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}
               {t("send")}

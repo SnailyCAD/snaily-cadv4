@@ -1107,6 +1107,7 @@ model LeoIncident {
   EmsFdDeputy          EmsFdDeputy[]          @relation("emsfdActiveIncident")
   CombinedEmsFdUnit    CombinedEmsFdUnit[]    @relation("combinedEmsFdActiveIncident")
   Record               Record[]
+  DispatchChat         DispatchChat[]
 }
 
 model IncidentEvent {
@@ -1188,14 +1189,18 @@ model ActiveDispatchers {
 }
 
 model DispatchChat {
-  id        String       @id @default(uuid())
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @default(now()) @updatedAt
-  message   String       @db.Text
-  unitId    String
+  id         String       @id @default(uuid())
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @default(now()) @updatedAt
+  message    String       @db.Text
+  unitId     String
   // creator = null ? dispatcher : unit
-  creator   ChatCreator? @relation(fields: [creatorId], references: [id], onDelete: Cascade)
-  creatorId String?
+  creator    ChatCreator? @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId  String?
+  call       Call911?     @relation(fields: [callId], references: [id], onDelete: Cascade)
+  callId     String?
+  incident   LeoIncident? @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  incidentId String?
 }
 
 model ChatCreator {
@@ -1250,6 +1255,7 @@ model Call911 {
   Record            Record[]
   EmsFdIncident     EmsFdIncident?      @relation(fields: [emsFdIncidentId], references: [id])
   emsFdIncidentId   String?
+  DispatchChat      DispatchChat[]
 }
 
 model GTAMapPosition {

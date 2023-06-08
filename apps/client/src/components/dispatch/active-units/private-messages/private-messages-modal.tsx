@@ -4,7 +4,7 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { MessageItem } from "./message-item";
-import { SendMessageForm } from "./send-message-form";
+import { SendMessageForm } from "./send-message-form/send-message-form";
 import { DispatchChat } from "@snailycad/types";
 import { useQuery } from "@tanstack/react-query";
 import useFetch from "lib/useFetch";
