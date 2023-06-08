@@ -345,9 +345,9 @@ export function MiscFeatures() {
               >
                 <Select
                   values={[
-                    { label: "Hours", value: JailTimeScale.HOURS },
-                    { label: "Minutes", value: JailTimeScale.MINUTES },
-                    { label: "Seconds", value: JailTimeScale.SECONDS },
+                    { label: t("hours"), value: JailTimeScale.HOURS },
+                    { label: t("minutes"), value: JailTimeScale.MINUTES },
+                    { label: t("seconds"), value: JailTimeScale.SECONDS },
                   ]}
                   name="jailTimeScaling"
                   value={values.jailTimeScaling}

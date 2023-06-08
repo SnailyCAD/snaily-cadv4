@@ -118,8 +118,8 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
 
   const tableHeaders = React.useMemo(() => {
     return [
-      user?.developerMode ? { header: "ID", accessorKey: "id" } : null,
-      { header: "Value", accessorKey: "value" },
+      user?.developerMode ? { header: common("id"), accessorKey: "id" } : null,
+      { header: t("value"), accessorKey: "value" },
       ...extraTableHeaders,
       { header: t("isDisabled"), accessorKey: "isDisabled" },
       { header: common("createdAt"), accessorKey: "createdAt" },
@@ -263,7 +263,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
               className="underline"
               size="xs"
             >
-              Select all {totalCount}?
+              {t("selectAll", { count: totalCount })}
             </Button>
           </span>
         </div>
@@ -272,12 +272,12 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
       {allSelected ? (
         <div className="flex items-center gap-2 px-4 py-2 card my-3 !bg-slate-900 !border-slate-500 border-2">
           <InfoCircle />
-          <span>{totalCount} items selected. </span>
+          {t("xItemsSelected", { count: totalCount })}
         </div>
       ) : null}
 
       {asyncTable.noItemsAvailable ? (
-        <p className="mt-5">There are no values yet for this type.</p>
+        <p className="mt-5">{t("noValuesForThisType")}</p>
       ) : (
         <Table
           tableState={tableState}
@@ -320,8 +320,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
                           sideOffset={5}
                           className="rounded-md bg-white dark:bg-tertiary dark:text-white p-4 max-w-[350px]"
                         >
-                          You cannot delete this value because it is being used by another database
-                          item. You must first delete that item.
+                          {t("cannotDeleteTooltip")}
                         </Tooltip.Content>
                       </Tooltip.Portal>
                     ) : null}

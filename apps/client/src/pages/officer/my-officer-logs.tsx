@@ -55,7 +55,7 @@ export default function MyOfficersLogs({ logs: data }: Props) {
 
         <div className="flex">
           <div className="ml-3 w-52">
-            <FormField label="Group By Officer">
+            <FormField label={t("groupByOfficer")}>
               <Select
                 isLoading={isLoading}
                 isClearable

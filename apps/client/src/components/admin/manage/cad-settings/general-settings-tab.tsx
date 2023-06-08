@@ -100,7 +100,11 @@ export function GeneralSettingsTab() {
               errorMessage={errors.name}
               action="input"
               label={t("cadName")}
-              description={t("cadNameDescription")}
+              description={t.rich("cadNameDescription", {
+                span: (children) => (
+                  <span className="text-base italic font-semibold">{children}</span>
+                ),
+              })}
             >
               <Input onChange={handleChange} value={values.name} name="name" />
             </SettingsFormField>

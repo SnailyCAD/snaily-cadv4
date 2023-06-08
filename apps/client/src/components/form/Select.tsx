@@ -74,6 +74,7 @@ export function Select({ name, onChange, ...rest }: Props) {
   return (
     <ReactSelect
       {...rest}
+      placeholder={common("select")}
       isDisabled={rest.disabled ?? !canBeClosed}
       isClearable={fixedClearable ? value.some((v) => !v.isFixed) : rest.isClearable}
       value={value}

@@ -37,7 +37,7 @@ export default function EmsFdIncidents({ activeDeputy, incidents: initialData }:
   return (
     <Layout
       permissions={{
-        permissions: [Permissions.ViewIncidents, Permissions.ManageIncidents],
+        permissions: [Permissions.ViewEmsFdIncidents, Permissions.ManageEmsFdIncidents],
       }}
       className="dark:text-white"
     >

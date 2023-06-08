@@ -49,13 +49,13 @@ export default function MyDeputyLogs({ logs: data }: Props) {
   );
 
   return (
-    <Layout permissions={{ permissions: [Permissions.Leo] }} className="dark:text-white">
+    <Layout permissions={{ permissions: [Permissions.EmsFd] }} className="dark:text-white">
       <header className="flex items-center justify-between">
         <Title className="!mb-0">{t("Ems.myDeputyLogs")}</Title>
 
         <div className="flex">
           <div className="ml-3 w-52">
-            <FormField label="Group By Deputy">
+            <FormField label={t("Leo.groupByDeputy")}>
               <Select
                 isLoading={isLoading}
                 isClearable
