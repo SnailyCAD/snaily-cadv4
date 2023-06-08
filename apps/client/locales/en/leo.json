@@ -308,7 +308,8 @@
     "privateMessages": "Private Messages",
     "send": "Send",
     "noMessages": "No messages",
-    "message": "Message"
+    "message": "Message",
+    "newMessageFromDispatch": "New Message from Dispatch"
   },
   "Bolos": {
     "activeBolos": "Active Bolos",

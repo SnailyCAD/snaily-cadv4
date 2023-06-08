@@ -3,19 +3,23 @@ import { SocketEvents } from "@snailycad/config";
 import { DispatchChat } from "@snailycad/types";
 import { Button } from "@snailycad/ui";
 import { useQuery } from "@tanstack/react-query";
+import { toastMessage } from "lib/toastMessage";
 import useFetch from "lib/useFetch";
 import { ActiveDeputy } from "state/ems-fd-state";
 import { ActiveOfficer } from "state/leo-state";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
+import { useTranslations } from "use-intl";
 
 interface Props {
   unit: ActiveDeputy | ActiveOfficer;
 }
 
 export function PrivateMessagesButton(props: Props) {
-  const { openModal } = useModal();
+  const { openModal, isOpen } = useModal();
   const { execute } = useFetch();
+  const t = useTranslations("Leo");
+
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["private-messages-count", props.unit.id],
     queryFn: async () => {
@@ -33,6 +37,14 @@ export function PrivateMessagesButton(props: Props) {
     (data: { chat: DispatchChat; unitId: string }) => {
       if (data.unitId === props.unit?.id) {
         refetch();
+
+        if (isOpen(ModalIds.PrivateMessage)) return;
+
+        toastMessage({
+          icon: "success",
+          message: data.chat.message,
+          title: t("newMessageFromDispatch"),
+        });
       }
     },
     [props.unit?.id],
