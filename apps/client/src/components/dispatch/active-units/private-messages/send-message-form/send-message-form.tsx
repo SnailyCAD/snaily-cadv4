@@ -71,9 +71,11 @@ export function SendMessageForm(props: Props) {
                 <AddCallPopover />
                 <AddIncidentPopover />
               </div>
-            ) : null}
+            ) : (
+              <div />
+            )}
 
-            <Button disabled={state === "loading"} className="flex items-center ml-2" type="submit">
+            <Button disabled={state === "loading"} className="flex items-center" type="submit">
               {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}
               {t("send")}
             </Button>
