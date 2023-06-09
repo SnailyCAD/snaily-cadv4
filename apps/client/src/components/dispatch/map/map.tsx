@@ -6,6 +6,7 @@ import { RenderMapBlips } from "./render-map-blips";
 import { RenderActiveCalls } from "./calls/render-active-map-calls";
 import { MapActions } from "./map-actions";
 import { RenderMapPlayers } from "./units/render-map-players";
+import { SelectMapServerModal } from "./modals/select-map-server-modal";
 
 const TILES_URL = "/tiles/minimap_sea_{y}_{x}.webp" as const;
 
@@ -47,6 +48,8 @@ export function Map() {
       <RenderMapBlips />
       <RenderActiveCalls />
       <MapActions />
+
+      <SelectMapServerModal />
     </MapContainer>
   );
 }

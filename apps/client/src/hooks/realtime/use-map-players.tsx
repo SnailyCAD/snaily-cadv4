@@ -7,13 +7,13 @@ import type {
   MapPlayer,
   PlayerDataEventPayload,
 } from "types/map";
-import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { toastMessage } from "lib/toastMessage";
-import type { cad } from "@snailycad/types";
 import type { GetDispatchPlayerBySteamIdData } from "@snailycad/types/api";
-import { io, Socket } from "socket.io-client";
 import { create } from "zustand";
+import { useDispatchMapState } from "state/mapState";
+import { ModalIds } from "types/ModalIds";
+import { useModal } from "state/modalState";
 
 export const useMapPlayersStore = create<{
   players: Map<string, MapPlayer | PlayerDataEventPayload>;
@@ -25,10 +25,9 @@ export const useMapPlayersStore = create<{
 
 export function useMapPlayers() {
   const { players, setPlayers } = useMapPlayersStore();
-  const [socket, setSocket] = React.useState<Socket | null>(null);
 
-  const { cad } = useAuth();
-  const url = getCADURL(cad);
+  const { openModal } = useModal();
+  const { socket, currentMapServerURL } = useDispatchMapState();
   const { state, execute } = useFetch();
 
   const getCADUsers = React.useCallback(
@@ -141,6 +140,8 @@ export function useMapPlayers() {
     [onPlayerData, onPlayerLeft],
   );
 
+  console.log(currentMapServerURL);
+
   const onError = React.useCallback(
     (reason: Error) => {
       console.log({ reason });
@@ -148,7 +149,7 @@ export function useMapPlayers() {
       toastMessage({
         message: (
           <>
-            Unable to make a Websocket connection to {url}.{" "}
+            Unable to make a Websocket connection to {currentMapServerURL}.{" "}
             <a
               target="_blank"
               rel="noreferrer"
@@ -163,87 +164,42 @@ export function useMapPlayers() {
         duration: 10_000,
       });
     },
-    [url],
+    [currentMapServerURL],
   );
 
-  React.useEffect(() => {
-    if (!socket && url) {
-      const newSocket = makeSocketConnection(url);
+  const onConnect = React.useCallback(() => {
+    toastMessage({
+      icon: "success",
+      message: "Successfully connected to the server",
+      title: "Connection Success",
+    });
+  }, []);
 
-      if (newSocket) {
-        setSocket(newSocket);
-      }
+  React.useEffect(() => {
+    if (!currentMapServerURL) {
+      openModal(ModalIds.SelectMapServer, { showAlert: true });
     }
-  }, [url, socket]);
+  }, [currentMapServerURL]); // eslint-disable-line react-hooks/exhaustive-deps
 
   React.useEffect(() => {
     const s = socket;
+
     if (s) {
       s.onAny(onMessage);
       s.on("disconnect", console.log);
       s.once("connect_error", onError);
+      s.on("connect", onConnect);
     }
 
     return () => {
       s?.offAny(onMessage);
       s?.off("disconnect", console.log);
       s?.off("connect_error", onError);
+      s?.off("connect", onConnect);
     };
-  }, [socket, onError, onMessage]);
+  }, [socket, onError, onMessage, onConnect]);
 
   return {
     players,
   };
-}
-
-let warned = false;
-function getCADURL(cad: cad | null) {
-  if (!cad) return null;
-
-  const liveMapURL = cad.miscCadSettings?.liveMapURL;
-
-  if (!liveMapURL) {
-    !warned &&
-      toastMessage({
-        duration: Infinity,
-        // eslint-disable-next-line quotes
-        message: 'There was no "Live Map URL" provided from the CAD-Settings.',
-      });
-    warned = true;
-    return null;
-  }
-
-  return liveMapURL;
-}
-
-function makeSocketConnection(url: string) {
-  try {
-    if (url.startsWith("ws")) {
-      const _url = url.replace(/ws:\/\//, "http://").replace(/wss:\/\//, "https://");
-      return io(_url);
-    }
-
-    return io(url);
-  } catch (error) {
-    const isSecurityError = error instanceof Error && error.name === "SecurityError";
-
-    console.log({ error });
-
-    if (isSecurityError) {
-      toastMessage({
-        message: `Unable to make a Websocket connection to ${url}. The connections are not secure.`,
-        title: "Security Error",
-        duration: Infinity,
-      });
-      return;
-    }
-
-    toastMessage({
-      message: `Unable to make a Websocket connection to ${url}`,
-      title: "Connection Error",
-      duration: Infinity,
-    });
-
-    return null;
-  }
 }
