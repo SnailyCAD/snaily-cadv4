@@ -20,8 +20,15 @@ import { User } from "@snailycad/types";
 import { getActiveOfficer } from "lib/leo/activeOfficer";
 import { getActiveDeputy } from "lib/get-active-ems-fd-deputy";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { validateSchema } from "lib/data/validate-schema";
+import { PRIVATE_MESSAGE_SCHEMA } from "@snailycad/schemas";
+import { callInclude } from "./911-calls/calls-911-controller";
+import { incidentInclude } from "controllers/leo/incidents/IncidentController";
+import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 
 const dispatchChatIncludes = Prisma.validator<Prisma.DispatchChatSelect>()({
+  call: { include: callInclude },
+  incident: { include: incidentInclude },
   creator: {
     include: {
       combinedUnit: { include: combinedUnitProperties },
@@ -91,11 +98,13 @@ export class DispatchPrivateMessagesController {
   @Post("/:unitId")
   async createPrivateMessage(
     @PathParams("unitId") unitId: string,
-    @BodyParams("message") message: string,
     @Context("user") user: User,
     @Context() ctx: Context,
     @Req() request: Req,
+    @BodyParams() body: unknown,
   ): Promise<DispatchChat & { creator: any }> {
+    const data = validateSchema(PRIVATE_MESSAGE_SCHEMA, body);
+
     const isFromDispatch = request.headers["is-from-dispatch"] === "true";
     const isDispatch =
       isFromDispatch &&
@@ -139,9 +148,38 @@ export class DispatchPrivateMessagesController {
       throw new ExtendedBadRequest({ message: "onlyDispatchCanCreateInitialChat" });
     }
 
+    let call911Id = undefined;
+    let incidentId = undefined;
+
+    if (data.call911Id) {
+      const call = await prisma.call911.findUnique({
+        where: { id: data.call911Id },
+      });
+
+      if (!call) {
+        throw new ExtendedBadRequest({ message: "callDoesNotExist" });
+      }
+
+      call911Id = { connect: { id: call.id } };
+    }
+
+    if (data.incidentId) {
+      const incident = await prisma.leoIncident.findFirst({
+        where: { id: data.incidentId, isActive: true },
+      });
+
+      if (!incident) {
+        throw new ExtendedBadRequest({ message: "incidentDoesNotExist" });
+      }
+
+      incidentId = { connect: { id: incident.id } };
+    }
+
     const chat = await prisma.dispatchChat.create({
       data: {
-        message,
+        message: data.message,
+        call: call911Id,
+        incident: incidentId,
         unitId,
         creator: {
           connectOrCreate: isDispatch
@@ -160,9 +198,10 @@ export class DispatchPrivateMessagesController {
     const normalizedChat = {
       ...chat,
       creator: { unit: createChatCreatorUnit(chat) },
+      call: officerOrDeputyToUnit(chat.call),
+      incident: officerOrDeputyToUnit(chat.incident),
     };
 
-    // todo: send socket event
     this.socket.emitPrivateMessage(unitId, normalizedChat);
 
     return normalizedChat;

@@ -16,3 +16,9 @@ export const TONES_SCHEMA = z.object({
   emsFdTone: z.boolean(),
   description: z.string().max(355).nullish(),
 });
+
+export const PRIVATE_MESSAGE_SCHEMA = z.object({
+  message: z.string().min(1),
+  call911Id: z.string().nullish(),
+  incidentId: z.string().nullish(),
+});

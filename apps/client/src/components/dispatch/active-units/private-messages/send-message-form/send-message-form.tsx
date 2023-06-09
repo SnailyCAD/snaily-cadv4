@@ -6,6 +6,7 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
 import { AddCallPopover } from "./add-call-popover";
 import { AddIncidentPopover } from "./add-incident-popover";
+import { useRouter } from "next/router";
 
 interface Props {
   unitId: string;
@@ -15,6 +16,8 @@ interface Props {
 export function SendMessageForm(props: Props) {
   const { state, execute } = useFetch();
   const t = useTranslations("Leo");
+  const router = useRouter();
+  const isDispatch = router.pathname.includes("/dispatch");
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
@@ -59,14 +62,16 @@ export function SendMessageForm(props: Props) {
             errorMessage={errors.message}
             isTextarea
             onKeyDown={(e) => handleCtrlEnter(e, submitForm)}
+            isRequired
           />
 
           <footer className="flex mt-5 items-center justify-between">
-            {/* todo: translations */}
-            <div className="flex items-center gap-2">
-              <AddCallPopover />
-              <AddIncidentPopover />
-            </div>
+            {isDispatch ? (
+              <div className="flex items-center gap-2">
+                <AddCallPopover />
+                <AddIncidentPopover />
+              </div>
+            ) : null}
 
             <Button disabled={state === "loading"} className="flex items-center ml-2" type="submit">
               {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}
