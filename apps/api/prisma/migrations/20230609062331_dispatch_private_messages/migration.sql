@@ -4,7 +4,10 @@ CREATE TABLE "DispatchChat" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "message" TEXT NOT NULL,
+    "unitId" TEXT NOT NULL,
     "creatorId" TEXT,
+    "callId" TEXT,
+    "incidentId" TEXT,
 
     CONSTRAINT "DispatchChat_pkey" PRIMARY KEY ("id")
 );
@@ -24,6 +27,12 @@ CREATE TABLE "ChatCreator" (
 
 -- AddForeignKey
 ALTER TABLE "DispatchChat" ADD CONSTRAINT "DispatchChat_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "ChatCreator"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "DispatchChat" ADD CONSTRAINT "DispatchChat_callId_fkey" FOREIGN KEY ("callId") REFERENCES "Call911"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "DispatchChat" ADD CONSTRAINT "DispatchChat_incidentId_fkey" FOREIGN KEY ("incidentId") REFERENCES "LeoIncident"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ChatCreator" ADD CONSTRAINT "ChatCreator_officerId_fkey" FOREIGN KEY ("officerId") REFERENCES "Officer"("id") ON DELETE SET NULL ON UPDATE CASCADE;
