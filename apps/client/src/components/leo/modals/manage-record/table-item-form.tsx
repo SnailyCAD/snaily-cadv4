@@ -195,10 +195,7 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
             />
           </div>
         </FieldWrapper>
-        <FieldWrapper
-          errorMessage={violationErrors[penalCode.id]?.communityService}
-          description={finesDisabled ? null : finesDescription}
-        >
+        <FieldWrapper errorMessage={violationErrors[penalCode.id]?.communityService}>
           <div className="flex items-center">
             <FormField className="mb-0" label={t("communityService")} checkbox>
               <Checkbox
