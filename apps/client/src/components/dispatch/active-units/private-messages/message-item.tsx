@@ -5,6 +5,9 @@ import { FullDate } from "components/shared/FullDate";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { classNames } from "lib/classNames";
 import { makeUnitName } from "lib/utils";
+import { Full911Call, useCall911State } from "state/dispatch/call-911-state";
+import { useModal } from "state/modalState";
+import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 
 interface Props {
@@ -14,6 +17,8 @@ interface Props {
 export function MessageItem(props: Props) {
   const { generateCallsign } = useGenerateCallsign();
   const t = useTranslations("Leo");
+  const setCurrentlySelectedCall = useCall911State((state) => state.setCurrentlySelectedCall);
+  const { openModal } = useModal();
 
   const unitCallsign = props.message.creator?.unit
     ? generateCallsign(props.message.creator.unit, getTemplateId(props.message))
@@ -21,6 +26,19 @@ export function MessageItem(props: Props) {
 
   const unitName = props.message.creator?.unit ? makeUnitName(props.message.creator.unit) : null;
   const isDispatch = !props.message.creator?.unit;
+
+  function handleCallPress() {
+    if (!props.message.call) return;
+
+    setCurrentlySelectedCall(props.message.call as Full911Call);
+    openModal(ModalIds.Manage911Call);
+  }
+
+  function handleIncidentPress() {
+    if (!props.message.incident) return;
+
+    openModal(ModalIds.ManageIncident, props.message.incident);
+  }
 
   return (
     <li className="flex flex-col rounded-md gap-y-0.5">
@@ -42,12 +60,12 @@ export function MessageItem(props: Props) {
 
       <footer className="flex items-center gap-2">
         {props.message.call ? (
-          <Button size="xs" className="text-base mt-1">
+          <Button onPress={handleCallPress} size="xs" className="text-base mt-1">
             {t("appendedActiveCall", { call: `#${props.message.call.caseNumber}` })}
           </Button>
         ) : null}
         {props.message.incident ? (
-          <Button size="xs" className="text-base mt-1">
+          <Button onPress={handleIncidentPress} size="xs" className="text-base mt-1">
             {t("appendedActiveIncident", { incident: `#${props.message.incident.caseNumber}` })}
           </Button>
         ) : null}

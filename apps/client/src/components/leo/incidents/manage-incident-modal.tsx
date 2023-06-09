@@ -39,11 +39,13 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
   incident: tempIncident,
   type,
 }: Props<T>) {
-  const { activeIncidents, setActiveIncidents } = useActiveIncidents();
-  const foundIncident = activeIncidents.find((v) => v.id === tempIncident?.id);
-  const incident = foundIncident ?? tempIncident ?? null;
+  const { isOpen, closeModal, getPayload } = useModal();
 
-  const { isOpen, closeModal } = useModal();
+  const { activeIncidents, setActiveIncidents } = useActiveIncidents();
+  const payloadIncident = getPayload<LeoIncident | null>(ModalIds.ManageIncident);
+  const foundIncident = activeIncidents.find((v) => v.id === tempIncident?.id);
+  const incident = payloadIncident ?? foundIncident ?? tempIncident ?? null;
+
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const { codes10 } = useValues();
