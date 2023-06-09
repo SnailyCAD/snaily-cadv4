@@ -87,8 +87,6 @@ export function LiveMapTab() {
     }
   }
 
-  console.log({ test: cad?.miscCadSettings?.liveMapURLs });
-
   const validate = handleValidate(LIVE_MAP_SETTINGS);
   const INITIAL_VALUES = {
     liveMapURL: cad?.miscCadSettings?.liveMapURL ?? "",

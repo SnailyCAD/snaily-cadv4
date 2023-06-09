@@ -35,8 +35,6 @@ export class CADSettingsLiveMapController {
       { showUpsert: true, customAccessorKey: "id" },
     );
 
-    console.log(JSON.stringify(connectDisconnectArr, null, 4));
-
     await prisma.$transaction(
       connectDisconnectArr.map((item) =>
         prisma.miscCadSettings.update({
