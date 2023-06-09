@@ -11,7 +11,7 @@ import useFetch from "lib/useFetch";
 import { toastMessage } from "lib/toastMessage";
 import type { GetDispatchPlayerBySteamIdData } from "@snailycad/types/api";
 import { create } from "zustand";
-import { useDispatchMapState } from "state/mapState";
+import { useDispatchMapState, useSocketStore } from "state/mapState";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 
@@ -27,7 +27,8 @@ export function useMapPlayers() {
   const { players, setPlayers } = useMapPlayersStore();
 
   const { openModal } = useModal();
-  const { socket, currentMapServerURL } = useDispatchMapState();
+  const { currentMapServerURL } = useDispatchMapState();
+  const { socket } = useSocketStore();
   const { state, execute } = useFetch();
 
   const getCADUsers = React.useCallback(

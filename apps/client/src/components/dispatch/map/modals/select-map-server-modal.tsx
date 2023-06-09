@@ -6,7 +6,7 @@ import { useTranslations } from "use-intl";
 import { Alert, Button, SelectField, SelectValue } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
 import { MiscCadSettings } from "@snailycad/types";
-import { useDispatchMapState } from "state/mapState";
+import { useDispatchMapState, useSocketStore } from "state/mapState";
 import { toastMessage } from "lib/toastMessage";
 import { io } from "socket.io-client";
 
@@ -16,7 +16,8 @@ export function SelectMapServerModal() {
   const common = useTranslations("Common");
   const { cad } = useAuth();
   const liveMapURLs = createLiveMapURLs(cad?.miscCadSettings ?? null);
-  const { currentMapServerURL, socket, setSocket, setCurrentMapServerURL } = useDispatchMapState();
+  const { currentMapServerURL, setCurrentMapServerURL } = useDispatchMapState();
+  const { socket, setSocket } = useSocketStore();
   const payload = getPayload<{ showAlert?: true }>(ModalIds.SelectMapServer);
 
   function handleClose() {
