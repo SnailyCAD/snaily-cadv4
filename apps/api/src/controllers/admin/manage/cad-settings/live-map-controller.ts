@@ -12,6 +12,7 @@ import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import type { MiscCadSettings } from "@snailycad/types";
 import sharp from "sharp";
+import { manyToManyHelper } from "lib/data/many-to-many";
 
 @Controller("/admin/manage/cad-settings/live-map")
 @ContentType("application/json")
@@ -27,6 +28,23 @@ export class CADSettingsLiveMapController {
     @BodyParams() body: unknown,
   ): Promise<APITypes.PutCADMiscSettingsData> {
     const data = validateSchema(LIVE_MAP_SETTINGS, body);
+
+    const connectDisconnectArr = manyToManyHelper(
+      cad.miscCadSettings.liveMapURLs ?? [],
+      data.liveMapURLs ?? [],
+      { showUpsert: true, customAccessorKey: "id" },
+    );
+
+    console.log(JSON.stringify(connectDisconnectArr, null, 4));
+
+    await prisma.$transaction(
+      connectDisconnectArr.map((item) =>
+        prisma.miscCadSettings.update({
+          where: { id: cad.miscCadSettingsId ?? "null" },
+          data: { liveMapURLs: item },
+        }),
+      ),
+    );
 
     const updated = await prisma.miscCadSettings.update({
       where: {

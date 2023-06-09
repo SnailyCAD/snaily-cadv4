@@ -15,6 +15,9 @@ export const CAD_SETTINGS_SCHEMA = z.object({
 
 export const LIVE_MAP_SETTINGS = z.object({
   liveMapURL: z.string().nullable(),
+  liveMapURLs: z
+    .array(z.object({ url: z.string().url(), name: z.string().min(2), id: z.string().optional() }))
+    .nullable(),
 });
 
 export const API_TOKEN_SCHEMA = z.object({
