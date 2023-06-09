@@ -35,10 +35,10 @@ import { getFirstOfficerFromActiveOfficer, getInactivityFilter } from "lib/leo/u
 import type * as APITypes from "@snailycad/types/api";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { Socket } from "services/socket-service";
-import { assignUnitsToWarrant } from "lib/records/assign-units-to-warrant";
+import { assignUnitsToWarrant } from "~/lib/leo/records/assign-units-to-warrant";
 import type { cad } from "@snailycad/types";
 import { userProperties } from "lib/auth/getSessionUser";
-import { upsertRecord } from "lib/records/upsert-record";
+import { upsertRecord } from "~/lib/leo/records/upsert-record";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { getTranslator } from "utils/get-translator";
 

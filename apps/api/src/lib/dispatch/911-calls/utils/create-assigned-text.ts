@@ -1,4 +1,4 @@
-import type { handleDeleteAssignedUnit } from "./assignUnitsToCall";
+import type { handleDeleteAssignedUnit } from "../assign-units-to-911-call";
 
 interface Options {
   disconnectedUnits: NonNullable<Awaited<ReturnType<typeof handleDeleteAssignedUnit>>>[];

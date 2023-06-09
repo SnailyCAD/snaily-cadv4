@@ -1,6 +1,6 @@
 import type { DepartmentValue, DivisionValue } from "@prisma/client";
-import { prisma } from "lib/data/prisma";
-import { manyToManyHelper } from "lib/data/many-to-many";
+import { prisma } from "~/lib/data/prisma";
+import { manyToManyHelper } from "~/lib/data/many-to-many";
 
 interface Options {
   call: { id: string; departments: { id: string }[]; divisions: { id: string }[] };

@@ -1,9 +1,9 @@
 import type { AssignedUnit, Call911 } from "@prisma/client";
 import { captureException } from "@sentry/node";
-import { prisma } from "lib/data/prisma";
-import { getPrismaNameActiveCallIncident } from "lib/leo/utils";
-import type { Socket } from "services/socket-service";
-import { getNextActiveCallId } from "./getNextActiveCall";
+import { prisma } from "~/lib/data/prisma";
+import { getPrismaNameActiveCallIncident } from "~/lib/leo/utils";
+import type { Socket } from "~/services/socket-service";
+import { getNextActive911CallId } from "./get-next-active-911-call";
 
 interface HandleEndCallOptions {
   socket: Socket;
@@ -29,7 +29,7 @@ export async function handleEndCall(options: HandleEndCallOptions) {
         const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
         if (!prismaName || !unitId) return;
 
-        const nextActiveIncidentId = await getNextActiveCallId({
+        const nextActiveIncidentId = await getNextActive911CallId({
           callId: options.call.id,
           type: "unassign",
           unit: { ...unit, id: unitId },

@@ -1,14 +1,14 @@
 import { AssignedUnit, ShouldDoType } from "@prisma/client";
 import type { Call911 } from "@prisma/client";
-import { findUnit } from "lib/leo/findUnit";
-import { prisma } from "lib/data/prisma";
-import type { Socket } from "services/socket-service";
-import { manyToManyHelper } from "lib/data/many-to-many";
+import { findUnit } from "~/lib/leo/findUnit";
+import { prisma } from "~/lib/data/prisma";
+import type { Socket } from "~/services/socket-service";
+import { manyToManyHelper } from "~/lib/data/many-to-many";
 import type { z } from "zod";
 import type { ASSIGNED_UNIT } from "@snailycad/schemas";
-import { assignedUnitsInclude } from "controllers/leo/incidents/IncidentController";
-import { createAssignedText } from "./createAssignedText";
-import { getNextActiveCallId } from "./getNextActiveCall";
+import { assignedUnitsInclude } from "~/controllers/leo/incidents/IncidentController";
+import { createAssignedText } from "./utils/create-assigned-text";
+import { getNextActive911CallId } from "./get-next-active-911-call";
 
 interface Options {
   call: Call911 & { assignedUnits: AssignedUnit[] };
@@ -17,10 +17,12 @@ interface Options {
   socket?: Socket;
 }
 
-export async function assignUnitsToCall({ socket, call, unitIds, maxAssignmentsToCalls }: Options) {
+export async function assignUnitsTo911Call(options: Options) {
   const disconnectConnectArr = manyToManyHelper(
-    call.assignedUnits.map((u) => String(u.officerId || u.emsFdDeputyId || u.combinedLeoId)),
-    unitIds.map((v) => v.id),
+    options.call.assignedUnits.map((u) =>
+      String(u.officerId || u.emsFdDeputyId || u.combinedLeoId),
+    ),
+    options.unitIds.map((v) => v.id),
     { showUpsert: false },
   );
 
@@ -33,19 +35,19 @@ export async function assignUnitsToCall({ socket, call, unitIds, maxAssignmentsT
       const creationId = "connect" in data && data.connect?.id;
 
       if (deletionId) {
-        const callData = await handleDeleteAssignedUnit({ unitId: deletionId, call });
+        const callData = await handleDeleteAssignedUnit({ unitId: deletionId, call: options.call });
         if (!callData) return;
         disconnectedUnits.push(callData);
         return callData;
       }
 
       if (creationId) {
-        const isPrimary = unitIds.find((v) => v.id === creationId)?.isPrimary;
+        const isPrimary = options.unitIds.find((v) => v.id === creationId)?.isPrimary;
         const callData = await handleCreateAssignedUnit({
           unitId: creationId,
           isPrimary: isPrimary ?? false,
-          maxAssignmentsToCalls,
-          call,
+          maxAssignmentsToCalls: options.maxAssignmentsToCalls,
+          call: options.call,
         });
         if (!callData) return;
 
@@ -65,7 +67,7 @@ export async function assignUnitsToCall({ socket, call, unitIds, maxAssignmentsT
     translationData.map((data) =>
       prisma.call911Event.create({
         data: {
-          call911Id: call.id,
+          call911Id: options.call.id,
           translationData: data as any,
           description: data.key,
         },
@@ -73,9 +75,9 @@ export async function assignUnitsToCall({ socket, call, unitIds, maxAssignmentsT
     ),
   );
 
-  if (socket) {
-    await socket.emitUpdateOfficerStatus();
-    await socket.emitUpdateDeputyStatus();
+  if (options.socket) {
+    await options.socket.emitUpdateOfficerStatus();
+    await options.socket.emitUpdateDeputyStatus();
   }
 }
 
@@ -115,7 +117,7 @@ export async function handleDeleteAssignedUnit(
       await prisma[prismaName].update({
         where: { id: unitId },
         data: {
-          activeCallId: await getNextActiveCallId({
+          activeCallId: await getNextActive911CallId({
             callId: options.call.id,
             type: "unassign",
             unit: { id: options.unitId },
@@ -186,7 +188,7 @@ async function handleCreateAssignedUnit(options: HandleCreateAssignedUnitOptions
   await prisma[prismaModelName].update({
     where: { id: unit.id },
     data: {
-      activeCallId: await getNextActiveCallId({
+      activeCallId: await getNextActive911CallId({
         callId: options.call.id,
         type: "assign",
         unit,

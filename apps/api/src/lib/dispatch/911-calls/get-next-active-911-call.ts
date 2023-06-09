@@ -1,5 +1,5 @@
 import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@prisma/client";
-import { prisma } from "lib/data/prisma";
+import { prisma } from "~/lib/data/prisma";
 
 interface Options {
   callId: string;
@@ -12,7 +12,7 @@ interface Options {
  * if the unit already has an active call, move the call to the stack.
  * once the call is ended, the new activeCall will be the latest call in the stack.
  */
-export async function getNextActiveCallId(options: Options) {
+export async function getNextActive911CallId(options: Options) {
   if (options.force) {
     return options.callId;
   }

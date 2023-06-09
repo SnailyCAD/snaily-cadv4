@@ -30,8 +30,8 @@ import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
 import { getInactivityFilter } from "lib/leo/utils";
-import { assignUnitsToCall } from "lib/calls/assignUnitsToCall";
-import { linkOrUnlinkCallDepartmentsAndDivisions } from "lib/calls/linkOrUnlinkCallDepartmentsAndDivisions";
+import { assignUnitsTo911Call } from "lib/dispatch/911-calls/assign-units-to-911-call";
+import { linkOrUnlinkCallDepartmentsAndDivisions } from "lib/dispatch/911-calls/link-unlink-departments-divisions-call-911";
 import { hasPermission } from "@snailycad/permissions";
 import type * as APITypes from "@snailycad/types/api";
 import {
@@ -39,11 +39,11 @@ import {
   incidentInclude,
 } from "controllers/leo/incidents/IncidentController";
 import type { z } from "zod";
-import { getNextActiveCallId } from "lib/calls/getNextActiveCall";
+import { getNextActive911CallId } from "lib/dispatch/911-calls/get-next-active-911-call";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 import { getTranslator } from "utils/get-translator";
 import { HandleInactivity } from "middlewares/handle-inactivity";
-import { handleEndCall } from "lib/calls/handle-end-call";
+import { handleEndCall } from "lib/dispatch/911-calls/handle-end-911-call";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { isFeatureEnabled } from "lib/upsert-cad";
 import { _leoProperties, unitProperties } from "utils/leo/includes";
@@ -225,7 +225,7 @@ export class Calls911Controller {
     }
 
     const unitIds = (data.assignedUnits ?? []) as z.infer<typeof ASSIGNED_UNIT>[];
-    await assignUnitsToCall({
+    await assignUnitsTo911Call({
       call,
       maxAssignmentsToCalls,
       socket: this.socket,
@@ -341,7 +341,7 @@ export class Calls911Controller {
     const unitIds = (data.assignedUnits ?? []) as z.infer<typeof ASSIGNED_UNIT>[];
 
     if (data.assignedUnits) {
-      await assignUnitsToCall({
+      await assignUnitsTo911Call({
         call,
         maxAssignmentsToCalls,
         unitIds,
@@ -551,7 +551,7 @@ export class Calls911Controller {
     await prisma[prismaNames[type]].update({
       where: { id: unit.id },
       data: {
-        activeCallId: await getNextActiveCallId({
+        activeCallId: await getNextActive911CallId({
           callId: call.id,
           type: callType,
           unit,

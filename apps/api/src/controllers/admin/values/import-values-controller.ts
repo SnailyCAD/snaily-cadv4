@@ -42,7 +42,7 @@ import {
   Feature,
 } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
-import { upsertWarningApplicable } from "lib/records/penal-code";
+import { upsertWarningApplicable } from "~/lib/leo/records/penal-code";
 import { getLastOfArray, manyToManyHelper } from "lib/data/many-to-many";
 import { getPermissionsForValuesRequest } from "lib/values/utils";
 import { UsePermissions } from "middlewares/use-permissions";

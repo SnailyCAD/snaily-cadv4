@@ -20,6 +20,7 @@
     "lib": ["esnext"],
     "baseUrl": ".",
     "paths": {
+      "~/*": ["./src/*"],
       "utils/*": ["./src/utils/*"],
       "lib/*": ["./src/lib/*"],
       "middlewares/*": ["./src/middlewares/*"],

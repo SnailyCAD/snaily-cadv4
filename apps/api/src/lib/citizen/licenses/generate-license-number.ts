@@ -1,4 +1,4 @@
-import { generateString } from "../utils/generate-string";
+import { generateString } from "../../../utils/generate-string";
 
 interface GenerateLicenseNumberOptions {
   template?: string | null;

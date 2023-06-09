@@ -1,8 +1,8 @@
 import type { LICENSE_SCHEMA } from "@snailycad/schemas";
 import type { z } from "zod";
 import type { DriversLicenseCategoryValue, Citizen, Prisma } from "@prisma/client";
-import { getLastOfArray, manyToManyHelper } from "lib/data/many-to-many";
-import { prisma } from "lib/data/prisma";
+import { getLastOfArray, manyToManyHelper } from "~/lib/data/many-to-many";
+import { prisma } from "~/lib/data/prisma";
 import type { SuspendedCitizenLicenses } from "@snailycad/types";
 
 type LicenseSchema = Pick<

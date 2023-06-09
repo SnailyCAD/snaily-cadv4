@@ -25,7 +25,7 @@ import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { shouldCheckCitizenUserId } from "lib/citizen/has-citizen-access";
 import type * as APITypes from "@snailycad/types/api";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
-import { setEndedSuspendedLicenses } from "lib/citizen/set-ended-suspended-licenses";
+import { setEndedSuspendedLicenses } from "lib/citizen/licenses/set-ended-suspended-licenses";
 import { incidentInclude } from "../incidents/IncidentController";
 import { callInclude } from "controllers/dispatch/911-calls/calls-911-controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
