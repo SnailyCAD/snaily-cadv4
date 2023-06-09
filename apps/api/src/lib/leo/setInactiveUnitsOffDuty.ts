@@ -6,11 +6,6 @@ import { handleStartEndOfficerLog } from "./handleStartEndOfficerLog";
 
 export async function setInactiveUnitsOffDuty(lastStatusChangeTimestamp: Date, socket: Socket) {
   try {
-    // use setTimeout to create a delay for 10 seconds
-    await new Promise((resolve) => {
-      setTimeout(resolve, 10_000);
-    });
-
     const where = {
       status: { shouldDo: { not: ShouldDoType.SET_OFF_DUTY } },
       lastStatusChangeTimestamp: { lte: lastStatusChangeTimestamp },
@@ -50,6 +45,16 @@ export async function setInactiveUnitsOffDuty(lastStatusChangeTimestamp: Date, s
         where,
         data: { statusId: null, activeCallId: null },
       }),
+      ...officers.map((officer) =>
+        prisma.dispatchChat.deleteMany({
+          where: { unitId: officer.id },
+        }),
+      ),
+      ...deputies.map((deputy) =>
+        prisma.dispatchChat.deleteMany({
+          where: { unitId: deputy.id },
+        }),
+      ),
     ]);
   } catch {
     console.error("unable to set units off-duty. Skipping...");

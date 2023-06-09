@@ -14,6 +14,7 @@ import {
   EmsFdDeputy,
   Warrant,
   ActiveTone,
+  DispatchChat,
 } from "@prisma/client";
 import { prisma } from "lib/data/prisma";
 import {
@@ -178,5 +179,9 @@ export class Socket {
       ...data,
       user: { username: data.createdBy.username },
     });
+  }
+
+  emitPrivateMessage(unitId: string, chat: DispatchChat) {
+    this.io.sockets.emit(SocketEvents.PrivateMessage, { unitId, chat });
   }
 }

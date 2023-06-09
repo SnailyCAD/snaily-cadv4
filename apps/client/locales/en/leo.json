@@ -303,7 +303,18 @@
     "arrestReport": "Arrest Report",
     "writtenWarning": "Written Warning",
     "warrant": "Warrant",
-    "viewAllRecordLogs": "View all record logs"
+    "viewAllRecordLogs": "View all record logs",
+    "privateMessage": "Private Message",
+    "privateMessages": "Private Messages",
+    "send": "Send",
+    "noMessages": "No messages",
+    "message": "Message",
+    "newMessageFromDispatch": "New Message from Dispatch",
+    "addActiveCall": "Add active call",
+    "addActiveIncident": "Add active incident",
+    "appendedActiveCall": "Appended active call: {call}",
+    "appendedActiveIncident": "Appended active incident: {incident}",
+    "activeIncident": "Active Incident"
   },
   "Bolos": {
     "activeBolos": "Active Bolos",

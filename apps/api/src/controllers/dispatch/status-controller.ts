@@ -297,16 +297,24 @@ export class StatusController {
       });
     } else {
       if (code.shouldDo === ShouldDoType.SET_OFF_DUTY) {
-        await prisma.combinedLeoUnit.delete({
-          where: {
-            id: unit.unit.id,
-          },
-        });
+        if (unit.type === "combined-ems-fd") {
+          await prisma.combinedEmsFdUnit.delete({
+            where: { id: unit.unit.id },
+          });
+        } else {
+          await prisma.combinedLeoUnit.delete({
+            where: { id: unit.unit.id },
+          });
+        }
       }
     }
 
     if (code.shouldDo === ShouldDoType.SET_OFF_DUTY) {
       this.socket.emitSetUnitOffDuty(unit.unit.id);
+
+      await prisma.dispatchChat.deleteMany({
+        where: { unitId: unit.unit.id },
+      });
     }
 
     if (unit.type === "leo" || unit.type === "combined-leo") {
