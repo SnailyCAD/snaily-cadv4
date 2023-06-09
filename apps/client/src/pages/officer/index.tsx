@@ -21,7 +21,7 @@ import { usePanicButton } from "hooks/shared/usePanicButton";
 import { Title } from "components/shared/Title";
 import { UtilityPanel } from "components/shared/UtilityPanel";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import { useNameSearch } from "state/search/name-search-state";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";

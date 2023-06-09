@@ -2,7 +2,7 @@ import { useTranslations } from "use-intl";
 import { Loader, Button, AsyncListSearchField, Item, SwitchField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { makeUnitName, yesOrNoText } from "lib/utils";

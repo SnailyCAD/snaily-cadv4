@@ -1,6 +1,6 @@
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 import { hasValueObj, isBaseValue } from "@snailycad/utils/typeguards";
 import type { DeleteValueByIdData } from "@snailycad/types/api";

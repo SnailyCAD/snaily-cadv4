@@ -6,7 +6,7 @@ import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { EmployeeAsEnum, EmployeeValue } from "@snailycad/types";
 import { useTranslations } from "use-intl";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { getValueStrFromValue } from "lib/admin/values/utils";
 import { shallow } from "zustand/shallow";
 import { useBusinessState } from "state/business-state";

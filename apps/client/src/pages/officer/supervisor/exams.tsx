@@ -14,7 +14,7 @@ import { Permissions } from "@snailycad/permissions";
 import { Status } from "components/shared/Status";
 import { ManageExamModal } from "components/leo/exams/ManageExamModal";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { usePermission } from "hooks/usePermission";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";

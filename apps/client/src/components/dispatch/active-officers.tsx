@@ -3,7 +3,7 @@ import { useTranslations } from "use-intl";
 import { Button } from "@snailycad/ui";
 import { ActiveOfficer, useLeoState } from "state/leo-state";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useActiveOfficers } from "hooks/realtime/useActiveOfficers";
 import { useRouter } from "next/router";
 import { formatUnitDivisions, makeUnitName } from "lib/utils";

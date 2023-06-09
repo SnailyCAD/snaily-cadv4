@@ -22,7 +22,7 @@ import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { PatchCheckFill } from "react-bootstrap-icons";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 
 interface BleeterProfilePageProps {

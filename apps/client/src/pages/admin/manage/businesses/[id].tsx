@@ -17,7 +17,7 @@ import type {
   GetManageBusinessByIdEmployeesData,
 } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import dynamic from "next/dynamic";
 import Link from "next/link";

@@ -7,7 +7,7 @@ import { useModal } from "state/modalState";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { Officer, ValueType } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { formatOfficerDepartment, formatUnitDivisions, makeUnitName, requestAll } from "lib/utils";

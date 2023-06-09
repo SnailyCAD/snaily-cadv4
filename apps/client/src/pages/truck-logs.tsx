@@ -6,7 +6,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 import useFetch from "lib/useFetch";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";

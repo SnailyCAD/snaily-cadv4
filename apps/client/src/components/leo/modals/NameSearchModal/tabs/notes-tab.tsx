@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
 import type { NameSearchResult } from "state/search/name-search-state";
 import type { VehicleSearchResult } from "state/search/vehicle-search-state";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { ManageNoteModal } from "../ManageNoteModal";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";

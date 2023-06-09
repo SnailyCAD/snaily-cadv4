@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 import { Alert, Button, SelectField, SelectValue } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";

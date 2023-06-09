@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { Record, RecordType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { Button, TabsContent } from "@snailycad/ui";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";

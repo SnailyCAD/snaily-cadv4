@@ -13,7 +13,7 @@ import { classNames } from "lib/classNames";
 import { makeUnitName } from "lib/utils";
 import { useTranslations } from "next-intl";
 import { useDispatchState } from "state/dispatch/dispatch-state";
-import { DndActions } from "types/DndActions";
+import { DndActions } from "types/dnd-actions";
 
 interface Props {
   incident: LeoIncident;

@@ -7,7 +7,7 @@ import { Button, TabsContent } from "@snailycad/ui";
 import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicle-search-state";
 import { useModal } from "state/modalState";
 import { useNameSearch } from "state/search/name-search-state";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 
 export function NameSearchVehiclesTab() {
   const t = useTranslations();

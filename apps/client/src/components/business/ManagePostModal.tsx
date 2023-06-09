@@ -5,7 +5,7 @@ import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useBusinessState } from "state/business-state";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 import { CREATE_COMPANY_POST_SCHEMA } from "@snailycad/schemas";
 import { handleValidate } from "lib/handleValidate";

@@ -3,7 +3,7 @@ import { Button, SelectField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useAsyncTable } from "hooks/shared/table/use-async-table";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import * as Accordion from "@radix-ui/react-accordion";
 import { CaretDownFill } from "react-bootstrap-icons";
 import type { GetManageUsersInactiveUsers } from "@snailycad/types/api";

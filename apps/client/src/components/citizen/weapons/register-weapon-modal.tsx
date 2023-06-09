@@ -8,7 +8,7 @@ import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useValues } from "src/context/ValuesContext";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import {
   ValueLicenseType,
   ValueType,

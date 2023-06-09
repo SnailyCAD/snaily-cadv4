@@ -11,7 +11,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import type { Full911Call } from "state/dispatch/dispatch-state";
 import { Input, Loader, Button } from "@snailycad/ui";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { LinkCallToIncidentModal } from "components/leo/call-history/LinkCallToIncidentModal";
 import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";

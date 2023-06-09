@@ -8,7 +8,7 @@ import useFetch from "lib/useFetch";
 import { ActiveDeputy } from "state/ems-fd-state";
 import { ActiveOfficer } from "state/leo-state";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 
 interface Props {

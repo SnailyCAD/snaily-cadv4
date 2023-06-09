@@ -4,7 +4,7 @@ import * as Accordion from "@radix-ui/react-accordion";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useAsyncTable } from "components/shared/Table";
 import type { GetManageUnitsInactiveUnits } from "@snailycad/types/api";
 import { toastMessage } from "lib/toastMessage";

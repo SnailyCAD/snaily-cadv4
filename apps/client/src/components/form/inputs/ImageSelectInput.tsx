@@ -4,7 +4,7 @@ import { FormikHelpers, useFormikContext } from "formik";
 import { useTranslations } from "next-intl";
 import { FormField } from "../FormField";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { CropImageModal } from "components/modal/CropImageModal";
 import { AllowedFileExtension, allowedFileExtensions, IMAGES_REGEX } from "@snailycad/config";
 import Link from "next/link";

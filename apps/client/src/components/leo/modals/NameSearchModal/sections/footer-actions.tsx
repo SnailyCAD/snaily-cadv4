@@ -9,7 +9,7 @@ import { normalizeValue } from "lib/values/normalize-value";
 import { ThreeDotsVertical } from "react-bootstrap-icons";
 import { useModal } from "state/modalState";
 import { useNameSearch } from "state/search/name-search-state";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 import { shallow } from "zustand/shallow";
 import { ManageRecordModal } from "../../manage-record/manage-record-modal";

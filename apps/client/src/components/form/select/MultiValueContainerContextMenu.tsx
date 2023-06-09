@@ -7,7 +7,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Full911Call, useDispatchState } from "state/dispatch/dispatch-state";
 import { makeUnitName } from "lib/utils";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { isUnitCombined } from "@snailycad/utils";
 import type { Post911CallEventsData, PutDispatchStatusByUnitId } from "@snailycad/types/api";
 

@@ -3,7 +3,7 @@ import { useTranslations } from "use-intl";
 import { Button } from "@snailycad/ui";
 import { ManageUnitModal } from "./modals/manage-unit-modal";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { ActiveDeputy, useEmsFdState } from "state/ems-fd-state";
 import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
 import { useRouter } from "next/router";

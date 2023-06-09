@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import { NameSearchResult, useNameSearch } from "state/search/name-search-state";
 import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicle-search-state";
 import { useWeaponSearch, WeaponSearchResult } from "state/search/weapon-search-state";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import type { CustomFieldResults } from "./CustomFieldSearch";
 
 interface Props {

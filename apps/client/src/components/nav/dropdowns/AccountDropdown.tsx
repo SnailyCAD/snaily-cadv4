@@ -7,7 +7,7 @@ import { useAuth } from "context/AuthContext";
 import { classNames } from "lib/classNames";
 import { Dropdown } from "components/Dropdown";
 import { Button } from "@snailycad/ui";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 import dynamic from "next/dynamic";
 

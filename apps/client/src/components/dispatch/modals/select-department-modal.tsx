@@ -2,7 +2,7 @@ import { Button, Loader } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 import { useValues } from "context/ValuesContext";
 import { Select } from "components/form/Select";

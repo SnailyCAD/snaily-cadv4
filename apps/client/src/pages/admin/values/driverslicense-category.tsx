@@ -15,7 +15,7 @@ import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll, yesOrNoText } from "lib/utils";
 import dynamic from "next/dynamic";
 import { Title } from "components/shared/Title";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { AlertModal } from "components/modal/AlertModal";
 import { Permissions } from "@snailycad/permissions";
 import type { DeleteValueByIdData, PutValuePositionsData } from "@snailycad/types/api";

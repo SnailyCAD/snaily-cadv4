@@ -12,7 +12,7 @@ import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { Select } from "components/form/Select";
 import { isUnitCombined, isUnitCombinedEmsFd } from "@snailycad/utils/typeguards";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";

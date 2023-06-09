@@ -9,7 +9,7 @@ import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import type { Full911Call } from "state/dispatch/dispatch-state";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import type { LeoIncident } from "@snailycad/types";
 import type { PostLink911CallToIncident } from "@snailycad/types/api";
 

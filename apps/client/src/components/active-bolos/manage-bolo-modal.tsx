@@ -5,7 +5,7 @@ import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { Bolo, BoloType, RegisteredVehicle } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { CREATE_BOLO_SCHEMA } from "@snailycad/schemas";

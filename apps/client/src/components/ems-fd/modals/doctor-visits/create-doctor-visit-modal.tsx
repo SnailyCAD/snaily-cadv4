@@ -5,7 +5,7 @@ import { Loader, Button, TextField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import type { DoctorVisit } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import type { PostEmsFdDoctorVisit } from "@snailycad/types/api";

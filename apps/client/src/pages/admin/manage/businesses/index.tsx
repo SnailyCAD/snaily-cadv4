@@ -8,7 +8,7 @@ import { useModal } from "state/modalState";
 
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { requestAll, yesOrNoText } from "lib/utils";
 import { PendingBusinessesTab } from "components/admin/manage/business/pending-businesses-tab";
 import { useAuth } from "context/AuthContext";

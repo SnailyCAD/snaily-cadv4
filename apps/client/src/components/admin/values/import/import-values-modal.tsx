@@ -6,7 +6,7 @@ import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { useTranslations } from "use-intl";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import type { ValueType } from "@snailycad/types";
 import type { ImportValuesData } from "@snailycad/types/api";
 

@@ -4,7 +4,7 @@ import { Loader, Button } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import useFetch from "lib/useFetch";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useRouter } from "next/router";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import type { PutTaxiCallsData, PutTowCallsData } from "@snailycad/types/api";

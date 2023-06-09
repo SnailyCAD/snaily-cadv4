@@ -12,7 +12,7 @@ import { Permissions } from "@snailycad/permissions";
 import { Button, buttonSizes, buttonVariants } from "@snailycad/ui";
 import { useTranslations } from "use-intl";
 import dynamic from "next/dynamic";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import Link from "next/link";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useModal } from "state/modalState";

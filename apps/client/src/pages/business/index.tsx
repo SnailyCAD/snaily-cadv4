@@ -7,7 +7,7 @@ import { Layout } from "components/Layout";
 import { Button } from "@snailycad/ui";
 import { useTranslations } from "use-intl";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { BusinessCard } from "components/business/BusinessCard";
 import dynamic from "next/dynamic";
 import { requestAll } from "lib/utils";

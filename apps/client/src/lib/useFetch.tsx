@@ -4,7 +4,7 @@ import { useTranslations } from "use-intl";
 import type { FormikHelpers } from "formik";
 import { toastMessage } from "./toastMessage";
 import { useModal } from "../state/modalState";
-import { ModalIds } from "../types/ModalIds";
+import { ModalIds } from "../types/modal-ids";
 import { useAuth } from "../context/AuthContext";
 import { getNextI18nConfig } from "./i18n/getNextI18nConfig";
 import {

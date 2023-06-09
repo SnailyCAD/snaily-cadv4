@@ -3,7 +3,7 @@ import { Button } from "@snailycad/ui";
 import { Table, useTableState } from "components/shared/Table";
 import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useActiveWarrants } from "hooks/realtime/use-active-warrants";
 import { makeUnitName } from "lib/utils";

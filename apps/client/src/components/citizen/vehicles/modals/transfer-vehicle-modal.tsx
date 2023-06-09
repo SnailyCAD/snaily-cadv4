@@ -6,7 +6,7 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
 import type { RegisteredVehicle } from "@snailycad/types";
 import { FormRow } from "components/form/FormRow";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { handleValidate } from "lib/handleValidate";
 import { TRANSFER_VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";

@@ -7,7 +7,7 @@ import { Status } from "components/shared/Status";
 import { FullDate } from "components/shared/FullDate";
 import { useModal } from "state/modalState";
 import { Button, TabsContent } from "@snailycad/ui";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import type { GetExpungementRequestsData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import useFetch from "lib/useFetch";

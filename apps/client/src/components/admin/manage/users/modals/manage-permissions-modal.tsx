@@ -2,7 +2,7 @@ import * as React from "react";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { getPermissions, PermissionNames, Permissions } from "@snailycad/permissions";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";

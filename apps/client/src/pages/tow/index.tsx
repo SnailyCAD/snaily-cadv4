@@ -9,7 +9,7 @@ import type { GetServerSideProps } from "next";
 import type { TaxiCall, TowCall } from "@snailycad/types";
 import { Button } from "@snailycad/ui";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { TowTaxiCallsTable } from "components/calls/TowTaxiCallsTable";

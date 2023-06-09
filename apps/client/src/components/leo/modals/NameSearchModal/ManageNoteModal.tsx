@@ -5,7 +5,7 @@ import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import type { VehicleSearchResult } from "state/search/vehicle-search-state";
 import type { NameSearchResult } from "state/search/name-search-state";
 import type { PutNotesData, PostNotesData } from "@snailycad/types/api";

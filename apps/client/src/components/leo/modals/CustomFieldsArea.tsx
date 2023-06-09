@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import type { NameSearchResult } from "state/search/name-search-state";
 import type { VehicleSearchResult } from "state/search/vehicle-search-state";
 import type { WeaponSearchResult } from "state/search/weapon-search-state";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { Permissions, usePermission } from "hooks/usePermission";
 
 interface Props {

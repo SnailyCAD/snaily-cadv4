@@ -7,7 +7,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 import { useTranslations } from "next-intl";
 import { Full911Call, useDispatchState } from "state/dispatch/dispatch-state";
-import { DndActions } from "types/DndActions";
+import { DndActions } from "types/dnd-actions";
 import { shallow } from "zustand/shallow";
 import { classNames } from "lib/classNames";
 

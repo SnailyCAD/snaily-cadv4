@@ -26,7 +26,7 @@ import {
 import { useTranslations } from "use-intl";
 import { Select } from "components/form/Select";
 import hexColor from "hex-color-regex";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { DepartmentFields } from "./manage-modal/department-fields";
 import { StatusValueFields, useDefaultDepartments } from "./manage-modal/status-value-fields";
 import { LicenseFields } from "./manage-modal/license-fields";

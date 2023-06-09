@@ -5,7 +5,7 @@ import { FullDate } from "components/shared/FullDate";
 import { Table, useTableState } from "components/shared/Table";
 import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import dynamic from "next/dynamic";
 import { usePermission, Permissions } from "hooks/usePermission";
 import type { GetTaxiCallsData, GetTowCallsData } from "@snailycad/types/api";

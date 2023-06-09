@@ -5,7 +5,7 @@ import { Table, useTableState } from "components/shared/Table";
 import { useTranslations } from "next-intl";
 import { ManageCourtDateModal } from "./ManageCourtDateModal";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { AlertModal } from "components/modal/AlertModal";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 

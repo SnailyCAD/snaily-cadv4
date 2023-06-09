@@ -15,7 +15,7 @@ import useFetch from "lib/useFetch";
 import { getObjLength, isEmpty, makeUnitName, yesOrNoText } from "lib/utils";
 import dynamic from "next/dynamic";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 
 const ManageIncidentModal = dynamic(async () => {

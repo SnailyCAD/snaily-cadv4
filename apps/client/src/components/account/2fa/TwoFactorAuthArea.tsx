@@ -1,7 +1,7 @@
 import { useTranslations } from "next-intl";
 import { useAuth } from "context/AuthContext";
 import { Button } from "@snailycad/ui";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 
 export function TwoFactorAuthArea() {

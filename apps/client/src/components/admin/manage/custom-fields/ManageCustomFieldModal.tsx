@@ -6,7 +6,7 @@ import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { CustomField, CustomFieldCategory } from "@snailycad/types";
 import { useTranslations } from "use-intl";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { CUSTOM_FIELDS_SCHEMA } from "@snailycad/schemas";
 import type { PostManageCustomFieldsData, PutManageCustomFieldsData } from "@snailycad/types/api";
 

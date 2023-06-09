@@ -8,7 +8,7 @@ import { makeUnitName, requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import { Record, BaseCitizen, RecordRelease, ReleaseType, ValueType } from "@snailycad/types";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { Table, useTableState } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import compareDesc from "date-fns/compareDesc";

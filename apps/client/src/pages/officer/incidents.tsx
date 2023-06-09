@@ -7,7 +7,7 @@ import type { GetServerSideProps } from "next";
 import { useTranslations } from "use-intl";
 import { useModal } from "state/modalState";
 import { Alert, Button } from "@snailycad/ui";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useLeoState } from "state/leo-state";
 import { Title } from "components/shared/Title";
 import { usePermission, Permissions } from "hooks/usePermission";

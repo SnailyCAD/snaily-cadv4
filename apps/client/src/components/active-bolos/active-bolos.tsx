@@ -2,7 +2,7 @@ import * as React from "react";
 import { useModal } from "state/modalState";
 import { useBolos } from "hooks/realtime/useBolos";
 import useFetch from "lib/useFetch";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { type Bolo, ShouldDoType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import type { DeleteBolosData, GetBolosData } from "@snailycad/types/api";

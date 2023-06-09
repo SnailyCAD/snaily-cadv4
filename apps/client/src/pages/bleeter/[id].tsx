@@ -6,7 +6,7 @@ import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { useTranslations } from "use-intl";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";

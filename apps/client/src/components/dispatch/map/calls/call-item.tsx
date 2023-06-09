@@ -2,7 +2,7 @@ import * as React from "react";
 import * as Accordion from "@radix-ui/react-accordion";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { Button } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { CaretDownFill } from "react-bootstrap-icons";

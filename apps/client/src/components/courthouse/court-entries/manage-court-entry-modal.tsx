@@ -8,7 +8,7 @@ import { Form, Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { DEFAULT_EDITOR_DATA, Editor } from "components/editor/editor";
 import { CourtEntryDates } from "./court-entry-dates";
 import type { PostCourtEntriesData, PutCourtEntriesData } from "@snailycad/types/api";

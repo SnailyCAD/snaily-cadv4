@@ -4,7 +4,7 @@ import { useModal } from "state/modalState";
 import { useFormikContext } from "formik";
 import { yesOrNoText } from "lib/utils";
 import { useTranslations } from "next-intl";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { ManageSeizedItemsModal } from "./manage-seized-items-modal";
 import type { SeizedItem } from "@snailycad/types";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";

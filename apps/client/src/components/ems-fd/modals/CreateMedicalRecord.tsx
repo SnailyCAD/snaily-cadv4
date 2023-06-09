@@ -6,7 +6,7 @@ import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import type { MedicalRecord } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import { Select } from "components/form/Select";

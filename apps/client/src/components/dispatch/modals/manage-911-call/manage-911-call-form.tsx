@@ -7,7 +7,7 @@ import { CALL_911_SCHEMA } from "@snailycad/schemas";
 import { dataToSlate, Editor } from "components/editor/editor";
 import { useValues } from "context/ValuesContext";
 import { toastMessage } from "lib/toastMessage";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { Form, Formik } from "formik";
 import { Button, Input, Loader, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";

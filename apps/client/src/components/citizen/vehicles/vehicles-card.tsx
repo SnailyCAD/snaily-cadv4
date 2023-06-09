@@ -2,7 +2,7 @@ import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "@snailycad/ui";
 import type { RegisteredVehicle } from "@snailycad/types";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";

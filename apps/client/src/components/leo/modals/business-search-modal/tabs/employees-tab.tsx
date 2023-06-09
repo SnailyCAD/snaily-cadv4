@@ -4,7 +4,7 @@ import { Table, useTableState } from "components/shared/Table";
 import { yesOrNoText } from "lib/utils";
 import { useModal } from "state/modalState";
 import { useBusinessSearch } from "state/search/business-search-state";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 
 export function BusinessSearchEmployeesTab() {

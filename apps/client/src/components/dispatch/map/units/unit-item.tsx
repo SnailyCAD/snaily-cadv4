@@ -7,7 +7,7 @@ import type { MapPlayer } from "types/map";
 import { Button } from "@snailycad/ui";
 import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import type { CombinedEmsFdUnit, CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 import { Infofield } from "components/shared/Infofield";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";

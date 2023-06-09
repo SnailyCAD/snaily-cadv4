@@ -6,7 +6,7 @@ import { Table, useTableState } from "components/shared/Table";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { AddQualificationsModal } from "./AddQualificationsModal";
 import { FullDate } from "components/shared/FullDate";
 import { QualificationsHoverCard } from "./QualificationHoverCard";

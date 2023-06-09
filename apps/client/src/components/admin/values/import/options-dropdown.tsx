@@ -1,7 +1,7 @@
 import { ThreeDots } from "react-bootstrap-icons";
 import { useTranslations } from "next-intl";
 import { Button } from "@snailycad/ui";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 import { useDownload } from "@casper124578/useful";
 import { Dropdown } from "components/Dropdown";

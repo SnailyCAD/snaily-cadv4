@@ -1,7 +1,7 @@
 import { Button, TabsContent } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import type { CourthousePost } from "@snailycad/types";
 import { FullDate } from "components/shared/FullDate";

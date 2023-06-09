@@ -8,7 +8,7 @@ import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { filterLicenseTypes } from "lib/utils";
 import { useTranslations } from "next-intl";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { ValueLicenseType } from "@snailycad/types";
 import { useVehicleSearch } from "state/search/vehicle-search-state";
 import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";

@@ -17,7 +17,7 @@ import { usePanicButton } from "hooks/shared/usePanicButton";
 import { Title } from "components/shared/Title";
 import { ValueType } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 import { Permissions } from "@snailycad/permissions";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";

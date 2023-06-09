@@ -13,7 +13,7 @@ import { useRouter } from "next/router";
 import type { Full911Call } from "state/dispatch/dispatch-state";
 import { useEmsFdState } from "state/ems-fd-state";
 import { useLeoState } from "state/leo-state";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 import type { VehicleSearchResult } from "state/search/vehicle-search-state";
 import { Checkbox } from "components/form/inputs/Checkbox";

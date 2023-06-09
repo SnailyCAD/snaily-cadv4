@@ -7,7 +7,7 @@ import { Button, TabsContent } from "@snailycad/ui";
 import { Table, useTableState } from "components/shared/Table";
 import { Permissions, usePermission } from "hooks/usePermission";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 import dynamic from "next/dynamic";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";

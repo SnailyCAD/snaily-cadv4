@@ -6,7 +6,7 @@ import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { Button, buttonSizes, buttonVariants } from "@snailycad/ui";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import dynamic from "next/dynamic";
 import { Title } from "components/shared/Title";
 import type { GetBleeterData } from "@snailycad/types/api";

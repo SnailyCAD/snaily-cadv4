@@ -2,7 +2,7 @@ import { useTranslations } from "use-intl";
 import { Loader, Button, TextField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { Form, Formik } from "formik";
 import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";

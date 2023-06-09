@@ -1,7 +1,7 @@
 import { useTranslations } from "use-intl";
 import { useBusinessState } from "state/business-state";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { Form, Formik } from "formik";

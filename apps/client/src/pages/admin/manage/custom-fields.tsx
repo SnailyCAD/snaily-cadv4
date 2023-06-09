@@ -11,7 +11,7 @@ import { Permissions } from "@snailycad/permissions";
 import { Button } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { ManageCustomFieldModal } from "components/admin/manage/custom-fields/ManageCustomFieldModal";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";

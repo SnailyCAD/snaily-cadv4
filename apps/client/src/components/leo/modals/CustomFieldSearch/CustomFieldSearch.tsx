@@ -7,7 +7,7 @@ import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { Select } from "components/form/Select";
 import { CustomFieldResults } from "./CustomFieldResults";
 import { handleValidate } from "lib/handleValidate";

@@ -11,7 +11,7 @@ import { Table, useTableState } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { Button } from "@snailycad/ui";
 import { ImportModal } from "components/admin/import/ImportModal";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 import { useAsyncTable } from "hooks/shared/table/use-async-table";
 import type { GetImportWeaponsData, PostImportWeaponsData } from "@snailycad/types/api";

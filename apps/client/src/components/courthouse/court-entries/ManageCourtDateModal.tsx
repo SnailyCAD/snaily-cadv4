@@ -5,7 +5,7 @@ import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import { useTranslations } from "next-intl";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import type { CourtDate } from "@snailycad/types";
 import { v4 } from "uuid";
 import parseISO from "date-fns/parseISO";

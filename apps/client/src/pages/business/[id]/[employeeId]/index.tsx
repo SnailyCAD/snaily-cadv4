@@ -8,7 +8,7 @@ import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useBusinessState } from "state/business-state";
 import { useTranslations } from "use-intl";
 import { BusinessPost, WhitelistStatus } from "@snailycad/types";

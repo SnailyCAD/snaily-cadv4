@@ -18,7 +18,7 @@ import { useValues } from "context/ValuesContext";
 import { Form, Formik, type FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 import { RecordType, type PenalCode, type Record, PaymentStatus } from "@snailycad/types";
 import { toastMessage } from "lib/toastMessage";

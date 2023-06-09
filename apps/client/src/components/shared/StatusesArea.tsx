@@ -8,7 +8,7 @@ import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
 import type { ActiveDeputy } from "state/ems-fd-state";
 import type { ActiveOfficer } from "state/leo-state";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import {
   CombinedEmsFdUnit,
   CombinedLeoUnit,

@@ -9,7 +9,7 @@ import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useNameSearch } from "state/search/name-search-state";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import type { PutSearchActionsCitizenFlagsData } from "@snailycad/types/api";
 import { shallow } from "zustand/shallow";
 

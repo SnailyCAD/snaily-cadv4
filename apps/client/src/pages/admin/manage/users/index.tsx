@@ -10,7 +10,7 @@ import { Permissions, usePermission } from "hooks/usePermission";
 import { AllUsersTab } from "components/admin/manage/users/tabs/all-users-tab";
 import type { GetManageUsersData } from "@snailycad/types/api";
 import { TabList, Button } from "@snailycad/ui";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 import dynamic from "next/dynamic";
 

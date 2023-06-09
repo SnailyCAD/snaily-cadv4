@@ -2,7 +2,7 @@ import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import useFetch from "lib/useFetch";
 import type { Full911Call } from "state/dispatch/dispatch-state";
 import { useRouter } from "next/router";

@@ -4,7 +4,7 @@ import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import { useTranslations } from "next-intl";
 import type { Unit } from "src/pages/admin/manage/units";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 
 export function AlertDeclineOfficerModal({
   onSubmit,

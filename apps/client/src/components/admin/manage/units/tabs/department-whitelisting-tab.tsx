@@ -7,7 +7,7 @@ import { Button, buttonVariants, TabsContent } from "@snailycad/ui";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { AlertDeclineOfficerModal } from "../AlertDeclineOfficerModal";
 import Link from "next/link";
 import type {

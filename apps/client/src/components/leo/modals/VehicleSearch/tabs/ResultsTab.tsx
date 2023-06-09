@@ -12,7 +12,7 @@ import { CustomFieldsArea } from "../../CustomFieldsArea";
 import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";
 import { useModal } from "state/modalState";
 import { useRouter } from "next/router";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 export function ResultsTab() {

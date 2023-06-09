@@ -4,7 +4,7 @@ import { PET_MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { PetMedicalRecord } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import type {

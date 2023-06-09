@@ -22,7 +22,7 @@ import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 import { usePermission, Permissions } from "hooks/usePermission";
 import dynamic from "next/dynamic";

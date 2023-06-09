@@ -2,7 +2,7 @@ import * as React from "react";
 import { Button, TabsContent } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { Table, useTableState } from "components/shared/Table";
 import { WhitelistStatus } from "@snailycad/types";
 import { Status } from "components/shared/Status";

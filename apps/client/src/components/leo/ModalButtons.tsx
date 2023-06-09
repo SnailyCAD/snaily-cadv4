@@ -10,7 +10,7 @@ import * as modalButtons from "components/modal-buttons/buttons";
 import { ModalButton } from "components/modal-buttons/ModalButton";
 import type { PostLeoTogglePanicButtonData } from "@snailycad/types/api";
 import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useImageUrl } from "hooks/useImageUrl";

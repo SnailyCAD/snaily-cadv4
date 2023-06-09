@@ -19,7 +19,7 @@ import { usePermission, Permissions } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { classNames } from "lib/classNames";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { OfficerRank } from "components/leo/OfficerRank";
 import type {
   DeleteManageUnitByIdData,

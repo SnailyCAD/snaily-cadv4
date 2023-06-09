@@ -2,7 +2,7 @@ import type { User } from "@snailycad/types";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { FormField } from "components/form/FormField";
 import { Form, Formik } from "formik";
 import { Loader, Button } from "@snailycad/ui";

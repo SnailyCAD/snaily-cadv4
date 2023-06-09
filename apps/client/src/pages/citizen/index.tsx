@@ -7,7 +7,7 @@ import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { Button, buttonVariants } from "@snailycad/ui";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 import { requestAll } from "lib/utils";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";

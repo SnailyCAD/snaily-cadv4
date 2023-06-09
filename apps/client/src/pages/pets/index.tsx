@@ -11,7 +11,7 @@ import { requestAll } from "lib/utils";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 
 interface PetsPageProps {

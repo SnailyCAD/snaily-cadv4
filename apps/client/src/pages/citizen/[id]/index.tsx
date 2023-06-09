@@ -20,7 +20,7 @@ import { useAuth } from "context/AuthContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Infofield } from "components/shared/Infofield";
 import { Title } from "components/shared/Title";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { FullDate } from "components/shared/FullDate";
 import type { DeleteCitizenByIdData } from "@snailycad/types/api";
 import { Dropdown } from "components/Dropdown";

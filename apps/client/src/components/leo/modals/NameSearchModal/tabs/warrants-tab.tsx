@@ -1,7 +1,7 @@
 import compareDesc from "date-fns/compareDesc";
 import { useTranslations } from "use-intl";
 import { SelectField, Button, TabsContent } from "@snailycad/ui";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";

@@ -6,7 +6,7 @@ import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import useFetch from "lib/useFetch";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { handleValidate } from "lib/handleValidate";
 import { BLEETER_SCHEMA } from "@snailycad/schemas";
 import { CropImageModal } from "components/modal/CropImageModal";

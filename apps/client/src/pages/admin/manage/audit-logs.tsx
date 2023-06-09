@@ -12,7 +12,7 @@ import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { SearchArea } from "components/shared/search/search-area";
 import { FullDate } from "components/shared/FullDate";
 import { Button } from "@snailycad/ui";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import dynamic from "next/dynamic";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";

@@ -5,7 +5,7 @@ import { Table, useTableState } from "components/shared/Table";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { usePetsState } from "state/citizen/pets-state";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 import { ManagePetNoteModal } from "./manage-pet-note-modal";
 import { AlertModal } from "components/modal/AlertModal";

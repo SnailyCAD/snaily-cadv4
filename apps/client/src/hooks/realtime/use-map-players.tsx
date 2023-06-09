@@ -12,7 +12,7 @@ import { toastMessage } from "lib/toastMessage";
 import type { GetDispatchPlayerBySteamIdData } from "@snailycad/types/api";
 import { create } from "zustand";
 import { useDispatchMapState, useSocketStore } from "state/mapState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 
 export const useMapPlayersStore = create<{

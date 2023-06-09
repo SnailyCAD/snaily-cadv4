@@ -8,7 +8,7 @@ import { EmsFdIncident, IncidentInvolvedUnit, LeoIncident, StatusViewMode } from
 import { useTranslations } from "next-intl";
 import { Button, Loader } from "@snailycad/ui";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { FullDate } from "components/shared/FullDate";
 import { generateContrastColor } from "lib/table/get-contrasting-text-color";
 import dynamic from "next/dynamic";

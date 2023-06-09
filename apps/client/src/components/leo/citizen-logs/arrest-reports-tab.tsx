@@ -7,7 +7,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { FullDate } from "components/shared/FullDate";
 import { makeUnitName } from "lib/utils";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { ManageRecordModal } from "../modals/manage-record/manage-record-modal";
 import useFetch from "lib/useFetch";
 import { Status } from "components/shared/Status";

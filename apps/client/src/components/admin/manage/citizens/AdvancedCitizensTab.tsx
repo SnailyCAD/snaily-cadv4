@@ -8,7 +8,7 @@ import { useValues } from "context/ValuesContext";
 import useFetch from "lib/useFetch";
 import { X } from "react-bootstrap-icons";
 import { ImportModal } from "components/admin/import/ImportModal";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import type { PostImportCitizensData } from "@snailycad/types/api";
 import { useTranslations } from "use-intl";
 

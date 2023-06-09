@@ -10,7 +10,7 @@ import { useModal } from "state/modalState";
 import { useHoverDirty } from "react-use";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { FullDate } from "components/shared/FullDate";
 import { classNames } from "lib/classNames";
 import { Button } from "@snailycad/ui";

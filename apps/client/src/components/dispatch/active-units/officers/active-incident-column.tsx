@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { LeoIncident } from "@snailycad/types";
 import { useTranslations } from "next-intl";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 import { Button } from "@snailycad/ui";
 import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";

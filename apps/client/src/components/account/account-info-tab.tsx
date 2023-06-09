@@ -4,7 +4,7 @@ import { useAuth } from "context/AuthContext";
 import { FormRow } from "components/form/FormRow";
 import { Button, TextField, TabsContent } from "@snailycad/ui";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import dynamic from "next/dynamic";
 
 const ManagePermissionsModal = dynamic(

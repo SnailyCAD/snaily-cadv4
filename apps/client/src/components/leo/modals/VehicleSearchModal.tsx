@@ -4,7 +4,7 @@ import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik, useFormikContext } from "formik";
 import useFetch from "lib/useFetch";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 import { BoloType, CustomFieldCategory, RegisteredVehicle } from "@snailycad/types";
 import { useRouter } from "next/router";

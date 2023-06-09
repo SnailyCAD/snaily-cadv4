@@ -7,7 +7,7 @@ import { classNames } from "lib/classNames";
 import { makeUnitName } from "lib/utils";
 import { Full911Call, useCall911State } from "state/dispatch/call-911-state";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 
 interface Props {

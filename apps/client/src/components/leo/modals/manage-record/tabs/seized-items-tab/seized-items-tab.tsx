@@ -1,6 +1,6 @@
 import { Button, TabsContent } from "@snailycad/ui";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 import { SeizedItemsTable } from "./seized-items-table";
 

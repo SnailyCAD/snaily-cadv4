@@ -7,7 +7,7 @@ import { useValues } from "context/ValuesContext";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useVehicleSearch } from "state/search/vehicle-search-state";
 import { useNameSearch } from "state/search/name-search-state";
 import type { PostSearchActionsCreateVehicle } from "@snailycad/types/api";

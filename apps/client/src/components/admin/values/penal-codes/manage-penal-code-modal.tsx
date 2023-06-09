@@ -10,7 +10,7 @@ import { PenalCode, ValueType, PenalCodeType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { FormRow } from "components/form/FormRow";
 import { dataToSlate, Editor } from "components/editor/editor";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Checkbox } from "components/form/inputs/Checkbox";
 import type { PatchValueByIdData, PostValuesData } from "@snailycad/types/api";

@@ -2,7 +2,7 @@ import { useTranslations } from "use-intl";
 import { Button, TabsContent } from "@snailycad/ui";
 import { useBusinessState } from "state/business-state";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import type { RegisteredVehicle } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { RegisterVehicleModal } from "components/citizen/vehicles/modals/register-vehicle-modal";

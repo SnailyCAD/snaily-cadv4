@@ -1,5 +1,5 @@
 import { Button } from "@snailycad/ui";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { ActiveToneType, ShouldDoType } from "@snailycad/types";
 import { useModal } from "state/modalState";
 import { useTranslations } from "use-intl";

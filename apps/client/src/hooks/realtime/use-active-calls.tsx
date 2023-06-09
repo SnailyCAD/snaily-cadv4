@@ -14,7 +14,7 @@ import type { Full911Call } from "state/dispatch/dispatch-state";
 import type { ActiveDeputy } from "state/ems-fd-state";
 import type { ActiveOfficer } from "state/leo-state";
 import { useModal } from "state/modalState";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 import { shallow } from "zustand/shallow";
 

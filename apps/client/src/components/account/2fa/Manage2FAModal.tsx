@@ -5,7 +5,7 @@ import { useModal } from "state/modalState";
 import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useAuth } from "context/AuthContext";
 import { toastMessage } from "lib/toastMessage";
 import type {

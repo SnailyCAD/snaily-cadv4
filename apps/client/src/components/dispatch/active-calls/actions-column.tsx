@@ -9,7 +9,7 @@ import { defaultPermissions } from "@snailycad/permissions";
 import type { ActiveOfficer } from "state/leo-state";
 import type { ActiveDeputy } from "state/ems-fd-state";
 import { ShouldDoType } from "@snailycad/types";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "next-intl";
 import { useCall911State } from "state/dispatch/call-911-state";
 

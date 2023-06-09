@@ -3,7 +3,7 @@ import { useTranslations } from "use-intl";
 import { LICENSE_SCHEMA } from "@snailycad/schemas";
 import { useModal } from "state/modalState";
 import { Modal } from "components/modal/Modal";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import type { SelectValue } from "components/form/Select";
 import { Button, Loader } from "@snailycad/ui";
 import { handleValidate } from "lib/handleValidate";

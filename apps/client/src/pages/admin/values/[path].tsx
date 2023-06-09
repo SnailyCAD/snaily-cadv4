@@ -17,7 +17,7 @@ import { useTableDataOfType, useTableHeadersOfType } from "lib/admin/values/valu
 import { OptionsDropdown } from "components/admin/values/import/options-dropdown";
 import { Title } from "components/shared/Title";
 import { AlertModal } from "components/modal/AlertModal";
-import { ModalIds } from "types/ModalIds";
+import { ModalIds } from "types/modal-ids";
 import { FullDate } from "components/shared/FullDate";
 import { valueRoutes } from "components/admin/Sidebar/routes";
 import type {
