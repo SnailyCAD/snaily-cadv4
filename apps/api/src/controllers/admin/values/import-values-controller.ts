@@ -141,6 +141,7 @@ export const typeHandlers = {
       const disconnectConnectArr = manyToManyHelper(
         updatedValue.trimLevels.map((v) => v.id),
         item.trimLevels ?? [],
+        { showUpsert: false },
       );
 
       const updated = getLastOfArray(
@@ -281,6 +282,7 @@ export const typeHandlers = {
       const disconnectConnectArr = manyToManyHelper(
         updatedValue.departments.map((v) => v.id),
         item.departments ?? [],
+        { showUpsert: false },
       );
 
       const updated = getLastOfArray(
@@ -382,6 +384,7 @@ export const typeHandlers = {
       const disconnectConnectArr = manyToManyHelper(
         updatedValue.departments.map((v) => v.id),
         item.departments ?? [],
+        { showUpsert: false },
       );
 
       const updated = getLastOfArray(
@@ -486,11 +489,13 @@ export const typeHandlers = {
       const departmentDcArr = manyToManyHelper(
         updatedValue.departments.map((v) => v.id),
         item.departments ?? [],
+        { showUpsert: false },
       );
 
       const divisionsDcArr = manyToManyHelper(
         updatedValue.divisions.map((v) => v.id),
         item.divisions ?? [],
+        { showUpsert: false },
       );
 
       const updatedWithDepartment = getLastOfArray(

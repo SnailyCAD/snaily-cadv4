@@ -212,6 +212,7 @@ export class SearchActionsController {
     const disconnectConnectArr = manyToManyHelper(
       vehicle.flags.map((v) => v.id),
       flags,
+      { showUpsert: false },
     );
 
     await prisma.$transaction(
@@ -249,6 +250,7 @@ export class SearchActionsController {
     const disconnectConnectArr = manyToManyHelper(
       citizen.flags.map((v) => v.id),
       flags,
+      { showUpsert: false },
     );
 
     await prisma.$transaction(
@@ -286,6 +288,7 @@ export class SearchActionsController {
     const disconnectConnectArr = manyToManyHelper(
       citizen.addressFlags.map((v) => v.id),
       addressFlags,
+      { showUpsert: false },
     );
 
     await prisma.$transaction(

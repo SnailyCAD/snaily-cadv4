@@ -453,6 +453,7 @@ export class Calls911Controller {
     const disconnectConnectArr = manyToManyHelper(
       call.incidents.map((v) => v.id),
       data.incidentIds as string[],
+      { showUpsert: false },
     );
 
     await prisma.$transaction(

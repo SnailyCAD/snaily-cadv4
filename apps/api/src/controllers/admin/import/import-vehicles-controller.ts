@@ -168,7 +168,7 @@ export async function importVehiclesHandler(body: unknown[]) {
 
       let last = vehicle;
       if (data.flags) {
-        const disconnectConnectArr = manyToManyHelper([], data.flags);
+        const disconnectConnectArr = manyToManyHelper([], data.flags, { showUpsert: false });
 
         last = getLastOfArray(
           await prisma.$transaction(

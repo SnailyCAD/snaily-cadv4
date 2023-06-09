@@ -16,13 +16,13 @@ export async function linkOrUnlinkCallDepartmentsAndDivisions({
   const departmentDisconnectConnectArr = manyToManyHelper(
     call.departments,
     departments.map(normalizeId),
-    { accessor: "id" },
+    { customAccessorKey: "id", showUpsert: false },
   );
 
   const divisionDisconnectConnectArr = manyToManyHelper(
     call.divisions,
     divisions.map(normalizeId),
-    { accessor: "id" },
+    { customAccessorKey: "id", showUpsert: false },
   );
 
   await prisma.$transaction([

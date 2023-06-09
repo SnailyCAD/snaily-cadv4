@@ -385,6 +385,7 @@ export class VehiclesController {
       const connectDisconnectArr = manyToManyHelper(
         vehicle.trimLevels.map((v) => v.id),
         data.trimLevels,
+        { showUpsert: false },
       );
 
       await prisma.$transaction(

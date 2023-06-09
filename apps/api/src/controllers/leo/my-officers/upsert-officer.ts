@@ -175,6 +175,7 @@ export async function upsertOfficer({
     const disconnectConnectArr = manyToManyHelper(
       existingOfficer?.divisions.map((v) => v.id) ?? [],
       toIdString(data.divisions),
+      { showUpsert: false },
     );
 
     await updateOfficerDivisionsCallsigns({

@@ -471,6 +471,7 @@ export class AdminManageUnitsController {
         const disconnectConnectArr = manyToManyHelper(
           (unit.divisions as { id: string }[]).map((v) => v.id),
           data.divisions as string[],
+          { showUpsert: false },
         );
 
         await prisma.$transaction(
