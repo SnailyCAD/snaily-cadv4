@@ -107,6 +107,10 @@ export function DeputyColumn({ deputy, isDispatch, nameAndCallsign, setTempUnit 
             shouldShowSplit ? void handleunMerge(deputy.id) : handleMerge(deputy);
           },
         },
+        {
+          name: t("privateMessage"),
+          onClick: () => openModal(ModalIds.PrivateMessage, deputy),
+        },
         ...dispatchCodes,
       ]}
     >

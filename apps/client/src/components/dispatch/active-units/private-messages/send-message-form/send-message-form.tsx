@@ -56,6 +56,7 @@ export function SendMessageForm(props: Props) {
       {({ values, errors, setFieldValue, submitForm }) => (
         <Form className="mt-4">
           <TextField
+            autoFocus
             label={t("message")}
             value={values.message}
             onChange={(value) => setFieldValue("message", value)}

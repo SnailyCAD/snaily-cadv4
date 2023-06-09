@@ -17,6 +17,10 @@ import { useValues } from "context/ValuesContext";
 import { isUnitCombinedEmsFd } from "@snailycad/utils";
 
 import dynamic from "next/dynamic";
+import { ActiveCallColumn } from "components/dispatch/active-units/officers/active-call-column";
+import { ActiveIncidentColumn } from "components/dispatch/active-units/officers/active-incident-column";
+import { PrivateMessagesButton } from "components/leo/private-messages/private-messages-button";
+import { PrivateMessagesModal } from "components/dispatch/active-units/private-messages/private-messages-modal";
 
 const TonesModal = dynamic(
   async () => (await import("components/dispatch/modals/tones-modal")).TonesModal,
@@ -96,10 +100,39 @@ export function ModalButtons({
   return (
     <div className="py-2">
       {nameAndCallsign && activeDeputy ? (
-        <p className="text-lg">
-          <span className="font-semibold">{t("Ems.activeDeputy")}: </span>
-          {nameAndCallsign}
-        </p>
+        <div className="flex items-center gap-x-12">
+          <p className="text-lg">
+            <span className="font-semibold">{t("Ems.activeDeputy")}: </span>
+            {nameAndCallsign}
+          </p>
+
+          <p className="flex items-center gap-x-1">
+            <span className="font-semibold">{t("Leo.activeCall")}: </span>
+            <ActiveCallColumn
+              size="sm"
+              callId={activeDeputy.activeCallId}
+              isDispatch={false}
+              unitId={activeDeputy.id}
+            />
+          </p>
+
+          <p className="flex items-center gap-x-1">
+            <span className="font-semibold">{t("Leo.incident")}: </span>
+            <ActiveIncidentColumn
+              size="sm"
+              incidentId={activeDeputy.activeIncidentId}
+              isDispatch={false}
+              unitId={activeDeputy.id}
+            />
+          </p>
+
+          <p className="flex items-center gap-x-1">
+            <span className="font-semibold">{t("Leo.privateMessages")}: </span>
+            <PrivateMessagesButton unit={activeDeputy} />
+          </p>
+
+          <PrivateMessagesModal />
+        </div>
       ) : null}
 
       <div className="mt-2 modal-buttons-grid">
