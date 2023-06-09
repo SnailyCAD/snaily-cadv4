@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 import { Title } from "components/shared/Title";
 import { defaultPermissions } from "@snailycad/permissions";
 import type { GetAdminDashboardData } from "@snailycad/types/api";
+import { Alert } from "@snailycad/ui";
 
 interface Props {
   counts: GetAdminDashboardData | null;
@@ -17,7 +18,24 @@ export default function Admin({ counts }: Props) {
   const t = useTranslations("Management");
 
   if (!counts) {
-    return null;
+    return (
+      <AdminLayout
+        permissions={{
+          permissions: [
+            ...defaultPermissions.allDefaultAdminPermissions,
+            ...defaultPermissions.defaultCourthousePermissions,
+          ],
+        }}
+      >
+        <Title>{t("adminDashboard")}</Title>
+
+        <Alert
+          type="error"
+          message={t("unableToLoadStatisticsMessage")}
+          title={t("unableToLoadStatisticsTitle")}
+        />
+      </AdminLayout>
+    );
   }
 
   return (
