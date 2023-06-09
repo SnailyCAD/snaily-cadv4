@@ -1,28 +1,33 @@
 export type DisconnectOrConnect<
   T extends string | object,
-  Accessor extends T extends string ? never : keyof T,
-  ShowExisting extends boolean = false,
-> = ShowExisting extends false
-  ? { disconnect?: { id: T[Accessor] | Accessor } } | { connect?: { id: T[Accessor] | Accessor } }
+  ShowUpsert extends boolean = false,
+> = ShowUpsert extends false
+  ? { disconnect?: { id: string } } | { connect?: { id: string } }
   :
-      | { existing?: { id: T[Accessor] | Accessor } }
-      | { disconnect?: { id: T[Accessor] | Accessor } }
-      | { connect?: { id: T[Accessor] | Accessor } };
+      | {
+          upsert?: {
+            where: { id: string };
+            create: T;
+            update: T;
+          };
+        }
+      | { disconnect?: { id: string } }
+      | { connect?: { id: string } };
 
-interface ManyToManyOptions<Accessor, ShowExisting extends boolean = false> {
-  accessor?: Accessor;
-  showExisting?: ShowExisting;
+interface ManyToManyOptions<CustomAccessorKey, ShowUpsert extends boolean = false> {
+  customAccessorKey?: CustomAccessorKey;
+  showUpsert?: ShowUpsert;
 }
 
 export function manyToManyHelper<
-  T extends string | object,
-  Accessor extends T extends string ? never : keyof T,
-  ShowExisting extends boolean = false,
->(currentArr: T[], incomingArr: T[], options?: ManyToManyOptions<Accessor, ShowExisting>) {
-  const connectDisconnectArr: DisconnectOrConnect<T, Accessor, ShowExisting>[] = [];
-  const arr = merge(currentArr, incomingArr);
-  const accessor = options?.accessor;
-  const showExisting = options?.showExisting ?? false;
+  ShowUpsert extends boolean,
+  T extends ShowUpsert extends true ? { id?: string } : string | { id: string },
+  CustomAccessorKey extends T extends string ? never : keyof T,
+>(currentArr: T[], incomingArr: T[], options?: ManyToManyOptions<CustomAccessorKey, ShowUpsert>) {
+  const connectDisconnectArr: DisconnectOrConnect<T, ShowUpsert>[] = [];
+  const accessor = options?.customAccessorKey;
+  const showUpsert = options?.showUpsert ?? false;
+  const arr = merge(currentArr, incomingArr, accessor, showUpsert);
 
   for (const item of arr) {
     const existsInCurrent = currentArr.some(
@@ -34,25 +39,37 @@ export function manyToManyHelper<
     );
 
     if (!existsInCurrent && existsInIncoming) {
-      connectDisconnectArr.push({
-        connect: { id: getAccessor(item, accessor) },
-      });
-      continue;
+      const _accessor = getAccessor(item, accessor);
+
+      if (_accessor && !showUpsert) {
+        connectDisconnectArr.push({
+          connect: { id: _accessor },
+        });
+        continue;
+      }
     }
 
     if (existsInCurrent && !existsInIncoming) {
-      connectDisconnectArr.push({
-        disconnect: { id: getAccessor(item, accessor) },
-      });
-      continue;
+      const _accessor = getAccessor(item, accessor);
+
+      if (_accessor) {
+        connectDisconnectArr.push({
+          disconnect: { id: _accessor },
+        });
+        continue;
+      }
     }
 
-    if (existsInCurrent && existsInIncoming && showExisting) {
-      // @ts-expect-error this is a false positive
+    const _accessor = getAccessor(item, accessor);
+    if (showUpsert && typeof item === "object") {
+      // @ts-expect-error todo: fix
       connectDisconnectArr.push({
-        existing: { id: getAccessor(item, accessor) },
+        upsert: {
+          create: item,
+          update: item,
+          where: { id: String(_accessor) },
+        },
       });
-      continue;
     }
   }
 
@@ -60,19 +77,22 @@ export function manyToManyHelper<
 }
 
 function getAccessor<
-  T extends string | object,
-  Accessor extends T extends string ? never : keyof T,
->(v: T, accessor?: Accessor) {
-  if (!accessor) return v as unknown as Accessor;
-  return typeof v === "string" ? (v as unknown as Accessor) : v[accessor];
+  AllowNull extends boolean,
+  T extends AllowNull extends true ? { id?: string } : string | { id: string },
+  CustomAccessorKey extends T extends string ? never : keyof T,
+>(value: T, customAccessorKey?: CustomAccessorKey) {
+  const accessorKey = customAccessorKey ?? "id";
+
+  return typeof value === "string" ? value : value[accessorKey];
 }
 
 export function merge<
-  T extends string | object,
+  AllowNull extends boolean,
+  T extends AllowNull extends true ? { id?: string } : string | { id: string },
   Accessor extends T extends string ? never : keyof T,
->(arr1: T[], arr2: T[], accessor?: Accessor) {
+>(arr1: T[], arr2: T[], accessor?: Accessor, allowNull?: AllowNull) {
   const set = new Set();
-  const fullArr = [...arr1, ...arr2];
+  const fullArr = allowNull ? [...arr2, ...arr1] : [...arr1, ...arr2];
 
   const filteredArr = fullArr.filter((el) => {
     const duplicate = set.has(getAccessor(el, accessor));

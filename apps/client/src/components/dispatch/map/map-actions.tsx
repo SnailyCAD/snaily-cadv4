@@ -36,6 +36,9 @@ export function MapActions() {
         <Button onPress={() => openModal(ModalIds.Manage911Call)}>
           {t("Calls.create911Call")}
         </Button>
+        <Button onPress={() => openModal(ModalIds.SelectMapServer)}>
+          {t("Leo.selectMapServer")}
+        </Button>
       </div>,
       portalRef,
     )

@@ -121,7 +121,10 @@ export function CAD_SELECT(user?: Pick<User, "rank"> | null, includeDiscordRoles
     steamApiKey: user?.rank === Rank.OWNER,
     apiTokenId: user?.rank === Rank.OWNER,
     apiToken: user?.rank === Rank.OWNER,
-    miscCadSettings: user?.rank === Rank.OWNER ? { include: { webhooks: true } } : true,
+    miscCadSettings:
+      user?.rank === Rank.OWNER
+        ? { include: { webhooks: true, liveMapURLs: true } }
+        : { include: { liveMapURLs: true } },
     miscCadSettingsId: true,
     logoId: true,
     discordRolesId: true,

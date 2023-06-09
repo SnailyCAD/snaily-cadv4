@@ -81,7 +81,9 @@ export class LicenseExamsController {
       include: { categories: true },
     });
 
-    const connectDisconnectArr = manyToManyHelper([], data.categories as string[]);
+    const connectDisconnectArr = manyToManyHelper([], data.categories as string[], {
+      showUpsert: false,
+    });
     await prisma.$transaction(
       connectDisconnectArr.map((item) =>
         prisma.licenseExam.update({
@@ -125,6 +127,7 @@ export class LicenseExamsController {
     const connectDisconnectArr = manyToManyHelper(
       exam.categories.map((v) => v.id),
       data.categories as string[],
+      { showUpsert: false },
     );
 
     await prisma.$transaction(
@@ -204,7 +207,8 @@ export class LicenseExamsController {
     if (!citizen) return;
 
     const connectDisconnectArr = manyToManyHelper(citizen.dlCategory, exam.categories, {
-      accessor: "id",
+      customAccessorKey: "id",
+      showUpsert: false,
     });
 
     const prismaNames = {

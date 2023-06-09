@@ -249,6 +249,7 @@ export class DiscordSettingsController {
     const disconnectConnectArr = manyToManyHelper(
       options.discordRoles.map((v) => v.id),
       options.newRoles,
+      { showUpsert: false },
     );
 
     await prisma.$transaction(

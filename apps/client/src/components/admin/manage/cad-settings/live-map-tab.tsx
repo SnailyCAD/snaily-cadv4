@@ -1,7 +1,8 @@
+import * as Popover from "@radix-ui/react-popover";
 import * as React from "react";
-import { Button, Input, Loader, TabsContent } from "@snailycad/ui";
+import { Alert, Button, Input, Loader, TabsContent, TextField } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
-import { Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik, FormikHelpers, useFormikContext } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
 import { SettingsFormField } from "components/form/SettingsFormField";
@@ -9,9 +10,10 @@ import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { toastMessage } from "lib/toastMessage";
 import type { PutCADMiscSettingsData } from "@snailycad/types/api";
 import Link from "next/link";
-import { BoxArrowUpRight } from "react-bootstrap-icons";
+import { BoxArrowUpRight, ChevronDown } from "react-bootstrap-icons";
 import { handleValidate } from "lib/handleValidate";
 import { LIVE_MAP_SETTINGS } from "@snailycad/schemas";
+import { Table, useTableState } from "components/shared/Table";
 
 const TILE_NAMES = [
   "minimap_sea_0_0",
@@ -27,6 +29,8 @@ export function LiveMapTab() {
   const { state, execute } = useFetch();
   const { cad, setCad } = useAuth();
   const t = useTranslations("LiveMapTab");
+  const tableState = useTableState();
+  const [openPopover, setOpenPopover] = React.useState<"edit" | "add" | null>(null);
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
@@ -86,6 +90,7 @@ export function LiveMapTab() {
   const validate = handleValidate(LIVE_MAP_SETTINGS);
   const INITIAL_VALUES = {
     liveMapURL: cad?.miscCadSettings?.liveMapURL ?? "",
+    liveMapURLs: cad?.miscCadSettings?.liveMapURLs ?? [],
     tiles: undefined as FileList | undefined,
   };
 
@@ -98,7 +103,7 @@ export function LiveMapTab() {
       </p>
 
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setFieldValue, errors, values }) => (
+        {({ setFieldValue, errors, values }) => (
           <Form className="mt-3 space-y-5">
             <SettingsFormField
               description={
@@ -114,16 +119,104 @@ export function LiveMapTab() {
                   </Link>
                 </span>
               }
-              errorMessage={errors.liveMapURL}
-              label={t("liveMapUrl")}
+              errorMessage={errors.liveMapURLs}
+              label={
+                <div className="flex items-center justify-between">
+                  {t("liveMapURLs")}
+
+                  <ManageURLPopover
+                    trigger={
+                      <Button
+                        onPress={() => setOpenPopover("add")}
+                        size="xs"
+                        className="text-base flex gap-2 items-center"
+                      >
+                        {t("addURL")}
+                        <ChevronDown className="w-3 mt-0.5" />
+                      </Button>
+                    }
+                    url={null}
+                    isPopoverOpen={openPopover === "add"}
+                    setIsPopoverOpen={(v) => setOpenPopover(v ? "add" : null)}
+                  />
+                </div>
+              }
             >
-              <Input
-                type="url"
-                name="liveMapURL"
-                value={values.liveMapURL}
-                onChange={handleChange}
-                placeholder="http://my-host:my-port"
-              />
+              {values.liveMapURLs.length <= 0 ? (
+                <>
+                  <p className="text-neutral-500 dark:text-gray-400">{t("noLiveMapUrls")}</p>
+
+                  {values.liveMapURL ? (
+                    <Alert
+                      className="mt-3"
+                      type="success"
+                      title={t("foundPreviousLiveMapURLTitle")}
+                    >
+                      <span className="font-medium">{t("foundPreviousLiveMapURLDescription")}</span>
+
+                      <Button
+                        className="mt-3 max-w-fit"
+                        onPress={() => {
+                          setFieldValue("liveMapURLs", [
+                            { url: values.liveMapURL, name: "Default" },
+                          ]);
+                          setFieldValue("liveMapURL", null);
+                        }}
+                      >
+                        {t("addURL")}
+                      </Button>
+                    </Alert>
+                  ) : null}
+                </>
+              ) : (
+                <Table
+                  tableState={tableState}
+                  data={values.liveMapURLs.map((url) => ({
+                    id: `${url.url}-${url.id}`,
+                    name: url.name,
+                    url: url.url,
+                    actions: (
+                      <>
+                        <ManageURLPopover
+                          trigger={
+                            <Button
+                              onPress={() => setOpenPopover("edit")}
+                              size="xs"
+                              variant="success"
+                              className="text-base flex gap-2 items-center mr-2"
+                            >
+                              {common("edit")}
+                              <ChevronDown className="w-3 mt-0.5" />
+                            </Button>
+                          }
+                          url={url}
+                          isPopoverOpen={openPopover === "edit"}
+                          setIsPopoverOpen={(v) => setOpenPopover(v ? "edit" : null)}
+                        />
+
+                        <Button
+                          onPress={() => {
+                            setFieldValue(
+                              "liveMapURLs",
+                              [...values.liveMapURLs].filter((u) => u.url !== url.url),
+                              true,
+                            );
+                          }}
+                          size="xs"
+                          variant="danger"
+                        >
+                          {common("delete")}
+                        </Button>
+                      </>
+                    ),
+                  }))}
+                  columns={[
+                    { header: common("name"), accessorKey: "name" },
+                    { header: common("url"), accessorKey: "url" },
+                    { header: common("actions"), accessorKey: "actions" },
+                  ]}
+                />
+              )}
             </SettingsFormField>
 
             <SettingsFormField
@@ -167,5 +260,77 @@ export function LiveMapTab() {
         )}
       </Formik>
     </TabsContent>
+  );
+}
+
+interface ManageURLPopoverProps {
+  trigger: React.ReactNode;
+  isPopoverOpen: boolean;
+  setIsPopoverOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  url?: { url: string; id: string; name: string } | null;
+}
+
+function ManageURLPopover(props: ManageURLPopoverProps) {
+  const t = useTranslations("LiveMapTab");
+  const common = useTranslations("Common");
+  const { values, setFieldValue } = useFormikContext<{
+    liveMapURLs: NonNullable<ManageURLPopoverProps["url"]>[];
+  }>();
+
+  const [name, setName] = React.useState(props.url?.name ?? "");
+  const [url, setUrl] = React.useState(props.url?.url ?? "");
+
+  React.useEffect(() => {
+    setName(props.url?.name ?? "");
+    setUrl(props.url?.url ?? "");
+  }, [props.url]);
+
+  function handleSubmit() {
+    const existsInUrl = values.liveMapURLs.some((url) => url.url === props.url?.url);
+
+    if (!existsInUrl) {
+      setFieldValue("liveMapURLs", [...values.liveMapURLs, { name, url }]);
+    } else {
+      const newLiveMapURls = values.liveMapURLs.map((u) => {
+        if (u.id === props.url?.id) {
+          return { ...u, name, url };
+        }
+
+        return url;
+      });
+
+      setFieldValue("liveMapURLs", newLiveMapURls);
+    }
+
+    props.setIsPopoverOpen(false);
+  }
+
+  return (
+    <Popover.Root open={props.isPopoverOpen} onOpenChange={props.setIsPopoverOpen}>
+      <Popover.Trigger asChild>
+        <span>{props.trigger}</span>
+      </Popover.Trigger>
+
+      <Popover.Content className="z-50 p-4 bg-gray-200 rounded-md shadow-md dropdown-fade w-96 dark:bg-primary dark:border dark:border-secondary text-base font-normal">
+        <h3 className="text-xl font-semibold mb-3">{t("addURL")}</h3>
+
+        <div id="add-edit-url-form">
+          <TextField label={common("name")} value={name} onChange={(value) => setName(value)} />
+          <TextField
+            placeholder="http://my-host:my-port"
+            type="url"
+            label={common("url")}
+            value={url}
+            onChange={(value) => setUrl(value)}
+          />
+
+          <Button onPress={handleSubmit} type="submit" size="xs">
+            {props.url ? common("save") : t("addURL")}
+          </Button>
+        </div>
+
+        <Popover.Arrow className="fill-primary" />
+      </Popover.Content>
+    </Popover.Root>
   );
 }

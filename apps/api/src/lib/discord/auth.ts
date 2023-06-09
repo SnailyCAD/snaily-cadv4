@@ -116,6 +116,7 @@ export async function updateMemberRolesLogin<
     const disconnectConnectArray = manyToManyHelper(
       user.roles?.map((v) => v.id) ?? [],
       customRoles.map((v) => v.id),
+      { showUpsert: false },
     );
 
     await Promise.all(

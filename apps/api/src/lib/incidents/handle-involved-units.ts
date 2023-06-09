@@ -18,7 +18,9 @@ export async function assignUnitsInvolvedToIncident(options: Options) {
     String(u.officerId ?? u.emsFdDeputyId ?? u.combinedLeoId),
   );
 
-  const disconnectConnectArr = manyToManyHelper(unitsInvolved, options.unitIds);
+  const disconnectConnectArr = manyToManyHelper(unitsInvolved, options.unitIds, {
+    showUpsert: false,
+  });
 
   await Promise.all(
     disconnectConnectArr.map(async (data) => {

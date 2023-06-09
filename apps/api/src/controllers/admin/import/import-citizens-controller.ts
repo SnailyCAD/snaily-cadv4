@@ -149,7 +149,7 @@ export class ImportCitizensController {
         }
 
         if (data.flags) {
-          const disconnectConnectArr = manyToManyHelper([], data.flags);
+          const disconnectConnectArr = manyToManyHelper([], data.flags, { showUpsert: false });
 
           await prisma.$transaction(
             disconnectConnectArr.map((v) =>

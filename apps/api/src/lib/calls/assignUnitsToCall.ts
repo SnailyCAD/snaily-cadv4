@@ -21,6 +21,7 @@ export async function assignUnitsToCall({ socket, call, unitIds, maxAssignmentsT
   const disconnectConnectArr = manyToManyHelper(
     call.assignedUnits.map((u) => String(u.officerId || u.emsFdDeputyId || u.combinedLeoId)),
     unitIds.map((v) => v.id),
+    { showUpsert: false },
   );
 
   const disconnectedUnits: NonNullable<Awaited<ReturnType<typeof handleDeleteAssignedUnit>>>[] = [];

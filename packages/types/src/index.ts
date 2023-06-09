@@ -52,6 +52,7 @@ export type CadFeature = Prisma.CadFeature;
 
 export type MiscCadSettings = Prisma.MiscCadSettings & {
   webhooks?: DiscordWebhook[];
+  liveMapURLs?: Prisma.LiveMapURL[];
 };
 
 export type DiscordWebhook = Prisma.DiscordWebhook;

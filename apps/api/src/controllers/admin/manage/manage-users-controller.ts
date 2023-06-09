@@ -266,6 +266,7 @@ export class ManageUsersController {
     const disconnectConnectArr = manyToManyHelper(
       user.roles.map((v) => v.id),
       data.roles as string[],
+      { showUpsert: false },
     );
 
     await prisma.$transaction(

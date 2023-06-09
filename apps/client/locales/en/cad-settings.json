@@ -94,6 +94,11 @@
   "LiveMapTab": {
     "liveMapSettings": "Live Map Settings",
     "liveMapUrl": "Live Map URL",
+    "liveMapURLs": "Live Map URLs",
+    "addURL": "Add URL",
+    "noLiveMapUrls": "No live map URLs have been added yet.",
+    "foundPreviousLiveMapURLTitle": "Found Live Map URL",
+    "foundPreviousLiveMapURLDescription": "The previous Live Map URL was found. Would you like to add it to the CAD?",
     "liveMapUrlDescription": "This URL will communicate to the live_map resource in your FiveM server.",
     "liveMapSettingsInfo": "Configure the live map URL and map tiles.",
     "mapTiles": "Map Tiles",

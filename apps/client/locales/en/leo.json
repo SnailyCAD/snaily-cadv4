@@ -314,7 +314,10 @@
     "addActiveIncident": "Add active incident",
     "appendedActiveCall": "Appended active call: {call}",
     "appendedActiveIncident": "Appended active incident: {incident}",
-    "activeIncident": "Active Incident"
+    "activeIncident": "Active Incident",
+    "liveMapServer": "Live Map Server",
+    "selectMapServer": "Select Map Server",
+    "mustSelectMapServer": "You must select a map server to continue."
   },
   "Bolos": {
     "activeBolos": "Active Bolos",

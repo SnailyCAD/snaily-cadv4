@@ -35,7 +35,11 @@ export async function updateCitizenLicenseCategories(
       suspendedLicenses?.firearmsLicense,
     ),
   ];
-  const disconnectConnectArr = manyToManyHelper(citizen.dlCategory?.map((v) => v.id) ?? [], newArr);
+  const disconnectConnectArr = manyToManyHelper(
+    citizen.dlCategory?.map((v) => v.id) ?? [],
+    newArr,
+    { showUpsert: false },
+  );
 
   const last = getLastOfArray(
     await prisma.$transaction(
