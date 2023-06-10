@@ -1,17 +1,24 @@
-# [SnailyCADv4](https://snailycad.org)
 
-<!-- [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/lqLdjV?referralCode=zxxB_p) -->
+<p align="center">
+  <a href="https://snailycad.org" target="_blank" rel="noopener noreferrer">
+    <img width="180" src="https://raw.githubusercontent.com/SnailyCAD/website/main/static/logo.svg" alt="SnailyCAD logo">
+  </a>
+</p>
+<br/>
+<p align="center">
+  <img src="https://img.shields.io/github/license/SnailyCAD/snaily-cadv4?color=gr" alt="npm package">
+  <a href="https://github.com/vitejs/vite/actions/workflows/ci.yml"><img src="https://github.com/SnailyCAD/snaily-cadv4/actions/workflows/test-builds-typecheck.yml/badge.svg?event=push" alt="build status"></a>
+  <a href="https://discord.gg/eGnrPqEH7U"><img src="https://img.shields.io/badge/chat-discord-blue?style=flat&logo=discord" alt="discord chat"></a>
+</p>
+<br/>
 
-![license](https://img.shields.io/github/license/SnailyCAD/snaily-cadv4?color=gr&style=flat-square)
-![contributors](https://img.shields.io/github/contributors/SnailyCAD/snaily-cadv4?color=gr&style=flat-square)
-![stars](https://img.shields.io/github/stars/SnailyCAD/snaily-cadv4?style=flat-square&color=gr)
-![issues](https://img.shields.io/github/issues/SnailyCAD/snaily-cadv4?style=flat-square)
 
-## About
+# SnailyCAD
 
 💻 An open source Computer Aided Dispatch (CAD) for FiveM,
 this is a web based integration for communities who love police roleplaying and dispatching. Optional Discord and FiveM integrations included.
 
+  
 <a href="https://discord.gg/eGnrPqEH7U">
   <img src="http://invidget.switchblade.xyz/eGnrPqEH7U" />
 </a>
@@ -25,14 +32,22 @@ this is a web based integration for communities who love police roleplaying and 
 
 ## Sponsors
 
-- [runesasia](https://github.com/runesasia)
+- [Legacy](https://github.com/Legacy-TacticalGamingInteractive)
+- [Local9](https://github.com/Local9)
 - [jxckUK](https://github.com/jxckUK)
 - [Creizy](https://github.com/Creizy)
+- [Whitigol](https://github.com/WhitigolProd)
+- [LazyCalypso](https://github.com/LazyCalypso)
 - [Northern524](https://github.com/Northern524)
+- [Sharki](https://github.com/subtosharki)
+- [GamingFlamin](https://github.com/GamingFlamin)
+- [Zachary Hartman](https://github.com/zahrtman2006)
+- [runesasia](https://github.com/runesasia)
+
 
 ## License
 
-[MIT © Dev-CasperTheGhost](./LICENSE)
+[MIT](./LICENSE)
 
 ## Archived versions
 
