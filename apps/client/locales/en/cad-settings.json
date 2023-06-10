@@ -96,6 +96,7 @@
     "liveMapUrl": "Live Map URL",
     "liveMapURLs": "Live Map URLs",
     "addURL": "Add URL",
+    "editURL": "Edit URL",
     "noLiveMapUrls": "No live map URLs have been added yet.",
     "foundPreviousLiveMapURLTitle": "Found Live Map URL",
     "foundPreviousLiveMapURLDescription": "The previous Live Map URL was found. Would you like to add it to the CAD?",
