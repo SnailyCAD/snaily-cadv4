@@ -45,7 +45,9 @@ export function BleeterPostsList(props: BleeterPostsListProps) {
                 </h4>
               </header>
 
-              <div className="mx-1 mb-2">
+              <div className="mb-2 mt-3">
+                <h2 className="text-xl font-bold">{post.title}</h2>
+
                 <Editor hideBorder isReadonly value={post.bodyData} />
               </div>
 
