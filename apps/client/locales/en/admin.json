@@ -143,6 +143,8 @@
     "other": "Other",
     "unableToLoadStatisticsMessage": "Unable to load statistics, please try again later.",
     "unableToLoadStatisticsTitle": "Unable to load statistics",
+    "userNotFoundError": "The user you tried to manage was not found.",
+    "userNotFoundTitle": "User not found",
     "alert_deleteCustomRole": "Are you sure you want to delete <span>{role}</span>? This action cannot be undone",
     "alert_deleteUnit": "Are you sure you want to delete <span>{unit}</span>? This action cannot be undone!",
     "alert_deleteCustomField": "Are you sure you want to delete this custom field? This action cannot be undone. All values created with this field will also be deleted.",

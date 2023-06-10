@@ -61,11 +61,11 @@ const ManagePermissionsModal = dynamic(
 
 interface Props {
   roles: GetCustomRolesData;
-  user: GetManageUserByIdData;
+  user: GetManageUserByIdData | null;
 }
 
 export default function ManageCitizens(props: Props) {
-  const [user, setUser] = React.useState(props.user);
+  const [user, setUser] = React.useState(props.user!);
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Management");
@@ -95,6 +95,27 @@ export default function ManageCitizens(props: Props) {
     if (json.id) {
       setUser({ ...user, ...json });
     }
+  }
+
+  if (!props.user) {
+    return (
+      <AdminLayout
+        permissions={{
+          permissions: [Permissions.BanUsers, Permissions.ManageUsers, Permissions.DeleteUsers],
+        }}
+      >
+        <Title renderLayoutTitle={false} className="mb-2">
+          {t("userNotFoundTitle")}
+        </Title>
+
+        <Alert
+          type="error"
+          className="my-5"
+          message={t("userNotFoundError")}
+          title={t("userNotFoundTitle")}
+        />
+      </AdminLayout>
+    );
   }
 
   const INITIAL_VALUES = {
@@ -259,12 +280,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query, loc
     [`/admin/manage/users/${query.id}`, null],
     ["/admin/manage/custom-roles?includeAll=true", { totalCount: 0, customRoles: [] }],
   ]);
-
-  if (!user) {
-    return {
-      notFound: true,
-    };
-  }
 
   return {
     props: {
