@@ -16,6 +16,8 @@ import { Title } from "components/shared/Title";
 import { dataToSlate, Editor } from "components/editor/editor";
 import type { DeleteBleeterByIdData, GetBleeterByIdData } from "@snailycad/types/api";
 import { ImageWrapper } from "components/shared/image-wrapper";
+import Link from "next/link";
+import { classNames } from "lib/classNames";
 
 const ManageBleetModal = dynamic(
   async () => (await import("components/bleeter/manage-bleet-modal")).ManageBleetModal,
@@ -58,7 +60,21 @@ export default function BleetPost({ post }: Props) {
       </Breadcrumbs>
 
       <header className="flex items-center justify-between pb-2 border-b-2">
-        <Title className="!mb-0">{post.title}</Title>
+        <div className="flex flex-col">
+          <Title className="!mb-0 !font-bold">{post.title}</Title>
+          <h2
+            className={classNames(
+              "font-medium dark:text-gray-400 text-neutral-700 text-lg",
+              post.creator && "underline",
+            )}
+          >
+            {post.creator ? (
+              <Link href={`/bleeter/@/${post.creator.handle}`}>{post.creator.name}</Link>
+            ) : (
+              post.user.username
+            )}
+          </h2>
+        </div>
 
         <div>
           {user?.id === post.userId ? (
