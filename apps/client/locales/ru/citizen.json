@@ -60,7 +60,8 @@
     "waterLicensePoints": "Баллы за Экзамен на Водный Транспорт",
     "createPreviousRecordsStepDescription": "Здесь вы можете по желанию добавить предыдущие записи, которые были у этого гражданина. Это полезно, когда гражданин уже был арестован ранее",
     "alert_markCitizenDeceased": "Вы уверены, что хотите удалить <span>{citizen}</span>? Только EMS/FD могут отметить гражданина, как живого",
-    "alert_deleteCitizen": "Вы уверены, что хотите удалить <span>{citizen}</span>? Это действие необратимо."
+    "alert_deleteCitizen": "Вы уверены, что хотите удалить <span>{citizen}</span>? Это действие необратимо.",
+    "id": "Id"
   },
   "Vehicles": {
     "model": "Модель",
