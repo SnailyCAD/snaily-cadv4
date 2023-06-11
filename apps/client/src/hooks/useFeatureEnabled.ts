@@ -25,7 +25,7 @@ export const DEFAULT_DISABLED_FEATURES = {
   USER_DEFINED_CALLSIGN_COMBINED_UNIT: { isEnabled: false },
 } satisfies Partial<Record<Feature, { isEnabled: boolean }>>;
 
-const DEFAULT_FEATURE_OPTIONS = {
+export const DEFAULT_FEATURE_OPTIONS = {
   [Feature.LICENSE_EXAMS]: Object.values(LicenseExamType),
 } satisfies CadFeatureOptions;
 

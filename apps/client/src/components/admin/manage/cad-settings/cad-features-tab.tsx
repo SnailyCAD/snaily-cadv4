@@ -4,12 +4,12 @@ import { useTranslations } from "use-intl";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { Toggle } from "components/form/Toggle";
-import { CadFeature, Feature, LicenseExamType } from "@snailycad/types";
+import { CadFeature, CadFeatureOptions, Feature, LicenseExamType } from "@snailycad/types";
 import { Button, Loader, TextField, TabsContent, SelectField } from "@snailycad/ui";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { toastMessage } from "lib/toastMessage";
-import { DEFAULT_DISABLED_FEATURES } from "hooks/useFeatureEnabled";
+import { DEFAULT_DISABLED_FEATURES, DEFAULT_FEATURE_OPTIONS } from "hooks/useFeatureEnabled";
 import type { PutCADFeaturesData } from "@snailycad/types/api";
 import Link from "next/link";
 import { BoxArrowUpRight } from "react-bootstrap-icons";
@@ -70,20 +70,14 @@ export function CADFeaturesTab() {
   }
 
   function createInitialOptions() {
-    const obj = {} as Partial<Record<Feature, any>>;
+    const obj = {} as CadFeatureOptions;
 
-    const cadFeatures = cad?.features;
+    const cadFeatures = cad?.features?.options ?? DEFAULT_FEATURE_OPTIONS;
     for (const _key in cadFeatures) {
-      const key = _key as Feature;
-      let option = cadFeatures.options?.[key];
+      const typedKey = _key as keyof CadFeatureOptions;
+      const option = cadFeatures[typedKey] ?? DEFAULT_FEATURE_OPTIONS[typedKey];
 
-      if (key === Feature.LICENSE_EXAMS) {
-        if (!option || option.length === 0) {
-          option = Object.values(LicenseExamType);
-        }
-      }
-
-      obj[key as Feature] = option;
+      obj[typedKey] = option;
     }
 
     return obj;
@@ -91,11 +85,15 @@ export function CADFeaturesTab() {
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!cad) return;
-    const featuresArr = Object.entries(values.features).map(([key, value]) => ({
-      feature: key as Feature,
-      isEnabled: value.isEnabled,
-      extraFields: values.options[key as Feature],
-    }));
+    const featuresArr = Object.entries(values.features).map(([key, value]) => {
+      const extraFields = key === Feature.LICENSE_EXAMS ? values.options[key] : undefined;
+
+      return {
+        feature: key as Feature,
+        isEnabled: value.isEnabled,
+        extraFields,
+      };
+    });
 
     const { json } = await execute<PutCADFeaturesData>({
       path: "/admin/manage/cad-settings/features",
@@ -146,7 +144,7 @@ export function CADFeaturesTab() {
                     description={
                       <>
                         {feature.description}{" "}
-                        {values.options[feature.feature] ? (
+                        {feature.feature in values.options ? (
                           <div className="mt-2">
                             <h4 className="font-semibold text-lg mb-2">Extra Options</h4>
 
