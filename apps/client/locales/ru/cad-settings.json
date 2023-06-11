@@ -176,7 +176,10 @@
     "weaponLicenseNumberLength": "Длина Номера Оружейной Лицензии",
     "weaponLicenseNumberLengthDescription": "Длина номера оружейной лицензии (По умолчанию: 8)",
     "waterLicenseNumberLength": "Длина Номера Водительской Лицензии",
-    "waterLicenseNumberLengthDescription": "Длина номера водительской лицензии (По умолчанию: 8)"
+    "waterLicenseNumberLengthDescription": "Длина номера водительской лицензии (По умолчанию: 8)",
+    "seconds": "Секунды",
+    "minutes": "Минуты",
+    "hours": "Часы"
   },
   "Features": {
     "enableOrDisableFeatures": "Включить или отключить функции",

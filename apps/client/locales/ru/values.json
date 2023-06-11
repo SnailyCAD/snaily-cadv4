@@ -24,7 +24,7 @@
     "priority": "Приоритет",
     "isDisabled": "Отключено",
     "county": "Округ",
-    "value": "Value",
+    "value": "Значение",
     "selectAll": "Выбрать {count}?",
     "xItemsSelected": "{count} опций выбрано.",
     "noValuesForThisType": "Для этого типа не созданы переменные.",
@@ -58,7 +58,11 @@
     "insuranceStatus": "Статус Страховки",
     "employee": "Сотрудник",
     "manager": "Менеджер",
-    "owner": "Владелец"
+    "owner": "Владелец",
+    "import": "Импортировать",
+    "importCitizens": "Импортировать Граждан",
+    "importVehicles": "Импортировать Транспорт",
+    "importWeapons": "Импортировать Оружие"
   },
   "PENAL_CODE_GROUP": {
     "MANAGE": "Управлять группами кодекса",
