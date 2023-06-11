@@ -47,6 +47,7 @@ import { handleEndCall } from "lib/dispatch/911-calls/handle-end-911-call";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { isFeatureEnabled } from "lib/upsert-cad";
 import { _leoProperties, unitProperties } from "utils/leo/includes";
+import { slateDataToString, type Descendant } from "@snailycad/utils/editor";
 
 export const callInclude = Prisma.validator<Prisma.Call911Select>()({
   position: true,
@@ -637,10 +638,11 @@ export class Calls911Controller {
     locale?: string | null,
   ): Promise<{ embeds: APIEmbed[] }> {
     const t = await getTranslator({ type: "webhooks", locale, namespace: "Calls" });
+    const formattedDescription = slateDataToString(call.descriptionData as Descendant[] | null);
 
     const caller = call.name || t("unknown");
     const location = `${call.location} ${call.postal ? call.postal : ""}`;
-    const description = call.description || t("couldNotRenderDescription");
+    const description = call.description || formattedDescription || t("couldNotRenderDescription");
 
     return {
       embeds: [

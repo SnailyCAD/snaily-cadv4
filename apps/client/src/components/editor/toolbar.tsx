@@ -16,8 +16,8 @@ import { useSlate } from "slate-react";
 import { Button } from "@snailycad/ui";
 import { classNames } from "lib/classNames";
 import { isBlockActive, toggleMark, toggleBlock, isMarkActive } from "lib/editor/utils";
-import type { SlateElements, Text } from "./types";
 import { SelectColorPopover } from "./toolbar/select-color-popover";
+import { SlateElements, Text } from "@snailycad/utils/editor";
 
 /**
  * mostly example code from: https://github.com/ianstormtaylor/slate/blob/main/site/examples/richtext.tsx

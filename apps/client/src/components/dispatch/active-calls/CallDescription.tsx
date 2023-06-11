@@ -1,10 +1,10 @@
 import { DEFAULT_EDITOR_DATA } from "components/editor/editor";
 import { HoverCard } from "components/shared/HoverCard";
 import { classNames } from "lib/classNames";
-import { dataToString } from "lib/editor/dataToString";
 import { useTranslations } from "next-intl";
 import type { Descendant } from "slate";
 import dynamic from "next/dynamic";
+import { slateDataToString } from "@snailycad/utils/editor";
 
 const Editor = dynamic(async () => (await import("components/editor/editor")).Editor, {
   ssr: false,
@@ -19,7 +19,7 @@ export function CallDescription({ data, nonCard }: Props) {
   const common = useTranslations("Common");
 
   const stringDescription =
-    dataToString(data.descriptionData as Descendant[] | null) || data.description;
+    slateDataToString(data.descriptionData as Descendant[] | null) || data.description;
 
   if (!stringDescription) {
     return <>{common("none")}</>;

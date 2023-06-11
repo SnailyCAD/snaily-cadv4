@@ -29,6 +29,10 @@
       "require": "./dist/case-number.js",
       "import": "./dist/case-number.mjs"
     },
+    "./editor": {
+      "require": "./dist/editor/index.js",
+      "import": "./dist/editor/index.mjs"
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -50,6 +54,9 @@
       ],
       "case-number": [
         "dist/case-number.d.ts"
+      ],
+      "editor": [
+        "dist/editor/index.d.ts"
       ]
     }
   },
@@ -71,7 +78,7 @@
   },
   "tsup": {
     "entry": [
-      "src/**/*.ts"
+      "src/**/**/*.ts"
     ],
     "dts": true,
     "bundle": false,

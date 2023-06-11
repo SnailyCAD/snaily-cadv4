@@ -1,5 +1,6 @@
+import { SlateEditor, SlateElements, Text, slateDataToString } from "@snailycad/utils/editor";
 import * as React from "react";
-import { BaseEditor, Editor as _Editor, Node as SlateNode, Descendant, createEditor } from "slate";
+import { Editor as _Editor, Node as SlateNode, Descendant, createEditor } from "slate";
 import {
   Editable,
   ReactEditor,
@@ -8,20 +9,16 @@ import {
   Slate,
   withReact,
 } from "slate-react";
-import { type HistoryEditor, withHistory } from "slate-history";
+import { withHistory } from "slate-history";
 import { Toolbar } from "./toolbar";
 import { toggleMark } from "lib/editor/utils";
 import isHotkey from "is-hotkey";
 import { SHORTCUTS, withShortcuts } from "lib/editor/withShortcuts";
 import { withChecklists } from "lib/editor/withChecklists";
-import type { SlateElements, Text } from "./types";
 import { classNames } from "lib/classNames";
-import { dataToString } from "lib/editor/dataToString";
 import { useTranslations } from "use-intl";
 import { EditorElement } from "./elements/element";
 import { EditorLeaf } from "./elements/leaf";
-
-export type SlateEditor = BaseEditor & ReactEditor & HistoryEditor;
 
 declare module "slate" {
   interface CustomTypes {
@@ -67,7 +64,7 @@ export function Editor(props: EditorProps) {
     [],
   );
   const isEmpty = React.useMemo(() => {
-    return dataToString(props.value)?.trim() === "";
+    return slateDataToString(props.value)?.trim() === "";
   }, [props.value]);
 
   function handleChange(value: Descendant[]) {

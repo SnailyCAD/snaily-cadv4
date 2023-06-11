@@ -1,5 +1,4 @@
-import type { SlateEditor } from "components/editor/editor";
-import type { Text } from "components/editor/types";
+import { SlateEditor, Text } from "@snailycad/utils/editor";
 import { Editor, Transforms, Element as SlateElement } from "slate";
 
 const LIST_TYPES = ["numbered-list", "bulleted-list"];
