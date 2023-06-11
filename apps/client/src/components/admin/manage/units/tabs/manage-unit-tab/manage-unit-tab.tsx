@@ -94,7 +94,7 @@ export function ManageUnitTab({ unit: data }: Props) {
 
     status: unit.statusId,
     department: getUnitDepartment(unit)?.id ?? "",
-    division: !isUnitOfficer(unit) ? unit.divisionId : "",
+    division: !isUnitOfficer(unit) ? unit.divisionId : null,
     divisions: divisions.map((v) => ({ value: v.id, label: v.value.value })),
     callsign: unit.callsign,
     callsign2: unit.callsign2,
@@ -269,6 +269,7 @@ export function ManageUnitTab({ unit: data }: Props) {
               </FormRow>
 
               <SwitchField
+                className="mt-3"
                 isSelected={values.suspended}
                 onChange={(isSelected) => setFieldValue("suspended", isSelected)}
               >

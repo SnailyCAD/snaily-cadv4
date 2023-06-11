@@ -490,10 +490,10 @@ export class AdminManageUnitsController {
       data: {
         statusId: data.status,
         departmentId: data.department,
-        divisionId: data.division,
+        divisionId: type === "officer" ? undefined : data.division,
         rankId: data.rank,
         position: data.position,
-        suspended: data.suspended,
+        suspended: data.suspended ?? false,
         callsign2: data.callsign2,
         callsign: data.callsign,
         badgeNumber: data.badgeNumber,
