@@ -14,6 +14,9 @@ import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { getImageWebPPath } from "lib/images/get-image-webp-path";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import type { User } from "@snailycad/types";
+import { resolve } from "node:path";
+import { existsSync } from "node:fs";
+import sharp from "sharp";
 
 @Controller("/admin/manage/cad-settings/image")
 @ContentType("application/json")
@@ -67,6 +70,8 @@ export class ManageCitizensController {
       executorId: user.id,
     });
 
+    this.handleUploadFavicon(file);
+
     return data;
   }
 
@@ -102,5 +107,20 @@ export class ManageCitizensController {
         return data;
       }),
     );
+  }
+
+  private async handleUploadFavicon(image: PlatformMulterFile) {
+    const clientPublicFolder = resolve(process.cwd(), "../client", "public");
+    const doesFaviconExist = existsSync(`${clientPublicFolder}/favicon.png`);
+
+    if (doesFaviconExist) {
+      // don't override the existing favicon
+      return;
+    }
+
+    const sharpImage = sharp(image.buffer).png({ quality: 80 });
+    const buffer = await sharpImage.toBuffer();
+
+    await fs.writeFile(`${clientPublicFolder}/favicon.png`, buffer);
   }
 }
