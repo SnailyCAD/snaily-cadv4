@@ -92,7 +92,7 @@ export function ManageCustomFieldModal({ field, onClose, onCreate, onUpdate }: P
 
             <SelectField
               errorMessage={errors.category}
-              label="Category"
+              label={t("category")}
               options={CATEGORIES}
               name="category"
               onSelectionChange={(key) => setFieldValue("category", key)}
@@ -101,7 +101,7 @@ export function ManageCustomFieldModal({ field, onClose, onCreate, onUpdate }: P
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onPress={handleClose} variant="cancel">
-                Cancel
+                {common("cancel")}
               </Button>
               <Button className="flex items-center" disabled={state === "loading"} type="submit">
                 {state === "loading" ? <Loader className="mr-2" /> : null}

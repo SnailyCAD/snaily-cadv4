@@ -133,7 +133,7 @@ export default function ManageCustomFields({ customFields: data }: Props) {
           }))}
           columns={[
             { header: common("name"), accessorKey: "name" },
-            { header: "Category", accessorKey: "category" },
+            { header: t("category"), accessorKey: "category" },
             hasManagePermissions ? { header: common("actions"), accessorKey: "actions" } : null,
           ]}
         />

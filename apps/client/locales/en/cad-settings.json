@@ -176,7 +176,10 @@
     "weaponLicenseNumberLength": "Weapon License Number Length",
     "weaponLicenseNumberLengthDescription": "The length of the weapon license number (Default: 8)",
     "waterLicenseNumberLength": "Water License Number Length",
-    "waterLicenseNumberLengthDescription": "The length of the water license number (Default: 8)"
+    "waterLicenseNumberLengthDescription": "The length of the water license number (Default: 8)",
+    "seconds": "Seconds",
+    "minutes": "Minutes",
+    "hours": "Hours"
   },
   "Features": {
     "enableOrDisableFeatures": "Enable or Disable Features",

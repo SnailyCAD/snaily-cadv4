@@ -145,7 +145,7 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
               value={values.name}
             />
 
-            <FormField errorMessage={errors.permissions as string} label="Permissions">
+            <FormField errorMessage={errors.permissions as string} label={t("permissions")}>
               <Select
                 isMulti
                 closeMenuOnSelect={false}
@@ -159,7 +159,11 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
               />
             </FormField>
 
-            <FormField optional errorMessage={errors.discordRoleId as string} label="Discord Role">
+            <FormField
+              optional
+              errorMessage={errors.discordRoleId as string}
+              label={t("discordRole")}
+            >
               <Select
                 values={discordRoles.map((role) => ({
                   value: role.id,
@@ -176,7 +180,7 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onPress={handleClose} variant="cancel">
-                Cancel
+                {common("cancel")}
               </Button>
               <Button className="flex items-center" disabled={state === "loading"} type="submit">
                 {state === "loading" ? <Loader className="mr-2" /> : null}

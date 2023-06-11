@@ -21,6 +21,7 @@ export function ImportValuesModal({ onImport, type }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const t = useTranslations("Values");
+  const common = useTranslations("Common");
 
   async function onSubmit(_: any, helpers: FormikHelpers<typeof INITIAL_VALUES>) {
     const fd = new FormData();
@@ -54,7 +55,7 @@ export function ImportValuesModal({ onImport, type }: Props) {
   return (
     <Modal
       className="w-[600px]"
-      title={"Import values"}
+      title={t("importValues")}
       onClose={() => closeModal(ModalIds.ImportValues)}
       isOpen={isOpen(ModalIds.ImportValues)}
     >
@@ -83,7 +84,7 @@ export function ImportValuesModal({ onImport, type }: Props) {
               rel="noreferrer"
               href="https://docs.snailycad.org/docs/developer/importing-values"
             >
-              Documentation
+              {common("documentation")}
             </a>
 
             <footer className="flex justify-end mt-5">
@@ -92,11 +93,11 @@ export function ImportValuesModal({ onImport, type }: Props) {
                 onPress={() => closeModal(ModalIds.ImportValues)}
                 variant="cancel"
               >
-                Cancel
+                {common("cancel")}
               </Button>
               <Button className="flex items-center" disabled={state === "loading"} type="submit">
                 {state === "loading" ? <Loader className="mr-2" /> : null}
-                {"Import"}
+                {common("import")}
               </Button>
             </footer>
           </Form>

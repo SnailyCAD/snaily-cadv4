@@ -138,7 +138,7 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
                     errorMessage={errors.username}
                     autoFocus
                     isRequired
-                    label="Username"
+                    label={t("username")}
                     value={values.username}
                     onChange={(value) => setFieldValue("username", value)}
                   />
@@ -147,7 +147,7 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
                     type="password"
                     errorMessage={errors.password}
                     isRequired
-                    label="Password"
+                    label={t("password")}
                     value={values.password}
                     onChange={(value) => setFieldValue("password", value)}
                     autoComplete="current-password"

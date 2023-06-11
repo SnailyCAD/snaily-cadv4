@@ -26,19 +26,20 @@ export function ImportModal<T extends ImportData>({ onImport, id, url }: Props<T
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const t = useTranslations("Values");
+  const common = useTranslations("Common");
 
   const data = {
     [ModalIds.ImportCitizens]: {
       docsUrl: "https://docs.snailycad.org/docs/developer/importing-values#citizens",
-      title: "Import Citizen",
+      title: t("importCitizens"),
     },
     [ModalIds.ImportVehicles]: {
       docsUrl: "https://docs.snailycad.org/docs/developer/importing-values#vehicles",
-      title: "Import Vehicles",
+      title: t("importVehicles"),
     },
     [ModalIds.ImportWeapons]: {
       docsUrl: "https://docs.snailycad.org/docs/developer/importing-values#weapons",
-      title: "Import Weapons",
+      title: t("importWeapons"),
     },
   };
 
@@ -97,16 +98,16 @@ export function ImportModal<T extends ImportData>({ onImport, id, url }: Props<T
             </FormField>
 
             <a className="underline" target="_blank" rel="noreferrer" href={data[id].docsUrl}>
-              Documentation
+              {common("documentation")}
             </a>
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onPress={() => closeModal(id)} variant="cancel">
-                Cancel
+                {common("cancel")}
               </Button>
               <Button className="flex items-center" disabled={state === "loading"} type="submit">
                 {state === "loading" ? <Loader className="mr-2" /> : null}
-                {"Import"}
+                {t("import")}
               </Button>
             </footer>
           </Form>

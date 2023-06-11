@@ -30,7 +30,7 @@ export function QualificationFields({ image, setImage }: any) {
         selectedKey={values.qualificationType}
       />
 
-      <FormField errorMessage={errors.departments as string} label="Departments">
+      <FormField errorMessage={errors.departments as string} label={t("departments")}>
         <Select
           isMulti
           isClearable={false}
@@ -45,7 +45,7 @@ export function QualificationFields({ image, setImage }: any) {
         />
       </FormField>
 
-      <FormField optional errorMessage={errors.description as string} label="Description">
+      <FormField optional errorMessage={errors.description as string} label={common("description")}>
         <Textarea value={values.description} name="description" onChange={handleChange} />
       </FormField>
 

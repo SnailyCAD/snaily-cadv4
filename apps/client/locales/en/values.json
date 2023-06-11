@@ -58,7 +58,11 @@
     "insuranceStatus": "Insurance Status",
     "employee": "Employee",
     "manager": "Manager",
-    "owner": "Owner"
+    "owner": "Owner",
+    "import": "Import",
+    "importCitizens": "Import Citizens",
+    "importVehicles": "Import Vehicles",
+    "importWeapons": "Import Weapons"
   },
   "PENAL_CODE_GROUP": {
     "MANAGE": "Manage Penal Code Groups",

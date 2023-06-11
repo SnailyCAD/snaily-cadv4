@@ -278,7 +278,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             {type === ValueType.DIVISION ? null : (
               <TextField
                 errorMessage={errors.value}
-                label="Value"
+                label={tValues("value")}
                 autoFocus
                 name="value"
                 onChange={(value) => setFieldValue("value", value)}
@@ -381,6 +381,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             {type === "CODES_10" ? <StatusValueFields /> : null}
 
             <SwitchField
+              className="my-4 mt-8"
               isSelected={values.isDisabled}
               onChange={(isSelected) => setFieldValue("isDisabled", isSelected)}
               description={tValues("disabledDescription")}
