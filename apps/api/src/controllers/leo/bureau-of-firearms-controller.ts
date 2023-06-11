@@ -1,4 +1,4 @@
-import { WhitelistStatus } from "@prisma/client";
+import { Prisma, WhitelistStatus } from "@prisma/client";
 import { BodyParams, PathParams, QueryParams, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -13,6 +13,11 @@ import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled, Feature } from "middlewares/is-enabled";
 import { citizenInclude } from "controllers/citizen/CitizenController";
+
+const includes = Prisma.validator<Prisma.WeaponSelect>()({
+  ...citizenInclude.weapons.include,
+  citizen: true,
+});
 
 @Controller("/leo/bureau-of-firearms")
 @UseBeforeEach(IsAuth)
@@ -32,10 +37,7 @@ export class BureauOfFirearmsController {
       prisma.weapon.count({ where: { bofStatus: { not: null } } }),
       prisma.weapon.findMany({
         where: { bofStatus: { not: null } },
-        include: {
-          ...citizenInclude.weapons.include,
-          citizen: true,
-        },
+        include: includes,
         orderBy: { createdAt: "desc" },
         take: includeAll ? undefined : 35,
         skip: includeAll ? undefined : skip,
@@ -66,10 +68,7 @@ export class BureauOfFirearmsController {
     const updated = await prisma.weapon.update({
       where: { id: weapon.id },
       data: { bofStatus },
-      include: {
-        ...citizenInclude.weapons.include,
-        citizen: true,
-      },
+      include: includes,
     });
 
     return updated;

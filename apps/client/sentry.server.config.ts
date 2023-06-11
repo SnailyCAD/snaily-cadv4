@@ -16,5 +16,8 @@ init({
     "Hydration failed because the initial UI does not match what was rendered on the server.",
     "Cannot have two HTML5 backends at the same time.",
     /Cannot resolve a DOM point from Slate point:/gi,
+    /Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node./gi,
+    "Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.",
+    "The object can not be found here.",
   ],
 });
