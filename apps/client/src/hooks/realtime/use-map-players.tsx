@@ -141,8 +141,6 @@ export function useMapPlayers() {
     [onPlayerData, onPlayerLeft],
   );
 
-  console.log(currentMapServerURL);
-
   const onError = React.useCallback(
     (reason: Error) => {
       console.log({ reason });

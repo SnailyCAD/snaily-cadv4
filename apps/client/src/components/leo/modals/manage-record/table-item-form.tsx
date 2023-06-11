@@ -80,8 +80,6 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
     { fine?: string; jailTime?: string; bail?: string; communityService?: string; counts?: string }
   >;
 
-  console.log({ violationErrors });
-
   const current = values.violations.find(
     (v: SelectValue<PenalCode>) => v.value?.id === penalCode.id,
   );

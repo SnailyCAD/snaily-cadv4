@@ -363,37 +363,38 @@ export class DispatchController {
       z.object({ discordId: z.string().optional(), steamId: z.string().optional() }),
     );
     const ids = validateSchema(schema, body);
-    const users = [];
 
-    for (const { steamId, discordId } of ids) {
-      const user = await prisma.user.findFirst({
-        where: { OR: [{ steamId }, { discordId }] },
-        select: {
-          username: true,
-          id: true,
-          permissions: true,
-          rank: true,
-          steamId: true,
-          roles: true,
-          discordId: true,
-        },
-      });
+    const users = await Promise.all(
+      ids.map(async (id) => {
+        const user = await prisma.user.findFirst({
+          where: { OR: [{ steamId: id.steamId }, { discordId: id.discordId }] },
+          select: {
+            username: true,
+            id: true,
+            permissions: true,
+            rank: true,
+            steamId: true,
+            roles: true,
+            discordId: true,
+          },
+        });
 
-      if (!user) {
-        continue;
-      }
+        if (!user) {
+          return null;
+        }
 
-      const [officer, deputy] = await Promise.all([
-        getActiveOfficer({ user, ctx }).catch(() => null),
-        getActiveDeputy({ user, ctx }).catch(() => null),
-      ]);
+        const [officer, deputy] = await Promise.all([
+          getActiveOfficer({ user, ctx }).catch(() => null),
+          getActiveDeputy({ user, ctx }).catch(() => null),
+        ]);
 
-      const unit = officer ?? deputy ?? null;
+        const unit = officer ?? deputy ?? null;
 
-      users.push({ ...user, unit });
-    }
+        return { ...user, unit };
+      }),
+    );
 
-    return users;
+    return users.filter((v) => v !== null);
   }
 
   @Get("/players/:steamId")
