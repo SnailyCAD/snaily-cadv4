@@ -285,10 +285,10 @@ export class LeoSearchController {
     permissions: [Permissions.Leo, Permissions.Dispatch],
   })
   async searchVehicle(
-    @BodyParams("plateOrVin", String) _plateOrVin: string,
-    @QueryParams("includeMany", Boolean) includeMany: boolean,
+    @BodyParams("plateOrVin", String) _plateOrVin?: string,
+    @QueryParams("includeMany", Boolean) includeMany?: boolean,
   ): Promise<APITypes.PostLeoSearchVehicleData> {
-    const trimmedPlateOrVin = _plateOrVin.trim();
+    const trimmedPlateOrVin = _plateOrVin?.trim();
 
     if (!trimmedPlateOrVin || trimmedPlateOrVin.length < 3) {
       return null;
