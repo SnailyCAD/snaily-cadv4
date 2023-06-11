@@ -13,6 +13,8 @@ import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger
 import type { MiscCadSettings } from "@snailycad/types";
 import sharp from "sharp";
 import { manyToManyHelper } from "lib/data/many-to-many";
+import { allowedFileExtensions } from "@snailycad/config";
+import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
 
 @Controller("/admin/manage/cad-settings/live-map")
 @ContentType("application/json")
@@ -71,7 +73,29 @@ export class CADSettingsLiveMapController {
     permissions: [Permissions.ManageCADSettings],
   })
   async updateLiveMapTiles(@MultipartFile("tiles") files: PlatformMulterFile[]) {
+    const allowedNames = [
+      "minimap_sea_0_0",
+      "minimap_sea_0_1",
+      "minimap_sea_1_0",
+      "minimap_sea_1_1",
+      "minimap_sea_2_0",
+      "minimap_sea_2_1",
+    ];
+
+    if (!Array.isArray(files)) {
+      throw new ExtendedBadRequest({ tiles: "Invalid files" });
+    }
+
     for (const file of files) {
+      const fileType = file.mimetype as (typeof allowedFileExtensions)[number];
+      if (!allowedFileExtensions.includes(fileType)) {
+        throw new ExtendedBadRequest({ tiles: "Invalid file type" });
+      }
+
+      if (!allowedNames.includes(file.originalname)) {
+        throw new ExtendedBadRequest({ tiles: "Invalid file name" });
+      }
+
       const sharpImage = sharp(file.buffer).webp({ quality: 80 });
 
       const pathToClientPublicDir = `${process.cwd()}/../client/public/tiles/${
