@@ -14,6 +14,7 @@ import { create } from "zustand";
 import { useDispatchMapState, useSocketStore } from "state/mapState";
 import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
+import { makeSocketConnection } from "components/dispatch/map/modals/select-map-server-modal";
 
 export const useMapPlayersStore = create<{
   players: Map<string, MapPlayer | PlayerDataEventPayload>;
@@ -26,9 +27,9 @@ export const useMapPlayersStore = create<{
 export function useMapPlayers() {
   const { players, setPlayers } = useMapPlayersStore();
 
-  const { openModal } = useModal();
+  const { openModal, isOpen } = useModal();
   const { currentMapServerURL } = useDispatchMapState();
-  const { socket } = useSocketStore();
+  const { socket, setSocket } = useSocketStore();
   const { state, execute } = useFetch();
 
   const getCADUsers = React.useCallback(
@@ -177,8 +178,15 @@ export function useMapPlayers() {
   React.useEffect(() => {
     if (!currentMapServerURL) {
       openModal(ModalIds.SelectMapServer, { showAlert: true });
+    } else if (!isOpen(ModalIds.SelectMapServer) && !socket?.connected) {
+      socket?.close();
+
+      const newSocket = makeSocketConnection(currentMapServerURL);
+      if (newSocket) {
+        setSocket(newSocket);
+      }
     }
-  }, [currentMapServerURL]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [currentMapServerURL, socket?.connected]); // eslint-disable-line react-hooks/exhaustive-deps
 
   React.useEffect(() => {
     const s = socket;

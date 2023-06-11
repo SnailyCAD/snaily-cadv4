@@ -35,38 +35,6 @@ export function SelectMapServerModal() {
     }
   }
 
-  function makeSocketConnection(url: string) {
-    try {
-      if (url.startsWith("ws")) {
-        const _url = url.replace(/ws:\/\//, "http://").replace(/wss:\/\//, "https://");
-        return io(_url);
-      }
-
-      return io(url);
-    } catch (error) {
-      const isSecurityError = error instanceof Error && error.name === "SecurityError";
-
-      console.log({ error });
-
-      if (isSecurityError) {
-        toastMessage({
-          message: `Unable to make a Websocket connection to ${url}. The connections are not secure.`,
-          title: "Security Error",
-          duration: Infinity,
-        });
-        return;
-      }
-
-      toastMessage({
-        message: `Unable to make a Websocket connection to ${url}`,
-        title: "Connection Error",
-        duration: Infinity,
-      });
-
-      return null;
-    }
-  }
-
   return (
     <Modal
       onClose={handleClose}
@@ -124,4 +92,36 @@ function createLiveMapURLs(miscCadSettings: MiscCadSettings | null) {
   }
 
   return Array.from(liveMapURLs.values());
+}
+
+export function makeSocketConnection(url: string) {
+  try {
+    if (url.startsWith("ws")) {
+      const _url = url.replace(/ws:\/\//, "http://").replace(/wss:\/\//, "https://");
+      return io(_url);
+    }
+
+    return io(url);
+  } catch (error) {
+    const isSecurityError = error instanceof Error && error.name === "SecurityError";
+
+    console.log({ error });
+
+    if (isSecurityError) {
+      toastMessage({
+        message: `Unable to make a Websocket connection to ${url}. The connections are not secure.`,
+        title: "Security Error",
+        duration: Infinity,
+      });
+      return;
+    }
+
+    toastMessage({
+      message: `Unable to make a Websocket connection to ${url}`,
+      title: "Connection Error",
+      duration: Infinity,
+    });
+
+    return null;
+  }
 }
