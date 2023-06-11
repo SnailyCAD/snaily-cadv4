@@ -25,6 +25,10 @@ export const DEFAULT_DISABLED_FEATURES = {
   USER_DEFINED_CALLSIGN_COMBINED_UNIT: { isEnabled: false },
 } satisfies Partial<Record<Feature, { isEnabled: boolean }>>;
 
+const DEFAULT_FEATURE_OPTIONS = {
+  [Feature.LICENSE_EXAMS]: Object.values(LicenseExamType),
+} satisfies CadFeatureOptions;
+
 export function useFeatureEnabled(
   features?: Record<Feature, boolean> & { options?: CadFeatureOptions },
 ) {
@@ -32,20 +36,14 @@ export function useFeatureEnabled(
   const _features = features ?? cad?.features;
 
   const options = React.useMemo(() => {
-    const obj = {} as Partial<Record<Feature, any>>;
+    const obj = {} as CadFeatureOptions;
 
-    const cadFeatures = _features;
+    const cadFeatures = _features?.options ?? DEFAULT_FEATURE_OPTIONS;
     for (const _key in cadFeatures) {
-      const key = _key as Feature;
-      let option = cadFeatures.options?.[key];
+      const typedKey = _key as keyof CadFeatureOptions;
+      const option = cadFeatures[typedKey] ?? DEFAULT_FEATURE_OPTIONS[typedKey];
 
-      if (key === Feature.LICENSE_EXAMS) {
-        if (!option || option.length === 0) {
-          option = Object.values(LicenseExamType);
-        }
-      }
-
-      obj[key as Feature] = option;
+      obj[typedKey] = option;
     }
 
     return obj;

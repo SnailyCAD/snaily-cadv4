@@ -115,7 +115,7 @@ export function ManageExamModal({ exam, onClose, onCreate, onUpdate }: Props) {
               label={common("type")}
               isDisabled={!!exam}
               name="type"
-              options={(options.LICENSE_EXAMS as LicenseExamType[]).map((v) => ({
+              options={options.LICENSE_EXAMS.map((v) => ({
                 label: v.toLowerCase(),
                 value: v,
               }))}

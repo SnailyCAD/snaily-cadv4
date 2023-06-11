@@ -2,7 +2,7 @@ import { Middleware, MiddlewareMethods, Context, Next } from "@tsed/common";
 import { UseBefore } from "@tsed/platform-middlewares";
 import { StoreSet, useDecorators } from "@tsed/core";
 import { CadFeature, Feature as DatabaseFeature, Feature } from "@prisma/client";
-import type { Feature as TypesFeature } from "@snailycad/types";
+import type { CadFeatureOptions, Feature as TypesFeature } from "@snailycad/types";
 import { setCADFeatures } from "./auth/is-auth";
 import { prisma } from "lib/data/prisma";
 import { FeatureNotEnabled } from "src/exceptions/feature-not-enabled";
@@ -37,7 +37,6 @@ export const DEFAULT_DISABLED_FEATURES: Partial<
 export type CadFeatures = Record<TypesFeature | DatabaseFeature, boolean> & {
   options?: CadFeatureOptions;
 };
-export type CadFeatureOptions = Record<TypesFeature | DatabaseFeature, any>;
 
 export function createFeaturesObject(features?: CadFeature[] | undefined) {
   const obj: CadFeatures = {} as CadFeatures;
@@ -46,8 +45,8 @@ export function createFeaturesObject(features?: CadFeature[] | undefined) {
   Object.keys(Feature).map((feature) => {
     const cadFeature = features?.find((v) => v.feature === feature);
 
-    if (cadFeature?.extraFields) {
-      featureExtraOptions[feature as TypesFeature | DatabaseFeature] = cadFeature.extraFields
+    if (cadFeature?.extraFields && feature === Feature.LICENSE_EXAMS) {
+      featureExtraOptions[feature] = cadFeature.extraFields
         ? JSON.parse(cadFeature.extraFields as any)
         : null;
     }

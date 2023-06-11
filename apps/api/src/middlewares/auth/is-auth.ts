@@ -9,8 +9,9 @@ import { handleDiscordSync } from "./utils/utils";
 import { hasPermission, Permissions } from "@snailycad/permissions";
 import { setErrorMap } from "zod";
 import { getErrorMap } from "../../utils/zod-error-map";
-import { CadFeatureOptions, createFeaturesObject, overwriteFeatures } from "../is-enabled";
+import { createFeaturesObject, overwriteFeatures } from "../is-enabled";
 import { getUserFromSession, setGlobalUserFromCADAPIToken } from "./utils/get-user";
+import { CadFeatureOptions } from "@snailycad/types";
 
 @Middleware()
 export class IsAuth implements MiddlewareMethods {
