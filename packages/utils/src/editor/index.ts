@@ -1,5 +1,5 @@
 import type { SlateElements, Text } from "./types";
-import type { BaseEditor } from "slate";
+import type { BaseEditor, Descendant } from "slate";
 import type { ReactEditor } from "slate-react";
 import type { HistoryEditor } from "slate-history";
 
@@ -14,4 +14,4 @@ declare module "slate" {
 
 export * from "./types";
 export { slateDataToString } from "./slate-data-to-string";
-export { Descendant } from "slate";
+export { Descendant };
