@@ -5,7 +5,7 @@ import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-par
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
-import { Officer, MiscCadSettings, CombinedLeoUnit, Prisma } from "@prisma/client";
+import { Officer, MiscCadSettings, CombinedLeoUnit } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { Socket } from "services/socket-service";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
@@ -17,32 +17,7 @@ import { getNextIncidentId } from "lib/incidents/get-next-incident-id";
 import { assignUnitsInvolvedToIncident } from "lib/incidents/handle-involved-units";
 import { ActiveDeputy } from "middlewares/active-deputy";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
-import { _leoProperties, unitProperties } from "utils/leo/includes";
-
-export const assignedUnitsInclude = Prisma.validator<{ include: Prisma.AssignedUnitSelect }>()({
-  include: {
-    officer: { include: _leoProperties },
-    deputy: { include: unitProperties },
-    combinedUnit: {
-      include: {
-        status: { include: { value: true } },
-        department: { include: { value: true } },
-        officers: {
-          include: _leoProperties,
-        },
-      },
-    },
-    combinedEmsFdUnit: {
-      include: {
-        status: { include: { value: true } },
-        department: { include: { value: true } },
-        deputies: {
-          include: unitProperties,
-        },
-      },
-    },
-  },
-});
+import { _leoProperties, assignedUnitsInclude, unitProperties } from "utils/leo/includes";
 
 export const incidentInclude = {
   creator: { include: unitProperties },

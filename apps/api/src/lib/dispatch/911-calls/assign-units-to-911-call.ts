@@ -6,9 +6,9 @@ import type { Socket } from "~/services/socket-service";
 import { manyToManyHelper } from "~/lib/data/many-to-many";
 import type { z } from "zod";
 import type { ASSIGNED_UNIT } from "@snailycad/schemas";
-import { assignedUnitsInclude } from "~/controllers/leo/incidents/IncidentController";
 import { createAssignedText } from "./utils/create-assigned-text";
 import { getNextActive911CallId } from "./get-next-active-911-call";
+import { assignedUnitsInclude } from "~/utils/leo/includes";
 
 interface Options {
   call: Call911 & { assignedUnits: AssignedUnit[] };

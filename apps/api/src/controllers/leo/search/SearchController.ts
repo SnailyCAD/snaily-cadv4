@@ -4,7 +4,7 @@ import { NotFound } from "@tsed/exceptions";
 import { BodyParams, QueryParams } from "@tsed/platform-params";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/auth/is-auth";
-import { leoProperties } from "utils/leo/includes";
+import { callInclude, leoProperties } from "utils/leo/includes";
 
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
@@ -27,7 +27,6 @@ import type * as APITypes from "@snailycad/types/api";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { setEndedSuspendedLicenses } from "lib/citizen/licenses/set-ended-suspended-licenses";
 import { incidentInclude } from "../incidents/IncidentController";
-import { callInclude } from "controllers/dispatch/911-calls/calls-911-controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 
 export const vehicleSearchInclude = {
@@ -45,9 +44,7 @@ export const vehicleSearchInclude = {
 export const RecordsInclude = (isRecordApprovalEnabled: boolean) => ({
   where: isRecordApprovalEnabled ? { status: WhitelistStatus.ACCEPTED } : undefined,
   include: {
-    officer: {
-      include: leoProperties,
-    },
+    officer: { include: leoProperties },
     seizedItems: true,
     courtEntry: { include: { dates: true } },
     vehicle: { include: { model: { include: { value: true } } } },

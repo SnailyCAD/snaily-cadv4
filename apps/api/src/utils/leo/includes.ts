@@ -44,3 +44,40 @@ export const combinedUnitProperties = Prisma.validator<Prisma.CombinedLeoUnitSel
   officers: { include: _leoProperties },
   activeVehicle: { include: { value: true } },
 });
+
+export const assignedUnitsInclude = Prisma.validator<{ include: Prisma.AssignedUnitSelect }>()({
+  include: {
+    officer: { include: _leoProperties },
+    deputy: { include: unitProperties },
+    combinedUnit: {
+      include: {
+        status: { include: { value: true } },
+        department: { include: { value: true } },
+        officers: {
+          include: _leoProperties,
+        },
+      },
+    },
+    combinedEmsFdUnit: {
+      include: {
+        status: { include: { value: true } },
+        department: { include: { value: true } },
+        deputies: {
+          include: unitProperties,
+        },
+      },
+    },
+  },
+});
+
+export const callInclude = Prisma.validator<Prisma.Call911Select>()({
+  position: true,
+  assignedUnits: assignedUnitsInclude,
+  events: true,
+  incidents: true,
+  departments: { include: _leoProperties.department.include },
+  divisions: { include: unitProperties.division.include },
+  situationCode: { include: { value: true } },
+  type: { include: { value: true } },
+  gtaMapPosition: true,
+});

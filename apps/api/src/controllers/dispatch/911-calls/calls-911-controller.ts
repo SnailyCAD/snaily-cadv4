@@ -34,10 +34,7 @@ import { assignUnitsTo911Call } from "lib/dispatch/911-calls/assign-units-to-911
 import { linkOrUnlinkCallDepartmentsAndDivisions } from "lib/dispatch/911-calls/link-unlink-departments-divisions-call-911";
 import { hasPermission } from "@snailycad/permissions";
 import type * as APITypes from "@snailycad/types/api";
-import {
-  assignedUnitsInclude,
-  incidentInclude,
-} from "controllers/leo/incidents/IncidentController";
+import { incidentInclude } from "controllers/leo/incidents/IncidentController";
 import type { z } from "zod";
 import { getNextActive911CallId } from "lib/dispatch/911-calls/get-next-active-911-call";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
@@ -46,20 +43,8 @@ import { HandleInactivity } from "middlewares/handle-inactivity";
 import { handleEndCall } from "lib/dispatch/911-calls/handle-end-911-call";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { isFeatureEnabled } from "lib/upsert-cad";
-import { _leoProperties, unitProperties } from "utils/leo/includes";
+import { _leoProperties, assignedUnitsInclude, callInclude } from "utils/leo/includes";
 import { slateDataToString, type Descendant } from "@snailycad/utils/editor";
-
-export const callInclude = Prisma.validator<Prisma.Call911Select>()({
-  position: true,
-  assignedUnits: assignedUnitsInclude,
-  events: true,
-  incidents: true,
-  departments: { include: _leoProperties.department.include },
-  divisions: { include: unitProperties.division.include },
-  situationCode: { include: { value: true } },
-  type: { include: { value: true } },
-  gtaMapPosition: true,
-});
 
 @Controller("/911-calls")
 @UseBeforeEach(IsAuth)

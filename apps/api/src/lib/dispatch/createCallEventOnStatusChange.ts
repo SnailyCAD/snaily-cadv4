@@ -1,9 +1,9 @@
 import type { StatusValue } from "@prisma/client";
 import { ShouldDoType } from "@snailycad/types";
-import { callInclude } from "controllers/dispatch/911-calls/calls-911-controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { prisma } from "lib/data/prisma";
 import type { Socket } from "services/socket-service";
+import { callInclude } from "~/utils/leo/includes";
 
 interface Options {
   socket: Socket;

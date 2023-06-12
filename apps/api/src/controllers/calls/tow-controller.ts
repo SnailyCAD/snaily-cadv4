@@ -25,13 +25,13 @@ import {
 } from "@prisma/client";
 import { canManageInvariant } from "lib/auth/getSessionUser";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";
-import { callInclude } from "controllers/dispatch/911-calls/calls-911-controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { sendDiscordWebhook, sendRawWebhook } from "lib/discord/webhooks";
 import type * as APITypes from "@snailycad/types/api";
 import { shouldCheckCitizenUserId } from "lib/citizen/has-citizen-access";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { getTranslator } from "utils/get-translator";
+import { callInclude } from "~/utils/leo/includes";
 
 const CITIZEN_SELECTS = {
   name: true,
