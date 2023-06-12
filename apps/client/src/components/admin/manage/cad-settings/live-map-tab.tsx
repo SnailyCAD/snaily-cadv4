@@ -12,6 +12,7 @@ import type { PutCADMiscSettingsData } from "@snailycad/types/api";
 import Link from "next/link";
 import { BoxArrowUpRight, ChevronDown } from "react-bootstrap-icons";
 import { Table, useTableState } from "components/shared/Table";
+import { MiscCadSettings, LiveMapURL } from "@snailycad/types";
 
 const TILE_NAMES = [
   "minimap_sea_0_0",
@@ -22,6 +23,27 @@ const TILE_NAMES = [
   "minimap_sea_2_1",
 ];
 
+type OptionalLiveMapURL = Pick<LiveMapURL, "name" | "url"> & { id?: string };
+function createInitialLiveMapValues(miscCadSettings: MiscCadSettings | null) {
+  if (!miscCadSettings) return [];
+
+  const liveMapURLsMap = (miscCadSettings.liveMapURLs ?? []).map(
+    (url) => [url.url, url] as [string, OptionalLiveMapURL],
+  );
+  const liveMapURLs = new Map(liveMapURLsMap);
+
+  if (miscCadSettings.liveMapURL && !liveMapURLs.has(miscCadSettings.liveMapURL)) {
+    liveMapURLs.set(miscCadSettings.liveMapURL, {
+      name: "Migrated Server",
+      url: miscCadSettings.liveMapURL,
+    });
+
+    return Array.from(liveMapURLs.values());
+  }
+
+  return Array.from(liveMapURLs.values());
+}
+
 export function LiveMapTab() {
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
@@ -29,9 +51,9 @@ export function LiveMapTab() {
   const t = useTranslations("LiveMapTab");
   const tableState = useTableState();
   const [openPopover, setOpenPopover] = React.useState<`edit-${string}` | "add" | null>(null);
-  const [liveMapURLs, setLiveMapURLs] = React.useState<
-    NonNullable<PutCADMiscSettingsData["liveMapURLs"]>
-  >(cad?.miscCadSettings?.liveMapURLs ?? []);
+  const [liveMapURLs, setLiveMapURLs] = React.useState<OptionalLiveMapURL[]>(
+    createInitialLiveMapValues(cad?.miscCadSettings ?? null),
+  );
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
@@ -269,11 +291,9 @@ interface ManageURLPopoverProps {
   trigger: React.ReactNode;
   isPopoverOpen: boolean;
   setIsPopoverOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  url?: { url: string; id: string; name: string } | null;
-  liveMapURLs: NonNullable<PutCADMiscSettingsData["liveMapURLs"]>;
-  setLiveMapURLs: React.Dispatch<
-    React.SetStateAction<NonNullable<PutCADMiscSettingsData["liveMapURLs"]>>
-  >;
+  url?: OptionalLiveMapURL | null;
+  liveMapURLs: OptionalLiveMapURL[];
+  setLiveMapURLs: React.Dispatch<React.SetStateAction<OptionalLiveMapURL[]>>;
 }
 
 function ManageURLPopover(props: ManageURLPopoverProps) {

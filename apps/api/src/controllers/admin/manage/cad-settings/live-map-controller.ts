@@ -12,7 +12,7 @@ import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import type { MiscCadSettings } from "@snailycad/types";
 import sharp from "sharp";
-import { manyToManyHelper } from "lib/data/many-to-many";
+import { getLastOfArray, manyToManyHelper } from "lib/data/many-to-many";
 import { allowedFileExtensions } from "@snailycad/config";
 import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
 
@@ -37,22 +37,19 @@ export class CADSettingsLiveMapController {
       { showUpsert: true, customAccessorKey: "id" },
     );
 
-    await prisma.$transaction(
-      connectDisconnectArr.map((item) =>
-        prisma.miscCadSettings.update({
-          where: { id: cad.miscCadSettingsId ?? "null" },
-          data: { liveMapURLs: item },
+    const updated = getLastOfArray(
+      await prisma.$transaction(
+        connectDisconnectArr.map((item, idx) => {
+          const isLast = idx === connectDisconnectArr.length - 1;
+
+          return prisma.miscCadSettings.update({
+            where: { id: cad.miscCadSettingsId ?? "null" },
+            data: { liveMapURLs: item, liveMapURL: null },
+            include: isLast ? { webhooks: true } : undefined,
+          });
         }),
       ),
     );
-
-    const updated = await prisma.miscCadSettings.update({
-      where: {
-        id: cad.miscCadSettingsId ?? "null",
-      },
-      data: { liveMapURL: data.liveMapURL },
-      include: { webhooks: true },
-    });
 
     await createAuditLogEntry({
       action: {

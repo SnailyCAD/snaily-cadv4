@@ -49,6 +49,7 @@ interface CADVersion {
 }
 
 export type CadFeature = Prisma.CadFeature;
+export type LiveMapURL = Prisma.LiveMapURL;
 
 export type MiscCadSettings = Prisma.MiscCadSettings & {
   webhooks?: DiscordWebhook[];
@@ -130,7 +131,6 @@ export type User = Pick<
 >;
 
 export type User2FA = Prisma.User2FA;
-
 export type UserSoundSettings = Prisma.UserSoundSettings;
 
 export type BaseCitizen = Prisma.Citizen;
