@@ -1,4 +1,4 @@
-// eslint-disable @typescript-eslint/no-unnecessary-condition
+/* eslint-disable  @typescript-eslint/no-unnecessary-condition */
 
 import { Editor, Element as SlateElement, Descendant } from "slate";
 
