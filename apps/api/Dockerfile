@@ -11,12 +11,6 @@ RUN yarn config set httpTimeout 1200000 && \
 
 RUN yarn turbo run build --filter="{packages/**/**}"
 
-FROM node:18 as runner
-
-WORKDIR /snailycad
-
-COPY --from=builder /snailycad ./
-
 ENV NODE_ENV="production"
 
 CMD yarn workspace @snailycad/api start

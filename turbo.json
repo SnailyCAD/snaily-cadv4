@@ -3,13 +3,21 @@
   "pipeline": {
     "@snailycad/client#build": {
       "dependsOn": [
+        "copy-env",
         "^build"
       ],
       "outputs": [
         ".next/**"
       ]
     },
+    "@snailycad/api#build": {
+      "dependsOn": [
+        "copy-env",
+        "^build"
+      ]
+    },
     "copy-env": {
+      "cache": false,
       "dependsOn": [
         "^copy-env"
       ],
