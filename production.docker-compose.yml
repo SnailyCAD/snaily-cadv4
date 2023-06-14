@@ -14,12 +14,9 @@ services:
 
   api:
     container_name: "snaily-cad-api"
-
     build:
       context: .
-      dockerfile: Dockerfile
-      args:
-        - BUILD_CONTEXT=api
+      dockerfile: ./apps/api/Dockerfile
     ports:
       - "${PORT_API}:${PORT_API}"
     expose:
@@ -32,13 +29,9 @@ services:
 
   client:
     container_name: "snaily-cad-client"
-
     build:
       context: .
-      dockerfile: Dockerfile
-      args:
-        - BUILD_CONTEXT=client
-
+      dockerfile: ./apps/client/Dockerfile
     ports:
       - "${PORT_CLIENT}:${PORT_CLIENT}"
     expose:
