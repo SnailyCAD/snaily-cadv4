@@ -9,7 +9,7 @@ RUN yarn config set httpTimeout 1200000 && \
   npx turbo prune --scope=@snailycad/api --docker && \
   yarn install
 
-RUN yarn turbo run build --filter="{packages/**/**}"
+RUN yarn turbo run build --filter=@snailycad/api
 
 ENV NODE_ENV="production"
 
