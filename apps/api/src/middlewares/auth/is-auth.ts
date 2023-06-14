@@ -1,5 +1,5 @@
 import process from "node:process";
-import { Rank, User, Feature, CadFeature, cad, Prisma } from "@prisma/client";
+import { Feature, CadFeature, cad, Prisma } from "@prisma/client";
 import { API_TOKEN_HEADER } from "@snailycad/config";
 import { Context, Middleware, Req, MiddlewareMethods, Res } from "@tsed/common";
 import { Unauthorized } from "@tsed/exceptions";
@@ -40,17 +40,22 @@ export class IsAuth implements MiddlewareMethods {
     const hasManageCadSettingsPermissions = hasPermission({
       permissionsToCheck: [Permissions.ManageCADSettings],
       userToCheck: user ?? null,
-      fallback: (user) => user.rank === Rank.OWNER,
     });
 
     let cad = await prisma.cad.findFirst({
-      select: CAD_SELECT(user, hasManageCadSettingsPermissions),
+      select: CAD_SELECT({
+        selectCADsettings: hasManageCadSettingsPermissions,
+        includeDiscordRoles: hasManageCadSettingsPermissions,
+      }),
     });
 
     if (cad) {
       if (!cad.miscCadSettings) {
         cad = await prisma.cad.update({
-          select: CAD_SELECT(user, hasManageCadSettingsPermissions),
+          select: CAD_SELECT({
+            selectCADsettings: hasManageCadSettingsPermissions,
+            includeDiscordRoles: hasManageCadSettingsPermissions,
+          }),
           where: { id: cad.id },
           data: { miscCadSettings: { create: {} } },
         });
@@ -107,7 +112,12 @@ export function setCADFeatures<T extends Partial<cad & { features?: CadFeature[]
   return { ...cad, features: filtered };
 }
 
-export function CAD_SELECT(user?: Pick<User, "rank"> | null, includeDiscordRoles?: boolean) {
+interface CadSelectOptions {
+  includeDiscordRoles?: boolean;
+  selectCADsettings?: boolean;
+}
+
+export function CAD_SELECT(options: CadSelectOptions) {
   return Prisma.validator<Prisma.cadSelect>()({
     id: true,
     name: true,
@@ -118,19 +128,18 @@ export function CAD_SELECT(user?: Pick<User, "rank"> | null, includeDiscordRoles
     businessWhitelisted: true,
     features: true,
     autoSetUserProperties: true,
-    registrationCode: user?.rank === Rank.OWNER,
-    steamApiKey: user?.rank === Rank.OWNER,
-    apiTokenId: user?.rank === Rank.OWNER,
-    apiToken: user?.rank === Rank.OWNER,
-    miscCadSettings:
-      user?.rank === Rank.OWNER
-        ? { include: { webhooks: true, liveMapURLs: true } }
-        : { include: { liveMapURLs: true } },
+    registrationCode: options.selectCADsettings,
+    steamApiKey: options.selectCADsettings,
+    apiTokenId: options.selectCADsettings,
+    apiToken: options.selectCADsettings,
+    miscCadSettings: options.selectCADsettings
+      ? { include: { webhooks: true, liveMapURLs: true } }
+      : { include: { liveMapURLs: true } },
     miscCadSettingsId: true,
     logoId: true,
     discordRolesId: true,
     autoSetUserPropertiesId: true,
-    discordRoles: includeDiscordRoles
+    discordRoles: options.includeDiscordRoles
       ? {
           include: {
             roles: true,

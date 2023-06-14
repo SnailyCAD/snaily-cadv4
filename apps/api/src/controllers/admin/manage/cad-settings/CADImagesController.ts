@@ -8,7 +8,7 @@ import { MultipartFile, PlatformMulterFile, UseBefore } from "@tsed/common";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import fs from "node:fs/promises";
 import { cad, Feature, MiscCadSettings } from "@prisma/client";
-import { Permissions } from "@snailycad/permissions";
+import { Permissions, hasPermission } from "@snailycad/permissions";
 import { UsePermissions } from "middlewares/use-permissions";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { getImageWebPPath } from "lib/images/get-image-webp-path";
@@ -51,11 +51,19 @@ export class ManageCitizensController {
       await fs.rm(previousImage, { force: true });
     }
 
+    const hasManageCadSettingsPermissions = hasPermission({
+      permissionsToCheck: [Permissions.ManageCADSettings],
+      userToCheck: user,
+    });
+
     const [data] = await Promise.all([
       prisma.cad.update({
         where: { id: cad.id },
         data: { logoId: image.fileName },
-        select: CAD_SELECT(user, true),
+        select: CAD_SELECT({
+          includeDiscordRoles: true,
+          selectCADsettings: hasManageCadSettingsPermissions,
+        }),
       }),
       fs.writeFile(image.path, image.buffer),
     ]);

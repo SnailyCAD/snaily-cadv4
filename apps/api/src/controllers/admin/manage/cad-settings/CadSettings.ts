@@ -15,7 +15,7 @@ import { Req, Res, UseBefore } from "@tsed/common";
 import { Socket } from "services/socket-service";
 import { nanoid } from "nanoid";
 import { validateSchema } from "lib/data/validate-schema";
-import { ApiToken, cad, Feature, JailTimeScale, Prisma, Rank } from "@prisma/client";
+import { ApiToken, cad, Feature, JailTimeScale, Prisma } from "@prisma/client";
 import { getCADVersion } from "@snailycad/utils/version";
 import { getSessionUser, userProperties } from "lib/auth/getSessionUser";
 import type * as APITypes from "@snailycad/types/api";
@@ -27,6 +27,7 @@ import {
 } from "@snailycad/audit-logger/server";
 import type { MiscCadSettings } from "@snailycad/types";
 import { createFeaturesObject } from "middlewares/is-enabled";
+import { hasPermission } from "@snailycad/permissions";
 
 @Controller("/admin/manage/cad-settings")
 @ContentType("application/json")
@@ -44,12 +45,28 @@ export class CADSettingsController {
     const user = await getSessionUser({ req: request, res: response, returnNullOnError: true });
     const version = await getCADVersion();
 
-    const cad = await prisma.cad.findFirst({
-      select: { ...CAD_SELECT(user, true), registrationCode: true },
+    const hasManageCadSettingsPermissions = hasPermission({
+      permissionsToCheck: [Permissions.ManageCADSettings],
+      userToCheck: user ?? null,
     });
 
-    const registrationCode =
-      user?.rank === Rank.OWNER ? cad?.registrationCode : !!cad?.registrationCode;
+    const cad = await prisma.cad.findFirst({
+      select: {
+        ...CAD_SELECT({
+          includeDiscordRoles: true,
+          selectCADsettings: hasManageCadSettingsPermissions,
+        }),
+        registrationCode: true,
+      },
+    });
+
+    const hasManageCADSettingsPermissions = hasPermission({
+      permissionsToCheck: [Permissions.ManageCADSettings],
+      userToCheck: user,
+    });
+    const registrationCode = hasManageCADSettingsPermissions
+      ? cad?.registrationCode
+      : !!cad?.registrationCode;
 
     return {
       ...setCADFeatures(cad),

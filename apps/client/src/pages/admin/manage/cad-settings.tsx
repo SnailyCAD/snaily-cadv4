@@ -27,7 +27,7 @@ const Tabs = {
     { ssr: false },
   ),
   ApiTokenTab: dynamic(
-    async () => (await import("components/admin/manage/cad-settings/ApiTokenTab")).ApiTokenTab,
+    async () => (await import("components/admin/manage/cad-settings/api-token-tab")).ApiTokenTab,
     { ssr: false },
   ),
   DiscordRolesTab: dynamic(
