@@ -223,7 +223,7 @@ export function AllUnitsTab({ units }: Props) {
                   unit.user?.username ?? t("Leo.temporaryUnit")
                 ),
               callsign: generateCallsign(unit),
-              badgeNumber: unit.badgeNumber,
+              badgeNumberString: unit.badgeNumberString,
               department: formatOfficerDepartment(unit) ?? common("none"),
               departmentStatus: <Status fallback="—">{departmentStatus}</Status>,
               division: formatUnitDivisions(unit),
@@ -260,7 +260,9 @@ export function AllUnitsTab({ units }: Props) {
             { header: common("name"), accessorKey: "name" },
             { header: common("user"), accessorKey: "user" },
             { header: t("Leo.callsign"), accessorKey: "callsign" },
-            BADGE_NUMBERS ? { header: t("Leo.badgeNumber"), accessorKey: "badgeNumber" } : null,
+            BADGE_NUMBERS
+              ? { header: t("Leo.badgeNumber"), accessorKey: "badgeNumberString" }
+              : null,
             { header: t("Leo.department"), accessorKey: "department" },
             DIVISIONS ? { header: t("Leo.division"), accessorKey: "division" } : null,
             { header: t("Leo.rank"), accessorKey: "rank" },

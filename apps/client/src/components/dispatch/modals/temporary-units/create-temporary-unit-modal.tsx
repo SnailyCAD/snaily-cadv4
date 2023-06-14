@@ -63,7 +63,7 @@ export function CreateTemporaryUnitModal({ onClose }: Props) {
     divisions: [],
     callsign: "",
     callsign2: "",
-    badgeNumber: "",
+    badgeNumberString: "",
     identifier: "",
     citizenId: "test",
   };
@@ -167,15 +167,11 @@ export function CreateTemporaryUnitModal({ onClose }: Props) {
 
             {BADGE_NUMBERS ? (
               <TextField
-                errorMessage={errors.badgeNumber}
+                errorMessage={errors.badgeNumberString}
                 label={t("Leo.badgeNumber")}
-                name="badgeNumber"
-                onChange={(value) => {
-                  isNaN(parseInt(value))
-                    ? setFieldValue("badgeNumber", value)
-                    : setFieldValue("badgeNumber", parseInt(value));
-                }}
-                value={String(values.badgeNumber)}
+                name="badgeNumberString"
+                onChange={(value) => setFieldValue("badgeNumberString", value)}
+                value={values.badgeNumberString}
               />
             ) : null}
 

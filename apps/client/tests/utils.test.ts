@@ -76,7 +76,7 @@ const TEST_OFFICER = {
   callsign: "E",
   callsign2: "92",
   citizen: { name: "john", surname: "doe" },
-  badgeNumber: 6034,
+  badgeNumberString: 6034,
   department: { value: { value: "LSPD" }, callsign: "A" },
   divisions: [
     { value: { value: "Patrol" }, callsign: "P" },
@@ -89,7 +89,7 @@ const TEST_EMS_FD_DEPUTY = {
   callsign: "E",
   callsign2: "92",
   citizen: { name: "jane", surname: "doe" },
-  badgeNumber: 6034,
+  badgeNumberString: "6034",
   department: { value: { value: "Fire" }, callsign: "A" },
   division: { value: { value: "Patrol" }, callsign: "P" },
   citizenId: "xxxxx",

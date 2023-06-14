@@ -95,7 +95,7 @@ export function DepartmentWhitelistingTab({ pendingUnits }: Props) {
               id: officer.id,
               name: makeUnitName(officer),
               callsign: generateCallsign(officer),
-              badgeNumber: officer.badgeNumber,
+              badgeNumberString: officer.badgeNumberString,
               department: formatOfficerDepartment(officer) ?? common("none"),
               division: formatUnitDivisions(officer),
               user:
@@ -136,7 +136,7 @@ export function DepartmentWhitelistingTab({ pendingUnits }: Props) {
           columns={[
             { header: common("name"), accessorKey: "name" },
             { header: t("Leo.callsign"), accessorKey: "callsign" },
-            { header: t("Leo.badgeNumber"), accessorKey: "badgeNumber" },
+            { header: t("Leo.badgeNumber"), accessorKey: "badgeNumberString" },
             { header: t("Leo.department"), accessorKey: "department" },
             DIVISIONS ? { header: t("Leo.division"), accessorKey: "division" } : null,
             { header: common("user"), accessorKey: "user" },

@@ -8,7 +8,7 @@ export const OFFICER = {
   callsign: "E",
   callsign2: "92",
   citizen: { name: "john", surname: "doe" },
-  badgeNumber: 6034,
+  badgeNumberString: "6034",
   department: { value: { value: "LSPD" }, callsign: "PD" },
   divisions: [{ value: { value: "Patrol" }, callsign: "P" }],
   citizenId: "xxxxx",

@@ -175,7 +175,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
                       officer={officer}
                     />
                   ),
-                  badgeNumber: isUnitOfficer(officer) && String(officer.badgeNumber),
+                  badgeNumberString: isUnitOfficer(officer) && officer.badgeNumberString,
                   department:
                     (isUnitOfficer(officer) && officer.department?.value.value) ?? common("none"),
                   division: (
@@ -232,7 +232,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
               })}
             columns={[
               { header: t("officer"), accessorKey: "officer" },
-              BADGE_NUMBERS ? { header: t("badgeNumber"), accessorKey: "badgeNumber" } : null,
+              BADGE_NUMBERS ? { header: t("badgeNumber"), accessorKey: "badgeNumberString" } : null,
               { header: t("department"), accessorKey: "department" },
               DIVISIONS ? { header: t("division"), accessorKey: "division" } : null,
               { header: t("rank"), accessorKey: "rank" },

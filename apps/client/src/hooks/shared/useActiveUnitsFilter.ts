@@ -35,7 +35,7 @@ export function useActiveUnitsFilter() {
     const rank = !isCombined && (unit.rank?.value ?? common("none"));
     const status = unit.status?.value.value ?? common("none");
     const radioChannel = unit.radioChannelId ?? common("none");
-    const badgeNumber = !isCombined && unit.badgeNumber;
+    const badgeNumberString = !isCombined && unit.badgeNumberString;
 
     const divisions = (
       "divisions" in unit ? unit.divisions : "division" in unit ? [unit.division] : []
@@ -49,7 +49,7 @@ export function useActiveUnitsFilter() {
       rank,
       status,
       radioChannel,
-      badgeNumber,
+      badgeNumberString,
       divisionString,
       officers,
       deputies,

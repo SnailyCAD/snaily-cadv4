@@ -49,8 +49,8 @@ export async function upsertEmsFdDeputy(options: UpsertEmsFdDeputyOptions) {
     features: options.cad.features,
   });
 
-  if (isBadgeNumbersEnabled && !data.badgeNumber) {
-    throw new ExtendedBadRequest({ badgeNumber: "Required" });
+  if (isBadgeNumbersEnabled && !data.badgeNumberString) {
+    throw new ExtendedBadRequest({ badgeNumberString: "Required" });
   }
 
   if (divisionsEnabled) {
@@ -116,7 +116,7 @@ export async function upsertEmsFdDeputy(options: UpsertEmsFdDeputyOptions) {
     departmentId: defaultDepartment ? defaultDepartment.id : data.department,
     rankId: rank,
     divisionId: data.division || null,
-    badgeNumber: data.badgeNumber,
+    badgeNumberString: data.badgeNumberString,
     citizenId: citizen.id,
     incremental,
     whitelistStatusId,
