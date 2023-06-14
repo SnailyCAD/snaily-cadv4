@@ -109,7 +109,7 @@ export default function MyOfficers({ officers: data }: Props) {
                 </span>
               ),
               callsign: generateCallsign(officer),
-              badgeNumber: officer.badgeNumber,
+              badgeNumberString: officer.badgeNumberString,
               department: formatOfficerDepartment(officer) ?? common("none"),
               departmentStatus: <UnitDepartmentStatus unit={officer} />,
               division: formatUnitDivisions(officer),
@@ -135,7 +135,7 @@ export default function MyOfficers({ officers: data }: Props) {
           columns={[
             { header: t("officer"), accessorKey: "officer" },
             { header: t("callsign"), accessorKey: "callsign" },
-            BADGE_NUMBERS ? { header: t("badgeNumber"), accessorKey: "badgeNumber" } : null,
+            BADGE_NUMBERS ? { header: t("badgeNumber"), accessorKey: "badgeNumberString" } : null,
             { header: t("department"), accessorKey: "department" },
             DIVISIONS ? { header: t("division"), accessorKey: "division" } : null,
             { header: t("rank"), accessorKey: "rank" },

@@ -114,7 +114,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
     callsign: deputy?.callsign ?? "",
     callsign2: deputy?.callsign2 ?? "",
     division: deputy?.divisionId ?? "",
-    badgeNumber: BADGE_NUMBERS ? deputy?.badgeNumber ?? undefined : undefined,
+    badgeNumberString: BADGE_NUMBERS ? deputy?.badgeNumberString ?? "" : undefined,
     image: undefined,
   };
 
@@ -141,16 +141,12 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
 
             {BADGE_NUMBERS ? (
               <TextField
-                errorMessage={errors.badgeNumber}
+                errorMessage={errors.badgeNumberString}
                 label={t("Leo.badgeNumber")}
                 autoFocus
-                name="badgeNumber"
-                onChange={(value) => {
-                  isNaN(parseInt(value))
-                    ? setFieldValue("badgeNumber", value)
-                    : setFieldValue("badgeNumber", parseInt(value));
-                }}
-                value={String(values.badgeNumber)}
+                name="badgeNumberString"
+                onChange={(value) => setFieldValue("badgeNumberString", value)}
+                value={values.badgeNumberString}
               />
             ) : null}
 

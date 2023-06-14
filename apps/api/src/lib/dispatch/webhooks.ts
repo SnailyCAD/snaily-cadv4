@@ -47,8 +47,8 @@ export async function createWebhookData(options: CreateWebhookDataOptions<Unit>)
   const status = options.unit.status?.value.value ?? "Off-duty";
   const unitName = isNotCombined ? `${unit.citizen.name} ${unit.citizen.surname}` : "";
   const callsign = generateCallsign(unit as any, options.cad.miscCadSettings.callsignTemplate);
-  const badgeNumber = isBadgeNumberEnabled && isNotCombined ? `${unit.badgeNumber} - ` : "";
-  const officerName = isNotCombined ? `${badgeNumber}${callsign} ${unitName}` : `${callsign}`;
+  const badgeNumberString = isBadgeNumberEnabled && isNotCombined ? `${unit.badgeNumberString} - ` : "";
+  const officerName = isNotCombined ? `${badgeNumberString}${callsign} ${unitName}` : `${callsign}`;
 
   return {
     embeds: [
@@ -94,8 +94,8 @@ export async function createPanicButtonEmbed(
     : options.cad.miscCadSettings.callsignTemplate;
 
   const callsign = generateCallsign(unit as any, template);
-  const badgeNumber = isBadgeNumberEnabled || isCombined ? "" : `${unit.badgeNumber} - `;
-  const officerName = isCombined ? `${callsign}` : `${badgeNumber}${callsign} ${unitName}`;
+  const badgeNumberString = isBadgeNumberEnabled || isCombined ? "" : `${unit.badgeNumberString} - `;
+  const officerName = isCombined ? `${callsign}` : `${badgeNumberString}${callsign} ${unitName}`;
 
   return {
     embeds: [

@@ -155,7 +155,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
                       setTempUnit={deputyState.setTempId}
                     />
                   ),
-                  badgeNumber: !isUnitCombinedEmsFd(deputy) && deputy.badgeNumber,
+                  badgeNumberString: !isUnitCombinedEmsFd(deputy) && deputy.badgeNumberString,
                   department:
                     (!isUnitCombinedEmsFd(deputy) && deputy.department?.value.value) ??
                     common("none"),
@@ -202,7 +202,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
               })}
             columns={[
               { header: t("Ems.deputy"), accessorKey: "deputy" },
-              BADGE_NUMBERS ? { header: t("Leo.badgeNumber"), accessorKey: "badgeNumber" } : null,
+              BADGE_NUMBERS ? { header: t("Leo.badgeNumber"), accessorKey: "badgeNumberString" } : null,
               { header: t("Leo.department"), accessorKey: "department" },
               DIVISIONS ? { header: t("Leo.division"), accessorKey: "division" } : null,
               { header: t("Leo.rank"), accessorKey: "rank" },

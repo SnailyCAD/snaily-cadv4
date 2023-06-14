@@ -101,7 +101,7 @@ export function ManageUnitTab({ unit: data }: Props) {
     rank: unit.rankId,
     position: unit.position ?? "",
     suspended: unit.suspended,
-    badgeNumber: BADGE_NUMBERS ? unit.badgeNumber ?? undefined : undefined,
+    badgeNumberString: BADGE_NUMBERS ? unit.badgeNumberString ?? "" : undefined,
   };
 
   return (
@@ -238,15 +238,11 @@ export function ManageUnitTab({ unit: data }: Props) {
 
               {BADGE_NUMBERS ? (
                 <TextField
-                  errorMessage={errors.badgeNumber}
+                  errorMessage={errors.badgeNumberString}
                   label={t("badgeNumber")}
-                  name="badgeNumber"
-                  onChange={(value) => {
-                    isNaN(Number(value))
-                      ? setFieldValue("badgeNumber", value)
-                      : setFieldValue("badgeNumber", parseInt(value));
-                  }}
-                  value={String(values.badgeNumber)}
+                  name="badgeNumberString"
+                  onChange={(value) => setFieldValue("badgeNumberString", value)}
+                  value={values.badgeNumberString}
                 />
               ) : null}
 

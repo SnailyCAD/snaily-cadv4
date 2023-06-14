@@ -114,8 +114,8 @@ export async function upsertOfficer({
     features: cad.features,
   });
 
-  if (isBadgeNumbersEnabled && !data.badgeNumber) {
-    throw new ExtendedBadRequest({ badgeNumber: "Required" });
+  if (isBadgeNumbersEnabled && !data.badgeNumberString) {
+    throw new ExtendedBadRequest({ badgeNumberString: "Required" });
   }
 
   const { defaultDepartment, department, whitelistStatusId } = await handleWhitelistStatus(
@@ -153,7 +153,7 @@ export async function upsertOfficer({
     userId: user?.id,
     departmentId: defaultDepartment ? defaultDepartment.id : data.department,
     rankId: newRankId,
-    badgeNumber: isBadgeNumbersEnabled ? data.badgeNumber : undefined,
+    badgeNumberString: isBadgeNumbersEnabled ? data.badgeNumberString : undefined,
     citizenId: citizen.id,
     imageId: validatedImageURL,
     imageBlurData: await generateBlurPlaceholder(validatedImageURL),
