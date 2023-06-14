@@ -450,7 +450,11 @@ export class AdminManageUnitsController {
       features: cad.features,
     });
 
-    if (isBadgeNumbersEnabled && typeof data.badgeNumberString !== "undefined" && !data.badgeNumberString) {
+    if (
+      isBadgeNumbersEnabled &&
+      typeof data.badgeNumberString !== "undefined" &&
+      !data.badgeNumberString
+    ) {
       throw new ExtendedBadRequest({ badgeNumberString: "Required" });
     }
 

@@ -126,7 +126,9 @@ export default function MyDeputies({ deputies: data }: Props) {
           columns={[
             { header: t("Ems.deputy"), accessorKey: "deputy" },
             { header: t("Leo.callsign"), accessorKey: "callsign" },
-            BADGE_NUMBERS ? { header: t("Leo.badgeNumber"), accessorKey: "badgeNumberString" } : null,
+            BADGE_NUMBERS
+              ? { header: t("Leo.badgeNumber"), accessorKey: "badgeNumberString" }
+              : null,
             { header: t("Leo.department"), accessorKey: "department" },
             DIVISIONS ? { header: t("Leo.division"), accessorKey: "division" } : null,
             { header: t("Leo.rank"), accessorKey: "rank" },

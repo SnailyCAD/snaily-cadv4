@@ -260,7 +260,9 @@ export function AllUnitsTab({ units }: Props) {
             { header: common("name"), accessorKey: "name" },
             { header: common("user"), accessorKey: "user" },
             { header: t("Leo.callsign"), accessorKey: "callsign" },
-            BADGE_NUMBERS ? { header: t("Leo.badgeNumber"), accessorKey: "badgeNumberString" } : null,
+            BADGE_NUMBERS
+              ? { header: t("Leo.badgeNumber"), accessorKey: "badgeNumberString" }
+              : null,
             { header: t("Leo.department"), accessorKey: "department" },
             DIVISIONS ? { header: t("Leo.division"), accessorKey: "division" } : null,
             { header: t("Leo.rank"), accessorKey: "rank" },
