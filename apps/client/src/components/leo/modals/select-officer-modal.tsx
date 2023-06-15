@@ -1,5 +1,5 @@
 import { SELECT_OFFICER_SCHEMA } from "@snailycad/schemas";
-import { Loader, Button, AsyncListSearchField, Item } from "@snailycad/ui";
+import { Loader, Button, AsyncListSearchField, Item, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
@@ -18,6 +18,7 @@ import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
 import { shallow } from "zustand/shallow";
 import { useDispatchState } from "state/dispatch/dispatch-state";
 import { useUserOfficers } from "hooks/leo/use-get-user-officers";
+import { Permissions, usePermission } from "hooks/usePermission";
 
 export function SelectOfficerModal() {
   const setActiveOfficer = useLeoState((state) => state.setActiveOfficer);
@@ -44,6 +45,9 @@ export function SelectOfficerModal() {
   const onDutyCode = codes10.values.find((v) => v.shouldDo === ShouldDoType.SET_ON_DUTY);
   const { state, execute } = useFetch();
 
+  const { hasPermissions } = usePermission();
+  const canSetUserDefinedCallsign = hasPermissions([Permissions.SetUserDefinedCallsignOnOfficer]);
+
   async function onSubmit(
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
@@ -57,6 +61,7 @@ export function SelectOfficerModal() {
       data: {
         status: includeStatuses ? values.status : onDutyCode.id,
         vehicleId: values.vehicleId,
+        userDefinedCallsign: canSetUserDefinedCallsign ? values.userDefinedCallsign : undefined,
       },
       helpers,
     });
@@ -80,6 +85,7 @@ export function SelectOfficerModal() {
     status: null,
     vehicleId: null as string | null,
     vehicleSearch: "",
+    userDefinedCallsign: canSetUserDefinedCallsign ? "" : undefined,
   };
 
   return (
@@ -90,7 +96,7 @@ export function SelectOfficerModal() {
       className="w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, setValues, errors, values, isValid }) => (
+        {({ handleChange, setValues, setFieldValue, errors, values, isValid }) => (
           <Form>
             {includeStatuses ? (
               <p className="my-3 text-neutral-700 dark:text-gray-400">{error("noActiveOfficer")}</p>
@@ -152,6 +158,16 @@ export function SelectOfficerModal() {
                     }))}
                 />
               </FormField>
+            ) : null}
+
+            {canSetUserDefinedCallsign ? (
+              <TextField
+                isOptional
+                label={t("userDefinedCallsign")}
+                value={values.userDefinedCallsign}
+                onChange={(value) => setFieldValue("userDefinedCallsign", value)}
+                description={t("userDefinedCallsignDescription")}
+              />
             ) : null}
 
             <footer className="flex justify-end mt-5">

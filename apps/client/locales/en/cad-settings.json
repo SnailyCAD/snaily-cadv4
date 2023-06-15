@@ -402,6 +402,8 @@
     "ViewDLExams": "View Exams",
     "ManageDLExams": "Manage Exams",
     "ViewWeaponExams": "View Weapon Exams",
-    "ManageWeaponExams": "Manage Weapon Exams"
+    "ManageWeaponExams": "Manage Weapon Exams",
+    "SetUserDefinedCallsignOnOfficer": "Set User Defined Callsign On Officer",
+    "SetUserDefinedCallsignOnEmsFd": "Set User Defined Callsign On EMS/FD Deputy"
   }
 }

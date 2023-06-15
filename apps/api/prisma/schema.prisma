@@ -950,6 +950,7 @@ model Officer {
   activeDivisionCallsign      IndividualDivisionCallsign?  @relation("divisionCallsign", fields: [activeDivisionCallsignId], references: [id])
   activeDivisionCallsignId    String?
   incremental                 Int?
+  userDefinedCallsign         String?
   divisions                   DivisionValue[]              @relation("officerDivisionsToDivision")
   rank                        Value?                       @relation("officerRankToValue", fields: [rankId], references: [id])
   rankId                      String?
@@ -1490,6 +1491,7 @@ model EmsFdDeputy {
   callsign                  String                 @db.VarChar(255)
   callsign2                 String                 @db.VarChar(255)
   incremental               Int?
+  userDefinedCallsign       String?
   division                  DivisionValue?         @relation("emsFdDivisionToDivision", fields: [divisionId], references: [id])
   divisionId                String?
   position                  String?                @db.Text

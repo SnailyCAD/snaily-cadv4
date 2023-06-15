@@ -1,5 +1,5 @@
 import { SELECT_DEPUTY_SCHEMA } from "@snailycad/schemas";
-import { Loader, Button, AsyncListSearchField, Item } from "@snailycad/ui";
+import { Loader, Button, AsyncListSearchField, Item, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
@@ -17,6 +17,7 @@ import { isUnitDisabled, makeUnitName } from "lib/utils";
 import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
 import type { EmergencyVehicleValue } from "@snailycad/types";
 import { useGetUserDeputies } from "hooks/ems-fd/use-get-user-deputies";
+import { Permissions, usePermission } from "hooks/usePermission";
 
 export function SelectDeputyModal() {
   const { userDeputies, isLoading } = useGetUserDeputies();
@@ -32,6 +33,9 @@ export function SelectDeputyModal() {
   const { codes10 } = useValues();
   const onDutyCode = codes10.values.find((v) => v.shouldDo === ShouldDoType.SET_ON_DUTY);
 
+  const { hasPermissions } = usePermission();
+  const canSetUserDefinedCallsign = hasPermissions([Permissions.SetUserDefinedCallsignOnEmsFd]);
+
   async function onSubmit(
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
@@ -46,6 +50,7 @@ export function SelectDeputyModal() {
         deputyId: values.deputy?.id,
         deputy: values.deputy?.id,
         status: onDutyCode.id,
+        userDefinedCallsign: canSetUserDefinedCallsign ? values.userDefinedCallsign : undefined,
       },
       helpers,
     });
@@ -62,6 +67,7 @@ export function SelectDeputyModal() {
     deputy: null as EmsFdDeputy | null,
     vehicleId: null as string | null,
     vehicleSearch: "",
+    userDefinedCallsign: canSetUserDefinedCallsign ? "" : undefined,
   };
 
   return (
@@ -72,7 +78,7 @@ export function SelectDeputyModal() {
       className="w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, setValues, errors, values, isValid }) => (
+        {({ handleChange, setValues, setFieldValue, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.deputy} label={t("deputy")}>
               <Select
@@ -113,6 +119,16 @@ export function SelectDeputyModal() {
             >
               {(item) => <Item key={item.id}>{item.value.value}</Item>}
             </AsyncListSearchField>
+
+            {canSetUserDefinedCallsign ? (
+              <TextField
+                isOptional
+                label={t("userDefinedCallsign")}
+                value={values.userDefinedCallsign}
+                onChange={(value) => setFieldValue("userDefinedCallsign", value)}
+                description={t("userDefinedCallsignDescription")}
+              />
+            ) : null}
 
             <footer className="flex justify-end mt-5">
               <Button

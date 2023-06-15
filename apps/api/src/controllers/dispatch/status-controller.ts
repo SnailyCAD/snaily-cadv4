@@ -103,6 +103,36 @@ export class StatusController {
       include: { value: true },
     });
 
+    let userDefinedCallsign: string | undefined;
+    if (data.userDefinedCallsign && code?.shouldDo === ShouldDoType.SET_ON_DUTY) {
+      const canSetUserDefinedCallsign = hasPermission({
+        permissionsToCheck: [
+          Permissions.SetUserDefinedCallsignOnEmsFd,
+          Permissions.SetUserDefinedCallsignOnOfficer,
+        ],
+        userToCheck: user,
+      });
+
+      if (!canSetUserDefinedCallsign) {
+        throw new BadRequest("cannotSetUserDefinedCallsign");
+      }
+
+      const [existingOfficer, existingDeputy] = await prisma.$transaction([
+        prisma.officer.findFirst({
+          where: { userDefinedCallsign: { equals: data.userDefinedCallsign, mode: "insensitive" } },
+        }),
+        prisma.emsFdDeputy.findFirst({
+          where: { userDefinedCallsign: { equals: data.userDefinedCallsign, mode: "insensitive" } },
+        }),
+      ]);
+
+      if (existingOfficer || existingDeputy) {
+        throw new BadRequest("callsignAlreadyTaken");
+      }
+
+      userDefinedCallsign = data.userDefinedCallsign;
+    }
+
     let activeEmergencyVehicleId: string | undefined;
     if (data.vehicleId && code?.shouldDo === ShouldDoType.SET_ON_DUTY) {
       const divisionIds = getDivisionsFromUnit(unit, isDivisionsEnabled);
@@ -231,6 +261,7 @@ export class StatusController {
       updatedUnit = await prisma.officer.update({
         where: { id: unit.unit.id },
         data: {
+          userDefinedCallsign,
           activeVehicleId: activeEmergencyVehicleId,
           statusId,
           incremental,
@@ -242,6 +273,7 @@ export class StatusController {
       updatedUnit = await prisma.emsFdDeputy.update({
         where: { id: unit.unit.id },
         data: {
+          userDefinedCallsign,
           activeVehicleId: activeEmergencyVehicleId,
           statusId,
           incremental,
@@ -253,6 +285,7 @@ export class StatusController {
       updatedUnit = await prisma.combinedLeoUnit.update({
         where: { id: unit.unit.id },
         data: {
+          userDefinedCallsign,
           activeVehicleId: activeEmergencyVehicleId,
           statusId,
           lastStatusChangeTimestamp: new Date(),
@@ -263,6 +296,7 @@ export class StatusController {
       updatedUnit = await prisma.combinedEmsFdUnit.update({
         where: { id: unit.unit.id },
         data: {
+          userDefinedCallsign,
           activeVehicleId: activeEmergencyVehicleId,
           statusId,
           lastStatusChangeTimestamp: new Date(),

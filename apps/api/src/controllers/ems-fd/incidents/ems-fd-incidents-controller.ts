@@ -329,7 +329,7 @@ export class IncidentController {
 
   @Delete("/purge")
   @UsePermissions({
-    permissions: [Permissions.PurgeLeoIncidents],
+    permissions: [Permissions.PurgeEmsFdIncidents],
   })
   async purgeIncidents(
     @BodyParams("ids") ids: string[],
