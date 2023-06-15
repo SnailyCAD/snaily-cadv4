@@ -230,6 +230,7 @@ export const typeHandlers = {
             isConfidential: item.isConfidential ?? false,
             whitelisted: item.whitelisted ?? false,
             extraFields: item.extraFields || undefined,
+            customTemplate: item.customTemplate || undefined,
             defaultOfficerRank: item.defaultOfficerRankId
               ? { connect: { id: item.defaultOfficerRankId } }
               : undefined,
@@ -405,7 +406,6 @@ export const typeHandlers = {
       return updated || updatedValue;
     });
   },
-
   OFFICER_RANK: async ({ body, id }: HandlerOptions) => {
     const data = validateSchema(BASE_ARR, body);
 

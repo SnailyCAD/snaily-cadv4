@@ -79,6 +79,7 @@ export const DEPARTMENT_SCHEMA = BASE_VALUE_SCHEMA.extend({
   defaultOfficerRankId: z.string().nullish(),
   isConfidential: z.boolean().nullish(),
   extraFields: z.any().nullish(),
+  customTemplate: z.string().nullish(),
 });
 
 export const DEPARTMENT_ARR = z.array(DEPARTMENT_SCHEMA).min(1);
