@@ -33,6 +33,7 @@ export function usePermissionsModal(options: UsePermissionsModalOptions) {
       permissions: [
         ...defaultPermissions.defaultLeoPermissions,
         Permissions.SetUserDefinedCallsignOnOfficer,
+        Permissions.PurgeLeoIncidents,
       ],
     },
     {
@@ -44,6 +45,7 @@ export function usePermissionsModal(options: UsePermissionsModalOptions) {
       permissions: [
         ...defaultPermissions.defaultEmsFdPermissions,
         Permissions.SetUserDefinedCallsignOnEmsFd,
+        Permissions.PurgeEmsFdIncidents,
       ],
     },
     {
@@ -59,7 +61,11 @@ export function usePermissionsModal(options: UsePermissionsModalOptions) {
     },
     {
       name: t("owner"),
-      permissions: [Permissions.ManageCADSettings],
+      permissions: [
+        Permissions.ManageCADSettings,
+        Permissions.DeleteRegisteredVehicles,
+        Permissions.DeleteRegisteredWeapons,
+      ],
     },
   ];
 
