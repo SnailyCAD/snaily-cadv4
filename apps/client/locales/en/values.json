@@ -62,7 +62,9 @@
     "import": "Import",
     "importCitizens": "Import Citizens",
     "importVehicles": "Import Vehicles",
-    "importWeapons": "Import Weapons"
+    "importWeapons": "Import Weapons",
+    "customCallsignTemplate": "Custom Callsign Template",
+    "customCallsignTemplateDescription": "When set, it will use this template over the global callsign template. You can use the following variables: {variables}"
   },
   "PENAL_CODE_GROUP": {
     "MANAGE": "Manage Penal Code Groups",

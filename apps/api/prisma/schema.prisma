@@ -703,6 +703,7 @@ model DepartmentValue {
   value                 Value                   @relation("departmentToValue", fields: [valueId], references: [id], onDelete: Cascade)
   valueId               String
   callsign              String?
+  customTemplate        String?
   whitelisted           Boolean                 @default(false)
   isDefaultDepartment   Boolean                 @default(false)
   type                  DepartmentType          @default(LEO)
@@ -957,7 +958,7 @@ model Officer {
   statusId                    String?
   suspended                   Boolean                      @default(false)
   badgeNumber                 Int?
-  badgeNumberString            String?
+  badgeNumberString           String?
   imageId                     String?                      @db.VarChar(255)
   imageBlurData               String?                      @db.Text
   citizen                     Citizen                      @relation(fields: [citizenId], references: [id], onDelete: Cascade)
@@ -1498,7 +1499,7 @@ model EmsFdDeputy {
   statusId                  String?
   suspended                 Boolean                @default(false)
   badgeNumber               Int?
-  badgeNumberString          String?
+  badgeNumberString         String?
   imageId                   String?                @db.VarChar(255)
   imageBlurData             String?                @db.Text
   citizen                   Citizen                @relation(fields: [citizenId], references: [id], onDelete: Cascade)

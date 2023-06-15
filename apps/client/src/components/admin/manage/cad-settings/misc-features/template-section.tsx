@@ -3,7 +3,7 @@ import { SettingsFormField } from "components/form/SettingsFormField";
 import { useFormikContext } from "formik";
 import { useTranslations } from "use-intl";
 
-const CALLSIGN_TEMPLATE_VARIABLES = (
+export const CALLSIGN_TEMPLATE_VARIABLES = (
   <span key="CALLSIGN_TEMPLATE_VARIABLES">
     <code>{"{department}"}</code>,<code>{"{division}"}</code>, <code>{"{callsign}"}</code>,{" "}
     <code>{"{callsign2}"}</code>

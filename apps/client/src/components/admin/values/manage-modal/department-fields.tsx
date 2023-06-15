@@ -5,6 +5,7 @@ import { useFormikContext } from "formik";
 import { DepartmentType } from "@snailycad/types";
 import { useValues } from "context/ValuesContext";
 import { useTranslations } from "use-intl";
+import { CALLSIGN_TEMPLATE_VARIABLES } from "components/admin/manage/cad-settings/misc-features/template-section";
 
 export const DEPARTMENT_LABELS = {
   [DepartmentType.LEO]: "LEO",
@@ -37,6 +38,18 @@ export function DepartmentFields() {
         name="callsign"
         onChange={(value) => setFieldValue("callsign", value)}
         value={values.callsign}
+      />
+
+      <TextField
+        label={t("customCallsignTemplate")}
+        isOptional
+        name="customTemplate"
+        onChange={(value) => setFieldValue("customTemplate", value)}
+        value={values.customTemplate}
+        description={t.rich("customCallsignTemplateDescription", {
+          // @ts-expect-error this is a valid element
+          variables: CALLSIGN_TEMPLATE_VARIABLES,
+        })}
       />
 
       <FormField

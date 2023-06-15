@@ -16,7 +16,7 @@ type Unit =
  */
 export function generateCallsign(unit: Unit, template: string | null) {
   const isCombined = !("citizenId" in unit) || "officers" in unit || "deputies" in unit;
-  const _template = isCombined && unit.pairedUnitTemplate ? unit.pairedUnitTemplate : template;
+  const _template = getTemplateFromUnit({ template, unit });
 
   if (isCombined && unit.userDefinedCallsign) {
     return unit.userDefinedCallsign;
@@ -39,4 +39,19 @@ export function generateCallsign(unit: Unit, template: string | null) {
   };
 
   return replaceTemplateVariables(_template, replacers);
+}
+
+interface GetTemplateOptions {
+  unit: Unit;
+  template: string | null;
+}
+
+function getTemplateFromUnit({ unit, template }: GetTemplateOptions) {
+  const isCombined = !("citizenId" in unit) || "officers" in unit || "deputies" in unit;
+
+  if (isCombined) {
+    return unit.userDefinedCallsign || unit.pairedUnitTemplate || template;
+  }
+
+  return unit.department?.customTemplate || template;
 }
