@@ -93,6 +93,7 @@ export function useTableDataOfType(type: ValueType) {
           isDefaultDepartment: common(yesOrNoText(v.isDefaultDepartment)),
           defaultOfficerRank: v.defaultOfficerRank?.value ?? common("none"),
           isConfidential: common(yesOrNoText(v.isConfidential)),
+          customTemplate: v.customTemplate || common("none"),
         };
       }
       case ValueType.DIVISION: {
@@ -100,7 +101,7 @@ export function useTableDataOfType(type: ValueType) {
 
         return {
           callsign: v.callsign || common("none"),
-          pairedUnitTemplate: v.pairedUnitTemplate ?? common("none"),
+          pairedUnitTemplate: v.pairedUnitTemplate || common("none"),
           department: v.department.value.value,
         };
       }
@@ -209,6 +210,7 @@ export function useTableHeadersOfType(type: ValueType): ColumnDef<{ id: string }
         { header: t("isDefaultDepartment"), accessorKey: "isDefaultDepartment" },
         { header: t("defaultOfficerRank"), accessorKey: "defaultOfficerRank" },
         { header: t("isConfidential"), accessorKey: "isConfidential" },
+        { header: t("customCallsignTemplate"), accessorKey: "customTemplate" },
       ];
     }
     case ValueType.DIVISION: {
