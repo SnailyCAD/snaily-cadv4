@@ -4,6 +4,7 @@ import { CREATE_OFFICER_SCHEMA } from "./leo";
 export const SELECT_DEPUTY_SCHEMA = z.object({
   deputy: z.object({ id: z.string().min(2).max(255) }),
   vehicleId: z.string().nullish(),
+  userDefinedCallsign: z.string().max(255).nullish(),
 });
 
 export const EMS_FD_DEPUTY_SCHEMA = CREATE_OFFICER_SCHEMA.omit({

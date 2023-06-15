@@ -65,10 +65,12 @@ export const UPDATE_OFFICER_STATUS_SCHEMA = z.object({
   status: z.string().min(2).max(255),
   suspended: z.boolean().optional(),
   vehicleId: z.string().nullish(),
+  userDefinedCallsign: z.string().nullish(),
 });
 
 export const SELECT_OFFICER_SCHEMA = z.object({
   officer: z.object({ id: z.string().min(2).max(255) }),
+  userDefinedCallsign: z.string().nullish(),
 });
 
 export const LEO_INCIDENT_SCHEMA = z.object({

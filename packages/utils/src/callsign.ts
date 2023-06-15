@@ -1,9 +1,15 @@
 import type { CombinedEmsFdUnit, CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 import { replaceTemplateVariables } from "./utils/replace-template-variables";
 
-type P = "callsign" | "callsign2" | "department" | "citizenId" | "incremental";
+type P =
+  | "callsign"
+  | "callsign2"
+  | "department"
+  | "citizenId"
+  | "incremental"
+  | "userDefinedCallsign";
 type Unit =
-  | Pick<Officer, P | "divisions" | "callsigns">
+  | Pick<Officer, P | "divisions">
   | Pick<EmsFdDeputy, P | "division">
   | CombinedLeoUnit
   | CombinedEmsFdUnit;
@@ -53,5 +59,5 @@ function getTemplateFromUnit({ unit, template }: GetTemplateOptions) {
     return unit.userDefinedCallsign || unit.pairedUnitTemplate || template;
   }
 
-  return unit.department?.customTemplate || template;
+  return unit.userDefinedCallsign || unit.department?.customTemplate || template;
 }
