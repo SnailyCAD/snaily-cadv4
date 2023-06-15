@@ -72,15 +72,13 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
     });
   }, [isMounted, pageProps.cad, locale]);
 
-  const isServer = typeof window === "undefined";
-
   const requiresDnd = DRAG_AND_DROP_PAGES.includes(router.pathname);
   const DndProviderWrapper = requiresDnd ? DndProvider : React.Fragment;
 
   return (
     <QueryClientProvider client={queryClient}>
       <SSRProvider>
-        <SocketProvider uri={url} options={{ reconnectionDelay: 10_000, autoConnect: !isServer }}>
+        <SocketProvider uri={url}>
           <AuthProvider initialData={pageProps}>
             <NextIntlProvider
               defaultTranslationValues={{

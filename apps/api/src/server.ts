@@ -81,7 +81,8 @@ const parsedCORSOrigin = parseCORSOrigin(process.env.CORS_ORIGIN_URL ?? "http://
     },
   ],
   socketIO: {
-    maxHttpBufferSize: 1e6, // 1 mb
+    maxHttpBufferSize: 1e8, // 100 mb
+    pingTimeout: 60000,
     cors: {
       credentials: true,
       origin: parsedCORSOrigin,
