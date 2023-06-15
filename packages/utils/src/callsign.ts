@@ -50,7 +50,7 @@ function getTemplateFromUnit({ unit, template }: GetTemplateOptions) {
   const isCombined = !("citizenId" in unit) || "officers" in unit || "deputies" in unit;
 
   if (isCombined) {
-    return unit.userDefinedCallsign || unit.pairedUnitTemplate;
+    return unit.userDefinedCallsign || unit.pairedUnitTemplate || template;
   }
 
   return unit.department?.customTemplate || template;
