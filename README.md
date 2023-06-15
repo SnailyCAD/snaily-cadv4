@@ -20,7 +20,7 @@ this is a web based integration for communities who love police roleplaying and 
 
   
 <a href="https://discord.gg/eGnrPqEH7U">
-  <img src="https://discord-invite-widget-production.caspertheghost.workers.dev/?inviteCode=eGnrPqEH7U" />
+  <img src="https://invite.caspertheghost.me?inviteCode=eGnrPqEH7U" />
 </a>
 
 ## Links
