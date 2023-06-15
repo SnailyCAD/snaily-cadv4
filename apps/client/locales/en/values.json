@@ -62,7 +62,8 @@
     "import": "Import",
     "importCitizens": "Import Citizens",
     "importVehicles": "Import Vehicles",
-    "importWeapons": "Import Weapons"
+    "importWeapons": "Import Weapons",
+    "customCallsignTemplate": "Custom Callsign Template"
   },
   "PENAL_CODE_GROUP": {
     "MANAGE": "Manage Penal Code Groups",

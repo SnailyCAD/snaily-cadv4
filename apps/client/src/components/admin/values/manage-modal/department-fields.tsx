@@ -39,6 +39,14 @@ export function DepartmentFields() {
         value={values.callsign}
       />
 
+      <TextField
+        label={t("customCallsignTemplate")}
+        isOptional
+        name="customTemplate"
+        onChange={(value) => setFieldValue("customTemplate", value)}
+        value={values.customTemplate}
+      />
+
       <FormField
         optional
         errorMessage={errors.defaultOfficerRankId as string}

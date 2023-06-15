@@ -212,6 +212,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     isDefaultDepartment: value && isDepartmentValue(value) ? value.isDefaultDepartment : false,
     callsign:
       value && (isDepartmentValue(value) || isDivisionValue(value)) ? value.callsign ?? "" : "",
+    customTemplate: value && isDepartmentValue(value) ? value.customTemplate ?? "" : "",
 
     as: value && isEmployeeValue(value) ? value.as : "",
     hash: value && (isVehicleValue(value) || isWeaponValue(value)) ? value.hash ?? "" : undefined,
