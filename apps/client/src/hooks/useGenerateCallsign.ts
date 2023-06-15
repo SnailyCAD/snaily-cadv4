@@ -8,7 +8,13 @@ import type {
 } from "@snailycad/types";
 import { generateCallsign } from "@snailycad/utils/callsign";
 
-type P = "callsign" | "callsign2" | "department" | "citizenId" | "incremental";
+type P =
+  | "callsign"
+  | "callsign2"
+  | "department"
+  | "citizenId"
+  | "incremental"
+  | "userDefinedCallsign";
 type Unit =
   | Pick<Officer, P | "divisions" | "activeDivisionCallsign">
   | Pick<EmsFdDeputy, P | "division">
