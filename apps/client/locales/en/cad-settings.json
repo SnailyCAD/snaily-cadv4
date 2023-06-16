@@ -184,6 +184,9 @@
   "Features": {
     "enableOrDisableFeatures": "Enable or Disable Features",
     "searchFeatures": "Search Features...",
+    "types": "Types",
+    "EXPUNGEMENT_REQUEST": "Expungement Request",
+    "NAME_CHANGE_REQUEST": "Name change request",
     "TOW": "Tow",
     "TOW-description": "When enabled, this will allow citizens to create tow calls",
     "TAXI": "Taxi",

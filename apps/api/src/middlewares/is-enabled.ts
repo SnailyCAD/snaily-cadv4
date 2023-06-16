@@ -45,8 +45,11 @@ export function createFeaturesObject(features?: CadFeature[] | undefined) {
   Object.keys(Feature).map((feature) => {
     const cadFeature = features?.find((v) => v.feature === feature);
 
-    if (cadFeature?.extraFields && feature === Feature.LICENSE_EXAMS) {
-      featureExtraOptions[feature] = cadFeature.extraFields
+    if (
+      cadFeature?.extraFields &&
+      ([Feature.LICENSE_EXAMS, Feature.COURTHOUSE] as string[]).includes(feature)
+    ) {
+      featureExtraOptions[feature as keyof CadFeatureOptions] = cadFeature.extraFields
         ? JSON.parse(cadFeature.extraFields as any)
         : null;
     }

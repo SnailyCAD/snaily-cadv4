@@ -312,3 +312,10 @@ export const ActiveToneType = {
 } as const;
 
 export type ActiveToneType = (typeof ActiveToneType)[keyof typeof ActiveToneType];
+
+export const CourthouseType = {
+  EXPUNGEMENT_REQUEST: "EXPUNGEMENT_REQUEST",
+  NAME_CHANGE_REQUEST: "NAME_CHANGE_REQUEST",
+} as const;
+
+export type CourthouseType = (typeof CourthouseType)[keyof typeof CourthouseType];
