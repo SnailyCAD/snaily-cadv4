@@ -16,6 +16,7 @@ import type { GetExpungementRequestsData, GetNameChangeRequestsData } from "@sna
 import Link from "next/link";
 import { BoxArrowUpRight } from "react-bootstrap-icons";
 import { defaultPermissions } from "@snailycad/permissions";
+import { CourthouseType } from "@snailycad/types";
 
 interface Props {
   requests: GetExpungementRequestsData;
@@ -24,16 +25,25 @@ interface Props {
 
 export default function Courthouse(props: Props) {
   const t = useTranslations("Courthouse");
-  const { COURTHOUSE_POSTS } = useFeatureEnabled();
+  const { COURTHOUSE_POSTS, options } = useFeatureEnabled();
 
   const { hasPermissions } = usePermission();
   const hasEntriesPerms = hasPermissions([Permissions.Leo]);
   const hasCourthouseAdminPerms = hasPermissions(defaultPermissions.defaultCourthousePermissions);
+  const enabledTypes = options.COURTHOUSE;
 
-  const TABS = [
-    { name: t("expungementRequests"), value: "expungementRequestsTab" },
-    { name: t("nameChangeRequests"), value: "nameChangeRequestsTab" },
-  ];
+  const expungementRequestsEnabled = enabledTypes.includes(CourthouseType.EXPUNGEMENT_REQUEST);
+  const nameChangeRequestsEnabled = enabledTypes.includes(CourthouseType.NAME_CHANGE_REQUEST);
+
+  const TABS = [];
+
+  if (expungementRequestsEnabled) {
+    TABS.push({ name: t("expungementRequests"), value: "expungementRequestsTab" });
+  }
+
+  if (nameChangeRequestsEnabled) {
+    TABS.push({ name: t("nameChangeRequests"), value: "nameChangeRequestsTab" });
+  }
 
   if (hasEntriesPerms) {
     TABS[2] = { name: t("courtEntries"), value: "courtEntriesTab" };
