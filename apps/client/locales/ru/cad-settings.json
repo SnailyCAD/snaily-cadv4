@@ -184,6 +184,9 @@
   "Features": {
     "enableOrDisableFeatures": "Включить или отключить функции",
     "searchFeatures": "Поиск Функций...",
+    "types": "Типы",
+    "EXPUNGEMENT_REQUEST": "Запрос на удаление",
+    "NAME_CHANGE_REQUEST": "Запрос на смену имени",
     "TOW": "Эвакуатор",
     "TOW-description": "Если включено, это позволит гражданам создавать вызовы эвакуатора.",
     "TAXI": "Такси",
@@ -402,6 +405,8 @@
     "ViewDLExams": "Просмотр Экзаменов",
     "ManageDLExams": "Управление Экзаменами",
     "ViewWeaponExams": "Просмотр Экзаменов на Оружие",
-    "ManageWeaponExams": "Управление Экзаменами на Оружие"
+    "ManageWeaponExams": "Управление Экзаменами на Оружие",
+    "SetUserDefinedCallsignOnOfficer": "Установка Пользовательского Позывного на Офицера",
+    "SetUserDefinedCallsignOnEmsFd": "Установка Пользовательского Позывного на EMS/FD"
   }
 }
