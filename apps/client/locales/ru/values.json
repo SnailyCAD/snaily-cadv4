@@ -62,7 +62,9 @@
     "import": "Импортировать",
     "importCitizens": "Импортировать Граждан",
     "importVehicles": "Импортировать Транспорт",
-    "importWeapons": "Импортировать Оружие"
+    "importWeapons": "Импортировать Оружие",
+    "customCallsignTemplate": "Пользовательский шаблон позывного",
+    "customCallsignTemplateDescription": "Если установлен, то он перезапишет глобальный стандартный шаблон позывного. Вы можете использовать следующие переменные: {variables}"
   },
   "PENAL_CODE_GROUP": {
     "MANAGE": "Управлять группами кодекса",
