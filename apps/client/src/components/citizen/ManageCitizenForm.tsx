@@ -68,6 +68,7 @@ export function ManageCitizenForm({
   const validate = handleValidate(validationSchema);
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
+  const tErrorMessages = useTranslations("ErrorMessages");
 
   const isNamesFieldDisabled =
     typeof formFeatures?.["edit-name"] !== "undefined" ? !formFeatures["edit-name"] : !!citizen;
@@ -112,6 +113,11 @@ export function ManageCitizenForm({
     let fd;
     const validatedImage = validateFile(image, helpers);
 
+    if (!image && features.REQUIRED_CITIZEN_IMAGE) {
+      helpers.setFieldError("image", tErrorMessages("required"));
+      return;
+    }
+
     if (validatedImage) {
       if (typeof validatedImage !== "string") {
         fd = new FormData();
@@ -124,8 +130,13 @@ export function ManageCitizenForm({
 
   return (
     <MultiForm
-      onStepChange={(activeStep) => {
+      onStepChange={(activeStep, formState) => {
         const isOfficerStep = activeStep.props.id === "officer";
+
+        if (!image && features.REQUIRED_CITIZEN_IMAGE) {
+          formState.setFieldError("image", tErrorMessages("required"));
+          return;
+        }
 
         const schema = isOfficerStep ? CREATE_CITIZEN_WITH_OFFICER_SCHEMA : CREATE_CITIZEN_SCHEMA;
         setValidationSchema(schema);
@@ -180,7 +191,12 @@ export function ManageCitizenForm({
       >
         {({ values, errors, setValues, setFieldValue }) => (
           <>
-            <ImageSelectInput image={image} setImage={setImage} />
+            <ImageSelectInput
+              isOptional={!features.REQUIRED_CITIZEN_IMAGE}
+              image={image}
+              setImage={setImage}
+              valueKey="image"
+            />
 
             {formFeatures?.["edit-user"] ? (
               <AsyncListSearchField<User>

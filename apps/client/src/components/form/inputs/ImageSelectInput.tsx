@@ -17,9 +17,17 @@ interface Props {
   label?: string;
   valueKey?: string;
   hideLabel?: boolean;
+  isOptional?: boolean;
 }
 
-export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, setImage }: Props) {
+export function ImageSelectInput({
+  label,
+  hideLabel,
+  valueKey = "image",
+  image,
+  setImage,
+  isOptional = true,
+}: Props) {
   const [useURL, setUseURL] = React.useState(false);
   const [urlImageData, setURLImageData] = React.useState<File | null>(null);
 
@@ -58,7 +66,7 @@ export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, 
 
   return useURL ? (
     <FormField
-      optional
+      optional={isOptional}
       errorMessage={errors[valueKey] as string}
       label={hideLabel ? null : label ?? common("image")}
     >
@@ -72,6 +80,7 @@ export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, 
           name={valueKey}
           type="url"
           value={values[valueKey]}
+          errorMessage={errors[valueKey] as string}
         />
 
         <Button
@@ -108,12 +117,13 @@ export function ImageSelectInput({ label, hideLabel, valueKey = "image", image, 
   ) : (
     <>
       <FormField
-        optional
+        optional={isOptional}
         errorMessage={errors[valueKey] as string}
         label={hideLabel ? null : label ?? common("image")}
       >
         <div className="flex">
           <Input
+            errorMessage={errors[valueKey] as string}
             style={{ width: "95%", marginRight: "0.5em" }}
             onChange={(e) => {
               handleChange(e);
