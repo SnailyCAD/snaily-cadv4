@@ -14,6 +14,7 @@ export const IMPORT_CITIZENS_SCHEMA = z.object({
     .max(new Date())
     .describe("ISO format")
     .or(z.string().min(2)),
+  socialSecurityNumber: z.string().nullish(),
   address: z.string().max(255).nullish(),
   eyeColor: z.string().max(255).nullish(),
   hairColor: z.string().max(255).nullish(),
