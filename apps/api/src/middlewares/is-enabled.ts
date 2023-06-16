@@ -32,6 +32,7 @@ export const DEFAULT_DISABLED_FEATURES: Partial<
   SIGNAL_100_CITIZEN: { isEnabled: false },
   FORCE_ACCOUNT_PASSWORD: { isEnabled: false },
   USER_DEFINED_CALLSIGN_COMBINED_UNIT: { isEnabled: false },
+  REQUIRED_CITIZEN_IMAGE: { isEnabled: false },
 };
 
 export type CadFeatures = Record<TypesFeature | DatabaseFeature, boolean> & {

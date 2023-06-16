@@ -23,6 +23,7 @@ export const DEFAULT_DISABLED_FEATURES = {
   SIGNAL_100_CITIZEN: { isEnabled: false },
   FORCE_ACCOUNT_PASSWORD: { isEnabled: false },
   USER_DEFINED_CALLSIGN_COMBINED_UNIT: { isEnabled: false },
+  REQUIRED_CITIZEN_IMAGE: { isEnabled: false },
 } satisfies Partial<Record<Feature, { isEnabled: boolean }>>;
 
 export const DEFAULT_FEATURE_OPTIONS = {

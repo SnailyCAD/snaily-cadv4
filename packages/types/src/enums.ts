@@ -51,6 +51,7 @@ export const Feature = {
   HOSPITAL_SERVICES: "HOSPITAL_SERVICES",
   MEDICAL_RECORDS_CITIZEN_MANAGEABLE: "MEDICAL_RECORDS_CITIZEN_MANAGEABLE",
   PETS: "PETS",
+  REQUIRED_CITIZEN_IMAGE: "REQUIRED_CITIZEN_IMAGE",
 } as const;
 
 export type Feature = (typeof Feature)[keyof typeof Feature];
