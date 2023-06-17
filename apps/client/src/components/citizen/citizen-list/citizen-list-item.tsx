@@ -62,7 +62,9 @@ export function CitizenListItem({ citizen }: Props) {
 
       <Link
         href={`/citizen/${citizen.id}`}
-        className={`rounded-md transition-all p-1 px-3 ${buttonVariants.default}`}
+        className={buttonVariants({
+          className: "rounded-md transition-all p-1 px-3",
+        })}
       >
         {t("viewCitizen")}
       </Link>

@@ -17,7 +17,6 @@ import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { Status } from "components/shared/Status";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { classNames } from "lib/classNames";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
 import { OfficerRank } from "components/leo/OfficerRank";
@@ -214,7 +213,7 @@ export function AllUnitsTab({ units }: Props) {
                 hasViewUsersPermissions && unit.user ? (
                   <Link
                     href={`/admin/manage/users/${unit.userId}`}
-                    className={`rounded-md transition-all p-1 px-1.5 ${buttonVariants.default}`}
+                    className={buttonVariants({ size: "xs" })}
                   >
                     {unit.user.username}
                   </Link>
@@ -236,7 +235,7 @@ export function AllUnitsTab({ units }: Props) {
                   {hasManagePermissions || hasManageAwardsPermissions ? (
                     <Link
                       href={`/admin/manage/units/${unit.id}`}
-                      className={classNames("p-0.5 px-2 rounded-md", buttonVariants.success)}
+                      className={buttonVariants({ variant: "success", size: "xs" })}
                     >
                       {common("manage")}
                     </Link>

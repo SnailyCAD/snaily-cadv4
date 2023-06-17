@@ -4,7 +4,7 @@ import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { Button, buttonSizes, buttonVariants } from "@snailycad/ui";
+import { Button, buttonVariants } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
 import dynamic from "next/dynamic";
@@ -15,7 +15,6 @@ import { useList } from "hooks/shared/table/use-list";
 import { NewBleeterExperienceForm } from "components/bleeter/new-bleeter-experience";
 import { BleeterPostsList } from "components/bleeter/list/posts-list";
 import Link from "next/link";
-import { classNames } from "lib/classNames";
 
 const ManageBleetModal = dynamic(
   async () => (await import("components/bleeter/manage-bleet-modal")).ManageBleetModal,
@@ -46,10 +45,7 @@ export default function Bleeter({ data }: Props) {
 
         <div className="flex gap-2">
           <Button onPress={() => openModal(ModalIds.ManageBleetModal)}>{t("createBleet")}</Button>
-          <Link
-            className={classNames("rounded-md", buttonSizes.sm, buttonVariants.default)}
-            href={`/bleeter/@/${data.userBleeterProfile.handle}`}
-          >
+          <Link className={buttonVariants()} href={`/bleeter/@/${data.userBleeterProfile.handle}`}>
             {t("myProfile")}
           </Link>
         </div>

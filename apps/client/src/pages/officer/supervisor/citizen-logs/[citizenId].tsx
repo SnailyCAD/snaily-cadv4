@@ -15,8 +15,7 @@ import { ViolationsColumn } from "components/leo/ViolationsColumn";
 import { Status } from "components/shared/Status";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import Link from "next/link";
-import { buttonSizes, buttonVariants } from "@snailycad/ui";
-import { classNames } from "lib/classNames";
+import { buttonVariants } from "@snailycad/ui";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { RecordsCaseNumberColumn } from "components/leo/records-case-number-column";
 
@@ -62,11 +61,7 @@ export default function CitizenLogs(props: Props) {
         <Title>{t("citizenLogs")}</Title>
 
         <Link
-          className={classNames(
-            "flex items-center gap-3 rounded-md",
-            buttonSizes.sm,
-            buttonVariants.default,
-          )}
+          className={buttonVariants({ className: "flex items-center gap-2" })}
           href="/officer/supervisor/citizen-logs"
         >
           <ArrowLeft /> {t("viewAllRecordLogs")}

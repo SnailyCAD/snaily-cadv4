@@ -29,7 +29,6 @@ import dynamic from "next/dynamic";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { ApiTokenArea } from "components/admin/manage/users/api-token-area";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { classNames } from "lib/classNames";
 import type {
   GetCustomRolesData,
   GetManageUserByIdData,
@@ -231,7 +230,10 @@ export default function ManageCitizens(props: Props) {
               <div className="flex justify-end mt-3">
                 <Link
                   href="/admin/manage/users"
-                  className={classNames(buttonVariants.cancel, "p-1 px-4 rounded-md")}
+                  className={buttonVariants({
+                    variant: "cancel",
+                    className: "p-1 px-4",
+                  })}
                 >
                   {common("goBack")}
                 </Link>

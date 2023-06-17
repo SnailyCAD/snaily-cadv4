@@ -20,7 +20,6 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { FormRow } from "components/form/FormRow";
 import { isUnitOfficer } from "@snailycad/utils";
-import { classNames } from "lib/classNames";
 import type { GetManageUnitByIdData, PutManageUnitData } from "@snailycad/types/api";
 import { TabsContent } from "@radix-ui/react-tabs";
 import { QualificationsTable } from "../../QualificationsTable";
@@ -273,10 +272,7 @@ export function ManageUnitTab({ unit: data }: Props) {
               </SwitchField>
 
               <footer className="flex justify-end">
-                <Link
-                  href="/admin/manage/units"
-                  className={classNames(buttonVariants.cancel, "p-1 px-4 rounded-md")}
-                >
+                <Link href="/admin/manage/units" className={buttonVariants({ variant: "cancel" })}>
                   {common("cancel")}
                 </Link>
 

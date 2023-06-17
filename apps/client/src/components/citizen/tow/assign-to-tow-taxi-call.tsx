@@ -18,7 +18,7 @@ interface Props {
   onClose?(): void;
 }
 
-export function AssignToCallModal({ call, onClose, onSuccess }: Props) {
+export function AssignCitizenToTowOrTaxiCall({ call, onClose, onSuccess }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");

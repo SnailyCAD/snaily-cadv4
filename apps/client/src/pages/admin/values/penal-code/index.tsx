@@ -9,14 +9,13 @@ import { SearchArea } from "components/shared/search/search-area";
 import { Title } from "components/shared/Title";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { Permissions } from "@snailycad/permissions";
-import { Button, buttonSizes, buttonVariants } from "@snailycad/ui";
+import { Button, buttonVariants } from "@snailycad/ui";
 import { useTranslations } from "use-intl";
 import dynamic from "next/dynamic";
 import { ModalIds } from "types/modal-ids";
 import Link from "next/link";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useModal } from "state/modalState";
-import { classNames } from "lib/classNames";
 import type { DeletePenalCodeGroupsData, PutValuePositionsData } from "@snailycad/types/api";
 import useFetch from "lib/useFetch";
 import { hasTableDataChanged } from "lib/admin/values/utils";
@@ -173,7 +172,7 @@ export default function PenalCodeGroupsPage(props: Props) {
           actions: (
             <>
               <Link
-                className={classNames("rounded-md", buttonSizes.xs, buttonVariants.default)}
+                className={buttonVariants({ size: "xs" })}
                 href={`/admin/values/penal-code/${group.id}`}
               >
                 {common("view")}

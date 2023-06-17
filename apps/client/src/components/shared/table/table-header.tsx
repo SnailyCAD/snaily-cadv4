@@ -1,7 +1,12 @@
 import { TableActionsAlignment } from "@snailycad/types";
-import { Button } from "@snailycad/ui";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@snailycad/ui";
 import { Column, flexRender, Header, RowData } from "@tanstack/react-table";
-import { Dropdown } from "components/Dropdown";
 import { classNames } from "lib/classNames";
 import { ArrowDownSquareFill, Check, ThreeDots } from "react-bootstrap-icons";
 
@@ -56,36 +61,39 @@ export function TableHeader<TData extends RowData>({
         </span>
       ) : null}
       {isActions && tableId ? (
-        <Dropdown
-          alignOffset={0}
-          modal
-          side="left"
-          trigger={<Button className="inline-block ml-2">{<ThreeDots />}</Button>}
-        >
-          {tableLeafs.map((leaf) => {
-            const columnName = (leaf.columnDef.header ?? leaf.id).toString();
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button size="xs" className="ml-2 h-7 w-7 inline-grid place-content-center">
+              <ThreeDots />
+            </Button>
+          </DropdownMenuTrigger>
 
-            return (
-              <Dropdown.Item
-                closeOnClick={false}
-                key={leaf.id}
-                className={classNames(
-                  "flex items-center justify-between",
-                  leaf.getIsVisible() && "dark:bg-secondary bg-gray-400",
-                )}
-                onPress={() => leaf.toggleVisibility()}
-              >
-                {columnName}
+          <DropdownMenuContent alignOffset={0} side="left">
+            {tableLeafs.map((leaf) => {
+              const columnName = (leaf.columnDef.header ?? leaf.id).toString();
 
-                {leaf.getIsVisible() ? (
-                  <span className="ml-2 text-green-500">
-                    <Check aria-label={`Selected ${leaf.id}`} className="dark:text-gray-400" />
-                  </span>
-                ) : null}
-              </Dropdown.Item>
-            );
-          })}
-        </Dropdown>
+              return (
+                <DropdownMenuItem
+                  closeOnClick={false}
+                  key={leaf.id}
+                  className={classNames(
+                    "flex items-center justify-between",
+                    leaf.getIsVisible() && "dark:bg-secondary bg-gray-400",
+                  )}
+                  onClick={() => leaf.toggleVisibility()}
+                >
+                  {columnName}
+
+                  {leaf.getIsVisible() ? (
+                    <span className="ml-2 text-green-500">
+                      <Check aria-label={`Selected ${leaf.id}`} className="dark:text-gray-400" />
+                    </span>
+                  ) : null}
+                </DropdownMenuItem>
+              );
+            })}
+          </DropdownMenuContent>
+        </DropdownMenu>
       ) : null}
     </th>
   );

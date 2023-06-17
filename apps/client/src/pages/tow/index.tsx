@@ -12,7 +12,7 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
-import { TowTaxiCallsTable } from "components/calls/TowTaxiCallsTable";
+import { TowTaxiCallsTable } from "components/citizen/tow/tow-taxi-calls-table";
 import { Permissions } from "@snailycad/permissions";
 import type { GetTowCallsData } from "@snailycad/types/api";
 

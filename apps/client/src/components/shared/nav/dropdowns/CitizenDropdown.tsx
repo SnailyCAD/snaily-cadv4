@@ -3,8 +3,13 @@ import { ChevronDown } from "react-bootstrap-icons";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { Feature } from "@snailycad/types";
 import { useTranslations } from "next-intl";
-import { Dropdown } from "components/Dropdown";
-import { Button } from "@snailycad/ui";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuLinkItem,
+  DropdownMenuContent,
+} from "@snailycad/ui";
 import { classNames } from "lib/classNames";
 import { useAuth } from "context/AuthContext";
 import { usePermission, Permissions } from "hooks/usePermission";
@@ -39,11 +44,14 @@ export function CitizenDropdown() {
   }
 
   return (
-    <Dropdown
-      trigger={
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
         <Button
           role="listitem"
-          className={classNames(isActive("/citizen") && "font-semibold")}
+          className={classNames(
+            "flex gap-1 items-center px-2",
+            isActive("/citizen") && "font-semibold",
+          )}
           variant="transparent"
         >
           {t("citizen")}
@@ -51,23 +59,25 @@ export function CitizenDropdown() {
             <ChevronDown width={15} height={15} className="text-gray-700 dark:text-gray-300" />
           </span>
         </Button>
-      }
-    >
-      <Dropdown.LinkItem href="/citizen">{t("citizens")}</Dropdown.LinkItem>
+      </DropdownMenuTrigger>
 
-      {items.map((item) => {
-        const upperCase = item.href.replace(/-/g, "_").replace("/", "").toUpperCase() as Feature;
+      <DropdownMenuContent align="start" alignOffset={10}>
+        <DropdownMenuLinkItem href="/citizen">{t("citizens")}</DropdownMenuLinkItem>
 
-        if (!enabled[upperCase]) {
-          return null;
-        }
+        {items.map((item) => {
+          const upperCase = item.href.replace(/-/g, "_").replace("/", "").toUpperCase() as Feature;
 
-        return (
-          <Dropdown.LinkItem key={item.href} href={item.href}>
-            {item.name}
-          </Dropdown.LinkItem>
-        );
-      })}
-    </Dropdown>
+          if (!enabled[upperCase]) {
+            return null;
+          }
+
+          return (
+            <DropdownMenuLinkItem key={item.href} href={item.href}>
+              {item.name}
+            </DropdownMenuLinkItem>
+          );
+        })}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

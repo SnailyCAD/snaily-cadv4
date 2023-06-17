@@ -3,7 +3,7 @@ import { Star } from "react-bootstrap-icons";
 import Link from "next/link";
 import type { GetServerSideProps } from "next";
 import { dataToSlate, Editor } from "components/editor/editor";
-import { BreadcrumbItem, Breadcrumbs, Button, buttonSizes, buttonVariants } from "@snailycad/ui";
+import { BreadcrumbItem, Breadcrumbs, Button, buttonVariants } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -16,7 +16,6 @@ import useFetch from "lib/useFetch";
 import dynamic from "next/dynamic";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
-import { classNames } from "lib/classNames";
 import type { DeleteBusinessPostsData, GetBusinessByIdData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { shallow } from "zustand/shallow";
@@ -141,7 +140,7 @@ export default function BusinessId(props: Props) {
           {hasManagePermissions ? (
             <Link
               href={`/business/${currentBusiness.id}/${currentEmployee.id}/manage`}
-              className={classNames(buttonVariants.default, buttonSizes.md, "rounded-md")}
+              className={buttonVariants()}
             >
               {common("manage")}
             </Link>

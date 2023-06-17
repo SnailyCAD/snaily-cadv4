@@ -2,9 +2,9 @@ import * as React from "react";
 import { useOption } from "@react-aria/listbox";
 import type { Node } from "@react-types/shared";
 import type { ListState } from "@react-stately/list";
-import { buttonSizes } from "../../button";
-import { classNames } from "../../../utils/classNames";
+import { cn } from "../../../utils/classNames";
 import { Check } from "react-bootstrap-icons";
+import { buttonVariants } from "../../button";
 
 interface OptionProps {
   item: Node<unknown>;
@@ -23,13 +23,15 @@ export function Option(props: OptionProps) {
     <li
       {...optionProps}
       ref={ref}
-      className={classNames(
-        buttonSizes.md,
-        "flex items-center justify-between",
-        "rounded-md my-1 dark:text-white dark:hover:bg-secondary hover:bg-gray-300 focus:bg-gray-300 dark:focus:bg-secondary cursor-pointer",
-        (isSelected || isFocused) && "dark:bg-secondary bg-gray-300",
-        isDisabled && "cursor-not-allowed opacity-70",
-      )}
+      className={buttonVariants({
+        size: "md",
+        className: cn(
+          "flex items-center justify-between",
+          "rounded-md my-1 dark:text-white dark:hover:bg-secondary hover:bg-gray-300 focus:bg-gray-300 dark:focus:bg-secondary cursor-pointer",
+          (isSelected || isFocused) && "dark:bg-secondary bg-gray-300",
+          isDisabled && "cursor-not-allowed opacity-70",
+        ),
+      })}
     >
       {props.item.rendered}
       {isSelected ? (

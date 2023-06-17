@@ -1,9 +1,8 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { buttonSizes, buttonVariants, TabsContent } from "@snailycad/ui";
+import { buttonVariants, TabsContent } from "@snailycad/ui";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import Link from "next/link";
-import { classNames } from "lib/classNames";
 import { SearchArea } from "components/shared/search/search-area";
 import type { GetManageRecordLogsData } from "@snailycad/types/api";
 
@@ -47,7 +46,7 @@ export function CitizenLogsTab({ citizens }: Props) {
                 citizen: `${citizen.name} ${citizen.surname}`,
                 actions: (
                   <Link
-                    className={classNames("rounded-md", buttonSizes.xs, buttonVariants.default)}
+                    className={buttonVariants({ size: "xs" })}
                     href={`/officer/supervisor/citizen-logs/${citizen.id}`}
                   >
                     {common("view")}
