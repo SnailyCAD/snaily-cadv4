@@ -1,7 +1,6 @@
 import * as React from "react";
 import type { CombinedLeoUnit, Officer } from "@snailycad/types";
 import { useImageUrl } from "hooks/useImageUrl";
-import { ContextMenu } from "components/shared/ContextMenu";
 import { useValues } from "context/ValuesContext";
 import useFetch from "lib/useFetch";
 import { useUnitStatusChange } from "hooks/shared/useUnitsStatusChange";
@@ -15,7 +14,13 @@ import { useRouter } from "next/router";
 import { useTranslations } from "next-intl";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
-import { Draggable } from "@snailycad/ui";
+import {
+  Draggable,
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@snailycad/ui";
 import { DndActions } from "types/dnd-actions";
 import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { classNames } from "lib/classNames";
@@ -97,53 +102,73 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
 
   const unitStatusColor = officer.status?.color ?? undefined;
   const textColor = unitStatusColor && generateContrastColor(unitStatusColor);
+  const contextMenuActions = [
+    {
+      name: shouldShowSplit ? t("unmerge") : t("merge"),
+      onClick: () => {
+        shouldShowSplit ? void handleunMerge(officer.id) : handleMerge(officer);
+      },
+    },
+    {
+      name: t("privateMessage"),
+      onClick: () => openModal(ModalIds.PrivateMessage, officer),
+    },
+    ...dispatchCodes,
+  ];
+
+  const canContextMenuBeOpened = isEligiblePage ? canBeOpened ?? false : false;
 
   return (
-    <ContextMenu
-      canBeOpened={isEligiblePage ? canBeOpened ?? false : false}
-      asChild
-      items={[
-        {
-          name: shouldShowSplit ? t("unmerge") : t("merge"),
-          onClick: () => {
-            shouldShowSplit ? void handleunMerge(officer.id) : handleMerge(officer);
-          },
-        },
-        {
-          name: t("privateMessage"),
-          onClick: () => openModal(ModalIds.PrivateMessage, officer),
-        },
-        ...dispatchCodes,
-      ]}
-    >
-      <span>
-        <Draggable
-          onDrag={(isDragging) => setDraggingUnit(isDragging ? "move" : null)}
-          canDrag={canDrag}
-          type={DndActions.MoveUnitTo911CallOrIncident}
-          item={officer}
-        >
-          {({ isDragging }) => (
-            <ActiveUnitsQualificationsCard canBeOpened={!isDragging} unit={officer}>
-              <span
-                className={classNames("capitalize", canDrag ? "cursor-grab" : "cursor-default")}
-                // * 9 to fix overlapping issues with next table column
-                style={{ minWidth: nameAndCallsign.length * 9 }} // todo: still necessary?
-              >
-                {isUnitOfficer(officer) && officer.imageId ? (
-                  <ImageWrapper
-                    quality={70}
-                    className="rounded-md w-[30px] h-[30px] object-cover mr-2 inline-block"
-                    draggable={false}
-                    src={makeImageUrl("units", officer.imageId)!}
-                    loading="lazy"
-                    width={30}
-                    height={30}
-                    alt={nameAndCallsign}
-                  />
-                ) : null}
-                {isUnitCombined(officer) ? (
-                  <div className="flex items-center">
+    <ContextMenu>
+      <ContextMenuTrigger disabled={!canContextMenuBeOpened} asChild>
+        <span>
+          <Draggable
+            onDrag={(isDragging) => setDraggingUnit(isDragging ? "move" : null)}
+            canDrag={canDrag}
+            type={DndActions.MoveUnitTo911CallOrIncident}
+            item={officer}
+          >
+            {({ isDragging }) => (
+              <ActiveUnitsQualificationsCard canBeOpened={!isDragging} unit={officer}>
+                <span
+                  className={classNames("capitalize", canDrag ? "cursor-grab" : "cursor-default")}
+                  // * 9 to fix overlapping issues with next table column
+                  style={{ minWidth: nameAndCallsign.length * 9 }} // todo: still necessary?
+                >
+                  {isUnitOfficer(officer) && officer.imageId ? (
+                    <ImageWrapper
+                      quality={70}
+                      className="rounded-md w-[30px] h-[30px] object-cover mr-2 inline-block"
+                      draggable={false}
+                      src={makeImageUrl("units", officer.imageId)!}
+                      loading="lazy"
+                      width={30}
+                      height={30}
+                      alt={nameAndCallsign}
+                    />
+                  ) : null}
+                  {isUnitCombined(officer) ? (
+                    <div className="flex items-center">
+                      <span
+                        style={{
+                          backgroundColor: unitStatusColor,
+                          color: textColor,
+                        }}
+                        className="px-1.5 py-0.5 rounded-md dark:bg-secondary"
+                      >
+                        {generateCallsign(officer, "pairedUnitTemplate")}
+                      </span>
+
+                      <span className="mx-4">
+                        <ArrowRight />
+                      </span>
+                      {officer.officers.map((officer) => (
+                        <React.Fragment key={officer.id}>
+                          {generateCallsign(officer)} {makeUnitName(officer)} <br />
+                        </React.Fragment>
+                      ))}
+                    </div>
+                  ) : (
                     <span
                       style={{
                         backgroundColor: unitStatusColor,
@@ -151,34 +176,23 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
                       }}
                       className="px-1.5 py-0.5 rounded-md dark:bg-secondary"
                     >
-                      {generateCallsign(officer, "pairedUnitTemplate")}
+                      {nameAndCallsign}
                     </span>
+                  )}
+                </span>
+              </ActiveUnitsQualificationsCard>
+            )}
+          </Draggable>
+        </span>
+      </ContextMenuTrigger>
 
-                    <span className="mx-4">
-                      <ArrowRight />
-                    </span>
-                    {officer.officers.map((officer) => (
-                      <React.Fragment key={officer.id}>
-                        {generateCallsign(officer)} {makeUnitName(officer)} <br />
-                      </React.Fragment>
-                    ))}
-                  </div>
-                ) : (
-                  <span
-                    style={{
-                      backgroundColor: unitStatusColor,
-                      color: textColor,
-                    }}
-                    className="px-1.5 py-0.5 rounded-md dark:bg-secondary"
-                  >
-                    {nameAndCallsign}
-                  </span>
-                )}
-              </span>
-            </ActiveUnitsQualificationsCard>
-          )}
-        </Draggable>
-      </span>
+      <ContextMenuContent>
+        {contextMenuActions.map((action, idx) => (
+          <ContextMenuItem key={`${action.name}-${idx}`} onClick={action.onClick}>
+            {action.name}
+          </ContextMenuItem>
+        ))}
+      </ContextMenuContent>
     </ContextMenu>
   );
 }

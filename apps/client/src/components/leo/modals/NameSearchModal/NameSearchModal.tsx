@@ -21,7 +21,7 @@ import {
   ManageLicensesModal,
 } from "components/citizen/licenses/manage-licenses-modal";
 import { ManageCitizenFlagsModal } from "./ManageCitizenFlagsModal";
-import { CitizenImageModal } from "components/citizen/modals/CitizenImageModal";
+import { CitizenImageModal } from "components/citizen/modals/citizen-image-modal";
 import { ManageCustomFieldsModal } from "./ManageCustomFieldsModal";
 import { CustomFieldsArea } from "../CustomFieldsArea";
 import { useBolos } from "hooks/realtime/useBolos";
