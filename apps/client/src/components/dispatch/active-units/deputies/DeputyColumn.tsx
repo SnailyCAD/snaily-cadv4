@@ -1,9 +1,14 @@
 import * as React from "react";
 import { useImageUrl } from "hooks/useImageUrl";
-import { ContextMenu } from "components/shared/ContextMenu";
 import { useValues } from "context/ValuesContext";
 import { useUnitStatusChange } from "hooks/shared/useUnitsStatusChange";
-import { Draggable } from "@snailycad/ui";
+import {
+  Draggable,
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@snailycad/ui";
 import { DndActions } from "types/dnd-actions";
 import { ActiveUnitsQualificationsCard } from "components/leo/qualifications/ActiveUnitsQualificationsCard";
 import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
@@ -96,51 +101,71 @@ export function DeputyColumn({ deputy, isDispatch, nameAndCallsign, setTempUnit 
     }
   }
 
+  const contextMenuActions = [
+    {
+      name: shouldShowSplit ? t("unmerge") : t("merge"),
+      onClick: () => {
+        shouldShowSplit ? void handleunMerge(deputy.id) : handleMerge(deputy);
+      },
+    },
+    {
+      name: t("privateMessage"),
+      onClick: () => openModal(ModalIds.PrivateMessage, deputy),
+    },
+    ...dispatchCodes,
+  ];
+
+  const canContextMenuBeOpened = isEligiblePage ? canBeOpened ?? false : false;
+
   return (
-    <ContextMenu
-      canBeOpened={isEligiblePage ? canBeOpened ?? false : false}
-      asChild
-      items={[
-        {
-          name: shouldShowSplit ? t("unmerge") : t("merge"),
-          onClick: () => {
-            shouldShowSplit ? void handleunMerge(deputy.id) : handleMerge(deputy);
-          },
-        },
-        {
-          name: t("privateMessage"),
-          onClick: () => openModal(ModalIds.PrivateMessage, deputy),
-        },
-        ...dispatchCodes,
-      ]}
-    >
-      <span>
-        <Draggable
-          onDrag={(isDragging) => setDraggingUnit(isDragging ? "move" : null)}
-          canDrag={canDrag}
-          item={deputy}
-          type={DndActions.MoveUnitTo911CallOrIncident}
-        >
-          {({ isDragging }) => (
-            <ActiveUnitsQualificationsCard canBeOpened={!isDragging} unit={deputy}>
-              <span // * 9 to fix overlapping issues with next table column
-                style={{ minWidth: nameAndCallsign.length * 9 }}
-                className={classNames("capitalize", canDrag ? "cursor-grab" : "cursor-default")}
-              >
-                {!isUnitCombinedEmsFd(deputy) && deputy.imageId ? (
-                  <ImageWrapper
-                    quality={70}
-                    className="rounded-md w-[30px] h-[30px] object-cover mr-2 inline-block"
-                    draggable={false}
-                    src={makeImageUrl("units", deputy.imageId)!}
-                    loading="lazy"
-                    width={30}
-                    height={30}
-                    alt={nameAndCallsign}
-                  />
-                ) : null}
-                {isUnitCombinedEmsFd(deputy) ? (
-                  <div className="flex items-center">
+    <ContextMenu>
+      <ContextMenuTrigger disabled={!canContextMenuBeOpened} asChild>
+        <span>
+          <Draggable
+            onDrag={(isDragging) => setDraggingUnit(isDragging ? "move" : null)}
+            canDrag={canDrag}
+            item={deputy}
+            type={DndActions.MoveUnitTo911CallOrIncident}
+          >
+            {({ isDragging }) => (
+              <ActiveUnitsQualificationsCard canBeOpened={!isDragging} unit={deputy}>
+                <span // * 9 to fix overlapping issues with next table column
+                  style={{ minWidth: nameAndCallsign.length * 9 }}
+                  className={classNames("capitalize", canDrag ? "cursor-grab" : "cursor-default")}
+                >
+                  {!isUnitCombinedEmsFd(deputy) && deputy.imageId ? (
+                    <ImageWrapper
+                      quality={70}
+                      className="rounded-md w-[30px] h-[30px] object-cover mr-2 inline-block"
+                      draggable={false}
+                      src={makeImageUrl("units", deputy.imageId)!}
+                      loading="lazy"
+                      width={30}
+                      height={30}
+                      alt={nameAndCallsign}
+                    />
+                  ) : null}
+                  {isUnitCombinedEmsFd(deputy) ? (
+                    <div className="flex items-center">
+                      <span
+                        style={{
+                          backgroundColor: unitStatusColor,
+                          color: textColor,
+                        }}
+                        className="px-1.5 py-0.5 rounded-md dark:bg-secondary"
+                      >
+                        {generateCallsign(deputy, "pairedUnitTemplate")}
+                      </span>
+                      <span className="mx-4">
+                        <ArrowRight />
+                      </span>
+                      {deputy.deputies.map((deputy) => (
+                        <React.Fragment key={deputy.id}>
+                          {generateCallsign(deputy)} {makeUnitName(deputy)} <br />
+                        </React.Fragment>
+                      ))}
+                    </div>
+                  ) : (
                     <span
                       style={{
                         backgroundColor: unitStatusColor,
@@ -148,33 +173,23 @@ export function DeputyColumn({ deputy, isDispatch, nameAndCallsign, setTempUnit 
                       }}
                       className="px-1.5 py-0.5 rounded-md dark:bg-secondary"
                     >
-                      {generateCallsign(deputy, "pairedUnitTemplate")}
+                      {nameAndCallsign}
                     </span>
-                    <span className="mx-4">
-                      <ArrowRight />
-                    </span>
-                    {deputy.deputies.map((deputy) => (
-                      <React.Fragment key={deputy.id}>
-                        {generateCallsign(deputy)} {makeUnitName(deputy)} <br />
-                      </React.Fragment>
-                    ))}
-                  </div>
-                ) : (
-                  <span
-                    style={{
-                      backgroundColor: unitStatusColor,
-                      color: textColor,
-                    }}
-                    className="px-1.5 py-0.5 rounded-md dark:bg-secondary"
-                  >
-                    {nameAndCallsign}
-                  </span>
-                )}
-              </span>
-            </ActiveUnitsQualificationsCard>
-          )}
-        </Draggable>
-      </span>
+                  )}
+                </span>
+              </ActiveUnitsQualificationsCard>
+            )}
+          </Draggable>
+        </span>
+      </ContextMenuTrigger>
+
+      <ContextMenuContent>
+        {contextMenuActions.map((action, idx) => (
+          <ContextMenuItem key={`${action.name}-${idx}`} onClick={action.onClick}>
+            {action.name}
+          </ContextMenuItem>
+        ))}
+      </ContextMenuContent>
     </ContextMenu>
   );
 }

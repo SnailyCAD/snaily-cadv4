@@ -16,3 +16,10 @@ export * from "./tab-list";
 export { SwitchField } from "./fields/switch-field";
 export * from "./alert";
 export * from "./dropdown";
+export {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuPortal,
+  ContextMenuTrigger,
+} from "./context-menu";

@@ -12,7 +12,7 @@ import { Infofield } from "components/shared/Infofield";
 import { FullDate } from "components/shared/FullDate";
 import { calculateAge, formatCitizenAddress } from "lib/utils";
 import { useAuth } from "context/AuthContext";
-import { CitizenImageModal } from "components/citizen/modals/CitizenImageModal";
+import { CitizenImageModal } from "components/citizen/modals/citizen-image-modal";
 import type {
   PostEmsFdDeclareCitizenById,
   PostEmsFdMedicalRecordsSearchData,

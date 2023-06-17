@@ -8,7 +8,6 @@ import ReactSelect, {
 import { useAuth } from "context/AuthContext";
 import { useModal } from "state/modalState";
 
-import { MultiValueContainerContextMenu } from "./select/MultiValueContainerContextMenu";
 import { MultiValueContainerPenalCode } from "./select/MultiValueContainerPenalCode";
 import { MultiValueContainerDescription } from "./select/MultiValueContainerDescription";
 
@@ -29,7 +28,6 @@ interface Props<Value extends SelectValue = SelectValue<any>>
   isClearable?: boolean;
   disabled?: boolean;
   extra?: {
-    showContextMenuForUnits?: boolean;
     showPenalCodeDescriptions?: boolean;
     showDLCategoryDescriptions?: boolean;
   };
@@ -85,9 +83,7 @@ export function Select({ name, onChange, ...rest }: Props) {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       menuPortalTarget={(typeof document !== "undefined" && document.body) || undefined}
       components={
-        rest.extra?.showContextMenuForUnits
-          ? { MultiValueContainer: MultiValueContainerContextMenu }
-          : rest.extra?.showPenalCodeDescriptions
+        rest.extra?.showPenalCodeDescriptions
           ? { MultiValueContainer: MultiValueContainerPenalCode }
           : rest.extra?.showDLCategoryDescriptions
           ? { MultiValueContainer: MultiValueContainerDescription }

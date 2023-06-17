@@ -3436,6 +3436,7 @@ __metadata:
   resolution: "@snailycad/ui@workspace:packages/ui"
   dependencies:
     "@internationalized/date": ^3.2.0
+    "@radix-ui/react-context-menu": ^2.1.4
     "@radix-ui/react-tabs": ^1.0.4
     "@react-aria/breadcrumbs": ^3.5.2
     "@react-aria/button": ^3.7.2

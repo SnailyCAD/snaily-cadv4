@@ -39,7 +39,7 @@ import { CitizenRecordsCard } from "components/citizen/records/citizen-records-c
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const CitizenImageModal = dynamic(
-  async () => (await import("components/citizen/modals/CitizenImageModal")).CitizenImageModal,
+  async () => (await import("components/citizen/modals/citizen-image-modal")).CitizenImageModal,
 );
 const WeaponsCard = dynamic(
   async () => (await import("components/citizen/weapons/weapons-card")).WeaponsCard,
