@@ -1,11 +1,16 @@
 import * as React from "react";
-import { Button, SelectField } from "@snailycad/ui";
+import {
+  Button,
+  SelectField,
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useAsyncTable } from "hooks/shared/table/use-async-table";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
-import * as Accordion from "@radix-ui/react-accordion";
-import { CaretDownFill } from "react-bootstrap-icons";
 import type { GetManageUsersInactiveUsers } from "@snailycad/types/api";
 import useFetch from "lib/useFetch";
 import { toastMessage } from "lib/toastMessage";
@@ -79,23 +84,13 @@ export function PruneUsersModal() {
         ]}
       />
 
-      <Accordion.Root disabled={asyncTable.noItemsAvailable} className="mt-4" type="multiple">
-        <Accordion.Item value="unavailable-sounds">
-          <Accordion.Trigger
-            type="button"
-            title={t("clickToExpand")}
-            className="accordion-state gap-2 flex items-center justify-between pt-1 text-lg font-semibold text-left"
-          >
-            <h3 className="text-xl font-semibold leading-none">{t("inactiveUsers")}</h3>
+      <Accordion className="mt-4" type="multiple">
+        <AccordionItem value="unavailable-sounds">
+          <AccordionTrigger type="button" title={t("clickToExpand")}>
+            <h3 className="text-xl leading-none">{t("inactiveUsers")}</h3>
+          </AccordionTrigger>
 
-            <CaretDownFill
-              width={16}
-              height={16}
-              className="transform w-4 h-4 transition-transform accordion-state-transform"
-            />
-          </Accordion.Trigger>
-
-          <Accordion.Content className="mt-3">
+          <AccordionContent className="mt-3">
             {asyncTable.items.map((user) => (
               <div key={user.id} className="flex items-center justify-between">
                 <div>
@@ -110,9 +105,9 @@ export function PruneUsersModal() {
                 </Button>
               </div>
             ))}
-          </Accordion.Content>
-        </Accordion.Item>
-      </Accordion.Root>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
 
       <footer>
         <Button

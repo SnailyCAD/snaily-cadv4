@@ -23,3 +23,4 @@ export {
   ContextMenuPortal,
   ContextMenuTrigger,
 } from "./context-menu";
+export * from "./accordion";

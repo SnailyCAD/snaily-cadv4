@@ -1,6 +1,12 @@
 import * as React from "react";
-import { Button, SelectField } from "@snailycad/ui";
-import * as Accordion from "@radix-ui/react-accordion";
+import {
+  Button,
+  SelectField,
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
@@ -10,7 +16,6 @@ import type { GetManageUnitsInactiveUnits } from "@snailycad/types/api";
 import { toastMessage } from "lib/toastMessage";
 import { Modal } from "components/modal/Modal";
 import { FullDate } from "components/shared/FullDate";
-import { CaretDownFill } from "react-bootstrap-icons";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
@@ -131,23 +136,13 @@ export function PruneUnitsModal() {
         ]}
       />
 
-      <Accordion.Root disabled={asyncTable.noItemsAvailable} className="mt-4" type="multiple">
-        <Accordion.Item value="unavailable-sounds">
-          <Accordion.Trigger
-            type="button"
-            title="Click to expand"
-            className="accordion-state gap-2 flex items-center justify-between pt-1 text-lg font-semibold text-left"
-          >
-            <h3 className="text-xl font-semibold leading-none">{t("Management.inactiveUnits")}</h3>
+      <Accordion disabled={asyncTable.noItemsAvailable} className="mt-4" type="multiple">
+        <AccordionItem value="unavailable-sounds">
+          <AccordionTrigger type="button" title="Click to expand">
+            <h3 className="text-xl leading-none">{t("Management.inactiveUnits")}</h3>
+          </AccordionTrigger>
 
-            <CaretDownFill
-              width={16}
-              height={16}
-              className="transform w-4 h-4 transition-transform accordion-state-transform"
-            />
-          </Accordion.Trigger>
-
-          <Accordion.Content asChild className="mt-3">
+          <AccordionContent asChild className="mt-3">
             <ul>
               {asyncTable.items.map((unit) => {
                 const unitName = makeUnitName(unit);
@@ -167,15 +162,15 @@ export function PruneUnitsModal() {
                       ) : null}
                     </div>
                     <Button type="button" size="xs" onPress={() => asyncTable.remove(unit.id)}>
-                      Keep
+                      {t("Management.keep")}
                     </Button>
                   </li>
                 );
               })}
             </ul>
-          </Accordion.Content>
-        </Accordion.Item>
-      </Accordion.Root>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
 
       <footer>
         <Button

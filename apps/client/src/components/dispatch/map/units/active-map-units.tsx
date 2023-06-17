@@ -3,7 +3,6 @@ import { CombinedEmsFdUnit, CombinedLeoUnit, EmsFdDeputy, Officer } from "@snail
 import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
 import { useActiveOfficers } from "hooks/realtime/useActiveOfficers";
 import type { MapPlayer, PlayerDataEventPayload } from "types/map";
-import { Root as AccordionRoot } from "@radix-ui/react-accordion";
 import { createPortal } from "react-dom";
 import { usePortal } from "@casper124578/useful";
 import { useTranslations } from "next-intl";
@@ -11,6 +10,7 @@ import { UnitItem } from "./unit-item";
 import { ManageUnitModal } from "components/dispatch/modals/manage-unit-modal";
 import { useMapPlayersStore } from "hooks/realtime/use-map-players";
 import { createMapUnitsFromActiveUnits } from "lib/map/create-map-units-from-active-units.ts";
+import { Accordion } from "@snailycad/ui";
 
 interface Props {
   players: (MapPlayer | PlayerDataEventPayload)[];
@@ -46,7 +46,7 @@ export function ActiveMapUnits({ openItems, setOpenItems }: Props) {
         {units.length <= 0 ? (
           <p className="text-base mt-2 text-neutral-700 dark:text-gray-300">{t("noActiveUnits")}</p>
         ) : (
-          <AccordionRoot value={openItems} onValueChange={setOpenItems} type="multiple">
+          <Accordion value={openItems} onValueChange={setOpenItems} type="multiple">
             {units.map((player, idx) => {
               return (
                 <UnitItem
@@ -56,7 +56,7 @@ export function ActiveMapUnits({ openItems, setOpenItems }: Props) {
                 />
               );
             })}
-          </AccordionRoot>
+          </Accordion>
         )}
 
         {tempUnit ? <ManageUnitModal onClose={() => setTempUnit(null)} unit={tempUnit} /> : null}

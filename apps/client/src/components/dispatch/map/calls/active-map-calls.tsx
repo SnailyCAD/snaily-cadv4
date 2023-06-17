@@ -1,5 +1,4 @@
 import type * as React from "react";
-import { Root as AccordionRoot } from "@radix-ui/react-accordion";
 import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
 import type { Full911Call } from "state/dispatch/dispatch-state";
@@ -10,6 +9,7 @@ import { SocketEvents } from "@snailycad/config";
 import { usePortal } from "@casper124578/useful";
 import { CallItem } from "./call-item";
 import { useCall911State } from "state/dispatch/call-911-state";
+import { Accordion } from "@snailycad/ui";
 
 export interface MapCallProps {
   hasMarker(callId: string): boolean;
@@ -67,13 +67,13 @@ export function ActiveMapCalls({ hasMarker, setOpenItems, openItems, setMarker }
         {calls911State.calls.length <= 0 ? (
           <p>{t("no911Calls")}</p>
         ) : (
-          <AccordionRoot value={openItems} onValueChange={setOpenItems} type="multiple">
+          <Accordion value={openItems} onValueChange={setOpenItems} type="multiple">
             {calls911State.calls.map((call) => {
               return (
                 <CallItem hasMarker={hasMarker} setMarker={setMarker} key={call.id} call={call} />
               );
             })}
-          </AccordionRoot>
+          </Accordion>
         )}
 
         <Manage911CallModal
