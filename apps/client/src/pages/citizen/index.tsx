@@ -74,7 +74,9 @@ export default function CitizenPage({ citizens }: Props) {
         <li>
           <Link
             href="/citizen/create"
-            className={`rounded-md transition-all p-1 px-4 ${buttonVariants.default} block w-full`}
+            className={buttonVariants({
+              className: "rounded-md transition-all p-1 px-4 block w-full",
+            })}
           >
             {t("createCitizen")}
           </Link>

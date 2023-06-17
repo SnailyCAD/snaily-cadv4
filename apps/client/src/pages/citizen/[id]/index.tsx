@@ -6,7 +6,16 @@ import type { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { Layout } from "components/Layout";
 import { useModal } from "state/modalState";
-import { BreadcrumbItem, Breadcrumbs, Button } from "@snailycad/ui";
+import {
+  BreadcrumbItem,
+  Breadcrumbs,
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLinkItem,
+  DropdownMenuTrigger,
+} from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import { getTranslations } from "lib/getTranslation";
 import { VehiclesCard } from "components/citizen/vehicles/vehicles-card";
@@ -23,7 +32,6 @@ import { Title } from "components/shared/Title";
 import { ModalIds } from "types/modal-ids";
 import { FullDate } from "components/shared/FullDate";
 import type { DeleteCitizenByIdData } from "@snailycad/types/api";
-import { Dropdown } from "components/Dropdown";
 import { ImageWrapper } from "components/shared/image-wrapper";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import { ValueType } from "@snailycad/types";
@@ -191,11 +199,8 @@ export default function CitizenId() {
         </div>
 
         <div>
-          <Dropdown
-            alignOffset={0}
-            align="end"
-            className="dropdown-right"
-            trigger={
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
               <Button className="flex items-center justify-center w-9 h-9">
                 <ThreeDots
                   aria-label="Options"
@@ -204,32 +209,34 @@ export default function CitizenId() {
                   className="text-neutral-800 dark:text-gray-300"
                 />
               </Button>
-            }
-          >
-            <Dropdown.LinkItem href={`/citizen/${citizen.id}/edit`}>
-              {t("editCitizen")}
-            </Dropdown.LinkItem>
+            </DropdownMenuTrigger>
 
-            {ALLOW_CITIZEN_DELETION_BY_NON_ADMIN ? (
-              <>
-                <Dropdown.Item
-                  onPress={() => openModal(ModalIds.AlertDeleteCitizen)}
-                  variant="danger"
-                >
-                  {t("deleteCitizen")}
-                </Dropdown.Item>
+            <DropdownMenuContent alignOffset={0} align="end">
+              <DropdownMenuLinkItem href={`/citizen/${citizen.id}/edit`}>
+                {t("editCitizen")}
+              </DropdownMenuLinkItem>
 
-                {!citizen.dead ? (
-                  <Dropdown.Item
-                    onPress={() => openModal(ModalIds.AlertMarkDeceased)}
+              {ALLOW_CITIZEN_DELETION_BY_NON_ADMIN ? (
+                <>
+                  <DropdownMenuItem
+                    onClick={() => openModal(ModalIds.AlertDeleteCitizen)}
                     variant="danger"
                   >
-                    {t("markCitizenDeceased")}
-                  </Dropdown.Item>
-                ) : null}
-              </>
-            ) : null}
-          </Dropdown>
+                    {t("deleteCitizen")}
+                  </DropdownMenuItem>
+
+                  {!citizen.dead ? (
+                    <DropdownMenuItem
+                      onClick={() => openModal(ModalIds.AlertMarkDeceased)}
+                      variant="danger"
+                    >
+                      {t("markCitizenDeceased")}
+                    </DropdownMenuItem>
+                  ) : null}
+                </>
+              ) : null}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 

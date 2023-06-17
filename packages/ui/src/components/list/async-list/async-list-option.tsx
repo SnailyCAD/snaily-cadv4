@@ -2,8 +2,8 @@ import * as React from "react";
 import { useOption } from "@react-aria/listbox";
 import type { Node } from "@react-types/shared";
 import type { ListState } from "@react-stately/list";
-import { buttonSizes } from "../../button";
-import { classNames } from "../../../utils/classNames";
+import { buttonVariants } from "../../button";
+import { cn } from "../../../utils/classNames";
 import { Check } from "react-bootstrap-icons";
 
 interface OptionProps {
@@ -23,13 +23,15 @@ export function AsyncListFieldOption(props: OptionProps) {
     <li
       {...optionProps}
       ref={ref}
-      className={classNames(
-        buttonSizes.sm,
-        "flex items-center justify-between",
-        "rounded-md my-1 dark:text-white dark:hover:bg-secondary hover:bg-gray-400 focus:bg-gray-400 dark:focus:bg-secondary  cursor-pointer",
-        (isSelected || isFocused) && "dark:bg-secondary bg-gray-400",
-        isDisabled && "cursor-not-allowed opacity-70",
-      )}
+      className={buttonVariants({
+        size: "sm",
+        className: cn(
+          "flex items-center justify-between",
+          "rounded-md my-1 dark:text-white dark:hover:bg-secondary hover:bg-gray-400 focus:bg-gray-400 dark:focus:bg-secondary  cursor-pointer",
+          (isSelected || isFocused) && "dark:bg-secondary bg-gray-400",
+          isDisabled && "cursor-not-allowed opacity-70",
+        ),
+      })}
     >
       {props.item.rendered}
       {isSelected ? (

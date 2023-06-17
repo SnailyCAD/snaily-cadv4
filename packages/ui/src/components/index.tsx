@@ -15,3 +15,4 @@ export * from "./dnd/index";
 export * from "./tab-list";
 export { SwitchField } from "./fields/switch-field";
 export * from "./alert";
+export * from "./dropdown";

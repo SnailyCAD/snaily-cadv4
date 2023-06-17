@@ -1,8 +1,13 @@
 import { useRouter } from "next/router";
 import { ChevronDown } from "react-bootstrap-icons";
 import { useTranslations } from "next-intl";
-import { Dropdown } from "components/Dropdown";
-import { Button } from "@snailycad/ui";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLinkItem,
+  DropdownMenuTrigger,
+} from "@snailycad/ui";
 import { classNames } from "lib/classNames";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
@@ -100,12 +105,14 @@ export function OfficerDropdown() {
   ] as const;
 
   return (
-    <Dropdown
-      className="min-w-[200px]"
-      trigger={
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
         <Button
           role="listitem"
-          className={classNames(isActive("/officer") && "font-semibold")}
+          className={classNames(
+            "flex gap-1 items-center px-2",
+            isActive("/officer") && "font-semibold",
+          )}
           variant="transparent"
         >
           <span className="relative">
@@ -121,41 +128,43 @@ export function OfficerDropdown() {
             <ChevronDown width={15} height={15} className="text-gray-700 dark:text-gray-300" />
           </span>
         </Button>
-      }
-    >
-      {items.map((item) => {
-        const show = item.show ?? true;
-        const path = item.href;
+      </DropdownMenuTrigger>
 
-        if (!show) {
-          return null;
-        }
+      <DropdownMenuContent align="start" alignOffset={10}>
+        {items.map((item) => {
+          const show = item.show ?? true;
+          const path = item.href;
 
-        const notifications = {
-          "/officer/dmv": data?.pendingVehicles,
-          "/officer/bureau-of-firearms": data?.pendingWeapons,
-        } as Record<string, number | undefined>;
-        const notificationCount = notifications[path];
+          if (!show) {
+            return null;
+          }
 
-        return (
-          <Dropdown.LinkItem
-            className="flex justify-between items-center gap-2"
-            key={path}
-            href={path}
-          >
-            {item.name}
+          const notifications = {
+            "/officer/dmv": data?.pendingVehicles,
+            "/officer/bureau-of-firearms": data?.pendingWeapons,
+          } as Record<string, number | undefined>;
+          const notificationCount = notifications[path];
 
-            {notificationCount ? (
-              <span
-                aria-label={notificationCount.toString()}
-                className=" bg-tertiary h-6 min-w-[24px] grid place-content-center rounded-full font-sm"
-              >
-                {notificationCount}
-              </span>
-            ) : null}
-          </Dropdown.LinkItem>
-        );
-      })}
-    </Dropdown>
+          return (
+            <DropdownMenuLinkItem
+              className="flex justify-between items-center gap-2"
+              key={path}
+              href={path}
+            >
+              {item.name}
+
+              {notificationCount ? (
+                <span
+                  aria-label={notificationCount.toString()}
+                  className=" bg-tertiary h-6 min-w-[24px] grid place-content-center rounded-full font-sm"
+                >
+                  {notificationCount}
+                </span>
+              ) : null}
+            </DropdownMenuLinkItem>
+          );
+        })}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

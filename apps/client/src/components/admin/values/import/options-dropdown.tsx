@@ -1,10 +1,15 @@
 import { ThreeDots } from "react-bootstrap-icons";
 import { useTranslations } from "next-intl";
-import { Button } from "@snailycad/ui";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@snailycad/ui";
 import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 import { useDownload } from "@casper124578/useful";
-import { Dropdown } from "components/Dropdown";
 import type { ValueType } from "@snailycad/types";
 import { isPenalCodeValue, isDivisionValue, isStatusValue } from "@snailycad/utils";
 import format from "date-fns/format";
@@ -36,11 +41,8 @@ export function OptionsDropdown({ type, valueLength }: Props) {
   }
 
   return (
-    <Dropdown
-      alignOffset={0}
-      align="end"
-      className="dropdown-right"
-      trigger={
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
         <Button className="flex items-center justify-center w-9 h-9">
           <ThreeDots
             aria-label="Options"
@@ -49,15 +51,17 @@ export function OptionsDropdown({ type, valueLength }: Props) {
             className="text-neutral-800 dark:text-gray-300"
           />
         </Button>
-      }
-    >
-      <Dropdown.Item onPress={() => openModal(ModalIds.ImportValues)}>
-        {t("importValues")}
-      </Dropdown.Item>
-      <Dropdown.Item disabled={valueLength <= 0} onPress={handleExport}>
-        {t("exportValues")}
-      </Dropdown.Item>
-    </Dropdown>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent alignOffset={0} align="end">
+        <DropdownMenuItem onClick={() => openModal(ModalIds.ImportValues)}>
+          {t("importValues")}
+        </DropdownMenuItem>
+        <DropdownMenuItem disabled={valueLength <= 0} onClick={handleExport}>
+          {t("exportValues")}
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 

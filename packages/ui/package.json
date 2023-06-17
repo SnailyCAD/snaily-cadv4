@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "npx rimraf ./dist && yarn tsup",
+    "build": "yarn tsup",
     "watch": "yarn tsup --watch --silent=false",
     "typecheck": "yarn tsc --noEmit"
   },
@@ -72,6 +72,7 @@
   },
   "dependencies": {
     "@internationalized/date": "^3.2.0",
+    "@radix-ui/react-avatar": "^1.0.3",
     "@radix-ui/react-tabs": "^1.0.4",
     "@react-aria/breadcrumbs": "^3.5.2",
     "@react-aria/button": "^3.7.2",
@@ -107,6 +108,7 @@
     "@react-types/select": "^3.8.1",
     "@react-types/shared": "^3.18.1",
     "@snailycad/utils": "workspace:*",
+    "class-variance-authority": "^0.6.0",
     "react-bootstrap-icons": "^1.10.3",
     "react-dnd": "16.0.1",
     "react-dnd-html5-backend": "16.0.1",
@@ -114,6 +116,7 @@
   },
   "peerDependencies": {
     "date-fns": ">=2.29.3",
+    "next": "*",
     "next-intl": ">=2.13.1",
     "react": ">=18.2.0",
     "react-dom": ">=18.2.0"

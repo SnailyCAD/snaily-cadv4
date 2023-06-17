@@ -1,8 +1,13 @@
 import { useRouter } from "next/router";
 import { ChevronDown } from "react-bootstrap-icons";
 import { useTranslations } from "next-intl";
-import { Dropdown } from "components/Dropdown";
-import { Button } from "@snailycad/ui";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLinkItem,
+  DropdownMenuTrigger,
+} from "@snailycad/ui";
 import { classNames } from "lib/classNames";
 import { usePermission, Permissions } from "hooks/usePermission";
 
@@ -13,11 +18,14 @@ export function DispatchDropdown() {
   const { hasPermissions } = usePermission();
 
   return (
-    <Dropdown
-      trigger={
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
         <Button
           role="listitem"
-          className={classNames(isActive("/dispatch") && "font-semibold")}
+          className={classNames(
+            "flex gap-1 items-center px-2",
+            isActive("/dispatch") && "font-semibold",
+          )}
           variant="transparent"
         >
           {t("dispatch")}
@@ -25,15 +33,17 @@ export function DispatchDropdown() {
             <ChevronDown width={15} height={15} className="text-gray-700 dark:text-gray-300" />
           </span>
         </Button>
-      }
-    >
-      {hasPermissions([Permissions.Dispatch]) ? (
-        <Dropdown.LinkItem href="/dispatch">{t("dashboard")}</Dropdown.LinkItem>
-      ) : null}
+      </DropdownMenuTrigger>
 
-      {hasPermissions([Permissions.LiveMap]) ? (
-        <Dropdown.LinkItem href="/dispatch/map">{t("liveMap")}</Dropdown.LinkItem>
-      ) : null}
-    </Dropdown>
+      <DropdownMenuContent align="start" alignOffset={10}>
+        {hasPermissions([Permissions.Dispatch]) ? (
+          <DropdownMenuLinkItem href="/dispatch">{t("dashboard")}</DropdownMenuLinkItem>
+        ) : null}
+
+        {hasPermissions([Permissions.LiveMap]) ? (
+          <DropdownMenuLinkItem href="/dispatch/map">{t("liveMap")}</DropdownMenuLinkItem>
+        ) : null}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
