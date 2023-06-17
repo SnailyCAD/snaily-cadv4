@@ -201,7 +201,7 @@ export default function CitizenId() {
         <div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className="flex items-center justify-center w-9 h-9">
+              <Button size="xs" className="flex items-center justify-center w-9 h-9">
                 <ThreeDots
                   aria-label="Options"
                   width={17}

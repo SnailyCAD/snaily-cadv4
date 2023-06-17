@@ -52,8 +52,8 @@ export const DropdownMenuItem = React.forwardRef<
           variant,
         ),
       })}
-      onClick={handleClick}
       {...props}
+      onClick={handleClick}
     />
   );
 });

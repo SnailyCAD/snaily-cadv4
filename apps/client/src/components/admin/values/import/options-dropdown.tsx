@@ -26,7 +26,7 @@ export function OptionsDropdown({ type, valueLength }: Props) {
   const t = useTranslations("Values");
   const { openModal } = useModal();
   const download = useDownload();
-  const { execute } = useFetch();
+  const { state, execute } = useFetch();
 
   async function handleExport() {
     const { json } = await execute<GetValuesExportData>({
@@ -43,12 +43,12 @@ export function OptionsDropdown({ type, valueLength }: Props) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className="flex items-center justify-center w-9 h-9">
+        <Button size="xs" className="flex items-center justify-center w-9 h-9">
           <ThreeDots
             aria-label="Options"
             width={17}
             height={17}
-            className="text-neutral-800 dark:text-gray-300"
+            className="fill-neutral-800 dark:fill-gray-300"
           />
         </Button>
       </DropdownMenuTrigger>
@@ -57,7 +57,11 @@ export function OptionsDropdown({ type, valueLength }: Props) {
         <DropdownMenuItem onClick={() => openModal(ModalIds.ImportValues)}>
           {t("importValues")}
         </DropdownMenuItem>
-        <DropdownMenuItem disabled={valueLength <= 0} onClick={handleExport}>
+        <DropdownMenuItem
+          closeOnClick={false}
+          disabled={state === "loading" || valueLength <= 0}
+          onClick={handleExport}
+        >
           {t("exportValues")}
         </DropdownMenuItem>
       </DropdownMenuContent>

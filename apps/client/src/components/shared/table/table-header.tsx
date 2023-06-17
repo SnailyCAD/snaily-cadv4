@@ -63,7 +63,9 @@ export function TableHeader<TData extends RowData>({
       {isActions && tableId ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button className="inline-block ml-2">{<ThreeDots />}</Button>
+            <Button size="xs" className="ml-2 h-7 w-7 inline-grid place-content-center">
+              <ThreeDots />
+            </Button>
           </DropdownMenuTrigger>
 
           <DropdownMenuContent alignOffset={0} side="left">

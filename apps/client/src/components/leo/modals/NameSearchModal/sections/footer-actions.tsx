@@ -90,12 +90,17 @@ export function NameSearchFooterActions(props: Props) {
     <div className="flex items-center">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button>
-            <ThreeDotsVertical />
+          <Button className="flex items-center justify-center w-8 h-7 p-0">
+            <ThreeDotsVertical
+              aria-label="Options"
+              className="fill-neutral-800 dark:fill-gray-300"
+              width={16}
+              height={16}
+            />
           </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent sideOffset={3} alignOffset={0}>
+        <DropdownMenuContent side="right" sideOffset={3} alignOffset={0}>
           {CREATE_USER_CITIZEN_LEO ? (
             <DropdownMenuItem className="px-1.5" onClick={() => openModal(ModalIds.CreateCitizen)}>
               {t("Leo.createCitizen")}
