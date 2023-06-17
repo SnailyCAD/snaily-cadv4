@@ -1,6 +1,11 @@
 import type { AssignedUnit, StatusValue } from "@snailycad/types";
 import type { Post911CallEventsData } from "@snailycad/types/api";
-import { ContextMenu } from "components/shared/ContextMenu";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@snailycad/ui";
 import { useValues } from "context/ValuesContext";
 import useFetch from "lib/useFetch";
 import { useCall911State } from "state/dispatch/call-911-state";
@@ -56,8 +61,18 @@ export function SituationChangeColumn(props: UnitColumnProps) {
     }));
 
   return (
-    <ContextMenu canBeOpened={!props.isDisabled} asChild items={codesMapped}>
-      <span>{props.children}</span>
+    <ContextMenu modal={false}>
+      <ContextMenuTrigger disabled={codesMapped.length <= 0}>
+        <span>{props.children}</span>
+      </ContextMenuTrigger>
+
+      <ContextMenuContent>
+        {codesMapped.map((code) => (
+          <ContextMenuItem onClick={code.onClick} key={code.name}>
+            {code.name}
+          </ContextMenuItem>
+        ))}
+      </ContextMenuContent>
     </ContextMenu>
   );
 }

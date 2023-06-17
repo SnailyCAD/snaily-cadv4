@@ -13,7 +13,7 @@ interface OptionProps {
 
 export function Option(props: OptionProps) {
   const ref = React.useRef<HTMLLIElement>(null);
-  const { optionProps, isDisabled, isFocused, isSelected } = useOption(
+  const { optionProps, isDisabled, isSelected } = useOption(
     { key: props.item.key },
     props.state,
     ref,
@@ -24,11 +24,12 @@ export function Option(props: OptionProps) {
       {...optionProps}
       ref={ref}
       className={buttonVariants({
+        variant: "transparent",
         size: "md",
         className: cn(
           "flex items-center justify-between",
-          "rounded-md my-1 dark:text-white dark:hover:bg-secondary hover:bg-gray-300 focus:bg-gray-300 dark:focus:bg-secondary cursor-pointer",
-          (isSelected || isFocused) && "dark:bg-secondary bg-gray-300",
+          "rounded-md my-1 dark:text-white dark:hover:bg-secondary hover:bg-gray-300 focus:bg-gray-300 dark:focus:bg-secondary cursor-pointer focus-visible:outline-none",
+          isSelected && "dark:bg-secondary bg-gray-300",
           isDisabled && "cursor-not-allowed opacity-70",
         ),
       })}
