@@ -72,7 +72,6 @@
   },
   "dependencies": {
     "@internationalized/date": "^3.2.0",
-    "@radix-ui/react-avatar": "^1.0.3",
     "@radix-ui/react-tabs": "^1.0.4",
     "@react-aria/breadcrumbs": "^3.5.2",
     "@react-aria/button": "^3.7.2",

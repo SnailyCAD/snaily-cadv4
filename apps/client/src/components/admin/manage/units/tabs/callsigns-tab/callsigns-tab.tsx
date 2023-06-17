@@ -97,10 +97,7 @@ export function CallsignsTab({ units }: Props) {
               name: makeUnitName(unit),
               user:
                 hasViewUsersPermissions && unit.user ? (
-                  <Link
-                    href={`/admin/manage/users/${unit.userId}`}
-                    className={`rounded-md transition-all p-1 px-1.5 ${buttonVariants.default}`}
-                  >
+                  <Link href={`/admin/manage/users/${unit.userId}`} className={buttonVariants()}>
                     {unit.user.username}
                   </Link>
                 ) : (

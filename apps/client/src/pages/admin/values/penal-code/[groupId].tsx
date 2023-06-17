@@ -9,14 +9,13 @@ import { SearchArea } from "components/shared/search/search-area";
 import { Title } from "components/shared/Title";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { Permissions } from "@snailycad/permissions";
-import { Button, buttonSizes, buttonVariants } from "@snailycad/ui";
+import { Button, buttonVariants } from "@snailycad/ui";
 import { useTranslations } from "use-intl";
 import dynamic from "next/dynamic";
 import { ModalIds } from "types/modal-ids";
 import Link from "next/link";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useModal } from "state/modalState";
-import { classNames } from "lib/classNames";
 import type {
   DeleteValueByIdData,
   DeleteValuesBulkData,
@@ -164,11 +163,7 @@ export default function PenalCodeGroupsPage(props: Props) {
           )}
           <Link
             href="/admin/values/penal-code"
-            className={classNames(
-              "flex items-center gap-3 rounded-md",
-              buttonSizes.sm,
-              buttonVariants.default,
-            )}
+            className={buttonVariants({ className: "flex items-center gap-3" })}
           >
             <ArrowLeft /> View all groups
           </Link>

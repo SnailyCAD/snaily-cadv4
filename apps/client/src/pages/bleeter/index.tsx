@@ -46,10 +46,7 @@ export default function Bleeter({ data }: Props) {
 
         <div className="flex gap-2">
           <Button onPress={() => openModal(ModalIds.ManageBleetModal)}>{t("createBleet")}</Button>
-          <Link
-            className={classNames("rounded-md", buttonSizes.sm, buttonVariants.default)}
-            href={`/bleeter/@/${data.userBleeterProfile.handle}`}
-          >
+          <Link className={buttonVariants()} href={`/bleeter/@/${data.userBleeterProfile.handle}`}>
             {t("myProfile")}
           </Link>
         </div>

@@ -10,7 +10,6 @@ import { Select } from "components/form/Select";
 import Link from "next/link";
 import { FullDate } from "components/shared/FullDate";
 import { usePermission, Permissions } from "hooks/usePermission";
-import { classNames } from "lib/classNames";
 import { useAsyncTable } from "hooks/shared/table/use-async-table";
 import type { DeleteManageCitizenByIdData, GetManageCitizensData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
@@ -146,7 +145,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
                   {hasPermissions([Permissions.ManageCitizens]) ? (
                     <Link
                       href={`/admin/manage/citizens/${citizen.id}`}
-                      className={classNames(buttonVariants.success, "p-0.5 px-2 rounded-md")}
+                      className={buttonVariants({ variant: "success", size: "xs" })}
                     >
                       {common("edit")}
                     </Link>

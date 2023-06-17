@@ -100,10 +100,7 @@ export function DepartmentWhitelistingTab({ pendingUnits }: Props) {
               division: formatUnitDivisions(officer),
               user:
                 hasViewUsersPermissions && officer.user ? (
-                  <Link
-                    href={`/admin/manage/users/${officer.userId}`}
-                    className={`rounded-md transition-all p-1 px-1.5 ${buttonVariants.default}`}
-                  >
+                  <Link className={buttonVariants()} href={`/admin/manage/users/${officer.userId}`}>
                     {officer.user.username}
                   </Link>
                 ) : (
