@@ -5,9 +5,10 @@ interface Props {
   permissions?: Permissions[];
   title: string;
   children: ReactNode;
+  icon: ReactNode;
 }
 
-export function SidebarSection({ title, permissions, children }: Props) {
+export function SidebarSection({ icon, title, permissions, children }: Props) {
   const { hasPermissions } = usePermission();
 
   if (permissions && !hasPermissions(permissions)) {
@@ -15,9 +16,14 @@ export function SidebarSection({ title, permissions, children }: Props) {
   }
 
   return (
-    <section className="mt-3 first:mt-0">
-      <h1 className="px-3 text-2xl font-semibold dark:text-white">{title}</h1>
-      <ul className="flex flex-col space-y-1.5 mt-3">{children}</ul>
+    <section className="mt-6 first:mt-0">
+      <header className="flex items-center gap-2 px-3">
+        <span aria-hidden>{icon}</span>
+
+        <h1 className="text-[20px] font-semibold dark:text-white">{title}</h1>
+      </header>
+
+      <ul className="flex flex-col space-y-1.5 mt-3 ml-5">{children}</ul>
     </section>
   );
 }

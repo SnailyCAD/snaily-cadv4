@@ -11,6 +11,7 @@ import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import { SidebarSection } from "./Sidebar/SidebarSection";
 import useFetch from "lib/useFetch";
 import { useQuery } from "@tanstack/react-query";
+import { DatabaseAdd, DatabaseGear, PersonGear } from "react-bootstrap-icons";
 
 type AdminNotificationKeys =
   | "pendingUnitsForDepartments"
@@ -85,6 +86,7 @@ export function AdminSidebar() {
               ...defaultPermissions.defaultOwnerPermissions,
               ...defaultPermissions.defaultCourthousePermissions,
             ]}
+            icon={<PersonGear className="w-5 h-5" aria-hidden />}
             title={man("management")}
           >
             <>
@@ -117,6 +119,7 @@ export function AdminSidebar() {
           <SidebarSection
             permissions={defaultPermissions.defaultImportPermissions}
             title={man("import")}
+            icon={<DatabaseAdd className="w-5 h-5" aria-hidden />}
           >
             {importRoutes.map((route) => {
               return (
@@ -135,6 +138,7 @@ export function AdminSidebar() {
           <SidebarSection
             permissions={defaultPermissions.defaultValuePermissions}
             title={t("Values.values")}
+            icon={<DatabaseGear className="w-5 h-5" aria-hidden />}
           >
             {valueRoutes.map((route) => {
               return (
@@ -189,7 +193,7 @@ function SidebarItem({ route, href, text, isActive, notificationCount, onRouteCl
         prefetch={false}
         onClick={onRouteClick}
         className={classNames(
-          "flex items-center justify-between transition-colors rounded-md px-4 py-1 dark:text-white hover:bg-gray-200 dark:hover:bg-secondary",
+          "text-lg flex items-center justify-between transition-colors rounded-md px-3 py-1 dark:text-white hover:bg-gray-200 dark:hover:bg-secondary",
           isActive && "bg-gray-300 dark:bg-secondary dark:text-white",
         )}
         href={href}
