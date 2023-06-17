@@ -1,4 +1,3 @@
-
 <p align="center">
   <a href="https://snailycad.org" target="_blank" rel="noopener noreferrer">
     <img width="180" src="https://raw.githubusercontent.com/SnailyCAD/website/main/static/logo.svg" alt="SnailyCAD logo">
@@ -12,13 +11,11 @@
 </p>
 <br/>
 
-
 # SnailyCAD
 
 💻 An open source Computer Aided Dispatch (CAD) for FiveM,
 this is a web based integration for communities who love police roleplaying and dispatching. Optional Discord and FiveM integrations included.
 
-  
 <a href="https://discord.gg/eGnrPqEH7U">
   <img src="https://invite.caspertheghost.me?inviteCode=eGnrPqEH7U&locale=en" />
 </a>
@@ -43,7 +40,6 @@ this is a web based integration for communities who love police roleplaying and 
 - [GamingFlamin](https://github.com/GamingFlamin)
 - [Zachary Hartman](https://github.com/zahrtman2006)
 - [runesasia](https://github.com/runesasia)
-
 
 ## License
 

@@ -5,7 +5,7 @@ services:
     env_file:
       - .env
     ports:
-      - "5433:5432"
+      - "${DB_PORT}:5432"
     networks:
       - cad_web
     volumes:

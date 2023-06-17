@@ -34,6 +34,8 @@
     "sourceRoot": "/"
   },
   "ts-node": {
-    "swc": true
+    "swc": true,
+    "files": true,
+    "require": ["tsconfig-paths/register"]
   }
 }

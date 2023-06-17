@@ -29,7 +29,6 @@ apps/client/public/sounds/*.mp3
 !.yarn/versions
 
 # typescript
-.vscode/settings.json
 tsconfig.tsbuildinfo
 
 # misc
@@ -40,6 +39,6 @@ packages/**/coverage
 test.mjs
 .data
 .dev-data
-
+v
 # Sentry
 .sentryclirc
