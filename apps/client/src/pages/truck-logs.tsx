@@ -18,7 +18,8 @@ const AlertModal = dynamic(async () => (await import("components/modal/AlertModa
   ssr: false,
 });
 const ManageTruckLogModal = dynamic(
-  async () => (await import("components/truck-logs/manage-truck-log-modal")).ManageTruckLogModal,
+  async () =>
+    (await import("components/citizen/truck-logs/manage-truck-log-modal")).ManageTruckLogModal,
   { ssr: false },
 );
 

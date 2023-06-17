@@ -29,12 +29,12 @@ const AppearanceTab = dynamic(
 );
 
 const ConnectionsTab = dynamic(
-  async () => (await import("components/account/ConnectionsTab")).ConnectionsTab,
+  async () => (await import("components/account/user-connections-tab")).ConnectionsTab,
   { ssr: false },
 );
 
 const UserApiTokenTab = dynamic(
-  async () => (await import("components/account/UserApiToken")).UserApiTokenTab,
+  async () => (await import("components/account/user-api-token-tab")).UserApiTokenTab,
   { ssr: false },
 );
 

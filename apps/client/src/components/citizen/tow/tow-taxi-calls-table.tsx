@@ -12,8 +12,9 @@ import type { GetTaxiCallsData, GetTowCallsData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
-const AssignToCallModal = dynamic(
-  async () => (await import("components/citizen/tow/AssignToTowCall")).AssignToCallModal,
+const AssignCitizenToTowOrTaxiCall = dynamic(
+  async () =>
+    (await import("components/citizen/tow/assign-to-tow-taxi-call")).AssignCitizenToTowOrTaxiCall,
 );
 const ManageCallModal = dynamic(
   async () => (await import("components/citizen/tow/manage-tow-call")).ManageCallModal,
@@ -113,7 +114,7 @@ export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props)
         />
       )}
 
-      <AssignToCallModal
+      <AssignCitizenToTowOrTaxiCall
         onClose={() => callState.setTempId(null)}
         onSuccess={updateCalls}
         call={tempCall}
