@@ -17,7 +17,7 @@ export const ContextMenuContent = React.forwardRef<
       alignOffset={5}
       style={{ scrollbarWidth: "thin" }}
       className={cn(
-        "flex flex-col z-50 shadow-sm shadow-primary bg-white dark:bg-primary border dark:border-secondary p-2 rounded-md min-w-[15rem] max-h-[25rem] overflow-auto",
+        "flex flex-col z-50 shadow dark:shadow-primary bg-white dark:bg-primary border dark:border-secondary p-2 rounded-md min-w-[15rem] max-h-[25rem] overflow-auto",
         className,
       )}
       {...props}

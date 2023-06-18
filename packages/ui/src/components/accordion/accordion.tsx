@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { CaretDownFill } from "react-bootstrap-icons";
-import { cn } from "../utils/classNames";
+import { cn } from "../../utils/classNames";
 
 export const Accordion = AccordionPrimitive.Root;
 export const AccordionItem = AccordionPrimitive.Item;
@@ -14,7 +14,7 @@ export const AccordionTrigger = React.forwardRef<
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        "accordion-state gap-2 flex items-center justify-between pt-1 text-lg font-medium text-left",
+        "accordion-state gap-2 flex items-center justify-between pt-1 text-lg font-medium text-left  [&[data-state=open]>svg]:rotate-180",
         className,
       )}
       {...props}
