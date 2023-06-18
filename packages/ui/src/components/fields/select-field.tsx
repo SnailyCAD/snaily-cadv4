@@ -97,7 +97,7 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
                     "!border-red-500 focus:!border-red-700 dark:focus:!border-red-700",
 
                   state.isOpen && "dark:!border-gray-500 !border-gray-500",
-                  props.isDisabled && "!cursor-not-allowed opacity-80",
+                  props.isDisabled && "!cursor-not-allowed opacity-60",
                 ),
               })}
               ref={ref}

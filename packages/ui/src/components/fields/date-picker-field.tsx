@@ -17,7 +17,11 @@ import { Loader } from "../loader";
 const Calendar = dynamic(
   async () => (await import("../inputs/date-picker/calendar/calendar")).Calendar,
   {
-    loading: () => <Loader />,
+    loading: () => (
+      <div className="h-[306px] w-full grid place-content-center">
+        <Loader />
+      </div>
+    ),
     ssr: false,
   },
 );
