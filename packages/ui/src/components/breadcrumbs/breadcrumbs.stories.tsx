@@ -35,7 +35,17 @@ export const ThreeDeepLevel: Story = {
         Manage Users
       </BreadcrumbItem>,
       <BreadcrumbItem href="/admin/manage/users/john-doe" key="john-doe">
-        CasperTheGhost
+        Casper
+      </BreadcrumbItem>,
+    ],
+  },
+};
+
+export const OneDeepLevel: Story = {
+  args: {
+    children: [
+      <BreadcrumbItem href="/admin" key="admin">
+        Admin
       </BreadcrumbItem>,
     ],
   },

@@ -13,7 +13,8 @@
     "watch": "yarn tsup --watch --silent=false",
     "typecheck": "yarn tsc --noEmit",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "chromatic": "yarn chromatic"
   },
   "devDependencies": {
     "@snailycad/types": "workspace:*",
@@ -106,5 +107,7 @@
     "react": ">=18.2.0",
     "react-dom": ">=18.2.0"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "readme": "ERROR: No README data found!",
+  "_id": "@snailycad/ui@1.61.0"
 }

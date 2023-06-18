@@ -16,6 +16,12 @@ const preview: Preview = {
   },
 };
 
+const MESSAGES_REQUIRED_IN_COMPONENTS = {
+  Common: {
+    optionalField: "Optional",
+  },
+};
+
 export const decorators = [
   withThemeByDataAttribute({
     themes: {
@@ -26,7 +32,7 @@ export const decorators = [
     attributeName: "data-theme",
   }),
   (Story) => (
-    <NextIntlProvider locale="en">
+    <NextIntlProvider messages={MESSAGES_REQUIRED_IN_COMPONENTS} locale="en">
       <Story />
     </NextIntlProvider>
   ),
