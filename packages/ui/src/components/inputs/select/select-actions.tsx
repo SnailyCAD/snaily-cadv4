@@ -1,7 +1,7 @@
 import type { SelectValue } from "../../fields/select-field";
 import type { MultiSelectState } from "../../../hooks/select/useMultiSelectState";
 import { ChevronDown, X } from "react-bootstrap-icons";
-import { Button } from "../../button";
+import { Button } from "../../button/button";
 import { classNames } from "../../../utils/classNames";
 import type { ReactNode } from "react";
 
@@ -28,7 +28,7 @@ export function SelectActions<T extends SelectValue>(props: Props<T>) {
             props.state.setSelectedKeys([]);
           }}
           className={classNames(
-            "px-2 !rounded-none -mx-[1px]",
+            "px-2 !rounded-none -mx-[1.5px]",
             "group-hover:dark:!border-gray-500 group-hover:!border-gray-500",
             props.state.isOpen && "!border-gray-800 dark:!border-gray-500",
             props.errorMessage &&
@@ -36,7 +36,7 @@ export function SelectActions<T extends SelectValue>(props: Props<T>) {
           )}
           type="button"
         >
-          <X className="w-5 h-5 fill-white" />
+          <X className="w-5 h-5 dark:fill-white" />
         </Button>
       ) : null}
 
@@ -46,14 +46,14 @@ export function SelectActions<T extends SelectValue>(props: Props<T>) {
         size="xs"
         type="button"
         className={classNames(
-          "rounded-l-none border-gray-200 dark:border-quinary",
+          "rounded-l-none",
+          !showClearableButton && "-ml-[1.5px]",
           "group-hover:dark:!border-gray-500 group-hover:!border-gray-500",
-          showClearableButton ? "-ml-[1px]" : "-ml-[1.5px]",
           props.state.isOpen && "!border-gray-800 dark:!border-gray-500",
           props.errorMessage && "!border-red-500 focus:!border-red-700 dark:!focus:border-red-700",
         )}
       >
-        <ChevronDown />
+        <ChevronDown className="w-5 h-5 dark:fill-white" />
       </Button>
     </>
   );

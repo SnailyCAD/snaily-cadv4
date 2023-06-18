@@ -6,7 +6,8 @@ module.exports = {
     hoverOnlyWhenSupported: true,
   },
   content: ["./src/**/*.tsx"],
-  darkMode: "class",
+  // eslint-disable-next-line quotes
+  darkMode: ["class", '[data-theme="dark"]'],
   theme: {
     extend: {
       borderWidth: {

@@ -31,8 +31,15 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Run turbo build
-        run: yarn turbo run build
+      - name: Build packages
+        run: yarn turbo run build --filter="{packages/**/**}"
+        env:
+          NODE_OPTIONS: --max-old-space-size=6144
+
+      - name: Build apps
+        run: yarn turbo run build --filter="{apps/**/**}"
+        env:
+          NODE_OPTIONS: --max-old-space-size=6144
 
       - name: Run turbo typecheck
         run: yarn turbo run typecheck

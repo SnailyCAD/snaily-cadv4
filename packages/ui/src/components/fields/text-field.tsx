@@ -5,7 +5,7 @@ import { Input } from "../inputs/input";
 import { Textarea } from "../inputs/textarea";
 import { ErrorMessage } from "../error-message";
 import { Label } from "../label";
-import { PasswordInput } from "../inputs/password-input";
+import { PasswordInputButton } from "../inputs/password-input-button";
 
 interface Props extends AriaTextFieldOptions<"input"> {
   label: React.ReactNode;
@@ -40,7 +40,7 @@ export function TextField(props: Props) {
       )}
       {props.children}
 
-      {props.type === "password" ? <PasswordInput inputRef={ref} /> : null}
+      {props.type === "password" ? <PasswordInputButton inputRef={ref} /> : null}
 
       {props.errorMessage && (
         <ErrorMessage errorMessage={props.errorMessage} errorMessageProps={errorMessageProps} />

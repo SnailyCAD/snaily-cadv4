@@ -4,7 +4,7 @@ import type { Node } from "@react-types/shared";
 import type { ListState } from "@react-stately/list";
 import { cn } from "../../../utils/classNames";
 import { Check } from "react-bootstrap-icons";
-import { buttonVariants } from "../../button";
+import { buttonVariants } from "../../button/button";
 
 interface OptionProps {
   item: Node<unknown>;

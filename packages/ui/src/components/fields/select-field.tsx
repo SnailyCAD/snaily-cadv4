@@ -5,7 +5,7 @@ import { ModalProvider } from "@react-aria/overlays";
 import { classNames, cn } from "../../utils/classNames";
 import { Popover } from "../overlays/popover";
 import { ListBox } from "../list/select/list-box";
-import { buttonVariants } from "../button";
+import { buttonVariants } from "../button/button";
 import { useMultiSelectState } from "../../hooks/select/useMultiSelectState";
 import { useMultiSelect } from "../../hooks/select/useMultiSelect";
 import { getSelectedKeyOrKeys } from "../../utils/select/getSelectedKeyOrKeys";
@@ -92,7 +92,7 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
                 variant: "default",
                 size: "sm",
                 className: cn(
-                  "transition-colors cursor-default rounded-md !rounded-r-none w-full h-10 flex items-center justify-between border !bg-white dark:!bg-secondary hover:dark:!bg-secondary hover:dark:!brightness-100 group-hover:dark:!border-gray-500 group-hover:!border-gray-500",
+                  "cursor-default !rounded-r-none w-full h-10 flex items-center justify-between border !bg-white dark:!bg-secondary hover:dark:!bg-secondary hover:dark:!brightness-100 group-hover:dark:!border-gray-500 group-hover:!border-gray-500",
                   props.errorMessage &&
                     "!border-red-500 focus:!border-red-700 dark:focus:!border-red-700",
 
