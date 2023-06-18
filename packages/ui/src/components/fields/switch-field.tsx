@@ -3,7 +3,7 @@ import { VisuallyHidden } from "@react-aria/visually-hidden";
 import { useToggleState } from "@react-stately/toggle";
 import * as React from "react";
 import { classNames } from "../../utils/classNames";
-import { HoverCard } from "../hover-card";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "../hover-card";
 import { InfoCircle } from "react-bootstrap-icons";
 
 interface SwitchFieldProps extends AriaSwitchProps {
@@ -58,8 +58,12 @@ export function SwitchField(props: SwitchFieldProps) {
 
       {props.description ? (
         <span className="ml-1">
-          <HoverCard portal={false} trigger={<InfoCircle width={14} height={14} />}>
-            {props.description}
+          <HoverCard>
+            <HoverCardTrigger asChild>
+              <InfoCircle width={14} height={14} />
+            </HoverCardTrigger>
+
+            <HoverCardContent pointerEvents>{props.description}</HoverCardContent>
           </HoverCard>
         </span>
       ) : null}

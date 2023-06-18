@@ -1,6 +1,5 @@
 import { EmsFdDeputy, Officer, WhitelistStatus } from "@snailycad/types";
-import { Button } from "@snailycad/ui";
-import { HoverCard } from "components/shared/HoverCard";
+import { Button, HoverCard, HoverCardContent, HoverCardTrigger } from "@snailycad/ui";
 import { Status } from "components/shared/Status";
 import { useTranslations } from "next-intl";
 import { Info } from "react-bootstrap-icons";
@@ -18,23 +17,25 @@ export function UnitDepartmentStatus({ unit }: Props) {
       <Status fallback="—">{departmentStatus}</Status>
 
       {unit.whitelistStatus?.status === WhitelistStatus.PENDING ? (
-        <HoverCard
-          trigger={
+        <HoverCard>
+          <HoverCardTrigger asChild>
             <Button className="px-1 cursor-default">
               <Info />
             </Button>
-          }
-        >
-          <p className="max-w-[400px]">
-            {t(
-              unit.department?.isDefaultDepartment
-                ? "pendingAccessDepartment"
-                : "pendingAccessDepartmentNoDefault",
-              {
-                defaultDepartment: unit.department?.value.value,
-              },
-            )}
-          </p>
+          </HoverCardTrigger>
+
+          <HoverCardContent pointerEvents>
+            <p className="max-w-[400px]">
+              {t(
+                unit.department?.isDefaultDepartment
+                  ? "pendingAccessDepartment"
+                  : "pendingAccessDepartmentNoDefault",
+                {
+                  defaultDepartment: unit.department?.value.value,
+                },
+              )}
+            </p>
+          </HoverCardContent>
         </HoverCard>
       ) : null}
     </span>

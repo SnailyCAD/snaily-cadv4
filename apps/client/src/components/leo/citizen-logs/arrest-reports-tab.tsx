@@ -1,6 +1,13 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { Button, Loader, TabsContent } from "@snailycad/ui";
+import {
+  Button,
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+  Loader,
+  TabsContent,
+} from "@snailycad/ui";
 import { Record, RecordType } from "@snailycad/types";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
@@ -11,7 +18,6 @@ import { ModalIds } from "types/modal-ids";
 import { ManageRecordModal } from "../modals/manage-record/manage-record-modal";
 import useFetch from "lib/useFetch";
 import { Status } from "components/shared/Status";
-import { HoverCard } from "components/shared/HoverCard";
 import { ViolationsColumn } from "../ViolationsColumn";
 import type {
   GetManagePendingArrestReports,
@@ -100,14 +106,14 @@ export function ArrestReportsTab({ arrestReports }: Props) {
               officer: officer ? `${callsign} ${officerName}` : common("none"),
               postal: record.postal || common("none"),
               notes: (
-                <HoverCard
-                  trigger={
+                <HoverCard>
+                  <HoverCardTrigger asChild>
                     <span className="block max-w-[300px] truncate cursor-help">
                       {record.notes || common("none")}
                     </span>
-                  }
-                >
-                  {record.notes}
+                  </HoverCardTrigger>
+
+                  <HoverCardContent>{record.notes}</HoverCardContent>
                 </HoverCard>
               ),
               violations: <ViolationsColumn violations={record.violations} />,

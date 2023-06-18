@@ -24,3 +24,4 @@ export {
   ContextMenuTrigger,
 } from "./context-menu";
 export * from "./accordion";
+export * from "./hover-card";

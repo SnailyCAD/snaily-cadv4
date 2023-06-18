@@ -1,14 +1,14 @@
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@snailycad/ui";
 import { useFormatter } from "use-intl";
-import { HoverCardProps, HoverCard } from "./HoverCard";
 
-interface Props extends Omit<HoverCardProps, "trigger" | "children"> {
+interface Props {
   children: Date | string | number;
   onlyDate?: boolean;
   isDateOfBirth?: boolean;
   relative?: boolean;
 }
 
-export function FullDate({ children, onlyDate, relative, isDateOfBirth, ...rest }: Props) {
+export function FullDate({ children, onlyDate, relative, isDateOfBirth }: Props) {
   const { dateTime, relativeTime } = useFormatter();
 
   const isCorrectDate = isValidDate(children);
@@ -29,18 +29,18 @@ export function FullDate({ children, onlyDate, relative, isDateOfBirth, ...rest 
   const triggerFormattedTime = relative ? relativeFormattedTime : formattedTime;
 
   return (
-    <HoverCard
-      openDelay={100}
-      trigger={
+    <HoverCard openDelay={100}>
+      <HoverCardTrigger asChild>
         <span suppressHydrationWarning className="z-30">
           {triggerFormattedTime}
         </span>
-      }
-      {...rest}
-    >
-      <span suppressHydrationWarning className="font-semibold">
-        {dateTime(date, { dateStyle: "full", timeStyle: onlyDate ? undefined : "medium" })}
-      </span>
+      </HoverCardTrigger>
+
+      <HoverCardContent pointerEvents>
+        <span suppressHydrationWarning className="font-semibold">
+          {dateTime(date, { dateStyle: "full", timeStyle: onlyDate ? undefined : "medium" })}
+        </span>
+      </HoverCardContent>
     </HoverCard>
   );
 }

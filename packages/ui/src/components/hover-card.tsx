@@ -1,56 +1,26 @@
 import * as React from "react";
-import * as RHoverCard from "@radix-ui/react-hover-card";
+import * as HoverCardPrimitive from "@radix-ui/react-hover-card";
 import { classNames } from "../utils/classNames";
 
-export interface HoverCardProps extends RHoverCard.HoverCardProps {
-  trigger: any;
-  children: React.ReactNode;
-  /** defaults to `false` */
-  pointerEvents?: boolean;
-  contentProps?: RHoverCard.HoverCardContentProps;
-  showArrow?: boolean;
-  disabled?: boolean;
-  side?: RHoverCard.HoverCardContentProps["side"];
-  portal?: boolean;
+export const HoverCardTrigger = HoverCardPrimitive.Trigger;
+
+export function HoverCard(props: React.ComponentPropsWithoutRef<typeof HoverCardPrimitive.Root>) {
+  return <HoverCardPrimitive.Root closeDelay={100} openDelay={0} {...props} />;
 }
 
-export function HoverCard({
-  trigger,
-  children,
-  pointerEvents,
-  contentProps,
-  disabled,
-  side,
-  portal = true,
-  ...rest
-}: HoverCardProps) {
-  if (disabled) {
-    return trigger;
-  }
-
-  const Portal = portal ? RHoverCard.Portal : React.Fragment;
-  const portalProps = portal ? { className: "z-50" } : {};
-
-  return (
-    <RHoverCard.Root closeDelay={100} openDelay={0} {...rest}>
-      <RHoverCard.Trigger asChild>{trigger}</RHoverCard.Trigger>
-      <Portal {...portalProps}>
-        <RHoverCard.Content
-          side={side}
-          sideOffset={5}
-          {...contentProps}
-          className={classNames(
-            pointerEvents ? "pointer-events-auto" : "pointer-events-none",
-            "bg-gray-200 dark:border dark:border-secondary dark:bg-tertiary shadow-lg w-full max-w-lg p-3 rounded-md dark:text-white hover-card dropdown-fade !z-10",
-            contentProps?.className,
-          )}
-        >
-          {children}
-          {rest.showArrow ?? true ? (
-            <RHoverCard.Arrow className="fill-current text-white dark:text-tertiary" />
-          ) : null}
-        </RHoverCard.Content>
-      </Portal>
-    </RHoverCard.Root>
-  );
-}
+export const HoverCardContent = React.forwardRef<
+  React.ElementRef<typeof HoverCardPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof HoverCardPrimitive.Content> & { pointerEvents?: boolean }
+>(({ className, align = "center", sideOffset = 4, pointerEvents = false, ...props }, ref) => (
+  <HoverCardPrimitive.Content
+    ref={ref}
+    align={align}
+    sideOffset={sideOffset}
+    className={classNames(
+      pointerEvents ? "pointer-events-auto" : "pointer-events-none",
+      "bg-gray-200 dark:border dark:border-secondary dark:bg-tertiary shadow-lg w-full max-w-lg p-3 rounded-md dark:text-white hover-card animate-enter !z-10",
+    )}
+    {...props}
+  />
+));
+HoverCardContent.displayName = HoverCardPrimitive.Content.displayName;
