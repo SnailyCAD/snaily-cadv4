@@ -2,7 +2,7 @@ import * as React from "react";
 import { AriaButtonProps, useButton } from "@react-aria/button";
 import { mergeProps } from "@react-aria/utils";
 import { VariantProps, cva } from "class-variance-authority";
-import { cn } from "../utils/classNames";
+import { cn } from "../../utils/classNames";
 
 export const buttonVariants = cva(
   "rounded-md disabled:opacity-60 disabled:cursor-not-allowed transition-colors",

@@ -5,7 +5,7 @@ import { ModalProvider } from "@react-aria/overlays";
 import { classNames, cn } from "../../utils/classNames";
 import { Popover } from "../overlays/popover";
 import { ListBox } from "../list/select/list-box";
-import { buttonVariants } from "../button";
+import { buttonVariants } from "../button/button";
 import { useMultiSelectState } from "../../hooks/select/useMultiSelectState";
 import { useMultiSelect } from "../../hooks/select/useMultiSelect";
 import { getSelectedKeyOrKeys } from "../../utils/select/getSelectedKeyOrKeys";

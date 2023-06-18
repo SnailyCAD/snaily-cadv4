@@ -1,7 +1,7 @@
 import * as React from "react";
 import { FormikHelpers, Form, Formik, FormikConfig, FormikProps, FormikValues } from "formik";
 import { classNames } from "../../utils/classNames";
-import { Button } from "../button";
+import { Button } from "../button/button";
 import { ArrowLeft, ArrowRight } from "react-bootstrap-icons";
 import { MultiFormStep, MultiFormStepItem } from "./multi-form-step";
 

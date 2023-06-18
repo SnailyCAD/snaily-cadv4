@@ -1,7 +1,7 @@
 import type { SelectValue } from "../../fields/select-field";
 import type { MultiSelectState } from "../../../hooks/select/useMultiSelectState";
 import { ChevronDown, X } from "react-bootstrap-icons";
-import { Button } from "../../button";
+import { Button } from "../../button/button";
 import { classNames } from "../../../utils/classNames";
 import type { ReactNode } from "react";
 

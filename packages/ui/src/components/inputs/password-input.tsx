@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button } from "../button";
+import { Button } from "../button/button";
 import { useTranslations } from "next-intl";
 
 export function PasswordInput({ inputRef }: { inputRef: React.RefObject<HTMLInputElement> }) {

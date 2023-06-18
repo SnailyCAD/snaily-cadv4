@@ -4,7 +4,7 @@ export * from "./fields/text-field";
 export * from "./inputs/input";
 export * from "./inputs/textarea";
 export * from "./overlays/popover";
-export * from "./button";
+export * from "./button/button";
 export * from "./fields/radio-group-field";
 export * from "./breadcrumbs/breadcrumbs";
 export * from "./breadcrumbs/breadcrumb-item";
@@ -14,7 +14,7 @@ export * from "./multi-form/multi-form";
 export * from "./dnd/index";
 export * from "./tab-list";
 export { SwitchField } from "./fields/switch-field";
-export * from "./alert";
+export * from "./alert/alert";
 export * from "./dropdown";
 export {
   ContextMenu,
