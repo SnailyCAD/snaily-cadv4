@@ -1,6 +1,8 @@
+import * as React from "react";
 import "../src/tailwind.css";
 import type { Preview } from "@storybook/react";
 import { withThemeByDataAttribute } from "@storybook/addon-styling";
+import { NextIntlProvider } from "next-intl";
 
 const preview: Preview = {
   parameters: {
@@ -23,6 +25,11 @@ export const decorators = [
     defaultTheme: "dark",
     attributeName: "data-theme",
   }),
+  (Story) => (
+    <NextIntlProvider locale="en">
+      <Story />
+    </NextIntlProvider>
+  ),
 ];
 
 export default preview;
