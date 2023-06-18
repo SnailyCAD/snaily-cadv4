@@ -58,7 +58,8 @@ const parsedCORSOrigin = parseCORSOrigin(process.env.CORS_ORIGIN_URL ?? "http://
     compress(),
     json({ limit: "500kb" }),
     cors({
-      origin: parsedCORSOrigin,
+      // todo: only in dev localhost:6006
+      origin: [parsedCORSOrigin, "http://localhost:6006"],
       credentials: true,
     }),
     Sentry.Handlers.requestHandler({

@@ -6,14 +6,14 @@ import { buttonVariants } from "../../button/button";
 import { cn } from "../../../utils/classNames";
 import { Check } from "react-bootstrap-icons";
 
-interface OptionProps {
-  item: Node<unknown>;
-  state: ListState<unknown>;
+interface OptionProps<T> {
+  item: Node<T>;
+  state: ListState<T>;
 }
 
-export function AsyncListFieldOption(props: OptionProps) {
+export function AsyncListFieldOption<T>(props: OptionProps<T>) {
   const ref = React.useRef<HTMLLIElement>(null);
-  const { optionProps, isDisabled, isFocused, isSelected } = useOption(
+  const { optionProps, isDisabled, isFocusVisible, isSelected } = useOption<T>(
     { key: props.item.key },
     props.state,
     ref,
@@ -24,16 +24,17 @@ export function AsyncListFieldOption(props: OptionProps) {
       {...optionProps}
       ref={ref}
       className={buttonVariants({
+        variant: "transparent",
         size: "sm",
         className: cn(
-          "flex items-center justify-between",
-          "rounded-md my-1 dark:text-white dark:hover:bg-secondary hover:bg-gray-400 focus:bg-gray-400 dark:focus:bg-secondary  cursor-pointer",
-          (isSelected || isFocused) && "dark:bg-secondary bg-gray-400",
-          isDisabled && "cursor-not-allowed opacity-70",
+          "flex items-center justify-between my-1 hover:bg-gray-300 dark:hover:bg-secondary focus:bg-gray-300 dark:focus:bg-secondary",
+          (isSelected || isFocusVisible) && "dark:bg-secondary bg-gray-400",
+          isDisabled && "cursor-not-allowed opacity-80",
         ),
       })}
     >
       {props.item.rendered}
+
       {isSelected ? (
         <Check aria-label={`Selected ${props.item.textValue}`} className="dark:text-gray-400" />
       ) : null}

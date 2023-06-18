@@ -20,6 +20,9 @@ const MESSAGES_REQUIRED_IN_COMPONENTS = {
   Common: {
     optionalField: "Optional",
     select: "Select...",
+    startTyping: "Start typing...",
+    noOptions: "No options",
+    searching: "Searching...",
   },
 };
 
