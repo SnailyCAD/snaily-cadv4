@@ -31,8 +31,11 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Run turbo build
-        run: yarn turbo run build
+      - name: Build packages
+        run: yarn turbo run build --filter="{packages/**/**}"
+
+      - name: Build apps
+        run: yarn turbo run build --filter="{apps/**/**}"
 
       - name: Run turbo typecheck
         run: yarn turbo run typecheck
