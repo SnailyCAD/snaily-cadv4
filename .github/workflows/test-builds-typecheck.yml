@@ -33,6 +33,8 @@ jobs:
 
       - name: Build packages
         run: yarn turbo run build --filter="{packages/**/**}"
+        env:
+          NODE_OPTIONS: --max-old-space-size=6144
 
       - name: Build apps
         run: yarn turbo run build --filter="{apps/**/**}"
