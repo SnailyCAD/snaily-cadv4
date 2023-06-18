@@ -1,7 +1,7 @@
 import { components, MultiValueGenericProps } from "react-select";
-import { HoverCard } from "components/shared/HoverCard";
 import type { DriversLicenseCategoryValue } from "@snailycad/types";
 import { dataToSlate, Editor } from "components/editor/editor";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@snailycad/ui";
 
 export function MultiValueContainerDescription(props: MultiValueGenericProps<any>) {
   const value = props.data as Pick<DriversLicenseCategoryValue, "description">;
@@ -17,10 +17,14 @@ export function MultiValueContainerDescription(props: MultiValueGenericProps<any
   }
 
   return (
-    <HoverCard portal={false} pointerEvents trigger={trigger}>
-      <div className="dark:text-gray-200 mt-2 text-base min-w-[300px]">
-        <Editor isReadonly value={dataToSlate(value)} />
-      </div>
+    <HoverCard>
+      <HoverCardTrigger asChild>{trigger}</HoverCardTrigger>
+
+      <HoverCardContent pointerEvents>
+        <div className="dark:text-gray-200 mt-2 text-base min-w-[300px]">
+          <Editor isReadonly value={dataToSlate(value)} />
+        </div>
+      </HoverCardContent>
     </HoverCard>
   );
 }

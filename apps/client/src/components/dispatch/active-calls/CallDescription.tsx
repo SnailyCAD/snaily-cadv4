@@ -1,10 +1,10 @@
 import { DEFAULT_EDITOR_DATA } from "components/editor/editor";
-import { HoverCard } from "components/shared/HoverCard";
 import { classNames } from "lib/classNames";
 import { useTranslations } from "next-intl";
 import type { Descendant } from "slate";
 import dynamic from "next/dynamic";
 import { slateDataToString } from "@snailycad/utils/editor";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@snailycad/ui";
 
 const Editor = dynamic(async () => (await import("components/editor/editor")).Editor, {
   ssr: false,
@@ -35,25 +35,26 @@ export function CallDescription({ data, nonCard }: Props) {
   }
 
   return (
-    <HoverCard
-      pointerEvents
-      disabled={hoverCardDisabled}
-      trigger={
+    <HoverCard open={hoverCardDisabled ? false : undefined}>
+      <HoverCardTrigger asChild>
         <div
           className={classNames(
-            "w-[300px] truncate overflow-hidden cursor-help",
+            "w-[300px] truncate overflow-hidden",
             shouldTruncate && (nonCard ? "truncate-custom-non-card" : "truncate-custom"),
+            shouldTruncate && "cursor-help",
           )}
         >
           {data.description || stringDescription}
         </div>
-      }
-    >
-      {data.description ? (
-        <p className="w-full whitespace-pre-wrap">{data.description}</p>
-      ) : (
-        <Editor hideBorder value={data.descriptionData ?? DEFAULT_EDITOR_DATA} isReadonly />
-      )}
+      </HoverCardTrigger>
+
+      <HoverCardContent pointerEvents>
+        {data.description ? (
+          <p className="w-full whitespace-pre-wrap">{data.description}</p>
+        ) : (
+          <Editor hideBorder value={data.descriptionData ?? DEFAULT_EDITOR_DATA} isReadonly />
+        )}
+      </HoverCardContent>
     </HoverCard>
   );
 }

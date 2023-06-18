@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { Button } from "@snailycad/ui";
+import { Button, HoverCard, HoverCardContent, HoverCardTrigger } from "@snailycad/ui";
 import { ActiveOfficer, useLeoState } from "state/leo-state";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
@@ -23,7 +23,6 @@ import { OfficerColumn } from "./active-units/officers/officer-column";
 import { isUnitOfficer } from "@snailycad/utils/typeguards";
 import { ActiveIncidentColumn } from "./active-units/officers/active-incident-column";
 import { ActiveCallColumn } from "./active-units/officers/active-call-column";
-import { HoverCard } from "components/shared/HoverCard";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useMounted } from "@casper124578/useful";
 import { shallow } from "zustand/shallow";
@@ -179,15 +178,16 @@ function ActiveOfficers({ initialOfficers }: Props) {
                   department:
                     (isUnitOfficer(officer) && officer.department?.value.value) ?? common("none"),
                   division: (
-                    <HoverCard
-                      trigger={
+                    <HoverCard>
+                      <HoverCardTrigger asChild>
                         <p className="max-w-xs truncate">
                           {isUnitOfficer(officer) && formatUnitDivisions(officer)}
                         </p>
-                      }
-                      contentProps={{ className: "whitespace-pre-wrap" }}
-                    >
-                      {isUnitOfficer(officer) && formatUnitDivisions(officer)}
+                      </HoverCardTrigger>
+
+                      <HoverCardContent className="whitespace-pre-wrap" pointerEvents>
+                        {isUnitOfficer(officer) && formatUnitDivisions(officer)}
+                      </HoverCardContent>
                     </HoverCard>
                   ),
                   rank: (isUnitOfficer(officer) && officer.rank?.value) ?? common("none"),
