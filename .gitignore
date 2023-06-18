@@ -42,3 +42,6 @@ test.mjs
 v
 # Sentry
 .sentryclirc
+
+# storybook
+storybook-static

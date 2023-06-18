@@ -12,4 +12,4 @@ jobs:
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          storybookBaseDir: packages/ui
+          workingDir: packages/ui
