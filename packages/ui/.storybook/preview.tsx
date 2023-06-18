@@ -19,6 +19,7 @@ const preview: Preview = {
 const MESSAGES_REQUIRED_IN_COMPONENTS = {
   Common: {
     optionalField: "Optional",
+    select: "Select...",
   },
 };
 
