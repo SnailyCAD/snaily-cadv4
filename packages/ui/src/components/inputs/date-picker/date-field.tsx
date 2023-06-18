@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useLocale } from "@react-aria/i18n";
-import { useDateFieldState, DateSegment, DateFieldState } from "@react-stately/datepicker";
+import { useDateFieldState, type DateSegment, DateFieldState } from "@react-stately/datepicker";
 import { AriaDatePickerProps, useDateField, useDateSegment } from "@react-aria/datepicker";
 import { createCalendar } from "@internationalized/date";
 import { classNames } from "../../../utils/classNames";

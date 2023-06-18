@@ -43,7 +43,8 @@
     "entry": [
       "src/**/*.ts",
       "src/**/*.tsx",
-      "!src/**/*.stories.tsx"
+      "!src/**/*.stories.tsx",
+      "!src/stories/**/*"
     ],
     "dts": true,
     "bundle": false,

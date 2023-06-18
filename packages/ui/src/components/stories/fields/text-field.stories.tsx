@@ -33,6 +33,14 @@ export const Optional: Story = {
   },
 };
 
+export const WithDescription: Story = {
+  args: {
+    label: "Username",
+    placeholder: "Enter your username",
+    description: "This is a description inside a hover-card",
+  },
+};
+
 export const TextFieldTextArea: Story = {
   args: {
     label: "Username",

@@ -71,7 +71,7 @@ export function DatePickerField({ value: _value, ...rest }: Props) {
           <div
             className={classNames(
               "relative bg-white dark:bg-secondary p-1.5 px-3 w-full rounded-l-md border border-r-0",
-              rest.isDisabled ? "cursor-not-allowed opacity-80" : "",
+              rest.isDisabled ? "cursor-not-allowed opacity-60" : "",
               rest.errorMessage
                 ? "border-red-500 focus:border-red-700 dark:focus:border-red-700"
                 : "border-gray-200 dark:border-quinary",
@@ -84,18 +84,20 @@ export function DatePickerField({ value: _value, ...rest }: Props) {
           </div>
           <Button
             {...buttonProps}
+            isDisabled={rest.isDisabled}
             type="button"
             className={classNames(
-              rest.isClearable ? "!rounded-none -mr-[1px]" : "rounded-l-none",
+              rest.isClearable ? "!rounded-none -mr-[2px]" : "rounded-l-none",
               rest.errorMessage &&
                 "!border-red-500 focus:!border-red-700 dark:!focus:border-red-700",
             )}
           >
-            <Calendar2 className="w-5 h-5 fill-white" />
+            <Calendar2 className="w-5 h-5 dark:fill-white" />
           </Button>
           {rest.isClearable ? (
             <Button
               size="xs"
+              isDisabled={rest.isDisabled}
               // @ts-expect-error null is allowed here to clear the date value
               onPress={() => state.setValue(null)}
               type="button"
@@ -106,7 +108,7 @@ export function DatePickerField({ value: _value, ...rest }: Props) {
                   "!border-red-500 focus:!border-red-700 dark:!focus:border-red-700",
               )}
             >
-              <X className="w-5 h-5 fill-white" />
+              <X className="w-5 h-5 dark:fill-white" />
             </Button>
           ) : null}
         </div>
