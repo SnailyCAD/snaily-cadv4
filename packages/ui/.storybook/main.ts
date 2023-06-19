@@ -18,6 +18,9 @@ const config: StorybookConfig = {
   async viteFinal(config) {
     return mergeConfig(config, {
       define: { "process.env": {} },
+      rollupOptions: {
+        external: "@snailycad/utils",
+      },
     });
   },
 };

@@ -3,7 +3,7 @@ import { Feature } from "@prisma/client";
 
 const FEATURES: Feature[] = Object.values(Feature);
 
-const DEFAULTS: Partial<Record<Feature, { isEnabled: boolean }>> = {
+const DEFAULT_DISABLED_FEATURES: Partial<Record<Feature, { isEnabled: boolean }>> = {
   CUSTOM_TEXTFIELD_VALUES: { isEnabled: false },
   DMV: { isEnabled: false },
   USER_API_TOKENS: { isEnabled: false },
@@ -23,6 +23,7 @@ const DEFAULTS: Partial<Record<Feature, { isEnabled: boolean }>> = {
   SIGNAL_100_CITIZEN: { isEnabled: false },
   FORCE_ACCOUNT_PASSWORD: { isEnabled: false },
   USER_DEFINED_CALLSIGN_COMBINED_UNIT: { isEnabled: false },
+  REQUIRED_CITIZEN_IMAGE: { isEnabled: false },
 };
 
 /**
@@ -34,7 +35,7 @@ export async function setDefaultCadFeatures() {
   if (!cad) return;
 
   for (const feature of FEATURES) {
-    const isEnabled = DEFAULTS[feature]?.isEnabled ?? true;
+    const isEnabled = DEFAULT_DISABLED_FEATURES[feature]?.isEnabled ?? true;
 
     const existing = await prisma.cadFeature.findUnique({
       where: { feature },

@@ -299,7 +299,9 @@
     "MEDICAL_RECORDS_CITIZEN_MANAGEABLE": "Medical Records Citizen Manageable",
     "MEDICAL_RECORDS_CITIZEN_MANAGEABLE-description": "When enabled, this will allow citizens to manage their own medical records. When disabled, this will only allow EMS/FD to manage citizen medical records.",
     "PETS": "Pets",
-    "PETS-description": "When enabled, this will allow citizens to create pets."
+    "PETS-description": "When enabled, this will allow citizens to create pets.",
+    "REQUIRED_CITIZEN_IMAGE": "Required Citizen Image",
+    "REQUIRED_CITIZEN_IMAGE-description": "When enabled, this will require citizens to upload an image when creating a citizen."
   },
   "Permissions": {
     "defaultPermissions": "Default Permissions",

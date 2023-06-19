@@ -30,6 +30,11 @@ import { z } from "zod";
 const rootDir = __dirname;
 const processEnvPort = process.env.PORT || process.env.PORT_API;
 const parsedCORSOrigin = parseCORSOrigin(process.env.CORS_ORIGIN_URL ?? "http://localhost:3000");
+const allowedCorsOrigins = [parsedCORSOrigin];
+
+if (process.env.NODE_ENV === "development") {
+  allowedCorsOrigins.push("http://localhost:6006");
+}
 
 @Configuration({
   rootDir,
@@ -57,10 +62,7 @@ const parsedCORSOrigin = parseCORSOrigin(process.env.CORS_ORIGIN_URL ?? "http://
     cookieParser(),
     compress(),
     json({ limit: "500kb" }),
-    cors({
-      origin: parsedCORSOrigin,
-      credentials: true,
-    }),
+    cors({ origin: allowedCorsOrigins, credentials: true }),
     Sentry.Handlers.requestHandler({
       request: true,
       serverName: true,
