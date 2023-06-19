@@ -15,6 +15,8 @@ jobs:
     steps:
       - uses: styfle/cancel-workflow-action@0.9.1
         with:
-          # `60597620` = Chromatic, `14026219` = Lint, `19288873` = "Typecheck & test builds in workspaces/*"
+          # `60597620` = Chromatic
+          # `14026219` = Lint
+          # `19288873` = "Typecheck & test builds in workspaces/*"
           workflow_id: 60597620, 14026219, 19288873
           access_token: ${{ github.token }}
