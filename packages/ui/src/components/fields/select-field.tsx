@@ -28,6 +28,7 @@ export type SelectFieldProps<T extends SelectValue> = Omit<
   label: string;
   isClearable?: boolean;
   isOptional?: boolean;
+  isLoading?: boolean;
   children?: React.ReactNode;
   options: T[];
   className?: string;
@@ -118,6 +119,7 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
               isClearable={props.isClearable}
               errorMessage={props.errorMessage}
               isDisabled={props.isDisabled}
+              isLoading={props.isLoading}
             />
           </div>
           {state.isOpen && (

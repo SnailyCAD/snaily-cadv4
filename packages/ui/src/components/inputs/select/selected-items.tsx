@@ -42,7 +42,11 @@ export function SelectedItems<T extends SelectValue>(props: Props<T>) {
   }
 
   if (selectedItem) {
-    return <span>{selectedItem.textValue}</span>;
+    return (
+      <span className="w-full inline-block overflow-hidden whitespace-nowrap text-ellipsis">
+        {selectedItem.textValue}
+      </span>
+    );
   }
 
   return <span>{common("select")}</span>;

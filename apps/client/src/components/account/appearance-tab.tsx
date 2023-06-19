@@ -1,11 +1,9 @@
 import * as React from "react";
-import { FormField } from "components/form/FormField";
 import { useAuth } from "context/AuthContext";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
 import { StatusViewMode, TableActionsAlignment } from "@snailycad/types";
-import { Select } from "components/form/Select";
 import {
   Button,
   Loader,
@@ -106,7 +104,7 @@ export function AppearanceTab({ availableSounds }: Props) {
       <TabsContent aria-label={t("appearanceSettings")} value="appearanceSettings">
         <h1 className="text-2xl font-semibold">{t("appearanceSettings")}</h1>
         <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-          {({ handleChange, setFieldValue, values, errors }) => (
+          {({ setFieldValue, values, errors }) => (
             <Form className="mt-3">
               <SwitchField
                 isSelected={values.developerMode}
@@ -168,18 +166,19 @@ export function AppearanceTab({ availableSounds }: Props) {
                       {t("speech")}
                     </SwitchField>
 
-                    <FormField label={t("speechVoice")}>
-                      <Select
-                        disabled={!values.soundSettings.speech}
-                        values={voices.map((voice) => ({
-                          label: voice.name,
-                          value: voice.voiceURI,
-                        }))}
-                        value={values.soundSettings.speechVoice}
-                        onChange={handleChange}
-                        name="soundSettings.speechVoice"
-                      />
-                    </FormField>
+                    <SelectField
+                      isClearable
+                      label={t("speechVoice")}
+                      isDisabled={!values.soundSettings.speech}
+                      options={voices.map((voice) => ({
+                        label: voice.name,
+                        value: voice.voiceURI,
+                      }))}
+                      selectedKey={values.soundSettings.speechVoice}
+                      onSelectionChange={(value) =>
+                        setFieldValue("soundSettings.speechVoice", value)
+                      }
+                    />
                   </section>
                 ) : null}
 

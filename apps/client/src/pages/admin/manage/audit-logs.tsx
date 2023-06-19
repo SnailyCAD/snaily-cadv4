@@ -11,11 +11,9 @@ import { useModal } from "state/modalState";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { SearchArea } from "components/shared/search/search-area";
 import { FullDate } from "components/shared/FullDate";
-import { Button } from "@snailycad/ui";
+import { Button, SelectField } from "@snailycad/ui";
 import { ModalIds } from "types/modal-ids";
 import dynamic from "next/dynamic";
-import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
 import { AuditLogActionType } from "@snailycad/audit-logger";
 import { defaultPermissions } from "@snailycad/permissions";
 
@@ -67,19 +65,19 @@ export default function ManageAuditLogs({ data }: Props) {
         asyncTable={asyncTable}
         search={{ search, setSearch }}
       >
-        <FormField className="w-full max-w-[15rem]" label={common("type")}>
-          <Select
-            isClearable
-            value={asyncTable.filters?.type ?? null}
-            onChange={(event) =>
-              asyncTable.setFilters((prev) => ({ ...prev, type: event.target.value }))
-            }
-            values={ActionTypes.map((type) => ({
-              label: type,
-              value: type,
-            }))}
-          />
-        </FormField>
+        <SelectField
+          label={common("type")}
+          className="w-full max-w-[17rem]"
+          isClearable
+          selectedKey={asyncTable.filters?.type ?? null}
+          onSelectionChange={(value) => {
+            asyncTable.setFilters((prev) => ({ ...prev, type: value }));
+          }}
+          options={ActionTypes.map((type) => ({
+            label: type,
+            value: type,
+          }))}
+        />
       </SearchArea>
 
       <Table

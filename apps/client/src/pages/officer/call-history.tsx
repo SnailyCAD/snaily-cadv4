@@ -9,11 +9,10 @@ import type { AssignedUnit } from "@snailycad/types";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import type { Full911Call } from "state/dispatch/dispatch-state";
-import { Input, Loader, Button } from "@snailycad/ui";
+import { Loader, Button, TextField } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
 import { LinkCallToIncidentModal } from "components/leo/call-history/LinkCallToIncidentModal";
-import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
@@ -115,22 +114,23 @@ export default function CallHistory({ data, incidents }: Props) {
         <p className="mt-5">{"No calls ended yet."}</p>
       ) : (
         <>
-          <div className="mb-2">
-            <FormField label={common("search")} className="my-2">
-              <div className="flex gap-2">
-                <Input onChange={(e) => setSearch(e.target.value)} value={search} />
-                {hasManagePermissions ? (
-                  <Button
-                    onPress={() => openModal(ModalIds.AlertPurgeCalls)}
-                    className="flex items-center gap-2 ml-2 min-w-fit"
-                    disabled={state === "loading" || isEmpty(tableState.rowSelection)}
-                  >
-                    {state === "loading" ? <Loader /> : null}
-                    {t("purgeSelected")}
-                  </Button>
-                ) : null}
-              </div>
-            </FormField>
+          <div className="mb-2 flex gap-2 items-center">
+            <TextField
+              onChange={(value) => setSearch(value)}
+              value={search}
+              label={common("search")}
+              className="w-full"
+            />
+            {hasManagePermissions ? (
+              <Button
+                onPress={() => openModal(ModalIds.AlertPurgeCalls)}
+                className="flex items-center gap-2 min-w-fit h-10 mt-3.5"
+                disabled={state === "loading" || isEmpty(tableState.rowSelection)}
+              >
+                {state === "loading" ? <Loader /> : null}
+                {t("purgeSelected")}
+              </Button>
+            ) : null}
           </div>
 
           {search && asyncTable.pagination.totalDataCount !== data.totalCount ? (

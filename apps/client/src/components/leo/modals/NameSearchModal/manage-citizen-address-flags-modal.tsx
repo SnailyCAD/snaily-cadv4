@@ -1,7 +1,5 @@
 import type { Value } from "@snailycad/types";
-import { Button } from "@snailycad/ui";
-import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
+import { Button, SelectField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { useValues } from "context/ValuesContext";
@@ -34,7 +32,7 @@ export function ManageCitizenAddressFlagsModal() {
     const { json } = await execute<PutSearchActionsCitizenAddressFlagsData>({
       path: `/search/actions/citizen-address-flags/${currentResult.id}`,
       method: "PUT",
-      data: { addressFlags: values.addressFlags.map((v) => v.value) },
+      data: { addressFlags: values.addressFlags.map((v) => v) },
     });
 
     if (json.addressFlags) {
@@ -52,7 +50,7 @@ export function ManageCitizenAddressFlagsModal() {
   }
 
   const INITIAL_VALUES = {
-    addressFlags: currentResult.addressFlags?.map(makeValueOption) ?? [],
+    addressFlags: currentResult.addressFlags?.map((v) => v.id) ?? [],
   };
 
   return (
@@ -63,17 +61,16 @@ export function ManageCitizenAddressFlagsModal() {
       className="w-[600px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, values, errors, isValid }) => (
+        {({ setFieldValue, values, errors, isValid }) => (
           <Form autoComplete="off">
-            <FormField errorMessage={errors.addressFlags as string} label={cT("addressFlags")}>
-              <Select
-                isMulti
-                values={addressFlag.values.map(makeValueOption)}
-                name="addressFlags"
-                onChange={handleChange}
-                value={values.addressFlags}
-              />
-            </FormField>
+            <SelectField
+              errorMessage={errors.addressFlags as string}
+              label={cT("addressFlags")}
+              selectionMode="multiple"
+              options={addressFlag.values.map(makeValueOption)}
+              selectedKeys={values.addressFlags}
+              onSelectionChange={(keys) => setFieldValue("flags", keys)}
+            />
 
             <footer className="flex justify-end mt-5">
               <Button
