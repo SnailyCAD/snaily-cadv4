@@ -106,8 +106,7 @@ export function PlayerMarker({ player, handleToggle }: Props) {
       permissionsToCheck: defaultPermissions.defaultEmsFdPermissions,
     });
 
-  // eslint-disable-next-line eqeqeq
-  const hasUnit = isCADUser && player.unit != null;
+  const hasUnit = isCADUser && Boolean(player.unit);
 
   const showUnitsOnly = hiddenItems[MapItem.UNITS_ONLY];
 

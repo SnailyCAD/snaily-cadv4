@@ -70,8 +70,8 @@ export class JailController {
     if (jailTimeScale) {
       const citizenIdsToUpdate = {} as Record<string, string[]>;
 
-      citizens.map((citizen) => {
-        citizen.Record.map((record) => {
+      citizens.forEach((citizen) =>
+        citizen.Record.forEach((record) => {
           if (record.type === "ARREST_REPORT") {
             const totalJailTime = record.violations.reduce((ac, cv) => ac + (cv.jailTime || 0), 0);
             const time = convertToJailTimeScale(totalJailTime, jailTimeScale);
@@ -85,8 +85,8 @@ export class JailController {
               ];
             }
           }
-        });
-      });
+        }),
+      );
 
       await Promise.all(
         Object.entries(citizenIdsToUpdate).map(async ([citizenId, recordIds]) => {

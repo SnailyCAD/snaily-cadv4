@@ -166,6 +166,7 @@ export function Manage2FAModal() {
                 </p>
 
                 <img
+                  alt={t("scanQRCode")}
                   className="self-center"
                   width={350}
                   height={350}

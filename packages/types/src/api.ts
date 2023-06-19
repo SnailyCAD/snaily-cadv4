@@ -1,5 +1,4 @@
 import type * as Prisma from "@prisma/client";
-import type { WhitelistStatus } from "./index.js";
 import type * as Types from "./index.js";
 
 export * from "./api/admin.js";
@@ -79,7 +78,7 @@ export interface PostLoginUserData {
  */
 export type PostRegisterUserData = PostLoginUserData & {
   isOwner: boolean;
-  whitelistStatus?: WhitelistStatus;
+  whitelistStatus?: Types.WhitelistStatus;
 };
 
 /**

@@ -105,7 +105,7 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
       let hasAddedError = false as boolean; // as boolean because eslint gets upset otherwise.
       if (options.helpers) {
         for (const error of errors) {
-          Object.entries(error).map(([key, value]) => {
+          Object.entries(error).forEach(([key, value]) => {
             const translationOptions = typeof value === "string" ? undefined : value.data;
             const translationKey = typeof value === "string" ? value : value.message;
 

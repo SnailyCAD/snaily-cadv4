@@ -43,7 +43,7 @@ export function createFeaturesObject(features?: CadFeature[] | undefined) {
   const obj: CadFeatures = {} as CadFeatures;
   const featureExtraOptions: CadFeatureOptions = {} as CadFeatureOptions;
 
-  Object.keys(Feature).map((feature) => {
+  Object.keys(Feature).forEach((feature) => {
     const cadFeature = features?.find((v) => v.feature === feature);
 
     if (

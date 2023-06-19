@@ -57,7 +57,7 @@ export function useFeatureEnabled(
   const featuresObj = React.useMemo(() => {
     const obj: Record<Feature, boolean> = {} as Record<Feature, boolean>;
 
-    Object.keys(Feature).map((feature) => {
+    Object.keys(Feature).forEach((feature) => {
       const cadFeature = _features?.[feature as Feature];
 
       // @ts-expect-error - this is fine
