@@ -13,7 +13,7 @@
     "watch": "yarn tsup --watch --silent=false",
     "typecheck": "yarn tsc --noEmit",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "yarn workspace @snailycad/utils build && storybook build",
+    "build-storybook": "storybook build",
     "chromatic": "yarn chromatic"
   },
   "devDependencies": {
