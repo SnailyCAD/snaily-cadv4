@@ -214,14 +214,14 @@ export function ManageRecordModal(props: Props) {
           value: {
             key: v.penalCodeId,
             ...penalCode,
-            fine: { enabled: !!v.fine, value: v.fine ?? undefined },
+            fine: { enabled: Boolean(v.fine), value: v.fine ?? undefined },
             counts: { enabled: true, value: v.counts ?? undefined },
-            jailTime: { enabled: !!v.jailTime, value: v.jailTime ?? undefined },
+            jailTime: { enabled: Boolean(v.jailTime), value: v.jailTime ?? undefined },
             communityService: {
-              enabled: !!v.communityService,
+              enabled: Boolean(v.communityService),
               value: v.communityService ?? undefined,
             },
-            bail: { enabled: LEO_BAIL ? !!v.jailTime : false, value: v.bail ?? undefined },
+            bail: { enabled: LEO_BAIL ? Boolean(v.jailTime) : false, value: v.bail ?? undefined },
           },
         };
       }) ?? ([] as SelectValue<PenalCode>[]),
@@ -273,7 +273,7 @@ export function ManageRecordModal(props: Props) {
                       <AsyncListSearchField<BusinessSearchResult>
                         className="w-full"
                         autoFocus
-                        isDisabled={props.isReadOnly || !!props.record}
+                        isDisabled={props.isReadOnly || Boolean(props.record)}
                         setValues={({ localValue, node }) => {
                           const labelValue =
                             typeof localValue !== "undefined" ? { businessName: localValue } : {};
@@ -303,13 +303,13 @@ export function ManageRecordModal(props: Props) {
                         autoFocus
                         fromAuthUserOnly={false}
                         label={t("citizen")}
-                        isDisabled={props.isReadOnly || !!props.record}
+                        isDisabled={props.isReadOnly || Boolean(props.record)}
                         labelFieldName="citizenName"
                         valueFieldName="citizenId"
                       />
                     )}
                     <Button
-                      isDisabled={props.isReadOnly || !!props.record}
+                      isDisabled={props.isReadOnly || Boolean(props.record)}
                       onPress={() => setIsBusinessRecord((prev) => !prev)}
                       className="min-w-fit h-[39px] mt-7"
                     >

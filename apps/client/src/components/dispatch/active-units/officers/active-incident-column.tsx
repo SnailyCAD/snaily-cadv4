@@ -28,7 +28,7 @@ export function ActiveIncidentColumn({ unitId, incidentId, isDispatch, size = "m
   const { execute } = useFetch();
 
   const { data, isLoading } = useQuery({
-    enabled: !!incidentId,
+    enabled: Boolean(incidentId),
     queryKey: [unitId, incidentId],
     queryFn: async () => {
       const { json } = await execute<GetIncidentByIdData<"leo">>({

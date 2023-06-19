@@ -47,7 +47,7 @@ function TableCell<TData extends RowData>(
   const isNone = props.tableActionsAlignment === TableActionsAlignment.NONE;
   const dir = isNone ? "" : isLeft ? "left-0" : "right-0";
 
-  const hasStyle = !!props.rowProps?.style;
+  const hasStyle = Boolean(props.rowProps?.style);
   const bgColor = hasStyle
     ? null
     : props.rowProps?.className?.includes("bg")

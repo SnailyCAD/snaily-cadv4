@@ -504,7 +504,7 @@ export class AdminManageUnitsController {
         imageId: validatedImageURL,
         imageBlurData: await generateBlurPlaceholder(validatedImageURL),
         userId: data.userId,
-        isTemporary: !!data.userId,
+        isTemporary: Boolean(data.userId),
       },
       include: type === "officer" ? leoProperties : unitProperties,
     });

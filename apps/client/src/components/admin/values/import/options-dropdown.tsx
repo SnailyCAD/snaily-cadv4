@@ -92,8 +92,8 @@ function omitUnnecessaryProperties(values: readonly any[]) {
     if (isPenalCodeValue(v)) {
       return {
         ...omit(v, ["createdAt", "updatedAt", "position", "warningApplicable"]),
-        warningApplicable: !!v.warningApplicable,
-        warningNotApplicable: !!v.warningNotApplicable,
+        warningApplicable: Boolean(v.warningApplicable),
+        warningNotApplicable: Boolean(v.warningNotApplicable),
         warningFines: v.warningApplicable ? v.warningApplicable.fines : [],
         warningNotFines: v.warningNotApplicable ? v.warningNotApplicable.fines : [],
         prisonTerm: v.warningNotApplicable ? v.warningNotApplicable.prisonTerm : [],

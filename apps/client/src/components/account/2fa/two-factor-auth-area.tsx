@@ -18,7 +18,7 @@ export function TwoFactorAuthArea() {
         className="mt-3"
         variant={is2faEnabled ? "danger" : "default"}
         type="button"
-        onPress={() => openModal(ModalIds.Manage2FA, !!is2faEnabled)}
+        onPress={() => openModal(ModalIds.Manage2FA, Boolean(is2faEnabled))}
       >
         {is2faEnabled ? t("disable2FA") : t("enable2FA")}
       </Button>

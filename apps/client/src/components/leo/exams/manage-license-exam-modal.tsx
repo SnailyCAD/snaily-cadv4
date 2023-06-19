@@ -113,7 +113,7 @@ export function ManageExamModal({ exam, onClose, onCreate, onUpdate }: Props) {
               autoFocus
               errorMessage={errors.type}
               label={common("type")}
-              isDisabled={!!exam}
+              isDisabled={Boolean(exam)}
               name="type"
               options={options.LICENSE_EXAMS.map((v) => ({
                 label: v.toLowerCase(),
@@ -126,7 +126,7 @@ export function ManageExamModal({ exam, onClose, onCreate, onUpdate }: Props) {
             <CitizenSuggestionsField
               fromAuthUserOnly={false}
               label={common("citizen")}
-              isDisabled={!!exam}
+              isDisabled={Boolean(exam)}
               labelFieldName="citizenName"
               valueFieldName="citizenId"
             />

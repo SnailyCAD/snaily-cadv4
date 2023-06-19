@@ -99,6 +99,6 @@ export class PenalCodeGroupController {
       where: { id },
     });
 
-    return !!deleted;
+    return Boolean(deleted);
   }
 }

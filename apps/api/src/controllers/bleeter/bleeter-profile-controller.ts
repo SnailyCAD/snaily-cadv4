@@ -51,7 +51,7 @@ export class BleeterController {
       postsCount,
       followersCount,
       followingCount,
-      isFollowingThisProfile: !!isFollowingThisProfile,
+      isFollowingThisProfile: Boolean(isFollowingThisProfile),
     };
   }
 

@@ -66,7 +66,7 @@ export class CADSettingsController {
     });
     const registrationCode = hasManageCADSettingsPermissions
       ? cad?.registrationCode
-      : !!cad?.registrationCode;
+      : Boolean(cad?.registrationCode);
 
     return {
       ...setCADFeatures(cad),

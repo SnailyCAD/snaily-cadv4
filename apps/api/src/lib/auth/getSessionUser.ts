@@ -183,9 +183,9 @@ function createUserData(user: User & { password: string; hasPassword?: boolean }
   const { tempPassword, password = "", ...rest } = user;
   return {
     ...rest,
-    hasPassword: !!password.trim(),
+    hasPassword: Boolean(password.trim()),
     tempPassword: null,
-    hasTempPassword: !!tempPassword,
+    hasTempPassword: Boolean(tempPassword),
   } as GetUserData;
 }
 

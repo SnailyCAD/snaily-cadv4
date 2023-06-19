@@ -81,8 +81,8 @@ export function TonesModal({ types }: Props) {
 
   const validate = handleValidate(TONES_SCHEMA);
   const INITIAL_VALUES = {
-    emsFdTone: !!types.every((v) => v === ActiveToneType.EMS_FD),
-    leoTone: !!types.every((v) => v === ActiveToneType.LEO),
+    emsFdTone: Boolean(types.every((v) => v === ActiveToneType.EMS_FD)),
+    leoTone: Boolean(types.every((v) => v === ActiveToneType.LEO)),
     description: "",
     types,
   };

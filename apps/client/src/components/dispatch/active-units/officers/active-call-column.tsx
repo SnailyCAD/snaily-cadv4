@@ -32,7 +32,7 @@ export function ActiveCallColumn({ unitId, callId, isDispatch, size = "md" }: Pr
   const { execute } = useFetch();
 
   const { data, isLoading } = useQuery({
-    enabled: !!callId,
+    enabled: Boolean(callId),
     queryKey: [unitId, callId],
     queryFn: async () => {
       const { json } = await execute<Get911CallByIdData>({

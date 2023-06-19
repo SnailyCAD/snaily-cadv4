@@ -24,7 +24,7 @@ export function DefaultPermissionsTab() {
   ) {
     if (!cad) return;
 
-    const permissionsArray = Object.keys(values).filter((v) => !!values[v as PermissionNames]);
+    const permissionsArray = Object.keys(values).filter((v) => Boolean(values[v as PermissionNames]));
 
     const { json } = await execute<PutCADDefaultPermissionsData, typeof INITIAL_VALUES>({
       path: "/admin/manage/cad-settings/default-permissions",

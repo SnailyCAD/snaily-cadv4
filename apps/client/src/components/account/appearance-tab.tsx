@@ -189,7 +189,7 @@ export function AppearanceTab({ availableSounds }: Props) {
                   {availableSoundsArr.map((_name) => {
                     const fieldName = _name as keyof typeof INITIAL_VALUES.soundSettings;
                     const kebabCase = soundCamelCaseToKebabCase(fieldName);
-                    const soundAvailable = !!availableSounds[kebabCase];
+                    const soundAvailable = Boolean(availableSounds[kebabCase]);
 
                     if (!soundAvailable) return null;
                     if (["speech", "speechVoice"].includes(fieldName)) return null;

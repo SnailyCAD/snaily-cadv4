@@ -71,7 +71,7 @@ export function ManageCitizenForm({
   const tErrorMessages = useTranslations("ErrorMessages");
 
   const isNamesFieldDisabled =
-    typeof formFeatures?.["edit-name"] !== "undefined" ? !formFeatures["edit-name"] : !!citizen;
+    typeof formFeatures?.["edit-name"] !== "undefined" ? !formFeatures["edit-name"] : Boolean(citizen);
   const weightPrefix = cad?.miscCadSettings?.weightPrefix
     ? `(${cad.miscCadSettings.weightPrefix})`
     : "";
