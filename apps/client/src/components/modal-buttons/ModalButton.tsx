@@ -1,5 +1,5 @@
 import { useTranslations } from "next-intl";
-import type { ModalButton, Args } from "./buttons";
+import type { ModalButton, ModalButtonArgs } from "./buttons";
 import { Button } from "@snailycad/ui";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
@@ -25,7 +25,7 @@ export function ModalButton({ button: buttonFn, unit, ...buttonProps }: Props) {
 
   const isDispatch = router.pathname === "/dispatch";
   const btnArgs = { ...features, hasActiveDispatchers, isDispatch, unit, user };
-  const button = buttonFn(btnArgs as Args<any>);
+  const button = buttonFn(btnArgs as ModalButtonArgs<any>);
   const isEnabled = button.isEnabled ?? true;
 
   if (!isEnabled) {

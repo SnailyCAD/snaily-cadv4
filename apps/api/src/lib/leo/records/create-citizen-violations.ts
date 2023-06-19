@@ -12,14 +12,14 @@ interface Options {
 export async function createCitizenViolations(options: Options) {
   try {
     await Promise.all(
-      options.data.map((violation) => {
+      options.data.map((violation) =>
         upsertRecord({
           data: { ...violation, citizenId: options.citizenId },
           officer: null,
           recordId: null,
           cad: options.cad,
-        });
-      }),
+        }),
+      ),
     );
   } catch {
     /* empty */

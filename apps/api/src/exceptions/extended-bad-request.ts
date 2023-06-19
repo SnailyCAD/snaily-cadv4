@@ -3,7 +3,7 @@ import { BadRequest } from "@tsed/exceptions";
 
 interface ErrorMessage {
   message: string;
-  data: Record<string, any>;
+  data: Record<string, unknown>;
 }
 
 export class ExtendedBadRequest extends BadRequest implements ResponseErrorObject {

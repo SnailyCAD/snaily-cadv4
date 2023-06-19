@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { WhitelistStatus } from "@snailycad/types";
 
 interface CreateWhereObjOptions {
@@ -5,7 +6,7 @@ interface CreateWhereObjOptions {
   query: string;
   pendingOnly: boolean;
   type: "OFFICER" | "DEPUTY";
-  extraWhere?: any;
+  extraWhere?: Prisma.OfficerWhereInput | Prisma.EmsFdDeputyWhereInput;
 }
 
 export function createWhereCombinedUnit(options: CreateWhereObjOptions) {
@@ -43,7 +44,7 @@ export function createWhere({
       : { ...extraWhere, ...departmentIdWhere };
   }
 
-  const where: any = {
+  const where = {
     ...(pendingOnly ? { whitelistStatus: { status: WhitelistStatus.PENDING } } : {}),
     ...extraWhere,
     OR: [
@@ -67,14 +68,13 @@ export function createWhere({
           ],
         },
       },
+      type === "OFFICER"
+        ? {
+            divisions: { some: { value: { value: { contains: query, mode: "insensitive" } } } },
+          }
+        : {},
     ],
-  };
-
-  if (type === "OFFICER") {
-    where.OR.push({
-      divisions: { some: { value: { value: { contains: query, mode: "insensitive" } } } },
-    });
-  }
+  } satisfies Prisma.OfficerWhereInput | Prisma.EmsFdDeputyWhereInput;
 
   return where;
 }

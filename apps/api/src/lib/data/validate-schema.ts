@@ -1,7 +1,7 @@
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { z } from "zod";
 
-export function validateSchema<Schema extends z.ZodType<any, any, any>>(
+export function validateSchema<Schema extends z.ZodTypeAny>(
   schema: Schema,
   values: unknown,
 ): z.infer<Schema> {

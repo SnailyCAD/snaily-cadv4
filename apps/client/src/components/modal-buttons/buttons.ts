@@ -4,12 +4,15 @@ import { isUnitOfficer } from "@snailycad/utils";
 import type { ActiveOfficer } from "state/leo-state";
 import { ModalIds } from "types/modal-ids";
 
-export type Args<T> = Record<Feature | "hasActiveDispatchers" | "isDispatch", boolean> & {
+export type ModalButtonArgs<T> = Record<
+  Feature | "hasActiveDispatchers" | "isDispatch",
+  boolean
+> & {
   unit: EmsFdDeputy | ActiveOfficer | null;
   user: User;
 } & T;
 export interface ModalButton<T = unknown> {
-  (args: Args<T>): {
+  (args: ModalButtonArgs<T>): {
     nameKey: [string, string];
     modalId: ModalIds;
     /* defaults to true **/

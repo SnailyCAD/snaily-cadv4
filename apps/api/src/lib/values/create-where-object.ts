@@ -6,7 +6,7 @@ interface CreateSearchWhereObjectOptions {
   path: string;
   query: string;
   showDisabled?: boolean;
-  queryParams: any;
+  queryParams: Partial<Record<string, string>>;
 }
 
 export function createSearchWhereObject(options: CreateSearchWhereObjectOptions) {
@@ -15,7 +15,8 @@ export function createSearchWhereObject(options: CreateSearchWhereObjectOptions)
   const showDisabled = options.showDisabled ?? true;
 
   if (type === "PENAL_CODE") {
-    const groupId = options.queryParams.groupId as string | undefined;
+    const groupId = options.queryParams.groupId;
+
     const where: Prisma.PenalCodeWhereInput = {
       OR: [
         { title: { contains: options.query, mode: "insensitive" } },
