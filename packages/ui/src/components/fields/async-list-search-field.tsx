@@ -40,8 +40,8 @@ export interface AsyncListFieldProps<T extends object>
   fetchOptions: AsyncListFieldFetchOptions;
 
   /** the value that handles the input value */
-  inputValue: string;
-  setValues(values: { inputValue?: string; node?: Node<T> | null }): void;
+  localValue: string;
+  setValues(values: { localValue?: string; node?: Node<T> | null }): void;
 }
 
 function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
@@ -89,29 +89,29 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
       list.setFilterText(state.inputValue);
     },
     200,
-    [props.inputValue],
+    [props.localValue],
   );
 
   function handleSelectionChange(key?: React.Key, value?: string) {
     if (props.isClearable && key === "cleared") {
-      props.setValues({ inputValue: "", node: null });
+      props.setValues({ localValue: "", node: null });
       return;
     }
 
     if (!key) {
-      props.setValues({ inputValue: value });
+      props.setValues({ localValue: value });
       return;
     }
 
     const item = state.collection.getItem(key) as Node<T> | null;
     if (item) {
-      props.setValues({ inputValue: item.textValue, node: item });
+      props.setValues({ localValue: item.textValue, node: item });
     }
   }
 
   const listOptions = {
     items: props.filterFn ? list.items.filter(props.filterFn) : list.items,
-    inputValue: props.inputValue,
+    localValue: props.localValue,
     onInputChange: (value: string) => handleSelectionChange(undefined, value),
   };
 
