@@ -1,5 +1,13 @@
 import { TOW_SCHEMA } from "@snailycad/schemas";
-import { Loader, Input, Button, TextField, AsyncListSearchField, Item } from "@snailycad/ui";
+import {
+  Loader,
+  Input,
+  Button,
+  TextField,
+  AsyncListSearchField,
+  Item,
+  CheckboxField,
+} from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
@@ -16,7 +24,6 @@ import { useLeoState } from "state/leo-state";
 import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 import type { VehicleSearchResult } from "state/search/vehicle-search-state";
-import { Checkbox } from "components/form/inputs/Checkbox";
 import type { PostTowCallsData } from "@snailycad/types/api";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
 import { useUserOfficers } from "hooks/leo/use-get-user-officers";
@@ -172,18 +179,12 @@ export function DispatchCallTowModal({ call }: Props) {
               </>
             ) : null}
 
-            <FormField
-              errorMessage={errors.callCountyService}
-              checkbox
-              label={t("Calls.callCountyService")}
+            <CheckboxField
+              onChange={(isSelected) => setFieldValue("callCountyService", isSelected)}
+              isSelected={values.callCountyService}
             >
-              <Checkbox
-                name="callCountyService"
-                onChange={() => setFieldValue("callCountyService", !values.callCountyService)}
-                checked={values.callCountyService}
-                className="w-[max-content] ml-1"
-              />
-            </FormField>
+              {t("Calls.callCountyService")}
+            </CheckboxField>
 
             <TextField
               isTextarea

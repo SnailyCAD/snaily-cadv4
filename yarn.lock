@@ -4087,6 +4087,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-aria/checkbox@npm:^3.9.1":
+  version: 3.9.1
+  resolution: "@react-aria/checkbox@npm:3.9.1"
+  dependencies:
+    "@react-aria/label": ^3.5.2
+    "@react-aria/toggle": ^3.6.1
+    "@react-aria/utils": ^3.17.0
+    "@react-stately/checkbox": ^3.4.2
+    "@react-stately/toggle": ^3.5.2
+    "@react-types/checkbox": ^3.4.4
+    "@react-types/shared": ^3.18.1
+    "@swc/helpers": ^0.4.14
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: 082b4dc6465fc748b8040b783321eb90e03316ecd23708f2b46907c5ff7aebf3c44cdebe6d5b90c2379b98b210cb45132a79252a7080444885ab3b2c6e456392
+  languageName: node
+  linkType: hard
+
 "@react-aria/combobox@npm:^3.6.1":
   version: 3.6.1
   resolution: "@react-aria/combobox@npm:3.6.1"
@@ -4513,6 +4531,21 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
   checksum: bd87e575ba39b58e4d233e8a03098d6d9e4ed3a723e4c472b30d28310176e87d441a545787e66b584e389197c433045d124f1af64ed1ee38cb9a23789670a422
+  languageName: node
+  linkType: hard
+
+"@react-stately/checkbox@npm:^3.4.2":
+  version: 3.4.2
+  resolution: "@react-stately/checkbox@npm:3.4.2"
+  dependencies:
+    "@react-stately/toggle": ^3.5.2
+    "@react-stately/utils": ^3.6.0
+    "@react-types/checkbox": ^3.4.4
+    "@react-types/shared": ^3.18.1
+    "@swc/helpers": ^0.4.14
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+  checksum: 81cc4ec0a279b16f6be9682248b21c94ccaf2b8ba68f2a7c24b1157b60b89fe512a32e8280ed1c98d631624f676b4ce1a5130d350ecab333d690947249e84179
   languageName: node
   linkType: hard
 
@@ -5568,6 +5601,7 @@ __metadata:
     "@react-aria/breadcrumbs": ^3.5.2
     "@react-aria/button": ^3.7.2
     "@react-aria/calendar": ^3.3.0
+    "@react-aria/checkbox": ^3.9.1
     "@react-aria/combobox": ^3.6.1
     "@react-aria/datepicker": ^3.4.1
     "@react-aria/dialog": ^3.5.2

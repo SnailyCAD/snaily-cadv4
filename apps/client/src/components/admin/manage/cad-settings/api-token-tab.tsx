@@ -1,7 +1,6 @@
 import type * as React from "react";
-import { PasswordInput } from "components/form/inputs/Input";
 import { Toggle } from "components/form/Toggle";
-import { Button, Loader, TabsContent } from "@snailycad/ui";
+import { Button, Loader, TabsContent, TextField } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
 import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
@@ -56,11 +55,6 @@ export function ApiTokenTab() {
     }
   }
 
-  function handleClick(e: React.MouseEvent<HTMLInputElement>) {
-    const t = e.target as HTMLInputElement;
-    t.select();
-  }
-
   const INITIAL_VALUES = {
     enabled: cad?.apiToken?.enabled ?? false,
     token: cad?.apiToken?.token ?? "",
@@ -76,42 +70,6 @@ export function ApiTokenTab() {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, setFieldValue, values }) => (
           <Form className="mt-3 space-y-5">
-            <SettingsFormField
-              description={t.rich("tokenDescription", {
-                a: (children) => (
-                  <a
-                    rel="noreferrer"
-                    target="_blank"
-                    className="text-blue-600 underline"
-                    href="https://docs.snailycad.org/docs/developer/public-api"
-                  >
-                    {children}
-                  </a>
-                ),
-              })}
-              label="Token"
-            >
-              <PasswordInput onClick={handleClick} readOnly value={values.token} />
-            </SettingsFormField>
-
-            <SettingsFormField
-              description={t.rich("discordBotCommandDescription", {
-                a: (children) => (
-                  <a
-                    rel="noreferrer"
-                    target="_blank"
-                    className="text-blue-600 underline"
-                    href="https://docs.snailycad.org/docs/discord-integration/discord-bot"
-                  >
-                    {children}
-                  </a>
-                ),
-              })}
-              label={t("discordBotCommand")}
-            >
-              <PasswordInput onClick={handleClick} readOnly value={discordCommand} />
-            </SettingsFormField>
-
             <SettingsFormField
               action="checkbox"
               description={t.rich("readMorePublicAPI", {
@@ -129,6 +87,58 @@ export function ApiTokenTab() {
               label={common("enabled")}
             >
               <Toggle value={values.enabled} onCheckedChange={handleChange} name="enabled" />
+            </SettingsFormField>
+
+            <SettingsFormField
+              description={t.rich("tokenDescription", {
+                a: (children) => (
+                  <a
+                    rel="noreferrer"
+                    target="_blank"
+                    className="text-blue-600 underline"
+                    href="https://docs.snailycad.org/docs/developer/public-api"
+                  >
+                    {children}
+                  </a>
+                ),
+              })}
+              label="Token"
+            >
+              <TextField
+                label="Token"
+                type="password"
+                inputElementType="input"
+                onFocus={(event) => (event.target as HTMLInputElement).select()}
+                isReadOnly
+                value={values.token}
+                isDisabled={!values.enabled}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              description={t.rich("discordBotCommandDescription", {
+                a: (children) => (
+                  <a
+                    rel="noreferrer"
+                    target="_blank"
+                    className="text-blue-600 underline"
+                    href="https://docs.snailycad.org/docs/discord-integration/discord-bot"
+                  >
+                    {children}
+                  </a>
+                ),
+              })}
+              label={t("discordBotCommand")}
+            >
+              <TextField
+                label={t("discordBotCommand")}
+                type="password"
+                inputElementType="input"
+                onFocus={(event) => (event.target as HTMLInputElement).select()}
+                isReadOnly
+                value={discordCommand}
+                isDisabled={!values.enabled}
+              />
             </SettingsFormField>
 
             <div className="flex">
