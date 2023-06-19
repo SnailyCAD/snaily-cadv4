@@ -1,10 +1,9 @@
 import * as React from "react";
 import { useAuth } from "context/AuthContext";
 import { useTranslations } from "use-intl";
-import { PasswordInput } from "components/form/inputs/Input";
 import { Toggle } from "components/form/Toggle";
 import useFetch from "lib/useFetch";
-import { Button, Input, Loader, TabsContent } from "@snailycad/ui";
+import { Button, Input, Loader, TabsContent, TextField } from "@snailycad/ui";
 import { handleValidate } from "lib/handleValidate";
 import { CAD_SETTINGS_SCHEMA } from "@snailycad/schemas";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
@@ -94,7 +93,7 @@ export function GeneralSettingsTab() {
       <h2 className="text-2xl font-semibold">{t("generalSettings")}</h2>
 
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, values, errors }) => (
+        {({ handleSubmit, handleChange, setFieldValue, values, errors }) => (
           <form autoComplete="off" className="mt-3" onSubmit={handleSubmit}>
             <SettingsFormField
               errorMessage={errors.name}
@@ -141,11 +140,15 @@ export function GeneralSettingsTab() {
               label={t("registrationCode")}
               description={t("registrationCodeDescription")}
             >
-              <PasswordInput
-                onChange={handleChange}
+              <TextField
+                label={t("registrationCode")}
+                type="password"
+                inputElementType="input"
+                onFocus={(event) => (event.target as HTMLInputElement).select()}
                 value={String(values.registrationCode)}
-                name="registrationCode"
+                onChange={(value) => setFieldValue("registrationCode", value)}
                 autoComplete="off"
+                isOptional
               />
             </SettingsFormField>
 

@@ -25,3 +25,4 @@ export {
 } from "./context-menu";
 export * from "./accordion/accordion";
 export * from "./hover-card";
+export * from "./fields/checkbox-field";

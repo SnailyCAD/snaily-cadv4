@@ -1,7 +1,5 @@
-import { classNames } from "lib/classNames";
 import * as React from "react";
-
-// todo: move to `@snailycad/ui`
+import { cn } from "../../utils/classNames";
 
 type Props = JSX.IntrinsicElements["input"];
 
@@ -10,7 +8,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, Props>((props, ref) =
     {...props}
     contentEditable={false}
     type="checkbox"
-    className={classNames(
+    className={cn(
       "cursor-pointer rounded-md focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2",
       props.className,
     )}

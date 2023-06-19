@@ -1,12 +1,11 @@
 import { FormField } from "components/form/FormField";
-import { Input, Textarea } from "@snailycad/ui";
+import { CheckboxField, Input, Textarea } from "@snailycad/ui";
 import type { SelectValue } from "components/form/Select";
 import { useFormikContext } from "formik";
 import { useTranslations } from "next-intl";
 import type { PenalCode } from "@snailycad/types";
 import type React from "react";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { Checkbox } from "components/form/inputs/Checkbox";
 
 interface Props {
   penalCode: PenalCode;
@@ -172,15 +171,15 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
           description={finesDisabled ? null : finesDescription}
         >
           <div className="flex items-center">
-            <FormField className="mb-0" label={t("fines")} checkbox>
-              <Checkbox
-                disabled={finesDisabled}
-                onChange={() => handleValueChange("fine", !currentValue.fine?.enabled)}
-                checked={currentValue.fine?.enabled ?? false}
-                name="fine.enabled"
-                style={{ width: 20 }}
-              />
-            </FormField>
+            <CheckboxField
+              isDisabled={finesDisabled}
+              isSelected={currentValue.fine?.enabled ?? false}
+              className="mb-0"
+              onChange={(isSelected) => handleValueChange("fine", isSelected)}
+            >
+              {t("fines")}
+            </CheckboxField>
+
             <Input
               name="fine.value"
               onChange={handleValueChange.bind(null, "fine", undefined)}
@@ -195,17 +194,15 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
         </FieldWrapper>
         <FieldWrapper errorMessage={violationErrors[penalCode.id]?.communityService}>
           <div className="flex items-center">
-            <FormField className="mb-0" label={t("communityService")} checkbox>
-              <Checkbox
-                disabled={finesDisabled}
-                onChange={() =>
-                  handleValueChange("communityService", !currentValue.communityService?.enabled)
-                }
-                checked={currentValue.communityService?.enabled ?? false}
-                name="communityService.enabled"
-                style={{ width: 20 }}
-              />
-            </FormField>
+            <CheckboxField
+              isDisabled={finesDisabled}
+              isSelected={currentValue.communityService?.enabled ?? false}
+              className="mb-0"
+              onChange={(isSelected) => handleValueChange("communityService", isSelected)}
+            >
+              {t("communityService")}
+            </CheckboxField>
+
             <Textarea
               name="communityService.value"
               onChange={handleValueChange.bind(null, "communityService", undefined)}
@@ -222,15 +219,15 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
           description={jailTimeDisabled ? null : jailTimeBailDescription}
         >
           <div className="flex items-center mt-1">
-            <FormField className="mb-0" label={t("jailTime")} checkbox>
-              <Checkbox
-                onChange={() => handleValueChange("jailTime", !currentValue.jailTime?.enabled)}
-                checked={currentValue.jailTime?.enabled ?? false}
-                name="jailTime.enabled"
-                disabled={warningNotApplicableDisabled}
-                style={{ width: 20 }}
-              />
-            </FormField>
+            <CheckboxField
+              isDisabled={warningNotApplicableDisabled}
+              isSelected={currentValue.jailTime?.enabled ?? false}
+              className="mb-0"
+              onChange={(isSelected) => handleValueChange("jailTime", isSelected)}
+            >
+              {t("jailTime")}
+            </CheckboxField>
+
             <Input
               name="jailTime.value"
               onChange={handleValueChange.bind(null, "jailTime", undefined)}

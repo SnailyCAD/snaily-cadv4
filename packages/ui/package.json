@@ -64,6 +64,7 @@
     "@react-aria/breadcrumbs": "^3.5.2",
     "@react-aria/button": "^3.7.2",
     "@react-aria/calendar": "^3.3.0",
+    "@react-aria/checkbox": "^3.9.1",
     "@react-aria/combobox": "^3.6.1",
     "@react-aria/datepicker": "^3.4.1",
     "@react-aria/dialog": "^3.5.2",

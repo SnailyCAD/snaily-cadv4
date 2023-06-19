@@ -1,5 +1,5 @@
 import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
-import { Loader, Button, Input, SwitchField } from "@snailycad/ui";
+import { Loader, Button, SwitchField, CheckboxField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
@@ -215,20 +215,13 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
 
               <footer className="flex items-center justify-end mt-5">
                 {isDispatch && !incident ? (
-                  <FormField
-                    className="!mb-0 mr-2"
-                    labelClassName="min-w-fit"
-                    label="Open Manage incident modal after call creation?"
-                    checkbox
+                  <CheckboxField
+                    className="mb-0 mr-2"
+                    isSelected={values.openModalAfterCreation}
+                    onChange={(isSelected) => setFieldValue("openModalAfterCreation", isSelected)}
                   >
-                    <Input
-                      checked={values.openModalAfterCreation}
-                      onChange={() =>
-                        setFieldValue("openModalAfterCreation", !values.openModalAfterCreation)
-                      }
-                      type="checkbox"
-                    />
-                  </FormField>
+                    Open Manage incident modal after call creation?
+                  </CheckboxField>
                 ) : null}
 
                 <Button type="reset" onPress={handleClose} variant="cancel">

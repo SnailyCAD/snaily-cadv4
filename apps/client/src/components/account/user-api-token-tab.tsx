@@ -3,9 +3,8 @@ import { useAuth } from "context/AuthContext";
 import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
-import { Button, Loader, TabsContent } from "@snailycad/ui";
+import { Button, Loader, TabsContent, TextField } from "@snailycad/ui";
 import { SettingsFormField } from "components/form/SettingsFormField";
-import { PasswordInput } from "components/form/inputs/Input";
 import type {
   DeleteUserRegenerateApiTokenData,
   PutUserEnableDisableApiTokenData,
@@ -54,11 +53,6 @@ export function UserApiTokenTab() {
     }
   }
 
-  function handleClick(e: React.MouseEvent<HTMLInputElement>) {
-    const t = e.target as HTMLInputElement;
-    t.select();
-  }
-
   const INITIAL_VALUES = {
     enabled: user?.apiToken?.enabled ?? false,
     token: user?.apiToken?.token ?? "",
@@ -67,11 +61,18 @@ export function UserApiTokenTab() {
   return (
     <TabsContent aria-label={t("userApiToken")} value="userApiToken">
       <h1 className="text-2xl font-semibold">{t("userApiToken")}</h1>
-      <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
+      <Formik enableReinitialize onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, setFieldValue, values }) => (
           <Form className="mt-3 space-y-5">
             <SettingsFormField description={t("userApiTokenDescription")} label={t("token")}>
-              <PasswordInput onClick={handleClick} readOnly value={values.token} />
+              <TextField
+                label={t("token")}
+                type="password"
+                inputElementType="input"
+                onFocus={(event) => (event.target as HTMLInputElement).select()}
+                isReadOnly
+                value={values.token}
+              />
             </SettingsFormField>
 
             <SettingsFormField
