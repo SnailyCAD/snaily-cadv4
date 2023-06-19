@@ -117,17 +117,17 @@ export class ImportWeaponsController {
 export async function importWeaponsHandler(body: unknown[]) {
   const data = validateSchema(WEAPON_SCHEMA_ARR, body);
 
-  return Promise.all(
-    data.map(async (data) => {
-      return prisma.weapon.create({
+  return prisma.$transaction(
+    data.map((weapon) =>
+      prisma.weapon.create({
         data: {
-          citizenId: data.ownerId,
-          registrationStatusId: data.registrationStatusId,
-          modelId: data.modelId,
+          citizenId: weapon.ownerId,
+          registrationStatusId: weapon.registrationStatusId,
+          modelId: weapon.modelId,
           serialNumber: generateString(10),
         },
         include: weaponsInclude,
-      });
-    }),
+      }),
+    ),
   );
 }

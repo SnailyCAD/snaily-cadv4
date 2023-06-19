@@ -75,7 +75,7 @@ export async function upsertOfficer({
       throw new ExtendedBadRequest({ divisions: "Must have at least 1 item" });
     }
 
-    await validateMaxDivisionsPerUnit(data.divisions, cad);
+    validateMaxDivisionsPerUnit(data.divisions, cad);
   }
 
   if (user) {

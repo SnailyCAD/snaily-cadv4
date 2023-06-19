@@ -148,8 +148,8 @@ export class DispatchPrivateMessagesController {
       throw new ExtendedBadRequest({ message: "onlyDispatchCanCreateInitialChat" });
     }
 
-    let call911Id = undefined;
-    let incidentId = undefined;
+    let call911Id;
+    let incidentId;
 
     if (data.call911Id) {
       const call = await prisma.call911.findUnique({

@@ -26,13 +26,13 @@ async function readLocaleFile(locale, file) {
   return JSON.parse(data);
 }
 
-async function getLocaleFilesFromLocale(locale) {
+function getLocaleFilesFromLocale(locale) {
   const localesPath = getLocalesPath();
   return readdir(resolve(localesPath, locale), "utf8");
 }
 
 async function getInitialTranslations() {
-  const localeFiles = await getLocaleFilesFromLocale(localeToCheck);
+  const localeFiles = getLocaleFilesFromLocale(localeToCheck);
   const mergedLocaleTranslations = {};
 
   for (const file of localeFiles) {
@@ -60,7 +60,7 @@ function getLocalesPath() {
 }
 
 async function getDefaultLocaleTranslations() {
-  const localeFiles = await getLocaleFilesFromLocale(DEFAULT_LOCALE);
+  const localeFiles = getLocaleFilesFromLocale(DEFAULT_LOCALE);
   const mergedLocaleTranslations = {};
 
   for (const file of localeFiles) {

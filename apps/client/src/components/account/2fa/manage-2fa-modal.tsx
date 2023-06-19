@@ -13,6 +13,7 @@ import type {
   PostEnable2FAData,
   PostVerify2FAData,
 } from "@snailycad/types/api";
+import Image from "next/image";
 
 enum Steps {
   EnterPassword = 0,
@@ -165,7 +166,7 @@ export function Manage2FAModal() {
                   </code>
                 </p>
 
-                <img
+                <Image
                   alt={t("scanQRCode")}
                   className="self-center"
                   width={350}
