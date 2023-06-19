@@ -1,6 +1,5 @@
 import type * as React from "react";
-import { Toggle } from "components/form/Toggle";
-import { Button, Loader, TabsContent, TextField } from "@snailycad/ui";
+import { Button, Loader, SwitchField, TabsContent, TextField } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
 import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
@@ -68,7 +67,7 @@ export function ApiTokenTab() {
       <h2 className="mt-2 text-2xl font-semibold">{t("publicAPIAccess")}</h2>
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setFieldValue, values }) => (
+        {({ setFieldValue, values }) => (
           <Form className="mt-3 space-y-5">
             <SettingsFormField
               action="checkbox"
@@ -86,7 +85,12 @@ export function ApiTokenTab() {
               })}
               label={common("enabled")}
             >
-              <Toggle value={values.enabled} onCheckedChange={handleChange} name="enabled" />
+              <SwitchField
+                aria-label={common("enabled")}
+                isSelected={values.enabled}
+                onChange={(isSelected) => setFieldValue("enabled", isSelected)}
+                name="enabled"
+              />
             </SettingsFormField>
 
             <SettingsFormField

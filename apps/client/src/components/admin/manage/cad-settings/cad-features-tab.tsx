@@ -3,7 +3,6 @@ import { Form, Formik } from "formik";
 import { useTranslations } from "use-intl";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
-import { Toggle } from "components/form/Toggle";
 import {
   CadFeature,
   CadFeatureOptions,
@@ -11,7 +10,7 @@ import {
   Feature,
   LicenseExamType,
 } from "@snailycad/types";
-import { Button, Loader, TextField, TabsContent, SelectField } from "@snailycad/ui";
+import { Button, Loader, TextField, TabsContent, SelectField, SwitchField } from "@snailycad/ui";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { toastMessage } from "lib/toastMessage";
@@ -144,7 +143,7 @@ export function CADFeaturesTab() {
       />
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setFieldValue, values }) => (
+        {({ setFieldValue, values }) => (
           <Form>
             {filteredFeatures.map((feature) => {
               return (
@@ -210,17 +209,18 @@ export function CADFeaturesTab() {
                       </span>
                     }
                   >
-                    <Toggle
-                      value={
+                    <SwitchField
+                      aria-label={feature.name}
+                      isSelected={
                         values.features[feature.feature]?.isEnabled ??
                         // @ts-expect-error - this is fine
                         DEFAULT_DISABLED_FEATURES[key]?.isEnabled ??
                         true
                       }
-                      onCheckedChange={(v) => {
-                        handleChange(v);
-                      }}
-                      name={`features.${feature.feature}.isEnabled`}
+                      onChange={(isSelected) =>
+                        setFieldValue(`features.${feature.feature}.isEnabled`, isSelected)
+                      }
+                      name="enabled"
                     />
                   </SettingsFormField>
                 </div>

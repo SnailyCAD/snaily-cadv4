@@ -1,9 +1,8 @@
-import { Toggle } from "components/form/Toggle";
 import { useAuth } from "context/AuthContext";
 import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
-import { Button, Loader, TabsContent, TextField } from "@snailycad/ui";
+import { Button, Loader, SwitchField, TabsContent, TextField } from "@snailycad/ui";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import type {
   DeleteUserRegenerateApiTokenData,
@@ -62,7 +61,7 @@ export function UserApiTokenTab() {
     <TabsContent aria-label={t("userApiToken")} value="userApiToken">
       <h1 className="text-2xl font-semibold">{t("userApiToken")}</h1>
       <Formik enableReinitialize onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setFieldValue, values }) => (
+        {({ setFieldValue, values }) => (
           <Form className="mt-3 space-y-5">
             <SettingsFormField description={t("userApiTokenDescription")} label={t("token")}>
               <TextField
@@ -92,7 +91,12 @@ export function UserApiTokenTab() {
               }
               label={common("enabled")}
             >
-              <Toggle value={values.enabled} onCheckedChange={handleChange} name="enabled" />
+              <SwitchField
+                aria-label={common("enabled")}
+                isSelected={values.enabled}
+                onChange={(isSelected) => setFieldValue("enabled", isSelected)}
+                name="enabled"
+              />
             </SettingsFormField>
 
             <div className="flex">

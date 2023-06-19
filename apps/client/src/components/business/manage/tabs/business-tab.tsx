@@ -6,9 +6,8 @@ import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { Form, Formik } from "formik";
 import { CREATE_COMPANY_SCHEMA } from "@snailycad/schemas";
-import { Button, Loader, Input, TabsContent } from "@snailycad/ui";
+import { Button, Loader, Input, TabsContent, SwitchField } from "@snailycad/ui";
 import { handleValidate } from "lib/handleValidate";
-import { Toggle } from "components/form/Toggle";
 import { useRouter } from "next/router";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import type { DeleteBusinessByIdData, PutBusinessByIdData } from "@snailycad/types/api";
@@ -77,7 +76,7 @@ export function ManageBusinessTab() {
       <h3 className="text-2xl font-semibold">{t("business")}</h3>
 
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, errors, values, isValid }) => (
+        {({ handleChange, setFieldValue, errors, values, isValid }) => (
           <Form className="mt-3">
             <SettingsFormField
               description={t("nameDescription")}
@@ -101,10 +100,10 @@ export function ManageBusinessTab() {
               errorMessage={errors.whitelisted}
               label={t("whitelisted")}
             >
-              <Toggle
-                name="whitelisted"
-                onCheckedChange={handleChange}
-                value={values.whitelisted}
+              <SwitchField
+                aria-label={t("whitelisted")}
+                isSelected={values.whitelisted}
+                onChange={(isSelected) => setFieldValue("whitelisted", isSelected)}
               />
             </SettingsFormField>
 

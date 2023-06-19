@@ -22,3 +22,9 @@ export const Disabled: Story = {
     isDisabled: true,
   },
 };
+
+export const HiddenLabel: Story = {
+  args: {
+    "aria-label": "Add helpful label here",
+  },
+};
