@@ -21,7 +21,7 @@ export function useGetActiveTone(type?: ActiveToneType) {
   const { data } = useQuery({
     refetchOnMount: false,
     refetchOnWindowFocus: false,
-    enabled: !!TONES,
+    enabled: Boolean(TONES),
     queryKey: ["active-tones", type],
     queryFn: async () => {
       const { json } = await execute<GETDispatchTonesData>({

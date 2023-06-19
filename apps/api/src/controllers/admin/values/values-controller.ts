@@ -411,7 +411,7 @@ export class ValuesController {
     @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.DeleteValueByIdData> {
     const type = getTypeFromPath(path);
-    return !!this.deleteById(type, id, sessionUserId);
+    return Boolean(this.deleteById(type, id, sessionUserId));
   }
 
   @Patch("/:id")

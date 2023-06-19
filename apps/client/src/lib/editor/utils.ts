@@ -58,7 +58,7 @@ export function isBlockActive(editor: SlateEditor, format: SlateElement["type"])
       }),
     );
 
-    return !!match;
+    return Boolean(match);
   } catch (error) {
     return false;
   }

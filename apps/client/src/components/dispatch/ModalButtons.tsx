@@ -64,7 +64,7 @@ export function DispatchModalButtons() {
     shallow,
   );
 
-  const isActive = ACTIVE_DISPATCHERS ? !!userActiveDispatcher : true;
+  const isActive = ACTIVE_DISPATCHERS ? Boolean(userActiveDispatcher) : true;
 
   async function handleStateChangeDispatcher() {
     const newState = !isActive;

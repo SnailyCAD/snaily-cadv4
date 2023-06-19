@@ -85,8 +85,8 @@ export function ManagePenalCode({ onCreate, onUpdate, onClose, groupId, type, pe
     description: penalCode?.description ?? "",
     descriptionData: dataToSlate(penalCode),
     groupId: penalCode?.groupId ?? groupId,
-    warningApplicable: !!penalCode?.warningApplicableId,
-    warningNotApplicable: !!penalCode?.warningNotApplicableId,
+    warningApplicable: Boolean(penalCode?.warningApplicableId),
+    warningNotApplicable: Boolean(penalCode?.warningNotApplicableId),
     fines1: {
       enabled: (penalCode?.warningApplicable?.fines.length ?? 0) > 0,
       values: penalCode?.warningApplicable?.fines ?? [],

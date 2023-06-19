@@ -161,7 +161,7 @@ export function DiscordRolesTab() {
               label={t("adminRole")}
             >
               <Select
-                disabled={!!fetchError}
+                disabled={Boolean(fetchError)}
                 isClearable
                 isMulti
                 values={roles.map((role) => ({
@@ -174,7 +174,7 @@ export function DiscordRolesTab() {
               />
 
               <SelectPermissionsField
-                disabled={!!fetchError}
+                disabled={Boolean(fetchError)}
                 name="adminRolePermissions"
                 permissions={defaultPermissions.allDefaultAdminPermissions}
               />
@@ -187,7 +187,7 @@ export function DiscordRolesTab() {
             >
               <Select
                 isClearable
-                disabled={!!fetchError}
+                disabled={Boolean(fetchError)}
                 isMulti
                 values={roles.map((role) => ({
                   value: role.id,
@@ -199,7 +199,7 @@ export function DiscordRolesTab() {
               />
 
               <SelectPermissionsField
-                disabled={!!fetchError}
+                disabled={Boolean(fetchError)}
                 name="leoRolePermissions"
                 permissions={defaultPermissions.defaultLeoPermissions}
               />
@@ -212,7 +212,7 @@ export function DiscordRolesTab() {
             >
               <Select
                 isClearable
-                disabled={!!fetchError}
+                disabled={Boolean(fetchError)}
                 isMulti
                 values={roles.map((role) => ({
                   value: role.id,
@@ -224,7 +224,7 @@ export function DiscordRolesTab() {
               />
 
               <SelectPermissionsField
-                disabled={!!fetchError}
+                disabled={Boolean(fetchError)}
                 name="leoSupervisorRolePermissions"
                 permissions={defaultPermissions.defaultLeoPermissions}
               />
@@ -237,7 +237,7 @@ export function DiscordRolesTab() {
             >
               <Select
                 isClearable
-                disabled={!!fetchError}
+                disabled={Boolean(fetchError)}
                 isMulti
                 values={roles.map((role) => ({
                   value: role.id,
@@ -249,7 +249,7 @@ export function DiscordRolesTab() {
               />
 
               <SelectPermissionsField
-                disabled={!!fetchError}
+                disabled={Boolean(fetchError)}
                 name="emsFdRolePermissions"
                 permissions={defaultPermissions.defaultEmsFdPermissions}
               />
@@ -262,7 +262,7 @@ export function DiscordRolesTab() {
             >
               <Select
                 isClearable
-                disabled={!!fetchError}
+                disabled={Boolean(fetchError)}
                 isMulti
                 values={roles.map((role) => ({
                   value: role.id,
@@ -274,7 +274,7 @@ export function DiscordRolesTab() {
               />
 
               <SelectPermissionsField
-                disabled={!!fetchError}
+                disabled={Boolean(fetchError)}
                 name="dispatchRolePermissions"
                 permissions={defaultPermissions.defaultDispatchPermissions}
               />
@@ -287,7 +287,7 @@ export function DiscordRolesTab() {
             >
               <Select
                 isClearable
-                disabled={!!fetchError}
+                disabled={Boolean(fetchError)}
                 isMulti
                 values={roles.map((role) => ({
                   value: role.id,
@@ -299,7 +299,7 @@ export function DiscordRolesTab() {
               />
 
               <SelectPermissionsField
-                disabled={!!fetchError}
+                disabled={Boolean(fetchError)}
                 name="towRolePermissions"
                 permissions={defaultPermissions.defaultTowPermissions}
               />
@@ -312,7 +312,7 @@ export function DiscordRolesTab() {
             >
               <Select
                 isClearable
-                disabled={!!fetchError}
+                disabled={Boolean(fetchError)}
                 isMulti
                 values={roles.map((role) => ({
                   value: role.id,
@@ -324,7 +324,7 @@ export function DiscordRolesTab() {
               />
 
               <SelectPermissionsField
-                disabled={!!fetchError}
+                disabled={Boolean(fetchError)}
                 name="taxiRolePermissions"
                 permissions={defaultPermissions.defaultTaxiPermissions}
               />
@@ -337,7 +337,7 @@ export function DiscordRolesTab() {
             >
               <Select
                 isClearable
-                disabled={!!fetchError}
+                disabled={Boolean(fetchError)}
                 isMulti
                 values={roles.map((role) => ({
                   value: role.id,
@@ -349,7 +349,7 @@ export function DiscordRolesTab() {
               />
 
               <SelectPermissionsField
-                disabled={!!fetchError}
+                disabled={Boolean(fetchError)}
                 name="courthouseRolePermissions"
                 permissions={defaultPermissions.defaultCourthousePermissions}
               />
@@ -362,7 +362,7 @@ export function DiscordRolesTab() {
             >
               <Select
                 isClearable
-                disabled={!!fetchError}
+                disabled={Boolean(fetchError)}
                 values={roles.map((role) => ({
                   value: role.id,
                   label: role.name,
@@ -376,7 +376,7 @@ export function DiscordRolesTab() {
             <Button
               className="flex items-center"
               type="submit"
-              disabled={!!fetchError || state === "loading"}
+              disabled={Boolean(fetchError) || state === "loading"}
             >
               {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}
               {common("save")}

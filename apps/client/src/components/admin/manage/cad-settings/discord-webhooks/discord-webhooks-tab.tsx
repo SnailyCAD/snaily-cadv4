@@ -97,7 +97,7 @@ export function DiscordWebhooksTab() {
         {() => (
           <Form className="mt-5 space-y-5">
             <WebhookSettingsField
-              disabled={!!fetchError}
+              disabled={Boolean(fetchError)}
               fieldName="call911Webhook"
               channels={channels}
               description={t("calls911ChannelInfo")}
@@ -105,7 +105,7 @@ export function DiscordWebhooksTab() {
             />
 
             <WebhookSettingsField
-              disabled={!!fetchError}
+              disabled={Boolean(fetchError)}
               fieldName="statusesWebhook"
               channels={channels}
               description={t("statusUpdatesChannelInfo")}
@@ -113,7 +113,7 @@ export function DiscordWebhooksTab() {
             />
 
             <WebhookSettingsField
-              disabled={!!fetchError}
+              disabled={Boolean(fetchError)}
               fieldName="panicButtonWebhook"
               channels={channels}
               description={t("panicButtonChannelInfo")}
@@ -121,7 +121,7 @@ export function DiscordWebhooksTab() {
             />
 
             <WebhookSettingsField
-              disabled={!!fetchError}
+              disabled={Boolean(fetchError)}
               fieldName="boloWebhook"
               channels={channels}
               description={t("bolosChannelInfo")}
@@ -129,7 +129,7 @@ export function DiscordWebhooksTab() {
             />
 
             <WebhookSettingsField
-              disabled={!!fetchError}
+              disabled={Boolean(fetchError)}
               fieldName="vehicleImpoundedWebhook"
               channels={channels}
               description={t("impoundedVehicleChannelInfo")}
@@ -137,7 +137,7 @@ export function DiscordWebhooksTab() {
             />
 
             <WebhookSettingsField
-              disabled={!!fetchError}
+              disabled={Boolean(fetchError)}
               fieldName="citizenRecordsWebhook"
               channels={channels}
               description={t("citizenRecordsChannelInfo")}
@@ -145,7 +145,7 @@ export function DiscordWebhooksTab() {
             />
 
             <WebhookSettingsField
-              disabled={!!fetchError}
+              disabled={Boolean(fetchError)}
               fieldName="warrantsWebhook"
               channels={channels}
               description={t("warrantsChannelInfo")}
@@ -155,7 +155,7 @@ export function DiscordWebhooksTab() {
             <Button
               className="flex items-center"
               type="submit"
-              disabled={!!fetchError || state === "loading"}
+              disabled={Boolean(fetchError) || state === "loading"}
             >
               {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}
               {common("save")}
