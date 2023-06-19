@@ -111,7 +111,7 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
 
   const listOptions = {
     items: props.filterFn ? list.items.filter(props.filterFn) : list.items,
-    localValue: props.localValue,
+    inputValue: props.localValue,
     onInputChange: (value: string) => handleSelectionChange(undefined, value),
   };
 
