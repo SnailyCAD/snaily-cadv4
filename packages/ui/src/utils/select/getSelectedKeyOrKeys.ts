@@ -7,8 +7,7 @@ export function getSelectedKeyOrKeys<T extends SelectValue>(props: Options<T>) {
     return [];
   }
 
-  // eslint-disable-next-line eqeqeq
-  if (props.selectedKey != null) {
+  if (props.selectedKey !== null && typeof props.selectedKey !== "undefined") {
     if (props.selectedKey.toString().trim().length <= 0) {
       return [];
     }

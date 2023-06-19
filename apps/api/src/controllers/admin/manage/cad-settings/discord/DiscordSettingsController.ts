@@ -118,7 +118,7 @@ export class DiscordSettingsController {
       whitelistedRoleId: data.whitelistedRoleId,
     };
 
-    Object.values(rolesToCheck).map((roleId) => {
+    Object.values(rolesToCheck).forEach((roleId) => {
       if (Array.isArray(roleId) && roleId.length <= 0) return;
 
       if (roleId && !this.doesRoleExist(roles, roleId)) {

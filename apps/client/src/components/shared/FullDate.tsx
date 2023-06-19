@@ -47,8 +47,7 @@ export function FullDate({ children, onlyDate, relative, isDateOfBirth }: Props)
 
 function isValidDate(children: any) {
   try {
-    new Date(children);
-    return true;
+    return Boolean(new Date(children));
   } catch {
     return false;
   }

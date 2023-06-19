@@ -54,7 +54,7 @@ if (ENV_FILE_PATH.endsWith("/apps/client/.env") || ENV_FILE_PATH.endsWith("/apps
 /**
  * @param {string} distDir
  */
-async function copyEnv(distDir) {
+function copyEnv(distDir) {
   try {
     one(ENV_FILE_PATH, distDir, (error) => {
       if (error) {

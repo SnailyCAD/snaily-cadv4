@@ -79,4 +79,4 @@ export const DropdownMenuLinkItem = React.forwardRef<
     </Link>
   </DropdownMenuPrimitive.Item>
 ));
-DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName;
+DropdownMenuLinkItem.displayName = DropdownMenuPrimitive.Item.displayName;

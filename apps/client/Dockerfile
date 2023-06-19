@@ -13,4 +13,4 @@ RUN yarn turbo run build --filter=@snailycad/client
 
 ENV NODE_ENV="production"
 
-CMD yarn workspace @snailycad/client start
+CMD ["yarn", "workspace", "@snailycad/client", "start"]

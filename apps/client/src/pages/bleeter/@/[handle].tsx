@@ -133,6 +133,7 @@ export default function BleeterProfilePage(props: BleeterProfilePageProps) {
             <p>{props.data.postsCount}</p>
           </li>
           <li
+            role="button"
             onClick={() => followersCount && openModal(ModalIds.Followers)}
             className={classNames("text-center", followersCount && "cursor-pointer")}
           >
@@ -142,6 +143,7 @@ export default function BleeterProfilePage(props: BleeterProfilePageProps) {
             <p>{followersCount}</p>
           </li>
           <li
+            role="button"
             onClick={() => followingCount && openModal(ModalIds.Following)}
             className={classNames("text-center", followingCount && "cursor-pointer")}
           >

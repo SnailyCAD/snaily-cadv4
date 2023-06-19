@@ -206,7 +206,7 @@ export class MyOfficersController {
   }
 }
 
-export async function validateMaxDivisionsPerUnit(
+export function validateMaxDivisionsPerUnit(
   arr: unknown[],
   cad: (cad & { miscCadSettings: MiscCadSettings }) | null,
 ) {

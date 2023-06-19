@@ -70,8 +70,7 @@ function MultiForm<FormValues extends FormikValues>(props: Props<FormValues>) {
             <ul className="flex gap-2">
               {titles.map((title, idx) => {
                 // conditional rendering of the steps
-                // eslint-disable-next-line eqeqeq
-                if (title == null) return null;
+                if (title === null) return null;
 
                 const isActive = titles.indexOf(title) === currentStep;
                 const hasBeenSubmitted = submittedSteps.includes(title);

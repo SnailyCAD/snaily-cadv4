@@ -147,9 +147,10 @@ function handleFilter(status: StatusValue, departmentId: string | null) {
     return false;
   }
 
-  const checkDepartments = departmentId && (status.departments ?? []).length > 0;
-  if (checkDepartments && !status.departments?.some((v) => v.id === departmentId)) {
-    return false;
+  const statusDepartments = status.departments ?? [];
+  const checkDepartments = departmentId && statusDepartments.length > 0;
+  if (checkDepartments) {
+    return statusDepartments.some((v) => v.id === departmentId);
   }
 
   return true;

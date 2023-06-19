@@ -21,3 +21,4 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(({ errorMessage, 
     } `}
   />
 ));
+Input.displayName = "Input";

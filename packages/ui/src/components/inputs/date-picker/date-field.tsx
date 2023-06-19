@@ -37,8 +37,9 @@ function DateSegment(props: { segment: DateSegment; state: DateFieldState }) {
       style={{
         ...segmentProps.style,
         minWidth:
-          // eslint-disable-next-line eqeqeq
-          props.segment.maxValue != null ? `${String(props.segment.maxValue).length}ch` : undefined,
+          typeof props.segment.maxValue === "number"
+            ? `${String(props.segment.maxValue).length}ch`
+            : undefined,
       }}
       className={classNames(
         "px-0.5 tabular-nums text-right outline-none rounded-sm focus:bg-blue-600 focus:text-white group",

@@ -3,7 +3,7 @@ import { useTranslations } from "next-intl";
 import { classNames } from "../utils/classNames";
 import type { FocusableElement } from "@react-types/shared";
 import { InfoCircle } from "react-bootstrap-icons";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "../components/hover-card";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
 
 interface Props {
   label: React.ReactNode;

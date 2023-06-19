@@ -40,7 +40,7 @@ for (const pkg of allPackages) {
 
 updateMainPackage();
 
-async function askNewVersion() {
+function askNewVersion() {
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,

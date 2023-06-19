@@ -36,3 +36,4 @@ export const Toggle = React.forwardRef<HTMLButtonElement, Props>(
     );
   },
 );
+Toggle.displayName = SwitchPrimitive.Root.displayName;

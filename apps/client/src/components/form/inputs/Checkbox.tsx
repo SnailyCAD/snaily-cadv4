@@ -1,6 +1,8 @@
 import { classNames } from "lib/classNames";
 import * as React from "react";
 
+// todo: move to `@snailycad/ui`
+
 type Props = JSX.IntrinsicElements["input"];
 
 export const Checkbox = React.forwardRef<HTMLInputElement, Props>((props, ref) => (
@@ -15,3 +17,4 @@ export const Checkbox = React.forwardRef<HTMLInputElement, Props>((props, ref) =
     ref={ref}
   />
 ));
+Checkbox.displayName = "Checkbox";
