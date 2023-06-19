@@ -100,7 +100,8 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
   const showSteamOAuth = STEAM_OAUTH && useThirdPartyConnectionsAbility;
   const showDiscordOAuth = DISCORD_AUTH && useThirdPartyConnectionsAbility;
 
-  const showHorizontalLine = ALLOW_REGULAR_LOGIN && (showSteamOAuth || showDiscordOAuth || Boolean(user));
+  const showHorizontalLine =
+    ALLOW_REGULAR_LOGIN && (showSteamOAuth || showDiscordOAuth || Boolean(user));
 
   return (
     <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
