@@ -26,7 +26,6 @@ type CADPick =
   | "discordRoles"
   | "discordRolesId"
   | "version"
-  | "autoSetUserProperties"
   | "autoSetUserPropertiesId";
 
 export type cad = Pick<
