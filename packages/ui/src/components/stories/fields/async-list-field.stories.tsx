@@ -19,7 +19,7 @@ function DefaultRenderer() {
     <AsyncListSearchField<{ name: string; id: string }>
       label="Name"
       isClearable
-      inputValue={localSearchValue}
+      localValue={localSearchValue}
       selectedKey={selectedItem}
       fetchOptions={{
         apiPath: "/search/name",
@@ -27,7 +27,7 @@ function DefaultRenderer() {
         bodyKey: "name",
         filterTextRequired: true,
       }}
-      setValues={({ inputValue: localValue, node }) => {
+      setValues={({ localValue, node }) => {
         if (typeof localValue !== "undefined") {
           setLocalSearchValue(localValue);
         }
