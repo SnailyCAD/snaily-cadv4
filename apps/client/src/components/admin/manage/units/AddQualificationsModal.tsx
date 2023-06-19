@@ -1,11 +1,10 @@
-import { QualificationValueType } from "@snailycad/types";
+import { QualificationValueType, ValueType } from "@snailycad/types";
 import type {
   GetManageUnitByIdData,
   PostManageUnitAddQualificationData,
 } from "@snailycad/types/api";
 import { Loader, Button } from "@snailycad/ui";
-import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
+import { ValueSelectField } from "components/form/inputs/value-select-field";
 import { Modal } from "components/modal/Modal";
 import { useValues } from "context/ValuesContext";
 import { Form, Formik } from "formik";
@@ -56,31 +55,22 @@ export function AddQualificationsModal({ unit, setUnit }: Props) {
       className="min-w-[600px]"
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={handleSubmit}>
-        {({ handleChange, errors, values, isValid }) => (
+        {({ isValid }) => (
           <Form>
-            <FormField
-              errorMessage={errors.qualificationId}
+            <ValueSelectField
+              fieldName="qualificationId"
+              values={qualification.values}
               label={
                 type === QualificationValueType.AWARD ? t("Leo.award") : t("Leo.qualification")
               }
-            >
-              <Select
-                value={values.qualificationId}
-                name="qualificationId"
-                onChange={handleChange}
-                values={qualification.values
-                  .filter((v) => {
-                    return !v.departments?.length
-                      ? v.qualificationType === type
-                      : v.departments.some((v) => unit.departmentId === v.id) &&
-                          v.qualificationType === type;
-                  })
-                  .map((q) => ({
-                    value: q.id,
-                    label: q.value.value,
-                  }))}
-              />
-            </FormField>
+              valueType={ValueType.QUALIFICATION}
+              filterFn={(value) => {
+                return !value.departments?.length
+                  ? value.qualificationType === type
+                  : value.departments.some((v) => unit.departmentId === v.id) &&
+                      value.qualificationType === type;
+              }}
+            />
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onPress={handleClose} variant="cancel">

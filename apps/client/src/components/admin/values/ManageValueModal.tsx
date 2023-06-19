@@ -8,7 +8,6 @@ import {
   BASE_VALUE_SCHEMA,
   CALL_TYPE_SCHEMA,
 } from "@snailycad/schemas";
-import { FormField } from "components/form/FormField";
 import { Loader, Button, SelectField, TextField, SwitchField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { Form, Formik, FormikHelpers } from "formik";
@@ -24,7 +23,6 @@ import {
   ValueType,
 } from "@snailycad/types";
 import { useTranslations } from "use-intl";
-import { Select } from "components/form/Select";
 import hexColor from "hex-color-regex";
 import { ModalIds } from "types/modal-ids";
 import { DepartmentFields } from "./manage-modal/department-fields";
@@ -87,7 +85,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
   const t = useTranslations(type);
   const common = useTranslations("Common");
   const tValues = useTranslations("Values");
-  const defaultDepartments = useDefaultDepartments();
+  const { makeDefaultDepartmentsValues } = useDefaultDepartments();
   const defaultDivisions = useDefaultDivisions();
 
   const title = !value ? t("ADD") : t("EDIT");
@@ -118,10 +116,10 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
       ...values,
       type: dlType ? dlType : values.type,
       whatPages: values.whatPages,
-      departments: values.departments?.map((v) => v.value),
-      divisions: values.divisions?.map((v) => v.value),
-      officerRankDepartments: values.officerRankDepartments?.map((v) => v.value),
-      trimLevels: values.trimLevels.map((v) => v.value),
+      departments: values.departments,
+      divisions: values.divisions,
+      officerRankDepartments: values.officerRankDepartments,
+      trimLevels: values.trimLevels,
       extraFields: JSON.parse(values.extraFields),
     };
 
@@ -181,6 +179,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     }
   }
 
+  // todo: make this a function
   const INITIAL_VALUES = {
     isDisabled: value ? getDisabledFromValue(value) : false,
     value: value ? getValueStrFromValue(value) : "",
@@ -200,7 +199,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     departments:
       value &&
       (isStatusValue(value) || isUnitQualification(value) || isEmergencyVehicleValue(value))
-        ? defaultDepartments(value)
+        ? makeDefaultDepartmentsValues(value)
         : undefined,
     whatPages: value && isStatusValue(value) ? makeDefaultWhatPages(value) : [],
 
@@ -216,13 +215,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
 
     as: value && isEmployeeValue(value) ? value.as : "",
     hash: value && (isVehicleValue(value) || isWeaponValue(value)) ? value.hash ?? "" : undefined,
-    trimLevels:
-      value && isVehicleValue(value)
-        ? value.trimLevels?.map((value) => ({
-            value: value.id,
-            label: value.value,
-          })) ?? []
-        : [],
+    trimLevels: value && isVehicleValue(value) ? value.trimLevels?.map((v) => v.id) ?? [] : [],
 
     licenseType: value && isBaseValue(value) ? value.licenseType : null,
     isDefault: value && isBaseValue(value) ? value.isDefault : undefined,
@@ -230,7 +223,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
 
     officerRankImageId: "",
     officerRankDepartments:
-      value && isOfficerRankValue(value) ? defaultDepartments(value) : undefined,
+      value && isOfficerRankValue(value) ? makeDefaultDepartmentsValues(value) : undefined,
 
     postal: value && isAddressValue(value) ? value.postal ?? "" : "",
     county: value && isAddressValue(value) ? value.county ?? "" : "",
@@ -274,7 +267,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
       isOpen={isOpen(ModalIds.ManageValue)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setFieldValue, values, errors }) => (
+        {({ setFieldValue, values, errors }) => (
           <Form>
             {type === ValueType.DIVISION ? null : (
               <TextField
@@ -313,7 +306,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
               <TextField
                 isOptional
                 errorMessage={errors.hash}
-                label={t("gameHash")}
+                label={tValues("gameHash")}
                 name="hash"
                 onChange={(value) => setFieldValue("hash", value)}
                 value={values.hash}
@@ -321,19 +314,19 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             ) : null}
 
             {ValueType.VEHICLE === type ? (
-              <FormField label={tValues("trimLevels")}>
-                <Select
-                  isMulti
-                  closeMenuOnSelect={false}
-                  name="trimLevels"
-                  onChange={handleChange}
-                  value={values.trimLevels}
-                  values={vehicleTrimLevel.values.map((trimLevel) => ({
-                    value: trimLevel.id,
-                    label: trimLevel.value,
-                  }))}
-                />
-              </FormField>
+              <SelectField
+                isOptional
+                isClearable
+                selectionMode="multiple"
+                errorMessage={errors.trimLevels}
+                label={tValues("trimLevels")}
+                options={vehicleTrimLevel.values.map((trimLevel) => ({
+                  value: trimLevel.id,
+                  label: trimLevel.value,
+                }))}
+                selectedKeys={values.trimLevels}
+                onSelectionChange={(keys) => setFieldValue("trimLevels", keys)}
+              />
             ) : null}
 
             {type === ValueType.CALL_TYPE ? (
@@ -351,19 +344,20 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             {type === ValueType.OFFICER_RANK ? (
               <>
                 <ImageSelectInput valueKey="officerRankImageId" image={image} setImage={setImage} />
-                <FormField optional label={tValues("departments")}>
-                  <Select
-                    isMulti
-                    closeMenuOnSelect={false}
-                    name="officerRankDepartments"
-                    onChange={handleChange}
-                    value={values.officerRankDepartments ?? []}
-                    values={department.values.map((department) => ({
-                      value: department.id,
-                      label: department.value.value,
-                    }))}
-                  />
-                </FormField>
+
+                <SelectField
+                  isOptional
+                  label={tValues("departments")}
+                  isClearable
+                  selectionMode="multiple"
+                  errorMessage={errors.officerRankDepartments}
+                  options={department.values.map((department) => ({
+                    value: department.id,
+                    label: department.value.value,
+                  }))}
+                  selectedKeys={values.officerRankDepartments}
+                  onSelectionChange={(keys) => setFieldValue("officerRankDepartments", keys)}
+                />
               </>
             ) : null}
 

@@ -16,6 +16,7 @@ import { Eyedropper } from "react-bootstrap-icons";
 import { Input, Button, SelectField, RadioGroupField, Radio } from "@snailycad/ui";
 import { useValues } from "context/ValuesContext";
 import { useTranslations } from "use-intl";
+import { isOfficerRankValue } from "@snailycad/utils";
 
 const HexColorPicker = dynamic(async () => (await import("react-colorful")).HexColorPicker);
 
@@ -49,31 +50,42 @@ const WHAT_PAGES_VALUES = Object.values(WhatPages).map((v) => ({
 export function useDefaultDepartments() {
   const { department } = useValues();
 
-  const DEFAULT_DEPARTMENTS = department.values.map((v) => ({
-    value: v.id,
-    label: v.value.value,
-  }));
+  const DEFAULT_DEPARTMENTS_VALUES = department.values.map((value) => value.id);
+  const DEFAULT_DEPARTMENTS_LABELS = department.values.map((value) => value.value.value);
+
+  function makeDefaultDepartmentsValues(
+    value: StatusValue | QualificationValue | EmergencyVehicleValue | Value | null,
+  ) {
+    const departments = makeDefaultDepartments(value);
+    return departments.length <= 0
+      ? DEFAULT_DEPARTMENTS_VALUES
+      : departments.map((value) => value.id);
+  }
+
+  function makeDefaultDepartmentsLabels(
+    value: StatusValue | QualificationValue | EmergencyVehicleValue | Value | null,
+  ) {
+    const departments = makeDefaultDepartments(value);
+    return departments.length <= 0
+      ? DEFAULT_DEPARTMENTS_LABELS
+      : departments.map((value) => value.value.value);
+  }
 
   function makeDefaultDepartments(
     value: StatusValue | QualificationValue | EmergencyVehicleValue | Value | null,
   ) {
     if (!value) return [];
     const departments =
-      ("officerRankDepartments" in value
+      (isOfficerRankValue(value)
         ? value.officerRankDepartments
         : "departments" in value
         ? value.departments
         : []) ?? [];
 
-    return departments.length <= 0
-      ? DEFAULT_DEPARTMENTS
-      : departments.map((v) => ({
-          label: v.value.value,
-          value: v.id,
-        }));
+    return departments;
   }
 
-  return makeDefaultDepartments;
+  return { makeDefaultDepartmentsValues, makeDefaultDepartmentsLabels };
 }
 
 export function StatusValueFields() {

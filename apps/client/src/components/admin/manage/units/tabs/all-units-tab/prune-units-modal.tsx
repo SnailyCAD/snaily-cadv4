@@ -16,8 +16,6 @@ import type { GetManageUnitsInactiveUnits } from "@snailycad/types/api";
 import { toastMessage } from "lib/toastMessage";
 import { Modal } from "components/modal/Modal";
 import { FullDate } from "components/shared/FullDate";
-import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
 import { isUnitOfficer } from "@snailycad/utils";
 import { makeUnitName } from "lib/utils";
@@ -31,7 +29,6 @@ const initialData = {
 export function PruneUnitsModal() {
   const [days, setDays] = React.useState("30");
   const [action, setAction] = React.useState("SET_DEPARTMENT_DEFAULT");
-  const [departmentId, setDepartmentId] = React.useState(null);
 
   const { department } = useValues();
   const { state, execute } = useFetch();
@@ -90,6 +87,7 @@ export function PruneUnitsModal() {
       </p>
 
       <SelectField
+        isLoading={asyncTable.isLoading}
         isDisabled={asyncTable.isLoading}
         onSelectionChange={(value) => {
           setDays(value as string);
@@ -104,23 +102,24 @@ export function PruneUnitsModal() {
         ]}
       />
 
-      <FormField label={t("Leo.department")}>
-        <Select
-          name="departmentId"
-          onChange={(event) => {
-            setDepartmentId(event.target.value);
-            asyncTable.setFilters((prevFilters) => ({
-              ...prevFilters,
-              departmentId: event.target.value as string,
-            }));
-          }}
-          value={departmentId}
-          values={department.values.map((department) => ({
-            label: department.value.value,
-            value: department.id,
-          }))}
-        />
-      </FormField>
+      <SelectField
+        isOptional
+        isClearable
+        label={t("Leo.department")}
+        isLoading={asyncTable.isLoading}
+        isDisabled={asyncTable.isLoading}
+        selectedKey={asyncTable.filters?.departmentId ?? null}
+        onSelectionChange={(value) => {
+          asyncTable.setFilters((prevFilters) => ({
+            ...prevFilters,
+            departmentId: value as string,
+          }));
+        }}
+        options={department.values.map((department) => ({
+          label: department.value.value,
+          value: department.id,
+        }))}
+      />
 
       <SelectField
         isDisabled={asyncTable.isLoading}

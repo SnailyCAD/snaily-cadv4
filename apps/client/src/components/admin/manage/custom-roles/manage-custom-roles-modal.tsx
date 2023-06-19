@@ -1,6 +1,5 @@
 import * as React from "react";
-import { FormField } from "components/form/FormField";
-import { Button, Loader, TextField } from "@snailycad/ui";
+import { Button, Loader, SelectField, TextField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { Form, Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
@@ -8,7 +7,6 @@ import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import type { CustomRole, DiscordRole } from "@snailycad/types";
 import { useTranslations } from "use-intl";
-import { Select } from "components/form/Select";
 import { ModalIds } from "types/modal-ids";
 import { CUSTOM_ROLE_SCHEMA } from "@snailycad/schemas";
 import { Permissions } from "@snailycad/permissions";
@@ -45,6 +43,7 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
     const { json } = await execute<GetCADDiscordRolesData>({
       path: "/admin/manage/cad-settings/discord/roles",
       method: "GET",
+      noToast: true,
     });
 
     if (Array.isArray(json)) {
@@ -64,7 +63,7 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
 
     const data = {
       ...values,
-      permissions: values.permissions.map((v) => v.value),
+      permissions: values.permissions.map((v) => v),
     };
 
     if (role) {
@@ -118,11 +117,7 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
   const INITIAL_VALUES = {
     name: role?.name ?? "",
     discordRoleId: role?.discordRoleId ?? null,
-    permissions:
-      role?.permissions.map((v) => ({
-        value: v,
-        label: v,
-      })) ?? [],
+    permissions: role?.permissions ?? [],
   };
 
   const validate = handleValidate(CUSTOM_ROLE_SCHEMA);
@@ -134,7 +129,7 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
       isOpen={isOpen(ModalIds.ManageCustomRole)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setFieldValue, values, errors }) => (
+        {({ setFieldValue, values, errors }) => (
           <Form>
             <TextField
               errorMessage={errors.name}
@@ -145,36 +140,29 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
               value={values.name}
             />
 
-            <FormField errorMessage={errors.permissions as string} label={t("permissions")}>
-              <Select
-                isMulti
-                closeMenuOnSelect={false}
-                values={Object.values(Permissions).map((permission) => ({
-                  value: permission,
-                  label: tPermission(permission),
-                }))}
-                value={values.permissions}
-                name="permissions"
-                onChange={handleChange}
-              />
-            </FormField>
+            <SelectField
+              label={t("permissions")}
+              errorMessage={errors.permissions}
+              selectionMode="multiple"
+              selectedKeys={values.permissions}
+              options={Object.values(Permissions).map((permission) => ({
+                value: permission,
+                label: tPermission(permission),
+              }))}
+              onSelectionChange={(keys) => setFieldValue("permissions", keys)}
+            />
 
-            <FormField
-              optional
-              errorMessage={errors.discordRoleId as string}
+            <SelectField
+              errorMessage={errors.discordRoleId}
+              isOptional
               label={t("discordRole")}
-            >
-              <Select
-                values={discordRoles.map((role) => ({
-                  value: role.id,
-                  label: role.name,
-                }))}
-                value={values.discordRoleId}
-                name="discordRoleId"
-                onChange={handleChange}
-                isClearable
-              />
-            </FormField>
+              isClearable
+              options={discordRoles.map((role) => ({
+                value: role.id,
+                label: role.name,
+              }))}
+              selectedKey={values.discordRoleId}
+            />
 
             <ImageSelectInput image={image} setImage={setImage} />
 

@@ -2,11 +2,9 @@ import * as React from "react";
 import { useModal } from "state/modalState";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/modal-ids";
-import { Loader, Button, buttonVariants, TextField } from "@snailycad/ui";
+import { Loader, Button, buttonVariants, TextField, SelectField } from "@snailycad/ui";
 import { useTranslations } from "next-intl";
-import { FormField } from "components/form/FormField";
 import { Table, useTableState } from "components/shared/Table";
-import { Select } from "components/form/Select";
 import Link from "next/link";
 import { FullDate } from "components/shared/FullDate";
 import { usePermission, Permissions } from "hooks/usePermission";
@@ -97,22 +95,22 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
               ) : null}
             </TextField>
 
-            <FormField className="w-40" label={t("filter")}>
-              <Select
-                isClearable
-                value={asyncTable.filters?.userId ?? null}
-                onChange={(e) =>
-                  asyncTable.setFilters((prevFilters) => ({
-                    ...prevFilters,
-                    userId: e?.target.value,
-                  }))
-                }
-                values={users.map((u) => ({
-                  label: u.username,
-                  value: u.id,
-                }))}
-              />
-            </FormField>
+            <SelectField
+              className="w-64"
+              label={t("filter")}
+              isClearable
+              selectedKey={asyncTable.filters?.userId ?? null}
+              options={users.map((u) => ({
+                value: u.id,
+                label: u.username,
+              }))}
+              onSelectionChange={(value) => {
+                asyncTable.setFilters((prevFilters) => ({
+                  ...prevFilters,
+                  userId: value,
+                }));
+              }}
+            />
           </div>
 
           {search && asyncTable.pagination.totalDataCount !== totalCount ? (

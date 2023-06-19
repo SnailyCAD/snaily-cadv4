@@ -26,6 +26,7 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { makeDefaultWhatPages } from "./utils";
 import type { ColumnDef } from "@tanstack/react-table";
 import { ImageWrapper } from "components/shared/image-wrapper";
+import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
 const TYPE_LABELS = {
   [StatusValueType.SITUATION_CODE]: "Situation Code",
@@ -34,7 +35,7 @@ const TYPE_LABELS = {
 
 export function useTableDataOfType(type: ValueType) {
   const common = useTranslations("Common");
-  const defaultDepartments = useDefaultDepartments();
+  const { makeDefaultDepartmentsLabels } = useDefaultDepartments();
   const { makeImageUrl } = useImageUrl();
   const { LICENSE_LABELS } = useLicenseLabels();
 
@@ -60,16 +61,13 @@ export function useTableDataOfType(type: ValueType) {
       case ValueType.CODES_10: {
         const v = value as StatusValue;
         const whatPages = makeDefaultWhatPages(v);
-        const departments = defaultDepartments(v);
+        const departments = makeDefaultDepartmentsLabels(v);
 
         return {
           shouldDo: SHOULD_DO_LABELS[v.shouldDo],
           type: TYPE_LABELS[v.type],
           whatPages: whatPages?.map((v) => WHAT_PAGES_LABELS[v]).join(", "),
-          departments:
-            v.shouldDo === ShouldDoType.SET_ON_DUTY
-              ? "—"
-              : departments.map((v) => v.label).join(", "),
+          departments: v.shouldDo === ShouldDoType.SET_ON_DUTY ? "—" : departments.join(", "),
           color: v.color ? (
             <>
               <span
@@ -146,7 +144,7 @@ export function useTableDataOfType(type: ValueType) {
       case ValueType.OFFICER_RANK: {
         const v = value as Value;
         const imgUrl = makeImageUrl("values", v.officerRankImageId);
-        const departments = defaultDepartments(v);
+        const departments = makeDefaultDepartmentsLabels(v);
 
         return {
           image: imgUrl ? (
@@ -162,7 +160,7 @@ export function useTableDataOfType(type: ValueType) {
           ) : (
             "—"
           ),
-          departments: departments.map((v) => v.label).join(", "),
+          departments: <CallDescription nonCard data={{ description: departments.join(", ") }} />,
         };
       }
       case ValueType.CALL_TYPE: {

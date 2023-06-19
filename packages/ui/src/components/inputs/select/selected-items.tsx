@@ -20,7 +20,7 @@ export function SelectedItems<T extends SelectValue>(props: Props<T>) {
       <>
         {selectedItems.map((item) => (
           <span
-            className="text-sm flex items-center justify-between p-0.5 px-1.5 rounded-sm bg-gray-300 dark:bg-tertiary h-7"
+            className="text-sm flex items-center justify-between p-0.5 px-1.5 rounded-sm bg-gray-300 dark:bg-tertiary"
             key={item.key}
           >
             <span className="pr-1">{item.textValue}</span>

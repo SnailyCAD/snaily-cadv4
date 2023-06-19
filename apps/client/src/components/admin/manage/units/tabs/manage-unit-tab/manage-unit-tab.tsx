@@ -26,7 +26,8 @@ import { QualificationsTable } from "../../QualificationsTable";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
-import type { User } from "@snailycad/types";
+import { ValueType, type User } from "@snailycad/types";
+import { ValueSelectField } from "components/form/inputs/value-select-field";
 
 interface Props {
   unit: GetManageUnitByIdData;
@@ -139,30 +140,21 @@ export function ManageUnitTab({ unit: data }: Props) {
 
               <ImageSelectInput setImage={setImage} image={image} />
 
-              <FormField label={t("status")}>
-                <Select
-                  isClearable
-                  name="status"
-                  onChange={handleChange}
-                  value={values.status}
-                  values={codes10.values.map((v) => ({
-                    label: v.value.value,
-                    value: v.id,
-                  }))}
-                />
-              </FormField>
+              <ValueSelectField
+                label={t("status")}
+                fieldName="status"
+                values={codes10.values}
+                valueType={ValueType.CODES_10}
+                isClearable
+              />
 
-              <FormField label="Department">
-                <Select
-                  name="department"
-                  onChange={handleChange}
-                  value={values.department}
-                  values={department.values.map((v) => ({
-                    label: v.value.value,
-                    value: v.id,
-                  }))}
-                />
-              </FormField>
+              <ValueSelectField
+                label={t("department")}
+                fieldName="department"
+                values={department.values}
+                valueType={ValueType.DEPARTMENT}
+                isClearable
+              />
 
               {DIVISIONS ? (
                 <FormField
@@ -187,44 +179,34 @@ export function ManageUnitTab({ unit: data }: Props) {
                         }))}
                     />
                   ) : (
-                    <Select
-                      name="division"
-                      onChange={handleChange}
-                      value={values.division}
-                      values={division.values
-                        .filter((v) =>
-                          values.department ? v.departmentId === values.department : true,
-                        )
-                        .map((value) => ({
-                          label: value.value.value,
-                          value: value.id,
-                        }))}
+                    <ValueSelectField
+                      fieldName="division"
+                      label={t("division")}
+                      values={division.values}
+                      valueType={ValueType.DIVISION}
+                      filterFn={(value) =>
+                        values.department ? value.departmentId === values.department : true
+                      }
                     />
                   )}
                 </FormField>
               ) : null}
 
               <FormRow>
-                <FormField label={t("rank")}>
-                  <Select
-                    isClearable
-                    name="rank"
-                    onChange={handleChange}
-                    value={values.rank}
-                    values={officerRank.values
-                      .filter((v) => {
-                        if ((v.officerRankDepartments?.length ?? 0) <= 0) return true;
+                <ValueSelectField
+                  label={t("rank")}
+                  fieldName="rank"
+                  values={officerRank.values}
+                  valueType={ValueType.OFFICER_RANK}
+                  isClearable
+                  filterFn={(value) => {
+                    if ((value.officerRankDepartments?.length ?? 0) <= 0) return true;
 
-                        return (
-                          v.officerRankDepartments?.some((v) => v.id === values.department) ?? true
-                        );
-                      })
-                      .map((value) => ({
-                        label: value.value,
-                        value: value.id,
-                      }))}
-                  />
-                </FormField>
+                    return (
+                      value.officerRankDepartments?.some((v) => v.id === values.department) ?? true
+                    );
+                  }}
+                />
 
                 <TextField
                   errorMessage={errors.position}

@@ -3,11 +3,9 @@ import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/modal-ids";
-import { FormField } from "components/form/FormField";
 import { Form, Formik } from "formik";
-import { Loader, Button } from "@snailycad/ui";
+import { Loader, Button, SelectField } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
-import { Select } from "components/form/Select";
 import type { GetCustomRolesData, PutManageUserByIdRolesData } from "@snailycad/types/api";
 
 interface Props {
@@ -27,7 +25,7 @@ export function ManageRolesModal({ roles, user, onUpdate }: Props) {
       path: `/admin/manage/users/roles/${user.id}`,
       method: "PUT",
       data: {
-        roles: data.roles.map((v) => v.value),
+        roles: data.roles.map((v) => v),
       },
     });
 
@@ -38,7 +36,7 @@ export function ManageRolesModal({ roles, user, onUpdate }: Props) {
   }
 
   const INITIAL_VALUES = {
-    roles: user.roles?.map((v) => ({ label: v.name, value: v.id })) ?? [],
+    roles: user.roles?.map((v) => v.id) ?? [],
   };
 
   return (
@@ -49,9 +47,9 @@ export function ManageRolesModal({ roles, user, onUpdate }: Props) {
       isOpen={isOpen(ModalIds.ManageRoles)}
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, values }) => {
-          const _roles = values.roles.map((v) => {
-            const role = roles.customRoles.find((r) => r.id === v.value);
+        {({ values }) => {
+          const _roles = values.roles.map((roleId) => {
+            const role = roles.customRoles.find((r) => r.id === roleId);
             return role!;
           });
 
@@ -59,19 +57,16 @@ export function ManageRolesModal({ roles, user, onUpdate }: Props) {
 
           return (
             <Form>
-              <FormField label={t("roles")} className="my-2">
-                <Select
-                  values={roles.customRoles.map((role) => ({
-                    label: role.name,
-                    value: role.id,
-                  }))}
-                  value={values.roles}
-                  onChange={handleChange}
-                  name="roles"
-                  isMulti
-                  closeMenuOnSelect={false}
-                />
-              </FormField>
+              <SelectField
+                label={t("roles")}
+                className="my-2"
+                selectionMode="multiple"
+                selectedKeys={values.roles}
+                options={roles.customRoles.map((role) => ({
+                  label: role.name,
+                  value: role.id,
+                }))}
+              />
 
               <div className="mt-3">
                 <h3 className="text-lg font-semibold">Permissions</h3>
