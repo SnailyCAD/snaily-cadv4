@@ -49,7 +49,7 @@ export interface Blip {
   pos: LatLngLiteral;
   rawPos?: XYZ;
   type: number;
-  icon?: Icon | undefined;
+  icon?: Icon;
 }
 
 export interface MarkerType {

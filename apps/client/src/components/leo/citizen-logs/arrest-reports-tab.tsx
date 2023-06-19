@@ -82,7 +82,7 @@ export function ArrestReportsTab({ arrestReports }: Props) {
 
   return (
     <TabsContent value="arrest-reports-tab">
-      {asyncTable.isLoading && asyncTable.items.length >= 0 ? (
+      {asyncTable.isLoading && asyncTable.items.length <= 0 ? (
         <Loader />
       ) : asyncTable.noItemsAvailable ? (
         <p className="mt-5">{t("noCitizenLogs")}</p>
