@@ -10,6 +10,7 @@ import {
   SelectField,
   TextField,
   SwitchField,
+  FormRow,
 } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
@@ -31,7 +32,6 @@ import { useAuth } from "context/AuthContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useBusinessState } from "state/business-state";
 import { filterLicenseType, filterLicenseTypes } from "lib/utils";
-import { FormRow } from "components/form/FormRow";
 import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";
 import { toastMessage } from "lib/toastMessage";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";

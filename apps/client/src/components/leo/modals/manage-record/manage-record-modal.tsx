@@ -9,6 +9,7 @@ import {
   TabList,
   TabsContent,
   SwitchField,
+  FormRow,
 } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import type { SelectValue } from "components/form/Select";
@@ -27,9 +28,7 @@ import type { PostRecordsData, PutRecordsByIdData } from "@snailycad/types/api";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import { FullDate } from "components/shared/FullDate";
-
 import dynamic from "next/dynamic";
-import { FormRow } from "components/form/FormRow";
 import type { BusinessSearchResult } from "state/search/business-search-state";
 
 const ManageCourtEntryModal = dynamic(
@@ -268,7 +267,7 @@ export function ManageRecordModal(props: Props) {
             >
               <TabsContent value="general-information-tab">
                 {props.hideCitizenField ? null : (
-                  <FormRow flexLike>
+                  <FormRow useFlex>
                     {isBusinessRecord ? (
                       <AsyncListSearchField<BusinessSearchResult>
                         className="w-full"

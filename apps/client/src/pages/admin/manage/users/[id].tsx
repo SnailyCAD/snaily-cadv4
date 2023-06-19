@@ -16,9 +16,9 @@ import {
   Breadcrumbs,
   BreadcrumbItem,
   Alert,
+  FormRow,
 } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
-import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";

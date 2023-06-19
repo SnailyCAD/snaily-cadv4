@@ -9,8 +9,7 @@ import { Select } from "components/form/Select";
 import { filterLicenseType, filterLicenseTypes } from "lib/utils";
 import { classNames } from "lib/classNames";
 import type { LicenseInitialValues } from "./manage-licenses-modal";
-import { FormRow } from "components/form/FormRow";
-import { DatePickerField, SwitchField } from "@snailycad/ui";
+import { FormRow, DatePickerField, SwitchField } from "@snailycad/ui";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
 
 export function createDefaultLicensesValues(citizen: Citizen | null): LicenseInitialValues {

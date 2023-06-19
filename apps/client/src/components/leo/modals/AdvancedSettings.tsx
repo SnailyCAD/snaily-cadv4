@@ -1,7 +1,13 @@
 import type { IndividualDivisionCallsign } from "@snailycad/types";
 import { FormField } from "components/form/FormField";
-import { FormRow } from "components/form/FormRow";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, Input } from "@snailycad/ui";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+  Input,
+  FormRow,
+} from "@snailycad/ui";
 import type { SelectValue } from "components/form/Select";
 import { useFormikContext } from "formik";
 

@@ -13,12 +13,12 @@ import {
   AsyncListSearchField,
   Item,
   SwitchField,
+  FormRow,
 } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
-import { FormRow } from "components/form/FormRow";
 import { isUnitOfficer } from "@snailycad/utils";
 import type { GetManageUnitByIdData, PutManageUnitData } from "@snailycad/types/api";
 import { TabsContent } from "@radix-ui/react-tabs";

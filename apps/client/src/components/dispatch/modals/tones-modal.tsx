@@ -1,11 +1,10 @@
-import { Loader, Button, TextField, SwitchField } from "@snailycad/ui";
+import { Loader, Button, TextField, SwitchField, FormRow } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
-import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
 import { TONES_SCHEMA } from "@snailycad/schemas";
 import { toastMessage } from "lib/toastMessage";
@@ -99,10 +98,10 @@ export function TonesModal({ types }: Props) {
           <Form>
             <p className="my-3 text-neutral-700 dark:text-gray-400">{t("notesInfo")}</p>
 
-            <FormRow>
+            <FormRow useFlex>
               {types.includes(ActiveToneType.EMS_FD) ? (
                 <SwitchField
-                  className="mt-3"
+                  className="mt-3 w-full"
                   isSelected={values.emsFdTone}
                   onChange={(isSelected) => setFieldValue("emsFdTone", isSelected)}
                 >
@@ -112,7 +111,7 @@ export function TonesModal({ types }: Props) {
 
               {types.includes(ActiveToneType.LEO) ? (
                 <SwitchField
-                  className="mt-3"
+                  className="mt-3 w-full"
                   isSelected={values.leoTone}
                   onChange={(isSelected) => setFieldValue("leoTone", isSelected)}
                 >

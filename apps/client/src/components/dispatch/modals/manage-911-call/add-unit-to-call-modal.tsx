@@ -1,5 +1,5 @@
 import { useTranslations } from "use-intl";
-import { Loader, Button, AsyncListSearchField, Item, SwitchField } from "@snailycad/ui";
+import { Loader, Button, AsyncListSearchField, Item, SwitchField, FormRow } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
@@ -13,7 +13,6 @@ import { useCall911State } from "state/dispatch/call-911-state";
 import type { CombinedEmsFdUnit, CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 import { useImageUrl } from "hooks/useImageUrl";
 import { ImageWrapper } from "components/shared/image-wrapper";
-import { FormRow } from "components/form/FormRow";
 import type { ActiveDeputy } from "state/ems-fd-state";
 import type { ActiveOfficer } from "state/leo-state";
 import { Infofield } from "components/shared/Infofield";
@@ -191,7 +190,7 @@ export function AddUnitToCallModal({ onClose }: Props) {
                 }}
               </AsyncListSearchField>
 
-              <FormRow flexLike className="items-center">
+              <FormRow useFlex className="items-center justify-between">
                 <SwitchField
                   className="mt-3"
                   isSelected={values.isPrimary}

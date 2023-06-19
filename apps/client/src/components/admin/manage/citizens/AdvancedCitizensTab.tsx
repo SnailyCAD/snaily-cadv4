@@ -1,7 +1,6 @@
 import * as React from "react";
 import { FormField } from "components/form/FormField";
-import { FormRow } from "components/form/FormRow";
-import { Button, Loader, TextField } from "@snailycad/ui";
+import { Button, Loader, TextField, FormRow } from "@snailycad/ui";
 import { v4 } from "uuid";
 import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
@@ -58,7 +57,7 @@ export function AdvancedCitizensTab() {
       <form className="mt-10" onSubmit={onSubmit}>
         {Object.entries(citizens).map(([id, value]) => {
           return (
-            <FormRow flexLike key={id}>
+            <FormRow key={id}>
               <div className="grid place-items-center">
                 <Button
                   type="button"

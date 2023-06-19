@@ -1,6 +1,5 @@
 import { CREATE_TRUCK_LOG_SCHEMA } from "@snailycad/schemas";
-import { Loader, Button, TextField, AsyncListSearchField, Item } from "@snailycad/ui";
-import { FormRow } from "components/form/FormRow";
+import { FormRow, Loader, Button, TextField, AsyncListSearchField, Item } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";

@@ -1,11 +1,10 @@
-import { Loader, Button, TextField } from "@snailycad/ui";
+import { Loader, Button, TextField, FormRow } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
 import type { RegisteredVehicle } from "@snailycad/types";
-import { FormRow } from "components/form/FormRow";
 import { ModalIds } from "types/modal-ids";
 import { handleValidate } from "lib/handleValidate";
 import { TRANSFER_VEHICLE_SCHEMA } from "@snailycad/schemas";

@@ -1,7 +1,6 @@
 import { NAME_CHANGE_REQUEST_SCHEMA } from "@snailycad/schemas";
-import { Input, Loader, Button } from "@snailycad/ui";
+import { Input, Loader, Button, FormRow } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { FormRow } from "components/form/FormRow";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik, FormikHelpers } from "formik";

@@ -4,8 +4,7 @@ import { useValues } from "context/ValuesContext";
 import { useFormikContext } from "formik";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import { useTranslations } from "use-intl";
-import { FormRow } from "../FormRow";
-import { AsyncListSearchField, Item } from "@snailycad/ui";
+import { AsyncListSearchField, FormRow, Item } from "@snailycad/ui";
 import { classNames } from "lib/classNames";
 import type { Node } from "@react-types/shared";
 
@@ -78,7 +77,7 @@ export function AddressPostalSelect(props: Props) {
   }
 
   return (
-    <FormRow disabled={props.postalOnly} flexLike>
+    <FormRow useFlex>
       {props.postalOnly ? null : (
         <AsyncListSearchField<AddressValue>
           isDisabled={props.isDisabled}
@@ -119,7 +118,7 @@ export function AddressPostalSelect(props: Props) {
         selectedKey={selectedPostal}
         allowsCustomValue
         defaultItems={address.values}
-        className={classNames(!props.postalOnly && "w-[300px]")}
+        className={classNames(!props.postalOnly ? "w-[300px]" : "w-full")}
         label={common("postal")}
         isOptional={props.postalOptional}
         errorMessage={errors.postal}

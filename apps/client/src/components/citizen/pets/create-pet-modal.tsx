@@ -1,7 +1,6 @@
 import { PET_SCHEMA } from "@snailycad/schemas";
 import { PostPetsData } from "@snailycad/types/api";
-import { Button, DatePickerField, Loader, TextField } from "@snailycad/ui";
-import { FormRow } from "components/form/FormRow";
+import { Button, DatePickerField, Loader, TextField, FormRow } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import { useAuth } from "context/AuthContext";

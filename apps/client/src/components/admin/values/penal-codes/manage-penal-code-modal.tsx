@@ -1,6 +1,6 @@
 import { PENAL_CODE_SCHEMA } from "@snailycad/schemas";
 import { FormField } from "components/form/FormField";
-import { Loader, Button, SelectField, TextField, CheckboxField } from "@snailycad/ui";
+import { Loader, Button, SelectField, TextField, CheckboxField, FormRow } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { Form, Formik, useFormikContext } from "formik";
 import { handleValidate } from "lib/handleValidate";
@@ -8,7 +8,6 @@ import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { PenalCode, ValueType, PenalCodeType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
-import { FormRow } from "components/form/FormRow";
 import { dataToSlate, Editor } from "components/editor/editor";
 import { ModalIds } from "types/modal-ids";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
@@ -215,7 +214,7 @@ function FieldsRow({ keyValue }: { keyValue: `fines${number}` | "prisonTerm" | "
   const isBailDisabled = keyValue === "bail" ? !values.prisonTerm.enabled : false;
 
   return (
-    <FormRow className="mb-0">
+    <FormRow>
       <CheckboxField
         onChange={(isSelected) => setFieldValue(`${keyValue}.enabled`, isSelected)}
         isSelected={values[keyValue].enabled}
@@ -224,7 +223,7 @@ function FieldsRow({ keyValue }: { keyValue: `fines${number}` | "prisonTerm" | "
         {label}
       </CheckboxField>
 
-      <FormRow className="items-center" flexLike>
+      <FormRow className="items-center" useFlex>
         <TextField
           label="Min."
           onChange={(value) => setFieldValue(`${keyValue}.values[0]`, value)}
@@ -237,7 +236,7 @@ function FieldsRow({ keyValue }: { keyValue: `fines${number}` | "prisonTerm" | "
           isDisabled={isDisabled}
         />
 
-        <span className="mb-2.5">{" - "}</span>
+        <span className="mt-2.5">{" - "}</span>
         <TextField
           label="Max."
           onChange={(value) => setFieldValue(`${keyValue}.values[1]`, value)}

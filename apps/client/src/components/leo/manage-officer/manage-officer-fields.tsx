@@ -1,8 +1,7 @@
 import type * as React from "react";
-import { TextField } from "@snailycad/ui";
+import { TextField, FormRow } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
-import { FormRow } from "components/form/FormRow";
 import { ImageSelectInput } from "components/form/inputs/ImageSelectInput";
 import { CallSignPreview } from "../CallsignPreview";
 import type { Officer } from "@snailycad/types";

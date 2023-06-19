@@ -1,5 +1,5 @@
 import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
-import { Loader, Button, SwitchField, CheckboxField } from "@snailycad/ui";
+import { Loader, Button, SwitchField, CheckboxField, FormRow } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
@@ -8,7 +8,6 @@ import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
-import { FormRow } from "components/form/FormRow";
 import { useRouter } from "next/router";
 import { dataToSlate, Editor } from "components/editor/editor";
 import { IncidentEventsArea } from "./IncidentEventsArea";
@@ -154,11 +153,12 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
               ) : null}
 
               <div>
-                <FormRow>
+                <FormRow className="mb-3" useFlex>
                   <SwitchField
                     isDisabled={areFieldsDisabled}
                     isSelected={values.firearmsInvolved}
                     onChange={(isSelected) => setFieldValue("firearmsInvolved", isSelected)}
+                    className="w-full"
                   >
                     {t("firearmsInvolved")}
                   </SwitchField>
@@ -167,6 +167,7 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
                     isDisabled={areFieldsDisabled}
                     isSelected={values.injuriesOrFatalities}
                     onChange={(isSelected) => setFieldValue("injuriesOrFatalities", isSelected)}
+                    className="w-full"
                   >
                     {t("injuriesOrFatalities")}
                   </SwitchField>
@@ -175,6 +176,7 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
                     isDisabled={areFieldsDisabled}
                     isSelected={values.arrestsMade}
                     onChange={(isSelected) => setFieldValue("arrestsMade", isSelected)}
+                    className="w-full"
                   >
                     {t("arrestsMade")}
                   </SwitchField>
@@ -188,7 +190,7 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
                   />
                 </FormField>
 
-                <FormRow flexLike>
+                <FormRow useFlex>
                   <ValueSelectField
                     className="w-full"
                     isOptional

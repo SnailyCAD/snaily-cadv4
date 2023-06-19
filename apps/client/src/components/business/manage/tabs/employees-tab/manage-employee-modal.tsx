@@ -1,4 +1,4 @@
-import { Loader, Button, SwitchField } from "@snailycad/ui";
+import { Loader, Button, SwitchField, FormRow } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
@@ -10,7 +10,6 @@ import { useTranslations } from "use-intl";
 import { UPDATE_EMPLOYEE_SCHEMA } from "@snailycad/schemas";
 import { handleValidate } from "lib/handleValidate";
 import { Select } from "components/form/Select";
-import { FormRow } from "components/form/FormRow";
 import { useValues } from "context/ValuesContext";
 import { Employee, EmployeeAsEnum } from "@snailycad/types";
 import type { PutBusinessEmployeesData } from "@snailycad/types/api";

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { EMS_FD_DEPUTY_SCHEMA } from "@snailycad/schemas";
-import { Loader, Button, TextField } from "@snailycad/ui";
+import { Loader, Button, TextField, FormRow } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
@@ -11,7 +11,6 @@ import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
-import { FormRow } from "components/form/FormRow";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { CallSignPreview } from "components/leo/CallsignPreview";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";

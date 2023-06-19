@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import type { Post911CallsData, Put911CallByIdData } from "@snailycad/types/api";
 import { StatusValueType, ValueType, WhitelistStatus } from "@snailycad/types";
-import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
 import { CALL_911_SCHEMA } from "@snailycad/schemas";
 import { dataToSlate, Editor } from "components/editor/editor";
@@ -9,7 +8,7 @@ import { useValues } from "context/ValuesContext";
 import { toastMessage } from "lib/toastMessage";
 import { ModalIds } from "types/modal-ids";
 import { Form, Formik } from "formik";
-import { Button, CheckboxField, Loader, TextField } from "@snailycad/ui";
+import { Button, CheckboxField, Loader, TextField, FormRow } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
 import type { Full911Call } from "state/dispatch/dispatch-state";
@@ -163,7 +162,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
             </FormField>
           ) : (
             <>
-              <FormRow flexLike={!DIVISIONS}>
+              <FormRow useFlex={!DIVISIONS}>
                 <FormField
                   className="w-full"
                   errorMessage={errors.departments as string}

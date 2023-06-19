@@ -9,8 +9,8 @@ import {
   MultiFormStep,
   AsyncListSearchField,
   Item,
+  FormRow,
 } from "@snailycad/ui";
-import { FormRow } from "components/form/FormRow";
 import type { SelectValue } from "components/form/Select";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { CREATE_CITIZEN_SCHEMA, CREATE_CITIZEN_WITH_OFFICER_SCHEMA } from "@snailycad/schemas";
@@ -248,7 +248,7 @@ export function ManageCitizenForm({
               />
             </FormRow>
 
-            <FormRow flexLike={!features.SOCIAL_SECURITY_NUMBERS}>
+            <FormRow useFlex={!features.SOCIAL_SECURITY_NUMBERS}>
               <DatePickerField
                 errorMessage={errors.dateOfBirth as string}
                 value={values.dateOfBirth}
@@ -368,7 +368,7 @@ export function ManageCitizenForm({
       {formFeatures?.["license-fields"] && features.ALLOW_CITIZEN_UPDATE_LICENSE ? (
         <MultiFormStep id="license-information" title={t("licenseInformation")}>
           {() => (
-            <FormRow flexLike>
+            <FormRow>
               <ManageLicensesFormFields flexType="column" isLeo={false} allowRemoval />
             </FormRow>
           )}

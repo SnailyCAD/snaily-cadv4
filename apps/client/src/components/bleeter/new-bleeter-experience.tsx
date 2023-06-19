@@ -1,7 +1,6 @@
 import { BleeterProfile } from "@snailycad/types";
-import { Button, Loader, TextField } from "@snailycad/ui";
+import { Button, Loader, TextField, FormRow } from "@snailycad/ui";
 import { Layout } from "components/Layout";
-import { FormRow } from "components/form/FormRow";
 import { Title } from "components/shared/Title";
 import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";

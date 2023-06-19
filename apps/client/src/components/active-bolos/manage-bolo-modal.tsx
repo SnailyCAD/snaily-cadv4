@@ -1,5 +1,5 @@
 import { FormField } from "components/form/FormField";
-import { AsyncListSearchField, Button, Item, Loader, TextField } from "@snailycad/ui";
+import { AsyncListSearchField, Button, Item, Loader, TextField, FormRow } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
@@ -11,8 +11,6 @@ import { useTranslations } from "use-intl";
 import { CREATE_BOLO_SCHEMA } from "@snailycad/schemas";
 import { useDispatchState } from "state/dispatch/dispatch-state";
 import { PersonFill, ThreeDots } from "react-bootstrap-icons";
-import { FormRow } from "components/form/FormRow";
-import { classNames } from "lib/classNames";
 import { useSSRSafeId } from "@react-aria/ssr";
 import type { PostBolosData, PutBolosData } from "@snailycad/types/api";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
@@ -127,11 +125,11 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
         {({ setValues, setFieldValue, values, errors, isValid }) => (
           <Form autoComplete="off">
             <FormField errorMessage={errors.type} label={common("type")}>
-              <FormRow>
+              <FormRow useFlex>
                 <Button
                   onPress={() => setFieldValue("type", BoloType.PERSON)}
                   variant={values.type === BoloType.PERSON ? "blue" : "default"}
-                  className={classNames("flex justify-center")}
+                  className="flex justify-center w-full"
                   type="button"
                   title="Person type"
                   aria-label="Person Type"
@@ -142,7 +140,7 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                 <Button
                   onPress={() => setFieldValue("type", BoloType.VEHICLE)}
                   variant={values.type === BoloType.VEHICLE ? "blue" : "default"}
-                  className={classNames("flex justify-center")}
+                  className="flex justify-center w-full"
                   type="button"
                   title="Vehicle type"
                   aria-label="Vehicle Type"
@@ -162,7 +160,7 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                 <Button
                   onPress={() => setFieldValue("type", BoloType.OTHER)}
                   variant={values.type === BoloType.OTHER ? "blue" : "default"}
-                  className={classNames("flex justify-center")}
+                  className="flex justify-center w-full"
                   type="button"
                   title="Other type"
                   aria-label="Other Type"
