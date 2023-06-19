@@ -9,7 +9,7 @@ import {
   isEmpty,
 } from "lib/utils";
 import { useTranslations } from "use-intl";
-import { Button, buttonVariants, TabsContent } from "@snailycad/ui";
+import { Button, buttonVariants, SelectField, TabsContent } from "@snailycad/ui";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
@@ -29,8 +29,6 @@ import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { getSelectedTableRows } from "hooks/shared/table/use-table-state";
 import { SearchArea } from "components/shared/search/search-area";
 import dynamic from "next/dynamic";
-import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
 import { useImageUrl } from "hooks/useImageUrl";
 import { ImageWrapper } from "components/shared/image-wrapper";
@@ -165,19 +163,19 @@ export function AllUnitsTab({ units }: Props) {
         asyncTable={asyncTable}
         totalCount={units.totalCount}
       >
-        <FormField className="w-full max-w-[15rem]" label={t("Leo.department")}>
-          <Select
-            isClearable
-            value={asyncTable.filters?.departmentId ?? null}
-            onChange={(event) =>
-              asyncTable.setFilters((prev) => ({ ...prev, departmentId: event.target.value }))
-            }
-            values={department.values.map((v) => ({
-              label: v.value.value,
-              value: v.id,
-            }))}
-          />
-        </FormField>
+        <SelectField
+          className="min-w-[15rem]"
+          label={t("Leo.department")}
+          isClearable
+          selectedKey={asyncTable.filters?.departmentId ?? null}
+          options={department.values.map((value) => ({
+            label: value.value.value,
+            value: value.id,
+          }))}
+          onSelectionChange={(value) => {
+            asyncTable.setFilters((prev) => ({ ...prev, departmentId: value }));
+          }}
+        />
       </SearchArea>
 
       {asyncTable.noItemsAvailable ? (
