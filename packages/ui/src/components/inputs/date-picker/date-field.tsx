@@ -2,10 +2,10 @@ import * as React from "react";
 import { useLocale } from "@react-aria/i18n";
 import { useDateFieldState, type DateSegment, DateFieldState } from "@react-stately/datepicker";
 import { AriaDatePickerProps, useDateField, useDateSegment } from "@react-aria/datepicker";
-import { createCalendar } from "@internationalized/date";
+import { type DateValue, createCalendar } from "@internationalized/date";
 import { classNames } from "../../../utils/classNames";
 
-export function DateField(props: AriaDatePickerProps<any>) {
+export function DateField(props: AriaDatePickerProps<DateValue>) {
   const { locale } = useLocale();
   const state = useDateFieldState({
     ...props,

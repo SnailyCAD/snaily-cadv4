@@ -44,7 +44,7 @@ function MultiForm<FormValues extends FormikValues>(props: Props<FormValues>) {
   }, [steps]);
 
   const getActiveStep = React.useCallback(
-    (formikState: any, stepNumber: number) => {
+    <FormValues extends object>(formikState: FormikProps<FormValues>, stepNumber: number) => {
       const _step = steps[stepNumber];
       const elementProps = typeof _step === "object" && "props" in _step ? _step.props : {};
 

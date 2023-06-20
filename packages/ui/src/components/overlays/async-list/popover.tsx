@@ -7,7 +7,7 @@ interface Props {
   children: React.ReactNode;
   onClose(): void;
   isOpen: boolean;
-  popoverRef?: any;
+  popoverRef?: React.MutableRefObject<HTMLDivElement | null>;
   menuClassName?: string;
 }
 

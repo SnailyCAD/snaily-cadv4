@@ -2,14 +2,14 @@ import * as React from "react";
 import { useDrop } from "react-dnd";
 import { classNames } from "../../utils/classNames";
 
-interface Props {
-  onDrop(item: any): void;
+interface Props<Item> {
+  onDrop(item: Item): void;
   accepts: string[];
-  canDrop?(item: any): boolean;
+  canDrop?(item: Item): boolean;
   children: React.ReactNode;
 }
 
-function _Droppable(props: Props) {
+export function Droppable<Item>(props: Props<Item>) {
   const [{ isOver, canDrop: _canDrop }, drop] = useDrop({
     accept: props.accepts,
     canDrop: props.canDrop,
@@ -31,5 +31,3 @@ function _Droppable(props: Props) {
     </div>
   );
 }
-
-export const Droppable = React.memo(_Droppable);

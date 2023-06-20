@@ -48,11 +48,9 @@ export function AssignedUnitsColumn({ handleAssignToCall, isDispatch, call }: Pr
   }
 
   return (
-    <Droppable
+    <Droppable<Officer | EmsFdDeputy | CombinedLeoUnit>
       accepts={[DndActions.MoveUnitTo911CallOrIncident]}
-      onDrop={(item: Officer | EmsFdDeputy | CombinedLeoUnit) =>
-        void handleAssignToCall(call, item.id)
-      }
+      onDrop={(item) => void handleAssignToCall(call, item.id)}
       canDrop={(item) => isDispatch && !call.assignedUnits.some((v) => v.unit?.id === item.id)}
     >
       <div ref={scrollRef} className="flex">

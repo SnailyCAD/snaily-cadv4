@@ -1,13 +1,13 @@
 import * as React from "react";
 import { useCalendarState } from "@react-stately/calendar";
 import { CalendarProps, useCalendar } from "@react-aria/calendar";
-import { createCalendar } from "@internationalized/date";
+import { type DateValue, createCalendar } from "@internationalized/date";
 import { CalendarGrid } from "./calendar-grid";
 import { Button } from "../../../button/button";
 import { ChevronLeft, ChevronRight } from "react-bootstrap-icons";
 import { useLocale } from "@react-aria/i18n";
 
-export function Calendar(props: CalendarProps<any>) {
+export function Calendar(props: CalendarProps<DateValue>) {
   const { locale } = useLocale();
   const state = useCalendarState({
     ...props,

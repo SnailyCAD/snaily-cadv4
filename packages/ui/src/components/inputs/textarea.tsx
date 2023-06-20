@@ -1,8 +1,8 @@
 import * as React from "react";
 import { classNames } from "../../utils/classNames";
 
-type Props = Omit<JSX.IntrinsicElements["textarea"], "id"> & {
-  errorMessage?: string;
+type Props = Omit<JSX.IntrinsicElements["textarea"], "id" | "ref"> & {
+  errorMessage?: string | null;
 };
 
 export const Textarea = React.forwardRef<HTMLTextAreaElement, Props>(

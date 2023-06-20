@@ -14,7 +14,7 @@ interface Props extends AriaDialogProps {
   children: React.ReactNode;
   onClose(): void;
   isOpen: boolean;
-  popoverRef?: any;
+  popoverRef?: React.MutableRefObject<HTMLDivElement | null>;
   className?: string;
   isCalendar?: boolean;
 }

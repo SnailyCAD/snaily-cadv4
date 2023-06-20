@@ -25,7 +25,7 @@ export interface MultiSelectProps<T>
     FocusableProps,
     OverlayTriggerProps {
   shouldFlip?: boolean;
-  onSelectionChange?(keys: React.Key[] | React.Key): any;
+  onSelectionChange?(keys: React.Key[] | React.Key): void;
 }
 
 export interface MultiSelectState<T> extends MultiSelectListState<T>, MenuTriggerState {

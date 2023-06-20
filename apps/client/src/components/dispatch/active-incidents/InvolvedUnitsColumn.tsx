@@ -42,11 +42,9 @@ export function InvolvedUnitsColumn({ handleAssignUnassignToIncident, incident }
   }
 
   return (
-    <Droppable
+    <Droppable<Officer | EmsFdDeputy | CombinedLeoUnit>
       accepts={[DndActions.MoveUnitTo911CallOrIncident]}
-      onDrop={(item: Officer | EmsFdDeputy | CombinedLeoUnit) =>
-        void handleAssignUnassignToIncident(incident, item.id, "assign")
-      }
+      onDrop={(item) => void handleAssignUnassignToIncident(incident, item.id, "assign")}
       canDrop={(item) => !incident.unitsInvolved.some((v) => v.unit?.id === item.id)}
     >
       <div className="flex gap-2">

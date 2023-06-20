@@ -13,7 +13,7 @@ interface Props<T extends AnyValue> {
   valueType: ValueType;
   values: T[];
   label: string;
-  filterFn?(value: T): boolean;
+  filterFn?(value: T, index: number): boolean;
   className?: string;
 
   isClearable?: boolean;

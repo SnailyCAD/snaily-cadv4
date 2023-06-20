@@ -9,7 +9,7 @@ import { useModal } from "state/modalState";
 import { useActiveIncidentsTable } from "hooks/realtime/use-active-incidents-table";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
-import type { LeoIncident } from "@snailycad/types";
+import type { IncidentInvolvedUnit, LeoIncident } from "@snailycad/types";
 import { InvolvedUnitsColumn } from "./active-incidents/InvolvedUnitsColumn";
 import { DndActions } from "types/dnd-actions";
 import { classNames } from "lib/classNames";
@@ -180,10 +180,11 @@ export function ActiveIncidents() {
         />
       )}
 
-      <Droppable
-        onDrop={({ incident, unit }) =>
-          handleAssignUnassignToIncident(incident, unit.unit?.id, "unassign")
-        }
+      <Droppable<{ incident: LeoIncident; unit: IncidentInvolvedUnit }>
+        onDrop={({ incident, unit }) => {
+          if (!unit.unit?.id) return;
+          handleAssignUnassignToIncident(incident, unit.unit?.id, "unassign");
+        }}
         accepts={[DndActions.UnassignUnitFromIncident]}
       >
         <div

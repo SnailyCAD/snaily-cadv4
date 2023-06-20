@@ -26,7 +26,7 @@ const Calendar = dynamic(
   },
 );
 
-interface Props extends AriaDateFieldProps<any> {
+interface Props extends Omit<AriaDateFieldProps<DateValue>, "value"> {
   label: string;
   isDisabled?: boolean;
   isOptional?: boolean;

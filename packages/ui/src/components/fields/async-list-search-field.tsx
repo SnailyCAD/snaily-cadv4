@@ -30,7 +30,7 @@ export interface AsyncListFieldProps<T extends object>
   label: React.ReactNode;
   isOptional?: boolean;
   isClearable?: boolean;
-  filterFn?: any;
+  filterFn?(value: T, index: number): boolean;
 
   errorMessage?: string | null;
   className?: string;
@@ -45,7 +45,7 @@ export interface AsyncListFieldProps<T extends object>
 }
 
 function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
-  const ref = React.useRef<any>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
   const listBoxRef = React.useRef<HTMLUListElement | null>(null);
   const popoverRef = React.useRef<HTMLDivElement | null>(null);
   const buttonRef = React.useRef<HTMLButtonElement | null>(null);
@@ -110,7 +110,9 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
   }
 
   const listOptions = {
-    items: props.filterFn ? list.items.filter(props.filterFn) : list.items,
+    items: props.filterFn
+      ? list.items.filter((value, index) => props.filterFn?.(value, index))
+      : list.items,
     inputValue: props.localValue,
     onInputChange: (value: string) => handleSelectionChange(undefined, value),
   };
@@ -127,7 +129,7 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
     {
       ...props,
       onSelectionChange: handleSelectionChange,
-      inputRef: ref,
+      inputRef,
       listBoxRef,
       popoverRef,
       buttonRef,
@@ -144,7 +146,7 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
       <div className="relative group flex">
         <Input
           {...inputProps}
-          ref={ref}
+          ref={inputRef}
           errorMessage={props.errorMessage}
           className={cn(
             inputProps.className,
