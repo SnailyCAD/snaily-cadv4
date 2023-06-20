@@ -479,5 +479,5 @@ export type ActiveTone = Prisma.ActiveTone & {
 
 export type AuditLog = Prisma.AuditLog & {
   executor?: User | null;
-  action: { previous: any; new: any; type: any };
+  action: { previous: unknown; new: unknown; type: unknown };
 };

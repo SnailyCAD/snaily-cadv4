@@ -36,9 +36,9 @@ export function useLoadValuesClientSide(options: Options) {
       return [];
     }
 
-    const [first, ...rest] = options.valueTypes;
+    const [first, ...rest] = options.valueTypes as [ValueType, ...ValueType[]];
 
-    const firstType = first!.toLowerCase();
+    const firstType = first.toLowerCase();
     const params = new URLSearchParams();
 
     if (rest.length >= 1) {

@@ -32,8 +32,9 @@ export function orderColumnsByTableActionsAlignment<TData extends RowData>(
     arr[i + 1] = column;
   }
 
-  if (columns[idxOfActions]) {
-    arr[0] = columns[idxOfActions]!;
+  const actionsColumn = columns[idxOfActions];
+  if (actionsColumn) {
+    arr[0] = actionsColumn;
   }
 
   return arr;
