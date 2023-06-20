@@ -24,12 +24,12 @@ interface Props<T extends AnyValue> {
 export function ValueSelectField<T extends AnyValue>(props: Props<T>) {
   const { values, errors, setValues } = useFormikContext<any>();
 
-  function getDefaultSearchValue() {
+  const getDefaultSearchValue = React.useCallback(() => {
     const value = props.values.find((v) => v.id === values[props.fieldName]);
     return value ? getValueStrFromValue(value) : "";
-  }
+  }, [props.fieldName, props.values]); // eslint-disable-line
 
-  const [search, setSearch] = React.useState<string>(getDefaultSearchValue());
+  const [search, setSearch] = React.useState<string>(() => getDefaultSearchValue());
 
   useLoadValuesClientSide({
     enabled: !hasFetched,
@@ -38,7 +38,9 @@ export function ValueSelectField<T extends AnyValue>(props: Props<T>) {
 
   React.useEffect(() => {
     hasFetched = true;
-  }, []);
+
+    setSearch(() => getDefaultSearchValue());
+  }, [getDefaultSearchValue]);
 
   function handleSuggestionPress({
     node,
@@ -75,6 +77,7 @@ export function ValueSelectField<T extends AnyValue>(props: Props<T>) {
       isOptional={props.isOptional}
       errorMessage={errors[props.fieldName] as string}
       localValue={search}
+      inputValue={search}
       setValues={handleSuggestionPress}
       fetchOptions={{
         filterTextRequired: false,

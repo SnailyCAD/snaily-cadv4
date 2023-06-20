@@ -1,5 +1,4 @@
-import { Loader, Button, SwitchField, FormRow } from "@snailycad/ui";
-import { FormField } from "components/form/FormField";
+import { Loader, Button, SwitchField, FormRow, SelectField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik, FormikHelpers } from "formik";
@@ -9,7 +8,6 @@ import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 import { UPDATE_EMPLOYEE_SCHEMA } from "@snailycad/schemas";
 import { handleValidate } from "lib/handleValidate";
-import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
 import { Employee, EmployeeAsEnum } from "@snailycad/types";
 import type { PutBusinessEmployeesData } from "@snailycad/types/api";
@@ -99,19 +97,18 @@ export function ManageEmployeeModal({ onClose, onUpdate, employee, isAdmin }: Pr
       onClose={handleClose}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setFieldValue, errors, values, isValid }) => (
+        {({ setFieldValue, errors, values, isValid }) => (
           <Form>
-            <FormField errorMessage={errors.roleId} label={t("role")}>
-              <Select
-                name="roleId"
-                onChange={handleChange}
-                value={values.roleId}
-                values={filteredRoles.map((v) => ({
-                  label: v.value?.value,
-                  value: v.id,
-                }))}
-              />
-            </FormField>
+            <SelectField
+              errorMessage={errors.roleId}
+              label={t("role")}
+              options={filteredRoles.map((v) => ({
+                label: v.value?.value,
+                value: v.id,
+              }))}
+              onSelectionChange={(key) => setFieldValue("roleId", key)}
+              selectedKey={values.roleId}
+            />
 
             <FormRow>
               <SwitchField

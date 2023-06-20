@@ -1,6 +1,4 @@
 import { Loader, Button } from "@snailycad/ui";
-import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { useValues } from "context/ValuesContext";
@@ -14,6 +12,8 @@ import type { PostSearchActionsCreateVehicle } from "@snailycad/types/api";
 import { handleValidate } from "lib/handleValidate";
 import { IMPOUND_VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { shallow } from "zustand/shallow";
+import { ValueSelectField } from "components/form/inputs/value-select-field";
+import { ValueType } from "@snailycad/types";
 
 export function ImpoundVehicleModal() {
   const common = useTranslations("Common");
@@ -74,35 +74,28 @@ export function ImpoundVehicleModal() {
       className="min-w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, errors, values }) => (
-          <Form>
-            <FormField errorMessage={errors.impoundLot} label={t("Leo.impoundLot")}>
-              <Select
-                values={impoundLot.values.map((license) => ({
-                  label: license.value,
-                  value: license.id,
-                }))}
-                value={values.impoundLot}
-                name="impoundLot"
-                onChange={handleChange}
-              />
-            </FormField>
+        <Form>
+          <ValueSelectField
+            fieldName="impoundLot"
+            label={t("Leo.impoundLot")}
+            values={impoundLot.values}
+            valueType={ValueType.IMPOUND_LOT}
+          />
 
-            <footer className="flex items-center justify-end gap-2 mt-5">
-              <Button
-                type="reset"
-                onPress={() => closeModal(ModalIds.ImpoundVehicle)}
-                variant="cancel"
-              >
-                {common("cancel")}
-              </Button>
-              <Button className="flex items-center" disabled={state === "loading"} type="submit">
-                {state === "loading" ? <Loader className="mr-2" /> : null}
-                {t("Leo.impoundVehicle")}
-              </Button>
-            </footer>
-          </Form>
-        )}
+          <footer className="flex items-center justify-end gap-2 mt-5">
+            <Button
+              type="reset"
+              onPress={() => closeModal(ModalIds.ImpoundVehicle)}
+              variant="cancel"
+            >
+              {common("cancel")}
+            </Button>
+            <Button className="flex items-center" disabled={state === "loading"} type="submit">
+              {state === "loading" ? <Loader className="mr-2" /> : null}
+              {t("Leo.impoundVehicle")}
+            </Button>
+          </footer>
+        </Form>
       </Formik>
     </Modal>
   );

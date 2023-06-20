@@ -2,8 +2,9 @@ import type { SelectValue } from "../../fields/select-field";
 import type { MultiSelectState } from "../../../hooks/select/useMultiSelectState";
 import { ChevronDown, X } from "react-bootstrap-icons";
 import { Button } from "../../button/button";
-import { classNames } from "../../../utils/classNames";
+import { cn } from "../../../utils/classNames";
 import type { ReactNode } from "react";
+import { Loader } from "../../loader";
 
 interface Props<T extends SelectValue> {
   state: MultiSelectState<T>;
@@ -11,6 +12,7 @@ interface Props<T extends SelectValue> {
   errorMessage?: string | ReactNode;
   isClearable?: boolean;
   isDisabled?: boolean;
+  isLoading?: boolean;
 }
 
 export function SelectActions<T extends SelectValue>(props: Props<T>) {
@@ -21,13 +23,24 @@ export function SelectActions<T extends SelectValue>(props: Props<T>) {
 
   return (
     <>
+      {props.isLoading ? (
+        <div
+          className={cn(
+            "absolute top-0 bottom-0 flex items-center justify-center",
+            showClearableButton ? "right-[82px]" : "right-12",
+          )}
+        >
+          <Loader />
+        </div>
+      ) : null}
+
       {showClearableButton ? (
         <Button
           isDisabled={props.isDisabled}
           onPress={() => {
             props.state.setSelectedKeys([]);
           }}
-          className={classNames(
+          className={cn(
             "px-2 !rounded-none -mx-[1.5px]",
             "group-hover:dark:!border-gray-500 group-hover:!border-gray-500",
             props.state.isOpen && "!border-gray-800 dark:!border-gray-500",
@@ -45,7 +58,7 @@ export function SelectActions<T extends SelectValue>(props: Props<T>) {
         onPress={() => props.state.open()}
         size="xs"
         type="button"
-        className={classNames(
+        className={cn(
           "rounded-l-none",
           !showClearableButton && "-ml-[1.5px]",
           "group-hover:dark:!border-gray-500 group-hover:!border-gray-500",

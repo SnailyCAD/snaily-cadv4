@@ -1,7 +1,5 @@
 import type { PostDispatchSignal100Data } from "@snailycad/types/api";
-import { Button, Loader } from "@snailycad/ui";
-import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
+import { Button, Loader, SelectField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
@@ -58,19 +56,19 @@ export function EnableSignal100Modal() {
       onClose={() => closeModal(ModalIds.EnableSignal100)}
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={handleSubmit}>
-        {({ handleChange, values }) => (
+        {({ setFieldValue, values }) => (
           <Form>
-            <FormField optional label="Call">
-              <Select
-                onChange={handleChange}
-                name="call"
-                value={values.call}
-                values={calls.map((call) => ({
-                  label: `#${call.caseNumber}`,
-                  value: call.id,
-                }))}
-              />
-            </FormField>
+            <SelectField
+              isOptional
+              label="Call"
+              isClearable
+              selectedKey={values.call}
+              onSelectionChange={(key) => setFieldValue("call", key)}
+              options={calls.map((call) => ({
+                label: `#${call.caseNumber}`,
+                value: call.id,
+              }))}
+            />
 
             <footer className="flex items-center justify-end gap-2 mt-5">
               <Button

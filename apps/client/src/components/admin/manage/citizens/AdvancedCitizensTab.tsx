@@ -1,8 +1,6 @@
 import * as React from "react";
-import { FormField } from "components/form/FormField";
 import { Button, Loader, TextField, FormRow } from "@snailycad/ui";
 import { v4 } from "uuid";
-import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
 import useFetch from "lib/useFetch";
 import { X } from "react-bootstrap-icons";
@@ -10,6 +8,8 @@ import { ImportModal } from "components/admin/import/ImportModal";
 import { ModalIds } from "types/modal-ids";
 import type { PostImportCitizensData } from "@snailycad/types/api";
 import { useTranslations } from "use-intl";
+import { ValueSelectField } from "components/form/inputs/value-select-field";
+import { ValueType } from "@snailycad/types";
 
 export function AdvancedCitizensTab() {
   const [citizens, setCitizens] = React.useState<Record<string, any>>(createInitialCitizen());
@@ -89,27 +89,21 @@ export function AdvancedCitizensTab() {
                 onBlur={(e) => handleChange("dateOfBirth", id, e)}
               />
 
-              {/* todo: use async search field (see: manage-citizen-form) */}
-              <FormField className="w-full" label="Gender">
-                <Select
-                  value={value.gender}
-                  onChange={(event) => handleChange("gender", id, event)}
-                  values={gender.values.map((gender) => ({
-                    value: gender.id,
-                    label: gender.value,
-                  }))}
+              <FormRow>
+                <ValueSelectField
+                  fieldName="gender"
+                  valueType={ValueType.GENDER}
+                  values={gender.values}
+                  label={t("gender")}
                 />
-              </FormField>
-              <FormField className="w-full" label={t("Citizen.ethnicity")}>
-                <Select
-                  value={value.ethnicity}
-                  onChange={(event) => handleChange("ethnicity", id, event)}
-                  values={ethnicity.values.map((ethnicity) => ({
-                    value: ethnicity.id,
-                    label: ethnicity.value,
-                  }))}
+
+                <ValueSelectField
+                  fieldName="ethnicity"
+                  valueType={ValueType.ETHNICITY}
+                  values={ethnicity.values}
+                  label={t("ethnicity")}
                 />
-              </FormField>
+              </FormRow>
             </FormRow>
           );
         })}

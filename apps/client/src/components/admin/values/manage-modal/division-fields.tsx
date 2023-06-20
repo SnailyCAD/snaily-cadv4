@@ -1,29 +1,23 @@
-import { FormField } from "components/form/FormField";
 import { TextField } from "@snailycad/ui";
-import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
 import { useFormikContext } from "formik";
 import { useTranslations } from "use-intl";
+import { ValueSelectField } from "components/form/inputs/value-select-field";
+import { ValueType } from "@snailycad/types";
 
 export function DivisionFields() {
-  const { values, errors, setFieldValue, handleChange } = useFormikContext<any>();
+  const { values, errors, setFieldValue } = useFormikContext<any>();
   const { department } = useValues();
   const t = useTranslations("Values");
 
   return (
     <>
-      <FormField label={t("department")}>
-        <Select
-          autoFocus
-          values={department.values.map((v) => ({
-            value: v.id,
-            label: v.value.value,
-          }))}
-          name="departmentId"
-          onChange={handleChange}
-          value={values.departmentId}
-        />
-      </FormField>
+      <ValueSelectField
+        label={t("department")}
+        fieldName="departmentId"
+        values={department.values}
+        valueType={ValueType.DEPARTMENT}
+      />
 
       <TextField
         errorMessage={errors.value as string}

@@ -1,11 +1,9 @@
 import * as React from "react";
 import type { Full911Call } from "state/dispatch/dispatch-state";
 import { makeUnitName } from "lib/utils";
-import { FormField } from "components/form/FormField";
 import { useTranslations } from "next-intl";
-import { Loader, TextField } from "@snailycad/ui";
+import { Loader, SelectField, SelectValue, TextField } from "@snailycad/ui";
 import { useCallsFilters } from "state/callsFiltersState";
-import { Select, SelectValue } from "components/form/Select";
 import type { useAsyncTable } from "components/shared/Table";
 import { useValues } from "context/ValuesContext";
 import type { DepartmentValue, DivisionValue } from "@snailycad/types";
@@ -65,59 +63,61 @@ export function CallsFilters({ asyncTable, calls }: Props) {
         ) : null}
       </TextField>
 
-      <FormField label={t("departments")}>
-        <Select
-          isClearable
-          value={department?.value?.id ?? null}
-          onChange={(e) => {
-            setDepartment(e.target);
+      <SelectField
+        label={t("departments")}
+        isClearable
+        isOptional
+        options={departments}
+        selectedKey={department ?? null}
+        className="w-96"
+        onSelectionChange={(key) => {
+          const stringifiedKey = key as unknown as string | null;
 
-            asyncTable.setFilters((prev) => ({
-              ...prev,
-              department: e.target?.value?.id ?? null,
-            }));
-          }}
-          className="w-56"
-          values={departments}
-        />
-      </FormField>
+          setDepartment(stringifiedKey);
+          asyncTable.setFilters((prev) => ({
+            ...prev,
+            department: stringifiedKey ?? null,
+          }));
+        }}
+      />
 
       {DIVISIONS ? (
-        <FormField label={t("divisions")}>
-          <Select
-            isClearable
-            value={division?.value?.id ?? null}
-            onChange={(e) => {
-              setDivision(e.target);
-              asyncTable.setFilters((prev) => ({
-                ...prev,
-                division: e.target?.value?.id ?? null,
-              }));
-            }}
-            className="w-56"
-            values={divisions.filter((v) =>
-              department?.value ? v.value.departmentId === department.value.id : true,
-            )}
-          />
-        </FormField>
-      ) : null}
-
-      <FormField label={t("assignedUnits")}>
-        <Select
+        <SelectField
+          label={t("divisions")}
           isClearable
-          value={assignedUnit?.value?.id ?? null}
-          className="w-56"
-          onChange={(e) => {
-            setAssignedUnit(e.target);
+          isOptional
+          options={divisions}
+          selectedKey={division ?? null}
+          className="w-96"
+          onSelectionChange={(key) => {
+            const stringifiedKey = key as unknown as string | null;
 
+            setDivision(stringifiedKey);
             asyncTable.setFilters((prev) => ({
               ...prev,
-              assignedUnit: e.target?.value?.id ?? null,
+              division: stringifiedKey ?? null,
             }));
           }}
-          values={assignedUnits}
         />
-      </FormField>
+      ) : null}
+
+      <SelectField
+        label={t("assignedUnits")}
+        isClearable
+        isOptional
+        options={assignedUnits}
+        selectedKey={assignedUnit ?? null}
+        className="w-96"
+        onSelectionChange={(key) => {
+          const stringifiedKey = key as unknown as string | null;
+
+          setAssignedUnit(stringifiedKey);
+          asyncTable.setFilters((prev) => ({
+            ...prev,
+            assignedUnit: stringifiedKey ?? null,
+          }));
+        }}
+      />
     </div>
   ) : null;
 }
@@ -126,13 +126,13 @@ export type Call911Filters = "departments" | "divisions" | "assignedUnits";
 
 function makeOptions<T extends DepartmentValue | DivisionValue>(values: T[]) {
   return values.map((v) => ({
-    value: v,
+    value: v.id,
     label: v.value.value,
   }));
 }
 
 function makeAssignedUnitOptions(calls: Full911Call[], generateCallsign: (unit: any) => string) {
-  const map = new Map<string, SelectValue<{ id: string }>>();
+  const map = new Map<string, SelectValue>();
 
   calls.forEach((call) => {
     const data = call.assignedUnits;
@@ -142,8 +142,8 @@ function makeAssignedUnitOptions(calls: Full911Call[], generateCallsign: (unit: 
         const label = `${generateCallsign(v.unit)} ${makeUnitName(v.unit)}`;
         const value = v.unit?.id ?? v.id;
 
-        const obj: SelectValue<{ id: string }> = {
-          value: { id: value },
+        const obj = {
+          value,
           label,
         };
 

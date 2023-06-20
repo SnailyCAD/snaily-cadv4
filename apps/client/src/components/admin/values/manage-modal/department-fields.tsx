@@ -1,11 +1,10 @@
-import { FormField } from "components/form/FormField";
 import { SelectField, SwitchField, TextField } from "@snailycad/ui";
-import { Select } from "components/form/Select";
 import { useFormikContext } from "formik";
-import { DepartmentType } from "@snailycad/types";
+import { DepartmentType, ValueType } from "@snailycad/types";
 import { useValues } from "context/ValuesContext";
 import { useTranslations } from "use-intl";
 import { CALLSIGN_TEMPLATE_VARIABLES } from "components/admin/manage/cad-settings/misc-features/template-section";
+import { ValueSelectField } from "components/form/inputs/value-select-field";
 
 export const DEPARTMENT_LABELS = {
   [DepartmentType.LEO]: "LEO",
@@ -17,7 +16,7 @@ const DEPARTMENT_TYPES = Object.values(DepartmentType).map((v) => ({
 }));
 
 export function DepartmentFields() {
-  const { values, errors, setFieldValue, handleChange } = useFormikContext<any>();
+  const { values, errors, setFieldValue } = useFormikContext<any>();
   const { officerRank } = useValues();
   const common = useTranslations("Common");
   const t = useTranslations("Values");
@@ -52,22 +51,14 @@ export function DepartmentFields() {
         })}
       />
 
-      <FormField
-        optional
-        errorMessage={errors.defaultOfficerRankId as string}
+      <ValueSelectField
         label={t("defaultRank")}
-      >
-        <Select
-          isClearable
-          onChange={handleChange}
-          name="defaultOfficerRankId"
-          value={values.defaultOfficerRankId}
-          values={officerRank.values.map((v) => ({
-            label: v.value,
-            value: v.id,
-          }))}
-        />
-      </FormField>
+        fieldName="defaultOfficerRankId"
+        values={officerRank.values}
+        valueType={ValueType.OFFICER_RANK}
+        isOptional
+        isClearable
+      />
 
       <SwitchField
         description={t("whitelistedDescription")}

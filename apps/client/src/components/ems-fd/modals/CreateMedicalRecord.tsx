@@ -2,17 +2,16 @@ import { useTranslations } from "use-intl";
 import { Form, Formik } from "formik";
 import { MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
 import { Loader, Button, TextField } from "@snailycad/ui";
-import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
-import type { MedicalRecord } from "@snailycad/types";
+import { ValueType, type MedicalRecord } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
-import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
 import type { PostEmsFdMedicalRecord } from "@snailycad/types/api";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
+import { ValueSelectField } from "components/form/inputs/value-select-field";
 
 interface Props {
   onCreate?(newV: MedicalRecord): void;
@@ -62,7 +61,7 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
       className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setFieldValue, errors, values, isValid }) => (
+        {({ setFieldValue, errors, values, isValid }) => (
           <Form>
             <CitizenSuggestionsField
               autoFocus
@@ -72,17 +71,13 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
               valueFieldName="citizenId"
             />
 
-            <FormField errorMessage={errors.bloodGroup} label={t("bloodGroup")}>
-              <Select
-                values={bloodGroup.values.map((v) => ({
-                  value: v.id,
-                  label: v.value,
-                }))}
-                onChange={handleChange}
-                name="bloodGroup"
-                value={values.bloodGroup}
-              />
-            </FormField>
+            <ValueSelectField
+              isClearable
+              fieldName="bloodGroup"
+              valueType={ValueType.BLOOD_GROUP}
+              values={bloodGroup.values}
+              label={t("bloodGroup")}
+            />
 
             <TextField
               onChange={(value) => setFieldValue("type", value)}

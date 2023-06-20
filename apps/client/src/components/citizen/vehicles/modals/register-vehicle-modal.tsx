@@ -5,14 +5,12 @@ import {
   Item,
   AsyncListSearchField,
   Button,
-  Input,
   Loader,
   SelectField,
   TextField,
   SwitchField,
   FormRow,
 } from "@snailycad/ui";
-import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useValues } from "src/context/ValuesContext";
@@ -38,7 +36,6 @@ import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsFie
 import type { PostCitizenVehicleData, PutCitizenVehicleData } from "@snailycad/types/api";
 import { shallow } from "zustand/shallow";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
-import { Select } from "components/form/Select";
 
 interface Props {
   vehicle: RegisteredVehicle | null;
@@ -67,7 +64,7 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
 
   const { INSPECTION_STATUS, TAX_STATUS } = useVehicleLicenses();
 
-  const { vehicle: vehicles, license } = useValues();
+  const { license } = useValues();
 
   const isDisabled = router.pathname === "/citizen/[id]";
   const maxPlateLength = cad?.miscCadSettings?.maxPlateLength ?? 8;
@@ -88,7 +85,6 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
     const data = {
       ...values,
       modelValue: undefined,
-      trimLevels: values.trimLevels.map((v) => v.value),
     };
 
     if (vehicle && !isLeo) {
@@ -126,7 +122,7 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
     model: vehicle ? (CUSTOM_TEXTFIELD_VALUES ? vehicle.model.value.value : vehicle.modelId) : "",
     modelName: vehicle?.model.value.value ?? "",
     modelValue: vehicle?.model ?? null,
-    trimLevels: vehicle?.trimLevels?.map((v) => ({ label: v.value, value: v.id })) ?? [],
+    trimLevels: (vehicle?.trimLevels ?? []).map((v) => v.id),
 
     color: vehicle?.color ?? "",
     insuranceStatus: vehicle?.insuranceStatusId ?? null,
@@ -155,7 +151,7 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
       className="w-[700px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setFieldValue, setValues, errors, values, isValid }) => (
+        {({ setFieldValue, setValues, errors, values, isValid }) => (
           <Form>
             <TextField
               errorMessage={errors.plate}
@@ -166,51 +162,40 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
               maxLength={maxPlateLength}
             />
 
-            {CUSTOM_TEXTFIELD_VALUES ? (
-              <FormField errorMessage={errors.model} label={tVehicle("model")}>
-                <Input
-                  list="vehicle-models-list"
-                  value={values.model}
-                  name="model"
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setValues({
-                      ...values,
-                      modelName: value,
-                      model: value,
-                    });
-                  }}
-                />
+            <AsyncListSearchField<VehicleValue>
+              allowsCustomValue={CUSTOM_TEXTFIELD_VALUES}
+              localValue={values.modelName}
+              setValues={({ localValue, node }) => {
+                if (CUSTOM_TEXTFIELD_VALUES) {
+                  if (typeof localValue === "undefined") return;
 
-                <datalist id="vehicle-models-list">
-                  {vehicles.values.map((vehicle) => (
-                    <span key={vehicle.id}>{vehicle.value.value}</span>
-                  ))}
-                </datalist>
-              </FormField>
-            ) : (
-              <AsyncListSearchField<VehicleValue>
-                localValue={values.modelName}
-                setValues={({ localValue, node }) => {
-                  const modelName =
-                    typeof localValue !== "undefined" ? { modelName: localValue } : {};
-                  const model = node ? { model: node.key as string, modelValue: node.value } : {};
+                  setValues({
+                    ...values,
+                    modelName: localValue,
+                    model: localValue,
+                  });
 
-                  setValues({ ...values, ...modelName, ...model });
-                }}
-                errorMessage={errors.model}
-                label={tVehicle("model")}
-                selectedKey={values.model}
-                fetchOptions={{
-                  apiPath: (value) => `/admin/values/vehicle/search?query=${value}`,
-                  method: "GET",
-                }}
-              >
-                {(item) => {
-                  return <Item textValue={item.value.value}>{item.value.value}</Item>;
-                }}
-              </AsyncListSearchField>
-            )}
+                  return;
+                }
+
+                const modelName =
+                  typeof localValue !== "undefined" ? { modelName: localValue } : {};
+                const model = node ? { model: node.key as string, modelValue: node.value } : {};
+
+                setValues({ ...values, ...modelName, ...model });
+              }}
+              errorMessage={errors.model}
+              label={tVehicle("model")}
+              selectedKey={values.model}
+              fetchOptions={{
+                apiPath: (value) => `/admin/values/vehicle/search?query=${value}`,
+                method: "GET",
+              }}
+            >
+              {(item) => {
+                return <Item textValue={item.value.value}>{item.value.value}</Item>;
+              }}
+            </AsyncListSearchField>
 
             <CitizenSuggestionsField
               isOptional={isLeo}
@@ -230,21 +215,16 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
               value={values.color}
             />
 
-            <FormField label={tVehicle("trimLevels")}>
-              <Select
-                name="trimLevels"
-                value={values.trimLevels}
-                isMulti
-                closeMenuOnSelect={false}
-                onChange={handleChange}
-                values={
-                  values.modelValue?.trimLevels?.map((value) => ({
-                    label: value.value,
-                    value: value.id,
-                  })) ?? []
-                }
-              />
-            </FormField>
+            <SelectField
+              label={tVehicle("trimLevels")}
+              selectionMode="multiple"
+              selectedKeys={values.trimLevels}
+              onSelectionChange={(keys) => setFieldValue("trimLevels", keys)}
+              options={(values.modelValue?.trimLevels ?? []).map((value) => ({
+                label: value.value,
+                value: value.id,
+              }))}
+            />
 
             <TextField
               errorMessage={errors.vinNumber}

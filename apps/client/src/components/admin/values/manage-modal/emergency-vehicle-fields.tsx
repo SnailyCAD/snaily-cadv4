@@ -1,6 +1,5 @@
 import type { EmergencyVehicleValue } from "@snailycad/types";
-import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
+import { SelectField } from "@snailycad/ui";
 import { useValues } from "context/ValuesContext";
 import { useFormikContext } from "formik";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
@@ -9,62 +8,50 @@ import { useTranslations } from "use-intl";
 export function useDefaultDivisions() {
   const { division } = useValues();
 
-  const DEFAULT_DIVISIONS = division.values.map((v) => ({
-    value: v.id,
-    label: v.value.value,
-  }));
+  const DEFAULT_DIVISIONS = division.values.map((value) => value.id);
 
   function makeDefaultDivisions(value: EmergencyVehicleValue | null) {
     if (!value) return [];
-    const divisions = value.divisions ?? [];
 
-    return divisions.length <= 0
-      ? DEFAULT_DIVISIONS
-      : divisions.map((v) => ({
-          label: v.value.value,
-          value: v.id,
-        }));
+    const divisions = value.divisions ?? [];
+    return divisions.length <= 0 ? DEFAULT_DIVISIONS : divisions.map((value) => value.id);
   }
 
   return makeDefaultDivisions;
 }
 
 export function EmergencyVehicleFields() {
-  const { values, handleChange } = useFormikContext<any>();
+  const { values, setFieldValue } = useFormikContext<any>();
   const { division, department } = useValues();
   const { DIVISIONS } = useFeatureEnabled();
   const t = useTranslations("Values");
 
   return (
     <>
-      <FormField label={t("departments")}>
-        <Select
-          closeMenuOnSelect={false}
-          isMulti
-          values={department.values.map((v) => ({
-            value: v.id,
-            label: v.value.value,
-          }))}
-          name="departments"
-          onChange={handleChange}
-          value={values.departments}
-        />
-      </FormField>
+      <SelectField
+        label={t("departments")}
+        selectionMode="multiple"
+        options={department.values.map((v) => ({
+          label: v.value.value,
+          value: v.id,
+        }))}
+        onSelectionChange={(keys) => setFieldValue("departments", keys)}
+        selectedKeys={values.departments}
+      />
 
       {DIVISIONS ? (
-        <FormField optional label={t("divisions")}>
-          <Select
-            closeMenuOnSelect={false}
-            isMulti
-            values={division.values.map((v) => ({
-              value: v.id,
-              label: v.value.value,
-            }))}
-            name="divisions"
-            onChange={handleChange}
-            value={values.divisions}
-          />
-        </FormField>
+        <SelectField
+          isOptional
+          isClearable
+          label={t("divisions")}
+          selectionMode="multiple"
+          options={division.values.map((v) => ({
+            label: v.value.value,
+            value: v.id,
+          }))}
+          onSelectionChange={(keys) => setFieldValue("divisions", keys)}
+          selectedKeys={values.divisions}
+        />
       ) : null}
     </>
   );

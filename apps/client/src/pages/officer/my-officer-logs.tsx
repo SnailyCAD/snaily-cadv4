@@ -4,8 +4,6 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import type { Officer, OfficerLog } from "@snailycad/types";
-import { Select } from "components/form/Select";
-import { FormField } from "components/form/FormField";
 import { makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Title } from "components/shared/Title";
@@ -14,6 +12,7 @@ import { Permissions } from "@snailycad/permissions";
 import type { GetMyOfficersLogsData } from "@snailycad/types/api";
 import { useAsyncTable } from "components/shared/Table";
 import { useUserOfficers } from "hooks/leo/use-get-user-officers";
+import { SelectField } from "@snailycad/ui";
 
 export type OfficerLogWithOfficer = OfficerLog & { officer: Officer };
 
@@ -50,29 +49,27 @@ export default function MyOfficersLogs({ logs: data }: Props) {
 
   return (
     <Layout permissions={{ permissions: [Permissions.Leo] }} className="dark:text-white">
-      <header className="flex items-center justify-between">
+      <header className="flex items-start justify-between">
         <Title className="!mb-0">{t("myOfficerLogs")}</Title>
 
-        <div className="flex">
-          <div className="ml-3 w-52">
-            <FormField label={t("groupByOfficer")}>
-              <Select
-                isLoading={isLoading}
-                isClearable
-                onChange={(e) => {
-                  asyncTable.setFilters((prev) => ({
-                    ...prev,
-                    officerId: e.target.value,
-                  }));
-                }}
-                value={asyncTable.filters?.officerId ?? null}
-                values={Object.entries(officerNames).map(([id, name]) => ({
-                  label: name,
-                  value: id,
-                }))}
-              />
-            </FormField>
-          </div>
+        <div className="ml-3 w-64">
+          <SelectField
+            isDisabled={isLoading}
+            isLoading={isLoading}
+            onSelectionChange={(value) => {
+              asyncTable.setFilters((prev) => ({
+                ...prev,
+                officerId: value,
+              }));
+            }}
+            selectedKey={asyncTable.filters?.officerId ?? null}
+            isClearable
+            label={t("groupByOfficer")}
+            options={Object.entries(officerNames).map(([id, name]) => ({
+              label: name,
+              value: id,
+            }))}
+          />
         </div>
       </header>
 

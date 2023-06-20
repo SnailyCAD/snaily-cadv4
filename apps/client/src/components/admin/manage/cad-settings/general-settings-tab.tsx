@@ -187,7 +187,7 @@ export function GeneralSettingsTab() {
                 description={t("towWhitelistDescription")}
               >
                 <SwitchField
-                  aria-label={t("towWhitelisted")}
+                  aria-label={t("towWhitelist")}
                   isSelected={values.towWhitelisted}
                   onChange={(isSelected) => setFieldValue("towWhitelisted", isSelected)}
                 />
@@ -200,7 +200,7 @@ export function GeneralSettingsTab() {
                 description={t("taxiWhitelistDescription")}
               >
                 <SwitchField
-                  aria-label={t("taxiWhitelisted")}
+                  aria-label={t("taxiWhitelist")}
                   isSelected={values.taxiWhitelisted}
                   onChange={(isSelected) => setFieldValue("taxiWhitelisted", isSelected)}
                 />
@@ -213,7 +213,7 @@ export function GeneralSettingsTab() {
                 description={t("businessWhitelistDescription")}
               >
                 <SwitchField
-                  aria-label={t("businessWhitelisted")}
+                  aria-label={t("businessWhitelist")}
                   isSelected={values.businessWhitelisted}
                   onChange={(isSelected) => setFieldValue("businessWhitelisted", isSelected)}
                 />

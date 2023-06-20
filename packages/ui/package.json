@@ -41,17 +41,18 @@
   },
   "tsup": {
     "entry": [
-      "src/**/*.ts",
-      "src/**/*.tsx",
+      "src/index.tsx",
+      "src/components/**/*.tsx",
       "!src/**/*.stories.tsx",
       "!src/stories/**/*"
     ],
     "dts": true,
-    "bundle": false,
     "platform": "node",
     "target": "node16",
     "silent": true,
     "treeshake": true,
+    "splitting": true,
+    "minify": true,
     "format": [
       "esm"
     ]

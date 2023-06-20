@@ -1,14 +1,12 @@
-import { Loader, Button } from "@snailycad/ui";
-import { FormField } from "components/form/FormField";
+import { Loader, Button, SelectField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 import { JOIN_COMPANY_SCHEMA } from "@snailycad/schemas";
 import { handleValidate } from "lib/handleValidate";
-import { Select } from "components/form/Select";
 import { useRouter } from "next/router";
 import { useBusinessState } from "state/business-state";
 import { toastMessage } from "lib/toastMessage";
@@ -32,11 +30,15 @@ export function JoinBusinessModal({ onCreate }: Props) {
     closeModal(ModalIds.JoinBusiness);
   }
 
-  async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute<PostJoinBusinessData>({
+  async function onSubmit(
+    values: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
+    const { json } = await execute<PostJoinBusinessData, typeof INITIAL_VALUES>({
       path: "/businesses/join",
       method: "POST",
       data: values,
+      helpers,
     });
 
     if (json.id) {
@@ -66,7 +68,7 @@ export function JoinBusinessModal({ onCreate }: Props) {
       onClose={handleClose}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, errors, values, isValid }) => (
+        {({ setFieldValue, errors, values, isValid }) => (
           <Form>
             <CitizenSuggestionsField
               autoFocus
@@ -77,19 +79,18 @@ export function JoinBusinessModal({ onCreate }: Props) {
               valueFieldName="citizenId"
             />
 
-            <FormField errorMessage={errors.businessId} label={t("business")}>
-              <Select
-                values={joinableBusinesses
-                  .filter((v) => v.status !== WhitelistStatus.DECLINED)
-                  .map((business) => ({
-                    label: business.name,
-                    value: business.id,
-                  }))}
-                name="businessId"
-                onChange={handleChange}
-                value={values.businessId}
-              />
-            </FormField>
+            <SelectField
+              errorMessage={errors.businessId}
+              label={t("business")}
+              onSelectionChange={(key) => setFieldValue("businessId", key)}
+              selectedKey={values.businessId}
+              options={joinableBusinesses
+                .filter((v) => v.status !== WhitelistStatus.DECLINED)
+                .map((business) => ({
+                  label: business.name,
+                  value: business.id,
+                }))}
+            />
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onPress={handleClose} variant="cancel">

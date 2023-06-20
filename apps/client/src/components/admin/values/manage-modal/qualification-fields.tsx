@@ -1,14 +1,12 @@
 import { useFormikContext } from "formik";
-import { FormField } from "components/form/FormField";
 import { ImageSelectInput } from "components/form/inputs/ImageSelectInput";
-import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
-import { SelectField, Textarea } from "@snailycad/ui";
+import { SelectField, TextField } from "@snailycad/ui";
 import { QualificationValueType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 
 export function QualificationFields({ image, setImage }: any) {
-  const { values, errors, setFieldValue, handleChange } = useFormikContext<any>();
+  const { values, errors, setFieldValue } = useFormikContext<any>();
   const { department } = useValues();
   const t = useTranslations("Values");
   const common = useTranslations("Common");
@@ -30,24 +28,26 @@ export function QualificationFields({ image, setImage }: any) {
         selectedKey={values.qualificationType}
       />
 
-      <FormField errorMessage={errors.departments as string} label={t("departments")}>
-        <Select
-          isMulti
-          isClearable={false}
-          values={department.values.map((v) => ({
-            value: v.id,
-            label: v.value.value,
-          }))}
-          name="departments"
-          onChange={handleChange}
-          value={values.departments}
-          closeMenuOnSelect={false}
-        />
-      </FormField>
+      <SelectField
+        errorMessage={errors.qualificationType as string}
+        label={t("departments")}
+        selectionMode="multiple"
+        options={department.values.map((v) => ({
+          label: v.value.value,
+          value: v.id,
+        }))}
+        onSelectionChange={(keys) => setFieldValue("departments", keys)}
+        selectedKeys={values.departments}
+      />
 
-      <FormField optional errorMessage={errors.description as string} label={common("description")}>
-        <Textarea value={values.description} name="description" onChange={handleChange} />
-      </FormField>
+      <TextField
+        isOptional
+        errorMessage={errors.description as string}
+        label={common("description")}
+        isTextarea
+        value={values.description}
+        onChange={(value) => setFieldValue("description", value)}
+      />
 
       <ImageSelectInput image={image} setImage={setImage} />
     </>

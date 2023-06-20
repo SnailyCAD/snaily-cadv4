@@ -1,8 +1,6 @@
 import { Form, Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
 import { Loader, Button, SelectField, TextField } from "@snailycad/ui";
-import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
 import useFetch from "lib/useFetch";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
@@ -48,7 +46,7 @@ export function CreateWarrantModal({ warrant, readOnly, onClose, onCreate, onUpd
   ) {
     const data = {
       ...values,
-      assignedOfficers: values.assignedOfficers.map((value) => value.value),
+      assignedOfficers: values.assignedOfficers ?? [],
     };
 
     if (warrant) {
@@ -101,14 +99,7 @@ export function CreateWarrantModal({ warrant, readOnly, onClose, onCreate, onUpd
     citizenName: warrant?.citizen ? `${warrant.citizen.name} ${warrant.citizen.surname}` : "",
     status: warrant?.status ?? "",
     description: warrant?.description ?? "",
-    assignedOfficers: warrant?.assignedOfficers
-      ? warrant.assignedOfficers.map((unit) => ({
-          label: isUnitCombined(unit.unit)
-            ? generateCallsign(unit.unit, "pairedUnitTemplate")
-            : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`,
-          value: unit.unit.id,
-        }))
-      : [],
+    assignedOfficers: warrant?.assignedOfficers?.map((v) => v.unit.id),
   };
 
   return (
@@ -119,7 +110,7 @@ export function CreateWarrantModal({ warrant, readOnly, onClose, onCreate, onUpd
       className="w-[600px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setFieldValue, values, errors, isValid }) => (
+        {({ setFieldValue, values, errors, isValid }) => (
           <Form autoComplete="off">
             <CitizenSuggestionsField
               autoFocus
@@ -131,22 +122,19 @@ export function CreateWarrantModal({ warrant, readOnly, onClose, onCreate, onUpd
             />
 
             {isActive ? (
-              <FormField label="Assigned Officers">
-                <Select
-                  disabled={readOnly}
-                  closeMenuOnSelect={false}
-                  isMulti
-                  name="assignedOfficers"
-                  values={activeOfficers.map((unit) => ({
-                    label: isUnitCombined(unit)
-                      ? generateCallsign(unit, "pairedUnitTemplate")
-                      : `${generateCallsign(unit)} ${makeUnitName(unit)}`,
-                    value: unit.id,
-                  }))}
-                  value={values.assignedOfficers}
-                  onChange={handleChange}
-                />
-              </FormField>
+              <SelectField
+                selectedKeys={values.assignedOfficers}
+                selectionMode="multiple"
+                label="Assigned Officers"
+                isDisabled={readOnly}
+                onSelectionChange={(value) => setFieldValue("assignedOfficers", value)}
+                options={activeOfficers.map((unit) => ({
+                  label: isUnitCombined(unit)
+                    ? generateCallsign(unit, "pairedUnitTemplate")
+                    : `${generateCallsign(unit)} ${makeUnitName(unit)}`,
+                  value: unit.id,
+                }))}
+              />
             ) : null}
 
             <SelectField

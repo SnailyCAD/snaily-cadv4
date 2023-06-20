@@ -1,13 +1,11 @@
 import * as React from "react";
-import { Loader, Button } from "@snailycad/ui";
-import { FormField } from "components/form/FormField";
+import { Loader, Button, SelectField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/modal-ids";
-import { Select, SelectValue } from "components/form/Select";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import type {
   PostExpungementRequestByCitizenIdData,
@@ -75,7 +73,7 @@ export function RequestExpungement({
               />
 
               <Button
-                className="flex items-center mt-4"
+                className="flex items-center mt-4 h-10"
                 disabled={!values.citizenId || state === "loading"}
                 type="submit"
               >
@@ -120,7 +118,7 @@ function ResultsForm({ result, onSuccess, handleClose }: ResultProps) {
       data: Object.entries(values).reduce(
         (ac, [key, data]) => ({
           ...ac,
-          [key]: data.map((v) => v.value),
+          [key]: data,
         }),
         {},
       ),
@@ -134,77 +132,75 @@ function ResultsForm({ result, onSuccess, handleClose }: ResultProps) {
   }
 
   const INITIAL_VALUES = {
-    warrants: [] as SelectValue[],
-    tickets: [] as SelectValue[],
-    arrestReports: [] as SelectValue[],
+    warrants: [] as string[],
+    tickets: [] as string[],
+    arrestReports: [] as string[],
   };
+
+  const hasWarrants = result.warrants.length > 0;
+  const hasTickets = tickets.length > 0;
+  const hasArrestReports = arrestReports.length > 0;
 
   return (
     <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-      {({ handleChange, values, errors, isValid }) => (
+      {({ setFieldValue, values, errors, isValid }) => (
         <Form>
-          <FormField
-            className="w-full"
-            errorMessage={errors.warrants as string}
-            label={leo("warrants")}
-          >
-            {result.warrants.length <= 0 ? (
-              <p>{leo("noWarrants")}</p>
-            ) : (
-              <Select
-                values={result.warrants.map((v) => ({
-                  value: v.id,
-                  label: v.description,
-                }))}
-                value={values.warrants}
-                name="warrants"
-                isMulti
-                onChange={handleChange}
-              />
-            )}
-          </FormField>
+          {hasWarrants ? (
+            <SelectField
+              errorMessage={errors.warrants}
+              label={leo("warrants")}
+              selectionMode="multiple"
+              selectedKeys={values.warrants}
+              onSelectionChange={(keys) => setFieldValue("warrants", keys)}
+              options={result.warrants.map((v) => ({
+                value: v.id,
+                label: v.description,
+              }))}
+            />
+          ) : (
+            <section className="mb-3">
+              <h4 className="font-medium text-lg">{leo("warrants")}</h4>
+              <p className="text-base my-1">{leo("noWarrants")}</p>
+            </section>
+          )}
 
-          <FormField
-            className="w-full"
-            errorMessage={errors.arrestReports as string}
-            label={leo("arrestReports")}
-          >
-            {arrestReports.length <= 0 ? (
-              <p>{leo("noArrestReports")}</p>
-            ) : (
-              <Select
-                values={arrestReports.map((v) => ({
-                  value: v.id,
-                  label: getTitles(v),
-                }))}
-                value={values.arrestReports}
-                name="arrestReports"
-                isMulti
-                onChange={handleChange}
-              />
-            )}
-          </FormField>
+          {hasArrestReports ? (
+            <SelectField
+              errorMessage={errors.arrestReports}
+              label={leo("arrestReports")}
+              selectionMode="multiple"
+              selectedKeys={values.arrestReports}
+              onSelectionChange={(keys) => setFieldValue("arrestReports", keys)}
+              options={arrestReports.map((v) => ({
+                value: v.id,
+                label: getTitles(v),
+              }))}
+            />
+          ) : (
+            <section className="mb-3">
+              <h4 className="font-medium text-lg">{leo("arrestReports")}</h4>
+              <p className="text-base my-1">{leo("noArrestReports")}</p>
+            </section>
+          )}
 
-          <FormField
-            className="w-full"
-            errorMessage={errors.tickets as string}
-            label={leo("tickets")}
-          >
-            {tickets.length <= 0 ? (
-              <p>{leo("noTicketsCitizen")}</p>
-            ) : (
-              <Select
-                values={tickets.map((v) => ({
-                  value: v.id,
-                  label: getTitles(v),
-                }))}
-                value={values.tickets}
-                name="tickets"
-                isMulti
-                onChange={handleChange}
-              />
-            )}
-          </FormField>
+          {hasTickets ? (
+            <SelectField
+              errorMessage={errors.tickets}
+              label={leo("tickets")}
+              selectionMode="multiple"
+              selectedKeys={values.tickets}
+              onSelectionChange={(keys) => setFieldValue("tickets", keys)}
+              options={tickets.map((v) => ({
+                value: v.id,
+                label: getTitles(v),
+              }))}
+            />
+          ) : (
+            <section className="mb-3">
+              <h4 className="font-medium text-lg">{leo("tickets")}</h4>
+              <p className="text-base my-1">{leo("noTicketsCitizen")}</p>
+            </section>
+          )}
 
           <footer className="flex justify-end mt-5">
             <Button onPress={handleClose} variant="cancel" type="reset">

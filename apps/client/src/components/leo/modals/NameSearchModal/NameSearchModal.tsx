@@ -118,13 +118,7 @@ export function NameSearchModal() {
     const { json } = await execute<PutSearchActionsLicensesData>({
       path: `/search/actions/licenses/${currentResult.id}`,
       method: "PUT",
-      data: {
-        ...values,
-        driversLicenseCategory: values.driversLicenseCategory?.map((v) => v.value),
-        pilotLicenseCategory: values.pilotLicenseCategory?.map((v) => v.value),
-        waterLicenseCategory: values.waterLicenseCategory?.map((v) => v.value),
-        firearmLicenseCategory: values.firearmLicenseCategory?.map((v) => v.value),
-      },
+      data: values,
     });
 
     if (json) {
