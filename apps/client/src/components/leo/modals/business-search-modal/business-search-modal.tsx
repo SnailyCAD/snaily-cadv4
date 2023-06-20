@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Loader, Button, AsyncListSearchField, Item } from "@snailycad/ui";
+import { Loader, Button, AsyncListSearchField, Item, Infofield } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
@@ -11,7 +11,6 @@ import { formatCitizenAddress } from "lib/utils";
 import type { PostLeoSearchBusinessData } from "@snailycad/types/api";
 import type { BaseCitizen } from "@snailycad/types";
 import { BusinessSearchResult, useBusinessSearch } from "state/search/business-search-state";
-import { Infofield } from "components/shared/Infofield";
 import dynamic from "next/dynamic";
 
 const BusinessSearchTabsContainer = dynamic(

@@ -1,6 +1,6 @@
 import compareDesc from "date-fns/compareDesc";
 import { useTranslations } from "use-intl";
-import { SelectField, Button, TabsContent } from "@snailycad/ui";
+import { SelectField, Button, TabsContent, FullDate } from "@snailycad/ui";
 import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
@@ -9,7 +9,6 @@ import { useNameSearch } from "state/search/name-search-state";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Table, useTableState } from "components/shared/Table";
-import { FullDate } from "components/shared/FullDate";
 import { Warrant, WarrantStatus } from "@snailycad/types";
 import type { DeleteRecordsByIdData, PutWarrantsData } from "@snailycad/types/api";
 import { Permissions, usePermission } from "hooks/usePermission";

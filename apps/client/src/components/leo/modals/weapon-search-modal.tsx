@@ -1,18 +1,16 @@
 import * as React from "react";
-import { Loader, Button, AsyncListSearchField, Item } from "@snailycad/ui";
+import { Loader, Button, AsyncListSearchField, Item, Infofield, Status } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
-import { Infofield } from "components/shared/Infofield";
 import { useWeaponSearch, WeaponSearchResult } from "state/search/weapon-search-state";
 import { CustomFieldsArea } from "./CustomFieldsArea";
 import { useRouter } from "next/router";
 import { ManageCustomFieldsModal } from "./NameSearchModal/ManageCustomFieldsModal";
 import { CustomFieldCategory } from "@snailycad/types";
-import { Status } from "components/shared/Status";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {

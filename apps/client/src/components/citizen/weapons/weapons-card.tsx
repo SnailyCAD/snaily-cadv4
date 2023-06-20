@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button } from "@snailycad/ui";
+import { Button, FullDate, Status } from "@snailycad/ui";
 import type { Weapon } from "@snailycad/types";
 import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
@@ -9,13 +9,11 @@ import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { Table, useTableState } from "components/shared/Table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { FullDate } from "components/shared/FullDate";
 import { useAsyncTable } from "hooks/shared/table/use-async-table";
 import { useCitizen } from "context/CitizenContext";
 import type { DeleteCitizenWeaponData, GetCitizenWeaponsData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { SearchArea } from "components/shared/search/search-area";
-import { Status } from "components/shared/Status";
 
 export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
   const [search, setSearch] = React.useState("");

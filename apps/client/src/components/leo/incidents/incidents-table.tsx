@@ -1,10 +1,9 @@
 import { Permissions } from "@snailycad/permissions";
 import type { EmsFdIncident, IncidentInvolvedUnit, LeoIncident } from "@snailycad/types";
 import type { DeleteIncidentByIdData } from "@snailycad/types/api";
-import { Button, Loader } from "@snailycad/ui";
+import { Button, FullDate, Loader } from "@snailycad/ui";
 import { isUnitCombined, isUnitCombinedEmsFd } from "@snailycad/utils";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
-import { FullDate } from "components/shared/FullDate";
 import { ImageWrapper } from "components/shared/image-wrapper";
 import { getSelectedTableRows, Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";

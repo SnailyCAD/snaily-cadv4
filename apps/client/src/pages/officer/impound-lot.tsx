@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { Button } from "@snailycad/ui";
+import { Button, FullDate } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -14,7 +14,6 @@ import { Title } from "components/shared/Title";
 import { usePermission, Permissions } from "hooks/usePermission";
 import type { GetLeoImpoundedVehiclesData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
-import { FullDate } from "components/shared/FullDate";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { AllowImpoundedVehicleCheckoutModal } from "components/leo/modals/AllowImpoundedVehicleCheckoutModal";
 

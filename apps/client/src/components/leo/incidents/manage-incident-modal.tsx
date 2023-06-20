@@ -1,5 +1,13 @@
 import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
-import { Loader, Button, SwitchField, CheckboxField, FormRow } from "@snailycad/ui";
+import {
+  Loader,
+  Button,
+  SwitchField,
+  CheckboxField,
+  FormRow,
+  Infofield,
+  FullDate,
+} from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
@@ -19,9 +27,7 @@ import type { PostIncidentsData, PutIncidentByIdData } from "@snailycad/types/ap
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
 import { InvolvedUnitsTable } from "./involved-units/involved-units-table";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
-import { Infofield } from "components/shared/Infofield";
 import { useAuth } from "context/AuthContext";
-import { FullDate } from "components/shared/FullDate";
 
 interface Props<T extends LeoIncident | EmsFdIncident> {
   incident?: T | null;

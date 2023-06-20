@@ -3,9 +3,7 @@ import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useTranslations } from "next-intl";
 import { getTitles } from "components/courthouse/expungement-requests/RequestExpungement";
-import { Button, TabsContent } from "@snailycad/ui";
-import { FullDate } from "components/shared/FullDate";
-import { Status } from "components/shared/Status";
+import { Button, FullDate, Status, TabsContent } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import type {
   GetManageExpungementRequests,

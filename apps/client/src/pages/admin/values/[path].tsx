@@ -1,7 +1,7 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
 import { useRouter } from "next/router";
-import { Button } from "@snailycad/ui";
+import { Button, FullDate } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -18,7 +18,6 @@ import { OptionsDropdown } from "components/admin/values/import/options-dropdown
 import { Title } from "components/shared/Title";
 import { AlertModal } from "components/modal/AlertModal";
 import { ModalIds } from "types/modal-ids";
-import { FullDate } from "components/shared/FullDate";
 import { valueRoutes } from "components/admin/Sidebar/routes";
 import type {
   DeleteValuesBulkData,

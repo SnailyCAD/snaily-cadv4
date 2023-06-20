@@ -1,5 +1,4 @@
-import { FullDate } from "components/shared/FullDate";
-import { Infofield } from "components/shared/Infofield";
+import { FullDate, Infofield } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { calculateAge, formatCitizenAddress } from "lib/utils";

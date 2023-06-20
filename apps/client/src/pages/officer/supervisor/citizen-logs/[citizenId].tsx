@@ -10,12 +10,10 @@ import { Permissions } from "@snailycad/permissions";
 import type { GetManageRecordsLogsCitizenData } from "@snailycad/types/api";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { useRouter } from "next/router";
-import { FullDate } from "components/shared/FullDate";
 import { ViolationsColumn } from "components/leo/ViolationsColumn";
-import { Status } from "components/shared/Status";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import Link from "next/link";
-import { buttonVariants } from "@snailycad/ui";
+import { FullDate, Status, buttonVariants } from "@snailycad/ui";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { RecordsCaseNumberColumn } from "components/leo/records-case-number-column";
 

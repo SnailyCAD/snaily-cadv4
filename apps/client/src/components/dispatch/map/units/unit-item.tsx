@@ -2,12 +2,17 @@ import type * as React from "react";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import type { MapPlayer } from "types/map";
-import { Button, AccordionContent, AccordionTrigger, AccordionItem } from "@snailycad/ui";
+import {
+  Button,
+  AccordionContent,
+  AccordionTrigger,
+  AccordionItem,
+  Infofield,
+} from "@snailycad/ui";
 import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
 import type { CombinedEmsFdUnit, CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
-import { Infofield } from "components/shared/Infofield";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { UnitRadioChannelModal } from "components/dispatch/active-units/UnitRadioChannelModal";
 import { isUnitCombined, isUnitCombinedEmsFd } from "@snailycad/utils";

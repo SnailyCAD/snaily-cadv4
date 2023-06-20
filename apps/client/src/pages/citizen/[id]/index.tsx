@@ -15,6 +15,8 @@ import {
   DropdownMenuItem,
   DropdownMenuLinkItem,
   DropdownMenuTrigger,
+  FullDate,
+  Infofield,
 } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import { getTranslations } from "lib/getTranslation";
@@ -27,10 +29,8 @@ import dynamic from "next/dynamic";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useAuth } from "context/AuthContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { Infofield } from "components/shared/Infofield";
 import { Title } from "components/shared/Title";
 import { ModalIds } from "types/modal-ids";
-import { FullDate } from "components/shared/FullDate";
 import type { DeleteCitizenByIdData } from "@snailycad/types/api";
 import { ImageWrapper } from "components/shared/image-wrapper";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";

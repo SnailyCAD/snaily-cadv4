@@ -9,11 +9,11 @@ import type { GetServerSideProps } from "next";
 import { requestAll } from "lib/utils";
 import { Table, useTableState } from "components/shared/Table";
 import { Title } from "components/shared/Title";
-import { FullDate } from "components/shared/FullDate";
 import type { TowCall } from "@snailycad/types";
 import { Permissions } from "@snailycad/permissions";
 import type { GetTowCallsData } from "@snailycad/types/api";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
+import { FullDate } from "@snailycad/ui";
 
 interface Props {
   calls: GetTowCallsData;

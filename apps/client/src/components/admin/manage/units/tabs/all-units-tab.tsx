@@ -9,12 +9,11 @@ import {
   isEmpty,
 } from "lib/utils";
 import { useTranslations } from "use-intl";
-import { Button, buttonVariants, SelectField, TabsContent } from "@snailycad/ui";
+import { Button, buttonVariants, SelectField, Status, TabsContent } from "@snailycad/ui";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
-import { Status } from "components/shared/Status";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useModal } from "state/modalState";

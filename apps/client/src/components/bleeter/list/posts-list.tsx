@@ -1,6 +1,6 @@
 import { BleeterPost, BleeterProfile } from "@snailycad/types";
+import { FullDate } from "@snailycad/ui";
 import { Editor } from "components/editor/editor";
-import { FullDate } from "components/shared/FullDate";
 import { ImageWrapper } from "components/shared/image-wrapper";
 import { useList } from "hooks/shared/table/use-list";
 import { useImageUrl } from "hooks/useImageUrl";

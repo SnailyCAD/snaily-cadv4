@@ -1,5 +1,4 @@
-import { Button } from "@snailycad/ui";
-import { FullDate } from "components/shared/FullDate";
+import { Button, FullDate } from "@snailycad/ui";
 import { Table, useTableState } from "components/shared/Table";
 import { usePetsState } from "state/citizen/pets-state";
 import { useModal } from "state/modalState";

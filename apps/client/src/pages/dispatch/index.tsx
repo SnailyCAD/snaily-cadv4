@@ -31,8 +31,8 @@ import type {
 import { UtilityPanel } from "components/shared/UtilityPanel";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { useActiveDispatcherState } from "state/dispatch/active-dispatcher-state";
-import { Infofield } from "components/shared/Infofield";
 import { shallow } from "zustand/shallow";
+import { Infofield } from "@snailycad/ui";
 
 const ActiveIncidents = dynamic(async () => {
   return (await import("components/dispatch/active-incidents")).ActiveIncidents;

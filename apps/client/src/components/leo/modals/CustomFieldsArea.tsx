@@ -1,5 +1,4 @@
-import { Button } from "@snailycad/ui";
-import { Infofield } from "components/shared/Infofield";
+import { Button, Infofield } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
 import type { NameSearchResult } from "state/search/name-search-state";
