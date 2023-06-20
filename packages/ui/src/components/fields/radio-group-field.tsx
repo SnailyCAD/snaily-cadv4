@@ -39,7 +39,7 @@ export function Radio(props: AriaRadioProps) {
   const { inputProps, isDisabled } = useRadio(props, state, ref);
 
   return (
-    <label className="block">
+    <label className="block dark:text-gray-200 my-0.5">
       <input {...inputProps} ref={ref} />
       <span className={cn("ml-1", isDisabled && "opacity-80 cursor-not-allowed")}>
         {props.children}

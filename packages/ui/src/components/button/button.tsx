@@ -5,7 +5,7 @@ import { VariantProps, cva } from "class-variance-authority";
 import { cn } from "../../utils/classNames";
 
 export const buttonVariants = cva(
-  "rounded-md disabled:opacity-60 disabled:cursor-not-allowed transition-colors cursor-pointer focus-visible:outline-none",
+  "rounded-md disabled:opacity-60 disabled:cursor-not-allowed transition-colors cursor-pointer",
   {
     variants: {
       variant: {
