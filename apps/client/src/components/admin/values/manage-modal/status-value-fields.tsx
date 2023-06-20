@@ -1,5 +1,4 @@
 import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
 import { useFormikContext } from "formik";
 import dynamic from "next/dynamic";
 import {
@@ -116,19 +115,17 @@ export function StatusValueFields() {
       />
 
       {values.shouldDo === ShouldDoType.SET_ON_DUTY ? null : (
-        <FormField errorMessage={errors.departments as string} label={t("departments")}>
-          <Select
-            closeMenuOnSelect={false}
-            name="departments"
-            onChange={handleChange}
-            value={values.departments}
-            isMulti
-            values={department.values.map((v) => ({
-              value: v.id,
-              label: v.value.value,
-            }))}
-          />
-        </FormField>
+        <SelectField
+          label={t("departments")}
+          errorMessage={errors.departments as string}
+          selectedKeys={values.departments}
+          onSelectionChange={(keys) => setFieldValue("departments", keys)}
+          selectionMode="multiple"
+          options={department.values.map((v) => ({
+            value: v.id,
+            label: v.value.value,
+          }))}
+        />
       )}
 
       <FormField errorMessage={errors.color as string} label={t("colorHex")}>

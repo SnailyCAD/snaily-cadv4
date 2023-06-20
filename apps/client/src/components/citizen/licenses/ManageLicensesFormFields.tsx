@@ -3,13 +3,10 @@ import { useValues } from "context/ValuesContext";
 import { useFormikContext } from "formik";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useTranslations } from "next-intl";
-
-import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
 import { filterLicenseType, filterLicenseTypes } from "lib/utils";
 import { classNames } from "lib/classNames";
 import type { LicenseInitialValues } from "./manage-licenses-modal";
-import { FormRow, DatePickerField, SwitchField } from "@snailycad/ui";
+import { FormRow, DatePickerField, SwitchField, SelectField } from "@snailycad/ui";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
 
 export function createDefaultLicensesValues(citizen: Citizen | null): LicenseInitialValues {
@@ -31,35 +28,19 @@ export function createDefaultLicensesValues(citizen: Citizen | null): LicenseIni
     driversLicenseCategory:
       citizen?.dlCategory
         .filter((v) => v.type === DriversLicenseCategoryType.AUTOMOTIVE)
-        .map((v) => ({
-          value: v.id,
-          label: v.value.value,
-          description: v.description,
-        })) ?? null,
+        .map((v) => v.id) ?? [],
     pilotLicenseCategory:
       citizen?.dlCategory
         .filter((v) => v.type === DriversLicenseCategoryType.AVIATION)
-        .map((v) => ({
-          value: v.id,
-          label: v.value.value,
-          description: v.description,
-        })) ?? null,
+        .map((v) => v.id) ?? [],
     waterLicenseCategory:
       citizen?.dlCategory
         .filter((v) => v.type === DriversLicenseCategoryType.WATER)
-        .map((v) => ({
-          value: v.id,
-          label: v.value.value,
-          description: v.description,
-        })) ?? null,
+        .map((v) => v.id) ?? [],
     firearmLicenseCategory:
       citizen?.dlCategory
         .filter((v) => v.type === DriversLicenseCategoryType.FIREARM)
-        .map((v) => ({
-          value: v.id,
-          label: v.value.value,
-          description: v.description,
-        })) ?? null,
+        .map((v) => v.id) ?? [],
   };
 }
 
@@ -70,7 +51,7 @@ interface Props {
 }
 
 export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Props) {
-  const { values, setFieldValue, errors, handleChange } =
+  const { values, setFieldValue, errors } =
     useFormikContext<ReturnType<typeof createDefaultLicensesValues>>();
 
   const { license, driverslicenseCategory } = useValues();
@@ -123,26 +104,22 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
               filterFn={(v) => filterLicenseType(v, ValueLicenseType.LICENSE)}
             />
 
-            <FormField
-              errorMessage={errors.driversLicenseCategory as string}
+            <SelectField
               label={t("Citizen.driversLicenseCategory")}
-            >
-              <Select
-                disabled={values.suspended.driverLicense}
-                extra={{ showDLCategoryDescriptions: true }}
-                isMulti
-                values={driverslicenseCategory.values
-                  .filter((v) => v.type === DriversLicenseCategoryType.AUTOMOTIVE)
-                  .map((category) => ({
-                    label: category.value.value,
-                    value: category.id,
-                    description: category.description,
-                  }))}
-                value={values.driversLicenseCategory}
-                name="driversLicenseCategory"
-                onChange={handleChange}
-              />
-            </FormField>
+              errorMessage={errors.driversLicenseCategory}
+              isDisabled={values.suspended.driverLicense}
+              selectionMode="multiple"
+              selectedKeys={values.driversLicenseCategory}
+              isClearable
+              onSelectionChange={(keys) => setFieldValue("driversLicenseCategory", keys)}
+              options={driverslicenseCategory.values
+                .filter((v) => v.type === DriversLicenseCategoryType.AUTOMOTIVE)
+                .map((value) => ({
+                  label: value.value.value,
+                  value: value.id,
+                  description: value.description,
+                }))}
+            />
           </div>
 
           {!isLeo && values.suspended.driverLicense ? (
@@ -196,26 +173,22 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
             filterFn={(v) => filterLicenseType(v, ValueLicenseType.LICENSE)}
           />
 
-          <FormField
-            errorMessage={errors.pilotLicenseCategory as string}
+          <SelectField
             label={t("Citizen.pilotLicenseCategory")}
-          >
-            <Select
-              disabled={values.suspended.pilotLicense}
-              isMulti
-              extra={{ showDLCategoryDescriptions: true }}
-              values={driverslicenseCategory.values
-                .filter((v) => v.type === DriversLicenseCategoryType.AVIATION)
-                .map((category) => ({
-                  label: category.value.value,
-                  value: category.id,
-                  description: category.description,
-                }))}
-              value={values.pilotLicenseCategory}
-              name="pilotLicenseCategory"
-              onChange={handleChange}
-            />
-          </FormField>
+            errorMessage={errors.pilotLicenseCategory}
+            isDisabled={values.suspended.pilotLicense}
+            selectionMode="multiple"
+            selectedKeys={values.pilotLicenseCategory}
+            isClearable
+            onSelectionChange={(keys) => setFieldValue("pilotLicenseCategory", keys)}
+            options={driverslicenseCategory.values
+              .filter((v) => v.type === DriversLicenseCategoryType.AVIATION)
+              .map((value) => ({
+                label: value.value.value,
+                value: value.id,
+                description: value.description,
+              }))}
+          />
         </div>
 
         {!isLeo && values.suspended.pilotLicense ? (
@@ -266,26 +239,22 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
             label={t("Citizen.waterLicense")}
           />
 
-          <FormField
-            errorMessage={errors.waterLicenseCategory as string}
+          <SelectField
             label={t("Citizen.waterLicenseCategory")}
-          >
-            <Select
-              disabled={values.suspended.waterLicense}
-              isMulti
-              extra={{ showDLCategoryDescriptions: true }}
-              values={driverslicenseCategory.values
-                .filter((v) => v.type === DriversLicenseCategoryType.WATER)
-                .map((category) => ({
-                  label: category.value.value,
-                  value: category.id,
-                  description: category.description,
-                }))}
-              value={values.waterLicenseCategory}
-              name="waterLicenseCategory"
-              onChange={handleChange}
-            />
-          </FormField>
+            errorMessage={errors.waterLicenseCategory}
+            isDisabled={values.suspended.waterLicense}
+            selectionMode="multiple"
+            selectedKeys={values.waterLicenseCategory}
+            isClearable
+            onSelectionChange={(keys) => setFieldValue("waterLicenseCategory", keys)}
+            options={driverslicenseCategory.values
+              .filter((v) => v.type === DriversLicenseCategoryType.WATER)
+              .map((value) => ({
+                label: value.value.value,
+                value: value.id,
+                description: value.description,
+              }))}
+          />
         </div>
 
         {!isLeo && values.suspended.waterLicense ? (
@@ -337,26 +306,22 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
               label={t("Citizen.weaponLicense")}
             />
 
-            <FormField
-              errorMessage={errors.firearmLicenseCategory as string}
+            <SelectField
               label={t("Citizen.firearmLicenseCategory")}
-            >
-              <Select
-                disabled={values.suspended.firearmsLicense}
-                extra={{ showDLCategoryDescriptions: true }}
-                values={driverslicenseCategory.values
-                  .filter((v) => v.type === DriversLicenseCategoryType.FIREARM)
-                  .map((v) => ({
-                    label: v.value.value,
-                    value: v.id,
-                  }))}
-                value={values.firearmLicenseCategory}
-                onChange={handleChange}
-                name="firearmLicenseCategory"
-                isMulti
-                isClearable
-              />
-            </FormField>
+              errorMessage={errors.firearmLicenseCategory}
+              isDisabled={values.suspended.firearmsLicense}
+              selectionMode="multiple"
+              selectedKeys={values.firearmLicenseCategory}
+              isClearable
+              onSelectionChange={(keys) => setFieldValue("firearmLicenseCategory", keys)}
+              options={driverslicenseCategory.values
+                .filter((v) => v.type === DriversLicenseCategoryType.FIREARM)
+                .map((value) => ({
+                  label: value.value.value,
+                  value: value.id,
+                  description: value.description,
+                }))}
+            />
           </div>
 
           {!isLeo && values.suspended.firearmsLicense ? (

@@ -2,9 +2,7 @@ import * as React from "react";
 import { getUnitDepartment } from "lib/utils";
 import { useTranslations } from "use-intl";
 import { Form, Formik, FormikHelpers } from "formik";
-import { FormField } from "components/form/FormField";
 import { useValues } from "context/ValuesContext";
-import { Select } from "components/form/Select";
 import {
   Loader,
   Button,
@@ -14,6 +12,7 @@ import {
   Item,
   SwitchField,
   FormRow,
+  SelectField,
 } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import Link from "next/link";
@@ -52,11 +51,6 @@ export function ManageUnitTab({ unit: data }: Props) {
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
-    const data = {
-      ...values,
-      divisions: values.divisions.map((v) => v.value),
-    };
-
     const validatedImage = validateFile(image, helpers);
     const formData = new FormData();
 
@@ -69,7 +63,7 @@ export function ManageUnitTab({ unit: data }: Props) {
     const { json } = await execute<PutManageUnitData, typeof INITIAL_VALUES>({
       path: `/admin/manage/units/${unit.id}`,
       method: "PUT",
-      data,
+      data: values,
       helpers,
     });
 
@@ -88,14 +82,14 @@ export function ManageUnitTab({ unit: data }: Props) {
   }
 
   const divisions = isUnitOfficer(unit) ? unit.divisions : [];
+
   const INITIAL_VALUES = {
     userId: unit.userId ?? "",
     username: unit.user?.username ?? "",
-
     status: unit.statusId,
     department: getUnitDepartment(unit)?.id ?? "",
     division: !isUnitOfficer(unit) ? unit.divisionId : null,
-    divisions: divisions.map((v) => ({ value: v.id, label: v.value.value })),
+    divisions: divisions.map((v) => v.id),
     callsign: unit.callsign,
     callsign2: unit.callsign2,
     rank: unit.rankId,
@@ -108,7 +102,7 @@ export function ManageUnitTab({ unit: data }: Props) {
     <TabsContent value="manage-unit">
       {hasManagePermissions ? (
         <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-          {({ setFieldValue, handleChange, setValues, values, errors }) => (
+          {({ setFieldValue, setValues, values, errors }) => (
             <Form>
               {unit.isTemporary && !unit.user ? (
                 <AsyncListSearchField<User>
@@ -157,39 +151,33 @@ export function ManageUnitTab({ unit: data }: Props) {
               />
 
               {DIVISIONS ? (
-                <FormField
-                  errorMessage={
-                    isUnitOfficer(unit) ? (errors.divisions as string) : errors.division
-                  }
-                  label={t("division")}
-                >
-                  {isUnitOfficer(unit) ? (
-                    <Select
-                      isMulti
-                      value={values.divisions}
-                      name="divisions"
-                      onChange={handleChange}
-                      values={division.values
-                        .filter((v) =>
-                          values.department ? v.departmentId === values.department : true,
-                        )
-                        .map((value) => ({
-                          label: value.value.value,
-                          value: value.id,
-                        }))}
-                    />
-                  ) : (
-                    <ValueSelectField
-                      fieldName="division"
-                      label={t("division")}
-                      values={division.values}
-                      valueType={ValueType.DIVISION}
-                      filterFn={(value) =>
-                        values.department ? value.departmentId === values.department : true
-                      }
-                    />
-                  )}
-                </FormField>
+                isUnitOfficer(unit) ? (
+                  <SelectField
+                    errorMessage={errors.divisions}
+                    label={t("division")}
+                    selectedKeys={values.divisions}
+                    onSelectionChange={(keys) => setFieldValue("divisions", keys)}
+                    options={division.values
+                      .filter((value) =>
+                        values.department ? value.departmentId === values.department : true,
+                      )
+                      .map((value) => ({
+                        value: value.id,
+                        label: value.value.value,
+                      }))}
+                    selectionMode="multiple"
+                  />
+                ) : (
+                  <ValueSelectField
+                    fieldName="division"
+                    label={t("division")}
+                    values={division.values}
+                    valueType={ValueType.DIVISION}
+                    filterFn={(value) =>
+                      values.department ? value.departmentId === values.department : true
+                    }
+                  />
+                )
               ) : null}
 
               <FormRow>

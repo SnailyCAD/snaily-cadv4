@@ -47,7 +47,6 @@
       "!src/stories/**/*"
     ],
     "dts": true,
-    "clean": true,
     "platform": "node",
     "target": "node16",
     "silent": true,
