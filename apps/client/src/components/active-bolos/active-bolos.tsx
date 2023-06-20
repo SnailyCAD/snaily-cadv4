@@ -8,7 +8,7 @@ import { useTranslations } from "use-intl";
 import type { DeleteBolosData, GetBolosData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useMounted } from "@casper124578/useful";
-import { Button } from "@snailycad/ui";
+import { Button, FullDate } from "@snailycad/ui";
 import { classNames } from "lib/classNames";
 import { Filter } from "react-bootstrap-icons";
 import dynamic from "next/dynamic";
@@ -21,7 +21,6 @@ import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { defaultPermissions } from "@snailycad/permissions";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
-import { FullDate } from "components/shared/FullDate";
 
 const BoloFilters = dynamic(async () => (await import("./bolo-filters")).BoloFilters, {
   ssr: false,

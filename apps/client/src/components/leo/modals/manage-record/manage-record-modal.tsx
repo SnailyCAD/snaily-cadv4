@@ -10,6 +10,7 @@ import {
   TabsContent,
   SwitchField,
   FormRow,
+  FullDate,
 } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import type { SelectValue } from "components/form/Select";
@@ -27,7 +28,6 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { PostRecordsData, PutRecordsByIdData } from "@snailycad/types/api";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
-import { FullDate } from "components/shared/FullDate";
 import dynamic from "next/dynamic";
 import type { BusinessSearchResult } from "state/search/business-search-state";
 

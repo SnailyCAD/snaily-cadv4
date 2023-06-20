@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body[data-mode="dark"],
+body[data-mode="dark"] {
+  background-color: theme("colors.primary");
+}

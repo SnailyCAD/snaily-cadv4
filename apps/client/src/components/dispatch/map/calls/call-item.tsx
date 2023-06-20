@@ -2,12 +2,17 @@ import * as React from "react";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { ModalIds } from "types/modal-ids";
-import { Button, AccordionItem, AccordionContent, AccordionTrigger } from "@snailycad/ui";
+import {
+  Button,
+  AccordionItem,
+  AccordionContent,
+  AccordionTrigger,
+  Infofield,
+} from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import type { Full911Call } from "state/dispatch/dispatch-state";
 import type { MapCallProps } from "./active-map-calls";
 import { useTranslations } from "next-intl";
-import { Infofield } from "components/shared/Infofield";
 import { isUnitCombined } from "@snailycad/utils";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";

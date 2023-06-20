@@ -1,4 +1,3 @@
-import { FullDate } from "components/shared/FullDate";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import formatDistance from "date-fns/formatDistance";
 import { useImageUrl } from "hooks/useImageUrl";
@@ -10,6 +9,7 @@ import type { OfficerLogWithDeputy } from "src/pages/ems-fd/my-deputy-logs";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import type { GetMyDeputiesLogsData, GetMyOfficersLogsData } from "@snailycad/types/api";
 import { ImageWrapper } from "components/shared/image-wrapper";
+import { FullDate } from "@snailycad/ui";
 
 type OfficerLogData = GetMyOfficersLogsData["logs"][number] | GetMyDeputiesLogsData["logs"][number];
 

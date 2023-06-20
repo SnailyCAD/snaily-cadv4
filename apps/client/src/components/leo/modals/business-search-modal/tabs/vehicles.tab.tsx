@@ -1,6 +1,5 @@
 import type { RegisteredVehicle } from "@snailycad/types";
-import { Button, TabsContent } from "@snailycad/ui";
-import { FullDate } from "components/shared/FullDate";
+import { Button, FullDate, TabsContent } from "@snailycad/ui";
 import { Table, useTableState } from "components/shared/Table";
 import { useModal } from "state/modalState";
 import { useBusinessSearch } from "state/search/business-search-state";

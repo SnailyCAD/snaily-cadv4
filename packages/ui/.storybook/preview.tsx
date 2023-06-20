@@ -24,6 +24,18 @@ const MESSAGES_REQUIRED_IN_COMPONENTS = {
     noOptions: "No options",
     searching: "Searching...",
   },
+  Statuses: {
+    ACCEPTED: "Accepted",
+    PASSED: "Passed",
+    PAID: "Paid",
+    PENDING: "Pending",
+    IN_PROGRESS: "In Progress",
+    DECLINED: "Declined",
+    DENIED: "Denied",
+    UNPAID: "Unpaid",
+    FAILED: "Failed",
+    CANCELED: "Canceled",
+  },
 };
 
 export const decorators = [

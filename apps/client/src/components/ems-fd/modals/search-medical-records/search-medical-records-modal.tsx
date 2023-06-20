@@ -1,15 +1,21 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Form, Formik } from "formik";
-import { Loader, Button, Item, AsyncListSearchField, TabList } from "@snailycad/ui";
+import {
+  Loader,
+  Button,
+  Item,
+  AsyncListSearchField,
+  TabList,
+  Infofield,
+  FullDate,
+} from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { PersonFill } from "react-bootstrap-icons";
-import { Infofield } from "components/shared/Infofield";
-import { FullDate } from "components/shared/FullDate";
 import { calculateAge, formatCitizenAddress } from "lib/utils";
 import { useAuth } from "context/AuthContext";
 import { CitizenImageModal } from "components/citizen/modals/citizen-image-modal";

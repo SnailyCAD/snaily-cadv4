@@ -1,9 +1,7 @@
-import { FullDate } from "components/shared/FullDate";
 import { Table, useTableState } from "components/shared/Table";
-import { Status } from "components/shared/Status";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useTranslations } from "use-intl";
-import { Button, TabsContent } from "@snailycad/ui";
+import { Button, FullDate, Status, TabsContent } from "@snailycad/ui";
 import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicle-search-state";
 import { useModal } from "state/modalState";
 import { useNameSearch } from "state/search/name-search-state";

@@ -1,12 +1,9 @@
-import { Button, TabsContent } from "@snailycad/ui";
+import { Button, FullDate, Infofield, Status, TabsContent } from "@snailycad/ui";
 import { useTranslations } from "use-intl";
 import { yesOrNoText } from "lib/utils";
 import { classNames } from "lib/classNames";
-import { Infofield } from "components/shared/Infofield";
-import { FullDate } from "components/shared/FullDate";
 import { useVehicleSearch } from "state/search/vehicle-search-state";
 import { Pencil } from "react-bootstrap-icons";
-import { Status } from "components/shared/Status";
 import { TruckLogsTable } from "../TruckLogsTable";
 import { CustomFieldsArea } from "../../CustomFieldsArea";
 import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";

@@ -16,8 +16,6 @@ import { useEmsFdState } from "state/ems-fd-state";
 import type { Delete911CallByIdData } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { Manage911CallForm } from "./manage-911-call-form";
-import { Infofield } from "components/shared/Infofield";
-import { FullDate } from "components/shared/FullDate";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { shallow } from "zustand/shallow";
@@ -25,6 +23,7 @@ import { isUnitCombined } from "@snailycad/utils";
 import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { useInvalidateQuery } from "hooks/use-invalidate-query";
 import { useAuth } from "context/AuthContext";
+import { FullDate, Infofield } from "@snailycad/ui";
 
 interface Props {
   call: Full911Call | null;

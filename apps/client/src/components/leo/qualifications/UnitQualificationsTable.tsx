@@ -1,6 +1,6 @@
 import { EmsFdDeputy, Officer, QualificationValueType, UnitQualification } from "@snailycad/types";
+import { FullDate } from "@snailycad/ui";
 import { QualificationsHoverCard } from "components/admin/manage/units/QualificationHoverCard";
-import { FullDate } from "components/shared/FullDate";
 import { Table, useTableState } from "components/shared/Table";
 import { classNames } from "lib/classNames";
 import { useTranslations } from "next-intl";

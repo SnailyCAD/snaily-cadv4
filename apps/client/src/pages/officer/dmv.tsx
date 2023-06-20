@@ -1,5 +1,5 @@
 import { useTranslations } from "use-intl";
-import { Button } from "@snailycad/ui";
+import { Button, FullDate, Status } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -8,10 +8,8 @@ import type { GetServerSideProps } from "next";
 import { WhitelistStatus } from "@snailycad/types";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { Title } from "components/shared/Title";
-import { FullDate } from "components/shared/FullDate";
 import { Permissions } from "hooks/usePermission";
 import useFetch from "lib/useFetch";
-import { Status } from "components/shared/Status";
 import type { GetDMVPendingVehiclesData, PostDMVVehiclesData } from "@snailycad/types/api";
 import { useInvalidateQuery } from "hooks/use-invalidate-query";
 

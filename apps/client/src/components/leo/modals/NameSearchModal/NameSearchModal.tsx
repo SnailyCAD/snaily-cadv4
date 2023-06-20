@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, AsyncListSearchField, Item } from "@snailycad/ui";
+import { Button, AsyncListSearchField, Item, Infofield } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik, useFormikContext } from "formik";
@@ -14,7 +14,6 @@ import { useRouter } from "next/router";
 import { ArrowLeft, PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { Infofield } from "components/shared/Infofield";
 import dynamic from "next/dynamic";
 import {
   LicenseInitialValues,

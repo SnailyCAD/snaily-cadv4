@@ -1,5 +1,4 @@
-import { FullDate } from "components/shared/FullDate";
-import { Infofield } from "components/shared/Infofield";
+import { FullDate, Infofield } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
 import { calculateAge } from "lib/utils";
 import { usePetsState } from "state/citizen/pets-state";

@@ -1,6 +1,6 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
-import { Button, TextField } from "@snailycad/ui";
+import { Button, FullDate, TextField } from "@snailycad/ui";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
@@ -27,7 +27,6 @@ import {
   hasTableDataChanged,
 } from "lib/admin/values/utils";
 import { Table, useTableState } from "components/shared/Table";
-import { FullDate } from "components/shared/FullDate";
 import { createValueDocumentationURL } from "./[path]";
 import { BoxArrowUpRight } from "react-bootstrap-icons";
 import Link from "next/link";

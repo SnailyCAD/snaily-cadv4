@@ -1,4 +1,4 @@
-import { Infofield } from "components/shared/Infofield";
+import { Infofield } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
 import { classNames } from "lib/classNames";
 import { useNameSearch } from "state/search/name-search-state";

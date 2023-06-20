@@ -6,6 +6,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
+  FullDate,
 } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
@@ -15,7 +16,6 @@ import { useAsyncTable } from "components/shared/Table";
 import type { GetManageUnitsInactiveUnits } from "@snailycad/types/api";
 import { toastMessage } from "lib/toastMessage";
 import { Modal } from "components/modal/Modal";
-import { FullDate } from "components/shared/FullDate";
 import { useValues } from "context/ValuesContext";
 import { isUnitOfficer } from "@snailycad/utils";
 import { makeUnitName } from "lib/utils";

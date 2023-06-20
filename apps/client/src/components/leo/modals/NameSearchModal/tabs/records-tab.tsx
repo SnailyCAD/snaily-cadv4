@@ -3,7 +3,7 @@ import compareDesc from "date-fns/compareDesc";
 import { useRouter } from "next/router";
 import { Record, RecordType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
-import { Button, TabsContent } from "@snailycad/ui";
+import { Button, FullDate, Status, TabsContent } from "@snailycad/ui";
 import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
@@ -12,11 +12,9 @@ import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Table, useTableState } from "components/shared/Table";
 import { ManageRecordModal } from "../../manage-record/manage-record-modal";
-import { FullDate } from "components/shared/FullDate";
 import { Permissions, usePermission } from "hooks/usePermission";
 import { ViolationsColumn } from "components/leo/ViolationsColumn";
 import type { DeleteRecordsByIdData } from "@snailycad/types/api";
-import { Status } from "components/shared/Status";
 import { RecordsCaseNumberColumn } from "components/leo/records-case-number-column";
 
 interface RecordsTabProps {
@@ -229,8 +227,7 @@ export function RecordsTable({
               paymentStatus: <Status fallback="—">{record.paymentStatus}</Status>,
               totalCost: `${currency}${formatSum(totalCost())}`,
               notes: record.notes || common("none"),
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-              createdAt: record.createdAt ? <FullDate>{record.createdAt}</FullDate> : "-",
+              createdAt: <FullDate>{record.createdAt}</FullDate>,
               actions: isCitizen ? null : (
                 <>
                   <Button

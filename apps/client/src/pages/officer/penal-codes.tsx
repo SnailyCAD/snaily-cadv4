@@ -9,8 +9,7 @@ import { requestAll, yesOrNoText } from "lib/utils";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { useValues } from "context/ValuesContext";
-import { TextField } from "@snailycad/ui";
-import { Infofield } from "components/shared/Infofield";
+import { Infofield, TextField } from "@snailycad/ui";
 import {
   getPenalCodeMaxFines,
   getPenalCodeMinFines,

@@ -1,10 +1,9 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { Button, Droppable } from "@snailycad/ui";
+import { Button, Droppable, FullDate } from "@snailycad/ui";
 import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { Table, useTableState } from "components/shared/Table";
 import { yesOrNoText } from "lib/utils";
-import { FullDate } from "components/shared/FullDate";
 import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 import { useActiveIncidentsTable } from "hooks/realtime/use-active-incidents-table";

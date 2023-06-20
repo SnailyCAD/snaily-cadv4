@@ -1,5 +1,5 @@
 import { useTranslations } from "use-intl";
-import { Button, TabsContent } from "@snailycad/ui";
+import { Button, Status, TabsContent } from "@snailycad/ui";
 import { FullEmployee, useBusinessState } from "state/business-state";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
@@ -9,7 +9,6 @@ import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { Table, useTableState } from "components/shared/Table";
 import { yesOrNoText } from "lib/utils";
-import { Status } from "components/shared/Status";
 import type { DeleteBusinessFireEmployeeData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { shallow } from "zustand/shallow";

@@ -1,10 +1,9 @@
-import { Button, TabsContent } from "@snailycad/ui";
+import { Button, FullDate, TabsContent } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/modal-ids";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import type { CourtEntry } from "@snailycad/types";
-import { FullDate } from "components/shared/FullDate";
 import { ManageCourtEntry } from "./manage-court-entry-modal";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";

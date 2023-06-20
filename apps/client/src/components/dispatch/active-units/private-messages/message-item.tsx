@@ -1,7 +1,6 @@
 import { DispatchChat } from "@snailycad/types";
-import { Button } from "@snailycad/ui";
+import { Button, FullDate } from "@snailycad/ui";
 import { isUnitOfficer } from "@snailycad/utils";
-import { FullDate } from "components/shared/FullDate";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { classNames } from "lib/classNames";
 import { makeUnitName } from "lib/utils";

@@ -1,14 +1,14 @@
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@snailycad/ui";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "../components/hover-card";
 import { useFormatter } from "use-intl";
 
-interface Props {
+interface FullDateProps {
   children: Date | string | number;
   onlyDate?: boolean;
   isDateOfBirth?: boolean;
   relative?: boolean;
 }
 
-export function FullDate({ children, onlyDate, relative, isDateOfBirth }: Props) {
+export function FullDate({ children, onlyDate, relative, isDateOfBirth }: FullDateProps) {
   const { dateTime, relativeTime } = useFormatter();
 
   const isCorrectDate = isValidDate(children);
@@ -45,7 +45,7 @@ export function FullDate({ children, onlyDate, relative, isDateOfBirth }: Props)
   );
 }
 
-function isValidDate(children: any) {
+function isValidDate(children: Date | string | number) {
   try {
     return Boolean(new Date(children));
   } catch {

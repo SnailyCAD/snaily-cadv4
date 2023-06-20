@@ -2,22 +2,22 @@ import * as React from "react";
 import { useTranslations } from "use-intl";
 import {
   Button,
+  FullDate,
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
   Loader,
+  Status,
   TabsContent,
 } from "@snailycad/ui";
 import { Record, RecordType } from "@snailycad/types";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { FullDate } from "components/shared/FullDate";
 import { makeUnitName } from "lib/utils";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
 import { ManageRecordModal } from "../modals/manage-record/manage-record-modal";
 import useFetch from "lib/useFetch";
-import { Status } from "components/shared/Status";
 import { ViolationsColumn } from "../ViolationsColumn";
 import type {
   GetManagePendingArrestReports,

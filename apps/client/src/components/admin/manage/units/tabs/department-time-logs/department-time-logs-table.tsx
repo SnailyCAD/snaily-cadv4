@@ -1,10 +1,9 @@
 import * as React from "react";
 import { getUnitDepartment, makeUnitName } from "lib/utils";
 import { useTranslations } from "use-intl";
-import { DatePickerField, SelectField, TabsContent } from "@snailycad/ui";
+import { DatePickerField, FullDate, SelectField, TabsContent } from "@snailycad/ui";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
-import { FullDate } from "components/shared/FullDate";
 import { useDebouncedValue } from "hooks/shared/use-debounced-value";
 import { SearchArea } from "components/shared/search/search-area";
 import type {

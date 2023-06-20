@@ -1,5 +1,5 @@
 import { useTranslations } from "use-intl";
-import { Alert, Button } from "@snailycad/ui";
+import { Alert, Button, Status } from "@snailycad/ui";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
@@ -10,7 +10,6 @@ import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll, yesOrNoText } from "lib/utils";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { Title } from "components/shared/Title";
-import { Status } from "components/shared/Status";
 import { usePermission, Permissions } from "hooks/usePermission";
 import type {
   DeleteBusinessFireEmployeeData,

@@ -1,12 +1,10 @@
 import * as React from "react";
-import { Button, TabsContent } from "@snailycad/ui";
+import { Button, FullDate, Status, TabsContent } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/modal-ids";
 import { Table, useTableState } from "components/shared/Table";
 import { WhitelistStatus } from "@snailycad/types";
-import { Status } from "components/shared/Status";
-import { FullDate } from "components/shared/FullDate";
 import { RequestNameChangeModal } from "./RequestNameChange";
 import type { GetNameChangeRequestsData } from "@snailycad/types/api";
 

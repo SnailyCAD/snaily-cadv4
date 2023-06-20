@@ -11,11 +11,10 @@ import { DispatchCallTowModal } from "components/dispatch/modals/CallTowModal";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useCallsFilters } from "state/callsFiltersState";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
-import { FullDate } from "components/shared/FullDate";
 import { classNames } from "lib/classNames";
 import { usePermission } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
-import { Droppable } from "@snailycad/ui";
+import { Droppable, FullDate, Status } from "@snailycad/ui";
 import { DndActions } from "types/dnd-actions";
 import { AssignedUnitsColumn } from "./assigned-units-column";
 import type { Get911CallsData, Post911CallAssignUnAssign } from "@snailycad/types/api";
@@ -26,7 +25,6 @@ import { ActiveCallsActionsColumn } from "./actions-column";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { useActiveCalls } from "hooks/realtime/use-active-calls";
 import { shallow } from "zustand/shallow";
-import { Status } from "components/shared/Status";
 
 interface Props {
   initialData: Get911CallsData;

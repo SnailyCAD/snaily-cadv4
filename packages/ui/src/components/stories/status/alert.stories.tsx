@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Alert } from "./alert";
+import { Alert } from "../../alert/alert";
 
 const meta = {
   title: "Status/Alert",

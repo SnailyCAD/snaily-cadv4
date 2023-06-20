@@ -1,6 +1,6 @@
 import { Table, useTableState } from "components/shared/Table";
 import { useTranslations } from "use-intl";
-import { Button, TabsContent } from "@snailycad/ui";
+import { Button, Status, TabsContent } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { useNameSearch } from "state/search/name-search-state";
 import { ModalIds } from "types/modal-ids";
@@ -8,7 +8,6 @@ import { ModalIds } from "types/modal-ids";
 import type { Weapon } from "@snailycad/types";
 import { useWeaponSearch } from "state/search/weapon-search-state";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { Status } from "components/shared/Status";
 
 export function NameSearchWeaponsTab() {
   const t = useTranslations();

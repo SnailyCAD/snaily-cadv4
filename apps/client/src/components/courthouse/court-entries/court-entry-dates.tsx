@@ -1,6 +1,5 @@
 import type { CourtDate } from "@snailycad/types";
-import { Button } from "@snailycad/ui";
-import { FullDate } from "components/shared/FullDate";
+import { Button, FullDate } from "@snailycad/ui";
 import { Table, useTableState } from "components/shared/Table";
 import { useTranslations } from "next-intl";
 import { ManageCourtDateModal } from "./ManageCourtDateModal";
