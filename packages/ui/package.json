@@ -35,24 +35,24 @@
     "storybook": "^7.0.22",
     "tailwindcss": "^3.3.2",
     "tslib": "^2.5.3",
-    "tsup": "^7.0.0",
+    "tsup": "6.6.2",
     "typescript": "^5.1.3",
     "vite": "^4.3.9"
   },
   "tsup": {
     "entry": [
       "src/index.tsx",
-      "src/components/**/*.tsx",
+      "src/**/*.tsx",
+      "src/**/*.ts",
       "!src/**/*.stories.tsx",
       "!src/stories/**/*"
     ],
+    "bundle": false,
     "dts": true,
     "platform": "node",
-    "target": "node16",
+    "target": "node18",
     "silent": true,
     "treeshake": true,
-    "splitting": true,
-    "minify": true,
     "format": [
       "esm"
     ]
