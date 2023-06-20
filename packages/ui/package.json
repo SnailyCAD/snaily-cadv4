@@ -1,7 +1,7 @@
 {
   "name": "@snailycad/ui",
   "type": "module",
-  "version": "1.61.0",
+  "version": "1.62.0",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
