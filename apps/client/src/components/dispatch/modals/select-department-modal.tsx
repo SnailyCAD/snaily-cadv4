@@ -5,12 +5,12 @@ import { Form, Formik } from "formik";
 import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 import { useValues } from "context/ValuesContext";
-import { Select } from "components/form/Select";
-import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
 import { useActiveDispatcherState } from "state/dispatch/active-dispatcher-state";
 import type { GetDispatchData } from "@snailycad/types/api";
 import { useRouter } from "next/router";
+import { ValueSelectField } from "components/form/inputs/value-select-field";
+import { ValueType } from "@snailycad/types";
 
 export function SelectDepartmentModal() {
   const { closeModal, isOpen } = useModal();
@@ -55,21 +55,16 @@ export function SelectDepartmentModal() {
       className="w-[600px]"
     >
       <Formik enableReinitialize onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, values, errors, isValid }) => (
+        {({ isValid }) => (
           <Form>
-            <FormField errorMessage={errors.activeDepartment} label={t("selectDepartment")}>
-              <Select
-                name="activeDepartment"
-                isClearable
-                values={department.values.map((department) => ({
-                  label: department.value.value,
-                  value: department.id,
-                }))}
-                autoFocus
-                value={values.activeDepartment ?? null}
-                onChange={handleChange}
-              />
-            </FormField>
+            <ValueSelectField
+              fieldName="activeDepartment"
+              isClearable
+              isOptional
+              values={department.values}
+              label={t("selectDepartment")}
+              valueType={ValueType.DEPARTMENT}
+            />
 
             <footer className="flex justify-end gap-2">
               <Button

@@ -9,7 +9,6 @@ import {
   CheckboxField,
 } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { useValues } from "context/ValuesContext";
@@ -26,9 +25,9 @@ import { useTranslations } from "use-intl";
 import type { VehicleSearchResult } from "state/search/vehicle-search-state";
 import type { PostTowCallsData } from "@snailycad/types/api";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
-import { useUserOfficers } from "hooks/leo/use-get-user-officers";
-import { useGetUserDeputies } from "hooks/ems-fd/use-get-user-deputies";
 import { isUnitCombined, isUnitCombinedEmsFd } from "@snailycad/utils";
+import { ValueSelectField } from "components/form/inputs/value-select-field";
+import { ValueType } from "@snailycad/types";
 
 interface Props {
   call: Full911Call | null;
@@ -47,17 +46,10 @@ export function DispatchCallTowModal({ call }: Props) {
   const { impoundLot } = useValues();
   const { state, execute } = useFetch();
 
-  const { userOfficers, isLoading: officersLoading } = useUserOfficers({ enabled: isLeo });
-  const { userDeputies, isLoading: deputiesLoading } = useGetUserDeputies({ enabled: isEmsFd });
-  const isLoading = isLeo ? officersLoading : isEmsFd ? deputiesLoading : false;
-
   const activeDeputy = useEmsFdState((state) => state.activeDeputy);
   const activeOfficer = useLeoState((state) => state.activeOfficer);
 
   const activeUnit = isLeo ? activeOfficer : isEmsFd ? activeDeputy : null;
-
-  const citizensFrom = isLeo ? userOfficers : isEmsFd ? userDeputies : [];
-  const citizens = [...citizensFrom].map((v) => v.citizen);
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const payload = getPayload<{ call911Id: string }>(ModalIds.ManageTowCall);
@@ -105,42 +97,18 @@ export function DispatchCallTowModal({ call }: Props) {
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, setValues, setFieldValue, values, isValid, errors }) => (
           <Form>
-            {activeUnit ? (
-              <FormField errorMessage={errors.creatorId as string} label={t("Calls.citizen")}>
-                <Select
-                  isLoading={isLoading}
-                  disabled
-                  name="creatorId"
-                  onChange={handleChange}
-                  values={citizens.map((citizen) => ({
-                    label: `${citizen.name} ${citizen.surname}`,
-                    value: citizen.id,
-                  }))}
-                  value={values.creatorId || null}
-                />
-              </FormField>
-            ) : null}
-
             <AddressPostalSelect addressLabel="location" />
 
             {isLeo || isDispatch ? (
               <>
-                <FormField
-                  optional
-                  errorMessage={errors.deliveryAddressId}
+                <ValueSelectField
+                  valueType={ValueType.IMPOUND_LOT}
+                  values={impoundLot.values}
+                  isOptional
+                  isClearable
+                  fieldName="deliveryAddressId"
                   label={t("Calls.deliveryAddress")}
-                >
-                  <Select
-                    isClearable
-                    name="deliveryAddressId"
-                    onChange={handleChange}
-                    values={impoundLot.values.map((lot) => ({
-                      label: lot.value,
-                      value: lot.id,
-                    }))}
-                    value={values.deliveryAddressId}
-                  />
-                </FormField>
+                />
 
                 <AsyncListSearchField<VehicleSearchResult>
                   label={t("Vehicles.plate")}

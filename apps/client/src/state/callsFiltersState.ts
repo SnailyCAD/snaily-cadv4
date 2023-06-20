@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import type { Record, Citizen, MedicalRecord, RegisteredVehicle, Weapon } from "@snailycad/types";
-import type { SelectValue } from "components/form/Select";
 
 export type CitizenWithVehAndWep = Citizen & {
   weapons: Weapon[];
@@ -9,8 +8,6 @@ export type CitizenWithVehAndWep = Citizen & {
   Record: Record[];
 };
 
-type _SelectValue = SelectValue<{ id: string; departmentId?: string | null } | null>;
-
 interface CallFiltersState {
   showFilters: boolean;
   setShowFilters(showFilters: boolean): void;
@@ -18,14 +15,14 @@ interface CallFiltersState {
   search: string;
   setSearch(search: string): void;
 
-  department: _SelectValue | null;
-  setDepartment(department: _SelectValue | null): void;
+  department: string | null;
+  setDepartment(department: string | null): void;
 
-  division: _SelectValue | null;
-  setDivision(division: _SelectValue | null): void;
+  division: string | null;
+  setDivision(division: string | null): void;
 
-  assignedUnit: _SelectValue | null;
-  setAssignedUnit(assignedUnit: _SelectValue | null): void;
+  assignedUnit: string | null;
+  setAssignedUnit(assignedUnit: string | null): void;
 }
 
 export const useCallsFilters = create<CallFiltersState>()((set) => ({
