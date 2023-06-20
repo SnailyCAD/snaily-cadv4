@@ -25,6 +25,11 @@ const OPTIONS = [
   },
 ];
 
+const OPTIONS_WITH_DESC = OPTIONS.map((option) => ({
+  ...option,
+  description: "This is a description",
+}));
+
 const LARGE_LIST = Array.from({ length: 30 })
   .fill({})
   .map((_, i) => ({
@@ -62,6 +67,15 @@ export const MultiSelectLargeList: Story = {
     label: "Select multiple options",
     options: LARGE_LIST,
     selectedKeys: LARGE_LIST.slice(5, 30).map((o) => o.value),
+    selectionMode: "multiple",
+  },
+};
+
+export const MultiWithDescription: Story = {
+  args: {
+    label: "Select multiple options",
+    options: OPTIONS_WITH_DESC,
+    selectedKeys: OPTIONS_WITH_DESC.map((v) => v.value),
     selectionMode: "multiple",
   },
 };
