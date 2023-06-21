@@ -1,5 +1,5 @@
 import type * as React from "react";
-import { cn } from "../utils/classNames";
+import { cn } from "mxcn";
 
 type ParagraphProps = React.PropsWithoutRef<React.JSX.IntrinsicElements["p"]>;
 interface Props extends ParagraphProps {

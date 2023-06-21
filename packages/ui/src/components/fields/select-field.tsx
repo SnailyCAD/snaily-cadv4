@@ -2,7 +2,7 @@ import * as React from "react";
 import type { AriaSelectProps } from "@react-types/select";
 import { Item } from "@react-stately/collections";
 import { ModalProvider } from "@react-aria/overlays";
-import { classNames, cn } from "../../utils/classNames";
+import { cn } from "mxcn";
 import { Popover } from "../overlays/popover";
 import { ListBox } from "../list/select/list-box";
 import { buttonVariants } from "../button/button";
@@ -83,7 +83,7 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
 
   return (
     <ModalProvider>
-      <div className={classNames("flex flex-col mb-3", props.className)}>
+      <div className={cn("flex flex-col mb-3", props.className)}>
         <Label {...props} labelProps={labelProps} />
         <div className="relative group">
           <div className="flex">
@@ -107,7 +107,7 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
             >
               <div
                 {...valueProps}
-                className={classNames(
+                className={cn(
                   "flex items-center gap-2 flex-wrap",
                   !(selectedItems || selectedItem) && "text-neutral-700 dark:text-gray-400",
                 )}

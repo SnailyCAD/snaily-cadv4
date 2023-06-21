@@ -1,6 +1,6 @@
 import { AriaBreadcrumbItemProps, useBreadcrumbItem } from "@react-aria/breadcrumbs";
 import * as React from "react";
-import { classNames } from "../../utils/classNames";
+import { cn } from "mxcn";
 import Link from "next/link";
 import { ChevronRight } from "react-bootstrap-icons";
 
@@ -29,7 +29,7 @@ function SpanElement(props: Props) {
     <span
       {...itemProps}
       ref={ref}
-      className={classNames(
+      className={cn(
         "cursor-default",
         props.isDisabled ? "text-gray-400" : "text-blue-500",
         props.isCurrent ? "font-semibold" : "font-normal",
@@ -48,7 +48,7 @@ function LinkElement(props: Props) {
     <Link
       {...itemProps}
       ref={ref}
-      className={classNames(
+      className={cn(
         props.isDisabled ? "text-gray-400" : "text-blue-500",
         !props.isCurrent && "hover:text-blue-600",
         props.isCurrent || props.isDisabled ? "no-underline" : "underline",

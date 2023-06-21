@@ -1,5 +1,5 @@
 import * as React from "react";
-import { classNames } from "../../utils/classNames";
+import { cn } from "mxcn";
 
 type Props = Omit<JSX.IntrinsicElements["textarea"], "id" | "ref"> & {
   errorMessage?: string | null;
@@ -10,7 +10,8 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, Props>(
     <textarea
       ref={ref}
       {...rest}
-      className={classNames(
+      // todo: cn
+      className={cn(
         `
       w-full p-1.5 px-3 bg-white rounded-md border
       outline-none focus:border-gray-800 dark:focus:border-gray-500

@@ -4,7 +4,7 @@ import { useCalendarCell } from "@react-aria/calendar";
 import type { CalendarDate } from "@internationalized/date";
 import { useFocusRing } from "@react-aria/focus";
 import { mergeProps } from "@react-aria/utils";
-import { classNames } from "../../../../utils/classNames";
+import { cn } from "mxcn";
 import isToday from "date-fns/isToday";
 
 interface Props {
@@ -33,7 +33,7 @@ export function CalendarCell(props: Props) {
         {...mergeProps(buttonProps, focusProps)}
         ref={ref}
         hidden={isOutsideVisibleRange}
-        className={classNames(
+        className={cn(
           "w-10 h-10 outline-none group flex items-center justify-center",
           isSelected && (isInvalid ? "bg-red-300" : "bg-blue-600 text-white rounded-md"),
           isDisabled && "opacity-50 cursor-default",
@@ -41,7 +41,7 @@ export function CalendarCell(props: Props) {
       >
         <div
           title={_isToday ? "Today" : undefined}
-          className={classNames(
+          className={cn(
             "w-full h-full flex items-center justify-center transition-colors",
             _isToday &&
               !isSelected &&

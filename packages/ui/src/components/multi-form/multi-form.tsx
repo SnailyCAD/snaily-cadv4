@@ -1,6 +1,6 @@
 import * as React from "react";
 import { FormikHelpers, Form, Formik, FormikConfig, FormikProps, FormikValues } from "formik";
-import { classNames } from "../../utils/classNames";
+import { cn } from "mxcn";
 import { Button } from "../button/button";
 import { ArrowLeft, ArrowRight } from "react-bootstrap-icons";
 import { MultiFormStep, MultiFormStepItem } from "./multi-form-step";
@@ -77,11 +77,11 @@ function MultiForm<FormValues extends FormikValues>(props: Props<FormValues>) {
                 const stepNumber = idx + 1;
 
                 return (
-                  <li className={classNames("")} key={title}>
+                  <li key={title}>
                     <button
                       disabled
                       type="button"
-                      className={classNames(
+                      className={cn(
                         "h-7",
                         hasBeenSubmitted || isActive
                           ? "text-blue-500"
@@ -92,7 +92,7 @@ function MultiForm<FormValues extends FormikValues>(props: Props<FormValues>) {
                       {stepNumber}. {title}
                     </button>
                     <span
-                      className={classNames(
+                      className={cn(
                         "block h-1 w-full rounded-sm",
                         hasBeenSubmitted || isActive
                           ? "bg-blue-500"

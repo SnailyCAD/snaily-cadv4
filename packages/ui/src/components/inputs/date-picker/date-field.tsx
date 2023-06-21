@@ -3,7 +3,7 @@ import { useLocale } from "@react-aria/i18n";
 import { useDateFieldState, type DateSegment, DateFieldState } from "@react-stately/datepicker";
 import { AriaDatePickerProps, useDateField, useDateSegment } from "@react-aria/datepicker";
 import { type DateValue, createCalendar } from "@internationalized/date";
-import { classNames } from "../../../utils/classNames";
+import { cn } from "mxcn";
 
 export function DateField(props: AriaDatePickerProps<DateValue>) {
   const { locale } = useLocale();
@@ -41,7 +41,7 @@ function DateSegment(props: { segment: DateSegment; state: DateFieldState }) {
             ? `${String(props.segment.maxValue).length}ch`
             : undefined,
       }}
-      className={classNames(
+      className={cn(
         "px-0.5 tabular-nums text-right outline-none rounded-sm focus:bg-blue-600 focus:text-white group",
         !props.segment.isEditable ? "text-gray-500" : "text-neutral-800 dark:text-white",
         props.segment.type === "literal" && "mx-1",

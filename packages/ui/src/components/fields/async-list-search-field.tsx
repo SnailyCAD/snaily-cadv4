@@ -16,7 +16,7 @@ import { useTranslations } from "next-intl";
 import { Loader } from "../loader";
 import { getAPIUrl } from "@snailycad/utils/api-url";
 import { AsyncListSearchFieldActions } from "./async-list-search-field/actions";
-import { cn } from "../../utils/classNames";
+import { cn } from "mxcn";
 
 interface AsyncListFieldFetchOptions {
   filterTextRequired?: boolean;

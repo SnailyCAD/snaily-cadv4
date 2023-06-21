@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as HoverCardPrimitive from "@radix-ui/react-hover-card";
-import { classNames } from "../utils/classNames";
+import { cn } from "mxcn";
 
 export const HoverCardTrigger = HoverCardPrimitive.Trigger;
 
@@ -16,7 +16,7 @@ export const HoverCardContent = React.forwardRef<
     ref={ref}
     align={align}
     sideOffset={sideOffset}
-    className={classNames(
+    className={cn(
       pointerEvents ? "pointer-events-auto" : "pointer-events-none",
       "bg-gray-200 dark:border dark:border-secondary dark:bg-tertiary shadow-lg w-full max-w-lg p-3 rounded-md dark:text-white hover-card animate-enter !z-10",
     )}

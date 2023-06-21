@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "next-intl";
-import { classNames } from "../utils/classNames";
+import { cn } from "mxcn";
 import type { FocusableElement } from "@react-types/shared";
 import { InfoCircle } from "react-bootstrap-icons";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
@@ -24,7 +24,7 @@ export function Label(props: Props) {
     elementType,
     {
       ...props.labelProps,
-      className: classNames(
+      className: cn(
         "mb-1 dark:text-white flex items-center gap-1",
         props.hiddenLabel && "sr-only",
         props.labelClassnames,

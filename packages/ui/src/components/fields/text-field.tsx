@@ -1,6 +1,6 @@
 import * as React from "react";
 import { AriaTextFieldOptions, TextFieldAria, useTextField } from "@react-aria/textfield";
-import { classNames } from "../../utils/classNames";
+import { cn } from "mxcn";
 import { Input } from "../inputs/input";
 import { Textarea } from "../inputs/textarea";
 import { ErrorMessage } from "../error-message";
@@ -30,7 +30,7 @@ export function TextField(props: Props) {
   );
 
   return (
-    <div className={classNames("relative text-field flex flex-col mb-3", props.className)}>
+    <div className={cn("relative text-field flex flex-col mb-3", props.className)}>
       <Label {...props} labelProps={labelProps} />
 
       {props.isTextarea ? (

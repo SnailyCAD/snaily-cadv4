@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { CaretDownFill } from "react-bootstrap-icons";
-import { cn } from "../../utils/classNames";
+import { cn } from "mxcn";
 
 export const Accordion = AccordionPrimitive.Root;
 export const AccordionItem = AccordionPrimitive.Item;

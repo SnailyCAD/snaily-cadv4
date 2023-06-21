@@ -1,5 +1,5 @@
 import type * as React from "react";
-import { cn } from "../utils/classNames";
+import { cn } from "mxcn";
 
 type Props = React.PropsWithoutRef<React.JSX.IntrinsicElements["div"]> & {
   children: React.ReactNode;

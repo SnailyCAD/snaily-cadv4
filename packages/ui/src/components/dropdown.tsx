@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { cn } from "../utils/classNames";
+import { cn } from "mxcn";
 import Link from "next/link";
 import { ButtonVariantProps, buttonVariants } from "./button/button";
 
@@ -43,6 +43,7 @@ export const DropdownMenuItem = React.forwardRef<
   return (
     <DropdownMenuPrimitive.Item
       ref={ref}
+      // todo: cn
       className={buttonVariants({
         variant: "transparent",
         className: cn(
@@ -66,6 +67,7 @@ export const DropdownMenuLinkItem = React.forwardRef<
   <DropdownMenuPrimitive.Item ref={ref} {...props} asChild>
     <Link
       href={href}
+      // todo: cn
       className={buttonVariants({
         className: cn(
           "outline-none block rounded-md transition-colors w-full text-left bg-transparent dark:hover:bg-secondary hover:bg-gray-400 focus:bg-gray-400 dark:focus:bg-secondary focus-visible:outline-none",

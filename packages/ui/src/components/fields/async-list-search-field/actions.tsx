@@ -1,7 +1,7 @@
 import { ComboBoxState } from "@react-stately/combobox";
 import { Button } from "../../button/button";
 import { ChevronDown, X } from "react-bootstrap-icons";
-import { cn } from "../../../utils/classNames";
+import { cn } from "mxcn";
 
 interface AsyncListSearchFieldActionsProps<T> {
   state: ComboBoxState<T>;

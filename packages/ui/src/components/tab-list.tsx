@@ -27,6 +27,7 @@ interface Props<Tabs extends Tab[]> {
   onValueChange?(value: string): void;
 }
 
+// todo: cn
 export function TabList<Tabs extends Tab[]>({
   children,
   tabs,

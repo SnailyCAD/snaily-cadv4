@@ -4,7 +4,7 @@ import { useToggleState } from "@react-stately/toggle";
 import * as React from "react";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "../hover-card";
 import { InfoCircle } from "react-bootstrap-icons";
-import { cn } from "../../utils/classNames";
+import { cn } from "mxcn";
 import { useFocusRing } from "@react-aria/focus";
 
 interface CheckboxFieldProps extends AriaCheckboxProps {

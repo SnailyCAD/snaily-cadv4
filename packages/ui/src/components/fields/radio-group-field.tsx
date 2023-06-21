@@ -4,7 +4,7 @@ import { useRadioGroupState } from "@react-stately/radio";
 import { RadioContext, useRadioFieldContext } from "../../context/radio-field-context";
 import { ErrorMessage } from "../error-message";
 import { Label } from "../label";
-import { cn } from "../../utils/classNames";
+import { cn } from "mxcn";
 
 interface Props extends AriaRadioGroupProps {
   children: React.ReactNode;
