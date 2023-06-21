@@ -14,6 +14,7 @@ import { useNameSearch } from "state/search/name-search-state";
 import type { PutSearchActionsVehicleLicensesData } from "@snailycad/types/api";
 import { shallow } from "zustand/shallow";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
+import { hasSearchResults } from "../VehicleSearchModal";
 
 export function ManageVehicleLicensesModal() {
   const common = useTranslations("Common");
@@ -33,7 +34,7 @@ export function ManageVehicleLicensesModal() {
   const { INSPECTION_STATUS, TAX_STATUS } = useVehicleLicenses();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    if (!currentResult) return;
+    if (!hasSearchResults(currentResult)) return;
 
     const { json } = await execute<PutSearchActionsVehicleLicensesData>({
       path: `/search/actions/vehicle-licenses/${currentResult.id}`,
@@ -58,7 +59,7 @@ export function ManageVehicleLicensesModal() {
     }
   }
 
-  if (!currentResult) {
+  if (!hasSearchResults(currentResult)) {
     return null;
   }
 

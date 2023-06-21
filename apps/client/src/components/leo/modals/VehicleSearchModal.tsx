@@ -295,7 +295,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
               </div>
             </footer>
 
-            {hasSearchResult(currentResult) ? (
+            {hasSearchResults(currentResult) ? (
               <>
                 <ManageCustomFieldsModal
                   onUpdate={(results) => setCurrentResult({ ...currentResult, ...results })}
@@ -348,16 +348,7 @@ function AutoSubmit() {
   return null;
 }
 
-function hasSearchResults(
-  currentResult: VehicleSearchResult | "initial" | null,
-): currentResult is VehicleSearchResult {
-  if (currentResult === "initial") return false;
-  if (!currentResult) return false;
-
-  return true;
-}
-
-function hasSearchResult(
+export function hasSearchResults(
   currentResult: VehicleSearchResult | "initial" | null,
 ): currentResult is VehicleSearchResult {
   if (currentResult === "initial") return false;

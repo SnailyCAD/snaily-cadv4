@@ -11,6 +11,7 @@ import { useModal } from "state/modalState";
 import { useRouter } from "next/router";
 import { ModalIds } from "types/modal-ids";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { hasSearchResults } from "../../VehicleSearchModal";
 
 export function ResultsTab() {
   const currentResult = useVehicleSearch((state) => state.currentResult);
@@ -26,13 +27,14 @@ export function ResultsTab() {
   const isLeo = router.pathname === "/officer";
 
   function handleEditVehicleFlags() {
-    if (!currentResult) return;
+    if (!hasSearchResults(currentResult)) return;
 
     openModal(ModalIds.ManageVehicleFlags);
   }
 
   function handleNameClick() {
-    if (!currentResult?.citizen) return;
+    if (!hasSearchResults(currentResult)) return;
+    if (!currentResult.citizen) return;
 
     openModal(ModalIds.NameSearch, {
       ...currentResult.citizen,
@@ -41,7 +43,7 @@ export function ResultsTab() {
     closeModal(ModalIds.VehicleSearchWithinName);
   }
 
-  if (!currentResult) {
+  if (!hasSearchResults(currentResult)) {
     return null;
   }
 

@@ -14,6 +14,7 @@ import { IMPOUND_VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { shallow } from "zustand/shallow";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
 import { ValueType } from "@snailycad/types";
+import { hasSearchResults } from "../VehicleSearchModal";
 
 export function ImpoundVehicleModal() {
   const common = useTranslations("Common");
@@ -32,7 +33,7 @@ export function ImpoundVehicleModal() {
   const t = useTranslations();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    if (!currentResult) return;
+    if (!hasSearchResults(currentResult)) return;
 
     const { json } = await execute<PostSearchActionsCreateVehicle>({
       path: `/search/actions/impound/${currentResult.id}`,

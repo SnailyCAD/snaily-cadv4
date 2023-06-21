@@ -11,6 +11,7 @@ import { ModalIds } from "types/modal-ids";
 import { useNameSearch } from "state/search/name-search-state";
 import type { PutSearchActionsVehicleFlagsData } from "@snailycad/types/api";
 import { shallow } from "zustand/shallow";
+import { hasSearchResults } from "../VehicleSearchModal";
 
 export function ManageVehicleFlagsModal() {
   const { isOpen, closeModal } = useModal();
@@ -29,7 +30,7 @@ export function ManageVehicleFlagsModal() {
   const { state, execute } = useFetch();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    if (!currentResult) return;
+    if (!hasSearchResults(currentResult)) return;
 
     const { json } = await execute<PutSearchActionsVehicleFlagsData>({
       path: `/search/actions/vehicle-flags/${currentResult.id}`,
@@ -57,7 +58,7 @@ export function ManageVehicleFlagsModal() {
     return { label: v.value, value: v.id };
   }
 
-  if (!currentResult) {
+  if (!hasSearchResults(currentResult)) {
     return null;
   }
 
