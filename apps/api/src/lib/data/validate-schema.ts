@@ -1,3 +1,4 @@
+import { BadRequest } from "@tsed/exceptions";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { z } from "zod";
 
@@ -5,29 +6,26 @@ export function validateSchema<Schema extends z.ZodTypeAny>(
   schema: Schema,
   values: unknown,
 ): z.infer<Schema> {
-  let data = {};
-  const errors: Record<string, string> = {};
+  const data = schema.safeParse(values);
 
-  try {
-    data = schema.parse(values);
-  } catch (error) {
-    const zodError = error instanceof z.ZodError ? error : null;
+  if (!data.success) {
+    const zodError = data.error;
+    const errors: Record<string, string> = {};
 
-    if (zodError) {
-      const { fieldErrors } = zodError.flatten();
-
-      for (const fieldError in fieldErrors) {
-        const [errorMessage] = fieldErrors[fieldError] ?? [];
-        if (errorMessage) {
-          errors[fieldError] = errorMessage;
-        }
+    const { fieldErrors } = zodError.flatten();
+    for (const fieldError in fieldErrors) {
+      const [errorMessage] = fieldErrors[fieldError] ?? [];
+      if (errorMessage) {
+        errors[fieldError] = errorMessage;
       }
     }
+
+    if (Object.values(errors).length > 0) {
+      throw new ExtendedBadRequest(errors);
+    }
+
+    throw new BadRequest(JSON.stringify(zodError.message));
   }
 
-  if (Object.values(errors).length > 0) {
-    throw new ExtendedBadRequest(errors);
-  }
-
-  return data as z.infer<Schema>;
+  return data.data;
 }
