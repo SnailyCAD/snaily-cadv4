@@ -46,12 +46,15 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
 
   const payloadVehicle = getPayload<Partial<RegisteredVehicle> | null>(ModalIds.VehicleSearch);
   const isLeo = router.pathname === "/officer";
-  const showMarkVehicleAsStolenButton = currentResult && isLeo && !currentResult.reportedStolen;
-  const showImpoundVehicleButton = currentResult && isLeo && !currentResult.impounded;
-  const showCreateVehicleButton = CREATE_USER_CITIZEN_LEO && isLeo && !currentResult;
+  const showMarkVehicleAsStolenButton =
+    hasSearchResults(currentResult) && isLeo && !currentResult.reportedStolen;
+  const showImpoundVehicleButton =
+    hasSearchResults(currentResult) && isLeo && !currentResult.impounded;
+  const showCreateVehicleButton =
+    CREATE_USER_CITIZEN_LEO && isLeo && !hasSearchResults(currentResult);
 
   const bolo = React.useMemo(() => {
-    if (!currentResult) return null;
+    if (!hasSearchResults(currentResult)) return null;
     if (bolos.length <= 0) return null;
 
     const boloWithPlate = bolos.find(
@@ -64,7 +67,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
 
   React.useEffect(() => {
     if (!isOpen(id)) {
-      setCurrentResult(undefined);
+      setCurrentResult("initial");
     }
   }, [id, isOpen, setCurrentResult]);
 
@@ -90,7 +93,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   }
 
   async function handleMarkStolen(stolen: boolean) {
-    if (!currentResult) return;
+    if (!hasSearchResults(currentResult)) return;
 
     const { json } = await execute<PostMarkStolenData>({
       path: `/bolos/mark-stolen/${currentResult.id}`,
@@ -125,8 +128,11 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   }
 
   const INITIAL_VALUES = {
-    vinNumber: payloadVehicle?.vinNumber ?? currentResult?.vinNumber ?? "",
-    plateOrVin: payloadVehicle?.vinNumber ?? currentResult?.vinNumber ?? "",
+    vinNumber:
+      payloadVehicle?.vinNumber ?? (hasSearchResults(currentResult) ? currentResult.vinNumber : ""),
+    plateOrVin:
+      payloadVehicle?.vinNumber ??
+      (hasSearchResults(currentResult) ? currentResult?.vinNumber : ""),
   };
 
   return (
@@ -170,10 +176,8 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
               )}
             </AsyncListSearchField>
 
-            {!currentResult ? (
-              typeof currentResult === "undefined" ? null : (
-                <p>{t("vehicleNotFound")}</p>
-              )
+            {currentResult === "initial" ? null : !currentResult ? (
+              <p>{t("vehicleNotFound")}</p>
             ) : (
               <div className="mt-3">
                 <h3 className="text-2xl font-semibold">{t("results")}</h3>
@@ -291,14 +295,20 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
               </div>
             </footer>
 
-            {currentResult ? (
-              <ManageCustomFieldsModal
-                onUpdate={(results) => setCurrentResult({ ...currentResult, ...results })}
-                category={CustomFieldCategory.VEHICLE}
-                url={`/search/actions/custom-fields/vehicle/${currentResult.id}`}
-                allCustomFields={currentResult.allCustomFields ?? []}
-                customFields={currentResult.customFields ?? []}
-              />
+            {hasSearchResult(currentResult) ? (
+              <>
+                <ManageCustomFieldsModal
+                  onUpdate={(results) => setCurrentResult({ ...currentResult, ...results })}
+                  category={CustomFieldCategory.VEHICLE}
+                  url={`/search/actions/custom-fields/vehicle/${currentResult.id}`}
+                  allCustomFields={currentResult.allCustomFields ?? []}
+                  customFields={currentResult.customFields ?? []}
+                />
+                <AllowImpoundedVehicleCheckoutModal
+                  onCheckout={(vehicle) => setCurrentResult({ ...vehicle, impounded: false })}
+                  vehicle={currentResult}
+                />
+              </>
             ) : null}
 
             <AutoSubmit />
@@ -309,10 +319,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
       <ImpoundVehicleModal />
       <ManageVehicleFlagsModal />
       <ManageVehicleLicensesModal />
-      <AllowImpoundedVehicleCheckoutModal
-        onCheckout={(vehicle) => setCurrentResult({ ...vehicle, impounded: false })}
-        vehicle={currentResult}
-      />
+
       {CREATE_USER_CITIZEN_LEO && isLeo ? (
         <RegisterVehicleModal
           onCreate={(vehicle) => {
@@ -339,4 +346,22 @@ function AutoSubmit() {
   }, [payloadVehicle, submitForm]);
 
   return null;
+}
+
+function hasSearchResults(
+  currentResult: VehicleSearchResult | "initial" | null,
+): currentResult is VehicleSearchResult {
+  if (currentResult === "initial") return false;
+  if (!currentResult) return false;
+
+  return true;
+}
+
+function hasSearchResult(
+  currentResult: VehicleSearchResult | "initial" | null,
+): currentResult is VehicleSearchResult {
+  if (currentResult === "initial") return false;
+  if (!currentResult) return false;
+
+  return true;
 }

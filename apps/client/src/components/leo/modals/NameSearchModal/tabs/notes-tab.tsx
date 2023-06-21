@@ -15,7 +15,7 @@ import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 interface Props<T extends VehicleSearchResult | NameSearchResult> {
   currentResult: VehicleSearchResult | NameSearchResult;
-  setCurrentResult(value: T | null | undefined): void;
+  setCurrentResult(value: T | null | "initial"): void;
   type: "CITIZEN" | "VEHICLE";
 }
 

@@ -4,11 +4,11 @@ import { create } from "zustand";
 export type VehicleSearchResult = NonNullable<PostLeoSearchVehicleData>;
 
 interface VehicleSearchState {
-  currentResult: VehicleSearchResult | null | undefined;
-  setCurrentResult(v: VehicleSearchResult | null | undefined): void;
+  currentResult: VehicleSearchResult | null | "initial";
+  setCurrentResult(v: VehicleSearchResult | null | "initial"): void;
 }
 
 export const useVehicleSearch = create<VehicleSearchState>()((set) => ({
-  currentResult: undefined,
+  currentResult: "initial",
   setCurrentResult: (v) => set({ currentResult: v }),
 }));
