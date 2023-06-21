@@ -322,7 +322,7 @@ export function ManageCitizenForm({
               />
             </FormRow>
 
-            <AddressPostalSelect addressOptional={false} />
+            <AddressPostalSelect postalOptional addressOptional={false} />
           </>
         )}
       </MultiFormStep>
@@ -367,7 +367,7 @@ export function ManageCitizenForm({
 
       {formFeatures?.["license-fields"] && features.ALLOW_CITIZEN_UPDATE_LICENSE ? (
         <MultiFormStep id="license-information" title={t("licenseInformation")}>
-          {() => <ManageLicensesFormFields flexType="column" isLeo={false} allowRemoval />}
+          {() => <ManageLicensesFormFields isLeo={false} allowRemoval />}
         </MultiFormStep>
       ) : null}
 

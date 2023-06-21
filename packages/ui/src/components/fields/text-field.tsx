@@ -41,6 +41,7 @@ export function TextField(props: Props) {
         />
       ) : (
         <Input
+          errorMessage={props.errorMessage}
           ref={ref as React.RefObject<HTMLInputElement>}
           {...(inputProps as TextFieldAria["inputProps"])}
         />

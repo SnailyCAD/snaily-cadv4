@@ -1,3 +1,4 @@
+import { cn } from "mxcn";
 import * as React from "react";
 
 type Props = Omit<JSX.IntrinsicElements["input"], "id"> & {
@@ -8,17 +9,15 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(({ errorMessage, 
   <input
     ref={ref}
     {...rest}
-    className={`
-    w-full p-1.5 px-3 bg-white rounded-md border
-    outline-none
-    dark:bg-secondary dark:text-white
-    disabled:cursor-not-allowed disabled:opacity-80
-    placeholder:opacity-50
-    transition-all ${rest.className} ${
-      errorMessage
-        ? "border-red-500 focus:border-red-700 dark:focus:border-red-700"
-        : "border-gray-200 dark:border-quinary focus:border-gray-800 dark:focus:border-gray-500"
-    } `}
+    className={cn(
+      "w-full p-1.5 px-3 rounded-md border outline-none disabled:cursor-not-allowed disabled:opacity-80 resize-y",
+      "transition-colors placeholder:opacity-50",
+      "bg-white dark:bg-secondary dark:text-white",
+      "border-gray-200 dark:border-quinary focus:border-gray-800 dark:focus:border-gray-500",
+      errorMessage &&
+        "border-red-500 dark:border-red-500 focus:border-red-700 dark:focus:border-red-700",
+      rest.className,
+    )}
   />
 ));
 Input.displayName = "Input";

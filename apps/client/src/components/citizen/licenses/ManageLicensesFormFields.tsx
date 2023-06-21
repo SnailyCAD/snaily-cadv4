@@ -46,7 +46,6 @@ export function createDefaultLicensesValues(citizen: Citizen | null): LicenseIni
 interface Props {
   isLeo?: boolean;
   allowRemoval?: boolean;
-  flexType: "row" | "column";
 }
 
 export function ManageLicensesFormFields({ isLeo, allowRemoval }: Props) {
@@ -90,8 +89,9 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval }: Props) {
 
           <FormRow>
             <ValueSelectField
-              isDisabled={values.suspended.driverLicense}
+              isOptional
               isClearable={allowRemoval}
+              isDisabled={values.suspended.driverLicense}
               fieldName="driversLicense"
               valueType={ValueType.LICENSE}
               values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE)}
@@ -105,7 +105,8 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval }: Props) {
               isDisabled={values.suspended.driverLicense}
               selectionMode="multiple"
               selectedKeys={values.driversLicenseCategory}
-              isClearable
+              isOptional
+              isClearable={allowRemoval}
               onSelectionChange={(keys) => setFieldValue("driversLicenseCategory", keys)}
               options={driverslicenseCategory.values
                 .filter((v) => v.type === DriversLicenseCategoryType.AUTOMOTIVE)
@@ -160,6 +161,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval }: Props) {
         <FormRow>
           <ValueSelectField
             isDisabled={values.suspended.pilotLicense}
+            isOptional
             isClearable={allowRemoval}
             fieldName="pilotLicense"
             valueType={ValueType.LICENSE}
@@ -174,7 +176,8 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval }: Props) {
             isDisabled={values.suspended.pilotLicense}
             selectionMode="multiple"
             selectedKeys={values.pilotLicenseCategory}
-            isClearable
+            isOptional
+            isClearable={allowRemoval}
             onSelectionChange={(keys) => setFieldValue("pilotLicenseCategory", keys)}
             options={driverslicenseCategory.values
               .filter((v) => v.type === DriversLicenseCategoryType.AVIATION)
@@ -225,6 +228,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval }: Props) {
 
         <FormRow>
           <ValueSelectField
+            isOptional
             isClearable={allowRemoval}
             fieldName="waterLicense"
             valueType={ValueType.LICENSE}
@@ -240,7 +244,8 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval }: Props) {
             isDisabled={values.suspended.waterLicense}
             selectionMode="multiple"
             selectedKeys={values.waterLicenseCategory}
-            isClearable
+            isOptional
+            isClearable={allowRemoval}
             onSelectionChange={(keys) => setFieldValue("waterLicenseCategory", keys)}
             options={driverslicenseCategory.values
               .filter((v) => v.type === DriversLicenseCategoryType.WATER)
@@ -292,6 +297,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval }: Props) {
 
           <FormRow>
             <ValueSelectField
+              isOptional
               isClearable={allowRemoval}
               fieldName="weaponLicense"
               valueType={ValueType.LICENSE}
@@ -307,7 +313,8 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval }: Props) {
               isDisabled={values.suspended.firearmsLicense}
               selectionMode="multiple"
               selectedKeys={values.firearmLicenseCategory}
-              isClearable
+              isOptional
+              isClearable={allowRemoval}
               onSelectionChange={(keys) => setFieldValue("firearmLicenseCategory", keys)}
               options={driverslicenseCategory.values
                 .filter((v) => v.type === DriversLicenseCategoryType.FIREARM)
