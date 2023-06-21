@@ -367,11 +367,7 @@ export function ManageCitizenForm({
 
       {formFeatures?.["license-fields"] && features.ALLOW_CITIZEN_UPDATE_LICENSE ? (
         <MultiFormStep id="license-information" title={t("licenseInformation")}>
-          {() => (
-            <FormRow>
-              <ManageLicensesFormFields flexType="column" isLeo={false} allowRemoval />
-            </FormRow>
-          )}
+          {() => <ManageLicensesFormFields flexType="column" isLeo={false} allowRemoval />}
         </MultiFormStep>
       ) : null}
 

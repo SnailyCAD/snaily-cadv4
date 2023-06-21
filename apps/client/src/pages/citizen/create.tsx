@@ -8,7 +8,6 @@ import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { ManageCitizenForm } from "components/citizen/ManageCitizenForm";
-import type { SelectValue } from "components/form/Select";
 import type { PostCitizenImageByIdData, PostCitizensData } from "@snailycad/types/api";
 import { BreadcrumbItem, Breadcrumbs } from "@snailycad/ui";
 
@@ -30,21 +29,7 @@ export default function CreateCitizen() {
       path: "/citizen",
       method: "POST",
       helpers,
-      data: {
-        ...data,
-        driversLicenseCategory: Array.isArray(data.driversLicenseCategory)
-          ? (data.driversLicenseCategory as SelectValue[]).map((v) => v.value)
-          : data.driversLicenseCategory,
-        pilotLicenseCategory: Array.isArray(data.pilotLicenseCategory)
-          ? (data.pilotLicenseCategory as SelectValue[]).map((v) => v.value)
-          : data.pilotLicenseCategory,
-        waterLicenseCategory: Array.isArray(data.waterLicenseCategory)
-          ? (data.waterLicenseCategory as SelectValue[]).map((v) => v.value)
-          : data.waterLicenseCategory,
-        firearmLicenseCategory: Array.isArray(data.firearmLicenseCategory)
-          ? (data.firearmLicenseCategory as SelectValue[]).map((v) => v.value)
-          : data.firearmLicenseCategory,
-      },
+      data,
     });
 
     const errors = ["dateLargerThanNow", "nameAlreadyTaken", "invalidImageType"];

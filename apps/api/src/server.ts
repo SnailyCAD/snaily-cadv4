@@ -144,11 +144,13 @@ export class Server {
       version: z.string().optional(),
     });
 
-    s.parse(body);
+    const data = await s.safeParseAsync(body);
+
+    if (!data.success) return;
 
     await request(URL, {
       method: "POST",
-      body: JSON.stringify(body),
+      body: JSON.stringify(data.data),
       headers: {
         "Content-Type": "application/json",
       },

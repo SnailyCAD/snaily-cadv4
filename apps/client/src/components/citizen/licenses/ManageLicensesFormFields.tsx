@@ -4,7 +4,6 @@ import { useFormikContext } from "formik";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useTranslations } from "next-intl";
 import { filterLicenseType, filterLicenseTypes } from "lib/utils";
-import { classNames } from "lib/classNames";
 import type { LicenseInitialValues } from "./manage-licenses-modal";
 import { FormRow, DatePickerField, SwitchField, SelectField } from "@snailycad/ui";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
@@ -50,17 +49,13 @@ interface Props {
   flexType: "row" | "column";
 }
 
-export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Props) {
+export function ManageLicensesFormFields({ isLeo, allowRemoval }: Props) {
   const { values, setFieldValue, errors } =
     useFormikContext<ReturnType<typeof createDefaultLicensesValues>>();
 
   const { license, driverslicenseCategory } = useValues();
   const t = useTranslations();
   const { WEAPON_REGISTRATION, LICENSE_EXAMS } = useFeatureEnabled();
-  const formRowClassName = classNames(
-    "w-full",
-    flexType === "row" ? "grid grid-cols-2 gap-2" : "flex flex-col",
-  );
 
   return (
     <>
@@ -93,7 +88,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
             </FormRow>
           ) : null}
 
-          <div className={formRowClassName}>
+          <FormRow>
             <ValueSelectField
               isDisabled={values.suspended.driverLicense}
               isClearable={allowRemoval}
@@ -120,7 +115,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
                   description: value.description,
                 }))}
             />
-          </div>
+          </FormRow>
 
           {!isLeo && values.suspended.driverLicense ? (
             <p className="-mt-2 text-base mb-3 text-neutral-700 dark:text-gray-400">
@@ -162,7 +157,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
           </FormRow>
         ) : null}
 
-        <div className={formRowClassName}>
+        <FormRow>
           <ValueSelectField
             isDisabled={values.suspended.pilotLicense}
             isClearable={allowRemoval}
@@ -189,7 +184,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
                 description: value.description,
               }))}
           />
-        </div>
+        </FormRow>
 
         {!isLeo && values.suspended.pilotLicense ? (
           <p className="-mt-2 text-base mb-3 text-neutral-700 dark:text-gray-400">
@@ -228,7 +223,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
           </FormRow>
         ) : null}
 
-        <div className={formRowClassName}>
+        <FormRow>
           <ValueSelectField
             isClearable={allowRemoval}
             fieldName="waterLicense"
@@ -255,7 +250,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
                 description: value.description,
               }))}
           />
-        </div>
+        </FormRow>
 
         {!isLeo && values.suspended.waterLicense ? (
           <p className="-mt-2 text-base mb-3 text-neutral-700 dark:text-gray-400">
@@ -295,7 +290,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
             </FormRow>
           ) : null}
 
-          <div className={formRowClassName}>
+          <FormRow>
             <ValueSelectField
               isClearable={allowRemoval}
               fieldName="weaponLicense"
@@ -322,7 +317,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval, flexType }: Prop
                   description: value.description,
                 }))}
             />
-          </div>
+          </FormRow>
 
           {!isLeo && values.suspended.firearmsLicense ? (
             <p className="-mt-2 text-base mb-3 text-neutral-700 dark:text-gray-400">

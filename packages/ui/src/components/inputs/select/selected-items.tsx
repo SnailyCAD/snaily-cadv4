@@ -25,7 +25,7 @@ export function SelectedItems<T extends SelectValue>(props: Props<T>) {
 
           return (
             <span
-              className="text-sm flex items-center justify-between p-0.5 px-1.5 rounded-sm bg-gray-300 dark:bg-tertiary"
+              className="text-sm flex items-center justify-between px-1.5 rounded-sm bg-gray-300 dark:bg-tertiary"
               key={item.key}
             >
               <HoverCard open={option?.description ? undefined : false}>
