@@ -11,14 +11,12 @@ export type ModalButtonArgs<T> = Record<
   unit: EmsFdDeputy | ActiveOfficer | null;
   user: User;
 } & T;
-export interface ModalButton<T = unknown> {
-  (args: ModalButtonArgs<T>): {
+export type ModalButton<T = unknown> = (args: ModalButtonArgs<T>) => {
     nameKey: [string, string];
     modalId: ModalIds;
     /* defaults to true **/
     isEnabled?: boolean;
   };
-}
 
 export const switchDivision: ModalButton = ({ DIVISIONS, unit }) => {
   const isEnabled = unit ? isUnitOfficer(unit) && (unit.callsigns?.length ?? 0) >= 1 : false;
