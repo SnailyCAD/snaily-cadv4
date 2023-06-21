@@ -99,6 +99,13 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
     }
 
     if (!key) {
+      // if there are no items to select from, and the value is empty, then we should clear the value
+      // only if we do not allow custom values
+      if (list.items.length <= 0 && !value && !props.allowsCustomValue) {
+        props.setValues({ localValue: "" });
+        return;
+      }
+
       props.setValues({ localValue: value });
       return;
     }
