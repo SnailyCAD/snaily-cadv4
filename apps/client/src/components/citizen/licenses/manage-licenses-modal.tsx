@@ -54,7 +54,7 @@ export function ManageLicensesModal({
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ isValid }) => (
           <>
-            <ManageLicensesFormFields flexType="row" allowRemoval={allowRemoval} isLeo={isLeo} />
+            <ManageLicensesFormFields allowRemoval={allowRemoval} isLeo={isLeo} />
 
             <Form>
               <footer className="flex justify-end mt-5">
