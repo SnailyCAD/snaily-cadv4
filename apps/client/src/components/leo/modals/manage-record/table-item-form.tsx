@@ -6,9 +6,24 @@ import { useTranslations } from "next-intl";
 import type { PenalCode } from "@snailycad/types";
 import type React from "react";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { createInitialRecordValues } from "./manage-record-modal";
+
+type PenalCodeValueName = "counts" | "fine" | "jailTime" | "bail" | "communityService";
+interface PenalCodeValue<Name extends PenalCodeValueName> {
+  value: Name extends "counts" ? string | null : number | null;
+  enabled: boolean;
+}
+
+interface ExtendedPenalCode extends PenalCode {
+  counts?: PenalCodeValue<"counts">;
+  fine?: PenalCodeValue<"fine">;
+  jailTime?: PenalCodeValue<"jailTime">;
+  bail?: PenalCodeValue<"bail">;
+  communityService?: PenalCodeValue<"communityService">;
+}
 
 interface Props {
-  penalCode: PenalCode;
+  penalCode: ExtendedPenalCode;
   isReadOnly?: boolean;
 }
 
@@ -57,6 +72,12 @@ export function getPenalCodeMaxFines(penalCode: PenalCode) {
   return 0;
 }
 
+interface HandleValueChangeOptions {
+  fieldName: "counts" | "fine" | "jailTime" | "bail" | "communityService";
+  enabled?: boolean;
+  event?: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
+}
+
 export function TableItemForm({ penalCode, isReadOnly }: Props) {
   const t = useTranslations("Leo");
   const { LEO_BAIL } = useFeatureEnabled();
@@ -73,39 +94,26 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
     isReadOnly || !penalCode.warningNotApplicableId || jailTimeDisabled;
   const finesDisabled = isReadOnly || !hasFines(penalCode);
 
-  const { setFieldValue, values, errors } = useFormikContext<any>();
+  const { setFieldValue, values, errors } =
+    useFormikContext<ReturnType<typeof createInitialRecordValues>>();
   const violationErrors = (errors.violations ?? {}) as Record<
     string,
-    { fine?: string; jailTime?: string; bail?: string; communityService?: string; counts?: string }
+    Record<PenalCodeValueName, string>
   >;
 
   const current = values.violations.find(
     (v: SelectValue<PenalCode>) => v.value?.id === penalCode.id,
   );
 
-  const currentValue = current?.value ?? {
-    fine: { enabled: false, value: "" },
-    jailTime: { enabled: false, value: "" },
-    bail: { value: "" },
-    communityService: { enabled: false, value: "" },
-    counts: 1,
-  };
+  const currentValue = parseCurrentValue(current?.value ?? null);
 
-  const handleValueChange = (
-    fieldName: string,
-    enabled?: boolean,
-    e?: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const idx = (values.violations as SelectValue<PenalCode>[]).findIndex(
-      (v) => v.value?.id === penalCode.id,
-    );
+  const handleValueChange = (options: HandleValueChangeOptions) => {
+    const idx = values.violations.findIndex((v) => v.value.id === penalCode.id);
+    const updatedArr = [...values.violations] as { label: string; value: ExtendedPenalCode }[];
+    const newValue = options.event?.target.value ?? penalCode[options.fieldName]?.value ?? "";
 
-    const updatedArr = [...values.violations] as SelectValue<PenalCode>[];
-
-    const newValue = e?.target.value ?? (penalCode as any)[fieldName]?.value ?? "";
-
-    if (fieldName === "counts") {
-      const int = parseInt(newValue);
+    if (options.fieldName === "counts") {
+      const int = parseInt(String(newValue));
       if (int > 10) {
         return;
       }
@@ -115,8 +123,8 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
       label: penalCode.title,
       value: {
         ...penalCode,
-        [fieldName]: {
-          enabled: enabled ?? (penalCode as any)[fieldName]?.enabled ?? true,
+        [options.fieldName]: {
+          enabled: options.enabled ?? penalCode[options.fieldName]?.enabled ?? true,
           value: newValue,
         },
       },
@@ -156,11 +164,11 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
             max={10}
             min={1}
             name="fine.counts"
-            onChange={handleValueChange.bind(null, "counts", undefined)}
+            onChange={(event) => handleValueChange({ fieldName: "counts", event })}
             type="number"
             disabled={isReadOnly}
             className="max-w-[125px] min-w-[125px] py-0.5"
-            value={!isNaN(currentValue.counts?.value) ? currentValue.counts?.value : ""}
+            value={transformField(currentValue.counts.value, "1")}
           />
         </FormField>
       </FieldWrapper>
@@ -173,22 +181,29 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
           <div className="flex items-center">
             <CheckboxField
               isDisabled={finesDisabled}
-              isSelected={currentValue.fine?.enabled ?? false}
+              isSelected={currentValue.fine.enabled}
               className="mb-0"
-              onChange={(isSelected) => handleValueChange("fine", isSelected)}
+              onChange={(isSelected) =>
+                handleValueChange({
+                  fieldName: "fine",
+                  enabled: isSelected,
+                })
+              }
             >
               {t("fines")}
             </CheckboxField>
 
             <Input
               name="fine.value"
-              onChange={handleValueChange.bind(null, "fine", undefined)}
+              onChange={(event) => handleValueChange({ fieldName: "fine", event })}
               min={minFine}
               max={maxFine}
               type="number"
-              disabled={isReadOnly || !currentValue.fine?.enabled}
+              disabled={isReadOnly || !currentValue.fine.enabled}
               className="max-w-[125px] min-w-[125px] ml-5 py-0.5"
-              value={!isNaN(currentValue.fine?.value) ? currentValue.fine?.value : ""}
+              value={
+                !isNaN(parseFloat(String(currentValue.fine.value))) ? currentValue.fine.value : ""
+              }
             />
           </div>
         </FieldWrapper>
@@ -196,19 +211,21 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
           <div className="flex items-center">
             <CheckboxField
               isDisabled={finesDisabled}
-              isSelected={currentValue.communityService?.enabled ?? false}
+              isSelected={currentValue.communityService.enabled}
               className="mb-0"
-              onChange={(isSelected) => handleValueChange("communityService", isSelected)}
+              onChange={(isSelected) =>
+                handleValueChange({ fieldName: "communityService", enabled: isSelected })
+              }
             >
               {t("communityService")}
             </CheckboxField>
 
             <Textarea
               name="communityService.value"
-              onChange={handleValueChange.bind(null, "communityService", undefined)}
-              disabled={isReadOnly || !currentValue.communityService?.enabled}
+              onChange={(event) => handleValueChange({ fieldName: "communityService", event })}
+              disabled={isReadOnly || !currentValue.communityService.enabled}
               className="max-w-[250px] min-w-[250px] ml-5 py-0.5"
-              value={currentValue.communityService?.value}
+              value={currentValue.communityService.value}
             />
           </div>
         </FieldWrapper>
@@ -221,40 +238,42 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
           <div className="flex items-center mt-1">
             <CheckboxField
               isDisabled={warningNotApplicableDisabled}
-              isSelected={currentValue.jailTime?.enabled ?? false}
+              isSelected={currentValue.jailTime.enabled}
               className="mb-0"
-              onChange={(isSelected) => handleValueChange("jailTime", isSelected)}
+              onChange={(isSelected) =>
+                handleValueChange({ fieldName: "jailTime", enabled: isSelected })
+              }
             >
               {t("jailTime")}
             </CheckboxField>
 
             <Input
               name="jailTime.value"
-              onChange={handleValueChange.bind(null, "jailTime", undefined)}
+              onChange={(event) => handleValueChange({ fieldName: "jailTime", event })}
               min={minJailTime}
               max={maxJailTime}
               type="number"
               disabled={
-                isReadOnly || warningNotApplicableDisabled || !currentValue.jailTime?.enabled
+                isReadOnly || warningNotApplicableDisabled || !currentValue.jailTime.enabled
               }
               className="max-w-[125px] min-w-[125px] ml-5 py-0.5"
-              value={!isNaN(currentValue.jailTime?.value) ? currentValue.jailTime?.value : ""}
+              value={!isNaN(Number(currentValue.jailTime.value)) ? currentValue.jailTime.value : ""}
             />
             {LEO_BAIL ? (
               <div className="flex flex-row items-center mb-0 ml-5">
                 <label>{t("bail")}</label>
                 <Input
                   type="number"
-                  onChange={handleValueChange.bind(null, "bail", undefined)}
+                  onChange={(event) => handleValueChange({ fieldName: "bail", event })}
                   name="bail.value"
                   disabled={
                     isReadOnly ||
                     bailDisabled ||
                     warningNotApplicableDisabled ||
-                    !currentValue.jailTime?.enabled
+                    !currentValue.jailTime.enabled
                   }
                   className="py-0.5 min-w-[125px] max-w-[125px] ml-5"
-                  value={!isNaN(currentValue.bail?.value) ? currentValue.bail?.value : ""}
+                  value={!isNaN(Number(currentValue.bail.value)) ? currentValue.bail.value : ""}
                   min={minBail}
                   max={maxBail}
                 />
@@ -287,4 +306,36 @@ function FieldWrapper({
       ) : null}
     </div>
   );
+}
+
+/** appends default data to the current penal code */
+function parseCurrentValue(
+  penalCode:
+    | (PenalCode & Partial<Record<PenalCodeValueName, PenalCodeValue<PenalCodeValueName>>>)
+    | null,
+) {
+  return {
+    ...(penalCode ?? {}),
+    fine: { enabled: penalCode?.fine?.enabled ?? false, value: penalCode?.fine?.value ?? "" },
+    jailTime: {
+      enabled: penalCode?.jailTime?.enabled ?? false,
+      value: penalCode?.jailTime?.value ?? "",
+    },
+    bail: { value: penalCode?.bail?.value ?? "" },
+    communityService: {
+      enabled: penalCode?.communityService?.enabled ?? false,
+      value: penalCode?.communityService?.value ?? "",
+    },
+    counts: { value: penalCode?.counts?.value ?? "1" },
+  };
+}
+
+/** automatically transform the value from a string or number to a stringified number */
+function transformField(value: string | number | null, defaultValue: string) {
+  if (value === null) return defaultValue;
+
+  const stringified = String(value);
+
+  if (isNaN(parseFloat(stringified))) return defaultValue;
+  return stringified;
 }

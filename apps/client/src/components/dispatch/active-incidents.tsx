@@ -30,7 +30,7 @@ export function ActiveIncidents() {
   /**
    * undefined = hide modal. It will otherwise open 2 modals, 1 with the incorrect data.
    */
-  const [tempIncident, setTempIncident] = React.useState<LeoIncident | null | undefined>(undefined);
+  const [tempIncident, setTempIncident] = React.useState<LeoIncident | "create" | "hide">("hide");
 
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
@@ -64,7 +64,7 @@ export function ActiveIncidents() {
   }
 
   async function handleDismissIncident() {
-    if (!tempIncident) return;
+    if (tempIncident === "create" || tempIncident === "hide") return;
 
     const { json } = await execute<PutIncidentByIdData<"leo">>({
       path: `/incidents/${tempIncident.id}`,
@@ -80,7 +80,7 @@ export function ActiveIncidents() {
       asyncTable.remove(json.id);
 
       closeModal(ModalIds.AlertDeleteIncident);
-      setTempIncident(undefined);
+      setTempIncident("hide");
     }
   }
 
@@ -96,7 +96,7 @@ export function ActiveIncidents() {
 
   function handleCreateIncident() {
     openModal(ModalIds.ManageIncident);
-    setTempIncident(null);
+    setTempIncident("create");
   }
 
   return (
@@ -183,7 +183,7 @@ export function ActiveIncidents() {
       <Droppable<{ incident: LeoIncident; unit: IncidentInvolvedUnit }>
         onDrop={({ incident, unit }) => {
           if (!unit.unit?.id) return;
-          handleAssignUnassignToIncident(incident, unit.unit?.id, "unassign");
+          handleAssignUnassignToIncident(incident, unit.unit.id, "unassign");
         }}
         accepts={[DndActions.UnassignUnitFromIncident]}
       >
@@ -199,7 +199,7 @@ export function ActiveIncidents() {
         </div>
       </Droppable>
 
-      {typeof tempIncident === "undefined" ? null : (
+      {tempIncident === "hide" ? null : (
         <ManageIncidentModal
           type="leo"
           onCreate={(incident) => {
@@ -209,7 +209,7 @@ export function ActiveIncidents() {
               setTempIncident(incident as LeoIncident);
               openModal(ModalIds.ManageIncident);
             } else {
-              setTempIncident(undefined);
+              setTempIncident("hide");
             }
           }}
           onUpdate={(old, incident) => {
@@ -219,8 +219,8 @@ export function ActiveIncidents() {
               asyncTable.remove(incident.id);
             }
           }}
-          onClose={() => setTempIncident(undefined)}
-          incident={tempIncident}
+          onClose={() => setTempIncident("hide")}
+          incident={tempIncident === "create" ? null : tempIncident}
         />
       )}
 
@@ -231,7 +231,7 @@ export function ActiveIncidents() {
         onDeleteClick={handleDismissIncident}
         id={ModalIds.AlertDeleteIncident}
         deleteText={t("endIncident")}
-        onClose={() => setTempIncident(undefined)}
+        onClose={() => setTempIncident("hide")}
       />
     </div>
   );

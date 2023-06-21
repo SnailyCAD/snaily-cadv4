@@ -13,7 +13,6 @@ import {
   FullDate,
 } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
-import type { SelectValue } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { useValues } from "context/ValuesContext";
@@ -72,6 +71,63 @@ interface Props {
   onCreate?(data: Record): void;
   customSubmitHandler?(data: any): Awaited<boolean>;
   onClose?(): void;
+}
+
+interface CreateInitialRecordValuesOptions {
+  type: RecordType;
+  record?: Record | null;
+  penalCodes: PenalCode[];
+  isLeoBailEnabled: boolean;
+  payload: {
+    citizenId?: string;
+    citizenName?: string;
+    businessId?: string;
+    businessName?: string;
+  } | null;
+}
+
+export function createInitialRecordValues(options: CreateInitialRecordValuesOptions) {
+  return {
+    type: options.type,
+    citizenId: options.record?.citizenId ?? options.payload?.citizenId ?? "",
+    citizenName: options.payload?.citizenName ?? "",
+
+    businessId: options.record?.businessId ?? options.payload?.businessId ?? "",
+    businessName: options.payload?.businessName ?? "",
+
+    violations: (options.record?.violations ?? []).map((v) => {
+      return {
+        label: v.penalCode.title,
+        value: {
+          ...v.penalCode,
+          fine: { enabled: Boolean(v.fine), value: v.fine },
+          counts: { enabled: true, value: v.counts },
+          jailTime: { enabled: Boolean(v.jailTime), value: v.jailTime },
+          communityService: { enabled: Boolean(v.communityService), value: v.communityService },
+          bail: {
+            enabled: options.isLeoBailEnabled ? Boolean(v.jailTime) : false,
+            value: v.bail,
+          },
+        },
+      };
+    }),
+    address: options.record?.address ?? "",
+    postal: options.record?.postal ?? "",
+    notes: options.record?.notes ?? "",
+    seizedItems: options.record?.seizedItems ?? [],
+    paymentStatus: options.record?.paymentStatus ?? null,
+    courtEntry: options.record?.courtEntry ?? null,
+
+    plateOrVin: options.record?.vehicle?.plate ?? options.record?.vehiclePlate ?? "",
+    plateOrVinSearch: options.record?.vehicle?.plate ?? options.record?.vehiclePlate ?? "",
+    vehicleId: options.record?.vehicleId ?? null,
+    vehicleModel:
+      options.record?.vehicle?.model.value.value ?? options.record?.vehicleModel ?? null,
+    vehicleColor: options.record?.vehicle?.color ?? options.record?.vehicleColor ?? null,
+
+    call911Id: options.record?.call911Id ?? null,
+    incidentId: options.record?.incidentId ?? null,
+  };
 }
 
 export function ManageRecordModal(props: Props) {
@@ -194,52 +250,13 @@ export function ManageRecordModal(props: Props) {
   const schema = isBusinessRecord ? CREATE_TICKET_SCHEMA_BUSINESS : CREATE_TICKET_SCHEMA;
   const validate = handleValidate(schema);
 
-  const INITIAL_VALUES = {
+  const INITIAL_VALUES = createInitialRecordValues({
     type: props.type,
-    citizenId: props.record?.citizenId ?? payload?.citizenId ?? "",
-    citizenName: payload?.citizenName ?? "",
-
-    businessId: props.record?.businessId ?? payload?.businessId ?? "",
-    businessName: payload?.businessName ?? "",
-
-    violations:
-      props.record?.violations.map((v) => {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        const penalCode = v.penalCode ?? penalCodes.find((p) => p.id === v.penalCodeId);
-
-        return {
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          label: penalCode?.title,
-          value: {
-            key: v.penalCodeId,
-            ...penalCode,
-            fine: { enabled: Boolean(v.fine), value: v.fine ?? undefined },
-            counts: { enabled: true, value: v.counts ?? undefined },
-            jailTime: { enabled: Boolean(v.jailTime), value: v.jailTime ?? undefined },
-            communityService: {
-              enabled: Boolean(v.communityService),
-              value: v.communityService ?? undefined,
-            },
-            bail: { enabled: LEO_BAIL ? Boolean(v.jailTime) : false, value: v.bail ?? undefined },
-          },
-        };
-      }) ?? ([] as SelectValue<PenalCode>[]),
-    address: props.record?.address ?? "",
-    postal: props.record?.postal ?? "",
-    notes: props.record?.notes ?? "",
-    seizedItems: props.record?.seizedItems ?? [],
-    paymentStatus: props.record?.paymentStatus ?? null,
-    courtEntry: props.record?.courtEntry ?? null,
-
-    plateOrVin: props.record?.vehicle?.plate ?? props.record?.vehiclePlate ?? "",
-    plateOrVinSearch: props.record?.vehicle?.plate ?? props.record?.vehiclePlate ?? "",
-    vehicleId: props.record?.vehicleId ?? null,
-    vehicleModel: props.record?.vehicle?.model.value.value ?? props.record?.vehicleModel ?? null,
-    vehicleColor: props.record?.vehicle?.color ?? props.record?.vehicleColor ?? null,
-
-    call911Id: props.record?.call911Id ?? null,
-    incidentId: props.record?.incidentId ?? null,
-  };
+    record: props.record,
+    penalCodes,
+    isLeoBailEnabled: LEO_BAIL,
+    payload,
+  });
 
   return (
     <Modal
