@@ -309,7 +309,7 @@ function FieldWrapper({
 }
 
 /** appends default data to the current penal code */
-function parseCurrentValue(
+export function parseCurrentValue(
   penalCode:
     | (PenalCode & Partial<Record<PenalCodeValueName, PenalCodeValue<PenalCodeValueName>>>)
     | null,
