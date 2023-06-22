@@ -74,6 +74,38 @@ export class PetsController {
     return pet;
   }
 
+  @Put("/:petId")
+  @Description("Update a pet for a citizen")
+  async updatePet(
+    @PathParams("petId") id: string,
+    @BodyParams() body: unknown,
+    @Context("user") user: User,
+  ) {
+    const data = validateSchema(PET_SCHEMA, body);
+    const pet = await prisma.pet.findUnique({
+      where: { id },
+      include: { citizen: { select: { userId: true } } },
+    });
+
+    if (!pet || pet.citizen.userId !== user.id) {
+      throw new NotFound("notFound");
+    }
+
+    const petMedicalRecord = await prisma.pet.update({
+      where: {
+        id: pet.id,
+      },
+      data: {
+        breed: data.breed,
+        color: data.color,
+        dateOfBirth: data.dateOfBirth,
+        weight: data.weight,
+      },
+    });
+
+    return petMedicalRecord;
+  }
+
   @Post("/:petId/medical-records")
   @Description("Create a medical record for a pet")
   async createMedicalRecord(

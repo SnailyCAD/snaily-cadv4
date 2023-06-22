@@ -21,6 +21,7 @@ interface ManagePetModalProps {
 export function ManagePetModal(props: ManagePetModalProps) {
   const { isOpen, closeModal } = useModal();
   const t = useTranslations("Pets");
+  const common = useTranslations("Common");
   const { execute, state } = useFetch();
   const { cad } = useAuth();
   const router = useRouter();
@@ -45,16 +46,29 @@ export function ManagePetModal(props: ManagePetModalProps) {
 
   const validate = handleValidate(PET_SCHEMA);
   async function onSubmit(data: typeof INITIAL_VALUES) {
-    const { json } = await execute<PostPetsData>({
-      method: "POST",
-      path: "/pets",
-      data,
-    });
+    if (props.pet) {
+      const { json } = await execute<PostPetsData>({
+        method: "PUT",
+        path: `/pets/${props.pet.id}`,
+        data,
+      });
 
-    if (json.id) {
-      router.push(`/pets/${json.id}`);
-      props.onCreate?.(json);
-      closeModal(ModalIds.ManagePet);
+      if (json.id) {
+        router.push(`/pets/${json.id}`);
+        closeModal(ModalIds.ManagePet);
+      }
+    } else {
+      const { json } = await execute<PostPetsData>({
+        method: "POST",
+        path: "/pets",
+        data,
+      });
+
+      if (json.id) {
+        router.push(`/pets/${json.id}`);
+        props.onCreate?.(json);
+        closeModal(ModalIds.ManagePet);
+      }
     }
   }
 
@@ -74,6 +88,7 @@ export function ManagePetModal(props: ManagePetModalProps) {
               errorMessage={errors.name}
               value={values.name}
               label={t("name")}
+              isDisabled={Boolean(props.pet)}
             />
 
             <TextField
@@ -116,11 +131,11 @@ export function ManagePetModal(props: ManagePetModalProps) {
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onPress={handleClose} variant="cancel">
-                Cancel
+                {common("cancel")}
               </Button>
               <Button className="flex items-center" disabled={state === "loading"} type="submit">
                 {state === "loading" ? <Loader className="mr-2" /> : null}
-                {t("createPet")}
+                {props.pet ? common("save") : t("createPet")}
               </Button>
             </footer>
           </Form>
