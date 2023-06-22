@@ -1,30 +1,27 @@
 import { Feature, User } from "@snailycad/types";
-import { BodyParams, Context } from "@tsed/common";
-import { Controller } from "@tsed/di";
-import { BadRequest } from "@tsed/exceptions";
-import { UseBefore } from "@tsed/platform-middlewares";
-import { ContentType, Delete, Description, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/getSessionUser";
 import { prisma } from "lib/data/prisma";
-import { IsAuth } from "middlewares/auth/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { nanoid } from "nanoid";
 import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
+import { BadRequestException, Body, Controller, Delete, Put, UseGuards } from "@nestjs/common";
+import { AuthGuard } from "~/middlewares/auth/is-auth";
+import { Description } from "~/decorators/description";
+import { SessionUser } from "~/decorators/user";
 
 @Controller("/user/api-token")
-@UseBefore(IsAuth)
-@ContentType("application/json")
+@UseGuards(AuthGuard)
 @IsFeatureEnabled({ feature: Feature.USER_API_TOKENS })
-export class AccountController {
+export class UserApiTokenController {
   @Put("/")
   @Description("Enable or disable the authenticated user's API Token.")
   @UsePermissions({
     permissions: [Permissions.UsePersonalApiToken],
   })
   async enableDisableUserAPIToken(
-    @Context("user") user: User,
-    @BodyParams() body: any,
+    @SessionUser() user: User,
+    @Body() body: any,
   ): Promise<APITypes.PutUserEnableDisableApiTokenData> {
     if (body.enabled === false) {
       if (!user.apiTokenId) {
@@ -64,10 +61,10 @@ export class AccountController {
     permissions: [Permissions.UsePersonalApiToken],
   })
   async generateNewApiToken(
-    @Context("user") user: User,
+    @SessionUser() user: User,
   ): Promise<APITypes.DeleteUserRegenerateApiTokenData> {
     if (!user.apiTokenId) {
-      throw new BadRequest("noApiTokenId");
+      throw new BadRequestException("noApiTokenId");
     }
 
     const updated = await prisma.user.update({

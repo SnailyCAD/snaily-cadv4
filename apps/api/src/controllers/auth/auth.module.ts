@@ -4,6 +4,7 @@ import { UserController } from "./user/user-controller";
 import { UserTwoFactorAuthenticationController } from "./2fa-controller";
 import { SteamOAuthController } from "./steam-auth-controller";
 import { DiscordOAuthController } from "./discord-auth-controller";
+import { UserApiTokenController } from "./user/user-api-token-controller";
 
 @Module({
   controllers: [
@@ -12,6 +13,7 @@ import { DiscordOAuthController } from "./discord-auth-controller";
     SteamOAuthController,
     UserTwoFactorAuthenticationController,
     UserController,
+    UserApiTokenController,
   ],
 })
 export class AuthModule {
