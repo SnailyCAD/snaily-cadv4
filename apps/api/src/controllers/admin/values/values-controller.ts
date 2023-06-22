@@ -1,20 +1,9 @@
-import {
-  Get,
-  Controller,
-  PathParams,
-  UseBeforeEach,
-  BodyParams,
-  QueryParams,
-  MultipartFile,
-  PlatformMulterFile,
-  Context,
-} from "@tsed/common";
+import { MultipartFile, PlatformMulterFile } from "@tsed/common";
 import fs from "node:fs/promises";
-import { ContentType, Delete, Description, Patch, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
 import { IsValidPath, validValuePaths } from "middlewares/valid-path";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { IsAuth } from "middlewares/auth/is-auth";
+import { AuthGuard, IsAuth } from "middlewares/auth/is-auth";
 import { typeHandlers } from "./import-values-controller";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { ValuesSelect, getTypeFromPath, getPermissionsForValuesRequest } from "lib/values/utils";
@@ -28,6 +17,8 @@ import { validateSchema } from "lib/data/validate-schema";
 import { createSearchWhereObject } from "lib/values/create-where-object";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
+import { Controller, UseGuards } from "@nestjs/common";
+import { Description } from "~/decorators/description";
 
 export const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
   QUALIFICATION: {
@@ -57,8 +48,7 @@ export const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
 };
 
 @Controller("/admin/values/:path")
-@UseBeforeEach(IsAuth, IsValidPath)
-@ContentType("application/json")
+@UseGuards(AuthGuard, IsValidPath)
 export class ValuesController {
   @Get("/")
   @Description("Get all the values by the specified types")
