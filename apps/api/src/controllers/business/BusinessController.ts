@@ -1,20 +1,30 @@
-import { Controller } from "@tsed/di";
-import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
-import { ContentType, Delete, Get, Hidden, Post, Put } from "@tsed/schema";
-import { IsAuth } from "middlewares/auth/is-auth";
 import {
   CREATE_COMPANY_SCHEMA,
   JOIN_COMPANY_SCHEMA,
   DELETE_COMPANY_POST_SCHEMA,
 } from "@snailycad/schemas";
-import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 import { type User, EmployeeAsEnum, MiscCadSettings, WhitelistStatus, cad } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type * as APITypes from "@snailycad/types/api";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from "@nestjs/common";
+import { AuthGuard } from "~/middlewares/auth/is-auth";
+import { SessionUser } from "~/decorators/user";
+import { Cad } from "~/decorators/cad";
 
 const businessInclude = {
   citizen: {
@@ -32,14 +42,12 @@ const businessInclude = {
   },
 };
 
-@UseBeforeEach(IsAuth)
+@UseGuards(AuthGuard)
 @Controller("/businesses")
-@Hidden()
-@ContentType("application/json")
 @IsFeatureEnabled({ feature: Feature.BUSINESS })
 export class BusinessController {
   @Get("/")
-  async getBusinessesByUser(@Context("user") user: User): Promise<APITypes.GetBusinessesData> {
+  async getBusinessesByUser(@SessionUser() user: User): Promise<APITypes.GetBusinessesData> {
     const [ownedBusinesses, joinedBusinesses, joinableBusinesses] = await prisma.$transaction([
       prisma.employee.findMany({
         where: {
@@ -73,9 +81,9 @@ export class BusinessController {
 
   @Get("/business/:id")
   async getBusinessById(
-    @Context("user") user: User,
-    @PathParams("id") id: string,
-    @QueryParams("employeeId") employeeId: string,
+    @SessionUser() user: User,
+    @Param("id") id: string,
+    @Query("employeeId") employeeId: string,
   ): Promise<APITypes.GetBusinessByIdData> {
     const business = await prisma.business.findUnique({
       where: {
@@ -114,7 +122,7 @@ export class BusinessController {
       : null;
 
     if (!business || !employee || employee.userId !== user.id) {
-      throw new NotFound("employeeNotFound");
+      throw new NotFoundException("employeeNotFound");
     }
 
     return { ...business, employee };
@@ -122,9 +130,9 @@ export class BusinessController {
 
   @Put("/:id")
   async updateBusiness(
-    @PathParams("id") businessId: string,
-    @BodyParams() body: unknown,
-    @Context("user") user: User,
+    @Param("id") businessId: string,
+    @Body() body: unknown,
+    @SessionUser() user: User,
   ): Promise<APITypes.PutBusinessByIdData> {
     const data = validateSchema(CREATE_COMPANY_SCHEMA, body);
 
@@ -140,7 +148,7 @@ export class BusinessController {
     });
 
     if (!employee) {
-      throw new NotFound("employeeNotFound");
+      throw new NotFoundException("employeeNotFound");
     }
 
     const updated = await prisma.business.update({
@@ -160,9 +168,9 @@ export class BusinessController {
 
   @Delete("/:id")
   async deleteBusiness(
-    @PathParams("id") businessId: string,
-    @BodyParams() body: unknown,
-    @Context("user") user: User,
+    @Param("id") businessId: string,
+    @Body() body: unknown,
+    @SessionUser() user: User,
   ): Promise<APITypes.DeleteBusinessByIdData> {
     const data = validateSchema(DELETE_COMPANY_POST_SCHEMA, body);
 
@@ -178,7 +186,7 @@ export class BusinessController {
     });
 
     if (!employee) {
-      throw new NotFound("employeeNotFound");
+      throw new NotFoundException("employeeNotFound");
     }
 
     await prisma.business.delete({
@@ -192,9 +200,9 @@ export class BusinessController {
 
   @Post("/join")
   async joinBusiness(
-    @BodyParams() body: unknown,
-    @Context("user") user: User,
-    @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings | null },
+    @Body() body: unknown,
+    @SessionUser() user: User,
+    @Cad() cad: cad & { miscCadSettings: MiscCadSettings | null },
   ): Promise<APITypes.PostJoinBusinessData> {
     const data = validateSchema(JOIN_COMPANY_SCHEMA, body);
 
@@ -205,7 +213,7 @@ export class BusinessController {
     });
 
     if (!citizen || citizen.userId !== user.id) {
-      throw new NotFound("notFound");
+      throw new NotFoundException("notFound");
     }
 
     if (cad.miscCadSettings?.maxBusinessesPerCitizen) {
@@ -217,7 +225,7 @@ export class BusinessController {
       });
 
       if (ownedBusinessesCount > cad.miscCadSettings.maxBusinessesPerCitizen) {
-        throw new BadRequest("maxBusinessesLength");
+        throw new BadRequestException("maxBusinessesLength");
       }
     }
 
@@ -228,11 +236,11 @@ export class BusinessController {
     });
 
     if (!business || business.status === WhitelistStatus.DECLINED) {
-      throw new NotFound("notFound");
+      throw new NotFoundException("notFound");
     }
 
     if (business.status === WhitelistStatus.PENDING) {
-      throw new BadRequest("businessIsPending");
+      throw new BadRequestException("businessIsPending");
     }
 
     const inBusiness = await prisma.employee.findFirst({
@@ -243,7 +251,7 @@ export class BusinessController {
     });
 
     if (inBusiness) {
-      throw new BadRequest("alreadyInThisBusiness");
+      throw new BadRequestException("alreadyInThisBusiness");
     }
 
     let employeeRole = await prisma.employeeValue.findFirst({
@@ -308,9 +316,9 @@ export class BusinessController {
     permissions: [Permissions.CreateBusinesses],
   })
   async createBusiness(
-    @BodyParams() body: unknown,
-    @Context("user") user: User,
-    @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings | null },
+    @Body() body: unknown,
+    @SessionUser() user: User,
+    @Cad() cad: cad & { miscCadSettings: MiscCadSettings | null },
   ): Promise<APITypes.PostCreateBusinessData> {
     const data = validateSchema(CREATE_COMPANY_SCHEMA, body);
 
@@ -321,7 +329,7 @@ export class BusinessController {
     });
 
     if (!owner || owner.userId !== user.id) {
-      throw new NotFound("notFound");
+      throw new NotFoundException("notFound");
     }
 
     const { miscCadSettings, businessWhitelisted } = cad;
@@ -334,7 +342,7 @@ export class BusinessController {
       });
 
       if (ownedBusinessesCount > miscCadSettings.maxBusinessesPerCitizen) {
-        throw new BadRequest("maxBusinessesLength");
+        throw new BadRequestException("maxBusinessesLength");
       }
     }
 

@@ -1,6 +1,5 @@
 import "reflect-metadata";
 import { NestFactory } from "@nestjs/core";
-import { $log } from "@tsed/logger";
 
 import { getCADVersion } from "@snailycad/utils/version";
 import * as Sentry from "@sentry/node";
@@ -15,6 +14,7 @@ import fastifyCookie from "@fastify/cookie";
 import helmet from "@fastify/helmet";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import compression from "@fastify/compress";
+import { Logger } from "@nestjs/common";
 
 Sentry.init({
   dsn: "https://308dd96b826c4e38a814fc9bae681687@o518232.ingest.sentry.io/6553288",
@@ -67,7 +67,6 @@ async function bootstrap() {
     const document = SwaggerModule.createDocument(app, options);
 
     SwaggerModule.setup("/api-docs", app, document);
-
     await app.listen(8080, "0.0.0.0");
 
     const versions = await getCADVersion();
@@ -85,12 +84,12 @@ async function bootstrap() {
     console.log(`SnailyCADv4 is running ${versionStr}. Node version: ${nodeVersion}`);
 
     if (canSecureCookiesBeEnabled() === false) {
-      $log.error(
+      Logger.error(
         "Secure cookies (SECURE_COOKIES_FOR_IFRAME) could not be enabled because this SnailyCAD instance is not using HTTPS. https://docs.snailycad.org/docs/errors/secure-cookies-for-iframe",
       );
     }
   } catch (er) {
-    $log.error(er);
+    Logger.error(er);
   }
 }
 

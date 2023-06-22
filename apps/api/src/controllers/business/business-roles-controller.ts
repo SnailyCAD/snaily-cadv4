@@ -1,28 +1,35 @@
-import { Controller } from "@tsed/di";
-import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
-import { ContentType, Delete, Description, Get, Hidden, Post, Put } from "@tsed/schema";
-import { IsAuth } from "middlewares/auth/is-auth";
-import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 import { type User, WhitelistStatus } from "@prisma/client";
 import type * as APITypes from "@snailycad/types/api";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 import { validateSchema } from "lib/data/validate-schema";
 import { BUSINESSES_BUSINESS_ROLE_SCHEMA } from "@snailycad/schemas";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from "@nestjs/common";
+import { AuthGuard } from "~/middlewares/auth/is-auth";
+import { Description } from "~/decorators/description";
+import { SessionUser } from "~/decorators/user";
 
-@UseBeforeEach(IsAuth)
+@UseGuards(AuthGuard)
 @Controller("/businesses/roles")
-@Hidden()
-@ContentType("application/json")
 @IsFeatureEnabled({ feature: Feature.BUSINESS })
-export class BusinessController {
+export class BusinessRolesController {
   @Get("/:id")
   @Description("Get all business roles related to this business.")
   async getBusinessRoles(
-    @Context("user") user: User,
-    @PathParams("id") businessId: string,
-    @QueryParams("employeeId") employeeId: string,
+    @SessionUser() user: User,
+    @Param("id") businessId: string,
+    @Query("employeeId") employeeId: string,
   ): Promise<APITypes.GetBusinessRolesByBusinessIdData> {
     const employee = await prisma.employee.findFirst({
       where: {
@@ -35,7 +42,7 @@ export class BusinessController {
 
     const isOwner = employee?.role?.as === "OWNER";
     if (!employee || !isOwner) {
-      throw new NotFound("employeeNotFoundOrInvalidPermissions");
+      throw new NotFoundException("employeeNotFoundOrInvalidPermissions");
     }
 
     const [totalCount, roles] = await prisma.$transaction([
@@ -56,10 +63,10 @@ export class BusinessController {
   @Post("/:id")
   @Description("Create a business role related to this business.")
   async createBusinessRole(
-    @Context("user") user: User,
-    @PathParams("id") businessId: string,
-    @QueryParams("employeeId") employeeId: string,
-    @BodyParams() body: unknown,
+    @SessionUser() user: User,
+    @Param("id") businessId: string,
+    @Query("employeeId") employeeId: string,
+    @Body() body: unknown,
   ) {
     const data = validateSchema(BUSINESSES_BUSINESS_ROLE_SCHEMA, body);
 
@@ -74,7 +81,7 @@ export class BusinessController {
 
     const isOwner = employee?.role?.as === "OWNER";
     if (!employee || !isOwner) {
-      throw new NotFound("employeeNotFoundOrInvalidPermissions");
+      throw new NotFoundException("employeeNotFoundOrInvalidPermissions");
     }
 
     const role = await prisma.employeeValue.create({
@@ -97,11 +104,11 @@ export class BusinessController {
 
   @Put("/:id/:roleId")
   async updateBusinessRole(
-    @Context("user") user: User,
-    @PathParams("id") businessId: string,
-    @PathParams("roleId") roleId: string,
-    @QueryParams("employeeId") employeeId: string,
-    @BodyParams() body: unknown,
+    @SessionUser() user: User,
+    @Param("id") businessId: string,
+    @Param("roleId") roleId: string,
+    @Query("employeeId") employeeId: string,
+    @Body() body: unknown,
   ) {
     const data = validateSchema(BUSINESSES_BUSINESS_ROLE_SCHEMA, body);
 
@@ -116,7 +123,7 @@ export class BusinessController {
 
     const isOwner = employee?.role?.as === "OWNER";
     if (!employee || !isOwner) {
-      throw new NotFound("employeeNotFoundOrInvalidPermissions");
+      throw new NotFoundException("employeeNotFoundOrInvalidPermissions");
     }
 
     const role = await prisma.employeeValue.findUnique({
@@ -124,7 +131,7 @@ export class BusinessController {
     });
 
     if (!role) {
-      throw new NotFound("roleNotFound");
+      throw new NotFoundException("roleNotFound");
     }
 
     const updatedRole = await prisma.employeeValue.update({
@@ -143,10 +150,10 @@ export class BusinessController {
 
   @Delete("/:id/:roleId")
   async deleteBusinessRole(
-    @Context("user") user: User,
-    @PathParams("id") businessId: string,
-    @PathParams("roleId") roleId: string,
-    @QueryParams("employeeId") employeeId: string,
+    @SessionUser() user: User,
+    @Param("id") businessId: string,
+    @Param("roleId") roleId: string,
+    @Query("employeeId") employeeId: string,
   ) {
     const employee = await prisma.employee.findFirst({
       where: {
@@ -159,7 +166,7 @@ export class BusinessController {
 
     const isOwner = employee?.role?.as === "OWNER";
     if (!employee || !isOwner) {
-      throw new NotFound("employeeNotFoundOrInvalidPermissions");
+      throw new NotFoundException("employeeNotFoundOrInvalidPermissions");
     }
 
     const role = await prisma.employeeValue.findUnique({
@@ -167,7 +174,7 @@ export class BusinessController {
     });
 
     if (!role) {
-      throw new NotFound("roleNotFound");
+      throw new NotFoundException("roleNotFound");
     }
 
     await prisma.employeeValue.delete({

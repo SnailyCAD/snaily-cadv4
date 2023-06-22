@@ -1,10 +1,5 @@
-import { Controller } from "@tsed/di";
-import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { ContentType, Delete, Hidden, Put } from "@tsed/schema";
-import { IsAuth } from "middlewares/auth/is-auth";
+import { AuthGuard } from "middlewares/auth/is-auth";
 import { UPDATE_EMPLOYEE_SCHEMA, FIRE_EMPLOYEE_SCHEMA } from "@snailycad/schemas";
-import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 import { cad, EmployeeAsEnum, User, WhitelistStatus } from "@prisma/client";
 import { validateBusinessAcceptance } from "utils/businesses";
@@ -12,20 +7,21 @@ import { validateSchema } from "lib/data/validate-schema";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import type * as APITypes from "@snailycad/types/api";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
+import { Body, Controller, Delete, NotFoundException, Param, Put, UseGuards } from "@nestjs/common";
+import { SessionUser } from "~/decorators/user";
+import { Cad } from "~/decorators/cad";
 
-@UseBeforeEach(IsAuth)
+@UseGuards(AuthGuard)
 @Controller("/businesses/employees")
-@Hidden()
-@ContentType("application/json")
 @IsFeatureEnabled({ feature: Feature.BUSINESS })
 export class BusinessEmployeeController {
   @Put("/:businessId/:id")
   async updateEmployee(
-    @PathParams("id") employeeId: string,
-    @PathParams("businessId") businessId: string,
-    @Context("user") user: User,
-    @Context("cad") cad: cad,
-    @BodyParams() body: unknown,
+    @Param("id") employeeId: string,
+    @Param("businessId") businessId: string,
+    @SessionUser() user: User,
+    @Cad() cad: cad,
+    @Body() body: unknown,
   ): Promise<APITypes.PutBusinessEmployeesData> {
     const data = validateSchema(UPDATE_EMPLOYEE_SCHEMA, body);
 
@@ -47,7 +43,7 @@ export class BusinessEmployeeController {
     const canManageEmployees = isOwner ? true : managingEmployee?.canManageEmployees;
 
     if (!canManageEmployees) {
-      throw new NotFound("employeeNotFoundOrInvalidPermissions");
+      throw new NotFoundException("employeeNotFoundOrInvalidPermissions");
     }
 
     const employeeToUpdate = await prisma.employee.findFirst({
@@ -64,7 +60,7 @@ export class BusinessEmployeeController {
     });
 
     if (!employeeToUpdate) {
-      throw new NotFound("employeeNotFound");
+      throw new NotFoundException("employeeNotFound");
     }
 
     const role = await prisma.employeeValue.findUnique({
@@ -104,11 +100,11 @@ export class BusinessEmployeeController {
 
   @Delete("/:businessId/:id")
   async fireEmployee(
-    @PathParams("id") employeeId: string,
-    @PathParams("businessId") businessId: string,
-    @Context("user") user: User,
-    @Context("cad") cad: cad,
-    @BodyParams() body: unknown,
+    @Param("id") employeeId: string,
+    @Param("businessId") businessId: string,
+    @SessionUser() user: User,
+    @Cad() cad: cad,
+    @Body() body: unknown,
   ): Promise<APITypes.DeleteBusinessFireEmployeeData> {
     const data = validateSchema(FIRE_EMPLOYEE_SCHEMA, body);
 
@@ -129,7 +125,7 @@ export class BusinessEmployeeController {
     const canManageEmployees = isOwner ? true : managingEmployee?.canManageEmployees;
 
     if (!canManageEmployees) {
-      throw new NotFound("employeeNotFoundOrInvalidPermissions");
+      throw new NotFoundException("employeeNotFoundOrInvalidPermissions");
     }
 
     const employeeToDelete = await prisma.employee.findFirst({
@@ -146,7 +142,7 @@ export class BusinessEmployeeController {
     });
 
     if (!employeeToDelete) {
-      throw new NotFound("employeeNotFound");
+      throw new NotFoundException("employeeNotFound");
     }
 
     await prisma.employee.delete({
@@ -160,12 +156,12 @@ export class BusinessEmployeeController {
 
   @Put("/:businessId/:id/:type")
   async acceptOrDeclineEmployee(
-    @PathParams("type") type: "accept" | "decline",
-    @PathParams("id") employeeId: string,
-    @PathParams("businessId") businessId: string,
-    @Context("user") user: User,
-    @Context("cad") cad: cad,
-    @BodyParams() body: unknown,
+    @Param("type") type: "accept" | "decline",
+    @Param("id") employeeId: string,
+    @Param("businessId") businessId: string,
+    @SessionUser() user: User,
+    @Cad() cad: cad,
+    @Body() body: unknown,
   ): Promise<APITypes.PostBusinessAcceptDeclineData> {
     const data = validateSchema(FIRE_EMPLOYEE_SCHEMA, body);
 
@@ -186,7 +182,7 @@ export class BusinessEmployeeController {
     const canManageEmployees = isOwner ? true : managingEmployee?.canManageEmployees;
 
     if (!canManageEmployees) {
-      throw new NotFound("employeeNotFoundOrInvalidPermissions");
+      throw new NotFoundException("employeeNotFoundOrInvalidPermissions");
     }
 
     const employeeToUpdate = await prisma.employee.findFirst({
@@ -198,7 +194,7 @@ export class BusinessEmployeeController {
     });
 
     if (!employeeToUpdate) {
-      throw new NotFound("employeeNotFound");
+      throw new NotFoundException("employeeNotFound");
     }
 
     const status = type === "accept" ? WhitelistStatus.ACCEPTED : WhitelistStatus.DECLINED;

@@ -5,9 +5,10 @@ import { AuthModule } from "./controllers/auth/auth.module";
 import { BleeterModule } from "./controllers/bleeter/bleeter.module";
 // import { ManageValuesModule } from "./controllers/admin/values/values.module";
 import { CitizenModule } from "./controllers/citizen/citizen.module";
+import { BusinessModule } from "./controllers/business/business.module";
 
 @Module({
-  imports: [AuthModule, BleeterModule, CitizenModule],
+  imports: [AuthModule, BleeterModule, CitizenModule, BusinessModule],
   controllers: [NavController, MainController],
 })
 export class AppModule {

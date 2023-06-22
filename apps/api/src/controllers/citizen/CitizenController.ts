@@ -40,6 +40,7 @@ import {
 import { Description } from "~/decorators/description";
 import { Cad } from "~/decorators/cad";
 import { SessionUser } from "~/decorators/user";
+import { Permissions, UsePermissions } from "~/middlewares/use-permissions";
 
 export const citizenInclude = Prisma.validator<Prisma.CitizenSelect>()({
   user: { select: userProperties },
@@ -101,6 +102,9 @@ export const citizenIncludeWithRecords = {
 
 @Controller("/citizen")
 @UseGuards(AuthGuard)
+@UsePermissions({
+  permissions: [Permissions.BanUsers],
+})
 export class CitizenController {
   @Get("/")
   @Description("Get all the citizens of the authenticated user")

@@ -1,29 +1,35 @@
-import { Controller } from "@tsed/di";
-import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { ContentType, Delete, Hidden, Post, Put } from "@tsed/schema";
-import { IsAuth } from "middlewares/auth/is-auth";
 import { CREATE_COMPANY_POST_SCHEMA, DELETE_COMPANY_POST_SCHEMA } from "@snailycad/schemas";
-import { Forbidden, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 import { validateBusinessAcceptance } from "utils/businesses";
 import { validateSchema } from "lib/data/validate-schema";
 import type { cad, User } from "@prisma/client";
 import type * as APITypes from "@snailycad/types/api";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
+import {
+  Body,
+  Controller,
+  Delete,
+  ForbiddenException,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from "@nestjs/common";
+import { AuthGuard } from "~/middlewares/auth/is-auth";
+import { SessionUser } from "~/decorators/user";
+import { Cad } from "~/decorators/cad";
 
-@UseBeforeEach(IsAuth)
+@UseGuards(AuthGuard)
 @Controller("/businesses/posts")
-@Hidden()
-@ContentType("application/json")
 @IsFeatureEnabled({ feature: Feature.BUSINESS })
 export class BusinessPostsController {
   @Post("/:id")
   async createPost(
-    @BodyParams() body: unknown,
-    @Context("user") user: User,
-    @Context("cad") cad: cad,
-    @PathParams("id") businessId: string,
+    @Body() body: unknown,
+    @SessionUser() user: User,
+    @Cad() cad: cad,
+    @Param("id") businessId: string,
   ): Promise<APITypes.PostBusinessPostsData> {
     const data = validateSchema(CREATE_COMPANY_POST_SCHEMA, body);
 
@@ -36,11 +42,11 @@ export class BusinessPostsController {
     });
 
     if (!employee || employee.userId !== user.id || employee.businessId !== businessId) {
-      throw new NotFound("notFound");
+      throw new NotFoundException("notFound");
     }
 
     if (!employee.canCreatePosts) {
-      throw new Forbidden("insufficientPermissions");
+      throw new ForbiddenException("insufficientPermissions");
     }
 
     const post = await prisma.businessPost.create({
@@ -59,11 +65,11 @@ export class BusinessPostsController {
 
   @Put("/:id/:postId")
   async updatePost(
-    @BodyParams() body: unknown,
-    @Context("user") user: User,
-    @Context("cad") cad: cad,
-    @PathParams("id") businessId: string,
-    @PathParams("postId") postId: string,
+    @Body() body: unknown,
+    @SessionUser() user: User,
+    @Cad() cad: cad,
+    @Param("id") businessId: string,
+    @Param("postId") postId: string,
   ): Promise<APITypes.PutBusinessPostsData> {
     const data = validateSchema(CREATE_COMPANY_POST_SCHEMA, body);
 
@@ -78,11 +84,11 @@ export class BusinessPostsController {
     });
 
     if (!employee) {
-      throw new NotFound("employeeNotFound");
+      throw new NotFoundException("employeeNotFound");
     }
 
     if (!employee.canCreatePosts) {
-      throw new Forbidden("insufficientPermissions");
+      throw new ForbiddenException("insufficientPermissions");
     }
 
     const post = await prisma.businessPost.findFirst({
@@ -94,7 +100,7 @@ export class BusinessPostsController {
     });
 
     if (!post) {
-      throw new NotFound("notFound");
+      throw new NotFoundException("notFound");
     }
 
     const updated = await prisma.businessPost.update({
@@ -113,11 +119,11 @@ export class BusinessPostsController {
 
   @Delete("/:id/:postId")
   async deletePost(
-    @BodyParams() body: unknown,
-    @Context("user") user: User,
-    @Context("cad") cad: cad,
-    @PathParams("id") id: string,
-    @PathParams("postId") postId: string,
+    @Body() body: unknown,
+    @SessionUser() user: User,
+    @Cad() cad: cad,
+    @Param("id") id: string,
+    @Param("postId") postId: string,
   ): Promise<APITypes.DeleteBusinessPostsData> {
     const data = validateSchema(DELETE_COMPANY_POST_SCHEMA, body);
 
@@ -133,7 +139,7 @@ export class BusinessPostsController {
     });
 
     if (!post) {
-      throw new NotFound("notFound");
+      throw new NotFoundException("notFound");
     }
 
     await prisma.businessPost.delete({
