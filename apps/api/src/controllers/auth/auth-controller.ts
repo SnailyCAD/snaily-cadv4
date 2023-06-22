@@ -1,6 +1,4 @@
-import { Controller, BodyParams, Post, Res, Response } from "@tsed/common";
 import { hashSync, genSaltSync, compareSync } from "bcrypt";
-import { BadRequest } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 import { findOrCreateCAD, isFeatureEnabled } from "lib/upsert-cad";
 import { REGISTER_SCHEMA, AUTH_SCHEMA } from "@snailycad/schemas";
@@ -8,7 +6,6 @@ import { validateSchema } from "lib/data/validate-schema";
 import { ExtendedNotFound } from "src/exceptions/extended-not-found";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { validateUser2FA } from "lib/auth/2fa";
-import { ContentType, Description, Returns } from "@tsed/schema";
 import { User, WhitelistStatus, Rank, AutoSetUserProperties, cad, Feature } from "@prisma/client";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import { setUserPreferencesCookies } from "lib/auth/setUserPreferencesCookies";
@@ -17,18 +14,17 @@ import { setUserTokenCookies } from "lib/auth/setUserTokenCookies";
 import { validateGoogleCaptcha } from "lib/auth/validate-google-captcha";
 import { validateDiscordAndSteamId } from "lib/auth/validate-discord-steam-id";
 import { createFeaturesObject } from "middlewares/is-enabled";
+import { BadRequestException, Body, Controller, Post, Res } from "@nestjs/common";
+import { FastifyReply } from "fastify";
+import { Description } from "~/decorators/description";
 
 @Controller("/auth")
-@ContentType("application/json")
 export class AuthController {
   @Post("/login")
   @Description("Authenticate a user via username and password")
-  @Returns(200)
-  @Returns(400, ExtendedBadRequest)
-  @Returns(404, ExtendedNotFound)
   async login(
-    @BodyParams() body: unknown,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: FastifyReply,
+    @Body() body: unknown,
   ): Promise<APITypes.PostLoginUserData> {
     const data = validateSchema(AUTH_SCHEMA, body);
 
@@ -69,7 +65,7 @@ export class AuthController {
 
     // allow owners to login by username/password, a little backup function.
     if (!regularAuthEnabled && user.rank !== Rank.OWNER) {
-      throw new BadRequest("allowRegularLoginIsDisabled");
+      throw new BadRequestException("allowRegularLoginIsDisabled");
     }
 
     const userPassword = user.tempPassword ?? user.password;
@@ -100,11 +96,9 @@ export class AuthController {
 
   @Post("/register")
   @Description("Create a user via username and password")
-  @Returns(200)
-  @Returns(400, ExtendedBadRequest)
   async register(
-    @BodyParams() body: unknown,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: FastifyReply,
+    @Body() body: unknown,
   ): Promise<APITypes.PostRegisterUserData> {
     const data = validateSchema(REGISTER_SCHEMA, body);
 
@@ -145,7 +139,7 @@ export class AuthController {
     });
 
     if (!regularAuthEnabled) {
-      throw new BadRequest("allowRegularLoginIsDisabled");
+      throw new BadRequestException("allowRegularLoginIsDisabled");
     }
 
     const userCount = await prisma.user.count();

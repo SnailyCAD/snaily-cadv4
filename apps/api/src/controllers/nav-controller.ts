@@ -1,22 +1,20 @@
+import { Controller, Get, UseGuards } from "@nestjs/common";
 import { WhitelistStatus } from "@prisma/client";
 import { Permissions, defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { User } from "@snailycad/types";
-import { Context, UseBeforeEach } from "@tsed/common";
-import { Controller } from "@tsed/di";
-import { Description, Get } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
-import { IsAuth } from "middlewares/auth/is-auth";
+import { AuthGuard } from "middlewares/auth/is-auth";
 import { UsePermissions } from "middlewares/use-permissions";
+import { SessionUser } from "~/decorators/user";
+import { Description } from "~/decorators/description";
 
 @Controller("/notifications")
-@UseBeforeEach(IsAuth)
+@UseGuards(AuthGuard)
 export class NavController {
   @Get("/officer")
   @Description("Get a number of notifications for the officer dropdown for the authenticated user.")
-  @UsePermissions({
-    permissions: defaultPermissions.defaultLeoPermissions,
-  })
-  async getOfficerNotifications(@Context("user") user: User) {
+  @UsePermissions({ permissions: defaultPermissions.defaultLeoPermissions })
+  async getOfficerNotifications(@SessionUser() user: User) {
     const hasManageBureauOfFirearms = hasPermission({
       permissionsToCheck: [Permissions.ManageBureauOfFirearms],
       userToCheck: user,
@@ -42,7 +40,7 @@ export class NavController {
   @UsePermissions({
     permissions: defaultPermissions.allDefaultAdminPermissions,
   })
-  async getAdminNotifications(@Context("user") user: User) {
+  async getAdminNotifications(@SessionUser() user: User) {
     const hasManageUnits = hasPermission({
       permissionsToCheck: [Permissions.ManageUnits],
       userToCheck: user,

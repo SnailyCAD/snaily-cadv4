@@ -1,10 +1,6 @@
-import { UseBeforeEach, Context, MultipartFile, PlatformMulterFile } from "@tsed/common";
-import { Controller } from "@tsed/di";
-import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
-import { QueryParams, BodyParams, PathParams } from "@tsed/platform-params";
+import { MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { prisma } from "lib/data/prisma";
-import { IsAuth } from "middlewares/auth/is-auth";
-import { BadRequest, Forbidden, NotFound } from "@tsed/exceptions";
+import { AuthGuard } from "middlewares/auth/is-auth";
 import { CREATE_CITIZEN_SCHEMA, CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
 import fs from "node:fs/promises";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
@@ -27,6 +23,23 @@ import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { z } from "zod";
 import { RecordsInclude } from "controllers/leo/search/SearchController";
 import { leoProperties } from "utils/leo/includes";
+import {
+  Controller,
+  UseGuards,
+  Get,
+  Delete,
+  Post,
+  Put,
+  Query,
+  Body,
+  Param,
+  NotFoundException,
+  ForbiddenException,
+  BadRequestException,
+} from "@nestjs/common";
+import { Description } from "~/decorators/description";
+import { Cad } from "~/decorators/cad";
+import { SessionUser } from "~/decorators/user";
 
 export const citizenInclude = Prisma.validator<Prisma.CitizenSelect>()({
   user: { select: userProperties },
@@ -87,16 +100,15 @@ export const citizenIncludeWithRecords = {
 };
 
 @Controller("/citizen")
-@UseBeforeEach(IsAuth)
-@ContentType("application/json")
+@UseGuards(AuthGuard)
 export class CitizenController {
   @Get("/")
   @Description("Get all the citizens of the authenticated user")
   async getCitizens(
-    @Context("cad") cad: { features?: Record<Feature, boolean> },
-    @Context("user") user: User,
-    @QueryParams("query", String) query = "",
-    @QueryParams("skip", Number) skip = 0,
+    @Cad() cad: cad & { features?: Record<Feature, boolean> },
+    @SessionUser() user: User,
+    @Query("query") query = "",
+    @Query("skip") skip = 0,
   ): Promise<APITypes.GetCitizensData> {
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     const [name, surname] = query.toString().toLowerCase().split(/ +/g);
@@ -142,9 +154,9 @@ export class CitizenController {
 
   @Get("/:id")
   async getCitizen(
-    @Context("cad") cad: { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings },
-    @Context("user") user: User,
-    @PathParams("id") citizenId: string,
+    @Cad() cad: cad & { features?: Record<Feature, boolean> },
+    @SessionUser() user: User,
+    @Param("id") citizenId: string,
   ): Promise<APITypes.GetCitizenByIdData> {
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
 
@@ -157,12 +169,12 @@ export class CitizenController {
     });
 
     if (!citizen) {
-      throw new NotFound("notFound");
+      throw new NotFoundException("notFound");
     }
 
     const [_citizen] = await setEndedSuspendedLicenses([citizen]);
     if (!_citizen) {
-      throw new NotFound("notFound");
+      throw new NotFoundException("notFound");
     }
 
     return _citizen;
@@ -170,9 +182,9 @@ export class CitizenController {
 
   @Get("/:id/records")
   async getCitizenRecords(
-    @Context("cad") cad: { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings },
-    @Context("user") user: User,
-    @PathParams("id") citizenId: string,
+    @Cad() cad: cad & { features?: Record<Feature, boolean> },
+    @SessionUser() user: User,
+    @Param("id") citizenId: string,
   ): Promise<APITypes.GetCitizenByIdRecordsData> {
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
 
@@ -185,7 +197,7 @@ export class CitizenController {
     });
 
     if (!citizen) {
-      throw new NotFound("notFound");
+      throw new NotFoundException("notFound");
     }
 
     const isEnabled = isFeatureEnabled({
@@ -203,9 +215,9 @@ export class CitizenController {
 
   @Delete("/:id")
   async deleteCitizen(
-    @Context("user") user: User,
-    @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
-    @PathParams("id") citizenId: string,
+    @Cad() cad: cad & { features?: Record<Feature, boolean> },
+    @SessionUser() user: User,
+    @Param("id") citizenId: string,
   ): Promise<APITypes.DeleteCitizenByIdData> {
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
 
@@ -216,7 +228,7 @@ export class CitizenController {
     });
 
     if (!allowDeletion) {
-      throw new Forbidden("onlyAdminsCanDeleteCitizens");
+      throw new ForbiddenException("onlyAdminsCanDeleteCitizens");
     }
 
     const citizen = await prisma.citizen.findFirst({
@@ -227,7 +239,7 @@ export class CitizenController {
     });
 
     if (!citizen) {
-      throw new NotFound("notFound");
+      throw new NotFoundException("notFound");
     }
 
     await prisma.citizen.delete({
@@ -241,9 +253,9 @@ export class CitizenController {
 
   @Post("/:id/deceased")
   async markCitizenDeceased(
-    @Context("user") user: User,
-    @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
-    @PathParams("id") citizenId: string,
+    @Cad() cad: cad & { features?: Record<Feature, boolean> },
+    @SessionUser() user: User,
+    @Param("id") citizenId: string,
   ): Promise<APITypes.DeleteCitizenByIdData> {
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
 
@@ -254,7 +266,7 @@ export class CitizenController {
     });
 
     if (!allowDeletion) {
-      throw new Forbidden("onlyAdminsCanDeleteCitizens");
+      throw new ForbiddenException("onlyAdminsCanDeleteCitizens");
     }
 
     const citizen = await prisma.citizen.findFirst({
@@ -265,7 +277,7 @@ export class CitizenController {
     });
 
     if (!citizen) {
-      throw new NotFound("notFound");
+      throw new NotFoundException("notFound");
     }
 
     await prisma.citizen.update({
@@ -278,10 +290,10 @@ export class CitizenController {
 
   @Post("/")
   async createCitizen(
-    @Context("cad")
+    @Cad()
     cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings },
-    @Context("user") user: User,
-    @BodyParams() body: unknown,
+    @SessionUser() user: User,
+    @Body() body: unknown,
   ): Promise<APITypes.PostCitizensData> {
     const data = validateSchema(
       CREATE_CITIZEN_SCHEMA.extend({
@@ -299,7 +311,7 @@ export class CitizenController {
       });
 
       if (count >= miscSettings.maxCitizensPerUser) {
-        throw new BadRequest("maxCitizensPerUserReached");
+        throw new BadRequestException("maxCitizensPerUserReached");
       }
     }
 
@@ -378,11 +390,11 @@ export class CitizenController {
 
   @Put("/:id")
   async updateCitizen(
-    @PathParams("id") citizenId: string,
-    @Context("user") user: User,
-    @Context("cad")
+    @Param("id") citizenId: string,
+    @Cad()
     cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings | null },
-    @BodyParams() body: unknown,
+    @SessionUser() user: User,
+    @Body() body: unknown,
   ): Promise<APITypes.PutCitizenByIdData> {
     const data = validateSchema(CREATE_CITIZEN_SCHEMA.partial(), body);
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
@@ -394,9 +406,9 @@ export class CitizenController {
     });
 
     if (checkCitizenUserId) {
-      canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
+      canManageInvariant(citizen?.userId, user, new NotFoundException("notFound"));
     } else if (!citizen) {
-      throw new NotFound("citizenNotFound");
+      throw new NotFoundException("citizenNotFound");
     }
 
     const date = data.dateOfBirth ? new Date(data.dateOfBirth).getTime() : undefined;
@@ -445,9 +457,9 @@ export class CitizenController {
 
   @Post("/:id")
   async uploadImageToCitizen(
-    @Context("user") user: User,
-    @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
-    @PathParams("id") citizenId: string,
+    @Cad() cad: cad & { features?: Record<Feature, boolean> },
+    @SessionUser() user: User,
+    @Param("id") citizenId: string,
     @MultipartFile("image") file?: PlatformMulterFile,
   ): Promise<APITypes.PostCitizenImageByIdData> {
     try {
@@ -465,9 +477,9 @@ export class CitizenController {
 
       const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
       if (checkCitizenUserId && !isCreateCitizenEnabled) {
-        canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
+        canManageInvariant(citizen?.userId, user, new NotFoundException("notFound"));
       } else if (!citizen) {
-        throw new NotFound("citizenNotFound");
+        throw new NotFoundException("citizenNotFound");
       }
 
       if (!file) {
@@ -503,7 +515,7 @@ export class CitizenController {
 
       return data;
     } catch {
-      throw new BadRequest("errorUploadingImage");
+      throw new BadRequestException("errorUploadingImage");
     }
   }
 }

@@ -1,8 +1,6 @@
 import process from "node:process";
 import { Feature, CadFeature, cad, Prisma } from "@prisma/client";
 import { API_TOKEN_HEADER } from "@snailycad/config";
-import { Context, Middleware, Req, MiddlewareMethods, Res } from "@tsed/common";
-import { Unauthorized } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 import { getCADVersion } from "@snailycad/utils/version";
 import { handleDiscordSync } from "./utils/utils";
@@ -11,35 +9,45 @@ import { setErrorMap } from "zod";
 import { getErrorMap } from "../../utils/zod-error-map";
 import { createFeaturesObject, overwriteFeatures } from "../is-enabled";
 import { getUserFromSession, setGlobalUserFromCADAPIToken } from "./utils/get-user";
-import { CadFeatureOptions } from "@snailycad/types";
+import { CadFeatureOptions, User } from "@snailycad/types";
+import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
+import { FastifyReply } from "fastify";
 
-@Middleware()
-export class IsAuth implements MiddlewareMethods {
-  async use(@Req() req: Req, @Res() res: Res, @Context() ctx: Context) {
-    const globalCADApiToken = req.headers[API_TOKEN_HEADER];
+@Injectable()
+export class AuthGuard implements CanActivate {
+  async canActivate(context: ExecutionContext) {
+    const http = context.switchToHttp();
+    // todo: custom FastifyRequest type
+    const request = http.getRequest();
+    const response = http.getResponse<FastifyReply>();
+
+    const globalCADApiToken = request.headers[API_TOKEN_HEADER];
 
     let user;
     if (globalCADApiToken) {
       const fakeUser = await setGlobalUserFromCADAPIToken({
-        res,
-        req,
+        res: response,
+        req: request,
         apiTokenHeader: globalCADApiToken,
       });
 
-      ctx.set("user", fakeUser);
+      user = fakeUser;
+
+      request["user"] = fakeUser;
     } else {
-      user = await getUserFromSession({ res, req });
-      ctx.set("user", user);
-      ctx.set("sessionUserId", user.id);
+      user = await getUserFromSession({ res: response, req: request });
+
+      request["user"] = user;
+      request["sessionUserId"] = user.id;
     }
 
     if (!globalCADApiToken && !user) {
-      throw new Unauthorized("Unauthorized");
+      return false;
     }
 
     const hasManageCadSettingsPermissions = hasPermission({
       permissionsToCheck: [Permissions.ManageCADSettings],
-      userToCheck: user ?? null,
+      userToCheck: user as User,
     });
 
     let cad = await prisma.cad.findFirst({
@@ -61,17 +69,19 @@ export class IsAuth implements MiddlewareMethods {
         });
       }
 
-      ctx.set("cad", { ...setCADFeatures(cad), version: await getCADVersion() });
+      request["cad"] = { ...setCADFeatures(cad), version: await getCADVersion() };
     }
 
     // localized error messages
-    const localeHeader = req.headers.sn_locale as string | undefined;
-    const errorMap = await getErrorMap(user?.locale || localeHeader || "en");
+    const localeHeader = request.headers.sn_locale as string | undefined;
+    const errorMap = await getErrorMap((user as User).locale || localeHeader || "en");
     setErrorMap(errorMap);
 
     if (user) {
-      await handleDiscordSync({ user, cad });
+      await handleDiscordSync({ user: user as User, cad });
     }
+
+    return true;
   }
 }
 

@@ -1,8 +1,8 @@
-import type { Res } from "@tsed/common";
+import { FastifyReply } from "fastify";
 import { setCookie } from "utils/set-cookie";
 
 interface Options {
-  res: Res;
+  res: FastifyReply;
   locale: string | null;
   isDarkTheme: boolean;
 }

@@ -1,14 +1,15 @@
 import { WhitelistStatus } from "@prisma/client";
 import { allPermissions } from "@snailycad/permissions";
-import type { Req, Res } from "@tsed/common";
+import type { Req } from "@tsed/common";
 import { BadRequest, Unauthorized } from "@tsed/exceptions";
 import { getSessionUser } from "lib/auth/getSessionUser";
 import { prisma } from "lib/data/prisma";
 import { isRouteDisabled } from "./utils";
+import { FastifyReply } from "fastify";
 
 interface SetGlobalUserFromCADAPITokenOptions {
   req: Req;
-  res: Res;
+  res: FastifyReply;
   apiTokenHeader: string | string[];
 }
 

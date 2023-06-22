@@ -1,11 +1,11 @@
 import { Cookie } from "@snailycad/config";
 import type { User } from "@prisma/client";
-import type { Res } from "@tsed/common";
 import { createId } from "@paralleldrive/cuid2";
 import { prisma } from "lib/data/prisma";
 import { signJWT } from "utils/jwt";
 import { setCookie } from "utils/set-cookie";
 import { postLoginFlowHandler } from "./post-auth";
+import { FastifyReply } from "fastify";
 
 // expire after 1 hour
 export const ACCESS_TOKEN_EXPIRES_MS = 60 * 60 * 1000;
@@ -17,7 +17,7 @@ export const REFRESH_TOKEN_EXPIRES_S = REFRESH_TOKEN_EXPIRES_MS / 1000;
 
 interface SetUserPreferencesCookiesOptions {
   user: User;
-  res: Res;
+  res: FastifyReply;
 }
 
 export async function setUserTokenCookies(options: SetUserPreferencesCookiesOptions) {

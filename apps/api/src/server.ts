@@ -9,15 +9,10 @@ import {
   Inject,
   PlatformApplication,
   PlatformContext,
-  Request,
-  Response,
   ResponseErrorObject,
 } from "@tsed/common";
 import { Catch, ExceptionFilterMethods } from "@tsed/platform-exceptions";
 import type { Exception } from "@tsed/exceptions";
-import { json } from "express";
-import compress from "compression";
-import cookieParser from "cookie-parser";
 import cors from "cors";
 import { checkForUpdates } from "utils/check-for-updates";
 import { getCADVersion } from "@snailycad/utils/version";
@@ -59,31 +54,11 @@ if (process.env.NODE_ENV === "development") {
     ],
   },
   middlewares: [
-    cookieParser(),
-    compress(),
-    json({ limit: "500kb" }),
-    cors({ origin: allowedCorsOrigins, credentials: true }),
     Sentry.Handlers.requestHandler({
       request: true,
       serverName: true,
     }),
     Sentry.Handlers.tracingHandler(),
-  ],
-  swagger: [
-    {
-      path: "/api-docs",
-      specVersion: "3.0.3",
-      spec: {
-        info: {
-          title: "SnailyCAD API Documentation",
-          version: "0.0.0",
-          contact: {
-            name: "SnailyCAD Community Discord",
-            url: "https://discord.gg/eGnrPqEH7U",
-          },
-        },
-      },
-    },
   ],
   socketIO: {
     maxHttpBufferSize: 1e8, // 100 mb
@@ -102,11 +77,6 @@ export class Server {
   settings!: Configuration;
 
   private versions!: Awaited<ReturnType<typeof getCADVersion>>;
-
-  public $beforeRoutesInit() {
-    this.app.get("/", this.versionHandler());
-    this.app.get("/v1", this.versionHandler());
-  }
 
   public async $afterInit() {
     await checkForUpdates();
@@ -155,20 +125,6 @@ export class Server {
         "Content-Type": "application/json",
       },
     });
-  }
-
-  protected versionHandler() {
-    return async (_: Request, res: Response) => {
-      const versions = await getCADVersion();
-      this.versions = versions;
-
-      res.setHeader("content-type", "text/html");
-      return res
-        .status(200)
-        .send(
-          `<html><head><title>SnailyCAD API</title></head><body>200 Success. Current CAD Version: ${versions?.currentVersion} - ${versions?.currentCommitHash}</body></html>`,
-        );
-    };
   }
 }
 

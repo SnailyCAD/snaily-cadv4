@@ -1,9 +1,6 @@
 import "reflect-metadata";
-
-import { Server } from "./server";
+import { NestFactory } from "@nestjs/core";
 import { $log } from "@tsed/logger";
-import { PlatformExpress } from "@tsed/platform-express";
-import { importProviders } from "@tsed/components-scan";
 
 import { getCADVersion } from "@snailycad/utils/version";
 import * as Sentry from "@sentry/node";
@@ -11,7 +8,13 @@ import { ProfilingIntegration } from "@sentry/profiling-node";
 
 import { prisma } from "lib/data/prisma";
 import { registerDiscordRolesMetadata } from "lib/discord/register-metadata";
-import { canSecureCookiesBeEnabled } from "utils/validate-environment-variables";
+import { canSecureCookiesBeEnabled, parseCORSOrigin } from "utils/validate-environment-variables";
+import { AppModule } from "./app";
+import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
+import fastifyCookie from "@fastify/cookie";
+import helmet from "@fastify/helmet";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import compression from "@fastify/compress";
 
 Sentry.init({
   dsn: "https://308dd96b826c4e38a814fc9bae681687@o518232.ingest.sentry.io/6553288",
@@ -27,23 +30,50 @@ Sentry.init({
   denyUrls: [/localhost/],
 });
 
-const rootDir = __dirname;
+const parsedCORSOrigin = parseCORSOrigin(process.env.CORS_ORIGIN_URL ?? "http://localhost:3000");
+const allowedCorsOrigins = [parsedCORSOrigin];
+
+if (process.env.NODE_ENV === "development") {
+  allowedCorsOrigins.push("http://localhost:6006");
+}
 
 async function bootstrap() {
   try {
     registerDiscordRolesMetadata();
 
-    const scannedProviders = await importProviders({
-      mount: {
-        "/v1": [`${rootDir}/controllers/**/*.ts`],
-      },
+    const app = await NestFactory.create<NestFastifyApplication>(
+      AppModule,
+      new FastifyAdapter({
+        logger: true,
+      }),
+      { rawBody: true },
+    );
+
+    const FIVE_HUNDRED_KB = 500_000;
+    app.useBodyParser("json", { bodyLimit: FIVE_HUNDRED_KB });
+    app.register(fastifyCookie, {});
+    app.register(helmet, { contentSecurityPolicy: false });
+    app.register(compression);
+    app.enableCors({
+      origin: allowedCorsOrigins,
+      credentials: true,
     });
 
-    const platform = await PlatformExpress.bootstrap(Server, {
-      ...scannedProviders,
-    });
+    const options = new DocumentBuilder()
+      .setTitle("SnailyCAD API")
+      .setVersion("3.0")
+      .setContact(
+        "SnailyCAD Community Discord",
+        "https://discord.gg/eGnrPqEH7U",
+        "hello@snailycad.org",
+      )
+      .build();
+    const document = SwaggerModule.createDocument(app, options);
 
-    await platform.listen();
+    SwaggerModule.setup("/api-docs", app, document);
+
+    await app.listen(8080, "0.0.0.0");
+
     const versions = await getCADVersion();
     const versionStr = versions
       ? `with version ${versions.currentVersion} - ${versions.currentCommitHash}`
@@ -52,10 +82,6 @@ async function bootstrap() {
     Sentry.setTags({
       "snailycad.version": versions?.currentVersion,
       "snailycad.commitHash": versions?.currentCommitHash,
-    });
-
-    process.on("SIGINT", () => {
-      platform.stop();
     });
 
     const nodeVersion = process.versions.node;

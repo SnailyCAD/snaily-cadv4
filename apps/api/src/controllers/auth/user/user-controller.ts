@@ -1,10 +1,6 @@
-import { Context, Res, BodyParams } from "@tsed/common";
-import { Controller } from "@tsed/di";
-import { UseBefore } from "@tsed/platform-middlewares";
-import { ContentType, Delete, Description, Patch, Post } from "@tsed/schema";
 import { Cookie } from "@snailycad/config";
 import { prisma } from "lib/data/prisma";
-import { IsAuth } from "middlewares/auth/is-auth";
+import { AuthGuard } from "middlewares/auth/is-auth";
 import { setCookie } from "utils/set-cookie";
 import { cad, Rank, ShouldDoType, StatusViewMode, TableActionsAlignment } from "@prisma/client";
 import { NotFound } from "@tsed/exceptions";
@@ -18,33 +14,28 @@ import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
 import { setUserPreferencesCookies } from "lib/auth/setUserPreferencesCookies";
 import type * as APITypes from "@snailycad/types/api";
 import type { User } from "@snailycad/types";
+import { Body, Controller, Delete, Patch, Post, Res, UseGuards } from "@nestjs/common";
+import { SessionUser, SessionUserId } from "~/decorators/user";
+import { Cad } from "~/decorators/cad";
+import { FastifyReply } from "fastify";
+import { Description } from "~/decorators/description";
 
 @Controller("/user")
-@UseBefore(IsAuth)
-@ContentType("application/json")
+@UseGuards(AuthGuard)
 export class UserController {
-  private socket: Socket;
-  constructor(socket: Socket) {
-    this.socket = socket;
-  }
-
   @Post("/")
   @Description("Get the authenticated user's information")
-  async getAuthUser(
-    @Context("cad") cad: cad,
-    @Context("user") user: User,
-  ): Promise<APITypes.GetUserData> {
+  async getAuthUser(@SessionUser() user: User, @Cad() cad: cad): Promise<APITypes.GetUserData> {
     const cadWithoutDiscordRoles = { ...cad, discordRoles: undefined };
-
     return { ...user, cad: cadWithoutDiscordRoles };
   }
 
   @Patch("/")
   @Description("Update the authenticated user's settings")
   async patchAuthUser(
-    @Res() res: Res,
-    @BodyParams() body: any,
-    @Context("user") user: User,
+    @Res({ passthrough: true }) res: FastifyReply,
+    @Body() body: unknown,
+    @SessionUser() user: User,
   ): Promise<APITypes.PatchUserData> {
     const data = validateSchema(CHANGE_USER_SCHEMA, body);
 
@@ -105,7 +96,7 @@ export class UserController {
 
   @Delete("/")
   @Description("Delete the authenticated user's account")
-  async deleteAuthUser(@Context("user") user: User) {
+  async deleteAuthUser(@SessionUser() user: User) {
     if (user.rank === Rank.OWNER) {
       throw new ExtendedBadRequest({ rank: "cannotDeleteOwner" });
     }
@@ -119,10 +110,10 @@ export class UserController {
 
   @Post("/logout")
   @Description("Logout the authenticated user")
-  async logoutUser(@Res() res: Res, @Context() ctx: Context): Promise<APITypes.PostUserLogoutData> {
-    const userId = ctx.get("user").id;
-    ctx.delete("user");
-
+  async logoutUser(
+    @Res() res: FastifyReply,
+    @SessionUserId() userId: string,
+  ): Promise<APITypes.PostUserLogoutData> {
     setCookie({
       res,
       name: Cookie.AccessToken,
@@ -208,8 +199,8 @@ export class UserController {
   @Post("/password")
   @Description("Update the authenticated user's password")
   async updatePassword(
-    @Context("user") user: User,
-    @BodyParams() body: unknown,
+    @SessionUser() user: User,
+    @Body() body: unknown,
   ): Promise<APITypes.PostUserPasswordData> {
     const data = validateSchema(CHANGE_PASSWORD_SCHEMA, body);
 
