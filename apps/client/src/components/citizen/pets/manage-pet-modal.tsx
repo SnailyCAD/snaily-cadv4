@@ -1,4 +1,5 @@
 import { PET_SCHEMA } from "@snailycad/schemas";
+import { Pet } from "@snailycad/types";
 import { PostPetsData } from "@snailycad/types/api";
 import { Button, DatePickerField, Loader, TextField, FormRow } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
@@ -12,11 +13,12 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 
-interface CreatePetModalProps {
+interface ManagePetModalProps {
+  pet: Pet | null;
   onCreate?(data: PostPetsData): void;
 }
 
-export function CreatePetModal(props: CreatePetModalProps) {
+export function ManagePetModal(props: ManagePetModalProps) {
   const { isOpen, closeModal } = useModal();
   const t = useTranslations("Pets");
   const { execute, state } = useFetch();
@@ -24,13 +26,13 @@ export function CreatePetModal(props: CreatePetModalProps) {
   const router = useRouter();
 
   const INITIAL_VALUES = {
-    name: "",
-    breed: "",
-    color: "",
-    dateOfBirth: undefined,
-    weight: "",
-    citizenSearch: "",
-    citizenId: "",
+    name: props.pet?.name ?? "",
+    breed: props.pet?.breed ?? "",
+    color: props.pet?.color ?? "",
+    dateOfBirth: props.pet?.dateOfBirth ? new Date(props.pet.dateOfBirth) : undefined,
+    weight: props.pet?.weight ?? "",
+    citizenSearch: props.pet ? `${props.pet.citizen.name} ${props.pet.citizen.surname}` : "",
+    citizenId: props.pet?.citizenId ?? null,
   };
 
   const weightPrefix = cad?.miscCadSettings?.weightPrefix
@@ -38,7 +40,7 @@ export function CreatePetModal(props: CreatePetModalProps) {
     : "";
 
   function handleClose() {
-    closeModal(ModalIds.CreatePet);
+    closeModal(ModalIds.ManagePet);
   }
 
   const validate = handleValidate(PET_SCHEMA);
@@ -52,6 +54,7 @@ export function CreatePetModal(props: CreatePetModalProps) {
     if (json.id) {
       router.push(`/pets/${json.id}`);
       props.onCreate?.(json);
+      closeModal(ModalIds.ManagePet);
     }
   }
 
@@ -60,7 +63,7 @@ export function CreatePetModal(props: CreatePetModalProps) {
       className="w-[600px]"
       onClose={handleClose}
       title={t("createPet")}
-      isOpen={isOpen(ModalIds.CreatePet)}
+      isOpen={isOpen(ModalIds.ManagePet)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ values, errors, setFieldValue }) => (

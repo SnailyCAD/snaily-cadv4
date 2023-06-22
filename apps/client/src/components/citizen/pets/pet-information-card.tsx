@@ -1,13 +1,44 @@
-import { FullDate, Infofield } from "@snailycad/ui";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  FullDate,
+  Infofield,
+} from "@snailycad/ui";
+import { AlertModal } from "components/modal/AlertModal";
 import { useAuth } from "context/AuthContext";
+import useFetch from "lib/useFetch";
 import { calculateAge } from "lib/utils";
+import { useRouter } from "next/router";
+import { ThreeDots } from "react-bootstrap-icons";
 import { usePetsState } from "state/citizen/pets-state";
+import { useModal } from "state/modalState";
+import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 
 export function PetInformationCard() {
   const t = useTranslations("Pets");
   const { cad } = useAuth();
   const { currentPet } = usePetsState();
+  const { openModal, closeModal } = useModal();
+  const { state, execute } = useFetch();
+  const router = useRouter();
+
+  async function handleDeletePet() {
+    if (!currentPet) return;
+
+    const { json } = await execute<boolean>({
+      path: `/pets/${currentPet.id}`,
+      method: "DELETE",
+    });
+
+    if (json) {
+      router.push("/pets");
+      closeModal(ModalIds.AlertDeletePet);
+    }
+  }
 
   if (!currentPet) {
     return null;
@@ -39,6 +70,37 @@ export function PetInformationCard() {
           </Infofield>
         </div>
       </section>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button size="xs" className="flex items-center justify-center w-9 h-9">
+            <ThreeDots
+              aria-label="Options"
+              width={17}
+              height={17}
+              className="text-neutral-800 dark:text-gray-300"
+            />
+          </Button>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent alignOffset={0} align="end">
+          <DropdownMenuItem onClick={() => openModal(ModalIds.ManagePet)} variant="danger">
+            {t("editPet")}
+          </DropdownMenuItem>
+
+          <DropdownMenuItem onClick={() => openModal(ModalIds.AlertDeletePet)} variant="danger">
+            {t("deletePet")}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <AlertModal
+        title={t("deletePet")}
+        description={t("alert_deletePet")}
+        id={ModalIds.AlertDeletePet}
+        state={state}
+        onDeleteClick={handleDeletePet}
+      />
     </div>
   );
 }

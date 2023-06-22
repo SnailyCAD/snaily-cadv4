@@ -12,6 +12,7 @@ import { usePetsState } from "state/citizen/pets-state";
 import { useTranslations } from "use-intl";
 import { PetMedicalRecordsCard } from "components/citizen/pets/medical-records/pet-medical-records-card";
 import { PetNotesCard } from "components/citizen/pets/notes/pet-notes-card";
+import { ManagePetModal } from "components/citizen/pets/manage-pet-modal";
 
 interface PetByIdPageProps {
   pet: GetPetByIdData;
@@ -45,6 +46,8 @@ export default function PetByIdPage(props: PetByIdPageProps) {
       <PetInformationCard />
       <PetMedicalRecordsCard />
       <PetNotesCard />
+
+      <ManagePetModal pet={props.pet} />
     </Layout>
   );
 }

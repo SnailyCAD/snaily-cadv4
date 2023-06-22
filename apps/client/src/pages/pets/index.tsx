@@ -1,7 +1,7 @@
 import { GetUserPetsData } from "@snailycad/types/api";
 import { Button, buttonVariants } from "@snailycad/ui";
 import { Layout } from "components/Layout";
-import { CreatePetModal } from "components/citizen/pets/create-pet-modal";
+import { ManagePetModal } from "components/citizen/pets/manage-pet-modal";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { getSessionUser } from "lib/auth";
@@ -38,7 +38,7 @@ export default function PetsPage(props: PetsPageProps) {
       <header className="flex items-center justify-between mb-5">
         <Title>{t("Pets.pets")}</Title>
 
-        <Button onPress={() => openModal(ModalIds.CreatePet)}>{t("Pets.createPet")}</Button>
+        <Button onPress={() => openModal(ModalIds.ManagePet)}>{t("Pets.createPet")}</Button>
       </header>
 
       {props.pets.totalCount <= 0 ? (
@@ -66,7 +66,7 @@ export default function PetsPage(props: PetsPageProps) {
         />
       )}
 
-      <CreatePetModal onCreate={(pet) => asyncTable.append(pet)} />
+      <ManagePetModal pet={null} onCreate={(pet) => asyncTable.append(pet)} />
     </Layout>
   );
 }

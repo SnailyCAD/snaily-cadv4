@@ -10,7 +10,7 @@ export const enum ModalIds {
   ManageOccupation = "ManageOccupationModal",
   CitizenImage = "CitizenImageModal",
   TransferVehicle = "TransferVehicleModal",
-  CreatePet = "CreatePetModal",
+  ManagePet = "ManagePetModal",
   ManagePetMedicalRecord = "ManagePetMedicalRecordModal",
   Followers = "FollowersModal",
   Following = "FollowingModal",
@@ -154,4 +154,5 @@ export const enum ModalIds {
   AlertCancelExpungementRequest = "AlertCancelExpungementRequestModal",
   AlertDeleteBusinessRole = "AlertDeleteBusinessRoleModal",
   AlertDeclareCitizenAlive = "AlertDeclareCitizenAliveModal",
+  AlertDeletePet = "AlertDeletePetModal",
 }
