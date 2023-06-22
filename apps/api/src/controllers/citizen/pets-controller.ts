@@ -106,6 +106,23 @@ export class PetsController {
     return petMedicalRecord;
   }
 
+  @Delete("/:petId")
+  @Description("Delete a pet for a citizen")
+  async deletePet(@PathParams("petId") id: string, @Context("user") user: User) {
+    const pet = await prisma.pet.findUnique({
+      where: { id },
+      include: { citizen: { select: { userId: true } } },
+    });
+
+    if (!pet || pet.citizen.userId !== user.id) {
+      throw new NotFound("notFound");
+    }
+
+    await prisma.pet.delete({ where: { id: pet.id } });
+
+    return true;
+  }
+
   @Post("/:petId/medical-records")
   @Description("Create a medical record for a pet")
   async createMedicalRecord(
