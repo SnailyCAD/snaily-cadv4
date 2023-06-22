@@ -1,16 +1,5 @@
-import {
-  Controller,
-  BodyParams,
-  Context,
-  UseBefore,
-  PathParams,
-  UseBeforeEach,
-} from "@tsed/common";
-import { Description, Delete, Get, Post, Put, ContentType } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
 import { TOW_SCHEMA, UPDATE_TOW_SCHEMA } from "@snailycad/schemas";
-import { NotFound } from "@tsed/exceptions";
-import { IsAuth } from "middlewares/auth/is-auth";
 import { Socket } from "services/socket-service";
 import { validateSchema } from "lib/data/validate-schema";
 import { Feature, User } from "@prisma/client";
@@ -19,10 +8,23 @@ import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { towIncludes } from "./tow-controller";
 import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from "@nestjs/common";
+import { AuthGuard } from "~/middlewares/auth/is-auth";
+import { Description } from "~/decorators/description";
+import { SessionUser } from "~/decorators/user";
 
 @Controller("/taxi")
-@UseBeforeEach(IsAuth)
-@ContentType("application/json")
+@UseGuards(AuthGuard)
 @IsFeatureEnabled({ feature: Feature.TAXI })
 export class TaxiController {
   private socket: Socket;
@@ -43,12 +45,11 @@ export class TaxiController {
     return calls;
   }
 
-  @UseBefore(IsAuth)
   @Post("/")
   @Description("Create a new taxi call")
   async createTaxiCall(
-    @BodyParams() body: unknown,
-    @Context("user") user: User,
+    @Body() body: unknown,
+    @SessionUser() user: User,
   ): Promise<APITypes.PostTaxiCallsData> {
     const data = validateSchema(TOW_SCHEMA, body);
 
@@ -57,7 +58,7 @@ export class TaxiController {
         where: { id: data.creatorId },
       });
 
-      canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
+      canManageInvariant(citizen?.userId, user, new NotFoundException("notFound"));
     }
 
     const call = await prisma.taxiCall.create({
@@ -77,15 +78,14 @@ export class TaxiController {
     return call;
   }
 
-  @UseBefore(IsAuth)
   @Put("/:id")
   @Description("Update a taxi call by its id")
   @UsePermissions({
     permissions: [Permissions.ManageTaxiCalls],
   })
   async updateTaxiCall(
-    @PathParams("id") callId: string,
-    @BodyParams() body: unknown,
+    @Param("id") callId: string,
+    @Body() body: unknown,
   ): Promise<APITypes.PutTaxiCallsData> {
     const data = validateSchema(UPDATE_TOW_SCHEMA, body);
 
@@ -94,7 +94,7 @@ export class TaxiController {
     });
 
     if (!call) {
-      throw new NotFound("notFound");
+      throw new NotFoundException("notFound");
     }
 
     const rawAssignedUnitId = data.assignedUnitId;
@@ -125,19 +125,18 @@ export class TaxiController {
     return updated;
   }
 
-  @UseBefore(IsAuth)
   @Delete("/:id")
   @Description("Delete a taxi call by its id")
   @UsePermissions({
     permissions: [Permissions.ManageTaxiCalls],
   })
-  async endTaxiCall(@PathParams("id") callId: string): Promise<APITypes.DeleteTaxiCallsData> {
+  async endTaxiCall(@Param("id") callId: string): Promise<APITypes.DeleteTaxiCallsData> {
     const call = await prisma.taxiCall.findUnique({
       where: { id: callId },
     });
 
     if (!call) {
-      throw new NotFound("notFound");
+      throw new NotFoundException("notFound");
     }
 
     await prisma.taxiCall.delete({

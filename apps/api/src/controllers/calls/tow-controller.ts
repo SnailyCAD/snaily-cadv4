@@ -1,17 +1,6 @@
-import {
-  Controller,
-  QueryParams,
-  BodyParams,
-  UseBefore,
-  PathParams,
-  Context,
-  UseBeforeEach,
-} from "@tsed/common";
-import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
 import { TOW_SCHEMA, UPDATE_TOW_SCHEMA } from "@snailycad/schemas";
-import { NotFound } from "@tsed/exceptions";
-import { IsAuth } from "middlewares/auth/is-auth";
+import { AuthGuard } from "middlewares/auth/is-auth";
 import { Socket } from "services/socket-service";
 import { validateSchema } from "lib/data/validate-schema";
 import {
@@ -32,6 +21,21 @@ import { shouldCheckCitizenUserId } from "lib/citizen/has-citizen-access";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { getTranslator } from "utils/get-translator";
 import { callInclude } from "~/utils/leo/includes";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from "@nestjs/common";
+import { Description } from "~/decorators/description";
+import { SessionUser } from "~/decorators/user";
+import { Cad } from "~/decorators/cad";
 
 const CITIZEN_SELECTS = {
   name: true,
@@ -45,8 +49,7 @@ export const towIncludes = {
 };
 
 @Controller("/tow")
-@UseBeforeEach(IsAuth)
-@ContentType("application/json")
+@UseGuards(AuthGuard)
 @IsFeatureEnabled({ feature: Feature.TAXI })
 export class TowController {
   private socket: Socket;
@@ -59,11 +62,9 @@ export class TowController {
   @UsePermissions({
     permissions: [Permissions.ManageTowCalls, Permissions.ViewTowCalls, Permissions.ViewTowLogs],
   })
-  async getTowCalls(
-    @QueryParams("ended", Boolean) includingEnded = false,
-  ): Promise<APITypes.GetTowCallsData> {
+  async getTowCalls(@Query("ended") includingEnded = "false"): Promise<APITypes.GetTowCallsData> {
     const calls = await prisma.towCall.findMany({
-      where: includingEnded ? undefined : { ended: false },
+      where: includingEnded === "true" ? undefined : { ended: false },
       include: towIncludes,
       orderBy: { createdAt: "desc" },
     });
@@ -71,13 +72,12 @@ export class TowController {
     return calls;
   }
 
-  @UseBefore(IsAuth)
   @Post("/")
   @Description("Create a new tow call")
   async createTowCall(
-    @BodyParams() body: unknown,
-    @Context("user") user: User,
-    @Context("cad") cad: { features?: Record<Feature, boolean> },
+    @Body() body: unknown,
+    @SessionUser() user: User,
+    @Cad() cad: { features?: Record<Feature, boolean> },
   ): Promise<APITypes.PostTowCallsData> {
     const data = validateSchema(TOW_SCHEMA, body);
 
@@ -101,7 +101,7 @@ export class TowController {
       const checkUserId = shouldCheckCitizenUserId({ cad, user });
 
       if (checkUserId) {
-        canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
+        canManageInvariant(citizen?.userId, user, new NotFoundException("notFound"));
       }
     }
 
@@ -113,7 +113,7 @@ export class TowController {
       });
 
       if (!vehicle) {
-        throw new NotFound("vehicleNotFound");
+        throw new NotFoundException("vehicleNotFound");
       }
 
       await prisma.impoundedVehicle.create({
@@ -198,15 +198,14 @@ export class TowController {
     return call;
   }
 
-  @UseBefore(IsAuth)
   @Put("/:id")
   @Description("Update a tow call by its id")
   @UsePermissions({
     permissions: [Permissions.ManageTowCalls],
   })
   async updateCall(
-    @PathParams("id") callId: string,
-    @BodyParams() body: unknown,
+    @Param("id") callId: string,
+    @Body() body: unknown,
   ): Promise<APITypes.PutTowCallsData> {
     const data = validateSchema(UPDATE_TOW_SCHEMA, body);
 
@@ -215,7 +214,7 @@ export class TowController {
     });
 
     if (!call) {
-      throw new NotFound("notFound");
+      throw new NotFoundException("notFound");
     }
 
     const rawAssignedUnitId = data.assignedUnitId;
@@ -244,19 +243,18 @@ export class TowController {
     return updated;
   }
 
-  @UseBefore(IsAuth)
   @Delete("/:id")
   @Description("Delete a tow call by its id")
   @UsePermissions({
     permissions: [Permissions.ManageTowCalls],
   })
-  async endTowCall(@PathParams("id") callId: string): Promise<APITypes.DeleteTowCallsData> {
+  async endTowCall(@Param("id") callId: string): Promise<APITypes.DeleteTowCallsData> {
     const call = await prisma.towCall.findUnique({
       where: { id: callId },
     });
 
     if (!call) {
-      throw new NotFound("notFound");
+      throw new NotFoundException("notFound");
     }
 
     const updated = await prisma.towCall.update({
