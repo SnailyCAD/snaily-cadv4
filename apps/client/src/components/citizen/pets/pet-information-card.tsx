@@ -8,7 +8,9 @@ import {
   Infofield,
 } from "@snailycad/ui";
 import { AlertModal } from "components/modal/AlertModal";
+import { ImageWrapper } from "components/shared/image-wrapper";
 import { useAuth } from "context/AuthContext";
+import { useImageUrl } from "hooks/useImageUrl";
 import useFetch from "lib/useFetch";
 import { calculateAge } from "lib/utils";
 import { useRouter } from "next/router";
@@ -25,6 +27,7 @@ export function PetInformationCard() {
   const { openModal, closeModal } = useModal();
   const { state, execute } = useFetch();
   const router = useRouter();
+  const { makeImageUrl } = useImageUrl();
 
   async function handleDeletePet() {
     if (!currentPet) return;
@@ -47,6 +50,19 @@ export function PetInformationCard() {
   return (
     <div className="flex items-start justify-between p-4 card">
       <section className="flex flex-col items-start sm:flex-row">
+        {currentPet.imageId ? (
+          <ImageWrapper
+            quality={80}
+            alt={currentPet.name}
+            className="rounded-md w-[150px] h-[150px] object-cover"
+            draggable={false}
+            src={makeImageUrl("pets", currentPet.imageId)!}
+            loading="lazy"
+            width={150}
+            height={150}
+          />
+        ) : null}
+
         <div className="flex flex-col mt-2 sm:ml-4 sm:mt-0">
           <Infofield label={t("name")}>{currentPet.name}</Infofield>
 

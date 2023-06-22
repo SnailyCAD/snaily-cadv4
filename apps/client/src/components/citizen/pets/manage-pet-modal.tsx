@@ -1,11 +1,13 @@
+import * as React from "react";
 import { PET_SCHEMA } from "@snailycad/schemas";
 import { Pet } from "@snailycad/types";
 import { PostPetsData } from "@snailycad/types/api";
 import { Button, DatePickerField, Loader, TextField, FormRow } from "@snailycad/ui";
+import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { Modal } from "components/modal/Modal";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import { useAuth } from "context/AuthContext";
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
@@ -25,6 +27,7 @@ export function ManagePetModal(props: ManagePetModalProps) {
   const { execute, state } = useFetch();
   const { cad } = useAuth();
   const router = useRouter();
+  const [image, setImage] = React.useState<File | string | null>(null);
 
   const INITIAL_VALUES = {
     name: props.pet?.name ?? "",
@@ -45,7 +48,19 @@ export function ManagePetModal(props: ManagePetModalProps) {
   }
 
   const validate = handleValidate(PET_SCHEMA);
-  async function onSubmit(data: typeof INITIAL_VALUES) {
+  async function onSubmit(
+    data: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
+    let fd;
+    const validatedImage = validateFile(image, helpers);
+    if (validatedImage) {
+      if (typeof validatedImage !== "string") {
+        fd = new FormData();
+        fd.set("image", validatedImage, validatedImage.name);
+      }
+    }
+
     if (props.pet) {
       const { json } = await execute<PostPetsData>({
         method: "PUT",
@@ -54,6 +69,14 @@ export function ManagePetModal(props: ManagePetModalProps) {
       });
 
       if (json.id) {
+        await execute({
+          path: `/pets/${json.id}/image`,
+          method: "POST",
+          data: fd,
+          helpers,
+          headers: { "content-type": "multipart/form-data" },
+        });
+
         router.push(`/pets/${json.id}`);
         closeModal(ModalIds.ManagePet);
       }
@@ -65,6 +88,14 @@ export function ManagePetModal(props: ManagePetModalProps) {
       });
 
       if (json.id) {
+        await execute({
+          path: `/pets/${json.id}/image`,
+          method: "POST",
+          data: fd,
+          helpers,
+          headers: { "content-type": "multipart/form-data" },
+        });
+
         router.push(`/pets/${json.id}`);
         props.onCreate?.(json);
         closeModal(ModalIds.ManagePet);
@@ -90,6 +121,8 @@ export function ManagePetModal(props: ManagePetModalProps) {
               label={t("name")}
               isDisabled={Boolean(props.pet)}
             />
+
+            <ImageSelectInput image={image} setImage={setImage} isOptional />
 
             <TextField
               onChange={(value) => setFieldValue("breed", value)}

@@ -1,6 +1,13 @@
 import { Feature, User } from "@prisma/client";
 import { PET_NOTE_SCHEMA, PET_MEDICAL_RECORD_SCHEMA, PET_SCHEMA } from "@snailycad/schemas";
-import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
+import {
+  UseBeforeEach,
+  Context,
+  BodyParams,
+  PathParams,
+  MultipartFile,
+  PlatformMulterFile,
+} from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
@@ -9,6 +16,11 @@ import { IsAuth } from "middlewares/auth/is-auth";
 import type * as APITypes from "@snailycad/types/api";
 import { validateSchema } from "lib/data/validate-schema";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
+import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
+import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
+import { getImageWebPPath } from "~/lib/images/get-image-webp-path";
+import fs from "node:fs/promises";
+import { validateImageURL } from "~/lib/images/validate-image-url";
 
 @Controller("/pets")
 @UseBeforeEach(IsAuth)
@@ -56,6 +68,7 @@ export class PetsController {
   @Description("Create a pet for a citizen")
   async createPet(@BodyParams() body: unknown): Promise<APITypes.PostPetsData> {
     const data = validateSchema(PET_SCHEMA, body);
+    const validatedImageURL = validateImageURL(data.image);
 
     const pet = await prisma.pet.create({
       data: {
@@ -65,6 +78,7 @@ export class PetsController {
         color: data.color,
         dateOfBirth: data.dateOfBirth,
         weight: data.weight,
+        imageId: validatedImageURL,
       },
       include: {
         citizen: true,
@@ -72,6 +86,53 @@ export class PetsController {
     });
 
     return pet;
+  }
+
+  @Post("/:petId/image")
+  @Description("Upload the image for a pet")
+  async uploadPetImage(
+    @PathParams("petId") id: string,
+    @Context("user") user: User,
+    @MultipartFile("image") file?: PlatformMulterFile,
+  ) {
+    const pet = await prisma.pet.findUnique({
+      where: { id },
+      include: { citizen: { select: { userId: true } } },
+    });
+
+    if (!pet || pet.citizen.userId !== user.id) {
+      throw new NotFound("notFound");
+    }
+
+    if (!file) {
+      throw new ExtendedBadRequest({ file: "No file provided." }, "invalidImageType");
+    }
+
+    if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
+      throw new ExtendedBadRequest({ image: "invalidImageType" }, "invalidImageType");
+    }
+
+    const image = await getImageWebPPath({
+      buffer: file.buffer,
+      pathType: "pets",
+      id: `${pet.id}-${file.originalname.split(".")[0]}`,
+    });
+
+    const previousImage = pet.imageId ? `${process.cwd()}/public/pets/${pet.imageId}` : undefined;
+    if (previousImage) {
+      await fs.rm(previousImage, { force: true });
+    }
+
+    const [data] = await Promise.all([
+      prisma.pet.update({
+        where: { id: pet.id },
+        data: { imageId: image.fileName },
+        select: { imageId: true },
+      }),
+      fs.writeFile(image.path, image.buffer),
+    ]);
+
+    return data;
   }
 
   @Put("/:petId")
@@ -91,6 +152,7 @@ export class PetsController {
       throw new NotFound("notFound");
     }
 
+    const validatedImageURL = validateImageURL(data.image);
     const petMedicalRecord = await prisma.pet.update({
       where: {
         id: pet.id,
@@ -100,6 +162,7 @@ export class PetsController {
         color: data.color,
         dateOfBirth: data.dateOfBirth,
         weight: data.weight,
+        imageId: validatedImageURL,
       },
     });
 

@@ -119,6 +119,7 @@ export const PET_SCHEMA = z.object({
   name: z.string().min(2).max(255),
   breed: z.string().min(2).max(255),
   color: z.string().min(2).max(255),
+  image: z.any().nullish(),
   dateOfBirth: z
     .date()
     .min(new Date(1900, 0, 1))
