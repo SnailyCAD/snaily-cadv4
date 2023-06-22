@@ -1,25 +1,35 @@
-import { User, Feature, cad, Prisma, WhitelistStatus } from "@prisma/client";
+import { User, Feature, Prisma, WhitelistStatus } from "@prisma/client";
 import { WEAPON_SCHEMA } from "@snailycad/schemas";
-import { UseBeforeEach, Context, BodyParams, PathParams, QueryParams } from "@tsed/common";
-import { Controller } from "@tsed/di";
-import { NotFound } from "@tsed/exceptions";
-import { Post, Delete, Put, Description, Get, ContentType } from "@tsed/schema";
 import { canManageInvariant } from "lib/auth/getSessionUser";
 import { isFeatureEnabled } from "lib/upsert-cad";
 import { shouldCheckCitizenUserId } from "lib/citizen/has-citizen-access";
 import { prisma } from "lib/data/prisma";
 import { validateSchema } from "lib/data/validate-schema";
-import { IsAuth } from "middlewares/auth/is-auth";
+import { AuthGuard } from "middlewares/auth/is-auth";
 import { generateString } from "utils/generate-string";
 import { citizenInclude } from "./CitizenController";
 import type * as APITypes from "@snailycad/types/api";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import type { Weapon } from "@snailycad/types";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from "@nestjs/common";
+import { SessionUser } from "~/decorators/user";
+import { Cad } from "~/decorators/cad";
+import { Description } from "~/decorators/description";
 
 @Controller("/weapons")
-@UseBeforeEach(IsAuth)
-@ContentType("application/json")
+@UseGuards(AuthGuard)
 @IsFeatureEnabled({ feature: Feature.WEAPON_REGISTRATION })
 export class WeaponController {
   private MAX_ITEMS_PER_TABLE_PAGE = 12;
@@ -27,11 +37,11 @@ export class WeaponController {
 
   @Get("/:citizenId")
   async getCitizenWeapons(
-    @PathParams("citizenId") citizenId: string,
-    @Context("user") user: User,
-    @Context("cad") cad: { features?: Record<Feature, boolean> },
-    @QueryParams("skip", Number) skip = 0,
-    @QueryParams("query", String) query?: string,
+    @Param("citizenId") citizenId: string,
+    @SessionUser() user: User,
+    @Cad() cad: { features?: Record<Feature, boolean> },
+    @Query("skip") skip = "0",
+    @Query("query") query?: string,
   ): Promise<APITypes.GetCitizenWeaponsData> {
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     const citizen = await prisma.citizen.findFirst({
@@ -39,7 +49,7 @@ export class WeaponController {
     });
 
     if (!citizen) {
-      throw new NotFound("citizenNotFound");
+      throw new NotFoundException("citizenNotFound");
     }
 
     const where: Prisma.WeaponWhereInput = {
@@ -60,7 +70,7 @@ export class WeaponController {
       prisma.weapon.findMany({
         where,
         take: this.MAX_ITEMS_PER_TABLE_PAGE,
-        skip,
+        skip: parseInt(skip),
         include: citizenInclude.weapons.include,
         orderBy: { createdAt: "desc" },
       }),
@@ -72,9 +82,9 @@ export class WeaponController {
   @Post("/")
   @Description("Register a new weapon")
   async registerWeapon(
-    @Context("user") user: User,
-    @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
-    @BodyParams() body: unknown,
+    @SessionUser() user: User,
+    @Cad() cad: { features?: Record<Feature, boolean> },
+    @Body() body: unknown,
   ): Promise<APITypes.PostCitizenWeaponData> {
     const data = validateSchema(WEAPON_SCHEMA, body);
 
@@ -86,9 +96,9 @@ export class WeaponController {
 
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     if (checkCitizenUserId) {
-      canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
+      canManageInvariant(citizen?.userId, user, new NotFoundException("notFound"));
     } else if (!citizen) {
-      throw new NotFound("NotFound");
+      throw new NotFoundException("NotFound");
     }
 
     const isCustomEnabled = isFeatureEnabled({
@@ -149,10 +159,10 @@ export class WeaponController {
   @Put("/:id")
   @Description("Update a registered weapon")
   async updateWeapon(
-    @Context("user") user: User,
-    @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
-    @PathParams("id") weaponId: string,
-    @BodyParams() body: unknown,
+    @SessionUser() user: User,
+    @Cad() cad: { features?: Record<Feature, boolean> },
+    @Param("id") weaponId: string,
+    @Body() body: unknown,
   ): Promise<APITypes.PutCitizenWeaponData> {
     const data = validateSchema(WEAPON_SCHEMA, body);
 
@@ -164,9 +174,9 @@ export class WeaponController {
 
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     if (checkCitizenUserId) {
-      canManageInvariant(weapon?.userId, user, new NotFound("notFound"));
+      canManageInvariant(weapon?.userId, user, new NotFoundException("notFound"));
     } else if (!weapon) {
-      throw new NotFound("NotFound");
+      throw new NotFoundException("NotFound");
     }
 
     const isCustomEnabled = isFeatureEnabled({
@@ -232,9 +242,9 @@ export class WeaponController {
   @Delete("/:id")
   @Description("Delete a registered weapon")
   async deleteWeapon(
-    @Context("user") user: User,
-    @Context("cad") cad: { features?: Record<Feature, boolean> },
-    @PathParams("id") weaponId: string,
+    @SessionUser() user: User,
+    @Cad() cad: { features?: Record<Feature, boolean> },
+    @Param("id") weaponId: string,
   ): Promise<APITypes.DeleteCitizenWeaponData> {
     const weapon = await prisma.weapon.findUnique({
       where: {
@@ -244,9 +254,9 @@ export class WeaponController {
 
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     if (checkCitizenUserId) {
-      canManageInvariant(weapon?.userId, user, new NotFound("notFound"));
+      canManageInvariant(weapon?.userId, user, new NotFoundException("notFound"));
     } else if (!weapon) {
-      throw new NotFound("NotFound");
+      throw new NotFoundException("NotFound");
     }
 
     await prisma.weapon.delete({

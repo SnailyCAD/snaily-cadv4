@@ -11,34 +11,45 @@ import {
   Value,
 } from "@prisma/client";
 import { VEHICLE_SCHEMA, DELETE_VEHICLE_SCHEMA, TRANSFER_VEHICLE_SCHEMA } from "@snailycad/schemas";
-import { UseBeforeEach, Context, BodyParams, PathParams, QueryParams } from "@tsed/common";
-import { Controller } from "@tsed/di";
-import { BadRequest, NotFound } from "@tsed/exceptions";
-import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { canManageInvariant } from "lib/auth/getSessionUser";
 import { isFeatureEnabled } from "lib/upsert-cad";
 import { shouldCheckCitizenUserId } from "lib/citizen/has-citizen-access";
 import { prisma } from "lib/data/prisma";
 import { validateSchema } from "lib/data/validate-schema";
-import { IsAuth } from "middlewares/auth/is-auth";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { generateString } from "utils/generate-string";
 import { citizenInclude } from "./CitizenController";
 import type * as APITypes from "@snailycad/types/api";
 import type { RegisteredVehicle } from "@snailycad/types";
 import { getLastOfArray, manyToManyHelper } from "lib/data/many-to-many";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from "@nestjs/common";
+import { AuthGuard } from "~/middlewares/auth/is-auth";
+import { SessionUser } from "~/decorators/user";
+import { Cad } from "~/decorators/cad";
+import { Description } from "~/decorators/description";
+import { Put } from "@tsed/schema";
 
 @Controller("/vehicles")
-@UseBeforeEach(IsAuth)
-@ContentType("application/json")
+@UseGuards(AuthGuard)
 export class VehiclesController {
   private VIN_NUMBER_LENGTH = 17;
 
   @Get("/search")
   async searchCitizenVehicles(
-    @Context("user") user: User,
-    @QueryParams("query", String) query: string,
-    @QueryParams("citizenId", String) citizenId?: string,
+    @SessionUser() user: User,
+    @Query("query") query: string,
+    @Query("citizenId") citizenId?: string,
   ) {
     const where: Prisma.RegisteredVehicleWhereInput = {
       ...{ userId: user.id },
@@ -68,11 +79,11 @@ export class VehiclesController {
 
   @Get("/:citizenId")
   async getCitizenVehicles(
-    @PathParams("citizenId") citizenId: string,
-    @Context("user") user: User,
-    @Context("cad") cad: { features: Record<Feature, boolean> },
-    @QueryParams("skip", Number) skip = 0,
-    @QueryParams("query", String) query?: string,
+    @Param("citizenId") citizenId: string,
+    @SessionUser() user: User,
+    @Cad() cad: { features: Record<Feature, boolean> },
+    @Query("skip") skip = "0",
+    @Query("query") query?: string,
   ): Promise<APITypes.GetCitizenVehiclesData> {
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     const citizen = await prisma.citizen.findFirst({
@@ -80,7 +91,7 @@ export class VehiclesController {
     });
 
     if (!citizen) {
-      throw new NotFound("citizenNotFound");
+      throw new NotFoundException("citizenNotFound");
     }
 
     const where: Prisma.RegisteredVehicleWhereInput = {
@@ -103,7 +114,7 @@ export class VehiclesController {
       prisma.registeredVehicle.findMany({
         where,
         take: 12,
-        skip,
+        skip: parseInt(skip),
         include: citizenInclude.vehicles.include,
         orderBy: { createdAt: "desc" },
       }),
@@ -115,10 +126,10 @@ export class VehiclesController {
   @Post("/")
   @Description("Register a new vehicle")
   async registerVehicle(
-    @Context("user") user: User,
-    @Context("cad")
+    @SessionUser() user: User,
+    @Cad()
     cad: cad & { miscCadSettings?: MiscCadSettings; features?: Record<Feature, boolean> },
-    @BodyParams() body: unknown,
+    @Body() body: unknown,
   ): Promise<APITypes.PostCitizenVehicleData> {
     const data = validateSchema(VEHICLE_SCHEMA, body);
 
@@ -130,9 +141,9 @@ export class VehiclesController {
 
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     if (checkCitizenUserId) {
-      canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
+      canManageInvariant(citizen?.userId, user, new NotFoundException("notFound"));
     } else if (!citizen) {
-      throw new NotFound("NotFound");
+      throw new NotFoundException("NotFound");
     }
 
     const existing = await prisma.registeredVehicle.findUnique({
@@ -256,7 +267,7 @@ export class VehiclesController {
 
       const isOwner = employee?.role?.as === "OWNER";
       if (!employee || !isOwner || !employee.canManageVehicles) {
-        throw new NotFound("employeeNotFoundOrInvalidPermissions");
+        throw new NotFoundException("employeeNotFoundOrInvalidPermissions");
       }
 
       await prisma.registeredVehicle.update({
@@ -274,10 +285,11 @@ export class VehiclesController {
   @Put("/:id")
   @Description("Update a registered vehicle")
   async updateVehicle(
-    @Context("user") user: User,
-    @Context("cad") cad: { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings },
-    @PathParams("id") vehicleId: string,
-    @BodyParams() body: unknown,
+    @SessionUser() user: User,
+    @Cad()
+    cad: cad & { miscCadSettings?: MiscCadSettings; features?: Record<Feature, boolean> },
+    @Param("id") vehicleId: string,
+    @Body() body: unknown,
   ): Promise<APITypes.PutCitizenVehicleData> {
     const data = validateSchema(VEHICLE_SCHEMA, body);
 
@@ -291,11 +303,11 @@ export class VehiclesController {
     });
 
     if (!vehicle) {
-      throw new NotFound("notFound");
+      throw new NotFoundException("notFound");
     }
 
     if (vehicle.impounded) {
-      throw new BadRequest("vehicleIsImpounded");
+      throw new BadRequestException("vehicleIsImpounded");
     }
 
     const existing = await prisma.registeredVehicle.findFirst({
@@ -308,7 +320,7 @@ export class VehiclesController {
       throw new ExtendedBadRequest({ plate: "plateAlreadyInUse" });
     }
 
-    const plateLength = cad.miscCadSettings.maxPlateLength || 8;
+    const plateLength = cad.miscCadSettings?.maxPlateLength || 8;
     if (data.plate.length > plateLength) {
       throw new ExtendedBadRequest({ plate: "plateToLong" });
     }
@@ -327,14 +339,14 @@ export class VehiclesController {
 
       const isOwner = employee?.role?.as === "OWNER";
       if (!employee || !isOwner || employee.canManageVehicles) {
-        throw new NotFound("employeeNotFoundOrInvalidPermissions");
+        throw new NotFoundException("employeeNotFoundOrInvalidPermissions");
       }
     } else {
       const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
       if (checkCitizenUserId) {
-        canManageInvariant(vehicle?.userId, user, new NotFound("notFound"));
+        canManageInvariant(vehicle?.userId, user, new NotFoundException("notFound"));
       } else if (!vehicle) {
-        throw new NotFound("NotFound");
+        throw new NotFoundException("NotFound");
       }
     }
 
@@ -439,8 +451,8 @@ export class VehiclesController {
   @Post("/transfer/:vehicleId")
   @Description("Transfer a vehicle to a new owner")
   async transferVehicle(
-    @BodyParams() body: unknown,
-    @PathParams("vehicleId") vehicleId: string,
+    @Body() body: unknown,
+    @Param("vehicleId") vehicleId: string,
   ): Promise<APITypes.PostCitizenTransferVehicleData> {
     const data = validateSchema(TRANSFER_VEHICLE_SCHEMA, body);
 
@@ -449,7 +461,7 @@ export class VehiclesController {
     });
 
     if (!vehicle) {
-      throw new NotFound("vehicleNotFound");
+      throw new NotFoundException("vehicleNotFound");
     }
 
     const newOwner = await prisma.citizen.findFirst({
@@ -459,7 +471,7 @@ export class VehiclesController {
     });
 
     if (!newOwner) {
-      throw new NotFound("newOwnerNotFound");
+      throw new NotFoundException("newOwnerNotFound");
     }
 
     const updatedVehicle = await prisma.registeredVehicle.update({
@@ -476,10 +488,11 @@ export class VehiclesController {
   @Delete("/:id")
   @Description("Delete a registered vehicle")
   async deleteVehicle(
-    @Context("user") user: User,
-    @Context("cad") cad: { features?: Record<Feature, boolean> },
-    @PathParams("id") vehicleId: string,
-    @BodyParams() body: unknown,
+    @SessionUser() user: User,
+    @Cad()
+    cad: cad & { miscCadSettings?: MiscCadSettings; features?: Record<Feature, boolean> },
+    @Param("id") vehicleId: string,
+    @Body() body: unknown,
   ): Promise<APITypes.DeleteCitizenVehicleData> {
     const data = validateSchema(DELETE_VEHICLE_SCHEMA, body);
 
@@ -490,11 +503,11 @@ export class VehiclesController {
     });
 
     if (!vehicle) {
-      throw new NotFound("notFound");
+      throw new NotFoundException("notFound");
     }
 
     if (vehicle.impounded) {
-      throw new BadRequest("vehicleIsImpounded");
+      throw new BadRequestException("vehicleIsImpounded");
     }
 
     if (data.businessId && data.employeeId) {
@@ -511,7 +524,7 @@ export class VehiclesController {
 
       const isOwner = employee?.role?.as === "OWNER";
       if (!employee || !isOwner || !employee.canManageVehicles) {
-        throw new NotFound("employeeNotFoundOrInvalidPermissions");
+        throw new NotFoundException("employeeNotFoundOrInvalidPermissions");
       }
     } else {
       if (vehicle.citizenId) {
@@ -523,9 +536,9 @@ export class VehiclesController {
         // therefore we should use `citizen`
         const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
         if (checkCitizenUserId) {
-          canManageInvariant(owner?.userId, user, new NotFound("notFound"));
+          canManageInvariant(owner?.userId, user, new NotFoundException("notFound"));
         } else if (!owner) {
-          throw new NotFound("NotFound");
+          throw new NotFoundException("NotFound");
         }
       }
     }

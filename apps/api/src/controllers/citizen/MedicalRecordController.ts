@@ -1,26 +1,34 @@
 import type { cad, Feature, User } from "@prisma/client";
 import { MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
-import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
-import { Controller } from "@tsed/di";
-import { NotFound } from "@tsed/exceptions";
-import { ContentType, Delete, Description, Post, Put } from "@tsed/schema";
 import { canManageInvariant } from "lib/auth/getSessionUser";
 import { shouldCheckCitizenUserId } from "lib/citizen/has-citizen-access";
 import { prisma } from "lib/data/prisma";
 import { validateSchema } from "lib/data/validate-schema";
-import { IsAuth } from "middlewares/auth/is-auth";
 import type * as APITypes from "@snailycad/types/api";
+import {
+  Body,
+  Controller,
+  Delete,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from "@nestjs/common";
+import { AuthGuard } from "~/middlewares/auth/is-auth";
+import { Description } from "~/decorators/description";
+import { SessionUser } from "~/decorators/user";
+import { Cad } from "~/decorators/cad";
 
 @Controller("/medical-records")
-@UseBeforeEach(IsAuth)
-@ContentType("application/json")
+@UseGuards(AuthGuard)
 export class MedicalRecordsController {
   @Post("/")
   @Description("Create a medical records for a citizen")
   async createMedicalRecord(
-    @Context("user") user: User,
-    @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
-    @BodyParams() body: unknown,
+    @SessionUser() user: User,
+    @Cad() cad: cad & { features?: Record<Feature, boolean> },
+    @Body() body: unknown,
   ): Promise<APITypes.PostCitizenMedicalRecordsData> {
     const data = validateSchema(MEDICAL_RECORD_SCHEMA, body);
 
@@ -32,9 +40,9 @@ export class MedicalRecordsController {
 
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     if (checkCitizenUserId) {
-      canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
+      canManageInvariant(citizen?.userId, user, new NotFoundException("notFound"));
     } else if (!citizen) {
-      throw new NotFound("citizenNotFound");
+      throw new NotFoundException("citizenNotFound");
     }
 
     const medicalRecord = await prisma.medicalRecord.create({
@@ -61,10 +69,10 @@ export class MedicalRecordsController {
   @Put("/:id")
   @Description("Update a medical record by its id")
   async updateMedicalRecord(
-    @Context("user") user: User,
-    @Context("cad") cad: { features?: Record<Feature, boolean> },
-    @PathParams("id") recordId: string,
-    @BodyParams() body: unknown,
+    @SessionUser() user: User,
+    @Cad() cad: cad & { features?: Record<Feature, boolean> },
+    @Param("id") recordId: string,
+    @Body() body: unknown,
   ): Promise<APITypes.PutCitizenMedicalRecordsData> {
     const data = validateSchema(MEDICAL_RECORD_SCHEMA, body);
 
@@ -76,9 +84,9 @@ export class MedicalRecordsController {
 
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     if (checkCitizenUserId) {
-      canManageInvariant(record?.userId, user, new NotFound("notFound"));
+      canManageInvariant(record?.userId, user, new NotFoundException("notFound"));
     } else if (!record) {
-      throw new NotFound("recordNotFound");
+      throw new NotFoundException("recordNotFound");
     }
 
     const updated = await prisma.medicalRecord.update({
@@ -106,9 +114,9 @@ export class MedicalRecordsController {
   @Delete("/:id")
   @Description("Delete a medical record by its id")
   async deleteMedicalRecord(
-    @Context("user") user: User,
-    @Context("cad") cad: { features: Record<Feature, boolean> },
-    @PathParams("id") recordId: string,
+    @SessionUser() user: User,
+    @Cad() cad: cad & { features?: Record<Feature, boolean> },
+    @Param("id") recordId: string,
   ): Promise<APITypes.DeleteCitizenMedicalRecordsData> {
     const medicalRecord = await prisma.medicalRecord.findUnique({
       where: {
@@ -118,9 +126,9 @@ export class MedicalRecordsController {
 
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     if (checkCitizenUserId) {
-      canManageInvariant(medicalRecord?.userId, user, new NotFound("notFound"));
+      canManageInvariant(medicalRecord?.userId, user, new NotFoundException("notFound"));
     } else if (!medicalRecord) {
-      throw new NotFound("medicalRecordNotFound");
+      throw new NotFoundException("medicalRecordNotFound");
     }
 
     await prisma.medicalRecord.delete({

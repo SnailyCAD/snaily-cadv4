@@ -1,32 +1,39 @@
 import { cad, Feature, User } from "@prisma/client";
 import { LICENSE_SCHEMA } from "@snailycad/schemas";
-import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
-import { Controller } from "@tsed/di";
-import { Forbidden, NotFound } from "@tsed/exceptions";
-import { ContentType, Description, Put } from "@tsed/schema";
 import { canManageInvariant } from "lib/auth/getSessionUser";
 import { prisma } from "lib/data/prisma";
 import { validateSchema } from "lib/data/validate-schema";
-import { IsAuth } from "middlewares/auth/is-auth";
 import { updateCitizenLicenseCategories } from "lib/citizen/licenses/update-citizen-license-categories";
 import { isFeatureEnabled } from "lib/upsert-cad";
 import { shouldCheckCitizenUserId } from "lib/citizen/has-citizen-access";
 import type * as APITypes from "@snailycad/types/api";
 import { citizenInclude } from "./CitizenController";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
+import {
+  Body,
+  Controller,
+  ForbiddenException,
+  NotFoundException,
+  Param,
+  Put,
+  UseGuards,
+} from "@nestjs/common";
+import { AuthGuard } from "~/middlewares/auth/is-auth";
+import { Description } from "~/decorators/description";
+import { SessionUser } from "~/decorators/user";
+import { Cad } from "~/decorators/cad";
 
 @Controller("/licenses")
-@UseBeforeEach(IsAuth)
-@ContentType("application/json")
+@UseGuards(AuthGuard)
 @IsFeatureEnabled({ feature: Feature.ALLOW_CITIZEN_UPDATE_LICENSE })
 export class LicensesController {
   @Put("/:id")
   @Description("Update the licenses of a citizen")
   async updateCitizenLicenses(
-    @PathParams("id") citizenId: string,
-    @Context("user") user: User,
-    @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
-    @BodyParams() body: unknown,
+    @Param("id") citizenId: string,
+    @SessionUser() user: User,
+    @Cad() cad: cad & { features?: Record<Feature, boolean> },
+    @Body() body: unknown,
   ): Promise<APITypes.PutCitizenLicensesByIdData> {
     const data = validateSchema(LICENSE_SCHEMA, body);
 
@@ -37,7 +44,7 @@ export class LicensesController {
     });
 
     if (isLicenseExamsEnabled) {
-      throw new Forbidden("citizenNotAllowedToEditLicenses");
+      throw new ForbiddenException("citizenNotAllowedToEditLicenses");
     }
 
     const citizen = await prisma.citizen.findUnique({
@@ -49,9 +56,9 @@ export class LicensesController {
 
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     if (checkCitizenUserId) {
-      canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
+      canManageInvariant(citizen?.userId, user, new NotFoundException("notFound"));
     } else if (!citizen) {
-      throw new NotFound("citizenNotFound");
+      throw new NotFoundException("citizenNotFound");
     }
 
     await updateCitizenLicenseCategories(citizen, data);
