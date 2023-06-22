@@ -1,4 +1,3 @@
-import type { Req } from "@tsed/common";
 import { Unauthorized } from "@tsed/exceptions";
 import { parse } from "cookie";
 import { Cookie, USER_API_TOKEN_HEADER } from "@snailycad/config";
@@ -13,7 +12,7 @@ import { getUserFromUserAPIToken } from "./getUserFromUserAPIToken";
 import { validateUserData } from "./validateUser";
 import { createFeaturesObject } from "middlewares/is-enabled";
 import { Prisma } from "@prisma/client";
-import { FastifyReply } from "fastify";
+import { FastifyReply, FastifyRequest } from "fastify";
 
 export enum GetSessionUserErrors {
   InvalidAPIToken = "invalid user API token",
@@ -55,7 +54,7 @@ export const userProperties = Prisma.validator<Prisma.UserSelect>()({
 
 interface GetSessionUserOptions<ReturnNullOnError extends boolean> {
   returnNullOnError?: ReturnNullOnError;
-  req: Req;
+  req: FastifyRequest;
   res: FastifyReply;
 }
 
@@ -105,7 +104,7 @@ export async function getSessionUser(
       where: { id: apiToken.id },
       data: {
         uses: { increment: 1 },
-        logs: { create: { method: options.req.method, route: options.req.originalUrl } },
+        logs: { create: { method: options.req.method, route: options.req.url } },
       },
     });
 

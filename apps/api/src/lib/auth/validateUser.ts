@@ -1,15 +1,19 @@
 import { Rank, WhitelistStatus, User } from "@snailycad/types";
 import type { GetUserData } from "@snailycad/types/api";
-import type { Req } from "@tsed/common";
 import { NotFound, Unauthorized } from "@tsed/exceptions";
 import { GetSessionUserErrors } from "./getSessionUser";
+import { FastifyRequest } from "fastify";
 
 export function validateUserData(
   user: User | null,
-  req: Req,
+  req: FastifyRequest,
   returnNullOnError?: false,
 ): asserts user is GetUserData;
-export function validateUserData(user: User | null, req: Req, returnNullOnError?: boolean) {
+export function validateUserData(
+  user: User | null,
+  req: FastifyRequest,
+  returnNullOnError?: boolean,
+) {
   if (!user) {
     if (returnNullOnError) return null;
     throw new Unauthorized(GetSessionUserErrors.NotFound);

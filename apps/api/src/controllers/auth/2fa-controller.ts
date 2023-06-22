@@ -1,28 +1,26 @@
 import type { User } from "@prisma/client";
 import process from "node:process";
 import { authenticator } from "otplib";
-import { BodyParams, Context, UseBeforeEach } from "@tsed/common";
-import { Controller } from "@tsed/di";
-import { BadRequest } from "@tsed/exceptions";
-import { ContentType, Delete, Description, Post } from "@tsed/schema";
 import { compareSync } from "bcrypt";
 import qrcode from "qrcode";
 import { prisma } from "lib/data/prisma";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
-import { IsAuth } from "middlewares/auth/is-auth";
+import { AuthGuard } from "middlewares/auth/is-auth";
 import { encryptValue } from "lib/auth/crypto";
 import { validateUser2FA } from "lib/auth/2fa";
 import type * as APITypes from "@snailycad/types/api";
+import { BadRequestException, Body, Controller, Delete, Post, UseGuards } from "@nestjs/common";
+import { Description } from "~/decorators/description";
+import { SessionUser } from "~/decorators/user";
 
 @Controller("/2fa")
-@UseBeforeEach(IsAuth)
-@ContentType("application/json")
+@UseGuards(AuthGuard)
 export class UserTwoFactorAuthenticationController {
   @Post("/verify")
   @Description("Verify a totpCode for the authenticated user's account")
   async verify2FA(
-    @Context("user") user: User,
-    @BodyParams("totpCode") totpCode: string,
+    @SessionUser() user: User,
+    @Body("totpCode") totpCode: string,
   ): Promise<APITypes.PostVerify2FAData> {
     await validateUser2FA({ userId: user.id, totpCode });
 
@@ -32,8 +30,8 @@ export class UserTwoFactorAuthenticationController {
   @Post("/enable")
   @Description("Enable two step authentication for the authenticated user")
   async enable2FA(
-    @Context("user") user: User,
-    @BodyParams("currentPassword") currentPassword: string,
+    @SessionUser() user: User,
+    @Body("currentPassword") currentPassword: string,
   ): Promise<APITypes.PostEnable2FAData> {
     const u = (await prisma.user.findUnique({
       where: { id: user.id },
@@ -46,7 +44,7 @@ export class UserTwoFactorAuthenticationController {
     });
 
     if (user2FA) {
-      throw new BadRequest("user2FAAlreadyEnabled");
+      throw new BadRequestException("user2FAAlreadyEnabled");
     }
 
     const isCurrentPasswordCorrect = currentPassword && compareSync(currentPassword, u.password);
@@ -58,7 +56,7 @@ export class UserTwoFactorAuthenticationController {
 
     const hashSecret = process.env.ENCRYPTION_TOKEN;
     if (!hashSecret) {
-      throw new BadRequest("2FA_NOT_ENABLED");
+      throw new BadRequestException("2FA_NOT_ENABLED");
     }
 
     await prisma.user2FA.create({
@@ -77,8 +75,8 @@ export class UserTwoFactorAuthenticationController {
   @Delete("/")
   @Description("Disable two step authentication for the authenticated user")
   async disable2FA(
-    @Context("user") user: User,
-    @BodyParams("currentPassword") currentPassword: string,
+    @SessionUser() user: User,
+    @Body("currentPassword") currentPassword: string,
   ): Promise<APITypes.DeleteDisable2FAData> {
     const u = (await prisma.user.findUnique({
       where: { id: user.id },
@@ -90,7 +88,7 @@ export class UserTwoFactorAuthenticationController {
     });
 
     if (!user2FA) {
-      throw new BadRequest("noUser2FA");
+      throw new BadRequestException("noUser2FA");
     }
 
     const isCurrentPasswordCorrect = compareSync(currentPassword, u.password);

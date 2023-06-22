@@ -1,7 +1,4 @@
 import process from "node:process";
-import { Context, Delete, Get, QueryParams, Req, Res, UseBefore } from "@tsed/common";
-import { BadRequest } from "@tsed/exceptions";
-import { Controller } from "@tsed/di";
 import { URL } from "node:url";
 import { request } from "undici";
 import type { RESTPostOAuth2AccessTokenResult, APIUser } from "discord-api-types/v10";
@@ -9,31 +6,43 @@ import { prisma } from "lib/data/prisma";
 import { getSessionUser } from "lib/auth/getSessionUser";
 import { cad, Feature, Rank, WhitelistStatus, type User } from "@prisma/client";
 import { getDefaultPermissionsForNewUser } from "./auth-controller";
-import { IsAuth } from "middlewares/auth/is-auth";
 import { DISCORD_API_URL } from "lib/discord/config";
 import { updateMemberRolesLogin } from "lib/discord/auth";
-import { ContentType, Description } from "@tsed/schema";
 import { isFeatureEnabled } from "lib/upsert-cad";
 import { setUserTokenCookies } from "lib/auth/setUserTokenCookies";
 import { getAPIUrl } from "@snailycad/utils/api-url";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { encode } from "lib/discord/utils";
+import {
+  BadRequestException,
+  Controller,
+  Delete,
+  Get,
+  Query,
+  Req,
+  Res,
+  UseGuards,
+} from "@nestjs/common";
+import { Description } from "~/decorators/description";
+import { FastifyReply, FastifyRequest } from "fastify";
+import { AuthGuard } from "~/middlewares/auth/is-auth";
+import { SessionUser } from "~/decorators/user";
+import { Cad } from "~/decorators/cad";
 
 const callbackUrl = makeCallbackURL(getAPIUrl());
 const DISCORD_CLIENT_ID = process.env["DISCORD_CLIENT_ID"];
 const DISCORD_CLIENT_SECRET = process.env["DISCORD_CLIENT_SECRET"];
 
 @Controller("/auth/discord")
-@ContentType("application/json")
 @IsFeatureEnabled({ feature: [Feature.DISCORD_AUTH, Feature.FORCE_DISCORD_AUTH] })
-export class DiscordAuth {
+export class DiscordOAuthController {
   @Get("/")
   @Description("Redirect to Discord OAuth2 URL")
-  async handleRedirectToDiscordOAuthAPI(@Res() res: Res) {
+  async handleRedirectToDiscordOAuthAPI(@Res() res: FastifyReply) {
     const url = new URL(`${DISCORD_API_URL}/oauth2/authorize`);
 
     if (!DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET) {
-      throw new BadRequest(
+      throw new BadRequestException(
         "No `DISCORD_CLIENT_ID` was specified in the .env file. Please refer to the documentation: https://docs.snailycad.org/docs/discord-integration/discord-authentication",
       );
     }
@@ -50,9 +59,9 @@ export class DiscordAuth {
   @Get("/callback")
   @Description("Handle Discord's OAuth2 response. Authenticate user where possible.")
   async handleCallbackFromDiscord(
-    @QueryParams("code") code: string,
-    @Res() res: Res,
-    @Req() req: Req,
+    @Query("code") code: string,
+    @Res({ passthrough: true }) res: FastifyReply,
+    @Req() req: FastifyRequest,
   ) {
     const redirectURL = findRedirectURL();
 
@@ -169,26 +178,28 @@ export class DiscordAuth {
     function validateUser(user: User) {
       if (user.rank !== Rank.OWNER) {
         if (user.banned) {
-          return res.redirect(`${redirectURL}/auth/login?error=userBanned`);
+          res.redirect(`${redirectURL}/auth/login?error=userBanned`);
+          return;
         }
 
         if (user.whitelistStatus === WhitelistStatus.PENDING) {
-          return res.redirect(`${redirectURL}/auth/pending?success=discord`);
+          res.redirect(`${redirectURL}/auth/pending?success=discord`);
+          return;
         }
 
         if (user.whitelistStatus === WhitelistStatus.DECLINED) {
-          return res.redirect(`${redirectURL}/auth/login?error=whitelistDeclined`);
+          res.redirect(`${redirectURL}/auth/login?error=whitelistDeclined`);
         }
       }
     }
   }
 
   @Delete("/")
-  @UseBefore(IsAuth)
+  @UseGuards(AuthGuard)
   @Description("Remove Discord OAuth2 from from authenticated user")
   async removeDiscordAuth(
-    @Context("user") user: User,
-    @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
+    @SessionUser() user: User,
+    @Cad() cad: cad & { features?: Record<Feature, boolean> },
   ) {
     const regularAuthEnabled = isFeatureEnabled({
       features: cad.features,
@@ -197,7 +208,7 @@ export class DiscordAuth {
     });
 
     if (!regularAuthEnabled) {
-      throw new BadRequest("allowRegularLoginDisabled");
+      throw new BadRequestException("allowRegularLoginDisabled");
     }
 
     await prisma.user.update({

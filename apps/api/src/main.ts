@@ -62,11 +62,7 @@ async function bootstrap() {
     const options = new DocumentBuilder()
       .setTitle("SnailyCAD API")
       .setVersion("3.0")
-      .setContact(
-        "SnailyCAD Community Discord",
-        "https://discord.gg/eGnrPqEH7U",
-        "hello@snailycad.org",
-      )
+      .setContact("SnailyCAD Community", "https://discord.gg/eGnrPqEH7U", "hello@snailycad.org")
       .build();
     const document = SwaggerModule.createDocument(app, options);
 

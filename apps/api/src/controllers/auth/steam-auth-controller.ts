@@ -1,12 +1,8 @@
 import process from "node:process";
-import { Context, Delete, Get, QueryParams, Req, Res, UseBefore } from "@tsed/common";
-import { BadRequest } from "@tsed/exceptions";
-import { Controller } from "@tsed/di";
 import { URL } from "node:url";
 import { prisma } from "lib/data/prisma";
 import { Rank, User, WhitelistStatus } from "@prisma/client";
-import { IsAuth } from "middlewares/auth/is-auth";
-import { ContentType, Description } from "@tsed/schema";
+import { AuthGuard } from "middlewares/auth/is-auth";
 import { request } from "undici";
 import { findRedirectURL } from "./discord-auth-controller";
 import { getSessionUser } from "lib/auth/getSessionUser";
@@ -14,20 +10,32 @@ import { getDefaultPermissionsForNewUser } from "./auth-controller";
 import { setUserTokenCookies } from "lib/auth/setUserTokenCookies";
 import { getAPIUrl } from "@snailycad/utils/api-url";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
+import {
+  BadRequestException,
+  Controller,
+  Delete,
+  Get,
+  Query,
+  Req,
+  Res,
+  UseGuards,
+} from "@nestjs/common";
+import { Description } from "~/decorators/description";
+import { FastifyReply, FastifyRequest } from "fastify";
+import { SessionUser } from "~/decorators/user";
 
 const callbackUrl = makeCallbackURL(getAPIUrl());
 const STEAM_API_KEY = process.env["STEAM_API_KEY"];
 export const STEAM_API_URL = "https://api.steampowered.com";
 
 @Controller("/auth/steam")
-@ContentType("application/json")
 @IsFeatureEnabled({ feature: [Feature.STEAM_OAUTH, Feature.FORCE_STEAM_AUTH] })
 export class SteamOAuthController {
   @Get("/")
   @Description("Redirect to Steam's OAuth2 URL")
-  async handleRedirectToSteamOAuthAPI(@Res() res: Res) {
+  async handleRedirectToSteamOAuthAPI(@Res() res: FastifyReply) {
     if (!STEAM_API_KEY) {
-      throw new BadRequest(
+      throw new BadRequestException(
         "No `STEAM_API_KEY` was specified in the .env file. Please refer to the documentation: https://docs.snailycad.org/docs/steam-integration/steam-authentication",
       );
     }
@@ -38,7 +46,11 @@ export class SteamOAuthController {
 
   @Get("/callback")
   @Description("Handle Steam's OAuth2 response. Authenticate user where possible.")
-  async handleCallbackFromSteam(@QueryParams() query: any, @Res() res: Res, @Req() req: Req) {
+  async handleCallbackFromSteam(
+    @Query() query: any,
+    @Res({ passthrough: true }) res: FastifyReply,
+    @Req() req: FastifyRequest,
+  ) {
     const redirectURL = findRedirectURL();
     const identity = query["openid.identity"];
 
@@ -146,24 +158,26 @@ export class SteamOAuthController {
     function validateUser(user: User) {
       if (user.rank !== Rank.OWNER) {
         if (user.banned) {
-          return res.redirect(`${redirectURL}/auth/login?error=userBanned`);
+          res.redirect(`${redirectURL}/auth/login?error=userBanned`);
+          return;
         }
 
         if (user.whitelistStatus === WhitelistStatus.PENDING) {
-          return res.redirect(`${redirectURL}/auth/pending?success=steam`);
+          res.redirect(`${redirectURL}/auth/pending?success=steam`);
+          return;
         }
 
         if (user.whitelistStatus === WhitelistStatus.DECLINED) {
-          return res.redirect(`${redirectURL}/auth/login?error=whitelistDeclined`);
+          res.redirect(`${redirectURL}/auth/login?error=whitelistDeclined`);
         }
       }
     }
   }
 
   @Delete("/")
-  @UseBefore(IsAuth)
+  @UseGuards(AuthGuard)
   @Description("Remove Steam OAuth2 from the authenticated user")
-  async removeSteamOauth(@Context("user") user: User) {
+  async removeSteamOauth(@SessionUser() user: User) {
     await prisma.user.update({
       where: {
         id: user.id,
