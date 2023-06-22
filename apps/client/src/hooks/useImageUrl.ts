@@ -1,7 +1,7 @@
 import { getAPIUrl } from "@snailycad/utils/api-url";
 import { IMAGES_REGEX } from "@snailycad/config";
 
-type ImageURLTypes = "citizens" | "users" | "bleeter" | "units" | "cad" | "values";
+type ImageURLTypes = "citizens" | "users" | "bleeter" | "units" | "cad" | "values" | "pets";
 
 export function useImageUrl() {
   function makeImageUrl(type: ImageURLTypes, id: string | null) {

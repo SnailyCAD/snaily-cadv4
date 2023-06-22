@@ -141,6 +141,9 @@
     "addNote": "Add Note",
     "manageNote": "Manage Note",
     "deleteNote": "Delete Note",
+    "editPet": "Edit Pet",
+    "deletePet": "Delete Pet",
+    "alert_deletePet": "Are you sure you want to delete this pet? This action cannot be undone.",
     "alert_deleteNote": "Are you sure you want to delete this note? This action cannot be undone."
   }
 }

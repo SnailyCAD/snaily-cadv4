@@ -437,6 +437,7 @@ model Pet {
   dateOfBirth DateTime
   citizen     Citizen  @relation(fields: [citizenId], references: [id])
   citizenId   String
+  imageId     String?
 
   notes          Note[]
   medicalRecords PetMedicalRecord[]

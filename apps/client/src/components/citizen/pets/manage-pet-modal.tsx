@@ -1,10 +1,13 @@
+import * as React from "react";
 import { PET_SCHEMA } from "@snailycad/schemas";
+import { Pet } from "@snailycad/types";
 import { PostPetsData } from "@snailycad/types/api";
 import { Button, DatePickerField, Loader, TextField, FormRow } from "@snailycad/ui";
+import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { Modal } from "components/modal/Modal";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import { useAuth } from "context/AuthContext";
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
@@ -12,25 +15,28 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 
-interface CreatePetModalProps {
+interface ManagePetModalProps {
+  pet: Pet | null;
   onCreate?(data: PostPetsData): void;
 }
 
-export function CreatePetModal(props: CreatePetModalProps) {
+export function ManagePetModal(props: ManagePetModalProps) {
   const { isOpen, closeModal } = useModal();
   const t = useTranslations("Pets");
+  const common = useTranslations("Common");
   const { execute, state } = useFetch();
   const { cad } = useAuth();
   const router = useRouter();
+  const [image, setImage] = React.useState<File | string | null>(null);
 
   const INITIAL_VALUES = {
-    name: "",
-    breed: "",
-    color: "",
-    dateOfBirth: undefined,
-    weight: "",
-    citizenSearch: "",
-    citizenId: "",
+    name: props.pet?.name ?? "",
+    breed: props.pet?.breed ?? "",
+    color: props.pet?.color ?? "",
+    dateOfBirth: props.pet?.dateOfBirth ? new Date(props.pet.dateOfBirth) : undefined,
+    weight: props.pet?.weight ?? "",
+    citizenSearch: props.pet ? `${props.pet.citizen.name} ${props.pet.citizen.surname}` : "",
+    citizenId: props.pet?.citizenId ?? null,
   };
 
   const weightPrefix = cad?.miscCadSettings?.weightPrefix
@@ -38,20 +44,62 @@ export function CreatePetModal(props: CreatePetModalProps) {
     : "";
 
   function handleClose() {
-    closeModal(ModalIds.CreatePet);
+    closeModal(ModalIds.ManagePet);
   }
 
   const validate = handleValidate(PET_SCHEMA);
-  async function onSubmit(data: typeof INITIAL_VALUES) {
-    const { json } = await execute<PostPetsData>({
-      method: "POST",
-      path: "/pets",
-      data,
-    });
+  async function onSubmit(
+    data: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
+    let fd;
+    const validatedImage = validateFile(image, helpers);
+    if (validatedImage) {
+      if (typeof validatedImage !== "string") {
+        fd = new FormData();
+        fd.set("image", validatedImage, validatedImage.name);
+      }
+    }
 
-    if (json.id) {
-      router.push(`/pets/${json.id}`);
-      props.onCreate?.(json);
+    if (props.pet) {
+      const { json } = await execute<PostPetsData>({
+        method: "PUT",
+        path: `/pets/${props.pet.id}`,
+        data,
+      });
+
+      if (json.id) {
+        await execute({
+          path: `/pets/${json.id}/image`,
+          method: "POST",
+          data: fd,
+          helpers,
+          headers: { "content-type": "multipart/form-data" },
+        });
+
+        router.push(`/pets/${json.id}`);
+        closeModal(ModalIds.ManagePet);
+      }
+    } else {
+      const { json } = await execute<PostPetsData>({
+        method: "POST",
+        path: "/pets",
+        data,
+      });
+
+      if (json.id) {
+        await execute({
+          path: `/pets/${json.id}/image`,
+          method: "POST",
+          data: fd,
+          helpers,
+          headers: { "content-type": "multipart/form-data" },
+        });
+
+        router.push(`/pets/${json.id}`);
+        props.onCreate?.(json);
+        closeModal(ModalIds.ManagePet);
+      }
     }
   }
 
@@ -60,7 +108,7 @@ export function CreatePetModal(props: CreatePetModalProps) {
       className="w-[600px]"
       onClose={handleClose}
       title={t("createPet")}
-      isOpen={isOpen(ModalIds.CreatePet)}
+      isOpen={isOpen(ModalIds.ManagePet)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ values, errors, setFieldValue }) => (
@@ -71,7 +119,10 @@ export function CreatePetModal(props: CreatePetModalProps) {
               errorMessage={errors.name}
               value={values.name}
               label={t("name")}
+              isDisabled={Boolean(props.pet)}
             />
+
+            <ImageSelectInput image={image} setImage={setImage} isOptional />
 
             <TextField
               onChange={(value) => setFieldValue("breed", value)}
@@ -113,11 +164,11 @@ export function CreatePetModal(props: CreatePetModalProps) {
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onPress={handleClose} variant="cancel">
-                Cancel
+                {common("cancel")}
               </Button>
               <Button className="flex items-center" disabled={state === "loading"} type="submit">
                 {state === "loading" ? <Loader className="mr-2" /> : null}
-                {t("createPet")}
+                {props.pet ? common("save") : t("createPet")}
               </Button>
             </footer>
           </Form>
