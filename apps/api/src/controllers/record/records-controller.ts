@@ -1,17 +1,12 @@
-import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import {
   CREATE_TICKET_SCHEMA,
   CREATE_WARRANT_SCHEMA,
   UPDATE_WARRANT_SCHEMA,
   CREATE_TICKET_SCHEMA_BUSINESS,
 } from "@snailycad/schemas";
-import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
-import { UseBeforeEach, UseBefore } from "@tsed/platform-middlewares";
 import { ActiveOfficer } from "middlewares/active-officer";
-import { Controller } from "@tsed/di";
-import { IsAuth } from "middlewares/auth/is-auth";
+import { AuthGuard } from "middlewares/auth/is-auth";
 import {
   Citizen,
   Feature,
@@ -41,15 +36,30 @@ import { userProperties } from "lib/auth/getSessionUser";
 import { upsertRecord } from "~/lib/leo/records/upsert-record";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { getTranslator } from "utils/get-translator";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from "@nestjs/common";
+import { Description } from "~/decorators/description";
+import { Cad } from "~/decorators/cad";
+import { SessionUser } from "~/decorators/user";
 
 export const assignedOfficersInclude = {
   combinedUnit: { include: combinedUnitProperties },
   officer: { include: leoProperties },
 };
 
-@UseBeforeEach(IsAuth)
+@UseGuards(AuthGuard)
 @Controller("/records")
-@ContentType("application/json")
 export class RecordsController {
   private socket: Socket;
   constructor(socket: Socket) {
@@ -60,9 +70,9 @@ export class RecordsController {
   @Description("Get all active warrants (ACTIVE_WARRANTS must be enabled)")
   @IsFeatureEnabled({ feature: Feature.ACTIVE_WARRANTS })
   async getActiveWarrants(
-    @Context("cad") cad: cad,
-    @QueryParams("skip", Number) skip = 0,
-    @QueryParams("includeAll", Boolean) includeAll = false,
+    @Cad() cad: cad,
+    @Query("skip") skip = 0,
+    @Query("includeAll") includeAll = false,
   ): Promise<APITypes.GetActiveWarrantsData> {
     const inactivityFilter = getInactivityFilter(cad, "activeWarrantsInactivityTimeout");
 
@@ -92,16 +102,16 @@ export class RecordsController {
     };
   }
 
-  @UseBefore(ActiveOfficer)
+  @UseGuards(ActiveOfficer)
   @Post("/create-warrant")
   @Description("Create a new warrant")
   @UsePermissions({
     permissions: [Permissions.ManageWarrants, Permissions.DeleteCitizenRecords],
   })
   async createWarrant(
-    @Context("cad") cad: { features?: Record<Feature, boolean> },
-    @Context("user") user: User,
-    @BodyParams() body: unknown,
+    @Cad() cad: { features?: Record<Feature, boolean> },
+    @SessionUser() user: User,
+    @Body() body: unknown,
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
   ): Promise<APITypes.PostCreateWarrantData> {
     const data = validateSchema(CREATE_WARRANT_SCHEMA, body);
@@ -114,7 +124,7 @@ export class RecordsController {
     });
 
     if (!citizen) {
-      throw new NotFound("citizenNotFound");
+      throw new NotFoundException("citizenNotFound");
     }
 
     const isWarrantApprovalEnabled = isFeatureEnabled({
@@ -163,7 +173,7 @@ export class RecordsController {
     });
 
     if (approvalStatus === WhitelistStatus.PENDING) {
-      throw new BadRequest("warrantApprovalRequired");
+      throw new BadRequestException("warrantApprovalRequired");
     }
 
     const normalizedWarrant = officerOrDeputyToUnit(updatedWarrant);
@@ -172,15 +182,15 @@ export class RecordsController {
     return normalizedWarrant;
   }
 
-  @UseBefore(ActiveOfficer)
+  @UseGuards(ActiveOfficer)
   @Put("/warrant/:id")
   @Description("Update a warrant by its id")
   @UsePermissions({
     permissions: [Permissions.Leo],
   })
   async updateWarrant(
-    @BodyParams() body: unknown,
-    @PathParams("id") warrantId: string,
+    @Body() body: unknown,
+    @Param("id") warrantId: string,
   ): Promise<APITypes.PutWarrantsData> {
     const data = validateSchema(UPDATE_WARRANT_SCHEMA, body);
 
@@ -190,7 +200,7 @@ export class RecordsController {
     });
 
     if (!warrant) {
-      throw new NotFound("warrantNotFound");
+      throw new NotFoundException("warrantNotFound");
     }
 
     await prisma.$transaction(
@@ -228,15 +238,15 @@ export class RecordsController {
     return normalizedWarrant;
   }
 
-  @UseBefore(ActiveOfficer)
+  @UseGuards(ActiveOfficer)
   @Post("/")
   @Description("Create a new ticket, written warning or arrest report to a citizen")
   @UsePermissions({
     permissions: [Permissions.Leo],
   })
   async createTicket(
-    @BodyParams() body: unknown,
-    @Context("cad") cad: { features?: Record<Feature, boolean> },
+    @Body() body: unknown,
+    @Cad() cad: { features?: Record<Feature, boolean> },
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
   ): Promise<APITypes.PostRecordsData> {
     const data = validateSchema(CREATE_TICKET_SCHEMA.or(CREATE_TICKET_SCHEMA_BUSINESS), body);
@@ -262,7 +272,7 @@ export class RecordsController {
     return recordItem;
   }
 
-  @UseBefore(ActiveOfficer)
+  @UseGuards(ActiveOfficer)
   @Put("/record/:id")
   @Description("Update a ticket, written warning or arrest report by its id")
   @UsePermissions({
@@ -270,8 +280,8 @@ export class RecordsController {
   })
   async updateRecordById(
     @Context("cad") cad: { features?: Record<Feature, boolean> },
-    @BodyParams() body: unknown,
-    @PathParams("id") recordId: string,
+    @Body() body: unknown,
+    @Param("id") recordId: string,
   ): Promise<APITypes.PutRecordsByIdData> {
     const data = validateSchema(CREATE_TICKET_SCHEMA.or(CREATE_TICKET_SCHEMA_BUSINESS), body);
 
@@ -285,15 +295,15 @@ export class RecordsController {
     return recordItem;
   }
 
-  @UseBefore(ActiveOfficer)
+  @UseGuards(ActiveOfficer)
   @Delete("/:id")
   @Description("Delete a ticket, written warning or arrest report by its id")
   @UsePermissions({
     permissions: [Permissions.Leo],
   })
   async deleteRecord(
-    @PathParams("id") id: string,
-    @BodyParams("type") type: "WARRANT" | (string & {}),
+    @Param("id") id: string,
+    @Body("type") type: "WARRANT" | (string & {}),
   ): Promise<APITypes.DeleteRecordsByIdData> {
     if (type === "WARRANT") {
       const warrant = await prisma.warrant.findUnique({
@@ -301,7 +311,7 @@ export class RecordsController {
       });
 
       if (!warrant) {
-        throw new NotFound("warrantNotFound");
+        throw new NotFoundException("warrantNotFound");
       }
     } else {
       const record = await prisma.record.findUnique({
@@ -309,7 +319,7 @@ export class RecordsController {
       });
 
       if (!record) {
-        throw new NotFound("recordNotFound");
+        throw new NotFoundException("recordNotFound");
       }
     }
 
