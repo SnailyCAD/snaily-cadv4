@@ -13,6 +13,7 @@ import {
   SwitchField,
   FormRow,
   SelectField,
+  TabsContent,
 } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import Link from "next/link";
@@ -20,7 +21,6 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { isUnitOfficer } from "@snailycad/utils";
 import type { GetManageUnitByIdData, PutManageUnitData } from "@snailycad/types/api";
-import { TabsContent } from "@radix-ui/react-tabs";
 import { QualificationsTable } from "../../QualificationsTable";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { usePermission, Permissions } from "hooks/usePermission";
