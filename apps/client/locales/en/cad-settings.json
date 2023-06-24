@@ -78,7 +78,11 @@
     "citizenRecordsChannel": "Citizen Records channel",
     "citizenRecordsChannelInfo": "The Discord channel where new arrest reports, tickets, warrants and written warnings will be sent to.",
     "warrantsChannel": "Warrants channel",
-    "warrantsChannelInfo": "The Discord channel where new warrants will be sent to."
+    "warrantsChannelInfo": "The Discord channel where new warrants will be sent to.",
+    "bleeterPostChannelInfo": "The Discord channel where new bleeter posts will be sent to.",
+    "bleeterPostChannel": "Bleeter Post channel",
+    "citizenDeclaredDeadChannelInfo": "The Discord channel where dead citizen notifications will be sent to.",
+    "citizenDeclaredDeadChannel": "Citizen Declared Dead channel"
   },
   "RawWebhooksTab": {
     "rawWebhooks": "Raw Webhooks",

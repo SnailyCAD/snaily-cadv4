@@ -91,7 +91,7 @@ export const DISCORD_SETTINGS_SCHEMA = z.object({
 
 /** discord webhooks */
 const DISCORD_WEBHOOK_TYPE =
-  /CALL_911|BOLO|UNIT_STATUS|PANIC_BUTTON|VEHICLE_IMPOUNDED|CITIZEN_RECORD|WARRANTS/;
+  /CALL_911|BOLO|UNIT_STATUS|PANIC_BUTTON|VEHICLE_IMPOUNDED|CITIZEN_RECORD|WARRANTS|BLEETER_POST|CITIZEN_DECLARED_DEAD/;
 
 export const DISCORD_WEBHOOK = z.object({
   id: z.string().max(255).nullish(),
@@ -111,6 +111,8 @@ export const DISCORD_WEBHOOKS_SCHEMA = z.object({
   vehicleImpoundedWebhook: DISCORD_WEBHOOK,
   citizenRecordsWebhook: DISCORD_WEBHOOK,
   warrantsWebhook: DISCORD_WEBHOOK,
+  bleeterPostWebhook: DISCORD_WEBHOOK,
+  citizenDeclaredDeadWebhook: DISCORD_WEBHOOK,
 });
 
 export const RAW_WEBHOOKS_SCHEMA = z.object({

@@ -27,6 +27,7 @@ import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { z } from "zod";
 import { RecordsInclude } from "controllers/leo/search/SearchController";
 import { leoProperties } from "utils/leo/includes";
+import { sendDiscordWebhook } from "~/lib/discord/webhooks";
 
 export const citizenInclude = Prisma.validator<Prisma.CitizenSelect>()({
   user: { select: userProperties },
@@ -271,6 +272,19 @@ export class CitizenController {
     await prisma.citizen.update({
       where: { id: citizen.id },
       data: { dead: true, dateOfDead: new Date() },
+    });
+
+    const webhookData = {
+      embeds: [
+        {
+          title: "Citizen marked as deceased",
+          description: `${citizen.name} ${citizen.surname} has been marked as deceased by ${citizen.name} ${citizen.surname}`,
+        },
+      ],
+    };
+    await sendDiscordWebhook({
+      data: webhookData,
+      type: "CITIZEN_DECLARED_DEAD",
     });
 
     return true;

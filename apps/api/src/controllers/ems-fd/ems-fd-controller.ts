@@ -39,6 +39,7 @@ import { HandleInactivity } from "middlewares/handle-inactivity";
 import { upsertEmsFdDeputy } from "lib/ems-fd/upsert-ems-fd-deputy";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { unitProperties, combinedEmsFdUnitProperties } from "utils/leo/includes";
+import { sendDiscordWebhook } from "~/lib/discord/webhooks";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
@@ -362,6 +363,7 @@ export class EmsFdController {
   async declareCitizenDeadOrAlive(
     @PathParams("citizenId") citizenId: string,
     @Context("cad") cad: { features?: Record<Feature, boolean> },
+    @Context("user") user: User,
   ): Promise<APITypes.PostEmsFdDeclareCitizenById> {
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -384,6 +386,19 @@ export class EmsFdController {
         where: { id: citizen.id },
       });
 
+      const webhookData = {
+        embeds: [
+          {
+            title: "Citizen marked as deceased",
+            description: `${citizen.name} ${citizen.surname} has been marked as deceased by ${user.username}`,
+          },
+        ],
+      };
+      await sendDiscordWebhook({
+        data: webhookData,
+        type: "CITIZEN_DECLARED_DEAD",
+      });
+
       return { ...deleted, dead: true, dateOfDead: new Date() };
     }
 
@@ -395,6 +410,19 @@ export class EmsFdController {
         dead: !citizen.dead,
         dateOfDead: citizen.dead ? null : new Date(),
       },
+    });
+
+    const webhookData = {
+      embeds: [
+        {
+          title: "Citizen marked as deceased",
+          description: `${citizen.name} ${citizen.surname} has been marked as deceased by ${user.username}`,
+        },
+      ],
+    };
+    await sendDiscordWebhook({
+      data: webhookData,
+      type: "CITIZEN_DECLARED_DEAD",
     });
 
     return updated;

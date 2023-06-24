@@ -1851,6 +1851,8 @@ enum DiscordWebhookType {
   CITIZEN_RECORD
   VEHICLE_IMPOUNDED
   WARRANTS
+  BLEETER_POST
+  CITIZEN_DECLARED_DEAD
 }
 
 enum JailTimeScale {

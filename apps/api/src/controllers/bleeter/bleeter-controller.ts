@@ -23,6 +23,10 @@ import type * as APITypes from "@snailycad/types/api";
 import { getImageWebPPath } from "lib/images/get-image-webp-path";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
+import { BleeterPost, BleeterProfile } from "@snailycad/types";
+import { Descendant, slateDataToString } from "@snailycad/utils/editor";
+import { getAPIUrl } from "@snailycad/utils/api-url";
+import { sendDiscordWebhook } from "~/lib/discord/webhooks";
 
 @UseBeforeEach(IsAuth)
 @Controller("/bleeter")
@@ -92,6 +96,13 @@ export class BleeterController {
         user: { select: { username: true } },
         creator: true,
       },
+    });
+
+    const webhookData = this.createWebhookData(post);
+    await sendDiscordWebhook({
+      data: webhookData,
+      type: "BLEETER_POST",
+      extraMessageData: { userDiscordId: user.discordId },
     });
 
     return post;
@@ -245,5 +256,28 @@ export class BleeterController {
     });
 
     return profile;
+  }
+
+  protected createWebhookData(
+    post: BleeterPost & { user: { username: string }; creator?: BleeterProfile | null },
+  ) {
+    const creator = post.creator ? `**${post.creator.name}**` : post.user.username;
+
+    const url = getAPIUrl().replace("/v1", "");
+    const IMAGE_URL = `${url}/static/`;
+    const imageUrl = post.imageId ? `${IMAGE_URL}bleeter/${post.imageId}` : "";
+
+    return {
+      embeds: [
+        {
+          image: { url: imageUrl },
+          title: post.title,
+          description: post.body?.trim()
+            ? post.body
+            : (slateDataToString(post.bodyData as Descendant[] | null) as string),
+          footer: { text: `Posted by **${creator}**` },
+        },
+      ],
+    };
   }
 }

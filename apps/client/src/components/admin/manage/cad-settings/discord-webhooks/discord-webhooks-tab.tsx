@@ -28,6 +28,8 @@ export function DiscordWebhooksTab() {
     vehicleImpoundedWebhook: makeInitialValue(cad, DiscordWebhookType.VEHICLE_IMPOUNDED),
     citizenRecordsWebhook: makeInitialValue(cad, DiscordWebhookType.CITIZEN_RECORD),
     warrantsWebhook: makeInitialValue(cad, DiscordWebhookType.WARRANTS),
+    bleeterPostWebhook: makeInitialValue(cad, DiscordWebhookType.BLEETER_POST),
+    citizenDeclaredDeadWebhook: makeInitialValue(cad, DiscordWebhookType.CITIZEN_DECLARED_DEAD),
   };
 
   React.useEffect(() => {
@@ -150,6 +152,22 @@ export function DiscordWebhooksTab() {
               channels={channels}
               description={t("warrantsChannelInfo")}
               label={t("warrantsChannel")}
+            />
+
+            <WebhookSettingsField
+              disabled={Boolean(fetchError)}
+              fieldName="bleeterPostWebhook"
+              channels={channels}
+              description={t("bleeterPostChannelInfo")}
+              label={t("bleeterPostChannel")}
+            />
+
+            <WebhookSettingsField
+              disabled={Boolean(fetchError)}
+              fieldName="citizenDeclaredDeadWebhook"
+              channels={channels}
+              description={t("citizenDeclaredDeadChannelInfo")}
+              label={t("citizenDeclaredDeadChannel")}
             />
 
             <Button

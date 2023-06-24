@@ -20,6 +20,8 @@ export async function sendDiscordWebhook(options: SendDiscordWebhookOptions) {
       where: { type: options.type },
     });
 
+    console.log(webhook);
+
     if (!webhook) return;
 
     const webhookData = await performDiscordRequest<RESTGetAPIWebhookResult>({
