@@ -45,6 +45,7 @@
     "newWarrantCreated": "New Warrant Created",
     "newRecordCreated": "New Record Created",
     "ACTIVE": "Active",
-    "INACTIVE": "Inactive"
+    "INACTIVE": "Inactive",
+    "violations": "Violations"
   }
 }

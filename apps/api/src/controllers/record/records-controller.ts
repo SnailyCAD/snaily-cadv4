@@ -324,7 +324,10 @@ export class RecordsController {
   }
 
   private async handleDiscordWebhook(
-    ticket: ((CADRecord & { violations: Violation[] }) | Warrant) & {
+    ticket: (
+      | (CADRecord & { violations: (Violation & { penalCode: { title: string } })[] })
+      | Warrant
+    ) & {
       citizen?: Citizen & { user?: Pick<User, "discordId"> | null };
       business?: Business;
     },
@@ -349,7 +352,10 @@ export class RecordsController {
 }
 
 async function createWebhookData(
-  data: ((CADRecord & { violations: Violation[] }) | Warrant) & {
+  data: (
+    | (CADRecord & { violations: (Violation & { penalCode: { title: string } })[] })
+    | Warrant
+  ) & {
     citizen?: Citizen & { user?: Pick<User, "discordId"> | null };
     business?: Business;
   },
@@ -370,13 +376,7 @@ async function createWebhookData(
   const totalBail = getTotal("bail");
   const totalFines = getTotal("fine");
 
-  const fields = [
-    {
-      name: t("citizen"),
-      value: citizen,
-      inline: true,
-    },
-  ];
+  const fields = [{ name: t("citizen"), value: citizen, inline: true }];
 
   if (isWarrant) {
     fields.push({ name: t("status"), value: t(data.status), inline: true });
@@ -384,9 +384,14 @@ async function createWebhookData(
     fields.push(
       { name: t("postal"), value: data.postal || "-", inline: true },
       { name: t("recordType"), value: t(data.type), inline: true },
-      { name: t("totalBail"), value: totalBail, inline: true },
       { name: t("totalFineAmount"), value: totalFines, inline: true },
       { name: t("totalJailTime"), value: totalJailTime, inline: true },
+      { name: t("totalBail"), value: totalBail, inline: true },
+      {
+        name: t("violations"),
+        value: data.violations.map((v) => `\`${v.penalCode.title}\``).join(", "),
+        inline: false,
+      },
     );
   }
 
@@ -403,7 +408,8 @@ async function createWebhookData(
   function getTotal(name: "jailTime" | "fine" | "bail") {
     const total = !isWarrant
       ? data.violations.reduce((ac, cv) => {
-          return ac + (cv[name] || 0);
+          const count = (name === "fine" && cv.counts) || 1;
+          return ac + (cv[name] || 0) * count;
         }, 0)
       : 0;
 

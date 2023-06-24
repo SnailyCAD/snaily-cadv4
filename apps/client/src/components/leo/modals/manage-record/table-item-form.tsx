@@ -210,7 +210,6 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
         <FieldWrapper errorMessage={violationErrors[penalCode.id]?.communityService}>
           <div className="flex items-center">
             <CheckboxField
-              isDisabled={finesDisabled}
               isSelected={currentValue.communityService.enabled}
               className="mb-0"
               onChange={(isSelected) =>
