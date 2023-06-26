@@ -1,5 +1,5 @@
 import * as React from "react";
-import { AddressValue, AnyValue, ValueType } from "@snailycad/types";
+import { AnyValue, ValueType } from "@snailycad/types";
 import { useFormikContext } from "formik";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import { AsyncListSearchField, Item } from "@snailycad/ui";
@@ -15,6 +15,7 @@ interface Props<T extends AnyValue> {
   label: string;
   filterFn?(value: T, index: number): boolean;
   className?: string;
+  onSelectionChange(value: T | null): void;
 
   isClearable?: boolean;
   isOptional?: boolean;
@@ -46,7 +47,7 @@ export function ValueSelectField<T extends AnyValue>(props: Props<T>) {
     node,
     localValue,
   }: {
-    node?: Node<AddressValue> | null;
+    node?: Node<T> | null;
     localValue?: string;
   }) {
     // when the menu closes, it will set the `searchValue` to `""`. We want to keep the value of the search
@@ -60,6 +61,7 @@ export function ValueSelectField<T extends AnyValue>(props: Props<T>) {
 
     const fieldData = { [props.fieldName]: node?.key ?? null };
     setValues({ ...values, ...fieldData });
+    props.onSelectionChange(node?.value ?? null);
   }
 
   return (
