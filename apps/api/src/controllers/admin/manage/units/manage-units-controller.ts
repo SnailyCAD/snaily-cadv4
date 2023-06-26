@@ -23,7 +23,6 @@ import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { Socket } from "services/socket-service";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { manyToManyHelper } from "lib/data/many-to-many";
-import { isCuid } from "@paralleldrive/cuid2";
 import type * as APITypes from "@snailycad/types/api";
 import { isFeatureEnabled } from "lib/upsert-cad";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
@@ -213,7 +212,7 @@ export class AdminManageUnitsController {
 
   @Get("/:id")
   @Description(
-    "Get a unit by the `id` or get all units from a user by the `discordId` or `steamId`",
+    "Get a unit by the `id` (/v1/admin/manage/units/xxxxxxxx) or get all units from a user by the `discordId` or `steamId` (/v1/admin/manage/units/null?discordId=xxxxx)",
   )
   @UsePermissions({
     permissions: [
@@ -223,77 +222,85 @@ export class AdminManageUnitsController {
       Permissions.ManageAwardsAndQualifications,
     ],
   })
-  async getUnit(@PathParams("id") id: string): Promise<APITypes.GetManageUnitByIdData> {
+  async getUnit(
+    @PathParams("id") unitId: string,
+    @QueryParams("steamId", String) steamId?: string,
+    @QueryParams("discordId", String) discordId?: string,
+  ): Promise<APITypes.GetManageUnitByIdData> {
     const extraInclude = {
       qualifications: { include: { qualification: { include: { value: true } } } },
       logs: { take: 25, orderBy: { createdAt: "desc" } },
     } as const;
 
-    const isUnitId = isCuid(id);
+    if (steamId || discordId) {
+      const OR = [];
 
-    if (isUnitId) {
-      let unit: any = await prisma.officer.findUnique({
-        where: { id },
-        include: { ...leoProperties, ...extraInclude },
-      });
-
-      if (!unit) {
-        unit = await prisma.emsFdDeputy.findUnique({
-          where: { id },
-          include: { ...unitProperties, ...extraInclude },
-        });
+      if (steamId) {
+        OR.push({ user: { steamId } });
+      } else if (discordId) {
+        OR.push({ user: { discordId } });
       }
 
-      if (!unit) {
-        unit = await prisma.combinedLeoUnit.findUnique({
-          where: { id },
-          include: combinedUnitProperties,
-        });
-      }
+      const where = { OR };
 
-      if (!unit) {
-        unit = await prisma.combinedEmsFdUnit.findUnique({
-          where: { id },
-          include: combinedEmsFdUnitProperties,
-        });
-      }
+      const [userOfficers, userDeputies, userCombinedOfficers, userCombinedDeputies] =
+        await prisma.$transaction([
+          prisma.officer.findMany({
+            where,
+            include: { ...leoProperties, ...extraInclude },
+          }),
+          prisma.emsFdDeputy.findMany({
+            where,
+            include: { ...unitProperties, ...extraInclude },
+          }),
+          prisma.combinedLeoUnit.findMany({
+            where: { officers: { some: where } },
+            include: combinedUnitProperties,
+          }),
+          prisma.combinedEmsFdUnit.findMany({
+            where: { deputies: { some: where } },
+            include: combinedEmsFdUnitProperties,
+          }),
+        ]);
 
-      if (!unit) {
-        throw new NotFound("unitNotFound");
-      }
-
-      return unit;
+      return {
+        userOfficers,
+        userDeputies,
+        userCombinedUnits: [...userCombinedOfficers, ...userCombinedDeputies],
+      } as any;
     }
 
-    const where = {
-      OR: [{ user: { discordId: id } }, { user: { steamId: id } }],
-    };
+    let unit: any = await prisma.officer.findUnique({
+      where: { id: unitId },
+      include: { ...leoProperties, ...extraInclude },
+    });
 
-    const [userOfficers, userDeputies, userCombinedOfficers, userCombinedDeputies] =
-      await prisma.$transaction([
-        prisma.officer.findMany({
-          where,
-          include: { ...unitProperties, ...extraInclude },
-        }),
-        prisma.emsFdDeputy.findMany({
-          where,
-          include: { ...unitProperties, ...extraInclude },
-        }),
-        prisma.combinedLeoUnit.findMany({
-          where: { officers: { some: where } },
-          include: combinedUnitProperties,
-        }),
-        prisma.combinedEmsFdUnit.findMany({
-          where: { deputies: { some: where } },
-          include: combinedEmsFdUnitProperties,
-        }),
-      ]);
+    if (!unit) {
+      unit = await prisma.emsFdDeputy.findUnique({
+        where: { id: unitId },
+        include: { ...unitProperties, ...extraInclude },
+      });
+    }
 
-    return {
-      userOfficers,
-      userDeputies,
-      userCombinedUnits: [...userCombinedOfficers, ...userCombinedDeputies],
-    } as any;
+    if (!unit) {
+      unit = await prisma.combinedLeoUnit.findUnique({
+        where: { id: unitId },
+        include: combinedUnitProperties,
+      });
+    }
+
+    if (!unit) {
+      unit = await prisma.combinedEmsFdUnit.findUnique({
+        where: { id: unitId },
+        include: combinedEmsFdUnitProperties,
+      });
+    }
+
+    if (!unit) {
+      throw new NotFound("unitNotFound");
+    }
+
+    return unit;
   }
 
   @Put("/off-duty")
