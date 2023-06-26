@@ -15,7 +15,7 @@ interface Props<T extends AnyValue> {
   label: string;
   filterFn?(value: T, index: number): boolean;
   className?: string;
-  onSelectionChange(value: T | null): void;
+  onSelectionChange?(value: T | null): void;
 
   isClearable?: boolean;
   isOptional?: boolean;
@@ -61,7 +61,7 @@ export function ValueSelectField<T extends AnyValue>(props: Props<T>) {
 
     const fieldData = { [props.fieldName]: node?.key ?? null };
     setValues({ ...values, ...fieldData });
-    props.onSelectionChange(node?.value ?? null);
+    props.onSelectionChange?.(node?.value ?? null);
   }
 
   return (
