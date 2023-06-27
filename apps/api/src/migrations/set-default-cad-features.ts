@@ -24,6 +24,7 @@ const DEFAULT_DISABLED_FEATURES: Partial<Record<Feature, { isEnabled: boolean }>
   FORCE_ACCOUNT_PASSWORD: { isEnabled: false },
   USER_DEFINED_CALLSIGN_COMBINED_UNIT: { isEnabled: false },
   REQUIRED_CITIZEN_IMAGE: { isEnabled: false },
+  LEO_EDITABLE_CITIZEN_PROFILE: { isEnabled: false },
 };
 
 /**

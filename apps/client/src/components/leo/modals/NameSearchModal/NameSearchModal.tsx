@@ -32,6 +32,7 @@ import { shallow } from "zustand/shallow";
 import { SpeechAlert } from "./speech-alert";
 import { ImageWrapper } from "components/shared/image-wrapper";
 import { ManageLicensePointsModal } from "./sections/license-points/manage-license-points-modal";
+import { Permissions, usePermission } from "hooks/usePermission";
 
 const VehicleSearchModal = dynamic(
   async () => (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal,
@@ -41,8 +42,8 @@ const WeaponSearchModal = dynamic(
   async () => (await import("components/leo/modals/weapon-search-modal")).WeaponSearchModal,
 );
 
-const CreateCitizenModal = dynamic(
-  async () => (await import("./CreateCitizenModal")).CreateCitizenModal,
+const CreateOrManageCitizenModal = dynamic(
+  async () => (await import("./CreateCitizenModal")).CreateOrManageCitizenModal,
 );
 
 const ManageCitizenAddressFlagsModal = dynamic(
@@ -73,9 +74,12 @@ export function NameSearchModal() {
   const { state, execute } = useFetch();
   const router = useRouter();
   const { makeImageUrl } = useImageUrl();
-  const { SOCIAL_SECURITY_NUMBERS, CREATE_USER_CITIZEN_LEO } = useFeatureEnabled();
+  const { SOCIAL_SECURITY_NUMBERS, CREATE_USER_CITIZEN_LEO, LEO_EDITABLE_CITIZEN_PROFILE } =
+    useFeatureEnabled();
   const { bolos } = useBolos();
+  const { hasPermissions } = usePermission();
 
+  const hasManageCitizenProfilePermissions = hasPermissions([Permissions.LeoManageCitizenProfile]);
   const { openModal } = useModal();
   const isLeo = router.pathname === "/officer";
   const isDispatch = router.pathname === "/dispatch";
@@ -429,7 +433,10 @@ export function NameSearchModal() {
             <AutoSubmit />
             <VehicleSearchModal id={ModalIds.VehicleSearchWithinName} />
             <WeaponSearchModal id={ModalIds.WeaponSearchWithinName} />
-            {CREATE_USER_CITIZEN_LEO && isLeo ? <CreateCitizenModal /> : null}
+            {(CREATE_USER_CITIZEN_LEO && isLeo) ||
+            (LEO_EDITABLE_CITIZEN_PROFILE && hasManageCitizenProfilePermissions) ? (
+              <CreateOrManageCitizenModal />
+            ) : null}
             {currentResult && !currentResult.isConfidential ? (
               <>
                 <ManageLicensePointsModal />

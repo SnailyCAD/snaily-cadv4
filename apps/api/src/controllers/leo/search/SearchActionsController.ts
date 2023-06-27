@@ -48,6 +48,8 @@ import { createVehicleImpoundedWebhookData } from "controllers/calls/tow-control
 import { sendDiscordWebhook, sendRawWebhook } from "lib/discord/webhooks";
 import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
 import { ActiveOfficer } from "middlewares/active-officer";
+import { IsFeatureEnabled } from "~/middlewares/is-enabled";
+import { validateSocialSecurityNumber } from "~/lib/citizen/validate-ssn";
 
 @Controller("/search/actions")
 @UseBeforeEach(IsAuth)
@@ -458,6 +460,74 @@ export class SearchActionsController {
     });
 
     return citizen as APITypes.PostSearchActionsCreateCitizen;
+  }
+
+  @Put("/citizen/:id")
+  @UsePermissions({
+    permissions: [Permissions.LeoManageCitizenProfile],
+  })
+  @IsFeatureEnabled({ feature: Feature.LEO_EDITABLE_CITIZEN_PROFILE })
+  async updateCitizenById(
+    @Context("cad")
+    cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings | null },
+    @Context("user") user: User,
+    @BodyParams() body: unknown,
+    @PathParams("id") citizenId: string,
+  ): Promise<APITypes.PostSearchActionsCreateCitizen> {
+    const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
+
+    const citizen = await prisma.citizen.findUnique({
+      where: {
+        id: citizenId,
+      },
+    });
+
+    if (!citizen) {
+      throw new NotFound("citizenNotFound");
+    }
+
+    const date = data.dateOfBirth ? new Date(data.dateOfBirth).getTime() : undefined;
+    if (date) {
+      const now = Date.now();
+
+      if (date > now) {
+        throw new ExtendedBadRequest({ dateOfBirth: "dateLargerThanNow" });
+      }
+    }
+
+    const isEditableSSNEnabled = isFeatureEnabled({
+      features: cad.features,
+      feature: Feature.EDITABLE_SSN,
+      defaultReturn: true,
+    });
+
+    if (data.socialSecurityNumber && isEditableSSNEnabled) {
+      await validateSocialSecurityNumber({
+        socialSecurityNumber: data.socialSecurityNumber,
+        citizenId: citizen.id,
+      });
+    }
+
+    const updated = await prisma.citizen.update({
+      where: {
+        id: citizen.id,
+      },
+      data: {
+        ...(await citizenObjectFromData({
+          data,
+          cad,
+        })),
+        socialSecurityNumber:
+          data.socialSecurityNumber && isEditableSSNEnabled
+            ? data.socialSecurityNumber
+            : !citizen.socialSecurityNumber
+            ? generateString(9, { type: "numbers-only" })
+            : undefined,
+      },
+      ...citizenSearchIncludeOrSelect(user, cad),
+    });
+
+    return updated as APITypes.PostSearchActionsCreateCitizen;
   }
 
   @UseBefore(ActiveOfficer)

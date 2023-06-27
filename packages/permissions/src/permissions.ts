@@ -26,6 +26,7 @@ export enum Permissions {
   ManageAwardsAndQualifications = "ManageAwardsAndQualifications",
   PurgeLeoIncidents = "PurgeLeoIncidents",
   LeoManageCustomFields = "LeoManageCustomFields",
+  LeoManageCitizenProfile = "LeoManageCitizenProfile",
 
   Dispatch = "Dispatch",
 

@@ -305,7 +305,9 @@
     "PETS": "Pets",
     "PETS-description": "When enabled, this will allow citizens to create pets.",
     "REQUIRED_CITIZEN_IMAGE": "Required Citizen Image",
-    "REQUIRED_CITIZEN_IMAGE-description": "When enabled, this will require citizens to upload an image when creating a citizen."
+    "REQUIRED_CITIZEN_IMAGE-description": "When enabled, this will require citizens to upload an image when creating a citizen.",
+    "LEO_EDITABLE_CITIZEN_PROFILE": "LEO Editable Citizen Profile",
+    "LEO_EDITABLE_CITIZEN_PROFILE-description": "When enabled, this will allow LEO/EMS/FD/Dispatch to edit citizen profiles if the user has the 'Manage Citizen Profile (non-admin)' permission."
   },
   "Permissions": {
     "defaultPermissions": "Default Permissions",
@@ -413,6 +415,7 @@
     "ViewWeaponExams": "View Weapon Exams",
     "ManageWeaponExams": "Manage Weapon Exams",
     "SetUserDefinedCallsignOnOfficer": "Set User Defined Callsign On Officer",
-    "SetUserDefinedCallsignOnEmsFd": "Set User Defined Callsign On EMS/FD Deputy"
+    "SetUserDefinedCallsignOnEmsFd": "Set User Defined Callsign On EMS/FD Deputy",
+    "LeoManageCitizenProfile": "Manage Citizen Profile (non-admin)"
   }
 }
