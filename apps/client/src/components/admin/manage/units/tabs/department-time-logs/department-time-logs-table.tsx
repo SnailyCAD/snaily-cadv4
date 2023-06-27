@@ -1,6 +1,6 @@
 import * as React from "react";
 import { getUnitDepartment, makeUnitName } from "lib/utils";
-import { useTranslations } from "use-intl";
+import { useFormatter, useTranslations } from "use-intl";
 import { DatePickerField, FullDate, SelectField, TabsContent } from "@snailycad/ui";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
@@ -36,6 +36,7 @@ export function DepartmentTimeLogsTab() {
   const t = useTranslations();
   const { generateCallsign } = useGenerateCallsign();
   const tableState = useTableState({ pagination: asyncTable.pagination });
+  const { number } = useFormatter();
 
   return (
     <TabsContent value="departmentTimeLogs">
@@ -86,7 +87,7 @@ export function DepartmentTimeLogsTab() {
           isLoading={asyncTable.isInitialLoading}
           tableState={tableState}
           data={asyncTable.items.map((item) => {
-            const hours = item.hours < 1 ? "Less than 1" : item.hours;
+            const hours = item.hours < 1 ? "Less than 1" : number(item.hours);
             const isGroupedByDepartments = "department" in item;
             const id = isGroupedByDepartments ? item.departmentId : item.unitId;
 
