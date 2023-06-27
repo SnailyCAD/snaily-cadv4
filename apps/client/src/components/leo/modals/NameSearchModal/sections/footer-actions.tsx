@@ -33,6 +33,7 @@ export function NameSearchFooterActions(props: Props) {
   const { state, execute } = useFetch();
   const { hasPermissions } = usePermission();
   const hasDeclarePermissions = hasPermissions([Permissions.DeclareCitizenDead]);
+  const hasManageCitizenProfilePermissions = hasPermissions([Permissions.LeoManageCitizenProfile]);
 
   const { currentResult, setCurrentResult } = useNameSearch(
     (state) => ({
@@ -88,7 +89,7 @@ export function NameSearchFooterActions(props: Props) {
 
   return (
     <div className="flex items-center">
-      <DropdownMenu>
+      <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button className="flex items-center justify-center w-8 h-7 p-0">
             <ThreeDotsVertical
@@ -102,7 +103,10 @@ export function NameSearchFooterActions(props: Props) {
 
         <DropdownMenuContent side="right" sideOffset={3} alignOffset={0}>
           {CREATE_USER_CITIZEN_LEO ? (
-            <DropdownMenuItem className="px-1.5" onClick={() => openModal(ModalIds.CreateCitizen)}>
+            <DropdownMenuItem
+              className="px-1.5"
+              onClick={() => openModal(ModalIds.CreateOrManageCitizen)}
+            >
               {t("Leo.createCitizen")}
             </DropdownMenuItem>
           ) : null}
@@ -130,6 +134,18 @@ export function NameSearchFooterActions(props: Props) {
               >
                 {currentResult.missing ? t("Leo.declareFound") : t("Leo.declareMissing")}
               </DropdownMenuItem>
+
+              {hasManageCitizenProfilePermissions ? (
+                <DropdownMenuItem
+                  disabled={state === "loading"}
+                  variant="cancel"
+                  className="px-1.5"
+                  size="xs"
+                  onClick={() => openModal(ModalIds.CreateOrManageCitizen)}
+                >
+                  {t("Leo.manageCitizenProfile")}
+                </DropdownMenuItem>
+              ) : null}
             </>
           ) : null}
         </DropdownMenuContent>

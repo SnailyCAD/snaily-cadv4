@@ -67,7 +67,7 @@ export const enum ModalIds {
   NameSearch = "NameSearchModal",
   VehicleSearchWithinName = "VehicleSearchWithinNameModal",
   WeaponSearchWithinName = "WeaponSearchWithinNameModal",
-  CreateCitizen = "CreateCitizenModal",
+  CreateOrManageCitizen = "CreateOrManageCitizenModal",
 
   SwitchDivisionCallsign = "SwitchDivisionCallsignModal",
   VehicleSearch = "VehicleSearchModal",

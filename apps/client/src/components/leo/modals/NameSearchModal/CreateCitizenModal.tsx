@@ -16,14 +16,15 @@ import type {
 } from "@snailycad/types/api";
 import { shallow } from "zustand/shallow";
 
-export function CreateCitizenModal() {
+export function CreateOrManageCitizenModal() {
   const { isOpen, closeModal } = useModal();
   const t = useTranslations("Leo");
   const { state, execute } = useFetch();
-  const { setCurrentResult, setResults } = useNameSearch(
+  const { currentResult, setCurrentResult, setResults } = useNameSearch(
     (state) => ({
       setCurrentResult: state.setCurrentResult,
       setResults: state.setResults,
+      currentResult: state.currentResult,
     }),
     shallow,
   );
@@ -34,7 +35,7 @@ export function CreateCitizenModal() {
   });
 
   function handleClose() {
-    closeModal(ModalIds.CreateCitizen);
+    closeModal(ModalIds.CreateOrManageCitizen);
   }
 
   async function onSubmit({
@@ -93,10 +94,14 @@ export function CreateCitizenModal() {
     }
   }
 
+  if (currentResult?.isConfidential) {
+    return null;
+  }
+
   return (
     <Modal
       title={t("createCitizen")}
-      isOpen={isOpen(ModalIds.CreateCitizen)}
+      isOpen={isOpen(ModalIds.CreateOrManageCitizen)}
       onClose={handleClose}
       className="w-[1000px]"
     >
@@ -107,9 +112,9 @@ export function CreateCitizenModal() {
       ) : (
         <ManageCitizenForm
           cancelURL="#"
-          formFeatures={{ "edit-name": true }}
+          formFeatures={{ "edit-name": !currentResult, "license-fields": Boolean(currentResult) }}
           onSubmit={onSubmit}
-          citizen={null}
+          citizen={currentResult}
           state={state}
         />
       )}
