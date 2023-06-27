@@ -27,7 +27,7 @@ interface Props {
 export function NameSearchFooterActions(props: Props) {
   const [type, setType] = React.useState<RecordType | null>(null);
 
-  const { CREATE_USER_CITIZEN_LEO } = useFeatureEnabled();
+  const { CREATE_USER_CITIZEN_LEO, LEO_EDITABLE_CITIZEN_PROFILE } = useFeatureEnabled();
   const { openModal } = useModal();
   const t = useTranslations();
   const { state, execute } = useFetch();
@@ -135,7 +135,7 @@ export function NameSearchFooterActions(props: Props) {
                 {currentResult.missing ? t("Leo.declareFound") : t("Leo.declareMissing")}
               </DropdownMenuItem>
 
-              {hasManageCitizenProfilePermissions ? (
+              {hasManageCitizenProfilePermissions && LEO_EDITABLE_CITIZEN_PROFILE ? (
                 <DropdownMenuItem
                   disabled={state === "loading"}
                   variant="cancel"

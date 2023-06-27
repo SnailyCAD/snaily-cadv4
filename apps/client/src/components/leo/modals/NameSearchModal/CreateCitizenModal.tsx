@@ -132,7 +132,7 @@ export function CreateOrManageCitizenModal() {
       ) : (
         <ManageCitizenForm
           cancelURL="#"
-          formFeatures={{ "edit-name": !currentResult, "license-fields": Boolean(currentResult) }}
+          formFeatures={{ "edit-name": !currentResult }}
           onSubmit={onSubmit}
           citizen={currentResult}
           state={state}
