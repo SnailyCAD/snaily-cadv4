@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import { ModalIds } from "types/modal-ids";
 import { ManageCitizenForm } from "components/citizen/ManageCitizenForm";
 import { Loader } from "@snailycad/ui";
-import type { SelectValue } from "components/form/Select";
 import { useNameSearch } from "state/search/name-search-state";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import { ValueType } from "@snailycad/types";
@@ -28,9 +27,9 @@ export function CreateOrManageCitizenModal() {
     }),
     shallow,
   );
-  const { CREATE_USER_CITIZEN_LEO } = useFeatureEnabled();
+  const { CREATE_USER_CITIZEN_LEO, LEO_EDITABLE_CITIZEN_PROFILE } = useFeatureEnabled();
   const { isLoading } = useLoadValuesClientSide({
-    enabled: CREATE_USER_CITIZEN_LEO,
+    enabled: CREATE_USER_CITIZEN_LEO || LEO_EDITABLE_CITIZEN_PROFILE,
     valueTypes: [ValueType.GENDER, ValueType.ETHNICITY],
   });
 
@@ -47,50 +46,71 @@ export function CreateOrManageCitizenModal() {
     data: any;
     helpers: any;
   }) {
-    const { json, error } = await execute<PostSearchActionsCreateCitizen>({
-      path: "/search/actions/citizen",
-      method: "POST",
-      helpers,
-      data: {
-        ...data,
-        driversLicenseCategory: Array.isArray(data.driversLicenseCategory)
-          ? (data.driversLicenseCategory as SelectValue[]).map((v) => v.value)
-          : data.driversLicenseCategory,
-        pilotLicenseCategory: Array.isArray(data.pilotLicenseCategory)
-          ? (data.pilotLicenseCategory as SelectValue[]).map((v) => v.value)
-          : data.pilotLicenseCategory,
-        waterLicenseCategory: Array.isArray(data.waterLicenseCategory)
-          ? (data.waterLicenseCategory as SelectValue[]).map((v) => v.value)
-          : data.waterLicenseCategory,
-        firearmLicenseCategory: Array.isArray(data.firearmLicenseCategory)
-          ? (data.firearmLicenseCategory as SelectValue[]).map((v) => v.value)
-          : data.firearmLicenseCategory,
-      },
-    });
+    if (currentResult) {
+      if (currentResult.isConfidential) return;
 
-    const errors = ["dateLargerThanNow", "nameAlreadyTaken", "invalidImageType"];
-    if (errors.includes(error as string)) {
-      helpers.setCurrentStep(0);
-    }
+      const { json, error } = await execute<PostSearchActionsCreateCitizen>({
+        path: `/search/actions/citizen/${currentResult.id}`,
+        method: "PUT",
+        helpers,
+        data,
+      });
 
-    if (json.id) {
-      let imageJson;
-      if (formData) {
-        const { json: _imageJson } = await execute<PostCitizenImageByIdData>({
-          path: `/citizen/${json.id}`,
-          method: "POST",
-          data: formData,
-          helpers,
-        });
-
-        if (_imageJson) {
-          imageJson = _imageJson;
-        }
+      const errors = ["dateLargerThanNow", "nameAlreadyTaken", "invalidImageType"];
+      if (errors.includes(error as string)) {
+        helpers.setCurrentStep(0);
       }
 
-      setCurrentResult({ ...json, ...imageJson });
-      setResults([{ ...json, ...imageJson }]);
-      handleClose();
+      if (json.id) {
+        let imageJson;
+        if (formData) {
+          const { json: _imageJson } = await execute<PostCitizenImageByIdData>({
+            path: `/citizen/${json.id}`,
+            method: "POST",
+            data: formData,
+            helpers,
+          });
+
+          if (_imageJson) {
+            imageJson = _imageJson;
+          }
+        }
+
+        setCurrentResult({ ...json, ...imageJson });
+        handleClose();
+      }
+    } else {
+      const { json, error } = await execute<PostSearchActionsCreateCitizen>({
+        path: "/search/actions/citizen",
+        method: "POST",
+        helpers,
+        data,
+      });
+
+      const errors = ["dateLargerThanNow", "nameAlreadyTaken", "invalidImageType"];
+      if (errors.includes(error as string)) {
+        helpers.setCurrentStep(0);
+      }
+
+      if (json.id) {
+        let imageJson;
+        if (formData) {
+          const { json: _imageJson } = await execute<PostCitizenImageByIdData>({
+            path: `/citizen/${json.id}`,
+            method: "POST",
+            data: formData,
+            helpers,
+          });
+
+          if (_imageJson) {
+            imageJson = _imageJson;
+          }
+        }
+
+        setCurrentResult({ ...json, ...imageJson });
+        setResults([{ ...json, ...imageJson }]);
+        handleClose();
+      }
     }
   }
 

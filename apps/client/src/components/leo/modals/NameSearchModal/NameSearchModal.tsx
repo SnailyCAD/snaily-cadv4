@@ -74,7 +74,8 @@ export function NameSearchModal() {
   const { state, execute } = useFetch();
   const router = useRouter();
   const { makeImageUrl } = useImageUrl();
-  const { SOCIAL_SECURITY_NUMBERS, CREATE_USER_CITIZEN_LEO } = useFeatureEnabled();
+  const { SOCIAL_SECURITY_NUMBERS, CREATE_USER_CITIZEN_LEO, LEO_EDITABLE_CITIZEN_PROFILE } =
+    useFeatureEnabled();
   const { bolos } = useBolos();
   const { hasPermissions } = usePermission();
 
@@ -432,7 +433,8 @@ export function NameSearchModal() {
             <AutoSubmit />
             <VehicleSearchModal id={ModalIds.VehicleSearchWithinName} />
             <WeaponSearchModal id={ModalIds.WeaponSearchWithinName} />
-            {(CREATE_USER_CITIZEN_LEO && isLeo) || hasManageCitizenProfilePermissions ? (
+            {(CREATE_USER_CITIZEN_LEO && isLeo) ||
+            (LEO_EDITABLE_CITIZEN_PROFILE && hasManageCitizenProfilePermissions) ? (
               <CreateOrManageCitizenModal />
             ) : null}
             {currentResult && !currentResult.isConfidential ? (
