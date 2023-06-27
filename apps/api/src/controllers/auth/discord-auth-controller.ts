@@ -31,11 +31,17 @@ export class DiscordAuth {
   @Description("Redirect to Discord OAuth2 URL")
   async handleRedirectToDiscordOAuthAPI(@Res() res: Res) {
     const url = new URL(`${DISCORD_API_URL}/oauth2/authorize`);
+    const redirectURL = findRedirectURL();
 
     if (!DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET) {
       throw new BadRequest(
         "No `DISCORD_CLIENT_ID` was specified in the .env file. Please refer to the documentation: https://docs.snailycad.org/docs/discord-integration/discord-authentication",
       );
+    }
+
+    const userCount = await prisma.user.count();
+    if (userCount <= 0) {
+      return res.redirect(`${redirectURL}/auth/login?error=ownerCannotDiscordAuth`);
     }
 
     url.searchParams.append("client_id", DISCORD_CLIENT_ID);

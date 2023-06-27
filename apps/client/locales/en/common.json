@@ -185,7 +185,8 @@
     "featureNotEnabled": "This feature is not enabled. ({feature})",
     "errorUploadingImage": "Unable to upload your image at this moment. Please try again later. If this keeps reoccurring, contact the CAD-owner.",
     "noDefaultDepartmentSet": "There is no default department set. Please contact an administrator to set a default department.",
-    "userDefinedCallsignAlreadyExists": "A combined unit with that callsign is already present. Please use a different callsign."
+    "userDefinedCallsignAlreadyExists": "A combined unit with that callsign is already present. Please use a different callsign.",
+    "ownerCannotDiscordAuth": "The first account (Owner) cannot be registered via Discord. Please use username/password registration. You can connect Discord later in the account settings."
   },
   "Statuses": {
     "ACCEPTED": "Accepted",
