@@ -744,8 +744,8 @@ export class AdminManageUnitsController {
   })
   async addUnitQualification(
     @PathParams("unitId") unitId: string,
-    @BodyParams("qualificationId") qualificationId: string,
     @Context("sessionUserId") sessionUserId: string,
+    @BodyParams("qualificationId") qualificationId?: string,
   ): Promise<APITypes.PostManageUnitAddQualificationData> {
     const unit = await findUnit(unitId);
 
@@ -763,7 +763,7 @@ export class AdminManageUnitsController {
     } as const;
 
     const qualificationValue = await prisma.qualificationValue.findUnique({
-      where: { id: qualificationId },
+      where: { id: String(qualificationId) },
     });
 
     if (!qualificationValue) {
