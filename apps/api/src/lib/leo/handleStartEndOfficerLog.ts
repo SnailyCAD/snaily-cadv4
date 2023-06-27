@@ -124,6 +124,13 @@ async function handleUnassignFromActiveIncident<Type extends "leo" | "ems-fd">(
   });
   if (!incident) return;
 
+  // unassign officer from incident
+  // @ts-expect-error method has same properties
+  await prisma[prismaName].update({
+    where: { id: options.unit.id },
+    data: { activeIncidentId: null },
+  });
+
   /**
    * remove officer from involved officers then emit via socket
    */
