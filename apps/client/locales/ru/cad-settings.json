@@ -78,7 +78,11 @@
     "citizenRecordsChannel": "Канал записей о гражданах",
     "citizenRecordsChannelInfo": "Канал Discord, куда будут отправлены записи о новых отчетах об аресте, штрафах, ордерах и письменных предупреждениях.",
     "warrantsChannel": "Канал ордеров",
-    "warrantsChannelInfo": "Канал Discord, куда будут отправлены записи о новых ордерах."
+    "warrantsChannelInfo": "Канал Discord, куда будут отправлены записи о новых ордерах.",
+    "bleeterPostChannelInfo": "Канал, куда будут отправлены новые посты Bleeter.",
+    "bleeterPostChannel": "Канал Постов Bleeter",
+    "citizenDeclaredDeadChannelInfo": "Канал, куда будут отправлены уведомления о гражданах, которые были объявлены мертвыми.",
+    "citizenDeclaredDeadChannel": "Канал объявления о смерти граждан"
   },
   "RawWebhooksTab": {
     "rawWebhooks": "Raw Вебхуки",
@@ -301,7 +305,9 @@
     "PETS": "Питомцы",
     "PETS-description": "Если включено, граждане смогут созавать себе питомцев.",
     "REQUIRED_CITIZEN_IMAGE": "Требуется Изображение Гражданина",
-    "REQUIRED_CITIZEN_IMAGE-description": "Если включено, то пользователям нужно будет загрузить фото своего гражданина при создании."
+    "REQUIRED_CITIZEN_IMAGE-description": "Если включено, то пользователям нужно будет загрузить фото своего гражданина при создании.",
+    "LEO_EDITABLE_CITIZEN_PROFILE": "Редактирование Профиля Гражданина",
+    "LEO_EDITABLE_CITIZEN_PROFILE-description": "Если включено, то сотрудники структур смогут редактировать профили граждан, у которых указаны права на редактирование."
   },
   "Permissions": {
     "defaultPermissions": "Стандартные Разрешения",
