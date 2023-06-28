@@ -36,6 +36,7 @@
     "alert_deleteCourtDate": "Are you sure you want to delete this court date? This action cannot be undone.",
     "description": "Description",
     "createdBy": "Created By",
-    "cancelRequest": "Cancel Request"
+    "cancelRequest": "Cancel Request",
+    "courthouseManagement": "Courthouse Management"
   }
 }

@@ -45,7 +45,7 @@
     "licenseSuspendedInfo": "License is suspended. Please contact an officer to revoke the suspension.",
     "licenseNumber": "DVLA License Number",
     "unmarkAsStolen": "Unmark as Stolen",
-    "markCitizenDeceased": "Mark cilivian deceased",
+    "markCitizenDeceased": "Mark civilian deceased",
     "citizenDead": "WARNING: This civilian died on {date}",
     "basicInformation": "Basic Information",
     "optionalInformation": "Optional Information",
@@ -54,9 +54,14 @@
     "createWithOfficer": "Create with Officer",
     "previousRecords": "Previous Records",
     "addressFlags": "Address Flags",
+    "driverLicensePoints": "Driver License Points",
+    "pilotLicensePoints": "Pilot License Points",
+    "firearmsLicensePoints": "Firearms License Points",
+    "waterLicensePoints": "Water License Points",
     "createPreviousRecordsStepDescription": "Here you can optionally add previous records this civilian has had. This is useful for when a civilian has been arrested before.",
     "alert_markCitizenDeceased": "Are you sure you want to delete <span>{citizen}</span>? Only the ambulance service can mark you alive again.",
-    "alert_deleteCitizen": "Are you sure you want to delete <span>{citizen}</span>? This action cannot be undone."
+    "alert_deleteCitizen": "Are you sure you want to delete <span>{citizen}</span>? This action cannot be undone.",
+    "id": "Id"
   },
   "Vehicles": {
     "model": "Model",
@@ -113,7 +118,32 @@
     "deleteMedicalRecord": "Delete Medical Record",
     "bloodGroup": "Blood group",
     "diseases": "Diseases",
+    "petMedicalRecords": "Pet Medical Records",
+    "petNoMedicalRecords": "This pet doesn't have any medical records yet.",
     "info_bloodgroup": "Note: updating your bloodgroup will update all other medical records' bloodgroup",
     "alert_deleteMedicalRecord": "Are you sure you want to delete this medical record? This action cannot be undone."
+  },
+  "Pets": {
+    "pets": "Pets",
+    "createPet": "Create Pet",
+    "name": "Name",
+    "color": "Color",
+    "dateOfBirth": "Date of Birth",
+    "weight": "Weight",
+    "age": "Age",
+    "breed": "Breed",
+    "medicalRecords": "Medical Records",
+    "viewPet": "View Pet",
+    "citizen": "Citizen",
+    "noPets": "You do not have any pets created yet.",
+    "notes": "Notes",
+    "noNotes": "This pet doesn't have any notes yet",
+    "addNote": "Add Note",
+    "manageNote": "Manage Note",
+    "deleteNote": "Delete Note",
+    "editPet": "Edit Pet",
+    "deletePet": "Delete Pet",
+    "alert_deletePet": "Are you sure you want to delete this pet? This action cannot be undone.",
+    "alert_deleteNote": "Are you sure you want to delete this note? This action cannot be undone."
   }
 }

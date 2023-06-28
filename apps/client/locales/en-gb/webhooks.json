@@ -38,13 +38,14 @@
     "recordType": "Record Type",
     "ARREST_REPORT": "Arrest Report",
     "WRITTEN_WARNING": "Caution",
-    "TICKET": "Fixed Penalty Notice",
+    "TICKET": "FPN",
     "totalBail": "Total Bail",
     "totalFineAmount": "Total Fine Amount",
     "totalJailTime": "Total Sentence",
     "newWarrantCreated": "New Warrant Created",
     "newRecordCreated": "New Record Created",
     "ACTIVE": "Active",
-    "INACTIVE": "Inactive"
+    "INACTIVE": "Inactive",
+    "violations": "Charges"
   }
 }
