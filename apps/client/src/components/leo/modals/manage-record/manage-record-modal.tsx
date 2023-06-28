@@ -275,11 +275,11 @@ export function ManageRecordModal(props: Props) {
           <Form autoComplete="off">
             <TabList
               tabs={[
-                { name: "General Information", value: "general-information-tab" },
-                { name: "Violations", value: "violations-tab" },
-                { name: "Seized Items", value: "seized-items-tab" },
-                { name: "Vehicle Information", value: "vehicle-tab" },
-                { name: "Connections", value: "connections-tab" },
+                { name: t("generalInformation"), value: "general-information-tab" },
+                { name: t("violations"), value: "violations-tab" },
+                { name: t("seizedItems"), value: "seized-items-tab" },
+                { name: t("vehicleInformation"), value: "vehicle-tab" },
+                { name: t("connections"), value: "connections-tab" },
               ]}
             >
               <TabsContent value="general-information-tab">

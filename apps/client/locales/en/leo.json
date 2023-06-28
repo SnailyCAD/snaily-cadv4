@@ -320,7 +320,9 @@
     "mustSelectMapServer": "You must select a map server to continue.",
     "userDefinedCallsign": "User Defined Callsign",
     "userDefinedCallsignDescription": "You are allowed to set a custom callsign for this unit. This will override the default callsign set by the department.",
-    "manageCitizenProfile": "Manage Citizen Profile"
+    "manageCitizenProfile": "Manage Citizen Profile",
+    "generalInformation": "General Information",
+    "vehicleInformation": "Vehicle Information"
   },
   "Bolos": {
     "activeBolos": "Active Bolos",
