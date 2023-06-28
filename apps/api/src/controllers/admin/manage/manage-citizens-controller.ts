@@ -12,7 +12,6 @@ import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateImageURL } from "lib/images/validate-image-url";
 import { Feature, Prisma } from "@prisma/client";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
-import { isCuid } from "@paralleldrive/cuid2";
 import type * as APITypes from "@snailycad/types/api";
 import { validateSocialSecurityNumber } from "lib/citizen/validate-ssn";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
@@ -78,19 +77,26 @@ export class AdminManageCitizensController {
 
   @Get("/:id")
   @Description(
-    "Get a citizen by the `id`. Or get all citizens from a user by the `discordId` or `steamId`",
+    "Get a citizen by the `id` (/v1/admin/manage/citizens/xxxxxxxx) or get all citizens from a user by the `discordId` or `steamId` (/v1/admin/manage/citizens/null?discordId=xxxxx)",
   )
   @UsePermissions({
     permissions: [Permissions.ViewCitizens, Permissions.ManageCitizens, Permissions.DeleteCitizens],
   })
-  async getCitizen(@PathParams("id") id: string): Promise<APITypes.GetManageCitizenByIdData> {
-    const isCitizenId = isCuid(id);
-    const functionName = isCitizenId ? "findFirst" : "findMany";
+  async getCitizen(
+    @PathParams("id") id: string,
+    @QueryParams("steamId", String) steamId?: string,
+    @QueryParams("discordId", String) discordId?: string,
+  ): Promise<APITypes.GetManageCitizenByIdData> {
+    const functionName = discordId || steamId ? "findMany" : "findFirst";
 
-    const OR: Prisma.CitizenWhereInput["OR"] = [{ id }];
+    const OR: Prisma.CitizenWhereInput["OR"] = [];
 
-    if (!isCitizenId) {
-      OR.push({ user: { discordId: id } }, { user: { steamId: id } });
+    if (steamId) {
+      OR.push({ user: { steamId } });
+    } else if (discordId) {
+      OR.push({ user: { discordId } });
+    } else {
+      OR.push({ id });
     }
 
     // @ts-expect-error same properties
