@@ -1,0 +1,25 @@
+{
+  "Bleeter": {
+    "bleeter": "Bleeter",
+    "noPosts": "There are no bleeter posts yet. Check back later",
+    "createBleet": "Create bleet",
+    "editBleet": "Edit bleet",
+    "deleteBleet": "Delete Bleet",
+    "viewBleet": "View bleet",
+    "headerImage": "Header Image",
+    "bleetTitle": "Bleet title",
+    "bleetBody": "Bleet Body",
+    "followers": "Followers",
+    "following": "Following",
+    "follow": "Follow",
+    "unfollow": "Unfollow",
+    "editProfile": "Edit Profile",
+    "posts": "Posts",
+    "myProfile": "My Profile",
+    "save": "Save",
+    "getStarted": "Get Started",
+    "unVerifyProfile": "Unverify Profile",
+    "verifyProfile": "Verify Profile",
+    "alert_deleteBleet": "Are you sure want to delete \"<span>{title}</span>\"? This action cannot be undone."
+  }
+}
