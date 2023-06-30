@@ -137,6 +137,7 @@ export class ImportCitizensController {
             pilotLicenseId: data.pilotLicenseId ?? null,
             postal: data.postal ?? null,
             phoneNumber: data.phoneNumber ?? null,
+            occupation: data.occupation ?? null,
           },
           include: { gender: true, ethnicity: true, suspendedLicenses: true },
         });

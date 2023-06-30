@@ -30,6 +30,7 @@ export const IMPORT_CITIZENS_SCHEMA = z.object({
   flags: z.array(z.string()).nullish(),
   postal: z.string().nullish(),
   phoneNumber: z.string().nullish(),
+  occupation: z.string().nullish(),
   vehicles: z
     .array(VEHICLE_SCHEMA.omit({ ownerId: true }))
     .optional()
