@@ -3,6 +3,7 @@ import { INSPECTION_STATUS_REGEX, TAX_STATUS_REGEX } from "../../citizen";
 
 export const VEHICLE_SCHEMA = z.object({
   plate: z.string().min(2).max(255),
+  userId: z.string().nullish(),
   modelId: z.string().min(2).max(255),
   ownerId: z.string().min(2).max(255),
   registrationStatusId: z.string().min(2).max(255),

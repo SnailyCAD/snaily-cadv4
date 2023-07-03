@@ -143,11 +143,15 @@ export class ImportCitizensController {
         });
 
         if (data.vehicles) {
-          await importVehiclesHandler(data.vehicles.map((v) => ({ ...v, ownerId: citizen.id })));
+          await importVehiclesHandler(
+            data.vehicles.map((v) => ({ ...v, userId: data.userId, ownerId: citizen.id })),
+          );
         }
 
         if (data.weapons) {
-          await importWeaponsHandler(data.weapons.map((v) => ({ ...v, ownerId: citizen.id })));
+          await importWeaponsHandler(
+            data.weapons.map((v) => ({ ...v, userId: data.userId, ownerId: citizen.id })),
+          );
         }
 
         if (data.flags) {

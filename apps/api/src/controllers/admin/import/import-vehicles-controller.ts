@@ -151,6 +151,7 @@ export async function importVehiclesHandler(body: unknown[]) {
     data.map(async (data) => {
       const vehicle = await prisma.registeredVehicle.create({
         data: {
+          userId: data.userId,
           citizenId: data.ownerId,
           plate: data.plate,
           color: data.color,

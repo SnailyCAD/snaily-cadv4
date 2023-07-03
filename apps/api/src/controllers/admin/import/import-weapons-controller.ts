@@ -121,6 +121,7 @@ export async function importWeaponsHandler(body: unknown[]) {
     data.map((weapon) =>
       prisma.weapon.create({
         data: {
+          userId: weapon.userId,
           citizenId: weapon.ownerId,
           registrationStatusId: weapon.registrationStatusId,
           modelId: weapon.modelId,
