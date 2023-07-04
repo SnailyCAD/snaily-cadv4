@@ -67,7 +67,8 @@
     "alert_end911Call": "Are you sure you want to end this call?",
     "alert_endTowCall": "Are you sure you want to end this call?",
     "id": "id",
-    "towLogsDescription": "Here you can view all archived tow logs. This allows you to view all tow logs that have been ended/archived."
+    "towLogsDescription": "Here you can view all archived tow logs. This allows you to view all tow logs that have been ended/archived.",
+    "addAllUnits": "Add all active units"
   },
   "Events": {
     "unitAssignedToCall": "<span>{unit}</span> has been assigned to this call.",

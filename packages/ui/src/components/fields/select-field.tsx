@@ -40,6 +40,7 @@ export type SelectFieldProps<T extends SelectValue> = Omit<
   selectedKeys?: Parameters<typeof useMultiSelectState>["0"]["selectedKeys"];
   selectedKey?: React.Key | null;
   selectionMode?: "single" | "multiple";
+  isCalendar?: boolean;
 };
 
 export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
@@ -129,7 +130,7 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
             />
           </div>
           {state.isOpen && (
-            <Popover isOpen={state.isOpen} onClose={state.close}>
+            <Popover isCalendar={props.isCalendar} isOpen={state.isOpen} onClose={state.close}>
               <ListBox {...menuProps} state={state} />
             </Popover>
           )}

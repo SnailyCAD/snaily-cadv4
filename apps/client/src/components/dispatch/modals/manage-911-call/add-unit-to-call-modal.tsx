@@ -24,10 +24,14 @@ import { ImageWrapper } from "components/shared/image-wrapper";
 import type { ActiveDeputy } from "state/ems-fd-state";
 import type { ActiveOfficer } from "state/leo-state";
 import { TrashFill } from "react-bootstrap-icons";
+import { useActiveOfficers } from "hooks/realtime/useActiveOfficers";
+import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
 
 interface Props {
   onClose?(): void;
 }
+
+type SetValues<Values> = (values: React.SetStateAction<Values>) => void;
 
 export function AddUnitToCallModal({ onClose }: Props) {
   const { isOpen, closeModal } = useModal();
@@ -37,6 +41,8 @@ export function AddUnitToCallModal({ onClose }: Props) {
   const call911State = useCall911State();
   const call = call911State.currentlySelectedCall!;
   const { makeImageUrl } = useImageUrl();
+  const { activeOfficers } = useActiveOfficers();
+  const { activeDeputies } = useActiveDeputies();
 
   const t = useTranslations("Calls");
 
@@ -96,7 +102,25 @@ export function AddUnitToCallModal({ onClose }: Props) {
     });
   }
 
-  function handleAddUnit(values: typeof INITIAL_VALUES, setValues: any) {
+  function handleAddAllUnits(
+    values: typeof INITIAL_VALUES,
+    setValues: SetValues<typeof INITIAL_VALUES>,
+  ) {
+    const units = [...activeOfficers, ...activeDeputies].map((unit) => ({
+      ...unit,
+      isPrimary: false,
+    }));
+
+    setValues({
+      ...values,
+      units: [...values.units, ...units],
+    });
+  }
+
+  function handleAddUnit(
+    values: typeof INITIAL_VALUES,
+    setValues: SetValues<typeof INITIAL_VALUES>,
+  ) {
     if (values.unit) {
       if (values.units.some((v) => v.id === values.unit?.id)) {
         setValues({
@@ -206,13 +230,23 @@ export function AddUnitToCallModal({ onClose }: Props) {
                   {t("primaryUnit")}
                 </SwitchField>
 
-                <Button
-                  type="button"
-                  onPress={() => handleAddUnit(values, setValues)}
-                  className="max-h-9 max-w-fit"
-                >
-                  {t("addUnit")}
-                </Button>
+                <div>
+                  <Button
+                    type="button"
+                    onPress={() => handleAddAllUnits(values, setValues)}
+                    className="max-h-9 max-w-fit mr-2"
+                  >
+                    {t("addAllUnits")}
+                  </Button>
+
+                  <Button
+                    type="button"
+                    onPress={() => handleAddUnit(values, setValues)}
+                    className="max-h-9 max-w-fit"
+                  >
+                    {t("addUnit")}
+                  </Button>
+                </div>
               </FormRow>
             </div>
 

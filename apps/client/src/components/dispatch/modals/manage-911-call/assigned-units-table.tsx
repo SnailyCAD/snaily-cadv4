@@ -174,6 +174,7 @@ function RoleColumn({ unit, isDisabled }: RoleColumnProps) {
 
   return (
     <SelectField
+      isCalendar
       label={t("primaryUnit")}
       hiddenLabel
       selectedKey={isPrimary}
@@ -229,6 +230,7 @@ function StatusColumn({ unit, isDisabled, color, useDot }: StatusColumnProps) {
 
   return (
     <SelectField
+      isCalendar
       label={t("primaryUnit")}
       hiddenLabel
       selectedKey={selectedKey}
