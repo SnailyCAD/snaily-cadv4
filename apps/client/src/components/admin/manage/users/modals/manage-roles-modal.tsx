@@ -47,7 +47,7 @@ export function ManageRolesModal({ roles, user, onUpdate }: Props) {
       isOpen={isOpen(ModalIds.ManageRoles)}
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ values }) => {
+        {({ setFieldValue, values }) => {
           const _roles = values.roles.map((roleId) => {
             const role = roles.customRoles.find((r) => r.id === roleId);
             return role!;
@@ -66,6 +66,7 @@ export function ManageRolesModal({ roles, user, onUpdate }: Props) {
                   label: role.name,
                   value: role.id,
                 }))}
+                onSelectionChange={(keys) => setFieldValue("roles", keys)}
               />
 
               <div className="mt-3">

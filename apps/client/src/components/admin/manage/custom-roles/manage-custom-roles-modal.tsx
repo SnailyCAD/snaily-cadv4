@@ -162,6 +162,7 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
                 label: role.name,
               }))}
               selectedKey={values.discordRoleId}
+              onSelectionChange={(key) => setFieldValue("discordRoleId", key)}
             />
 
             <ImageSelectInput image={image} setImage={setImage} />
