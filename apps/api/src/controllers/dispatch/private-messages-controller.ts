@@ -72,10 +72,9 @@ export class DispatchPrivateMessagesController {
         getActiveDeputy({ ctx, user, req: request }).catch(() => null),
       ]);
 
-      const activeUnit = activeOfficer ?? activeDeputy;
       const { unit } = await findUnit(unitId);
 
-      if (unit?.id !== activeUnit?.id) {
+      if (unit?.id !== activeOfficer?.id || unit?.id !== activeDeputy?.id) {
         throw new ExtendedBadRequest({ message: "Insufficient permissions" });
       }
     }
@@ -127,9 +126,7 @@ export class DispatchPrivateMessagesController {
         getActiveDeputy({ ctx, user, req: request }).catch(() => null),
       ]);
 
-      const activeUnit = activeOfficer ?? activeDeputy;
-
-      if (unit?.id !== activeUnit?.id) {
+      if (unit?.id !== activeOfficer?.id || unit?.id !== activeDeputy?.id) {
         throw new ExtendedBadRequest({ message: "Insufficient permissions" });
       }
     }

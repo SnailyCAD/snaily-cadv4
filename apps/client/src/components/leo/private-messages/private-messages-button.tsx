@@ -24,6 +24,7 @@ export function PrivateMessagesButton(props: Props) {
     queryKey: ["private-messages-count", props.unit.id],
     queryFn: async () => {
       const { json } = await execute<DispatchChat[]>({
+        noToast: true,
         path: `/dispatch/private-message/${props.unit.id}`,
         method: "GET",
       });

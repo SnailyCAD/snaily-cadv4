@@ -142,7 +142,6 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
               <TextField
                 errorMessage={errors.badgeNumberString}
                 label={t("Leo.badgeNumber")}
-                autoFocus
                 name="badgeNumberString"
                 onChange={(value) => setFieldValue("badgeNumberString", value)}
                 value={values.badgeNumberString}
