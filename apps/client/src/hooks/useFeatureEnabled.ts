@@ -25,6 +25,7 @@ export const DEFAULT_DISABLED_FEATURES = {
   USER_DEFINED_CALLSIGN_COMBINED_UNIT: { isEnabled: false },
   REQUIRED_CITIZEN_IMAGE: { isEnabled: false },
   LEO_EDITABLE_CITIZEN_PROFILE: { isEnabled: false },
+  ALLOW_MULTIPLE_UNITS_DEPARTMENTS_PER_USER: { isEnabled: false },
 } satisfies Partial<Record<Feature, { isEnabled: boolean }>>;
 
 export const DEFAULT_FEATURE_OPTIONS = {
