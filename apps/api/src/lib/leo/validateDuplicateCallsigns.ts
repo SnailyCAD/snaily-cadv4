@@ -1,8 +1,10 @@
+import { Prisma } from "@prisma/client";
 import { BadRequest } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 
 interface Options {
   unitId?: string;
+  userId?: string;
   type: "leo" | "ems-fd" | "combined-leo" | "combined-ems-fd";
   callsign1: string;
   callsign2: string;
@@ -18,11 +20,20 @@ export async function validateDuplicateCallsigns(options: Options) {
 
   const t = prismaNames[options.type];
 
+  const NOT: Partial<Prisma.OfficerWhereInput>[] = [];
+  if (options.unitId) {
+    NOT.push({ id: options.unitId });
+  }
+  if (options.userId) {
+    NOT.push({ userId: options.userId });
+  }
+
   // @ts-expect-error properties for this function are the same.
   const existing = await prisma[t].count({
     where: {
-      AND: [{ callsign: options.callsign1 }, { callsign2: options.callsign2 }],
-      NOT: options.unitId ? { id: options.unitId } : undefined,
+      callsign: options.callsign1,
+      callsign2: options.callsign2,
+      NOT,
     },
   });
 
