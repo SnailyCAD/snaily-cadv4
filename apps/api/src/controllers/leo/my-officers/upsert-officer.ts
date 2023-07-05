@@ -70,6 +70,12 @@ export async function upsertOfficer({
     features: cad.features,
   });
 
+  const allowMultipleOfficersWithSameDeptPerUser = isFeatureEnabled({
+    feature: Feature.ALLOW_MULTIPLE_UNITS_DEPARTMENTS_PER_USER,
+    defaultReturn: false,
+    features: cad.features,
+  });
+
   if (divisionsEnabled) {
     if (!data.divisions || data.divisions.length <= 0) {
       throw new ExtendedBadRequest({ divisions: "Must have at least 1 item" });
@@ -88,11 +94,14 @@ export async function upsertOfficer({
     });
   }
 
+  console.log({ allowMultipleOfficersWithSameDeptPerUser });
+
   await validateDuplicateCallsigns({
     callsign1: data.callsign,
     callsign2: data.callsign2,
     type: "leo",
     unitId: existingOfficer?.id,
+    userId: allowMultipleOfficersWithSameDeptPerUser ? user?.id : undefined,
   });
 
   if (user && !existingOfficer) {

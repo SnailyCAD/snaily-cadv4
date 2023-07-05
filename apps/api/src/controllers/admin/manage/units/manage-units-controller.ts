@@ -365,6 +365,7 @@ export class AdminManageUnitsController {
     @Context("sessionUserId") sessionUserId: string,
     @PathParams("unitId") unitId: string,
     @BodyParams() body: unknown,
+    @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
   ): Promise<APITypes.PutManageUnitCallsignData> {
     const data = validateSchema(UPDATE_UNIT_CALLSIGN_SCHEMA.partial(), body);
 
@@ -384,11 +385,18 @@ export class AdminManageUnitsController {
     const t = prismaNames[type];
 
     if (data.callsign && data.callsign2) {
+      const allowMultipleOfficersWithSameDeptPerUser = isFeatureEnabled({
+        feature: Feature.ALLOW_MULTIPLE_UNITS_DEPARTMENTS_PER_USER,
+        defaultReturn: false,
+        features: cad.features,
+      });
+
       await validateDuplicateCallsigns({
         callsign1: data.callsign,
         callsign2: data.callsign2,
         unitId: unit.id,
         type,
+        userId: allowMultipleOfficersWithSameDeptPerUser && unit.userId ? unit.userId : undefined,
       });
     }
 

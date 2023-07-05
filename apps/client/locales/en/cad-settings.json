@@ -307,7 +307,9 @@
     "REQUIRED_CITIZEN_IMAGE": "Required Citizen Image",
     "REQUIRED_CITIZEN_IMAGE-description": "When enabled, this will require citizens to upload an image when creating a citizen.",
     "LEO_EDITABLE_CITIZEN_PROFILE": "LEO Editable Citizen Profile",
-    "LEO_EDITABLE_CITIZEN_PROFILE-description": "When enabled, this will allow LEO/EMS/FD/Dispatch to edit citizen profiles if the user has the 'Manage Citizen Profile (non-admin)' permission."
+    "LEO_EDITABLE_CITIZEN_PROFILE-description": "When enabled, this will allow LEO/EMS/FD/Dispatch to edit citizen profiles if the user has the 'Manage Citizen Profile (non-admin)' permission.",
+    "ALLOW_MULTIPLE_UNITS_DEPARTMENTS_PER_USER": "Allow multiple units with the same callsign and department per user",
+    "ALLOW_MULTIPLE_UNITS_DEPARTMENTS_PER_USER-description": "When enabled, officers and deputies can create multiple units with the same callsign and department."
   },
   "Permissions": {
     "defaultPermissions": "Default Permissions",

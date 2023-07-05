@@ -76,11 +76,18 @@ export async function upsertEmsFdDeputy(options: UpsertEmsFdDeputyOptions) {
     });
   }
 
+  const allowMultipleOfficersWithSameDeptPerUser = isFeatureEnabled({
+    feature: Feature.ALLOW_MULTIPLE_UNITS_DEPARTMENTS_PER_USER,
+    defaultReturn: false,
+    features: options.cad.features,
+  });
+
   await validateDuplicateCallsigns({
     callsign1: data.callsign,
     callsign2: data.callsign2,
     type: "ems-fd",
     unitId: options.existingDeputy?.id,
+    userId: allowMultipleOfficersWithSameDeptPerUser ? options.user?.id : undefined,
   });
 
   const citizen = await upsertEmsFdCitizen({ ...options, data });
