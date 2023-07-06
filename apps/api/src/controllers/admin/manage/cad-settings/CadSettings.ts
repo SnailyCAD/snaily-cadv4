@@ -263,6 +263,8 @@ export class CADSettingsController {
         driversLicenseNumberLength: data.driversLicenseNumberLength,
         weaponLicenseNumberLength: data.weaponLicenseNumberLength,
         waterLicenseNumberLength: data.waterLicenseNumberLength,
+        signal100RepeatAmount: data.signal100RepeatAmount,
+        signal100RepeatIntervalMs: data.signal100RepeatIntervalMs,
       },
       include: { webhooks: true },
     });

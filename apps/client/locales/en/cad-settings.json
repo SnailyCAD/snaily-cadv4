@@ -183,7 +183,11 @@
     "waterLicenseNumberLengthDescription": "The length of the water license number (Default: 8)",
     "seconds": "Seconds",
     "minutes": "Minutes",
-    "hours": "Hours"
+    "hours": "Hours",
+    "signal100RepeatAmountDescription": "The amount of times Signal 100 should be repeated. (Default: 1)",
+    "signal100RepeatAmount": "Signal 100 Repeat Amount",
+    "signal100RepeatIntervalMsDescription": "The amount of time between each Signal 100 message in milliseconds. (Default: 1000)",
+    "signal100RepeatIntervalMs": "Signal 100 Repeat Interval (ms)"
   },
   "Features": {
     "enableOrDisableFeatures": "Enable or Disable Features",

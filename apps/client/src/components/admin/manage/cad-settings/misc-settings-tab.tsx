@@ -151,6 +151,11 @@ export function MiscFeatures() {
     pilotLicenseMaxPoints: miscSettings.pilotLicenseMaxPoints ?? 12,
     weaponLicenseMaxPoints: miscSettings.weaponLicenseMaxPoints ?? 12,
     waterLicenseMaxPoints: miscSettings.waterLicenseMaxPoints ?? 12,
+
+    // how many times a signal 100 should be repeated.
+    signal100RepeatAmount: miscSettings.signal100RepeatAmount ?? 1,
+    // the amount between each signal 100 repeat.
+    signal100RepeatIntervalMs: miscSettings.signal100RepeatIntervalMs ?? 1_000,
   };
 
   return (
@@ -353,6 +358,36 @@ export function MiscFeatures() {
                   value={values.jailTimeScaling}
                   onChange={handleChange}
                   isClearable
+                />
+              </SettingsFormField>
+
+              <SettingsFormField
+                action="short-input"
+                description={t("signal100RepeatAmountDescription")}
+                errorMessage={errors.signal100RepeatAmount}
+                label={t("signal100RepeatAmount")}
+              >
+                <Input
+                  name="signal100RepeatAmount"
+                  type="number"
+                  value={values.signal100RepeatAmount}
+                  onChange={handleChange}
+                  min={1}
+                />
+              </SettingsFormField>
+
+              <SettingsFormField
+                action="short-input"
+                description={t("signal100RepeatIntervalMsDescription")}
+                errorMessage={errors.signal100RepeatIntervalMs}
+                label={t("signal100RepeatIntervalMs")}
+              >
+                <Input
+                  name="signal100RepeatIntervalMs"
+                  type="number"
+                  value={values.signal100RepeatIntervalMs}
+                  onChange={handleChange}
+                  min={1}
                 />
               </SettingsFormField>
             </section>
