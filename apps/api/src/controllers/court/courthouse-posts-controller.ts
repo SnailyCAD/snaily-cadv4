@@ -17,6 +17,7 @@ import { userProperties } from "lib/auth/getSessionUser";
 import { NotFound } from "@tsed/exceptions";
 import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
+import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/courthouse-posts")
 @UseBeforeEach(IsAuth)
@@ -46,7 +47,7 @@ export class CourthousePostsController {
   })
   @Post("/")
   async createCourthousePost(
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(COURTHOUSE_POST_SCHEMA) body: unknown,
     @Context("user") user: User,
   ): Promise<APITypes.PostCourthousePostsData> {
     const data = validateSchema(COURTHOUSE_POST_SCHEMA, body);
@@ -69,7 +70,7 @@ export class CourthousePostsController {
   @Put("/:id")
   async updateCourthousePost(
     @PathParams("id") postId: string,
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(COURTHOUSE_POST_SCHEMA) body: unknown,
   ): Promise<APITypes.PutCourthousePostsData> {
     const data = validateSchema(COURTHOUSE_POST_SCHEMA, body);
 

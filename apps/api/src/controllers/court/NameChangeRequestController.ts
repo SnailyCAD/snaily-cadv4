@@ -10,6 +10,7 @@ import { NotFound } from "@tsed/exceptions";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import type * as APITypes from "@snailycad/types/api";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
+import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/name-change")
 @UseBeforeEach(IsAuth)
@@ -29,7 +30,7 @@ export class NameChangeRequestController {
 
   @Post("/")
   async requestNameChange(
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(NAME_CHANGE_REQUEST_SCHEMA) body: unknown,
     @Context("user") user: User,
   ): Promise<APITypes.PostNameChangeRequestsData> {
     const data = validateSchema(NAME_CHANGE_REQUEST_SCHEMA, body);

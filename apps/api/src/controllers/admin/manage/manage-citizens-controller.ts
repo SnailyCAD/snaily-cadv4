@@ -18,6 +18,7 @@ import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { isFeatureEnabled } from "lib/upsert-cad";
 import { leoProperties, unitProperties } from "utils/leo/includes";
+import { ZodSchema } from "~/lib/zod-schema";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/citizens")
@@ -119,7 +120,7 @@ export class AdminManageCitizensController {
   })
   async updateCitizen(
     @PathParams("id") id: string,
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(CREATE_CITIZEN_SCHEMA.partial()) body: unknown,
     @Context("sessionUserId") sessionUserId: string,
     @Context("cad") cad: { features: Record<Feature, boolean> },
   ): Promise<APITypes.PutManageCitizenByIdData> {

@@ -12,6 +12,7 @@ import { validateSchema } from "lib/data/validate-schema";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import type * as APITypes from "@snailycad/types/api";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
+import { ZodSchema } from "~/lib/zod-schema";
 
 @UseBeforeEach(IsAuth)
 @Controller("/businesses/employees")
@@ -25,7 +26,7 @@ export class BusinessEmployeeController {
     @PathParams("businessId") businessId: string,
     @Context("user") user: User,
     @Context("cad") cad: cad,
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(UPDATE_EMPLOYEE_SCHEMA) body: unknown,
   ): Promise<APITypes.PutBusinessEmployeesData> {
     const data = validateSchema(UPDATE_EMPLOYEE_SCHEMA, body);
 
@@ -108,7 +109,7 @@ export class BusinessEmployeeController {
     @PathParams("businessId") businessId: string,
     @Context("user") user: User,
     @Context("cad") cad: cad,
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(FIRE_EMPLOYEE_SCHEMA) body: unknown,
   ): Promise<APITypes.DeleteBusinessFireEmployeeData> {
     const data = validateSchema(FIRE_EMPLOYEE_SCHEMA, body);
 
@@ -165,7 +166,7 @@ export class BusinessEmployeeController {
     @PathParams("businessId") businessId: string,
     @Context("user") user: User,
     @Context("cad") cad: cad,
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(FIRE_EMPLOYEE_SCHEMA) body: unknown,
   ): Promise<APITypes.PostBusinessAcceptDeclineData> {
     const data = validateSchema(FIRE_EMPLOYEE_SCHEMA, body);
 

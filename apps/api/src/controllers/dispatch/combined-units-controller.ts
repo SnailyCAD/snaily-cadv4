@@ -15,6 +15,7 @@ import { validateSchema } from "lib/data/validate-schema";
 import { MERGE_UNIT_SCHEMA } from "@snailycad/schemas";
 import { isFeatureEnabled } from "lib/upsert-cad";
 import { combinedUnitProperties, combinedEmsFdUnitProperties } from "utils/leo/includes";
+import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -33,7 +34,7 @@ export class CombinedUnitsController {
     permissions: [Permissions.Dispatch, Permissions.Leo],
   })
   async mergeOfficers(
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(MERGE_UNIT_SCHEMA) body: unknown,
     @Context("cad") cad: { features?: Record<Feature, boolean> },
   ): Promise<APITypes.PostDispatchStatusMergeOfficers> {
     const data = validateSchema(MERGE_UNIT_SCHEMA, body);
@@ -145,7 +146,7 @@ export class CombinedUnitsController {
     permissions: [Permissions.Dispatch, Permissions.Leo],
   })
   async mergeDeputies(
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(MERGE_UNIT_SCHEMA) body: unknown,
     @Context("cad") cad: { features?: Record<Feature, boolean> },
   ): Promise<APITypes.PostDispatchStatusMergeDeputies> {
     const data = validateSchema(MERGE_UNIT_SCHEMA, body);

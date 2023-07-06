@@ -19,6 +19,7 @@ import type { Prisma, VehicleInspectionStatus, VehicleTaxStatus } from "@prisma/
 import { getLastOfArray, manyToManyHelper } from "lib/data/many-to-many";
 import type * as APITypes from "@snailycad/types/api";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";
+import { ZodSchema } from "~/lib/zod-schema";
 
 const vehiclesInclude = { ...citizenInclude.vehicles.include, citizen: true };
 
@@ -116,7 +117,9 @@ export class ImportVehiclesController {
   @UsePermissions({
     permissions: [Permissions.ImportRegisteredVehicles],
   })
-  async importVehicles(@BodyParams() body: any): Promise<APITypes.PostImportVehiclesData> {
+  async importVehicles(
+    @BodyParams() @ZodSchema(VEHICLE_SCHEMA_ARR) body: unknown,
+  ): Promise<APITypes.PostImportVehiclesData> {
     return importVehiclesHandler(body);
   }
 
@@ -144,7 +147,7 @@ export class ImportVehiclesController {
   }
 }
 
-export async function importVehiclesHandler(body: unknown[]) {
+export async function importVehiclesHandler(body: unknown) {
   const data = validateSchema(VEHICLE_SCHEMA_ARR, body);
 
   return Promise.all(

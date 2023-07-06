@@ -28,6 +28,7 @@ import { z } from "zod";
 import { RecordsInclude } from "controllers/leo/search/SearchController";
 import { leoProperties } from "utils/leo/includes";
 import { sendDiscordWebhook } from "~/lib/discord/webhooks";
+import { ZodSchema } from "~/lib/zod-schema";
 
 export const citizenInclude = Prisma.validator<Prisma.CitizenSelect>()({
   user: { select: userProperties },
@@ -295,7 +296,13 @@ export class CitizenController {
     @Context("cad")
     cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings },
     @Context("user") user: User,
-    @BodyParams() body: unknown,
+    @BodyParams()
+    @ZodSchema(
+      CREATE_CITIZEN_SCHEMA.extend({
+        department: z.string().nullish(),
+      }),
+    )
+    body: unknown,
   ): Promise<APITypes.PostCitizensData> {
     const data = validateSchema(
       CREATE_CITIZEN_SCHEMA.extend({
@@ -396,7 +403,7 @@ export class CitizenController {
     @Context("user") user: User,
     @Context("cad")
     cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings | null },
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(CREATE_CITIZEN_SCHEMA.partial()) body: unknown,
   ): Promise<APITypes.PutCitizenByIdData> {
     const data = validateSchema(CREATE_CITIZEN_SCHEMA.partial(), body);
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });

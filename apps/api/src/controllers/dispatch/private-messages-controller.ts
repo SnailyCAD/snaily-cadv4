@@ -25,6 +25,7 @@ import { validateSchema } from "lib/data/validate-schema";
 import { PRIVATE_MESSAGE_SCHEMA } from "@snailycad/schemas";
 import { incidentInclude } from "controllers/leo/incidents/IncidentController";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
+import { ZodSchema } from "~/lib/zod-schema";
 
 const dispatchChatIncludes = Prisma.validator<Prisma.DispatchChatSelect>()({
   call: { include: callInclude },
@@ -100,7 +101,7 @@ export class DispatchPrivateMessagesController {
     @Context("user") user: User,
     @Context() ctx: Context,
     @Req() request: Req,
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(PRIVATE_MESSAGE_SCHEMA) body: unknown,
   ): Promise<DispatchChat & { creator: any }> {
     const data = validateSchema(PRIVATE_MESSAGE_SCHEMA, body);
 

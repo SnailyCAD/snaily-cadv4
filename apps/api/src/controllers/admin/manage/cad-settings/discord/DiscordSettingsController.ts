@@ -15,6 +15,7 @@ import { UsePermissions } from "middlewares/use-permissions";
 import { performDiscordRequest } from "lib/discord/performDiscordRequest";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { parseDiscordGuildIds } from "lib/discord/utils";
+import { ZodSchema } from "~/lib/zod-schema";
 
 const guildId = process.env.DISCORD_SERVER_ID;
 
@@ -97,7 +98,7 @@ export class DiscordSettingsController {
   })
   async setRoleTypes(
     @Context("cad") cad: cad,
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(DISCORD_SETTINGS_SCHEMA) body: unknown,
     @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.PostCADDiscordRolesData> {
     if (!guildId) {

@@ -11,6 +11,7 @@ import { validateSchema } from "lib/data/validate-schema";
 import type { cad, User } from "@prisma/client";
 import type * as APITypes from "@snailycad/types/api";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
+import { ZodSchema } from "~/lib/zod-schema";
 
 @UseBeforeEach(IsAuth)
 @Controller("/businesses/posts")
@@ -20,7 +21,7 @@ import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 export class BusinessPostsController {
   @Post("/:id")
   async createPost(
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(CREATE_COMPANY_POST_SCHEMA) body: unknown,
     @Context("user") user: User,
     @Context("cad") cad: cad,
     @PathParams("id") businessId: string,
@@ -59,7 +60,7 @@ export class BusinessPostsController {
 
   @Put("/:id/:postId")
   async updatePost(
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(CREATE_COMPANY_POST_SCHEMA) body: unknown,
     @Context("user") user: User,
     @Context("cad") cad: cad,
     @PathParams("id") businessId: string,
@@ -113,7 +114,7 @@ export class BusinessPostsController {
 
   @Delete("/:id/:postId")
   async deletePost(
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(DELETE_COMPANY_POST_SCHEMA) body: unknown,
     @Context("user") user: User,
     @Context("cad") cad: cad,
     @PathParams("id") id: string,

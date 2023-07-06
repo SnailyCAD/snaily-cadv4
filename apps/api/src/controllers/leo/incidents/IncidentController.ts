@@ -19,6 +19,7 @@ import { getNextIncidentId } from "lib/incidents/get-next-incident-id";
 import { assignUnitsInvolvedToIncident } from "lib/incidents/handle-involved-units";
 import { cad } from "@snailycad/types";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
+import { ZodSchema } from "~/lib/zod-schema";
 
 export const incidentInclude = {
   creator: { include: leoProperties },
@@ -108,7 +109,7 @@ export class IncidentController {
     permissions: [Permissions.Dispatch, Permissions.ManageIncidents],
   })
   async createIncident(
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(LEO_INCIDENT_SCHEMA) body: unknown,
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
   ): Promise<APITypes.PostIncidentsData<"leo">> {
@@ -299,7 +300,7 @@ export class IncidentController {
     permissions: [Permissions.Dispatch, Permissions.ManageIncidents],
   })
   async updateIncident(
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(LEO_INCIDENT_SCHEMA) body: unknown,
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
     @PathParams("id") incidentId: string,
   ): Promise<APITypes.PutIncidentByIdData<"leo">> {

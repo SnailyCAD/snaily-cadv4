@@ -22,6 +22,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@anatine/zod-openapi@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "@anatine/zod-openapi@npm:2.0.1"
+  dependencies:
+    ts-deepmerge: ^6.0.3
+  peerDependencies:
+    openapi3-ts: ^4.1.2
+    zod: ^3.20.0
+  checksum: 46f974bfb6efcc69f63beae9b268240b2a7052d4956ea0bfcfbaaca6bb3c46f26fd4e1a4f1a6ed0c62a0fb817680366ed5e6c872eb79463132c16c03fd26c0ab
+  languageName: node
+  linkType: hard
+
 "@aw-web-design/x-default-browser@npm:1.4.88":
   version: 1.4.88
   resolution: "@aw-web-design/x-default-browser@npm:1.4.88"
@@ -5047,6 +5059,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snailycad/api@workspace:apps/api"
   dependencies:
+    "@anatine/zod-openapi": ^2.0.1
     "@discordjs/rest": ^1.7.1
     "@paralleldrive/cuid2": ^2.2.1
     "@prisma/client": ^4.16.1
@@ -5113,6 +5126,7 @@ __metadata:
     use-intl: ^2.15.1
     vite: ^4.3.9
     vitest: ^0.32.2
+    zod: ^3.21.4
   languageName: unknown
   linkType: soft
 
@@ -19119,6 +19133,13 @@ __metadata:
   version: 2.2.0
   resolution: "ts-dedent@npm:2.2.0"
   checksum: 93ed8f7878b6d5ed3c08d99b740010eede6bccfe64bce61c5a4da06a2c17d6ddbb80a8c49c2d15251de7594a4f93ffa21dd10e7be75ef66a4dc9951b4a94e2af
+  languageName: node
+  linkType: hard
+
+"ts-deepmerge@npm:^6.0.3":
+  version: 6.1.0
+  resolution: "ts-deepmerge@npm:6.1.0"
+  checksum: 8cdfe7eac402f0d0b2c776c1a4cd1b32df6a0dd71ea88586eb34a73b86975d4f59d39ee0c426c2169c1ae7773ac4557394ffea0ec20845c9c832d6bb0a29b16d
   languageName: node
   linkType: hard
 

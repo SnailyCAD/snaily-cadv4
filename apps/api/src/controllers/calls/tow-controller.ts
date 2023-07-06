@@ -32,6 +32,7 @@ import { shouldCheckCitizenUserId } from "lib/citizen/has-citizen-access";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { getTranslator } from "utils/get-translator";
 import { callInclude } from "~/utils/leo/includes";
+import { ZodSchema } from "~/lib/zod-schema";
 
 const CITIZEN_SELECTS = {
   name: true,
@@ -75,7 +76,7 @@ export class TowController {
   @Post("/")
   @Description("Create a new tow call")
   async createTowCall(
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(TOW_SCHEMA) body: unknown,
     @Context("user") user: User,
     @Context("cad") cad: { features?: Record<Feature, boolean> },
   ): Promise<APITypes.PostTowCallsData> {
@@ -206,7 +207,7 @@ export class TowController {
   })
   async updateCall(
     @PathParams("id") callId: string,
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(UPDATE_TOW_SCHEMA) body: unknown,
   ): Promise<APITypes.PutTowCallsData> {
     const data = validateSchema(UPDATE_TOW_SCHEMA, body);
 

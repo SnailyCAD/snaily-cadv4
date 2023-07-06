@@ -27,6 +27,7 @@ import { citizenInclude } from "./CitizenController";
 import type * as APITypes from "@snailycad/types/api";
 import type { RegisteredVehicle } from "@snailycad/types";
 import { getLastOfArray, manyToManyHelper } from "lib/data/many-to-many";
+import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/vehicles")
 @UseBeforeEach(IsAuth)
@@ -118,7 +119,7 @@ export class VehiclesController {
     @Context("user") user: User,
     @Context("cad")
     cad: cad & { miscCadSettings?: MiscCadSettings; features?: Record<Feature, boolean> },
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(VEHICLE_SCHEMA) body: unknown,
   ): Promise<APITypes.PostCitizenVehicleData> {
     const data = validateSchema(VEHICLE_SCHEMA, body);
 
@@ -277,7 +278,7 @@ export class VehiclesController {
     @Context("user") user: User,
     @Context("cad") cad: { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings },
     @PathParams("id") vehicleId: string,
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(VEHICLE_SCHEMA) body: unknown,
   ): Promise<APITypes.PutCitizenVehicleData> {
     const data = validateSchema(VEHICLE_SCHEMA, body);
 
@@ -439,7 +440,7 @@ export class VehiclesController {
   @Post("/transfer/:vehicleId")
   @Description("Transfer a vehicle to a new owner")
   async transferVehicle(
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(TRANSFER_VEHICLE_SCHEMA) body: unknown,
     @PathParams("vehicleId") vehicleId: string,
   ): Promise<APITypes.PostCitizenTransferVehicleData> {
     const data = validateSchema(TRANSFER_VEHICLE_SCHEMA, body);
@@ -479,7 +480,7 @@ export class VehiclesController {
     @Context("user") user: User,
     @Context("cad") cad: { features?: Record<Feature, boolean> },
     @PathParams("id") vehicleId: string,
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(DELETE_VEHICLE_SCHEMA) body: unknown,
   ): Promise<APITypes.DeleteCitizenVehicleData> {
     const data = validateSchema(DELETE_VEHICLE_SCHEMA, body);
 

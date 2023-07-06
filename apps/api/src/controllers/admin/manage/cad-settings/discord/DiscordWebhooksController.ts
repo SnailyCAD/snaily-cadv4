@@ -22,6 +22,7 @@ import { performDiscordRequest } from "lib/discord/performDiscordRequest";
 import { AuditLogActionType } from "@snailycad/audit-logger";
 import { createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { parseDiscordGuildIds } from "lib/discord/utils";
+import { ZodSchema } from "~/lib/zod-schema";
 
 const guildId = process.env.DISCORD_SERVER_ID;
 
@@ -98,7 +99,7 @@ export class DiscordWebhooksController {
   async setWebhookTypes(
     @Context("cad")
     cad: cad & { miscCadSettings: (MiscCadSettings & { webhooks?: DiscordWebhook[] }) | null },
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(DISCORD_WEBHOOKS_SCHEMA) body: unknown,
     @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.PostCADDiscordWebhooksData> {
     const name = cad.name || "SnailyCAD";

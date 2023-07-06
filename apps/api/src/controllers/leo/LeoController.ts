@@ -18,6 +18,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { handlePanicButtonPressed } from "lib/leo/send-panic-button-webhook";
 import { HandleInactivity } from "middlewares/handle-inactivity";
+import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -262,7 +263,7 @@ export class LeoController {
     permissions: [Permissions.Leo, Permissions.ManageUnitCallsigns],
   })
   async updateOfficerDivisionCallsign(
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(SWITCH_CALLSIGN_SCHEMA) body: unknown,
     @PathParams("officerId") officerId: string,
   ): Promise<APITypes.PutLeoCallsignData> {
     const officer = await prisma.officer.findUnique({

@@ -39,6 +39,7 @@ import {
   combinedUnitProperties,
   combinedEmsFdUnitProperties,
 } from "utils/leo/includes";
+import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -57,7 +58,7 @@ export class StatusController {
   async updateUnitStatus(
     @PathParams("unitId") unitId: string,
     @Context("user") user: User,
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(UPDATE_OFFICER_STATUS_SCHEMA) body: unknown,
     @Req() req: Req,
     @Context("cad")
     cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings },

@@ -16,6 +16,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import type { Weapon } from "@snailycad/types";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
+import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/weapons")
 @UseBeforeEach(IsAuth)
@@ -74,7 +75,7 @@ export class WeaponController {
   async registerWeapon(
     @Context("user") user: User,
     @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(WEAPON_SCHEMA) body: unknown,
   ): Promise<APITypes.PostCitizenWeaponData> {
     const data = validateSchema(WEAPON_SCHEMA, body);
 
@@ -152,7 +153,7 @@ export class WeaponController {
     @Context("user") user: User,
     @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
     @PathParams("id") weaponId: string,
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(WEAPON_SCHEMA) body: unknown,
   ): Promise<APITypes.PutCitizenWeaponData> {
     const data = validateSchema(WEAPON_SCHEMA, body);
 
