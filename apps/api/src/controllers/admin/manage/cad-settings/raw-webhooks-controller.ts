@@ -9,6 +9,7 @@ import { prisma } from "lib/data/prisma";
 import { validateSchema } from "lib/data/validate-schema";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";
+import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/admin/manage/cad-settings/webhooks")
 @ContentType("application/json")
@@ -29,7 +30,7 @@ export class WebhooksController {
     permissions: [Permissions.ManageCADSettings],
   })
   async saveWebhooks(
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(RAW_WEBHOOKS_SCHEMA) body: unknown,
     @Context("cad") cad: cad,
     @Context("sessionUserId") sessionUserId: string,
   ) {

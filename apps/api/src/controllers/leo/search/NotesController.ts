@@ -8,6 +8,7 @@ import { NotFound } from "@tsed/exceptions";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type { Citizen, RegisteredVehicle } from "@prisma/client";
 import type * as APITypes from "@snailycad/types/api";
+import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/notes")
 @UseBeforeEach(IsAuth)
@@ -17,7 +18,9 @@ export class NotesController {
   @UsePermissions({
     permissions: [Permissions.Leo, Permissions.EmsFd, Permissions.Dispatch],
   })
-  async addNoteToItem(@BodyParams() body: unknown): Promise<APITypes.PostNotesData> {
+  async addNoteToItem(
+    @BodyParams() @ZodSchema(NOTE_SCHEMA) body: unknown,
+  ): Promise<APITypes.PostNotesData> {
     const data = validateSchema(NOTE_SCHEMA, body);
 
     const item = await this.findItem(data);
@@ -37,7 +40,7 @@ export class NotesController {
   })
   async editNoteFromItem(
     @PathParams("id") noteId: string,
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(NOTE_SCHEMA) body: unknown,
   ): Promise<APITypes.PutNotesData> {
     const data = validateSchema(NOTE_SCHEMA, body);
 
@@ -57,7 +60,7 @@ export class NotesController {
   })
   async deleteNoteFromItem(
     @PathParams("id") noteId: string,
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(NOTE_SCHEMA) body: unknown,
   ): Promise<APITypes.DeleteNotesData> {
     const data = validateSchema(NOTE_SCHEMA, body);
 

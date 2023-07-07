@@ -19,6 +19,7 @@ import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { towIncludes } from "./tow-controller";
 import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
+import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/taxi")
 @UseBeforeEach(IsAuth)
@@ -47,7 +48,7 @@ export class TaxiController {
   @Post("/")
   @Description("Create a new taxi call")
   async createTaxiCall(
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(TOW_SCHEMA) body: unknown,
     @Context("user") user: User,
   ): Promise<APITypes.PostTaxiCallsData> {
     const data = validateSchema(TOW_SCHEMA, body);
@@ -85,7 +86,7 @@ export class TaxiController {
   })
   async updateTaxiCall(
     @PathParams("id") callId: string,
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(UPDATE_TOW_SCHEMA) body: unknown,
   ): Promise<APITypes.PutTaxiCallsData> {
     const data = validateSchema(UPDATE_TOW_SCHEMA, body);
 

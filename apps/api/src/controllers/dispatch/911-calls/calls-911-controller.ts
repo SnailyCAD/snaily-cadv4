@@ -45,6 +45,7 @@ import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger
 import { isFeatureEnabled } from "lib/upsert-cad";
 import { _leoProperties, assignedUnitsInclude, callInclude } from "utils/leo/includes";
 import { slateDataToString, type Descendant } from "@snailycad/utils/editor";
+import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/911-calls")
 @UseBeforeEach(IsAuth)
@@ -155,7 +156,7 @@ export class Calls911Controller {
 
   @Post("/")
   async create911Call(
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(CALL_911_SCHEMA) body: unknown,
     @Context("user") user: User,
     @Context("cad")
     cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings },
@@ -249,7 +250,7 @@ export class Calls911Controller {
   })
   async update911Call(
     @PathParams("id") id: string,
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(CALL_911_SCHEMA.partial()) body: unknown,
     @Context("user") user: User,
     @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings },
   ): Promise<APITypes.Put911CallByIdData> {
@@ -423,7 +424,7 @@ export class Calls911Controller {
   })
   async linkCallToIncident(
     @PathParams("callId") callId: string,
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(LINK_INCIDENT_TO_CALL_SCHEMA) body: unknown,
   ): Promise<APITypes.PostLink911CallToIncident> {
     const data = validateSchema(LINK_INCIDENT_TO_CALL_SCHEMA, body);
 
@@ -571,7 +572,7 @@ export class Calls911Controller {
   async updateAssignedUnit(
     @PathParams("callId") callId: string,
     @PathParams("assignedUnitId") assignedUnitId: string,
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(UPDATE_ASSIGNED_UNIT_SCHEMA) body: unknown,
   ): Promise<APITypes.PUT911CallAssignedUnit> {
     const data = validateSchema(UPDATE_ASSIGNED_UNIT_SCHEMA, body);
 

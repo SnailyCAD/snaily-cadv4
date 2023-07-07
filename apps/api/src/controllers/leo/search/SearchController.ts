@@ -28,6 +28,7 @@ import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { setEndedSuspendedLicenses } from "lib/citizen/licenses/set-ended-suspended-licenses";
 import { incidentInclude } from "../incidents/IncidentController";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
+import { ZodSchema } from "~/lib/zod-schema";
 
 export const vehicleSearchInclude = {
   model: { include: { value: true } },
@@ -322,7 +323,7 @@ export class LeoSearchController {
     permissions: [Permissions.Leo, Permissions.Dispatch],
   })
   async customFieldSearch(
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(CUSTOM_FIELD_SEARCH_SCHEMA) body: unknown,
     @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
     @Context("user") user: User,
   ): Promise<APITypes.PostSearchCustomFieldData<true>> {

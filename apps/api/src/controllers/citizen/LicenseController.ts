@@ -14,6 +14,7 @@ import { shouldCheckCitizenUserId } from "lib/citizen/has-citizen-access";
 import type * as APITypes from "@snailycad/types/api";
 import { citizenInclude } from "./CitizenController";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
+import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/licenses")
 @UseBeforeEach(IsAuth)
@@ -26,7 +27,7 @@ export class LicensesController {
     @PathParams("id") citizenId: string,
     @Context("user") user: User,
     @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(LICENSE_SCHEMA) body: unknown,
   ): Promise<APITypes.PutCitizenLicensesByIdData> {
     const data = validateSchema(LICENSE_SCHEMA, body);
 

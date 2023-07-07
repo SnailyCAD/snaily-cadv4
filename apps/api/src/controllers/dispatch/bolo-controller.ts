@@ -27,6 +27,7 @@ import type * as APITypes from "@snailycad/types/api";
 import type { cad } from "@snailycad/types";
 import { getTranslator } from "utils/get-translator";
 import { HandleInactivity } from "middlewares/handle-inactivity";
+import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/bolos")
 @UseBeforeEach(IsAuth)
@@ -100,7 +101,7 @@ export class BoloController {
     permissions: [Permissions.Dispatch, Permissions.Leo],
   })
   async createBolo(
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(CREATE_BOLO_SCHEMA) body: unknown,
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
   ): Promise<APITypes.PostBolosData> {
     const data = validateSchema(CREATE_BOLO_SCHEMA, body);
@@ -144,7 +145,7 @@ export class BoloController {
   })
   async updateBolo(
     @PathParams("id") id: string,
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(CREATE_BOLO_SCHEMA) body: unknown,
   ): Promise<APITypes.PutBolosData> {
     const data = validateSchema(CREATE_BOLO_SCHEMA, body);
 

@@ -7,7 +7,11 @@ import {
   UseAfter,
 } from "@tsed/common";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
-import { DOCTOR_VISIT_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
+import {
+  DOCTOR_VISIT_SCHEMA,
+  EMS_FD_DEPUTY_SCHEMA,
+  MEDICAL_RECORD_SCHEMA,
+} from "@snailycad/schemas";
 import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
@@ -40,6 +44,7 @@ import { upsertEmsFdDeputy } from "lib/ems-fd/upsert-ems-fd-deputy";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { unitProperties, combinedEmsFdUnitProperties } from "utils/leo/includes";
 import { sendDiscordWebhook } from "~/lib/discord/webhooks";
+import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
@@ -103,7 +108,7 @@ export class EmsFdController {
     permissions: [Permissions.EmsFd],
   })
   async createEmsFdDeputy(
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(EMS_FD_DEPUTY_SCHEMA) body: unknown,
     @Context("user") user: User,
     @Context("cad")
     cad: DBCad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings },
@@ -124,7 +129,7 @@ export class EmsFdController {
   })
   async updateDeputy(
     @PathParams("id") deputyId: string,
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(EMS_FD_DEPUTY_SCHEMA) body: unknown,
     @Context("user") user: User,
     @Context("cad")
     cad: DBCad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings },
@@ -229,7 +234,9 @@ export class EmsFdController {
   @UsePermissions({
     permissions: [Permissions.EmsFd],
   })
-  async createMedicalRecord(@BodyParams() body: unknown): Promise<APITypes.PostEmsFdMedicalRecord> {
+  async createMedicalRecord(
+    @BodyParams() @ZodSchema(MEDICAL_RECORD_SCHEMA) body: unknown,
+  ): Promise<APITypes.PostEmsFdMedicalRecord> {
     const data = validateSchema(MEDICAL_RECORD_SCHEMA, body);
 
     const citizen = await prisma.citizen.findUnique({
@@ -260,7 +267,7 @@ export class EmsFdController {
   @Description("Update a medical record by its id")
   async updateMedicalRecord(
     @PathParams("id") recordId: string,
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(MEDICAL_RECORD_SCHEMA) body: unknown,
   ): Promise<APITypes.PutCitizenMedicalRecordsData> {
     const data = validateSchema(MEDICAL_RECORD_SCHEMA, body);
 
@@ -326,7 +333,9 @@ export class EmsFdController {
   @UsePermissions({
     permissions: [Permissions.EmsFd],
   })
-  async createDoctorVisit(@BodyParams() body: unknown): Promise<APITypes.PostEmsFdDoctorVisit> {
+  async createDoctorVisit(
+    @BodyParams() @ZodSchema(DOCTOR_VISIT_SCHEMA) body: unknown,
+  ): Promise<APITypes.PostEmsFdDoctorVisit> {
     const data = validateSchema(DOCTOR_VISIT_SCHEMA, body);
 
     const citizen = await prisma.citizen.findUnique({

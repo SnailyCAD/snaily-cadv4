@@ -15,6 +15,7 @@ import { validateSchema } from "lib/data/validate-schema";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type * as APITypes from "@snailycad/types/api";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
+import { ZodSchema } from "~/lib/zod-schema";
 
 const businessInclude = {
   citizen: {
@@ -123,7 +124,7 @@ export class BusinessController {
   @Put("/:id")
   async updateBusiness(
     @PathParams("id") businessId: string,
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(CREATE_COMPANY_SCHEMA) body: unknown,
     @Context("user") user: User,
   ): Promise<APITypes.PutBusinessByIdData> {
     const data = validateSchema(CREATE_COMPANY_SCHEMA, body);
@@ -161,7 +162,7 @@ export class BusinessController {
   @Delete("/:id")
   async deleteBusiness(
     @PathParams("id") businessId: string,
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(DELETE_COMPANY_POST_SCHEMA) body: unknown,
     @Context("user") user: User,
   ): Promise<APITypes.DeleteBusinessByIdData> {
     const data = validateSchema(DELETE_COMPANY_POST_SCHEMA, body);
@@ -192,7 +193,7 @@ export class BusinessController {
 
   @Post("/join")
   async joinBusiness(
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(JOIN_COMPANY_SCHEMA) body: unknown,
     @Context("user") user: User,
     @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings | null },
   ): Promise<APITypes.PostJoinBusinessData> {
@@ -308,7 +309,7 @@ export class BusinessController {
     permissions: [Permissions.CreateBusinesses],
   })
   async createBusiness(
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(CREATE_COMPANY_SCHEMA) body: unknown,
     @Context("user") user: User,
     @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings | null },
   ): Promise<APITypes.PostCreateBusinessData> {

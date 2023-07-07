@@ -7,6 +7,7 @@ import { CREATE_PENAL_CODE_GROUP_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/data/validate-schema";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type * as APITypes from "@snailycad/types/api";
+import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/admin/penal-code-group")
 @UseBeforeEach(IsAuth)
@@ -39,7 +40,7 @@ export class PenalCodeGroupController {
     permissions: [Permissions.ManageValuePenalCode],
   })
   async createPenalCodeGroup(
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(CREATE_PENAL_CODE_GROUP_SCHEMA) body: unknown,
   ): Promise<APITypes.PostPenalCodeGroupsData> {
     const data = validateSchema(CREATE_PENAL_CODE_GROUP_SCHEMA, body);
 
@@ -59,7 +60,7 @@ export class PenalCodeGroupController {
   })
   async editPenalCodeGroup(
     @PathParams("id") id: string,
-    @BodyParams() body: unknown,
+    @BodyParams() @ZodSchema(CREATE_PENAL_CODE_GROUP_SCHEMA) body: unknown,
   ): Promise<APITypes.PutPenalCodeGroupsData> {
     const data = validateSchema(CREATE_PENAL_CODE_GROUP_SCHEMA, body);
 

@@ -21,6 +21,7 @@ import { manyToManyHelper } from "lib/data/many-to-many";
 import type * as APITypes from "@snailycad/types/api";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { citizenInclude } from "controllers/citizen/CitizenController";
+import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/admin/import/citizens")
 @UseBeforeEach(IsAuth)
@@ -44,7 +45,7 @@ export class ImportCitizensController {
     permissions: [Permissions.ImportCitizens, Permissions.ManageCitizens],
   })
   async importCitizensViaBodyData(
-    @BodyParams() body: any,
+    @BodyParams() @ZodSchema(IMPORT_CITIZENS_ARR) body: unknown,
   ): Promise<APITypes.PostImportCitizensData> {
     return this.importCitizensHandler(body);
   }
