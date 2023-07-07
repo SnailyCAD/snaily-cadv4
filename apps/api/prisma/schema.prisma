@@ -74,6 +74,10 @@ model MiscCadSettings {
   authScreenHeaderImageId   String?
   inactivityTimeout         Int?
   jailTimeScale             JailTimeScale?
+  // How many times a signal 100 should be repeated.
+  signal100RepeatAmount     Int?           @default(1)
+  // The amount between each signal 100 repeat.
+  signal100RepeatIntervalMs Int?           @default(1000)
 
   call911InactivityTimeout           Int?
   incidentInactivityTimeout          Int?

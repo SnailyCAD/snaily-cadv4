@@ -66,6 +66,8 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
   pilotLicenseMaxPoints: z.number().finite().nullable(),
   weaponLicenseMaxPoints: z.number().finite().nullable(),
   waterLicenseMaxPoints: z.number().finite().nullable(),
+  signal100RepeatAmount: z.number().finite().nullable(),
+  signal100RepeatIntervalMs: z.number().finite().nullable(),
 });
 
 export const DISCORD_SETTINGS_SCHEMA = z.object({
