@@ -35,6 +35,10 @@ describe("formatCaseNumber", () => {
       '"PD-2022-12-20-00320"',
     );
   });
+
+  test("Return caseNumber if template is null", () => {
+    expect(formatCaseNumber(RECORD, null)).toMatchInlineSnapshot('"#320"');
+  });
 });
 
 describe("prefixNumber", () => {
