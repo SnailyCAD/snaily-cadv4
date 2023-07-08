@@ -307,6 +307,7 @@ export class Calls911Controller {
         typeId: data.type,
         extraFields: data.extraFields || undefined,
         status: (data.status as WhitelistStatus | null) || undefined,
+        gtaMapPositionId: data.gtaMapPosition === null ? null : undefined,
       },
     });
 

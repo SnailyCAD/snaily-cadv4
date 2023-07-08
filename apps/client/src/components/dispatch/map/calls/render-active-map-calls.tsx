@@ -55,15 +55,19 @@ export function RenderActiveCalls() {
     const latLng = e.target._latlng;
     const data = {
       ...call,
+      gtaMapPosition: null,
+      gtaMapPositionId: null,
       position: { id: call.positionId ?? "", ...latLng },
     };
 
-    handleCallStateUpdate(call.id, { ...data });
+    handleCallStateUpdate(call.id, data);
 
     const { json } = await execute<Put911CallByIdData>({
       path: `/911-calls/${call.id}`,
       method: "PUT",
       data: {
+        gtaMapPosition: null,
+        gtaMapPositionId: null,
         position: data.position,
       },
     });
@@ -107,9 +111,10 @@ export function RenderActiveCalls() {
     <>
       {!hiddenItems[MapItem.CALLS] &&
         callsWithPosition.map((call) => {
-          const callGtaPosition = call.gtaMapPosition
-            ? convertToMap(call.gtaMapPosition.x, call.gtaMapPosition.y, map)
-            : null;
+          const callGtaPosition =
+            call.gtaMapPosition && call.gtaMapPositionId
+              ? convertToMap(call.gtaMapPosition.x, call.gtaMapPosition.y, map)
+              : null;
           const callPosition = call.position as { lat: number; lng: number };
           const position = callGtaPosition ?? callPosition;
 
@@ -118,15 +123,12 @@ export function RenderActiveCalls() {
               eventHandlers={{
                 moveend: (e) => handleMoveEnd(e, call),
               }}
-              // must be managed by in-game updates
-              draggable={!call.gtaMapPosition}
+              draggable
               key={call.id}
               position={position}
               icon={CALL_ICON}
             >
-              {!call.gtaMapPosition ? (
-                <Tooltip direction="top">{t("dragToMoveCallBlip")}</Tooltip>
-              ) : null}
+              <Tooltip direction="top">{t("dragToMoveCallBlip")}</Tooltip>
 
               <Popup minWidth={300}>
                 <p style={{ margin: 2, fontSize: 18 }}>
