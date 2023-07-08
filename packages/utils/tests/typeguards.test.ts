@@ -47,6 +47,33 @@ const OFFICER_RANK = {
   createdAt: new Date(),
 } as any;
 
+const PENAL_CODE = {
+  title: "Hello world",
+  descriptionData: "Hello world",
+  warningApplicableId: null,
+  warningNotApplicableId: "123",
+} as any;
+
+const CALL_TYPE = {
+  value: { value: "Traffic stop", type: ValueType.CALL_TYPE },
+} as any;
+
+const EMERGENCY_VEHICLE = {
+  value: { value: "Police Cruiser", type: ValueType.EMERGENCY_VEHICLE },
+} as any;
+
+const ADDRESS_VALUE = {
+  value: { value: "123 Main Street", type: ValueType.ADDRESS },
+} as any;
+
+const COMBINED_EMS_FD_UNIT = {
+  callsign: OFFICER.callsign,
+  callsign2: OFFICER.callsign2,
+  department: OFFICER.department,
+  division: OFFICER.division,
+  deputies: [OFFICER],
+} as any;
+
 test("typeguards.hasValueObj -> VEHICLE_VALUE", () => {
   expect(typeguards.hasValueObj(VEHICLE_VALUE)).toBe(true);
 });
@@ -103,6 +130,22 @@ test("typeguards.isOfficerRankValue -> OFFICER_RANK -> true", () => {
   expect(typeguards.isOfficerRankValue(OFFICER_RANK)).toBe(true);
 });
 
+test("typeguards.isPenalCodeValue -> PENAL_CODE -> true", () => {
+  expect(typeguards.isPenalCodeValue(PENAL_CODE)).toBe(true);
+});
+
+test("typeguards.isCallTypeValue -> CALL_TYPE -> true", () => {
+  expect(typeguards.isCallTypeValue(CALL_TYPE)).toBe(true);
+});
+
+test("typeguards.isEmergencyVehicleValue -> EMERGENCY_VEHICLE -> true", () => {
+  expect(typeguards.isEmergencyVehicleValue(EMERGENCY_VEHICLE)).toBe(true);
+});
+
+test("typeguards.isAddressValue -> ADDRESS_VALUE -> true", () => {
+  expect(typeguards.isAddressValue(ADDRESS_VALUE)).toBe(true);
+});
+
 test("typeguards.isUnitOfficer -> OFFICER -> true", () => {
   expect(typeguards.isUnitOfficer(OFFICER)).toBe(true);
 });
@@ -117,4 +160,8 @@ test("typeguards.isUnitOfficer -> EMS_FD_DEPUTY -> false", () => {
 
 test("typeguards.isUnitCombined -> COMBINED_UNIT -> true", () => {
   expect(typeguards.isUnitCombined(COMBINED_UNIT)).toBe(true);
+});
+
+test("typeguards.isUnitCombinedEmsFd -> COMBINED_EMS_FD_UNIT -> true", () => {
+  expect(typeguards.isUnitCombinedEmsFd(COMBINED_EMS_FD_UNIT)).toBe(true);
 });
