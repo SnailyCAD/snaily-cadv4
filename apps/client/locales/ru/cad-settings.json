@@ -183,7 +183,11 @@
     "waterLicenseNumberLengthDescription": "Длина номера водительской лицензии (По умолчанию: 8)",
     "seconds": "Секунды",
     "minutes": "Минуты",
-    "hours": "Часы"
+    "hours": "Часы",
+    "signal100RepeatAmountDescription": "Количество раз повтора сигнала 100 (По-умолчанию: 1)",
+    "signal100RepeatAmount": "Количество повторений сигнала 100",
+    "signal100RepeatIntervalMsDescription": "Время между сигналами 100 в милисекундах. (По-умолчанию: 1000)",
+    "signal100RepeatIntervalMs": "Интервал повторений сигнала 100 (мс)"
   },
   "Features": {
     "enableOrDisableFeatures": "Включить или отключить функции",
@@ -307,7 +311,9 @@
     "REQUIRED_CITIZEN_IMAGE": "Требуется Изображение Гражданина",
     "REQUIRED_CITIZEN_IMAGE-description": "Если включено, то пользователям нужно будет загрузить фото своего гражданина при создании.",
     "LEO_EDITABLE_CITIZEN_PROFILE": "Редактирование Профиля Гражданина",
-    "LEO_EDITABLE_CITIZEN_PROFILE-description": "Если включено, то сотрудники структур смогут редактировать профили граждан, у которых указаны права на редактирование."
+    "LEO_EDITABLE_CITIZEN_PROFILE-description": "Если включено, то сотрудники структур смогут редактировать профили граждан, у которых указаны права на редактирование.",
+    "ALLOW_MULTIPLE_UNITS_DEPARTMENTS_PER_USER": "Позволять нескольким пользователям использовать один позывной и департамент (на гражданина)",
+    "ALLOW_MULTIPLE_UNITS_DEPARTMENTS_PER_USER-description": "Если включено, пользователь сможет создавать несколько офицеров с одним и тем же позывным и департаментом."
   },
   "Permissions": {
     "defaultPermissions": "Стандартные Разрешения",
@@ -415,6 +421,7 @@
     "ViewWeaponExams": "Просмотр Экзаменов на Оружие",
     "ManageWeaponExams": "Управление Экзаменами на Оружие",
     "SetUserDefinedCallsignOnOfficer": "Установка Пользовательского Позывного на Офицера",
-    "SetUserDefinedCallsignOnEmsFd": "Установка Пользовательского Позывного на EMS/FD"
+    "SetUserDefinedCallsignOnEmsFd": "Установка Пользовательского Позывного на EMS/FD",
+    "LeoManageCitizenProfile": "Управление Профилем Гражданина (не админ)"
   }
 }
