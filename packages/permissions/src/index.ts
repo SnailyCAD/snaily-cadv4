@@ -14,7 +14,6 @@ export interface HasPermissionOptions {
   userToCheck: PartialUser | null;
   /** the permissions you want to check. */
   permissionsToCheck: (Permissions | string)[];
-  fallback?: boolean | ((user: PartialUser) => boolean | undefined);
 }
 /**
  * checks whether a user has certain permissions.
@@ -41,12 +40,6 @@ export function hasPermission(options: HasPermissionOptions) {
 
   for (const perm of options.permissionsToCheck) {
     if (userPermissions.includes(perm)) return true;
-  }
-
-  if (userPermissions.length <= 0 && typeof options.fallback !== "undefined") {
-    return typeof options.fallback === "boolean"
-      ? options.fallback
-      : options.fallback(options.userToCheck) ?? false;
   }
 
   return false;

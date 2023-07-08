@@ -15,6 +15,15 @@ const manageUsers = [
   Permissions.DeleteUsers,
 ];
 
+test("Should return false if the provided user is null", () => {
+  expect(
+    hasPermission({
+      userToCheck: null,
+      permissionsToCheck: [Permissions.ViewUsers],
+    }),
+  ).toBe(false);
+});
+
 test("Should allow a user to manage/delete/ban a user", () => {
   expect(
     hasPermission({
