@@ -10,7 +10,7 @@ import { MapItem, useDispatchMapState } from "state/mapState";
 import { generateMarkerTypes } from "../render-map-blips";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import {  ShouldDoType } from "@snailycad/types";
+import { ShouldDoType } from "@snailycad/types";
 
 interface Props {
   player: MapPlayer | PlayerDataEventPayload;
