@@ -61,4 +61,8 @@ describe("slateDataToString", () => {
       '"Hello world - this is a test hello world testing  line breaks"',
     );
   });
+
+  test("Return null if data is null", () => {
+    expect(slateDataToString(null)).toBeNull();
+  });
 });

@@ -60,3 +60,9 @@ test(`should generate paired unit callsign template: ${COMBINED_UNIT_WITH_TEMPLA
 test("should return an empty string if template === null", () => {
   expect(generateCallsign(COMBINED_UNIT, null)).toMatchInlineSnapshot('""');
 });
+
+test("should generate callsign from user defined callsign (Combined Units)", () => {
+  expect(
+    generateCallsign({ ...COMBINED_UNIT, userDefinedCallsign: "TEST" }, null),
+  ).toMatchInlineSnapshot('"TEST"');
+});
