@@ -41,7 +41,7 @@ export const vehicleSearchInclude = {
   notes: true,
 };
 
-export const RecordsInclude = (isRecordApprovalEnabled: boolean) => ({
+export const recordsInclude = (isRecordApprovalEnabled: boolean) => ({
   where: isRecordApprovalEnabled ? { status: WhitelistStatus.ACCEPTED } : undefined,
   include: {
     officer: { include: leoProperties },
@@ -104,7 +104,7 @@ export const citizenSearchIncludeOrSelect = (
         customFields: { include: { field: true } },
         warrants: { where: warrantWhere, include: { officer: { include: leoProperties } } },
         notes: true,
-        Record: RecordsInclude(isEnabled),
+        Record: recordsInclude(isEnabled),
         dlCategory: { include: { value: true } },
       },
     } as any;
@@ -223,7 +223,7 @@ export class LeoSearchController {
         },
       },
       include: {
-        Record: RecordsInclude(isEnabled),
+        Record: recordsInclude(isEnabled),
         vehicles: {
           include: vehicleSearchInclude,
         },

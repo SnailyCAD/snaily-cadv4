@@ -49,7 +49,9 @@ export class AdminController {
       prisma.bolo.count({ where: { type: "VEHICLE" } }),
     ]);
 
-    const filters: Prisma.Enumerable<Prisma.OfficerWhereInput> = [
+    const filters:
+      | Pick<Prisma.OfficerWhereInput, "status">[]
+      | Pick<Prisma.EmsFdDeputyWhereInput, "status">[] = [
       { status: { shouldDo: "SET_OFF_DUTY" } },
       { status: { is: null } },
     ];

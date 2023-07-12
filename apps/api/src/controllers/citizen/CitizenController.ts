@@ -25,7 +25,7 @@ import { upsertOfficer } from "controllers/leo/my-officers/upsert-officer";
 import { createCitizenViolations } from "~/lib/leo/records/create-citizen-violations";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { z } from "zod";
-import { RecordsInclude } from "controllers/leo/search/SearchController";
+import { recordsInclude } from "controllers/leo/search/SearchController";
 import { leoProperties } from "utils/leo/includes";
 import { sendDiscordWebhook } from "~/lib/discord/webhooks";
 
@@ -196,8 +196,8 @@ export class CitizenController {
     });
 
     const records = await prisma.record.findMany({
-      ...RecordsInclude(isEnabled),
-      where: { ...RecordsInclude(isEnabled).where, citizenId: citizen.id },
+      ...recordsInclude(isEnabled),
+      where: { ...recordsInclude(isEnabled).where, citizenId: citizen.id },
     });
     return records;
   }

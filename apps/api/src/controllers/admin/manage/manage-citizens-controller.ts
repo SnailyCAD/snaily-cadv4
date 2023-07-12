@@ -18,6 +18,7 @@ import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { isFeatureEnabled } from "lib/upsert-cad";
 import { leoProperties, unitProperties } from "utils/leo/includes";
+import { recordsInclude } from "~/controllers/leo/search/SearchController";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/citizens")
@@ -84,9 +85,10 @@ export class AdminManageCitizensController {
   })
   async getCitizen(
     @PathParams("id") id: string,
+    @Context("cad") cad: { features: Record<Feature, boolean> },
     @QueryParams("steamId", String) steamId?: string,
     @QueryParams("discordId", String) discordId?: string,
-  ): Promise<APITypes.GetManageCitizenByIdData> {
+  ): Promise<APITypes.GetManageCitizenByIdData | APITypes.GetManageCitizenByIdData[]> {
     const functionName = discordId || steamId ? "findMany" : "findFirst";
 
     const OR: Prisma.CitizenWhereInput["OR"] = [];
@@ -99,9 +101,14 @@ export class AdminManageCitizensController {
       OR.push({ id });
     }
 
-    // @ts-expect-error same properties
+    const isEnabled = isFeatureEnabled({
+      feature: Feature.CITIZEN_RECORD_APPROVAL,
+      features: cad.features,
+      defaultReturn: false,
+    });
+
     const citizen = await prisma.citizen[functionName]({
-      include: citizenInclude,
+      include: { ...citizenInclude, Record: recordsInclude(isEnabled) },
       where: { OR },
     });
 
