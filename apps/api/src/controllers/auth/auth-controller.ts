@@ -17,7 +17,6 @@ import { setUserTokenCookies } from "lib/auth/setUserTokenCookies";
 import { validateGoogleCaptcha } from "lib/auth/validate-google-captcha";
 import { validateDiscordAndSteamId } from "lib/auth/validate-discord-steam-id";
 import { createFeaturesObject } from "middlewares/is-enabled";
-import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/auth")
 @ContentType("application/json")
@@ -28,7 +27,7 @@ export class AuthController {
   @Returns(400, ExtendedBadRequest)
   @Returns(404, ExtendedNotFound)
   async login(
-    @BodyParams() @ZodSchema(AUTH_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @Res() res: Response,
   ): Promise<APITypes.PostLoginUserData> {
     const data = validateSchema(AUTH_SCHEMA, body);
@@ -104,7 +103,7 @@ export class AuthController {
   @Returns(200)
   @Returns(400, ExtendedBadRequest)
   async register(
-    @BodyParams() @ZodSchema(REGISTER_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @Res() res: Response,
   ): Promise<APITypes.PostRegisterUserData> {
     const data = validateSchema(REGISTER_SCHEMA, body);

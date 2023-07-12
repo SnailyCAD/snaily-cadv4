@@ -12,7 +12,6 @@ import { shouldCheckCitizenUserId } from "lib/citizen/has-citizen-access";
 import type * as APITypes from "@snailycad/types/api";
 import { citizenInclude } from "./CitizenController";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
-import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/truck-logs")
 @UseBeforeEach(IsAuth)
@@ -43,7 +42,7 @@ export class TruckLogsController {
   async createTruckLog(
     @Context("user") user: User,
     @Context("cad") cad: { features?: Record<Feature, boolean> },
-    @BodyParams() @ZodSchema(CREATE_TRUCK_LOG_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PostTruckLogsData> {
     const data = validateSchema(CREATE_TRUCK_LOG_SCHEMA, body);
 
@@ -93,7 +92,7 @@ export class TruckLogsController {
   async updateTruckLog(
     @Context("user") user: User,
     @Context("cad") cad: { features?: Record<Feature, boolean> },
-    @BodyParams() @ZodSchema(CREATE_TRUCK_LOG_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @PathParams("id") id: string,
   ): Promise<APITypes.PutTruckLogsData> {
     const data = validateSchema(CREATE_TRUCK_LOG_SCHEMA, body);

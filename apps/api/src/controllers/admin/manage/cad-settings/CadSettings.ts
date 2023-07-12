@@ -28,7 +28,6 @@ import {
 import type { MiscCadSettings } from "@snailycad/types";
 import { createFeaturesObject } from "middlewares/is-enabled";
 import { hasPermission } from "@snailycad/permissions";
-import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/admin/manage/cad-settings")
 @ContentType("application/json")
@@ -121,7 +120,7 @@ export class CADSettingsController {
   async updateCadSettings(
     @Context("sessionUserId") sessionUserId: string,
     @Context("cad") cad: cad,
-    @BodyParams() @ZodSchema(CAD_SETTINGS_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PutCADSettingsData> {
     const data = validateSchema(CAD_SETTINGS_SCHEMA, body);
 
@@ -172,7 +171,7 @@ export class CADSettingsController {
   async updateCadFeatures(
     @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
     @Context("sessionUserId") sessionUserId: string,
-    @BodyParams() @ZodSchema(DISABLED_FEATURES_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PutCADFeaturesData> {
     const data = validateSchema(DISABLED_FEATURES_SCHEMA, body);
 
@@ -220,7 +219,7 @@ export class CADSettingsController {
   async updateMiscSettings(
     @Context("sessionUserId") sessionUserId: string,
     @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings },
-    @BodyParams() @ZodSchema(CAD_MISC_SETTINGS_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PutCADMiscSettingsData> {
     const data = validateSchema(CAD_MISC_SETTINGS_SCHEMA, body);
 
@@ -290,7 +289,7 @@ export class CADSettingsController {
   })
   async updateDefaultPermissions(
     @Context("cad") cad: cad,
-    @BodyParams() @ZodSchema(UPDATE_DEFAULT_PERMISSIONS_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.PutCADDefaultPermissionsData> {
     const data = validateSchema(UPDATE_DEFAULT_PERMISSIONS_SCHEMA, body);
@@ -340,7 +339,7 @@ export class CADSettingsController {
   })
   async updateApiToken(
     @Context("cad") cad: cad,
-    @BodyParams() @ZodSchema(API_TOKEN_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.PutCADApiTokenData> {
     const data = validateSchema(API_TOKEN_SCHEMA, body);

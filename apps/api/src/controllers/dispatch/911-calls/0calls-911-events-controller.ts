@@ -12,7 +12,6 @@ import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import type * as APITypes from "@snailycad/types/api";
 import { callInclude } from "~/utils/leo/includes";
-import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/911-calls/events")
 @UseBeforeEach(IsAuth)
@@ -29,7 +28,7 @@ export class Calls911EventsController {
   })
   async createCallEvent(
     @PathParams("callId") callId: string,
-    @BodyParams() @ZodSchema(CALL_911_EVENT_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.Post911CallEventsData> {
     const data = validateSchema(CALL_911_EVENT_SCHEMA, body);
 
@@ -67,7 +66,7 @@ export class Calls911EventsController {
   async updateCallEvent(
     @PathParams("callId") callId: string,
     @PathParams("eventId") eventId: string,
-    @BodyParams() @ZodSchema(CALL_911_EVENT_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.Put911CallEventByIdData> {
     const data = validateSchema(CALL_911_EVENT_SCHEMA, body);
 

@@ -18,7 +18,6 @@ import { citizenInclude } from "controllers/citizen/CitizenController";
 import type { Prisma } from "@prisma/client";
 import type * as APITypes from "@snailycad/types/api";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";
-import { ZodSchema } from "~/lib/zod-schema";
 
 const weaponsInclude = { ...citizenInclude.weapons.include, citizen: true };
 
@@ -63,9 +62,7 @@ export class ImportWeaponsController {
   @UsePermissions({
     permissions: [Permissions.ImportRegisteredWeapons],
   })
-  async importWeaponsViaBodyData(
-    @BodyParams() @ZodSchema(WEAPON_SCHEMA_ARR) body: unknown,
-  ): Promise<APITypes.PostImportWeaponsData> {
+  async importWeaponsViaBodyData(@BodyParams() body: any): Promise<APITypes.PostImportWeaponsData> {
     return importWeaponsHandler(body);
   }
 
@@ -117,7 +114,7 @@ export class ImportWeaponsController {
   }
 }
 
-export async function importWeaponsHandler(body: unknown) {
+export async function importWeaponsHandler(body: unknown[]) {
   const data = validateSchema(WEAPON_SCHEMA_ARR, body);
 
   return prisma.$transaction(

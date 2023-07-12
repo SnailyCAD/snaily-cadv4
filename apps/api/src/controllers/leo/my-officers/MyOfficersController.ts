@@ -16,8 +16,6 @@ import { upsertOfficer } from "./upsert-officer";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { hasPermission } from "@snailycad/permissions";
 import { getImageWebPPath } from "lib/images/get-image-webp-path";
-import { ZodSchema } from "~/lib/zod-schema";
-import { CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -48,7 +46,7 @@ export class MyOfficersController {
     permissions: [Permissions.Leo],
   })
   async createOfficer(
-    @BodyParams() @ZodSchema(CREATE_OFFICER_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @Context("user") user: User,
     @Context("cad")
     cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings },
@@ -62,7 +60,7 @@ export class MyOfficersController {
   })
   async updateOfficer(
     @PathParams("id") officerId: string,
-    @BodyParams() @ZodSchema(CREATE_OFFICER_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @Context("user") user: User,
     @Context("cad")
     cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings },

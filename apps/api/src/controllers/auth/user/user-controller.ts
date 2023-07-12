@@ -18,7 +18,6 @@ import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
 import { setUserPreferencesCookies } from "lib/auth/setUserPreferencesCookies";
 import type * as APITypes from "@snailycad/types/api";
 import type { User } from "@snailycad/types";
-import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/user")
 @UseBefore(IsAuth)
@@ -44,7 +43,7 @@ export class UserController {
   @Description("Update the authenticated user's settings")
   async patchAuthUser(
     @Res() res: Res,
-    @BodyParams() @ZodSchema(CHANGE_USER_SCHEMA) body: unknown,
+    @BodyParams() body: any,
     @Context("user") user: User,
   ): Promise<APITypes.PatchUserData> {
     const data = validateSchema(CHANGE_USER_SCHEMA, body);
@@ -210,7 +209,7 @@ export class UserController {
   @Description("Update the authenticated user's password")
   async updatePassword(
     @Context("user") user: User,
-    @BodyParams() @ZodSchema(CHANGE_PASSWORD_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PostUserPasswordData> {
     const data = validateSchema(CHANGE_PASSWORD_SCHEMA, body);
 

@@ -28,7 +28,6 @@ import { validateSchema } from "lib/data/validate-schema";
 import { createSearchWhereObject } from "lib/values/create-where-object";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
-import { ZodSchema } from "~/lib/zod-schema";
 
 export const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
   QUALIFICATION: {
@@ -370,7 +369,7 @@ export class ValuesController {
   async bulkDeleteByPathAndIds(
     @PathParams("path") path: string,
     @Context("sessionUserId") sessionUserId: string,
-    @BodyParams() @ZodSchema(BULK_DELETE_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.DeleteValuesBulkData> {
     const type = getTypeFromPath(path);
     const data = validateSchema(BULK_DELETE_SCHEMA, body);

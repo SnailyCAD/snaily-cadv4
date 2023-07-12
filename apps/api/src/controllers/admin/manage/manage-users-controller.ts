@@ -25,7 +25,6 @@ import { manyToManyHelper } from "lib/data/many-to-many";
 import type * as APITypes from "@snailycad/types/api";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { isDiscordIdInUse } from "lib/discord/utils";
-import { ZodSchema } from "~/lib/zod-schema";
 
 const manageUsersSelect = (selectCitizens: boolean) =>
   ({
@@ -206,7 +205,7 @@ export class ManageUsersController {
   async updateUserPermissionsById(
     @Context("sessionUserId") sessionUserId: string,
     @PathParams("id") userId: string,
-    @BodyParams() @ZodSchema(PERMISSIONS_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PutManageUserPermissionsByIdData> {
     const data = validateSchema(PERMISSIONS_SCHEMA, body);
     const user = await prisma.user.findUnique({
@@ -248,7 +247,7 @@ export class ManageUsersController {
   async updateUserRolesById(
     @Context("sessionUserId") sessionUserId: string,
     @PathParams("id") userId: string,
-    @BodyParams() @ZodSchema(ROLES_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PutManageUserByIdRolesData> {
     const data = validateSchema(ROLES_SCHEMA, body);
     const user = await prisma.user.findUnique({
@@ -297,7 +296,7 @@ export class ManageUsersController {
   async updateUserById(
     @Context("sessionUserId") sessionUserId: string,
     @PathParams("id") userId: string,
-    @BodyParams() @ZodSchema(UPDATE_USER_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PutManageUserByIdData> {
     const data = validateSchema(UPDATE_USER_SCHEMA, body);
     const user = await prisma.user.findUnique({
@@ -392,7 +391,7 @@ export class ManageUsersController {
     @Context("user") authUser: User,
     @PathParams("id") userId: string,
     @PathParams("type") banType: "ban" | "unban",
-    @BodyParams() @ZodSchema(BAN_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PostManageUserBanUnbanData> {
     if (!["ban", "unban"].includes(banType)) {
       throw new NotFound("notFound");

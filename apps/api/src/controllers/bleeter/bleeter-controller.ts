@@ -27,7 +27,6 @@ import { BleeterPost, BleeterProfile } from "@snailycad/types";
 import { Descendant, slateDataToString } from "@snailycad/utils/editor";
 import { getAPIUrl } from "@snailycad/utils/api-url";
 import { sendDiscordWebhook } from "~/lib/discord/webhooks";
-import { ZodSchema } from "~/lib/zod-schema";
 
 @UseBeforeEach(IsAuth)
 @Controller("/bleeter")
@@ -76,7 +75,7 @@ export class BleeterController {
   @Post("/")
   @Description("Create a bleeter post")
   async createPost(
-    @BodyParams() @ZodSchema(BLEETER_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @Context("user") user: User,
   ): Promise<APITypes.PostBleeterData> {
     const data = validateSchema(BLEETER_SCHEMA, body);
@@ -113,7 +112,7 @@ export class BleeterController {
   @Description("Update a bleeter post by its id")
   async updatePost(
     @PathParams("id") postId: string,
-    @BodyParams() @ZodSchema(BLEETER_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @Context("user") user: User,
   ): Promise<APITypes.PutBleeterByIdData> {
     const data = validateSchema(BLEETER_SCHEMA, body);
@@ -222,7 +221,7 @@ export class BleeterController {
   @Description("Create a new bleeter profile")
   async createBleeterProfile(
     @Context("user") user: User,
-    @BodyParams() @ZodSchema(BLEETER_PROFILE_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PostNewExperienceProfileData> {
     const data = validateSchema(BLEETER_PROFILE_SCHEMA, body);
 

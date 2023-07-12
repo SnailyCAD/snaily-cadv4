@@ -39,7 +39,6 @@ import {
   combinedUnitProperties,
   combinedEmsFdUnitProperties,
 } from "utils/leo/includes";
-import { ZodSchema } from "~/lib/zod-schema";
 
 const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_UNIT"] as const;
 type Action = (typeof ACTIONS)[number];
@@ -365,7 +364,7 @@ export class AdminManageUnitsController {
   async updateCallsignUnit(
     @Context("sessionUserId") sessionUserId: string,
     @PathParams("unitId") unitId: string,
-    @BodyParams() @ZodSchema(UPDATE_UNIT_CALLSIGN_SCHEMA.partial()) body: unknown,
+    @BodyParams() body: unknown,
     @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
   ): Promise<APITypes.PutManageUnitCallsignData> {
     const data = validateSchema(UPDATE_UNIT_CALLSIGN_SCHEMA.partial(), body);
@@ -436,7 +435,7 @@ export class AdminManageUnitsController {
   async updateUnit(
     @Context("sessionUserId") sessionUserId: string,
     @PathParams("id") id: string,
-    @BodyParams() @ZodSchema(UPDATE_UNIT_SCHEMA.partial()) body: unknown,
+    @BodyParams() body: unknown,
     @Context("cad")
     cad: cad & { miscCadSettings: MiscCadSettings; features?: Record<Feature, boolean> },
   ): Promise<APITypes.PutManageUnitData> {

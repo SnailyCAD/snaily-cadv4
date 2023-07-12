@@ -13,7 +13,6 @@ import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { convertToJailTimeScale } from "lib/leo/utils";
 import type * as APITypes from "@snailycad/types/api";
-import { ZodSchema } from "~/lib/zod-schema";
 
 const citizenInclude = {
   Record: {
@@ -115,7 +114,7 @@ export class JailController {
   })
   async releaseCitizen(
     @PathParams("id") id: string,
-    @BodyParams() @ZodSchema(RELEASE_CITIZEN_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.DeleteReleaseJailedCitizenData> {
     const data = validateSchema(RELEASE_CITIZEN_SCHEMA, body);
 

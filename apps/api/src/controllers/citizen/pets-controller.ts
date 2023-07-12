@@ -21,7 +21,6 @@ import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { getImageWebPPath } from "~/lib/images/get-image-webp-path";
 import fs from "node:fs/promises";
 import { validateImageURL } from "~/lib/images/validate-image-url";
-import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/pets")
 @UseBeforeEach(IsAuth)
@@ -67,9 +66,7 @@ export class PetsController {
 
   @Post("/")
   @Description("Create a pet for a citizen")
-  async createPet(
-    @BodyParams() @ZodSchema(PET_SCHEMA) body: unknown,
-  ): Promise<APITypes.PostPetsData> {
+  async createPet(@BodyParams() body: unknown): Promise<APITypes.PostPetsData> {
     const data = validateSchema(PET_SCHEMA, body);
     const validatedImageURL = validateImageURL(data.image);
 
@@ -142,7 +139,7 @@ export class PetsController {
   @Description("Update a pet for a citizen")
   async updatePet(
     @PathParams("petId") id: string,
-    @BodyParams() @ZodSchema(PET_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @Context("user") user: User,
   ) {
     const data = validateSchema(PET_SCHEMA, body);
@@ -193,7 +190,7 @@ export class PetsController {
   @Description("Create a medical record for a pet")
   async createMedicalRecord(
     @PathParams("petId") id: string,
-    @BodyParams() @ZodSchema(PET_MEDICAL_RECORD_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @Context("user") user: User,
   ): Promise<APITypes.PostPetByIdMedicalRecordsData> {
     const data = validateSchema(PET_MEDICAL_RECORD_SCHEMA, body);
@@ -215,7 +212,7 @@ export class PetsController {
   async updateMedicalRecord(
     @PathParams("petId") petId: string,
     @PathParams("medicalRecordId") medicalRecordId: string,
-    @BodyParams() @ZodSchema(PET_MEDICAL_RECORD_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @Context("user") user: User,
   ): Promise<APITypes.PutPetByIdMedicalRecordsData> {
     const data = validateSchema(PET_MEDICAL_RECORD_SCHEMA, body);
@@ -250,7 +247,7 @@ export class PetsController {
   @Description("Create a nte for a pet")
   async createNote(
     @PathParams("petId") id: string,
-    @BodyParams() @ZodSchema(PET_NOTE_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @Context("user") user: User,
   ): Promise<APITypes.PostPetByIdNotesData> {
     const data = validateSchema(PET_NOTE_SCHEMA, body);
@@ -271,7 +268,7 @@ export class PetsController {
   async updateNote(
     @PathParams("petId") petId: string,
     @PathParams("noteId") noteId: string,
-    @BodyParams() @ZodSchema(PET_NOTE_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @Context("user") user: User,
   ): Promise<APITypes.PutPetByIdNotesData> {
     const data = validateSchema(PET_NOTE_SCHEMA, body);

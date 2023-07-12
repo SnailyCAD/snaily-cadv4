@@ -41,7 +41,6 @@ import { userProperties } from "lib/auth/getSessionUser";
 import { upsertRecord } from "~/lib/leo/records/upsert-record";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { getTranslator } from "utils/get-translator";
-import { ZodSchema } from "~/lib/zod-schema";
 
 export const assignedOfficersInclude = {
   combinedUnit: { include: combinedUnitProperties },
@@ -102,7 +101,7 @@ export class RecordsController {
   async createWarrant(
     @Context("cad") cad: { features?: Record<Feature, boolean> },
     @Context("user") user: User,
-    @BodyParams() @ZodSchema(CREATE_WARRANT_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
   ): Promise<APITypes.PostCreateWarrantData> {
     const data = validateSchema(CREATE_WARRANT_SCHEMA, body);
@@ -180,7 +179,7 @@ export class RecordsController {
     permissions: [Permissions.Leo],
   })
   async updateWarrant(
-    @BodyParams() @ZodSchema(UPDATE_WARRANT_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @PathParams("id") warrantId: string,
   ): Promise<APITypes.PutWarrantsData> {
     const data = validateSchema(UPDATE_WARRANT_SCHEMA, body);
@@ -236,7 +235,7 @@ export class RecordsController {
     permissions: [Permissions.Leo],
   })
   async createTicket(
-    @BodyParams() @ZodSchema(CREATE_TICKET_SCHEMA.or(CREATE_TICKET_SCHEMA_BUSINESS)) body: unknown,
+    @BodyParams() body: unknown,
     @Context("cad") cad: { features?: Record<Feature, boolean> },
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
   ): Promise<APITypes.PostRecordsData> {
@@ -271,7 +270,7 @@ export class RecordsController {
   })
   async updateRecordById(
     @Context("cad") cad: { features?: Record<Feature, boolean> },
-    @BodyParams() @ZodSchema(CREATE_TICKET_SCHEMA.or(CREATE_TICKET_SCHEMA_BUSINESS)) body: unknown,
+    @BodyParams() body: unknown,
     @PathParams("id") recordId: string,
   ): Promise<APITypes.PutRecordsByIdData> {
     const data = validateSchema(CREATE_TICKET_SCHEMA.or(CREATE_TICKET_SCHEMA_BUSINESS), body);

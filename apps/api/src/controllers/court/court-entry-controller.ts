@@ -10,7 +10,6 @@ import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type * as APITypes from "@snailycad/types/api";
 import { Feature } from "@snailycad/types";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
-import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/court-entries")
 @UseBeforeEach(IsAuth)
@@ -42,9 +41,7 @@ export class CourtEntryController {
   @UsePermissions({
     permissions: [Permissions.Leo],
   })
-  async createCourtEntry(
-    @BodyParams() @ZodSchema(COURT_ENTRY_SCHEMA) body: unknown,
-  ): Promise<APITypes.PostCourtEntriesData> {
+  async createCourtEntry(@BodyParams() body: unknown): Promise<APITypes.PostCourtEntriesData> {
     const data = validateSchema(COURT_ENTRY_SCHEMA, body);
 
     const entry = await prisma.courtEntry.create({
@@ -76,7 +73,7 @@ export class CourtEntryController {
   })
   async updateCourtEntry(
     @PathParams("id") id: string,
-    @BodyParams() @ZodSchema(COURT_ENTRY_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PutCourtEntriesData> {
     const data = validateSchema(COURT_ENTRY_SCHEMA, body);
 

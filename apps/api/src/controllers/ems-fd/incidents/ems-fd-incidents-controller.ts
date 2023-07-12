@@ -18,7 +18,6 @@ import { assignUnitsInvolvedToIncident } from "lib/incidents/handle-involved-uni
 import { ActiveDeputy } from "middlewares/active-deputy";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { _leoProperties, assignedUnitsInclude, unitProperties } from "utils/leo/includes";
-import { ZodSchema } from "~/lib/zod-schema";
 
 export const incidentInclude = {
   creator: { include: unitProperties },
@@ -113,7 +112,7 @@ export class IncidentController {
     permissions: [Permissions.Dispatch, Permissions.ManageEmsFdIncidents],
   })
   async createIncident(
-    @BodyParams() @ZodSchema(LEO_INCIDENT_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
   ): Promise<APITypes.PostIncidentsData<"ems-fd">> {
@@ -274,7 +273,7 @@ export class IncidentController {
     permissions: [Permissions.Dispatch, Permissions.ManageEmsFdIncidents],
   })
   async updateIncident(
-    @BodyParams() @ZodSchema(LEO_INCIDENT_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
     @PathParams("id") incidentId: string,
   ): Promise<APITypes.PutIncidentByIdData<"ems-fd">> {

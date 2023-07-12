@@ -50,7 +50,6 @@ import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
 import { ActiveOfficer } from "middlewares/active-officer";
 import { IsFeatureEnabled } from "~/middlewares/is-enabled";
 import { validateSocialSecurityNumber } from "~/lib/citizen/validate-ssn";
-import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/search/actions")
 @UseBeforeEach(IsAuth)
@@ -62,7 +61,7 @@ export class SearchActionsController {
     permissions: [Permissions.Leo],
   })
   async updateCitizenLicenses(
-    @BodyParams() @ZodSchema(LICENSE_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @PathParams("citizenId") citizenId: string,
   ): Promise<APITypes.PutSearchActionsLicensesData> {
     const data = validateSchema(LICENSE_SCHEMA, body);
@@ -124,7 +123,7 @@ export class SearchActionsController {
     permissions: [Permissions.Leo],
   })
   async updateCitizenLicensePoints(
-    @BodyParams() @ZodSchema(LICENSE_POINTS_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @PathParams("citizenId") citizenId: string,
   ): Promise<APITypes.PutSearchActionsLicensePointsData> {
     const data = validateSchema(LICENSE_POINTS_SCHEMA, body);
@@ -163,7 +162,7 @@ export class SearchActionsController {
     permissions: [Permissions.Leo],
   })
   async updateVehicleLicenses(
-    @BodyParams() @ZodSchema(LEO_VEHICLE_LICENSE_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @PathParams("vehicleId") vehicleId: string,
   ): Promise<APITypes.PutSearchActionsVehicleLicensesData> {
     const data = validateSchema(LEO_VEHICLE_LICENSE_SCHEMA, body);
@@ -406,7 +405,7 @@ export class SearchActionsController {
     @Context("cad")
     cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings | null },
     @Context("user") user: User,
-    @BodyParams() @ZodSchema(CREATE_CITIZEN_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PostSearchActionsCreateCitizen> {
     const isCreateCitizensEnabled = isFeatureEnabled({
       features: cad.features,
@@ -472,7 +471,7 @@ export class SearchActionsController {
     @Context("cad")
     cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings | null },
     @Context("user") user: User,
-    @BodyParams() @ZodSchema(CREATE_CITIZEN_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @PathParams("id") citizenId: string,
   ): Promise<APITypes.PostSearchActionsCreateCitizen> {
     const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
@@ -535,7 +534,7 @@ export class SearchActionsController {
   @Post("/impound/:vehicleId")
   @Description("Impound a vehicle from plate search")
   async impoundVehicle(
-    @BodyParams() @ZodSchema(IMPOUND_VEHICLE_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @PathParams("vehicleId") vehicleId: string,
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
     @Context("user") user: User,
@@ -586,7 +585,7 @@ export class SearchActionsController {
     @Context("user") user: User,
     @Context("cad")
     cad: cad & { miscCadSettings?: MiscCadSettings; features?: Record<Feature, boolean> },
-    @BodyParams() @ZodSchema(LEO_VEHICLE_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PostSearchActionsCreateVehicle> {
     const data = validateSchema(LEO_VEHICLE_SCHEMA, body);
 

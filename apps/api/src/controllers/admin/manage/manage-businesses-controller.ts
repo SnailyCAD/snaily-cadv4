@@ -14,7 +14,6 @@ import { UPDATE_EMPLOYEE_SCHEMA } from "@snailycad/schemas";
 import { EmployeeAsEnum } from "@snailycad/types";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
-import { ZodSchema } from "~/lib/zod-schema";
 
 const businessInclude = {
   user: {
@@ -110,7 +109,7 @@ export class AdminManageBusinessesController {
   async updateBusinessEmployee(
     @PathParams("id") employeeId: string,
     @Context("sessionUserId") sessionUserId: string,
-    @BodyParams() @ZodSchema(UPDATE_EMPLOYEE_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ) {
     const data = validateSchema(UPDATE_EMPLOYEE_SCHEMA, body);
     const employee = await prisma.employee.findFirst({

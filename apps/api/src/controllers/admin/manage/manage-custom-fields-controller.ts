@@ -10,7 +10,6 @@ import { validateSchema } from "lib/data/validate-schema";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type * as APITypes from "@snailycad/types/api";
-import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/admin/manage/custom-fields")
 @UseBeforeEach(IsAuth)
@@ -47,7 +46,7 @@ export class AdminManageCustomFieldsController {
     permissions: [Permissions.ManageCustomFields],
   })
   async createCustomField(
-    @BodyParams() @ZodSchema(CUSTOM_FIELDS_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.PostManageCustomFieldsData> {
     const data = validateSchema(CUSTOM_FIELDS_SCHEMA, body);
@@ -75,7 +74,7 @@ export class AdminManageCustomFieldsController {
     permissions: [Permissions.ManageCustomFields],
   })
   async updateCustomField(
-    @BodyParams() @ZodSchema(CUSTOM_FIELDS_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @PathParams("id") id: string,
     @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.PutManageCustomFieldsData> {

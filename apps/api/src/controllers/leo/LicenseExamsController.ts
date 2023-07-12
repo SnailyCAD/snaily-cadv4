@@ -17,7 +17,6 @@ import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { manyToManyHelper } from "lib/data/many-to-many";
 import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
-import { ZodSchema } from "~/lib/zod-schema";
 
 const licenseExamIncludes = {
   citizen: true,
@@ -66,9 +65,7 @@ export class LicenseExamsController {
   @UsePermissions({
     permissions: [Permissions.ManageLicenseExams],
   })
-  async createLicenseExam(
-    @BodyParams() @ZodSchema(LICENSE_EXAM_SCHEMA) body: unknown,
-  ): Promise<APITypes.PostLicenseExamsData> {
+  async createlicenseExam(@BodyParams() body: unknown): Promise<APITypes.PostLicenseExamsData> {
     const data = validateSchema(LICENSE_EXAM_SCHEMA, body);
 
     const status = this.getExamStatus(data);
@@ -112,9 +109,9 @@ export class LicenseExamsController {
   @UsePermissions({
     permissions: [Permissions.ManageLicenseExams],
   })
-  async updateLicenseExam(
+  async updatelicenseExam(
     @PathParams("id") examId: string,
-    @BodyParams() @ZodSchema(LICENSE_EXAM_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PutLicenseExamByIdData> {
     const data = validateSchema(LICENSE_EXAM_SCHEMA, body);
 

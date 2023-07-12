@@ -10,7 +10,6 @@ import type * as APITypes from "@snailycad/types/api";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 import { validateSchema } from "lib/data/validate-schema";
 import { BUSINESSES_BUSINESS_ROLE_SCHEMA } from "@snailycad/schemas";
-import { ZodSchema } from "~/lib/zod-schema";
 
 @UseBeforeEach(IsAuth)
 @Controller("/businesses/roles")
@@ -60,7 +59,7 @@ export class BusinessController {
     @Context("user") user: User,
     @PathParams("id") businessId: string,
     @QueryParams("employeeId") employeeId: string,
-    @BodyParams() @ZodSchema(BUSINESSES_BUSINESS_ROLE_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ) {
     const data = validateSchema(BUSINESSES_BUSINESS_ROLE_SCHEMA, body);
 
@@ -102,7 +101,7 @@ export class BusinessController {
     @PathParams("id") businessId: string,
     @PathParams("roleId") roleId: string,
     @QueryParams("employeeId") employeeId: string,
-    @BodyParams() @ZodSchema(BUSINESSES_BUSINESS_ROLE_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ) {
     const data = validateSchema(BUSINESSES_BUSINESS_ROLE_SCHEMA, body);
 

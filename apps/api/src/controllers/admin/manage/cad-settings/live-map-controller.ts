@@ -15,7 +15,6 @@ import sharp from "sharp";
 import { getLastOfArray, manyToManyHelper } from "lib/data/many-to-many";
 import { allowedFileExtensions } from "@snailycad/config";
 import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
-import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/admin/manage/cad-settings/live-map")
 @ContentType("application/json")
@@ -28,7 +27,7 @@ export class CADSettingsLiveMapController {
   async updateMiscSettings(
     @Context("sessionUserId") sessionUserId: string,
     @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings },
-    @BodyParams() @ZodSchema(LIVE_MAP_SETTINGS) body: unknown,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PutCADMiscSettingsData> {
     const data = validateSchema(LIVE_MAP_SETTINGS, body);
 

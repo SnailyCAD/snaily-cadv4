@@ -29,7 +29,6 @@ import {
   combinedUnitProperties,
   combinedEmsFdUnitProperties,
 } from "utils/leo/includes";
-import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -156,7 +155,7 @@ export class DispatchController {
   })
   async updateAreaOfPlay(
     @Context("cad") cad: cad,
-    @BodyParams() @ZodSchema(UPDATE_AOP_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PostDispatchAopData> {
     const data = validateSchema(UPDATE_AOP_SCHEMA, body);
 
@@ -315,7 +314,7 @@ export class DispatchController {
   })
   async updateRadioChannel(
     @PathParams("unitId") unitId: string,
-    @BodyParams() @ZodSchema(UPDATE_RADIO_CHANNEL_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PutDispatchRadioChannelData> {
     const data = validateSchema(UPDATE_RADIO_CHANNEL_SCHEMA, body);
     const { unit, type } = await findUnit(unitId);
@@ -359,14 +358,7 @@ export class DispatchController {
   @UsePermissions({
     permissions: [Permissions.Dispatch, Permissions.LiveMap],
   })
-  async getCADUsersByDiscordOrSteamId(
-    @BodyParams()
-    @ZodSchema(
-      z.array(z.object({ discordId: z.string().optional(), steamId: z.string().optional() })),
-    )
-    body: unknown,
-    @Context() ctx: Context,
-  ) {
+  async getCADUsersByDiscordOrSteamId(@BodyParams() body: unknown, @Context() ctx: Context) {
     const schema = z.array(
       z.object({ discordId: z.string().optional(), steamId: z.string().optional() }),
     );
@@ -453,7 +445,7 @@ export class DispatchController {
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   async handleTones(
-    @BodyParams() @ZodSchema(TONES_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @Context("user") user: User,
   ): Promise<APITypes.PostDispatchTonesData> {
     const data = validateSchema(TONES_SCHEMA, body);

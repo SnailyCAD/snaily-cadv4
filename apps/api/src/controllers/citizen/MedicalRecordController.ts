@@ -10,7 +10,6 @@ import { prisma } from "lib/data/prisma";
 import { validateSchema } from "lib/data/validate-schema";
 import { IsAuth } from "middlewares/auth/is-auth";
 import type * as APITypes from "@snailycad/types/api";
-import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/medical-records")
 @UseBeforeEach(IsAuth)
@@ -21,7 +20,7 @@ export class MedicalRecordsController {
   async createMedicalRecord(
     @Context("user") user: User,
     @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
-    @BodyParams() @ZodSchema(MEDICAL_RECORD_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PostCitizenMedicalRecordsData> {
     const data = validateSchema(MEDICAL_RECORD_SCHEMA, body);
 
@@ -65,7 +64,7 @@ export class MedicalRecordsController {
     @Context("user") user: User,
     @Context("cad") cad: { features?: Record<Feature, boolean> },
     @PathParams("id") recordId: string,
-    @BodyParams() @ZodSchema(MEDICAL_RECORD_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PutCitizenMedicalRecordsData> {
     const data = validateSchema(MEDICAL_RECORD_SCHEMA, body);
 

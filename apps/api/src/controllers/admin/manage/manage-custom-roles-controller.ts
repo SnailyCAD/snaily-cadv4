@@ -24,7 +24,6 @@ import process from "node:process";
 import type * as APITypes from "@snailycad/types/api";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { defaultPermissions } from "@snailycad/permissions";
-import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/admin/manage/custom-roles")
 @UseBeforeEach(IsAuth)
@@ -67,7 +66,7 @@ export class AdminManageCustomRolesController {
   })
   @Description("Create a new custom role.")
   async createCustomRole(
-    @BodyParams() @ZodSchema(CUSTOM_ROLE_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.PostCustomRolesData> {
     const data = validateSchema(CUSTOM_ROLE_SCHEMA, body);
@@ -105,7 +104,7 @@ export class AdminManageCustomRolesController {
   })
   @Description("Update a custom role by its ID.")
   async updateCustomRole(
-    @BodyParams() @ZodSchema(CUSTOM_ROLE_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
     @PathParams("id") id: string,
     @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.PutCustomRoleByIdData> {

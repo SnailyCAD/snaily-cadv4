@@ -11,7 +11,6 @@ import { incidentInclude } from "./IncidentController";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import type * as APITypes from "@snailycad/types/api";
-import { ZodSchema } from "~/lib/zod-schema";
 
 @Controller("/incidents/events")
 @UseBeforeEach(IsAuth)
@@ -29,7 +28,7 @@ export class IncidentEventsController {
   })
   async createIncidentEvent(
     @PathParams("incidentId") incidentId: string,
-    @BodyParams() @ZodSchema(CALL_911_EVENT_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PostIncidentEventsData> {
     const data = validateSchema(CALL_911_EVENT_SCHEMA, body);
 
@@ -67,7 +66,7 @@ export class IncidentEventsController {
   async updateIncidentEvent(
     @PathParams("incidentId") incidentId: string,
     @PathParams("eventId") eventId: string,
-    @BodyParams() @ZodSchema(CALL_911_EVENT_SCHEMA) body: unknown,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PutIncidentEventByIdData> {
     const data = validateSchema(CALL_911_EVENT_SCHEMA, body);
 
