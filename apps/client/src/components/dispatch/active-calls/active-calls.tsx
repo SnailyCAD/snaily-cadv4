@@ -30,7 +30,7 @@ interface Props {
   initialData: Get911CallsData;
 }
 
-function _ActiveCalls({ initialData }: Props) {
+function Active911Calls({ initialData }: Props) {
   const { hasPermissions } = usePermission();
   const draggingUnit = useDispatchState((state) => state.draggingUnit);
   const call911State = useCall911State(
@@ -231,4 +231,4 @@ function _ActiveCalls({ initialData }: Props) {
   );
 }
 
-export const ActiveCalls = React.memo(_ActiveCalls);
+export const ActiveCalls = React.memo(Active911Calls);

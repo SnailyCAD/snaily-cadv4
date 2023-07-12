@@ -24,7 +24,6 @@
     "@casper124578/eslint-config": "6.0.0",
     "@casper124578/eslint-config-next": "6.0.0",
     "@casper124578/eslint-config-react": "6.0.0",
-    "@typescript-eslint/eslint-plugin": "latest",
     "colorette": "2.0.20",
     "concurrently": "^8.2.0",
     "copy": "^0.3.2",
