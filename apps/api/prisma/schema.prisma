@@ -8,7 +8,7 @@ datasource db {
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["jsonProtocol"]
+  previewFeatures = []
 }
 
 model cad {
@@ -1370,7 +1370,7 @@ model Record {
   type                 RecordType
   citizen              Citizen?            @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId            String?
-  officer              Officer?            @relation(fields: [officerId], references: [id], onDelete: Cascade)
+  officer              Officer?            @relation(fields: [officerId], references: [id], onDelete: SetNull)
   officerId            String?
   violations           Violation[]
   createdAt            DateTime            @default(now())
@@ -1378,9 +1378,9 @@ model Record {
   postal               String              @db.VarChar(255)
   address              String?             @db.Text
   notes                String?             @db.Text
-  release              RecordRelease?      @relation(fields: [releaseId], references: [id])
+  release              RecordRelease?      @relation(fields: [releaseId], references: [id], onDelete: SetNull)
   releaseId            String?
-  courtEntry           CourtEntry?         @relation(fields: [CourtEntryId], references: [id])
+  courtEntry           CourtEntry?         @relation(fields: [CourtEntryId], references: [id], onDelete: SetNull)
   CourtEntryId         String?
   RecordLog            RecordLog[]
   ExpungementRequest   ExpungementRequest? @relation(fields: [expungementRequestId], references: [id])
@@ -1415,7 +1415,7 @@ model Warrant {
   id                   String                   @id @default(uuid())
   citizen              Citizen                  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId            String
-  officer              Officer?                 @relation(fields: [officerId], references: [id], onDelete: Cascade)
+  officer              Officer?                 @relation(fields: [officerId], references: [id], onDelete: SetNull)
   officerId            String?
   assignedOfficers     AssignedWarrantOfficer[]
   description          String                   @db.Text
@@ -1434,9 +1434,9 @@ model RecordLog {
   citizenId  String?
   business   Business? @relation(fields: [businessId], references: [id])
   businessId String?
-  records    Record?   @relation(fields: [recordId], references: [id])
+  records    Record?   @relation(fields: [recordId], references: [id], onDelete: Cascade)
   recordId   String?
-  warrant    Warrant?  @relation(fields: [warrantId], references: [id])
+  warrant    Warrant?  @relation(fields: [warrantId], references: [id], onDelete: Cascade)
   warrantId  String?
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @default(now()) @updatedAt

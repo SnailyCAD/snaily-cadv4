@@ -94,26 +94,23 @@ export class Calls911Controller {
     }
 
     if (parseInt(query) && where.OR) {
-      // @ts-expect-error this can be ignored.
-      where.OR = [...Array.from(where.OR), { caseNumber: { equals: parseInt(query) } }];
+      where.OR.push({ caseNumber: { equals: parseInt(query) } });
     }
 
     if (department && where.OR) {
-      // @ts-expect-error this can be ignored.
-      where.OR = [...Array.from(where.OR), { departments: { some: { id: department } } }];
+      where.OR.push({ departments: { some: { id: department } } });
     }
     if (division && where.OR) {
-      // @ts-expect-error this can be ignored.
-      where.OR = [...Array.from(where.OR), { divisions: { some: { id: division } } }];
+      where.OR.push({ divisions: { some: { id: division } } });
     }
+
     if (assignedUnit && where.OR) {
-      where.OR = [
-        ...Array.from(where.OR as any[]),
+      where.OR.push(
         { assignedUnits: { some: { id: assignedUnit } } },
         { assignedUnits: { some: { officerId: assignedUnit } } },
         { assignedUnits: { some: { emsFdDeputyId: assignedUnit } } },
         { assignedUnits: { some: { combinedLeoId: assignedUnit } } },
-      ];
+      );
     }
 
     // todo

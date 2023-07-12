@@ -1,15 +1,17 @@
 import { Prisma } from "@prisma/client";
 import { WhitelistStatus } from "@snailycad/types";
 
-interface CreateWhereObjOptions {
+interface CreateWhereObjOptions<Type extends "OFFICER" | "DEPUTY"> {
   departmentId?: string;
   query: string;
   pendingOnly: boolean;
-  type: "OFFICER" | "DEPUTY";
-  extraWhere?: Prisma.OfficerWhereInput | Prisma.EmsFdDeputyWhereInput;
+  type: Type;
+  extraWhere?: Type extends "OFFICER" ? Prisma.OfficerWhereInput : Prisma.EmsFdDeputyWhereInput;
 }
 
-export function createWhereCombinedUnit(options: CreateWhereObjOptions) {
+export function createWhereCombinedUnit<Type extends "OFFICER" | "DEPUTY">(
+  options: CreateWhereObjOptions<Type>,
+) {
   const fieldName = options.type === "OFFICER" ? "officers" : "deputies";
 
   return {
@@ -23,13 +25,13 @@ export function createWhereCombinedUnit(options: CreateWhereObjOptions) {
   };
 }
 
-export function createWhere({
+export function createWhere<Type extends "OFFICER" | "DEPUTY">({
   query,
   pendingOnly,
   departmentId,
-  type = "OFFICER",
+  type,
   extraWhere = {},
-}: CreateWhereObjOptions) {
+}: CreateWhereObjOptions<Type>) {
   const [name, surname] = getName(query);
 
   const departmentIdWhere = departmentId ? { departmentId } : {};
@@ -74,7 +76,7 @@ export function createWhere({
           }
         : {},
     ],
-  } satisfies Prisma.OfficerWhereInput | Prisma.EmsFdDeputyWhereInput;
+  } satisfies Type extends "OFFICER" ? Prisma.OfficerWhereInput : Prisma.EmsFdDeputyWhereInput;
 
   return where;
 }

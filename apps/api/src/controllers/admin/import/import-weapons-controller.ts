@@ -72,7 +72,7 @@ export class ImportWeaponsController {
     permissions: [Permissions.ImportRegisteredWeapons, Permissions.ManageCitizens],
   })
   async getRandomWeapon(@QueryParams("userRegisteredOnly", Boolean) userRegisteredOnly?: boolean) {
-    const where: Prisma.CitizenWhereInput = {};
+    const where: Prisma.WeaponWhereInput = {};
     if (typeof userRegisteredOnly === "boolean") {
       where.userId = userRegisteredOnly ? { not: { equals: null } } : { equals: null };
     }
