@@ -70,27 +70,33 @@ export default function AccountPendingPage() {
             <span className="h-[2px] bg-secondary w-full rounded-md" />
           </div>
 
-          {showDiscordOAuth ? (
-            <Button
-              type="button"
-              onPress={handleDiscordLogin}
-              className="flex items-center justify-center gap-3 w-full"
-            >
-              <Discord />
-              {t("syncDiscord")}
-            </Button>
-          ) : null}
+          {showDiscordOAuth || showSteamOAuth ? (
+            <>
+              {showDiscordOAuth ? (
+                <Button
+                  type="button"
+                  onPress={handleDiscordLogin}
+                  className="flex items-center justify-center gap-3 w-full"
+                >
+                  <Discord />
+                  {t("syncDiscord")}
+                </Button>
+              ) : null}
 
-          {showSteamOAuth ? (
-            <Button
-              type="button"
-              onPress={handleSteamLogin}
-              className="flex items-center justify-center gap-3 w-full mt-2"
-            >
-              <Steam />
-              {t("syncSteam")}
-            </Button>
-          ) : null}
+              {showSteamOAuth ? (
+                <Button
+                  type="button"
+                  onPress={handleSteamLogin}
+                  className="flex items-center justify-center gap-3 w-full mt-2"
+                >
+                  <Steam />
+                  {t("syncSteam")}
+                </Button>
+              ) : null}
+            </>
+          ) : (
+            <p>{t("noThirdPartyConnections")}</p>
+          )}
         </div>
         <VersionDisplay cad={cad} />
 
