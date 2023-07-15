@@ -248,6 +248,12 @@ export class ValuesController {
       where: { type, isDisabled: false, value: { contains: query, mode: "insensitive" } },
       orderBy: { position: "asc" },
       take: 35,
+      include:
+        type === ValueType.OFFICER_RANK
+          ? {
+              officerRankDepartments: { include: { value: true } },
+            }
+          : undefined,
     });
 
     return values;

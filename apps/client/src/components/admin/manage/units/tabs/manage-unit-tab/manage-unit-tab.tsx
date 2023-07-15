@@ -188,11 +188,14 @@ export function ManageUnitTab({ unit: data }: Props) {
                   valueType={ValueType.OFFICER_RANK}
                   isClearable
                   filterFn={(value) => {
-                    if ((value.officerRankDepartments?.length ?? 0) <= 0) return true;
+                    // has no departments set - allows all departments
+                    if (!value.officerRankDepartments || value.officerRankDepartments.length <= 0) {
+                      return true;
+                    }
 
-                    return (
-                      value.officerRankDepartments?.some((v) => v.id === values.department) ?? true
-                    );
+                    return values.department
+                      ? value.officerRankDepartments.some((v) => v.id === values.department)
+                      : true;
                   }}
                 />
 
