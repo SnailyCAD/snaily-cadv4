@@ -39,7 +39,7 @@ export function useSignal100() {
     onEnded() {
       setPlayCount(playCount + 1);
 
-      if (playCount >= signal100RepeatAmount) {
+      if (playCount <= signal100RepeatAmount) {
         // wait for the possible interval ms
         setTimeout(() => {
           controls.seek(0);
