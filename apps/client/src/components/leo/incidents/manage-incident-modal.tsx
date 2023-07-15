@@ -228,7 +228,7 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
                     isSelected={values.openModalAfterCreation}
                     onChange={(isSelected) => setFieldValue("openModalAfterCreation", isSelected)}
                   >
-                    Open Manage incident modal after call creation?
+                    {t("openModalAfterCreation")}
                   </CheckboxField>
                 ) : null}
 

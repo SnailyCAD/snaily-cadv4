@@ -268,7 +268,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
                   isSelected={values.openCallModalAfterCreation}
                   onChange={(isSelected) => setFieldValue("openCallModalAfterCreation", isSelected)}
                 >
-                  Open Manage 911 call modal after call creation?
+                  {t("openCallModalAfterCreation")}
                 </CheckboxField>
               ) : null}
 
