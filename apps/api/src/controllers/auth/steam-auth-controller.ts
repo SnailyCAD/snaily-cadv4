@@ -16,12 +16,12 @@ import { getAPIUrl } from "@snailycad/utils/api-url";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 
 const callbackUrl = makeCallbackURL(getAPIUrl());
-const STEAM_API_KEY = process.env["STEAM_API_KEY"];
+const STEAM_API_KEY = process.env.STEAM_API_KEY;
 export const STEAM_API_URL = "https://api.steampowered.com";
 
 @Controller("/auth/steam")
 @ContentType("application/json")
-@IsFeatureEnabled({ feature: [Feature.STEAM_OAUTH, Feature.FORCE_STEAM_AUTH] })
+@IsFeatureEnabled({ feature: [Feature.STEAM_OAUTH] })
 export class SteamOAuthController {
   @Get("/")
   @Description("Redirect to Steam's OAuth2 URL")
@@ -59,7 +59,7 @@ export class SteamOAuthController {
     ]);
 
     if (!steamData) {
-      return res.redirect(`${redirectURL}/auth/login?error=could not fetch discord data`);
+      return res.redirect(`${redirectURL}/auth/login?error=steamAuthIssue`);
     }
 
     const steamId = steamData.steamid;

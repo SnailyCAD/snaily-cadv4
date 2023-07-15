@@ -45,6 +45,8 @@ export function LoginForm({ onFormSubmitted, isWithinModal }: Props) {
     whitelistPending: tError("whitelistPending"),
     whitelistDeclined: tError("whitelistDeclined"),
     ownerCannotDiscordAuth: tError("ownerCannotDiscordAuth"),
+    steamAuthIssue: tError("steamAuthIssue"),
+    discordAuthIssue: tError("discordAuthIssue"),
   } as const;
 
   const errorMessage = authMessages[router.query.error as keyof typeof authMessages];
