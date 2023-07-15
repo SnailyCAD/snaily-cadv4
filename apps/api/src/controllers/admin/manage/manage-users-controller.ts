@@ -597,7 +597,7 @@ export class ManageUsersController {
 
   private parsePermissions(data: Record<string, string>, user: { roles: CustomRole[] }) {
     const permissions: string[] = [];
-    const values = Object.values(Permissions);
+    const values = Object.keys(Permissions);
     const rolePermissions = user.roles.flatMap((r) => r.permissions);
 
     for (const name of values) {

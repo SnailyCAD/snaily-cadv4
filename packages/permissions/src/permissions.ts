@@ -122,4 +122,4 @@ export enum Permissions {
   ManageWeaponExams = "ManageWeaponExams",
 }
 
-export const allPermissions = Object.values(Permissions);
+export const allPermissions = Object.keys(Permissions);

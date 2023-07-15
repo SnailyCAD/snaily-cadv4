@@ -390,7 +390,7 @@ export function DiscordRolesTab() {
 
 function makeValue(permissions: Permissions[] | undefined, t: (key: string) => string) {
   if (!permissions || !Array.isArray(permissions)) return [] as SelectValue[];
-  return permissions.map((v) => ({ value: t(v), label: v }));
+  return permissions.map((v) => ({ value: v, label: t(v) }));
 }
 
 function SelectPermissionsField({
@@ -415,9 +415,9 @@ function SelectPermissionsField({
         onChange={handleChange}
         isMulti
         value={values[name]}
-        values={permissions.map((v) => ({
-          label: tPermission(v),
-          value: v,
+        values={permissions.map((permission) => ({
+          label: tPermission(permission),
+          value: permission,
         }))}
       />
     </FormField>
