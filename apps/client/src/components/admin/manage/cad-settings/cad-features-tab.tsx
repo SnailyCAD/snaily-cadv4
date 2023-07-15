@@ -214,7 +214,7 @@ export function CADFeaturesTab() {
                       isSelected={
                         values.features[feature.feature]?.isEnabled ??
                         // @ts-expect-error - this is fine
-                        DEFAULT_DISABLED_FEATURES[key]?.isEnabled ??
+                        DEFAULT_DISABLED_FEATURES[feature.feature]?.isEnabled ??
                         true
                       }
                       onChange={(isSelected) =>
