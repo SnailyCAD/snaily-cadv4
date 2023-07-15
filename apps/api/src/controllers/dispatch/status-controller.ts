@@ -332,13 +332,17 @@ export class StatusController {
     } else {
       if (code.shouldDo === ShouldDoType.SET_OFF_DUTY) {
         if (unit.type === "combined-ems-fd") {
-          await prisma.combinedEmsFdUnit.delete({
-            where: { id: unit.unit.id },
-          });
+          await prisma.combinedEmsFdUnit
+            .delete({
+              where: { id: unit.unit.id },
+            })
+            .catch(() => null);
         } else {
-          await prisma.combinedLeoUnit.delete({
-            where: { id: unit.unit.id },
-          });
+          await prisma.combinedLeoUnit
+            .delete({
+              where: { id: unit.unit.id },
+            })
+            .catch(() => null);
         }
       }
     }

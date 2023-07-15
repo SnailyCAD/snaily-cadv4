@@ -174,12 +174,6 @@ export async function upsertRecord(options: UpsertRecordOptions) {
   );
 
   if (Object.keys(errors).length >= 1) {
-    captureException({
-      name: "InvalidViolations",
-      message: "Invalid violations appended to record",
-      violations: JSON.stringify(errors),
-    });
-
     await prisma.record.delete({ where: { id: ticket.id } });
     throw new ExtendedBadRequest(errors);
   }

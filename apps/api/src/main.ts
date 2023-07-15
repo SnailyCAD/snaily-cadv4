@@ -21,7 +21,7 @@ Sentry.init({
   tracesSampleRate: 1.0,
   profilesSampleRate: 1.0,
   attachStacktrace: true,
-  ignoreErrors: [/invocation: Can't reach database server at/gi],
+  ignoreErrors: [/can't reach database server at/gim],
   denyUrls: [/localhost/],
 });
 
