@@ -21,11 +21,7 @@ export const CHANGE_USER_SCHEMA = z.object({
   tableActionsAlignment: z.string(),
   locale: z.string().nullish(),
   developerMode: z.boolean().nullish(),
-  username: z
-    .string()
-    .min(3)
-    .max(255)
-    .regex(/^([a-z_.\d]+)*[a-z\d]+$/i),
+  username: z.string().min(3).max(255),
 });
 
 export const CHANGE_PASSWORD_SCHEMA = z.object({

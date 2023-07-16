@@ -50,10 +50,15 @@ export class UserController {
 
     const existing = await prisma.user.findUnique({
       where: { username: data.username },
+      select: { username: true },
     });
 
     if (existing && user.username !== data.username) {
       throw new ExtendedBadRequest({ username: "userAlreadyExists" });
+    }
+
+    if (!user.discordId && /^([a-z_.\d]+)*[a-z\d]+$/i.test(data.username)) {
+      throw new ExtendedBadRequest({ username: "invalidUsername" });
     }
 
     let soundSettingsId = null;

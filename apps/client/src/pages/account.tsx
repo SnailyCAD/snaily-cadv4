@@ -3,7 +3,6 @@ import { Layout } from "components/Layout";
 import { TabList } from "@snailycad/ui";
 import type { GetServerSideProps } from "next";
 import { useTranslations } from "next-intl";
-
 import { useAuth } from "context/AuthContext";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
