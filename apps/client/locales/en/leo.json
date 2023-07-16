@@ -322,8 +322,8 @@
     "userDefinedCallsignDescription": "You are allowed to set a custom callsign for this unit. This will override the default callsign set by the department.",
     "manageCitizenProfile": "Manage Citizen Profile",
     "generalInformation": "General Information",
-    "vehicleInformation": "Vehicle Information"
-,    "openModalAfterCreation": "Open Manage Incident modal after creation?"
+    "vehicleInformation": "Vehicle Information",
+    "openModalAfterCreation": "Open Manage Incident modal after creation?"
   },
   "Bolos": {
     "activeBolos": "Active Bolos",
