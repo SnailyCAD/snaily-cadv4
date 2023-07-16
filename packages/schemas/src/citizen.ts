@@ -112,6 +112,7 @@ export const MEDICAL_RECORD_SCHEMA = z.object({
   description: z.string(),
   bloodGroup: z.string().max(255).nullable(),
   citizenId: z.string().min(2).max(255),
+  descriptionData: z.any().nullish(),
 });
 
 export const PET_SCHEMA = z.object({
@@ -132,6 +133,7 @@ export const PET_SCHEMA = z.object({
 export const PET_MEDICAL_RECORD_SCHEMA = z.object({
   type: z.string().max(255),
   description: z.string(),
+  descriptionData: z.any().nullish(),
 });
 
 export const PET_NOTE_SCHEMA = z.object({

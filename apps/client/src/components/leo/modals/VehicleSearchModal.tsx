@@ -149,14 +149,15 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
               allowsCustomValue
               autoFocus
               setValues={({ localValue, node }) => {
-                const vinNumber = localValue ? { vinNumber: localValue } : {};
+                const searchValue =
+                  typeof localValue !== "undefined" ? { vinNumber: localValue } : {};
                 const plateOrVin = node ? { plateOrVin: node.key as string } : {};
 
                 if (node) {
                   setCurrentResult(node.value);
                 }
 
-                setValues({ ...values, ...vinNumber, ...plateOrVin });
+                setValues({ ...values, ...searchValue, ...plateOrVin });
               }}
               localValue={values.vinNumber}
               errorMessage={errors.plateOrVin}

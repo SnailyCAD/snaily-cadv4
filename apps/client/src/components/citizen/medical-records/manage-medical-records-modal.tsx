@@ -14,6 +14,8 @@ import type {
 } from "@snailycad/types/api";
 import { Button, TextField, Loader } from "@snailycad/ui";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
+import { Editor, dataToSlate } from "components/editor/editor";
+import { FormField } from "components/form/FormField";
 
 interface Props {
   isEmsFd?: boolean;
@@ -75,6 +77,7 @@ export function ManageMedicalRecordsModal({
   const INITIAL_VALUES = {
     type: medicalRecord?.type ?? "",
     description: medicalRecord?.description ?? "",
+    descriptionData: dataToSlate(medicalRecord),
     bloodGroup: bloodGroupId ?? "",
     citizenId: citizen.id,
   };
@@ -108,14 +111,12 @@ export function ManageMedicalRecordsModal({
               <small className="inline-block mb-3 text-base">{t("info_bloodgroup")}</small>
             ) : null}
 
-            <TextField
-              label={common("description")}
-              errorMessage={errors.description}
-              value={values.description}
-              onChange={(value) => setFieldValue("description", value)}
-              name="description"
-              isTextarea
-            />
+            <FormField errorMessage={errors.description} label={common("description")}>
+              <Editor
+                value={values.descriptionData}
+                onChange={(v) => setFieldValue("descriptionData", v)}
+              />
+            </FormField>
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onPress={handleClose} variant="cancel">

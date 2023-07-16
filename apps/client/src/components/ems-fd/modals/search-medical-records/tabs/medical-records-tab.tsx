@@ -13,6 +13,7 @@ import dynamic from "next/dynamic";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
+import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
 interface MedicalRecordsTabProps {
   results: PostEmsFdMedicalRecordsSearchData;
@@ -88,7 +89,7 @@ export function MedicalRecordsTab(props: MedicalRecordsTabProps) {
             id: record.id,
             type: record.type,
             bloodGroup: record.bloodGroup?.value ?? t("Common.none"),
-            description: record.description || t("Common.none"),
+            description: <CallDescription data={record} />,
             actions: (
               <>
                 <Button

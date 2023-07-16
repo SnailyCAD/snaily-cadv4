@@ -43,6 +43,7 @@ export class MedicalRecordsController {
         userId: user.id || undefined,
         type: data.type,
         description: data.description,
+        descriptionData: data.descriptionData || undefined,
         bloodGroupId: data.bloodGroup || null,
       },
       include: {
@@ -89,6 +90,7 @@ export class MedicalRecordsController {
         description: data.description,
         type: data.type,
         bloodGroupId: data.bloodGroup || null,
+        descriptionData: data.descriptionData || undefined,
       },
       include: {
         bloodGroup: true,
