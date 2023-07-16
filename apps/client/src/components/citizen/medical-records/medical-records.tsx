@@ -11,6 +11,7 @@ import type { DeleteCitizenMedicalRecordsData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import dynamic from "next/dynamic";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
 const ManageMedicalRecordsModal = dynamic(
   async () => (await import("./manage-medical-records-modal")).ManageMedicalRecordsModal,
@@ -86,7 +87,7 @@ export function MedicalRecords() {
               id: record.id,
               diseases: record.type,
               bloodGroup: record.bloodGroup?.value ?? common("none"),
-              description: record.description || common("none"),
+              description: <CallDescription data={record} />,
               createdAt: <FullDate>{record.createdAt}</FullDate>,
               actions: (
                 <>

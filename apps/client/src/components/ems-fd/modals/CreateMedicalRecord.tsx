@@ -12,6 +12,8 @@ import { useValues } from "context/ValuesContext";
 import type { PostEmsFdMedicalRecord } from "@snailycad/types/api";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
+import { DEFAULT_EDITOR_DATA, Editor } from "components/editor/editor";
+import { FormField } from "components/form/FormField";
 
 interface Props {
   onCreate?(newV: MedicalRecord): void;
@@ -51,6 +53,7 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
     citizenId: "",
     citizenName: "",
     bloodGroup: null,
+    descriptionData: DEFAULT_EDITOR_DATA,
   };
 
   return (
@@ -87,14 +90,12 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
               label={common("type")}
             />
 
-            <TextField
-              isTextarea
-              errorMessage={errors.description}
-              label={common("description")}
-              value={values.description}
-              name="description"
-              onChange={(value) => setFieldValue("description", value)}
-            />
+            <FormField errorMessage={errors.description} label={common("description")}>
+              <Editor
+                value={values.descriptionData}
+                onChange={(v) => setFieldValue("descriptionData", v)}
+              />
+            </FormField>
 
             <footer className="flex justify-end mt-5">
               <Button

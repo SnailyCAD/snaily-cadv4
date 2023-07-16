@@ -282,6 +282,7 @@ export class EmsFdController {
         description: data.description,
         type: data.type,
         bloodGroupId: data.bloodGroup || null,
+        descriptionData: data.descriptionData || undefined,
       },
       include: {
         bloodGroup: true,
