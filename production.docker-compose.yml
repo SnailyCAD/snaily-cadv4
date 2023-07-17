@@ -26,6 +26,8 @@ services:
     networks:
       - cad_web
     restart: always
+    volumes:
+      - ./public:/snailycad/apps/api/public
 
   client:
     container_name: "snaily-cad-client"
