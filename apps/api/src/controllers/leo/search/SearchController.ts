@@ -128,6 +128,7 @@ const weaponsInclude = {
   model: { include: { value: true } },
   registrationStatus: true,
   customFields: { include: { field: true } },
+  flags: true,
 };
 
 @Controller("/search")

@@ -323,7 +323,9 @@
     "manageCitizenProfile": "Manage Citizen Profile",
     "generalInformation": "General Information",
     "vehicleInformation": "Vehicle Information",
-    "openModalAfterCreation": "Open Manage Incident modal after creation?"
+    "openModalAfterCreation": "Open Manage Incident modal after creation?",
+    "manageWeaponFlags": "Manage Weapon Flags",
+    "flags": "Flags"
   },
   "Bolos": {
     "activeBolos": "Active Bolos",

@@ -66,6 +66,7 @@ export type PostLeoSearchWeaponData =
       citizen: Prisma.Citizen;
       model: Types.WeaponValue;
       registrationStatus: Prisma.Value;
+      flags?: Prisma.Value[];
     })
   | null;
 

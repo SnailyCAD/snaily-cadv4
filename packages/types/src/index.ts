@@ -236,7 +236,7 @@ export type DriversLicenseCategoryValue = Prisma.DriversLicenseCategoryValue & {
 
 export type VehicleValue = Prisma.VehicleValue & { trimLevels?: Value[]; value: Value };
 
-export type WeaponValue = Prisma.WeaponValue & { value: Value };
+export type WeaponValue = Prisma.WeaponValue & { value: Value; flags?: Value[] };
 
 export type BleeterPost = Prisma.BleeterPost;
 export type BleeterProfile = Prisma.BleeterProfile & {};
