@@ -15,7 +15,6 @@ export async function createCitizenViolations(options: Options) {
       options.data.map((violation) =>
         upsertRecord({
           data: { ...violation, citizenId: options.citizenId },
-          officer: null,
           recordId: null,
           cad: options.cad,
         }),
