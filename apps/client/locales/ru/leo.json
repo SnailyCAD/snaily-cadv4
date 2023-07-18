@@ -322,7 +322,8 @@
     "userDefinedCallsignDescription": "Вы можете установить пользовательский позывной на этот юнит. Он перезапишет стандартный позывной, установленный департаментом.",
     "manageCitizenProfile": "Управление профилем гражданина",
     "generalInformation": "Общая информация",
-    "vehicleInformation": "Информация о транспорте"
+    "vehicleInformation": "Информация о транспорте",
+    "openModalAfterCreation": "Открыть модальное окно инцидентов после создания?"
   },
   "Bolos": {
     "activeBolos": "Активные BOLO",
