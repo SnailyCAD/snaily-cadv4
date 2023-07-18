@@ -87,7 +87,6 @@ export function ManageMedicalRecordsModal({
       title={medicalRecord ? t("editMedicalRecord") : t("addMedicalRecord")}
       onClose={handleClose}
       isOpen={isOpen(ModalIds.ManageMedicalRecords)}
-      className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ setFieldValue, errors, values, isValid }) => (

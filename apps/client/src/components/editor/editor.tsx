@@ -113,7 +113,7 @@ export function Editor(props: EditorProps) {
   return (
     <div
       className={classNames(
-        "mt-1 rounded-md border w-full shadow-sm",
+        "mt-1 rounded-md border w-full shadow-sm pb-10",
         props.hideBorder ? "border-none" : "border",
         !props.isReadonly ? "bg-secondary text-white overflow-hidden" : !props.hideBorder && "px-3",
         props.errorMessage ? "border-red-500 focus:border-red-700" : "border-gray-700",
@@ -141,7 +141,7 @@ export function Editor(props: EditorProps) {
           renderLeaf={renderLeaf}
           renderElement={renderElement}
           className={classNames(
-            "w-full bg-transparent disabled:cursor-not-allowed disabled:opacity-80 py-1.5",
+            "w-full bg-transparent disabled:cursor-not-allowed disabled:opacity-80 outline-none",
             props.truncate && "!flex",
             props.isReadonly ? "px-0" : "px-2",
           )}
