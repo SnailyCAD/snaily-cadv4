@@ -279,7 +279,6 @@ export class RecordsController {
       data,
       cad,
       recordId,
-      officer: null,
     });
 
     return recordItem;

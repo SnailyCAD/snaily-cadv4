@@ -17,7 +17,7 @@ interface UpsertRecordOptions {
   data: z.infer<typeof CREATE_TICKET_SCHEMA | typeof CREATE_TICKET_SCHEMA_BUSINESS>;
   recordId: string | null;
   cad: { features?: Record<Feature, boolean> };
-  officerId: string | null;
+  officerId?: string | null;
 }
 
 export async function upsertRecord(options: UpsertRecordOptions) {
@@ -82,7 +82,7 @@ export async function upsertRecord(options: UpsertRecordOptions) {
       type: options.data.type as RecordType,
       citizenId: citizen?.id,
       businessId: business?.id,
-      officerId: options.officerId ?? null,
+      officerId: options.officerId,
       notes: options.data.notes,
       postal: String(options.data.postal),
       status: recordStatus,
