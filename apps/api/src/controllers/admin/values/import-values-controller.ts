@@ -541,6 +541,8 @@ export const typeHandlers = {
     typeHandlers.GENERIC({ ...options, type: "CITIZEN_FLAG" }),
   VEHICLE_TRIM_LEVEL: async (options: HandlerOptions) =>
     typeHandlers.GENERIC({ ...options, type: "VEHICLE_TRIM_LEVEL" }),
+  WEAPON_FLAG: async (options: HandlerOptions) =>
+    typeHandlers.GENERIC({ ...options, type: "WEAPON_FLAG" }),
 
   GENERIC: async ({ body, type, id }: HandlerOptions & { type: ValueType }): Promise<Value[]> => {
     const data = validateSchema(BASE_ARR, body);

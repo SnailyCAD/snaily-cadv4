@@ -80,6 +80,7 @@ export default function DispatchDashboard(props: DispatchPageProps) {
       ValueType.DEPARTMENT,
       ValueType.DIVISION,
       ValueType.ADDRESS_FLAG,
+      ValueType.WEAPON_FLAG,
     ],
   });
 

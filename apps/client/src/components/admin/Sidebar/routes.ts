@@ -152,6 +152,11 @@ export const valueRoutes: SidebarRoute[] = [
     permissions: [Permissions.ManageValueWeapon],
     hidden: ({ WEAPON_REGISTRATION }) => !WEAPON_REGISTRATION,
   },
+  {
+    type: ValueType.WEAPON_FLAG,
+    permissions: [Permissions.ManageValueWeaponFlag],
+    hidden: ({ WEAPON_REGISTRATION }) => !WEAPON_REGISTRATION,
+  },
 ];
 
 export const importRoutes: SidebarRoute[] = [

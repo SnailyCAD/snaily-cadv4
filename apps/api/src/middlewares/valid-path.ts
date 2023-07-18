@@ -26,6 +26,7 @@ export const validValuePaths = [
   "emergency_vehicle",
   "address_flag",
   "vehicle_trim_level",
+  "weapon_flag",
 ];
 
 @Middleware()

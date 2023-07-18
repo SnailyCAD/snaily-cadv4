@@ -206,5 +206,11 @@
     "ADD": "Add trim level",
     "DELETE": "Delete trim level",
     "EDIT": "Edit trim level"
+  },
+  "WEAPON_FLAG": {
+    "MANAGE": "Manage Weapon flags",
+    "ADD": "Add weapon flag",
+    "DELETE": "Delete weapon flag",
+    "EDIT": "Edit weapon flag"
   }
 }
