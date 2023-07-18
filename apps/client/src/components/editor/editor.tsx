@@ -141,7 +141,8 @@ export function Editor(props: EditorProps) {
           renderLeaf={renderLeaf}
           renderElement={renderElement}
           className={classNames(
-            "w-full bg-transparent disabled:cursor-not-allowed disabled:opacity-80 py-1.5",
+            "w-full bg-transparent disabled:cursor-not-allowed disabled:opacity-80 outline-none",
+            props.value.length <= 3 ? "pb-10" : "py-1.5",
             props.truncate && "!flex",
             props.isReadonly ? "px-0" : "px-2",
           )}
