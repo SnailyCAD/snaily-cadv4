@@ -45,6 +45,7 @@
     "newWarrantCreated": "Новый ордер создан",
     "newRecordCreated": "Новая запись создана",
     "ACTIVE": "Активно",
-    "INACTIVE": "Неактивно"
+    "INACTIVE": "Неактивно",
+    "violations": "Нарушения"
   }
 }
