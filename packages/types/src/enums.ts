@@ -150,6 +150,7 @@ export const ValueType = {
   EMERGENCY_VEHICLE: "EMERGENCY_VEHICLE",
   ADDRESS_FLAG: "ADDRESS_FLAG",
   VEHICLE_TRIM_LEVEL: "VEHICLE_TRIM_LEVEL",
+  WEAPON_FLAG: "WEAPON_FLAG",
 } as const;
 
 export type ValueType = (typeof ValueType)[keyof typeof ValueType];

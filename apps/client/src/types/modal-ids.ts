@@ -58,6 +58,7 @@ export const enum ModalIds {
 
   ManageVehicleFlags = "ManageVehicleFlagsModal",
   ManageCitizenFlags = "ManageCitizenFlagsModal",
+  ManageWeaponFlags = "ManageWeaponFlagsModal",
   ManageAddressFlags = "ManageAddressFlagsModal",
   ManageVehicleLicenses = "ManageVehicleLicensesModal",
   AddressSearch = "AddressSearchModal",

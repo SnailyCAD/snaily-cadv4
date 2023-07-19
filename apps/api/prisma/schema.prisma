@@ -508,6 +508,7 @@ model Weapon {
   serialNumber         String             @unique @db.VarChar(255)
   registrationStatus   Value              @relation("weaponRegistrationStatusToValue", fields: [registrationStatusId], references: [id])
   registrationStatusId String
+  flags                Value[]            @relation("weaponFlags")
   bofStatus            WhitelistStatus?
   model                WeaponValue        @relation("weaponModelToValue", fields: [modelId], references: [id])
   modelId              String
@@ -614,6 +615,7 @@ model Value {
   CitizenAddressFlags             Citizen[]                     @relation("citizenAddressFlags")
   VehicleTrimLevels               VehicleValue[]                @relation("vehicleTrimLevels")
   RegisteredVehicle               RegisteredVehicle[]           @relation("registeredVehicleTrimLevels")
+  Weapon                          Weapon[]                      @relation("weaponFlags")
 }
 
 model AddressValue {
@@ -1767,6 +1769,7 @@ enum ValueType {
   EMERGENCY_VEHICLE
   ADDRESS_FLAG
   VEHICLE_TRIM_LEVEL
+  WEAPON_FLAG
 }
 
 enum DriversLicenseCategoryType {

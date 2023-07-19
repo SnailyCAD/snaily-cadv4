@@ -130,6 +130,7 @@ export default function OfficerDashboard({
       ValueType.PENAL_CODE,
       ValueType.DEPARTMENT,
       ValueType.DIVISION,
+      ValueType.WEAPON_FLAG,
     ],
   });
 

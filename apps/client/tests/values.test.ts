@@ -20,6 +20,7 @@ const types = {
   driverslicenseCategory: ValueType.DRIVERSLICENSE_CATEGORY,
   impoundLot: ValueType.IMPOUND_LOT,
   qualification: ValueType.QUALIFICATION,
+  weaponFlag: ValueType.WEAPON_FLAG,
 };
 
 describe("Normalize the value types", () => {

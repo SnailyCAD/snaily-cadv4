@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import { ManageCustomFieldsModal } from "./NameSearchModal/ManageCustomFieldsModal";
 import { CustomFieldCategory } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { ManageWeaponFlagsModal } from "./weapon-search/manage-weapon-flags-modal";
 
 interface Props {
   id?: ModalIds.WeaponSearch | ModalIds.WeaponSearchWithinName;
@@ -114,40 +115,62 @@ export function WeaponSearchModal({ id = ModalIds.WeaponSearch }: Props) {
               <div className="mt-3">
                 <h3 className="text-2xl font-semibold">{t("results")}</h3>
 
-                <ul className="mt-2">
-                  <li>
-                    <Infofield label={wT("model")}>{currentResult.model.value.value}</Infofield>
-                  </li>
-                  <li>
-                    <Infofield label={wT("registrationStatus")}>
-                      {currentResult.registrationStatus.value}
-                    </Infofield>
-                  </li>
-                  <li>
-                    <Infofield label={wT("serialNumber")}>{currentResult.serialNumber}</Infofield>
-                  </li>
-                  {BUREAU_OF_FIREARMS ? (
+                <div className="flex gap-x-24">
+                  <ul className="mt-2">
                     <li>
-                      <Infofield label={wT("bofStatus")}>
-                        <Status fallback="—">{currentResult.bofStatus}</Status>
+                      <Infofield label={wT("model")}>{currentResult.model.value.value}</Infofield>
+                    </li>
+                    <li>
+                      <Infofield label={wT("registrationStatus")}>
+                        {currentResult.registrationStatus.value}
                       </Infofield>
                     </li>
-                  ) : null}
-                  <li>
-                    <Infofield className="capitalize mt-2" label={t("owner")}>
-                      <Button
-                        title={common("openInSearch")}
-                        size="xs"
-                        type="button"
-                        onPress={handleNameClick}
-                      >
-                        {currentResult.citizen.name} {currentResult.citizen.surname}
-                      </Button>
-                    </Infofield>
-                  </li>
+                    <li>
+                      <Infofield label={wT("serialNumber")}>{currentResult.serialNumber}</Infofield>
+                    </li>
+                    {BUREAU_OF_FIREARMS ? (
+                      <li>
+                        <Infofield label={wT("bofStatus")}>
+                          <Status fallback="—">{currentResult.bofStatus}</Status>
+                        </Infofield>
+                      </li>
+                    ) : null}
 
-                  <CustomFieldsArea currentResult={currentResult} isLeo={isLeo} />
-                </ul>
+                    <li>
+                      <Infofield className="capitalize mt-2" label={t("owner")}>
+                        <Button
+                          title={common("openInSearch")}
+                          size="xs"
+                          type="button"
+                          onPress={handleNameClick}
+                        >
+                          {currentResult.citizen.name} {currentResult.citizen.surname}
+                        </Button>
+                      </Infofield>
+                    </li>
+                  </ul>
+
+                  <ul>
+                    <li className="mt-4">
+                      <Infofield label={t("flags")}>
+                        {currentResult.flags?.map((v) => v.value).join(", ") || common("none")}
+                      </Infofield>
+
+                      {isLeo ? (
+                        <Button
+                          size="xs"
+                          type="button"
+                          className="mt-2"
+                          onPress={() => openModal(ModalIds.ManageWeaponFlags)}
+                        >
+                          {t("manageWeaponFlags")}
+                        </Button>
+                      ) : null}
+                    </li>
+
+                    <CustomFieldsArea currentResult={currentResult} isLeo={isLeo} />
+                  </ul>
+                </div>
               </div>
             )}
 
@@ -169,13 +192,17 @@ export function WeaponSearchModal({ id = ModalIds.WeaponSearch }: Props) {
       </Formik>
 
       {currentResult ? (
-        <ManageCustomFieldsModal
-          category={CustomFieldCategory.WEAPON}
-          url={`/search/actions/custom-fields/weapon/${currentResult.id}`}
-          allCustomFields={currentResult.allCustomFields ?? []}
-          customFields={currentResult.customFields ?? []}
-          onUpdate={(results) => setCurrentResult({ ...currentResult, ...results })}
-        />
+        <>
+          <ManageCustomFieldsModal
+            category={CustomFieldCategory.WEAPON}
+            url={`/search/actions/custom-fields/weapon/${currentResult.id}`}
+            allCustomFields={currentResult.allCustomFields ?? []}
+            customFields={currentResult.customFields ?? []}
+            onUpdate={(results) => setCurrentResult({ ...currentResult, ...results })}
+          />
+
+          <ManageWeaponFlagsModal />
+        </>
       ) : null}
     </Modal>
   );

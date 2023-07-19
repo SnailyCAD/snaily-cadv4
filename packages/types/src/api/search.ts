@@ -66,6 +66,7 @@ export type PostLeoSearchWeaponData =
       citizen: Prisma.Citizen;
       model: Types.WeaponValue;
       registrationStatus: Prisma.Value;
+      flags?: Prisma.Value[];
     })
   | null;
 
@@ -137,6 +138,14 @@ export type PutSearchActionsCitizenFlagsData = Pick<Types.Citizen, "id" | "flags
  */
 export type PutSearchActionsCitizenAddressFlagsData = Pick<Types.Citizen, "id"> & {
   addressFlags: Types.Value[];
+};
+
+/**
+ * @method PUT
+ * @route /search/actions/weapon-flags/:weapon
+ */
+export type PutSearchActionsWeaponFlagsData = Pick<Prisma.Weapon, "id"> & {
+  flags: Types.Value[];
 };
 
 /**

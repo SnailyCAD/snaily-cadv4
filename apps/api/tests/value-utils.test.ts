@@ -63,6 +63,7 @@ test("Should return correct permissions for all types", () => {
         "ManageValueQualification",
         "ManageValueCallType",
         "ManageValueVehicleTrimLevel",
+        "ManageValueWeaponFlag",
       ],
     }
   `);
