@@ -693,4 +693,42 @@ export class SearchActionsController {
 
     return updated;
   }
+
+  @Put("/weapon-flags/:weaponId")
+  @Description("Update the weapon's flags by their id")
+  @UsePermissions({
+    permissions: [Permissions.Leo],
+  })
+  async updateWeaponFlags(
+    @BodyParams("flags") flags: string[],
+    @PathParams("weaponId") weaponId: string,
+  ): Promise<APITypes.PutSearchActionsWeaponFlagsData> {
+    const weapon = await prisma.weapon.findUnique({
+      where: { id: weaponId },
+      select: { id: true, flags: true },
+    });
+
+    if (!weapon) {
+      throw new NotFound("notFound");
+    }
+
+    const disconnectConnectArr = manyToManyHelper(
+      weapon.flags.map((v) => v.id),
+      flags,
+      { showUpsert: false },
+    );
+
+    await prisma.$transaction(
+      disconnectConnectArr.map((v) =>
+        prisma.weapon.update({ where: { id: weapon.id }, data: { flags: v } }),
+      ),
+    );
+
+    const updated = await prisma.weapon.findUniqueOrThrow({
+      where: { id: weapon.id },
+      select: { id: true, flags: true },
+    });
+
+    return updated;
+  }
 }

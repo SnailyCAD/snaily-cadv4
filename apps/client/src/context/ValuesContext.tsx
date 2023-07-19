@@ -45,6 +45,7 @@ export interface ValueContext {
   address: ContextValue<AddressValue>;
   addressFlag: ContextValue;
   vehicleTrimLevel: ContextValue;
+  weaponFlag: ContextValue;
   setValues: React.Dispatch<React.SetStateAction<GetValuesData>>;
 }
 

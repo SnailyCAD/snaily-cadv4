@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import { ManageCustomFieldsModal } from "./NameSearchModal/ManageCustomFieldsModal";
 import { CustomFieldCategory } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { ManageWeaponFlagsModal } from "./weapon-search/manage-weapon-flags-modal";
 
 interface Props {
   id?: ModalIds.WeaponSearch | ModalIds.WeaponSearchWithinName;
@@ -191,13 +192,17 @@ export function WeaponSearchModal({ id = ModalIds.WeaponSearch }: Props) {
       </Formik>
 
       {currentResult ? (
-        <ManageCustomFieldsModal
-          category={CustomFieldCategory.WEAPON}
-          url={`/search/actions/custom-fields/weapon/${currentResult.id}`}
-          allCustomFields={currentResult.allCustomFields ?? []}
-          customFields={currentResult.customFields ?? []}
-          onUpdate={(results) => setCurrentResult({ ...currentResult, ...results })}
-        />
+        <>
+          <ManageCustomFieldsModal
+            category={CustomFieldCategory.WEAPON}
+            url={`/search/actions/custom-fields/weapon/${currentResult.id}`}
+            allCustomFields={currentResult.allCustomFields ?? []}
+            customFields={currentResult.customFields ?? []}
+            onUpdate={(results) => setCurrentResult({ ...currentResult, ...results })}
+          />
+
+          <ManageWeaponFlagsModal />
+        </>
       ) : null}
     </Modal>
   );

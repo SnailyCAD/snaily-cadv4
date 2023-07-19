@@ -142,6 +142,14 @@ export type PutSearchActionsCitizenAddressFlagsData = Pick<Types.Citizen, "id"> 
 
 /**
  * @method PUT
+ * @route /search/actions/weapon-flags/:weapon
+ */
+export type PutSearchActionsWeaponFlagsData = Pick<Prisma.Weapon, "id"> & {
+  flags: Types.Value[];
+};
+
+/**
+ * @method PUT
  * @route /search/actions/custom-fields/citizen/:citizenId
  */
 export interface PutSearchActionsUpdateCitizenCustomFields {
