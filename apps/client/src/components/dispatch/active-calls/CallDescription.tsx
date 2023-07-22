@@ -48,7 +48,7 @@ export function CallDescription({ data, nonCard }: Props) {
         </div>
       </HoverCardTrigger>
 
-      <HoverCardContent pointerEvents>
+      <HoverCardContent className="z-[999]" pointerEvents>
         {data.description ? (
           <p className="w-full whitespace-pre-wrap">{data.description}</p>
         ) : (

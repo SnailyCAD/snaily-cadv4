@@ -16,6 +16,7 @@ import { Permissions, usePermission } from "hooks/usePermission";
 import { ViolationsColumn } from "components/leo/ViolationsColumn";
 import type { DeleteRecordsByIdData } from "@snailycad/types/api";
 import { RecordsCaseNumberColumn } from "components/leo/records-case-number-column";
+import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
 interface RecordsTabProps {
   records: Record[];
@@ -220,13 +221,16 @@ export function RecordsTable({
               id: record.id,
               caseNumber: <RecordsCaseNumberColumn record={record} />,
               violations: <ViolationsColumn violations={record.violations} />,
-              postal: record.postal,
               officer: record.officer
                 ? `${generateCallsign(record.officer)} ${makeUnitName(record.officer)}`
                 : common("none"),
               paymentStatus: <Status fallback="—">{record.paymentStatus}</Status>,
               totalCost: `${currency}${formatSum(totalCost())}`,
-              notes: record.notes || common("none"),
+              notes: (
+                <CallDescription
+                  data={{ description: record.notes, descriptionData: record.descriptionData }}
+                />
+              ),
               createdAt: <FullDate>{record.createdAt}</FullDate>,
               actions: isCitizen ? null : (
                 <>
@@ -257,12 +261,11 @@ export function RecordsTable({
         columns={[
           isCitizenCreation ? { header: common("type"), accessorKey: "type" } : null,
           isCitizenCreation ? null : { header: t("Leo.caseNumber"), accessorKey: "caseNumber" },
+          { header: t("Leo.notes"), accessorKey: "notes" },
           { header: t("Leo.violations"), accessorKey: "violations" },
-          { header: t("Leo.postal"), accessorKey: "postal" },
           { header: t("Leo.officer"), accessorKey: "officer" },
           { header: t("Leo.paymentStatus"), accessorKey: "paymentStatus" },
           isCitizen ? { header: t("Leo.totalCost"), accessorKey: "totalCost" } : null,
-          { header: t("Leo.notes"), accessorKey: "notes" },
           isCitizenCreation ? null : { header: common("createdAt"), accessorKey: "createdAt" },
           isCitizen ? null : { header: common("actions"), accessorKey: "actions" },
         ]}

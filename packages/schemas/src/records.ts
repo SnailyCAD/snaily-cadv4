@@ -25,6 +25,7 @@ export const CREATE_TICKET_SCHEMA = z.object({
   seizedItems: z.array(SEIZED_ITEM_SCHEMA).optional(),
   postal: z.string().min(1).max(255),
   notes: z.string().nullish(),
+  descriptionData: z.any(),
   paymentStatus: z
     .string()
     .regex(/PAID|UNPAID/)

@@ -94,6 +94,7 @@ export async function upsertRecord(options: UpsertRecordOptions) {
       vehiclePlate: options.data.plateOrVin || options.data.plateOrVinSearch,
       call911Id: options.data.call911Id || null,
       incidentId: options.data.incidentId || null,
+      descriptionData: options.data.descriptionData || undefined,
     },
     update: {
       notes: options.data.notes,
@@ -106,6 +107,7 @@ export async function upsertRecord(options: UpsertRecordOptions) {
       vehiclePlate: options.data.plateOrVin || options.data.plateOrVinSearch,
       call911Id: options.data.call911Id || null,
       incidentId: options.data.incidentId || null,
+      descriptionData: options.data.descriptionData || undefined,
     },
     include: {
       officer: { include: leoProperties },
