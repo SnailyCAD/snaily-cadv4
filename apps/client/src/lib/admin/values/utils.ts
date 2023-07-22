@@ -1,6 +1,18 @@
 import compareAsc from "date-fns/compareAsc";
-import { type AnyValue, type PenalCodeGroup, type StatusValue, WhatPages } from "@snailycad/types";
-import { hasValueObj, isBaseValue } from "@snailycad/utils";
+import {
+  type AnyValue,
+  type PenalCodeGroup,
+  type StatusValue,
+  WhatPages,
+  ValueType,
+} from "@snailycad/types";
+import {
+  hasValueObj,
+  isBaseValue,
+  isDLCategoryValue,
+  isDepartmentValue,
+  isStatusValue,
+} from "@snailycad/utils";
 
 export function sortValues<T extends AnyValue>(values: T[]): T[] {
   return values.sort((a, b) => {
@@ -58,6 +70,26 @@ export function getDisabledFromValue(value: AnyValue) {
   const isBase = isBaseValue(value);
   const hasObj = hasValueObj(value);
   return isBase ? value.isDisabled : hasObj ? value.value.isDisabled : false;
+}
+
+export function getTypeForValue(type: ValueType, value: AnyValue | null) {
+  if (!value) {
+    if (type === ValueType.DRIVERSLICENSE_CATEGORY) {
+      return null;
+    }
+
+    return "STATUS_CODE";
+  }
+
+  if (isDLCategoryValue(value)) {
+    return value.type;
+  }
+
+  if (isStatusValue(value) || isDepartmentValue(value)) {
+    return value.type;
+  }
+
+  return null;
 }
 
 /**

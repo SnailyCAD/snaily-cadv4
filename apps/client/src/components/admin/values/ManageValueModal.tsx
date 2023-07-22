@@ -48,6 +48,7 @@ import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSele
 import type { PatchValueByIdData, PostValuesData } from "@snailycad/types/api";
 import {
   getDisabledFromValue,
+  getTypeForValue,
   getValueStrFromValue,
   makeDefaultWhatPages,
 } from "lib/admin/values/utils";
@@ -62,7 +63,6 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 interface Props {
   type: ValueType;
   value: AnyValue | null;
-  clType?: DriversLicenseCategoryType | null;
   onCreate(newValue: AnyValue): void;
   onUpdate(oldValue: AnyValue, newValue: AnyValue): void;
 }
@@ -77,7 +77,7 @@ const EXTRA_SCHEMAS: Partial<Record<ValueType, Zod.ZodObject<Zod.ZodRawShape>>> 
   CALL_TYPE: CALL_TYPE_SCHEMA,
 };
 
-export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, value }: Props) {
+export function ManageValueModal({ onCreate, onUpdate, type, value }: Props) {
   const [image, setImage] = React.useState<File | string | null>(null);
 
   const { state, execute } = useFetch();
@@ -114,7 +114,6 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
   ) {
     const data = {
       ...values,
-      type: dlType ? dlType : values.type,
       whatPages: values.whatPages,
       departments: values.departments,
       divisions: values.divisions,
@@ -195,7 +194,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
 
     shouldDo: value && isStatusValue(value) ? value.shouldDo : "",
     color: value && isStatusValue(value) ? value.color ?? "" : "",
-    type: value && (isStatusValue(value) || isDepartmentValue(value)) ? value.type : "STATUS_CODE",
+    type: getTypeForValue(type, value),
     departments:
       value &&
       (isStatusValue(value) || isUnitQualification(value) || isEmergencyVehicleValue(value))
@@ -299,6 +298,19 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
                 name="as"
                 onSelectionChange={(key) => setFieldValue("as", key)}
                 selectedKey={values.as}
+              />
+            ) : null}
+
+            {type === ValueType.DRIVERSLICENSE_CATEGORY ? (
+              <SelectField
+                errorMessage={errors.type}
+                label={tValues("category")}
+                options={Object.keys(DriversLicenseCategoryType).map((key) => ({
+                  value: key,
+                  label: key,
+                }))}
+                onSelectionChange={(value) => setFieldValue("type", value)}
+                selectedKey={values.type}
               />
             ) : null}
 
