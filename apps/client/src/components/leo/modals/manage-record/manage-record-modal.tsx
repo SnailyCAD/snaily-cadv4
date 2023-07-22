@@ -3,7 +3,6 @@ import { CREATE_TICKET_SCHEMA, CREATE_TICKET_SCHEMA_BUSINESS } from "@snailycad/
 import {
   Loader,
   Button,
-  TextField,
   AsyncListSearchField,
   Item,
   TabList,
@@ -29,6 +28,7 @@ import { AddressPostalSelect } from "components/form/select/PostalSelect";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import dynamic from "next/dynamic";
 import type { BusinessSearchResult } from "state/search/business-search-state";
+import { Editor, dataToSlate } from "components/editor/editor";
 
 const ManageCourtEntryModal = dynamic(
   async () =>
@@ -114,6 +114,10 @@ export function createInitialRecordValues(options: CreateInitialRecordValuesOpti
     address: options.record?.address ?? "",
     postal: options.record?.postal ?? "",
     notes: options.record?.notes ?? "",
+    descriptionData: dataToSlate({
+      description: options.record?.notes,
+      descriptionData: options.record?.descriptionData,
+    }),
     seizedItems: options.record?.seizedItems ?? [],
     paymentStatus: options.record?.paymentStatus ?? null,
     courtEntry: options.record?.courtEntry ?? null,
@@ -355,16 +359,12 @@ export function ManageRecordModal(props: Props) {
                     : "None"}
                 </FormField>
 
-                <TextField
-                  isTextarea
-                  isOptional
-                  isDisabled={props.isReadOnly}
-                  errorMessage={errors.notes}
-                  label={t("notes")}
-                  value={values.notes}
-                  name="notes"
-                  onChange={(value) => setFieldValue("notes", value)}
-                />
+                <FormField optional label={t("notes")} errorMessage={errors.notes}>
+                  <Editor
+                    value={values.descriptionData}
+                    onChange={(v) => setFieldValue("descriptionData", v)}
+                  />
+                </FormField>
 
                 <SwitchField
                   isDisabled={props.isReadOnly}

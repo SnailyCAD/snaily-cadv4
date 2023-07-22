@@ -1381,6 +1381,7 @@ model Record {
   postal               String              @db.VarChar(255)
   address              String?             @db.Text
   notes                String?             @db.Text
+  descriptionData      Json?
   release              RecordRelease?      @relation(fields: [releaseId], references: [id], onDelete: SetNull)
   releaseId            String?
   courtEntry           CourtEntry?         @relation(fields: [CourtEntryId], references: [id], onDelete: SetNull)

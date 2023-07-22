@@ -172,7 +172,7 @@ export function NameSearchModal() {
       title={t("nameSearch")}
       onClose={() => closeModal(ModalIds.NameSearch)}
       isOpen={isOpen(ModalIds.NameSearch)}
-      className="w-[850px]"
+      className={currentResult ? "w-[1200px]" : "w-[650px]"}
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ setValues, errors, values }) => (

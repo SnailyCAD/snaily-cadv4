@@ -140,7 +140,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
       title={t("plateSearch")}
       onClose={() => closeModal(id)}
       isOpen={isOpen(id)}
-      className="w-[750px]"
+      className={currentResult ? "w-[900px]" : "w-[650px]"}
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ setValues, errors, values, isValid }) => (

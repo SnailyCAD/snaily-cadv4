@@ -18,7 +18,8 @@ export const HoverCardContent = React.forwardRef<
     sideOffset={sideOffset}
     className={cn(
       pointerEvents ? "pointer-events-auto" : "pointer-events-none",
-      "bg-gray-200 dark:border dark:border-secondary dark:bg-tertiary shadow-lg w-full max-w-lg p-3 rounded-md dark:text-white hover-card animate-enter !z-10",
+      "bg-gray-200 dark:border dark:border-secondary dark:bg-tertiary shadow-lg w-full max-w-lg p-3 rounded-md dark:text-white hover-card animate-enter z-50",
+      className,
     )}
     {...props}
   />

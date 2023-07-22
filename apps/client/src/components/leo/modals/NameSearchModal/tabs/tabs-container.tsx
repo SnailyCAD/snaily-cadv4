@@ -53,7 +53,7 @@ export function NameSearchTabsContainer() {
   ];
 
   return (
-    <TabList defaultValue="" tabs={TABS}>
+    <TabList defaultValue="vehicles" tabs={TABS}>
       <NameSearchVehiclesTab />
       {WEAPON_REGISTRATION ? <NameSearchWeaponsTab /> : null}
       <RecordsTab
