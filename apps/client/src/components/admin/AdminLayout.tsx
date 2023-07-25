@@ -34,6 +34,10 @@ export function AdminLayout({ children, className, permissions }: Props) {
     return <Loader />;
   }
 
+  const isNewVersionAvailable =
+    cad?.version?.latestReleaseVersion &&
+    parseVersion(cad.version.latestReleaseVersion) > parseVersion(cad.version.currentVersion);
+
   return (
     <>
       <Nav maxWidth="none" />
@@ -45,8 +49,7 @@ export function AdminLayout({ children, className, permissions }: Props) {
           <div className="ml-6 px-4 py-5 admin-dashboard-responsive">
             <Component enabled={roleplayStopped} audio={audio} />
             {showError ? <SocketErrorComponent /> : null}
-            {cad?.version?.latestReleaseVersion &&
-            cad.version.latestReleaseVersion !== cad.version.currentVersion ? (
+            {cad?.version && isNewVersionAvailable ? (
               <a
                 href={`https://github.com/SnailyCAD/snaily-cadv4/releases/tag/${cad.version.latestReleaseVersion}`}
                 className="block mb-5"
@@ -65,4 +68,8 @@ export function AdminLayout({ children, className, permissions }: Props) {
       </main>
     </>
   );
+}
+
+function parseVersion(version: string) {
+  return parseInt(version.replaceAll(".", ""), 10);
 }
