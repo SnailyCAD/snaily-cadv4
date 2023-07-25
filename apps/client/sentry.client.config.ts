@@ -3,7 +3,7 @@ import { BrowserTracing } from "@sentry/browser";
 
 init({
   dsn: "https://6e31d0dc886d482091e293edb73eb10e@o518232.ingest.sentry.io/6553264",
-  tracesSampleRate: 0.7,
+  tracesSampleRate: 0.4,
   attachStacktrace: true,
   denyUrls: [/localhost/],
   ignoreErrors: [

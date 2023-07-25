@@ -38,7 +38,6 @@ const nextConfig = {
 /** @type {typeof nextConfig} */
 export default (phase, defaultConfig) => {
   const plugins = [
-    // presume I have other plugins
     (config) =>
       withSentryConfig(
         config,

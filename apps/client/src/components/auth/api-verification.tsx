@@ -1,5 +1,5 @@
 import { GetCADSettingsData } from "@snailycad/types/api";
-import { Alert } from "@snailycad/ui";
+import { Alert, Button } from "@snailycad/ui";
 import { getAPIUrl } from "@snailycad/utils/api-url";
 import { useQuery } from "@tanstack/react-query";
 import useFetch from "lib/useFetch";
@@ -30,6 +30,10 @@ export function ApiVerification() {
     },
   });
 
+  function handleCopyError(error: any) {
+    navigator.clipboard.writeText(error);
+  }
+
   const isNetworkError = error instanceof Error && error.message === "Network Error";
   const title = isNetworkError
     ? "Could not connect the your SnailyCAD API."
@@ -46,8 +50,13 @@ export function ApiVerification() {
 
   return error ? (
     <Alert className="mb-5 max-w-md z-50" type="error" title={title} message={message}>
+      <Button className="mt-3" onPress={() => handleCopyError(error)}>
+        Copy error data
+      </Button>
+
       <p className="mt-3">
-        For more information, please visit our{" "}
+        <span className="font-medium">If you are the owner/developer for this community,</span>{" "}
+        please visit our{" "}
         <a
           target="_blank"
           className="font-semibold underline"

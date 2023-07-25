@@ -194,8 +194,8 @@ export class DiscordWebhooksController {
     // delete previous webhook if exists.
     if ((prevId && !channelId) || (prevId && channelId !== prevId)) {
       await performDiscordRequest({
-        async handler(rest) {
-          await rest.delete(Routes.webhook(prevId));
+        handler(rest) {
+          return rest.delete(Routes.webhook(prevId));
         },
       });
     }
@@ -214,8 +214,8 @@ export class DiscordWebhooksController {
 
       if (prevWebhookData?.id) {
         await performDiscordRequest({
-          async handler(rest) {
-            rest.patch(Routes.webhook(prevId), {
+          handler(rest) {
+            return rest.patch(Routes.webhook(prevId), {
               body: { name, avatar: avatarURI },
             });
           },
