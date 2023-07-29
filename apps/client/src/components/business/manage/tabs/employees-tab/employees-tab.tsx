@@ -30,7 +30,10 @@ export function EmployeesTab() {
 
   const employees = currentBusiness?.employees ?? [];
   const [tempEmployee, employeeState] = useTemporaryItem(employees);
-  const tableState = useTableState();
+  const tableState = useTableState({
+    tableId: "business-employees",
+    pagination: { pageSize: 25, totalDataCount: currentBusiness?.employees.length ?? 0 },
+  });
 
   function handleUpdate(old: FullEmployee, newE: FullEmployee) {
     if (!currentBusiness) return;
