@@ -9,7 +9,7 @@ interface Props extends ParagraphProps {
 
 export function Infofield({ childrenProps, label, ...props }: Props) {
   return (
-    <div {...props} className={cn("text-lg", props.className)}>
+    <div {...props}>
       <span className="font-semibold text-neutral-700 dark:text-gray-300/75">{label}: </span>
       <span {...childrenProps} className={cn("ml-0.5 dark:text-white", childrenProps?.className)}>
         {props.children}

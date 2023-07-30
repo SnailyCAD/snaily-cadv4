@@ -9,7 +9,6 @@ import { useAuth } from "context/AuthContext";
 import { useModal } from "state/modalState";
 
 import { MultiValueContainerPenalCode } from "./select/MultiValueContainerPenalCode";
-import { MultiValueContainerDescription } from "./select/MultiValueContainerDescription";
 
 export interface SelectValue<Value = string> {
   readonly label: string;
@@ -29,7 +28,6 @@ interface Props<Value extends SelectValue = SelectValue<any>>
   disabled?: boolean;
   extra?: {
     showPenalCodeDescriptions?: boolean;
-    showDLCategoryDescriptions?: boolean;
   };
 }
 
@@ -85,8 +83,6 @@ export function Select({ name, onChange, ...rest }: Props) {
       components={
         rest.extra?.showPenalCodeDescriptions
           ? { MultiValueContainer: MultiValueContainerPenalCode }
-          : rest.extra?.showDLCategoryDescriptions
-          ? { MultiValueContainer: MultiValueContainerDescription }
           : undefined
       }
     />

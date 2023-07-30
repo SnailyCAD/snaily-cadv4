@@ -43,7 +43,7 @@ export function AdvancedSettings() {
           {values.divisions.map((div) => {
             return (
               <div className="flex flex-col gap-2" key={div.value}>
-                <h3 className="text-lg font-semibold">{div.label}&apos;s Callsign</h3>
+                <h3 className="font-semibold">{div.label}&apos;s Callsign</h3>
 
                 <FormRow>
                   <FormField label={`Callsign 1 (${div.label})`}>

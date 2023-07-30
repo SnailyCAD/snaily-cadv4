@@ -76,10 +76,8 @@ export function ConnectionsTab() {
               key={connection.key}
             >
               <div>
-                <h4 className="text-xl font-semibold mb-2">{t(connection.key)}</h4>
-                <p className="text-lg">
-                  {connection.value ? disconnectText : connection.connectText}
-                </p>
+                <h4 className="text-lg font-semibold mb-2">{t(connection.key)}</h4>
+                <p>{connection.value ? disconnectText : connection.connectText}</p>
               </div>
 
               <div className="min-w-fit">

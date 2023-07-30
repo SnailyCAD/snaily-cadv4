@@ -9,6 +9,14 @@ import { Title } from "components/shared/Title";
 import { defaultPermissions } from "@snailycad/permissions";
 import type { GetAdminDashboardData } from "@snailycad/types/api";
 import { Alert } from "@snailycad/ui";
+import { Fira_Mono } from "next/font/google";
+import { classNames } from "lib/classNames";
+
+const firaMonoFont = Fira_Mono({
+  weight: ["500", "700"],
+  variable: "--fira-mono",
+  subsets: ["latin"],
+});
 
 interface Props {
   counts: GetAdminDashboardData | null;
@@ -126,10 +134,12 @@ export default function Admin({ counts }: Props) {
 
 function Group({ name, children }: { name: string; children: React.ReactNode }) {
   return (
-    <section className="max-w-2xl my-2 mb-7 select-none">
-      <h4 className="text-lg">{name}</h4>
+    <section className="my-2 mb-7 select-none w-full">
+      <h4 className="text-base uppercase font-semibold text-neutral-700 dark:text-gray-300">
+        {name}
+      </h4>
 
-      <div className="flex justify-between">{children}</div>
+      <div className="grid grid-cols-4 w-full">{children}</div>
     </section>
   );
 }
@@ -144,14 +154,14 @@ function Item({
   percentage?: number;
 }) {
   return (
-    <div className="relative flex items-end select-none">
-      <div>
-        <span className="font-sans text-5xl font-semibold">{count}</span>
-      </div>
+    <div className="relative flex items-end select-none w-full">
+      <span className={classNames("text-5xl font-semibold font-mono", firaMonoFont.className)}>
+        {count}
+      </span>
 
-      <div className="flex flex-col items-end">
+      <div className="flex flex-col items-end mb-1">
         {percentage ? (
-          <span className="text-lg text-gray-500 dark:text-gray-300">{percentage.toFixed()}%</span>
+          <span className="text-gray-500 dark:text-gray-300">{percentage.toFixed()}%</span>
         ) : null}
         <span className="ml-3 text-xl capitalize">{name}</span>
       </div>

@@ -193,7 +193,7 @@ function SidebarItem({ route, href, text, isActive, notificationCount, onRouteCl
         prefetch={false}
         onClick={onRouteClick}
         className={classNames(
-          "text-lg flex items-center justify-between transition-colors rounded-md px-3 py-1 dark:text-white hover:bg-gray-200 dark:hover:bg-secondary",
+          "flex items-center justify-between transition-colors rounded-md px-3 py-1 dark:text-white hover:bg-gray-200 dark:hover:bg-secondary",
           isActive && "bg-gray-300 dark:bg-secondary dark:text-white",
         )}
         href={href}

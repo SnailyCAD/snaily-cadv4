@@ -68,7 +68,7 @@ export function SettingsFormField({
           </h3>
 
           {description ? (
-            <div className="mt-2 text-lg dark:text-gray-200 max-w-2/3">{description}</div>
+            <div className="mt-2 dark:text-gray-200 max-w-2/3">{description}</div>
           ) : null}
         </header>
 

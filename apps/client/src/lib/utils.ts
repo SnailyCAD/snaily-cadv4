@@ -34,7 +34,12 @@ export async function requestAll(
         isSsr: true,
       })
         .then((v) => (typeof v.data === "undefined" ? defaultValue : v.data))
-        .catch(() => defaultValue);
+        .catch((error) => {
+          if (process.env.NODE_ENV === "development") {
+            console.error(error);
+          }
+          return defaultValue;
+        });
     }),
   );
 }

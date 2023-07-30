@@ -88,7 +88,7 @@ export function ModalButtons({ initialActiveOfficer }: { initialActiveOfficer: A
     <div className="py-2">
       {nameAndCallsign && activeOfficer ? (
         <div className="flex items-center gap-x-12">
-          <p className="text-lg">
+          <p>
             <span className="font-semibold">{t("Leo.activeOfficer")}: </span>
 
             {isUnitOfficer(activeOfficer) && activeOfficer.imageId ? (

@@ -3,6 +3,7 @@ import { GetBleeterProfileByHandleData } from "@snailycad/types/api";
 import { Button, Loader } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { BleeterPostsList } from "components/bleeter/list/posts-list";
+import { ManageBleetModal } from "components/bleeter/manage-bleet-modal";
 import { EditBleeterProfileModal } from "components/bleeter/modals/edit-profile-modal";
 import {
   FollowersFollowingModal,
@@ -90,13 +91,22 @@ export default function BleeterProfilePage(props: BleeterProfilePageProps) {
             </h1>
 
             {user?.id === props.data.userId ? (
-              <Button
-                onPress={() => openModal(ModalIds.ManageBleeterProfile)}
-                className="text-sm"
-                size="xs"
-              >
-                {t("editProfile")}
-              </Button>
+              <>
+                <Button
+                  onPress={() => openModal(ModalIds.ManageBleeterProfile)}
+                  className="text-sm"
+                  size="xs"
+                >
+                  {t("editProfile")}
+                </Button>
+                <Button
+                  onPress={() => openModal(ModalIds.ManageBleetModal)}
+                  className="inline-flex gap-2 items-center text-sm"
+                  size="xs"
+                >
+                  {t("createBleet")}
+                </Button>
+              </>
             ) : (
               <Button
                 onPress={handleFollow}
@@ -163,6 +173,7 @@ export default function BleeterProfilePage(props: BleeterProfilePageProps) {
 
       <FollowersFollowingModal profileHandle={props.data.handle} type="followers" />
       <FollowersFollowingModal profileHandle={props.data.handle} type="following" />
+      <ManageBleetModal onCreate={(post) => router.push(`/bleeter/${post.id}`)} post={null} />
 
       {user?.id === props.data.userId ? <EditBleeterProfileModal profile={props.data} /> : null}
     </Layout>

@@ -44,7 +44,7 @@ export default function Dmv({ data }: Props) {
       data: { type },
     });
 
-    if (json) {
+    if (json.id && json.dmvStatus === WhitelistStatus.ACCEPTED) {
       await invalidateQuery();
       asyncTable.update(id, json);
     }

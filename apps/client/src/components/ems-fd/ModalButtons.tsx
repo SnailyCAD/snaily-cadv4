@@ -101,7 +101,7 @@ export function ModalButtons({
     <div className="py-2">
       {nameAndCallsign && activeDeputy ? (
         <div className="flex items-center gap-x-12">
-          <p className="text-lg">
+          <p>
             <span className="font-semibold">{t("Ems.activeDeputy")}: </span>
             {nameAndCallsign}
           </p>

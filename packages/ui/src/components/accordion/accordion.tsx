@@ -14,7 +14,7 @@ export const AccordionTrigger = React.forwardRef<
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        "accordion-state gap-2 flex items-center justify-between pt-1 text-lg font-medium text-left  [&[data-state=open]>svg]:rotate-180",
+        "accordion-state gap-2 flex items-center justify-between text-lg pt-1 font-medium text-left [&[data-state=open]>svg]:rotate-180",
         className,
       )}
       {...props}

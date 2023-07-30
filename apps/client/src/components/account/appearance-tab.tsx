@@ -226,16 +226,18 @@ export function AppearanceTab({ availableSounds }: Props) {
                     <Accordion className="mt-4" type="multiple">
                       <AccordionItem value="unavailable-sounds">
                         <AccordionTrigger title="Click to expand">
-                          <h3 className="text-xl font-semibold mb-3">{t("unavailableSounds")}</h3>
+                          <h3 className="text-xl font-semibold">{t("unavailableSounds")}</h3>
                         </AccordionTrigger>
 
                         <AccordionContent className="mt-3">
                           {unAvailableSoundsArr.map((sound) => (
-                            <p key={sound}>{t(sound)}</p>
+                            <p className="my-1" key={sound}>
+                              {t(sound)}
+                            </p>
                           ))}
 
                           <a
-                            className="mt-2 ml-1 underline"
+                            className="mt-2 underline"
                             rel="noreferrer"
                             target="_blank"
                             href="https://docs.snailycad.org/docs/guides/how-set-custom-sounds"

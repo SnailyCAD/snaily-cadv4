@@ -17,11 +17,14 @@ import {
   ShouldDoType,
   WhatPages,
   type StatusValue,
+  ValueType,
 } from "@snailycad/types";
 import { useAudio } from "react-use";
 import { useAuth } from "context/AuthContext";
 import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
 import { useMounted } from "@casper124578/useful";
+import Link from "next/link";
+import { createValueDocumentationURL } from "src/pages/admin/values/[path]";
 
 interface Props<T extends ActiveOfficer | ActiveDeputy> {
   initialData: T | null;
@@ -139,10 +142,16 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
   const isOnDutyActive = !isUnitOffDuty && onDutyCode?.id === activeUnit.status?.id;
 
   if (!onDutyCode && filteredCodes.length <= 0) {
+    const documentationUrl = createValueDocumentationURL(ValueType.CODES_10);
+
     return (
-      <div className="text-lg mt-2 px-4 py-3 bg-gray-300/50 dark:bg-tertiary dark:border-t-[1.5px] dark:border-secondary">
+      <Link
+        target="_blank"
+        href={documentationUrl}
+        className="block mt-2 px-4 py-3 bg-gray-300/50 dark:bg-tertiary dark:border-t-[1.5px] dark:border-secondary text-blue-500 dark:text-blue-400 underline"
+      >
         This CAD does not have any 10 codes. Please ask an admin to add some.
-      </div>
+      </Link>
     );
   }
 

@@ -21,6 +21,10 @@ export async function getSessionUser(req?: IncomingMessage): Promise<GetUserData
 
     return null;
   } catch (e) {
+    if (process.env.NODE_ENV === "development") {
+      console.error({ fetchError: e });
+    }
+
     return null;
   }
 }
