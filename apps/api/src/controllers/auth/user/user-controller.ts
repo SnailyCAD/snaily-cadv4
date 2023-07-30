@@ -57,7 +57,7 @@ export class UserController {
       throw new ExtendedBadRequest({ username: "userAlreadyExists" });
     }
 
-    if (!user.discordId && /^([a-z_.\d]+)*[a-z\d]+$/i.test(data.username)) {
+    if (!user.discordId && !/^([a-z_.\d]+)*[a-z\d]+$/i.test(data.username)) {
       throw new ExtendedBadRequest({ username: "invalidUsername" });
     }
 
