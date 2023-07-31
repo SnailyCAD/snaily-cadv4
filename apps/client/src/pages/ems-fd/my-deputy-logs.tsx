@@ -30,7 +30,7 @@ export default function MyDeputyLogs({ logs: data }: Props) {
         data: json.logs,
         totalCount: json.totalCount,
       }),
-      path: "/ems-fd/logs",
+      path: "/ems-fd/logs?currentUserOnly",
     },
     totalCount: data.totalCount,
     initialData: data.logs,

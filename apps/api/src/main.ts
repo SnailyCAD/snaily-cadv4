@@ -11,6 +11,7 @@ import * as Sentry from "@sentry/node";
 import { prisma } from "lib/data/prisma";
 import { registerDiscordRolesMetadata } from "lib/discord/register-metadata";
 import { canSecureCookiesBeEnabled } from "utils/validate-environment-variables";
+import { areRequiredCommandsInstalled } from "./utils/validate-requirements";
 
 Sentry.init({
   dsn: "https://308dd96b826c4e38a814fc9bae681687@o518232.ingest.sentry.io/6553288",
@@ -29,6 +30,7 @@ const rootDir = __dirname;
 
 async function bootstrap() {
   try {
+    await areRequiredCommandsInstalled();
     registerDiscordRolesMetadata();
 
     const scannedProviders = await importProviders({

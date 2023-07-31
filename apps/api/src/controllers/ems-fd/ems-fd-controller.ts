@@ -75,12 +75,13 @@ export class EmsFdController {
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("includeAll", Boolean) includeAll = false,
     @QueryParams("emsFdDeputyId", String) emsFdDeputyId?: string,
+    @QueryParams("currentUserOnly", Boolean) currentUserOnly?: boolean,
   ): Promise<APITypes.GetMyDeputiesLogsData> {
     const hasManageUnitsPermissions = hasPermission({
       permissionsToCheck: [Permissions.ManageUnits, Permissions.ViewUnits, Permissions.DeleteUnits],
       userToCheck: user,
     });
-    const userIdObj = hasManageUnitsPermissions ? {} : { userId: user.id };
+    const userIdObj = hasManageUnitsPermissions && !currentUserOnly ? {} : { userId: user.id };
 
     const where = { ...userIdObj, officerId: null, emsFdDeputyId: emsFdDeputyId || undefined };
 

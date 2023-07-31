@@ -145,7 +145,10 @@ export type PostLeoTogglePanicButtonData = Types.CombinedLeoUnit | Types.Officer
  * @method GET
  * @route /leo/impounded-vehicles
  */
-export type GetLeoImpoundedVehiclesData = Types.ImpoundedVehicle[];
+export interface GetLeoImpoundedVehiclesData {
+  totalCount: number;
+  vehicles: Types.ImpoundedVehicle[];
+}
 
 /**
  * @method DELETE

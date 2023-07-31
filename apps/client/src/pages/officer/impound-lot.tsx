@@ -9,13 +9,14 @@ import type { GetServerSideProps } from "next";
 import type { ImpoundedVehicle } from "@snailycad/types";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
-import { Table, useTableState } from "components/shared/Table";
+import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { usePermission, Permissions } from "hooks/usePermission";
 import type { GetLeoImpoundedVehiclesData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { AllowImpoundedVehicleCheckoutModal } from "components/leo/modals/AllowImpoundedVehicleCheckoutModal";
+import { SearchArea } from "components/shared/search/search-area";
 
 interface Props {
   vehicles: GetLeoImpoundedVehiclesData;
@@ -25,14 +26,25 @@ export default function ImpoundLot({ vehicles: data }: Props) {
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { openModal } = useModal();
+  const [search, setSearch] = React.useState("");
 
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageImpoundLot]);
-  const tableState = useTableState();
   const { generateCallsign } = useGenerateCallsign();
 
-  const [vehicles, setVehicles] = React.useState(data);
-  const [tempVehicle, vehicleState] = useTemporaryItem(vehicles);
+  const asyncTable = useAsyncTable<GetLeoImpoundedVehiclesData["vehicles"][number]>({
+    search,
+    fetchOptions: {
+      onResponse(json: GetLeoImpoundedVehiclesData) {
+        return { data: json.vehicles, totalCount: json.totalCount };
+      },
+      path: "/leo/impounded-vehicles",
+    },
+    initialData: data.vehicles,
+    totalCount: data.totalCount,
+  });
+  const tableState = useTableState(asyncTable);
+  const [tempVehicle, vehicleState] = useTemporaryItem(asyncTable.items);
 
   function handleCheckoutClick(item: ImpoundedVehicle) {
     vehicleState.setTempId(item.id);
@@ -48,12 +60,18 @@ export default function ImpoundLot({ vehicles: data }: Props) {
     >
       <Title>{t("impoundLot")}</Title>
 
-      {vehicles.length <= 0 ? (
+      <SearchArea
+        asyncTable={asyncTable}
+        search={{ search, setSearch }}
+        totalCount={data.totalCount}
+      />
+
+      {asyncTable.items.length <= 0 ? (
         <p className="mt-5">{t("noImpoundedVehicles")}</p>
       ) : (
         <Table
           tableState={tableState}
-          data={vehicles.map((item) => ({
+          data={asyncTable.items.map((item) => ({
             id: item.id,
             plate: item.vehicle.plate,
             model: item.vehicle.model.value.value,
@@ -85,7 +103,7 @@ export default function ImpoundLot({ vehicles: data }: Props) {
 
       <AllowImpoundedVehicleCheckoutModal
         onCheckout={(vehicle) => {
-          setVehicles((p) => p.filter((v) => v.id !== vehicle.id));
+          asyncTable.remove(vehicle.id);
           vehicleState.setTempId(null);
         }}
         vehicle={tempVehicle}

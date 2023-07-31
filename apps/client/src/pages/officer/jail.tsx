@@ -101,12 +101,13 @@ export default function Jail({ data }: Props) {
         <Title>{t("jail")}</Title>
 
         <CheckboxField
-          onChange={(isSelected) =>
+          onChange={(isSelected) => {
+            asyncTable.pagination.setPagination((prev) => ({ ...prev, pageIndex: 0 }));
             asyncTable.setFilters((prev) => ({
               ...prev,
               activeOnly: isSelected,
-            }))
-          }
+            }));
+          }}
           isSelected={Boolean(asyncTable.filters?.activeOnly)}
         >
           {t("showActiveOnly")}
@@ -117,6 +118,7 @@ export default function Jail({ data }: Props) {
         <p className="mt-5">{t("noImprisonedCitizens")}</p>
       ) : (
         <Table
+          isLoading={asyncTable.isLoading}
           tableState={tableState}
           data={_itemsWithArrestReportSortedByCreatedAt.map((item) => {
             const jailTime = item.record?.violations.reduce((ac, cv) => ac + (cv.jailTime || 0), 0);

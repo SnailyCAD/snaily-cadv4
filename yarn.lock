@@ -5204,6 +5204,7 @@ __metadata:
     "@tsed/socketio": ^7.33.0
     "@tsed/swagger": ^7.33.0
     "@types/bcrypt": ^5.0.0
+    "@types/command-exists": ^1.2.0
     "@types/compression": ^1.7.2
     "@types/cookie": ^0.5.1
     "@types/cookie-parser": ^1.4.3
@@ -5217,6 +5218,7 @@ __metadata:
     "@types/sharp": ^0.31.1
     "@vitest/coverage-c8": ^0.33.0
     bcrypt: ^5.1.0
+    command-exists: ^1.2.9
     compression: 1.7.4
     cookie: ^0.5.0
     cookie-parser: 1.4.6
@@ -7284,6 +7286,13 @@ __metadata:
   dependencies:
     "@types/color-convert": "*"
   checksum: 4a54a6eca687b1f19d393c6c44e292009e913fa2377b5b815d1cd04470131087d7a799718d9e66a970f43e6ba16e7056a5b40b49d2d0d1d0f1530aff23864528
+  languageName: node
+  linkType: hard
+
+"@types/command-exists@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "@types/command-exists@npm:1.2.0"
+  checksum: 7c5a626c38898d0267375dbf24ea374e6fcc8a85837f38eeb4485a5699a905eda89941059ea4f82ffc92b2207b29bdd7f7ab8dcbae95ed661b65cafe958e3fb1
   languageName: node
   linkType: hard
 
@@ -9477,6 +9486,13 @@ __metadata:
   version: 2.0.3
   resolution: "comma-separated-tokens@npm:2.0.3"
   checksum: e3bf9e0332a5c45f49b90e79bcdb4a7a85f28d6a6f0876a94f1bb9b2bfbdbbb9292aac50e1e742d8c0db1e62a0229a106f57917e2d067fca951d81737651700d
+  languageName: node
+  linkType: hard
+
+"command-exists@npm:^1.2.9":
+  version: 1.2.9
+  resolution: "command-exists@npm:1.2.9"
+  checksum: 729ae3d88a2058c93c58840f30341b7f82688a573019535d198b57a4d8cb0135ced0ad7f52b591e5b28a90feb2c675080ce916e56254a0f7c15cb2395277cac3
   languageName: node
   linkType: hard
 

@@ -1,4 +1,4 @@
-import { Controller, UseBeforeEach, UseBefore, UseAfter } from "@tsed/common";
+import { QueryParams, Controller, UseBeforeEach, UseBefore, UseAfter } from "@tsed/common";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { SWITCH_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
@@ -8,7 +8,7 @@ import { IsAuth } from "middlewares/auth/is-auth";
 import { ActiveOfficer } from "middlewares/active-officer";
 import { Socket } from "services/socket-service";
 import { combinedUnitProperties, leoProperties } from "utils/leo/includes";
-import { cad, ShouldDoType, User } from "@prisma/client";
+import { cad, Prisma, ShouldDoType, User } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { getInactivityFilter } from "lib/leo/utils";
@@ -181,18 +181,35 @@ export class LeoController {
   @UsePermissions({
     permissions: [Permissions.ViewImpoundLot, Permissions.ManageImpoundLot],
   })
-  async getImpoundedVehicles(): Promise<APITypes.GetLeoImpoundedVehiclesData> {
-    const vehicles = await prisma.impoundedVehicle.findMany({
-      include: {
-        location: true,
-        officer: { include: leoProperties },
-        vehicle: {
-          include: { citizen: true, model: { include: { value: true } } },
-        },
+  async getImpoundedVehicles(
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("includeAll", Boolean) includeAll = false,
+    @QueryParams("search", String) search?: string,
+  ): Promise<APITypes.GetLeoImpoundedVehiclesData> {
+    const where: Prisma.ImpoundedVehicleWhereInput = {
+      vehicle: {
+        plate: { contains: search, mode: "insensitive" },
+        model: { value: { value: { contains: search, mode: "insensitive" } } },
       },
-    });
+    };
 
-    return vehicles;
+    const [totalCount, vehicles] = await prisma.$transaction([
+      prisma.impoundedVehicle.count({ where }),
+      prisma.impoundedVehicle.findMany({
+        where,
+        take: includeAll ? undefined : 35,
+        skip: includeAll ? undefined : skip,
+        include: {
+          location: true,
+          officer: { include: leoProperties },
+          vehicle: {
+            include: { citizen: true, model: { include: { value: true } } },
+          },
+        },
+      }),
+    ]);
+
+    return { totalCount, vehicles };
   }
 
   @Delete("/impounded-vehicles/:id")
