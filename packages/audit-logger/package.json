@@ -27,7 +27,7 @@
     "@snailycad/types": "workspace:*",
     "tsup": "6.6.2",
     "typescript": "^5.1.6",
-    "vite": "^4.4.2"
+    "vite": "^4.4.8"
   },
   "tsup": {
     "entry": [
@@ -46,7 +46,7 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "superjson": "^1.12.4"
+    "superjson": "^1.13.1"
   },
   "typesVersions": {
     "*": {
