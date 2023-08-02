@@ -161,9 +161,9 @@ export function AllUnitsTab({ units }: Props) {
         search={{ search, setSearch }}
         asyncTable={asyncTable}
         totalCount={units.totalCount}
+        className="grid grid-cols-3"
       >
         <SelectField
-          className="min-w-[15rem]"
           label={t("Leo.department")}
           isClearable
           selectedKey={asyncTable.filters?.departmentId ?? null}

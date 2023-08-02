@@ -36,5 +36,8 @@
   },
   "engines": {
     "node": ">=18.16.0"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^8.0.2"
   }
 }

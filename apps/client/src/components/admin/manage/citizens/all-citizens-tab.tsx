@@ -2,7 +2,15 @@ import * as React from "react";
 import { useModal } from "state/modalState";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/modal-ids";
-import { Loader, Button, buttonVariants, TextField, SelectField, FullDate } from "@snailycad/ui";
+import {
+  Loader,
+  Button,
+  buttonVariants,
+  TextField,
+  FullDate,
+  AsyncListSearchField,
+  Item,
+} from "@snailycad/ui";
 import { useTranslations } from "next-intl";
 import { Table, useTableState } from "components/shared/Table";
 import Link from "next/link";
@@ -11,6 +19,7 @@ import { useAsyncTable } from "hooks/shared/table/use-async-table";
 import type { DeleteManageCitizenByIdData, GetManageCitizensData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import dynamic from "next/dynamic";
+import { User } from "@snailycad/types";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal, {
   ssr: false,
@@ -42,8 +51,8 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
   const tableState = useTableState({ pagination: asyncTable.pagination });
 
   const [tempValue, valueState] = useTemporaryItem(asyncTable.items);
-  const users = React.useMemo(() => makeUsersList(asyncTable.items), [asyncTable.items]);
   const { hasPermissions } = usePermission();
+  const hasViewUsersPermissions = hasPermissions([Permissions.ViewUsers]);
 
   const { state, execute } = useFetch();
   const { openModal, closeModal } = useModal();
@@ -94,22 +103,30 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
               ) : null}
             </TextField>
 
-            <SelectField
-              className="w-64"
-              label={t("filter")}
+            <AsyncListSearchField<User>
               isClearable
-              selectedKey={asyncTable.filters?.userId ?? null}
-              options={users.map((u) => ({
-                value: u.id,
-                label: u.username,
-              }))}
-              onSelectionChange={(value) => {
+              setValues={({ localValue, node }) => {
                 asyncTable.setFilters((prevFilters) => ({
                   ...prevFilters,
-                  userId: value,
+                  userId: node?.value?.id,
+                  username: localValue,
                 }));
               }}
-            />
+              localValue={asyncTable.filters?.username ?? ""}
+              label="User"
+              selectedKey={asyncTable.filters?.userId ?? null}
+              fetchOptions={{
+                apiPath: "/admin/manage/users/search",
+                method: "POST",
+                bodyKey: "username",
+              }}
+            >
+              {(item) => (
+                <Item key={item.id} textValue={item.username}>
+                  <p>{item.username}</p>
+                </Item>
+              )}
+            </AsyncListSearchField>
           </div>
 
           {search && asyncTable.pagination.totalDataCount !== totalCount ? (
@@ -136,7 +153,17 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
               eyeColor: citizen.eyeColor,
               weight: citizen.weight,
               height: citizen.height,
-              user: citizen.user?.username ?? common("none"),
+              user:
+                hasViewUsersPermissions && citizen.user ? (
+                  <Link
+                    href={`/admin/manage/users/${citizen.userId}`}
+                    className={buttonVariants({ size: "xs" })}
+                  >
+                    {citizen.user.username}
+                  </Link>
+                ) : (
+                  common("none")
+                ),
               actions: (
                 <>
                   {hasPermissions([Permissions.ManageCitizens]) ? (
@@ -189,22 +216,4 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
       />
     </>
   );
-}
-
-function makeUsersList(citizens: GetManageCitizensData["citizens"]) {
-  const list = new Map<string, { id: string; username: string }>();
-  const arr = [];
-
-  for (const citizen of citizens) {
-    const obj = {
-      id: String(citizen.userId),
-      username: citizen.user?.username ?? "No User",
-    };
-
-    if (list.has(String(citizen.userId))) continue;
-    list.set(String(citizen.userId), obj);
-    arr.push(obj);
-  }
-
-  return arr;
 }

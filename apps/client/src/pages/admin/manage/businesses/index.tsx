@@ -1,3 +1,4 @@
+import * as React from "react";
 import { useTranslations } from "use-intl";
 import { TabsContent, TabList, Loader, Button, buttonVariants, Status } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
@@ -5,7 +6,6 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { useModal } from "state/modalState";
-
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { ModalIds } from "types/modal-ids";
@@ -18,6 +18,7 @@ import { usePermission, Permissions } from "hooks/usePermission";
 import type { DeleteBusinessByIdData, GetManageBusinessesData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import Link from "next/link";
+import { SearchArea } from "components/shared/search/search-area";
 
 interface Props {
   businesses: GetManageBusinessesData;
@@ -29,13 +30,14 @@ export default function ManageBusinesses({ businesses: data }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, openModal, closeModal } = useModal();
   const { hasPermissions } = usePermission();
-  const tableState = useTableState();
+  const [search, setSearch] = React.useState("");
 
   const t = useTranslations("Management");
   const common = useTranslations("Common");
   const businessWhitelisted = cad?.businessWhitelisted ?? false;
 
   const asyncTable = useAsyncTable<GetManageBusinessesData["businesses"][number]>({
+    search,
     totalCount: data.totalCount,
     initialData: data.businesses,
     fetchOptions: {
@@ -46,6 +48,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
       }),
     },
   });
+  const tableState = useTableState(asyncTable);
   const [tempValue, valueState] = useTemporaryItem(asyncTable.items);
 
   const TABS = [
@@ -102,6 +105,12 @@ export default function ManageBusinesses({ businesses: data }: Props) {
           value="allBusinesses"
         >
           <h2 className="text-2xl font-semibold mb-2">{t("allBusinesses")}</h2>
+
+          <SearchArea
+            search={{ search, setSearch }}
+            asyncTable={asyncTable}
+            totalCount={data.totalCount}
+          />
 
           {asyncTable.noItemsAvailable ? (
             <p className="mt-5">{t("noBusinesses")}</p>

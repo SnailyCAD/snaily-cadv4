@@ -196,6 +196,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
                 ) : null}
 
                 <TabList
+                  queryState={false}
                   tabs={[
                     { value: "results", name: t("results") },
                     { value: "notes", name: t("notes") },

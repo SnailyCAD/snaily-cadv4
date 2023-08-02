@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as Tabs from "@radix-ui/react-tabs";
+import { useRouter } from "next/router";
 
 interface TabListStore {
   upsertTabTitle(value: string, name?: string): void;
@@ -24,28 +25,45 @@ interface Props<Tabs extends Tab[]> {
   tabs: Tabs;
   defaultValue?: Tabs[number]["value"];
   children: React.ReactNode;
+  queryState?: boolean;
   onValueChange?(value: string): void;
 }
 
-// todo: cn
 export function TabList<Tabs extends Tab[]>({
   children,
   tabs,
   defaultValue = tabs[0]?.value,
   onValueChange,
+  queryState = true,
 }: Props<Tabs>) {
   const [titles, setTitles] = React.useState<Record<string, string>>({});
+  const router = useRouter();
+  const activeTab = router.query.activeTab as string | undefined;
 
   function upsertTabTitle(value: string, name?: string) {
     if (!name) return;
     setTitles((prev) => ({ ...prev, [value]: name }));
   }
 
+  function handleValueChange(value: string) {
+    onValueChange?.(value);
+
+    if (queryState) {
+      const [asPathWithoutQueryParams] = router.asPath.split("?");
+
+      router.replace(
+        router.pathname,
+        { pathname: asPathWithoutQueryParams, query: { activeTab: value } },
+        { shallow: true },
+      );
+    }
+  }
+
   return (
     <TabListContext.Provider value={{ upsertTabTitle }}>
       <Tabs.Root
-        onValueChange={onValueChange}
-        defaultValue={defaultValue}
+        onValueChange={handleValueChange}
+        defaultValue={activeTab || defaultValue}
         className="w-full px-2 sm:px-0"
       >
         <Tabs.List className="relative flex p-1 pl-0 pb-0 gap-x-5 overflow-y-auto thin-scrollbar">

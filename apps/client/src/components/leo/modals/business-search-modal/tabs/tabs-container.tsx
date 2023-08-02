@@ -40,7 +40,7 @@ export function BusinessSearchTabsContainer() {
 
   return (
     <div className="mt-3">
-      <TabList tabs={TABS}>
+      <TabList queryState={false} tabs={TABS}>
         <BusinessSearchEmployeesTab />
         <BusinessSearchVehiclesTab />
         <RecordsTab

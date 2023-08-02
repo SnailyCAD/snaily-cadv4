@@ -53,6 +53,13 @@ export function useAsyncTable<T>(options: Options<T>) {
   });
 
   React.useEffect(() => {
+    setPagination((prev) => ({
+      ...prev,
+      pageIndex: 0,
+    }));
+  }, [options.search]);
+
+  React.useEffect(() => {
     setPagination({
       pageSize: options.fetchOptions.pageSize ?? 35,
       pageIndex: options.fetchOptions.pageIndex ?? 0,

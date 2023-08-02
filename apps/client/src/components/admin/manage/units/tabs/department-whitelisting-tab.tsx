@@ -87,6 +87,7 @@ export function DepartmentWhitelistingTab({ pendingUnits }: Props) {
         <p className="mt-2">{t("Management.noPendingOfficers")}</p>
       ) : (
         <Table
+          isLoading={asyncTable.isInitialLoading}
           tableState={tableState}
           data={asyncTable.items.map((officer) => {
             const isPending = officer.whitelistStatus?.status === WhitelistStatus.PENDING;

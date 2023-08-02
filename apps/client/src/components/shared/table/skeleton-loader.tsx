@@ -2,17 +2,27 @@ import { classNames } from "lib/classNames";
 import { _RowData } from "./table";
 
 interface TableSkeletonLoaderProps {
-  tableHeaders: { id: string }[];
+  tableHeaders?: { id: string }[];
   isWithinCardOrModal?: boolean;
 }
 
+const BASE_HEADERS = [
+  { id: "id" },
+  { id: "name" },
+  { id: "lorum" },
+  { id: "type" },
+  { id: "status" },
+  { id: "actions" },
+];
+
 export function TableSkeletonLoader(props: TableSkeletonLoaderProps) {
   const fakeTableRows = new Array(10).fill({}) as unknown[];
+  const headers = props.tableHeaders ?? BASE_HEADERS;
 
   return (
     <div className="flex flex-col w-full whitespace-nowrap">
       <header className="w-full flex overflow-x-auto">
-        {props.tableHeaders.map((header) => (
+        {headers.map((header) => (
           <div
             style={{ width: `${header.id.length * 6}%` }}
             className={classNames(
@@ -33,7 +43,7 @@ export function TableSkeletonLoader(props: TableSkeletonLoaderProps) {
       <div className="mt-2">
         {fakeTableRows.map((_, idx) => (
           <div key={idx} className="flex gap-2">
-            {props.tableHeaders.map((header) => {
+            {headers.map((header) => {
               return (
                 <div
                   style={{ width: `${header.id.length * 6}%` }}

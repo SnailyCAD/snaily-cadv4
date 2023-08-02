@@ -12,18 +12,20 @@ import { usePermission, Permissions } from "hooks/usePermission";
 import type { GetManageUnitsData } from "@snailycad/types/api";
 import { AllUnitsTab } from "components/admin/manage/units/tabs/all-units-tab";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
+import { TableSkeletonLoader } from "components/shared/table/skeleton-loader";
 
 const DepartmentWhitelistingTab = dynamic(
   async () =>
     (await import("components/admin/manage/units/tabs/department-whitelisting-tab"))
       .DepartmentWhitelistingTab,
-  { ssr: false },
+
+  { ssr: false, loading: () => <TableSkeletonLoader /> },
 );
 
 const CallsignsTab = dynamic(
   async () =>
     (await import("components/admin/manage/units/tabs/callsigns-tab/callsigns-tab")).CallsignsTab,
-  { ssr: false },
+  { ssr: false, loading: () => <TableSkeletonLoader /> },
 );
 
 const DepartmentTimeLogsTab = dynamic(
