@@ -25,6 +25,7 @@ export function AsyncListSearchFieldActions<T>(props: AsyncListSearchFieldAction
     <>
       {props.showClearableButton ? (
         <Button
+          isDisabled={props.isDisabled}
           type="button"
           onPress={() => props.state.setSelectedKey("cleared")}
           className={cn(

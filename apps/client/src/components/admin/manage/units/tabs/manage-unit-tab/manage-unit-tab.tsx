@@ -25,7 +25,7 @@ import { QualificationsTable } from "../../QualificationsTable";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
-import { ValueType, type User } from "@snailycad/types";
+import { ValueType, type User, WhitelistStatus } from "@snailycad/types";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
 
 interface Props {
@@ -82,6 +82,7 @@ export function ManageUnitTab({ unit: data }: Props) {
   }
 
   const divisions = isUnitOfficer(unit) ? unit.divisions : [];
+  const areFormFieldsDisabled = unit.whitelistStatus?.status === WhitelistStatus.PENDING;
 
   const INITIAL_VALUES = {
     userId: unit.userId ?? "",
@@ -107,6 +108,7 @@ export function ManageUnitTab({ unit: data }: Props) {
               {unit.isTemporary && !unit.user ? (
                 <AsyncListSearchField<User>
                   autoFocus
+                  isDisabled={areFormFieldsDisabled}
                   setValues={({ localValue, node }) => {
                     setValues({
                       ...values,
@@ -135,6 +137,7 @@ export function ManageUnitTab({ unit: data }: Props) {
               <ImageSelectInput setImage={setImage} image={image} />
 
               <ValueSelectField
+                isDisabled={areFormFieldsDisabled}
                 label={t("status")}
                 fieldName="status"
                 values={codes10.values}
@@ -143,6 +146,7 @@ export function ManageUnitTab({ unit: data }: Props) {
               />
 
               <ValueSelectField
+                isDisabled={areFormFieldsDisabled}
                 label={t("department")}
                 fieldName="department"
                 values={department.values}
@@ -153,6 +157,7 @@ export function ManageUnitTab({ unit: data }: Props) {
               {DIVISIONS ? (
                 isUnitOfficer(unit) ? (
                   <SelectField
+                    isDisabled={areFormFieldsDisabled}
                     errorMessage={errors.divisions}
                     label={t("division")}
                     selectedKeys={values.divisions}
@@ -182,6 +187,7 @@ export function ManageUnitTab({ unit: data }: Props) {
 
               <FormRow>
                 <ValueSelectField
+                  isDisabled={areFormFieldsDisabled}
                   label={t("rank")}
                   fieldName="rank"
                   values={officerRank.values}
@@ -200,6 +206,7 @@ export function ManageUnitTab({ unit: data }: Props) {
                 />
 
                 <TextField
+                  isDisabled={areFormFieldsDisabled}
                   errorMessage={errors.position}
                   label={t("position")}
                   name="position"
@@ -210,6 +217,7 @@ export function ManageUnitTab({ unit: data }: Props) {
 
               {BADGE_NUMBERS ? (
                 <TextField
+                  isDisabled={areFormFieldsDisabled}
                   errorMessage={errors.badgeNumberString}
                   label={t("badgeNumber")}
                   name="badgeNumberString"
@@ -220,6 +228,7 @@ export function ManageUnitTab({ unit: data }: Props) {
 
               <FormRow>
                 <TextField
+                  isDisabled={areFormFieldsDisabled}
                   errorMessage={errors.callsign}
                   label={t("callsign1")}
                   name="callsign"
@@ -228,6 +237,7 @@ export function ManageUnitTab({ unit: data }: Props) {
                 />
 
                 <TextField
+                  isDisabled={areFormFieldsDisabled}
                   errorMessage={errors.callsign2}
                   label={t("callsign2")}
                   name="callsign2"
@@ -237,6 +247,7 @@ export function ManageUnitTab({ unit: data }: Props) {
               </FormRow>
 
               <SwitchField
+                isDisabled={areFormFieldsDisabled}
                 className="mt-3"
                 isSelected={values.suspended}
                 onChange={(isSelected) => setFieldValue("suspended", isSelected)}
@@ -261,6 +272,7 @@ export function ManageUnitTab({ unit: data }: Props) {
 
       {hasManageAwardsPermissions || hasManagePermissions ? (
         <QualificationsTable
+          areFormFieldsDisabled={areFormFieldsDisabled}
           hasManagePermissions={hasManagePermissions}
           setUnit={setUnit}
           unit={unit}
