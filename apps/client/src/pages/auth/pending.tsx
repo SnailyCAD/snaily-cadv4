@@ -7,7 +7,7 @@ import { getSessionUser } from "lib/auth";
 import { useAuth } from "context/AuthContext";
 import { Title } from "components/shared/Title";
 import { VersionDisplay } from "components/shared/VersionDisplay";
-import { WhitelistStatus } from "@snailycad/types";
+import { Rank, WhitelistStatus } from "@snailycad/types";
 import { canUseThirdPartyConnections } from "lib/utils";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Discord, Steam } from "react-bootstrap-icons";
@@ -21,7 +21,7 @@ export default function AccountPendingPage() {
   const t = useTranslations("Auth");
   const { DISCORD_AUTH, STEAM_OAUTH } = useFeatureEnabled();
 
-  if (user?.whitelistStatus !== WhitelistStatus.PENDING) {
+  if (user?.rank !== Rank.OWNER && user?.whitelistStatus !== WhitelistStatus.PENDING) {
     return <main className="flex justify-center pt-20">This account is not pending access.</main>;
   }
 
