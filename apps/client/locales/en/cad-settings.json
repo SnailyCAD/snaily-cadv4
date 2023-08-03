@@ -107,7 +107,9 @@
     "liveMapUrlDescription": "This URL will communicate to the live_map resource in your FiveM server.",
     "liveMapSettingsInfo": "Configure the live map URL and map tiles.",
     "mapTiles": "Map Tiles",
-    "mapTilesDescription": "These are the map tiles that will be shown in the live map. These must be named in the following format:"
+    "mapTilesDescription": "These are the map tiles that will be shown in the live map. These must be named in the following format:",
+    "liveMapTilesAlertTitle": "Image formats",
+    "liveMapTilesAlertMessage": "The image formats must be in .png or .jpg format."
   },
   "ApiTokenTab": {
     "apiToken": "API Token",

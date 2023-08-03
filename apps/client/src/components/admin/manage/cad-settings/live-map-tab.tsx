@@ -249,18 +249,23 @@ export function LiveMapTab() {
                   {t("mapTilesDescription")}{" "}
                   {TILE_NAMES.map((name, idx) => (
                     <React.Fragment key={idx}>
-                      <code key={idx}>{name}</code>
+                      <code key={idx}>{`${name}.png`}</code>
                       {idx === TILE_NAMES.length - 1 ? "" : ", "}
                     </React.Fragment>
                   ))}
-                  <Link
-                    className="flex mt-3 underline items-center gap-1 text-neutral-700 dark:text-gray-200"
-                    target="_blank"
-                    href="https://docs.snailycad.org/docs/fivem-integrations/live-map/how-to-set-custom-map-files"
-                  >
-                    {common("learnMore")}
-                    <BoxArrowUpRight className="inline-block" />
-                  </Link>
+                  <Alert className="mt-4" title={t("liveMapTilesAlertTitle")} type="warning">
+                    <p>
+                      {t("liveMapTilesAlertMessage")}{" "}
+                      <Link
+                        className="inline-flex underline items-center gap-1 text-neutral-950 font-medium"
+                        target="_blank"
+                        href="https://docs.snailycad.org/docs/fivem-integrations/live-map/how-to-set-custom-map-files"
+                      >
+                        {common("learnMore")}
+                        <BoxArrowUpRight className="inline-block" />
+                      </Link>
+                    </p>
+                  </Alert>
                 </span>
               }
               errorMessage={errors.tiles}
