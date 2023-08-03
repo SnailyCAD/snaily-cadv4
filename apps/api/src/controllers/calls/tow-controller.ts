@@ -18,6 +18,7 @@ import {
   Citizen,
   DiscordWebhookType,
   Feature,
+  Prisma,
   RegisteredVehicle,
   User,
   Value,
@@ -61,14 +62,35 @@ export class TowController {
   })
   async getTowCalls(
     @QueryParams("ended", Boolean) includingEnded = false,
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("includeAll", Boolean) includeAll = false,
+    @QueryParams("query", String) query = "",
   ): Promise<APITypes.GetTowCallsData> {
-    const calls = await prisma.towCall.findMany({
-      where: includingEnded ? undefined : { ended: false },
-      include: towIncludes,
-      orderBy: { createdAt: "desc" },
-    });
+    const where: Prisma.TowCallWhereInput = query
+      ? {
+          OR: [
+            {
+              creator: { name: { contains: query, mode: "insensitive" } },
+            },
+            { description: { contains: query, mode: "insensitive" } },
+            { descriptionData: { array_contains: query } },
+            { location: { contains: query, mode: "insensitive" } },
+          ],
+        }
+      : {};
 
-    return calls;
+    const [totalCount, calls] = await prisma.$transaction([
+      prisma.towCall.count({ where }),
+      prisma.towCall.findMany({
+        where: includingEnded ? where : { ended: false, ...where },
+        include: towIncludes,
+        orderBy: { createdAt: "desc" },
+        take: includeAll ? undefined : 35,
+        skip: includeAll ? undefined : skip,
+      }),
+    ]);
+
+    return { calls, totalCount };
   }
 
   @UseBefore(IsAuth)

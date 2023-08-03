@@ -16,19 +16,22 @@ export * from "./api/bleeter.js";
  * @method Get
  * @route /taxi
  */
-export type GetTaxiCallsData = Types.TaxiCall[];
+export interface GetTaxiCallsData {
+  calls: Types.TaxiCall[];
+  totalCount: number;
+}
 
 /**
  * @method Post
  * @route /taxi
  */
-export type PostTaxiCallsData = GetTaxiCallsData[number];
+export type PostTaxiCallsData = GetTaxiCallsData["calls"][number];
 
 /**
  * @method Put
  * @route /taxi/:id
  */
-export type PutTaxiCallsData = GetTaxiCallsData[number];
+export type PutTaxiCallsData = GetTaxiCallsData["calls"][number];
 
 /**
  * @method Delete
@@ -41,19 +44,22 @@ export type DeleteTaxiCallsData = boolean;
  * @method Get
  * @route /tow
  */
-export type GetTowCallsData = Types.TowCall[];
+export interface GetTowCallsData {
+  calls: Types.TowCall[];
+  totalCount: number;
+}
 
 /**
  * @method Post
  * @route /tow
  */
-export type PostTowCallsData = GetTowCallsData[number];
+export type PostTowCallsData = GetTowCallsData["calls"][number];
 
 /**
  * @method Put
  * @route /tow/:id
  */
-export type PutTowCallsData = GetTowCallsData[number];
+export type PutTowCallsData = GetTowCallsData["calls"][number];
 
 /**
  * @method Delete

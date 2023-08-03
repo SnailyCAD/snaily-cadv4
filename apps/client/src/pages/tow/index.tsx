@@ -1,12 +1,9 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { useListener } from "@casper124578/use-socket.io";
-import { SocketEvents } from "@snailycad/config";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import type { TaxiCall, TowCall } from "@snailycad/types";
 import { Button } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
@@ -17,47 +14,16 @@ import { Permissions } from "@snailycad/permissions";
 import type { GetTowCallsData } from "@snailycad/types/api";
 
 interface Props {
-  calls: GetTowCallsData;
+  initialData: GetTowCallsData;
 }
 
 export default function Tow(props: Props) {
   const { openModal } = useModal();
-  const [calls, setCalls] = React.useState(props.calls);
   const t = useTranslations("Calls");
-
-  useListener(SocketEvents.CreateTowCall, (data: TowCall) => {
-    const isAlreadyInCalls = calls.some((v) => v.id === data.id);
-
-    if (!isAlreadyInCalls) {
-      setCalls((p) => [data, ...p]);
-    }
-  });
-
-  useListener(SocketEvents.EndTowCall, handleCallEnd);
-
-  useListener(SocketEvents.UpdateTowCall, (data: TowCall) => {
-    const old = calls.find((v) => v.id === data.id);
-
-    if (old) {
-      setCalls((p) => {
-        const removed = p.filter((v) => v.id !== data.id);
-
-        return [data, ...removed];
-      });
-    }
-  });
 
   function onCreateClick() {
     openModal(ModalIds.ManageTowCall);
   }
-
-  function handleCallEnd(call: Pick<TowCall, keyof TaxiCall>) {
-    setCalls((p) => p.filter((v) => v.id !== call.id));
-  }
-
-  React.useEffect(() => {
-    setCalls(props.calls);
-  }, [props.calls]);
 
   return (
     <Layout
@@ -76,23 +42,18 @@ export default function Tow(props: Props) {
         <Button onPress={onCreateClick}>{t("createTowCall")}</Button>
       </header>
 
-      <TowTaxiCallsTable
-        type="tow"
-        noCallsText={t("noTowCalls")}
-        calls={calls}
-        setCalls={setCalls as any}
-      />
+      <TowTaxiCallsTable initialData={props.initialData} type="tow" noCallsText={t("noTowCalls")} />
     </Layout>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const user = await getSessionUser(req);
-  const [data] = await requestAll(req, [["/tow", []]]);
+  const [data] = await requestAll(req, [["/tow", { totalCount: 0, calls: [] }]]);
 
   return {
     props: {
-      calls: data,
+      initialData: data,
       session: user,
       messages: {
         ...(await getTranslations(["calls", "leo", "common"], user?.locale ?? locale)),

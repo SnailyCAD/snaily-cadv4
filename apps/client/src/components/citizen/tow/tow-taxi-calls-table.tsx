@@ -1,7 +1,7 @@
-import type * as React from "react";
+import * as React from "react";
 import type { TaxiCall, TowCall } from "@snailycad/types";
 import { Button, FullDate } from "@snailycad/ui";
-import { Table, useTableState } from "components/shared/Table";
+import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
@@ -10,6 +10,9 @@ import { usePermission, Permissions } from "hooks/usePermission";
 import type { GetTaxiCallsData, GetTowCallsData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
+import { SearchArea } from "components/shared/search/search-area";
+import { useListener } from "@casper124578/use-socket.io";
+import { SocketEvents } from "@snailycad/config";
 
 const AssignCitizenToTowOrTaxiCall = dynamic(
   async () =>
@@ -20,20 +23,36 @@ const ManageCallModal = dynamic(
 );
 
 interface Props {
-  noCallsText: string;
-  calls: GetTaxiCallsData | GetTowCallsData;
-  setCalls: React.Dispatch<React.SetStateAction<(TowCall | TaxiCall)[]>>;
+  initialData: GetTaxiCallsData | GetTowCallsData;
   type: "tow" | "taxi";
+  noCallsText: string;
 }
 
-export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props) {
-  const [tempCall, callState] = useTemporaryItem<string, TowCall | TaxiCall>(calls);
+export function TowTaxiCallsTable({ initialData, type, noCallsText }: Props) {
+  const [search, setSearch] = React.useState("");
+
+  const asyncTable = useAsyncTable({
+    totalCount: initialData.totalCount,
+    initialData: initialData.calls,
+    search,
+    fetchOptions: {
+      path: type === "taxi" ? "/taxi" : "/tow",
+      onResponse(json: GetTaxiCallsData | GetTowCallsData) {
+        return { data: json.calls, totalCount: json.totalCount };
+      },
+    },
+  });
+  const tableState = useTableState(asyncTable);
+  const [tempCall, callState] = useTemporaryItem<string, TowCall | TaxiCall>(asyncTable.items);
 
   const { openModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
   const leo = useTranslations("Leo");
-  const tableState = useTableState();
+
+  const CreateCallEvent = type === "tow" ? SocketEvents.CreateTowCall : SocketEvents.CreateTaxiCall;
+  const EndCallEvent = type === "tow" ? SocketEvents.EndTowCall : SocketEvents.EndTaxiCall;
+  const UpdateCallEvent = type === "tow" ? SocketEvents.UpdateTowCall : SocketEvents.UpdateTaxiCall;
 
   const { hasPermissions } = usePermission();
   const toCheckPerms =
@@ -50,18 +69,28 @@ export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props)
     callState.setTempId(call.id);
   }
 
-  function updateCalls(old: TowCall | TaxiCall, newC: TowCall | TaxiCall) {
+  function updateCalls(updatedCall: TowCall | TaxiCall) {
     callState.setTempId(null);
-    setCalls((p) => {
-      const idx = p.findIndex((v) => v.id === old.id);
-      p[idx] = newC;
-      return p;
-    });
+    asyncTable.update(updatedCall.id, updatedCall);
   }
 
-  function handleCallEnd(call: TaxiCall) {
-    setCalls((p) => p.filter((v) => v.id !== call.id));
+  function handleCallEnd(call: TowCall | TaxiCall) {
+    asyncTable.remove(call.id);
   }
+
+  function handleCallCreation(call: TowCall | TaxiCall) {
+    const isAlreadyInCalls = asyncTable.items.some((v) => v.id === call.id);
+
+    if (!isAlreadyInCalls) {
+      asyncTable.prepend(call);
+    }
+  }
+
+  useListener(EndCallEvent, handleCallEnd);
+  useListener({ eventName: UpdateCallEvent, checkHasListeners: true }, updateCalls, [asyncTable]);
+  useListener({ eventName: CreateCallEvent, checkHasListeners: true }, handleCallCreation, [
+    asyncTable,
+  ]);
 
   function assignedUnit(call: TowCall | TaxiCall) {
     return call.assignedUnit ? (
@@ -75,12 +104,18 @@ export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props)
 
   return (
     <>
-      {calls.length <= 0 ? (
+      <SearchArea
+        asyncTable={asyncTable}
+        search={{ setSearch, search }}
+        totalCount={initialData.totalCount}
+      />
+
+      {asyncTable.items.length <= 0 ? (
         <p className="mt-5">{noCallsText}</p>
       ) : (
         <Table
           tableState={tableState}
-          data={calls.map((call) => ({
+          data={asyncTable.items.map((call) => ({
             id: call.id,
             location: call.location,
             postal: call.postal || common("none"),
@@ -121,10 +156,6 @@ export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props)
       <ManageCallModal
         onClose={() => callState.setTempId(null)}
         onDelete={handleCallEnd}
-        onUpdate={updateCalls}
-        onCreate={(call) => {
-          setCalls((p) => [call, ...p]);
-        }}
         call={tempCall}
       />
     </>

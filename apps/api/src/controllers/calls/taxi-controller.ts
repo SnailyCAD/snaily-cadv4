@@ -5,6 +5,7 @@ import {
   UseBefore,
   PathParams,
   UseBeforeEach,
+  QueryParams,
 } from "@tsed/common";
 import { Description, Delete, Get, Post, Put, ContentType } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
@@ -13,7 +14,7 @@ import { NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { Socket } from "services/socket-service";
 import { validateSchema } from "lib/data/validate-schema";
-import { Feature, User } from "@prisma/client";
+import { Feature, Prisma, User } from "@prisma/client";
 import { canManageInvariant } from "lib/auth/getSessionUser";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { towIncludes } from "./tow-controller";
@@ -35,12 +36,35 @@ export class TaxiController {
   @UsePermissions({
     permissions: [Permissions.ManageTaxiCalls, Permissions.ViewTaxiCalls],
   })
-  async getTaxiCalls(): Promise<APITypes.GetTaxiCallsData> {
-    const calls = await prisma.taxiCall.findMany({
-      include: towIncludes,
-    });
+  async getTaxiCalls(
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("includeAll", Boolean) includeAll = false,
+    @QueryParams("query", String) query = "",
+  ): Promise<APITypes.GetTaxiCallsData> {
+    const where: Prisma.TaxiCallWhereInput = query
+      ? {
+          OR: [
+            {
+              creator: { name: { contains: query, mode: "insensitive" } },
+            },
+            { description: { contains: query, mode: "insensitive" } },
+            { location: { contains: query, mode: "insensitive" } },
+          ],
+        }
+      : {};
 
-    return calls;
+    const [totalCount, calls] = await prisma.$transaction([
+      prisma.taxiCall.count({ where }),
+      prisma.taxiCall.findMany({
+        include: towIncludes,
+        where,
+        orderBy: { createdAt: "desc" },
+        take: includeAll ? undefined : 35,
+        skip: includeAll ? undefined : skip,
+      }),
+    ]);
+
+    return { calls, totalCount };
   }
 
   @UseBefore(IsAuth)
