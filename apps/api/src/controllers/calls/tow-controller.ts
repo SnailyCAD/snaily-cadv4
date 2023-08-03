@@ -75,6 +75,7 @@ export class TowController {
             { description: { contains: query, mode: "insensitive" } },
             { descriptionData: { array_contains: query } },
             { location: { contains: query, mode: "insensitive" } },
+            { postal: { contains: query, mode: "insensitive" } },
           ],
         }
       : {};

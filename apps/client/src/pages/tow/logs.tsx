@@ -7,29 +7,37 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { requestAll } from "lib/utils";
-import { Table, useTableState } from "components/shared/Table";
+import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import type { TowCall } from "@snailycad/types";
 import { Permissions } from "@snailycad/permissions";
 import type { GetTowCallsData } from "@snailycad/types/api";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 import { FullDate } from "@snailycad/ui";
+import { SearchArea } from "components/shared/search/search-area";
 
 interface Props {
-  calls: GetTowCallsData;
+  initialData: GetTowCallsData;
 }
 
 export default function TowLogs(props: Props) {
-  const [calls, setCalls] = React.useState<TowCall[]>(props.calls);
+  const [search, setSearch] = React.useState("");
+
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
-  const tableState = useTableState();
 
-  useListener(SocketEvents.EndTowCall, handleCallEnd);
-
-  function handleCallEnd(call: TowCall) {
-    setCalls((p) => [call, ...p]);
-  }
+  const asyncTable = useAsyncTable({
+    totalCount: props.initialData.totalCount,
+    initialData: props.initialData.calls,
+    search,
+    fetchOptions: {
+      path: "/tow?ended=true",
+      onResponse(json: GetTowCallsData) {
+        return { data: json.calls, totalCount: json.totalCount };
+      },
+    },
+  });
+  const tableState = useTableState(asyncTable);
 
   function assignedUnit(call: TowCall) {
     return call.assignedUnit ? (
@@ -41,9 +49,10 @@ export default function TowLogs(props: Props) {
     );
   }
 
-  React.useEffect(() => {
-    setCalls(props.calls);
-  }, [props.calls]);
+  useListener(SocketEvents.EndTowCall, handleCallEnd);
+  function handleCallEnd(call: TowCall) {
+    asyncTable.remove(call.id);
+  }
 
   return (
     <Layout permissions={{ permissions: [Permissions.ViewTowLogs] }} className="dark:text-white">
@@ -54,12 +63,18 @@ export default function TowLogs(props: Props) {
         </p>
       </header>
 
-      {calls.length <= 0 ? (
+      <SearchArea
+        asyncTable={asyncTable}
+        search={{ search, setSearch }}
+        totalCount={props.initialData.totalCount}
+      />
+
+      {asyncTable.items.length <= 0 ? (
         <p className="text-neutral-700 dark:text-gray-400 mt-10">{t("noTowCalls")}</p>
       ) : (
         <Table
           tableState={tableState}
-          data={calls.map((call) => ({
+          data={asyncTable.items.map((call) => ({
             id: call.id,
             location: call.location,
             postal: call.postal || common("none"),
@@ -84,11 +99,11 @@ export default function TowLogs(props: Props) {
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, req }) => {
   const user = await getSessionUser(req);
-  const [data] = await requestAll(req, [["/tow?ended=true", []]]);
+  const [data] = await requestAll(req, [["/tow?ended=true", { totalCount: 0, calls: [] }]]);
 
   return {
     props: {
-      calls: data,
+      initialData: data,
       session: user,
       messages: {
         ...(await getTranslations(["calls", "common"], user?.locale ?? locale)),

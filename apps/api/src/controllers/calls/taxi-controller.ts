@@ -49,6 +49,7 @@ export class TaxiController {
             },
             { description: { contains: query, mode: "insensitive" } },
             { location: { contains: query, mode: "insensitive" } },
+            { postal: { contains: query, mode: "insensitive" } },
           ],
         }
       : {};
