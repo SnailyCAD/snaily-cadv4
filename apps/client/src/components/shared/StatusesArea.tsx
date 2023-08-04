@@ -144,14 +144,16 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
   const documentationUrl = createValueDocumentationURL(ValueType.CODES_10);
 
   if (!onDutyCode) {
-    <Link
-      target="_blank"
-      href={documentationUrl}
-      className="block mt-2 px-4 py-3 bg-gray-300/50 dark:bg-tertiary dark:border-t-[1.5px] dark:border-secondary text-blue-500 dark:text-blue-400 underline"
-    >
-      This SnailyCAD instance does not have a 10-code for setting a unit on duty. Please ask an
-      admin to add one with the {`"Should Do"`} set to {`"Set On Duty"`}.
-    </Link>;
+    return (
+      <Link
+        target="_blank"
+        href={documentationUrl}
+        className="block mt-2 px-4 py-3 bg-gray-300/50 dark:bg-tertiary dark:border-t-[1.5px] dark:border-secondary text-blue-500 dark:text-blue-400 underline"
+      >
+        This SnailyCAD instance does not have a 10-code for setting a unit on duty. Please ask an
+        admin to add one with the {`"Should Do"`} set to {`"Set On Duty"`}.
+      </Link>
+    );
   }
 
   if (filteredCodes.length <= 0) {
