@@ -24,7 +24,8 @@ import { ImageWrapper } from "components/shared/image-wrapper";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageDeputyModal = dynamic(
-  async () => (await import("components/ems-fd/modals/ManageDeputyModal")).ManageDeputyModal,
+  async () =>
+    (await import("components/ems-fd/modals/deputy/manage-deputy-modal")).ManageDeputyModal,
 );
 
 interface Props {

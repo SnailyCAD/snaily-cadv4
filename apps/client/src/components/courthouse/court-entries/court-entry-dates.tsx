@@ -2,7 +2,7 @@ import type { CourtDate } from "@snailycad/types";
 import { Button, FullDate } from "@snailycad/ui";
 import { Table, useTableState } from "components/shared/Table";
 import { useTranslations } from "next-intl";
-import { ManageCourtDateModal } from "./ManageCourtDateModal";
+import { ManageCourtDateModal } from "./manage-court-entry-date-modal";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
 import { AlertModal } from "components/modal/AlertModal";

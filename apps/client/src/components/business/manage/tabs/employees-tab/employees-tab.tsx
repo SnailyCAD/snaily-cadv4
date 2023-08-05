@@ -81,8 +81,6 @@ export function EmployeesTab() {
     openModal(ModalIds.AlertFireEmployee);
   }
 
-  console.log({ test: tableState.pagination });
-
   return (
     <TabsContent aria-label={t("allEmployees")} value="allEmployees">
       <h3 className="text-2xl font-semibold">{t("employees")}</h3>

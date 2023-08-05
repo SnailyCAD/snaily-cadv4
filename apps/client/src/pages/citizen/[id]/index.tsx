@@ -21,7 +21,7 @@ import {
 import useFetch from "lib/useFetch";
 import { getTranslations } from "lib/getTranslation";
 import { VehiclesCard } from "components/citizen/vehicles/vehicles-card";
-import { LicensesCard } from "components/citizen/licenses/LicensesCard";
+import { LicensesCard } from "components/citizen/licenses/licenses-card";
 import { MedicalRecords } from "components/citizen/medical-records/medical-records";
 import { calculateAge, formatCitizenAddress, requestAll } from "lib/utils";
 import { useCitizen } from "context/CitizenContext";

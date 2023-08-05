@@ -42,13 +42,14 @@ const NotepadModal = dynamic(
 );
 
 const SelectDeputyModal = dynamic(
-  async () => (await import("components/ems-fd/modals/select-deputy-modal")).SelectDeputyModal,
+  async () =>
+    (await import("components/ems-fd/modals/deputy/select-deputy-modal")).SelectDeputyModal,
   { ssr: false },
 );
 
 const CreateMedicalRecordModal = dynamic(
   async () =>
-    (await import("components/ems-fd/modals/CreateMedicalRecord")).CreateMedicalRecordModal,
+    (await import("components/ems-fd/modals/create-medical-record-modal")).CreateMedicalRecordModal,
   { ssr: false },
 );
 

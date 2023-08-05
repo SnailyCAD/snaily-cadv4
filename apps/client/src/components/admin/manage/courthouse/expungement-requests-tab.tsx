@@ -2,7 +2,7 @@ import { ExpungementRequestStatus } from "@snailycad/types";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useTranslations } from "next-intl";
-import { getTitles } from "components/courthouse/expungement-requests/RequestExpungement";
+import { getTitles } from "components/courthouse/expungement-requests/request-expungement-modal";
 import { Button, FullDate, Status, TabsContent } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import type {

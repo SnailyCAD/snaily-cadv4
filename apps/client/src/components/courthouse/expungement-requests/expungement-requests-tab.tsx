@@ -2,7 +2,7 @@ import { Table, useTableState } from "components/shared/Table";
 import { useTranslations } from "next-intl";
 import { ExpungementRequestStatus } from "@snailycad/types";
 import dynamic from "next/dynamic";
-import { getTitles } from "./RequestExpungement";
+import { getTitles } from "./request-expungement-modal";
 import { useModal } from "state/modalState";
 import { Button, FullDate, Status, TabsContent } from "@snailycad/ui";
 import { ModalIds } from "types/modal-ids";
@@ -12,7 +12,7 @@ import useFetch from "lib/useFetch";
 import { useList } from "hooks/shared/table/use-list";
 
 const RequestExpungement = dynamic(
-  async () => (await import("./RequestExpungement")).RequestExpungement,
+  async () => (await import("./request-expungement-modal")).RequestExpungement,
   { ssr: false },
 );
 

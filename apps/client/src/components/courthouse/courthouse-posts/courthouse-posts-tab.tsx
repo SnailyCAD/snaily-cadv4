@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { ModalIds } from "types/modal-ids";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import type { CourthousePost } from "@snailycad/types";
-import { ManageCourtPostModal } from "./ManageCourtPostModal";
+import { ManageCourtPostModal } from "./manage-courthouse-post-modal";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { usePermission, Permissions } from "hooks/usePermission";

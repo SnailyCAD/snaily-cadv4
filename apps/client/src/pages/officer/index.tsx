@@ -15,7 +15,7 @@ import { ActiveBolos } from "components/active-bolos/active-bolos";
 import { requestAll } from "lib/utils";
 import { ActiveOfficers } from "components/dispatch/active-officers";
 import { ActiveDeputies } from "components/dispatch/active-deputies";
-import { ActiveWarrants } from "components/leo/active-warrants/ActiveWarrants";
+import { ActiveWarrants } from "components/leo/active-warrants/active-warrants";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { usePanicButton } from "hooks/shared/usePanicButton";
 import { Title } from "components/shared/Title";

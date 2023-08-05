@@ -1,5 +1,5 @@
 import { Button } from "@snailycad/ui";
-import { CitizenLicenses } from "components/citizen/licenses/LicensesCard";
+import { CitizenLicenses } from "components/citizen/licenses/licenses-card";
 import { useModal } from "state/modalState";
 import { useNameSearch } from "state/search/name-search-state";
 import { ModalIds } from "types/modal-ids";

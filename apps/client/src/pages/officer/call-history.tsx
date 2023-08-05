@@ -12,7 +12,7 @@ import type { Full911Call } from "state/dispatch/dispatch-state";
 import { Loader, Button, TextField, FullDate } from "@snailycad/ui";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
-import { LinkCallToIncidentModal } from "components/leo/call-history/LinkCallToIncidentModal";
+import { LinkCallToIncidentModal } from "components/leo/call-history/link-call-to-citizen-modal";
 import useFetch from "lib/useFetch";
 import { Title } from "components/shared/Title";
 import { AlertModal } from "components/modal/AlertModal";

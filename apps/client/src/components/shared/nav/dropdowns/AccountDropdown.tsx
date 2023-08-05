@@ -17,7 +17,7 @@ import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 import dynamic from "next/dynamic";
 
-const ChangelogModal = dynamic(async () => (await import("../ChangelogModal")).ChangelogModal, {
+const ChangelogModal = dynamic(async () => (await import("../changelog-modal")).ChangelogModal, {
   ssr: false,
 });
 

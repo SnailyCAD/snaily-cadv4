@@ -18,6 +18,8 @@ export const ONE_DAY = 60 * 60 * 24;
 @Controller("/admin")
 @ContentType("application/json")
 export class AdminController {
+  private changelogBody: string | null = null;
+
   @Get("/")
   @UseBefore(IsAuth)
   @Description("Get simple CAD stats")
@@ -120,6 +122,11 @@ export class AdminController {
         `private, max-age=${ONE_DAY} stale-while-revalidate=${ONE_DAY / 2}`,
       );
 
+      if (this.changelogBody) {
+        return this.changelogBody;
+      }
+
+      this.changelogBody = response.data.body;
       const json = response.data as { body: string };
       return json;
     } catch (e) {

@@ -33,7 +33,7 @@ export class LicenseExamsController {
   @UsePermissions({
     permissions: [Permissions.ViewLicenseExams, Permissions.ManageLicenseExams],
   })
-  async getAlllicenseExams(
+  async getAllLicenseExams(
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query = "",
   ): Promise<APITypes.GetLicenseExamsData> {

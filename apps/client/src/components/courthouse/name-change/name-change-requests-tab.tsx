@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { ModalIds } from "types/modal-ids";
 import { Table, useTableState } from "components/shared/Table";
 import { WhitelistStatus } from "@snailycad/types";
-import { RequestNameChangeModal } from "./RequestNameChange";
+import { RequestNameChangeModal } from "./request-name-change-modal";
 import type { GetNameChangeRequestsData } from "@snailycad/types/api";
 
 interface Props {

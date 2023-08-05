@@ -12,7 +12,7 @@ import { ModalIds } from "types/modal-ids";
 import { Table, useTableState } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import compareDesc from "date-fns/compareDesc";
-import { ReleaseCitizenModal } from "components/leo/jail/ReleaseCitizenModal";
+import { ReleaseCitizenModal } from "components/leo/jail/release-citizen-modal";
 import { Title } from "components/shared/Title";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";

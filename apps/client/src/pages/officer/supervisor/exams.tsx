@@ -99,74 +99,72 @@ export default function CitizenLogs({ data }: Props) {
         ) : null}
       </header>
 
+      <SearchArea
+        totalCount={data.totalCount}
+        search={{ search, setSearch }}
+        asyncTable={asyncTable}
+      />
+
       {asyncTable.noItemsAvailable ? (
         <p className="mt-5">{t("licenseExams.noExams")}</p>
       ) : (
-        <>
-          <SearchArea
-            totalCount={data.totalCount}
-            search={{ search, setSearch }}
-            asyncTable={asyncTable}
-          />
+        <Table
+          tableState={tableState}
+          data={asyncTable.items.map((exam) => {
+            const hasPassedOrFailed = exam.status !== LicenseExamStatus.IN_PROGRESS;
 
-          <Table
-            tableState={tableState}
-            data={asyncTable.items.map((exam) => {
-              const hasPassedOrFailed = exam.status !== LicenseExamStatus.IN_PROGRESS;
-
-              return {
-                id: exam.id,
-                rowProps: {
-                  className: hasPassedOrFailed ? "opacity-60" : undefined,
-                },
-                type: exam.type,
-                citizen: `${exam.citizen.name} ${exam.citizen.surname}`,
-                theoryExam: (
-                  <span className="capitalize">
-                    {exam.theoryExam ? PASS_FAIL_LABELS[exam.theoryExam] : "—"}
-                  </span>
-                ),
-                practiceExam: (
-                  <span className="capitalize">
-                    {exam.practiceExam ? PASS_FAIL_LABELS[exam.practiceExam] : "—"}
-                  </span>
-                ),
-                status: <Status>{exam.status}</Status>,
-                categories: exam.categories?.map((v) => v.value.value).join(", ") || "—",
-                license: exam.license.value,
-                createdAt: <FullDate>{exam.createdAt}</FullDate>,
-                actions: (
-                  <>
-                    {hasPassedOrFailed ? null : (
-                      <Button variant="success" size="xs" onPress={() => handleEditClick(exam)}>
-                        {common("edit")}
-                      </Button>
-                    )}
-                    <Button
-                      className="ml-2"
-                      variant="danger"
-                      size="xs"
-                      onPress={() => handleDeleteClick(exam)}
-                    >
-                      {common("delete")}
+            return {
+              id: exam.id,
+              rowProps: {
+                className: hasPassedOrFailed ? "opacity-60" : undefined,
+              },
+              type: exam.type,
+              citizen: `${exam.citizen.name} ${exam.citizen.surname}`,
+              theoryExam: (
+                <span className="capitalize">
+                  {exam.theoryExam ? PASS_FAIL_LABELS[exam.theoryExam] : "—"}
+                </span>
+              ),
+              practiceExam: (
+                <span className="capitalize">
+                  {exam.practiceExam ? PASS_FAIL_LABELS[exam.practiceExam] : "—"}
+                </span>
+              ),
+              status: <Status>{exam.status}</Status>,
+              categories: exam.categories?.map((v) => v.value.value).join(", ") || "—",
+              license: exam.license.value,
+              createdAt: <FullDate>{exam.createdAt}</FullDate>,
+              actions: (
+                <>
+                  {hasPassedOrFailed ? null : (
+                    <Button variant="success" size="xs" onPress={() => handleEditClick(exam)}>
+                      {common("edit")}
                     </Button>
-                  </>
-                ),
-              };
-            })}
-            columns={[
-              { header: common("type"), accessorKey: "type" },
-              { header: t("Leo.citizen"), accessorKey: "citizen" },
-              { header: t("licenseExams.theoryExam"), accessorKey: "theoryExam" },
-              { header: t("licenseExams.practiceExam"), accessorKey: "practiceExam" },
-              { header: t("Leo.status"), accessorKey: "status" },
-              { header: t("licenseExams.categories"), accessorKey: "categories" },
-              { header: t("Leo.license"), accessorKey: "license" },
-              { header: common("createdAt"), accessorKey: "createdAt" },
-              hasManagePermissions ? { header: common("actions"), accessorKey: "actions" } : null,
-            ]}
-          />
-        </>
+                  )}
+                  <Button
+                    className="ml-2"
+                    variant="danger"
+                    size="xs"
+                    onPress={() => handleDeleteClick(exam)}
+                  >
+                    {common("delete")}
+                  </Button>
+                </>
+              ),
+            };
+          })}
+          columns={[
+            { header: common("type"), accessorKey: "type" },
+            { header: t("Leo.citizen"), accessorKey: "citizen" },
+            { header: t("licenseExams.theoryExam"), accessorKey: "theoryExam" },
+            { header: t("licenseExams.practiceExam"), accessorKey: "practiceExam" },
+            { header: t("Leo.status"), accessorKey: "status" },
+            { header: t("licenseExams.categories"), accessorKey: "categories" },
+            { header: t("Leo.license"), accessorKey: "license" },
+            { header: common("createdAt"), accessorKey: "createdAt" },
+            hasManagePermissions ? { header: common("actions"), accessorKey: "actions" } : null,
+          ]}
+        />
       )}
 
       <AlertModal

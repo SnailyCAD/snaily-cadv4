@@ -1,5 +1,5 @@
 import { PostEmsFdMedicalRecordsSearchData } from "@snailycad/types/api";
-import { TabsContent } from "@snailycad/ui";
+import { FullDate, TabsContent } from "@snailycad/ui";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 import { Table, useTableState } from "components/shared/Table";
 import { useTranslations } from "use-intl";
@@ -29,6 +29,7 @@ export function DoctorVisitsTab(props: DoctorVisitsTabProps) {
             diagnosis: <CallDescription data={{ description: record.diagnosis }} />,
             conditions: <CallDescription data={{ description: record.conditions }} />,
             medications: <CallDescription data={{ description: record.medications }} />,
+            createdAt: <FullDate>{record.createdAt}</FullDate>,
             description: record.description ? (
               <CallDescription data={{ description: record.description }} />
             ) : (
@@ -39,6 +40,7 @@ export function DoctorVisitsTab(props: DoctorVisitsTabProps) {
             { header: t("Ems.diagnosis"), accessorKey: "diagnosis" },
             { header: t("Ems.conditions"), accessorKey: "conditions" },
             { header: t("Ems.medications"), accessorKey: "medications" },
+            { header: t("Common.createdAt"), accessorKey: "createdAt" },
             { header: t("Common.description"), accessorKey: "description" },
           ]}
         />
