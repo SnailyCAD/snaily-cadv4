@@ -111,7 +111,10 @@ export default function ManageBusinesses({ business, businessId }: Props) {
           <p>
             This business is still pending approval. It must first be approved by an administrator
             before any changes can be done.{" "}
-            <Link className="font-medium underline" href="/admin/manage/businesses?activeTab=pendingBusinesses">
+            <Link
+              className="font-medium underline"
+              href="/admin/manage/businesses?activeTab=pendingBusinesses"
+            >
               Go back
             </Link>
           </p>
