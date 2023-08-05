@@ -1,25 +1,40 @@
 import { PostEmsFdMedicalRecordsSearchData } from "@snailycad/types/api";
-import { FullDate, TabsContent } from "@snailycad/ui";
+import { Button, FullDate, TabsContent } from "@snailycad/ui";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 import { Table, useTableState } from "components/shared/Table";
+import { useModal } from "state/modalState";
+import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
+import { CreateDoctorVisitModal } from "../../doctor-visits/create-doctor-visit-modal";
 
 interface DoctorVisitsTabProps {
   results: PostEmsFdMedicalRecordsSearchData;
+  setResults: React.Dispatch<
+    React.SetStateAction<PostEmsFdMedicalRecordsSearchData | null | undefined>
+  >;
 }
 
 export function DoctorVisitsTab(props: DoctorVisitsTabProps) {
   const tableState = useTableState();
   const t = useTranslations();
+  const { openModal, closeModal } = useModal();
 
   if (!("DoctorVisit" in props.results)) {
     return null;
   }
 
   return (
-    <TabsContent className="mt-7" value="doctor-visits">
+    <TabsContent value="doctor-visits">
+      <header className="flex items-center justify-between my-3">
+        <h1 className="text-xl font-semibold">{t("Ems.doctorVisits")}</h1>
+
+        <Button size="xs" onClick={() => openModal(ModalIds.CreateDoctorVisit)}>
+          {t("Ems.add")}
+        </Button>
+      </header>
+
       {props.results.DoctorVisit.length <= 0 ? (
-        <p>No medical records</p>
+        <p>{t("Ems.noDoctorVisits")}</p>
       ) : (
         <Table
           features={{ isWithinCardOrModal: true }}
@@ -45,6 +60,20 @@ export function DoctorVisitsTab(props: DoctorVisitsTabProps) {
           ]}
         />
       )}
+
+      <CreateDoctorVisitModal
+        onCreate={(doctorVisit) => {
+          if (!("DoctorVisit" in props.results)) return;
+
+          props.setResults({
+            ...props.results,
+            DoctorVisit: [...props.results.DoctorVisit, doctorVisit],
+          });
+
+          closeModal(ModalIds.ManageMedicalRecords);
+        }}
+        citizen={props.results}
+      />
     </TabsContent>
   );
 }

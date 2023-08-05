@@ -29,6 +29,8 @@ import type {
 import { useCall911State } from "state/dispatch/call-911-state";
 import { usePermission } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { useModal } from "state/modalState";
+import { ModalIds } from "types/modal-ids";
 
 interface Props {
   activeDeputy: GetEmsFdActiveDeputy | null;
@@ -87,6 +89,7 @@ export default function EmsFDDashboard({ activeDeputy, calls, activeDeputies }: 
   const set911Calls = useCall911State((state) => state.setCalls);
   const { hasPermissions } = usePermission();
   const isAdmin = hasPermissions(defaultPermissions.allDefaultAdminPermissions);
+  const { isOpen } = useModal();
 
   React.useEffect(() => {
     state.setActiveDeputy(activeDeputy);
@@ -131,9 +134,14 @@ export default function EmsFDDashboard({ activeDeputy, calls, activeDeputies }: 
       {isAdmin || state.activeDeputy ? (
         <>
           <NotepadModal />
-          <CreateMedicalRecordModal />
+
           <SearchMedicalRecordModal />
-          <CreateDoctorVisitModal />
+          {isOpen(ModalIds.SearchMedicalRecord) ? null : (
+            <>
+              <CreateMedicalRecordModal />
+              <CreateDoctorVisitModal />
+            </>
+          )}
         </>
       ) : null}
     </Layout>

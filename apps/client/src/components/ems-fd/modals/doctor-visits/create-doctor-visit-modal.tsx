@@ -8,15 +8,16 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
 import type { DoctorVisit } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
-import type { PostEmsFdDoctorVisit } from "@snailycad/types/api";
+import type { PostEmsFdDoctorVisit, PostEmsFdMedicalRecordsSearchData } from "@snailycad/types/api";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 
 interface Props {
   onCreate?(newV: DoctorVisit): void;
   onClose?(): void;
+  citizen?: PostEmsFdMedicalRecordsSearchData;
 }
 
-export function CreateDoctorVisitModal({ onClose, onCreate }: Props) {
+export function CreateDoctorVisitModal({ citizen, onClose, onCreate }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
@@ -43,8 +44,8 @@ export function CreateDoctorVisitModal({ onClose, onCreate }: Props) {
   }
 
   const INITIAL_VALUES = {
-    citizenId: "",
-    citizenName: "",
+    citizenId: citizen?.id ?? "",
+    citizenName: citizen?.name ? `${citizen.name} ${citizen.surname}` : "",
 
     description: "",
     diagnosis: "",
@@ -63,6 +64,7 @@ export function CreateDoctorVisitModal({ onClose, onCreate }: Props) {
         {({ setFieldValue, errors, values, isValid }) => (
           <Form>
             <CitizenSuggestionsField
+              isDisabled={!!citizen}
               autoFocus
               fromAuthUserOnly={false}
               label={common("citizen")}

@@ -36,7 +36,7 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute<PostEmsFdMedicalRecord>({
-      path: "/ems-fd/medical-record",
+      path: "/ems-fd/medical-records",
       method: "POST",
       data: values,
     });

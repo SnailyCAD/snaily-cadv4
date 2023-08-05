@@ -57,6 +57,7 @@ export function ManageMedicalRecordsModal({
 
       if (json?.id) {
         onUpdate?.(medicalRecord, json);
+        onClose?.();
       }
     } else {
       const { json } = await execute<PostCitizenMedicalRecordsData>({
@@ -67,6 +68,7 @@ export function ManageMedicalRecordsModal({
 
       if (json?.id) {
         onCreate?.(json);
+        onClose?.();
       }
     }
   }

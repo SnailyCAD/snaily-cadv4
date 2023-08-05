@@ -1,4 +1,4 @@
-import { Citizen, MedicalRecord, Value } from "@snailycad/types";
+import { MedicalRecord, Value } from "@snailycad/types";
 import {
   DeleteCitizenMedicalRecordsData,
   PostEmsFdMedicalRecordsSearchData,
@@ -20,7 +20,7 @@ interface MedicalRecordsTabProps {
   handleDeclare(): void;
   state: "loading" | "error" | null;
   setResults: React.Dispatch<
-    React.SetStateAction<(Citizen & { medicalRecords?: MedicalRecord[] }) | null | undefined>
+    React.SetStateAction<PostEmsFdMedicalRecordsSearchData | null | undefined>
   >;
 }
 const ManageMedicalRecordsModal = dynamic(
@@ -78,7 +78,15 @@ export function MedicalRecordsTab(props: MedicalRecordsTabProps) {
   }
 
   return (
-    <TabsContent className="mt-7" value="medical-records">
+    <TabsContent value="medical-records">
+      <header className="flex items-center justify-between my-3">
+        <h1 className="text-xl font-semibold">{t("Ems.medicalRecords")}</h1>
+
+        <Button size="xs" onClick={() => openModal(ModalIds.ManageMedicalRecords)}>
+          {t("Ems.add")}
+        </Button>
+      </header>
+
       {props.results.medicalRecords.length <= 0 ? (
         <p>No medical records</p>
       ) : (

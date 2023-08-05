@@ -110,7 +110,13 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
           <Form>
             <AsyncListSearchField<SearchResult>
               autoFocus
+              allowsCustomValue
               setValues={({ localValue, node }) => {
+                if (typeof node === "undefined" && typeof localValue === "undefined") {
+                  setValues({ ...values, name: values.searchValue });
+                  return;
+                }
+
                 const searchValue =
                   typeof localValue !== "undefined" ? { searchValue: localValue } : {};
                 const name = node ? { name: node.key as string } : {};
@@ -165,7 +171,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
             </AsyncListSearchField>
 
             {typeof results === "undefined" ? null : results === null ? (
-              <p>{t("Errors.citizenNotFound")}</p>
+              <p className="mt-5">{t("Errors.citizenNotFound")}</p>
             ) : results.isConfidential ? (
               <p className="my-5 px-2">{t("Leo.citizenIsConfidential")}</p>
             ) : (
@@ -198,7 +204,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                   </SpeechAlert>
                 ) : null}
 
-                <div className="flex w-full">
+                <div className="flex w-full mt-5">
                   <div className="mr-2 min-w-[100px]">
                     {results.imageId ? (
                       <button
@@ -272,6 +278,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                     </div>
                     <div className="mt-7">
                       <TabList
+                        queryState={false}
                         tabs={[
                           {
                             name: t("Ems.medicalRecords"),
@@ -289,7 +296,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                           state={state}
                           setResults={setResults as any}
                         />
-                        <DoctorVisitsTab results={results} />
+                        <DoctorVisitsTab setResults={setResults as any} results={results} />
                       </TabList>
                     </div>
                   </div>

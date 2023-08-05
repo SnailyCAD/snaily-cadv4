@@ -28,7 +28,9 @@
     "medicalRecords": "Medical Records",
     "medications": "Medication",
     "diagnosis": "Diagnosis",
-    "conditions": "Conditions"
+    "conditions": "Conditions",
+    "add": "Add",
+    "noDoctorVisits": "This citizen doesn't have any doctor visits."
   },
   "HospitalServices": {
     "hospitalServices": "Hospital Services",

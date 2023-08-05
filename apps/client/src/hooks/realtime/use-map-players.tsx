@@ -9,7 +9,6 @@ import type {
 } from "types/map";
 import useFetch from "lib/useFetch";
 import { toastMessage } from "lib/toastMessage";
-import type { GetDispatchPlayerBySteamIdData } from "@snailycad/types/api";
 import { create } from "zustand";
 import { useDispatchMapState, useSocketStore } from "state/mapState";
 import { ModalIds } from "types/modal-ids";
@@ -50,7 +49,7 @@ export function useMapPlayers() {
         }));
 
       if (options.fetchMore) {
-        const { json: rawJson } = await execute<GetDispatchPlayerBySteamIdData[]>({
+        const { json: rawJson } = await execute({
           path: "/dispatch/players",
           data: filteredPlayers,
           noToast: true,

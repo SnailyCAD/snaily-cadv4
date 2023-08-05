@@ -226,7 +226,7 @@ export class EmsFdController {
   }
 
   @Use(ActiveDeputy)
-  @Post("/medical-record")
+  @Post("/medical-records")
   @UsePermissions({
     permissions: [Permissions.EmsFd],
   })
@@ -249,6 +249,7 @@ export class EmsFdController {
         userId: citizen.userId,
         type: data.type,
         description: data.description,
+        descriptionData: data.descriptionData || null,
         bloodGroupId: data.bloodGroup ?? null,
       },
       include: { bloodGroup: true },
