@@ -15,6 +15,7 @@ import { useDispatchMapState, useSocketStore } from "state/mapState";
 import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 import { makeSocketConnection } from "components/dispatch/map/modals/select-map-server-modal";
+import { ConnectionStatus } from "@snailycad/ui";
 
 export const useMapPlayersStore = create<{
   players: Map<string, MapPlayer | PlayerDataEventPayload>;
@@ -28,7 +29,7 @@ export function useMapPlayers() {
   const { players, setPlayers } = useMapPlayersStore();
 
   const { openModal, isOpen } = useModal();
-  const { currentMapServerURL } = useDispatchMapState();
+  const { setStatus, currentMapServerURL } = useDispatchMapState();
   const { socket, setSocket } = useSocketStore();
   const { state, execute } = useFetch();
 
@@ -145,6 +146,7 @@ export function useMapPlayers() {
   const onError = React.useCallback(
     (reason: Error) => {
       console.log({ reason });
+      setStatus(ConnectionStatus.DISCONNECTED);
 
       toastMessage({
         message: (
@@ -164,16 +166,17 @@ export function useMapPlayers() {
         duration: 10_000,
       });
     },
-    [currentMapServerURL],
+    [currentMapServerURL], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   const onConnect = React.useCallback(() => {
+    setStatus(ConnectionStatus.CONNECTED);
     toastMessage({
       icon: "success",
       message: "Successfully connected to the server",
       title: "Connection Success",
     });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   React.useEffect(() => {
     if (!currentMapServerURL) {

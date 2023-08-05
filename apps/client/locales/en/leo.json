@@ -325,7 +325,8 @@
     "vehicleInformation": "Vehicle Information",
     "openModalAfterCreation": "Open Manage Incident modal after creation?",
     "manageWeaponFlags": "Manage Weapon Flags",
-    "flags": "Flags"
+    "flags": "Flags",
+    "toggle": "Toggle..."
   },
   "Bolos": {
     "activeBolos": "Active Bolos",

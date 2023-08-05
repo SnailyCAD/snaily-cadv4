@@ -200,6 +200,9 @@
     "DENIED": "Denied",
     "UNPAID": "Unpaid",
     "FAILED": "Failed",
-    "CANCELED": "Canceled"
+    "CANCELED": "Canceled",
+    "CONNECTED": "Connected",
+    "CONNECTING": "Connecting...",
+    "DISCONNECTED": "Disconnected"
   }
 }

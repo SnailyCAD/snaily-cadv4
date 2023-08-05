@@ -6,12 +6,20 @@ import {
 } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 
+export const ConnectionStatus = {
+  CONNECTED: "CONNECTED",
+  CONNECTING: "CONNECTING",
+  DISCONNECTED: "DISCONNECTED",
+};
+type ConnectionStatus = (typeof ConnectionStatus)[keyof typeof ConnectionStatus];
+
 interface Props {
   children:
     | WhitelistStatus
     | ExpungementRequestStatus
     | LicenseExamStatus
     | PaymentStatus
+    | ConnectionStatus
     | null
     | undefined;
   fallback?: string;
@@ -28,14 +36,17 @@ export const colors = {
   [ExpungementRequestStatus.ACCEPTED]: Colors.GREEN,
   [LicenseExamStatus.PASSED]: Colors.GREEN,
   [PaymentStatus.PAID]: Colors.GREEN,
+  [ConnectionStatus.CONNECTED]: Colors.GREEN,
   [WhitelistStatus.PENDING]: Colors.ORANGE,
   [ExpungementRequestStatus.PENDING]: Colors.ORANGE,
   [LicenseExamStatus.IN_PROGRESS]: Colors.ORANGE,
+  [ConnectionStatus.CONNECTING]: Colors.ORANGE,
   [WhitelistStatus.DECLINED]: Colors.RED,
   [ExpungementRequestStatus.DENIED]: Colors.RED,
   [LicenseExamStatus.FAILED]: Colors.RED,
   [PaymentStatus.UNPAID]: Colors.RED,
   [ExpungementRequestStatus.CANCELED]: Colors.RED,
+  [ConnectionStatus.DISCONNECTED]: Colors.RED,
 };
 
 export function Status({ children, fallback }: Props) {

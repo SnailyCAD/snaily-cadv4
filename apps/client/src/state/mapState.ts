@@ -1,3 +1,4 @@
+import { ConnectionStatus } from "@snailycad/ui";
 import { Socket } from "socket.io-client";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
@@ -14,6 +15,9 @@ interface DispatchMapState {
 
   currentMapServerURL: string | null;
   setCurrentMapServerURL(url: string): void;
+
+  status: ConnectionStatus | null;
+  setStatus(status: ConnectionStatus): void;
 }
 
 interface SocketStore {
@@ -28,6 +32,11 @@ export const useDispatchMapState = create<DispatchMapState>()(
       setCurrentMapServerURL(url) {
         // todo: persist in localstorage
         set({ currentMapServerURL: url });
+      },
+
+      status: null,
+      setStatus(status) {
+        set({ status });
       },
 
       hiddenItems: { [MapItem.UNITS_ONLY]: true },
