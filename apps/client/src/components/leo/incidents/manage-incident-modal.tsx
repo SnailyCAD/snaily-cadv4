@@ -35,12 +35,16 @@ interface Props<T extends LeoIncident | EmsFdIncident> {
   onCreate?(incident: T & { openModalAfterCreation?: boolean }): void;
   onUpdate?(oldIncident: T, incident: T): void;
   type: "ems-fd" | "leo";
+  isActive?: boolean;
+  isUnitAssigned?: boolean;
 }
 
 export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
   onClose,
   onCreate,
   onUpdate,
+  isActive,
+  isUnitAssigned,
   incident: tempIncident,
   type,
 }: Props<T>) {
@@ -64,7 +68,11 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
   const areIncidentsNonDispatch = isEmsFdIncidents || isLeoIncidents;
 
   const areEventsReadonly = isDispatch ? false : areIncidentsNonDispatch;
-  const areFieldsDisabled = isDispatch ? false : !areIncidentsNonDispatch;
+  const areFieldsDisabled = isDispatch
+    ? false
+    : isActive
+    ? !isUnitAssigned
+    : !areIncidentsNonDispatch;
 
   function handleAddUpdateCallEvent(incident: LeoIncident) {
     setActiveIncidents(activeIncidents.map((inc) => (inc.id === incident.id ? incident : inc)));
@@ -121,7 +129,7 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
     firearmsInvolved: incident?.firearmsInvolved ?? false,
     injuriesOrFatalities: incident?.injuriesOrFatalities ?? false,
     arrestsMade: incident?.arrestsMade ?? false,
-    isActive: isDispatch ? true : incident?.isActive ?? false,
+    isActive: isActive ?? incident?.isActive,
     situationCodeId: incident?.situationCodeId ?? null,
     openModalAfterCreation: true,
   };
@@ -209,7 +217,11 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
                     filterFn={(value) => value.type === StatusValueType.SITUATION_CODE}
                   />
 
-                  <AddressPostalSelect postalOnly addressLabel="location" />
+                  <AddressPostalSelect
+                    isDisabled={areFieldsDisabled}
+                    postalOnly
+                    addressLabel="location"
+                  />
                 </FormRow>
 
                 {incident ? (

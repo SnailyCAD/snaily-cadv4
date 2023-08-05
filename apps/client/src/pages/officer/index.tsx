@@ -37,7 +37,7 @@ import type {
 import { CreateWarrantModal } from "components/leo/modals/CreateWarrantModal";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { usePermission } from "hooks/usePermission";
-import { shallow } from "zustand/shallow";
+import { ActiveIncidents } from "components/dispatch/active-incidents";
 
 const Modals = {
   CreateWarrantModal: dynamic(
@@ -142,17 +142,14 @@ export default function OfficerDashboard({
   const tones = useTones(ActiveToneType.LEO);
   const panic = usePanicButton();
   const { isOpen } = useModal();
-  const { LEO_TICKETS, ACTIVE_WARRANTS, CALLS_911 } = useFeatureEnabled();
+  const { LEO_TICKETS, ACTIVE_WARRANTS, CALLS_911, ACTIVE_INCIDENTS } = useFeatureEnabled();
   const { hasPermissions } = usePermission();
   const isAdmin = hasPermissions(defaultPermissions.allDefaultAdminPermissions);
 
-  const { currentResult, setCurrentResult } = useNameSearch(
-    (state) => ({
-      currentResult: state.currentResult,
-      setCurrentResult: state.setCurrentResult,
-    }),
-    shallow,
-  );
+  const { currentResult, setCurrentResult } = useNameSearch((state) => ({
+    currentResult: state.currentResult,
+    setCurrentResult: state.setCurrentResult,
+  }));
 
   function handleRecordCreate(data: Record) {
     if (!currentResult || currentResult.isConfidential) return;
@@ -198,6 +195,7 @@ export default function OfficerDashboard({
       </UtilityPanel>
 
       {CALLS_911 ? <ActiveCalls initialData={calls} /> : null}
+      {ACTIVE_INCIDENTS ? <ActiveIncidents /> : null}
       <ActiveBolos initialBolos={bolos} />
       {ACTIVE_WARRANTS ? <ActiveWarrants /> : null}
       <div className="mt-3">

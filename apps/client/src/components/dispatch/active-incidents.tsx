@@ -9,7 +9,7 @@ import { useModal } from "state/modalState";
 import { useActiveIncidentsTable } from "hooks/realtime/use-active-incidents-table";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
-import type { IncidentInvolvedUnit, LeoIncident } from "@snailycad/types";
+import { ShouldDoType, type IncidentInvolvedUnit, type LeoIncident } from "@snailycad/types";
 import { InvolvedUnitsColumn } from "./active-incidents/InvolvedUnitsColumn";
 import { DndActions } from "types/dnd-actions";
 import { classNames } from "lib/classNames";
@@ -20,6 +20,11 @@ import { CallDescription } from "./active-calls/CallDescription";
 import dynamic from "next/dynamic";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import compareDesc from "date-fns/compareDesc";
+import { useRouter } from "next/router";
+import { usePermission } from "hooks/usePermission";
+import { defaultPermissions } from "@snailycad/permissions";
+import { useLeoState } from "state/leo-state";
+import { useEmsFdState } from "state/ems-fd-state";
 
 const ManageIncidentModal = dynamic(
   async () => (await import("components/leo/incidents/manage-incident-modal")).ManageIncidentModal,
@@ -32,12 +37,30 @@ export function ActiveIncidents() {
    */
   const [tempIncident, setTempIncident] = React.useState<LeoIncident | "create" | "hide">("hide");
 
+  const router = useRouter();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { hasActiveDispatchers } = useActiveDispatchers();
   const { openModal, closeModal } = useModal();
   const { state, execute } = useFetch();
   const draggingUnit = useDispatchState((state) => state.draggingUnit);
+  const { hasPermissions } = usePermission();
+  const activeOfficer = useLeoState((state) => state.activeOfficer);
+  const activeDeputy = useEmsFdState((state) => state.activeDeputy);
+
+  const hasDispatchPermissions = hasPermissions(defaultPermissions.defaultDispatchPermissions);
+  const isDispatch = router.pathname === "/dispatch" && hasDispatchPermissions;
+  const activeUnit =
+    router.pathname === "/officer"
+      ? activeOfficer
+      : router.pathname === "/ems-fd"
+      ? activeDeputy
+      : null;
+  const isUnitActive =
+    activeUnit?.status && activeUnit.status.shouldDo !== ShouldDoType.SET_OFF_DUTY;
+
+  const isUnitAssignedToIncident = (incident: LeoIncident) =>
+    incident.unitsInvolved.some((v) => v.unit?.id === activeUnit?.id);
 
   const asyncTable = useActiveIncidentsTable();
   const { activeIncidents } = useActiveIncidents();
@@ -127,11 +150,14 @@ export function ActiveIncidents() {
           data={activeIncidents
             .sort((a, b) => compareDesc(new Date(a.updatedAt), new Date(b.updatedAt)))
             .map((incident) => {
+              const isUnitAssigned = isUnitAssignedToIncident(incident);
+
               return {
                 id: incident.id,
                 caseNumber: `#${incident.caseNumber}`,
                 unitsInvolved: (
                   <InvolvedUnitsColumn
+                    isDispatch={isDispatch}
                     handleAssignUnassignToIncident={handleAssignUnassignToIncident}
                     incident={incident}
                   />
@@ -145,23 +171,40 @@ export function ActiveIncidents() {
                 actions: (
                   <>
                     <Button
-                      onPress={() => onEditClick(incident)}
-                      disabled={!hasActiveDispatchers}
+                      disabled={isDispatch ? !hasActiveDispatchers : !isUnitActive}
                       size="xs"
                       variant="success"
+                      onPress={() => onEditClick(incident)}
                     >
-                      {common("manage")}
+                      {isDispatch ? common("manage") : common("view")}
                     </Button>
 
-                    <Button
-                      onPress={() => onEndClick(incident)}
-                      disabled={!hasActiveDispatchers}
-                      size="xs"
-                      variant="danger"
-                      className="ml-2"
-                    >
-                      {t("end")}
-                    </Button>
+                    {isDispatch ? (
+                      <Button
+                        onPress={() => onEndClick(incident)}
+                        disabled={!hasActiveDispatchers}
+                        size="xs"
+                        variant="danger"
+                      >
+                        {t("end")}
+                      </Button>
+                    ) : (
+                      <Button
+                        size="xs"
+                        className="mx-2"
+                        isDisabled={!activeUnit}
+                        onPress={() => {
+                          if (!activeUnit?.id) return;
+                          handleAssignUnassignToIncident(
+                            incident,
+                            activeUnit.id,
+                            isUnitAssigned ? "unassign" : "assign",
+                          );
+                        }}
+                      >
+                        {isUnitAssigned ? t("unassignToIncident") : t("assignToIncident")}
+                      </Button>
+                    )}
                   </>
                 ),
               };
@@ -201,6 +244,10 @@ export function ActiveIncidents() {
 
       {tempIncident === "hide" ? null : (
         <ManageIncidentModal
+          isActive
+          isUnitAssigned={
+            tempIncident === "create" ? false : isUnitAssignedToIncident(tempIncident)
+          }
           type="leo"
           onCreate={(incident) => {
             asyncTable.prepend(incident as LeoIncident);
