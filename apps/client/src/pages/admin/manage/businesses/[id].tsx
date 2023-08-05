@@ -1,5 +1,5 @@
 import { useTranslations } from "use-intl";
-import { Alert, Button, Status } from "@snailycad/ui";
+import { Alert, Button, Status, buttonVariants } from "@snailycad/ui";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
@@ -20,6 +20,7 @@ import { ModalIds } from "types/modal-ids";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { ArrowLeft } from "react-bootstrap-icons";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal, {
   ssr: false,
@@ -49,7 +50,6 @@ export default function ManageBusinesses({ business, businessId }: Props) {
   useLoadValuesClientSide({
     valueTypes: [ValueType.BUSINESS_ROLE],
   });
-  const tableState = useTableState();
 
   const asyncTable = useAsyncTable({
     fetchOptions: {
@@ -62,8 +62,9 @@ export default function ManageBusinesses({ business, businessId }: Props) {
     totalCount: business.totalCount,
     initialData: business.employees,
   });
-
+  const tableState = useTableState(asyncTable);
   const [tempEmployee, employeeState] = useTemporaryItem(asyncTable.items);
+
   const t = useTranslations();
   const common = useTranslations("Common");
   const isBusinessPendingApproval = business.status === WhitelistStatus.PENDING;
@@ -94,14 +95,23 @@ export default function ManageBusinesses({ business, businessId }: Props) {
         ],
       }}
     >
-      <Title className="mb-5">{t("Business.employees")}</Title>
+      <header className="flex items-center justify-between mt-5">
+        <Title>{t("Business.employees")}</Title>
+
+        <Link
+          className={buttonVariants({ className: "flex items-center gap-2" })}
+          href="/admin/manage/businesses"
+        >
+          <ArrowLeft /> {t("Common.goBack")}
+        </Link>
+      </header>
 
       {isBusinessPendingApproval ? (
         <Alert type="warning" title="Business is pending approval">
           <p>
             This business is still pending approval. It must first be approved by an administrator
             before any changes can be done.{" "}
-            <Link className="font-medium underline" href="/admin/manage/businesses">
+            <Link className="font-medium underline" href="/admin/manage/businesses?activeTab=pendingBusinesses">
               Go back
             </Link>
           </p>
