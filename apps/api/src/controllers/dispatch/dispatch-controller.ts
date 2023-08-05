@@ -354,6 +354,31 @@ export class DispatchController {
     return updated;
   }
 
+  @Post("/player/check")
+  async checkPlayer(@BodyParams() body: unknown) {
+    const schema = z.object({ discordId: z.string().optional(), steamId: z.string().optional() });
+    const data = validateSchema(schema, body);
+
+    const user = await prisma.user.findFirst({
+      where: { OR: [{ steamId: data.steamId }, { discordId: data.discordId }] },
+      select: {
+        username: true,
+        id: true,
+        permissions: true,
+        rank: true,
+        steamId: true,
+        roles: true,
+        discordId: true,
+      },
+    });
+
+    // todo: replace from /players/:steamId
+    // todo: also fetch active unit?
+    // idea: in-game, if no user is found, prompt them to login via Discord or Steam and all that
+
+    return user;
+  }
+
   @Post("/players")
   @UsePermissions({
     permissions: [Permissions.Dispatch, Permissions.LiveMap],
