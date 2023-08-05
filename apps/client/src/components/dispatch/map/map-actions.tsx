@@ -11,7 +11,7 @@ import {
 import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
-import { MapItem, useDispatchMapState } from "state/mapState";
+import { MapItem, useDispatchMapState, useSocketStore } from "state/mapState";
 import { Permissions, usePermission } from "hooks/usePermission";
 
 export function MapActions() {
@@ -19,6 +19,7 @@ export function MapActions() {
   const portalRef = usePortal("MapActions");
   const { openModal } = useModal();
   const mapState = useDispatchMapState();
+  const status = useSocketStore((state) => state.status);
 
   const { hasPermissions } = usePermission();
   const hasManageUsersPermissions = hasPermissions([Permissions.ManageUsers]);
@@ -28,7 +29,7 @@ export function MapActions() {
     createPortal(
       <div className="group fixed z-50 left-0 bottom-0 p-3 transition-colors bg-black/20 hover:bg-black/50 rounded-tr-md">
         <p className="mb-2 group-hover:text-white">
-          <Status>{mapState.status}</Status>
+          <Status>{status}</Status>
         </p>
 
         <div className="flex gap-2">

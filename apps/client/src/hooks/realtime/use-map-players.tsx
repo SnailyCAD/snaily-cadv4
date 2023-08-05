@@ -29,8 +29,8 @@ export function useMapPlayers() {
   const { players, setPlayers } = useMapPlayersStore();
 
   const { openModal, isOpen } = useModal();
-  const { setStatus, currentMapServerURL } = useDispatchMapState();
-  const { socket, setSocket } = useSocketStore();
+  const { currentMapServerURL } = useDispatchMapState();
+  const { socket, setStatus, setSocket } = useSocketStore();
   const { state, execute } = useFetch();
 
   const getCADUsers = React.useCallback(

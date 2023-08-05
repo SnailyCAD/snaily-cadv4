@@ -15,14 +15,14 @@ interface DispatchMapState {
 
   currentMapServerURL: string | null;
   setCurrentMapServerURL(url: string): void;
-
-  status: ConnectionStatus | null;
-  setStatus(status: ConnectionStatus): void;
 }
 
 interface SocketStore {
   socket: Socket | null;
   setSocket(socket: Socket): void;
+
+  status: ConnectionStatus | null;
+  setStatus(status: ConnectionStatus): void;
 }
 
 export const useDispatchMapState = create<DispatchMapState>()(
@@ -30,13 +30,7 @@ export const useDispatchMapState = create<DispatchMapState>()(
     (set) => ({
       currentMapServerURL: null,
       setCurrentMapServerURL(url) {
-        // todo: persist in localstorage
         set({ currentMapServerURL: url });
-      },
-
-      status: null,
-      setStatus(status) {
-        set({ status });
       },
 
       hiddenItems: { [MapItem.UNITS_ONLY]: true },
@@ -57,6 +51,11 @@ export const useDispatchMapState = create<DispatchMapState>()(
 );
 
 export const useSocketStore = create<SocketStore>()((set) => ({
+  status: null,
+  setStatus(status) {
+    set({ status });
+  },
+
   socket: null,
   setSocket(socket) {
     set({ socket });
