@@ -1,3 +1,4 @@
+import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Form, Formik, FormikHelpers } from "formik";
 import { LEO_VEHICLE_SCHEMA, VEHICLE_SCHEMA } from "@snailycad/schemas";
@@ -33,9 +34,14 @@ import { filterLicenseType, filterLicenseTypes } from "lib/utils";
 import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";
 import { toastMessage } from "lib/toastMessage";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
-import type { PostCitizenVehicleData, PutCitizenVehicleData } from "@snailycad/types/api";
+import type {
+  PostCitizenImageByIdData,
+  PostCitizenVehicleData,
+  PutCitizenVehicleData,
+} from "@snailycad/types/api";
 import { shallow } from "zustand/shallow";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
+import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 
 interface Props {
   vehicle: RegisteredVehicle | null;
@@ -45,6 +51,8 @@ interface Props {
 }
 
 export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: Props) {
+  const [image, setImage] = React.useState<File | string | null>(null);
+
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const t = useTranslations("Citizen");
@@ -96,7 +104,9 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
       });
 
       if (json?.id) {
-        onUpdate?.(vehicle, { ...vehicle, ...json });
+        const imageId = await handleImageUpload(json.id, helpers);
+
+        onUpdate?.(vehicle, { ...vehicle, ...json, imageId });
       }
     } else {
       const path = isLeo ? "/search/actions/vehicle" : "/vehicles";
@@ -108,14 +118,43 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
       });
 
       if (json?.id) {
+        const imageId = await handleImageUpload(json.id, helpers);
+
         toastMessage({
           title: common("success"),
           message: tVehicle("successVehicleRegistered", { plate: values.plate.toUpperCase() }),
           icon: "success",
         });
-        onCreate?.(json);
+        onCreate?.({ ...json, imageId });
       }
     }
+  }
+
+  async function handleImageUpload(id: string, helpers: FormikHelpers<typeof INITIAL_VALUES>) {
+    const fd = new FormData();
+    const validatedImage = validateFile(image, helpers);
+
+    if (validatedImage) {
+      if (typeof validatedImage !== "string") {
+        fd.set("image", validatedImage, validatedImage.name);
+      }
+    }
+
+    if (validatedImage && typeof validatedImage === "object") {
+      const { json } = await execute<PostCitizenImageByIdData>({
+        path: `/vehicles/${id}`,
+        method: "POST",
+        data: fd,
+
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+      });
+
+      return json.imageId;
+    }
+
+    return null;
   }
 
   const INITIAL_VALUES = {
@@ -153,6 +192,8 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ setFieldValue, setValues, errors, values, isValid }) => (
           <Form>
+            <ImageSelectInput image={image} setImage={setImage} isOptional />
+
             <TextField
               errorMessage={errors.plate}
               label={tVehicle("plate")}

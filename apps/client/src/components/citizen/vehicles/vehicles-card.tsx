@@ -14,6 +14,8 @@ import type { DeleteCitizenVehicleData, GetCitizenVehiclesData } from "@snailyca
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { SearchArea } from "components/shared/search/search-area";
 import dynamic from "next/dynamic";
+import { useImageUrl } from "hooks/useImageUrl";
+import { ImageWrapper } from "components/shared/image-wrapper";
 
 const RegisterVehicleModal = dynamic(
   async () => (await import("./modals/register-vehicle-modal")).RegisterVehicleModal,
@@ -33,6 +35,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
   const { state, execute } = useFetch();
   const { DMV } = useFeatureEnabled();
   const { citizen } = useCitizen(false);
+  const { makeImageUrl } = useImageUrl();
 
   const asyncTable = useAsyncTable({
     search,
@@ -105,52 +108,62 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
           <Table
             tableState={tableState}
             features={{ isWithinCardOrModal: true }}
-            data={asyncTable.items.map((vehicle) => ({
-              id: vehicle.id,
-              rowProps: {
-                title: vehicle.impounded ? t("vehicleImpounded") : undefined,
-                className: vehicle.impounded ? "opacity-50" : undefined,
-              },
-              plate: vehicle.plate,
-              model: vehicle.model.value.value,
-              color: vehicle.color,
-              registrationStatus: vehicle.registrationStatus.value,
-              insuranceStatus: vehicle.insuranceStatus?.value ?? common("none"),
-              vinNumber: vehicle.vinNumber,
-              dmvStatus: <Status fallback="—">{vehicle.dmvStatus}</Status>,
-              createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
-              actions: (
-                <>
-                  <Button
-                    disabled={vehicle.impounded}
-                    onPress={() => handleTransferClick(vehicle)}
-                    size="xs"
-                  >
-                    {t("transfer")}
-                  </Button>
+            data={asyncTable.items.map((vehicle) => {
+              const imageUrl = makeImageUrl("values", vehicle.imageId);
 
-                  <Button
-                    disabled={vehicle.impounded}
-                    onPress={() => handleEditClick(vehicle)}
-                    size="xs"
-                    className="ml-2"
-                  >
-                    {common("edit")}
-                  </Button>
+              return {
+                id: vehicle.id,
+                rowProps: {
+                  title: vehicle.impounded ? t("vehicleImpounded") : undefined,
+                  className: vehicle.impounded ? "opacity-50" : undefined,
+                },
+                image: imageUrl ? (
+                  <ImageWrapper width={50} height={30} src={imageUrl} alt={vehicle.plate} />
+                ) : (
+                  "-"
+                ),
+                plate: vehicle.plate,
+                model: vehicle.model.value.value,
+                color: vehicle.color,
+                registrationStatus: vehicle.registrationStatus.value,
+                insuranceStatus: vehicle.insuranceStatus?.value ?? common("none"),
+                vinNumber: vehicle.vinNumber,
+                dmvStatus: <Status fallback="—">{vehicle.dmvStatus}</Status>,
+                createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
+                actions: (
+                  <>
+                    <Button
+                      disabled={vehicle.impounded}
+                      onPress={() => handleTransferClick(vehicle)}
+                      size="xs"
+                    >
+                      {t("transfer")}
+                    </Button>
 
-                  <Button
-                    disabled={vehicle.impounded}
-                    className="ml-2"
-                    onPress={() => handleDeleteClick(vehicle)}
-                    size="xs"
-                    variant="danger"
-                  >
-                    {common("delete")}
-                  </Button>
-                </>
-              ),
-            }))}
+                    <Button
+                      disabled={vehicle.impounded}
+                      onPress={() => handleEditClick(vehicle)}
+                      size="xs"
+                      className="ml-2"
+                    >
+                      {common("edit")}
+                    </Button>
+
+                    <Button
+                      disabled={vehicle.impounded}
+                      className="ml-2"
+                      onPress={() => handleDeleteClick(vehicle)}
+                      size="xs"
+                      variant="danger"
+                    >
+                      {common("delete")}
+                    </Button>
+                  </>
+                ),
+              };
+            })}
             columns={[
+              { header: t("image"), accessorKey: "image" },
               { header: t("plate"), accessorKey: "plate" },
               { header: t("model"), accessorKey: "model" },
               { header: t("color"), accessorKey: "color" },
