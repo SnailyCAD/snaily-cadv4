@@ -59,6 +59,7 @@ import {
   useDefaultDivisions,
 } from "./manage-modal/emergency-vehicle-fields";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { VehicleFields } from "./manage-modal/vehicle-fields";
 
 interface Props {
   type: ValueType;
@@ -90,7 +91,7 @@ export function ManageValueModal({ onCreate, onUpdate, type, value }: Props) {
 
   const title = !value ? t("ADD") : t("EDIT");
   const footerTitle = !value ? t("ADD") : common("save");
-  const { vehicleTrimLevel, department } = useValues();
+  const { department } = useValues();
   const { DIVISIONS } = useFeatureEnabled();
 
   const BUSINESS_VALUES = [
@@ -325,20 +326,8 @@ export function ManageValueModal({ onCreate, onUpdate, type, value }: Props) {
               />
             ) : null}
 
-            {ValueType.VEHICLE === type ? (
-              <SelectField
-                isOptional
-                isClearable
-                selectionMode="multiple"
-                errorMessage={errors.trimLevels}
-                label={tValues("trimLevels")}
-                options={vehicleTrimLevel.values.map((trimLevel) => ({
-                  value: trimLevel.id,
-                  label: trimLevel.value,
-                }))}
-                selectedKeys={values.trimLevels}
-                onSelectionChange={(keys) => setFieldValue("trimLevels", keys)}
-              />
+            {type === ValueType.VEHICLE ? (
+              <VehicleFields setImage={setImage} image={image} />
             ) : null}
 
             {type === ValueType.CALL_TYPE ? (

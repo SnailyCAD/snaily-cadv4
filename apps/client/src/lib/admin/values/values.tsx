@@ -104,7 +104,27 @@ export function useTableDataOfType(type: ValueType) {
           department: v.department.value.value,
         };
       }
-      case ValueType.VEHICLE:
+      case ValueType.VEHICLE: {
+        const v = value as VehicleValue;
+        const imgUrl = makeImageUrl("values", v.imageId);
+
+        return {
+          image: imgUrl ? (
+            <ImageWrapper
+              quality={70}
+              alt={v.value.value}
+              loading="lazy"
+              src={imgUrl}
+              width={50}
+              height={50}
+              className="object-cover"
+            />
+          ) : (
+            "—"
+          ),
+          gameHash: v.hash || common("none"),
+        };
+      }
       case ValueType.WEAPON: {
         const v = value as VehicleValue;
 
@@ -226,7 +246,12 @@ export function useTableHeadersOfType(type: ValueType): ColumnDef<{ id: string }
         { header: t("pairedUnitTemplate"), accessorKey: "pairedUnitTemplate" },
       ];
     }
-    case ValueType.VEHICLE:
+    case ValueType.VEHICLE: {
+      return [
+        { header: t("image"), accessorKey: "image" },
+        { header: t("gameHash"), accessorKey: "gameHash" },
+      ];
+    }
     case ValueType.WEAPON: {
       return [{ header: t("gameHash"), accessorKey: "gameHash" }];
     }

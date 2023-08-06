@@ -93,6 +93,7 @@
     "transfer": "Transfer",
     "transferVehicle": "Transfer Vehicle",
     "trimLevels": "Trim Levels",
+    "image": "Image",
     "transferVehicleInfo": "Transfer your <span>{model}</span> to a new owner. This means you will lose ownership of this vehicle and will be unable to manage it further.",
     "alert_deleteVehicle": "Are you sure you want to delete this vehicle? This action cannot be undone."
   },
