@@ -326,7 +326,9 @@ export function ManageValueModal({ onCreate, onUpdate, type, value }: Props) {
               />
             ) : null}
 
-            {type === ValueType.VEHICLE ? <VehicleFields setImage={image} image={image} /> : null}
+            {type === ValueType.VEHICLE ? (
+              <VehicleFields setImage={setImage} image={image} />
+            ) : null}
 
             {type === ValueType.CALL_TYPE ? (
               <TextField

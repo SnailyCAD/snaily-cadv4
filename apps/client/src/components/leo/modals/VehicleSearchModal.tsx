@@ -22,6 +22,8 @@ import type { PostMarkStolenData } from "@snailycad/types/api";
 import { ImpoundVehicleModal } from "./VehicleSearch/ImpoundVehicleModal";
 import { AllowImpoundedVehicleCheckoutModal } from "./AllowImpoundedVehicleCheckoutModal";
 import { shallow } from "zustand/shallow";
+import { ImageWrapper } from "components/shared/image-wrapper";
+import { useImageUrl } from "hooks/useImageUrl";
 
 interface Props {
   id?: ModalIds.VehicleSearch | ModalIds.VehicleSearchWithinName;
@@ -43,6 +45,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   const { state, execute } = useFetch();
   const router = useRouter();
   const { CREATE_USER_CITIZEN_LEO } = useFeatureEnabled();
+  const { makeImageUrl } = useImageUrl();
 
   const payloadVehicle = getPayload<Partial<RegisteredVehicle> | null>(ModalIds.VehicleSearch);
   const isLeo = router.pathname === "/officer";
@@ -170,11 +173,28 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
                 filterTextRequired: true,
               }}
             >
-              {(item) => (
-                <Item key={item.vinNumber} textValue={item.vinNumber}>
-                  {item.plate.toUpperCase()} ({item.vinNumber})
-                </Item>
-              )}
+              {(item) => {
+                const imageUrl = makeImageUrl("values", item.imageId || item.model.imageId);
+
+                return (
+                  <Item key={item.vinNumber} textValue={item.vinNumber}>
+                    <div className="flex items-center gap-2">
+                      {imageUrl ? (
+                        <ImageWrapper
+                          quality={70}
+                          alt={item.plate.toUpperCase()}
+                          loading="lazy"
+                          src={imageUrl}
+                          width={30}
+                          height={30}
+                          className="object-cover"
+                        />
+                      ) : null}
+                      {item.plate.toUpperCase()} ({item.vinNumber})
+                    </div>
+                  </Item>
+                );
+              }}
             </AsyncListSearchField>
 
             {currentResult === "initial" ? null : !currentResult ? (

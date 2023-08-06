@@ -265,65 +265,65 @@ export class ValuesController {
     @PathParams("id") id: string,
     @MultipartFile("image") file?: PlatformMulterFile,
   ) {
+    const type = getTypeFromPath(_path);
+    const supportedValueTypes = [
+      ValueType.VEHICLE,
+      ValueType.QUALIFICATION,
+      ValueType.OFFICER_RANK,
+    ] as string[];
+
+    if (!supportedValueTypes.includes(type)) {
+      return new BadRequest("invalidType");
+    }
+
+    if (!file) {
+      throw new ExtendedBadRequest({ file: "No file provided." });
+    }
+
+    if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
+      throw new ExtendedBadRequest({ image: "invalidImageType" });
+    }
+
+    switch (type) {
+      case ValueType.VEHICLE: {
+        const value = await prisma.vehicleValue.findUnique({
+          where: { id },
+        });
+
+        if (!value) {
+          throw new NotFound("valueNotFound");
+        }
+
+        break;
+      }
+      case ValueType.QUALIFICATION: {
+        const value = await prisma.qualificationValue.findUnique({
+          where: { id },
+        });
+
+        if (!value) {
+          throw new NotFound("valueNotFound");
+        }
+
+        break;
+      }
+      case ValueType.OFFICER_RANK: {
+        const value = await prisma.value.findFirst({
+          where: { id, type: ValueType.OFFICER_RANK },
+        });
+
+        if (!value) {
+          throw new NotFound("valueNotFound");
+        }
+
+        break;
+      }
+      default: {
+        throw new ExtendedBadRequest({ type: "invalidType" });
+      }
+    }
+
     try {
-      const type = getTypeFromPath(_path);
-      const supportedValueTypes = [
-        ValueType.VEHICLE,
-        ValueType.QUALIFICATION,
-        ValueType.OFFICER_RANK,
-      ] as string[];
-
-      if (!supportedValueTypes.includes(type)) {
-        return new BadRequest("invalidType");
-      }
-
-      if (!file) {
-        throw new ExtendedBadRequest({ file: "No file provided." });
-      }
-
-      if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
-        throw new ExtendedBadRequest({ image: "invalidImageType" });
-      }
-
-      switch (type) {
-        case ValueType.VEHICLE: {
-          const value = await prisma.value.findUnique({
-            where: { id },
-          });
-
-          if (!value) {
-            throw new NotFound("valueNotFound");
-          }
-
-          break;
-        }
-        case ValueType.QUALIFICATION: {
-          const value = await prisma.qualificationValue.findUnique({
-            where: { id },
-          });
-
-          if (!value) {
-            throw new NotFound("valueNotFound");
-          }
-
-          break;
-        }
-        case ValueType.OFFICER_RANK: {
-          const value = await prisma.value.findFirst({
-            where: { id, type: ValueType.OFFICER_RANK },
-          });
-
-          if (!value) {
-            throw new NotFound("valueNotFound");
-          }
-
-          break;
-        }
-        default: {
-          throw new ExtendedBadRequest({ type: "invalidType" });
-        }
-      }
-
       const image = await getImageWebPPath({
         buffer: file.buffer,
         pathType: "values",
