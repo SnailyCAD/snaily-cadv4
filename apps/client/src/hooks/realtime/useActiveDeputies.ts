@@ -8,7 +8,6 @@ import { useEmsFdState } from "state/ems-fd-state";
 import type { CombinedEmsFdUnit, EmsFdDeputy } from "@snailycad/types";
 import type { GetEmsFdActiveDeputies } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call-911-state";
-import { shallow } from "zustand/shallow";
 import { isUnitCombinedEmsFd } from "@snailycad/utils";
 import { useActiveIncidents } from "./useActiveIncidents";
 import { useMapPlayersStore } from "./use-map-players";
@@ -22,13 +21,10 @@ export function useActiveDeputies() {
   const playerState = useMapPlayersStore();
 
   const incidentsState = useActiveIncidents();
-  const call911State = useCall911State(
-    (state) => ({
-      calls: state.calls,
-      setCalls: state.setCalls,
-    }),
-    shallow,
-  );
+  const call911State = useCall911State((state) => ({
+    calls: state.calls,
+    setCalls: state.setCalls,
+  }));
 
   const handleIncidentsState = React.useCallback(
     (data: EmsFdDeputy[]) => {

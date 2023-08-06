@@ -16,7 +16,6 @@ import { useModal } from "state/modalState";
 import { useNameSearch } from "state/search/name-search-state";
 import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
-import { shallow } from "zustand/shallow";
 import { ManageRecordModal } from "../../manage-record/manage-record-modal";
 import { Permissions, usePermission } from "hooks/usePermission";
 
@@ -35,13 +34,10 @@ export function NameSearchFooterActions(props: Props) {
   const hasDeclarePermissions = hasPermissions([Permissions.DeclareCitizenDead]);
   const hasManageCitizenProfilePermissions = hasPermissions([Permissions.LeoManageCitizenProfile]);
 
-  const { currentResult, setCurrentResult } = useNameSearch(
-    (state) => ({
-      currentResult: state.currentResult,
-      setCurrentResult: state.setCurrentResult,
-    }),
-    shallow,
-  );
+  const { currentResult, setCurrentResult } = useNameSearch((state) => ({
+    currentResult: state.currentResult,
+    setCurrentResult: state.setCurrentResult,
+  }));
 
   async function handleDeclare() {
     if (!currentResult || !hasDeclarePermissions) return;

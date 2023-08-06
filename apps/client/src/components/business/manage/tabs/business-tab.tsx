@@ -12,7 +12,6 @@ import { useRouter } from "next/router";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import type { DeleteBusinessByIdData, PutBusinessByIdData } from "@snailycad/types/api";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
-import { shallow } from "zustand/shallow";
 
 export function ManageBusinessTab() {
   const { state, execute } = useFetch();
@@ -21,14 +20,11 @@ export function ManageBusinessTab() {
   const t = useTranslations("Business");
   const router = useRouter();
 
-  const { currentBusiness, currentEmployee, setCurrentBusiness } = useBusinessState(
-    (state) => ({
-      currentBusiness: state.currentBusiness,
-      currentEmployee: state.currentEmployee,
-      setCurrentBusiness: state.setCurrentBusiness,
-    }),
-    shallow,
-  );
+  const { currentBusiness, currentEmployee, setCurrentBusiness } = useBusinessState((state) => ({
+    currentBusiness: state.currentBusiness,
+    currentEmployee: state.currentEmployee,
+    setCurrentBusiness: state.setCurrentBusiness,
+  }));
 
   if (!currentBusiness) {
     return null;

@@ -1,5 +1,6 @@
 import type { CombinedEmsFdUnit, EmsFdDeputy } from "@snailycad/types";
-import { create } from "zustand";
+import { shallow } from "zustand/shallow";
+import { createWithEqualityFn } from "zustand/traditional";
 
 export type ActiveDeputy = EmsFdDeputy | CombinedEmsFdUnit;
 
@@ -11,10 +12,13 @@ interface EmsFdState {
   setDeputies(deputies: EmsFdDeputy[]): void;
 }
 
-export const useEmsFdState = create<EmsFdState>()((set) => ({
-  activeDeputy: null,
-  setActiveDeputy: (deputy) => set({ activeDeputy: deputy }),
+export const useEmsFdState = createWithEqualityFn<EmsFdState>()(
+  (set) => ({
+    activeDeputy: null,
+    setActiveDeputy: (deputy) => set({ activeDeputy: deputy }),
 
-  deputies: [],
-  setDeputies: (deputies) => set({ deputies }),
-}));
+    deputies: [],
+    setDeputies: (deputies) => set({ deputies }),
+  }),
+  shallow,
+);

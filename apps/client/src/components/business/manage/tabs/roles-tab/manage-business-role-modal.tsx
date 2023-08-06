@@ -8,7 +8,6 @@ import { EmployeeAsEnum, EmployeeValue } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { ModalIds } from "types/modal-ids";
 import { getValueStrFromValue } from "lib/admin/values/utils";
-import { shallow } from "zustand/shallow";
 import { useBusinessState } from "state/business-state";
 import { BUSINESSES_BUSINESS_ROLE_SCHEMA } from "@snailycad/schemas";
 
@@ -31,13 +30,10 @@ const BUSINESS_VALUES = [
 ];
 
 export function ManageBusinessRoleModal({ onCreate, onUpdate, onClose, value }: Props) {
-  const { currentBusiness, currentEmployee } = useBusinessState(
-    (state) => ({
-      currentBusiness: state.currentBusiness,
-      currentEmployee: state.currentEmployee,
-    }),
-    shallow,
-  );
+  const { currentBusiness, currentEmployee } = useBusinessState((state) => ({
+    currentBusiness: state.currentBusiness,
+    currentEmployee: state.currentEmployee,
+  }));
 
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();

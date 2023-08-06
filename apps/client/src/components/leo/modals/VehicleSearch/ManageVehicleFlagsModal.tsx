@@ -10,7 +10,6 @@ import { useVehicleSearch } from "state/search/vehicle-search-state";
 import { ModalIds } from "types/modal-ids";
 import { useNameSearch } from "state/search/name-search-state";
 import type { PutSearchActionsVehicleFlagsData } from "@snailycad/types/api";
-import { shallow } from "zustand/shallow";
 import { hasSearchResults } from "../VehicleSearchModal";
 
 export function ManageVehicleFlagsModal() {
@@ -19,13 +18,10 @@ export function ManageVehicleFlagsModal() {
   const t = useTranslations("Leo");
   const veh = useTranslations("Vehicles");
   const { currentResult, setCurrentResult } = useVehicleSearch();
-  const nameSearchState = useNameSearch(
-    (state) => ({
-      currentResult: state.currentResult,
-      setCurrentResult: state.setCurrentResult,
-    }),
-    shallow,
-  );
+  const nameSearchState = useNameSearch((state) => ({
+    currentResult: state.currentResult,
+    setCurrentResult: state.setCurrentResult,
+  }));
   const { vehicleFlag } = useValues();
   const { state, execute } = useFetch();
 

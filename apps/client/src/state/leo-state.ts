@@ -1,6 +1,7 @@
 import type { AssignedWarrantOfficer, BaseCitizen, Officer, Warrant } from "@snailycad/types";
 import type { GetActiveOfficerData } from "@snailycad/types/api";
-import { create } from "zustand";
+import { shallow } from "zustand/shallow";
+import { createWithEqualityFn } from "zustand/traditional";
 
 export type ActiveOfficer = GetActiveOfficerData;
 
@@ -16,7 +17,10 @@ interface LeoState {
   setActiveOfficer(officer: ActiveOfficer | null): void;
 }
 
-export const useLeoState = create<LeoState>()((set) => ({
-  activeOfficer: null,
-  setActiveOfficer: (officer) => set({ activeOfficer: officer }),
-}));
+export const useLeoState = createWithEqualityFn<LeoState>()(
+  (set) => ({
+    activeOfficer: null,
+    setActiveOfficer: (officer) => set({ activeOfficer: officer }),
+  }),
+  shallow,
+);

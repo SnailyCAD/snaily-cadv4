@@ -14,7 +14,6 @@ import { PersonFill, ThreeDots } from "react-bootstrap-icons";
 import { useSSRSafeId } from "@react-aria/ssr";
 import type { PostBolosData, PutBolosData } from "@snailycad/types/api";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
-import { shallow } from "zustand/shallow";
 import { useInvalidateQuery } from "hooks/use-invalidate-query";
 
 interface Props {
@@ -28,13 +27,10 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
   const common = useTranslations("Common");
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
-  const { bolos, setBolos } = useDispatchState(
-    (state) => ({
-      bolos: state.bolos,
-      setBolos: state.setBolos,
-    }),
-    shallow,
-  );
+  const { bolos, setBolos } = useDispatchState((state) => ({
+    bolos: state.bolos,
+    setBolos: state.setBolos,
+  }));
   const t = useTranslations("Bolos");
   const leo = useTranslations("Leo");
 

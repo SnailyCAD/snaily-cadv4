@@ -25,7 +25,6 @@ import { ActiveIncidentColumn } from "./active-units/officers/active-incident-co
 import { ActiveCallColumn } from "./active-units/officers/active-call-column";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useMounted } from "@casper124578/useful";
-import { shallow } from "zustand/shallow";
 import { generateContrastColor } from "lib/table/get-contrasting-text-color";
 import dynamic from "next/dynamic";
 import { Permissions } from "@snailycad/permissions";
@@ -80,22 +79,16 @@ function ActiveOfficers({ initialOfficers }: Props) {
   const hasDispatchPerms = hasPermissions([Permissions.Dispatch]);
   const showCreateTemporaryUnitButton = isDispatch && hasDispatchPerms;
 
-  const { leoSearch, showLeoFilters, setShowFilters } = useActiveUnitsState(
-    (state) => ({
-      leoSearch: state.leoSearch,
-      showLeoFilters: state.showLeoFilters,
-      setShowFilters: state.setShowFilters,
-    }),
-    shallow,
-  );
+  const { leoSearch, showLeoFilters, setShowFilters } = useActiveUnitsState((state) => ({
+    leoSearch: state.leoSearch,
+    showLeoFilters: state.showLeoFilters,
+    setShowFilters: state.setShowFilters,
+  }));
 
-  const { activeOfficer, setActiveOfficer } = useLeoState(
-    (state) => ({
-      activeOfficer: state.activeOfficer,
-      setActiveOfficer: state.setActiveOfficer,
-    }),
-    shallow,
-  );
+  const { activeOfficer, setActiveOfficer } = useLeoState((state) => ({
+    activeOfficer: state.activeOfficer,
+    setActiveOfficer: state.setActiveOfficer,
+  }));
 
   const [tempOfficer, officerState] = useTemporaryItem(activeOfficers);
 

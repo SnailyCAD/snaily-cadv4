@@ -9,7 +9,6 @@ import {
 import { useValues } from "context/ValuesContext";
 import useFetch from "lib/useFetch";
 import { useCall911State } from "state/dispatch/call-911-state";
-import { shallow } from "zustand/shallow";
 
 interface UnitColumnProps {
   unit: AssignedUnit;
@@ -21,13 +20,10 @@ export function SituationChangeColumn(props: UnitColumnProps) {
   const { codes10 } = useValues();
   const unitId = props.unit.unit?.id;
   const { execute, state } = useFetch();
-  const { call, setCurrentlySelectedCall } = useCall911State(
-    (state) => ({
-      call: state.currentlySelectedCall,
-      setCurrentlySelectedCall: state.setCurrentlySelectedCall,
-    }),
-    shallow,
-  );
+  const { call, setCurrentlySelectedCall } = useCall911State((state) => ({
+    call: state.currentlySelectedCall,
+    setCurrentlySelectedCall: state.setCurrentlySelectedCall,
+  }));
 
   if (props.isDisabled || !unitId) {
     return <span>{props.children}</span>;

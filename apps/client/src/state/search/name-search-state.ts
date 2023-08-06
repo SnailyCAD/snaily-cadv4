@@ -1,5 +1,6 @@
 import type { PostLeoSearchCitizenData } from "@snailycad/types/api";
-import { create } from "zustand";
+import { shallow } from "zustand/shallow";
+import { createWithEqualityFn } from "zustand/traditional";
 
 export type NameSearchResult = PostLeoSearchCitizenData[number];
 
@@ -11,10 +12,13 @@ interface NameSearchState {
   setCurrentResult(v: NameSearchResult | null): void;
 }
 
-export const useNameSearch = create<NameSearchState>()((set) => ({
-  results: null,
-  setResults: (v) => set({ results: v }),
+export const useNameSearch = createWithEqualityFn<NameSearchState>()(
+  (set) => ({
+    results: null,
+    setResults: (v) => set({ results: v }),
 
-  currentResult: null,
-  setCurrentResult: (v) => set({ currentResult: v }),
-}));
+    currentResult: null,
+    setCurrentResult: (v) => set({ currentResult: v }),
+  }),
+  shallow,
+);

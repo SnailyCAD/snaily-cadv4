@@ -6,7 +6,8 @@ import type {
   EmployeeValue,
   RegisteredVehicle,
 } from "@snailycad/types";
-import { create } from "zustand";
+import { shallow } from "zustand/shallow";
+import { createWithEqualityFn } from "zustand/traditional";
 
 export type FullEmployee = Employee & {
   citizen: Pick<Citizen, "id" | "name" | "surname">;
@@ -34,16 +35,19 @@ interface BusinessState {
   setJoinableBusinesses(businesses: Business[]): void;
 }
 
-export const useBusinessState = create<BusinessState>()((set) => ({
-  currentBusiness: null,
-  setCurrentBusiness: (business) => set({ currentBusiness: business }),
+export const useBusinessState = createWithEqualityFn<BusinessState>()(
+  (set) => ({
+    currentBusiness: null,
+    setCurrentBusiness: (business) => set({ currentBusiness: business }),
 
-  currentEmployee: null,
-  setCurrentEmployee: (employee) => set({ currentEmployee: employee }),
+    currentEmployee: null,
+    setCurrentEmployee: (employee) => set({ currentEmployee: employee }),
 
-  posts: [],
-  setPosts: (posts) => set({ posts }),
+    posts: [],
+    setPosts: (posts) => set({ posts }),
 
-  joinableBusinesses: [],
-  setJoinableBusinesses: (businesses) => set({ joinableBusinesses: businesses }),
-}));
+    joinableBusinesses: [],
+    setJoinableBusinesses: (businesses) => set({ joinableBusinesses: businesses }),
+  }),
+  shallow,
+);

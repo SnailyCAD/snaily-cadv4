@@ -16,7 +16,6 @@ import type {
   LeoIncident,
   Officer,
 } from "@snailycad/types";
-import { shallow } from "zustand/shallow";
 import { useDispatchState } from "state/dispatch/dispatch-state";
 import { useImageUrl } from "hooks/useImageUrl";
 import { ImageWrapper } from "components/shared/image-wrapper";
@@ -36,13 +35,10 @@ export function AddInvolvedUnitToIncidentModal<T extends LeoIncident | EmsFdInci
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
   const { generateCallsign } = useGenerateCallsign();
-  const { activeIncidents, setActiveIncidents } = useDispatchState(
-    (state) => ({
-      setActiveIncidents: state.setActiveIncidents,
-      activeIncidents: state.activeIncidents,
-    }),
-    shallow,
-  );
+  const { activeIncidents, setActiveIncidents } = useDispatchState((state) => ({
+    setActiveIncidents: state.setActiveIncidents,
+    activeIncidents: state.activeIncidents,
+  }));
 
   const { makeImageUrl } = useImageUrl();
   const t = useTranslations("Calls");

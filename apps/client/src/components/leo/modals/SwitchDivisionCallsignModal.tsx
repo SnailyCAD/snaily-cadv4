@@ -13,16 +13,12 @@ import { useLeoState } from "state/leo-state";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { isUnitCombined } from "@snailycad/utils";
 import type { PutLeoCallsignData } from "@snailycad/types/api";
-import { shallow } from "zustand/shallow";
 
 export function SwitchDivisionCallsignModal() {
-  const { activeOfficer, setActiveOfficer } = useLeoState(
-    (state) => ({
-      activeOfficer: state.activeOfficer,
-      setActiveOfficer: state.setActiveOfficer,
-    }),
-    shallow,
-  );
+  const { activeOfficer, setActiveOfficer } = useLeoState((state) => ({
+    activeOfficer: state.activeOfficer,
+    setActiveOfficer: state.setActiveOfficer,
+  }));
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");

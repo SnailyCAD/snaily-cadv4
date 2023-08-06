@@ -9,7 +9,6 @@ import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 
 import dynamic from "next/dynamic";
-import { shallow } from "zustand/shallow";
 import type { Record } from "@snailycad/types";
 
 const ManageIncidentModal = dynamic(
@@ -37,13 +36,10 @@ export function ConnectionsTab({
   const t = useTranslations("Leo");
   const { handleChange, errors, values } = useFormikContext<_FormikContext>();
 
-  const { calls, setCurrentlySelectedCall } = useCall911State(
-    (state) => ({
-      calls: state.calls,
-      setCurrentlySelectedCall: state.setCurrentlySelectedCall,
-    }),
-    shallow,
-  );
+  const { calls, setCurrentlySelectedCall } = useCall911State((state) => ({
+    calls: state.calls,
+    setCurrentlySelectedCall: state.setCurrentlySelectedCall,
+  }));
   const { activeIncidents } = useActiveIncidents();
   const { openModal } = useModal();
 

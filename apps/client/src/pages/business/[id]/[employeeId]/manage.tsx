@@ -13,7 +13,6 @@ import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { EmployeesTab } from "components/business/manage/tabs/employees-tab/employees-tab";
 import { TabList, BreadcrumbItem, Breadcrumbs } from "@snailycad/ui";
-import { shallow } from "zustand/shallow";
 import { GetBusinessByIdData } from "@snailycad/types/api";
 
 interface Props {
@@ -45,14 +44,11 @@ export default function BusinessId(props: Props) {
     setCurrentEmployee: state.setCurrentEmployee,
   }));
 
-  const { currentBusiness, currentEmployee } = useBusinessState(
-    (state) => ({
-      currentBusiness: state.currentBusiness,
-      currentEmployee: state.currentEmployee,
-      posts: state.posts,
-    }),
-    shallow,
-  );
+  const { currentBusiness, currentEmployee } = useBusinessState((state) => ({
+    currentBusiness: state.currentBusiness,
+    currentEmployee: state.currentEmployee,
+    posts: state.posts,
+  }));
 
   const common = useTranslations("Common");
   const t = useTranslations("Business");

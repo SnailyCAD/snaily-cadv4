@@ -15,7 +15,6 @@ import { EmergencyVehicleValue, Officer, ShouldDoType } from "@snailycad/types";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { isUnitDisabled, makeUnitName } from "lib/utils";
 import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
-import { shallow } from "zustand/shallow";
 import { useDispatchState } from "state/dispatch/dispatch-state";
 import { useUserOfficers } from "hooks/leo/use-get-user-officers";
 import { Permissions, usePermission } from "hooks/usePermission";
@@ -24,13 +23,10 @@ export function SelectOfficerModal() {
   const setActiveOfficer = useLeoState((state) => state.setActiveOfficer);
   const { userOfficers, isLoading } = useUserOfficers();
 
-  const { activeOfficers, setActiveOfficers } = useDispatchState(
-    (state) => ({
-      activeOfficers: state.activeOfficers,
-      setActiveOfficers: state.setActiveOfficers,
-    }),
-    shallow,
-  );
+  const { activeOfficers, setActiveOfficers } = useDispatchState((state) => ({
+    activeOfficers: state.activeOfficers,
+    setActiveOfficers: state.setActiveOfficers,
+  }));
 
   const { isOpen, closeModal, getPayload } = useModal();
   const common = useTranslations("Common");

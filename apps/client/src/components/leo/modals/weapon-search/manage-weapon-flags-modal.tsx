@@ -8,7 +8,6 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/modal-ids";
 import type { PutSearchActionsWeaponFlagsData } from "@snailycad/types/api";
-import { shallow } from "zustand/shallow";
 import { useWeaponSearch } from "state/search/weapon-search-state";
 
 export function ManageWeaponFlagsModal() {
@@ -16,13 +15,10 @@ export function ManageWeaponFlagsModal() {
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const veh = useTranslations("Vehicles");
-  const { currentResult, setCurrentResult } = useWeaponSearch(
-    (state) => ({
-      currentResult: state.currentResult,
-      setCurrentResult: state.setCurrentResult,
-    }),
-    shallow,
-  );
+  const { currentResult, setCurrentResult } = useWeaponSearch((state) => ({
+    currentResult: state.currentResult,
+    setCurrentResult: state.setCurrentResult,
+  }));
   const { weaponFlag } = useValues();
   const { state, execute } = useFetch();
 

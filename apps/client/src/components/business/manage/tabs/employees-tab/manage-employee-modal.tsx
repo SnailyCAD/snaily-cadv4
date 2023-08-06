@@ -11,7 +11,6 @@ import { handleValidate } from "lib/handleValidate";
 import { useValues } from "context/ValuesContext";
 import { Employee, EmployeeAsEnum } from "@snailycad/types";
 import type { PutBusinessEmployeesData } from "@snailycad/types/api";
-import { shallow } from "zustand/shallow";
 
 interface Props {
   isAdmin?: boolean;
@@ -21,13 +20,10 @@ interface Props {
 }
 
 export function ManageEmployeeModal({ onClose, onUpdate, employee, isAdmin }: Props) {
-  const { currentBusiness, currentEmployee } = useBusinessState(
-    (state) => ({
-      currentBusiness: state.currentBusiness,
-      currentEmployee: state.currentEmployee,
-    }),
-    shallow,
-  );
+  const { currentBusiness, currentEmployee } = useBusinessState((state) => ({
+    currentBusiness: state.currentBusiness,
+    currentEmployee: state.currentEmployee,
+  }));
 
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();

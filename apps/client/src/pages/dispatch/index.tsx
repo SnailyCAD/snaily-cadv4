@@ -31,7 +31,6 @@ import type {
 import { UtilityPanel } from "components/shared/UtilityPanel";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { useActiveDispatcherState } from "state/dispatch/active-dispatcher-state";
-import { shallow } from "zustand/shallow";
 import { Infofield } from "@snailycad/ui";
 
 const ActiveIncidents = dynamic(async () => {
@@ -84,13 +83,10 @@ export default function DispatchDashboard(props: DispatchPageProps) {
     ],
   });
 
-  const { userActiveDispatcher, setUserActiveDispatcher } = useActiveDispatcherState(
-    (state) => ({
-      setUserActiveDispatcher: state.setUserActiveDispatcher,
-      userActiveDispatcher: state.userActiveDispatcher,
-    }),
-    shallow,
-  );
+  const { userActiveDispatcher, setUserActiveDispatcher } = useActiveDispatcherState((state) => ({
+    setUserActiveDispatcher: state.setUserActiveDispatcher,
+    userActiveDispatcher: state.userActiveDispatcher,
+  }));
   const state = useDispatchState();
   const set911Calls = useCall911State((state) => state.setCalls);
   const t = useTranslations("Leo");

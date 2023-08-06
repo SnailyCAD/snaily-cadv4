@@ -8,7 +8,6 @@ import { makeUnitName } from "lib/utils";
 import { useTranslations } from "next-intl";
 import { Full911Call, useDispatchState } from "state/dispatch/dispatch-state";
 import { DndActions } from "types/dnd-actions";
-import { shallow } from "zustand/shallow";
 import { classNames } from "lib/classNames";
 
 interface Props {
@@ -20,13 +19,10 @@ interface Props {
 export function AssignedUnitsColumn({ handleAssignToCall, isDispatch, call }: Props) {
   const common = useTranslations("Common");
   const { generateCallsign } = useGenerateCallsign();
-  const { setDraggingUnit, draggingUnit } = useDispatchState(
-    (state) => ({
-      draggingUnit: state.draggingUnit,
-      setDraggingUnit: state.setDraggingUnit,
-    }),
-    shallow,
-  );
+  const { setDraggingUnit, draggingUnit } = useDispatchState((state) => ({
+    draggingUnit: state.draggingUnit,
+    setDraggingUnit: state.setDraggingUnit,
+  }));
   const { hasActiveDispatchers } = useActiveDispatchers();
   const canDrag = hasActiveDispatchers && isDispatch;
   const scrollRef = React.useRef<HTMLDivElement | null>(null);

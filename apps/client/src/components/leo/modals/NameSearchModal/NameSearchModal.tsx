@@ -28,7 +28,6 @@ import type { PostLeoSearchCitizenData, PutSearchActionsLicensesData } from "@sn
 import { NameSearchBasicInformation } from "./sections/basic-information";
 import { NameSearchLicensesSection } from "./sections/licenses-section";
 import { NameSearchFooter } from "./sections/footer";
-import { shallow } from "zustand/shallow";
 import { SpeechAlert } from "./speech-alert";
 import { ImageWrapper } from "components/shared/image-wrapper";
 import { ManageLicensePointsModal } from "./sections/license-points/manage-license-points-modal";
@@ -84,15 +83,12 @@ export function NameSearchModal() {
   const isLeo = router.pathname === "/officer";
   const isDispatch = router.pathname === "/dispatch";
 
-  const { results, currentResult, setCurrentResult, setResults } = useNameSearch(
-    (state) => ({
-      results: state.results,
-      currentResult: state.currentResult,
-      setCurrentResult: state.setCurrentResult,
-      setResults: state.setResults,
-    }),
-    shallow,
-  );
+  const { results, currentResult, setCurrentResult, setResults } = useNameSearch((state) => ({
+    results: state.results,
+    currentResult: state.currentResult,
+    setCurrentResult: state.setCurrentResult,
+    setResults: state.setResults,
+  }));
 
   const payloadCitizen = getPayload<Citizen>(ModalIds.NameSearch);
 

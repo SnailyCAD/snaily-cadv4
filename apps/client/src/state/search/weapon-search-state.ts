@@ -1,5 +1,6 @@
 import type { PostLeoSearchWeaponData } from "@snailycad/types/api";
-import { create } from "zustand";
+import { shallow } from "zustand/shallow";
+import { createWithEqualityFn } from "zustand/traditional";
 
 export type WeaponSearchResult = PostLeoSearchWeaponData;
 
@@ -8,7 +9,10 @@ interface WeaponSearchState {
   setCurrentResult(v: WeaponSearchResult | null | undefined): void;
 }
 
-export const useWeaponSearch = create<WeaponSearchState>()((set) => ({
-  currentResult: undefined,
-  setCurrentResult: (v) => set({ currentResult: v }),
-}));
+export const useWeaponSearch = createWithEqualityFn<WeaponSearchState>()(
+  (set) => ({
+    currentResult: undefined,
+    setCurrentResult: (v) => set({ currentResult: v }),
+  }),
+  shallow,
+);

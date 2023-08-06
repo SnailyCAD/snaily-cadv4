@@ -12,7 +12,6 @@ import { handleValidate } from "lib/handleValidate";
 import type { BusinessPost } from "@snailycad/types";
 import { dataToSlate, Editor } from "components/editor/editor";
 import type { PostBusinessPostsData, PutBusinessPostsData } from "@snailycad/types/api";
-import { shallow } from "zustand/shallow";
 
 interface Props {
   onCreate(post: BusinessPost): void;
@@ -22,13 +21,10 @@ interface Props {
 }
 
 export function ManageBusinessPostModal({ onClose, onCreate, onUpdate, post }: Props) {
-  const { currentBusiness, currentEmployee } = useBusinessState(
-    (state) => ({
-      currentBusiness: state.currentBusiness,
-      currentEmployee: state.currentEmployee,
-    }),
-    shallow,
-  );
+  const { currentBusiness, currentEmployee } = useBusinessState((state) => ({
+    currentBusiness: state.currentBusiness,
+    currentEmployee: state.currentEmployee,
+  }));
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
   const common = useTranslations("Common");

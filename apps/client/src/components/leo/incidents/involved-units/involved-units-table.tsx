@@ -12,7 +12,6 @@ import { ModalIds } from "types/modal-ids";
 import { generateContrastColor } from "lib/table/get-contrasting-text-color";
 import dynamic from "next/dynamic";
 import { useDispatchState } from "state/dispatch/dispatch-state";
-import { shallow } from "zustand/shallow";
 
 const AddInvolvedUnitToIncidentModal = dynamic(
   async () => (await import("./add-involved-unit")).AddInvolvedUnitToIncidentModal,
@@ -37,13 +36,10 @@ export function InvolvedUnitsTable<T extends LeoIncident | EmsFdIncident>({
   const t = useTranslations("Leo");
   const { openModal } = useModal();
   const { state, execute } = useFetch();
-  const { activeIncidents, setActiveIncidents } = useDispatchState(
-    (state) => ({
-      setActiveIncidents: state.setActiveIncidents,
-      activeIncidents: state.activeIncidents,
-    }),
-    shallow,
-  );
+  const { activeIncidents, setActiveIncidents } = useDispatchState((state) => ({
+    setActiveIncidents: state.setActiveIncidents,
+    activeIncidents: state.activeIncidents,
+  }));
 
   async function handleUnassignFromCall(unit: IncidentInvolvedUnit) {
     const newAssignedUnits = [...incident.unitsInvolved]

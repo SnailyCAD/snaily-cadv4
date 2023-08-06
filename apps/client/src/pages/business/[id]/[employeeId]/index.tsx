@@ -18,7 +18,6 @@ import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import type { DeleteBusinessPostsData, GetBusinessByIdData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
-import { shallow } from "zustand/shallow";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageBusinessPostModal = dynamic(
@@ -40,14 +39,11 @@ export default function BusinessId(props: Props) {
     setPosts: state.setPosts,
   }));
 
-  const { currentBusiness, currentEmployee, posts } = useBusinessState(
-    (state) => ({
-      currentBusiness: state.currentBusiness,
-      currentEmployee: state.currentEmployee,
-      posts: state.posts,
-    }),
-    shallow,
-  );
+  const { currentBusiness, currentEmployee, posts } = useBusinessState((state) => ({
+    currentBusiness: state.currentBusiness,
+    currentEmployee: state.currentEmployee,
+    posts: state.posts,
+  }));
 
   const common = useTranslations("Common");
   const t = useTranslations("Business");

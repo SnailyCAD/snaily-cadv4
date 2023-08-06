@@ -8,7 +8,6 @@ import { Button, Loader, TextField } from "@snailycad/ui";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useNameSearch } from "state/search/name-search-state";
-import { shallow } from "zustand/shallow";
 import { PutSearchActionsLicensePointsData } from "@snailycad/types/api";
 import { toastMessage } from "lib/toastMessage";
 
@@ -17,13 +16,10 @@ export function ManageLicensePointsModal() {
   const common = useTranslations("Common");
   const t = useTranslations();
   const { state, execute } = useFetch();
-  const { currentResult, setCurrentResult } = useNameSearch(
-    (state) => ({
-      currentResult: state.currentResult,
-      setCurrentResult: state.setCurrentResult,
-    }),
-    shallow,
-  );
+  const { currentResult, setCurrentResult } = useNameSearch((state) => ({
+    currentResult: state.currentResult,
+    setCurrentResult: state.setCurrentResult,
+  }));
 
   if (!currentResult || currentResult.isConfidential) {
     return null;

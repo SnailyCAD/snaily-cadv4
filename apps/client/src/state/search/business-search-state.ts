@@ -1,5 +1,6 @@
 import type { PostLeoSearchBusinessData } from "@snailycad/types/api";
-import { create } from "zustand";
+import { shallow } from "zustand/shallow";
+import { createWithEqualityFn } from "zustand/traditional";
 
 export type BusinessSearchResult = PostLeoSearchBusinessData[number];
 
@@ -11,10 +12,13 @@ interface BusinessSearchState {
   setCurrentResult(v: BusinessSearchResult | null): void;
 }
 
-export const useBusinessSearch = create<BusinessSearchState>()((set) => ({
-  results: null,
-  setResults: (v) => set({ results: v }),
+export const useBusinessSearch = createWithEqualityFn<BusinessSearchState>()(
+  (set) => ({
+    results: null,
+    setResults: (v) => set({ results: v }),
 
-  currentResult: null,
-  setCurrentResult: (v) => set({ currentResult: v }),
-}));
+    currentResult: null,
+    setCurrentResult: (v) => set({ currentResult: v }),
+  }),
+  shallow,
+);

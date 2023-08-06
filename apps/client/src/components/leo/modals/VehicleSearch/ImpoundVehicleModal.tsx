@@ -11,7 +11,6 @@ import { useNameSearch } from "state/search/name-search-state";
 import type { PostSearchActionsCreateVehicle } from "@snailycad/types/api";
 import { handleValidate } from "lib/handleValidate";
 import { IMPOUND_VEHICLE_SCHEMA } from "@snailycad/schemas";
-import { shallow } from "zustand/shallow";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
 import { ValueType } from "@snailycad/types";
 import { hasSearchResults } from "../VehicleSearchModal";
@@ -21,13 +20,10 @@ export function ImpoundVehicleModal() {
   const { isOpen, closeModal } = useModal();
   const { impoundLot } = useValues();
   const { currentResult, setCurrentResult } = useVehicleSearch();
-  const nameSearchState = useNameSearch(
-    (state) => ({
-      currentResult: state.currentResult,
-      setCurrentResult: state.setCurrentResult,
-    }),
-    shallow,
-  );
+  const nameSearchState = useNameSearch((state) => ({
+    currentResult: state.currentResult,
+    setCurrentResult: state.setCurrentResult,
+  }));
   const { state, execute } = useFetch();
 
   const t = useTranslations();

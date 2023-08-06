@@ -19,7 +19,6 @@ import { useModal } from "state/modalState";
 import { AssignedUnitsTable } from "./assigned-units-table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
-import { shallow } from "zustand/shallow";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
 import { useInvalidateQuery } from "hooks/use-invalidate-query";
 
@@ -36,14 +35,11 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
   const { execute, state } = useFetch();
-  const { setCalls, calls, setCurrentlySelectedCall } = useCall911State(
-    (state) => ({
-      setCalls: state.setCalls,
-      calls: state.calls,
-      setCurrentlySelectedCall: state.setCurrentlySelectedCall,
-    }),
-    shallow,
-  );
+  const { setCalls, calls, setCurrentlySelectedCall } = useCall911State((state) => ({
+    setCalls: state.setCalls,
+    calls: state.calls,
+    setCurrentlySelectedCall: state.setCurrentlySelectedCall,
+  }));
   const { closeModal, openModal } = useModal();
   const { DIVISIONS } = useFeatureEnabled();
   const { invalidateQuery } = useInvalidateQuery(["/911-calls"]);

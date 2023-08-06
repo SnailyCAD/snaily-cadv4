@@ -39,7 +39,6 @@ import type {
   PostCitizenVehicleData,
   PutCitizenVehicleData,
 } from "@snailycad/types/api";
-import { shallow } from "zustand/shallow";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 
@@ -62,13 +61,10 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
   const router = useRouter();
   const { cad } = useAuth();
   const { CUSTOM_TEXTFIELD_VALUES, EDITABLE_VIN } = useFeatureEnabled();
-  const { currentBusiness, currentEmployee } = useBusinessState(
-    (state) => ({
-      currentBusiness: state.currentBusiness,
-      currentEmployee: state.currentEmployee,
-    }),
-    shallow,
-  );
+  const { currentBusiness, currentEmployee } = useBusinessState((state) => ({
+    currentBusiness: state.currentBusiness,
+    currentEmployee: state.currentEmployee,
+  }));
 
   const { INSPECTION_STATUS, TAX_STATUS } = useVehicleLicenses();
 

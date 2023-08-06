@@ -37,7 +37,6 @@ import type {
 import { CreateWarrantModal } from "components/leo/modals/CreateWarrantModal";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { usePermission } from "hooks/usePermission";
-import { shallow } from "zustand/shallow";
 
 const Modals = {
   CreateWarrantModal: dynamic(
@@ -146,13 +145,10 @@ export default function OfficerDashboard({
   const { hasPermissions } = usePermission();
   const isAdmin = hasPermissions(defaultPermissions.allDefaultAdminPermissions);
 
-  const { currentResult, setCurrentResult } = useNameSearch(
-    (state) => ({
-      currentResult: state.currentResult,
-      setCurrentResult: state.setCurrentResult,
-    }),
-    shallow,
-  );
+  const { currentResult, setCurrentResult } = useNameSearch((state) => ({
+    currentResult: state.currentResult,
+    setCurrentResult: state.setCurrentResult,
+  }));
 
   function handleRecordCreate(data: Record) {
     if (!currentResult || currentResult.isConfidential) return;

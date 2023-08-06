@@ -21,7 +21,6 @@ import { RegisterVehicleModal } from "components/citizen/vehicles/modals/registe
 import type { PostMarkStolenData } from "@snailycad/types/api";
 import { ImpoundVehicleModal } from "./VehicleSearch/ImpoundVehicleModal";
 import { AllowImpoundedVehicleCheckoutModal } from "./AllowImpoundedVehicleCheckoutModal";
-import { shallow } from "zustand/shallow";
 import { ImageWrapper } from "components/shared/image-wrapper";
 import { useImageUrl } from "hooks/useImageUrl";
 
@@ -31,10 +30,10 @@ interface Props {
 
 export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   const { currentResult, setCurrentResult } = useVehicleSearch();
-  const nameSearchState = useNameSearch(
-    (state) => ({ currentResult: state.currentResult, setCurrentResult: state.setCurrentResult }),
-    shallow,
-  );
+  const nameSearchState = useNameSearch((state) => ({
+    currentResult: state.currentResult,
+    setCurrentResult: state.setCurrentResult,
+  }));
   const { bolos } = useBolos();
 
   const { isOpen, openModal, closeModal, getPayload } = useModal();

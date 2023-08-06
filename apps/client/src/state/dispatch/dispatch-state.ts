@@ -9,7 +9,8 @@ import type {
   LeoIncident,
   CombinedEmsFdUnit,
 } from "@snailycad/types";
-import { create } from "zustand";
+import { shallow } from "zustand/shallow";
+import { createWithEqualityFn } from "zustand/traditional";
 
 export type Full911Call = Call911 & { assignedUnits: AssignedUnit[]; events: Call911Event[] };
 
@@ -30,19 +31,22 @@ interface DispatchState {
   setDraggingUnit(v: "incident" | "call" | "move" | null): void;
 }
 
-export const useDispatchState = create<DispatchState>()((set) => ({
-  bolos: [],
-  setBolos: (bolos) => set({ bolos }),
+export const useDispatchState = createWithEqualityFn<DispatchState>()(
+  (set) => ({
+    bolos: [],
+    setBolos: (bolos) => set({ bolos }),
 
-  activeOfficers: [],
-  setActiveOfficers: (officers) => set({ activeOfficers: officers }),
+    activeOfficers: [],
+    setActiveOfficers: (officers) => set({ activeOfficers: officers }),
 
-  activeDeputies: [],
-  setActiveDeputies: (deputies) => set({ activeDeputies: deputies }),
+    activeDeputies: [],
+    setActiveDeputies: (deputies) => set({ activeDeputies: deputies }),
 
-  activeIncidents: [],
-  setActiveIncidents: (incidents) => set({ activeIncidents: incidents }),
+    activeIncidents: [],
+    setActiveIncidents: (incidents) => set({ activeIncidents: incidents }),
 
-  draggingUnit: null,
-  setDraggingUnit: (v) => set({ draggingUnit: v }),
-}));
+    draggingUnit: null,
+    setDraggingUnit: (v) => set({ draggingUnit: v }),
+  }),
+  shallow,
+);

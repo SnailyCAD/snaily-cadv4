@@ -2,7 +2,6 @@ import { RecordType } from "@snailycad/types";
 import { TabList } from "@snailycad/ui";
 import { useBusinessSearch } from "state/search/business-search-state";
 import { useTranslations } from "use-intl";
-import { shallow } from "zustand/shallow";
 import { RecordsTab } from "../../NameSearchModal/tabs/records-tab";
 import { BusinessSearchEmployeesTab } from "./employees-tab";
 import { BusinessSearchVehiclesTab } from "./vehicles.tab";
@@ -10,13 +9,10 @@ import { BusinessSearchVehiclesTab } from "./vehicles.tab";
 export function BusinessSearchTabsContainer() {
   const t = useTranslations();
 
-  const { currentResult, setCurrentResult } = useBusinessSearch(
-    (state) => ({
-      currentResult: state.currentResult,
-      setCurrentResult: state.setCurrentResult,
-    }),
-    shallow,
-  );
+  const { currentResult, setCurrentResult } = useBusinessSearch((state) => ({
+    currentResult: state.currentResult,
+    setCurrentResult: state.setCurrentResult,
+  }));
 
   if (!currentResult) {
     return null;

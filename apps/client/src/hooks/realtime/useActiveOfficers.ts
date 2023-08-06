@@ -9,7 +9,6 @@ import type { CombinedLeoUnit, Officer } from "@snailycad/types";
 import { isUnitCombined } from "@snailycad/utils";
 import type { GetActiveOfficersData } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call-911-state";
-import { shallow } from "zustand/shallow";
 import { useMapPlayersStore } from "./use-map-players";
 import { useActiveIncidents } from "./useActiveIncidents";
 import { findPlayerFromUnit } from "lib/map/create-map-units-from-active-units.ts";
@@ -23,13 +22,10 @@ export function useActiveOfficers() {
   const playerState = useMapPlayersStore();
   const incidentsState = useActiveIncidents();
 
-  const call911State = useCall911State(
-    (state) => ({
-      calls: state.calls,
-      setCalls: state.setCalls,
-    }),
-    shallow,
-  );
+  const call911State = useCall911State((state) => ({
+    calls: state.calls,
+    setCalls: state.setCalls,
+  }));
 
   // remove the unit property from the player state
   const handleMapPlayersState = React.useCallback(

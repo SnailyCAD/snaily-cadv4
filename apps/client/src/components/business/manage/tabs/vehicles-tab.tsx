@@ -10,7 +10,6 @@ import { AlertModal } from "components/modal/AlertModal";
 import { Table, useTableState } from "components/shared/Table";
 import type { DeleteCitizenVehicleData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
-import { shallow } from "zustand/shallow";
 
 export function VehiclesTab() {
   const { state, execute } = useFetch();
@@ -19,14 +18,11 @@ export function VehiclesTab() {
   const bus = useTranslations("Business");
   const t = useTranslations();
   const tableState = useTableState();
-  const { currentBusiness, currentEmployee, setCurrentBusiness } = useBusinessState(
-    (state) => ({
-      currentBusiness: state.currentBusiness,
-      currentEmployee: state.currentEmployee,
-      setCurrentBusiness: state.setCurrentBusiness,
-    }),
-    shallow,
-  );
+  const { currentBusiness, currentEmployee, setCurrentBusiness } = useBusinessState((state) => ({
+    currentBusiness: state.currentBusiness,
+    currentEmployee: state.currentEmployee,
+    setCurrentBusiness: state.setCurrentBusiness,
+  }));
 
   const vehicles = currentBusiness?.vehicles ?? [];
   const [tempVehicle, vehicleState] = useTemporaryItem(vehicles);

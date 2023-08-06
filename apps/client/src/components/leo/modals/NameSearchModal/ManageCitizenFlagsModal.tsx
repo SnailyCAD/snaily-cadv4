@@ -9,20 +9,16 @@ import { useTranslations } from "next-intl";
 import { useNameSearch } from "state/search/name-search-state";
 import { ModalIds } from "types/modal-ids";
 import type { PutSearchActionsCitizenFlagsData } from "@snailycad/types/api";
-import { shallow } from "zustand/shallow";
 
 export function ManageCitizenFlagsModal() {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const veh = useTranslations("Vehicles");
-  const { currentResult, setCurrentResult } = useNameSearch(
-    (state) => ({
-      currentResult: state.currentResult,
-      setCurrentResult: state.setCurrentResult,
-    }),
-    shallow,
-  );
+  const { currentResult, setCurrentResult } = useNameSearch((state) => ({
+    currentResult: state.currentResult,
+    setCurrentResult: state.setCurrentResult,
+  }));
   const { citizenFlag } = useValues();
   const { state, execute } = useFetch();
 

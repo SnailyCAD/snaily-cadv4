@@ -26,7 +26,6 @@ import { ActiveIncidentColumn } from "./active-units/officers/active-incident-co
 import { DeputyColumn } from "./active-units/deputies/DeputyColumn";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useMounted } from "@casper124578/useful";
-import { shallow } from "zustand/shallow";
 import { generateContrastColor } from "lib/table/get-contrasting-text-color";
 import { Permissions, usePermission } from "hooks/usePermission";
 import { isUnitCombinedEmsFd } from "@snailycad/utils";
@@ -60,21 +59,15 @@ function ActiveDeputies({ initialDeputies }: Props) {
   const hasDispatchPerms = hasPermissions([Permissions.Dispatch]);
   const showCreateTemporaryUnitButton = isDispatch && hasDispatchPerms;
 
-  const { activeDeputy, setActiveDeputy } = useEmsFdState(
-    (state) => ({
-      activeDeputy: state.activeDeputy,
-      setActiveDeputy: state.setActiveDeputy,
-    }),
-    shallow,
-  );
-  const { emsSearch, showEmsFilters, setShowFilters } = useActiveUnitsState(
-    (state) => ({
-      emsSearch: state.emsSearch,
-      showEmsFilters: state.showEmsFilters,
-      setShowFilters: state.setShowFilters,
-    }),
-    shallow,
-  );
+  const { activeDeputy, setActiveDeputy } = useEmsFdState((state) => ({
+    activeDeputy: state.activeDeputy,
+    setActiveDeputy: state.setActiveDeputy,
+  }));
+  const { emsSearch, showEmsFilters, setShowFilters } = useActiveUnitsState((state) => ({
+    emsSearch: state.emsSearch,
+    showEmsFilters: state.showEmsFilters,
+    setShowFilters: state.setShowFilters,
+  }));
 
   const [tempDeputy, deputyState] = useTemporaryItem(activeDeputies);
 

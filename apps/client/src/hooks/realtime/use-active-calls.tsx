@@ -16,7 +16,6 @@ import type { ActiveOfficer } from "state/leo-state";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
-import { shallow } from "zustand/shallow";
 
 interface UseActiveCallsOptions {
   calls: Full911Call[];
@@ -27,14 +26,11 @@ const ADDED_TO_CALL_SRC = "/sounds/added-to-call.mp3" as const;
 const INCOMING_CALL_SRC = "/sounds/incoming-call.mp3" as const;
 
 export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
-  const call911State = useCall911State(
-    (state) => ({
-      currentlySelectedCall: state.currentlySelectedCall,
-      setCalls: state.setCalls,
-      setCurrentlySelectedCall: state.setCurrentlySelectedCall,
-    }),
-    shallow,
-  );
+  const call911State = useCall911State((state) => ({
+    currentlySelectedCall: state.currentlySelectedCall,
+    setCalls: state.setCalls,
+    setCurrentlySelectedCall: state.setCurrentlySelectedCall,
+  }));
   const { user } = useAuth();
   const { openModal } = useModal();
   const t = useTranslations();

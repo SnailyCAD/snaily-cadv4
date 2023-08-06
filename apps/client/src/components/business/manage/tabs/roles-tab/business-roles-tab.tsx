@@ -12,7 +12,6 @@ import type {
   GetBusinessRolesByBusinessIdData,
 } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
-import { shallow } from "zustand/shallow";
 import { getValueStrFromValue } from "lib/admin/values/utils";
 import { ManageBusinessRoleModal } from "./manage-business-role-modal";
 
@@ -27,14 +26,11 @@ export function BusinessRolesTab() {
   const common = useTranslations("Common");
   const t = useTranslations("Business");
 
-  const { currentBusiness, currentEmployee, setCurrentBusiness } = useBusinessState(
-    (state) => ({
-      currentBusiness: state.currentBusiness,
-      currentEmployee: state.currentEmployee,
-      setCurrentBusiness: state.setCurrentBusiness,
-    }),
-    shallow,
-  );
+  const { currentBusiness, currentEmployee, setCurrentBusiness } = useBusinessState((state) => ({
+    currentBusiness: state.currentBusiness,
+    currentEmployee: state.currentEmployee,
+    setCurrentBusiness: state.setCurrentBusiness,
+  }));
 
   const returnNull = !currentBusiness || !currentEmployee;
 
