@@ -354,8 +354,8 @@ export class DispatchController {
     return updated;
   }
 
-  @Post("/player/check")
-  async checkPlayer(@BodyParams() body: unknown) {
+  @Post("/player")
+  async checkPlayer(@BodyParams() body: unknown, @Context() ctx: Context) {
     const schema = z.object({ discordId: z.string().optional(), steamId: z.string().optional() });
     const data = validateSchema(schema, body);
 
@@ -372,11 +372,21 @@ export class DispatchController {
       },
     });
 
+    if (!user) {
+      return null;
+    }
+
+    const [officer, deputy] = await Promise.all([
+      getActiveOfficer({ user, ctx }).catch(() => null),
+      getActiveDeputy({ user, ctx }).catch(() => null),
+    ]);
+
+    const unit = officer ?? deputy ?? null;
+
     // todo: replace from /players/:steamId
-    // todo: also fetch active unit?
     // idea: in-game, if no user is found, prompt them to login via Discord or Steam and all that
 
-    return user;
+    return { ...user, unit };
   }
 
   @Post("/players")
