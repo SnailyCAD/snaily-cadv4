@@ -267,7 +267,11 @@ export class ValuesController {
   ) {
     try {
       const type = getTypeFromPath(_path);
-      const supportedValueTypes = [ValueType.QUALIFICATION, ValueType.OFFICER_RANK] as string[];
+      const supportedValueTypes = [
+        ValueType.VEHICLE,
+        ValueType.QUALIFICATION,
+        ValueType.OFFICER_RANK,
+      ] as string[];
 
       if (!supportedValueTypes.includes(type)) {
         return new BadRequest("invalidType");
@@ -281,21 +285,42 @@ export class ValuesController {
         throw new ExtendedBadRequest({ image: "invalidImageType" });
       }
 
-      if (type === ValueType.QUALIFICATION) {
-        const value = await prisma.qualificationValue.findUnique({
-          where: { id },
-        });
+      switch (type) {
+        case ValueType.VEHICLE: {
+          const value = await prisma.value.findUnique({
+            where: { id },
+          });
 
-        if (!value) {
-          throw new NotFound("valueNotFound");
+          if (!value) {
+            throw new NotFound("valueNotFound");
+          }
+
+          break;
         }
-      } else if (type === ValueType.OFFICER_RANK) {
-        const value = await prisma.value.findFirst({
-          where: { id, type: ValueType.OFFICER_RANK },
-        });
+        case ValueType.QUALIFICATION: {
+          const value = await prisma.qualificationValue.findUnique({
+            where: { id },
+          });
 
-        if (!value) {
-          throw new NotFound("valueNotFound");
+          if (!value) {
+            throw new NotFound("valueNotFound");
+          }
+
+          break;
+        }
+        case ValueType.OFFICER_RANK: {
+          const value = await prisma.value.findFirst({
+            where: { id, type: ValueType.OFFICER_RANK },
+          });
+
+          if (!value) {
+            throw new NotFound("valueNotFound");
+          }
+
+          break;
+        }
+        default: {
+          throw new ExtendedBadRequest({ type: "invalidType" });
         }
       }
 
@@ -309,23 +334,38 @@ export class ValuesController {
 
       await fs.writeFile(image.path, image.buffer);
 
-      let data;
+      switch (type) {
+        case ValueType.VEHICLE: {
+          const data = await prisma.vehicleValue.update({
+            where: { id },
+            data: { imageId: image.fileName },
+            select: { imageId: true },
+          });
 
-      if (type === ValueType.QUALIFICATION) {
-        data = await prisma.qualificationValue.update({
-          where: { id },
-          data: { imageId: image.fileName, imageBlurData: blurData },
-          select: { imageId: true },
-        });
-      } else if (type === ValueType.OFFICER_RANK) {
-        data = await prisma.value.update({
-          where: { id },
-          data: { officerRankImageId: image.fileName, officerRankImageBlurData: blurData },
-          select: { officerRankImageId: true },
-        });
+          return data;
+        }
+        case ValueType.QUALIFICATION: {
+          const data = await prisma.qualificationValue.update({
+            where: { id },
+            data: { imageId: image.fileName, imageBlurData: blurData },
+            select: { imageId: true },
+          });
+
+          return data;
+        }
+        case ValueType.OFFICER_RANK: {
+          const data = await prisma.value.update({
+            where: { id },
+            data: { officerRankImageId: image.fileName, officerRankImageBlurData: blurData },
+            select: { officerRankImageId: true },
+          });
+
+          return data;
+        }
+        default: {
+          throw new ExtendedBadRequest({ type: "invalidType" });
+        }
       }
-
-      return data;
     } catch {
       throw new BadRequest("errorUploadingImage");
     }
