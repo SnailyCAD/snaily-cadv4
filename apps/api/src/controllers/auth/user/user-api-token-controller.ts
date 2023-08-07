@@ -15,7 +15,6 @@ import { z } from "zod";
 import { validateSchema } from "~/lib/data/validate-schema";
 
 @Controller("/user/api-token")
-@UseBefore(IsAuth)
 @ContentType("application/json")
 @IsFeatureEnabled({ feature: Feature.USER_API_TOKENS })
 export class AccountController {
@@ -24,6 +23,7 @@ export class AccountController {
   @UsePermissions({
     permissions: [Permissions.UsePersonalApiToken],
   })
+  @UseBefore(IsAuth)
   async enableDisableUserAPIToken(
     @Context("user") user: User,
     @BodyParams() body: any,
@@ -85,17 +85,20 @@ export class AccountController {
       },
     });
 
+    const user = dbToken?.User[0];
+
     // todo: validate identifiers
 
-    if (!dbToken) {
+    if (!dbToken || !user) {
       throw new BadRequest("invalidToken");
     }
 
-    return { ...dbToken.User, token: dbToken.token };
+    return { ...user, token: dbToken.token };
   }
 
   @Delete("/")
   @Description("Re-generate a token")
+  @UseBefore(IsAuth)
   @UsePermissions({
     permissions: [Permissions.UsePersonalApiToken],
   })
