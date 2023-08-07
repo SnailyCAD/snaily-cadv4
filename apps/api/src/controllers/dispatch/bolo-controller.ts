@@ -22,7 +22,7 @@ import {
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type { APIEmbed } from "discord-api-types/v10";
 import { sendDiscordWebhook, sendRawWebhook } from "lib/discord/webhooks";
-import { getFirstOfficerFromActiveOfficer, getInactivityFilter } from "lib/leo/utils";
+import { getUserOfficerFromActiveOfficer, getInactivityFilter } from "lib/leo/utils";
 import type * as APITypes from "@snailycad/types/api";
 import type { cad } from "@snailycad/types";
 import { getTranslator } from "utils/get-translator";
@@ -101,10 +101,15 @@ export class BoloController {
   })
   async createBolo(
     @BodyParams() body: unknown,
+    @Context("sessionUserId") sessionUserId: string,
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
   ): Promise<APITypes.PostBolosData> {
     const data = validateSchema(CREATE_BOLO_SCHEMA, body);
-    const officer = getFirstOfficerFromActiveOfficer({ allowDispatch: true, activeOfficer });
+    const officer = getUserOfficerFromActiveOfficer({
+      userId: sessionUserId,
+      allowDispatch: true,
+      activeOfficer,
+    });
 
     const bolo = await prisma.bolo.create({
       data: {

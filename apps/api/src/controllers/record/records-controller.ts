@@ -31,7 +31,7 @@ import { combinedUnitProperties, leoProperties } from "utils/leo/includes";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { isFeatureEnabled } from "lib/upsert-cad";
 import { sendDiscordWebhook, sendRawWebhook } from "lib/discord/webhooks";
-import { getFirstOfficerFromActiveOfficer, getInactivityFilter } from "lib/leo/utils";
+import { getUserOfficerFromActiveOfficer, getInactivityFilter } from "lib/leo/utils";
 import type * as APITypes from "@snailycad/types/api";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { Socket } from "services/socket-service";
@@ -105,7 +105,11 @@ export class RecordsController {
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
   ): Promise<APITypes.PostCreateWarrantData> {
     const data = validateSchema(CREATE_WARRANT_SCHEMA, body);
-    const officer = getFirstOfficerFromActiveOfficer({ activeOfficer, allowDispatch: true });
+    const officer = getUserOfficerFromActiveOfficer({
+      userId: user.id,
+      activeOfficer,
+      allowDispatch: true,
+    });
 
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -238,9 +242,14 @@ export class RecordsController {
     @BodyParams() body: unknown,
     @Context("cad") cad: { features?: Record<Feature, boolean> },
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.PostRecordsData> {
     const data = validateSchema(CREATE_TICKET_SCHEMA.or(CREATE_TICKET_SCHEMA_BUSINESS), body);
-    const officer = getFirstOfficerFromActiveOfficer({ activeOfficer, allowDispatch: true });
+    const officer = getUserOfficerFromActiveOfficer({
+      userId: sessionUserId,
+      activeOfficer,
+      allowDispatch: true,
+    });
 
     const recordItem = await upsertRecord({
       data,

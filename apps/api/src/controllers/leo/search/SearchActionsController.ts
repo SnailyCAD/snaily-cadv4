@@ -46,7 +46,7 @@ import { generateString } from "utils/generate-string";
 import type * as APITypes from "@snailycad/types/api";
 import { createVehicleImpoundedWebhookData } from "controllers/calls/tow-controller";
 import { sendDiscordWebhook, sendRawWebhook } from "lib/discord/webhooks";
-import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
+import { getUserOfficerFromActiveOfficer } from "lib/leo/utils";
 import { ActiveOfficer } from "middlewares/active-officer";
 import { IsFeatureEnabled } from "~/middlewares/is-enabled";
 import { validateSocialSecurityNumber } from "~/lib/citizen/validate-ssn";
@@ -540,7 +540,11 @@ export class SearchActionsController {
     @Context("user") user: User,
   ): Promise<APITypes.PostSearchActionsCreateVehicle> {
     const data = validateSchema(IMPOUND_VEHICLE_SCHEMA, body);
-    const officer = getFirstOfficerFromActiveOfficer({ allowDispatch: true, activeOfficer });
+    const officer = getUserOfficerFromActiveOfficer({
+      userId: user.id,
+      allowDispatch: true,
+      activeOfficer,
+    });
 
     const vehicle = await prisma.registeredVehicle.findUnique({
       where: { id: vehicleId },

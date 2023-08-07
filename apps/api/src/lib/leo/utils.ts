@@ -168,23 +168,27 @@ export function getPrismaNameActiveCallIncident(options: GetPrismaNameActiveCall
   return { prismaName, unitId };
 }
 
-interface GetFirstOfficerFromActiveOfficerOptions<AllowDispatch extends boolean = false> {
+interface GetUserOfficerFromActiveOfficerOptions<AllowDispatch extends boolean = false> {
   activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer | null;
+  userId: string;
   allowDispatch?: AllowDispatch;
 }
 
-type GetFirstOfficerFromActiveOfficerReturn<AllowDispatch extends boolean = false> =
+type GetUserOfficerFromActiveOfficerReturn<AllowDispatch extends boolean = false> =
   AllowDispatch extends true ? Officer | null : Officer;
 
-export function getFirstOfficerFromActiveOfficer<AllowDispatch extends boolean = false>({
+export function getUserOfficerFromActiveOfficer<AllowDispatch extends boolean = false>({
   activeOfficer,
   allowDispatch,
-}: GetFirstOfficerFromActiveOfficerOptions<AllowDispatch>): GetFirstOfficerFromActiveOfficerReturn<AllowDispatch> {
+  userId,
+}: GetUserOfficerFromActiveOfficerOptions<AllowDispatch>): GetUserOfficerFromActiveOfficerReturn<AllowDispatch> {
   const isCombined = activeOfficer && "officers" in activeOfficer;
-  const officer = isCombined ? activeOfficer.officers[0] : activeOfficer;
+  const officer = isCombined
+    ? activeOfficer.officers.find((officer) => officer.userId === userId)
+    : activeOfficer;
 
   if (allowDispatch && !officer) {
-    return null as GetFirstOfficerFromActiveOfficerReturn<AllowDispatch>;
+    return null as GetUserOfficerFromActiveOfficerReturn<AllowDispatch>;
   }
 
   return officer as Officer;

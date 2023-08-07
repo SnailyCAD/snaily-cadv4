@@ -13,7 +13,7 @@ import { Socket } from "services/socket-service";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
-import { getFirstOfficerFromActiveOfficer, getInactivityFilter } from "lib/leo/utils";
+import { getUserOfficerFromActiveOfficer, getInactivityFilter } from "lib/leo/utils";
 import type * as APITypes from "@snailycad/types/api";
 import { getNextIncidentId } from "lib/incidents/get-next-incident-id";
 import { assignUnitsInvolvedToIncident } from "lib/incidents/handle-involved-units";
@@ -111,9 +111,14 @@ export class IncidentController {
     @BodyParams() body: unknown,
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.PostIncidentsData<"leo">> {
     const data = validateSchema(LEO_INCIDENT_SCHEMA, body);
-    const officer = getFirstOfficerFromActiveOfficer({ allowDispatch: true, activeOfficer });
+    const officer = getUserOfficerFromActiveOfficer({
+      userId: sessionUserId,
+      allowDispatch: true,
+      activeOfficer,
+    });
     const maxAssignmentsToIncidents = cad.miscCadSettings.maxAssignmentsToIncidents ?? Infinity;
 
     const incident = await prisma.leoIncident.create({
