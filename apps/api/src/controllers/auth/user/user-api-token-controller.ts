@@ -3,7 +3,7 @@ import { BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest } from "@tsed/exceptions";
 import { UseBefore } from "@tsed/platform-middlewares";
-import { ContentType, Delete, Description, Put } from "@tsed/schema";
+import { ContentType, Delete, Description, Post, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/getSessionUser";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/auth/is-auth";
@@ -11,6 +11,8 @@ import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { nanoid } from "nanoid";
 import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
+import { z } from "zod";
+import { validateSchema } from "~/lib/data/validate-schema";
 
 @Controller("/user/api-token")
 @UseBefore(IsAuth)
@@ -56,6 +58,40 @@ export class AccountController {
     });
 
     return updatedUser;
+  }
+
+  @Post("/validate")
+  @Description("Validate an API token")
+  async validateApiToken(@BodyParams() body: unknown) {
+    const schema = z.object({
+      identifiers: z.array(z.string()),
+      token: z.string(),
+    });
+
+    const data = validateSchema(schema, body);
+
+    const dbToken = await prisma.apiToken.findFirst({
+      where: { token: data.token },
+      include: {
+        User: {
+          select: {
+            username: true,
+            id: true,
+            steamId: true,
+            discordId: true,
+            permissions: true,
+          },
+        },
+      },
+    });
+
+    // todo: validate identifiers
+
+    if (!dbToken) {
+      throw new BadRequest("invalidToken");
+    }
+
+    return { ...dbToken.User, token: dbToken.token };
   }
 
   @Delete("/")
