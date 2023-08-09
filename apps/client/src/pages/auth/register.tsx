@@ -116,7 +116,12 @@ function Register({ cad }: Props) {
         <LocalhostDetector />
         <ApiVerification />
 
-        <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
+        <Formik
+          enableReinitialize
+          validate={validate}
+          onSubmit={onSubmit}
+          initialValues={INITIAL_VALUES}
+        >
           {({ setFieldValue, errors, isValid }) => (
             <Form className="w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-primary dark:border dark:border-secondary z-10">
               <header className="mb-3">
@@ -159,6 +164,7 @@ function Register({ cad }: Props) {
 
               {cad.registrationCode ? (
                 <TextField
+                  defaultValue={String(initialRegistrationCode)}
                   errorMessage={errors.registrationCode}
                   label={t("Auth.registrationCode")}
                   name="registrationCode"
