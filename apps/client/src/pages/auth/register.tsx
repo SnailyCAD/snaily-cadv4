@@ -24,13 +24,6 @@ import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recapt
 import { toastMessage } from "lib/toastMessage";
 import { ApiVerification } from "components/auth/api-verification";
 
-const INITIAL_VALUES = {
-  username: "",
-  password: "",
-  confirmPassword: "",
-  registrationCode: "",
-};
-
 interface Props {
   cad: Pick<cad, "registrationCode" | "version">;
 }
@@ -47,6 +40,14 @@ function Register({ cad }: Props) {
   const validate = handleValidate(AUTH_SCHEMA);
   const common = useTranslations();
   const { executeRecaptcha } = useGoogleReCaptcha();
+  const initialRegistrationCode = router.query.registrationCode ?? "";
+
+  const INITIAL_VALUES = {
+    username: "",
+    password: "",
+    confirmPassword: "",
+    registrationCode: initialRegistrationCode,
+  };
 
   React.useEffect(() => {
     if (!ALLOW_REGULAR_LOGIN) {
