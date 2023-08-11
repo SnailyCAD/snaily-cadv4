@@ -191,14 +191,14 @@ async function getSteamData(steamId: string): Promise<SteamData | null> {
       headers: { accept: "application/json" },
     },
   )
-    .then((v) => v.body.json())
+    .then((v) => v.body.json() as any)
     .catch(() => null);
 
   if (!data) {
     return null;
   }
 
-  return data?.response?.players[0];
+  return data.response.players[0];
 }
 
 function makeCallbackURL(base: string) {

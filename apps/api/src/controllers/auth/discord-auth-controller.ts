@@ -262,7 +262,7 @@ async function getDiscordData(code: string): Promise<APIUser | null> {
       Authorization: `Bearer ${accessToken}`,
     },
   })
-    .then((v) => v.body.json())
+    .then((v) => v.body.json() as any)
     .catch(() => null);
 
   return meData;

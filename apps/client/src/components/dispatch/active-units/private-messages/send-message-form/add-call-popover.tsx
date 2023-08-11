@@ -54,7 +54,8 @@ export function AddCallPopover() {
             // eslint-disable-next-line
             if (key === null) {
               // key can be null
-              return setValues({ ...values, call911: null, call911Id: null });
+              setValues({ ...values, call911: null, call911Id: null });
+              return;
             }
 
             setFieldValue("call911Id", key as string | null);

@@ -14,7 +14,7 @@ async function fetchLatestVersion(): Promise<string | null> {
       },
     ).catch(() => null);
 
-    const json = await response?.body.json().catch(() => null);
+    const json = await (response?.body.json() as any).catch(() => null);
     return json?.version ?? null;
   } catch (error) {
     console.error(error);

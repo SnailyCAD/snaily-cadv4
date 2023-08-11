@@ -54,7 +54,8 @@ export function AddIncidentPopover() {
             // eslint-disable-next-line
             if (key === null) {
               // key can be null
-              return setValues({ ...values, incident: null, incidentId: null });
+              setValues({ ...values, incident: null, incidentId: null });
+              return;
             }
 
             setFieldValue("incidentId", key as string | null);
