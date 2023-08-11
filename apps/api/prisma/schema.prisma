@@ -496,6 +496,8 @@ model RegisteredVehicle {
   ImpoundedVehicle ImpoundedVehicle[]
   Business         Business[]         @relation("registeredBusinessVehicles")
   Record           Record[]
+
+  @@index([plate, vinNumber])
 }
 
 model Weapon {
@@ -514,6 +516,8 @@ model Weapon {
   model                WeaponValue        @relation("weaponModelToValue", fields: [modelId], references: [id])
   modelId              String
   customFields         CustomFieldValue[]
+
+  @@index([serialNumber])
 }
 
 model MedicalRecord {
@@ -617,6 +621,8 @@ model Value {
   VehicleTrimLevels               VehicleValue[]                @relation("vehicleTrimLevels")
   RegisteredVehicle               RegisteredVehicle[]           @relation("registeredVehicleTrimLevels")
   Weapon                          Weapon[]                      @relation("weaponFlags")
+
+  @@index([type])
 }
 
 model AddressValue {
@@ -1006,6 +1012,8 @@ model Officer {
   isTemporary                 Boolean                      @default(false)
   identifiers                 String[]
   ChatCreator                 ChatCreator[]
+
+  @@index([callsign, callsign2, statusId])
 }
 
 model IndividualDivisionCallsign {
@@ -1169,6 +1177,8 @@ model CombinedLeoUnit {
   EmsFdIncident             EmsFdIncident?           @relation(fields: [emsFdIncidentId], references: [id])
   emsFdIncidentId           String?
   ChatCreator               ChatCreator[]
+
+  @@index([statusId])
 }
 
 model CombinedEmsFdUnit {
@@ -1197,6 +1207,8 @@ model CombinedEmsFdUnit {
   AssignedUnit         AssignedUnit[]
   IncidentInvolvedUnit IncidentInvolvedUnit[]
   ChatCreator          ChatCreator[]
+
+  @@index([statusId])
 }
 
 // dispatching
@@ -1278,6 +1290,8 @@ model Call911 {
   EmsFdIncident     EmsFdIncident?      @relation(fields: [emsFdIncidentId], references: [id])
   emsFdIncidentId   String?
   DispatchChat      DispatchChat[]
+
+  @@index([caseNumber])
 }
 
 model GTAMapPosition {
@@ -1366,6 +1380,8 @@ model Bolo {
   name        String?  @db.VarChar(255)
   officer     Officer? @relation("bolosToOfficer", fields: [officerId], references: [id])
   officerId   String?
+
+  @@index([type, plate, name])
 }
 
 // tickets, arrest reports, warrants, written warnings
@@ -1541,6 +1557,8 @@ model EmsFdDeputy {
   combinedEmsFdUnitId       String?
   EmsFdIncident             EmsFdIncident[]        @relation("emsFdIncidentCreator")
   ChatCreator               ChatCreator[]
+
+  @@index([callsign, callsign2, statusId])
 }
 
 model EmsFdIncident {
