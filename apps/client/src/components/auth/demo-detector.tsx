@@ -6,7 +6,7 @@ export function DemoDetector() {
   const [isDemo, setIsDemo] = React.useState(false);
 
   React.useEffect(() => {
-    const isDemo = window.location.hostname === "demo.snaily-cad.org";
+    const isDemo = window.location.hostname === "demo.snailycad.org";
 
     setIsDemo(isDemo);
   }, []);
