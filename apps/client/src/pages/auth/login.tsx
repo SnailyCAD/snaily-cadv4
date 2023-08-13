@@ -3,6 +3,7 @@ import { getTranslations } from "lib/getTranslation";
 import { Title } from "components/shared/Title";
 import { AuthScreenImages } from "components/auth/AuthScreenImages";
 import { LocalhostDetector } from "components/auth/LocalhostDetector";
+import { DemoDetector } from "components/auth/demo-detector";
 import { parseCookies } from "nookies";
 import { VersionDisplay } from "components/shared/VersionDisplay";
 import { useAuth } from "context/AuthContext";
@@ -29,6 +30,7 @@ export default function Login() {
         <AuthScreenImages />
         <LocalhostDetector />
         <ApiVerification />
+        <DemoDetector />
 
         <LoginForm onFormSubmitted={handleSubmit} />
 
