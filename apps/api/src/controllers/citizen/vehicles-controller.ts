@@ -9,6 +9,7 @@ import {
   cad,
   Prisma,
   Value,
+  EmployeeAsEnum,
 } from "@prisma/client";
 import { VEHICLE_SCHEMA, DELETE_VEHICLE_SCHEMA, TRANSFER_VEHICLE_SCHEMA } from "@snailycad/schemas";
 import {
@@ -195,6 +196,26 @@ export class VehiclesController {
       });
     }
 
+    if (data.businessId && data.employeeId) {
+      const employee = await prisma.employee.findFirst({
+        where: {
+          id: data.employeeId,
+          businessId: data.businessId,
+          userId: user.id,
+        },
+        include: {
+          role: true,
+        },
+      });
+
+      const isOwner = employee?.role?.as === EmployeeAsEnum.OWNER;
+      const canManageEmployees = isOwner ? true : employee?.canManageEmployees;
+
+      if (!canManageEmployees) {
+        throw new NotFound("employeeNotFoundOrInvalidPermissions");
+      }
+    }
+
     const isDmvEnabled = isFeatureEnabled({
       features: cad.features,
       feature: Feature.DMV,
@@ -254,22 +275,6 @@ export class VehiclesController {
     );
 
     if (data.businessId && data.employeeId) {
-      const employee = await prisma.employee.findFirst({
-        where: {
-          id: data.employeeId,
-          businessId: data.businessId,
-          userId: user.id,
-        },
-        include: {
-          role: true,
-        },
-      });
-
-      const isOwner = employee?.role?.as === "OWNER";
-      if (!employee || !isOwner || !employee.canManageVehicles) {
-        throw new NotFound("employeeNotFoundOrInvalidPermissions");
-      }
-
       await prisma.registeredVehicle.update({
         where: { id: vehicle.id },
         data: { Business: { connect: { id: data.businessId } } },

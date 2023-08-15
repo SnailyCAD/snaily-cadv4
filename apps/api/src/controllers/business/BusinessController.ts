@@ -7,6 +7,7 @@ import {
   CREATE_COMPANY_SCHEMA,
   JOIN_COMPANY_SCHEMA,
   DELETE_COMPANY_POST_SCHEMA,
+  EDIT_COMPANY_SCHEMA,
 } from "@snailycad/schemas";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
@@ -126,7 +127,7 @@ export class BusinessController {
     @BodyParams() body: unknown,
     @Context("user") user: User,
   ): Promise<APITypes.PutBusinessByIdData> {
-    const data = validateSchema(CREATE_COMPANY_SCHEMA, body);
+    const data = validateSchema(EDIT_COMPANY_SCHEMA, body);
 
     const employee = await prisma.employee.findFirst({
       where: {
