@@ -18,6 +18,9 @@ export function DemoDetector() {
       <p>
         This demo is a fully functional version of SnailyCADv4. You can use this demo to test out
         SnailyCADv4 before you decide to install and use it for your own community.
+        <br />
+        To use this demo, please create a new account. This will give you access to 99% of the
+        features of SnailyCADv4
       </p>
 
       <Link className="mt-2 underline text-black font-medium" href="https://docs.snailycad.org">
