@@ -2,8 +2,7 @@ import { join } from "node:path";
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import readline from "node:readline";
 import { bold, green, underline } from "colorette";
-import prettier from "prettier";
-const { format } = prettier;
+import { format } from "prettier";
 
 const PACKAGES_PATH = join(process.cwd(), "packages");
 const APPS_PATH = join(process.cwd(), "apps");
@@ -34,7 +33,7 @@ for (const pkg of allPackages) {
     }
   }
 
-  writeFileSync(packageJsonPath, stringifyAndFormat(packageJsonContentJSON));
+  writeFileSync(packageJsonPath, await stringifyAndFormat(packageJsonContentJSON));
   console.log(`${green("INFO:")} Set version ${underline(version)} for ${underline(pkg)}\n`);
 }
 
@@ -66,17 +65,17 @@ function getJson(path) {
   }
 }
 
-function stringifyAndFormat(json) {
+async function stringifyAndFormat(json) {
   return format(JSON.stringify(json, null, 2), { parser: "json" });
 }
 
-function updateMainPackage() {
+async function updateMainPackage() {
   const packageJsonPath = join(process.cwd(), "package.json");
 
   const packageJsonContentJSON = getJson(packageJsonPath);
   packageJsonContentJSON.version = version;
 
-  writeFileSync(packageJsonPath, stringifyAndFormat(packageJsonContentJSON));
+  writeFileSync(packageJsonPath, await stringifyAndFormat(packageJsonContentJSON));
   console.log(
     `${green("INFO:")} Set version ${underline(version)} for ${underline("snailycad")}\n`,
   );
