@@ -1,4 +1,4 @@
-import { Context, Res, BodyParams } from "@tsed/common";
+import { Context, Res, BodyParams, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { UseBefore } from "@tsed/platform-middlewares";
 import { ContentType, Delete, Description, Patch, Post } from "@tsed/schema";
@@ -18,6 +18,8 @@ import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
 import { setUserPreferencesCookies } from "lib/auth/setUserPreferencesCookies";
 import type * as APITypes from "@snailycad/types/api";
 import type { User } from "@snailycad/types";
+import { getActiveOfficer } from "~/lib/leo/activeOfficer";
+import { getActiveDeputy } from "~/lib/get-active-ems-fd-deputy";
 
 @Controller("/user")
 @UseBefore(IsAuth)
@@ -33,8 +35,24 @@ export class UserController {
   async getAuthUser(
     @Context("cad") cad: cad,
     @Context("user") user: User,
+    @Context() ctx: Context,
+    @QueryParams("includeActiveUnit", Boolean) includeActiveUnit?: boolean,
   ): Promise<APITypes.GetUserData> {
     const cadWithoutDiscordRoles = { ...cad, discordRoles: undefined };
+
+    if (includeActiveUnit) {
+      const [officer, deputy] = await Promise.all([
+        getActiveOfficer({ user, ctx }).catch(() => null),
+        getActiveDeputy({ user, ctx }).catch(() => null),
+      ]);
+
+      const unit = (officer ?? deputy ?? null) as
+        | APITypes.GetActiveOfficerData
+        | APITypes.GetEmsFdActiveDeputy
+        | null;
+
+      return { ...user, unit, cad: cadWithoutDiscordRoles };
+    }
 
     return { ...user, cad: cadWithoutDiscordRoles };
   }

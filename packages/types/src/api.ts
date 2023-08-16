@@ -1,5 +1,7 @@
 import type * as Prisma from "@prisma/client";
 import type * as Types from "./index.js";
+import { GetEmsFdActiveDeputy } from "./api.js";
+import { GetActiveOfficerData } from "./api.js";
 
 export * from "./api/admin.js";
 export * from "./api/dispatch.js";
@@ -114,7 +116,10 @@ export type DeleteDisable2FAData = boolean;
  * @route /user
  */
 // todo: add cad properties
-export type GetUserData = Types.User & { cad: Prisma.cad };
+export type GetUserData = Types.User & {
+  cad: Prisma.cad;
+  unit?: GetActiveOfficerData | GetEmsFdActiveDeputy | null;
+};
 
 /**
  * @method Patch
