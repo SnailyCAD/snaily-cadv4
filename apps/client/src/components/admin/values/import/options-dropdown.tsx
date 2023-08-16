@@ -9,7 +9,7 @@ import {
 } from "@snailycad/ui";
 import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
-import { useDownload } from "@casper124578/useful";
+import { useDownload } from "@casperiv/useful";
 import type { ValueType } from "@snailycad/types";
 import { isPenalCodeValue, isDivisionValue, isStatusValue } from "@snailycad/utils";
 import format from "date-fns/format";

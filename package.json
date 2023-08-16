@@ -21,9 +21,9 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@casper124578/eslint-config": "6.0.0",
-    "@casper124578/eslint-config-next": "6.0.0",
-    "@casper124578/eslint-config-react": "6.0.0",
+    "@casperiv/eslint-config": "8.0.0",
+    "@casperiv/eslint-config-next": "8.0.0",
+    "@casperiv/eslint-config-react": "8.0.0",
     "colorette": "2.0.20",
     "concurrently": "^8.2.0",
     "copy": "^0.3.2",

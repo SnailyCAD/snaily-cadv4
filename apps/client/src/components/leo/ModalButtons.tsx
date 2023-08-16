@@ -14,7 +14,7 @@ import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useImageUrl } from "hooks/useImageUrl";
-import { useMounted } from "@casper124578/useful";
+import { useMounted } from "@casperiv/useful";
 import { usePermission } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
 import dynamic from "next/dynamic";

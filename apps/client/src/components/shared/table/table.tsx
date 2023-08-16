@@ -18,7 +18,7 @@ import { TableActionsAlignment } from "@snailycad/types";
 import { orderColumnsByTableActionsAlignment } from "lib/table/orderColumnsByTableActionsAlignment";
 import type { useTableState } from "hooks/shared/table/use-table-state";
 import { ReactSortable } from "react-sortablejs";
-import { useMounted } from "@casper124578/useful";
+import { useMounted } from "@casperiv/useful";
 import { createTableDragDropColumn } from "lib/table/create-table-dnd-column";
 import { createTableCheckboxColumn } from "./indeterminate-checkbox";
 import { TableSkeletonLoader } from "./skeleton-loader";

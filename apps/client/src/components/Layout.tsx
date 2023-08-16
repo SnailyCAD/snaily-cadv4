@@ -4,7 +4,7 @@ import { useRoleplayStopped } from "hooks/global/useRoleplayStopped";
 import { Nav } from "./shared/nav/Nav";
 import { useHasPermissionForLayout } from "hooks/auth/useHasPermissionForLayout";
 import { useSocketError } from "hooks/global/useSocketError";
-import { useSocket } from "@casper124578/use-socket.io";
+import { useSocket } from "@casperiv/use-socket.io";
 
 import dynamic from "next/dynamic";
 

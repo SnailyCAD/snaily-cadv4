@@ -1598,9 +1598,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@casper124578/eslint-config-next@npm:6.0.0":
+"@casperiv/eslint-config-next@npm:6.0.0":
   version: 6.0.0
-  resolution: "@casper124578/eslint-config-next@npm:6.0.0"
+  resolution: "@casperiv/eslint-config-next@npm:6.0.0"
   dependencies:
     eslint-config-next: ^13.1.6
   peerDependencies:
@@ -1610,9 +1610,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@casper124578/eslint-config-react@npm:6.0.0":
+"@casperiv/eslint-config-react@npm:6.0.0":
   version: 6.0.0
-  resolution: "@casper124578/eslint-config-react@npm:6.0.0"
+  resolution: "@casperiv/eslint-config-react@npm:6.0.0"
   dependencies:
     eslint-plugin-jsx-a11y: ^6.7.1
     eslint-plugin-react: ^7.32.2
@@ -1623,9 +1623,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@casper124578/eslint-config@npm:6.0.0":
+"@casperiv/eslint-config@npm:6.0.0":
   version: 6.0.0
-  resolution: "@casper124578/eslint-config@npm:6.0.0"
+  resolution: "@casperiv/eslint-config@npm:6.0.0"
   dependencies:
     "@typescript-eslint/eslint-plugin": ^5.50.0
     "@typescript-eslint/parser": ^5.50.0
@@ -1641,9 +1641,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@casper124578/use-socket.io@npm:5.1.0":
+"@casperiv/use-socket.io@npm:5.1.0":
   version: 5.1.0
-  resolution: "@casper124578/use-socket.io@npm:5.1.0"
+  resolution: "@casperiv/use-socket.io@npm:5.1.0"
   dependencies:
     react: 18.2.0
     socket.io-client: 4.6.1
@@ -1657,9 +1657,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@casper124578/useful@npm:^2.0.6":
+"@casperiv/useful@npm:^2.0.6":
   version: 2.0.6
-  resolution: "@casper124578/useful@npm:2.0.6"
+  resolution: "@casperiv/useful@npm:2.0.6"
   peerDependencies:
     react: ">=18.2.0"
     react-dom: ">=18.2.0"
@@ -5300,8 +5300,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snailycad/client@workspace:apps/client"
   dependencies:
-    "@casper124578/use-socket.io": 5.1.0
-    "@casper124578/useful": ^2.0.6
+    "@casperiv/use-socket.io": 5.1.0
+    "@casperiv/useful": ^2.0.6
     "@headlessui/react": ^1.7.16
     "@radix-ui/react-popover": ^1.0.6
     "@radix-ui/react-toolbar": ^1.0.4
@@ -18485,9 +18485,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "snailycad@workspace:."
   dependencies:
-    "@casper124578/eslint-config": 6.0.0
-    "@casper124578/eslint-config-next": 6.0.0
-    "@casper124578/eslint-config-react": 6.0.0
+    "@casperiv/eslint-config": 6.0.0
+    "@casperiv/eslint-config-next": 6.0.0
+    "@casperiv/eslint-config-react": 6.0.0
     "@faker-js/faker": ^8.0.2
     colorette: 2.0.20
     concurrently: ^8.2.0

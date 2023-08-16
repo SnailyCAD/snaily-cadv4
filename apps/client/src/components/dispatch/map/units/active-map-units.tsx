@@ -4,7 +4,7 @@ import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
 import { useActiveOfficers } from "hooks/realtime/useActiveOfficers";
 import type { MapPlayer, PlayerDataEventPayload } from "types/map";
 import { createPortal } from "react-dom";
-import { usePortal } from "@casper124578/useful";
+import { usePortal } from "@casperiv/useful";
 import { useTranslations } from "next-intl";
 import { UnitItem } from "./unit-item";
 import { ManageUnitModal } from "components/dispatch/modals/manage-unit-modal";

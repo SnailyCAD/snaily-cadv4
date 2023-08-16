@@ -9,7 +9,7 @@ import { getTranslations } from "lib/getTranslation";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { useMounted } from "@casper124578/useful";
+import { useMounted } from "@casperiv/useful";
 import { Title } from "components/shared/Title";
 import { toastMessage } from "lib/toastMessage";
 import { canUseThirdPartyConnections } from "lib/utils";

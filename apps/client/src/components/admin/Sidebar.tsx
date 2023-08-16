@@ -4,7 +4,7 @@ import { classNames } from "lib/classNames";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useTranslations } from "use-intl";
-import { useViewport } from "@casper124578/useful/hooks/useViewport";
+import { useViewport } from "@casperiv/useful/hooks/useViewport";
 import { importRoutes, managementRoutes, SidebarRoute, valueRoutes } from "./Sidebar/routes";
 import { usePermission } from "hooks/usePermission";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";

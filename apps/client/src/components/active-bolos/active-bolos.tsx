@@ -7,7 +7,7 @@ import { type Bolo, ShouldDoType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import type { DeleteBolosData, GetBolosData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
-import { useMounted } from "@casper124578/useful";
+import { useMounted } from "@casperiv/useful";
 import { Button, FullDate } from "@snailycad/ui";
 import { classNames } from "lib/classNames";
 import { Filter } from "react-bootstrap-icons";
