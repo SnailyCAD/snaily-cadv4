@@ -29,6 +29,7 @@ import {
   combinedUnitProperties,
   combinedEmsFdUnitProperties,
 } from "utils/leo/includes";
+import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -181,7 +182,8 @@ export class DispatchController {
   })
   async setSignal100(
     @Context("cad") cad: cad,
-    @BodyParams("value") value: boolean,
+    @Context("sessionUserId") sessionUserId: string,
+    @BodyParams("value") value?: boolean,
     @BodyParams("callId") callId?: string,
   ): Promise<APITypes.PostDispatchSignal100Data> {
     if (typeof value !== "boolean") {
@@ -195,6 +197,15 @@ export class DispatchController {
       data: {
         signal100Enabled: value,
       },
+    });
+
+    await createAuditLogEntry({
+      action: {
+        type: AuditLogActionType.Signal100Toggled,
+        new: { enabled: value, user: { id: sessionUserId } },
+      },
+      executorId: sessionUserId,
+      prisma,
     });
 
     if (callId) {

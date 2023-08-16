@@ -68,4 +68,6 @@ export enum AuditLogActionType {
   Calls911Purge = "Calls911Purge",
   LeoIncidentsPurged = "LeoIncidentsPurged",
   EmsIncidentsPurged = "EmsIncidentsPurged",
+  Signal100Toggled = "Signal100Toggled",
+  Call911Create = "Call911Create",
 }

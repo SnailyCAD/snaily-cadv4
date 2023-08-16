@@ -228,6 +228,15 @@ export class Calls911Controller {
 
     const normalizedCall = officerOrDeputyToUnit(updated);
 
+    await createAuditLogEntry({
+      action: {
+        type: AuditLogActionType.Call911Create,
+        new: normalizedCall,
+      },
+      executorId: user.id,
+      prisma,
+    });
+
     try {
       const data = await this.createWebhookData(normalizedCall, user.locale);
       await sendDiscordWebhook({ type: DiscordWebhookType.CALL_911, data });
