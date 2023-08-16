@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { RowSelectionState, SortingState, VisibilityState } from "@tanstack/react-table";
 import type { useAsyncTable } from "./use-async-table";
-import { useMounted } from "@casper124578/useful";
+import { useMounted } from "@casperiv/useful";
 
 interface TableStateOptions {
   dragDrop?: {

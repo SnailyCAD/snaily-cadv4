@@ -1,6 +1,6 @@
 import * as React from "react";
 import format from "date-fns/format";
-import { useMounted } from "@casper124578/useful";
+import { useMounted } from "@casperiv/useful";
 
 export function useTime() {
   const ref = React.useRef<HTMLSpanElement>(null);

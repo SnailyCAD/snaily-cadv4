@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useSocket } from "@casper124578/use-socket.io";
+import { useSocket } from "@casperiv/use-socket.io";
 import type { Socket } from "socket.io-client";
 
 const DISCONNECT_REASONS = ["transport close", "transport error"];

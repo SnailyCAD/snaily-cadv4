@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useAuth } from "context/AuthContext";
-import { useListener } from "@casper124578/use-socket.io";
+import { useListener } from "@casperiv/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 
 export function useAreaOfPlay() {

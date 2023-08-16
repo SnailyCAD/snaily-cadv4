@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import type { TranslationValues } from "use-intl";
 
-export type ErrorMessages = typeof import("../../../locales/en/common.json")["Errors"];
+export type ErrorMessages = (typeof import("../../../locales/en/common.json"))["Errors"];
 export type ErrorMessage = keyof ErrorMessages;
 
 export interface ErrorObj {

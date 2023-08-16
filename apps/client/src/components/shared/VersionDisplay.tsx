@@ -1,4 +1,4 @@
-import { useMounted } from "@casper124578/useful";
+import { useMounted } from "@casperiv/useful";
 import type { cad } from "@snailycad/types";
 
 interface Props {

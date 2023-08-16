@@ -1,4 +1,4 @@
-import { useListener } from "@casper124578/use-socket.io";
+import { useListener } from "@casperiv/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { DispatchChat } from "@snailycad/types";
 import { Button } from "@snailycad/ui";

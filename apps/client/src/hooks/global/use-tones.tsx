@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useListener } from "@casper124578/use-socket.io";
+import { useListener } from "@casperiv/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { useTranslations } from "use-intl";
 import { useAudio } from "react-use";
