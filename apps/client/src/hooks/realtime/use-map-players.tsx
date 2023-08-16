@@ -9,20 +9,24 @@ import type {
 } from "types/map";
 import useFetch from "lib/useFetch";
 import { toastMessage } from "lib/toastMessage";
-import { create } from "zustand";
 import { useDispatchMapState, useSocketStore } from "state/mapState";
 import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 import { makeSocketConnection } from "components/dispatch/map/modals/select-map-server-modal";
 import { ConnectionStatus } from "@snailycad/ui";
+import { createWithEqualityFn } from "zustand/traditional";
+import { shallow } from "zustand/shallow";
 
-export const useMapPlayersStore = create<{
+export const useMapPlayersStore = createWithEqualityFn<{
   players: Map<string, MapPlayer | PlayerDataEventPayload>;
   setPlayers(players: Map<string, MapPlayer | PlayerDataEventPayload>): void;
-}>((set) => ({
-  players: new Map<string, MapPlayer | PlayerDataEventPayload>(),
-  setPlayers: (players: Map<string, MapPlayer | PlayerDataEventPayload>) => set({ players }),
-}));
+}>(
+  (set) => ({
+    players: new Map<string, MapPlayer | PlayerDataEventPayload>(),
+    setPlayers: (players: Map<string, MapPlayer | PlayerDataEventPayload>) => set({ players }),
+  }),
+  shallow,
+);
 
 export function useMapPlayers() {
   const { players, setPlayers } = useMapPlayersStore();
