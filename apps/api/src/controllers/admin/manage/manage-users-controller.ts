@@ -33,7 +33,7 @@ const manageUsersSelect = (selectCitizens: boolean) =>
     apiToken: { include: { logs: { take: 35, orderBy: { createdAt: "desc" } } } },
     roles: true,
     User2FA: true,
-  } as const);
+  }) as const;
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/users")
