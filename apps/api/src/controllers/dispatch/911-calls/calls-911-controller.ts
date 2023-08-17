@@ -133,13 +133,22 @@ export class Calls911Controller {
   }
 
   @Get("/:id")
-  @Description("Get a call by its id")
+  @Description("Get a call by its id or caseNumber")
   @UsePermissions({
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   async getCallById(@PathParams("id") id: string): Promise<APITypes.Get911CallByIdData> {
-    const call = await prisma.call911.findUnique({
-      where: { id },
+    console.log("idOrCaseNumber", Number(id));
+    let where: Prisma.Call911WhereInput = {};
+
+    if (Number.isNaN(parseInt(id))) {
+      where = { id };
+    } else {
+      where = { caseNumber: parseInt(id) };
+    }
+
+    const call = await prisma.call911.findFirst({
+      where,
       include: callInclude,
     });
 
