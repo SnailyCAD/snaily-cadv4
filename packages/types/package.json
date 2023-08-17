@@ -12,14 +12,10 @@
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "typesVersions": {
     "*": {
-      "api": [
-        "dist/api.d.ts"
-      ]
+      "api": ["dist/api.d.ts"]
     }
   },
   "main": "./dist/index.js",
@@ -37,19 +33,14 @@
     "typescript": "^5.1.6"
   },
   "tsup": {
-    "entry": [
-      "./src/**/*.ts"
-    ],
+    "entry": ["./src/**/*.ts"],
     "dts": true,
     "bundle": false,
     "platform": "node",
     "target": "node16",
     "silent": true,
     "treeshake": true,
-    "format": [
-      "cjs",
-      "esm"
-    ]
+    "format": ["cjs", "esm"]
   },
   "sideEffects": false
 }

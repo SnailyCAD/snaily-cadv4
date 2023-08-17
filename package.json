@@ -1,12 +1,9 @@
 {
   "private": true,
   "name": "snailycad",
-  "version": "1.66.0",
+  "version": "1.67.0",
   "packageManager": "yarn@3.6.0",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "workspaces": ["apps/*", "packages/*"],
   "scripts": {
     "start": "yarn run concurrently \"yarn workspace @snailycad/client start\" \"yarn workspace @snailycad/api generate && yarn workspace @snailycad/api start\"",
     "build": "yarn turbo run build --filter=\"{packages/**/**}\" && yarn turbo run build --filter=\"{apps/**/**}\"",

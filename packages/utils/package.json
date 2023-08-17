@@ -35,29 +35,15 @@
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "typesVersions": {
     "*": {
-      "callsign": [
-        "dist/callsign.d.ts"
-      ],
-      "typeguards": [
-        "dist/typeguards.d.ts"
-      ],
-      "version": [
-        "dist/version.d.ts"
-      ],
-      "api-url": [
-        "dist/api-url.d.ts"
-      ],
-      "case-number": [
-        "dist/case-number.d.ts"
-      ],
-      "editor": [
-        "dist/editor/index.d.ts"
-      ]
+      "callsign": ["dist/callsign.d.ts"],
+      "typeguards": ["dist/typeguards.d.ts"],
+      "version": ["dist/version.d.ts"],
+      "api-url": ["dist/api-url.d.ts"],
+      "case-number": ["dist/case-number.d.ts"],
+      "editor": ["dist/editor/index.d.ts"]
     }
   },
   "scripts": {
@@ -77,19 +63,14 @@
     "vitest": "^0.34.0"
   },
   "tsup": {
-    "entry": [
-      "src/**/**/*.ts"
-    ],
+    "entry": ["src/**/**/*.ts"],
     "dts": true,
     "bundle": false,
     "platform": "node",
     "target": "node16",
     "silent": true,
     "treeshake": true,
-    "format": [
-      "cjs",
-      "esm"
-    ]
+    "format": ["cjs", "esm"]
   },
   "sideEffects": false
 }

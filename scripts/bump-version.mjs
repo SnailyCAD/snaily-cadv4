@@ -28,7 +28,7 @@ for (const pkg of allPackages) {
   console.log(`${green("INFO:")} Set version ${underline(version)} for ${underline(pkg)}\n`);
 }
 
-updateMainPackage();
+await updateMainPackage();
 
 function getJson(path) {
   try {

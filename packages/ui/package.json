@@ -5,9 +5,7 @@
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "build": "yarn tsup",
     "watch": "yarn tsup --watch --silent=false",
@@ -53,9 +51,7 @@
     "target": "node18",
     "silent": true,
     "treeshake": true,
-    "format": [
-      "esm"
-    ]
+    "format": ["esm"]
   },
   "dependencies": {
     "@internationalized/date": "^3.3.0",

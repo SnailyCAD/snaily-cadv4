@@ -11,9 +11,7 @@
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "build": "yarn tsup",
     "watch": "yarn tsup --watch --silent=false",
@@ -28,21 +26,14 @@
     "vitest": "^0.34.0"
   },
   "tsup": {
-    "entry": [
-      "src/index.ts",
-      "src/routes.ts",
-      "src/socket-events.ts"
-    ],
+    "entry": ["src/index.ts", "src/routes.ts", "src/socket-events.ts"],
     "dts": true,
     "bundle": false,
     "platform": "node",
     "treeshake": true,
     "target": "node16",
     "silent": true,
-    "format": [
-      "cjs",
-      "esm"
-    ]
+    "format": ["cjs", "esm"]
   },
   "sideEffects": false
 }
