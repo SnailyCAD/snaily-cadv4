@@ -7,7 +7,7 @@
     "format": "yarn prisma format",
     "generate": "yarn prisma generate",
     "typecheck": "yarn run generate && tsc --noEmit",
-    "copy-env": "node ../../scripts/copy-env.mjs --api",
+    "set-client-port": "node ../../scripts/set-client-port.mjs --api",
     "test:watch": "yarn vitest --watch",
     "test": "yarn vitest run"
   },
