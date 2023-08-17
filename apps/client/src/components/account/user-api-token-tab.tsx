@@ -87,6 +87,7 @@ export function UserApiTokenTab() {
                   >
                     Public API Access here
                   </a>
+                  .
                 </>
               }
               label={common("enabled")}

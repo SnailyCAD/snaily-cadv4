@@ -56,10 +56,6 @@ export function usePermissionsModal(options: UsePermissionsModalOptions) {
       ],
     },
     {
-      name: t("other"),
-      permissions: defaultPermissions.otherDefaultPermissions,
-    },
-    {
       name: t("owner"),
       permissions: [
         Permissions.ManageCADSettings,
