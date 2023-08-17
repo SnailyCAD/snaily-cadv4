@@ -1,4 +1,4 @@
-import { Rank, type cad, WhitelistStatus, Feature, User, Prisma, CustomRole } from "@prisma/client";
+import { Rank, WhitelistStatus, User, Prisma, CustomRole } from "@prisma/client";
 import { PathParams, BodyParams, Context, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -20,7 +20,6 @@ import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateSchema } from "lib/data/validate-schema";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
-import { isFeatureEnabled } from "lib/upsert-cad";
 import { manyToManyHelper } from "lib/data/many-to-many";
 import type * as APITypes from "@snailycad/types/api";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
@@ -529,18 +528,7 @@ export class ManageUsersController {
   async revokeApiToken(
     @Context("sessionUserId") sessionUserId: string,
     @PathParams("userId") userId: string,
-    @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
   ): Promise<APITypes.DeleteManageUserRevokeApiTokenData> {
-    const isUserAPITokensEnabled = isFeatureEnabled({
-      feature: Feature.USER_API_TOKENS,
-      features: cad.features,
-      defaultReturn: false,
-    });
-
-    if (!isUserAPITokensEnabled) {
-      throw new BadRequest("featureNotEnabled");
-    }
-
     const user = await prisma.user.findUnique({
       where: {
         id: userId,

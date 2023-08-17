@@ -1,4 +1,3 @@
-import { hasPermission, Permissions } from "@snailycad/permissions";
 import type { User } from "@snailycad/types";
 import { Forbidden } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
@@ -21,15 +20,8 @@ export async function getUserFromUserAPIToken(
     select: { ...userProperties, password: includePassword },
   });
 
-  if (user) {
-    const hasPersonalApiTokenPerms = hasPermission({
-      userToCheck: user,
-      permissionsToCheck: [Permissions.UsePersonalApiToken],
-    });
-
-    if (!hasPersonalApiTokenPerms) {
-      throw new Forbidden(GetSessionUserErrors.InvalidPermissionsForUserAPIToken);
-    }
+  if (!user) {
+    return { apiToken: null, user: null };
   }
 
   return {

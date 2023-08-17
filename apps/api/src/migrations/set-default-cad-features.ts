@@ -6,7 +6,6 @@ const FEATURES: Feature[] = Object.values(Feature);
 const DEFAULT_DISABLED_FEATURES: Partial<Record<Feature, { isEnabled: boolean }>> = {
   CUSTOM_TEXTFIELD_VALUES: { isEnabled: false },
   DMV: { isEnabled: false },
-  USER_API_TOKENS: { isEnabled: false },
   CITIZEN_RECORD_APPROVAL: { isEnabled: false },
   COMMON_CITIZEN_CARDS: { isEnabled: false },
   STEAM_OAUTH: { isEnabled: false },

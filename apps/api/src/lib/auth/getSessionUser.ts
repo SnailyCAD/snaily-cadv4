@@ -4,14 +4,12 @@ import { parse } from "cookie";
 import { Cookie, USER_API_TOKEN_HEADER } from "@snailycad/config";
 import { signJWT, verifyJWT } from "utils/jwt";
 import { prisma } from "lib/data/prisma";
-import { Feature, type User } from "@snailycad/types";
-import { isFeatureEnabled } from "lib/upsert-cad";
+import { type User } from "@snailycad/types";
 import type { GetUserData } from "@snailycad/types/api";
 import { setCookie } from "utils/set-cookie";
 import { ACCESS_TOKEN_EXPIRES_MS, ACCESS_TOKEN_EXPIRES_S } from "./setUserTokenCookies";
 import { getUserFromUserAPIToken } from "./getUserFromUserAPIToken";
 import { validateUserData } from "./validateUser";
-import { createFeaturesObject } from "middlewares/is-enabled";
 import { Prisma } from "@prisma/client";
 
 export enum GetSessionUserErrors {
@@ -79,24 +77,17 @@ export async function getSessionUser(
     ? String(options.req.headers[USER_API_TOKEN_HEADER])
     : undefined;
 
-  const cad = await prisma.cad.findFirst({ select: { features: true } });
-  const isUserAPITokensEnabled = isFeatureEnabled({
-    feature: Feature.USER_API_TOKENS,
-    features: createFeaturesObject(cad?.features),
-    defaultReturn: false,
-  });
-
   /**
-   * `userApiTokenHeader` is defined (passed via headers) and `isUserAPITokensEnabled` is true (feature is enabled)
+   * `userApiTokenHeader` is defined (passed via headers)
    * -> then we will try to get the user from the user's API token
    *
    * -> if the user exists, we validate them if they're not banned, awaiting whitelisting, etc.
    * -> if the validation fails, we throw an error respectively.
    * -> if the validations succeeds, we return the user.
    *
-   * -> if `userApiTokenHeader` or `isUserAPITokensEnabled` is false, we will try to get the user from the access token (cookies)
+   * -> if `userApiTokenHeader` is false, we will try to get the user from the access token (cookies)
    */
-  if (userApiTokenHeader && isUserAPITokensEnabled) {
+  if (userApiTokenHeader) {
     const { apiToken, user } = await getUserFromUserAPIToken(userApiTokenHeader);
     validateUserData(user, options.req, options.returnNullOnError as false | undefined);
 

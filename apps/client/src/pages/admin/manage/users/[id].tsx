@@ -28,7 +28,6 @@ import { usePermission, Permissions } from "hooks/usePermission";
 import dynamic from "next/dynamic";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { ApiTokenArea } from "components/admin/manage/users/api-token-area";
-import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type {
   GetCustomRolesData,
   GetManageUserByIdData,
@@ -70,7 +69,6 @@ export default function ManageCitizens(props: Props) {
   const t = useTranslations("Management");
   const { openModal } = useModal();
   const { hasPermissions } = usePermission();
-  const { USER_API_TOKENS } = useFeatureEnabled();
   const { cad } = useAuth();
 
   async function handleAcceptUser() {
@@ -250,9 +248,7 @@ export default function ManageCitizens(props: Props) {
           )}
         </Formik>
 
-        {USER_API_TOKENS && (!isUserPendingApproval || !isUserDenied) ? (
-          <ApiTokenArea user={user} />
-        ) : null}
+        {!isUserPendingApproval || !isUserDenied ? <ApiTokenArea user={user} /> : null}
 
         {user.rank !== Rank.OWNER && (!isUserPendingApproval || !isUserDenied) ? (
           <>

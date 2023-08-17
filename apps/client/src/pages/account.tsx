@@ -13,7 +13,6 @@ import { useMounted } from "@casperiv/useful";
 import { Title } from "components/shared/Title";
 import { toastMessage } from "lib/toastMessage";
 import { canUseThirdPartyConnections } from "lib/utils";
-import { usePermission, Permissions } from "hooks/usePermission";
 import { getAvailableSounds, Sounds } from "lib/server/getAvailableSounds.server";
 import { AccountInfoTab } from "components/account/account-info-tab";
 
@@ -46,12 +45,9 @@ export default function Account({ availableSounds }: Props) {
   const { user } = useAuth();
   const t = useTranslations("Account");
   const router = useRouter();
-  const { DISCORD_AUTH, STEAM_OAUTH, USER_API_TOKENS } = useFeatureEnabled();
+  const { DISCORD_AUTH, STEAM_OAUTH } = useFeatureEnabled();
   const errorT = useTranslations("Errors");
   const showConnectionsTab = (DISCORD_AUTH || STEAM_OAUTH) && canUseThirdPartyConnections();
-
-  const { hasPermissions } = usePermission();
-  const hasApiTokenPermissions = hasPermissions([Permissions.UsePersonalApiToken]);
 
   const errors = {
     discordAccountAlreadyLinked: errorT("discordAccountAlreadyLinked"),
@@ -71,15 +67,11 @@ export default function Account({ availableSounds }: Props) {
     { name: t("accountInfo"), value: "accountInfo" },
     { name: t("accountSettings"), value: "accountSettings" },
     { name: t("appearanceSettings"), value: "appearanceSettings" },
+    { name: t("userApiToken"), value: "userApiToken" },
   ];
 
   if (showConnectionsTab) {
-    TABS_TITLES[3] = { name: t("connections"), value: "connections" };
-  }
-
-  if (USER_API_TOKENS && hasApiTokenPermissions) {
-    const idx = showConnectionsTab ? 4 : 3;
-    TABS_TITLES[idx] = { name: t("userApiToken"), value: "userApiToken" };
+    TABS_TITLES[4] = { name: t("connections"), value: "connections" };
   }
 
   if (!user) {
@@ -96,8 +88,8 @@ export default function Account({ availableSounds }: Props) {
             <AccountInfoTab />
             <AccountSettingsTab />
             <AppearanceTab availableSounds={availableSounds} />
+            <UserApiTokenTab />
             {showConnectionsTab ? <ConnectionsTab /> : null}
-            {USER_API_TOKENS && hasApiTokenPermissions ? <UserApiTokenTab /> : null}
           </TabList>
         </div>
       </div>

@@ -6,7 +6,6 @@ import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
 import { GiveTempPasswordModal } from "./modals/give-temp-password-modal";
 import { useTranslations } from "use-intl";
-import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type {
   DeleteManageUserRevokeApiTokenData,
   DeleteManageUsersData,
@@ -23,7 +22,6 @@ export function DangerZone({ user, setUser }: Props) {
   const router = useRouter();
   const { openModal, closeModal } = useModal();
   const t = useTranslations("Management");
-  const { USER_API_TOKENS } = useFeatureEnabled();
 
   const formDisabled = user.rank === "OWNER";
 
@@ -105,7 +103,7 @@ export function DangerZone({ user, setUser }: Props) {
           </Button>
         ) : null}
 
-        {USER_API_TOKENS && user.apiTokenId ? (
+        {user.apiTokenId ? (
           <Button
             variant="danger"
             className="flex items-center ml-2"

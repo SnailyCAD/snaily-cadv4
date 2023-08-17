@@ -112,11 +112,7 @@ export enum Permissions {
   ManageValueVehicleTrimLevel = "ManageValueVehicleTrimLevel",
   ManageValueWeaponFlag = "ManageValueWeaponFlag",
 
-  // other
-  UsePersonalApiToken = "UsePersonalApiToken",
-
   // deprecated
-
   ViewDLExams = "ViewDLExams",
   ManageDLExams = "ManageDLExams",
   ViewWeaponExams = "ViewWeaponExams",
