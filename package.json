@@ -25,6 +25,7 @@
     "@casperiv/eslint-config-react": "8.0.0",
     "colorette": "2.0.20",
     "concurrently": "^8.2.0",
+    "copy": "^0.3.2",
     "dotenv": "^16.3.1",
     "eslint": "8.47.0",
     "husky": "^8.0.3",
