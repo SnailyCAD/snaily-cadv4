@@ -11,7 +11,7 @@
     "start:proxy-experimental": "yarn next start --port 80",
     "validate": "node ../../scripts/validate.mjs",
     "typecheck": "yarn tsc --noEmit",
-    "copy-env": "node ../../scripts/copy-env.mjs --client",
+    "set-client-port": "node ../../scripts/set-client-port.mjs --client",
     "validate-locales": "node ../../scripts/validate-locales.mjs",
     "test:watch": "yarn vitest --watch",
     "test": "yarn vitest run",

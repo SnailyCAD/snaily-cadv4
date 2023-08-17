@@ -2,81 +2,42 @@
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
     "@snailycad/client#build": {
-      "dependsOn": [
-        "copy-env",
-        "^build"
-      ],
-      "outputs": [
-        ".next/**"
-      ]
+      "dependsOn": ["set-client-port", "^build"],
+      "outputs": [".next/**"]
     },
     "@snailycad/api#build": {
-      "dependsOn": [
-        "copy-env",
-        "^build"
-      ]
+      "dependsOn": ["set-client-port", "^build"]
     },
-    "copy-env": {
+    "set-client-port": {
       "cache": false,
-      "dependsOn": [
-        "^copy-env"
-      ],
-      "outputs": [
-        ".env"
-      ]
+      "dependsOn": ["^set-client-port"],
+      "outputs": [".env"]
     },
     "create-images-domain": {
-      "dependsOn": [
-        "^create-images-domain"
-      ],
-      "outputs": [
-        "next.config.mjs"
-      ]
+      "dependsOn": ["^create-images-domain"],
+      "outputs": ["next.config.mjs"]
     },
     "validate-locales": {
-      "dependsOn": [
-        "^validate-locales"
-      ]
+      "dependsOn": ["^validate-locales"]
     },
     "build": {
-      "dependsOn": [
-        "copy-env",
-        "create-images-domain",
-        "validate-locales",
-        "^build"
-      ],
-      "outputs": [
-        ".next/**",
-        "dist/**"
-      ]
+      "dependsOn": ["set-client-port", "create-images-domain", "validate-locales", "^build"],
+      "outputs": [".next/**", "dist/**"]
     },
     "typecheck": {
-      "dependsOn": [
-        "^typecheck"
-      ],
+      "dependsOn": ["^typecheck"],
       "outputs": []
     },
     "test": {
-      "dependsOn": [
-        "^test"
-      ],
-      "inputs": [
-        "src/**/*.tsx",
-        "src/**/*.ts",
-        "tests/**/*.test.ts"
-      ],
+      "dependsOn": ["^test"],
+      "inputs": ["src/**/*.tsx", "src/**/*.ts", "tests/**/*.test.ts"],
       "outputs": []
     },
     "watch": {
       "persistent": true,
       "cache": false,
-      "outputs": [
-        ".next/*",
-        "dist/*"
-      ]
+      "outputs": [".next/*", "dist/*"]
     }
   },
-  "globalDependencies": [
-    "**/.env"
-  ]
+  "globalDependencies": ["**/.env"]
 }

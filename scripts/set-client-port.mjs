@@ -1,6 +1,5 @@
 import "dotenv/config";
 import process from "node:process";
-import { one } from "copy";
 import { join } from "node:path";
 import { readFile, writeFile } from "node:fs/promises";
 import { EOL } from "node:os";
@@ -43,47 +42,9 @@ async function addPortToClientPackageJson() {
 
 const [, , ...args] = process.argv;
 const copyToClient = hasArg("--client");
-const copyToApi = hasArg("--api");
-
-let ENV_FILE_PATH = join(process.cwd(), ".env");
-
-if (ENV_FILE_PATH.endsWith("/apps/client/.env") || ENV_FILE_PATH.endsWith("/apps/api/.env")) {
-  ENV_FILE_PATH = ENV_FILE_PATH.replace(/apps\/(client|api)\//, "");
-}
-
-/**
- * @param {string} distDir
- */
-function copyEnv(distDir) {
-  try {
-    one(ENV_FILE_PATH, distDir, (error) => {
-      if (error) {
-        console.log({ error });
-        return;
-      }
-
-      const isClient = distDir.endsWith("client");
-      const isApi = distDir.endsWith("api");
-      const type = isClient ? "client" : isApi ? "api" : null;
-
-      if (type) {
-        console.log(`✅ copied .env — ${type}`);
-      }
-    });
-  } catch (e) {
-    console.log({ e });
-  }
-}
 
 if (copyToClient) {
-  const CLIENT_PACKAGE_PATH = join(process.cwd(), "apps", "client");
   addPortToClientPackageJson();
-  copyEnv(CLIENT_PACKAGE_PATH);
-}
-
-if (copyToApi) {
-  const API_PACKAGE_PATH = join(process.cwd(), "apps", "api");
-  copyEnv(API_PACKAGE_PATH);
 }
 
 function hasArg(arg) {

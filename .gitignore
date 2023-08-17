@@ -46,3 +46,7 @@ v
 # storybook
 storybook-static
 build-storybook.log
+
+# environment
+!apps/api/.env
+!apps/client/.env
