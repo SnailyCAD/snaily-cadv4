@@ -11,7 +11,6 @@
     "start": "yarn run concurrently \"yarn workspace @snailycad/client start\" \"yarn workspace @snailycad/api generate && yarn workspace @snailycad/api start\"",
     "build": "yarn turbo run build --filter=\"{packages/**/**}\" && yarn turbo run build --filter=\"{apps/**/**}\"",
     "dev": "docker compose up -d && yarn turbo run watch --parallel --concurrency 11",
-    "format:quick": "pretty-quick --staged --pattern \"(packages|apps)/**/*.{js,jsx,mjs,ts,tsx,md,css,json}\"",
     "format": "prettier --write \"./(packages|apps)/**/**/*.{js,jsx,ts,mjs,tsx,md,css,json}\" --ignore-path .gitignore",
     "lint": "yarn run eslint . --ext .ts,.js,.tsx,.jsx,.mjs",
     "lint:fix": "yarn run eslint . --ext .ts,.js,.tsx,.jsx,.mjs --fix",
