@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/client",
-  "version": "1.67.0",
+  "version": "1.67.1",
   "sideEffects": false,
   "scripts": {
     "dev": " yarn next dev",
