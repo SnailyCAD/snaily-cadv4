@@ -15,7 +15,9 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "yarn tsup",
     "watch": "yarn tsup --watch --silent=false",
@@ -31,18 +33,25 @@
     "vitest": "^0.34.0"
   },
   "tsup": {
-    "entry": ["src/**/*.ts"],
+    "entry": [
+      "src/**/*.ts"
+    ],
     "dts": true,
     "bundle": false,
     "platform": "node",
     "target": "node16",
     "treeshake": true,
     "silent": true,
-    "format": ["cjs", "esm"]
+    "format": [
+      "cjs",
+      "esm"
+    ]
   },
   "typesVersions": {
     "*": {
-      "permissions": ["dist/permissions.d.ts"]
+      "permissions": [
+        "dist/permissions.d.ts"
+      ]
     }
   },
   "sideEffects": false

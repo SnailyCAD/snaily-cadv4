@@ -15,7 +15,9 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "npx rimraf ./dist && yarn workspace @snailycad/api generate && yarn tsup",
     "watch": "yarn tsup --watch --silent=false",
@@ -28,14 +30,19 @@
     "vite": "^4.4.8"
   },
   "tsup": {
-    "entry": ["src/**/*.ts"],
+    "entry": [
+      "src/**/*.ts"
+    ],
     "dts": true,
     "bundle": false,
     "platform": "node",
     "treeshake": true,
     "target": "node16",
     "silent": true,
-    "format": ["cjs", "esm"]
+    "format": [
+      "cjs",
+      "esm"
+    ]
   },
   "sideEffects": false,
   "dependencies": {
@@ -43,7 +50,9 @@
   },
   "typesVersions": {
     "*": {
-      "server": ["dist/server.d.ts"]
+      "server": [
+        "dist/server.d.ts"
+      ]
     }
   }
 }
