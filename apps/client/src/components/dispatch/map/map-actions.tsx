@@ -38,6 +38,11 @@ export function MapActions() {
               <Button>{t("Leo.toggle")}</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" key="content">
+              <DropdownMenuItem onClick={() => mapState.setItem(MapItem.SMART_SIGNS)}>
+                {mapState.hiddenItems[MapItem.SMART_SIGNS]
+                  ? t("Leo.showSmartSigns")
+                  : t("Leo.hideSmartSigns")}
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => mapState.setItem(MapItem.BLIPS)}>
                 {mapState.hiddenItems[MapItem.BLIPS] ? t("Leo.showBlips") : t("Leo.hideBlips")}
               </DropdownMenuItem>

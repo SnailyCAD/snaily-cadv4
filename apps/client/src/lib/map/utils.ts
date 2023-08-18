@@ -34,6 +34,17 @@ export function convertToMap(rawX: XYZ["x"], rawY: XYZ["y"], map: L.Map) {
   return { lat: rLat, lng: rLng };
 }
 
+// todo: test this out
+export function convertToCoords(lat: number, lng: number, map: L.Map) {
+  const { lat: lat1, lng: lng1 } = map.unproject([0, 0], 0);
+  const { lat: lat2, lng: lng2 } = map.unproject([TILE_SIZE * 2, TILE_SIZE * 3 - TILE_SIZE], 0);
+
+  const x = GAME.x_1 + ((lng - lng1) * (GAME.x_1 - GAME.x_2)) / (lng1 - lng2);
+  const y = GAME.y_1 + ((lat - lat1) * (GAME.y_1 - GAME.y_2)) / (lat1 - lat2);
+
+  return { x, y, z: 0 };
+}
+
 function stringCoordToFloat(coord: XYZ<string | number | undefined>) {
   return {
     x: parseFloat(String(coord.x)),
