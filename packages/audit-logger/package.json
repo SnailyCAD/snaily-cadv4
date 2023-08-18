@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/audit-logger",
-  "version": "1.67.1",
+  "version": "1.67.2",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
