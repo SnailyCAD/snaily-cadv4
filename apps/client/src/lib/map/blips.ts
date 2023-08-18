@@ -181,4 +181,5 @@ export const blipTypes: Record<string, BlipType> = {
   DiamondCasino: { id: 679, x: 3, y: 25 },
   LSCarMeet: { id: 777, x: 4, y: 29 },
   LSCarMeetGarage: { id: 779, x: 2, y: 29 },
+  Computer: { id: 780, x: 11, y: 113.75 },
 };

@@ -76,3 +76,11 @@ export interface MapPlayer extends User, PlayerDataEventPayload {
   ref: Marker | null;
   identifier: string;
 }
+
+export interface SmartSignMarker {
+  x: number;
+  z: number;
+  y: number;
+  id: 5;
+  defaultText: Record<"firstLine" | "secondLine" | "thirdLine", string>;
+}

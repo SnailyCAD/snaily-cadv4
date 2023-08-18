@@ -37,7 +37,7 @@ export function MapActions() {
             <DropdownMenuTrigger asChild key="trigger">
               <Button>{t("Leo.toggle")}</Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" key="content">
+            <DropdownMenuContent className="min-w-[175px]" align="start" key="content">
               <DropdownMenuItem onClick={() => mapState.setItem(MapItem.SMART_SIGNS)}>
                 {mapState.hiddenItems[MapItem.SMART_SIGNS]
                   ? t("Leo.showSmartSigns")
