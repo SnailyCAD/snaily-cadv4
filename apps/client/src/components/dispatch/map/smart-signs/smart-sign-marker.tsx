@@ -8,6 +8,7 @@ import { MapItem, useDispatchMapState, useSocketStore } from "state/mapState";
 import { generateMarkerTypes } from "../render-map-blips";
 import { Button, Input } from "@snailycad/ui";
 import { Permissions, usePermission } from "hooks/usePermission";
+import { toastMessage } from "lib/toastMessage";
 
 interface Props {
   marker: SmartSignMarker;
@@ -16,6 +17,9 @@ interface Props {
 export function SmartSignsMarker({ marker }: Props) {
   const map = useMap();
   const socket = useSocketStore((state) => state.socket);
+  const [markerText, setMarkerText] = React.useState<
+    SmartSignMarker["defaultText"] & { editing?: boolean }
+  >(marker.defaultText);
 
   const t = useTranslations("Leo");
   const hiddenItems = useDispatchMapState((state) => state.hiddenItems);
@@ -36,24 +40,35 @@ export function SmartSignsMarker({ marker }: Props) {
     return undefined;
   }, [markerTypes]);
 
+  React.useEffect(() => {
+    if (!markerText.editing) setMarkerText(marker.defaultText);
+  }, [marker.defaultText, markerText.editing]);
+
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!socket?.connected) return;
 
-    const elements = event.currentTarget.elements as HTMLFormControlsCollection;
-
-    const firstLine = elements.namedItem("firstLine") as HTMLInputElement;
-    const secondLine = elements.namedItem("secondLine") as HTMLInputElement;
-    const thirdLine = elements.namedItem("thirdLine") as HTMLInputElement;
-
     socket.emit("sna-live-map:update-smart-sign", {
       ...marker,
       defaultText: {
-        firstLine: firstLine.value.toLowerCase() || null,
-        secondLine: secondLine.value.toLowerCase() || null,
-        thirdLine: thirdLine.value.toLowerCase() || null,
+        firstLine: markerText.firstLine.toLowerCase() || null,
+        secondLine: markerText.secondLine.toLowerCase() || null,
+        thirdLine: markerText.thirdLine.toLowerCase() || null,
       },
     });
+
+    toastMessage({
+      icon: "success",
+      title: t("smartSignUpdated"),
+      message: t("smartSignUpdatedMessage"),
+    });
+
+    setTimeout(() => {
+      setMarkerText({
+        ...markerText,
+        editing: false,
+      });
+    }, 500); // clear editing state after 500ms
   }
 
   if (hiddenItems[MapItem.SMART_SIGNS]) {
@@ -62,11 +77,11 @@ export function SmartSignsMarker({ marker }: Props) {
 
   return (
     <Marker icon={playerIcon} key={marker.id} position={pos}>
-      <Tooltip direction="top">SmartSign</Tooltip>
+      <Tooltip direction="top">SmartSign {marker.id}</Tooltip>
 
       <Popup minWidth={300}>
         <p style={{ margin: 2 }}>
-          <strong>{t("id")}:</strong> {marker.id}
+          <strong>SmartSign {marker.id}</strong>
         </p>
 
         <form onSubmit={handleSubmit} className="mt-3">
@@ -74,21 +89,30 @@ export function SmartSignsMarker({ marker }: Props) {
             name="firstLine"
             readOnly={!hasManageSmartSignsPermissions}
             className="rounded-b-none !text-amber-600 font-bold text-[15px] uppercase"
-            defaultValue={marker.defaultText.firstLine.toUpperCase()}
+            value={markerText.firstLine.toUpperCase()}
+            onChange={(event) =>
+              setMarkerText({ ...markerText, editing: true, firstLine: event.target.value })
+            }
             maxLength={15}
           />
           <Input
             name="secondLine"
             readOnly={!hasManageSmartSignsPermissions}
             className="rounded-none -my-1 !text-amber-600 font-bold text-[15px] uppercase"
-            defaultValue={marker.defaultText.secondLine.toUpperCase()}
+            value={markerText.secondLine.toUpperCase()}
+            onChange={(event) =>
+              setMarkerText({ ...markerText, editing: true, secondLine: event.target.value })
+            }
             maxLength={15}
           />
           <Input
             name="thirdLine"
             readOnly={!hasManageSmartSignsPermissions}
             className="rounded-t-none !text-amber-600 font-bold text-[15px] uppercase"
-            defaultValue={marker.defaultText.thirdLine.toUpperCase()}
+            value={markerText.thirdLine.toUpperCase()}
+            onChange={(event) =>
+              setMarkerText({ ...markerText, editing: true, thirdLine: event.target.value })
+            }
             maxLength={15}
           />
 
