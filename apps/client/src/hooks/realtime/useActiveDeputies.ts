@@ -15,7 +15,10 @@ import { findPlayerFromUnit } from "lib/map/create-map-units-from-active-units.t
 
 export function useActiveDeputies() {
   const { user } = useAuth();
-  const { activeDeputies, setActiveDeputies } = useDispatchState();
+  const { activeDeputies, setActiveDeputies } = useDispatchState((state) => ({
+    activeDeputies: state.activeDeputies,
+    setActiveDeputies: state.setActiveDeputies,
+  }));
   const { state, execute } = useFetch();
   const setActiveDeputy = useEmsFdState((state) => state.setActiveDeputy);
   const playerState = useMapPlayersStore();

@@ -9,7 +9,7 @@ import { MapItem, useDispatchMapState } from "state/mapState";
 export function RenderMapBlips() {
   const map = useMap();
   const [blips, setBlips] = React.useState<Blip[]>([]);
-  const { hiddenItems } = useDispatchMapState();
+  const hiddenItems = useDispatchMapState((state) => state.hiddenItems);
 
   const doBlips = React.useCallback(async () => {
     setBlips(await generateBlips(map));
@@ -23,22 +23,11 @@ export function RenderMapBlips() {
     return null;
   }
 
-  return (
-    <>
-      {blips.map((blip, idx) => {
-        return (
-          <Marker
-            icon={blip.icon}
-            draggable={false}
-            key={`${blip.name}-${idx}`}
-            position={blip.pos}
-          >
-            <Tooltip direction="top">{blip.name}</Tooltip>
-          </Marker>
-        );
-      })}
-    </>
-  );
+  return blips.map((blip, idx) => (
+    <Marker icon={blip.icon} draggable={false} key={`${blip.name}-${idx}`} position={blip.pos}>
+      <Tooltip direction="top">{blip.name}</Tooltip>
+    </Marker>
+  ));
 }
 
 async function generateBlips(map: L.Map) {

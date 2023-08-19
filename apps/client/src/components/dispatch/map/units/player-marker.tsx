@@ -28,8 +28,9 @@ const PLAYER_ICON = leafletIcon({
 export function PlayerMarker({ player, handleToggle }: Props) {
   const map = useMap();
   const t = useTranslations("Leo");
-  const { hiddenItems } = useDispatchMapState();
+  const hiddenItems = useDispatchMapState((state) => state.hiddenItems);
   const markerTypes = React.useMemo(generateMarkerTypes, []);
+
   const { generateCallsign } = useGenerateCallsign();
 
   const playerIcon = React.useMemo(() => {
@@ -106,7 +107,6 @@ export function PlayerMarker({ player, handleToggle }: Props) {
     });
 
   const hasUnit = isCADUser && Boolean(player.unit);
-
   const showUnitsOnly = hiddenItems[MapItem.UNITS_ONLY];
 
   if (showUnitsOnly) {

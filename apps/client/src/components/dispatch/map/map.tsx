@@ -22,7 +22,7 @@ export function Map() {
       map?.setZoom(-2);
       map?.getBounds();
     }
-  }, [bounds, map]);
+  }, [bounds]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <MapContainer

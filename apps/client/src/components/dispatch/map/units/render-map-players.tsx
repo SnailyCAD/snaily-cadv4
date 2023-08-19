@@ -5,7 +5,6 @@ import { useMapPlayers } from "hooks/realtime/use-map-players";
 
 export function RenderMapPlayers() {
   const [openItems, setOpenItems] = React.useState<string[]>([]);
-
   const { players } = useMapPlayers();
 
   function handleToggle(name: string) {
@@ -18,13 +17,11 @@ export function RenderMapPlayers() {
     });
   }
 
-  const playerValues = React.useMemo(() => {
-    return [...players.values()];
-  }, [players]);
+  const playerValues = React.useMemo(() => [...players.values()], [players]);
 
   return (
     <>
-      {Array.from(players.values()).map((player, idx) => (
+      {playerValues.map((player, idx) => (
         <PlayerMarker
           key={`${player.identifier}-${idx}`}
           handleToggle={handleToggle}
