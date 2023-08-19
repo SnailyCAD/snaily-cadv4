@@ -30,13 +30,13 @@ async function loadNextConfig() {
   return { data, text };
 }
 
-function writeNextConfig(data) {
+async function writeNextConfig(data) {
   if (process.env.NODE_ENV === "development") return;
 
   const configFilePath = getNextConfigPath();
   return writeFile(
     configFilePath,
-    format(data, {
+    await format(data, {
       endOfLine: "auto",
       semi: true,
       trailingComma: "all",
@@ -77,6 +77,6 @@ stringArray.splice(imagesIndex, imagesEndIndex - imagesIndex, imagesData);
 
 const config = stringArray.join("\n");
 
-writeNextConfig(config);
+await writeNextConfig(config);
 
 console.log("Image domain added to next.config.mjs");
