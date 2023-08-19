@@ -26,8 +26,6 @@ export function ActiveMapUnits({ openItems, setOpenItems }: Props) {
   const portalRef = usePortal("ActiveMapCalls");
   const t = useTranslations("Leo");
 
-  console.log("re-render?", players);
-
   const { activeOfficers } = useActiveOfficers();
   const { activeDeputies } = useActiveDeputies();
   const units = createMapUnitsFromActiveUnits({

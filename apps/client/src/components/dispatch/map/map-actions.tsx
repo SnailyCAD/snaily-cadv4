@@ -28,8 +28,6 @@ export function MapActions() {
   const hasManageUsersPermissions = hasPermissions([Permissions.ManageUsers]);
   const hasManageSmartSignsPermissions = hasPermissions([Permissions.ManageSmartSigns]);
 
-  console.log("re-render?");
-
   return (
     portalRef &&
     createPortal(
