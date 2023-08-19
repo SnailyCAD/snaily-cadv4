@@ -16,11 +16,14 @@ import { findPlayerFromUnit } from "lib/map/create-map-units-from-active-units.t
 let ran = false;
 export function useActiveOfficers() {
   const { user } = useAuth();
-  const { activeOfficers, setActiveOfficers } = useDispatchState();
   const { state, execute } = useFetch();
   const setActiveOfficer = useLeoState((state) => state.setActiveOfficer);
   const playerState = useMapPlayersStore();
   const incidentsState = useActiveIncidents();
+  const { activeOfficers, setActiveOfficers } = useDispatchState((state) => ({
+    activeOfficers: state.activeOfficers,
+    setActiveOfficers: state.setActiveOfficers,
+  }));
 
   const call911State = useCall911State((state) => ({
     calls: state.calls,

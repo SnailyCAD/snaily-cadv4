@@ -22,8 +22,7 @@ export function ActiveMapUnits({ openItems, setOpenItems }: Props) {
   const [tempUnit, setTempUnit] = React.useState<
     null | Officer | EmsFdDeputy | CombinedEmsFdUnit | CombinedLeoUnit
   >(null);
-  const { players } = useMapPlayersStore();
-
+  const players = useMapPlayersStore((state) => state.players);
   const portalRef = usePortal("ActiveMapCalls");
   const t = useTranslations("Leo");
 

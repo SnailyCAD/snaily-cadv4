@@ -326,7 +326,11 @@
     "openModalAfterCreation": "Open Manage Incident modal after creation?",
     "manageWeaponFlags": "Manage Weapon Flags",
     "flags": "Flags",
-    "toggle": "Toggle..."
+    "toggle": "Toggle...",
+    "hideSmartSigns": "Hide Smart Signs",
+    "showSmartSigns": "Show Smart Signs",
+    "smartSignUpdated": "SmartSign Updated",
+    "smartSignUpdatedMessage": "We sent a request to the FXServer to update the SmartSign."
   },
   "Bolos": {
     "activeBolos": "Active Bolos",

@@ -18,11 +18,15 @@ export function MapActions() {
   const t = useTranslations();
   const portalRef = usePortal("MapActions");
   const { openModal } = useModal();
-  const mapState = useDispatchMapState();
+  const mapState = useDispatchMapState((state) => ({
+    hiddenItems: state.hiddenItems,
+    setItem: state.setItem,
+  }));
   const status = useSocketStore((state) => state.status);
 
   const { hasPermissions } = usePermission();
   const hasManageUsersPermissions = hasPermissions([Permissions.ManageUsers]);
+  const hasManageSmartSignsPermissions = hasPermissions([Permissions.ManageSmartSigns]);
 
   return (
     portalRef &&
@@ -37,7 +41,14 @@ export function MapActions() {
             <DropdownMenuTrigger asChild key="trigger">
               <Button>{t("Leo.toggle")}</Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" key="content">
+            <DropdownMenuContent className="min-w-[175px]" align="start" key="content">
+              {hasManageSmartSignsPermissions ? (
+                <DropdownMenuItem onClick={() => mapState.setItem(MapItem.SMART_SIGNS)}>
+                  {mapState.hiddenItems[MapItem.SMART_SIGNS]
+                    ? t("Leo.showSmartSigns")
+                    : t("Leo.hideSmartSigns")}
+                </DropdownMenuItem>
+              ) : null}
               <DropdownMenuItem onClick={() => mapState.setItem(MapItem.BLIPS)}>
                 {mapState.hiddenItems[MapItem.BLIPS] ? t("Leo.showBlips") : t("Leo.hideBlips")}
               </DropdownMenuItem>

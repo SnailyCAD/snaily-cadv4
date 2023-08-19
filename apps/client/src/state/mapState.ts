@@ -1,15 +1,22 @@
 import { ConnectionStatus } from "@snailycad/ui";
 import { Socket } from "socket.io-client";
+import { SmartSignMarker } from "types/map";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import { shallow } from "zustand/shallow";
+import { createWithEqualityFn } from "zustand/traditional";
 
 export enum MapItem {
   CALLS,
   UNITS_ONLY,
   BLIPS,
+  SMART_SIGNS,
 }
 
 interface DispatchMapState {
+  smartSigns: SmartSignMarker[];
+  setSmartSigns(signs: SmartSignMarker[]): void;
+
   hiddenItems: Partial<Record<MapItem, boolean>>;
   setItem(item: MapItem): void;
 
@@ -25,9 +32,14 @@ interface SocketStore {
   setStatus(status: ConnectionStatus): void;
 }
 
-export const useDispatchMapState = create<DispatchMapState>()(
+export const useDispatchMapState = createWithEqualityFn<DispatchMapState>()(
   persist(
     (set) => ({
+      smartSigns: [],
+      setSmartSigns(signs) {
+        set({ smartSigns: signs });
+      },
+
       currentMapServerURL: null,
       setCurrentMapServerURL(url) {
         set({ currentMapServerURL: url });
@@ -44,10 +56,15 @@ export const useDispatchMapState = create<DispatchMapState>()(
       },
     }),
     {
+      partialize: (state) => ({
+        hiddenItems: state.hiddenItems,
+        currentMapServerURL: state.currentMapServerURL,
+      }),
       name: "dispatch-map-state-storage",
       storage: createJSONStorage(() => localStorage),
     },
   ),
+  shallow,
 );
 
 export const useSocketStore = create<SocketStore>()((set) => ({

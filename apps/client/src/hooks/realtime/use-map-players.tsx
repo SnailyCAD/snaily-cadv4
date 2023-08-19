@@ -31,10 +31,14 @@ export const useMapPlayersStore = createWithEqualityFn<{
 export function useMapPlayers() {
   const { players, setPlayers } = useMapPlayersStore();
 
+  const currentMapServerURL = useDispatchMapState((state) => state.currentMapServerURL);
   const { openModal, isOpen } = useModal();
-  const { currentMapServerURL } = useDispatchMapState();
-  const { socket, setStatus, setSocket } = useSocketStore();
   const { state, execute } = useFetch();
+  const { socket, setStatus, setSocket } = useSocketStore((state) => ({
+    socket: state.socket,
+    setStatus: state.setStatus,
+    setSocket: state.setSocket,
+  }));
 
   const getCADUsers = React.useCallback(
     async (options: {
@@ -74,7 +78,7 @@ export function useMapPlayers() {
         }
       }
 
-      setPlayers(newPlayers);
+      setPlayers(options.map);
     },
     [state], // eslint-disable-line
   );

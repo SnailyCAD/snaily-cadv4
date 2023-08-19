@@ -7,6 +7,7 @@ import { RenderActiveCalls } from "./calls/render-active-map-calls";
 import { MapActions } from "./map-actions";
 import { RenderMapPlayers } from "./units/render-map-players";
 import { SelectMapServerModal } from "./modals/select-map-server-modal";
+import { RenderMapSmartSigns } from "./smart-signs/render-map-smart-signs";
 
 const TILES_URL = "/tiles/minimap_sea_{y}_{x}.webp" as const;
 
@@ -21,7 +22,7 @@ export function Map() {
       map?.setZoom(-2);
       map?.getBounds();
     }
-  }, [bounds, map]);
+  }, [bounds]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <MapContainer
@@ -48,6 +49,7 @@ export function Map() {
       <RenderMapBlips />
       <RenderActiveCalls />
       <MapActions />
+      <RenderMapSmartSigns />
 
       <SelectMapServerModal />
     </MapContainer>
