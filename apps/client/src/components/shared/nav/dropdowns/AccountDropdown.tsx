@@ -21,7 +21,11 @@ const ChangelogModal = dynamic(async () => (await import("../changelog-modal")).
   ssr: false,
 });
 
-export function AccountDropdown() {
+interface AccountDropdownProps {
+  isAccountPending?: boolean;
+}
+
+export function AccountDropdown(props: AccountDropdownProps) {
   const [isOpen, setOpen] = React.useState(false);
 
   const { user, setUser, cad } = useAuth();
@@ -55,8 +59,12 @@ export function AccountDropdown() {
         </DropdownMenuTrigger>
 
         <DropdownMenuContent className="mt-2.5" side="left">
-          <DropdownMenuLinkItem href="/account">{t("account")}</DropdownMenuLinkItem>
-          <hr className="my-2 mx-2 border-t border-secondary dark:border-quinary" />
+          {props.isAccountPending ? null : (
+            <>
+              <DropdownMenuLinkItem href="/account">{t("account")}</DropdownMenuLinkItem>
+              <hr className="my-2 mx-2 border-t border-secondary dark:border-quinary" />
+            </>
+          )}
           <DropdownMenuItem onClick={handleLogout}>{t("logout")}</DropdownMenuItem>
           <hr className="my-2 mx-2 border-t border-secondary dark:border-quinary" />
 

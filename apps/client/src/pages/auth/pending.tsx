@@ -13,6 +13,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Discord, Steam } from "react-bootstrap-icons";
 import { getAPIUrl } from "@snailycad/utils/api-url";
 import { useRouter } from "next/router";
+import { Nav } from "components/shared/nav/Nav";
 
 export default function AccountPendingPage() {
   const { user, cad } = useAuth();
@@ -21,8 +22,14 @@ export default function AccountPendingPage() {
   const t = useTranslations("Auth");
   const { DISCORD_AUTH, STEAM_OAUTH } = useFeatureEnabled();
 
-  if (user?.rank !== Rank.OWNER && user?.whitelistStatus !== WhitelistStatus.PENDING) {
-    return <main className="flex justify-center pt-20">This account is not pending access.</main>;
+  const isAccountPending =
+    user?.rank !== Rank.OWNER && user?.whitelistStatus === WhitelistStatus.PENDING;
+  if (!isAccountPending) {
+    return (
+      <main className="flex justify-center pt-20 dark:text-white">
+        This account is not pending access.
+      </main>
+    );
   }
 
   const rawSuccessMessage = router.query.success as string | undefined;
@@ -52,6 +59,8 @@ export default function AccountPendingPage() {
 
   return (
     <>
+      <Nav isAccountPending={isAccountPending} />
+
       <Title renderLayoutTitle={false}>{t("accountPending")}</Title>
 
       <main className="flex flex-col items-center justify-center pt-20">

@@ -21,9 +21,10 @@ import { AdminLink } from "./dropdowns/admin-link";
 
 interface Props {
   maxWidth?: string;
+  isAccountPending?: boolean;
 }
 
-export function Nav({ maxWidth }: Props) {
+export function Nav({ maxWidth, isAccountPending }: Props) {
   const [menuOpen, setMenuOpen] = React.useState(false);
 
   const { user, cad } = useAuth();
@@ -89,56 +90,58 @@ export function Nav({ maxWidth }: Props) {
               </a>
             </h1>
 
-            <div
-              role="list"
-              className={classNames(
-                "nav:flex",
-                menuOpen
-                  ? "grid place-content-center fixed top-[3.6rem] left-0 bg-white dark:bg-tertiary w-screen space-y-2 py-3 animate-enter"
-                  : "hidden nav:flex-row space-x-1 items-center",
-              )}
-            >
-              <CitizenDropdown />
+            {isAccountPending ? null : (
+              <div
+                role="list"
+                className={classNames(
+                  "nav:flex",
+                  menuOpen
+                    ? "grid place-content-center fixed top-[3.6rem] left-0 bg-white dark:bg-tertiary w-screen space-y-2 py-3 animate-enter"
+                    : "hidden nav:flex-row space-x-1 items-center",
+                )}
+              >
+                <CitizenDropdown />
 
-              {hasPermissions([Permissions.ViewTowCalls, Permissions.ManageTowCalls]) && TOW ? (
-                <TowDropdown />
-              ) : null}
+                {hasPermissions([Permissions.ViewTowCalls, Permissions.ManageTowCalls]) && TOW ? (
+                  <TowDropdown />
+                ) : null}
 
-              {hasPermissions(defaultPermissions.defaultLeoPermissions) ? (
-                <OfficerDropdown />
-              ) : null}
+                {hasPermissions(defaultPermissions.defaultLeoPermissions) ? (
+                  <OfficerDropdown />
+                ) : null}
 
-              {hasPermissions([Permissions.EmsFd]) ? <EmsFdDropdown /> : null}
+                {hasPermissions([Permissions.EmsFd]) ? <EmsFdDropdown /> : null}
 
-              {hasPermissions([Permissions.LiveMap, Permissions.Dispatch]) ? (
-                <DispatchDropdown />
-              ) : null}
+                {hasPermissions([Permissions.LiveMap, Permissions.Dispatch]) ? (
+                  <DispatchDropdown />
+                ) : null}
 
-              {user && COURTHOUSE ? (
-                <Link
-                  role="listitem"
-                  href="/courthouse"
-                  className={classNames(
-                    "p-1 nav:px-2 text-gray-700 dark:text-gray-200 transition duration-300",
-                    isActive("/courthouse") && "font-semibold",
-                  )}
-                >
-                  {t("courthouse")}
-                </Link>
-              ) : null}
+                {user && COURTHOUSE ? (
+                  <Link
+                    role="listitem"
+                    href="/courthouse"
+                    className={classNames(
+                      "p-1 nav:px-2 text-gray-700 dark:text-gray-200 transition duration-300",
+                      isActive("/courthouse") && "font-semibold",
+                    )}
+                  >
+                    {t("courthouse")}
+                  </Link>
+                ) : null}
 
-              {hasPermissions([
-                ...defaultPermissions.allDefaultAdminPermissions,
-                ...defaultPermissions.defaultCourthousePermissions,
-                Permissions.ManageAwardsAndQualifications,
-              ]) ? (
-                <AdminLink />
-              ) : null}
-            </div>
+                {hasPermissions([
+                  ...defaultPermissions.allDefaultAdminPermissions,
+                  ...defaultPermissions.defaultCourthousePermissions,
+                  Permissions.ManageAwardsAndQualifications,
+                ]) ? (
+                  <AdminLink />
+                ) : null}
+              </div>
+            )}
           </div>
 
           <div>
-            <AccountDropdown />
+            <AccountDropdown isAccountPending={isAccountPending} />
           </div>
         </div>
       </div>
