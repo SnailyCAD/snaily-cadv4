@@ -28,7 +28,9 @@
     "medicalRecords": "Медицинские записи",
     "medications": "Лекарства",
     "diagnosis": "Диагноз",
-    "conditions": "Состояние"
+    "conditions": "Состояние",
+    "add": "Добавить",
+    "noDoctorVisits": "У гражданина нет визитов к врачу."
   },
   "HospitalServices": {
     "hospitalServices": "Услуги госпиталя",

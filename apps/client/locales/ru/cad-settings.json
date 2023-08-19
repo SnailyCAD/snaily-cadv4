@@ -422,6 +422,7 @@
     "ManageWeaponExams": "Управление Экзаменами на Оружие",
     "SetUserDefinedCallsignOnOfficer": "Установка Пользовательского Позывного на Офицера",
     "SetUserDefinedCallsignOnEmsFd": "Установка Пользовательского Позывного на EMS/FD",
-    "LeoManageCitizenProfile": "Управление Профилем Гражданина (не админ)"
+    "LeoManageCitizenProfile": "Управление Профилем Гражданина (не админ)",
+    "ManageSmartSigns": "Управление Smart Signs"
   }
 }
