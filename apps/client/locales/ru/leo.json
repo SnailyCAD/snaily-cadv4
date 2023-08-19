@@ -323,7 +323,14 @@
     "manageCitizenProfile": "Управление профилем гражданина",
     "generalInformation": "Общая информация",
     "vehicleInformation": "Информация о транспорте",
-    "openModalAfterCreation": "Открыть модальное окно инцидентов после создания?"
+    "openModalAfterCreation": "Открыть модальное окно инцидентов после создания?",
+    "manageWeaponFlags": "Редактировать флаги оружия",
+    "flags": "Флаги",
+    "toggle": "Переключить...",
+    "hideSmartSigns": "Скрыть Smart Signs",
+    "showSmartSigns": "Показать Smart Signs",
+    "smartSignUpdated": "Smart Sign обновлен",
+    "smartSignUpdatedMessage": "Запрос на обновление Smart Sign был отправлен на FXServer."
   },
   "Bolos": {
     "activeBolos": "Активные BOLO",
