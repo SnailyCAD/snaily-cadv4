@@ -424,6 +424,7 @@
     "ManageWeaponExams": "Manage Weapon Exams",
     "SetUserDefinedCallsignOnOfficer": "Set User Defined Callsign On Officer",
     "SetUserDefinedCallsignOnEmsFd": "Set User Defined Callsign On EMS/FD Deputy",
-    "LeoManageCitizenProfile": "Manage Citizen Profile (non-admin)"
+    "LeoManageCitizenProfile": "Manage Citizen Profile (non-admin)",
+    "ManageSmartSigns": "Manage Smart Signs"
   }
 }
