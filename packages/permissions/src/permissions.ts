@@ -29,6 +29,7 @@ export enum Permissions {
   LeoManageCitizenProfile = "LeoManageCitizenProfile",
 
   Dispatch = "Dispatch",
+  ManageSmartSigns = "ManageSmartSigns",
 
   // ems-fd
   EmsFd = "EmsFd",

@@ -3,7 +3,7 @@ import { useDispatchMapState, useSocketStore } from "state/mapState";
 import { SmartSignMarker } from "types/map";
 
 export function useSmartSigns() {
-  const { socket } = useSocketStore();
+  const socket = useSocketStore((state) => state.socket);
   const { smartSigns, setSmartSigns } = useDispatchMapState((state) => ({
     smartSigns: state.smartSigns,
     setSmartSigns: state.setSmartSigns,
