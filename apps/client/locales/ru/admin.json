@@ -86,6 +86,7 @@
     "leo": "LEO",
     "emsFd": "EMS/FD",
     "onDuty": "На смене",
+    "impounded": "Эвакуировано",
     "suspended": "Приостановлен",
     "pruneUsers": "Удалить Пользователей",
     "inactiveUsers": "Неактивные Пользователи",
