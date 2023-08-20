@@ -86,6 +86,7 @@
     "leo": "LEO",
     "emsFd": "EMS/FD",
     "onDuty": "On Duty",
+    "impounded": "Impounded",
     "suspended": "Suspended",
     "pruneUsers": "Prune Users",
     "inactiveUsers": "Inactive Users",

@@ -91,7 +91,7 @@ export default function Admin({ counts }: Props) {
         />
         <Item
           count={counts.impoundedVehicles}
-          name="impounded"
+          name={t("impounded")}
           percentage={(100 / counts.vehicles) * counts.impoundedVehicles}
         />
       </Group>
