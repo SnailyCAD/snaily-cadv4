@@ -1466,29 +1466,31 @@ model RecordLog {
 
 // Expungement requests
 model ExpungementRequest {
-  id        String                   @id @default(uuid())
-  citizen   Citizen                  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
-  citizenId String
-  user      User?                    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String?
-  status    ExpungementRequestStatus @default(PENDING)
-  createdAt DateTime                 @default(now())
-  updatedAt DateTime                 @default(now()) @updatedAt
-  warrants  Warrant[]
-  records   Record[]
+  id          String                   @id @default(uuid())
+  citizen     Citizen                  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId   String
+  user        User?                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String?
+  status      ExpungementRequestStatus @default(PENDING)
+  createdAt   DateTime                 @default(now())
+  updatedAt   DateTime                 @default(now()) @updatedAt
+  description String?                  @db.Text
+  warrants    Warrant[]
+  records     Record[]
 }
 
 model NameChangeRequest {
-  id         String          @id @default(uuid())
-  citizen    Citizen         @relation(fields: [citizenId], references: [id], onDelete: Cascade)
-  citizenId  String
-  user       User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     String?
-  newName    String
-  newSurname String
-  status     WhitelistStatus @default(PENDING)
-  createdAt  DateTime        @default(now())
-  updatedAt  DateTime        @default(now()) @updatedAt
+  id          String          @id @default(uuid())
+  citizen     Citizen         @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId   String
+  user        User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String?
+  newName     String
+  newSurname  String
+  description String?         @db.Text
+  status      WhitelistStatus @default(PENDING)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @default(now()) @updatedAt
 }
 
 model CourtEntry {

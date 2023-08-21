@@ -8,6 +8,8 @@ import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/auth/is-auth";
 import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
+import { validateSchema } from "~/lib/data/validate-schema";
+import { EXPUNGEMENT_REQUEST_SCHEMA } from "@snailycad/schemas";
 
 export const expungementRequestInclude = {
   citizen: true,
@@ -29,6 +31,9 @@ export class ExpungementRequestsController {
         userId: user.id,
       },
       include: expungementRequestInclude,
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
     return requests;
@@ -77,8 +82,10 @@ export class ExpungementRequestsController {
   async requestExpungement(
     @Context("user") user: User,
     @PathParams("citizenId") citizenId: string,
-    @BodyParams() body: any,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PostExpungementRequestByCitizenIdData> {
+    const data = validateSchema(EXPUNGEMENT_REQUEST_SCHEMA, body);
+
     const citizen = await prisma.citizen.findFirst({
       where: { id: citizenId, userId: user.id },
     });
@@ -91,13 +98,14 @@ export class ExpungementRequestsController {
       data: {
         citizenId: citizen.id,
         userId: user.id || undefined,
+        description: data.description,
       },
       include: expungementRequestInclude,
     });
 
-    const warrants = body.warrants as string[];
-    const arrestReports = body.arrestReports as string[];
-    const tickets = body.tickets as string[];
+    const warrants = data.warrants as string[];
+    const arrestReports = data.arrestReports as string[];
+    const tickets = data.tickets as string[];
 
     if (arrestReports.length <= 0 && tickets.length <= 0 && warrants.length <= 0) {
       throw new BadRequest("mustSpecifyMinOneArray");
