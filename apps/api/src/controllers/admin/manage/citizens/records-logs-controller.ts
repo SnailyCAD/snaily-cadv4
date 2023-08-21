@@ -119,11 +119,13 @@ export class AdminManageCitizensController {
     @QueryParams("includeAll", Boolean) includeAll = false,
   ): Promise<APITypes.GetManageRecordsLogsCitizenData> {
     const [totalCount, recordsLogs] = await prisma.$transaction([
-      prisma.recordLog.count({ where: { citizenId } }),
+      prisma.recordLog.count({
+        where: { OR: [{ citizenId }, { citizen: { socialSecurityNumber: citizenId } }] },
+      }),
       prisma.recordLog.findMany({
         take: includeAll ? undefined : 35,
         skip: includeAll ? undefined : skip,
-        where: { citizenId },
+        where: { OR: [{ citizenId }, { citizen: { socialSecurityNumber: citizenId } }] },
         orderBy: { createdAt: "desc" },
         include: {
           warrant: { include: { officer: { include: leoProperties } } },
