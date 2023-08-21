@@ -66,6 +66,7 @@ export class NameChangeRequestController {
         newSurname: data.newSurname,
         citizenId: data.citizenId,
         userId: user.id,
+        description: data.description,
       },
       include: { citizen: true },
     });

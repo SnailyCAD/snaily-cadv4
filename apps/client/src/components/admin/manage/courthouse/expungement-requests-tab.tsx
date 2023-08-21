@@ -10,6 +10,7 @@ import type {
   PutManageExpungementRequests,
 } from "@snailycad/types/api";
 import { useInvalidateQuery } from "hooks/use-invalidate-query";
+import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
 interface Props {
   requests: GetManageExpungementRequests;
@@ -66,6 +67,7 @@ export function ExpungementRequestsTab({ requests: data }: Props) {
           data={asyncTable.items.map((request) => ({
             id: request.id,
             citizen: `${request.citizen.name} ${request.citizen.surname}`,
+            description: <CallDescription data={{ description: request.description }} />,
             warrants: request.warrants.map((w) => w.description).join(", ") || common("none"),
             arrestReports:
               request.records
@@ -103,6 +105,7 @@ export function ExpungementRequestsTab({ requests: data }: Props) {
           }))}
           columns={[
             { header: t("Leo.citizen"), accessorKey: "citizen" },
+            { header: common("description"), accessorKey: "description" },
             { header: t("Leo.warrants"), accessorKey: "warrants" },
             { header: t("Leo.arrestReports"), accessorKey: "arrestReports" },
             { header: t("Leo.tickets"), accessorKey: "tickets" },
