@@ -7,6 +7,7 @@ import { Table, useTableState } from "components/shared/Table";
 import { WhitelistStatus } from "@snailycad/types";
 import { RequestNameChangeModal } from "./request-name-change-modal";
 import type { GetNameChangeRequestsData } from "@snailycad/types/api";
+import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
 interface Props {
   requests: GetNameChangeRequestsData;
@@ -41,12 +42,14 @@ export function NameChangeRequestTab(props: Props) {
             },
             citizen: `${request.citizen.name} ${request.citizen.surname}`,
             newName: `${request.newName} ${request.newSurname}`,
+            description: <CallDescription data={{ description: request.description }} />,
             status: <Status>{request.status}</Status>,
             createdAt: <FullDate>{request.createdAt}</FullDate>,
           }))}
           columns={[
             { header: common("citizen"), accessorKey: "citizen" },
             { header: "new name", accessorKey: "newName" },
+            { header: common("description"), accessorKey: "description" },
             { header: "status", accessorKey: "status" },
             { header: common("createdAt"), accessorKey: "createdAt" },
           ]}

@@ -10,6 +10,14 @@ export const NAME_CHANGE_REQUEST_SCHEMA = z.object({
   citizenId: z.string().min(2),
   newName: z.string().min(1).max(255),
   newSurname: z.string().min(2).max(255),
+  description: z.string().nullish(),
+});
+
+export const EXPUNGEMENT_REQUEST_SCHEMA = z.object({
+  description: z.string().nullish(),
+  warrants: z.array(z.any()),
+  arrestReports: z.array(z.any()),
+  tickets: z.array(z.any()),
 });
 
 export const COURT_DATE_SCHEMA = z.object({

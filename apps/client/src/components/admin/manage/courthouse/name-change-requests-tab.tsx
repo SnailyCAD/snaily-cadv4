@@ -9,6 +9,7 @@ import type {
   PutManageNameChangeRequests,
 } from "@snailycad/types/api";
 import { useInvalidateQuery } from "hooks/use-invalidate-query";
+import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
 interface Props {
   requests: GetManageNameChangeRequests;
@@ -66,6 +67,7 @@ export function NameChangeRequestsTab({ requests: data }: Props) {
             id: request.id,
             citizen: `${request.citizen.name} ${request.citizen.surname}`,
             newName: `${request.newName} ${request.newSurname}`,
+            description: <CallDescription data={{ description: request.description }} />,
             status: <Status>{request.status}</Status>,
             createdAt: <FullDate>{request.createdAt}</FullDate>,
             actions: (
@@ -92,6 +94,7 @@ export function NameChangeRequestsTab({ requests: data }: Props) {
           }))}
           columns={[
             { header: common("citizen"), accessorKey: "citizen" },
+            { header: common("description"), accessorKey: "description" },
             { header: t("Courthouse.newName"), accessorKey: "newName" },
             { header: t("Courthouse.status"), accessorKey: "status" },
             { header: common("createdAt"), accessorKey: "createdAt" },

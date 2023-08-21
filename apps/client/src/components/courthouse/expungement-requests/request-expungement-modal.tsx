@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Loader, Button, SelectField } from "@snailycad/ui";
+import { Loader, Button, SelectField, TextField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
@@ -135,6 +135,7 @@ function ResultsForm({ result, onSuccess, handleClose }: ResultProps) {
     warrants: [] as string[],
     tickets: [] as string[],
     arrestReports: [] as string[],
+    description: "",
   };
 
   const hasWarrants = result.warrants.length > 0;
@@ -201,6 +202,15 @@ function ResultsForm({ result, onSuccess, handleClose }: ResultProps) {
               <p className="text-base my-1">{leo("noTicketsCitizen")}</p>
             </section>
           )}
+
+          <TextField
+            isOptional
+            isTextarea
+            errorMessage={errors.description}
+            value={values.description}
+            onChange={(value) => setFieldValue("description", value)}
+            label={common("description")}
+          />
 
           <footer className="flex justify-end mt-5">
             <Button onPress={handleClose} variant="cancel" type="reset">

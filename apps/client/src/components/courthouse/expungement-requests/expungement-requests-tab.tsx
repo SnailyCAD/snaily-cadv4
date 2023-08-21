@@ -10,6 +10,7 @@ import type { GetExpungementRequestsData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import useFetch from "lib/useFetch";
 import { useList } from "hooks/shared/table/use-list";
+import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
 const RequestExpungement = dynamic(
   async () => (await import("./request-expungement-modal")).RequestExpungement,
@@ -100,6 +101,7 @@ export function ExpungementRequestsTab(props: Props) {
                 className: isDisabled ? "opacity-50 cursor-not-allowed" : "",
               },
               citizen: `${request.citizen.name} ${request.citizen.surname}`,
+              description: <CallDescription data={{ description: request.description }} />,
               warrants,
               arrestReports,
               tickets,
@@ -119,6 +121,7 @@ export function ExpungementRequestsTab(props: Props) {
           })}
           columns={[
             { header: leo("citizen"), accessorKey: "citizen" },
+            { header: common("description"), accessorKey: "description" },
             { header: leo("warrants"), accessorKey: "warrants" },
             { header: leo("arrestReports"), accessorKey: "arrestReports" },
             { header: leo("tickets"), accessorKey: "tickets" },
