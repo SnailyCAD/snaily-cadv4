@@ -161,9 +161,13 @@ export class LeoSearchController {
         ...citizenSearchIncludeOrSelect(user, cad),
       });
 
-      return appendConfidential(
-        await appendCustomFields(citizens, CustomFieldCategory.CITIZEN),
-      ) as APITypes.PostLeoSearchCitizenData;
+      const citizensWithCustomFields = await appendCustomFields(
+        citizens,
+        CustomFieldCategory.CITIZEN,
+      );
+      const citizensWithConfidential = appendConfidential(citizensWithCustomFields);
+
+      return citizensWithConfidential as APITypes.PostLeoSearchCitizenData;
     }
 
     const checkUserId = shouldCheckCitizenUserId({ cad, user });
@@ -190,11 +194,15 @@ export class LeoSearchController {
       ...citizenSearchIncludeOrSelect(user, cad),
     });
 
-    return appendAssignedUnitData(
-      appendConfidential(
-        await appendCustomFields(setEndedSuspendedLicenses(citizens), CustomFieldCategory.CITIZEN),
-      ),
-    ) as APITypes.PostLeoSearchCitizenData;
+    const citizensWithEndedSuspendedLicenses = await setEndedSuspendedLicenses(citizens);
+    const citizensWithCustomFields = await appendCustomFields(
+      citizensWithEndedSuspendedLicenses,
+      CustomFieldCategory.CITIZEN,
+    );
+    const citizensWithConfidential = appendConfidential(citizensWithCustomFields);
+    const citizensWithAssignedUnitData = appendAssignedUnitData(citizensWithConfidential);
+
+    return citizensWithAssignedUnitData as APITypes.PostLeoSearchCitizenData;
   }
 
   @Post("/business")

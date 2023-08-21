@@ -22,7 +22,6 @@ import {
 import { ManageCitizenFlagsModal } from "./ManageCitizenFlagsModal";
 import { CitizenImageModal } from "components/citizen/modals/citizen-image-modal";
 import { ManageCustomFieldsModal } from "./ManageCustomFieldsModal";
-import { CustomFieldsArea } from "../CustomFieldsArea";
 import { useBolos } from "hooks/realtime/useBolos";
 import type { PostLeoSearchCitizenData, PutSearchActionsLicensesData } from "@snailycad/types/api";
 import { NameSearchBasicInformation } from "./sections/basic-information";
@@ -412,8 +411,6 @@ export function NameSearchModal() {
                           </Button>
                         ) : null}
                       </div>
-
-                      <CustomFieldsArea currentResult={currentResult} isLeo={isLeo} />
                     </div>
                   </div>
 
