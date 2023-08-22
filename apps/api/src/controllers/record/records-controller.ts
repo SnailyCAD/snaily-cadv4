@@ -49,6 +49,7 @@ import { recordsInclude } from "../leo/search/SearchController";
 import { citizenInclude } from "../citizen/CitizenController";
 import { generateCallsign } from "@snailycad/utils";
 import { Descendant, slateDataToString } from "@snailycad/utils/editor";
+import puppeteer from "puppeteer";
 
 export const assignedOfficersInclude = {
   combinedUnit: { include: combinedUnitProperties },
@@ -184,12 +185,12 @@ export class RecordsController {
     return normalizedWarrant;
   }
 
-  @Post("/print/record/:id")
+  @Post("/pdf/record/:id")
   @Description("Export a record as a PDF")
   @UsePermissions({
     permissions: [Permissions.Leo],
   })
-  @Header("Content-Type", "text/html")
+  @Header("Content-Type", "application/pdf")
   async printRecord(
     @PathParams("id") id: string,
     @Context("cad")
@@ -235,7 +236,26 @@ export class RecordsController {
       formattedDescription,
     });
 
-    return template;
+    try {
+      const browser = await puppeteer.launch({ headless: "new" });
+      const page = await browser.newPage();
+
+      page.setContent(template, { waitUntil: "domcontentloaded" });
+
+      await page.emulateMediaType("screen");
+
+      const pdf = await page.pdf({
+        format: "letter",
+        printBackground: true,
+        scale: 0.8,
+        preferCSSPageSize: true,
+      });
+
+      return pdf;
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
   }
 
   @UseBefore(ActiveOfficer)

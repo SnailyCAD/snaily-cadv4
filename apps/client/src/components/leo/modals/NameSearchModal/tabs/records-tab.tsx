@@ -17,6 +17,7 @@ import { ViolationsColumn } from "components/leo/ViolationsColumn";
 import type { DeleteRecordsByIdData } from "@snailycad/types/api";
 import { RecordsCaseNumberColumn } from "components/leo/records-case-number-column";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
+import { getAPIUrl } from "@snailycad/utils/api-url";
 
 interface RecordsTabProps {
   records: Record[];
@@ -148,6 +149,7 @@ export function RecordsTable({
   const { openModal } = useModal();
   const t = useTranslations();
   const router = useRouter();
+  const exportedRecordHTMLRef = React.useRef<HTMLDivElement | null>(null);
 
   const isCitizenCreation = router.pathname === "/citizen/create";
   const isCitizen = router.pathname.startsWith("/citizen") && !isCitizenCreation;
@@ -173,6 +175,32 @@ export function RecordsTable({
 
     if (!_hasDeletePermissions) return;
     openModal(ModalIds.AlertDeleteRecord, record);
+  }
+
+  function downloadFile(url: string, filename: string) {
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = filename;
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+  }
+
+  async function handleExportClick(record: Record) {
+    // using regular fetch here because axios doesn't support blob responses
+    const apiUrl = getAPIUrl();
+    const response = await fetch(`${apiUrl}/records/pdf/record/${record.id}`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        accept: "application/pdf",
+      },
+    });
+
+    const blob = new Blob([await response.blob()], { type: "application/pdf" });
+    const url = window.URL.createObjectURL(blob);
+
+    downloadFile(url, `record-${record.id}.pdf`);
   }
 
   function handleEditClick(record: Record) {
@@ -236,6 +264,15 @@ export function RecordsTable({
                 <>
                   <Button
                     type="button"
+                    onPress={() => handleExportClick(record)}
+                    size="xs"
+                    className="inline-flex mr-2 items-center gap-2"
+                  >
+                    {common("export")}
+                  </Button>
+
+                  <Button
+                    type="button"
                     onPress={() => handleEditClick(record)}
                     size="xs"
                     variant="success"
@@ -270,6 +307,8 @@ export function RecordsTable({
           isCitizen ? null : { header: common("actions"), accessorKey: "actions" },
         ]}
       />
+
+      <div ref={exportedRecordHTMLRef} />
     </div>
   );
 }
