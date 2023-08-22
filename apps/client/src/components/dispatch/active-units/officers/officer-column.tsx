@@ -109,11 +109,15 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
         shouldShowSplit ? void handleunMerge(officer.id) : handleMerge(officer);
       },
     },
-    {
-      name: t("privateMessage"),
-      onClick: () => openModal(ModalIds.PrivateMessage, officer),
-    },
-    ...dispatchCodes,
+    ...(isDispatch
+      ? [
+          {
+            name: t("privateMessage"),
+            onClick: () => openModal(ModalIds.PrivateMessage, officer),
+          },
+          ...dispatchCodes,
+        ]
+      : dispatchCodes),
   ];
 
   const canContextMenuBeOpened = isEligiblePage ? canBeOpened ?? false : false;
