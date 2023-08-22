@@ -33,7 +33,7 @@
     "noCourthousePosts": "Публикаций нет",
     "createdBy": "Создано",
     "cancelRequest": "Отменить запрос",
-    "courthouseManagement": "Управление Судом",
+    "courthouseManagement": "Управление судом",
     "alert_deleteCourthousePost": "Вы уверены, что хотите удалить эту публикацию? Это действие необратимо",
     "alert_deleteCourtEntry": "Вы уверены, что хотите удалить это судебное заседание? Это действие необратимо",
     "alert_cancelRequest": "Вы уверены, что хотите отменить этот запрос на удаление? Это действие необратимо",
