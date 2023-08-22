@@ -195,6 +195,7 @@ export class RecordsController {
     @PathParams("id") id: string,
     @Context("cad")
     cad: cad & { miscCadSettings: MiscCadSettings; features: Record<Feature, boolean> },
+    @Context("user") user: User,
   ) {
     const isEnabled = isFeatureEnabled({
       feature: Feature.CITIZEN_RECORD_APPROVAL,
@@ -228,12 +229,19 @@ export class RecordsController {
       record.descriptionData as unknown[] as Descendant[],
     );
 
+    const translator = await getTranslator({
+      type: "webhooks",
+      locale: user.locale,
+      namespace: "Records",
+    });
+
     const template = await ejs.renderFile(templatePath, {
       formatDate,
       officer,
       age,
       record,
       formattedDescription,
+      translator,
     });
 
     try {

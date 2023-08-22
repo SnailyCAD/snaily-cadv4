@@ -149,7 +149,6 @@ export function RecordsTable({
   const { openModal } = useModal();
   const t = useTranslations();
   const router = useRouter();
-  const exportedRecordHTMLRef = React.useRef<HTMLDivElement | null>(null);
 
   const isCitizenCreation = router.pathname === "/citizen/create";
   const isCitizen = router.pathname.startsWith("/citizen") && !isCitizenCreation;
@@ -307,8 +306,6 @@ export function RecordsTable({
           isCitizen ? null : { header: common("actions"), accessorKey: "actions" },
         ]}
       />
-
-      <div ref={exportedRecordHTMLRef} />
     </div>
   );
 }

@@ -97,17 +97,20 @@
   </head>
   <body id="element-to-copy">
     <div class="container">
-      <h1 class="container__title">Arrest Report</h1>
+      <h1 class="container__title">
+        <%= translator(record.type) %>
+        <span class="container__title__case-number">#<%= record.caseNumber %></span>
+      </h1>
 
       <section class="container__section">
-        <h2 class="container__section__title">General Information</h2>
+        <h2 class="container__section__title"><%= translator("generalInformation") %></h2>
 
         <table class="container__section__table">
           <thead>
             <tr>
-              <th>Officer</th>
-              <th>Address</th>
-              <th>Postal</th>
+              <th><%= translator("officer") %></th>
+              <th><%= translator("address") %></th>
+              <th><%= translator("postal") %></th>
             </tr>
           </thead>
 
@@ -121,9 +124,9 @@
 
           <thead>
             <tr>
-              <th>Created At</th>
-              <th>Payment Status</th>
-              <th>Case Number</th>
+              <th><%= translator("createdAt") %></th>
+              <th><%= translator("paymentStatus") %></th>
+              <th><%= translator("caseNumber") %></th>
             </tr>
           </thead>
 
@@ -138,16 +141,16 @@
       </section>
 
       <section class="container__section">
-        <h2 class="container__section__title">Citizen Information</h2>
+        <h2 class="container__section__title"><%= translator("citizenInformation") %></h2>
 
         <table class="container__section__table">
           <thead>
             <tr>
-              <th>First name</th>
-              <th>Surname</th>
-              <th>Date of Birth</th>
-              <th>Age</th>
-              <th colspan="2">Social Security Number</th>
+              <th><%= translator("firstName") %></th>
+              <th><%= translator("surname") %></th>
+              <th><%= translator("dateOfBirth") %></th>
+              <th><%= translator("age") %></th>
+              <th colspan="2"><%= translator("socialSecurityNumber") %></th>
             </tr>
           </thead>
 
@@ -163,12 +166,12 @@
 
           <thead>
             <tr>
-              <th>Gender</th>
-              <th>Ethnicity</th>
-              <th>Hair Color</th>
-              <th>Eye Color</th>
-              <th>Weight</th>
-              <th>Height</th>
+              <th><%= translator("gender") %></th>
+              <th><%= translator("ethnicity") %></th>
+              <th><%= translator("hairColor") %></th>
+              <th><%= translator("eyeColor") %></th>
+              <th><%= translator("weight") %></th>
+              <th><%= translator("height") %></th>
             </tr>
           </thead>
 
@@ -185,10 +188,10 @@
 
           <thead>
             <tr>
-              <th colspan="2">Address</th>
-              <th>Postal</th>
-              <th>Phone Number</th>
-              <th colspan="2">Occupation</th>
+              <th colspan="2"><%= translator("address") %></th>
+              <th><%= translator("postal") %></th>
+              <th><%= translator("phoneNumber") %></th>
+              <th colspan="2"><%= translator("description") %></th>
             </tr>
           </thead>
 
@@ -206,14 +209,14 @@
       <% if (record.vehicle) { %>
 
       <section class="container__section">
-        <h2 class="container__section__title">Vehicle Information</h2>
+        <h2 class="container__section__title"><%= translator("vehicleInformation") %></h2>
 
         <table class="container__section__table">
           <thead>
             <tr>
-              <th>Plate</th>
-              <th colspan="2">VIN Number</th>
-              <th>Registered On</th>
+              <th><%= translator("plate") %></th>
+              <th colspan="2"><%= translator("vinNumber") %></th>
+              <th><%= translator("registeredAt") %></th>
             </tr>
           </thead>
 
@@ -227,9 +230,9 @@
 
           <thead>
             <tr>
-              <th>Registration Status</th>
-              <th colspan="2">Model</th>
-              <th>Color</th>
+              <th><%= translator("registrationStatus") %></th>
+              <th colspan="2"><%= translator("model") %></th>
+              <th><%= translator("color") %></th>
             </tr>
           </thead>
 
@@ -246,7 +249,7 @@
       <% } %>
 
       <section class="container__section">
-        <h2 class="container__section__title">Violations</h2>
+        <h2 class="container__section__title"><%= translator("violations") %></h2>
 
         <% record.violations.map((violation, index) => { %>
 
@@ -254,8 +257,8 @@
           <thead>
             <tr>
               <th>#</th>
-              <th colspan="2">Violation</th>
-              <th>Counts</th>
+              <th colspan="2"><%= translator("violation") %></th>
+              <th><%= translator("counts") %></th>
             </tr>
           </thead>
 
@@ -269,10 +272,10 @@
 
           <thead>
             <tr>
-              <th>Fines</th>
-              <th>Jail Time</th>
-              <th>Bail</th>
-              <th>Community Service</th>
+              <th><%= translator("fines") %></th>
+              <th><%= translator("jailTime") %></th>
+              <th><%= translator("bail") %></th>
+              <th><%= translator("communityService") %></th>
             </tr>
           </thead>
 
@@ -290,7 +293,7 @@
       </section>
 
       <section class="container__section">
-        <h2 class="container__section__title">Description</h2>
+        <h2 class="container__section__title"><%= translator("description") %></h2>
 
         <p class="container__section__description"><%= formattedDescription || record.notes %></p>
       </section>
