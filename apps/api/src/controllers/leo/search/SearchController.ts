@@ -47,7 +47,7 @@ export const recordsInclude = (isRecordApprovalEnabled: boolean) => ({
     officer: { include: leoProperties },
     seizedItems: true,
     courtEntry: { include: { dates: true } },
-    vehicle: { include: { model: { include: { value: true } } } },
+    vehicle: { include: { model: { include: { value: true } }, registrationStatus: true } },
     incident: { include: incidentInclude },
     call911: { include: callInclude },
     violations: {
