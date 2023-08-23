@@ -117,8 +117,8 @@
           <tbody>
             <tr>
               <td><%= officer %></td>
-              <td><%= record.address %></td>
-              <td><%= record.postal %></td>
+              <td><%= record.address || "-" %></td>
+              <td><%= record.postal || "-" %></td>
             </tr>
           </tbody>
 
@@ -197,10 +197,10 @@
 
           <tbody>
             <tr>
-              <td colspan="2"><%= record.citizen?.address %></td>
-              <td><%= record.citizen?.postal %></td>
-              <td><%= record.citizen?.phoneNumber %></td>
-              <td colspan="2"><%= record.citizen?.occupation %></td>
+              <td colspan="2"><%= record.citizen?.address || "-" %></td>
+              <td><%= record.citizen?.postal || "-" %></td>
+              <td><%= record.citizen?.phoneNumber || "-" %></td>
+              <td colspan="2"><%= record.citizen?.occupation || "-" %></td>
             </tr>
           </tbody>
         </table>
@@ -238,7 +238,7 @@
 
           <tbody>
             <tr>
-              <td><%= record.vehicle.registrationStatus?.value %></td>
+              <td><%= record.vehicle.registrationStatus.value %></td>
               <td colspan="2"><%= record.vehicle.model.value.value %></td>
               <td><%= record.vehicle.color %></td>
             </tr>
@@ -281,10 +281,10 @@
 
           <tbody>
             <tr>
-              <td><%= violation.fine %></td>
-              <td><%= violation.jailTime %></td>
-              <td><%= violation.bail %></td>
-              <td><%= violation.communityService %></td>
+              <td><%= violation.fine || "-" %></td>
+              <td><%= violation.jailTime || "-" %></td>
+              <td><%= violation.bail || "-" %></td>
+              <td><%= violation.communityService || "-" %></td>
             </tr>
           </tbody>
         </table>

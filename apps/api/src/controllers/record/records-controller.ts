@@ -186,12 +186,12 @@ export class RecordsController {
   }
 
   @Post("/pdf/record/:id")
-  @Description("Export a record as a PDF")
+  @Description("Export a record to a PDF file.")
   @UsePermissions({
     permissions: [Permissions.Leo],
   })
   @Header("Content-Type", "application/pdf")
-  async printRecord(
+  async exportRecordToPDF(
     @PathParams("id") id: string,
     @Context("cad")
     cad: cad & { miscCadSettings: MiscCadSettings; features: Record<Feature, boolean> },
@@ -211,20 +211,22 @@ export class RecordsController {
       throw new NotFound("recordNotFound");
     }
 
+    if (!record.citizen) {
+      throw new BadRequest("recordNotAssociatedWithCitizen");
+    }
+
     const root = __dirname;
-    const templatePath = resolve(root, "../../templates/records/index.ejs");
+    const templatePath = resolve(root, "../../templates/record.ejs");
     const age = record.citizen?.dateOfBirth ? calculateAge(record.citizen.dateOfBirth) : "";
 
     const unitName = record.officer
-      ? `${record.officer?.citizen.name} ${record.officer?.citizen.surname}`
+      ? `${record.officer.citizen.name} ${record.officer.citizen.surname}`
       : "";
-
     const officerCallsign = record.officer
-      ? generateCallsign(record.officer as any, cad.miscCadSettings.callsignTemplate)
+      ? generateCallsign(record.officer, cad.miscCadSettings.callsignTemplate)
       : "";
 
     const officer = record.officer ? `${officerCallsign} ${unitName}` : "";
-
     const formattedDescription = slateDataToString(
       record.descriptionData as unknown[] as Descendant[],
     );
