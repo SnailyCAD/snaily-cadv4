@@ -20,7 +20,7 @@ import { classNames } from "lib/classNames";
 import { useActiveUnitsState } from "state/active-unit-state";
 import { useActiveUnitsFilter } from "hooks/shared/useActiveUnitsFilter";
 import { OfficerColumn } from "./active-units/officers/officer-column";
-import { isUnitOfficer } from "@snailycad/utils/typeguards";
+import { isUnitCombined, isUnitOfficer } from "@snailycad/utils/typeguards";
 import { ActiveIncidentColumn } from "./active-units/officers/active-incident-column";
 import { ActiveCallColumn } from "./active-units/officers/active-call-column";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
@@ -169,7 +169,9 @@ function ActiveOfficers({ initialOfficers }: Props) {
                   ),
                   badgeNumberString: isUnitOfficer(officer) && officer.badgeNumberString,
                   department:
-                    (isUnitOfficer(officer) && officer.department?.value.value) ?? common("none"),
+                    ((isUnitCombined(officer) && officer.officers[0]?.department?.value.value) ||
+                      (isUnitOfficer(officer) && officer.department?.value.value)) ??
+                    common("none"),
                   division: (
                     <HoverCard>
                       <HoverCardTrigger asChild>
