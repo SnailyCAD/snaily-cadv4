@@ -3,7 +3,7 @@ import compareDesc from "date-fns/compareDesc";
 import { useRouter } from "next/router";
 import { Record, RecordType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
-import { Button, FullDate, Status, TabsContent } from "@snailycad/ui";
+import { Button, FullDate, Loader, Status, TabsContent } from "@snailycad/ui";
 import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
@@ -17,6 +17,7 @@ import { ViolationsColumn } from "components/leo/ViolationsColumn";
 import type { DeleteRecordsByIdData } from "@snailycad/types/api";
 import { RecordsCaseNumberColumn } from "components/leo/records-case-number-column";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
+import { getAPIUrl } from "@snailycad/utils/api-url";
 
 interface RecordsTabProps {
   records: Record[];
@@ -144,6 +145,8 @@ export function RecordsTable({
   hasDeletePermissions?: boolean;
   data: Record[];
 }) {
+  const [exportState, setExportState] = React.useState<"loading" | "idle">("idle");
+
   const common = useTranslations("Common");
   const { openModal } = useModal();
   const t = useTranslations();
@@ -173,6 +176,36 @@ export function RecordsTable({
 
     if (!_hasDeletePermissions) return;
     openModal(ModalIds.AlertDeleteRecord, record);
+  }
+
+  function downloadFile(url: string, filename: string) {
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = filename;
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+  }
+
+  async function handleExportClick(record: Record) {
+    setExportState("loading");
+
+    // using regular fetch here because axios doesn't support blob responses
+    const apiUrl = getAPIUrl();
+    const response = await fetch(`${apiUrl}/records/pdf/record/${record.id}`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        accept: "application/pdf",
+      },
+    });
+
+    const blob = new Blob([await response.blob()], { type: "application/pdf" });
+    const url = window.URL.createObjectURL(blob);
+
+    downloadFile(url, `record-${record.id}.pdf`);
+
+    setExportState("idle");
   }
 
   function handleEditClick(record: Record) {
@@ -234,6 +267,17 @@ export function RecordsTable({
               createdAt: <FullDate>{record.createdAt}</FullDate>,
               actions: isCitizen ? null : (
                 <>
+                  <Button
+                    type="button"
+                    onPress={() => handleExportClick(record)}
+                    size="xs"
+                    className="inline-flex mr-2 items-center gap-2"
+                    disabled={exportState === "loading"}
+                  >
+                    {exportState === "loading" ? <Loader className="w-3 h-3" /> : null}
+                    {common("export")}
+                  </Button>
+
                   <Button
                     type="button"
                     onPress={() => handleEditClick(record)}
