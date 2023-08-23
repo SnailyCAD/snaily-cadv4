@@ -3,7 +3,7 @@ import compareDesc from "date-fns/compareDesc";
 import { useRouter } from "next/router";
 import { Record, RecordType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
-import { Button, FullDate, Status, TabsContent } from "@snailycad/ui";
+import { Button, FullDate, Loader, Status, TabsContent } from "@snailycad/ui";
 import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
@@ -145,6 +145,8 @@ export function RecordsTable({
   hasDeletePermissions?: boolean;
   data: Record[];
 }) {
+  const [exportState, setExportState] = React.useState<"loading" | "idle">("idle");
+
   const common = useTranslations("Common");
   const { openModal } = useModal();
   const t = useTranslations();
@@ -186,6 +188,8 @@ export function RecordsTable({
   }
 
   async function handleExportClick(record: Record) {
+    setExportState("loading");
+
     // using regular fetch here because axios doesn't support blob responses
     const apiUrl = getAPIUrl();
     const response = await fetch(`${apiUrl}/records/pdf/record/${record.id}`, {
@@ -200,6 +204,8 @@ export function RecordsTable({
     const url = window.URL.createObjectURL(blob);
 
     downloadFile(url, `record-${record.id}.pdf`);
+
+    setExportState("idle");
   }
 
   function handleEditClick(record: Record) {
@@ -266,7 +272,9 @@ export function RecordsTable({
                     onPress={() => handleExportClick(record)}
                     size="xs"
                     className="inline-flex mr-2 items-center gap-2"
+                    disabled={exportState === "loading"}
                   >
+                    {exportState === "loading" ? <Loader className="w-3 h-3" /> : null}
                     {common("export")}
                   </Button>
 
