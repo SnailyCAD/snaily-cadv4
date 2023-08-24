@@ -24,7 +24,7 @@ export function ManagePetNoteModal(props: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Pets");
   const { state, execute } = useFetch();
-  const { currentPet } = usePetsState();
+  const currentPet = usePetsState((state) => state.currentPet);
 
   function handleClose() {
     modalState.closeModal(ModalIds.ManageNote);

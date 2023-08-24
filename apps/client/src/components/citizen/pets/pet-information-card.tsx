@@ -23,7 +23,7 @@ import { useTranslations } from "use-intl";
 export function PetInformationCard() {
   const t = useTranslations("Pets");
   const { cad } = useAuth();
-  const { currentPet } = usePetsState();
+  const currentPet = usePetsState((state) => state.currentPet);
   const modalState = useModal();
   const { state, execute } = useFetch();
   const router = useRouter();

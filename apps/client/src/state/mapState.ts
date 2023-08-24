@@ -1,7 +1,6 @@
 import { ConnectionStatus } from "@snailycad/ui";
 import { Socket } from "socket.io-client";
 import { SmartSignMarker } from "types/map";
-import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { shallow } from "zustand/shallow";
 import { createWithEqualityFn } from "zustand/traditional";
@@ -67,14 +66,17 @@ export const useDispatchMapState = createWithEqualityFn<DispatchMapState>()(
   shallow,
 );
 
-export const useSocketStore = create<SocketStore>()((set) => ({
-  status: null,
-  setStatus(status) {
-    set({ status });
-  },
+export const useSocketStore = createWithEqualityFn<SocketStore>()(
+  (set) => ({
+    status: null,
+    setStatus(status) {
+      set({ status });
+    },
 
-  socket: null,
-  setSocket(socket) {
-    set({ socket });
-  },
-}));
+    socket: null,
+    setSocket(socket) {
+      set({ socket });
+    },
+  }),
+  shallow,
+);

@@ -13,7 +13,7 @@ export function NameSearchVehiclesTab() {
   const { DMV } = useFeatureEnabled();
   const currentResult = useNameSearch((state) => state.currentResult);
   const modalState = useModal();
-  const { setCurrentResult: setVehicleResult } = useVehicleSearch();
+  const setVehicleResult = useVehicleSearch((state) => state.setCurrentResult);
   const tableState = useTableState();
 
   function handlePlateClick(vehicle: VehicleSearchResult) {

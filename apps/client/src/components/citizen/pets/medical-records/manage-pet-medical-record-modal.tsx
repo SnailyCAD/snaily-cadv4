@@ -26,7 +26,7 @@ export function ManagePetMedicalRecordModal(props: Props) {
   const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("MedicalRecords");
-  const { currentPet } = usePetsState();
+  const currentPet = usePetsState((state) => state.currentPet);
 
   function handleClose() {
     modalState.closeModal(ModalIds.ManagePetMedicalRecord);

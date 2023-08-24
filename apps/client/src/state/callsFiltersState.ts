@@ -1,5 +1,6 @@
-import { create } from "zustand";
 import type { Record, Citizen, MedicalRecord, RegisteredVehicle, Weapon } from "@snailycad/types";
+import { shallow } from "zustand/shallow";
+import { createWithEqualityFn } from "zustand/traditional";
 
 export type CitizenWithVehAndWep = Citizen & {
   weapons: Weapon[];
@@ -25,19 +26,22 @@ interface CallFiltersState {
   setAssignedUnit(assignedUnit: string | null): void;
 }
 
-export const useCallsFilters = create<CallFiltersState>()((set) => ({
-  showFilters: false,
-  setShowFilters: (showFilters) => set({ showFilters }),
+export const useCallsFilters = createWithEqualityFn<CallFiltersState>()(
+  (set) => ({
+    showFilters: false,
+    setShowFilters: (showFilters) => set({ showFilters }),
 
-  search: "",
-  setSearch: (search) => set({ search }),
+    search: "",
+    setSearch: (search) => set({ search }),
 
-  assignedUnit: null,
-  setAssignedUnit: (assignedUnit) => set({ assignedUnit }),
+    assignedUnit: null,
+    setAssignedUnit: (assignedUnit) => set({ assignedUnit }),
 
-  department: null,
-  setDepartment: (department) => set({ department }),
+    department: null,
+    setDepartment: (department) => set({ department }),
 
-  division: null,
-  setDivision: (division) => set({ division }),
-}));
+    division: null,
+    setDivision: (division) => set({ division }),
+  }),
+  shallow,
+);

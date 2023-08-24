@@ -9,10 +9,11 @@ import type {
 import { useDebounce, useHoverDirty } from "react-use";
 import { isUnitCombined, isUnitCombinedEmsFd } from "@snailycad/utils";
 import useFetch from "lib/useFetch";
-import { create } from "zustand";
 import { HoverCard, HoverCardContent, HoverCardTrigger, Loader } from "@snailycad/ui";
 import type { GetUnitQualificationsByUnitIdData } from "@snailycad/types/api";
 import dynamic from "next/dynamic";
+import { createWithEqualityFn } from "zustand/traditional";
+import { shallow } from "zustand/shallow";
 
 const UnitQualificationsTable = dynamic(
   async () => (await import("./UnitQualificationsTable")).UnitQualificationsTable,
@@ -33,10 +34,13 @@ interface CacheStore {
   setUnits(units: CacheStore["units"]): void;
 }
 
-const useCacheStore = create<CacheStore>((set) => ({
-  units: {},
-  setUnits: (units) => set({ units }),
-}));
+const useCacheStore = createWithEqualityFn<CacheStore>(
+  (set) => ({
+    units: {},
+    setUnits: (units) => set({ units }),
+  }),
+  shallow,
+);
 
 export function ActiveUnitsQualificationsCard({ canBeOpened = true, unit, children }: Props) {
   const { state, execute } = useFetch();
