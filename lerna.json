@@ -1,0 +1,5 @@
+{
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+  "packages": ["packages/config", "packages/permissions", "packages/types", "packages/utils"],
+  "version": "1.68.2"
+}
