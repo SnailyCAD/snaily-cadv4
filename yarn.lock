@@ -5056,7 +5056,7 @@ __metadata:
     "@snailycad/config": "workspace:*"
     "@snailycad/image-data-uri": ^3.2.0
     "@snailycad/permissions": "workspace:*"
-    "@snailycad/prisma-generator-redundant-types": ^1.0.3
+    "@snailycad/prisma-generator-redundant-types": ^2.0.0
     "@snailycad/schemas": "workspace:*"
     "@snailycad/types": "workspace:*"
     "@snailycad/utils": "workspace:*"
@@ -5254,15 +5254,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/prisma-generator-redundant-types@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "@snailycad/prisma-generator-redundant-types@npm:1.0.3"
+"@snailycad/prisma-generator-redundant-types@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@snailycad/prisma-generator-redundant-types@npm:2.0.0"
   dependencies:
     "@prisma/generator-helper": 5.2.0
     "@prisma/internals": 5.2.0
   bin:
     prisma-generator-redundant-types: dist/bin.js
-  checksum: faadde088ffedbb4c511e38317423c2fa5af8f339c2e9a9fab61007ac773e7f92cbcbcf88888fb5d2ecafc459cb982943966eb242a02281361a4087368a2db6a
+  checksum: f1a83e6a476b85198c5cc236b17ab5d5755fe05a037c9f6b587b72bbb7252dc03a90115ea49bf533b3a1d84c84db63542241277a6a484960f0fb3048b799f322
   languageName: node
   linkType: hard
 
