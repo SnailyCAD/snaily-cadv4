@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/api",
-  "version": "1.68.0",
+  "version": "1.68.1",
   "scripts": {
     "watch": "yarn prisma generate && yarn nodemon --watch \"./src/**/*.ts\" --ignore \"node_modules/**/*\" --exec node --loader ts-node/esm src/main.ts",
     "start": "yarn prisma migrate deploy && yarn prisma generate && node --loader ts-node/esm src/main.ts",
