@@ -46,3 +46,6 @@ v
 # storybook
 storybook-static
 build-storybook.log
+
+# Prisma generated types
+prisma/index.ts
