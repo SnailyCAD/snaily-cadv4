@@ -6,30 +6,37 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"
     },
     "./callsign": {
+      "types": "./dist/callsign.d.ts",
       "require": "./dist/callsign.js",
       "import": "./dist/callsign.mjs"
     },
     "./typeguards": {
+      "types": "./dist/typeguards.d.ts",
       "require": "./dist/typeguards.js",
       "import": "./dist/typeguards.mjs"
     },
     "./version": {
+      "types": "./dist/version.d.ts",
       "require": "./dist/version.js",
       "import": "./dist/version.mjs"
     },
     "./api-url": {
+      "types": "./dist/api-url.d.ts",
       "require": "./dist/api-url.js",
       "import": "./dist/api-url.mjs"
     },
     "./case-number": {
+      "types": "./dist/case-number.d.ts",
       "require": "./dist/case-number.js",
       "import": "./dist/case-number.mjs"
     },
     "./editor": {
+      "types": "./dist/editor/index.d.ts",
       "require": "./dist/editor/index.js",
       "import": "./dist/editor/index.mjs"
     },
