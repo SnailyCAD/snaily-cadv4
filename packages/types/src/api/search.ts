@@ -1,4 +1,4 @@
-import type * as Prisma from "@prisma/client";
+import type * as Prisma from "../prisma/index";
 import type * as Types from "../index.js";
 
 /** ems-fd search */
@@ -74,13 +74,13 @@ export type PostLeoSearchWeaponData =
  * @method POST
  * @route /search/vehicle
  */
-export type PostLeoSearchVehicleData =
-  | (Types.RegisteredVehicle & {
-      customFields: Types.CustomFieldValue[];
-      allCustomFields: Types.CustomField[];
-      TruckLog: Prisma.TruckLog[];
-    })
-  | null;
+interface BasePostLeoSearchVehicleData extends Types.RegisteredVehicle {
+  customFields: Types.CustomFieldValue[];
+  TruckLog: Prisma.TruckLog[];
+  allCustomFields?: Types.CustomField[];
+}
+
+export type PostLeoSearchVehicleData = BasePostLeoSearchVehicleData | null;
 
 export type PostLeoSearchBusinessData = (Types.Business & {
   vehicles: Types.RegisteredVehicle[];

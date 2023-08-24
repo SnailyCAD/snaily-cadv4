@@ -39,10 +39,12 @@ packages/**/coverage
 import-officers.mjs
 .data
 .dev-data
-v
 # Sentry
 .sentryclirc
 
 # storybook
 storybook-static
 build-storybook.log
+
+# Prisma generated types
+**/prisma/index.ts

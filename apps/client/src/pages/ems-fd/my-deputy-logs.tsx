@@ -14,7 +14,9 @@ import { useAsyncTable } from "components/shared/Table";
 import { useGetUserDeputies } from "hooks/ems-fd/use-get-user-deputies";
 import { SelectField } from "@snailycad/ui";
 
-export type OfficerLogWithDeputy = OfficerLog & { emsFdDeputy: EmsFdDeputy };
+export interface OfficerLogWithDeputy extends Omit<OfficerLog, "emsFdDeputy" | "officer"> {
+  emsFdDeputy: EmsFdDeputy;
+}
 
 interface Props {
   logs: GetMyDeputiesLogsData;

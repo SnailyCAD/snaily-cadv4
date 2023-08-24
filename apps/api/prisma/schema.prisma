@@ -11,6 +11,11 @@ generator client {
   previewFeatures = []
 }
 
+generator types {
+  provider = "prisma-generator-redundant-types"
+  output   = "../../../packages/types/src/prisma"
+}
+
 model cad {
   id                      String                 @id @default(cuid())
   name                    String                 @db.VarChar(255)
@@ -1811,11 +1816,6 @@ enum EmployeeAsEnum {
 enum StatusValueType {
   STATUS_CODE
   SITUATION_CODE
-}
-
-enum StatusEnum {
-  ON_DUTY
-  OFF_DUTY
 }
 
 enum WhatPages {

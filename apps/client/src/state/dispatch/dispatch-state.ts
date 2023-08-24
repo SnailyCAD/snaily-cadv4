@@ -12,7 +12,10 @@ import type {
 import { shallow } from "zustand/shallow";
 import { createWithEqualityFn } from "zustand/traditional";
 
-export type Full911Call = Call911 & { assignedUnits: AssignedUnit[]; events: Call911Event[] };
+export interface Full911Call extends Call911 {
+  assignedUnits: AssignedUnit[];
+  events: Call911Event[];
+}
 
 interface DispatchState {
   bolos: Bolo[];

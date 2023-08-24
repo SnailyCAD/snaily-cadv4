@@ -1,5 +1,5 @@
 import type { Permissions } from "@snailycad/permissions";
-import type * as Prisma from "@prisma/client";
+import type * as Prisma from "./prisma/index";
 import type * as Enums from "./enums";
 import { CadFeatureOptions } from "./lib/cad-feature";
 
