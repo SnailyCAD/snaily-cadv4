@@ -5044,17 +5044,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@snaily-cad/image-data-uri@npm:^3.1.1":
-  version: 3.1.1
-  resolution: "@snaily-cad/image-data-uri@npm:3.1.1"
-  dependencies:
-    fs-extra: ^10.1.0
-    mime-types: ^2.1.35
-    undici: ^5.19.1
-  checksum: c349ef3363026379dc4b571a1907c636b36e36bf3e24a3fadadf320cff8f2b3183e0a016ac48404f2e607e34dc2e1a106375ce10f8a6a8c4109c516dbc6a02cb
-  languageName: node
-  linkType: hard
-
 "@snailycad/api@workspace:apps/api":
   version: 0.0.0-use.local
   resolution: "@snailycad/api@workspace:apps/api"
@@ -5063,9 +5052,9 @@ __metadata:
     "@paralleldrive/cuid2": ^2.2.2
     "@prisma/client": ^5.1.1
     "@sentry/node": ^7.63.0
-    "@snaily-cad/image-data-uri": ^3.1.1
     "@snailycad/audit-logger": "workspace:*"
     "@snailycad/config": "workspace:*"
+    "@snailycad/image-data-uri": ^3.2.0
     "@snailycad/permissions": "workspace:*"
     "@snailycad/prisma-generator-redundant-types": ^1.0.3
     "@snailycad/schemas": "workspace:*"
@@ -5241,6 +5230,17 @@ __metadata:
     vitest: ^0.34.0
   languageName: unknown
   linkType: soft
+
+"@snailycad/image-data-uri@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "@snailycad/image-data-uri@npm:3.2.0"
+  dependencies:
+    fs-extra: ^10.1.0
+    mime-types: ^2.1.35
+    undici: ^5.23.0
+  checksum: b6bf97505dc33620ee596a6f1b0037d2e5ee0198157a5d95c8691fbf51ac1a169c9d4560515e79170e29a8d6928fbf33f657e69c4242b4212e38857f2fa82bd5
+  languageName: node
+  linkType: hard
 
 "@snailycad/permissions@workspace:*, @snailycad/permissions@workspace:packages/permissions":
   version: 0.0.0-use.local
@@ -20123,7 +20123,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici@npm:^5.19.1, undici@npm:^5.22.1, undici@npm:^5.23.0":
+"undici@npm:^5.22.1, undici@npm:^5.23.0":
   version: 5.23.0
   resolution: "undici@npm:5.23.0"
   dependencies:

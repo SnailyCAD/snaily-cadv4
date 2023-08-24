@@ -16,7 +16,7 @@ import { DISCORD_WEBHOOKS_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/data/validate-schema";
 import type * as APITypes from "@snailycad/types/api";
 import { resolve } from "node:path";
-import { encodeFromFile } from "@snaily-cad/image-data-uri";
+import { encodeFromFile } from "@snailycad/image-data-uri";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { performDiscordRequest } from "lib/discord/performDiscordRequest";
 import { AuditLogActionType } from "@snailycad/audit-logger";
