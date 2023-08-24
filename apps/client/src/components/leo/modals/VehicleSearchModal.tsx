@@ -250,7 +250,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
                   </Button>
                 ) : null}
 
-                {currentResult && isLeo ? (
+                {typeof currentResult !== "string" && currentResult && isLeo ? (
                   <>
                     {showMarkVehicleAsStolenButton ? (
                       <Button

@@ -78,6 +78,7 @@ interface BasePostLeoSearchVehicleData extends Types.RegisteredVehicle {
   customFields: Types.CustomFieldValue[];
   TruckLog: Prisma.TruckLog[];
   allCustomFields?: Types.CustomField[];
+  citizen?: (Prisma.Citizen & { warrants?: Types.Warrant[] }) | null;
 }
 
 export type PostLeoSearchVehicleData = BasePostLeoSearchVehicleData | null;
