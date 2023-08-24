@@ -24,6 +24,24 @@ for (const pkg of allPackages) {
   if (!packageJsonContentJSON) continue;
   packageJsonContentJSON.version = version;
 
+  for (const utilPkg of packages) {
+    const isInDep = packageJsonContentJSON.dependencies?.[`@snailycad/${utilPkg}`];
+    const isInDevDep = packageJsonContentJSON.devDependencies?.[`@snailycad/${utilPkg}`];
+
+    if (isInDep) {
+      const isWorkspace = isInDep.startsWith("workspace:");
+      packageJsonContentJSON.dependencies[`@snailycad/${utilPkg}`] = isWorkspace
+        ? "workspace:*"
+        : version;
+    } else if (isInDevDep) {
+      const isWorkspace = isInDevDep.startsWith("workspace:");
+
+      packageJsonContentJSON.devDependencies[`@snailycad/${utilPkg}`] = isWorkspace
+        ? "workspace:*"
+        : version;
+    }
+  }
+
   writeFileSync(packageJsonPath, await stringifyAndFormat(packageJsonContentJSON));
   console.log(`${green("INFO:")} Set version ${underline(version)} for ${underline(pkg)}\n`);
 }
