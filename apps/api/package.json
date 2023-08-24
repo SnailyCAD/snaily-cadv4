@@ -48,7 +48,7 @@
     "@snailycad/config": "workspace:*",
     "@snailycad/image-data-uri": "^3.2.0",
     "@snailycad/permissions": "workspace:*",
-    "@snailycad/prisma-generator-redundant-types": "^2.0.0",
+    "@snailycad/prisma-generator-redundant-types": "^2.0.2",
     "@snailycad/schemas": "workspace:*",
     "@snailycad/types": "workspace:*",
     "@snailycad/utils": "workspace:*",

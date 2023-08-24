@@ -14,7 +14,9 @@ import { useAsyncTable } from "components/shared/Table";
 import { useUserOfficers } from "hooks/leo/use-get-user-officers";
 import { SelectField } from "@snailycad/ui";
 
-export type OfficerLogWithOfficer = OfficerLog & { officer: Officer };
+export interface OfficerLogWithOfficer extends Omit<OfficerLog, "officer" | "emsFdDeputy"> {
+  officer: Officer;
+}
 
 interface Props {
   logs: GetMyOfficersLogsData;

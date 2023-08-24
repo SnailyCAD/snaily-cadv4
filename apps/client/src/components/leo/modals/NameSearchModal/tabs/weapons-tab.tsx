@@ -22,7 +22,7 @@ export function NameSearchWeaponsTab() {
     if (!currentResult || currentResult.isConfidential) return;
 
     // todo: set correct data for `allCustomFields` and `customFields`
-    setWeaponResult({ allCustomFields: [], customFields: [], ...weapon, citizen: currentResult });
+    setWeaponResult({ ...weapon, allCustomFields: [], customFields: [], citizen: currentResult });
     modalState.openModal(ModalIds.WeaponSearchWithinName);
   }
 
